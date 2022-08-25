@@ -8,9 +8,9 @@ export function BottomRow(props: Player) {
     <>
       <FeetEqZone DisplayRow={displayRow} isPlayer={props.isPlayer} />
       <div className={'beforeArsenal ' + displayRow}></div>
-      <div className={'arsenalZone ' + displayRow}>Arsenal</div>
+      <div className={'arsenalZone cardStackZone ' + displayRow}>Arsenal</div>
       <div className={'afterArsenal ' + displayRow}></div>
-      <div className={'banishedZone ' + displayRow}>Banish</div>
+      <div className={'banishedZone cardStackZone ' + displayRow}>Banish</div>
     </>
   );
 }

@@ -16,19 +16,35 @@
 }
 
 .OpponentPlaymat {
-  background-color: grey;
+  border-radius: 10px;
+  padding: 5px 5px 5px 5px;
+  background-image: url('https://source.unsplash.com/random');
+  background-repeat: no-repeat;
+  background-size: cover;
   grid-row-start: 1;
   grid-row-end: 2;
 }
 
 .CombatChain {
-  background-color: red;
+  background-image: url('https://source.unsplash.com/random/1920x1080');
+  border-radius: 10px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 5px 0px 5px 0px;
   grid-row-start: 2;
   grid-row-end: 3;
+  color: white;
 }
 
 .PlayerPlaymat {
-  background-color: green;
+  border-radius: 10px;
+  padding: 5px 5px 5px 5px;
+  background-image: url('https://source.unsplash.com/random/1024x768');
+  background-repeat: no-repeat;
+  background-size: auto;
+  background-size: cover;
   grid-row-start: 3;
   grid-row-end: 4;
 }
@@ -36,6 +52,7 @@
 .PlayerBoard {
   display: grid;
   height: 100%;
+  gap: 10px;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
   grid-template-rows: 1fr 1fr 1fr;
   place-items: center;
@@ -48,16 +65,34 @@
   text-align: center;
 }
 
+.cardStackZone {
+  width: 90%;
+  height: 100%;
+  border-radius: 5%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .singleCardZone {
+  position: relative;
   display: grid;
   place-items: center;
 }
 
+.singleCardZone::before {
+  content: '';
+  display: block;
+}
+
 .singleCardZone > img {
+  grid-area: 1 / 1 / 2 / 2;
+  border-radius: 5%;
   padding: 0fr;
   width: 90%;
-  height: 90%;
+  height: auto;
   object-fit: contain;
+  filter: drop-shadow(0.1rem 0.1rem 0.1rem black);
 }
 
 .middleRow {
@@ -70,19 +105,21 @@
 .bottomRow {
   grid-row-start: 3;
   grid-row-end: 3;
+  display: grid;
+  text-align: center;
 }
 
 .hatZone,
 .feetZone {
   grid-column-start: 1;
   grid-column-end: 2;
-  background-color: aqua;
 }
 
 .permanentZone {
   grid-column-start: 2;
   grid-column-end: 7;
-  background-color: grey;
+  background: rgba(50, 50, 50, 0.5);
+  color: white;
 }
 
 .beforeArsenal {
@@ -93,19 +130,21 @@
 .afterArsenal {
   grid-column-start: 6;
   grid-column-end: 7;
-  background-color: aliceblue;
 }
 
 .arsenalZone {
   grid-column-start: 3;
   grid-column-end: 6;
+  background: rgba(50, 50, 50, 0.5);
+  color: white;
 }
 
 .graveyardZone,
 .banishedZone {
   grid-column-start: 7;
   grid-column-end: 8;
-  background-color: brown;
+  background: rgba(50, 50, 50, 0.5);
+  color: white;
 }
 
 .chestZone {
@@ -114,11 +153,12 @@
 }
 
 .glovesZone {
+  place-self: start;
   grid-column-start: 2;
   grid-column-end: 3;
 }
 
-.weaponLzone {
+.weaponLZone {
   grid-column-start: 3;
   grid-column-end: 4;
 }
@@ -131,17 +171,18 @@
 .weaponRZone {
   grid-column-start: 5;
   grid-column-end: 6;
-  background-color: yellow;
 }
 
 .pitchZone {
   grid-column-start: 6;
   grid-column-end: 7;
-  background-color: aqua;
+  background: rgba(50, 50, 50, 0.5);
+  color: white;
 }
 
 .deckZone {
   grid-column-start: 7;
   grid-column-end: 8;
-  background-color: purple;
+  background: rgba(50, 50, 50, 0.5);
+  color: white;
 }
