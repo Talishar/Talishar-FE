@@ -14,8 +14,6 @@ function App() {
 
   React.useEffect(() => {
     function handleResize() {
-      console.log('inner Height', window.innerHeight);
-      console.log('inner Width', window.innerWidth);
       setDimension({
         height: window.innerHeight,
         width: window.innerWidth,
@@ -26,7 +24,8 @@ function App() {
       });
     }
     window.addEventListener('resize', handleResize);
-  }, [window.innerHeight, window.innerWidth]);
+    handleResize();
+  }, []);
 
   return (
     <div className="App">
