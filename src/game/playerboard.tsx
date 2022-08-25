@@ -4,8 +4,9 @@ import { MiddleRow } from './middlerow';
 import { BottomRow } from './bottomrow';
 
 export function PlayerBoard() {
+  const height = (window.innerHeight / 8) * 3;
   return (
-    <div className="PlayerPlaymat">
+    <div className="PlayerPlaymat" style={{ height: height }}>
       {/* Customise the playmat here */}
       <div className="PlayerBoard">
         <TopRow isPlayer={true} />

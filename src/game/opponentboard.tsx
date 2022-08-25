@@ -5,8 +5,9 @@ import { BottomRow } from './bottomrow';
 import { Player } from '../interface/player';
 
 export function OpponentBoard() {
+  const height = (window.innerHeight / 8) * 3;
   return (
-    <div className="OpponentPlaymat">
+    <div className="OpponentPlaymat" style={{ height: height }}>
       {/* Customise the playmat here */}
       <div className="PlayerBoard">
         <BottomRow isPlayer={false} />

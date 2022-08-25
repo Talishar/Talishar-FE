@@ -1,27 +1,43 @@
 .GameBoard {
-  display: grid;
+  justify-self: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.App {
+  display: block;
+  align-content: center;
+  max-width: 1024px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .OpponentPlaymat {
   background-color: grey;
   grid-row-start: 1;
-  grid-row-end: 1;
+  grid-row-end: 2;
 }
 
 .CombatChain {
   background-color: red;
   grid-row-start: 2;
-  grid-row-end: 2;
+  grid-row-end: 3;
 }
 
 .PlayerPlaymat {
   background-color: green;
   grid-row-start: 3;
-  grid-row-end: 3;
+  grid-row-end: 4;
 }
 
 .PlayerBoard {
   display: grid;
+  height: 100%;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
 }
 
 .topRow {
@@ -29,7 +45,7 @@
   grid-row-end: 1;
   display: grid;
   text-align: center;
-  height: 100px;
+  height: 100%;
 }
 
 .middleRow {
@@ -37,13 +53,13 @@
   grid-row-end: 2;
   display: grid;
   text-align: center;
-  height: 100px;
+  height: 100%;
 }
 
 .bottomRow {
   grid-row-start: 3;
   grid-row-end: 3;
-  height: 100px;
+  height: 100%;
 }
 
 .hatZone,

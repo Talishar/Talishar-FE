@@ -3,9 +3,16 @@ import { PlayerBoard } from './playerboard';
 import { OpponentBoard } from './opponentboard';
 import { CombatChain } from './combatchain';
 
-export function Board() {
+export interface playAreaDimensions {
+  dimension: number;
+}
+
+export function Board(dimension: playAreaDimensions) {
   return (
-    <div className="GameBoard">
+    <div
+      className="GameBoard"
+      style={{ height: dimension.dimension, width: dimension.dimension }}
+    >
       <OpponentBoard />
       <CombatChain />
       <PlayerBoard />
