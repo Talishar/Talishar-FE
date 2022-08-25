@@ -1,39 +1,121 @@
-.App {
+.GameBoard {
+  display: grid;
+}
+
+.OpponentPlaymat {
+  background-color: grey;
+  grid-row-start: 1;
+  grid-row-end: 1;
+}
+
+.CombatChain {
+  background-color: red;
+  grid-row-start: 2;
+  grid-row-end: 2;
+}
+
+.PlayerPlaymat {
+  background-color: green;
+  grid-row-start: 3;
+  grid-row-end: 3;
+}
+
+.PlayerBoard {
+  display: grid;
+}
+
+.topRow {
+  grid-row-start: 1;
+  grid-row-end: 1;
+  display: grid;
   text-align: center;
+  height: 100px;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.middleRow {
+  grid-row-start: 2;
+  grid-row-end: 2;
+  display: grid;
+  text-align: center;
+  height: 100px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-float infinite 3s ease-in-out;
-  }
+.bottomRow {
+  grid-row-start: 3;
+  grid-row-end: 3;
+  height: 100px;
 }
 
-.App-header {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+.hatZone,
+.feetZone {
+  grid-column-start: 1;
+  grid-column-end: 2;
+  background-color: aqua;
 }
 
-.App-link {
-  color: rgb(112, 76, 182);
+.permanentZone {
+  grid-column-start: 2;
+  grid-column-end: 7;
+  background-color: grey;
 }
 
-@keyframes App-logo-float {
-  0% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(10px);
-  }
-  100% {
-    transform: translateY(0px);
-  }
+.beforeArsenal {
+  grid-column-start: 2;
+  grid-column-end: 3;
+}
+
+.afterArsenal {
+  grid-column-start: 6;
+  grid-column-end: 7;
+  background-color: aliceblue;
+}
+
+.arsenalZone {
+  grid-column-start: 3;
+  grid-column-end: 6;
+}
+
+.graveyardZone,
+.banishedZone {
+  grid-column-start: 7;
+  grid-column-end: 8;
+  background-color: brown;
+}
+
+.chestZone {
+  grid-column-start: 1;
+  grid-column-end: 2;
+}
+
+.glovesZone {
+  grid-column-start: 2;
+  grid-column-end: 3;
+}
+
+.weaponLzone {
+  grid-column-start: 3;
+  grid-column-end: 4;
+}
+
+.heroZone {
+  grid-column-start: 4;
+  grid-column-end: 5;
+}
+
+.weaponRZone {
+  grid-column-start: 5;
+  grid-column-end: 6;
+  background-color: yellow;
+}
+
+.pitchZone {
+  grid-column-start: 6;
+  grid-column-end: 7;
+  background-color: aqua;
+}
+
+.deckZone {
+  grid-column-start: 7;
+  grid-column-end: 8;
+  background-color: purple;
 }
