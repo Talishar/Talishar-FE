@@ -9,7 +9,7 @@ export function BottomRow(props: Player) {
       <div className={'beforeArsenal ' + displayRow}></div>
       <div className={'arsenalZone ' + displayRow}>Arsenal</div>
       <div className={'afterArsenal ' + displayRow}></div>
-      <div className={'banishedZone ' + displayRow}>Banished Zone</div>
+      <div className={'banishedZone ' + displayRow}>Banish</div>
     </>
   );
 }
