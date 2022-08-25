@@ -1,9 +1,6 @@
 import React from 'react';
-import logo from './logo.svg';
-import { Counter } from './features/counter/Counter';
 import { Board } from './game/board';
 import './App.css';
-import { maxHeaderSize } from 'http';
 
 function App() {
   const [dimension, setDimension] = React.useState({
