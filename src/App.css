@@ -38,6 +38,7 @@
   height: 100%;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
   grid-template-rows: 1fr 1fr 1fr;
+  place-items: center;
 }
 
 .topRow {
@@ -45,7 +46,6 @@
   grid-row-end: 1;
   display: grid;
   text-align: center;
-  height: 100%;
 }
 
 .middleRow {
@@ -53,13 +53,11 @@
   grid-row-end: 2;
   display: grid;
   text-align: center;
-  height: 100%;
 }
 
 .bottomRow {
   grid-row-start: 3;
   grid-row-end: 3;
-  height: 100%;
 }
 
 .hatZone,
