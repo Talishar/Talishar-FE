@@ -48,6 +48,18 @@
   text-align: center;
 }
 
+.singleCardZone {
+  display: grid;
+  place-items: center;
+}
+
+.singleCardZone > img {
+  padding: 0fr;
+  width: 90%;
+  height: 90%;
+  object-fit: contain;
+}
+
 .middleRow {
   grid-row-start: 2;
   grid-row-end: 2;

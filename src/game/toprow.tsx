@@ -1,14 +1,17 @@
 import React from 'react';
 import { Player } from '../interface/player';
+import { HeadEqZone } from './zones/headEqZone';
+import { Displayrow } from '../interface/displayrow';
 
 export function TopRow(props: Player) {
-  const displayRow = props.isPlayer ? 'topRow' : 'bottomRow';
-
+  const row = props.isPlayer ? 'topRow' : 'bottomRow';
   return (
     <>
-      <div className={'hatZone ' + displayRow}>Hat</div>
-      <div className={'permanentZone ' + displayRow}>Permanents</div>
-      <div className={'graveyardZone ' + displayRow}>Graveyard</div>
+      <div>
+        <HeadEqZone DisplayRow={row} isPlayer={props.isPlayer} />
+      </div>
+      <div className={'permanentZone ' + row}></div>
+      <div className={'graveyardZone ' + row}>Graveyard</div>
     </>
   );
 }
