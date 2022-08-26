@@ -95,6 +95,22 @@
   filter: drop-shadow(0.1rem 0.1rem 0.1rem black);
 }
 
+.singleCardZone > .cardDisplay {
+  position: relative;
+  grid-area: 1 / 1 / 2 / 2;
+  padding: 0fr;
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0.1rem 0.1rem 0.1rem black);
+}
+
+.cardDisplay > img {
+  object-fit: contain;
+  width: 90%;
+  height: auto;
+  border-radius: 5%;
+}
+
 .middleRow {
   grid-row-start: 2;
   grid-row-end: 2;

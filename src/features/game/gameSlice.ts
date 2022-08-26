@@ -9,6 +9,7 @@ export interface GameState {
 
 const initialState: GameState = {
   playerOne: {
+    // human player
     HeadEq: { cardNumber: 'WTR079' },
     ChestEq: { cardNumber: 'WTR150' },
     GlovesEq: { cardNumber: 'UPR158' },
@@ -20,7 +21,19 @@ const initialState: GameState = {
     ActionPoints: 0,
     PitchRemaining: 0
   },
-  playerTwo: {}
+  playerTwo: {
+    // AI or opposing player
+    HeadEq: { cardNumber: 'CRU006' },
+    ChestEq: { cardNumber: 'WTR005' },
+    GlovesEq: { cardNumber: 'WTR153' },
+    FeetEq: { cardNumber: 'WTR004' },
+    WeaponLEq: { cardNumber: '' },
+    Hero: { cardNumber: 'WTR002' },
+    WeaponREq: { cardNumber: 'WTR003' },
+    Health: 20,
+    ActionPoints: 0,
+    PitchRemaining: 0
+  }
 };
 
 export const gameSlice = createSlice({

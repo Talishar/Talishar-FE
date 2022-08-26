@@ -1,12 +1,23 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../app/store';
 import { Displayrow } from '../../interface/displayrow';
+import { CardDisplay } from '../elements/card';
 
 export function FeetEqZone(prop: Displayrow) {
-  const eqImg =
-    'http://www.fleshandbloodonline.com/FaBOnline/concat/WTR154.webp';
+  let cardToDisplay;
+  if (prop.isPlayer) {
+    cardToDisplay = useSelector(
+      (state: RootState) => state.game.playerOne.FeetEq
+    );
+  } else {
+    cardToDisplay = useSelector(
+      (state: RootState) => state.game.playerTwo.FeetEq
+    );
+  }
   return (
     <div className={'feetZone singleCardZone ' + prop.DisplayRow}>
-      <img src={eqImg} />
+      <CardDisplay card={cardToDisplay} />
     </div>
   );
 }
