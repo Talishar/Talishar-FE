@@ -1,6 +1,7 @@
 import React from 'react';
 import { Board } from './game/board';
 import './App.css';
+import { GameStateHandler } from './app/gameStateHandler';
 
 function App() {
   const [dimension, setDimension] = React.useState({
@@ -29,6 +30,7 @@ function App() {
 
   return (
     <div className="App">
+      <GameStateHandler />
       <div className="leftCol"></div>
       <div
         style={{
