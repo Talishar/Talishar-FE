@@ -36,6 +36,10 @@ const initialState: GameState = {
   }
 };
 
+// TODO: Write thunk
+// export const nextTurn = createAsyncThunk('game/nextTurn', async (thunkAPI) => {
+// });
+
 export const gameSlice = createSlice({
   name: 'game',
   initialState,
