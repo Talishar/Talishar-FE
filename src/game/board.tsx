@@ -2,6 +2,7 @@ import React from 'react';
 import { PlayerBoard } from './playerboard';
 import { OpponentBoard } from './opponentboard';
 import { CombatChain } from './combatchain';
+import styles from './board.module.css';
 
 export interface playAreaDimensions {
   dimension: number;
@@ -10,7 +11,7 @@ export interface playAreaDimensions {
 export function Board(dimension: playAreaDimensions) {
   return (
     <div
-      className="GameBoard"
+      className={styles.gameBoard}
       style={{ height: dimension.dimension, width: dimension.dimension }}
     >
       <OpponentBoard />

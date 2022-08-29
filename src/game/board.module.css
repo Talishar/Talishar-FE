@@ -1,0 +1,45 @@
+.gameBoard {
+  justify-self: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.opponentPlaymat {
+  border-radius: 10px;
+  padding: 10px;
+  background-image: url('https://source.unsplash.com/random');
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.combatChain {
+  background-image: url('https://source.unsplash.com/random/1920x1080');
+  border-radius: 10px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 5px 0px 5px 0px;
+  color: white;
+}
+
+.playerPlaymat {
+  border-radius: 10px;
+  padding: 10px;
+  background-image: url('https://source.unsplash.com/random/1024x768');
+  background-repeat: no-repeat;
+  background-size: auto;
+  background-size: cover;
+}
+
+.playerBoard {
+  display: grid;
+  height: 100%;
+  gap: 10px;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
+  place-items: center;
+}
