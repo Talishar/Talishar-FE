@@ -1,8 +1,7 @@
 import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { visitFunctionBody } from 'typescript';
-import type { RootState, AppDispatch } from './store';
-import { nextTurn, GetNextTurnParams } from '../features/game/gameSlice';
+import type { AppDispatch } from './store';
+import { nextTurn } from '../features/game/gameSlice';
 
 const intervalLength = 2000;
 // const hostURL = 'https://localhost/FaBOnline/';

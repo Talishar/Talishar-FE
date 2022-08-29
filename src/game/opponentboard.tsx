@@ -2,7 +2,6 @@ import React from 'react';
 import { TopRow } from './toprow';
 import { MiddleRow } from './middlerow';
 import { BottomRow } from './bottomrow';
-import { Player } from '../interface/player';
 
 export function OpponentBoard() {
   const height = (window.innerHeight / 8) * 3;

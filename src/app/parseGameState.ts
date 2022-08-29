@@ -31,10 +31,9 @@ export function returnCard(input: string) {
 }
 
 function parseEQArray(input: string) {
-  let result;
   const eqArray: string[] = input.split('|');
   if (eqArray.length == 6) {
-    return (result = {
+    return {
       HeadEq: { cardNumber: returnCard(eqArray[2]) },
       ChestEq: { cardNumber: returnCard(eqArray[3]) },
       GlovesEq: { cardNumber: returnCard(eqArray[4]) },
@@ -45,9 +44,9 @@ function parseEQArray(input: string) {
       Health: 20,
       ActionPoints: 0,
       PitchRemaining: 0
-    });
+    };
   } else {
-    return (result = {
+    return {
       HeadEq: { cardNumber: returnCard(eqArray[3]) },
       ChestEq: { cardNumber: returnCard(eqArray[4]) },
       GlovesEq: { cardNumber: returnCard(eqArray[5]) },
@@ -58,6 +57,6 @@ function parseEQArray(input: string) {
       Health: 20,
       ActionPoints: 0,
       PitchRemaining: 0
-    });
+    };
   }
 }

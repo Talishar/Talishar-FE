@@ -1,6 +1,3 @@
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { RootState, AppThunk } from '../app/store';
-
 export interface Card {
   cardNumber: string; //Card number = card ID (e.g. WTR000 = Heart of Fyendal)
   action?: number; //action = (ProcessInput2 mode)
