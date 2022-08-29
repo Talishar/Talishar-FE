@@ -61,15 +61,15 @@ export const nextTurn = createAsyncThunk(
       params.playerID +
       '&authKey=' +
       params.authKey;
-    const response = fetch(queryURL, {
+    const response = await fetch(queryURL, {
       method: 'GET',
       headers: {}
-    })
-      .then((data) => data.text())
-      .then((resp) => {
-        const gameState: GameState = ParseGameState(resp);
-        return gameState;
-      });
+    });
+    const data = await response.text();
+    console.log(data);
+    const gameState: GameState = ParseGameState(data);
+    console.log(gameState);
+    return gameState;
   }
 );
 
@@ -83,6 +83,10 @@ export const gameSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(nextTurn.fulfilled, (state, action) => {
       console.log('thunk');
+      console.log('state', state);
+      console.log('action', action);
+      state.playerOne = action.payload.playerOne;
+      state.playerTwo = action.payload.playerTwo;
     });
   }
 });

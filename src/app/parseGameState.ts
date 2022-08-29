@@ -1,23 +1,13 @@
 import { GameState } from '../features/game/gameSlice';
 
 export function ParseGameState(input: string) {
-  console.log(input);
+  const stringArray: string[] = input.toUpperCase().split('<BR>');
+  // console.log(stringArray);
   const result: GameState = {
-    gameID: 663,
+    gameID: 664,
     playerID: 3,
     authKey: '28df413b665604299807c461a7f3cae71c4176cb2b96afad04b84cf96d016258',
-    playerOne: {
-      HeadEq: { cardNumber: 'WTR079' },
-      ChestEq: { cardNumber: 'WTR150' },
-      GlovesEq: { cardNumber: 'UPR158' },
-      FeetEq: { cardNumber: 'WTR154' },
-      WeaponLEq: { cardNumber: 'CRU048' },
-      Hero: { cardNumber: 'CRU046' },
-      WeaponREq: { cardNumber: 'CRU049' },
-      Health: 20,
-      ActionPoints: 0,
-      PitchRemaining: 0
-    },
+    playerOne: parseEQArray(stringArray[3]),
     playerTwo: {
       // AI or opposing player
       HeadEq: { cardNumber: 'CRU006' },
@@ -32,6 +22,42 @@ export function ParseGameState(input: string) {
       PitchRemaining: 0
     }
   };
-
   return result;
+}
+
+export function returnCard(input: string) {
+  const cardArr: string[] = input.split(' ');
+  return cardArr[0];
+}
+
+function parseEQArray(input: string) {
+  let result;
+  const eqArray: string[] = input.split('|');
+  if (eqArray.length == 6) {
+    return (result = {
+      HeadEq: { cardNumber: returnCard(eqArray[2]) },
+      ChestEq: { cardNumber: returnCard(eqArray[3]) },
+      GlovesEq: { cardNumber: returnCard(eqArray[4]) },
+      FeetEq: { cardNumber: returnCard(eqArray[5]) },
+      WeaponLEq: { cardNumber: returnCard(eqArray[1]) },
+      Hero: { cardNumber: returnCard(eqArray[0]) },
+      WeaponREq: { cardNumber: '' },
+      Health: 20,
+      ActionPoints: 0,
+      PitchRemaining: 0
+    });
+  } else {
+    return (result = {
+      HeadEq: { cardNumber: returnCard(eqArray[3]) },
+      ChestEq: { cardNumber: returnCard(eqArray[4]) },
+      GlovesEq: { cardNumber: returnCard(eqArray[5]) },
+      FeetEq: { cardNumber: returnCard(eqArray[6]) },
+      WeaponLEq: { cardNumber: returnCard(eqArray[1]) },
+      Hero: { cardNumber: returnCard(eqArray[0]) },
+      WeaponREq: { cardNumber: returnCard(eqArray[2]) },
+      Health: 20,
+      ActionPoints: 0,
+      PitchRemaining: 0
+    });
+  }
 }
