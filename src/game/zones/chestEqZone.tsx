@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../app/store';
 import { Displayrow } from '../../interface/displayrow';
 import { CardDisplay } from '../elements/card';
+import styles from './cardzone.module.css';
 
 export function ChestEqZone(prop: Displayrow) {
   let cardToDisplay;
@@ -16,7 +17,7 @@ export function ChestEqZone(prop: Displayrow) {
     );
   }
   return (
-    <div className={'chestZone singleCardZone ' + prop.DisplayRow}>
+    <div className={styles.chestZone}>
       <CardDisplay card={cardToDisplay} />
     </div>
   );

@@ -74,61 +74,11 @@
   align-items: center;
 }
 
-.singleCardZone {
-  position: relative;
-  display: grid;
-  place-items: center;
-}
-
-.singleCardZone::before {
-  content: '';
-  display: block;
-}
-
-.singleCardZone > img {
-  grid-area: 1 / 1 / 2 / 2;
-  border-radius: 5%;
-  padding: 0fr;
-  width: 90%;
-  height: auto;
-  object-fit: contain;
-  filter: drop-shadow(0.1rem 0.1rem 0.1rem black);
-}
-
-.singleCardZone > .cardDisplay {
-  position: relative;
-  grid-area: 1 / 1 / 2 / 2;
-  padding: 0fr;
-  height: auto;
-  object-fit: contain;
-  filter: drop-shadow(0.1rem 0.1rem 0.1rem black);
-}
-
-.cardDisplay > img {
-  object-fit: contain;
-  width: 90%;
-  height: auto;
-  border-radius: 5%;
-}
-
-.middleRow {
-  grid-row-start: 2;
-  grid-row-end: 2;
-  display: grid;
-  text-align: center;
-}
-
 .bottomRow {
   grid-row-start: 3;
   grid-row-end: 3;
   display: grid;
   text-align: center;
-}
-
-.hatZone,
-.feetZone {
-  grid-column-start: 1;
-  grid-column-end: 2;
 }
 
 .permanentZone {
@@ -161,32 +111,6 @@
   grid-column-end: 8;
   background: rgba(50, 50, 50, 0.5);
   color: white;
-}
-
-.chestZone {
-  grid-column-start: 1;
-  grid-column-end: 2;
-}
-
-.glovesZone {
-  place-self: start;
-  grid-column-start: 2;
-  grid-column-end: 3;
-}
-
-.weaponLZone {
-  grid-column-start: 3;
-  grid-column-end: 4;
-}
-
-.heroZone {
-  grid-column-start: 4;
-  grid-column-end: 5;
-}
-
-.weaponRZone {
-  grid-column-start: 5;
-  grid-column-end: 6;
 }
 
 .pitchZone {

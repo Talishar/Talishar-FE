@@ -1,5 +1,6 @@
 import React from 'react';
 import { Card } from '../../features/cardSlice';
+import styles from './card.module.css';
 
 export interface CardProp {
   card?: Card;
@@ -18,9 +19,8 @@ export function CardDisplay(prop: CardProp) {
   sectionStyle = {
     backgroundImage: 'url(' + { eqImg } + ')'
   };
-  const classes = 'cardDisplay';
   return (
-    <div className={classes} style={sectionStyle}>
+    <div className={styles.card} style={sectionStyle}>
       <img src={eqImg} />
     </div>
   );
