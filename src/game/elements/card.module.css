@@ -1,10 +1,10 @@
 .card {
-  position: absolute;
   padding: 0fr;
   height: 110px;
   width: 110px;
   object-fit: contain;
   filter: drop-shadow(0.1rem 0.1rem 0.1rem black);
+  position: relative;
 }
 
 img {

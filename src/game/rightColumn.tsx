@@ -1,10 +1,11 @@
 import React from 'react';
+import { Menu } from './elements/menu';
 import styles from './rightColumn.module.css';
 
 export function RightColumn() {
   return (
     <div className={styles.rightColumn}>
-      <div>Menu and icons</div>
+      <Menu />
       <div>Turn Number</div>
       <div>Last Card</div>
       <div>
