@@ -11,7 +11,7 @@
   position: absolute;
   top: 50px;
   height: 330px;
-  width: 1024px;
+  width: 1055px;
   border-radius: 10px;
   padding: 10px;
   background-image: url('https://source.unsplash.com/random');
@@ -23,7 +23,7 @@
   position: absolute;
   top: 400px;
   height: 140px;
-  width: 1024px;
+  width: 1055px;
   padding: 10px;
   background-image: url('https://source.unsplash.com/random/1920x1080');
   border-radius: 10px;
@@ -39,7 +39,7 @@
   position: absolute;
   top: 570px;
   height: 330px;
-  width: 1024px;
+  width: 1055px;
   border-radius: 10px;
   padding: 10px;
   background-image: url('https://source.unsplash.com/random/1024x768');
@@ -48,9 +48,9 @@
   background-size: cover;
 }
 
-.playerBoard {
+/* .playerBoard {
   display: flex;
   flex-flow: column nowrap;
   height: 30vh;
   gap: 10px;
-}
+} */

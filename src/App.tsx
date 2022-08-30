@@ -6,12 +6,24 @@ import { LeftColumn } from './game/leftColumn';
 import { RightColumn } from './game/rightColumn';
 import { HandZone } from './game/zones/handZone';
 
+const maxWidth = 1370;
+const maxHeight = 970;
+
 function App() {
   const [dimension, setDimension] = React.useState(1.0);
 
   React.useEffect(() => {
     function handleResize() {
-      setDimension(window.innerHeight / 970);
+      let ratio = 0;
+      if (
+        window.innerHeight / maxHeight <
+        (window.innerWidth - 75) / maxWidth
+      ) {
+        ratio = window.innerHeight / maxHeight;
+      } else {
+        ratio = (window.innerWidth - 75) / maxWidth;
+      }
+      setDimension(ratio);
     }
     window.addEventListener('resize', handleResize);
     handleResize();
