@@ -31,7 +31,29 @@ const initialState: GameState = {
     WeaponREq: { cardNumber: 'CRU049' },
     Health: 20,
     ActionPoints: 0,
-    PitchRemaining: 0
+    PitchRemaining: 0,
+    Hand: [
+      {
+        cardNumber: 'WTR101'
+      },
+      {
+        cardNumber: 'WTR100'
+      },
+      {
+        cardNumber: 'WTR104'
+      },
+      {
+        cardNumber: 'CRU073'
+      }
+    ],
+    Arsenal: [
+      {
+        cardNumber: 'UPR161'
+      },
+      {
+        cardNumber: 'UPR161'
+      }
+    ]
   },
   playerTwo: {
     // AI or opposing player

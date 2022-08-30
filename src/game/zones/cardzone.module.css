@@ -30,7 +30,7 @@
 
 .weaponRZone {
   position: absolute;
-  right: 450px;
+  right: 340px;
 }
 
 .permanentsZone {
@@ -105,6 +105,9 @@
   right: 250px;
   border-radius: 10px;
   display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  gap: 10px;
   justify-content: center;
   align-items: center;
   background: rgba(50, 50, 50, 0.5);

@@ -3,18 +3,31 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../app/store';
 import { Displayrow } from '../../interface/displayrow';
 import { CardDisplay } from '../elements/card';
+import { Card } from '../../features/cardSlice';
 import styles from './cardzone.module.css';
 
 export function ArsenalZone(prop: Displayrow) {
-  // let cardToDisplay;
-  // if (prop.isPlayer) {
-  //   cardToDisplay = useSelector(
-  //     (state: RootState) => state.game.playerOne.Hero
-  //   );
-  // } else {
-  //   cardToDisplay = useSelector(
-  //     (state: RootState) => state.game.playerTwo.Hero
-  //   );
-  // }
-  return <div className={styles.arsenalZone}>Arsenal</div>;
+  let arsenalCards: Card[] | undefined;
+
+  if (prop.isPlayer) {
+    arsenalCards = useSelector(
+      (state: RootState) => state.game.playerOne.Arsenal
+    ) as Card[];
+  } else {
+    arsenalCards = useSelector(
+      (state: RootState) => state.game.playerTwo.Arsenal
+    ) as Card[];
+  }
+
+  if (arsenalCards === undefined) {
+    return <div className={styles.arsenalZone}>Arsenal</div>;
+  }
+
+  return (
+    <div className={styles.arsenalZone}>
+      {arsenalCards.map((card: Card, index) => {
+        return <CardDisplay card={card} key={index} />;
+      })}
+    </div>
+  );
 }

@@ -11,4 +11,6 @@ export interface Player {
   Health?: number;
   ActionPoints?: number;
   PitchRemaining?: number;
+  Hand?: Card[];
+  Arsenal?: Card[];
 }
