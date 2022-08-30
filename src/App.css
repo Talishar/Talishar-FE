@@ -21,13 +21,6 @@ body {
   justify-content: center;
 }
 
-.topRow {
-  grid-row-start: 1;
-  grid-row-end: 1;
-  display: grid;
-  text-align: center;
-}
-
 .cardStackZone {
   width: 90%;
   height: 100%;
@@ -37,13 +30,6 @@ body {
   align-items: center;
 }
 
-.bottomRow {
-  grid-row-start: 3;
-  grid-row-end: 3;
-  display: grid;
-  text-align: center;
-}
-
 .permanentZone {
   grid-column-start: 2;
   grid-column-end: 7;
@@ -51,41 +37,27 @@ body {
   color: white;
 }
 
-.beforeArsenal {
-  grid-column-start: 2;
-  grid-column-end: 3;
-}
-
-.afterArsenal {
-  grid-column-start: 6;
-  grid-column-end: 7;
-}
-
 .arsenalZone {
-  grid-column-start: 3;
-  grid-column-end: 6;
+  flex-grow: 1;
   background: rgba(50, 50, 50, 0.5);
   color: white;
 }
 
 .graveyardZone,
 .banishedZone {
-  grid-column-start: 7;
-  grid-column-end: 8;
+  flex-grow: 1;
   background: rgba(50, 50, 50, 0.5);
   color: white;
 }
 
 .pitchZone {
-  grid-column-start: 6;
-  grid-column-end: 7;
+  flex-grow: 1;
   background: rgba(50, 50, 50, 0.5);
   color: white;
 }
 
 .deckZone {
-  grid-column-start: 7;
-  grid-column-end: 8;
+  flex-grow: 1;
   background: rgba(50, 50, 50, 0.5);
   color: white;
 }

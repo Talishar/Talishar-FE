@@ -1,0 +1,20 @@
+.topRow {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  align-items: stretch;
+}
+
+.bottomRow {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  align-items: stretch;
+}
+
+.middleRow {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  align-items: stretch;
+}

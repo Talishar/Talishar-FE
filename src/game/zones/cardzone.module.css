@@ -1,37 +1,33 @@
 .hatZone,
 .feetZone {
   text-align: center;
-  grid-column-start: 1;
-  grid-column-end: 2;
+  flex-grow: 1;
+  width: 10vh;
 }
 
 .chestZone {
   text-align: center;
-  grid-column-start: 1;
-  grid-column-end: 2;
+  flex-grow: 1;
+  width: 10vh;
 }
 
 .glovesZone {
   text-align: left;
   place-self: start;
-  grid-column-start: 2;
-  grid-column-end: 3;
+  flex-grow: 1;
+  width: 10vh;
 }
 
 .weaponLZone {
   text-align: right;
-  grid-column-start: 3;
-  grid-column-end: 4;
+  flex-grow: 1;
 }
 
 .heroZone {
-  text-align: center;
-  grid-column-start: 4;
-  grid-column-end: 5;
+  flex-grow: 1;
 }
 
 .weaponRZone {
   text-align: left;
-  grid-column-start: 5;
-  grid-column-end: 6;
+  flex-grow: 1;
 }
