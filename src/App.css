@@ -1,3 +1,7 @@
+:root {
+  --aspect: 1920px;
+}
+
 html,
 body {
   padding: 0;
@@ -25,7 +29,7 @@ body {
   margin: auto;
   height: 100%;
   width: 100%;
-  max-width: 1520px;
+  max-width: var(--aspect);
 }
 
 .gameZone {
