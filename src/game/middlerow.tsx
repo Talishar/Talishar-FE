@@ -6,6 +6,8 @@ import { HeroZone } from './zones/heroZone';
 import { WeaponLZone } from './zones/weaponLZone';
 import { WeaponRZone } from './zones/weaponRZone';
 import styles from './rows.module.css';
+import { DeckZone } from './zones/deckZone';
+import { PitchZone } from './zones/pitchZone';
 
 export function MiddleRow(props: Player) {
   return (
@@ -15,8 +17,8 @@ export function MiddleRow(props: Player) {
       <WeaponLZone DisplayRow="middleRow" isPlayer={props.isPlayer} />
       <HeroZone DisplayRow="middleRow" isPlayer={props.isPlayer} />
       <WeaponRZone DisplayRow="middleRow" isPlayer={props.isPlayer} />
-      <div className="pitchZone middleRow cardStackZone">Pitch</div>
-      <div className="deckZone middleRow cardStackZone">Deck</div>
+      <PitchZone DisplayRow="middleRow" isPlayer={props.isPlayer} />
+      <DeckZone DisplayRow="middleRow" isPlayer={props.isPlayer} />
     </div>
   );
 }

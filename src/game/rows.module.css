@@ -1,20 +1,29 @@
 .topRow {
+  position: absolute;
+  top: 5px;
   display: flex;
+  height: 110px;
   justify-content: space-between;
-  width: 100%;
+  width: 1024px;
   align-items: stretch;
 }
 
 .bottomRow {
+  position: absolute;
+  bottom: 5px;
   display: flex;
   justify-content: space-between;
-  width: 100%;
+  width: 1024px;
+  height: 110px;
   align-items: stretch;
 }
 
 .middleRow {
+  position: absolute;
+  top: 120px;
+  height: 110px;
   display: flex;
   justify-content: space-between;
-  width: 100%;
+  width: 1024px;
   align-items: stretch;
 }

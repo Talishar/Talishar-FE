@@ -1,4 +1,9 @@
 .leftColumn {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  bottom: 0px;
+  width: 100px;
   max-width: 10%;
   height: 100vh;
 }
