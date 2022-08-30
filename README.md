@@ -8,18 +8,25 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## Requirements:
 
-[Node.js](https://nodejs.org/en/) installed.
+[Node.js](https://nodejs.org/en/) installed. (latest version!)
 
-[Yarn](https://yarnpkg.com/) installed. Assuming you have `npm` installed:
-`npm install --global yarn`
+[Yarn](https://yarnpkg.com/) installed.
+`corepack enable`
+if there is some error with windows, you'll need to change permissions on your nodejs folder to allow all users to modify.
 
 clone the repo (duh)
 
-then inside the repo
+then inside the repo:
 `yarn install`
 and then:
 `yarn start`
-then you should be in developer mode.
+then you should be in developer mode. Happy coding!
+
+## How it's organised:
+Short answer is it isn't really. If you have a better idea on how to organise the files, please let me know.
+
+Otherwise try to keep everything as small as possible, Reacty-containers. And pulling data from Redux etc.
+
 
 ## Available Scripts
 
