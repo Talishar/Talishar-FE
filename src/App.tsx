@@ -17,8 +17,6 @@ function App() {
     handleResize();
   }, []);
 
-  console.log(dimension);
-
   return (
     <div className="centering">
       <GameStateHandler />

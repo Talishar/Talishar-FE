@@ -63,9 +63,9 @@ export const nextTurn = createAsyncThunk(
       headers: {}
     });
     const data = await response.text();
-    console.log(data);
+    // console.log(data);
     const gameState: GameState = ParseGameState(data);
-    console.log(gameState);
+    // console.log(gameState);
     return gameState;
   }
 );
