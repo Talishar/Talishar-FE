@@ -15,6 +15,8 @@ body {
 
 .app {
   position: relative;
+  display: flex;
+  flex-flow: row nowrap;
   margin: auto;
   height: 100%;
   width: 100%;
@@ -22,12 +24,9 @@ body {
 }
 
 .gameZone {
-  position: absolute;
   transform-origin: top left;
-  top: 0px;
-  bottom: 0px;
-  left: 100px;
-  right: 200px;
+  order: 2;
+  width: 100%;
 }
 
 .cardStackZone {

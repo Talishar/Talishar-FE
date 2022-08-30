@@ -1,7 +1,7 @@
 .handZone {
-  position: absolute;
+  position: relative;
   height: 45px;
-  width: 1055px;
+  width: 100%;
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
@@ -10,9 +10,9 @@
 }
 
 .isPlayer {
-  top: 925px;
+  top: 2vh;
 }
 
 .isOpponent {
-  top: -65px;
+  top: -7vh;
 }

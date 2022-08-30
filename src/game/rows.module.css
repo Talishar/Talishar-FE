@@ -1,29 +1,50 @@
 .topRow {
-  position: absolute;
-  top: 5px;
   display: flex;
-  height: 110px;
+  height: 10vh;
+  gap: 1vh;
   justify-content: space-between;
-  width: 1055px;
-  align-items: stretch;
+  width: 100%;
+  padding-bottom: 1vh;
 }
 
 .bottomRow {
-  position: absolute;
-  bottom: 5px;
   display: flex;
   justify-content: space-between;
-  width: 1055px;
-  height: 110px;
+  width: 100%;
+  gap: 1vh;
+  height: 10vh;
   align-items: stretch;
 }
 
 .middleRow {
-  position: absolute;
   top: 120px;
-  height: 110px;
+  height: 10vh;
   display: flex;
   justify-content: space-between;
-  width: 1055px;
+  width: 100%;
+  gap: 1vh;
   align-items: stretch;
+  padding-bottom: 1vh;
+}
+
+.groupL {
+  height: 10vh;
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: row;
+}
+
+.groupM {
+  height: 10vh;
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+}
+
+.groupR {
+  height: 10vh;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-direction: row;
 }

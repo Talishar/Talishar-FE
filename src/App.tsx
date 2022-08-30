@@ -36,7 +36,7 @@ function App() {
         <LeftColumn />
         <div
           className="gameZone"
-          style={{ transform: 'scale(' + dimension + ')' }}
+          // style={{ transform: 'scale(' + dimension + ')' }}
         >
           <HandZone isPlayer={false} />
           <Board />

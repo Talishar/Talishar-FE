@@ -1,43 +1,44 @@
 .hatZone,
 .feetZone {
-  position: absolute;
+  position: relative;
   left: 0px;
   border-radius: 10px;
+  flex: 0 0 10vh;
 }
 
 .chestZone {
-  position: absolute;
+  position: relative;
   left: 0px;
+  flex: 0 0 10vh;
 }
 
 .glovesZone {
-  position: absolute;
-  left: 115px;
+  position: relative;
+  left: 1vh;
   text-align: left;
   place-self: start;
-  width: 10vh;
+  flex: 0 0 10vh;
 }
 
 .weaponLZone {
-  position: absolute;
-  left: 355px;
+  flex: 0 0 10vh;
+  right: 1vh;
 }
 
 .heroZone {
-  position: absolute;
-  left: 472px;
+  flex: 0 0 10vh;
+  margin-left: 1vh;
+  margin-right: 1vh;
 }
 
 .weaponRZone {
-  position: absolute;
-  right: 357px;
+  flex: 0 0 10vh;
 }
 
 .permanentsZone {
-  position: absolute;
-  height: 110px;
-  left: 115px;
-  right: 115px;
+  position: relative;
+  height: 10vh;
+  width: 100%;
   border-radius: 10px;
   display: flex;
   justify-content: center;
@@ -47,10 +48,10 @@
 }
 
 .graveyardZone {
-  position: absolute;
-  height: 110px;
-  width: 110px;
-  right: 0px;
+  position: relative;
+  height: 10vh;
+  width: 10vh;
+  flex: 0 0 10vh;
   border-radius: 10px;
   display: flex;
   justify-content: center;
@@ -60,9 +61,9 @@
 }
 
 .deckZone {
-  position: absolute;
-  height: 110px;
-  width: 110px;
+  order: 5;
+  height: 10vh;
+  width: 10vh;
   right: 0px;
   border-radius: 10px;
   display: flex;
@@ -73,10 +74,10 @@
 }
 
 .pitchZone {
-  position: absolute;
-  height: 110px;
-  width: 110px;
-  right: 115px;
+  order: 4;
+  height: 10vh;
+  width: 10vh;
+  margin-right: 1vh;
   border-radius: 10px;
   display: flex;
   justify-content: center;
@@ -86,9 +87,9 @@
 }
 
 .banishZone {
-  position: absolute;
-  height: 110px;
-  width: 110px;
+  position: relative;
+  height: 10vh;
+  width: 10vh;
   right: 0px;
   border-radius: 10px;
   display: flex;
@@ -99,10 +100,9 @@
 }
 
 .arsenalZone {
-  position: absolute;
-  height: 110px;
-  left: 250px;
-  right: 250px;
+  position: relative;
+  height: 10vh;
+  width: 50%;
   border-radius: 10px;
   display: flex;
   flex-direction: row;

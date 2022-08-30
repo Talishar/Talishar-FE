@@ -8,40 +8,41 @@
 }
 
 .opponentPlaymat {
-  position: absolute;
-  top: 50px;
-  height: 330px;
-  width: 1055px;
+  position: relative;
+  top: -1vh;
+  height: 32vh;
+  margin: auto;
+  width: 95%;
   border-radius: 10px;
-  padding: 10px;
+  padding: 1vh;
   background-image: url('https://source.unsplash.com/random');
   background-repeat: no-repeat;
   background-size: cover;
 }
 
 .combatChain {
-  position: absolute;
-  top: 400px;
-  height: 140px;
-  width: 1055px;
-  padding: 10px;
+  position: relative;
+  height: 17vh;
+  margin: auto;
+  width: 95%;
+  padding: 1vh;
   background-image: url('https://source.unsplash.com/random/1920x1080');
   border-radius: 10px;
   text-align: center;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 5px 0px 5px 0px;
   color: white;
 }
 
 .playerPlaymat {
-  position: absolute;
-  top: 570px;
-  height: 330px;
-  width: 1055px;
+  top: 1vh;
+  position: relative;
+  height: 32vh;
+  margin: auto;
+  width: 95%;
+  padding: 1vh;
   border-radius: 10px;
-  padding: 10px;
   background-image: url('https://source.unsplash.com/random/1024x768');
   background-repeat: no-repeat;
   background-size: auto;

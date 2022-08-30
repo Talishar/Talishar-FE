@@ -1,18 +1,18 @@
 .card {
-  padding: 0fr;
-  height: 110px;
-  width: 110px;
+  position: relative;
+  height: 10vh;
+  width: auto;
   object-fit: contain;
   filter: drop-shadow(0.1rem 0.1rem 0.1rem black);
   position: relative;
 }
 
 img {
-  position: absolute;
+  position: relative;
   left: 0px;
   top: 0px;
   object-fit: contain;
-  width: 110px;
-  height: 110px;
+  width: 10vh;
+  height: 10vh;
   border-radius: 5%;
 }
