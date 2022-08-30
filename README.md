@@ -1,18 +1,20 @@
 # Getting started with FaB-Online-React-Client
 
-This is a new front end client for fleshandbloodonline.com - completely separate from the back end. The players will be using this app to connect to the servers eventually.
+This is a new front end client for fleshandbloodonline.com - completely separate from the back end. The players will be using this app to connect to the servers eventually, we hope.
 
 ## Project
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app), using the [Redux](https://redux.js.org/) and [Redux Toolkit](https://redux-toolkit.js.org/) TS template.
 
-## Requirements:
+## Requirements / How to install:
 
-[Node.js](https://nodejs.org/en/) installed. (latest version!)
+Github and git installed first.
+[Node.js](https://nodejs.org/en/) installed. (latest version, 16.0+)
 
-[Yarn](https://yarnpkg.com/) installed.
+Latest [Yarn](https://yarnpkg.com/) installed, how to:
+enable node corepack:
 `corepack enable`
-if there is some error with windows, you'll need to change permissions on your nodejs folder to allow all users to modify.
+if there is some error with windows, you'll need to change permissions on your nodejs folder to allow all users to modify, and it'll make the corepack folder there.
 
 clone the repo (duh)
 
@@ -22,11 +24,17 @@ and then:
 `yarn start`
 then you should be in developer mode. Happy coding!
 
+You'll probably need to `yarn install` every time you switch branches to make sure dependencies and libraries are up to date.
+
+## Optional happy fun things:
+
+Configure Prettier / ES Lint in your editor of choice.
+Helps to maintain a consistent 'code-style' which I think is helpful?
+
 ## How it's organised:
 Short answer is it isn't really. If you have a better idea on how to organise the files, please let me know.
 
-Otherwise try to keep everything as small as possible, Reacty-containers. And pulling data from Redux etc.
-
+Otherwise try to keep everything as small as possible, Reacty-containers. And pulling data from Redux etc. CSS modules help to keep stuff locally scoped.
 
 ## Available Scripts
 
