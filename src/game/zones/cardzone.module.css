@@ -1,33 +1,112 @@
 .hatZone,
 .feetZone {
-  text-align: center;
-  flex-grow: 1;
-  width: 10vh;
+  position: absolute;
+  left: 0px;
+  border-radius: 10px;
 }
 
 .chestZone {
-  text-align: center;
-  flex-grow: 1;
-  width: 10vh;
+  position: absolute;
+  left: 0px;
 }
 
 .glovesZone {
+  position: absolute;
+  left: 115px;
   text-align: left;
   place-self: start;
-  flex-grow: 1;
   width: 10vh;
 }
 
 .weaponLZone {
-  text-align: right;
-  flex-grow: 1;
+  position: absolute;
+  left: 340px;
 }
 
 .heroZone {
-  flex-grow: 1;
+  position: absolute;
+  left: 457px;
 }
 
 .weaponRZone {
-  text-align: left;
-  flex-grow: 1;
+  position: absolute;
+  right: 450px;
+}
+
+.permanentsZone {
+  position: absolute;
+  height: 110px;
+  left: 115px;
+  right: 115px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(50, 50, 50, 0.5);
+  color: white;
+}
+
+.graveyardZone {
+  position: absolute;
+  height: 110px;
+  width: 110px;
+  right: 0px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(50, 50, 50, 0.5);
+  color: white;
+}
+
+.deckZone {
+  position: absolute;
+  height: 110px;
+  width: 110px;
+  right: 0px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(50, 50, 50, 0.5);
+  color: white;
+}
+
+.pitchZone {
+  position: absolute;
+  height: 110px;
+  width: 110px;
+  right: 115px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(50, 50, 50, 0.5);
+  color: white;
+}
+
+.banishZone {
+  position: absolute;
+  height: 110px;
+  width: 110px;
+  right: 0px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(50, 50, 50, 0.5);
+  color: white;
+}
+
+.arsenalZone {
+  position: absolute;
+  height: 110px;
+  left: 250px;
+  right: 250px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(50, 50, 50, 0.5);
+  color: white;
 }

@@ -3,22 +3,31 @@ body {
 }
 
 .centering {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   display: flex;
-  margin: auto;
+  align-items: center;
+  justify-content: center;
 }
 
 .app {
-  display: flex;
-  flex-direction: row;
+  position: relative;
   margin: auto;
+  height: 100%;
+  width: 100%;
+  max-width: 1350px;
 }
 
 .gameZone {
-  max-width: 70%;
-  display: flex;
-  flex-direction: column;
-  flex-wrap: nowrap;
-  justify-content: center;
+  position: absolute;
+  transform-origin: top left;
+  top: 0px;
+  bottom: 0px;
+  left: 100px;
+  right: 200px;
 }
 
 .cardStackZone {

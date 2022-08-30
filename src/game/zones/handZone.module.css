@@ -1,0 +1,13 @@
+.handZone {
+  position: absolute;
+  height: 45px;
+  width: 1044px;
+}
+
+.isPlayer {
+  top: 925px;
+}
+
+.isOpponent {
+  top: 0px;
+}

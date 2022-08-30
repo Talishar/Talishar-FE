@@ -4,28 +4,14 @@ import './App.css';
 import { GameStateHandler } from './app/gameStateHandler';
 import { LeftColumn } from './game/leftColumn';
 import { RightColumn } from './game/rightColumn';
-import { Hand } from './game/hand';
+import { HandZone } from './game/zones/handZone';
 
 function App() {
-  const [dimension, setDimension] = React.useState({
-    height: window.innerHeight,
-    width: window.innerWidth,
-    maxDimension:
-      window.innerHeight < window.innerWidth
-        ? window.innerHeight
-        : window.innerWidth
-  });
+  const [dimension, setDimension] = React.useState(1.0);
 
   React.useEffect(() => {
     function handleResize() {
-      setDimension({
-        height: window.innerHeight,
-        width: window.innerWidth,
-        maxDimension:
-          window.innerHeight < window.innerWidth
-            ? window.innerHeight
-            : window.innerWidth
-      });
+      setDimension(window.innerHeight / 970);
     }
     window.addEventListener('resize', handleResize);
     handleResize();
@@ -36,10 +22,13 @@ function App() {
       <GameStateHandler />
       <div className="app">
         <LeftColumn />
-        <div className="gameZone" style={{ maxHeight: dimension.height }}>
-          <Hand isPlayer={false} />
-          <Board dimension={dimension.maxDimension} />
-          <Hand isPlayer={true} />
+        <div
+          className="gameZone"
+          style={{ transform: 'scale(' + dimension + ')' }}
+        >
+          <HandZone isPlayer={false} />
+          <Board />
+          <HandZone isPlayer={true} />
         </div>
         <RightColumn />
       </div>

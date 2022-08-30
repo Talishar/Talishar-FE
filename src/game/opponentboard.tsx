@@ -6,10 +6,7 @@ import styles from './board.module.css';
 
 export function OpponentBoard() {
   return (
-    <div
-      className={styles.opponentPlaymat}
-      style={{ maxHeight: window.innerHeight * 0.35 }}
-    >
+    <div className={styles.opponentPlaymat}>
       {/* Customise the playmat here */}
       <div className={styles.playerBoard}>
         <BottomRow isPlayer={false} />

@@ -1,4 +1,9 @@
 .rightColumn {
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  bottom: 0px;
+  width: 200px;
   max-width: 20%;
   display: flex;
   flex-direction: column;
@@ -6,6 +11,5 @@
   justify-content: space-between;
   align-items: stretch;
   align-content: stretch;
-  height: 100vh;
   background-color: red;
 }

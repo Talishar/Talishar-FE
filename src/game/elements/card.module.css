@@ -1,16 +1,18 @@
 .card {
-  position: relative;
-  grid-area: 1 / 1 / 2 / 2;
+  position: absolute;
   padding: 0fr;
-  height: 10vh;
-  width: 10vh;
+  height: 110px;
+  width: 110px;
   object-fit: contain;
   filter: drop-shadow(0.1rem 0.1rem 0.1rem black);
 }
 
 img {
+  position: absolute;
+  left: 0px;
+  top: 0px;
   object-fit: contain;
-  width: 90%;
-  height: 10vh;
+  width: 110px;
+  height: 110px;
   border-radius: 5%;
 }

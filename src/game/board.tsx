@@ -8,7 +8,7 @@ export interface playAreaDimensions {
   dimension: number;
 }
 
-export function Board(dimension: playAreaDimensions) {
+export function Board() {
   return (
     <div className={styles.gameBoard}>
       <OpponentBoard />

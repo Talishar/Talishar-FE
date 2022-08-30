@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../app/store';
 import { Displayrow } from '../../interface/displayrow';
 import { CardDisplay } from '../elements/card';
+import styles from './cardzone.module.css';
 
 export function HeadEqZone(prop: Displayrow) {
   let cardToDisplay;
@@ -17,7 +18,7 @@ export function HeadEqZone(prop: Displayrow) {
   }
 
   return (
-    <div className={'hatZone singleCardZone ' + prop.DisplayRow}>
+    <div className={styles.hatZone}>
       <CardDisplay card={cardToDisplay} />
     </div>
   );
