@@ -2,6 +2,11 @@
   position: absolute;
   height: 45px;
   width: 1044px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: center;
+  gap: 10px;
 }
 
 .isPlayer {
@@ -9,5 +14,5 @@
 }
 
 .isOpponent {
-  top: 0px;
+  top: -65px;
 }

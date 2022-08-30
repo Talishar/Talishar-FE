@@ -49,9 +49,6 @@ const initialState: GameState = {
     Arsenal: [
       {
         cardNumber: 'UPR161'
-      },
-      {
-        cardNumber: 'UPR161'
       }
     ]
   },
@@ -66,7 +63,26 @@ const initialState: GameState = {
     WeaponREq: { cardNumber: 'WTR003' },
     Health: 20,
     ActionPoints: 0,
-    PitchRemaining: 0
+    PitchRemaining: 0,
+    Hand: [
+      {
+        cardNumber: 'CBBlack'
+      },
+      {
+        cardNumber: 'CBBlack'
+      },
+      {
+        cardNumber: 'CBBlack'
+      },
+      {
+        cardNumber: 'CBBlack'
+      }
+    ],
+    Arsenal: [
+      {
+        cardNumber: 'CBBlack'
+      }
+    ]
   }
 };
 
