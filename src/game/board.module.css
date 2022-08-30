@@ -1,4 +1,9 @@
 .gameBoard {
+  position: relative;
+  top: 20px;
+  bottom: 20px;
+  left: 100px;
+  right: 200px;
   justify-self: center;
   display: flex;
   flex-direction: column;
@@ -8,6 +13,7 @@
 }
 
 .opponentPlaymat {
+  flex-grow: 3;
   border-radius: 10px;
   padding: 10px;
   background-image: url('https://source.unsplash.com/random');
@@ -24,9 +30,11 @@
   justify-content: center;
   margin: 5px 0px 5px 0px;
   color: white;
+  flex-grow: 1;
 }
 
 .playerPlaymat {
+  flex-grow: 3;
   border-radius: 10px;
   padding: 10px;
   background-image: url('https://source.unsplash.com/random/1024x768');

@@ -10,10 +10,7 @@ export interface playAreaDimensions {
 
 export function Board(dimension: playAreaDimensions) {
   return (
-    <div
-      className={styles.gameBoard}
-      style={{ height: dimension.dimension, width: dimension.dimension }}
-    >
+    <div className={styles.gameBoard}>
       <OpponentBoard />
       <CombatChain />
       <PlayerBoard />

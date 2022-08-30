@@ -3,7 +3,6 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../app/store';
 import { Displayrow } from '../../interface/displayrow';
 import { CardDisplay } from '../elements/card';
-import styles from './cardzone.module.css';
 
 export function HeadEqZone(prop: Displayrow) {
   let cardToDisplay;
@@ -13,12 +12,12 @@ export function HeadEqZone(prop: Displayrow) {
     );
   } else {
     cardToDisplay = useSelector(
-      (state: RootState) => state.game.playerTwo.HeadEq
+      (state: RootState) => state.game.playerOne.HeadEq
     );
   }
 
   return (
-    <div className={styles.hatZone}>
+    <div className={'hatZone singleCardZone ' + prop.DisplayRow}>
       <CardDisplay card={cardToDisplay} />
     </div>
   );

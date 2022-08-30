@@ -5,9 +5,11 @@ import { BottomRow } from './bottomrow';
 import styles from './board.module.css';
 
 export function OpponentBoard() {
-  const height = (window.innerHeight / 8) * 3;
   return (
-    <div className={styles.opponentPlaymat} style={{ height: height }}>
+    <div
+      className={styles.opponentPlaymat}
+      style={{ maxHeight: window.innerHeight * 0.35 }}
+    >
       {/* Customise the playmat here */}
       <div className={styles.playerBoard}>
         <BottomRow isPlayer={false} />

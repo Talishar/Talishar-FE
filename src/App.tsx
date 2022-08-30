@@ -2,13 +2,16 @@ import React from 'react';
 import { Board } from './game/board';
 import './App.css';
 import { GameStateHandler } from './app/gameStateHandler';
+import { LeftColumn } from './game/leftColumn';
+import { RightColumn } from './game/rightColumn';
+import { Hand } from './game/hand';
 
 function App() {
   const [dimension, setDimension] = React.useState({
     height: window.innerHeight,
     width: window.innerWidth,
     maxDimension:
-      window.innerHeight > window.innerWidth
+      window.innerHeight < window.innerWidth
         ? window.innerHeight
         : window.innerWidth
   });
@@ -29,18 +32,17 @@ function App() {
   }, []);
 
   return (
-    <div className="App">
+    <div className="centering">
       <GameStateHandler />
-      <div className="leftCol"></div>
-      <div
-        style={{
-          height: dimension.maxDimension,
-          width: dimension.maxDimension
-        }}
-      >
-        <Board dimension={dimension.maxDimension} />
+      <div className="app">
+        <LeftColumn />
+        <div className="gameZone" style={{ maxHeight: dimension.height }}>
+          <Hand isPlayer={false} />
+          <Board dimension={dimension.maxDimension} />
+          <Hand isPlayer={true} />
+        </div>
+        <RightColumn />
       </div>
-      <div className="rightCol"></div>
     </div>
   );
 }
