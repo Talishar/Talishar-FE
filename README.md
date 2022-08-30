@@ -1,6 +1,25 @@
-# Getting Started with Create React App
+# Getting started with FaB-Online-React-Client
+
+This is a new front end client for fleshandbloodonline.com - completely separate from the back end. The players will be using this app to connect to the servers eventually.
+
+## Project
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app), using the [Redux](https://redux.js.org/) and [Redux Toolkit](https://redux-toolkit.js.org/) TS template.
+
+## Requirements:
+
+[Node.js](https://nodejs.org/en/) installed.
+
+[Yarn](https://yarnpkg.com/) installed. Assuming you have `npm` installed:
+`npm install --global yarn`
+
+clone the repo (duh)
+
+then inside the repo
+`yarn install`
+and then:
+`yarn start`
+then you should be in developer mode.
 
 ## Available Scripts
 
