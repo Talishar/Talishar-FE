@@ -3,18 +3,33 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../app/store';
 import { Displayrow } from '../../interface/displayrow';
 import { CardDisplay } from '../elements/card';
+import { Card } from '../../features/cardSlice';
 import styles from './cardzone.module.css';
 
 export function GraveyardZone(prop: Displayrow) {
-  // let cardToDisplay;
-  // if (prop.isPlayer) {
-  //   cardToDisplay = useSelector(
-  //     (state: RootState) => state.game.playerOne.Hero
-  //   );
-  // } else {
-  //   cardToDisplay = useSelector(
-  //     (state: RootState) => state.game.playerTwo.Hero
-  //   );
-  // }
-  return <div className={styles.graveyardZone}>Graveyard</div>;
+  let graveyardZone: Card[] | undefined;
+
+  if (prop.isPlayer) {
+    graveyardZone = useSelector(
+      (state: RootState) => state.game.playerOne.Graveyard
+    );
+  } else {
+    graveyardZone = useSelector(
+      (state: RootState) => state.game.playerTwo.Graveyard
+    );
+  }
+
+  if (graveyardZone === undefined) {
+    return <div className={styles.graveyardZone}>Graveyard</div>;
+  }
+
+  const numInGraveyard = graveyardZone.length;
+  const cardToDisplay = graveyardZone[numInGraveyard - 1];
+
+  return (
+    <div className={styles.graveyardZone}>
+      <CardDisplay card={cardToDisplay} num={numInGraveyard} />
+      Graveyard
+    </div>
+  );
 }

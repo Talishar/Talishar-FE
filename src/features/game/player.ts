@@ -13,4 +13,8 @@ export interface Player {
   PitchRemaining?: number;
   Hand?: Card[];
   Arsenal?: Card[];
+  Banish?: Card[];
+  Graveyard?: Card[];
+  Pitch?: Card[];
+  DeckSize?: number;
 }

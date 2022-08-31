@@ -82,6 +82,14 @@ const initialState: GameState = {
       {
         cardNumber: 'CBBlack'
       }
+    ],
+    Banish: [
+      {
+        cardNumber: 'WTR104'
+      },
+      {
+        cardNumber: 'CRU073'
+      }
     ]
   }
 };
