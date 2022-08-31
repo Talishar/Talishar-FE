@@ -1,8 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../app/store';
-import { Displayrow } from '../../interface/displayrow';
-import { CardDisplay } from './card';
 import styles from './lastPlayed.module.css';
 
 export function LastPlayed() {
