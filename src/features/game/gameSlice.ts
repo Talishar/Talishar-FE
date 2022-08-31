@@ -1,11 +1,16 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { ParseGameState } from '../../app/parseGameState';
 import { Player } from './player';
+import { Card } from '../cardSlice';
+
 export interface GameInfo {
   gameID: number;
   playerID: number;
   authKey: string;
+  turnNo?: number;
+  lastPlayed?: Card;
 }
+
 export interface GameState {
   gameInfo: GameInfo;
   playerOne: Player;
@@ -20,6 +25,8 @@ const initialState: GameState = {
   },
   playerOne: {
     // human player
+    Name: 'LaustinSpayce',
+    IsVerified: true,
     HeadEq: { cardNumber: 'WTR079' },
     ChestEq: { cardNumber: 'WTR150' },
     GlovesEq: { cardNumber: 'UPR158' },
@@ -68,6 +75,7 @@ const initialState: GameState = {
   },
   playerTwo: {
     // AI or opposing player
+    Name: 'BigDumDum',
     HeadEq: { cardNumber: 'CRU006' },
     ChestEq: { cardNumber: 'WTR005' },
     GlovesEq: { cardNumber: 'WTR153' },

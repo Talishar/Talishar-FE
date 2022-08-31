@@ -1,0 +1,17 @@
+.playerName {
+  padding-left: 1vw;
+  margin-top: 0.5vh;
+  margin-bottom: 0.5vh;
+  margin-left: 0.5vw;
+  border-radius: 10px;
+  background-color: brown;
+  display: flex;
+  left: 0px;
+  align-self: flex-start;
+  height: 3vh;
+  color: wheat;
+  width: 20vw;
+  align-items: center;
+  justify-content: flex-start;
+  z-index: 2;
+}

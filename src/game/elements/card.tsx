@@ -33,7 +33,7 @@ export function CardDisplay(prop: CardProp) {
         onClick();
       }}
     >
-      <img src={eqImg} />
+      <img src={eqImg} className={styles.img} />
       {prop.num !== undefined && (
         <div className={styles.floatCover}>
           <div className={styles.number}>

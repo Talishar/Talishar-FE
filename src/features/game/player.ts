@@ -17,4 +17,6 @@ export interface Player {
   Graveyard?: Card[];
   Pitch?: Card[];
   DeckSize?: number;
+  Name?: string;
+  IsVerified?: boolean;
 }

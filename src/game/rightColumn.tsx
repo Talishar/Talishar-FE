@@ -1,18 +1,23 @@
 import React from 'react';
+import { LastPlayed } from './elements/lastPlayed';
 import { Menu } from './elements/menu';
+import { TurnNumber } from './elements/turnNumber';
 import styles from './rightColumn.module.css';
+import { ChatBox } from './elements/chatBox';
+import { PhaseTracker } from './elements/phaseTracker';
 
 export function RightColumn() {
   return (
     <div className={styles.rightColumn}>
-      <Menu />
-      <div>Turn Number</div>
-      <div>Last Card</div>
-      <div>
-        WHOSE TURN IS IT?
-        <div>Including special feature PASS and NEXT TURN</div>
+      <div className={styles.topGroup}>
+        <Menu />
+        <TurnNumber />
+        <LastPlayed />
+        <PhaseTracker />
       </div>
-      <div>THE CHAT BOX huzzah</div>
+      <div className={styles.bottomGroup}>
+        <ChatBox />
+      </div>
     </div>
   );
 }

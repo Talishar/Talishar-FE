@@ -13,3 +13,17 @@
   align-content: stretch;
   background-color: red;
 }
+
+.topGroup {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.bottomGroup {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}

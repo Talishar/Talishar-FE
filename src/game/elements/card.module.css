@@ -1,5 +1,6 @@
 .card {
-  position: relative;
+  position: absolute;
+  border-radius: 10px;
   height: 10vh;
   width: auto;
   object-fit: contain;
@@ -38,12 +39,11 @@
   color: black;
 }
 
-img {
+.img {
   position: relative;
-  left: 0px;
+  left: 2px;
   top: 0px;
   object-fit: contain;
-  width: 10vh;
   height: 10vh;
-  border-radius: 5%;
+  border-radius: 10px;
 }
