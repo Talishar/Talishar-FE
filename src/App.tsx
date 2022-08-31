@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Board } from './game/board';
 import './App.css';
 import { GameStateHandler } from './app/gameStateHandler';
@@ -6,38 +6,27 @@ import { LeftColumn } from './game/leftColumn';
 import { RightColumn } from './game/rightColumn';
 import { HandZone } from './game/zones/handZone';
 
-const maxWidth = 1370;
-const maxHeight = 970;
-
 function App() {
-  const [dimension, setDimension] = React.useState(1.0);
+  const [maxWidth, setMaxWidth] = useState(1920);
 
-  React.useEffect(() => {
-    function handleResize() {
-      let ratio = 0;
-      if (
-        window.innerHeight / maxHeight <
-        (window.innerWidth - 75) / maxWidth
-      ) {
-        ratio = window.innerHeight / maxHeight;
+  useEffect(() => {
+    const calculateRatio = () => {
+      if (window.innerHeight < window.innerWidth) {
+        setMaxWidth((window.innerHeight * 16) / 9);
       } else {
-        ratio = (window.innerWidth - 75) / maxWidth;
+        setMaxWidth(window.innerWidth);
       }
-      setDimension(ratio);
-    }
-    window.addEventListener('resize', handleResize);
-    handleResize();
+    };
+    window.addEventListener('resize', calculateRatio);
+    calculateRatio();
   }, []);
 
   return (
     <div className="centering">
       <GameStateHandler />
-      <div className="app">
+      <div className="app" style={{ maxWidth: maxWidth }}>
         <LeftColumn />
-        <div
-          className="gameZone"
-          style={{ transform: 'scale(' + dimension + ')' }}
-        >
+        <div className="gameZone">
           <HandZone isPlayer={false} />
           <Board />
           <HandZone isPlayer={true} />

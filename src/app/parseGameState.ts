@@ -4,9 +4,11 @@ export function ParseGameState(input: string) {
   const stringArray: string[] = input.toUpperCase().split('<BR>');
   // console.log(stringArray);
   const result: GameState = {
-    gameID: 0,
-    playerID: 0,
-    authKey: '',
+    gameInfo: {
+      gameID: 0,
+      playerID: 0,
+      authKey: ''
+    },
     playerOne: parseEQArray(stringArray[3]),
     playerTwo: {
       // AI or opposing player

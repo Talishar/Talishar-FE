@@ -1,25 +1,23 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { ParseGameState } from '../../app/parseGameState';
 import { Player } from './player';
-
-export interface GameState {
+export interface GameInfo {
   gameID: number;
   playerID: number;
   authKey: string;
+}
+export interface GameState {
+  gameInfo: GameInfo;
   playerOne: Player;
   playerTwo: Player;
 }
 
-export interface GetNextTurnParams {
-  gameID: number;
-  playerID: number;
-  authKey: string;
-}
-
 const initialState: GameState = {
-  gameID: 663,
-  playerID: 3,
-  authKey: '28df413b665604299807c461a7f3cae71c4176cb2b96afad04b84cf96d016258',
+  gameInfo: {
+    gameID: 663,
+    playerID: 3,
+    authKey: '28df413b665604299807c461a7f3cae71c4176cb2b96afad04b84cf96d016258'
+  },
   playerOne: {
     // human player
     HeadEq: { cardNumber: 'WTR079' },
@@ -32,6 +30,22 @@ const initialState: GameState = {
     Health: 20,
     ActionPoints: 0,
     PitchRemaining: 0,
+    Graveyard: [
+      {
+        cardNumber: 'ARC003'
+      },
+      {
+        cardNumber: 'WTR069'
+      }
+    ],
+    Pitch: [
+      {
+        cardNumber: 'ARC003'
+      },
+      {
+        cardNumber: 'WTR069'
+      }
+    ],
     Hand: [
       {
         cardNumber: 'WTR101'
@@ -82,13 +96,21 @@ const initialState: GameState = {
       {
         cardNumber: 'CBBlack'
       }
+    ],
+    Banish: [
+      {
+        cardNumber: 'WTR104'
+      },
+      {
+        cardNumber: 'CRU073'
+      }
     ]
   }
 };
 
 export const nextTurn = createAsyncThunk(
   'game/nextTurn',
-  async (params: GetNextTurnParams) => {
+  async (params: GameInfo) => {
     const queryURL =
       'http://localhost/FaBOnline/GetNextTurn3.php?gameName=' +
       params.gameID +

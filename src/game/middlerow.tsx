@@ -12,13 +12,19 @@ import { PitchZone } from './zones/pitchZone';
 export function MiddleRow(props: Player) {
   return (
     <div className={styles.middleRow}>
-      <ChestEqZone DisplayRow="middleRow" isPlayer={props.isPlayer} />
-      <GlovesEqZone DisplayRow="middleRow" isPlayer={props.isPlayer} />
-      <WeaponLZone DisplayRow="middleRow" isPlayer={props.isPlayer} />
-      <HeroZone DisplayRow="middleRow" isPlayer={props.isPlayer} />
-      <WeaponRZone DisplayRow="middleRow" isPlayer={props.isPlayer} />
-      <PitchZone DisplayRow="middleRow" isPlayer={props.isPlayer} />
-      <DeckZone DisplayRow="middleRow" isPlayer={props.isPlayer} />
+      <div className={styles.groupL}>
+        <ChestEqZone DisplayRow="middleRow" isPlayer={props.isPlayer} />
+        <GlovesEqZone DisplayRow="middleRow" isPlayer={props.isPlayer} />
+      </div>
+      <div className={styles.groupM}>
+        <WeaponLZone DisplayRow="middleRow" isPlayer={props.isPlayer} />
+        <HeroZone DisplayRow="middleRow" isPlayer={props.isPlayer} />
+        <WeaponRZone DisplayRow="middleRow" isPlayer={props.isPlayer} />
+      </div>
+      <div className={styles.groupR}>
+        <PitchZone DisplayRow="middleRow" isPlayer={props.isPlayer} />
+        <DeckZone DisplayRow="middleRow" isPlayer={props.isPlayer} />
+      </div>
     </div>
   );
 }

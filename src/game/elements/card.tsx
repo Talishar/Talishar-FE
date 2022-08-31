@@ -4,6 +4,8 @@ import styles from './card.module.css';
 
 export interface CardProp {
   card?: Card;
+  num?: number;
+  name?: string;
 }
 
 export function CardDisplay(prop: CardProp) {
@@ -19,9 +21,26 @@ export function CardDisplay(prop: CardProp) {
   sectionStyle = {
     backgroundImage: 'url(' + { eqImg } + ')'
   };
+
+  function onClick() {
+    console.log('I have been clicked!');
+  }
   return (
-    <div className={styles.card} style={sectionStyle}>
+    <div
+      className={styles.card}
+      style={sectionStyle}
+      onClick={() => {
+        onClick();
+      }}
+    >
       <img src={eqImg} />
+      {prop.num !== undefined && (
+        <div className={styles.floatCover}>
+          <div className={styles.number}>
+            <div className={styles.text}>{prop.num}</div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

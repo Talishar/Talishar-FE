@@ -1,5 +1,14 @@
+:root {
+  --aspect: 1920px;
+}
+
+html,
 body {
+  padding: 0;
   overflow-y: hidden;
+  margin: 0;
+  width: 100vw;
+  height: 100vh;
 }
 
 .centering {
@@ -15,19 +24,18 @@ body {
 
 .app {
   position: relative;
+  display: flex;
+  flex-flow: row nowrap;
   margin: auto;
   height: 100%;
   width: 100%;
-  max-width: 1520px;
+  max-width: var(--aspect);
 }
 
 .gameZone {
-  position: absolute;
   transform-origin: top left;
-  top: 0px;
-  bottom: 0px;
-  left: 100px;
-  right: 200px;
+  order: 2;
+  width: 100%;
 }
 
 .cardStackZone {
