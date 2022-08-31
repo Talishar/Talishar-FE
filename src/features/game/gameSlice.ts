@@ -71,6 +71,11 @@ const initialState: GameState = {
       {
         cardNumber: 'UPR161'
       }
+    ],
+    Effects: [
+      {
+        cardNumber: 'ARC044'
+      }
     ]
   },
   playerTwo: {

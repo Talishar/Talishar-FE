@@ -19,4 +19,5 @@ export interface Player {
   DeckSize?: number;
   Name?: string;
   IsVerified?: boolean;
+  Effects?: Card[];
 }

@@ -33,7 +33,10 @@ body {
 }
 
 .gameZone {
-  transform-origin: top left;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
   order: 2;
   width: 100%;
 }
