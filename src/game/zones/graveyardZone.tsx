@@ -29,7 +29,6 @@ export function GraveyardZone(prop: Displayrow) {
   return (
     <div className={styles.graveyardZone}>
       <CardDisplay card={cardToDisplay} num={numInGraveyard} />
-      Graveyard
     </div>
   );
 }

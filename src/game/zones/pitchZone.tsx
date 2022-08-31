@@ -3,18 +3,28 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../app/store';
 import { Displayrow } from '../../interface/displayrow';
 import { CardDisplay } from '../elements/card';
+import { Card } from '../../features/cardSlice';
 import styles from './cardzone.module.css';
 
 export function PitchZone(prop: Displayrow) {
-  // let cardToDisplay;
-  // if (prop.isPlayer) {
-  //   cardToDisplay = useSelector(
-  //     (state: RootState) => state.game.playerOne.Hero
-  //   );
-  // } else {
-  //   cardToDisplay = useSelector(
-  //     (state: RootState) => state.game.playerTwo.Hero
-  //   );
-  // }
-  return <div className={styles.pitchZone}>Pitch</div>;
+  let pitchZone: Card[] | undefined;
+
+  if (prop.isPlayer) {
+    pitchZone = useSelector((state: RootState) => state.game.playerOne.Pitch);
+  } else {
+    pitchZone = useSelector((state: RootState) => state.game.playerTwo.Pitch);
+  }
+
+  if (pitchZone === undefined) {
+    return <div className={styles.pitchZone}>Pitch</div>;
+  }
+
+  const numInPitch = pitchZone.length;
+  const cardToDisplay = pitchZone[numInPitch - 1];
+
+  return (
+    <div className={styles.pitchZone}>
+      <CardDisplay card={cardToDisplay} num={numInPitch} />
+    </div>
+  );
 }

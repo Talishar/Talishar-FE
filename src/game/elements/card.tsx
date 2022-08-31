@@ -5,6 +5,7 @@ import styles from './card.module.css';
 export interface CardProp {
   card?: Card;
   num?: number;
+  name?: string;
 }
 
 export function CardDisplay(prop: CardProp) {
