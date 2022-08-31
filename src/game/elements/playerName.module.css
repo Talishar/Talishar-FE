@@ -1,14 +1,13 @@
 .playerName {
-  padding-left: 1vw;
   margin-top: 0.5vh;
   margin-bottom: 0.5vh;
-  margin-left: 0.5vw;
+  padding-left: 1vh;
   border-radius: 10px;
   background-color: brown;
   display: flex;
   left: 0px;
   align-self: flex-start;
-  height: 3vh;
+  height: 5vh;
   color: wheat;
   width: 20vw;
   align-items: center;

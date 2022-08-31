@@ -37,12 +37,13 @@
 
 .permanentsZone {
   position: relative;
-  height: 10vh;
   width: 100%;
   border-radius: 10px;
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow-x: auto;
+  overflow-y: hidden;
   background: rgba(50, 50, 50, 0.5);
   color: white;
 }

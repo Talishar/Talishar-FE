@@ -6,6 +6,7 @@
   flex-wrap: nowrap;
   justify-content: center;
   gap: 1vh;
+  z-index: 3;
 }
 
 .isPlayer {
