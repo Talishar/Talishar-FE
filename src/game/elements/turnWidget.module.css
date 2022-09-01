@@ -1,9 +1,9 @@
 .widgetContainer {
   height: 130%;
-  /* background-color: white; */
   flex-shrink: 1;
   width: 45vh;
   z-index: 5;
+  user-select: none;
 }
 
 .widgetGraphic {

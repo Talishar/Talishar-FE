@@ -4,11 +4,18 @@
 
 html,
 body {
+  color: goldenrod;
   padding: 0;
   overflow-y: hidden;
   margin: 0;
   width: 100vw;
   height: 100vh;
+  background: radial-gradient(transparent, black),
+    url('./img/backgrounds/paper_dark.jpeg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-color: rgba(50, 50, 50, 0.5);
 }
 
 .centering {
