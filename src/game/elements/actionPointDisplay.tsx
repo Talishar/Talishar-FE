@@ -13,9 +13,6 @@ export function ActionPointDisplay(props: Player) {
     (state: RootState) => state.game.activePlayer
   );
 
-  console.log(activePlayer);
-  console.log(APAvailable);
-
   if (activePlayer === undefined) {
     return <></>;
   }

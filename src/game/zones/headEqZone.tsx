@@ -13,7 +13,7 @@ export function HeadEqZone(prop: Displayrow) {
     );
   } else {
     cardToDisplay = useSelector(
-      (state: RootState) => state.game.playerOne.HeadEq
+      (state: RootState) => state.game.playerTwo.HeadEq
     );
   }
 

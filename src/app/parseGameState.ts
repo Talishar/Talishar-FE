@@ -1,8 +1,10 @@
+import { Card } from '../features/cardSlice';
 import { GameState } from '../features/game/gameSlice';
 
 export function ParseGameState(input: string) {
-  const stringArray: string[] = input.toUpperCase().split('<BR>');
-  // console.log(stringArray);
+  const newInput = input.replace(/<BR>/g, '<br>');
+  const stringArray: string[] = newInput.split('<br>');
+  console.log(stringArray);
   const result: GameState = {
     gameInfo: {
       gameID: 0,
@@ -24,12 +26,26 @@ export function ParseGameState(input: string) {
       PitchRemaining: 0
     }
   };
+
+  result.playerOne.Hand = parseHand(stringArray[2]);
+  result.playerTwo.Hand = parseHand(stringArray[1]);
   return result;
 }
 
 export function returnCard(input: string) {
   const cardArr: string[] = input.split(' ');
   return cardArr[0];
+}
+
+function parseHand(input: string) {
+  const eqArray: string[] = input.split('|');
+  const resultArray: Card[] = [];
+  eqArray.map((string, _) =>
+    resultArray.push({
+      cardNumber: returnCard(string)
+    })
+  );
+  return resultArray;
 }
 
 function parseEQArray(input: string) {
