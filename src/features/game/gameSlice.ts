@@ -11,13 +11,57 @@ export interface GameInfo {
   lastPlayed?: Card;
 }
 
+export interface CombatChainLink {
+  attackingCard?: Card;
+  reactionCards?: Card[];
+  totalAttack?: number;
+  totalDefence?: number;
+  didItHit?: boolean;
+}
+
 export interface GameState {
   gameInfo: GameInfo;
   playerOne: Player;
   playerTwo: Player;
+  activeCombatChain?: CombatChainLink;
+  oldCombatChain?: CombatChainLink[];
 }
 
 const initialState: GameState = {
+  oldCombatChain: [
+    {
+      attackingCard: {
+        cardNumber: 'WTR069'
+      },
+      reactionCards: [
+        {
+          cardNumber: 'CRU073'
+        },
+        {
+          cardNumber: 'ARC044'
+        }
+      ],
+      totalAttack: 88,
+      totalDefence: 44,
+      didItHit: true
+    }
+  ],
+  activeCombatChain: {
+    attackingCard: {
+      cardNumber: 'CRU048'
+    },
+    reactionCards: [
+      {
+        cardNumber: 'CRU073'
+      },
+      {
+        cardNumber: 'ARC044'
+      }
+    ],
+    totalAttack: 88,
+    totalDefence: 44,
+    didItHit: true
+  },
   gameInfo: {
     gameID: 663,
     playerID: 3,

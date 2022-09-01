@@ -1,0 +1,36 @@
+.currentAttack {
+  width: 20vh;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5vh;
+}
+
+.attDefRow {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  height: 3vh;
+  gap: 1vh;
+}
+
+.attDiv {
+  text-align: right;
+  width: 50%;
+}
+
+.defDiv {
+  text-align: left;
+  width: 50%;
+}
+
+.attackSymbol {
+  height: 3vh;
+}
+
+.chainSymbols {
+  height: 3vh;
+}
