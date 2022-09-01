@@ -27,12 +27,12 @@
   margin: auto;
   width: 95%;
   padding: 1vh;
-  background-image: url('https://source.unsplash.com/random/1920x1080');
+  background-image: url('https://www.publicdomainpictures.net/pictures/30000/velka/red-felt-texture.jpg');
   border-radius: 10px;
   text-align: center;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   color: white;
 }
 
@@ -48,6 +48,14 @@
   background-repeat: no-repeat;
   background-size: auto;
   background-size: cover;
+}
+
+.chainCentre {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  color: white;
 }
 
 /* .playerBoard {
