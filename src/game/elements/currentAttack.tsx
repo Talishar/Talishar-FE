@@ -30,11 +30,9 @@ export function CurrentAttack() {
         </div>
         <div className={styles.defDiv}>{defValue}</div>
       </div>
-      <div className={styles.attDefRow}>
-        <i className="fa fa-refresh" aria-hidden="true"></i>
-        <i className="fa fa-times-circle" aria-hidden="true"></i>
+      <div className={styles.attack}>
+        <CardDisplay card={attCard} />
       </div>
-      <CardDisplay card={attCard} />
     </div>
   );
 }

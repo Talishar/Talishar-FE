@@ -1,5 +1,5 @@
 .currentAttack {
-  width: 20vh;
+  width: 22vh;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -8,31 +8,63 @@
   gap: 0.5vh;
 }
 
-.attDefRow {
+.cardContainer {
+  height: 13vh;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  height: 3vh;
+}
+
+.attack {
+  height: 13vh;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
   gap: 1vh;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.attDefRow {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5vh;
+  height: 3vh;
+  width: 100%;
 }
 
 .attDiv {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
   text-align: right;
   width: 50%;
 }
 
 .defDiv {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
   text-align: left;
   width: 50%;
 }
 
 .attackSymbol {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   height: 3vh;
 }
 
 .chainSymbols {
-  height: 3vh;
+  height: 2.5vh;
 }
 
 .chainLinkSymbol {
