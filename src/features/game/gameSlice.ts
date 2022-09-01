@@ -25,10 +25,45 @@ export interface GameState {
   playerTwo: Player;
   activeCombatChain?: CombatChainLink;
   oldCombatChain?: CombatChainLink[];
+  activePlayer?: number; // 1 is us 2 is them
 }
 
 const initialState: GameState = {
+  activePlayer: 1,
   oldCombatChain: [
+    {
+      attackingCard: {
+        cardNumber: 'WTR069'
+      },
+      reactionCards: [
+        {
+          cardNumber: 'CRU073'
+        },
+        {
+          cardNumber: 'ARC044'
+        }
+      ],
+      totalAttack: 88,
+      totalDefence: 44,
+      didItHit: true
+    },
+    {
+      attackingCard: {
+        cardNumber: 'WTR069'
+      },
+      reactionCards: [
+        {
+          cardNumber: 'CRU073'
+        },
+        {
+          cardNumber: 'ARC044'
+        }
+      ],
+      totalAttack: 88,
+      totalDefence: 44,
+      didItHit: true
+    },
+
     {
       attackingCard: {
         cardNumber: 'WTR069'

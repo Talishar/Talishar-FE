@@ -9,7 +9,6 @@ export function CombatChain() {
   return (
     <div className={styles.combatChain}>
       <CurrentAttack />
-      COMBAT CHANE PEW PEW PEW
       <div className={styles.chainCentre}>
         <ChainLinks />
         <Reactions />
