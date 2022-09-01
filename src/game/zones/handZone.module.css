@@ -1,6 +1,8 @@
 .handZone {
   position: relative;
   width: 100%;
+  min-height: 10vh;
+  height: 10vh;
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
@@ -16,5 +18,5 @@
 
 .isOpponent {
   align-self: flex-end;
-  bottom: 2vh;
+  top: -2vh;
 }

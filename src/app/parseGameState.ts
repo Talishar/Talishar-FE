@@ -2,9 +2,9 @@ import { Card } from '../features/cardSlice';
 import { GameState } from '../features/game/gameSlice';
 
 export function ParseGameState(input: string) {
+  // inconsistent BR and br cases so replace all with lowercase
   const newInput = input.replace(/<BR>/g, '<br>');
   const stringArray: string[] = newInput.split('<br>');
-  console.log(stringArray);
   const result: GameState = {
     gameInfo: {
       gameID: 0,

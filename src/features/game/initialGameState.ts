@@ -2,7 +2,7 @@ import { GameState } from './gameSlice';
 
 export const initialState: GameState = {
   gameInfo: {
-    gameID: 42463,
+    gameID: 42434,
     playerID: 3,
     authKey: '28df413b665604299807c461a7f3cae71c4176cb2b96afad04b84cf96d016258'
   },
