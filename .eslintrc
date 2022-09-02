@@ -11,5 +11,12 @@
     "airbnb-typescript-prettier",
     "prettier"
   ],
+  "no-param-reassign": [
+    "error",
+    {
+      "props": true,
+      "ignorePropertyModificationsFor": ["state"]
+    }
+  ],
   "rules": { "prettier/prettier": 1 }
 }
