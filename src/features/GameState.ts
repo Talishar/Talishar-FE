@@ -13,6 +13,7 @@ export default interface GameState {
   popup?: {
     popupOn?: boolean;
     popupCard?: Card;
-    onRight?: boolean;
+    xCoord?: number;
+    yCoord?: number;
   };
 }

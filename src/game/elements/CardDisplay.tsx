@@ -33,9 +33,13 @@ export default function CardDisplay(prop: CardProp) {
   }
 
   const handleMouseEnter = (e: React.MouseEvent) => {
-    // TODO: Have the popup appear near the mouse cursor rather than in the corner.
-    const onRight = e.pageX < window.innerWidth / 2 ? true : false;
-    dispatch(setPopUp({ cardNumber: card.cardNumber, onRight: onRight }));
+    dispatch(
+      setPopUp({
+        cardNumber: card.cardNumber,
+        xCoord: e.clientX,
+        yCoord: e.clientY
+      })
+    );
   };
 
   const handleMouseLeave = () => {
@@ -76,13 +80,18 @@ export default function CardDisplay(prop: CardProp) {
 
       <div className={classStyles.join(' ')}></div>
       <div className={equipStatus.join(' ')}></div>
-      {num !== undefined && num !== 0 && (
-        <div className={styles.floatCover}>
+      <div className={styles.floatCover}>
+        {num !== undefined && num !== 0 && (
           <div className={styles.number}>
             <div className={styles.text}>{num}</div>
           </div>
-        </div>
-      )}
+        )}
+        {card.defCounters !== undefined && card.defCounters !== 0 && (
+          <div className={styles.defCounter}>
+            <div>{card.defCounters}</div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

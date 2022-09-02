@@ -22,7 +22,7 @@ export default function LastPlayed() {
     if (cardRedux == undefined) {
       cardRedux = { cardNumber: 'CardBack' };
     }
-    dispatch(setPopUp({ cardNumber: cardRedux.cardNumber, onRight: true }));
+    dispatch(setPopUp({ cardNumber: cardRedux.cardNumber }));
   };
 
   const handleMouseLeave = () => {

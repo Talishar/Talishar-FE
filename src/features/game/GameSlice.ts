@@ -27,11 +27,16 @@ export const gameSlice = createSlice({
   reducers: {
     setPopUp: (
       state,
-      action: PayloadAction<{ cardNumber: string; onRight?: boolean }>
+      action: PayloadAction<{
+        cardNumber: string;
+        xCoord?: number;
+        yCoord?: number;
+      }>
     ) => {
       state.popup = {
         popupOn: true,
-        onRight: action.payload.onRight,
+        xCoord: action.payload.xCoord,
+        yCoord: action.payload.yCoord,
         popupCard: { cardNumber: action.payload.cardNumber }
       };
     },
