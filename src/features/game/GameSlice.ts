@@ -1,9 +1,4 @@
-import {
-  createAction,
-  createAsyncThunk,
-  createSlice,
-  PayloadAction
-} from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import ParseGameState from '../../app/ParseGameState';
 import InitialGameState from './InitialGameState';
 import GameInfo from '../GameInfo';

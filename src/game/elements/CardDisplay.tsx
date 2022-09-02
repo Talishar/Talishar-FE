@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useDispatch } from 'react-redux';
-import { AppDispatch } from '../../app/Store';
 import Card from '../../features/Card';
-import { clearPopUp, gameSlice, setPopUp } from '../../features/game/GameSlice';
+import { clearPopUp, setPopUp } from '../../features/game/GameSlice';
 import styles from './Card.module.css';
 
 export interface CardProp {
@@ -34,14 +33,12 @@ export default function CardDisplay(prop: CardProp) {
   }
 
   const handleMouseEnter = (e: React.MouseEvent) => {
-    console.log(e.pageX);
+    // TODO: Have the popup appear near the mouse cursor rather than in the corner.
     const onRight = e.pageX < window.innerWidth / 2 ? true : false;
-    console.log(onRight);
     dispatch(setPopUp({ cardNumber: card.cardNumber, onRight: onRight }));
   };
 
   const handleMouseLeave = () => {
-    console.log('mouse leave');
     dispatch(clearPopUp());
   };
 

@@ -4,6 +4,7 @@ import styles from './Menu.module.css';
 
 function MenuButton() {
   function toggleMenu() {
+    // TODO: Implement menu
     console.log('opening menu');
   }
   return (
