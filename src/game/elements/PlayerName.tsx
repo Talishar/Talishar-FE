@@ -2,7 +2,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../app/Store';
 import styles from './PlayerName.module.css';
-import Player from '../../interface/player';
+import Player from '../../interface/Player';
 
 export default function PlayerName(player: Player) {
   const playerName = player.isPlayer

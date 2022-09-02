@@ -1,24 +1,23 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../app/Store';
-import Displayrow from '../../interface/displayrow';
+import Displayrow from '../../interface/Displayrow';
 import CardDisplay from '../elements/CardDisplay';
 import styles from './Cardzone.module.css';
 
-export default function HeadEqZone(prop: Displayrow) {
+export default function WeaponRZone(prop: Displayrow) {
   let cardToDisplay;
   if (prop.isPlayer) {
     cardToDisplay = useSelector(
-      (state: RootState) => state.game.playerOne.HeadEq
+      (state: RootState) => state.game.playerOne.WeaponREq
     );
   } else {
     cardToDisplay = useSelector(
-      (state: RootState) => state.game.playerTwo.HeadEq
+      (state: RootState) => state.game.playerTwo.WeaponREq
     );
   }
-
   return (
-    <div className={styles.hatZone}>
+    <div className={styles.weaponRZone}>
       <CardDisplay card={cardToDisplay} />
     </div>
   );

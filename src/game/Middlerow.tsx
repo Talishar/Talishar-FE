@@ -1,5 +1,5 @@
 import React from 'react';
-import Player from '../interface/player';
+import Player from '../interface/Player';
 import ChestEqZone from './zones/ChestEqZone';
 import GlovesEqZone from './zones/GlovesEqZone';
 import HeroZone from './zones/HeroZone';

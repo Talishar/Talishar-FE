@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../app/Store';
-import Displayrow from '../../interface/displayrow';
+import Displayrow from '../../interface/Displayrow';
 import CardDisplay from '../elements/CardDisplay';
 import Card from '../../features/Card';
 import styles from './Cardzone.module.css';

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../app/Store';
-import Player from '../../interface/player';
+import Player from '../../interface/Player';
 import styles from '../ActiveEffects.module.css';
 import Card from '../../features/Card';
 

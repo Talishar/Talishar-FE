@@ -1,5 +1,5 @@
 import React from 'react';
-import Player from '../interface/player';
+import Player from '../interface/Player';
 import HeadEqZone from './zones/HeadEqZone';
 import styles from './Rows.module.css';
 import PermanentsZone from './zones/PermanentsZone';

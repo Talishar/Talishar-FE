@@ -2,7 +2,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import styles from './HandZone.module.css';
 import { RootState } from '../../app/Store';
-import Player from '../../interface/player';
+import Player from '../../interface/Player';
 import Card from '../../features/Card';
 import CardDisplay from '../elements/CardDisplay';
 
