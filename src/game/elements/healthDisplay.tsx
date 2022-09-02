@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { RootState } from '../../app/store';
+import { RootState } from '../../app/Store';
 import { Player } from '../../interface/player';
 import styles from './turnWidget.module.css';
 

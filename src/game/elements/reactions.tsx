@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { RootState } from '../../app/store';
+import { RootState } from '../../app/Store';
 import { CardDisplay } from './card';
 import styles from './combatChain.module.css';
 

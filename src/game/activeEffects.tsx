@@ -7,7 +7,7 @@ export function ActiveEffects() {
     <div className={styles.activeEffects}>
       <div className={styles.text}>Opp effects</div>
       <Effects isPlayer={false} />
-      <Effects isPlayer={true} />
+      <Effects isPlayer />
       <div className={styles.text}>Your effects</div>
     </div>
   );

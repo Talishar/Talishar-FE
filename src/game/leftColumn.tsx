@@ -8,7 +8,7 @@ export function LeftColumn() {
     <div className={styles.leftColumn}>
       <PlayerName isPlayer={false} />
       <ActiveEffects />
-      <PlayerName isPlayer={true} />
+      <PlayerName isPlayer />
     </div>
   );
 }

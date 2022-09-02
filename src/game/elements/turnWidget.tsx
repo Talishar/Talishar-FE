@@ -11,11 +11,11 @@ export function TurnWidget() {
         <div className={styles.widgetLeftCol}>
           <ActionPointDisplay isPlayer={false} />
           <PassTurnDisplay />
-          <ActionPointDisplay isPlayer={true} />
+          <ActionPointDisplay isPlayer />
         </div>
         <div className={styles.widgetRightCol}>
           <Health isPlayer={false} />
-          <Health isPlayer={true} />
+          <Health isPlayer />
         </div>
       </div>
     </div>

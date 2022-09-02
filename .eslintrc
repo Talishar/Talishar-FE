@@ -8,6 +8,7 @@
     "plugin:@typescript-eslint/recommended",
     "plugin:react/recommended",
     "plugin:prettier/recommended",
+    "airbnb-typescript-prettier",
     "prettier"
   ],
   "rules": { "prettier/prettier": 1 }

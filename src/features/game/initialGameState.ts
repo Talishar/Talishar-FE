@@ -1,6 +1,6 @@
-import { GameState } from './gameSlice';
+import GameState from '../GameState';
 
-export const initialState: GameState = {
+const InitialGameState: GameState = {
   gameInfo: {
     gameID: 42434,
     playerID: 3,
@@ -171,3 +171,5 @@ export const initialState: GameState = {
     ]
   }
 };
+
+export default InitialGameState;

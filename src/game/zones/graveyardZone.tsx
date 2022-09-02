@@ -1,9 +1,9 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { RootState } from '../../app/store';
+import { RootState } from '../../app/Store';
 import { Displayrow } from '../../interface/displayrow';
 import { CardDisplay } from '../elements/card';
-import { Card } from '../../features/cardSlice';
+import { Card } from '../../features/Card';
 import styles from './cardzone.module.css';
 
 export function GraveyardZone(prop: Displayrow) {

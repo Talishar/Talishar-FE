@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { RootState } from '../../app/store';
+import { RootState } from '../../app/Store';
 import styles from './combatChain.module.css';
 import attack from '../../img/symbols/symbol-attack.png';
 import defend from '../../img/symbols/symbol-defence.png';
@@ -10,7 +10,7 @@ export function ChainLinks() {
     (state: RootState) => state.game.oldCombatChain
   );
   if (oldCombatChain === undefined || oldCombatChain.length === 0) {
-    return <div className={styles.chainLinksRow}></div>;
+    return <div className={styles.chainLinksRow} />;
   }
 
   return (

@@ -1,44 +1,15 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { ParseGameState } from '../../app/parseGameState';
-import { Player } from './player';
-import { Card } from '../cardSlice';
-import { initialState } from './initialGameState';
-
-export interface GameInfo {
-  gameID: number;
-  playerID: number;
-  authKey: string;
-  turnNo?: number;
-  lastPlayed?: Card;
-}
-
-export interface CombatChainLink {
-  attackingCard?: Card;
-  reactionCards?: Card[];
-  totalAttack?: number;
-  totalDefence?: number;
-  didItHit?: boolean;
-}
-
-export interface GameState {
-  gameInfo: GameInfo;
-  playerOne: Player;
-  playerTwo: Player;
-  activeCombatChain?: CombatChainLink;
-  oldCombatChain?: CombatChainLink[];
-  activePlayer?: number; // 1 is us 2 is them
-}
+import ParseGameState from '../../app/ParseGameState';
+import InitialGameState from './InitialGameState';
+import Player from '../Player';
+import Card from '../Card';
+import GameInfo from '../GameInfo';
+import GameState from '../GameState';
 
 export const nextTurn = createAsyncThunk(
   'game/nextTurn',
   async (params: GameInfo) => {
-    const queryURL =
-      'https://www.fleshandbloodonline.com/FaBOnline/GetNextTurn3.php?gameName=' +
-      params.gameID +
-      '&playerID=' +
-      params.playerID +
-      '&authKey=' +
-      params.authKey;
+    const queryURL = `https://www.fleshandbloodonline.com/FaBOnline/GetNextTurn3.php?gameName=${params.gameID}&playerID=${params.playerID}&authKey=${params.authKey}`;
     const response = await fetch(queryURL, {
       method: 'GET',
       headers: {}
@@ -53,7 +24,7 @@ export const nextTurn = createAsyncThunk(
 
 export const gameSlice = createSlice({
   name: 'game',
-  initialState,
+  InitialGameState,
   // The `reducers` field lets us define reducers and generate associated actions
   reducers: {},
   // The `extraReducers` field lets the slice handle actions defined elsewhere,

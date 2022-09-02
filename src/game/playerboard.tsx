@@ -9,9 +9,9 @@ export function PlayerBoard() {
     <div className={styles.playerPlaymat}>
       {/* Customise the playmat here */}
       <div className={styles.playerBoard}>
-        <TopRow isPlayer={true} />
-        <MiddleRow isPlayer={true} />
-        <BottomRow isPlayer={true} />
+        <TopRow isPlayer />
+        <MiddleRow isPlayer />
+        <BottomRow isPlayer />
       </div>
     </div>
   );
