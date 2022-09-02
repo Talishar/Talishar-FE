@@ -2,7 +2,7 @@ import GameState from '../GameState';
 
 const InitialGameState: GameState = {
   gameInfo: {
-    gameID: 42434,
+    gameID: 45631,
     playerID: 3,
     authKey: '28df413b665604299807c461a7f3cae71c4176cb2b96afad04b84cf96d016258'
   },
@@ -79,7 +79,7 @@ const InitialGameState: GameState = {
     Name: 'LaustinSpayce',
     IsVerified: true,
     HeadEq: { cardNumber: 'WTR079' },
-    ChestEq: { cardNumber: 'WTR150' },
+    ChestEq: { cardNumber: 'WTR150', counters: 2 },
     GlovesEq: { cardNumber: 'UPR158' },
     FeetEq: { cardNumber: 'WTR154' },
     WeaponLEq: { cardNumber: 'CRU048' },
@@ -169,6 +169,10 @@ const InitialGameState: GameState = {
         cardNumber: 'CRU073'
       }
     ]
+  },
+  popup: {
+    popupOn: false,
+    popupCard: undefined
   }
 };
 

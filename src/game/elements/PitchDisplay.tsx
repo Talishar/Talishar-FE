@@ -2,8 +2,6 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../app/Store';
 import Displayrow from '../../interface/Displayrow';
-import CardDisplay from '../elements/CardDisplay';
-import Card from '../../features/Card';
 import styles from './PitchDisplay.module.css';
 
 export default function PitchDisplay(prop: Displayrow) {

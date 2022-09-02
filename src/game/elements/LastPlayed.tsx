@@ -1,23 +1,41 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../app/Store';
+import { clearPopUp, setPopUp } from '../../features/game/GameSlice';
 import styles from './LastPlayed.module.css';
 
 export default function LastPlayed() {
-  let lastCard = useSelector(
+  let cardRedux = useSelector(
     (state: RootState) => state.game.gameInfo.lastPlayed
   );
+  const dispatch = useDispatch();
 
-  if (lastCard === undefined) {
-    lastCard = {
+  if (cardRedux === undefined) {
+    cardRedux = {
       cardNumber: 'CardBack'
     };
+  } else {
+    cardRedux = { cardNumber: cardRedux.cardNumber };
   }
 
-  const src = `https://www.fleshandbloodonline.com/FaBOnline/WebpImages/${lastCard.cardNumber}.webp`;
+  const handleMouseEnter = () => {
+    if (cardRedux == undefined) {
+      cardRedux = { cardNumber: 'CardBack' };
+    }
+    dispatch(setPopUp({ cardNumber: cardRedux.cardNumber, onRight: true }));
+  };
+
+  const handleMouseLeave = () => {
+    dispatch(clearPopUp());
+  };
+  const src = `https://www.fleshandbloodonline.com/FaBOnline/WebpImages/${cardRedux.cardNumber}.webp`;
 
   return (
-    <div className={styles.lastPlayed}>
+    <div
+      className={styles.lastPlayed}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
       <img src={src} className={styles.img} />
     </div>
   );

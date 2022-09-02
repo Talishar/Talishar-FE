@@ -19,6 +19,20 @@
   top: 0px;
   right: 0px;
   bottom: 0px;
+  /* z-index: 2; */
+}
+
+.floatTint {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  left: 0px;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  /* z-index: 1; */
+  border-radius: 10px;
 }
 
 .number {
@@ -46,4 +60,29 @@
   object-fit: contain;
   height: 10vh;
   border-radius: 10px;
+}
+
+.disabled {
+  background-color: black;
+  opacity: 0.5;
+}
+
+.isBroken {
+  background-image: url('../../img/symbols/symbol-brokenEquip.png');
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+}
+
+.onChain {
+  background-image: url('../../img/symbols/symbol-onChain.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: 0px -5vh;
+}
+
+.isFrozen {
+  background-image: url('../../img/elements/frozenOverlay.png');
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
 }
