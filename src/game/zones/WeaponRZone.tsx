@@ -6,16 +6,11 @@ import CardDisplay from '../elements/CardDisplay';
 import styles from './Cardzone.module.css';
 
 export default function WeaponRZone(prop: Displayrow) {
-  let cardToDisplay;
-  if (prop.isPlayer) {
-    cardToDisplay = useSelector(
-      (state: RootState) => state.game.playerOne.WeaponREq
-    );
-  } else {
-    cardToDisplay = useSelector(
-      (state: RootState) => state.game.playerTwo.WeaponREq
-    );
-  }
+  const { isPlayer } = prop;
+  const cardToDisplay = useSelector((state: RootState) =>
+    isPlayer ? state.game.playerOne.WeaponREq : state.game.playerTwo.WeaponREq
+  );
+
   return (
     <div className={styles.weaponRZone}>
       <CardDisplay card={cardToDisplay} />
