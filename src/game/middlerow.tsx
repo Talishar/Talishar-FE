@@ -1,15 +1,15 @@
 import React from 'react';
-import { Player } from '../interface/player';
-import { ChestEqZone } from './zones/chestEqZone';
-import { GlovesEqZone } from './zones/glovesEqZone';
-import { HeroZone } from './zones/heroZone';
-import { WeaponLZone } from './zones/weaponLZone';
-import { WeaponRZone } from './zones/weaponRZone';
-import styles from './rows.module.css';
-import { DeckZone } from './zones/deckZone';
-import { PitchZone } from './zones/pitchZone';
+import Player from '../interface/player';
+import ChestEqZone from './zones/ChestEqZone';
+import GlovesEqZone from './zones/GlovesEqZone';
+import HeroZone from './zones/HeroZone';
+import WeaponLZone from './zones/WeaponLZone';
+import WeaponRZone from './zones/WeaponRZone';
+import styles from './Rows.module.css';
+import DeckZone from './zones/DeckZone';
+import PitchZone from './zones/PitchZone';
 
-export function MiddleRow(props: Player) {
+export default function MiddleRow(props: Player) {
   return (
     <div className={styles.middleRow}>
       <div className={styles.groupL}>

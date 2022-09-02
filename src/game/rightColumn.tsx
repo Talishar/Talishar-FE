@@ -1,12 +1,12 @@
 import React from 'react';
-import { LastPlayed } from './elements/lastPlayed';
-import { Menu } from './elements/menu';
-import { TurnNumber } from './elements/turnNumber';
-import styles from './rightColumn.module.css';
-import { ChatBox } from './elements/chatBox';
-import { PhaseTracker } from './elements/phaseTracker';
+import LastPlayed from './elements/LastPlayed';
+import Menu from './elements/Menu';
+import TurnNumber from './elements/TurnNumber';
+import styles from './RightColumn.module.css';
+import ChatBox from './elements/ChatBox';
+import PhaseTracker from './elements/PhaseTracker';
 
-export function RightColumn() {
+export default function RightColumn() {
   return (
     <div className={styles.rightColumn}>
       <div className={styles.topGroup}>

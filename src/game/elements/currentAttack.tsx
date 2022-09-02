@@ -1,10 +1,10 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../app/Store';
-import styles from './combatChain.module.css';
+import styles from './CombatChain.module.css';
 import attackSymbol from '../../img/symbols/symbol-attack.png';
 import defSymbol from '../../img/symbols/symbol-defence.png';
-import { CardDisplay } from './card';
+import CardDisplay from './CardDisplay';
 
 export default function CurrentAttack() {
   const activeCombatChain = useSelector(

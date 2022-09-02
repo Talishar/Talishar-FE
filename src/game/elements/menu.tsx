@@ -1,7 +1,6 @@
 import React from 'react';
 import screenfull from 'screenfull';
-import { Card } from '../../features/Card';
-import styles from './menu.module.css';
+import styles from './Menu.module.css';
 
 function MenuButton() {
   function toggleMenu() {
@@ -40,7 +39,7 @@ function FullScreenButton() {
   );
 }
 
-export function Menu() {
+export default function Menu() {
   return (
     <div className={styles.menuList}>
       <MenuButton />

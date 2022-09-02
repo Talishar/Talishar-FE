@@ -1,10 +1,10 @@
 import React from 'react';
-import { TopRow } from './toprow';
-import { MiddleRow } from './middlerow';
-import { BottomRow } from './bottomrow';
-import styles from './board.module.css';
+import TopRow from './TopRow';
+import MiddleRow from './MiddleRow';
+import BottomRow from './BottomRow';
+import styles from './Board.module.css';
 
-export function OpponentBoard() {
+export default function OpponentBoard() {
   return (
     <div className={styles.opponentPlaymat}>
       {/* Customise the playmat here */}

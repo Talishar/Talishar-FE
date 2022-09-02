@@ -1,6 +1,6 @@
 import React from 'react';
-import { Card } from '../../features/Card';
-import styles from './card.module.css';
+import Card from '../../features/Card';
+import styles from './Card.module.css';
 
 export interface CardProp {
   card?: Card;
@@ -8,13 +8,16 @@ export interface CardProp {
   name?: string;
 }
 
-export function CardDisplay(prop: CardProp) {
-  if (prop.card == null || prop.card.cardNumber == '') {
-    return <></>;
+export default function CardDisplay(prop: CardProp) {
+  const { card } = prop;
+
+  if (card == null || card.cardNumber === '') {
+    return null;
   }
+
   let eqImg = '';
   let sectionStyle = {};
-  eqImg = `https://www.fleshandbloodonline.com/FaBOnline/concat/${prop.card.cardNumber}.webp`;
+  eqImg = `https://www.fleshandbloodonline.com/FaBOnline/concat/${card.cardNumber}.webp`;
   sectionStyle = {
     backgroundImage: `url(${{ eqImg }})`
   };
@@ -22,6 +25,7 @@ export function CardDisplay(prop: CardProp) {
   function onClick() {
     console.log('I have been clicked!');
   }
+
   return (
     <div
       className={styles.card}

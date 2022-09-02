@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../app/Store';
-import styles from './turnWidget.module.css';
+import styles from './TurnWidget.module.css';
 
 export default function PassTurnDisplay() {
   const activePlayer = useSelector(

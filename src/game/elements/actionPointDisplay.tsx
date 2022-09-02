@@ -1,25 +1,28 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../app/Store';
-import { Player } from '../../interface/player';
-import styles from './turnWidget.module.css';
+import Player from '../../interface/player';
+import styles from './TurnWidget.module.css';
 
-export function ActionPointDisplay(props: Player) {
-  const APAvailable = props.isPlayer
-    ? useSelector((state: RootState) => state.game.playerOne.ActionPoints)
-    : useSelector((state: RootState) => state.game.playerTwo.ActionPoints);
+export default function ActionPointDisplay(props: Player) {
+  const { isPlayer } = props;
+  const APAvailable = useSelector((state: RootState) =>
+    isPlayer
+      ? state.game.playerOne.ActionPoints
+      : state.game.playerTwo.ActionPoints
+  );
 
   const activePlayer = useSelector(
     (state: RootState) => state.game.activePlayer
   );
 
   if (activePlayer === undefined) {
-    return <></>;
+    return null;
   }
 
   const extras = APAvailable !== 1 ? 's' : '';
 
-  if (activePlayer === 1 && props.isPlayer) {
+  if (activePlayer === 1 && isPlayer) {
     return (
       <div className={styles.actionPointDisplay}>
         {APAvailable} Action Point{extras}
@@ -27,7 +30,7 @@ export function ActionPointDisplay(props: Player) {
     );
   }
 
-  if (activePlayer === 2 && props.isPlayer === false) {
+  if (activePlayer === 2 && isPlayer === false) {
     return (
       <div>
         {APAvailable} Action Point{extras}
@@ -35,5 +38,5 @@ export function ActionPointDisplay(props: Player) {
     );
   }
 
-  return <></>;
+  return null;
 }

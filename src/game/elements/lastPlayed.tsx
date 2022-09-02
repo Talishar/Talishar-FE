@@ -1,9 +1,9 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../app/Store';
-import styles from './lastPlayed.module.css';
+import styles from './LastPlayed.module.css';
 
-export function LastPlayed() {
+export default function LastPlayed() {
   let lastCard = useSelector(
     (state: RootState) => state.game.gameInfo.lastPlayed
   );

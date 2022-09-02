@@ -20,4 +20,5 @@ export default interface Player {
   Name?: string;
   IsVerified?: boolean;
   Effects?: Card[];
+  Permanents?: Card[];
 }

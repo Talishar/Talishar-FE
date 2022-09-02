@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Board } from './game/board';
+import { Board } from './game/Board';
 import './App.css';
-import { GameStateHandler } from './app/GameStateHandler';
-import { LeftColumn } from './game/leftColumn';
-import { RightColumn } from './game/rightColumn';
-import { HandZone } from './game/zones/handZone';
+import GameStateHandler from './app/GameStateHandler';
+import LeftColumn from './game/LeftColumn';
+import RightColumn from './game/RightColumn';
+import HandZone from './game/zones/HandZone';
 
 function App() {
   const [maxWidth, setMaxWidth] = useState(1920);

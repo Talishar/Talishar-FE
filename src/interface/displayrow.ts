@@ -1,4 +1,4 @@
-export interface Displayrow {
+export default interface Displayrow {
   DisplayRow: string;
   isPlayer: boolean;
 }

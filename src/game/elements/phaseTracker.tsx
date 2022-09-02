@@ -1,5 +1,5 @@
 import React from 'react';
 
-export function PhaseTracker() {
+export default function PhaseTracker() {
   return <div>Phase Tracker</div>;
 }

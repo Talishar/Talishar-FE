@@ -8,15 +8,17 @@
     "plugin:@typescript-eslint/recommended",
     "plugin:react/recommended",
     "plugin:prettier/recommended",
-    "airbnb-typescript-prettier",
     "prettier"
   ],
-  "no-param-reassign": [
-    "error",
-    {
-      "props": true,
-      "ignorePropertyModificationsFor": ["state"]
-    }
-  ],
-  "rules": { "prettier/prettier": 1 }
+
+  "rules": {
+    "prettier/prettier": 1,
+    "no-param-reassign": [
+      "error",
+      {
+        "props": true,
+        "ignorePropertyModificationsFor": ["state"]
+      }
+    ]
+  }
 }
