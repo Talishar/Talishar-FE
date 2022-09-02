@@ -1,8 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import ParseGameState from '../../app/ParseGameState';
 import InitialGameState from './InitialGameState';
-import Player from '../Player';
-import Card from '../Card';
 import GameInfo from '../GameInfo';
 import GameState from '../GameState';
 
@@ -24,7 +22,7 @@ export const nextTurn = createAsyncThunk(
 
 export const gameSlice = createSlice({
   name: 'game',
-  InitialGameState,
+  initialState: InitialGameState,
   // The `reducers` field lets us define reducers and generate associated actions
   reducers: {},
   // The `extraReducers` field lets the slice handle actions defined elsewhere,
@@ -33,6 +31,7 @@ export const gameSlice = createSlice({
     builder.addCase(nextTurn.fulfilled, (state, action) => {
       state.playerOne = action.payload.playerOne;
       state.playerTwo = action.payload.playerTwo;
+      return state;
     });
   }
 });

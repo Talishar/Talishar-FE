@@ -172,4 +172,4 @@ const InitialGameState: GameState = {
   }
 };
 
-export default InitialGameState;
+export default InitialGameState as GameState;
