@@ -1,27 +1,25 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import styles from './handZone.module.css';
-import { RootState } from '../../app/store';
-import { Player } from '../../interface/player';
-import { Card } from '../../features/cardSlice';
-import { CardDisplay } from '../elements/card';
+import styles from './HandZone.module.css';
+import { RootState } from '../../app/Store';
+import Player from '../../interface/player';
+import Card from '../../features/Card';
+import CardDisplay from '../elements/CardDisplay';
 
-export function HandZone(prop: Player) {
-  let handCards: Card[] | undefined;
-  if (prop.isPlayer) {
-    handCards = useSelector(
-      (state: RootState) => state.game.playerOne.Hand
-    ) as Card[];
-  } else {
-    handCards = useSelector(
-      (state: RootState) => state.game.playerTwo.Hand
-    ) as Card[];
-  }
-  let displayRow = prop.isPlayer ? styles.isPlayer : styles.isOpponent;
-  displayRow = displayRow + ' ' + styles.handZone;
+export default function HandZone(prop: Player) {
+  const { isPlayer } = prop;
+
+  const handCards = useSelector((state: RootState) =>
+    isPlayer ? state.game.playerOne.Hand : state.game.playerTwo.Hand
+  );
+
+  let displayRow = isPlayer ? styles.isPlayer : styles.isOpponent;
+  displayRow = `${displayRow} ${styles.handZone}`;
+
   if (handCards === undefined) {
-    return <div className={displayRow}>Empty hand womp womp. :(</div>;
+    return <div className={displayRow}></div>;
   }
+
   return (
     <div className={displayRow}>
       {handCards.map((card: Card, index) => {

@@ -1,21 +1,17 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { RootState } from '../../app/store';
-import { Displayrow } from '../../interface/displayrow';
-import { CardDisplay } from '../elements/card';
-import styles from './cardzone.module.css';
+import { RootState } from '../../app/Store';
+import Displayrow from '../../interface/displayrow';
+import CardDisplay from '../elements/CardDisplay';
+import styles from './Cardzone.module.css';
 
-export function GlovesEqZone(prop: Displayrow) {
-  let cardToDisplay;
-  if (prop.isPlayer) {
-    cardToDisplay = useSelector(
-      (state: RootState) => state.game.playerOne.GlovesEq
-    );
-  } else {
-    cardToDisplay = useSelector(
-      (state: RootState) => state.game.playerTwo.GlovesEq
-    );
-  }
+export default function GlovesEqZone(prop: Displayrow) {
+  const { isPlayer } = prop;
+
+  const cardToDisplay = useSelector((state: RootState) =>
+    isPlayer ? state.game.playerOne.GlovesEq : state.game.playerTwo.GlovesEq
+  );
+
   return (
     <div className={styles.glovesZone}>
       <CardDisplay card={cardToDisplay} />

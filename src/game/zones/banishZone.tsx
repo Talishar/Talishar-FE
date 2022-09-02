@@ -1,19 +1,17 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { RootState } from '../../app/store';
-import { Displayrow } from '../../interface/displayrow';
-import { CardDisplay } from '../elements/card';
-import { Card } from '../../features/cardSlice';
-import styles from './cardzone.module.css';
+import { RootState } from '../../app/Store';
+import Displayrow from '../../interface/displayrow';
+import CardDisplay from '../elements/CardDisplay';
+import Card from '../../features/Card';
+import styles from './Cardzone.module.css';
 
-export function BanishZone(prop: Displayrow) {
-  let banishZone: Card[] | undefined;
+export default function BanishZone(prop: Displayrow) {
+  const { isPlayer } = prop;
 
-  if (prop.isPlayer) {
-    banishZone = useSelector((state: RootState) => state.game.playerOne.Banish);
-  } else {
-    banishZone = useSelector((state: RootState) => state.game.playerTwo.Banish);
-  }
+  const banishZone = useSelector((state: RootState) =>
+    isPlayer ? state.game.playerOne.Banish : state.game.playerTwo.Banish
+  );
 
   if (banishZone === undefined) {
     return <div className={styles.banishZone}>Banish</div>;

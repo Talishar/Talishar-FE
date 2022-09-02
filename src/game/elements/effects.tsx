@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { RootState } from '../../app/store';
 import { useSelector } from 'react-redux';
-import { Player } from '../../interface/player';
-import styles from '../activeEffects.module.css';
-import { Card } from '../../features/cardSlice';
+import { RootState } from '../../app/Store';
+import Player from '../../interface/player';
+import styles from '../ActiveEffects.module.css';
+import Card from '../../features/Card';
 
 export interface CardProp {
   card?: Card;
@@ -12,10 +12,9 @@ export interface CardProp {
 }
 
 export function Effect(prop: CardProp) {
-  const src =
-    'https://www.fleshandbloodonline.com/FaBOnline/crops/' +
-    prop.card!.cardNumber +
-    '_cropped.png';
+  const src = `https://www.fleshandbloodonline.com/FaBOnline/crops/${
+    prop.card!.cardNumber
+  }_cropped.png`;
   return (
     <div className={styles.effect}>
       <img src={src} className={styles.img} />
@@ -23,14 +22,14 @@ export function Effect(prop: CardProp) {
   );
 }
 
-export function Effects(props: Player) {
+export default function Effects(props: Player) {
   const classCSS = props.isPlayer ? styles.isPlayer : styles.isOpponent;
   const effects = props.isPlayer
     ? useSelector((state: RootState) => state.game.playerOne.Effects)
     : useSelector((state: RootState) => state.game.playerTwo.Effects);
 
   if (effects === undefined) {
-    return <div className={classCSS}></div>;
+    return <div className={classCSS} />;
   }
 
   return (
@@ -40,11 +39,4 @@ export function Effects(props: Player) {
       })}
     </div>
   );
-}
-
-{
-  /* <img
-  style="border: 1px solid transparent; height:65; width:83.85px; position:relative;"
-  src="./crops/ARC044_cropped.png"
-></img>; */
 }

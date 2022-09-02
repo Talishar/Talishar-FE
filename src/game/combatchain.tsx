@@ -1,11 +1,11 @@
 import React from 'react';
-import styles from './board.module.css';
-import { ChainLinks } from './elements/chainLinks';
-import { CurrentAttack } from './elements/currentAttack';
-import { Reactions } from './elements/reactions';
-import { TurnWidget } from './elements/turnWidget';
+import styles from './Board.module.css';
+import ChainLinks from './elements/ChainLinks';
+import CurrentAttack from './elements/CurrentAttack';
+import Reactions from './elements/Reactions';
+import TurnWidget from './elements/TurnWidget';
 
-export function CombatChain() {
+export default function CombatChain() {
   return (
     <div className={styles.combatChain}>
       <CurrentAttack />

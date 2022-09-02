@@ -1,7 +1,7 @@
 import React from 'react';
-import styles from './chatBox.module.css';
+import styles from './ChatBox.module.css';
 
-export function ChatBox() {
+export default function ChatBox() {
   return (
     <div className={styles.chatBoxContainer}>
       <div className={styles.chatBox}>Some text</div>

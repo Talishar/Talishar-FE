@@ -1,10 +1,9 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { RootState } from '../../app/store';
-import { Player } from '../../interface/player';
-import styles from './turnWidget.module.css';
+import { RootState } from '../../app/Store';
+import styles from './TurnWidget.module.css';
 
-export function PassTurnDisplay() {
+export default function PassTurnDisplay() {
   const activePlayer = useSelector(
     (state: RootState) => state.game.activePlayer
   );
@@ -21,5 +20,5 @@ export function PassTurnDisplay() {
     return <div className={styles.passTurnDisplay}>WAITING</div>;
   }
 
-  return <></>;
+  return null;
 }

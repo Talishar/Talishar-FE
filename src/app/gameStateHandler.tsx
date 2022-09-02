@@ -1,14 +1,13 @@
-import React, { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import type { AppDispatch } from './store';
-import { useSelector } from 'react-redux';
-import { RootState } from '../app/store';
-import { nextTurn } from '../features/game/gameSlice';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import type { AppDispatch } from './Store';
+import { RootState } from './Store';
+import { nextTurn } from '../features/game/GameSlice';
 
 const intervalLength = 2000;
 // const hostURL = 'https://localhost/FaBOnline/';
 
-export function GameStateHandler() {
+export default function GameStateHandler() {
   const params = useSelector((state: RootState) => state.game.gameInfo);
 
   const dispatch = useDispatch<AppDispatch>();
@@ -21,7 +20,7 @@ export function GameStateHandler() {
     return () => {
       clearInterval(intervalID);
     };
-  }, []);
+  }, [params, dispatch]);
 
-  return <></>;
+  return null;
 }

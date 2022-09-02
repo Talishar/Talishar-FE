@@ -1,19 +1,18 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { RootState } from '../../app/store';
-import { Displayrow } from '../../interface/displayrow';
-import { CardDisplay } from '../elements/card';
-import { Card } from '../../features/cardSlice';
-import styles from './cardzone.module.css';
+import { RootState } from '../../app/Store';
+import Displayrow from '../../interface/displayrow';
+import CardDisplay from '../elements/CardDisplay';
+import styles from './Cardzone.module.css';
+import PitchDisplay from '../elements/PitchDisplay';
 
-export function PitchZone(prop: Displayrow) {
-  let pitchZone: Card[] | undefined;
+export default function PitchZone(prop: Displayrow) {
+  const { isPlayer } = prop;
+  const { DisplayRow } = prop;
 
-  if (prop.isPlayer) {
-    pitchZone = useSelector((state: RootState) => state.game.playerOne.Pitch);
-  } else {
-    pitchZone = useSelector((state: RootState) => state.game.playerTwo.Pitch);
-  }
+  const pitchZone = useSelector((state: RootState) =>
+    isPlayer ? state.game.playerOne.Pitch : state.game.playerTwo.Pitch
+  );
 
   if (pitchZone === undefined) {
     return <div className={styles.pitchZone}>Pitch</div>;
@@ -25,6 +24,7 @@ export function PitchZone(prop: Displayrow) {
   return (
     <div className={styles.pitchZone}>
       <CardDisplay card={cardToDisplay} num={numInPitch} />
+      <PitchDisplay isPlayer={isPlayer} DisplayRow={DisplayRow} />
     </div>
   );
 }

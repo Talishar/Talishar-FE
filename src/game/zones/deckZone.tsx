@@ -1,20 +1,16 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { RootState } from '../../app/store';
-import { Displayrow } from '../../interface/displayrow';
-import { CardDisplay } from '../elements/card';
-import styles from './cardzone.module.css';
+import { RootState } from '../../app/Store';
+import Displayrow from '../../interface/displayrow';
+import CardDisplay from '../elements/CardDisplay';
+import styles from './Cardzone.module.css';
 
-export function DeckZone(prop: Displayrow) {
-  // let cardToDisplay;
-  // if (prop.isPlayer) {
-  //   cardToDisplay = useSelector(
-  //     (state: RootState) => state.game.playerOne.Hero
-  //   );
-  // } else {
-  //   cardToDisplay = useSelector(
-  //     (state: RootState) => state.game.playerTwo.Hero
-  //   );
-  // }
+export default function DeckZone(prop: Displayrow) {
+  const { isPlayer } = prop;
+
+  const deckCards = useSelector((state: RootState) =>
+    isPlayer ? state.game.playerOne.DeckSize : state.game.playerTwo.DeckSize
+  );
+
   return <div className={styles.deckZone}>Deck</div>;
 }

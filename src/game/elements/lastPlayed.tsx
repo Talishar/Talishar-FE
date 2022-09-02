@@ -1,9 +1,9 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { RootState } from '../../app/store';
-import styles from './lastPlayed.module.css';
+import { RootState } from '../../app/Store';
+import styles from './LastPlayed.module.css';
 
-export function LastPlayed() {
+export default function LastPlayed() {
   let lastCard = useSelector(
     (state: RootState) => state.game.gameInfo.lastPlayed
   );
@@ -14,10 +14,7 @@ export function LastPlayed() {
     };
   }
 
-  const src =
-    'https://www.fleshandbloodonline.com/FaBOnline/WebpImages/' +
-    lastCard.cardNumber +
-    '.webp';
+  const src = `https://www.fleshandbloodonline.com/FaBOnline/WebpImages/${lastCard.cardNumber}.webp`;
 
   return (
     <div className={styles.lastPlayed}>

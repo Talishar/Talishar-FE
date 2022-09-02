@@ -1,6 +1,6 @@
-import { Card } from '../cardSlice';
+import Card from './Card';
 
-export interface Player {
+export default interface Player {
   HeadEq?: Card;
   ChestEq?: Card;
   GlovesEq?: Card;
@@ -20,4 +20,5 @@ export interface Player {
   Name?: string;
   IsVerified?: boolean;
   Effects?: Card[];
+  Permanents?: Card[];
 }

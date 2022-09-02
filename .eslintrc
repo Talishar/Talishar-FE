@@ -10,5 +10,15 @@
     "plugin:prettier/recommended",
     "prettier"
   ],
-  "rules": { "prettier/prettier": 1 }
+
+  "rules": {
+    "prettier/prettier": 1,
+    "no-param-reassign": [
+      "error",
+      {
+        "props": true,
+        "ignorePropertyModificationsFor": ["state"]
+      }
+    ]
+  }
 }

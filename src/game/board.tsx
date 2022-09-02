@@ -1,8 +1,8 @@
 import React from 'react';
-import { PlayerBoard } from './playerboard';
-import { OpponentBoard } from './opponentboard';
-import { CombatChain } from './combatchain';
-import styles from './board.module.css';
+import PlayerBoard from './PlayerBoard';
+import OpponentBoard from './OpponentBoard';
+import CombatChain from './CombatChain';
+import styles from './Board.module.css';
 
 export interface playAreaDimensions {
   dimension: number;

@@ -1,7 +1,6 @@
 import React from 'react';
-import { Card } from '../../features/cardSlice';
-import styles from './menu.module.css';
 import screenfull from 'screenfull';
+import styles from './Menu.module.css';
 
 function MenuButton() {
   function toggleMenu() {
@@ -14,7 +13,7 @@ function MenuButton() {
         aria-label="Skip to main navigation"
         onClick={() => toggleMenu()}
       >
-        <i className="fa fa-bars" aria-hidden="true"></i>
+        <i className="fa fa-bars" aria-hidden="true" />
       </button>
     </div>
   );
@@ -34,13 +33,13 @@ function FullScreenButton() {
         aria-label="Skip to main navigation"
         onClick={() => toggleFullScreen()}
       >
-        <i className="fa fa-arrows-alt" aria-hidden="true"></i>
+        <i className="fa fa-arrows-alt" aria-hidden="true" />
       </button>
     </div>
   );
 }
 
-export function Menu() {
+export default function Menu() {
   return (
     <div className={styles.menuList}>
       <MenuButton />
