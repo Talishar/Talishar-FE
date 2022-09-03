@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import Card from '../../features/Card';
 import { clearPopUp, setPopUp } from '../../features/game/GameSlice';
@@ -16,6 +16,7 @@ export default function CardDisplay(prop: CardProp) {
   const classStyles: string[] = [styles.floatTint];
   const equipStatus: string[] = [styles.floatTint];
   const dispatch = useDispatch();
+  const ref = useRef<HTMLDivElement>(null);
 
   if (card == null || card.cardNumber === '') {
     return null;
@@ -32,12 +33,19 @@ export default function CardDisplay(prop: CardProp) {
     console.log('I have been clicked!');
   }
 
-  const handleMouseEnter = (e: React.MouseEvent) => {
+  const handleMouseEnter = () => {
+    if (ref.current === null) {
+      return;
+    }
+    const rect = ref.current.getBoundingClientRect();
+    console.log(rect);
+    const xCoord = rect.left < window.innerWidth / 2 ? rect.right : rect.left;
+    const yCoord = rect.top < window.innerHeight / 2 ? rect.bottom : rect.top;
     dispatch(
       setPopUp({
         cardNumber: card.cardNumber,
-        xCoord: e.clientX,
-        yCoord: e.clientY
+        xCoord: xCoord,
+        yCoord: yCoord
       })
     );
   };
@@ -73,8 +81,9 @@ export default function CardDisplay(prop: CardProp) {
       onClick={() => {
         onClick();
       }}
-      onMouseEnter={(e) => handleMouseEnter(e)}
+      onMouseEnter={() => handleMouseEnter()}
       onMouseLeave={() => handleMouseLeave()}
+      ref={ref}
     >
       <img src={eqImg} className={styles.img} />
 

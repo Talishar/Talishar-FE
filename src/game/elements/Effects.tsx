@@ -1,6 +1,7 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
+import React, { useRef } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../app/Store';
+import { clearPopUp, setPopUp } from '../../features/game/GameSlice';
 import Player from '../../interface/Player';
 import styles from '../ActiveEffects.module.css';
 import Card from '../../features/Card';
@@ -13,8 +14,36 @@ export interface CardProp {
 
 function Effect(prop: CardProp) {
   const src = `https://www.fleshandbloodonline.com/FaBOnline/crops/${prop.card.cardNumber}_cropped.png`;
+  const ref = useRef<HTMLDivElement>(null);
+  const dispatch = useDispatch();
+
+  const handleMouseEnter = () => {
+    if (ref.current === null) {
+      return;
+    }
+    const rect = ref.current.getBoundingClientRect();
+    console.log(rect);
+    const xCoord = rect.left < window.innerWidth / 2 ? rect.right : rect.left;
+    const yCoord = rect.top < window.innerHeight / 2 ? rect.bottom : rect.top;
+    dispatch(
+      setPopUp({
+        cardNumber: prop.card.cardNumber,
+        xCoord: xCoord,
+        yCoord: yCoord
+      })
+    );
+  };
+
+  const handleMouseLeave = () => {
+    dispatch(clearPopUp());
+  };
   return (
-    <div className={styles.effect}>
+    <div
+      className={styles.effect}
+      onMouseEnter={() => handleMouseEnter()}
+      onMouseLeave={() => handleMouseLeave()}
+      ref={ref}
+    >
       <img src={src} className={styles.img} />
     </div>
   );
