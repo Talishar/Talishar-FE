@@ -47,8 +47,18 @@ function PlayerHandCard(props: handCard) {
   const handleMouseLeave = () => {
     dispatch(clearPopUp());
   };
-  const degree = lerp(-15, 15, cardIndex / (handSize - 1));
-  const rotationStyle = { transform: `rotate(${degree}deg)` };
+  const degree = lerp(-15, 15, cardIndex / (lengthOfCards - 1));
+  const yDisplace = () => {
+    if (ref.current === null) {
+      return;
+    }
+    const rect = ref.current.getBoundingClientRect();
+    console.log(rect);
+    return lerp(rect.bottom, rect.top, -1 * ((cardIndex / (lengthOfCards - 1)) ** 2))
+  }
+  const rotationStyle = {
+  transform: `rotate(${degree}deg) translateY(${yDisplace}px)`
+  };
 
   const src = `https://www.fleshandbloodonline.com/FaBOnline/WebpImages/${card.cardNumber}.webp`;
 
