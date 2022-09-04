@@ -5,6 +5,7 @@ import GameStateHandler from './app/GameStateHandler';
 import LeftColumn from './game/LeftColumn';
 import RightColumn from './game/RightColumn';
 import HandZone from './game/zones/HandZone';
+import PlayerHand from './game/zones/PlayerHand';
 
 function App() {
   const [maxWidth, setMaxWidth] = useState(1920);
@@ -30,6 +31,7 @@ function App() {
           <HandZone isPlayer={false} />
           <Board />
           <HandZone isPlayer />
+          <PlayerHand />
         </div>
         <RightColumn />
       </div>

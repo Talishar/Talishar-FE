@@ -1,0 +1,34 @@
+.handRow {
+  position: fixed;
+  min-width: 40%;
+  max-width: 80%;
+  min-height: 10vh;
+  bottom: 0px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: center;
+  gap: 1vh;
+  user-select: none;
+}
+
+.handCard {
+  height: 10vh;
+  overflow: visible;
+  width: 1px;
+  flex-grow: 1;
+}
+
+.img {
+  width: 100%;
+}
+
+.imgContainer {
+  position: relative;
+  height: 20vh;
+  aspect-ratio: 2/3;
+}
+
+.imgContainer:hover {
+  top: -3vh;
+}
