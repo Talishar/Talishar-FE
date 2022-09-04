@@ -37,7 +37,6 @@ export default function CardDisplay(prop: CardProp) {
       return;
     }
     const rect = ref.current.getBoundingClientRect();
-    console.log(rect);
     const xCoord = rect.left < window.innerWidth / 2 ? rect.right : rect.left;
     const yCoord = rect.top < window.innerHeight / 2 ? rect.bottom : rect.top;
     dispatch(

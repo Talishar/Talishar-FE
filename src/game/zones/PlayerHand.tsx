@@ -1,9 +1,16 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { shallowEqual, useSelector, useDispatch } from 'react-redux';
 import { clearPopUp, setPopUp } from '../../features/game/GameSlice';
 import { RootState } from '../../app/Store';
 import Card from '../../features/Card';
 import styles from './PlayerHand.module.css';
+import Draggable, {
+  DraggableData,
+  DraggableEventHandler
+} from 'react-draggable';
+
+const HandCurvatureConstant = 8;
+const ScreenPercentageForCardPlayed = 0.25;
 
 interface handCard {
   card?: Card;
@@ -19,7 +26,11 @@ function lerp(start: number, end: number, amt: number) {
 }
 
 function PlayerHandCard(props: handCard) {
-  const { card, cardIndex, handSize } = props;
+  const [controlledPosition, setControlledPosition] = useState({ x: 0, y: 0 });
+  const [canPopUp, setCanPopup] = useState(true);
+  const [cardPlayMessage, setCardPlayMessage] = useState(false);
+  const { card, cardIndex, handSize, isArsenal, isBanished, isGraveyard } =
+    props;
   if (card === undefined) {
     return <div className={styles.handCard}></div>;
   }
@@ -27,12 +38,24 @@ function PlayerHandCard(props: handCard) {
   const ref = useRef<HTMLDivElement>(null);
   const dispatch = useDispatch();
 
+  const onDragStop = (e: any, data: any) => {
+    if (data.lastY < -window.innerHeight * ScreenPercentageForCardPlayed) {
+      console.log('playing the card');
+    }
+    setControlledPosition({ x: 0, y: 0 });
+    setCanPopup(true);
+  };
+
+  const onDrag = () => {
+    dispatch(clearPopUp());
+    setCanPopup(false);
+  };
+
   const handleMouseEnter = () => {
-    if (ref.current === null) {
+    if (ref.current === null || !canPopUp) {
       return;
     }
     const rect = ref.current.getBoundingClientRect();
-    console.log(rect);
     const xCoord = rect.left < window.innerWidth / 2 ? rect.right : rect.left;
     const yCoord = rect.top < window.innerHeight / 2 ? rect.bottom : rect.top;
     dispatch(
@@ -47,32 +70,58 @@ function PlayerHandCard(props: handCard) {
   const handleMouseLeave = () => {
     dispatch(clearPopUp());
   };
-  const degree = lerp(-15, 15, cardIndex / (lengthOfCards - 1));
+
+  const degree = lerp(-15, 15, cardIndex / (handSize - 1));
+
   const yDisplace = () => {
     if (ref.current === null) {
-      return;
+      return 0;
     }
+    const displacement = Math.sin((cardIndex / (handSize - 1)) * Math.PI);
     const rect = ref.current.getBoundingClientRect();
-    console.log(rect);
-    return lerp(rect.bottom, rect.top, -1 * ((cardIndex / (lengthOfCards - 1)) ** 2))
-  }
+    const yTranslate = lerp(
+      0,
+      (rect.bottom - rect.top) / HandCurvatureConstant,
+      -displacement
+    );
+    return yTranslate;
+  };
+
   const rotationStyle = {
-  transform: `rotate(${degree}deg) translateY(${yDisplace}px)`
+    transform: `translateY(${yDisplace()}px) rotate(${degree}deg) `
   };
 
   const src = `https://www.fleshandbloodonline.com/FaBOnline/WebpImages/${card.cardNumber}.webp`;
 
   return (
     <div className={styles.handCard}>
-      <div
-        className={styles.imgContainer}
-        onMouseEnter={() => handleMouseEnter()}
-        onMouseLeave={() => handleMouseLeave()}
-        ref={ref}
-        style={rotationStyle}
+      <Draggable
+        defaultPosition={{ x: 0, y: 0 }}
+        onStop={onDragStop}
+        onDrag={onDrag}
+        position={controlledPosition}
       >
-        <img src={src} className={styles.img} />
-      </div>
+        <div>
+          <div
+            className={styles.imgContainer}
+            onMouseEnter={() => handleMouseEnter()}
+            onMouseLeave={() => handleMouseLeave()}
+            ref={ref}
+            style={rotationStyle}
+          >
+            <div>
+              <img src={src} className={styles.img} draggable="false" />
+              <div className={styles.iconCol}>
+                {isArsenal === true && (
+                  <div className={styles.arsenal}>
+                    <i className="fa fa-random" aria-hidden="true"></i>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      </Draggable>
     </div>
   );
 }
@@ -120,17 +169,15 @@ export default function PlayerHand() {
             />
           );
         })}
-      {arsenalCards !== undefined && handCards !== undefined && (
-        <PlayerHandCard handSize={0} cardIndex={0} />
-      )}
       {arsenalCards !== undefined &&
         arsenalCards.map((card, ix) => {
           return (
             <PlayerHandCard
               card={card}
+              isArsenal
               key={ix}
               handSize={lengthOfCards}
-              cardIndex={ix}
+              cardIndex={ix + handCards!.length}
             />
           );
         })}
