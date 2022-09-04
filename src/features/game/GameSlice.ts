@@ -42,6 +42,15 @@ export const gameSlice = createSlice({
     },
     clearPopUp: (state) => {
       state.popup = { popupOn: false, popupCard: undefined };
+    },
+    setPlayCardMessage: (state) => {
+      state.playCardMessage = {
+        popUpOn: true,
+        message: 'Release to play this card'
+      };
+    },
+    clearPlayCardMessage: (state) => {
+      state.playCardMessage = { popUpOn: false };
     }
   },
   // The `extraReducers` field lets the slice handle actions defined elsewhere,

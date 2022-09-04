@@ -16,4 +16,8 @@ export default interface GameState {
     xCoord?: number;
     yCoord?: number;
   };
+  playCardMessage?: {
+    popUpOn?: boolean;
+    message?: string;
+  };
 }
