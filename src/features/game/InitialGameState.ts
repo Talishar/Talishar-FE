@@ -94,6 +94,84 @@ const InitialGameState: GameState = {
       },
       {
         cardNumber: 'WTR069'
+      },
+
+      {
+        cardNumber: 'WTR101'
+      },
+      {
+        cardNumber: 'WTR100'
+      },
+      {
+        cardNumber: 'WTR104'
+      },
+      {
+        cardNumber: 'CRU073'
+      },
+
+      {
+        cardNumber: 'WTR101'
+      },
+      {
+        cardNumber: 'WTR100'
+      },
+      {
+        cardNumber: 'WTR104'
+      },
+      {
+        cardNumber: 'CRU073'
+      },
+
+      {
+        cardNumber: 'WTR101'
+      },
+      {
+        cardNumber: 'WTR100'
+      },
+      {
+        cardNumber: 'WTR104'
+      },
+      {
+        cardNumber: 'CRU073'
+      },
+
+      {
+        cardNumber: 'WTR101'
+      },
+      {
+        cardNumber: 'WTR100'
+      },
+      {
+        cardNumber: 'WTR104'
+      },
+      {
+        cardNumber: 'CRU073'
+      },
+
+      {
+        cardNumber: 'WTR101'
+      },
+      {
+        cardNumber: 'WTR100'
+      },
+      {
+        cardNumber: 'WTR104'
+      },
+      {
+        cardNumber: 'CRU073'
+      },
+
+      {
+        cardNumber: 'WTR101'
+      },
+      {
+        cardNumber: 'WTR100'
+      },
+      {
+        cardNumber: 'WTR104'
+      },
+      {
+        cardNumber: 'CRU073'
       }
     ],
     Pitch: [

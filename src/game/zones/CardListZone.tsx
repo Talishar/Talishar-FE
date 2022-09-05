@@ -8,13 +8,15 @@ import styles from './CardListZone.module.css';
 export default function CardListZone() {
   const cardList = useSelector((state: RootState) => state.game.cardListFocus);
   const dispatch = useDispatch();
-  if (cardList === undefined) {
+  if (cardList === undefined || cardList.cardList === undefined) {
     return null;
   }
 
   const closeCardList = () => {
     dispatch(clearCardListFocus());
   };
+
+  const reversedList = [...cardList.cardList].reverse();
 
   return (
     <div className={styles.emptyOutside} onClick={closeCardList}>
@@ -32,8 +34,8 @@ export default function CardListZone() {
           </div>
         </div>
         <div className={styles.cardListContents}>
-          {cardList.cardList &&
-            cardList.cardList.map((card, ix) => {
+          {reversedList &&
+            reversedList.map((card, ix) => {
               return <CardDisplay card={card} key={ix} />;
             })}
         </div>

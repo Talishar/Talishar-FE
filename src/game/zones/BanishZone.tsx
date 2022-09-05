@@ -25,7 +25,7 @@ export default function BanishZone(prop: Displayrow) {
     dispatch(
       setCardListFocus({
         cardList: banishZone,
-        name: `${isPlayerPronoun} banish zone`
+        name: `${isPlayerPronoun} Banish Zone`
       })
     );
   };
