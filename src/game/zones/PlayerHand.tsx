@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { shallowEqual, useSelector, useDispatch } from 'react-redux';
 import { clearPopUp, setPopUp } from '../../features/game/GameSlice';
 import { RootState } from '../../app/Store';
@@ -29,6 +29,7 @@ function PlayerHandCard(props: handCard) {
   const [controlledPosition, setControlledPosition] = useState({ x: 0, y: 0 });
   const [canPopUp, setCanPopup] = useState(true);
   const [cardPlayMessage, setCardPlayMessage] = useState(false);
+  const [dragging, setDragging] = useState(false);
   const { card, cardIndex, handSize, isArsenal, isBanished, isGraveyard } =
     props;
   if (card === undefined) {
@@ -44,11 +45,13 @@ function PlayerHandCard(props: handCard) {
     }
     setControlledPosition({ x: 0, y: 0 });
     setCanPopup(true);
+    setDragging(false);
   };
 
   const onDrag = () => {
     dispatch(clearPopUp());
     setCanPopup(false);
+    setDragging(true);
   };
 
   const handleMouseEnter = () => {
@@ -87,11 +90,23 @@ function PlayerHandCard(props: handCard) {
     return yTranslate;
   };
 
-  const rotationStyle = {
+  const [translation, setTranslation] = useState({
     transform: `translateY(${yDisplace()}px) rotate(${degree}deg) `
-  };
+  });
 
-  const src = `https://www.fleshandbloodonline.com/FaBOnline/WebpImages/${card.cardNumber}.webp`;
+  useEffect(() => {
+    if (dragging) {
+      setTranslation({
+        transform: `translateY(${yDisplace()}px) rotate(0deg) `
+      });
+    } else {
+      setTranslation({
+        transform: `translateY(${yDisplace()}px) rotate(${degree}deg) `
+      });
+    }
+  }, [dragging]);
+
+  const src = `https://www.fleshandbloodonline.com/FaBOnline2/WebpImages/${card.cardNumber}.webp`;
 
   return (
     <div className={styles.handCard}>
@@ -107,7 +122,7 @@ function PlayerHandCard(props: handCard) {
             onMouseEnter={() => handleMouseEnter()}
             onMouseLeave={() => handleMouseLeave()}
             ref={ref}
-            style={rotationStyle}
+            style={translation}
           >
             <div>
               <img src={src} className={styles.img} draggable="false" />

@@ -26,7 +26,7 @@ export default function CardDisplay(prop: CardProp) {
     num = card.counters;
   }
 
-  const eqImg = `https://www.fleshandbloodonline.com/FaBOnline/concat/${card.cardNumber}.webp`;
+  const eqImg = `https://www.fleshandbloodonline.com/FaBOnline2/concat/${card.cardNumber}.webp`;
 
   function onClick() {
     console.log('I have been clicked!');

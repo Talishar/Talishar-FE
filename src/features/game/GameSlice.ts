@@ -7,7 +7,8 @@ import GameState from '../GameState';
 export const nextTurn = createAsyncThunk(
   'game/nextTurn',
   async (params: GameInfo) => {
-    const queryURL = `https://www.fleshandbloodonline.com/FaBOnline/GetNextTurn3.php?gameName=${params.gameID}&playerID=${params.playerID}&authKey=${params.authKey}`;
+    // const queryURL = `http://localhost/FaBOnline/GetNextTurn3.php?gameName=${params.gameID}&playerID=${params.playerID}`;
+    const queryURL = `https://www.fleshandbloodonline.com/FaBOnline2/GetNextTurn3.php?gameName=${params.gameID}&playerID=${params.playerID}`;
     const response = await fetch(queryURL, {
       method: 'GET',
       headers: {}

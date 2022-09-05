@@ -15,7 +15,7 @@ export default function CardPopUp() {
     return null;
   }
 
-  const src = `https://www.fleshandbloodonline.com/FaBOnline/WebpImages/${popup.popupCard.cardNumber}.webp`;
+  const src = `https://www.fleshandbloodonline.com/FaBOnline2/WebpImages/${popup.popupCard.cardNumber}.webp`;
 
   if (popup.xCoord === undefined || popup.yCoord === undefined) {
     return (

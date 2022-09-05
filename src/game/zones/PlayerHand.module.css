@@ -33,6 +33,7 @@
   position: relative;
   height: 25vh;
   aspect-ratio: 2/3;
+  transition: transform 0.25s;
 }
 
 .imgContainer:hover {
