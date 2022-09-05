@@ -22,7 +22,6 @@ export default function PitchZone(prop: Displayrow) {
   const dispatch = useDispatch();
 
   const pitchZoneDisplay = () => {
-    console.log('displaying the banish zone!');
     const isPlayerPronoun = isPlayer ? 'Your' : 'Your Opponents';
     dispatch(
       setCardListFocus({

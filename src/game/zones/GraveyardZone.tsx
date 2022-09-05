@@ -20,7 +20,6 @@ export default function GraveyardZone(prop: Displayrow) {
   const dispatch = useDispatch();
 
   const graveyardZoneDisplay = () => {
-    console.log('displaying the banish zone!');
     const isPlayerPronoun = isPlayer ? 'Your' : 'Your Opponents';
     dispatch(
       setCardListFocus({

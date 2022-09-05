@@ -20,7 +20,6 @@ export default function BanishZone(prop: Displayrow) {
   const dispatch = useDispatch();
 
   const banishZoneDisplay = () => {
-    console.log('displaying the banish zone!');
     const isPlayerPronoun = isPlayer ? 'Your' : 'Your Opponents';
     dispatch(
       setCardListFocus({
