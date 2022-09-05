@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React from 'react';
 import { shallowEqual, useSelector } from 'react-redux';
 import { RootState } from '../../app/Store';
 import Card from '../../features/Card';
@@ -60,7 +60,9 @@ export default function PlayerHand() {
               isArsenal
               key={ix}
               handSize={lengthOfCards}
-              cardIndex={ix + handCards!.length}
+              cardIndex={
+                ix + (handCards?.length !== undefined ? handCards.length : 0)
+              }
             />
           );
         })}

@@ -19,7 +19,9 @@ export default function PitchDisplay(prop: Displayrow) {
 
   return (
     <div className={styles.pitchOverlay}>
-      <div className={styles.pitchValue}>{pitchAmount}</div>
+      <div className={styles.pitchBackground}>
+        <div className={styles.pitchValue}>{pitchAmount}</div>
+      </div>
     </div>
   );
 }

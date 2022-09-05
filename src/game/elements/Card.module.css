@@ -57,8 +57,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 25%;
-  width: 25%;
+  height: 4vh;
+  width: 4vh;
   background-image: url('../../img/symbols/symbol-defence.png');
   background-position: center;
   background-size: contain;

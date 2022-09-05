@@ -1,18 +1,22 @@
 .topRow {
-  display: flex;
+  top: 120px;
   height: 10vh;
-  gap: 1vh;
+  display: flex;
   justify-content: space-between;
   width: 100%;
+  gap: 1vh;
+  align-items: stretch;
   padding-bottom: 1vh;
 }
 
 .bottomRow {
-  display: flex;
+  top: 120px;
   height: 10vh;
-  gap: 1vh;
+  display: flex;
   justify-content: space-between;
   width: 100%;
+  gap: 1vh;
+  align-items: stretch;
   padding-bottom: 1vh;
 }
 
@@ -42,6 +46,7 @@
 }
 
 .groupR {
+  width: fit-content;
   height: 10vh;
   display: flex;
   align-items: center;

@@ -105,6 +105,7 @@
 }
 
 .pitchZone {
+  position: relative;
   order: 4;
   height: 10vh;
   width: 10vh;
@@ -119,21 +120,22 @@
 
 .banishZone {
   position: relative;
+  right: 0px;
+  display: flex;
   height: 10vh;
   width: 10vh;
-  right: 0px;
-  border-radius: 10px;
-  display: flex;
   justify-content: center;
   align-items: center;
   background: rgba(50, 50, 50, 0.5);
   color: white;
+  border-radius: 10px;
+  flex: 0 0 10vh;
 }
 
 .arsenalZone {
   position: relative;
   height: 10vh;
-  width: 50%;
+  width: 32vh;
   border-radius: 10px;
   display: flex;
   flex-direction: row;
