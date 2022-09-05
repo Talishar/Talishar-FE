@@ -9,11 +9,11 @@
 
 .bottomRow {
   display: flex;
+  height: 10vh;
+  gap: 1vh;
   justify-content: space-between;
   width: 100%;
-  gap: 1vh;
-  height: 10vh;
-  align-items: stretch;
+  padding-bottom: 1vh;
 }
 
 .middleRow {

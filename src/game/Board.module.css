@@ -39,6 +39,7 @@
 }
 
 .playerPlaymat {
+  overflow: hidden;
   top: 1vh;
   position: relative;
   height: 32vh;

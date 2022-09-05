@@ -36,16 +36,45 @@
 }
 
 .permanentsZone {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  overflow-x: auto;
+  overflow-y: hidden;
+  justify-content: flex-start;
+  gap: 1vh;
+  align-content: flex-start;
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.permanentsZone::-webkit-scrollbar {
+  display: none;
+}
+
+.permanentsWrapper {
   position: relative;
-  width: 100%;
+  overflow: clip;
+  flex: 0 1 100%;
+  min-width: 0;
   border-radius: 10px;
+  gap: 1vh;
+  background: rgba(50, 50, 50, 0.5);
+  color: white;
+  height: 10vh;
+}
+.permanentsText {
+  position: absolute;
+  top: 0px;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
   display: flex;
   justify-content: center;
   align-items: center;
-  overflow-x: auto;
-  overflow-y: hidden;
-  background: rgba(50, 50, 50, 0.5);
-  color: white;
 }
 
 .graveyardZone {

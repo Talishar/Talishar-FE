@@ -13,19 +13,30 @@ export default function PermanentsZone(prop: Displayrow) {
   );
 
   if (permanents === undefined || permanents.length === 0) {
-    return <div className={styles.permanentsZone}>Permanents</div>;
+    return (
+      <div className={styles.permanentsWrapper}>
+        <div className={styles.permanentsText}>
+          <div>Permanents</div>
+        </div>
+      </div>
+    );
   }
 
   //TODO: Stack permanents that are the same.
   return (
-    <div className={styles.permanentsZone}>
-      {permanents.map((card, ix) => {
-        return (
-          <div key={ix.toString()} className={styles.cardContainer}>
-            <CardDisplay card={card} key={ix.toString()} />
-          </div>
-        );
-      })}
+    <div className={styles.permanentsWrapper}>
+      <div className={styles.permanentsText}>
+        <div>Permanents</div>
+      </div>
+      <div className={styles.permanentsZone}>
+        {permanents.map((card, ix) => {
+          return (
+            <div key={ix.toString()} className={styles.cardContainer}>
+              <CardDisplay card={card} key={ix.toString()} />
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }

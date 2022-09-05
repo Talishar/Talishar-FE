@@ -88,6 +88,65 @@ const InitialGameState: GameState = {
     Health: 20,
     ActionPoints: 0,
     PitchRemaining: 0,
+    Permanents: [
+      {
+        cardNumber: 'ARC010',
+        counters: 1
+      },
+
+      {
+        cardNumber: 'ARC010'
+      },
+      {
+        cardNumber: 'MON104'
+      },
+      {
+        cardNumber: 'MON104'
+      },
+      {
+        cardNumber: 'ARC010'
+      },
+      {
+        cardNumber: 'MON104'
+      },
+      {
+        cardNumber: 'MON104'
+      },
+      {
+        cardNumber: 'MON104'
+      },
+      {
+        cardNumber: 'MON104'
+      },
+      {
+        cardNumber: 'ARC010',
+        counters: 1
+      },
+      {
+        cardNumber: 'MON104'
+      },
+      {
+        cardNumber: 'MON104'
+      },
+      {
+        cardNumber: 'MON104'
+      },
+      {
+        cardNumber: 'MON104'
+      },
+      {
+        cardNumber: 'MON104'
+      },
+      {
+        cardNumber: 'MON104'
+      },
+      {
+        cardNumber: 'MON104'
+      },
+      {
+        cardNumber: 'UPR409'
+      }
+    ],
     Graveyard: [
       {
         cardNumber: 'ARC003'

@@ -40,9 +40,27 @@ function FullScreenButton() {
   );
 }
 
+function UndoButton() {
+  const clickUndo = () => {
+    console.log('clicked the undo button');
+  };
+  return (
+    <div>
+      <button
+        className={styles.btn}
+        aria-label="Skip to main navigation"
+        onClick={clickUndo}
+      >
+        <i className="fa fa-undo" aria-hidden="true" />
+      </button>
+    </div>
+  );
+}
+
 export default function Menu() {
   return (
     <div className={styles.menuList}>
+      <UndoButton />
       <MenuButton />
       <FullScreenButton />
     </div>
