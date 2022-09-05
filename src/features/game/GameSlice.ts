@@ -3,6 +3,7 @@ import ParseGameState from '../../app/ParseGameState';
 import InitialGameState from './InitialGameState';
 import GameInfo from '../GameInfo';
 import GameState from '../GameState';
+import Card from '../Card';
 
 export const nextTurn = createAsyncThunk(
   'game/nextTurn',
@@ -52,6 +53,22 @@ export const gameSlice = createSlice({
     },
     clearPlayCardMessage: (state) => {
       state.playCardMessage = { popUpOn: false };
+    },
+    setCardListFocus: (
+      state,
+      action: PayloadAction<{
+        cardList?: Card[];
+        name?: string;
+      }>
+    ) => {
+      state.cardListFocus = {
+        active: true,
+        cardList: action.payload.cardList,
+        name: action.payload.name
+      };
+    },
+    clearCardListFocus: (state) => {
+      state.cardListFocus = undefined;
     }
   },
   // The `extraReducers` field lets the slice handle actions defined elsewhere,
@@ -73,4 +90,5 @@ export const gameSlice = createSlice({
 export default gameSlice.reducer;
 
 const { actions } = gameSlice;
-export const { setPopUp, clearPopUp } = actions;
+export const { setPopUp, clearPopUp, setCardListFocus, clearCardListFocus } =
+  actions;

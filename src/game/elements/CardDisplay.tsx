@@ -8,10 +8,11 @@ export interface CardProp {
   card?: Card;
   num?: number;
   name?: string;
+  preventUseOnClick?: boolean;
 }
 
 export default function CardDisplay(prop: CardProp) {
-  const { card } = prop;
+  const { card, preventUseOnClick } = prop;
   let { num } = prop;
   const classStyles: string[] = [styles.floatTint];
   const equipStatus: string[] = [styles.floatTint];
@@ -29,6 +30,9 @@ export default function CardDisplay(prop: CardProp) {
   const eqImg = `https://www.fleshandbloodonline.com/FaBOnline2/concat/${card.cardNumber}.webp`;
 
   function onClick() {
+    if (preventUseOnClick) {
+      return;
+    }
     console.log('I have been clicked!');
   }
 

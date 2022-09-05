@@ -20,4 +20,9 @@ export default interface GameState {
     popUpOn?: boolean;
     message?: string;
   };
+  cardListFocus?: {
+    cardList?: Card[];
+    name?: string;
+    active?: boolean;
+  };
 }
