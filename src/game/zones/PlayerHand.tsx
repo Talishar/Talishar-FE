@@ -35,7 +35,7 @@ export default function PlayerHand() {
   lengthOfCards +=
     playableGraveyardCards !== undefined ? playableGraveyardCards.length : 0;
 
-  const widthPercentage = Math.min(lengthOfCards * 10, MaxHandWidthPercentage);
+  const widthPercentage = Math.min(lengthOfCards * 5, MaxHandWidthPercentage);
 
   const widthfunction = { width: `${widthPercentage}%` };
 
