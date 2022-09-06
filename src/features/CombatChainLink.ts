@@ -6,4 +6,5 @@ export default interface CombatChainLink {
   totalAttack?: number;
   totalDefence?: number;
   didItHit?: boolean;
+  index?: number;
 }

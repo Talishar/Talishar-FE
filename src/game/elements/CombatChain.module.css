@@ -72,7 +72,11 @@
 }
 
 .reactions {
-  height: 13vh;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
   width: 100%;
   display: flex;
   flex-direction: row;
@@ -81,6 +85,12 @@
   gap: 1vh;
   overflow-x: auto;
   overflow-y: hidden;
+}
+
+.reactionWrapper {
+  position: relative;
+  height: 13vh;
+  width: 100%;
 }
 
 .chainLinksRow {

@@ -134,6 +134,9 @@ export default function ParseGameState(input: string) {
   // index 12 - PlayerOneEQ Array - must parse this before other playerOne individual values set
   result.playerOne = parseEQArray(stringArray[12]);
 
+  // index 8 - PlayerOne Hand
+  result.playerOne.Hand = parseHand(stringArray[8]);
+
   // index 9 - player One health
   result.playerOne.Health = parseInt(stringArray[9]);
 
@@ -165,7 +168,33 @@ export default function ParseGameState(input: string) {
       ? undefined
       : [{ cardNumber: zonesArrayPOne[3].split(' ')[1] }];
 
+  // index 12 is combat chain total attack
+
+  result.activeCombatChain.totalAttack = isNaN(parseInt(stringArray[13]))
+    ? undefined
+    : parseInt(stringArray[13]);
+  result.activeCombatChain.totalDefence = isNaN(parseInt(stringArray[14]))
+    ? undefined
+    : parseInt(stringArray[14]);
+
+  // index 15 is their arsenal.
+  result.playerTwo.Arsenal = parseHand(stringArray[15]);
+
+  // index 16 is our arsenal
+  result.playerOne.Arsenal = parseHand(stringArray[16]);
+
+  // index 17 is the chain link summary
+  result.oldCombatChain = parseChainLinks(stringArray[17]);
+
+  console.log(stringArray);
   return result;
+}
+
+function parseChainLinks(input: string) {
+  const inputArray: string[] = input.split('|');
+  return inputArray.map((link, ix) => {
+    return { didItHit: link === 'hit' ? true : false, index: ix };
+  });
 }
 
 function parseCombatChain(input: string) {

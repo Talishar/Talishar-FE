@@ -13,14 +13,16 @@ export default function Reactions() {
   }
 
   return (
-    <div className={styles.reactions}>
-      {activeCombatChain.reactionCards?.map((card, ix) => {
-        return (
-          <div key={ix.toString()} className={styles.cardContainer}>
-            <CardDisplay card={card} key={ix.toString()} />
-          </div>
-        );
-      })}
+    <div className={styles.reactionWrapper}>
+      <div className={styles.reactions}>
+        {activeCombatChain.reactionCards?.map((card, ix) => {
+          return (
+            <div key={ix.toString()} className={styles.cardContainer}>
+              <CardDisplay card={card} key={ix.toString()} />
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }

@@ -13,7 +13,13 @@ export default function ArsenalZone(prop: Displayrow) {
     isPlayer ? state.game.playerOne.Arsenal : state.game.playerTwo.Arsenal
   );
 
-  if (arsenalCards === undefined) {
+  console.log(arsenalCards);
+
+  if (
+    arsenalCards === undefined ||
+    arsenalCards.length === 0 ||
+    arsenalCards[0].cardNumber === ''
+  ) {
     return <div className={styles.arsenalZone}>Arsenal</div>;
   }
 
