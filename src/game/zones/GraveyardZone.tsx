@@ -8,16 +8,21 @@ import styles from './Cardzone.module.css';
 
 export default function GraveyardZone(prop: Displayrow) {
   const { isPlayer } = prop;
+  const dispatch = useDispatch();
 
   const graveyardZone = useSelector((state: RootState) =>
     isPlayer ? state.game.playerOne.Graveyard : state.game.playerTwo.Graveyard
   );
 
-  if (graveyardZone === undefined) {
+  const numInGraveYard = useSelector((state: RootState) =>
+    isPlayer
+      ? state.game.playerOne.GraveyardCount
+      : state.game.playerTwo.GraveyardCount
+  );
+
+  if (graveyardZone === undefined || numInGraveYard === 0) {
     return <div className={styles.graveyardZone}>Graveyard</div>;
   }
-
-  const dispatch = useDispatch();
 
   const graveyardZoneDisplay = () => {
     const isPlayerPronoun = isPlayer ? 'Your' : 'Your Opponents';
@@ -29,14 +34,13 @@ export default function GraveyardZone(prop: Displayrow) {
     );
   };
 
-  const numInGraveyard = graveyardZone.length;
-  const cardToDisplay = graveyardZone[numInGraveyard - 1];
+  const cardToDisplay = graveyardZone[0];
 
   return (
     <div className={styles.graveyardZone} onClick={graveyardZoneDisplay}>
       <CardDisplay
         card={cardToDisplay}
-        num={numInGraveyard}
+        num={numInGraveYard}
         preventUseOnClick
       />
     </div>

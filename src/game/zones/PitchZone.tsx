@@ -10,6 +10,7 @@ import PitchDisplay from '../elements/PitchDisplay';
 export default function PitchZone(prop: Displayrow) {
   const { isPlayer } = prop;
   const { DisplayRow } = prop;
+  const dispatch = useDispatch();
 
   const pitchZone = useSelector((state: RootState) =>
     isPlayer ? state.game.playerOne.Pitch : state.game.playerTwo.Pitch
@@ -18,8 +19,6 @@ export default function PitchZone(prop: Displayrow) {
   if (pitchZone === undefined) {
     return <div className={styles.pitchZone}>Pitch</div>;
   }
-
-  const dispatch = useDispatch();
 
   const pitchZoneDisplay = () => {
     const isPlayerPronoun = isPlayer ? 'Your' : 'Your Opponents';

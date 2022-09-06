@@ -16,4 +16,5 @@ export default interface Card {
   onChain?: boolean; // onChain = 1 if card is on combat chain (mostly for equipment)
   isFrozen?: boolean; // isFrozen = 1 if frozen
   gem?: 'none' | 'inactive' | 'active'; // gem = (0, 1, 2?)
+  cardIndex?: number;
 }

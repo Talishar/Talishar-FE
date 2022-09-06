@@ -10,15 +10,20 @@ export default interface Player {
   WeaponREq?: Card;
   Health?: number;
   ActionPoints?: number;
-  PitchRemaining?: number;
   Hand?: Card[];
   Arsenal?: Card[];
   Banish?: Card[];
+  BanishCount?: number;
   Graveyard?: Card[];
+  GraveyardCount?: number;
   Pitch?: Card[];
+  PitchRemaining?: number;
   DeckSize?: number;
+  DeckBack?: Card;
   Name?: string;
   IsVerified?: boolean;
   Effects?: Card[];
   Permanents?: Card[];
+  Soul?: Card[];
+  SoulCount?: number;
 }

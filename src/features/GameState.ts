@@ -25,4 +25,8 @@ export default interface GameState {
     name?: string;
     active?: boolean;
   };
+  activeLayers?: {
+    active?: boolean;
+    cardList?: Card[];
+  };
 }

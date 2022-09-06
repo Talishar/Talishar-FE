@@ -4,7 +4,7 @@ import type { AppDispatch } from './Store';
 import { RootState } from './Store';
 import { nextTurn } from '../features/game/GameSlice';
 
-const intervalLength = 2000;
+const intervalLength = 1000;
 // const hostURL = 'https://localhost/FaBOnline/';
 
 // set to true if you do not want redux being updated every second.
