@@ -220,6 +220,12 @@ export default function ParseGameState(input: string) {
   result.playerOne.Permanents = ourAllies.concat(ourAuras, ourItems, ourPerms);
   // index 26 onwards is the log
 
+  console.log('game');
+  console.log(stringArray);
+  console.log('me');
+  console.log(result.playerOne.Permanents);
+  console.log('opp');
+  console.log(result.playerTwo.Permanents);
   const chatLog: string[] = [];
 
   if (stringArray.length > 26) {
