@@ -1,0 +1,46 @@
+.container {
+  position: relative;
+  background-image: url('../../img/elements/Banner.png');
+  width: 200px;
+  height: 200px;
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.phaseWidget {
+  left: 10px;
+  position: relative;
+  background-image: url('../../img/elements/Tracker.png');
+  width: 180px;
+  height: 200px;
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.titleContainer {
+  position: absolute;
+  top: 30px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+}
+
+.phaseTrackerBottomContainer {
+  text-align: center;
+  position: absolute;
+  bottom: 0px;
+  height: 75px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+}
+
+.bottomInterior {
+  width: 80%;
+}

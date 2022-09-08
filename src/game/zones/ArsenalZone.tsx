@@ -13,8 +13,6 @@ export default function ArsenalZone(prop: Displayrow) {
     isPlayer ? state.game.playerOne.Arsenal : state.game.playerTwo.Arsenal
   );
 
-  console.log(arsenalCards);
-
   if (
     arsenalCards === undefined ||
     arsenalCards.length === 0 ||

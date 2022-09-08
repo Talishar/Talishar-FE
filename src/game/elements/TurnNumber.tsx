@@ -1,6 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../app/Store';
+import styles from '../RightColumn.module.css';
 
 export default function TurnNumber() {
   let turnNumber = useSelector(
@@ -12,7 +13,7 @@ export default function TurnNumber() {
   }
 
   return (
-    <div>
+    <div className={styles.turnNumber}>
       <div>TURN No.{turnNumber}</div>
     </div>
   );

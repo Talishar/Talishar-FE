@@ -20,6 +20,7 @@
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
+  padding-bottom: 1em;
 }
 
 .bottomGroup {
@@ -30,4 +31,8 @@
   flex-direction: column;
   justify-content: flex-end;
   align-items: flex-end;
+}
+
+.turnNumber {
+  padding-top: 1em;
 }
