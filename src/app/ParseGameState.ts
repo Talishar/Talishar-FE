@@ -186,7 +186,49 @@ export default function ParseGameState(input: string) {
   // index 17 is the chain link summary
   result.oldCombatChain = parseChainLinks(stringArray[17]);
 
-  console.log(stringArray);
+  // index 18 their allies
+  // const theirAllies = parseHand(stringArray[18]);
+  const theirAllies: Card[] = [];
+
+  // index 19 their aura
+  const theirAuras = parseHand(stringArray[19]);
+
+  // index 20 their items
+  const theirItems = parseHand(stringArray[20]);
+
+  // index 21 their permanents (other permanents)
+  const theirPerms = parseHand(stringArray[21]);
+
+  result.playerTwo.Permanents = theirAllies.concat(
+    theirAuras,
+    theirItems,
+    theirPerms
+  );
+
+  // index 22 our allies
+  const ourAllies = parseHand(stringArray[22]);
+
+  // index 23 our auras
+  const ourAuras = parseHand(stringArray[23]);
+
+  // index 24 our items
+  const ourItems = parseHand(stringArray[24]);
+
+  // index 25 our permanents
+  const ourPerms = parseHand(stringArray[25]);
+
+  result.playerOne.Permanents = ourAllies.concat(ourAuras, ourItems, ourPerms);
+  // index 26 onwards is the log
+
+  const chatLog: string[] = [];
+
+  if (stringArray.length > 26) {
+    for (let i = 26; i < stringArray.length - 1; i++) {
+      chatLog.push(stringArray[i]);
+    }
+  }
+  result.chatLog = chatLog;
+
   return result;
 }
 

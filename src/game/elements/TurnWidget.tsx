@@ -10,18 +10,21 @@ const baseWidth = 350;
 
 export default function TurnWidget() {
   const [heightRatio, setHeightRatio] = useState(1);
+
   useEffect(() => {
     function calculateWidgetHeight() {
       return window.innerHeight / defaultInnerHeight;
     }
     setHeightRatio(calculateWidgetHeight());
   }, [window.innerHeight]);
+
   const style = { transform: `scale(${heightRatio})` };
+
   const containerStyle = {
     height: `${baseHeight * heightRatio}px`,
     width: `${baseWidth * heightRatio}px`
   };
-  console.log(containerStyle);
+
   return (
     <div className={styles.widgetContainer} style={containerStyle}>
       <div className={styles.widgetScaler} style={style}>

@@ -29,4 +29,5 @@ export default interface GameState {
     active?: boolean;
     cardList?: Card[];
   };
+  chatLog?: string[];
 }

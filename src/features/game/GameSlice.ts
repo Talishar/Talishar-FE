@@ -9,7 +9,7 @@ export const nextTurn = createAsyncThunk(
   'game/nextTurn',
   async (params: GameInfo) => {
     // const queryURL = `http://localhost/FaBOnline/GetNextTurn3.php?gameName=${params.gameID}&playerID=${params.playerID}`;
-    const queryURL = `https://www.fleshandbloodonline.com/FaBOnline2/GetNextTurn3.php?gameName=${params.gameID}&playerID=${params.playerID}`;
+    const queryURL = `https://www.talishar.net/FaBOnline2/GetNextTurn3.php?gameName=${params.gameID}&playerID=${params.playerID}`;
     try {
       const response = await fetch(queryURL, {
         method: 'GET',
@@ -85,6 +85,7 @@ export const gameSlice = createSlice({
       state.activeCombatChain = action.payload.activeCombatChain;
       state.activeLayers = action.payload.activeLayers;
       state.oldCombatChain = action.payload.oldCombatChain;
+      state.chatLog = action.payload.chatLog;
       return state;
     });
   }

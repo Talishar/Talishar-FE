@@ -13,6 +13,8 @@ export default function PlayerHand() {
     false;
   };
 
+  let hasArsenal = true;
+
   const handCards = useAppSelector(
     (state: RootState) => state.game.playerOne.Hand
   );
@@ -27,6 +29,14 @@ export default function PlayerHand() {
     (state: RootState) => state.game.playerOne.Graveyard?.filter(isPlayable),
     shallowEqual
   );
+
+  if (
+    arsenalCards === undefined ||
+    arsenalCards.length === 0 ||
+    arsenalCards[0].cardNumber === ''
+  ) {
+    hasArsenal = false;
+  }
 
   let lengthOfCards = 0;
   lengthOfCards += handCards !== undefined ? handCards.length : 0;
@@ -53,7 +63,8 @@ export default function PlayerHand() {
             />
           );
         })}
-      {arsenalCards !== undefined &&
+      {hasArsenal &&
+        arsenalCards !== undefined &&
         arsenalCards.map((card, ix) => {
           return (
             <PlayerHandCard
