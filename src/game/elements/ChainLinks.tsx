@@ -1,12 +1,12 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useAppSelector } from '../../app/Hooks';
 import { RootState } from '../../app/Store';
 import styles from './CombatChain.module.css';
 import hit from '../../img/symbols/symbol-hit.png';
 import defend from '../../img/symbols/symbol-defence.png';
 
 export default function ChainLinks() {
-  const oldCombatChain = useSelector(
+  const oldCombatChain = useAppSelector(
     (state: RootState) => state.game.oldCombatChain
   );
   if (oldCombatChain === undefined || oldCombatChain.length === 0) {

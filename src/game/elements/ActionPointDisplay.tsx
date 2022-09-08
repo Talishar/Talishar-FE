@@ -1,18 +1,18 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useAppSelector } from '../../app/Hooks';
 import { RootState } from '../../app/Store';
 import Player from '../../interface/Player';
 import styles from './TurnWidget.module.css';
 
 export default function ActionPointDisplay(props: Player) {
   const { isPlayer } = props;
-  const APAvailable = useSelector((state: RootState) =>
+  const APAvailable = useAppSelector((state: RootState) =>
     isPlayer
       ? state.game.playerOne.ActionPoints
       : state.game.playerTwo.ActionPoints
   );
 
-  const activePlayer = useSelector(
+  const activePlayer = useAppSelector(
     (state: RootState) => state.game.activePlayer
   );
 

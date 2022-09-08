@@ -1,14 +1,14 @@
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useAppDispatch, useAppSelector } from '../../app/Hooks';
 import { RootState } from '../../app/Store';
 import { clearPopUp, setPopUp } from '../../features/game/GameSlice';
 import styles from './LastPlayed.module.css';
 
 export default function LastPlayed() {
-  let cardRedux = useSelector(
+  let cardRedux = useAppSelector(
     (state: RootState) => state.game.gameInfo.lastPlayed
   );
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   if (cardRedux === undefined) {
     cardRedux = {

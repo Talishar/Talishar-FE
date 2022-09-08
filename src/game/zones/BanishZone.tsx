@@ -1,5 +1,5 @@
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useAppDispatch, useAppSelector } from '../../app/Hooks';
 import { RootState } from '../../app/Store';
 import { setCardListFocus } from '../../features/game/GameSlice';
 import Displayrow from '../../interface/Displayrow';
@@ -8,13 +8,13 @@ import styles from './Cardzone.module.css';
 
 export default function BanishZone(prop: Displayrow) {
   const { isPlayer } = prop;
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
-  const banishZone = useSelector((state: RootState) =>
+  const banishZone = useAppSelector((state: RootState) =>
     isPlayer ? state.game.playerOne.Banish : state.game.playerTwo.Banish
   );
 
-  const numInBanish = useSelector((state: RootState) =>
+  const numInBanish = useAppSelector((state: RootState) =>
     isPlayer
       ? state.game.playerOne.BanishCount
       : state.game.playerTwo.BanishCount

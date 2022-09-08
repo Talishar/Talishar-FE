@@ -1,9 +1,10 @@
 import React from 'react';
-import { shallowEqual, useSelector } from 'react-redux';
+import { shallowEqual } from 'react-redux';
 import { RootState } from '../../app/Store';
 import Card from '../../features/Card';
 import styles from './PlayerHand.module.css';
 import PlayerHandCard from '../elements/PlayerHandCard';
+import { useAppSelector } from '../../app/Hooks';
 
 const MaxHandWidthPercentage = 50;
 
@@ -12,17 +13,17 @@ export default function PlayerHand() {
     false;
   };
 
-  const handCards = useSelector(
+  const handCards = useAppSelector(
     (state: RootState) => state.game.playerOne.Hand
   );
-  const arsenalCards = useSelector(
+  const arsenalCards = useAppSelector(
     (state: RootState) => state.game.playerOne.Arsenal
   );
-  const playableBanishedCards = useSelector(
+  const playableBanishedCards = useAppSelector(
     (state: RootState) => state.game.playerOne.Banish?.filter(isPlayable),
     shallowEqual
   );
-  const playableGraveyardCards = useSelector(
+  const playableGraveyardCards = useAppSelector(
     (state: RootState) => state.game.playerOne.Graveyard?.filter(isPlayable),
     shallowEqual
   );

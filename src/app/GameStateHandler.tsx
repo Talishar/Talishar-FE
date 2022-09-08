@@ -1,8 +1,9 @@
 import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import type { AppDispatch } from './Store';
 import { RootState } from './Store';
 import { nextTurn } from '../features/game/GameSlice';
+import { useAppDispatch, useAppSelector } from './Hooks';
 
 const intervalLength = 1000;
 // const hostURL = 'https://localhost/FaBOnline/';
@@ -11,9 +12,9 @@ const intervalLength = 1000;
 const DO_NOT_CALL = true;
 
 export default function GameStateHandler() {
-  const params = useSelector((state: RootState) => state.game.gameInfo);
+  const params = useAppSelector((state: RootState) => state.game.gameInfo);
 
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
   useEffect(() => {
     function getGameState() {
       if (DO_NOT_CALL) {

@@ -1,10 +1,10 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useAppSelector } from '../../app/Hooks';
 import { RootState } from '../../app/Store';
 import styles from '../RightColumn.module.css';
 
 export default function TurnNumber() {
-  let turnNumber = useSelector(
+  let turnNumber = useAppSelector(
     (state: RootState) => state.game.gameInfo.turnNo
   );
 

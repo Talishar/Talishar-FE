@@ -1,15 +1,15 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
 import styles from './HandZone.module.css';
 import { RootState } from '../../app/Store';
 import Player from '../../interface/Player';
 import Card from '../../features/Card';
 import CardDisplay from '../elements/CardDisplay';
+import { useAppSelector } from '../../app/Hooks';
 
 export default function HandZone(prop: Player) {
   const { isPlayer } = prop;
 
-  const handCards = useSelector((state: RootState) =>
+  const handCards = useAppSelector((state: RootState) =>
     isPlayer ? state.game.playerOne.Hand : state.game.playerTwo.Hand
   );
 

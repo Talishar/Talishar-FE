@@ -1,5 +1,5 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useAppSelector } from '../../app/Hooks';
 import { RootState } from '../../app/Store';
 import Displayrow from '../../interface/Displayrow';
 import styles from './PitchDisplay.module.css';
@@ -7,7 +7,7 @@ import styles from './PitchDisplay.module.css';
 export default function PitchDisplay(prop: Displayrow) {
   const { isPlayer } = prop;
 
-  let pitchAmount = useSelector((state: RootState) =>
+  let pitchAmount = useAppSelector((state: RootState) =>
     isPlayer
       ? state.game.playerOne.PitchRemaining
       : state.game.playerTwo.PitchRemaining

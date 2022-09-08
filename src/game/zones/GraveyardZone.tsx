@@ -1,20 +1,20 @@
 import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../app/Store';
 import Displayrow from '../../interface/Displayrow';
 import { setCardListFocus } from '../../features/game/GameSlice';
 import CardDisplay from '../elements/CardDisplay';
 import styles from './Cardzone.module.css';
+import { useAppDispatch, useAppSelector } from '../../app/Hooks';
 
 export default function GraveyardZone(prop: Displayrow) {
   const { isPlayer } = prop;
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
-  const graveyardZone = useSelector((state: RootState) =>
+  const graveyardZone = useAppSelector((state: RootState) =>
     isPlayer ? state.game.playerOne.Graveyard : state.game.playerTwo.Graveyard
   );
 
-  const numInGraveYard = useSelector((state: RootState) =>
+  const numInGraveYard = useAppSelector((state: RootState) =>
     isPlayer
       ? state.game.playerOne.GraveyardCount
       : state.game.playerTwo.GraveyardCount

@@ -1,10 +1,10 @@
 import React, { useRef } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../app/Store';
 import { clearPopUp, setPopUp } from '../../features/game/GameSlice';
 import Player from '../../interface/Player';
 import styles from '../ActiveEffects.module.css';
 import Card from '../../features/Card';
+import { useAppDispatch, useAppSelector } from '../../app/Hooks';
 
 export interface CardProp {
   card: Card;
@@ -15,7 +15,7 @@ export interface CardProp {
 function Effect(prop: CardProp) {
   const src = `https://www.fleshandbloodonline.com/FaBOnline2/crops/${prop.card.cardNumber}_cropped.png`;
   const ref = useRef<HTMLDivElement>(null);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const handleMouseEnter = () => {
     if (ref.current === null) {
@@ -50,7 +50,7 @@ function Effect(prop: CardProp) {
 
 export default function Effects(props: Player) {
   const classCSS = props.isPlayer ? styles.isPlayer : styles.isOpponent;
-  const effects = useSelector((state: RootState) =>
+  const effects = useAppSelector((state: RootState) =>
     props.isPlayer ? state.game.playerOne.Effects : state.game.playerTwo.Effects
   );
 

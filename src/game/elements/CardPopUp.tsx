@@ -1,12 +1,12 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useAppSelector } from '../../app/Hooks';
 import { RootState } from '../../app/Store';
 import styles from './CardPopUp.module.css';
 
 const popUpGap = 10;
 
 export default function CardPopUp() {
-  const popup = useSelector((state: RootState) => state.game.popup);
+  const popup = useAppSelector((state: RootState) => state.game.popup);
   let isDFC = false;
   let dfcValue = '';
   if (

@@ -1,10 +1,9 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { shallowEqual, useSelector, useDispatch } from 'react-redux';
 import { clearPopUp, setPopUp } from '../../features/game/GameSlice';
-import { RootState } from '../../app/Store';
 import Card from '../../features/Card';
 import styles from '../zones/PlayerHand.module.css';
 import Draggable, { DraggableData, DraggableEvent } from 'react-draggable';
+import { useAppDispatch } from '../../app/Hooks';
 
 const HandCurvatureConstant = 8;
 const ScreenPercentageForCardPlayed = 0.25;
@@ -34,7 +33,7 @@ export default function PlayerHandCard(props: handCard) {
   }
   const src = `https://www.fleshandbloodonline.com/FaBOnline2/WebpImages/${card.cardNumber}.webp`;
   const ref = useRef<HTMLDivElement>(null);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const onDragStop = (e: DraggableEvent, data: DraggableData) => {
     if (data.lastY < -window.innerHeight * ScreenPercentageForCardPlayed) {

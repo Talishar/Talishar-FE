@@ -1,18 +1,18 @@
 import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../app/Store';
 import Displayrow from '../../interface/Displayrow';
 import CardDisplay from '../elements/CardDisplay';
 import { setCardListFocus } from '../../features/game/GameSlice';
 import styles from './Cardzone.module.css';
 import PitchDisplay from '../elements/PitchDisplay';
+import { useAppDispatch, useAppSelector } from '../../app/Hooks';
 
 export default function PitchZone(prop: Displayrow) {
   const { isPlayer } = prop;
   const { DisplayRow } = prop;
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
-  const pitchZone = useSelector((state: RootState) =>
+  const pitchZone = useAppSelector((state: RootState) =>
     isPlayer ? state.game.playerOne.Pitch : state.game.playerTwo.Pitch
   );
 

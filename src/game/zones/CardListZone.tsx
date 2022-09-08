@@ -1,13 +1,15 @@
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useAppDispatch, useAppSelector } from '../../app/Hooks';
 import { RootState } from '../../app/Store';
 import { clearCardListFocus } from '../../features/game/GameSlice';
 import CardDisplay from '../elements/CardDisplay';
 import styles from './CardListZone.module.css';
 
 export default function CardListZone() {
-  const cardList = useSelector((state: RootState) => state.game.cardListFocus);
-  const dispatch = useDispatch();
+  const cardList = useAppSelector(
+    (state: RootState) => state.game.cardListFocus
+  );
+  const dispatch = useAppDispatch();
   if (cardList === undefined || cardList.cardList === undefined) {
     return null;
   }

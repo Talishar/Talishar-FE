@@ -1,13 +1,13 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
 import { RootState } from '../../app/Store';
 import styles from './CombatChain.module.css';
 import attackSymbol from '../../img/symbols/symbol-attack.png';
 import defSymbol from '../../img/symbols/symbol-defence.png';
 import CardDisplay from './CardDisplay';
+import { useAppSelector } from '../../app/Hooks';
 
 export default function CurrentAttack() {
-  const activeCombatChain = useSelector(
+  const activeCombatChain = useAppSelector(
     (state: RootState) => state.game.activeCombatChain
   );
   if (activeCombatChain === undefined) {

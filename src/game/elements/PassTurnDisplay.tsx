@@ -1,10 +1,10 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useAppSelector } from '../../app/Hooks';
 import { RootState } from '../../app/Store';
 import styles from './TurnWidget.module.css';
 
 export default function PassTurnDisplay() {
-  const activePlayer = useSelector(
+  const activePlayer = useAppSelector(
     (state: RootState) => state.game.activePlayer
   );
 

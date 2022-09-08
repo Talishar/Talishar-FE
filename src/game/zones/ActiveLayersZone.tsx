@@ -1,14 +1,14 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useAppSelector } from '../../app/Hooks';
 import { RootState } from '../../app/Store';
 import CardDisplay from '../elements/CardDisplay';
 import styles from './ActiveLayersZone.module.css';
 
 export default function ActiveLayersZone() {
-  const activeLayer = useSelector(
+  const activeLayer = useAppSelector(
     (state: RootState) => state.game.activeLayers
   );
-  // const dispatch = useDispatch();
+  // const dispatch = useAppDispatch();
   if (
     activeLayer === undefined ||
     activeLayer.active === false ||

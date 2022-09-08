@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { useDispatch } from 'react-redux';
+import { useAppDispatch } from '../../app/Hooks';
 import Card from '../../features/Card';
 import { clearPopUp, setPopUp } from '../../features/game/GameSlice';
 import styles from './Card.module.css';
@@ -16,7 +16,7 @@ export default function CardDisplay(prop: CardProp) {
   let { num } = prop;
   const classStyles: string[] = [styles.floatTint];
   const equipStatus: string[] = [styles.floatTint];
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const ref = useRef<HTMLDivElement>(null);
 
   if (card == null || card.cardNumber === '') {

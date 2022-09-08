@@ -1,5 +1,5 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useAppSelector } from '../../app/Hooks';
 import { RootState } from '../../app/Store';
 import Displayrow from '../../interface/Displayrow';
 import CardDisplay from '../elements/CardDisplay';
@@ -8,7 +8,7 @@ import styles from './Cardzone.module.css';
 export default function PermanentsZone(prop: Displayrow) {
   const { isPlayer } = prop;
 
-  const permanents = useSelector((state: RootState) =>
+  const permanents = useAppSelector((state: RootState) =>
     isPlayer ? state.game.playerOne.Permanents : state.game.playerTwo.Permanents
   );
 
