@@ -16,10 +16,6 @@ export default function HandZone(prop: Player) {
   let displayRow = isPlayer ? styles.isPlayer : styles.isOpponent;
   displayRow = `${displayRow} ${styles.handZone}`;
 
-  if (isPlayer) {
-    return <div className={displayRow}></div>;
-  }
-
   if (handCards === undefined) {
     return <div className={displayRow}></div>;
   }
