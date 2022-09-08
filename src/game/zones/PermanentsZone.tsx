@@ -23,6 +23,8 @@ export default function PermanentsZone(prop: Displayrow) {
   }
 
   //TODO: Stack permanents that are the same.
+  // We probably need to use some deepEqual library to assist with this.
+
   return (
     <div className={styles.permanentsWrapper}>
       <div className={styles.permanentsText}>

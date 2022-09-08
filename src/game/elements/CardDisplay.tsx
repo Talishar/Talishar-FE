@@ -27,7 +27,7 @@ export default function CardDisplay(prop: CardProp) {
     num = card.counters;
   }
 
-  const eqImg = `https://www.fleshandbloodonline.com/FaBOnline2/concat/${card.cardNumber}.webp`;
+  const eqImg = `https://www.talishar.net/FaBOnline2/concat/${card.cardNumber}.webp`;
 
   function onClick() {
     if (preventUseOnClick) {
@@ -100,6 +100,11 @@ export default function CardDisplay(prop: CardProp) {
         {card.defCounters !== undefined && card.defCounters !== 0 && (
           <div className={styles.defCounter}>
             <div>{card.defCounters}</div>
+          </div>
+        )}
+        {card.lifeCounters !== undefined && card.lifeCounters !== 0 && (
+          <div className={styles.lifeCounter}>
+            <div>{card.lifeCounters}</div>
           </div>
         )}
       </div>
