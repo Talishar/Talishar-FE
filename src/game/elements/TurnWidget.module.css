@@ -1,7 +1,14 @@
 .widgetContainer {
   position: relative;
+}
+
+.widgetScaler {
+  position: absolute;
+  transform-origin: top right;
+  top: 0px;
   right: -25px;
   height: 210px;
+  width: 250px;
   flex-shrink: 0;
   flex-grow: 0;
   flex-basis: 250px;
