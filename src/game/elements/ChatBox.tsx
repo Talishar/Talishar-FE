@@ -1,5 +1,4 @@
 import React, { useEffect, useRef } from 'react';
-import { setSyntheticTrailingComments } from 'typescript';
 import { useAppSelector } from '../../app/Hooks';
 import { RootState } from '../../app/Store';
 import styles from './ChatBox.module.css';
@@ -36,7 +35,11 @@ export default function ChatBox() {
             })}
         </div>
       </div>
-      <form className={styles.chatInput}>Input</form>
+      <input
+        className={styles.chatInput}
+        value="Chat is currently disabled"
+        disabled
+      />
     </div>
   );
 }

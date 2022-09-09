@@ -51,9 +51,6 @@
 
 .defCounter {
   border-radius: 100%;
-  border-style: solid;
-  border-color: black;
-  border-width: 2px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -63,6 +60,7 @@
   background-position: center;
   background-size: contain;
   text-align: center;
+  font-size: 1.25em;
   color: white;
   text-shadow: 3px 3px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000,
     -1px 1px 0 #000, 1px 1px 0 #000;
@@ -70,9 +68,6 @@
 
 .lifeCounter {
   border-radius: 100%;
-  border-style: solid;
-  border-color: black;
-  border-width: 2px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -81,6 +76,7 @@
   background-image: url('../../img/symbols/symbol-defence.png');
   background-position: center;
   background-size: contain;
+  font-size: 1.25em;
   text-align: center;
   color: white;
   text-shadow: 3px 3px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000,

@@ -1,6 +1,6 @@
-# Getting started with FaB-Online-React-Client
+# Getting started with Talishar-React-Client
 
-This is a new front end client for fleshandbloodonline.com - completely separate from the back end. The players will be using this app to connect to the servers eventually, we hope.
+This is a new front end client for talishar.net - completely separate from the back end. The players will be using this app to connect to the servers eventually, we hope.
 
 ## Project
 
@@ -32,6 +32,7 @@ Configure Prettier / ES Lint in your editor of choice.
 Helps to maintain a consistent 'code-style' which I think is helpful?
 
 ## How it's organised:
+
 Short answer is it isn't really. If you have a better idea on how to organise the files, please let me know.
 
 Otherwise try to keep everything as small as possible, Reacty-containers. And pulling data from Redux etc. CSS modules help to keep stuff locally scoped.
