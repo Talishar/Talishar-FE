@@ -3,14 +3,13 @@
   margin-bottom: 0.5vh;
   padding-left: 1vh;
   border-radius: 10px;
-  background-color: brown;
+  background-color: #8e101d;
   display: flex;
   left: 0px;
   align-self: flex-start;
   height: 5vh;
-  color: wheat;
+  color: goldenrod;
   width: 20vw;
   align-items: center;
   justify-content: flex-start;
-  /* z-index: 2; */
 }

@@ -133,11 +133,12 @@
 .arsenalZone {
   position: relative;
   height: 10vh;
-  width: 32vh;
+  flex: 0 0 10vh;
   border-radius: 10px;
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
+  left: -4px;
   gap: 10px;
   justify-content: center;
   align-items: center;
