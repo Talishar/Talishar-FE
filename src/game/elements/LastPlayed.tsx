@@ -8,6 +8,7 @@ export default function LastPlayed() {
   let cardRedux = useAppSelector(
     (state: RootState) => state.game.gameInfo.lastPlayed
   );
+
   const dispatch = useAppDispatch();
 
   if (cardRedux === undefined) {
@@ -28,7 +29,7 @@ export default function LastPlayed() {
   const handleMouseLeave = () => {
     dispatch(clearPopUp());
   };
-  const src = `https://www.fleshandbloodonline.com/FaBOnline2/WebpImages/${cardRedux.cardNumber}.webp`;
+  const src = `https://www.talishar.net/FaBOnline2/WebpImages/${cardRedux.cardNumber}.webp`;
 
   return (
     <div

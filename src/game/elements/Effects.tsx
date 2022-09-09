@@ -13,7 +13,7 @@ export interface CardProp {
 }
 
 function Effect(prop: CardProp) {
-  const src = `https://www.fleshandbloodonline.com/FaBOnline2/crops/${prop.card.cardNumber}_cropped.png`;
+  const src = `https://www.talishar.net/FaBOnline2/crops/${prop.card.cardNumber}_cropped.png`;
   const ref = useRef<HTMLDivElement>(null);
   const dispatch = useAppDispatch();
 
@@ -36,6 +36,7 @@ function Effect(prop: CardProp) {
   const handleMouseLeave = () => {
     dispatch(clearPopUp());
   };
+
   return (
     <div
       className={styles.effect}

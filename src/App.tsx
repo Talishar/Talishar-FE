@@ -19,6 +19,7 @@ function App() {
   if (playerNo === 3) {
     isSpectator = true;
   }
+
   useEffect(() => {
     const calculateRatio = () => {
       if (window.innerHeight < window.innerWidth) {

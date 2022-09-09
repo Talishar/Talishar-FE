@@ -2,7 +2,7 @@ import GameState from '../GameState';
 
 const InitialGameState: GameState = {
   gameInfo: {
-    gameID: 70633,
+    gameID: 73333,
     playerID: 3,
     authKey: '28df413b665604299807c461a7f3cae71c4176cb2b96afad04b84cf96d016258'
   },
@@ -101,50 +101,10 @@ const InitialGameState: GameState = {
         cardNumber: 'MON104'
       },
       {
-        cardNumber: 'MON104'
-      },
-      {
-        cardNumber: 'ARC010'
-      },
-      {
-        cardNumber: 'MON104'
-      },
-      {
-        cardNumber: 'MON104'
-      },
-      {
-        cardNumber: 'MON104'
-      },
-      {
-        cardNumber: 'MON104'
-      },
-      {
-        cardNumber: 'ARC010',
-        counters: 1
-      },
-      {
-        cardNumber: 'MON104'
-      },
-      {
-        cardNumber: 'MON104'
-      },
-      {
-        cardNumber: 'MON104'
-      },
-      {
-        cardNumber: 'MON104'
-      },
-      {
-        cardNumber: 'MON104'
-      },
-      {
-        cardNumber: 'MON104'
-      },
-      {
-        cardNumber: 'MON104'
-      },
-      {
-        cardNumber: 'UPR409'
+        cardNumber: 'UPR409',
+        lifeCounters: 5,
+        counters: 12,
+        defCounters: 873
       }
     ],
     Graveyard: [

@@ -13,6 +13,7 @@ export default function GameStateHandler() {
   const params = useAppSelector((state: RootState) => state.game.gameInfo);
 
   const dispatch = useAppDispatch();
+
   useEffect(() => {
     function getGameState() {
       if (DO_NOT_CALL) {

@@ -82,12 +82,14 @@ export default function ParseGameState(input: string) {
   newInput = newInput.replace(/<\/div>/g, '<br>');
   newInput = newInput.replace(/<div id='theirChar'>/g, '');
   const stringArray: string[] = newInput.split('<br>');
+
   // index 0 is something
   const result: GameState = {
     gameInfo: { gameID: 0, playerID: 0, authKey: '' },
     playerOne: {},
     playerTwo: {}
   };
+
   // index 7 is player2 char and equip
   result.playerTwo = parseEQArray(stringArray[7]);
 
