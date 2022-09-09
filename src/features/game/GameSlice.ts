@@ -26,6 +26,7 @@ export const nextTurn = createAsyncThunk(
 
 export const gameSlice = createSlice({
   name: 'game',
+  // change the following line if you want to test with filled-in dummy data
   initialState: InitialGameState,
   // The `reducers` field lets us define reducers and generate associated actions
   reducers: {
@@ -71,6 +72,13 @@ export const gameSlice = createSlice({
     },
     clearCardListFocus: (state) => {
       state.cardListFocus = undefined;
+    },
+    setGameStart: (
+      state,
+      action: PayloadAction<{ playerID: number; gameID: number }>
+    ) => {
+      (state.gameInfo.gameID = action.payload.gameID),
+        (state.gameInfo.playerID = action.payload.playerID);
     }
   },
   // The `extraReducers` field lets the slice handle actions defined elsewhere,
@@ -99,5 +107,10 @@ export const gameSlice = createSlice({
 export default gameSlice.reducer;
 
 const { actions } = gameSlice;
-export const { setPopUp, clearPopUp, setCardListFocus, clearCardListFocus } =
-  actions;
+export const {
+  setPopUp,
+  setGameStart,
+  clearPopUp,
+  setCardListFocus,
+  clearCardListFocus
+} = actions;

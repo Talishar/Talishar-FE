@@ -1,8 +1,14 @@
 import GameState from '../GameState';
 
 const InitialGameState: GameState = {
+  gameInfo: { gameID: 0, playerID: 3, authKey: '' },
+  playerOne: {},
+  playerTwo: {}
+};
+
+export const OfflineTestingGameState: GameState = {
   gameInfo: {
-    gameID: 73333,
+    gameID: 0,
     playerID: 3,
     authKey: '28df413b665604299807c461a7f3cae71c4176cb2b96afad04b84cf96d016258'
   },
@@ -93,7 +99,6 @@ const InitialGameState: GameState = {
         cardNumber: 'ARC010',
         counters: 1
       },
-
       {
         cardNumber: 'ARC010'
       },
@@ -114,7 +119,6 @@ const InitialGameState: GameState = {
       {
         cardNumber: 'WTR069'
       },
-
       {
         cardNumber: 'WTR101'
       },
@@ -127,7 +131,6 @@ const InitialGameState: GameState = {
       {
         cardNumber: 'CRU073'
       },
-
       {
         cardNumber: 'WTR101'
       },
@@ -140,7 +143,6 @@ const InitialGameState: GameState = {
       {
         cardNumber: 'CRU073'
       },
-
       {
         cardNumber: 'WTR101'
       },
@@ -153,7 +155,6 @@ const InitialGameState: GameState = {
       {
         cardNumber: 'CRU073'
       },
-
       {
         cardNumber: 'WTR101'
       },
@@ -166,7 +167,6 @@ const InitialGameState: GameState = {
       {
         cardNumber: 'CRU073'
       },
-
       {
         cardNumber: 'WTR101'
       },
@@ -179,7 +179,6 @@ const InitialGameState: GameState = {
       {
         cardNumber: 'CRU073'
       },
-
       {
         cardNumber: 'WTR101'
       },

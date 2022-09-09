@@ -82,6 +82,9 @@ export default function ParseGameState(input: string) {
   newInput = newInput.replace(/<\/div>/g, '<br>');
   newInput = newInput.replace(/<div id='theirChar'>/g, '');
   const stringArray: string[] = newInput.split('<br>');
+  if (stringArray.length <= 1) {
+    throw 'error response from API invalid';
+  }
 
   // index 0 is something
   const result: GameState = {
