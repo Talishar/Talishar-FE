@@ -12,6 +12,10 @@ export default function FeetEqZone(prop: Displayrow) {
     isPlayer ? state.game.playerOne.FeetEq : state.game.playerTwo.FeetEq
   );
 
+  if (cardToDisplay === undefined) {
+    return <div className={styles.chestZone}>Feet</div>;
+  }
+
   return (
     <div className={styles.feetZone}>
       <CardDisplay card={cardToDisplay} />

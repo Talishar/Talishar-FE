@@ -20,6 +20,10 @@ export default function HandZone(prop: Player) {
     return <div className={displayRow}></div>;
   }
 
+  if (isPlayer) {
+    console.log(handCards);
+  }
+
   return (
     <div className={displayRow}>
       {handCards.map((card: Card, index) => {

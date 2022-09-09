@@ -9,7 +9,7 @@ export default function Reactions() {
     (state: RootState) => state.game.activeCombatChain
   );
   if (activeCombatChain === undefined) {
-    return <div className={styles.currentAttack}>EmptyChain</div>;
+    return <div className={styles.currentAttack}></div>;
   }
 
   return (

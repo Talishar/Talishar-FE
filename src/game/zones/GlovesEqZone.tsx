@@ -12,6 +12,10 @@ export default function GlovesEqZone(prop: Displayrow) {
     isPlayer ? state.game.playerOne.GlovesEq : state.game.playerTwo.GlovesEq
   );
 
+  if (cardToDisplay === undefined) {
+    return <div className={styles.glovesZone}>Arms</div>;
+  }
+
   return (
     <div className={styles.glovesZone}>
       <CardDisplay card={cardToDisplay} />

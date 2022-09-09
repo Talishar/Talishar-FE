@@ -11,6 +11,10 @@ export default function HeadEqZone(prop: Displayrow) {
     isPlayer ? state.game.playerOne.HeadEq : state.game.playerTwo.HeadEq
   );
 
+  if (cardToDisplay === undefined) {
+    return <div className={styles.hatZone}>Head</div>;
+  }
+
   return (
     <div className={styles.hatZone}>
       <CardDisplay card={cardToDisplay} />

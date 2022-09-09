@@ -12,6 +12,10 @@ export default function ChestEqZone(prop: Displayrow) {
     isPlayer ? state.game.playerOne.ChestEq : state.game.playerTwo.ChestEq
   );
 
+  if (cardToDisplay === undefined) {
+    return <div className={styles.chestZone}>Chest</div>;
+  }
+
   return (
     <div className={styles.chestZone}>
       <CardDisplay card={cardToDisplay} />

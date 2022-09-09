@@ -4,20 +4,41 @@
   left: 0px;
   border-radius: 10px;
   flex: 0 0 10vh;
+  background: rgba(50, 50, 50, 0.5);
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
 }
 
 .chestZone {
   position: relative;
   left: 0px;
   flex: 0 0 10vh;
+  border-radius: 10px;
+  background: rgba(50, 50, 50, 0.5);
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
 }
 
 .glovesZone {
   position: relative;
-  left: 1vh;
   text-align: left;
   place-self: start;
   flex: 0 0 10vh;
+  margin-left: 1vh;
+  height: 10vh;
+  border-radius: 10px;
+  background: rgba(50, 50, 50, 0.5);
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
 }
 
 .weaponLZone {
@@ -138,7 +159,6 @@
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
-  left: -4px;
   gap: 10px;
   justify-content: center;
   align-items: center;
