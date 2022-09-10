@@ -55,5 +55,6 @@
     "eslint": "^8.22.0",
     "eslint-config-prettier": "^8.5.0"
   },
-  "packageManager": "yarn@3.2.3"
+  "packageManager": "yarn@3.2.3",
+  "homepage": "."
 }
