@@ -8,7 +8,7 @@ import Card from '../Card';
 export const nextTurn = createAsyncThunk(
   'game/nextTurn',
   async (params: GameInfo) => {
-    // const queryURL = `http://localhost/FaBOnline/GetNextTurn3.php?gameName=${params.gameID}&playerID=${params.playerID}`;
+    // const queryURL = `http://localhost:41062/FaBOnline/GetNextTurn3.php?gameName=${params.gameID}&playerID=${params.playerID}`;
     const queryURL = `https://www.talishar.net/FaBOnline2/GetNextTurn3.php?gameName=${params.gameID}&playerID=${params.playerID}`;
     try {
       const response = await fetch(queryURL, {
