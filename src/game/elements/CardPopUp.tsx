@@ -17,7 +17,7 @@ export default function CardPopUp() {
     return null;
   }
 
-  const src = `https://www.fleshandbloodonline.com/FaBOnline2/WebpImages/${popup.popupCard.cardNumber}.webp`;
+  const src = `https://www.talishar.net/game/WebpImages/${popup.popupCard.cardNumber}.webp`;
 
   if (popup.xCoord === undefined || popup.yCoord === undefined) {
     return (
@@ -118,7 +118,7 @@ export default function CardPopUp() {
   dfcStyle.left = '-270px';
   dfcStyle.position = 'absolute';
 
-  const dfcURL = `https://www.fleshandbloodonline.com/FaBOnline2/WebpImages/${dfcValue}.webp`;
+  const dfcURL = `https://www.talishar.net/game/WebpImages/${dfcValue}.webp`;
 
   return (
     <div className={styles.popUp} style={popUpStyle}>

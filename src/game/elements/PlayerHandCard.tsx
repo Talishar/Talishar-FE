@@ -24,14 +24,13 @@ function lerp(start: number, end: number, amt: number) {
 export default function PlayerHandCard(props: handCard) {
   const [controlledPosition, setControlledPosition] = useState({ x: 0, y: 0 });
   const [canPopUp, setCanPopup] = useState(true);
-  // const [cardPlayMessage, setCardPlayMessage] = useState(false);
   const [dragging, setDragging] = useState(false);
   const { card, cardIndex, handSize, isArsenal, isBanished, isGraveyard } =
     props;
   if (card === undefined) {
     return <div className={styles.handCard}></div>;
   }
-  const src = `https://www.fleshandbloodonline.com/FaBOnline2/WebpImages/${card.cardNumber}.webp`;
+  const src = `https://www.talishar.net/game/WebpImages/${card.cardNumber}.webp`;
   const ref = useRef<HTMLDivElement>(null);
   const dispatch = useAppDispatch();
 
