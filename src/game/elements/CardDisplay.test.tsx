@@ -1,7 +1,7 @@
 import React from 'react';
+import CardDisplay from './CardDisplay';
 import { Provider } from 'react-redux';
-import { store } from './app/Store';
-import App from './App';
+import { store } from '../../app/Store';
 import { createRoot } from 'react-dom/client';
 
 it('renders without crashing', () => {
@@ -9,7 +9,7 @@ it('renders without crashing', () => {
   const root = createRoot(div);
   root.render(
     <Provider store={store}>
-      <App />
+      <CardDisplay />
     </Provider>
   );
 });
