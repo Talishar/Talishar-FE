@@ -27,7 +27,7 @@ export default function CardDisplay(prop: CardProp) {
     num = card.counters;
   }
 
-  const eqImg = `https://www.talishar.net/FaBOnline2/concat/${card.cardNumber}.webp`;
+  const eqImg = `/cardsquares/${card.cardNumber}.webp`;
 
   function onClick() {
     if (preventUseOnClick) {

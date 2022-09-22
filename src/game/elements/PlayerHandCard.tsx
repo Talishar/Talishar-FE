@@ -30,7 +30,7 @@ export default function PlayerHandCard(props: handCard) {
   if (card === undefined) {
     return <div className={styles.handCard}></div>;
   }
-  const src = `https://www.talishar.net/game/WebpImages/${card.cardNumber}.webp`;
+  const src = `/cardimages/${card.cardNumber}.webp`;
   const ref = useRef<HTMLDivElement>(null);
   const dispatch = useAppDispatch();
 

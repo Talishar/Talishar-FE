@@ -29,7 +29,7 @@ export default function LastPlayed() {
   const handleMouseLeave = () => {
     dispatch(clearPopUp());
   };
-  const src = `https://www.talishar.net/FaBOnline2/WebpImages/${cardRedux.cardNumber}.webp`;
+  const src = `/cardimages/${cardRedux.cardNumber}.webp`;
 
   return (
     <div
