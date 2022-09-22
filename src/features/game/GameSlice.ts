@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import ParseGameState from '../../app/ParseGameState';
-import InitialGameState from './InitialGameState';
+import InitialGameState, { OfflineTestingGameState } from './InitialGameState';
 import GameInfo from '../GameInfo';
 import GameState from '../GameState';
 import Card from '../Card';
@@ -27,7 +27,8 @@ export const nextTurn = createAsyncThunk(
 export const gameSlice = createSlice({
   name: 'game',
   // change the following line if you want to test with filled-in dummy data
-  initialState: InitialGameState,
+  // initialState: InitialGameState,
+  initialState: OfflineTestingGameState,
   // The `reducers` field lets us define reducers and generate associated actions
   reducers: {
     setPopUp: (
