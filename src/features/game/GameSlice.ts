@@ -24,6 +24,29 @@ export const nextTurn = createAsyncThunk(
   }
 );
 
+export const playCard = createAsyncThunk(
+  'game/playCard',
+  async (cardParams: Card, { getState }) => {
+    console.log('doing the thing');
+    const { game } = getState() as { game: { gameInfo: GameInfo } };
+    const gameInfo = game.gameInfo;
+    const mode = 3;
+    // const queryURL = `http://google.com`;
+    const queryURL = `http://localhost:41062/FaBOnline/ProcessInput2.php?gameName=${gameInfo.gameID}&playerID=${gameInfo.playerID}&authKey=${gameInfo.authKey}&mode=${mode}&cardID=${cardParams.actionDataOverride}`;
+    try {
+      const response = await fetch(queryURL, {
+        method: 'GET',
+        headers: {}
+      });
+      const data = await response.text();
+      console.log(data);
+      return;
+    } catch (e) {
+      console.error(e);
+    }
+  }
+);
+
 export const gameSlice = createSlice({
   name: 'game',
   // change the following line if you want to test with filled-in dummy data
@@ -101,6 +124,9 @@ export const gameSlice = createSlice({
       state.oldCombatChain = action.payload.oldCombatChain;
       state.chatLog = action.payload.chatLog;
       return state;
+    });
+    builder.addCase(playCard.fulfilled, (_state, _action) => {
+      return;
     });
   }
 });

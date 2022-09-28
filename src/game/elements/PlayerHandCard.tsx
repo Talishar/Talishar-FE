@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { clearPopUp, setPopUp } from '../../features/game/GameSlice';
+import { clearPopUp, playCard, setPopUp } from '../../features/game/GameSlice';
 import Card from '../../features/Card';
 import styles from '../zones/PlayerHand.module.css';
 import Draggable, { DraggableData, DraggableEvent } from 'react-draggable';
@@ -36,7 +36,9 @@ export default function PlayerHandCard(props: handCard) {
 
   const onDragStop = (e: DraggableEvent, data: DraggableData) => {
     if (data.lastY < -window.innerHeight * ScreenPercentageForCardPlayed) {
-      console.log('playing the card');
+      console.log('playing card');
+      dispatch(playCard(card));
+      console.log(card);
     }
     setControlledPosition({ x: 0, y: 0 });
     setCanPopup(true);

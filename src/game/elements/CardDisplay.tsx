@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import { useAppDispatch } from '../../app/Hooks';
 import Card from '../../features/Card';
-import { clearPopUp, setPopUp } from '../../features/game/GameSlice';
+import { clearPopUp, playCard, setPopUp } from '../../features/game/GameSlice';
 import styles from './Card.module.css';
 
 export interface CardProp {
@@ -34,7 +34,11 @@ export default function CardDisplay(prop: CardProp) {
     if (preventUseOnClick) {
       return;
     }
-    console.log('I have been clicked!');
+    if (card === undefined) {
+      return;
+    }
+    console.log('clicked');
+    dispatch(playCard(card));
   }
 
   const handleMouseEnter = () => {
