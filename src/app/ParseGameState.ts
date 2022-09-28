@@ -1,6 +1,24 @@
+import { isFunctionDeclaration } from 'typescript';
 import Card from '../features/Card';
 import CombatChainLink from '../features/CombatChainLink';
 import GameState from '../features/GameState';
+
+const weaponArray = [
+  'Pistol',
+  'Sword',
+  'Bow',
+  'Staff',
+  'Claw',
+  'Hammer',
+  'Dagger',
+  'Gun',
+  'Scepter',
+  'Orb',
+  'Axe',
+  'Flail',
+  'Scythe',
+  'Club'
+];
 
 export function returnCardString(input: string, ix: number) {
   const array = [];
@@ -14,7 +32,13 @@ export function returnCard(array: string[], ix: number) {
   if (array === undefined) {
     return { cardNumber: '' };
   }
-  const cardArr: string[] = array[ix].split(' ');
+  const card = parseCard(array[ix]);
+  card.cardIndex = ix;
+  return card;
+}
+
+function parseCard(cardStr: string) {
+  const cardArr: string[] = cardStr.split(' ');
   const card: Card = {
     cardNumber: cardArr[0],
     action: parseInt(cardArr[1]),
@@ -32,7 +56,7 @@ export function returnCard(array: string[], ix: number) {
     isBroken: cardArr[13] === '1',
     onChain: cardArr[14] === '1',
     isFrozen: cardArr[15] === '1',
-    cardIndex: ix,
+    cardIndex: 0,
     gem:
       cardArr[16] === '0' ? 'none' : cardArr[15] === '1' ? 'inactive' : 'active'
   };
@@ -46,30 +70,36 @@ function parseHand(input: string) {
   return resultArray;
 }
 
+function returnEquipment(array: string[], eq: string) {
+  const foundCard = array.find((card) => {
+    const parsedCard = parseCard(card);
+    if (parsedCard.sType === eq || parsedCard.type === eq) {
+      return parsedCard;
+    }
+    if (eq === 'Weapon') {
+      for (const weaponType of weaponArray) {
+        if (weaponType === parsedCard.sType) {
+          return parsedCard;
+        }
+      }
+    }
+  });
+  if (foundCard === undefined) {
+    return;
+  }
+  return parseCard(foundCard);
+}
+
 function parseEQArray(input: string) {
   const eqArray: string[] = input.split('|');
-  if (eqArray.length === 6) {
-    return {
-      HeadEq: returnCard(eqArray, 2),
-      ChestEq: returnCard(eqArray, 3),
-      GlovesEq: returnCard(eqArray, 4),
-      FeetEq: returnCard(eqArray, 5),
-      WeaponLEq: returnCard(eqArray, 1),
-      Hero: returnCard(eqArray, 0),
-      WeaponREq: { cardNumber: '' },
-      Health: 0,
-      ActionPoints: 0,
-      PitchRemaining: 0
-    };
-  }
   return {
-    HeadEq: returnCard(eqArray, 3),
-    ChestEq: returnCard(eqArray, 4),
-    GlovesEq: returnCard(eqArray, 5),
-    FeetEq: returnCard(eqArray, 6),
-    WeaponLEq: returnCard(eqArray, 1),
-    Hero: returnCard(eqArray, 0),
-    WeaponREq: returnCard(eqArray, 2),
+    HeadEq: returnEquipment(eqArray, 'Head'),
+    ChestEq: returnEquipment(eqArray, 'Chest'),
+    GlovesEq: returnEquipment(eqArray, 'Arms'),
+    FeetEq: returnEquipment(eqArray, 'Legs'),
+    WeaponLEq: returnEquipment(eqArray, 'Weapon'),
+    Hero: returnEquipment(eqArray, 'C'),
+    WeaponREq: returnEquipment(eqArray, 'Off-Hand'),
     Health: 20,
     ActionPoints: 0,
     PitchRemaining: 0

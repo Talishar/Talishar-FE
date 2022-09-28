@@ -8,8 +8,8 @@ import Card from '../Card';
 export const nextTurn = createAsyncThunk(
   'game/nextTurn',
   async (params: GameInfo) => {
-    // const queryURL = `http://localhost:41062/FaBOnline/GetNextTurn3.php?gameName=${params.gameID}&playerID=${params.playerID}`;
-    const queryURL = `https://www.talishar.net/game/GetNextTurn3.php?gameName=${params.gameID}&playerID=${params.playerID}`;
+    const queryURL = `http://localhost:41062/FaBOnline/GetNextTurn3.php?gameName=${params.gameID}&playerID=${params.playerID}&authKey=${params.authKey}`;
+    // const queryURL = `https://www.talishar.net/game/GetNextTurn3.php?gameName=${params.gameID}&playerID=${params.playerID}`;
     try {
       const response = await fetch(queryURL, {
         method: 'GET',
@@ -76,10 +76,15 @@ export const gameSlice = createSlice({
     },
     setGameStart: (
       state,
-      action: PayloadAction<{ playerID: number; gameID: number }>
+      action: PayloadAction<{
+        playerID: number;
+        gameID: number;
+        authKey: string;
+      }>
     ) => {
       (state.gameInfo.gameID = action.payload.gameID),
-        (state.gameInfo.playerID = action.payload.playerID);
+        (state.gameInfo.playerID = action.payload.playerID),
+        (state.gameInfo.authKey = action.payload.authKey);
     }
   },
   // The `extraReducers` field lets the slice handle actions defined elsewhere,

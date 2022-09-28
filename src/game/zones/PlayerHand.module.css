@@ -59,3 +59,12 @@
   height: auto;
   padding: 5px;
 }
+
+.border6 {
+  border-color: greenyellow;
+  border-width: 1px;
+  border-style: solid;
+  margin: -2px -4px -2px 0px;
+  border-radius: 10px;
+  box-shadow: 0 0 3px 3px greenyellow;
+}
