@@ -5,7 +5,7 @@
   background-color: rgba(0, 0, 0, 0.5);
   border-radius: 10px;
   border: 1px goldenrod solid;
-  padding: 0.5vh;
+  padding: 2px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -19,6 +19,7 @@
 
 .img {
   height: 35vh;
+  display: block;
 }
 
 .popUpInside {
