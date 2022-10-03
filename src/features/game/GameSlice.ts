@@ -8,8 +8,10 @@ import Card from '../Card';
 export const nextTurn = createAsyncThunk(
   'game/nextTurn',
   async (params: GameInfo) => {
-    // const queryURL = `http://localhost:41062/FaBOnline/GetNextTurn3.php?gameName=${params.gameID}&playerID=${params.playerID}`;
-    const queryURL = `https://www.talishar.net/game/GetNextTurn3.php?gameName=${params.gameID}&playerID=${params.playerID}`;
+    const queryURL = `http://localhost:41062/FaBOnline/GetNextTurnAPI.php?gameName=${params.gameID}&playerID=${params.playerID}&authKey=${params.authKey}`;
+
+    // const queryURL = `http://localhost:41062/FaBOnline/GetNextTurn3.php?gameName=${params.gameID}&playerID=${params.playerID}&authKey=${params.authKey}`;
+    // const queryURL = `https://www.talishar.net/game/GetNextTurn3.php?gameName=${params.gameID}&playerID=${params.playerID}`;
     try {
       const response = await fetch(queryURL, {
         method: 'GET',
@@ -18,6 +20,29 @@ export const nextTurn = createAsyncThunk(
       const data = await response.text();
       const gameState: GameState = ParseGameState(data);
       return gameState;
+    } catch (e) {
+      console.error(e);
+    }
+  }
+);
+
+export const playCard = createAsyncThunk(
+  'game/playCard',
+  async (cardParams: Card, { getState }) => {
+    console.log('doing the thing');
+    const { game } = getState() as { game: { gameInfo: GameInfo } };
+    const gameInfo = game.gameInfo;
+    const mode = 3;
+    // const queryURL = `http://google.com`;
+    const queryURL = `http://localhost:41062/FaBOnline/ProcessInput2.php?gameName=${gameInfo.gameID}&playerID=${gameInfo.playerID}&authKey=${gameInfo.authKey}&mode=${mode}&cardID=${cardParams.actionDataOverride}`;
+    try {
+      const response = await fetch(queryURL, {
+        method: 'GET',
+        headers: {}
+      });
+      const data = await response.text();
+      console.log(data);
+      return;
     } catch (e) {
       console.error(e);
     }
@@ -76,10 +101,15 @@ export const gameSlice = createSlice({
     },
     setGameStart: (
       state,
-      action: PayloadAction<{ playerID: number; gameID: number }>
+      action: PayloadAction<{
+        playerID: number;
+        gameID: number;
+        authKey: string;
+      }>
     ) => {
       (state.gameInfo.gameID = action.payload.gameID),
-        (state.gameInfo.playerID = action.payload.playerID);
+        (state.gameInfo.playerID = action.payload.playerID),
+        (state.gameInfo.authKey = action.payload.authKey);
     }
   },
   // The `extraReducers` field lets the slice handle actions defined elsewhere,
@@ -96,6 +126,9 @@ export const gameSlice = createSlice({
       state.oldCombatChain = action.payload.oldCombatChain;
       state.chatLog = action.payload.chatLog;
       return state;
+    });
+    builder.addCase(playCard.fulfilled, (_state, _action) => {
+      return;
     });
   }
 });

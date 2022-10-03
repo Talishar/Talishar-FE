@@ -4,7 +4,6 @@
   height: 10vh;
   width: auto;
   object-fit: contain;
-  filter: drop-shadow(0.1rem 0.1rem 0.1rem black);
   position: relative;
   user-select: none;
   -webkit-user-select: none;
@@ -88,6 +87,7 @@
 }
 
 .img {
+  box-shadow: 3px 3px 5px black;
   position: relative;
   left: 2px;
   top: 0px;
@@ -119,4 +119,12 @@
   background-image: url('../../img/elements/frozenOverlay.png');
   background-repeat: no-repeat;
   background-size: 100% 100%;
+}
+
+.border6 {
+  border-color: greenyellow;
+  border-width: 1px;
+  border-style: solid;
+  margin: -2px -4px -2px 0px;
+  box-shadow: 0 0 3px 3px greenyellow;
 }

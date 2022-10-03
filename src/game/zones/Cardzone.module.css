@@ -61,7 +61,8 @@
   top: 0;
   left: 0;
   right: 0;
-  bottom: 0;
+  bottom: -10px;
+  padding-bottom: 10px;
   display: flex;
   overflow-x: auto;
   overflow-y: hidden;
@@ -78,7 +79,7 @@
 
 .permanentsWrapper {
   position: relative;
-  overflow: clip;
+  overflow-x: clip;
   flex: 0 1 100%;
   min-width: 0;
   border-radius: 10px;

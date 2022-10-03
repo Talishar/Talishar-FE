@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import { useAppDispatch } from '../../app/Hooks';
 import Card from '../../features/Card';
-import { clearPopUp, setPopUp } from '../../features/game/GameSlice';
+import { clearPopUp, playCard, setPopUp } from '../../features/game/GameSlice';
 import styles from './Card.module.css';
 
 export interface CardProp {
@@ -16,6 +16,7 @@ export default function CardDisplay(prop: CardProp) {
   let { num } = prop;
   const classStyles: string[] = [styles.floatTint];
   const equipStatus: string[] = [styles.floatTint];
+  const imgStyles: string[] = [styles.img];
   const dispatch = useAppDispatch();
   const ref = useRef<HTMLDivElement>(null);
 
@@ -33,7 +34,11 @@ export default function CardDisplay(prop: CardProp) {
     if (preventUseOnClick) {
       return;
     }
-    console.log('I have been clicked!');
+    if (card === undefined) {
+      return;
+    }
+    console.log('clicked');
+    dispatch(playCard(card));
   }
 
   const handleMouseEnter = () => {
@@ -60,9 +65,9 @@ export default function CardDisplay(prop: CardProp) {
     classStyles.push(styles.disabled);
   }
 
-  if (card.borderColor !== undefined) {
-    // not implemented
-    classStyles.push('border' + card.borderColor);
+  if (card.borderColor !== undefined && card.borderColor !== '0') {
+    // switch statement for different border colours
+    imgStyles.push(styles.border6);
   }
 
   if (card.isBroken) {
@@ -87,7 +92,7 @@ export default function CardDisplay(prop: CardProp) {
       onMouseLeave={() => handleMouseLeave()}
       ref={ref}
     >
-      <img src={eqImg} className={styles.img} />
+      <img src={eqImg} className={imgStyles.join(' ')} />
 
       <div className={classStyles.join(' ')}></div>
       <div className={equipStatus.join(' ')}></div>

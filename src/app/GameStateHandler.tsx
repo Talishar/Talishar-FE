@@ -36,12 +36,21 @@ export default function GameStateHandler() {
       gameID = '0';
     }
     let player = QueryParam.get('playerID');
-    if ((player !== '1' && player !== '2') || typeof player != 'number') {
+    console.log(player);
+    if (player === null) {
       player = '3';
+    }
+    let authKey = QueryParam.get('authKey');
+    if (authKey === null) {
+      authKey = '';
     }
 
     dispatch(
-      setGameStart({ gameID: parseInt(gameID), playerID: parseInt(player) })
+      setGameStart({
+        gameID: parseInt(gameID),
+        playerID: parseInt(player),
+        authKey: authKey
+      })
     );
   }, []);
 
