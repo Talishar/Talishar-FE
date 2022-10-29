@@ -7,10 +7,13 @@ import Card from '../Card';
 
 export const nextTurn = createAsyncThunk(
   'game/nextTurn',
-  async (params: GameInfo) => {
+  async (params: GameInfo, { getState }) => {
+    const { game } = getState() as { game: { gameInfo: GameInfo } };
+    //const gameInfo = game.gameInfo;
+    //const lastUpdate = params.lastUpdate || 0;//Default to 0
     // const queryURL = `http://localhost:41062/FaBOnline/GetNextTurnAPI.php?gameName=${params.gameID}&playerID=${params.playerID}&authKey=${params.authKey}`;
-    const queryURL = `http://localhost:41062/FaBOnline/GetNextTurn3.php?gameName=${params.gameID}&playerID=${params.playerID}&authKey=${params.authKey}`;
-    // const queryURL = `https://www.talishar.net/game/GetNextTurn3.php?gameName=${params.gameID}&playerID=${params.playerID}`;
+    //const queryURL = `http://localhost:41062/FaBOnline/GetNextTurn3.php?gameName=${params.gameID}&playerID=${params.playerID}&authKey=${params.authKey}`;
+    const queryURL = `https://www.talishar.net/game/GetNextTurn3.php?gameName=${params.gameID}&playerID=${params.playerID}&authKey=${params.authKey}`;
     try {
       const response = await fetch(queryURL, {
         method: 'GET',
@@ -19,7 +22,11 @@ export const nextTurn = createAsyncThunk(
       const data = await response.text();
       console.log(data);
       const parsedData = JSON.parse(data);
-      return ParseGameState(parsedData);
+      const gs = ParseGameState(parsedData);
+      //gameInfo.lastUpdate = gs.lastUpdate;
+      //alert(game.lastUpdate);
+      //alert(JSON.stringify(game.oldCombatChain,0, 4));
+      return gs;
     } catch (e) {
       console.error(e);
     }
