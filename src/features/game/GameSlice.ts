@@ -9,7 +9,6 @@ export const nextTurn = createAsyncThunk(
   'game/nextTurn',
   async (params: GameInfo) => {
     // const queryURL = `http://localhost:41062/FaBOnline/GetNextTurnAPI.php?gameName=${params.gameID}&playerID=${params.playerID}&authKey=${params.authKey}`;
-
     const queryURL = `http://localhost:41062/FaBOnline/GetNextTurn3.php?gameName=${params.gameID}&playerID=${params.playerID}&authKey=${params.authKey}`;
     // const queryURL = `https://www.talishar.net/game/GetNextTurn3.php?gameName=${params.gameID}&playerID=${params.playerID}`;
     try {
@@ -18,8 +17,9 @@ export const nextTurn = createAsyncThunk(
         headers: {}
       });
       const data = await response.text();
-      const gameState: GameState = ParseGameState(data);
-      return gameState;
+      console.log(data);
+      const parsedData = JSON.parse(data);
+      return ParseGameState(parsedData);
     } catch (e) {
       console.error(e);
     }

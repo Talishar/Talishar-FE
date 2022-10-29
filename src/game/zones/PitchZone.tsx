@@ -16,8 +16,18 @@ export default function PitchZone(prop: Displayrow) {
     isPlayer ? state.game.playerOne.Pitch : state.game.playerTwo.Pitch
   );
 
-  if (pitchZone === undefined) {
-    return <div className={styles.pitchZone}>Pitch</div>;
+  if (
+    pitchZone === undefined ||
+    pitchZone.length === 0 ||
+    pitchZone[0].cardNumber === 'blankZone'
+  ) {
+    return (
+      <>
+        <div className={styles.pitchZone}>
+          <PitchDisplay isPlayer={isPlayer} DisplayRow={DisplayRow} />
+        </div>
+      </>
+    );
   }
 
   const pitchZoneDisplay = () => {
@@ -33,9 +43,10 @@ export default function PitchZone(prop: Displayrow) {
   const numInPitch = pitchZone.length;
   const cardToDisplay = pitchZone[numInPitch - 1];
 
+  // TODO: Have the nice stacking effect like it was requested on twitter
   return (
     <div className={styles.pitchZone} onClick={pitchZoneDisplay}>
-      <CardDisplay card={cardToDisplay} num={numInPitch} preventUseOnClick />
+      <CardDisplay card={cardToDisplay} num={0} preventUseOnClick />
       <PitchDisplay isPlayer={isPlayer} DisplayRow={DisplayRow} />
     </div>
   );
