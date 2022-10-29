@@ -135,6 +135,7 @@ export default function ParseGameState(input: any) {
     result.playerTwo.Hand.push(ParseCard(cardObj));
   }
 
+  result.playerTwo.SoulCount = input.opponentSoulCount;
   result.playerTwo.Health = input.opponentHealth;
 
   result.playerTwo.GraveyardCount = input.opponentDiscardCount;
@@ -187,6 +188,7 @@ export default function ParseGameState(input: any) {
     result.playerOne.Hand.push(ParseCard(cardObj));
   }
 
+  result.playerOne.SoulCount = input.playerSoulCount;
   result.playerOne.Health = input.playerHealth;
 
   result.playerOne.GraveyardCount = input.playerDiscardCount;
