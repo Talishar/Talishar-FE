@@ -10,8 +10,8 @@ export const nextTurn = createAsyncThunk(
   async (params: GameInfo, { getState }) => {
     const { game } = getState() as any;
     const lastUpdate = game.lastUpdate || 0;//Default to 0
-    // const queryURL = `http://localhost:41062/FaBOnline/GetNextTurnAPI.php?gameName=${params.gameID}&playerID=${params.playerID}&authKey=${params.authKey}`;
-    //const queryURL = `http://localhost:41062/FaBOnline/GetNextTurn3.php?gameName=${params.gameID}&playerID=${params.playerID}&authKey=${params.authKey}`;
+    // const queryURL = `http://localhost:41062/FaBOnline/GetNextTurnAPI.php?gameName=${params.gameID}&playerID=${params.playerID}&authKey=${params.authKey}&lastUpdate=${lastUpdate}`;
+    //const queryURL = `http://localhost:41062/FaBOnline/GetNextTurn3.php?gameName=${params.gameID}&playerID=${params.playerID}&authKey=${params.authKey}&lastUpdate=${lastUpdate}`;
     const queryURL = `https://www.talishar.net/game/GetNextTurn3.php?gameName=${params.gameID}&playerID=${params.playerID}&authKey=${params.authKey}&lastUpdate=${lastUpdate}`;
     try {
       const response = await fetch(queryURL, {
