@@ -28,7 +28,7 @@ You'll probably need to `yarn install` every time you switch branches to make su
 
 ### Important!
 
-In the file `app/features/game/GameSlice.ts` you'll need to modify `queryURL` so that the port is the same as what you're running for the php BE. (TODO: Make it less jank).
+In the file `src/features/game/GameSlice.ts` you'll need to modify `queryURL` so that the port is the same as what you're running for the php BE. (TODO: Make it less jank).
 
 ## Optional happy fun things:
 
