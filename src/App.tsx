@@ -34,6 +34,10 @@ function App() {
 
   return (
     <div className="centering">
+      <div
+        id="cardDetail"
+        style={{ display: 'none', position: 'absolute' }}
+      ></div>
       <GameStateHandler />
       <div className="app" style={{ maxWidth }}>
         <LeftColumn />

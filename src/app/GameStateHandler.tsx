@@ -6,8 +6,8 @@ import { useAppDispatch, useAppSelector } from './Hooks';
 const intervalLength = 1000;
 // const hostURL = 'https://localhost/FaBOnline/';
 
-// set to true if you do not want redux being updated every second.
-const DO_NOT_CALL = false;
+// set to false if you do not want redux being updated every second.
+const ENABLE_LONG_POLL = false;
 
 export default function GameStateHandler() {
   const QueryParam = new URLSearchParams(window.location.search);
@@ -16,14 +16,18 @@ export default function GameStateHandler() {
 
   // setup long poll
   useEffect(() => {
+    let intervalID: NodeJS.Timer;
+
     function getGameState() {
-      if (DO_NOT_CALL) {
-        return;
-      }
       dispatch(nextTurn(params));
     }
-    const intervalID = setInterval(getGameState, intervalLength);
+
+    if (ENABLE_LONG_POLL) {
+      intervalID = setInterval(getGameState, intervalLength);
+    }
+
     getGameState();
+
     return () => {
       clearInterval(intervalID);
     };
