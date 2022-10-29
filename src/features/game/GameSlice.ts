@@ -19,7 +19,7 @@ export const nextTurn = createAsyncThunk(
         headers: {}
       });
       const data = await response.text();
-      console.log(data);
+      //console.log(data);
       const parsedData = JSON.parse(data);
       const gs = ParseGameState(parsedData);
       return gs;
