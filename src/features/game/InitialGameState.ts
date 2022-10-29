@@ -269,7 +269,8 @@ export const OfflineTestingGameState: GameState = {
   popup: {
     popupOn: false,
     popupCard: undefined
-  }
+  },
+  lastUpdate: 0
 };
 
 export default InitialGameState as GameState;

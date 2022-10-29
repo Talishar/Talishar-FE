@@ -7,11 +7,12 @@ import Card from '../Card';
 
 export const nextTurn = createAsyncThunk(
   'game/nextTurn',
-  async (params: GameInfo) => {
-    //const lastUpdate = params.lastUpdate || 0;//Default to 0
+  async (params: GameInfo, { getState }) => {
+    const { game } = getState() as any;
+    const lastUpdate = game.lastUpdate || 0;//Default to 0
     // const queryURL = `http://localhost:41062/FaBOnline/GetNextTurnAPI.php?gameName=${params.gameID}&playerID=${params.playerID}&authKey=${params.authKey}`;
     //const queryURL = `http://localhost:41062/FaBOnline/GetNextTurn3.php?gameName=${params.gameID}&playerID=${params.playerID}&authKey=${params.authKey}`;
-    const queryURL = `https://www.talishar.net/game/GetNextTurn3.php?gameName=${params.gameID}&playerID=${params.playerID}&authKey=${params.authKey}`;
+    const queryURL = `https://www.talishar.net/game/GetNextTurn3.php?gameName=${params.gameID}&playerID=${params.playerID}&authKey=${params.authKey}&lastUpdate=${lastUpdate}`;
     try {
       const response = await fetch(queryURL, {
         method: 'GET',
@@ -21,9 +22,6 @@ export const nextTurn = createAsyncThunk(
       console.log(data);
       const parsedData = JSON.parse(data);
       const gs = ParseGameState(parsedData);
-      //gameInfo.lastUpdate = gs.lastUpdate;
-      //alert(game.lastUpdate);
-      //alert(JSON.stringify(game.oldCombatChain,0, 4));
       return gs;
     } catch (e) {
       console.error(e);
@@ -130,6 +128,7 @@ export const gameSlice = createSlice({
       state.activeLayers = action.payload.activeLayers;
       state.oldCombatChain = action.payload.oldCombatChain;
       state.chatLog = action.payload.chatLog;
+      state.lastUpdate = action.payload.lastUpdate;
       return state;
     });
     builder.addCase(playCard.fulfilled, (_state, _action) => {
