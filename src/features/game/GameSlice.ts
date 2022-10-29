@@ -7,9 +7,7 @@ import Card from '../Card';
 
 export const nextTurn = createAsyncThunk(
   'game/nextTurn',
-  async (params: GameInfo, { getState }) => {
-    const { game } = getState() as { game: { gameInfo: GameInfo } };
-    //const gameInfo = game.gameInfo;
+  async (params: GameInfo) => {
     //const lastUpdate = params.lastUpdate || 0;//Default to 0
     // const queryURL = `http://localhost:41062/FaBOnline/GetNextTurnAPI.php?gameName=${params.gameID}&playerID=${params.playerID}&authKey=${params.authKey}`;
     //const queryURL = `http://localhost:41062/FaBOnline/GetNextTurn3.php?gameName=${params.gameID}&playerID=${params.playerID}&authKey=${params.authKey}`;
