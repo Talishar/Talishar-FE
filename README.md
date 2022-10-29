@@ -26,6 +26,10 @@ then you should be in developer mode. Happy coding!
 
 You'll probably need to `yarn install` every time you switch branches to make sure dependencies and libraries are up to date.
 
+### Important!
+
+In the file `app/features/game/GameSlice.ts` you'll need to modify `queryURL` so that the port is the same as what you're running for the php BE. (TODO: Make it less jank).
+
 ## Optional happy fun things:
 
 Configure Prettier / ES Lint in your editor of choice.
