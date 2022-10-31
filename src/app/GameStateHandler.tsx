@@ -3,12 +3,6 @@ import { RootState } from './Store';
 import { nextTurn, setGameStart } from '../features/game/GameSlice';
 import { useAppDispatch, useAppSelector } from './Hooks';
 
-const intervalLength = 1000;
-// const hostURL = 'https://localhost/FaBOnline/';
-
-// set to false if you do not want redux being updated every second.
-const ENABLE_LONG_POLL = false;
-
 export default function GameStateHandler() {
   const QueryParam = new URLSearchParams(window.location.search);
   const params = useAppSelector((state: RootState) => state.game.gameInfo);

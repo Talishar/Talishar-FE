@@ -1,8 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import ParseGameState from '../../app/ParseGameState';
-import InitialGameState, { OfflineTestingGameState } from './InitialGameState';
+import { OfflineTestingGameState } from './InitialGameState';
 import GameInfo from '../GameInfo';
-import GameState from '../GameState';
 import Card from '../Card';
 
 export const nextTurn = createAsyncThunk(
