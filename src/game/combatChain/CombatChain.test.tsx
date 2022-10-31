@@ -2,7 +2,7 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { store } from '../../app/Store';
 import { createRoot } from 'react-dom/client';
-import CombatChain from './Combatchain';
+import CombatChain from './CombatChain';
 
 it('renders without crashing', () => {
   const div = document.createElement('div');
