@@ -1,6 +1,6 @@
 import React from 'react';
-import ActiveEffects from './ActiveEffects';
-import PlayerName from './elements/PlayerName';
+import ActiveEffects from '../activeEffects/ActiveEffects';
+import PlayerName from '../elements/playerName/PlayerName';
 import styles from './LeftColumn.module.css';
 
 export default function LeftColumn() {

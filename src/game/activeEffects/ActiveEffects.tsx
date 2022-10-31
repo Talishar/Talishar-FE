@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './ActiveEffects.module.css';
-import Effects from './elements/Effects';
+import Effects from '../elements/effects/Effects';
 
 export default function ActiveEffects() {
   return (

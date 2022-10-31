@@ -1,9 +1,9 @@
 import React from 'react';
-import Player from '../interface/Player';
-import FeetEqZone from './zones/FeetEqZone';
+import Player from '../../interface/Player';
+import FeetEqZone from '../zones/feetEqZone/FeetEqZone';
 import styles from './Rows.module.css';
-import BanishZone from './zones/BanishZone';
-import ArsenalZone from './zones/ArsenalZone';
+import BanishZone from '../zones/banishZone/BanishZone';
+import ArsenalZone from '../zones/arsenalZone/ArsenalZone';
 
 export default function BottomRow(props: Player) {
   const displayRow = props.isPlayer ? styles.bottomRow : styles.topRow;

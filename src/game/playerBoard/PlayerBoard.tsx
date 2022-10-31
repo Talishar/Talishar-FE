@@ -1,8 +1,8 @@
 import React from 'react';
-import TopRow from './Toprow';
-import MiddleRow from './Middlerow';
-import BottomRow from './Bottomrow';
-import styles from './Board.module.css';
+import TopRow from '../topRow/TopRow';
+import MiddleRow from '../middleRow/MiddleRow';
+import BottomRow from '../bottomRow/BottomRow';
+import styles from './PlayerBoard.module.css';
 
 export default function PlayerBoard() {
   return (

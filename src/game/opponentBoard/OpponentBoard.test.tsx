@@ -1,8 +1,8 @@
 import React from 'react';
 import { Provider } from 'react-redux';
-import { store } from '../app/Store';
+import { store } from '../../app/Store';
 import { createRoot } from 'react-dom/client';
-import OpponentBoard from './Opponentboard';
+import OpponentBoard from './OpponentBoard';
 
 it('renders without crashing', () => {
   const div = document.createElement('div');

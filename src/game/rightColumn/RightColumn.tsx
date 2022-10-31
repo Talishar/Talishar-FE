@@ -1,10 +1,10 @@
 import React from 'react';
-import LastPlayed from './elements/LastPlayed';
-import Menu from './elements/Menu';
-import TurnNumber from './elements/TurnNumber';
+import LastPlayed from '../elements/lastPlayed/LastPlayed';
+import Menu from '../elements/menu/Menu';
+import TurnNumber from '../elements/turnNumber/TurnNumber';
 import styles from './RightColumn.module.css';
-import ChatBox from './elements/ChatBox';
-import PhaseTracker from './elements/PhaseTracker';
+import ChatBox from '../elements/chatBox/ChatBox';
+import PhaseTracker from '../elements/phaseTracker/PhaseTracker';
 
 export default function RightColumn() {
   return (

@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Board } from './game/Board';
+import { Board } from './game/board/Board';
 import './App.css';
 import GameStateHandler from './app/GameStateHandler';
-import LeftColumn from './game/LeftColumn';
-import RightColumn from './game/RightColumn';
-import HandZone from './game/zones/HandZone';
-import PlayerHand from './game/zones/PlayerHand';
+import LeftColumn from './game/leftColumn/LeftColumn';
+import RightColumn from './game/rightColumn/RightColumn';
+import HandZone from './game/zones/handZone/HandZone';
+import PlayerHand from './game/zones/playerHand/PlayerHand';
 import { useAppSelector } from './app/Hooks';
 import { RootState } from './app/Store';
 

@@ -1,10 +1,10 @@
 import React from 'react';
-import PlayerBoard from './Playerboard';
-import OpponentBoard from './Opponentboard';
-import CombatChain from './Combatchain';
+import PlayerBoard from '../playerBoard/PlayerBoard';
+import OpponentBoard from '../opponentBoard/OpponentBoard';
+import CombatChain from '../combatChain/Combatchain';
 import styles from './Board.module.css';
-import CardListZone from './zones/CardListZone';
-import ActiveLayersZone from './zones/ActiveLayersZone';
+import CardListZone from '../zones/cardListZone/CardListZone';
+import ActiveLayersZone from '../zones/activeLayersZone/ActiveLayersZone';
 
 export interface playAreaDimensions {
   dimension: number;
