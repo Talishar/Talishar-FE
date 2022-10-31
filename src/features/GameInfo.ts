@@ -6,4 +6,5 @@ export default interface GameInfo {
   authKey: string;
   turnNo?: number;
   lastPlayed?: Card;
+  lastUpdate?: number;
 }

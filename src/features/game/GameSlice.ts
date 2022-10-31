@@ -8,23 +8,30 @@ import Card from '../Card';
 export const nextTurn = createAsyncThunk(
   'game/nextTurn',
   async (params: GameInfo, { getState }) => {
-    const { game } = getState() as any;
-    const lastUpdate = game.lastUpdate || 0;//Default to 0
+    // NOTE: Edit the queryURL here if testing locally versus testing remotely.
     // const queryURL = `http://localhost:41062/FaBOnline/GetNextTurnAPI.php?gameName=${params.gameID}&playerID=${params.playerID}&authKey=${params.authKey}&lastUpdate=${lastUpdate}`;
     //const queryURL = `http://localhost:41062/FaBOnline/GetNextTurn3.php?gameName=${params.gameID}&playerID=${params.playerID}&authKey=${params.authKey}&lastUpdate=${lastUpdate}`;
-    const queryURL = `https://www.talishar.net/game/GetNextTurn3.php?gameName=${params.gameID}&playerID=${params.playerID}&authKey=${params.authKey}&lastUpdate=${lastUpdate}`;
-    try {
-      const response = await fetch(queryURL, {
-        method: 'GET',
-        headers: {}
-      });
-      const data = await response.text();
-      //console.log(data);
-      const parsedData = JSON.parse(data);
-      const gs = ParseGameState(parsedData);
-      return gs;
-    } catch (e) {
-      console.error(e);
+    const queryURL = `https://talishar.net/game/GetNextTurn3.php?gameName=${params.gameID}&playerID=${params.playerID}&authKey=${params.authKey}&lastUpdate=${params.lastUpdate}`;
+    let waitingForJSONResponse = true;
+    while (waitingForJSONResponse) {
+      try {
+        console.log('sending fetch');
+        const response = await fetch(queryURL, {
+          method: 'GET',
+          headers: {}
+        });
+        const data = await response.text();
+        console.log('data: ', data);
+        if (data === '0') {
+          continue;
+        }
+        waitingForJSONResponse = false;
+        const parsedData = JSON.parse(data);
+        const gs = ParseGameState(parsedData);
+        return gs;
+      } catch (e) {
+        return console.error(e);
+      }
     }
   }
 );
@@ -122,13 +129,23 @@ export const gameSlice = createSlice({
       if (action.payload === undefined) {
         return state;
       }
+      state.gameInfo.lastUpdate = action.payload.gameInfo.lastUpdate;
       state.playerOne = action.payload.playerOne;
       state.playerTwo = action.payload.playerTwo;
       state.activeCombatChain = action.payload.activeCombatChain;
       state.activeLayers = action.payload.activeLayers;
       state.oldCombatChain = action.payload.oldCombatChain;
       state.chatLog = action.payload.chatLog;
-      state.lastUpdate = action.payload.lastUpdate;
+      state.isUpdateInProgress = false;
+      return state;
+    });
+    builder.addCase(nextTurn.pending, (state, action) => {
+      state.isUpdateInProgress = true;
+      return state;
+    });
+
+    builder.addCase(nextTurn.rejected, (state, action) => {
+      state.isUpdateInProgress = false;
       return state;
     });
     builder.addCase(playCard.fulfilled, (_state, _action) => {

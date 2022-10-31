@@ -50,11 +50,6 @@ export default function CardPopUp() {
       dfcValue = 'UPR409';
       break;
     }
-    case 'UPR409': {
-      isDFC = true;
-      dfcValue = 'UPR009';
-      break;
-    }
     case 'UPR010': {
       isDFC = true;
       dfcValue = 'UPR410';
@@ -93,6 +88,66 @@ export default function CardPopUp() {
     case 'UPR017': {
       isDFC = true;
       dfcValue = 'UPR417';
+      break;
+    }
+    case 'UPR406': {
+      isDFC = true;
+      dfcValue = 'UPR006';
+      break;
+    }
+    case 'UPR407': {
+      isDFC = true;
+      dfcValue = 'UPR007';
+      break;
+    }
+    case 'UPR408': {
+      isDFC = true;
+      dfcValue = 'UPR008';
+      break;
+    }
+    case 'UPR409': {
+      isDFC = true;
+      dfcValue = 'UPR009';
+      break;
+    }
+    case 'UPR410': {
+      isDFC = true;
+      dfcValue = 'UPR010';
+      break;
+    }
+    case 'UPR411': {
+      isDFC = true;
+      dfcValue = 'UPR011';
+      break;
+    }
+    case 'UPR412': {
+      isDFC = true;
+      dfcValue = 'UPR012';
+      break;
+    }
+    case 'UPR413': {
+      isDFC = true;
+      dfcValue = 'UPR013';
+      break;
+    }
+    case 'UPR414': {
+      isDFC = true;
+      dfcValue = 'UPR014';
+      break;
+    }
+    case 'UPR415': {
+      isDFC = true;
+      dfcValue = 'UPR015';
+      break;
+    }
+    case 'UPR416': {
+      isDFC = true;
+      dfcValue = 'UPR016';
+      break;
+    }
+    case 'UPR417': {
+      isDFC = true;
+      dfcValue = 'UPR017';
       break;
     }
   }

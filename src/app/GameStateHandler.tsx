@@ -12,26 +12,19 @@ const ENABLE_LONG_POLL = false;
 export default function GameStateHandler() {
   const QueryParam = new URLSearchParams(window.location.search);
   const params = useAppSelector((state: RootState) => state.game.gameInfo);
+  const isUpdateInProgress = useAppSelector(
+    (state: RootState) => state.game.isUpdateInProgress
+  );
   const dispatch = useAppDispatch();
 
   // setup long poll
   useEffect(() => {
-    let intervalID: NodeJS.Timer;
-
-    function getGameState() {
-      dispatch(nextTurn(params));
+    if (params.gameID == 0 || isUpdateInProgress) {
+      return;
     }
 
-    if (ENABLE_LONG_POLL) {
-      intervalID = setInterval(getGameState, intervalLength);
-    }
-
-    getGameState();
-
-    return () => {
-      clearInterval(intervalID);
-    };
-  }, [params, dispatch]);
+    dispatch(nextTurn(params));
+  }, [params, isUpdateInProgress, dispatch]);
 
   // write the gameID etc to the params
   useEffect(() => {

@@ -30,5 +30,5 @@ export default interface GameState {
     cardList?: Card[];
   };
   chatLog?: string[];
-  lastUpdate?: number;
+  isUpdateInProgress?: boolean;
 }

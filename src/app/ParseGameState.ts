@@ -235,6 +235,6 @@ export default function ParseGameState(input: any) {
   result.chatLog = [];
   result.chatLog.push(input.chatLog);
 
-  result.lastUpdate = input.lastUpdate;
+  result.gameInfo.lastUpdate = input.lastUpdate;
   return result;
 }

@@ -3,14 +3,16 @@ import GameState from '../GameState';
 const InitialGameState: GameState = {
   gameInfo: { gameID: 0, playerID: 3, authKey: '' },
   playerOne: {},
-  playerTwo: {}
+  playerTwo: {},
+  isUpdateInProgress: false
 };
 
 export const OfflineTestingGameState: GameState = {
   gameInfo: {
     gameID: 0,
     playerID: 3,
-    authKey: '28df413b665604299807c461a7f3cae71c4176cb2b96afad04b84cf96d016258'
+    authKey: '28df413b665604299807c461a7f3cae71c4176cb2b96afad04b84cf96d016258',
+    lastUpdate: 0
   },
   activePlayer: 1,
   oldCombatChain: [
@@ -269,8 +271,7 @@ export const OfflineTestingGameState: GameState = {
   popup: {
     popupOn: false,
     popupCard: undefined
-  },
-  lastUpdate: 0
+  }
 };
 
 export default InitialGameState as GameState;
