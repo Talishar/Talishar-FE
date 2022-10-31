@@ -6,6 +6,9 @@ import Player from '../features/Player';
 
 function ParseCard(input: any) {
   const card: Card = { cardNumber: 'blank' };
+  if (input === undefined) {
+    return card;
+  }
   card.cardNumber = input.cardNumber ? input.cardNumber : 'blank';
   card.action = card.action ? Number(card.action) : undefined;
   card.overlay = input.overlay == 1 ? 'disabled' : 'none';
@@ -84,7 +87,7 @@ export default function ParseGameState(input: any) {
 
   // active chain link
   result.activeCombatChain = {};
-  if (input.activeChainLink.length > 0) {
+  if (input.activeChainLink !== undefined && input.activeChainLink.length > 0) {
     result.activeCombatChain.attackingCard = ParseCard(
       input.activeChainLink[0]
     );
@@ -230,10 +233,14 @@ export default function ParseGameState(input: any) {
     result.playerOne.Effects.push(ParseCard(cardObj));
   }
 
-  // finally the chat log.
+  // Chat log.
   result.chatLog = [];
   result.chatLog.push(input.chatLog);
 
+  // last update frame
   result.gameInfo.lastUpdate = input.lastUpdate;
+
+  // last played card
+  result.gameInfo.lastPlayed = ParseCard(input.lastPlayedCard);
   return result;
 }

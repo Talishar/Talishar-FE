@@ -33,7 +33,6 @@ export default function GameStateHandler() {
       gameID = '0';
     }
     let player = QueryParam.get('playerID');
-    console.log(player);
     if (player === null) {
       player = '3';
     }

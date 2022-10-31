@@ -10,23 +10,23 @@ export const nextTurn = createAsyncThunk(
   async (params: GameInfo, { getState }) => {
     // NOTE: Edit the queryURL here if testing locally versus testing remotely.
     // const queryURL = `http://localhost:41062/FaBOnline/GetNextTurnAPI.php?gameName=${params.gameID}&playerID=${params.playerID}&authKey=${params.authKey}&lastUpdate=${lastUpdate}`;
-    //const queryURL = `http://localhost:41062/FaBOnline/GetNextTurn3.php?gameName=${params.gameID}&playerID=${params.playerID}&authKey=${params.authKey}&lastUpdate=${lastUpdate}`;
-    const queryURL = `https://talishar.net/game/GetNextTurn3.php?gameName=${params.gameID}&playerID=${params.playerID}&authKey=${params.authKey}&lastUpdate=${params.lastUpdate}`;
+    const queryURL = `http://localhost:41062/FaBOnline/GetNextTurn3.php?gameName=${params.gameID}&playerID=${params.playerID}&authKey=${params.authKey}&lastUpdate=${params.lastUpdate}`;
+    // const queryURL = `https://talishar.net/game/GetNextTurn3.php?gameName=${params.gameID}&playerID=${params.playerID}&authKey=${params.authKey}&lastUpdate=${params.lastUpdate}`;
     let waitingForJSONResponse = true;
     while (waitingForJSONResponse) {
       try {
-        console.log('sending fetch');
+        // console.log('sending fetch');
         const response = await fetch(queryURL, {
           method: 'GET',
           headers: {}
         });
         const data = await response.text();
-        console.log('data: ', data);
-        if (data === '0') {
+        if (data.toString().trim() === '0') {
           continue;
         }
         waitingForJSONResponse = false;
         const parsedData = JSON.parse(data);
+        console.log(parsedData);
         const gs = ParseGameState(parsedData);
         return gs;
       } catch (e) {
@@ -43,7 +43,6 @@ export const playCard = createAsyncThunk(
     const { game } = getState() as { game: { gameInfo: GameInfo } };
     const gameInfo = game.gameInfo;
     const mode = 3;
-    // const queryURL = `http://google.com`;
     const queryURL = `http://localhost:41062/FaBOnline/ProcessInput2.php?gameName=${gameInfo.gameID}&playerID=${gameInfo.playerID}&authKey=${gameInfo.authKey}&mode=${mode}&cardID=${cardParams.actionDataOverride}`;
     try {
       const response = await fetch(queryURL, {
@@ -129,7 +128,6 @@ export const gameSlice = createSlice({
       if (action.payload === undefined) {
         return state;
       }
-      state.gameInfo.lastUpdate = action.payload.gameInfo.lastUpdate;
       state.playerOne = action.payload.playerOne;
       state.playerTwo = action.payload.playerTwo;
       state.activeCombatChain = action.payload.activeCombatChain;
@@ -137,6 +135,10 @@ export const gameSlice = createSlice({
       state.oldCombatChain = action.payload.oldCombatChain;
       state.chatLog = action.payload.chatLog;
       state.isUpdateInProgress = false;
+
+      // gameInfo
+      state.gameInfo.lastPlayed = action.payload.gameInfo.lastPlayed;
+      state.gameInfo.lastUpdate = action.payload.gameInfo.lastUpdate;
       return state;
     });
     builder.addCase(nextTurn.pending, (state, action) => {
