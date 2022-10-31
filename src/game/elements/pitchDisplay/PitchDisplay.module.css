@@ -12,7 +12,7 @@
 }
 
 .pitchBackground {
-  background-image: url('../../img/symbols/symbol-resource.png');
+  background-image: url('../../../img/symbols/symbol-resource.png');
   background-position: center;
   background-size: contain;
   height: 4vh;

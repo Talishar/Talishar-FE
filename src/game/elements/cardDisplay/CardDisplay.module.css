@@ -55,7 +55,7 @@
   align-items: center;
   height: 4vh;
   width: 4vh;
-  background-image: url('../../img/symbols/symbol-defence.png');
+  background-image: url('../../../img/symbols/symbol-defence.png');
   background-position: center;
   background-size: contain;
   text-align: center;
@@ -73,7 +73,7 @@
   align-items: center;
   height: 4vh;
   width: 4vh;
-  background-image: url('../../img/symbols/symbol-defence.png');
+  background-image: url('../../../img/symbols/symbol-defence.png');
   background-position: center;
   background-size: contain;
   font-size: 1.25em;
@@ -103,21 +103,21 @@
 }
 
 .isBroken {
-  background-image: url('../../img/symbols/symbol-brokenEquip.png');
+  background-image: url('../../../img/symbols/symbol-brokenEquip.png');
   background-repeat: no-repeat;
   background-size: contain;
   background-position: 1.5vh -0.5vh;
 }
 
 .onChain {
-  background-image: url('../../img/symbols/symbol-onChain.png');
+  background-image: url('../../../img/symbols/symbol-onChain.png');
   background-repeat: no-repeat;
   background-size: cover;
   background-position: 0px -5vh;
 }
 
 .isFrozen {
-  background-image: url('../../img/elements/frozenOverlay.png');
+  background-image: url('../../../img/elements/frozenOverlay.png');
   background-repeat: no-repeat;
   background-size: 100% 100%;
 }

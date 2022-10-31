@@ -5,7 +5,7 @@ import GlovesEqZone from '../zones/glovesEqZone/GlovesEqZone';
 import HeroZone from '../zones/heroZone/HeroZone';
 import WeaponLZone from '../zones/weaponLZone/WeaponLZone';
 import WeaponRZone from '../zones/weaponRZone/WeaponRZone';
-import styles from './Rows.module.css';
+import styles from './MiddleRow.module.css';
 import DeckZone from '../zones/deckZone/DeckZone';
 import PitchZone from '../zones/pitchZone/PitchZone';
 

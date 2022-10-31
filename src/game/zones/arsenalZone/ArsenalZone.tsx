@@ -4,7 +4,7 @@ import { RootState } from '../../../app/Store';
 import Displayrow from '../../../interface/Displayrow';
 import CardDisplay from '../../elements/cardDisplay/CardDisplay';
 import Card from '../../../features/Card';
-import styles from './Cardzone.module.css';
+import styles from '../Cardzone.module.css';
 
 export default function ArsenalZone(prop: Displayrow) {
   const { isPlayer } = prop;

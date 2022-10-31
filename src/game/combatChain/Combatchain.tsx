@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './Board.module.css';
+import styles from './CombatChain.module.css';
 import ChainLinks from '../elements/chainLinks/ChainLinks';
 import CurrentAttack from '../elements/currentAttack/CurrentAttack';
 import Reactions from '../elements/reactions/Reactions';

@@ -94,7 +94,7 @@
 }
 
 .chainLinksRow {
-  background-image: url('../../img/elements/gold-chain.png');
+  background-image: url('../../../img/elements/gold-chain.png');
   background-size: contain;
   background-repeat: no-repeat;
   background-position: left;

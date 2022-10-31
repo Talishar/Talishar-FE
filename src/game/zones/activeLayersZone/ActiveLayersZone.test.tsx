@@ -1,6 +1,6 @@
 import React from 'react';
 import { Provider } from 'react-redux';
-import { store } from '../../app/Store';
+import { store } from '../../../app/Store';
 import { createRoot } from 'react-dom/client';
 import ActiveLayersZone from './ActiveLayersZone';
 

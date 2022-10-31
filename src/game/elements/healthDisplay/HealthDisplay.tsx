@@ -2,7 +2,7 @@ import React from 'react';
 import { useAppSelector } from '../../../app/Hooks';
 import { RootState } from '../../../app/Store';
 import Player from '../../../interface/Player';
-import styles from './TurnWidget.module.css';
+import styles from './HealthDisplay.module.css';
 
 export default function HealthDisplay(props: Player) {
   const health = useAppSelector((state: RootState) =>

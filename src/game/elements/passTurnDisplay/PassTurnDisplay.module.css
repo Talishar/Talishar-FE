@@ -1,0 +1,9 @@
+.passTurnDisplay {
+  position: absolute;
+  top: 83px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 20px;
+}

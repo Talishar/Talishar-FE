@@ -5,7 +5,7 @@ import {
   setPopUp
 } from '../../../features/game/GameSlice';
 import Card from '../../../features/Card';
-import styles from '../../zones/PlayerHand.module.css';
+import styles from './PlayerHandCard.module.css';
 import Draggable, { DraggableData, DraggableEvent } from 'react-draggable';
 import { useAppDispatch } from '../../../app/Hooks';
 

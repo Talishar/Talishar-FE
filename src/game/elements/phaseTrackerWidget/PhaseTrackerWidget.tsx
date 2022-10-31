@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './PhaseTracker.module.css';
+import styles from './PhaseTrackerWidget.module.css';
 
 export default function PhaseTrackerWidget() {
   //TODO: Add functionality to this.

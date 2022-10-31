@@ -6,7 +6,7 @@ import {
   playCard,
   setPopUp
 } from '../../../features/game/GameSlice';
-import styles from './Card.module.css';
+import styles from './CardDisplay.module.css';
 
 export interface CardProp {
   card?: Card;

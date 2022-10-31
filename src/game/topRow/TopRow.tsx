@@ -1,7 +1,7 @@
 import React from 'react';
 import Player from '../../interface/Player';
 import HeadEqZone from '../zones/headEqZone/HeadEqZone';
-import styles from './Rows.module.css';
+import styles from './TopRow.module.css';
 import PermanentsZone from '../zones/permanentsZone/PermanentsZone';
 import GraveyardZone from '../zones/graveyardZone/GraveyardZone';
 

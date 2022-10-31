@@ -1,7 +1,7 @@
 import React from 'react';
 import Player from '../../interface/Player';
 import FeetEqZone from '../zones/feetEqZone/FeetEqZone';
-import styles from './Rows.module.css';
+import styles from './BottomRow.module.css';
 import BanishZone from '../zones/banishZone/BanishZone';
 import ArsenalZone from '../zones/arsenalZone/ArsenalZone';
 

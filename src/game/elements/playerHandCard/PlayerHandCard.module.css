@@ -1,0 +1,70 @@
+.handRow {
+  position: fixed;
+  min-width: 10%;
+  max-width: 50%;
+  max-height: 1vh;
+  bottom: 0px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+  gap: 1vh;
+  user-select: none;
+}
+
+.handCard {
+  height: 15vh;
+  overflow: visible;
+  width: 1px;
+  flex-grow: 1;
+}
+
+.img {
+  width: 100%;
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
+  user-drag: none;
+}
+
+.imgContainer {
+  position: relative;
+  height: 25vh;
+  aspect-ratio: 2/3;
+  transition: transform 0.25s;
+}
+
+.imgContainer:hover {
+  top: -3vh;
+}
+
+.iconCol {
+  display: flex;
+  position: absolute;
+  top: 4vh;
+  left: -1vh;
+  height: 10vh;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.arsenal {
+  background-color: rgba(0, 0, 0, 0.5);
+  border: goldenrod solid 1px;
+  color: gold;
+  border-radius: 5px;
+  width: auto;
+  height: auto;
+  padding: 5px;
+}
+
+.border6 {
+  border-color: greenyellow;
+  border-width: 1px;
+  border-style: solid;
+  margin: -2px -4px -2px 0px;
+  border-radius: 10px;
+  box-shadow: 0 0 3px 3px greenyellow;
+}

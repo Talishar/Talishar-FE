@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import { RootState } from '../../../app/Store';
 import { clearPopUp, setPopUp } from '../../../features/game/GameSlice';
 import Player from '../../../interface/Player';
-import styles from '../ActiveEffects.module.css';
+import styles from './Effects.module.css';
 import Card from '../../../features/Card';
 import { useAppDispatch, useAppSelector } from '../../../app/Hooks';
 

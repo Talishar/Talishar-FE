@@ -1,7 +1,7 @@
 import React from 'react';
 import { useAppSelector } from '../../../app/Hooks';
 import { RootState } from '../../../app/Store';
-import styles from '../TurnNumber.module.css';
+import styles from './TurnNumber.module.css';
 
 export default function TurnNumber() {
   let turnNumber = useAppSelector(

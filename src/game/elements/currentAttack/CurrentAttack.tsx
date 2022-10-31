@@ -1,8 +1,8 @@
 import React from 'react';
 import { RootState } from '../../../app/Store';
-import styles from './CombatChain.module.css';
-import attackSymbol from '../../img/symbols/symbol-attack.png';
-import defSymbol from '../../img/symbols/symbol-defence.png';
+import styles from './CurrentAttack.module.css';
+import attackSymbol from '../../../img/symbols/symbol-attack.png';
+import defSymbol from '../../../img/symbols/symbol-defence.png';
 import CardDisplay from '../cardDisplay/CardDisplay';
 import { useAppSelector } from '../../../app/Hooks';
 

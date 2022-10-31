@@ -4,7 +4,7 @@ import { RootState } from '../../../app/Store';
 import { setCardListFocus } from '../../../features/game/GameSlice';
 import Displayrow from '../../../interface/Displayrow';
 import CardDisplay from '../../elements/cardDisplay/CardDisplay';
-import styles from './Cardzone.module.css';
+import styles from '../Cardzone.module.css';
 
 export default function BanishZone(prop: Displayrow) {
   const { isPlayer } = prop;
