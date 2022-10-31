@@ -3,7 +3,6 @@ import Card from '../features/Card';
 import CombatChainLink from '../features/CombatChainLink';
 import GameState from '../features/GameState';
 import Player from '../features/Player';
-import CardDisplay from '../game/elements/CardDisplay';
 
 function ParseCard(input: any) {
   const card: Card = { cardNumber: 'blank' };
