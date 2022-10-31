@@ -1,0 +1,131 @@
+.card {
+  position: absolute;
+  border-radius: 10px;
+  height: 10vh;
+  width: auto;
+  object-fit: contain;
+  position: relative;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.floatCover {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  left: 0px;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  z-index: 2;
+}
+
+.floatTint {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  left: 0px;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  z-index: 1;
+  border-radius: 10px;
+}
+
+.number {
+  border-radius: 100%;
+  border-style: solid;
+  border-color: black;
+  border-width: 2px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 25%;
+  width: 25%;
+  background-color: white;
+  text-align: center;
+}
+
+.defCounter {
+  border-radius: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 4vh;
+  width: 4vh;
+  background-image: url('../../../img/symbols/symbol-defence.png');
+  background-position: center;
+  background-size: contain;
+  text-align: center;
+  font-size: 1.25em;
+  color: white;
+  text-shadow: 3px 3px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000,
+    -1px 1px 0 #000, 1px 1px 0 #000;
+  z-index: -1;
+}
+
+.lifeCounter {
+  border-radius: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 4vh;
+  width: 4vh;
+  background-image: url('../../../img/symbols/symbol-defence.png');
+  background-position: center;
+  background-size: contain;
+  font-size: 1.25em;
+  text-align: center;
+  color: white;
+  text-shadow: 3px 3px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000,
+    -1px 1px 0 #000, 1px 1px 0 #000;
+}
+
+.text {
+  color: black;
+}
+
+.img {
+  box-shadow: 3px 3px 5px black;
+  position: relative;
+  left: 2px;
+  top: 0px;
+  object-fit: contain;
+  height: 10vh;
+  border-radius: 10px;
+}
+
+.disabled {
+  background-color: black;
+  opacity: 0.5;
+}
+
+.isBroken {
+  background-image: url('../../../img/symbols/symbol-brokenEquip.png');
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: 1.5vh -0.5vh;
+}
+
+.onChain {
+  background-image: url('../../../img/symbols/symbol-onChain.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: 0px -5vh;
+}
+
+.isFrozen {
+  background-image: url('../../../img/elements/frozenOverlay.png');
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+
+.border6 {
+  border-color: greenyellow;
+  border-width: 1px;
+  border-style: solid;
+  margin: -2px -4px -2px 0px;
+  box-shadow: 0 0 3px 3px greenyellow;
+}

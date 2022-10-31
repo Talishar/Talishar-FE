@@ -1,0 +1,55 @@
+.topRow {
+  top: 120px;
+  height: 10vh;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  gap: 1vh;
+  align-items: stretch;
+  padding-bottom: 1vh;
+}
+
+.bottomRow {
+  top: 120px;
+  height: 10vh;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  gap: 1vh;
+  align-items: stretch;
+  padding-bottom: 1vh;
+}
+
+.middleRow {
+  top: 120px;
+  height: 10vh;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  gap: 1vh;
+  align-items: stretch;
+  padding-bottom: 1vh;
+}
+
+.groupL {
+  height: 10vh;
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: row;
+}
+
+.groupM {
+  height: 10vh;
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+}
+
+.groupR {
+  width: fit-content;
+  height: 10vh;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-direction: row;
+}

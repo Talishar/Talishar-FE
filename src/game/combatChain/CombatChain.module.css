@@ -1,0 +1,67 @@
+.gameBoard {
+  justify-self: center;
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  justify-content: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.opponentPlaymat {
+  position: relative;
+  top: -1vh;
+  height: 32vh;
+  margin: auto;
+  width: 95%;
+  border-radius: 10px;
+  padding: 1vh;
+  background-image: url('../../img/backgrounds/everfest-bg.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.combatChain {
+  position: relative;
+  height: 17vh;
+  margin: auto;
+  width: 95%;
+  padding: 1vh;
+  background-image: url('../../img/backgrounds/red-felt-texture.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  border-radius: 10px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: white;
+}
+
+.playerPlaymat {
+  overflow: hidden;
+  top: 1vh;
+  position: relative;
+  height: 32vh;
+  margin: auto;
+  width: 95%;
+  padding: 1vh;
+  border-radius: 10px;
+  background-image: url('../../img/backgrounds/glint-bg.png');
+  background-repeat: no-repeat;
+  background-size: auto;
+  background-size: cover;
+}
+
+.chainCentre {
+  padding-left: 1vh;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5vh;
+  flex-grow: 2;
+  flex-basis: 1 0 100%;
+}
