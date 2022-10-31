@@ -44,7 +44,8 @@ function App() {
         <div className="gameZone">
           <HandZone isPlayer={false} />
           <Board />
-          {isSpectator ? <HandZone isPlayer /> : <PlayerHand />}
+          <HandZone isPlayer />
+          <PlayerHand />
         </div>
         <RightColumn />
       </div>

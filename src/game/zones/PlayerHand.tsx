@@ -13,6 +13,10 @@ export default function PlayerHand() {
     false;
   };
 
+  const playerNo = useAppSelector(
+    (state: RootState) => state.game.gameInfo.playerID
+  );
+
   let hasArsenal = true;
 
   const handCards = useAppSelector(
@@ -49,6 +53,10 @@ export default function PlayerHand() {
   const widthPercentage = Math.min(lengthOfCards * 5, MaxHandWidthPercentage);
 
   const widthfunction = { width: `${widthPercentage}%` };
+
+  if (playerNo === 3) {
+    return <></>;
+  }
 
   return (
     <div className={styles.handRow} style={widthfunction}>

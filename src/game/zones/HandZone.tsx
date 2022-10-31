@@ -12,11 +12,14 @@ export default function HandZone(prop: Player) {
   const handCards = useAppSelector((state: RootState) =>
     isPlayer ? state.game.playerOne.Hand : state.game.playerTwo.Hand
   );
+  const playerNo = useAppSelector(
+    (state: RootState) => state.game.gameInfo.playerID
+  );
 
   let displayRow = isPlayer ? styles.isPlayer : styles.isOpponent;
   displayRow = `${displayRow} ${styles.handZone}`;
 
-  if (handCards === undefined) {
+  if (handCards === undefined || (playerNo !== 3 && isPlayer)) {
     return <div className={displayRow}></div>;
   }
 
