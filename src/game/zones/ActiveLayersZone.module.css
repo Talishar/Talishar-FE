@@ -11,6 +11,7 @@
   padding: 2vh;
   border: 1px solid goldenrod;
   border-radius: 20px;
+  z-index: 1000;
 }
 
 .activeLayersTitleContainer {
