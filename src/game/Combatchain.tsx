@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './Board.module.css';
-import ChainLinks from './elements/ChainLinks';
+import ChainLinks from './elements/chainLinks/ChainLinks';
 import CurrentAttack from './elements/CurrentAttack';
 import Reactions from './elements/Reactions';
 import TurnWidget from './elements/TurnWidget';
