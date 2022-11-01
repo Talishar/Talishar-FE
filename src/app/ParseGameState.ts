@@ -185,6 +185,8 @@ export default function ParseGameState(input: any) {
     result.playerTwo.Effects.push(ParseCard(cardObj));
   }
 
+  result.playerTwo.ActionPoints = input.opponentAP;
+
   // Player One the one who's playing.
   // Equipment first again.
   result.playerOne = ParseEquipment(input.playerEquipment);
@@ -238,9 +240,14 @@ export default function ParseGameState(input: any) {
     result.playerOne.Effects.push(ParseCard(cardObj));
   }
 
+  result.playerOne.ActionPoints = input.playerAP;
+
   // Chat log.
   result.chatLog = [];
   result.chatLog.push(input.chatLog);
+
+  // activeplayer
+  result.activePlayer = input.amIActivePlayer ? 1 : 2;
 
   // last update frame
   result.gameInfo.lastUpdate = input.lastUpdate;

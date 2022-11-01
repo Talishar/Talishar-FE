@@ -32,8 +32,8 @@ export default function ActionPointDisplay(props: Player) {
 
   if (activePlayer === 2 && isPlayer === false) {
     return (
-      <div>
-        {APAvailable} Action Point{extras}
+      <div className={styles.actionPointOppDisplay}>
+        {APAvailable} AP{extras}
       </div>
     );
   }

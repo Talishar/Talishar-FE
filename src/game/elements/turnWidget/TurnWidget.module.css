@@ -16,8 +16,22 @@
   user-select: none;
 }
 
-.widgetGraphic {
+.widgetGraphicMyTurn {
   background-image: url('../../../img/elements/myTurn.png');
+  background-position: right;
+  background-size: contain;
+  background-repeat: no-repeat;
+  height: 100%;
+  width: auto;
+  top: 0px;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+  position: absolute;
+}
+
+.widgetGraphicTheirTurn {
+  background-image: url('../../../img/elements/ourTurn.png');
   background-position: right;
   background-size: contain;
   background-repeat: no-repeat;
@@ -55,16 +69,6 @@
   top: 0px;
   bottom: 0px;
   right: 0px;
-}
-
-.actionPointDisplay {
-  display: flex;
-  align-items: flex-end;
-  justify-content: flex-end;
-  width: 130px;
-  height: 30px;
-  bottom: 80px;
-  position: absolute;
 }
 
 .passTurnDisplay {

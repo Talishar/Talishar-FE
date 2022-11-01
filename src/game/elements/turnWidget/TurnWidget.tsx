@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { useAppSelector } from '../../../app/Hooks';
+import { RootState } from '../../../app/Store';
 import ActionPointDisplay from '../actionPointDisplay/ActionPointDisplay';
 import HealthDisplay from '../healthDisplay/HealthDisplay';
 import PassTurnDisplay from '../passTurnDisplay/PassTurnDisplay';
@@ -10,6 +12,15 @@ const baseWidth = 350;
 
 export default function TurnWidget() {
   const [heightRatio, setHeightRatio] = useState(1);
+
+  const activePlayer = useAppSelector(
+    (state: RootState) => state.game.activePlayer
+  );
+
+  const graphicStyle =
+    activePlayer === 1
+      ? styles.widgetGraphicMyTurn
+      : styles.widgetGraphicTheirTurn;
 
   useEffect(() => {
     function calculateWidgetHeight() {
@@ -28,7 +39,7 @@ export default function TurnWidget() {
   return (
     <div className={styles.widgetContainer} style={containerStyle}>
       <div className={styles.widgetScaler} style={style}>
-        <div className={styles.widgetGraphic}>
+        <div className={graphicStyle}>
           <div className={styles.widgetLeftCol}>
             <ActionPointDisplay isPlayer={false} />
             <PassTurnDisplay />

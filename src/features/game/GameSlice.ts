@@ -134,6 +134,7 @@ export const gameSlice = createSlice({
       state.oldCombatChain = action.payload.oldCombatChain;
       state.chatLog = action.payload.chatLog;
       state.isUpdateInProgress = false;
+      state.activePlayer = action.payload.activePlayer;
 
       // gameInfo
       state.gameInfo.lastPlayed = action.payload.gameInfo.lastPlayed;
