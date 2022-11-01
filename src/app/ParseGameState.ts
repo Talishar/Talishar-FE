@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { ImportsNotUsedAsValues } from 'typescript';
 import Card from '../features/Card';
 import CombatChainLink from '../features/CombatChainLink';
 import GameState from '../features/GameState';
@@ -117,12 +118,16 @@ export default function ParseGameState(input: any) {
 
   // layers
   result.activeLayers = {};
-  if (input.layerContents.length > 0) {
+  if (
+    input.layerDisplay !== undefined &&
+    input.layerDisplay.layerContents.length > 0
+  ) {
     result.activeLayers.active = true;
     result.activeLayers.cardList = [];
-    for (const cardObj of input.layerContents) {
+    for (const cardObj of input.layerDisplay.layerContents) {
       result.activeLayers.cardList.push(ParseCard(cardObj));
     }
+    result.activeLayers.target = input.layerDisplay.target;
   } else {
     result.activeLayers.active = false;
   }

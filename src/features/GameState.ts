@@ -28,6 +28,7 @@ export default interface GameState {
   activeLayers?: {
     active?: boolean;
     cardList?: Card[];
+    target?: Card;
   };
   chatLog?: string[];
   isUpdateInProgress?: boolean;
