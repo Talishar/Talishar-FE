@@ -14,6 +14,7 @@ export interface CardProp {
   num?: number;
   name?: string;
   preventUseOnClick?: boolean;
+  useCardMode?: number;
 }
 
 export default function CardDisplay(prop: CardProp) {
@@ -44,7 +45,7 @@ export default function CardDisplay(prop: CardProp) {
       return;
     }
     console.log('clicked');
-    dispatch(playCard(card));
+    dispatch(playCard({ cardParams: card, mode: prop.useCardMode }));
   }
 
   const handleMouseEnter = () => {

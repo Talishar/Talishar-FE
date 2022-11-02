@@ -37,12 +37,20 @@ export const nextTurn = createAsyncThunk(
 
 export const playCard = createAsyncThunk(
   'game/playCard',
-  async (cardParams: Card, { getState }) => {
+  async (
+    params: { cardParams: Card; mode?: number; cardIndex?: number },
+    { getState }
+  ) => {
     console.log('doing the thing');
     const { game } = getState() as { game: { gameInfo: GameInfo } };
+    const mode = params.mode === undefined ? 3 : params.mode;
+    let playNo =
+      params.cardParams.actionDataOverride !== ''
+        ? params.cardParams.actionDataOverride
+        : params.cardIndex;
+    playNo = mode === 4 ? params.cardParams.cardNumber : playNo;
     const gameInfo = game.gameInfo;
-    const mode = 3;
-    const queryURL = `http://localhost:41062/FaBOnline/ProcessInput2.php?gameName=${gameInfo.gameID}&playerID=${gameInfo.playerID}&authKey=${gameInfo.authKey}&mode=${mode}&cardID=${cardParams.actionDataOverride}`;
+    const queryURL = `http://localhost:41062/FaBOnline/ProcessInput2.php?gameName=${gameInfo.gameID}&playerID=${gameInfo.playerID}&authKey=${gameInfo.authKey}&mode=${mode}&cardID=${playNo}`;
     try {
       const response = await fetch(queryURL, {
         method: 'GET',
@@ -135,6 +143,7 @@ export const gameSlice = createSlice({
       state.chatLog = action.payload.chatLog;
       state.isUpdateInProgress = false;
       state.activePlayer = action.payload.activePlayer;
+      state.turnPhase = action.payload.turnPhase;
 
       // gameInfo
       state.gameInfo.lastPlayed = action.payload.gameInfo.lastPlayed;

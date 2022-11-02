@@ -7,7 +7,8 @@ import {
 import Card from '../../../features/Card';
 import styles from './PlayerHandCard.module.css';
 import Draggable, { DraggableData, DraggableEvent } from 'react-draggable';
-import { useAppDispatch } from '../../../app/Hooks';
+import { useAppSelector, useAppDispatch } from '../../../app/Hooks';
+import { RootState } from '../../../app/Store';
 
 const HandCurvatureConstant = 8;
 const ScreenPercentageForCardPlayed = 0.25;
@@ -37,11 +38,16 @@ export default function PlayerHandCard(props: handCard) {
   const src = `/cardimages/${card.cardNumber}.webp`;
   const ref = useRef<HTMLDivElement>(null);
   const dispatch = useAppDispatch();
+  const isArsenalPhase = useAppSelector((state: RootState) =>
+    state.game.turnPhase === 'ARS' ? true : false
+  );
+
+  const playCardMode = isArsenalPhase ? 4 : 27;
 
   const onDragStop = (e: DraggableEvent, data: DraggableData) => {
     if (data.lastY < -window.innerHeight * ScreenPercentageForCardPlayed) {
       console.log('playing card');
-      dispatch(playCard(card));
+      dispatch(playCard({ cardParams: card, mode: playCardMode }));
       console.log(card);
     }
     setControlledPosition({ x: 0, y: 0 });
@@ -137,8 +143,30 @@ export default function PlayerHandCard(props: handCard) {
               />
               <div className={styles.iconCol}>
                 {isArsenal === true && (
-                  <div className={styles.arsenal}>
-                    <i className="fa fa-random" aria-hidden="true"></i>
+                  <div className={styles.icon}>
+                    <i
+                      className="fa fa-random"
+                      aria-hidden="true"
+                      title="Arsenal"
+                    ></i>
+                  </div>
+                )}
+                {isBanished === true && (
+                  <div className={styles.icon}>
+                    <i
+                      className="fa fa-random"
+                      aria-hidden="true"
+                      title="Banished Zone"
+                    ></i>
+                  </div>
+                )}
+                {isGraveyard === true && (
+                  <div className={styles.icon}>
+                    <i
+                      className="fa fa-random"
+                      aria-hidden="true"
+                      title="Graveyard"
+                    ></i>
                   </div>
                 )}
               </div>

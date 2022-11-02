@@ -34,7 +34,7 @@ export default function GameStateHandler() {
     if (authKey === null) {
       authKey = '';
     }
-
+    console.log(authKey);
     dispatch(
       setGameStart({
         gameID: parseInt(gameID),

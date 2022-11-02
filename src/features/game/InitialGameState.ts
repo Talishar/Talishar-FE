@@ -1,7 +1,11 @@
 import GameState from '../GameState';
 
 const InitialGameState: GameState = {
-  gameInfo: { gameID: 0, playerID: 3, authKey: '' },
+  gameInfo: {
+    gameID: 0,
+    playerID: 3,
+    authKey: 'db0deb87292a0cc5662e3747221d84034aba2b953eb335d9602b572e1ab5995f'
+  },
   playerOne: {},
   playerTwo: {},
   isUpdateInProgress: false
@@ -11,7 +15,7 @@ export const OfflineTestingGameState: GameState = {
   gameInfo: {
     gameID: 0,
     playerID: 3,
-    authKey: '28df413b665604299807c461a7f3cae71c4176cb2b96afad04b84cf96d016258',
+    authKey: 'db0deb87292a0cc5662e3747221d84034aba2b953eb335d9602b572e1ab5995f',
     lastUpdate: 0
   },
   activePlayer: 1,
