@@ -1,3 +1,4 @@
+import { BooleanLiteral } from 'typescript';
 import Card from './Card';
 
 export default interface CombatChainLink {
@@ -7,4 +8,9 @@ export default interface CombatChainLink {
   totalDefence?: number;
   didItHit?: boolean;
   index?: number;
+  goAgain?: boolean;
+  dominate?: boolean;
+  overpower?: boolean;
+  fused?: boolean;
+  damagePrevention?: number;
 }

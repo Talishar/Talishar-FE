@@ -10,6 +10,7 @@ import styles from './CardDisplay.module.css';
 
 export interface CardProp {
   card?: Card;
+  makeMeBigger?: boolean;
   num?: number;
   name?: string;
   preventUseOnClick?: boolean;
@@ -23,6 +24,7 @@ export default function CardDisplay(prop: CardProp) {
   const imgStyles: string[] = [styles.img];
   const dispatch = useAppDispatch();
   const ref = useRef<HTMLDivElement>(null);
+  let cardStyle = styles.card;
 
   if (card == null || card.cardNumber === '') {
     return null;
@@ -86,9 +88,13 @@ export default function CardDisplay(prop: CardProp) {
     equipStatus.push(styles.isFrozen);
   }
 
+  cardStyle += prop.makeMeBigger
+    ? ' ' + styles.biggerSize
+    : ' ' + styles.normalSize;
+
   return (
     <div
-      className={styles.card}
+      className={cardStyle}
       onClick={() => {
         onClick();
       }}

@@ -7,7 +7,7 @@ export default interface GameState {
   gameInfo: GameInfo;
   playerOne: Player;
   playerTwo: Player;
-  activeCombatChain?: CombatChainLink;
+  activeChainLink?: CombatChainLink;
   oldCombatChain?: CombatChainLink[];
   activePlayer?: number; // 1 is us 2 is them
   popup?: {

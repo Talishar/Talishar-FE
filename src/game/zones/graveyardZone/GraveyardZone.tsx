@@ -14,13 +14,7 @@ export default function GraveyardZone(prop: Displayrow) {
     isPlayer ? state.game.playerOne.Graveyard : state.game.playerTwo.Graveyard
   );
 
-  const numInGraveYard = useAppSelector((state: RootState) =>
-    isPlayer
-      ? state.game.playerOne.GraveyardCount
-      : state.game.playerTwo.GraveyardCount
-  );
-
-  if (graveyardZone === undefined || numInGraveYard === 0) {
+  if (graveyardZone === undefined || graveyardZone.length === 0) {
     return <div className={styles.graveyardZone}>Graveyard</div>;
   }
 
@@ -40,7 +34,7 @@ export default function GraveyardZone(prop: Displayrow) {
     <div className={styles.graveyardZone} onClick={graveyardZoneDisplay}>
       <CardDisplay
         card={cardToDisplay}
-        num={numInGraveYard}
+        num={graveyardZone.length}
         preventUseOnClick
       />
     </div>

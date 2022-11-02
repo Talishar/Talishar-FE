@@ -1,7 +1,7 @@
 .popUp {
   position: fixed;
   z-index: 2000;
-  height: 35vh;
+  height: 50vh;
   background-color: rgba(0, 0, 0, 0.5);
   border-radius: 10px;
   border: 1px goldenrod solid;
@@ -18,7 +18,7 @@
 }
 
 .img {
-  height: 35vh;
+  height: 50vh;
   display: block;
 }
 

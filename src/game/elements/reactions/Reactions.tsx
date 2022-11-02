@@ -6,7 +6,7 @@ import styles from './Reactions.module.css';
 
 export default function Reactions() {
   const activeCombatChain = useAppSelector(
-    (state: RootState) => state.game.activeCombatChain
+    (state: RootState) => state.game.activeChainLink?.reactionCards
   );
   if (activeCombatChain === undefined) {
     return <div className={styles.currentAttack}></div>;
@@ -15,7 +15,7 @@ export default function Reactions() {
   return (
     <div className={styles.reactionWrapper}>
       <div className={styles.reactions}>
-        {activeCombatChain.reactionCards?.map((card, ix) => {
+        {activeCombatChain?.map((card, ix) => {
           return (
             <div key={ix.toString()} className={styles.cardContainer}>
               <CardDisplay card={card} key={ix.toString()} />

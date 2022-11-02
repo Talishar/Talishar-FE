@@ -87,22 +87,26 @@ export default function ParseGameState(input: any) {
   };
 
   // active chain link
-  result.activeCombatChain = {};
-  if (input.activeChainLink !== undefined && input.activeChainLink.length > 0) {
-    result.activeCombatChain.attackingCard = ParseCard(
-      input.activeChainLink[0]
+  result.activeChainLink = {};
+  if (input.activeChainLink !== undefined) {
+    result.activeChainLink.attackingCard = ParseCard(
+      input.activeChainLink.attackingCard
     );
-    if (input.activeChainLink.length > 1) {
-      result.activeCombatChain.reactionCards = [];
-      for (let i = 1; i < input.activeChainLink.length; i++) {
-        result.activeCombatChain.reactionCards?.push(
-          ParseCard(input.activeChainLink[i])
-        );
-      }
+    result.activeChainLink.reactionCards = [];
+    for (const chainLinkObj of input.activeChainLink.reactions) {
+      result.activeChainLink.reactionCards?.push(ParseCard(chainLinkObj));
     }
+    result.activeChainLink.totalAttack = input.activeChainLink.totalAttack;
+    result.activeChainLink.totalDefence = input.activeChainLink.totalDefence;
+    result.activeChainLink.goAgain = input.activeChainLink.goAgain;
+    result.activeChainLink.dominate = input.activeChainLink.dominate;
+    result.activeChainLink.overpower = input.activeChainLink.overpower;
+    result.activeChainLink.damagePrevention = Number(
+      input.activeChainLink.damagePrevention
+    );
   }
-  result.activeCombatChain.totalAttack = input.totalAttack;
-  result.activeCombatChain.totalDefence = input.totalDefence;
+
+  console.log(result.activeChainLink);
 
   // previous combat chain links
   result.oldCombatChain = [];
@@ -135,7 +139,6 @@ export default function ParseGameState(input: any) {
   // Player Two, the opponent.
   // do equipment first as it's more complicated
   result.playerTwo = ParseEquipment(input.opponentEquipment);
-  result.playerTwo.Name = input.opponentName;
 
   result.playerTwo.Hand = [];
   for (const cardObj of input.opponentHand) {
@@ -145,20 +148,24 @@ export default function ParseGameState(input: any) {
   result.playerTwo.SoulCount = input.opponentSoulCount;
   result.playerTwo.Health = input.opponentHealth;
 
-  result.playerTwo.GraveyardCount = input.opponentDiscardCount;
   result.playerTwo.Graveyard = [];
-  result.playerTwo.Graveyard.push(ParseCard(input.opponentDiscardCard));
+  for (const cardObj of input.opponentDiscard.reverse()) {
+    result.playerTwo.Graveyard.push(ParseCard(cardObj));
+  }
 
   result.playerTwo.PitchRemaining = input.opponentPitchCount;
   result.playerTwo.Pitch = [];
-  result.playerTwo.Pitch.push(ParseCard(input.opponentPitchCard));
+  for (const cardObj of input.opponentPitch.reverse()) {
+    result.playerTwo.Pitch.push(ParseCard(cardObj));
+  }
 
   result.playerTwo.DeckSize = input.opponentDeckCount;
   result.playerTwo.DeckBack = ParseCard(input.opponentDeckCard);
 
-  result.playerTwo.BanishCount = input.opponentBanishCount;
   result.playerTwo.Banish = [];
-  result.playerTwo.Banish.push(ParseCard(input.opponentBanishCard));
+  for (const cardObj of input.opponentBanish.reverse()) {
+    result.playerTwo.Banish.push(ParseCard(cardObj));
+  }
 
   result.playerTwo.Arsenal = [];
   for (const cardObj of input.opponentArse) {
@@ -190,7 +197,6 @@ export default function ParseGameState(input: any) {
   // Player One the one who's playing.
   // Equipment first again.
   result.playerOne = ParseEquipment(input.playerEquipment);
-  result.playerOne.Name = input.playerName;
 
   result.playerOne.Hand = [];
   for (const cardObj of input.playerHand) {
@@ -200,20 +206,24 @@ export default function ParseGameState(input: any) {
   result.playerOne.SoulCount = input.playerSoulCount;
   result.playerOne.Health = input.playerHealth;
 
-  result.playerOne.GraveyardCount = input.playerDiscardCount;
   result.playerOne.Graveyard = [];
-  result.playerOne.Graveyard.push(ParseCard(input.playerDiscardCard));
+  for (const cardObj of input.playerDiscard.reverse()) {
+    result.playerOne.Graveyard.push(ParseCard(cardObj));
+  }
 
   result.playerOne.PitchRemaining = input.playerPitchCount;
   result.playerOne.Pitch = [];
-  result.playerOne.Pitch.push(ParseCard(input.playerPitchCard));
+  for (const cardObj of input.playerPitch.reverse()) {
+    result.playerOne.Pitch.push(ParseCard(cardObj));
+  }
 
   result.playerOne.DeckSize = input.playerDeckCount;
   result.playerOne.DeckBack = ParseCard(input.playerDeckCard);
 
-  result.playerOne.BanishCount = input.playerBanishCount;
   result.playerOne.Banish = [];
-  result.playerOne.Banish.push(ParseCard(input.playerBanishCard));
+  for (const cardObj of input.playerBanish.reverse()) {
+    result.playerOne.Banish.push(ParseCard(cardObj));
+  }
 
   result.playerOne.Arsenal = [];
   for (const cardObj of input.playerArse) {
@@ -254,5 +264,15 @@ export default function ParseGameState(input: any) {
 
   // last played card
   result.gameInfo.lastPlayed = ParseCard(input.lastPlayedCard);
+
+  // turn number
+  result.gameInfo.turnNo = input.turnNo;
+
+  // if it's the first turn of the game add these details:
+  if (input.initialLoad) {
+    result.playerOne.Name = input.initialLoad.playerName;
+    result.playerTwo.Name = input.initialLoad.opponentName;
+  }
+
   return result;
 }

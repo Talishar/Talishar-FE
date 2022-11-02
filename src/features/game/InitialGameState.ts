@@ -66,7 +66,7 @@ export const OfflineTestingGameState: GameState = {
       didItHit: true
     }
   ],
-  activeCombatChain: {
+  activeChainLink: {
     attackingCard: {
       cardNumber: 'CRU048'
     },
@@ -85,14 +85,12 @@ export const OfflineTestingGameState: GameState = {
   playerOne: {
     // human player
     Name: 'LaustinSpayce',
-    IsVerified: true,
     HeadEq: { cardNumber: 'WTR079' },
     ChestEq: { cardNumber: 'WTR150', counters: 2 },
     GlovesEq: { cardNumber: 'UPR158' },
     FeetEq: { cardNumber: 'WTR154' },
     WeaponLEq: { cardNumber: 'CRU048' },
     Hero: { cardNumber: 'CRU046' },
-    WeaponREq: { cardNumber: 'CRU049' },
     Health: 20,
     ActionPoints: 0,
     PitchRemaining: 0,
@@ -234,9 +232,9 @@ export const OfflineTestingGameState: GameState = {
     ChestEq: { cardNumber: 'WTR005' },
     GlovesEq: { cardNumber: 'WTR153' },
     FeetEq: { cardNumber: 'WTR004' },
-    WeaponLEq: { cardNumber: '' },
+    WeaponLEq: { cardNumber: 'WTR003' },
     Hero: { cardNumber: 'WTR002' },
-    WeaponREq: { cardNumber: 'WTR003' },
+    WeaponREq: undefined,
     Health: 20,
     ActionPoints: 0,
     PitchRemaining: 0,

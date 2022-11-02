@@ -14,7 +14,7 @@ export default function TurnNumber() {
 
   return (
     <div className={styles.turnNumber}>
-      <div>TURN No.{turnNumber}</div>
+      <div>TURN #{turnNumber}</div>
     </div>
   );
 }

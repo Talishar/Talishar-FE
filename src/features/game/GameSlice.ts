@@ -127,9 +127,9 @@ export const gameSlice = createSlice({
       if (action.payload === undefined) {
         return state;
       }
-      state.playerOne = action.payload.playerOne;
-      state.playerTwo = action.payload.playerTwo;
-      state.activeCombatChain = action.payload.activeCombatChain;
+      state.playerOne = { ...state.playerOne, ...action.payload.playerOne };
+      state.playerTwo = { ...state.playerTwo, ...action.payload.playerTwo };
+      state.activeChainLink = action.payload.activeChainLink;
       state.activeLayers = action.payload.activeLayers;
       state.oldCombatChain = action.payload.oldCombatChain;
       state.chatLog = action.payload.chatLog;
@@ -139,6 +139,7 @@ export const gameSlice = createSlice({
       // gameInfo
       state.gameInfo.lastPlayed = action.payload.gameInfo.lastPlayed;
       state.gameInfo.lastUpdate = action.payload.gameInfo.lastUpdate;
+      state.gameInfo.turnNo = action.payload.gameInfo.turnNo;
       return state;
     });
     builder.addCase(nextTurn.pending, (state, action) => {

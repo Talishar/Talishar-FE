@@ -1,12 +1,21 @@
 .card {
   position: absolute;
   border-radius: 10px;
-  height: 10vh;
-  width: auto;
   object-fit: contain;
   position: relative;
   user-select: none;
   -webkit-user-select: none;
+  overflow: visible;
+}
+
+.normalSize {
+  height: 10vh;
+  width: auto;
+}
+
+.biggerSize {
+  height: 100%;
+  width: 100%;
 }
 
 .floatCover {
@@ -93,7 +102,7 @@
   left: 2px;
   top: 0px;
   object-fit: contain;
-  height: 10vh;
+  height: 100%;
   border-radius: 10px;
 }
 

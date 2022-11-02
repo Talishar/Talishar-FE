@@ -14,17 +14,7 @@ export default function BanishZone(prop: Displayrow) {
     isPlayer ? state.game.playerOne.Banish : state.game.playerTwo.Banish
   );
 
-  const numInBanish = useAppSelector((state: RootState) =>
-    isPlayer
-      ? state.game.playerOne.BanishCount
-      : state.game.playerTwo.BanishCount
-  );
-
-  if (
-    banishZone === undefined ||
-    banishZone.length === 0 ||
-    numInBanish === 0
-  ) {
+  if (banishZone === undefined || banishZone.length === 0) {
     return <div className={styles.banishZone}>Banish</div>;
   }
 
@@ -39,12 +29,15 @@ export default function BanishZone(prop: Displayrow) {
     );
   };
 
-  numInBanish;
   const cardToDisplay = banishZone[0];
 
   return (
     <div className={styles.banishZone} onClick={banishZoneDisplay}>
-      <CardDisplay card={cardToDisplay} num={numInBanish} preventUseOnClick />
+      <CardDisplay
+        card={cardToDisplay}
+        num={banishZone.length}
+        preventUseOnClick
+      />
     </div>
   );
 }

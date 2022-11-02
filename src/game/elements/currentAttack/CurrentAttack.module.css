@@ -6,6 +6,37 @@
   align-items: center;
   justify-content: center;
   gap: 0.5vh;
+  overflow: visible;
+}
+
+.floatCover {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  flex-wrap: wrap;
+  left: 3vh;
+  top: 2vh;
+  right: 3vh;
+  bottom: 2vh;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  border: goldenrod solid 1px;
+  color: gold;
+  border-radius: 5px;
+  width: 2vh;
+  height: 2vh;
+  padding: 2px;
+  margin: 2px;
+  pointer-events: auto;
 }
 
 .cardContainer {
@@ -17,6 +48,7 @@
 }
 
 .attack {
+  position: relative;
   height: 13vh;
   width: 100%;
   display: flex;
@@ -24,8 +56,7 @@
   align-items: center;
   justify-content: center;
   gap: 1vh;
-  overflow-x: auto;
-  overflow-y: hidden;
+  overflow: visible;
 }
 
 .attDefRow {

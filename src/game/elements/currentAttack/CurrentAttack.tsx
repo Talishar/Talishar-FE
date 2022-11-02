@@ -8,9 +8,13 @@ import { useAppSelector } from '../../../app/Hooks';
 
 export default function CurrentAttack() {
   const activeCombatChain = useAppSelector(
-    (state: RootState) => state.game.activeCombatChain
+    (state: RootState) => state.game.activeChainLink
   );
-  if (activeCombatChain === undefined) {
+  if (
+    activeCombatChain === undefined ||
+    activeCombatChain.attackingCard === undefined ||
+    activeCombatChain.attackingCard.cardNumber === 'blank'
+  ) {
     return <div className={styles.currentAttack} />;
   }
 
@@ -39,7 +43,52 @@ export default function CurrentAttack() {
         <div className={styles.defDiv}>{defValue}</div>
       </div>
       <div className={styles.attack}>
-        <CardDisplay card={attCard} />
+        <CardDisplay card={attCard} makeMeBigger={true} />
+        <div className={styles.floatCover}>
+          {activeCombatChain.goAgain ? (
+            <div className={styles.icon}>
+              <i
+                className="fa fa-refresh"
+                aria-hidden="true"
+                title="Go Again"
+              ></i>
+            </div>
+          ) : null}
+          {activeCombatChain.dominate ? (
+            <div className={styles.icon}>
+              <i
+                className="fa fa-bullseye"
+                aria-hidden="true"
+                title="Dominate"
+              ></i>
+            </div>
+          ) : null}
+          {activeCombatChain.overpower ? (
+            <div className={styles.icon}>
+              <i
+                className="fa fa-bolt"
+                aria-hidden="true"
+                title="Overpower"
+              ></i>
+            </div>
+          ) : null}
+          {activeCombatChain.fused ? (
+            <div className={styles.icon}>
+              <i className="fa fa-leaf" aria-hidden="true" title="Fused"></i>
+            </div>
+          ) : null}
+          {activeCombatChain.damagePrevention ? (
+            <div className={styles.icon}>
+              <i
+                className="fa fa-shield"
+                aria-hidden="true"
+                title="Damage Prevention"
+              >
+                {activeCombatChain.damagePrevention}
+              </i>
+            </div>
+          ) : null}
+        </div>
       </div>
     </div>
   );

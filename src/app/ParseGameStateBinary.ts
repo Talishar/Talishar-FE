@@ -127,7 +127,7 @@ export default function ParseGameState(input: string) {
   result.playerTwo = parseEQArray(stringArray[7]);
 
   // index 1 is combat Chain
-  result.activeCombatChain = parseCombatChain(stringArray[1]);
+  result.activeChainLink = parseCombatChain(stringArray[1]);
   // index 2 in layers
   result.activeLayers = parseLayers(stringArray[2]);
   // index 3 is player2 hand
@@ -205,10 +205,10 @@ export default function ParseGameState(input: string) {
 
   // index 12 is combat chain total attack
 
-  result.activeCombatChain.totalAttack = isNaN(parseInt(stringArray[13]))
+  result.activeChainLink.totalAttack = isNaN(parseInt(stringArray[13]))
     ? undefined
     : parseInt(stringArray[13]);
-  result.activeCombatChain.totalDefence = isNaN(parseInt(stringArray[14]))
+  result.activeChainLink.totalDefence = isNaN(parseInt(stringArray[14]))
     ? undefined
     : parseInt(stringArray[14]);
 
