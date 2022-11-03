@@ -1,3 +1,4 @@
+import OptionsOverlay from '../../game/elements/optionsOverlay/OptionsOverlay';
 import GameState from '../GameState';
 
 const InitialGameState: GameState = {
@@ -33,8 +34,7 @@ export const OfflineTestingGameState: GameState = {
         }
       ],
       totalAttack: 88,
-      totalDefence: 44,
-      didItHit: true
+      totalDefence: 44
     },
     {
       attackingCard: {
@@ -84,7 +84,12 @@ export const OfflineTestingGameState: GameState = {
     ],
     totalAttack: 88,
     totalDefence: 44,
-    didItHit: true
+    didItHit: true,
+    goAgain: true,
+    dominate: true,
+    overpower: true,
+    fused: true,
+    damagePrevention: 5
   },
   playerOne: {
     // human player
@@ -273,6 +278,9 @@ export const OfflineTestingGameState: GameState = {
   popup: {
     popupOn: false,
     popupCard: undefined
+  },
+  optionsOverlay: {
+    active: true
   }
 };
 

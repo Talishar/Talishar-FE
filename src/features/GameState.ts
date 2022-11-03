@@ -33,4 +33,19 @@ export default interface GameState {
   chatLog?: string[];
   isUpdateInProgress?: boolean;
   turnPhase?: string;
+  optionsOverlay?: {
+    active?: boolean;
+  };
+  playerPreferences?: {
+    manualModeEnabled: boolean;
+    accessibleModeEnabled: boolean;
+    soundEnabled: boolean;
+    chatEnabled: boolean;
+    statsEnabled: boolean;
+    casterModeEnabled: boolean;
+    attackReactionsSkip: boolean;
+    defenceReactionsSkip: boolean;
+    manualTargetingEnabled: boolean;
+    holdPrioritySetting: number;
+  };
 }

@@ -8,6 +8,7 @@ import HandZone from './game/zones/handZone/HandZone';
 import PlayerHand from './game/zones/playerHand/PlayerHand';
 import { useAppSelector } from './app/Hooks';
 import { RootState } from './app/Store';
+import OptionsOverlay from './game/elements/optionsOverlay/OptionsOverlay';
 
 function App() {
   const [maxWidth, setMaxWidth] = useState(1920);
@@ -49,6 +50,7 @@ function App() {
         </div>
         <RightColumn />
       </div>
+      <OptionsOverlay />
     </div>
   );
 }
