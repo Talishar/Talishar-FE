@@ -8,12 +8,18 @@ import { API_URL } from '../../constants';
 export const nextTurn = createAsyncThunk(
   'game/nextTurn',
   async (params: GameInfo, { getState }) => {
-    const queryURL = `${API_URL}}GetNextTurn3.php?gameName=${params.gameID}&playerID=${params.playerID}&authKey=${params.authKey}&lastUpdate=${params.lastUpdate}`;
+    const queryURL = `${API_URL}GetNextTurn3.php?`;
+    const queryParams = new URLSearchParams({
+      gameName: String(params.gameID),
+      playerID: String(params.playerID),
+      authKey: String(params.authKey),
+      lastUpdate: String(params.lastUpdate)
+    });
+
     let waitingForJSONResponse = true;
     while (waitingForJSONResponse) {
       try {
-        // console.log('sending fetch');
-        const response = await fetch(queryURL, {
+        const response = await fetch(queryURL + queryParams, {
           method: 'GET',
           headers: {}
         });
@@ -39,8 +45,9 @@ export const playCard = createAsyncThunk(
     params: { cardParams: Card; mode?: number; cardIndex?: number },
     { getState }
   ) => {
-    console.log('doing the thing');
     const { game } = getState() as { game: { gameInfo: GameInfo } };
+
+    // TODO: Improve this (perhaps on BE need to have accept POST request)
     const mode = params.mode === undefined ? 3 : params.mode;
     let playNo =
       params.cardParams.actionDataOverride !== ''
@@ -48,9 +55,18 @@ export const playCard = createAsyncThunk(
         : params.cardIndex;
     playNo = mode === 4 ? params.cardParams.cardNumber : playNo;
     const gameInfo = game.gameInfo;
-    const queryURL = `http://localhost:41062/FaBOnline/ProcessInput2.php?gameName=${gameInfo.gameID}&playerID=${gameInfo.playerID}&authKey=${gameInfo.authKey}&mode=${mode}&cardID=${playNo}`;
+
+    // Construct query and params
+    const queryURL = `${API_URL}ProcessInput2.php?`;
+    const queryParams = new URLSearchParams({
+      gameName: String(gameInfo.gameID),
+      playerID: String(gameInfo.playerID),
+      authKey: String(gameInfo.authKey),
+      mode: String(mode),
+      cardID: String(playNo)
+    });
     try {
-      const response = await fetch(queryURL, {
+      const response = await fetch(queryURL + queryParams, {
         method: 'GET',
         headers: {}
       });

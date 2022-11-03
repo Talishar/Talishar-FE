@@ -280,7 +280,7 @@ export const OfflineTestingGameState: GameState = {
     popupCard: undefined
   },
   optionsOverlay: {
-    active: true
+    active: false
   }
 };
 
