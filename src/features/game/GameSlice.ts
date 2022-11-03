@@ -3,14 +3,12 @@ import ParseGameState from '../../app/ParseGameState';
 import { OfflineTestingGameState } from './InitialGameState';
 import GameInfo from '../GameInfo';
 import Card from '../Card';
+import { API_URL } from '../../constants';
 
 export const nextTurn = createAsyncThunk(
   'game/nextTurn',
   async (params: GameInfo, { getState }) => {
-    // NOTE: Edit the queryURL here if testing locally versus testing remotely.
-    // const queryURL = `http://localhost:41062/FaBOnline/GetNextTurnAPI.php?gameName=${params.gameID}&playerID=${params.playerID}&authKey=${params.authKey}&lastUpdate=${lastUpdate}`;
-    const queryURL = `http://localhost:41062/FaBOnline/GetNextTurn3.php?gameName=${params.gameID}&playerID=${params.playerID}&authKey=${params.authKey}&lastUpdate=${params.lastUpdate}`;
-    // const queryURL = `https://talishar.net/game/GetNextTurn3.php?gameName=${params.gameID}&playerID=${params.playerID}&authKey=${params.authKey}&lastUpdate=${params.lastUpdate}`;
+    const queryURL = `${API_URL}}GetNextTurn3.php?gameName=${params.gameID}&playerID=${params.playerID}&authKey=${params.authKey}&lastUpdate=${params.lastUpdate}`;
     let waitingForJSONResponse = true;
     while (waitingForJSONResponse) {
       try {
