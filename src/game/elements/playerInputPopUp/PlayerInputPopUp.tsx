@@ -4,6 +4,7 @@ import { useAppSelector, useAppDispatch } from '../../../app/Hooks';
 import { RootState } from '../../../app/Store';
 import styles from './PlayerInputPopUp.module.css';
 import Button from '../../../features/Button';
+import CardDisplay from '../cardDisplay/CardDisplay';
 
 export default function PlayerInputPopUp() {
   const inputPopUp = useAppSelector(
@@ -42,6 +43,14 @@ export default function PlayerInputPopUp() {
     );
   });
 
+  const selectCard = inputPopUp.popup?.cards?.map((card, ix) => {
+    return (
+      <div className={styles.cardDiv} key={ix.toString()}>
+        <CardDisplay card={card} />
+      </div>
+    );
+  });
+
   return (
     <div className={styles.optionsContainer}>
       <div className={styles.optionsTitleContainer}>
@@ -59,7 +68,10 @@ export default function PlayerInputPopUp() {
           </div>
         ) : null}
       </div>
-      <div className={styles.contentContainer}>{buttons}</div>
+      <div className={styles.contentContainer}>
+        {selectCard}
+        {buttons}
+      </div>
     </div>
   );
 }

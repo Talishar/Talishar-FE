@@ -37,10 +37,12 @@
   width: 100%;
   display: flex;
   justify-content: center;
-  align-content: center;
-  align-items: center;
+  align-content: flex-start;
+  align-items: flex-start;
 }
 
 .bottomInterior {
-  width: 80%;
+  padding-top: 1.5vh;
+  font-size: 0.75em;
+  width: 70%;
 }

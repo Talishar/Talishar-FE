@@ -47,7 +47,7 @@ export const playCard = createAsyncThunk(
 
     // TODO: Improve this (perhaps on BE need to have accept POST request)
     const playNo =
-      params.cardParams.actionDataOverride !== ''
+      params.cardParams.actionDataOverride != ''
         ? params.cardParams.actionDataOverride
         : params.cardIndex;
     const gameInfo = game.gameInfo;

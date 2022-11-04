@@ -271,7 +271,7 @@ export default function ParseGameState(input: any) {
 
   // turn phase
   if (input.turnPhase !== undefined) {
-    result.turnPhase = input.turnPhase.turnPhase;
+    result.turnPhase = input.turnPhase;
   }
 
   result.playerInputPopUp = input.playerInputPopUp;
