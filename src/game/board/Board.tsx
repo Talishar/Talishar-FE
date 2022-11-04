@@ -5,7 +5,7 @@ import CombatChain from '../combatChain/CombatChain';
 import styles from './Board.module.css';
 import CardListZone from '../zones/cardListZone/CardListZone';
 import ActiveLayersZone from '../zones/activeLayersZone/ActiveLayersZone';
-import OptionsOverlay from '../elements/optionsOverlay/OptionsOverlay';
+import PlayerInputPopUp from '../elements/playerInputPopUp/PlayerInputPopUp';
 
 export interface playAreaDimensions {
   dimension: number;
@@ -19,6 +19,7 @@ export function Board() {
       <PlayerBoard />
       <CardListZone />
       <ActiveLayersZone />
+      <PlayerInputPopUp />
     </div>
   );
 }

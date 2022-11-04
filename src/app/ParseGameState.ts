@@ -273,6 +273,8 @@ export default function ParseGameState(input: any) {
     result.turnPhase = input.turnPhase.turnPhase;
   }
 
+  result.playerInputPopUp = input.playerInputPopUp;
+
   // if it's the first turn of the game add these details:
   if (input.initialLoad) {
     result.playerOne.Name = input.initialLoad.playerName;

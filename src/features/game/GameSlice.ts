@@ -4,6 +4,7 @@ import { OfflineTestingGameState } from './InitialGameState';
 import GameInfo from '../GameInfo';
 import Card from '../Card';
 import { API_URL } from '../../constants';
+import Button from '../Button';
 
 export const nextTurn = createAsyncThunk(
   'game/nextTurn',
@@ -72,6 +73,31 @@ export const playCard = createAsyncThunk(
       });
       const data = await response.text();
       console.log(data);
+      return;
+    } catch (e) {
+      console.error(e);
+    }
+  }
+);
+
+export const submitButton = createAsyncThunk(
+  'game/submitButton',
+  async (params: { button: Button }, { getState }) => {
+    const { game } = getState() as { game: { gameInfo: GameInfo } };
+    const queryURL = `${API_URL}ProcessInput2.php?`;
+    const queryParams = new URLSearchParams({
+      gameName: String(game.gameInfo.gameID),
+      playerID: String(game.gameInfo.playerID),
+      authKey: String(game.gameInfo.authKey),
+      mode: String(params.button.mode),
+      buttonInput: String(params.button.buttonInput)
+    });
+    try {
+      const response = await fetch(queryURL + queryParams, {
+        method: 'GET',
+        headers: {}
+      });
+      const data = await response.text();
       return;
     } catch (e) {
       console.error(e);
@@ -158,6 +184,7 @@ export const gameSlice = createSlice({
       state.isUpdateInProgress = false;
       state.activePlayer = action.payload.activePlayer;
       state.turnPhase = action.payload.turnPhase;
+      state.playerInputPopUp = action.payload.playerInputPopUp;
 
       // gameInfo
       state.gameInfo.lastPlayed = action.payload.gameInfo.lastPlayed;
@@ -175,6 +202,9 @@ export const gameSlice = createSlice({
       return state;
     });
     builder.addCase(playCard.fulfilled, (_state, _action) => {
+      return;
+    });
+    builder.addCase(submitButton.fulfilled, (_state, _action) => {
       return;
     });
   }

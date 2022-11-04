@@ -1,0 +1,11 @@
+export default interface Button {
+  mode?: number;
+  buttonInput?: string;
+  fullRefresh?: boolean;
+  prompt?: string;
+  imgURL?: string;
+  tooltip?: string;
+  caption?: string;
+  sizeOverride?: string;
+  fullReload?: boolean;
+}

@@ -1,3 +1,5 @@
+import { StringLiteral } from '@babel/types';
+import Button from './Button';
 import Card from './Card';
 import CombatChainLink from './CombatChainLink';
 import GameInfo from './GameInfo';
@@ -35,6 +37,22 @@ export default interface GameState {
   turnPhase?: string;
   optionsOverlay?: {
     active?: boolean;
+  };
+  playerInputPopUp?: {
+    active?: boolean;
+    buttons?: Button[];
+    popup?: {
+      active?: boolean;
+      size?: number;
+      big?: boolean;
+      overCombatChain?: boolean;
+      id?: string;
+      title?: string;
+      canClose?: number;
+      additionalComments?: string;
+      cards?: Card[];
+      customInput?: string;
+    };
   };
   playerPreferences?: {
     manualModeEnabled: boolean;
