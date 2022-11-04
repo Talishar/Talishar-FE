@@ -13,7 +13,7 @@ export default function PlayerInputPopUp() {
   const dispatch = useAppDispatch();
 
   const onPassTurn = () => {
-    dispatch(playCard({ cardParams: { cardNumber: '' }, mode: 99 }));
+    dispatch(submitButton({ button: { mode: 99 } }));
   };
 
   const clickButton = (button: Button) => {
@@ -30,15 +30,15 @@ export default function PlayerInputPopUp() {
 
   const buttons = inputPopUp.buttons?.map((button, ix) => {
     return (
-      <button
+      <div
+        className={styles.buttonDiv}
         onClick={() => {
           clickButton(button);
         }}
         key={ix.toString()}
-        className={styles.button}
       >
         {button.caption}
-      </button>
+      </div>
     );
   });
 
@@ -59,7 +59,7 @@ export default function PlayerInputPopUp() {
           </div>
         ) : null}
       </div>
-      {buttons}
+      <div className={styles.contentContainer}>{buttons}</div>
     </div>
   );
 }

@@ -42,12 +42,10 @@ export default function PlayerHandCard(props: handCard) {
     state.game.turnPhase === 'ARS' ? true : false
   );
 
-  const playCardMode = isArsenalPhase ? 4 : 27;
-
   const onDragStop = (e: DraggableEvent, data: DraggableData) => {
     if (data.lastY < -window.innerHeight * ScreenPercentageForCardPlayed) {
       console.log('playing card');
-      dispatch(playCard({ cardParams: card, mode: playCardMode }));
+      dispatch(playCard({ cardParams: card }));
       console.log(card);
     }
     setControlledPosition({ x: 0, y: 0 });

@@ -42,19 +42,14 @@ export const nextTurn = createAsyncThunk(
 
 export const playCard = createAsyncThunk(
   'game/playCard',
-  async (
-    params: { cardParams: Card; mode?: number; cardIndex?: number },
-    { getState }
-  ) => {
+  async (params: { cardParams: Card; cardIndex?: number }, { getState }) => {
     const { game } = getState() as { game: { gameInfo: GameInfo } };
 
     // TODO: Improve this (perhaps on BE need to have accept POST request)
-    const mode = params.mode === undefined ? 3 : params.mode;
-    let playNo =
+    const playNo =
       params.cardParams.actionDataOverride !== ''
         ? params.cardParams.actionDataOverride
         : params.cardIndex;
-    playNo = mode === 4 ? params.cardParams.cardNumber : playNo;
     const gameInfo = game.gameInfo;
 
     // Construct query and params
@@ -63,9 +58,11 @@ export const playCard = createAsyncThunk(
       gameName: String(gameInfo.gameID),
       playerID: String(gameInfo.playerID),
       authKey: String(gameInfo.authKey),
-      mode: String(mode),
+      mode: String(params.cardParams.action),
       cardID: String(playNo)
     });
+
+    console.log(queryParams);
     try {
       const response = await fetch(queryURL + queryParams, {
         method: 'GET',

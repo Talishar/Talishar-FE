@@ -45,7 +45,7 @@ export default function CardDisplay(prop: CardProp) {
       return;
     }
     console.log('clicked');
-    dispatch(playCard({ cardParams: card, mode: prop.useCardMode }));
+    dispatch(playCard({ cardParams: card }));
   }
 
   const handleMouseEnter = () => {

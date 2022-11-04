@@ -1,5 +1,5 @@
 import React from 'react';
-import { playCard } from '../../../features/game/GameSlice';
+import { playCard, submitButton } from '../../../features/game/GameSlice';
 import { useAppSelector, useAppDispatch } from '../../../app/Hooks';
 import { RootState } from '../../../app/Store';
 import styles from './PassTurnDisplay.module.css';
@@ -12,7 +12,7 @@ export default function PassTurnDisplay() {
   const dispatch = useAppDispatch();
 
   const onPassTurn = () => {
-    dispatch(playCard({ cardParams: { cardNumber: '' }, mode: 99 }));
+    dispatch(submitButton({ button: { mode: 99 } }));
   };
 
   if (activePlayer === undefined) {

@@ -11,7 +11,7 @@ function ParseCard(input: any) {
     return card;
   }
   card.cardNumber = input.cardNumber ? input.cardNumber : 'blank';
-  card.action = card.action ? Number(card.action) : undefined;
+  card.action = input.action ? Number(input.action) : undefined;
   card.overlay = input.overlay == 1 ? 'disabled' : 'none';
   card.borderColor = input.borderColor ? String(input.borderColor) : undefined;
   card.actionDataOverride = input.actionDataOverride
@@ -229,6 +229,7 @@ export default function ParseGameState(input: any) {
   for (const cardObj of input.playerArse) {
     result.playerOne.Arsenal.push(ParseCard(cardObj));
   }
+  console.log(result.playerOne.Arsenal);
 
   // Stick all permanents in the same pile.
   result.playerOne.Permanents = [];

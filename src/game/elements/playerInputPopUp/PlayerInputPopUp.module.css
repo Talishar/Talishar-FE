@@ -4,8 +4,8 @@
   flex-direction: column;
   min-width: 30%;
   max-width: 90%;
-  top: 50%;
-  bottom: 10vh;
+  top: 60%;
+  bottom: 5vh;
   left: 20%;
   right: 20%;
   background-color: rgba(0, 0, 0, 0.8);
@@ -23,11 +23,34 @@
   width: 100%;
   justify-content: space-between;
   align-items: center;
+  padding-bottom: 1vh;
 }
 
 .title {
   padding: 0px;
   margin: 0px;
+}
+
+.buttonDiv {
+  background-color: goldenrod;
+  color: black;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  min-width: 8vh;
+  height: 4vh;
+  border-radius: 5px;
+  border: 1px solid goldenrod;
+  flex-basis: auto;
+  padding: 0vh 1vh;
+}
+
+.buttonDiv:hover {
+  background-color: black;
+  color: goldenrod;
+  border: 1px solid goldenrod;
+  cursor: pointer;
 }
 
 .optionsOverlayCloseIcon {
@@ -43,4 +66,12 @@
 .optionsOverlayCloseIcon:hover {
   background-color: goldenrod;
   color: black;
+}
+
+.contentContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 1vh;
 }
