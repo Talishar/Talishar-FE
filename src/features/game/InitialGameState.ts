@@ -34,7 +34,8 @@ export const OfflineTestingGameState: GameState = {
         }
       ],
       totalAttack: 88,
-      totalDefence: 44
+      totalDefence: 44,
+      isDraconic: true
     },
     {
       attackingCard: {
@@ -50,7 +51,8 @@ export const OfflineTestingGameState: GameState = {
       ],
       totalAttack: 88,
       totalDefence: 44,
-      didItHit: true
+      didItHit: true,
+      isDraconic: false
     },
 
     {
@@ -67,7 +69,8 @@ export const OfflineTestingGameState: GameState = {
       ],
       totalAttack: 88,
       totalDefence: 44,
-      didItHit: true
+      didItHit: true,
+      isDraconic: true
     }
   ],
   activeChainLink: {

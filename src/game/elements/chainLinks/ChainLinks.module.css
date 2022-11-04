@@ -68,7 +68,28 @@
 }
 
 .chainLinkSymbol {
+  position: relative;
   height: 2.5vh;
+  z-index: 11;
+}
+
+.draconicChainLinkContainer {
+  position: absolute;
+  top: -1vh;
+  right: -0.75vh;
+  left: -1.25vh;
+  bottom: -1vh;
+  z-index: 10;
+}
+
+.draconicChainLinkSymbol {
+  float: left;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.7s ease-in-out;
+}
+.draconicChainLinkSymbol:hover {
+  transform: rotate(360deg);
 }
 
 .reactions {
