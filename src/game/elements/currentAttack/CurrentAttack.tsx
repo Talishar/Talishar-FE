@@ -37,7 +37,7 @@ export default function CurrentAttack() {
           <img
             className={styles.chainSymbols}
             src={defSymbol}
-            alt="attack symbol"
+            alt="defence symbol"
           />
         </div>
         <div className={styles.defDiv}>{defValue}</div>
