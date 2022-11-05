@@ -30,10 +30,11 @@ export const nextTurn = createAsyncThunk(
           continue;
         }
         waitingForJSONResponse = false;
+        data = data.toString().trim();
         const indexOfBraces = data.indexOf('{');
         if (indexOfBraces !== 0) {
-          console.log(data.substring(0, indexOfBraces + 1));
-          data = data.substring(indexOfBraces + 1);
+          console.log(data.substring(0, indexOfBraces));
+          data = data.substring(indexOfBraces);
         }
         const parsedData = JSON.parse(data);
         const gs = ParseGameState(parsedData);
@@ -49,9 +50,9 @@ export const playCard = createAsyncThunk(
   'game/playCard',
   async (params: { cardParams: Card; cardIndex?: number }, { getState }) => {
     const { game } = getState() as { game: GameState };
-    if (game.isPlayerInputInProgress) {
-      return;
-    }
+    // if (game.isPlayerInputInProgress) {
+    //   return;
+    // }
 
     const playNo =
       params.cardParams.actionDataOverride != ''

@@ -72,6 +72,11 @@
   display: flex;
   flex-direction: row;
   align-items: flex-start;
+  align-content: flex-start;
   justify-content: flex-start;
-  gap: 1vh;
+  row-gap: 1vh;
+  column-gap: 1vh;
+  flex-wrap: wrap;
+  overflow: auto;
+  height: 100%;
 }

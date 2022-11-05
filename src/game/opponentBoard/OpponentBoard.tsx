@@ -21,8 +21,6 @@ export default function OpponentBoard() {
     backgroundImage: `url(/playmats/${playmat}.webp)`
   };
 
-  console.log(styleToApply);
-
   return (
     <div className={styles.opponentPlaymat} style={styleToApply}>
       <div className={styles.playerBoard}>
