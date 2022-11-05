@@ -33,6 +33,7 @@ export default interface GameState {
   };
   chatLog?: string[];
   isUpdateInProgress?: boolean;
+  isPlayerInputInProgress?: boolean;
   turnPhase?: {
     turnPhase?: string;
     caption?: string;

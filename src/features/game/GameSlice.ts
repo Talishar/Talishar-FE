@@ -5,6 +5,7 @@ import GameInfo from '../GameInfo';
 import Card from '../Card';
 import { API_URL } from '../../constants';
 import Button from '../Button';
+import GameState from '../GameState';
 
 export const nextTurn = createAsyncThunk(
   'game/nextTurn',
@@ -24,11 +25,16 @@ export const nextTurn = createAsyncThunk(
           method: 'GET',
           headers: {}
         });
-        const data = await response.text();
+        let data = await response.text();
         if (data.toString().trim() === '0') {
           continue;
         }
         waitingForJSONResponse = false;
+        const indexOfBraces = data.indexOf('{');
+        if (indexOfBraces !== 0) {
+          console.log(data.substring(0, indexOfBraces + 1));
+          data = data.substring(indexOfBraces + 1);
+        }
         const parsedData = JSON.parse(data);
         console.log(parsedData);
         const gs = ParseGameState(parsedData);
@@ -43,7 +49,10 @@ export const nextTurn = createAsyncThunk(
 export const playCard = createAsyncThunk(
   'game/playCard',
   async (params: { cardParams: Card; cardIndex?: number }, { getState }) => {
-    const { game } = getState() as { game: { gameInfo: GameInfo } };
+    const { game } = getState() as { game: GameState };
+    if (game.isPlayerInputInProgress) {
+      return;
+    }
 
     // TODO: Improve this (perhaps on BE need to have accept POST request)
     const playNo =
@@ -80,7 +89,10 @@ export const playCard = createAsyncThunk(
 export const submitButton = createAsyncThunk(
   'game/submitButton',
   async (params: { button: Button }, { getState }) => {
-    const { game } = getState() as { game: { gameInfo: GameInfo } };
+    const { game } = getState() as { game: GameState };
+    if (game.isPlayerInputInProgress) {
+      return;
+    }
     const queryURL = `${API_URL}ProcessInput2.php?`;
     const queryParams = new URLSearchParams({
       gameName: String(game.gameInfo.gameID),
@@ -104,8 +116,6 @@ export const submitButton = createAsyncThunk(
 
 export const gameSlice = createSlice({
   name: 'game',
-  // change the following line if you want to test with filled-in dummy data
-  // initialState: InitialGameState,
   initialState: OfflineTestingGameState,
   // The `reducers` field lets us define reducers and generate associated actions
   reducers: {
@@ -172,13 +182,15 @@ export const gameSlice = createSlice({
       if (action.payload === undefined) {
         return state;
       }
+      state.isUpdateInProgress = false;
+      state.isPlayerInputInProgress = false;
+
       state.playerOne = { ...state.playerOne, ...action.payload.playerOne };
       state.playerTwo = { ...state.playerTwo, ...action.payload.playerTwo };
       state.activeChainLink = action.payload.activeChainLink;
       state.activeLayers = action.payload.activeLayers;
       state.oldCombatChain = action.payload.oldCombatChain;
       state.chatLog = action.payload.chatLog;
-      state.isUpdateInProgress = false;
       state.activePlayer = action.payload.activePlayer;
       state.turnPhase = action.payload.turnPhase;
       state.playerInputPopUp = action.payload.playerInputPopUp;
@@ -193,15 +205,37 @@ export const gameSlice = createSlice({
       state.isUpdateInProgress = true;
       return state;
     });
-
     builder.addCase(nextTurn.rejected, (state, action) => {
       state.isUpdateInProgress = false;
       return state;
     });
-    builder.addCase(playCard.fulfilled, (_state, _action) => {
+
+    builder.addCase(playCard.pending, (state) => {
+      // player input in progress
+      state.isPlayerInputInProgress = true;
+      return state;
+    });
+    builder.addCase(playCard.fulfilled, () => {
+      // not setting isPlayerInput to false because the
+      // 'nextTurn' builder will set to true.
       return;
     });
-    builder.addCase(submitButton.fulfilled, (_state, _action) => {
+    builder.addCase(playCard.rejected, (state) => {
+      state.isPlayerInputInProgress = false;
+      return state;
+    });
+
+    builder.addCase(submitButton.pending, (state) => {
+      // player input in progress
+      state.isPlayerInputInProgress = true;
+      return;
+    });
+    builder.addCase(submitButton.fulfilled, () => {
+      return;
+    });
+    builder.addCase(submitButton.rejected, (state) => {
+      state.isPlayerInputInProgress = false;
+      return state;
       return;
     });
   }
