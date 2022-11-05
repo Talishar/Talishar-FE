@@ -4,11 +4,28 @@ import MiddleRow from '../middleRow/MiddleRow';
 import BottomRow from '../bottomRow/BottomRow';
 import styles from './OpponentBoard.module.css';
 import CardPopUp from '../elements/cardPopUp/CardPopUp';
+import { useAppSelector } from '../../app/Hooks';
+import { RootState } from '../../app/Store';
+import { DEFAULT_PLAYMAT } from '../../constants';
+import { url } from 'inspector';
 
 export default function OpponentBoard() {
+  let playmat = useAppSelector(
+    (state: RootState) => state.game.playerTwo.Playmat
+  );
+
+  if (playmat === undefined) {
+    playmat = DEFAULT_PLAYMAT;
+  }
+
+  const styleToApply = {
+    backgroundImage: `url(/playmats/${playmat}.webp)`
+  };
+
+  console.log(styleToApply);
+
   return (
-    <div className={styles.opponentPlaymat}>
-      {/* Customise the playmat here */}
+    <div className={styles.opponentPlaymat} style={styleToApply}>
       <div className={styles.playerBoard}>
         <BottomRow isPlayer={false} />
         <MiddleRow isPlayer={false} />

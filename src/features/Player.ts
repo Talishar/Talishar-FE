@@ -26,4 +26,5 @@ export default interface Player {
   Permanents?: Card[];
   Soul?: Card[];
   SoulCount?: number;
+  Playmat?: string;
 }

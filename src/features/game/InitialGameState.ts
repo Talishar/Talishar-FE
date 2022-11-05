@@ -106,6 +106,7 @@ export const OfflineTestingGameState: GameState = {
     Health: 20,
     ActionPoints: 0,
     PitchRemaining: 0,
+    Playmat: 'IronsongDetermination',
     Permanents: [
       {
         cardNumber: 'ARC010',
@@ -250,6 +251,7 @@ export const OfflineTestingGameState: GameState = {
     Health: 20,
     ActionPoints: 0,
     PitchRemaining: 0,
+    Playmat: 'Everfest',
     Hand: [
       {
         cardNumber: 'CBBlack'
