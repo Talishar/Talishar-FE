@@ -1,4 +1,3 @@
-import OptionsOverlay from '../../game/elements/optionsOverlay/OptionsOverlay';
 import GameState from '../GameState';
 
 const InitialGameState: GameState = {

@@ -1,4 +1,3 @@
-import { StringLiteral } from '@babel/types';
 import Button from './Button';
 import Card from './Card';
 import CombatChainLink from './CombatChainLink';

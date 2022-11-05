@@ -7,7 +7,6 @@ import CardPopUp from '../elements/cardPopUp/CardPopUp';
 import { useAppSelector } from '../../app/Hooks';
 import { RootState } from '../../app/Store';
 import { DEFAULT_PLAYMAT } from '../../constants';
-import { url } from 'inspector';
 
 export default function OpponentBoard() {
   let playmat = useAppSelector(
