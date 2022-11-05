@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { ImportsNotUsedAsValues } from 'typescript';
 import Card from '../features/Card';
 import CombatChainLink from '../features/CombatChainLink';
 import GameState from '../features/GameState';
@@ -105,8 +104,6 @@ export default function ParseGameState(input: any) {
       input.activeChainLink.damagePrevention
     );
   }
-
-  console.log(result.activeChainLink);
 
   // previous combat chain links
   result.oldCombatChain = [];
@@ -229,7 +226,6 @@ export default function ParseGameState(input: any) {
   for (const cardObj of input.playerArse) {
     result.playerOne.Arsenal.push(ParseCard(cardObj));
   }
-  console.log(result.playerOne.Arsenal);
 
   // Stick all permanents in the same pile.
   result.playerOne.Permanents = [];
