@@ -107,6 +107,32 @@ export const submitButton = createAsyncThunk(
   }
 );
 
+export const submitMultiButton = createAsyncThunk(
+  'game/submitButton',
+  async (params: { mode?: number; extraParams: string }, { getState }) => {
+    const { game } = getState() as { game: GameState };
+    const queryURL = `${API_URL}ProcessInput2.php?`;
+    const queryParams = new URLSearchParams({
+      gameName: String(game.gameInfo.gameID),
+      playerID: String(game.gameInfo.playerID),
+      authKey: String(game.gameInfo.authKey),
+      mode: String(params.mode)
+    });
+    const queryParamsString =
+      queryURL + queryParams.toString() + params.extraParams;
+    try {
+      const response = await fetch(queryParamsString, {
+        method: 'GET',
+        headers: {}
+      });
+      const data = await response.text();
+      return;
+    } catch (e) {
+      console.error(e);
+    }
+  }
+);
+
 export const gameSlice = createSlice({
   name: 'game',
   initialState: InitialGameState,

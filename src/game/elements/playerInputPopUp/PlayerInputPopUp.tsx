@@ -1,5 +1,9 @@
-import React from 'react';
-import { playCard, submitButton } from '../../../features/game/GameSlice';
+import React, { useEffect, useState } from 'react';
+import {
+  playCard,
+  submitButton,
+  submitMultiButton
+} from '../../../features/game/GameSlice';
 import { useAppSelector, useAppDispatch } from '../../../app/Hooks';
 import { RootState } from '../../../app/Store';
 import styles from './PlayerInputPopUp.module.css';
@@ -10,6 +14,14 @@ export default function PlayerInputPopUp() {
   const inputPopUp = useAppSelector(
     (state: RootState) => state.game.playerInputPopUp
   );
+
+  const [checkedState, setCheckedState] = useState(
+    new Array(inputPopUp?.multiChooseText?.length).fill(false)
+  );
+
+  useEffect(() => {
+    setCheckedState(new Array(inputPopUp?.multiChooseText?.length).fill(false));
+  }, [inputPopUp]);
 
   const dispatch = useAppDispatch();
 
@@ -29,6 +41,27 @@ export default function PlayerInputPopUp() {
     return null;
   }
 
+  const checkBoxSubmit = () => {
+    let extraParams = `&chkCount=${checkedState.length}`;
+    if (inputPopUp.multiChooseText) {
+      for (let i = 0; i < checkedState.length; i++) {
+        if (inputPopUp.multiChooseText[i]) {
+          if (inputPopUp.multiChooseText[i].value) {
+            extraParams += checkedState[i]
+              ? `&chk${i}=${inputPopUp.multiChooseText[i].value}`
+              : '';
+          }
+        }
+      }
+    }
+    dispatch(
+      submitMultiButton({
+        mode: inputPopUp.formOptions?.mode,
+        extraParams: extraParams
+      })
+    );
+  };
+
   const buttons = inputPopUp.buttons?.map((button, ix) => {
     return (
       <div
@@ -47,6 +80,34 @@ export default function PlayerInputPopUp() {
     return (
       <div className={styles.cardDiv} key={ix.toString()}>
         <CardDisplay card={card} />
+      </div>
+    );
+  });
+
+  const handleCheckBoxChange = (pos: number | undefined) => {
+    if (pos === undefined) {
+      return;
+    }
+    const updatedCheckedState = checkedState.map((item, index) =>
+      index === pos ? !item : item
+    );
+    setCheckedState(updatedCheckedState);
+  };
+
+  const checkboxes = inputPopUp.multiChooseText?.map((option, ix) => {
+    return (
+      <div key={ix} className={styles.checkBoxRow}>
+        <label className={styles.checkBoxLabel}>
+          <input
+            type="checkbox"
+            id={`multi-choose-text-${String(option.input)}`}
+            name={option.label}
+            value={checkedState[ix]}
+            onChange={() => handleCheckBoxChange(option.input)}
+            className={styles.checkBox}
+          />
+          {option.label}
+        </label>
       </div>
     );
   });
@@ -71,6 +132,19 @@ export default function PlayerInputPopUp() {
       <div className={styles.contentContainer}>
         {selectCard}
         {buttons}
+        {inputPopUp.formOptions ? (
+          <form>
+            {checkboxes}
+            <div
+              className={styles.buttonDiv}
+              onClick={() => {
+                checkBoxSubmit();
+              }}
+            >
+              {inputPopUp.formOptions.caption}
+            </div>
+          </form>
+        ) : null}
       </div>
     </div>
   );

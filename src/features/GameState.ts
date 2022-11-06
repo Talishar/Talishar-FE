@@ -56,6 +56,20 @@ export default interface GameState {
       cards?: Card[];
       customInput?: string;
     };
+    multiChooseText?: {
+      submitLink?: string;
+      input?: number;
+      value?: string;
+      check?: string;
+      label?: string;
+    }[];
+    choiceOptions?: string;
+    formOptions?: {
+      playerID: number;
+      caption: string;
+      mode: number;
+      maxNo: number;
+    };
   };
   playerPreferences?: {
     manualModeEnabled: boolean;
