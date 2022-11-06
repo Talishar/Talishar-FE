@@ -25,10 +25,11 @@ export default function PlayerHand() {
   const arsenalCards = useAppSelector(
     (state: RootState) => state.game.playerOne.Arsenal
   );
-  const playableBanishedCards = useAppSelector(
-    (state: RootState) => state.game.playerOne.Banish?.filter(isPlayable),
-    shallowEqual
-  );
+  const playableBanishedCards = useAppSelector((state: RootState) => {
+    return state.game.playerOne.Banish?.filter(
+      (card) => card.borderColor != '0' && card.borderColor != null
+    );
+  }, shallowEqual);
   const playableGraveyardCards = useAppSelector(
     (state: RootState) => state.game.playerOne.Graveyard?.filter(isPlayable),
     shallowEqual
@@ -65,7 +66,7 @@ export default function PlayerHand() {
           return (
             <PlayerHandCard
               card={card}
-              key={ix}
+              key={`hand-${ix}`}
               handSize={lengthOfCards}
               cardIndex={ix}
             />
@@ -78,10 +79,22 @@ export default function PlayerHand() {
             <PlayerHandCard
               card={card}
               isArsenal
-              key={ix}
+              key={`arsenal-${ix}`}
+              handSize={lengthOfCards}
+              cardIndex={ix + Number(handCards?.length)}
+            />
+          );
+        })}
+      {playableBanishedCards !== undefined &&
+        playableBanishedCards.map((card, ix) => {
+          return (
+            <PlayerHandCard
+              card={card}
+              isBanished
+              key={`banished-${ix}`}
               handSize={lengthOfCards}
               cardIndex={
-                ix + (handCards?.length !== undefined ? handCards.length : 0)
+                ix + Number(handCards?.length) + Number(arsenalCards?.length)
               }
             />
           );

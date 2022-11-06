@@ -1,5 +1,8 @@
 import React from 'react';
+import { useDispatch } from 'react-redux';
 import screenfull from 'screenfull';
+import { useAppDispatch } from '../../../app/Hooks';
+import { submitButton } from '../../../features/game/GameSlice';
 import styles from './Menu.module.css';
 
 function MenuButton() {
@@ -41,8 +44,9 @@ function FullScreenButton() {
 }
 
 function UndoButton() {
+  const dispatch = useAppDispatch();
   const clickUndo = () => {
-    console.log('clicked the undo button');
+    dispatch(submitButton({ button: { mode: 10000 } }));
   };
   return (
     <div>

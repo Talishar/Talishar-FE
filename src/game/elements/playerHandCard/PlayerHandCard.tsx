@@ -38,9 +38,6 @@ export default function PlayerHandCard(props: handCard) {
   const src = `./cardimages/${card.cardNumber}.webp`;
   const ref = useRef<HTMLDivElement>(null);
   const dispatch = useAppDispatch();
-  const isArsenalPhase = useAppSelector((state: RootState) =>
-    state.game.turnPhase === 'ARS' ? true : false
-  );
 
   const onDragStop = (e: DraggableEvent, data: DraggableData) => {
     if (data.lastY < -window.innerHeight * ScreenPercentageForCardPlayed) {
@@ -152,7 +149,7 @@ export default function PlayerHandCard(props: handCard) {
                 {isBanished === true && (
                   <div className={styles.icon}>
                     <i
-                      className="fa fa-random"
+                      className="fa fa-cloud"
                       aria-hidden="true"
                       title="Banished Zone"
                     ></i>
