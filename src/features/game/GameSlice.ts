@@ -86,9 +86,6 @@ export const submitButton = createAsyncThunk(
   'game/submitButton',
   async (params: { button: Button }, { getState }) => {
     const { game } = getState() as { game: GameState };
-    if (game.isPlayerInputInProgress) {
-      return;
-    }
     const queryURL = `${API_URL}ProcessInput2.php?`;
     const queryParams = new URLSearchParams({
       gameName: String(game.gameInfo.gameID),
