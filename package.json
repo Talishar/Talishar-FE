@@ -29,7 +29,8 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "eslint . --ext .ts,.tsx",
-    "prettier-format": "prettier --config .prettierrc 'src/**/*.{js,jsx,ts,tsx,css,md,json}' --write"
+    "prettier-format": "prettier --config .prettierrc 'src/**/*.{js,jsx,ts,tsx,css,md,json}' --write",
+    "build-for-beta": "yarn build && rsync -r --stats ./build talishar-beta:/opt/ReactClientRepo/"
   },
   "eslintConfig": {
     "extends": [
