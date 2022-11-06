@@ -5,6 +5,7 @@ import Player from '../../../interface/Player';
 import styles from './Effects.module.css';
 import Card from '../../../features/Card';
 import { useAppDispatch, useAppSelector } from '../../../app/Hooks';
+import { API_URL } from '../../../constants';
 
 export interface CardProp {
   card: Card;
@@ -13,7 +14,7 @@ export interface CardProp {
 }
 
 function Effect(prop: CardProp) {
-  const src = `https://www.talishar.net/FaBOnline2/crops/${prop.card.cardNumber}_cropped.png`;
+  const src = `./crops/${prop.card.cardNumber}_cropped.png`;
   const ref = useRef<HTMLDivElement>(null);
   const dispatch = useAppDispatch();
 

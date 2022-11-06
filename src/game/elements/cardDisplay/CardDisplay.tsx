@@ -35,7 +35,7 @@ export default function CardDisplay(prop: CardProp) {
     num = card.counters;
   }
 
-  const eqImg = `/cardsquares/${card.cardNumber}.webp`;
+  const eqImg = `./cardsquares/${card.cardNumber}.webp`;
 
   function onClick() {
     if (preventUseOnClick) {
