@@ -26,7 +26,6 @@ export default function CardDisplay(prop: CardProp) {
   const dispatch = useAppDispatch();
   const ref = useRef<HTMLDivElement>(null);
   let cardStyle = styles.card;
-  const [];
 
   if (card == null || card.cardNumber === '') {
     return null;

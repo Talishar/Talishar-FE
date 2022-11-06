@@ -58,7 +58,7 @@ export default function PlayerHandCard(props: handCard) {
 
   const onClick = () => {
     console.log('clicky click');
-  }
+  };
 
   const handleMouseEnter = () => {
     if (ref.current === null || !canPopUp) {
@@ -133,7 +133,7 @@ export default function PlayerHandCard(props: handCard) {
             onMouseLeave={() => handleMouseLeave()}
             onTouchStart={() => handleMouseEnter()}
             onTouchEnd={() => handleMouseLeave()}
-            onClick={() => }
+            onClick={() => onClick()}
             ref={ref}
             style={translation}
           >
