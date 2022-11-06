@@ -56,6 +56,10 @@ export default function PlayerHandCard(props: handCard) {
     setDragging(true);
   };
 
+  const onClick = () => {
+    console.log('clicky click');
+  }
+
   const handleMouseEnter = () => {
     if (ref.current === null || !canPopUp) {
       return;
@@ -127,6 +131,9 @@ export default function PlayerHandCard(props: handCard) {
             className={styles.imgContainer}
             onMouseEnter={() => handleMouseEnter()}
             onMouseLeave={() => handleMouseLeave()}
+            onTouchStart={() => handleMouseEnter()}
+            onTouchEnd={() => handleMouseLeave()}
+            onClick={() => }
             ref={ref}
             style={translation}
           >

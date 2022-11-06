@@ -26,6 +26,7 @@ export default function CardDisplay(prop: CardProp) {
   const dispatch = useAppDispatch();
   const ref = useRef<HTMLDivElement>(null);
   let cardStyle = styles.card;
+  const [];
 
   if (card == null || card.cardNumber === '') {
     return null;
@@ -62,6 +63,14 @@ export default function CardDisplay(prop: CardProp) {
         yCoord: yCoord
       })
     );
+  };
+
+  const onTouchStart = () => {
+    handleMouseEnter();
+  };
+
+  const onTouchEnd = () => {
+    handleMouseLeave();
   };
 
   const handleMouseLeave = () => {
@@ -101,6 +110,8 @@ export default function CardDisplay(prop: CardProp) {
       }}
       onMouseEnter={() => handleMouseEnter()}
       onMouseLeave={() => handleMouseLeave()}
+      onTouchStart={onTouchStart}
+      onTouchEnd={onTouchEnd}
       ref={ref}
     >
       <img src={eqImg} className={imgStyles.join(' ')} />
