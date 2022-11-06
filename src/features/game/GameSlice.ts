@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import ParseGameState from '../../app/ParseGameState';
-import { OfflineTestingGameState } from './InitialGameState';
+import InitialGameState, { OfflineTestingGameState } from './InitialGameState';
 import GameInfo from '../GameInfo';
 import Card from '../Card';
 import { API_URL } from '../../constants';
@@ -109,7 +109,7 @@ export const submitButton = createAsyncThunk(
 
 export const gameSlice = createSlice({
   name: 'game',
-  initialState: OfflineTestingGameState,
+  initialState: InitialGameState,
   // The `reducers` field lets us define reducers and generate associated actions
   reducers: {
     setPopUp: (
