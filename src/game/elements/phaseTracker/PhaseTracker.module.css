@@ -21,12 +21,15 @@
 
 .titleContainer {
   position: absolute;
-  top: 30px;
-  width: 100%;
+  top: 25px;
   display: flex;
   justify-content: center;
   align-content: center;
   align-items: center;
+  left: 15%;
+  right: 15%;
+  height: 35px;
+  text-align: center;
 }
 
 .phaseTrackerBottomContainer {
