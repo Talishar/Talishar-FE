@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { playCard, submitButton } from '../../../features/game/GameSlice';
 import { useAppSelector, useAppDispatch } from '../../../app/Hooks';
 import { RootState } from '../../../app/Store';
@@ -14,6 +14,17 @@ export default function PassTurnDisplay() {
   const onPassTurn = () => {
     dispatch(submitButton({ button: { mode: 99 } }));
   };
+
+  const pressKey = (e: KeyboardEvent) => {
+    if (e.key == ' ') {
+      onPassTurn();
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('keydown', pressKey, true);
+    // return document.removeEventListener('keydown', pressKey, true);
+  }, []);
 
   if (activePlayer === undefined) {
     return <div className={styles.passTurnDisplay}>Whut</div>;
