@@ -80,21 +80,25 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 
 ## Put your FE build on beta.talishar.net/ReactClient
 
-Connect to the talishar beta server (speak to Nate about getting access) and get the IP:
+Get access to the talishar beta server (speak to Nate about getting access) and get the IP, add it to your `.ssh/config` add your key and make life nice n easy.
 
 Anyway this is what I am doing:
 check `src/Constants.ts` to make sure everything is pointing toward the beta site.
 
 - `yarn build`
 - `rsync -r --stats ./build talishar-beta:/opt/ReactClientRepo/` and it'll stick your locally baked build over to the beta server.
+  - If you don't have `rsync` you can use `scp` just set aside an hour for it all to copy over(!)
+
+[Get on the beta](https://beta.talishar.net/ReactClient/) and you're good to go!
 
 ### This doesn't work (but should be the ideal way)
 
+- `ssh talishar-beta` to ssh into the talishar beta.
 - `cd /opt/ReactClientRepo`
 - Now do what you need to check out the repo, switch to your beta/feature branch or whatever
 - `yarn build` and get a cup of coffee as it takes a while and doesn't tell you anything while it's doing its thing.
 
-There will then be a build made and you can access it by going to `beta.talishar.net/ReactClient` yay
+There will then be a build made and you can access it by going to https://beta.talishar.net/ReactClient/ yay
 
 ## Learn More
 
