@@ -9,6 +9,7 @@ import Card from '../../../features/Card';
 import styles from './PlayerHandCard.module.css';
 import Draggable, { DraggableData, DraggableEvent } from 'react-draggable';
 import { useAppDispatch } from '../../../app/Hooks';
+import { LONG_PRESS_TIMER } from '../../../constants';
 
 const HandCurvatureConstant = 8;
 const ScreenPercentageForCardPlayed = 0.25;
@@ -78,7 +79,7 @@ export default function PlayerHandCard(props: handCard) {
     isLongPress.current = false;
     timerRef.current = setTimeout(() => {
       isLongPress.current = true;
-    }, 500);
+    }, LONG_PRESS_TIMER);
   };
 
   const handleOnMouseDown = () => {
