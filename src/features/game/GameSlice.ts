@@ -204,6 +204,12 @@ export const gameSlice = createSlice({
       (state.gameInfo.gameID = action.payload.gameID),
         (state.gameInfo.playerID = action.payload.playerID),
         (state.gameInfo.authKey = action.payload.authKey);
+    },
+    removeCardFromHand: (state, action: PayloadAction<{ card: Card }>) => {
+      state.playerOne.Hand = state.playerOne?.Hand?.filter(
+        (cardObj) =>
+          cardObj.actionDataOverride != action.payload.card.actionDataOverride
+      );
     }
   },
   // The `extraReducers` field lets the slice handle actions defined elsewhere,
@@ -287,5 +293,6 @@ export const {
   setGameStart,
   clearPopUp,
   setCardListFocus,
-  clearCardListFocus
+  clearCardListFocus,
+  removeCardFromHand
 } = actions;
