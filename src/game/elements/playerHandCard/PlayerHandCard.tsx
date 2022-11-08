@@ -8,8 +8,7 @@ import {
 import Card from '../../../features/Card';
 import styles from './PlayerHandCard.module.css';
 import Draggable, { DraggableData, DraggableEvent } from 'react-draggable';
-import { useAppSelector, useAppDispatch } from '../../../app/Hooks';
-import { RootState } from '../../../app/Store';
+import { useAppDispatch } from '../../../app/Hooks';
 
 const HandCurvatureConstant = 8;
 const ScreenPercentageForCardPlayed = 0.25;
@@ -31,9 +30,13 @@ export default function PlayerHandCard(props: handCard) {
   const [controlledPosition, setControlledPosition] = useState({ x: 0, y: 0 });
   const [canPopUp, setCanPopup] = useState(true);
   const [dragging, setDragging] = useState(false);
-  const [isVisible, setIsVisible] = useState(true);
   const { card, cardIndex, handSize, isArsenal, isBanished, isGraveyard } =
     props;
+
+  // ref to determine if we have a long press or a short tap.
+  const timerRef = useRef<ReturnType<typeof setTimeout>>();
+  const isLongPress = useRef<boolean>();
+
   if (card === undefined) {
     return <div className={styles.handCard}></div>;
   }
@@ -52,6 +55,7 @@ export default function PlayerHandCard(props: handCard) {
 
   const playCardFunc = () => {
     dispatch(playCard({ cardParams: card }));
+    dispatch(clearPopUp());
     if (!isBanished && !isGraveyard && !isArsenal) {
       dispatch(removeCardFromHand({ card }));
     }
@@ -64,7 +68,39 @@ export default function PlayerHandCard(props: handCard) {
   };
 
   const onClick = () => {
-    console.log('clicky click');
+    if (isLongPress.current) {
+      return;
+    }
+    playCardFunc();
+  };
+
+  const startPressTimer = () => {
+    isLongPress.current = false;
+    timerRef.current = setTimeout(() => {
+      isLongPress.current = true;
+    }, 500);
+  };
+
+  const handleOnMouseDown = () => {
+    startPressTimer();
+    return;
+  };
+
+  const handleOnMouseUp = () => {
+    clearTimeout(timerRef.current);
+    return;
+  };
+
+  const handleOnTouchStart = () => {
+    startPressTimer();
+    handleMouseEnter();
+    return;
+  };
+
+  const handleOnTouchEnd = () => {
+    clearTimeout(timerRef.current);
+    handleMouseLeave();
+    return;
   };
 
   const handleMouseEnter = () => {
@@ -125,68 +161,66 @@ export default function PlayerHandCard(props: handCard) {
     imgStyles.push(styles.border6);
   }
 
-  if (isVisible) {
-    return (
-      <div className={styles.handCard}>
-        <Draggable
-          defaultPosition={{ x: 0, y: 0 }}
-          onStop={onDragStop}
-          onDrag={onDrag}
-          position={controlledPosition}
-        >
-          <div>
-            <div
-              className={styles.imgContainer}
-              onMouseEnter={() => handleMouseEnter()}
-              onMouseLeave={() => handleMouseLeave()}
-              onTouchStart={() => handleMouseEnter()}
-              onTouchEnd={() => handleMouseLeave()}
-              onClick={() => onClick()}
-              ref={ref}
-              style={translation}
-            >
-              <div>
-                <img
-                  src={src}
-                  className={imgStyles.join(' ')}
-                  draggable="false"
-                />
-                <div className={styles.iconCol}>
-                  {isArsenal === true && (
-                    <div className={styles.icon}>
-                      <i
-                        className="fa fa-random"
-                        aria-hidden="true"
-                        title="Arsenal"
-                      ></i>
-                    </div>
-                  )}
-                  {isBanished === true && (
-                    <div className={styles.icon}>
-                      <i
-                        className="fa fa-cloud"
-                        aria-hidden="true"
-                        title="Banished Zone"
-                      ></i>
-                    </div>
-                  )}
-                  {isGraveyard === true && (
-                    <div className={styles.icon}>
-                      <i
-                        className="fa fa-random"
-                        aria-hidden="true"
-                        title="Graveyard"
-                      ></i>
-                    </div>
-                  )}
-                </div>
+  return (
+    <div className={styles.handCard}>
+      <Draggable
+        defaultPosition={{ x: 0, y: 0 }}
+        onStop={onDragStop}
+        onDrag={onDrag}
+        position={controlledPosition}
+      >
+        <div>
+          <div
+            className={styles.imgContainer}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+            onClick={onClick}
+            onMouseDown={handleOnMouseDown}
+            onMouseUp={handleOnMouseUp}
+            onTouchStart={handleOnTouchStart}
+            onTouchEnd={handleOnTouchEnd}
+            ref={ref}
+            style={translation}
+          >
+            <div>
+              <img
+                src={src}
+                className={imgStyles.join(' ')}
+                draggable="false"
+              />
+              <div className={styles.iconCol}>
+                {isArsenal === true && (
+                  <div className={styles.icon}>
+                    <i
+                      className="fa fa-random"
+                      aria-hidden="true"
+                      title="Arsenal"
+                    ></i>
+                  </div>
+                )}
+                {isBanished === true && (
+                  <div className={styles.icon}>
+                    <i
+                      className="fa fa-cloud"
+                      aria-hidden="true"
+                      title="Banished Zone"
+                    ></i>
+                  </div>
+                )}
+                {isGraveyard === true && (
+                  <div className={styles.icon}>
+                    <i
+                      className="fa fa-random"
+                      aria-hidden="true"
+                      title="Graveyard"
+                    ></i>
+                  </div>
+                )}
               </div>
             </div>
           </div>
-        </Draggable>
-      </div>
-    );
-  }
-
-  return <></>;
+        </div>
+      </Draggable>
+    </div>
+  );
 }
