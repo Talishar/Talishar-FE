@@ -5,7 +5,6 @@ import Player from '../../../interface/Player';
 import styles from './Effects.module.css';
 import Card from '../../../features/Card';
 import { useAppDispatch, useAppSelector } from '../../../app/Hooks';
-import { API_URL } from '../../../constants';
 
 export interface CardProp {
   card: Card;
