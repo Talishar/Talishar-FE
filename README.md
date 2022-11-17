@@ -105,3 +105,5 @@ There will then be a build made and you can access it by going to https://beta.t
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
+
+There is some redux stuff involved here too so check the [React Redux documentation too.](https://react-redux.js.org/)
