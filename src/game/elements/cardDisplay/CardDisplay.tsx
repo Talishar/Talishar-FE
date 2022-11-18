@@ -7,6 +7,7 @@ import {
   setPopUp
 } from '../../../features/game/GameSlice';
 import styles from './CardDisplay.module.css';
+import classNames from 'classnames';
 
 export interface CardProp {
   card?: Card;
@@ -20,12 +21,8 @@ export interface CardProp {
 export default function CardDisplay(prop: CardProp) {
   const { card, preventUseOnClick } = prop;
   let { num } = prop;
-  const classStyles: string[] = [styles.floatTint];
-  const equipStatus: string[] = [styles.floatTint];
-  const imgStyles: string[] = [styles.img];
   const dispatch = useAppDispatch();
   const ref = useRef<HTMLDivElement>(null);
-  let cardStyle = styles.card;
 
   if (card == null || card.cardNumber === '') {
     return null;
@@ -76,30 +73,20 @@ export default function CardDisplay(prop: CardProp) {
     dispatch(clearPopUp());
   };
 
-  if (card.overlay === 'disabled') {
-    classStyles.push(styles.disabled);
-  }
-
-  if (card.borderColor !== undefined && card.borderColor !== '0') {
-    // switch statement for different border colours
-    imgStyles.push(styles.border6);
-  }
-
-  if (card.isBroken) {
-    equipStatus.push(styles.isBroken);
-  }
-
-  if (card.onChain) {
-    equipStatus.push(styles.onChain);
-  }
-
-  if (card.isFrozen) {
-    equipStatus.push(styles.isFrozen);
-  }
-
-  cardStyle += prop.makeMeBigger
-    ? ' ' + styles.biggerSize
-    : ' ' + styles.normalSize;
+  const classStyles = classNames({
+    [styles.disabled]: card.overlay === 'disabled'
+  });
+  const equipStatus = classNames(
+    { [styles.isBroken]: card.isBroken },
+    { [styles.onChain]: card.onChain },
+    { [styles.isFrozen]: card.isFrozen }
+  );
+  const imgStyles = classNames(styles.img, {
+    border6: card.borderColor !== undefined && card.borderColor !== '0'
+  });
+  const cardStyle = classNames(styles.card, styles.normalSize, {
+    [styles.biggerSize]: prop.makeMeBigger
+  });
 
   return (
     <div
@@ -113,10 +100,9 @@ export default function CardDisplay(prop: CardProp) {
       onTouchEnd={onTouchEnd}
       ref={ref}
     >
-      <img src={eqImg} className={imgStyles.join(' ')} />
-
-      <div className={classStyles.join(' ')}></div>
-      <div className={equipStatus.join(' ')}></div>
+      <img src={eqImg} className={imgStyles} />
+      {classStyles !== '' ? <div className={classStyles}></div> : <></>}
+      {equipStatus !== '' ? <div className={equipStatus}></div> : <></>}
       <div className={styles.floatCover}>
         {num !== undefined && num !== 0 && (
           <div className={styles.number}>

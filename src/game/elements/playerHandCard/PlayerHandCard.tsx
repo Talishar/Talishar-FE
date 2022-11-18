@@ -10,6 +10,7 @@ import styles from './PlayerHandCard.module.css';
 import Draggable, { DraggableData, DraggableEvent } from 'react-draggable';
 import { useAppDispatch } from '../../../app/Hooks';
 import { LONG_PRESS_TIMER } from '../../../constants';
+import classNames from 'classnames';
 
 const HandCurvatureConstant = 8;
 const ScreenPercentageForCardPlayed = 0.25;
@@ -156,11 +157,9 @@ export default function PlayerHandCard(props: handCard) {
     }
   }, [dragging]);
 
-  const imgStyles = [styles.img];
-
-  if (card.borderColor !== undefined && card.borderColor !== '0') {
-    imgStyles.push(styles.border6);
-  }
+  const imgStyles = classNames(styles.img, {
+    border6: card.borderColor !== undefined && card.borderColor !== '0'
+  });
 
   return (
     <div className={styles.handCard}>
@@ -184,11 +183,7 @@ export default function PlayerHandCard(props: handCard) {
             style={translation}
           >
             <div>
-              <img
-                src={src}
-                className={imgStyles.join(' ')}
-                draggable="false"
-              />
+              <img src={src} className={imgStyles} draggable="false" />
               <div className={styles.iconCol}>
                 {isArsenal === true && (
                   <div className={styles.icon}>
