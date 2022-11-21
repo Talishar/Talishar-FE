@@ -28,6 +28,8 @@ function ParseCard(input: any) {
   card.onChain = input.onChain ? Boolean(input.onChain) : false;
   card.isFrozen = input.isFrozen ? Boolean(input.isFrozen) : false;
   card.gem = input.gem ? (input.gem == 2 ? 'active' : 'inactive') : 'none';
+  card.countersMap = input.countersMap ? input.countersMap : undefined;
+  card.label = input.label ? String(input.label) : undefined;
 
   return card;
 }

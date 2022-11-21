@@ -104,20 +104,23 @@ export default function CardDisplay(prop: CardProp) {
       {classStyles !== '' ? <div className={classStyles}></div> : <></>}
       {equipStatus !== '' ? <div className={equipStatus}></div> : <></>}
       <div className={styles.floatCover}>
-        {num !== undefined && num !== 0 && (
+        {!!num && (
           <div className={styles.number}>
             <div className={styles.text}>{num}</div>
           </div>
         )}
-        {card.defCounters !== undefined && card.defCounters !== 0 && (
+        {!!Number(card.countersMap?.defence) && (
           <div className={styles.defCounter}>
-            <div>{card.defCounters}</div>
+            <div>{card.countersMap?.defence}</div>
           </div>
         )}
-        {card.lifeCounters !== undefined && card.lifeCounters !== 0 && (
+        {!!Number(card.countersMap?.life) && (
           <div className={styles.lifeCounter}>
-            <div>{card.lifeCounters}</div>
+            <div>{card.countersMap?.life}</div>
           </div>
+        )}
+        {card.label !== undefined && card.label !== '' && (
+          <div className={styles.label}>{card.label}</div>
         )}
       </div>
     </div>

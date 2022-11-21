@@ -17,4 +17,6 @@ export default interface Card {
   isFrozen?: boolean; // isFrozen = 1 if frozen
   gem?: 'none' | 'inactive' | 'active'; // gem = (0, 1, 2?)
   cardIndex?: number;
+  countersMap?: { [key: string]: number }; // string = name of counter, number = number of counters
+  label?: string;
 }
