@@ -50,5 +50,51 @@
   flex-direction: column;
 }
 
+.optionsContentContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.column {
+  width: 50%;
+}
+
+.rightColumn {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  padding-right: 2vh;
+}
+
 .optionLabel {
+}
+
+.buttonDiv {
+  background-color: goldenrod;
+  color: black;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  min-width: 8vh;
+  height: 4vh;
+  border-radius: 5px;
+  border: 1px solid goldenrod;
+  flex-basis: auto;
+  padding: 0vh 1vh;
+  margin-bottom: 1vh;
+}
+
+.buttonDiv:last-child {
+  margin-bottom: 0;
+  margin-right: 0;
+}
+
+.buttonDiv:hover {
+  background-color: black;
+  color: goldenrod;
+  border: 1px solid goldenrod;
+  cursor: pointer;
 }
