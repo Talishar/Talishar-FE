@@ -36,6 +36,7 @@
   display: flex;
   justify-content: flex-start;
   flex-direction: row;
+  width: 21vh;
 }
 
 .groupM {
@@ -46,7 +47,7 @@
 }
 
 .groupR {
-  width: fit-content;
+  width: 21vh;
   height: 10vh;
   display: flex;
   align-items: center;

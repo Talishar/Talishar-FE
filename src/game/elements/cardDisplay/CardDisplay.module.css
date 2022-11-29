@@ -126,6 +126,11 @@
 .disabled {
   background-color: black;
   opacity: 0.5;
+  position: absolute;
+  left: 0px;
+  right: 0px;
+  top: 0px;
+  bottom: 0px;
 }
 
 .isBroken {
@@ -133,6 +138,11 @@
   background-repeat: no-repeat;
   background-size: contain;
   background-position: 1.5vh -0.5vh;
+  position: absolute;
+  left: 0px;
+  right: 0px;
+  top: 0px;
+  bottom: 0px;
 }
 
 .onChain {

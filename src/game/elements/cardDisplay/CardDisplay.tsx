@@ -73,10 +73,12 @@ export default function CardDisplay(prop: CardProp) {
     dispatch(clearPopUp());
   };
 
-  const classStyles = classNames({
+  const classStyles = classNames(styles.floatTint, {
     [styles.disabled]: card.overlay === 'disabled'
   });
+
   const equipStatus = classNames(
+    styles.floatTint,
     { [styles.isBroken]: card.isBroken },
     { [styles.onChain]: card.onChain },
     { [styles.isFrozen]: card.isFrozen }
@@ -101,8 +103,8 @@ export default function CardDisplay(prop: CardProp) {
       ref={ref}
     >
       <img src={eqImg} className={imgStyles} />
-      {classStyles !== '' ? <div className={classStyles}></div> : <></>}
-      {equipStatus !== '' ? <div className={equipStatus}></div> : <></>}
+      <div className={classStyles}></div>
+      <div className={equipStatus}></div>
       <div className={styles.floatCover}>
         {!!num && (
           <div className={styles.number}>
