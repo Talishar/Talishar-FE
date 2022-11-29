@@ -82,7 +82,7 @@ export default function CardDisplay(prop: CardProp) {
     { [styles.isFrozen]: card.isFrozen }
   );
   const imgStyles = classNames(styles.img, {
-    border6: card.borderColor !== undefined && card.borderColor !== '0'
+    [styles.border6]: card.borderColor == '6'
   });
   const cardStyle = classNames(styles.card, styles.normalSize, {
     [styles.biggerSize]: prop.makeMeBigger
