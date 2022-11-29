@@ -1,17 +1,17 @@
 import React from 'react';
 import { useAppSelector } from '../../../app/Hooks';
 import { RootState } from '../../../app/Store';
-import styles from './OptionsOverlay.module.css';
+import styles from './OptionsMenu.module.css';
 
 export default function OptionsOverlay() {
-  const optionsOverlay = useAppSelector(
-    (state: RootState) => state.game.optionsOverlay
+  const optionsMenu = useAppSelector(
+    (state: RootState) => state.game.optionsMenu
   );
 
   if (
-    optionsOverlay === undefined ||
-    optionsOverlay.active === undefined ||
-    optionsOverlay.active == false
+    optionsMenu === undefined ||
+    optionsMenu.active === undefined ||
+    optionsMenu.active == false
   ) {
     return null;
   }
@@ -27,7 +27,7 @@ export default function OptionsOverlay() {
           <h3 className={styles.title}>Options</h3>
           (priority settings can be adjusted here)
         </div>
-        <div className={styles.optionsOverlayCloseIcon} onClick={closeOptions}>
+        <div className={styles.optionsMenuCloseIcon} onClick={closeOptions}>
           <div>
             <h3 className={styles.title}>
               <i className="fa fa-times" aria-hidden="true"></i>

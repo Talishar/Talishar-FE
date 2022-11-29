@@ -8,7 +8,8 @@ const InitialGameState: GameState = {
   },
   playerOne: {},
   playerTwo: {},
-  isUpdateInProgress: false
+  isUpdateInProgress: false,
+  optionsMenu: { active: false }
 };
 
 export const OfflineTestingGameState: GameState = {
@@ -283,7 +284,7 @@ export const OfflineTestingGameState: GameState = {
     popupOn: false,
     popupCard: undefined
   },
-  optionsOverlay: {
+  optionsMenu: {
     active: false
   }
 };

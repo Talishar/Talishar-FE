@@ -193,6 +193,12 @@ export const gameSlice = createSlice({
     clearCardListFocus: (state) => {
       state.cardListFocus = undefined;
     },
+    openOptionsMenu: (state) => {
+      state.optionsMenu = { active: true };
+    },
+    closeOptionsMenu: (state) => {
+      state.optionsMenu = { active: false };
+    },
     setGameStart: (
       state,
       action: PayloadAction<{
@@ -294,5 +300,7 @@ export const {
   clearPopUp,
   setCardListFocus,
   clearCardListFocus,
-  removeCardFromHand
+  removeCardFromHand,
+  openOptionsMenu,
+  closeOptionsMenu
 } = actions;

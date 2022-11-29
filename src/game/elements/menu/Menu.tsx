@@ -1,20 +1,23 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
 import screenfull from 'screenfull';
 import { useAppDispatch } from '../../../app/Hooks';
-import { submitButton } from '../../../features/game/GameSlice';
+import {
+  openOptionsMenu,
+  submitButton
+} from '../../../features/game/GameSlice';
 import styles from './Menu.module.css';
 
 function MenuButton() {
-  function toggleMenu() {
-    // TODO: Implement menu
-    console.log('opening menu');
-  }
+  const dispatch = useAppDispatch();
+  const toggleMenu = () => {
+    dispatch(openOptionsMenu());
+  };
+
   return (
     <div>
       <button
         className={styles.btn}
-        aria-label="Skip to main navigation"
+        aria-label="Open main menu"
         onClick={() => toggleMenu()}
       >
         <i className="fa fa-bars" aria-hidden="true" />
@@ -25,9 +28,7 @@ function MenuButton() {
 
 function FullScreenButton() {
   function toggleFullScreen() {
-    if (screenfull.isEnabled) {
-      screenfull.request();
-    }
+    screenfull.toggle();
   }
 
   return (

@@ -38,7 +38,7 @@ export default interface GameState {
     turnPhase?: string;
     caption?: string;
   };
-  optionsOverlay?: {
+  optionsMenu?: {
     active?: boolean;
   };
   playerInputPopUp?: {
