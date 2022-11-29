@@ -83,4 +83,8 @@ export default interface GameState {
     manualTargetingEnabled: boolean;
     holdPrioritySetting: number;
   };
+  playerPrompt?: {
+    helpText?: string;
+    buttons?: Button[];
+  };
 }

@@ -1,5 +1,5 @@
 .currentAttack {
-  width: 22vh;
+  width: 20vh;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -49,7 +49,7 @@
 
 .attack {
   position: relative;
-  height: 13vh;
+  height: 12vh;
   width: 100%;
   display: flex;
   flex-direction: row;

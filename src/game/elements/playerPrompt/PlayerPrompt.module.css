@@ -1,0 +1,39 @@
+.playerPrompt {
+  background-color: #fffdd0;
+  border: 1px solid #004225;
+  color: #004225;
+  width: 95%;
+  height: 2vh;
+  padding: 1vh;
+  top: 1vh;
+  margin: auto;
+  text-align: center;
+  position: relative;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.buttonDiv {
+  background-color: #004225;
+  color: #fffdd0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  min-width: 4vh;
+  height: 2vh;
+  border-radius: 5px;
+  border: 1px solid black;
+  flex-basis: auto;
+  padding: 0vh 1vh;
+  margin-left: 1vh;
+}
+
+.buttonDiv:hover {
+  background-color: #fffdd0;
+  color: #004225;
+  border: 1px solid #004225;
+  cursor: pointer;
+}

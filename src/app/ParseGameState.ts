@@ -280,5 +280,7 @@ export default function ParseGameState(input: any) {
     result.playerTwo.Name = input.initialLoad.opponentName;
   }
 
+  result.playerPrompt = input.playerPrompt;
+
   return result;
 }

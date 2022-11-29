@@ -243,6 +243,8 @@ export const gameSlice = createSlice({
       state.gameInfo.lastPlayed = action.payload.gameInfo.lastPlayed;
       state.gameInfo.lastUpdate = action.payload.gameInfo.lastUpdate;
       state.gameInfo.turnNo = action.payload.gameInfo.turnNo;
+
+      state.playerPrompt = action.payload.playerPrompt;
       return state;
     });
     builder.addCase(nextTurn.pending, (state, action) => {
