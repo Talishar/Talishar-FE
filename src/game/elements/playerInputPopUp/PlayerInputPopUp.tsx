@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import {
-  playCard,
   submitButton,
   submitMultiButton
 } from '../../../features/game/GameSlice';

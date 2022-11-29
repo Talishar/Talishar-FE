@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import ParseGameState from '../../app/ParseGameState';
-import InitialGameState, { OfflineTestingGameState } from './InitialGameState';
+import InitialGameState from './InitialGameState';
 import GameInfo from '../GameInfo';
 import Card from '../Card';
 import { API_URL_BETA, API_URL_LIVE } from '../../constants';

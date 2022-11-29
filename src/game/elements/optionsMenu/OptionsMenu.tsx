@@ -2,7 +2,10 @@ import { Field, Form, Formik } from 'formik';
 import React from 'react';
 import { useAppDispatch, useAppSelector } from '../../../app/Hooks';
 import { RootState } from '../../../app/Store';
-import { closeOptionsMenu } from '../../../features/game/GameSlice';
+import {
+  closeOptionsMenu,
+  submitButton
+} from '../../../features/game/GameSlice';
 import styles from './OptionsMenu.module.css';
 
 export default function OptionsOverlay() {
@@ -39,7 +42,38 @@ export default function OptionsOverlay() {
   };
 
   const submitOptions = () => {
+    // TODO: implement
     console.log('submitting options');
+  };
+
+  const concedeGame = () => {
+    // TODO: implement
+    console.log('coneding game placeholder');
+  };
+
+  const mainMenu = () => {
+    // TODO: implement
+    console.log('going to main menu');
+  };
+
+  const reportBug = () => {
+    dispatch(submitButton({ button: { mode: 100003 } })); // 100003 - report bug
+    closeOptions();
+  };
+
+  const undoButtonHandler = () => {
+    dispatch(submitButton({ button: { mode: 10000 } })); // 10000 - undo
+    closeOptions();
+  };
+
+  const revertToStartOfThisTurn = () => {
+    // TODO: implement
+    console.log('revert to start of this turn');
+  };
+
+  const revertToStartOfPreviousTurn = () => {
+    // TODO: implement
+    console.log('revert to start of previous turn');
   };
 
   return (
@@ -169,17 +203,33 @@ export default function OptionsOverlay() {
         <div className={styles.column}>
           <h3>Navigation</h3>
           <div className={styles.rightColumn}>
-            <button className={styles.buttonDiv}>Home page</button>
-            <button className={styles.buttonDiv}>Concede</button>
-            <button className={styles.buttonDiv}>Report Bug</button>
-            <button className={styles.buttonDiv}>Undo</button>
-            <button className={styles.buttonDiv}>
-              Revert to Start of this turn
+            <button className={styles.buttonDiv} onClick={mainMenu}>
+              Home page
             </button>
-            <button className={styles.buttonDiv}>
-              Revert to Start of Last Turn
+            <button className={styles.buttonDiv} onClick={concedeGame}>
+              Concede
+            </button>
+            <button className={styles.buttonDiv} onClick={reportBug}>
+              Report Bug
+            </button>
+            <button className={styles.buttonDiv} onClick={undoButtonHandler}>
+              Undo
+            </button>
+            <button
+              className={styles.buttonDiv}
+              onClick={revertToStartOfThisTurn}
+            >
+              Revert to Start of This turn
+            </button>
+            <button
+              className={styles.buttonDiv}
+              onClick={revertToStartOfPreviousTurn}
+            >
+              Revert to Start of Previous Turn
             </button>
           </div>
+          <h3>Invite your friends to spectate</h3>
+          <div>LINKLINKLINK have a button to press</div>
         </div>
       </div>
     </div>
