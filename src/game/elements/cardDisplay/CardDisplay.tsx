@@ -8,6 +8,7 @@ import {
 } from '../../../features/game/GameSlice';
 import styles from './CardDisplay.module.css';
 import classNames from 'classnames';
+import GemSlider from '../gemSlider/GemSlider';
 
 export interface CardProp {
   card?: Card;
@@ -41,7 +42,6 @@ export default function CardDisplay(prop: CardProp) {
     if (card === undefined) {
       return;
     }
-    console.log('clicked');
     dispatch(playCard({ cardParams: card }));
   }
 
@@ -121,8 +121,16 @@ export default function CardDisplay(prop: CardProp) {
             <div>{card.countersMap?.life}</div>
           </div>
         )}
+        {!!Number(card.countersMap?.attack) && (
+          <div className={styles.attackCounter}>
+            <div>{card.countersMap?.attack}</div>
+          </div>
+        )}
         {card.label !== undefined && card.label !== '' && (
           <div className={styles.label}>{card.label}</div>
+        )}
+        {card.gem !== 'none' && (
+          <GemSlider gem={card.gem} cardID={card.actionDataOverride} />
         )}
       </div>
     </div>

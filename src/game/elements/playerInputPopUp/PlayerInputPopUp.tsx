@@ -19,7 +19,16 @@ export default function PlayerInputPopUp() {
   );
 
   useEffect(() => {
-    setCheckedState(new Array(inputPopUp?.multiChooseText?.length).fill(false));
+    const cardsArrLength =
+      inputPopUp?.popup?.cards?.length !== undefined
+        ? inputPopUp?.popup?.cards?.length
+        : 0;
+    const optionsArrLength =
+      inputPopUp?.multiChooseText?.length !== undefined
+        ? inputPopUp?.multiChooseText?.length
+        : 0;
+    const checkBoxLength = Math.max(cardsArrLength, optionsArrLength);
+    setCheckedState(new Array(checkBoxLength).fill(false));
   }, [inputPopUp]);
 
   const dispatch = useAppDispatch();
@@ -53,6 +62,15 @@ export default function PlayerInputPopUp() {
         }
       }
     }
+    if (inputPopUp.popup?.cards) {
+      for (let i = 0; i < checkedState.length; i++) {
+        if (inputPopUp.popup.cards[i]) {
+          extraParams += checkedState[i]
+            ? `&chk${i}=${inputPopUp.popup.cards[i].actionDataOverride}`
+            : '';
+        }
+      }
+    }
     dispatch(
       submitMultiButton({
         mode: inputPopUp.formOptions?.mode,
@@ -75,8 +93,24 @@ export default function PlayerInputPopUp() {
     );
   });
 
+  // cards
   const selectCard = inputPopUp.popup?.cards?.map((card, ix) => {
-    return (
+    return inputPopUp.choiceOptions == 'checkbox' ? (
+      <div
+        key={ix.toString()}
+        className={styles.cardDiv}
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          handleCheckBoxChange(Number(card.actionDataOverride));
+        }}
+      >
+        <CardDisplay
+          card={{ borderColor: checkedState[ix] ? '6' : '', ...card }}
+          preventUseOnClick
+        />
+      </div>
+    ) : (
       <div className={styles.cardDiv} key={ix.toString()}>
         <CardDisplay card={card} />
       </div>
@@ -129,21 +163,29 @@ export default function PlayerInputPopUp() {
         ) : null}
       </div>
       <div className={styles.contentContainer}>
-        {selectCard}
-        {buttons}
-        {inputPopUp.formOptions ? (
-          <form>
-            {checkboxes}
-            <div
-              className={styles.buttonDiv}
-              onClick={() => {
-                checkBoxSubmit();
-              }}
-            >
-              {inputPopUp.formOptions.caption}
-            </div>
-          </form>
-        ) : null}
+        <form className={styles.form}>
+          {selectCard?.length != 0 ? (
+            <div className={styles.cardList}>{selectCard}</div>
+          ) : null}
+          {buttons?.length != 0 ? (
+            <div className={styles.buttonList}>{buttons}</div>
+          ) : null}
+          <div>
+            {inputPopUp.formOptions ? (
+              <div>
+                {checkboxes?.length != 0 ? <div>{checkboxes}</div> : null}
+                <div
+                  className={styles.buttonDiv}
+                  onClick={() => {
+                    checkBoxSubmit();
+                  }}
+                >
+                  {inputPopUp.formOptions.caption}
+                </div>
+              </div>
+            ) : null}
+          </div>
+        </form>
       </div>
     </div>
   );

@@ -31,6 +31,14 @@
   margin: 0px;
 }
 
+.buttonList {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 1vh;
+}
+
 .buttonDiv {
   background-color: goldenrod;
   color: black;
@@ -44,6 +52,7 @@
   border: 1px solid goldenrod;
   flex-basis: auto;
   padding: 0vh 1vh;
+  width: fit-content;
 }
 
 .buttonDiv:hover {
@@ -79,4 +88,24 @@
   flex-wrap: wrap;
   overflow: auto;
   height: 100%;
+  padding-top: 0.5em;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 1vh;
+}
+
+.cardList {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 1vh;
+}
+
+.checkBoxRow:last-child {
+  padding-bottom: 2vh;
 }
