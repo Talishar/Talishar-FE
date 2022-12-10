@@ -63,14 +63,15 @@ Otherwise try to keep everything as small as possible, Reacty-containers. And pu
 
 Get access to the talishar beta server (speak to Nate about getting access) and get the IP, add it to your `.ssh/config` add your key and make life nice n easy.
 
-Anyway, I am checking `src/Constants.ts` to make sure everything is pointing toward the beta site, then
+First, check `src/Constants.ts` to make sure everything is pointing toward the beta site. Tight now the [Beta client](https://beta.talishar.net/ReactClient/) is deployed from the `/build` directory, inside the repo, on the beta server.
+
+So go to the repo root directory of the beta server, make sure you've checked out and pulled the branch you want to deploy to beta, and then:
 
 ```
-npm run build-for-beta
+npm run build
 ```
-makes a development build and puts it in `/dist` folder. I then use `rsync` to copy it to the correct folder in the Talishar beta server.
 
-[Get on the beta](https://beta.talishar.net/ReactClient/) and you're good to go!
+the `/build` output directory is automatically served. There's only one active beta at a time this way, but it's better than nowt.
 
 ## The plan for later:
 
