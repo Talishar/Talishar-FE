@@ -21,6 +21,11 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## Requirements / How to install:
 
+### Prerequesites:
+ - node.js, and preferably some way to manage node installs like volta
+ - git
+ - basic knowledge of the command line / terminal
+
 Github and git installed first.
 [Node.js](https://nodejs.org/en/) installed. (latest version, 16.0+)
 
