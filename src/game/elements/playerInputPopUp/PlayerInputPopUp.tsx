@@ -8,7 +8,6 @@ import { RootState } from '../../../app/Store';
 import styles from './PlayerInputPopUp.module.css';
 import Button from '../../../features/Button';
 import CardDisplay from '../cardDisplay/CardDisplay';
-import { input } from '@testing-library/user-event/dist/types/event';
 
 export default function PlayerInputPopUp() {
   const inputPopUp = useAppSelector(
