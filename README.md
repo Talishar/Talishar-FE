@@ -24,6 +24,7 @@ This is a new front end client for talishar.net - completely separate from the b
  - node.js (currently 18.12.1)
  - git
  - basic knowledge of the command line / terminal
+   * If you're on windows, you may want to consider downloading Windows Powershell
 
 ```
 git clone https://github.com/Talishar/Talishar-FE
