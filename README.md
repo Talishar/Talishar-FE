@@ -47,7 +47,7 @@ If you have problems running the development server, come to the discord and ask
 
 ### Important!
 
-In the file `src/features/game/GameSlice.ts` you'll need to modify `queryURL` so that the port is the same as what you're running for the php BE. (We need to do some things to make this less janky, bear with us!)
+In the file `src/Constants.ts` you'll need to modify `queryURL` so that the port is the same as what you're running for the php BE. (We need to do some things to make this less janky, bear with us!)
 
 ## Optional happy fun things:
 
