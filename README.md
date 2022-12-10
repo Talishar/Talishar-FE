@@ -66,7 +66,7 @@ Get access to the talishar beta server (speak to Nate about getting access) and 
 Anyway, I am checking `src/Constants.ts` to make sure everything is pointing toward the beta site, then
 
 ```
-npm build-for-beta
+npm run build-for-beta
 ```
 makes a development build and puts it in `/dist` folder. I then use `rsync` to copy it to the correct folder in the Talishar beta server.
 
