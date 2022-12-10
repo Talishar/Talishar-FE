@@ -121,6 +121,11 @@ export default function CardDisplay(prop: CardProp) {
             <div>{card.countersMap?.life}</div>
           </div>
         )}
+        {!!Number(card.countersMap?.attack) && (
+          <div className={styles.attackCounter}>
+            <div>{card.countersMap?.attack}</div>
+          </div>
+        )}
         {card.label !== undefined && card.label !== '' && (
           <div className={styles.label}>{card.label}</div>
         )}
