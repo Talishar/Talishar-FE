@@ -8,6 +8,7 @@ import {
 } from '../../../features/game/GameSlice';
 import styles from './CardDisplay.module.css';
 import classNames from 'classnames';
+import GemSlider from '../gemSlider/GemSlider';
 
 export interface CardProp {
   card?: Card;
@@ -122,6 +123,9 @@ export default function CardDisplay(prop: CardProp) {
         )}
         {card.label !== undefined && card.label !== '' && (
           <div className={styles.label}>{card.label}</div>
+        )}
+        {card.gem !== 'none' && (
+          <GemSlider gem={card.gem} cardID={card.actionDataOverride} />
         )}
       </div>
     </div>

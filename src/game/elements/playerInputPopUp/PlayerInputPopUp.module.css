@@ -106,10 +106,6 @@
   gap: 1vh;
 }
 
-.checkBoxRow {
-
-}
-
 .checkBoxRow:last-child {
   padding-bottom: 2vh;
 }
