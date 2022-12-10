@@ -31,6 +31,14 @@
   margin: 0px;
 }
 
+.buttonList {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 1vh;
+}
+
 .buttonDiv {
   background-color: goldenrod;
   color: black;
@@ -44,7 +52,7 @@
   border: 1px solid goldenrod;
   flex-basis: auto;
   padding: 0vh 1vh;
-  max-width: 25vh;
+  width: fit-content;
 }
 
 .buttonDiv:hover {
@@ -96,4 +104,12 @@
   flex-wrap: wrap;
   align-items: flex-start;
   gap: 1vh;
+}
+
+.checkBoxRow {
+
+}
+
+.checkBoxRow:last-child {
+  padding-bottom: 2vh;
 }

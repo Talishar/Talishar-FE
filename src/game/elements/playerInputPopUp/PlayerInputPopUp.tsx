@@ -165,12 +165,16 @@ export default function PlayerInputPopUp() {
       </div>
       <div className={styles.contentContainer}>
         <form className={styles.form}>
-          <div className={styles.cardList}>{selectCard}</div>
-          <div>{buttons}</div>
+          {selectCard?.length != 0 ? (
+            <div className={styles.cardList}>{selectCard}</div>
+          ) : null}
+          {buttons?.length != 0 ? (
+            <div className={styles.buttonList}>{buttons}</div>
+          ) : null}
           <div>
             {inputPopUp.formOptions ? (
               <div>
-                {checkboxes}
+                {checkboxes?.length != 0 ? <div>{checkboxes}</div> : null}
                 <div
                   className={styles.buttonDiv}
                   onClick={() => {
