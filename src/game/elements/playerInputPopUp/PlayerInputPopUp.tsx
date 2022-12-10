@@ -19,7 +19,16 @@ export default function PlayerInputPopUp() {
   );
 
   useEffect(() => {
-    setCheckedState(new Array(inputPopUp?.multiChooseText?.length).fill(false));
+    const cardsArrLength =
+      inputPopUp?.popup?.cards?.length !== undefined
+        ? inputPopUp?.popup?.cards?.length
+        : 0;
+    const optionsArrLength =
+      inputPopUp?.multiChooseText?.length !== undefined
+        ? inputPopUp?.multiChooseText?.length
+        : 0;
+    const checkBoxLength = Math.max(cardsArrLength, optionsArrLength);
+    setCheckedState(new Array(checkBoxLength).fill(false));
   }, [inputPopUp]);
 
   const dispatch = useAppDispatch();
@@ -75,8 +84,25 @@ export default function PlayerInputPopUp() {
     );
   });
 
+  // cards
   const selectCard = inputPopUp.popup?.cards?.map((card, ix) => {
-    return (
+    return inputPopUp.choiceOptions == 'checkbox' ? (
+      <div
+        key={ix.toString()}
+        className={styles.cardDiv}
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          handleCheckBoxChange(Number(card.actionDataOverride));
+          console.log('whoop clicky click woo ' + card.actionDataOverride);
+        }}
+      >
+        <CardDisplay
+          card={{ borderColor: checkedState[ix] ? '6' : '', ...card }}
+          preventUseOnClick
+        />
+      </div>
+    ) : (
       <div className={styles.cardDiv} key={ix.toString()}>
         <CardDisplay card={card} />
       </div>
@@ -148,3 +174,7 @@ export default function PlayerInputPopUp() {
     </div>
   );
 }
+
+const CardCheckBoxContainer = (props: Props) => {
+  return <div>{props.children}</div>;
+};

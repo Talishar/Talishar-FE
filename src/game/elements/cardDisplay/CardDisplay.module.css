@@ -114,6 +114,9 @@
 }
 
 .img {
+  border-color: black;
+  border-width: 1px;
+  border-style: solid;
   box-shadow: 3px 3px 5px black;
   position: relative;
   left: 2px;
@@ -121,6 +124,7 @@
   object-fit: contain;
   height: 100%;
   border-radius: 10px;
+  margin: -2px -4px -2px 0px;
 }
 
 .disabled {

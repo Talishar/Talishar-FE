@@ -41,7 +41,6 @@ export default function CardDisplay(prop: CardProp) {
     if (card === undefined) {
       return;
     }
-    console.log('clicked');
     dispatch(playCard({ cardParams: card }));
   }
 

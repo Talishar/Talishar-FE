@@ -161,8 +161,6 @@ export default function PlayerHandCard(props: handCard) {
     [styles.border6]: card.borderColor == '6'
   });
 
-  console.log(imgStyles);
-
   return (
     <div className={styles.handCard}>
       <Draggable
