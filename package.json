@@ -54,9 +54,39 @@
     ]
   },
   "jest": {
+    "roots": [
+      "<rootDir>/src"
+    ],
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx,ts,tsx}",
+      "!src/**/*.d.ts",
+      "!src/mocks/**"
+    ],
+    "setupFilesAfterEnv": [
+      "./config/jest/setupTests.js"
+    ],
+    "testEnvironment": "jsdom",
+    "modulePaths": [
+      "<rootDir>/src"
+    ],
+    "transform": {
+      "^.+\\.(ts|js|tsx|jsx)$": "@swc/jest",
+      "^.+\\.css$": "<rootDir>/config/jest/cssTransform.js",
+      "^(?!.*\\.(js|jsx|mjs|cjs|ts|tsx|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
+    },
     "transformIgnorePatterns": [
-      "!node_modules/"
-    ]
+      "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|mjs|cjs|ts|tsx)$",
+      "^.+\\.module\\.(css|sass|scss)$"
+    ],
+    "moduleNameMapper": {
+      "^react-native$": "react-native-web",
+      "^.+\\.module\\.(css|sass|scss)$": "identity-obj-proxy"
+    },
+    "watchPlugins": [
+      "jest-watch-typeahead/filename",
+      "jest-watch-typeahead/testname"
+    ],
+    "resetMocks": true
   },
   "devDependencies": {
     "@babel/core": "^7.19.1",
@@ -68,9 +98,13 @@
     "@typescript-eslint/parser": "^5.35.1",
     "@vitejs/plugin-react": "^1.1.1",
     "babel-jest": "^29.0.3",
+    "camelcase": "^6.3.0",
     "eslint": "^8.22.0",
     "eslint-config-prettier": "^8.5.0",
+    "identity-obj-proxy": "^3.0.0",
     "jest": "^29.0.3",
+    "jest-environment-jsdom": "^29.3.1",
+    "jest-watch-typeahead": "^2.2.1",
     "vite": "^2.9.15",
     "vite-plugin-svgr": "^2.2.2",
     "vite-tsconfig-paths": "^4.0.2"
