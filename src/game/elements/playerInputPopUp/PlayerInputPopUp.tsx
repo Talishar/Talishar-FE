@@ -8,6 +8,7 @@ import { RootState } from '../../../app/Store';
 import styles from './PlayerInputPopUp.module.css';
 import Button from '../../../features/Button';
 import CardDisplay from '../cardDisplay/CardDisplay';
+import { input } from '@testing-library/user-event/dist/types/event';
 
 export default function PlayerInputPopUp() {
   const inputPopUp = useAppSelector(
@@ -62,6 +63,15 @@ export default function PlayerInputPopUp() {
         }
       }
     }
+    if (inputPopUp.popup?.cards) {
+      for (let i = 0; i < checkedState.length; i++) {
+        if (inputPopUp.popup.cards[i]) {
+          extraParams += checkedState[i]
+            ? `&chk${i}=${inputPopUp.popup.cards[i].actionDataOverride}`
+            : '';
+        }
+      }
+    }
     dispatch(
       submitMultiButton({
         mode: inputPopUp.formOptions?.mode,
@@ -94,7 +104,6 @@ export default function PlayerInputPopUp() {
           e.preventDefault();
           e.stopPropagation();
           handleCheckBoxChange(Number(card.actionDataOverride));
-          console.log('whoop clicky click woo ' + card.actionDataOverride);
         }}
       >
         <CardDisplay
@@ -155,26 +164,26 @@ export default function PlayerInputPopUp() {
         ) : null}
       </div>
       <div className={styles.contentContainer}>
-        {selectCard}
-        {buttons}
-        {inputPopUp.formOptions ? (
-          <form>
-            {checkboxes}
-            <div
-              className={styles.buttonDiv}
-              onClick={() => {
-                checkBoxSubmit();
-              }}
-            >
-              {inputPopUp.formOptions.caption}
-            </div>
-          </form>
-        ) : null}
+        <form className={styles.form}>
+          <div className={styles.cardList}>{selectCard}</div>
+          <div>{buttons}</div>
+          <div>
+            {inputPopUp.formOptions ? (
+              <div>
+                {checkboxes}
+                <div
+                  className={styles.buttonDiv}
+                  onClick={() => {
+                    checkBoxSubmit();
+                  }}
+                >
+                  {inputPopUp.formOptions.caption}
+                </div>
+              </div>
+            ) : null}
+          </div>
+        </form>
       </div>
     </div>
   );
 }
-
-const CardCheckBoxContainer = (props: Props) => {
-  return <div>{props.children}</div>;
-};

@@ -44,6 +44,7 @@
   border: 1px solid goldenrod;
   flex-basis: auto;
   padding: 0vh 1vh;
+  max-width: 25vh;
 }
 
 .buttonDiv:hover {
@@ -80,4 +81,19 @@
   overflow: auto;
   height: 100%;
   padding-top: 0.5em;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 1vh;
+}
+
+.cardList {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 1vh;
 }
