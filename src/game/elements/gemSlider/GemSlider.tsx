@@ -17,7 +17,6 @@ const GemSlider = (props: GemSlider) => {
   const dispatch = useAppDispatch();
 
   const onClick = () => {
-    console.log('clicked gem');
     dispatch(
       submitButton({ button: { buttonInput: props.cardID, mode: 102 } })
     );
