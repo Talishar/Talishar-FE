@@ -10,6 +10,15 @@
 
 # production
 /build
+dist
+dist-ssr
+
+# dev tooling
+/.vscode/
+/packages/vite/LICENSE
+explorations
+node_modules
+playground-temp
 
 # misc
 .DS_Store
@@ -17,6 +26,14 @@
 .env.development.local
 .env.test.local
 .env.production.local
+.idea
+temp
+TODOs.md
+.eslintcache
+
+*.cpuprofile
+*.local
+*.log
 
 npm-debug.log*
 yarn-debug.log*
