@@ -14,8 +14,8 @@ export default defineConfig({
         target: 'https://beta.talishar.net/game',
         changeOrigin: true,
         secure: false,
-        ws: true,
-        rewrite: (path) => path.replace(/api\/beta/, '')
+        rewrite: (path) => path.replace(/api\/beta\//, '')
+        // ** FOR DEBUGGING THE PROXY **
         // configure: (proxy, _options) => {
         //   proxy.on('error', (err, _req, _res) => {
         //     console.log('proxy error', err);
@@ -36,15 +36,13 @@ export default defineConfig({
         target: 'https://talishar.net/game',
         changeOrigin: true,
         secure: false,
-        ws: true,
-        rewrite: (path) => path.replace(/api\/prod/, '')
+        rewrite: (path) => path.replace(/api\/prod\//, '')
       },
       '/api/dev': {
         target: 'http://localhost:8080/FaBOnline',
         changeOrigin: true,
         secure: false,
-        ws: true,
-        rewrite: (path) => path.replace(/api\/dev/, '')
+        rewrite: (path) => path.replace(/api\/dev\//, '')
       }
     }
   }
