@@ -4,13 +4,13 @@ export const GAME_LIMIT_BETA = 1000;
 
 export const API_URL_BETA = import.meta.env.DEV
   ? `/api/beta/`
-  : 'https://beta.talishar.net/game';
+  : 'https://beta.talishar.net/game/';
 export const API_URL_LIVE = import.meta.env.DEV
   ? `/api/live/`
-  : 'https://talishar.net/game';
+  : 'https://talishar.net/game/';
 export const API_URL_DEV = import.meta.env.DEV
   ? `/api/dev/`
-  : 'https://talishar.net/game';
+  : 'https://talishar.net/game/';
 
 // what playmat is the default
 export const DEFAULT_PLAYMAT = `Default`;
