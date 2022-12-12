@@ -32,11 +32,11 @@ export default defineConfig({
         //   });
         // }
       },
-      '/api/prod': {
+      '/api/live': {
         target: 'https://talishar.net/game',
         changeOrigin: true,
         secure: false,
-        rewrite: (path) => path.replace(/api\/prod\//, '')
+        rewrite: (path) => path.replace(/api\/live\//, '')
       },
       '/api/dev': {
         target: 'http://localhost:8080/FaBOnline',

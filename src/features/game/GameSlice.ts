@@ -7,7 +7,7 @@ import {
   API_URL_BETA,
   API_URL_LIVE,
   API_URL_DEV,
-  GAME_LIMIT_PROD,
+  GAME_LIMIT_LIVE,
   GAME_LIMIT_BETA
 } from '../../constants';
 import Button from '../Button';
@@ -17,7 +17,7 @@ export const nextTurn = createAsyncThunk(
   'game/nextTurn',
   async (params: GameInfo, { getState }) => {
     const queryURL =
-      params.gameID > GAME_LIMIT_PROD
+      params.gameID > GAME_LIMIT_LIVE
         ? `${API_URL_LIVE}GetNextTurn3.php?`
         : params.gameID > GAME_LIMIT_BETA
         ? `${API_URL_BETA}GetNextTurn3.php?`
@@ -72,7 +72,7 @@ export const playCard = createAsyncThunk(
     const gameInfo = game.gameInfo;
 
     const queryURL =
-      gameInfo.gameID > GAME_LIMIT_PROD
+      gameInfo.gameID > GAME_LIMIT_LIVE
         ? `${API_URL_LIVE}ProcessInput2.php?`
         : gameInfo.gameID > GAME_LIMIT_BETA
         ? `${API_URL_BETA}ProcessInput2.php?`
@@ -103,7 +103,7 @@ export const submitButton = createAsyncThunk(
   async (params: { button: Button }, { getState }) => {
     const { game } = getState() as { game: GameState };
     const queryURL =
-      game.gameInfo.gameID > GAME_LIMIT_PROD
+      game.gameInfo.gameID > GAME_LIMIT_LIVE
         ? `${API_URL_LIVE}ProcessInput2.php?`
         : game.gameInfo.gameID > GAME_LIMIT_BETA
         ? `${API_URL_BETA}ProcessInput2.php?`
@@ -133,7 +133,7 @@ export const submitMultiButton = createAsyncThunk(
   async (params: { mode?: number; extraParams: string }, { getState }) => {
     const { game } = getState() as { game: GameState };
     const queryURL =
-      game.gameInfo.gameID > GAME_LIMIT_PROD
+      game.gameInfo.gameID > GAME_LIMIT_LIVE
         ? `${API_URL_LIVE}ProcessInput2.php?`
         : game.gameInfo.gameID > GAME_LIMIT_BETA
         ? `${API_URL_BETA}ProcessInput2.php?`
