@@ -30,7 +30,7 @@
     "build": "vite build",
     "serve": "vite preview",
     "test": "jest",
-    "test-coverage": "jest — collectCoverage —",
+    "test-coverage": "jest --collectCoverage",
     "lint": "eslint . --ext .ts,.tsx",
     "prettier-format": "prettier --config .prettierrc 'src/**/*.{js,jsx,ts,tsx,css,md,json}' --write",
     "build-for-beta": "npm run build && rsync -r --stats ./dist/ talishar-beta:/opt/ReactClientRepo/build/"
