@@ -30,6 +30,7 @@
     "build": "vite build",
     "serve": "vite preview",
     "test": "jest",
+    "test-coverage": "jest --collectCoverage",
     "lint": "eslint . --ext .ts,.tsx",
     "prettier-format": "prettier --config .prettierrc 'src/**/*.{js,jsx,ts,tsx,css,md,json}' --write",
     "build-for-beta": "npm run build && rsync -r --stats ./dist/ talishar-beta:/opt/ReactClientRepo/build/"
@@ -69,7 +70,15 @@
       "<rootDir>/src"
     ],
     "transform": {
-      "^.+\\.(ts|js|tsx|jsx)$": "@swc/jest",
+      "^.+\\.(ts|js|tsx|jsx)$": [
+        "jest-chain-transform",
+        {
+          "transformers": [
+            "../../../config/jest/importMetaEnvTransformer.js",
+            "@swc/jest"
+          ]
+        }
+      ],
       "^.+\\.css$": "<rootDir>/config/jest/cssTransform.js",
       "^(?!.*\\.(js|jsx|mjs|cjs|ts|tsx|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
     },
@@ -104,6 +113,7 @@
     "eslint-config-prettier": "^8.5.0",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^29.0.3",
+    "jest-chain-transform": "^0.0.5",
     "jest-environment-jsdom": "^29.3.1",
     "jest-watch-typeahead": "^2.2.1",
     "vite": "^2.9.15",

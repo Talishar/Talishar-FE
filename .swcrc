@@ -4,8 +4,8 @@
     "target": "es5",
     "parser": {
       "syntax": "typescript",
-      "tsx": true,
-      "decorators": false,
+      "tsx": false,
+      "decorators": true,
       "dynamicImport": false
     },
     "transform": {
