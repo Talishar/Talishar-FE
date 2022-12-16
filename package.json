@@ -123,6 +123,6 @@
   "packageManager": "yarn@3.2.3",
   "homepage": ".",
   "volta": {
-    "node": "18.12.1"
+    "node": "17.9.1"
   }
 }
