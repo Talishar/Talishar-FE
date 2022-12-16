@@ -13,7 +13,7 @@ Visit [Talishar.net](https://talishar.net/) to get playing Flesh & Blood in your
 
 # Getting started with Talishar-FE
 
-This is a new front end client for talishar.net - completely separate from the back end. The players will be using this app to connect to the servers eventually, we hope.
+This is a new front end client for talishar.net - completely separate from the back end. The players will be using this app to connect to the servers eventually.
 
 ## Project
  This is a [Vite](https://vitejs.dev/) single page [React](https://reactjs.org/) App using [Redux](https://redux.js.org/), [Redux Toolkit](https://redux-toolkit.js.org/), and [React Redux](https://react-redux.js.org/) bindings.
