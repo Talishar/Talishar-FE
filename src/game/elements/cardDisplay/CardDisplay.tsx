@@ -9,6 +9,7 @@ import {
 import styles from './CardDisplay.module.css';
 import classNames from 'classnames';
 import GemSlider from '../gemSlider/GemSlider';
+import CountersOverlay from '../countersOverlay/CountersOverlay';
 
 export interface CardProp {
   card?: Card;
@@ -102,39 +103,7 @@ export default function CardDisplay(prop: CardProp) {
       <img src={eqImg} className={imgStyles} />
       <div className={classStyles}></div>
       <div className={equipStatus}></div>
-      <div className={styles.floatCover}>
-        {!!num && (
-          <div className={styles.number}>
-            <div className={styles.text}>{num}</div>
-          </div>
-        )}
-        {!!Number(card.countersMap?.defence) && (
-          <div className={styles.defCounter}>
-            <div>{card.countersMap?.defence}</div>
-          </div>
-        )}
-        {!!Number(card.countersMap?.steam) && (
-          <div className={styles.steamCounter}>
-            <div>{card.countersMap?.steam}</div>
-          </div>
-        )}
-        {!!Number(card.countersMap?.life) && (
-          <div className={styles.lifeCounter}>
-            <div>{card.countersMap?.life}</div>
-          </div>
-        )}
-        {!!Number(card.countersMap?.attack) && (
-          <div className={styles.attackCounter}>
-            <div>{card.countersMap?.attack}</div>
-          </div>
-        )}
-        {card.label !== undefined && card.label !== '' && (
-          <div className={styles.label}>{card.label}</div>
-        )}
-        {card.gem !== 'none' && (
-          <GemSlider gem={card.gem} cardID={card.actionDataOverride} />
-        )}
-      </div>
+      <CountersOverlay {...card} num={num} />
     </div>
   );
 }
