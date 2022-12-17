@@ -29,10 +29,6 @@ export default function CardDisplay(prop: CardProp) {
     return null;
   }
 
-  if (card.counters !== 0 && card.counters != undefined) {
-    num = card.counters;
-  }
-
   const eqImg = `./cardsquares/${card.cardNumber}.webp`;
 
   function onClick() {
@@ -115,6 +111,11 @@ export default function CardDisplay(prop: CardProp) {
         {!!Number(card.countersMap?.defence) && (
           <div className={styles.defCounter}>
             <div>{card.countersMap?.defence}</div>
+          </div>
+        )}
+        {!!Number(card.countersMap?.steam) && (
+          <div className={styles.steamCounter}>
+            <div>{card.countersMap?.steam}</div>
           </div>
         )}
         {!!Number(card.countersMap?.life) && (
