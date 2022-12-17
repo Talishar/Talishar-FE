@@ -3,7 +3,6 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import viteTsconfigPaths from 'vite-tsconfig-paths';
 import svgrPlugin from 'vite-plugin-svgr';
-import GithubActionsReporter from 'vitest-github-actions-reporter';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -50,9 +49,6 @@ export default defineConfig({
   },
   test: {
     globals: true,
-    environment: 'jsdom',
-    reporters: process.env.GITHUB_ACTIONS
-      ? new GithubActionsReporter()
-      : 'default'
+    environment: 'jsdom'
   }
 });
