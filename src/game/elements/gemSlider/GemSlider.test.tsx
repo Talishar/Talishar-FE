@@ -29,3 +29,7 @@ it('is active when gem is "active"', () => {
   const image = document.querySelector('img') as HTMLImageElement;
   expect(image.src).toContain('hexagonRedGemGlow.png');
 });
+
+it('is a test deliberately designed to fail', () => {
+  expect(true).toEqual(false);
+});
