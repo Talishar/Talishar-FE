@@ -3,6 +3,7 @@ import { useAppDispatch, useAppSelector } from '../../../app/Hooks';
 import { RootState } from '../../../app/Store';
 import { clearCardListFocus } from '../../../features/game/GameSlice';
 import CardDisplay from '../../elements/cardDisplay/CardDisplay';
+import { FaTimes } from 'react-icons/fa';
 import styles from './CardListZone.module.css';
 
 export default function CardListZone() {
@@ -28,11 +29,7 @@ export default function CardListZone() {
             <h3 className={styles.title}>{cardList.name}</h3>
           </div>
           <div className={styles.cardListCloseIcon} onClick={closeCardList}>
-            <div>
-              <h3 className={styles.title}>
-                <i className="fa fa-times" aria-hidden="true"></i>
-              </h3>
-            </div>
+            <FaTimes title="close dialog" />
           </div>
         </div>
         <div className={styles.cardListContents}>

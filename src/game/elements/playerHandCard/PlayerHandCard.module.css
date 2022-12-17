@@ -1,18 +1,3 @@
-.handRow {
-  position: fixed;
-  min-width: 10%;
-  max-width: 50%;
-  max-height: 1vh;
-  bottom: 0px;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  justify-content: center;
-  align-items: center;
-  gap: 1vh;
-  user-select: none;
-}
-
 .handCard {
   height: 15vh;
   overflow: visible;
