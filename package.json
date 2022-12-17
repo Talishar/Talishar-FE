@@ -118,7 +118,8 @@
     "jest-watch-typeahead": "^2.2.1",
     "vite": "^2.9.15",
     "vite-plugin-svgr": "^2.2.2",
-    "vite-tsconfig-paths": "^4.0.2"
+    "vite-tsconfig-paths": "^4.0.2",
+    "vitest": "^0.25.8"
   },
   "packageManager": "yarn@3.2.3",
   "homepage": ".",
