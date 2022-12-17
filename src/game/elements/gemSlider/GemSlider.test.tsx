@@ -1,6 +1,3 @@
-/**
- * @vitest-environment jsdom
- */
 import React from 'react';
 import GemSlider from './GemSlider';
 import { renderWithProviders } from '../../../utils/TestUtils';
