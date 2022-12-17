@@ -1,5 +1,8 @@
 import React from 'react';
 import { RootState } from '../../../app/Store';
+import { BiRefresh, BiBullseye, BiShield } from 'react-icons/bi';
+import { HiBolt } from 'react-icons/hi2';
+import { GiZigzagLeaf } from 'react-icons/gi';
 import styles from './CurrentAttack.module.css';
 import attackSymbol from '../../../img/symbols/symbol-attack.png';
 import defSymbol from '../../../img/symbols/symbol-defence.png';
@@ -47,45 +50,28 @@ export default function CurrentAttack() {
         <div className={styles.floatCover}>
           {activeCombatChain.goAgain ? (
             <div className={styles.icon}>
-              <i
-                className="fa fa-refresh"
-                aria-hidden="true"
-                title="Go Again"
-              ></i>
+              <BiRefresh title="Go Again" />
             </div>
           ) : null}
           {activeCombatChain.dominate ? (
             <div className={styles.icon}>
-              <i
-                className="fa fa-bullseye"
-                aria-hidden="true"
-                title="Dominate"
-              ></i>
+              <BiBullseye title="Dominate" />
             </div>
           ) : null}
           {activeCombatChain.overpower ? (
             <div className={styles.icon}>
-              <i
-                className="fa fa-bolt"
-                aria-hidden="true"
-                title="Overpower"
-              ></i>
+              <HiBolt title="Overpower" />
             </div>
           ) : null}
           {activeCombatChain.fused ? (
             <div className={styles.icon}>
-              <i className="fa fa-leaf" aria-hidden="true" title="Fused"></i>
+              <GiZigzagLeaf title="Fused" />
             </div>
           ) : null}
           {activeCombatChain.damagePrevention ? (
             <div className={styles.icon}>
-              <i
-                className="fa fa-shield"
-                aria-hidden="true"
-                title="Damage Prevention"
-              >
-                {activeCombatChain.damagePrevention}
-              </i>
+              <BiShield title="Damage Prevention" />
+              {activeCombatChain.damagePrevention}
             </div>
           ) : null}
         </div>

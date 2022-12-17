@@ -5,6 +5,8 @@ import {
   openOptionsMenu,
   submitButton
 } from '../../../features/game/GameSlice';
+import { FaBars, FaUndo } from 'react-icons/fa';
+import { HiOutlineArrowsExpand } from 'react-icons/hi';
 import styles from './Menu.module.css';
 
 function MenuButton() {
@@ -18,9 +20,10 @@ function MenuButton() {
       <button
         className={styles.btn}
         aria-label="Open main menu"
+        title="options menu"
         onClick={() => toggleMenu()}
       >
-        <i className="fa fa-bars" aria-hidden="true" />
+        <FaBars aria-hidden="true" />
       </button>
     </div>
   );
@@ -35,10 +38,10 @@ function FullScreenButton() {
     <div>
       <button
         className={styles.btn}
-        aria-label="Skip to main navigation"
+        aria-label="Full Screen"
         onClick={() => toggleFullScreen()}
       >
-        <i className="fa fa-arrows-alt" aria-hidden="true" />
+        <HiOutlineArrowsExpand aria-hidden="true" />
       </button>
     </div>
   );
@@ -51,12 +54,8 @@ function UndoButton() {
   };
   return (
     <div>
-      <button
-        className={styles.btn}
-        aria-label="Skip to main navigation"
-        onClick={clickUndo}
-      >
-        <i className="fa fa-undo" aria-hidden="true" />
+      <button className={styles.btn} aria-label="Undo" onClick={clickUndo}>
+        <FaUndo aria-hidden="true" />
       </button>
     </div>
   );
