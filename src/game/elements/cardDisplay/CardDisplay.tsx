@@ -43,6 +43,7 @@ export default function CardDisplay(prop: CardProp) {
       return;
     }
     dispatch(playCard({ cardParams: card }));
+    handleMouseLeave();
   }
 
   const handleMouseEnter = () => {
