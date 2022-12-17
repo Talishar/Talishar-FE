@@ -6,6 +6,7 @@ import {
   closeOptionsMenu,
   submitButton
 } from '../../../features/game/GameSlice';
+import { FaTimes } from 'react-icons/fa';
 import styles from './OptionsMenu.module.css';
 
 export default function OptionsOverlay() {
@@ -84,11 +85,7 @@ export default function OptionsOverlay() {
           (priority settings can be adjusted here)
         </div>
         <div className={styles.optionsMenuCloseIcon} onClick={closeOptions}>
-          <div>
-            <h3 className={styles.title}>
-              <i className="fa fa-times" aria-hidden="true"></i>
-            </h3>
-          </div>
+          <FaTimes title="close options menu" />
         </div>
       </div>
       <div className={styles.optionsContentContainer}>

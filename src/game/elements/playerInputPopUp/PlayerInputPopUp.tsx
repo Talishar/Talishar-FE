@@ -7,6 +7,7 @@ import { useAppSelector, useAppDispatch } from '../../../app/Hooks';
 import { RootState } from '../../../app/Store';
 import styles from './PlayerInputPopUp.module.css';
 import Button from '../../../features/Button';
+import { FaTimes } from 'react-icons/fa';
 import CardDisplay from '../cardDisplay/CardDisplay';
 
 export default function PlayerInputPopUp() {
@@ -154,11 +155,7 @@ export default function PlayerInputPopUp() {
         </div>
         {inputPopUp.popup?.canClose ? (
           <div className={styles.inputPopUpCloseIcon} onClick={onPassTurn}>
-            <div>
-              <h3 className={styles.title}>
-                <i className="fa fa-times" aria-hidden="true"></i>
-              </h3>
-            </div>
+            <FaTimes title="close popup" />
           </div>
         ) : null}
       </div>

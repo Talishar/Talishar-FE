@@ -2,6 +2,7 @@ import React from 'react';
 import { RootState } from '../../../app/Store';
 import styles from './PlayerName.module.css';
 import Player from '../../../interface/Player';
+import { FaCertificate } from 'react-icons/fa';
 import { useAppSelector } from '../../../app/Hooks';
 
 export default function PlayerName(player: Player) {
@@ -19,11 +20,7 @@ export default function PlayerName(player: Player) {
     <div className={styles.playerName}>
       {playerName}
 
-      {isVerified ? (
-        <i className="fa fa-certificate" aria-hidden="true" />
-      ) : (
-        <></>
-      )}
+      {isVerified ? <FaCertificate aria-hidden="true" /> : <></>}
     </div>
   );
 }
