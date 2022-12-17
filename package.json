@@ -27,7 +27,7 @@
     "serve": "vite preview",
     "test": "vitest",
     "test:unit": "vitest",
-    "test-coverage": "vitest --collectCoverage",
+    "test-coverage": "vitest --coverage",
     "lint": "eslint . --ext .ts,.tsx",
     "prettier-format": "prettier --config .prettierrc 'src/**/*.{js,jsx,ts,tsx,css,md,json}' --write",
     "build-for-beta": "npm run build && rsync -r --stats ./dist/ talishar-beta:/opt/ReactClientRepo/build/"
