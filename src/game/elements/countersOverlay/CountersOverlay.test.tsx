@@ -1,6 +1,8 @@
 import React from 'react';
 import CountersOverlay from './CountersOverlay';
 import { renderWithProviders } from '../../../utils/TestUtils';
+import { prettyDOM } from '@testing-library/react';
+import styles from './CountersOverlay.module.css';
 
 it('renders without crashing', () => {
   renderWithProviders(<CountersOverlay cardNumber="WTR001" />);
@@ -26,5 +28,15 @@ it('displays a steam counter', () => {
   );
   const div = doc.getByTitle('1 steam counter(s)');
   expect(div).toBeTruthy();
-  // TODO: Add a test for the BG image
+  expect(div.className).toContain('steamCounter');
+});
+
+it('displays an aim counter', () => {
+  const doc = renderWithProviders(
+    <CountersOverlay cardNumber="WTR001" countersMap={{ aim: 2 }} />
+  );
+  const div = doc.getByTitle('aim counter');
+  expect(div).toBeTruthy();
+  expect(div.className).toContain('aimCounter');
+  expect(doc.queryByText('2')).toBeFalsy();
 });
