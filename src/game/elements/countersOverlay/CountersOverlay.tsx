@@ -78,7 +78,7 @@ export const CountersOverlay = ({
         </div>
       )}
       {!!Number(countersMap?.aim) && (
-        <div className={styles.aim} title={`aim counter`}></div>
+        <div className={styles.aimCounter} title={`aim counter`}></div>
       )}
       {!!num && (
         <div
