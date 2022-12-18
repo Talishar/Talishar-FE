@@ -35,8 +35,26 @@ it('displays an aim counter', () => {
   const doc = renderWithProviders(
     <CountersOverlay cardNumber="WTR001" countersMap={{ aim: 2 }} />
   );
-  const div = doc.getByTitle('aim counter');
+  const div = doc.queryAllByTitle('aim counter');
   expect(div).toBeTruthy();
-  expect(div.className).toContain('aimCounter');
+  expect(div[0].className).toContain('aimCounter');
   expect(doc.queryByText('2')).toBeFalsy();
+});
+
+it('displays some unknown weird counter', () => {
+  const doc = renderWithProviders(
+    <CountersOverlay cardNumber="WTR001" countersMap={{ weirdCounter: 2 }} />
+  );
+  const div = doc.getByText('2');
+  expect(div).toBeTruthy();
+});
+
+it('should trim leading zero from an incorrectly set stringy number', () => {
+  const doc = renderWithProviders(
+    // @ts-ignore: Type error
+    <CountersOverlay cardNumber="WTR001" countersMap={{ newCounter: '02' }} />
+  );
+  const div = doc.getByText('2');
+  expect(div).toBeTruthy();
+  expect(div.textContent).toEqual('2');
 });

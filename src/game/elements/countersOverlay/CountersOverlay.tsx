@@ -29,8 +29,8 @@ export const CountersOverlay = ({
   let numDescriptionFinal = numDescription ?? '';
 
   for (const counter in countersMap) {
-    if (includedCounters.includes(counter)) {
-      numTotal += countersMap[counter];
+    if (!includedCounters.includes(counter)) {
+      numTotal += Number(countersMap[counter]);
       numDescriptionFinal = counter;
     }
   }
@@ -80,7 +80,7 @@ export const CountersOverlay = ({
       {!!Number(countersMap?.aim) && (
         <div className={styles.aimCounter} title={`aim counter`}></div>
       )}
-      {!!num && (
+      {!!numTotal && (
         <div
           className={styles.number}
           title={`${numTotal} ${numDescriptionFinal} counter(s)`}
