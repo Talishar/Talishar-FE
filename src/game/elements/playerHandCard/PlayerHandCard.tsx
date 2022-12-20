@@ -17,7 +17,7 @@ import classNames from 'classnames';
 const HandCurvatureConstant = 8;
 const ScreenPercentageForCardPlayed = 0.25;
 
-export interface handCard {
+export interface HandCard {
   isArsenal?: boolean;
   isGraveyard?: boolean;
   isBanished?: boolean;
@@ -30,7 +30,7 @@ function lerp(start: number, end: number, amt: number) {
   return (1 - amt) * start + amt * end;
 }
 
-export const PlayerHandCard = (props: handCard) => {
+export const PlayerHandCard = (props: HandCard) => {
   const [controlledPosition, setControlledPosition] = useState({ x: 0, y: 0 });
   const [canPopUp, setCanPopup] = useState(true);
   const [dragging, setDragging] = useState(false);
