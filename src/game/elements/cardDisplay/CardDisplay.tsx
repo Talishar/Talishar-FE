@@ -8,7 +8,6 @@ import {
 } from '../../../features/game/GameSlice';
 import styles from './CardDisplay.module.css';
 import classNames from 'classnames';
-import GemSlider from '../gemSlider/GemSlider';
 import CountersOverlay from '../countersOverlay/CountersOverlay';
 
 export interface CardProp {
@@ -22,7 +21,7 @@ export interface CardProp {
 
 export default function CardDisplay(prop: CardProp) {
   const { card, preventUseOnClick } = prop;
-  let { num } = prop;
+  const { num } = prop;
   const dispatch = useAppDispatch();
   const ref = useRef<HTMLDivElement>(null);
 

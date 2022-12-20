@@ -9,9 +9,11 @@ import styles from '../Cardzone.module.css';
 export default function ArsenalZone(prop: Displayrow) {
   const { isPlayer } = prop;
 
-  const arsenalCards = useAppSelector((state: RootState) =>
-    isPlayer ? state.game.playerOne.Arsenal : state.game.playerTwo.Arsenal
-  );
+  const arsenalCards = useAppSelector((state: RootState) => {
+    return isPlayer
+      ? state.game.playerOne.Arsenal
+      : state.game.playerTwo.Arsenal;
+  });
 
   if (
     arsenalCards === undefined ||
