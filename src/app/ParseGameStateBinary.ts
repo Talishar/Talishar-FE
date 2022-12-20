@@ -1,5 +1,5 @@
 import { isFunctionDeclaration } from 'typescript';
-import Card from '../features/Card';
+import { Card } from '../features/Card';
 import CombatChainLink from '../features/CombatChainLink';
 import GameState from '../features/GameState';
 

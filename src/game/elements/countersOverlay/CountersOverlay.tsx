@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import Card from '../../../features/Card';
+import { Card } from '../../../features/Card';
 import styles from './CountersOverlay.module.css';
 import GemSlider from '../gemSlider/GemSlider';
 

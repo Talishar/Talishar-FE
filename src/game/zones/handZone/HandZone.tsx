@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './HandZone.module.css';
 import { RootState } from '../../../app/Store';
 import Player from '../../../interface/Player';
-import Card from '../../../features/Card';
+import { Card } from '../../../features/Card';
 import CardDisplay from '../../elements/cardDisplay/CardDisplay';
 import { useAppSelector } from '../../../app/Hooks';
 

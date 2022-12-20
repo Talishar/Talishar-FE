@@ -1,5 +1,5 @@
 import Button from './Button';
-import Card from './Card';
+import { Card } from './Card';
 import CombatChainLink from './CombatChainLink';
 import GameInfo from './GameInfo';
 import Player from './Player';

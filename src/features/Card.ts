@@ -1,4 +1,4 @@
-export default interface Card {
+export interface Card {
   cardNumber: string; // Card number = card ID (e.g. WTR000 = Heart of Fyendal)
   action?: number; // action = (ProcessInput2 mode)
   overlay?: 'none' | 'disabled'; // overlay = 0 is none, 1 is grayed out/disabled
