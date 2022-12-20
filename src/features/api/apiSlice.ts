@@ -1,10 +1,12 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { API_URL_DEV } from '../../constants';
+import { API_URL_DEV, API_URL_LIVE } from '../../constants';
 
 // Define our single API slice object
 export const apiSlice = createApi({
   reducerPath: 'api',
-  baseQuery: fetchBaseQuery({ baseUrl: API_URL_DEV }),
+  baseQuery: fetchBaseQuery({
+    baseUrl: import.meta.env.DEV ? API_URL_DEV : API_URL_LIVE
+  }),
   endpoints: (builder) => ({
     getPopUpContent: builder.query({
       query: ({ playerNo = 0, gameName = 0, popupType = '', authKey = '' }) => {
