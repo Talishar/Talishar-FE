@@ -10,7 +10,7 @@ import styles from './CardDisplay.module.css';
 import classNames from 'classnames';
 import CountersOverlay from '../countersOverlay/CountersOverlay';
 
-export interface TheCardProp {
+export interface CardProp {
   makeMeBigger?: boolean;
   num?: number;
   name?: string;
@@ -19,7 +19,7 @@ export interface TheCardProp {
   card?: Card;
 }
 
-export const CardDisplay = (prop: TheCardProp) => {
+export const CardDisplay = (prop: CardProp) => {
   const { card, preventUseOnClick } = prop;
   const { num } = prop;
   const dispatch = useAppDispatch();
