@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import Card from '../features/Card';
+import { Card } from '../features/Card';
 import CombatChainLink from '../features/CombatChainLink';
 import GameState from '../features/GameState';
 import Player from '../features/Player';

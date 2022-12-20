@@ -7,7 +7,7 @@ import {
 } from '../../../features/game/GameSlice';
 import { ImShuffle } from 'react-icons/im';
 import { GiPirateGrave, GiFluffySwirl } from 'react-icons/gi';
-import Card from '../../../features/Card';
+import { Card } from '../../../features/Card';
 import styles from './PlayerHandCard.module.css';
 import Draggable, { DraggableData, DraggableEvent } from 'react-draggable';
 import { useAppDispatch } from '../../../app/Hooks';
@@ -17,20 +17,20 @@ import classNames from 'classnames';
 const HandCurvatureConstant = 8;
 const ScreenPercentageForCardPlayed = 0.25;
 
-export interface handCard {
-  card?: Card;
+export interface HandCard {
   isArsenal?: boolean;
   isGraveyard?: boolean;
   isBanished?: boolean;
   handSize: number;
   cardIndex: number;
+  card?: Card;
 }
 
 function lerp(start: number, end: number, amt: number) {
   return (1 - amt) * start + amt * end;
 }
 
-export default function PlayerHandCard(props: handCard) {
+export const PlayerHandCard = (props: HandCard) => {
   const [controlledPosition, setControlledPosition] = useState({ x: 0, y: 0 });
   const [canPopUp, setCanPopup] = useState(true);
   const [dragging, setDragging] = useState(false);
@@ -209,4 +209,6 @@ export default function PlayerHandCard(props: handCard) {
       </Draggable>
     </div>
   );
-}
+};
+
+export default PlayerHandCard;

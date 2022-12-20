@@ -1,7 +1,7 @@
 import React from 'react';
 import { shallowEqual } from 'react-redux';
 import { RootState } from '../../../app/Store';
-import Card from '../../../features/Card';
+import { Card } from '../../../features/Card';
 import styles from './PlayerHand.module.css';
 import PlayerHandCard from '../../elements/playerHandCard/PlayerHandCard';
 import { useAppSelector } from '../../../app/Hooks';

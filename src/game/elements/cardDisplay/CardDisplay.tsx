@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { useAppDispatch } from '../../../app/Hooks';
-import Card from '../../../features/Card';
+import { Card } from '../../../features/Card';
 import {
   clearPopUp,
   playCard,
@@ -8,21 +8,20 @@ import {
 } from '../../../features/game/GameSlice';
 import styles from './CardDisplay.module.css';
 import classNames from 'classnames';
-import GemSlider from '../gemSlider/GemSlider';
 import CountersOverlay from '../countersOverlay/CountersOverlay';
 
 export interface CardProp {
-  card?: Card;
   makeMeBigger?: boolean;
   num?: number;
   name?: string;
   preventUseOnClick?: boolean;
   useCardMode?: number;
+  card?: Card;
 }
 
-export default function CardDisplay(prop: CardProp) {
+export const CardDisplay = (prop: CardProp) => {
   const { card, preventUseOnClick } = prop;
-  let { num } = prop;
+  const { num } = prop;
   const dispatch = useAppDispatch();
   const ref = useRef<HTMLDivElement>(null);
 
@@ -106,4 +105,6 @@ export default function CardDisplay(prop: CardProp) {
       <CountersOverlay {...card} num={num} />
     </div>
   );
-}
+};
+
+export default CardDisplay;

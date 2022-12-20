@@ -16,7 +16,7 @@ export const OfflineTestingGameState: GameState = {
   gameInfo: {
     gameID: 0,
     playerID: 3,
-    authKey: 'db0deb87292a0cc5662e3747221d84034aba2b953eb335d9602b572e1ab5995f',
+    authKey: '',
     lastUpdate: 0
   },
   activePlayer: 1,

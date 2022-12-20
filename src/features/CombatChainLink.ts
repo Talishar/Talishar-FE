@@ -1,5 +1,5 @@
 import { BooleanLiteral } from 'typescript';
-import Card from './Card';
+import { Card } from './Card';
 
 export default interface CombatChainLink {
   attackingCard?: Card;
