@@ -210,3 +210,5 @@ export const PlayerHandCard = (props: handCard) => {
     </div>
   );
 };
+
+export default PlayerHandCard;
