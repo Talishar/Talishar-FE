@@ -7,12 +7,17 @@ import styles from './CurrentAttack.module.css';
 import attackSymbol from '../../../img/symbols/symbol-attack.png';
 import defSymbol from '../../../img/symbols/symbol-defence.png';
 import CardDisplay from '../cardDisplay/CardDisplay';
-import { useAppSelector } from '../../../app/Hooks';
+import { useAppDispatch, useAppSelector } from '../../../app/Hooks';
+import {
+  setCardListFocus,
+  showChainLinkSummary
+} from '../../../features/game/GameSlice';
 
 export default function CurrentAttack() {
   const activeCombatChain = useAppSelector(
     (state: RootState) => state.game.activeChainLink
   );
+  const dispatch = useAppDispatch();
   if (
     activeCombatChain === undefined ||
     activeCombatChain.attackingCard === undefined ||
@@ -20,6 +25,9 @@ export default function CurrentAttack() {
   ) {
     return <div className={styles.currentAttack} />;
   }
+  const attackZoneDisplay = () => {
+    dispatch(showChainLinkSummary());
+  };
 
   const attackValue = activeCombatChain.totalAttack;
   const defValue = activeCombatChain.totalDefence;
@@ -29,7 +37,7 @@ export default function CurrentAttack() {
     <div className={styles.currentAttack}>
       <div className={styles.attDefRow}>
         <div className={styles.attDiv}>{attackValue}</div>
-        <div className={styles.attackSymbol}>
+        <div className={styles.attackSymbol} onClick={attackZoneDisplay}>
           <img
             className={styles.chainSymbols}
             src={attackSymbol}

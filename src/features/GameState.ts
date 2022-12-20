@@ -25,6 +25,8 @@ export default interface GameState {
     cardList?: Card[];
     name?: string;
     active?: boolean;
+    apiCall?: boolean;
+    popupType?: string;
   };
   activeLayers?: {
     active?: boolean;
@@ -87,4 +89,5 @@ export default interface GameState {
     helpText?: string;
     buttons?: Button[];
   };
+  chainLinkSummary?: boolean;
 }

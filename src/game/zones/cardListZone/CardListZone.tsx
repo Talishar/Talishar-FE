@@ -5,13 +5,23 @@ import { clearCardListFocus } from '../../../features/game/GameSlice';
 import CardDisplay from '../../elements/cardDisplay/CardDisplay';
 import { FaTimes } from 'react-icons/fa';
 import styles from './CardListZone.module.css';
+import { useGetPopUpContentQuery } from '../../../features/api/apiSlice';
 
-export default function CardListZone() {
+export const CardListZone = () => {
   const cardList = useAppSelector(
     (state: RootState) => state.game.cardListFocus
   );
+  const gameInfo = useAppSelector((state: RootState) => state.game.gameInfo);
   const dispatch = useAppDispatch();
-  if (cardList === undefined || cardList.cardList === undefined) {
+
+  const { data, isLoading, error } = useGetPopUpContentQuery({
+    gameName: gameInfo.gameID,
+    playerNo: gameInfo.playerID,
+    authKey: gameInfo.authKey,
+    popupType: cardList?.popupType
+  });
+
+  if (cardList === undefined) {
     return null;
   }
 
@@ -19,7 +29,33 @@ export default function CardListZone() {
     dispatch(clearCardListFocus());
   };
 
-  const reversedList = [...cardList.cardList].reverse();
+  let content;
+  const reversedList = cardList.cardList
+    ? [...cardList.cardList].reverse()
+    : undefined;
+
+  if (!cardList.apiCall) {
+    console.log('not api');
+    content = (
+      <div className={styles.cardListContents}>
+        {reversedList &&
+          reversedList.map((card, ix) => {
+            return <CardDisplay card={card} key={ix} />;
+          })}
+      </div>
+    );
+  } else {
+    console.log('is api');
+    if (isLoading) {
+      content = <div>Loading...</div>;
+    } else if (error) {
+      content = <div>{String(error)}</div>;
+    } else {
+      content = (
+        <div className={styles.cardListContents}>{JSON.stringify(data)}</div>
+      );
+    }
+  }
 
   return (
     <div className={styles.emptyOutside} onClick={closeCardList}>
@@ -32,13 +68,10 @@ export default function CardListZone() {
             <FaTimes title="close dialog" />
           </div>
         </div>
-        <div className={styles.cardListContents}>
-          {reversedList &&
-            reversedList.map((card, ix) => {
-              return <CardDisplay card={card} key={ix} />;
-            })}
-        </div>
+        {content}
       </div>
     </div>
   );
-}
+};
+
+export default CardListZone;
