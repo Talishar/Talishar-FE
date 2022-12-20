@@ -10,7 +10,6 @@ export const CardListZone = () => {
   const cardList = useAppSelector(
     (state: RootState) => state.game.cardListFocus
   );
-  const gameInfo = useAppSelector((state: RootState) => state.game.gameInfo);
   const dispatch = useAppDispatch();
 
   if (cardList === undefined) {
@@ -21,7 +20,6 @@ export const CardListZone = () => {
     dispatch(clearCardListFocus());
   };
 
-  let content;
   const reversedList = cardList.cardList
     ? [...cardList.cardList].reverse()
     : undefined;
