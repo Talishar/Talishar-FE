@@ -21,10 +21,11 @@ This is a new front end client for talishar.net - completely separate from the b
 ## Requirements / How to install:
 
 ### Prerequesites:
- - node.js (currently 18.12.1)
+ - [Volta](https://volta.sh/) to manage node installs.
+ - node.js (currently 16.19.0), which would be managed automagically by Volta for you.
  - git
  - basic knowledge of the command line / terminal
-   * If you're on windows, you may want to consider downloading Windows Powershell
+   * If you're on Windows, get Windows Powershell or wsl or something.
 
 ```
 git clone https://github.com/Talishar/Talishar-FE
