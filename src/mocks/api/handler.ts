@@ -1,5 +1,6 @@
 // ./src/mock/api/handler.js
 
+// Build out the mocks for other APIs and stuff for Talishar, this is just an example for one.
 import { rest } from 'msw';
 
 export const handlers = [

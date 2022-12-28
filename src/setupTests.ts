@@ -14,6 +14,7 @@ const store = setupStore();
 
 export const restHandlers = [
   rest.get('https://talishar.net/game/GetPopupAPI.php', (req, res, ctx) => {
+    console.log('calling this API');
     return res(ctx.status(200), ctx.json({ foo: 'bar' }));
   })
 ];
