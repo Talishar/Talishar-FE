@@ -13,9 +13,15 @@ import { setupStore } from './app/Store';
 const store = setupStore();
 
 export const restHandlers = [
-  rest.get('https://talishar.net/game/GetPopupAPI.php', (req, res, ctx) => {
-    console.log('calling this API');
-    return res(ctx.status(200), ctx.json({ foo: 'bar' }));
+  rest.get('api/live/GetPopupAPI.php', (req, res, ctx) => {
+    return res(
+      ctx.status(200),
+      ctx.json({
+        Cards: [
+          { Player: '2', Name: 'Zipper Hit', cardID: 'ARC030', modifier: '4' }
+        ]
+      })
+    );
   })
 ];
 
@@ -23,7 +29,10 @@ const server = setupServer(...restHandlers);
 
 // Establish API mocking before all tests.
 beforeAll(() => {
-  server.listen();
+  console.log('starting server');
+  server.listen({
+    onUnhandledRequest: 'error'
+  });
 });
 
 // Reset any request handlers that we may add during the tests,

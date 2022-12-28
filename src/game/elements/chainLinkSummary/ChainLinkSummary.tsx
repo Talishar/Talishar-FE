@@ -10,6 +10,7 @@ import { FaTimes } from 'react-icons/fa';
 import styles from './ChainLinkSummary.module.css';
 import { useGetPopUpContentQuery } from '../../../features/api/apiSlice';
 import GameInfo from '../../../features/GameInfo';
+import CardTextLink from '../cardTextLink/CardTextLink';
 
 export const ChainLinkSummaryContainer = () => {
   const chainLinkSummary = useAppSelector(
@@ -54,7 +55,19 @@ const ChainLinkSummary = ({
     content = <div>{String(error)}</div>;
   } else {
     content = (
-      <div className={styles.cardListContents}>{JSON.stringify(data)}</div>
+      <div className={styles.cardListContents}>
+        {data.Cards.map((entry: any, ix: number) => {
+          return (
+            <div key={`cardList${ix}`}>
+              <b>
+                <CardTextLink cardName={entry.Name} cardID={entry.cardID} />
+              </b>{' '}
+              gives {entry.modifier > 0 ? '+' : ''}
+              {entry.modifier}
+            </div>
+          );
+        })}
+      </div>
     );
   }
 
