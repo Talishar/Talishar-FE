@@ -18,28 +18,35 @@ export const ChainLinkSummaryContainer = () => {
   );
   const gameInfo = useAppSelector((state: RootState) => state.game.gameInfo);
 
-  if (!chainLinkSummary) {
+  if (!chainLinkSummary || !chainLinkSummary.show) {
     return null;
   }
 
+  const props = { chainLinkIndex: chainLinkSummary.index, ...gameInfo };
   return (
     <div>
-      <ChainLinkSummary {...gameInfo} />
+      <ChainLinkSummary {...props} />
     </div>
   );
 };
+
+interface ChainLinkSummaryProps extends GameInfo {
+  chainLinkIndex?: number;
+}
 
 const ChainLinkSummary = ({
   gameID,
   playerID,
   authKey,
+  chainLinkIndex,
   lastUpdate
-}: GameInfo) => {
+}: ChainLinkSummaryProps) => {
   const { data, isLoading, error } = useGetPopUpContentQuery({
     gameName: gameID,
     playerNo: playerID,
     authKey: authKey,
-    popupType: 'attackSummary',
+    popupType: chainLinkIndex != -1 ? 'chainLinkPopup' : 'attackSummary',
+    stupidPopUpParam: chainLinkIndex ?? -1,
     lastUpdate: lastUpdate
   });
   const dispatch = useAppDispatch();
@@ -56,17 +63,21 @@ const ChainLinkSummary = ({
   } else {
     content = (
       <div className={styles.cardListContents}>
-        {data.Cards.map((entry: any, ix: number) => {
-          return (
-            <div key={`cardList${ix}`}>
-              <b>
-                <CardTextLink cardName={entry.Name} cardID={entry.cardID} />
-              </b>{' '}
-              gives {entry.modifier > 0 ? '+' : ''}
-              {entry.modifier}
-            </div>
-          );
-        })}
+        {data.Cards != undefined ? (
+          data.Cards.map((entry: any, ix: number) => {
+            return (
+              <div key={`cardList${ix}`}>
+                <b>
+                  <CardTextLink cardName={entry.Name} cardID={entry.cardID} />
+                </b>{' '}
+                gives {entry.modifier > 0 ? '+' : ''}
+                {entry.modifier}
+              </div>
+            );
+          })
+        ) : (
+          <div>{JSON.stringify(data)}</div>
+        )}
       </div>
     );
   }

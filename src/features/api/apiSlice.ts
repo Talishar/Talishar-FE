@@ -38,7 +38,15 @@ export const apiSlice = createApi({
   baseQuery: dynamicBaseQuery,
   endpoints: (builder) => ({
     getPopUpContent: builder.query({
-      query: ({ playerNo = 0, gameName = 0, popupType = '', authKey = '' }) => {
+      query: ({
+        playerNo = 0,
+        gameName = 0,
+        popupType = '',
+        authKey = '',
+        stupidPopUpParam = 0
+      }) => {
+        const type =
+          popupType + (stupidPopUpParam == -1 ? '' : `-${stupidPopUpParam}`);
         return {
           url: 'GetPopupAPI.php',
           method: 'GET',
@@ -46,7 +54,7 @@ export const apiSlice = createApi({
             gameName: gameName,
             playerID: playerNo,
             authKey: authKey,
-            popupType: popupType
+            popupType: type
           }
         };
       }

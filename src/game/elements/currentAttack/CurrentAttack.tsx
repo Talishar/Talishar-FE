@@ -26,7 +26,7 @@ export default function CurrentAttack() {
     return <div className={styles.currentAttack} />;
   }
   const attackZoneDisplay = () => {
-    dispatch(showChainLinkSummary());
+    dispatch(showChainLinkSummary({ chainLink: -1 }));
   };
 
   const attackValue = activeCombatChain.totalAttack;

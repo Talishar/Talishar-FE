@@ -231,11 +231,17 @@ export const gameSlice = createSlice({
           cardObj.actionDataOverride != action.payload.card.actionDataOverride
       );
     },
-    showChainLinkSummary: (state) => {
-      state.chainLinkSummary = true;
+    showChainLinkSummary: (
+      state,
+      action: PayloadAction<{ chainLink?: number }>
+    ) => {
+      state.chainLinkSummary = {
+        show: true,
+        index: action?.payload.chainLink ?? -1
+      };
     },
     hideChainLinkSummary: (state) => {
-      state.chainLinkSummary = false;
+      state.chainLinkSummary = {};
     }
   },
   // The `extraReducers` field lets the slice handle actions defined elsewhere,

@@ -89,5 +89,8 @@ export default interface GameState {
     helpText?: string;
     buttons?: Button[];
   };
-  chainLinkSummary?: boolean;
+  chainLinkSummary?: {
+    show?: boolean;
+    index?: number;
+  };
 }
