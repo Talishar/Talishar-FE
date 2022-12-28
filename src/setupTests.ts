@@ -4,11 +4,21 @@
 // learn more: https://github.com/testing-library/jest-dom
 import '@testing-library/jest-dom/extend-expect';
 import '@testing-library/jest-dom';
-import { server } from './mocks/api/server';
+import 'whatwg-fetch';
+import { setupServer } from 'msw/node';
+import { rest } from 'msw';
 import { apiSlice } from './features/api/apiSlice';
 import { setupStore } from './app/Store';
 
 const store = setupStore();
+
+export const restHandlers = [
+  rest.get('https://talishar.net/game/GetPopupAPI.php', (req, res, ctx) => {
+    return res(ctx.status(200), ctx.json({ foo: 'bar' }));
+  })
+];
+
+const server = setupServer(...restHandlers);
 
 // Establish API mocking before all tests.
 beforeAll(() => {
