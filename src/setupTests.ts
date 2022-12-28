@@ -29,10 +29,7 @@ const server = setupServer(...restHandlers);
 
 // Establish API mocking before all tests.
 beforeAll(() => {
-  console.log('starting server');
-  server.listen({
-    onUnhandledRequest: 'error'
-  });
+  server.listen();
 });
 
 // Reset any request handlers that we may add during the tests,
