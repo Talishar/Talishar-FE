@@ -1,11 +1,7 @@
 import React from 'react';
 import { useAppDispatch, useAppSelector } from '../../../app/Hooks';
 import { RootState } from '../../../app/Store';
-import {
-  clearCardListFocus,
-  hideChainLinkSummary
-} from '../../../features/game/GameSlice';
-import CardDisplay from '../cardDisplay/CardDisplay';
+import { hideChainLinkSummary } from '../../../features/game/GameSlice';
 import { FaTimes } from 'react-icons/fa';
 import styles from './ChainLinkSummary.module.css';
 import { useGetPopUpContentQuery } from '../../../features/api/apiSlice';
@@ -46,7 +42,7 @@ const ChainLinkSummary = ({
     playerNo: playerID,
     authKey: authKey,
     popupType: chainLinkIndex != -1 ? 'chainLinkPopup' : 'attackSummary',
-    stupidPopUpParam: chainLinkIndex ?? -1,
+    index: chainLinkIndex,
     lastUpdate: lastUpdate
   });
   const dispatch = useAppDispatch();

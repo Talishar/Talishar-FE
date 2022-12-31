@@ -39,22 +39,21 @@ export const apiSlice = createApi({
   endpoints: (builder) => ({
     getPopUpContent: builder.query({
       query: ({
-        playerNo = 0,
-        gameName = 0,
+        playerID = 0,
+        gameID = 0,
         popupType = '',
         authKey = '',
-        stupidPopUpParam = 0
+        index = 0
       }) => {
-        const type =
-          popupType + (stupidPopUpParam == -1 ? '' : `-${stupidPopUpParam}`);
         return {
           url: 'GetPopupAPI.php',
           method: 'GET',
           params: {
-            gameName: gameName,
-            playerID: playerNo,
+            gameName: gameID,
+            playerID: playerID,
             authKey: authKey,
-            popupType: type
+            popupType: popupType,
+            index: index
           }
         };
       }

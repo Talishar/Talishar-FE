@@ -18,3 +18,7 @@ export const DEFAULT_PLAYMAT = `Default`;
 // How long in ms for a click versus 'long press'
 // TODO: make this user definable
 export const LONG_PRESS_TIMER = 250;
+
+// BE query enums:
+export const PLAYER_OPTIONS = 'mySettings';
+export const END_GAME_STATS = 'myStatsPopup';
