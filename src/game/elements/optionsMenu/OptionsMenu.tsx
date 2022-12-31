@@ -292,7 +292,7 @@ export default function OptionsOverlay() {
       <div className={styles.optionsTitleContainer}>
         <div className={styles.optionsTitle}>
           <h2 className={styles.title}>Main Options</h2>
-          (priority settings can be adjusted aaaa here)
+          (priority settings can be adjusted here)
         </div>
         <div className={styles.optionsMenuCloseIcon} onClick={closeOptions}>
           <FaTimes title="close options menu" />
