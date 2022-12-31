@@ -11,14 +11,16 @@ export default function ChainLinks() {
   const oldCombatChain = useAppSelector(
     (state: RootState) => state.game.oldCombatChain
   );
-  if (oldCombatChain === undefined || oldCombatChain.length === 0) {
-    return <div className={styles.chainLinksRow} />;
-  }
+
   const dispatch = useAppDispatch();
 
   const clickChainLink = (key: number) => {
     dispatch(showChainLinkSummary({ chainLink: key }));
   };
+
+  if (oldCombatChain === undefined || oldCombatChain.length === 0) {
+    return <div className={styles.chainLinksRow} />;
+  }
 
   return (
     <div className={styles.chainLinksRow}>
