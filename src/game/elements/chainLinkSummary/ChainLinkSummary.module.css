@@ -35,7 +35,6 @@
   justify-content: flex-start;
   align-items: flex-start;
   align-content: flex-start;
-  flex-wrap: wrap;
   gap: 1vh;
   overflow-y: auto;
   height: auto;
@@ -65,4 +64,20 @@
   width: 100%;
   height: 100%;
   z-index: 100;
+}
+
+.leftColumn {
+ width: 10vh;
+}
+
+.midColumn {
+  width: 50vh;
+}
+
+.table {
+  width: 100%
+}
+
+.column {
+ text-align: center;
 }

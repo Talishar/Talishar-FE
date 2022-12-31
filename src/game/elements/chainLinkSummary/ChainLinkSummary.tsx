@@ -7,6 +7,8 @@ import styles from './ChainLinkSummary.module.css';
 import { useGetPopUpContentQuery } from '../../../features/api/apiSlice';
 import GameInfo from '../../../features/GameInfo';
 import CardTextLink from '../cardTextLink/CardTextLink';
+import { Effect } from '../effects/Effects';
+import { Card } from '../../../features/Card';
 
 export const ChainLinkSummaryContainer = () => {
   const chainLinkSummary = useAppSelector(
@@ -38,8 +40,8 @@ const ChainLinkSummary = ({
   lastUpdate
 }: ChainLinkSummaryProps) => {
   const { data, isLoading, error } = useGetPopUpContentQuery({
-    gameName: gameID,
-    playerNo: playerID,
+    gameID: gameID,
+    playerID: playerID,
     authKey: authKey,
     popupType: chainLinkIndex != -1 ? 'chainLinkPopup' : 'attackSummary',
     index: chainLinkIndex,
@@ -59,21 +61,32 @@ const ChainLinkSummary = ({
   } else {
     content = (
       <div className={styles.cardListContents}>
-        {data.Cards != undefined ? (
-          data.Cards.map((entry: any, ix: number) => {
-            return (
-              <div key={`cardList${ix}`}>
-                <b>
-                  <CardTextLink cardName={entry.Name} cardID={entry.cardID} />
-                </b>{' '}
-                gives {entry.modifier > 0 ? '+' : ''}
-                {entry.modifier}
-              </div>
-            );
-          })
-        ) : (
-          <div>{JSON.stringify(data)}</div>
-        )}
+        <table className={styles.table}>
+          <th className={styles.leftColumn}></th>
+          <th className={styles.midColumn}>Card</th>
+          <th className={styles.rightColumn}>Effect</th>
+          {data.Cards != undefined ? (
+            data.Cards.map((entry: any, ix: number) => {
+              const card: Card = { cardNumber: entry.cardID };
+              return (
+                <tr key={`cardList${ix}`}>
+                  <td className={styles.column}>
+                    <Effect card={card} />
+                  </td>
+                  <td className={styles.column}>
+                    <CardTextLink cardName={entry.Name} cardID={entry.cardID} />
+                  </td>
+                  <td className={styles.column}>
+                    {entry.modifier > 0 ? '+' : ''}
+                    {entry.modifier} attack or def
+                  </td>
+                </tr>
+              );
+            })
+          ) : (
+            <div>{JSON.stringify(data)}</div>
+          )}
+        </table>
       </div>
     );
   }

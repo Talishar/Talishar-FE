@@ -47,6 +47,7 @@ export const CardTextLink = ({ cardID, cardName }: CardTextLinkProp) => {
       onTouchStart={onTouchStart}
       onTouchEnd={onTouchEnd}
       ref={ref}
+      className={styles.cardText}
     >
       {cardName}
     </span>

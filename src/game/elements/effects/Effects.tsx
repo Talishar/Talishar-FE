@@ -12,7 +12,7 @@ export interface CardProp {
   name?: string;
 }
 
-function Effect(prop: CardProp) {
+export function Effect(prop: CardProp) {
   const src = `./crops/${prop.card.cardNumber}_cropped.png`;
   const ref = useRef<HTMLDivElement>(null);
   const dispatch = useAppDispatch();
