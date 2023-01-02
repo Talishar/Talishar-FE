@@ -4,6 +4,7 @@ import { render } from '@testing-library/react';
 import type { RenderOptions } from '@testing-library/react';
 import type { PreloadedState } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
+import { apiSlice } from '../features/api/apiSlice';
 
 import { AppStore, RootState, setupStore } from '../app/Store';
 
@@ -19,7 +20,10 @@ interface ExtendedRenderOptions extends Omit<RenderOptions, 'queries'> {
 export const renderWithProviders = (
   ui: React.ReactElement,
   {
-    preloadedState = { game: InitialGameState },
+    // @ts-ignore - I know I know...
+    preloadedState = {
+      game: InitialGameState
+    },
     // Automatically create a store instance if no store was passed in
     store = setupStore(preloadedState),
     ...renderOptions

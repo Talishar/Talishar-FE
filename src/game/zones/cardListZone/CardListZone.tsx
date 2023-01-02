@@ -6,12 +6,13 @@ import CardDisplay from '../../elements/cardDisplay/CardDisplay';
 import { FaTimes } from 'react-icons/fa';
 import styles from './CardListZone.module.css';
 
-export default function CardListZone() {
+export const CardListZone = () => {
   const cardList = useAppSelector(
     (state: RootState) => state.game.cardListFocus
   );
   const dispatch = useAppDispatch();
-  if (cardList === undefined || cardList.cardList === undefined) {
+
+  if (cardList === undefined) {
     return null;
   }
 
@@ -19,7 +20,9 @@ export default function CardListZone() {
     dispatch(clearCardListFocus());
   };
 
-  const reversedList = [...cardList.cardList].reverse();
+  const reversedList = cardList.cardList
+    ? [...cardList.cardList].reverse()
+    : undefined;
 
   return (
     <div className={styles.emptyOutside} onClick={closeCardList}>
@@ -41,4 +44,6 @@ export default function CardListZone() {
       </div>
     </div>
   );
-}
+};
+
+export default CardListZone;

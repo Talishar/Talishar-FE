@@ -51,6 +51,7 @@ export const nextTurn = createAsyncThunk(
         const gs = ParseGameState(parsedData);
         return gs;
       } catch (e) {
+        console.log(e);
         return console.error(e);
       }
     }
@@ -230,6 +231,18 @@ export const gameSlice = createSlice({
         (cardObj) =>
           cardObj.actionDataOverride != action.payload.card.actionDataOverride
       );
+    },
+    showChainLinkSummary: (
+      state,
+      action: PayloadAction<{ chainLink?: number }>
+    ) => {
+      state.chainLinkSummary = {
+        show: true,
+        index: action?.payload.chainLink ?? -1
+      };
+    },
+    hideChainLinkSummary: (state) => {
+      state.chainLinkSummary = {};
     }
   },
   // The `extraReducers` field lets the slice handle actions defined elsewhere,
@@ -318,5 +331,7 @@ export const {
   clearCardListFocus,
   removeCardFromHand,
   openOptionsMenu,
-  closeOptionsMenu
+  closeOptionsMenu,
+  showChainLinkSummary,
+  hideChainLinkSummary
 } = actions;

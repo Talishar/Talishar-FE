@@ -7,6 +7,7 @@ import CardListZone from '../zones/cardListZone/CardListZone';
 import ActiveLayersZone from '../zones/activeLayersZone/ActiveLayersZone';
 import PlayerInputPopUp from '../elements/playerInputPopUp/PlayerInputPopUp';
 import PlayerPrompt from '../elements/playerPrompt/PlayerPrompt';
+import ChainLinkSummaryContainer from '../elements/chainLinkSummary/ChainLinkSummary';
 
 export interface playAreaDimensions {
   dimension: number;
@@ -20,6 +21,7 @@ export function Board() {
       <PlayerPrompt />
       <PlayerBoard />
       <CardListZone />
+      <ChainLinkSummaryContainer />
       <ActiveLayersZone />
       <PlayerInputPopUp />
     </div>
