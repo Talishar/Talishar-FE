@@ -5,8 +5,7 @@ import {
   removeCardFromHand,
   setPopUp
 } from '../../../features/game/GameSlice';
-import { ImShuffle } from 'react-icons/im';
-import { GiPirateGrave, GiFluffySwirl } from 'react-icons/gi';
+import { GiTombstone, GiFluffySwirl, GiCannon } from 'react-icons/gi';
 import { Card } from '../../../features/Card';
 import styles from './PlayerHandCard.module.css';
 import Draggable, { DraggableData, DraggableEvent } from 'react-draggable';
@@ -189,7 +188,7 @@ export const PlayerHandCard = (props: HandCard) => {
               <div className={styles.iconCol}>
                 {isArsenal === true && (
                   <div className={styles.icon}>
-                    <ImShuffle title="arsenal" />
+                    <GiCannon title="arsenal" />
                   </div>
                 )}
                 {isBanished === true && (
@@ -199,7 +198,7 @@ export const PlayerHandCard = (props: HandCard) => {
                 )}
                 {isGraveyard === true && (
                   <div className={styles.icon}>
-                    <GiPirateGrave title="Graveyard" />
+                    <GiTombstone title="Graveyard" />
                   </div>
                 )}
               </div>

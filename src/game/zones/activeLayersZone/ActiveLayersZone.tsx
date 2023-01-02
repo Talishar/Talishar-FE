@@ -28,7 +28,7 @@ export default function ActiveLayersZone() {
       <div className={styles.activeLayersContents}>
         {activeLayer.cardList &&
           activeLayer.cardList.map((card, ix) => {
-            return <CardDisplay card={card} key={ix} />;
+            return <CardDisplay card={card} key={ix} makeMeBigger />;
           })}
       </div>
     </div>
