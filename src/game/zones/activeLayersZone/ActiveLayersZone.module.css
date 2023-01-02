@@ -2,14 +2,14 @@
   position: fixed;
   display: flex;
   flex-direction: column;
-  min-width: 30%;
+  min-width: 45%;
   max-width: 60%;
   top: 10vh;
   bottom: 60vh;
   left: 20%;
   background-color: rgba(0, 0, 0, 0.8);
   padding: 2vh;
-  border: 1px solid goldenrod;
+  border: 1px solid gold;
   border-radius: 20px;
   z-index: 1000;
 }
