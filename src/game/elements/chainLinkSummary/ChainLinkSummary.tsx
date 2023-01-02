@@ -9,12 +9,25 @@ import GameInfo from '../../../features/GameInfo';
 import CardTextLink from '../cardTextLink/CardTextLink';
 import { Effect } from '../effects/Effects';
 import { Card } from '../../../features/Card';
+import EndGameScreen from '../endGameScreen/EndGameScreen';
 
 export const ChainLinkSummaryContainer = () => {
   const chainLinkSummary = useAppSelector(
     (state: RootState) => state.game.chainLinkSummary
   );
   const gameInfo = useAppSelector((state: RootState) => state.game.gameInfo);
+  const turnPhase = useAppSelector(
+    (state: RootState) => state.game.turnPhase?.turnPhase
+  );
+
+  // if the game is over display the end game stats screen
+  if (!!turnPhase && turnPhase === 'OVER') {
+    return (
+      <div>
+        <EndGameScreen />
+      </div>
+    );
+  }
 
   if (!chainLinkSummary || !chainLinkSummary.show) {
     return null;
@@ -57,35 +70,44 @@ const ChainLinkSummary = ({
   if (isLoading) {
     content = <div>Loading...</div>;
   } else if (error) {
-    content = <div>{String(error)}</div>;
+    content = <div>{JSON.stringify(error)}</div>;
   } else {
     content = (
       <div className={styles.cardListContents}>
         <table className={styles.table}>
-          <th className={styles.leftColumn}></th>
-          <th className={styles.midColumn}>Card</th>
-          <th className={styles.rightColumn}>Effect</th>
-          {data.Cards != undefined ? (
-            data.Cards.map((entry: any, ix: number) => {
-              const card: Card = { cardNumber: entry.cardID };
-              return (
-                <tr key={`cardList${ix}`}>
-                  <td className={styles.column}>
-                    <Effect card={card} />
-                  </td>
-                  <td className={styles.column}>
-                    <CardTextLink cardName={entry.Name} cardID={entry.cardID} />
-                  </td>
-                  <td className={styles.column}>
-                    {entry.modifier > 0 ? '+' : ''}
-                    {entry.modifier} attack or def
-                  </td>
-                </tr>
-              );
-            })
-          ) : (
-            <div>{JSON.stringify(data)}</div>
-          )}
+          <thead>
+            <tr>
+              <th className={styles.leftColumn}></th>
+              <th className={styles.midColumn}>Card</th>
+              <th className={styles.rightColumn}>Effect</th>
+            </tr>
+          </thead>
+          <tbody>
+            {data.Cards != undefined ? (
+              data.Cards.map((entry: any, ix: number) => {
+                const card: Card = { cardNumber: entry.cardID };
+                return (
+                  <tr key={`cardList${ix}`}>
+                    <td className={styles.column}>
+                      <Effect card={card} />
+                    </td>
+                    <td className={styles.column}>
+                      <CardTextLink
+                        cardName={entry.Name}
+                        cardID={entry.cardID}
+                      />
+                    </td>
+                    <td className={styles.column}>
+                      {entry.modifier > 0 ? '+' : ''}
+                      {entry.modifier} attack or def
+                    </td>
+                  </tr>
+                );
+              })
+            ) : (
+              <div>{JSON.stringify(data)}</div>
+            )}
+          </tbody>
         </table>
       </div>
     );

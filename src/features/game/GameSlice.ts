@@ -51,6 +51,7 @@ export const nextTurn = createAsyncThunk(
         const gs = ParseGameState(parsedData);
         return gs;
       } catch (e) {
+        console.log(e);
         return console.error(e);
       }
     }

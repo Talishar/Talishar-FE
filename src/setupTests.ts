@@ -22,6 +22,16 @@ export const restHandlers = [
         ]
       })
     );
+  }),
+  rest.get('api/dev/GetPopupAPI.php', (req, res, ctx) => {
+    return res(
+      ctx.status(200),
+      ctx.json({
+        Cards: [
+          { Player: '2', Name: 'Zipper Hit', cardID: 'ARC030', modifier: '4' }
+        ]
+      })
+    );
   })
 ];
 
