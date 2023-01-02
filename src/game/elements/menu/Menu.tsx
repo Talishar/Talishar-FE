@@ -5,8 +5,8 @@ import {
   openOptionsMenu,
   submitButton
 } from '../../../features/game/GameSlice';
-import { FaBars, FaUndo } from 'react-icons/fa';
-import { HiOutlineArrowsExpand } from 'react-icons/hi';
+import { FaUndo } from 'react-icons/fa';
+import { GiExpand, GiHamburgerMenu } from 'react-icons/gi';
 import styles from './Menu.module.css';
 
 function MenuButton() {
@@ -23,7 +23,7 @@ function MenuButton() {
         title="options menu"
         onClick={() => toggleMenu()}
       >
-        <FaBars aria-hidden="true" />
+        <GiHamburgerMenu aria-hidden="true" />
       </button>
     </div>
   );
@@ -41,7 +41,7 @@ function FullScreenButton() {
         aria-label="Full Screen"
         onClick={() => toggleFullScreen()}
       >
-        <HiOutlineArrowsExpand aria-hidden="true" />
+        <GiExpand aria-hidden="true" />
       </button>
     </div>
   );

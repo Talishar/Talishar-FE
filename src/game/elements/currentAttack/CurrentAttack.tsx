@@ -1,8 +1,7 @@
 import React from 'react';
 import { RootState } from '../../../app/Store';
-import { BiRefresh, BiBullseye, BiShield } from 'react-icons/bi';
-import { HiBolt } from 'react-icons/hi2';
-import { GiZigzagLeaf } from 'react-icons/gi';
+import { BiBullseye } from 'react-icons/bi';
+import { GiZigzagLeaf, GiElectric, GiCycle, GiShield } from 'react-icons/gi';
 import styles from './CurrentAttack.module.css';
 import attackSymbol from '../../../img/symbols/symbol-attack.png';
 import defSymbol from '../../../img/symbols/symbol-defence.png';
@@ -58,7 +57,7 @@ export default function CurrentAttack() {
         <div className={styles.floatCover}>
           {activeCombatChain.goAgain ? (
             <div className={styles.icon}>
-              <BiRefresh title="Go Again" />
+              <GiCycle title="Go Again" />
             </div>
           ) : null}
           {activeCombatChain.dominate ? (
@@ -68,7 +67,7 @@ export default function CurrentAttack() {
           ) : null}
           {activeCombatChain.overpower ? (
             <div className={styles.icon}>
-              <HiBolt title="Overpower" />
+              <GiElectric title="Overpower" />
             </div>
           ) : null}
           {activeCombatChain.fused ? (
@@ -78,7 +77,7 @@ export default function CurrentAttack() {
           ) : null}
           {activeCombatChain.damagePrevention ? (
             <div className={styles.icon}>
-              <BiShield title="Damage Prevention" />
+              <GiShield title="Damage Prevention" />
               {activeCombatChain.damagePrevention}
             </div>
           ) : null}
