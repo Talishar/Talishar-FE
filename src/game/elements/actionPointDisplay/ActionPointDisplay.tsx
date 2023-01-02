@@ -7,36 +7,19 @@ import styles from './ActionPointDisplay.module.css';
 export default function ActionPointDisplay(props: Player) {
   const { isPlayer } = props;
   const APAvailable = useAppSelector((state: RootState) =>
-    isPlayer
-      ? state.game.playerOne.ActionPoints
-      : state.game.playerTwo.ActionPoints
+    Math.max(
+      state.game.playerOne.ActionPoints ?? 0,
+      state.game.playerTwo.ActionPoints ?? 0
+    )
   );
 
   const activePlayer = useAppSelector(
     (state: RootState) => state.game.activePlayer
   );
 
-  if (activePlayer === undefined) {
-    return null;
-  }
-
-  const extras = APAvailable !== 1 ? 's' : '';
-
-  if (activePlayer === 1 && isPlayer) {
-    return (
-      <div className={styles.actionPointDisplay}>
-        {APAvailable} AP{extras}
-      </div>
-    );
-  }
-
-  if (activePlayer === 2 && isPlayer === false) {
-    return (
-      <div className={styles.actionPointOppDisplay}>
-        {APAvailable} AP{extras}
-      </div>
-    );
-  }
-
-  return null;
+  return (
+    <div className={styles.actionPointDisplay}>
+      <div className={styles.actionPointCounter}>{APAvailable}</div>
+    </div>
+  );
 }

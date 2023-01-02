@@ -35,7 +35,8 @@ export default function PassTurnDisplay() {
   if (activePlayer === 1) {
     return (
       <div className={styles.passTurnDisplayActive} onClick={onPassTurn}>
-        PASS [spacebar]
+        PASS <br />
+        [spacebar]
       </div>
     );
   }

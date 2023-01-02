@@ -20,7 +20,11 @@ export default function PlayerName(player: Player) {
     <div className={styles.playerName}>
       {playerName}
 
-      {isVerified ? <FaCertificate aria-hidden="true" /> : <></>}
+      {isVerified ? (
+        <FaCertificate aria-hidden="true" fontSize={'1.5rem'} />
+      ) : (
+        <></>
+      )}
     </div>
   );
 }

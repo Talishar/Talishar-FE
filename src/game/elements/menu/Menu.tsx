@@ -23,7 +23,7 @@ function MenuButton() {
         title="options menu"
         onClick={() => toggleMenu()}
       >
-        <GiHamburgerMenu aria-hidden="true" />
+        <GiHamburgerMenu aria-hidden="true" fontSize={'1.5rem'} />
       </button>
     </div>
   );
@@ -41,7 +41,7 @@ function FullScreenButton() {
         aria-label="Full Screen"
         onClick={() => toggleFullScreen()}
       >
-        <GiExpand aria-hidden="true" />
+        <GiExpand aria-hidden="true" fontSize={'1.5rem'} />
       </button>
     </div>
   );
@@ -55,7 +55,7 @@ function UndoButton() {
   return (
     <div>
       <button className={styles.btn} aria-label="Undo" onClick={clickUndo}>
-        <FaUndo aria-hidden="true" />
+        <FaUndo aria-hidden="true" fontSize={'1.5rem'} />
       </button>
     </div>
   );

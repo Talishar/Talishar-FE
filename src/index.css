@@ -1,5 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@500;900&display=swap');
 
+html {
+  font-size: 1.5dvh;
+}
+
 body {
   margin: 0;
   font-family: 'Roboto', 'Helvetica Neue', -apple-system, BlinkMacSystemFont,
