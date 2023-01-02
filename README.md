@@ -43,7 +43,7 @@ npm install
 npm run dev
 ```
 
-Access the server at http://localhost:3000/
+Access the server at http://localhost:5173/ (Port 5173 by default, if you configure it to something else in Vite then it'll be there instead).
 
 If you have problems running the development server, come to the discord and ask for help.
 
