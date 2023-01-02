@@ -137,4 +137,5 @@
   padding-right: 1vh;
   gap: 1vh;
   height: 100%;
+  cursor: pointer;
 }
