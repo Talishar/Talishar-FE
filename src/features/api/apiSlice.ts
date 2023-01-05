@@ -57,9 +57,29 @@ export const apiSlice = createApi({
           }
         };
       }
+    }),
+    submitChat: builder.mutation({
+      query: ({
+        gameID = 0,
+        playerID = 0,
+        chatText = '',
+        authKey = '',
+        ...rest
+      }) => {
+        return {
+          url: 'SubmitChat.php',
+          method: 'GET',
+          params: {
+            gameName: gameID,
+            playerID: playerID,
+            authKey: authKey,
+            chatText: chatText
+          }
+        };
+      }
     })
   })
 });
 
 // Export the auto-generated hook for the `getPosts` query endpoint
-export const { useGetPopUpContentQuery } = apiSlice;
+export const { useGetPopUpContentQuery, useSubmitChatMutation } = apiSlice;

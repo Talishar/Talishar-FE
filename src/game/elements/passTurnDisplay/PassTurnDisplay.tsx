@@ -24,7 +24,7 @@ export default function PassTurnDisplay() {
   // TODO: Migrate the key listeners to a separate component
   // component can have customisable keys maybe
   useEffect(() => {
-    document.addEventListener('keydown', pressKey, true);
+    document.addEventListener('keydown', pressKey, false);
     // return document.removeEventListener('keydown', pressKey, true);
   }, []);
 

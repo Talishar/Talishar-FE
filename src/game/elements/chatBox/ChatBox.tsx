@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { useAppSelector } from '../../../app/Hooks';
 import { RootState } from '../../../app/Store';
+import ChatInput from '../chatInput/ChatInput';
 import styles from './ChatBox.module.css';
 
 export default function ChatBox() {
@@ -35,11 +36,7 @@ export default function ChatBox() {
             })}
         </div>
       </div>
-      <input
-        className={styles.chatInput}
-        value="Chat is currently disabled"
-        disabled
-      />
+      <ChatInput />
     </div>
   );
 }
