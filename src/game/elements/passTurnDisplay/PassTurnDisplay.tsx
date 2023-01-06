@@ -5,8 +5,8 @@ import { RootState } from '../../../app/Store';
 import styles from './PassTurnDisplay.module.css';
 
 export default function PassTurnDisplay() {
-  const activePlayer = useAppSelector(
-    (state: RootState) => state.game.activePlayer
+  const canPassPhase = useAppSelector(
+    (state: RootState) => state.game.canPassPhase
   );
 
   const dispatch = useAppDispatch();
@@ -28,11 +28,11 @@ export default function PassTurnDisplay() {
     // return document.removeEventListener('keydown', pressKey, true);
   }, []);
 
-  if (activePlayer === undefined) {
+  if (canPassPhase === undefined) {
     return <div className={styles.passTurnDisplay}>Whut</div>;
   }
 
-  if (activePlayer === 1) {
+  if (canPassPhase === true) {
     return (
       <div className={styles.passTurnDisplayActive} onClick={onPassTurn}>
         PASS <br />
@@ -41,8 +41,8 @@ export default function PassTurnDisplay() {
     );
   }
 
-  if (activePlayer === 2) {
-    return <div className={styles.passTurnDisplay}>WAITING</div>;
+  if (canPassPhase === false) {
+    return <div className={styles.passTurnDisplay}>WAIT</div>;
   }
 
   return null;
