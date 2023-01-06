@@ -13,3 +13,17 @@ it('renders without crashing', () => {
     </Provider>
   );
 });
+
+it('renders a card', () => {
+  const div = document.createElement('div');
+  const root = createRoot(div);
+  root.render(
+    <Provider store={store}>
+      <PlayerHandCard
+        handSize={0}
+        cardIndex={0}
+        card={{ cardNumber: 'WTR001' }}
+      />
+    </Provider>
+  );
+});

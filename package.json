@@ -28,7 +28,7 @@
     "build": "vite build",
     "serve": "vite preview",
     "test": "vitest",
-    "test:unit": "vitest",
+    "test:unit": "vitest --coverage ",
     "test-coverage": "vitest --coverage",
     "lint": "eslint . --ext .ts,.tsx",
     "prettier-format": "prettier --config .prettierrc 'src/**/*.{js,jsx,ts,tsx,css,md,json}' --write",
