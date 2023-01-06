@@ -10,6 +10,10 @@ export const ChatInput = () => {
   const [chatInput, setChatInput] = useState('');
   const [submitChat, submitChatResult] = useSubmitChatMutation();
 
+  if (gameInfo.playerID === 3) {
+    return null;
+  }
+
   const handleSubmit = async (event: React.SyntheticEvent) => {
     event.preventDefault();
     if (chatInput.trim() === '') {
