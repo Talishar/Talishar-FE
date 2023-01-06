@@ -29,7 +29,7 @@ export default function PassTurnDisplay() {
   }, []);
 
   if (canPassPhase === undefined) {
-    return <div className={styles.passTurnDisplay}>Whut</div>;
+    return <div className={styles.passTurnDisplay}></div>;
   }
 
   if (canPassPhase === true) {
