@@ -61,23 +61,15 @@ Short answer is it isn't really. If you have a better idea on how to organise th
 
 Otherwise try to keep everything as small as possible, Reacty-containers. And pulling data from Redux etc. CSS modules help to keep stuff locally scoped.
 
-## Put your FE build on beta.talishar.net/ReactClient
-
-Get access to the talishar beta server (speak to Nate about getting access) and get the IP, add it to your `.ssh/config` add your key and make life nice n easy.
-
-First, check `src/Constants.ts` to make sure everything is pointing toward the beta site. Tight now the [Beta client](https://beta.talishar.net/ReactClient/) is deployed from the `/build` directory, inside the repo, on the beta server.
-
-So go to the repo root directory of the beta server, make sure you've checked out and pulled the branch you want to deploy to beta, and then:
-
-```
-npm run build
-```
-
-the `/build` output directory is automatically served. There's only one active beta at a time this way, but it's better than nowt.
-
 ## The plan for later:
 
-There will be CI/CD for deploying the Talishar FE onto a cloudflare CDN, or something like that. Still lots to do before we get there, we could definitely do with much better tests!
+Accomplished so far:
+ - ✅ automatic deployment to CDN
+ - ✅ automatic testing for all MR and commits to main
+
+Still need help with:
+ - More testing coverage
+ - Building out features and helping with BE bugs etc.
 
 ## Learn More
 

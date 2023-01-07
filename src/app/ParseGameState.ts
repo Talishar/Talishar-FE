@@ -282,5 +282,7 @@ export default function ParseGameState(input: any) {
 
   result.playerPrompt = input.playerPrompt;
 
+  result.canPassPhase = input.canPassPhase;
+  
   return result;
 }

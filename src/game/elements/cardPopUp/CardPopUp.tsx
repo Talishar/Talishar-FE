@@ -170,7 +170,8 @@ export default function CardPopUp() {
 
   const dfcStyle: Record<string, string> = {};
 
-  dfcStyle.left = '-380px';
+  //TODO: This needs to be less jank
+  dfcStyle.left = '-40vh';
   dfcStyle.position = 'absolute';
 
   const dfcURL = `./cardimages/${dfcValue}.webp`;

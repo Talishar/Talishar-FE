@@ -93,4 +93,5 @@ export default interface GameState {
     show?: boolean;
     index?: number;
   };
+  canPassPhase?: boolean;
 }
