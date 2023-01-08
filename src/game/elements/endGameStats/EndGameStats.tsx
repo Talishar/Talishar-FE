@@ -63,7 +63,7 @@ const EndGameStats = (data: EndGameData) => {
       </div>
       <div>
         <h2>Stuff</h2>
-        <div>Statsy stats stats</div>
+        <div>TODO: Add more stuff here</div>
       </div>
       <div>
         <h2>Turn Stats</h2>
@@ -86,24 +86,31 @@ const EndGameStats = (data: EndGameData) => {
                 <tr>
                   <td className={styles.turnNo}>{ix + 1}</td>
                   <td className={styles.played}>
+                    {/* @ts-ignore */}
                     {data.turnResults[key]?.cardsUsed}
                   </td>
                   <td className={styles.blocked}>
+                    {/* @ts-ignore */}
                     {data.turnResults[key]?.cardsBlocked}
                   </td>
                   <td className={styles.pitched}>
+                    {/* @ts-ignore */}
                     {data.turnResults[key]?.cardsPitched}
                   </td>
                   <td className={styles.pitched}>
+                    {/* @ts-ignore */}
                     {data.turnResults[key]?.resourcesUsed}
                   </td>
                   <td className={styles.pitched}>
+                    {/* @ts-ignore */}
                     {data.turnResults[key]?.cardsLeft}
                   </td>
                   <td className={styles.pitched}>
+                    {/* @ts-ignore */}
                     {data.turnResults[key]?.damageDealt}
                   </td>
                   <td className={styles.pitched}>
+                    {/* @ts-ignore */}
                     {data.turnResults[key]?.damageTaken}
                   </td>
                 </tr>
