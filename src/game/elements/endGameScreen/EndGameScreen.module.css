@@ -22,6 +22,15 @@
   align-items: center;
 }
 
+.cardListTitle {
+  padding-right: 1em;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  align-content: space-between;
+  justify-content: space-between;
+}
+
 .title {
   padding: 0px;
   margin: 0px;
@@ -95,7 +104,6 @@
   border: 1px solid goldenrod;
   flex-basis: auto;
   padding: 0vh 1vh;
-  margin-bottom: 1vh;
 }
 
 .buttonDiv:hover {
