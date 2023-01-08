@@ -30,6 +30,7 @@ export interface TurnResult {
 }
 
 const EndGameStats = (data: EndGameData) => {
+  console.log(data.cardResults);
   return (
     <div className={styles.cardListContents}>
       <div>
@@ -44,19 +45,20 @@ const EndGameStats = (data: EndGameData) => {
             </tr>
           </thead>
           <tbody>
-            {data.cardResults.map((result, ix) => {
-              const card: Card = { cardNumber: result.cardId };
-              return (
-                <tr key={`cardList${ix}`}>
-                  <td className={styles.card}>
-                    <Effect card={card} />
-                  </td>
-                  <td className={styles.played}>{result.played}</td>
-                  <td className={styles.blocked}>{result.blocked}</td>
-                  <td className={styles.pitched}>{result.pitched}</td>
-                </tr>
-              );
-            })}
+            {!!data.cardResults &&
+              data.cardResults?.map((result, ix) => {
+                const card: Card = { cardNumber: result.cardId };
+                return (
+                  <tr key={`cardList${ix}`}>
+                    <td className={styles.card}>
+                      <Effect card={card} />
+                    </td>
+                    <td className={styles.played}>{result.played}</td>
+                    <td className={styles.blocked}>{result.blocked}</td>
+                    <td className={styles.pitched}>{result.pitched}</td>
+                  </tr>
+                );
+              })}
           </tbody>
         </table>
       </div>
@@ -80,41 +82,42 @@ const EndGameStats = (data: EndGameData) => {
             </tr>
           </thead>
           <tbody>
-            {Object.keys(data.turnResults).map((key, ix) => {
-              return (
-                <tr>
-                  <td className={styles.turnNo}>{ix + 1}</td>
-                  <td className={styles.played}>
-                    {/* @ts-ignore */}
-                    {data.turnResults[key]?.cardsUsed}
-                  </td>
-                  <td className={styles.blocked}>
-                    {/* @ts-ignore */}
-                    {data.turnResults[key]?.cardsBlocked}
-                  </td>
-                  <td className={styles.pitched}>
-                    {/* @ts-ignore */}
-                    {data.turnResults[key]?.cardsPitched}
-                  </td>
-                  <td className={styles.pitched}>
-                    {/* @ts-ignore */}
-                    {data.turnResults[key]?.resourcesUsed}
-                  </td>
-                  <td className={styles.pitched}>
-                    {/* @ts-ignore */}
-                    {data.turnResults[key]?.cardsLeft}
-                  </td>
-                  <td className={styles.pitched}>
-                    {/* @ts-ignore */}
-                    {data.turnResults[key]?.damageDealt}
-                  </td>
-                  <td className={styles.pitched}>
-                    {/* @ts-ignore */}
-                    {data.turnResults[key]?.damageTaken}
-                  </td>
-                </tr>
-              );
-            })}
+            {!!data.turnResults &&
+              Object.keys(data.turnResults).map((key, ix) => {
+                return (
+                  <tr key={`turnList${ix}`}>
+                    <td className={styles.turnNo}>{ix + 1}</td>
+                    <td className={styles.played}>
+                      {/* @ts-ignore */}
+                      {data.turnResults[key]?.cardsUsed}
+                    </td>
+                    <td className={styles.blocked}>
+                      {/* @ts-ignore */}
+                      {data.turnResults[key]?.cardsBlocked}
+                    </td>
+                    <td className={styles.pitched}>
+                      {/* @ts-ignore */}
+                      {data.turnResults[key]?.cardsPitched}
+                    </td>
+                    <td className={styles.pitched}>
+                      {/* @ts-ignore */}
+                      {data.turnResults[key]?.resourcesUsed}
+                    </td>
+                    <td className={styles.pitched}>
+                      {/* @ts-ignore */}
+                      {data.turnResults[key]?.cardsLeft}
+                    </td>
+                    <td className={styles.pitched}>
+                      {/* @ts-ignore */}
+                      {data.turnResults[key]?.damageDealt}
+                    </td>
+                    <td className={styles.pitched}>
+                      {/* @ts-ignore */}
+                      {data.turnResults[key]?.damageTaken}
+                    </td>
+                  </tr>
+                );
+              })}
           </tbody>
         </table>
       </div>
