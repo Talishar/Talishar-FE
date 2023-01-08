@@ -30,7 +30,6 @@ export interface TurnResult {
 }
 
 const EndGameStats = (data: EndGameData) => {
-  console.log(data);
   return (
     <div className={styles.cardListContents}>
       <div>
