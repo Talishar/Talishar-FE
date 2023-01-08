@@ -1,6 +1,9 @@
 import { useAppDispatch, useAppSelector } from '../../../app/Hooks';
 import { RootState } from '../../../app/Store';
-import { hideChainLinkSummary } from '../../../features/game/GameSlice';
+import {
+  hideChainLinkSummary,
+  hideActiveLayer
+} from '../../../features/game/GameSlice';
 import { FaTimes } from 'react-icons/fa';
 import styles from './ChainLinkSummary.module.css';
 import { useGetPopUpContentQuery } from '../../../features/api/apiSlice';
@@ -19,8 +22,11 @@ export const ChainLinkSummaryContainer = () => {
     (state: RootState) => state.game.turnPhase?.turnPhase
   );
 
+  const dispatch = useAppDispatch();
+
   // if the game is over display the end game stats screen
   if (!!turnPhase && turnPhase === 'OVER') {
+    dispatch(hideActiveLayer());
     return (
       <div>
         <EndGameScreen />
