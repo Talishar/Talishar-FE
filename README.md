@@ -2,7 +2,7 @@
   <img src="https://github.com/Talishar/Talishar/blob/main/Images/TalisharLogo.webp?raw=true" width="623" height="278" alt="Talishar" />
 </p>
 
-<h3 align="center">Talishar is a browser-based platform to play Flesh and Blood.</h3>
+<h3 align="center">Talishar is a browser-based platform to play Flesh and Blood. This is an unofficial project not linked to or endorsed by Legend Story Studios.</h3>
 
 [![license](https://flat.badgen.net/github/license/talishar/talishar)](./LICENSE)
 [![discord](https://flat.badgen.net/discord/online-members/JykuRkdd5S?icon=discord)](https://discord.gg/JykuRkdd5S)
