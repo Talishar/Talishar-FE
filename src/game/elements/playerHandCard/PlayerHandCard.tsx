@@ -12,6 +12,7 @@ import Draggable, { DraggableData, DraggableEvent } from 'react-draggable';
 import { useAppDispatch } from '../../../app/Hooks';
 import { LONG_PRESS_TIMER } from '../../../constants';
 import classNames from 'classnames';
+import CardImage from '../cardImage/CardImage';
 
 const HandCurvatureConstant = 8;
 const ScreenPercentageForCardPlayed = 0.25;
@@ -184,7 +185,7 @@ export const PlayerHandCard = (props: HandCard) => {
             style={translation}
           >
             <div>
-              <img src={src} className={imgStyles} draggable="false" />
+              <CardImage src={src} className={imgStyles} draggable="false" />
               <div className={styles.iconCol}>
                 {isArsenal === true && (
                   <div className={styles.icon}>
