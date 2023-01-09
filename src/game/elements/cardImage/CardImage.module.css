@@ -1,0 +1,28 @@
+.popUp {
+  position: fixed;
+  z-index: 2000;
+  height: 50vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 10px;
+  border: 1px goldenrod solid;
+  padding: 1vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.defaultPos {
+  right: 200px;
+  top: 10vh;
+}
+
+.img {
+  height: 50vh;
+  display: block;
+  border-radius: 1em;
+}
+
+.popUpInside {
+  z-index: 111;
+}

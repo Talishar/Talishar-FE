@@ -1,6 +1,7 @@
 import React from 'react';
 import { useAppSelector } from '../../../app/Hooks';
 import { RootState } from '../../../app/Store';
+import CardImage from '../cardImage/CardImage';
 import styles from './CardPopUp.module.css';
 
 const popUpGap = 10;
@@ -181,12 +182,12 @@ export default function CardPopUp() {
       {isDFC && (
         <div className={styles.popUp} style={dfcStyle}>
           <div className={styles.popUpInside}>
-            <img src={dfcURL} className={styles.img} />
+            <CardImage src={dfcURL} className={styles.img} />
           </div>
         </div>
       )}
       <div className={styles.popUpInside}>
-        <img src={src} className={styles.img} />
+        <CardImage src={src} className={styles.img} />
       </div>
     </div>
   );
