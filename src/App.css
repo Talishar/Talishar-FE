@@ -88,3 +88,11 @@ body {
   background: rgba(50, 50, 50, 0.5);
   color: white;
 }
+
+.defaultToast {
+  background-color: rgba(0, 0, 0, 0.8);
+  padding: 2vh;
+  border: 1px solid goldenrod;
+  border-radius: 12px;
+  color: goldenrod;
+}

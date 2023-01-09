@@ -15,7 +15,6 @@ export interface CardImage {
 export const CardImage = (props: CardImage) => {
   let src = props.src;
   const [error, setError] = useState(false);
-  console.log(props.className);
 
   if (error) {
     let srcArray = src.split('/');

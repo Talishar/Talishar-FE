@@ -273,6 +273,8 @@ export const gameSlice = createSlice({
 
       state.playerPrompt = action.payload.playerPrompt;
       state.canPassPhase = action.payload.canPassPhase;
+      state.events = action.payload.events;
+      
       return state;
     });
     builder.addCase(nextTurn.pending, (state, action) => {

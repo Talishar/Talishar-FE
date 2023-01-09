@@ -94,4 +94,8 @@ export default interface GameState {
     index?: number;
   };
   canPassPhase?: boolean;
+  events?: {
+    eventType: string;
+    eventValue?: string;
+  }[];
 }
