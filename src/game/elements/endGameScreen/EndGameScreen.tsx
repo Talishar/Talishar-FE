@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../app/Hooks';
 import { RootState } from '../../../app/Store';
 import { FaTimes } from 'react-icons/fa';
@@ -9,12 +9,15 @@ import CardTextLink from '../cardTextLink/CardTextLink';
 import { Effect } from '../effects/Effects';
 import { Card } from '../../../features/Card';
 import { END_GAME_STATS } from '../../../constants';
+import { hideActiveLayer } from '../../../features/game/GameSlice';
+import EndGameStats, { EndGameData } from '../endGameStats/EndGameStats';
 
 const EndGameScreen = () => {
   const gameInfo = useAppSelector((state: RootState) => state.game.gameInfo);
+  const [playerID, setPlayerID] = useState(gameInfo.playerID === 2 ? 2 : 1);
   const { data, isLoading, error } = useGetPopUpContentQuery({
     gameID: gameInfo.gameID,
-    playerID: gameInfo.playerID,
+    playerID: playerID,
     authKey: gameInfo.authKey,
     popupType: END_GAME_STATS
   });
@@ -27,12 +30,12 @@ const EndGameScreen = () => {
   } else if (error) {
     content = <div>{JSON.stringify(error)}</div>;
   } else {
-    content = (
-      <div className={styles.cardListContents}>
-        <div>This is where the end game stats would be if I had any.</div>
-      </div>
-    );
+    content = <EndGameStats {...(data as EndGameData)} />;
   }
+
+  const switchPlayer = () => {
+    playerID === 2 ? setPlayerID(1) : setPlayerID(2);
+  };
 
   return (
     <div className={styles.emptyOutside} onClick={() => console.log('clickus')}>
@@ -40,6 +43,9 @@ const EndGameScreen = () => {
         <div className={styles.cardListTitleContainer}>
           <div className={styles.cardListTitle}>
             <h3 className={styles.title}>{'Game Over Summary'}</h3>
+            <div className={styles.buttonDiv} onClick={switchPlayer}>
+              Switch player stats
+            </div>
           </div>
           <div
             className={styles.cardListCloseIcon}

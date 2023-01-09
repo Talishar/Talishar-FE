@@ -2,7 +2,7 @@
   <img src="https://github.com/Talishar/Talishar/blob/main/Images/TalisharLogo.webp?raw=true" width="623" height="278" alt="Talishar" />
 </p>
 
-<h3 align="center">Talishar is a browser-based platform to play Flesh and Blood. It is a fan-made FABTCG project not associated with Legend Story Studios.</h3>
+<h3 align="center">Talishar is a browser-based platform to play Flesh and Blood. This is an unofficial project not linked to or endorsed by Legend Story Studios.</h3>
 
 [![license](https://flat.badgen.net/github/license/talishar/talishar)](./LICENSE)
 [![discord](https://flat.badgen.net/discord/online-members/JykuRkdd5S?icon=discord)](https://discord.gg/JykuRkdd5S)
@@ -49,7 +49,7 @@ If you have problems running the development server, come to the discord and ask
 
 ### Important!
 
-In the file `src/Constants.ts` you'll need to modify `queryURL` so that the port is the same as what you're running for the php BE. (We need to do some things to make this less janky, bear with us!)
+If you run into any trouble setting up the project please let LaustinSpayce know so we can fix it, and help make it a smoother process for future contributors.
 
 ## Optional happy fun things:
 
