@@ -9,6 +9,8 @@ import PlayerHand from './game/zones/playerHand/PlayerHand';
 import { useAppSelector } from './app/Hooks';
 import { RootState } from './app/Store';
 import OptionsOverlay from './game/elements/optionsMenu/OptionsMenu';
+import { Toaster } from 'react-hot-toast';
+import EventsHandler from './game/elements/eventsHandler/EventsHandler';
 
 function App() {
   const [maxWidth, setMaxWidth] = useState(1920);
@@ -35,11 +37,23 @@ function App() {
 
   return (
     <div className="centering">
+      <Toaster
+        position="top-left"
+        toastOptions={{
+          style: {
+            background: '#004225',
+            color: '#fffdd0',
+            border: '1px solid #fffdd0',
+            padding: '0.5rem'
+          }
+        }}
+      />
       <div
         id="cardDetail"
         style={{ display: 'none', position: 'absolute' }}
       ></div>
       <GameStateHandler />
+      <EventsHandler />
       <div className="app" style={{ maxWidth }}>
         <LeftColumn />
         <div className="gameZone">
