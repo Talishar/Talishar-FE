@@ -8,22 +8,29 @@ const UNKNOWN_IMAGE = 'Difficulties';
 export interface CardImage {
   src: string;
   className?: string;
+  draggable?: Booleanish;
 }
 
 export const CardImage = (props: CardImage) => {
-  const [src, setSrc] = useState(props.src);
+  let src = props.src;
   const [error, setError] = useState(false);
 
-  let className = props.className;
+  // TODO: I am 99% sure we do not need different CardImage and CardImageSquare components
+  if (error) {
+    src = `./cardimages/${UNKNOWN_IMAGE}.webp`;
+  }
   const handleImageError = () => {
-    if (error) return;
     setError(true);
-    setSrc(`./cardimages/${UNKNOWN_IMAGE}.webp`);
   };
 
   return (
     <>
-      <img src={src} className={styles.img} onError={handleImageError} />
+      <img
+        src={src}
+        className={props.className}
+        onError={handleImageError}
+        draggable={props.draggable}
+      />
     </>
   );
 };

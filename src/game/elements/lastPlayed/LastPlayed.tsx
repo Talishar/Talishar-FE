@@ -2,6 +2,7 @@ import React from 'react';
 import { useAppDispatch, useAppSelector } from '../../../app/Hooks';
 import { RootState } from '../../../app/Store';
 import { clearPopUp, setPopUp } from '../../../features/game/GameSlice';
+import CardImage from '../cardImage/CardImage';
 import styles from './LastPlayed.module.css';
 
 export default function LastPlayed() {
@@ -37,7 +38,7 @@ export default function LastPlayed() {
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      <img src={src} className={styles.img} />
+      <CardImage src={src} className={styles.img} />
     </div>
   );
 }

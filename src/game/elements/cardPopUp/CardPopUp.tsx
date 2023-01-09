@@ -24,7 +24,7 @@ export default function CardPopUp() {
     return (
       <div className={styles.defaultPos + ' ' + styles.popUp}>
         <div className={styles.popUpInside}>
-          <img src={src} className={styles.img} />
+          <CardImage src={src} className={styles.img} />
         </div>
       </div>
     );
