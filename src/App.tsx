@@ -9,6 +9,7 @@ import PlayerHand from './game/zones/playerHand/PlayerHand';
 import { useAppSelector } from './app/Hooks';
 import { RootState } from './app/Store';
 import OptionsOverlay from './game/elements/optionsMenu/OptionsMenu';
+import { Toaster } from 'react-hot-toast';
 
 function App() {
   const [maxWidth, setMaxWidth] = useState(1920);
@@ -35,6 +36,7 @@ function App() {
 
   return (
     <div className="centering">
+      <Toaster />
       <div
         id="cardDetail"
         style={{ display: 'none', position: 'absolute' }}
