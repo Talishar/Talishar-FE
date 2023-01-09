@@ -243,6 +243,12 @@ export const gameSlice = createSlice({
     },
     hideChainLinkSummary: (state) => {
       state.chainLinkSummary = {};
+    },
+    hideActiveLayer: (state) => {
+      state.activeLayers = { ...state.activeLayers, active: false };
+    },
+    showActiveLayer: (state) => {
+      state.activeLayers = { ...state.activeLayers, active: true };
     }
   },
   // The `extraReducers` field lets the slice handle actions defined elsewhere,
@@ -334,5 +340,7 @@ export const {
   openOptionsMenu,
   closeOptionsMenu,
   showChainLinkSummary,
-  hideChainLinkSummary
+  hideChainLinkSummary,
+  hideActiveLayer,
+  showActiveLayer
 } = actions;

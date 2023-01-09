@@ -20,7 +20,5 @@ it('does something', async () => {
   const div = renderWithProviders(<EndGameScreen />, {
     store: testStore
   });
-  await div.findByText(
-    'This is where the end game stats would be if I had any.'
-  );
+  await div.findByText('Card Play Stats');
 });
