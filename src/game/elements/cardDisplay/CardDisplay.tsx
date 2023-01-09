@@ -9,7 +9,6 @@ import {
 import styles from './CardDisplay.module.css';
 import classNames from 'classnames';
 import CountersOverlay from '../countersOverlay/CountersOverlay';
-import CardImageSquare from '../cardImageSquare/CardImageSquare';
 import CardImage from '../cardImage/CardImage';
 
 export interface CardProp {
