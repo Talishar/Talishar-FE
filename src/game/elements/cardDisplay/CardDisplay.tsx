@@ -10,6 +10,7 @@ import styles from './CardDisplay.module.css';
 import classNames from 'classnames';
 import CountersOverlay from '../countersOverlay/CountersOverlay';
 import CardImageSquare from '../cardImageSquare/CardImageSquare';
+import CardImage from '../cardImage/CardImage';
 
 export interface CardProp {
   makeMeBigger?: boolean;
@@ -100,7 +101,7 @@ export const CardDisplay = (prop: CardProp) => {
       onTouchEnd={onTouchEnd}
       ref={ref}
     >
-      <CardImageSquare src={eqImg} className={imgStyles} />
+      <CardImage src={eqImg} className={imgStyles} />
       <div className={classStyles}></div>
       <div className={equipStatus}></div>
       <CountersOverlay {...card} num={num} />
