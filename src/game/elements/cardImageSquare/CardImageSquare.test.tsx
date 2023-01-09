@@ -1,7 +1,7 @@
 import React from 'react';
-import CardPopUp, { CardImage } from './CardImage';
+import CardImageSquare from './CardImageSquare';
 import { renderWithProviders } from '../../../utils/TestUtils';
 
 it('renders without crashing', () => {
-  renderWithProviders(<CardImage src={'./cardimages/WTR001.webp'} />);
+  renderWithProviders(<CardImageSquare src={'./cardsquares/WTR001.webp'} />);
 });

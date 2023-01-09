@@ -1,0 +1,12 @@
+.img {
+  border-color: black;
+  border-width: 1px;
+  border-style: solid;
+  box-shadow: 3px 3px 5px black;
+  position: relative;
+  left: 0px;
+  top: 0px;
+  object-fit: contain;
+  height: 100%;
+  border-radius: 10px;
+}
