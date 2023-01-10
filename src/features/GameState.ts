@@ -26,6 +26,7 @@ export default interface GameState {
     name?: string;
     active?: boolean;
     apiCall?: boolean;
+    apiQuery?: string;
     popupType?: string;
   };
   activeLayers?: {

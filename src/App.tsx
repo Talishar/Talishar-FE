@@ -48,12 +48,11 @@ function App() {
           }
         }}
       />
+      <EventsHandler />
       <div
         id="cardDetail"
         style={{ display: 'none', position: 'absolute' }}
       ></div>
-      <GameStateHandler />
-      <EventsHandler />
       <div className="app" style={{ maxWidth }}>
         <LeftColumn />
         <div className="gameZone">
@@ -65,6 +64,7 @@ function App() {
         <RightColumn />
       </div>
       <OptionsOverlay />
+      <GameStateHandler />
     </div>
   );
 }

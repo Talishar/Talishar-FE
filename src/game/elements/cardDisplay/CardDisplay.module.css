@@ -9,13 +9,13 @@
 }
 
 .normalSize {
-  height: 10vh;
-  width: auto;
+  height: 10dvh;
+  width: 10dvh;
 }
 
 .biggerSize {
   height: 12dvh;
-  width: auto;
+  width: 12dvh;
 }
 
 .floatTint {
