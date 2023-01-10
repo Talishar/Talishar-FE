@@ -4,6 +4,7 @@ import { Provider } from 'react-redux';
 import { store } from './app/Store';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { Toaster } from 'react-hot-toast';
 import './index.css';
 
 // Because we *must* have a root else the site won't work at all.
