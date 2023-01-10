@@ -12,7 +12,7 @@ export const CardListZone = () => {
     (state: RootState) => state.game.cardListFocus
   );
   const dispatch = useAppDispatch();
-  if (cardList === null || cardList?.active != true) {
+  if (cardList === undefined || cardList?.active != true) {
     return null;
   }
 

@@ -12,7 +12,6 @@ import {
 } from '../../constants';
 import Button from '../Button';
 import GameState from '../GameState';
-import { string } from 'yup';
 
 export const nextTurn = createAsyncThunk(
   'game/nextTurn',

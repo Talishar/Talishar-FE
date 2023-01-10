@@ -9,10 +9,7 @@ import {
 } from 'react-icons/gi';
 import { useAppDispatch, useAppSelector } from '../../../app/Hooks';
 import { RootState } from '../../../app/Store';
-import {
-  setCardListFocus,
-  setCardListLoadFocus
-} from '../../../features/game/GameSlice';
+import { setCardListLoadFocus } from '../../../features/game/GameSlice';
 import Displayrow from '../../../interface/Displayrow';
 import styles from './ZoneCounts.module.css';
 
