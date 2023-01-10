@@ -23,4 +23,14 @@
   justify-content: space-around;
   display: flex;
   align-items: center;
+  user-select: none;
+}
+
+.clickableItem {
+  width: 100%;
+  justify-content: space-around;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
 }
