@@ -16,7 +16,7 @@ export default function DeckZone(prop: Displayrow) {
   );
 
   if (deckCards === undefined || deckCards === 0) {
-    return <div className={styles.banishZone}>Deck</div>;
+    return <div className={styles.deckZone}>Deck</div>;
   }
 
   return (

@@ -1,0 +1,26 @@
+.container {
+  position: absolute;
+  right: 8rem;
+  display: flex;
+  height: 10vh;
+  width: 10vh;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(50, 50, 50, 0.5);
+  color: white;
+  border-radius: 10px;
+  flex: 0 0 10vh;
+}
+
+.column {
+  flex: 1;
+  padding: 0.5em;
+}
+
+.item {
+  width: 100%;
+  justify-content: space-around;
+  display: flex;
+  align-items: center;
+}

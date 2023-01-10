@@ -12,6 +12,7 @@ import {
 } from '../../constants';
 import Button from '../Button';
 import GameState from '../GameState';
+import { string } from 'yup';
 
 export const nextTurn = createAsyncThunk(
   'game/nextTurn',
@@ -202,7 +203,22 @@ export const gameSlice = createSlice({
       state.cardListFocus = {
         active: true,
         cardList: action.payload.cardList,
-        name: action.payload.name
+        name: action.payload.name,
+        apiCall: false
+      };
+    },
+    setCardListLoadFocus: (
+      state,
+      action: PayloadAction<{
+        name?: string;
+        query?: string;
+      }>
+    ) => {
+      state.cardListFocus = {
+        active: true,
+        name: action.payload.name,
+        apiQuery: action.payload.query,
+        apiCall: true
       };
     },
     clearCardListFocus: (state) => {
@@ -280,7 +296,7 @@ export const gameSlice = createSlice({
       state.playerPrompt = action.payload.playerPrompt;
       state.canPassPhase = action.payload.canPassPhase;
       state.events = action.payload.events;
-      
+
       return state;
     });
     builder.addCase(nextTurn.pending, (state, action) => {
@@ -337,6 +353,7 @@ export const {
   setGameStart,
   clearPopUp,
   setCardListFocus,
+  setCardListLoadFocus,
   clearCardListFocus,
   removeCardFromHand,
   openOptionsMenu,
