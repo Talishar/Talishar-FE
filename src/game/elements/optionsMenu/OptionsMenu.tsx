@@ -2,6 +2,7 @@ import { Field, Form, Formik } from 'formik';
 import React from 'react';
 import { useAppDispatch, useAppSelector } from '../../../app/Hooks';
 import { RootState } from '../../../app/Store';
+import screenfull from 'screenfull';
 import {
   closeOptionsMenu,
   submitButton
@@ -229,6 +230,16 @@ const OptionsContent = () => {
       <div className={styles.column}>
         <h3>Navigation</h3>
         <div className={styles.rightColumn}>
+          <button
+            className={styles.buttonDiv}
+            onClick={async (e) => {
+              e.preventDefault;
+              await screenfull.exit();
+              window.location.href = `https://talishar.net/game/NextTurn4.php?gameName=${gameInfo.gameID}&playerID=${gameInfo.playerID}`;
+            }}
+          >
+            Play in legacy Talishar client.
+          </button>
           <button className={styles.buttonDiv} onClick={mainMenu}>
             Home page
           </button>
