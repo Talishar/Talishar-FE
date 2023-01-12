@@ -81,9 +81,13 @@ export const CardDisplay = (prop: CardProp) => {
     { [styles.onChain]: card.onChain },
     { [styles.isFrozen]: card.isFrozen }
   );
+
   const imgStyles = classNames(styles.img, {
-    [styles.border6]: card.borderColor == '6'
+    [styles.border6]: card.borderColor == '6',
+    [styles.border3]: card.borderColor == '3',
+    [styles.border7]: card.borderColor == '7'
   });
+
   const cardStyle = classNames(styles.card, styles.normalSize, {
     [styles.biggerSize]: prop.makeMeBigger
   });

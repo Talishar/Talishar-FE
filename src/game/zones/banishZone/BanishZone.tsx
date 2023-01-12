@@ -29,7 +29,7 @@ export default function BanishZone(prop: Displayrow) {
     );
   };
 
-  const cardToDisplay = banishZone[0];
+  const cardToDisplay = { ...banishZone[0], borderColor: '' };
 
   return (
     <div className={styles.banishZone} onClick={banishZoneDisplay}>

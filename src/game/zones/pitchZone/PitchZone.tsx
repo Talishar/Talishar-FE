@@ -41,7 +41,7 @@ export default function PitchZone(prop: Displayrow) {
   };
 
   const numInPitch = pitchZone.length;
-  const cardToDisplay = pitchZone[numInPitch - 1];
+  const cardToDisplay = { ...pitchZone[numInPitch - 1], borderColor: '' };
 
   // TODO: Have the nice stacking effect like it was requested on twitter
   return (
