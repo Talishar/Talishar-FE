@@ -16,7 +16,6 @@ export default function GameStateHandler() {
     if (params.gameID == 0 || isUpdateInProgress) {
       return;
     }
-
     dispatch(nextTurn(params));
   }, [params, isUpdateInProgress, dispatch]);
 
@@ -31,7 +30,8 @@ export default function GameStateHandler() {
       player = '3';
     }
     let authKey = QueryParam.get('authKey');
-    if (authKey === null) {
+    if (!authKey) {
+      // TODO: Get authKey from lastAuthKey cookie.
       authKey = '';
     }
 

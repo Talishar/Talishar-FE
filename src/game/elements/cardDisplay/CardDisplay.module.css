@@ -83,10 +83,26 @@
   background-size: 100% 100%;
 }
 
+.border3 {
+  border-color: goldenrod;
+  border-style: solid;
+  margin: -3px -5px -3px -2px;
+  border-radius: 15px;
+  box-shadow: 0 0 3px 3px goldenrod;
+}
+
 .border6 {
   border-color: greenyellow;
-  border-width: 1px;
   border-style: solid;
-  margin: -2px -4px -2px 0px;
+  margin: -3px -5px -3px -2px;
+  border-radius: 15px;
   box-shadow: 0 0 3px 3px greenyellow;
+}
+
+.border7 {
+  border-color: purple;
+  border-style: solid;
+  margin: -3px -5px -3px -2px;
+  border-radius: 15px;
+  box-shadow: 0 0 5px 5px purple;
 }

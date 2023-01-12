@@ -28,7 +28,7 @@ export default function GraveyardZone(prop: Displayrow) {
     );
   };
 
-  const cardToDisplay = graveyardZone[0];
+  const cardToDisplay = { ...graveyardZone[0], borderColor: '' };
 
   return (
     <div className={styles.graveyardZone} onClick={graveyardZoneDisplay}>

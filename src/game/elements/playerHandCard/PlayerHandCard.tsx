@@ -160,7 +160,9 @@ export const PlayerHandCard = (props: HandCard) => {
   }, [dragging]);
 
   const imgStyles = classNames(styles.img, {
-    [styles.border6]: card.borderColor == '6'
+    [styles.border6]: card.borderColor == '6',
+    [styles.border3]: card.borderColor == '3',
+    [styles.border7]: card.borderColor == '7'
   });
 
   return (
