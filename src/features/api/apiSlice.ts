@@ -28,7 +28,7 @@ const dynamicBaseQuery: BaseQueryFn<
   if (gameId > GAME_LIMIT_LIVE) {
     baseUrl = API_URL_LIVE;
   }
-  const rawBaseQuery = fetchBaseQuery({ baseUrl });
+  const rawBaseQuery = fetchBaseQuery({ baseUrl, credentials: 'include' });
   return rawBaseQuery(args, webApi, extraOptions);
 };
 
