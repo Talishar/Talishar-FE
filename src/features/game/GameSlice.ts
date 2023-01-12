@@ -34,7 +34,8 @@ export const nextTurn = createAsyncThunk(
       try {
         const response = await fetch(queryURL + queryParams, {
           method: 'GET',
-          headers: {}
+          headers: {},
+          credentials: 'include'
         });
         let data = await response.text();
         if (data.toString().trim() === '0') {
@@ -89,7 +90,8 @@ export const playCard = createAsyncThunk(
     try {
       const response = await fetch(queryURL + queryParams, {
         method: 'GET',
-        headers: {}
+        headers: {},
+        credentials: 'include'
       });
       const data = await response.text();
       return;
@@ -119,7 +121,8 @@ export const submitButton = createAsyncThunk(
     try {
       const response = await fetch(queryURL + queryParams, {
         method: 'GET',
-        headers: {}
+        headers: {},
+        credentials: 'include'
       });
       const data = await response.text();
       return;
@@ -150,7 +153,8 @@ export const submitMultiButton = createAsyncThunk(
     try {
       const response = await fetch(queryParamsString, {
         method: 'GET',
-        headers: {}
+        headers: {},
+        credentials: 'include'
       });
       const data = await response.text();
       return;
