@@ -18,15 +18,15 @@ export const ZoneCounts = (prop: Displayrow) => {
   return (
     <div className={styles.container}>
       <div className={styles.column}>
+        <SoulCount {...prop} />
         <HandCount {...prop} />
-        <GraveyardCount {...prop} />
-        <BanishCount {...prop} />
-      </div>
-      <div className={styles.column}>
-        <DeckCount {...prop} />
         <PitchCount {...prop} />
         <ArsenalCount {...prop} />
-        <SoulCount {...prop} />
+      </div>
+      <div className={styles.column}>
+        <GraveyardCount {...prop} />
+        <DeckCount {...prop} />
+        <BanishCount {...prop} />
       </div>
     </div>
   );
