@@ -83,8 +83,12 @@ export const CardDisplay = (prop: CardProp) => {
   );
 
   const imgStyles = classNames(styles.img, {
-    [styles.border6]: card.borderColor == '6',
+    [styles.border1]: card.borderColor == '1',
+    [styles.border2]: card.borderColor == '2',
     [styles.border3]: card.borderColor == '3',
+    [styles.border4]: card.borderColor == '4',
+    [styles.border5]: card.borderColor == '5',
+    [styles.border6]: card.borderColor == '6',
     [styles.border7]: card.borderColor == '7'
   });
 
