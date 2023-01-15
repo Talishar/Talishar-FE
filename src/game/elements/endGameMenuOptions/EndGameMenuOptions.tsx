@@ -9,6 +9,7 @@ const EndGameMenuOptions = () => {
   const dispatch = useAppDispatch();
   const [hasRated, setHasRated] = useState(false);
 
+  // TODO: Need constants for the button modes.
   const handleMainMenu = async () => {
     dispatch(submitButton({ button: { mode: 100001 } }));
     await screenfull.exit();
@@ -37,7 +38,7 @@ const EndGameMenuOptions = () => {
     if (hasRated) {
       return;
     }
-    dispatch(submitButton({ button: { mode: 100008 } }));
+    dispatch(submitButton({ button: { mode: 100009 } }));
     setHasRated(true);
   };
 
