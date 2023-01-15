@@ -1,4 +1,3 @@
-import React from 'react';
 import { store } from '../../../app/Store';
 import EndGameScreen from './EndGameScreen';
 import { renderWithProviders } from '../../../utils/TestUtils';
