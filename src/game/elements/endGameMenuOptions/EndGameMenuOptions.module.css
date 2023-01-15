@@ -1,0 +1,79 @@
+.container {
+  margin: 0.5rem 0;
+  width: 100%;
+}
+
+.buttons {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+  align-content: center;
+  justify-content: center;
+}
+
+.buttonDiv {
+  background-color: goldenrod;
+  color: black;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  min-width: 8vh;
+  height: 4vh;
+  border-radius: 5px;
+  border: 1px solid goldenrod;
+  flex-basis: auto;
+  padding: 0vh 1vh;
+}
+
+.buttonDiv:hover {
+  background-color: black;
+  color: goldenrod;
+  border: 1px solid goldenrod;
+  cursor: pointer;
+}
+
+.ratings {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin: 0.5rem;
+}
+
+.thumbUpIcon {
+  height: 3rem;
+  width: 3rem;
+  border: 1px solid goldenrod;
+  border-radius: 0.5rem;
+  color: green;
+  font-size: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.thumbUpIcon:hover {
+  cursor: pointer;
+  color: black;
+  background-color: green;
+}
+
+.thumbDownIcon {
+  height: 3rem;
+  width: 3rem;
+  border: 1px solid goldenrod;
+  border-radius: 0.5rem;
+  color: red;
+  font-size: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.thumbDownIcon:hover {
+  cursor: pointer;
+  background-color: red;
+  color: black;
+}

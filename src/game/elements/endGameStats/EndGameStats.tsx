@@ -1,5 +1,6 @@
 import { Card } from '../../../features/Card';
 import { Effect } from '../effects/Effects';
+import EndGameMenuOptions from '../endGameMenuOptions/EndGameMenuOptions';
 import styles from './EndGameStats.module.css';
 
 export interface EndGameData {
@@ -32,6 +33,7 @@ export interface TurnResult {
 const EndGameStats = (data: EndGameData) => {
   return (
     <div className={styles.cardListContents}>
+      <EndGameMenuOptions />
       <div>
         <h2>Card Play Stats</h2>
         <table className={styles.cardTable}>

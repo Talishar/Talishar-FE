@@ -11,6 +11,7 @@ import { Card } from '../../../features/Card';
 import { END_GAME_STATS } from '../../../constants';
 import { hideActiveLayer } from '../../../features/game/GameSlice';
 import EndGameStats, { EndGameData } from '../endGameStats/EndGameStats';
+import EndGameMenuOptions from '../endGameMenuOptions/EndGameMenuOptions';
 
 const EndGameScreen = () => {
   const gameInfo = useAppSelector((state: RootState) => state.game.gameInfo);
