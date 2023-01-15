@@ -23,6 +23,7 @@ const EndGameMenuOptions = () => {
 
   const handleFullRematch = () => {
     dispatch(submitButton({ button: { mode: 100004 } }));
+    // TODO: Redirect to sideboard screen.
   };
 
   // only allow to rate once so we block it from the FE:
