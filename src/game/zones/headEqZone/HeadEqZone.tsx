@@ -5,7 +5,7 @@ import Displayrow from '../../../interface/Displayrow';
 import CardDisplay from '../../elements/cardDisplay/CardDisplay';
 import styles from '../Cardzone.module.css';
 
-export default function HeadEqZone(prop: Displayrow) {
+export const HeadEqZone = React.memo((prop: Displayrow) => {
   const { isPlayer } = prop;
   const cardToDisplay = useAppSelector((state: RootState) =>
     isPlayer ? state.game.playerOne.HeadEq : state.game.playerTwo.HeadEq
@@ -20,4 +20,6 @@ export default function HeadEqZone(prop: Displayrow) {
       <CardDisplay card={cardToDisplay} />
     </div>
   );
-}
+});
+
+export default HeadEqZone;

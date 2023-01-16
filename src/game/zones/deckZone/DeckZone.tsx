@@ -5,7 +5,7 @@ import Displayrow from '../../../interface/Displayrow';
 import CardDisplay from '../../elements/cardDisplay/CardDisplay';
 import styles from '../Cardzone.module.css';
 
-export default function DeckZone(prop: Displayrow) {
+export const DeckZone = React.memo((prop: Displayrow) => {
   const { isPlayer } = prop;
 
   const deckCards = useAppSelector((state: RootState) =>
@@ -24,4 +24,6 @@ export default function DeckZone(prop: Displayrow) {
       <CardDisplay card={deckBack} num={deckCards} preventUseOnClick />
     </div>
   );
-}
+});
+
+export default DeckZone;

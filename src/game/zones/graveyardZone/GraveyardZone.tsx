@@ -6,7 +6,7 @@ import CardDisplay from '../../elements/cardDisplay/CardDisplay';
 import styles from '../Cardzone.module.css';
 import { useAppDispatch, useAppSelector } from '../../../app/Hooks';
 
-export default function GraveyardZone(prop: Displayrow) {
+export const GraveyardZone = React.memo((prop: Displayrow) => {
   const { isPlayer } = prop;
   const dispatch = useAppDispatch();
 
@@ -39,4 +39,6 @@ export default function GraveyardZone(prop: Displayrow) {
       />
     </div>
   );
-}
+});
+
+export default GraveyardZone;

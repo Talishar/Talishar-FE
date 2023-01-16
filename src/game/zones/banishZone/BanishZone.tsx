@@ -6,7 +6,7 @@ import Displayrow from '../../../interface/Displayrow';
 import CardDisplay from '../../elements/cardDisplay/CardDisplay';
 import styles from '../Cardzone.module.css';
 
-export default function BanishZone(prop: Displayrow) {
+export const BanishZone = React.memo((prop: Displayrow) => {
   const { isPlayer } = prop;
   const dispatch = useAppDispatch();
 
@@ -40,4 +40,6 @@ export default function BanishZone(prop: Displayrow) {
       />
     </div>
   );
-}
+});
+
+export default BanishZone;
