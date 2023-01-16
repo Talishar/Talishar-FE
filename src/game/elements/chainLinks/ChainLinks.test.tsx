@@ -12,4 +12,6 @@ it('renders without crashing', () => {
       <ChainLinks />
     </Provider>
   );
+  const display = document.querySelector('div');
+  expect(display).toMatchInlineSnapshot('null');
 });
