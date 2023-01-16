@@ -1,9 +1,10 @@
+import React from 'react';
 import { useEffect } from 'react';
 import { toast } from 'react-hot-toast';
 import { useAppDispatch, useAppSelector } from '../../../app/Hooks';
 import { RootState } from '../../../app/Store';
 
-export const EventsHandler = () => {
+export const EventsHandler = React.memo(() => {
   const events = useAppSelector((state: RootState) => state.game.events);
 
   if (!events) {
@@ -27,6 +28,6 @@ export const EventsHandler = () => {
   }
 
   return null;
-};
+});
 
 export default EventsHandler;

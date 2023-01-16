@@ -48,7 +48,7 @@ function App() {
           }
         }}
       />
-      <EventsHandler />
+
       <div
         id="cardDetail"
         style={{ display: 'none', position: 'absolute' }}
@@ -65,6 +65,7 @@ function App() {
       </div>
       <OptionsOverlay />
       <GameStateHandler />
+      <EventsHandler />
     </div>
   );
 }

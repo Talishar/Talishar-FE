@@ -3,7 +3,7 @@ import { RootState } from './Store';
 import { nextTurn, setGameStart } from '../features/game/GameSlice';
 import { useAppDispatch, useAppSelector } from './Hooks';
 
-export default function GameStateHandler() {
+export const GameStateHandler = React.memo(() => {
   const QueryParam = new URLSearchParams(window.location.search);
   const params = useAppSelector((state: RootState) => state.game.gameInfo);
   const isUpdateInProgress = useAppSelector(
@@ -45,4 +45,6 @@ export default function GameStateHandler() {
   }, []);
 
   return null;
-}
+});
+
+export default GameStateHandler;
