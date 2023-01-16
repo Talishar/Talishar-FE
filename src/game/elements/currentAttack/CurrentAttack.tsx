@@ -77,7 +77,9 @@ export default function CurrentAttack() {
           ) : null}
           {activeCombatChain.damagePrevention ? (
             <div className={styles.icon}>
-              <GiShield title="Damage Prevention" />
+              <GiShield
+                title={`${activeCombatChain.damagePrevention} Damage Prevention`}
+              />
               {activeCombatChain.damagePrevention}
             </div>
           ) : null}
