@@ -27,4 +27,6 @@ export default interface Player {
   Soul?: Card[];
   SoulCount?: number;
   Playmat?: string;
+  isPatron?: boolean;
+  isContributor?: boolean;
 }

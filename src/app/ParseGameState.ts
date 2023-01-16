@@ -277,7 +277,11 @@ export default function ParseGameState(input: any) {
   // if it's the first turn of the game add these details:
   if (input.initialLoad) {
     result.playerOne.Name = input.initialLoad.playerName;
+    result.playerOne.isPatron = input.initialLoad.playerIsPatron;
+    result.playerOne.isContributor = input.initialLoad.playerIsContributor;
     result.playerTwo.Name = input.initialLoad.opponentName;
+    result.playerTwo.isPatron = input.initialLoad.opponentIsPatron;
+    result.playerTwo.isContributor = input.initialLoad.opponentIsContributor;
   }
 
   result.playerPrompt = input.playerPrompt;
@@ -285,6 +289,6 @@ export default function ParseGameState(input: any) {
   result.canPassPhase = input.canPassPhase;
 
   result.events = input.newEvents?.eventArray;
-  
+
   return result;
 }

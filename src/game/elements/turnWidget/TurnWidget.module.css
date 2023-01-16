@@ -2,8 +2,12 @@
   top: 0px;
   right: 0px;
   position: absolute;
+
+  width: 16vh;
+  height: 22vh;
   width: 16dvh;
   height: 22dvh;
+
   z-index: 15;
   user-select: none;
 }
@@ -14,7 +18,10 @@
   background-size: 12vh auto;
   background-repeat: no-repeat;
   height: 100%;
+
+  width: 15vh;
   width: 15dvh;
+
   position: absolute;
   right: 0px;
   display: flex;
@@ -33,6 +40,11 @@
 }
 
 .widgetRightCol {
+  width: 12vh;
+  height: 19vh;
+  gap: 1vh;
+  margin-right: 1vh;
+
   width: 12dvh;
   display: flex;
   flex-direction: column;

@@ -9,11 +9,15 @@
 }
 
 .normalSize {
+  height: 10vh;
+  width: 10vh;
   height: 10dvh;
   width: 10dvh;
 }
 
 .biggerSize {
+  height: 12vh;
+  width: 12vh;
   height: 12dvh;
   width: 12dvh;
 }

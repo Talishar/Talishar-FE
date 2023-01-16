@@ -12,9 +12,10 @@
 }
 
 .cardTable {
-  width: 100%
+  width: 100%;
 }
 
 .card {
+  width: 5vh;
   width: 5dvh;
 }
