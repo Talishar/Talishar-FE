@@ -1,3 +1,4 @@
+import React from 'react';
 import { useEffect } from 'react';
 import { RootState } from './Store';
 import { nextTurn, setGameStart } from '../features/game/GameSlice';
