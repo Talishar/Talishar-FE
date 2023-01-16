@@ -10,21 +10,35 @@ export default function PlayerName(player: Player) {
     player.isPlayer ? state.game.playerOne.Name : state.game.playerTwo.Name
   );
 
-  const isVerified = useAppSelector((state: RootState) =>
+  const isPatron = useAppSelector((state: RootState) =>
     player.isPlayer
-      ? state.game.playerOne.IsVerified
-      : state.game.playerTwo.IsVerified
+      ? state.game.playerOne.isPatron
+      : state.game.playerTwo.isPatron
+  );
+
+  const isContributor = useAppSelector((state: RootState) =>
+    player.isPlayer
+      ? state.game.playerOne.isContributor
+      : state.game.playerTwo.isContributor
   );
 
   return (
     <div className={styles.playerName}>
+      {isPatron ? (
+        <img
+          className={styles.icon}
+          src="./images/patronHeart.webp"
+          title="I am a patreon of Talishar!"
+        />
+      ) : null}
+      {isContributor ? (
+        <img
+          className={styles.icon}
+          src="./images/copper.webp"
+          title="I am a contributor to Talishar!"
+        />
+      ) : null}
       {playerName}
-
-      {isVerified ? (
-        <FaCertificate aria-hidden="true" fontSize={'1.5rem'} />
-      ) : (
-        <></>
-      )}
     </div>
   );
 }

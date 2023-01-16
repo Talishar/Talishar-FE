@@ -13,3 +13,8 @@
   align-items: center;
   justify-content: flex-start;
 }
+
+.icon {
+  height: 3vh;
+  width: 3vh;
+}
