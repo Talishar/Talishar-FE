@@ -1,5 +1,6 @@
 .passTurnDisplay {
-  font-size: 0.75rem;
+  font-size: 1.5rem;
+  text-shadow: 0 0 5 rgb(0, 255, 38);
   display: flex;
   align-items: center;
   justify-content: center;
