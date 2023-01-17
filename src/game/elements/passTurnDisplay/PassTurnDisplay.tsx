@@ -35,8 +35,8 @@ export default function PassTurnDisplay() {
   if (canPassPhase === true) {
     return (
       <div className={styles.passTurnDisplayActive} onClick={onPassTurn}>
-        PASS <br />
-        [spacebar]
+        <div> PASS </div>
+        <div classMame={styles.subthing}> [spacebar]</div>
       </div>
     );
   }
