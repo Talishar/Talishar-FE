@@ -1,6 +1,7 @@
 import React from 'react';
 import { useEffect } from 'react';
 import { toast } from 'react-hot-toast';
+import { GiAngelOutfit } from 'react-icons/gi';
 import { shallowEqual } from 'react-redux';
 import { useAppDispatch, useAppSelector } from '../../../app/Hooks';
 import { RootState } from '../../../app/Store';
@@ -47,6 +48,17 @@ export const EventsHandler = React.memo(() => {
             toast((t) => (
               <div className={styles.card}>
                 Card Banished
+                <CardDisplay
+                  card={{ cardNumber: event.eventValue ?? '' }}
+                  makeMeBigger
+                />
+              </div>
+            ));
+            continue;
+          case 'SOUL':
+            toast((t) => (
+              <div className={styles.card}>
+                Into Soul <GiAngelOutfit />
                 <CardDisplay
                   card={{ cardNumber: event.eventValue ?? '' }}
                   makeMeBigger
