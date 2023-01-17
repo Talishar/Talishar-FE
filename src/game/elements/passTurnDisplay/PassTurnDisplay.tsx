@@ -36,7 +36,7 @@ export default function PassTurnDisplay() {
     return (
       <div className={styles.passTurnDisplayActive} onClick={onPassTurn}>
         <div> PASS </div>
-        <div classMame={styles.subThing}> [spacebar]</div>
+        <div className={styles.subThing}>[spacebar]</div>
       </div>
     );
   }
