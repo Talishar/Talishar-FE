@@ -3,10 +3,14 @@ import { useEffect } from 'react';
 import { RootState } from './Store';
 import { nextTurn, setGameStart } from '../features/game/GameSlice';
 import { useAppDispatch, useAppSelector } from './Hooks';
+import { shallowEqual } from 'react-redux';
 
 export const GameStateHandler = React.memo(() => {
   const QueryParam = new URLSearchParams(window.location.search);
-  const params = useAppSelector((state: RootState) => state.game.gameInfo);
+  const params = useAppSelector(
+    (state: RootState) => state.game.gameInfo,
+    shallowEqual
+  );
   const isUpdateInProgress = useAppSelector(
     (state: RootState) => state.game.isUpdateInProgress
   );
@@ -48,4 +52,5 @@ export const GameStateHandler = React.memo(() => {
   return null;
 });
 
+GameStateHandler.displayName = 'GameStateHandler';
 export default GameStateHandler;
