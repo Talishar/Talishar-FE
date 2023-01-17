@@ -12,6 +12,7 @@
   text-shadow: 0 0 5 rgb(0, 255, 38);
   font-size: 2rem;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   height: 7vh;
