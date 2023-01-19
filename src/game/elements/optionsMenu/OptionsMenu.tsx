@@ -27,46 +27,52 @@ const OptionsContent = () => {
 
   const gameURL = `http://fe.talishar.net/?gameName=${gameInfo.gameID}&playerID=3`;
 
-  const closeOptions = () => {
+  const clickCloseOptionsHandler = () => {
     dispatch(closeOptionsMenu());
   };
 
-  const submitOptions = () => {
+  const clickSubmitOptionsHandler = () => {
     // TODO: implement
     console.log('submitting options');
   };
 
-  const concedeGame = () => {
+  const clickConcedeGameHandler = () => {
     // TODO: implement
-    console.log('coneding game placeholder');
   };
 
-  const mainMenu = () => {
-    // TODO: implement
-    console.log('going to main menu');
+  const clickPlayLegacyHandler = async (e: React.MouseEvent) => {
+    e.preventDefault;
+    await screenfull.exit();
+    window.location.href = `https://talishar.net/game/NextTurn4.php?gameName=${gameInfo.gameID}&playerID=${gameInfo.playerID}`;
   };
 
-  const reportBug = () => {
+  const mainMenu = async (e: React.MouseEvent) => {
+    e.preventDefault;
+    await screenfull.exit();
+    window.location.href = `https://talishar.net/game/NextTurn4.php?gameName=${gameInfo.gameID}&playerID=${gameInfo.playerID}`;
+  };
+
+  const clickReportBugHandler = () => {
     dispatch(submitButton({ button: { mode: 100003 } })); // 100003 - report bug
-    closeOptions();
+    clickCloseOptionsHandler();
   };
 
-  const undoButtonHandler = () => {
+  const clickUndoButtonHandler = () => {
     dispatch(submitButton({ button: { mode: 10000 } })); // 10000 - undo
-    closeOptions();
+    clickCloseOptionsHandler();
   };
 
-  const revertToStartOfThisTurn = () => {
+  const clickRevertToStartOfThisTurnHandler = () => {
     // TODO: implement
     console.log('revert to start of this turn');
   };
 
-  const revertToStartOfPreviousTurn = () => {
+  const clickRevertToStartOfPreviousTurnHandler = () => {
     // TODO: implement
     console.log('revert to start of previous turn');
   };
 
-  const copySpectateToClipboard = () => {
+  const clickCopySpectateToClipboardHandler = () => {
     navigator.clipboard.writeText(gameURL);
   };
 
@@ -127,7 +133,7 @@ const OptionsContent = () => {
         <Formik
           enableReinitialize
           initialValues={initialValues}
-          onSubmit={submitOptions}
+          onSubmit={clickSubmitOptionsHandler}
         >
           {({ values }) => (
             <Form>
@@ -230,37 +236,33 @@ const OptionsContent = () => {
       <div className={styles.column}>
         <h3>Navigation</h3>
         <div className={styles.rightColumn}>
-          <button
-            className={styles.buttonDiv}
-            onClick={async (e) => {
-              e.preventDefault;
-              await screenfull.exit();
-              window.location.href = `https://talishar.net/game/NextTurn4.php?gameName=${gameInfo.gameID}&playerID=${gameInfo.playerID}`;
-            }}
-          >
+          <button className={styles.buttonDiv} onClick={clickPlayLegacyHandler}>
             Play in legacy Talishar client.
           </button>
           <button className={styles.buttonDiv} onClick={mainMenu}>
             Home page
           </button>
-          <button className={styles.buttonDiv} onClick={concedeGame}>
+          <button
+            className={styles.buttonDiv}
+            onClick={clickConcedeGameHandler}
+          >
             Concede
           </button>
-          <button className={styles.buttonDiv} onClick={reportBug}>
+          <button className={styles.buttonDiv} onClick={clickReportBugHandler}>
             Report Bug
           </button>
-          <button className={styles.buttonDiv} onClick={undoButtonHandler}>
+          <button className={styles.buttonDiv} onClick={clickUndoButtonHandler}>
             Undo
           </button>
           <button
             className={styles.buttonDiv}
-            onClick={revertToStartOfThisTurn}
+            onClick={clickRevertToStartOfThisTurnHandler}
           >
             Revert to Start of This turn
           </button>
           <button
             className={styles.buttonDiv}
-            onClick={revertToStartOfPreviousTurn}
+            onClick={clickRevertToStartOfPreviousTurnHandler}
           >
             Revert to Start of Previous Turn
           </button>
@@ -270,7 +272,7 @@ const OptionsContent = () => {
           {gameURL}
           <button
             className={styles.buttonDiv}
-            onClick={copySpectateToClipboard}
+            onClick={clickCopySpectateToClipboardHandler}
           >
             Copy Spectate Link
           </button>
