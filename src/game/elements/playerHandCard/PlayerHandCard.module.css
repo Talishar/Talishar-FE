@@ -12,6 +12,8 @@
   -moz-user-drag: none;
   -o-user-drag: none;
   user-drag: none;
+  border-radius: 1vh;
+  border-radius: 1dvh;
 }
 
 .imgContainer {
@@ -53,56 +55,35 @@
 
 .border1 {
   border-color: deepskyblue;
-  border-style: solid;
-  margin: -3px -5px -3px -2px;
-  border-radius: 20px;
-  box-shadow: 0 0 3px 3px deepskyblue;
+  box-shadow: 0 0 5px 5px deepskyblue;
 }
 
 .border2 {
   border-color: red;
-  border-style: solid;
-  margin: -3px -5px -3px -2px;
-  border-radius: 20px;
-  box-shadow: 0 0 3px 3px red;
+  box-shadow: 0 0 5px 5px red;
 }
 
 .border3 {
   border-color: goldenrod;
-  border-style: solid;
-  margin: -3px -5px -3px -2px;
-  border-radius: 20px;
-  box-shadow: 0 0 3px 3px goldenrod;
+  box-shadow: 0 0 5px 5px goldenrod;
 }
 
 .border4 {
   border-color: gray;
-  border-style: solid;
-  margin: -3px -5px -3px -2px;
-  border-radius: 20px;
-  box-shadow: 0 0 3px 3px gray;
+  box-shadow: 0 0 5px 5px gray;
 }
 
 .border5 {
   border-color: tan;
-  border-style: solid;
-  margin: -3px -5px -3px -2px;
-  border-radius: 20px;
-  box-shadow: 0 0 3px 3px tan;
+  box-shadow: 0 0 5px 5px tan;
 }
 
 .border6 {
   border-color: chartreuse;
-  border-style: solid;
-  margin: -3px -5px -3px -2px;
-  border-radius: 20px;
-  box-shadow: 0 0 3px 3px chartreuse;
+  box-shadow: 0 0 5px 5px chartreuse;
 }
 
 .border7 {
   border-color: purple;
-  border-style: solid;
-  margin: -3px -5px -3px -2px;
-  border-radius: 20px;
   box-shadow: 0 0 5px 5px purple;
 }

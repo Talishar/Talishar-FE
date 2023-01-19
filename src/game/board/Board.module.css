@@ -14,7 +14,8 @@
   height: 32vh;
   margin: auto;
   width: 95%;
-  border-radius: 10px;
+  border-radius: 2vh;
+  border-radius: 2dvh;
   padding: 1vh;
   background-image: url('../../img/backgrounds/everfest-bg.webp');
   background-repeat: no-repeat;
