@@ -37,7 +37,7 @@ const OptionsContent = () => {
   };
 
   const clickConcedeGameHandler = () => {
-    // TODO: implement
+    dispatch(submitButton({ button: { mode: PROCESS_INPUT.CONCEDE_GAME } }));
   };
 
   const clickPlayLegacyHandler = async (e: React.MouseEvent) => {
@@ -49,7 +49,7 @@ const OptionsContent = () => {
   const mainMenu = async (e: React.MouseEvent) => {
     e.preventDefault;
     await screenfull.exit();
-    window.location.href = `https://talishar.net/game/NextTurn4.php?gameName=${gameInfo.gameID}&playerID=${gameInfo.playerID}`;
+    window.location.href = `https://talishar.net/game/MainMenu.php`;
   };
 
   const clickReportBugHandler = () => {
@@ -65,7 +65,7 @@ const OptionsContent = () => {
   const clickRevertToStartOfThisTurnHandler = () => {
     dispatch(
       submitButton({ button: { mode: PROCESS_INPUT.REVERT_TO_PRIOR_TURN } })
-    ); // 10000 - undo
+    );
     clickCloseOptionsHandler();
   };
 
