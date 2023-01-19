@@ -3,6 +3,7 @@ import { playCard, submitButton } from '../../../features/game/GameSlice';
 import { useAppSelector, useAppDispatch } from '../../../app/Hooks';
 import { RootState } from '../../../app/Store';
 import styles from './PassTurnDisplay.module.css';
+import { PROCESS_INPUT } from '../../../constants';
 
 export default function PassTurnDisplay() {
   const canPassPhase = useAppSelector(
@@ -12,7 +13,7 @@ export default function PassTurnDisplay() {
   const dispatch = useAppDispatch();
 
   const onPassTurn = () => {
-    dispatch(submitButton({ button: { mode: 99 } }));
+    dispatch(submitButton({ button: { mode: PROCESS_INPUT.PASS } }));
   };
 
   const pressKey = (e: KeyboardEvent) => {

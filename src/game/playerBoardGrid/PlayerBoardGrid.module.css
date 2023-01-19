@@ -1,0 +1,49 @@
+.playerBoard {
+  display: grid;
+  grid-template-rows: 10vh 10vh 10vh;
+  grid-template-columns: 10vh 10vh 1fr 10vh 10vh 10vh 1fr 10vh 10vh;
+  gap: 1vh;
+  padding: 1vh;
+  grid-template-areas:
+    'head permanents permanents permanents permanents permanents permanents permanents graveyard'
+    'chest gloves . weaponl hero weaponr . pitch deck'
+    'feet . . arsenal arsenal arsenal . zonecounts banish';
+}
+
+.playerBoardB {
+  display: grid;
+  grid-template-rows: 10vh 10vh 10vh;
+  grid-template-columns: 10vh 10vh 1fr 10vh 10vh 10vh 10vh 10vh;
+  gap: 1vh;
+  padding: 1vh;
+  grid-template-areas:
+    'head . permanents weaponl hero weaponr . graveyard'
+    'chest gloves permanents arsenal arsenal arsenal pitch deck'
+    'feet . permanents . . . zonecounts banish';
+}
+
+.playerPlaymat {
+  top: 2vh;
+  position: relative;
+  margin: auto;
+  width: 95%;
+  border-radius: 10px;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+}
+
+.FirstBox {
+  background-color: green;
+  grid-area: green;
+}
+
+.SecondBox {
+  background-color: red;
+  grid-area: red;
+}
+
+.ThirdBox {
+  background-color: yellow;
+  grid-area: yellow;
+}

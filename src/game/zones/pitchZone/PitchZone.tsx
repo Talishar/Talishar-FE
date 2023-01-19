@@ -3,7 +3,7 @@ import { RootState } from '../../../app/Store';
 import Displayrow from '../../../interface/Displayrow';
 import CardDisplay from '../../elements/cardDisplay/CardDisplay';
 import { setCardListFocus } from '../../../features/game/GameSlice';
-import styles from '../Cardzone.module.css';
+import styles from './PitchZone.module.css';
 import PitchDisplay from '../../elements/pitchDisplay/PitchDisplay';
 import { useAppDispatch, useAppSelector } from '../../../app/Hooks';
 

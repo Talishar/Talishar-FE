@@ -1,0 +1,10 @@
+.glovesZone {
+  border-radius: 10px;
+  background: rgba(50, 50, 50, 0.5);
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+  grid-area: gloves;
+}

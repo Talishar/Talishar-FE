@@ -4,7 +4,7 @@ import { RootState } from '../../../app/Store';
 import Displayrow from '../../../interface/Displayrow';
 import CardDisplay from '../../elements/cardDisplay/CardDisplay';
 import { Card } from '../../../features/Card';
-import styles from '../Cardzone.module.css';
+import styles from './ArsenalZone.module.css';
 
 export default function ArsenalZone(prop: Displayrow) {
   const { isPlayer } = prop;
@@ -20,14 +20,20 @@ export default function ArsenalZone(prop: Displayrow) {
     arsenalCards.length === 0 ||
     arsenalCards[0].cardNumber === ''
   ) {
-    return <div className={styles.arsenalZone}>Arsenal</div>;
+    return (
+      <div className={styles.arsenalContainer}>
+        <div className={styles.arsenalZone}>Arsenal</div>
+      </div>
+    );
   }
 
   return (
-    <div className={styles.arsenalZone}>
-      {arsenalCards.map((card: Card, index) => {
-        return <CardDisplay card={card} key={index} />;
-      })}
+    <div className={styles.arsenalContainer}>
+      <div className={styles.arsenalZone}>
+        {arsenalCards.map((card: Card, index) => {
+          return <CardDisplay card={card} key={index} />;
+        })}
+      </div>
     </div>
   );
 }

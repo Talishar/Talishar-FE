@@ -11,6 +11,8 @@ import { RootState } from './app/Store';
 import OptionsOverlay from './game/elements/optionsMenu/OptionsMenu';
 import { Toaster } from 'react-hot-toast';
 import EventsHandler from './game/elements/eventsHandler/EventsHandler';
+import PlayerInputPopUp from './game/elements/playerInputPopUp/PlayerInputPopUp';
+import CardPopUp from './game/elements/cardPopUp/CardPopUp';
 
 function App() {
   const [maxWidth, setMaxWidth] = useState(1920);
@@ -64,6 +66,8 @@ function App() {
         <RightColumn />
       </div>
       <OptionsOverlay />
+      <PlayerInputPopUp />
+      <CardPopUp />
       <GameStateHandler />
       <EventsHandler />
     </div>

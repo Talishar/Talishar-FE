@@ -3,7 +3,7 @@ import { RootState } from '../../../app/Store';
 import Displayrow from '../../../interface/Displayrow';
 import { setCardListFocus } from '../../../features/game/GameSlice';
 import CardDisplay from '../../elements/cardDisplay/CardDisplay';
-import styles from '../Cardzone.module.css';
+import styles from './GraveyardZone.module.css';
 import { useAppDispatch, useAppSelector } from '../../../app/Hooks';
 
 export const GraveyardZone = React.memo((prop: Displayrow) => {

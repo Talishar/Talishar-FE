@@ -4,6 +4,7 @@ import gemOn from '../../../img/elements/hexagonRedGemGlow.png';
 import gemOff from '../../../img/elements/hexagonGrayGem.png';
 import styles from './GemSlider.module.css';
 import { submitButton } from '../../../features/game/GameSlice';
+import { PROCESS_INPUT } from '../../../constants';
 
 interface GemSlider {
   gem?: 'none' | 'inactive' | 'active';
@@ -18,7 +19,12 @@ const GemSlider = (props: GemSlider) => {
 
   const onClick = () => {
     dispatch(
-      submitButton({ button: { buttonInput: props.cardID, mode: 102 } })
+      submitButton({
+        button: {
+          buttonInput: props.cardID,
+          mode: PROCESS_INPUT.TOGGLE_EQUIPMENT_ACTIVE
+        }
+      })
     );
   };
 
