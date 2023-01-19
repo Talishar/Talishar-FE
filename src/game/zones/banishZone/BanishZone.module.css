@@ -2,8 +2,6 @@
   position: relative;
   right: 0px;
   display: flex;
-  height: 10vh;
-  width: 10vh;
   justify-content: center;
   align-items: center;
   background: rgba(50, 50, 50, 0.5);

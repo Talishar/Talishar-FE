@@ -1,7 +1,7 @@
 .playerBoard {
   display: grid;
-  grid-template-rows: 12vh 12vh 12vh;
-  grid-template-columns: 12vh 12vh 1fr 12vh 12vh 12vh 1fr 12vh 12vh;
+  grid-template-rows: 10vh 10vh 10vh;
+  grid-template-columns: 10vh 10vh 1fr 10vh 10vh 10vh 1fr 10vh 10vh;
   gap: 1vh;
   padding: 1vh;
   grid-template-areas:

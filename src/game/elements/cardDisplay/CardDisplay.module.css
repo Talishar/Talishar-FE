@@ -11,9 +11,8 @@
 
 .normalSize {
   height: 10vh;
-  width: 10vh;
   height: 10dvh;
-  width: 10dvh;
+  aspect-ratio: 1;
 }
 
 .biggerSize {

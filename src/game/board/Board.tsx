@@ -25,7 +25,6 @@ export function Board() {
       <CardListZone />
       <ChainLinkSummaryContainer />
       <ActiveLayersZone />
-      <PlayerInputPopUp />
     </div>
   );
 }

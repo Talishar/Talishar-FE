@@ -27,7 +27,6 @@ export default function OpponentBoard() {
         <BottomRow isPlayer={false} />
         <MiddleRow isPlayer={false} />
         <TopRow isPlayer={false} />
-        <CardPopUp />
       </div>
     </div>
   );

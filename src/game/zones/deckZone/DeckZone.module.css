@@ -1,6 +1,6 @@
 .deckZone {
-  height: 10vh;
-  width: 10vh;
+  width: 100%;
+  height: 100%;
   right: 0px;
   border-radius: 10px;
   display: flex;

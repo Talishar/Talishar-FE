@@ -10,6 +10,18 @@
     'feet . . arsenal arsenal arsenal . zonecounts banish';
 }
 
+.playerBoardB {
+  display: grid;
+  grid-template-rows: 10vh 10vh 10vh;
+  grid-template-columns: 10vh 10vh 1fr 10vh 10vh 10vh 10vh 10vh;
+  gap: 1vh;
+  padding: 1vh;
+  grid-template-areas:
+    'head . permanents weaponl hero weaponr . graveyard'
+    'chest gloves permanents arsenal arsenal arsenal pitch deck'
+    'feet . permanents . . . zonecounts banish';
+}
+
 .playerPlaymat {
   top: 2vh;
   position: relative;

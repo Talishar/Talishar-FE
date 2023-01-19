@@ -1,8 +1,5 @@
 .pitchZone {
   position: relative;
-  height: 10vh;
-  width: 10vh;
-  margin-right: 1vh;
   border-radius: 10px;
   display: flex;
   justify-content: center;
