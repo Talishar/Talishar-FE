@@ -8,6 +8,7 @@ import ActiveLayersZone from '../zones/activeLayersZone/ActiveLayersZone';
 import PlayerInputPopUp from '../elements/playerInputPopUp/PlayerInputPopUp';
 import PlayerPrompt from '../elements/playerPrompt/PlayerPrompt';
 import ChainLinkSummaryContainer from '../elements/chainLinkSummary/ChainLinkSummary';
+import PlayerBoardGrid from '../playerBoardGrid/PlayerBoardGrid';
 
 export interface playAreaDimensions {
   dimension: number;
@@ -19,7 +20,7 @@ export function Board() {
       <OpponentBoard />
       <CombatChain />
       <PlayerPrompt />
-      <PlayerBoard />
+      <PlayerBoardGrid />
       <CardListZone />
       <ChainLinkSummaryContainer />
       <ActiveLayersZone />
