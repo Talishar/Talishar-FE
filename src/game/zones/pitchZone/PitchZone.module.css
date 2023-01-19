@@ -1,0 +1,13 @@
+.pitchZone {
+  position: relative;
+  height: 10vh;
+  width: 10vh;
+  margin-right: 1vh;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(50, 50, 50, 0.5);
+  color: white;
+  grid-area: arsenal;
+}

@@ -3,7 +3,7 @@ import { useAppSelector } from '../../../app/Hooks';
 import { RootState } from '../../../app/Store';
 import Displayrow from '../../../interface/Displayrow';
 import CardDisplay from '../../elements/cardDisplay/CardDisplay';
-import styles from '../Cardzone.module.css';
+import styles from './HeadEqZone.module.css';
 
 export const HeadEqZone = React.memo((prop: Displayrow) => {
   const { isPlayer } = prop;
@@ -12,11 +12,11 @@ export const HeadEqZone = React.memo((prop: Displayrow) => {
   );
 
   if (cardToDisplay === undefined) {
-    return <div className={styles.hatZone}>Head</div>;
+    return <div className={styles.headZone}>Head</div>;
   }
 
   return (
-    <div className={styles.hatZone}>
+    <div className={styles.headZone}>
       <CardDisplay card={cardToDisplay} />
     </div>
   );

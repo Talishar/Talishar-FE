@@ -1,0 +1,13 @@
+.headZone {
+  position: relative;
+  left: 0px;
+  border-radius: 1vh;
+  flex: 0 0 10vh;
+  background: rgba(50, 50, 50, 0.5);
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+  grid-area: head;
+}

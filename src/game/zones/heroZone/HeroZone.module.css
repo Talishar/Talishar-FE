@@ -1,0 +1,6 @@
+.heroZone {
+  flex: 0 0 10vh;
+  margin-left: 1vh;
+  margin-right: 1vh;
+  grid-area: hero;
+}

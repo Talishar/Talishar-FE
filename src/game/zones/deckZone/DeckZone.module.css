@@ -1,0 +1,12 @@
+.deckZone {
+  height: 10vh;
+  width: 10vh;
+  right: 0px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(50, 50, 50, 0.5);
+  color: white;
+  grid-area: deck;
+}

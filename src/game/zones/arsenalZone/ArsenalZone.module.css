@@ -1,0 +1,15 @@
+.arsenalZone {
+  position: relative;
+  height: 10vh;
+  flex: 0 0 10vh;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+  background: rgba(50, 50, 50, 0.5);
+  color: white;
+  grid-area: arsenal;
+}

@@ -1,0 +1,5 @@
+.weaponLZone {
+  flex: 0 0 10vh;
+  right: 1vh;
+  grid-area: weaponl;
+}

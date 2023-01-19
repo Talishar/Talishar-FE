@@ -1,0 +1,44 @@
+.permanentsWrapper {
+  position: relative;
+  overflow-x: clip;
+  flex: 0 1 100%;
+  min-width: 0;
+  border-radius: 10px;
+  gap: 1vh;
+  background: rgba(50, 50, 50, 0.5);
+  color: white;
+  height: 10vh;
+  grid-area: permanents;
+}
+
+.permanentsZone {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: -10px;
+  padding-bottom: 10px;
+  display: flex;
+  overflow-x: auto;
+  overflow-y: hidden;
+  justify-content: flex-start;
+  gap: 1vh;
+  align-content: flex-start;
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.permanentsText {
+  position: absolute;
+  top: 0px;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.permanentsZone::-webkit-scrollbar {
+  display: none;
+}

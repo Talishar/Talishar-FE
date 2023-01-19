@@ -3,7 +3,7 @@ import { useAppSelector } from '../../../app/Hooks';
 import { RootState } from '../../../app/Store';
 import Displayrow from '../../../interface/Displayrow';
 import CardDisplay from '../../elements/cardDisplay/CardDisplay';
-import styles from '../Cardzone.module.css';
+import styles from './DeckZone.module.css';
 
 export const DeckZone = React.memo((prop: Displayrow) => {
   const { isPlayer } = prop;
