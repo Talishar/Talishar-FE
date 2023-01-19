@@ -1,11 +1,6 @@
 .glovesZone {
-  position: relative;
   text-align: left;
   place-self: start;
-  flex: 0 0 10vh;
-  margin-left: 1vh;
-  height: 10vh;
-  border-radius: 10px;
   background: rgba(50, 50, 50, 0.5);
   color: white;
   display: flex;

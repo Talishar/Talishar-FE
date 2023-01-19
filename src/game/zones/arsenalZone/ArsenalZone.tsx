@@ -20,14 +20,20 @@ export default function ArsenalZone(prop: Displayrow) {
     arsenalCards.length === 0 ||
     arsenalCards[0].cardNumber === ''
   ) {
-    return <div className={styles.arsenalZone}>Arsenal</div>;
+    return (
+      <div className={styles.arsenalContainer}>
+        <div className={styles.arsenalZone}>Arsenal</div>
+      </div>
+    );
   }
 
   return (
-    <div className={styles.arsenalZone}>
-      {arsenalCards.map((card: Card, index) => {
-        return <CardDisplay card={card} key={index} />;
-      })}
+    <div className={styles.arsenalContainer}>
+      <div className={styles.arsenalZone}>
+        {arsenalCards.map((card: Card, index) => {
+          return <CardDisplay card={card} key={index} />;
+        })}
+      </div>
     </div>
   );
 }

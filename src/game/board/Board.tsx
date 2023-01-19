@@ -9,6 +9,7 @@ import PlayerInputPopUp from '../elements/playerInputPopUp/PlayerInputPopUp';
 import PlayerPrompt from '../elements/playerPrompt/PlayerPrompt';
 import ChainLinkSummaryContainer from '../elements/chainLinkSummary/ChainLinkSummary';
 import PlayerBoardGrid from '../playerBoardGrid/PlayerBoardGrid';
+import OpponentBoardGrid from '../opponentBoardGrid/OpponentBoardGrid';
 
 export interface playAreaDimensions {
   dimension: number;
@@ -17,7 +18,7 @@ export interface playAreaDimensions {
 export function Board() {
   return (
     <div className={styles.gameBoard}>
-      <OpponentBoard />
+      <OpponentBoardGrid />
       <CombatChain />
       <PlayerPrompt />
       <PlayerBoardGrid />

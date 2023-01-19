@@ -1,8 +1,5 @@
 import React from 'react';
-import TopRow from '../topRow/TopRow';
-import MiddleRow from '../middleRow/MiddleRow';
-import BottomRow from '../bottomRow/BottomRow';
-import styles from './PlayerBoardGrid.module.css';
+import styles from './OpponentBoardGrid.module.css';
 import { useAppSelector } from '../../app/Hooks';
 import { RootState } from '../../app/Store';
 import { DEFAULT_PLAYMAT } from '../../constants';
@@ -21,7 +18,7 @@ import ArsenalZone from '../zones/arsenalZone/ArsenalZone';
 import ZoneCounts from '../zones/zoneCountsZone/ZoneCounts';
 import BanishZone from '../zones/banishZone/BanishZone';
 
-export default function PlayerBoardGrid() {
+export default function OpponentBoardGrid() {
   let playmat = useAppSelector(
     (state: RootState) => state.game.playerOne.Playmat
   );
@@ -38,20 +35,20 @@ export default function PlayerBoardGrid() {
     <div className={styles.playerPlaymat} style={styleToApply}>
       {/* Customise the playmat here */}
       <div className={styles.playerBoard}>
-        <HeadEqZone isPlayer />
-        <PermanentsZone isPlayer />
-        <GraveyardZone isPlayer />
-        <ChestEqZone isPlayer />
-        <GlovesEqZone isPlayer />
-        <WeaponLZone isPlayer />
-        <HeroZone isPlayer />
-        <WeaponRZone isPlayer />
-        <PitchZone isPlayer />
-        <DeckZone isPlayer />
-        <FeetEqZone isPlayer />
-        <ArsenalZone isPlayer />
-        <ZoneCounts isPlayer />
-        <BanishZone isPlayer />
+        <HeadEqZone isPlayer={false} />
+        <PermanentsZone isPlayer={false} />
+        <GraveyardZone isPlayer={false} />
+        <ChestEqZone isPlayer={false} />
+        <GlovesEqZone isPlayer={false} />
+        <WeaponLZone isPlayer={false} />
+        <HeroZone isPlayer={false} />
+        <WeaponRZone isPlayer={false} />
+        <PitchZone isPlayer={false} />
+        <DeckZone isPlayer={false} />
+        <FeetEqZone isPlayer={false} />
+        <ArsenalZone isPlayer={false} />
+        <ZoneCounts isPlayer={false} />
+        <BanishZone isPlayer={false} />
       </div>
     </div>
   );

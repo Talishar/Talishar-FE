@@ -1,17 +1,17 @@
 .playerBoard {
   display: grid;
-  grid-template-rows: 10vh 10vh 10vh;
-  grid-template-columns: 10vh 10vh 1fr 10vh 10vh 10vh 1fr 10vh 10vh;
+  grid-template-rows: 12vh 12vh 12vh;
+  grid-template-columns: 12vh 12vh 1fr 12vh 12vh 12vh 1fr 12vh 12vh;
   gap: 1vh;
   padding: 1vh;
   grid-template-areas:
-    'head permanents permanents permanents permanents permanents permanents permanents graveyard'
+    'feet . . arsenal arsenal arsenal . zonecounts banish'
     'chest gloves . weaponl hero weaponr . pitch deck'
-    'feet . . arsenal arsenal arsenal . zonecounts banish';
+    'head permanents permanents permanents permanents permanents permanents permanents graveyard';
 }
 
 .playerPlaymat {
-  top: 2vh;
+  top: -1vh;
   position: relative;
   margin: auto;
   width: 95%;
