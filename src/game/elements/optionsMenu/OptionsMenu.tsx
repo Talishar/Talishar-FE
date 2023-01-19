@@ -10,7 +10,7 @@ import {
 import { FaTimes } from 'react-icons/fa';
 import styles from './OptionsMenu.module.css';
 import { useGetPopUpContentQuery } from '../../../features/api/apiSlice';
-import { PLAYER_OPTIONS } from '../../../constants';
+import { PLAYER_OPTIONS, PROCESS_INPUT } from '../../../constants';
 
 const OptionsContent = () => {
   const optionsMenu = useAppSelector(
@@ -53,18 +53,20 @@ const OptionsContent = () => {
   };
 
   const clickReportBugHandler = () => {
-    dispatch(submitButton({ button: { mode: 100003 } })); // 100003 - report bug
+    dispatch(submitButton({ button: { mode: PROCESS_INPUT.REPORT_BUG } }));
     clickCloseOptionsHandler();
   };
 
   const clickUndoButtonHandler = () => {
-    dispatch(submitButton({ button: { mode: 10000 } })); // 10000 - undo
+    dispatch(submitButton({ button: { mode: PROCESS_INPUT.UNDO } }));
     clickCloseOptionsHandler();
   };
 
   const clickRevertToStartOfThisTurnHandler = () => {
-    // TODO: implement
-    console.log('revert to start of this turn');
+    dispatch(
+      submitButton({ button: { mode: PROCESS_INPUT.REVERT_TO_PRIOR_TURN } })
+    ); // 10000 - undo
+    clickCloseOptionsHandler();
   };
 
   const clickRevertToStartOfPreviousTurnHandler = () => {

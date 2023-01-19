@@ -9,6 +9,7 @@ import styles from './PlayerInputPopUp.module.css';
 import Button from '../../../features/Button';
 import { FaTimes } from 'react-icons/fa';
 import CardDisplay from '../cardDisplay/CardDisplay';
+import { PROCESS_INPUT } from '../../../constants';
 
 export default function PlayerInputPopUp() {
   const inputPopUp = useAppSelector(
@@ -35,7 +36,7 @@ export default function PlayerInputPopUp() {
   const dispatch = useAppDispatch();
 
   const onPassTurn = () => {
-    dispatch(submitButton({ button: { mode: 99 } }));
+    dispatch(submitButton({ button: { mode: PROCESS_INPUT.PASS } }));
   };
 
   const clickButton = (button: Button) => {

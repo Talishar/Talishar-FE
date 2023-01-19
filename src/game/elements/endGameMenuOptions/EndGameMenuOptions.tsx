@@ -4,6 +4,7 @@ import { submitButton } from '../../../features/game/GameSlice';
 import screenfull from 'screenfull';
 import styles from './EndGameMenuOptions.module.css';
 import { useState } from 'react';
+import { PROCESS_INPUT } from '../../../constants';
 
 const EndGameMenuOptions = () => {
   const dispatch = useAppDispatch();
@@ -11,18 +12,18 @@ const EndGameMenuOptions = () => {
 
   // TODO: Need constants for the button modes.
   const handleMainMenu = async () => {
-    dispatch(submitButton({ button: { mode: 100001 } }));
+    dispatch(submitButton({ button: { mode: PROCESS_INPUT.MAIN_MENU } }));
     await screenfull.exit();
     // TODO: handle this link better
     window.location.href = `https://talishar.net/game/MainMenu.php`;
   };
 
   const handleQuickRematch = () => {
-    dispatch(submitButton({ button: { mode: 100000 } }));
+    dispatch(submitButton({ button: { mode: PROCESS_INPUT.QUICK_REMATCH } }));
   };
 
   const handleFullRematch = () => {
-    dispatch(submitButton({ button: { mode: 100004 } }));
+    dispatch(submitButton({ button: { mode: PROCESS_INPUT.FULL_REMATCH } }));
     // TODO: Redirect to sideboard screen.
   };
 
@@ -31,7 +32,9 @@ const EndGameMenuOptions = () => {
     if (hasRated) {
       return;
     }
-    dispatch(submitButton({ button: { mode: 100008 } }));
+    dispatch(
+      submitButton({ button: { mode: PROCESS_INPUT.RATING_THUMBS_UP } })
+    );
     setHasRated(true);
   };
 
@@ -39,7 +42,9 @@ const EndGameMenuOptions = () => {
     if (hasRated) {
       return;
     }
-    dispatch(submitButton({ button: { mode: 100009 } }));
+    dispatch(
+      submitButton({ button: { mode: PROCESS_INPUT.RATING_THUMBS_DOWN } })
+    );
     setHasRated(true);
   };
 

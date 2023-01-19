@@ -8,6 +8,7 @@ import {
 import { FaUndo } from 'react-icons/fa';
 import { GiExpand, GiHamburgerMenu } from 'react-icons/gi';
 import styles from './Menu.module.css';
+import { PROCESS_INPUT } from '../../../constants';
 
 function MenuButton() {
   const dispatch = useAppDispatch();
@@ -50,7 +51,7 @@ function FullScreenButton() {
 function UndoButton() {
   const dispatch = useAppDispatch();
   const clickUndo = () => {
-    dispatch(submitButton({ button: { mode: 10000 } }));
+    dispatch(submitButton({ button: { mode: PROCESS_INPUT.UNDO } }));
   };
   return (
     <div>
