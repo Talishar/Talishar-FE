@@ -79,6 +79,7 @@ const ChainLinkSummary = ({
   } else {
     content = (
       <div className={styles.cardListContents}>
+        <div>Total Damage: {data.TotalDamageDealt}</div>
         <table className={styles.table}>
           <thead>
             <tr>
@@ -104,7 +105,7 @@ const ChainLinkSummary = ({
                     </td>
                     <td className={styles.column}>
                       {entry.modifier > 0 ? '+' : ''}
-                      {entry.modifier} attack or def
+                      {entry.modifier}
                     </td>
                   </tr>
                 );

@@ -1,15 +1,16 @@
 import React from 'react';
-import { Provider } from 'react-redux';
-import { store } from '../../../app/Store';
-import { createRoot } from 'react-dom/client';
+import { renderWithProviders } from '../../../utils/TestUtils';
 import PhaseTrackerWidget from './PhaseTrackerWidget';
 
-it('renders without crashing', () => {
-  const div = document.createElement('div');
-  const root = createRoot(div);
-  root.render(
-    <Provider store={store}>
-      <PhaseTrackerWidget />
-    </Provider>
-  );
+it('matches snapshot main phase', () => {
+  const div = renderWithProviders(<PhaseTrackerWidget phase={'M'} />);
+  const display = document.querySelector('div');
+  expect(display).toMatchSnapshot();
+});
+
+it('matches snapshot defence reaction phase', () => {
+  const div = renderWithProviders(<PhaseTrackerWidget phase={'D'} />);
+
+  const display = document.querySelector('div');
+  expect(display).toMatchSnapshot();
 });

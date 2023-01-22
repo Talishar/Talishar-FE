@@ -24,7 +24,8 @@ export default function OpponentBoardGrid() {
   );
 
   if (playmat === undefined) {
-    playmat = DEFAULT_PLAYMAT;
+    // playmat = DEFAULT_PLAYMAT;
+    playmat = `volcor`;
   }
 
   const styleToApply = {
