@@ -4,7 +4,10 @@
   top: 0px;
   bottom: 0px;
   width: 20%;
-  min-width: 200px;
+  min-width: 20vh;
+  min-width: 20dvh;
+  max-width: 20vh;
+  max-width: 20dvh;
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;

@@ -19,7 +19,7 @@ export default function PhaseTracker() {
     if (newPhase == null) {
       return;
     }
-    if (turnPhase?.turnPhase != 'P' && turnPhase?.turnPhase != undefined) {
+    if (turnPhase?.turnPhase != undefined) {
       setPhaseEnum(turnPhase.turnPhase);
     }
     setPhase(newPhase);

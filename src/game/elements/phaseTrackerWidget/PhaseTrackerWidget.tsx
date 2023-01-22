@@ -7,10 +7,13 @@ export interface TurnPhase {
 
 export default function PhaseTrackerWidget({ phase }: TurnPhase) {
   let styleToApply = { left: '0em' };
-  console.log(phase);
+
   switch (phase) {
     case 'M':
       styleToApply = { left: '0.42em' };
+      break;
+    case 'P':
+      styleToApply = { left: '3.08em' };
       break;
     case 'B':
       styleToApply = { left: '5.08em' };
