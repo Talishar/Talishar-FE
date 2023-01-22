@@ -17,6 +17,12 @@
   background-color: rgba(50, 50, 50, 0.5);
 }
 
+@media (orientation: portrait) {
+  .rightColumn {
+    display: none;
+  }
+}
+
 .topGroup {
   display: flex;
   flex-direction: column;

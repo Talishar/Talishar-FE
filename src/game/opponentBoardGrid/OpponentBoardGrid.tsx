@@ -25,7 +25,7 @@ export default function OpponentBoardGrid() {
 
   if (playmat === undefined) {
     // playmat = DEFAULT_PLAYMAT;
-    playmat = `misteria`;
+    playmat = `volcor`;
   }
 
   const styleToApply = {

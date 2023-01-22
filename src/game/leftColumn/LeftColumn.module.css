@@ -11,3 +11,9 @@
   width: 10dvh;
   height: 100vh;
 }
+
+@media (orientation: portrait) {
+  .leftColumn {
+    display: none;
+  }
+}
