@@ -2,14 +2,15 @@
   margin-top: 0.5vh;
   margin-bottom: 0.5vh;
   padding-left: 1vh;
-  border-radius: 10px;
+  border-radius: 0.5rem;
   background-color: #8e101d;
   display: flex;
   left: 0px;
   align-self: flex-start;
   height: 5vh;
   color: gold;
-  width: 20vw;
+  width: 30vh;
+  width: 30dvh;
   align-items: center;
   justify-content: flex-start;
 }

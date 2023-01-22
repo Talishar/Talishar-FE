@@ -27,7 +27,8 @@ export default function PlayerBoardGrid() {
   );
 
   if (playmat === undefined) {
-    playmat = DEFAULT_PLAYMAT;
+    // playmat = DEFAULT_PLAYMAT;
+    playmat = `aria`;
   }
 
   const styleToApply = {
