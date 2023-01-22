@@ -1,8 +1,12 @@
 .container {
   position: relative;
+  display: flex;
+  flex-direction: column;
   background-image: url('../../../img/elements/Banner.png');
-  width: 200px;
-  height: 200px;
+  width: 20vh;
+  width: 20dvh;
+  height: 20vh;
+  height: 20dvh;
   background-position: center;
   background-size: contain;
   background-repeat: no-repeat;
@@ -20,32 +24,34 @@
 }
 
 .titleContainer {
-  position: absolute;
-  top: 25px;
   display: flex;
   justify-content: center;
   align-content: center;
   align-items: center;
   left: 15%;
   right: 15%;
-  height: 35px;
+  width: 100%;
+  margin-top: 2vh;
+  margin-top: 2dvh;
+  height: 3vh;
+  height: 3dvh;
   text-align: center;
 }
 
 .phaseTrackerBottomContainer {
   text-align: center;
-  position: absolute;
   bottom: 0px;
-  height: 75px;
   width: 100%;
   display: flex;
+  flex-direction: column;
+  flex-grow: 1;
   justify-content: center;
   align-content: flex-start;
-  align-items: flex-start;
+  align-items: center;
 }
 
 .bottomInterior {
-  padding-top: 1.5vh;
+  flex-grow: 1;
   font-size: 0.75em;
   width: 70%;
 }
