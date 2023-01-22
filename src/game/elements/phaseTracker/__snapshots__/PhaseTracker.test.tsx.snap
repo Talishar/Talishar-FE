@@ -1,0 +1,32 @@
+// Vitest Snapshot v1
+
+exports[`renders without crashing 1`] = `
+<div>
+  <div
+    class="_container_eeb0ac"
+  >
+    <div
+      class="_titleContainer_eeb0ac"
+    >
+      <div
+        class="_titleInterior_eeb0ac"
+      />
+    </div>
+    <div
+      class="_phaseWidget_58c017"
+    >
+      <div
+        class="_icon_58c017"
+        style="left: 0em;"
+      />
+    </div>
+    <div
+      class="_phaseTrackerBottomContainer_eeb0ac"
+    >
+      <div
+        class="_bottomInterior_eeb0ac"
+      />
+    </div>
+  </div>
+</div>
+`;
