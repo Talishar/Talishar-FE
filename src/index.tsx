@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 import { store } from './app/Store';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import reportWebVitals from './reportWebVitals';
-import Index from 'routes/index';
+import Index from './routes/index/Index';
 import { ErrorPage } from 'errorPage';
 import Play from 'routes/game/play/Play';
 import './index.scss';
