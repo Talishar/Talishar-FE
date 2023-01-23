@@ -14,6 +14,8 @@
   user-drag: none;
   border-radius: 1vh;
   border-radius: 1dvh;
+  max-height: 100%;
+  max-width: 100%;
 }
 
 .imgContainer {

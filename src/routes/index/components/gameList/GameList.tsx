@@ -2,6 +2,7 @@ import { useGetGameListQuery } from 'features/api/apiSlice';
 import styles from './GameList.module.css';
 import React from 'react';
 import { StringLiteral } from 'typescript';
+import { createSearchParams, useNavigate } from 'react-router-dom';
 
 export interface GameListResponse {
   data?: {
@@ -26,8 +27,15 @@ export interface GameListResponse {
 
 const GameList = () => {
   const { data, isLoading, error }: GameListResponse = useGetGameListQuery({});
+  const navigate = useNavigate();
   const spectateHandler = (gameName: number) => {
-    console.log('clicky click ', gameName);
+    navigate({
+      pathname: '/game/play',
+      search: `?${createSearchParams({
+        gameName: String(gameName),
+        playerID: String(3)
+      })}`
+    });
   };
 
   let sortedOpenGames = data?.openGames ? [...data.openGames] : [];
