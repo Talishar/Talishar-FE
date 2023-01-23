@@ -9,7 +9,7 @@ import {
   API_URL_DEV,
   GAME_LIMIT_LIVE,
   GAME_LIMIT_BETA
-} from '../../constants';
+} from 'constants';
 import Button from '../Button';
 import GameState from '../GameState';
 

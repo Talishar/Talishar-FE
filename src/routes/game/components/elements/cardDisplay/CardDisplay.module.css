@@ -1,0 +1,127 @@
+.card {
+  position: absolute;
+  border-radius: 10px;
+  border-radius: 1.5vh;
+  object-fit: cover;
+  position: relative;
+  user-select: none;
+  -webkit-user-select: none;
+  overflow: visible;
+}
+
+.normalSize {
+  height: 10vh;
+  height: 10dvh;
+  aspect-ratio: 1;
+}
+
+.biggerSize {
+  height: 12vh;
+  width: 12vh;
+  height: 12dvh;
+  width: 12dvh;
+}
+
+.floatTint {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+  border-radius: 10px;
+  border-radius: 7%;
+}
+
+.text {
+  color: black;
+}
+
+.img {
+  border-color: black;
+  border-width: 1px;
+  border-style: solid;
+  box-shadow: 3px 3px 5px black;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  object-fit: cover;
+  height: 100%;
+  border-radius: 15px;
+  border-radius: 7%;
+}
+
+.disabled {
+  background-color: black;
+  opacity: 0.5;
+  position: absolute;
+  left: 0px;
+  right: 0px;
+  top: 0px;
+  bottom: 0px;
+}
+
+.isBroken {
+  background-image: url('../../../../../img/symbols/symbol-brokenEquip.png');
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: 1.5vh -0.5vh;
+  position: absolute;
+  left: 0px;
+  right: 0px;
+  top: 0px;
+  bottom: 0px;
+}
+
+.onChain {
+  background-image: url('../../../../../img/symbols/symbol-onChain.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: 0px -5vh;
+}
+
+.isFrozen {
+  background-image: url('../../../../../img/elements/frozenOverlay.png');
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+
+.border1 {
+  border-color: deepskyblue;
+  box-shadow: 0 0 3px 3px deepskyblue;
+}
+
+.border2 {
+  border-color: red;
+  box-shadow: 0 0 3px 3px red;
+}
+
+.border3 {
+  border-color: goldenrod;
+  box-shadow: 0 0 3px 3px goldenrod;
+}
+
+.border4 {
+  border-color: gray;
+  box-shadow: 0 0 3px 3px gray;
+}
+
+.border5 {
+  border-color: tan;
+  box-shadow: 0 0 3px 3px tan;
+}
+
+.border6 {
+  border-color: chartreuse;
+  box-shadow: 0 0 3px 3px chartreuse;
+}
+
+.border7 {
+  border-color: purple;
+  box-shadow: 0 0 5px 5px purple;
+}

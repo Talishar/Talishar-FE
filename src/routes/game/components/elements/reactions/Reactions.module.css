@@ -1,0 +1,119 @@
+.currentAttack {
+  width: 22vh;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5vh;
+}
+
+.cardContainer {
+  height: 13vh;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.attack {
+  height: 13vh;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 1vh;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.attDefRow {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5vh;
+  height: 3vh;
+  width: 100%;
+}
+
+.attDiv {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  text-align: right;
+  width: 50%;
+}
+
+.defDiv {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  text-align: left;
+  width: 50%;
+}
+
+.attackSymbol {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 3vh;
+}
+
+.chainSymbols {
+  height: 2.5vh;
+}
+
+.chainLinkSymbol {
+  height: 2.5vh;
+}
+
+.reactions {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 1vh;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.reactionWrapper {
+  position: relative;
+  height: 13vh;
+  width: 100%;
+}
+
+.chainLinksRow {
+  background-image: url('../../../../../img/elements/gold-chain.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: left;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  gap: 1vh;
+  align-items: center;
+  height: 3vh;
+  width: 100%;
+}
+
+.chainLinkSummary {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding-left: 1vh;
+  padding-right: 1vh;
+  gap: 1vh;
+  height: 100%;
+}

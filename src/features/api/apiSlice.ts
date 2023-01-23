@@ -5,14 +5,14 @@ import {
   FetchArgs,
   FetchBaseQueryError
 } from '@reduxjs/toolkit/query/react';
-import { RootState } from '../../app/Store';
+import { RootState } from 'app/Store';
 import {
   API_URL_BETA,
   API_URL_DEV,
   API_URL_LIVE,
   GAME_LIMIT_BETA,
   GAME_LIMIT_LIVE
-} from '../../constants';
+} from 'constants';
 
 // Different request URLs depending on the gameID number, beta, live or dev.
 const dynamicBaseQuery: BaseQueryFn<
