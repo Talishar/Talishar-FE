@@ -75,9 +75,6 @@ const OptionsContent = () => {
     navigator.clipboard.writeText(gameURL);
   };
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
   if (isError) {
     return <div>Oh noes an error!</div>;
   }
@@ -134,101 +131,126 @@ const OptionsContent = () => {
           initialValues={initialValues}
           onSubmit={clickSubmitOptionsHandler}
         >
-          {({ values }) => (
-            <Form>
+          {isLoading ? (
+            <h3 aria-busy>Loading...</h3>
+          ) : (
+            ({ values }) => (
               <div>
-                <h3>Priority Settings:</h3>
-                <div className={styles.radioContainer}>
-                  <label className={styles.optionLabel}>
-                    <Field type="radio" name="holdPriority" value="autoPass" />
-                    Auto-Pass Priority
-                  </label>
-                  <label className={styles.optionLabel}>
-                    <Field
-                      type="radio"
-                      name="holdPriority"
-                      value="alwaysPass"
-                    />
-                    Always Pass Priority
-                  </label>
-                  <label className={styles.optionLabel}>
-                    <Field
-                      type="radio"
-                      name="holdPriority"
-                      value="alwaysHold"
-                    />
-                    Always Hold Priority
-                  </label>
-                  <label className={styles.optionLabel}>
-                    <Field
-                      type="radio"
-                      name="holdPriority"
-                      value="holdAllOpp"
-                    />
-                    Hold Priority for all Opponent Actions
-                  </label>
-                  <label className={styles.optionLabel}>
-                    <Field
-                      type="radio"
-                      name="holdPriority"
-                      value="holdOppAtt"
-                    />
-                    Hold Priority for all Opponent Attacks
-                  </label>
-                </div>
-                <h3>Skip overrides</h3>
-                <div className={styles.radioContainer}>
-                  <label className={styles.optionLabel}>
-                    <Field type="checkbox" name="skipAttackReactions" />
-                    Skip Attack Reactions
-                  </label>
-                  <label className={styles.optionLabel}>
-                    <Field type="checkbox" name="skipDefenseReactions" />
-                    Skip Defense Reactions
-                  </label>
-                  <label className={styles.optionLabel}>
-                    <Field type="checkbox" name="manualTargeting" />
-                    Manual Targeting
-                  </label>
-                </div>
-                <h3>Attack Shortcut Threshold</h3>
-                <div className={styles.radioContainer}>
-                  <label className={styles.optionLabel}>
-                    <Field type="radio" name="attackSkip" value="neverSkip" />
-                    Never Skip Attacks
-                  </label>
-                  <label className={styles.optionLabel}>
-                    <Field type="radio" name="attackSkip" value="skipOnes" />
-                    Skip 1 Power Attacks
-                  </label>
-                  <label className={styles.optionLabel}>
-                    <Field type="radio" name="attackSkip" value="skipAll" />
-                    Skip All Attacks
-                  </label>
-                </div>
-                <div className={styles.radioContainer}>
-                  <label className={styles.optionLabel}>
-                    <Field type="checkbox" name="manualMode" />
-                    Manual Mode
-                  </label>
-                  <label className={styles.optionLabel}>
-                    <Field type="checkbox" name="accessibilityMode" />
-                    Accessibility Mode
-                  </label>
-                  <label className={styles.optionLabel}>
-                    <Field type="checkbox" name="mute" />
-                    Mute
-                  </label>
-                  <label className={styles.optionLabel}>
-                    <Field type="checkbox" name="disableChat" />
-                    Manual Mode
-                  </label>
-                </div>
-                <button className={styles.buttonDiv} type="submit">
-                  Submit
-                </button>
+                <Form>
+                  <div>
+                    <fieldset>
+                      <legend>
+                        <strong>Priority Settings:</strong>
+                      </legend>
+                      <label className={styles.optionLabel}>
+                        <Field
+                          type="radio"
+                          name="holdPriority"
+                          value="autoPass"
+                        />
+                        Auto-Pass Priority
+                      </label>
+                      <label className={styles.optionLabel}>
+                        <Field
+                          type="radio"
+                          name="holdPriority"
+                          value="alwaysPass"
+                        />
+                        Always Pass Priority
+                      </label>
+                      <label className={styles.optionLabel}>
+                        <Field
+                          type="radio"
+                          name="holdPriority"
+                          value="alwaysHold"
+                        />
+                        Always Hold Priority
+                      </label>
+                      <label className={styles.optionLabel}>
+                        <Field
+                          type="radio"
+                          name="holdPriority"
+                          value="holdAllOpp"
+                        />
+                        Hold Priority for all Opponent Actions
+                      </label>
+                      <label className={styles.optionLabel}>
+                        <Field
+                          type="radio"
+                          name="holdPriority"
+                          value="holdOppAtt"
+                        />
+                        Hold Priority for all Opponent Attacks
+                      </label>
+                    </fieldset>
+                    <fieldset>
+                      <legend>
+                        <strong>Skip overrides</strong>
+                      </legend>
+                      <label className={styles.optionLabel}>
+                        <Field type="checkbox" name="skipAttackReactions" />
+                        Skip Attack Reactions
+                      </label>
+                      <label className={styles.optionLabel}>
+                        <Field type="checkbox" name="skipDefenseReactions" />
+                        Skip Defense Reactions
+                      </label>
+                      <label className={styles.optionLabel}>
+                        <Field type="checkbox" name="manualTargeting" />
+                        Manual Targeting
+                      </label>
+                    </fieldset>
+                    <fieldset>
+                      <legend>
+                        <strong>Attack Shortcut Threshold</strong>
+                      </legend>
+                      <label className={styles.optionLabel}>
+                        <Field
+                          type="radio"
+                          name="attackSkip"
+                          value="neverSkip"
+                        />
+                        Never Skip Attacks
+                      </label>
+                      <label className={styles.optionLabel}>
+                        <Field
+                          type="radio"
+                          name="attackSkip"
+                          value="skipOnes"
+                        />
+                        Skip 1 Power Attacks
+                      </label>
+                      <label className={styles.optionLabel}>
+                        <Field type="radio" name="attackSkip" value="skipAll" />
+                        Skip All Attacks
+                      </label>
+                    </fieldset>
+                    <fieldset>
+                      <legend>Other Settings</legend>
+                      <label className={styles.optionLabel}>
+                        <Field type="checkbox" name="manualMode" />
+                        Manual Mode
+                      </label>
+                      <label className={styles.optionLabel}>
+                        <Field type="checkbox" name="accessibilityMode" />
+                        Accessibility Mode
+                      </label>
+                      <label className={styles.optionLabel}>
+                        <Field type="checkbox" name="mute" />
+                        Mute
+                      </label>
+                      <label className={styles.optionLabel}>
+                        <Field type="checkbox" name="disableChat" />
+                        Manual Mode
+                      </label>
+                    </fieldset>
+                    <button className={styles.buttonDiv} type="submit">
+                      Submit
+                    </button>
+                  </div>
+                </Form>
               </div>
-            </Form>
+            )
           )}
         </Formik>
       </div>

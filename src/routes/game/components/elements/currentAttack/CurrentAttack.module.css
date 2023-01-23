@@ -77,8 +77,8 @@
   justify-content: flex-end;
   align-items: center;
   text-align: right;
-  width: 50%;
   font-size: 1.5em;
+  flex-grow: 1;
   color: white;
   text-shadow: -1px 1px 2px #000, 1px 1px 2px #000, 1px -1px 0 #000,
     -1px -1px 0 #000;
@@ -90,8 +90,8 @@
   justify-content: flex-start;
   align-items: center;
   text-align: left;
-  width: 50%;
   font-size: 1.5em;
+  flex-grow: 1;
   color: white;
   text-shadow: -1px 1px 2px #000, 1px 1px 2px #000, 1px -1px 0 #000,
     -1px -1px 0 #000;
@@ -102,15 +102,24 @@
   justify-content: center;
   align-items: center;
   height: 3vh;
+  width: 3vh;
+  height: 3dvh;
+  width: 3dvh;
   cursor: pointer;
 }
 
 .chainSymbols {
   height: 2.5vh;
+  width: 2.5vh;
+  height: 2.5dvh;
+  width: 2.5dvh;
 }
 
 .chainLinkSymbol {
   height: 2.5vh;
+  width: 2.5vh;
+  height: 2.5dvh;
+  width: 2.5dvh;
 }
 
 .reactions {

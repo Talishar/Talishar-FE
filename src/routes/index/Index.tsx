@@ -1,5 +1,4 @@
 import { useGetGameListQuery } from 'features/api/apiSlice';
-import 
 import React from 'react';
 
 const Index = () => {
