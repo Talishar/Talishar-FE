@@ -1,5 +1,5 @@
 .passTurnDisplay {
-  font-size: 1.5rem;
+  font-size: 1.5em;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -9,7 +9,7 @@
 
 .passTurnDisplayActive {
   text-shadow: 0 0 5 rgb(0, 255, 38);
-  font-size: 1.5rem;
+  font-size: 1.5em;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -20,9 +20,9 @@
 }
 .passTurnDisplayActive:hover {
   cursor: pointer;
-  font-size: 1.75rem;
+  font-size: 1.75em;
 }
 
 .subThing {
-  font-size: 0.75rem;
+  font-size: 0.75em;
 }

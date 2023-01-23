@@ -1,12 +1,12 @@
 .container {
-  margin: 0.5rem 0;
+  margin: 0.5em0;
   width: 100%;
 }
 
 .buttons {
   display: flex;
   flex-direction: row;
-  gap: 0.5rem;
+  gap: 0.5em;
   align-content: center;
   justify-content: center;
 }
@@ -38,17 +38,17 @@
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  margin: 0.5rem;
+  gap: 0.5em;
+  margin: 0.5em;
 }
 
 .thumbUpIcon {
-  height: 3rem;
-  width: 3rem;
+  height: 3em;
+  width: 3em;
   border: 1px solid goldenrod;
-  border-radius: 0.5rem;
+  border-radius: 0.5em;
   color: green;
-  font-size: 2rem;
+  font-size: 2em;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -61,12 +61,12 @@
 }
 
 .thumbDownIcon {
-  height: 3rem;
-  width: 3rem;
+  height: 3em;
+  width: 3em;
   border: 1px solid goldenrod;
-  border-radius: 0.5rem;
+  border-radius: 0.5em;
   color: red;
-  font-size: 2rem;
+  font-size: 2em;
   display: flex;
   align-items: center;
   justify-content: center;

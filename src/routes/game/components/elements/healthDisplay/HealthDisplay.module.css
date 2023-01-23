@@ -2,7 +2,7 @@
   text-shadow: 0 0 10px rgb(0, 255, 38);
   height: 9vh;
   height: 9dvh;
-  font-size: 2.5rem;
+  font-size: 2.5em;
   display: flex;
   align-items: center;
 }
