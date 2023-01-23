@@ -1,0 +1,30 @@
+.gameList {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+
+.gameItem {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  gap: 0.5em;
+  vertical-align: center;
+  align-items: center;
+  justify-content: center;
+}
+
+.button {
+  margin-bottom: 0;
+  color: black;
+}
+
+.title {
+  text-align: center;
+  padding-bottom: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+img {
+  max-height: 3em;
+}

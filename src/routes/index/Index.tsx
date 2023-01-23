@@ -1,68 +1,30 @@
-import { useGetGameListQuery } from 'features/api/apiSlice';
 import React from 'react';
+import CreateGame from './components/createGame/CreateGame';
+import GameList from './components/gameList/GameList';
+import styles from './Index.module.css';
 
 const Index = () => {
-  const { data, isLoading, error } = useGetGameListQuery({});
-  console.log(isLoading);
-  console.log(error);
   return (
-    <div>
-      <h2>HELLO TALISHAR LOADMING</h2>
-      <div>
-        <div className="grid">
-          <div>
-            <hgroup>
-              <h1>Sign in</h1>
-              <h2>A minimalist layout for Login pages</h2>
-            </hgroup>
-            <form>
-              <input
-                type="text"
-                name="login"
-                placeholder="Login"
-                aria-label="Login"
-              />
-              <input
-                type="password"
-                name="password"
-                placeholder="Password"
-                aria-label="Password"
-              />
-              <fieldset>
-                <label>
-                  <input
-                    type="checkbox"
-                    role="switch"
-                    id="remember"
-                    name="remember"
-                  />
-                  Remember me
-                </label>
-              </fieldset>
-              <button type="submit" className="contrast">
-                Login
-              </button>
-            </form>
-          </div>
-          <div></div>
+    <main>
+      <div className="grid">
+        <div className={styles.firstCol}>
+          <GameList />
         </div>
-        {isLoading ? <div aria-busy="true">Loading!</div> : null}
-        {error ? <div>ERROR!</div> : null}
-        {data != undefined && data.gamesInProgress != undefined
-          ? data.gamesInProgress.map((entry: any, ix: number) => {
-              console.log(entry);
-              return (
-                <div key={ix}>
-                  <div>
-                    {data.p1Hero} V {data.p2Hero}
-                  </div>
-                  <div>{data.gameName}</div>
-                </div>
-              );
-            })
-          : null}
+        <div>
+          <CreateGame />
+        </div>
+        <div>
+          <h1>News</h1>
+          <h3>Big changes to matchmaking!</h3>
+          <h4>Login is now required for matchmaking</h4>
+          <p>
+            If logged out, you can still make private games to play with
+            friends, against yourself in multiple tabs, or against the bot!
+            We've also added Clash as a supported format.
+          </p>
+        </div>
       </div>
-    </div>
+    </main>
   );
 };
 

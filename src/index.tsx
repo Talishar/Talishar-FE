@@ -7,7 +7,6 @@ import reportWebVitals from './reportWebVitals';
 import Index from 'routes/index';
 import { ErrorPage } from 'errorPage';
 import Play from 'routes/game/play/Play';
-import '@picocss/pico';
 import './index.scss';
 
 // Because we *must* have a root else the site won't work at all.

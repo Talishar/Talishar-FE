@@ -85,6 +85,7 @@ export const apiSlice = createApi({
             ? 'http://127.0.0.1:5173/api/live/APIs/GetGameList.php'
             : API_URL_LIVE + 'APIs/GetGameList.php',
           method: 'GET',
+          credentials: 'omit',
           params: {}
         };
       }

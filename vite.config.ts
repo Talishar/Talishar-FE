@@ -36,7 +36,7 @@ export default defineConfig({
       '/api/live': {
         target: 'https://talishar.net/game',
         changeOrigin: true,
-        secure: false,
+        secure: true,
         rewrite: (path) => path.replace(/api\/live\//, '')
       },
       '/api/dev': {
