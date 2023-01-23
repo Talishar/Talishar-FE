@@ -3,5 +3,10 @@ $primary-500: #ffc107;
 $primary-600: #ffb300;
 $primary-700: #ffa000;
 
+html,
+body {
+  overflow-y: auto;
+}
+
 // Import Pico
 @import '@picocss/pico/scss/pico';
