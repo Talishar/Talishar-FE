@@ -8,6 +8,7 @@ import './index.css';
 import Index from 'routes/index';
 import { ErrorPage } from 'errorPage';
 import Play from 'routes/game/play/Play';
+import '@picocss/pico';
 
 // Because we *must* have a root else the site won't work at all.
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

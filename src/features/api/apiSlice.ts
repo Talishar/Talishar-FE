@@ -77,9 +77,24 @@ export const apiSlice = createApi({
           }
         };
       }
+    }),
+    getGameList: builder.query({
+      query: () => {
+        return {
+          url: import.meta.env.DEV
+            ? 'http://127.0.0.1:5173/api/live/APIs/GetGameList.php'
+            : API_URL_LIVE + 'APIs/GetGameList.php',
+          method: 'GET',
+          params: {}
+        };
+      }
     })
   })
 });
 
 // Export the auto-generated hook for the `getPosts` query endpoint
-export const { useGetPopUpContentQuery, useSubmitChatMutation } = apiSlice;
+export const {
+  useGetPopUpContentQuery,
+  useSubmitChatMutation,
+  useGetGameListQuery
+} = apiSlice;
