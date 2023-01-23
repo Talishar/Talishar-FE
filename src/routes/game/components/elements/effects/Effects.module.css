@@ -22,6 +22,7 @@
   max-height: 50%;
   overflow-y: auto;
   overflow-x: hidden;
+  gap: 0.5em;
 }
 
 .isPlayer {
@@ -32,6 +33,7 @@
   max-height: 50%;
   overflow-y: auto;
   overflow-x: hidden;
+  gap: 0.5em;
 }
 
 .img {
