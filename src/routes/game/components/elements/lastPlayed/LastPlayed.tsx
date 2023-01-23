@@ -30,7 +30,7 @@ export default function LastPlayed() {
   const handleMouseLeave = () => {
     dispatch(clearPopUp());
   };
-  const src = `./cardimages/${cardRedux.cardNumber}.webp`;
+  const src = `/cardimages/${cardRedux.cardNumber}.webp`;
 
   return (
     <div

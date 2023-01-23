@@ -32,7 +32,7 @@ export default function PlayerBoardGrid() {
   }
 
   const styleToApply = {
-    backgroundImage: `url(./playmats/${playmat}.webp)`
+    backgroundImage: `url(/playmats/${playmat}.webp)`
   };
 
   return (

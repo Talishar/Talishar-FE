@@ -27,14 +27,14 @@ export default function PlayerName(player: Player) {
       {isPatron ? (
         <img
           className={styles.icon}
-          src="./images/patronHeart.webp"
+          src="/images/patronHeart.webp"
           title="I am a patreon of Talishar!"
         />
       ) : null}
       {isContributor ? (
         <img
           className={styles.icon}
-          src="./images/copper.webp"
+          src="/images/copper.webp"
           title="I am a contributor to Talishar!"
         />
       ) : null}

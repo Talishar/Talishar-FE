@@ -80,7 +80,7 @@ exports[`shows a mock chain link summary 1`] = `
                   >
                     <img
                       class="_img_159bb8"
-                      src="./crops/ARC030_cropped.png"
+                      src="/crops/ARC030_cropped.png"
                     />
                   </div>
                 </td>

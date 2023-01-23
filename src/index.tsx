@@ -6,6 +6,8 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import reportWebVitals from './reportWebVitals';
 import './index.css';
 import Index from 'routes/index';
+import { ErrorPage } from 'errorPage';
+import Play from 'routes/game/play/Play';
 
 // Because we *must* have a root else the site won't work at all.
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -15,7 +17,12 @@ const root = createRoot(container);
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <Index />
+    element: <Index />,
+    errorElement: <ErrorPage />
+  },
+  {
+    path: '/game/play',
+    element: <Play />
   }
 ]);
 

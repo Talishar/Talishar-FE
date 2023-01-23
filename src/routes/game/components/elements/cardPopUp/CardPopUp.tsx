@@ -18,7 +18,7 @@ export default function CardPopUp() {
     return null;
   }
 
-  const src = `./cardimages/${popup.popupCard.cardNumber}.webp`;
+  const src = `/cardimages/${popup.popupCard.cardNumber}.webp`;
 
   if (popup.xCoord === undefined || popup.yCoord === undefined) {
     return (
@@ -175,7 +175,7 @@ export default function CardPopUp() {
   dfcStyle.left = '-40vh';
   dfcStyle.position = 'absolute';
 
-  const dfcURL = `./cardimages/${dfcValue}.webp`;
+  const dfcURL = `/cardimages/${dfcValue}.webp`;
 
   return (
     <div className={styles.popUp} style={popUpStyle}>

@@ -18,7 +18,7 @@ export default function PlayerBoard() {
   }
 
   const styleToApply = {
-    backgroundImage: `url(./playmats/${playmat}.webp)`
+    backgroundImage: `url(/playmats/${playmat}.webp)`
   };
 
   return (

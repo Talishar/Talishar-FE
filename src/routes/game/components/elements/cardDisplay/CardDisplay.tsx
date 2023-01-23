@@ -26,7 +26,7 @@ export const CardDisplay = (prop: CardProp) => {
     return null;
   }
 
-  const eqImg = `./cardsquares/${card.cardNumber}.webp`;
+  const eqImg = `/cardsquares/${card.cardNumber}.webp`;
 
   function onClick() {
     if (preventUseOnClick) {
