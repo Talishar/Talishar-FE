@@ -61,16 +61,6 @@ const EndGameMenuOptions = () => {
           Full Rematch (new sideboard)
         </div>
       </div>
-      <div className={styles.ratings}>
-        <div>Rate your opponent:</div>
-        <div className={styles.thumbUpIcon} onClick={handleThumbUp}>
-          <GiThumbUp />
-        </div>
-        <div className={styles.thumbDownIcon} onClick={handleThumbDown}>
-          <GiThumbDown />
-        </div>
-        {hasRated && <div>Thank you for rating!</div>}
-      </div>
     </div>
   );
 };

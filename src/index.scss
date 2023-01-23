@@ -1,0 +1,9 @@
+/* Custom Orange version */
+
+// Override default variables
+$primary-500: #ffc107;
+$primary-600: #ffb300;
+$primary-700: #ffa000;
+
+// Import Pico
+@import '@picocss/pico/scss/pico';
