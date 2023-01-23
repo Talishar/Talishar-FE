@@ -10,7 +10,7 @@ it('renders without crashing', () => {
   expect(display).toMatchInlineSnapshot(`
     <div>
       <span
-        class="_cardText_b954fc"
+        class="_cardText_1b6faf"
       >
         Heart of Fyendal
       </span>

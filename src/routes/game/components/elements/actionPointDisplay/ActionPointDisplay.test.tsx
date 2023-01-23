@@ -8,10 +8,10 @@ it('renders without crashing isPlayer true', () => {
   expect(display).toMatchInlineSnapshot(`
     <div>
       <div
-        class="_actionPointDisplay_46ece5"
+        class="_actionPointDisplay_f2afca"
       >
         <div
-          class="_actionPointCounter_46ece5"
+          class="_actionPointCounter_f2afca"
         >
           0
         </div>

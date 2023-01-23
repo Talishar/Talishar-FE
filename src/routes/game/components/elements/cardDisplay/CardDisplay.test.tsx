@@ -14,20 +14,20 @@ it('renders a card', () => {
   expect(display).toMatchInlineSnapshot(`
     <div>
       <div
-        class="_card_75f994 _normalSize_75f994"
+        class="_card_877d58 _normalSize_877d58"
       >
         <img
-          class="_img_75f994"
+          class="_img_877d58"
           src="./cardsquares/WTR001.webp"
         />
         <div
-          class="_floatTint_75f994"
+          class="_floatTint_877d58"
         />
         <div
-          class="_floatTint_75f994"
+          class="_floatTint_877d58"
         />
         <div
-          class="_floatCover_591427"
+          class="_floatCover_562030"
         />
       </div>
     </div>

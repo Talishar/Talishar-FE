@@ -6,25 +6,25 @@ exports[`shows a mock chain link summary 1`] = `
 <div>
   <div>
     <div
-      class="_emptyOutside_bb3b61"
+      class="_emptyOutside_1e6509"
     >
       <div
-        class="_cardListBox_bb3b61"
+        class="_cardListBox_1e6509"
       >
         <div
-          class="_cardListTitleContainer_bb3b61"
+          class="_cardListTitleContainer_1e6509"
         >
           <div
-            class="_cardListTitle_bb3b61"
+            class="_cardListTitle_1e6509"
           >
             <h3
-              class="_title_bb3b61"
+              class="_title_1e6509"
             >
               Chain Link Summary
             </h3>
           </div>
           <div
-            class="_cardListCloseIcon_bb3b61"
+            class="_cardListCloseIcon_1e6509"
           >
             <svg
               fill="currentColor"
@@ -45,26 +45,26 @@ exports[`shows a mock chain link summary 1`] = `
           </div>
         </div>
         <div
-          class="_cardListContents_bb3b61"
+          class="_cardListContents_1e6509"
         >
           <div>
             Total Damage: 
           </div>
           <table
-            class="_table_bb3b61"
+            class="_table_1e6509"
           >
             <thead>
               <tr>
                 <th
-                  class="_leftColumn_bb3b61"
+                  class="_leftColumn_1e6509"
                 />
                 <th
-                  class="_midColumn_bb3b61"
+                  class="_midColumn_1e6509"
                 >
                   Card
                 </th>
                 <th
-                  class="_rightColumn_bb3b61"
+                  class="_rightColumn_1e6509"
                 >
                   Effect
                 </th>
@@ -73,28 +73,28 @@ exports[`shows a mock chain link summary 1`] = `
             <tbody>
               <tr>
                 <td
-                  class="_column_bb3b61"
+                  class="_column_1e6509"
                 >
                   <div
-                    class="_effect_7d1df9"
+                    class="_effect_159bb8"
                   >
                     <img
-                      class="_img_7d1df9"
+                      class="_img_159bb8"
                       src="./crops/ARC030_cropped.png"
                     />
                   </div>
                 </td>
                 <td
-                  class="_column_bb3b61"
+                  class="_column_1e6509"
                 >
                   <span
-                    class="_cardText_b954fc"
+                    class="_cardText_1b6faf"
                   >
                     Zipper Hit
                   </span>
                 </td>
                 <td
-                  class="_column_bb3b61"
+                  class="_column_1e6509"
                 >
                   +
                   4

@@ -3,28 +3,28 @@
 exports[`renders without crashing 1`] = `
 <div>
   <div
-    class="_container_eeb0ac"
+    class="_container_babf0d"
   >
     <div
-      class="_titleContainer_eeb0ac"
+      class="_titleContainer_babf0d"
     >
       <div
-        class="_titleInterior_eeb0ac"
+        class="_titleInterior_babf0d"
       />
     </div>
     <div
-      class="_phaseWidget_58c017"
+      class="_phaseWidget_217ff1"
     >
       <div
-        class="_icon_58c017"
+        class="_icon_217ff1"
         style="left: 0em;"
       />
     </div>
     <div
-      class="_phaseTrackerBottomContainer_eeb0ac"
+      class="_phaseTrackerBottomContainer_babf0d"
     >
       <div
-        class="_bottomInterior_eeb0ac"
+        class="_bottomInterior_babf0d"
       />
     </div>
   </div>

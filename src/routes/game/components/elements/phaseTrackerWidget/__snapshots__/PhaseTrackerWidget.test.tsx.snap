@@ -3,10 +3,10 @@
 exports[`matches snapshot defence reaction phase 1`] = `
 <div>
   <div
-    class="_phaseWidget_58c017"
+    class="_phaseWidget_217ff1"
   >
     <div
-      class="_icon_58c017"
+      class="_icon_217ff1"
       style="left: 7.08em;"
     />
   </div>
@@ -16,10 +16,10 @@ exports[`matches snapshot defence reaction phase 1`] = `
 exports[`matches snapshot main phase 1`] = `
 <div>
   <div
-    class="_phaseWidget_58c017"
+    class="_phaseWidget_217ff1"
   >
     <div
-      class="_icon_58c017"
+      class="_icon_217ff1"
       style="left: 0.42em;"
     />
   </div>
