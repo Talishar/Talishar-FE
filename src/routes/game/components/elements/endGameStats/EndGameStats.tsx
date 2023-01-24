@@ -1,4 +1,5 @@
 import { Card } from 'features/Card';
+import { number } from 'yup';
 import { Effect } from '../effects/Effects';
 import EndGameMenuOptions from '../endGameMenuOptions/EndGameMenuOptions';
 import styles from './EndGameStats.module.css';
@@ -18,6 +19,8 @@ export interface CardResult {
   blocked: number;
   pitched: number;
   played: number;
+  cardName: string;
+  pitchValue: number;
 }
 
 export interface TurnResult {
@@ -40,6 +43,7 @@ const EndGameStats = (data: EndGameData) => {
           <thead>
             <tr>
               <th>Card ID</th>
+              <th>Card Name</th>
               <th>Times Played</th>
               <th>Times Blocked</th>
               <th>Times Pitched</th>
@@ -49,11 +53,25 @@ const EndGameStats = (data: EndGameData) => {
             {!!data.cardResults &&
               data.cardResults?.map((result, ix) => {
                 const card: Card = { cardNumber: result.cardId };
+                let cardStyle = '';
+                switch (result.pitchValue) {
+                  case 1:
+                    cardStyle = styles.onePitch;
+                    break;
+                  case 2:
+                    cardStyle = styles.twoPitch;
+                    break;
+                  case 3:
+                    cardStyle = styles.threePitch;
+                    break;
+                  default:
+                }
                 return (
                   <tr key={`cardList${ix}`}>
                     <td className={styles.card}>
                       <Effect card={card} />
                     </td>
+                    <td className={cardStyle}>{result.cardName}</td>
                     <td className={styles.played}>{result.played}</td>
                     <td className={styles.blocked}>{result.blocked}</td>
                     <td className={styles.pitched}>{result.pitched}</td>

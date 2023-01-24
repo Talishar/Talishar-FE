@@ -19,3 +19,15 @@
   width: 5vh;
   width: 5dvh;
 }
+
+.onePitch {
+  color: red;
+}
+
+.twoPitch {
+  color: goldenrod;
+}
+
+.threePitch {
+  color: aqua;
+}
