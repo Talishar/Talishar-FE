@@ -14,7 +14,7 @@ import './index.scss';
 const container = document.getElementById('root')!;
 const root = createRoot(container);
 
-const router = createBrowserRouter([
+export const router = createBrowserRouter([
   {
     path: '/',
     element: <Index />,
