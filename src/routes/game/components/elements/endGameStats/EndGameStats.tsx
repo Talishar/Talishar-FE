@@ -66,6 +66,9 @@ const EndGameStats = (data: EndGameData) => {
       <div>
         <h2>Stuff</h2>
         <div>TODO: Add more stuff here</div>
+        <div>
+          <small>Collision point you're the best</small>
+        </div>
       </div>
       <div>
         <h2>Turn Stats</h2>
