@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Board } from '../components/board/Board';
-import './Play.css';
+import './Play.module.css';
 import GameStateHandler from '../../../app/GameStateHandler';
 import LeftColumn from '../components/leftColumn/LeftColumn';
 import RightColumn from '../components/rightColumn/RightColumn';

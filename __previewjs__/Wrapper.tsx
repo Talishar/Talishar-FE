@@ -6,6 +6,7 @@ import { Provider } from 'react-redux';
 import { AppStore, RootState, setupStore } from '../src/app/Store';
 import { OfflineTestingGameState } from '../src/features/game/InitialGameState';
 import '../src/index.css';
+import { MemoryRouter } from 'react-router-dom';
 
 // This type interface extends the default options for render from RTL, as well
 // as allows the user to specify other things such as initialState, store.
@@ -23,7 +24,9 @@ export const Wrapper: React.FC<ExtendedRenderOptions> = ({
   return (
     <>
       <Provider store={store}>
-        <div className="wrapped">{children}</div>
+        <MemoryRouter>
+          <div className="wrapped">{children}</div>
+        </MemoryRouter>
       </Provider>
     </>
   );
