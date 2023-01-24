@@ -32,7 +32,61 @@ export const restHandlers = [
         ]
       })
     );
-  })
+  }),
+  rest.get(
+    'http://127.0.0.1:5173/api/live/APIs/GetGameList.php',
+    (req, res, ctx) => {
+      return res(
+        ctx.status(200),
+        ctx.json({
+          gamesInProgress: [
+            {
+              p1Hero: 'ELE062',
+              p2Hero: 'UPR044',
+              secondsSinceLastUpdate: 0,
+              gameName: '613615'
+            },
+            {
+              p1Hero: 'UPR102',
+              p2Hero: 'UPR044',
+              secondsSinceLastUpdate: 9,
+              gameName: '613650'
+            },
+            {
+              p1Hero: 'WTR001',
+              p2Hero: 'UPR001',
+              secondsSinceLastUpdate: 6,
+              gameName: '613611'
+            }
+          ],
+          openGames: [
+            {
+              p1Hero: 'MON002',
+              format: 'blitz',
+              formatName: '',
+              description: 'Game #613659',
+              gameName: '613659'
+            },
+            {
+              p1Hero: 'EVR120',
+              format: 'commoner',
+              formatName: 'Commoner ',
+              description: 'Game #613569',
+              gameName: '613569'
+            },
+            {
+              p1Hero: 'WTR002',
+              format: 'blitz',
+              formatName: '',
+              description: 'Game #613664',
+              gameName: '613664'
+            }
+          ],
+          canSeeQueue: false
+        })
+      );
+    }
+  )
 ];
 
 const server = setupServer(...restHandlers);

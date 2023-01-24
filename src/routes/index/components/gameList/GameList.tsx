@@ -78,12 +78,11 @@ const GameList = () => {
           })
         : null}
       {data != undefined && (
-        <h5 className={styles.title}>
-          Games in progress: <span>({data.gamesInProgress.length})</span>
-        </h5>
-      )}
-      {data != undefined
-        ? data.gamesInProgress.map((entry, ix: number) => {
+        <div data-testid="games-in-progress">
+          <h5 className={styles.title}>
+            Games in progress: <span>({data.gamesInProgress.length})</span>
+          </h5>
+          {data.gamesInProgress.map((entry, ix: number) => {
             return (
               <div key={ix} className={styles.gameItem}>
                 <div>
@@ -110,8 +109,9 @@ const GameList = () => {
                 </div>
               </div>
             );
-          })
-        : null}
+          })}
+        </div>
+      )}
     </div>
   );
 };

@@ -1,0 +1,20 @@
+// Vitest Snapshot v1
+
+exports[`displays loading! when loading 1`] = `
+<div>
+  <div
+    class="_gameList_4a28c4"
+  >
+    <h1>
+      Spectating a game totally works though but you can't join one
+    </h1>
+    <div
+      aria-busy="true"
+    >
+      Loading!
+    </div>
+  </div>
+</div>
+`;
+
+exports[`displays the list of games! when loaded 1`] = `Promise {}`;
