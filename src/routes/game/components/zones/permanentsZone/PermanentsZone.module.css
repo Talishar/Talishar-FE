@@ -43,3 +43,31 @@
 .permanentsZone::-webkit-scrollbar {
   display: none;
 }
+
+.counter {
+  position: absolute;
+  background-color: black;
+  z-index: 10;
+  top: 1.5em;
+  height: 2em;
+  left: -0.75em;
+  min-width: 2em;
+  width: auto;
+  background-color: rgba(0, 0, 0, 0.9);
+  border: goldenrod solid 1px;
+  color: gold;
+  border-radius: 5px;
+  font-size: 0.75em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.35em;
+}
+
+.cardContainer {
+  position: relative;
+}
+
+.stacked {
+  margin-left: 0.5em;
+}
