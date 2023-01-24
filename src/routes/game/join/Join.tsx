@@ -6,6 +6,7 @@ import styles from './Join.module.css';
 import Equipment from './components/equipment/Equipment';
 import { useState } from 'react';
 import classNames from 'classnames';
+import { FaExclamationCircle } from 'react-icons/fa';
 
 export interface Deck {
   hero: string;
@@ -36,6 +37,7 @@ export interface LobbyInfo {
 
 const Join = () => {
   const [activeTab, setActiveTab] = useState('equipment');
+  const [unreadChat, setUnreadChat] = useState(true);
   const data = testData as LobbyInfo;
 
   const opponentHero = 'ARC002';
@@ -45,6 +47,7 @@ const Join = () => {
   const eqClasses = classNames({ secondary: activeTab !== 'equipment' });
   const deckClasses = classNames({ secondary: activeTab !== 'deck' });
   const chatClasses = classNames({ secondary: activeTab !== 'chat' });
+  const canSubmit = true;
   return (
     <div>
       <div>
@@ -91,6 +94,11 @@ const Join = () => {
                 className={chatClasses}
                 onClick={() => setActiveTab('chat')}
               >
+                {unreadChat && (
+                  <>
+                    <FaExclamationCircle />{' '}
+                  </>
+                )}
                 Chat
               </button>
             </li>
@@ -100,6 +108,21 @@ const Join = () => {
           {activeTab === 'equipment' && <Equipment {...data} />}
           {activeTab === 'deck' && <Deck {...data} />}
           {activeTab === 'chat' && <LobbyChat />}
+        </div>
+        <div className={styles.stickyFooter}>
+          <div className={styles.footerContent}>
+            <div>Deck 40/40</div>
+            {!canSubmit && (
+              <div className={styles.alarm}>
+                <FaExclamationCircle /> Your deck no good
+              </div>
+            )}
+          </div>
+          <div className={styles.buttonHolder}>
+            <button disabled={!canSubmit} className={styles.buttonClass}>
+              Submit deck
+            </button>
+          </div>
         </div>
       </div>
     </div>
