@@ -34,3 +34,33 @@ nav {
 .contentContainer {
   padding: 0 0.5em;
 }
+
+.stickyFooter {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  background-color: var(--card-background-color);
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  padding: 1em 0.5em;
+  grid-template-areas: 'content content submit';
+  align-items: center;
+}
+
+.footerContent {
+  grid-area: content;
+}
+
+.buttonHolder {
+  grid-area: submit;
+}
+
+.buttonClass {
+  color: black;
+  margin-bottom: 0;
+}
+
+.alarm {
+  color: rgba(183, 28, 28);
+}

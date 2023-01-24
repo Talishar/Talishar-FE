@@ -1,14 +1,22 @@
 import classNames from 'classnames';
 import { Formik } from 'formik';
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import styles from './CreateGame.module.css';
 
 const CreateGame = () => {
+  const navigate = useNavigate();
   const initialValues = {
     Wibble: '1'
   };
   const clickSubmitOptionsHandler = () => {
     console.log('click create game');
+  };
+
+  const handleButtonClick = (e: React.MouseEvent<HTMLElement>) => {
+    e.preventDefault();
+    console.log('click mcclickerson');
+    navigate('/game/join/');
   };
 
   const buttonClass = classNames(styles.button, 'primary');
@@ -106,8 +114,12 @@ const CreateGame = () => {
                   <br />
                 </label>
               </div>
-              <button type="submit" className={buttonClass}>
-                Login
+              <button
+                type="submit"
+                className={buttonClass}
+                onClick={handleButtonClick}
+              >
+                Create Game
               </button>
             </form>
           )}
