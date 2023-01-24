@@ -4,4 +4,10 @@
   justify-content: center;
   align-items: center;
   gap: 0.5em;
+  line-height: normal;
+}
+
+.die {
+  font-size: 5em;
+  line-height: normal;
 }
