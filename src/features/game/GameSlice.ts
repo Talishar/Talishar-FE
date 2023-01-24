@@ -57,7 +57,7 @@ export const nextTurn = createAsyncThunk(
         const gs = ParseGameState(parsedData);
         return gs;
       } catch (e) {
-        if (params.signal.aborted) {
+        if (params.signal?.aborted) {
           return console.log('fetch aborted');
         }
         waitingForJSONResponse = false;
