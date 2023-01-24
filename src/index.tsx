@@ -9,6 +9,7 @@ import { ErrorPage } from 'errorPage';
 import Play from 'routes/game/play/Play';
 import './index.scss';
 import { Toaster } from 'react-hot-toast';
+import Join from 'routes/game/join/Join';
 
 // Because we *must* have a root else the site won't work at all.
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -24,6 +25,10 @@ export const router = createBrowserRouter([
   {
     path: '/game/play',
     element: <Play />
+  },
+  {
+    path: '/game/join',
+    element: <Join />
   }
 ]);
 

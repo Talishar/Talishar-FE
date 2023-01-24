@@ -1,7 +1,109 @@
 import React from 'react';
+import Deck from './components/deck/Deck';
+import LobbyChat from './components/lobbyChat/LobbyChat';
+import testData from './mockdata.json';
+import styles from './Join.module.css';
+import Equipment from './components/equipment/Equipment';
+import { useState } from 'react';
+import classNames from 'classnames';
+
+export interface Deck {
+  hero: string;
+  weapons: string[];
+  head: string[];
+  chest: string[];
+  arms: string[];
+  legs: string[];
+  offhand: string[];
+  cards: string[];
+  headSB: string[];
+  chestSB: string[];
+  armsSB: string[];
+  legsSB: string[];
+  offhandSB: string[];
+  weaponSB: string[];
+  cardsSB: string[];
+}
+
+export interface LobbyInfo {
+  badges: string[];
+  amIActive: boolean;
+  nameColor: string;
+  displayName: string;
+  overlayURL: string;
+  deck: Deck;
+}
 
 const Join = () => {
-  return <div>Join</div>;
+  const [activeTab, setActiveTab] = useState('equipment');
+  const data = testData as LobbyInfo;
+
+  const opponentHero = 'ARC002';
+  const leftPic = `url(/crops/${data.deck.hero}_cropped.png)`;
+  const rightPic = `url(/crops/${opponentHero}_cropped.png)`;
+
+  const eqClasses = classNames({ secondary: activeTab !== 'equipment' });
+  const deckClasses = classNames({ secondary: activeTab !== 'deck' });
+  const chatClasses = classNames({ secondary: activeTab !== 'chat' });
+  return (
+    <div>
+      <div>
+        <div className={styles.titleContainer}>
+          <div className={styles.leftCol} style={{ backgroundImage: leftPic }}>
+            <div className={styles.dimPic}>
+              <h3>{data.displayName}</h3>
+              <h5>{data.deck.hero}</h5>
+            </div>
+          </div>
+          <div
+            className={styles.rightCol}
+            style={{ backgroundImage: rightPic }}
+          >
+            <div className={styles.dimPic}>
+              <h3>Player 2</h3>
+              <h5>Dash, Inventor Extraordinaire</h5>
+            </div>
+          </div>
+        </div>
+        <nav>
+          <ul>
+            <li>Get ready!</li>
+          </ul>
+          <ul>
+            <li>
+              <button
+                className={eqClasses}
+                onClick={() => setActiveTab('equipment')}
+              >
+                Equipment
+              </button>
+            </li>
+            <li>
+              <button
+                className={deckClasses}
+                onClick={() => setActiveTab('deck')}
+              >
+                Deck
+              </button>
+            </li>
+            <li>
+              <button
+                className={chatClasses}
+                onClick={() => setActiveTab('chat')}
+              >
+                Chat
+              </button>
+            </li>
+          </ul>
+        </nav>
+        <div className={styles.contentContainer}>
+          {activeTab === 'equipment' && <Equipment {...data} />}
+          {activeTab === 'deck' && <Deck {...data} />}
+          {activeTab === 'chat' && <LobbyChat />}
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default Join;
