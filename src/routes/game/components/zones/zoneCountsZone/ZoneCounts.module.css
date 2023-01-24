@@ -8,6 +8,7 @@
   border-radius: 10px;
   flex: 0 0 10vh;
   grid-area: zonecounts;
+  line-height: normal;
 }
 
 .column {
