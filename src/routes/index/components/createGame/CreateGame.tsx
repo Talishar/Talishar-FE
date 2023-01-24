@@ -1,5 +1,7 @@
+import classNames from 'classnames';
 import { Formik } from 'formik';
 import React from 'react';
+import styles from './CreateGame.module.css';
 
 const CreateGame = () => {
   const initialValues = {
@@ -9,17 +11,19 @@ const CreateGame = () => {
     console.log('click mcclickerson');
   };
 
+  const buttonClass = classNames(styles.button, 'primary');
   return (
     <div>
       <article>
         <h3>Create New Game</h3>
+        <h1>DOES NOT WORK GO TO REGULAR SITE TO PLAY ETC</h1>
         <Formik
           initialValues={initialValues}
           onSubmit={clickSubmitOptionsHandler}
         >
           {({ values }) => (
             <form>
-              <div>
+              <div className={styles.formContainer}>
                 <label>
                   Favorite Deck
                   <select
@@ -102,7 +106,7 @@ const CreateGame = () => {
                   <br />
                 </label>
               </div>
-              <button type="submit" className="primary">
+              <button type="submit" className={buttonClass}>
                 Login
               </button>
             </form>

@@ -3,6 +3,7 @@ import styles from './GameList.module.css';
 import React from 'react';
 import { StringLiteral } from 'typescript';
 import { createSearchParams, useNavigate } from 'react-router-dom';
+import classNames from 'classnames';
 
 export interface GameListResponse {
   data?: {
@@ -43,8 +44,11 @@ const GameList = () => {
     a.format.localeCompare(b.format)
   );
 
+  const buttonClass = classNames(styles.button, 'secondary');
+
   return (
     <div className={styles.gameList}>
+      <h1>Spectating a game totally works though but you can't join one</h1>
       {isLoading ? <div aria-busy="true">Loading!</div> : null}
       {error ? <div>ERROR!</div> : null}
       {sortedOpenGames != undefined
@@ -60,7 +64,7 @@ const GameList = () => {
                 <div>{entry.format}</div>
                 <div>
                   <button
-                    className={styles.button}
+                    className={buttonClass}
                     onClick={(e) => {
                       e.preventDefault();
                       spectateHandler(entry.gameName);
@@ -95,7 +99,7 @@ const GameList = () => {
                 </div>
                 <div>
                   <button
-                    className={styles.button}
+                    className={buttonClass}
                     onClick={(e) => {
                       e.preventDefault();
                       spectateHandler(entry.gameName);

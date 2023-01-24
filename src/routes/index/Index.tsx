@@ -36,6 +36,12 @@ const Index = () => {
         </div>
         <div>
           <h1>News</h1>
+          <h1>BETA CLIENT BETA CLIENT BETA CLIENT BETA CLIENT</h1>
+          <h1>
+            THE FORMS AND SITE DO NOT WORK{' '}
+            <a href="https://talishar.net/">GO TO THE REGULAR SITE</a> IF YOU
+            WANT TO ACTUALLY PLAY
+          </h1>
           <h3>Big changes to matchmaking!</h3>
           <h4>Login is now required for matchmaking</h4>
           <p>
