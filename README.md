@@ -47,6 +47,18 @@ Access the server at http://localhost:5173/ (Port 5173 by default, if you config
 
 If you have problems running the development server, come to the discord and ask for help.
 
+### How to play a game.
+
+- From regular talishar.net you should be able to copy the search Params and append them to your local dev url for spectating.
+  - Eg: `https://talishar.net/game/NextTurn4.php?gameName=612839&playerID=3`
+  - Copy the `?gameName=612839&playerID=3`
+  - Stick it on the the end of your dev service, eg: `http://127.0.0.1:5173/?gameName=612839&playerID=3`
+  - react router will automatically route any query like this to the 'game' page.
+- If you want to play (use your cards) - you'll need to find your authkey.
+  - on Talishar.net you can find your cookie in storage -> cookies, it is called `lastAuthKey` and copy the value as search query param `authKey`
+  - so your local dev url will look something like: `http://127.0.0.1:5173/game/play?gameName=612888&playerID=1&authKey=7147c19a6b4460390ace621dc581e334f24e9e4fa0c729eecab9805a6bbafd09`
+  - if you're playing with a local dev BE server then there's no need, all the cookies and stuff should work without any fiddling.
+
 ### Important!
 
 If you run into any trouble setting up the project please let LaustinSpayce know so we can fix it, and help make it a smoother process for future contributors.
