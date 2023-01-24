@@ -277,14 +277,14 @@ export const gameSlice = createSlice({
     hideChainLinkSummary: (state) => {
       state.chainLinkSummary = {};
     },
+    setIsUpdateInProgressFalse: (state) => {
+      state.isUpdateInProgress = false;
+    },
     hideActiveLayer: (state) => {
       state.activeLayers = { ...state.activeLayers, active: false };
     },
     showActiveLayer: (state) => {
       state.activeLayers = { ...state.activeLayers, active: true };
-    },
-    setIsUpdateInProgressFalse: (state) => {
-      state.isUpdateInProgress = false;
     }
   },
   // The `extraReducers` field lets the slice handle actions defined elsewhere,

@@ -26,15 +26,11 @@ export const GameStateHandler = React.memo(() => {
     if (params.gameID == 0 || isUpdateInProgress) {
       return;
     }
-    console.log('setting up long poll');
-    console.log(abortRef.current);
-    console.log(params);
     dispatch(nextTurn({ game: params, signal: abortRef.current?.signal }));
   }, [params, isUpdateInProgress, dispatch]);
 
   // write the gameID etc to the params
   useEffect(() => {
-    console.log('mounting');
     let gameID = QueryParam.get('gameName') ? QueryParam.get('gameName') : '0';
     if (typeof gameID != 'string') {
       gameID = '0';
@@ -59,7 +55,6 @@ export const GameStateHandler = React.memo(() => {
     );
 
     return () => {
-      console.log('closing the thing');
       abortRef.current?.abort();
       dispatch(setIsUpdateInProgressFalse());
     };

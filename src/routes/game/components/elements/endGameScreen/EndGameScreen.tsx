@@ -16,15 +16,19 @@ import EndGameMenuOptions from '../endGameMenuOptions/EndGameMenuOptions';
 const EndGameScreen = () => {
   const gameInfo = useAppSelector((state: RootState) => state.game.gameInfo);
   const [playerID, setPlayerID] = useState(gameInfo.playerID === 2 ? 2 : 1);
+  const [isVisible, setIsVisible] = useState(true);
   const { data, isLoading, error } = useGetPopUpContentQuery({
     gameID: gameInfo.gameID,
     playerID: playerID,
     authKey: gameInfo.authKey,
     popupType: END_GAME_STATS
   });
-  const dispatch = useAppDispatch();
 
   let content;
+
+  const closeWindow = () => {
+    setIsVisible(false);
+  };
 
   if (isLoading) {
     content = <div>Loading...</div>;
@@ -34,12 +38,16 @@ const EndGameScreen = () => {
     content = <EndGameStats {...(data as EndGameData)} />;
   }
 
+  if (isVisible === false) {
+    return null;
+  }
+
   const switchPlayer = () => {
     playerID === 2 ? setPlayerID(1) : setPlayerID(2);
   };
 
   return (
-    <div className={styles.emptyOutside} onClick={() => console.log('clickus')}>
+    <div className={styles.emptyOutside} onClick={() => closeWindow()}>
       <div className={styles.cardListBox} onClick={(e) => e.stopPropagation()}>
         <div className={styles.cardListTitleContainer}>
           <div className={styles.cardListTitle}>
@@ -50,7 +58,7 @@ const EndGameScreen = () => {
           </div>
           <div
             className={styles.cardListCloseIcon}
-            onClick={() => console.log('clickus')}
+            onClick={() => closeWindow()}
           >
             <FaTimes title="close dialog" />
           </div>

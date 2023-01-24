@@ -8,7 +8,7 @@ const CreateGame = () => {
     Wibble: '1'
   };
   const clickSubmitOptionsHandler = () => {
-    console.log('click mcclickerson');
+    console.log('click create game');
   };
 
   const buttonClass = classNames(styles.button, 'primary');
