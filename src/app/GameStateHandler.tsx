@@ -1,11 +1,16 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { useEffect } from 'react';
 import { RootState } from './Store';
-import { nextTurn, setGameStart } from '../features/game/GameSlice';
+import {
+  nextTurn,
+  setGameStart,
+  setIsUpdateInProgressFalse
+} from '../features/game/GameSlice';
 import { useAppDispatch, useAppSelector } from './Hooks';
 import { shallowEqual } from 'react-redux';
 
 export const GameStateHandler = React.memo(() => {
+  const abortRef = useRef<AbortController>();
   const QueryParam = new URLSearchParams(window.location.search);
   const params = useAppSelector(
     (state: RootState) => state.game.gameInfo,
@@ -21,7 +26,7 @@ export const GameStateHandler = React.memo(() => {
     if (params.gameID == 0 || isUpdateInProgress) {
       return;
     }
-    dispatch(nextTurn(params));
+    dispatch(nextTurn({ game: params, signal: abortRef.current?.signal }));
   }, [params, isUpdateInProgress, dispatch]);
 
   // write the gameID etc to the params
@@ -39,6 +44,7 @@ export const GameStateHandler = React.memo(() => {
       // TODO: Get authKey from lastAuthKey cookie.
       authKey = '';
     }
+    abortRef.current = new AbortController();
 
     dispatch(
       setGameStart({
@@ -47,6 +53,11 @@ export const GameStateHandler = React.memo(() => {
         authKey: authKey
       })
     );
+
+    return () => {
+      abortRef.current?.abort();
+      dispatch(setIsUpdateInProgressFalse());
+    };
   }, []);
 
   return null;

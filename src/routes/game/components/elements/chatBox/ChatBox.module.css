@@ -1,0 +1,30 @@
+.chatBox {
+  overflow-y: scroll;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  line-height: normal;
+}
+
+.chatBoxContainer {
+  position: relative;
+  width: 100%;
+  flex-grow: 1;
+  flex-basis: 100%;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 1vh;
+}
+
+.chatBoxInner {
+  font-weight: 400;
+  font-size: 1em;
+  position: relative;
+  overflow: clip;
+  flex: 0 1 100%;
+  border: 2px solid black;
+  background-color: white;
+  color: black;
+}

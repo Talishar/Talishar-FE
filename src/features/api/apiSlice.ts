@@ -5,14 +5,14 @@ import {
   FetchArgs,
   FetchBaseQueryError
 } from '@reduxjs/toolkit/query/react';
-import { RootState } from '../../app/Store';
+import { RootState } from 'app/Store';
 import {
   API_URL_BETA,
   API_URL_DEV,
   API_URL_LIVE,
   GAME_LIMIT_BETA,
   GAME_LIMIT_LIVE
-} from '../../constants';
+} from 'constants';
 
 // Different request URLs depending on the gameID number, beta, live or dev.
 const dynamicBaseQuery: BaseQueryFn<
@@ -77,9 +77,25 @@ export const apiSlice = createApi({
           }
         };
       }
+    }),
+    getGameList: builder.query({
+      query: () => {
+        return {
+          url: import.meta.env.DEV
+            ? 'http://127.0.0.1:5173/api/live/APIs/GetGameList.php'
+            : API_URL_LIVE + 'APIs/GetGameList.php',
+          method: 'GET',
+          credentials: 'omit',
+          params: {}
+        };
+      }
     })
   })
 });
 
 // Export the auto-generated hook for the `getPosts` query endpoint
-export const { useGetPopUpContentQuery, useSubmitChatMutation } = apiSlice;
+export const {
+  useGetPopUpContentQuery,
+  useSubmitChatMutation,
+  useGetGameListQuery
+} = apiSlice;

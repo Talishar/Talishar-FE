@@ -1,0 +1,31 @@
+.pitchOverlay {
+  user-select: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-content: center;
+}
+
+.pitchBackground {
+  background-image: url('../../../../../img/symbols/symbol-resource.png');
+  background-position: center;
+  background-size: contain;
+  height: 4vh;
+  width: 4vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pitchValue {
+  text-align: center;
+  font-size: 1.5em;
+  color: white;
+  text-shadow: -1px 1px 2px #000, 1px 1px 2px #000, 1px -1px 0 #000,
+    -1px -1px 0 #000;
+}

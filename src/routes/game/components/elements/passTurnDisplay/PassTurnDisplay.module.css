@@ -1,0 +1,30 @@
+.passTurnDisplay {
+  font-size: 1.5em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 7vh;
+  height: 7dvh;
+  padding: 0;
+}
+
+.passTurnDisplayActive {
+  text-shadow: 0 0 5 rgb(0, 255, 38);
+  font-size: 1.5em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 7vh;
+  height: 7dvh;
+  text-shadow: 0 0 10px rgb(0, 255, 38);
+  padding: 0;
+}
+.passTurnDisplayActive:hover {
+  cursor: pointer;
+}
+
+.subThing {
+  font-size: 0.5em;
+  padding: 0;
+}

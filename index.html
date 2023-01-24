@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
   <head>
     <meta charset="utf-8" />
     <!-- <link rel="icon" href="/favicon.ico" /> -->
@@ -43,11 +43,11 @@
     <script>
       function ShowDetail(e, imgSource) {
         imgSource = imgSource.replace('_cropped', '');
-        imgSource = imgSource.replace('/crops/', '/cardimages/');
+        imgSource = imgSource.replace('./crops/', '/cardimages/');
         imgSource = imgSource.replace('_concat', '');
-        imgSource = imgSource.replace('/concat/', '/cardimages/');
-        imgSource = imgSource.replace('/undefined./WebpImages', '/cardimages');
-        imgSource = imgSource.replace('/WebpImages/', '/cardimages/');
+        imgSource = imgSource.replace('./concat/', '/cardimages/');
+        imgSource = imgSource.replace('./undefined./WebpImages', '/cardimages');
+        imgSource = imgSource.replace('./WebpImages/', '/cardimages/');
         imgSource = imgSource.replace('.png', '.webp');
         var el = document.getElementById('cardDetail');
         el.innerHTML =

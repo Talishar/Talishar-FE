@@ -1,0 +1,34 @@
+.container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(50, 50, 50, 0.5);
+  color: white;
+  border-radius: 10px;
+  flex: 0 0 10vh;
+  grid-area: zonecounts;
+  line-height: normal;
+}
+
+.column {
+  flex: 1;
+  padding: 0.5em;
+}
+
+.item {
+  width: 100%;
+  justify-content: space-around;
+  display: flex;
+  align-items: center;
+  user-select: none;
+}
+
+.clickableItem {
+  width: 100%;
+  justify-content: space-around;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+}

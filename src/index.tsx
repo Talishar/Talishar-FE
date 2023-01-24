@@ -2,18 +2,45 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { store } from './app/Store';
-import App from './App';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import reportWebVitals from './reportWebVitals';
-import './index.css';
+import Index from './routes/index/Index';
+import { ErrorPage } from 'errorPage';
+import Play from 'routes/game/play/Play';
+import './index.scss';
+import { Toaster } from 'react-hot-toast';
 
 // Because we *must* have a root else the site won't work at all.
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 const container = document.getElementById('root')!;
 const root = createRoot(container);
 
+export const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <Index />,
+    errorElement: <ErrorPage />
+  },
+  {
+    path: '/game/play',
+    element: <Play />
+  }
+]);
+
 root.render(
   <Provider store={store}>
-    <App />
+    <Toaster
+      position="top-left"
+      toastOptions={{
+        style: {
+          background: '#004225',
+          color: '#fffdd0',
+          border: '1px solid #fffdd0',
+          padding: '0.5rem'
+        }
+      }}
+    />
+    <RouterProvider router={router} />
   </Provider>
 );
 

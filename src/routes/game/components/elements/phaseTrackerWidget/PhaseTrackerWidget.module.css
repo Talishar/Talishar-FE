@@ -1,0 +1,20 @@
+.phaseWidget {
+  background-image: url('../../../../../img/elements/Tracker.png');
+  font-size: 1em;
+  width: 95%;
+  height: 9vh;
+  height: 9dvh;
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.icon {
+  position: relative;
+  background-image: url('../../../../../img/elements/redPhaseMarker.png');
+  background-size: contain;
+  height: 2.5em;
+  width: 2.5em;
+  top: 2.62em;
+  transition: all 0.25s ease-out;
+}

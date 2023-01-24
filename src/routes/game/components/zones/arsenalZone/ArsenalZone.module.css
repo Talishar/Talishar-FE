@@ -1,0 +1,23 @@
+.arsenalContainer {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  gap: 1vh;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  grid-area: arsenal;
+}
+
+.arsenalZone {
+  height: 100%;
+  min-width: 10dvh;
+  display: flex;
+  gap: 1dvh;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  border-radius: 10px;
+  background: rgba(50, 50, 50, 0.5);
+  color: white;
+}

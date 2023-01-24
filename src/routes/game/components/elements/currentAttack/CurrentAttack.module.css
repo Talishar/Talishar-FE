@@ -1,0 +1,170 @@
+.currentAttack {
+  width: 20vh;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5vh;
+  overflow: visible;
+  user-select: none;
+}
+
+.floatCover {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  flex-wrap: wrap;
+  left: 3vh;
+  top: 2vh;
+  right: 3vh;
+  bottom: 2vh;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  border: goldenrod solid 1px;
+  color: gold;
+  border-radius: 5px;
+  width: 2vh;
+  height: 2vh;
+  padding: 2px;
+  margin: 2px;
+  pointer-events: auto;
+  user-select: none;
+}
+
+.cardContainer {
+  height: 13vh;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.attack {
+  position: relative;
+  height: 12vh;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 1vh;
+  overflow: visible;
+}
+
+.attDefRow {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5vh;
+  height: 3vh;
+  width: 100%;
+}
+
+.attDiv {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  text-align: right;
+  font-size: 1.5em;
+  flex-grow: 1;
+  color: white;
+  text-shadow: -1px 1px 2px #000, 1px 1px 2px #000, 1px -1px 0 #000,
+    -1px -1px 0 #000;
+}
+
+.defDiv {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  text-align: left;
+  font-size: 1.5em;
+  flex-grow: 1;
+  color: white;
+  text-shadow: -1px 1px 2px #000, 1px 1px 2px #000, 1px -1px 0 #000,
+    -1px -1px 0 #000;
+}
+
+.attackSymbol {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 3vh;
+  width: 3vh;
+  height: 3dvh;
+  width: 3dvh;
+  cursor: pointer;
+}
+
+.chainSymbols {
+  height: 2.5vh;
+  width: 2.5vh;
+  height: 2.5dvh;
+  width: 2.5dvh;
+}
+
+.chainLinkSymbol {
+  height: 2.5vh;
+  width: 2.5vh;
+  height: 2.5dvh;
+  width: 2.5dvh;
+}
+
+.reactions {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 1vh;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.reactionWrapper {
+  position: relative;
+  height: 13vh;
+  width: 100%;
+}
+
+.chainLinksRow {
+  background-image: url('../../../../../img/elements/gold-chain.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: left;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  gap: 1vh;
+  align-items: center;
+  height: 3vh;
+  width: 100%;
+}
+
+.chainLinkSummary {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding-left: 1vh;
+  padding-right: 1vh;
+  gap: 1vh;
+  height: 100%;
+}

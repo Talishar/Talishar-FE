@@ -1,0 +1,33 @@
+.cardListContents {
+  padding-top: 2vh;
+  display: flex;
+  flex-grow: 1;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  align-content: flex-start;
+  gap: 1vh;
+  overflow-y: auto;
+  height: auto;
+}
+
+.cardTable {
+  width: 100%;
+}
+
+.card {
+  width: 5vh;
+  width: 5dvh;
+}
+
+.onePitch {
+  color: red;
+}
+
+.twoPitch {
+  color: goldenrod;
+}
+
+.threePitch {
+  color: aqua;
+}
