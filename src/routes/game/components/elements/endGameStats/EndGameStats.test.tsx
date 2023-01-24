@@ -57,5 +57,5 @@ it('renders without crashing', () => {
 
 it('passes a snapshot test', () => {
   const div = renderWithProviders(<EndGameStats {...(stats as EndGameData)} />);
-  expect(div.getByRole('div')).toMatchSnapshot();
+  expect(div).toMatchSnapshot();
 });
