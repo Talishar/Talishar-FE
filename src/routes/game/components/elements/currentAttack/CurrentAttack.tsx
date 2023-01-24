@@ -56,29 +56,29 @@ export default function CurrentAttack() {
         <CardDisplay card={attCard} makeMeBigger={true} />
         <div className={styles.floatCover}>
           {activeCombatChain.goAgain ? (
-            <div className={styles.icon} title="Go Again">
+            <div className={styles.icon} data-tooltip="Go Again">
               <GiCycle />
             </div>
           ) : null}
           {activeCombatChain.dominate ? (
-            <div className={styles.icon} title="Dominate">
+            <div className={styles.icon} data-tooltip="Dominate">
               <BiBullseye />
             </div>
           ) : null}
           {activeCombatChain.overpower ? (
-            <div className={styles.icon} title="Overpower">
+            <div className={styles.icon} data-tooltip="Overpower">
               <GiElectric />
             </div>
           ) : null}
           {activeCombatChain.fused ? (
-            <div className={styles.icon} title="Fused">
+            <div className={styles.icon} data-tooltip="Fused">
               <GiZigzagLeaf />
             </div>
           ) : null}
           {activeCombatChain.damagePrevention ? (
             <div
               className={styles.icon}
-              title={`${activeCombatChain.damagePrevention} Damage Prevention`}
+              data-tooltip={`${activeCombatChain.damagePrevention} Damage Prevention`}
             >
               <GiShield />
               {activeCombatChain.damagePrevention}

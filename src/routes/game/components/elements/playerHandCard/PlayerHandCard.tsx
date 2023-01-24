@@ -195,7 +195,7 @@ export const PlayerHandCard = (props: HandCard) => {
               <div className={styles.iconCol}>
                 {isArsenal === true && (
                   <div className={styles.icon}>
-                    <GiCannon title="arsenal" />
+                    <GiCannon title="Arsenal" />
                   </div>
                 )}
                 {isBanished === true && (
