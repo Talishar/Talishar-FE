@@ -12,21 +12,25 @@ import {
 } from 'constants';
 import Button from '../Button';
 import GameState from '../GameState';
+import { FaSignal } from 'react-icons/fa';
 
 export const nextTurn = createAsyncThunk(
   'game/nextTurn',
-  async (params: GameInfo, { getState }) => {
+  async (
+    params: { game: GameInfo; signal: AbortSignal | undefined },
+    { getState }
+  ) => {
     const queryURL =
-      params.gameID > GAME_LIMIT_LIVE
+      params.game.gameID > GAME_LIMIT_LIVE
         ? `${API_URL_LIVE}GetNextTurn3.php?`
-        : params.gameID > GAME_LIMIT_BETA
+        : params.game.gameID > GAME_LIMIT_BETA
         ? `${API_URL_BETA}GetNextTurn3.php?`
         : `${API_URL_DEV}GetNextTurn3.php?`;
     const queryParams = new URLSearchParams({
-      gameName: String(params.gameID),
-      playerID: String(params.playerID),
-      authKey: String(params.authKey),
-      lastUpdate: String(params.lastUpdate)
+      gameName: String(params.game.gameID),
+      playerID: String(params.game.playerID),
+      authKey: String(params.game.authKey),
+      lastUpdate: String(params.game.lastUpdate)
     });
 
     let waitingForJSONResponse = true;
@@ -35,7 +39,8 @@ export const nextTurn = createAsyncThunk(
         const response = await fetch(queryURL + queryParams, {
           method: 'GET',
           headers: {},
-          credentials: 'include'
+          credentials: 'include',
+          signal: params.signal
         });
         let data = await response.text();
         if (data.toString().trim() === '0') {
@@ -52,6 +57,10 @@ export const nextTurn = createAsyncThunk(
         const gs = ParseGameState(parsedData);
         return gs;
       } catch (e) {
+        if (params.signal.aborted) {
+          return console.log('fetch aborted');
+        }
+        waitingForJSONResponse = false;
         console.log(e);
         return console.error(e);
       }
@@ -243,7 +252,12 @@ export const gameSlice = createSlice({
     ) => {
       (state.gameInfo.gameID = action.payload.gameID),
         (state.gameInfo.playerID = action.payload.playerID),
-        (state.gameInfo.authKey = action.payload.authKey);
+        (state.gameInfo.authKey = action.payload.authKey),
+        (state.gameInfo.lastUpdate = 0),
+        (state.playerOne = {}),
+        (state.playerTwo = {});
+      state.activeLayers = undefined;
+      state.activeChainLink = undefined;
     },
     removeCardFromHand: (state, action: PayloadAction<{ card: Card }>) => {
       state.playerOne.Hand = state.playerOne?.Hand?.filter(
@@ -268,6 +282,9 @@ export const gameSlice = createSlice({
     },
     showActiveLayer: (state) => {
       state.activeLayers = { ...state.activeLayers, active: true };
+    },
+    setIsUpdateInProgressFalse: (state) => {
+      state.isUpdateInProgress = false;
     }
   },
   // The `extraReducers` field lets the slice handle actions defined elsewhere,
@@ -364,5 +381,6 @@ export const {
   showChainLinkSummary,
   hideChainLinkSummary,
   hideActiveLayer,
-  showActiveLayer
+  showActiveLayer,
+  setIsUpdateInProgressFalse
 } = actions;

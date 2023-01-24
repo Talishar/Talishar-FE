@@ -8,6 +8,7 @@ import Index from './routes/index/Index';
 import { ErrorPage } from 'errorPage';
 import Play from 'routes/game/play/Play';
 import './index.scss';
+import { Toaster } from 'react-hot-toast';
 
 // Because we *must* have a root else the site won't work at all.
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -28,6 +29,17 @@ export const router = createBrowserRouter([
 
 root.render(
   <Provider store={store}>
+    <Toaster
+      position="top-left"
+      toastOptions={{
+        style: {
+          background: '#004225',
+          color: '#fffdd0',
+          border: '1px solid #fffdd0',
+          padding: '0.5rem'
+        }
+      }}
+    />
     <RouterProvider router={router} />
   </Provider>
 );

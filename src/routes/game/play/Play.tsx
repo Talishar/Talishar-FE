@@ -39,18 +39,6 @@ function Play() {
 
   return (
     <div className="centering">
-      <Toaster
-        position="top-left"
-        toastOptions={{
-          style: {
-            background: '#004225',
-            color: '#fffdd0',
-            border: '1px solid #fffdd0',
-            padding: '0.5rem'
-          }
-        }}
-      />
-
       <div
         id="cardDetail"
         style={{ display: 'none', position: 'absolute' }}

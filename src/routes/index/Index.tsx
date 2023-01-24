@@ -1,3 +1,5 @@
+import { useAppDispatch } from 'app/Hooks';
+import { setGameStart } from 'features/game/GameSlice';
 import React, { useEffect } from 'react';
 import {
   createSearchParams,
@@ -12,6 +14,7 @@ import styles from './Index.module.css';
 const Index = () => {
   const [params, setParams] = useSearchParams();
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (!!params.get('gameName')) {
@@ -23,6 +26,7 @@ const Index = () => {
         })}`
       });
     }
+    dispatch(setGameStart({ playerID: 0, gameID: 0, authKey: '' }));
   }, []);
 
   return (
