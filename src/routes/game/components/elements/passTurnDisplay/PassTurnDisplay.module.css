@@ -5,6 +5,7 @@
   justify-content: center;
   height: 7vh;
   height: 7dvh;
+  padding: 0;
 }
 
 .passTurnDisplayActive {
@@ -17,12 +18,13 @@
   height: 7vh;
   height: 7dvh;
   text-shadow: 0 0 10px rgb(0, 255, 38);
+  padding: 0;
 }
 .passTurnDisplayActive:hover {
   cursor: pointer;
-  font-size: 1.75em;
 }
 
 .subThing {
-  font-size: 0.75em;
+  font-size: 0.5em;
+  padding: 0;
 }
