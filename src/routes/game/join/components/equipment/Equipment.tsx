@@ -16,76 +16,87 @@ const Equipment = (params: LobbyInfo) => {
   const legs = [...params.deck.legs, ...params.deck.legsSB];
   return (
     <div className={styles.container}>
-      <h3>Weapons / Off-Hand</h3>
-      <div className={styles.categoryContainer}>
-        {hands.map((card, ix) => {
-          return (
-            <div key={`deck${ix}`} className={styles.cardContainer}>
-              <CardImage
-                src={`/cardsquares/${card}.webp`}
-                draggable={false}
-                className={styles.card}
-              />
-            </div>
-          );
-        })}
+      <div className={styles.eqCategory}>
+        <h3>Weapons / Off-Hand</h3>
+        <div className={styles.categoryContainer}>
+          {hands.map((card, ix) => {
+            return (
+              <div key={`deck${ix}`} className={styles.cardContainer}>
+                <CardImage
+                  src={`/cardsquares/${card}.webp`}
+                  draggable={false}
+                  className={styles.card}
+                />
+              </div>
+            );
+          })}
+        </div>
       </div>
-      <h3>Head</h3>
-      <div className={styles.categoryContainer}>
-        {head.map((card, ix) => {
-          return (
-            <div key={`deck${ix}`} className={styles.cardContainer}>
-              <CardImage
-                src={`/cardsquares/${card}.webp`}
-                draggable={false}
-                className={styles.card}
-              />
-            </div>
-          );
-        })}
+      <div className={styles.eqCategory}>
+        <h3>Head</h3>
+        <div className={styles.categoryContainer}>
+          {head.map((card, ix) => {
+            return (
+              <div key={`deck${ix}`} className={styles.cardContainer}>
+                <CardImage
+                  src={`/cardsquares/${card}.webp`}
+                  draggable={false}
+                  className={styles.card}
+                />
+              </div>
+            );
+          })}
+        </div>
       </div>
-      <h3>Chest</h3>
-      <div className={styles.categoryContainer}>
-        {chest.map((card, ix) => {
-          return (
-            <div key={`deck${ix}`} className={styles.cardContainer}>
-              <CardImage
-                src={`/cardsquares/${card}.webp`}
-                draggable={false}
-                className={styles.card}
-              />
-            </div>
-          );
-        })}
+      <div className={styles.eqCategory}>
+        <h3>Chest</h3>
+        <div className={styles.categoryContainer}>
+          {chest.map((card, ix) => {
+            return (
+              <div key={`deck${ix}`} className={styles.cardContainer}>
+                <CardImage
+                  src={`/cardsquares/${card}.webp`}
+                  draggable={false}
+                  className={styles.card}
+                />
+              </div>
+            );
+          })}
+        </div>
       </div>
-      <h3>Arms</h3>
-      <div className={styles.categoryContainer}>
-        {arms.map((card, ix) => {
-          return (
-            <div key={`deck${ix}`} className={styles.cardContainer}>
-              <CardImage
-                src={`/cardsquares/${card}.webp`}
-                draggable={false}
-                className={styles.card}
-              />
-            </div>
-          );
-        })}
+      <div className={styles.eqCategory}>
+        <h3>Arms</h3>
+        <div className={styles.categoryContainer}>
+          {arms.map((card, ix) => {
+            return (
+              <div key={`deck${ix}`} className={styles.cardContainer}>
+                <CardImage
+                  src={`/cardsquares/${card}.webp`}
+                  draggable={false}
+                  className={styles.card}
+                />
+              </div>
+            );
+          })}
+        </div>
       </div>
-      <h3>Legs</h3>
-      <div className={styles.categoryContainer}>
-        {legs.map((card, ix) => {
-          return (
-            <div key={`deck${ix}`} className={styles.cardContainer}>
-              <CardImage
-                src={`/cardsquares/${card}.webp`}
-                draggable={false}
-                className={styles.card}
-              />
-            </div>
-          );
-        })}
+      <div className={styles.eqCategory}>
+        <h3>Legs</h3>
+        <div className={styles.categoryContainer}>
+          {legs.map((card, ix) => {
+            return (
+              <div key={`deck${ix}`} className={styles.cardContainer}>
+                <CardImage
+                  src={`/cardsquares/${card}.webp`}
+                  draggable={false}
+                  className={styles.card}
+                />
+              </div>
+            );
+          })}
+        </div>
       </div>
+      <div className={styles.spacerDiv}></div>
     </div>
   );
 };

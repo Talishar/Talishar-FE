@@ -25,3 +25,12 @@
   max-width: 100%;
   border-radius: 0.5em;
 }
+
+.spacerDiv {
+  height: 5em;
+}
+
+.eqCategory > h3 {
+  margin-bottom: 0.5em;
+  margin-top: 1em;
+}
