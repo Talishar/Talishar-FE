@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useLayoutEffect, useRef } from 'react';
 
-const useShortcut = (keys: Array<String>, callback: Function) => {
+const useShortcut = (keyCode: String, callback: Function) => {
   // callback ref pattern
   const callbackRef = useRef(callback);
   useLayoutEffect(() => {
@@ -9,11 +9,11 @@ const useShortcut = (keys: Array<String>, callback: Function) => {
 
   const handleKeyPress = useCallback(
     (event: KeyboardEvent) => {
-      if (keys.some((key: String) => event.key === key)) {
+      if (event.code === keyCode) {
         callbackRef.current(event);
       }
     },
-    [keys]
+    [keyCode]
   );
 
   useEffect(() => {
