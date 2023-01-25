@@ -9,8 +9,9 @@ import {
 import { FaUndo } from 'react-icons/fa';
 import { GiExpand, GiHamburgerMenu } from 'react-icons/gi';
 import styles from './Menu.module.css';
-import { PROCESS_INPUT } from 'constants';
+import { DEFAULT_SHORTCUTS, PROCESS_INPUT } from 'constants';
 import { RootState } from 'app/Store';
+import useShortcut from 'hooks/useShortcut';
 
 function MenuButton() {
   const optionsMenu = useAppSelector(
@@ -21,6 +22,8 @@ function MenuButton() {
     if (optionsMenu?.active) return dispatch(closeOptionsMenu());
     return dispatch(openOptionsMenu());
   };
+  
+  useShortcut(DEFAULT_SHORTCUTS.TOGGLE_OPTIONS_MENU, toggleMenu);
 
   return (
     <div>
