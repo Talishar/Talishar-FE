@@ -86,3 +86,9 @@ export const PROCESS_INPUT = {
   ROGUELIKE_RESUME_ADVENTURE: 100011,
   CREATE_REPLAY: 100012
 };
+
+// Default shortcut inputs
+export const DEFAULT_SHORTCUTS = {
+  TOGGLE_OPTIONS_MENU: 'KeyM',
+  PASS_TURN: 'Space'
+};
