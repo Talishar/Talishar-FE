@@ -27,3 +27,8 @@
 .popUpInside {
   z-index: 111;
 }
+
+.doubleFacedCard {
+  position: absolute;
+  left: -40vh;
+}
