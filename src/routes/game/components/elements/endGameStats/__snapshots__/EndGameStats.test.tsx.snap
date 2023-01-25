@@ -1,0 +1,266 @@
+// Vitest Snapshot v1
+
+exports[`passes a snapshot test 1`] = `
+<div
+  class="_cardListContents_8328d1"
+  data-testid="test-stats"
+>
+  <div
+    class="_container_e52bf8"
+  >
+    <div
+      class="_buttons_e52bf8"
+    >
+      <div
+        class="_buttonDiv_e52bf8"
+      >
+        Main Menu
+      </div>
+      <div
+        class="_buttonDiv_e52bf8"
+      >
+        Quick Rematch (no sideboarding)
+      </div>
+      <div
+        class="_buttonDiv_e52bf8"
+      >
+        Full Rematch (new sideboard)
+      </div>
+    </div>
+  </div>
+  <div>
+    <h2>
+      Card Play Stats
+    </h2>
+    <table
+      class="_cardTable_8328d1"
+    >
+      <thead>
+        <tr>
+          <th>
+            Card ID
+          </th>
+          <th>
+            Card Name
+          </th>
+          <th>
+            Times Played
+          </th>
+          <th>
+            Times Blocked
+          </th>
+          <th>
+            Times Pitched
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td
+            class="_card_8328d1"
+          >
+            <div
+              class="_effect_159bb8"
+            >
+              <img
+                class="_img_159bb8"
+                src="/crops/ELE146_cropped.png"
+              />
+            </div>
+          </td>
+          <td
+            class="_onePitch_8328d1"
+          >
+            test card name one 
+          </td>
+          <td
+            class="_played_8328d1"
+          >
+            0
+          </td>
+          <td
+            class="_blocked_8328d1"
+          >
+            0
+          </td>
+          <td
+            class="_pitched_8328d1"
+          >
+            0
+          </td>
+        </tr>
+        <tr>
+          <td
+            class="_card_8328d1"
+          >
+            <div
+              class="_effect_159bb8"
+            >
+              <img
+                class="_img_159bb8"
+                src="/crops/ELE123_cropped.png"
+              />
+            </div>
+          </td>
+          <td
+            class="_threePitch_8328d1"
+          >
+            test card name two
+          </td>
+          <td
+            class="_played_8328d1"
+          >
+            0
+          </td>
+          <td
+            class="_blocked_8328d1"
+          >
+            0
+          </td>
+          <td
+            class="_pitched_8328d1"
+          >
+            0
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div>
+    <h2>
+      Stuff
+    </h2>
+    <div>
+      TODO: Add more stuff here
+    </div>
+    <div>
+      <small>
+        Collision point you're the best
+      </small>
+    </div>
+  </div>
+  <div>
+    <h2>
+      Turn Stats
+    </h2>
+    <table
+      class="_cardTable_8328d1"
+    >
+      <thead>
+        <tr>
+          <th>
+            Turn Number
+          </th>
+          <th>
+            Cards Played
+          </th>
+          <th>
+            Cards Blocked
+          </th>
+          <th>
+            Cards Pitched
+          </th>
+          <th>
+            Resources Used
+          </th>
+          <th>
+            Cards Left
+          </th>
+          <th>
+            Damage Dealt
+          </th>
+          <th>
+            Damage Taken
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td
+            class="_turnNo_8328d1"
+          >
+            1
+          </td>
+          <td
+            class="_played_8328d1"
+          >
+            2
+          </td>
+          <td
+            class="_blocked_8328d1"
+          >
+            3
+          </td>
+          <td
+            class="_pitched_8328d1"
+          >
+            2
+          </td>
+          <td
+            class="_pitched_8328d1"
+          >
+            6
+          </td>
+          <td
+            class="_pitched_8328d1"
+          >
+            1
+          </td>
+          <td
+            class="_pitched_8328d1"
+          >
+            4
+          </td>
+          <td
+            class="_pitched_8328d1"
+          >
+            6
+          </td>
+        </tr>
+        <tr>
+          <td
+            class="_turnNo_8328d1"
+          >
+            2
+          </td>
+          <td
+            class="_played_8328d1"
+          >
+            1
+          </td>
+          <td
+            class="_blocked_8328d1"
+          >
+            2
+          </td>
+          <td
+            class="_pitched_8328d1"
+          >
+            0
+          </td>
+          <td
+            class="_pitched_8328d1"
+          >
+            0
+          </td>
+          <td
+            class="_pitched_8328d1"
+          >
+            0
+          </td>
+          <td
+            class="_pitched_8328d1"
+          >
+            0
+          </td>
+          <td
+            class="_pitched_8328d1"
+          >
+            7
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+`;
