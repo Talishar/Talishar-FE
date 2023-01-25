@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Board } from '../components/board/Board';
-import './Play.module.css';
+import './Play.css';
 import GameStateHandler from '../../../app/GameStateHandler';
 import LeftColumn from '../components/leftColumn/LeftColumn';
 import RightColumn from '../components/rightColumn/RightColumn';
@@ -9,7 +9,6 @@ import PlayerHand from '../components/zones/playerHand/PlayerHand';
 import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import OptionsOverlay from '../components/elements/optionsMenu/OptionsMenu';
-import { Toaster } from 'react-hot-toast';
 import EventsHandler from '../components/elements/eventsHandler/EventsHandler';
 import PlayerInputPopUp from '../components/elements/playerInputPopUp/PlayerInputPopUp';
 import CardPopUp from '../components/elements/cardPopUp/CardPopUp';
