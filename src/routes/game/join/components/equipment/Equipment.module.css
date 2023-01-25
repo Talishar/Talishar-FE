@@ -34,3 +34,33 @@
   margin-bottom: 0.5em;
   margin-top: 1em;
 }
+
+input {
+  display: none;
+}
+
+.overlay {
+  position: relative;
+  top: -100px;
+  height: 100px;
+}
+
+input[type='radio'] + img + .overlay {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+input[type='radio']:checked + img {
+  box-shadow: 0 0 0 0.2em var(--primary);
+}
+
+input[type='radio']:checked + img + .overlay {
+  display: none;
+}
+
+input[type='checkbox']:checked + img {
+  box-shadow: 0 0 0 0.2em var(--primary);
+}
+
+input[type='checkbox']:checked + img + .overlay {
+  display: none;
+}

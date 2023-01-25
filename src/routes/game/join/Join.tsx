@@ -95,6 +95,7 @@ const Join = () => {
                   <button
                     className={eqClasses}
                     onClick={() => setActiveTab('equipment')}
+                    type="button"
                   >
                     Equipment
                   </button>
@@ -103,6 +104,7 @@ const Join = () => {
                   <button
                     className={deckClasses}
                     onClick={() => setActiveTab('deck')}
+                    type="button"
                   >
                     Deck
                   </button>
@@ -111,6 +113,7 @@ const Join = () => {
                   <button
                     className={chatClasses}
                     onClick={() => setActiveTab('chat')}
+                    type="button"
                   >
                     {unreadChat && (
                       <>

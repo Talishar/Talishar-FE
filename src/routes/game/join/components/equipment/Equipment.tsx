@@ -31,6 +31,7 @@ const Equipment = (params: LobbyInfo) => {
                     draggable={false}
                     className={styles.card}
                   />
+                  <div className={styles.overlay}></div>
                 </label>
               </div>
             );
@@ -50,6 +51,7 @@ const Equipment = (params: LobbyInfo) => {
                     draggable={false}
                     className={styles.card}
                   />
+                  <div className={styles.overlay}></div>
                 </label>
               </div>
             );
@@ -69,6 +71,7 @@ const Equipment = (params: LobbyInfo) => {
                     draggable={false}
                     className={styles.card}
                   />
+                  <div className={styles.overlay}></div>
                 </label>
               </div>
             );
@@ -81,13 +84,14 @@ const Equipment = (params: LobbyInfo) => {
           {arms.map((card, ix) => {
             return (
               <div key={`deck${ix}`} className={styles.cardContainer}>
-                <label>
+                <label className={styles.selection}>
                   <Field type="radio" name="arms" value={`${card}`} />
                   <CardImage
                     src={`/cardsquares/${card}.webp`}
                     draggable={false}
                     className={styles.card}
                   />
+                  <div className={styles.overlay}></div>
                 </label>
               </div>
             );
@@ -107,6 +111,7 @@ const Equipment = (params: LobbyInfo) => {
                     draggable={false}
                     className={styles.card}
                   />
+                  <div className={styles.overlay}></div>
                 </label>
               </div>
             );
