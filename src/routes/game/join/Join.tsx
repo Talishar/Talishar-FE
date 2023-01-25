@@ -7,7 +7,7 @@ import Equipment from './components/equipment/Equipment';
 import { useState } from 'react';
 import classNames from 'classnames';
 import { FaExclamationCircle } from 'react-icons/fa';
-import { Formik } from 'formik';
+import { Form, Formik } from 'formik';
 
 export interface Deck {
   hero: string;
@@ -65,7 +65,7 @@ const Join = () => {
             console.log(values);
           }}
         >
-          <form>
+          <Form>
             <div className={styles.titleContainer}>
               <div
                 className={styles.leftCol}
@@ -137,12 +137,16 @@ const Join = () => {
                 )}
               </div>
               <div className={styles.buttonHolder}>
-                <button disabled={!canSubmit} className={styles.buttonClass}>
+                <button
+                  disabled={!canSubmit}
+                  className={styles.buttonClass}
+                  type="submit"
+                >
                   Submit deck
                 </button>
               </div>
             </div>
-          </form>
+          </Form>
         </Formik>
       </div>
     </div>
