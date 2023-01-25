@@ -1,16 +1,21 @@
 import React from 'react';
 import screenfull from 'screenfull';
-import { useAppDispatch } from 'app/Hooks';
-import { openOptionsMenu, submitButton } from 'features/game/GameSlice';
+import { useAppDispatch, useAppSelector } from 'app/Hooks';
+import { openOptionsMenu, closeOptionsMenu, submitButton } from 'features/game/GameSlice';
 import { FaUndo } from 'react-icons/fa';
 import { GiExpand, GiHamburgerMenu } from 'react-icons/gi';
 import styles from './Menu.module.css';
 import { PROCESS_INPUT } from 'constants';
+import { RootState } from 'app/Store';
 
 function MenuButton() {
+  const optionsMenu = useAppSelector(
+    (state: RootState) => state.game.optionsMenu
+  );
   const dispatch = useAppDispatch();
   const toggleMenu = () => {
-    dispatch(openOptionsMenu());
+    if (optionsMenu?.active) return dispatch(closeOptionsMenu());
+    return dispatch(openOptionsMenu());
   };
 
   return (
