@@ -90,5 +90,5 @@ export const PROCESS_INPUT = {
 // Default shortcut inputs
 export const DEFAULT_SHORTCUTS = {
   TOGGLE_OPTIONS_MENU: ['m', 'M'],
-  PASS_TURN: [' '],
+  PASS_TURN: [' ']
 };

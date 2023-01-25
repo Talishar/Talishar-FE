@@ -17,7 +17,7 @@ export default function PassTurnDisplay() {
     dispatch(submitButton({ button: { mode: PROCESS_INPUT.PASS } }));
   };
 
-  useShortcut(DEFAULT_SHORTCUTS.PASS_TURN, onPassTurn)
+  useShortcut(DEFAULT_SHORTCUTS.PASS_TURN, onPassTurn);
 
   if (canPassPhase === undefined) {
     return <div className={styles.passTurnDisplay}></div>;

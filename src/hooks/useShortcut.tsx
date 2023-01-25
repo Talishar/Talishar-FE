@@ -1,11 +1,11 @@
-import { useCallback, useEffect, useLayoutEffect, useRef } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef } from 'react';
 
 const useShortcut = (keys: Array<String>, callback: Function) => {
   // callback ref pattern
   const callbackRef = useRef(callback);
   useLayoutEffect(() => {
     callbackRef.current = callback;
-  })
+  });
 
   const handleKeyPress = useCallback(
     (event: KeyboardEvent) => {
@@ -17,11 +17,10 @@ const useShortcut = (keys: Array<String>, callback: Function) => {
   );
 
   useEffect(() => {
-    document.addEventListener("keydown", handleKeyPress);
+    document.addEventListener('keydown', handleKeyPress);
 
-    return () =>
-      document.removeEventListener("keydown", handleKeyPress);
+    return () => document.removeEventListener('keydown', handleKeyPress);
   }, [handleKeyPress]);
-}
+};
 
 export default useShortcut;

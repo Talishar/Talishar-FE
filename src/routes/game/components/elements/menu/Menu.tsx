@@ -22,7 +22,7 @@ function MenuButton() {
     if (optionsMenu?.active) return dispatch(closeOptionsMenu());
     return dispatch(openOptionsMenu());
   };
-  
+
   useShortcut(DEFAULT_SHORTCUTS.TOGGLE_OPTIONS_MENU, toggleMenu);
 
   return (
