@@ -1,9 +1,11 @@
+import { Field, useFormikContext } from 'formik';
 import React from 'react';
 import CardImage from 'routes/game/components/elements/cardImage/CardImage';
 import { LobbyInfo } from '../../Join';
 import styles from './Equipment.module.css';
 
 const Equipment = (params: LobbyInfo) => {
+  const { values } = useFormikContext();
   const hands = [
     ...params.deck.weapons,
     ...params.deck.weaponSB,
@@ -22,11 +24,14 @@ const Equipment = (params: LobbyInfo) => {
           {hands.map((card, ix) => {
             return (
               <div key={`deck${ix}`} className={styles.cardContainer}>
-                <CardImage
-                  src={`/cardsquares/${card}.webp`}
-                  draggable={false}
-                  className={styles.card}
-                />
+                <label>
+                  <Field type="checkbox" name="weapons" value={`${card}`} />
+                  <CardImage
+                    src={`/cardsquares/${card}.webp`}
+                    draggable={false}
+                    className={styles.card}
+                  />
+                </label>
               </div>
             );
           })}
@@ -38,11 +43,14 @@ const Equipment = (params: LobbyInfo) => {
           {head.map((card, ix) => {
             return (
               <div key={`deck${ix}`} className={styles.cardContainer}>
-                <CardImage
-                  src={`/cardsquares/${card}.webp`}
-                  draggable={false}
-                  className={styles.card}
-                />
+                <label>
+                  <Field type="radio" name="head" value={`${card}`} />
+                  <CardImage
+                    src={`/cardsquares/${card}.webp`}
+                    draggable={false}
+                    className={styles.card}
+                  />
+                </label>
               </div>
             );
           })}
@@ -54,11 +62,14 @@ const Equipment = (params: LobbyInfo) => {
           {chest.map((card, ix) => {
             return (
               <div key={`deck${ix}`} className={styles.cardContainer}>
-                <CardImage
-                  src={`/cardsquares/${card}.webp`}
-                  draggable={false}
-                  className={styles.card}
-                />
+                <label>
+                  <Field type="radio" name="chest" value={`${card}`} />
+                  <CardImage
+                    src={`/cardsquares/${card}.webp`}
+                    draggable={false}
+                    className={styles.card}
+                  />
+                </label>
               </div>
             );
           })}
@@ -70,11 +81,14 @@ const Equipment = (params: LobbyInfo) => {
           {arms.map((card, ix) => {
             return (
               <div key={`deck${ix}`} className={styles.cardContainer}>
-                <CardImage
-                  src={`/cardsquares/${card}.webp`}
-                  draggable={false}
-                  className={styles.card}
-                />
+                <label>
+                  <Field type="radio" name="arms" value={`${card}`} />
+                  <CardImage
+                    src={`/cardsquares/${card}.webp`}
+                    draggable={false}
+                    className={styles.card}
+                  />
+                </label>
               </div>
             );
           })}
@@ -86,11 +100,14 @@ const Equipment = (params: LobbyInfo) => {
           {legs.map((card, ix) => {
             return (
               <div key={`deck${ix}`} className={styles.cardContainer}>
-                <CardImage
-                  src={`/cardsquares/${card}.webp`}
-                  draggable={false}
-                  className={styles.card}
-                />
+                <label>
+                  <Field type="radio" name="legs" value={`${card}`} />
+                  <CardImage
+                    src={`/cardsquares/${card}.webp`}
+                    draggable={false}
+                    className={styles.card}
+                  />
+                </label>
               </div>
             );
           })}
