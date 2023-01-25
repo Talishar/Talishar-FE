@@ -13,6 +13,7 @@ import { Toaster } from 'react-hot-toast';
 import EventsHandler from '../components/elements/eventsHandler/EventsHandler';
 import PlayerInputPopUp from '../components/elements/playerInputPopUp/PlayerInputPopUp';
 import CardPopUp from '../components/elements/cardPopUp/CardPopUp';
+import ChatCardDetail from '../components/elements/chatCardDetail/ChatCardDetail';
 
 function Play() {
   const [maxWidth, setMaxWidth] = useState(1920);
@@ -39,11 +40,8 @@ function Play() {
 
   return (
     <div className="centering">
-      <div
-        id="cardDetail"
-        style={{ display: 'none', position: 'absolute' }}
-      ></div>
       <div className="app" style={{ maxWidth }}>
+        <ChatCardDetail />
         <LeftColumn />
         <div className="gameZone">
           <HandZone isPlayer={false} />
