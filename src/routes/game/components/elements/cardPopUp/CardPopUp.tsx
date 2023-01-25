@@ -5,6 +5,7 @@ import CardImage from '../cardImage/CardImage';
 import styles from './CardPopUp.module.css';
 import { doubleFacedCardsMappings } from './constants';
 import classNames from 'classnames';
+import useWindowDimensions from 'hooks/useWindowDimensions';
 
 const popUpGap = 10;
 
@@ -30,7 +31,7 @@ function getSrcs(cardNumber: string): Array<string> {
 
 export default function CardPopUpContainer() {
   const popup = useAppSelector((state: RootState) => state.game.popup);
-
+  const [windowWidth, windowHeight] = useWindowDimensions();
   if (
     popup === undefined ||
     popup.popupOn === false ||
@@ -47,18 +48,18 @@ export default function CardPopUpContainer() {
 
   const popUpStyle: Record<string, string> = {}
 
-  if (popup.xCoord > window.innerWidth / 2) {
+  if (popup.xCoord > windowWidth / 2) {
     popUpStyle.right =
-      (window.innerWidth - (popup.xCoord - popUpGap)).toString() + 'px';
+      (windowWidth - (popup.xCoord - popUpGap)).toString() + 'px';
   } else {
     popUpStyle.left = (popup.xCoord + popUpGap).toString() + 'px';
   }
 
-  if (popup.yCoord < window.innerHeight / 2) {
+  if (popup.yCoord < windowHeight / 2) {
     popUpStyle.top = popup.yCoord.toString() + 'px';
   } else {
     popUpStyle.bottom =
-      (window.innerHeight - popup.yCoord + popUpGap).toString() + 'px';
+      (windowHeight - popup.yCoord + popUpGap).toString() + 'px';
   }
 
   return (
