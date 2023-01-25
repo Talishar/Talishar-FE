@@ -46,7 +46,7 @@ export default function CardPopUpContainer() {
     return (<CardPopUp src={src} />);
   }
 
-  const popUpStyle: Record<string, string> = {}
+  const popUpStyle: Record<string, string> = {};
 
   if (popup.xCoord > windowWidth / 2) {
     popUpStyle.right =
