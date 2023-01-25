@@ -99,7 +99,7 @@ const dieRoll = (rolled: string | undefined) => {
   fragment = rolled === '4' ? <GiDiceSixFacesFour /> : fragment;
   fragment = rolled === '5' ? <GiDiceSixFacesFive /> : fragment;
   fragment = rolled === '6' ? <GiDiceSixFacesSix /> : fragment;
-  return <>fragment</>;
+  return <>{fragment}</>;
 };
 
 EventsHandler.displayName = 'EventsHandler';
