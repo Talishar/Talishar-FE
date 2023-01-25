@@ -1,7 +1,11 @@
 import React from 'react';
 import screenfull from 'screenfull';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
-import { openOptionsMenu, closeOptionsMenu, submitButton } from 'features/game/GameSlice';
+import {
+  openOptionsMenu,
+  closeOptionsMenu,
+  submitButton
+} from 'features/game/GameSlice';
 import { FaUndo } from 'react-icons/fa';
 import { GiExpand, GiHamburgerMenu } from 'react-icons/gi';
 import styles from './Menu.module.css';
