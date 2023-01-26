@@ -31,14 +31,26 @@ body {
   justify-content: center;
 }
 
+@media (orientation: landscape) {
+  .app {
+    height: 100%;
+    width: 100%;
+    max-width: var(--aspect);
+  }
+}
+
+@media (orientation: portrait) {
+  .app {
+    aspect-ratio: 16/9;
+  }
+}
+
 .app {
   position: relative;
   display: flex;
   flex-flow: row nowrap;
   margin: auto;
-  height: 100%;
-  width: 100%;
-  max-width: var(--aspect);
+  
 }
 
 .gameZone {
