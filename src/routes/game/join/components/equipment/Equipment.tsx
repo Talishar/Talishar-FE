@@ -1,37 +1,41 @@
 import { Field, useFormikContext } from 'formik';
 import React from 'react';
 import CardImage from 'routes/game/components/elements/cardImage/CardImage';
-import { LobbyInfo } from '../../Join';
+import { LobbyInfo, Weapon } from '../../Join';
 import styles from './Equipment.module.css';
 
-const Equipment = (params: LobbyInfo) => {
+type EquipmentProps = {
+  lobbyInfo: LobbyInfo;
+  weapons: Weapon[];
+  weaponSB: Weapon[];
+};
+
+const Equipment = ({ lobbyInfo, weapons, weaponSB }: EquipmentProps) => {
   const { values } = useFormikContext();
-  const hands = [
-    ...params.deck.weapons,
-    ...params.deck.weaponSB,
-    ...params.deck.offhand,
-    ...params.deck.offhandSB
-  ];
-  const head = [...params.deck.head, ...params.deck.headSB];
-  const chest = [...params.deck.chest, ...params.deck.chestSB];
-  const arms = [...params.deck.arms, ...params.deck.armsSB];
-  const legs = [...params.deck.legs, ...params.deck.legsSB];
+  const hands = [...weapons, ...weaponSB];
+  const head = [...lobbyInfo.deck.head, ...lobbyInfo.deck.headSB];
+  const chest = [...lobbyInfo.deck.chest, ...lobbyInfo.deck.chestSB];
+  const arms = [...lobbyInfo.deck.arms, ...lobbyInfo.deck.armsSB];
+  const legs = [...lobbyInfo.deck.legs, ...lobbyInfo.deck.legsSB];
   return (
     <div className={styles.container}>
       <div className={styles.eqCategory}>
         <h3>Weapons / Off-Hand</h3>
         <div className={styles.categoryContainer}>
-          {hands.map((card, ix) => {
+          {hands.map((weapon, ix) => {
             return (
               <div key={`deck${ix}`} className={styles.cardContainer}>
                 <label>
-                  <Field type="checkbox" name="weapons" value={`${card}`} />
+                  <Field
+                    type="checkbox"
+                    name="weapons"
+                    value={`${weapon.id}`}
+                  />
                   <CardImage
-                    src={`/cardsquares/${card}.webp`}
+                    src={`/cardsquares/${weapon.id.substring(0, 6)}.webp`}
                     draggable={false}
                     className={styles.card}
                   />
-                  <div className={styles.overlay}></div>
                 </label>
               </div>
             );
@@ -51,7 +55,6 @@ const Equipment = (params: LobbyInfo) => {
                     draggable={false}
                     className={styles.card}
                   />
-                  <div className={styles.overlay}></div>
                 </label>
               </div>
             );
@@ -71,7 +74,6 @@ const Equipment = (params: LobbyInfo) => {
                     draggable={false}
                     className={styles.card}
                   />
-                  <div className={styles.overlay}></div>
                 </label>
               </div>
             );
@@ -91,7 +93,6 @@ const Equipment = (params: LobbyInfo) => {
                     draggable={false}
                     className={styles.card}
                   />
-                  <div className={styles.overlay}></div>
                 </label>
               </div>
             );
@@ -111,7 +112,6 @@ const Equipment = (params: LobbyInfo) => {
                     draggable={false}
                     className={styles.card}
                   />
-                  <div className={styles.overlay}></div>
                 </label>
               </div>
             );

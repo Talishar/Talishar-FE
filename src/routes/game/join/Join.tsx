@@ -10,21 +10,28 @@ import { FaExclamationCircle } from 'react-icons/fa';
 import { Form, Formik } from 'formik';
 
 export interface Deck {
+  heroName: string;
   hero: string;
-  weapons: string[];
+  weapons: Weapon[];
   head: string[];
   chest: string[];
   arms: string[];
   legs: string[];
-  offhand: string[];
+  offhand: Weapon[];
   cards: string[];
   headSB: string[];
   chestSB: string[];
   armsSB: string[];
   legsSB: string[];
-  offhandSB: string[];
-  weaponSB: string[];
+  offhandSB: Weapon[];
+  weaponSB: Weapon[];
   cardsSB: string[];
+}
+
+export interface Weapon {
+  id: string;
+  is1H: boolean;
+  img?: string;
 }
 
 export interface LobbyInfo {
@@ -49,13 +56,37 @@ const Join = () => {
   const deckClasses = classNames({ secondary: activeTab !== 'deck' });
   const chatClasses = classNames({ secondary: activeTab !== 'chat' });
   const canSubmit = true;
+
+  // I'm not sure how I can get formik to understand checkboxes and repeating cards so give them all an index here parts.
+  const deckIndexed = data.deck.cards.map((card, ix) => `${card}-${ix}`);
+  const deckSBIndexed = data.deck.cardsSB.map(
+    (card, ix) => `${card}-${ix + deckIndexed.length}`
+  );
+  const weaponsIndexed = [...data.deck.weapons, ...data.deck.offhand].map(
+    (card, ix) => {
+      return {
+        id: `${card.id}-${ix}`,
+        is1H: card.is1H,
+        img: `${card.id}`
+      } as Weapon;
+    }
+  );
+  const weaponsSBIndexed = [...data.deck.weaponSB, ...data.deck.offhandSB].map(
+    (card, ix) => {
+      return {
+        id: `${card.id}-${ix + weaponsIndexed.length}`,
+        img: `${card.id}`,
+        is1H: card.is1H
+      } as Weapon;
+    }
+  );
   return (
     <div>
       <div>
         <Formik
           initialValues={{
-            deck: [...data.deck.cards],
-            weapons: [...data.deck.weapons],
+            deck: deckIndexed,
+            weapons: weaponsIndexed,
             head: data.deck.head[0],
             chest: data.deck.chest[0],
             arms: data.deck.arms[0],
@@ -126,8 +157,16 @@ const Join = () => {
               </ul>
             </nav>
             <div className={styles.contentContainer}>
-              {activeTab === 'equipment' && <Equipment {...data} />}
-              {activeTab === 'deck' && <Deck {...data} />}
+              {activeTab === 'equipment' && (
+                <Equipment
+                  lobbyInfo={data}
+                  weapons={weaponsIndexed}
+                  weaponSB={weaponsSBIndexed}
+                />
+              )}
+              {activeTab === 'deck' && (
+                <Deck deck={[...deckIndexed, ...deckSBIndexed]} />
+              )}
               {activeTab === 'chat' && <LobbyChat />}
             </div>
             <div className={styles.stickyFooter}>

@@ -29,6 +29,7 @@ nav {
   padding: 0 1em;
   top: 0;
   background-color: var(--card-background-color);
+  z-index: 10;
 }
 
 .contentContainer {

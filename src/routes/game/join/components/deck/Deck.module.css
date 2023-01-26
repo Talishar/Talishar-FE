@@ -4,9 +4,10 @@
   flex-direction: row;
   flex-wrap: wrap;
   gap: 0.5em;
+  padding: 1em 0.5em 5em 0.5em;
 }
 
-.cardContainer {
+.deckCardContainer {
   height: 100px;
   width: 100px;
 }
@@ -17,4 +18,13 @@
   max-height: 100%;
   max-width: 100%;
   border-radius: 0.5em;
+}
+
+input + img {
+  filter: brightness(0.5);
+  transition: filter 0.25s;
+}
+
+input[type='checkbox']:checked + img {
+  filter: brightness(1);
 }

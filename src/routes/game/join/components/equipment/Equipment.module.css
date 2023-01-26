@@ -39,28 +39,17 @@ input {
   display: none;
 }
 
-.overlay {
-  position: relative;
-  top: -100px;
-  height: 100px;
-}
-
-input[type='radio'] + img + .overlay {
-  background-color: rgba(0, 0, 0, 0.5);
+input + img {
+  filter: brightness(0.5);
+  transition: filter 0.25s, box-shadow 0.25s;
 }
 
 input[type='radio']:checked + img {
   box-shadow: 0 0 0 0.2em var(--primary);
-}
-
-input[type='radio']:checked + img + .overlay {
-  display: none;
+  filter: brightness(1);
 }
 
 input[type='checkbox']:checked + img {
   box-shadow: 0 0 0 0.2em var(--primary);
-}
-
-input[type='checkbox']:checked + img + .overlay {
-  display: none;
+  filter: brightness(1);
 }
