@@ -1,10 +1,9 @@
-import React, { useRef } from 'react';
 import { RootState } from 'app/Store';
-import { clearPopUp, setPopUp } from 'features/game/GameSlice';
 import Player from 'interface/Player';
 import styles from './Effects.module.css';
 import { Card } from 'features/Card';
-import { useAppDispatch, useAppSelector } from 'app/Hooks';
+import { useAppSelector } from 'app/Hooks';
+import CardPopUp from '../cardPopUp/CardPopUp';
 
 export interface CardProp {
   card: Card;
@@ -14,38 +13,14 @@ export interface CardProp {
 
 export function Effect(prop: CardProp) {
   const src = `/crops/${prop.card.cardNumber}_cropped.png`;
-  const ref = useRef<HTMLDivElement>(null);
-  const dispatch = useAppDispatch();
-
-  const handleMouseEnter = () => {
-    if (ref.current === null) {
-      return;
-    }
-    const rect = ref.current.getBoundingClientRect();
-    const xCoord = rect.left < window.innerWidth / 2 ? rect.right : rect.left;
-    const yCoord = rect.top < window.innerHeight / 2 ? rect.bottom : rect.top;
-    dispatch(
-      setPopUp({
-        cardNumber: prop.card.cardNumber,
-        xCoord: xCoord,
-        yCoord: yCoord
-      })
-    );
-  };
-
-  const handleMouseLeave = () => {
-    dispatch(clearPopUp());
-  };
 
   return (
-    <div
-      className={styles.effect}
-      onMouseEnter={() => handleMouseEnter()}
-      onMouseLeave={() => handleMouseLeave()}
-      ref={ref}
+    <CardPopUp
+      cardNumber={prop.card.cardNumber}
+      containerClass={styles.effect}
     >
       <img src={src} className={styles.img} />
-    </div>
+    </CardPopUp>
   );
 }
 

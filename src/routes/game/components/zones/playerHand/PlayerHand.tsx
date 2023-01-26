@@ -67,8 +67,6 @@ export default function PlayerHand() {
             <PlayerHandCard
               card={card}
               key={`hand-${ix}`}
-              handSize={lengthOfCards}
-              cardIndex={ix}
             />
           );
         })}
@@ -80,8 +78,6 @@ export default function PlayerHand() {
               card={card}
               isArsenal
               key={`arsenal-${ix}`}
-              handSize={lengthOfCards}
-              cardIndex={ix + Number(handCards?.length)}
             />
           );
         })}
@@ -92,10 +88,6 @@ export default function PlayerHand() {
               card={card}
               isBanished
               key={`banished-${ix}`}
-              handSize={lengthOfCards}
-              cardIndex={
-                ix + Number(handCards?.length) + Number(arsenalCards?.length)
-              }
             />
           );
         })}
