@@ -1,7 +1,7 @@
 import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import CardImage from '../cardImage/CardImage';
-import styles from './CardPopUp.module.css';
+import styles from './CardPortal.module.css';
 import { doubleFacedCardsMappings } from './constants';
 import classNames from 'classnames';
 import useWindowDimensions from 'hooks/useWindowDimensions';
