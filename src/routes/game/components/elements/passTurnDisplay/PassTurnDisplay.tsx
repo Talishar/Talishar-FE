@@ -3,7 +3,8 @@ import { playCard, submitButton } from 'features/game/GameSlice';
 import { useAppSelector, useAppDispatch } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import styles from './PassTurnDisplay.module.css';
-import { PROCESS_INPUT } from 'constants';
+import { DEFAULT_SHORTCUTS, PROCESS_INPUT } from 'constants';
+import useShortcut from 'hooks/useShortcut';
 
 export default function PassTurnDisplay() {
   const canPassPhase = useAppSelector(
@@ -16,18 +17,7 @@ export default function PassTurnDisplay() {
     dispatch(submitButton({ button: { mode: PROCESS_INPUT.PASS } }));
   };
 
-  const pressKey = (e: KeyboardEvent) => {
-    if (e.key == ' ') {
-      onPassTurn();
-    }
-  };
-
-  // TODO: Migrate the key listeners to a separate component
-  // component can have customisable keys maybe
-  useEffect(() => {
-    document.addEventListener('keydown', pressKey, false);
-    // return document.removeEventListener('keydown', pressKey, true);
-  }, []);
+  useShortcut(DEFAULT_SHORTCUTS.PASS_TURN, onPassTurn);
 
   if (canPassPhase === undefined) {
     return <div className={styles.passTurnDisplay}></div>;

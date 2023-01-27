@@ -253,7 +253,8 @@ export default function ParseGameState(input: any) {
 
   // Chat log.
   result.chatLog = [];
-  result.chatLog.push(input.chatLog);
+  const re = /.\/Images\//gm;
+  result.chatLog.push(input.chatLog.replace(re, '/images/'));
 
   // activeplayer
   result.activePlayer = input.amIActivePlayer ? 1 : 2;
