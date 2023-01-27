@@ -1,7 +1,7 @@
 import { Field, useFormikContext } from 'formik';
 import React from 'react';
 import CardImage from 'routes/game/components/elements/cardImage/CardImage';
-import { LobbyInfo } from '../../Join';
+import { DeckResponse } from '../../Join';
 import styles from './Deck.module.css';
 
 type DeckProps = {
@@ -9,7 +9,7 @@ type DeckProps = {
 };
 
 const Deck = ({ deck }: DeckProps) => {
-  const { values } = useFormikContext();
+  const { values } = useFormikContext<DeckResponse>();
 
   return (
     <div className={styles.container}>

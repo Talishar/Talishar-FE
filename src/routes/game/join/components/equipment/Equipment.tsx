@@ -1,4 +1,4 @@
-import { Field, useFormikContext } from 'formik';
+import { Field, FieldArray, useFormikContext } from 'formik';
 import React from 'react';
 import CardImage from 'routes/game/components/elements/cardImage/CardImage';
 import { LobbyInfo, Weapon } from '../../Join';
@@ -11,36 +11,54 @@ type EquipmentProps = {
 };
 
 const Equipment = ({ lobbyInfo, weapons, weaponSB }: EquipmentProps) => {
-  const { values } = useFormikContext();
+  const { values } = useFormikContext<DeckResponse>();
   const hands = [...weapons, ...weaponSB];
-  const head = [...lobbyInfo.deck.head, ...lobbyInfo.deck.headSB];
-  const chest = [...lobbyInfo.deck.chest, ...lobbyInfo.deck.chestSB];
-  const arms = [...lobbyInfo.deck.arms, ...lobbyInfo.deck.armsSB];
-  const legs = [...lobbyInfo.deck.legs, ...lobbyInfo.deck.legsSB];
+  const head = [...lobbyInfo.deck.head, ...lobbyInfo.deck.headSB, 'none'];
+  const chest = [...lobbyInfo.deck.chest, ...lobbyInfo.deck.chestSB, 'none'];
+  const arms = [...lobbyInfo.deck.arms, ...lobbyInfo.deck.armsSB, 'none'];
+  const legs = [...lobbyInfo.deck.legs, ...lobbyInfo.deck.legsSB, 'none'];
   return (
     <div className={styles.container}>
       <div className={styles.eqCategory}>
         <h3>Weapons / Off-Hand</h3>
-        <div className={styles.categoryContainer}>
-          {hands.map((weapon, ix) => {
-            return (
-              <div key={`deck${ix}`} className={styles.cardContainer}>
-                <label>
-                  <Field
-                    type="checkbox"
-                    name="weapons"
-                    value={`${weapon.id}`}
-                  />
-                  <CardImage
-                    src={`/cardsquares/${weapon.id.substring(0, 6)}.webp`}
-                    draggable={false}
-                    className={styles.card}
-                  />
-                </label>
-              </div>
-            );
-          })}
-        </div>
+        <FieldArray
+          name="weapons"
+          render={(arrayHelpers) => (
+            <div className={styles.categoryContainer}>
+              {hands.map((weapon, ix) => {
+                return (
+                  <div key={`deck${ix}`} className={styles.cardContainer}>
+                    <label>
+                      <input
+                        type="checkbox"
+                        name="weapons"
+                        value={`${weapon}`}
+                        checked={values.weapons.some(
+                          (value: Weapon) => value.id === weapon.id
+                        )}
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            arrayHelpers.push(weapon);
+                          } else {
+                            const idx = values.weapons.findIndex(
+                              (value: Weapon) => value.id === weapon.id
+                            );
+                            arrayHelpers.remove(idx);
+                          }
+                        }}
+                      />
+                      <CardImage
+                        src={`/cardsquares/${weapon.id.substring(0, 6)}.webp`}
+                        draggable={false}
+                        className={styles.card}
+                      />
+                    </label>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        />
       </div>
       <div className={styles.eqCategory}>
         <h3>Head</h3>

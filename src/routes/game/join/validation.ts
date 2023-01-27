@@ -1,0 +1,33 @@
+import { array, boolean, object, string } from 'yup';
+
+export const deckValidation = (deckSize: number) => {
+  return object({
+    // maximum of two 1H items, or one 2H item.
+    weapons: array()
+      .required()
+      .min(1, 'Pick at least one weapon.')
+      .of(
+        object().shape({
+          id: string().required(),
+          is1H: boolean()
+        })
+      )
+      // Test that the sum of weapons.hands is less than 2. And hope LSS don't introduce heroes with only 1 hand, or 3 hands.
+      .test('hands', 'Your hero only has two hands.', (weapons = []) => {
+        const hands = weapons.reduce((total, row) => {
+          return total + (row.is1H ? 1 : 2);
+        }, 0);
+        return hands <= 2;
+      }), // maximum 2 hand-objects
+    head: string().required(),
+    chest: string().required(),
+    arms: string().required(),
+    legs: string().required(),
+    deck: array()
+      .required()
+      .of(string())
+      .min(deckSize, `Minimum deck size is ${deckSize} cards.`)
+  });
+};
+
+export default deckValidation;

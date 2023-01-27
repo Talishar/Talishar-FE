@@ -8,6 +8,8 @@ import { useState } from 'react';
 import classNames from 'classnames';
 import { FaExclamationCircle } from 'react-icons/fa';
 import { Form, Formik } from 'formik';
+import deckValidation from './validation';
+import StickyFooter from './components/stickyFooter/StickyFooter';
 
 export interface Deck {
   heroName: string;
@@ -43,6 +45,15 @@ export interface LobbyInfo {
   deck: Deck;
 }
 
+export interface DeckResponse {
+  deck: string[];
+  weapons: Weapon[];
+  head: string;
+  chest: string;
+  arms: string;
+  legs: string;
+}
+
 const Join = () => {
   const [activeTab, setActiveTab] = useState('equipment');
   const [unreadChat, setUnreadChat] = useState(true);
@@ -57,7 +68,7 @@ const Join = () => {
   const chatClasses = classNames({ secondary: activeTab !== 'chat' });
   const canSubmit = true;
 
-  // I'm not sure how I can get formik to understand checkboxes and repeating cards so give them all an index here parts.
+  // I'm not sure how I can get formik to understand checkboxes and repeating cards so give them all an index here.
   const deckIndexed = data.deck.cards.map((card, ix) => `${card}-${ix}`);
   const deckSBIndexed = data.deck.cardsSB.map(
     (card, ix) => `${card}-${ix + deckIndexed.length}`
@@ -71,15 +82,17 @@ const Join = () => {
       } as Weapon;
     }
   );
-  const weaponsSBIndexed = [...data.deck.weaponSB, ...data.deck.offhandSB].map(
-    (card, ix) => {
-      return {
-        id: `${card.id}-${ix + weaponsIndexed.length}`,
-        img: `${card.id}`,
-        is1H: card.is1H
-      } as Weapon;
-    }
-  );
+  const weaponsSBIndexed = [
+    ...data.deck.weaponSB,
+    ...data.deck.offhandSB,
+    { id: `none`, is1H: true, img: `none` }
+  ].map((card, ix) => {
+    return {
+      id: `${card.id}-${ix + weaponsIndexed.length}`,
+      img: `${card.id}`,
+      is1H: card.is1H
+    } as Weapon;
+  });
   return (
     <div>
       <div>
@@ -95,6 +108,7 @@ const Join = () => {
           onSubmit={(values) => {
             console.log(values);
           }}
+          validationSchema={deckValidation(60)}
         >
           <Form>
             <div className={styles.titleContainer}>
@@ -169,25 +183,7 @@ const Join = () => {
               )}
               {activeTab === 'chat' && <LobbyChat />}
             </div>
-            <div className={styles.stickyFooter}>
-              <div className={styles.footerContent}>
-                <div>Deck 40/40</div>
-                {!canSubmit && (
-                  <div className={styles.alarm}>
-                    <FaExclamationCircle /> Your deck no good
-                  </div>
-                )}
-              </div>
-              <div className={styles.buttonHolder}>
-                <button
-                  disabled={!canSubmit}
-                  className={styles.buttonClass}
-                  type="submit"
-                >
-                  Submit deck
-                </button>
-              </div>
-            </div>
+            <StickyFooter deckSize={60} />
           </Form>
         </Formik>
       </div>
