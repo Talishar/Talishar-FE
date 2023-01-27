@@ -1,7 +1,8 @@
 .container {
   width: 100%;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  flex-wrap: wrap;
   gap: 0.5em;
   padding: 0 1em;
 }
@@ -27,6 +28,7 @@
 }
 
 .spacerDiv {
+  width: 100vw;
   height: 5em;
 }
 
