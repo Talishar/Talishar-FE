@@ -18,7 +18,9 @@ const StickyFooter = ({ deckSize }: DeckSize) => {
   return (
     <div className={styles.stickyFooter}>
       <div className={styles.footerContent}>
-        <div>Deck {values.deck.length}/60</div>
+        <div>
+          Deck {values.deck.length}/{deckSize}
+        </div>
         {!isValid && (
           <div className={styles.alarm}>
             <FaExclamationCircle /> {errorArray[0]}

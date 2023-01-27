@@ -20,7 +20,10 @@
   height: 100%;
   padding: 1em;
   padding-top: 5em;
-  background-color: rgba(0, 0, 0, 0.8);
+  color: #f4eded;
+  text-shadow: -1px 1px 2px #000, 1px 1px 2px #000, 1px -1px 0 #000,
+    -1px -1px 0 #000;
+  background-color: rgba(0, 0, 0, 0.35);
 }
 
 nav {

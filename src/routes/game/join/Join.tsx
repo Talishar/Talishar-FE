@@ -59,7 +59,7 @@ const Join = () => {
   const [unreadChat, setUnreadChat] = useState(true);
   const data = testData as LobbyInfo;
 
-  const opponentHero = 'ARC002';
+  const opponentHero = 'ELE001';
   const leftPic = `url(/crops/${data.deck.hero}_cropped.png)`;
   const rightPic = `url(/crops/${opponentHero}_cropped.png)`;
 
@@ -118,7 +118,7 @@ const Join = () => {
               >
                 <div className={styles.dimPic}>
                   <h3>{data.displayName}</h3>
-                  <h5>{data.deck.hero}</h5>
+                  <h5>{data.deck.heroName}</h5>
                 </div>
               </div>
               <div
@@ -126,8 +126,8 @@ const Join = () => {
                 style={{ backgroundImage: rightPic }}
               >
                 <div className={styles.dimPic}>
-                  <h3>Player 2</h3>
-                  <h5>Dash, Inventor Extraordinaire</h5>
+                  <h3>OotTheMonk</h3>
+                  <h5>Oldhim, Grandfather of Eternity</h5>
                 </div>
               </div>
             </div>
