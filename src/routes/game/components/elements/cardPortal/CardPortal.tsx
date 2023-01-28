@@ -13,8 +13,8 @@ function CardDetails({ src, containerClass, containerStyle }: { src: string, con
   return (
     <div className={containerClassName} style={containerStyle}>
         <div className={styles.popUpInside} key={src}>
-        <CardImage src={src} className={styles.img} />
-      </div>
+          <CardImage src={src} className={styles.img} />
+        </div>
     </div>);
 }
 
@@ -62,7 +62,7 @@ export default function CardPortal() {
   }
 
   return (
-    <div className={styles.popUp} style={popUpStyle}>
+    <div className={styles.popUpContainer} style={popUpStyle}>
       {dfcSrc != null && <CardDetails src={dfcSrc} containerClass={classNames(styles.popUp, styles.doubleFacedCard)} />}
       <CardDetails src={src} containerClass={styles.popUp} containerStyle={popUpStyle} />
     </div>
