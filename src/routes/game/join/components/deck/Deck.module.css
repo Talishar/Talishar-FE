@@ -20,11 +20,16 @@
   border-radius: 0.5em;
 }
 
-input + img {
-  filter: brightness(0.5);
-  transition: filter 0.25s;
+.container input {
+  display: none;
 }
 
-input[type='checkbox']:checked + img {
+.container input + img {
+  filter: brightness(0.5);
+  transition: filter 0.25s, box-shadow 0.25s;
+}
+
+.container input[type='checkbox']:checked + img {
+  box-shadow: 0 0 0 1px var(--primary);
   filter: brightness(1);
 }

@@ -1,7 +1,7 @@
 import { Field, FieldArray, useFormikContext } from 'formik';
 import React from 'react';
 import CardImage from 'routes/game/components/elements/cardImage/CardImage';
-import { LobbyInfo, Weapon } from '../../Join';
+import { DeckResponse, LobbyInfo, Weapon } from '../../Join';
 import styles from './Equipment.module.css';
 
 type EquipmentProps = {

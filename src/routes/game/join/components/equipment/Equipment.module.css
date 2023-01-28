@@ -38,21 +38,21 @@
   margin-top: 1em;
 }
 
-input {
+.eqCategory input {
   display: none;
 }
 
-input + img {
+.eqCategory input + img {
   filter: brightness(0.5);
   transition: filter 0.25s, box-shadow 0.25s;
 }
 
-input[type='radio']:checked + img {
+.eqCategory input[type='radio']:checked + img {
   box-shadow: 0 0 0 0.2em var(--primary);
   filter: brightness(1);
 }
 
-input[type='checkbox']:checked + img {
+.eqCategory input[type='checkbox']:checked + img {
   box-shadow: 0 0 0 0.2em var(--primary);
   filter: brightness(1);
 }

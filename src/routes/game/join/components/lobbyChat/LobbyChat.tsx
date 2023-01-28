@@ -6,6 +6,7 @@ const LobbyChat = () => {
   return (
     <div className={styles.container}>
       <ChatBox />
+      <div className={styles.spacer}></div>
     </div>
   );
 };
