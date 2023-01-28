@@ -13,10 +13,10 @@ type EquipmentProps = {
 const Equipment = ({ lobbyInfo, weapons, weaponSB }: EquipmentProps) => {
   const { values } = useFormikContext<DeckResponse>();
   const hands = [...weapons, ...weaponSB];
-  const head = [...lobbyInfo.deck.head, ...lobbyInfo.deck.headSB, 'none'];
-  const chest = [...lobbyInfo.deck.chest, ...lobbyInfo.deck.chestSB, 'none'];
-  const arms = [...lobbyInfo.deck.arms, ...lobbyInfo.deck.armsSB, 'none'];
-  const legs = [...lobbyInfo.deck.legs, ...lobbyInfo.deck.legsSB, 'none'];
+  const head = [...lobbyInfo.deck.head, ...lobbyInfo.deck.headSB, 'NONE00'];
+  const chest = [...lobbyInfo.deck.chest, ...lobbyInfo.deck.chestSB, 'NONE00'];
+  const arms = [...lobbyInfo.deck.arms, ...lobbyInfo.deck.armsSB, 'NONE00'];
+  const legs = [...lobbyInfo.deck.legs, ...lobbyInfo.deck.legsSB, 'NONE00'];
   return (
     <div className={styles.container}>
       <div className={styles.eqCategory}>

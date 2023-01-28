@@ -85,7 +85,7 @@ const Join = () => {
   const weaponsSBIndexed = [
     ...data.deck.weaponSB,
     ...data.deck.offhandSB,
-    { id: `none`, is1H: true, img: `none` }
+    { id: `NONE00`, is1H: true, img: `NONE00` }
   ].map((card, ix) => {
     return {
       id: `${card.id}-${ix + weaponsIndexed.length}`,

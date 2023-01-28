@@ -43,7 +43,7 @@
 }
 
 .eqCategory input + img {
-  filter: brightness(0.5);
+  filter: brightness(0.65);
   transition: filter 0.25s, box-shadow 0.25s;
 }
 

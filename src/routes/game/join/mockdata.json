@@ -12,10 +12,7 @@
     "chest": ["ARC004"],
     "arms": ["WTR153"],
     "legs": ["ARC005"],
-    "offhand": [
-      { "id": "WTR000", "is1H": true },
-      { "id": "WTR000", "is1H": true }
-    ],
+    "offhand": [],
     "cards": [
       "CRU109",
       "CRU109",
@@ -78,11 +75,14 @@
       "ARC029",
       "ARC029"
     ],
-    "headSB": ["CRU102"],
-    "chestSB": [],
-    "armsSB": [],
-    "legsSB": [],
-    "offhandSB": [],
+    "headSB": ["CRU102", "ARC150", "ARC155"],
+    "chestSB": ["CRU081"],
+    "armsSB": ["ARC157"],
+    "legsSB": ["CRU053", "DYN006"],
+    "offhandSB": [
+      { "id": "EVR155", "is1H": true },
+      { "id": "EVR155", "is1H": true }
+    ],
     "weaponSB": [{ "id": "ARC003", "is1H": false }],
     "cardsSB": [
       "ARC010",
