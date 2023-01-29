@@ -87,11 +87,13 @@ exports[`shows a mock chain link summary 1`] = `
                 <td
                   class="_column_1e6509"
                 >
-                  <span
+                  <div
                     class="_cardText_1b6faf"
                   >
-                    Zipper Hit
-                  </span>
+                    <span>
+                      Zipper Hit
+                    </span>
+                  </div>
                 </td>
                 <td
                   class="_column_1e6509"

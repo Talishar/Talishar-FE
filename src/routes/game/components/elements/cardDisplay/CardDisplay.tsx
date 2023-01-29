@@ -1,11 +1,11 @@
-import React, { useRef } from 'react';
 import { useAppDispatch } from 'app/Hooks';
 import { Card } from 'features/Card';
-import { clearPopUp, playCard, setPopUp } from 'features/game/GameSlice';
+import { playCard } from 'features/game/GameSlice';
 import styles from './CardDisplay.module.css';
 import classNames from 'classnames';
 import CountersOverlay from '../countersOverlay/CountersOverlay';
 import CardImage from '../cardImage/CardImage';
+import CardPopUp from '../cardPopUp/CardPopUp';
 
 export interface CardProp {
   makeMeBigger?: boolean;
@@ -20,7 +20,6 @@ export const CardDisplay = (prop: CardProp) => {
   const { card, preventUseOnClick } = prop;
   const { num } = prop;
   const dispatch = useAppDispatch();
-  const ref = useRef<HTMLDivElement>(null);
 
   if (card == null || card.cardNumber === '') {
     return null;
@@ -36,36 +35,7 @@ export const CardDisplay = (prop: CardProp) => {
       return;
     }
     dispatch(playCard({ cardParams: card }));
-    handleMouseLeave();
   }
-
-  const handleMouseEnter = () => {
-    if (ref.current === null) {
-      return;
-    }
-    const rect = ref.current.getBoundingClientRect();
-    const xCoord = rect.left < window.innerWidth / 2 ? rect.right : rect.left;
-    const yCoord = rect.top < window.innerHeight / 2 ? rect.bottom : rect.top;
-    dispatch(
-      setPopUp({
-        cardNumber: card.cardNumber,
-        xCoord: xCoord,
-        yCoord: yCoord
-      })
-    );
-  };
-
-  const onTouchStart = () => {
-    handleMouseEnter();
-  };
-
-  const onTouchEnd = () => {
-    handleMouseLeave();
-  };
-
-  const handleMouseLeave = () => {
-    dispatch(clearPopUp());
-  };
 
   const classStyles = classNames(styles.floatTint, {
     [styles.disabled]: card.overlay === 'disabled'
@@ -93,22 +63,16 @@ export const CardDisplay = (prop: CardProp) => {
   });
 
   return (
-    <div
-      className={cardStyle}
-      onClick={() => {
-        onClick();
-      }}
-      onMouseEnter={() => handleMouseEnter()}
-      onMouseLeave={() => handleMouseLeave()}
-      onTouchStart={onTouchStart}
-      onTouchEnd={onTouchEnd}
-      ref={ref}
+    <CardPopUp
+      cardNumber={card.cardNumber}
+      containerClass={cardStyle}
+      onClick={onClick}
     >
       <CardImage src={eqImg} className={imgStyles} />
       <div className={classStyles}></div>
       <div className={equipStatus}></div>
       <CountersOverlay {...card} num={num} />
-    </div>
+    </CardPopUp>
   );
 };
 

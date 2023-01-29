@@ -3,7 +3,6 @@ import TopRow from '../topRow/TopRow';
 import MiddleRow from '../middleRow/MiddleRow';
 import BottomRow from '../bottomRow/BottomRow';
 import styles from './OpponentBoard.module.css';
-import CardPopUp from '../elements/cardPopUp/CardPopUp';
 import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import { DEFAULT_PLAYMAT } from 'constants';

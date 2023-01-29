@@ -8,7 +8,7 @@ import PlayerHand from '../components/zones/playerHand/PlayerHand';
 import OptionsOverlay from '../components/elements/optionsMenu/OptionsMenu';
 import EventsHandler from '../components/elements/eventsHandler/EventsHandler';
 import PlayerInputPopUp from '../components/elements/playerInputPopUp/PlayerInputPopUp';
-import CardPopUp from '../components/elements/cardPopUp/CardPopUp';
+import CardPortal from '../components/elements/cardPortal/CardPortal';
 import ChatCardDetail from '../components/elements/chatCardDetail/ChatCardDetail';
 
 function Play() {
@@ -27,7 +27,7 @@ function Play() {
       </div>
       <OptionsOverlay />
       <PlayerInputPopUp />
-      <CardPopUp />
+      <CardPortal />
       <GameStateHandler />
       <EventsHandler />
     </div>

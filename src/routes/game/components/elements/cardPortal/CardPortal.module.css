@@ -1,7 +1,10 @@
-.popUp {
+.popUpContainer {
   position: fixed;
   z-index: 2000;
   height: 53vh;
+}
+
+.popUp {
   background-color: rgba(0, 0, 0, 0.5);
   border-radius: 10px;
   border: 1px goldenrod solid;
