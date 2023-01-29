@@ -119,3 +119,13 @@ export const URL_END_POINT = {
   SUBMIT_SIDEBOARD: '/APIs/SubmitSideboard.php',
   USER_PROFILE: '/APIs/UserProfileAPI.php'
 };
+
+export const GAME_VISIBILITY = {
+  PUBLIC: 'public',
+  PRIVATE: 'private'
+};
+
+export const ADD_DECK_TO_FAVORITES = {
+  TRUE: 1,
+  FALSE: 0
+};

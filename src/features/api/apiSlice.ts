@@ -14,6 +14,7 @@ import {
   GAME_LIMIT_LIVE,
   URL_END_POINT
 } from 'constants';
+import { CreateGameAPI } from 'interface/API/CreateGame.php';
 
 // Different request URLs depending on the gameID number, beta, live or dev.
 const dynamicBaseQuery: BaseQueryFn<
@@ -94,8 +95,15 @@ export const apiSlice = createApi({
         };
       }
     }),
+    getFavoriteDecks: builder.query({
+      query: () => {
+        return {
+          url: URL_END_POINT.GET_FAVORITE_DECKS
+        };
+      }
+    }),
     createGame: builder.mutation({
-      query: ({ ...body }) => {
+      query: ({ ...body }: CreateGameAPI) => {
         return {
           url: 'API.php',
           method: 'POST',
