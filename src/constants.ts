@@ -92,3 +92,22 @@ export const DEFAULT_SHORTCUTS = {
   TOGGLE_OPTIONS_MENU: 'KeyM',
   PASS_TURN: 'Space'
 };
+
+export const GAME_FORMAT = {
+  CLASSIC_CONSTRUCTED: 'cc',
+  COMPETITIVE_CC: 'compcc',
+  BLITZ: 'blitz',
+  COMPETITIVE_BLITZ: 'compblitz',
+  OPEN_FORMAT: 'livinglegendscc',
+  COMMONER: 'commoner',
+  CLASH: 'clash'
+};
+
+export const URL_END_POINT = {
+  GET_GAME_LIST: '/APIs/GetGameList.php',
+  CREATE_GAME: '/APIs/CreateGame.php',
+  SUBMIT_CHAT: 'SubmitChat.php',
+  GET_POPUP: 'GetPopupAPI.php',
+  GAME_STATE_POLL: 'GetNextTurn3.php?',
+  PROCESS_INPUT: 'ProcessInput2.php?'
+};

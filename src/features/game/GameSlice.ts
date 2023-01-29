@@ -8,7 +8,8 @@ import {
   API_URL_LIVE,
   API_URL_DEV,
   GAME_LIMIT_LIVE,
-  GAME_LIMIT_BETA
+  GAME_LIMIT_BETA,
+  URL_END_POINT
 } from 'constants';
 import Button from '../Button';
 import GameState from '../GameState';
@@ -22,10 +23,10 @@ export const nextTurn = createAsyncThunk(
   ) => {
     const queryURL =
       params.game.gameID > GAME_LIMIT_LIVE
-        ? `${API_URL_LIVE}GetNextTurn3.php?`
+        ? `${API_URL_LIVE}${URL_END_POINT.GAME_STATE_POLL}`
         : params.game.gameID > GAME_LIMIT_BETA
-        ? `${API_URL_BETA}GetNextTurn3.php?`
-        : `${API_URL_DEV}GetNextTurn3.php?`;
+        ? `${API_URL_BETA}${URL_END_POINT.GAME_STATE_POLL}`
+        : `${API_URL_DEV}${URL_END_POINT.GAME_STATE_POLL}`;
     const queryParams = new URLSearchParams({
       gameName: String(params.game.gameID),
       playerID: String(params.game.playerID),
@@ -84,10 +85,10 @@ export const playCard = createAsyncThunk(
 
     const queryURL =
       gameInfo.gameID > GAME_LIMIT_LIVE
-        ? `${API_URL_LIVE}ProcessInput2.php?`
+        ? `${API_URL_LIVE}${URL_END_POINT.PROCESS_INPUT}`
         : gameInfo.gameID > GAME_LIMIT_BETA
-        ? `${API_URL_BETA}ProcessInput2.php?`
-        : `${API_URL_DEV}ProcessInput2.php?`;
+        ? `${API_URL_BETA}${URL_END_POINT.PROCESS_INPUT}`
+        : `${API_URL_DEV}${URL_END_POINT.PROCESS_INPUT}`;
     const queryParams = new URLSearchParams({
       gameName: String(gameInfo.gameID),
       playerID: String(gameInfo.playerID),
@@ -116,10 +117,10 @@ export const submitButton = createAsyncThunk(
     const { game } = getState() as { game: GameState };
     const queryURL =
       game.gameInfo.gameID > GAME_LIMIT_LIVE
-        ? `${API_URL_LIVE}ProcessInput2.php?`
+        ? `${API_URL_LIVE}${URL_END_POINT.PROCESS_INPUT}`
         : game.gameInfo.gameID > GAME_LIMIT_BETA
-        ? `${API_URL_BETA}ProcessInput2.php?`
-        : `${API_URL_DEV}ProcessInput2.php?`;
+        ? `${API_URL_BETA}${URL_END_POINT.PROCESS_INPUT}`
+        : `${API_URL_DEV}${URL_END_POINT.PROCESS_INPUT}`;
     const queryParams = new URLSearchParams({
       gameName: String(game.gameInfo.gameID),
       playerID: String(game.gameInfo.playerID),
@@ -147,10 +148,10 @@ export const submitMultiButton = createAsyncThunk(
     const { game } = getState() as { game: GameState };
     const queryURL =
       game.gameInfo.gameID > GAME_LIMIT_LIVE
-        ? `${API_URL_LIVE}ProcessInput2.php?`
+        ? `${API_URL_LIVE}${URL_END_POINT.PROCESS_INPUT}`
         : game.gameInfo.gameID > GAME_LIMIT_BETA
-        ? `${API_URL_BETA}ProcessInput2.php?`
-        : `${API_URL_DEV}ProcessInput2.php?`;
+        ? `${API_URL_BETA}${URL_END_POINT.PROCESS_INPUT}`
+        : `${API_URL_DEV}${URL_END_POINT.PROCESS_INPUT}`;
     const queryParams = new URLSearchParams({
       gameName: String(game.gameInfo.gameID),
       playerID: String(game.gameInfo.playerID),

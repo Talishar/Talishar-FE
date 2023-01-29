@@ -11,7 +11,8 @@ import {
   API_URL_DEV,
   API_URL_LIVE,
   GAME_LIMIT_BETA,
-  GAME_LIMIT_LIVE
+  GAME_LIMIT_LIVE,
+  URL_END_POINT
 } from 'constants';
 
 // Different request URLs depending on the gameID number, beta, live or dev.
@@ -27,6 +28,9 @@ const dynamicBaseQuery: BaseQueryFn<
   }
   if (gameId > GAME_LIMIT_LIVE) {
     baseUrl = API_URL_LIVE;
+  }
+  if (gameId === 0) {
+    baseUrl = import.meta.env.DEV ? API_URL_DEV : API_URL_LIVE;
   }
   const rawBaseQuery = fetchBaseQuery({ baseUrl, credentials: 'include' });
   return rawBaseQuery(args, webApi, extraOptions);
@@ -82,11 +86,20 @@ export const apiSlice = createApi({
       query: () => {
         return {
           url: import.meta.env.DEV
-            ? 'http://127.0.0.1:5173/api/live/APIs/GetGameList.php'
-            : API_URL_LIVE + 'APIs/GetGameList.php',
+            ? `http://127.0.0.1:5173/api/live/${URL_END_POINT.GET_GAME_LIST}`
+            : API_URL_LIVE + URL_END_POINT.GET_GAME_LIST,
           method: 'GET',
           credentials: 'omit',
           params: {}
+        };
+      }
+    }),
+    createGame: builder.mutation({
+      query: ({ ...body }) => {
+        return {
+          url: 'API.php',
+          method: 'POST',
+          body: body
         };
       }
     })
