@@ -9,11 +9,13 @@ it('renders without crashing', () => {
   const display = document.querySelector('div');
   expect(display).toMatchInlineSnapshot(`
     <div>
-      <span
+      <div
         class="_cardText_1b6faf"
       >
-        Heart of Fyendal
-      </span>
+        <span>
+          Heart of Fyendal
+        </span>
+      </div>
     </div>
   `);
 });
