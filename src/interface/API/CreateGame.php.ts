@@ -1,6 +1,3 @@
-import deckValidation from 'routes/game/join/validation';
-import { boolean, string } from 'yup';
-
 export interface CreateGame {
   deck?: string;
   decklink?: string;
@@ -10,5 +7,5 @@ export interface CreateGame {
   decksToTry?: string; // deprecated
   favoriteDeck?: number; // 0 for off 1 for on
   favoriteDecks?: string; // URL to fabrary
-  gameDescription?: string; //
+  gameDescription?: string;
 }

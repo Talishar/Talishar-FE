@@ -109,5 +109,13 @@ export const URL_END_POINT = {
   SUBMIT_CHAT: 'SubmitChat.php',
   GET_POPUP: 'GetPopupAPI.php',
   GAME_STATE_POLL: 'GetNextTurn3.php?',
-  PROCESS_INPUT: 'ProcessInput2.php?'
+  PROCESS_INPUT: 'ProcessInput2.php?',
+  PARSE_GAME_FILE: '/APIs/ParseGameFile.php',
+  CHOOSE_FIRST_PLAYER: '/APIs/ChooseFirstPlayer.php',
+  GET_FAVORITE_DECKS: '/APIs/GetFavoriteDecks.php',
+  GET_LOBBY_INFO: '/APIs/GetLobbyInfo.php',
+  GET_LOBBY_REFRESH: '/APIs/GetLobbyRefresh.php',
+  JOIN_GAME: '/APIs/JoinGame.php',
+  SUBMIT_SIDEBOARD: '/APIs/SubmitSideboard.php',
+  USER_PROFILE: '/APIs/UserProfileAPI.php'
 };
