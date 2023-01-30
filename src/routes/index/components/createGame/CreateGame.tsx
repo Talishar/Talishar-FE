@@ -1,15 +1,19 @@
+import { useAppDispatch } from 'app/Hooks';
 import classNames from 'classnames';
 import { GAME_FORMAT, GAME_VISIBILITY } from 'constants';
 import { useCreateGameMutation } from 'features/api/apiSlice';
+import { setGameStart } from 'features/game/GameSlice';
 import { Field, Form, Formik, FormikHelpers } from 'formik';
 import { CreateGameAPI } from 'interface/API/CreateGame.php';
 import { handleRequest } from 'msw';
 import React from 'react';
+import { toast } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import styles from './CreateGame.module.css';
 
 const CreateGame = () => {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const isLoggedIn = false; // TODO: useAuth(); handler or something
   const [createGame, createGameResult] = useCreateGameMutation();
   const initialValues: CreateGameAPI = {
@@ -24,11 +28,37 @@ const CreateGame = () => {
     gameDescription: ''
   };
 
-  const handleSubmit = (
+  const handleSubmit = async (
     values: CreateGameAPI,
     { setSubmitting }: FormikHelpers<CreateGameAPI>
   ) => {
-    createGame(values);
+    setSubmitting(true);
+    try {
+      const response = await createGame(values).unwrap();
+      console.log(response);
+      if (response.error) {
+        console.warn('error when loading thing');
+        // TODO: Show a modal or something to say there has been an error and to try again.
+        return;
+      } else {
+        if (!response.playerID || !response.gameName || !response.authKey) {
+          throw new Error('A required param is missing');
+        }
+        dispatch(
+          setGameStart({
+            playerID: response.playerID ?? 0,
+            gameID: response.gameName ?? 0,
+            authKey: response.authKey ?? ''
+          })
+        );
+        navigate(`/game/join/${response.gameName}`);
+      }
+    } catch (error) {
+      console.warn(error);
+      toast.error(String(error));
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const handleButtonClick = (e: React.MouseEvent<HTMLElement>) => {
@@ -44,10 +74,6 @@ const CreateGame = () => {
       <article>
         <h3>Create New Game</h3>
         <h1>DOES NOT WORK GO TO REGULAR SITE TO PLAY ETC</h1>
-        <h3>
-          {createGameResult.error}
-          {JSON.stringify(createGameResult.status)}
-        </h3>
         <Formik initialValues={initialValues} onSubmit={handleSubmit}>
           {({ values }) => (
             <Form>

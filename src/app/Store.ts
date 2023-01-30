@@ -9,7 +9,7 @@ export const store = configureStore({
     [apiSlice.reducerPath]: apiSlice.reducer
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(apiSlice.middleware)
+    getDefaultMiddleware().concat([rtkQueryErrorToaster, apiSlice.middleware])
 });
 
 export const setupStore = (preloadedState?: PreloadedState<RootState>) => {

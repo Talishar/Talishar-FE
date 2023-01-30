@@ -25,10 +25,13 @@ import { toast } from 'react-hot-toast';
 // catch warnings and show a toast if we get one.
 export const rtkQueryErrorToaster: Middleware =
   (api: MiddlewareAPI) => (next) => (action) => {
-    console.log(action);
     if (isRejectedWithValue(action)) {
-      console.warn('We got a rejected action!');
-      toast.error(action.error.data.message);
+      console.warn('Rejected action:', action);
+      toast.error(
+        `Error: ${action.payload} - ${
+          action.error?.message ?? 'an error happened'
+        }`
+      );
     }
     return next(action);
   };
@@ -122,14 +125,15 @@ export const apiSlice = createApi({
     createGame: builder.mutation({
       query: ({ ...body }: CreateGameAPI) => {
         return {
-          url: 'API.php',
+          url: URL_END_POINT.CREATE_GAME,
           method: 'POST',
           body: body
         };
       },
       // Pick out data and prevent nested properties in a hook or selector
-      transformResponse: (response: { data: CreateGameResponse }, meta, arg) =>
-        response.data,
+      transformResponse: (response: CreateGameResponse, meta, arg) => {
+        return response;
+      },
       // Pick out errors and prevent nested properties in a hook or selector
       transformErrorResponse: (
         response: { status: string | number },

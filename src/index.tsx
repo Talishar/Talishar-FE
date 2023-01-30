@@ -27,7 +27,11 @@ export const router = createBrowserRouter([
     element: <Play />
   },
   {
-    path: '/game/join',
+    path: '/game/play/:gameName',
+    element: <Play />
+  },
+  {
+    path: '/game/join/:gameName',
     element: <Join />
   }
 ]);
