@@ -1,30 +1,35 @@
 export interface CreateGameAPI {
-  deck?: string;
-  fabdb?: string; // link to fabdb or fabrary
-  deckTestMode?: boolean; // true for against practice dummy
-  format?: string; // have enum
-  visibility?: string; // "public" for public or "private" for private
-  decksToTry?: string; // deprecated
-  favoriteDeck?: number; // 0 for off 1 for on
-  favoriteDecks?: string; // URL to fabrary
-  gameDescription?: string;
+  deck?: string; // This is for limited game modes (see JoinGameInput.php)
+  fabdb?: string; // Deck builder decklink (any deckbuilder, name comes from when fabdb was the only one)
+  deckTestMode?: boolean; // If this is populated with ANYTHING, will start a game against the combat dummy
+  format?: string; // Format of the game enum
+  visibility?: string; // "public" = public game, "private" = private game
+  decksToTry?: string; // This is only used if there's no favorite deck or decklink. 1 = ira
+  favoriteDeck?: boolean; //Set this to true to save the provided deck link to your favorites
+  favoriteDecks?: string; //This one is kind of weird. It's the favorite deck index, then the string "<fav>" then the favorite deck link
+  gameDescription?: string; //Just a string with the game name
 }
 
 export interface CreateGameFormik {
   deck?: string;
-  fabdb?: string; // link to fabdb or fabrary
-  deckTestMode?: boolean; // true for against practice dummy
-  format?: string; // have enum
-  visibility?: string; // "public" for public or "private" for private
-  decksToTry?: string; // deprecated
-  favoriteDeck?: boolean; // 0 for off 1 for on
-  favoriteDecks?: string; // URL to fabrary
+  fabdb?: string;
+  deckTestMode?: boolean;
+  format?: string;
+  visibility?: string;
+  decksToTry?: string;
+  favoriteDeck?: boolean;
+  favoriteDecks?: string;
   gameDescription?: string;
 }
 
-export const convertFormikToAPI = (input: CreateGameFormik) => {
-  return { ...input, favoriteDeck: input.favoriteDeck ? '1' : '0' };
-};
+export interface CreateGameResponse {
+  gameStarted?: boolean;
+  error?: string;
+  message?: string;
+  gameName?: number;
+  playerID?: number;
+  authKey?: string;
+}
 
 /*
 {

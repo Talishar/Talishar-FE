@@ -5,6 +5,8 @@ import {
   FetchArgs,
   FetchBaseQueryError
 } from '@reduxjs/toolkit/query/react';
+import { isRejected, isRejectedWithValue } from '@reduxjs/toolkit';
+import type { MiddlewareAPI, Middleware } from '@reduxjs/toolkit';
 import { RootState } from 'app/Store';
 import {
   API_URL_BETA,
@@ -14,7 +16,22 @@ import {
   GAME_LIMIT_LIVE,
   URL_END_POINT
 } from 'constants';
-import { CreateGameAPI } from 'interface/API/CreateGame.php';
+import {
+  CreateGameAPI,
+  CreateGameResponse
+} from 'interface/API/CreateGame.php';
+import { toast } from 'react-hot-toast';
+
+// catch warnings and show a toast if we get one.
+export const rtkQueryErrorToaster: Middleware =
+  (api: MiddlewareAPI) => (next) => (action) => {
+    console.log(action);
+    if (isRejectedWithValue(action)) {
+      console.warn('We got a rejected action!');
+      toast.error(action.error.data.message);
+    }
+    return next(action);
+  };
 
 // Different request URLs depending on the gameID number, beta, live or dev.
 const dynamicBaseQuery: BaseQueryFn<
@@ -109,7 +126,16 @@ export const apiSlice = createApi({
           method: 'POST',
           body: body
         };
-      }
+      },
+      // Pick out data and prevent nested properties in a hook or selector
+      transformResponse: (response: { data: CreateGameResponse }, meta, arg) =>
+        response.data,
+      // Pick out errors and prevent nested properties in a hook or selector
+      transformErrorResponse: (
+        response: { status: string | number },
+        meta,
+        arg
+      ) => response.status
     })
   })
 });
@@ -118,5 +144,7 @@ export const apiSlice = createApi({
 export const {
   useGetPopUpContentQuery,
   useSubmitChatMutation,
-  useGetGameListQuery
+  useGetGameListQuery,
+  useGetFavoriteDecksQuery,
+  useCreateGameMutation
 } = apiSlice;

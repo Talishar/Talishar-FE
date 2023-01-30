@@ -1,7 +1,9 @@
 import classNames from 'classnames';
-import { ADD_DECK_TO_FAVORITES, GAME_FORMAT, GAME_VISIBILITY } from 'constants';
+import { GAME_FORMAT, GAME_VISIBILITY } from 'constants';
+import { useCreateGameMutation } from 'features/api/apiSlice';
 import { Field, Form, Formik, FormikHelpers } from 'formik';
-import { CreateGameAPI, CreateGameFormik } from 'interface/API/CreateGame.php';
+import { CreateGameAPI } from 'interface/API/CreateGame.php';
+import { handleRequest } from 'msw';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './CreateGame.module.css';
@@ -9,7 +11,8 @@ import styles from './CreateGame.module.css';
 const CreateGame = () => {
   const navigate = useNavigate();
   const isLoggedIn = false; // TODO: useAuth(); handler or something
-  const initialValues: CreateGameFormik = {
+  const [createGame, createGameResult] = useCreateGameMutation();
+  const initialValues: CreateGameAPI = {
     deck: '',
     fabdb: '',
     deckTestMode: false,
@@ -20,8 +23,12 @@ const CreateGame = () => {
     favoriteDecks: '',
     gameDescription: ''
   };
-  const clickSubmitOptionsHandler = () => {
-    console.log('click create game');
+
+  const handleSubmit = (
+    values: CreateGameAPI,
+    { setSubmitting }: FormikHelpers<CreateGameAPI>
+  ) => {
+    createGame(values);
   };
 
   const handleButtonClick = (e: React.MouseEvent<HTMLElement>) => {
@@ -31,23 +38,17 @@ const CreateGame = () => {
   };
 
   const buttonClass = classNames(styles.button, 'primary');
+
   return (
     <div>
       <article>
         <h3>Create New Game</h3>
         <h1>DOES NOT WORK GO TO REGULAR SITE TO PLAY ETC</h1>
-        <Formik
-          initialValues={initialValues}
-          onSubmit={(
-            values: CreateGameFormik,
-            { setSubmitting }: FormikHelpers<CreateGameFormik>
-          ) => {
-            setTimeout(() => {
-              alert(JSON.stringify(values, null, 2));
-              setSubmitting(false);
-            }, 500);
-          }}
-        >
+        <h3>
+          {createGameResult.error}
+          {JSON.stringify(createGameResult.status)}
+        </h3>
+        <Formik initialValues={initialValues} onSubmit={handleSubmit}>
           {({ values }) => (
             <Form>
               <div className={styles.formContainer}>
