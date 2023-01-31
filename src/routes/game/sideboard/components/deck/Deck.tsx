@@ -1,7 +1,7 @@
 import { Field, useFormikContext } from 'formik';
 import React from 'react';
 import CardImage from 'routes/game/components/elements/cardImage/CardImage';
-import { DeckResponse } from '../../Join';
+import { DeckResponse } from '../../Sideboard';
 import styles from './Deck.module.css';
 
 type DeckProps = {

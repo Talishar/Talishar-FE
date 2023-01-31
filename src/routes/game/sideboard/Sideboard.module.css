@@ -1,0 +1,49 @@
+.titleContainer {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5em;
+  background-color: black;
+}
+
+.leftCol {
+  background-size: cover;
+}
+
+.rightCol {
+  text-align: right;
+  background-size: cover;
+}
+
+.dimPic {
+  width: 100%;
+  height: 100%;
+  padding: 1em;
+  padding-top: 5em;
+  color: #f4eded;
+  text-shadow: -1px 1px 2px #000, 1px 1px 2px #000, 1px -1px 0 #000,
+    -1px -1px 0 #000;
+  background-color: rgba(0, 0, 0, 0.35);
+}
+
+nav {
+  position: -webkit-sticky; /* Safari */
+  position: sticky;
+  padding: 0 1em;
+  top: 0;
+  background-color: var(--card-background-color);
+  z-index: 10;
+}
+
+.contentContainer {
+  padding: 0 0.5em;
+}
+
+.buttonClass {
+  color: black;
+  margin-bottom: 0;
+}
+
+.alarm {
+  color: rgba(183, 28, 28);
+}

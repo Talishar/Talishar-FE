@@ -21,6 +21,7 @@ import {
   CreateGameResponse
 } from 'interface/API/CreateGame.php';
 import { toast } from 'react-hot-toast';
+import { JoinGameAPI, JoinGameResponse } from 'interface/API/JoinGame.php';
 
 // catch warnings and show a toast if we get one.
 export const rtkQueryErrorToaster: Middleware =
@@ -140,6 +141,25 @@ export const apiSlice = createApi({
         meta,
         arg
       ) => response.status
+    }),
+    joinGame: builder.mutation({
+      query: ({ ...body }: JoinGameAPI) => {
+        return {
+          url: URL_END_POINT.CREATE_GAME,
+          method: 'POST',
+          body: body
+        };
+      },
+      // Pick out data and prevent nested properties in a hook or selector
+      transformResponse: (response: JoinGameResponse, meta, arg) => {
+        return response;
+      },
+      // Pick out errors and prevent nested properties in a hook or selector
+      transformErrorResponse: (
+        response: { status: string | number },
+        meta,
+        arg
+      ) => response.status
     })
   })
 });
@@ -150,5 +170,6 @@ export const {
   useSubmitChatMutation,
   useGetGameListQuery,
   useGetFavoriteDecksQuery,
-  useCreateGameMutation
+  useCreateGameMutation,
+  useJoinGameMutation
 } = apiSlice;
