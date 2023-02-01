@@ -36,6 +36,7 @@ export interface GetLobbyInfoResponse {
   displayName: string;
   overlayURL: string;
   deck: Deck;
+  format: string;
 }
 
 export interface DeckResponse {

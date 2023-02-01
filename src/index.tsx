@@ -36,7 +36,7 @@ export const router = createBrowserRouter([
     element: <Join />
   },
   {
-    path: '/game/sideboard/:gameName',
+    path: '/game/lobby/:gameName',
     element: <Sideboard />
   }
 ]);

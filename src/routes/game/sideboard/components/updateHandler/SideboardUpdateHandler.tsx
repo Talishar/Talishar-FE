@@ -2,6 +2,7 @@ import React, { useRef } from 'react';
 import { useEffect } from 'react';
 import { RootState } from 'app/Store';
 import {
+  clearGetLobbyRefresh,
   gameLobby,
   nextTurn,
   setIsUpdateInProgressFalse
@@ -35,6 +36,7 @@ export const SideboardUpdateHandler = React.memo(() => {
     return () => {
       abortRef.current?.abort();
       dispatch(setIsUpdateInProgressFalse());
+      dispatch(clearGetLobbyRefresh());
     };
   }, []);
 

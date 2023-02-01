@@ -345,6 +345,9 @@ export const gameSlice = createSlice({
     },
     showActiveLayer: (state) => {
       state.activeLayers = { ...state.activeLayers, active: true };
+    },
+    clearGetLobbyRefresh: (state) => {
+      state.gameLobby = undefined;
     }
   },
   // The `extraReducers` field lets the slice handle actions defined elsewhere,
@@ -469,5 +472,6 @@ export const {
   hideChainLinkSummary,
   hideActiveLayer,
   showActiveLayer,
-  setIsUpdateInProgressFalse
+  setIsUpdateInProgressFalse,
+  clearGetLobbyRefresh
 } = actions;
