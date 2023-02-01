@@ -4,41 +4,23 @@ import { RootState } from 'app/Store';
 import { clearPopUp, setPopUp } from 'features/game/GameSlice';
 import CardImage from '../cardImage/CardImage';
 import styles from './LastPlayed.module.css';
+import CardPopUp from '../cardPopUp/CardPopUp';
 
 export default function LastPlayed() {
   let cardRedux = useAppSelector(
     (state: RootState) => state.game.gameInfo.lastPlayed
   );
-
-  const dispatch = useAppDispatch();
-
-  if (cardRedux === undefined) {
-    cardRedux = {
-      cardNumber: 'CardBack'
-    };
-  } else {
-    cardRedux = { cardNumber: cardRedux.cardNumber };
-  }
-
-  const handleMouseEnter = () => {
-    if (cardRedux == undefined) {
-      cardRedux = { cardNumber: 'CardBack' };
-    }
-    dispatch(setPopUp({ cardNumber: cardRedux.cardNumber }));
-  };
-
-  const handleMouseLeave = () => {
-    dispatch(clearPopUp());
-  };
-  const src = `/cardimages/${cardRedux.cardNumber}.webp`;
+  const hasNoLastPlayedCard = cardRedux == null;
+  const cardNumber = cardRedux?.cardNumber ?? "CardBack";
+  const src = `/cardimages/${cardNumber}.webp`;
 
   return (
-    <div
-      className={styles.lastPlayed}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
+    <CardPopUp
+      isHidden={hasNoLastPlayedCard}
+      cardNumber={cardNumber}
+      containerClass={styles.lastPlayed}
     >
       <CardImage src={src} className={styles.img} />
-    </div>
+    </CardPopUp>
   );
 }
