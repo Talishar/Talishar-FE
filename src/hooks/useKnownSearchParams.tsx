@@ -8,7 +8,7 @@ type SetKnownSearchParams = (key: KnownSearchParamKeys, value: string) => void;
 export const useKnownSearchParams = (): [Partial<KnownSearchParams>, SetKnownSearchParams] => {
     const [params, setSearchParams] = useSearchParams();
 
-    const values = knownSearchParams.reduce<Partial<KnownSearchParams>>((paramsValues, currentParamName) => {
+    const searchParamValues = knownSearchParams.reduce<Partial<KnownSearchParams>>((paramsValues, currentParamName) => {
         const currentParamValue = params.get(currentParamName);
         if (currentParamValue == null) {
             return paramsValues;
@@ -22,8 +22,8 @@ export const useKnownSearchParams = (): [Partial<KnownSearchParams>, SetKnownSea
                 cause: `${key} missing in knownSearchParams`
             });
         }
-        setSearchParams({ ...values, [key]: value });
+        setSearchParams({ ...searchParamValues, [key]: value });
     }
 
-    return [values, setKnownSearchParams];
+    return [searchParamValues, setKnownSearchParams];
 }
