@@ -433,9 +433,7 @@ export const gameSlice = createSlice({
       state.chatLog = [action.payload.gameLog ?? ''];
 
       // gameInfo
-      // state.gameInfo.lastPlayed = action.payload.gameInfo.lastPlayed;
-      // state.gameInfo.lastUpdate = action.payload.gameInfo.lastUpdate;
-      // state.gameInfo.turnNo = action.payload.gameInfo.turnNo;
+      state.gameLobby = action.payload;
 
       return state;
     });

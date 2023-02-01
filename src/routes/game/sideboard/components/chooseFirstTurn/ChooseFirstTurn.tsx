@@ -1,0 +1,54 @@
+import { useAppSelector } from 'app/Hooks';
+import { RootState } from 'app/Store';
+import { useChooseFirstPlayerMutation } from 'features/api/apiSlice';
+import React, { useEffect } from 'react';
+import { toast } from 'react-hot-toast';
+import ChatBox from 'routes/game/components/elements/chatBox/ChatBox';
+import styles from './ChooseFirstTurn.module.css';
+
+const ChooseFirstTurn = () => {
+  const [chooseFirstPlayer, chooseFirstPlayerData] =
+    useChooseFirstPlayerMutation();
+  const gameInfo = useAppSelector((state: RootState) => state.game.gameInfo);
+
+  const chooseFirst = async () => {
+    try {
+      const response = chooseFirstPlayer({
+        gameName: gameInfo.gameID,
+        playerID: gameInfo.playerID,
+        authKey: gameInfo.authKey,
+        action: 'Go First'
+      });
+    } catch (err) {
+      console.warn(err);
+      toast.error('There has been an error!');
+    }
+  };
+
+  const chooseSecond = () => {
+    try {
+      const response = chooseFirstPlayer({
+        gameName: gameInfo.gameID,
+        playerID: gameInfo.playerID,
+        authKey: gameInfo.authKey,
+        action: 'Go Second'
+      });
+    } catch (err) {
+      console.warn(err);
+      toast.error('There has been an error!');
+    }
+  };
+
+  return (
+    <div className={styles.container}>
+      <h3>You won the die roll!</h3>
+      <h5>Would you like to go first or second?</h5>
+      <div className={styles.buttons}>
+        <button onClick={chooseFirst}>First</button>
+        <button onClick={chooseSecond}>Second</button>
+      </div>
+    </div>
+  );
+};
+
+export default ChooseFirstTurn;

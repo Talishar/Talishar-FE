@@ -16,12 +16,18 @@ import { shallowEqual } from 'react-redux';
 import { RootState } from 'app/Store';
 import { Weapon } from 'interface/API/GetLobbyInfo.php';
 import SideboardUpdateHandler from './components/updateHandler/SideboardUpdateHandler';
+import { GAME_FORMAT } from 'constants';
+import ChooseFirstTurn from './components/chooseFirstTurn/ChooseFirstTurn';
 
 const Sideboard = () => {
   const [activeTab, setActiveTab] = useState('equipment');
   const [unreadChat, setUnreadChat] = useState(true);
   const gameInfo = useAppSelector(
     (state: RootState) => state.game.gameInfo,
+    shallowEqual
+  );
+  const gameLobby = useAppSelector(
+    (state: RootState) => state.game.gameLobby,
     shallowEqual
   );
   let { data, isError, isLoading } = useGetLobbyInfoQuery({
@@ -39,21 +45,46 @@ const Sideboard = () => {
   }
 
   console.log(data);
+  if (data === undefined || data === null) {
+    return null;
+  }
 
   const opponentHero = 'ELE001';
-  const leftPic = `url(/crops/${data.deck.hero}_cropped.png)`;
-  const rightPic = `url(/crops/${opponentHero}_cropped.png)`;
+  const leftPic = `url(/crops/${
+    data.deck.hero === 'CardBack' ? 'UNKNOWNHERO' : data.deck.hero
+  }_cropped.png)`;
+  const rightPic = `url(/crops/${
+    gameLobby?.theirHero === 'CardBack' ? 'UNKNOWNHERO' : gameLobby?.theirHero
+  }_cropped.png)`;
 
   const eqClasses = classNames({ secondary: activeTab !== 'equipment' });
   const deckClasses = classNames({ secondary: activeTab !== 'deck' });
   const chatClasses = classNames({ secondary: activeTab !== 'chat' });
-  const canSubmit = true;
+  const canSubmit = true; // figure this one out
+
+  let deckSize = 60;
+  switch (data.format) {
+    case GAME_FORMAT.BLITZ:
+    case GAME_FORMAT.COMPETITIVE_BLITZ:
+    case GAME_FORMAT.COMMONER:
+      deckSize = 40;
+      break;
+    case GAME_FORMAT.OPEN_FORMAT:
+      deckSize = 0;
+      break;
+    default:
+  }
 
   // I'm not sure how I can get formik to understand checkboxes and repeating cards so give them all an index here.
   const deckIndexed = data.deck.cards.map((card, ix) => `${card}-${ix}`);
   const deckSBIndexed = data.deck.cardsSB.map(
     (card, ix) => `${card}-${ix + deckIndexed.length}`
   );
+
+  useEffect(() => {
+    setActiveTab('chat');
+  }, [gameLobby?.amIChoosingFirstPlayer]);
+
   const weaponsIndexed = [...data?.deck?.weapons, ...data?.deck?.offhand].map(
     (card, ix) => {
       return {
@@ -90,7 +121,7 @@ const Sideboard = () => {
           onSubmit={(values) => {
             console.log(values);
           }}
-          validationSchema={deckValidation(60)}
+          validationSchema={deckValidation(deckSize)}
           enableReinitialize
         >
           <Form>
@@ -109,50 +140,58 @@ const Sideboard = () => {
                 style={{ backgroundImage: rightPic }}
               >
                 <div className={styles.dimPic}>
-                  <h3>OotTheMonk</h3>
-                  <h5>Oldhim, Grandfather of Eternity</h5>
+                  <h3>{gameLobby?.theirName ?? ''}</h3>
+                  <h5>
+                    {gameLobby?.theirHeroName != ''
+                      ? gameLobby?.theirHeroName
+                      : 'Waiting For Opponent'}
+                  </h5>
                 </div>
               </div>
             </div>
-            <nav>
-              <ul>
-                <li>Get ready!</li>
-              </ul>
-              <ul>
-                <li>
-                  <button
-                    className={eqClasses}
-                    onClick={() => setActiveTab('equipment')}
-                    type="button"
-                  >
-                    Equipment
-                  </button>
-                </li>
-                <li>
-                  <button
-                    className={deckClasses}
-                    onClick={() => setActiveTab('deck')}
-                    type="button"
-                  >
-                    Deck
-                  </button>
-                </li>
-                <li>
-                  <button
-                    className={chatClasses}
-                    onClick={() => setActiveTab('chat')}
-                    type="button"
-                  >
-                    {unreadChat && (
-                      <>
-                        <FaExclamationCircle />{' '}
-                      </>
-                    )}
-                    Chat
-                  </button>
-                </li>
-              </ul>
-            </nav>
+            {gameLobby?.amIChoosingFirstPlayer ? (
+              <ChooseFirstTurn />
+            ) : (
+              <nav>
+                <ul>
+                  <li>Get ready!</li>
+                </ul>
+                <ul>
+                  <li>
+                    <button
+                      className={eqClasses}
+                      onClick={() => setActiveTab('equipment')}
+                      type="button"
+                    >
+                      Equipment
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      className={deckClasses}
+                      onClick={() => setActiveTab('deck')}
+                      type="button"
+                    >
+                      Deck
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      className={chatClasses}
+                      onClick={() => setActiveTab('chat')}
+                      type="button"
+                    >
+                      {unreadChat && (
+                        <>
+                          <FaExclamationCircle />{' '}
+                        </>
+                      )}
+                      Chat
+                    </button>
+                  </li>
+                </ul>
+              </nav>
+            )}
             <div className={styles.contentContainer}>
               {activeTab === 'equipment' && (
                 <Equipment
@@ -166,7 +205,9 @@ const Sideboard = () => {
               )}
               {activeTab === 'chat' && <LobbyChat />}
             </div>
-            <StickyFooter deckSize={60} />
+            {!gameLobby?.amIChoosingFirstPlayer ? (
+              <StickyFooter deckSize={deckSize} />
+            ) : null}
           </Form>
         </Formik>
       </div>

@@ -26,6 +26,7 @@ import {
   GetLobbyInfo,
   GetLobbyInfoResponse
 } from 'interface/API/GetLobbyInfo.php';
+import { ChooseFirstPlayer } from 'interface/API/ChooseFirstPlayer.php';
 
 // catch warnings and show a toast if we get one.
 export const rtkQueryErrorToaster: Middleware =
@@ -176,6 +177,15 @@ export const apiSlice = createApi({
       transformResponse: (response: GetLobbyInfoResponse, meta, arg) => {
         return response;
       }
+    }),
+    chooseFirstPlayer: builder.mutation({
+      query: ({ ...body }: ChooseFirstPlayer) => {
+        return {
+          url: URL_END_POINT.CHOOSE_FIRST_PLAYER,
+          method: 'POST',
+          body: body
+        };
+      }
     })
   })
 });
@@ -188,5 +198,6 @@ export const {
   useGetFavoriteDecksQuery,
   useCreateGameMutation,
   useJoinGameMutation,
-  useGetLobbyInfoQuery
+  useGetLobbyInfoQuery,
+  useChooseFirstPlayerMutation
 } = apiSlice;
