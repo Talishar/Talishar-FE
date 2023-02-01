@@ -14,6 +14,10 @@ import {
 import Button from '../Button';
 import GameState from '../GameState';
 import { FaSignal } from 'react-icons/fa';
+import {
+  GetLobbyRefresh,
+  GetLobbyRefreshResponse
+} from 'interface/API/GetLobbyRefresh.php';
 
 export const nextTurn = createAsyncThunk(
   'game/nextTurn',
@@ -57,6 +61,61 @@ export const nextTurn = createAsyncThunk(
         const parsedData = JSON.parse(data);
         const gs = ParseGameState(parsedData);
         return gs;
+      } catch (e) {
+        if (params.signal?.aborted) {
+          return console.log('fetch aborted');
+        }
+        waitingForJSONResponse = false;
+        console.log(e);
+        return console.error(e);
+      }
+    }
+  }
+);
+
+export const gameLobby = createAsyncThunk(
+  'gameLobby/getLobby',
+  async (
+    params: { game: GameInfo; signal: AbortSignal | undefined },
+    { getState }
+  ) => {
+    const queryURL =
+      params.game.gameID > GAME_LIMIT_LIVE
+        ? `${API_URL_LIVE}${URL_END_POINT.GET_LOBBY_REFRESH}`
+        : params.game.gameID > GAME_LIMIT_BETA
+        ? `${API_URL_BETA}${URL_END_POINT.GET_LOBBY_REFRESH}`
+        : `${API_URL_DEV}${URL_END_POINT.GET_LOBBY_REFRESH}`;
+
+    const requestBody = {
+      gameName: params.game.gameID,
+      playerID: params.game.playerID,
+      authKey: params.game.authKey,
+      lastUpdate: params.game.lastUpdate
+    } as GetLobbyRefresh;
+
+    let waitingForJSONResponse = true;
+    while (waitingForJSONResponse) {
+      try {
+        const response = await fetch(queryURL, {
+          method: 'POST',
+          headers: {},
+          credentials: 'include',
+          signal: params.signal,
+          body: JSON.stringify(requestBody)
+        });
+        let data = await response.text();
+        if (data.toString().trim() === '0') {
+          continue;
+        }
+        waitingForJSONResponse = false;
+        data = data.toString().trim();
+        const indexOfBraces = data.indexOf('{');
+        if (indexOfBraces !== 0) {
+          console.log(data.substring(0, indexOfBraces));
+          data = data.substring(indexOfBraces);
+        }
+        const parsedData = JSON.parse(data) as GetLobbyRefreshResponse;
+        return parsedData;
       } catch (e) {
         if (params.signal?.aborted) {
           return console.log('fetch aborted');
@@ -356,6 +415,33 @@ export const gameSlice = createSlice({
     });
     builder.addCase(submitButton.rejected, (state) => {
       state.isPlayerInputInProgress = false;
+      return state;
+    });
+
+    // nextTurn
+    builder.addCase(gameLobby.fulfilled, (state, action) => {
+      if (action.payload === undefined) {
+        return state;
+      }
+      state.isUpdateInProgress = false;
+      state.isPlayerInputInProgress = false;
+
+      state.gameInfo.lastUpdate = action.payload.lastUpdate;
+      state.chatLog = [action.payload.gameLog ?? ''];
+
+      // gameInfo
+      // state.gameInfo.lastPlayed = action.payload.gameInfo.lastPlayed;
+      // state.gameInfo.lastUpdate = action.payload.gameInfo.lastUpdate;
+      // state.gameInfo.turnNo = action.payload.gameInfo.turnNo;
+
+      return state;
+    });
+    builder.addCase(gameLobby.pending, (state, action) => {
+      state.isUpdateInProgress = true;
+      return state;
+    });
+    builder.addCase(gameLobby.rejected, (state, action) => {
+      state.isUpdateInProgress = false;
       return state;
     });
   }

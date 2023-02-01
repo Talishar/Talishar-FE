@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Deck from './components/deck/Deck';
 import LobbyChat from './components/lobbyChat/LobbyChat';
 import testData from './mockdata.json';
@@ -15,6 +15,7 @@ import { useAppSelector } from 'app/Hooks';
 import { shallowEqual } from 'react-redux';
 import { RootState } from 'app/Store';
 import { Weapon } from 'interface/API/GetLobbyInfo.php';
+import SideboardUpdateHandler from './components/updateHandler/SideboardUpdateHandler';
 
 const Sideboard = () => {
   const [activeTab, setActiveTab] = useState('equipment');
@@ -29,13 +30,15 @@ const Sideboard = () => {
     authKey: gameInfo.authKey
   });
 
-  console.log(data);
-  console.log(isError);
-  console.log(isLoading);
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
-  if (data === undefined) {
+  if (data === undefined || data === null || Object.keys(data).length === 0) {
     data = testData;
   }
+
+  console.log(data);
 
   const opponentHero = 'ELE001';
   const leftPic = `url(/crops/${data.deck.hero}_cropped.png)`;
@@ -73,6 +76,7 @@ const Sideboard = () => {
   });
   return (
     <div>
+      <SideboardUpdateHandler />
       <div>
         <Formik
           initialValues={{
@@ -87,6 +91,7 @@ const Sideboard = () => {
             console.log(values);
           }}
           validationSchema={deckValidation(60)}
+          enableReinitialize
         >
           <Form>
             <div className={styles.titleContainer}>
