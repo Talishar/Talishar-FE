@@ -22,6 +22,10 @@ import {
 } from 'interface/API/CreateGame.php';
 import { toast } from 'react-hot-toast';
 import { JoinGameAPI, JoinGameResponse } from 'interface/API/JoinGame.php';
+import {
+  GetLobbyInfo,
+  GetLobbyInfoResponse
+} from 'interface/API/GetLobbyInfo.php';
 
 // catch warnings and show a toast if we get one.
 export const rtkQueryErrorToaster: Middleware =
@@ -160,6 +164,18 @@ export const apiSlice = createApi({
         meta,
         arg
       ) => response.status
+    }),
+    getLobbyInfo: builder.query({
+      query: ({ ...body }: GetLobbyInfo) => {
+        return {
+          url: URL_END_POINT.GET_LOBBY_INFO,
+          method: 'POST',
+          body: body
+        };
+      },
+      transformResponse: (response: GetLobbyInfoResponse, meta, arg) => {
+        return response;
+      }
     })
   })
 });
@@ -171,5 +187,6 @@ export const {
   useGetGameListQuery,
   useGetFavoriteDecksQuery,
   useCreateGameMutation,
-  useJoinGameMutation
+  useJoinGameMutation,
+  useGetLobbyInfoQuery
 } = apiSlice;

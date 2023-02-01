@@ -10,54 +10,32 @@ import { FaExclamationCircle } from 'react-icons/fa';
 import { Form, Formik } from 'formik';
 import deckValidation from './validation';
 import StickyFooter from './components/stickyFooter/StickyFooter';
-
-export interface Deck {
-  heroName: string;
-  hero: string;
-  weapons: Weapon[];
-  head: string[];
-  chest: string[];
-  arms: string[];
-  legs: string[];
-  offhand: Weapon[];
-  cards: string[];
-  headSB: string[];
-  chestSB: string[];
-  armsSB: string[];
-  legsSB: string[];
-  offhandSB: Weapon[];
-  weaponSB: Weapon[];
-  cardsSB: string[];
-}
-
-export interface Weapon {
-  id: string;
-  is1H: boolean;
-  img?: string;
-}
-
-export interface LobbyInfo {
-  badges: string[];
-  amIActive: boolean;
-  nameColor: string;
-  displayName: string;
-  overlayURL: string;
-  deck: Deck;
-}
-
-export interface DeckResponse {
-  deck: string[];
-  weapons: Weapon[];
-  head: string;
-  chest: string;
-  arms: string;
-  legs: string;
-}
+import { useGetLobbyInfoQuery } from 'features/api/apiSlice';
+import { useAppSelector } from 'app/Hooks';
+import { shallowEqual } from 'react-redux';
+import { RootState } from 'app/Store';
+import { Weapon } from 'interface/API/GetLobbyInfo.php';
 
 const Sideboard = () => {
   const [activeTab, setActiveTab] = useState('equipment');
   const [unreadChat, setUnreadChat] = useState(true);
-  const data = testData as LobbyInfo;
+  const gameInfo = useAppSelector(
+    (state: RootState) => state.game.gameInfo,
+    shallowEqual
+  );
+  let { data, isError, isLoading } = useGetLobbyInfoQuery({
+    gameName: gameInfo.gameID,
+    playerID: gameInfo.playerID,
+    authKey: gameInfo.authKey
+  });
+
+  console.log(data);
+  console.log(isError);
+  console.log(isLoading);
+
+  if (data === undefined) {
+    data = testData;
+  }
 
   const opponentHero = 'ELE001';
   const leftPic = `url(/crops/${data.deck.hero}_cropped.png)`;
@@ -73,7 +51,7 @@ const Sideboard = () => {
   const deckSBIndexed = data.deck.cardsSB.map(
     (card, ix) => `${card}-${ix + deckIndexed.length}`
   );
-  const weaponsIndexed = [...data.deck.weapons, ...data.deck.offhand].map(
+  const weaponsIndexed = [...data?.deck?.weapons, ...data?.deck?.offhand].map(
     (card, ix) => {
       return {
         id: `${card.id}-${ix}`,

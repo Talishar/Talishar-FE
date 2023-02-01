@@ -2,9 +2,9 @@ import GameState from '../GameState';
 
 const InitialGameState: GameState = {
   gameInfo: {
-    gameID: 0,
-    playerID: 0,
-    authKey: ''
+    gameID: 174,
+    playerID: 1,
+    authKey: 'ff4c10933664bb5071726525e07637d5b037b95cad8ac65b5f54613d15f0e65c'
   },
   playerOne: {},
   playerTwo: {},

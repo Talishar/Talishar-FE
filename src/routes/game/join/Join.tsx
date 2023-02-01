@@ -3,9 +3,9 @@ import { GAME_FORMAT, GAME_VISIBILITY } from 'constants';
 import { useJoinGameMutation } from 'features/api/apiSlice';
 import { Formik, Form, Field } from 'formik';
 import { JoinGameAPI } from 'interface/API/JoinGame.php';
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './Join.module.css';
+import React from 'react';
 
 const JoinGame = () => {
   const navigate = useNavigate();

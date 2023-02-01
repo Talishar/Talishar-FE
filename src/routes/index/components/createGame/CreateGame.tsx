@@ -51,7 +51,7 @@ const CreateGame = () => {
             authKey: response.authKey ?? ''
           })
         );
-        navigate(`/game/join/${response.gameName}`);
+        navigate(`/game/sideboard/${response.gameName}`);
       }
     } catch (error) {
       console.warn(error);
