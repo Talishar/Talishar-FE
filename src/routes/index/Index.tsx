@@ -1,31 +1,14 @@
 import { useAppDispatch } from 'app/Hooks';
 import { setGameStart } from 'features/game/GameSlice';
-import React, { useEffect } from 'react';
-import {
-  createSearchParams,
-  redirect,
-  useNavigate,
-  useSearchParams
-} from 'react-router-dom';
+import { useEffect } from 'react';
 import CreateGame from './components/createGame/CreateGame';
 import GameList from './components/gameList/GameList';
 import styles from './Index.module.css';
 
 const Index = () => {
-  const [params, setParams] = useSearchParams();
-  const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    if (!!params.get('gameName')) {
-      navigate({
-        pathname: '/game/play',
-        search: `?${createSearchParams({
-          gameName: params.get('gameName') ?? '',
-          playerID: params.get('playerID') ?? '3'
-        })}`
-      });
-    }
     dispatch(setGameStart({ playerID: 0, gameID: 0, authKey: '' }));
   }, []);
 
