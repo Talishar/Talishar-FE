@@ -12,7 +12,8 @@ import { useKnownSearchParams } from 'hooks/useKnownSearchParams';
 
 export const GameStateHandler = React.memo(() => {
   const abortRef = useRef<AbortController>();
-  const [{ gameName = '0', playerID = '3', authKey = '' }] = useKnownSearchParams();
+  const [{ gameName = '0', playerID = '3', authKey = '' }] =
+    useKnownSearchParams();
   const params = useAppSelector(
     (state: RootState) => state.game.gameInfo,
     shallowEqual

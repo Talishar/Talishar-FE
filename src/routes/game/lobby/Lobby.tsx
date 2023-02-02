@@ -23,7 +23,7 @@ import { GAME_FORMAT, BREAKPOINT_MEDIUM, BREAKPOINT_LARGE } from 'constants';
 import ChooseFirstTurn from './components/chooseFirstTurn/ChooseFirstTurn';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import { SubmitSideboardAPI } from 'interface/API/SubmitSideboard.php';
-import { useNavigate } from 'react-router-dom';
+import { createSearchParams, useNavigate } from 'react-router-dom';
 
 const Lobby = () => {
   const [activeTab, setActiveTab] = useState('equipment');
@@ -97,7 +97,15 @@ const Lobby = () => {
       const data: any = await submitSideboardMutation(requestBody).unwrap();
       console.log(data);
       if (data.status === 'OK') {
-        navigate(`/game/play/${gameInfo.gameID}`);
+        const gameParams = {
+          gameName: String(gameInfo.gameID),
+          playerID: String(gameInfo.playerID),
+          authKey: gameInfo.authKey
+        };
+        navigate({
+          pathname: `/game/play/${gameInfo.gameID}`,
+          search: `?${createSearchParams(gameParams)}`
+        });
       }
     } catch (err) {
       console.error(err);
