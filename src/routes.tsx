@@ -90,9 +90,10 @@ export const router = createBrowserRouter(
       <Route
         path="game/play/:gameName"
         element={
-          <PlayGuard>
-            <Play />
-          </PlayGuard>
+          // disabled playguard as we need to redo this logic a bit
+          // <PlayGuard>
+          <Play />
+          // </PlayGuard>
         }
       />
       <Route path="game/join/:gameName" element={<JoinGame />} />

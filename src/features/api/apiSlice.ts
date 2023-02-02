@@ -27,6 +27,7 @@ import {
   GetLobbyInfoResponse
 } from 'interface/API/GetLobbyInfo.php';
 import { ChooseFirstPlayer } from 'interface/API/ChooseFirstPlayer.php';
+import { SubmitSideboardAPI } from 'interface/API/SubmitSideboard.php';
 
 // catch warnings and show a toast if we get one.
 export const rtkQueryErrorToaster: Middleware =
@@ -186,6 +187,15 @@ export const apiSlice = createApi({
           body: body
         };
       }
+    }),
+    submitSideboard: builder.mutation({
+      query: ({ ...body }: SubmitSideboardAPI) => {
+        return {
+          url: URL_END_POINT.SUBMIT_SIDEBOARD,
+          method: 'POST',
+          body: body
+        };
+      }
     })
   })
 });
@@ -199,5 +209,6 @@ export const {
   useCreateGameMutation,
   useJoinGameMutation,
   useGetLobbyInfoQuery,
-  useChooseFirstPlayerMutation
+  useChooseFirstPlayerMutation,
+  useSubmitSideboardMutation
 } = apiSlice;

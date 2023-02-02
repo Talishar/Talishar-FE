@@ -10,18 +10,27 @@ import { FaExclamationCircle } from 'react-icons/fa';
 import { Form, Formik } from 'formik';
 import deckValidation from './validation';
 import StickyFooter from './components/stickyFooter/StickyFooter';
-import { useGetLobbyInfoQuery } from 'features/api/apiSlice';
+import {
+  useGetLobbyInfoQuery,
+  useSubmitSideboardMutation
+} from 'features/api/apiSlice';
 import { useAppSelector } from 'app/Hooks';
 import { shallowEqual } from 'react-redux';
 import { RootState } from 'app/Store';
-import { Weapon } from 'interface/API/GetLobbyInfo.php';
+import { DeckResponse, Weapon } from 'interface/API/GetLobbyInfo.php';
 import SideboardUpdateHandler from './components/updateHandler/SideboardUpdateHandler';
-import { GAME_FORMAT } from 'constants';
+import { GAME_FORMAT, BREAKPOINT_MEDIUM, BREAKPOINT_LARGE } from 'constants';
 import ChooseFirstTurn from './components/chooseFirstTurn/ChooseFirstTurn';
+import useWindowDimensions from 'hooks/useWindowDimensions';
+import { SubmitSideboardAPI } from 'interface/API/SubmitSideboard.php';
+import { useNavigate } from 'react-router-dom';
 
 const Lobby = () => {
   const [activeTab, setActiveTab] = useState('equipment');
   const [unreadChat, setUnreadChat] = useState(false);
+  const [width, height] = useWindowDimensions();
+  const [isWideScreen, setIsWideScreen] = useState(false);
+  const navigate = useNavigate();
   const gameInfo = useAppSelector(
     (state: RootState) => state.game.gameInfo,
     shallowEqual
@@ -37,34 +46,21 @@ const Lobby = () => {
     authKey: gameInfo.authKey
   });
 
+  const [submitSideboardMutation, submitSideboardMutationData] =
+    useSubmitSideboardMutation();
+
   useEffect(() => {
     if (gameLobby?.gameLog != undefined || gameLobby?.gameLog != '')
       setUnreadChat(true);
   }, [gameLobby?.gameLog]);
 
-  // this doesn't work for some reason.
-  // useEffect(() => {
-  //   window.scrollTo(0, 0);
-  // }, []);
+  useEffect(() => {
+    setActiveTab('chat');
+  }, [!!gameLobby?.amIChoosingFirstPlayer]);
 
-  if (data === undefined || data === null || Object.keys(data).length === 0) {
-    data = testData;
-  }
-
-  if (data === undefined || data === null) {
-    return null;
-  }
-
-  const leftPic = `url(/crops/${
-    data.deck.hero === 'CardBack' ? 'UNKNOWNHERO' : data.deck.hero
-  }_cropped.png)`;
-  const rightPic = `url(/crops/${
-    gameLobby?.theirHero === 'CardBack' ? 'UNKNOWNHERO' : gameLobby?.theirHero
-  }_cropped.png)`;
-
-  const eqClasses = classNames({ secondary: activeTab !== 'equipment' });
-  const deckClasses = classNames({ secondary: activeTab !== 'deck' });
-  const chatClasses = classNames({ secondary: activeTab !== 'chat' });
+  useEffect(() => {
+    setIsWideScreen(width > BREAKPOINT_LARGE);
+  }, [width]);
 
   const handleEquipmentClick = () => {
     setActiveTab('equipment');
@@ -79,6 +75,60 @@ const Lobby = () => {
     setActiveTab('chat');
   };
 
+  const handleFormSubmission = async (values: DeckResponse) => {
+    // encode it as an object
+    const deck = {
+      hero: data?.deck.hero,
+      hands: values.weapons.map((item) => item.id.substring(0, 6)),
+      head: values.head,
+      chest: values.chest,
+      arms: values.arms,
+      legs: values.legs,
+      deck: values.deck.map((card) => card.substring(0, 6))
+    };
+    const requestBody: SubmitSideboardAPI = {
+      gameName: gameInfo.gameID,
+      playerID: gameInfo.playerID,
+      authKey: gameInfo.authKey,
+      submission: JSON.stringify(deck) // the API unmarshals the JSON inside the unmarshaled JSON.
+    };
+
+    try {
+      const data: any = await submitSideboardMutation(requestBody).unwrap();
+      console.log(data);
+      if (data.status === 'OK') {
+        navigate(`/game/play/${gameInfo.gameID}`);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  if (data === undefined || data === null || Object.keys(data).length === 0) {
+    data = testData;
+  }
+
+  if (data === undefined || data === null) {
+    return null;
+  }
+
+  // I'm not sure how I can get formik to understand checkboxes and repeating cards so give them all an index here.
+  const deckIndexed = data.deck.cards.map((card, ix) => `${card}-${ix}`);
+  const deckSBIndexed = data.deck.cardsSB.map(
+    (card, ix) => `${card}-${ix + deckIndexed.length}`
+  );
+
+  const leftPic = `url(/crops/${
+    data.deck.hero === 'CardBack' ? 'UNKNOWNHERO' : data.deck.hero
+  }_cropped.png)`;
+  const rightPic = `url(/crops/${
+    gameLobby?.theirHero === 'CardBack' ? 'UNKNOWNHERO' : gameLobby?.theirHero
+  }_cropped.png)`;
+
+  const eqClasses = classNames({ secondary: activeTab !== 'equipment' });
+  const deckClasses = classNames({ secondary: activeTab !== 'deck' });
+  const chatClasses = classNames({ secondary: activeTab !== 'chat' });
+
   let deckSize = 60;
   switch (data.format) {
     case GAME_FORMAT.BLITZ:
@@ -92,15 +142,10 @@ const Lobby = () => {
     default:
   }
 
-  // I'm not sure how I can get formik to understand checkboxes and repeating cards so give them all an index here.
-  const deckIndexed = data.deck.cards.map((card, ix) => `${card}-${ix}`);
-  const deckSBIndexed = data.deck.cardsSB.map(
-    (card, ix) => `${card}-${ix + deckIndexed.length}`
-  );
-
-  useEffect(() => {
-    setActiveTab('chat');
-  }, [!!gameLobby?.amIChoosingFirstPlayer]);
+  const contentContainerClasses = classNames([
+    styles.contentContainer,
+    { [styles.gridContentContainer]: isWideScreen }
+  ]);
 
   const weaponsIndexed = [...data?.deck?.weapons, ...data?.deck?.offhand].map(
     (card, ix) => {
@@ -135,9 +180,7 @@ const Lobby = () => {
             arms: data.deck.arms[0],
             legs: data.deck.legs[0]
           }}
-          onSubmit={(values) => {
-            console.log(values);
-          }}
+          onSubmit={handleFormSubmission}
           validationSchema={deckValidation(deckSize)}
           enableReinitialize
         >
@@ -169,58 +212,60 @@ const Lobby = () => {
             {gameLobby?.amIChoosingFirstPlayer ? (
               <ChooseFirstTurn />
             ) : (
-              <nav>
-                <ul>
-                  <li>Get ready!</li>
-                </ul>
-                <ul>
-                  <li>
-                    <button
-                      className={eqClasses}
-                      onClick={handleEquipmentClick}
-                      type="button"
-                    >
-                      Equipment
-                    </button>
-                  </li>
-                  <li>
-                    <button
-                      className={deckClasses}
-                      onClick={handleDeckClick}
-                      type="button"
-                    >
-                      Deck
-                    </button>
-                  </li>
-                  <li>
-                    <button
-                      className={chatClasses}
-                      onClick={handleChatClick}
-                      type="button"
-                    >
-                      {unreadChat && (
-                        <>
-                          <FaExclamationCircle />{' '}
-                        </>
-                      )}
-                      Chat
-                    </button>
-                  </li>
-                </ul>
-              </nav>
+              !isWideScreen && (
+                <nav>
+                  <ul>
+                    <li>Get ready!</li>
+                  </ul>
+                  <ul>
+                    <li>
+                      <button
+                        className={eqClasses}
+                        onClick={handleEquipmentClick}
+                        type="button"
+                      >
+                        Equipment
+                      </button>
+                    </li>
+                    <li>
+                      <button
+                        className={deckClasses}
+                        onClick={handleDeckClick}
+                        type="button"
+                      >
+                        Deck
+                      </button>
+                    </li>
+                    <li>
+                      <button
+                        className={chatClasses}
+                        onClick={handleChatClick}
+                        type="button"
+                      >
+                        {unreadChat && (
+                          <>
+                            <FaExclamationCircle />{' '}
+                          </>
+                        )}
+                        Chat
+                      </button>
+                    </li>
+                  </ul>
+                </nav>
+              )
             )}
-            <div className={styles.contentContainer}>
-              {activeTab === 'equipment' && (
+            <div className={contentContainerClasses}>
+              {(activeTab === 'equipment' || isWideScreen) && (
                 <Equipment
                   lobbyInfo={data}
                   weapons={weaponsIndexed}
                   weaponSB={weaponsSBIndexed}
                 />
               )}
-              {activeTab === 'deck' && (
+              {(activeTab === 'deck' || isWideScreen) && (
                 <Deck deck={[...deckIndexed, ...deckSBIndexed]} />
               )}
-              {activeTab === 'chat' && <LobbyChat />}
+              {(activeTab === 'chat' || isWideScreen) && <LobbyChat />}
             </div>
             {!gameLobby?.amIChoosingFirstPlayer ? (
               <StickyFooter deckSize={deckSize} />

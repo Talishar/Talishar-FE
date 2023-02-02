@@ -15,6 +15,12 @@ export const API_URL_DEV = import.meta.env.DEV
 // what playmat is the default
 export const DEFAULT_PLAYMAT = `Default`;
 
+// in pixels
+export const BREAKPOINT_SMALL = 576;
+export const BREAKPOINT_MEDIUM = 768;
+export const BREAKPOINT_LARGE = 992;
+export const BREAKPOINT_EXTRA_LARGE = 1200;
+
 // How long in ms for a click versus 'long press'
 // TODO: make this user definable
 export const LONG_PRESS_TIMER = 250;
