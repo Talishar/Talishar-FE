@@ -95,22 +95,8 @@ export const router = createBrowserRouter(
           </PlayGuard>
         }
       />
-      <Route
-        path="game/join/:gameName"
-        element={
-          <PlayGuard>
-            <JoinGame />
-          </PlayGuard>
-        }
-      />
-      <Route
-        path="game/lobby/:gameName"
-        element={
-          <PlayGuard>
-            <Lobby />
-          </PlayGuard>
-        }
-      />
+      <Route path="game/join/:gameName" element={<JoinGame />} />
+      <Route path="game/lobby/:gameName" element={<Lobby />} />
       <Route path="user">
         <Route index element={<Navigate to={'./profile'} />} />
         <Route
