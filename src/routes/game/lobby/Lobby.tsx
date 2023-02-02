@@ -19,7 +19,7 @@ import SideboardUpdateHandler from './components/updateHandler/SideboardUpdateHa
 import { GAME_FORMAT } from 'constants';
 import ChooseFirstTurn from './components/chooseFirstTurn/ChooseFirstTurn';
 
-const Sideboard = () => {
+const Lobby = () => {
   const [activeTab, setActiveTab] = useState('equipment');
   const [unreadChat, setUnreadChat] = useState(false);
   const gameInfo = useAppSelector(
@@ -232,4 +232,4 @@ const Sideboard = () => {
   );
 };
 
-export default Sideboard;
+export default Lobby;
