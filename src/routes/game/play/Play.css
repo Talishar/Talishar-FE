@@ -2,22 +2,15 @@
   --aspect: 1920px;
 }
 
-html,
-body {
+.app {
   color: gold;
   padding: 0;
-  overflow-y: hidden;
   margin: 0;
   width: 100vw;
   height: 100vh;
-  background: radial-gradient(transparent, black),
-    url('../../../img/backgrounds/dark_bg_texture.webp');
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-color: rgba(50, 50, 50, 0.5);
-  font-size: 1.5vh;
-  font-size: 1.5dvh;
+
+  /* font-size: 1.5vh;
+  font-size: 1.5dvh; */
 }
 
 .centering {
@@ -50,7 +43,6 @@ body {
   display: flex;
   flex-flow: row nowrap;
   margin: auto;
-  
 }
 
 .gameZone {

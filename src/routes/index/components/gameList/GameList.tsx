@@ -31,7 +31,7 @@ const GameList = () => {
   const navigate = useNavigate();
   const spectateHandler = (gameName: number) => {
     navigate({
-      pathname: '/game/play',
+      pathname: `/game/play/${gameName}`,
       search: `?${createSearchParams({
         gameName: String(gameName),
         playerID: String(3)
