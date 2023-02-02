@@ -3,6 +3,7 @@ import Index from './routes/index/Index';
 import { ErrorPage } from 'errorPage';
 import Play from 'routes/game/play/Play';
 import { useKnownSearchParams } from 'hooks/useKnownSearchParams';
+import { ForgottenPasswordForm, LoginForm, LoginPage } from 'routes/login';
 
 const PlayGuard = ({ children }: { children: JSX.Element }) => {
   const [searchParams] = useKnownSearchParams();
@@ -34,10 +35,25 @@ const IndexGuard = ({ children }: { children: JSX.Element }) => {
   return children;
 }
 
+const LoginGuard = ({ children }: { children: JSX.Element }) => {
+  // Todo: check for login status
+  const isLoggedIn = false;
+
+  if (isLoggedIn) {
+    return <Navigate to={{
+      pathname: "/"
+    }}
+      state={{ from: location }}
+    />;
+  }
+
+  return children;
+}
+
 export const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path='/'>
-      <Route path='/' element={
+      <Route index element={
         <IndexGuard>
           <Index />
         </IndexGuard>
@@ -50,5 +66,13 @@ export const router = createBrowserRouter(
         </PlayGuard>
       }
       />
+      <Route path='login' element={
+        <LoginGuard>
+          <LoginPage />
+        </LoginGuard>
+      }>
+        <Route index element={<LoginForm />} />
+        <Route path='password-recovery' element={<ForgottenPasswordForm />} />
+      </Route>
     </Route>
   ));
