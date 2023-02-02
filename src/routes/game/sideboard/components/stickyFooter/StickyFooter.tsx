@@ -1,7 +1,7 @@
 import { useFormikContext } from 'formik';
 import React from 'react';
 import { FaExclamationCircle } from 'react-icons/fa';
-import { DeckResponse } from '../../Sideboard';
+import { DeckResponse } from 'interface/API/GetLobbyInfo.php';
 import styles from './StickyFooter.module.css';
 
 export type DeckSize = {

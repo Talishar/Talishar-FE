@@ -10,7 +10,7 @@ import Play from 'routes/game/play/Play';
 import './index.scss';
 import { Toaster } from 'react-hot-toast';
 import Join from 'routes/game/join/Join';
-import Sideboard from 'routes/game/sideboard/Sideboard';
+import Sideboard from 'routes/game/sideboard/Lobby';
 
 // Because we *must* have a root else the site won't work at all.
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

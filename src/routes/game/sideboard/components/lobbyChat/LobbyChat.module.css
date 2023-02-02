@@ -2,8 +2,10 @@
   height: 500px;
   display: flex;
   flex-direction: column;
+  align-content: center;
   justify-content: flex-end;
   align-items: flex-end;
+  max-width: 350px;
 }
 
 .spacer {

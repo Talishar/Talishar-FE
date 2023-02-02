@@ -4,7 +4,6 @@ import { RootState } from 'app/Store';
 import {
   clearGetLobbyRefresh,
   gameLobby,
-  nextTurn,
   setIsUpdateInProgressFalse
 } from 'features/game/GameSlice';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';

@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import Deck from './components/deck/Deck';
 import LobbyChat from './components/lobbyChat/LobbyChat';
 import testData from './mockdata.json';
-import styles from './Sideboard.module.css';
+import styles from './Lobby.module.css';
 import Equipment from './components/equipment/Equipment';
 import { useState } from 'react';
 import classNames from 'classnames';
@@ -21,7 +21,7 @@ import ChooseFirstTurn from './components/chooseFirstTurn/ChooseFirstTurn';
 
 const Sideboard = () => {
   const [activeTab, setActiveTab] = useState('equipment');
-  const [unreadChat, setUnreadChat] = useState(true);
+  const [unreadChat, setUnreadChat] = useState(false);
   const gameInfo = useAppSelector(
     (state: RootState) => state.game.gameInfo,
     shallowEqual
@@ -30,6 +30,7 @@ const Sideboard = () => {
     (state: RootState) => state.game.gameLobby,
     shallowEqual
   );
+
   let { data, isError, isLoading } = useGetLobbyInfoQuery({
     gameName: gameInfo.gameID,
     playerID: gameInfo.playerID,
@@ -37,19 +38,23 @@ const Sideboard = () => {
   });
 
   useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
+    if (gameLobby?.gameLog != undefined || gameLobby?.gameLog != '')
+      setUnreadChat(true);
+  }, [gameLobby?.gameLog]);
+
+  // this doesn't work for some reason.
+  // useEffect(() => {
+  //   window.scrollTo(0, 0);
+  // }, []);
 
   if (data === undefined || data === null || Object.keys(data).length === 0) {
     data = testData;
   }
 
-  console.log(data);
   if (data === undefined || data === null) {
     return null;
   }
 
-  const opponentHero = 'ELE001';
   const leftPic = `url(/crops/${
     data.deck.hero === 'CardBack' ? 'UNKNOWNHERO' : data.deck.hero
   }_cropped.png)`;
@@ -60,7 +65,19 @@ const Sideboard = () => {
   const eqClasses = classNames({ secondary: activeTab !== 'equipment' });
   const deckClasses = classNames({ secondary: activeTab !== 'deck' });
   const chatClasses = classNames({ secondary: activeTab !== 'chat' });
-  const canSubmit = true; // figure this one out
+
+  const handleEquipmentClick = () => {
+    setActiveTab('equipment');
+  };
+
+  const handleDeckClick = () => {
+    setActiveTab('deck');
+  };
+
+  const handleChatClick = () => {
+    setUnreadChat(false);
+    setActiveTab('chat');
+  };
 
   let deckSize = 60;
   switch (data.format) {
@@ -83,7 +100,7 @@ const Sideboard = () => {
 
   useEffect(() => {
     setActiveTab('chat');
-  }, [gameLobby?.amIChoosingFirstPlayer]);
+  }, [!!gameLobby?.amIChoosingFirstPlayer]);
 
   const weaponsIndexed = [...data?.deck?.weapons, ...data?.deck?.offhand].map(
     (card, ix) => {
@@ -160,7 +177,7 @@ const Sideboard = () => {
                   <li>
                     <button
                       className={eqClasses}
-                      onClick={() => setActiveTab('equipment')}
+                      onClick={handleEquipmentClick}
                       type="button"
                     >
                       Equipment
@@ -169,7 +186,7 @@ const Sideboard = () => {
                   <li>
                     <button
                       className={deckClasses}
-                      onClick={() => setActiveTab('deck')}
+                      onClick={handleDeckClick}
                       type="button"
                     >
                       Deck
@@ -178,7 +195,7 @@ const Sideboard = () => {
                   <li>
                     <button
                       className={chatClasses}
-                      onClick={() => setActiveTab('chat')}
+                      onClick={handleChatClick}
                       type="button"
                     >
                       {unreadChat && (

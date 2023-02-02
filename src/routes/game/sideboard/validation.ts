@@ -19,10 +19,10 @@ export const deckValidation = (deckSize: number) => {
         }, 0);
         return hands <= 2;
       }), // maximum 2 hand-objects
-    head: string().required(),
-    chest: string().required(),
-    arms: string().required(),
-    legs: string().required(),
+    head: string().required('You must have head equipment.'),
+    chest: string().required('You must have chest equipment.'),
+    arms: string().required('You must have arms equipment.'),
+    legs: string().required('You must have legs equipment.'),
     deck: array()
       .required()
       .of(string())

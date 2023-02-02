@@ -1,11 +1,15 @@
 import { Field, FieldArray, useFormikContext } from 'formik';
 import React from 'react';
 import CardImage from 'routes/game/components/elements/cardImage/CardImage';
-import { DeckResponse, LobbyInfo, Weapon } from '../../Sideboard';
+import {
+  DeckResponse,
+  GetLobbyInfoResponse,
+  Weapon
+} from 'interface/API/GetLobbyInfo.php';
 import styles from './Equipment.module.css';
 
 type EquipmentProps = {
-  lobbyInfo: LobbyInfo;
+  lobbyInfo: GetLobbyInfoResponse;
   weapons: Weapon[];
   weaponSB: Weapon[];
 };
