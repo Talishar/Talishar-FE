@@ -42,11 +42,11 @@ export const nextTurn = createAsyncThunk(
     while (waitingForJSONResponse) {
       try {
         const response = await fetch(queryURL + queryParams, {
-          method: 'GET',
+          method: 'POST',
           headers: {},
-          mode: 'no-cors',
           credentials: 'include',
-          signal: params.signal
+          signal: params.signal,
+          body: JSON.stringify(queryParams)
         });
         let data = await response.text();
         if (data.toString().trim() === '0') {

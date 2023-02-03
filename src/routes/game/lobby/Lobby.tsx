@@ -18,8 +18,17 @@ import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { shallowEqual } from 'react-redux';
 import { RootState } from 'app/Store';
 import { DeckResponse, Weapon } from 'interface/API/GetLobbyInfo.php';
-import SideboardUpdateHandler from './components/updateHandler/SideboardUpdateHandler';
-import { GAME_FORMAT, BREAKPOINT_LARGE } from 'constants';
+import LobbyUpdateHandler from './components/updateHandler/SideboardUpdateHandler';
+import {
+  GAME_FORMAT,
+  BREAKPOINT_LARGE,
+  URL_END_POINT,
+  GAME_LIMIT_LIVE,
+  GAME_LIMIT_BETA,
+  API_URL_LIVE,
+  API_URL_BETA,
+  API_URL_DEV
+} from 'constants';
 import ChooseFirstTurn from './components/chooseFirstTurn/ChooseFirstTurn';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import { SubmitSideboardAPI } from 'interface/API/SubmitSideboard.php';
@@ -101,12 +110,26 @@ const Lobby = () => {
       const data: any = await submitSideboardMutation(requestBody).unwrap();
 
       if (data.status === 'OK') {
+        const queryURL =
+          gameInfo.gameID > GAME_LIMIT_LIVE
+            ? `${API_URL_LIVE}${URL_END_POINT.START_GAME_LEGACY}`
+            : gameInfo.gameID > GAME_LIMIT_BETA
+            ? `${API_URL_BETA}${URL_END_POINT.START_GAME_LEGACY}`
+            : `${API_URL_DEV}${URL_END_POINT.START_GAME_LEGACY}`;
+        const queryParams = new URLSearchParams({
+          gameName: String(gameInfo.gameID),
+          playerID: String(gameInfo.playerID),
+          authKey: String(gameInfo.authKey)
+        });
+        await fetch(queryURL + '?' + queryParams);
         navigate(`/game/play/${gameInfo.gameID}`);
       }
     } catch (err) {
       console.error(err);
     } finally {
       setIsSubmitting(false);
+      console.log('calling navigate in catch');
+      navigate(`/game/play/${gameInfo.gameID}`);
     }
   };
 
@@ -175,7 +198,7 @@ const Lobby = () => {
   });
   return (
     <div>
-      <SideboardUpdateHandler isSubmitting={isSubmitting} />
+      <LobbyUpdateHandler isSubmitting={isSubmitting} />
       <div>
         <Formik
           initialValues={{

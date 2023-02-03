@@ -9,12 +9,12 @@ import {
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { shallowEqual } from 'react-redux';
 
-interface SideboardUpdateHandlerProps {
+interface LobbyUpdateHandlerProps {
   isSubmitting: boolean;
 }
 
-export const SideboardUpdateHandler = React.memo(
-  ({ isSubmitting }: SideboardUpdateHandlerProps) => {
+export const LobbyUpdateHandler = React.memo(
+  ({ isSubmitting }: LobbyUpdateHandlerProps) => {
     const abortRef = useRef<AbortController>();
     const params = useAppSelector(
       (state: RootState) => state.game.gameInfo,
@@ -51,5 +51,5 @@ export const SideboardUpdateHandler = React.memo(
   }
 );
 
-SideboardUpdateHandler.displayName = 'SideboardUpdateHandler';
-export default SideboardUpdateHandler;
+LobbyUpdateHandler.displayName = 'LobbyUpdateHandler';
+export default LobbyUpdateHandler;

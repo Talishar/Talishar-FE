@@ -123,7 +123,8 @@ export const URL_END_POINT = {
   GET_LOBBY_REFRESH: '/APIs/GetLobbyRefresh.php',
   JOIN_GAME: '/APIs/JoinGame.php',
   SUBMIT_SIDEBOARD: '/APIs/SubmitSideboard.php',
-  USER_PROFILE: '/APIs/UserProfileAPI.php'
+  USER_PROFILE: '/APIs/UserProfileAPI.php',
+  START_GAME_LEGACY: 'Start.php'
 };
 
 export const GAME_VISIBILITY = {
