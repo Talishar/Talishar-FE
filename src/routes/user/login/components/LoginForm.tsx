@@ -22,6 +22,7 @@ export const LoginForm = () => {
                 <input
                     type="email"
                     name="email"
+                    placeholder="bravo@talishar.net"
                     onChange={formik.handleChange}
                     value={formik.values.email}
                 />
@@ -29,6 +30,7 @@ export const LoginForm = () => {
                 <input
                     type="password"
                     name="password"
+                    placeholder="********"
                     onChange={formik.handleChange}
                     value={formik.values.password}
                 />

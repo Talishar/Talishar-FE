@@ -27,4 +27,17 @@ it('links to signup', async () => {
     );
     userEvent.click(screen.getByText('Sign Up'));
     await screen.findByText('signup page');
+});
+
+it('allows the user to login', () => {
+    render(
+        <MemoryRouter>
+            <LoginForm />
+        </MemoryRouter>
+    );
+
+    userEvent.type(screen.getByPlaceholderText('bravo@talishar.net'), 'test@talishar.net');
+    userEvent.type(screen.getByPlaceholderText('********'), 'ihateprism');
+    userEvent.click(screen.getByText('Submit'));
+    // Todo: expect URL to change
 })
