@@ -9,38 +9,47 @@ import {
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { shallowEqual } from 'react-redux';
 
-export const SideboardUpdateHandler = React.memo(() => {
-  const abortRef = useRef<AbortController>();
-  const params = useAppSelector(
-    (state: RootState) => state.game.gameInfo,
-    shallowEqual
-  );
-  const isUpdateInProgress = useAppSelector(
-    (state: RootState) => state.game.isUpdateInProgress
-  );
-  const dispatch = useAppDispatch();
+interface SideboardUpdateHandlerProps {
+  isSubmitting: boolean;
+}
 
-  // setup long poll
-  useEffect(() => {
-    if (params.gameID == 0 || isUpdateInProgress) {
-      return;
-    }
-    dispatch(gameLobby({ game: params, signal: abortRef.current?.signal }));
-  }, [params, isUpdateInProgress, dispatch]);
+export const SideboardUpdateHandler = React.memo(
+  ({ isSubmitting }: SideboardUpdateHandlerProps) => {
+    const abortRef = useRef<AbortController>();
+    const params = useAppSelector(
+      (state: RootState) => state.game.gameInfo,
+      shallowEqual
+    );
+    const isUpdateInProgress = useAppSelector(
+      (state: RootState) => state.game.isUpdateInProgress
+    );
+    const dispatch = useAppDispatch();
 
-  // gameID already in params
-  useEffect(() => {
-    abortRef.current = new AbortController();
+    // setup long poll
+    useEffect(() => {
+      if (params.gameID == 0 || isUpdateInProgress) {
+        return;
+      }
+      dispatch(gameLobby({ game: params, signal: abortRef.current?.signal }));
+    }, [params, isUpdateInProgress, dispatch]);
 
-    return () => {
+    if (isSubmitting) {
       abortRef.current?.abort();
-      dispatch(setIsUpdateInProgressFalse());
-      dispatch(clearGetLobbyRefresh());
-    };
-  }, []);
+    }
+    // gameID already in params
+    useEffect(() => {
+      abortRef.current = new AbortController();
 
-  return null;
-});
+      return () => {
+        abortRef.current?.abort();
+        dispatch(setIsUpdateInProgressFalse());
+        dispatch(clearGetLobbyRefresh());
+      };
+    }, [isSubmitting]);
+
+    return null;
+  }
+);
 
 SideboardUpdateHandler.displayName = 'SideboardUpdateHandler';
 export default SideboardUpdateHandler;

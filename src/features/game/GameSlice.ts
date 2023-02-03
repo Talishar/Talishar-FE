@@ -44,6 +44,7 @@ export const nextTurn = createAsyncThunk(
         const response = await fetch(queryURL + queryParams, {
           method: 'GET',
           headers: {},
+          mode: 'no-cors',
           credentials: 'include',
           signal: params.signal
         });
@@ -310,14 +311,20 @@ export const gameSlice = createSlice({
         authKey: string;
       }>
     ) => {
-      (state.gameInfo.gameID = action.payload.gameID),
-        (state.gameInfo.playerID = action.payload.playerID),
-        (state.gameInfo.authKey = action.payload.authKey),
-        (state.gameInfo.lastUpdate = 0),
-        (state.playerOne = {}),
-        (state.playerTwo = {});
+      state.gameInfo.gameID = action.payload.gameID;
+      state.gameInfo.playerID = !!state.gameInfo.playerID
+        ? state.gameInfo.playerID
+        : action.payload.playerID;
+      state.gameInfo.authKey = !!state.gameInfo.authKey
+        ? state.gameInfo.authKey
+        : action.payload.authKey;
+      state.gameInfo.lastUpdate = 0;
+      state.playerOne = {};
+      state.playerTwo = {};
       state.activeLayers = undefined;
       state.activeChainLink = undefined;
+
+      return state;
     },
     removeCardFromHand: (state, action: PayloadAction<{ card: Card }>) => {
       state.playerOne.Hand = state.playerOne?.Hand?.filter(

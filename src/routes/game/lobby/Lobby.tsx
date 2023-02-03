@@ -14,16 +14,17 @@ import {
   useGetLobbyInfoQuery,
   useSubmitSideboardMutation
 } from 'features/api/apiSlice';
-import { useAppSelector } from 'app/Hooks';
+import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { shallowEqual } from 'react-redux';
 import { RootState } from 'app/Store';
 import { DeckResponse, Weapon } from 'interface/API/GetLobbyInfo.php';
 import SideboardUpdateHandler from './components/updateHandler/SideboardUpdateHandler';
-import { GAME_FORMAT, BREAKPOINT_MEDIUM, BREAKPOINT_LARGE } from 'constants';
+import { GAME_FORMAT, BREAKPOINT_LARGE } from 'constants';
 import ChooseFirstTurn from './components/chooseFirstTurn/ChooseFirstTurn';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import { SubmitSideboardAPI } from 'interface/API/SubmitSideboard.php';
-import { createSearchParams, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { nextTurn } from 'features/game/GameSlice';
 
 const Lobby = () => {
   const [activeTab, setActiveTab] = useState('equipment');
@@ -31,6 +32,8 @@ const Lobby = () => {
   const [width, height] = useWindowDimensions();
   const [isWideScreen, setIsWideScreen] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const gameInfo = useAppSelector(
     (state: RootState) => state.game.gameInfo,
     shallowEqual
@@ -76,6 +79,7 @@ const Lobby = () => {
   };
 
   const handleFormSubmission = async (values: DeckResponse) => {
+    setIsSubmitting(true);
     // encode it as an object
     const deck = {
       hero: data?.deck.hero,
@@ -95,20 +99,14 @@ const Lobby = () => {
 
     try {
       const data: any = await submitSideboardMutation(requestBody).unwrap();
-      console.log(data);
+
       if (data.status === 'OK') {
-        const gameParams = {
-          gameName: String(gameInfo.gameID),
-          playerID: String(gameInfo.playerID),
-          authKey: gameInfo.authKey
-        };
-        navigate({
-          pathname: `/game/play/${gameInfo.gameID}`,
-          search: `?${createSearchParams(gameParams)}`
-        });
+        navigate(`/game/play/${gameInfo.gameID}`);
       }
     } catch (err) {
       console.error(err);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -177,7 +175,7 @@ const Lobby = () => {
   });
   return (
     <div>
-      <SideboardUpdateHandler />
+      <SideboardUpdateHandler isSubmitting={isSubmitting} />
       <div>
         <Formik
           initialValues={{

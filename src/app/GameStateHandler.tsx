@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { useEffect } from 'react';
 import { RootState } from './Store';
 import {
@@ -18,6 +18,7 @@ export const GameStateHandler = React.memo(() => {
     (state: RootState) => state.game.gameInfo,
     shallowEqual
   );
+  const [firstPoll, setFirstPoll] = useState(true);
   const isUpdateInProgress = useAppSelector(
     (state: RootState) => state.game.isUpdateInProgress
   );
@@ -25,7 +26,7 @@ export const GameStateHandler = React.memo(() => {
 
   // setup long poll
   useEffect(() => {
-    if (params.gameID == 0 || isUpdateInProgress) {
+    if (params.gameID == 0 || isUpdateInProgress || firstPoll) {
       return;
     }
     dispatch(nextTurn({ game: params, signal: abortRef.current?.signal }));
@@ -35,19 +36,26 @@ export const GameStateHandler = React.memo(() => {
   useEffect(() => {
     abortRef.current = new AbortController();
 
-    dispatch(
-      setGameStart({
-        gameID: parseInt(gameName),
-        playerID: parseInt(playerID),
-        authKey: authKey
-      })
-    );
+    if (gameName != '0' && gameName != String(params.gameID)) {
+      dispatch(
+        setGameStart({
+          gameID: parseInt(gameName),
+          playerID: parseInt(playerID),
+          authKey: authKey
+        })
+      );
+    }
+
+    setTimeout(() => {
+      setFirstPoll(false);
+      dispatch(nextTurn({ game: params, signal: abortRef.current?.signal }));
+    }, 500);
 
     return () => {
       abortRef.current?.abort();
       dispatch(setIsUpdateInProgressFalse());
     };
-  }, []);
+  }, [params.gameID]);
 
   return null;
 });
