@@ -1,0 +1,29 @@
+.formContainer {
+    width: 460px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+}
+
+@media (max-width: 767px) {
+    .formContainer {
+        width: 100%;
+        border: none;
+    }
+}
+
+.submitButton {
+    margin-top: 18px;
+}
+
+.linebreak {
+    width: 100%;
+    text-align: center;
+}
+
+.signupButton {
+    width: 100%;
+}
+
+.divider {
+    margin: 18px 0;
+}
