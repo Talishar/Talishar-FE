@@ -53,7 +53,7 @@ export default ({ mode }) => {
           rewrite: (path) => path.replace(/api\/live\//, '')
         },
         '/api/dev': {
-          target: `https://${devURL}:${devPort}/${devDirectory}`,
+          target: `http://${devURL}:${devPort}/${devDirectory}`,
           changeOrigin: true,
           secure: false,
           rewrite: (path) => path.replace(/api\/dev\//, '')
