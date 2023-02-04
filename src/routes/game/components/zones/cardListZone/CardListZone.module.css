@@ -6,7 +6,7 @@
   bottom: 20vh;
   left: 20vw;
   right: 20vw;
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: var(--near-black);
   padding: 2vh;
   border: 1px solid var(--primary);
   border-radius: 12px;

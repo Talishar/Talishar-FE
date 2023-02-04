@@ -7,7 +7,7 @@
   top: 10vh;
   bottom: 60vh;
   left: 20%;
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: var(--near-black);
   padding: 2vh;
   border: 1px solid gold;
   border-radius: 20px;

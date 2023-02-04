@@ -6,7 +6,6 @@ import CardDisplay from '../../elements/cardDisplay/CardDisplay';
 import styles from './PermanentsZone.module.css';
 import { Card } from 'features/Card';
 import isEqual from 'react-fast-compare';
-import { FaTimes } from 'react-icons/fa';
 import classNames from 'classnames';
 import { shallowEqual } from 'react-redux';
 

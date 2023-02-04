@@ -1,5 +1,6 @@
 .headZone {
   background: rgba(50, 50, 50, 0.5);
+  border-radius: 1vh;
   color: var(--white);
   display: flex;
   justify-content: center;
