@@ -168,3 +168,15 @@
   gap: 1vh;
   height: 100%;
 }
+
+@media (orientation: portrait) {
+  .currentAttack {
+    width: 10em;
+    gap: 0.5em;
+  }
+
+  .attack {
+    height: 10em;
+    gap: 0.5em;
+  }
+}

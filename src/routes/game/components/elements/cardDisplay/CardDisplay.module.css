@@ -15,18 +15,6 @@
   aspect-ratio: 1;
 }
 
-@media (orientation: portrait) {
-  .card {
-    border-radius: 2em;
-  }
-
-  .normalSize {
-    height: 12vw;
-    height: 12dvw;
-    aspect-ratio: 1;
-  }
-}
-
 .biggerSize {
   height: 12vh;
   width: 12vh;
@@ -138,4 +126,30 @@
 .border7 {
   border-color: purple;
   box-shadow: 0 0 5px 5px purple;
+}
+
+@media (orientation: portrait) {
+  .card {
+    border-radius: 2em;
+  }
+
+  .normalSize {
+    height: 12vw;
+    height: 12dvw;
+    aspect-ratio: 1;
+  }
+
+  .biggerSize {
+    height: 7em;
+    width: 7em;
+    aspect-ratio: 1;
+  }
+
+  .isBroken {
+    background-position: 1em -0.5em;
+  }
+
+  .onChain {
+    background-position: 0em -2.5em;
+  }
 }
