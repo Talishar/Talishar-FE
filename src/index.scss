@@ -11,10 +11,12 @@ body {
   background-position: center;
   background-size: cover;
   background-color: rgba(50, 50, 50, 0.5);
+  --snow: #f4eded;
 }
 
 body {
-  --white: var(--color);
+  --white: var(--snow);
+  --dark-red: #6f0000;
 }
 
 // Import Pico

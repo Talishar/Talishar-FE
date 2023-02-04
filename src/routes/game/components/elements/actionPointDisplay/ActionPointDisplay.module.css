@@ -16,7 +16,7 @@
   background-size: contain;
   text-align: center;
   font-size: 1.5em;
-  color: var(--color);
+  color: var(--white);
   text-shadow: -1px 1px 2px #000, 1px 1px 2px #000, 1px -1px 0 #000,
     -1px -1px 0 #000;
   z-index: -1;

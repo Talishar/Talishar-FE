@@ -19,5 +19,5 @@
   position: relative;
   border-radius: 10px;
   background: rgba(50, 50, 50, 0.5);
-  color: var(--color);
+  color: var(--white);
 }

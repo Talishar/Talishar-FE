@@ -4,7 +4,7 @@
   border-radius: 1vh;
   flex: 0 0 10vh;
   background: rgba(50, 50, 50, 0.5);
-  color: var(--color);
+  color: var(--white);
   display: flex;
   justify-content: center;
   align-content: center;
