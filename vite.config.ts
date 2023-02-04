@@ -40,7 +40,7 @@ export default defineConfig({
         rewrite: (path) => path.replace(/api\/live\//, '')
       },
       '/api/dev': {
-        target: 'http://localhost:8080/game',
+        target: 'http://localhost:80/FaBOnline',
         changeOrigin: true,
         secure: false,
         rewrite: (path) => path.replace(/api\/dev\//, '')
