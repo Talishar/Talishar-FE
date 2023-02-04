@@ -12,7 +12,7 @@
 }
 
 .buttonDiv {
-  background-color: goldenrod;
+  background-color: var(--primary);
   color: black;
   display: flex;
   flex-direction: row;
@@ -21,15 +21,15 @@
   min-width: 8vh;
   height: 4vh;
   border-radius: 5px;
-  border: 1px solid goldenrod;
+  border: 1px solid var(--primary);
   flex-basis: auto;
   padding: 0vh 1vh;
 }
 
 .buttonDiv:hover {
   background-color: black;
-  color: goldenrod;
-  border: 1px solid goldenrod;
+  color: var(--primary);
+  border: 1px solid var(--primary);
   cursor: pointer;
 }
 
@@ -45,7 +45,7 @@
 .thumbUpIcon {
   height: 3em;
   width: 3em;
-  border: 1px solid goldenrod;
+  border: 1px solid var(--primary);
   border-radius: 0.5em;
   color: green;
   font-size: 2em;
@@ -63,7 +63,7 @@
 .thumbDownIcon {
   height: 3em;
   width: 3em;
-  border: 1px solid goldenrod;
+  border: 1px solid var(--primary);
   border-radius: 0.5em;
   color: red;
   font-size: 2em;

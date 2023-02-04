@@ -14,11 +14,11 @@
   top: -1vh;
   position: relative;
   margin: auto;
-  width: 95%;
-  border-radius: 10px;
+  border-radius: 0.5em;
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
+  width: 95%;
 }
 
 .FirstBox {
@@ -34,4 +34,16 @@
 .ThirdBox {
   background-color: yellow;
   grid-area: yellow;
+}
+
+@media (orientation: portrait) {
+  .playerPlaymat {
+    width: 100%;
+  }
+  .playerBoard {
+    grid-template-rows: 12dvw 12dvw 12dvw;
+    grid-template-columns: 12dvw 12dvw 1fr 12dvw 12dvw 12dvw 1fr 12dvw 12dvw;
+    gap: 1dvw;
+    padding: 1dvw;
+  }
 }

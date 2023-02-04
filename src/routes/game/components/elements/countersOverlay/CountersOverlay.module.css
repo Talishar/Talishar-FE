@@ -1,20 +1,20 @@
 .label {
-  background-color: rgba(0, 0, 0, 0.9);
-  color: goldenrod;
+  background-color: var(--near-black);
+  color: var(--primary);
   order: 99;
   position: absolute;
   bottom: 5px;
   left: 5px;
   right: 3px;
   text-align: center;
-  border: 1px goldenrod solid;
+  border: 1px var(--primary) solid;
   border-radius: 5px;
   z-index: 100;
   text-overflow: ellipsis;
   overflow: hidden;
 }
 
-.floatCover {
+.countersCover {
   position: absolute;
   display: flex;
   justify-content: center;
@@ -34,10 +34,10 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 4vh;
-  width: 4vh;
+  height: 2em;
+  width: 2em;
   font-size: 1.5em;
-  background-color: white;
+  background-color: var(--white);
   text-align: center;
 }
 
@@ -46,14 +46,14 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 4vh;
-  width: 4vh;
+  height: 2em;
+  width: 2em;
   background-image: url('../../../../../img/symbols/symbol-defence.png');
   background-position: center;
   background-size: contain;
   text-align: center;
   font-size: 1.5em;
-  color: white;
+  color: var(--white);
   text-shadow: -1px 1px 2px #000, 1px 1px 2px #000, 1px -1px 0 #000,
     -1px -1px 0 #000;
   z-index: -1;
@@ -64,14 +64,14 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 4vh;
-  width: 4vh;
+  height: 2em;
+  width: 2em;
   background-image: url('../../../../../img/symbols/symbol-steamCounter.png');
   background-position: center;
   background-size: contain;
   text-align: center;
   font-size: 1.5em;
-  color: white;
+  color: var(--white);
   text-shadow: -1px 1px 2px #000, 1px 1px 2px #000, 1px -1px 0 #000,
     -1px -1px 0 #000;
   z-index: -1;
@@ -82,14 +82,14 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 4vh;
-  width: 4vh;
+  height: 2em;
+  width: 2em;
   background-image: url('../../../../../img/symbols/symbol-attack.png');
   background-position: center;
   background-size: contain;
   text-align: center;
   font-size: 1.5em;
-  color: white;
+  color: var(--white);
   text-shadow: -1px 1px 2px #000, 1px 1px 2px #000, 1px -1px 0 #000,
     -1px -1px 0 #000;
   z-index: -1;
@@ -100,22 +100,22 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 4vh;
-  width: 4vh;
+  height: 2em;
+  width: 2em;
   background-image: url('../../../../../img/symbols/symbol-health.png');
   background-position: center;
   background-size: contain;
   text-align: center;
   font-size: 1.5em;
-  color: white;
+  color: var(--white);
   text-shadow: -1px 1px 2px #000, 1px 1px 2px #000, 1px -1px 0 #000,
     -1px -1px 0 #000;
 }
 
 .aimCounter {
   border-radius: 100%;
-  height: 4vh;
-  width: 4vh;
+  height: 2em;
+  width: 2em;
   background-image: url('../../../../../img/symbols/symbol-aim.png');
   background-position: center;
   background-size: contain;

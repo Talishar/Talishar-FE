@@ -4,19 +4,11 @@
 
 html,
 body {
-  color: gold;
+  color: var(--white);
   padding: 0;
-  overflow-y: hidden;
   margin: 0;
   width: 100vw;
   height: 100vh;
-  background: radial-gradient(transparent, black),
-    url('../../../img/backgrounds/dark_bg_texture.webp');
-  background-position: center;
-  background-size: cover;
-  background-color: rgba(50, 50, 50, 0.5);
-  font-size: 1.5vh;
-  font-size: 1.5dvh;
 }
 
 .centering {
@@ -35,12 +27,16 @@ body {
     height: 100%;
     width: 100%;
     max-width: var(--aspect);
+    font-size: calc(1.5vh - 2px);
+    font-size: calc(1.5dvh - 2px);
   }
 }
 
 @media (orientation: portrait) {
   .app {
     aspect-ratio: 16/9;
+    font-size: calc(1.5vw + 3px);
+    font-size: calc(1.5dvw + 3px);
   }
 }
 
@@ -49,7 +45,6 @@ body {
   display: flex;
   flex-flow: row nowrap;
   margin: auto;
-
 }
 
 .gameZone {
@@ -74,38 +69,38 @@ body {
   grid-column-start: 2;
   grid-column-end: 7;
   background: rgba(50, 50, 50, 0.5);
-  color: white;
+  color: var(--white);
 }
 
 .arsenalZone {
   flex-grow: 1;
   background: rgba(50, 50, 50, 0.5);
-  color: white;
+  color: var(--white);
 }
 
 .graveyardZone,
 .banishedZone {
   flex-grow: 1;
   background: rgba(50, 50, 50, 0.5);
-  color: white;
+  color: var(--white);
 }
 
 .pitchZone {
   flex-grow: 1;
   background: rgba(50, 50, 50, 0.5);
-  color: white;
+  color: var(--white);
 }
 
 .deckZone {
   flex-grow: 1;
   background: rgba(50, 50, 50, 0.5);
-  color: white;
+  color: var(--white);
 }
 
 .defaultToast {
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: var(--near-black);
   padding: 2vh;
-  border: 1px solid goldenrod;
+  border: 1px solid var(--primary);
   border-radius: 12px;
-  color: goldenrod;
+  color: var(--primary);
 }

@@ -25,7 +25,7 @@
 }
 
 .twoPitch {
-  color: goldenrod;
+  color: var(--primary);
 }
 
 .threePitch {

@@ -4,8 +4,8 @@
   justify-content: space-between;
   align-items: center;
   background: rgba(50, 50, 50, 0.5);
-  color: white;
-  border-radius: 10px;
+  color: var(--white);
+  border-radius: 0.5em;
   flex: 0 0 10vh;
   grid-area: zonecounts;
   line-height: normal;

@@ -133,9 +133,25 @@
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  padding-left: 1vh;
-  padding-right: 1vh;
-  gap: 1vh;
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+  gap: 0.5em;
   height: 100%;
   cursor: pointer;
+}
+
+@media (orientation: portrait) {
+  .chainLinksRow {
+    gap: 0.5em;
+    height: 2em;
+  }
+
+  .chainLinkSymbol {
+    height: 2em;
+  }
+
+  .chainLinkSummary {
+    padding-left: 0.25em;
+    padding-right: 0.25em;
+  }
 }

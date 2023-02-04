@@ -36,7 +36,7 @@ export const CountersOverlay = ({
   }
 
   return (
-    <div className={styles.floatCover}>
+    <div className={styles.countersCover}>
       {!!Number(countersMap?.defence) && (
         <div
           className={styles.defCounter}

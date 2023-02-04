@@ -1,7 +1,7 @@
 .card {
   position: absolute;
-  border-radius: 10px;
-  border-radius: 1.5vh;
+  border-radius: 0.5em;
+  border-radius: 2em;
   object-fit: cover;
   position: relative;
   user-select: none;
@@ -32,7 +32,7 @@
   justify-content: center;
   align-items: center;
   z-index: 1;
-  border-radius: 10px;
+  border-radius: 0.5em;
   border-radius: 7%;
 }
 
@@ -104,8 +104,8 @@
 }
 
 .border3 {
-  border-color: goldenrod;
-  box-shadow: 0 0 3px 3px goldenrod;
+  border-color: var(--primary);
+  box-shadow: 0 0 3px 3px var(--primary);
 }
 
 .border4 {
@@ -126,4 +126,30 @@
 .border7 {
   border-color: purple;
   box-shadow: 0 0 5px 5px purple;
+}
+
+@media (orientation: portrait) {
+  .card {
+    border-radius: 2em;
+  }
+
+  .normalSize {
+    height: 12vw;
+    height: 12dvw;
+    aspect-ratio: 1;
+  }
+
+  .biggerSize {
+    height: 7em;
+    width: 7em;
+    aspect-ratio: 1;
+  }
+
+  .isBroken {
+    background-position: 1em -0.5em;
+  }
+
+  .onChain {
+    background-position: 0em -2.5em;
+  }
 }
