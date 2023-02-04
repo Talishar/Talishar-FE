@@ -5,6 +5,7 @@ import Play from 'routes/game/play/Play';
 import { useKnownSearchParams } from 'hooks/useKnownSearchParams';
 import { ForgottenPasswordForm, LoginForm, LoginPage } from 'routes/user/login';
 import { DecksPage, ProfilePage } from 'routes/user';
+import { SignUpForm } from 'routes/user/login/components/SignUpForm';
 
 const PlayGuard = ({ children }: { children: JSX.Element }) => {
   const [searchParams] = useKnownSearchParams();
@@ -38,7 +39,7 @@ const IndexGuard = ({ children }: { children: JSX.Element }) => {
 
 const LoggedInGuard = ({ children, shouldBeLoggedIn }: { children: JSX.Element, shouldBeLoggedIn: boolean }) => {
   // Todo: check for login status
-  const isLoggedIn = true;
+  const isLoggedIn = false;
 
   if (isLoggedIn === !shouldBeLoggedIn) {
     return <Navigate to={{
@@ -86,6 +87,7 @@ export const router = createBrowserRouter(
         }>
           <Route index element={<LoginForm />} />
           <Route path='password-recovery' element={<ForgottenPasswordForm />} />
+          <Route path='signup' element={<SignUpForm />} />
         </Route>
       </Route>
     </Route>
