@@ -6,7 +6,7 @@
   border-radius: 10px;
   gap: 1vh;
   background: rgba(50, 50, 50, 0.5);
-  color: white;
+  color: var(--color);
   width: 100%;
   height: 100%;
   grid-area: permanents;

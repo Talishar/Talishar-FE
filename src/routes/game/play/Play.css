@@ -67,32 +67,32 @@ body {
   grid-column-start: 2;
   grid-column-end: 7;
   background: rgba(50, 50, 50, 0.5);
-  color: white;
+  color: var(--color);
 }
 
 .arsenalZone {
   flex-grow: 1;
   background: rgba(50, 50, 50, 0.5);
-  color: white;
+  color: var(--color);
 }
 
 .graveyardZone,
 .banishedZone {
   flex-grow: 1;
   background: rgba(50, 50, 50, 0.5);
-  color: white;
+  color: var(--color);
 }
 
 .pitchZone {
   flex-grow: 1;
   background: rgba(50, 50, 50, 0.5);
-  color: white;
+  color: var(--color);
 }
 
 .deckZone {
   flex-grow: 1;
   background: rgba(50, 50, 50, 0.5);
-  color: white;
+  color: var(--color);
 }
 
 .defaultToast {

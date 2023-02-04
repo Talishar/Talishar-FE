@@ -25,10 +25,10 @@
   overflow: clip;
   flex: 0 1 100%;
   border: 2px solid black;
-  background-color: white;
+  background-color: var(--color);
   color: black;
 }
 
-.chatBoxInner div{
+.chatBoxInner div {
   margin-bottom: 0.5em;
 }

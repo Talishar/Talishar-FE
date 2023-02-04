@@ -5,7 +5,7 @@
   width: 20em;
   border-radius: 0.3em;
 
-  background-color: #002d1a;
+  background-color: var(--secondary);
   color: var(--secondary-inverse);
 
   display: flex;

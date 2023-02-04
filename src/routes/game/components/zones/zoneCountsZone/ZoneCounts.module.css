@@ -4,7 +4,7 @@
   justify-content: space-between;
   align-items: center;
   background: rgba(50, 50, 50, 0.5);
-  color: white;
+  color: var(--color);
   border-radius: 10px;
   flex: 0 0 10vh;
   grid-area: zonecounts;

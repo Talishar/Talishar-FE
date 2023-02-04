@@ -9,7 +9,7 @@
   flex-shrink: 1;
   width: 99%;
   border: 2px solid black;
-  background-color: white;
+  background-color: var(--color);
   color: black;
   height: 3vh;
 }
