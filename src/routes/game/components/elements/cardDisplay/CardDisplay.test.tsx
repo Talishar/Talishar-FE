@@ -21,13 +21,7 @@ it('renders a card', () => {
           src="/cardsquares/WTR001.webp"
         />
         <div
-          class="_floatTint_877d58"
-        />
-        <div
-          class="_floatTint_877d58"
-        />
-        <div
-          class="_floatCover_562030"
+          class="_countersCover_562030"
         />
       </div>
     </div>
