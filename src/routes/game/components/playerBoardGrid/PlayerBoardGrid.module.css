@@ -47,3 +47,15 @@
   background-color: yellow;
   grid-area: yellow;
 }
+
+@media (orientation: portrait) {
+  .playerPlaymat {
+    width: 100%;
+  }
+  .playerBoard {
+    grid-template-rows: 12dvw 12dvw 12dvw;
+    grid-template-columns: 12dvw 12dvw 1fr 12dvw 12dvw 12dvw 1fr 12dvw 12dvw;
+    gap: 1dvw;
+    padding: 1dvw;
+  }
+}

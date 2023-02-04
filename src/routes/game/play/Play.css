@@ -9,8 +9,6 @@ body {
   margin: 0;
   width: 100vw;
   height: 100vh;
-  font-size: 1.5vh;
-  font-size: 1.5dvh;
 }
 
 .centering {
@@ -29,12 +27,16 @@ body {
     height: 100%;
     width: 100%;
     max-width: var(--aspect);
+    font-size: calc(1.5vh - 2px);
+    font-size: calc(1.5dvh - 2px);
   }
 }
 
 @media (orientation: portrait) {
   .app {
     aspect-ratio: 16/9;
+    font-size: calc(1.5vw + 3px);
+    font-size: calc(1.5dvw + 3px);
   }
 }
 

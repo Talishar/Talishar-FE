@@ -27,3 +27,9 @@
   flex-grow: 2;
   flex-basis: 1 0 100%;
 }
+
+@media (orientation: portrait) {
+  .combatChain {
+    height: 10em;
+  }
+}

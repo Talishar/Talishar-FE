@@ -1,7 +1,7 @@
 .card {
   position: absolute;
   border-radius: 10px;
-  border-radius: 1.5vh;
+  border-radius: 2em;
   object-fit: cover;
   position: relative;
   user-select: none;
@@ -13,6 +13,18 @@
   height: 10vh;
   height: 10dvh;
   aspect-ratio: 1;
+}
+
+@media (orientation: portrait) {
+  .card {
+    border-radius: 2em;
+  }
+
+  .normalSize {
+    height: 12vw;
+    height: 12dvw;
+    aspect-ratio: 1;
+  }
 }
 
 .biggerSize {
