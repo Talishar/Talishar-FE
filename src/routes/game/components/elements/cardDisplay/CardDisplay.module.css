@@ -104,8 +104,8 @@
 }
 
 .border3 {
-  border-color: goldenrod;
-  box-shadow: 0 0 3px 3px goldenrod;
+  border-color: var(--primary);
+  box-shadow: 0 0 3px 3px var(--primary);
 }
 
 .border4 {

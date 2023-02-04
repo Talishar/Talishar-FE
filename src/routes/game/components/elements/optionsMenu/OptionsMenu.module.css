@@ -10,7 +10,7 @@
   right: 10vw;
   background-color: rgba(0, 0, 0, 0.8);
   padding: 2vh;
-  border: 1px solid goldenrod;
+  border: 1px solid var(--primary);
   border-radius: 20px;
   z-index: 1000;
 }
@@ -41,7 +41,7 @@
 }
 
 .optionsMenuCloseIcon:hover {
-  background-color: goldenrod;
+  background-color: var(--primary);
   color: black;
 }
 
@@ -73,7 +73,7 @@
 }
 
 .buttonDiv {
-  background-color: goldenrod;
+  background-color: var(--primary);
   color: black;
   display: flex;
   flex-direction: row;
@@ -82,7 +82,7 @@
   min-width: 8vh;
   height: 4vh;
   border-radius: 5px;
-  border: 1px solid goldenrod;
+  border: 1px solid var(--primary);
   flex-basis: auto;
   padding: 0vh 1vh;
   margin-bottom: 1vh;
@@ -95,7 +95,7 @@
 
 .buttonDiv:hover {
   background-color: black;
-  color: goldenrod;
-  border: 1px solid goldenrod;
+  color: var(--primary);
+  border: 1px solid var(--primary);
   cursor: pointer;
 }

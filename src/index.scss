@@ -6,6 +6,15 @@ $primary-700: #ffa000;
 html,
 body {
   overflow-y: auto;
+  background: radial-gradient(transparent, black),
+    url('./img/backgrounds/dark_bg_texture.webp');
+  background-position: center;
+  background-size: cover;
+  background-color: rgba(50, 50, 50, 0.5);
+}
+
+body {
+  --white: var(--color);
 }
 
 // Import Pico

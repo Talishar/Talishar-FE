@@ -30,8 +30,8 @@
   justify-content: center;
   align-items: center;
   background-color: rgba(0, 0, 0, 0.5);
-  border: goldenrod solid 1px;
-  color: gold;
+  border: var(--primary) solid 1px;
+  color: var(--white);
   border-radius: 5px;
   width: 2vh;
   height: 2vh;

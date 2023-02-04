@@ -1,13 +1,13 @@
 .label {
   background-color: rgba(0, 0, 0, 0.9);
-  color: goldenrod;
+  color: var(--primary);
   order: 99;
   position: absolute;
   bottom: 5px;
   left: 5px;
   right: 3px;
   text-align: center;
-  border: 1px goldenrod solid;
+  border: 1px var(--primary) solid;
   border-radius: 5px;
   z-index: 100;
   text-overflow: ellipsis;

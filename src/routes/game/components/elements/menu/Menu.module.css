@@ -12,7 +12,7 @@
   touch-action: manipulation;
   padding: 0.5em 0.6em;
   font-size: 1em;
-  background-color: goldenrod;
+  background-color: var(--primary);
   color: black;
   display: flex;
   flex-direction: row;
@@ -21,14 +21,14 @@
   min-width: 5vh;
   height: 4vh;
   border-radius: 0.2em;
-  border: 1px solid goldenrod;
+  border: 1px solid var(--primary);
   flex-basis: auto;
 }
 
 .btn:hover {
   background-color: black;
-  color: goldenrod;
-  border: 1px solid goldenrod;
+  color: var(--primary);
+  border: 1px solid var(--primary);
   cursor: pointer;
 }
 

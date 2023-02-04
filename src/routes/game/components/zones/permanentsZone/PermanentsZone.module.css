@@ -54,8 +54,8 @@
   min-width: 2em;
   width: auto;
   background-color: rgba(0, 0, 0, 0.9);
-  border: goldenrod solid 1px;
-  color: gold;
+  border: var(--primary) solid 1px;
+  color: var(--white);
   border-radius: 5px;
   font-size: 0.75em;
   display: flex;

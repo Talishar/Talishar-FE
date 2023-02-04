@@ -8,7 +8,7 @@
   right: 20vw;
   background-color: rgba(0, 0, 0, 0.8);
   padding: 2vh;
-  border: 1px solid goldenrod;
+  border: 1px solid var(--primary);
   border-radius: 12px;
 }
 
@@ -51,7 +51,7 @@
 }
 
 .cardListCloseIcon:hover {
-  background-color: goldenrod;
+  background-color: var(--primary);
   color: black;
 }
 
@@ -67,7 +67,7 @@
 }
 
 .leftColumn {
- width: 10vh;
+  width: 10vh;
 }
 
 .midColumn {
@@ -75,9 +75,9 @@
 }
 
 .table {
-  width: 100%
+  width: 100%;
 }
 
 .column {
- text-align: center;
+  text-align: center;
 }

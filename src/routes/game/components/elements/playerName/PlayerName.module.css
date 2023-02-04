@@ -1,16 +1,15 @@
 .playerName {
-  margin-top: 0.5vh;
-  margin-bottom: 0.5vh;
-  padding-left: 1vh;
-  border-radius: 0.5em;
-  background-color: #8e101d;
+  margin: 0.5em 0.5em;
+  padding: 1em;
+  height: 3em;
+  width: 20em;
+  border-radius: 0.3em;
+
+  background-color: #002d1a;
+  color: var(--secondary-inverse);
+
   display: flex;
-  left: 0px;
   align-self: flex-start;
-  height: 5vh;
-  color: gold;
-  width: 30vh;
-  width: 30dvh;
   align-items: center;
   justify-content: flex-start;
 }
