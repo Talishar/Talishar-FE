@@ -44,7 +44,7 @@
 }
 
 .icon {
-  background-color: rgba(0, 0, 0, 0.9);
+  background-color: var(--near-black);
   border: var(--primary) solid 1px;
   color: var(--white);
   border-radius: 5px;

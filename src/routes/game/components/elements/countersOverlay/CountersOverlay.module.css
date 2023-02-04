@@ -1,5 +1,5 @@
 .label {
-  background-color: rgba(0, 0, 0, 0.9);
+  background-color: var(--near-black);
   color: var(--primary);
   order: 99;
   position: absolute;
@@ -14,7 +14,7 @@
   overflow: hidden;
 }
 
-.floatCover {
+.countersCover {
   position: absolute;
   display: flex;
   justify-content: center;

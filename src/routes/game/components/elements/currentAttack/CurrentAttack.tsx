@@ -7,10 +7,7 @@ import attackSymbol from '../../../../../img/symbols/symbol-attack.png';
 import defSymbol from '../../../../../img/symbols/symbol-defence.png';
 import CardDisplay from '../cardDisplay/CardDisplay';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
-import {
-  setCardListFocus,
-  showChainLinkSummary
-} from 'features/game/GameSlice';
+import { showChainLinkSummary } from 'features/game/GameSlice';
 
 export default function CurrentAttack() {
   const activeCombatChain = useAppSelector(

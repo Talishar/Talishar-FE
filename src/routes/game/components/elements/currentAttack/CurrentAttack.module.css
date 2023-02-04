@@ -33,10 +33,10 @@
   border: var(--primary) solid 1px;
   color: var(--white);
   border-radius: 5px;
-  width: 2vh;
-  height: 2vh;
+  width: 2em;
+  height: 2em;
   padding: 2px;
-  margin: 2px;
+  margin: 0.25em;
   pointer-events: auto;
   user-select: none;
 }
