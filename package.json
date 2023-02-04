@@ -7,6 +7,7 @@
     "@previewjs/cli": "^1.17.0",
     "@reduxjs/toolkit": "^1.8.5",
     "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^14.4.3",
     "ci": "^2.2.0",
     "classnames": "^2.3.2",
     "eslint-plugin-prettier": "^4.2.1",

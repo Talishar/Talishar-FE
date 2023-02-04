@@ -14,6 +14,7 @@ import { ForgottenPasswordForm, LoginForm, LoginPage } from 'routes/user/login';
 import { DecksPage, ProfilePage } from 'routes/user';
 import JoinGame from 'routes/game/join/Join';
 import Lobby from 'routes/game/lobby/Lobby';
+import { SignUpForm } from 'routes/user/login/components/SignUpForm';
 
 const PlayGuard = ({ children }: { children: JSX.Element }) => {
   const [searchParams] = useKnownSearchParams();
@@ -59,7 +60,7 @@ const LoggedInGuard = ({
   shouldBeLoggedIn: boolean;
 }) => {
   // Todo: check for login status
-  const isLoggedIn = true;
+  const isLoggedIn = false;
 
   if (isLoggedIn === !shouldBeLoggedIn) {
     return (
