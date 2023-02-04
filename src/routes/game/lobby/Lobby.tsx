@@ -110,26 +110,12 @@ const Lobby = () => {
       const data: any = await submitSideboardMutation(requestBody).unwrap();
 
       if (data.status === 'OK') {
-        const queryURL =
-          gameInfo.gameID > GAME_LIMIT_LIVE
-            ? `${API_URL_LIVE}${URL_END_POINT.START_GAME_LEGACY}`
-            : gameInfo.gameID > GAME_LIMIT_BETA
-            ? `${API_URL_BETA}${URL_END_POINT.START_GAME_LEGACY}`
-            : `${API_URL_DEV}${URL_END_POINT.START_GAME_LEGACY}`;
-        const queryParams = new URLSearchParams({
-          gameName: String(gameInfo.gameID),
-          playerID: String(gameInfo.playerID),
-          authKey: String(gameInfo.authKey)
-        });
-        await fetch(queryURL + '?' + queryParams);
         navigate(`/game/play/${gameInfo.gameID}`);
       }
     } catch (err) {
       console.error(err);
     } finally {
       setIsSubmitting(false);
-      console.log('calling navigate in catch');
-      navigate(`/game/play/${gameInfo.gameID}`);
     }
   };
 
