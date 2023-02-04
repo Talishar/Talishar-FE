@@ -4,7 +4,7 @@
   position: relative;
   left: 0px;
   flex: 0 0 10vh;
-  border-radius: 10px;
+  border-radius: 0.5em;
   background: rgba(50, 50, 50, 0.5);
   color: var(--white);
   display: flex;

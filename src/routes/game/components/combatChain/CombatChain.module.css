@@ -7,7 +7,7 @@
   background-image: url('../../../../img/backgrounds/red-felt-texture.webp');
   background-repeat: no-repeat;
   background-size: cover;
-  border-radius: 10px;
+  border-radius: 0.5em;
   text-align: center;
   display: flex;
   align-items: center;

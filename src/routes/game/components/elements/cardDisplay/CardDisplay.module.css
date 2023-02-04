@@ -1,6 +1,6 @@
 .card {
   position: absolute;
-  border-radius: 10px;
+  border-radius: 0.5em;
   border-radius: 2em;
   object-fit: cover;
   position: relative;
@@ -32,7 +32,7 @@
   justify-content: center;
   align-items: center;
   z-index: 1;
-  border-radius: 10px;
+  border-radius: 0.5em;
   border-radius: 7%;
 }
 

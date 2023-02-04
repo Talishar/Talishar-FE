@@ -5,7 +5,7 @@
   align-items: center;
   background: rgba(50, 50, 50, 0.5);
   color: var(--white);
-  border-radius: 10px;
+  border-radius: 0.5em;
   flex: 0 0 10vh;
   grid-area: zonecounts;
   line-height: normal;

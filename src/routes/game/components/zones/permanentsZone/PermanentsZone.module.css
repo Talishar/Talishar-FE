@@ -3,7 +3,7 @@
   overflow-x: clip;
   flex: 0 1 100%;
   min-width: 0;
-  border-radius: 10px;
+  border-radius: 0.5em;
   gap: 1vh;
   background: rgba(50, 50, 50, 0.5);
   color: var(--white);

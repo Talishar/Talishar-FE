@@ -1,7 +1,7 @@
 .graveyardZone {
   position: relative;
   flex: 0 0 10vh;
-  border-radius: 10px;
+  border-radius: 0.5em;
   display: flex;
   justify-content: center;
   align-items: center;
