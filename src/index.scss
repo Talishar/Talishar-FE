@@ -3,17 +3,22 @@ $primary-500: #ffc107;
 $primary-600: #ffb300;
 $primary-700: #ffa000;
 
-// Import Pico
-@import '@picocss/pico/scss/pico';
-
+html,
 body {
   overflow-y: auto;
-  --primary-inverse: #000000;
-  background-color: rgba(50, 50, 50, 0.5);
   background: radial-gradient(transparent, black),
-    url('img/backgrounds/dark_bg_texture.webp');
+    url('./img/backgrounds/dark_bg_texture.webp');
   background-position: center;
-  background-repeat: no-repeat;
   background-size: cover;
-  background-attachment: fixed;
+  background-color: rgba(50, 50, 50, 0.5);
+  --snow: #f4eded;
 }
+
+body {
+  --white: var(--snow);
+  --dark-red: #6f0000;
+  --near-black: rgba(0, 0, 0, 0.85);
+}
+
+// Import Pico
+@import '@picocss/pico/scss/pico';

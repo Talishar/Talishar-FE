@@ -11,13 +11,13 @@
 
 .arsenalZone {
   height: 100%;
-  min-width: 10dvh;
+  min-width: min(10dvh, 12dvw);
   display: flex;
   gap: 1dvh;
   justify-content: center;
   align-items: center;
   position: relative;
-  border-radius: 10px;
+  border-radius: 0.5em;
   background: rgba(50, 50, 50, 0.5);
-  color: white;
+  color: var(--white);
 }

@@ -69,8 +69,10 @@ export const CardDisplay = (prop: CardProp) => {
       onClick={onClick}
     >
       <CardImage src={eqImg} className={imgStyles} />
-      <div className={classStyles}></div>
-      <div className={equipStatus}></div>
+      {card.overlay === 'disabled' && <div className={classStyles}></div>}
+      {(card.isBroken || card.onChain || card.isFrozen) && (
+        <div className={equipStatus}></div>
+      )}
       <CountersOverlay {...card} num={num} />
     </CardPopUp>
   );

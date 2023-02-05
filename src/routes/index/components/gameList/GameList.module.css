@@ -15,9 +15,8 @@
 }
 
 .button {
-  color: var(--secondary);
+  background-color: var(--secondary);
   margin-bottom: 0;
-  color: black;
 }
 
 .title {

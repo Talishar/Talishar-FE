@@ -17,12 +17,12 @@
   background-image: url('../../img/backgrounds/red-felt-texture.webp');
   background-repeat: no-repeat;
   background-size: cover;
-  border-radius: 10px;
+  border-radius: 0.5em;
   text-align: center;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  color: white;
+  color: var(--white);
 }
 
 .playerPlaymat {
@@ -34,7 +34,7 @@
   margin-top: 1vh;
   width: 95%;
   padding: 1vh;
-  border-radius: 10px;
+  border-radius: 0.5em;
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;

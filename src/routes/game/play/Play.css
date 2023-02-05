@@ -3,13 +3,13 @@
 }
 
 .app {
-  color: gold;
+  color: var(--white);
   padding: 0;
   margin: 0;
   width: 100vw;
+  width: 100dvw:
   height: 100vh;
-  font-size: 1.5vh;
-  font-size: 1.5dvh;
+  height: 100dvh;
 }
 
 .centering {
@@ -28,12 +28,16 @@
     height: 100%;
     width: 100%;
     max-width: var(--aspect);
+    font-size: calc(1.5vh - 2px);
+    font-size: calc(1.5dvh - 2px);
   }
 }
 
 @media (orientation: portrait) {
   .app {
     aspect-ratio: 16/9;
+    font-size: calc(1.5vw + 3px);
+    font-size: calc(1.5dvw + 3px);
   }
 }
 
@@ -66,38 +70,38 @@
   grid-column-start: 2;
   grid-column-end: 7;
   background: rgba(50, 50, 50, 0.5);
-  color: white;
+  color: var(--white);
 }
 
 .arsenalZone {
   flex-grow: 1;
   background: rgba(50, 50, 50, 0.5);
-  color: white;
+  color: var(--white);
 }
 
 .graveyardZone,
 .banishedZone {
   flex-grow: 1;
   background: rgba(50, 50, 50, 0.5);
-  color: white;
+  color: var(--white);
 }
 
 .pitchZone {
   flex-grow: 1;
   background: rgba(50, 50, 50, 0.5);
-  color: white;
+  color: var(--white);
 }
 
 .deckZone {
   flex-grow: 1;
   background: rgba(50, 50, 50, 0.5);
-  color: white;
+  color: var(--white);
 }
 
 .defaultToast {
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: var(--near-black);
   padding: 2vh;
-  border: 1px solid goldenrod;
+  border: 1px solid var(--primary);
   border-radius: 12px;
-  color: goldenrod;
+  color: var(--primary);
 }

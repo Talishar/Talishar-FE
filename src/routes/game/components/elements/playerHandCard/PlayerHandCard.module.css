@@ -44,9 +44,9 @@
 }
 
 .icon {
-  background-color: rgba(0, 0, 0, 0.9);
-  border: goldenrod solid 1px;
-  color: gold;
+  background-color: var(--near-black);
+  border: var(--primary) solid 1px;
+  color: var(--white);
   border-radius: 5px;
   font-size: 1.5em;
   display: flex;
@@ -66,8 +66,8 @@
 }
 
 .border3 {
-  border-color: goldenrod;
-  box-shadow: 0 0 5px 5px goldenrod;
+  border-color: var(--primary);
+  box-shadow: 0 0 5px 5px var(--primary);
 }
 
 .border4 {

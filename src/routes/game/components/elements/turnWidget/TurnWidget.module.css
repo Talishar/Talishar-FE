@@ -42,18 +42,62 @@
 .widgetRightCol {
   width: 12vh;
   height: 19vh;
+  width: 12dvh;
+  height: 19dvh;
+
   gap: 1vh;
   margin-right: 1vh;
+  gap: 1dvh;
+  margin-right: 1dvh;
 
-  width: 12dvh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 19dvh;
-  gap: 1dvh;
+
   top: 0px;
   bottom: 0px;
   right: 0px;
-  margin-right: 1dvh;
+}
+
+@media (orientation: portrait) {
+  .widgetContainer {
+    top: 0px;
+    right: 0px;
+    position: absolute;
+
+    width: 20vw;
+    height: 26vw;
+    width: 20dvw;
+    height: 26dvw;
+
+    z-index: 15;
+    user-select: none;
+  }
+
+  .widgetLeftCol {
+    margin-right: 1em;
+  }
+
+  .widgetRightCol {
+    width: 14vw;
+    height: 23vw;
+    width: 14dvw;
+    height: 2dvw;
+
+    gap: 1vw;
+    gap: 1dvw;
+
+    margin-right: 1.25em;
+  }
+
+  .widgetBackground {
+    background-size: 15dvw auto;
+    height: 100%;
+
+    width: 18vw;
+    width: 18dvw;
+
+    right: -20px;
+  }
 }

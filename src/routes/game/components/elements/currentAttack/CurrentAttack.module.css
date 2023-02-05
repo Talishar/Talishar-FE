@@ -30,13 +30,13 @@
   justify-content: center;
   align-items: center;
   background-color: rgba(0, 0, 0, 0.5);
-  border: goldenrod solid 1px;
-  color: gold;
+  border: var(--primary) solid 1px;
+  color: var(--white);
   border-radius: 5px;
-  width: 2vh;
-  height: 2vh;
+  width: 2em;
+  height: 2em;
   padding: 2px;
-  margin: 2px;
+  margin: 0.25em;
   pointer-events: auto;
   user-select: none;
 }
@@ -79,7 +79,7 @@
   text-align: right;
   font-size: 1.5em;
   flex-grow: 1;
-  color: white;
+  color: var(--white);
   text-shadow: -1px 1px 2px #000, 1px 1px 2px #000, 1px -1px 0 #000,
     -1px -1px 0 #000;
 }
@@ -92,7 +92,7 @@
   text-align: left;
   font-size: 1.5em;
   flex-grow: 1;
-  color: white;
+  color: var(--white);
   text-shadow: -1px 1px 2px #000, 1px 1px 2px #000, 1px -1px 0 #000,
     -1px -1px 0 #000;
 }
@@ -167,4 +167,16 @@
   padding-right: 1vh;
   gap: 1vh;
   height: 100%;
+}
+
+@media (orientation: portrait) {
+  .currentAttack {
+    width: 10em;
+    gap: 0.5em;
+  }
+
+  .attack {
+    height: 10em;
+    gap: 0.5em;
+  }
 }
