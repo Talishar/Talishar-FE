@@ -35,7 +35,6 @@ const CreateGame = () => {
     setSubmitting(true);
     try {
       const response = await createGame(values).unwrap();
-      console.log(response);
       if (response.error) {
         console.warn('error when loading thing');
         // TODO: Show a modal or something to say there has been an error and to try again.
@@ -75,7 +74,7 @@ const CreateGame = () => {
         <h3>Create New Game</h3>
         <h1>DOES NOT WORK GO TO REGULAR SITE TO PLAY ETC</h1>
         <Formik initialValues={initialValues} onSubmit={handleSubmit}>
-          {({ values }) => (
+          {({ values, isSubmitting }) => (
             <Form>
               <div className={styles.formContainer}>
                 {!!isLoggedIn && (
@@ -173,7 +172,11 @@ const CreateGame = () => {
                   <br />
                 </label>
               </div>
-              <button type="submit" className={buttonClass}>
+              <button
+                type="submit"
+                className={buttonClass}
+                aria-busy={isSubmitting}
+              >
                 Create Game
               </button>
             </Form>

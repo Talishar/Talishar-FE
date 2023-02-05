@@ -1,17 +1,26 @@
+import React, { useState } from 'react';
 import { useAppDispatch } from 'app/Hooks';
-import { GAME_FORMAT, GAME_VISIBILITY } from 'constants';
 import { useJoinGameMutation } from 'features/api/apiSlice';
-import { Formik, Form, Field } from 'formik';
+import { Formik, Form, Field, FormikHelpers } from 'formik';
 import { JoinGameAPI } from 'interface/API/JoinGame.php';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import styles from './Join.module.css';
-import React from 'react';
+import { useKnownSearchParams } from 'hooks/useKnownSearchParams';
+import { setGameStart } from 'features/game/GameSlice';
+import { toast } from 'react-hot-toast';
 
 const JoinGame = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const [joinGame, joinGameResult] = useJoinGameMutation();
   const isLoggedIn = false; // TODO: useAuth(); handler or something
-  const [createGame, createGameResult] = useJoinGameMutation();
+
+  let [{ gameName = '0', playerID = '2', authKey = '' }] =
+    useKnownSearchParams();
+
+  const { gameID } = useParams();
+  gameName = gameID ?? gameName;
+
   const initialValues: JoinGameAPI = {
     deck: '',
     fabdb: '',
@@ -22,90 +31,98 @@ const JoinGame = () => {
     gameDescription: ''
   };
 
-  const handleSubmit = () => {
-    console.log('trying to join game');
+  const handleSubmit = async (
+    values: JoinGameAPI,
+    { setSubmitting }: FormikHelpers<JoinGameAPI>
+  ) => {
+    values.playerID = parseInt(playerID);
+    values.gameName = parseInt(gameName);
+
+    try {
+      setSubmitting(true);
+      const response = await joinGame(values).unwrap();
+      if (response.error) {
+        console.warn('error happened when trying to join');
+        return;
+      } else {
+        dispatch(
+          setGameStart({
+            playerID: response.playerID ?? 0,
+            gameID: response.gameName ?? 0,
+            authKey: response.authKey ?? ''
+          })
+        );
+        navigate(`/game/lobby/${response.gameName}`);
+      }
+    } catch (error) {
+      console.warn(error);
+      toast.error(String(error));
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
-    <Formik initialValues={initialValues} onSubmit={handleSubmit}>
-      {({ values }) => (
-        <Form>
-          <div className={styles.formContainer}>
-            {!!isLoggedIn && (
-              <label>
-                Favorite Deck
-                <select
-                  name="login"
-                  id="selectFavorite"
-                  placeholder="Login"
-                  aria-label="Login"
-                >
-                  <option>One</option>
-                  <option>Two</option>
-                </select>
-              </label>
-            )}
-            <fieldset>
-              <label>
-                Deck Link:
-                <Field
-                  type="text"
-                  id="fabdb"
-                  name="fabdb"
-                  aria-label="Deck Link"
-                />
-              </label>
-              <label>
-                <Field
-                  type="checkbox"
-                  role="switch"
-                  id="favoriteDeck"
-                  name="favoriteDeck"
-                />
-                Save Deck to ❤️ Favorites
-              </label>
-            </fieldset>
-            <label>
-              Game Name
-              <Field
-                type="text"
-                id="gameDescription"
-                name="gameDescription"
-                aria-label="Game Name"
-                placeholder="Defaults to Game#14321542"
-              />
-            </label>
-            <label>
-              Visibility
-              <Field
-                as="select"
-                name="visibility"
-                id="selectvisibility"
-                placeholder={GAME_VISIBILITY.PUBLIC}
-                aria-label="Visibility"
+    <main className={styles.LoginPageContainer}>
+      <article className={styles.formContainer}>
+        <Formik initialValues={initialValues} onSubmit={handleSubmit}>
+          {({ values, isSubmitting }) => (
+            <Form>
+              <div className={styles.form}>
+                {!!isLoggedIn && (
+                  <label>
+                    Favorite Deck
+                    <select
+                      name="login"
+                      id="selectFavorite"
+                      placeholder="Login"
+                      aria-label="Login"
+                    >
+                      <option>One</option>
+                      <option>Two</option>
+                    </select>
+                  </label>
+                )}
+                <fieldset>
+                  <label>
+                    Deck Link:
+                    <Field
+                      type="text"
+                      id="fabdb"
+                      name="fabdb"
+                      aria-label="Deck Link"
+                    />
+                  </label>
+                  <label>
+                    <Field
+                      type="checkbox"
+                      role="switch"
+                      id="favoriteDeck"
+                      name="favoriteDeck"
+                    />
+                    Save Deck to ❤️ Favorites
+                  </label>
+                </fieldset>
+              </div>
+              <button
+                type="submit"
+                className={styles.buttonClass}
+                aria-busy={isSubmitting}
               >
-                <option value={GAME_VISIBILITY.PUBLIC}>Public</option>
-                <option value={GAME_VISIBILITY.PRIVATE}>Private</option>
-              </Field>
-            </label>
-            <label>
-              <Field
-                type="checkbox"
-                role="switch"
-                id="deckTestMode"
-                name="deckTestMode"
-                aria-label="Single Player"
-              />
-              Single Player
-              <br />
-            </label>
-          </div>
-          <button type="submit" className={styles.buttonClass}>
-            Create Game
-          </button>
-        </Form>
-      )}
-    </Formik>
+                Join Game
+              </button>
+            </Form>
+          )}
+        </Formik>
+        <hr />
+        <h2>Instructions</h2>
+        <p>
+          Choose a deck and click submit. You will be taken to the game lobby.
+          Once in the game lobby, the player who win the dice roll choose if the
+          go first. Then the host can start the game. Have Fun!
+        </p>
+      </article>
+    </main>
   );
 };
 

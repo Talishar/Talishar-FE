@@ -89,7 +89,7 @@ export const router = createBrowserRouter(
         errorElement={<ErrorPage />}
       />
       <Route
-        path="game/play/:gameName"
+        path="game/play/:gameID"
         element={
           // disabled playguard as we need to redo this logic a bit
           // <PlayGuard>
@@ -97,8 +97,8 @@ export const router = createBrowserRouter(
           // </PlayGuard>
         }
       />
-      <Route path="game/join/:gameName" element={<JoinGame />} />
-      <Route path="game/lobby/:gameName" element={<Lobby />} />
+      <Route path="game/join/:gameID" element={<JoinGame />} />
+      <Route path="game/lobby/:gameID" element={<Lobby />} />
       <Route path="user">
         <Route index element={<Navigate to={'./profile'} />} />
         <Route

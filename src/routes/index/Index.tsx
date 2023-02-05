@@ -1,5 +1,5 @@
 import { useAppDispatch } from 'app/Hooks';
-import { setGameStart } from 'features/game/GameSlice';
+import { clearGameInfo, setGameStart } from 'features/game/GameSlice';
 import { useEffect } from 'react';
 import CreateGame from './components/createGame/CreateGame';
 import GameList from './components/gameList/GameList';
@@ -9,7 +9,7 @@ const Index = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(setGameStart({ playerID: 0, gameID: 0, authKey: '' }));
+    dispatch(clearGameInfo());
   }, []);
 
   return (

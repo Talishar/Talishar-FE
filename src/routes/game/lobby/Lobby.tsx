@@ -283,7 +283,10 @@ const Lobby = () => {
               {(activeTab === 'chat' || isWideScreen) && <LobbyChat />}
             </div>
             {!gameLobby?.amIChoosingFirstPlayer ? (
-              <StickyFooter deckSize={deckSize} />
+              <StickyFooter
+                deckSize={deckSize}
+                submitSideboard={gameLobby?.submitSideboard === 'block'}
+              />
             ) : null}
           </Form>
         </Formik>

@@ -303,6 +303,7 @@ export const gameSlice = createSlice({
     closeOptionsMenu: (state) => {
       state.optionsMenu = { active: false };
     },
+    // sets game information if any
     setGameStart: (
       state,
       action: PayloadAction<{
@@ -324,6 +325,14 @@ export const gameSlice = createSlice({
       state.activeLayers = undefined;
       state.activeChainLink = undefined;
 
+      return state;
+    },
+    // for main menu, zero out all active game info.
+    clearGameInfo: (state) => {
+      state.gameInfo.gameID = 0;
+      state.gameInfo.playerID = 0;
+      state.gameInfo.authKey = '';
+      state.gameInfo.lastUpdate = 0;
       return state;
     },
     removeCardFromHand: (state, action: PayloadAction<{ card: Card }>) => {
@@ -478,5 +487,6 @@ export const {
   hideActiveLayer,
   showActiveLayer,
   setIsUpdateInProgressFalse,
-  clearGetLobbyRefresh
+  clearGetLobbyRefresh,
+  clearGameInfo
 } = actions;

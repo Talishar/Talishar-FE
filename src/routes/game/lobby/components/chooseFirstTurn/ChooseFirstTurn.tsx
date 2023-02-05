@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactEventHandler } from 'react';
 import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import { useChooseFirstPlayerMutation } from 'features/api/apiSlice';
@@ -10,7 +10,8 @@ const ChooseFirstTurn = () => {
     useChooseFirstPlayerMutation();
   const gameInfo = useAppSelector((state: RootState) => state.game.gameInfo);
 
-  const chooseFirst = async () => {
+  const chooseFirst = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
     try {
       const response = chooseFirstPlayer({
         gameName: gameInfo.gameID,
@@ -24,7 +25,8 @@ const ChooseFirstTurn = () => {
     }
   };
 
-  const chooseSecond = () => {
+  const chooseSecond = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
     try {
       const response = chooseFirstPlayer({
         gameName: gameInfo.gameID,

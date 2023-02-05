@@ -151,7 +151,7 @@ export const apiSlice = createApi({
     joinGame: builder.mutation({
       query: ({ ...body }: JoinGameAPI) => {
         return {
-          url: URL_END_POINT.CREATE_GAME,
+          url: URL_END_POINT.JOIN_GAME,
           method: 'POST',
           body: body
         };

@@ -6,9 +6,10 @@ import styles from './StickyFooter.module.css';
 
 export type DeckSize = {
   deckSize: number;
+  submitSideboard: boolean;
 };
 
-const StickyFooter = ({ deckSize }: DeckSize) => {
+const StickyFooter = ({ deckSize, submitSideboard }: DeckSize) => {
   const { errors, values, isValid } = useFormikContext<DeckResponse>();
   let errorArray = [] as string[];
   for (const [key, value] of Object.entries(errors)) {
@@ -28,7 +29,11 @@ const StickyFooter = ({ deckSize }: DeckSize) => {
         )}
       </div>
       <div className={styles.buttonHolder}>
-        <button disabled={!errors} className={styles.buttonClass} type="submit">
+        <button
+          className={styles.buttonClass}
+          type="submit"
+          disabled={!errors || !submitSideboard}
+        >
           Submit deck
         </button>
       </div>
