@@ -4,6 +4,8 @@ import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import { useSubmitChatMutation } from 'features/api/apiSlice';
 import styles from './ChatInput.module.css';
+import { GiChatBubble } from 'react-icons/gi';
+import classNames from 'classnames';
 
 export const ChatInput = () => {
   const gameInfo = useAppSelector((state: RootState) => state.game.gameInfo);
@@ -38,24 +40,31 @@ export const ChatInput = () => {
     setChatInput(e.target?.value);
   };
 
+  const submitButtonClass = classNames('secondary', styles.buttonDiv);
+
   return (
     <div className={styles.chatInputContainer}>
       <form onSubmit={handleSubmit}>
-        <input
-          className={styles.chatInput}
-          value={chatInput}
-          onChange={handleChange}
-          onKeyDown={(e) => {
-            e.stopPropagation();
-          }}
-          onKeyDownCapture={(e) => {
-            e.stopPropagation();
-          }}
-          placeholder={
-            gameInfo.playerID === 3 ? 'Chat Disabled' : 'Hit return to send.'
-          }
-          disabled={gameInfo.playerID === 3}
-        />
+        <div className={styles.flexBox}>
+          <input
+            className={styles.chatInput}
+            value={chatInput}
+            onChange={handleChange}
+            onKeyDown={(e) => {
+              e.stopPropagation();
+            }}
+            onKeyDownCapture={(e) => {
+              e.stopPropagation();
+            }}
+            placeholder={
+              gameInfo.playerID === 3 ? 'Chat Disabled' : 'Hit return to send.'
+            }
+            disabled={gameInfo.playerID === 3}
+          />
+          <button className={submitButtonClass} onClick={handleSubmit}>
+            <GiChatBubble />
+          </button>
+        </div>
       </form>
     </div>
   );

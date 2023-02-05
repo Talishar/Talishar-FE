@@ -1,115 +1,185 @@
+import { useAppDispatch } from 'app/Hooks';
 import classNames from 'classnames';
-import { Formik } from 'formik';
+import { GAME_FORMAT, GAME_VISIBILITY } from 'constants';
+import { useCreateGameMutation } from 'features/api/apiSlice';
+import { setGameStart } from 'features/game/GameSlice';
+import { Field, Form, Formik, FormikHelpers } from 'formik';
+import { CreateGameAPI } from 'interface/API/CreateGame.php';
+import { handleRequest } from 'msw';
 import React from 'react';
+import { toast } from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 import styles from './CreateGame.module.css';
 
 const CreateGame = () => {
-  const initialValues = {
-    Wibble: '1'
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const isLoggedIn = false; // TODO: useAuth(); handler or something
+  const [createGame, createGameResult] = useCreateGameMutation();
+  const initialValues: CreateGameAPI = {
+    deck: '',
+    fabdb: '',
+    deckTestMode: false,
+    format: GAME_FORMAT.CLASSIC_CONSTRUCTED,
+    visibility: GAME_VISIBILITY.PUBLIC,
+    decksToTry: '',
+    favoriteDeck: false,
+    favoriteDecks: '',
+    gameDescription: ''
   };
-  const clickSubmitOptionsHandler = () => {
-    console.log('click create game');
+
+  const handleSubmit = async (
+    values: CreateGameAPI,
+    { setSubmitting }: FormikHelpers<CreateGameAPI>
+  ) => {
+    setSubmitting(true);
+    try {
+      const response = await createGame(values).unwrap();
+      if (response.error) {
+        console.warn('error when loading thing');
+        // TODO: Show a modal or something to say there has been an error and to try again.
+        return;
+      } else {
+        if (!response.playerID || !response.gameName || !response.authKey) {
+          throw new Error('A required param is missing');
+        }
+        dispatch(
+          setGameStart({
+            playerID: response.playerID ?? 0,
+            gameID: response.gameName ?? 0,
+            authKey: response.authKey ?? ''
+          })
+        );
+        navigate(`/game/lobby/${response.gameName}`);
+      }
+    } catch (error) {
+      console.warn(error);
+      toast.error(String(error));
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleButtonClick = (e: React.MouseEvent<HTMLElement>) => {
+    e.preventDefault();
+    console.log('click mcclickerson');
+    // navigate('/game/join/');
   };
 
   const buttonClass = classNames(styles.button, 'primary');
+
   return (
     <div>
       <article>
         <h3>Create New Game</h3>
         <h1>DOES NOT WORK GO TO REGULAR SITE TO PLAY ETC</h1>
-        <Formik
-          initialValues={initialValues}
-          onSubmit={clickSubmitOptionsHandler}
-        >
-          {({ values }) => (
-            <form>
+        <Formik initialValues={initialValues} onSubmit={handleSubmit}>
+          {({ values, isSubmitting }) => (
+            <Form>
               <div className={styles.formContainer}>
-                <label>
-                  Favorite Deck
-                  <select
-                    name="login"
-                    id="selectFavorite"
-                    placeholder="Login"
-                    aria-label="Login"
-                  >
-                    <option>One</option>
-                    <option>Two</option>
-                  </select>
-                </label>
+                {!!isLoggedIn && (
+                  <label>
+                    Favorite Deck
+                    <select
+                      name="login"
+                      id="selectFavorite"
+                      placeholder="Login"
+                      aria-label="Login"
+                    >
+                      <option>One</option>
+                      <option>Two</option>
+                    </select>
+                  </label>
+                )}
                 <fieldset>
                   <label>
                     Deck Link:
-                    <input
+                    <Field
                       type="text"
-                      id="deckLink"
-                      name="deckLink"
+                      id="fabdb"
+                      name="fabdb"
                       aria-label="Deck Link"
                     />
                   </label>
                   <label>
-                    <input
+                    <Field
                       type="checkbox"
                       role="switch"
-                      id="remember"
-                      name="remember"
+                      id="favoriteDeck"
+                      name="favoriteDeck"
                     />
                     Save Deck to ❤️ Favorites
                   </label>
                 </fieldset>
                 <label>
                   Game Name
-                  <input
+                  <Field
                     type="text"
-                    id="deckLink"
-                    name="deckLink"
-                    aria-label="Deck Link"
+                    id="gameDescription"
+                    name="gameDescription"
+                    aria-label="Game Name"
                     placeholder="Defaults to Game#14321542"
                   />
                 </label>
                 <label>
                   Format
-                  <select
+                  <Field
+                    as="select"
                     name="format"
-                    id="selectFormat"
-                    placeholder="Format"
+                    id="format"
+                    placeholder={GAME_FORMAT.BLITZ}
                     aria-label="Format"
                   >
-                    <option>Blitz</option>
-                    <option>Classic Constructed</option>
-                    <option>Competitive Blitz</option>
-                    <option>Competitive CC</option>
-                    <option>Commoner</option>
-                    <option>Clash</option>
-                    <option>Open Format (no restrictions!)</option>
-                  </select>
+                    <option value={GAME_FORMAT.BLITZ}>Blitz</option>
+                    <option value={GAME_FORMAT.CLASSIC_CONSTRUCTED}>
+                      Classic Constructed
+                    </option>
+                    <option value={GAME_FORMAT.COMPETITIVE_BLITZ}>
+                      Competitive Blitz
+                    </option>
+                    <option value={GAME_FORMAT.COMPETITIVE_CC}>
+                      Competitive CC
+                    </option>
+                    <option value={GAME_FORMAT.COMMONER}>Commoner</option>
+                    <option value={GAME_FORMAT.CLASH}>Clash</option>
+                    <option value={GAME_FORMAT.OPEN_FORMAT}>
+                      Open Format (no restrictions!)
+                    </option>
+                  </Field>
                 </label>
                 <label>
                   Visibility
-                  <select
-                    name="format"
-                    id="selectFormat"
-                    placeholder="Format"
-                    aria-label="Format"
+                  <Field
+                    as="select"
+                    name="visibility"
+                    id="selectvisibility"
+                    placeholder={GAME_VISIBILITY.PUBLIC}
+                    aria-label="Visibility"
                   >
-                    <option>Public</option>
-                    <option>Private</option>
-                  </select>
+                    <option value={GAME_VISIBILITY.PUBLIC}>Public</option>
+                    <option value={GAME_VISIBILITY.PRIVATE}>Private</option>
+                  </Field>
                 </label>
                 <label>
-                  <input
+                  <Field
                     type="checkbox"
                     role="switch"
                     id="deckTestMode"
                     name="deckTestMode"
+                    aria-label="Single Player"
                   />
                   Single Player
                   <br />
                 </label>
               </div>
-              <button type="submit" className={buttonClass}>
-                Login
+              <button
+                type="submit"
+                className={buttonClass}
+                aria-busy={isSubmitting}
+              >
+                Create Game
               </button>
-            </form>
+            </Form>
           )}
         </Formik>
       </article>

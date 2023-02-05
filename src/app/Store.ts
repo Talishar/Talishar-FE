@@ -1,7 +1,7 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import gameReducer from '../features/game/GameSlice';
 import type { PreloadedState } from '@reduxjs/toolkit';
-import { apiSlice } from '../features/api/apiSlice';
+import { apiSlice, rtkQueryErrorToaster } from '../features/api/apiSlice';
 
 export const store = configureStore({
   reducer: {
@@ -9,7 +9,7 @@ export const store = configureStore({
     [apiSlice.reducerPath]: apiSlice.reducer
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(apiSlice.middleware)
+    getDefaultMiddleware().concat([rtkQueryErrorToaster, apiSlice.middleware])
 });
 
 export const setupStore = (preloadedState?: PreloadedState<RootState>) => {
@@ -19,7 +19,10 @@ export const setupStore = (preloadedState?: PreloadedState<RootState>) => {
       [apiSlice.reducerPath]: apiSlice.reducer
     },
     middleware: (getDefaultMiddleware) =>
-      getDefaultMiddleware().concat(apiSlice.middleware),
+      getDefaultMiddleware().concat([
+        rtkQueryErrorToaster,
+        apiSlice.middleware
+      ]),
     preloadedState
   });
 };

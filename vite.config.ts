@@ -15,7 +15,7 @@ export default ({ mode }) => {
     ? process.env.VITE_DEV_PORT
     : '8080';
   const devDirectory = !!process.env.VITE_DEV_DIRECTORY
-    ? process.env.VITE_DEV_PORT
+    ? process.env.VITE_DEV_DIRECTORY
     : 'game';
 
   return defineConfig({

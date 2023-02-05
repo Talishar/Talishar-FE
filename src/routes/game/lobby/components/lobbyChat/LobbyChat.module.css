@@ -1,0 +1,14 @@
+.container {
+  height: 500px;
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  justify-content: flex-end;
+  align-items: flex-end;
+  max-width: 100%;
+  min-width: 0px;
+}
+
+.spacer {
+  height: 5em;
+}

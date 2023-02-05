@@ -15,6 +15,12 @@ export const API_URL_DEV = import.meta.env.DEV
 // what playmat is the default
 export const DEFAULT_PLAYMAT = `Default`;
 
+// in pixels
+export const BREAKPOINT_SMALL = 576;
+export const BREAKPOINT_MEDIUM = 768;
+export const BREAKPOINT_LARGE = 992;
+export const BREAKPOINT_EXTRA_LARGE = 1200;
+
 // How long in ms for a click versus 'long press'
 // TODO: make this user definable
 export const LONG_PRESS_TIMER = 250;
@@ -91,4 +97,42 @@ export const PROCESS_INPUT = {
 export const DEFAULT_SHORTCUTS = {
   TOGGLE_OPTIONS_MENU: 'KeyM',
   PASS_TURN: 'Space'
+};
+
+export const GAME_FORMAT = {
+  CLASSIC_CONSTRUCTED: 'cc',
+  COMPETITIVE_CC: 'compcc',
+  BLITZ: 'blitz',
+  COMPETITIVE_BLITZ: 'compblitz',
+  OPEN_FORMAT: 'livinglegendscc',
+  COMMONER: 'commoner',
+  CLASH: 'clash'
+};
+
+export const URL_END_POINT = {
+  GET_GAME_LIST: '/APIs/GetGameList.php',
+  CREATE_GAME: '/APIs/CreateGame.php',
+  SUBMIT_CHAT: 'SubmitChat.php',
+  GET_POPUP: 'GetPopupAPI.php',
+  GAME_STATE_POLL: 'GetNextTurn3.php?',
+  PROCESS_INPUT: 'ProcessInput2.php?',
+  PARSE_GAME_FILE: '/APIs/ParseGameFile.php',
+  CHOOSE_FIRST_PLAYER: '/APIs/ChooseFirstPlayer.php',
+  GET_FAVORITE_DECKS: '/APIs/GetFavoriteDecks.php',
+  GET_LOBBY_INFO: '/APIs/GetLobbyInfo.php',
+  GET_LOBBY_REFRESH: '/APIs/GetLobbyRefresh.php',
+  JOIN_GAME: '/APIs/JoinGame.php',
+  SUBMIT_SIDEBOARD: '/APIs/SubmitSideboard.php',
+  USER_PROFILE: '/APIs/UserProfileAPI.php',
+  START_GAME_LEGACY: 'Start.php'
+};
+
+export const GAME_VISIBILITY = {
+  PUBLIC: 'public',
+  PRIVATE: 'private'
+};
+
+export const ADD_DECK_TO_FAVORITES = {
+  TRUE: 1,
+  FALSE: 0
 };

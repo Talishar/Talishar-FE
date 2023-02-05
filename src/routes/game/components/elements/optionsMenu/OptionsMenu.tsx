@@ -137,7 +137,7 @@ const OptionsContent = () => {
             ({ values }) => (
               <div>
                 <Form>
-                  <div>
+                  <div className={styles.leftColumn}>
                     <fieldset>
                       <legend>
                         <strong>Priority Settings:</strong>

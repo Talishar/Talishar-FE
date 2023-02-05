@@ -9,4 +9,5 @@ code {
 html,
 body {
   overflow-y: auto;
+  --primary-inverse: #000000;
 }

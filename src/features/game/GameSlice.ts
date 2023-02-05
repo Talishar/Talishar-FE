@@ -8,11 +8,16 @@ import {
   API_URL_LIVE,
   API_URL_DEV,
   GAME_LIMIT_LIVE,
-  GAME_LIMIT_BETA
+  GAME_LIMIT_BETA,
+  URL_END_POINT
 } from 'constants';
 import Button from '../Button';
 import GameState from '../GameState';
 import { FaSignal } from 'react-icons/fa';
+import {
+  GetLobbyRefresh,
+  GetLobbyRefreshResponse
+} from 'interface/API/GetLobbyRefresh.php';
 
 export const nextTurn = createAsyncThunk(
   'game/nextTurn',
@@ -22,10 +27,10 @@ export const nextTurn = createAsyncThunk(
   ) => {
     const queryURL =
       params.game.gameID > GAME_LIMIT_LIVE
-        ? `${API_URL_LIVE}GetNextTurn3.php?`
+        ? `${API_URL_LIVE}${URL_END_POINT.GAME_STATE_POLL}`
         : params.game.gameID > GAME_LIMIT_BETA
-        ? `${API_URL_BETA}GetNextTurn3.php?`
-        : `${API_URL_DEV}GetNextTurn3.php?`;
+        ? `${API_URL_BETA}${URL_END_POINT.GAME_STATE_POLL}`
+        : `${API_URL_DEV}${URL_END_POINT.GAME_STATE_POLL}`;
     const queryParams = new URLSearchParams({
       gameName: String(params.game.gameID),
       playerID: String(params.game.playerID),
@@ -37,10 +42,11 @@ export const nextTurn = createAsyncThunk(
     while (waitingForJSONResponse) {
       try {
         const response = await fetch(queryURL + queryParams, {
-          method: 'GET',
+          method: 'POST',
           headers: {},
           credentials: 'include',
-          signal: params.signal
+          signal: params.signal,
+          body: JSON.stringify(queryParams)
         });
         let data = await response.text();
         if (data.toString().trim() === '0') {
@@ -56,6 +62,61 @@ export const nextTurn = createAsyncThunk(
         const parsedData = JSON.parse(data);
         const gs = ParseGameState(parsedData);
         return gs;
+      } catch (e) {
+        if (params.signal?.aborted) {
+          return console.log('fetch aborted');
+        }
+        waitingForJSONResponse = false;
+        console.log(e);
+        return console.error(e);
+      }
+    }
+  }
+);
+
+export const gameLobby = createAsyncThunk(
+  'gameLobby/getLobby',
+  async (
+    params: { game: GameInfo; signal: AbortSignal | undefined },
+    { getState }
+  ) => {
+    const queryURL =
+      params.game.gameID > GAME_LIMIT_LIVE
+        ? `${API_URL_LIVE}${URL_END_POINT.GET_LOBBY_REFRESH}`
+        : params.game.gameID > GAME_LIMIT_BETA
+        ? `${API_URL_BETA}${URL_END_POINT.GET_LOBBY_REFRESH}`
+        : `${API_URL_DEV}${URL_END_POINT.GET_LOBBY_REFRESH}`;
+
+    const requestBody = {
+      gameName: params.game.gameID,
+      playerID: params.game.playerID,
+      authKey: params.game.authKey,
+      lastUpdate: params.game.lastUpdate
+    } as GetLobbyRefresh;
+
+    let waitingForJSONResponse = true;
+    while (waitingForJSONResponse) {
+      try {
+        const response = await fetch(queryURL, {
+          method: 'POST',
+          headers: {},
+          credentials: 'include',
+          signal: params.signal,
+          body: JSON.stringify(requestBody)
+        });
+        let data = await response.text();
+        if (data.toString().trim() === '0') {
+          continue;
+        }
+        waitingForJSONResponse = false;
+        data = data.toString().trim();
+        const indexOfBraces = data.indexOf('{');
+        if (indexOfBraces !== 0) {
+          console.log(data.substring(0, indexOfBraces));
+          data = data.substring(indexOfBraces);
+        }
+        const parsedData = JSON.parse(data) as GetLobbyRefreshResponse;
+        return parsedData;
       } catch (e) {
         if (params.signal?.aborted) {
           return console.log('fetch aborted');
@@ -84,10 +145,10 @@ export const playCard = createAsyncThunk(
 
     const queryURL =
       gameInfo.gameID > GAME_LIMIT_LIVE
-        ? `${API_URL_LIVE}ProcessInput2.php?`
+        ? `${API_URL_LIVE}${URL_END_POINT.PROCESS_INPUT}`
         : gameInfo.gameID > GAME_LIMIT_BETA
-        ? `${API_URL_BETA}ProcessInput2.php?`
-        : `${API_URL_DEV}ProcessInput2.php?`;
+        ? `${API_URL_BETA}${URL_END_POINT.PROCESS_INPUT}`
+        : `${API_URL_DEV}${URL_END_POINT.PROCESS_INPUT}`;
     const queryParams = new URLSearchParams({
       gameName: String(gameInfo.gameID),
       playerID: String(gameInfo.playerID),
@@ -116,10 +177,10 @@ export const submitButton = createAsyncThunk(
     const { game } = getState() as { game: GameState };
     const queryURL =
       game.gameInfo.gameID > GAME_LIMIT_LIVE
-        ? `${API_URL_LIVE}ProcessInput2.php?`
+        ? `${API_URL_LIVE}${URL_END_POINT.PROCESS_INPUT}`
         : game.gameInfo.gameID > GAME_LIMIT_BETA
-        ? `${API_URL_BETA}ProcessInput2.php?`
-        : `${API_URL_DEV}ProcessInput2.php?`;
+        ? `${API_URL_BETA}${URL_END_POINT.PROCESS_INPUT}`
+        : `${API_URL_DEV}${URL_END_POINT.PROCESS_INPUT}`;
     const queryParams = new URLSearchParams({
       gameName: String(game.gameInfo.gameID),
       playerID: String(game.gameInfo.playerID),
@@ -147,10 +208,10 @@ export const submitMultiButton = createAsyncThunk(
     const { game } = getState() as { game: GameState };
     const queryURL =
       game.gameInfo.gameID > GAME_LIMIT_LIVE
-        ? `${API_URL_LIVE}ProcessInput2.php?`
+        ? `${API_URL_LIVE}${URL_END_POINT.PROCESS_INPUT}`
         : game.gameInfo.gameID > GAME_LIMIT_BETA
-        ? `${API_URL_BETA}ProcessInput2.php?`
-        : `${API_URL_DEV}ProcessInput2.php?`;
+        ? `${API_URL_BETA}${URL_END_POINT.PROCESS_INPUT}`
+        : `${API_URL_DEV}${URL_END_POINT.PROCESS_INPUT}`;
     const queryParams = new URLSearchParams({
       gameName: String(game.gameInfo.gameID),
       playerID: String(game.gameInfo.playerID),
@@ -242,6 +303,7 @@ export const gameSlice = createSlice({
     closeOptionsMenu: (state) => {
       state.optionsMenu = { active: false };
     },
+    // sets game information if any
     setGameStart: (
       state,
       action: PayloadAction<{
@@ -250,14 +312,28 @@ export const gameSlice = createSlice({
         authKey: string;
       }>
     ) => {
-      (state.gameInfo.gameID = action.payload.gameID),
-        (state.gameInfo.playerID = action.payload.playerID),
-        (state.gameInfo.authKey = action.payload.authKey),
-        (state.gameInfo.lastUpdate = 0),
-        (state.playerOne = {}),
-        (state.playerTwo = {});
+      state.gameInfo.gameID = action.payload.gameID;
+      state.gameInfo.playerID = !!state.gameInfo.playerID
+        ? state.gameInfo.playerID
+        : action.payload.playerID;
+      state.gameInfo.authKey = !!state.gameInfo.authKey
+        ? state.gameInfo.authKey
+        : action.payload.authKey;
+      state.gameInfo.lastUpdate = 0;
+      state.playerOne = {};
+      state.playerTwo = {};
       state.activeLayers = undefined;
       state.activeChainLink = undefined;
+
+      return state;
+    },
+    // for main menu, zero out all active game info.
+    clearGameInfo: (state) => {
+      state.gameInfo.gameID = 0;
+      state.gameInfo.playerID = 0;
+      state.gameInfo.authKey = '';
+      state.gameInfo.lastUpdate = 0;
+      return state;
     },
     removeCardFromHand: (state, action: PayloadAction<{ card: Card }>) => {
       state.playerOne.Hand = state.playerOne?.Hand?.filter(
@@ -285,6 +361,9 @@ export const gameSlice = createSlice({
     },
     showActiveLayer: (state) => {
       state.activeLayers = { ...state.activeLayers, active: true };
+    },
+    clearGetLobbyRefresh: (state) => {
+      state.gameLobby = undefined;
     }
   },
   // The `extraReducers` field lets the slice handle actions defined elsewhere,
@@ -357,6 +436,31 @@ export const gameSlice = createSlice({
       state.isPlayerInputInProgress = false;
       return state;
     });
+
+    // nextTurn
+    builder.addCase(gameLobby.fulfilled, (state, action) => {
+      if (action.payload === undefined) {
+        return state;
+      }
+      state.isUpdateInProgress = false;
+      state.isPlayerInputInProgress = false;
+
+      state.gameInfo.lastUpdate = action.payload.lastUpdate;
+      state.chatLog = [action.payload.gameLog ?? ''];
+
+      // gameInfo
+      state.gameLobby = action.payload;
+
+      return state;
+    });
+    builder.addCase(gameLobby.pending, (state, action) => {
+      state.isUpdateInProgress = true;
+      return state;
+    });
+    builder.addCase(gameLobby.rejected, (state, action) => {
+      state.isUpdateInProgress = false;
+      return state;
+    });
   }
 });
 
@@ -382,5 +486,7 @@ export const {
   hideChainLinkSummary,
   hideActiveLayer,
   showActiveLayer,
-  setIsUpdateInProgressFalse
+  setIsUpdateInProgressFalse,
+  clearGetLobbyRefresh,
+  clearGameInfo
 } = actions;

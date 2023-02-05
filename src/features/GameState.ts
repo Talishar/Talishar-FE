@@ -1,3 +1,4 @@
+import { GetLobbyRefreshResponse } from 'interface/API/GetLobbyRefresh.php';
 import Button from './Button';
 import { Card } from './Card';
 import CombatChainLink from './CombatChainLink';
@@ -99,4 +100,5 @@ export default interface GameState {
     eventType: string;
     eventValue?: string;
   }[];
+  gameLobby?: GetLobbyRefreshResponse;
 }

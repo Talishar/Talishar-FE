@@ -35,7 +35,7 @@ export interface TurnResult {
 
 const EndGameStats = (data: EndGameData) => {
   return (
-    <div className={styles.cardListContents}>
+    <div className={styles.cardListContents} data-testid="test-stats">
       <EndGameMenuOptions />
       <div>
         <h2>Card Play Stats</h2>

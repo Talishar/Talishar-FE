@@ -5,14 +5,43 @@ import {
   FetchArgs,
   FetchBaseQueryError
 } from '@reduxjs/toolkit/query/react';
+import { isRejected, isRejectedWithValue } from '@reduxjs/toolkit';
+import type { MiddlewareAPI, Middleware } from '@reduxjs/toolkit';
 import { RootState } from 'app/Store';
 import {
   API_URL_BETA,
   API_URL_DEV,
   API_URL_LIVE,
   GAME_LIMIT_BETA,
-  GAME_LIMIT_LIVE
+  GAME_LIMIT_LIVE,
+  URL_END_POINT
 } from 'constants';
+import {
+  CreateGameAPI,
+  CreateGameResponse
+} from 'interface/API/CreateGame.php';
+import { toast } from 'react-hot-toast';
+import { JoinGameAPI, JoinGameResponse } from 'interface/API/JoinGame.php';
+import {
+  GetLobbyInfo,
+  GetLobbyInfoResponse
+} from 'interface/API/GetLobbyInfo.php';
+import { ChooseFirstPlayer } from 'interface/API/ChooseFirstPlayer.php';
+import { SubmitSideboardAPI } from 'interface/API/SubmitSideboard.php';
+
+// catch warnings and show a toast if we get one.
+export const rtkQueryErrorToaster: Middleware =
+  (api: MiddlewareAPI) => (next) => (action) => {
+    if (isRejectedWithValue(action)) {
+      console.warn('Rejected action:', action);
+      toast.error(
+        `Error: ${action.payload} - ${
+          action.error?.message ?? 'an error happened'
+        }`
+      );
+    }
+    return next(action);
+  };
 
 // Different request URLs depending on the gameID number, beta, live or dev.
 const dynamicBaseQuery: BaseQueryFn<
@@ -27,6 +56,9 @@ const dynamicBaseQuery: BaseQueryFn<
   }
   if (gameId > GAME_LIMIT_LIVE) {
     baseUrl = API_URL_LIVE;
+  }
+  if (gameId === 0) {
+    baseUrl = import.meta.env.DEV ? API_URL_DEV : API_URL_LIVE;
   }
   const rawBaseQuery = fetchBaseQuery({ baseUrl, credentials: 'include' });
   return rawBaseQuery(args, webApi, extraOptions);
@@ -82,11 +114,86 @@ export const apiSlice = createApi({
       query: () => {
         return {
           url: import.meta.env.DEV
-            ? 'http://127.0.0.1:5173/api/live/APIs/GetGameList.php'
-            : API_URL_LIVE + 'APIs/GetGameList.php',
+            ? `http://127.0.0.1:5173/api/live/${URL_END_POINT.GET_GAME_LIST}`
+            : API_URL_LIVE + URL_END_POINT.GET_GAME_LIST,
           method: 'GET',
           credentials: 'omit',
           params: {}
+        };
+      }
+    }),
+    getFavoriteDecks: builder.query({
+      query: () => {
+        return {
+          url: URL_END_POINT.GET_FAVORITE_DECKS
+        };
+      }
+    }),
+    createGame: builder.mutation({
+      query: ({ ...body }: CreateGameAPI) => {
+        return {
+          url: URL_END_POINT.CREATE_GAME,
+          method: 'POST',
+          body: body
+        };
+      },
+      // Pick out data and prevent nested properties in a hook or selector
+      transformResponse: (response: CreateGameResponse, meta, arg) => {
+        return response;
+      },
+      // Pick out errors and prevent nested properties in a hook or selector
+      transformErrorResponse: (
+        response: { status: string | number },
+        meta,
+        arg
+      ) => response.status
+    }),
+    joinGame: builder.mutation({
+      query: ({ ...body }: JoinGameAPI) => {
+        return {
+          url: URL_END_POINT.JOIN_GAME,
+          method: 'POST',
+          body: body
+        };
+      },
+      // Pick out data and prevent nested properties in a hook or selector
+      transformResponse: (response: JoinGameResponse, meta, arg) => {
+        return response;
+      },
+      // Pick out errors and prevent nested properties in a hook or selector
+      transformErrorResponse: (
+        response: { status: string | number },
+        meta,
+        arg
+      ) => response.status
+    }),
+    getLobbyInfo: builder.query({
+      query: ({ ...body }: GetLobbyInfo) => {
+        return {
+          url: URL_END_POINT.GET_LOBBY_INFO,
+          method: 'POST',
+          body: body
+        };
+      },
+      transformResponse: (response: GetLobbyInfoResponse, meta, arg) => {
+        return response;
+      }
+    }),
+    chooseFirstPlayer: builder.mutation({
+      query: ({ ...body }: ChooseFirstPlayer) => {
+        return {
+          url: URL_END_POINT.CHOOSE_FIRST_PLAYER,
+          method: 'POST',
+          body: body
+        };
+      }
+    }),
+    submitSideboard: builder.mutation({
+      query: ({ ...body }: SubmitSideboardAPI) => {
+        return {
+          url: URL_END_POINT.SUBMIT_SIDEBOARD,
+          method: 'POST',
+          body: body
         };
       }
     })
@@ -97,5 +204,11 @@ export const apiSlice = createApi({
 export const {
   useGetPopUpContentQuery,
   useSubmitChatMutation,
-  useGetGameListQuery
+  useGetGameListQuery,
+  useGetFavoriteDecksQuery,
+  useCreateGameMutation,
+  useJoinGameMutation,
+  useGetLobbyInfoQuery,
+  useChooseFirstPlayerMutation,
+  useSubmitSideboardMutation
 } = apiSlice;

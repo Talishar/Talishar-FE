@@ -62,6 +62,10 @@
   width: 50%;
 }
 
+.leftColumn {
+  overflow-y: auto;
+}
+
 .rightColumn {
   display: flex;
   flex-direction: column;
