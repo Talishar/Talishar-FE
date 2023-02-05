@@ -2,8 +2,8 @@
   --aspect: 1920px;
 }
 
-.app {
-  color: var(--white);
+html,
+body {
   padding: 0;
   margin: 0;
   width: 100vw;
@@ -55,47 +55,6 @@
   flex-direction: column;
   order: 2;
   width: 100%;
-}
-
-.cardStackZone {
-  width: 90%;
-  height: 100%;
-  border-radius: 5%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.permanentZone {
-  grid-column-start: 2;
-  grid-column-end: 7;
-  background: rgba(50, 50, 50, 0.5);
-  color: var(--white);
-}
-
-.arsenalZone {
-  flex-grow: 1;
-  background: rgba(50, 50, 50, 0.5);
-  color: var(--white);
-}
-
-.graveyardZone,
-.banishedZone {
-  flex-grow: 1;
-  background: rgba(50, 50, 50, 0.5);
-  color: var(--white);
-}
-
-.pitchZone {
-  flex-grow: 1;
-  background: rgba(50, 50, 50, 0.5);
-  color: var(--white);
-}
-
-.deckZone {
-  flex-grow: 1;
-  background: rgba(50, 50, 50, 0.5);
-  color: var(--white);
 }
 
 .defaultToast {
