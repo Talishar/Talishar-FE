@@ -1,4 +1,9 @@
+.lobbyClass {
+  user-select: none;
+}
+
 .titleContainer {
+  height: 240px;
   width: 100%;
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -20,10 +25,38 @@
   height: 100%;
   padding: 1em;
   padding-top: 5em;
-  color: #f4eded;
+  color: var(--white);
   text-shadow: -1px 1px 2px #000, 1px 1px 2px #000, 1px -1px 0 #000,
     -1px -1px 0 #000;
   background-color: rgba(0, 0, 0, 0.35);
+}
+
+.heroNameStickyBar {
+  position: -webkit-sticky; /* Safari */
+  position: sticky;
+  top: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  align-content: center;
+  flex-direction: row;
+  padding: 0 1em;
+  height: 32px;
+  top: 0;
+  background-color: var(--card-background-color);
+  z-index: 10;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+.heroName {
+  color: var(--white);
+  text-shadow: -1px 1px 2px #000, 1px 1px 2px #000, 1px -1px 0 #000,
+    -1px -1px 0 #000;
+  margin-bottom: 0px;
 }
 
 nav {
@@ -33,6 +66,7 @@ nav {
   top: 0;
   background-color: var(--card-background-color);
   z-index: 10;
+  top: 32px;
 }
 
 .contentContainer {

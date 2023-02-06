@@ -4,6 +4,9 @@
   right: 0;
   left: 0;
   background-color: var(--card-background-color);
+}
+
+.dynamicContainer {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   padding: 1em 0.5em;

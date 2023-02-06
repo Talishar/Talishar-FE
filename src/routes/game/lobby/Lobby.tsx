@@ -27,13 +27,14 @@ import {
   GAME_LIMIT_BETA,
   API_URL_LIVE,
   API_URL_BETA,
-  API_URL_DEV
+  API_URL_DEV,
+  BREAKPOINT_EXTRA_LARGE
 } from 'constants';
 import ChooseFirstTurn from './components/chooseFirstTurn/ChooseFirstTurn';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import { SubmitSideboardAPI } from 'interface/API/SubmitSideboard.php';
 import { useNavigate } from 'react-router-dom';
-import { nextTurn } from 'features/game/GameSlice';
+import CardPortal from '../components/elements/cardPortal/CardPortal';
 
 const Lobby = () => {
   const [activeTab, setActiveTab] = useState('equipment');
@@ -71,7 +72,7 @@ const Lobby = () => {
   }, [!!gameLobby?.amIChoosingFirstPlayer]);
 
   useEffect(() => {
-    setIsWideScreen(width > BREAKPOINT_LARGE);
+    setIsWideScreen(width > BREAKPOINT_EXTRA_LARGE);
   }, [width]);
 
   const handleEquipmentClick = () => {
@@ -182,18 +183,21 @@ const Lobby = () => {
       is1H: card.is1H
     } as Weapon;
   });
+
+  const mainClassNames = classNames('container', styles.lobbyClass);
+
   return (
-    <div>
+    <main className={mainClassNames}>
       <LobbyUpdateHandler isSubmitting={isSubmitting} />
       <div>
         <Formik
           initialValues={{
             deck: deckIndexed,
             weapons: weaponsIndexed,
-            head: data.deck.head[0],
-            chest: data.deck.chest[0],
-            arms: data.deck.arms[0],
-            legs: data.deck.legs[0]
+            head: [...data.deck.head, ...data.deck.headSB, 'NONE00'][0],
+            chest: [...data.deck.chest, ...data.deck.chestSB, 'NONE00'][0],
+            arms: [...data.deck.arms, ...data.deck.armsSB, 'NONE00'][0],
+            legs: [...data.deck.legs, ...data.deck.legsSB, 'NONE00'][0]
           }}
           onSubmit={handleFormSubmission}
           validationSchema={deckValidation(deckSize)}
@@ -207,7 +211,6 @@ const Lobby = () => {
               >
                 <div className={styles.dimPic}>
                   <h3>{data.displayName}</h3>
-                  <h5>{data.deck.heroName}</h5>
                 </div>
               </div>
               <div
@@ -216,12 +219,15 @@ const Lobby = () => {
               >
                 <div className={styles.dimPic}>
                   <h3>{gameLobby?.theirName ?? ''}</h3>
-                  <h5>
-                    {gameLobby?.theirHeroName != ''
-                      ? gameLobby?.theirHeroName
-                      : 'Waiting For Opponent'}
-                  </h5>
                 </div>
+              </div>
+            </div>
+            <div className={styles.heroNameStickyBar}>
+              <div className={styles.heroName}>{data.deck.heroName}</div>
+              <div className={styles.heroName}>
+                {gameLobby?.theirHeroName != ''
+                  ? gameLobby?.theirHeroName
+                  : 'Waiting For Opponent'}
               </div>
             </div>
             {gameLobby?.amIChoosingFirstPlayer ? (
@@ -291,7 +297,8 @@ const Lobby = () => {
           </Form>
         </Formik>
       </div>
-    </div>
+      <CardPortal />
+    </main>
   );
 };
 
