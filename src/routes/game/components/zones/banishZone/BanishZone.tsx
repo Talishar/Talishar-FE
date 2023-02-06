@@ -20,7 +20,7 @@ export const BanishZone = React.memo((prop: Displayrow) => {
 
   const banishZoneDisplay = () => {
     // TODO: send get request to get this (async thunk)
-    const isPlayerPronoun = isPlayer ? 'Your' : 'Your Opponents';
+    const isPlayerPronoun = isPlayer ? 'Your' : "Your Opponent's";
     dispatch(
       setCardListFocus({
         cardList: banishZone,
