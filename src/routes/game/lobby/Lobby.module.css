@@ -3,12 +3,16 @@
 }
 
 .titleContainer {
+  position: -webkit-sticky; /* Safari */
+  position: sticky;
+  top: -208px;
   height: 240px;
   width: 100%;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0.5em;
   background-color: black;
+  z-index: 10;
 }
 
 .leftCol {
@@ -21,14 +25,22 @@
 }
 
 .dimPic {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
   width: 100%;
   height: 100%;
   padding: 1em;
-  padding-top: 5em;
+  padding-bottom: 0.2em;
   color: var(--white);
   text-shadow: -1px 1px 2px #000, 1px 1px 2px #000, 1px -1px 0 #000,
     -1px -1px 0 #000;
   background-color: rgba(0, 0, 0, 0.35);
+}
+
+.dimPic > h3 {
+  vertical-align: bottom;
+  margin-bottom: 0.5em;
 }
 
 .heroNameStickyBar {

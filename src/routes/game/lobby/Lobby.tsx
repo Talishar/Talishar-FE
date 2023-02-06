@@ -211,6 +211,7 @@ const Lobby = () => {
               >
                 <div className={styles.dimPic}>
                   <h3>{data.displayName}</h3>
+                  <div className={styles.heroName}>{data.deck.heroName}</div>
                 </div>
               </div>
               <div
@@ -219,17 +220,15 @@ const Lobby = () => {
               >
                 <div className={styles.dimPic}>
                   <h3>{gameLobby?.theirName ?? ''}</h3>
+                  <div className={styles.heroName}>
+                    {gameLobby?.theirHeroName != ''
+                      ? gameLobby?.theirHeroName
+                      : 'Waiting For Opponent'}
+                  </div>
                 </div>
               </div>
             </div>
-            <div className={styles.heroNameStickyBar}>
-              <div className={styles.heroName}>{data.deck.heroName}</div>
-              <div className={styles.heroName}>
-                {gameLobby?.theirHeroName != ''
-                  ? gameLobby?.theirHeroName
-                  : 'Waiting For Opponent'}
-              </div>
-            </div>
+            {/* <div className={styles.heroNameStickyBar}></div> */}
             {gameLobby?.amIChoosingFirstPlayer ? (
               <ChooseFirstTurn />
             ) : (
