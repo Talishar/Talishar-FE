@@ -133,7 +133,7 @@ const SoulCount = (prop: Displayrow) => {
   );
 
   const soulDisplay = () => {
-    const playerPronoun = isPlayer ? 'Your' : 'Your Opponents';
+    const playerPronoun = isPlayer ? 'Your' : 'your oppoent's';
     const popUpName = isPlayer ? 'mySoulPopup' : 'theirSoulPopup';
     dispatch(
       setCardListLoadFocus({
