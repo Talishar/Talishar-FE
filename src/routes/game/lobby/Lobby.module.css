@@ -39,29 +39,7 @@
 }
 
 .dimPic > h3 {
-  vertical-align: bottom;
   margin-bottom: 0.5em;
-}
-
-.heroNameStickyBar {
-  position: -webkit-sticky; /* Safari */
-  position: sticky;
-  top: 0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  align-content: center;
-  flex-direction: row;
-  padding: 0 1em;
-  height: 32px;
-  top: 0;
-  background-color: var(--card-background-color);
-  z-index: 10;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  font-size: 1.125rem;
-  font-weight: 600;
 }
 
 .heroName {

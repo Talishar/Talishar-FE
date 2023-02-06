@@ -228,7 +228,6 @@ const Lobby = () => {
                 </div>
               </div>
             </div>
-            {/* <div className={styles.heroNameStickyBar}></div> */}
             {gameLobby?.amIChoosingFirstPlayer ? (
               <ChooseFirstTurn />
             ) : (
