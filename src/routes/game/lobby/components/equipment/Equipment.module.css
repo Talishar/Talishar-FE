@@ -49,7 +49,7 @@
   display: none;
 }
 
-.eqCategory input + img {
+.eqCategory input + div > img {
   filter: brightness(0.65);
   transition: filter 0.25s, box-shadow 0.25s;
 }

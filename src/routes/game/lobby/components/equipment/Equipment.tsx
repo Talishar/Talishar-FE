@@ -94,7 +94,8 @@ const Equipment = ({ lobbyInfo, weapons, weaponSB }: EquipmentProps) => {
           {chest.map((card, ix) => {
             return (
               <div key={`deck${ix}`} className={styles.cardContainer}>
-                <label>
+                <label className={styles.selection}>
+                  <Field type="radio" name="chest" value={`${card}`} />
                   <CardPopUp cardNumber={card}>
                     <CardImage
                       src={`/cardsquares/${card}.webp`}

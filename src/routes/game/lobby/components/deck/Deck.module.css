@@ -24,7 +24,7 @@
   display: none;
 }
 
-.container input + img {
+.container input + div > img {
   filter: brightness(0.5);
   transition: filter 0.25s, box-shadow 0.25s;
 }
