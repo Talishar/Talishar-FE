@@ -29,7 +29,7 @@
   transition: filter 0.25s, box-shadow 0.25s;
 }
 
-.container input[type='checkbox']:checked + img {
+.container input[type='checkbox']:checked + div > img {
   box-shadow: 0 0 0 1px var(--primary);
   filter: brightness(1);
 }

@@ -54,12 +54,12 @@
   transition: filter 0.25s, box-shadow 0.25s;
 }
 
-.eqCategory input[type='radio']:checked + img {
+.eqCategory input[type='radio']:checked + div > img {
   box-shadow: 0 0 0 0.2em var(--primary);
   filter: brightness(1);
 }
 
-.eqCategory input[type='checkbox']:checked + img {
+.eqCategory input[type='checkbox']:checked + div > img {
   box-shadow: 0 0 0 0.2em var(--primary);
   filter: brightness(1);
 }
