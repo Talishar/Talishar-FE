@@ -109,10 +109,6 @@ const Lobby = () => {
 
     try {
       const data: any = await submitSideboardMutation(requestBody).unwrap();
-
-      if (data.status === 'OK') {
-        navigate(`/game/play/${gameInfo.gameID}`);
-      }
     } catch (err) {
       console.error(err);
     } finally {
@@ -126,6 +122,11 @@ const Lobby = () => {
 
   if (data === undefined || data === null) {
     return null;
+  }
+
+  // if the game is ready then let's join the main game
+  if (gameLobby?.isMainGameReady) {
+    navigate(`/game/play/${gameInfo.gameID}`);
   }
 
   // I'm not sure how I can get formik to understand checkboxes and repeating cards so give them all an index here.
@@ -289,7 +290,7 @@ const Lobby = () => {
             {!gameLobby?.amIChoosingFirstPlayer ? (
               <StickyFooter
                 deckSize={deckSize}
-                submitSideboard={gameLobby?.submitSideboard === 'block'}
+                submitSideboard={gameLobby?.canSubmitSideboard ?? false}
               />
             ) : null}
           </Form>
