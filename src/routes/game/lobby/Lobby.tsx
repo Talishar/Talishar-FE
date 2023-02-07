@@ -33,7 +33,7 @@ import {
 import ChooseFirstTurn from './components/chooseFirstTurn/ChooseFirstTurn';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import { SubmitSideboardAPI } from 'interface/API/SubmitSideboard.php';
-import { useNavigate } from 'react-router-dom';
+import { createSearchParams, useNavigate } from 'react-router-dom';
 import CardPortal from '../components/elements/cardPortal/CardPortal';
 
 const Lobby = () => {
@@ -126,7 +126,14 @@ const Lobby = () => {
 
   // if the game is ready then let's join the main game
   if (gameLobby?.isMainGameReady) {
-    navigate(`/game/play/${gameInfo.gameID}`);
+    const searchParam = {
+      playerID: String(gameInfo.playerID),
+      gameName: String(gameInfo.gameID)
+    };
+    navigate({
+      pathname: `/game/play/${gameInfo.gameID}`,
+      search: `?${createSearchParams(searchParam)}`
+    });
   }
 
   // I'm not sure how I can get formik to understand checkboxes and repeating cards so give them all an index here.
