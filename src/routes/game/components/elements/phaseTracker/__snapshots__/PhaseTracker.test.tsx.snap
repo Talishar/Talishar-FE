@@ -13,12 +13,17 @@ exports[`renders without crashing 1`] = `
       />
     </div>
     <div
-      class="_phaseWidget_217ff1"
+      class="_notScaled_217ff1"
     >
       <div
-        class="_icon_217ff1"
-        style="left: 0em;"
-      />
+        class="_phaseWidget_217ff1"
+        style="transform: scale(0.8131764705882353);"
+      >
+        <div
+          class="_icon_217ff1"
+          style="left: 8.5px;"
+        />
+      </div>
     </div>
     <div
       class="_phaseTrackerBottomContainer_babf0d"

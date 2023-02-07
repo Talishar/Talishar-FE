@@ -1,20 +1,30 @@
+.notScaled {
+  height: 7em;
+  width: 100%;
+  min-width: 100%;
+  display: flex;
+  overflow: clip;
+  align-items: center;
+  justify-content: center;
+}
+
 .phaseWidget {
   background-image: url('../../../../../img/elements/Tracker.png');
   font-size: 1em;
-  width: 95%;
-  height: 9vh;
-  height: 9dvh;
+  width: 178px;
+  height: 85px;
   background-position: center;
   background-size: contain;
   background-repeat: no-repeat;
+  flex-shrink: 0;
 }
 
 .icon {
-  position: relative;
+  position: absolute;
   background-image: url('../../../../../img/elements/redPhaseMarker.png');
   background-size: contain;
-  height: 2.5em;
-  width: 2.5em;
-  top: 2.62em;
+  height: 30px;
+  width: 30px;
+  top: 40px;
   transition: all 0.25s ease-out;
 }
