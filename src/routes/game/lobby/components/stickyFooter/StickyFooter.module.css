@@ -8,9 +8,10 @@
 
 .dynamicContainer {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 3em 1fr 1fr 1fr;
   padding: 1em 0.5em;
-  grid-template-areas: 'content content submit';
+  gap: 1em;
+  grid-template-areas: 'clipboard content content submit';
   align-items: center;
 }
 
@@ -29,4 +30,8 @@
 
 .alarm {
   color: var(--alarm);
+}
+
+.clipboardButtonHolder {
+  grid-area: clipboard;
 }

@@ -19,17 +19,7 @@ import { shallowEqual } from 'react-redux';
 import { RootState } from 'app/Store';
 import { DeckResponse, Weapon } from 'interface/API/GetLobbyInfo.php';
 import LobbyUpdateHandler from './components/updateHandler/SideboardUpdateHandler';
-import {
-  GAME_FORMAT,
-  BREAKPOINT_LARGE,
-  URL_END_POINT,
-  GAME_LIMIT_LIVE,
-  GAME_LIMIT_BETA,
-  API_URL_LIVE,
-  API_URL_BETA,
-  API_URL_DEV,
-  BREAKPOINT_EXTRA_LARGE
-} from 'constants';
+import { GAME_FORMAT, BREAKPOINT_EXTRA_LARGE } from 'constants';
 import ChooseFirstTurn from './components/chooseFirstTurn/ChooseFirstTurn';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import { SubmitSideboardAPI } from 'interface/API/SubmitSideboard.php';
@@ -244,9 +234,7 @@ const Lobby = () => {
             ) : (
               !isWideScreen && (
                 <nav>
-                  <ul>
-                    <li>Get ready!</li>
-                  </ul>
+                  <ul></ul>
                   <ul>
                     <li>
                       <button
