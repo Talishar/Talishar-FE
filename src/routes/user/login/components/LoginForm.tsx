@@ -21,7 +21,6 @@ export const LoginForm = () => {
             rememberMe: false
         },
         onSubmit: async (values) => {
-            console.log(values);
             try {
                 await login(getLoginBody(values));
             } catch (err) {
@@ -29,8 +28,6 @@ export const LoginForm = () => {
             }
         }
     });
-
-    console.log(loginResult);
 
     return (
         <article className={styles.formContainer}>
