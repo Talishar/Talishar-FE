@@ -63,12 +63,6 @@ const CreateGame = () => {
     }
   };
 
-  const handleButtonClick = (e: React.MouseEvent<HTMLElement>) => {
-    e.preventDefault();
-    console.log('click mcclickerson');
-    // navigate('/game/join/');
-  };
-
   const buttonClass = classNames(styles.button, 'primary');
   console.log(createGameResult);
   return (
