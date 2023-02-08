@@ -62,14 +62,15 @@ const Lobby = () => {
   const [submitSideboardMutation, submitSideboardMutationData] =
     useSubmitSideboardMutation();
 
-  useEffect(() => {
-    if (gameLobby?.gameLog != undefined || gameLobby?.gameLog != '')
-      setUnreadChat(true);
-  }, [gameLobby?.gameLog]);
+  // TODO: fix the chat log notification
+  // useEffect(() => {
+  //   if (gameLobby?.gameLog != undefined || gameLobby?.gameLog != '')
+  //     setUnreadChat(true);
+  // }, [gameLobby?.gameLog]);
 
-  useEffect(() => {
-    setActiveTab('chat');
-  }, [!!gameLobby?.amIChoosingFirstPlayer]);
+  // useEffect(() => {
+  //   setActiveTab('chat');
+  // }, [!!gameLobby?.amIChoosingFirstPlayer]);
 
   useEffect(() => {
     setIsWideScreen(width > BREAKPOINT_EXTRA_LARGE);
@@ -192,7 +193,7 @@ const Lobby = () => {
     } as Weapon;
   });
 
-  const mainClassNames = classNames('container', styles.lobbyClass);
+  const mainClassNames = classNames(styles.lobbyClass);
 
   return (
     <main className={mainClassNames}>
@@ -218,7 +219,7 @@ const Lobby = () => {
                 style={{ backgroundImage: leftPic }}
               >
                 <div className={styles.dimPic}>
-                  <h3>{data.displayName}</h3>
+                  <h3 aria-busy={isLoading}>{data.displayName}</h3>
                   <div className={styles.heroName}>{data.deck.heroName}</div>
                 </div>
               </div>
@@ -227,7 +228,9 @@ const Lobby = () => {
                 style={{ backgroundImage: rightPic }}
               >
                 <div className={styles.dimPic}>
-                  <h3>{gameLobby?.theirName ?? ''}</h3>
+                  <h3 aria-busy={!gameLobby?.theirName}>
+                    {gameLobby?.theirName ?? ''}
+                  </h3>
                   <div className={styles.heroName}>
                     {gameLobby?.theirHeroName != ''
                       ? gameLobby?.theirHeroName

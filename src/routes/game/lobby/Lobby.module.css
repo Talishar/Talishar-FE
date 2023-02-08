@@ -1,5 +1,7 @@
 .lobbyClass {
   user-select: none;
+  margin: auto;
+  max-width: 2560px;
 }
 
 .titleContainer {
