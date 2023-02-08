@@ -5,18 +5,18 @@ import classnames from 'classnames';
 import { useLoginMutation } from "features/api/apiSlice";
 import { QueryStatus } from "@reduxjs/toolkit/dist/query";
 
-const getLoginBody = ({ email, password, ...rest}: { email: string, password: string, rememberMe: boolean }) => {
+const getLoginBody = ({ userID, password, ...rest}: { userID: string, password: string, rememberMe: boolean }) => {
     if (rest.rememberMe) {
-        return { email, password, rememberMe: rest.rememberMe };
+        return { userID, password, rememberMe: rest.rememberMe };
     }
-    return { email, password };
+    return { userID, password };
 }
 
 export const LoginForm = () => {
     const [login, loginResult] = useLoginMutation();
     const formik = useFormik({
         initialValues: {
-            email: '',
+            userID: '',
             password: '',
             rememberMe: false
         },
@@ -32,13 +32,13 @@ export const LoginForm = () => {
     return (
         <article className={styles.formContainer}>
             <form onSubmit={formik.handleSubmit}>
-                <label htmlFor="email">Email</label>
+                <label htmlFor="email">Username</label>
                 <input
-                    type="email"
+                    type="text"
                     name="email"
-                    placeholder="bravo@talishar.net"
+                    placeholder="bravo"
                     onChange={formik.handleChange}
-                    value={formik.values.email}
+                    value={formik.values.userID}
                 />
                 <label htmlFor="password">Password</label>
                 <input
