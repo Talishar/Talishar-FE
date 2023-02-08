@@ -41,14 +41,14 @@ const ChooseFirstTurn = () => {
   };
 
   return (
-    <div className={styles.container}>
+    <article className={styles.container}>
       <h3>You won the die roll!</h3>
       <h5>Would you like to go first or second?</h5>
       <div className={styles.buttons}>
         <button onClick={chooseFirst}>First</button>
         <button onClick={chooseSecond}>Second</button>
       </div>
-    </div>
+    </article>
   );
 };
 

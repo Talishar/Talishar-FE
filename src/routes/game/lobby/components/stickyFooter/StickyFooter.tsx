@@ -34,7 +34,7 @@ const StickyFooter = ({ deckSize, submitSideboard }: DeckSize) => {
             className={styles.buttonClass}
             onClick={handleClipboardCopy}
             type="button"
-            data-tooltip="Copy join link to clipboard"
+            data-tooltip="Copy invite link"
             data-placement="right"
           >
             <HiClipboardCopy />
