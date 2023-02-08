@@ -67,13 +67,12 @@ const CreateGame = () => {
   console.log(createGameResult);
   return (
     <div>
-      <article>
+      <article className={styles.formContainer}>
         <h3>Create New Game</h3>
-        <h1>DOES NOT WORK GO TO REGULAR SITE TO PLAY ETC</h1>
         <Formik initialValues={initialValues} onSubmit={handleSubmit}>
           {({ values, isSubmitting }) => (
             <Form>
-              <div className={styles.formContainer}>
+              <div className={styles.formInner}>
                 {!!isLoggedIn && (
                   <label>
                     Favorite Deck
