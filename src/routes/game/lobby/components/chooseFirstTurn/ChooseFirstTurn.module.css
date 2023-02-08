@@ -4,11 +4,14 @@
   justify-content: center;
   align-items: center;
   padding: 1em;
+  max-width: 512px;
+  margin: auto;
 }
 
 .container > h3 {
   margin-bottom: 1em;
 }
+
 .buttons {
   display: flex;
   flex-direction: row;
@@ -19,6 +22,7 @@
   min-width: 10em;
   flex-grow: 1;
 }
+
 .spacer {
   height: 5em;
   width: 100vw;

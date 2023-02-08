@@ -19,17 +19,7 @@ import { shallowEqual } from 'react-redux';
 import { RootState } from 'app/Store';
 import { DeckResponse, Weapon } from 'interface/API/GetLobbyInfo.php';
 import LobbyUpdateHandler from './components/updateHandler/SideboardUpdateHandler';
-import {
-  GAME_FORMAT,
-  BREAKPOINT_LARGE,
-  URL_END_POINT,
-  GAME_LIMIT_LIVE,
-  GAME_LIMIT_BETA,
-  API_URL_LIVE,
-  API_URL_BETA,
-  API_URL_DEV,
-  BREAKPOINT_EXTRA_LARGE
-} from 'constants';
+import { GAME_FORMAT, BREAKPOINT_EXTRA_LARGE } from 'constants';
 import ChooseFirstTurn from './components/chooseFirstTurn/ChooseFirstTurn';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import { SubmitSideboardAPI } from 'interface/API/SubmitSideboard.php';
@@ -62,14 +52,15 @@ const Lobby = () => {
   const [submitSideboardMutation, submitSideboardMutationData] =
     useSubmitSideboardMutation();
 
-  useEffect(() => {
-    if (gameLobby?.gameLog != undefined || gameLobby?.gameLog != '')
-      setUnreadChat(true);
-  }, [gameLobby?.gameLog]);
+  // TODO: fix the chat log notification
+  // useEffect(() => {
+  //   if (gameLobby?.gameLog != undefined || gameLobby?.gameLog != '')
+  //     setUnreadChat(true);
+  // }, [gameLobby?.gameLog]);
 
-  useEffect(() => {
-    setActiveTab('chat');
-  }, [!!gameLobby?.amIChoosingFirstPlayer]);
+  // useEffect(() => {
+  //   setActiveTab('chat');
+  // }, [!!gameLobby?.amIChoosingFirstPlayer]);
 
   useEffect(() => {
     setIsWideScreen(width > BREAKPOINT_EXTRA_LARGE);
@@ -192,7 +183,7 @@ const Lobby = () => {
     } as Weapon;
   });
 
-  const mainClassNames = classNames('container', styles.lobbyClass);
+  const mainClassNames = classNames(styles.lobbyClass);
 
   return (
     <main className={mainClassNames}>
@@ -218,7 +209,7 @@ const Lobby = () => {
                 style={{ backgroundImage: leftPic }}
               >
                 <div className={styles.dimPic}>
-                  <h3>{data.displayName}</h3>
+                  <h3 aria-busy={isLoading}>{data.displayName}</h3>
                   <div className={styles.heroName}>{data.deck.heroName}</div>
                 </div>
               </div>
@@ -227,7 +218,9 @@ const Lobby = () => {
                 style={{ backgroundImage: rightPic }}
               >
                 <div className={styles.dimPic}>
-                  <h3>{gameLobby?.theirName ?? ''}</h3>
+                  <h3 aria-busy={!gameLobby?.theirName}>
+                    {gameLobby?.theirName ?? ''}
+                  </h3>
                   <div className={styles.heroName}>
                     {gameLobby?.theirHeroName != ''
                       ? gameLobby?.theirHeroName
@@ -241,9 +234,7 @@ const Lobby = () => {
             ) : (
               !isWideScreen && (
                 <nav>
-                  <ul>
-                    <li>Get ready!</li>
-                  </ul>
+                  <ul></ul>
                   <ul>
                     <li>
                       <button

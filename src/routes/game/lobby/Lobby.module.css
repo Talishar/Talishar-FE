@@ -1,5 +1,7 @@
 .lobbyClass {
   user-select: none;
+  margin: auto;
+  max-width: 2560px;
 }
 
 .titleContainer {
@@ -77,5 +79,5 @@ nav {
 }
 
 .alarm {
-  color: rgba(183, 28, 28);
+  color: var(--alarm);
 }

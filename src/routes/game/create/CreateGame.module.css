@@ -1,0 +1,26 @@
+.formContainer {
+  max-width: 460px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+}
+
+@media (max-width: 767px) {
+  .formContainer {
+    width: 100%;
+    border: none;
+  }
+}
+
+.button {
+  color: var(--primary-inverse);
+  margin-top: 32px;
+  width: 100%;
+}
+
+.alarm {
+  color: var(--alarm);
+}
+
+.formContainer > h3 {
+  margin-bottom: 0.75em;
+}

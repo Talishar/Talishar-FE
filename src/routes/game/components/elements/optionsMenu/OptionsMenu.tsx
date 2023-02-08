@@ -244,9 +244,17 @@ const OptionsContent = () => {
                         Manual Mode
                       </label>
                     </fieldset>
-                    <button className={styles.buttonDiv} type="submit">
-                      Submit
-                    </button>
+                    <div className={styles.buttonColumn}>
+                      <div className={styles.alarm}>
+                        THIS BUTTON DOES NOT WORK
+                      </div>
+                      <button className={styles.buttonDiv} type="submit">
+                        Submit Options (jk I don't work)
+                      </button>
+                      <div className={styles.alarm}>
+                        THIS BUTTON DOES NOT WORK
+                      </div>
+                    </div>
                   </div>
                 </Form>
               </div>
@@ -256,12 +264,12 @@ const OptionsContent = () => {
       </div>
       <div className={styles.column}>
         <h3>Navigation</h3>
-        <div className={styles.rightColumn}>
+        <div className={styles.buttonColumn}>
           <button className={styles.buttonDiv} onClick={clickPlayLegacyHandler}>
-            Play in legacy Talishar client.
+            Play in Legacy Talishar Client
           </button>
           <button className={styles.buttonDiv} onClick={mainMenu}>
-            Home page
+            Home Page
           </button>
           <button
             className={styles.buttonDiv}
@@ -288,10 +296,11 @@ const OptionsContent = () => {
             Revert to Start of Previous Turn
           </button>
         </div>
-        <h3>Invite your friends to spectate</h3>
-        <div>
-          {gameURL}
+        <h3>Invite your friends to laugh at your punts</h3>
+        <div className={styles.buttonColumn}>
+          <span>{gameURL}</span>
           <button
+            style={{ marginTop: '0.5em' }}
             className={styles.buttonDiv}
             onClick={clickCopySpectateToClipboardHandler}
           >
@@ -324,10 +333,10 @@ export default function OptionsOverlay() {
   return (
     <div className={styles.optionsContainer}>
       <div className={styles.optionsTitleContainer}>
-        <div className={styles.optionsTitle}>
+        <hgroup className={styles.optionsTitle}>
           <h2 className={styles.title}>Main Options</h2>
-          (priority settings can be adjusted here)
-        </div>
+          <h4>(priority settings can be adjusted here)</h4>
+        </hgroup>
         <div className={styles.optionsMenuCloseIcon} onClick={closeOptions}>
           <FaTimes title="close options menu" />
         </div>

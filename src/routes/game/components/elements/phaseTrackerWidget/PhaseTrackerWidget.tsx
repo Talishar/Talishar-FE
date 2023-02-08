@@ -13,8 +13,6 @@ export default function PhaseTrackerWidget({ phase }: TurnPhase) {
   const scaleFactor = 0.09 * (windowHeight / 85);
   let styleToApply = { left: '0em' };
 
-  console.log(scaleFactor);
-
   switch (phase) {
     case 'M':
       styleToApply = { left: '8.5px' };
