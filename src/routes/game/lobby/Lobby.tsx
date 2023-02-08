@@ -33,7 +33,7 @@ import {
 import ChooseFirstTurn from './components/chooseFirstTurn/ChooseFirstTurn';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import { SubmitSideboardAPI } from 'interface/API/SubmitSideboard.php';
-import { useNavigate } from 'react-router-dom';
+import { createSearchParams, useNavigate } from 'react-router-dom';
 import CardPortal from '../components/elements/cardPortal/CardPortal';
 
 const Lobby = () => {
@@ -109,10 +109,6 @@ const Lobby = () => {
 
     try {
       const data: any = await submitSideboardMutation(requestBody).unwrap();
-
-      if (data.status === 'OK') {
-        navigate(`/game/play/${gameInfo.gameID}`);
-      }
     } catch (err) {
       console.error(err);
     } finally {
@@ -126,6 +122,18 @@ const Lobby = () => {
 
   if (data === undefined || data === null) {
     return null;
+  }
+
+  // if the game is ready then let's join the main game
+  if (gameLobby?.isMainGameReady) {
+    const searchParam = {
+      playerID: String(gameInfo.playerID),
+      gameName: String(gameInfo.gameID)
+    };
+    navigate({
+      pathname: `/game/play/${gameInfo.gameID}`,
+      search: `?${createSearchParams(searchParam)}`
+    });
   }
 
   // I'm not sure how I can get formik to understand checkboxes and repeating cards so give them all an index here.
@@ -289,7 +297,7 @@ const Lobby = () => {
             {!gameLobby?.amIChoosingFirstPlayer ? (
               <StickyFooter
                 deckSize={deckSize}
-                submitSideboard={gameLobby?.submitSideboard === 'block'}
+                submitSideboard={gameLobby?.canSubmitSideboard ?? false}
               />
             ) : null}
           </Form>

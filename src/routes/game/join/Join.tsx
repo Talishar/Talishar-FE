@@ -3,7 +3,7 @@ import { useAppDispatch } from 'app/Hooks';
 import { useJoinGameMutation } from 'features/api/apiSlice';
 import { Formik, Form, Field, FormikHelpers } from 'formik';
 import { JoinGameAPI } from 'interface/API/JoinGame.php';
-import { useNavigate, useParams } from 'react-router-dom';
+import { createSearchParams, useNavigate, useParams } from 'react-router-dom';
 import styles from './Join.module.css';
 import { useKnownSearchParams } from 'hooks/useKnownSearchParams';
 import { setGameStart } from 'features/game/GameSlice';
@@ -52,7 +52,11 @@ const JoinGame = () => {
             authKey: response.authKey ?? ''
           })
         );
-        navigate(`/game/lobby/${response.gameName}`);
+        const searchParam = { playerID: String(response.playerID ?? '0') };
+        navigate({
+          pathname: `/game/lobby/${response.gameName}`,
+          search: `?${createSearchParams(searchParam)}`
+        });
       }
     } catch (error) {
       console.warn(error);
