@@ -90,6 +90,15 @@ export const apiSlice = createApi({
         };
       }
     }),
+    login: builder.mutation({
+      query: (body) => {
+        return {
+          url: URL_END_POINT.LOGIN,
+          method: 'POST',
+          body
+        }
+      }
+    }),
     submitChat: builder.mutation({
       query: ({
         gameID = 0,
@@ -206,6 +215,7 @@ export const {
   useSubmitChatMutation,
   useGetGameListQuery,
   useGetFavoriteDecksQuery,
+  useLoginMutation,
   useCreateGameMutation,
   useJoinGameMutation,
   useGetLobbyInfoQuery,
