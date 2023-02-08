@@ -17,6 +17,10 @@
   border-radius: 12px;
 }
 
+.alarm {
+  color: var(--alarm);
+}
+
 @media (max-width: 767px) {
   .formContainer {
     width: 100%;

@@ -1,3 +1,4 @@
+import useWindowDimensions from 'hooks/useWindowDimensions';
 import React from 'react';
 import styles from './PhaseTrackerWidget.module.css';
 
@@ -6,37 +7,47 @@ export interface TurnPhase {
 }
 
 export default function PhaseTrackerWidget({ phase }: TurnPhase) {
+  const [windowWidth, windowHeight] = useWindowDimensions();
+
+  // height of component needs to be 9vh;
+  const scaleFactor = 0.09 * (windowHeight / 85);
   let styleToApply = { left: '0em' };
 
   switch (phase) {
     case 'M':
-      styleToApply = { left: '0.42em' };
+      styleToApply = { left: '8.5px' };
       break;
     case 'P':
-      styleToApply = { left: '3.08em' };
+      styleToApply = { left: '45.5px' };
       break;
     case 'B':
-      styleToApply = { left: '5.08em' };
+      styleToApply = { left: '74px' };
       break;
     case 'A':
-      styleToApply = { left: '7.08em' };
+      styleToApply = { left: '102.5px' };
       break;
     case 'D':
-      styleToApply = { left: '7.08em' };
+      styleToApply = { left: '102.5px' };
       break;
     case 'ARS':
-      styleToApply = { left: '9.73em' };
+      styleToApply = { left: '139.5px' };
       break;
     case 'PDECK':
-      styleToApply = { left: '9.73em' };
+      styleToApply = { left: '139.5px' };
       break;
     default:
+      styleToApply = { left: '8.5px' };
       break;
   }
 
   return (
-    <div className={styles.phaseWidget}>
-      <div className={styles.icon} style={styleToApply}></div>
+    <div className={styles.notScaled}>
+      <div
+        className={styles.phaseWidget}
+        style={{ transform: `scale(${scaleFactor})` }}
+      >
+        <div className={styles.icon} style={styleToApply}></div>
+      </div>
     </div>
   );
 }

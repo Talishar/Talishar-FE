@@ -19,21 +19,12 @@ import { shallowEqual } from 'react-redux';
 import { RootState } from 'app/Store';
 import { DeckResponse, Weapon } from 'interface/API/GetLobbyInfo.php';
 import LobbyUpdateHandler from './components/updateHandler/SideboardUpdateHandler';
-import {
-  GAME_FORMAT,
-  BREAKPOINT_LARGE,
-  URL_END_POINT,
-  GAME_LIMIT_LIVE,
-  GAME_LIMIT_BETA,
-  API_URL_LIVE,
-  API_URL_BETA,
-  API_URL_DEV
-} from 'constants';
+import { GAME_FORMAT, BREAKPOINT_EXTRA_LARGE } from 'constants';
 import ChooseFirstTurn from './components/chooseFirstTurn/ChooseFirstTurn';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import { SubmitSideboardAPI } from 'interface/API/SubmitSideboard.php';
-import { useNavigate } from 'react-router-dom';
-import { nextTurn } from 'features/game/GameSlice';
+import { createSearchParams, useNavigate } from 'react-router-dom';
+import CardPortal from '../components/elements/cardPortal/CardPortal';
 
 const Lobby = () => {
   const [activeTab, setActiveTab] = useState('equipment');
@@ -61,17 +52,18 @@ const Lobby = () => {
   const [submitSideboardMutation, submitSideboardMutationData] =
     useSubmitSideboardMutation();
 
-  useEffect(() => {
-    if (gameLobby?.gameLog != undefined || gameLobby?.gameLog != '')
-      setUnreadChat(true);
-  }, [gameLobby?.gameLog]);
+  // TODO: fix the chat log notification
+  // useEffect(() => {
+  //   if (gameLobby?.gameLog != undefined || gameLobby?.gameLog != '')
+  //     setUnreadChat(true);
+  // }, [gameLobby?.gameLog]);
+
+  // useEffect(() => {
+  //   setActiveTab('chat');
+  // }, [!!gameLobby?.amIChoosingFirstPlayer]);
 
   useEffect(() => {
-    setActiveTab('chat');
-  }, [!!gameLobby?.amIChoosingFirstPlayer]);
-
-  useEffect(() => {
-    setIsWideScreen(width > BREAKPOINT_LARGE);
+    setIsWideScreen(width > BREAKPOINT_EXTRA_LARGE);
   }, [width]);
 
   const handleEquipmentClick = () => {
@@ -108,10 +100,6 @@ const Lobby = () => {
 
     try {
       const data: any = await submitSideboardMutation(requestBody).unwrap();
-
-      if (data.status === 'OK') {
-        navigate(`/game/play/${gameInfo.gameID}`);
-      }
     } catch (err) {
       console.error(err);
     } finally {
@@ -125,6 +113,18 @@ const Lobby = () => {
 
   if (data === undefined || data === null) {
     return null;
+  }
+
+  // if the game is ready then let's join the main game
+  if (gameLobby?.isMainGameReady) {
+    const searchParam = {
+      playerID: String(gameInfo.playerID),
+      gameName: String(gameInfo.gameID)
+    };
+    navigate({
+      pathname: `/game/play/${gameInfo.gameID}`,
+      search: `?${createSearchParams(searchParam)}`
+    });
   }
 
   // I'm not sure how I can get formik to understand checkboxes and repeating cards so give them all an index here.
@@ -182,18 +182,21 @@ const Lobby = () => {
       is1H: card.is1H
     } as Weapon;
   });
+
+  const mainClassNames = classNames(styles.lobbyClass);
+
   return (
-    <div>
+    <main className={mainClassNames}>
       <LobbyUpdateHandler isSubmitting={isSubmitting} />
       <div>
         <Formik
           initialValues={{
             deck: deckIndexed,
             weapons: weaponsIndexed,
-            head: data.deck.head[0],
-            chest: data.deck.chest[0],
-            arms: data.deck.arms[0],
-            legs: data.deck.legs[0]
+            head: [...data.deck.head, ...data.deck.headSB, 'NONE00'][0],
+            chest: [...data.deck.chest, ...data.deck.chestSB, 'NONE00'][0],
+            arms: [...data.deck.arms, ...data.deck.armsSB, 'NONE00'][0],
+            legs: [...data.deck.legs, ...data.deck.legsSB, 'NONE00'][0]
           }}
           onSubmit={handleFormSubmission}
           validationSchema={deckValidation(deckSize)}
@@ -206,8 +209,8 @@ const Lobby = () => {
                 style={{ backgroundImage: leftPic }}
               >
                 <div className={styles.dimPic}>
-                  <h3>{data.displayName}</h3>
-                  <h5>{data.deck.heroName}</h5>
+                  <h3 aria-busy={isLoading}>{data.displayName}</h3>
+                  <div className={styles.heroName}>{data.deck.heroName}</div>
                 </div>
               </div>
               <div
@@ -215,12 +218,14 @@ const Lobby = () => {
                 style={{ backgroundImage: rightPic }}
               >
                 <div className={styles.dimPic}>
-                  <h3>{gameLobby?.theirName ?? ''}</h3>
-                  <h5>
+                  <h3 aria-busy={!gameLobby?.theirName}>
+                    {gameLobby?.theirName ?? ''}
+                  </h3>
+                  <div className={styles.heroName}>
                     {gameLobby?.theirHeroName != ''
                       ? gameLobby?.theirHeroName
                       : 'Waiting For Opponent'}
-                  </h5>
+                  </div>
                 </div>
               </div>
             </div>
@@ -229,9 +234,7 @@ const Lobby = () => {
             ) : (
               !isWideScreen && (
                 <nav>
-                  <ul>
-                    <li>Get ready!</li>
-                  </ul>
+                  <ul></ul>
                   <ul>
                     <li>
                       <button
@@ -285,13 +288,14 @@ const Lobby = () => {
             {!gameLobby?.amIChoosingFirstPlayer ? (
               <StickyFooter
                 deckSize={deckSize}
-                submitSideboard={gameLobby?.submitSideboard === 'block'}
+                submitSideboard={gameLobby?.canSubmitSideboard ?? false}
               />
             ) : null}
           </Form>
         </Formik>
       </div>
-    </div>
+      <CardPortal />
+    </main>
   );
 };
 

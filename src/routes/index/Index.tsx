@@ -1,7 +1,7 @@
 import { useAppDispatch } from 'app/Hooks';
 import { clearGameInfo, setGameStart } from 'features/game/GameSlice';
 import { useEffect } from 'react';
-import CreateGame from './components/createGame/CreateGame';
+import CreateGame from '../game/create/CreateGame';
 import GameList from './components/gameList/GameList';
 import styles from './Index.module.css';
 

@@ -19,4 +19,6 @@ export interface GetLobbyRefreshResponse {
   theirChannelLink?: string;
   submitSideboard?: string; // dunno?
   myPriority?: boolean;
+  isMainGameReady?: boolean;
+  canSubmitSideboard?: boolean;
 }

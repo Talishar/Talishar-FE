@@ -32,6 +32,7 @@
 
 .optionsMenuCloseIcon {
   display: flex;
+  color: var(--primary);
   flex-direction: row;
   align-items: center;
   justify-content: center;
@@ -42,7 +43,7 @@
 
 .optionsMenuCloseIcon:hover {
   background-color: var(--primary);
-  color: black;
+  color: var(--primary-inverse);
 }
 
 .radioContainer {
@@ -56,50 +57,32 @@
   justify-content: flex-start;
   align-items: flex-start;
   gap: 4em;
+  overflow-y: auto;
 }
 
 .column {
   width: 50%;
 }
 
-.leftColumn {
-  overflow-y: auto;
-}
-
-.rightColumn {
+.buttonColumn {
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
+  align-items: center;
   padding-right: 2vh;
 }
 
-.optionLabel {
+.alarm {
+  color: var(--alarm);
+  text-align: center;
 }
 
 .buttonDiv {
-  background-color: var(--primary);
-  color: black;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  min-width: 8vh;
-  height: 4vh;
-  border-radius: 5px;
-  border: 1px solid var(--primary);
-  flex-basis: auto;
-  padding: 0vh 1vh;
-  margin-bottom: 1vh;
+  width: 75%;
+  padding: 0.25em;
+  margin-bottom: 0.5em;
 }
 
-.buttonDiv:last-child {
-  margin-bottom: 0;
-  margin-right: 0;
-}
-
-.buttonDiv:hover {
-  background-color: black;
-  color: var(--primary);
-  border: 1px solid var(--primary);
-  cursor: pointer;
+.column h3 {
+  margin: 0.5em 0;
 }
