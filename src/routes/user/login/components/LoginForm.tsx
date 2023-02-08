@@ -32,10 +32,10 @@ export const LoginForm = () => {
     return (
         <article className={styles.formContainer}>
             <form onSubmit={formik.handleSubmit}>
-                <label htmlFor="email">Username</label>
+                <label htmlFor="userID">Username</label>
                 <input
                     type="text"
-                    name="email"
+                    name="userID"
                     placeholder="bravo"
                     onChange={formik.handleChange}
                     value={formik.values.userID}

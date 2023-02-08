@@ -35,8 +35,7 @@ export const rtkQueryErrorToaster: Middleware =
     if (isRejectedWithValue(action)) {
       console.warn('Rejected action:', action);
       toast.error(
-        `Error: ${action.payload} - ${
-          action.error?.message ?? 'an error happened'
+        `Error: ${action.payload} - ${action.error?.message ?? 'an error happened'
         }`
       );
     }
@@ -95,7 +94,7 @@ export const apiSlice = createApi({
         return {
           url: URL_END_POINT.LOGIN,
           method: 'POST',
-          body
+          body: { ...body, submit: true },
         }
       }
     }),
