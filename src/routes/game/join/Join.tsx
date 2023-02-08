@@ -8,6 +8,7 @@ import styles from './Join.module.css';
 import { useKnownSearchParams } from 'hooks/useKnownSearchParams';
 import { setGameStart } from 'features/game/GameSlice';
 import { toast } from 'react-hot-toast';
+import { FaExclamationCircle } from 'react-icons/fa';
 
 const JoinGame = () => {
   const navigate = useNavigate();
@@ -42,8 +43,7 @@ const JoinGame = () => {
       setSubmitting(true);
       const response = await joinGame(values).unwrap();
       if (response.error) {
-        console.warn('error happened when trying to join');
-        return;
+        throw response.error;
       } else {
         dispatch(
           setGameStart({
@@ -60,7 +60,7 @@ const JoinGame = () => {
       }
     } catch (error) {
       console.warn(error);
-      toast.error(String(error));
+      toast.error(String(error), { position: 'top-center' });
     } finally {
       setSubmitting(false);
     }
@@ -73,7 +73,7 @@ const JoinGame = () => {
           {({ values, isSubmitting }) => (
             <Form>
               <div className={styles.form}>
-                {!!isLoggedIn && (
+                {isLoggedIn && (
                   <label>
                     Favorite Deck
                     <select
@@ -97,15 +97,17 @@ const JoinGame = () => {
                       aria-label="Deck Link"
                     />
                   </label>
-                  <label>
-                    <Field
-                      type="checkbox"
-                      role="switch"
-                      id="favoriteDeck"
-                      name="favoriteDeck"
-                    />
-                    Save Deck to ❤️ Favorites
-                  </label>
+                  {isLoggedIn && (
+                    <label>
+                      <Field
+                        type="checkbox"
+                        role="switch"
+                        id="favoriteDeck"
+                        name="favoriteDeck"
+                      />
+                      Save Deck to ❤️ Favorites
+                    </label>
+                  )}
                 </fieldset>
               </div>
               <button
@@ -115,6 +117,13 @@ const JoinGame = () => {
               >
                 Join Game
               </button>
+              {!!joinGameResult?.data?.error && (
+                <div className={styles.alarm}>
+                  <>
+                    <FaExclamationCircle /> {joinGameResult?.data?.error}
+                  </>
+                </div>
+              )}
             </Form>
           )}
         </Formik>

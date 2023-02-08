@@ -1,0 +1,11 @@
+.formContainer {
+  margin-bottom: 2em;
+}
+
+.button {
+  color: var(--primary-inverse);
+}
+
+.alarm {
+  color: var(--alarm);
+}

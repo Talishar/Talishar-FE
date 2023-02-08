@@ -28,5 +28,5 @@
 }
 
 .alarm {
-  color: rgba(183, 28, 28);
+  color: var(--alarm);
 }

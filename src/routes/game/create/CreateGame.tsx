@@ -4,11 +4,16 @@ import { GAME_FORMAT, GAME_VISIBILITY } from 'constants';
 import { useCreateGameMutation } from 'features/api/apiSlice';
 import { setGameStart } from 'features/game/GameSlice';
 import { Field, Form, Formik, FormikHelpers } from 'formik';
-import { CreateGameAPI } from 'interface/API/CreateGame.php';
+import {
+  CreateGameAPI,
+  CreateGameResponse
+} from 'interface/API/CreateGame.php';
 import { handleRequest } from 'msw';
 import React from 'react';
 import { toast } from 'react-hot-toast';
+import { FaExclamationCircle } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
+import { skipPartiallyEmittedExpressions } from 'typescript';
 import styles from './CreateGame.module.css';
 
 const CreateGame = () => {
@@ -36,9 +41,7 @@ const CreateGame = () => {
     try {
       const response = await createGame(values).unwrap();
       if (response.error) {
-        console.warn('error when loading thing');
-        // TODO: Show a modal or something to say there has been an error and to try again.
-        return;
+        throw response.error;
       } else {
         if (!response.playerID || !response.gameName || !response.authKey) {
           throw new Error('A required param is missing');
@@ -54,7 +57,7 @@ const CreateGame = () => {
       }
     } catch (error) {
       console.warn(error);
-      toast.error(String(error));
+      toast.error(String(error), { position: 'top-center' });
     } finally {
       setSubmitting(false);
     }
@@ -67,7 +70,7 @@ const CreateGame = () => {
   };
 
   const buttonClass = classNames(styles.button, 'primary');
-
+  console.log(createGameResult);
   return (
     <div>
       <article>
@@ -179,6 +182,13 @@ const CreateGame = () => {
               >
                 Create Game
               </button>
+              {!!createGameResult?.data?.error && (
+                <div className={styles.alarm}>
+                  <>
+                    <FaExclamationCircle /> {createGameResult?.data?.error}
+                  </>
+                </div>
+              )}
             </Form>
           )}
         </Formik>
