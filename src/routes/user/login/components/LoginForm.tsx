@@ -36,6 +36,7 @@ export const LoginForm = () => {
                 <input
                     type="text"
                     name="userID"
+                    id="userID"
                     placeholder="bravo"
                     onChange={formik.handleChange}
                     value={formik.values.userID}
@@ -44,6 +45,7 @@ export const LoginForm = () => {
                 <input
                     type="password"
                     name="password"
+                    id="password"
                     placeholder="********"
                     onChange={formik.handleChange}
                     value={formik.values.password}
