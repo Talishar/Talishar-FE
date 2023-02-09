@@ -6,10 +6,13 @@
 
 [![license](https://flat.badgen.net/github/license/talishar/talishar)](./LICENSE)
 [![discord](https://flat.badgen.net/discord/online-members/JykuRkdd5S?icon=discord)](https://discord.gg/JykuRkdd5S)
-[![patreon](https://flat.badgen.net/badge/become/a%20patreon/F96854?icon=patreon)](https://www.patreon.com/talishar_online/)
+[![patreon](https://flat.badgen.net/badge/become/a%20patreon/F96854?icon=patreon)](https://www.patreon.com/talishar)
 [![twitter](https://flat.badgen.net/twitter/follow/talishar_online?icon=twitter)](https://twitter.com/talishar_online/)
+[![github](https://flat.badgen.net/github/last-commit/Talishar/Talishar-FE?icon=github)](https://github.com/Talishar/Talishar-FE/)
 
 Visit [Talishar.net](https://talishar.net/) to get playing Flesh & Blood in your browser right now!
+
+The react frontend is currently in open beta at https://fe.talishar.net/
 
 # Getting started with Talishar-FE
 
