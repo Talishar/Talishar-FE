@@ -162,18 +162,23 @@ const Lobby = () => {
     { [styles.gridContentContainer]: isWideScreen }
   ]);
 
-  const weaponsIndexed = [...data?.deck?.weapons, ...data?.deck?.offhand].map(
-    (card, ix) => {
-      return {
-        id: `${card.id}-${ix}`,
-        is1H: card.is1H,
-        img: `${card.id}`
-      } as Weapon;
-    }
-  );
+  const weaponsIndexed = [
+    ...data.deck.weapons,
+    ...data.deck.offhand,
+    ...data.deck.quiver
+  ].map((card, ix) => {
+    return {
+      id: `${card.id}-${ix}`,
+      is1H: card.is1H,
+      img: `${card.id}`,
+      hands: card.hands ?? (card.is1H ? 1 : 2)
+    } as Weapon;
+  });
+
   const weaponsSBIndexed = [
     ...data.deck.weaponSB,
     ...data.deck.offhandSB,
+    ...data.deck.quiverSB,
     { id: `NONE00`, is1H: true, img: `NONE00` }
   ].map((card, ix) => {
     return {

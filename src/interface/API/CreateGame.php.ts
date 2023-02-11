@@ -29,7 +29,6 @@ export interface CreateGameResponse {
   gameName?: number;
   playerID?: number;
   authKey?: string;
-  error?: string;
 }
 
 /*

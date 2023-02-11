@@ -21,12 +21,16 @@ export interface Deck {
   offhandSB: Weapon[];
   weaponSB: Weapon[];
   cardsSB: string[];
+  quiver: Weapon[];
+  quiverSB: Weapon[];
 }
 
 export interface Weapon {
   id: string;
   is1H: boolean;
   img?: string;
+  hands?: number;
+  isQuiver?: boolean;
 }
 
 export interface GetLobbyInfoResponse {
