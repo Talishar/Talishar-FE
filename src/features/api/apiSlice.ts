@@ -35,8 +35,7 @@ export const rtkQueryErrorToaster: Middleware =
     if (isRejectedWithValue(action)) {
       console.warn('Rejected action:', action);
       toast.error(
-        `Error: ${action.payload} - ${
-          action.error?.message ?? 'an error happened'
+        `Error: ${action.payload} - ${action.error?.message ?? 'an error happened'
         }`
       );
     }
@@ -88,6 +87,15 @@ export const apiSlice = createApi({
             index: index
           }
         };
+      }
+    }),
+    login: builder.mutation({
+      query: (body) => {
+        return {
+          url: URL_END_POINT.LOGIN,
+          method: 'POST',
+          body: { ...body, submit: true },
+        }
       }
     }),
     submitChat: builder.mutation({
@@ -206,6 +214,7 @@ export const {
   useSubmitChatMutation,
   useGetGameListQuery,
   useGetFavoriteDecksQuery,
+  useLoginMutation,
   useCreateGameMutation,
   useJoinGameMutation,
   useGetLobbyInfoQuery,

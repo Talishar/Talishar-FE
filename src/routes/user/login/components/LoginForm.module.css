@@ -15,6 +15,16 @@
     margin-top: 18px;
 }
 
+.formError {
+    margin-top: 18px;
+    color: red;
+    text-align: center;
+}
+
+.forgottenPassword {
+    margin-top: 12px;
+}
+
 .linebreak {
     width: 100%;
     text-align: center;

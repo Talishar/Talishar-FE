@@ -124,7 +124,8 @@ export const URL_END_POINT = {
   JOIN_GAME: '/APIs/JoinGame.php',
   SUBMIT_SIDEBOARD: '/APIs/SubmitSideboard.php',
   USER_PROFILE: '/APIs/UserProfileAPI.php',
-  START_GAME_LEGACY: 'Start.php'
+  START_GAME_LEGACY: 'Start.php',
+  LOGIN: 'game/AccountFiles/AttemptPasswordLogin.php'
 };
 
 export const GAME_VISIBILITY = {
