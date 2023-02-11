@@ -26,6 +26,6 @@ export interface GetLobbyRefreshResponse {
 }
 
 export interface Matchup {
-  matchupid: string;
+  matchupId: string;
   name: string;
 }

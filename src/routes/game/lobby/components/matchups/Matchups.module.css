@@ -1,0 +1,9 @@
+.matchupContainer {
+  margin: 0 auto;
+  height: auto;
+  display: flex;
+  max-width: 200px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-direction: column;
+}

@@ -8,7 +8,7 @@ export interface JoinGameAPI {
   favoriteDeck?: boolean; //Set this to true to save the provided deck link to your favorites
   favoriteDecks?: string; //This one is kind of weird. It's the favorite deck index, then the string "<fav>" then the favorite deck link
   gameDescription?: string; //Just a string with the game name
-  matchup?: string; //The matchup link
+  matchup?: string; //The matchup ID ref
 }
 
 export interface JoinGameFormik {
