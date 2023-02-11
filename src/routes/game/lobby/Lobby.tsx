@@ -25,6 +25,7 @@ import useWindowDimensions from 'hooks/useWindowDimensions';
 import { SubmitSideboardAPI } from 'interface/API/SubmitSideboard.php';
 import { createSearchParams, useNavigate } from 'react-router-dom';
 import CardPortal from '../components/elements/cardPortal/CardPortal';
+import Matchups from './components/matchups/Matchups';
 
 const Lobby = () => {
   const [activeTab, setActiveTab] = useState('equipment');
@@ -43,7 +44,7 @@ const Lobby = () => {
     shallowEqual
   );
 
-  let { data, isError, isLoading } = useGetLobbyInfoQuery({
+  let { data, isError, isLoading, refetch } = useGetLobbyInfoQuery({
     gameName: gameInfo.gameID,
     playerID: gameInfo.playerID,
     authKey: gameInfo.authKey
@@ -78,6 +79,8 @@ const Lobby = () => {
     setUnreadChat(false);
     setActiveTab('chat');
   };
+
+  const handleMatchupClick = () => setActiveTab('matchups');
 
   const handleFormSubmission = async (values: DeckResponse) => {
     setIsSubmitting(true);
@@ -143,6 +146,7 @@ const Lobby = () => {
   const eqClasses = classNames({ secondary: activeTab !== 'equipment' });
   const deckClasses = classNames({ secondary: activeTab !== 'deck' });
   const chatClasses = classNames({ secondary: activeTab !== 'chat' });
+  const matchupClasses = classNames({ secondary: activeTab !== 'matchups' });
 
   let deckSize = 60;
   switch (data.format) {
@@ -162,18 +166,23 @@ const Lobby = () => {
     { [styles.gridContentContainer]: isWideScreen }
   ]);
 
-  const weaponsIndexed = [...data?.deck?.weapons, ...data?.deck?.offhand].map(
-    (card, ix) => {
-      return {
-        id: `${card.id}-${ix}`,
-        is1H: card.is1H,
-        img: `${card.id}`
-      } as Weapon;
-    }
-  );
+  const weaponsIndexed = [
+    ...data.deck.weapons,
+    ...data.deck.offhand,
+    ...data.deck.quiver
+  ].map((card, ix) => {
+    return {
+      id: `${card.id}-${ix}`,
+      is1H: card.is1H,
+      img: `${card.id}`,
+      hands: card.hands ?? (card.is1H ? 1 : 2)
+    } as Weapon;
+  });
+
   const weaponsSBIndexed = [
     ...data.deck.weaponSB,
     ...data.deck.offhandSB,
+    ...data.deck.quiverSB,
     { id: `NONE00`, is1H: true, img: `NONE00` }
   ].map((card, ix) => {
     return {
@@ -236,6 +245,18 @@ const Lobby = () => {
                 <nav>
                   <ul></ul>
                   <ul>
+                    {gameLobby?.matchups != undefined &&
+                      gameLobby?.matchups?.length > 0 && (
+                        <li>
+                          <button
+                            className={matchupClasses}
+                            onClick={handleMatchupClick}
+                            type="button"
+                          >
+                            Matchups
+                          </button>
+                        </li>
+                      )}
                     <li>
                       <button
                         className={eqClasses}
@@ -284,6 +305,9 @@ const Lobby = () => {
                 <Deck deck={[...deckIndexed, ...deckSBIndexed]} />
               )}
               {(activeTab === 'chat' || isWideScreen) && <LobbyChat />}
+              {(activeTab === 'matchups' || isWideScreen) && (
+                <Matchups refetch={refetch} />
+              )}
             </div>
             {!gameLobby?.amIChoosingFirstPlayer ? (
               <StickyFooter

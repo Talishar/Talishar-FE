@@ -17,8 +17,15 @@ export interface GetLobbyRefreshResponse {
   theirNameColor?: string;
   theirOverlayUrl?: string;
   theirChannelLink?: string;
-  submitSideboard?: string; // dunno?
+  submitSideboard?: string;
   myPriority?: boolean;
   isMainGameReady?: boolean;
   canSubmitSideboard?: boolean;
+  myDeckLink?: string;
+  matchups?: Matchup[];
+}
+
+export interface Matchup {
+  matchupId: string;
+  name: string;
 }
