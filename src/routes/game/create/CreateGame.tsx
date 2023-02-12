@@ -4,6 +4,7 @@ import { GAME_FORMAT, GAME_VISIBILITY } from 'constants';
 import { useCreateGameMutation } from 'features/api/apiSlice';
 import { setGameStart } from 'features/game/GameSlice';
 import { Field, Form, Formik, FormikHelpers } from 'formik';
+import useAuth from 'hooks/useAuth';
 import {
   CreateGameAPI,
   CreateGameResponse
@@ -17,9 +18,9 @@ import { skipPartiallyEmittedExpressions } from 'typescript';
 import styles from './CreateGame.module.css';
 
 const CreateGame = () => {
+  const { isLoggedIn } = useAuth();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const isLoggedIn = false; // TODO: useAuth(); handler or something
   const [createGame, createGameResult] = useCreateGameMutation();
   const initialValues: CreateGameAPI = {
     deck: '',
@@ -73,7 +74,7 @@ const CreateGame = () => {
           {({ values, isSubmitting }) => (
             <Form>
               <div className={styles.formInner}>
-                {!!isLoggedIn && (
+                {isLoggedIn && (
                   <label>
                     Favorite Deck
                     <select
@@ -97,15 +98,17 @@ const CreateGame = () => {
                       aria-label="Deck Link"
                     />
                   </label>
-                  <label>
-                    <Field
-                      type="checkbox"
-                      role="switch"
-                      id="favoriteDeck"
-                      name="favoriteDeck"
-                    />
-                    Save Deck to ❤️ Favorites
-                  </label>
+                  {isLoggedIn && (
+                    <label>
+                      <Field
+                        type="checkbox"
+                        role="switch"
+                        id="favoriteDeck"
+                        name="favoriteDeck"
+                      />
+                      Save Deck to ❤️ Favorites
+                    </label>
+                  )}
                 </fieldset>
                 <label>
                   Game Name
@@ -143,30 +146,33 @@ const CreateGame = () => {
                     </option>
                   </Field>
                 </label>
-                <label>
-                  Visibility
-                  <Field
-                    as="select"
-                    name="visibility"
-                    id="selectvisibility"
-                    placeholder={GAME_VISIBILITY.PUBLIC}
-                    aria-label="Visibility"
-                  >
-                    <option value={GAME_VISIBILITY.PUBLIC}>Public</option>
-                    <option value={GAME_VISIBILITY.PRIVATE}>Private</option>
-                  </Field>
-                </label>
-                <label>
-                  <Field
-                    type="checkbox"
-                    role="switch"
-                    id="deckTestMode"
-                    name="deckTestMode"
-                    aria-label="Single Player"
-                  />
-                  Single Player
-                  <br />
-                </label>
+                <fieldset>
+                  <label>
+                    Visibility
+                    <Field
+                      as="select"
+                      name="visibility"
+                      id="selectvisibility"
+                      placeholder={GAME_VISIBILITY.PUBLIC}
+                      aria-label="Visibility"
+                    >
+                      {isLoggedIn && (
+                        <option value={GAME_VISIBILITY.PUBLIC}>Public</option>
+                      )}
+                      <option value={GAME_VISIBILITY.PRIVATE}>Private</option>
+                    </Field>
+                  </label>
+                  <label>
+                    <Field
+                      type="checkbox"
+                      role="switch"
+                      id="deckTestMode"
+                      name="deckTestMode"
+                      aria-label="Single Player"
+                    />
+                    Single Player
+                  </label>
+                </fieldset>
               </div>
               <button
                 type="submit"

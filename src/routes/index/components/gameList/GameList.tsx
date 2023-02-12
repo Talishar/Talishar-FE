@@ -29,10 +29,7 @@ export interface GameListResponse {
 const GAME_LIST_POLLING_INTERVAL = 10000; // in ms
 
 const GameList = () => {
-  const { data, isLoading, error } = useGetGameListQuery<GameListResponse>(
-    {},
-    { pollingInterval: GAME_LIST_POLLING_INTERVAL }
-  );
+  const { data, isLoading, error } = useGetGameListQuery<GameListResponse>();
   const navigate = useNavigate();
   const spectateHandler = (gameName: number) => {
     navigate({

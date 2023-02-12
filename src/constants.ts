@@ -125,7 +125,8 @@ export const URL_END_POINT = {
   SUBMIT_SIDEBOARD: '/APIs/SubmitSideboard.php',
   USER_PROFILE: '/APIs/UserProfileAPI.php',
   START_GAME_LEGACY: 'Start.php',
-  LOGIN: 'game/AccountFiles/AttemptPasswordLogin.php'
+  LOGIN: '/AccountFiles/AttemptPasswordLogin.php',
+  LOGIN_WITH_COOKIE: '/AccountFiles/TryLoginAPI.php'
 };
 
 export const GAME_VISIBILITY = {
