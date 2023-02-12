@@ -3,6 +3,7 @@ import React from 'react';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import screenfull from 'screenfull';
+import { useNavigate } from 'react-router-dom';
 import { closeOptionsMenu, submitButton } from 'features/game/GameSlice';
 import { FaTimes } from 'react-icons/fa';
 import styles from './OptionsMenu.module.css';
@@ -15,6 +16,7 @@ const OptionsContent = () => {
   );
   const gameInfo = useAppSelector((state: RootState) => state.game.gameInfo);
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const { isLoading, isError, data } = useGetPopUpContentQuery({
     ...gameInfo,
@@ -45,8 +47,7 @@ const OptionsContent = () => {
 
   const mainMenu = async (e: React.MouseEvent) => {
     e.preventDefault;
-    await screenfull.exit();
-    window.location.href = `https://talishar.net/game/MainMenu.php`;
+    navigate('/')
   };
 
   const clickReportBugHandler = () => {
