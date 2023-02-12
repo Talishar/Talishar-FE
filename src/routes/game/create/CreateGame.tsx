@@ -27,7 +27,7 @@ const CreateGame = () => {
     fabdb: '',
     deckTestMode: false,
     format: GAME_FORMAT.CLASSIC_CONSTRUCTED,
-    visibility: GAME_VISIBILITY.PUBLIC,
+    visibility: '',
     decksToTry: '',
     favoriteDeck: false,
     favoriteDecks: '',
@@ -40,6 +40,9 @@ const CreateGame = () => {
   ) => {
     setSubmitting(true);
     try {
+      values.visibility =
+        values.visibility === '' ? 'private' : values.visibility;
+      console.log(values);
       const response = await createGame(values).unwrap();
       if (response.error) {
         throw response.error;
