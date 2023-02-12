@@ -28,6 +28,7 @@ import {
 } from 'interface/API/GetLobbyInfo.php';
 import { ChooseFirstPlayer } from 'interface/API/ChooseFirstPlayer.php';
 import { SubmitSideboardAPI } from 'interface/API/SubmitSideboard.php';
+import { GetFavoriteDecksResponse } from 'interface/API/GetFavoriteDecks.php';
 
 // catch warnings and show a toast if we get one.
 export const rtkQueryErrorToaster: Middleware =
@@ -108,6 +109,15 @@ export const apiSlice = createApi({
         };
       }
     }),
+    logOut: builder.mutation({
+      query: (body) => {
+        return {
+          url: URL_END_POINT.LOGOUT,
+          method: 'POST',
+          body: {}
+        };
+      }
+    }),
     submitChat: builder.mutation({
       query: ({
         gameID = 0,
@@ -145,6 +155,9 @@ export const apiSlice = createApi({
         return {
           url: URL_END_POINT.GET_FAVORITE_DECKS
         };
+      },
+      transformResponse: (response: GetFavoriteDecksResponse, metra, arg) => {
+        return response;
       }
     }),
     createGame: builder.mutation({
@@ -225,6 +238,8 @@ export const {
   useGetGameListQuery,
   useGetFavoriteDecksQuery,
   useLoginMutation,
+  useLoginWithCookieMutation,
+  useLogOutMutation,
   useCreateGameMutation,
   useJoinGameMutation,
   useGetLobbyInfoQuery,

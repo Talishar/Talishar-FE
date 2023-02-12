@@ -1,7 +1,10 @@
 import { useAppDispatch } from 'app/Hooks';
 import classNames from 'classnames';
 import { GAME_FORMAT, GAME_VISIBILITY } from 'constants';
-import { useCreateGameMutation } from 'features/api/apiSlice';
+import {
+  useCreateGameMutation,
+  useGetFavoriteDecksQuery
+} from 'features/api/apiSlice';
 import { setGameStart } from 'features/game/GameSlice';
 import { Field, Form, Formik, FormikHelpers } from 'formik';
 import useAuth from 'hooks/useAuth';
@@ -21,6 +24,7 @@ const CreateGame = () => {
   const { isLoggedIn } = useAuth();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const { data, isLoading, error } = useGetFavoriteDecksQuery({});
   const [createGame, createGameResult] = useCreateGameMutation();
   const initialValues: CreateGameAPI = {
     deck: '',
@@ -83,9 +87,13 @@ const CreateGame = () => {
                       id="selectFavorite"
                       placeholder="Login"
                       aria-label="Login"
+                      aria-busy={isLoading}
                     >
-                      <option>One</option>
-                      <option>Two</option>
+                      {data?.favoriteDecks.map((deck, ix) => (
+                        <option value={deck.index} key={deck.key}>
+                          {deck.name}
+                        </option>
+                      ))}
                     </select>
                   </label>
                 )}
