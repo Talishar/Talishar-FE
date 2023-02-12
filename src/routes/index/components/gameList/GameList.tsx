@@ -72,7 +72,7 @@ const GameList = () => {
                     className={buttonClass}
                     onClick={(e) => {
                       e.preventDefault();
-                      navigate('/game/join/' + string(entry.gameName));
+                      navigate(`/game/join/${entry.gameName}`);
                     }}
                   >
                     Join
