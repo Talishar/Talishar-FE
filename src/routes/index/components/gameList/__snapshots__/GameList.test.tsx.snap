@@ -2,18 +2,18 @@
 
 exports[`displays loading! when loading 1`] = `
 <div>
-  <div
+  <article
     class="_gameList_4a28c4"
   >
-    <h1>
-      Spectating a game totally works though but you can't join one
-    </h1>
+    <h3>
+      Games
+    </h3>
     <div
       aria-busy="true"
     >
       Loading!
     </div>
-  </div>
+  </article>
 </div>
 `;
 
