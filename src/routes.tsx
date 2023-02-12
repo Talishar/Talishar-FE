@@ -15,6 +15,8 @@ import { DecksPage, ProfilePage } from 'routes/user';
 import JoinGame from 'routes/game/join/Join';
 import Lobby from 'routes/game/lobby/Lobby';
 import { SignUpForm } from 'routes/user/login/components/SignUpForm';
+import useAuth from 'hooks/useAuth';
+import Header from 'components/header/Header';
 
 const PlayGuard = ({ children }: { children: JSX.Element }) => {
   const [searchParams] = useKnownSearchParams();
@@ -60,7 +62,7 @@ const LoggedInGuard = ({
   shouldBeLoggedIn: boolean;
 }) => {
   // Todo: check for login status
-  const isLoggedIn = false;
+  const { isLoggedIn } = useAuth();
 
   if (isLoggedIn === !shouldBeLoggedIn) {
     return (
@@ -78,16 +80,7 @@ const LoggedInGuard = ({
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route path="/">
-      <Route
-        index
-        element={
-          <IndexGuard>
-            <Index />
-          </IndexGuard>
-        }
-        errorElement={<ErrorPage />}
-      />
+    <Route>
       <Route
         path="game/play/:gameID"
         element={
@@ -100,34 +93,50 @@ export const router = createBrowserRouter(
       <Route path="game/play" element={<Play />} />
       <Route path="game/join/:gameID" element={<JoinGame />} />
       <Route path="game/lobby/:gameID" element={<Lobby />} />
-      <Route path="user">
-        <Route index element={<Navigate to={'./profile'} />} />
-        <Route
-          path="profile"
-          element={
-            <LoggedInGuard shouldBeLoggedIn={true}>
-              <ProfilePage />
-            </LoggedInGuard>
-          }
-        />
-        <Route
-          path="decks"
-          element={
-            <LoggedInGuard shouldBeLoggedIn={true}>
-              <DecksPage />
-            </LoggedInGuard>
-          }
-        />
-        <Route
-          path="login"
-          element={
-            <LoggedInGuard shouldBeLoggedIn={false}>
-              <LoginPage />
-            </LoggedInGuard>
-          }
-        >
-          <Route index element={<LoginForm />} />
-          <Route path="password-recovery" element={<ForgottenPasswordForm />} />
+      <Route element={<Header />}>
+        <Route path="/">
+          <Route
+            index
+            element={
+              <IndexGuard>
+                <Index />
+              </IndexGuard>
+            }
+            errorElement={<ErrorPage />}
+          />
+        </Route>
+        <Route path="user">
+          <Route index element={<Navigate to={'./profile'} />} />
+          <Route
+            path="profile"
+            element={
+              <LoggedInGuard shouldBeLoggedIn={true}>
+                <ProfilePage />
+              </LoggedInGuard>
+            }
+          />
+          <Route
+            path="decks"
+            element={
+              <LoggedInGuard shouldBeLoggedIn={true}>
+                <DecksPage />
+              </LoggedInGuard>
+            }
+          />
+          <Route
+            path="login"
+            element={
+              <LoggedInGuard shouldBeLoggedIn={false}>
+                <LoginPage />
+              </LoggedInGuard>
+            }
+          >
+            <Route index element={<LoginForm />} />
+            <Route
+              path="password-recovery"
+              element={<ForgottenPasswordForm />}
+            />
+          </Route>
         </Route>
       </Route>
     </Route>

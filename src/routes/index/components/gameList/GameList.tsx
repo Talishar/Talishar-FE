@@ -29,7 +29,10 @@ export interface GameListResponse {
 const GAME_LIST_POLLING_INTERVAL = 10000; // in ms
 
 const GameList = () => {
-  const { data, isLoading, error } = useGetGameListQuery<GameListResponse>();
+  const { data, isLoading, error }: GameListResponse = useGetGameListQuery(
+    {},
+    {}
+  );
   const navigate = useNavigate();
   const spectateHandler = (gameName: number) => {
     navigate({
@@ -49,8 +52,8 @@ const GameList = () => {
   const buttonClass = classNames(styles.button, 'secondary');
 
   return (
-    <div className={styles.gameList}>
-      <h1>Spectating a game totally works though but you can't join one</h1>
+    <article className={styles.gameList}>
+      <h3>Games</h3>
       {isLoading ? <div aria-busy="true">Loading!</div> : null}
       {error ? <div>ERROR!</div> : null}
       {sortedOpenGames != undefined
@@ -114,7 +117,7 @@ const GameList = () => {
           })}
         </div>
       )}
-    </div>
+    </article>
   );
 };
 
