@@ -72,7 +72,7 @@ const GameList = () => {
                     className={buttonClass}
                     onClick={(e) => {
                       e.preventDefault();
-                      spectateHandler(entry.gameName);
+                      navigate('/game/join/' + string(entry.gameName));
                     }}
                   >
                     Join
