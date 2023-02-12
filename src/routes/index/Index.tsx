@@ -26,7 +26,7 @@ const Index = () => {
           <img src={TalisharLogo} className={styles.logo} />
           <hgroup>
             <h1>News</h1>
-            <h2>THIS IS A BETA AND THINGS ARE UNRELIABLE</h2>
+            <h2>THIS IS A BETA AND THINGS ARE (even more) UNRELIABLE</h2>
             <h3>
               <a href="https://talishar.net/">GO TO THE REGULAR SITE</a> IF YOU
               WANT TO PLAY PROPERLY
