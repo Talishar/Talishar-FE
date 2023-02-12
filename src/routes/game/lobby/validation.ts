@@ -10,15 +10,15 @@ export const deckValidation = (deckSize: number) => {
         object().shape({
           id: string().required(),
           is1H: boolean(),
-          hands: number()
+          numHands: number()
         })
       )
       // Test that the sum of weapons.hands is less than 2. And hope LSS don't introduce heroes with only 1 hand, or 3 hands.
       .test('hands', 'Your hero only has two hands.', (weapons = []) => {
-        const hands = weapons.reduce((total, row) => {
-          return total + (row.hands ?? 0);
+        const numHands = weapons.reduce((total, row) => {
+          return total + (row.numHands ?? 0);
         }, 0);
-        return hands <= 2;
+        return numHands <= 2;
       }), // maximum 2 hand-objects
     head: string().required('You must have head equipment.'),
     chest: string().required('You must have chest equipment.'),

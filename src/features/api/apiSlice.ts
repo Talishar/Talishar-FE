@@ -28,6 +28,7 @@ import {
 } from 'interface/API/GetLobbyInfo.php';
 import { ChooseFirstPlayer } from 'interface/API/ChooseFirstPlayer.php';
 import { SubmitSideboardAPI } from 'interface/API/SubmitSideboard.php';
+import { GetFavoriteDecksResponse } from 'interface/API/GetFavoriteDecks.php';
 
 // catch warnings and show a toast if we get one.
 export const rtkQueryErrorToaster: Middleware =
@@ -35,7 +36,8 @@ export const rtkQueryErrorToaster: Middleware =
     if (isRejectedWithValue(action)) {
       console.warn('Rejected action:', action);
       toast.error(
-        `Error: ${action.payload} - ${action.error?.message ?? 'an error happened'
+        `Error: ${action.payload} - ${
+          action.error?.message ?? 'an error happened'
         }`
       );
     }
@@ -94,8 +96,26 @@ export const apiSlice = createApi({
         return {
           url: URL_END_POINT.LOGIN,
           method: 'POST',
-          body: { ...body, submit: true },
-        }
+          body: { ...body, submit: true }
+        };
+      }
+    }),
+    loginWithCookie: builder.mutation({
+      query: (body) => {
+        return {
+          url: URL_END_POINT.LOGIN_WITH_COOKIE,
+          method: 'POST',
+          body: {}
+        };
+      }
+    }),
+    logOut: builder.mutation({
+      query: (body) => {
+        return {
+          url: URL_END_POINT.LOGOUT,
+          method: 'POST',
+          body: {}
+        };
       }
     }),
     submitChat: builder.mutation({
@@ -135,6 +155,9 @@ export const apiSlice = createApi({
         return {
           url: URL_END_POINT.GET_FAVORITE_DECKS
         };
+      },
+      transformResponse: (response: GetFavoriteDecksResponse, metra, arg) => {
+        return response;
       }
     }),
     createGame: builder.mutation({
@@ -215,6 +238,8 @@ export const {
   useGetGameListQuery,
   useGetFavoriteDecksQuery,
   useLoginMutation,
+  useLoginWithCookieMutation,
+  useLogOutMutation,
   useCreateGameMutation,
   useJoinGameMutation,
   useGetLobbyInfoQuery,

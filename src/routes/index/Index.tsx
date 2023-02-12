@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import CreateGame from '../game/create/CreateGame';
 import GameList from './components/gameList/GameList';
 import styles from './Index.module.css';
+import TalisharLogo from '../../img/TalisharLogo.webp';
 
 const Index = () => {
   const dispatch = useAppDispatch();
@@ -21,22 +22,24 @@ const Index = () => {
         <div>
           <CreateGame />
         </div>
-        <div>
-          <h1>News</h1>
-          <h1>BETA CLIENT BETA CLIENT BETA CLIENT BETA CLIENT</h1>
-          <h1>
-            THE FORMS AND SITE DO NOT WORK{' '}
-            <a href="https://talishar.net/">GO TO THE REGULAR SITE</a> IF YOU
-            WANT TO ACTUALLY PLAY
-          </h1>
-          <h3>Big changes to matchmaking!</h3>
-          <h4>Login is now required for matchmaking</h4>
+        <article className={styles.news}>
+          <img src={TalisharLogo} className={styles.logo} />
+          <hgroup>
+            <h1>News</h1>
+            <h2>THIS IS A BETA AND THINGS ARE (even more) UNRELIABLE</h2>
+            <h3>
+              <a href="https://talishar.net/">GO TO THE REGULAR SITE</a> IF YOU
+              WANT TO PLAY PROPERLY
+            </h3>
+            <h4>Big changes to matchmaking!</h4>
+            <h5>Login is now required for matchmaking</h5>
+          </hgroup>
           <p>
             If logged out, you can still make private games to play with
             friends, against yourself in multiple tabs, or against the bot!
             We've also added Clash as a supported format.
           </p>
-        </div>
+        </article>
       </div>
     </main>
   );

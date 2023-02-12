@@ -1,3 +1,28 @@
 .firstCol {
   overflow-y: auto;
 }
+
+.news {
+  margin: 2em auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  width: 460px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+}
+
+@media (max-width: 767px) {
+  .news {
+    width: 100%;
+    border: none;
+  }
+}
+
+.logo {
+  display: block;
+  max-width: 1080px;
+  max-height: 483px;
+  width: auto;
+  height: auto;
+}

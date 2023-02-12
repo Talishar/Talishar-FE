@@ -1,9 +1,13 @@
 import { useAppDispatch } from 'app/Hooks';
 import classNames from 'classnames';
 import { GAME_FORMAT, GAME_VISIBILITY } from 'constants';
-import { useCreateGameMutation } from 'features/api/apiSlice';
+import {
+  useCreateGameMutation,
+  useGetFavoriteDecksQuery
+} from 'features/api/apiSlice';
 import { setGameStart } from 'features/game/GameSlice';
 import { Field, Form, Formik, FormikHelpers } from 'formik';
+import useAuth from 'hooks/useAuth';
 import {
   CreateGameAPI,
   CreateGameResponse
@@ -17,16 +21,17 @@ import { skipPartiallyEmittedExpressions } from 'typescript';
 import styles from './CreateGame.module.css';
 
 const CreateGame = () => {
+  const { isLoggedIn } = useAuth();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const isLoggedIn = false; // TODO: useAuth(); handler or something
+  // const { data, isLoading, error } = useGetFavoriteDecksQuery({});
   const [createGame, createGameResult] = useCreateGameMutation();
   const initialValues: CreateGameAPI = {
     deck: '',
     fabdb: '',
     deckTestMode: false,
     format: GAME_FORMAT.CLASSIC_CONSTRUCTED,
-    visibility: GAME_VISIBILITY.PUBLIC,
+    visibility: GAME_VISIBILITY.PRIVATE,
     decksToTry: '',
     favoriteDeck: false,
     favoriteDecks: '',
@@ -37,6 +42,7 @@ const CreateGame = () => {
     values: CreateGameAPI,
     { setSubmitting }: FormikHelpers<CreateGameAPI>
   ) => {
+    console.log('submit values', values);
     setSubmitting(true);
     try {
       const response = await createGame(values).unwrap();
@@ -64,7 +70,7 @@ const CreateGame = () => {
   };
 
   const buttonClass = classNames(styles.button, 'primary');
-  console.log(createGameResult);
+
   return (
     <div>
       <article className={styles.formContainer}>
@@ -73,7 +79,7 @@ const CreateGame = () => {
           {({ values, isSubmitting }) => (
             <Form>
               <div className={styles.formInner}>
-                {!!isLoggedIn && (
+                {true === false && (
                   <label>
                     Favorite Deck
                     <select
@@ -81,9 +87,13 @@ const CreateGame = () => {
                       id="selectFavorite"
                       placeholder="Login"
                       aria-label="Login"
+                      // aria-busy={isLoading}
                     >
-                      <option>One</option>
-                      <option>Two</option>
+                      {/* {data?.favoriteDecks.map((deck, ix) => (
+                        <option value={deck.index} key={deck.key}>
+                          {deck.name}
+                        </option>
+                      ))} */}
                     </select>
                   </label>
                 )}
@@ -97,15 +107,17 @@ const CreateGame = () => {
                       aria-label="Deck Link"
                     />
                   </label>
-                  <label>
-                    <Field
-                      type="checkbox"
-                      role="switch"
-                      id="favoriteDeck"
-                      name="favoriteDeck"
-                    />
-                    Save Deck to ❤️ Favorites
-                  </label>
+                  {isLoggedIn && (
+                    <label>
+                      <Field
+                        type="checkbox"
+                        role="switch"
+                        id="favoriteDeck"
+                        name="favoriteDeck"
+                      />
+                      Save Deck to ❤️ Favorites
+                    </label>
+                  )}
                 </fieldset>
                 <label>
                   Game Name
@@ -143,30 +155,31 @@ const CreateGame = () => {
                     </option>
                   </Field>
                 </label>
-                <label>
-                  Visibility
-                  <Field
-                    as="select"
-                    name="visibility"
-                    id="selectvisibility"
-                    placeholder={GAME_VISIBILITY.PUBLIC}
-                    aria-label="Visibility"
-                  >
-                    <option value={GAME_VISIBILITY.PUBLIC}>Public</option>
-                    <option value={GAME_VISIBILITY.PRIVATE}>Private</option>
-                  </Field>
-                </label>
-                <label>
-                  <Field
-                    type="checkbox"
-                    role="switch"
-                    id="deckTestMode"
-                    name="deckTestMode"
-                    aria-label="Single Player"
-                  />
-                  Single Player
-                  <br />
-                </label>
+                <fieldset>
+                  <label>
+                    Visibility
+                    <Field
+                      as="select"
+                      name="visibility"
+                      id="visibility"
+                      placeholder={GAME_VISIBILITY.PUBLIC}
+                      aria-label="Visibility"
+                    >
+                      <option value={GAME_VISIBILITY.PUBLIC}>Public</option>
+                      <option value={GAME_VISIBILITY.PRIVATE}>Private</option>
+                    </Field>
+                  </label>
+                  <label>
+                    <Field
+                      type="checkbox"
+                      role="switch"
+                      id="deckTestMode"
+                      name="deckTestMode"
+                      aria-label="Single Player"
+                    />
+                    Single Player
+                  </label>
+                </fieldset>
               </div>
               <button
                 type="submit"

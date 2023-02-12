@@ -29,7 +29,7 @@ export interface Weapon {
   id: string;
   is1H: boolean;
   img?: string;
-  hands?: number;
+  numHands?: number;
   isQuiver?: boolean;
 }
 
