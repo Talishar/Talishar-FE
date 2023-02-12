@@ -62,7 +62,9 @@ const LoggedInGuard = ({
   shouldBeLoggedIn: boolean;
 }) => {
   // Todo: check for login status
-  const { isLoggedIn } = useAuth();
+  // TODO: Why is the hook causing a whole page refresh? :(
+  // const { isLoggedIn } = useAuth();
+  const isLoggedIn = false;
 
   if (isLoggedIn === !shouldBeLoggedIn) {
     return (

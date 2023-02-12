@@ -27,7 +27,7 @@ const CreateGame = () => {
     fabdb: '',
     deckTestMode: false,
     format: GAME_FORMAT.CLASSIC_CONSTRUCTED,
-    visibility: '',
+    visibility: GAME_VISIBILITY.PRIVATE,
     decksToTry: '',
     favoriteDeck: false,
     favoriteDecks: '',
@@ -38,11 +38,9 @@ const CreateGame = () => {
     values: CreateGameAPI,
     { setSubmitting }: FormikHelpers<CreateGameAPI>
   ) => {
+    console.log('submit values', values);
     setSubmitting(true);
     try {
-      values.visibility =
-        values.visibility === '' ? 'private' : values.visibility;
-      console.log(values);
       const response = await createGame(values).unwrap();
       if (response.error) {
         throw response.error;
@@ -155,13 +153,11 @@ const CreateGame = () => {
                     <Field
                       as="select"
                       name="visibility"
-                      id="selectvisibility"
+                      id="visibility"
                       placeholder={GAME_VISIBILITY.PUBLIC}
                       aria-label="Visibility"
                     >
-                      {isLoggedIn && (
-                        <option value={GAME_VISIBILITY.PUBLIC}>Public</option>
-                      )}
+                      <option value={GAME_VISIBILITY.PUBLIC}>Public</option>
                       <option value={GAME_VISIBILITY.PRIVATE}>Private</option>
                     </Field>
                   </label>

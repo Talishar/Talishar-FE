@@ -4,7 +4,12 @@ import { Link, Outlet } from 'react-router-dom';
 import styles from './Header.module.css';
 
 const Header = () => {
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, logOut } = useAuth();
+
+  const handleLogOut = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    logOut();
+  };
 
   return (
     <div>
@@ -30,6 +35,13 @@ const Header = () => {
               <Link to="/user/login">Log In</Link>
             )}
           </li>
+          {isLoggedIn && (
+            <li>
+              <button onClick={handleLogOut} className="secondary outline">
+                Log out
+              </button>
+            </li>
+          )}
         </ul>
       </nav>
       <Outlet />
