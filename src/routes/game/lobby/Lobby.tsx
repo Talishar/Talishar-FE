@@ -14,7 +14,7 @@ import {
   useGetLobbyInfoQuery,
   useSubmitSideboardMutation
 } from 'features/api/apiSlice';
-import { useAppDispatch, useAppSelector } from 'app/Hooks';
+import { useAppSelector } from 'app/Hooks';
 import { shallowEqual } from 'react-redux';
 import { RootState } from 'app/Store';
 import { DeckResponse, Weapon } from 'interface/API/GetLobbyInfo.php';
@@ -33,7 +33,6 @@ const Lobby = () => {
   const [width, height] = useWindowDimensions();
   const [isWideScreen, setIsWideScreen] = useState(false);
   const navigate = useNavigate();
-  const dispatch = useAppDispatch();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const gameInfo = useAppSelector(
     (state: RootState) => state.game.gameInfo,
@@ -161,11 +160,6 @@ const Lobby = () => {
     default:
   }
 
-  const contentContainerClasses = classNames([
-    styles.contentContainer,
-    { [styles.gridContentContainer]: isWideScreen }
-  ]);
-
   const weaponsIndexed = [
     ...data.deck.weapons,
     ...data.deck.offhand,
@@ -198,21 +192,21 @@ const Lobby = () => {
   return (
     <main className={mainClassNames}>
       <LobbyUpdateHandler isSubmitting={isSubmitting} />
-      <div>
-        <Formik
-          initialValues={{
-            deck: deckIndexed,
-            weapons: weaponsIndexed,
-            head: [...data.deck.head, ...data.deck.headSB, 'NONE00'][0],
-            chest: [...data.deck.chest, ...data.deck.chestSB, 'NONE00'][0],
-            arms: [...data.deck.arms, ...data.deck.armsSB, 'NONE00'][0],
-            legs: [...data.deck.legs, ...data.deck.legsSB, 'NONE00'][0]
-          }}
-          onSubmit={handleFormSubmission}
-          validationSchema={deckValidation(deckSize)}
-          enableReinitialize
-        >
-          <Form>
+      <Formik
+        initialValues={{
+          deck: deckIndexed,
+          weapons: weaponsIndexed,
+          head: [...data.deck.head, ...data.deck.headSB, 'NONE00'][0],
+          chest: [...data.deck.chest, ...data.deck.chestSB, 'NONE00'][0],
+          arms: [...data.deck.arms, ...data.deck.armsSB, 'NONE00'][0],
+          legs: [...data.deck.legs, ...data.deck.legsSB, 'NONE00'][0]
+        }}
+        onSubmit={handleFormSubmission}
+        validationSchema={deckValidation(deckSize)}
+        enableReinitialize
+      >
+        <Form className={styles.form}>
+          <div className={styles.gridLayout}>
             <div className={styles.titleContainer}>
               <div
                 className={styles.leftCol}
@@ -294,31 +288,29 @@ const Lobby = () => {
                 </nav>
               )
             )}
-            <div className={contentContainerClasses}>
-              {(activeTab === 'equipment' || isWideScreen) && (
-                <Equipment
-                  lobbyInfo={data}
-                  weapons={weaponsIndexed}
-                  weaponSB={weaponsSBIndexed}
-                />
-              )}
-              {(activeTab === 'deck' || isWideScreen) && (
-                <Deck deck={[...deckIndexed, ...deckSBIndexed]} />
-              )}
-              {(activeTab === 'chat' || isWideScreen) && <LobbyChat />}
-              {(activeTab === 'matchups' || isWideScreen) && (
-                <Matchups refetch={refetch} />
-              )}
-            </div>
+            {(activeTab === 'equipment' || isWideScreen) && (
+              <Equipment
+                lobbyInfo={data}
+                weapons={weaponsIndexed}
+                weaponSB={weaponsSBIndexed}
+              />
+            )}
+            {(activeTab === 'deck' || isWideScreen) && (
+              <Deck deck={[...deckIndexed, ...deckSBIndexed]} />
+            )}
+            {(activeTab === 'chat' || isWideScreen) && <LobbyChat />}
+            {(activeTab === 'matchups' || isWideScreen) && (
+              <Matchups refetch={refetch} />
+            )}
             {!gameLobby?.amIChoosingFirstPlayer ? (
               <StickyFooter
                 deckSize={deckSize}
                 submitSideboard={gameLobby?.canSubmitSideboard ?? false}
               />
             ) : null}
-          </Form>
-        </Formik>
-      </div>
+          </div>
+        </Form>
+      </Formik>
       <CardPortal />
     </main>
   );

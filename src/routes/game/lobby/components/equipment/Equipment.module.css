@@ -8,6 +8,7 @@
   gap: 0.5em 3em;
   padding: 0 1em;
   min-width: 0px;
+  grid-area: weapons;
 }
 
 .categoryContainer {
@@ -62,4 +63,10 @@
 .eqCategory input[type='checkbox']:checked + div > img {
   box-shadow: 0 0 0 0.2em var(--primary);
   filter: brightness(1);
+}
+
+@media (min-width: 1200px) {
+  .container {
+    overflow-y: auto;
+  }
 }

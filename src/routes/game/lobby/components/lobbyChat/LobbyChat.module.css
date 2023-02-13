@@ -1,5 +1,4 @@
 .container {
-  height: 500px;
   display: flex;
   flex-direction: column;
   align-content: center;
@@ -7,8 +6,16 @@
   align-items: flex-end;
   max-width: 100%;
   min-width: 0px;
+  grid-area: chat;
+  height: calc(100dvh - 420px);
 }
 
 .spacer {
   height: 5em;
+}
+
+@media (min-width: 1200px) {
+  .spacer {
+    height: 0;
+  }
 }
