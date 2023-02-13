@@ -174,7 +174,7 @@ const CreateGame = () => {
                       placeholder={GAME_VISIBILITY.PUBLIC}
                       aria-label="Visibility"
                     >
-                      {isLoggedin && (
+                      {isLoggedIn && (
                         <option value={GAME_VISIBILITY.PUBLIC}>Public</option>
                       )}
                       <option value={GAME_VISIBILITY.PRIVATE}>Private</option>
