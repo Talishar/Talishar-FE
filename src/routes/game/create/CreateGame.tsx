@@ -30,11 +30,15 @@ const CreateGame = () => {
     deck: "",
     fabdb: "",
     deckTestMode: false,
-    format: isLoggedIn ? FORMAT.CLASSIC_CONSTRUCTED : FORMAT.OPEN_FORMAT,
-    visibility: isLoggedIn ? GAME_VISIBILITY.PUBLIC, GAME_VISIBILITY.PRIVATE,
+    format: isLoggedIn
+      ? GAME_FORMAT.CLASSIC_CONSTRUCTED
+      : GAME_FORMAT.OPEN_FORMAT,
+    visibility: isLoggedIn ? GAME_VISIBILITY.PUBLIC : GAME_VISIBILITY.PRIVATE,
     decksToTry: "",
     favoriteDeck: false,
-    favoriteDecklink: data?.lastUsedDeckIndex ? data.favoritesDeck[data.lastUsedDeckIndex] : '',
+    favoriteDecklink: data?.lastUsedDeckIndex
+      ? data.favoritesDeck[data.lastUsedDeckIndex]
+      : "",
     gameDescription: "",
   };
 
@@ -87,7 +91,7 @@ const CreateGame = () => {
                   <label>
                     Favorite Deck
                     <Field
-                    type="select"
+                      type="select"
                       name="favoriteDeckLink"
                       id="favoriteDeckLink"
                       placeholder="Select a favorite deck"
@@ -169,7 +173,9 @@ const CreateGame = () => {
                       placeholder={GAME_VISIBILITY.PUBLIC}
                       aria-label="Visibility"
                     >
-                      {isLoggedin ? <option value={GAME_VISIBILITY.PUBLIC}>Public</option>}
+                      {isLoggedin && (
+                        <option value={GAME_VISIBILITY.PUBLIC}>Public</option>
+                      )}
                       <option value={GAME_VISIBILITY.PRIVATE}>Private</option>
                     </Field>
                   </label>
