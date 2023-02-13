@@ -36,9 +36,10 @@ const CreateGame = () => {
     visibility: isLoggedIn ? GAME_VISIBILITY.PUBLIC : GAME_VISIBILITY.PRIVATE,
     decksToTry: "",
     favoriteDeck: false,
-    favoriteDecklink: data?.lastUsedDeckIndex
-      ? data.favoritesDeck[data.lastUsedDeckIndex]
-      : "",
+    favoriteDecklink:
+      data?.lastUsedDeckIndex !== undefined
+        ? data.favoritesDeck[data.lastUsedDeckIndex]
+        : "",
     gameDescription: "",
   };
 
