@@ -1,24 +1,24 @@
-import { useAppDispatch } from "app/Hooks";
-import classNames from "classnames";
-import { GAME_FORMAT, GAME_VISIBILITY } from "constants";
+import { useAppDispatch } from 'app/Hooks';
+import classNames from 'classnames';
+import { GAME_FORMAT, GAME_VISIBILITY } from 'constants';
 import {
   useCreateGameMutation,
-  useGetFavoriteDecksQuery,
-} from "features/api/apiSlice";
-import { setGameStart } from "features/game/GameSlice";
-import { Field, Form, Formik, FormikHelpers } from "formik";
-import useAuth from "hooks/useAuth";
+  useGetFavoriteDecksQuery
+} from 'features/api/apiSlice';
+import { setGameStart } from 'features/game/GameSlice';
+import { Field, Form, Formik, FormikHelpers } from 'formik';
+import useAuth from 'hooks/useAuth';
 import {
   CreateGameAPI,
-  CreateGameResponse,
-} from "interface/API/CreateGame.php";
-import { handleRequest } from "msw";
-import React from "react";
-import { toast } from "react-hot-toast";
-import { FaExclamationCircle } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
-import { skipPartiallyEmittedExpressions } from "typescript";
-import styles from "./CreateGame.module.css";
+  CreateGameResponse
+} from 'interface/API/CreateGame.php';
+import { handleRequest } from 'msw';
+import React from 'react';
+import { toast } from 'react-hot-toast';
+import { FaExclamationCircle } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
+import { skipPartiallyEmittedExpressions } from 'typescript';
+import styles from './CreateGame.module.css';
 
 const CreateGame = () => {
   const { isLoggedIn } = useAuth();
@@ -27,27 +27,27 @@ const CreateGame = () => {
   const { data, isLoading, error } = useGetFavoriteDecksQuery({});
   const [createGame, createGameResult] = useCreateGameMutation();
   const initialValues: CreateGameAPI = {
-    deck: "",
-    fabdb: "",
+    deck: '',
+    fabdb: '',
     deckTestMode: false,
     format: isLoggedIn
       ? GAME_FORMAT.CLASSIC_CONSTRUCTED
       : GAME_FORMAT.OPEN_FORMAT,
     visibility: isLoggedIn ? GAME_VISIBILITY.PUBLIC : GAME_VISIBILITY.PRIVATE,
-    decksToTry: "",
+    decksToTry: '',
     favoriteDeck: false,
-    favoriteDecklink:
+    favoriteDecks:
       data?.lastUsedDeckIndex !== undefined
-        ? data.favoritesDeck[data.lastUsedDeckIndex]
-        : "",
-    gameDescription: "",
+        ? data.favoriteDecks[data.lastUsedDeckIndex].key
+        : '',
+    gameDescription: ''
   };
 
   const handleSubmit = async (
     values: CreateGameAPI,
     { setSubmitting }: FormikHelpers<CreateGameAPI>
   ) => {
-    console.log("submit values", values);
+    console.log('submit values', values);
     setSubmitting(true);
     try {
       const response = await createGame(values).unwrap();
@@ -55,26 +55,26 @@ const CreateGame = () => {
         throw response.error;
       } else {
         if (!response.playerID || !response.gameName || !response.authKey) {
-          throw new Error("A required param is missing");
+          throw new Error('A required param is missing');
         }
         dispatch(
           setGameStart({
             playerID: response.playerID ?? 0,
             gameID: response.gameName ?? 0,
-            authKey: response.authKey ?? "",
+            authKey: response.authKey ?? ''
           })
         );
         navigate(`/game/lobby/${response.gameName}`);
       }
     } catch (error) {
       console.warn(error);
-      toast.error(String(error), { position: "top-center" });
+      toast.error(String(error), { position: 'top-center' });
     } finally {
       setSubmitting(false);
     }
   };
 
-  const buttonClass = classNames(styles.button, "primary");
+  const buttonClass = classNames(styles.button, 'primary');
 
   return (
     <div>
@@ -92,14 +92,14 @@ const CreateGame = () => {
                   <label>
                     Favorite Deck
                     <Field
-                      type="select"
-                      name="favoriteDeckLink"
-                      id="favoriteDeckLink"
+                      as="select"
+                      name="favoriteDecks"
+                      id="favoriteDecks"
                       placeholder="Select a favorite deck"
                       aria-busy={isLoading}
                     >
                       {data?.favoriteDecks.map((deck, ix) => (
-                        <option value={deck.index} index={deck.index}>
+                        <option value={deck.key} key={deck.index}>
                           {deck.name}
                         </option>
                       ))}
