@@ -2,6 +2,7 @@
   user-select: none;
   margin: auto;
   max-width: 2560px;
+  display: flex;
 }
 
 .titleContainer {
@@ -65,12 +66,10 @@ nav {
   padding: 0 0.5em;
 }
 
-.gridContentContainer {
-  max-width: 100%;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 300px 200px;
-  grid-template-rows: 1fr;
-  gap: 2em;
+.gridLayout {
+  display: flex;
+  width: 100dvw;
+  flex-direction: column;
 }
 
 .buttonClass {
@@ -80,4 +79,36 @@ nav {
 
 .alarm {
   color: var(--alarm);
+}
+
+@media (min-width: 1200px) {
+  .lobbyClass {
+    position: fixed;
+    top: 0px;
+    bottom: 110px;
+    overflow-y: hidden;
+  }
+
+  .form {
+    min-height: 100%;
+    overflow-y: hidden;
+    display: flex;
+  }
+
+  .gridLayout {
+    gap: 1em;
+    padding: 1em;
+    min-height: 100%;
+    overflow-y: hidden;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 200px;
+    grid-template-rows: 240px 1fr;
+    grid-template-areas:
+      'hero weapons deck matchups'
+      'chat weapons deck matchups';
+  }
+
+  .titleContainer {
+    grid-area: hero;
+  }
 }

@@ -24,7 +24,7 @@ const CreateGame = () => {
   const { isLoggedIn } = useAuth();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  // const { data, isLoading, error } = useGetFavoriteDecksQuery({});
+  const { data, isLoading, error } = useGetFavoriteDecksQuery({});
   const [createGame, createGameResult] = useCreateGameMutation();
   const initialValues: CreateGameAPI = {
     deck: '',
@@ -79,7 +79,7 @@ const CreateGame = () => {
           {({ values, isSubmitting }) => (
             <Form>
               <div className={styles.formInner}>
-                {true === false && (
+                {isLoggedIn && (
                   <label>
                     Favorite Deck
                     <select
@@ -87,13 +87,13 @@ const CreateGame = () => {
                       id="selectFavorite"
                       placeholder="Login"
                       aria-label="Login"
-                      // aria-busy={isLoading}
+                      aria-busy={isLoading}
                     >
-                      {/* {data?.favoriteDecks.map((deck, ix) => (
+                      {data?.favoriteDecks.map((deck, ix) => (
                         <option value={deck.index} key={deck.key}>
                           {deck.name}
                         </option>
-                      ))} */}
+                      ))}
                     </select>
                   </label>
                 )}

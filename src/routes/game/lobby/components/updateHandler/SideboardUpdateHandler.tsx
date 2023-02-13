@@ -16,10 +16,7 @@ interface LobbyUpdateHandlerProps {
 export const LobbyUpdateHandler = React.memo(
   ({ isSubmitting }: LobbyUpdateHandlerProps) => {
     const abortRef = useRef<AbortController>();
-    const params = useAppSelector(
-      (state: RootState) => state.game.gameInfo,
-      shallowEqual
-    );
+    const params = useAppSelector((state: RootState) => state.game.gameInfo);
     const isUpdateInProgress = useAppSelector(
       (state: RootState) => state.game.isUpdateInProgress
     );
@@ -36,6 +33,7 @@ export const LobbyUpdateHandler = React.memo(
     if (isSubmitting) {
       abortRef.current?.abort();
     }
+
     // gameID already in params
     useEffect(() => {
       abortRef.current = new AbortController();
