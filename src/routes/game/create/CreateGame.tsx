@@ -19,6 +19,8 @@ import { FaExclamationCircle } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { skipPartiallyEmittedExpressions } from 'typescript';
 import styles from './CreateGame.module.css';
+import CreateGameErrors from './CreateGameErrors';
+import validationSchema from './validationSchema';
 
 const CreateGame = () => {
   const { isLoggedIn } = useAuth();
@@ -26,6 +28,7 @@ const CreateGame = () => {
   const dispatch = useAppDispatch();
   const { data, isLoading, error } = useGetFavoriteDecksQuery({});
   const [createGame, createGameResult] = useCreateGameMutation();
+
   const initialValues: CreateGameAPI = {
     deck: '',
     fabdb: '',
@@ -38,7 +41,7 @@ const CreateGame = () => {
     favoriteDeck: false,
     favoriteDecks:
       data?.lastUsedDeckIndex !== undefined
-        ? data.favoriteDecks[data.lastUsedDeckIndex].key
+        ? data.favoriteDecks[data.lastUsedDeckIndex]?.key
         : '',
     gameDescription: ''
   };
@@ -47,7 +50,6 @@ const CreateGame = () => {
     values: CreateGameAPI,
     { setSubmitting }: FormikHelpers<CreateGameAPI>
   ) => {
-    console.log('submit values', values);
     setSubmitting(true);
     try {
       const response = await createGame(values).unwrap();
@@ -83,9 +85,10 @@ const CreateGame = () => {
         <Formik
           initialValues={initialValues}
           onSubmit={handleSubmit}
+          validationSchema={validationSchema}
           enableReinitialize
         >
-          {({ values, isSubmitting }) => (
+          {({ values, isSubmitting, errors }) => (
             <Form>
               <div className={styles.formInner}>
                 {isLoggedIn && !isLoading && (
@@ -199,13 +202,7 @@ const CreateGame = () => {
               >
                 Create Game
               </button>
-              {!!createGameResult?.data?.error && (
-                <div className={styles.alarm}>
-                  <>
-                    <FaExclamationCircle /> {createGameResult?.data?.error}
-                  </>
-                </div>
-              )}
+              <CreateGameErrors createGameResult={createGameResult.data} />
             </Form>
           )}
         </Formik>

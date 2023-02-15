@@ -38,7 +38,7 @@ export const LoginForm = () => {
     onSubmit: async (values) => {
       try {
         const resp = await login(getLoginBody(values)).unwrap();
-        console.log('logged in');
+
         if (resp?.isUserLoggedIn) {
           toast.success('logged in!', { position: 'top-center' });
           setLoggedIn(resp?.loggedInUserID ?? '0', resp?.loggedInUserName, '');
@@ -46,7 +46,7 @@ export const LoginForm = () => {
           navigate('/');
         }
       } catch (err) {
-        console.log(err);
+        console.warn(err);
       }
     }
   });
