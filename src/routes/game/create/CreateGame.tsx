@@ -38,7 +38,7 @@ const CreateGame = () => {
     favoriteDeck: false,
     favoriteDecks:
       data?.lastUsedDeckIndex !== undefined
-        ? data.favoriteDecks[data.lastUsedDeckIndex].key
+        ? data.favoriteDecks[data.lastUsedDeckIndex]?.key
         : '',
     gameDescription: ''
   };
