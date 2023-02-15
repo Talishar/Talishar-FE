@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { useAppDispatch } from 'app/Hooks';
-import { useJoinGameMutation } from 'features/api/apiSlice';
+import {
+  useGetFavoriteDecksQuery,
+  useJoinGameMutation
+} from 'features/api/apiSlice';
 import { Formik, Form, Field, FormikHelpers } from 'formik';
 import { JoinGameAPI } from 'interface/API/JoinGame.php';
 import { createSearchParams, useNavigate, useParams } from 'react-router-dom';
@@ -9,12 +12,16 @@ import { useKnownSearchParams } from 'hooks/useKnownSearchParams';
 import { setGameStart } from 'features/game/GameSlice';
 import { toast } from 'react-hot-toast';
 import { FaExclamationCircle } from 'react-icons/fa';
+import CreateGameErrors from '../create/CreateGameErrors';
+import validationSchema from './validationSchema';
+import useAuth from 'hooks/useAuth';
 
 const JoinGame = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [joinGame, joinGameResult] = useJoinGameMutation();
-  const isLoggedIn = false; // TODO: useAuth(); handler or something
+  const { data, isLoading, error } = useGetFavoriteDecksQuery({});
+  const { isLoggedIn } = useAuth();
 
   let [{ gameName = '0', playerID = '2', authKey = '' }] =
     useKnownSearchParams();
@@ -28,7 +35,10 @@ const JoinGame = () => {
     deckTestMode: false,
     decksToTry: '',
     favoriteDeck: false,
-    favoriteDecks: '',
+    favoriteDecks:
+      data?.lastUsedDeckIndex !== undefined
+        ? data.favoriteDecks[data.lastUsedDeckIndex]?.key
+        : '',
     gameDescription: ''
   };
 
@@ -69,22 +79,30 @@ const JoinGame = () => {
   return (
     <main className={styles.LoginPageContainer}>
       <article className={styles.formContainer}>
-        <Formik initialValues={initialValues} onSubmit={handleSubmit}>
+        <Formik
+          initialValues={initialValues}
+          onSubmit={handleSubmit}
+          validationSchema={validationSchema}
+        >
           {({ values, isSubmitting }) => (
             <Form>
               <div className={styles.form}>
-                {isLoggedIn && (
+                {isLoggedIn && !isLoading && (
                   <label>
                     Favorite Deck
-                    <select
-                      name="login"
-                      id="selectFavorite"
-                      placeholder="Login"
-                      aria-label="Login"
+                    <Field
+                      as="select"
+                      name="favoriteDecks"
+                      id="favoriteDecks"
+                      placeholder="Select a favorite deck"
+                      aria-busy={isLoading}
                     >
-                      <option>One</option>
-                      <option>Two</option>
-                    </select>
+                      {data?.favoriteDecks.map((deck, ix) => (
+                        <option value={deck.key} key={deck.index}>
+                          {deck.name}
+                        </option>
+                      ))}
+                    </Field>
                   </label>
                 )}
                 <fieldset>
@@ -117,13 +135,7 @@ const JoinGame = () => {
               >
                 Join Game
               </button>
-              {!!joinGameResult?.data?.error && (
-                <div className={styles.alarm}>
-                  <>
-                    <FaExclamationCircle /> {joinGameResult?.data?.error}
-                  </>
-                </div>
-              )}
+              <CreateGameErrors createGameResult={joinGameResult.data} />
             </Form>
           )}
         </Formik>
