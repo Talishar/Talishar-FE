@@ -7,22 +7,24 @@ export interface GetLobbyInfo {
 export interface Deck {
   heroName: string;
   hero: string;
-  weapons: Weapon[];
+  weapons?: Weapon[];
   head: string[];
   chest: string[];
   arms: string[];
   legs: string[];
-  offhand: Weapon[];
+  offhand?: Weapon[];
   cards: string[];
+  hands: Weapon[];
   headSB: string[];
   chestSB: string[];
   armsSB: string[];
   legsSB: string[];
-  offhandSB: Weapon[];
-  weaponSB: Weapon[];
+  offhandSB?: Weapon[];
+  weaponSB?: Weapon[];
   cardsSB: string[];
-  quiver: Weapon[];
-  quiverSB: Weapon[];
+  quiver?: Weapon[];
+  quiverSB?: Weapon[];
+  handsSB: Weapon[];
 }
 
 export interface Weapon {

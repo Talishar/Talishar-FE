@@ -160,11 +160,7 @@ const Lobby = () => {
     default:
   }
 
-  const weaponsIndexed = [
-    ...data.deck.weapons,
-    ...data.deck.offhand,
-    ...data.deck.quiver
-  ].map((card, ix) => {
+  const weaponsIndexed = [...data.deck.hands].map((card, ix) => {
     return {
       id: `${card.id}-${ix}`,
       is1H: card.is1H,
@@ -174,9 +170,7 @@ const Lobby = () => {
   });
 
   const weaponsSBIndexed = [
-    ...data.deck.weaponSB,
-    ...data.deck.offhandSB,
-    ...data.deck.quiverSB,
+    ...data.deck.handsSB,
     { id: `NONE00`, is1H: true, img: `NONE00`, numHands: 2 }
   ].map((card, ix) => {
     return {
