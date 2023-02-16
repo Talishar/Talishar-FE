@@ -36,7 +36,9 @@ const CreateGame = () => {
     favoriteDeck: false,
     favoriteDecks:
       data?.lastUsedDeckIndex !== undefined
-        ? data.favoriteDecks[data.lastUsedDeckIndex]?.key
+        ? data.favoriteDecks.find(
+            (deck) => deck.index === data.lastUsedDeckIndex
+          )?.key
         : '',
     gameDescription: ''
   };
@@ -141,6 +143,11 @@ const CreateGame = () => {
                     id="gameDescription"
                     name="gameDescription"
                     aria-label="Game Name"
+                    aria-invalid={
+                      (errors.gameDescription && touched.gameDescription) as
+                        | boolean
+                        | undefined
+                    }
                     placeholder="Defaults to Game#14321542"
                   />
                 </label>
@@ -152,6 +159,9 @@ const CreateGame = () => {
                     id="format"
                     placeholder={GAME_FORMAT.BLITZ}
                     aria-label="Format"
+                    aria-invalid={
+                      (errors.format && touched.format) as boolean | undefined
+                    }
                   >
                     <option value={GAME_FORMAT.BLITZ}>Blitz</option>
                     <option value={GAME_FORMAT.CLASSIC_CONSTRUCTED}>
@@ -179,6 +189,11 @@ const CreateGame = () => {
                       id="visibility"
                       placeholder={GAME_VISIBILITY.PUBLIC}
                       aria-label="Visibility"
+                      aria-invalid={
+                        (errors.visibility && touched.visibility) as
+                          | boolean
+                          | undefined
+                      }
                     >
                       {isLoggedIn && (
                         <option value={GAME_VISIBILITY.PUBLIC}>Public</option>
@@ -193,6 +208,11 @@ const CreateGame = () => {
                       id="deckTestMode"
                       name="deckTestMode"
                       aria-label="Single Player"
+                      aria-invalid={
+                        (errors.deckTestMode && touched.deckTestMode) as
+                          | boolean
+                          | undefined
+                      }
                     />
                     Single Player
                   </label>
