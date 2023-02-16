@@ -1,3 +1,4 @@
+import React from 'react';
 import { useAppDispatch } from 'app/Hooks';
 import classNames from 'classnames';
 import { GAME_FORMAT, GAME_VISIBILITY } from 'constants';
@@ -8,16 +9,10 @@ import {
 import { setGameStart } from 'features/game/GameSlice';
 import { Field, Form, Formik, FormikHelpers } from 'formik';
 import useAuth from 'hooks/useAuth';
-import {
-  CreateGameAPI,
-  CreateGameResponse
-} from 'interface/API/CreateGame.php';
-import { handleRequest } from 'msw';
-import React from 'react';
+import { CreateGameAPI } from 'interface/API/CreateGame.php';
 import { toast } from 'react-hot-toast';
 import { FaExclamationCircle } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
-import { skipPartiallyEmittedExpressions } from 'typescript';
 import styles from './CreateGame.module.css';
 import CreateGameErrors from './CreateGameErrors';
 import validationSchema from './validationSchema';
@@ -88,7 +83,7 @@ const CreateGame = () => {
           validationSchema={validationSchema}
           enableReinitialize
         >
-          {({ values, isSubmitting, errors }) => (
+          {({ values, isSubmitting, errors, touched }) => (
             <Form>
               <div className={styles.formInner}>
                 {isLoggedIn && !isLoading && (
@@ -100,6 +95,11 @@ const CreateGame = () => {
                       id="favoriteDecks"
                       placeholder="Select a favorite deck"
                       aria-busy={isLoading}
+                      aria-invalid={
+                        (errors.favoriteDecks && touched.favoriteDecks) as
+                          | boolean
+                          | undefined
+                      }
                     >
                       {data?.favoriteDecks.map((deck, ix) => (
                         <option value={deck.key} key={deck.index}>
@@ -117,6 +117,9 @@ const CreateGame = () => {
                       id="fabdb"
                       name="fabdb"
                       aria-label="Deck Link"
+                      aria-invalid={
+                        (errors.fabdb && touched.fabdb) as boolean | undefined
+                      }
                     />
                   </label>
                   {isLoggedIn && (
