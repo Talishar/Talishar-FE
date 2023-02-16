@@ -9,9 +9,16 @@ import { HiClipboardCopy } from 'react-icons/hi';
 export type DeckSize = {
   deckSize: number;
   submitSideboard: boolean;
+  isWidescreen: boolean;
+  handleLeave: (e: React.MouseEvent<HTMLButtonElement>) => void;
 };
 
-const StickyFooter = ({ deckSize, submitSideboard }: DeckSize) => {
+const StickyFooter = ({
+  deckSize,
+  submitSideboard,
+  isWidescreen,
+  handleLeave
+}: DeckSize) => {
   const { errors, values, isValid } = useFormikContext<DeckResponse>();
   let errorArray = [] as string[];
   for (const [key, value] of Object.entries(errors)) {
@@ -25,6 +32,7 @@ const StickyFooter = ({ deckSize, submitSideboard }: DeckSize) => {
   };
 
   const dynamicContainer = classNames(styles.dynamicContainer, 'container');
+  const leaveLobby = classNames(styles.buttonClass, 'outline secondary');
 
   return (
     <div className={styles.stickyFooter}>
@@ -60,6 +68,11 @@ const StickyFooter = ({ deckSize, submitSideboard }: DeckSize) => {
           >
             Submit deck
           </button>
+          {isWidescreen && (
+            <button className={leaveLobby} onClick={handleLeave}>
+              Leave
+            </button>
+          )}
         </div>
       </div>
     </div>

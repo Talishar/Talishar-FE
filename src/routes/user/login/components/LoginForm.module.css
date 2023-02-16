@@ -1,39 +1,45 @@
 .formContainer {
-    width: 460px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 12px;
+  width: 460px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
 }
 
 @media (max-width: 767px) {
-    .formContainer {
-        width: 100%;
-        border: none;
-    }
+  .formContainer {
+    width: 100%;
+    border: none;
+  }
 }
 
 .submitButton {
-    margin-top: 18px;
+  margin-top: 18px;
 }
 
 .formError {
-    margin-top: 18px;
-    color: red;
-    text-align: center;
+  margin-top: 18px;
+  color: red;
+  text-align: center;
+}
+
+.fieldError {
+  margin-top: -12px;
+  color: red;
+  text-align: center;
 }
 
 .forgottenPassword {
-    margin-top: 12px;
+  margin-top: 12px;
 }
 
 .linebreak {
-    width: 100%;
-    text-align: center;
+  width: 100%;
+  text-align: center;
 }
 
 .signupButton {
-    width: 100%;
+  width: 100%;
 }
 
 .divider {
-    margin: 18px 0;
+  margin: 18px 0;
 }

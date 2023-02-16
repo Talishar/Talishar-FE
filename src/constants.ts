@@ -96,7 +96,8 @@ export const PROCESS_INPUT = {
 // Default shortcut inputs
 export const DEFAULT_SHORTCUTS = {
   TOGGLE_OPTIONS_MENU: 'KeyM',
-  PASS_TURN: 'Space'
+  PASS_TURN: 'Space',
+  CLOSE_WINDOW: 'Escape'
 };
 
 export const GAME_FORMAT = {
@@ -127,7 +128,8 @@ export const URL_END_POINT = {
   START_GAME_LEGACY: 'Start.php',
   LOGIN: '/AccountFiles/PasswordLoginAPI.php',
   LOGIN_WITH_COOKIE: '/AccountFiles/TryLoginAPI.php',
-  LOGOUT: `/AccountFiles/LogoutUserAPI.php`
+  LOGOUT: `/AccountFiles/LogoutUserAPI.php`,
+  SIGNUP: `/AccountFiles/SignUpAPI.php`
 };
 
 export const GAME_VISIBILITY = {
@@ -138,4 +140,16 @@ export const GAME_VISIBILITY = {
 export const ADD_DECK_TO_FAVORITES = {
   TRUE: 1,
   FALSE: 0
+};
+
+export const ZONE = {
+  HAND: 'HAND',
+  HERO: 'HERO',
+  ALLIES: 'ALLIES',
+  EQUIPMENT: 'EQUIPMENT',
+  ITEMS: 'ITEMS',
+  ARSENAL: 'ARSENAL',
+  AURAS: 'AURAS',
+  PERMANENTS: 'PERMANENTS',
+  LANDMARKS: 'LANDMARKS'
 };

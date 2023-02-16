@@ -6,15 +6,14 @@ import CardDisplay from '../../elements/cardDisplay/CardDisplay';
 import { FaTimes } from 'react-icons/fa';
 import styles from './CardListZone.module.css';
 import { useGetPopUpContentQuery } from 'features/api/apiSlice';
+import useShortcut from 'hooks/useShortcut';
+import { DEFAULT_SHORTCUTS } from 'constants';
 
 export const CardListZone = () => {
   const cardList = useAppSelector(
     (state: RootState) => state.game.cardListFocus
   );
   const dispatch = useAppDispatch();
-  if (cardList === undefined || cardList?.active != true) {
-    return null;
-  }
 
   const reversedList = cardList?.cardList
     ? [...cardList.cardList].reverse()
@@ -23,6 +22,12 @@ export const CardListZone = () => {
   const closeCardList = () => {
     dispatch(clearCardListFocus());
   };
+
+  useShortcut(DEFAULT_SHORTCUTS.CLOSE_WINDOW, closeCardList);
+
+  if (cardList === undefined || cardList?.active != true) {
+    return null;
+  }
 
   return (
     <div className={styles.emptyOutside} onClick={closeCardList}>

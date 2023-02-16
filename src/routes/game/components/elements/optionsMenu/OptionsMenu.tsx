@@ -8,7 +8,8 @@ import { closeOptionsMenu, submitButton } from 'features/game/GameSlice';
 import { FaTimes } from 'react-icons/fa';
 import styles from './OptionsMenu.module.css';
 import { useGetPopUpContentQuery } from 'features/api/apiSlice';
-import { PLAYER_OPTIONS, PROCESS_INPUT } from 'constants';
+import { DEFAULT_SHORTCUTS, PLAYER_OPTIONS, PROCESS_INPUT } from 'constants';
+import useShortcut from 'hooks/useShortcut';
 
 const OptionsContent = () => {
   const optionsMenu = useAppSelector(
@@ -30,6 +31,8 @@ const OptionsContent = () => {
     dispatch(closeOptionsMenu());
   };
 
+  useShortcut(DEFAULT_SHORTCUTS.CLOSE_WINDOW, clickCloseOptionsHandler);
+
   const clickSubmitOptionsHandler = () => {
     // TODO: implement
     console.log('submitting options');
@@ -47,7 +50,7 @@ const OptionsContent = () => {
 
   const mainMenu = async (e: React.MouseEvent) => {
     e.preventDefault;
-    navigate('/')
+    navigate('/');
   };
 
   const clickReportBugHandler = () => {

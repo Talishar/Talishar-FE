@@ -48,6 +48,8 @@ export default function PlayerInputPopUp() {
     return null;
   }
 
+  const title = { __html: inputPopUp.popup?.title ?? '' };
+
   const checkBoxSubmit = () => {
     let extraParams = `&chkCount=${checkedState.length}`;
     if (inputPopUp.multiChooseText) {
@@ -148,7 +150,7 @@ export default function PlayerInputPopUp() {
     <div className={styles.optionsContainer}>
       <div className={styles.optionsTitleContainer}>
         <div className={styles.optionsTitle}>
-          <h3 className={styles.title}>{inputPopUp.popup?.title}</h3>
+          <h3 className={styles.title} dangerouslySetInnerHTML={title}></h3>
           {inputPopUp.popup?.additionalComments}
         </div>
         {inputPopUp.popup?.canClose ? (

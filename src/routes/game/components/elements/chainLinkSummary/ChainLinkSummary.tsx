@@ -9,6 +9,8 @@ import CardTextLink from '../cardTextLink/CardTextLink';
 import { Effect } from '../effects/Effects';
 import { Card } from 'features/Card';
 import EndGameScreen from '../endGameScreen/EndGameScreen';
+import useShortcut from 'hooks/useShortcut';
+import { DEFAULT_SHORTCUTS } from 'constants';
 
 export const ChainLinkSummaryContainer = () => {
   const chainLinkSummary = useAppSelector(
@@ -67,6 +69,9 @@ const ChainLinkSummary = ({
   const closeCardList = () => {
     dispatch(hideChainLinkSummary());
   };
+
+  useShortcut(DEFAULT_SHORTCUTS.CLOSE_WINDOW, closeCardList);
+
   let content;
 
   if (isLoading) {
@@ -97,7 +102,7 @@ const ChainLinkSummary = ({
                     <td className={styles.column}>
                       <CardTextLink
                         cardName={entry.Name}
-                        cardID={entry.cardID}
+                        cardNumber={entry.cardID}
                       />
                     </td>
                     <td className={styles.column}>

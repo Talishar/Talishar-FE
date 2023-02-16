@@ -118,6 +118,15 @@ export const apiSlice = createApi({
         };
       }
     }),
+    signUp: builder.mutation({
+      query: (body) => {
+        return {
+          url: URL_END_POINT.SIGNUP,
+          method: 'POST',
+          body: { ...body, submit: true }
+        };
+      }
+    }),
     submitChat: builder.mutation({
       query: ({
         gameID = 0,
@@ -240,6 +249,7 @@ export const {
   useLoginMutation,
   useLoginWithCookieMutation,
   useLogOutMutation,
+  useSignUpMutation,
   useCreateGameMutation,
   useJoinGameMutation,
   useGetLobbyInfoQuery,

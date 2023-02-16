@@ -21,10 +21,12 @@
 
 .buttonHolder {
   grid-area: submit;
+  display: flex;
+  flex-direction: row;
+  gap: 0.5em;
 }
 
 .buttonClass {
-  color: black;
   margin-bottom: 0;
 }
 

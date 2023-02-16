@@ -61,10 +61,7 @@ const LoggedInGuard = ({
   children: JSX.Element;
   shouldBeLoggedIn: boolean;
 }) => {
-  // Todo: check for login status
-  // TODO: Why is the hook causing a whole page refresh? :(
-  // const { isLoggedIn } = useAuth();
-  const isLoggedIn = false;
+  const { isLoggedIn } = useAuth();
 
   if (isLoggedIn === !shouldBeLoggedIn) {
     return (
@@ -138,6 +135,7 @@ export const router = createBrowserRouter(
               path="password-recovery"
               element={<ForgottenPasswordForm />}
             />
+            <Route path="signup" element={<SignUpForm />} />
           </Route>
         </Route>
       </Route>

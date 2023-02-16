@@ -20,7 +20,7 @@ const JoinGame = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [joinGame, joinGameResult] = useJoinGameMutation();
-  const { data, isLoading, error } = useGetFavoriteDecksQuery({});
+  const { data, isLoading } = useGetFavoriteDecksQuery({});
   const { isLoggedIn } = useAuth();
 
   let [{ gameName = '0', playerID = '2', authKey = '' }] =
@@ -37,7 +37,9 @@ const JoinGame = () => {
     favoriteDeck: false,
     favoriteDecks:
       data?.lastUsedDeckIndex !== undefined
-        ? data.favoriteDecks[data.lastUsedDeckIndex]?.key
+        ? data.favoriteDecks.find(
+            (deck) => deck.index === data.lastUsedDeckIndex
+          )?.key
         : '',
     gameDescription: ''
   };
@@ -84,7 +86,7 @@ const JoinGame = () => {
           onSubmit={handleSubmit}
           validationSchema={validationSchema}
         >
-          {({ values, isSubmitting }) => (
+          {({ isSubmitting }) => (
             <Form>
               <div className={styles.form}>
                 {isLoggedIn && !isLoading && (

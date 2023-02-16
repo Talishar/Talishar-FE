@@ -26,6 +26,7 @@ import { SubmitSideboardAPI } from 'interface/API/SubmitSideboard.php';
 import { createSearchParams, useNavigate } from 'react-router-dom';
 import CardPortal from '../components/elements/cardPortal/CardPortal';
 import Matchups from './components/matchups/Matchups';
+import Button from 'features/Button';
 
 const Lobby = () => {
   const [activeTab, setActiveTab] = useState('equipment');
@@ -146,6 +147,13 @@ const Lobby = () => {
   const deckClasses = classNames({ secondary: activeTab !== 'deck' });
   const chatClasses = classNames({ secondary: activeTab !== 'chat' });
   const matchupClasses = classNames({ secondary: activeTab !== 'matchups' });
+  const leaveClasses = classNames('secondary outline');
+
+  const handleLeave = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    // TODO: Need a way to announce to the server that we are leaving
+    navigate(`/`);
+  };
 
   let deckSize = 60;
   switch (data.format) {
@@ -232,7 +240,19 @@ const Lobby = () => {
             ) : (
               !isWideScreen && (
                 <nav>
-                  <ul></ul>
+                  <ul>
+                    {!isWideScreen && (
+                      <li>
+                        <button
+                          className={leaveClasses}
+                          onClick={handleLeave}
+                          type="button"
+                        >
+                          Leave
+                        </button>
+                      </li>
+                    )}
+                  </ul>
                   <ul>
                     {gameLobby?.matchups != undefined &&
                       gameLobby?.matchups?.length > 0 && (
@@ -300,6 +320,8 @@ const Lobby = () => {
               <StickyFooter
                 deckSize={deckSize}
                 submitSideboard={gameLobby?.canSubmitSideboard ?? false}
+                handleLeave={handleLeave}
+                isWidescreen={isWideScreen}
               />
             ) : null}
           </div>

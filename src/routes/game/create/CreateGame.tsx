@@ -1,3 +1,4 @@
+import React from 'react';
 import { useAppDispatch } from 'app/Hooks';
 import classNames from 'classnames';
 import { GAME_FORMAT, GAME_VISIBILITY } from 'constants';
@@ -8,16 +9,10 @@ import {
 import { setGameStart } from 'features/game/GameSlice';
 import { Field, Form, Formik, FormikHelpers } from 'formik';
 import useAuth from 'hooks/useAuth';
-import {
-  CreateGameAPI,
-  CreateGameResponse
-} from 'interface/API/CreateGame.php';
-import { handleRequest } from 'msw';
-import React from 'react';
+import { CreateGameAPI } from 'interface/API/CreateGame.php';
 import { toast } from 'react-hot-toast';
 import { FaExclamationCircle } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
-import { skipPartiallyEmittedExpressions } from 'typescript';
 import styles from './CreateGame.module.css';
 import CreateGameErrors from './CreateGameErrors';
 import validationSchema from './validationSchema';
@@ -26,7 +21,7 @@ const CreateGame = () => {
   const { isLoggedIn } = useAuth();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { data, isLoading, error } = useGetFavoriteDecksQuery({});
+  const { data, isLoading } = useGetFavoriteDecksQuery({});
   const [createGame, createGameResult] = useCreateGameMutation();
 
   const initialValues: CreateGameAPI = {
@@ -41,7 +36,9 @@ const CreateGame = () => {
     favoriteDeck: false,
     favoriteDecks:
       data?.lastUsedDeckIndex !== undefined
-        ? data.favoriteDecks[data.lastUsedDeckIndex]?.key
+        ? data.favoriteDecks.find(
+            (deck) => deck.index === data.lastUsedDeckIndex
+          )?.key
         : '',
     gameDescription: ''
   };
@@ -88,7 +85,7 @@ const CreateGame = () => {
           validationSchema={validationSchema}
           enableReinitialize
         >
-          {({ values, isSubmitting, errors }) => (
+          {({ values, isSubmitting, errors, touched }) => (
             <Form>
               <div className={styles.formInner}>
                 {isLoggedIn && !isLoading && (
@@ -100,6 +97,11 @@ const CreateGame = () => {
                       id="favoriteDecks"
                       placeholder="Select a favorite deck"
                       aria-busy={isLoading}
+                      aria-invalid={
+                        (errors.favoriteDecks && touched.favoriteDecks) as
+                          | boolean
+                          | undefined
+                      }
                     >
                       {data?.favoriteDecks.map((deck, ix) => (
                         <option value={deck.key} key={deck.index}>
@@ -117,6 +119,9 @@ const CreateGame = () => {
                       id="fabdb"
                       name="fabdb"
                       aria-label="Deck Link"
+                      aria-invalid={
+                        (errors.fabdb && touched.fabdb) as boolean | undefined
+                      }
                     />
                   </label>
                   {isLoggedIn && (
@@ -138,6 +143,11 @@ const CreateGame = () => {
                     id="gameDescription"
                     name="gameDescription"
                     aria-label="Game Name"
+                    aria-invalid={
+                      (errors.gameDescription && touched.gameDescription) as
+                        | boolean
+                        | undefined
+                    }
                     placeholder="Defaults to Game#14321542"
                   />
                 </label>
@@ -149,6 +159,9 @@ const CreateGame = () => {
                     id="format"
                     placeholder={GAME_FORMAT.BLITZ}
                     aria-label="Format"
+                    aria-invalid={
+                      (errors.format && touched.format) as boolean | undefined
+                    }
                   >
                     <option value={GAME_FORMAT.BLITZ}>Blitz</option>
                     <option value={GAME_FORMAT.CLASSIC_CONSTRUCTED}>
@@ -176,6 +189,11 @@ const CreateGame = () => {
                       id="visibility"
                       placeholder={GAME_VISIBILITY.PUBLIC}
                       aria-label="Visibility"
+                      aria-invalid={
+                        (errors.visibility && touched.visibility) as
+                          | boolean
+                          | undefined
+                      }
                     >
                       {isLoggedIn && (
                         <option value={GAME_VISIBILITY.PUBLIC}>Public</option>
@@ -190,6 +208,11 @@ const CreateGame = () => {
                       id="deckTestMode"
                       name="deckTestMode"
                       aria-label="Single Player"
+                      aria-invalid={
+                        (errors.deckTestMode && touched.deckTestMode) as
+                          | boolean
+                          | undefined
+                      }
                     />
                     Single Player
                   </label>

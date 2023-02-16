@@ -19,5 +19,5 @@ export interface Card {
   cardIndex?: number;
   countersMap?: { [key: string]: number }; // string = name of counter, number = number of counters
   label?: string;
-  zone: string;
+  zone?: string;
 }
