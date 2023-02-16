@@ -1,9 +1,11 @@
 import { useSignUpMutation } from 'features/api/apiSlice';
-import { useFormik } from 'formik';
+import { ErrorMessage, FormikProvider, useFormik } from 'formik';
 import styles from './LoginForm.module.css';
 import { QueryStatus } from '@reduxjs/toolkit/dist/query';
 import { Link } from 'react-router-dom';
 import classNames from 'classnames';
+import { signUpValidationSchema } from './validation';
+import { FaExclamationCircle } from 'react-icons/fa';
 
 export const SignUpForm = () => {
   const [signup, signupResult] = useSignUpMutation();
@@ -15,71 +17,95 @@ export const SignUpForm = () => {
       passwordConfirm: '',
       email: ''
     },
+    validationSchema: signUpValidationSchema,
     onSubmit: async (values) => {
       try {
-        // const resp = await login(getLoginBody(values)).unwrap();
-        // if (resp?.isUserLoggedIn) {
-        //   toast.success('logged in!', { position: 'top-center' });
-        //   setLoggedIn(resp?.loggedInUserID ?? '0', resp?.loggedInUserName, '');
-        //   // TODO: Have this go back in router history to the previous page or protected route.
-        //   navigate('/');
-        // }
+        console.log('values', values);
       } catch (err) {
         console.warn(err);
       }
     }
   });
-
-  const thing = QueryStatus;
+  let errorArray = [] as string[];
+  for (const [key, value] of Object.entries(formik.errors)) {
+    errorArray.push(String(value));
+  }
   return (
     <div>
       <h2>Sign Up</h2>
-      <article className={styles.formContainer}>
-        <form onSubmit={formik.handleSubmit}>
-          <label htmlFor="userID">Username</label>
-          <input
-            type="text"
-            name="userID"
-            id="userID"
-            placeholder="bravo"
-            onChange={formik.handleChange}
-            value={formik.values.userID}
-          />
-          <label htmlFor="email">Email</label>
-          <input
-            type="email"
-            name="email"
-            id="email"
-            placeholder="bravo@talishar.net"
-            onChange={formik.handleChange}
-            value={formik.values.email}
-          />
-          <label htmlFor="password">Password</label>
-          <input
-            type="password"
-            name="password"
-            id="password"
-            placeholder="********"
-            onChange={formik.handleChange}
-            value={formik.values.password}
-          />
-          <label htmlFor="passwordConfirm">Confirm Password</label>
-          <input
-            type="passwordConfirm"
-            name="passwordConfirm"
-            id="passwordConfirm"
-            placeholder="********"
-            onChange={formik.handleChange}
-            value={formik.values.passwordConfirm}
-          />
-          <button
-            type="submit"
-            disabled={signupResult.status === QueryStatus.pending}
-            aria-busy={signupResult.status === QueryStatus.pending}
-            className={styles.submitButton}
-          >
-            Submit
-          </button>
+      <FormikProvider value={formik}>
+        <article className={styles.formContainer}>
+          <form onSubmit={formik.handleSubmit}>
+            <label htmlFor="userID">Username</label>
+            <input
+              type="text"
+              name="userID"
+              id="userID"
+              placeholder="bravo"
+              onChange={formik.handleChange}
+              value={formik.values.userID}
+              aria-invalid={
+                (formik.errors.userID && formik.touched.userID) as
+                  | boolean
+                  | undefined
+              }
+            />
+
+            <label htmlFor="email">Email</label>
+            <input
+              type="email"
+              name="email"
+              id="email"
+              placeholder="bravo@talishar.net"
+              onChange={formik.handleChange}
+              value={formik.values.email}
+              aria-invalid={
+                (formik.errors.email && formik.touched.email) as
+                  | boolean
+                  | undefined
+              }
+            />
+            <label htmlFor="password">Password</label>
+            <input
+              type="password"
+              name="password"
+              id="password"
+              placeholder="********"
+              onChange={formik.handleChange}
+              value={formik.values.password}
+              aria-invalid={
+                (formik.errors.password && formik.touched.password) as
+                  | boolean
+                  | undefined
+              }
+            />
+            <label htmlFor="passwordConfirm">Confirm Password</label>
+            <input
+              type="passwordConfirm"
+              name="passwordConfirm"
+              id="passwordConfirm"
+              placeholder="********"
+              onChange={formik.handleChange}
+              value={formik.values.passwordConfirm}
+              aria-invalid={
+                (formik.errors.passwordConfirm &&
+                  formik.touched.passwordConfirm) as boolean | undefined
+              }
+            />
+            <button
+              type="submit"
+              disabled={signupResult.status === QueryStatus.pending}
+              aria-busy={signupResult.status === QueryStatus.pending}
+              className={styles.submitButton}
+            >
+              Submit
+            </button>
+            {!formik.isValid && (
+              <div className={styles.formError}>
+                <FaExclamationCircle /> {errorArray[0]}
+              </div>
+            )}
+          </form>
           <hr className={styles.divider} />
           <p className={styles.linebreak}>or</p>
           <Link
@@ -89,8 +115,8 @@ export const SignUpForm = () => {
           >
             Log in
           </Link>
-        </form>
-      </article>
+        </article>
+      </FormikProvider>
     </div>
   );
 };
