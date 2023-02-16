@@ -4,7 +4,7 @@ import CombatChainLink from '../features/CombatChainLink';
 import GameState from '../features/GameState';
 import Player from '../features/Player';
 
-function ParseCard(input: any) {
+function ParseCard(input: any, zone:string="") {
   const card: Card = { cardNumber: 'blank' };
   if (input === undefined) {
     return card;
@@ -30,6 +30,7 @@ function ParseCard(input: any) {
   card.gem = input.gem ? (input.gem == 1 ? 'active' : 'inactive') : 'none';
   card.countersMap = input.countersMap ? input.countersMap : undefined;
   card.label = input.label ? String(input.label) : undefined;
+  card.zone = zone;
 
   return card;
 }
@@ -177,10 +178,10 @@ export default function ParseGameState(input: any) {
     result.playerTwo.Permanents.push(ParseCard(cardObj));
   }
   for (const cardObj of input.opponentAuras) {
-    result.playerTwo.Permanents.push(ParseCard(cardObj));
+    result.playerTwo.Permanents.push(ParseCard(cardObj, "AURAS"));
   }
   for (const cardObj of input.opponentItems) {
-    result.playerTwo.Permanents.push(ParseCard(cardObj));
+    result.playerTwo.Permanents.push(ParseCard(cardObj, "ITEMS"));
   }
   for (const cardObj of input.opponentPermanents) {
     result.playerTwo.Permanents.push(ParseCard(cardObj));
@@ -235,10 +236,10 @@ export default function ParseGameState(input: any) {
     result.playerOne.Permanents.push(ParseCard(cardObj));
   }
   for (const cardObj of input.playerAuras) {
-    result.playerOne.Permanents.push(ParseCard(cardObj));
+    result.playerOne.Permanents.push(ParseCard(cardObj, "AURAS"));
   }
   for (const cardObj of input.playerItems) {
-    result.playerOne.Permanents.push(ParseCard(cardObj));
+    result.playerOne.Permanents.push(ParseCard(cardObj, "ITEMS"));
   }
   for (const cardObj of input.playerPermanents) {
     result.playerOne.Permanents.push(ParseCard(cardObj));

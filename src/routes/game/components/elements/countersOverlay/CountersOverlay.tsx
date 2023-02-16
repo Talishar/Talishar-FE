@@ -14,7 +14,8 @@ export const CountersOverlay = ({
   gem,
   actionDataOverride,
   num,
-  numDescription
+  numDescription,
+  zone
 }: CountersProp) => {
   const includedCounters = [
     'defence',
@@ -91,7 +92,7 @@ export const CountersOverlay = ({
       {label !== undefined && label !== '' && (
         <div className={styles.label}>{label}</div>
       )}
-      {gem !== 'none' && <GemSlider gem={gem} cardID={actionDataOverride} />}
+      {gem !== 'none' && <GemSlider gem={gem} cardID={actionDataOverride} zone={zone} />}
     </div>
   );
 };
