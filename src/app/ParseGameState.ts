@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { ZONE } from 'constants';
 import { Card } from '../features/Card';
 import CombatChainLink from '../features/CombatChainLink';
 import GameState from '../features/GameState';
 import Player from '../features/Player';
 
-function ParseCard(input: any, zone:string="") {
+function ParseCard(input: any) {
   const card: Card = { cardNumber: 'blank' };
   if (input === undefined) {
     return card;
@@ -30,7 +31,7 @@ function ParseCard(input: any, zone:string="") {
   card.gem = input.gem ? (input.gem == 1 ? 'active' : 'inactive') : 'none';
   card.countersMap = input.countersMap ? input.countersMap : undefined;
   card.label = input.label ? String(input.label) : undefined;
-  card.zone = zone;
+  card.zone = input.zone;
 
   return card;
 }
@@ -45,7 +46,7 @@ function ParseEquipment(input: any) {
   for (const cardObj of input) {
     switch (cardObj.type) {
       case 'C': // hero
-        result.Hero = ParseCard(cardObj);
+        result.Hero = ParseCard({ ...cardObj, zone: ZONE.HERO });
         break;
       case 'W': // weapon, possibly have two
         if (result.WeaponLEq === undefined) {
@@ -178,10 +179,14 @@ export default function ParseGameState(input: any) {
     result.playerTwo.Permanents.push(ParseCard(cardObj));
   }
   for (const cardObj of input.opponentAuras) {
-    result.playerTwo.Permanents.push(ParseCard(cardObj, "AURAS"));
+    result.playerTwo.Permanents.push(
+      ParseCard({ ...cardObj, zone: ZONE.AURAS })
+    );
   }
   for (const cardObj of input.opponentItems) {
-    result.playerTwo.Permanents.push(ParseCard(cardObj, "ITEMS"));
+    result.playerTwo.Permanents.push(
+      ParseCard({ ...cardObj, zone: ZONE.ITEMS })
+    );
   }
   for (const cardObj of input.opponentPermanents) {
     result.playerTwo.Permanents.push(ParseCard(cardObj));
@@ -236,10 +241,14 @@ export default function ParseGameState(input: any) {
     result.playerOne.Permanents.push(ParseCard(cardObj));
   }
   for (const cardObj of input.playerAuras) {
-    result.playerOne.Permanents.push(ParseCard(cardObj, "AURAS"));
+    result.playerOne.Permanents.push(
+      ParseCard({ ...cardObj, zone: ZONE.AURAS })
+    );
   }
   for (const cardObj of input.playerItems) {
-    result.playerOne.Permanents.push(ParseCard(cardObj, "ITEMS"));
+    result.playerOne.Permanents.push(
+      ParseCard({ ...cardObj, zone: ZONE.ITEMS })
+    );
   }
   for (const cardObj of input.playerPermanents) {
     result.playerOne.Permanents.push(ParseCard(cardObj));
