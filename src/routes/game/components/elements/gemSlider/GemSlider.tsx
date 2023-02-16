@@ -9,6 +9,7 @@ import { PROCESS_INPUT } from 'constants';
 interface GemSlider {
   gem?: 'none' | 'inactive' | 'active';
   cardID?: string;
+  zone?: string;
 }
 
 const GemSlider = (props: GemSlider) => {
@@ -21,8 +22,8 @@ const GemSlider = (props: GemSlider) => {
     dispatch(
       submitButton({
         button: {
-          buttonInput: props.cardID,
-          mode: PROCESS_INPUT.TOGGLE_EQUIPMENT_ACTIVE
+          buttonInput: (props.zone != "" ? props.zone + "-" : "") + props.cardID,
+          mode: (props.zone != "" ? PROCESS_INPUT.TOGGLE_PERMANENT_ACTIVE : PROCESS_INPUT.TOGGLE_EQUIPMENT_ACTIVE)
         }
       })
     );
