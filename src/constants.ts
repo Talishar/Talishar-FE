@@ -128,7 +128,8 @@ export const URL_END_POINT = {
   START_GAME_LEGACY: 'Start.php',
   LOGIN: '/AccountFiles/PasswordLoginAPI.php',
   LOGIN_WITH_COOKIE: '/AccountFiles/TryLoginAPI.php',
-  LOGOUT: `/AccountFiles/LogoutUserAPI.php`
+  LOGOUT: `/AccountFiles/LogoutUserAPI.php`,
+  SIGNUP: `/AccountFiles/SignUpAPI.php`
 };
 
 export const GAME_VISIBILITY = {

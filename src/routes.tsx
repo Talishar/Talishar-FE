@@ -138,6 +138,7 @@ export const router = createBrowserRouter(
               path="password-recovery"
               element={<ForgottenPasswordForm />}
             />
+            <Route path="signup" element={<SignUpForm />} />
           </Route>
         </Route>
       </Route>
