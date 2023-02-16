@@ -96,7 +96,8 @@ export const PROCESS_INPUT = {
 // Default shortcut inputs
 export const DEFAULT_SHORTCUTS = {
   TOGGLE_OPTIONS_MENU: 'KeyM',
-  PASS_TURN: 'Space'
+  PASS_TURN: 'Space',
+  CLOSE_WINDOW: 'Escape'
 };
 
 export const GAME_FORMAT = {
