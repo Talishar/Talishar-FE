@@ -32,7 +32,10 @@ const PlayerPrompt = () => {
 
   return (
     <div className={styles.playerPrompt}>
-      {playerPrompt?.helpText} {buttons}
+      <span
+        dangerouslySetInnerHTML={{ __html: playerPrompt?.helpText ?? '' }}
+      ></span>{' '}
+      {buttons}
     </div>
   );
 };

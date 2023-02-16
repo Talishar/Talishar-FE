@@ -32,7 +32,10 @@ export default function PhaseTracker() {
       </div>
       <PhaseTrackerWidget phase={phaseEnum} />
       <div className={styles.phaseTrackerBottomContainer}>
-        <div className={styles.bottomInterior}>{turnPhase?.caption}</div>
+        <div
+          className={styles.bottomInterior}
+          dangerouslySetInnerHTML={{ __html: turnPhase?.caption ?? '' }}
+        ></div>
       </div>
     </div>
   );
