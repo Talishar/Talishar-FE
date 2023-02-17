@@ -51,6 +51,7 @@ const OptionsContent = () => {
   const mainMenu = async (e: React.MouseEvent) => {
     e.preventDefault;
     navigate('/');
+    clickCloseOptionsHandler();
   };
 
   const clickReportBugHandler = () => {

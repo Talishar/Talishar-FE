@@ -19,6 +19,8 @@ export default function PlayerHand() {
 
   let hasArsenal = true;
 
+  const showArsenal = false;
+
   const handCards = useAppSelector(
     (state: RootState) => state.game.playerOne.Hand
   );
@@ -63,32 +65,18 @@ export default function PlayerHand() {
     <div className={styles.handRow} style={widthfunction}>
       {handCards !== undefined &&
         handCards.map((card, ix) => {
-          return (
-            <PlayerHandCard
-              card={card}
-              key={`hand-${ix}`}
-            />
-          );
+          return <PlayerHandCard card={card} key={`hand-${ix}`} />;
         })}
       {hasArsenal &&
+        showArsenal &&
         arsenalCards !== undefined &&
         arsenalCards.map((card, ix) => {
-          return (
-            <PlayerHandCard
-              card={card}
-              isArsenal
-              key={`arsenal-${ix}`}
-            />
-          );
+          return <PlayerHandCard card={card} isArsenal key={`arsenal-${ix}`} />;
         })}
       {playableBanishedCards !== undefined &&
         playableBanishedCards.map((card, ix) => {
           return (
-            <PlayerHandCard
-              card={card}
-              isBanished
-              key={`banished-${ix}`}
-            />
+            <PlayerHandCard card={card} isBanished key={`banished-${ix}`} />
           );
         })}
     </div>

@@ -3,6 +3,7 @@ import {
   GiAngelOutfit,
   GiCannon,
   GiCircleClaws,
+  GiDrop,
   GiFluffySwirl,
   GiHand,
   GiStack,
@@ -13,6 +14,7 @@ import { RootState } from 'app/Store';
 import { setCardListLoadFocus } from 'features/game/GameSlice';
 import Displayrow from 'interface/Displayrow';
 import styles from './ZoneCounts.module.css';
+import classNames from 'classnames';
 
 export const ZoneCounts = (prop: Displayrow) => {
   return (
@@ -24,6 +26,7 @@ export const ZoneCounts = (prop: Displayrow) => {
         <ArsenalCount {...prop} />
       </div>
       <div className={styles.column}>
+        <BloodDebtCount {...prop} />
         <GraveyardCount {...prop} />
         <DeckCount {...prop} />
         <BanishCount {...prop} />
@@ -156,6 +159,54 @@ const SoulCount = (prop: Displayrow) => {
           onClick={soulDisplay}
         >
           <GiAngelOutfit /> {soulCount}
+        </div>
+      ) : (
+        <div className={styles.item}> </div>
+      )}
+    </div>
+  );
+};
+
+const BloodDebtCount = (prop: Displayrow) => {
+  const [hasBloodDebt, setHasBloodDebt] = useState(false);
+  const dispatch = useAppDispatch();
+  const { isPlayer } = prop;
+  const BloodDebtCount = useAppSelector((state: RootState) =>
+    isPlayer
+      ? state.game.playerOne.bloodDebtCount
+      : state.game.playerTwo.bloodDebtCount
+  );
+  const isImmune = useAppSelector((state: RootState) =>
+    isPlayer
+      ? state.game.playerOne.bloodDebtImmune
+      : state.game.playerTwo.bloodDebtImmune
+  );
+
+  const BloodDebtDisplay = () => {
+    const playerPronoun = isPlayer ? 'Your' : "Your Opponent's";
+    const popUpName = isPlayer ? 'myBloodDebtPopup' : 'theirBloodDebtPopup';
+    dispatch(
+      setCardListLoadFocus({
+        query: popUpName,
+        name: `${playerPronoun} BloodDebt`
+      })
+    );
+  };
+
+  if (!hasBloodDebt && BloodDebtCount != undefined && BloodDebtCount > 0) {
+    setHasBloodDebt(true);
+  }
+
+  const bloodDebtItem = classNames(
+    { [styles.isRed]: !isImmune },
+    styles.clickableItem
+  );
+
+  return (
+    <div>
+      {!!hasBloodDebt ? (
+        <div title="BloodDebt" className={bloodDebtItem}>
+          <GiDrop /> {BloodDebtCount}
         </div>
       ) : (
         <div className={styles.item}> </div>

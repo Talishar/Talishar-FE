@@ -19,11 +19,15 @@ const GemSlider = (props: GemSlider) => {
   const dispatch = useAppDispatch();
 
   const onClick = () => {
+    console.log('cardId', props.cardID);
+    console.log('zone', props.zone);
     dispatch(
       submitButton({
         button: {
-          buttonInput: (props.zone != "" ? props.zone + "-" : "") + props.cardID,
-          mode: (props.zone != "" ? PROCESS_INPUT.TOGGLE_PERMANENT_ACTIVE : PROCESS_INPUT.TOGGLE_EQUIPMENT_ACTIVE)
+          buttonInput: (!!props.zone ? props.zone + '-' : '') + props.cardID,
+          mode: !!props.zone
+            ? PROCESS_INPUT.TOGGLE_PERMANENT_ACTIVE
+            : PROCESS_INPUT.TOGGLE_EQUIPMENT_ACTIVE
         }
       })
     );
