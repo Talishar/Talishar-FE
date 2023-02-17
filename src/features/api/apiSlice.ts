@@ -100,7 +100,7 @@ export const apiSlice = createApi({
         };
       }
     }),
-    loginWithCookie: builder.mutation({
+    loginWithCookie: builder.query({
       query: (body) => {
         return {
           url: URL_END_POINT.LOGIN_WITH_COOKIE,
@@ -247,7 +247,7 @@ export const {
   useGetGameListQuery,
   useGetFavoriteDecksQuery,
   useLoginMutation,
-  useLoginWithCookieMutation,
+  useLoginWithCookieQuery,
   useLogOutMutation,
   useSignUpMutation,
   useCreateGameMutation,

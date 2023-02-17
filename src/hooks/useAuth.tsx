@@ -1,6 +1,6 @@
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import {
-  useLoginWithCookieMutation,
+  useLoginWithCookieQuery,
   useLogOutMutation
 } from 'features/api/apiSlice';
 import {
@@ -16,9 +16,8 @@ export default function useAuth() {
   const currentUserId = useAppSelector(selectCurrentUser);
   const currentUserName = useAppSelector(selectCurrentUserName);
   const [logOutAPI, logOutData] = useLogOutMutation();
-  const [autoLogIn, autoLogInData] = useLoginWithCookieMutation();
+  const { isLoading, error, data } = useLoginWithCookieQuery({});
   const dispatch = useAppDispatch();
-  const isLoggedIn = currentUserId !== null;
 
   const setLoggedIn = (user: string, userName: string, token: string) => {
     dispatch(
@@ -40,32 +39,20 @@ export default function useAuth() {
       toast.error('error logging out', { position: 'top-center' });
     }
   };
+  const isLoggedIn = !!currentUserId;
 
   useEffect(() => {
-    const auto = async () => {
-      try {
-        const response = await autoLogIn({}).unwrap();
-        if (response.isUserLoggedIn) {
-          setLoggedIn(
-            response.loggedInUserID ?? '0',
-            response.loggedInUserName ?? '',
-            ''
-          );
-        } else {
-          dispatch(logOutReducer());
-        }
-      } catch (err) {
-        console.warn(err);
-      }
-    };
-
-    auto();
-  }, []);
+    if (data?.isUserLoggedIn) {
+      setLoggedIn(data.loggedInUserID, data.loggedInUserName, '');
+    }
+  }, [isLoading]);
 
   return {
     isLoggedIn,
     currentUserId,
     currentUserName,
+    isLoading,
+    error,
     setLoggedIn,
     logOut
   };
