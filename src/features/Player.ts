@@ -29,4 +29,6 @@ export default interface Player {
   Playmat?: string;
   isPatron?: boolean;
   isContributor?: boolean;
+  bloodDebtCount?: number;
+  bloodDebtImmune?: boolean;
 }

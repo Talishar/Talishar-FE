@@ -9,6 +9,7 @@ import styles from './BanishZone.module.css';
 export const BanishZone = React.memo((prop: Displayrow) => {
   const { isPlayer } = prop;
   const dispatch = useAppDispatch();
+  const showCount = false;
 
   const banishZone = useAppSelector((state: RootState) =>
     isPlayer ? state.game.playerOne.Banish : state.game.playerTwo.Banish
@@ -35,7 +36,7 @@ export const BanishZone = React.memo((prop: Displayrow) => {
     <div className={styles.banishZone} onClick={banishZoneDisplay}>
       <CardDisplay
         card={cardToDisplay}
-        num={banishZone.length}
+        num={showCount ? banishZone.length : undefined}
         preventUseOnClick
       />
     </div>

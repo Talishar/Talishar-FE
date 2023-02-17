@@ -18,6 +18,8 @@ export const GraveyardZone = React.memo((prop: Displayrow) => {
     return <div className={styles.graveyardZone}>Graveyard</div>;
   }
 
+  const showCount = false;
+
   const graveyardZoneDisplay = () => {
     const isPlayerPronoun = isPlayer ? 'Your' : "Your Opponent's";
     dispatch(
@@ -34,7 +36,7 @@ export const GraveyardZone = React.memo((prop: Displayrow) => {
     <div className={styles.graveyardZone} onClick={graveyardZoneDisplay}>
       <CardDisplay
         card={cardToDisplay}
-        num={graveyardZone.length}
+        num={showCount ? graveyardZone.length : undefined}
         preventUseOnClick
       />
     </div>

@@ -146,7 +146,8 @@ export default function ParseGameState(input: any) {
     result.playerTwo.Hand.push(ParseCard(cardObj));
   }
 
-  result.playerTwo.SoulCount = input.opponentSoulCount;
+  result.playerTwo.bloodDebtCount = input.opponentBloodDebtCount;
+  result.playerTwo.bloodDebtImmune = input.isOpponentBloodDebtImmune;
   result.playerTwo.Health = input.opponentHealth;
 
   result.playerTwo.Graveyard = [];
@@ -208,6 +209,8 @@ export default function ParseGameState(input: any) {
     result.playerOne.Hand.push(ParseCard(cardObj));
   }
 
+  result.playerOne.bloodDebtCount = input.myBloodDebtCount;
+  result.playerOne.bloodDebtImmune = input.amIBloodDebtImmune;
   result.playerOne.SoulCount = input.playerSoulCount;
   result.playerOne.Health = input.playerHealth;
 
