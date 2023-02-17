@@ -20,11 +20,13 @@
 
 .leftCol {
   background-size: cover;
+  height: 100%;
 }
 
 .rightCol {
   text-align: right;
   background-size: cover;
+  height: 100%;
 }
 
 .dimPic {

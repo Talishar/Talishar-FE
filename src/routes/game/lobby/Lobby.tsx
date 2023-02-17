@@ -27,6 +27,7 @@ import { createSearchParams, useNavigate } from 'react-router-dom';
 import CardPortal from '../components/elements/cardPortal/CardPortal';
 import Matchups from './components/matchups/Matchups';
 import Button from 'features/Button';
+import CardPopUp from '../components/elements/cardPopUp/CardPopUp';
 
 const Lobby = () => {
   const [activeTab, setActiveTab] = useState('equipment');
@@ -210,30 +211,40 @@ const Lobby = () => {
         <Form className={styles.form}>
           <div className={styles.gridLayout}>
             <div className={styles.titleContainer}>
-              <div
-                className={styles.leftCol}
-                style={{ backgroundImage: leftPic }}
+              <CardPopUp
+                cardNumber={data.deck.hero}
+                containerClass={styles.leftCol}
               >
-                <div className={styles.dimPic}>
-                  <h3 aria-busy={isLoading}>{data.displayName}</h3>
-                  <div className={styles.heroName}>{data.deck.heroName}</div>
-                </div>
-              </div>
-              <div
-                className={styles.rightCol}
-                style={{ backgroundImage: rightPic }}
-              >
-                <div className={styles.dimPic}>
-                  <h3 aria-busy={!gameLobby?.theirName}>
-                    {gameLobby?.theirName ?? ''}
-                  </h3>
-                  <div className={styles.heroName}>
-                    {gameLobby?.theirHeroName != ''
-                      ? gameLobby?.theirHeroName
-                      : 'Waiting For Opponent'}
+                <div
+                  className={styles.leftCol}
+                  style={{ backgroundImage: leftPic }}
+                >
+                  <div className={styles.dimPic}>
+                    <h3 aria-busy={isLoading}>{data.displayName}</h3>
+                    <div className={styles.heroName}>{data.deck.heroName}</div>
                   </div>
                 </div>
-              </div>
+              </CardPopUp>
+              <CardPopUp
+                cardNumber={gameLobby?.theirHero ?? 'CardBack'}
+                containerClass={styles.rightCol}
+              >
+                <div
+                  className={styles.rightCol}
+                  style={{ backgroundImage: rightPic }}
+                >
+                  <div className={styles.dimPic}>
+                    <h3 aria-busy={!gameLobby?.theirName}>
+                      {gameLobby?.theirName ?? ''}
+                    </h3>
+                    <div className={styles.heroName}>
+                      {gameLobby?.theirHeroName != ''
+                        ? gameLobby?.theirHeroName
+                        : 'Waiting For Opponent'}
+                    </div>
+                  </div>
+                </div>
+              </CardPopUp>
             </div>
             {gameLobby?.amIChoosingFirstPlayer ? (
               <ChooseFirstTurn />
