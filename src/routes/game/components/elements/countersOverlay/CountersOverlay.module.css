@@ -121,6 +121,21 @@
   background-size: contain;
 }
 
+.facing {
+  height: 2em;
+  width: 2em;
+  background-position: center;
+  background-size: contain;
+}
+
+.facingUp {
+  background-image: url('../../../../../img/symbols/symbol-faceUp.png');
+}
+
+.facingDown {
+  background-image: url('../../../../../img/symbols/symbol-faceDown.png');
+}
+
 .text {
   color: black;
 }
