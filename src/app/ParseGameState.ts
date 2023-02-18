@@ -147,6 +147,7 @@ export default function ParseGameState(input: any) {
     result.playerTwo.Hand.push(ParseCard(cardObj));
   }
 
+  result.playerTwo.SoulCount = input.opponentSoulCount;
   result.playerTwo.bloodDebtCount = input.opponentBloodDebtCount;
   result.playerTwo.bloodDebtImmune = input.isOpponentBloodDebtImmune;
   result.playerTwo.Health = input.opponentHealth;
