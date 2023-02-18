@@ -29,7 +29,7 @@ export default function PlayerHand() {
   );
   const playableBanishedCards = useAppSelector((state: RootState) => {
     return state.game.playerOne.Banish?.filter(
-      (card) => card.borderColor != '0' && card.borderColor != null
+      (card) => card.action != null && card.action != "0"
     );
   }, shallowEqual);
   const playableGraveyardCards = useAppSelector(
