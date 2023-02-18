@@ -4,8 +4,6 @@ import { render } from '@testing-library/react';
 import type { RenderOptions } from '@testing-library/react';
 import type { PreloadedState } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
-import { apiSlice } from '../features/api/apiSlice';
-import { router } from '../index';
 
 import { AppStore, RootState, setupStore } from '../app/Store';
 
