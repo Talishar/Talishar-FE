@@ -2,6 +2,7 @@ import React, { useRef } from 'react';
 import { Card } from 'features/Card';
 import styles from './CountersOverlay.module.css';
 import GemSlider from '../gemSlider/GemSlider';
+import classNames from 'classnames';
 
 export interface CountersProp extends Card {
   num?: number;
@@ -15,6 +16,7 @@ export const CountersOverlay = ({
   actionDataOverride,
   num,
   numDescription,
+  facing,
   zone
 }: CountersProp) => {
   const includedCounters = [
@@ -92,7 +94,22 @@ export const CountersOverlay = ({
       {label !== undefined && label !== '' && (
         <div className={styles.label}>{label}</div>
       )}
-      {gem !== 'none' && <GemSlider gem={gem} cardID={actionDataOverride} zone={zone} />}
+      {facing && (
+        <div
+          className={classNames(
+            {
+              [styles.facingUp]: facing === 'UP',
+              [styles.facingDown]: facing === 'DOWN' || facing === 'DOWNALL'
+            },
+            styles.facing
+          )}
+          // data-tooltip={`facing ${facing.toLowerCase()}`}
+          title={`Card is face ${facing.toLowerCase()}`}
+        ></div>
+      )}
+      {gem !== 'none' && (
+        <GemSlider gem={gem} cardID={actionDataOverride} zone={zone} />
+      )}
     </div>
   );
 };

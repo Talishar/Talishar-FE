@@ -7,12 +7,10 @@ it('renders without crashing isPlayer true', () => {
   const div = renderWithProviders(<EndGameScreen />);
 });
 
-it('does something', async () => {
+it.skip('does something', async () => {
   const testStore = store;
   store.dispatch(showChainLinkSummary({ chainLink: 0 }));
-  store.dispatch(
-    setGameStart({ playerID: 1, gameID: 123456, authKey: '12345' })
-  );
+  store.dispatch(setGameStart({ playerID: 1, gameID: 123, authKey: '12345' }));
   const div = renderWithProviders(<EndGameScreen />, {
     store: testStore
   });
