@@ -1,7 +1,6 @@
 import { useSignUpMutation } from 'features/api/apiSlice';
-import { ErrorMessage, FormikProvider, useFormik } from 'formik';
+import { FormikProvider, useFormik } from 'formik';
 import styles from './LoginForm.module.css';
-import { QueryStatus } from '@reduxjs/toolkit/dist/query';
 import { Link } from 'react-router-dom';
 import classNames from 'classnames';
 import { signUpValidationSchema } from './validation';
@@ -81,7 +80,7 @@ export const SignUpForm = () => {
             />
             <label htmlFor="passwordConfirm">Confirm Password</label>
             <input
-              type="passwordConfirm"
+              type="password"
               name="passwordConfirm"
               id="passwordConfirm"
               placeholder="********"
@@ -94,8 +93,8 @@ export const SignUpForm = () => {
             />
             <button
               type="submit"
-              disabled={signupResult.status === QueryStatus.pending}
-              aria-busy={signupResult.status === QueryStatus.pending}
+              disabled={formik.isSubmitting}
+              aria-busy={formik.isSubmitting}
               className={styles.submitButton}
             >
               Submit

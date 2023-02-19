@@ -1,0 +1,19 @@
+.gameItem {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  gap: 0.5em;
+  vertical-align: center;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.5em;
+}
+
+.button {
+  background-color: var(--secondary);
+  margin-bottom: 0;
+}
+
+img {
+  max-height: 3em;
+}

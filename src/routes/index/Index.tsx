@@ -1,8 +1,8 @@
 import { useAppDispatch } from 'app/Hooks';
-import { clearGameInfo, setGameStart } from 'features/game/GameSlice';
+import { clearGameInfo } from 'features/game/GameSlice';
 import { useEffect } from 'react';
 import CreateGame from '../game/create/CreateGame';
-import GameList from './components/gameList/GameList';
+import GameList from './components/gameList';
 import styles from './Index.module.css';
 import TalisharLogo from '../../img/TalisharLogo.webp';
 

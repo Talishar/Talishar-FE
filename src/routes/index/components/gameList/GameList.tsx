@@ -1,85 +1,87 @@
+import React, { useState } from 'react';
 import { useGetGameListQuery } from 'features/api/apiSlice';
-import styles from './GameList.module.css';
-import React from 'react';
-import { StringLiteral } from 'typescript';
 import { createSearchParams, useNavigate } from 'react-router-dom';
-import classNames from 'classnames';
+import styles from './GameList.module.css';
+import InProgressGame from '../inProgressGame';
+import OpenGame from '../openGame';
+import Filter from '../filter';
 
+export interface IOpenGame {
+  p1Hero?: string;
+  format: string;
+  formatName?: string;
+  description?: string;
+  gameName: number;
+}
+
+export interface IGameInProgress {
+  p1Hero?: string;
+  p2Hero?: string;
+  gameName: number;
+  secondsSinceLastUpdate?: number;
+}
 export interface GameListResponse {
   data?: {
-    gamesInProgress: {
-      p1Hero?: string;
-      p2Hero?: string;
-      gameName: number;
-      secondsSinceLastUpdate?: number;
-    }[];
-    openGames: {
-      p1Hero?: string;
-      format: string;
-      formatName?: string;
-      description?: string;
-      gameName: number;
-    }[];
+    gamesInProgress: IGameInProgress[];
+    openGames: IOpenGame[];
     canSeeQueue?: boolean;
   };
   isLoading?: boolean;
   error?: unknown;
+  refetch?: () => void;
 }
 
 const GAME_LIST_POLLING_INTERVAL = 10000; // in ms
 
 const GameList = () => {
-  const { data, isLoading, error }: GameListResponse = useGetGameListQuery(
-    {},
-    {}
-  );
+  const { data, isLoading, error, refetch }: GameListResponse =
+    useGetGameListQuery({}, {});
   const navigate = useNavigate();
-  const spectateHandler = (gameName: number) => {
-    navigate({
-      pathname: `/game/play/${gameName}`,
-      search: `?${createSearchParams({
-        gameName: String(gameName),
-        playerID: String(3)
-      })}`
-    });
-  };
+
+  const [heroFilter, setHeroFilter] = useState<string[]>([]);
+  const [formatFilter, setFormatFilter] = useState<string | null>(null);
 
   let sortedOpenGames = data?.openGames ? [...data.openGames] : [];
-  sortedOpenGames = sortedOpenGames.sort((a, b) =>
-    a.format.localeCompare(b.format)
-  );
+  sortedOpenGames = sortedOpenGames
+    .filter((game: IOpenGame) => {
+      return (
+        heroFilter.length === 0 ||
+        heroFilter.find((hero) => hero === game.p1Hero)
+      );
+    })
+    .filter((game: IOpenGame) => {
+      return formatFilter === null || game.format === formatFilter;
+    })
+    .sort((a, b) => a.format.localeCompare(b.format));
 
-  const buttonClass = classNames(styles.button, 'secondary');
+  let filteredGamesInProgress = data?.gamesInProgress
+    ? [...data.gamesInProgress]
+    : [];
+  filteredGamesInProgress = filteredGamesInProgress
+    .filter((game) => {
+      return (
+        heroFilter.length === 0 ||
+        heroFilter.find((hero) => {
+          return hero === game.p1Hero || hero === game.p2Hero;
+        })
+      );
+    })
+    // .filter((game: IGameInProgress) => {
+    //   return formatFilter === null; // TODO: get game format from BE
+    // })
+    .sort((a, b) => {
+      return (a.secondsSinceLastUpdate ?? 0) - (b.secondsSinceLastUpdate ?? 0);
+    });
 
   return (
     <article className={styles.gameList}>
       <h3>Games</h3>
       {isLoading ? <div aria-busy="true">Loading!</div> : null}
       {error ? <div>ERROR!</div> : null}
+      {!isLoading && !error && <Filter setHeroFilter={setHeroFilter} />}
       {sortedOpenGames != undefined
         ? sortedOpenGames.map((entry, ix: number) => {
-            return (
-              <div key={ix} className={styles.gameItem}>
-                <div>
-                  {!!entry.p1Hero && (
-                    <img src={`/crops/${entry.p1Hero}_cropped.png`} />
-                  )}
-                </div>
-                <div>{entry.description}</div>
-                <div>{entry.format}</div>
-                <div>
-                  <button
-                    className={buttonClass}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      navigate(`/game/join/${entry.gameName}`);
-                    }}
-                  >
-                    Join
-                  </button>
-                </div>
-              </div>
-            );
+            return <OpenGame entry={entry} ix={ix} />;
           })
         : null}
       {data != undefined && (
@@ -87,33 +89,8 @@ const GameList = () => {
           <h5 className={styles.title}>
             Games in progress: <span>({data.gamesInProgress.length})</span>
           </h5>
-          {data.gamesInProgress.map((entry, ix: number) => {
-            return (
-              <div key={ix} className={styles.gameItem}>
-                <div>
-                  {!!entry.p1Hero && (
-                    <img src={`/crops/${entry.p1Hero}_cropped.png`} />
-                  )}
-                </div>{' '}
-                -{' '}
-                <div>
-                  {!!entry.p2Hero && (
-                    <img src={`/crops/${entry.p2Hero}_cropped.png`} />
-                  )}
-                </div>
-                <div>
-                  <button
-                    className={buttonClass}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      spectateHandler(entry.gameName);
-                    }}
-                  >
-                    Spectate
-                  </button>
-                </div>
-              </div>
-            );
+          {filteredGamesInProgress.map((entry, ix: number) => {
+            return <InProgressGame entry={entry} ix={ix} />;
           })}
         </div>
       )}

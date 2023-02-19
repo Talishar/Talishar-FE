@@ -93,8 +93,8 @@ export const LoginForm = () => {
             </Link>
             <button
               type="submit"
-              disabled={loginResult.status === QueryStatus.pending}
-              aria-busy={loginResult.status === QueryStatus.pending}
+              disabled={formik.isSubmitting}
+              aria-busy={formik.isSubmitting}
               className={styles.submitButton}
             >
               Submit
