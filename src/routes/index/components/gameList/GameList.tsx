@@ -41,7 +41,6 @@ const GameList = () => {
   const [heroFilter, setHeroFilter] = useState<string[]>([]);
   const [formatFilter, setFormatFilter] = useState<string | null>(null);
 
-  console.log(heroFilter);
   let sortedOpenGames = data?.openGames ? [...data.openGames] : [];
   sortedOpenGames = sortedOpenGames
     .filter((game: IOpenGame) => {
