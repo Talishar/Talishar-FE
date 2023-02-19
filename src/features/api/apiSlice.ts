@@ -127,6 +127,15 @@ export const apiSlice = createApi({
         };
       }
     }),
+    forgottenPassword: builder.mutation({
+      query: (body) => {
+        return {
+          url: URL_END_POINT.FORGOT_PASSWORD,
+          method: 'POST',
+          body: { ...body }
+        };
+      }
+    }),
     submitChat: builder.mutation({
       query: ({
         gameID = 0,
@@ -250,6 +259,7 @@ export const {
   useLoginWithCookieQuery,
   useLogOutMutation,
   useSignUpMutation,
+  useForgottenPasswordMutation,
   useCreateGameMutation,
   useJoinGameMutation,
   useGetLobbyInfoQuery,
