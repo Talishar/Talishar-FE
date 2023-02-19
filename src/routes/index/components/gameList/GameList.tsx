@@ -1,48 +1,42 @@
-import { useGetGameListQuery } from 'features/api/apiSlice';
-import styles from './GameList.module.css';
 import React from 'react';
-import { StringLiteral } from 'typescript';
+import { useGetGameListQuery } from 'features/api/apiSlice';
 import { createSearchParams, useNavigate } from 'react-router-dom';
 import classNames from 'classnames';
+import styles from './GameList.module.css';
+import InProgressGame from '../inProgressGame';
+import OpenGame from '../openGame';
 
+export interface IOpenGame {
+  p1Hero?: string;
+  format: string;
+  formatName?: string;
+  description?: string;
+  gameName: number;
+}
+
+export interface IGameInProgress {
+  p1Hero?: string;
+  p2Hero?: string;
+  gameName: number;
+  secondsSinceLastUpdate?: number;
+}
 export interface GameListResponse {
   data?: {
-    gamesInProgress: {
-      p1Hero?: string;
-      p2Hero?: string;
-      gameName: number;
-      secondsSinceLastUpdate?: number;
-    }[];
-    openGames: {
-      p1Hero?: string;
-      format: string;
-      formatName?: string;
-      description?: string;
-      gameName: number;
-    }[];
+    gamesInProgress: IGameInProgress[];
+    openGames: IOpenGame[];
     canSeeQueue?: boolean;
   };
   isLoading?: boolean;
   error?: unknown;
+  refetch?: () => void;
 }
 
 const GAME_LIST_POLLING_INTERVAL = 10000; // in ms
 
 const GameList = () => {
-  const { data, isLoading, error }: GameListResponse = useGetGameListQuery(
-    {},
-    {}
-  );
+  const { data, isLoading, error, refetch }: GameListResponse =
+    useGetGameListQuery({}, {});
   const navigate = useNavigate();
-  const spectateHandler = (gameName: number) => {
-    navigate({
-      pathname: `/game/play/${gameName}`,
-      search: `?${createSearchParams({
-        gameName: String(gameName),
-        playerID: String(3)
-      })}`
-    });
-  };
 
   let sortedOpenGames = data?.openGames ? [...data.openGames] : [];
   sortedOpenGames = sortedOpenGames.sort((a, b) =>
@@ -58,28 +52,7 @@ const GameList = () => {
       {error ? <div>ERROR!</div> : null}
       {sortedOpenGames != undefined
         ? sortedOpenGames.map((entry, ix: number) => {
-            return (
-              <div key={ix} className={styles.gameItem}>
-                <div>
-                  {!!entry.p1Hero && (
-                    <img src={`/crops/${entry.p1Hero}_cropped.png`} />
-                  )}
-                </div>
-                <div>{entry.description}</div>
-                <div>{entry.format}</div>
-                <div>
-                  <button
-                    className={buttonClass}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      navigate(`/game/join/${entry.gameName}`);
-                    }}
-                  >
-                    Join
-                  </button>
-                </div>
-              </div>
-            );
+            return <OpenGame entry={entry} ix={ix} />;
           })
         : null}
       {data != undefined && (
@@ -88,32 +61,7 @@ const GameList = () => {
             Games in progress: <span>({data.gamesInProgress.length})</span>
           </h5>
           {data.gamesInProgress.map((entry, ix: number) => {
-            return (
-              <div key={ix} className={styles.gameItem}>
-                <div>
-                  {!!entry.p1Hero && (
-                    <img src={`/crops/${entry.p1Hero}_cropped.png`} />
-                  )}
-                </div>{' '}
-                -{' '}
-                <div>
-                  {!!entry.p2Hero && (
-                    <img src={`/crops/${entry.p2Hero}_cropped.png`} />
-                  )}
-                </div>
-                <div>
-                  <button
-                    className={buttonClass}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      spectateHandler(entry.gameName);
-                    }}
-                  >
-                    Spectate
-                  </button>
-                </div>
-              </div>
-            );
+            return <InProgressGame entry={entry} ix={ix} />;
           })}
         </div>
       )}
