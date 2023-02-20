@@ -1,0 +1,216 @@
+.gameBoardGrid {
+  display: grid;
+  grid-template-columns: 13dvh 13dvh 1fr 13dvh 13dvh 13dvh 1fr 13dvh 13dvh;
+  grid-template-rows: repeat(6, 13dvh);
+  width: 100%;
+  height: 85dvh;
+  gap: 5px;
+  padding: 1dvh;
+  grid-template-areas:
+    'pTwoFeet pTwoPermanents pTwoPermanents pTwoPermanents pTwoArsenal pTwoArsenal pTwoArsenal pTwoCount pTwoBanish'
+    'pTwoChest pTwoHands . pTwoWeaponLZone pTwoHero pTwoWeaponRZone . pTwoPitch pTwoDeck'
+    'pTwoHead combatChain combatChain combatChain combatChain combatChain combatChain combatChain pTwoGraveyard'
+    'pOneHead combatChain combatChain combatChain combatChain combatChain combatChain combatChain pOneGraveyard'
+    'pOneChest pOneHands . pOneWeaponLZone pOneHero pOneWeaponRZone . pOnePitch pOneDeck'
+    'pOneFeet pOnePermanents pOnePermanents pOnePermanents pOneArsenal pOneArsenal pOneArsenal pOneCount pOneBanish';
+}
+
+.pTwoFeet {
+  grid-area: pTwoFeet;
+  min-height: 14dvh;
+  min-width: 14dvh;
+  background-color: red;
+  aspect-ratio: 1;
+}
+
+.pTwoPermanents {
+  grid-area: pTwoPermanents;
+  min-width: 100%;
+  min-height: 100%;
+}
+
+.pTwoArsenal {
+  grid-area: pTwoArsenal;
+  min-width: 100%;
+  min-height: 100%;
+}
+
+.pTwoCount {
+  grid-area: pTwoCount;
+  min-width: 100%;
+  min-height: 100%;
+  aspect-ratio: 1;
+}
+
+.pTwoBanish {
+  grid-area: pTwoBanish;
+  min-width: 100%;
+  min-height: 100%;
+  aspect-ratio: 1;
+}
+
+.pTwoChest {
+  grid-area: pTwoChest;
+  min-width: 100%;
+  min-height: 100%;
+  aspect-ratio: 1;
+}
+
+.pTwoHands {
+  grid-area: pTwoHands;
+  min-width: 100%;
+  min-height: 100%;
+  aspect-ratio: 1;
+}
+
+.pTwoWeaponLZone {
+  grid-area: pTwoWeaponLZone;
+  min-width: 100%;
+  min-height: 100%;
+  aspect-ratio: 1;
+}
+
+.pTwoHero {
+  grid-area: pTwoHero;
+  min-width: 100%;
+  min-height: 100%;
+  aspect-ratio: 1;
+}
+
+.pTwoWeaponRZone {
+  grid-area: pTwoWeaponRZone;
+  min-width: 100%;
+  min-height: 100%;
+  aspect-ratio: 1;
+}
+
+.pTwoPitch {
+  grid-area: pTwoPitch;
+  min-width: 100%;
+  min-height: 100%;
+  aspect-ratio: 1;
+}
+
+.pTwoDeck {
+  grid-area: pTwoDeck;
+  min-width: 100%;
+  min-height: 100%;
+  aspect-ratio: 1;
+}
+
+.pTwoHead {
+  grid-area: pTwoHead;
+  min-width: 100%;
+  min-height: 100%;
+  aspect-ratio: 1;
+}
+
+.pTwoGraveyard {
+  grid-area: pTwoGraveyard;
+  min-width: 100%;
+  min-height: 100%;
+  aspect-ratio: 1;
+}
+
+.combatChain {
+  grid-area: combatChain;
+  background-color: red;
+  border-radius: 1em;
+}
+
+.pOneFeet {
+  grid-area: pOneFeet;
+  min-height: 14dvh;
+  min-width: 14dvh;
+  background-color: red;
+  aspect-ratio: 1;
+}
+
+.pOnePermanents {
+  grid-area: pOnePermanents;
+  min-width: 100%;
+  min-height: 100%;
+}
+
+.pOneArsenal {
+  grid-area: pOneArsenal;
+  min-width: 100%;
+  min-height: 100%;
+}
+
+.pOneCount {
+  grid-area: pOneCount;
+  min-width: 100%;
+  min-height: 100%;
+  aspect-ratio: 1;
+}
+
+.pOneBanish {
+  grid-area: pOneBanish;
+  min-width: 100%;
+  min-height: 100%;
+  aspect-ratio: 1;
+}
+
+.pOneChest {
+  grid-area: pOneChest;
+  min-width: 100%;
+  min-height: 100%;
+  aspect-ratio: 1;
+}
+
+.pOneHands {
+  grid-area: pOneHands;
+  min-width: 100%;
+  min-height: 100%;
+  aspect-ratio: 1;
+}
+
+.pOneWeaponLZone {
+  grid-area: pOneWeaponLZone;
+  min-width: 100%;
+  min-height: 100%;
+  aspect-ratio: 1;
+}
+
+.pOneHero {
+  grid-area: pOneHero;
+  min-width: 100%;
+  min-height: 100%;
+  aspect-ratio: 1;
+}
+
+.pOneWeaponRZone {
+  grid-area: pOneWeaponRZone;
+  min-width: 100%;
+  min-height: 100%;
+  aspect-ratio: 1;
+}
+
+.pOnePitch {
+  grid-area: pOnePitch;
+  min-width: 100%;
+  min-height: 100%;
+  aspect-ratio: 1;
+}
+
+.pOneDeck {
+  grid-area: pOneDeck;
+  min-width: 100%;
+  min-height: 100%;
+  aspect-ratio: 1;
+}
+
+.pOneHead {
+  grid-area: pOneHead;
+  min-width: 100%;
+  min-height: 100%;
+  aspect-ratio: 1;
+}
+
+.pOneGraveyard {
+  grid-area: pOneGraveyard;
+  min-width: 100%;
+  min-height: 100%;
+  aspect-ratio: 1;
+}
