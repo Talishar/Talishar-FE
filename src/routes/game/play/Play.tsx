@@ -10,6 +10,9 @@ import EventsHandler from '../components/elements/eventsHandler/EventsHandler';
 import PlayerInputPopUp from '../components/elements/playerInputPopUp/PlayerInputPopUp';
 import CardPortal from '../components/elements/cardPortal/CardPortal';
 import ChatCardDetail from '../components/elements/chatCardDetail/ChatCardDetail';
+import CardListZone from '../components/zones/cardListZone/CardListZone';
+import ChainLinkSummaryContainer from '../components/elements/chainLinkSummary/ChainLinkSummary';
+import ActiveLayersZone from '../components/zones/activeLayersZone/ActiveLayersZone';
 
 function Play() {
   return (
@@ -25,6 +28,9 @@ function Play() {
         </div>
         <RightColumn />
       </div>
+      <CardListZone />
+      <ChainLinkSummaryContainer />
+      <ActiveLayersZone />
       <OptionsOverlay />
       <PlayerInputPopUp />
       <CardPortal />

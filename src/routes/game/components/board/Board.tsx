@@ -22,9 +22,6 @@ export function Board() {
         <CombatChain />
         <PlayerPrompt />
         <PlayerBoardGrid />
-        <CardListZone />
-        <ChainLinkSummaryContainer />
-        <ActiveLayersZone />
       </div>
     );
   }
