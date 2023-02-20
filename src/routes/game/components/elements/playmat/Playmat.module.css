@@ -1,0 +1,21 @@
+.playerOne {
+  grid-column-start: 1;
+  grid-column-end: 10;
+  grid-row-start: 4;
+  grid-row-end: 7;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  z-index: 0;
+}
+
+.playerTwo {
+  grid-column-start: 1;
+  grid-column-end: 10;
+  grid-row-start: 1;
+  grid-row-end: 4;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  z-index: 0;
+}

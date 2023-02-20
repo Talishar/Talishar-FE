@@ -20,18 +20,21 @@
   min-height: 100%;
   min-width: 100%;
   aspect-ratio: 1;
+  z-index: 5;
 }
 
 .pTwoPermanents {
   grid-area: pTwoPermanents;
   min-width: 100%;
   min-height: 100%;
+  z-index: 5;
 }
 
 .pTwoArsenal {
   grid-area: pTwoArsenal;
   min-width: 100%;
   min-height: 100%;
+  z-index: 5;
 }
 
 .pTwoCount {
@@ -39,6 +42,7 @@
   min-width: 100%;
   min-height: 100%;
   aspect-ratio: 1;
+  z-index: 5;
 }
 
 .pTwoBanish {
@@ -46,6 +50,7 @@
   min-width: 100%;
   min-height: 100%;
   aspect-ratio: 1;
+  z-index: 5;
 }
 
 .pTwoChest {
@@ -53,6 +58,7 @@
   min-width: 100%;
   min-height: 100%;
   aspect-ratio: 1;
+  z-index: 5;
 }
 
 .pTwoHands {
@@ -60,6 +66,7 @@
   min-width: 100%;
   min-height: 100%;
   aspect-ratio: 1;
+  z-index: 5;
 }
 
 .pTwoWeaponLZone {
@@ -67,6 +74,7 @@
   min-width: 100%;
   min-height: 100%;
   aspect-ratio: 1;
+  z-index: 5;
 }
 
 .pTwoHero {
@@ -74,6 +82,7 @@
   min-width: 100%;
   min-height: 100%;
   aspect-ratio: 1;
+  z-index: 5;
 }
 
 .pTwoWeaponRZone {
@@ -81,6 +90,7 @@
   min-width: 100%;
   min-height: 100%;
   aspect-ratio: 1;
+  z-index: 5;
 }
 
 .pTwoPitch {
@@ -88,6 +98,7 @@
   min-width: 100%;
   min-height: 100%;
   aspect-ratio: 1;
+  z-index: 5;
 }
 
 .pTwoDeck {
@@ -95,6 +106,7 @@
   min-width: 100%;
   min-height: 100%;
   aspect-ratio: 1;
+  z-index: 5;
 }
 
 .pTwoHead {
@@ -102,6 +114,7 @@
   min-width: 100%;
   min-height: 100%;
   aspect-ratio: 1;
+  z-index: 5;
 }
 
 .pTwoGraveyard {
@@ -109,12 +122,18 @@
   min-width: 100%;
   min-height: 100%;
   aspect-ratio: 1;
+  z-index: 5;
 }
 
 .combatChain {
   grid-area: combatChain;
-  background-color: red;
   border-radius: 1em;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 1vh;
+  z-index: 5;
 }
 
 .pOneFeet {
@@ -122,6 +141,7 @@
   min-height: 100%;
   min-width: 100%;
   aspect-ratio: 1;
+  z-index: 5;
 }
 
 .pOnePermanents {
@@ -141,6 +161,7 @@
   min-width: 100%;
   min-height: 100%;
   aspect-ratio: 1;
+  z-index: 5;
 }
 
 .pOneBanish {
@@ -148,6 +169,7 @@
   min-width: 100%;
   min-height: 100%;
   aspect-ratio: 1;
+  z-index: 5;
 }
 
 .pOneChest {
@@ -155,6 +177,7 @@
   min-width: 100%;
   min-height: 100%;
   aspect-ratio: 1;
+  z-index: 5;
 }
 
 .pOneHands {
@@ -162,6 +185,7 @@
   min-width: 100%;
   min-height: 100%;
   aspect-ratio: 1;
+  z-index: 5;
 }
 
 .pOneWeaponLZone {
@@ -169,6 +193,7 @@
   min-width: 100%;
   min-height: 100%;
   aspect-ratio: 1;
+  z-index: 5;
 }
 
 .pOneHero {
@@ -176,6 +201,7 @@
   min-width: 100%;
   min-height: 100%;
   aspect-ratio: 1;
+  z-index: 5;
 }
 
 .pOneWeaponRZone {
@@ -183,6 +209,7 @@
   min-width: 100%;
   min-height: 100%;
   aspect-ratio: 1;
+  z-index: 5;
 }
 
 .pOnePitch {
@@ -190,6 +217,7 @@
   min-width: 100%;
   min-height: 100%;
   aspect-ratio: 1;
+  z-index: 5;
 }
 
 .pOneDeck {
@@ -197,6 +225,7 @@
   min-width: 100%;
   min-height: 100%;
   aspect-ratio: 1;
+  z-index: 5;
 }
 
 .pOneHead {
@@ -204,6 +233,7 @@
   min-width: 100%;
   min-height: 100%;
   aspect-ratio: 1;
+  z-index: 5;
 }
 
 .pOneGraveyard {
@@ -211,4 +241,5 @@
   min-width: 100%;
   min-height: 100%;
   aspect-ratio: 1;
+  z-index: 5;
 }

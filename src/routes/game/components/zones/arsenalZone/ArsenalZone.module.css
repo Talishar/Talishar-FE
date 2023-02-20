@@ -3,7 +3,7 @@
   flex-direction: row;
   flex-wrap: nowrap;
   gap: 1vh;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   height: 100%;
   grid-area: arsenal;
@@ -11,7 +11,8 @@
 
 .arsenalZone {
   height: 100%;
-  min-width: min(10dvh, 12dvw);
+  min-width: min(13dvh, 12dvw);
+  width: fit-content;
   display: flex;
   gap: 1dvh;
   justify-content: center;

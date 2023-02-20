@@ -1,4 +1,5 @@
 import React from 'react';
+
 import ArsenalZone from '../zones/arsenalZone/ArsenalZone';
 import BanishZone from '../zones/banishZone/BanishZone';
 import ChestEqZone from '../zones/chestEqZone/ChestEqZone';
@@ -13,6 +14,10 @@ import PitchZone from '../zones/pitchZone/PitchZone';
 import WeaponLZone from '../zones/weaponLZone/WeaponLZone';
 import WeaponRZone from '../zones/weaponRZone/WeaponRZone';
 import ZoneCounts from '../zones/zoneCountsZone/ZoneCounts';
+import CombatChain from '../combatChain/CombatChain';
+import PlayerPrompt from '../elements/playerPrompt/PlayerPrompt';
+import Playmat from '../elements/playmat';
+
 import styles from './GridBoard.module.css';
 
 const GridBoard = () => {
@@ -61,7 +66,10 @@ const GridBoard = () => {
         <GraveyardZone isPlayer={false} />
       </div>
       <>
-        <div className={styles.combatChain}></div>
+        <div className={styles.combatChain}>
+          <CombatChain />
+          <PlayerPrompt />
+        </div>
       </>
       <div className={styles.pOneGraveyard}>
         <GraveyardZone isPlayer={true} />
@@ -105,6 +113,8 @@ const GridBoard = () => {
       <div className={styles.pOneFeet}>
         <FeetEqZone isPlayer={true} />
       </div>
+      <Playmat isPlayer={false} />
+      <Playmat isPlayer={true} />
     </div>
   );
 };
