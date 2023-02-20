@@ -1,8 +1,7 @@
+import React from 'react';
 import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
-import classNames from 'classnames';
 import { DEFAULT_PLAYMAT } from 'constants';
-import React from 'react';
 import styles from './Playmat.module.css';
 export const Playmat = ({ isPlayer }: { isPlayer: boolean }) => {
   let playmat = useAppSelector((state: RootState) =>
@@ -10,7 +9,8 @@ export const Playmat = ({ isPlayer }: { isPlayer: boolean }) => {
   );
 
   if (playmat === undefined) {
-    playmat = DEFAULT_PLAYMAT;
+    // playmat = DEFAULT_PLAYMAT;
+    playmat = isPlayer ? 'aria' : `volcor`;
   }
 
   const styleToApply = {

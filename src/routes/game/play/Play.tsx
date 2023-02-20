@@ -23,13 +23,13 @@ function Play() {
         <div className="gameZone">
           <HandZone isPlayer={false} />
           <Board />
+          <ChainLinkSummaryContainer />
           <HandZone isPlayer />
           <PlayerHand />
         </div>
         <RightColumn />
       </div>
       <CardListZone />
-      <ChainLinkSummaryContainer />
       <ActiveLayersZone />
       <OptionsOverlay />
       <PlayerInputPopUp />

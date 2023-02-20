@@ -35,12 +35,16 @@
   flex-grow: 1;
   flex-direction: row;
   justify-content: flex-start;
-  align-items: flex-start;
   align-content: flex-start;
   flex-wrap: wrap;
   gap: 1vh;
   overflow-y: auto;
   height: auto;
+}
+
+.activeLayersContents > div {
+  flex-basis: 14dvh;
+  max-height: 14dvh;
 }
 
 .emptyOutside {

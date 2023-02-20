@@ -67,8 +67,10 @@
 
 .cardContainer {
   position: relative;
+  aspect-ratio: 1;
 }
 
 .stacked {
   margin-left: 0.75em;
+  aspect-ratio: 1;
 }

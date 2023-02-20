@@ -1,18 +1,20 @@
 .gameBoardGrid {
   display: grid;
-  grid-template-columns: 13dvh 13dvh 1fr 13dvh 13dvh 13dvh 1fr 13dvh 13dvh;
-  grid-template-rows: repeat(6, 13dvh);
+  grid-template-columns: 5px 13dvh 13dvh 1fr 13dvh 13dvh 13dvh 1fr 13dvh 13dvh 5px;
+  grid-template-rows: 5px repeat(6, 13dvh) 5px;
   width: 100%;
   height: 85dvh;
   gap: 5px;
   padding: 1dvh;
   grid-template-areas:
-    'pTwoFeet pTwoPermanents pTwoPermanents pTwoPermanents pTwoArsenal pTwoArsenal pTwoArsenal pTwoCount pTwoBanish'
-    'pTwoChest pTwoHands . pTwoWeaponLZone pTwoHero pTwoWeaponRZone . pTwoPitch pTwoDeck'
-    'pTwoHead combatChain combatChain combatChain combatChain combatChain combatChain combatChain pTwoGraveyard'
-    'pOneHead combatChain combatChain combatChain combatChain combatChain combatChain combatChain pOneGraveyard'
-    'pOneChest pOneHands . pOneWeaponLZone pOneHero pOneWeaponRZone . pOnePitch pOneDeck'
-    'pOneFeet pOnePermanents pOnePermanents pOnePermanents pOneArsenal pOneArsenal pOneArsenal pOneCount pOneBanish';
+    '. . . . . . . . . . .'
+    '. pTwoFeet pTwoPermanents pTwoPermanents pTwoPermanents pTwoArsenal pTwoArsenal pTwoArsenal pTwoCount pTwoBanish .'
+    '. pTwoChest pTwoHands . pTwoWeaponLZone pTwoHero pTwoWeaponRZone . pTwoPitch pTwoDeck .'
+    '. pTwoHead combatChain combatChain combatChain combatChain combatChain combatChain combatChain pTwoGraveyard .'
+    '. pOneHead combatChain combatChain combatChain combatChain combatChain combatChain combatChain pOneGraveyard .'
+    '. pOneChest pOneHands . pOneWeaponLZone pOneHero pOneWeaponRZone . pOnePitch pOneDeck .'
+    '. pOneFeet pOnePermanents pOnePermanents pOnePermanents pOneArsenal pOneArsenal pOneArsenal pOneCount pOneBanish .'
+    '. . . . . . . . . . .';
 }
 
 .pTwoFeet {
@@ -148,12 +150,14 @@
   grid-area: pOnePermanents;
   min-width: 100%;
   min-height: 100%;
+  z-index: 5;
 }
 
 .pOneArsenal {
   grid-area: pOneArsenal;
   min-width: 100%;
   min-height: 100%;
+  z-index: 5;
 }
 
 .pOneCount {

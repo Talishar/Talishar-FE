@@ -99,7 +99,7 @@ export default function PlayerInputPopUp() {
     return inputPopUp.choiceOptions == 'checkbox' ? (
       <div
         key={ix.toString()}
-        className={styles.cardDiv}
+        className={styles.f}
         onClick={(e) => {
           e.preventDefault();
           e.stopPropagation();

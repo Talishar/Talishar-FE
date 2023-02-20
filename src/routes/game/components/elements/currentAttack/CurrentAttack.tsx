@@ -50,7 +50,7 @@ export default function CurrentAttack() {
         <div className={styles.defDiv}>{defValue}</div>
       </div>
       <div className={styles.attack}>
-        <CardDisplay card={attCard} makeMeBigger={true} />
+        <CardDisplay card={attCard} />
         <div className={styles.floatCover}>
           {activeCombatChain.goAgain ? (
             <div className={styles.icon} data-tooltip="Go Again">
