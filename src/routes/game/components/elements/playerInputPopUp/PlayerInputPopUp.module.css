@@ -88,6 +88,7 @@
   flex-wrap: wrap;
   overflow: auto;
   height: 100%;
+  max-height: 100%;
   padding-top: 0.5em;
 }
 
@@ -108,4 +109,12 @@
 
 .checkBoxRow:last-child {
   padding-bottom: 2vh;
+}
+
+.cardDiv {
+  flex-basis: 14dvh;
+  max-height: 14vh;
+  max-width: 14vh;
+  max-height: 14dvh;
+  max-width: 14dvh;
 }

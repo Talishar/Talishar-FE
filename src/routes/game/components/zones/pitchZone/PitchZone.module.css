@@ -7,4 +7,6 @@
   background: rgba(50, 50, 50, 0.5);
   color: var(--white);
   grid-area: pitch;
+  min-width: 100%;
+  min-height: 100%;
 }

@@ -13,3 +13,11 @@
   user-select: none;
   z-index: 15;
 }
+
+@media (orientation: portrait) {
+  .handRow {
+    justify-content: space-around;
+    max-width: 100%;
+    width: 100%;
+  }
+}

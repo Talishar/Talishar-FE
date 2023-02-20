@@ -1,0 +1,170 @@
+.gameBoardGrid {
+  display: grid;
+  grid-template-columns: 5px 13dvh 13dvh 1fr 13dvh 13dvh 13dvh 1fr 13dvh 13dvh 5px;
+  grid-template-rows: 5px repeat(6, 13dvh) 5px;
+  width: 100%;
+  height: 85dvh;
+  gap: 5px;
+  padding: 1dvh;
+  grid-template-areas:
+    '. . . . . . . . . . .'
+    '. pTwoFeet pTwoPermanents pTwoPermanents pTwoPermanents pTwoArsenal pTwoArsenal pTwoArsenal pTwoCount pTwoBanish .'
+    '. pTwoChest pTwoHands . pTwoWeaponLZone pTwoHero pTwoWeaponRZone . pTwoPitch pTwoDeck .'
+    '. pTwoHead combatChain combatChain combatChain combatChain combatChain combatChain combatChain pTwoGraveyard .'
+    '. pOneHead combatChain combatChain combatChain combatChain combatChain combatChain combatChain pOneGraveyard .'
+    '. pOneChest pOneHands . pOneWeaponLZone pOneHero pOneWeaponRZone . pOnePitch pOneDeck .'
+    '. pOneFeet pOnePermanents pOnePermanents pOnePermanents pOneArsenal pOneArsenal pOneArsenal pOneCount pOneBanish .'
+    '. . . . . . . . . . .';
+}
+
+.gameBoardGrid > div {
+  min-width: 100%;
+  min-height: 100%;
+  z-index: 5;
+}
+
+.pTwoFeet {
+  grid-area: pTwoFeet;
+  aspect-ratio: 1;
+}
+
+.pTwoPermanents {
+  grid-area: pTwoPermanents;
+}
+
+.pTwoArsenal {
+  grid-area: pTwoArsenal;
+}
+
+.pTwoCount {
+  grid-area: pTwoCount;
+  aspect-ratio: 1;
+}
+
+.pTwoBanish {
+  grid-area: pTwoBanish;
+  aspect-ratio: 1;
+}
+
+.pTwoChest {
+  grid-area: pTwoChest;
+  aspect-ratio: 1;
+}
+
+.pTwoHands {
+  grid-area: pTwoHands;
+  aspect-ratio: 1;
+}
+
+.pTwoWeaponLZone {
+  grid-area: pTwoWeaponLZone;
+  aspect-ratio: 1;
+}
+
+.pTwoHero {
+  grid-area: pTwoHero;
+  aspect-ratio: 1;
+}
+
+.pTwoWeaponRZone {
+  grid-area: pTwoWeaponRZone;
+  aspect-ratio: 1;
+}
+
+.pTwoPitch {
+  grid-area: pTwoPitch;
+  aspect-ratio: 1;
+}
+
+.pTwoDeck {
+  grid-area: pTwoDeck;
+  aspect-ratio: 1;
+}
+
+.pTwoHead {
+  grid-area: pTwoHead;
+  aspect-ratio: 1;
+}
+
+.pTwoGraveyard {
+  grid-area: pTwoGraveyard;
+  aspect-ratio: 1;
+}
+
+.combatChain {
+  grid-area: combatChain;
+  border-radius: 1em;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 1vh;
+}
+
+.pOneFeet {
+  grid-area: pOneFeet;
+  aspect-ratio: 1;
+}
+
+.pOnePermanents {
+  grid-area: pOnePermanents;
+}
+
+.pOneArsenal {
+  grid-area: pOneArsenal;
+}
+
+.pOneCount {
+  grid-area: pOneCount;
+  aspect-ratio: 1;
+}
+
+.pOneBanish {
+  grid-area: pOneBanish;
+  aspect-ratio: 1;
+}
+
+.pOneChest {
+  grid-area: pOneChest;
+  aspect-ratio: 1;
+}
+
+.pOneHands {
+  grid-area: pOneHands;
+  aspect-ratio: 1;
+}
+
+.pOneWeaponLZone {
+  grid-area: pOneWeaponLZone;
+  aspect-ratio: 1;
+}
+
+.pOneHero {
+  grid-area: pOneHero;
+  aspect-ratio: 1;
+}
+
+.pOneWeaponRZone {
+  grid-area: pOneWeaponRZone;
+  aspect-ratio: 1;
+}
+
+.pOnePitch {
+  grid-area: pOnePitch;
+  aspect-ratio: 1;
+}
+
+.pOneDeck {
+  grid-area: pOneDeck;
+  aspect-ratio: 1;
+}
+
+.pOneHead {
+  grid-area: pOneHead;
+  aspect-ratio: 1;
+}
+
+.pOneGraveyard {
+  grid-area: pOneGraveyard;
+  aspect-ratio: 1;
+}

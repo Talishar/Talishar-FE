@@ -79,18 +79,16 @@ export default function PermanentsZone(prop: Displayrow) {
             styles.cardContainer
           );
           return (
-            <div>
-              <div key={ix.toString()} className={cardContainerStyles}>
-                <CardDisplay card={cardStack.card} key={ix.toString()} />
-                {cardStack.count > 1 && (
-                  <div
-                    title={`Stack of ${cardStack.count}`}
-                    className={styles.counter}
-                  >
-                    × {cardStack.count}
-                  </div>
-                )}
-              </div>
+            <div key={ix.toString()} className={cardContainerStyles}>
+              <CardDisplay card={cardStack.card} key={ix.toString()} />
+              {cardStack.count > 1 && (
+                <div
+                  title={`Stack of ${cardStack.count}`}
+                  className={styles.counter}
+                >
+                  × {cardStack.count}
+                </div>
+              )}
             </div>
           );
         })}

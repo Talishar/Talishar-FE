@@ -12,4 +12,6 @@
   align-content: center;
   align-items: center;
   grid-area: chest;
+  min-width: 100%;
+  min-height: 100%;
 }

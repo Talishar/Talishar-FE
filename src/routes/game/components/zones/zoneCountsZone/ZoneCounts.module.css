@@ -9,6 +9,8 @@
   flex: 0 0 10vh;
   grid-area: zonecounts;
   line-height: normal;
+  min-width: 100%;
+  min-height: 100%;
 }
 
 .column {

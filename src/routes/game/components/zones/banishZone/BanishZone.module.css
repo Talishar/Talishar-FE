@@ -9,4 +9,6 @@
   border-radius: 0.5em;
   flex: 0 0 10vh;
   grid-area: banish;
+  min-width: 100%;
+  min-height: 100%;
 }

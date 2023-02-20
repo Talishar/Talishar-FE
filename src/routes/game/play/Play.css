@@ -1,6 +1,6 @@
-:root {
+/* :root {
   --aspect: 1920px;
-}
+} */
 
 html,
 body {
@@ -27,7 +27,6 @@ body {
   .app {
     height: 100%;
     width: 100%;
-    max-width: var(--aspect);
     font-size: calc(1.5vh - 2px);
     font-size: calc(1.5dvh - 2px);
   }

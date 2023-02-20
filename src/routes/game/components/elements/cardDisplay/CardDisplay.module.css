@@ -7,12 +7,16 @@
   user-select: none;
   -webkit-user-select: none;
   overflow: visible;
+  height: 100%;
+  width: 100%;
+  aspect-ratio: 1;
 }
 
 .normalSize {
-  height: 10vh;
-  height: 10dvh;
-  aspect-ratio: 1;
+  max-height: 14vh;
+  max-width: 14vh;
+  max-height: 14dvh;
+  max-width: 14dvh;
 }
 
 .biggerSize {

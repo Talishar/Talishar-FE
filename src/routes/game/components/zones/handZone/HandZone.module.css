@@ -1,13 +1,18 @@
 .handZone {
+  display: flex;
   position: relative;
   width: 100%;
-  min-height: 10vh;
-  height: 10vh;
-  display: flex;
+  min-height: 14vh;
+  height: 14vh;
   flex-direction: row;
   flex-wrap: nowrap;
   justify-content: center;
-  gap: 1vh;
+  align-items: center;
+}
+
+.handZone div {
+  max-height: 14dvh;
+  max-width: 14dvh;
 }
 
 .isPlayer {

@@ -5,6 +5,7 @@ import { Card } from 'features/Card';
 import styles from './PlayerHand.module.css';
 import PlayerHandCard from '../../elements/playerHandCard/PlayerHandCard';
 import { useAppSelector } from 'app/Hooks';
+import useWindowDimensions from 'hooks/useWindowDimensions';
 
 const MaxHandWidthPercentage = 50;
 
@@ -12,6 +13,7 @@ export default function PlayerHand() {
   const isPlayable = (card: Card) => {
     false;
   };
+  const [width, height] = useWindowDimensions();
 
   const playerNo = useAppSelector(
     (state: RootState) => state.game.gameInfo.playerID
@@ -29,7 +31,7 @@ export default function PlayerHand() {
   );
   const playableBanishedCards = useAppSelector((state: RootState) => {
     return state.game.playerOne.Banish?.filter(
-      (card) => card.action != null && card.action != "0"
+      (card) => card.action != null && card.action != 0
     );
   }, shallowEqual);
   const playableGraveyardCards = useAppSelector(
@@ -55,7 +57,8 @@ export default function PlayerHand() {
 
   const widthPercentage = Math.min(lengthOfCards * 5, MaxHandWidthPercentage);
 
-  const widthfunction = { width: `${widthPercentage}%` };
+  const widthfunction =
+    width > height ? { width: `${widthPercentage}%` } : { width: `75%` };
 
   if (playerNo === 3) {
     return <></>;
