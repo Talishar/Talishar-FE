@@ -26,8 +26,7 @@
   justify-content: flex-start;
   gap: 1vh;
   align-content: flex-start;
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
+  flex-wrap: nowrap;
 }
 
 .permanentsText {
@@ -66,11 +65,14 @@
 }
 
 .cardContainer {
+  display: block;
   position: relative;
   aspect-ratio: 1;
+  min-width: 13dvh;
 }
 
 .stacked {
-  margin-left: 0.75em;
+  display: block;
+  /* margin-left: 0.25em; */
   aspect-ratio: 1;
 }
