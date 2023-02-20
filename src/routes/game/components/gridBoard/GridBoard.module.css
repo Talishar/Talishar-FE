@@ -17,9 +17,8 @@
 
 .pTwoFeet {
   grid-area: pTwoFeet;
-  min-height: 14dvh;
-  min-width: 14dvh;
-  background-color: red;
+  min-height: 100%;
+  min-width: 100%;
   aspect-ratio: 1;
 }
 
@@ -120,9 +119,8 @@
 
 .pOneFeet {
   grid-area: pOneFeet;
-  min-height: 14dvh;
-  min-width: 14dvh;
-  background-color: red;
+  min-height: 100%;
+  min-width: 100%;
   aspect-ratio: 1;
 }
 
