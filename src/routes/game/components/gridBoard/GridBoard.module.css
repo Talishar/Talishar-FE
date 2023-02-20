@@ -17,114 +17,78 @@
     '. . . . . . . . . . .';
 }
 
+.gameBoardGrid > div {
+  min-width: 100%;
+  min-height: 100%;
+  z-index: 5;
+}
+
 .pTwoFeet {
   grid-area: pTwoFeet;
-  min-height: 100%;
-  min-width: 100%;
   aspect-ratio: 1;
-  z-index: 5;
 }
 
 .pTwoPermanents {
   grid-area: pTwoPermanents;
-  min-width: 100%;
-  min-height: 100%;
-  z-index: 5;
 }
 
 .pTwoArsenal {
   grid-area: pTwoArsenal;
-  min-width: 100%;
-  min-height: 100%;
-  z-index: 5;
 }
 
 .pTwoCount {
   grid-area: pTwoCount;
-  min-width: 100%;
-  min-height: 100%;
   aspect-ratio: 1;
-  z-index: 5;
 }
 
 .pTwoBanish {
   grid-area: pTwoBanish;
-  min-width: 100%;
-  min-height: 100%;
   aspect-ratio: 1;
-  z-index: 5;
 }
 
 .pTwoChest {
   grid-area: pTwoChest;
-  min-width: 100%;
-  min-height: 100%;
   aspect-ratio: 1;
-  z-index: 5;
 }
 
 .pTwoHands {
   grid-area: pTwoHands;
-  min-width: 100%;
-  min-height: 100%;
   aspect-ratio: 1;
-  z-index: 5;
 }
 
 .pTwoWeaponLZone {
   grid-area: pTwoWeaponLZone;
-  min-width: 100%;
-  min-height: 100%;
   aspect-ratio: 1;
-  z-index: 5;
 }
 
 .pTwoHero {
   grid-area: pTwoHero;
-  min-width: 100%;
-  min-height: 100%;
   aspect-ratio: 1;
-  z-index: 5;
 }
 
 .pTwoWeaponRZone {
   grid-area: pTwoWeaponRZone;
-  min-width: 100%;
-  min-height: 100%;
   aspect-ratio: 1;
-  z-index: 5;
 }
 
 .pTwoPitch {
   grid-area: pTwoPitch;
-  min-width: 100%;
-  min-height: 100%;
   aspect-ratio: 1;
-  z-index: 5;
 }
 
 .pTwoDeck {
   grid-area: pTwoDeck;
-  min-width: 100%;
-  min-height: 100%;
   aspect-ratio: 1;
-  z-index: 5;
 }
 
 .pTwoHead {
   grid-area: pTwoHead;
-  min-width: 100%;
-  min-height: 100%;
   aspect-ratio: 1;
-  z-index: 5;
 }
 
 .pTwoGraveyard {
   grid-area: pTwoGraveyard;
-  min-width: 100%;
-  min-height: 100%;
   aspect-ratio: 1;
-  z-index: 5;
 }
 
 .combatChain {
@@ -135,115 +99,72 @@
   justify-content: flex-start;
   align-items: center;
   gap: 1vh;
-  z-index: 5;
 }
 
 .pOneFeet {
   grid-area: pOneFeet;
-  min-height: 100%;
-  min-width: 100%;
   aspect-ratio: 1;
-  z-index: 5;
 }
 
 .pOnePermanents {
   grid-area: pOnePermanents;
-  min-width: 100%;
-  min-height: 100%;
-  z-index: 5;
 }
 
 .pOneArsenal {
   grid-area: pOneArsenal;
-  min-width: 100%;
-  min-height: 100%;
-  z-index: 5;
 }
 
 .pOneCount {
   grid-area: pOneCount;
-  min-width: 100%;
-  min-height: 100%;
   aspect-ratio: 1;
-  z-index: 5;
 }
 
 .pOneBanish {
   grid-area: pOneBanish;
-  min-width: 100%;
-  min-height: 100%;
   aspect-ratio: 1;
-  z-index: 5;
 }
 
 .pOneChest {
   grid-area: pOneChest;
-  min-width: 100%;
-  min-height: 100%;
   aspect-ratio: 1;
-  z-index: 5;
 }
 
 .pOneHands {
   grid-area: pOneHands;
-  min-width: 100%;
-  min-height: 100%;
   aspect-ratio: 1;
-  z-index: 5;
 }
 
 .pOneWeaponLZone {
   grid-area: pOneWeaponLZone;
-  min-width: 100%;
-  min-height: 100%;
   aspect-ratio: 1;
-  z-index: 5;
 }
 
 .pOneHero {
   grid-area: pOneHero;
-  min-width: 100%;
-  min-height: 100%;
   aspect-ratio: 1;
-  z-index: 5;
 }
 
 .pOneWeaponRZone {
   grid-area: pOneWeaponRZone;
-  min-width: 100%;
-  min-height: 100%;
   aspect-ratio: 1;
-  z-index: 5;
 }
 
 .pOnePitch {
   grid-area: pOnePitch;
-  min-width: 100%;
-  min-height: 100%;
   aspect-ratio: 1;
-  z-index: 5;
 }
 
 .pOneDeck {
   grid-area: pOneDeck;
-  min-width: 100%;
-  min-height: 100%;
   aspect-ratio: 1;
-  z-index: 5;
 }
 
 .pOneHead {
   grid-area: pOneHead;
-  min-width: 100%;
-  min-height: 100%;
   aspect-ratio: 1;
-  z-index: 5;
 }
 
 .pOneGraveyard {
   grid-area: pOneGraveyard;
-  min-width: 100%;
-  min-height: 100%;
   aspect-ratio: 1;
-  z-index: 5;
 }
