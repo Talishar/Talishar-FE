@@ -3,7 +3,7 @@
 exports[`renders without crashing 1`] = `
 <div>
   <div
-    class="_container_babf0d"
+    class="_phaseTrackerContainer_babf0d"
   >
     <div
       class="_titleContainer_babf0d"
@@ -21,7 +21,7 @@ exports[`renders without crashing 1`] = `
       >
         <div
           class="_icon_217ff1"
-          style="left: 8.5px;"
+          style="left: 7px;"
         />
       </div>
     </div>
