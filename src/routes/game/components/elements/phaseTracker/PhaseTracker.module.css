@@ -1,4 +1,4 @@
-.container {
+.phaseTrackerContainer {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -13,6 +13,7 @@
   background-position: center;
   background-size: contain;
   background-repeat: no-repeat;
+  color: var(--primary);
 }
 
 .titleContainer {

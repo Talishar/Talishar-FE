@@ -1,7 +1,6 @@
 .widgetContainer {
   top: 0px;
   right: 0px;
-  position: absolute;
 
   width: 16vh;
   height: 22vh;
@@ -13,7 +12,6 @@
 }
 
 .widgetBackground {
-  background-image: url('../../../../../img/elements/turnwidget/turnWidget-Normal.png');
   background-position: right;
   background-size: 12vh auto;
   background-repeat: no-repeat;
@@ -30,6 +28,14 @@
   flex-direction: row;
 }
 
+.myTurn {
+  background-image: url('../../../../../img/elements/turnwidget/turnWidget-Green.png');
+}
+
+.ourTurn {
+  background-image: url('../../../../../img/elements/turnwidget/turnWidget-Normal.png');
+}
+
 .widgetLeftCol {
   display: flex;
   align-items: center;
@@ -37,6 +43,7 @@
   height: 100%;
   color: black;
   height: 100%;
+  z-index: 11;
 }
 
 .widgetRightCol {
@@ -53,11 +60,12 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
 
   top: 0px;
   bottom: 0px;
   right: 0px;
+  z-index: 10;
 }
 
 @media (orientation: portrait) {
@@ -71,7 +79,6 @@
     width: 20dvw;
     height: 26dvw;
 
-    z-index: 15;
     user-select: none;
   }
 
@@ -80,15 +87,9 @@
   }
 
   .widgetRightCol {
-    width: 14vw;
-    height: 23vw;
-    width: 14dvw;
-    height: 2dvw;
-
-    gap: 1vw;
-    gap: 1dvw;
-
-    margin-right: 1.25em;
+    height: 95%;
+    right: 2em;
+    margin-right: 2.2em;
   }
 
   .widgetBackground {

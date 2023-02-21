@@ -6,21 +6,26 @@
   height: 7vh;
   height: 7dvh;
   padding: 0;
+  text-shadow: -1px 1px 2px #000, 1px 1px 2px #000, 1px -1px 0 #000,
+    -1px -1px 0 #000;
 }
 
 .passTurnDisplayActive {
-  text-shadow: 0 0 5 rgb(0, 255, 38);
-  font-size: 1.5em;
+  font-size: 2em;
+  line-height: 0.9em;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   height: 7vh;
   height: 7dvh;
-  text-shadow: 0 0 10px rgb(0, 255, 38);
   padding: 0;
+  text-shadow: -1px 1px 2px #000, 1px 1px 2px #000, 1px -1px 0 #000,
+    -1px -1px 0 #000;
 }
+
 .passTurnDisplayActive:hover {
+  font-size: 2.2em;
   cursor: pointer;
 }
 

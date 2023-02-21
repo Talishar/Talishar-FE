@@ -99,7 +99,7 @@ export default function PlayerInputPopUp() {
     return inputPopUp.choiceOptions == 'checkbox' ? (
       <div
         key={ix.toString()}
-        className={styles.f}
+        className={styles.cardDiv}
         onClick={(e) => {
           e.preventDefault();
           e.stopPropagation();
@@ -107,7 +107,7 @@ export default function PlayerInputPopUp() {
         }}
       >
         <CardDisplay
-          card={{ borderColor: checkedState[ix] ? '6' : '', ...card }}
+          card={{ borderColor: checkedState[ix] ? '8' : '', ...card }}
           preventUseOnClick
         />
       </div>

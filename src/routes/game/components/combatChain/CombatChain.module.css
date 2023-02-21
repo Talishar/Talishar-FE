@@ -1,9 +1,9 @@
 .combatChain {
   position: relative;
-  height: 20vh;
-  height: 20dvh;
+  height: 22vh;
+  height: 22dvh;
   margin: auto;
-  width: 95%;
+  width: 100%;
   padding: 1vh;
   background-image: url('../../../../img/backgrounds/red-felt-texture.webp');
   background-repeat: no-repeat;
@@ -13,6 +13,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  outline: 1px solid black;
   color: var(--white);
 }
 

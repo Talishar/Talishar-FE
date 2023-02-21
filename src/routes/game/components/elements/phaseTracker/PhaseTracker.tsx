@@ -26,7 +26,7 @@ export default function PhaseTracker() {
   }, [turnPhase]);
 
   return (
-    <div className={styles.container}>
+    <div className={styles.phaseTrackerContainer}>
       <div className={styles.titleContainer}>
         <div className={styles.titleInterior}>{phase}</div>
       </div>
