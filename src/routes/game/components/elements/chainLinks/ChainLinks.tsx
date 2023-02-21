@@ -5,7 +5,9 @@ import styles from './ChainLinks.module.css';
 import draconic from '../../../../../img/symbols/symbol-draconic.png';
 import hit from '../../../../../img/symbols/symbol-hit.png';
 import defend from '../../../../../img/symbols/symbol-defence.png';
-import { showChainLinkSummary } from 'features/game/GameSlice';
+import { showChainLinkSummary, submitButton } from 'features/game/GameSlice';
+import { GiBreakingChain } from 'react-icons/gi';
+import { PROCESS_INPUT } from 'constants';
 
 export default function ChainLinks() {
   const oldCombatChain = useAppSelector(
@@ -18,6 +20,12 @@ export default function ChainLinks() {
     dispatch(showChainLinkSummary({ chainLink: key }));
   };
 
+  const handleBreakChainClick = () => {
+    dispatch(
+      submitButton({ button: { mode: PROCESS_INPUT.BREAK_COMBAT_CHAIN } })
+    );
+  };
+
   if (oldCombatChain === undefined || oldCombatChain.length === 0) {
     return <div className={styles.chainLinksRow} />;
   }
@@ -26,7 +34,6 @@ export default function ChainLinks() {
     <div className={styles.chainLinksRow}>
       {oldCombatChain.map((ChainLink, ix) => {
         const hitPic = ChainLink.didItHit ? hit : defend;
-
         return (
           <div
             className={styles.chainLinkSummary}
@@ -47,6 +54,11 @@ export default function ChainLinks() {
           </div>
         );
       })}
+      {oldCombatChain.length > 0 && (
+        <div className={styles.breakChain} onClick={handleBreakChainClick}>
+          <GiBreakingChain style={{ width: '100%', height: '100%' }} />
+        </div>
+      )}
     </div>
   );
 }

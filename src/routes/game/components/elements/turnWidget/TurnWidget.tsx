@@ -5,17 +5,24 @@ import ActionPointDisplay from '../actionPointDisplay/ActionPointDisplay';
 import HealthDisplay from '../healthDisplay/HealthDisplay';
 import PassTurnDisplay from '../passTurnDisplay/PassTurnDisplay';
 import styles from './TurnWidget.module.css';
+import classNames from 'classnames';
 
 export default function TurnWidget() {
   const [heightRatio, setHeightRatio] = useState(1);
 
-  const activePlayer = useAppSelector(
-    (state: RootState) => state.game.activePlayer
+  const canPassPhase = useAppSelector(
+    (state: RootState) => state.game.canPassPhase
   );
 
+  const widgetBackground = classNames(styles.widgetBackground, {
+    [styles.myTurn]: canPassPhase,
+    [styles.ourTurn]: !canPassPhase
+  });
+
+  console.log(widgetBackground);
   return (
     <div className={styles.widgetContainer}>
-      <div className={styles.widgetBackground}>
+      <div className={widgetBackground}>
         <div className={styles.widgetLeftCol}>
           <ActionPointDisplay isPlayer />
         </div>

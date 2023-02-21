@@ -2,8 +2,8 @@
   background-color: #fffdd0;
   border: 1px solid #004225;
   color: #004225;
-  width: 95%;
-  height: 4vh;
+  max-width: 100%;
+  width: 100%;
   padding: 1vh;
   margin: auto;
   text-align: center;
@@ -12,6 +12,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  transition: width 0.5s;
 }
 
 .buttonDiv {
