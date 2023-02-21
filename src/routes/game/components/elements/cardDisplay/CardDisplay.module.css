@@ -60,6 +60,7 @@
   border-radius: 7%;
   max-height: 100%;
   max-width: 100%;
+  transition: box-shadow 0.25s, border-color 0.25s;
 }
 
 .disabled {
@@ -130,6 +131,10 @@
 .border7 {
   border-color: purple;
   box-shadow: 0 0 5px 5px purple;
+}
+
+.border8 {
+  box-shadow: 0 0 0 2px var(--primary);
 }
 
 @media (orientation: portrait) {

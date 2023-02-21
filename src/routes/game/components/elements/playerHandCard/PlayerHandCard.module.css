@@ -16,6 +16,7 @@
   border-radius: 1dvh;
   max-height: 100%;
   max-width: 100%;
+  transition: box-shadow 0.25s, border-color 0.25s;
 }
 
 .imgContainer {
