@@ -11,32 +11,32 @@ export default function PhaseTrackerWidget({ phase }: TurnPhase) {
 
   // height of component needs to be 9vh;
   const scaleFactor = 0.09 * (windowHeight / 85);
-  let styleToApply = { left: '0em' };
+  let styleToApply = { left: '7px' };
 
   switch (phase) {
     case 'M':
-      styleToApply = { left: '8.5px' };
+      styleToApply = { left: '7px' };
       break;
     case 'P':
-      styleToApply = { left: '45.5px' };
+      styleToApply = { left: '44.5px' };
       break;
     case 'B':
-      styleToApply = { left: '74px' };
+      styleToApply = { left: '75px' };
       break;
     case 'A':
-      styleToApply = { left: '102.5px' };
+      styleToApply = { left: '105.5px' };
       break;
     case 'D':
-      styleToApply = { left: '102.5px' };
+      styleToApply = { left: '105.5px' };
       break;
     case 'ARS':
-      styleToApply = { left: '139.5px' };
+      styleToApply = { left: '143.5px' };
       break;
     case 'PDECK':
-      styleToApply = { left: '139.5px' };
+      styleToApply = { left: '143.5px' };
       break;
     default:
-      styleToApply = { left: '8.5px' };
+      styleToApply = { left: '7px' };
       break;
   }
 

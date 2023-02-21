@@ -43,6 +43,7 @@
   height: 100%;
   color: black;
   height: 100%;
+  z-index: 11;
 }
 
 .widgetRightCol {
@@ -64,6 +65,7 @@
   top: 0px;
   bottom: 0px;
   right: 0px;
+  z-index: 10;
 }
 
 @media (orientation: portrait) {
@@ -77,7 +79,6 @@
     width: 20dvw;
     height: 26dvw;
 
-    z-index: 15;
     user-select: none;
   }
 
@@ -86,15 +87,9 @@
   }
 
   .widgetRightCol {
-    width: 14vw;
-    height: 23vw;
-    width: 14dvw;
-    height: 2dvw;
-
-    gap: 1vw;
-    gap: 1dvw;
-
-    margin-right: 1.25em;
+    height: 95%;
+    right: 2em;
+    margin-right: 2.2em;
   }
 
   .widgetBackground {
