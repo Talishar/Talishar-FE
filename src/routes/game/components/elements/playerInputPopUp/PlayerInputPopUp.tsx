@@ -55,11 +55,9 @@ export default function PlayerInputPopUp() {
     if (inputPopUp.multiChooseText) {
       for (let i = 0; i < checkedState.length; i++) {
         if (inputPopUp.multiChooseText[i]) {
-          if (inputPopUp.multiChooseText[i].value) {
-            extraParams += checkedState[i]
-              ? `&chk${i}=${inputPopUp.multiChooseText[i].value}`
-              : '';
-          }
+          extraParams += checkedState[i]
+            ? `&chk${i}=${inputPopUp.multiChooseText[i].value}`
+            : '';
         }
       }
     }
