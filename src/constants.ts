@@ -130,7 +130,8 @@ export const URL_END_POINT = {
   LOGIN_WITH_COOKIE: '/AccountFiles/TryLoginAPI.php',
   LOGOUT: `/AccountFiles/LogoutUserAPI.php`,
   SIGNUP: `/AccountFiles/SignUpAPI.php`,
-  FORGOT_PASSWORD: `/AccountFiles/PasswordResetRequestAPI.php`
+  FORGOT_PASSWORD: `/AccountFiles/PasswordResetRequestAPI.php`,
+  GET_ALL_CARDS: `http://localhost:5173/json/card.json`
 };
 
 export const GAME_VISIBILITY = {

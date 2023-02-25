@@ -6,7 +6,9 @@ import styles from './PlayerInputPopUp.module.css';
 import Button from 'features/Button';
 import { FaTimes } from 'react-icons/fa';
 import CardDisplay from '../cardDisplay/CardDisplay';
+import SearchCardInput from '../searchCardInput';
 import { PROCESS_INPUT } from 'constants';
+import { NAME_A_CARD } from './constants';
 
 export default function PlayerInputPopUp() {
   const inputPopUp = useAppSelector(
@@ -179,6 +181,7 @@ export default function PlayerInputPopUp() {
                 </div>
               </div>
             ) : null}
+            {inputPopUp?.popup?.id === NAME_A_CARD && <SearchCardInput />}
           </div>
         </form>
       </div>
