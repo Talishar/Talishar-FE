@@ -41,7 +41,7 @@
     "lint": "eslint . --ext .ts,.tsx",
     "prettier-format": "prettier --config .prettierrc 'src/**/*.{js,jsx,ts,tsx,css,md,json}' --write",
     "build-for-beta": "npm run build && rsync -r --stats ./dist/ talishar-beta:/opt/ReactClientRepo/build/",
-    "generate-cards": "node scripts/card-generator.js"
+    "generate-cards": "node scripts/card-generator.js && npx prettier --write src/constants/cardList.ts"
   },
   "eslintConfig": {
     "extends": [
