@@ -237,14 +237,6 @@ export const apiSlice = createApi({
         };
       }
     }),
-    getAllCards: builder.query({
-      query: ({}) => {
-        return {
-          url: 'http://localhost:5173/json/card.json',
-          method: 'GET'
-        };
-      }
-    }),
     submitSideboard: builder.mutation({
       query: ({ ...body }: SubmitSideboardAPI) => {
         return {
@@ -271,7 +263,6 @@ export const {
   useCreateGameMutation,
   useJoinGameMutation,
   useGetLobbyInfoQuery,
-  useGetAllCardsQuery,
   useChooseFirstPlayerMutation,
   useSubmitSideboardMutation
 } = apiSlice;
