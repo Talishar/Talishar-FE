@@ -8,4 +8,5 @@ export default interface Button {
   caption?: string;
   sizeOverride?: string;
   fullReload?: boolean;
+  inputText?: string;
 }
