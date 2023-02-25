@@ -11,7 +11,7 @@ export default function LastPlayed() {
     (state: RootState) => state.game.gameInfo.lastPlayed
   );
   const hasNoLastPlayedCard = cardRedux == null;
-  const cardNumber = cardRedux?.cardNumber ?? "CardBack";
+  const cardNumber = cardRedux?.cardNumber ?? 'CardBack';
   const src = `/cardimages/${cardNumber}.webp`;
 
   return (

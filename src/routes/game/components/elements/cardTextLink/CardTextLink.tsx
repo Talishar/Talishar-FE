@@ -8,10 +8,7 @@ export interface CardTextLinkProp {
 
 export const CardTextLink = ({ cardNumber, cardName }: CardTextLinkProp) => {
   return (
-    <CardPopUp
-      cardNumber={cardNumber}
-      containerClass={styles.cardText}
-    >
+    <CardPopUp cardNumber={cardNumber} containerClass={styles.cardText}>
       <span>{cardName}</span>
     </CardPopUp>
   );

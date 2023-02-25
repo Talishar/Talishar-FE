@@ -240,7 +240,7 @@ export const apiSlice = createApi({
     getAllCards: builder.query({
       query: ({}) => {
         return {
-          url: "http://localhost:5173/json/card.json",
+          url: 'http://localhost:5173/json/card.json',
           method: 'GET'
         };
       }

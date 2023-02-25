@@ -2,7 +2,7 @@ import { useRef, useState } from 'react';
 import {
   clearPopUp,
   playCard,
-  removeCardFromHand,
+  removeCardFromHand
 } from 'features/game/GameSlice';
 import { GiTombstone, GiFluffySwirl, GiCannon } from 'react-icons/gi';
 import { Card } from 'features/Card';
@@ -24,7 +24,12 @@ export interface HandCard {
   card?: Card;
 }
 
-export const PlayerHandCard = ({ card, isArsenal, isBanished, isGraveyard }: HandCard) => {
+export const PlayerHandCard = ({
+  card,
+  isArsenal,
+  isBanished,
+  isGraveyard
+}: HandCard) => {
   const [controlledPosition, setControlledPosition] = useState({ x: 0, y: 0 });
   const [canPopUp, setCanPopup] = useState(true);
   const [, windowHeight] = useWindowDimensions();
@@ -84,7 +89,8 @@ export const PlayerHandCard = ({ card, isArsenal, isBanished, isGraveyard }: Han
   });
 
   return (
-    <div className={styles.handCard}
+    <div
+      className={styles.handCard}
       onClick={onClick}
       onMouseDown={startPressTimer}
       onMouseUp={() => clearTimeout(timerRef.current)}

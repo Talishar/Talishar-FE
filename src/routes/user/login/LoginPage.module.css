@@ -1,8 +1,8 @@
 .LoginPageContainer {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    max-width: var(--aspect);
-    margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  max-width: var(--aspect);
+  margin: 0 auto;
 }

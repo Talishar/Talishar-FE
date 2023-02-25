@@ -1,5 +1,3 @@
 export const DecksPage = () => {
-    return (
-        <div>Decks page</div>
-    );
-}
+  return <div>Decks page</div>;
+};
