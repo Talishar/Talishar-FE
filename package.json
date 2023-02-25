@@ -21,6 +21,8 @@
     "react-icons": "^4.7.1",
     "react-redux": "^8.0.1",
     "react-router-dom": "^6.7.0",
+    "react-select": "^5.7.0",
+    "request-promise": "^4.2.6",
     "screenfull": "^6.0.2",
     "typescript": "^4.6.0",
     "web-vitals": "^3.1.0",
@@ -37,7 +39,8 @@
     "test-coverage": "vitest --coverage",
     "lint": "eslint . --ext .ts,.tsx",
     "prettier-format": "prettier --config .prettierrc 'src/**/*.{js,jsx,ts,tsx,css,md,json}' --write",
-    "build-for-beta": "npm run build && rsync -r --stats ./dist/ talishar-beta:/opt/ReactClientRepo/build/"
+    "build-for-beta": "npm run build && rsync -r --stats ./dist/ talishar-beta:/opt/ReactClientRepo/build/",
+    "generate-cards": "node scripts/card-generator.js && npx prettier --write src/constants/cardList.ts"
   },
   "eslintConfig": {
     "extends": [

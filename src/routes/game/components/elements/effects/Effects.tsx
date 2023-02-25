@@ -15,10 +15,7 @@ export function Effect(prop: CardProp) {
   const src = `/crops/${prop.card.cardNumber}_cropped.png`;
 
   return (
-    <CardPopUp
-      cardNumber={prop.card.cardNumber}
-      containerClass={styles.effect}
-    >
+    <CardPopUp cardNumber={prop.card.cardNumber} containerClass={styles.effect}>
       <img src={src} className={styles.img} />
     </CardPopUp>
   );

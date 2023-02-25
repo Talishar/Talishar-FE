@@ -186,7 +186,8 @@ export const submitButton = createAsyncThunk(
       playerID: String(game.gameInfo.playerID),
       authKey: String(game.gameInfo.authKey),
       mode: String(params.button.mode),
-      buttonInput: String(params.button.buttonInput)
+      buttonInput: String(params.button.buttonInput),
+      inputText: String(params.button.inputText)
     });
     try {
       const response = await fetch(queryURL + queryParams, {

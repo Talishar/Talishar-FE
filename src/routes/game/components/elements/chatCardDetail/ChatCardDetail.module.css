@@ -1,4 +1,3 @@
-
 .cardDetailContainer {
   display: none;
   position: absolute;
@@ -14,5 +13,5 @@
 }
 
 .cardDetailContainer img {
-  max-height: 50vh; 
+  max-height: 50vh;
 }
