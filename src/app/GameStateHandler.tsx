@@ -36,7 +36,7 @@ export const GameStateHandler = React.memo(() => {
   );
   const dispatch = useAppDispatch();
 
-  if (gameID === undefined) {
+  if (gameID === undefined && gameName === '0') {
     navigate('/');
     toast.error('No GameID defined');
   }
