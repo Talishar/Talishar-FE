@@ -67,7 +67,7 @@ export const GameStateHandler = React.memo(() => {
   useEffect(() => {
     dispatch(
       setGameStart({
-        gameID: parseInt(gameID ?? ''),
+        gameID: parseInt(gameID ?? gameName),
         playerID: locationState?.playerID ?? parseInt(playerID),
         authKey: authKey
       })
