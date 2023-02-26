@@ -22,7 +22,7 @@ export const GameStateHandler = React.memo(() => {
   const abortRef = useRef<AbortController>();
   const navigate = useNavigate();
   const location = useLocation();
-  const locationState = location.state as GameLocationState;
+  const locationState = location.state as GameLocationState | undefined;
   const [{ gameName = '0', playerID = '3', authKey = '' }] =
     useKnownSearchParams();
   const { gameID } = useParams();
@@ -68,7 +68,7 @@ export const GameStateHandler = React.memo(() => {
     dispatch(
       setGameStart({
         gameID: parseInt(gameID ?? ''),
-        playerID: locationState.playerID ?? playerID,
+        playerID: locationState?.playerID ?? parseInt(playerID),
         authKey: authKey
       })
     );

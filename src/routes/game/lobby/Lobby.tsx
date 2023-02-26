@@ -35,8 +35,6 @@ const Lobby = () => {
   const [width, height] = useWindowDimensions();
   const [isWideScreen, setIsWideScreen] = useState(false);
   const navigate = useNavigate();
-  const location = useLocation();
-  const locationState = location.state as GameLocationState;
   const [isSubmitting, setIsSubmitting] = useState(false);
   const gameInfo = useAppSelector(
     (state: RootState) => state.game.gameInfo,
@@ -47,7 +45,7 @@ const Lobby = () => {
     shallowEqual
   );
 
-  let { data, isError, isLoading, refetch } = useGetLobbyInfoQuery({
+  let { data, isLoading, refetch } = useGetLobbyInfoQuery({
     gameName: gameInfo.gameID,
     playerID: gameInfo.playerID,
     authKey: gameInfo.authKey
