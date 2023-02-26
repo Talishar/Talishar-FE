@@ -13,13 +13,7 @@ export const InProgressGame = ({
 }) => {
   const navigate = useNavigate();
   const spectateHandler = (gameName: number) => {
-    navigate({
-      pathname: `/game/play/${gameName}`,
-      search: `?${createSearchParams({
-        gameName: String(gameName),
-        playerID: String(3)
-      })}`
-    });
+    navigate(`/game/play/${gameName}`);
   };
   const buttonClass = classNames(styles.button, 'secondary');
   return (
