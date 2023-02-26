@@ -63,7 +63,9 @@ const CreateGame = () => {
             authKey: response.authKey ?? ''
           })
         );
-        navigate(`/game/lobby/${response.gameName}`);
+        navigate(`/game/lobby/${response.gameName}`, {
+          state: { playerID: response.playerID ?? 0 }
+        });
       }
     } catch (error) {
       console.warn(error);

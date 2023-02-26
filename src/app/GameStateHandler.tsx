@@ -9,12 +9,24 @@ import {
 import { useAppDispatch, useAppSelector } from './Hooks';
 import { shallowEqual } from 'react-redux';
 import { useKnownSearchParams } from 'hooks/useKnownSearchParams';
+import {
+  redirect,
+  useLocation,
+  useNavigate,
+  useParams
+} from 'react-router-dom';
+import { GameLocationState } from 'interface/GameLocationState';
+import { toast } from 'react-hot-toast';
 
 export const GameStateHandler = React.memo(() => {
   const abortRef = useRef<AbortController>();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const locationState = location.state as GameLocationState | undefined;
   const [{ gameName = '0', playerID = '3', authKey = '' }] =
     useKnownSearchParams();
-  const params = useAppSelector(
+  const { gameID } = useParams();
+  const gameInfo = useAppSelector(
     (state: RootState) => state.game.gameInfo,
     shallowEqual
   );
@@ -24,38 +36,43 @@ export const GameStateHandler = React.memo(() => {
   );
   const dispatch = useAppDispatch();
 
+  if (gameID === undefined) {
+    navigate('/');
+    toast.error('No GameID defined');
+  }
+
   // setup long poll
   useEffect(() => {
-    if (params.gameID == 0 || isUpdateInProgress || firstPoll) {
+    if (gameInfo.gameID == 0 || isUpdateInProgress || firstPoll) {
       return;
     }
-    dispatch(nextTurn({ game: params, signal: abortRef.current?.signal }));
-  }, [params, isUpdateInProgress, dispatch]);
+    dispatch(nextTurn({ game: gameInfo, signal: abortRef.current?.signal }));
+  }, [gameInfo.gameID, isUpdateInProgress, dispatch]);
 
   // write the gameID etc to the params
   useEffect(() => {
     abortRef.current = new AbortController();
 
-    if (gameName != '0' && gameName != String(params.gameID)) {
-      dispatch(
-        setGameStart({
-          gameID: parseInt(gameName),
-          playerID: parseInt(playerID),
-          authKey: authKey
-        })
-      );
-    }
-
     setTimeout(() => {
       setFirstPoll(false);
-      dispatch(nextTurn({ game: params, signal: abortRef.current?.signal }));
+      dispatch(nextTurn({ game: gameInfo, signal: abortRef.current?.signal }));
     }, 500);
 
     return () => {
       abortRef.current?.abort();
       dispatch(setIsUpdateInProgressFalse());
     };
-  }, [params.gameID]);
+  }, [gameInfo.gameID]);
+
+  useEffect(() => {
+    dispatch(
+      setGameStart({
+        gameID: parseInt(gameID ?? ''),
+        playerID: locationState?.playerID ?? parseInt(playerID),
+        authKey: authKey
+      })
+    );
+  }, []);
 
   return null;
 });

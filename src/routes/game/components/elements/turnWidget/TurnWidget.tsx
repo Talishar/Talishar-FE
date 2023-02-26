@@ -19,7 +19,6 @@ export default function TurnWidget() {
     [styles.ourTurn]: !canPassPhase
   });
 
-  console.log(widgetBackground);
   return (
     <div className={styles.widgetContainer}>
       <div className={widgetBackground}>

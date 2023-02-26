@@ -4,10 +4,15 @@ import { RootState } from 'app/Store';
 import {
   clearGetLobbyRefresh,
   gameLobby,
+  setGameStart,
   setIsUpdateInProgressFalse
 } from 'features/game/GameSlice';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { shallowEqual } from 'react-redux';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { GameLocationState } from 'interface/GameLocationState';
+import { useKnownSearchParams } from 'hooks/useKnownSearchParams';
+import { toast } from 'react-hot-toast';
 
 interface LobbyUpdateHandlerProps {
   isSubmitting: boolean;
@@ -16,19 +21,30 @@ interface LobbyUpdateHandlerProps {
 export const LobbyUpdateHandler = React.memo(
   ({ isSubmitting }: LobbyUpdateHandlerProps) => {
     const abortRef = useRef<AbortController>();
-    const params = useAppSelector((state: RootState) => state.game.gameInfo);
+    const gameInfo = useAppSelector((state: RootState) => state.game.gameInfo);
     const isUpdateInProgress = useAppSelector(
       (state: RootState) => state.game.isUpdateInProgress
     );
     const dispatch = useAppDispatch();
+    const navigate = useNavigate();
+    const { gameID } = useParams();
+    const location = useLocation();
+    const locationState = location.state as GameLocationState | undefined;
+    const [{ gameName = '0', playerID = '3', authKey = '' }] =
+      useKnownSearchParams();
+
+    if (gameID === undefined) {
+      navigate('/');
+      toast.error('No GameID defined');
+    }
 
     // setup long poll
     useEffect(() => {
-      if (params.gameID == 0 || isUpdateInProgress) {
+      if (isUpdateInProgress) {
         return;
       }
-      dispatch(gameLobby({ game: params, signal: abortRef.current?.signal }));
-    }, [params, isUpdateInProgress, dispatch]);
+      dispatch(gameLobby({ game: gameInfo, signal: abortRef.current?.signal }));
+    }, [gameInfo.gameID, isUpdateInProgress, dispatch]);
 
     if (isSubmitting) {
       abortRef.current?.abort();
@@ -44,6 +60,16 @@ export const LobbyUpdateHandler = React.memo(
         dispatch(clearGetLobbyRefresh());
       };
     }, [isSubmitting]);
+
+    useEffect(() => {
+      dispatch(
+        setGameStart({
+          gameID: parseInt(gameID ?? ''),
+          playerID: locationState?.playerID ?? parseInt(playerID),
+          authKey: authKey
+        })
+      );
+    }, []);
 
     return null;
   }

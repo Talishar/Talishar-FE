@@ -25,7 +25,7 @@ const OptionsContent = () => {
     popupType: PLAYER_OPTIONS
   });
 
-  const gameURL = `http://fe.talishar.net/?gameName=${gameInfo.gameID}&playerID=3`;
+  const gameURL = `http://fe.talishar.net/game/play/${gameInfo.gameID}`;
 
   const clickCloseOptionsHandler = () => {
     dispatch(closeOptionsMenu());
