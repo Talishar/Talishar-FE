@@ -23,10 +23,10 @@ import { GAME_FORMAT, BREAKPOINT_EXTRA_LARGE } from 'constants';
 import ChooseFirstTurn from './components/chooseFirstTurn/ChooseFirstTurn';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import { SubmitSideboardAPI } from 'interface/API/SubmitSideboard.php';
-import { createSearchParams, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import CardPortal from '../components/elements/cardPortal/CardPortal';
 import Matchups from './components/matchups/Matchups';
-import Button from 'features/Button';
+import { GameLocationState } from 'interface/GameLocationState';
 import CardPopUp from '../components/elements/cardPopUp/CardPopUp';
 
 const Lobby = () => {
@@ -35,6 +35,8 @@ const Lobby = () => {
   const [width, height] = useWindowDimensions();
   const [isWideScreen, setIsWideScreen] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+  const locationState = location.state as GameLocationState;
   const [isSubmitting, setIsSubmitting] = useState(false);
   const gameInfo = useAppSelector(
     (state: RootState) => state.game.gameInfo,
@@ -125,9 +127,8 @@ const Lobby = () => {
       playerID: String(gameInfo.playerID),
       gameName: String(gameInfo.gameID)
     };
-    navigate({
-      pathname: `/game/play/${gameInfo.gameID}`,
-      search: `?${createSearchParams(searchParam)}`
+    navigate(`/game/play/${gameInfo.gameID}`, {
+      state: { playerID: gameInfo.playerID ?? 0 } as GameLocationState
     });
   }
 

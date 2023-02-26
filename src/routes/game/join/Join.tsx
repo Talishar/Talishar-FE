@@ -65,9 +65,8 @@ const JoinGame = () => {
           })
         );
         const searchParam = { playerID: String(response.playerID ?? '0') };
-        navigate({
-          pathname: `/game/lobby/${response.gameName}`,
-          search: `?${createSearchParams(searchParam)}`
+        navigate(`/game/lobby/${response.gameName}`, {
+          state: { playerID: response.playerID ?? 0 }
         });
       }
     } catch (error) {
