@@ -4,7 +4,7 @@
   color: #004225;
   max-width: 100%;
   width: 100%;
-  padding: 1vh;
+  height: 100%;
   margin: auto;
   text-align: center;
   position: relative;
@@ -13,6 +13,8 @@
   justify-content: center;
   align-items: center;
   transition: width 0.5s;
+  font-size: 1.8em;
+  font-weight: 600;
 }
 
 .buttonDiv {
@@ -23,12 +25,12 @@
   align-items: center;
   justify-content: center;
   min-width: 4vh;
-  height: 2vh;
+  height: auto;
   border-radius: 5px;
   border: 1px solid black;
   flex-basis: auto;
-  padding: 0vh 1vh;
-  margin-left: 1vh;
+  padding: 0 1dvh;
+  margin-left: 1dvh;
 }
 
 .buttonDiv:hover {

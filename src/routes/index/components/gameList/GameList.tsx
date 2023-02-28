@@ -66,6 +66,9 @@ const GameList = () => {
         })
       );
     })
+    // .filter((game: IGameInProgress) => {
+    //   return formatFilter === null; // TODO: get game format from BE
+    // })
     .sort((a, b) => {
       return (a.secondsSinceLastUpdate ?? 0) - (b.secondsSinceLastUpdate ?? 0);
     });
