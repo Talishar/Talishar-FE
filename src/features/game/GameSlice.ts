@@ -104,6 +104,7 @@ export const gameLobby = createAsyncThunk(
           signal: params.signal,
           body: JSON.stringify(requestBody)
         });
+
         let data = await response.text();
         if (data.toString().trim() === '0') {
           continue;

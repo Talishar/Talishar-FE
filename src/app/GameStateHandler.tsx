@@ -20,6 +20,7 @@ import { toast } from 'react-hot-toast';
 
 export const GameStateHandler = React.memo(() => {
   const abortRef = useRef<AbortController>();
+  const timeOutRef = useRef<number>();
   const navigate = useNavigate();
   const location = useLocation();
   const locationState = location.state as GameLocationState | undefined;
@@ -43,28 +44,26 @@ export const GameStateHandler = React.memo(() => {
 
   // setup long poll
   useEffect(() => {
-    if (gameInfo.gameID == 0 || isUpdateInProgress || firstPoll) {
+    if (gameInfo.gameID == 0 || isUpdateInProgress) {
       return;
     }
+
+    clearTimeout(timeOutRef.current);
+    abortRef.current?.abort();
+
+    abortRef.current = new AbortController();
     dispatch(nextTurn({ game: gameInfo, signal: abortRef.current?.signal }));
+
+    // timeout if longer than 10 seconds. Will clear this interval on next poll
+    timeOutRef.current = setTimeout(() => {
+      abortRef.current?.abort;
+      dispatch(setIsUpdateInProgressFalse());
+    }, 10000);
   }, [gameInfo.gameID, isUpdateInProgress, dispatch]);
 
-  // write the gameID etc to the params
+  // on mount, write gameID etc.
   useEffect(() => {
     abortRef.current = new AbortController();
-
-    setTimeout(() => {
-      setFirstPoll(false);
-      dispatch(nextTurn({ game: gameInfo, signal: abortRef.current?.signal }));
-    }, 500);
-
-    return () => {
-      abortRef.current?.abort();
-      dispatch(setIsUpdateInProgressFalse());
-    };
-  }, [gameInfo.gameID]);
-
-  useEffect(() => {
     dispatch(
       setGameStart({
         gameID: parseInt(gameID ?? gameName),
@@ -72,6 +71,11 @@ export const GameStateHandler = React.memo(() => {
         authKey: authKey
       })
     );
+
+    return () => {
+      abortRef.current?.abort();
+      dispatch(setIsUpdateInProgressFalse());
+    };
   }, []);
 
   return null;
