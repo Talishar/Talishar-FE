@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { useGetGameListQuery } from 'features/api/apiSlice';
-import { createSearchParams, useNavigate } from 'react-router-dom';
 import styles from './GameList.module.css';
 import InProgressGame from '../inProgressGame';
 import OpenGame from '../openGame';
 import Filter from '../filter';
+import { GAME_FORMAT } from 'constants';
+import FormatList from '../formatList';
 
 export interface IOpenGame {
   p1Hero?: string;
@@ -29,14 +30,14 @@ export interface GameListResponse {
   isLoading?: boolean;
   error?: unknown;
   refetch?: () => void;
+  isFetching?: boolean;
 }
 
 const GAME_LIST_POLLING_INTERVAL = 10000; // in ms
 
 const GameList = () => {
-  const { data, isLoading, error, refetch }: GameListResponse =
+  const { data, isLoading, error, refetch, isFetching }: GameListResponse =
     useGetGameListQuery({}, {});
-  const navigate = useNavigate();
 
   const [heroFilter, setHeroFilter] = useState<string[]>([]);
   const [formatFilter, setFormatFilter] = useState<string | null>(null);
@@ -66,27 +67,59 @@ const GameList = () => {
         })
       );
     })
-    // .filter((game: IGameInProgress) => {
-    //   return formatFilter === null; // TODO: get game format from BE
-    // })
     .sort((a, b) => {
       return (a.secondsSinceLastUpdate ?? 0) - (b.secondsSinceLastUpdate ?? 0);
     });
 
+  const handleReloadClick = () => {
+    refetch();
+  };
+
+  const otherFormats = [
+    GAME_FORMAT.OPEN_FORMAT,
+    GAME_FORMAT.COMMONER,
+    GAME_FORMAT.CLASH
+  ];
+  const blitz = sortedOpenGames.filter(
+    (game) => game.format === GAME_FORMAT.BLITZ
+  );
+  const compBlitz = sortedOpenGames.filter(
+    (game) => game.format === GAME_FORMAT.COMPETITIVE_BLITZ
+  );
+  const cc = sortedOpenGames.filter(
+    (game) => game.format === GAME_FORMAT.CLASSIC_CONSTRUCTED
+  );
+  const compcc = sortedOpenGames.filter(
+    (game) => game.format === GAME_FORMAT.COMPETITIVE_CC
+  );
+  const otherGames = sortedOpenGames.filter((game) =>
+    otherFormats.includes(game.format)
+  );
+
   return (
     <article className={styles.gameList}>
-      <h3>Games</h3>
+      <div className={styles.titleDiv}>
+        <h1 className={styles.title}>Games</h1>
+        <button
+          onClick={handleReloadClick}
+          aria-busy={isFetching}
+          disabled={isFetching}
+          className={styles.reloadButton}
+        >
+          Reload
+        </button>
+      </div>
       {isLoading ? <div aria-busy="true">Loading!</div> : null}
       {error ? <div>ERROR!</div> : null}
       {!isLoading && !error && <Filter setHeroFilter={setHeroFilter} />}
-      {sortedOpenGames != undefined
-        ? sortedOpenGames.map((entry, ix: number) => {
-            return <OpenGame entry={entry} ix={ix} />;
-          })
-        : null}
+      <FormatList gameList={blitz} name="Blitz" />
+      <FormatList gameList={compBlitz} name="Competitive Blitz" />
+      <FormatList gameList={cc} name="Classic Constructed" />
+      <FormatList gameList={compcc} name="Comp CC" />
+      <FormatList gameList={otherGames} name="Other" isOther />
       {data != undefined && (
         <div data-testid="games-in-progress">
-          <h5 className={styles.title}>
+          <h5 className={styles.subSectionTitle}>
             Games in progress: <span>({data.gamesInProgress.length})</span>
           </h5>
           {filteredGamesInProgress.map((entry, ix: number) => {
