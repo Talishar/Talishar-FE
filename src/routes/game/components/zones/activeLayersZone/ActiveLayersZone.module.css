@@ -5,7 +5,7 @@
   min-width: 45%;
   max-width: 60%;
   top: 10vh;
-  bottom: 60vh;
+  bottom: 55vh;
   left: 20%;
   background-color: var(--near-black);
   padding: 2vh;
@@ -24,13 +24,19 @@
   align-items: center;
 }
 
+.activeLayersTitle {
+  font-size: 0.75em;
+  padding-left: 0.5em;
+}
+
 .title {
+  font-size: 1.5em;
   padding: 0px;
   margin: 0px;
 }
 
 .activeLayersContents {
-  padding-top: 2vh;
+  padding-top: 0.5em;
   display: flex;
   flex-grow: 1;
   flex-direction: row;

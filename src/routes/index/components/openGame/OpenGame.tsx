@@ -4,7 +4,15 @@ import { useNavigate } from 'react-router-dom';
 import { IOpenGame } from '../gameList/GameList';
 import styles from './OpenGame.module.css';
 
-const OpenGame = ({ ix, entry }: { ix: number; entry: IOpenGame }) => {
+const OpenGame = ({
+  ix,
+  entry,
+  isOther
+}: {
+  ix: number;
+  entry: IOpenGame;
+  isOther?: boolean;
+}) => {
   const navigate = useNavigate();
   const buttonClass = classNames(styles.button, 'secondary');
 
@@ -14,7 +22,7 @@ const OpenGame = ({ ix, entry }: { ix: number; entry: IOpenGame }) => {
         {!!entry.p1Hero && <img src={`/crops/${entry.p1Hero}_cropped.png`} />}
       </div>
       <div>{entry.description}</div>
-      <div>{entry.format}</div>
+      {isOther && <div>{entry.format}</div>}
       <div>
         <button
           className={buttonClass}

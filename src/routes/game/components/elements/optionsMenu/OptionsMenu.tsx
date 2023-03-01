@@ -48,8 +48,10 @@ const OptionsContent = () => {
     window.location.href = `https://talishar.net/game/NextTurn4.php?gameName=${gameInfo.gameID}&playerID=${gameInfo.playerID}`;
   };
 
-  const mainMenu = async (e: React.MouseEvent) => {
+  // going to main menu means you concede the game
+  const handleClickMainMenuButton = async (e: React.MouseEvent) => {
     e.preventDefault;
+    clickConcedeGameHandler();
     navigate('/');
     clickCloseOptionsHandler();
   };
@@ -273,7 +275,10 @@ const OptionsContent = () => {
           <button className={styles.buttonDiv} onClick={clickPlayLegacyHandler}>
             Play in Legacy Talishar Client
           </button>
-          <button className={styles.buttonDiv} onClick={mainMenu}>
+          <button
+            className={styles.buttonDiv}
+            onClick={handleClickMainMenuButton}
+          >
             Home Page
           </button>
           <button

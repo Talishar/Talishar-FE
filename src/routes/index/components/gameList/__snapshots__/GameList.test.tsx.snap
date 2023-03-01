@@ -5,9 +5,22 @@ exports[`displays loading! when loading 1`] = `
   <article
     class="_gameList_4a28c4"
   >
-    <h3>
-      Games
-    </h3>
+    <div
+      class="_titleDiv_4a28c4"
+    >
+      <h1
+        class="_title_4a28c4"
+      >
+        Games
+      </h1>
+      <button
+        aria-busy="true"
+        class="_reloadButton_4a28c4"
+        disabled=""
+      >
+        Reload
+      </button>
+    </div>
     <div
       aria-busy="true"
     >

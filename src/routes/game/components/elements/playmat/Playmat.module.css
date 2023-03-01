@@ -1,23 +1,25 @@
 .playerOne {
   grid-column-start: 1;
   grid-column-end: 12;
-  grid-row-start: 5;
-  grid-row-end: 9;
+  grid-row-start: 6;
+  grid-row-end: 12;
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
   z-index: 0 !important;
   border-radius: 5px;
+  filter: brightness(0.5);
 }
 
 .playerTwo {
   grid-column-start: 1;
   grid-column-end: 12;
   grid-row-start: 1;
-  grid-row-end: 5;
+  grid-row-end: 6;
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
   z-index: 0 !important;
   border-radius: 5px;
+  filter: brightness(0.5);
 }
