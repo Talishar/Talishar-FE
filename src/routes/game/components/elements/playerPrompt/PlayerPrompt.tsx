@@ -4,6 +4,7 @@ import { RootState } from 'app/Store';
 import Button from 'features/Button';
 import { submitButton } from 'features/game/GameSlice';
 import styles from './PlayerPrompt.module.css';
+import { GiDivert } from 'react-icons/gi';
 
 const PlayerPrompt = () => {
   const playerPrompt = useAppSelector(
@@ -32,9 +33,11 @@ const PlayerPrompt = () => {
 
   return (
     <div className={styles.playerPrompt}>
-      <span
-        dangerouslySetInnerHTML={{ __html: playerPrompt?.helpText ?? '' }}
-      ></span>{' '}
+      <div className={styles.content}>
+        <div
+          dangerouslySetInnerHTML={{ __html: playerPrompt?.helpText ?? '' }}
+        ></div>
+      </div>
       {buttons}
     </div>
   );
