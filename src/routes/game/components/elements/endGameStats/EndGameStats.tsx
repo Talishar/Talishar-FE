@@ -12,6 +12,8 @@ export interface EndGameData {
   turns?: number;
   cardResults: CardResult[];
   turnResults: Map<string, TurnResult>;
+  roguelikeGameID?: string;
+  endingHealth?: number;
 }
 
 export interface CardResult {

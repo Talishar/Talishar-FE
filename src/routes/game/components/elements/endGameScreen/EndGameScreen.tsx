@@ -12,6 +12,7 @@ import { END_GAME_STATS } from 'constants';
 import { hideActiveLayer } from 'features/game/GameSlice';
 import EndGameStats, { EndGameData } from '../endGameStats/EndGameStats';
 import EndGameMenuOptions from '../endGameMenuOptions/EndGameMenuOptions';
+import { Link, useNavigate } from 'react-router-dom';
 
 const EndGameScreen = () => {
   const gameInfo = useAppSelector((state: RootState) => state.game.gameInfo);
@@ -23,6 +24,17 @@ const EndGameScreen = () => {
     authKey: gameInfo.authKey,
     popupType: END_GAME_STATS
   });
+  const navigate = useNavigate();
+
+  const dispatch = useAppDispatch();
+
+  const handleContinueAdventure = async () => {
+    let roguelikeID = data.roguelikeGameID;
+    let endingHealth = data.endingHealth;
+    // TODO: handle this link better
+    await screenfull.exit();
+    window.location.href = `http://localhost/FaBOnline/Roguelike/ContinueAdventure.php?gameName=${roguelikeID}&playerID=1&health=${endingHealth}`;
+  };
 
   let content;
 
@@ -52,6 +64,9 @@ const EndGameScreen = () => {
         <div className={styles.cardListTitleContainer}>
           <div className={styles.cardListTitle}>
             <h3 className={styles.title}>{'Game Over Summary'}</h3>
+            <div className={styles.buttonDiv} onClick={handleContinueAdventure}>
+              Continue Adventure
+            </div>
             <div className={styles.buttonDiv} onClick={switchPlayer}>
               Switch player stats
             </div>
