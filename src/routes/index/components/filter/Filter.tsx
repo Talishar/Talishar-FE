@@ -27,7 +27,11 @@ const Filter = ({
       >
         <option value="">None</option>
         {HEROES_OF_RATHE.map((hero, ix) => {
-          return <option value={hero.value}>{hero.label}</option>;
+          return (
+            <option value={hero.value} key={hero.value}>
+              {hero.label}
+            </option>
+          );
         })}
       </select>
     </>

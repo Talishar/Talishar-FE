@@ -17,7 +17,9 @@ export const youngToOldHeroesMapping: { [key: string]: string } = {
   WTR001: 'WTR002', // Rhinar
   WTR038: 'WTR039', // Bravo
   WTR076: 'WTR077', // Katsu
-  WTR113: 'WTR114' // Dorinthea
+  WTR113: 'WTR114', // Dorinthea
+  OUT001: 'OUT002', // Uzuri
+  OUT091: 'OUT092' // Riptide
 };
 
 export const HEROES_OF_RATHE: { value: string; label: string }[] = [
@@ -38,6 +40,9 @@ export const HEROES_OF_RATHE: { value: string; label: string }[] = [
   { value: 'ELE062', label: 'Briar' },
   { value: 'UPR001', label: 'Dromai' },
   { value: 'UPR044', label: 'Fai' },
+  { value: 'OUT001', label: 'Uzuri' },
+  { value: 'OUT091', label: 'Riptide' },
+  { value: 'OUT003', label: 'Arakni, Solitary Confinement' },
   { value: 'UPR102', label: 'Iyslander' },
   { value: 'DYN113', label: 'Arakni' },
   { value: 'CRU002', label: 'Kayo, Berserker Runt' },

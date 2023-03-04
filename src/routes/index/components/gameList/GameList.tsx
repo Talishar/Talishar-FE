@@ -6,6 +6,7 @@ import OpenGame from '../openGame';
 import Filter from '../filter';
 import { GAME_FORMAT } from 'constants';
 import FormatList from '../formatList';
+import { useAutoAnimate } from '@formkit/auto-animate/react';
 
 export interface IOpenGame {
   p1Hero?: string;
@@ -41,6 +42,8 @@ const GameList = () => {
 
   const [heroFilter, setHeroFilter] = useState<string[]>([]);
   const [formatFilter, setFormatFilter] = useState<string | null>(null);
+
+  const [parent] = useAutoAnimate();
 
   let sortedOpenGames = data?.openGames ? [...data.openGames] : [];
   sortedOpenGames = sortedOpenGames
@@ -118,12 +121,14 @@ const GameList = () => {
       <FormatList gameList={compcc} name="Comp CC" />
       <FormatList gameList={otherGames} name="Other" isOther />
       {data != undefined && (
-        <div data-testid="games-in-progress">
+        <div data-testid="games-in-progress" ref={parent}>
           <h5 className={styles.subSectionTitle}>
             Games in progress: <span>({data.gamesInProgress.length})</span>
           </h5>
           {filteredGamesInProgress.map((entry, ix: number) => {
-            return <InProgressGame entry={entry} ix={ix} />;
+            return (
+              <InProgressGame entry={entry} ix={ix} key={entry.gameName} />
+            );
           })}
         </div>
       )}
