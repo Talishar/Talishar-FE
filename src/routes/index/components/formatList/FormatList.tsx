@@ -17,7 +17,14 @@ const FormatList = ({ gameList, name, isOther }: IFormatList) => {
     <div className={styles.groupDiv}>
       <h5 className={styles.subSectionTitle}>{name}</h5>
       {gameList.map((entry, ix: number) => {
-        return <OpenGame entry={entry} ix={ix} isOther={isOther} />;
+        return (
+          <OpenGame
+            entry={entry}
+            ix={ix}
+            isOther={isOther}
+            key={entry.gameName}
+          />
+        );
       })}
     </div>
   );

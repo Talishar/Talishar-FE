@@ -35,11 +35,9 @@ export const rtkQueryErrorToaster: Middleware =
   (api: MiddlewareAPI) => (next) => (action) => {
     if (isRejectedWithValue(action)) {
       console.warn('Rejected action:', action);
-      toast.error(
-        `Error: ${action.payload} - ${
-          action.error?.message ?? 'an error happened'
-        }`
-      );
+      const errorMessage = action.error?.message ?? 'an error happened';
+      const errorStatus = action.payload?.status ?? 0;
+      toast.error(`Error: ${errorStatus} - ${errorMessage}`);
     }
     return next(action);
   };

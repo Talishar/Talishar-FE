@@ -17,7 +17,7 @@ export const InProgressGame = ({
   };
   const buttonClass = classNames(styles.button, 'secondary');
   return (
-    <div key={ix} className={styles.gameItem}>
+    <div key={entry.gameName} className={styles.gameItem}>
       <div>
         {!!entry.p1Hero && <img src={`/crops/${entry.p1Hero}_cropped.png`} />}
       </div>{' '}
