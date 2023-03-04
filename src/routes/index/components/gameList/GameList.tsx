@@ -43,7 +43,7 @@ const GameList = () => {
   const [heroFilter, setHeroFilter] = useState<string[]>([]);
   const [formatFilter, setFormatFilter] = useState<string | null>(null);
 
-  const [parent] = useAutoAnimate(/* optional config */);
+  const [parent] = useAutoAnimate();
 
   let sortedOpenGames = data?.openGames ? [...data.openGames] : [];
   sortedOpenGames = sortedOpenGames
