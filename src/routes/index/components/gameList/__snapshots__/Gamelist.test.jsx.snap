@@ -1,0 +1,31 @@
+// Vitest Snapshot v1
+
+exports[`displays loading! when loading 1`] = `
+<div>
+  <article
+    class="_gameList_4a28c4"
+  >
+    <div
+      class="_titleDiv_4a28c4"
+    >
+      <h1
+        class="_title_4a28c4"
+      >
+        Games
+      </h1>
+      <button
+        aria-busy="true"
+        class="_reloadButton_4a28c4"
+        disabled=""
+      >
+        Reload
+      </button>
+    </div>
+    <div
+      aria-busy="true"
+    >
+      Loading!
+    </div>
+  </article>
+</div>
+`;

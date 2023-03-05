@@ -22,23 +22,20 @@ export interface IGameInProgress {
   gameName: number;
   secondsSinceLastUpdate?: number;
 }
+
 export interface GameListResponse {
-  data?: {
-    gamesInProgress: IGameInProgress[];
-    openGames: IOpenGame[];
-    canSeeQueue?: boolean;
-  };
-  isLoading?: boolean;
-  error?: unknown;
-  refetch?: () => void;
-  isFetching?: boolean;
+  gamesInProgress: IGameInProgress[];
+  openGames: IOpenGame[];
+  canSeeQueue?: boolean;
 }
 
 const GAME_LIST_POLLING_INTERVAL = 10000; // in ms
 
 const GameList = () => {
-  const { data, isLoading, error, refetch, isFetching }: GameListResponse =
-    useGetGameListQuery({}, {});
+  const { data, isLoading, error, refetch, isFetching } = useGetGameListQuery(
+    {},
+    {}
+  );
 
   const [heroFilter, setHeroFilter] = useState<string[]>([]);
   const [formatFilter, setFormatFilter] = useState<string | null>(null);
