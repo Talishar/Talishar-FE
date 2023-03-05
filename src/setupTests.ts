@@ -9,6 +9,7 @@ import { setupServer } from 'msw/node';
 import { rest } from 'msw';
 import { apiSlice } from './features/api/apiSlice';
 import { setupStore } from './app/Store';
+import { vi } from 'vitest';
 
 const store = setupStore();
 
@@ -88,6 +89,20 @@ export const restHandlers = [
     }
   )
 ];
+
+Object.defineProperty(window, 'matchMedia', {
+  writable: true,
+  value: vi.fn().mockImplementation((query) => ({
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: vi.fn(), // deprecated
+    removeListener: vi.fn(), // deprecated
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
+    dispatchEvent: vi.fn()
+  }))
+});
 
 const server = setupServer(...restHandlers);
 
