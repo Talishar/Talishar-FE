@@ -32,7 +32,9 @@ export default function CurrentAttack() {
   return (
     <div className={styles.currentAttack}>
       <div className={styles.attDefRow}>
-        <div className={styles.attDiv}>{attackValue}</div>
+        <div className={styles.attDiv} data-testid="attack-value">
+          {attackValue}
+        </div>
         <div className={styles.attackSymbol} onClick={attackZoneDisplay}>
           <img
             className={styles.chainSymbols}
@@ -47,7 +49,9 @@ export default function CurrentAttack() {
             alt="defence symbol"
           />
         </div>
-        <div className={styles.defDiv}>{defValue}</div>
+        <div className={styles.defDiv} data-testid="defence-value">
+          {defValue}
+        </div>
       </div>
       <div className={styles.attack}>
         <CardDisplay card={attCard} />
