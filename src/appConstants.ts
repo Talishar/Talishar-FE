@@ -112,26 +112,26 @@ export const GAME_FORMAT = {
 };
 
 export const URL_END_POINT = {
-  GET_GAME_LIST: '/APIs/GetGameList.php',
-  CREATE_GAME: '/APIs/CreateGame.php',
+  GET_GAME_LIST: 'APIs/GetGameList.php',
+  CREATE_GAME: 'APIs/CreateGame.php',
   SUBMIT_CHAT: 'SubmitChat.php',
   GET_POPUP: 'GetPopupAPI.php',
   GAME_STATE_POLL: 'GetNextTurn3.php?',
   PROCESS_INPUT: 'ProcessInput2.php?',
-  PARSE_GAME_FILE: '/APIs/ParseGameFile.php',
-  CHOOSE_FIRST_PLAYER: '/APIs/ChooseFirstPlayer.php',
-  GET_FAVORITE_DECKS: '/APIs/GetFavoriteDecks.php',
-  GET_LOBBY_INFO: '/APIs/GetLobbyInfo.php',
-  GET_LOBBY_REFRESH: '/APIs/GetLobbyRefresh.php',
-  JOIN_GAME: '/APIs/JoinGame.php',
-  SUBMIT_SIDEBOARD: '/APIs/SubmitSideboard.php',
-  USER_PROFILE: '/APIs/UserProfileAPI.php',
+  PARSE_GAME_FILE: 'APIs/ParseGameFile.php',
+  CHOOSE_FIRST_PLAYER: 'APIs/ChooseFirstPlayer.php',
+  GET_FAVORITE_DECKS: 'APIs/GetFavoriteDecks.php',
+  GET_LOBBY_INFO: 'APIs/GetLobbyInfo.php',
+  GET_LOBBY_REFRESH: 'APIs/GetLobbyRefresh.php',
+  JOIN_GAME: 'APIs/JoinGame.php',
+  SUBMIT_SIDEBOARD: 'APIs/SubmitSideboard.php',
+  USER_PROFILE: 'APIs/UserProfileAPI.php',
   START_GAME_LEGACY: 'Start.php',
-  LOGIN: '/AccountFiles/PasswordLoginAPI.php',
-  LOGIN_WITH_COOKIE: '/AccountFiles/TryLoginAPI.php',
-  LOGOUT: `/AccountFiles/LogoutUserAPI.php`,
-  SIGNUP: `/AccountFiles/SignUpAPI.php`,
-  FORGOT_PASSWORD: `/AccountFiles/PasswordResetRequestAPI.php`
+  LOGIN: 'AccountFiles/PasswordLoginAPI.php',
+  LOGIN_WITH_COOKIE: 'AccountFiles/TryLoginAPI.php',
+  LOGOUT: `AccountFiles/LogoutUserAPI.php`,
+  SIGNUP: `AccountFiles/SignUpAPI.php`,
+  FORGOT_PASSWORD: `AccountFiles/PasswordResetRequestAPI.php`
 };
 
 export const GAME_VISIBILITY = {

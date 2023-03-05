@@ -7,7 +7,7 @@ import Button from 'features/Button';
 import { FaTimes } from 'react-icons/fa';
 import CardDisplay from '../cardDisplay/CardDisplay';
 import SearchCardInput from '../searchCardInput';
-import { PROCESS_INPUT } from 'constants';
+import { PROCESS_INPUT } from 'appConstants';
 import { NAME_A_CARD } from './constants';
 
 export default function PlayerInputPopUp() {

@@ -10,7 +10,7 @@ import {
   GAME_LIMIT_LIVE,
   GAME_LIMIT_BETA,
   URL_END_POINT
-} from 'constants';
+} from 'appConstants';
 import Button from '../Button';
 import GameState from '../GameState';
 import { FaSignal } from 'react-icons/fa';

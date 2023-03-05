@@ -9,7 +9,7 @@ import { Card } from 'features/Card';
 import styles from './PlayerHandCard.module.css';
 import Draggable, { DraggableData, DraggableEvent } from 'react-draggable';
 import { useAppDispatch } from 'app/Hooks';
-import { LONG_PRESS_TIMER } from 'constants';
+import { LONG_PRESS_TIMER } from 'appConstants';
 import classNames from 'classnames';
 import CardImage from '../cardImage/CardImage';
 import CardPopUp from '../cardPopUp/CardPopUp';

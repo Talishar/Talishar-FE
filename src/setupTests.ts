@@ -4,11 +4,13 @@
 // learn more: https://github.com/testing-library/jest-dom
 import '@testing-library/jest-dom/extend-expect';
 import '@testing-library/jest-dom';
-import 'whatwg-fetch';
+import 'isomorphic-fetch';
 import { setupServer } from 'msw/node';
 import { rest } from 'msw';
 import { apiSlice } from './features/api/apiSlice';
 import { setupStore } from './app/Store';
+import { vi } from 'vitest';
+import mockOptionsMenuResponse from 'mocks/optionsmenu/mockOptionsMenuResponse';
 
 const store = setupStore();
 
@@ -24,15 +26,27 @@ export const restHandlers = [
     );
   }),
   rest.get('api/dev/GetPopupAPI.php', (req, res, ctx) => {
-    return res(
-      ctx.status(200),
-      ctx.json({
-        Cards: [
-          { Player: '2', Name: 'Zipper Hit', cardID: 'ARC030', modifier: '4' }
-        ]
-      })
-    );
+    switch (req.url.searchParams.get('popupType')) {
+      case 'mySettings':
+        return res(ctx.status(200), ctx.json(mockOptionsMenuResponse));
+
+      default:
+        return res(
+          ctx.status(200),
+          ctx.json({
+            Cards: [
+              {
+                Player: '2',
+                Name: 'Zipper Hit',
+                cardID: 'ARC030',
+                modifier: '4'
+              }
+            ]
+          })
+        );
+    }
   }),
+
   rest.get(
     'http://127.0.0.1:5173/api/live/APIs/GetGameList.php',
     (req, res, ctx) => {
@@ -88,6 +102,20 @@ export const restHandlers = [
     }
   )
 ];
+
+Object.defineProperty(window, 'matchMedia', {
+  writable: true,
+  value: vi.fn().mockImplementation((query) => ({
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: vi.fn(), // deprecated
+    removeListener: vi.fn(), // deprecated
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
+    dispatchEvent: vi.fn()
+  }))
+});
 
 const server = setupServer(...restHandlers);
 

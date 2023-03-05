@@ -1,7 +1,7 @@
 import React from 'react';
 import { useAppDispatch } from 'app/Hooks';
 import classNames from 'classnames';
-import { GAME_FORMAT, GAME_VISIBILITY } from 'constants';
+import { GAME_FORMAT, GAME_VISIBILITY } from 'appConstants';
 import {
   useCreateGameMutation,
   useGetFavoriteDecksQuery

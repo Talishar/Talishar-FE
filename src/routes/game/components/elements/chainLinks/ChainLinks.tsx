@@ -7,7 +7,7 @@ import hit from '../../../../../img/symbols/symbol-hit.png';
 import defend from '../../../../../img/symbols/symbol-defence.png';
 import { showChainLinkSummary, submitButton } from 'features/game/GameSlice';
 import { GiBreakingChain } from 'react-icons/gi';
-import { PROCESS_INPUT } from 'constants';
+import { PROCESS_INPUT } from 'appConstants';
 
 export default function ChainLinks() {
   const oldCombatChain = useAppSelector(

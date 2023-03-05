@@ -3,7 +3,7 @@ import { playCard, submitButton } from 'features/game/GameSlice';
 import { useAppSelector, useAppDispatch } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import styles from './PassTurnDisplay.module.css';
-import { DEFAULT_SHORTCUTS, PROCESS_INPUT } from 'constants';
+import { DEFAULT_SHORTCUTS, PROCESS_INPUT } from 'appConstants';
 import useShortcut from 'hooks/useShortcut';
 
 export default function PassTurnDisplay() {

@@ -4,7 +4,7 @@ import gemOn from '../../../../../img/elements/hexagonRedGemGlow.png';
 import gemOff from '../../../../../img/elements/hexagonGrayGem.png';
 import styles from './GemSlider.module.css';
 import { submitButton } from 'features/game/GameSlice';
-import { PROCESS_INPUT } from 'constants';
+import { PROCESS_INPUT } from 'appConstants';
 
 interface GemSlider {
   gem?: 'none' | 'inactive' | 'active';

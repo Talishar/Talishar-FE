@@ -8,7 +8,7 @@ import { closeOptionsMenu, submitButton } from 'features/game/GameSlice';
 import { FaTimes } from 'react-icons/fa';
 import styles from './OptionsMenu.module.css';
 import { useGetPopUpContentQuery } from 'features/api/apiSlice';
-import { DEFAULT_SHORTCUTS, PLAYER_OPTIONS, PROCESS_INPUT } from 'constants';
+import { DEFAULT_SHORTCUTS, PLAYER_OPTIONS, PROCESS_INPUT } from 'appConstants';
 import useShortcut from 'hooks/useShortcut';
 
 const OptionsContent = () => {
@@ -322,7 +322,7 @@ const OptionsContent = () => {
   );
 };
 
-export default function OptionsOverlay() {
+export default function OptionsMenu() {
   const optionsMenu = useAppSelector(
     (state: RootState) => state.game.optionsMenu
   );
@@ -347,7 +347,11 @@ export default function OptionsOverlay() {
           <h2 className={styles.title}>Main Options</h2>
           <h4>(priority settings can be adjusted here)</h4>
         </hgroup>
-        <div className={styles.optionsMenuCloseIcon} onClick={closeOptions}>
+        <div
+          className={styles.optionsMenuCloseIcon}
+          onClick={closeOptions}
+          data-testid="close-button"
+        >
           <FaTimes title="close options menu" />
         </div>
       </div>

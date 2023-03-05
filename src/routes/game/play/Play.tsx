@@ -5,7 +5,7 @@ import LeftColumn from '../components/leftColumn/LeftColumn';
 import RightColumn from '../components/rightColumn/RightColumn';
 import HandZone from '../components/zones/handZone/HandZone';
 import PlayerHand from '../components/zones/playerHand/PlayerHand';
-import OptionsOverlay from '../components/elements/optionsMenu/OptionsMenu';
+import OptionsMenu from '../components/elements/optionsMenu/OptionsMenu';
 import EventsHandler from '../components/elements/eventsHandler/EventsHandler';
 import PlayerInputPopUp from '../components/elements/playerInputPopUp/PlayerInputPopUp';
 import CardPortal from '../components/elements/cardPortal/CardPortal';
@@ -31,7 +31,7 @@ function Play() {
       </div>
       <CardListZone />
       <ActiveLayersZone />
-      <OptionsOverlay />
+      <OptionsMenu />
       <PlayerInputPopUp />
       <CardPortal />
       <GameStateHandler />

@@ -4,7 +4,7 @@ import styles from './GameList.module.css';
 import InProgressGame from '../inProgressGame';
 import OpenGame from '../openGame';
 import Filter from '../filter';
-import { GAME_FORMAT } from 'constants';
+import { GAME_FORMAT } from 'appConstants';
 import FormatList from '../formatList';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
 
@@ -22,23 +22,20 @@ export interface IGameInProgress {
   gameName: number;
   secondsSinceLastUpdate?: number;
 }
+
 export interface GameListResponse {
-  data?: {
-    gamesInProgress: IGameInProgress[];
-    openGames: IOpenGame[];
-    canSeeQueue?: boolean;
-  };
-  isLoading?: boolean;
-  error?: unknown;
-  refetch?: () => void;
-  isFetching?: boolean;
+  gamesInProgress: IGameInProgress[];
+  openGames: IOpenGame[];
+  canSeeQueue?: boolean;
 }
 
 const GAME_LIST_POLLING_INTERVAL = 10000; // in ms
 
 const GameList = () => {
-  const { data, isLoading, error, refetch, isFetching }: GameListResponse =
-    useGetGameListQuery({}, {});
+  const { data, isLoading, error, refetch, isFetching } = useGetGameListQuery(
+    {},
+    {}
+  );
 
   const [heroFilter, setHeroFilter] = useState<string[]>([]);
   const [formatFilter, setFormatFilter] = useState<string | null>(null);

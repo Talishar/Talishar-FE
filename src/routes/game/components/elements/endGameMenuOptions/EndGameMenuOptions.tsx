@@ -4,7 +4,7 @@ import { submitButton } from 'features/game/GameSlice';
 import screenfull from 'screenfull';
 import styles from './EndGameMenuOptions.module.css';
 import { useState } from 'react';
-import { PROCESS_INPUT } from 'constants';
+import { PROCESS_INPUT } from 'appConstants';
 
 const EndGameMenuOptions = () => {
   const dispatch = useAppDispatch();

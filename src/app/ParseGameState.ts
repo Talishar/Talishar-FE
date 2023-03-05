@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { ZONE } from 'constants';
+import { ZONE } from 'appConstants';
 import { Card } from '../features/Card';
 import CombatChainLink from '../features/CombatChainLink';
 import GameState from '../features/GameState';
