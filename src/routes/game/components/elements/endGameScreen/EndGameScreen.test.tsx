@@ -7,7 +7,7 @@ it('renders without crashing isPlayer true', () => {
   const div = renderWithProviders(<EndGameScreen />);
 });
 
-it.skip('does something', async () => {
+it('does something', async () => {
   const testStore = store;
   store.dispatch(showChainLinkSummary({ chainLink: 0 }));
   store.dispatch(setGameStart({ playerID: 1, gameID: 123, authKey: '12345' }));
