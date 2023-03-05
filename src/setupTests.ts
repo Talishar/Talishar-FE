@@ -10,6 +10,7 @@ import { rest } from 'msw';
 import { apiSlice } from './features/api/apiSlice';
 import { setupStore } from './app/Store';
 import { vi } from 'vitest';
+import mockOptionsMenuResponse from 'mocks/optionsmenu/mockOptionsMenuResponse';
 
 const store = setupStore();
 
@@ -25,15 +26,27 @@ export const restHandlers = [
     );
   }),
   rest.get('api/dev/GetPopupAPI.php', (req, res, ctx) => {
-    return res(
-      ctx.status(200),
-      ctx.json({
-        Cards: [
-          { Player: '2', Name: 'Zipper Hit', cardID: 'ARC030', modifier: '4' }
-        ]
-      })
-    );
+    switch (req.url.searchParams.get('popupType')) {
+      case 'mySettings':
+        return res(ctx.status(200), ctx.json(mockOptionsMenuResponse));
+
+      default:
+        return res(
+          ctx.status(200),
+          ctx.json({
+            Cards: [
+              {
+                Player: '2',
+                Name: 'Zipper Hit',
+                cardID: 'ARC030',
+                modifier: '4'
+              }
+            ]
+          })
+        );
+    }
   }),
+
   rest.get(
     'http://127.0.0.1:5173/api/live/APIs/GetGameList.php',
     (req, res, ctx) => {

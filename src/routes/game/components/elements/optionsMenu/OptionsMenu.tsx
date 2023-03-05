@@ -322,7 +322,7 @@ const OptionsContent = () => {
   );
 };
 
-export default function OptionsOverlay() {
+export default function OptionsMenu() {
   const optionsMenu = useAppSelector(
     (state: RootState) => state.game.optionsMenu
   );
@@ -347,7 +347,11 @@ export default function OptionsOverlay() {
           <h2 className={styles.title}>Main Options</h2>
           <h4>(priority settings can be adjusted here)</h4>
         </hgroup>
-        <div className={styles.optionsMenuCloseIcon} onClick={closeOptions}>
+        <div
+          className={styles.optionsMenuCloseIcon}
+          onClick={closeOptions}
+          data-testid="close-button"
+        >
           <FaTimes title="close options menu" />
         </div>
       </div>
