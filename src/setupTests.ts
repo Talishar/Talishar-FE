@@ -4,7 +4,6 @@
 // learn more: https://github.com/testing-library/jest-dom
 import '@testing-library/jest-dom/extend-expect';
 import '@testing-library/jest-dom';
-import 'whatwg-fetch';
 import { setupServer } from 'msw/node';
 import { rest } from 'msw';
 import { apiSlice } from './features/api/apiSlice';
