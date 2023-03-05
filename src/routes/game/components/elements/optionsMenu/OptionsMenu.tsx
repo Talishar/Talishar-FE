@@ -8,7 +8,7 @@ import { closeOptionsMenu, submitButton } from 'features/game/GameSlice';
 import { FaTimes } from 'react-icons/fa';
 import styles from './OptionsMenu.module.css';
 import { useGetPopUpContentQuery } from 'features/api/apiSlice';
-import { DEFAULT_SHORTCUTS, PLAYER_OPTIONS, PROCESS_INPUT } from 'constants';
+import { DEFAULT_SHORTCUTS, PLAYER_OPTIONS, PROCESS_INPUT } from 'appConstants';
 import useShortcut from 'hooks/useShortcut';
 
 const OptionsContent = () => {

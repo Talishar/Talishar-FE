@@ -7,7 +7,7 @@ import { FaTimes } from 'react-icons/fa';
 import styles from './CardListZone.module.css';
 import { useGetPopUpContentQuery } from 'features/api/apiSlice';
 import useShortcut from 'hooks/useShortcut';
-import { DEFAULT_SHORTCUTS } from 'constants';
+import { DEFAULT_SHORTCUTS } from 'appConstants';
 
 export const CardListZone = () => {
   const cardList = useAppSelector(

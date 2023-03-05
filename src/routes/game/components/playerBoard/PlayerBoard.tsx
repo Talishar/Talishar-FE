@@ -5,7 +5,7 @@ import BottomRow from '../bottomRow/BottomRow';
 import styles from './PlayerBoard.module.css';
 import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
-import { DEFAULT_PLAYMAT } from 'constants';
+import { DEFAULT_PLAYMAT } from 'appConstants';
 
 export default function PlayerBoard() {
   let playmat = useAppSelector(

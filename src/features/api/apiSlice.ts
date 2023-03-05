@@ -15,7 +15,7 @@ import {
   GAME_LIMIT_BETA,
   GAME_LIMIT_LIVE,
   URL_END_POINT
-} from 'constants';
+} from 'appConstants';
 import {
   CreateGameAPI,
   CreateGameResponse

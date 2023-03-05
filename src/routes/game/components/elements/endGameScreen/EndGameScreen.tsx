@@ -8,7 +8,7 @@ import GameInfo from 'features/GameInfo';
 import CardTextLink from '../cardTextLink/CardTextLink';
 import { Effect } from '../effects/Effects';
 import { Card } from 'features/Card';
-import { END_GAME_STATS } from 'constants';
+import { END_GAME_STATS } from 'appConstants';
 import { hideActiveLayer } from 'features/game/GameSlice';
 import EndGameStats, { EndGameData } from '../endGameStats/EndGameStats';
 import EndGameMenuOptions from '../endGameMenuOptions/EndGameMenuOptions';

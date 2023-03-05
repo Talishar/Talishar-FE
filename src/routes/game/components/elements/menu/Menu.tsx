@@ -9,7 +9,7 @@ import {
 import { FaUndo } from 'react-icons/fa';
 import { GiExpand, GiHamburgerMenu } from 'react-icons/gi';
 import styles from './Menu.module.css';
-import { DEFAULT_SHORTCUTS, PROCESS_INPUT } from 'constants';
+import { DEFAULT_SHORTCUTS, PROCESS_INPUT } from 'appConstants';
 import { RootState } from 'app/Store';
 import useShortcut from 'hooks/useShortcut';
 

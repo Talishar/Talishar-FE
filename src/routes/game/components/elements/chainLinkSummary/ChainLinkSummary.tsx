@@ -10,7 +10,7 @@ import { Effect } from '../effects/Effects';
 import { Card } from 'features/Card';
 import EndGameScreen from '../endGameScreen/EndGameScreen';
 import useShortcut from 'hooks/useShortcut';
-import { DEFAULT_SHORTCUTS } from 'constants';
+import { DEFAULT_SHORTCUTS } from 'appConstants';
 
 export const ChainLinkSummaryContainer = () => {
   const chainLinkSummary = useAppSelector(

@@ -4,7 +4,7 @@ import styles from './GameList.module.css';
 import InProgressGame from '../inProgressGame';
 import OpenGame from '../openGame';
 import Filter from '../filter';
-import { GAME_FORMAT } from 'constants';
+import { GAME_FORMAT } from 'appConstants';
 import FormatList from '../formatList';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
 

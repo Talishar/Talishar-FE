@@ -4,7 +4,7 @@ import styles from './SearchCardInput.module.css';
 import { CARD_LIST } from 'constants/cardList';
 import classNames from 'classnames';
 import { useAppDispatch } from 'app/Hooks';
-import { PROCESS_INPUT } from 'constants';
+import { PROCESS_INPUT } from 'appConstants';
 import { submitButton } from 'features/game/GameSlice';
 
 // TODO: replace the any

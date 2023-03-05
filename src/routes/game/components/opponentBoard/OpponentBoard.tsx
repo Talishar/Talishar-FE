@@ -5,7 +5,7 @@ import BottomRow from '../bottomRow/BottomRow';
 import styles from './OpponentBoard.module.css';
 import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
-import { DEFAULT_PLAYMAT } from 'constants';
+import { DEFAULT_PLAYMAT } from 'appConstants';
 
 export default function OpponentBoard() {
   let playmat = useAppSelector(
