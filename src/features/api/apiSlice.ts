@@ -48,7 +48,7 @@ const dynamicBaseQuery: BaseQueryFn<
   unknown,
   FetchBaseQueryError
 > = async (args, webApi, extraOptions) => {
-  let baseUrl = 'http://localhost:3000/api/dev/';
+  let baseUrl = API_URL_DEV;
   const gameId = (webApi.getState() as RootState).game.gameInfo.gameID;
   if (gameId > GAME_LIMIT_BETA) {
     baseUrl = API_URL_BETA;
@@ -59,7 +59,6 @@ const dynamicBaseQuery: BaseQueryFn<
   if (gameId === 0) {
     baseUrl = import.meta.env.DEV ? API_URL_DEV : API_URL_LIVE;
   }
-  baseUrl = 'http://localhost:3000/SPOON/api/dev/';
   const rawBaseQuery = fetchBaseQuery({ baseUrl, credentials: 'include' });
   return rawBaseQuery(args, webApi, extraOptions);
 };
