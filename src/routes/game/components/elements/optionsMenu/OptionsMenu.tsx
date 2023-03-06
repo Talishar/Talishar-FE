@@ -10,6 +10,7 @@ import styles from './OptionsMenu.module.css';
 import { useGetPopUpContentQuery } from 'features/api/apiSlice';
 import { DEFAULT_SHORTCUTS, PLAYER_OPTIONS, PROCESS_INPUT } from 'appConstants';
 import useShortcut from 'hooks/useShortcut';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const OptionsContent = () => {
   const optionsMenu = useAppSelector(
@@ -328,34 +329,36 @@ export default function OptionsMenu() {
   );
   const dispatch = useAppDispatch();
 
-  if (
-    optionsMenu === undefined ||
-    optionsMenu.active === undefined ||
-    optionsMenu.active == false
-  ) {
-    return null;
-  }
-
   const closeOptions = () => {
     dispatch(closeOptionsMenu());
   };
 
   return (
-    <div className={styles.optionsContainer}>
-      <div className={styles.optionsTitleContainer}>
-        <hgroup className={styles.optionsTitle}>
-          <h2 className={styles.title}>Main Options</h2>
-          <h4>(priority settings can be adjusted here)</h4>
-        </hgroup>
-        <div
-          className={styles.optionsMenuCloseIcon}
-          onClick={closeOptions}
-          data-testid="close-button"
+    <AnimatePresence>
+      {optionsMenu?.active && (
+        <motion.div
+          className={styles.optionsContainer}
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.8 }}
+          key="optionsMenuPopup"
         >
-          <FaTimes title="close options menu" />
-        </div>
-      </div>
-      <OptionsContent />
-    </div>
+          <div className={styles.optionsTitleContainer}>
+            <hgroup className={styles.optionsTitle}>
+              <h2 className={styles.title}>Main Options</h2>
+              <h4>(priority settings can be adjusted here)</h4>
+            </hgroup>
+            <div
+              className={styles.optionsMenuCloseIcon}
+              onClick={closeOptions}
+              data-testid="close-button"
+            >
+              <FaTimes title="close options menu" />
+            </div>
+          </div>
+          <OptionsContent />
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }

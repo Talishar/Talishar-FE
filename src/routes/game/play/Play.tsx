@@ -13,11 +13,12 @@ import ChatCardDetail from '../components/elements/chatCardDetail/ChatCardDetail
 import CardListZone from '../components/zones/cardListZone/CardListZone';
 import ChainLinkSummaryContainer from '../components/elements/chainLinkSummary/ChainLinkSummary';
 import ActiveLayersZone from '../components/zones/activeLayersZone/ActiveLayersZone';
+import { AnimatePresence } from 'framer-motion';
 
 function Play() {
   return (
     <div className="centering">
-      <div className="app">
+      <div className="app" key="app">
         <ChatCardDetail />
         <LeftColumn />
         <div className="gameZone">

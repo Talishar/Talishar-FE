@@ -3,10 +3,10 @@
   display: flex;
   flex-direction: column;
   min-width: 45%;
-  max-width: 60%;
   top: 10vh;
   bottom: 55vh;
   left: 20%;
+  right: 20%;
   background-color: var(--near-black);
   padding: 2vh;
   border: 1px solid gold;

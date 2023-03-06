@@ -21,4 +21,5 @@ export interface Card {
   label?: string;
   zone?: string;
   facing?: 'UP' | 'DOWN' | 'DOWNALL';
+  layer?: number;
 }

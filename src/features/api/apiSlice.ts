@@ -154,6 +154,15 @@ export const apiSlice = createApi({
         };
       }
     }),
+    processInputAPI: builder.mutation({
+      query: ({ ...body }) => {
+        return {
+          url: URL_END_POINT.PROCESS_INPUT_POST,
+          method: 'POST',
+          body: body
+        };
+      }
+    }),
     getGameList: builder.query({
       query: () => {
         return {
@@ -261,6 +270,7 @@ export const {
   useCreateGameMutation,
   useJoinGameMutation,
   useGetLobbyInfoQuery,
+  useProcessInputAPIMutation,
   useChooseFirstPlayerMutation,
   useSubmitSideboardMutation
 } = apiSlice;

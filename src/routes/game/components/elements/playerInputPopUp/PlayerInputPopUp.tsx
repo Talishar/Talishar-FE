@@ -9,6 +9,7 @@ import CardDisplay from '../cardDisplay/CardDisplay';
 import SearchCardInput from '../searchCardInput';
 import { PROCESS_INPUT } from 'appConstants';
 import { NAME_A_CARD } from './constants';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function PlayerInputPopUp() {
   const inputPopUp = useAppSelector(
@@ -147,7 +148,13 @@ export default function PlayerInputPopUp() {
   });
 
   return (
-    <div className={styles.optionsContainer}>
+    <motion.div
+      initial={{ opacity: 0, scale: 0.8 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.8 }}
+      key="playerInputPopupBox"
+      className={styles.optionsContainer}
+    >
       <div className={styles.optionsTitleContainer}>
         <div className={styles.optionsTitle}>
           <h3 className={styles.title} dangerouslySetInnerHTML={title}></h3>
@@ -185,6 +192,6 @@ export default function PlayerInputPopUp() {
           </div>
         </form>
       </div>
-    </div>
+    </motion.div>
   );
 }
