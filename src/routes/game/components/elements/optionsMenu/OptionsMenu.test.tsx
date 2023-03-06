@@ -5,7 +5,7 @@ import { createRoot } from 'react-dom/client';
 import OptionsMenu from './OptionsMenu';
 import { renderWithProviders } from 'utils/TestUtils';
 import { OfflineTestingGameState } from 'features/game/InitialGameState';
-import { fireEvent, screen, act } from '@testing-library/react';
+import { screen, act, waitFor } from '@testing-library/react';
 import GameState from 'features/GameState';
 
 const renderWithOptionsOpen = () =>
@@ -44,6 +44,5 @@ it('closes the window when you click the close button', async () => {
   act(() => {
     closeButton.click();
   });
-
-  expect(closeButton).not.toBeInTheDocument();
+  await waitFor(() => expect(closeButton).not.toBeInTheDocument());
 });
