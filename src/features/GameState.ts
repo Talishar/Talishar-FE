@@ -34,6 +34,7 @@ export default interface GameState {
     active?: boolean;
     cardList?: Card[];
     target?: Card;
+    isReorderable?: boolean;
   };
   chatLog?: string[];
   isUpdateInProgress?: boolean;
