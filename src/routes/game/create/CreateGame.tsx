@@ -48,6 +48,7 @@ const CreateGame = () => {
     { setSubmitting }: FormikHelpers<CreateGameAPI>
   ) => {
     setSubmitting(true);
+    console.log('submitting');
     try {
       const response = await createGame(values).unwrap();
       if (response.error) {
