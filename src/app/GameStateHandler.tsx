@@ -17,10 +17,11 @@ import {
 } from 'react-router-dom';
 import { GameLocationState } from 'interface/GameLocationState';
 import { toast } from 'react-hot-toast';
+import { TimeoutId } from '@reduxjs/toolkit/dist/query/core/buildMiddleware/types';
 
 export const GameStateHandler = React.memo(() => {
   const abortRef = useRef<AbortController>();
-  const timeOutRef = useRef<number>();
+  const timeOutRef = useRef<TimeoutId>();
   const navigate = useNavigate();
   const location = useLocation();
   const locationState = location.state as GameLocationState | undefined;
