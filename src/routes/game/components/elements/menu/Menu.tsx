@@ -12,35 +12,9 @@ import styles from './Menu.module.css';
 import { DEFAULT_SHORTCUTS, PROCESS_INPUT } from 'appConstants';
 import { RootState } from 'app/Store';
 import useShortcut from 'hooks/useShortcut';
-import FullControlButton from './fullControlButton';
-
-function MenuButton() {
-  const optionsMenu = useAppSelector(
-    (state: RootState) => state.game.optionsMenu
-  );
-  const dispatch = useAppDispatch();
-  const toggleMenu = () => {
-    if (optionsMenu?.active) return dispatch(closeOptionsMenu());
-    return dispatch(openOptionsMenu());
-  };
-
-  useShortcut(DEFAULT_SHORTCUTS.TOGGLE_OPTIONS_MENU, toggleMenu);
-
-  return (
-    <div>
-      <button
-        className={styles.btn}
-        aria-label="Toggle main menu"
-        title="Options Menu"
-        onClick={() => toggleMenu()}
-        data-tooltip="Options Menu"
-        data-placement="bottom"
-      >
-        <GiHamburgerMenu aria-hidden="true" fontSize={'1.5em'} />
-      </button>
-    </div>
-  );
-}
+import FullControlToggle from './FullControlToggle';
+import HideModalsToggle from './HideModalsToggle/HideModalsToggle';
+import OptionsMenuToggle from './OptionsMenuToggle';
 
 function FullScreenButton() {
   function toggleFullScreen() {
@@ -89,11 +63,12 @@ export default function Menu() {
     <div>
       <div className={styles.menuList}>
         <UndoButton />
-        <MenuButton />
+        <OptionsMenuToggle />
         <FullScreenButton />
       </div>
       <div className={styles.menuList}>
-        <FullControlButton />
+        <FullControlToggle />
+        <HideModalsToggle />
       </div>
     </div>
   );

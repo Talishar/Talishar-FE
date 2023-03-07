@@ -4,9 +4,11 @@ import { RootState } from 'app/Store';
 import CardDisplay from '../../elements/cardDisplay/CardDisplay';
 import styles from './ActiveLayersZone.module.css';
 import { motion, AnimatePresence } from 'framer-motion';
-import ReorderLayers from './reorderLayers';
+import ReorderLayers from './ReorderLayers';
+import useShowModal from 'hooks/useShowModals';
 
 export default function ActiveLayersZone() {
+  const showModal = useShowModal();
   const activeLayer = useAppSelector(
     (state: RootState) => state.game.activeLayers
   );
@@ -22,7 +24,7 @@ export default function ActiveLayersZone() {
   console.log('reorderable cards', reorderableCards);
   return (
     <AnimatePresence>
-      {activeLayer?.active && (
+      {activeLayer?.active && showModal && (
         <motion.div
           className={styles.activeLayersBox}
           initial={{ opacity: 0, scale: 0.8 }}

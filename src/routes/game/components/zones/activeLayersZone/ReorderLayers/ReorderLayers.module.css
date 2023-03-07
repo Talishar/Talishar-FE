@@ -1,0 +1,41 @@
+.reorderCards {
+  overflow-x: auto;
+  height: 14dvh;
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  flex-grow: 1;
+  gap: 0.5em;
+  padding: 0 0 0 0.5em;
+  height: 16dvh;
+  margin: 0;
+}
+
+.reorderItem {
+  height: 14dvh;
+  width: 14dvh;
+  margin: 0;
+}
+
+.reorderItem {
+  max-width: 14dvh;
+  color: rgba(0, 0, 0, 0);
+}
+
+.reorderItem ::marker {
+  visibility: none;
+}
+
+.subtitle {
+  font-size: 1.25em;
+  padding: 0 0 0 0.25em;
+  margin: 0px;
+}
+
+.orderingExplanation {
+  font-size: 0.75em;
+  padding-left: 0.5em;
+  margin-bottom: 0;
+}

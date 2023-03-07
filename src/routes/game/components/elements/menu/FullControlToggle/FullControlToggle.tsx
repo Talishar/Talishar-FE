@@ -3,7 +3,7 @@ import styles from '../Menu.module.css';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { GiUsable } from 'react-icons/gi';
 
-const HoldPriorityButton = () => {
+const FullControlToggle = () => {
   const dispatch = useAppDispatch();
   const handleClickFullControl = () => {
     console.log('ARGH');
@@ -24,4 +24,4 @@ const HoldPriorityButton = () => {
   );
 };
 
-export default HoldPriorityButton;
+export default FullControlToggle;

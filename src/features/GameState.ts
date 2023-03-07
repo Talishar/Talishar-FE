@@ -102,4 +102,5 @@ export default interface GameState {
     eventValue?: string;
   }[];
   gameLobby?: GetLobbyRefreshResponse;
+  showModals?: boolean;
 }

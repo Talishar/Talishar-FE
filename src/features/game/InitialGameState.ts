@@ -9,7 +9,8 @@ const InitialGameState: GameState = {
   playerOne: {},
   playerTwo: {},
   isUpdateInProgress: false,
-  optionsMenu: { active: false }
+  optionsMenu: { active: false },
+  showModals: true
 };
 
 export const OfflineTestingGameState: GameState = {
@@ -286,7 +287,8 @@ export const OfflineTestingGameState: GameState = {
   },
   optionsMenu: {
     active: false
-  }
+  },
+  showModals: true
 };
 
 export default InitialGameState as GameState;
