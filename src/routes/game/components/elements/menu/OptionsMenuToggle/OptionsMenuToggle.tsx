@@ -34,7 +34,7 @@ function OptionsMenuToggle() {
         data-tooltip="Options Menu"
         data-placement="bottom"
       >
-        <GiHamburgerMenu aria-hidden="true" fontSize={'1.5em'} />
+        <GiHamburgerMenu aria-hidden="true" fontSize={'1.75em'} />
       </button>
     </div>
   );

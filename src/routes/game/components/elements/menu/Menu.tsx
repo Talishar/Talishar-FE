@@ -31,7 +31,7 @@ function FullScreenButton() {
         data-tooltip="Fullscreen"
         data-placement="bottom"
       >
-        <GiExpand aria-hidden="true" fontSize={'1.5em'} />
+        <GiExpand aria-hidden="true" fontSize={'2em'} />
       </button>
     </div>
   );

@@ -13,7 +13,6 @@ import {
 } from 'appConstants';
 import Button from '../Button';
 import GameState from '../GameState';
-import { FaSignal } from 'react-icons/fa';
 import {
   GetLobbyRefresh,
   GetLobbyRefreshResponse

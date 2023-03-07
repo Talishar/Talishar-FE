@@ -12,8 +12,10 @@ describe('menu', () => {
   });
 
   it('renders the buttons properly', () => {
-    expect(screen.getByTitle('options menu button')).toBeDefined();
-    expect(screen.getByTitle('fullscreen button')).toBeDefined();
-    expect(screen.getByTitle('undo button')).toBeDefined();
+    expect(screen.getByTitle('Options Menu')).toBeDefined();
+    expect(screen.getByTitle('Full Screen')).toBeDefined();
+    expect(screen.getByTitle('Undo')).toBeDefined();
+    expect(screen.getByTitle('Full Control')).toBeDefined();
+    expect(screen.getByTitle('Show Arena')).toBeDefined();
   });
 });

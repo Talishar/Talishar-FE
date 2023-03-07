@@ -20,14 +20,14 @@ const HideModalsToggle = () => {
         className={classNames(styles.btn, {
           [styles.buttonActive]: !showModal
         })}
-        aria-label="Hide Windows"
+        aria-label="Show Arena"
         onClick={handleClickHideWindowsToggle}
-        title="Hide Windows"
-        data-tooltip="Hide Windows"
+        title="Show Arena"
+        data-tooltip="Show Arena"
         data-placement="bottom"
       >
-        {showModal && <FaEye aria-hidden="true" fontSize={'1.5em'} />}
-        {!showModal && <FaEyeSlash aria-hidden="true" fontSize={'1.5em'} />}
+        {showModal && <FaEye aria-hidden="true" fontSize={'2em'} />}
+        {!showModal && <FaEyeSlash aria-hidden="true" fontSize={'2em'} />}
       </button>
     </div>
   );

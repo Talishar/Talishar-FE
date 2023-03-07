@@ -1,6 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { AppStore, RootState } from 'app/Store';
-import { TypeOf } from 'yup';
+import { RootState } from 'app/Store';
 
 const initialState = {
   user: null,

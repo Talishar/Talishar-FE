@@ -14,11 +14,11 @@ const FullControlToggle = () => {
         className={styles.btn}
         aria-label="Full Control"
         onClick={handleClickFullControl}
-        title="enter or leave full control mode"
+        title="Full Control"
         data-tooltip="Full Control"
         data-placement="bottom"
       >
-        <GiUsable aria-hidden="true" fontSize={'1.5em'} />
+        <GiUsable aria-hidden="true" fontSize={'2em'} />
       </button>
     </div>
   );
