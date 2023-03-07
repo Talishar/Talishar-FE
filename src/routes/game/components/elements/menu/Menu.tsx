@@ -12,6 +12,7 @@ import styles from './Menu.module.css';
 import { DEFAULT_SHORTCUTS, PROCESS_INPUT } from 'appConstants';
 import { RootState } from 'app/Store';
 import useShortcut from 'hooks/useShortcut';
+import FullControlButton from './fullControlButton';
 
 function MenuButton() {
   const optionsMenu = useAppSelector(
@@ -30,8 +31,10 @@ function MenuButton() {
       <button
         className={styles.btn}
         aria-label="Toggle main menu"
-        title="options menu button"
+        title="Options Menu"
         onClick={() => toggleMenu()}
+        data-tooltip="Options Menu"
+        data-placement="bottom"
       >
         <GiHamburgerMenu aria-hidden="true" fontSize={'1.5em'} />
       </button>
@@ -49,8 +52,10 @@ function FullScreenButton() {
       <button
         className={styles.btn}
         aria-label="Full Screen"
-        title="fullscreen button"
+        title="Full Screen"
         onClick={() => toggleFullScreen()}
+        data-tooltip="Fullscreen"
+        data-placement="bottom"
       >
         <GiExpand aria-hidden="true" fontSize={'1.5em'} />
       </button>
@@ -69,7 +74,9 @@ function UndoButton() {
         className={styles.btn}
         aria-label="Undo"
         onClick={clickUndo}
-        title="undo button"
+        title="Undo"
+        data-tooltip="Undo"
+        data-placement="bottom"
       >
         <FaUndo aria-hidden="true" fontSize={'1.5em'} />
       </button>
@@ -79,10 +86,15 @@ function UndoButton() {
 
 export default function Menu() {
   return (
-    <div className={styles.menuList}>
-      <UndoButton />
-      <MenuButton />
-      <FullScreenButton />
+    <div>
+      <div className={styles.menuList}>
+        <UndoButton />
+        <MenuButton />
+        <FullScreenButton />
+      </div>
+      <div className={styles.menuList}>
+        <FullControlButton />
+      </div>
     </div>
   );
 }
