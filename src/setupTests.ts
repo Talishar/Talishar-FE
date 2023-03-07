@@ -46,7 +46,18 @@ export const restHandlers = [
         );
     }
   }),
-
+  rest.post('/api/dev/APIs/CreateGame.php', (req, res, ctx) => {
+    return res(
+      ctx.status(200),
+      ctx.json({
+        message: 'success',
+        gameName: 870609,
+        playerID: 1,
+        authKey:
+          '75391d54a09cdfe877cfe9fc641dfab449e7d4ef37a1536e27cae2c0596c78d9'
+      })
+    );
+  }),
   rest.get(
     'http://127.0.0.1:5173/api/live/APIs/GetGameList.php',
     (req, res, ctx) => {
