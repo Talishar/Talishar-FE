@@ -21,5 +21,6 @@ export interface Card {
   label?: string;
   zone?: string;
   facing?: 'UP' | 'DOWN' | 'DOWNALL';
-  layer?: number;
+  layer?: number; // layer ID number
+  reorderable?: boolean; // can be reordered in the active layers window
 }

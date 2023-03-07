@@ -135,7 +135,8 @@ export default function ParseGameState(input: any) {
     for (const layer of input.layerDisplay.reorderableLayers) {
       result.activeLayers.cardList.push({
         ...ParseCard(layer.card),
-        layer: layer.layerID
+        layer: layer.layerID,
+        reorderable: layer.isReorderable
       });
       if (layer.isReorderable) {
         result.activeLayers.isReorderable = true;

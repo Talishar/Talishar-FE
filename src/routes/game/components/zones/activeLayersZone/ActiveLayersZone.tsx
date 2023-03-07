@@ -11,6 +11,15 @@ export default function ActiveLayersZone() {
     (state: RootState) => state.game.activeLayers
   );
 
+  const staticCards = activeLayer?.cardList?.filter(
+    (card) => card.reorderable === false
+  );
+  const reorderableCards = activeLayer?.cardList?.filter(
+    (card) => card.reorderable
+  );
+
+  console.log('static Cards', staticCards);
+  console.log('reorderable cards', reorderableCards);
   return (
     <AnimatePresence>
       {activeLayer?.active && (
@@ -23,20 +32,28 @@ export default function ActiveLayersZone() {
         >
           <div className={styles.activeLayersTitleContainer}>
             <div className={styles.activeLayersTitle}>
-              <h3 className={styles.title}>Active Layers</h3>
-              (priority settings can be adjusted in the menu)
+              <h3 className={styles.title}>
+                Active Layers
+                {activeLayer.isReorderable
+                  ? ' (Drag highlighted to reorder)'
+                  : null}
+              </h3>
+              <p className={styles.orderingExplanation}>
+                Priority settings can be adjusted in the menu
+              </p>
+              <p className={styles.orderingExplanation}>
+                For more info about trigger ordering, see rule 1.10.2c of the
+                comprehensive rulebook.
+              </p>
             </div>
           </div>
-          {activeLayer.isReorderable ? (
-            <ReorderLayers cards={activeLayer.cardList ?? []} />
-          ) : (
-            <div className={styles.activeLayersContents}>
-              {activeLayer.cardList &&
-                activeLayer.cardList.map((card, ix) => {
-                  return <CardDisplay card={card} key={ix} makeMeBigger />;
-                })}
-            </div>
-          )}
+          <div className={styles.activeLayersContents}>
+            {staticCards &&
+              staticCards.map((card, ix) => {
+                return <CardDisplay card={card} key={ix} />;
+              })}
+            <ReorderLayers cards={reorderableCards ?? []} />
+          </div>
         </motion.div>
       )}
     </AnimatePresence>
