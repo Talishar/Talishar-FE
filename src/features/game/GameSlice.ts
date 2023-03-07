@@ -13,7 +13,6 @@ import {
 } from 'appConstants';
 import Button from '../Button';
 import GameState from '../GameState';
-import { FaSignal } from 'react-icons/fa';
 import {
   GetLobbyRefresh,
   GetLobbyRefreshResponse
@@ -366,6 +365,15 @@ export const gameSlice = createSlice({
     },
     clearGetLobbyRefresh: (state) => {
       state.gameLobby = undefined;
+    },
+    toggleShowModals: (state) => {
+      state.showModals = !state.showModals;
+    },
+    enableModals: (state) => {
+      state.showModals = true;
+    },
+    disableModals: (state) => {
+      state.showModals = false;
     }
   },
   // The `extraReducers` field lets the slice handle actions defined elsewhere,
@@ -487,5 +495,8 @@ export const {
   showActiveLayer,
   setIsUpdateInProgressFalse,
   clearGetLobbyRefresh,
-  clearGameInfo
+  clearGameInfo,
+  toggleShowModals,
+  enableModals,
+  disableModals
 } = actions;

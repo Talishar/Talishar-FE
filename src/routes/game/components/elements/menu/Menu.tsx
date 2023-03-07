@@ -12,32 +12,9 @@ import styles from './Menu.module.css';
 import { DEFAULT_SHORTCUTS, PROCESS_INPUT } from 'appConstants';
 import { RootState } from 'app/Store';
 import useShortcut from 'hooks/useShortcut';
-
-function MenuButton() {
-  const optionsMenu = useAppSelector(
-    (state: RootState) => state.game.optionsMenu
-  );
-  const dispatch = useAppDispatch();
-  const toggleMenu = () => {
-    if (optionsMenu?.active) return dispatch(closeOptionsMenu());
-    return dispatch(openOptionsMenu());
-  };
-
-  useShortcut(DEFAULT_SHORTCUTS.TOGGLE_OPTIONS_MENU, toggleMenu);
-
-  return (
-    <div>
-      <button
-        className={styles.btn}
-        aria-label="Toggle main menu"
-        title="options menu button"
-        onClick={() => toggleMenu()}
-      >
-        <GiHamburgerMenu aria-hidden="true" fontSize={'1.5em'} />
-      </button>
-    </div>
-  );
-}
+import FullControlToggle from './FullControlToggle';
+import HideModalsToggle from './HideModalsToggle/HideModalsToggle';
+import OptionsMenuToggle from './OptionsMenuToggle';
 
 function FullScreenButton() {
   function toggleFullScreen() {
@@ -49,10 +26,12 @@ function FullScreenButton() {
       <button
         className={styles.btn}
         aria-label="Full Screen"
-        title="fullscreen button"
+        title="Full Screen"
         onClick={() => toggleFullScreen()}
+        data-tooltip="Fullscreen"
+        data-placement="bottom"
       >
-        <GiExpand aria-hidden="true" fontSize={'1.5em'} />
+        <GiExpand aria-hidden="true" fontSize={'2em'} />
       </button>
     </div>
   );
@@ -69,7 +48,9 @@ function UndoButton() {
         className={styles.btn}
         aria-label="Undo"
         onClick={clickUndo}
-        title="undo button"
+        title="Undo"
+        data-tooltip="Undo"
+        data-placement="bottom"
       >
         <FaUndo aria-hidden="true" fontSize={'1.5em'} />
       </button>
@@ -79,10 +60,16 @@ function UndoButton() {
 
 export default function Menu() {
   return (
-    <div className={styles.menuList}>
-      <UndoButton />
-      <MenuButton />
-      <FullScreenButton />
+    <div>
+      <div className={styles.menuList}>
+        <UndoButton />
+        <OptionsMenuToggle />
+        <FullScreenButton />
+      </div>
+      <div className={styles.menuList}>
+        <FullControlToggle />
+        <HideModalsToggle />
+      </div>
     </div>
   );
 }

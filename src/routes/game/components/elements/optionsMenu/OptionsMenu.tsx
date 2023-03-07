@@ -11,6 +11,7 @@ import { useGetPopUpContentQuery } from 'features/api/apiSlice';
 import { DEFAULT_SHORTCUTS, PLAYER_OPTIONS, PROCESS_INPUT } from 'appConstants';
 import useShortcut from 'hooks/useShortcut';
 import { motion, AnimatePresence } from 'framer-motion';
+import useShowModal from 'hooks/useShowModals';
 
 const OptionsContent = () => {
   const optionsMenu = useAppSelector(
@@ -324,6 +325,7 @@ const OptionsContent = () => {
 };
 
 export default function OptionsMenu() {
+  const showModal = useShowModal();
   const optionsMenu = useAppSelector(
     (state: RootState) => state.game.optionsMenu
   );
@@ -335,7 +337,7 @@ export default function OptionsMenu() {
 
   return (
     <AnimatePresence>
-      {optionsMenu?.active && (
+      {optionsMenu?.active && showModal && (
         <motion.div
           className={styles.optionsContainer}
           initial={{ opacity: 0, scale: 0.8 }}

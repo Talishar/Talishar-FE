@@ -9,8 +9,10 @@ import { useGetPopUpContentQuery } from 'features/api/apiSlice';
 import useShortcut from 'hooks/useShortcut';
 import { DEFAULT_SHORTCUTS } from 'appConstants';
 import { motion, AnimatePresence } from 'framer-motion';
+import useShowModal from 'hooks/useShowModals';
 
 export const CardListZone = () => {
+  const showModal = useShowModal();
   const cardList = useAppSelector(
     (state: RootState) => state.game.cardListFocus
   );
@@ -26,14 +28,9 @@ export const CardListZone = () => {
 
   useShortcut(DEFAULT_SHORTCUTS.CLOSE_WINDOW, closeCardList);
 
-  // if (cardList === undefined || cardList?.active != true) {
-  //   return null;
-  // }
-
   return (
-    // <div className={styles.emptyOutside} onClick={closeCardList}>
     <AnimatePresence>
-      {cardList?.active && (
+      {showModal && cardList?.active && (
         <motion.div
           className={styles.cardListBox}
           onClick={(e) => e.stopPropagation()}

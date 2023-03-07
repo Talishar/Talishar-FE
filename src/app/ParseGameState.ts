@@ -71,6 +71,7 @@ function ParseEquipment(input: any) {
             result.FeetEq = ParseCard(cardObj);
             break;
           case 'Off-Hand': // make assumption we won't have two weapons AND an off-hand
+          case 'Quiver': // make assumption that you can only have a 2H weapon AND a quiver
             result.WeaponREq = ParseCard(cardObj);
             break;
           default:
@@ -134,7 +135,8 @@ export default function ParseGameState(input: any) {
     for (const layer of input.layerDisplay.reorderableLayers) {
       result.activeLayers.cardList.push({
         ...ParseCard(layer.card),
-        layer: layer.layerID
+        layer: layer.layerID,
+        reorderable: layer.isReorderable
       });
       if (layer.isReorderable) {
         result.activeLayers.isReorderable = true;

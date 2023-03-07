@@ -10,8 +10,10 @@ import SearchCardInput from '../searchCardInput';
 import { PROCESS_INPUT } from 'appConstants';
 import { NAME_A_CARD } from './constants';
 import { motion, AnimatePresence } from 'framer-motion';
+import useShowModal from 'hooks/useShowModals';
 
 export default function PlayerInputPopUp() {
+  const showModal = useShowModal();
   const inputPopUp = useAppSelector(
     (state: RootState) => state.game.playerInputPopUp
   );
@@ -44,6 +46,7 @@ export default function PlayerInputPopUp() {
   };
 
   if (
+    !showModal ||
     inputPopUp === undefined ||
     inputPopUp.active === undefined ||
     inputPopUp.active == false

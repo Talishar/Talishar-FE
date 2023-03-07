@@ -20,10 +20,10 @@
 }
 
 .biggerSize {
-  height: 12vh;
+  /* height: 12vh;
   width: 12vh;
   height: 12dvh;
-  width: 12dvh;
+  width: 12dvh; */
 }
 
 .floatTint {
@@ -143,8 +143,9 @@
   }
 
   .normalSize {
-    height: 12vw;
-    height: 12dvw;
+    /* height: 12vw;
+    height: 12dvw; */
+    max-width: 130px;
     aspect-ratio: 1;
   }
 

@@ -11,6 +11,7 @@
   padding: 2vh;
   border: 1px solid gold;
   border-radius: 20px;
+  max-width: 60%;
   z-index: 99;
 }
 
@@ -31,26 +32,28 @@
 
 .title {
   font-size: 1.5em;
-  padding: 0px;
+  padding: 0px 0px 0px 0.25em;
   margin: 0px;
 }
 
 .activeLayersContents {
   padding-top: 0.5em;
   display: flex;
-  flex-grow: 1;
   flex-direction: row;
   justify-content: flex-start;
+  justify-items: flex-start;
   align-content: flex-start;
+  align-items: center;
   flex-wrap: wrap;
-  gap: 1vh;
+  gap: 0.5em;
   overflow-y: auto;
   height: auto;
 }
 
-.activeLayersContents > div {
-  flex-basis: 14dvh;
-  max-height: 14dvh;
+.orderingExplanation {
+  font-size: 0.75em;
+  padding-left: 0.5em;
+  margin-bottom: 0;
 }
 
 .emptyOutside {

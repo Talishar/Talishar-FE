@@ -1,0 +1,36 @@
+import React from 'react';
+import styles from '../Menu.module.css';
+import { useAppDispatch, useAppSelector } from 'app/Hooks';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import useShowModal from 'hooks/useShowModals';
+import { toggleShowModals } from 'features/game/GameSlice';
+import classNames from 'classnames';
+
+const HideModalsToggle = () => {
+  const showModal = useShowModal();
+  const dispatch = useAppDispatch();
+
+  const handleClickHideWindowsToggle = () => {
+    dispatch(toggleShowModals());
+  };
+
+  return (
+    <div>
+      <button
+        className={classNames(styles.btn, {
+          [styles.buttonActive]: !showModal
+        })}
+        aria-label="Show Arena"
+        onClick={handleClickHideWindowsToggle}
+        title="Show Arena"
+        data-tooltip="Show Arena"
+        data-placement="bottom"
+      >
+        {showModal && <FaEye aria-hidden="true" fontSize={'2em'} />}
+        {!showModal && <FaEyeSlash aria-hidden="true" fontSize={'2em'} />}
+      </button>
+    </div>
+  );
+};
+
+export default HideModalsToggle;
