@@ -71,6 +71,7 @@ function ParseEquipment(input: any) {
             result.FeetEq = ParseCard(cardObj);
             break;
           case 'Off-Hand': // make assumption we won't have two weapons AND an off-hand
+          case 'Quiver': // make assumption that you can only have a 2H weapon AND a quiver
             result.WeaponREq = ParseCard(cardObj);
             break;
           default:
