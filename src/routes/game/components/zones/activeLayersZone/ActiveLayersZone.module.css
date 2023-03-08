@@ -1,6 +1,6 @@
 .activeLayersBox {
   position: fixed;
-  display: flex;
+  display: grid;
   flex-direction: column;
   min-width: 10%;
   top: 10vh;
@@ -49,6 +49,7 @@
   gap: 0.5em;
   overflow-y: auto;
   height: auto;
+  width: 100%;
 }
 
 .orderingExplanation {
