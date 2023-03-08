@@ -6,10 +6,12 @@ import classNames from 'classnames';
 import { signUpValidationSchema } from './validation';
 import { FaExclamationCircle } from 'react-icons/fa';
 import { useState } from 'react';
+import { useAutoAnimate } from '@formkit/auto-animate/react';
 
 export const SignUpForm = () => {
   const [signup, signupResult] = useSignUpMutation();
   const [hasSubmitted, setHasSubmitted] = useState(false);
+  const [parent] = useAutoAnimate();
 
   const formik = useFormik({
     initialValues: {
