@@ -9,4 +9,12 @@
   grid-area: pitch;
   min-width: 100%;
   min-height: 100%;
+  isolation: isolate;
+}
+
+.pitchCard {
+  width: 100%;
+  position: absolute;
+  left: 0px;
+  right: 0px;
 }
