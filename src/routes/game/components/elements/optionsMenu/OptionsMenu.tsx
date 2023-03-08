@@ -148,7 +148,14 @@ const OptionsContent = () => {
                 <Form>
                   <div className={styles.leftColumn}>
                     <h3 className={styles.alarm}>OPTIONS ARE INACTIVE</h3>
-                    <p>Pending a large rework that is.</p>
+                    <h5>Disclaimer:</h5>
+                    <p>
+                      Talishar is an open-source, fan-made platform not
+                      associated with LSS. It may not be a completely accurate
+                      representation of the Rules as Written. If you have
+                      questions about interactions or rulings, please contact
+                      the judge community for clarification.
+                    </p>
                     <fieldset>
                       <legend>
                         <strong>Priority Settings:</strong>
@@ -294,6 +301,13 @@ const OptionsContent = () => {
                     </div>
                   </div>
                 </Form>
+                <p>
+                  Talishar is in no way affiliated with Legend Story Studios.
+                  Legend Story Studios®, Flesh and Blood™, and set names are
+                  trademarks of Legend Story Studios. Flesh and Blood
+                  characters, cards, logos, and art are property of Legend Story
+                  Studios. Card Images © Legend Story Studios.
+                </p>
               </div>
             )
           )}

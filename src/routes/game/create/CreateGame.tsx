@@ -82,6 +82,14 @@ const CreateGame = () => {
     <div>
       <article className={styles.formContainer}>
         <h3>Create New Game</h3>
+        <p>
+          <small>
+            Talishar is an open-source, fan-made platform not associated with
+            LSS. It may not be a completely accurate representation of the Rules
+            as Written. If you have questions about interactions or rulings,
+            please contact the judge community for clarification.
+          </small>
+        </p>
         <Formik
           initialValues={initialValues}
           onSubmit={handleSubmit}
