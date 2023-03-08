@@ -4,7 +4,10 @@ export const signUpValidationSchema = yup.object().shape({
   userID: yup
     .string()
     .required('User ID is required')
-    .matches(/^[a-zA-Z0-9_]*$/, 'Only alphanumeric characters are allowed'),
+    .matches(
+      /^[a-zA-Z0-9_]*$/,
+      'Only alphanumeric characters, and underscores are allowed'
+    ),
   email: yup
     .string()
     .email('Must be a valid email')
@@ -13,7 +16,7 @@ export const signUpValidationSchema = yup.object().shape({
   passwordConfirm: yup
     .string()
     .required('You must confirm your password')
-    .oneOf([yup.ref('password'), null], 'Passwords must match')
+    .oneOf([yup.ref('password')], 'Passwords must match')
 });
 
 export const forgottenPasswordValidaitonSchema = yup.object().shape({

@@ -1,19 +1,29 @@
-import { array, boolean, object, string, number } from 'yup';
+import * as yup from 'yup';
 
 const SELECT_DECK = 'You must select a deck.';
 const URL = 'Deck link must be a URL';
 
-export const validationSchema = object().shape(
+export const validationSchema = yup.object().shape(
   {
-    deck: string(),
-    fabdb: string(),
-    deckTestMode: boolean().required(),
-    format: string().required(),
-    visibility: string().required(),
-    decksToTry: string(),
-    favoriteDeck: boolean(),
-    favoriteDecks: string(),
-    gameDescription: string()
+    deck: yup.string(),
+    fabdb: yup.string().when(['favoriteDecks'], {
+      is: (favoriteDecks: string | undefined) =>
+        favoriteDecks === '' || favoriteDecks === undefined,
+      then: (validationSchema) =>
+        validationSchema.required(SELECT_DECK).url(URL),
+      otherwise: (validationSchema) => validationSchema.optional().nullable()
+    }),
+    deckTestMode: yup.boolean().required(),
+    format: yup.string().required(),
+    visibility: yup.string().required(),
+    decksToTry: yup.string(),
+    favoriteDeck: yup.boolean(),
+    favoriteDecks: yup.string().when(['fabdb'], {
+      is: (fabdb: string | undefined) => fabdb === '' || fabdb === undefined,
+      then: (validationSchema) => validationSchema.required(SELECT_DECK),
+      otherwise: (validationSchema) => validationSchema.optional().nullable()
+    }),
+    gameDescription: yup.string()
   },
   [['favoriteDecks', 'fabdb']]
 );
