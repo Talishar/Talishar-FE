@@ -1,9 +1,9 @@
 import * as yup from 'yup';
 
 export const signUpValidationSchema = yup.object().shape({
-  userID: yup
+  userId: yup
     .string()
-    .required('A Username is required')
+    .required('Username is required')
     .matches(
       /^[a-zA-Z0-9_]*$/,
       'Only alphanumeric characters, and underscores are allowed'
@@ -12,8 +12,11 @@ export const signUpValidationSchema = yup.object().shape({
     .string()
     .email('Must be a valid email')
     .required('Email is required'),
-  password: yup.string().required('Password is required'),
-  passwordConfirm: yup
+  password: yup
+    .string()
+    .required('Password is required')
+    .min(8, 'Password must be at least 8 characters long'),
+  passwordRepeat: yup
     .string()
     .required('You must confirm your password')
     .oneOf([yup.ref('password')], 'Passwords must match')
