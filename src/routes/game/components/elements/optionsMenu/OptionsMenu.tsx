@@ -147,6 +147,8 @@ const OptionsContent = () => {
               <div>
                 <Form>
                   <div className={styles.leftColumn}>
+                    <h3 className={styles.alarm}>OPTIONS ARE INACTIVE</h3>
+                    <p>Pending a large rework that is.</p>
                     <fieldset>
                       <legend>
                         <strong>Priority Settings:</strong>
@@ -156,6 +158,7 @@ const OptionsContent = () => {
                           type="radio"
                           name="holdPriority"
                           value="autoPass"
+                          disabled
                         />
                         Auto-Pass Priority
                       </label>
@@ -164,6 +167,7 @@ const OptionsContent = () => {
                           type="radio"
                           name="holdPriority"
                           value="alwaysPass"
+                          disabled
                         />
                         Always Pass Priority
                       </label>
@@ -172,6 +176,7 @@ const OptionsContent = () => {
                           type="radio"
                           name="holdPriority"
                           value="alwaysHold"
+                          disabled
                         />
                         Always Hold Priority
                       </label>
@@ -180,6 +185,7 @@ const OptionsContent = () => {
                           type="radio"
                           name="holdPriority"
                           value="holdAllOpp"
+                          disabled
                         />
                         Hold Priority for all Opponent Actions
                       </label>
@@ -188,6 +194,7 @@ const OptionsContent = () => {
                           type="radio"
                           name="holdPriority"
                           value="holdOppAtt"
+                          disabled
                         />
                         Hold Priority for all Opponent Attacks
                       </label>
@@ -197,15 +204,27 @@ const OptionsContent = () => {
                         <strong>Skip overrides</strong>
                       </legend>
                       <label className={styles.optionLabel}>
-                        <Field type="checkbox" name="skipAttackReactions" />
+                        <Field
+                          type="checkbox"
+                          name="skipAttackReactions"
+                          disabled
+                        />
                         Skip Attack Reactions
                       </label>
                       <label className={styles.optionLabel}>
-                        <Field type="checkbox" name="skipDefenseReactions" />
+                        <Field
+                          type="checkbox"
+                          name="skipDefenseReactions"
+                          disabled
+                        />
                         Skip Defense Reactions
                       </label>
                       <label className={styles.optionLabel}>
-                        <Field type="checkbox" name="manualTargeting" />
+                        <Field
+                          type="checkbox"
+                          name="manualTargeting"
+                          disabled
+                        />
                         Manual Targeting
                       </label>
                     </fieldset>
@@ -218,6 +237,7 @@ const OptionsContent = () => {
                           type="radio"
                           name="attackSkip"
                           value="neverSkip"
+                          disabled
                         />
                         Never Skip Attacks
                       </label>
@@ -226,43 +246,51 @@ const OptionsContent = () => {
                           type="radio"
                           name="attackSkip"
                           value="skipOnes"
+                          disabled
                         />
                         Skip 1 Power Attacks
                       </label>
                       <label className={styles.optionLabel}>
-                        <Field type="radio" name="attackSkip" value="skipAll" />
+                        <Field
+                          type="radio"
+                          name="attackSkip"
+                          value="skipAll"
+                          disabled
+                        />
                         Skip All Attacks
                       </label>
                     </fieldset>
                     <fieldset>
                       <legend>Other Settings</legend>
                       <label className={styles.optionLabel}>
-                        <Field type="checkbox" name="manualMode" />
+                        <Field type="checkbox" name="manualMode" disabled />
                         Manual Mode
                       </label>
                       <label className={styles.optionLabel}>
-                        <Field type="checkbox" name="accessibilityMode" />
+                        <Field
+                          type="checkbox"
+                          name="accessibilityMode"
+                          disabled
+                        />
                         Accessibility Mode
                       </label>
                       <label className={styles.optionLabel}>
-                        <Field type="checkbox" name="mute" />
+                        <Field type="checkbox" name="mute" disabled />
                         Mute
                       </label>
                       <label className={styles.optionLabel}>
-                        <Field type="checkbox" name="disableChat" />
-                        Manual Mode
+                        <Field type="checkbox" name="disableChat" disabled />
+                        Disable Chat
                       </label>
                     </fieldset>
                     <div className={styles.buttonColumn}>
-                      <div className={styles.alarm}>
-                        THIS BUTTON DOES NOT WORK
-                      </div>
-                      <button className={styles.buttonDiv} type="submit">
-                        Submit Options (jk I don't work)
+                      <button
+                        className={styles.buttonDiv}
+                        type="submit"
+                        disabled
+                      >
+                        Submit Options (inactive)
                       </button>
-                      <div className={styles.alarm}>
-                        THIS BUTTON DOES NOT WORK
-                      </div>
                     </div>
                   </div>
                 </Form>
@@ -304,11 +332,12 @@ const OptionsContent = () => {
           <button
             className={styles.buttonDiv}
             onClick={clickRevertToStartOfPreviousTurnHandler}
+            disabled
           >
-            Revert to Start of Previous Turn
+            Revert to Start of Previous Turn (inactive)
           </button>
         </div>
-        <h3>Invite your friends to laugh at your punts</h3>
+        <h3>Invite Spectators</h3>
         <div className={styles.buttonColumn}>
           <span>{gameURL}</span>
           <button

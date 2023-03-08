@@ -85,3 +85,8 @@
   color: var(--primary);
   cursor: pointer;
 }
+
+.breakChain:hover {
+  background-color: var(--primary);
+  color: black;
+}
