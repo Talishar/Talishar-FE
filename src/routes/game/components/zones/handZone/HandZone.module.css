@@ -17,10 +17,8 @@
 
 .isPlayer {
   align-self: flex-start;
-  top: 2vh;
 }
 
 .isOpponent {
   align-self: flex-end;
-  top: -2vh;
 }

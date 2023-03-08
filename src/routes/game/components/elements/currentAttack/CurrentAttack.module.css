@@ -17,10 +17,7 @@
   align-items: center;
   align-content: center;
   flex-wrap: wrap;
-  left: 3vh;
-  top: 2vh;
-  right: 3vh;
-  bottom: 2vh;
+  inset: 0;
   z-index: 2;
   pointer-events: none;
 }
