@@ -3,7 +3,7 @@ import * as yup from 'yup';
 export const signUpValidationSchema = yup.object().shape({
   userID: yup
     .string()
-    .required('User ID is required')
+    .required('A Username is required')
     .matches(
       /^[a-zA-Z0-9_]*$/,
       'Only alphanumeric characters, and underscores are allowed'
