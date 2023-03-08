@@ -15,8 +15,10 @@ const FullControlToggle = () => {
         aria-label="Full Control"
         onClick={handleClickFullControl}
         title="Full Control"
-        data-tooltip="Full Control"
+        data-tooltip="Full Control (not implemented)"
         data-placement="bottom"
+        disabled
+        aria-disabled={true}
       >
         <GiUsable aria-hidden="true" fontSize={'2em'} />
       </button>

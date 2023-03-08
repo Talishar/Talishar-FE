@@ -44,19 +44,19 @@ export default function PhaseTracker() {
 function phaseTitle(turnPhase: string | undefined) {
   switch (turnPhase) {
     case 'M':
-      return 'Main Phase';
+      return 'Action Phase';
     case 'B':
-      return 'Defence Phase';
+      return 'Defend Step';
     case 'A':
-      return 'Attack Reaction Step';
+      return 'Reaction Step';
     case 'D':
-      return 'Defence Reaction Step';
+      return 'Reaction Step';
     case 'P':
       return 'Pitching';
     case 'ARS':
-      return 'End Phase';
+      return 'End Step';
     case 'PDECK':
-      return 'End Phase';
+      return 'End Step';
     default:
       return null;
   }

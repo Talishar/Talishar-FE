@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@formkit/auto-animate": "^1.0.0-beta.6",
+    "@hookform/resolvers": "^2.9.11",
     "@picocss/pico": "^1.5.7",
     "@previewjs/cli": "^1.17.4",
     "@reduxjs/toolkit": "^1.9.3",
@@ -19,6 +20,7 @@
     "react-dom": "^18.2.0",
     "react-draggable": "^4.4.5",
     "react-fast-compare": "^3.2.0",
+    "react-hook-form": "^7.43.5",
     "react-hot-toast": "^2.4.0",
     "react-icons": "^4.8.0",
     "react-redux": "^8.0.5",

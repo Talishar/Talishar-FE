@@ -1,17 +1,18 @@
 .activeLayersBox {
   position: fixed;
-  display: flex;
+  display: grid;
   flex-direction: column;
-  min-width: 45%;
+  min-width: 10%;
   top: 10vh;
-  bottom: 55vh;
   left: 20%;
-  right: 20%;
   background-color: var(--near-black);
   padding: 2vh;
   border: 1px solid gold;
   border-radius: 20px;
-  max-width: 60%;
+  max-width: 900px;
+  min-height: 200px;
+  max-height: 40vh;
+  max-height: 40dvh;
   z-index: 99;
 }
 
@@ -48,6 +49,7 @@
   gap: 0.5em;
   overflow-y: auto;
   height: auto;
+  width: 100%;
 }
 
 .orderingExplanation {

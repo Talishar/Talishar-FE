@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactHTMLElement } from 'react';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import styles from './ChainLinks.module.css';
