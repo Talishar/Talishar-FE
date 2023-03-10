@@ -17,6 +17,7 @@ import {
   GetLobbyRefresh,
   GetLobbyRefreshResponse
 } from 'interface/API/GetLobbyRefresh.php';
+import { RootState } from 'app/Store';
 
 export const nextTurn = createAsyncThunk(
   'game/nextTurn',
@@ -63,7 +64,7 @@ export const nextTurn = createAsyncThunk(
         return gs;
       } catch (e) {
         if (params.signal?.aborted) {
-          return console.log('fetch aborted');
+          return;
         }
         waitingForJSONResponse = false;
         console.log(e);
@@ -119,7 +120,7 @@ export const gameLobby = createAsyncThunk(
         return parsedData;
       } catch (e) {
         if (params.signal?.aborted) {
-          return console.log('fetch aborted');
+          return;
         }
         waitingForJSONResponse = false;
         console.log(e);
@@ -500,3 +501,5 @@ export const {
   enableModals,
   disableModals
 } = actions;
+
+export const getGameInfo = (state: RootState) => state.game.gameInfo;

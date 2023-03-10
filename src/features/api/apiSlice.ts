@@ -77,7 +77,7 @@ export const apiSlice = createApi({
         index = 0
       }) => {
         return {
-          url: 'GetPopupAPI.php',
+          url: URL_END_POINT.GET_POPUP,
           method: 'GET',
           params: {
             gameName: gameID,
