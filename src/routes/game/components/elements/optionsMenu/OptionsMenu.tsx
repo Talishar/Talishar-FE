@@ -4,7 +4,11 @@ import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import screenfull from 'screenfull';
 import { useNavigate } from 'react-router-dom';
-import { closeOptionsMenu, submitButton } from 'features/game/GameSlice';
+import {
+  closeOptionsMenu,
+  getGameInfo,
+  submitButton
+} from 'features/game/GameSlice';
 import { FaTimes } from 'react-icons/fa';
 import styles from './OptionsMenu.module.css';
 import { DEFAULT_SHORTCUTS, PROCESS_INPUT } from 'appConstants';
@@ -17,18 +21,15 @@ import {
   getSettingsStatus
 } from 'features/options/optionsSlice';
 import OptionsSettings from './OptionsSettings';
+import { shallowEqual } from 'react-redux';
 
 const OptionsContent = () => {
   const optionsMenu = useAppSelector(
     (state: RootState) => state.game.optionsMenu
   );
-  const gameInfo = useAppSelector((state: RootState) => state.game.gameInfo);
+  const gameInfo = useAppSelector(getGameInfo, shallowEqual);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    dispatch(fetchAllSettings({ game: gameInfo }));
-  }, []);
 
   const gameURL = `http://fe.talishar.net/game/play/${gameInfo.gameID}`;
 

@@ -12,13 +12,18 @@ import {
   getSettingsStatus
 } from 'features/options/optionsSlice';
 import { getGameInfo } from 'features/game/GameSlice';
+import { shallowEqual } from 'react-redux';
 
 const OptionsSettings = () => {
-  const gameInfo = useAppSelector(getGameInfo);
-  const dispatch = useAppDispatch();
-
+  const gameInfo = useAppSelector(getGameInfo, shallowEqual);
   const settingsData = useAppSelector(getSettingsEntity);
   const isLoading = useAppSelector(getSettingsStatus);
+  const dispatch = useAppDispatch();
+
+  // fetch all settings when options is loaded
+  useEffect(() => {
+    dispatch(fetchAllSettings({ game: gameInfo }));
+  }, []);
 
   const initialValues = {
     holdPriority: settingsData['HoldPrioritySetting']?.value,
@@ -37,6 +42,7 @@ const OptionsSettings = () => {
     casterMode: settingsData['IsCasterMode']?.value === '1',
     streamerMode: settingsData['IsStreamerMode']?.value === '1'
   };
+
   return (
     <div>
       <div className={styles.leftColumn}>
