@@ -10,7 +10,11 @@ const HideModalsToggle = () => {
   const showModal = useShowModal();
   const dispatch = useAppDispatch();
 
-  const handleClickHideWindowsToggle = () => {
+  const handleClickHideWindowsToggle = (
+    e: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    e.preventDefault();
+    e.currentTarget.blur();
     dispatch(toggleShowModals());
   };
 

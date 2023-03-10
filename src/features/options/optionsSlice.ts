@@ -11,16 +11,18 @@ import {
   GAME_LIMIT_BETA,
   GAME_LIMIT_LIVE,
   PLAYER_OPTIONS,
+  PROCESS_INPUT,
   QUERY_STATUS,
   URL_END_POINT
 } from 'appConstants';
 import GameInfo from 'features/GameInfo';
+import { ProcessInputAPI } from 'interface/API/ProcessInputAPI';
 import { toast } from 'react-hot-toast';
 import { GiConsoleController } from 'react-icons/gi';
 
 interface Setting {
   name: string;
-  value: string;
+  value: string | number | boolean | undefined;
 }
 
 const settingsAdapter = createEntityAdapter<Setting>({
@@ -62,11 +64,40 @@ export const fetchAllSettings = createAsyncThunk(
   }
 );
 
-// const fetchOneSetting = createAsyncThunk() => {};
+// export const fetchOneSetting = createAsyncThunk() => {};
 
-const updateOption = createAsyncThunk('options/setSetting', async () => {});
+export const updateOptions = createAsyncThunk(
+  'options/setSettings',
+  async ({ game, settings }: { game: GameInfo; settings: Setting[] }) => {
+    const queryURL =
+      game.gameID > GAME_LIMIT_LIVE
+        ? `${API_URL_LIVE}${URL_END_POINT.PROCESS_INPUT_POST}`
+        : game.gameID > GAME_LIMIT_BETA
+        ? `${API_URL_BETA}${URL_END_POINT.PROCESS_INPUT_POST}`
+        : `${API_URL_DEV}${URL_END_POINT.PROCESS_INPUT_POST}`;
 
-// const updateMutlipleOptions = createAsyncThunk() => {};
+    try {
+      const response = await fetch(queryURL, {
+        method: 'POST',
+        headers: {},
+        credentials: 'include',
+        body: JSON.stringify({
+          playerID: game.playerID,
+          gameName: game.gameID,
+          authKey: game.authKey,
+          mode: PROCESS_INPUT.CHANGE_SETTING,
+          submission: { settings: [...settings] }
+        } as ProcessInputAPI)
+      });
+      const data = await response.json();
+      console.log('data from submitting settings', data);
+      return data;
+    } catch (err) {
+      console.warn(err);
+    } finally {
+    }
+  }
+);
 
 const optionsSlice = createSlice({
   name: 'options',
@@ -87,6 +118,16 @@ const optionsSlice = createSlice({
       state.status = QUERY_STATUS.FAILED;
     });
     builder.addCase(fetchAllSettings.pending, (state, action) => {
+      state.status = QUERY_STATUS.LOADING;
+    });
+    builder.addCase(updateOptions.fulfilled, (state, action) => {
+      state.status = QUERY_STATUS.SUCCESS;
+    });
+    builder.addCase(updateOptions.rejected, (state, action) => {
+      state.status = QUERY_STATUS.FAILED;
+    });
+    builder.addCase(updateOptions.pending, (state, action) => {
+      settingsAdapter.upsertMany(state, action.meta.arg.settings);
       state.status = QUERY_STATUS.LOADING;
     });
   }
