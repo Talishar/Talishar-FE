@@ -10,13 +10,14 @@ import {
   HOLD_PRIORITY_SETTING,
   HOLD_PRIORITY_ENUM
 } from 'features/options/constants';
+import { shallowEqual } from 'react-redux';
 
 const FullControlToggle = () => {
   const dispatch = useAppDispatch();
   const setting = useSetting({
     settingName: HOLD_PRIORITY_SETTING
   });
-  const gameInfo = useAppSelector(getGameInfo);
+  const gameInfo = useAppSelector(getGameInfo, shallowEqual);
 
   const handleClickFullControl = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
