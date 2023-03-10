@@ -39,7 +39,9 @@ function FullScreenButton() {
 
 function UndoButton() {
   const dispatch = useAppDispatch();
-  const clickUndo = () => {
+  const clickUndo = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    e.currentTarget.blur();
     dispatch(submitButton({ button: { mode: PROCESS_INPUT.UNDO } }));
   };
   return (

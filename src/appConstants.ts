@@ -157,3 +157,10 @@ export const ZONE = {
   PERMANENTS: 'PERMANENTS',
   LANDMARKS: 'LANDMARKS'
 };
+
+export const QUERY_STATUS = {
+  SUCCESS: 'success',
+  FAILED: 'failed',
+  LOADING: 'loading',
+  IDLE: 'idle'
+};

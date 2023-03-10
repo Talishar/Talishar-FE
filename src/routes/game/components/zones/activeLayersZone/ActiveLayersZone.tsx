@@ -20,8 +20,6 @@ export default function ActiveLayersZone() {
     (card) => card.reorderable
   );
 
-  console.log('static Cards', staticCards);
-  console.log('reorderable cards', reorderableCards);
   return (
     <AnimatePresence>
       {activeLayer?.active && showModal && (

@@ -1,31 +1,32 @@
 import { Field, Form, Formik } from 'formik';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import screenfull from 'screenfull';
 import { useNavigate } from 'react-router-dom';
-import { closeOptionsMenu, submitButton } from 'features/game/GameSlice';
+import {
+  closeOptionsMenu,
+  getGameInfo,
+  submitButton
+} from 'features/game/GameSlice';
 import { FaTimes } from 'react-icons/fa';
 import styles from './OptionsMenu.module.css';
-import { useGetPopUpContentQuery } from 'features/api/apiSlice';
-import { DEFAULT_SHORTCUTS, PLAYER_OPTIONS, PROCESS_INPUT } from 'appConstants';
+import { DEFAULT_SHORTCUTS, PROCESS_INPUT } from 'appConstants';
 import useShortcut from 'hooks/useShortcut';
 import { motion, AnimatePresence } from 'framer-motion';
 import useShowModal from 'hooks/useShowModals';
+import {
+  fetchAllSettings,
+  getSettingsEntity,
+  getSettingsStatus
+} from 'features/options/optionsSlice';
+import OptionsSettings from './OptionsSettings';
+import { shallowEqual } from 'react-redux';
 
 const OptionsContent = () => {
-  const optionsMenu = useAppSelector(
-    (state: RootState) => state.game.optionsMenu
-  );
-  const gameInfo = useAppSelector((state: RootState) => state.game.gameInfo);
+  const gameInfo = useAppSelector(getGameInfo, shallowEqual);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-
-  const { isLoading, isError, data } = useGetPopUpContentQuery({
-    ...gameInfo,
-    lastPlayed: null,
-    popupType: PLAYER_OPTIONS
-  });
 
   const gameURL = `http://fe.talishar.net/game/play/${gameInfo.gameID}`;
 
@@ -84,234 +85,10 @@ const OptionsContent = () => {
     navigator.clipboard.writeText(gameURL);
   };
 
-  if (isError) {
-    return <div>Oh noes an error!</div>;
-  }
-
-  const optionsObj = data?.Settings?.reduce((output: any, setting: any) => {
-    output[setting.name] = setting.value;
-    return output;
-  }, {});
-
-  //   {
-  //   "HoldPrioritySetting": "0",
-  //   "TryReactUI": "1",
-  //   "DarkMode": "0",
-  //   "ManualMode": "0",
-  //   "SkipARWindow": "0",
-  //   "SkipDRWindow": "0",
-  //   "SkipNextDRWindow": "0",
-  //   "AutoTargetOpponent": "1",
-  //   "ColorblindMode": "0",
-  //   "ShortcutAttackThreshold": "0",
-  //   "EnableDynamicScaling": "0", // not needed
-  //   "MuteSound": "0",
-  //   "CardBack": "0",
-  //   "IsPatron": "0",
-  //   "MuteChat": "0",
-  //   "DisableStats": "0",
-  //   "IsCasterMode": "0",
-  //   "IsStreamerMode": "0"
-  // }
-
-  const initialValues = {
-    holdPriority: optionsObj?.HoldPrioritySetting,
-    tryReactUI: optionsObj?.TryReactUI === '1',
-    darkMode: optionsObj?.DarkMode === '1',
-    skipAttackReactions: optionsObj?.SkipARWindow === '1',
-    skipDefenseReactions: optionsObj?.SkipDRWindow === '1',
-    skipNextDefenseReaction: optionsObj?.SkipNextDRWindow === '1',
-    manualTargeting: optionsObj?.AutoTargetOpponent === '0',
-    attackSkip: 'neverSkip', // options
-    manualMode: optionsObj?.ManualMode === '1',
-    accessibilityMode: optionsObj?.ColorblindMode === '1',
-    mute: optionsObj?.MuteSound === '1',
-    disableChat: optionsObj?.MuteChat === '1',
-    disableStats: optionsObj?.DisableStats === '1',
-    casterMode: optionsObj?.IsCasterMode === '1',
-    streamerMode: optionsObj?.IsStreamerMode === '1'
-  };
-
   return (
     <div className={styles.optionsContentContainer}>
       <div className={styles.column}>
-        <Formik
-          enableReinitialize
-          initialValues={initialValues}
-          onSubmit={clickSubmitOptionsHandler}
-        >
-          {isLoading ? (
-            <h3 aria-busy>Loading...</h3>
-          ) : (
-            ({ values }) => (
-              <div>
-                <Form>
-                  <div className={styles.leftColumn}>
-                    <h3 className={styles.alarm}>OPTIONS ARE INACTIVE</h3>
-                    <h5>Disclaimer:</h5>
-                    <p>
-                      Talishar is an open-source, fan-made platform not
-                      associated with LSS. It may not be a completely accurate
-                      representation of the Rules as Written. If you have
-                      questions about interactions or rulings, please contact
-                      the judge community for clarification.
-                    </p>
-                    <fieldset>
-                      <legend>
-                        <strong>Priority Settings:</strong>
-                      </legend>
-                      <label className={styles.optionLabel}>
-                        <Field
-                          type="radio"
-                          name="holdPriority"
-                          value="autoPass"
-                          disabled
-                        />
-                        Auto-Pass Priority
-                      </label>
-                      <label className={styles.optionLabel}>
-                        <Field
-                          type="radio"
-                          name="holdPriority"
-                          value="alwaysPass"
-                          disabled
-                        />
-                        Always Pass Priority
-                      </label>
-                      <label className={styles.optionLabel}>
-                        <Field
-                          type="radio"
-                          name="holdPriority"
-                          value="alwaysHold"
-                          disabled
-                        />
-                        Always Hold Priority
-                      </label>
-                      <label className={styles.optionLabel}>
-                        <Field
-                          type="radio"
-                          name="holdPriority"
-                          value="holdAllOpp"
-                          disabled
-                        />
-                        Hold Priority for all Opponent Actions
-                      </label>
-                      <label className={styles.optionLabel}>
-                        <Field
-                          type="radio"
-                          name="holdPriority"
-                          value="holdOppAtt"
-                          disabled
-                        />
-                        Hold Priority for all Opponent Attacks
-                      </label>
-                    </fieldset>
-                    <fieldset>
-                      <legend>
-                        <strong>Skip overrides</strong>
-                      </legend>
-                      <label className={styles.optionLabel}>
-                        <Field
-                          type="checkbox"
-                          name="skipAttackReactions"
-                          disabled
-                        />
-                        Skip Attack Reactions
-                      </label>
-                      <label className={styles.optionLabel}>
-                        <Field
-                          type="checkbox"
-                          name="skipDefenseReactions"
-                          disabled
-                        />
-                        Skip Defense Reactions
-                      </label>
-                      <label className={styles.optionLabel}>
-                        <Field
-                          type="checkbox"
-                          name="manualTargeting"
-                          disabled
-                        />
-                        Manual Targeting
-                      </label>
-                    </fieldset>
-                    <fieldset>
-                      <legend>
-                        <strong>Attack Shortcut Threshold</strong>
-                      </legend>
-                      <label className={styles.optionLabel}>
-                        <Field
-                          type="radio"
-                          name="attackSkip"
-                          value="neverSkip"
-                          disabled
-                        />
-                        Never Skip Attacks
-                      </label>
-                      <label className={styles.optionLabel}>
-                        <Field
-                          type="radio"
-                          name="attackSkip"
-                          value="skipOnes"
-                          disabled
-                        />
-                        Skip 1 Power Attacks
-                      </label>
-                      <label className={styles.optionLabel}>
-                        <Field
-                          type="radio"
-                          name="attackSkip"
-                          value="skipAll"
-                          disabled
-                        />
-                        Skip All Attacks
-                      </label>
-                    </fieldset>
-                    <fieldset>
-                      <legend>Other Settings</legend>
-                      <label className={styles.optionLabel}>
-                        <Field type="checkbox" name="manualMode" disabled />
-                        Manual Mode
-                      </label>
-                      <label className={styles.optionLabel}>
-                        <Field
-                          type="checkbox"
-                          name="accessibilityMode"
-                          disabled
-                        />
-                        Accessibility Mode
-                      </label>
-                      <label className={styles.optionLabel}>
-                        <Field type="checkbox" name="mute" disabled />
-                        Mute
-                      </label>
-                      <label className={styles.optionLabel}>
-                        <Field type="checkbox" name="disableChat" disabled />
-                        Disable Chat
-                      </label>
-                    </fieldset>
-                    <div className={styles.buttonColumn}>
-                      <button
-                        className={styles.buttonDiv}
-                        type="submit"
-                        disabled
-                      >
-                        Submit Options (inactive)
-                      </button>
-                    </div>
-                  </div>
-                </Form>
-                <p>
-                  Talishar is in no way affiliated with Legend Story Studios.
-                  Legend Story Studios®, Flesh and Blood™, and set names are
-                  trademarks of Legend Story Studios. Flesh and Blood
-                  characters, cards, logos, and art are property of Legend Story
-                  Studios. Card Images © Legend Story Studios.
-                </p>
-              </div>
-            )
-          )}
-        </Formik>
+        <OptionsSettings />
       </div>
       <div className={styles.column}>
         <h3>Navigation</h3>
