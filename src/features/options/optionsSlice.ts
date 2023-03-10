@@ -18,7 +18,6 @@ import {
 import GameInfo from 'features/GameInfo';
 import { ProcessInputAPI } from 'interface/API/ProcessInputAPI';
 import { toast } from 'react-hot-toast';
-import { GiConsoleController } from 'react-icons/gi';
 
 export interface GameOptions {
   Settings: Setting[];

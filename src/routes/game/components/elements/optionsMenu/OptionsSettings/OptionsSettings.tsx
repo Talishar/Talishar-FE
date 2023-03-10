@@ -55,13 +55,18 @@ const OptionsSettings = () => {
   return (
     <div>
       <div className={styles.leftColumn}>
-        <h3 className={styles.alarm}>OPTIONS ARE INACTIVE</h3>
-        <h5>Disclaimer:</h5>
+        <h5>Disclaimer, please note:</h5>
         <p>
           Talishar is an open-source, fan-made platform not associated with LSS.
-          It may not be a completely accurate representation of the Rules as
-          Written. If you have questions about interactions or rulings, please
+          It may not be a completely accurate representation of the rules as
+          written. If you have questions about interactions or rulings, please
           contact the judge community for clarification.
+        </p>
+        <p>
+          Talishar and its contributors are not responsible for any rules
+          misunderstandings or misplays because of innauccurate information on
+          this site. Legend Story Studios and their judges are the final
+          authority on all rulings.
         </p>
         <fieldset>
           <legend>
@@ -318,11 +323,6 @@ const OptionsSettings = () => {
             Disable Chat
           </label>
         </fieldset>
-        <div className={styles.buttonColumn}>
-          <button className={styles.buttonDiv} type="submit">
-            Submit Options (inactive)
-          </button>
-        </div>
       </div>
       <p>
         Talishar is in no way affiliated with Legend Story Studios. Legend Story
