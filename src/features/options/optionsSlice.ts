@@ -64,7 +64,7 @@ export const fetchAllSettings = createAsyncThunk(
 
 // const fetchOneSetting = createAsyncThunk() => {};
 
-// const updateOption = createAsyncThunk() => {};
+const updateOption = createAsyncThunk('options/setSetting', async () => {});
 
 // const updateMutlipleOptions = createAsyncThunk() => {};
 

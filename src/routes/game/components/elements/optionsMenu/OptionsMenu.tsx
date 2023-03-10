@@ -24,9 +24,6 @@ import OptionsSettings from './OptionsSettings';
 import { shallowEqual } from 'react-redux';
 
 const OptionsContent = () => {
-  const optionsMenu = useAppSelector(
-    (state: RootState) => state.game.optionsMenu
-  );
   const gameInfo = useAppSelector(getGameInfo, shallowEqual);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();

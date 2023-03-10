@@ -164,3 +164,11 @@ export const QUERY_STATUS = {
   LOADING: 'loading',
   IDLE: 'idle'
 };
+
+export enum HOLD_PRIORITY_SETTING {
+  AUTO_PASS = 0,
+  ALWAYS_HOLD,
+  HOLD_ALL_OPPONENT,
+  HOLD_ALL_OPPONENT_ATTACKS,
+  ALWAYS_PASS
+}
