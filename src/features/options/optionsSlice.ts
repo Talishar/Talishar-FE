@@ -20,7 +20,11 @@ import { ProcessInputAPI } from 'interface/API/ProcessInputAPI';
 import { toast } from 'react-hot-toast';
 import { GiConsoleController } from 'react-icons/gi';
 
-interface Setting {
+export interface GameOptions {
+  Settings: Setting[];
+}
+
+export interface Setting {
   name: string;
   value: string | number | boolean | undefined;
 }
