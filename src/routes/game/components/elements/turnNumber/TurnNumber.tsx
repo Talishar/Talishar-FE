@@ -5,7 +5,7 @@ import styles from './TurnNumber.module.css';
 
 export default function TurnNumber() {
   let turnNumber = useAppSelector(
-    (state: RootState) => state.game.gameInfo.turnNo
+    (state: RootState) => state.game.gameDynamicInfo.turnNo
   );
 
   if (turnNumber === undefined) {

@@ -4,7 +4,7 @@ import { hideChainLinkSummary, hideActiveLayer } from 'features/game/GameSlice';
 import { FaTimes } from 'react-icons/fa';
 import styles from './ChainLinkSummary.module.css';
 import { useGetPopUpContentQuery } from 'features/api/apiSlice';
-import GameInfo from 'features/GameInfo';
+import GameStaticInfo from 'features/GameStaticInfo';
 import CardTextLink from '../cardTextLink/CardTextLink';
 import { Effect } from '../effects/Effects';
 import { Card } from 'features/Card';
@@ -45,7 +45,7 @@ export const ChainLinkSummaryContainer = () => {
   );
 };
 
-interface ChainLinkSummaryProps extends GameInfo {
+interface ChainLinkSummaryProps extends GameStaticInfo {
   chainLinkIndex?: number;
 }
 

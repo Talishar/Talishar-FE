@@ -15,7 +15,7 @@ import {
   QUERY_STATUS,
   URL_END_POINT
 } from 'appConstants';
-import GameInfo from 'features/GameInfo';
+import GameStaticInfo from 'features/GameStaticInfo';
 import { ProcessInputAPI } from 'interface/API/ProcessInputAPI';
 import { toast } from 'react-hot-toast';
 
@@ -39,7 +39,7 @@ const settingsInitialState = settingsAdapter.getInitialState({
 
 export const fetchAllSettings = createAsyncThunk(
   'options/fetchAllSettings',
-  async (params: { game: GameInfo }) => {
+  async (params: { game: GameStaticInfo }) => {
     const queryURL =
       params.game.gameID > GAME_LIMIT_LIVE
         ? `${API_URL_LIVE}${URL_END_POINT.GET_POPUP}`
@@ -71,7 +71,7 @@ export const fetchAllSettings = createAsyncThunk(
 
 export const updateOptions = createAsyncThunk(
   'options/setSettings',
-  async ({ game, settings }: { game: GameInfo; settings: Setting[] }) => {
+  async ({ game, settings }: { game: GameStaticInfo; settings: Setting[] }) => {
     const queryURL =
       game.gameID > GAME_LIMIT_LIVE
         ? `${API_URL_LIVE}${URL_END_POINT.PROCESS_INPUT_POST}`
