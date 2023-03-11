@@ -4,21 +4,29 @@ import { hideChainLinkSummary, hideActiveLayer } from 'features/game/GameSlice';
 import { FaTimes } from 'react-icons/fa';
 import styles from './ChainLinkSummary.module.css';
 import { useGetPopUpContentQuery } from 'features/api/apiSlice';
-import GameInfo from 'features/GameInfo';
+import GameStaticInfo from 'features/GameStaticInfo';
 import CardTextLink from '../cardTextLink/CardTextLink';
 import { Effect } from '../effects/Effects';
 import { Card } from 'features/Card';
 import EndGameScreen from '../endGameScreen/EndGameScreen';
 import useShortcut from 'hooks/useShortcut';
 import { DEFAULT_SHORTCUTS } from 'appConstants';
+import { shallowEqual } from 'react-redux';
 
 export const ChainLinkSummaryContainer = () => {
   const chainLinkSummary = useAppSelector(
-    (state: RootState) => state.game.chainLinkSummary
+    (state: RootState) => state.game.chainLinkSummary,
+    shallowEqual
   );
-  const gameInfo = useAppSelector((state: RootState) => state.game.gameInfo);
+  const gameInfo = useAppSelector(
+    (state: RootState) => state.game.gameInfo,
+    shallowEqual
+  );
   const turnPhase = useAppSelector(
     (state: RootState) => state.game.turnPhase?.turnPhase
+  );
+  const lastUpdate = useAppSelector(
+    (state: RootState) => state.game.gameDynamicInfo.lastUpdate
   );
 
   const dispatch = useAppDispatch();
@@ -37,7 +45,11 @@ export const ChainLinkSummaryContainer = () => {
     return null;
   }
 
-  const props = { chainLinkIndex: chainLinkSummary.index, ...gameInfo };
+  const props = {
+    chainLinkIndex: chainLinkSummary.index,
+    lastUpdate: lastUpdate,
+    ...gameInfo
+  };
   return (
     <div>
       <ChainLinkSummary {...props} />
@@ -45,8 +57,9 @@ export const ChainLinkSummaryContainer = () => {
   );
 };
 
-interface ChainLinkSummaryProps extends GameInfo {
+interface ChainLinkSummaryProps extends GameStaticInfo {
   chainLinkIndex?: number;
+  lastUpdate?: number;
 }
 
 const ChainLinkSummary = ({

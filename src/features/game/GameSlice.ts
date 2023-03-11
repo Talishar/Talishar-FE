@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import ParseGameState from '../../app/ParseGameState';
 import InitialGameState from './InitialGameState';
-import GameInfo from '../GameInfo';
+import GameStaticInfo from '../GameStaticInfo';
 import { Card } from '../Card';
 import {
   API_URL_BETA,
@@ -22,7 +22,11 @@ import { RootState } from 'app/Store';
 export const nextTurn = createAsyncThunk(
   'game/nextTurn',
   async (
-    params: { game: GameInfo; signal: AbortSignal | undefined },
+    params: {
+      game: GameStaticInfo;
+      signal: AbortSignal | undefined;
+      lastUpdate: number;
+    },
     { getState }
   ) => {
     const queryURL =
@@ -35,7 +39,7 @@ export const nextTurn = createAsyncThunk(
       gameName: String(params.game.gameID),
       playerID: String(params.game.playerID),
       authKey: String(params.game.authKey),
-      lastUpdate: String(params.game.lastUpdate)
+      lastUpdate: String(params.lastUpdate)
     });
 
     let waitingForJSONResponse = true;
@@ -77,7 +81,11 @@ export const nextTurn = createAsyncThunk(
 export const gameLobby = createAsyncThunk(
   'gameLobby/getLobby',
   async (
-    params: { game: GameInfo; signal: AbortSignal | undefined },
+    params: {
+      game: GameStaticInfo;
+      signal: AbortSignal | undefined;
+      lastUpdate: number;
+    },
     { getState }
   ) => {
     const queryURL =
@@ -91,7 +99,7 @@ export const gameLobby = createAsyncThunk(
       gameName: params.game.gameID,
       playerID: params.game.playerID,
       authKey: params.game.authKey,
-      lastUpdate: params.game.lastUpdate
+      lastUpdate: params.lastUpdate
     } as GetLobbyRefresh;
 
     let waitingForJSONResponse = true;
@@ -321,7 +329,7 @@ export const gameSlice = createSlice({
       state.gameInfo.authKey = !!state.gameInfo.authKey
         ? state.gameInfo.authKey
         : action.payload.authKey;
-      state.gameInfo.lastUpdate = 0;
+      state.gameDynamicInfo.lastUpdate = 0;
       state.playerOne = {};
       state.playerTwo = {};
       state.activeLayers = undefined;
@@ -334,7 +342,7 @@ export const gameSlice = createSlice({
       state.gameInfo.gameID = 0;
       state.gameInfo.playerID = 0;
       state.gameInfo.authKey = '';
-      state.gameInfo.lastUpdate = 0;
+      state.gameDynamicInfo.lastUpdate = 0;
       return state;
     },
     removeCardFromHand: (state, action: PayloadAction<{ card: Card }>) => {
@@ -399,9 +407,11 @@ export const gameSlice = createSlice({
       state.playerInputPopUp = action.payload.playerInputPopUp;
 
       // gameInfo
-      state.gameInfo.lastPlayed = action.payload.gameInfo.lastPlayed;
-      state.gameInfo.lastUpdate = action.payload.gameInfo.lastUpdate;
-      state.gameInfo.turnNo = action.payload.gameInfo.turnNo;
+      state.gameDynamicInfo.lastPlayed =
+        action.payload.gameDynamicInfo.lastPlayed;
+      state.gameDynamicInfo.lastUpdate =
+        action.payload.gameDynamicInfo.lastUpdate;
+      state.gameDynamicInfo.turnNo = action.payload.gameDynamicInfo.turnNo;
 
       state.playerPrompt = action.payload.playerPrompt;
       state.canPassPhase = action.payload.canPassPhase;
@@ -456,7 +466,7 @@ export const gameSlice = createSlice({
       state.isUpdateInProgress = false;
       state.isPlayerInputInProgress = false;
 
-      state.gameInfo.lastUpdate = action.payload.lastUpdate;
+      state.gameDynamicInfo.lastUpdate = action.payload.lastUpdate;
       state.chatLog = [action.payload.gameLog ?? ''];
 
       // gameInfo

@@ -1,15 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from 'app/Store';
-
-const initialState = {
-  user: null,
-  userName: null,
-  token: null
-};
+import { defaultAuth } from './constants';
 
 const authSlice = createSlice({
   name: 'auth',
-  initialState,
+  initialState: defaultAuth,
   reducers: {
     setCredentialsReducer: (state, action) => {
       const { user, accessToken, userName } = action.payload;

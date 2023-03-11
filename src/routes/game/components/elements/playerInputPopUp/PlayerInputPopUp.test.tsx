@@ -1,6 +1,6 @@
 import React from 'react';
 import { Provider } from 'react-redux';
-import { store } from 'app/Store';
+import { globalInitialState, store } from 'app/Store';
 import { screen } from '@testing-library/react';
 import { createRoot } from 'react-dom/client';
 import PlayerInputPopUp from './PlayerInputPopUp';
@@ -19,6 +19,7 @@ it('renders without crashin', () => {
 
 it('renders two cards onto the screen', async () => {
   const initialState = {
+    ...globalInitialState,
     game: {
       ...OfflineTestingGameState,
       playerInputPopUp: {

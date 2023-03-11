@@ -6,6 +6,7 @@ const InitialGameState: GameState = {
     playerID: 0,
     authKey: ''
   },
+  gameDynamicInfo: {},
   playerOne: {},
   playerTwo: {},
   isUpdateInProgress: false,
@@ -17,9 +18,9 @@ export const OfflineTestingGameState: GameState = {
   gameInfo: {
     gameID: 0,
     playerID: 3,
-    authKey: '',
-    lastUpdate: 0
+    authKey: ''
   },
+  gameDynamicInfo: { lastUpdate: 0 },
   activePlayer: 1,
   oldCombatChain: [
     {

@@ -2,6 +2,7 @@ import React, { useRef, useState } from 'react';
 import { useEffect } from 'react';
 import { RootState } from './Store';
 import {
+  getGameInfo,
   nextTurn,
   setGameStart,
   setIsUpdateInProgressFalse
@@ -28,9 +29,9 @@ export const GameStateHandler = React.memo(() => {
   const [{ gameName = '0', playerID = '3', authKey = '' }] =
     useKnownSearchParams();
   const { gameID } = useParams();
-  const gameInfo = useAppSelector(
-    (state: RootState) => state.game.gameInfo,
-    shallowEqual
+  const gameInfo = useAppSelector(getGameInfo, shallowEqual);
+  const lastUpdate = useAppSelector(
+    (state: RootState) => state.game.gameDynamicInfo.lastUpdate
   );
   const [firstPoll, setFirstPoll] = useState(true);
   const isUpdateInProgress = useAppSelector(
@@ -53,7 +54,13 @@ export const GameStateHandler = React.memo(() => {
     abortRef.current?.abort();
 
     abortRef.current = new AbortController();
-    dispatch(nextTurn({ game: gameInfo, signal: abortRef.current?.signal }));
+    dispatch(
+      nextTurn({
+        game: gameInfo,
+        signal: abortRef.current?.signal,
+        lastUpdate: lastUpdate ?? 0
+      })
+    );
 
     // timeout if longer than 10 seconds. Will clear this interval on next poll
     timeOutRef.current = setTimeout(() => {

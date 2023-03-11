@@ -87,6 +87,7 @@ function ParseEquipment(input: any) {
 export default function ParseGameState(input: any) {
   const result: GameState = {
     gameInfo: { gameID: 0, playerID: 0, authKey: '' },
+    gameDynamicInfo: {},
     playerOne: {},
     playerTwo: {}
   };
@@ -284,13 +285,13 @@ export default function ParseGameState(input: any) {
   result.activePlayer = input.amIActivePlayer ? 1 : 2;
 
   // last update frame
-  result.gameInfo.lastUpdate = input.lastUpdate;
+  result.gameDynamicInfo.lastUpdate = input.lastUpdate;
 
   // last played card
-  result.gameInfo.lastPlayed = ParseCard(input.lastPlayedCard);
+  result.gameDynamicInfo.lastPlayed = ParseCard(input.lastPlayedCard);
 
   // turn number
-  result.gameInfo.turnNo = input.turnNo;
+  result.gameDynamicInfo.turnNo = input.turnNo;
 
   // turn phase
   if (input.turnPhase !== undefined) {

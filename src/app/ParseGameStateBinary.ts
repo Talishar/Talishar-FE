@@ -119,6 +119,7 @@ export default function ParseGameState(input: string) {
   // index 0 is something
   const result: GameState = {
     gameInfo: { gameID: 0, playerID: 0, authKey: '' },
+    gameDynamicInfo: {},
     playerOne: {},
     playerTwo: {}
   };

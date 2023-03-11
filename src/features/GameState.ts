@@ -2,11 +2,13 @@ import { GetLobbyRefreshResponse } from 'interface/API/GetLobbyRefresh.php';
 import Button from './Button';
 import { Card } from './Card';
 import CombatChainLink from './CombatChainLink';
-import GameInfo from './GameInfo';
+import { GameDynamicInfo } from './GameDynamicInfo';
+import GameStaticInfo from './GameStaticInfo';
 import Player from './Player';
 
 export default interface GameState {
-  gameInfo: GameInfo;
+  gameInfo: GameStaticInfo;
+  gameDynamicInfo: GameDynamicInfo;
   playerOne: Player;
   playerTwo: Player;
   activeChainLink?: CombatChainLink;

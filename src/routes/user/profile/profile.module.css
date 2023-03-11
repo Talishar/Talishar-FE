@@ -1,0 +1,17 @@
+.heroImage {
+}
+
+.deleteButton {
+  margin: 0;
+  padding: 0.5em;
+  text-align: center;
+}
+
+.button {
+  margin: 0;
+}
+
+/* .deleteButton:hover {
+  background-color: var(--danger);
+  color: var(--white);
+} */

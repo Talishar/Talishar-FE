@@ -21,9 +21,15 @@ interface LobbyUpdateHandlerProps {
 export const LobbyUpdateHandler = React.memo(
   ({ isSubmitting }: LobbyUpdateHandlerProps) => {
     const abortRef = useRef<AbortController>();
-    const gameInfo = useAppSelector((state: RootState) => state.game.gameInfo);
+    const gameInfo = useAppSelector(
+      (state: RootState) => state.game.gameInfo,
+      shallowEqual
+    );
     const isUpdateInProgress = useAppSelector(
       (state: RootState) => state.game.isUpdateInProgress
+    );
+    const lastUpdate = useAppSelector(
+      (state: RootState) => state.game.gameDynamicInfo.lastUpdate
     );
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
@@ -43,7 +49,13 @@ export const LobbyUpdateHandler = React.memo(
       if (isUpdateInProgress) {
         return;
       }
-      dispatch(gameLobby({ game: gameInfo, signal: abortRef.current?.signal }));
+      dispatch(
+        gameLobby({
+          game: gameInfo,
+          signal: abortRef.current?.signal,
+          lastUpdate: lastUpdate ?? 0
+        })
+      );
 
       // timeout if longer than 10 seconds. Will clear this interval on next poll
       const timeOut = setTimeout(() => {

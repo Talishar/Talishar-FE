@@ -2,22 +2,17 @@ import { useSignUpMutation } from 'features/api/apiSlice';
 import styles from './LoginForm.module.css';
 import { Link, useNavigate } from 'react-router-dom';
 import classNames from 'classnames';
-import { signUpValidationSchema } from './validation';
+import { SignUpType, signUpValidationSchema } from './validation';
 import { FaExclamationCircle } from 'react-icons/fa';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import useAuth from 'hooks/useAuth';
 import { toast } from 'react-hot-toast';
-
-export interface ISignUpForm {
-  userId: string;
-  password: string;
-  passwordRepeat: string;
-  email: string;
-}
+import { useState } from 'react';
 
 export const SignUpForm = () => {
+  const [disclaimerOpen, setDisclaimerOpen] = useState(false);
   const { isLoggedIn } = useAuth();
   const [signup, signupResult] = useSignUpMutation();
   const [parent] = useAutoAnimate();
@@ -28,7 +23,7 @@ export const SignUpForm = () => {
     handleSubmit,
     setError,
     formState: { errors, isSubmitting }
-  } = useForm<ISignUpForm>({
+  } = useForm<SignUpType>({
     mode: 'onBlur',
     resolver: yupResolver(signUpValidationSchema)
   });
@@ -37,7 +32,7 @@ export const SignUpForm = () => {
     navigate('/');
   }
 
-  const onSubmit: SubmitHandler<ISignUpForm> = async (data) => {
+  const onSubmit: SubmitHandler<SignUpType> = async (data) => {
     try {
       const resp = await signup(data).unwrap();
       if (resp.error) {
@@ -56,7 +51,6 @@ export const SignUpForm = () => {
     } catch (err) {
       console.warn(err);
     } finally {
-      console.log('finally');
     }
   };
 
@@ -107,6 +101,25 @@ export const SignUpForm = () => {
               {errors.passwordRepeat?.message}
             </div>
           )}
+          <input
+            type="checkbox"
+            {...register('agreeToTerms')}
+            aria-invalid={errors.agreeToTerms?.message ? 'true' : undefined}
+          />
+          <label htmlFor="passwordRepeat">
+            I agree that{' '}
+            <span
+              onClick={() => setDisclaimerOpen(true)}
+              className={styles.link}
+            >
+              Talishar is not a judge.
+            </span>
+          </label>
+          {errors.agreeToTerms?.message && (
+            <div className={styles.fieldError}>
+              {errors.agreeToTerms?.message}
+            </div>
+          )}
           <button className={styles.submitButton} aria-busy={isSubmitting}>
             Submit
           </button>
@@ -126,6 +139,65 @@ export const SignUpForm = () => {
           Log in
         </Link>
       </article>
+      <dialog open={disclaimerOpen}>
+        <article>
+          <header>
+            <span
+              aria-label="Close"
+              className="close"
+              onClick={() => setDisclaimerOpen(false)}
+            ></span>
+            Disclaimer
+          </header>
+          <p>
+            Welcome to Talishar, a fan-made website where you can play the
+            trading card game Flesh & Blood by Legend Story Studios in your
+            browser! We want to make sure you have a fun and enjoyable
+            experience playing the game online.
+          </p>
+          <p>
+            Please be aware that, while we strive to provide an accurate and
+            enjoyable gaming experience, there may be bugs or errors in the
+            software that could impact the game's accuracy and functionality.
+            Therefore, it's important to note that Talishar has no
+            responsibility and no warranty for the accuracy of the game rules on
+            our website. It's always a good idea to familiarize yourself with
+            the official rules and regulations of Flesh & Blood before playing
+            on Talishar.
+          </p>
+          <p>
+            It's also important to note that, if you're playing in a paper
+            event, you should not use "it works that way on Talishar" as an
+            excuse if you're caught performing an illegal move, missing
+            triggers, or doing something out of order. The ultimate
+            responsibility for knowing the rules of the game lies with the
+            player themselves, not the software. The ultimate authority on the
+            rules of Flesh & Blood is Legend Story Studios and their judges.
+          </p>
+          <p>
+            At Talishar, we're open source, which means we welcome contributions
+            and bug reports to help us improve the website. If you're interested
+            in contributing, please visit our GitHub page. We appreciate all
+            feedback and suggestions for improvement.
+          </p>
+          <p>
+            By accessing and using our website, you agree to this disclaimer and
+            assume all risks associated with using Talishar. We reserve the
+            right to modify or terminate our services at any time without prior
+            notice. If you have any questions or concerns, feel free to reach
+            out to us on our discord. Thanks for playing on Talishar!
+          </p>
+          <hr />
+          <button
+            onClick={(e) => {
+              e.preventDefault;
+              setDisclaimerOpen(false);
+            }}
+          >
+            I agree, let me play already!
+          </button>
+        </article>
+      </dialog>
     </div>
   );
 };

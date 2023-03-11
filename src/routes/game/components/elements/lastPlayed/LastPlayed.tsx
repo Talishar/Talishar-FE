@@ -8,7 +8,7 @@ import CardPopUp from '../cardPopUp/CardPopUp';
 
 export default function LastPlayed() {
   let cardRedux = useAppSelector(
-    (state: RootState) => state.game.gameInfo.lastPlayed
+    (state: RootState) => state.game.gameDynamicInfo.lastPlayed
   );
   const hasNoLastPlayedCard = cardRedux == null;
   const cardNumber = cardRedux?.cardNumber ?? 'CardBack';
