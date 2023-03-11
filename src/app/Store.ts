@@ -16,6 +16,8 @@ export const store = configureStore({
     getDefaultMiddleware().concat([rtkQueryErrorToaster, apiSlice.middleware])
 });
 
+export const globalInitialState = store.getState();
+
 export const setupStore = (preloadedState?: PreloadedState<RootState>) => {
   return configureStore({
     reducer: {

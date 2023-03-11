@@ -1,4 +1,4 @@
-import { Setting } from 'interface/GameOptions';
+import { Setting } from 'features/options/optionsSlice';
 
 export interface ProcessInputAPI {
   playerID: number;

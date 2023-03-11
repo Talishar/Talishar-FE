@@ -1,18 +1,17 @@
 import React from 'react';
 import { Provider } from 'react-redux';
-import { store } from 'app/Store';
+import { globalInitialState, store } from 'app/Store';
 import { createRoot } from 'react-dom/client';
 import OptionsMenu from './OptionsMenu';
 import { renderWithProviders } from 'utils/TestUtils';
 import { OfflineTestingGameState } from 'features/game/InitialGameState';
 import { screen, act, waitFor } from '@testing-library/react';
-import GameState from 'features/GameState';
 
 const renderWithOptionsOpen = () =>
   renderWithProviders(<OptionsMenu />, {
     preloadedState: {
-      game: { ...OfflineTestingGameState, optionsMenu: { active: true } },
-      auth: { user: null, userName: null, token: null }
+      ...globalInitialState,
+      game: { ...OfflineTestingGameState, optionsMenu: { active: true } }
     }
   });
 

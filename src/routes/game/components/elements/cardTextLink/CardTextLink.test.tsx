@@ -4,7 +4,7 @@ import { renderWithProviders } from 'utils/TestUtils';
 
 it('renders without crashing', () => {
   renderWithProviders(
-    <CardTextLink cardID="WTR001" cardName="Heart of Fyendal" />
+    <CardTextLink cardNumber="WTR001" cardName="Heart of Fyendal" />
   );
   const display = document.querySelector('div');
   expect(display).toMatchInlineSnapshot(`

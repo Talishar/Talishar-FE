@@ -1,17 +1,11 @@
 import React from 'react';
 import screenfull from 'screenfull';
-import { useAppDispatch, useAppSelector } from 'app/Hooks';
-import {
-  openOptionsMenu,
-  closeOptionsMenu,
-  submitButton
-} from 'features/game/GameSlice';
+import { useAppDispatch } from 'app/Hooks';
+import { submitButton } from 'features/game/GameSlice';
 import { FaUndo } from 'react-icons/fa';
-import { GiExpand, GiHamburgerMenu } from 'react-icons/gi';
+import { GiExpand } from 'react-icons/gi';
 import styles from './Menu.module.css';
-import { DEFAULT_SHORTCUTS, PROCESS_INPUT } from 'appConstants';
-import { RootState } from 'app/Store';
-import useShortcut from 'hooks/useShortcut';
+import { PROCESS_INPUT } from 'appConstants';
 import FullControlToggle from './FullControlToggle';
 import HideModalsToggle from './HideModalsToggle/HideModalsToggle';
 import OptionsMenuToggle from './OptionsMenuToggle';
