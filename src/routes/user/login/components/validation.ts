@@ -19,12 +19,30 @@ export const signUpValidationSchema = yup.object().shape({
   passwordRepeat: yup
     .string()
     .required('You must confirm your password')
-    .oneOf([yup.ref('password')], 'Passwords must match')
+    .oneOf([yup.ref('password')], 'Passwords must match'),
+  agreeToTerms: yup
+    .boolean()
+    .required()
+    .oneOf([true], 'You must agree to the terms')
 });
 
-export const forgottenPasswordValidaitonSchema = yup.object().shape({
+export type SignUpType = yup.InferType<typeof signUpValidationSchema>;
+
+export const forgottenPasswordValidationSchema = yup.object().shape({
   email: yup
     .string()
     .email('Must be a valid email')
     .required('Email is required')
 });
+
+export type ForgottenPasswordType = yup.InferType<
+  typeof forgottenPasswordValidationSchema
+>;
+
+export const loginValidationSchema = yup.object().shape({
+  userID: yup.string().required('You must enter a username'),
+  password: yup.string().required('You must enter a password'),
+  rememberMe: yup.boolean()
+});
+
+export type LoginValidationType = yup.InferType<typeof loginValidationSchema>;

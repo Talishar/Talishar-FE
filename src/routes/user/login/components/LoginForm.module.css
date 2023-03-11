@@ -22,7 +22,6 @@
 }
 
 .fieldError {
-  margin-top: -12px;
   color: red;
   text-align: center;
 }
@@ -42,4 +41,9 @@
 
 .divider {
   margin: 18px 0;
+}
+
+.link {
+  font-weight: 600;
+  color: var(--primary);
 }

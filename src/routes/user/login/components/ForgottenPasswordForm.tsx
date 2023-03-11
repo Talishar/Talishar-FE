@@ -1,5 +1,5 @@
 import { Form, FormikProvider, useFormik } from 'formik';
-import { forgottenPasswordValidaitonSchema } from './validation';
+import { forgottenPasswordValidationSchema } from './validation';
 import styles from './LoginForm.module.css';
 import { FaExclamationCircle } from 'react-icons/fa';
 import { useForgottenPasswordMutation } from 'features/api/apiSlice';
@@ -14,7 +14,7 @@ export const ForgottenPasswordForm = () => {
     initialValues: {
       email: ''
     },
-    validationSchema: forgottenPasswordValidaitonSchema,
+    validationSchema: forgottenPasswordValidationSchema,
     onSubmit: async (values) => {
       try {
         console.log('values', values);
