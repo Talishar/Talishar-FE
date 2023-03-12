@@ -15,7 +15,7 @@ export default function PlayerHand() {
   };
   const [width, height] = useWindowDimensions();
 
-  const playerNo = useAppSelector(
+  const playerID = useAppSelector(
     (state: RootState) => state.game.gameInfo.playerID
   );
 
@@ -60,7 +60,7 @@ export default function PlayerHand() {
   const widthfunction =
     width > height ? { width: `${widthPercentage}%` } : { width: `75%` };
 
-  if (playerNo === 3) {
+  if (playerID === 3) {
     return <></>;
   }
 

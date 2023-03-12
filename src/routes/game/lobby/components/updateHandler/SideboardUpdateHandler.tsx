@@ -4,6 +4,7 @@ import { RootState } from 'app/Store';
 import {
   clearGetLobbyRefresh,
   gameLobby,
+  getGameInfo,
   setGameStart,
   setIsUpdateInProgressFalse
 } from 'features/game/GameSlice';
@@ -21,10 +22,7 @@ interface LobbyUpdateHandlerProps {
 export const LobbyUpdateHandler = React.memo(
   ({ isSubmitting }: LobbyUpdateHandlerProps) => {
     const abortRef = useRef<AbortController>();
-    const gameInfo = useAppSelector(
-      (state: RootState) => state.game.gameInfo,
-      shallowEqual
-    );
+    const gameInfo = useAppSelector(getGameInfo, shallowEqual);
     const isUpdateInProgress = useAppSelector(
       (state: RootState) => state.game.isUpdateInProgress
     );

@@ -1,6 +1,10 @@
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
-import { hideChainLinkSummary, hideActiveLayer } from 'features/game/GameSlice';
+import {
+  hideChainLinkSummary,
+  hideActiveLayer,
+  getGameInfo
+} from 'features/game/GameSlice';
 import { FaTimes } from 'react-icons/fa';
 import styles from './ChainLinkSummary.module.css';
 import { useGetPopUpContentQuery } from 'features/api/apiSlice';
@@ -18,10 +22,7 @@ export const ChainLinkSummaryContainer = () => {
     (state: RootState) => state.game.chainLinkSummary,
     shallowEqual
   );
-  const gameInfo = useAppSelector(
-    (state: RootState) => state.game.gameInfo,
-    shallowEqual
-  );
+  const gameInfo = useAppSelector(getGameInfo, shallowEqual);
   const turnPhase = useAppSelector(
     (state: RootState) => state.game.turnPhase?.turnPhase
   );

@@ -23,11 +23,12 @@ import { GAME_FORMAT, BREAKPOINT_EXTRA_LARGE } from 'appConstants';
 import ChooseFirstTurn from './components/chooseFirstTurn/ChooseFirstTurn';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import { SubmitSideboardAPI } from 'interface/API/SubmitSideboard.php';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import CardPortal from '../components/elements/cardPortal/CardPortal';
 import Matchups from './components/matchups/Matchups';
 import { GameLocationState } from 'interface/GameLocationState';
 import CardPopUp from '../components/elements/cardPopUp/CardPopUp';
+import { getGameInfo } from 'features/game/GameSlice';
 
 const Lobby = () => {
   const [activeTab, setActiveTab] = useState('equipment');
@@ -36,8 +37,8 @@ const Lobby = () => {
   const [isWideScreen, setIsWideScreen] = useState(false);
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const gameInfo = useAppSelector(
-    (state: RootState) => state.game.gameInfo,
+  const { playerID, gameID, authKey } = useAppSelector(
+    getGameInfo,
     shallowEqual
   );
   const gameLobby = useAppSelector(
@@ -46,9 +47,9 @@ const Lobby = () => {
   );
 
   let { data, isLoading, refetch } = useGetLobbyInfoQuery({
-    gameName: gameInfo.gameID,
-    playerID: gameInfo.playerID,
-    authKey: gameInfo.authKey
+    gameName: gameID,
+    playerID: playerID,
+    authKey: authKey
   });
 
   const [submitSideboardMutation, submitSideboardMutationData] =
@@ -96,9 +97,9 @@ const Lobby = () => {
       deck: values.deck.map((card) => card.substring(0, 6))
     };
     const requestBody: SubmitSideboardAPI = {
-      gameName: gameInfo.gameID,
-      playerID: gameInfo.playerID,
-      authKey: gameInfo.authKey,
+      gameName: gameID,
+      playerID: playerID,
+      authKey: authKey,
       submission: JSON.stringify(deck) // the API unmarshals the JSON inside the unmarshaled JSON.
     };
 
@@ -122,11 +123,11 @@ const Lobby = () => {
   // if the game is ready then let's join the main game
   if (gameLobby?.isMainGameReady) {
     const searchParam = {
-      playerID: String(gameInfo.playerID),
-      gameName: String(gameInfo.gameID)
+      playerID: String(playerID),
+      gameName: String(gameID)
     };
-    navigate(`/game/play/${gameInfo.gameID}`, {
-      state: { playerID: gameInfo.playerID ?? 0 } as GameLocationState
+    navigate(`/game/play/${gameID}`, {
+      state: { playerID: playerID ?? 0 } as GameLocationState
     });
   }
 

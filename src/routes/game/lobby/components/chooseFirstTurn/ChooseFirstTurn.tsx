@@ -5,11 +5,15 @@ import { useChooseFirstPlayerMutation } from 'features/api/apiSlice';
 import { toast } from 'react-hot-toast';
 import styles from './ChooseFirstTurn.module.css';
 import { shallowEqual } from 'react-redux';
+import { getGameInfo } from 'features/game/GameSlice';
 
 const ChooseFirstTurn = () => {
   const [chooseFirstPlayer, chooseFirstPlayerData] =
     useChooseFirstPlayerMutation();
-  const gameInfo = useAppSelector((state: RootState) => state.game.gameInfo);
+  const { gameID, playerID, authKey } = useAppSelector(
+    getGameInfo,
+    shallowEqual
+  );
   const gameLobby = useAppSelector(
     (state: RootState) => state.game.gameLobby,
     shallowEqual
@@ -19,9 +23,9 @@ const ChooseFirstTurn = () => {
     e.preventDefault();
     try {
       await chooseFirstPlayer({
-        gameName: gameInfo.gameID,
-        playerID: gameInfo.playerID,
-        authKey: gameInfo.authKey,
+        gameName: gameID,
+        playerID: playerID,
+        authKey: authKey,
         action: 'Go First'
       });
     } catch (err) {
@@ -34,9 +38,9 @@ const ChooseFirstTurn = () => {
     e.preventDefault();
     try {
       await chooseFirstPlayer({
-        gameName: gameInfo.gameID,
-        playerID: gameInfo.playerID,
-        authKey: gameInfo.authKey,
+        gameName: gameID,
+        playerID: playerID,
+        authKey: authKey,
         action: 'Go Second'
       });
     } catch (err) {

@@ -1,6 +1,7 @@
-import { useAppDispatch, useAppSelector } from 'app/Hooks';
+import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
-import { apiSlice, useJoinGameMutation } from 'features/api/apiSlice';
+import { useJoinGameMutation } from 'features/api/apiSlice';
+import { getGameInfo } from 'features/game/GameSlice';
 import React, { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { shallowEqual } from 'react-redux';
@@ -17,18 +18,15 @@ const Matchups = ({ refetch }: Matchups) => {
     (state: RootState) => state.game.gameLobby,
     shallowEqual
   );
-  const gameInfo = useAppSelector(
-    (state: RootState) => state.game.gameInfo,
-    shallowEqual
-  );
+  const { gameID, playerID } = useAppSelector(getGameInfo, shallowEqual);
   const [joinGameMutation, joinGameMutationData] = useJoinGameMutation();
 
   const handleMatchupClick = async (matchupID: string) => {
     setIsUpdating(true);
     try {
       await joinGameMutation({
-        gameName: gameInfo.gameID,
-        playerID: gameInfo.playerID,
+        gameName: gameID,
+        playerID: playerID,
         fabdb: gameLobby?.myDeckLink ?? '',
         matchup: matchupID
       }).unwrap();
