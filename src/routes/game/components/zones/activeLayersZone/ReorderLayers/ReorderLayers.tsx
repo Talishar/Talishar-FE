@@ -6,9 +6,14 @@ import { Reorder } from 'framer-motion';
 import { useAppSelector } from 'app/Hooks';
 import { useProcessInputAPIMutation } from 'features/api/apiSlice';
 import { PROCESS_INPUT } from 'appConstants';
+import { getGameInfo } from 'features/game/GameSlice';
+import { shallowEqual } from 'react-redux';
 
 const ReorderLayers = ({ cards }: { cards: Card[] }) => {
-  const gameInfo = useAppSelector((state) => state.game.gameInfo);
+  const { gameID, playerID, authKey } = useAppSelector(
+    getGameInfo,
+    shallowEqual
+  );
   const [cardList, setCardList] = React.useState(
     cards.map((card) => {
       return { ...card, borderColor: '8' } as Card;
@@ -28,9 +33,9 @@ const ReorderLayers = ({ cards }: { cards: Card[] }) => {
       layers.push(card.layer);
     }
     const body = {
-      gameName: gameInfo.gameID,
-      playerID: gameInfo.playerID,
-      authKey: gameInfo.authKey,
+      gameName: gameID,
+      playerID: playerID,
+      authKey: authKey,
       mode: PROCESS_INPUT.REORDER_LAYERS,
       submission: { layers: layers }
     };

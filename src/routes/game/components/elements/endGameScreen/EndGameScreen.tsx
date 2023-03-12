@@ -9,12 +9,13 @@ import CardTextLink from '../cardTextLink/CardTextLink';
 import { Effect } from '../effects/Effects';
 import { Card } from 'features/Card';
 import { END_GAME_STATS } from 'appConstants';
-import { hideActiveLayer } from 'features/game/GameSlice';
+import { getGameInfo, hideActiveLayer } from 'features/game/GameSlice';
 import EndGameStats, { EndGameData } from '../endGameStats/EndGameStats';
 import EndGameMenuOptions from '../endGameMenuOptions/EndGameMenuOptions';
+import { shallowEqual } from 'react-redux';
 
 const EndGameScreen = () => {
-  const gameInfo = useAppSelector((state: RootState) => state.game.gameInfo);
+  const gameInfo = useAppSelector(getGameInfo, shallowEqual);
   const [playerID, setPlayerID] = useState(gameInfo.playerID === 2 ? 2 : 1);
   const [isVisible, setIsVisible] = useState(true);
   const { data, isLoading, error } = useGetPopUpContentQuery({

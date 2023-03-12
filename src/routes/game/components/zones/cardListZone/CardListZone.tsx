@@ -1,7 +1,7 @@
 import React from 'react';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
-import { clearCardListFocus } from 'features/game/GameSlice';
+import { clearCardListFocus, getGameInfo } from 'features/game/GameSlice';
 import CardDisplay from '../../elements/cardDisplay/CardDisplay';
 import { FaTimes } from 'react-icons/fa';
 import styles from './CardListZone.module.css';
@@ -10,6 +10,7 @@ import useShortcut from 'hooks/useShortcut';
 import { DEFAULT_SHORTCUTS } from 'appConstants';
 import { motion, AnimatePresence } from 'framer-motion';
 import useShowModal from 'hooks/useShowModals';
+import { shallowEqual } from 'react-redux';
 
 export const CardListZone = () => {
   const showModal = useShowModal();
@@ -69,7 +70,7 @@ interface CardListZoneAPI {
 }
 
 const CardListZoneAPI = ({ name }: CardListZoneAPI) => {
-  const gameInfo = useAppSelector((state: RootState) => state.game.gameInfo);
+  const gameInfo = useAppSelector(getGameInfo, shallowEqual);
   const { isLoading, isError, data } = useGetPopUpContentQuery({
     ...gameInfo,
     popupType: name

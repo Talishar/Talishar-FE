@@ -6,13 +6,18 @@ import { useSubmitChatMutation } from 'features/api/apiSlice';
 import styles from './ChatInput.module.css';
 import { GiChatBubble } from 'react-icons/gi';
 import classNames from 'classnames';
+import { shallowEqual } from 'react-redux';
+import { getGameInfo } from 'features/game/GameSlice';
 
 export const ChatInput = () => {
-  const gameInfo = useAppSelector((state: RootState) => state.game.gameInfo);
+  const { playerID, gameID, authKey } = useAppSelector(
+    getGameInfo,
+    shallowEqual
+  );
   const [chatInput, setChatInput] = useState('');
   const [submitChat, submitChatResult] = useSubmitChatMutation();
 
-  if (gameInfo.playerID === 3) {
+  if (playerID === 3) {
     return null;
   }
 
@@ -23,9 +28,9 @@ export const ChatInput = () => {
     }
     try {
       await submitChat({
-        gameID: gameInfo.gameID,
-        playerID: gameInfo.playerID,
-        authKey: gameInfo.authKey,
+        gameID: gameID,
+        playerID: playerID,
+        authKey: authKey,
         chatText: chatInput
       });
     } catch (err) {
@@ -57,9 +62,9 @@ export const ChatInput = () => {
               e.stopPropagation();
             }}
             placeholder={
-              gameInfo.playerID === 3 ? 'Chat Disabled' : 'Hit return to send.'
+              playerID === 3 ? 'Chat Disabled' : 'Hit return to send.'
             }
-            disabled={gameInfo.playerID === 3}
+            disabled={playerID === 3}
           />
           <button className={submitButtonClass} onClick={handleSubmit}>
             <GiChatBubble />

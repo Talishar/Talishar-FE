@@ -1,5 +1,4 @@
-import { Field, Form, Formik } from 'formik';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import screenfull from 'screenfull';
@@ -15,20 +14,15 @@ import { DEFAULT_SHORTCUTS, PROCESS_INPUT } from 'appConstants';
 import useShortcut from 'hooks/useShortcut';
 import { motion, AnimatePresence } from 'framer-motion';
 import useShowModal from 'hooks/useShowModals';
-import {
-  fetchAllSettings,
-  getSettingsEntity,
-  getSettingsStatus
-} from 'features/options/optionsSlice';
 import OptionsSettings from './OptionsSettings';
 import { shallowEqual } from 'react-redux';
 
 const OptionsContent = () => {
-  const gameInfo = useAppSelector(getGameInfo, shallowEqual);
+  const { gameID, playerID } = useAppSelector(getGameInfo, shallowEqual);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const gameURL = `http://fe.talishar.net/game/play/${gameInfo.gameID}`;
+  const gameURL = `http://fe.talishar.net/game/play/${gameID}`;
 
   const clickCloseOptionsHandler = () => {
     dispatch(closeOptionsMenu());
@@ -48,7 +42,7 @@ const OptionsContent = () => {
   const clickPlayLegacyHandler = async (e: React.MouseEvent) => {
     e.preventDefault;
     await screenfull.exit();
-    window.location.href = `https://talishar.net/game/NextTurn4.php?gameName=${gameInfo.gameID}&playerID=${gameInfo.playerID}`;
+    window.location.href = `https://talishar.net/game/NextTurn4.php?gameName=${gameID}&playerID=${playerID}`;
   };
 
   // going to main menu means you concede the game
