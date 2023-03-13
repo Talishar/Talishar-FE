@@ -181,6 +181,10 @@ export default function ParseGameState(input: any) {
     result.playerTwo.Banish.push(ParseCard(cardObj));
   }
 
+  if (input.landmarks?.length > 0) {
+    result.landmark = ParseCard(input.landmarks[0]);
+  }
+
   result.playerTwo.Arsenal = [];
   for (const cardObj of input.opponentArse) {
     result.playerTwo.Arsenal.push(ParseCard(cardObj));
