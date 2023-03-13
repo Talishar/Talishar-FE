@@ -47,7 +47,7 @@ export default ({ mode }) => {
           // }
         },
         '/api/live': {
-          target: 'https://api.talishar.net/game',
+          target: 'https://talishar.net/game',
           changeOrigin: true,
           secure: true,
           rewrite: (path) => path.replace(/api\/live\//, '')
