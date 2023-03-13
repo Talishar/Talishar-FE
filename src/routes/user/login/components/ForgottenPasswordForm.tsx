@@ -10,6 +10,7 @@ import classNames from 'classnames';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { toast } from 'react-hot-toast';
+import { useAutoAnimate } from '@formkit/auto-animate/react';
 
 export const ForgottenPasswordForm = () => {
   const navigate = useNavigate();
