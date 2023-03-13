@@ -120,7 +120,11 @@ export const SignUpForm = () => {
               {errors.agreeToTerms?.message}
             </div>
           )}
-          <button className={styles.submitButton} aria-busy={isSubmitting}>
+          <button
+            className={styles.submitButton}
+            aria-busy={isSubmitting}
+            disabled={isSubmitting}
+          >
             Submit
           </button>
           {errors.root?.serverError?.message && (
