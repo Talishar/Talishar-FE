@@ -42,7 +42,7 @@ const OptionsContent = () => {
   const clickPlayLegacyHandler = async (e: React.MouseEvent) => {
     e.preventDefault;
     await screenfull.exit();
-    window.location.href = `https://talishar.net/game/NextTurn4.php?gameName=${gameID}&playerID=${playerID}`;
+    window.location.href = `https://legacy.talishar.net/game/NextTurn4.php?gameName=${gameID}&playerID=${playerID}`;
   };
 
   // going to main menu means you concede the game

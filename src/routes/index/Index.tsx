@@ -27,17 +27,12 @@ const Index = () => {
           <hgroup>
             <h1>News</h1>
             <h2>THIS IS A BETA AND THINGS ARE (even more) UNRELIABLE</h2>
-            <h3>
-              <a href="https://talishar.net/">GO TO THE REGULAR SITE</a> IF YOU
-              WANT TO PLAY PROPERLY
-            </h3>
-            <h4>Big changes to matchmaking!</h4>
-            <h5>Login is now required for matchmaking</h5>
+            <h3>Outsiders!</h3>
           </hgroup>
           <p>
-            If logged out, you can still make private games to play with
-            friends, against yourself in multiple tabs, or against the bot!
-            We've also added Clash as a supported format.
+            All spoiled cards implemented except: <br />
+            Amnesia
+            <br /> Burden of the Past
           </p>
         </article>
       </div>
