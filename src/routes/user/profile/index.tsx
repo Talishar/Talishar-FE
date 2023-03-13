@@ -6,7 +6,7 @@ export const ProfilePage = () => {
   const { data, isLoading } = useGetFavoriteDecksQuery({});
 
   const handleButtonClick = (deckKey: string) => {
-    console.log('clicked this key', deckKey);
+    console.log('clicked this one', deckKey);
   };
 
   return (
@@ -14,6 +14,12 @@ export const ProfilePage = () => {
       <div className="container">
         <h1>Profile Page</h1>
         <article>
+          <h3>Profile:</h3>
+          <div>
+            <a href="https://legacy.talishar.net/game/ProfilePage.php">
+              Connect to Patreon on the legacy client
+            </a>
+          </div>
           <h3>Your decks:</h3>
           <table>
             <thead>
@@ -27,6 +33,7 @@ export const ProfilePage = () => {
               </tr>
             </thead>
             <tbody>
+              {isLoading && <div>Loading...</div>}
               {data?.favoriteDecks.map((deck, ix) => (
                 <tr key={deck.key}>
                   <th scope="row">

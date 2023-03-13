@@ -416,6 +416,7 @@ export const gameSlice = createSlice({
       state.playerPrompt = action.payload.playerPrompt;
       state.canPassPhase = action.payload.canPassPhase;
       state.events = action.payload.events;
+      state.landmark = action.payload.landmark;
 
       return state;
     });
