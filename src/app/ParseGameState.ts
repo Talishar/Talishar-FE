@@ -86,7 +86,7 @@ function ParseEquipment(input: any) {
 
 export default function ParseGameState(input: any) {
   const result: GameState = {
-    gameInfo: { gameID: 0, playerID: 0, authKey: '' },
+    gameInfo: { gameID: 0, playerID: 0, authKey: '', isPrivate: false },
     gameDynamicInfo: {},
     playerOne: {},
     playerTwo: {}

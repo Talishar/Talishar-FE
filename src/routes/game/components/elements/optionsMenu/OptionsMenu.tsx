@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import screenfull from 'screenfull';
@@ -18,9 +18,13 @@ import OptionsSettings from './OptionsSettings';
 import { shallowEqual } from 'react-redux';
 
 const OptionsContent = () => {
-  const { gameID, playerID } = useAppSelector(getGameInfo, shallowEqual);
+  const { gameID, playerID, isPrivate } = useAppSelector(
+    getGameInfo,
+    shallowEqual
+  );
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const [allowSpectator, setAllowSpectator] = useState(false);
 
   const gameURL = `http://fe.talishar.net/game/play/${gameID}`;
 
@@ -68,6 +72,13 @@ const OptionsContent = () => {
       submitButton({ button: { mode: PROCESS_INPUT.REVERT_TO_PRIOR_TURN } })
     );
     clickCloseOptionsHandler();
+  };
+
+  const handleAllowSpectators = () => {
+    dispatch(
+      submitButton({ button: { mode: PROCESS_INPUT.ALLOW_SPECTATORS } })
+    );
+    setAllowSpectator(true);
   };
 
   const clickRevertToStartOfPreviousTurnHandler = () => {
@@ -124,14 +135,28 @@ const OptionsContent = () => {
         </div>
         <h3>Invite Spectators</h3>
         <div className={styles.buttonColumn}>
-          <span>{gameURL}</span>
-          <button
-            style={{ marginTop: '0.5em' }}
-            className={styles.buttonDiv}
-            onClick={clickCopySpectateToClipboardHandler}
-          >
-            Copy Spectate Link
-          </button>
+          {isPrivate && !allowSpectator ? (
+            <>
+              <button
+                style={{ marginTop: '0.5em' }}
+                className={styles.buttonDiv}
+                onClick={handleAllowSpectators}
+              >
+                Allow Spectators for Private Match
+              </button>
+            </>
+          ) : (
+            <>
+              <span>{gameURL}</span>
+              <button
+                style={{ marginTop: '0.5em' }}
+                className={styles.buttonDiv}
+                onClick={clickCopySpectateToClipboardHandler}
+              >
+                Copy Spectate Link
+              </button>
+            </>
+          )}
         </div>
       </div>
     </div>
