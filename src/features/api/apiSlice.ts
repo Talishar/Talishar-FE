@@ -29,6 +29,8 @@ import {
 import { ChooseFirstPlayer } from 'interface/API/ChooseFirstPlayer.php';
 import { SubmitSideboardAPI } from 'interface/API/SubmitSideboard.php';
 import { GetFavoriteDecksResponse } from 'interface/API/GetFavoriteDecks.php';
+import { GameListResponse } from 'routes/index/components/gameList/GameList';
+import { ProcessInputAPI } from 'interface/API/ProcessInputAPI';
 
 // catch warnings and show a toast if we get one.
 export const rtkQueryErrorToaster: Middleware =
@@ -163,19 +165,18 @@ export const apiSlice = createApi({
         };
       }
     }),
-    getGameList: builder.query({
+    getGameList: builder.query<GameListResponse, undefined>({
       query: () => {
         return {
           url: import.meta.env.DEV
             ? `http://127.0.0.1:5173/api/live/${URL_END_POINT.GET_GAME_LIST}`
             : API_URL_LIVE + URL_END_POINT.GET_GAME_LIST,
           method: 'GET',
-          credentials: 'omit',
-          params: {}
+          credentials: 'omit'
         };
       }
     }),
-    getFavoriteDecks: builder.query({
+    getFavoriteDecks: builder.query<GetFavoriteDecksResponse, undefined>({
       query: () => {
         return {
           url: URL_END_POINT.GET_FAVORITE_DECKS
@@ -185,7 +186,7 @@ export const apiSlice = createApi({
         return response;
       }
     }),
-    createGame: builder.mutation({
+    createGame: builder.mutation<CreateGameResponse, CreateGameAPI>({
       query: ({ ...body }: CreateGameAPI) => {
         return {
           url: URL_END_POINT.CREATE_GAME,
@@ -193,18 +194,11 @@ export const apiSlice = createApi({
           body: body
         };
       },
-      // Pick out data and prevent nested properties in a hook or selector
-      transformResponse: (response: CreateGameResponse, meta, arg) => {
-        return response;
-      },
       // Pick out errors and prevent nested properties in a hook or selector
-      transformErrorResponse: (
-        response: { status: string | number },
-        meta,
-        arg
-      ) => response.status
+      transformErrorResponse: (response: { status: string | number }) =>
+        response.status
     }),
-    joinGame: builder.mutation({
+    joinGame: builder.mutation<JoinGameResponse, JoinGameAPI>({
       query: ({ ...body }: JoinGameAPI) => {
         return {
           url: URL_END_POINT.JOIN_GAME,
@@ -212,11 +206,6 @@ export const apiSlice = createApi({
           body: body
         };
       },
-      // Pick out data and prevent nested properties in a hook or selector
-      transformResponse: (response: JoinGameResponse, meta, arg) => {
-        return response;
-      },
-      // Pick out errors and prevent nested properties in a hook or selector
       transformErrorResponse: (
         response: { status: string | number },
         meta,
