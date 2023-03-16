@@ -27,15 +27,14 @@ export interface GameListResponse {
   gamesInProgress: IGameInProgress[];
   openGames: IOpenGame[];
   canSeeQueue?: boolean;
+  gameInProgressCount?: number;
 }
 
 const GAME_LIST_POLLING_INTERVAL = 10000; // in ms
 
 const GameList = () => {
-  const { data, isLoading, error, refetch, isFetching } = useGetGameListQuery(
-    {},
-    {}
-  );
+  const { data, isLoading, error, refetch, isFetching } =
+    useGetGameListQuery(undefined);
 
   const [heroFilter, setHeroFilter] = useState<string[]>([]);
   const [formatFilter, setFormatFilter] = useState<string | null>(null);
@@ -120,7 +119,7 @@ const GameList = () => {
       {data != undefined && (
         <div data-testid="games-in-progress" ref={parent}>
           <h5 className={styles.subSectionTitle}>
-            Games in progress: <span>({data.gamesInProgress.length})</span>
+            Games in progress: <span>({data.gameInProgressCount})</span>
           </h5>
           {filteredGamesInProgress.map((entry, ix: number) => {
             return (

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import Deck from './components/deck/Deck';
 import LobbyChat from './components/lobbyChat/LobbyChat';
 import testData from './mockdata.json';
@@ -29,6 +29,8 @@ import Matchups from './components/matchups/Matchups';
 import { GameLocationState } from 'interface/GameLocationState';
 import CardPopUp from '../components/elements/cardPopUp/CardPopUp';
 import { getGameInfo } from 'features/game/GameSlice';
+import useSound from 'use-sound';
+import playerJoined from 'sounds/playerJoinedSound.mp3';
 
 const Lobby = () => {
   const [activeTab, setActiveTab] = useState('equipment');
@@ -45,6 +47,7 @@ const Lobby = () => {
     (state: RootState) => state.game.gameLobby,
     shallowEqual
   );
+  const [playLobbyJoin] = useSound(playerJoined, { volume: 1 });
 
   let { data, isLoading, refetch } = useGetLobbyInfoQuery({
     gameName: gameID,
@@ -55,15 +58,11 @@ const Lobby = () => {
   const [submitSideboardMutation, submitSideboardMutationData] =
     useSubmitSideboardMutation();
 
-  // TODO: fix the chat log notification
-  // useEffect(() => {
-  //   if (gameLobby?.gameLog != undefined || gameLobby?.gameLog != '')
-  //     setUnreadChat(true);
-  // }, [gameLobby?.gameLog]);
-
-  // useEffect(() => {
-  //   setActiveTab('chat');
-  // }, [!!gameLobby?.amIChoosingFirstPlayer]);
+  useEffect(() => {
+    if (gameLobby?.theirName != undefined && gameLobby?.theirName != '') {
+      playLobbyJoin();
+    }
+  }, [gameLobby?.theirName]);
 
   useEffect(() => {
     setIsWideScreen(width > BREAKPOINT_EXTRA_LARGE);

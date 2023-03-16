@@ -21,7 +21,7 @@ const CreateGame = () => {
   const { isLoggedIn } = useAuth();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { data, isLoading } = useGetFavoriteDecksQuery({});
+  const { data, isLoading } = useGetFavoriteDecksQuery(undefined);
   const [createGame, createGameResult] = useCreateGameMutation();
 
   const initialValues: CreateGameAPI = {

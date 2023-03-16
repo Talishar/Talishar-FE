@@ -107,7 +107,8 @@ export const restHandlers = [
               gameName: '613664'
             }
           ],
-          canSeeQueue: false
+          canSeeQueue: false,
+          gameInProgressCount: 3
         })
       );
     }

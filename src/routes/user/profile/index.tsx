@@ -3,7 +3,7 @@ import { GiTrashCan } from 'react-icons/gi';
 import styles from './profile.module.css';
 
 export const ProfilePage = () => {
-  const { data, isLoading } = useGetFavoriteDecksQuery({});
+  const { data, isLoading } = useGetFavoriteDecksQuery(undefined);
 
   const handleButtonClick = (deckKey: string) => {
     console.log('clicked this one', deckKey);
