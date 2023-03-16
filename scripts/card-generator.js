@@ -12,6 +12,10 @@ rp(url)
     const cardNames = cards.reduce((acc, card) => {
       const name = card.name;
 
+      if (card.types.includes('Token')) {
+        return acc;
+      }
+
       if (!acc.includes(name)) {
         acc.push(name);
       }

@@ -20,7 +20,7 @@ const JoinGame = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [joinGame, joinGameResult] = useJoinGameMutation();
-  const { data, isLoading } = useGetFavoriteDecksQuery();
+  const { data, isLoading } = useGetFavoriteDecksQuery(undefined);
   const { isLoggedIn } = useAuth();
 
   let [{ gameName = '0', playerID = '2', authKey = '' }] =
