@@ -133,7 +133,7 @@ export const URL_END_POINT = {
   LOGIN: 'AccountFiles/PasswordLoginAPI.php',
   LOGIN_WITH_COOKIE: 'AccountFiles/TryLoginAPI.php',
   LOGOUT: `AccountFiles/LogoutUserAPI.php`,
-  SIGNUP: `AccountFiles/SignUpAPI.php`,
+  SIGNUP: `AccountFiles/SignupAPI.php`,
   FORGOT_PASSWORD: `AccountFiles/PasswordResetRequestAPI.php`
 };
 
