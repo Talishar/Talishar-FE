@@ -662,6 +662,7 @@ export const CARD_LIST: string[] = [
   'Piercing Shadow Vise',
   'Pink Visor',
   'Pitfall Trap',
+  'Plague Hive',
   'Plasma Barrel Shot',
   'Plasma Mainline',
   'Plasma Purifier',

@@ -99,7 +99,7 @@ const OptionsContent = () => {
         <h3>Navigation</h3>
         <div className={styles.buttonColumn}>
           <button className={styles.buttonDiv} onClick={clickPlayLegacyHandler}>
-            Play in Legacy Talishar Client
+            Legacy Talishar Client
           </button>
           <button
             className={styles.buttonDiv}
@@ -107,31 +107,42 @@ const OptionsContent = () => {
           >
             Home Page
           </button>
-          <button
-            className={styles.buttonDiv}
-            onClick={clickConcedeGameHandler}
-          >
-            Concede
-          </button>
-          <button className={styles.buttonDiv} onClick={clickReportBugHandler}>
-            Report Bug
-          </button>
-          <button className={styles.buttonDiv} onClick={clickUndoButtonHandler}>
-            Undo
-          </button>
-          <button
-            className={styles.buttonDiv}
-            onClick={clickRevertToStartOfThisTurnHandler}
-          >
-            Revert to Start of This turn
-          </button>
-          <button
-            className={styles.buttonDiv}
-            onClick={clickRevertToStartOfPreviousTurnHandler}
-            disabled
-          >
-            Revert to Start of Previous Turn (inactive)
-          </button>
+          {playerID !== 3 && ( // If not a spectator then can change options
+            <>
+              <button
+                className={styles.buttonDiv}
+                onClick={clickConcedeGameHandler}
+              >
+                Concede
+              </button>
+
+              <button
+                className={styles.buttonDiv}
+                onClick={clickReportBugHandler}
+              >
+                Report Bug
+              </button>
+              <button
+                className={styles.buttonDiv}
+                onClick={clickUndoButtonHandler}
+              >
+                Undo
+              </button>
+              <button
+                className={styles.buttonDiv}
+                onClick={clickRevertToStartOfThisTurnHandler}
+              >
+                Revert to Start of This turn
+              </button>
+              <button
+                className={styles.buttonDiv}
+                onClick={clickRevertToStartOfPreviousTurnHandler}
+                disabled
+              >
+                Revert to Start of Previous Turn (inactive)
+              </button>
+            </>
+          )}
         </div>
         <h3>Invite Spectators</h3>
         <div className={styles.buttonColumn}>

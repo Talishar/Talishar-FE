@@ -1,13 +1,14 @@
-const rp = require('request-promise');
+const axios = require('axios');
 const fs = require('fs');
 
 const url =
   'https://raw.githubusercontent.com/the-fab-cube/flesh-and-blood-cards/outsiders/json/english/card.json';
 const outputFile = 'src/constants/cardList.ts';
 
-rp(url)
+axios
+  .get(url)
   .then((jsonString) => {
-    const cards = JSON.parse(jsonString);
+    const cards = jsonString.data;
 
     const cardNames = cards.reduce((acc, card) => {
       const name = card.name;
