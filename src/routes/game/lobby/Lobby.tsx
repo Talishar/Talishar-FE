@@ -160,6 +160,7 @@ const Lobby = () => {
     case GAME_FORMAT.BLITZ:
     case GAME_FORMAT.COMPETITIVE_BLITZ:
     case GAME_FORMAT.COMMONER:
+    case GAME_FORMAT.CLASH:
       deckSize = 40;
       break;
     case GAME_FORMAT.OPEN_FORMAT:
