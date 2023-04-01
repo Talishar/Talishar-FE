@@ -191,6 +191,7 @@ const CreateGame = () => {
                     </option>
                     <option value={GAME_FORMAT.COMMONER}>Commoner</option>
                     <option value={GAME_FORMAT.CLASH}>Clash</option>
+                    <option value={GAME_FORMAT.SEALED}>Sealed (DraftFaB decks only)</option>
                     <option value={GAME_FORMAT.OPEN_FORMAT}>
                       Open Format (no restrictions!)
                     </option>

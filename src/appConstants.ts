@@ -110,7 +110,9 @@ export const GAME_FORMAT = {
   COMPETITIVE_BLITZ: 'compblitz',
   OPEN_FORMAT: 'livinglegendscc',
   COMMONER: 'commoner',
-  CLASH: 'clash'
+  CLASH: 'clash',
+  SEALED: 'sealed',
+  DRAFT: 'draft'
 };
 
 export const URL_END_POINT = {

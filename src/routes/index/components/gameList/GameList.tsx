@@ -77,7 +77,9 @@ const GameList = () => {
   const otherFormats = [
     GAME_FORMAT.OPEN_FORMAT,
     GAME_FORMAT.COMMONER,
-    GAME_FORMAT.CLASH
+    GAME_FORMAT.CLASH,
+    GAME_FORMAT.SEALED,
+    GAME_FORMAT.DRAFT
   ];
   const blitz = sortedOpenGames.filter(
     (game) => game.format === GAME_FORMAT.BLITZ
