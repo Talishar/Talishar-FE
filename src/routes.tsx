@@ -93,6 +93,14 @@ export const router = createBrowserRouter(
       <Route path="game/play" element={<Play />} />
       <Route path="game/join/:gameID" element={<JoinGame />} />
       <Route path="game/lobby/:gameID" element={<Lobby />} />
+      <Route
+        path="game/MainMenu.php"
+        element={
+          <>
+            <Navigate to="/" replace={true} />
+          </>
+        }
+      />
       <Route element={<Header />}>
         <Route path="/">
           <Route
