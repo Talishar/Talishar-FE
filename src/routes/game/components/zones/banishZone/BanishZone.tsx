@@ -9,7 +9,7 @@ import styles from './BanishZone.module.css';
 export const BanishZone = React.memo((prop: Displayrow) => {
   const { isPlayer } = prop;
   const dispatch = useAppDispatch();
-  const showCount = false;
+  const showCount = true;
 
   const banishZone = useAppSelector((state: RootState) =>
     isPlayer ? state.game.playerOne.Banish : state.game.playerTwo.Banish

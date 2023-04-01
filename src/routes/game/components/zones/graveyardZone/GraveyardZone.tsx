@@ -18,7 +18,7 @@ export const GraveyardZone = React.memo((prop: Displayrow) => {
     return <div className={styles.graveyardZone}>Graveyard</div>;
   }
 
-  const showCount = false;
+  const showCount = true;
 
   const graveyardZoneDisplay = () => {
     const isPlayerPronoun = isPlayer ? 'Your' : "Your Opponent's";
