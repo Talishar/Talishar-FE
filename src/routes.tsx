@@ -17,6 +17,7 @@ import Lobby from 'routes/game/lobby/Lobby';
 import { SignUpForm } from 'routes/user/login/components/SignUpForm';
 import useAuth from 'hooks/useAuth';
 import Header from 'components/header/Header';
+import Privacy from 'routes/privacy';
 
 const PlayGuard = ({ children }: { children: JSX.Element }) => {
   const [searchParams] = useKnownSearchParams();
@@ -104,6 +105,7 @@ export const router = createBrowserRouter(
             errorElement={<ErrorPage />}
           />
         </Route>
+        <Route path="privacy" element={<Privacy />} />
         <Route path="user">
           <Route index element={<Navigate to={'./profile'} />} />
           <Route
