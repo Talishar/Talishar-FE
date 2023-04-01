@@ -1,6 +1,6 @@
 import React from 'react';
 import { RootState } from 'app/Store';
-import { BiBullseye } from 'react-icons/bi';
+import { BiBullseye, BiTargetLock } from 'react-icons/bi';
 import { GiZigzagLeaf, GiElectric, GiCycle, GiShield } from 'react-icons/gi';
 import styles from './CurrentAttack.module.css';
 import attackSymbol from '../../../../../img/symbols/symbol-attack.png';
@@ -52,6 +52,11 @@ export default function CurrentAttack() {
         <div className={styles.defDiv} data-testid="defence-value">
           {defValue}
         </div>
+        {activeCombatChain.attackTarget ? (
+          <div className={styles.icon} data-tooltip={`Attack target: ${activeCombatChain.attackTarget}`}>
+            <BiTargetLock />
+          </div>
+        ) : null}
       </div>
       <div className={styles.attack}>
         <CardDisplay card={attCard} />

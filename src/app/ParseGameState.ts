@@ -110,6 +110,7 @@ export default function ParseGameState(input: any) {
     result.activeChainLink.damagePrevention = Number(
       input.activeChainLink.damagePrevention
     );
+    result.activeChainLink.attackTarget = input.activeChainLink.attackTarget;
   }
 
   // previous combat chain links

@@ -96,7 +96,8 @@ export const OfflineTestingGameState: GameState = {
     dominate: true,
     overpower: true,
     fused: true,
-    damagePrevention: 5
+    damagePrevention: 5,
+    attackTarget: "Prism"
   },
   playerOne: {
     // human player
