@@ -23,16 +23,18 @@ const Header = () => {
         </ul>
         <ul>
           <li>
-            <Link to="/">Limited</Link>
+            <a href="https://www.draftfab.com/">Limited</a>
           </li>
           <li>
-            <Link to="/">RogueLike</Link>
+            <a href="https://beta.talishar.net/game/Roguelike/CreateGame.php">
+              RogueLike
+            </a>
           </li>
           <li>
             {isLoggedIn ? (
               <Link to="/user">Profile</Link>
             ) : (
-              <Link to="/user/login">Log In</Link>
+              <Link to="/user/login">Log In or Signup</Link>
             )}
           </li>
           {isLoggedIn && (

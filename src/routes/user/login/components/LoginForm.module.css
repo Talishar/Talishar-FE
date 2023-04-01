@@ -47,3 +47,9 @@
   font-weight: 600;
   color: var(--primary);
 }
+
+.privacy {
+  display: block;
+  text-align: center;
+  margin: 18px auto 0 auto;
+}

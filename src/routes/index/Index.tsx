@@ -26,14 +26,24 @@ const Index = () => {
           <img src={TalisharLogo} className={styles.logo} />
           <hgroup>
             <h1>News</h1>
-            <h2>THIS IS A BETA AND THINGS ARE (even more) UNRELIABLE</h2>
-            <h3>Outsiders!</h3>
+            <h2>
+              New client! We hope you enjoy the new client. If there are any
+              issues please report them at the socials linked below:
+            </h2>
           </hgroup>
-          <p>
-            All spoiled cards implemented except: <br />
-            Amnesia
-            <br /> Burden of the Past
-          </p>
+          <p>Please join our community:</p>
+          <ul>
+            <li>
+              <a href="https://discord.gg/JykuRkdd5S" target="_blank">
+                Discord
+              </a>
+            </li>
+            <li>
+              <a href="https://twitter.com/talishar_online" target="_blank">
+                Twitter
+              </a>
+            </li>
+          </ul>
         </article>
       </div>
     </main>

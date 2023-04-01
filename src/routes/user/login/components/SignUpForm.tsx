@@ -142,6 +142,9 @@ export const SignUpForm = () => {
         >
           Log in
         </Link>
+        <small className={styles.privacy}>
+          <Link to={'/privacy'}>Privacy Policy</Link>
+        </small>
       </article>
       <dialog open={disclaimerOpen}>
         <article>

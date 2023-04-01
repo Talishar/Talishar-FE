@@ -135,6 +135,17 @@ export const LoginForm = () => {
         >
           Sign Up
         </Link>
+        <hr className={styles.divider} />
+        <small>
+          <em>
+            By using the Remember Me function, you consent to a cookie being
+            stored in your browser for purpose of identifying your account on
+            future visits.
+          </em>
+        </small>
+        <small>
+          <Link to={'/privacy'}>Privacy Policy</Link>
+        </small>
       </article>
     </div>
   );
