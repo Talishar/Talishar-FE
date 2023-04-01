@@ -68,6 +68,10 @@
   height: 100%;
 }
 
+.target {
+  margin-bottom: 0;
+}
+
 @media (orientation: portrait) {
   .activeLayersBox {
     position: fixed;

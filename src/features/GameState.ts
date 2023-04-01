@@ -35,7 +35,7 @@ export default interface GameState {
   activeLayers?: {
     active?: boolean;
     cardList?: Card[];
-    target?: Card;
+    target?: string;
     isReorderable?: boolean;
   };
   chatLog?: string[];
