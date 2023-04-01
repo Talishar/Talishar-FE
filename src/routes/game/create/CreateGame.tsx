@@ -12,7 +12,7 @@ import useAuth from 'hooks/useAuth';
 import { CreateGameAPI } from 'interface/API/CreateGame.php';
 import { toast } from 'react-hot-toast';
 import { FaExclamationCircle } from 'react-icons/fa';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import styles from './CreateGame.module.css';
 import CreateGameErrors from './CreateGameErrors';
 import validationSchema from './validationSchema';
@@ -22,16 +22,21 @@ const CreateGame = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { data, isLoading } = useGetFavoriteDecksQuery(undefined);
+  const [searchParams, setSearchParams] = useSearchParams();
   const [createGame, createGameResult] = useCreateGameMutation();
 
   const initialValues: CreateGameAPI = {
     deck: '',
-    fabdb: '',
+    fabdb: searchParams.get('fabdb') ?? '',
     deckTestMode: false,
-    format: isLoggedIn
-      ? GAME_FORMAT.CLASSIC_CONSTRUCTED
-      : GAME_FORMAT.OPEN_FORMAT,
-    visibility: isLoggedIn ? GAME_VISIBILITY.PUBLIC : GAME_VISIBILITY.PRIVATE,
+    format:
+      searchParams.get('format') || isLoggedIn
+        ? GAME_FORMAT.CLASSIC_CONSTRUCTED
+        : GAME_FORMAT.OPEN_FORMAT,
+    visibility:
+      searchParams.get('visibility') || isLoggedIn
+        ? GAME_VISIBILITY.PUBLIC
+        : GAME_VISIBILITY.PRIVATE,
     decksToTry: '',
     favoriteDeck: false,
     favoriteDecks:

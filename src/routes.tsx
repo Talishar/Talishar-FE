@@ -18,6 +18,7 @@ import { SignUpForm } from 'routes/user/login/components/SignUpForm';
 import useAuth from 'hooks/useAuth';
 import Header from 'components/header/Header';
 import Privacy from 'routes/privacy';
+import CreateGame from 'routes/game/create/CreateGame';
 
 const PlayGuard = ({ children }: { children: JSX.Element }) => {
   const [searchParams] = useKnownSearchParams();
@@ -95,11 +96,7 @@ export const router = createBrowserRouter(
       <Route path="game/lobby/:gameID" element={<Lobby />} />
       <Route
         path="game/MainMenu.php"
-        element={
-          <>
-            <Navigate to="/" replace={true} />
-          </>
-        }
+        element={<Navigate to="/" replace={true} />}
       />
       <Route element={<Header />}>
         <Route path="/">
@@ -113,6 +110,7 @@ export const router = createBrowserRouter(
             errorElement={<ErrorPage />}
           />
         </Route>
+        <Route path="game/create" element={<CreateGame />} />
         <Route path="privacy" element={<Privacy />} />
         <Route path="user">
           <Route index element={<Navigate to={'./profile'} />} />
