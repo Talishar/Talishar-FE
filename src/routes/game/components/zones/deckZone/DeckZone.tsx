@@ -8,7 +8,7 @@ import styles from './DeckZone.module.css';
 export const DeckZone = React.memo((prop: Displayrow) => {
   const { isPlayer } = prop;
 
-  const showCount = false;
+  const showCount = true;
 
   const deckCards = useAppSelector((state: RootState) =>
     isPlayer ? state.game.playerOne.DeckSize : state.game.playerTwo.DeckSize

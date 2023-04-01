@@ -38,6 +38,7 @@ export default function ActiveLayersZone() {
                   ? ' (Drag highlighted to reorder)'
                   : null}
               </h3>
+              <Target target={activeLayer.target} />
               <p className={styles.orderingExplanation}>
                 Priority settings can be adjusted in the menu
               </p>
@@ -59,3 +60,10 @@ export default function ActiveLayersZone() {
     </AnimatePresence>
   );
 }
+
+const Target = ({ target }: { target: string | undefined }) => {
+  // TODO: have this be useful
+  return null;
+
+  return <h4 className={styles.target}>{target}</h4>;
+};
