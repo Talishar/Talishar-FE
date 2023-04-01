@@ -1,6 +1,7 @@
 .permanentsWrapper {
   position: relative;
-  overflow-x: clip;
+  overflow-x: auto;
+  overflow-y: hidden;
   flex: 0 1 100%;
   border-radius: 0.5em;
   gap: 1vh;
@@ -21,8 +22,6 @@
   bottom: -10px;
   padding-bottom: 10px;
   display: flex;
-  overflow-x: auto;
-  overflow-y: hidden;
   justify-content: flex-start;
   gap: 1vh;
   align-content: flex-start;
