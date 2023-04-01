@@ -163,6 +163,10 @@ const Lobby = () => {
     case GAME_FORMAT.CLASH:
       deckSize = 40;
       break;
+    case GAME_FORMAT.SEALED:
+    case GAME_FORMAT.DRAFT:
+      deckSize = 30;
+      break;
     case GAME_FORMAT.OPEN_FORMAT:
       deckSize = 0;
       break;
