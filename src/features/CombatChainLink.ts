@@ -13,6 +13,7 @@ export default interface CombatChainLink {
   overpower?: boolean;
   fused?: boolean;
   damagePrevention?: number;
+  attackTarget?: string;
   isDraconic?: boolean;
   isIllusionist?: boolean;
 }
