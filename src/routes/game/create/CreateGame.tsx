@@ -30,11 +30,11 @@ const CreateGame = () => {
     fabdb: searchParams.get('fabdb') ?? '',
     deckTestMode: false,
     format:
-      searchParams.get('format') || isLoggedIn
+      searchParams.get('format') ?? isLoggedIn
         ? GAME_FORMAT.CLASSIC_CONSTRUCTED
         : GAME_FORMAT.OPEN_FORMAT,
     visibility:
-      searchParams.get('visibility') || isLoggedIn
+      searchParams.get('visibility') ?? isLoggedIn
         ? GAME_VISIBILITY.PUBLIC
         : GAME_VISIBILITY.PRIVATE,
     decksToTry: '',
