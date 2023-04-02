@@ -106,7 +106,7 @@ export const SignUpForm = () => {
             {...register('agreeToTerms')}
             aria-invalid={errors.agreeToTerms?.message ? 'true' : undefined}
           />
-          <label htmlFor="passwordRepeat">
+          <label htmlFor="agreeToTerms">
             I agree that{' '}
             <span
               onClick={() => setDisclaimerOpen(true)}

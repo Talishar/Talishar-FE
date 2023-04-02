@@ -39,6 +39,17 @@ export type ForgottenPasswordType = yup.InferType<
   typeof forgottenPasswordValidationSchema
 >;
 
+export const resetPasswordValidationSchema = yup.object().shape({
+  password: yup
+    .string()
+    .required('Password is required')
+    .min(8, 'Password must be at least 8 characters long'),
+  passwordRepeat: yup
+    .string()
+    .required('You must confirm your password')
+    .oneOf([yup.ref('password')], 'Passwords must match')
+});
+
 export const loginValidationSchema = yup.object().shape({
   userID: yup.string().required('You must enter a username'),
   password: yup.string().required('You must enter a password'),

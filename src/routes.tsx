@@ -10,7 +10,7 @@ import Index from './routes/index/Index';
 import { ErrorPage } from 'errorPage';
 import Play from 'routes/game/play/Play';
 import { useKnownSearchParams } from 'hooks/useKnownSearchParams';
-import { ForgottenPasswordForm, LoginForm, LoginPage } from 'routes/user/login';
+import { ForgottenPasswordForm, LoginForm, LoginPage, ResetPasswordForm } from 'routes/user/login';
 import { DecksPage, ProfilePage } from 'routes/user';
 import JoinGame from 'routes/game/join/Join';
 import Lobby from 'routes/game/lobby/Lobby';
@@ -142,6 +142,10 @@ export const router = createBrowserRouter(
             <Route
               path="password-recovery"
               element={<ForgottenPasswordForm />}
+            />
+            <Route
+              path="reset-password"
+              element={<ResetPasswordForm />}
             />
             <Route path="signup" element={<SignUpForm />} />
           </Route>
