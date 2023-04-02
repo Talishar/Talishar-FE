@@ -5,10 +5,11 @@ import { submitButton } from 'features/game/GameSlice';
 import { FaUndo } from 'react-icons/fa';
 import { GiExpand } from 'react-icons/gi';
 import styles from './Menu.module.css';
-import { PROCESS_INPUT } from 'appConstants';
+import { DEFAULT_SHORTCUTS, PROCESS_INPUT } from 'appConstants';
 import FullControlToggle from './FullControlToggle';
 import HideModalsToggle from './HideModalsToggle/HideModalsToggle';
 import OptionsMenuToggle from './OptionsMenuToggle';
+import useShortcut from 'hooks/useShortcut';
 
 function FullScreenButton() {
   function toggleFullScreen() {
@@ -36,8 +37,12 @@ function UndoButton() {
   const clickUndo = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     e.currentTarget.blur();
+    handleUndo();
+  };
+  const handleUndo = () => {
     dispatch(submitButton({ button: { mode: PROCESS_INPUT.UNDO } }));
   };
+  useShortcut(DEFAULT_SHORTCUTS.UNDO, handleUndo);
   return (
     <div>
       <button
