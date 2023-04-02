@@ -1,3 +1,11 @@
 .navBar {
   top: 0px;
 }
+
+.logoutButton {
+  padding: 0 var(--nav-link-spacing-horizontal);
+}
+
+.logoutButton button {
+  padding: .25rem var(--nav-link-spacing-horizontal);
+}
