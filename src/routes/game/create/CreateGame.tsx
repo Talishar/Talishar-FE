@@ -51,8 +51,9 @@ const CreateGame = () => {
     { setSubmitting }: FormikHelpers<CreateGameAPI>
   ) => {
     setSubmitting(true);
-    console.log('submitting');
     try {
+      // if you're not logged in you can ONLY make a private game.
+      if (!isLoggedIn) values.visibility = GAME_VISIBILITY.PRIVATE;
       values.user = searchParams.get('user') ?? undefined;
       const response = await createGame(values).unwrap();
       if (response.error) {
