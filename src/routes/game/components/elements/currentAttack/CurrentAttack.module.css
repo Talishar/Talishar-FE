@@ -22,7 +22,7 @@
   pointer-events: none;
 }
 
-.icon {
+.icon.icon {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -37,10 +37,6 @@
   margin: 0.25em;
   pointer-events: auto;
   user-select: none;
-}
-
-.icon .icon {
-  border-bottom: var(--primary) solid 1px;
 }
 
 .cardContainer {
