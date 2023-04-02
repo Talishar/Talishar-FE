@@ -136,6 +136,15 @@ export const apiSlice = createApi({
         };
       }
     }),
+    resetPassword: builder.mutation({
+      query: (body) => {
+        return {
+          url: URL_END_POINT.RESET_PASSWORD,
+          method: 'POST',
+          body: { ...body }
+        };
+      }
+    }),
     submitChat: builder.mutation({
       query: ({
         gameID = 0,
@@ -256,6 +265,7 @@ export const {
   useLogOutMutation,
   useSignUpMutation,
   useForgottenPasswordMutation,
+  useResetPasswordMutation,
   useCreateGameMutation,
   useJoinGameMutation,
   useGetLobbyInfoQuery,

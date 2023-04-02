@@ -138,7 +138,8 @@ export const URL_END_POINT = {
   LOGIN_WITH_COOKIE: 'AccountFiles/TryLoginAPI.php',
   LOGOUT: `AccountFiles/LogoutUserAPI.php`,
   SIGNUP: `AccountFiles/SignupAPI.php`,
-  FORGOT_PASSWORD: `AccountFiles/PasswordResetRequestAPI.php`
+  FORGOT_PASSWORD: `AccountFiles/PasswordResetRequestAPI.php`,
+  RESET_PASSWORD: `AccountFiles/ResetPassword.php`
 };
 
 export const GAME_VISIBILITY = {
