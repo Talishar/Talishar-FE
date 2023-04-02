@@ -38,7 +38,7 @@ const Header = () => {
             )}
           </li>
           {isLoggedIn && (
-            <li>
+            <li className={styles.logoutButton}>
               <button onClick={handleLogOut} className="secondary outline">
                 Log out
               </button>
