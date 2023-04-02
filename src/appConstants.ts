@@ -100,7 +100,9 @@ export const PROCESS_INPUT = {
 export const DEFAULT_SHORTCUTS = {
   TOGGLE_OPTIONS_MENU: 'KeyM',
   PASS_TURN: 'Space',
-  CLOSE_WINDOW: 'Escape'
+  CLOSE_WINDOW: 'Escape',
+  UNDO: 'KeyU',
+  UNDOALT: 'KeyZ'
 };
 
 export const GAME_FORMAT = {
