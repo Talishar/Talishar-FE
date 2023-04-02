@@ -1,5 +1,6 @@
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import {
+  useGetFavoriteDecksQuery,
   useLoginWithCookieQuery,
   useLogOutMutation
 } from 'features/api/apiSlice';
@@ -15,6 +16,7 @@ import { toast } from 'react-hot-toast';
 export default function useAuth() {
   const currentUserId = useAppSelector(selectCurrentUser);
   const currentUserName = useAppSelector(selectCurrentUserName);
+  const { refetch } = useGetFavoriteDecksQuery(undefined);
   const [logOutAPI, logOutData] = useLogOutMutation();
   const { isLoading, error, data } = useLoginWithCookieQuery({});
   const dispatch = useAppDispatch();
@@ -44,6 +46,7 @@ export default function useAuth() {
   useEffect(() => {
     if (data?.isUserLoggedIn) {
       setLoggedIn(data.loggedInUserID, data.loggedInUserName, '');
+      refetch();
     }
   }, [isLoading]);
 

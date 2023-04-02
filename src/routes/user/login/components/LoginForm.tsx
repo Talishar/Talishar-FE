@@ -2,7 +2,10 @@ import { ErrorMessage, FormikProvider, useFormik } from 'formik';
 import { Link, useNavigate } from 'react-router-dom';
 import styles from './LoginForm.module.css';
 import classnames from 'classnames';
-import { useLoginMutation } from 'features/api/apiSlice';
+import {
+  useGetFavoriteDecksQuery,
+  useLoginMutation
+} from 'features/api/apiSlice';
 import { QueryStatus } from '@reduxjs/toolkit/dist/query';
 import useAuth from 'hooks/useAuth';
 import { toast } from 'react-hot-toast';
@@ -34,6 +37,7 @@ export const LoginForm = () => {
   const [login, loginResult] = useLoginMutation();
   const { setLoggedIn } = useAuth();
   const navigate = useNavigate();
+  const { refetch } = useGetFavoriteDecksQuery(undefined);
   const {
     register,
     handleSubmit,
@@ -57,6 +61,7 @@ export const LoginForm = () => {
       }
       if (resp?.isUserLoggedIn) {
         toast.success('logged in!', { position: 'top-center' });
+        refetch();
         setLoggedIn(resp?.loggedInUserID ?? '0', resp?.loggedInUserName, '');
         // TODO: Have this go back in router history to the previous page or protected route.
         navigate('/');
