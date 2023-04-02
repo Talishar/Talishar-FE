@@ -55,6 +55,7 @@ const CreateGame = () => {
     setSubmitting(true);
     console.log('submitting');
     try {
+      values.user = searchParams.get('user') ?? undefined;
       const response = await createGame(values).unwrap();
       if (response.error) {
         throw response.error;
@@ -191,7 +192,9 @@ const CreateGame = () => {
                     </option>
                     <option value={GAME_FORMAT.COMMONER}>Commoner</option>
                     <option value={GAME_FORMAT.CLASH}>Clash</option>
-                    <option value={GAME_FORMAT.SEALED}>Sealed (DraftFaB decks only)</option>
+                    <option value={GAME_FORMAT.SEALED}>
+                      Sealed (DraftFaB decks only)
+                    </option>
                     <option value={GAME_FORMAT.OPEN_FORMAT}>
                       Open Format (no restrictions!)
                     </option>
