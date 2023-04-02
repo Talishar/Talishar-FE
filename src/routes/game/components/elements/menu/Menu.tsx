@@ -43,6 +43,7 @@ function UndoButton() {
     dispatch(submitButton({ button: { mode: PROCESS_INPUT.UNDO } }));
   };
   useShortcut(DEFAULT_SHORTCUTS.UNDO, handleUndo);
+  useShortcut(DEFAULT_SHORTCUTS.UNDOALT, handleUndo);
   return (
     <div>
       <button
