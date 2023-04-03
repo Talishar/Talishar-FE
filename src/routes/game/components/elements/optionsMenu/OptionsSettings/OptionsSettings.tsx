@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import styles from '../OptionsMenu.module.css';
 import {
@@ -12,12 +12,16 @@ import { getGameInfo } from 'features/game/GameSlice';
 import { shallowEqual } from 'react-redux';
 import * as optConst from 'features/options/constants';
 import HeroZone from 'routes/game/components/zones/heroZone/HeroZone';
+import CardDisplay from '../../cardDisplay/CardDisplay';
+import { CARD_BACK } from 'features/options/cardBacks';
+import { useGetCosmeticsQuery } from 'features/api/apiSlice';
 
 const OptionsSettings = () => {
   const gameInfo = useAppSelector(getGameInfo, shallowEqual);
   const settingsData = useAppSelector(getSettingsEntity);
   const isLoading = useAppSelector(getSettingsStatus);
   const dispatch = useAppDispatch();
+  const [openCardBacks, setOpenCardBacks] = useState<boolean>(false);
 
   // fetch all settings when options is loaded
   useEffect(() => {
@@ -31,6 +35,14 @@ const OptionsSettings = () => {
         settings: [{ name: name, value: value }]
       })
     );
+  };
+
+  const handleCardBackOnClick = () => {
+    setOpenCardBacks(true);
+  };
+
+  const closeCardBack = () => {
+    setOpenCardBacks(false);
   };
 
   const initialValues = {
@@ -49,7 +61,9 @@ const OptionsSettings = () => {
     disableChat: settingsData['MuteChat']?.value === '1',
     disableStats: settingsData['DisableStats']?.value === '1',
     casterMode: settingsData['IsCasterMode']?.value === '1',
-    streamerMode: settingsData['IsStreamerMode']?.value === '1'
+    streamerMode: settingsData['IsStreamerMode']?.value === '1',
+    // Enum is BE: /Libraries/PlayerSettings.php - function GetCardBack($player)
+    cardBack: String(settingsData['CardBack']?.value ?? '0')
   };
 
   return (
@@ -322,6 +336,19 @@ const OptionsSettings = () => {
             />
             Disable Chat
           </label>
+          <label className={styles.cardBack}>
+            Card Back
+            <div onClick={handleCardBackOnClick}>
+              <CardDisplay
+                card={{ cardNumber: CARD_BACK[initialValues.cardBack] }}
+                preventUseOnClick
+              />
+            </div>
+          </label>
+          <SelectCardBack
+            isOpen={openCardBacks}
+            closeFunction={closeCardBack}
+          />
         </fieldset>
       </div>
       <p>
@@ -334,4 +361,14 @@ const OptionsSettings = () => {
   );
 };
 
+const SelectCardBack = ({
+  isOpen,
+  closeFunction
+}: {
+  isOpen: boolean;
+  closeFunction: () => void;
+}) => {
+  const { data } = useGetCosmeticsQuery(undefined);
+  return <div></div>;
+};
 export default OptionsSettings;
