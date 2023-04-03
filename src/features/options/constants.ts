@@ -14,6 +14,7 @@ export const MUTE_CHAT = 'MuteChat';
 export const DISABLE_STATS = 'DisableStats';
 export const IS_CASTER_MODE = 'IsCasterMode';
 export const IS_STREAMER_MODE = 'IsStreamerMode';
+export const MY_PLAYMAT = 'Playmat';
 
 export enum HOLD_PRIORITY_ENUM {
   AUTO = 0,

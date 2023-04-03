@@ -31,6 +31,7 @@ import { SubmitSideboardAPI } from 'interface/API/SubmitSideboard.php';
 import { GetFavoriteDecksResponse } from 'interface/API/GetFavoriteDecks.php';
 import { GameListResponse } from 'routes/index/components/gameList/GameList';
 import { ProcessInputAPI } from 'interface/API/ProcessInputAPI';
+import { GetCosmeticsResponse } from 'interface/API/GetCosmeticsResponse.php';
 
 // catch warnings and show a toast if we get one.
 export const rtkQueryErrorToaster: Middleware =
@@ -185,6 +186,13 @@ export const apiSlice = createApi({
         };
       }
     }),
+    getCosmetics: builder.query<GetCosmeticsResponse, undefined>({
+      query: () => {
+        return {
+          url: URL_END_POINT.GET_COSMETICS
+        };
+      }
+    }),
     getFavoriteDecks: builder.query<GetFavoriteDecksResponse, undefined>({
       query: () => {
         return {
@@ -259,6 +267,7 @@ export const {
   useGetPopUpContentQuery,
   useSubmitChatMutation,
   useGetGameListQuery,
+  useGetCosmeticsQuery,
   useGetFavoriteDecksQuery,
   useLoginMutation,
   useLoginWithCookieQuery,

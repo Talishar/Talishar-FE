@@ -139,7 +139,8 @@ export const URL_END_POINT = {
   LOGOUT: `AccountFiles/LogoutUserAPI.php`,
   SIGNUP: `AccountFiles/SignupAPI.php`,
   FORGOT_PASSWORD: `AccountFiles/PasswordResetRequestAPI.php`,
-  RESET_PASSWORD: `AccountFiles/ResetPassword.php`
+  RESET_PASSWORD: `AccountFiles/ResetPassword.php`,
+  GET_COSMETICS: `APIs/GetCosmetics.php`
 };
 
 export const GAME_VISIBILITY = {
@@ -170,3 +171,14 @@ export const QUERY_STATUS = {
   LOADING: 'loading',
   IDLE: 'idle'
 };
+
+export const PLAYMATS = [
+  'aria',
+  'demonastery',
+  'metrix',
+  'misteria',
+  'pits',
+  'savage',
+  'solana',
+  'volcor'
+];
