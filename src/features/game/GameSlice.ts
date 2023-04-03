@@ -18,6 +18,7 @@ import {
   GetLobbyRefreshResponse
 } from 'interface/API/GetLobbyRefresh.php';
 import { RootState } from 'app/Store';
+import { deleteGameAuthKey, loadGameAuthKey, saveGameAuthKey } from 'utils/LocalKeyManagement';
 
 export const nextTurn = createAsyncThunk(
   'game/nextTurn',
@@ -326,9 +327,18 @@ export const gameSlice = createSlice({
       state.gameInfo.playerID = !!state.gameInfo.playerID
         ? state.gameInfo.playerID
         : action.payload.playerID;
-      state.gameInfo.authKey = !!state.gameInfo.authKey
-        ? state.gameInfo.authKey
-        : action.payload.authKey;
+      //If We don't currently have an Auth Key
+      if(!state.gameInfo.authKey){
+        //And the payload is giving us an auth key
+        if(action.payload.authKey !== ""){
+          saveGameAuthKey(action.payload.gameID, action.payload.authKey)
+          state.gameInfo.authKey = action.payload.authKey
+        }
+        //Else try to set from local storage
+        else{
+          state.gameInfo.authKey = loadGameAuthKey(state.gameInfo.gameID)
+        }
+      }
       state.gameDynamicInfo.lastUpdate = 0;
       state.playerOne = {};
       state.playerTwo = {};
@@ -339,6 +349,7 @@ export const gameSlice = createSlice({
     },
     // for main menu, zero out all active game info.
     clearGameInfo: (state) => {
+      deleteGameAuthKey(state.gameInfo.gameID)
       state.gameInfo.gameID = 0;
       state.gameInfo.playerID = 0;
       state.gameInfo.authKey = '';
