@@ -3,10 +3,14 @@ import { Card } from 'features/Card';
 import styles from './CountersOverlay.module.css';
 import GemSlider from '../gemSlider/GemSlider';
 import classNames from 'classnames';
+import { ActiveCardCounterOverlay } from './components/ActiveChainCounters';
+import CombatChainLink from 'features/CombatChainLink';
+import { ContinuousCounters } from './components/ContinuousCounters';
 
 export interface CountersProp extends Card {
   num?: number;
   numDescription?: string;
+  activeCombatChain?: CombatChainLink;
 }
 
 export const CountersOverlay = ({
@@ -17,7 +21,8 @@ export const CountersOverlay = ({
   num,
   numDescription,
   facing,
-  zone
+  zone,
+  activeCombatChain
 }: CountersProp) => {
   const includedCounters = [
     'defence',
@@ -40,49 +45,8 @@ export const CountersOverlay = ({
 
   return (
     <div className={styles.countersCover}>
-      {!!Number(countersMap?.defence) && (
-        <div
-          className={styles.defCounter}
-          title={`${countersMap?.defence} defence counter(s)`}
-        >
-          <div>{countersMap?.defence}</div>
-        </div>
-      )}
-      {!!Number(countersMap?.steam) && (
-        <div
-          className={styles.steamCounter}
-          title={`${countersMap?.steam} steam counter(s)`}
-        >
-          <div>{countersMap?.steam}</div>
-        </div>
-      )}
-      {!!Number(countersMap?.life) && (
-        <div
-          className={styles.lifeCounter}
-          title={`${countersMap?.life} life counter(s)`}
-        >
-          <div>{countersMap?.life}</div>
-        </div>
-      )}
-      {!!Number(countersMap?.attack) && (
-        <div
-          className={styles.attackCounter}
-          title={`${countersMap?.attack} attack counter(s)`}
-        >
-          <div>{countersMap?.attack}</div>
-        </div>
-      )}
-      {!!Number(countersMap?.energy) && (
-        <div
-          className={styles.number}
-          title={`${countersMap?.energy} energy counter(s)`}
-        >
-          <div className={styles.text}>{countersMap?.energy}</div>
-        </div>
-      )}
-      {!!Number(countersMap?.aim) && (
-        <div className={styles.aimCounter} title={`aim counter`}></div>
-      )}
+      {countersMap && <ContinuousCounters countersMap={countersMap} />}
+      {activeCombatChain && <ActiveCardCounterOverlay activeCombatChain={activeCombatChain} />}
       {!!numTotal && (
         <div
           className={styles.number}

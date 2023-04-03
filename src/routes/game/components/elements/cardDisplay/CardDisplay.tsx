@@ -6,6 +6,8 @@ import classNames from 'classnames';
 import CountersOverlay from '../countersOverlay/CountersOverlay';
 import CardImage from '../cardImage/CardImage';
 import CardPopUp from '../cardPopUp/CardPopUp';
+import { ActiveCardCounterOverlay } from '../countersOverlay/components/ActiveChainCounters';
+import CombatChainLink from 'features/CombatChainLink';
 
 export interface CardProp {
   makeMeBigger?: boolean;
@@ -14,11 +16,11 @@ export interface CardProp {
   preventUseOnClick?: boolean;
   useCardMode?: number;
   card?: Card;
+  activeCombatChain?: CombatChainLink;
 }
 
 export const CardDisplay = (prop: CardProp) => {
-  const { card, preventUseOnClick } = prop;
-  const { num } = prop;
+  const { card, preventUseOnClick, activeCombatChain, num } = prop;
   const dispatch = useAppDispatch();
 
   if (card == null || card.cardNumber === '') {
@@ -74,7 +76,7 @@ export const CardDisplay = (prop: CardProp) => {
       {(card.isBroken || card.onChain || card.isFrozen) && (
         <div className={equipStatus}></div>
       )}
-      <CountersOverlay {...card} num={num} />
+      <CountersOverlay {...card} num={num} activeCombatChain={activeCombatChain}/>
     </CardPopUp>
   );
 };

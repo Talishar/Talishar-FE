@@ -1,7 +1,6 @@
 import React from 'react';
 import { RootState } from 'app/Store';
-import { BiBullseye, BiTargetLock } from 'react-icons/bi';
-import { GiZigzagLeaf, GiElectric, GiCycle, GiShield } from 'react-icons/gi';
+import { BiTargetLock } from 'react-icons/bi';
 import styles from './CurrentAttack.module.css';
 import attackSymbol from '../../../../../img/symbols/symbol-attack.png';
 import defSymbol from '../../../../../img/symbols/symbol-defence.png';
@@ -59,38 +58,7 @@ export default function CurrentAttack() {
         ) : null}
       </div>
       <div className={styles.attack}>
-        <CardDisplay card={attCard} />
-        <div className={styles.floatCover}>
-          {activeCombatChain.goAgain ? (
-            <div className={styles.icon} data-tooltip="Go Again">
-              <GiCycle />
-            </div>
-          ) : null}
-          {activeCombatChain.dominate ? (
-            <div className={styles.icon} data-tooltip="Dominate">
-              <BiBullseye />
-            </div>
-          ) : null}
-          {activeCombatChain.overpower ? (
-            <div className={styles.icon} data-tooltip="Overpower">
-              <GiElectric />
-            </div>
-          ) : null}
-          {activeCombatChain.fused ? (
-            <div className={styles.icon} data-tooltip="Fused">
-              <GiZigzagLeaf />
-            </div>
-          ) : null}
-          {activeCombatChain.damagePrevention ? (
-            <div
-              className={styles.icon}
-              data-tooltip={`${activeCombatChain.damagePrevention} Damage Prevention`}
-            >
-              <GiShield />
-              {activeCombatChain.damagePrevention}
-            </div>
-          ) : null}
-        </div>
+        <CardDisplay card={attCard} activeCombatChain={activeCombatChain}/>
       </div>
     </div>
   );
