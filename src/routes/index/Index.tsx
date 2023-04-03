@@ -26,6 +26,9 @@ const Index = () => {
           <img src={TalisharLogo} className={styles.logo} />
           <hgroup>
             <h1>News</h1>
+            <h2><strong>We are currently experiencing technical issues with the backend/legacy 
+client, so unable to create games. we are aware and will fix asap. 
+thank you for your patience.</strong></h2>
             <h2>
               New client! We hope you enjoy the new client. If there are any
               issues please report them at the socials linked below:
