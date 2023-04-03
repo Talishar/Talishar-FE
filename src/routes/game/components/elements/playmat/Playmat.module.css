@@ -8,7 +8,6 @@
   background-position: center;
   z-index: 0 !important;
   border-radius: 5px;
-  filter: brightness(0.5);
 }
 
 .playerTwo {
@@ -21,5 +20,4 @@
   background-position: center;
   z-index: 0 !important;
   border-radius: 5px;
-  filter: brightness(0.5);
 }

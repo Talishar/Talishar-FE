@@ -2,10 +2,11 @@
   top: 0px;
   right: 0px;
 
-  width: 16vh;
-  height: 22vh;
-  width: 16dvh;
-  height: 22dvh;
+  position: relative;
+  width: 14vh;
+  height: 18vh;
+  width: 14dvh;
+  height: 18dvh;
 
   z-index: 15;
   user-select: none;
@@ -13,7 +14,7 @@
 
 .widgetBackground {
   background-position: right;
-  background-size: 12vh auto;
+  background-size: 10vh auto;
   background-repeat: no-repeat;
   height: 100%;
 
@@ -47,15 +48,16 @@
 }
 
 .widgetRightCol {
-  width: 12vh;
-  height: 19vh;
-  width: 12dvh;
-  height: 19dvh;
+  width: 10vh;
+  height: 17vh;
+  width: 10dvh;
+  height: 17dvh;
+  
+  padding: 1vh 0;
+  padding: 1dvh 0;
 
   gap: 1vh;
-  margin-right: 1vh;
   gap: 1dvh;
-  margin-right: 1dvh;
 
   display: flex;
   flex-direction: column;
