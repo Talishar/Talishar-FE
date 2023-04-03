@@ -10,7 +10,7 @@ export const Playmat = ({ isPlayer }: { isPlayer: boolean }) => {
 
   if (playmat === undefined) {
     // playmat = DEFAULT_PLAYMAT;
-    playmat = isPlayer ? 'aria' : `volcor`;
+    playmat = isPlayer ? 'pits' : `volcor`;
   }
 
   const styleToApply = {
