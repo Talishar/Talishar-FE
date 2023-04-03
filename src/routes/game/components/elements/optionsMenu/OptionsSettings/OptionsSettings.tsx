@@ -38,6 +38,7 @@ const OptionsSettings = () => {
   };
 
   const handleCardBackOnClick = () => {
+    console.log('clicked card back');
     setOpenCardBacks(true);
   };
 
@@ -275,7 +276,9 @@ const OptionsSettings = () => {
           </label>
         </fieldset>
         <fieldset>
-          <legend>Other Settings</legend>
+          <legend>
+            <strong>Other Settings</strong>
+          </legend>
           <label className={styles.optionLabel}>
             <input
               type="checkbox"
@@ -336,20 +339,16 @@ const OptionsSettings = () => {
             />
             Disable Chat
           </label>
-          <label className={styles.cardBack}>
-            Card Back
-            <div onClick={handleCardBackOnClick}>
-              <CardDisplay
-                card={{ cardNumber: CARD_BACK[initialValues.cardBack] }}
-                preventUseOnClick
-              />
-            </div>
-          </label>
-          <SelectCardBack
-            isOpen={openCardBacks}
-            closeFunction={closeCardBack}
-          />
         </fieldset>
+        <label className={styles.cardBack}>
+          <strong>Card Back</strong> (cannot change for now)
+          <div onClick={handleCardBackOnClick}>
+            <CardDisplay
+              card={{ cardNumber: CARD_BACK[initialValues.cardBack] }}
+              preventUseOnClick
+            />
+          </div>
+        </label>
       </div>
       <p>
         Talishar is in no way affiliated with Legend Story Studios. Legend Story
@@ -359,16 +358,5 @@ const OptionsSettings = () => {
       </p>
     </div>
   );
-};
-
-const SelectCardBack = ({
-  isOpen,
-  closeFunction
-}: {
-  isOpen: boolean;
-  closeFunction: () => void;
-}) => {
-  const { data } = useGetCosmeticsQuery(undefined);
-  return <div></div>;
 };
 export default OptionsSettings;
