@@ -26,14 +26,16 @@ const Index = () => {
           <img src={TalisharLogo} className={styles.logo} />
           <hgroup>
             <h1>News</h1>
-            <h2><strong>We are currently experiencing technical issues with the backend/legacy 
-client, so unable to create games. we are aware and will fix asap. 
-thank you for your patience.</strong></h2>
-            <h2>
-              New client! We hope you enjoy the new client. If there are any
-              issues please report them at the socials linked below:
-            </h2>
+            <h2>Apologies for the recent downtime</h2>
           </hgroup>
+            <p>we will investigate what caused it</p>
+            <p>
+              If there are any
+              issues please report them at the socials linked below:
+            </p>
+            <p>Talishar ks looking for contributors!
+              If you would like to comtribute to the open source
+              flesh and blood community, drop us a message on discord, or on our github.</p>
           <p>Please join our community:</p>
           <ul>
             <li>
