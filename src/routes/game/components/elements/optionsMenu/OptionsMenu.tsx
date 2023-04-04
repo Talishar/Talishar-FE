@@ -69,7 +69,7 @@ const OptionsContent = () => {
 
   const clickRevertToStartOfThisTurnHandler = () => {
     dispatch(
-      submitButton({ button: { mode: PROCESS_INPUT.REVERT_TO_PRIOR_TURN } })
+      submitButton({ button: { mode: PROCESS_INPUT.REVERT_TO_PRIOR_TURN, buttonInput:"beginTurnGamestate.txt" } })
     );
     clickCloseOptionsHandler();
   };
