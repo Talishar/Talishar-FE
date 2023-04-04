@@ -31,10 +31,12 @@ const CreateGame = () => {
     deckTestMode: false,
     format:
       searchParams.get('format') ??
-      (isLoggedIn ? GAME_FORMAT.CLASSIC_CONSTRUCTED : GAME_FORMAT.OPEN_FORMAT),
+      (isLoggedIn ?
+        (data?.lastFormat !== undefined ? data.lastFormat : GAME_FORMAT.CLASSIC_CONSTRUCTED)
+         : GAME_FORMAT.OPEN_FORMAT),
     visibility:
       searchParams.get('visibility') ??
-      (isLoggedIn ? GAME_VISIBILITY.PUBLIC : GAME_VISIBILITY.PRIVATE),
+      (isLoggedIn ? (data?.lastVisibility !== undefined && data.lastVisibility == 1 ? GAME_VISIBILITY.PUBLIC : GAME_VISIBILITY.PRIVATE) : GAME_VISIBILITY.PRIVATE),
     decksToTry: '',
     favoriteDeck: false,
     favoriteDecks:
