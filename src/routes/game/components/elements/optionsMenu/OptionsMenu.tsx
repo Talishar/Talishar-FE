@@ -82,8 +82,10 @@ const OptionsContent = () => {
   };
 
   const clickRevertToStartOfPreviousTurnHandler = () => {
-    // TODO: implement
-    console.log('revert to start of previous turn');
+    dispatch(
+      submitButton({ button: { mode: PROCESS_INPUT.REVERT_TO_PRIOR_TURN, buttonInput:"lastTurnGamestate.txt" } })
+    );
+    clickCloseOptionsHandler();
   };
 
   const clickCopySpectateToClipboardHandler = () => {
@@ -137,9 +139,8 @@ const OptionsContent = () => {
               <button
                 className={styles.buttonDiv}
                 onClick={clickRevertToStartOfPreviousTurnHandler}
-                disabled
               >
-                Revert to Start of Previous Turn (inactive)
+                Revert to Start of Previous Turn
               </button>
             </>
           )}
