@@ -21,15 +21,8 @@ export const ZoneCounts = (prop: Displayrow) => {
     <div className={styles.container}>
       <div className={styles.column}>
         <SoulCount {...prop} />
-        <HandCount {...prop} />
-        <PitchCount {...prop} />
-        <ArsenalCount {...prop} />
-      </div>
-      <div className={styles.column}>
         <BloodDebtCount {...prop} />
-        <GraveyardCount {...prop} />
-        <DeckCount {...prop} />
-        <BanishCount {...prop} />
+        <HandCount {...prop} />
       </div>
     </div>
   );
@@ -203,7 +196,7 @@ const BloodDebtCount = (prop: Displayrow) => {
   );
 
   return (
-    <div>
+    <>
       {!!hasBloodDebt ? (
         <div title="BloodDebt" className={bloodDebtItem}>
           <GiDrop /> {BloodDebtCount}
@@ -211,7 +204,7 @@ const BloodDebtCount = (prop: Displayrow) => {
       ) : (
         <div className={styles.item}> </div>
       )}
-    </div>
+    </>
   );
 };
 

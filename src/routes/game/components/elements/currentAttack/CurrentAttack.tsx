@@ -52,13 +52,16 @@ export default function CurrentAttack() {
           {defValue}
         </div>
         {activeCombatChain.attackTarget ? (
-          <div className={styles.icon} data-tooltip={`Attack target: ${activeCombatChain.attackTarget}`}>
+          <div
+            className={styles.icon}
+            data-tooltip={`Attack target: ${activeCombatChain.attackTarget}`}
+          >
             <BiTargetLock />
           </div>
         ) : null}
       </div>
       <div className={styles.attack}>
-        <CardDisplay card={attCard} activeCombatChain={activeCombatChain}/>
+        <CardDisplay card={attCard} activeCombatChain={activeCombatChain} />
       </div>
     </div>
   );

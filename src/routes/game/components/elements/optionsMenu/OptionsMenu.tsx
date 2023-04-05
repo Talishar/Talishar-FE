@@ -69,7 +69,12 @@ const OptionsContent = () => {
 
   const clickRevertToStartOfThisTurnHandler = () => {
     dispatch(
-      submitButton({ button: { mode: PROCESS_INPUT.REVERT_TO_PRIOR_TURN, buttonInput:"beginTurnGamestate.txt" } })
+      submitButton({
+        button: {
+          mode: PROCESS_INPUT.REVERT_TO_PRIOR_TURN,
+          buttonInput: 'beginTurnGamestate.txt'
+        }
+      })
     );
     clickCloseOptionsHandler();
   };
@@ -83,7 +88,12 @@ const OptionsContent = () => {
 
   const clickRevertToStartOfPreviousTurnHandler = () => {
     dispatch(
-      submitButton({ button: { mode: PROCESS_INPUT.REVERT_TO_PRIOR_TURN, buttonInput:"lastTurnGamestate.txt" } })
+      submitButton({
+        button: {
+          mode: PROCESS_INPUT.REVERT_TO_PRIOR_TURN,
+          buttonInput: 'lastTurnGamestate.txt'
+        }
+      })
     );
     clickCloseOptionsHandler();
   };
@@ -147,7 +157,7 @@ const OptionsContent = () => {
         </div>
         <h3>Invite Spectators</h3>
         <div className={styles.buttonColumn}>
-          {isPrivate && !allowSpectator ? (
+          {isPrivate && allowSpectator ? (
             <>
               <button
                 style={{ marginTop: '0.5em' }}

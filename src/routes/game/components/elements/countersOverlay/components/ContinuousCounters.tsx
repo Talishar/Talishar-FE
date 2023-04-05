@@ -2,8 +2,8 @@ import classNames from 'classnames';
 import styles from '../CountersOverlay.module.css';
 
 type Props = {
-  countersMap: {[key:string]: number}
-}
+  countersMap: { [key: string]: number };
+};
 
 const includedCounters = [
   'defence',
@@ -14,15 +14,14 @@ const includedCounters = [
   'aim'
 ];
 
-const toTooltipString = (type: string, value: number) => `${value>1 ? value : '' } ${type} counter${value>1 ? 's' : ''}`
+const toTooltipString = (type: string, value: number) =>
+  `${value > 1 ? value : ''} ${type} counter${value > 1 ? 's' : ''}`;
 export const ContinuousCounters = (props: Props) => {
-  const {
-    countersMap,
-  } = props;
+  const { countersMap } = props;
 
   return (
     <>
-    {!!Number(countersMap?.defence) && (
+      {!!Number(countersMap?.defence) && (
         <div
           className={styles.defCounter}
           title={`${countersMap?.defence} defence counter(s)`}
@@ -68,12 +67,12 @@ export const ContinuousCounters = (props: Props) => {
         </div>
       )}
       {!!Number(countersMap?.aim) && (
-        <div 
+        <div
           className={classNames(styles.aimCounter, styles.icon)}
           title={`aim counter`}
           data-tooltip={toTooltipString('Aim', countersMap?.aim)}
         />
       )}
     </>
-  )
-}
+  );
+};

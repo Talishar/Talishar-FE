@@ -1,22 +1,5 @@
-.firstCol {
+.gameListContainer {
   overflow-y: auto;
-}
-
-.news {
-  margin: 2em auto;
-  display: flex;
-  flex-direction: column;
-  gap: 1em;
-  max-width: 600px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 12px;
-}
-
-@media (max-width: 767px) {
-  .news {
-    width: 100%;
-    border: none;
-  }
 }
 
 .logo {
@@ -25,4 +8,49 @@
   max-height: 483px;
   width: 100%;
   height: auto;
+}
+
+.grid {
+  display: grid;
+  gap: 30px;
+  margin: 0 auto;
+  padding: 0 1em;
+  max-width: 100%;
+}
+
+.createGameContainer {
+  order: 1;
+}
+
+.newsContainer {
+  margin: 2em auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  max-width: 600px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  order: 2;
+}
+
+.gameListContainer {
+  order: 3;
+}
+
+@media (min-width: 1080px) {
+  .grid {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+
+  .gameListContainer {
+    order: 1;
+  }
+
+  .createGameContainer {
+    order: 2;
+  }
+
+  .newsContainer {
+    order: 3;
+  }
 }
