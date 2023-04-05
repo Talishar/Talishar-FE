@@ -1,4 +1,4 @@
-.label {
+.label.label {
   background-color: var(--near-black);
   color: var(--primary);
   order: 99;
@@ -14,7 +14,7 @@
   overflow: hidden;
 }
 
-.countersCover {
+.countersCover.countersCover {
   position: absolute;
   display: flex;
   justify-content: center;
@@ -25,9 +25,10 @@
   right: 0px;
   bottom: 0px;
   z-index: 2;
+  cursor: default;
 }
 
-.number {
+.number.number {
   border-radius: 100%;
   border-style: solid;
   border-color: black;
@@ -40,9 +41,10 @@
   font-size: 1.5em;
   background-color: var(--white);
   text-align: center;
+  cursor: default;
 }
 
-.defCounter {
+.defCounter.defCounter {
   border-radius: 100%;
   display: flex;
   justify-content: center;
@@ -58,9 +60,10 @@
   text-shadow: -1px 1px 2px #000, 1px 1px 2px #000, 1px -1px 0 #000,
     -1px -1px 0 #000;
   z-index: -1;
+  cursor: default;
 }
 
-.steamCounter {
+.steamCounter.steamCounter {
   border-radius: 100%;
   display: flex;
   justify-content: center;
@@ -76,9 +79,10 @@
   text-shadow: -1px 1px 2px #000, 1px 1px 2px #000, 1px -1px 0 #000,
     -1px -1px 0 #000;
   z-index: -1;
+  cursor: default;
 }
 
-.attackCounter {
+.attackCounter.attackCounter {
   border-radius: 100%;
   display: flex;
   justify-content: center;
@@ -94,9 +98,10 @@
   text-shadow: -1px 1px 2px #000, 1px 1px 2px #000, 1px -1px 0 #000,
     -1px -1px 0 #000;
   z-index: -1;
+  cursor: default;
 }
 
-.lifeCounter {
+.lifeCounter.lifeCounter {
   border-radius: 100%;
   display: flex;
   justify-content: center;
@@ -111,13 +116,14 @@
   color: var(--white);
   text-shadow: -1px 1px 2px #000, 1px 1px 2px #000, 1px -1px 0 #000,
     -1px -1px 0 #000;
+  cursor: default;
 }
 
-[data-tooltip]::before{
+[data-tooltip]::before {
   text-shadow: none;
 }
 
-.aimCounter {
+.aimCounter.aimCounter {
   border-radius: 100%;
   height: 2em;
   width: 2em;
@@ -125,6 +131,7 @@
   background-position: center;
   background-size: contain;
   border: none;
+  cursor: default;
 }
 
 .facing {
@@ -173,4 +180,5 @@
   margin: 0.25em;
   pointer-events: auto;
   user-select: none;
+  cursor: default;
 }

@@ -37,6 +37,7 @@
   margin: 0.25em;
   pointer-events: auto;
   user-select: none;
+  cursor: default;
 }
 
 .cardContainer {
