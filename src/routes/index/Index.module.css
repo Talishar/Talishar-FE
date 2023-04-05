@@ -1,4 +1,4 @@
-.firstCol {
+.gameListContainer {
   overflow-y: auto;
 }
 
@@ -12,12 +12,12 @@
   border-radius: 12px;
 }
 
-@media (max-width: 767px) {
+/* @media (max-width: 767px) {
   .news {
     width: 100%;
     border: none;
   }
-}
+} */
 
 .logo {
   display: block;
@@ -25,4 +25,42 @@
   max-height: 483px;
   width: 100%;
   height: auto;
+}
+
+.grid {
+  display: grid;
+  gap: 30px;
+  margin: 0 auto;
+  padding: 0 1em;
+  max-width: 100%;
+}
+
+.createGameContainer {
+  order: 1;
+}
+
+.news {
+  order: 2;
+}
+
+.gameListContainer {
+  order: 3;
+}
+
+@media (min-width: 1080px) {
+  .grid {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+
+  .gameListContainer {
+    order: 1;
+  }
+
+  .createGameContainer {
+    order: 2;
+  }
+
+  .news {
+    order: 3;
+  }
 }
