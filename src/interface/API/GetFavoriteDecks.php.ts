@@ -1,6 +1,8 @@
 export interface GetFavoriteDecksResponse {
   favoriteDecks: FavoriteDeck[];
   lastUsedDeckIndex?: number;
+  lastFormat?: number;
+  lastVisibility?: number;
 }
 
 export interface FavoriteDeck {
