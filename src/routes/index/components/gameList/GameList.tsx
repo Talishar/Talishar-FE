@@ -57,6 +57,7 @@ const GameList = () => {
   let filteredGamesInProgress = data?.gamesInProgress
     ? [...data.gamesInProgress]
     : [];
+
   filteredGamesInProgress = filteredGamesInProgress
     .filter((game) => {
       return (
@@ -111,7 +112,17 @@ const GameList = () => {
         </button>
       </div>
       {isLoading ? <div aria-busy="true">Loading!</div> : null}
-      {error ? <div>ERROR!</div> : null}
+      {error ? (
+        <div>
+          <h2>There has been an error!</h2>
+          <p>
+            Please refresh the page and try again, if you still get an error
+            loading the gamelist. Please report on our discord and let them know
+            the following:
+          </p>
+          <p>{JSON.stringify(error)}</p>
+        </div>
+      ) : null}
       {!isLoading && !error && <Filter setHeroFilter={setHeroFilter} />}
       <FormatList gameList={blitz} name="Blitz" />
       <FormatList gameList={compBlitz} name="Competitive Blitz" />
