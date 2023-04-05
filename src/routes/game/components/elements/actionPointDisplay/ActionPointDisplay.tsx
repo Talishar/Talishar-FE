@@ -12,9 +12,12 @@ export default function ActionPointDisplay(props: Player) {
     )
   );
 
+  const ActivePlayer = useAppSelector((state: RootState) =>
+    state.game.activePlayer
+  );
   return (
     <div className={styles.actionPointDisplay}>
-      <div className={styles.actionPointCounter}>{APAvailable}</div>
+      <div className={`${styles.actionPointCounter}`}>{APAvailable} AP</div>
     </div>
   );
 }
