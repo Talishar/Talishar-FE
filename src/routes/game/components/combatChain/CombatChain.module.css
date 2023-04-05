@@ -2,7 +2,7 @@
   position: relative;
   height: 20vh;
   height: 20dvh;
-  margin: auto;
+  margin: 2px;
   width: 100%;
   padding: 1vh;
   background: rgba(50,50,50,.5);
