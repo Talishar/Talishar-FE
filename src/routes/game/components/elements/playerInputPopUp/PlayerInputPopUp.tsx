@@ -113,6 +113,8 @@ export default function PlayerInputPopUp() {
   }) || [];
 
   const FormDisplay = PlayerInputFormTypeMap[inputPopUp.popup?.id || ''] || OtherInput;
+  //Title comes back as a HTML string so we need to dangeously set it vs just using it for the moment
+  const title = { __html: inputPopUp?.popup?.title ?? '' };
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.8 }}
@@ -123,7 +125,7 @@ export default function PlayerInputPopUp() {
     >
       <div className={styles.optionsTitleContainer}>
         <div className={styles.optionsTitle}>
-          <h3 className={styles.title}> {inputPopUp.popup?.title ?? ''}</h3>
+          <h3 className={styles.title} dangerouslySetInnerHTML={title}></h3>
           {inputPopUp.popup?.additionalComments}
         </div>
         {inputPopUp.popup?.canClose ? (
