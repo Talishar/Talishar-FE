@@ -20,7 +20,6 @@ export default function PassTurnDisplay() {
 
   const dispatch = useAppDispatch();
 
-  console.log('hasPriority', hasPriority);
   useEffect(() => {
     let link = document.getElementById('favicon') as HTMLLinkElement;
     console.log(link);
