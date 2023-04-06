@@ -13,7 +13,7 @@ export default interface GameState {
   playerTwo: Player;
   activeChainLink?: CombatChainLink;
   oldCombatChain?: CombatChainLink[];
-  activePlayer?: number; // 1 is us 2 is them
+  amIActivePlayer?: boolean;
   popup?: {
     popupOn?: boolean;
     popupCard?: Card;
@@ -106,4 +106,5 @@ export default interface GameState {
   gameLobby?: GetLobbyRefreshResponse;
   showModals?: boolean;
   landmark?: Card;
+  hasPriority?: boolean;
 }

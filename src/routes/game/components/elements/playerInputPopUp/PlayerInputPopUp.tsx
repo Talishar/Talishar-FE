@@ -9,7 +9,7 @@ import CardDisplay from '../cardDisplay/CardDisplay';
 import SearchCardInput from '../searchCardInput';
 import { PROCESS_INPUT } from 'appConstants';
 import { NAME_A_CARD } from './constants';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import useShowModal from 'hooks/useShowModals';
 
 export default function PlayerInputPopUp() {

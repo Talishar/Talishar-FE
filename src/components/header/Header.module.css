@@ -1,5 +1,6 @@
 .navBar {
   top: 0px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .logoutButton {
@@ -7,5 +8,5 @@
 }
 
 .logoutButton button {
-  padding: .25rem var(--nav-link-spacing-horizontal);
+  padding: 0.25rem var(--nav-link-spacing-horizontal);
 }

@@ -23,7 +23,7 @@ export const OfflineTestingGameState: GameState = {
     isPrivate: false
   },
   gameDynamicInfo: { lastUpdate: 0 },
-  activePlayer: 1,
+  amIActivePlayer: false,
   oldCombatChain: [
     {
       attackingCard: {
@@ -97,7 +97,7 @@ export const OfflineTestingGameState: GameState = {
     overpower: true,
     fused: true,
     damagePrevention: 5,
-    attackTarget: "Prism"
+    attackTarget: 'Prism'
   },
   playerOne: {
     // human player

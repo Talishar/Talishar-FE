@@ -12,6 +12,11 @@ const Index = () => {
 
   useEffect(() => {
     dispatch(clearGameInfo());
+
+    let link = document.getElementById('favicon') as HTMLLinkElement;
+    if (link) {
+      link.href = '/favicon.ico';
+    }
   }, []);
 
   return (
