@@ -287,7 +287,7 @@ export default function ParseGameState(input: any) {
   result.chatLog.push(input.chatLog.replace(re, '/images/'));
 
   // activeplayer
-  result.activePlayer = input.amIActivePlayer ? 1 : 2;
+  result.amIActivePlayer = input.amIActivePlayer as boolean;
 
   // last update frame
   result.gameDynamicInfo.lastUpdate = input.lastUpdate;

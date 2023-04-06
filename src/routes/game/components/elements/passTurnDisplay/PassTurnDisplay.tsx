@@ -12,10 +12,22 @@ export default function PassTurnDisplay() {
   const canPassPhase = useAppSelector(
     (state: RootState) => state.game.canPassPhase
   );
+  const amIActivePlayer = useAppSelector(
+    (state: RootState) => state.game.amIActivePlayer
+  );
   const [canPassController, setCanPassController] = useState<boolean>(false);
   const [playPassTurnSound] = useSound(passTurnSound);
 
   const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    let link = document.getElementById('favicon') as HTMLLinkElement;
+    if (amIActivePlayer && link) {
+      link.href = '/images/priorityGreen.ico';
+    } else {
+      link.href = '/images/priorityGrey.ico';
+    }
+  }, [amIActivePlayer]);
 
   const onPassTurn = () => {
     dispatch(submitButton({ button: { mode: PROCESS_INPUT.PASS } }));
