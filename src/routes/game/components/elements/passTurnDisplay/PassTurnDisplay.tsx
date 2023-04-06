@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { playCard, submitButton } from 'features/game/GameSlice';
+import { submitButton } from 'features/game/GameSlice';
 import { useAppSelector, useAppDispatch } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import styles from './PassTurnDisplay.module.css';
