@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { playCard, submitButton } from 'features/game/GameSlice';
 import { useAppSelector, useAppDispatch } from 'app/Hooks';
 import { RootState } from 'app/Store';
@@ -15,10 +15,19 @@ export default function PassTurnDisplay() {
   const hasPriority = useAppSelector(
     (state: RootState) => state.game.hasPriority
   );
+  const frameNumber = useAppSelector(
+    (state: RootState) => state.game.gameDynamicInfo.lastUpdate
+  );
   const [canPassController, setCanPassController] = useState<boolean>(false);
   const [playPassTurnSound] = useSound(passTurnSound);
 
   const dispatch = useAppDispatch();
+
+  useMemo(() => {
+    if (hasPriority) {
+      playPassTurnSound();
+    }
+  }, [frameNumber]);
 
   useEffect(() => {
     let link = document.getElementById('favicon') as HTMLLinkElement;
@@ -37,12 +46,12 @@ export default function PassTurnDisplay() {
 
   useShortcut(DEFAULT_SHORTCUTS.PASS_TURN, onPassTurn);
 
-  useEffect(() => {
-    if (canPassPhase && canPassController) {
-      setCanPassController(false);
-      playPassTurnSound();
-    }
-  }, [canPassController]);
+  // useEffect(() => {
+  //   if (canPassPhase && canPassController) {
+  //     setCanPassController(false);
+  //     playPassTurnSound();
+  //   }
+  // }, [canPassController]);
 
   if (canPassPhase === undefined) {
     return <div className={styles.passTurnDisplay}></div>;
