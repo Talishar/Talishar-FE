@@ -1,5 +1,5 @@
 // For dev env use local proxy, on production connect directly to server.
-export const GAME_LIMIT_LIVE = 10000;
+export const GAME_LIMIT_LIVE = 1000000;
 export const GAME_LIMIT_BETA = 1000;
 
 export const API_URL_BETA = import.meta.env.DEV
