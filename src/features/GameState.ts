@@ -106,4 +106,5 @@ export default interface GameState {
   gameLobby?: GetLobbyRefreshResponse;
   showModals?: boolean;
   landmark?: Card;
+  hasPriority?: boolean;
 }

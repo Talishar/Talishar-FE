@@ -321,5 +321,7 @@ export default function ParseGameState(input: any) {
 
   result.events = input.newEvents?.eventArray;
 
+  result.hasPriority = !!input.havePriority;
+
   return result;
 }

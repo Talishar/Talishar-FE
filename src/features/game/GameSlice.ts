@@ -427,6 +427,7 @@ export const gameSlice = createSlice({
       state.gameDynamicInfo.lastUpdate =
         action.payload.gameDynamicInfo.lastUpdate;
       state.gameDynamicInfo.turnNo = action.payload.gameDynamicInfo.turnNo;
+      state.hasPriority = action.payload.hasPriority;
 
       state.playerPrompt = action.payload.playerPrompt;
       state.canPassPhase = action.payload.canPassPhase;
