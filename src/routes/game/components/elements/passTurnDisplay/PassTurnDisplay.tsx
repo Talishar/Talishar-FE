@@ -23,9 +23,9 @@ export default function PassTurnDisplay() {
   useEffect(() => {
     let link = document.getElementById('favicon') as HTMLLinkElement;
     if (amIActivePlayer && link) {
-      link.href = '/images/priorityGreen.ico';
+      link.href = '/Images/priorityGreen.ico';
     } else {
-      link.href = '/images/priorityGrey.ico';
+      link.href = '/Images/priorityGrey.ico';
     }
   }, [amIActivePlayer]);
 
