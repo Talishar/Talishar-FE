@@ -14,7 +14,7 @@ it('shows a mock chain link summary', async () => {
   const testStore = store;
   store.dispatch(showChainLinkSummary({ chainLink: 0 }));
   store.dispatch(
-    setGameStart({ playerID: 1, gameID: 123456, authKey: '12345' })
+    setGameStart({ playerID: 1, gameID: 123456789, authKey: '12345' })
   );
   const div = renderWithProviders(<ChainLinkSummaryContainer />, {
     store: testStore
