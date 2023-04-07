@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { ReactNode, useEffect, useState } from 'react';
 import { submitButton, submitMultiButton } from 'features/game/GameSlice';
 import { useAppSelector, useAppDispatch } from 'app/Hooks';
 import { RootState } from 'app/Store';
@@ -11,9 +11,19 @@ import { PROCESS_INPUT } from 'appConstants';
 import { NAME_A_CARD } from './constants';
 import { motion } from 'framer-motion';
 import useShowModal from 'hooks/useShowModals';
+import { OptInput } from './components/OptInput';
+import { FormProps } from './playerInputPopupTypes';
+import { OtherInput } from './components/OtherInput';
+
+const PlayerInputFormTypeMap: {
+  [key: string]: (props: FormProps) => JSX.Element;
+} = {
+  OPT: OptInput
+};
 
 export default function PlayerInputPopUp() {
   const showModal = useShowModal();
+  const dispatch = useAppDispatch();
   const inputPopUp = useAppSelector(
     (state: RootState) => state.game.playerInputPopUp
   );
@@ -23,25 +33,17 @@ export default function PlayerInputPopUp() {
   );
 
   useEffect(() => {
-    const cardsArrLength =
-      inputPopUp?.popup?.cards?.length !== undefined
-        ? inputPopUp?.popup?.cards?.length
-        : 0;
-    const optionsArrLength =
-      inputPopUp?.multiChooseText?.length !== undefined
-        ? inputPopUp?.multiChooseText?.length
-        : 0;
+    const cardsArrLength = inputPopUp?.popup?.cards?.length ?? 0;
+    const optionsArrLength = inputPopUp?.multiChooseText?.length ?? 0;
     const checkBoxLength = Math.max(cardsArrLength, optionsArrLength);
     setCheckedState(new Array(checkBoxLength).fill(false));
   }, [inputPopUp]);
-
-  const dispatch = useAppDispatch();
 
   const onPassTurn = () => {
     dispatch(submitButton({ button: { mode: PROCESS_INPUT.PASS } }));
   };
 
-  const clickButton = (button: Button) => {
+  const onClickButton = (button: Button) => {
     dispatch(submitButton({ button: button }));
   };
 
@@ -53,8 +55,6 @@ export default function PlayerInputPopUp() {
   ) {
     return null;
   }
-
-  const title = { __html: inputPopUp.popup?.title ?? '' };
 
   const checkBoxSubmit = () => {
     let extraParams = `&chkCount=${checkedState.length}`;
@@ -84,44 +84,6 @@ export default function PlayerInputPopUp() {
     );
   };
 
-  const buttons = inputPopUp.buttons?.map((button, ix) => {
-    return (
-      <div
-        className={styles.buttonDiv}
-        onClick={() => {
-          clickButton(button);
-        }}
-        key={ix.toString()}
-      >
-        {button.caption}
-      </div>
-    );
-  });
-
-  // cards
-  const selectCard = inputPopUp.popup?.cards?.map((card, ix) => {
-    return inputPopUp.choiceOptions == 'checkbox' ? (
-      <div
-        key={ix.toString()}
-        className={styles.cardDiv}
-        onClick={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          handleCheckBoxChange(Number(card.actionDataOverride));
-        }}
-      >
-        <CardDisplay
-          card={{ borderColor: checkedState[ix] ? '8' : '', ...card }}
-          preventUseOnClick
-        />
-      </div>
-    ) : (
-      <div className={styles.cardDiv} key={ix.toString()}>
-        <CardDisplay card={card} />
-      </div>
-    );
-  });
-
   const handleCheckBoxChange = (pos: number | undefined) => {
     if (pos === undefined) {
       return;
@@ -148,8 +110,11 @@ export default function PlayerInputPopUp() {
         </label>
       </div>
     );
-  });
+  }) || [];
 
+  const FormDisplay = PlayerInputFormTypeMap[inputPopUp.popup?.id || ''] || OtherInput;
+  //Title comes back as a HTML string so we need to dangeously set it vs just using it for the moment
+  const title = { __html: inputPopUp?.popup?.title ?? '' };
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.8 }}
@@ -170,30 +135,18 @@ export default function PlayerInputPopUp() {
         ) : null}
       </div>
       <div className={styles.contentContainer}>
-        <form className={styles.form}>
-          {selectCard?.length != 0 ? (
-            <div className={styles.cardList}>{selectCard}</div>
-          ) : null}
-          {buttons?.length != 0 ? (
-            <div className={styles.buttonList}>{buttons}</div>
-          ) : null}
-          <div>
-            {inputPopUp.formOptions ? (
-              <div>
-                {checkboxes?.length != 0 ? <div>{checkboxes}</div> : null}
-                <div
-                  className={styles.buttonDiv}
-                  onClick={() => {
-                    checkBoxSubmit();
-                  }}
-                >
-                  {inputPopUp.formOptions.caption}
-                </div>
-              </div>
-            ) : null}
-            {inputPopUp?.popup?.id === NAME_A_CARD && <SearchCardInput />}
-          </div>
-        </form>
+        <FormDisplay
+          cards={inputPopUp.popup?.cards || []}
+          buttons={inputPopUp.buttons || []}
+          onClickButton={onClickButton}
+          id={inputPopUp.popup?.id || ''}
+          choiceOptions={inputPopUp.choiceOptions || ''}
+          checkedState={checkedState}
+          handleCheckBoxChange={handleCheckBoxChange}
+          formOptions={inputPopUp.formOptions}
+          checkboxes={checkboxes}
+          checkBoxSubmit={checkBoxSubmit}
+        />
       </div>
     </motion.div>
   );

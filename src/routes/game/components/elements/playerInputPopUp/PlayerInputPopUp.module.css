@@ -99,6 +99,30 @@
   gap: 1vh;
 }
 
+.optForm.optForm{
+  flex-direction: row;
+  margin-bottom: 0;
+}
+
+.optForm .buttonRow{
+  display: flex;
+  margin-top: .5rem;
+  align-items: center;
+}
+
+.optForm .buttonDiv {
+  margin: 0 .25em;
+}
+
+.optForm .cardDiv{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-height: none;
+  max-width:none;
+  height: 100%;
+}
+
 .cardList {
   display: flex;
   flex-direction: row;
