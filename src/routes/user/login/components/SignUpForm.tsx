@@ -50,6 +50,15 @@ export const SignUpForm = () => {
       }
     } catch (err) {
       console.warn(err);
+      toast.error(`Network error: ${JSON.stringify(err)}`, {
+        position: 'top-center'
+      });
+      setError('root.serverError', {
+        type: 'custom',
+        message: `There has been a network error while signing up. Please try again. If you still get an error please report on our discord and let them know the following: ${JSON.stringify(
+          err
+        )}`
+      });
     } finally {
     }
   };

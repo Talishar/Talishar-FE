@@ -64,7 +64,7 @@ export const LoginForm = () => {
         refetch();
         setLoggedIn(resp?.loggedInUserID ?? '0', resp?.loggedInUserName, '');
         // TODO: Have this go back in router history to the previous page or protected route.
-        navigate('/');
+        navigate(-1);
       }
       if (resp?.isUserLoggedIn === false) {
         toast.error('Incorrect username or password.', {
@@ -77,6 +77,15 @@ export const LoginForm = () => {
       }
     } catch (err) {
       console.warn(err);
+      toast.error(`Network error: ${JSON.stringify(err)}`, {
+        position: 'top-center'
+      });
+      setError('root.serverError', {
+        type: 'custom',
+        message: `There has been a network error while logging in. Please try again. If you still get an error please report on our discord and let them know the following: ${JSON.stringify(
+          err
+        )}`
+      });
     }
   };
 

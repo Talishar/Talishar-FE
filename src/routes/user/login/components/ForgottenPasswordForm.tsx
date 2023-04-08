@@ -45,6 +45,15 @@ export const ForgottenPasswordForm = () => {
       }
     } catch (err) {
       console.warn(err);
+      toast.error(`Network error: ${JSON.stringify(err)}`, {
+        position: 'top-center'
+      });
+      setError('root.serverError', {
+        type: 'custom',
+        message: `There has been a network error while submitting your forgotten password request. Please try again. If you still get an error please report on our discord and let them know the following: ${JSON.stringify(
+          err
+        )}`
+      });
     } finally {
     }
   };
