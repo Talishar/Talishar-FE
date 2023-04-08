@@ -3,8 +3,7 @@ import { ResetPassword } from 'interface/API/ResetPassword.php';
 import styles from './LoginForm.module.css';
 import { FaExclamationCircle } from 'react-icons/fa';
 import { useResetPasswordMutation } from 'features/api/apiSlice';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import classNames from 'classnames';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { toast } from 'react-hot-toast';
@@ -12,9 +11,8 @@ import { useAutoAnimate } from '@formkit/auto-animate/react';
 
 export const ResetPasswordForm = () => {
   const navigate = useNavigate();
-  const [params, setSearchParams] = useSearchParams();
-  const [resetPassword, resetPasswordResult] =
-    useResetPasswordMutation();
+  const [params] = useSearchParams();
+  const [resetPassword] = useResetPasswordMutation();
   const [parent] = useAutoAnimate();
   const {
     register,
@@ -28,8 +26,8 @@ export const ResetPasswordForm = () => {
 
   const onSubmit: SubmitHandler<ResetPassword> = async (values) => {
     try {
-      values.selector = params.get("selector");
-      values.validator = params.get("validator");
+      values.selector = params.get('selector') ?? '';
+      values.validator = params.get('validator') ?? '';
       const resp = await resetPassword(values).unwrap();
       if (resp.error) {
         setError('root.serverError', {
@@ -39,13 +37,22 @@ export const ResetPasswordForm = () => {
         toast.error(resp.error, { position: 'top-center' });
       }
       if (resp.message === 'Success!') {
-        toast.success('Password reset successfully! Login with your new password.', {
-          position: 'top-center'
-        });
+        toast.success(
+          'Password reset successfully! Login with your new password.',
+          {
+            position: 'top-center'
+          }
+        );
         navigate('/user/login');
       }
     } catch (err) {
       console.warn(err);
+      setError('root.serverError', {
+        type: 'custom',
+        message: `There has been a network error submitting the password reset. Please try again. If you still get an error please report on our discord and let them know the following: ${JSON.stringify(
+          err
+        )}`
+      });
     } finally {
     }
   };

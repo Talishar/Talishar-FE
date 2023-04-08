@@ -434,6 +434,10 @@ export const gameSlice = createSlice({
       state.events = action.payload.events;
       state.landmark = action.payload.landmark;
 
+      state.gameInfo.roguelikeGameID =
+        action.payload.gameInfo.roguelikeGameID ??
+        state.gameInfo.roguelikeGameID;
+
       return state;
     });
     builder.addCase(nextTurn.pending, (state, action) => {
