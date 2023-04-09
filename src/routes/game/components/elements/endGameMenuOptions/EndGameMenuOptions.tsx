@@ -32,7 +32,7 @@ const EndGameMenuOptions = () => {
   };
 
   const handleContinueAdventure = () => {
-    window.target = "https://beta.talishar.net/game/Roguelike/ContinueAdventure.php?gameName=" + roguelikeGameID + "&playerID=1&health=" + health;
+    window.location.href = "https://beta.talishar.net/game/Roguelike/ContinueAdventure.php?gameName=" + roguelikeGameID + "&playerID=1&health=" + health;
   };
 
   return (
