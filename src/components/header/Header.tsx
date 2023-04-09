@@ -26,9 +26,7 @@ const Header = () => {
             <a href="https://www.draftfab.com/">Limited</a>
           </li>
           <li>
-            <span data-placement="bottom" data-tooltip="coming soon">
-              RogueLike
-            </span>
+            <a href="https://beta.talishar.net/game/Roguelike/CreateGame.php">RogueLike</a>
           </li>
           <li>
             {isLoggedIn ? (
