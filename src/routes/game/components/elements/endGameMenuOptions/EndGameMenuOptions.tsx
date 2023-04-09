@@ -32,11 +32,7 @@ const EndGameMenuOptions = () => {
   };
 
   const handleContinueAdventure = () => {
-    dispatch(
-      submitButton({
-        button: { mode: PROCESS_INPUT.ROGUELIKE_RESUME_ADVENTURE }
-      })
-    );
+    window.target = "https://beta.talishar.net/game/Roguelike/ContinueAdventure.php?gameName=" + roguelikeGameID + "&playerID=1&health=" + health;
   };
 
   return (
