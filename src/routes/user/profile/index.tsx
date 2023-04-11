@@ -4,7 +4,7 @@ import {
 } from 'features/api/apiSlice';
 import { DeleteDeckAPIResponse } from 'interface/API/DeleteDeckAPI.php';
 import { toast } from 'react-hot-toast';
-import { GiTrashCan } from 'react-icons/gi';
+import { GiNotebook, GiTrashCan } from 'react-icons/gi';
 import styles from './profile.module.css';
 
 export const ProfilePage = () => {
@@ -12,7 +12,7 @@ export const ProfilePage = () => {
   const [deleteDeck] = useDeleteDeckMutation();
 
   const handleDeleteDeckMessage = (resp: DeleteDeckAPIResponse): string => {
-    if (resp.message !== 'Deck deleted successfully.') {
+    if (resp.message === 'Deck deleted successfully.') {
       return 'The deck has been removed from your favorites list. It is still available to view on the deckbuilding site.';
     } else {
       return 'There has been a problem deleting your deck, please try again.';
@@ -44,6 +44,10 @@ export const ProfilePage = () => {
     }
   };
 
+  const handleEditDeck = (deckLink: string) => {
+    window.location.href = deckLink;
+  };
+
   return (
     <div>
       <div className="container">
@@ -64,6 +68,7 @@ export const ProfilePage = () => {
                 <th scope="col">Format</th>
                 <th scope="col">Card Back</th>
                 <th scope="col">Playmat</th>
+                <th scope="col">View / Edit</th>
                 <th scope="col">Delete</th>
               </tr>
             </thead>
@@ -83,6 +88,17 @@ export const ProfilePage = () => {
                   <td>{deck.format}</td>
                   <td>{deck.cardBack}</td>
                   <td>{deck.playmat}</td>
+                  <td className={styles.editButton}>
+                    <button
+                      className={styles.button}
+                      onClick={() => handleEditDeck(deck.link)}
+                    >
+                      <GiNotebook
+                        fontSize={'1.5em'}
+                        className={styles.trashcanIcon}
+                      />
+                    </button>
+                  </td>
                   <td className={styles.deleteButton}>
                     <button
                       className={styles.button}
