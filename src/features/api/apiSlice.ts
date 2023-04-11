@@ -5,7 +5,7 @@ import {
   FetchArgs,
   FetchBaseQueryError
 } from '@reduxjs/toolkit/query/react';
-import { isRejected, isRejectedWithValue } from '@reduxjs/toolkit';
+import { isRejectedWithValue } from '@reduxjs/toolkit';
 import type { MiddlewareAPI, Middleware } from '@reduxjs/toolkit';
 import { RootState } from 'app/Store';
 import {
@@ -30,18 +30,23 @@ import { ChooseFirstPlayer } from 'interface/API/ChooseFirstPlayer.php';
 import { SubmitSideboardAPI } from 'interface/API/SubmitSideboard.php';
 import { GetFavoriteDecksResponse } from 'interface/API/GetFavoriteDecks.php';
 import { GameListResponse } from 'routes/index/components/gameList/GameList';
-import { ProcessInputAPI } from 'interface/API/ProcessInputAPI';
 import { GetCosmeticsResponse } from 'interface/API/GetCosmeticsResponse.php';
+import {
+  DeleteDeckAPIRequest,
+  DeleteDeckAPIResponse
+} from 'interface/API/DeleteDeckAPI.php';
 
 // catch warnings and show a toast if we get one.
 export const rtkQueryErrorToaster: Middleware =
   (api: MiddlewareAPI) => (next) => (action) => {
-    // if (isRejectedWithValue(action)) {
-    //   console.warn('Rejected action:', action);
-    //   const errorMessage = action.error?.message ?? 'an error happened';
-    //   const errorStatus = action.payload?.status ?? 0;
-    //   toast.error(`Error: ${errorStatus} - ${errorMessage}`);
-    // }
+    if (isRejectedWithValue(action)) {
+      console.warn('Rejected action:', action);
+      const errorMessage = action.error?.message ?? 'an error happened';
+      const errorStatus = action.payload?.status ?? 0;
+      toast.error(
+        `A network error happened, please try again. Error:\n${errorStatus}\n${errorMessage}`
+      );
+    }
     return next(action);
   };
 
@@ -203,8 +208,17 @@ export const apiSlice = createApi({
         return response;
       }
     }),
+    deleteDeck: builder.mutation<DeleteDeckAPIResponse, DeleteDeckAPIRequest>({
+      query: (body: DeleteDeckAPIRequest) => {
+        return {
+          url: URL_END_POINT.DELETE_DECK,
+          method: 'post',
+          body: body
+        };
+      }
+    }),
     createGame: builder.mutation<CreateGameResponse, CreateGameAPI>({
-      query: ({ ...body }: CreateGameAPI) => {
+      query: (body: CreateGameAPI) => {
         return {
           url: URL_END_POINT.CREATE_GAME,
           method: 'POST',
@@ -216,7 +230,7 @@ export const apiSlice = createApi({
         response.status
     }),
     joinGame: builder.mutation<JoinGameResponse, JoinGameAPI>({
-      query: ({ ...body }: JoinGameAPI) => {
+      query: (body: JoinGameAPI) => {
         return {
           url: URL_END_POINT.JOIN_GAME,
           method: 'POST',
@@ -269,6 +283,7 @@ export const {
   useGetGameListQuery,
   useGetCosmeticsQuery,
   useGetFavoriteDecksQuery,
+  useDeleteDeckMutation,
   useLoginMutation,
   useLoginWithCookieQuery,
   useLogOutMutation,

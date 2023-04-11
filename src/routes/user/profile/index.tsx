@@ -1,12 +1,52 @@
-import { useGetFavoriteDecksQuery } from 'features/api/apiSlice';
-import { GiTrashCan } from 'react-icons/gi';
+import {
+  useDeleteDeckMutation,
+  useGetFavoriteDecksQuery
+} from 'features/api/apiSlice';
+import { DeleteDeckAPIResponse } from 'interface/API/DeleteDeckAPI.php';
+import { toast } from 'react-hot-toast';
+import { GiNotebook, GiTrashCan } from 'react-icons/gi';
 import styles from './profile.module.css';
 
 export const ProfilePage = () => {
-  const { data, isLoading } = useGetFavoriteDecksQuery(undefined);
+  const { data, isLoading, refetch } = useGetFavoriteDecksQuery(undefined);
+  const [deleteDeck] = useDeleteDeckMutation();
 
-  const handleButtonClick = (deckKey: string) => {
-    console.log('clicked this one', deckKey);
+  const handleDeleteDeckMessage = (resp: DeleteDeckAPIResponse): string => {
+    if (resp.message === 'Deck deleted successfully.') {
+      return 'The deck has been removed from your favorites list. It is still available to view on the deckbuilding site.';
+    } else {
+      return 'There has been a problem deleting your deck, please try again.';
+    }
+  };
+
+  const handleDeleteDeck = async (deckLink: string) => {
+    try {
+      const deleteDeckPromise = deleteDeck({ deckLink }).unwrap();
+      toast.promise(
+        deleteDeckPromise,
+        {
+          loading: 'Deleting deck...',
+          success: (data) => handleDeleteDeckMessage(data),
+          error: (err) =>
+            `There has been an error, please try again. Error: ${err.toString()}`
+        },
+        {
+          style: {
+            minWidth: '250px'
+          },
+          position: 'top-center'
+        }
+      );
+      const resp = await deleteDeckPromise;
+    } catch (err) {
+      console.warn(err);
+    } finally {
+      refetch();
+    }
+  };
+
+  const handleEditDeck = (deckLink: string) => {
+    window.location.href = deckLink;
   };
 
   return (
@@ -29,6 +69,7 @@ export const ProfilePage = () => {
                 <th scope="col">Format</th>
                 <th scope="col">Card Back</th>
                 <th scope="col">Playmat</th>
+                <th scope="col">View / Edit</th>
                 <th scope="col">Delete</th>
               </tr>
             </thead>
@@ -48,10 +89,21 @@ export const ProfilePage = () => {
                   <td>{deck.format}</td>
                   <td>{deck.cardBack}</td>
                   <td>{deck.playmat}</td>
+                  <td className={styles.editButton}>
+                    <button
+                      className={styles.button}
+                      onClick={() => handleEditDeck(deck.link)}
+                    >
+                      <GiNotebook
+                        fontSize={'1.5em'}
+                        className={styles.trashcanIcon}
+                      />
+                    </button>
+                  </td>
                   <td className={styles.deleteButton}>
                     <button
                       className={styles.button}
-                      onClick={() => handleButtonClick(deck.key)}
+                      onClick={() => handleDeleteDeck(deck.link)}
                     >
                       <GiTrashCan
                         fontSize={'1.5em'}

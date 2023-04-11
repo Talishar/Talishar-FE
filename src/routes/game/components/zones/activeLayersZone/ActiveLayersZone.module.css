@@ -1,60 +1,55 @@
 .activeLayersBox {
   position: fixed;
-  display: grid;
+  display: flex;
   flex-direction: column;
   min-width: 10%;
   top: 10vh;
   left: 20%;
   background-color: var(--near-black);
   padding: 2vh;
-  border: 1px solid gold;
+  border: 1px solid var(--primary);
   border-radius: 20px;
-  max-width: 900px;
+  max-width: 90vh;
   min-height: 200px;
-  max-height: 40vh;
-  max-height: 40dvh;
+  max-height: 50vh;
+  max-height: 60dvh;
   z-index: 99;
-}
-
-.activeLayersTitleContainer {
-  position: relative;
-  display: flex;
-  flex-direction: row;
-  flex-grow: 0;
-  width: 100%;
-  justify-content: space-between;
-  align-items: center;
+  overflow-y: auto;
 }
 
 .activeLayersTitle {
   font-size: 0.75em;
   padding-left: 0.5em;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 10px;
 }
 
 .title {
   font-size: 1.5em;
-  padding: 0px 0px 0px 0.25em;
   margin: 0px;
 }
 
 .activeLayersContents {
-  padding-top: 0.5em;
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
   justify-content: flex-start;
   justify-items: flex-start;
   align-content: flex-start;
   align-items: center;
-  flex-wrap: wrap;
-  gap: 0.5em;
-  overflow-y: auto;
-  height: auto;
-  width: 100%;
+  gap: 5px;
+  min-width: fit-content;
+  max-width: 1920px;
+}
+
+.activeLayersContents > div {
+  width: 14dvh;
 }
 
 .orderingExplanation {
   font-size: 0.75em;
-  padding-left: 0.5em;
   margin-bottom: 0;
 }
 
@@ -78,6 +73,5 @@
     left: 0px;
     right: 0px;
     width: 100%;
-    max-width: 100%;
   }
 }
