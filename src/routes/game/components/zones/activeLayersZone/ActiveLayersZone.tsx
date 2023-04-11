@@ -1,24 +1,30 @@
 import React from 'react';
-import { useAppSelector } from 'app/Hooks';
+import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import CardDisplay from '../../elements/cardDisplay/CardDisplay';
 import styles from './ActiveLayersZone.module.css';
 import { motion, AnimatePresence } from 'framer-motion';
 import ReorderLayers from './ReorderLayers';
 import useShowModal from 'hooks/useShowModals';
+import { submitButton } from 'features/game/GameSlice';
+import { PROCESS_INPUT } from 'appConstants';
 
 export default function ActiveLayersZone() {
   const showModal = useShowModal();
   const activeLayer = useAppSelector(
     (state: RootState) => state.game.activeLayers
   );
-
+  const dispatch = useAppDispatch();
   const staticCards = activeLayer?.cardList?.filter(
     (card) => card.reorderable === false
   );
   const reorderableCards = activeLayer?.cardList?.filter(
     (card) => card.reorderable
   );
+
+  const handlePassTurn = () => {
+    dispatch(submitButton({ button: { mode: PROCESS_INPUT.PASS } }));
+  };
 
   return (
     <AnimatePresence>
@@ -30,8 +36,8 @@ export default function ActiveLayersZone() {
           exit={{ opacity: 0, scale: 0.8 }}
           key="activeLayersBox"
         >
-          <div className={styles.activeLayersTitleContainer}>
-            <div className={styles.activeLayersTitle}>
+          <div className={styles.activeLayersTitle}>
+            <div className={styles.titlesColumn}>
               <h3 className={styles.title}>
                 Active Layers
                 {activeLayer.isReorderable
@@ -46,6 +52,11 @@ export default function ActiveLayersZone() {
                 For more info about trigger ordering, see rule 1.10.2c of the
                 comprehensive rulebook.
               </p>
+            </div>
+            <div className={styles.passTurnBox}>
+              <button onClick={handlePassTurn}>
+                <small>Pass</small>
+              </button>
             </div>
           </div>
           <div className={styles.activeLayersContents}>
