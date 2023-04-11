@@ -13,4 +13,5 @@ export interface FavoriteDeck {
   format: string;
   cardBack: string;
   playmat: string;
+  link: string;
 }

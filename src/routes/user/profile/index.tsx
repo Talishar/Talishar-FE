@@ -1,12 +1,47 @@
-import { useGetFavoriteDecksQuery } from 'features/api/apiSlice';
+import {
+  useDeleteDeckMutation,
+  useGetFavoriteDecksQuery
+} from 'features/api/apiSlice';
+import { DeleteDeckAPIResponse } from 'interface/API/DeleteDeckAPI.php';
+import { toast } from 'react-hot-toast';
 import { GiTrashCan } from 'react-icons/gi';
 import styles from './profile.module.css';
 
 export const ProfilePage = () => {
-  const { data, isLoading } = useGetFavoriteDecksQuery(undefined);
+  const { data, isLoading, refetch } = useGetFavoriteDecksQuery(undefined);
+  const [deleteDeck] = useDeleteDeckMutation();
 
-  const handleButtonClick = (deckKey: string) => {
-    console.log('clicked this one', deckKey);
+  const handleDeleteDeckMessage = (resp: DeleteDeckAPIResponse): string => {
+    if (resp.message !== 'Deck deleted successfully.') {
+      return 'The deck has been removed from your favorites list. It is still available to view on the deckbuilding site.';
+    } else {
+      return 'There has been a problem deleting your deck, please try again.';
+    }
+  };
+
+  const handleDeleteDeck = async (deckLink: string) => {
+    try {
+      const deleteDeckPromise = deleteDeck({ deckLink }).unwrap();
+      toast.promise(
+        deleteDeckPromise,
+        {
+          loading: 'Deleting deck...',
+          success: (data) => handleDeleteDeckMessage(data),
+          error: (err) =>
+            `There has been an error, please try again. Error: ${err.toString()}`
+        },
+        {
+          style: {
+            minWidth: '250px'
+          },
+          position: 'top-center'
+        }
+      );
+      const resp = await deleteDeckPromise;
+    } catch (err) {
+    } finally {
+      refetch();
+    }
   };
 
   return (
@@ -51,7 +86,7 @@ export const ProfilePage = () => {
                   <td className={styles.deleteButton}>
                     <button
                       className={styles.button}
-                      onClick={() => handleButtonClick(deck.key)}
+                      onClick={() => handleDeleteDeck(deck.link)}
                     >
                       <GiTrashCan
                         fontSize={'1.5em'}
