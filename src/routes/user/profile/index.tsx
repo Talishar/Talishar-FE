@@ -39,6 +39,7 @@ export const ProfilePage = () => {
       );
       const resp = await deleteDeckPromise;
     } catch (err) {
+      console.warn(err);
     } finally {
       refetch();
     }
