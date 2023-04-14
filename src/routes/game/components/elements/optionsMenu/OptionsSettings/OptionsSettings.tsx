@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
-import styles from '../OptionsMenu.module.css';
+import styles from './OptionsSettings.module.css';
 import {
   fetchAllSettings,
   getSettingsEntity,
@@ -68,7 +68,8 @@ const OptionsSettings = () => {
     casterMode: settingsData['IsCasterMode']?.value === '1',
     streamerMode: settingsData['IsStreamerMode']?.value === '1',
     // Enum is BE: /Libraries/PlayerSettings.php - function GetCardBack($player)
-    cardBack: String(settingsData['CardBack']?.value ?? '0')
+    cardBack: String(settingsData['CardBack']?.value ?? '0'),
+    playMat: String(settingsData['Playmat']?.value ?? '0')
   };
 
   return (
@@ -344,31 +345,39 @@ const OptionsSettings = () => {
             Disable Chat
           </label>
         </fieldset>
-        <label className={styles.cardBack}>
+        <label className={styles.cardBackTitle}>
           <strong>Card Back</strong>
+          {!data?.cardBacks.length && (
+            <p>Link your patreon on your profile page to unlock card backs</p>
+          )}
           <div className={styles.cardBackListContainer}>
             {data?.cardBacks.map((cardBack) => {
               const cardClass = classNames(styles.cardBack, {
                 [styles.selected]: initialValues.cardBack === cardBack.id
               });
               return (
-                <div
+                <CardPopUp
                   key={`cardBack${cardBack.id}`}
-                  className={styles.cardConteiner}
+                  onClick={() =>
+                    handleSettingsChange({
+                      name: optConst.CARD_BACK,
+                      value: cardBack.id
+                    })
+                  }
+                  cardNumber={CARD_BACK[cardBack.id]}
                 >
-                  <label>
-                    <CardPopUp cardNumber={cardBack.name}>
-                      <CardImage
-                        src={`/cardsquares/${cardBack}.webp`}
-                        draggable={false}
-                        className={styles.card}
-                      />
-                    </CardPopUp>
-                  </label>
-                </div>
+                  <CardImage
+                    src={`/cardsquares/${CARD_BACK[cardBack.id]}.webp`}
+                    draggable={false}
+                    className={cardClass}
+                  />
+                </CardPopUp>
               );
             })}
           </div>
+        </label>
+        <label className={styles.cardBackTitle}>
+          <strong>Playmat</strong>
         </label>
       </div>
       <p>
