@@ -51,3 +51,14 @@ export const CARD_BACK = {
   '49': 'CBSecondCycle',
   '50': 'CBRavenousBabble'
 } as { [key: string]: string };
+
+export const PLAYMATS = {
+  '0': 'aria',
+  '1': 'demonastery',
+  '2': 'metrix',
+  '3': 'misteria',
+  '4': 'pits',
+  '5': 'savage',
+  '6': 'solana',
+  '7': 'volcor'
+} as { [key: string]: string };

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
-import styles from '../OptionsMenu.module.css';
+import styles from './OptionsSettings.module.css';
 import {
   fetchAllSettings,
   getSettingsEntity,
@@ -13,8 +13,11 @@ import { shallowEqual } from 'react-redux';
 import * as optConst from 'features/options/constants';
 import HeroZone from 'routes/game/components/zones/heroZone/HeroZone';
 import CardDisplay from '../../cardDisplay/CardDisplay';
-import { CARD_BACK } from 'features/options/cardBacks';
+import { CARD_BACK, PLAYMATS } from 'features/options/cardBacks';
 import { useGetCosmeticsQuery } from 'features/api/apiSlice';
+import CardPopUp from '../../cardPopUp/CardPopUp';
+import CardImage from '../../cardImage/CardImage';
+import classNames from 'classnames';
 
 const OptionsSettings = () => {
   const gameInfo = useAppSelector(getGameInfo, shallowEqual);
@@ -22,6 +25,7 @@ const OptionsSettings = () => {
   const isLoading = useAppSelector(getSettingsStatus);
   const dispatch = useAppDispatch();
   const [openCardBacks, setOpenCardBacks] = useState<boolean>(false);
+  const { data } = useGetCosmeticsQuery(undefined);
 
   // fetch all settings when options is loaded
   useEffect(() => {
@@ -64,7 +68,8 @@ const OptionsSettings = () => {
     casterMode: settingsData['IsCasterMode']?.value === '1',
     streamerMode: settingsData['IsStreamerMode']?.value === '1',
     // Enum is BE: /Libraries/PlayerSettings.php - function GetCardBack($player)
-    cardBack: String(settingsData['CardBack']?.value ?? '0')
+    cardBack: String(settingsData['CardBack']?.value ?? '0'),
+    playMat: String(settingsData['Playmat']?.value ?? '0')
   };
 
   return (
@@ -340,14 +345,52 @@ const OptionsSettings = () => {
             Disable Chat
           </label>
         </fieldset>
-        <label className={styles.cardBack}>
-          <strong>Card Back</strong> (cannot change for now)
-          <div onClick={handleCardBackOnClick}>
-            <CardDisplay
-              card={{ cardNumber: CARD_BACK[initialValues.cardBack] }}
-              preventUseOnClick
-            />
+        <label className={styles.cardBackTitle}>
+          <strong>Card Back</strong>
+          {!data?.cardBacks.length && (
+            <p>Link your patreon on your profile page to unlock card backs</p>
+          )}
+          <div className={styles.cardBackListContainer}>
+            {data?.cardBacks.map((cardBack) => {
+              const cardClass = classNames(styles.cardBack, {
+                [styles.selected]: initialValues.cardBack === cardBack.id
+              });
+              return (
+                <CardPopUp
+                  key={`cardBack${cardBack.id}`}
+                  onClick={() =>
+                    handleSettingsChange({
+                      name: optConst.CARD_BACK,
+                      value: cardBack.id
+                    })
+                  }
+                  cardNumber={CARD_BACK[cardBack.id]}
+                >
+                  <CardImage
+                    src={`/cardsquares/${CARD_BACK[cardBack.id]}.webp`}
+                    draggable={false}
+                    className={cardClass}
+                  />
+                </CardPopUp>
+              );
+            })}
           </div>
+        </label>
+        <label className={styles.cardBackTitle}>
+          <strong>Playmat</strong>
+          <select
+            defaultValue={initialValues.playMat}
+            onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+              handleSettingsChange({
+                name: optConst.MY_PLAYMAT,
+                value: e.target.value
+              })
+            }
+          >
+            {Object.keys(PLAYMATS).map((playmatKey) => {
+              return <option value={playmatKey}>{PLAYMATS[playmatKey]}</option>;
+            })}
+          </select>
         </label>
       </div>
       <p>

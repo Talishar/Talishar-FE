@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ZONE } from 'appConstants';
+import { PLAYMATS } from 'features/options/cardBacks';
 import { Card } from '../features/Card';
 import CombatChainLink from '../features/CombatChainLink';
 import GameState from '../features/GameState';
@@ -323,6 +324,10 @@ export default function ParseGameState(input: any) {
   result.events = input.newEvents?.eventArray;
 
   result.hasPriority = !!input.havePriority;
+
+  // playmat
+  result.playerOne.Playmat = PLAYMATS[input.MyPlaymat];
+  result.playerTwo.Playmat = PLAYMATS[input.TheirPlaymat];
 
   return result;
 }
