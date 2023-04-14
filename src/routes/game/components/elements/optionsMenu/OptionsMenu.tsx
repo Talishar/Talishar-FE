@@ -34,11 +34,6 @@ const OptionsContent = () => {
 
   useShortcut(DEFAULT_SHORTCUTS.CLOSE_WINDOW, clickCloseOptionsHandler);
 
-  const clickSubmitOptionsHandler = () => {
-    // TODO: implement
-    console.log('submitting options');
-  };
-
   const clickConcedeGameHandler = () => {
     dispatch(submitButton({ button: { mode: PROCESS_INPUT.CONCEDE_GAME } }));
   };

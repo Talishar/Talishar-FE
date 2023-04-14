@@ -17,13 +17,6 @@
   max-width: 14dvh;
 }
 
-.biggerSize {
-  /* height: 12vh;
-  width: 12vh;
-  height: 12dvh;
-  width: 12dvh; */
-}
-
 .floatTint {
   position: absolute;
   left: 0px;
@@ -137,8 +130,6 @@
 
 @media (orientation: portrait) {
   .normalSize {
-    /* height: 12vw;
-    height: 12dvw; */
     max-width: 130px;
     aspect-ratio: 1;
   }

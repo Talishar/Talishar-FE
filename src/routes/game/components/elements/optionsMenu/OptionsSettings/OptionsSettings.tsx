@@ -15,6 +15,9 @@ import HeroZone from 'routes/game/components/zones/heroZone/HeroZone';
 import CardDisplay from '../../cardDisplay/CardDisplay';
 import { CARD_BACK } from 'features/options/cardBacks';
 import { useGetCosmeticsQuery } from 'features/api/apiSlice';
+import CardPopUp from '../../cardPopUp/CardPopUp';
+import CardImage from '../../cardImage/CardImage';
+import classNames from 'classnames';
 
 const OptionsSettings = () => {
   const gameInfo = useAppSelector(getGameInfo, shallowEqual);
@@ -22,6 +25,7 @@ const OptionsSettings = () => {
   const isLoading = useAppSelector(getSettingsStatus);
   const dispatch = useAppDispatch();
   const [openCardBacks, setOpenCardBacks] = useState<boolean>(false);
+  const { data } = useGetCosmeticsQuery(undefined);
 
   // fetch all settings when options is loaded
   useEffect(() => {
@@ -341,12 +345,29 @@ const OptionsSettings = () => {
           </label>
         </fieldset>
         <label className={styles.cardBack}>
-          <strong>Card Back</strong> (cannot change for now)
-          <div onClick={handleCardBackOnClick}>
-            <CardDisplay
-              card={{ cardNumber: CARD_BACK[initialValues.cardBack] }}
-              preventUseOnClick
-            />
+          <strong>Card Back</strong>
+          <div className={styles.cardBackListContainer}>
+            {data?.cardBacks.map((cardBack) => {
+              const cardClass = classNames(styles.cardBack, {
+                [styles.selected]: initialValues.cardBack === cardBack.id
+              });
+              return (
+                <div
+                  key={`cardBack${cardBack.id}`}
+                  className={styles.cardConteiner}
+                >
+                  <label>
+                    <CardPopUp cardNumber={cardBack.name}>
+                      <CardImage
+                        src={`/cardsquares/${cardBack}.webp`}
+                        draggable={false}
+                        className={styles.card}
+                      />
+                    </CardPopUp>
+                  </label>
+                </div>
+              );
+            })}
           </div>
         </label>
       </div>
