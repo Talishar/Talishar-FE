@@ -6,6 +6,7 @@ const News = () => {
     <div>
       <hgroup>
         <h1>News</h1>
+        <h2>Choose your play mat from tne options menu in game!<h2>
         <h2>Announcing Major Roguelike Update</h2>
       </hgroup>
       <p>
