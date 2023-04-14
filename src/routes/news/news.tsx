@@ -5,9 +5,9 @@ const News = () => {
   return (
     <div>
       <hgroup>
-        <h1>News</h1>
-        <h2>Choose your play mat from tne options menu in game!<h2>
-        <h2>Announcing Major Roguelike Update</h2>
+        <h1>Hear ye Hear ye!</h1>
+        <h2>Choose your play mat from the options menu in game!</h2>
+        <h2>There's Major Roguelike Update!</h2>
       </hgroup>
       <p>
       <a href='https://beta.talishar.net/game/Roguelike/CreateGame.php'><img src={RoguelikeAnnouncement} style={{width:"100%", height:"auto", maxHeight:"100%"}} /></a>
