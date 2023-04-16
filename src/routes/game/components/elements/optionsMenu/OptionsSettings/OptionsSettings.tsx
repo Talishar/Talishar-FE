@@ -310,7 +310,6 @@ const OptionsSettings = () => {
             <input
               type="checkbox"
               name="accessibilityMode"
-              disabled
               area-disabled="true"
               checked={initialValues.accessibilityMode}
               onClick={() =>
