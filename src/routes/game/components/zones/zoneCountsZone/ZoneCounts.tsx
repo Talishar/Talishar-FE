@@ -144,8 +144,8 @@ const SoulCount = (prop: Displayrow) => {
   }
 
   return (
-    <div>
-      {!!hasSoul ? (
+    <>
+      {!!hasSoul && (
         <div
           title="Soul"
           className={styles.clickableItem}
@@ -153,10 +153,8 @@ const SoulCount = (prop: Displayrow) => {
         >
           <GiAngelOutfit /> {soulCount}
         </div>
-      ) : (
-        <div className={styles.item}> </div>
       )}
-    </div>
+    </>
   );
 };
 
