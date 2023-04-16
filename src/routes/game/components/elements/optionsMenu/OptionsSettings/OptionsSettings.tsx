@@ -76,6 +76,8 @@ const OptionsSettings = () => {
     playMat: String(settingsData['Playmat']?.value ?? '0')
   };
 
+  console.log('data', data);
+
   return (
     <div>
       <div className={styles.leftColumn}>
@@ -382,6 +384,7 @@ const OptionsSettings = () => {
         </label>
         <label className={styles.cardBackTitle}>
           <strong>Playmat</strong>
+          {!data?.playmats?.length && <p>Log in to customise your playmat</p>}
           <select
             defaultValue={initialValues.playMat}
             onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
@@ -391,8 +394,10 @@ const OptionsSettings = () => {
               })
             }
           >
-            {PLAYER_PLAYMATS.map((playmatKey) => {
-              return <option value={playmatKey}>{PLAYMATS[playmatKey]}</option>;
+            {data?.playmats?.map((playmatKey) => {
+              return (
+                <option value={playmatKey.id}>{PLAYMATS[playmatKey.id]}</option>
+              );
             })}
           </select>
         </label>
