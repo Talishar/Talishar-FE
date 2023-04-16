@@ -94,25 +94,27 @@ export default function PlayerInputPopUp() {
     setCheckedState(updatedCheckedState);
   };
 
-  const checkboxes = inputPopUp.multiChooseText?.map((option, ix) => {
-    return (
-      <div key={ix} className={styles.checkBoxRow}>
-        <label className={styles.checkBoxLabel}>
-          <input
-            type="checkbox"
-            id={`multi-choose-text-${String(option.input)}`}
-            name={option.label}
-            value={checkedState[ix]}
-            onChange={() => handleCheckBoxChange(option.input)}
-            className={styles.checkBox}
-          />
-          {option.label}
-        </label>
-      </div>
-    );
-  }) || [];
+  const checkboxes =
+    inputPopUp.multiChooseText?.map((option, ix) => {
+      return (
+        <div key={ix} className={styles.checkBoxRow}>
+          <label className={styles.checkBoxLabel}>
+            <input
+              type="checkbox"
+              id={`multi-choose-text-${String(option.input)}`}
+              name={option.label}
+              value={checkedState[ix]}
+              onChange={() => handleCheckBoxChange(option.input)}
+              className={styles.checkBox}
+            />
+            {option.label}
+          </label>
+        </div>
+      );
+    }) || [];
 
-  const FormDisplay = PlayerInputFormTypeMap[inputPopUp.popup?.id || ''] || OtherInput;
+  const FormDisplay =
+    PlayerInputFormTypeMap[inputPopUp.popup?.id || ''] || OtherInput;
   //Title comes back as a HTML string so we need to dangeously set it vs just using it for the moment
   const title = { __html: inputPopUp?.popup?.title ?? '' };
   return (

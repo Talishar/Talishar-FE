@@ -93,10 +93,15 @@ export const updateOptions = createAsyncThunk(
         } as ProcessInputAPI)
       });
       const data = await response.json();
-      console.log('data from submitting settings', data);
       return data;
     } catch (err) {
       console.warn(err);
+      toast.error(
+        `There has been a network error. Please try again. Error:\n${JSON.stringify(
+          err
+        )}`,
+        { position: 'top-center' }
+      );
     } finally {
     }
   }

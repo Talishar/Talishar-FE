@@ -71,8 +71,12 @@ interface CardListZoneAPI {
 
 const CardListZoneAPI = ({ name }: CardListZoneAPI) => {
   const gameInfo = useAppSelector(getGameInfo, shallowEqual);
+  const { lastUpdate } = useAppSelector(
+    (state: RootState) => state.game.gameDynamicInfo
+  );
   const { isLoading, isError, data } = useGetPopUpContentQuery({
     ...gameInfo,
+    lastUpdate,
     popupType: name
   });
 
@@ -85,7 +89,7 @@ const CardListZoneAPI = ({ name }: CardListZoneAPI) => {
   }
   if (data != undefined) {
     content = (
-      <div>
+      <div className={styles.cardListContents}>
         {data.cards.map((card: any, ix: number) => {
           return <CardDisplay card={card} key={ix} />;
         })}

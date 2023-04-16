@@ -16,4 +16,5 @@ export default interface CombatChainLink {
   attackTarget?: string;
   isDraconic?: boolean;
   isIllusionist?: boolean;
+  numRequiredEquipBlock?: number;
 }

@@ -1,5 +1,6 @@
 export interface GetCosmeticsResponse {
   cardBacks: CardBack[];
+  playmats: CardBack[];
 }
 
 export interface CardBack {

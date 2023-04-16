@@ -14,6 +14,10 @@ export default function ActiveLayersZone() {
   const activeLayer = useAppSelector(
     (state: RootState) => state.game.activeLayers
   );
+  const canPassPhase = useAppSelector(
+    (state: RootState) => state.game.canPassPhase
+  );
+
   const dispatch = useAppDispatch();
   const staticCards = activeLayer?.cardList?.filter(
     (card) => card.reorderable === false
@@ -53,11 +57,13 @@ export default function ActiveLayersZone() {
                 comprehensive rulebook.
               </p>
             </div>
-            <div className={styles.passTurnBox}>
-              <button onClick={handlePassTurn}>
-                <small>Pass</small>
-              </button>
-            </div>
+            {canPassPhase && (
+              <div className={styles.passTurnBox}>
+                <button onClick={handlePassTurn}>
+                  <small>Pass</small>
+                </button>
+              </div>
+            )}
           </div>
           <div className={styles.activeLayersContents}>
             {staticCards &&

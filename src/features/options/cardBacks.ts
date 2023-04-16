@@ -53,12 +53,16 @@ export const CARD_BACK = {
 } as { [key: string]: string };
 
 export const PLAYMATS = {
-  '0': 'aria',
+  '0': 'plain',
   '1': 'demonastery',
   '2': 'metrix',
   '3': 'misteria',
   '4': 'pits',
   '5': 'savage',
   '6': 'solana',
-  '7': 'volcor'
+  '7': 'volcor',
+  '8': 'training-dummy',
+  '9': 'aria'
 } as { [key: string]: string };
+
+export const PLAYER_PLAYMATS = ['0', '9', '1', '2', '3', '4', '5', '6', '7'];

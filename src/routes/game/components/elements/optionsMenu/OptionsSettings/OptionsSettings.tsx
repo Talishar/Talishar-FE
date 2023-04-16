@@ -13,7 +13,11 @@ import { shallowEqual } from 'react-redux';
 import * as optConst from 'features/options/constants';
 import HeroZone from 'routes/game/components/zones/heroZone/HeroZone';
 import CardDisplay from '../../cardDisplay/CardDisplay';
-import { CARD_BACK, PLAYMATS } from 'features/options/cardBacks';
+import {
+  CARD_BACK,
+  PLAYER_PLAYMATS,
+  PLAYMATS
+} from 'features/options/cardBacks';
 import { useGetCosmeticsQuery } from 'features/api/apiSlice';
 import CardPopUp from '../../cardPopUp/CardPopUp';
 import CardImage from '../../cardImage/CardImage';
@@ -71,6 +75,8 @@ const OptionsSettings = () => {
     cardBack: String(settingsData['CardBack']?.value ?? '0'),
     playMat: String(settingsData['Playmat']?.value ?? '0')
   };
+
+  console.log('data', data);
 
   return (
     <div>
@@ -378,19 +384,27 @@ const OptionsSettings = () => {
         </label>
         <label className={styles.cardBackTitle}>
           <strong>Playmat</strong>
-          <select
-            defaultValue={initialValues.playMat}
-            onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-              handleSettingsChange({
-                name: optConst.MY_PLAYMAT,
-                value: e.target.value
-              })
-            }
-          >
-            {Object.keys(PLAYMATS).map((playmatKey) => {
-              return <option value={playmatKey}>{PLAYMATS[playmatKey]}</option>;
-            })}
-          </select>
+          {!!data?.playmats?.length ? (
+            <select
+              defaultValue={initialValues.playMat}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                handleSettingsChange({
+                  name: optConst.MY_PLAYMAT,
+                  value: e.target.value
+                })
+              }
+            >
+              {data?.playmats?.map((playmatKey) => {
+                return (
+                  <option value={playmatKey.id}>
+                    {PLAYMATS[playmatKey.id]}
+                  </option>
+                );
+              })}
+            </select>
+          ) : (
+            <p>Log in to customise your playmat</p>
+          )}
         </label>
       </div>
       <p>
