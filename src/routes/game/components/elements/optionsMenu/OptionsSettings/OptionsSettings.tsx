@@ -384,22 +384,27 @@ const OptionsSettings = () => {
         </label>
         <label className={styles.cardBackTitle}>
           <strong>Playmat</strong>
-          {!data?.playmats?.length && <p>Log in to customise your playmat</p>}
-          <select
-            defaultValue={initialValues.playMat}
-            onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-              handleSettingsChange({
-                name: optConst.MY_PLAYMAT,
-                value: e.target.value
-              })
-            }
-          >
-            {data?.playmats?.map((playmatKey) => {
-              return (
-                <option value={playmatKey.id}>{PLAYMATS[playmatKey.id]}</option>
-              );
-            })}
-          </select>
+          {!!data?.playmats?.length ? (
+            <select
+              defaultValue={initialValues.playMat}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                handleSettingsChange({
+                  name: optConst.MY_PLAYMAT,
+                  value: e.target.value
+                })
+              }
+            >
+              {data?.playmats?.map((playmatKey) => {
+                return (
+                  <option value={playmatKey.id}>
+                    {PLAYMATS[playmatKey.id]}
+                  </option>
+                );
+              })}
+            </select>
+          ) : (
+            <p>Log in to customise your playmat</p>
+          )}
         </label>
       </div>
       <p>
