@@ -8,11 +8,6 @@ export const Playmat = ({ isPlayer }: { isPlayer: boolean }) => {
     isPlayer ? state.game.playerOne.Playmat : state.game.playerTwo.Playmat
   );
 
-  // if (playmat === undefined) {
-  //   // playmat = DEFAULT_PLAYMAT;
-  //   playmat = isPlayer ? 'pits' : `volcor`;
-  // }
-  console.log('playmat', playmat);
   const styleToApply = {
     backgroundImage: `url(/playmats/${playmat}.webp)`
   };

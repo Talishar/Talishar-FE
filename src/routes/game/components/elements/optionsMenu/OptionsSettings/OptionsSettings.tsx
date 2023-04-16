@@ -13,7 +13,11 @@ import { shallowEqual } from 'react-redux';
 import * as optConst from 'features/options/constants';
 import HeroZone from 'routes/game/components/zones/heroZone/HeroZone';
 import CardDisplay from '../../cardDisplay/CardDisplay';
-import { CARD_BACK, PLAYMATS } from 'features/options/cardBacks';
+import {
+  CARD_BACK,
+  PLAYER_PLAYMATS,
+  PLAYMATS
+} from 'features/options/cardBacks';
 import { useGetCosmeticsQuery } from 'features/api/apiSlice';
 import CardPopUp from '../../cardPopUp/CardPopUp';
 import CardImage from '../../cardImage/CardImage';
@@ -387,7 +391,7 @@ const OptionsSettings = () => {
               })
             }
           >
-            {Object.keys(PLAYMATS).map((playmatKey) => {
+            {PLAYER_PLAYMATS.map((playmatKey) => {
               return <option value={playmatKey}>{PLAYMATS[playmatKey]}</option>;
             })}
           </select>
