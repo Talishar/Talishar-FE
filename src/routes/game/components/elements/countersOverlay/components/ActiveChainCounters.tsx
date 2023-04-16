@@ -1,40 +1,46 @@
 import React from 'react';
-import CombatChainLink from "features/CombatChainLink"
+import CombatChainLink from 'features/CombatChainLink';
 import styles from '../CountersOverlay.module.css';
-import { GiCycle, GiElectric, GiShield, GiZigzagLeaf } from 'react-icons/gi';
+import {
+  GiCycle,
+  GiElectric,
+  GiShield,
+  GiShoulderArmor,
+  GiZigzagLeaf
+} from 'react-icons/gi';
 import { BiBullseye } from 'react-icons/bi';
 type Props = {
-  activeCombatChain?: CombatChainLink
-}
+  activeCombatChain?: CombatChainLink;
+};
 export const ActiveCardCounterOverlay = (props: Props) => {
-  const {
-    activeCombatChain
-  } = props;
+  const { activeCombatChain } = props;
 
-  if(!activeCombatChain){ return null};
+  if (!activeCombatChain) {
+    return null;
+  }
   return (
     <>
-      {activeCombatChain.goAgain ? (
+      {activeCombatChain.goAgain && (
         <div className={styles.icon} data-tooltip="Go Again">
           <GiCycle />
         </div>
-      ) : null}
-      {activeCombatChain.dominate ? (
+      )}
+      {activeCombatChain.dominate && (
         <div className={styles.icon} data-tooltip="Dominate">
           <BiBullseye />
         </div>
-      ) : null}
-      {activeCombatChain.overpower ? (
+      )}
+      {activeCombatChain.overpower && (
         <div className={styles.icon} data-tooltip="Overpower">
           <GiElectric />
         </div>
-      ) : null}
-      {activeCombatChain.fused ? (
+      )}
+      {activeCombatChain.fused && (
         <div className={styles.icon} data-tooltip="Fused">
           <GiZigzagLeaf />
         </div>
-      ) : null}
-      {activeCombatChain.damagePrevention ? (
+      )}
+      {!!activeCombatChain.damagePrevention && (
         <div
           className={styles.icon}
           data-tooltip={`${activeCombatChain.damagePrevention} Damage Prevention`}
@@ -42,7 +48,16 @@ export const ActiveCardCounterOverlay = (props: Props) => {
           <GiShield />
           {activeCombatChain.damagePrevention}
         </div>
-      ) : null}
+      )}
+      {activeCombatChain.numRequiredEquipBlock && (
+        <div
+          className={styles.icon}
+          data-tooltip={`Chain link must be defended with at least ${activeCombatChain.numRequiredEquipBlock} equipment`}
+        >
+          <GiShoulderArmor />
+          {activeCombatChain.numRequiredEquipBlock}
+        </div>
+      )}
     </>
-  )
-}
+  );
+};

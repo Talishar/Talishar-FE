@@ -112,6 +112,8 @@ export default function ParseGameState(input: any) {
       input.activeChainLink.damagePrevention
     );
     result.activeChainLink.attackTarget = input.activeChainLink.attackTarget;
+    result.activeChainLink.numRequiredEquipBlock =
+      input.activeChainLink.numRequiredEquipBlock;
   }
 
   // previous combat chain links
