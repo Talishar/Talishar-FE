@@ -6,7 +6,6 @@ import styles from './PlayerHand.module.css';
 import PlayerHandCard from '../../elements/playerHandCard/PlayerHandCard';
 import { useAppSelector } from 'app/Hooks';
 import useWindowDimensions from 'hooks/useWindowDimensions';
-import { AnimatePresence } from 'framer-motion';
 
 const MaxHandWidthPercentage = 50;
 
@@ -67,36 +66,22 @@ export default function PlayerHand() {
 
   return (
     <div className={styles.handRow} style={widthfunction}>
-      <AnimatePresence>
-        {handCards !== undefined &&
-          handCards.map((card, ix) => {
-            return (
-              <PlayerHandCard card={card} key={`hand-${card.cardNumber}`} />
-            );
-          })}
-        {hasArsenal &&
-          showArsenal &&
-          arsenalCards !== undefined &&
-          arsenalCards.map((card, ix) => {
-            return (
-              <PlayerHandCard
-                card={card}
-                isArsenal
-                key={`arsenal${card.cardNumber}`}
-              />
-            );
-          })}
-        {playableBanishedCards !== undefined &&
-          playableBanishedCards.map((card, ix) => {
-            return (
-              <PlayerHandCard
-                card={card}
-                isBanished
-                key={`banished-${card.cardNumber}`}
-              />
-            );
-          })}
-      </AnimatePresence>
+      {handCards !== undefined &&
+        handCards.map((card, ix) => {
+          return <PlayerHandCard card={card} key={`hand-${ix}`} />;
+        })}
+      {hasArsenal &&
+        showArsenal &&
+        arsenalCards !== undefined &&
+        arsenalCards.map((card, ix) => {
+          return <PlayerHandCard card={card} isArsenal key={`arsenal-${ix}`} />;
+        })}
+      {playableBanishedCards !== undefined &&
+        playableBanishedCards.map((card, ix) => {
+          return (
+            <PlayerHandCard card={card} isBanished key={`banished-${ix}`} />
+          );
+        })}
     </div>
   );
 }

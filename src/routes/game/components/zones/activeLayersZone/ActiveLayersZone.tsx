@@ -82,5 +82,5 @@ const Target = ({ target }: { target: string | undefined }) => {
   // TODO: have this be useful
   return null;
 
-  // return <h4 className={styles.target}>{target}</h4>;
+  return <h4 className={styles.target}>{target}</h4>;
 };
