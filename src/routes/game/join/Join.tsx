@@ -6,7 +6,7 @@ import {
 } from 'features/api/apiSlice';
 import { Formik, Form, Field, FormikHelpers } from 'formik';
 import { JoinGameAPI } from 'interface/API/JoinGame.php';
-import { createSearchParams, useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import styles from './Join.module.css';
 import { useKnownSearchParams } from 'hooks/useKnownSearchParams';
 import { setGameStart } from 'features/game/GameSlice';
@@ -15,6 +15,7 @@ import { FaExclamationCircle } from 'react-icons/fa';
 import CreateGameErrors from '../create/CreateGameErrors';
 import validationSchema from './validationSchema';
 import useAuth from 'hooks/useAuth';
+import classNames from 'classnames';
 
 const JoinGame = () => {
   const navigate = useNavigate();
@@ -129,6 +130,14 @@ const JoinGame = () => {
                   )}
                 </fieldset>
               </div>
+              {!isLoggedIn && (
+                <p>
+                  <small>
+                    You must be <Link to="/user/login">logged in</Link> to join
+                    public lobbies.
+                  </small>
+                </p>
+              )}
               <button
                 type="submit"
                 className={styles.buttonClass}
@@ -141,12 +150,17 @@ const JoinGame = () => {
           )}
         </Formik>
         <hr />
-        <h2>Instructions</h2>
-        <p>
-          Choose a deck and click submit. You will be taken to the game lobby.
-          Once in the game lobby, the player who win the dice roll choose if the
-          go first. Then the host can start the game. Have Fun!
-        </p>
+        <button
+          style={{ marginTop: '27px' }}
+          type="submit"
+          className={classNames(styles.buttonClass, 'outline')}
+          onClick={(e) => {
+            e.stopPropagation;
+            navigate(-1);
+          }}
+        >
+          Back
+        </button>
       </article>
     </main>
   );
