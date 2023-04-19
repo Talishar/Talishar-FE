@@ -1,0 +1,21 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  max-width: var(--aspect);
+  margin: 0 auto;
+}
+
+.article {
+  width: 460px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+}
+
+@media (max-width: 767px) {
+  .article {
+    width: 100%;
+    border: none;
+  }
+}

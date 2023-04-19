@@ -11,7 +11,6 @@ import { Field, Form, Formik, FormikHelpers } from 'formik';
 import useAuth from 'hooks/useAuth';
 import { CreateGameAPI } from 'interface/API/CreateGame.php';
 import { toast } from 'react-hot-toast';
-import { FaExclamationCircle } from 'react-icons/fa';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import styles from './CreateGame.module.css';
 import CreateGameErrors from './CreateGameErrors';

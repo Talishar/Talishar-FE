@@ -1,15 +1,28 @@
-import { useRouteError } from 'react-router-dom';
+import { useNavigate, useRouteError } from 'react-router-dom';
+import styles from './errorPage.module.css';
 
 export const ErrorPage = () => {
   const error = useRouteError();
+  const navigate = useNavigate();
   console.error(error);
   let statusText = '';
+  let errStatus = '';
+  let errMessage = '';
   if (typeof error === 'object' && error !== null) {
     if ('statusText' in error) {
       statusText += error.statusText;
     }
     if ('message' in error) {
       statusText += error.message;
+    }
+    if ('status' in error) {
+      errStatus += error.status;
+    }
+    if ('error' in error) {
+      //@ts-ignore
+      if ('message' in error.error) {
+        errMessage += error.error.message;
+      }
     }
   }
 
@@ -18,12 +31,22 @@ export const ErrorPage = () => {
   }
 
   return (
-    <div id="error-page">
-      <h1>Oops!</h1>
-      <p>Sorry, an unexpected error has occurred.</p>
-      <p>
-        <i>{statusText}</i>
-      </p>
-    </div>
+    <main className={styles.container}>
+      <article className={styles.article}>
+        <h1 style={{ marginBottom: '12px' }}>Oops!</h1>
+        <p>Sorry, an error has occurred.</p>
+        {!!errStatus && <p>{errStatus}</p>}
+        <p>
+          <i>{statusText}</i>
+        </p>
+        {!!errMessage && <p>{errMessage}</p>}
+        <img
+          src="/cardimages/WTR224.webp"
+          style={{ maxWidth: '100%', maxHeight: '100%', marginBottom: '19px' }}
+        />
+        <button onClick={() => navigate(-1)}>Back</button>
+        <button onClick={() => navigate('/')}>Home</button>
+      </article>
+    </main>
   );
 };
