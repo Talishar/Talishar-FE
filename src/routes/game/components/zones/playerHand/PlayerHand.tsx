@@ -6,7 +6,6 @@ import styles from './PlayerHand.module.css';
 import PlayerHandCard from '../../elements/playerHandCard/PlayerHandCard';
 import { useAppSelector } from 'app/Hooks';
 import useWindowDimensions from 'hooks/useWindowDimensions';
-import { AnimatePresence } from 'framer-motion';
 
 const MaxHandWidthPercentage = 50;
 

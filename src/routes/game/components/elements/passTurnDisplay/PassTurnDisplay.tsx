@@ -31,6 +31,7 @@ export default function PassTurnDisplay() {
 
   useEffect(() => {
     let link = document.getElementById('favicon') as HTMLLinkElement;
+    console.log(link);
     if (hasPriority && link) {
       link.href = '/images/priorityGreen.ico';
     } else if (link) {
@@ -44,6 +45,13 @@ export default function PassTurnDisplay() {
   };
 
   useShortcut(DEFAULT_SHORTCUTS.PASS_TURN, onPassTurn);
+
+  // useEffect(() => {
+  //   if (canPassPhase && canPassController) {
+  //     setCanPassController(false);
+  //     playPassTurnSound();
+  //   }
+  // }, [canPassController]);
 
   if (canPassPhase === undefined) {
     return <div className={styles.passTurnDisplay}></div>;
