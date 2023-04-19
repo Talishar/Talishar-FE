@@ -10,7 +10,12 @@ import Index from './routes/index/Index';
 import { ErrorPage } from 'errorPage';
 import Play from 'routes/game/play/Play';
 import { useKnownSearchParams } from 'hooks/useKnownSearchParams';
-import { ForgottenPasswordForm, LoginForm, LoginPage, ResetPasswordForm } from 'routes/user/login';
+import {
+  ForgottenPasswordForm,
+  LoginForm,
+  LoginPage,
+  ResetPasswordForm
+} from 'routes/user/login';
 import { DecksPage, ProfilePage } from 'routes/user';
 import JoinGame from 'routes/game/join/Join';
 import Lobby from 'routes/game/lobby/Lobby';
@@ -81,7 +86,7 @@ const LoggedInGuard = ({
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route>
+    <Route errorElement={<ErrorPage />}>
       <Route
         path="game/play/:gameID"
         element={
@@ -92,7 +97,6 @@ export const router = createBrowserRouter(
         }
       />
       <Route path="game/play" element={<Play />} />
-      <Route path="game/join/:gameID" element={<JoinGame />} />
       <Route path="game/lobby/:gameID" element={<Lobby />} />
       <Route
         path="game/MainMenu.php"
@@ -110,6 +114,7 @@ export const router = createBrowserRouter(
             errorElement={<ErrorPage />}
           />
         </Route>
+        <Route path="game/join/:gameID" element={<JoinGame />} />
         <Route path="game/create" element={<CreateGame />} />
         <Route path="privacy" element={<Privacy />} />
         <Route path="user">
@@ -143,13 +148,11 @@ export const router = createBrowserRouter(
               path="password-recovery"
               element={<ForgottenPasswordForm />}
             />
-            <Route
-              path="reset-password"
-              element={<ResetPasswordForm />}
-            />
+            <Route path="reset-password" element={<ResetPasswordForm />} />
             <Route path="signup" element={<SignUpForm />} />
           </Route>
         </Route>
+        {/* <Route path="*" element={<ErrorPage />} /> */}
       </Route>
     </Route>
   )
