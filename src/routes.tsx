@@ -152,7 +152,6 @@ export const router = createBrowserRouter(
             <Route path="signup" element={<SignUpForm />} />
           </Route>
         </Route>
-        {/* <Route path="*" element={<ErrorPage />} /> */}
       </Route>
     </Route>
   )
