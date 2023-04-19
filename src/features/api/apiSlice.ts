@@ -50,6 +50,21 @@ export const rtkQueryErrorToaster: Middleware =
     return next(action);
   };
 
+export const parseResponse = async (response: any) => {
+  const data = await response.text();
+  let stringData = data.toString().trim();
+  const indexOfBraces = stringData.indexOf('{');
+  if (indexOfBraces !== 0) {
+    console.warn(
+      `Backend PHP Warning:`,
+      stringData.substring(0, indexOfBraces)
+    );
+    toast.error(`Backend Warning:\n${stringData.substring(0, indexOfBraces)}`);
+    stringData = stringData.substring(indexOfBraces);
+  }
+  return JSON.parse(stringData);
+};
+
 // Different request URLs depending on the gameID number, beta, live or dev.
 const dynamicBaseQuery: BaseQueryFn<
   string | FetchArgs,
@@ -67,7 +82,10 @@ const dynamicBaseQuery: BaseQueryFn<
   if (gameId === 0) {
     baseUrl = import.meta.env.DEV ? API_URL_DEV : API_URL_LIVE;
   }
-  const rawBaseQuery = fetchBaseQuery({ baseUrl, credentials: 'include' });
+  const rawBaseQuery = fetchBaseQuery({
+    baseUrl,
+    credentials: 'include'
+  });
   return rawBaseQuery(args, webApi, extraOptions);
 };
 
@@ -102,7 +120,8 @@ export const apiSlice = createApi({
         return {
           url: URL_END_POINT.LOGIN,
           method: 'POST',
-          body: { ...body, submit: true }
+          body: { ...body, submit: true },
+          responseHandler: parseResponse
         };
       }
     }),
@@ -111,7 +130,8 @@ export const apiSlice = createApi({
         return {
           url: URL_END_POINT.LOGIN_WITH_COOKIE,
           method: 'POST',
-          body: {}
+          body: {},
+          responseHandler: parseResponse
         };
       }
     }),
@@ -120,7 +140,8 @@ export const apiSlice = createApi({
         return {
           url: URL_END_POINT.LOGOUT,
           method: 'POST',
-          body: {}
+          body: {},
+          responseHandler: parseResponse
         };
       }
     }),
@@ -129,7 +150,8 @@ export const apiSlice = createApi({
         return {
           url: URL_END_POINT.SIGNUP,
           method: 'POST',
-          body: { ...body, submit: true }
+          body: { ...body, submit: true },
+          responseHandler: parseResponse
         };
       }
     }),
@@ -147,7 +169,8 @@ export const apiSlice = createApi({
         return {
           url: URL_END_POINT.RESET_PASSWORD,
           method: 'POST',
-          body: { ...body }
+          body: { ...body },
+          responseHandler: parseResponse
         };
       }
     }),
@@ -167,7 +190,8 @@ export const apiSlice = createApi({
             playerID: playerID,
             authKey: authKey,
             chatText: chatText
-          }
+          },
+          responseHandler: parseResponse
         };
       }
     }),
@@ -176,7 +200,8 @@ export const apiSlice = createApi({
         return {
           url: URL_END_POINT.PROCESS_INPUT_POST,
           method: 'POST',
-          body: body
+          body: body,
+          responseHandler: parseResponse
         };
       }
     }),
@@ -184,21 +209,24 @@ export const apiSlice = createApi({
       query: () => {
         return {
           url: URL_END_POINT.GET_GAME_LIST,
-          method: 'GET'
+          method: 'GET',
+          responseHandler: parseResponse
         };
       }
     }),
     getCosmetics: builder.query<GetCosmeticsResponse, undefined>({
       query: () => {
         return {
-          url: URL_END_POINT.GET_COSMETICS
+          url: URL_END_POINT.GET_COSMETICS,
+          responseHandler: parseResponse
         };
       }
     }),
     getFavoriteDecks: builder.query<GetFavoriteDecksResponse, undefined>({
       query: () => {
         return {
-          url: URL_END_POINT.GET_FAVORITE_DECKS
+          url: URL_END_POINT.GET_FAVORITE_DECKS,
+          responseHandler: parseResponse
         };
       },
       transformResponse: (response: GetFavoriteDecksResponse, metra, arg) => {
@@ -210,7 +238,8 @@ export const apiSlice = createApi({
         return {
           url: URL_END_POINT.DELETE_DECK,
           method: 'post',
-          body: body
+          body: body,
+          responseHandler: parseResponse
         };
       }
     }),
@@ -219,7 +248,8 @@ export const apiSlice = createApi({
         return {
           url: URL_END_POINT.CREATE_GAME,
           method: 'POST',
-          body: body
+          body: body,
+          responseHandler: parseResponse
         };
       },
       // Pick out errors and prevent nested properties in a hook or selector
@@ -231,7 +261,8 @@ export const apiSlice = createApi({
         return {
           url: URL_END_POINT.JOIN_GAME,
           method: 'POST',
-          body: body
+          body: body,
+          responseHandler: parseResponse
         };
       },
       transformErrorResponse: (
@@ -245,7 +276,8 @@ export const apiSlice = createApi({
         return {
           url: URL_END_POINT.GET_LOBBY_INFO,
           method: 'POST',
-          body: body
+          body: body,
+          responseHandler: parseResponse
         };
       },
       transformResponse: (response: GetLobbyInfoResponse, meta, arg) => {
@@ -257,7 +289,8 @@ export const apiSlice = createApi({
         return {
           url: URL_END_POINT.CHOOSE_FIRST_PLAYER,
           method: 'POST',
-          body: body
+          body: body,
+          responseHandler: parseResponse
         };
       }
     }),
@@ -266,7 +299,8 @@ export const apiSlice = createApi({
         return {
           url: URL_END_POINT.SUBMIT_SIDEBOARD,
           method: 'POST',
-          body: body
+          body: body,
+          responseHandler: parseResponse
         };
       }
     })
