@@ -22,13 +22,15 @@ export interface HandCard {
   isGraveyard?: boolean;
   isBanished?: boolean;
   card?: Card;
+  addCardToPlayedCards: (cardName: string) => void;
 }
 
 export const PlayerHandCard = ({
   card,
   isArsenal,
   isBanished,
-  isGraveyard
+  isGraveyard,
+  addCardToPlayedCards
 }: HandCard) => {
   const [canPopUp, setCanPopup] = useState(true);
   const [, windowHeight] = useWindowDimensions();
@@ -54,6 +56,7 @@ export const PlayerHandCard = ({
     ) {
       setSnapback(false);
       playCardFunc();
+      addCardToPlayedCards(card.cardNumber);
     }
     setCanPopup(true);
   };

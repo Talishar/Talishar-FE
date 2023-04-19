@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { shallowEqual } from 'react-redux';
 import { RootState } from 'app/Store';
 import { Card } from 'features/Card';
@@ -20,6 +20,8 @@ export default function PlayerHand() {
     (state: RootState) => state.game.gameInfo.playerID
   );
 
+  const [playedCards, setPlayedCards] = useState<String[]>([]);
+
   let hasArsenal = true;
 
   const showArsenal = false;
@@ -35,10 +37,26 @@ export default function PlayerHand() {
       (card) => card.action != null && card.action != 0
     );
   }, shallowEqual);
-  const playableGraveyardCards = useAppSelector(
-    (state: RootState) => state.game.playerOne.Graveyard?.filter(isPlayable),
-    shallowEqual
-  );
+  // const playableGraveyardCards = useAppSelector(
+  //   (state: RootState) => state.game.playerOne.Graveyard?.filter(isPlayable),
+  //   shallowEqual
+  // );
+
+  const addCardToPlayedCards = (cardName: string) => {
+    const newArray = playedCards;
+    newArray.push(cardName);
+    setPlayedCards(newArray);
+  };
+
+  useEffect(() => {
+    if (
+      (handCards?.length === 0 || handCards === undefined) &&
+      (playableBanishedCards?.length === 0 ||
+        playableBanishedCards === undefined)
+    ) {
+      setPlayedCards([]);
+    }
+  }, [handCards, playableBanishedCards]);
 
   if (
     arsenalCards === undefined ||
@@ -49,12 +67,9 @@ export default function PlayerHand() {
   }
 
   let lengthOfCards = 0;
-  lengthOfCards += handCards !== undefined ? handCards.length : 0;
-  lengthOfCards += arsenalCards !== undefined ? arsenalCards.length : 0;
-  lengthOfCards +=
-    playableBanishedCards !== undefined ? playableBanishedCards.length : 0;
-  lengthOfCards +=
-    playableGraveyardCards !== undefined ? playableGraveyardCards.length : 0;
+  lengthOfCards += handCards?.length ?? 0;
+  lengthOfCards += arsenalCards?.length ?? 0;
+  lengthOfCards += playableBanishedCards?.length ?? 0;
 
   const widthPercentage = Math.min(lengthOfCards * 5, MaxHandWidthPercentage);
 
@@ -65,34 +80,54 @@ export default function PlayerHand() {
     return <></>;
   }
 
+  const cardsInHandsAlready = [...playedCards];
+
   return (
     <div className={styles.handRow} style={widthfunction}>
       <AnimatePresence>
         {handCards !== undefined &&
           handCards.map((card, ix) => {
+            const cardCount = cardsInHandsAlready.filter(
+              (value) => value === card.cardNumber
+            ).length;
+            cardsInHandsAlready.push(card.cardNumber);
             return (
-              <PlayerHandCard card={card} key={`hand-${card.cardNumber}`} />
+              <PlayerHandCard
+                card={card}
+                key={`hand-${card.cardNumber}-${cardCount}`}
+                addCardToPlayedCards={addCardToPlayedCards}
+              />
             );
           })}
         {hasArsenal &&
           showArsenal &&
           arsenalCards !== undefined &&
           arsenalCards.map((card, ix) => {
+            const cardCount = cardsInHandsAlready.filter(
+              (value) => value === card.cardNumber
+            ).length;
+            cardsInHandsAlready.push(card.cardNumber);
             return (
               <PlayerHandCard
                 card={card}
                 isArsenal
-                key={`arsenal${card.cardNumber}`}
+                key={`arsenal-${card.cardNumber}-${cardCount}`}
+                addCardToPlayedCards={addCardToPlayedCards}
               />
             );
           })}
         {playableBanishedCards !== undefined &&
           playableBanishedCards.map((card, ix) => {
+            const cardCount = cardsInHandsAlready.filter(
+              (value) => value === card.cardNumber
+            ).length;
+            cardsInHandsAlready.push(card.cardNumber);
             return (
               <PlayerHandCard
                 card={card}
                 isBanished
-                key={`banished-${card.cardNumber}`}
+                key={`banished-${card.cardNumber}-${cardCount}`}
+                addCardToPlayedCards={addCardToPlayedCards}
               />
             );
           })}
