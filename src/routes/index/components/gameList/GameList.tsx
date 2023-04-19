@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import { useGetGameListQuery } from 'features/api/apiSlice';
 import styles from './GameList.module.css';
 import InProgressGame from '../inProgressGame';
-import OpenGame from '../openGame';
 import Filter from '../filter';
 import { GAME_FORMAT } from 'appConstants';
 import FormatList from '../formatList';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
+import useAuth from 'hooks/useAuth';
+import { Link } from 'react-router-dom';
 
 export interface IOpenGame {
   p1Hero?: string;
@@ -35,6 +36,7 @@ const GAME_LIST_POLLING_INTERVAL = 10000; // in ms
 const GameList = () => {
   const { data, isLoading, error, refetch, isFetching } =
     useGetGameListQuery(undefined);
+  const { isLoggedIn } = useAuth();
 
   const [heroFilter, setHeroFilter] = useState<string[]>([]);
   const [formatFilter, setFormatFilter] = useState<string | null>(null);
@@ -111,7 +113,7 @@ const GameList = () => {
           Reload
         </button>
       </div>
-      {isLoading ? <div aria-busy="true">Loading!</div> : null}
+      {isLoading ? <div aria-busy="true">Loading games please wait</div> : null}
       {error ? (
         <div>
           <h2>There has been an error!</h2>
@@ -124,11 +126,21 @@ const GameList = () => {
         </div>
       ) : null}
       {!isLoading && !error && <Filter setHeroFilter={setHeroFilter} />}
-      <FormatList gameList={blitz} name="Blitz" />
-      <FormatList gameList={compBlitz} name="Competitive Blitz" />
-      <FormatList gameList={cc} name="Classic Constructed" />
-      <FormatList gameList={compcc} name="Comp CC" />
-      <FormatList gameList={otherGames} name="Other" isOther />
+      {isLoggedIn ? (
+        <>
+          <FormatList gameList={blitz} name="Blitz" />
+          <FormatList gameList={compBlitz} name="Competitive Blitz" />
+          <FormatList gameList={cc} name="Classic Constructed" />
+          <FormatList gameList={compcc} name="Comp CC" />
+          <FormatList gameList={otherGames} name="Other" isOther />
+        </>
+      ) : (
+        !isLoading && (
+          <p>
+            Please <Link to="/user/login">log in</Link> to view open lobbies
+          </p>
+        )
+      )}
       {data != undefined && (
         <div data-testid="games-in-progress" ref={parent}>
           <h5 className={styles.subSectionTitle}>
