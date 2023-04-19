@@ -183,11 +183,8 @@ export const apiSlice = createApi({
     getGameList: builder.query<GameListResponse, undefined>({
       query: () => {
         return {
-          url: import.meta.env.DEV
-            ? `http://127.0.0.1:5173/api/live/${URL_END_POINT.GET_GAME_LIST}`
-            : API_URL_LIVE + URL_END_POINT.GET_GAME_LIST,
-          method: 'GET',
-          credentials: 'omit'
+          url: URL_END_POINT.GET_GAME_LIST,
+          method: 'GET'
         };
       }
     }),
