@@ -12,6 +12,7 @@ import {
   URL_END_POINT
 } from 'appConstants';
 import Button from '../Button';
+import { toast } from 'react-hot-toast';
 import GameState from '../GameState';
 import {
   GetLobbyRefresh,
@@ -65,7 +66,8 @@ export const nextTurn = createAsyncThunk(
         data = data.toString().trim();
         const indexOfBraces = data.indexOf('{');
         if (indexOfBraces !== 0) {
-          console.log(data.substring(0, indexOfBraces));
+          toast.error(`Backend Warning:\n${data.substring(0, indexOfBraces)}`);
+          console.warn(data.substring(0, indexOfBraces));
           data = data.substring(indexOfBraces);
         }
         const parsedData = JSON.parse(data);
@@ -76,7 +78,6 @@ export const nextTurn = createAsyncThunk(
           return;
         }
         waitingForJSONResponse = false;
-        console.log(e);
         return console.error(e);
       }
     }
