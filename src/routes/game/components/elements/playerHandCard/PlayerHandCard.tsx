@@ -7,13 +7,13 @@ import {
 import { GiTombstone, GiFluffySwirl, GiCannon } from 'react-icons/gi';
 import { Card } from 'features/Card';
 import styles from './PlayerHandCard.module.css';
-import Draggable, { DraggableData, DraggableEvent } from 'react-draggable';
 import { useAppDispatch } from 'app/Hooks';
 import { LONG_PRESS_TIMER } from 'appConstants';
 import classNames from 'classnames';
 import CardImage from '../cardImage/CardImage';
 import CardPopUp from '../cardPopUp/CardPopUp';
 import useWindowDimensions from 'hooks/useWindowDimensions';
+import { motion, PanInfo } from 'framer-motion';
 
 const ScreenPercentageForCardPlayed = 0.25;
 
@@ -32,9 +32,9 @@ export const PlayerHandCard = ({
   isGraveyard,
   addCardToPlayedCards
 }: HandCard) => {
-  const [controlledPosition, setControlledPosition] = useState({ x: 0, y: 0 });
   const [canPopUp, setCanPopup] = useState(true);
   const [, windowHeight] = useWindowDimensions();
+  const [snapback, setSnapback] = useState<boolean>(true);
 
   // ref to determine if we have a long press or a short tap.
   const timerRef = useRef<ReturnType<typeof setTimeout>>();
@@ -46,12 +46,18 @@ export const PlayerHandCard = ({
   const src = `/cardimages/${card.cardNumber}.webp`;
   const dispatch = useAppDispatch();
 
-  const onDragStop = (_: DraggableEvent, data: DraggableData) => {
-    if (data.lastY < -windowHeight * ScreenPercentageForCardPlayed) {
+  const handleDragEnd = (
+    event: MouseEvent | TouchEvent | PointerEvent,
+    info: PanInfo
+  ) => {
+    if (
+      Math.abs(info.offset.y) >
+      windowHeight * ScreenPercentageForCardPlayed
+    ) {
+      setSnapback(false);
       playCardFunc();
       addCardToPlayedCards(card.cardNumber);
     }
-    setControlledPosition({ x: 0, y: 0 });
     setCanPopup(true);
   };
 
@@ -64,11 +70,14 @@ export const PlayerHandCard = ({
   };
 
   const onDrag = () => {
-    dispatch(clearPopUp());
-    setCanPopup(false);
+    if (canPopUp) {
+      setSnapback(true);
+      dispatch(clearPopUp());
+      setCanPopup(false);
+    }
   };
 
-  const onClick = () => {
+  const handleOnClick = () => {
     if (!isLongPress.current) {
       playCardFunc();
     }
@@ -79,6 +88,10 @@ export const PlayerHandCard = ({
     timerRef.current = setTimeout(() => {
       isLongPress.current = true;
     }, LONG_PRESS_TIMER);
+  };
+
+  const stopPressTimer = () => {
+    clearTimeout(timerRef.current);
   };
 
   const imgStyles = classNames(styles.img, {
@@ -92,47 +105,45 @@ export const PlayerHandCard = ({
   });
 
   return (
-    <div
+    <motion.div
+      drag
       className={styles.handCard}
-      onClick={onClick}
-      onMouseDown={startPressTimer}
-      onMouseUp={() => clearTimeout(timerRef.current)}
-      onTouchStart={startPressTimer}
-      onTouchEnd={() => clearTimeout(timerRef.current)}
+      style={{ touchAction: 'none' }}
+      onClick={handleOnClick}
+      onTapStart={startPressTimer}
+      onTap={stopPressTimer}
+      onDragEnd={handleDragEnd}
+      onDrag={onDrag}
+      dragSnapToOrigin={snapback}
+      initial={{ opacity: 0, y: 100 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, scale: 0.5 }}
     >
       <CardPopUp
         containerClass={styles.imgContainer}
         cardNumber={card.cardNumber}
         isHidden={!canPopUp}
       >
-        <Draggable
-          onStop={onDragStop}
-          onDrag={onDrag}
-          position={controlledPosition}
-        >
-          <div>
-            <CardImage src={src} className={imgStyles} draggable="false" />
-            <div className={styles.iconCol}>
-              {isArsenal === true && (
-                <div className={styles.icon}>
-                  <GiCannon title="Arsenal" />
-                </div>
-              )}
-              {isBanished === true && (
-                <div className={styles.icon}>
-                  <GiFluffySwirl title="Banished Zone" />
-                </div>
-              )}
-              {isGraveyard === true && (
-                <div className={styles.icon}>
-                  <GiTombstone title="Graveyard" />
-                </div>
-              )}
+        <CardImage src={src} className={imgStyles} draggable="false" />
+        <div className={styles.iconCol}>
+          {isArsenal === true && (
+            <div className={styles.icon}>
+              <GiCannon title="Arsenal" />
             </div>
-          </div>
-        </Draggable>
+          )}
+          {isBanished === true && (
+            <div className={styles.icon}>
+              <GiFluffySwirl title="Banished Zone" />
+            </div>
+          )}
+          {isGraveyard === true && (
+            <div className={styles.icon}>
+              <GiTombstone title="Graveyard" />
+            </div>
+          )}
+        </div>
       </CardPopUp>
-    </div>
+    </motion.div>
   );
 };
 
