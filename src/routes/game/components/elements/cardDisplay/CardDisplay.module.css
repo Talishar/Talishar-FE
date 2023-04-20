@@ -11,12 +11,12 @@
 }
 
 .normalSize {
-  min-height: 14vh;
-  min-width: 14vh;
-  min-height: 14dvh;
-  min-width: 14dvh;
-  height: 125px;
-  width: 125px;
+  min-height: 12vh;
+  min-width: 12vh;
+  min-height: 12dvh;
+  min-width: 12dvh;
+  height: 100%;
+  width: 100%;
   max-width: 100%;
   max-height: 100%;
 }
