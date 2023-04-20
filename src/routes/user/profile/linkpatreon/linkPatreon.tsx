@@ -38,15 +38,3 @@ const LinkPatreon = () => {
 };
 
 export default LinkPatreon;
-
-/*
-BE Response:
-<br />
-<b>Warning</b>: include_once(MenuBar.php): Failed to open stream: No such file or directory in <b>/var/www/html/game/AccountFiles/PatreonLoginAPI.php</b> on line <b>2</b><br />
-<br />
-<b>Warning</b>: include_once(): Failed opening 'MenuBar.php' for inclusion (include_path='.:/usr/local/lib/php') in <b>/var/www/html/game/AccountFiles/PatreonLoginAPI.php</b> on line <b>2</b><br />
-<br />
-<b>Fatal error</b>: Uncaught Error: Call to undefined function SetHeaders() in /var/www/html/game/AccountFiles/PatreonLoginAPI.php:16
-Stack trace:
-#0
-*/
