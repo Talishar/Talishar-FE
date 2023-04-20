@@ -1,4 +1,8 @@
 .landmark {
   width: 95%;
   margin: auto;
+  max-width: 95%;
+  max-height: 95%;
+  aspect-ratio: 1;
+  font-size: 14px;
 }

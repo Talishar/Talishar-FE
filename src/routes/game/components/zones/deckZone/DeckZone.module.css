@@ -9,4 +9,8 @@
   background: rgba(50, 50, 50, 0.5);
   color: var(--white);
   grid-area: deck;
+  font-size: 16px;
+  max-width: 100%;
+  max-height: 100%;
+  aspect-ratio: 1;
 }
