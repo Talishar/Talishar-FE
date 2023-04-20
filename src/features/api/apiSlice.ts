@@ -55,11 +55,14 @@ export const parseResponse = async (response: any) => {
   let stringData = data.toString().trim();
   const indexOfBraces = stringData.indexOf('{');
   if (indexOfBraces !== 0) {
-    console.warn(
-      `Backend PHP Warning:`,
-      stringData.substring(0, indexOfBraces)
-    );
-    toast.error(`Backend Warning:\n${stringData.substring(0, indexOfBraces)}`);
+    let errorString;
+    if (indexOfBraces === -1) {
+      errorString = data;
+    } else {
+      errorString = stringData.substring(0, indexOfBraces);
+    }
+    console.warn(`BE Response:`, errorString);
+    toast.error(`BE Response:\n${errorString}`);
     stringData = stringData.substring(indexOfBraces);
   }
   return JSON.parse(stringData);
