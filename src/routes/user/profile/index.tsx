@@ -7,6 +7,13 @@ import { toast } from 'react-hot-toast';
 import { GiNotebook, GiTrashCan } from 'react-icons/gi';
 import styles from './profile.module.css';
 
+const CODE = 'code';
+const CLIENT_ID =
+  'UMs7_V2SPi656fczWY0SDtg9M3RJy-gd4H95h7fd05BUJ2UMnd0IM77dp0ZAtBng';
+const REDIRECT_URI = 'https://talishar.net/user/profile/linkpatreon';
+const SCOPE = 'identity identity.memberships';
+const PATREON_URL = 'https://www.patreon.com/oauth2/authorize?';
+
 export const ProfilePage = () => {
   const { data, isLoading, refetch } = useGetFavoriteDecksQuery(undefined);
   const [deleteDeck] = useDeleteDeckMutation();
@@ -49,6 +56,12 @@ export const ProfilePage = () => {
     window.location.href = deckLink;
   };
 
+  const PatreonOAuthParam = new URLSearchParams();
+  PatreonOAuthParam.append('response_type', CODE);
+  PatreonOAuthParam.append('client_id', CLIENT_ID);
+  PatreonOAuthParam.append('redirect_uri', REDIRECT_URI);
+  PatreonOAuthParam.append('scope', SCOPE);
+
   return (
     <div>
       <div className="container">
@@ -56,8 +69,8 @@ export const ProfilePage = () => {
         <article>
           <h3>Profile:</h3>
           <div>
-            <a href="https://legacy.talishar.net/game/ProfilePage.php">
-              Connect to Patreon on the legacy client
+            <a href={PATREON_URL + PatreonOAuthParam.toString()}>
+              Connect to Patreon
             </a>
           </div>
           <h3>Your decks:</h3>
