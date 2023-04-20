@@ -24,7 +24,7 @@ import useAuth from 'hooks/useAuth';
 import Header from 'components/header/Header';
 import Privacy from 'routes/privacy';
 import CreateGame from 'routes/game/create/CreateGame';
-import Linkpatreon from 'routes/user/profile/linkpatreon';
+import LinkPatreon from 'routes/user/profile/linkpatreon';
 
 const PlayGuard = ({ children }: { children: JSX.Element }) => {
   const [searchParams] = useKnownSearchParams();
@@ -120,7 +120,7 @@ export const router = createBrowserRouter(
         <Route path="privacy" element={<Privacy />} />
         <Route path="user">
           <Route index element={<Navigate to={'./profile'} />} />
-          <Route path="profile/linkpatreon" element={<Linkpatreon />} />
+          <Route path="profile/linkpatreon" element={<LinkPatreon />} />
           <Route
             path="profile"
             element={

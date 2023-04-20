@@ -8,7 +8,7 @@ export interface PatreonLoginResponse {
   error?: string;
 }
 
-const Linkpatreon = () => {
+const LinkPatreon = () => {
   const [submitPatreonMutation, submitPatreonMutationResponse] =
     useSubmitPatreonLoginMutation();
   const [searchParams] = useSearchParams();
@@ -37,7 +37,7 @@ const Linkpatreon = () => {
   return <div>linkPatreon</div>;
 };
 
-export default Linkpatreon;
+export default LinkPatreon;
 
 /*
 BE Response:
