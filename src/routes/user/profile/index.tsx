@@ -62,6 +62,11 @@ export const ProfilePage = () => {
   PatreonOAuthParam.append('redirect_uri', REDIRECT_URI);
   PatreonOAuthParam.append('scope', SCOPE);
 
+  console.log(
+    'If you want to test the patreon connection go to this URL:',
+    PATREON_URL + PatreonOAuthParam.toString()
+  );
+
   return (
     <div>
       <div className="container">
@@ -69,8 +74,11 @@ export const ProfilePage = () => {
         <article>
           <h3>Profile:</h3>
           <div>
-            <a href={PATREON_URL + PatreonOAuthParam.toString()}>
+            {/* <a href={PATREON_URL + PatreonOAuthParam.toString()}>
               Connect to Patreon
+            </a> */}
+            <a href={'https://legacy.talishar.net/game/ProfilePage.php'}>
+              Connect to Patreon on legacy client
             </a>
           </div>
           <h3>Your decks:</h3>
