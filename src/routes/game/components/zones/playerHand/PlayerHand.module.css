@@ -12,6 +12,7 @@
   gap: 1vh;
   user-select: none;
   z-index: 15;
+  font-size: 16px;
 }
 
 @media (orientation: portrait) {

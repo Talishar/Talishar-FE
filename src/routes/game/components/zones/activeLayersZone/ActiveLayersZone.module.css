@@ -18,16 +18,22 @@
 }
 
 .activeLayersTitle {
-  font-size: 0.75em;
-  padding-left: 0.5em;
+  font-size: 22px;
+  padding-left: 8px;
+  margin-bottom: 8px;
+  line-height: 1;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   gap: 10px;
 }
 
+.title > small {
+  font-size: 16px;
+}
+
 .title {
-  font-size: 1.5em;
+  font-size: 24px;
   margin: 0px;
 }
 
@@ -45,7 +51,7 @@
 }
 
 .activeLayersContents > div {
-  width: 14dvh;
+  width: auto;
 }
 
 .orderingExplanation {

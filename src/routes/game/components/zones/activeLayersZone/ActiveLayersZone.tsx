@@ -43,15 +43,16 @@ export default function ActiveLayersZone() {
           <div className={styles.activeLayersTitle}>
             <div className={styles.titlesColumn}>
               <h3 className={styles.title}>
-                Active Layers
+                Active Layers{' '}
+                <small className={styles.orderingExplanation}>
+                  <em>Priority settings can be adjusted in the menu</em>
+                </small>
                 {activeLayer.isReorderable
                   ? ' (Drag highlighted to reorder)'
                   : null}
               </h3>
               <Target target={activeLayer.target} />
-              <p className={styles.orderingExplanation}>
-                Priority settings can be adjusted in the menu
-              </p>
+
               <p className={styles.orderingExplanation}>
                 For more info about trigger ordering, see rule 1.10.2c of the
                 comprehensive rulebook.
@@ -59,7 +60,7 @@ export default function ActiveLayersZone() {
             </div>
             {canPassPhase && (
               <div className={styles.passTurnBox}>
-                <button onClick={handlePassTurn}>
+                <button onClick={handlePassTurn} style={{ marginBottom: '0' }}>
                   <small>Pass</small>
                 </button>
               </div>
