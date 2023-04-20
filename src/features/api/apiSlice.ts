@@ -35,6 +35,7 @@ import {
   DeleteDeckAPIRequest,
   DeleteDeckAPIResponse
 } from 'interface/API/DeleteDeckAPI.php';
+import { PatreonLoginResponse } from 'routes/user/profile/linkpatreon/linkPatreon';
 
 // catch warnings and show a toast if we get one.
 export const rtkQueryErrorToaster: Middleware =
@@ -55,11 +56,14 @@ export const parseResponse = async (response: any) => {
   let stringData = data.toString().trim();
   const indexOfBraces = stringData.indexOf('{');
   if (indexOfBraces !== 0) {
-    console.warn(
-      `Backend PHP Warning:`,
-      stringData.substring(0, indexOfBraces)
-    );
-    toast.error(`Backend Warning:\n${stringData.substring(0, indexOfBraces)}`);
+    let errorString;
+    if (indexOfBraces === -1) {
+      errorString = data;
+    } else {
+      errorString = stringData.substring(0, indexOfBraces);
+    }
+    console.warn(`BE Response:`, errorString);
+    toast.error(`BE Response:\n${errorString}`);
     stringData = stringData.substring(indexOfBraces);
   }
   return JSON.parse(stringData);
@@ -303,6 +307,25 @@ export const apiSlice = createApi({
           responseHandler: parseResponse
         };
       }
+    }),
+    submitPatreonLogin: builder.mutation<
+      PatreonLoginResponse,
+      {
+        code: string;
+        redirect_uri: string;
+      }
+    >({
+      query: ({ code, redirect_uri }) => {
+        return {
+          url: URL_END_POINT.PATREON_LOGIN,
+          method: 'GET',
+          params: {
+            code: code,
+            redirect_uri: redirect_uri
+          },
+          responseHandler: parseResponse
+        };
+      }
     })
   })
 });
@@ -326,5 +349,6 @@ export const {
   useGetLobbyInfoQuery,
   useProcessInputAPIMutation,
   useChooseFirstPlayerMutation,
-  useSubmitSideboardMutation
+  useSubmitSideboardMutation,
+  useSubmitPatreonLoginMutation
 } = apiSlice;
