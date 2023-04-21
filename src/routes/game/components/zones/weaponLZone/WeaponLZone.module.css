@@ -1,6 +1,5 @@
 .weaponLZone {
   grid-area: weaponl;
-  max-width: 100%;
-  max-height: 100%;
-  aspect-ratio: 1;
+  min-width: 100%;
+  min-height: 100%;
 }

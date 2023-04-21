@@ -53,12 +53,9 @@ export const rtkQueryErrorToaster: Middleware =
 
 export const parseResponse = async (response: any) => {
   const data = await response.text();
-  let stringData = data.toString().trim() as string;
-  if (stringData.length === 0) {
-    return {};
-  }
+  let stringData = data.toString().trim();
   const indexOfBraces = stringData.indexOf('{');
-  if (indexOfBraces !== 0 && stringData.length > 0) {
+  if (indexOfBraces !== 0) {
     let errorString;
     if (indexOfBraces === -1) {
       errorString = data;

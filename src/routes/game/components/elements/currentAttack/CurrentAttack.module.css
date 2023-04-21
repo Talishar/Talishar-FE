@@ -5,10 +5,9 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: 0.5vh;
   overflow: visible;
   user-select: none;
-  max-height: 100%;
 }
 
 .floatCover {
@@ -51,15 +50,14 @@
 
 .attack {
   position: relative;
-  height: 14dvh;
-  width: 14dvh;
+  height: 100%;
+  width: 100%;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
   gap: 1vh;
   overflow: visible;
-  max-height: 100%;
 }
 
 .attDefRow {

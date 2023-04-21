@@ -3,16 +3,15 @@
   min-width: 10%;
   max-width: 50%;
   max-height: 1vh;
-  bottom: 2.6%;
+  bottom: 0px;
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
   justify-content: center;
   align-items: center;
-  gap: 32px;
+  gap: 1vh;
   user-select: none;
   z-index: 15;
-  font-size: 16px;
 }
 
 @media (orientation: portrait) {

@@ -1,6 +1,6 @@
 .container {
   display: flex;
-  font-size: 24px;
+  font-size: 1.5rem;
   flex-direction: row;
   justify-content: center;
   align-items: center;
@@ -12,9 +12,6 @@
   line-height: normal;
   min-width: 100%;
   min-height: 100%;
-  max-width: 100%;
-  max-height: 100%;
-  aspect-ratio: 1;
 }
 
 .column {
@@ -29,8 +26,7 @@
 
 .item {
   width: 100%;
-  justify-content: center;
-  gap: 8px;
+  justify-content: space-around;
   display: flex;
   align-items: center;
   user-select: none;

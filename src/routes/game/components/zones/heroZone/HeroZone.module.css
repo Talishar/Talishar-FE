@@ -1,9 +1,5 @@
 .heroZone {
   grid-area: hero;
-  min-width: 64px;
-  min-height: 64px;
-  max-width: 100%;
-  max-height: 100%;
-  aspect-ratio: 1;
-  font-size: 16px;
+  min-width: 100%;
+  min-height: 100%;
 }
