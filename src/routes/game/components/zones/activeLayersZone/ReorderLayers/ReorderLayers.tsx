@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import styles from './ReorderLayers.module.css';
 import CardDisplay from '../../../elements/cardDisplay/CardDisplay';
 import { Card } from 'features/Card';
@@ -14,11 +14,15 @@ const ReorderLayers = ({ cards }: { cards: Card[] }) => {
     getGameInfo,
     shallowEqual
   );
-  const [cardList, setCardList] = React.useState(
-    cards.map((card) => {
-      return { ...card, borderColor: '8' } as Card;
-    })
-  );
+  const [cardList, setCardList] = React.useState<Card[]>([]);
+  useMemo(() => {
+    console.log('cards in memo', cards);
+    setCardList(
+      cards.map((card) => {
+        return { ...card, borderColor: '8' } as Card;
+      }) ?? []
+    );
+  }, [cards]);
   const [processInputAPI, useProcessInputAPIResponse] =
     useProcessInputAPIMutation();
 
@@ -30,7 +34,7 @@ const ReorderLayers = ({ cards }: { cards: Card[] }) => {
     const layers = [];
     for (const card of cardList) {
       if (card.cardNumber === 'FINALIZECHAINLINK') continue;
-      layers.push(card.layer);
+      layers.unshift(card.layer);
     }
     const body = {
       gameName: gameID,
@@ -41,6 +45,9 @@ const ReorderLayers = ({ cards }: { cards: Card[] }) => {
     };
     processInputAPI(body);
   };
+
+  const cardInLayer = [] as string[];
+
   return (
     <Reorder.Group
       className={styles.reorderCards}
@@ -49,9 +56,15 @@ const ReorderLayers = ({ cards }: { cards: Card[] }) => {
       axis="x"
     >
       {cardList.map((card, ix) => {
+        // avoid any jankiness if we have duplicate cards in the layer!
+        const layerCount = cardInLayer.filter(
+          (value) => value === card.cardNumber
+        ).length;
+        cardInLayer.push(card.cardNumber);
+
         return (
           <Reorder.Item
-            key={card.layer}
+            key={`${card.cardNumber}${layerCount}`}
             value={card}
             className={styles.reorderItem}
             onDragEnd={handleDragEnd}
