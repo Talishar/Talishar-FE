@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import styles from './ReorderLayers.module.css';
 import CardDisplay from '../../../elements/cardDisplay/CardDisplay';
 import { Card } from 'features/Card';
@@ -14,11 +14,15 @@ const ReorderLayers = ({ cards }: { cards: Card[] }) => {
     getGameInfo,
     shallowEqual
   );
-  const [cardList, setCardList] = React.useState(
-    cards.map((card) => {
-      return { ...card, borderColor: '8' } as Card;
-    })
-  );
+  const [cardList, setCardList] = React.useState<Card[]>([]);
+  useMemo(() => {
+    console.log('cards in memo', cards);
+    setCardList(
+      cards.map((card) => {
+        return { ...card, borderColor: '8' } as Card;
+      }) ?? []
+    );
+  }, [cards]);
   const [processInputAPI, useProcessInputAPIResponse] =
     useProcessInputAPIMutation();
 
@@ -30,7 +34,7 @@ const ReorderLayers = ({ cards }: { cards: Card[] }) => {
     const layers = [];
     for (const card of cardList) {
       if (card.cardNumber === 'FINALIZECHAINLINK') continue;
-      layers.push(card.layer);
+      layers.unshift(card.layer);
     }
     const body = {
       gameName: gameID,
@@ -41,6 +45,10 @@ const ReorderLayers = ({ cards }: { cards: Card[] }) => {
     };
     processInputAPI(body);
   };
+
+  console.log('cardList', cardList);
+  console.log('cardsprop', cards);
+
   return (
     <Reorder.Group
       className={styles.reorderCards}
@@ -51,7 +59,7 @@ const ReorderLayers = ({ cards }: { cards: Card[] }) => {
       {cardList.map((card, ix) => {
         return (
           <Reorder.Item
-            key={card.layer}
+            key={card.cardNumber}
             value={card}
             className={styles.reorderItem}
             onDragEnd={handleDragEnd}
