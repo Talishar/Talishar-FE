@@ -14,12 +14,12 @@
   align-items: center;
   transition: width 0.5s;
   flex-wrap: nowrap;
-  font-size: 18px;
+  font-size: 1em;
   font-weight: 600;
-  padding: 2px;
+  padding: 8px;
   flex-direction: row;
   overflow-x: min-content;
-  gap: 8px;
+  gap: 0.2em;
 }
 
 .content {
@@ -42,9 +42,8 @@
   border-radius: 5px;
   border: 1px solid black;
   flex-basis: auto;
-  padding: 0 8px;
+  padding: 0 1dvh;
   margin-left: 1dvh;
-  height: 100%;
 }
 
 .buttonDiv:hover {

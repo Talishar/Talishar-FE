@@ -31,10 +31,6 @@
   text-align: center;
 }
 
-.titleInterior {
-  font-size: 18px;
-}
-
 .phaseTrackerBottomContainer {
   text-align: center;
   bottom: 0px;
@@ -49,8 +45,6 @@
 
 .bottomInterior {
   flex-grow: 1;
-  line-height: 1.2;
-  font-size: 16px;
-  width: 80%;
-  padding: 0;
+  font-size: 0.75em;
+  width: 70%;
 }
