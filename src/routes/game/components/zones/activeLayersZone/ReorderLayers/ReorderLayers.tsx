@@ -46,8 +46,7 @@ const ReorderLayers = ({ cards }: { cards: Card[] }) => {
     processInputAPI(body);
   };
 
-  console.log('cardList', cardList);
-  console.log('cardsprop', cards);
+  const cardInLayer = [] as string[];
 
   return (
     <Reorder.Group
@@ -57,9 +56,15 @@ const ReorderLayers = ({ cards }: { cards: Card[] }) => {
       axis="x"
     >
       {cardList.map((card, ix) => {
+        // avoid any jankiness if we have duplicate cards in the layer!
+        const layerCount = cardInLayer.filter(
+          (value) => value === card.cardNumber
+        ).length;
+        cardInLayer.push(card.cardNumber);
+
         return (
           <Reorder.Item
-            key={card.cardNumber}
+            key={`${card.cardNumber}${layerCount}`}
             value={card}
             className={styles.reorderItem}
             onDragEnd={handleDragEnd}
