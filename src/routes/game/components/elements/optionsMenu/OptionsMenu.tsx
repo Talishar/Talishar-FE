@@ -57,6 +57,11 @@ const OptionsContent = () => {
     clickCloseOptionsHandler();
   };
 
+  const clickReportPlayerHandler = () => {
+    dispatch(submitButton({ button: { mode: PROCESS_INPUT.REPORT_PLAYER } }));
+    clickCloseOptionsHandler();
+  };
+
   const clickUndoButtonHandler = () => {
     dispatch(submitButton({ button: { mode: PROCESS_INPUT.UNDO } }));
     clickCloseOptionsHandler();
@@ -128,6 +133,13 @@ const OptionsContent = () => {
                 onClick={clickReportBugHandler}
               >
                 Report Bug
+              </button>
+
+              <button
+                className={styles.buttonDiv}
+                onClick={clickReportPlayerHandler}
+              >
+                Report Player
               </button>
               <button
                 className={styles.buttonDiv}
