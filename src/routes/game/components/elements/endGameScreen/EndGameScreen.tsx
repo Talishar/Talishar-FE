@@ -8,6 +8,7 @@ import EndGameStats, { EndGameData } from '../endGameStats/EndGameStats';
 import { shallowEqual } from 'react-redux';
 import useShowModal from 'hooks/useShowModals';
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import classNames from "classnames";
 
 const EndGameScreen = () => {
   const gameInfo = useAppSelector(getGameInfo, shallowEqual);
@@ -20,6 +21,9 @@ const EndGameScreen = () => {
     popupType: END_GAME_STATS
   });
   const showModal = useShowModal();
+  const cardListBoxClasses = classNames(styles.cardListBox, {
+    [styles.reduced]: !showStats
+  })
 
   if (!showModal) return null;
 
@@ -42,7 +46,7 @@ const EndGameScreen = () => {
   }
 
   return (
-    <div className={`${styles.cardListBox} ${!showStats ? styles.reduced : ''}`}>
+    <div className={cardListBoxClasses}>
       <div className={styles.cardListTitleContainer}>
         <div className={styles.cardListTitle}>
           <h3 className={styles.title}>{'Game Over Summary'}</h3>
