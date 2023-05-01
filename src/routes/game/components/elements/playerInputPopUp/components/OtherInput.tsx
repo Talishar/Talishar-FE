@@ -4,7 +4,6 @@ import { NAME_A_CARD } from '../constants';
 import { FormProps } from '../playerInputPopupTypes';
 import styles from '../PlayerInputPopUp.module.css';
 
-
 export const OtherInput = (props: FormProps) => {
   const {
     cards,
@@ -47,23 +46,25 @@ export const OtherInput = (props: FormProps) => {
       {selectCard?.length != 0 ? (
         <div className={styles.cardList}>{selectCard}</div>
       ) : null}
-      {buttons?.length != 0 
-        ? <div className={styles.buttonList}>
-            { buttons?.map((button, ix) => {
-                return (
-                  <div
-                    className={styles.buttonDiv}
-                    onClick={() => {
-                      onClickButton(button);
-                    }}
-                    key={ix.toString()}
-                  >
-                    {button.caption}
-                  </div>
-                );
-            })}
-          </div>
-      : null }
+      {buttons?.length != 0 ? (
+        <div className={styles.buttonList}>
+          {buttons?.map((button, ix) => {
+            return (
+              <button
+                className={styles.buttonDiv}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  e.preventDefault();
+                  onClickButton(button);
+                }}
+                key={ix.toString()}
+              >
+                {button.caption}
+              </button>
+            );
+          })}
+        </div>
+      ) : null}
       <div>
         {formOptions ? (
           <div>
@@ -81,5 +82,5 @@ export const OtherInput = (props: FormProps) => {
         {id === NAME_A_CARD && <SearchCardInput />}
       </div>
     </form>
-  )
-}
+  );
+};

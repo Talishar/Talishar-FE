@@ -3,25 +3,28 @@
   height: 3dvh;
 }
 
-.chatInput {
+.chatInput.chatInput {
   font-weight: 400;
   font-size: 0.75em;
   flex-shrink: 1;
   flex-grow: 1;
-  width: auto;
+  max-width: 100%;
   border: 2px solid black;
   background-color: var(--white);
   color: black;
-  padding: 0 0.25rem;
+  padding: 0 0.5em;
   margin: 0;
   height: 1.75rem !important;
+  min-width: none;
 }
 
 .flexBox {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  /* flex-direction: row;
+  flex-wrap: nowrap; */
   gap: 0.25em;
+  max-width: 100%;
 }
 
 .buttonDiv {
