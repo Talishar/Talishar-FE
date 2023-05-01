@@ -123,7 +123,7 @@ export const ProfilePage = () => {
               {decksData?.favoriteDecks.map((deck, ix) => (
                 <tr key={deck.key}>
                   <th scope="row">
-                    {!!deck.hero && (loadGameAuthKey
+                    {!!deck.hero && (
                       <img
                         src={`/crops/${deck.hero}_cropped.png`}
                         className={styles.heroImage}
