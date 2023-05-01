@@ -30,7 +30,3 @@
   background-color: var(--white);
   color: black;
 }
-
-.chatBoxInner div {
-  margin-bottom: 0.5em;
-}
