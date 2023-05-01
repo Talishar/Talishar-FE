@@ -1,19 +1,17 @@
-import React, { ReactNode, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { submitButton, submitMultiButton } from 'features/game/GameSlice';
 import { useAppSelector, useAppDispatch } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import styles from './PlayerInputPopUp.module.css';
 import Button from 'features/Button';
 import { FaTimes } from 'react-icons/fa';
-import CardDisplay from '../cardDisplay/CardDisplay';
-import SearchCardInput from '../searchCardInput';
 import { PROCESS_INPUT } from 'appConstants';
-import { NAME_A_CARD } from './constants';
 import { motion } from 'framer-motion';
 import useShowModal from 'hooks/useShowModals';
 import { OptInput } from './components/OptInput';
 import { FormProps } from './playerInputPopupTypes';
 import { OtherInput } from './components/OtherInput';
+import { replaceText } from 'utils/ParseEscapedString';
 
 const PlayerInputFormTypeMap: {
   [key: string]: (props: FormProps) => JSX.Element;
@@ -116,7 +114,7 @@ export default function PlayerInputPopUp() {
   const FormDisplay =
     PlayerInputFormTypeMap[inputPopUp.popup?.id || ''] || OtherInput;
   //Title comes back as a HTML string so we need to dangeously set it vs just using it for the moment
-  const title = { __html: inputPopUp?.popup?.title ?? '' };
+  const title = { __html: replaceText(inputPopUp?.popup?.title ?? '') };
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.8 }}
