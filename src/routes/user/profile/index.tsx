@@ -72,10 +72,10 @@ export const ProfilePage = () => {
   PatreonOAuthParam.append('redirect_uri', REDIRECT_URI);
   PatreonOAuthParam.append('scope', SCOPE);
 
-  // console.log(
-  //   'If you want to test the patreon connection go to this URL:',
-  //   PATREON_URL + PatreonOAuthParam.toString()
-  // );
+  console.log(
+    'If you want to test the patreon connection go to this URL:',
+    PATREON_URL + PatreonOAuthParam.toString()
+  );
 
   return (
     <div>
@@ -84,17 +84,11 @@ export const ProfilePage = () => {
         <article>
           <h3>Profile:</h3>
           <div>
-            <h5>Username: {profileData?.userName}</h5>
-          </div>
-          <div>
             {profileIsLoading && <p>Loading Profile...</p>}
             {!profileIsLoading && profileData?.isPatreonLinked && (
               <p>
                 You have linked your patreon. <br />
-                <a href={PATREON_URL + PatreonOAuthParam.toString()}>
-                  Refresh your patreon connection
-                </a>{' '}
-                (in case you have new patreons and can't access their perks yet)
+                {JSON.stringify(profileData.patreonInfo)}
               </p>
             )}
             {!profileIsLoading && !profileData?.isPatreonLinked && (
