@@ -52,7 +52,9 @@ export const OtherInput = (props: FormProps) => {
             return (
               <button
                 className={styles.buttonDiv}
-                onClick={() => {
+                onClick={(e) => {
+                  e.stopPropagation();
+                  e.preventDefault();
                   onClickButton(button);
                 }}
                 key={ix.toString()}
