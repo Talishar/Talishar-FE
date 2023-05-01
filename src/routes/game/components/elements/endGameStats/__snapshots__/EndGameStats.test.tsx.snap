@@ -128,19 +128,6 @@ exports[`passes a snapshot test 1`] = `
   </div>
   <div>
     <h2>
-      Stuff
-    </h2>
-    <div>
-      TODO: Add more stuff here
-    </div>
-    <div>
-      <small>
-        Collision point you're the best
-      </small>
-    </div>
-  </div>
-  <div>
-    <h2>
       Turn Stats
     </h2>
     <table
@@ -162,6 +149,9 @@ exports[`passes a snapshot test 1`] = `
           </th>
           <th>
             Resources Used
+          </th>
+          <th>
+            Resources Left
           </th>
           <th>
             Cards Left
@@ -201,6 +191,9 @@ exports[`passes a snapshot test 1`] = `
           >
             6
           </td>
+          <td
+            class="_pitched_8328d1"
+          />
           <td
             class="_pitched_8328d1"
           >
@@ -243,6 +236,9 @@ exports[`passes a snapshot test 1`] = `
           >
             0
           </td>
+          <td
+            class="_pitched_8328d1"
+          />
           <td
             class="_pitched_8328d1"
           >
