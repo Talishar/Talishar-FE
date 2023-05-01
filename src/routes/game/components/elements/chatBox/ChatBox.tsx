@@ -3,6 +3,7 @@ import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import ChatInput from '../chatInput/ChatInput';
 import styles from './ChatBox.module.css';
+import { replaceText } from 'utils/ParseEscapedString';
 
 export default function ChatBox() {
   const chatLog = useAppSelector((state: RootState) => state.game.chatLog);
@@ -28,7 +29,7 @@ export default function ChatBox() {
             chatLog.map((chat, ix) => {
               return (
                 <div
-                  dangerouslySetInnerHTML={{ __html: chat }}
+                  dangerouslySetInnerHTML={{ __html: replaceText(chat) }}
                   key={ix}
                   ref={messagesEndRef}
                 ></div>
