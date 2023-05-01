@@ -21,8 +21,11 @@ import {
 import { RootState } from 'app/Store';
 import {
   deleteGameAuthKey,
+  deleteGamePlayerNo,
   loadGameAuthKey,
-  saveGameAuthKey
+  loadGamePlayerNo,
+  saveGameAuthKey,
+  saveGamePlayerNo
 } from 'utils/LocalKeyManagement';
 
 export const nextTurn = createAsyncThunk(
@@ -344,6 +347,13 @@ export const gameSlice = createSlice({
           state.gameInfo.authKey = loadGameAuthKey(state.gameInfo.gameID);
         }
       }
+      if (!state.gameInfo.playerID) {
+        if (action.payload.playerID !== 0) {
+          saveGamePlayerNo(action.payload.playerID, action.payload.playerID);
+        } else {
+          state.gameInfo.playerID = loadGamePlayerNo(state.gameInfo.playerID);
+        }
+      }
       state.gameDynamicInfo.lastUpdate = 0;
       state.playerOne = {};
       state.playerTwo = {};
@@ -355,6 +365,7 @@ export const gameSlice = createSlice({
     // for main menu, zero out all active game info.
     clearGameInfo: (state) => {
       deleteGameAuthKey(state.gameInfo.gameID);
+      deleteGamePlayerNo(state.gameInfo.gameID);
       state.gameInfo.gameID = 0;
       state.gameInfo.playerID = 0;
       state.gameInfo.authKey = '';
