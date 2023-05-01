@@ -31,6 +31,7 @@ export interface TurnResult {
   damageDealt: number;
   damageTaken: number;
   resourcesUsed: number;
+  resourcesLeft: number;
 }
 
 const EndGameStats = (data: EndGameData) => {
@@ -82,13 +83,6 @@ const EndGameStats = (data: EndGameData) => {
         </table>
       </div>
       <div>
-        <h2>Stuff</h2>
-        <div>TODO: Add more stuff here</div>
-        <div>
-          <small>Collision point you're the best</small>
-        </div>
-      </div>
-      <div>
         <h2>Turn Stats</h2>
         <table className={styles.cardTable}>
           <thead>
@@ -98,6 +92,7 @@ const EndGameStats = (data: EndGameData) => {
               <th>Cards Blocked</th>
               <th>Cards Pitched</th>
               <th>Resources Used</th>
+              <th>Resources Left</th>
               <th>Cards Left</th>
               <th>Damage Dealt</th>
               <th>Damage Taken</th>
@@ -124,6 +119,10 @@ const EndGameStats = (data: EndGameData) => {
                     <td className={styles.pitched}>
                       {/* @ts-ignore */}
                       {data.turnResults[key]?.resourcesUsed}
+                    </td>
+                    <td className={styles.pitched}>
+                      {/* @ts-ignore */}
+                      {data.turnResults[key]?.resourcesLeft}
                     </td>
                     <td className={styles.pitched}>
                       {/* @ts-ignore */}
