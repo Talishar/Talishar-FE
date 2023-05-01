@@ -4,7 +4,6 @@ import { NAME_A_CARD } from '../constants';
 import { FormProps } from '../playerInputPopupTypes';
 import styles from '../PlayerInputPopUp.module.css';
 
-
 export const OtherInput = (props: FormProps) => {
   const {
     cards,
@@ -83,5 +82,5 @@ export const OtherInput = (props: FormProps) => {
         {id === NAME_A_CARD && <SearchCardInput />}
       </div>
     </form>
-  )
-}
+  );
+};
