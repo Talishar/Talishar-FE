@@ -20,10 +20,11 @@ import BanishZone from '../zones/banishZone/BanishZone';
 
 export default function OpponentBoardGrid() {
   let playmat = useAppSelector(
-    (state: RootState) => state.game.playerTwo.Playmat
+    (state: RootState) => state.game.playerOne.Playmat
   );
 
   if (playmat === undefined) {
+    // playmat = DEFAULT_PLAYMAT;
     playmat = `volcor`;
   }
 

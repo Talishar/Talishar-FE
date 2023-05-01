@@ -52,7 +52,7 @@
   height: 17vh;
   width: 10dvh;
   height: 17dvh;
-
+  
   padding: 1vh 0;
   padding: 1dvh 0;
 
@@ -91,7 +91,7 @@
   .widgetRightCol {
     height: 95%;
     right: 2em;
-    margin-right: 0.5em;
+    margin-right: 2.2em;
   }
 
   .widgetBackground {
@@ -101,6 +101,6 @@
     width: 18vw;
     width: 18dvw;
 
-    right: -1em;
+    right: -20px;
   }
 }

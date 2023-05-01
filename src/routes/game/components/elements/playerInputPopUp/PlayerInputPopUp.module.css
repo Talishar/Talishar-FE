@@ -27,7 +27,6 @@
 }
 
 .title {
-  font-size: 16px;
   padding: 0px;
   margin: 0px;
 }
@@ -47,14 +46,13 @@
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  min-width: 64px;
-  height: 32px;
+  min-width: 8vh;
+  height: 4vh;
   border-radius: 5px;
   border: 1px solid var(--primary);
   flex-basis: auto;
-  padding: 8px;
-  width: auto;
-  margin-bottom: 0;
+  padding: 0vh 1vh;
+  width: fit-content;
 }
 
 .buttonDiv:hover {
@@ -85,8 +83,8 @@
   align-items: flex-start;
   align-content: flex-start;
   justify-content: flex-start;
-  row-gap: 10px;
-  column-gap: 10px;
+  row-gap: 1vh;
+  column-gap: 1vh;
   flex-wrap: wrap;
   overflow: auto;
   height: 100%;
@@ -98,30 +96,30 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  gap: 5px;
+  gap: 1vh;
 }
 
-.optForm.optForm {
+.optForm.optForm{
   flex-direction: row;
   margin-bottom: 0;
 }
 
-.optForm.buttonRow {
+.optForm .buttonRow{
   display: flex;
-  margin-top: 0.5rem;
+  margin-top: .5rem;
   align-items: center;
 }
 
-.optForm.buttonDiv {
-  margin: 0 0.25em;
+.optForm .buttonDiv {
+  margin: 0 .25em;
 }
 
-.optForm.cardDiv {
+.optForm .cardDiv{
   display: flex;
   flex-direction: column;
   align-items: center;
   max-height: none;
-  max-width: none;
+  max-width:none;
   height: 100%;
 }
 
@@ -143,12 +141,4 @@
   max-width: 14vh;
   max-height: 14dvh;
   max-width: 14dvh;
-}
-
-@media (orientation: portrait) {
-  .optionsContainer {
-    left: 0px;
-    width: 100%;
-    max-width: 100%;
-  }
 }

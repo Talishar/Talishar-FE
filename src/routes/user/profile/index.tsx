@@ -1,7 +1,6 @@
 import {
   useDeleteDeckMutation,
-  useGetFavoriteDecksQuery,
-  useGetUserProfileQuery
+  useGetFavoriteDecksQuery
 } from 'features/api/apiSlice';
 import { DeleteDeckAPIResponse } from 'interface/API/DeleteDeckAPI.php';
 import { toast } from 'react-hot-toast';
@@ -16,16 +15,7 @@ const SCOPE = 'identity identity.memberships';
 const PATREON_URL = 'https://www.patreon.com/oauth2/authorize?';
 
 export const ProfilePage = () => {
-  const {
-    data: decksData,
-    isLoading: deckIsLoading,
-    refetch: deckRefetch
-  } = useGetFavoriteDecksQuery(undefined);
-  const {
-    data: profileData,
-    isLoading: profileIsLoading,
-    refetch: profileRefetch
-  } = useGetUserProfileQuery(undefined);
+  const { data, isLoading, refetch } = useGetFavoriteDecksQuery(undefined);
   const [deleteDeck] = useDeleteDeckMutation();
 
   const handleDeleteDeckMessage = (resp: DeleteDeckAPIResponse): string => {
@@ -58,7 +48,7 @@ export const ProfilePage = () => {
     } catch (err) {
       console.warn(err);
     } finally {
-      deckRefetch();
+      refetch();
     }
   };
 
@@ -84,20 +74,12 @@ export const ProfilePage = () => {
         <article>
           <h3>Profile:</h3>
           <div>
-            {profileIsLoading && <p>Loading Profile...</p>}
-            {!profileIsLoading && profileData?.isPatreonLinked && (
-              <p>
-                You have linked your patreon. <br />
-                {JSON.stringify(profileData.patreonInfo)}
-              </p>
-            )}
-            {!profileIsLoading && !profileData?.isPatreonLinked && (
-              <p>
-                <a href={PATREON_URL + PatreonOAuthParam.toString()}>
-                  Connect to Patreon
-                </a>
-              </p>
-            )}
+            {/* <a href={PATREON_URL + PatreonOAuthParam.toString()}>
+              Connect to Patreon
+            </a> */}
+            <a href={'https://legacy.talishar.net/game/ProfilePage.php'}>
+              Connect to Patreon on legacy client
+            </a>
           </div>
           <h3>Your decks:</h3>
           <table>
@@ -113,8 +95,8 @@ export const ProfilePage = () => {
               </tr>
             </thead>
             <tbody>
-              {deckIsLoading && <div>Loading...</div>}
-              {decksData?.favoriteDecks.map((deck, ix) => (
+              {isLoading && <div>Loading...</div>}
+              {data?.favoriteDecks.map((deck, ix) => (
                 <tr key={deck.key}>
                   <th scope="row">
                     {!!deck.hero && (

@@ -1,12 +1,13 @@
 .container {
   display: flex;
-  font-size: 1.75em;
+  font-size: 1.5rem;
   flex-direction: row;
   justify-content: center;
   align-items: center;
   background: rgba(50, 50, 50, 0.5);
   color: var(--white);
   border-radius: 0.5em;
+  /* flex: 0 0 10vh; */
   grid-area: zonecounts;
   line-height: normal;
   min-width: 100%;

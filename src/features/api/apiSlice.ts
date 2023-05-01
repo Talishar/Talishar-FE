@@ -36,7 +36,6 @@ import {
   DeleteDeckAPIResponse
 } from 'interface/API/DeleteDeckAPI.php';
 import { PatreonLoginResponse } from 'routes/user/profile/linkpatreon/linkPatreon';
-import { UserProfileAPIResponse } from 'interface/API/UserProfileAPI.php';
 
 // catch warnings and show a toast if we get one.
 export const rtkQueryErrorToaster: Middleware =
@@ -292,15 +291,6 @@ export const apiSlice = createApi({
         return response;
       }
     }),
-    getUserProfile: builder.query<UserProfileAPIResponse, undefined>({
-      query: () => {
-        return {
-          url: URL_END_POINT.USER_PROFILE,
-          method: 'GET',
-          responseHandler: parseResponse
-        };
-      }
-    }),
     chooseFirstPlayer: builder.mutation({
       query: ({ ...body }: ChooseFirstPlayer) => {
         return {
@@ -363,6 +353,5 @@ export const {
   useProcessInputAPIMutation,
   useChooseFirstPlayerMutation,
   useSubmitSideboardMutation,
-  useSubmitPatreonLoginMutation,
-  useGetUserProfileQuery
+  useSubmitPatreonLoginMutation
 } = apiSlice;
