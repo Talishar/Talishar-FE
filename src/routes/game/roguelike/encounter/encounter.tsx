@@ -9,7 +9,7 @@ const Encounter = () => {
   return (
     <div className={styles.mapBackDrop}>
       <TopBar />
-      <div className="container">
+      <div className={styles.container}>
         <EncounterContainer />
       </div>
       <PlayerStats />
@@ -18,16 +18,34 @@ const Encounter = () => {
 };
 
 const TopBar = () => {
-  return <div className={styles.topBar}>Top bar!</div>;
+  return (
+    <div className={styles.topBar}>
+      <div className={styles.container}>
+        <div className={styles.topBarContainer}>
+          <PlayerHealth />
+          <PlayerGold />
+        </div>
+      </div>
+    </div>
+  );
 };
 
 const EncounterContainer = () => {
   return (
     <article className={styles.encounterContainer}>
+      <EncounterTitle />
       <EncounterImage />
       <EncounterDescription />
       <EncounterOptions />
     </article>
+  );
+};
+
+const EncounterTitle = () => {
+  return (
+    <div className={styles.encounterTitle}>
+      <h1>Once Upon A Beginning...</h1>
+    </div>
   );
 };
 
@@ -54,7 +72,7 @@ const EncounterDescription = () => {
 
 const EncounterOptions = () => {
   return (
-    <div>
+    <div className={styles.buttonSelection}>
       <button className="outline">Change your hero</button>
       <button className="outline">Change your bounty</button>
       <button className="outline">Change your difficulty</button>
@@ -66,12 +84,11 @@ const EncounterOptions = () => {
 const PlayerStats = () => {
   return (
     <footer className={styles.playerStatsContainer}>
-      <div className="container" style={{ height: '100%' }}>
+      <div className={styles.container} style={{ height: '100%' }}>
         <div className={styles.playerGridContainer}>
-          <PlayerHealth />
-          <PlayerGold />
           <PlayerHero />
           <PlayerDeck />
+          <div>Hey we got the game log here...</div>
         </div>
       </div>
     </footer>
