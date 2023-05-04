@@ -28,7 +28,11 @@ const mockGetNextTurn3 = {
     layerContents: [{ cardNumber: 'OUT185', controller: '1', countersMap: {} }],
     reorderableLayers: [
       {
-        card: { cardNumber: 'OUT185', controller: '1', countersMap: {} },
+        card: {
+          cardNumber: 'OUT185',
+          controller: '1',
+          countersMap: {}
+        },
         layerID: 0,
         isReorderable: false
       }
@@ -134,9 +138,9 @@ const mockGetNextTurn3 = {
       controller: 1,
       type: 'E',
       sType: 'Chest',
-      isBroken: true,
+      isBroken: false,
       onChain: false,
-      isFrozen: false,
+      isFrozen: true,
       countersMap: { counters: 0, defence: '0', attack: 0 }
     },
     {
@@ -339,7 +343,12 @@ const mockGetNextTurn3 = {
       isBroken: false,
       onChain: false,
       isFrozen: false,
-      countersMap: { counters: 0, life: 0, defence: '0', attack: '0' },
+      countersMap: {
+        counters: 0,
+        life: 0,
+        defence: '0',
+        attack: '0'
+      },
       numUses: '1'
     },
     {
@@ -423,7 +432,15 @@ const mockGetNextTurn3 = {
       numUses: '1'
     }
   ],
-  opponentArse: [],
+  opponentArse: [
+    {
+      cardNumber: 'ARC000',
+      controller: 1,
+      countersMap: { counters: '0' },
+      facing: 'UP',
+      isFrozen: true
+    }
+  ],
   playerArse: [
     {
       cardNumber: 'CardBack',
@@ -527,7 +544,11 @@ const mockGetNextTurn3 = {
   havePriority: false,
   opponentAP: '0',
   playerAP: 0,
-  lastPlayedCard: { cardNumber: 'OUT185', controller: '1', countersMap: {} },
+  lastPlayedCard: {
+    cardNumber: 'OUT185',
+    controller: '1',
+    countersMap: {}
+  },
   amIActivePlayer: false,
   turnNo: '11',
   playerPrompt: {
