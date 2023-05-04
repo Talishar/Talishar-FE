@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import ChatInput from '../chatInput/ChatInput';
@@ -6,7 +6,16 @@ import styles from './ChatBox.module.css';
 import { replaceText } from 'utils/ParseEscapedString';
 
 export default function ChatBox() {
+  const amIPlayerOne = useAppSelector((state: RootState) => {
+    return state.game.gameInfo.playerID === 1;
+  });
   const chatLog = useAppSelector((state: RootState) => state.game.chatLog);
+  const myName = useAppSelector((state: RootState) => {
+    return state.game.playerOne.Name;
+  });
+  const oppName = useAppSelector((state: RootState) => {
+    return state.game.playerTwo.Name;
+  });
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -16,20 +25,28 @@ export default function ChatBox() {
     });
   };
 
+  const chatMessages = chatLog?.map((message) => {
+    return message
+      .replace('Player 1', `<b>${amIPlayerOne ? myName : oppName}</b>`)
+      .replace('Player 2', `<b>${amIPlayerOne ? oppName : myName}</b>`);
+  });
+
   useEffect(() => {
     scrollToBottom();
   }, [chatLog]);
 
-  // TODO We really should not be dangerouslySetInnerHTML it's pretty bad mmkay
+  // TODO We really should not be dangerouslySetInnerHTML
   return (
     <div className={styles.chatBoxContainer}>
       <div className={styles.chatBoxInner}>
         <div className={styles.chatBox}>
-          {chatLog &&
-            chatLog.map((chat, ix) => {
+          {chatMessages &&
+            chatMessages.map((chat, ix) => {
               return (
                 <div
-                  dangerouslySetInnerHTML={{ __html: replaceText(chat) }}
+                  dangerouslySetInnerHTML={{
+                    __html: replaceText(chat)
+                  }}
                   key={ix}
                   ref={messagesEndRef}
                 ></div>
