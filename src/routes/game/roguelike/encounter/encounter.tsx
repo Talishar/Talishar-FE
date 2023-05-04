@@ -99,13 +99,7 @@ const PlayerHero = () => {
   const cardString = 'WTR114';
   return (
     <div className={styles.heroCardContainer}>
-      <CardPopUp cardNumber={cardString}>
-        <CardImage
-          src={`/cardsquares/${cardString}.webp`}
-          draggable={false}
-          className={styles.card}
-        />
-      </CardPopUp>
+      <CardDisplay card={{ cardNumber: cardString }} />
     </div>
   );
 };
@@ -114,13 +108,7 @@ const PlayerDeck = () => {
   const cardString = 'CardBack';
   return (
     <div className={styles.heroCardContainer}>
-      <CardPopUp cardNumber={cardString}>
-        <CardImage
-          src={`/cardsquares/${cardString}.webp`}
-          draggable={false}
-          className={styles.card}
-        />
-      </CardPopUp>
+      <CardDisplay card={{ cardNumber: cardString }} num={9} />
     </div>
   );
 };
