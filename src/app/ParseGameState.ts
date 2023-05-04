@@ -285,9 +285,12 @@ export default function ParseGameState(input: any) {
   result.playerOne.ActionPoints = input.playerAP;
 
   // Chat log.
-  result.chatLog = [];
+  const chatArray = input.chatLog.split('<br>') as string[];
   const re = /.\/Images\//gm;
-  result.chatLog.push(input.chatLog.replace(re, '/images/'));
+
+  result.chatLog = chatArray.map((message) => {
+    return message.replace(re, '/images/');
+  });
 
   // activeplayer
   result.amIActivePlayer = input.amIActivePlayer as boolean;
