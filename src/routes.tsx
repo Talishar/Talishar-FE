@@ -25,6 +25,7 @@ import Header from 'components/header/Header';
 import Privacy from 'routes/privacy';
 import CreateGame from 'routes/game/create/CreateGame';
 import LinkPatreon from 'routes/user/profile/linkpatreon';
+import Encounter from 'routes/game/roguelike/encounter/encounter';
 
 const PlayGuard = ({ children }: { children: JSX.Element }) => {
   const [searchParams] = useKnownSearchParams();
@@ -103,6 +104,7 @@ export const router = createBrowserRouter(
         path="game/MainMenu.php"
         element={<Navigate to="/" replace={true} />}
       />
+      <Route path="roguelike/encounter" element={<Encounter />} />
       <Route element={<Header />}>
         <Route path="/">
           <Route

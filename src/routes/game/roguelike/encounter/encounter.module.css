@@ -1,0 +1,72 @@
+.mapBackDrop {
+  background-image: url('./images/mapOfRathe.webp');
+  height: 100dvh;
+  width: 100dvw;
+  background-size: cover;
+}
+
+.topBar {
+  height: 5dvh;
+}
+
+.playerStatsContainer {
+  color: black;
+  background-color: tan;
+  border-top: black 3px solid;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 30vh;
+  height: 30dvh;
+  min-height: 200px;
+}
+
+.playerGridContainer {
+  padding-top: 20px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 2fr 2fr;
+  height: 100%;
+}
+
+.encounterContainer {
+  display: grid;
+  height: 60dvh;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 20px;
+}
+
+.encounterImageContainer {
+  grid-row: 1 / span 2;
+  display: flex;
+  align-items: center;
+  align-content: center;
+}
+
+.encounterImage {
+  max-width: 100%;
+  width: 100%;
+  max-height: 100%;
+}
+
+.statsContainer {
+  font-size: 3em;
+  display: flex;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+}
+
+.heroCardContainer {
+  display: flex;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+  /* height: 20dvh; */
+}
+
+.card {
+  max-width: 100%;
+  max-height: 20dvh;
+}
