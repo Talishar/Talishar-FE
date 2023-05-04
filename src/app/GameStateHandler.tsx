@@ -46,7 +46,7 @@ export const GameStateHandler = React.memo(() => {
 
   // setup long poll
   useEffect(() => {
-    if (gameInfo.gameID == 0 || isUpdateInProgress) {
+    if (gameInfo.gameID == 0 || isUpdateInProgress || gameInfo.gameID === 101) {
       return;
     }
 
@@ -79,6 +79,23 @@ export const GameStateHandler = React.memo(() => {
         authKey: authKey
       })
     );
+
+    if (gameID === '101') {
+      dispatch(
+        nextTurn({
+          game: {
+            gameID: parseInt(gameID ?? gameName),
+            playerID: 3,
+            authKey: '',
+            isPrivate: false
+          },
+          signal: abortRef.current?.signal,
+          lastUpdate: 0
+        })
+      );
+
+      return;
+    }
 
     return () => {
       abortRef.current?.abort();

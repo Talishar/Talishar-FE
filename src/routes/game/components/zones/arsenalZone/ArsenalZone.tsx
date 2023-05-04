@@ -9,6 +9,10 @@ import styles from './ArsenalZone.module.css';
 export default function ArsenalZone(prop: Displayrow) {
   const { isPlayer } = prop;
 
+  const isSpectator = useAppSelector((state: RootState) => {
+    return state.game.gameInfo.playerID === 3;
+  });
+
   const arsenalCards = useAppSelector((state: RootState) => {
     return isPlayer
       ? state.game.playerOne.Arsenal
@@ -31,7 +35,12 @@ export default function ArsenalZone(prop: Displayrow) {
     <div className={styles.arsenalContainer}>
       <div className={styles.arsenalZone}>
         {arsenalCards.map((card: Card, index) => {
-          return <CardDisplay card={card} key={index} />;
+          // if it doesn't belong to us we don't need to know if it's faceup or facedown.
+          const cardCopy = { ...card };
+          if (!isPlayer || isSpectator) {
+            cardCopy.facing = undefined;
+          }
+          return <CardDisplay card={cardCopy} key={index} />;
         })}
       </div>
     </div>
