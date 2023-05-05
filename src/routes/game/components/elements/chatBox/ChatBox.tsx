@@ -10,12 +10,14 @@ export default function ChatBox() {
     return state.game.gameInfo.playerID === 1;
   });
   const chatLog = useAppSelector((state: RootState) => state.game.chatLog);
-  const myName = useAppSelector((state: RootState) => {
-    return state.game.playerOne.Name;
-  });
-  const oppName = useAppSelector((state: RootState) => {
-    return state.game.playerTwo.Name;
-  });
+  const myName =
+    useAppSelector((state: RootState) => {
+      return state.game.playerOne.Name;
+    }) ?? 'you';
+  const oppName =
+    useAppSelector((state: RootState) => {
+      return state.game.playerTwo.Name;
+    }) ?? 'your opponent';
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -27,8 +29,14 @@ export default function ChatBox() {
 
   const chatMessages = chatLog?.map((message) => {
     return message
-      .replace('Player 1', `<b>${amIPlayerOne ? myName : oppName}</b>`)
-      .replace('Player 2', `<b>${amIPlayerOne ? oppName : myName}</b>`);
+      .replace(
+        'Player 1',
+        `<b>${(amIPlayerOne ? myName : oppName) ?? 'Player 1'}</b>`
+      )
+      .replace(
+        'Player 2',
+        `<b>${(amIPlayerOne ? oppName : myName) ?? 'Player 2'}</b>`
+      );
   });
 
   useEffect(() => {
