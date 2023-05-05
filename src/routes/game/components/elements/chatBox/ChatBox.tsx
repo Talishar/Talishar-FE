@@ -29,14 +29,8 @@ export default function ChatBox() {
 
   const chatMessages = chatLog?.map((message) => {
     return message
-      .replace(
-        'Player 1',
-        `<b>${(amIPlayerOne ? myName : oppName) ?? 'Player 1'}</b>`
-      )
-      .replace(
-        'Player 2',
-        `<b>${(amIPlayerOne ? oppName : myName) ?? 'Player 2'}</b>`
-      );
+      .replace('Player 1', `<b>${amIPlayerOne ? myName : oppName}</b>`)
+      .replace('Player 2', `<b>${amIPlayerOne ? oppName : myName}</b>`);
   });
 
   useEffect(() => {
