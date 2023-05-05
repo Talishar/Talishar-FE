@@ -491,7 +491,8 @@ export const gameSlice = createSlice({
       state.gameInfo.isPrivate =
         action.payload.isPrivateLobby ?? state.gameInfo.isPrivate;
       state.gameDynamicInfo.lastUpdate = action.payload.lastUpdate;
-      state.chatLog = [action.payload.gameLog ?? ''];
+      state.chatLog = action.payload.gameLog?.split('<br>');
+      state.playerTwo.Name = action.payload.theirName;
 
       // gameInfo
       state.gameLobby = action.payload;
