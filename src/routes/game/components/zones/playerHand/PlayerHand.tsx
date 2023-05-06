@@ -96,6 +96,7 @@ export default function PlayerHand() {
                 card={card}
                 key={`hand-${card.cardNumber}-${cardCount}`}
                 addCardToPlayedCards={addCardToPlayedCards}
+                zIndex={-ix}
               />
             );
           })}
@@ -113,6 +114,7 @@ export default function PlayerHand() {
                 isArsenal
                 key={`arsenal-${card.cardNumber}-${cardCount}`}
                 addCardToPlayedCards={addCardToPlayedCards}
+                zIndex={-(ix + (handCards?.length ?? 0))}
               />
             );
           })}
@@ -128,6 +130,9 @@ export default function PlayerHand() {
                 isBanished
                 key={`banished-${card.cardNumber}-${cardCount}`}
                 addCardToPlayedCards={addCardToPlayedCards}
+                zIndex={
+                  -(ix + (arsenalCards?.length ?? 0) + (handCards?.length ?? 0))
+                }
               />
             );
           })}

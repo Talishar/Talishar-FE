@@ -3,7 +3,7 @@
   min-width: 10%;
   max-width: 50%;
   max-height: 1vh;
-  bottom: 0px;
+  bottom: 2vh;
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
@@ -12,6 +12,7 @@
   gap: 1vh;
   user-select: none;
   z-index: 15;
+  isolation: isolate;
 }
 
 @media (orientation: portrait) {
