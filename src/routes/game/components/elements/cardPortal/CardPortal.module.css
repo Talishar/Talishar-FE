@@ -2,6 +2,7 @@
   position: fixed;
   z-index: 2000;
   height: 53vh;
+  height: 53dvh;
 }
 
 .popUp {
