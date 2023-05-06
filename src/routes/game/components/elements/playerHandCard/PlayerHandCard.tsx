@@ -22,6 +22,7 @@ export interface HandCard {
   isGraveyard?: boolean;
   isBanished?: boolean;
   card?: Card;
+  zIndex?: number;
   addCardToPlayedCards: (cardName: string) => void;
 }
 
@@ -30,6 +31,7 @@ export const PlayerHandCard = ({
   isArsenal,
   isBanished,
   isGraveyard,
+  zIndex,
   addCardToPlayedCards
 }: HandCard) => {
   const [canPopUp, setCanPopup] = useState(true);
@@ -108,7 +110,7 @@ export const PlayerHandCard = ({
     <motion.div
       drag
       className={styles.handCard}
-      style={{ touchAction: 'none' }}
+      style={{ touchAction: 'none', zIndex }}
       onClick={handleOnClick}
       onTapStart={startPressTimer}
       onTap={stopPressTimer}
