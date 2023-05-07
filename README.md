@@ -12,8 +12,6 @@
 
 Visit [Talishar.net](https://talishar.net/) to get playing Flesh & Blood in your browser right now!
 
-The react frontend is currently in open beta at https://fe.talishar.net/
-
 # Getting started with Talishar-FE
 
 This is a new front end client for talishar.net - completely separate from the back end. The players will be using this app to connect to the servers eventually.
@@ -24,7 +22,7 @@ This is a new front end client for talishar.net - completely separate from the b
 ## Requirements / How to install:
 
 ### Prerequesites:
- - [Volta](https://volta.sh/) to manage node installs.
+ - [Volta](https://volta.sh/) or FNM to manage node installs.
  - node.js (currently 16.19.0), which would be managed automagically by Volta for you.
  - git
  - basic knowledge of the command line / terminal
