@@ -321,6 +321,16 @@ export const apiSlice = createApi({
         };
       }
     }),
+    loadDebugGame: builder.mutation({
+      query: ({ ...body }: any) => {
+        return {
+          url: URL_END_POINT.LOAD_BUG_REPORT,
+          method: 'POST',
+          body: body,
+          responseHandler: parseResponse
+        };
+      }
+    }),
     submitPatreonLogin: builder.mutation<
       PatreonLoginResponse,
       {
@@ -364,5 +374,6 @@ export const {
   useChooseFirstPlayerMutation,
   useSubmitSideboardMutation,
   useSubmitPatreonLoginMutation,
+  useLoadDebugGameMutation,
   useGetUserProfileQuery
 } = apiSlice;
