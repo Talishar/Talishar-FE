@@ -6,6 +6,7 @@ import GameList from './components/gameList';
 import styles from './Index.module.css';
 import TalisharLogo from '../../img/TalisharLogo.webp';
 import News from 'routes/news';
+import DevTool from './components/devTool';
 
 const Index = () => {
   const dispatch = useAppDispatch();
@@ -22,6 +23,7 @@ const Index = () => {
   return (
     <main>
       <div className={styles.grid}>
+        {import.meta.env.DEV && <DevTool />}
         <div className={styles.gameListContainer}>
           <GameList />
         </div>

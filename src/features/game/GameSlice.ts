@@ -190,6 +190,7 @@ export const submitButton = createAsyncThunk(
   'game/submitButton',
   async (params: { button: Button }, { getState }) => {
     const { game } = getState() as { game: GameState };
+    console.log('button submitting');
     const queryURL =
       game.gameInfo.gameID > GAME_LIMIT_LIVE
         ? `${API_URL_LIVE}${URL_END_POINT.PROCESS_INPUT}`
@@ -202,7 +203,8 @@ export const submitButton = createAsyncThunk(
       authKey: String(game.gameInfo.authKey),
       mode: String(params.button.mode),
       buttonInput: String(params.button.buttonInput),
-      inputText: String(params.button.inputText)
+      inputText: String(params.button.inputText),
+      cardID: String(params.button.cardID)
     });
     try {
       const response = await fetch(queryURL + queryParams, {

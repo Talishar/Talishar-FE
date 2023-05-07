@@ -4,9 +4,15 @@ import { RootState } from 'app/Store';
 import { Card } from 'features/Card';
 import styles from './PlayerHand.module.css';
 import PlayerHandCard from '../../elements/playerHandCard/PlayerHandCard';
-import { useAppSelector } from 'app/Hooks';
+import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import { AnimatePresence } from 'framer-motion';
+import { MANUAL_MODE } from 'features/options/constants';
+import useSetting from 'hooks/useSetting';
+import { getGameInfo, submitButton } from 'features/game/GameSlice';
+import { updateOptions } from 'features/options/optionsSlice';
+import { useProcessInputAPIMutation } from 'features/api/apiSlice';
+import { PROCESS_INPUT } from 'appConstants';
 
 const MaxHandWidthPercentage = 50;
 
@@ -37,6 +43,7 @@ export default function PlayerHand() {
       (card) => card.action != null && card.action != 0
     );
   }, shallowEqual);
+  const isManualMode = useSetting({ settingName: MANUAL_MODE })?.value === '1';
   // const playableGraveyardCards = useAppSelector(
   //   (state: RootState) => state.game.playerOne.Graveyard?.filter(isPlayable),
   //   shallowEqual
@@ -136,7 +143,52 @@ export default function PlayerHand() {
               />
             );
           })}
+        {isManualMode && <ManualMode />}
       </AnimatePresence>
     </div>
   );
 }
+
+const ManualMode = () => {
+  const [card, setCard] = useState<string>('');
+  const dispatch = useAppDispatch();
+  const gameInfo = useAppSelector(getGameInfo, shallowEqual);
+  const [processInput, useProcessInputResponse] = useProcessInputAPIMutation();
+
+  const handleCloseManualMode = () => {
+    dispatch(
+      updateOptions({
+        game: gameInfo,
+        settings: [
+          {
+            name: MANUAL_MODE,
+            value: '0'
+          }
+        ]
+      })
+    );
+  };
+
+  const handleSubmitButton = () => {
+    console.log(card);
+
+    if (card === '') {
+      return;
+    }
+    console.log('submitting');
+    dispatch(
+      submitButton({
+        button: { mode: PROCESS_INPUT.ADD_CARD_TO_HAND_SELF, cardID: card }
+      })
+    );
+    setCard('');
+  };
+
+  return (
+    <div className={styles.manualMode}>
+      <input onChange={(e) => setCard(e.target.value)}></input>
+      <button onClick={handleSubmitButton}>Add</button>
+      <button onClick={handleCloseManualMode}>Close</button>
+    </div>
+  );
+};

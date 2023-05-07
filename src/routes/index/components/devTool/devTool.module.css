@@ -1,0 +1,11 @@
+.devTool {
+  grid-column: 1 / span 3;
+  margin: 2em auto;
+  max-width: 1080px;
+}
+
+.gridContainer {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 2em;
+}

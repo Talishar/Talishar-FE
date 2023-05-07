@@ -46,7 +46,6 @@ const OptionsSettings = () => {
   };
 
   const handleCardBackOnClick = () => {
-    console.log('clicked card back');
     setOpenCardBacks(true);
   };
 
@@ -75,8 +74,6 @@ const OptionsSettings = () => {
     cardBack: String(settingsData['CardBack']?.value ?? '0'),
     playMat: String(settingsData['Playmat']?.value ?? '0')
   };
-
-  console.log('data', data);
 
   return (
     <div>
@@ -294,7 +291,6 @@ const OptionsSettings = () => {
             <input
               type="checkbox"
               name="manualMode"
-              disabled
               area-disabled="true"
               checked={initialValues.manualMode}
               onClick={() =>

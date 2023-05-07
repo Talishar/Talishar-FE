@@ -9,4 +9,5 @@ export default interface Button {
   sizeOverride?: string;
   fullReload?: boolean;
   inputText?: string;
+  cardID?: string;
 }
