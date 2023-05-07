@@ -178,7 +178,16 @@ const ManualMode = () => {
 
   return (
     <div className={styles.manualMode}>
-      <input onChange={(e) => setCard(e.target.value)}></input>
+      <input
+        onChange={(e) => setCard(e.target.value)}
+        onKeyDown={(e) => {
+          e.stopPropagation();
+        }}
+        onKeyDownCapture={(e) => {
+          e.stopPropagation();
+        }}
+        placeholder={'enter card code here'}
+      ></input>
       <button onClick={handleSubmitButton}>Add</button>
       <button onClick={handleCloseManualMode}>Close</button>
     </div>
