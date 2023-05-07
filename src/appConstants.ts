@@ -143,7 +143,8 @@ export const URL_END_POINT = {
   RESET_PASSWORD: `AccountFiles/ResetPassword.php`,
   GET_COSMETICS: `APIs/GetCosmetics.php`,
   DELETE_DECK: `APIs/DeleteDeckAPI.php`,
-  PATREON_LOGIN: `AccountFiles/PatreonLoginAPI.php`
+  PATREON_LOGIN: `AccountFiles/PatreonLoginAPI.php`,
+  LOAD_BUG_REPORT: `LoadBugReport.php`
 };
 
 export const GAME_VISIBILITY = {
