@@ -20,10 +20,7 @@
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
-  left: 0px;
-  top: 0px;
-  right: 0px;
-  bottom: 0px;
+  inset: 0;
   z-index: 2;
   cursor: default;
 }
