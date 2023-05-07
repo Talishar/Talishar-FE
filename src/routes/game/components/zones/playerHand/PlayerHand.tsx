@@ -44,10 +44,6 @@ export default function PlayerHand() {
     );
   }, shallowEqual);
   const isManualMode = useSetting({ settingName: MANUAL_MODE })?.value === '1';
-  // const playableGraveyardCards = useAppSelector(
-  //   (state: RootState) => state.game.playerOne.Graveyard?.filter(isPlayable),
-  //   shallowEqual
-  // );
 
   const addCardToPlayedCards = (cardName: string) => {
     const newArray = playedCards;
@@ -153,7 +149,6 @@ const ManualMode = () => {
   const [card, setCard] = useState<string>('');
   const dispatch = useAppDispatch();
   const gameInfo = useAppSelector(getGameInfo, shallowEqual);
-  const [processInput, useProcessInputResponse] = useProcessInputAPIMutation();
 
   const handleCloseManualMode = () => {
     dispatch(
@@ -170,12 +165,9 @@ const ManualMode = () => {
   };
 
   const handleSubmitButton = () => {
-    console.log(card);
-
     if (card === '') {
       return;
     }
-    console.log('submitting');
     dispatch(
       submitButton({
         button: { mode: PROCESS_INPUT.ADD_CARD_TO_HAND_SELF, cardID: card }
