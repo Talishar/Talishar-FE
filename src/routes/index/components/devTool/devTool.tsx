@@ -33,18 +33,19 @@ const DebugGame = () => {
 
   return (
     <div>
-      <label htmlFor={gameIDInput}>Game ID to debug:</label>
+      <label htmlFor={gameIDInput}>Debug game ID:</label>
       <input
         id={gameIDInput}
         onChange={(e) => setGameID(e.target.value)}
       ></input>
-      <label htmlFor={localIDInput}>Local game to overwrite:</label>
+      <label htmlFor={localIDInput}>Local game ID to overwrite:</label>
       <input
         id={localIDInput}
         onChange={(e) => setLocalGame(e.target.value)}
       ></input>
-      <button onClick={handleButtonClick}>Launch game</button>
-      <div>{gameID}</div>
+      <button onClick={handleButtonClick}>
+        Replace local game with debug game
+      </button>
     </div>
   );
 };
