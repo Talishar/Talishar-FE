@@ -2,16 +2,21 @@ import React from 'react';
 import { RootState } from 'app/Store';
 import Displayrow from 'interface/Displayrow';
 import CardDisplay from '../../elements/cardDisplay/CardDisplay';
-import { setCardListFocus } from 'features/game/GameSlice';
+import { setCardListFocus, submitButton } from 'features/game/GameSlice';
 import styles from './PitchZone.module.css';
 import PitchDisplay from '../../elements/pitchDisplay/PitchDisplay';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { motion, AnimatePresence } from 'framer-motion';
+import useSetting from 'hooks/useSetting';
+import { MANUAL_MODE } from 'features/options/constants';
+import { PROCESS_INPUT } from 'appConstants';
+import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai';
 
 export default function PitchZone(prop: Displayrow) {
   const { isPlayer } = prop;
   const { DisplayRow } = prop;
   const dispatch = useAppDispatch();
+  const isManualMode = useSetting({ settingName: MANUAL_MODE })?.value === '1';
 
   const pitchZone = useAppSelector((state: RootState) =>
     isPlayer ? state.game.playerOne.Pitch : state.game.playerTwo.Pitch
@@ -65,6 +70,51 @@ export default function PitchZone(prop: Displayrow) {
         })}
       </AnimatePresence>
       <PitchDisplay isPlayer={isPlayer} DisplayRow={DisplayRow} />
+      {isManualMode && <ManualMode isPlayer={isPlayer} />}
     </div>
   );
 }
+
+const ManualMode = ({ isPlayer }: { isPlayer: Boolean }) => {
+  const dispatch = useAppDispatch();
+  const onAddResourceClick = (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    e.preventDefault();
+    e.stopPropagation();
+    dispatch(
+      submitButton({
+        button: {
+          mode: isPlayer
+            ? PROCESS_INPUT.ADD_RESOURCE_TO_POOL_SELF
+            : PROCESS_INPUT.ADD_RESOURCE_TO_POOL_OPPONENT
+        }
+      })
+    );
+  };
+  const onSubtractResourceClick = (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    e.preventDefault();
+    e.stopPropagation();
+    dispatch(
+      submitButton({
+        button: {
+          mode: isPlayer
+            ? PROCESS_INPUT.REMOVE_RESOURCE_FROM_POOL_SELF
+            : PROCESS_INPUT.REMOVE_RESOURCE_FROM_POOL_OPPONENT
+        }
+      })
+    );
+  };
+  return (
+    <div className={styles.manualMode}>
+      <button className={styles.drawButton} onClick={onAddResourceClick}>
+        <AiOutlinePlus />
+      </button>
+      <button className={styles.drawButton} onClick={onSubtractResourceClick}>
+        <AiOutlineMinus />
+      </button>
+    </div>
+  );
+};
