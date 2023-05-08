@@ -54,6 +54,18 @@
   margin-bottom: 0px;
 }
 
+.inLineNav {
+  position: relative;
+  top: 0;
+}
+
+.deckSelectorContainer {
+  grid-row: 1 / span 2;
+  height: 100%;
+  width: 100%;
+  overflow-y: auto;
+}
+
 nav {
   position: -webkit-sticky; /* Safari */
   position: sticky;
@@ -103,11 +115,11 @@ nav {
     min-height: 100%;
     overflow-y: hidden;
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 200px;
+    grid-template-columns: 1fr 1fr 200px;
     grid-template-rows: 240px 1fr;
     grid-template-areas:
-      'hero weapons deck matchups'
-      'chat weapons deck matchups';
+      'hero weapons matchups'
+      'chat weapons matchups';
   }
 
   .titleContainer {

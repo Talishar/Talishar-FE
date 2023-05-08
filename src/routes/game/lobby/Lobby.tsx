@@ -317,15 +317,54 @@ const Lobby = () => {
                 </nav>
               )
             )}
-            {(activeTab === 'equipment' || isWideScreen) && (
-              <Equipment
-                lobbyInfo={data}
-                weapons={weaponsIndexed}
-                weaponSB={weaponsSBIndexed}
-              />
-            )}
-            {(activeTab === 'deck' || isWideScreen) && (
-              <Deck deck={[...deckIndexed, ...deckSBIndexed]} />
+            {isWideScreen ? (
+              <div className={styles.deckSelectorContainer}>
+                <nav className={styles.inLineNav}>
+                  <ul>
+                    <li>
+                      <button
+                        className={eqClasses}
+                        onClick={handleEquipmentClick}
+                        type="button"
+                      >
+                        Equipment
+                      </button>
+                    </li>
+                    <li>
+                      <button
+                        className={deckClasses}
+                        onClick={handleDeckClick}
+                        type="button"
+                      >
+                        Deck
+                      </button>
+                    </li>
+                  </ul>
+                </nav>
+                {activeTab !== 'deck' && (
+                  <Equipment
+                    lobbyInfo={data}
+                    weapons={weaponsIndexed}
+                    weaponSB={weaponsSBIndexed}
+                  />
+                )}
+                {activeTab === 'deck' && (
+                  <Deck deck={[...deckIndexed, ...deckSBIndexed]} />
+                )}
+              </div>
+            ) : (
+              <>
+                {activeTab === 'equipment' && (
+                  <Equipment
+                    lobbyInfo={data}
+                    weapons={weaponsIndexed}
+                    weaponSB={weaponsSBIndexed}
+                  />
+                )}
+                {activeTab === 'deck' && (
+                  <Deck deck={[...deckIndexed, ...deckSBIndexed]} />
+                )}
+              </>
             )}
             {(activeTab === 'chat' || isWideScreen) && <LobbyChat />}
             {(activeTab === 'matchups' || isWideScreen) && (
