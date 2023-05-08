@@ -114,7 +114,12 @@
 
 @media only screen and (max-width: 500px) {
   // hide social icons on small screen, so it won't be too small
-  .navBar .social {
-    display: none;
+  .navBar {
+    .social {
+      display: none;
+    }
+    ul li a {
+      padding: 0 5px;
+    }
   }
 }
