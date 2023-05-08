@@ -2,8 +2,9 @@ import useAuth from 'hooks/useAuth';
 import React from 'react';
 import { Link, Outlet } from 'react-router-dom';
 import styles from './Header.module.scss';
-import TalisharLogo from '../../img/TalisharLogo.webp';
+import TalisharLogo from '../../img/CoinLogo.png';
 import {
+  BsGithub,
   BsPersonFill,
   FaDiscord,
   FaTwitter,
@@ -32,12 +33,17 @@ const Header = () => {
         </ul>
         <ul>
           <li>
-            <a href="https://discord.gg/JykuRkdd5S" target={"_blank"} className={styles.social}>
+            <a href="https://github.com/Talishar/Talishar" target={"_blank"} className={styles.social} title={"Github Link"}>
+              <BsGithub></BsGithub>
+            </a>
+          </li>
+          <li>
+            <a href="https://discord.gg/JykuRkdd5S" target={"_blank"} className={styles.social} title={"Discord Link"}>
               <FaDiscord></FaDiscord>
             </a>
           </li>
           <li>
-            <a href="https://twitter.com/talishar_online" target={"_blank"} className={styles.social}>
+            <a href="https://twitter.com/talishar_online" target={"_blank"} className={styles.social} title={"Twitter Link"}>
               <FaTwitter></FaTwitter>
             </a>
           </li>
@@ -55,13 +61,13 @@ const Header = () => {
             {isLoggedIn ? (
               <Link to="/user"><BsPersonFill></BsPersonFill> <span>Profile</span></Link>
             ) : (
-              <Link to="/user/login" className={styles.login}><button>Log In</button></Link>
+              <Link to="/user/login" className={styles.login}><button>Login</button></Link>
             )}
           </li>
           {isLoggedIn && (
             <li>
               <a href="" onClick={handleLogOut}>
-                <RiLogoutBoxRLine></RiLogoutBoxRLine> <span>Log out</span>
+                <RiLogoutBoxRLine></RiLogoutBoxRLine> <span>Logout</span>
               </a>
             </li>
           )}
