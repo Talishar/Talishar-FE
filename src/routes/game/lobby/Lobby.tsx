@@ -130,11 +130,12 @@ const Lobby = () => {
     });
   }
 
-  // I'm not sure how I can get formik to understand checkboxes and repeating cards so give them all an index here.
-  const deckIndexed = data.deck.cards.map((card, ix) => `${card}-${ix}`);
-  const deckSBIndexed = data.deck.cardsSB.map(
-    (card, ix) => `${card}-${ix + deckIndexed.length}`
-  );
+  const deckClone = [...data.deck.cards];
+  const deckSBClone = [...data.deck.cardsSB];
+  const deckIndexed = deckClone.sort().map((card, ix) => `${card}-${ix}`);
+  const deckSBIndexed = deckSBClone
+    .sort()
+    .map((card, ix) => `${card}-${ix + deckIndexed.length}`);
 
   const leftPic = `url(/crops/${
     data.deck.hero === 'CardBack' ? 'UNKNOWNHERO' : data.deck.hero

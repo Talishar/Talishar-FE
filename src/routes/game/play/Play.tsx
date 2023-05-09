@@ -13,9 +13,11 @@ import ChatCardDetail from '../components/elements/chatCardDetail/ChatCardDetail
 import CardListZone from '../components/zones/cardListZone/CardListZone';
 import ChainLinkSummaryContainer from '../components/elements/chainLinkSummary/ChainLinkSummary';
 import ActiveLayersZone from '../components/zones/activeLayersZone/ActiveLayersZone';
-import { AnimatePresence } from 'framer-motion';
+import ExperimentalGameStateHandler from 'app/ExperimentalGameStateHandler';
+import { useCookies } from 'react-cookie';
 
 function Play() {
+  const [cookies] = useCookies(['experimental']);
   return (
     <div className="centering">
       <div className="app" key="app">
@@ -35,8 +37,13 @@ function Play() {
       <OptionsMenu />
       <PlayerInputPopUp />
       <CardPortal />
-      <GameStateHandler />
-      <EventsHandler />
+      {cookies.experimental ? (
+        <ExperimentalGameStateHandler />
+      ) : (
+        <GameStateHandler />
+      )}
+      (
+      <EventsHandler />)
     </div>
   );
 }

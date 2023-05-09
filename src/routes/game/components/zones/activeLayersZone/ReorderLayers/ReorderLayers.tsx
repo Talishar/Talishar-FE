@@ -16,7 +16,6 @@ const ReorderLayers = ({ cards }: { cards: Card[] }) => {
   );
   const [cardList, setCardList] = React.useState<Card[]>([]);
   useMemo(() => {
-    console.log('cards in memo', cards);
     setCardList(
       cards.map((card) => {
         return { ...card, borderColor: '8' } as Card;
