@@ -22,6 +22,7 @@ import { useGetCosmeticsQuery } from 'features/api/apiSlice';
 import CardPopUp from '../../cardPopUp/CardPopUp';
 import CardImage from '../../cardImage/CardImage';
 import classNames from 'classnames';
+import { useCookies } from 'react-cookie';
 
 const OptionsSettings = () => {
   const gameInfo = useAppSelector(getGameInfo, shallowEqual);
@@ -30,6 +31,7 @@ const OptionsSettings = () => {
   const dispatch = useAppDispatch();
   const [openCardBacks, setOpenCardBacks] = useState<boolean>(false);
   const { data } = useGetCosmeticsQuery(undefined);
+  const [cookies, setCookie, removeCookie] = useCookies(['experimental']);
 
   // fetch all settings when options is loaded
   useEffect(() => {
@@ -91,6 +93,22 @@ const OptionsSettings = () => {
           this site. Legend Story Studios and their judges are the final
           authority on all rulings.
         </p>
+        <label className={styles.optionLabel}>
+          <input
+            type="checkbox"
+            name="manualMode"
+            area-disabled="true"
+            checked={cookies.experimental === 'true'}
+            onClick={() => {
+              if (cookies.experimental) {
+                removeCookie('experimental');
+              } else {
+                setCookie('experimental', 'true');
+              }
+            }}
+          />
+          Enable Experimental Features
+        </label>
         <fieldset>
           <legend>
             <strong>Priority Settings:</strong>
