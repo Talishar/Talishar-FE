@@ -115,7 +115,7 @@ nav {
     min-height: 100%;
     overflow-y: hidden;
     display: grid;
-    grid-template-columns: 1fr 1fr 200px;
+    grid-template-columns: 1fr 2fr 200px;
     grid-template-rows: 240px 1fr;
     grid-template-areas:
       'hero weapons matchups'
