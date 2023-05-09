@@ -14,7 +14,7 @@ const ExperimentalGameStateHandler = () => {
   useEffect(() => {
     console.log('setting up listener');
     const source = new EventSource(
-      `http://api.talishar.net/game/GetUpdateSSE.php?gameName=${gameID}&playerID=${gameInfo.playerID}&authKey=${gameInfo.authKey}`
+      `https://api.talishar.net/game/GetUpdateSSE.php?gameName=${gameID}&playerID=${gameInfo.playerID}&authKey=${gameInfo.authKey}`
     );
     console.log(source);
     source.onmessage = (e) => {
