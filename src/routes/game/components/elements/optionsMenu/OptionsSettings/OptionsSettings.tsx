@@ -93,22 +93,6 @@ const OptionsSettings = () => {
           this site. Legend Story Studios and their judges are the final
           authority on all rulings.
         </p>
-        <label className={styles.optionLabel}>
-          <input
-            type="checkbox"
-            name="manualMode"
-            area-disabled="true"
-            checked={cookies.experimental === 'true'}
-            onClick={() => {
-              if (cookies.experimental) {
-                removeCookie('experimental');
-              } else {
-                setCookie('experimental', 'true');
-              }
-            }}
-          />
-          Enable Experimental Features
-        </label>
         <fieldset>
           <legend>
             <strong>Priority Settings:</strong>
@@ -419,7 +403,29 @@ const OptionsSettings = () => {
             <p>Log in to customise your playmat</p>
           )}
         </label>
+        WARNING THIS MAY MAKE THE GAME MORE UNSTABLE. <br />
+        <label className={styles.optionLabel}>
+          <input
+            type="checkbox"
+            name="manualMode"
+            area-disabled="true"
+            checked={cookies.experimental === 'true'}
+            onClick={() => {
+              if (cookies.experimental) {
+                removeCookie('experimental');
+              } else {
+                setCookie('experimental', 'true');
+              }
+            }}
+          />
+          Enable Experimental Features.
+        </label>
+        <p>
+          We are always trying new things to improve Talishar if you try the
+          experiment please give feedback in our discord.
+        </p>
       </div>
+      <hr />
       <p>
         Talishar is in no way affiliated with Legend Story Studios. Legend Story
         Studios®, Flesh and Blood™, and set names are trademarks of Legend Story
