@@ -18,7 +18,7 @@ const ExperimentalGameStateHandler = () => {
     );
     console.log(source);
     source.onmessage = (e) => {
-      console.log(e);
+      console.log('update data:', e.data);
       dispatch(
         nextTurn({
           game: gameInfo,

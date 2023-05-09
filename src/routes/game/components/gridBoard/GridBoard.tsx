@@ -32,9 +32,9 @@ const GridBoard = () => {
       <div className={styles.pTwoArsenal}>
         <ArsenalZone isPlayer={false} />
       </div>
-      <div className={styles.pTwoCount}>
+      {/* <div className={styles.pTwoCount}>
         <ZoneCounts isPlayer={false} />
-      </div>
+      </div> */}
       <div className={styles.pTwoBanish}>
         <BanishZone isPlayer={false} />
       </div>
@@ -101,9 +101,9 @@ const GridBoard = () => {
       <div className={styles.pOneBanish}>
         <BanishZone isPlayer={true} />
       </div>
-      <div className={styles.pOneCount}>
+      {/* <div className={styles.pOneCount}>
         <ZoneCounts isPlayer={true} />
-      </div>
+      </div> */}
       <div className={styles.pOneArsenal}>
         <ArsenalZone isPlayer={true} />
       </div>

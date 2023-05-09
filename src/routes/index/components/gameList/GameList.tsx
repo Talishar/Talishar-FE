@@ -8,6 +8,7 @@ import FormatList from '../formatList';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
 import useAuth from 'hooks/useAuth';
 import { Link } from 'react-router-dom';
+import { useCookies } from 'react-cookie';
 
 export interface IOpenGame {
   p1Hero?: string;
@@ -34,6 +35,7 @@ export interface GameListResponse {
 const GAME_LIST_POLLING_INTERVAL = 10000; // in ms
 
 const GameList = () => {
+  const [cookies, setCookie, removeCookie] = useCookies(['experimental']);
   const { data, isLoading, error, refetch, isFetching } =
     useGetGameListQuery(undefined);
   const { isLoggedIn } = useAuth();
@@ -102,6 +104,16 @@ const GameList = () => {
 
   return (
     <article className={styles.gameList}>
+      {cookies.experimental && (
+        <button
+          onClick={(e) => {
+            e.preventDefault();
+            removeCookie('experimental');
+          }}
+        >
+          Disable experimental features
+        </button>
+      )}
       <div className={styles.titleDiv}>
         <h1 className={styles.title}>Games</h1>
         <button
