@@ -157,6 +157,7 @@ export const LoginForm = () => {
             future visits.
           </em>
         </small>
+        &nbsp;
         <small>
           <Link to={'/privacy'}>Privacy Policy</Link>
         </small>
