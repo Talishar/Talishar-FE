@@ -37,7 +37,9 @@ export const ForgottenPasswordForm = () => {
         });
         toast.error(resp.error, { position: 'top-center' });
       }
-      if (resp.message === 'Success!') {
+
+      // TODO change this to check statusCode, but we currently don't return it here
+      if (resp.message === 'Password reset email sent.') {
         toast.success('Password reset email sent. Please check your email.', {
           position: 'top-center'
         });
@@ -104,7 +106,7 @@ export const ForgottenPasswordForm = () => {
           className={classNames(styles.signupButton, 'outline')}
           style={{ marginTop: '1rem' }}
           role="button"
-          to={'/user/login'}
+          to={'/user/login/signup'}
         >
           Register
         </Link>
