@@ -20,7 +20,7 @@ export default function ActionPointDisplay(props: Player) {
 
   return (
     <div className={styles.actionPointDisplay}>
-      <div className={styles.actionPointCounter}>{APAvailable}</div>
+      <div className={styles.actionPointCounter}>{APAvailable} AP</div>
       {isManualMode && <ManualMode />}
     </div>
   );
