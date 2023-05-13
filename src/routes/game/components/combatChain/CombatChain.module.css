@@ -5,14 +5,14 @@
   margin: auto;
   width: 100%;
   padding: 1vh;
-  background: rgba(50, 50, 50, 0.5);
-  border: 2px solid rgba(255, 255, 255, 0.5);
+  background: none;
+  border: none;
+  outline: none;
   border-radius: 1em;
   text-align: center;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  outline: 1px solid black;
   color: var(--white);
   isolation: isolate;
 }
@@ -27,9 +27,9 @@
 }
 
 .experimental {
-  background: none;
-  border: none;
-  outline: none;
+  background: rgba(50, 50, 50, 0.5);
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  outline: 1px solid black;
 }
 
 .chainCentre {

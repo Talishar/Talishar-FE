@@ -13,7 +13,7 @@ it('renders without crashing isPlayer true', () => {
         <div
           class="_actionPointCounter_f2afca"
         >
-          0
+          0 AP
         </div>
       </div>
     </div>
