@@ -1,6 +1,5 @@
 import { Board } from '../components/board/Board';
 import './Play.css';
-import GameStateHandler from '../../../app/GameStateHandler';
 import LeftColumn from '../components/leftColumn/LeftColumn';
 import RightColumn from '../components/rightColumn/RightColumn';
 import HandZone from '../components/zones/handZone/HandZone';
@@ -14,10 +13,8 @@ import CardListZone from '../components/zones/cardListZone/CardListZone';
 import ChainLinkSummaryContainer from '../components/elements/chainLinkSummary/ChainLinkSummary';
 import ActiveLayersZone from '../components/zones/activeLayersZone/ActiveLayersZone';
 import ExperimentalGameStateHandler from 'app/ExperimentalGameStateHandler';
-import { useCookies } from 'react-cookie';
 
 function Play() {
-  const [cookies] = useCookies(['experimental']);
   return (
     <div className="centering">
       <div className="app" key="app">
