@@ -27,7 +27,7 @@ export default function ChainLinks() {
   };
 
   if (oldCombatChain === undefined || oldCombatChain.length === 0) {
-    return <div className={styles.chainLinksRow} />;
+    return <div style={{ height: '3vh' }} />;
   }
 
   return (
