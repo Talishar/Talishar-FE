@@ -37,13 +37,8 @@ function Play() {
       <OptionsMenu />
       <PlayerInputPopUp />
       <CardPortal />
-      {cookies.experimental ? (
-        <ExperimentalGameStateHandler />
-      ) : (
-        <GameStateHandler />
-      )}
-      (
-      <EventsHandler />)
+      <ExperimentalGameStateHandler />
+      <EventsHandler />
     </div>
   );
 }
