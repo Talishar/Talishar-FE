@@ -90,3 +90,7 @@
   background-color: var(--primary);
   color: black;
 }
+
+.experimental {
+  background-image: none;
+}

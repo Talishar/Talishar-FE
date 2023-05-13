@@ -8,11 +8,14 @@ import defend from '../../../../../img/symbols/symbol-defence.png';
 import { showChainLinkSummary, submitButton } from 'features/game/GameSlice';
 import { GiBreakingChain } from 'react-icons/gi';
 import { PROCESS_INPUT } from 'appConstants';
+import { useCookies } from 'react-cookie';
+import classNames from 'classnames';
 
 export default function ChainLinks() {
   const oldCombatChain = useAppSelector(
     (state: RootState) => state.game.oldCombatChain
   );
+  const [cookie] = useCookies(['experimental']);
 
   const dispatch = useAppDispatch();
 
@@ -26,8 +29,12 @@ export default function ChainLinks() {
     );
   };
 
+  const chainLinksRowClass = classNames(styles.chainLinksRow, {
+    [styles.experimental]: cookie.experimental
+  });
+
   if (oldCombatChain === undefined || oldCombatChain.length === 0) {
-    return <div className={styles.chainLinksRow} />;
+    return <div className={chainLinksRowClass} />;
   }
 
   return (
