@@ -347,6 +347,20 @@ const OptionsSettings = () => {
             />
             Disable Chat
           </label>
+          <label className={styles.optionLabel}>
+            <input
+              type="checkbox"
+              name="disableStats"
+              checked={initialValues.disableStats}
+              onClick={() =>
+                handleSettingsChange({
+                  name: optConst.DISABLE_STATS,
+                  value: initialValues.disableStats ? '0' : '1'
+                })
+              }
+            />
+            Disable Stats
+          </label>
         </fieldset>
         <label className={styles.cardBackTitle}>
           <strong>Card Back</strong>
