@@ -68,7 +68,7 @@ const ExperimentalGameStateHandler = () => {
       console.log('closing eventstream');
       source.close();
     };
-  }, []);
+  }, [gameInfo.playerID, gameInfo.gameID, gameInfo.authKey]);
 
   return null;
 };
