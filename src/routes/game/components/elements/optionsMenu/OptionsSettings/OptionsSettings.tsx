@@ -194,6 +194,7 @@ const OptionsSettings = () => {
           </legend>
           <label className={styles.optionLabel}>
             <input
+              defaultChecked
               type="checkbox"
               name="skipAttackReactions"
               checked={initialValues.skipAttackReactions}
@@ -208,6 +209,7 @@ const OptionsSettings = () => {
           </label>
           <label className={styles.optionLabel}>
             <input
+              defaultChecked
               type="checkbox"
               name="skipDefenseReactions"
               checked={initialValues.skipDefenseReactions}
@@ -222,6 +224,7 @@ const OptionsSettings = () => {
           </label>
           <label className={styles.optionLabel}>
             <input
+              defaultChecked
               type="checkbox"
               name="manualTargeting"
               checked={initialValues.manualTargeting}
@@ -291,6 +294,7 @@ const OptionsSettings = () => {
           </legend>
           <label className={styles.optionLabel}>
             <input
+              defaultChecked
               type="checkbox"
               name="manualMode"
               area-disabled="true"
@@ -306,6 +310,7 @@ const OptionsSettings = () => {
           </label>
           <label className={styles.optionLabel}>
             <input
+              defaultChecked
               type="checkbox"
               name="accessibilityMode"
               area-disabled="true"
@@ -321,6 +326,7 @@ const OptionsSettings = () => {
           </label>
           <label className={styles.optionLabel}>
             <input
+              defaultChecked
               type="checkbox"
               name="mute"
               checked={initialValues.mute}
@@ -335,6 +341,7 @@ const OptionsSettings = () => {
           </label>
           <label className={styles.optionLabel}>
             <input
+              defaultChecked
               type="checkbox"
               name="disableChat"
               checked={initialValues.disableChat}
@@ -349,6 +356,7 @@ const OptionsSettings = () => {
           </label>
           <label className={styles.optionLabel}>
             <input
+              defaultChecked
               type="checkbox"
               name="disableStats"
               checked={initialValues.disableStats}
