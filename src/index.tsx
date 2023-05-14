@@ -1,3 +1,4 @@
+import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { store } from './app/Store';
@@ -14,22 +15,24 @@ const container = document.getElementById('root')!;
 const root = createRoot(container);
 
 root.render(
-  <CookiesProvider>
-    <Provider store={store}>
-      <Toaster
-        position="top-left"
-        toastOptions={{
-          style: {
-            background: 'var(--dark-red)',
-            color: 'var(--white)',
-            border: '1px solid var(--primary)',
-            padding: '0.5rem'
-          }
-        }}
-      />
-      <RouterProvider router={router} />
-    </Provider>
-  </CookiesProvider>
+  <StrictMode>
+    <CookiesProvider>
+      <Provider store={store}>
+        <Toaster
+          position="top-left"
+          toastOptions={{
+            style: {
+              background: 'var(--dark-red)',
+              color: 'var(--white)',
+              border: '1px solid var(--primary)',
+              padding: '0.5rem'
+            }
+          }}
+        />
+        <RouterProvider router={router} />
+      </Provider>
+    </CookiesProvider>
+  </StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function

@@ -1,7 +1,5 @@
-import { setupListeners } from '@reduxjs/toolkit/dist/query';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { useAppSelector } from 'app/Hooks';
-import { RootState } from 'app/Store';
 import { useSubmitChatMutation } from 'features/api/apiSlice';
 import styles from './ChatInput.module.css';
 import { GiChatBubble } from 'react-icons/gi';
@@ -49,28 +47,24 @@ export const ChatInput = () => {
 
   return (
     <div className={styles.chatInputContainer}>
-      <form onSubmit={handleSubmit}>
-        <div className={styles.flexBox}>
-          <input
-            className={styles.chatInput}
-            value={chatInput}
-            onChange={handleChange}
-            onKeyDown={(e) => {
-              e.stopPropagation();
-            }}
-            onKeyDownCapture={(e) => {
-              e.stopPropagation();
-            }}
-            placeholder={
-              playerID === 3 ? 'Chat Disabled' : 'Hit return to send.'
+      <div className={styles.flexBox}>
+        <input
+          className={styles.chatInput}
+          value={chatInput}
+          onChange={handleChange}
+          onKeyDownCapture={(e) => {
+            e.stopPropagation();
+            if (e.key === 'Enter' || e.key === 'Return') {
+              handleSubmit(e);
             }
-            disabled={playerID === 3}
-          />
-          <button className={submitButtonClass} onClick={handleSubmit}>
-            <GiChatBubble />
-          </button>
-        </div>
-      </form>
+          }}
+          placeholder={playerID === 3 ? 'Chat Disabled' : 'Hit return to send.'}
+          disabled={playerID === 3}
+        />
+        <button className={submitButtonClass} onClick={handleSubmit}>
+          <GiChatBubble />
+        </button>
+      </div>
     </div>
   );
 };
