@@ -23,7 +23,8 @@ const OptOptionBox = ({ card, onClickButton }: OptOptionBoxProps) => {
         {card?.buttons.map((button: Button, bid) => (
           <div
             className={styles.buttonDiv}
-            onClick={() => {
+            onClick={(e) => {
+              e.preventDefault();
               onClickButton(button);
             }}
             key={bid.toString()}
