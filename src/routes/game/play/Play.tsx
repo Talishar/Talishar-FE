@@ -12,7 +12,7 @@ import ChatCardDetail from '../components/elements/chatCardDetail/ChatCardDetail
 import CardListZone from '../components/zones/cardListZone/CardListZone';
 import ChainLinkSummaryContainer from '../components/elements/chainLinkSummary/ChainLinkSummary';
 import ActiveLayersZone from '../components/zones/activeLayersZone/ActiveLayersZone';
-import GameStateHandler from 'app/GameStateHandler';
+import ExperimentalGameStateHandler from 'app/ExperimentalGameStateHandler';
 
 function Play() {
   return (
@@ -34,7 +34,7 @@ function Play() {
       <OptionsMenu />
       <PlayerInputPopUp />
       <CardPortal />
-      <GameStateHandler />
+      <ExperimentalGameStateHandler />
       <EventsHandler />
     </div>
   );
