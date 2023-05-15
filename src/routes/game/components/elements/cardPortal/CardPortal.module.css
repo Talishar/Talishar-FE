@@ -7,9 +7,9 @@
 
 .popUp {
   background-color: rgba(0, 0, 0, 0.5);
-  border-radius: 0.5em;
+  border-radius: 1em;
   border: 1px var(--primary) solid;
-  padding: 1vh;
+  padding: 0;
   display: flex;
   justify-content: center;
   align-items: center;

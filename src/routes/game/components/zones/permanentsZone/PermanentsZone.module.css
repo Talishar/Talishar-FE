@@ -67,7 +67,7 @@
   display: block;
   position: relative;
   aspect-ratio: 1;
-  min-width: 13dvh;
+  min-width: 11dvh;
 }
 
 .stacked {

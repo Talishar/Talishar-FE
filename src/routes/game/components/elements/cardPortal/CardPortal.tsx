@@ -6,7 +6,7 @@ import { doubleFacedCardsMappings } from './constants';
 import classNames from 'classnames';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 
-const popUpGap = 10;
+const popUpGap = 0;
 
 function CardDetails({
   src,
