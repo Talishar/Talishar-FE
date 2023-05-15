@@ -1,14 +1,17 @@
-import React, { useEffect, useMemo, useRef } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import ChatInput from '../chatInput/ChatInput';
 import styles from './ChatBox.module.css';
 import { replaceText } from 'utils/ParseEscapedString';
 
+const CHAT_RE = /<span[^>]*>(.*?):\s<\/span>/;
+
 export default function ChatBox() {
   const amIPlayerOne = useAppSelector((state: RootState) => {
     return state.game.gameInfo.playerID === 1;
   });
+  const [chatFilter, setChatFilter] = useState<'none' | 'chat' | 'log'>('none');
   const chatLog = useAppSelector((state: RootState) => state.game.chatLog);
   const myName =
     useAppSelector((state: RootState) => {
@@ -27,19 +30,64 @@ export default function ChatBox() {
     });
   };
 
-  const chatMessages = chatLog?.map((message) => {
-    return message
-      .replace('Player 1', `<b>${amIPlayerOne ? myName : oppName}</b>`)
-      .replace('Player 2', `<b>${amIPlayerOne ? oppName : myName}</b>`);
-  });
+  const chatMessages = chatLog
+    ?.filter((message) => {
+      switch (chatFilter) {
+        case 'none':
+          return true;
+
+        case 'chat':
+          return message.match(CHAT_RE);
+
+        case 'log':
+          return !message.match(CHAT_RE);
+
+        default:
+          return true;
+      }
+    })
+    .map((message) => {
+      return message
+        .replace('Player 1', `<b>${amIPlayerOne ? myName : oppName}</b>`)
+        .replace('Player 2', `<b>${amIPlayerOne ? oppName : myName}</b>`);
+    });
 
   useEffect(() => {
     scrollToBottom();
-  }, [chatLog]);
+  }, [chatLog, chatFilter]);
 
   // TODO We really should not be dangerouslySetInnerHTML
   return (
     <div className={styles.chatBoxContainer}>
+      <div className={styles.tabs}>
+        <button
+          className={chatFilter === 'none' ? 'outline' : ''}
+          onClick={(e) => {
+            e.preventDefault();
+            setChatFilter('none');
+          }}
+        >
+          All
+        </button>
+        <button
+          className={chatFilter === 'chat' ? 'outline' : ''}
+          onClick={(e) => {
+            e.preventDefault();
+            setChatFilter('chat');
+          }}
+        >
+          Chat
+        </button>
+        <button
+          className={chatFilter === 'log' ? 'outline' : ''}
+          onClick={(e) => {
+            e.preventDefault();
+            setChatFilter('log');
+          }}
+        >
+          Log
+        </button>
+      </div>
       <div className={styles.chatBoxInner}>
         <div className={styles.chatBox}>
           {chatMessages &&
