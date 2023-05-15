@@ -1,14 +1,5 @@
 import React, { useState } from 'react';
-import {
-  GiAngelOutfit,
-  GiCannon,
-  GiCircleClaws,
-  GiDrop,
-  GiFluffySwirl,
-  GiHand,
-  GiStack,
-  GiTombstone
-} from 'react-icons/gi';
+import { GiAngelOutfit, GiDrop } from 'react-icons/gi';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import { setCardListLoadFocus } from 'features/game/GameSlice';
