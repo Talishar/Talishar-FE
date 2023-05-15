@@ -5,7 +5,7 @@
 
 .chatInput.chatInput {
   font-weight: 400;
-  font-size: 0.75em;
+  font-size: max(1em, 14px);
   flex-shrink: 1;
   flex-grow: 1;
   max-width: 100%;
@@ -21,15 +21,13 @@
 .flexBox {
   display: grid;
   grid-template-columns: 1fr auto;
-  /* flex-direction: row;
-  flex-wrap: nowrap; */
   gap: 0.25em;
   max-width: 100%;
 }
 
 .buttonDiv {
   padding: 0.5em;
-  font-size: 0.5em;
+  font-size: max(1em, 14px);
   margin-right: 0.25rem;
   width: 2rem;
   height: 1.65rem !important;
