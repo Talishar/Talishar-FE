@@ -44,8 +44,22 @@ export const ErrorPage = () => {
           src="/cardimages/WTR224.webp"
           style={{ maxWidth: '100%', maxHeight: '100%', marginBottom: '19px' }}
         />
-        <button onClick={() => navigate(-1)}>Back</button>
-        <button onClick={() => navigate('/')}>Home</button>
+        <button
+          onClick={(e) => {
+            e.preventDefault;
+            navigate(-1);
+          }}
+        >
+          Back
+        </button>
+        <button
+          onClick={(e) => {
+            e.preventDefault;
+            navigate('/');
+          }}
+        >
+          Home
+        </button>
       </article>
     </main>
   );

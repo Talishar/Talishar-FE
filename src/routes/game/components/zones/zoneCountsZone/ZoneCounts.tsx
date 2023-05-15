@@ -1,14 +1,5 @@
 import React, { useState } from 'react';
-import {
-  GiAngelOutfit,
-  GiCannon,
-  GiCircleClaws,
-  GiDrop,
-  GiFluffySwirl,
-  GiHand,
-  GiStack,
-  GiTombstone
-} from 'react-icons/gi';
+import { GiAngelOutfit, GiDrop } from 'react-icons/gi';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import { setCardListLoadFocus } from 'features/game/GameSlice';
@@ -17,105 +8,28 @@ import styles from './ZoneCounts.module.css';
 import classNames from 'classnames';
 
 export const ZoneCounts = (prop: Displayrow) => {
+  const soulCount = useAppSelector((state: RootState) =>
+    prop.isPlayer
+      ? state.game.playerOne.SoulCount
+      : state.game.playerTwo.SoulCount
+  );
+
+  const bloodDebt = useAppSelector((state: RootState) =>
+    prop.isPlayer
+      ? state.game.playerOne.bloodDebtCount
+      : state.game.playerTwo.bloodDebtCount
+  );
+
+  if (!soulCount && !bloodDebt) {
+    return null;
+  }
+
   return (
     <div className={styles.container}>
       <div className={styles.column}>
         <SoulCount {...prop} />
         <BloodDebtCount {...prop} />
-        <HandCount {...prop} />
       </div>
-    </div>
-  );
-};
-
-const HandCount = (prop: Displayrow) => {
-  const { isPlayer } = prop;
-  const handCount = useAppSelector((state: RootState) =>
-    isPlayer
-      ? state.game.playerOne.Hand?.length
-      : state.game.playerTwo.Hand?.length
-  );
-
-  return (
-    <div title="Hand" className={styles.item}>
-      <GiHand /> {handCount}
-    </div>
-  );
-};
-
-const GraveyardCount = (prop: Displayrow) => {
-  const { isPlayer } = prop;
-  const graveyardCount = useAppSelector((state: RootState) => {
-    return isPlayer
-      ? state.game.playerOne.Graveyard?.length
-      : state.game.playerTwo.Graveyard?.length;
-  });
-
-  return (
-    <div title="Graveyard" className={styles.item}>
-      <GiTombstone /> {graveyardCount}
-    </div>
-  );
-};
-
-const BanishCount = (prop: Displayrow) => {
-  const { isPlayer } = prop;
-  const banishCount = useAppSelector((state: RootState) => {
-    return isPlayer
-      ? state.game.playerOne.Banish?.length
-      : state.game.playerTwo.Banish?.length;
-  });
-
-  return (
-    <div title="Banish" className={styles.item}>
-      <GiFluffySwirl /> {banishCount}
-    </div>
-  );
-};
-
-const DeckCount = (prop: Displayrow) => {
-  const { isPlayer } = prop;
-  const pitchCount = useAppSelector((state: RootState) => {
-    return (
-      (isPlayer
-        ? state.game.playerOne.DeckSize
-        : state.game.playerTwo.DeckSize) ?? 0
-    );
-  });
-
-  return (
-    <div title="Deck" className={styles.item}>
-      <GiStack /> {pitchCount}
-    </div>
-  );
-};
-
-const PitchCount = (prop: Displayrow) => {
-  const { isPlayer } = prop;
-  const pitchCount = useAppSelector((state: RootState) => {
-    return isPlayer
-      ? state.game.playerOne.Pitch?.length
-      : state.game.playerTwo.Pitch?.length;
-  });
-
-  return (
-    <div title="Pitch" className={styles.item}>
-      <GiCircleClaws /> {pitchCount}
-    </div>
-  );
-};
-
-const ArsenalCount = (prop: Displayrow) => {
-  const { isPlayer } = prop;
-  const arsenalCount = useAppSelector((state: RootState) => {
-    return isPlayer
-      ? state.game.playerOne.Arsenal?.length
-      : state.game.playerTwo.Arsenal?.length;
-  });
-
-  return (
-    <div title="Arsenal" className={styles.item}>
-      <GiCannon /> {arsenalCount}
     </div>
   );
 };
@@ -162,7 +76,7 @@ const BloodDebtCount = (prop: Displayrow) => {
   const [hasBloodDebt, setHasBloodDebt] = useState(false);
   const dispatch = useAppDispatch();
   const { isPlayer } = prop;
-  const BloodDebtCount = useAppSelector((state: RootState) =>
+  const bloodDebtCount = useAppSelector((state: RootState) =>
     isPlayer
       ? state.game.playerOne.bloodDebtCount
       : state.game.playerTwo.bloodDebtCount
@@ -184,7 +98,7 @@ const BloodDebtCount = (prop: Displayrow) => {
     );
   };
 
-  if (!hasBloodDebt && BloodDebtCount != undefined && BloodDebtCount > 0) {
+  if (!hasBloodDebt && bloodDebtCount != undefined && bloodDebtCount > 0) {
     setHasBloodDebt(true);
   }
 
@@ -197,7 +111,7 @@ const BloodDebtCount = (prop: Displayrow) => {
     <>
       {!!hasBloodDebt ? (
         <div title="BloodDebt" className={bloodDebtItem}>
-          <GiDrop /> {BloodDebtCount}
+          <GiDrop /> {bloodDebtCount}
         </div>
       ) : (
         <div className={styles.item}> </div>
