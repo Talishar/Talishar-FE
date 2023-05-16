@@ -29,9 +29,6 @@ const ExperimentalGameStateHandler = () => {
   if (parseInt(gameID ?? '') > GAME_LIMIT_LIVE) {
     baseUrl = API_URL_LIVE;
   }
-  if (parseInt(gameID ?? '') === 0) {
-    baseUrl = import.meta.env.DEV ? API_URL_DEV : API_URL_LIVE;
-  }
 
   useEffect(() => {
     dispatch(
@@ -41,9 +38,9 @@ const ExperimentalGameStateHandler = () => {
         authKey: gameInfo.authKey || authKey
       })
     );
-    console.log('setting up listener');
+    console.log('setting up listener to url', baseUrl);
     const source = new EventSource(
-      `${baseUrl}/GetUpdateSSE.php?gameName=${gameID}&playerID=${gameInfo.playerID}&authKey=${gameInfo.authKey}`
+      `${baseUrl}GetUpdateSSE.php?gameName=${gameID}&playerID=${gameInfo.playerID}&authKey=${gameInfo.authKey}`
     );
     console.log(source);
     source.onmessage = (e) => {
