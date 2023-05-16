@@ -32,15 +32,15 @@ const ExperimentalGameStateHandler = () => {
     );
 
     let baseUrl = API_URL_DEV;
-    if (parseInt(gameID ?? '') > GAME_LIMIT_BETA) {
+    if (gameInfo.gameID > GAME_LIMIT_BETA) {
       baseUrl = API_URL_BETA;
     }
-    if (parseInt(gameID ?? '') > GAME_LIMIT_LIVE) {
+    if (gameInfo.gameID > GAME_LIMIT_LIVE) {
       baseUrl = API_URL_LIVE;
     }
     console.log('setting up listener to domain', baseUrl);
     const source = new EventSource(
-      `${baseUrl}GetUpdateSSE.php?gameName=${gameID}&playerID=${gameInfo.playerID}&authKey=${gameInfo.authKey}`
+      `${baseUrl}GetUpdateSSE.php?gameName=${gameInfo.gameID}&playerID=${gameInfo.playerID}&authKey=${gameInfo.authKey}`
     );
     console.log(source);
     source.onmessage = (e) => {
