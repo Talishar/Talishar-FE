@@ -22,14 +22,6 @@ const ExperimentalGameStateHandler = () => {
   const location = useLocation();
   const locationState = location.state as GameLocationState | undefined;
 
-  let baseUrl = API_URL_DEV;
-  if (parseInt(gameID ?? '') > GAME_LIMIT_BETA) {
-    baseUrl = API_URL_BETA;
-  }
-  if (parseInt(gameID ?? '') > GAME_LIMIT_LIVE) {
-    baseUrl = API_URL_LIVE;
-  }
-
   useEffect(() => {
     dispatch(
       setGameStart({
@@ -38,7 +30,15 @@ const ExperimentalGameStateHandler = () => {
         authKey: gameInfo.authKey || authKey
       })
     );
-    console.log('setting up listener to url', baseUrl);
+
+    let baseUrl = API_URL_DEV;
+    if (parseInt(gameID ?? '') > GAME_LIMIT_BETA) {
+      baseUrl = API_URL_BETA;
+    }
+    if (parseInt(gameID ?? '') > GAME_LIMIT_LIVE) {
+      baseUrl = API_URL_LIVE;
+    }
+    console.log('setting up listener to domain', baseUrl);
     const source = new EventSource(
       `${baseUrl}GetUpdateSSE.php?gameName=${gameID}&playerID=${gameInfo.playerID}&authKey=${gameInfo.authKey}`
     );
