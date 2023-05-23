@@ -2,11 +2,20 @@
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
-  gap: 0.5em;
+  padding: 0.3rem;
   vertical-align: center;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 0.5em;
+  position: relative;
+  cursor: pointer;
+  transition: background-color 300ms, left 300ms;
+  left: 0;
+  background: transparent;
+
+  &:hover {
+    left: 0.3rem;
+    background-color: rgba(0, 0, 0, 0.2)
+  }
 }
 
 .button {
