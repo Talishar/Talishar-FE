@@ -56,6 +56,9 @@ export default function ActiveLayersZone() {
                 For more info about trigger ordering, see rule 1.10.2c of the
                 comprehensive rulebook.
               </p>
+              <p className={styles.orderingExplanation}>
+                The effects will resolve from right to left. Starting with the most right card.
+              </p>
             </div>
             {canPassPhase && (
               <div className={styles.passTurnBox}>

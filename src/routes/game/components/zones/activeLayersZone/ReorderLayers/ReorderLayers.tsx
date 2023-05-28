@@ -69,6 +69,7 @@ const ReorderLayers = ({ cards }: { cards: Card[] }) => {
             onDragEnd={handleDragEnd}
           >
             <CardDisplay card={card} key={ix} />
+            <div className={styles.countersCover}><div className={styles.number}><div className={styles.text}>{1 + cardList.length - cardInLayer.length}</div></div></div>
           </Reorder.Item>
         );
       })}
