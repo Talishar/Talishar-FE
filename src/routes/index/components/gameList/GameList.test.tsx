@@ -18,8 +18,8 @@ import GameList from './GameList';
 
 it('displays loading! when loading', () => {
   console.log('hello');
-  const { container } = renderWithProviders(<GameList />);
-  expect(container).toMatchSnapshot();
+  const container = renderWithProviders(<GameList />);
+  expect(container.getByText('Loading games please wait')).toBeInTheDocument();
 });
 
 // TODO: Rewrite the test so it works properly
