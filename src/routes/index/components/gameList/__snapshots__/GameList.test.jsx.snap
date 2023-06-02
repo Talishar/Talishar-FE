@@ -3,19 +3,19 @@
 exports[`displays loading! when loading 1`] = `
 <div>
   <article
-    class="_gameList_4a28c4"
+    class="_gameList_bdedf5"
   >
     <div
-      class="_titleDiv_4a28c4"
+      class="_titleDiv_bdedf5"
     >
       <h1
-        class="_title_4a28c4"
+        class="_title_bdedf5"
       >
         Games
       </h1>
       <button
         aria-busy="true"
-        class="_reloadButton_4a28c4"
+        class="_reloadButton_bdedf5"
         disabled=""
       >
         Reload

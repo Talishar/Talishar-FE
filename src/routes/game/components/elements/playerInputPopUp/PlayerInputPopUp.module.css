@@ -143,6 +143,10 @@
   max-width: 14vh;
   max-height: 14dvh;
   max-width: 14dvh;
+  height: 14vh;
+  height: 14dvh;
+  width: 14vh;
+  width: 14dvh;
 }
 
 @media (orientation: portrait) {
