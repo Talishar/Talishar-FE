@@ -118,6 +118,18 @@ export const GAME_FORMAT = {
   DRAFT: 'draft'
 };
 
+export const GAME_FORMAT_NUMBER = {
+  CLASSIC_CONSTRUCTED: '0',
+  COMPETITIVE_CC: '1',
+  BLITZ: '2',
+  COMPETITIVE_BLITZ: '3',
+  OPEN_FORMAT: '4',
+  COMMONER: '5',
+  CLASH: '-1',
+  SEALED: '6',
+  DRAFT: '7'
+};
+
 export const URL_END_POINT = {
   GET_GAME_LIST: 'APIs/GetGameList.php',
   CREATE_GAME: 'APIs/CreateGame.php',

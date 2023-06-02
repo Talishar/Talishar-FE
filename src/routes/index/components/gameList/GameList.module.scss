@@ -24,6 +24,14 @@
   margin-bottom: 1em;
 }
 
+.groupDiv {
+  padding-bottom: 0.75em;
+  + .groupDiv {
+    padding-top: 0.75em;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+  }
+}
+
 img {
   max-height: 3em;
 }
