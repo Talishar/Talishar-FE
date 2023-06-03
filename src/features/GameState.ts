@@ -107,4 +107,5 @@ export default interface GameState {
   showModals?: boolean;
   landmark?: Card;
   hasPriority?: boolean;
+  isFullRematch?: boolean;
 }

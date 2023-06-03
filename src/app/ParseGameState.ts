@@ -93,6 +93,12 @@ export default function ParseGameState(input: any) {
     playerTwo: {}
   };
 
+  if (input.errorMessage) {
+    if (input.errorMessage === '1234REMATCH') {
+      return { ...result, isFullRematch: true };
+    }
+  }
+
   // active chain link
   result.activeChainLink = {};
   if (input.activeChainLink !== undefined) {

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useLocation, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from './Hooks';
 import { getGameInfo, nextTurn, setGameStart } from 'features/game/GameSlice';
 import { shallowEqual } from 'react-redux';
@@ -12,6 +12,7 @@ import {
   GAME_LIMIT_BETA,
   GAME_LIMIT_LIVE
 } from 'appConstants';
+import { RootState } from './Store';
 
 const ExperimentalGameStateHandler = () => {
   const { gameID } = useParams();
@@ -21,6 +22,10 @@ const ExperimentalGameStateHandler = () => {
     useKnownSearchParams();
   const location = useLocation();
   const locationState = location.state as GameLocationState | undefined;
+  const isFullRematch = useAppSelector(
+    (state: RootState) => state.game.isFullRematch
+  );
+  const navigate = useNavigate();
 
   useEffect(() => {
     dispatch(
@@ -66,6 +71,10 @@ const ExperimentalGameStateHandler = () => {
       source.close();
     };
   }, [gameInfo.playerID, gameInfo.gameID, gameInfo.authKey]);
+
+  useEffect(() => {
+    isFullRematch ? navigate(`/game/lobby/${gameID}`) : null;
+  }, [isFullRematch]);
 
   return null;
 };
