@@ -131,8 +131,10 @@
 
 @media (orientation: portrait) {
   .normalSize {
-    max-width: 130px;
-    aspect-ratio: 1;
+    max-height: 14vw;
+    max-width: 14vw;
+    max-height: 14dvw;
+    max-width: 14dvw;
   }
 
   .biggerSize {
