@@ -1,7 +1,7 @@
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { submitButton } from 'features/game/GameSlice';
 import styles from './EndGameMenuOptions.module.css';
-import { useState } from 'react';
+import { useEffect } from 'react';
 import { PROCESS_INPUT } from 'appConstants';
 import { RootState } from 'app/Store';
 import { useNavigate } from 'react-router-dom';
@@ -14,7 +14,7 @@ const EndGameMenuOptions = () => {
   const { roguelikeGameID } = useAppSelector(getGameInfo, shallowEqual);
   //Always player 1 in roguelike, which is only place this matters
   const health = useAppSelector(
-    (state: RootState) => state.game.playerOne.Health ?? '0'
+    (state: RootState) => state.game.playerOne.Health ?? 0
   );
 
   const handleMainMenu = async () => {
@@ -28,7 +28,6 @@ const EndGameMenuOptions = () => {
 
   const handleFullRematch = () => {
     dispatch(submitButton({ button: { mode: PROCESS_INPUT.FULL_REMATCH } }));
-    // TODO: Redirect to sideboard screen if opponent has also elected for a full rematch.
   };
 
   const handleContinueAdventure = () => {

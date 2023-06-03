@@ -329,6 +329,7 @@ export const gameSlice = createSlice({
         authKey: string;
       }>
     ) => {
+      state.isFullRematch = false;
       state.gameInfo.gameID = action.payload.gameID;
       state.gameInfo.playerID = !!state.gameInfo.playerID
         ? state.gameInfo.playerID
@@ -412,6 +413,7 @@ export const gameSlice = createSlice({
       }
       state.isUpdateInProgress = false;
       state.isPlayerInputInProgress = false;
+      state.isFullRematch = action.payload.isFullRematch ?? false;
 
       state.playerOne = { ...state.playerOne, ...action.payload.playerOne };
       state.playerTwo = { ...state.playerTwo, ...action.payload.playerTwo };
@@ -497,6 +499,9 @@ export const gameSlice = createSlice({
 
       // gameInfo
       state.gameLobby = action.payload;
+
+      // set isFullRematch to false
+      state.isFullRematch = false;
 
       return state;
     });

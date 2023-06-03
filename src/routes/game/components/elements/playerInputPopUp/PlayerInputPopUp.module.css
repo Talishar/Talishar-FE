@@ -155,4 +155,11 @@
     width: 100%;
     max-width: 100%;
   }
+
+  .cardDiv {
+    max-width: 14vw;
+    max-width: 14dvw;
+    max-height: 14vw;
+    max-height: 14dvw;
+  }
 }
