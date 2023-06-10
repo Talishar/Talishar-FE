@@ -5,13 +5,11 @@ const News = () => {
   return (
     <div>
       <hgroup>
-        <h1>Hear ye Hear ye!</h1>
-        <h2>Choose your play mat from the options menu in game!</h2>
-        <h2>There's Major Roguelike Update!</h2>
+        <h1>Looking for DTD spoilers? Read up!</h1>
+        <h2>DTD Spoilers are limited to "Open Format"</h2>
+        <h2>Stats are not reported for DTD heroes until release</h2>
+        <h2>We're trying out less automation for this set, so pay attention to card effects!</h2>
       </hgroup>
-      <p>
-      <a href='https://beta.talishar.net/game/Roguelike/CreateGame.php'><img src={RoguelikeAnnouncement} style={{width:"100%", height:"auto", maxHeight:"100%"}} /></a>
-      </p>
       <p>Please join our community:</p>
       <ul>
         <li>
