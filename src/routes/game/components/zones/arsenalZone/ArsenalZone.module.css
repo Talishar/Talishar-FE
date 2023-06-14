@@ -11,6 +11,8 @@
 
 .arsenalZone {
   height: 100%;
+  height: 13vh;
+  height: 13dvh;
   min-width: min(13dvh, 12dvw);
   width: fit-content;
   display: flex;
