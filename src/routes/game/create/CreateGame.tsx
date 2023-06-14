@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useAppDispatch } from 'app/Hooks';
 import classNames from 'classnames';
 import { GAME_FORMAT, GAME_VISIBILITY } from 'appConstants';
@@ -7,56 +7,73 @@ import {
   useGetFavoriteDecksQuery
 } from 'features/api/apiSlice';
 import { setGameStart } from 'features/game/GameSlice';
-import { Field, Form, Formik, FormikHelpers } from 'formik';
 import useAuth from 'hooks/useAuth';
 import { CreateGameAPI } from 'interface/API/CreateGame.php';
 import { toast } from 'react-hot-toast';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import styles from './CreateGame.module.css';
-import CreateGameErrors from './CreateGameErrors';
 import validationSchema from './validationSchema';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { ErrorMessage } from '@hookform/error-message';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { FaExclamationCircle } from 'react-icons/fa';
 
 const CreateGame = () => {
   const { isLoggedIn } = useAuth();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { data, isLoading } = useGetFavoriteDecksQuery(undefined);
+  const { data, isLoading, isSuccess } = useGetFavoriteDecksQuery(undefined);
   const [searchParams, setSearchParams] = useSearchParams();
   const [createGame, createGameResult] = useCreateGameMutation();
 
-  const initialValues: CreateGameAPI = {
-    deck: '',
-    fabdb: searchParams.get('fabdb') ?? '',
-    deckTestMode: false,
-    format:
-      searchParams.get('format') ?? isLoggedIn
-        ? data?.lastFormat !== undefined
-          ? data.lastFormat
-          : GAME_FORMAT.CLASSIC_CONSTRUCTED
-        : GAME_FORMAT.OPEN_FORMAT,
-    visibility:
-      searchParams.get('visibility') ??
-      (isLoggedIn
-        ? data?.lastVisibility !== undefined && data.lastVisibility == 1
-          ? GAME_VISIBILITY.PUBLIC
-          : GAME_VISIBILITY.PRIVATE
-        : GAME_VISIBILITY.PRIVATE),
-    decksToTry: '',
-    favoriteDeck: false,
-    favoriteDecks:
-      data?.lastUsedDeckIndex !== undefined
-        ? data.favoriteDecks.find(
-            (deck) => deck.index === data.lastUsedDeckIndex
-          )?.key
-        : '',
-    gameDescription: ''
-  };
+  const {
+    formState: { isSubmitting, errors },
+    register,
+    handleSubmit,
+    setError,
+    reset
+  } = useForm<CreateGameAPI>({
+    mode: 'onBlur',
+    resolver: yupResolver(validationSchema)
+  });
 
-  const handleSubmit = async (
-    values: CreateGameAPI,
-    { setSubmitting }: FormikHelpers<CreateGameAPI>
+  const initialValues: CreateGameAPI = useMemo(() => {
+    return {
+      deck: '',
+      fabdb: searchParams.get('fabdb') ?? '',
+      deckTestMode: false,
+      format:
+        searchParams.get('format') ?? isLoggedIn
+          ? data?.lastFormat !== undefined
+            ? data.lastFormat
+            : GAME_FORMAT.CLASSIC_CONSTRUCTED
+          : GAME_FORMAT.OPEN_FORMAT,
+      visibility:
+        searchParams.get('visibility') ??
+        (isLoggedIn
+          ? data?.lastVisibility !== undefined && data.lastVisibility == 1
+            ? GAME_VISIBILITY.PUBLIC
+            : GAME_VISIBILITY.PRIVATE
+          : GAME_VISIBILITY.PRIVATE),
+      decksToTry: '',
+      favoriteDeck: false,
+      favoriteDecks:
+        data?.lastUsedDeckIndex !== undefined
+          ? data.favoriteDecks.find(
+              (deck) => deck.index === data.lastUsedDeckIndex
+            )?.key
+          : '',
+      gameDescription: ''
+    };
+  }, [isSuccess, isLoggedIn]);
+
+  useEffect(() => {
+    reset(initialValues);
+  }, [initialValues, reset]);
+
+  const onSubmit: SubmitHandler<CreateGameAPI> = async (
+    values: CreateGameAPI
   ) => {
-    setSubmitting(true);
     try {
       // if you're not logged in you can ONLY make a private game.
       if (!isLoggedIn) values.visibility = GAME_VISIBILITY.PRIVATE;
@@ -82,8 +99,13 @@ const CreateGame = () => {
     } catch (error) {
       console.warn(error);
       toast.error(String(error), { position: 'top-center' });
+      setError('root.serverError', {
+        type: 'custom',
+        message: `There has been an error while creating your game. Message: ${JSON.stringify(
+          error
+        )} Please try again`
+      });
     } finally {
-      setSubmitting(false);
     }
   };
 
@@ -101,159 +123,158 @@ const CreateGame = () => {
             please contact the judge community for clarification.
           </small>
         </p>
-        <Formik
-          initialValues={initialValues}
-          onSubmit={handleSubmit}
-          validationSchema={validationSchema}
-          enableReinitialize
-        >
-          {({ values, isSubmitting, errors, touched }) => (
-            <Form>
-              <div className={styles.formInner}>
-                {isLoggedIn && !isLoading && (
-                  <label>
-                    Favorite Deck
-                    <Field
-                      as="select"
-                      name="favoriteDecks"
-                      id="favoriteDecks"
-                      placeholder="Select a favorite deck"
-                      aria-busy={isLoading}
-                      aria-invalid={
-                        (errors.favoriteDecks && touched.favoriteDecks) as
-                          | boolean
-                          | undefined
-                      }
-                    >
-                      {data?.favoriteDecks.map((deck, ix) => (
-                        <option value={deck.key} key={deck.index}>
-                          {deck.name}
-                        </option>
-                      ))}
-                    </Field>
-                  </label>
-                )}
-                <fieldset>
-                  <label>
-                    Deck Link:
-                    <Field
-                      type="text"
-                      id="fabdb"
-                      name="fabdb"
-                      aria-label="Deck Link"
-                      aria-invalid={
-                        (errors.fabdb && touched.fabdb) as boolean | undefined
-                      }
-                    />
-                  </label>
-                  {isLoggedIn && (
-                    <label>
-                      <Field
-                        type="checkbox"
-                        role="switch"
-                        id="favoriteDeck"
-                        name="favoriteDeck"
-                      />
-                      Save Deck to ❤️ Favorites
-                    </label>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <div className={styles.formInner}>
+            {isLoggedIn && !isLoading && (
+              <label>
+                Favorite Deck
+                <select
+                  id="favoriteDecks"
+                  aria-busy={isLoading}
+                  {...register('favoriteDecks')}
+                  aria-invalid={
+                    errors.favoriteDecks?.message ? 'true' : undefined
+                  }
+                >
+                  {data?.favoriteDecks.map((deck, ix) => (
+                    <option value={deck.key} key={deck.index}>
+                      {deck.name}
+                    </option>
+                  ))}
+                </select>
+                <ErrorMessage
+                  errors={errors}
+                  name="favoriteDecks"
+                  render={({ message }) => <p>{message}</p>}
+                />
+              </label>
+            )}
+            <ErrorMessage
+              errors={errors}
+              name="favoriteDecks"
+              render={({ message }) => (
+                <p className={styles.fieldError}>
+                  <FaExclamationCircle /> {message}
+                </p>
+              )}
+            />
+            <fieldset>
+              <label>
+                Deck Link:
+                <input
+                  type="text"
+                  id="fabdb"
+                  aria-label="Deck Link"
+                  {...register('fabdb')}
+                  aria-invalid={errors.deck?.message ? 'true' : undefined}
+                />
+                <ErrorMessage
+                  errors={errors}
+                  name="fabdb"
+                  render={({ message }) => (
+                    <p className={styles.fieldError}>
+                      <FaExclamationCircle /> {message}
+                    </p>
                   )}
-                </fieldset>
+                />
+              </label>
+              {isLoggedIn && (
                 <label>
-                  Game Name
-                  <Field
-                    type="text"
-                    id="gameDescription"
-                    name="gameDescription"
-                    aria-label="Game Name"
-                    aria-invalid={
-                      (errors.gameDescription && touched.gameDescription) as
-                        | boolean
-                        | undefined
-                    }
-                    placeholder="Defaults to Game#14321542"
+                  <input
+                    type="checkbox"
+                    role="switch"
+                    id="favoriteDeck"
+                    {...register('favoriteDeck')}
                   />
+                  Save Deck to ❤️ Favorites
                 </label>
-                <label>
-                  Format
-                  <Field
-                    as="select"
-                    name="format"
-                    id="format"
-                    placeholder={GAME_FORMAT.BLITZ}
-                    aria-label="Format"
-                    aria-invalid={
-                      (errors.format && touched.format) as boolean | undefined
-                    }
-                  >
-                    <option value={GAME_FORMAT.BLITZ}>Blitz</option>
-                    <option value={GAME_FORMAT.CLASSIC_CONSTRUCTED}>
-                      Classic Constructed
-                    </option>
-                    <option value={GAME_FORMAT.COMPETITIVE_BLITZ}>
-                      Competitive Blitz
-                    </option>
-                    <option value={GAME_FORMAT.COMPETITIVE_CC}>
-                      Competitive CC
-                    </option>
-                    <option value={GAME_FORMAT.COMMONER}>Commoner</option>
-                    <option value={GAME_FORMAT.CLASH}>Clash</option>
-                    <option value={GAME_FORMAT.SEALED}>
-                      Sealed (DraftFaB decks only)
-                    </option>
-                    <option value={GAME_FORMAT.OPEN_FORMAT}>
-                      Open Format (no restrictions!)
-                    </option>
-                  </Field>
-                </label>
-                <fieldset>
-                  <label>
-                    Visibility
-                    <Field
-                      as="select"
-                      name="visibility"
-                      id="visibility"
-                      placeholder={GAME_VISIBILITY.PUBLIC}
-                      aria-label="Visibility"
-                      aria-invalid={
-                        (errors.visibility && touched.visibility) as
-                          | boolean
-                          | undefined
-                      }
-                    >
-                      {isLoggedIn && (
-                        <option value={GAME_VISIBILITY.PUBLIC}>Public</option>
-                      )}
-                      <option value={GAME_VISIBILITY.PRIVATE}>Private</option>
-                    </Field>
-                  </label>
-                  <label>
-                    <Field
-                      type="checkbox"
-                      role="switch"
-                      id="deckTestMode"
-                      name="deckTestMode"
-                      aria-label="Single Player"
-                      aria-invalid={
-                        (errors.deckTestMode && touched.deckTestMode) as
-                          | boolean
-                          | undefined
-                      }
-                    />
-                    Single Player
-                  </label>
-                </fieldset>
-              </div>
-              <button
-                type="submit"
-                className={buttonClass}
-                aria-busy={isSubmitting}
+              )}
+            </fieldset>
+            <label>
+              Game Name
+              <input
+                type="text"
+                id="gameDescription"
+                aria-label="Game Name"
+                {...register('gameDescription')}
+                aria-invalid={
+                  errors.gameDescription?.message ? 'true' : undefined
+                }
+                placeholder="Defaults to Game#14321542"
+              />
+            </label>
+            <label>
+              Format
+              <select
+                id="format"
+                aria-label="format"
+                {...register('format')}
+                aria-invalid={errors.format?.message ? 'true' : undefined}
               >
-                Create Game
-              </button>
-              <CreateGameErrors createGameResult={createGameResult.data} />
-            </Form>
+                <option value={GAME_FORMAT.BLITZ}>Blitz</option>
+                <option value={GAME_FORMAT.CLASSIC_CONSTRUCTED}>
+                  Classic Constructed
+                </option>
+                <option value={GAME_FORMAT.COMPETITIVE_BLITZ}>
+                  Competitive Blitz
+                </option>
+                <option value={GAME_FORMAT.COMPETITIVE_CC}>
+                  Competitive CC
+                </option>
+                <option value={GAME_FORMAT.COMMONER}>Commoner</option>
+                <option value={GAME_FORMAT.CLASH}>Clash</option>
+                <option value={GAME_FORMAT.SEALED}>
+                  Sealed (DraftFaB decks only)
+                </option>
+                <option value={GAME_FORMAT.OPEN_FORMAT}>
+                  Open Format (no restrictions!)
+                </option>
+              </select>
+            </label>
+            <fieldset>
+              <label>
+                Visibility
+                <select
+                  id="visibility"
+                  aria-label="Visibility"
+                  {...register('visibility')}
+                  aria-invalid={errors.visibility?.message ? 'true' : undefined}
+                >
+                  {isLoggedIn && (
+                    <option value={GAME_VISIBILITY.PUBLIC}>Public</option>
+                  )}
+                  <option value={GAME_VISIBILITY.PRIVATE}>Private</option>
+                </select>
+              </label>
+              <label>
+                <input
+                  type="checkbox"
+                  role="switch"
+                  id="deckTestMode"
+                  aria-label="Single Player"
+                  {...register('deckTestMode')}
+                  aria-invalid={
+                    errors.deckTestMode?.message ? 'true' : undefined
+                  }
+                />
+                Single Player
+              </label>
+            </fieldset>
+          </div>
+          <button
+            type="submit"
+            className={buttonClass}
+            disabled={isSubmitting}
+            aria-busy={isSubmitting}
+          >
+            Create Game
+          </button>
+          {errors.root?.serverError?.message && (
+            <div className={styles.fieldError}>
+              <FaExclamationCircle /> {errors.root?.serverError?.message}
+            </div>
           )}
-        </Formik>
+        </form>
       </article>
     </div>
   );

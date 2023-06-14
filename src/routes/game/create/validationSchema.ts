@@ -6,7 +6,7 @@ const URL = 'Deck link must be a URL';
 export const validationSchema = yup.object().shape(
   {
     deck: yup.string(),
-    fabdb: yup.string(),
+    fabdb: yup.string().url(URL),
     /*.when(['favoriteDecks'], {
       is: (favoriteDecks: string | undefined) =>
         favoriteDecks === '' || favoriteDecks === undefined,
@@ -28,5 +28,7 @@ export const validationSchema = yup.object().shape(
   },
   [['favoriteDecks', 'fabdb']]
 );
+
+export type validationSchemaType = yup.InferType<typeof validationSchema>;
 
 export default validationSchema;
