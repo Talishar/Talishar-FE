@@ -12,6 +12,10 @@
   }
 }
 
+.fieldError {
+  color: red;
+}
+
 .button {
   color: var(--primary-inverse);
   margin-top: 32px;
