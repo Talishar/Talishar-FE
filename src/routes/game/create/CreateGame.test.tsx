@@ -28,7 +28,6 @@ it('lets you create a game', async () => {
       name="deckTestMode"
       role="switch"
       type="checkbox"
-      value="true"
     />
   `);
 
