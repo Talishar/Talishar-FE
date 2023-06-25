@@ -417,6 +417,7 @@ export const gameSlice = createSlice({
 
       state.playerOne = { ...state.playerOne, ...action.payload.playerOne };
       state.playerTwo = { ...state.playerTwo, ...action.payload.playerTwo };
+
       state.activeChainLink = action.payload.activeChainLink;
       state.activeLayers = action.payload.activeLayers;
       state.oldCombatChain = action.payload.oldCombatChain;
@@ -441,6 +442,8 @@ export const gameSlice = createSlice({
       state.gameInfo.roguelikeGameID =
         action.payload.gameInfo.roguelikeGameID ??
         state.gameInfo.roguelikeGameID;
+
+      state.preventPassPrompt = action.payload.preventPassPrompt;
 
       return state;
     });
