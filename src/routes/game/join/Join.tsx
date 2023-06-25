@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useAppDispatch } from 'app/Hooks';
 import {
   useGetFavoriteDecksQuery,
@@ -22,7 +22,7 @@ const JoinGame = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [joinGame, joinGameResult] = useJoinGameMutation();
-  const { data, isLoading } = useGetFavoriteDecksQuery(undefined);
+  const { data, isLoading, isSuccess } = useGetFavoriteDecksQuery(undefined);
   const { isLoggedIn } = useAuth();
 
   let [{ gameName = '0', playerID = '2', authKey = '' }] =
@@ -42,20 +42,22 @@ const JoinGame = () => {
     resolver: yupResolver(validationSchema)
   });
 
-  const initialValues: JoinGameAPI = {
-    deck: '',
-    fabdb: '',
-    deckTestMode: false,
-    decksToTry: '',
-    favoriteDeck: false,
-    favoriteDecks:
-      data?.lastUsedDeckIndex !== undefined
-        ? data.favoriteDecks.find(
-            (deck) => deck.index === data.lastUsedDeckIndex
-          )?.key
-        : '',
-    gameDescription: ''
-  };
+  const initialValues: JoinGameAPI = useMemo(() => {
+    return {
+      deck: '',
+      fabdb: '',
+      deckTestMode: false,
+      decksToTry: '',
+      favoriteDeck: false,
+      favoriteDecks:
+        data?.lastUsedDeckIndex !== undefined
+          ? data.favoriteDecks.find(
+              (deck) => deck.index === data.lastUsedDeckIndex
+            )?.key
+          : '',
+      gameDescription: ''
+    };
+  }, [isSuccess, isLoggedIn]);
 
   useEffect(() => {
     reset(initialValues);
@@ -98,7 +100,7 @@ const JoinGame = () => {
     <main className={styles.LoginPageContainer}>
       <article className={styles.formContainer}>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <div className={styles.form}>
+          <div className={styles.formInner}>
             {isLoggedIn && !isLoading && (
               <label>
                 Favorite Deck
@@ -123,6 +125,15 @@ const JoinGame = () => {
                 />
               </label>
             )}
+            <ErrorMessage
+              errors={errors}
+              name="favoriteDecks"
+              render={({ message }) => (
+                <p className={styles.fieldError}>
+                  <FaExclamationCircle /> {message}
+                </p>
+              )}
+            />
             <fieldset>
               <label>
                 Deck Link:
