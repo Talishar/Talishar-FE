@@ -336,6 +336,8 @@ export default function ParseGameState(input: any) {
 
   result.hasPriority = !!input.havePriority;
 
+  result.preventPassPrompt = input.preventPassPrompt;
+
   // playmat
   result.playerOne.Playmat = PLAYMATS[input.MyPlaymat];
   result.playerTwo.Playmat = PLAYMATS[input.TheirPlaymat];

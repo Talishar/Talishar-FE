@@ -108,4 +108,5 @@ export default interface GameState {
   landmark?: Card;
   hasPriority?: boolean;
   isFullRematch?: boolean;
+  preventPassPrompt?: string;
 }
