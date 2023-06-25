@@ -105,7 +105,6 @@ const CreateGame = () => {
           error
         )} Please try again`
       });
-    } finally {
     }
   };
 
