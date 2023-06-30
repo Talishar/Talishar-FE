@@ -22,7 +22,8 @@ export const CountersOverlay = ({
   numDescription,
   facing,
   zone,
-  activeCombatChain
+  activeCombatChain,
+  controller
 }: CountersProp) => {
   const includedCounters = [
     'defence',
@@ -72,7 +73,7 @@ export const CountersOverlay = ({
         ></div>
       )}
       {gem !== 'none' && (
-        <GemSlider gem={gem} cardID={actionDataOverride} zone={zone} />
+        <GemSlider gem={gem} cardID={actionDataOverride} zone={zone} controller={controller} />
       )}
     </div>
   );

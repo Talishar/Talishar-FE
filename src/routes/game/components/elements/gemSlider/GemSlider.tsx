@@ -10,11 +10,13 @@ interface GemSlider {
   gem?: 'none' | 'inactive' | 'active';
   cardID?: string;
   zone?: string;
+  controller?: number;
 }
 
 const GemSlider = (props: GemSlider) => {
   if (props.gem === undefined) return null;
   if (props.gem === 'none') return null;
+
 
   const dispatch = useAppDispatch();
 
@@ -24,7 +26,7 @@ const GemSlider = (props: GemSlider) => {
         button: {
           buttonInput: (!!props.zone ? props.zone + '-' : '') + props.cardID,
           mode: !!props.zone
-            ? PROCESS_INPUT.TOGGLE_PERMANENT_ACTIVE
+            ? (props.controller == 2 ? PROCESS_INPUT.TOGGLE_PERMANENT_ACTIVE : PROCESS_INPUT.TOGGLE_OPPONENT_PERMANENT_ACTIVE)
             : PROCESS_INPUT.TOGGLE_EQUIPMENT_ACTIVE
         }
       })
