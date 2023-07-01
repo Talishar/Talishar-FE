@@ -1,10 +1,9 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Deck from './components/deck/Deck';
 import LobbyChat from './components/lobbyChat/LobbyChat';
 import testData from './mockdata.json';
 import styles from './Lobby.module.css';
 import Equipment from './components/equipment/Equipment';
-import { useState } from 'react';
 import classNames from 'classnames';
 import { FaExclamationCircle } from 'react-icons/fa';
 import { Form, Formik } from 'formik';
@@ -34,16 +33,17 @@ import playerJoined from 'sounds/playerJoinedSound.mp3';
 import { createPortal } from 'react-dom';
 
 const Lobby = () => {
-  const [activeTab, setActiveTab] = useState('equipment');
-  const [unreadChat, setUnreadChat] = useState(false);
+  const [activeTab, setActiveTab] = useState<string>('equipment');
+  const [unreadChat, setUnreadChat] = useState<boolean>(false);
   const [width, height] = useWindowDimensions();
-  const [isWideScreen, setIsWideScreen] = useState(false);
+  const [isWideScreen, setIsWideScreen] = useState<boolean>(false);
   const navigate = useNavigate();
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const { playerID, gameID, authKey } = useAppSelector(
     getGameInfo,
     shallowEqual
   );
+  const [acceptedDisclaimer, setAcceptedDisclaimer] = useState<boolean>(false);
   const gameLobby = useAppSelector(
     (state: RootState) => state.game.gameLobby,
     shallowEqual
@@ -198,8 +198,45 @@ const Lobby = () => {
 
   const mainClassNames = classNames(styles.lobbyClass);
 
+  const needToDoDisclaimer =
+    !acceptedDisclaimer && data.format === GAME_FORMAT.OPEN_FORMAT;
+
   return (
     <main className={mainClassNames}>
+      {needToDoDisclaimer &&
+        createPortal(
+          <>
+            <dialog open={needToDoDisclaimer} className={styles.modal}>
+              <article>
+                <header style={{ marginBottom: '1em' }}>
+                  Open Format Disclaimer:
+                </header>
+                <p style={{ marginBottom: '1em' }}>
+                  Note that new cards are added on a 'best-effort' basis and
+                  there may be more bugs and/or other innacurate card
+                  interactions than usual, since there are no official release
+                  notes from Legend Story Studios yet.
+                </p>
+                <button
+                  onClick={() => {
+                    setAcceptedDisclaimer(true);
+                  }}
+                >
+                  I accept
+                </button>
+                <button
+                  onClick={() => {
+                    navigate('/');
+                  }}
+                  className="outline"
+                >
+                  No Thanks
+                </button>
+              </article>
+            </dialog>
+          </>,
+          document.body
+        )}
       <LobbyUpdateHandler isSubmitting={isSubmitting} />
       <Formik
         initialValues={{
@@ -252,7 +289,7 @@ const Lobby = () => {
                 </div>
               </CardPopUp>
             </div>
-            {gameLobby?.amIChoosingFirstPlayer
+            {gameLobby?.amIChoosingFirstPlayer && !needToDoDisclaimer
               ? createPortal(<ChooseFirstTurn />, document.body)
               : !isWideScreen && (
                   <nav>

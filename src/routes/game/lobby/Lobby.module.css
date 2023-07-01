@@ -95,6 +95,9 @@ nav {
   color: var(--alarm);
 }
 
+.modal {
+}
+
 @media (min-width: 1200px) {
   .lobbyClass {
     position: fixed;
