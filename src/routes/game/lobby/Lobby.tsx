@@ -206,7 +206,7 @@ const Lobby = () => {
       {needToDoDisclaimer &&
         createPortal(
           <>
-            <dialog open={needToDoDisclaimer} className={styles.modal}>
+            <dialog open={needToDoDisclaimer}>
               <article>
                 <header style={{ marginBottom: '1em' }}>
                   Open Format Disclaimer:
