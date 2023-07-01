@@ -7,7 +7,7 @@ import { DEFAULT_SHORTCUTS, PROCESS_INPUT } from 'appConstants';
 import useShortcut from 'hooks/useShortcut';
 import useSound from 'use-sound';
 import passTurnSound from 'sounds/prioritySound.wav';
-import { useCookies } from 'react-cookie';
+import { createPortal } from 'react-dom';
 
 export default function PassTurnDisplay() {
   const canPassPhase = useAppSelector(
@@ -27,7 +27,6 @@ export default function PassTurnDisplay() {
   const preventPassPrompt = useAppSelector(
     (state: RootState) => state.game.preventPassPrompt
   );
-  const [cookies] = useCookies(['experimental']);
 
   const dispatch = useAppDispatch();
 
@@ -47,12 +46,7 @@ export default function PassTurnDisplay() {
   }, [hasPriority]);
 
   const onPassTurn = () => {
-    if (
-      preventPassPrompt &&
-      !showAreYouSureModal &&
-      cookies.experimental === 'true'
-    ) {
-      console.log('are you sure you want to do that');
+    if (preventPassPrompt && !showAreYouSureModal) {
       setShowAreYouSureModal(true);
     } else {
       dispatch(submitButton({ button: { mode: PROCESS_INPUT.PASS } }));
@@ -86,13 +80,19 @@ export default function PassTurnDisplay() {
           <div> PASS </div>
           <div className={styles.subThing}>[spacebar]</div>
         </div>
-        <dialog open={showAreYouSureModal} className={styles.modal}>
-          <article>
-            <header>{preventPassPrompt}</header>
-            <button onClick={clickYes}>YES</button>
-            <button onClick={clickNo}>NO</button>
-          </article>
-        </dialog>
+        {showAreYouSureModal &&
+          createPortal(
+            <>
+              <dialog open={showAreYouSureModal} className={styles.modal}>
+                <article>
+                  <header>{preventPassPrompt}</header>
+                  <button onClick={clickYes}>YES</button>
+                  <button onClick={clickNo}>NO</button>
+                </article>
+              </dialog>
+            </>,
+            document.body
+          )}
       </>
     );
   }
