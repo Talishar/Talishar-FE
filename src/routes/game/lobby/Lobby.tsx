@@ -31,6 +31,7 @@ import CardPopUp from '../components/elements/cardPopUp/CardPopUp';
 import { getGameInfo } from 'features/game/GameSlice';
 import useSound from 'use-sound';
 import playerJoined from 'sounds/playerJoinedSound.mp3';
+import { createPortal } from 'react-dom';
 
 const Lobby = () => {
   const [activeTab, setActiveTab] = useState('equipment');
@@ -115,7 +116,7 @@ const Lobby = () => {
     data = testData;
   }
 
-  if (data === undefined || data === null) {
+  if (data === undefined || data === null || !data.deck) {
     return null;
   }
 
@@ -251,73 +252,71 @@ const Lobby = () => {
                 </div>
               </CardPopUp>
             </div>
-            {gameLobby?.amIChoosingFirstPlayer ? (
-              <ChooseFirstTurn />
-            ) : (
-              !isWideScreen && (
-                <nav>
-                  <ul>
-                    {!isWideScreen && (
-                      <li>
-                        <button
-                          className={leaveClasses}
-                          onClick={handleLeave}
-                          type="button"
-                        >
-                          Leave
-                        </button>
-                      </li>
-                    )}
-                  </ul>
-                  <ul>
-                    {gameLobby?.matchups != undefined &&
-                      gameLobby?.matchups?.length > 0 && (
+            {gameLobby?.amIChoosingFirstPlayer
+              ? createPortal(<ChooseFirstTurn />, document.body)
+              : !isWideScreen && (
+                  <nav>
+                    <ul>
+                      {!isWideScreen && (
                         <li>
                           <button
-                            className={matchupClasses}
-                            onClick={handleMatchupClick}
+                            className={leaveClasses}
+                            onClick={handleLeave}
                             type="button"
                           >
-                            Matchups
+                            Leave
                           </button>
                         </li>
                       )}
-                    <li>
-                      <button
-                        className={eqClasses}
-                        onClick={handleEquipmentClick}
-                        type="button"
-                      >
-                        Equipment
-                      </button>
-                    </li>
-                    <li>
-                      <button
-                        className={deckClasses}
-                        onClick={handleDeckClick}
-                        type="button"
-                      >
-                        Deck
-                      </button>
-                    </li>
-                    <li>
-                      <button
-                        className={chatClasses}
-                        onClick={handleChatClick}
-                        type="button"
-                      >
-                        {unreadChat && (
-                          <>
-                            <FaExclamationCircle />{' '}
-                          </>
+                    </ul>
+                    <ul>
+                      {gameLobby?.matchups != undefined &&
+                        gameLobby?.matchups?.length > 0 && (
+                          <li>
+                            <button
+                              className={matchupClasses}
+                              onClick={handleMatchupClick}
+                              type="button"
+                            >
+                              Matchups
+                            </button>
+                          </li>
                         )}
-                        Chat
-                      </button>
-                    </li>
-                  </ul>
-                </nav>
-              )
-            )}
+                      <li>
+                        <button
+                          className={eqClasses}
+                          onClick={handleEquipmentClick}
+                          type="button"
+                        >
+                          Equipment
+                        </button>
+                      </li>
+                      <li>
+                        <button
+                          className={deckClasses}
+                          onClick={handleDeckClick}
+                          type="button"
+                        >
+                          Deck
+                        </button>
+                      </li>
+                      <li>
+                        <button
+                          className={chatClasses}
+                          onClick={handleChatClick}
+                          type="button"
+                        >
+                          {unreadChat && (
+                            <>
+                              <FaExclamationCircle />{' '}
+                            </>
+                          )}
+                          Chat
+                        </button>
+                      </li>
+                    </ul>
+                  </nav>
+                )}
             {isWideScreen ? (
               <div className={styles.deckSelectorContainer}>
                 <nav className={styles.inLineNav}>
