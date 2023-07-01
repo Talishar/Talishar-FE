@@ -1,0 +1,106 @@
+.widgetContainer {
+  top: 0px;
+  right: 0px;
+
+  position: relative;
+  width: 14vh;
+  height: 18vh;
+  width: 14dvh;
+  height: 18dvh;
+
+  z-index: 15;
+  user-select: none;
+}
+
+.widgetBackground {
+  background-position: right;
+  background-size: 10vh auto;
+  background-repeat: no-repeat;
+  height: 100%;
+
+  width: 15vh;
+  width: 15dvh;
+
+  position: absolute;
+  right: 0px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-direction: row;
+}
+
+.myTurn {
+  background-image: url('../../../../../img/elements/turnwidget/turnWidget-Green.png');
+}
+
+.ourTurn {
+  background-image: url('../../../../../img/elements/turnwidget/turnWidget-Normal.png');
+}
+
+.widgetLeftCol {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: black;
+  height: 100%;
+  z-index: 11;
+}
+
+.widgetRightCol {
+  width: 10vh;
+  height: 17vh;
+  width: 10dvh;
+  height: 17dvh;
+
+  padding: 1vh 0;
+  padding: 1dvh 0;
+
+  gap: 1vh;
+  gap: 1dvh;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+
+  top: 0px;
+  bottom: 0px;
+  right: 0px;
+  z-index: 10;
+}
+
+@media (orientation: portrait) {
+  .widgetContainer {
+    top: 0px;
+    right: 0px;
+    position: absolute;
+
+    width: 20vw;
+    height: 26vw;
+    width: 20dvw;
+    height: 26dvw;
+
+    user-select: none;
+  }
+
+  .widgetLeftCol {
+    margin-right: 1em;
+  }
+
+  .widgetRightCol {
+    height: 95%;
+    right: 2em;
+    margin-right: 0.5em;
+  }
+
+  .widgetBackground {
+    background-size: 15dvw auto;
+    height: 100%;
+
+    width: 18vw;
+    width: 18dvw;
+
+    right: -1em;
+  }
+}
