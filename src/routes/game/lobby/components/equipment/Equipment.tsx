@@ -22,6 +22,7 @@ const Equipment = ({ lobbyInfo, weapons, weaponSB }: EquipmentProps) => {
   const chest = [...lobbyInfo.deck.chest, ...lobbyInfo.deck.chestSB, 'NONE00'];
   const arms = [...lobbyInfo.deck.arms, ...lobbyInfo.deck.armsSB, 'NONE00'];
   const legs = [...lobbyInfo.deck.legs, ...lobbyInfo.deck.legsSB, 'NONE00'];
+  const demiHero = [...(lobbyInfo.deck.demiHero ?? [])];
   return (
     <div className={styles.container}>
       <div className={styles.eqCategory}>
@@ -151,6 +152,28 @@ const Equipment = ({ lobbyInfo, weapons, weaponSB }: EquipmentProps) => {
           })}
         </div>
       </div>
+      {demiHero.length > 0 && (
+        <div className={styles.eqCategory}>
+          <h3>Demi-Hero</h3>
+          <div className={styles.categoryContainer}>
+            {demiHero.map((card, ix) => {
+              return (
+                <div key={`deck${ix}`} className={styles.cardContainer}>
+                  <label>
+                    <CardPopUp cardNumber={card}>
+                      <CardImage
+                        src={`/cardsquares/${card}.webp`}
+                        draggable={false}
+                        className={styles.card}
+                      />
+                    </CardPopUp>
+                  </label>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
       <div className={styles.spacerDiv}></div>
     </div>
   );

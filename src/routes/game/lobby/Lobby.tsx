@@ -84,34 +84,6 @@ const Lobby = () => {
 
   const handleMatchupClick = () => setActiveTab('matchups');
 
-  const handleFormSubmission = async (values: DeckResponse) => {
-    setIsSubmitting(true);
-    // encode it as an object
-    const deck = {
-      hero: data?.deck.hero,
-      hands: values.weapons.map((item) => item.id.substring(0, 6)),
-      head: values.head,
-      chest: values.chest,
-      arms: values.arms,
-      legs: values.legs,
-      deck: values.deck.map((card) => card.substring(0, 6))
-    };
-    const requestBody: SubmitSideboardAPI = {
-      gameName: gameID,
-      playerID: playerID,
-      authKey: authKey,
-      submission: JSON.stringify(deck) // the API unmarshals the JSON inside the unmarshaled JSON.
-    };
-
-    try {
-      const data: any = await submitSideboardMutation(requestBody).unwrap();
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
   if (data === undefined || data === null || Object.keys(data).length === 0) {
     data = testData;
   }
@@ -200,6 +172,58 @@ const Lobby = () => {
 
   const needToDoDisclaimer =
     !acceptedDisclaimer && data.format === GAME_FORMAT.OPEN_FORMAT;
+
+  const handleFormSubmission = async (values: DeckResponse) => {
+    setIsSubmitting(true);
+
+    const hands = values.weapons.map((item) => item.id.substring(0, 6));
+    const deck = values.deck.map((card) => card.substring(0, 6));
+    const inventory = [
+      ...weaponsIndexed
+        .concat(weaponsSBIndexed)
+        .map((item) => item.id.substring(0, 6))
+        .filter((item) => !hands.includes(item) && item !== 'NONE00'),
+      ...(data?.deck?.head ?? [])
+        .concat(data?.deck?.headSB ?? [])
+        .filter((item) => !values.head.includes(item) && item !== 'NONE00'),
+      ...(data?.deck?.chest ?? [])
+        .concat(data?.deck?.chestSB ?? [])
+        .filter((item) => !values.chest.includes(item) && item !== 'NONE00'),
+      ...(data?.deck?.arms ?? [])
+        .concat(data?.deck?.armsSB ?? [])
+        .filter((item) => !values.arms.includes(item) && item !== 'NONE00'),
+      ...(data?.deck?.legs ?? [])
+        .concat(data?.deck?.legsSB ?? [])
+        .filter((item) => !values.legs.includes(item) && item !== 'NONE00'),
+      ...(data?.deck?.demiHero ?? [])
+    ];
+
+    // encode it as an object
+    const submitDeck = {
+      hero: data?.deck.hero,
+      hands,
+      head: values.head,
+      chest: values.chest,
+      arms: values.arms,
+      legs: values.legs,
+      deck,
+      inventory
+    };
+    const requestBody: SubmitSideboardAPI = {
+      gameName: gameID,
+      playerID: playerID,
+      authKey: authKey,
+      submission: JSON.stringify(submitDeck) // the API unmarshals the JSON inside the unmarshaled JSON.
+    };
+
+    try {
+      const data: any = await submitSideboardMutation(requestBody).unwrap();
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <main className={mainClassNames}>

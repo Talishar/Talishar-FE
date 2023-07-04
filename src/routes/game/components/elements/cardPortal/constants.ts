@@ -32,5 +32,6 @@ export const doubleFacedCardsMappings: { [key: string]: string } = {
   DTD011: 'DTD411',
   DTD012: 'DTD412',
   DTD164: 'DTD564',
+  DTD564: 'DTD164',
   DYN092: 'DYN492'
 };
