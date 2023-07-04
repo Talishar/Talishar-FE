@@ -32,3 +32,22 @@
   width: 2rem;
   height: 1.65rem !important;
 }
+
+.quickChatButton {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1em;
+}
+
+.quickChatButton button {
+  font-size: 0.8em;
+  padding: 0;
+  margin: 0;
+}
+
+.popOver {
+  background-color: var(--near-black);
+  border: 1px solid var(--primary);
+  color: white;
+  padding: 5px;
+}
