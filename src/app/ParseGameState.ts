@@ -90,7 +90,8 @@ export default function ParseGameState(input: any) {
     gameInfo: { gameID: 0, playerID: 0, authKey: '', isPrivate: false },
     gameDynamicInfo: {},
     playerOne: {},
-    playerTwo: {}
+    playerTwo: {},
+    chatEnabled: false
   };
 
   if (input.errorMessage) {
@@ -341,6 +342,8 @@ export default function ParseGameState(input: any) {
   // playmat
   result.playerOne.Playmat = PLAYMATS[input.MyPlaymat];
   result.playerTwo.Playmat = PLAYMATS[input.TheirPlaymat];
+
+  result.chatEnabled = input.chatEnabled ?? false;
 
   return result;
 }

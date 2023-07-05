@@ -109,4 +109,5 @@ export default interface GameState {
   hasPriority?: boolean;
   isFullRematch?: boolean;
   preventPassPrompt?: string;
+  chatEnabled: boolean;
 }

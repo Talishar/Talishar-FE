@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { useAppSelector } from 'app/Hooks';
+import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { useSubmitChatMutation } from 'features/api/apiSlice';
 import styles from './ChatInput.module.css';
 import { GiChatBubble } from 'react-icons/gi';
 import classNames from 'classnames';
 import { shallowEqual } from 'react-redux';
-import { getGameInfo } from 'features/game/GameSlice';
+import { getGameInfo, submitButton } from 'features/game/GameSlice';
 import {
   useFloating,
   autoUpdate,
@@ -19,6 +19,8 @@ import {
   FloatingFocusManager
 } from '@floating-ui/react';
 import { createPortal } from 'react-dom';
+import { PROCESS_INPUT } from 'appConstants';
+import { useCookies } from 'react-cookie';
 
 const submitButtonClass = classNames('secondary', styles.buttonDiv);
 
@@ -35,10 +37,6 @@ const CHAT_WHEEL = new Map<number, string>([
   [9, 'Good game!']
 ]);
 
-interface ChatWheelProps {
-  setChatEnabled: (arg0: boolean) => void;
-}
-
 interface ChatOptionsProps {
   setModalDisplay: (arg0: boolean) => void;
 }
@@ -48,9 +46,13 @@ export const ChatInput = () => {
     getGameInfo,
     shallowEqual
   );
+  // hardcode it to be true
+  // const chatEnabled = useAppSelector((state) => state.game.chatEnabled);
+  const chatEnabledState = useAppSelector((state) => state.game.chatEnabled);
+  const [cookies] = useCookies(['experimental']);
+  const chatEnabled = !cookies.experimental;
   const [chatInput, setChatInput] = useState('');
   const [submitChat, submitChatResult] = useSubmitChatMutation();
-  const [chatEnabled, setChatEnabled] = useState<boolean>(false);
 
   if (playerID === 3) {
     return null;
@@ -106,15 +108,16 @@ export const ChatInput = () => {
       </div>
     );
   }
-  return <ChatWheel setChatEnabled={setChatEnabled} />;
+  return <ChatWheel />;
 };
 
-const ChatWheel = ({ setChatEnabled }: ChatWheelProps) => {
+const ChatWheel = () => {
   const { playerID, gameID, authKey } = useAppSelector(
     getGameInfo,
     shallowEqual
   );
   const [modalDisplay, setModalDisplay] = useState<boolean>(false);
+  const dispatch = useAppDispatch();
   const { refs, floatingStyles, context } = useFloating({
     placement: 'left',
     open: modalDisplay,
@@ -145,11 +148,11 @@ const ChatWheel = ({ setChatEnabled }: ChatWheelProps) => {
         </button>
         <button
           onClick={(e) => {
-            // TODO: Submit a request to chat.
             e.preventDefault();
-            setChatEnabled(true);
+            dispatch(
+              submitButton({ button: { mode: PROCESS_INPUT.ENABLE_CHAT } })
+            );
           }}
-          disabled
         >
           Invite to Chat (coming soon)
         </button>
