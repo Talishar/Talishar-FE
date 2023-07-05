@@ -48,9 +48,7 @@ export const ChatInput = () => {
   );
   // hardcode it to be true
   // const chatEnabled = useAppSelector((state) => state.game.chatEnabled);
-  const chatEnabledState = useAppSelector((state) => state.game.chatEnabled);
-  const [cookies] = useCookies(['experimental']);
-  const chatEnabled = !cookies.experimental;
+  const chatEnabled = useAppSelector((state) => state.game.chatEnabled);
   const [chatInput, setChatInput] = useState('');
   const [submitChat, submitChatResult] = useSubmitChatMutation();
 
