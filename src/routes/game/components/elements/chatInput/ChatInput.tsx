@@ -18,8 +18,30 @@ import {
   useInteractions,
   FloatingFocusManager
 } from '@floating-ui/react';
+import { createPortal } from 'react-dom';
 
 const submitButtonClass = classNames('secondary', styles.buttonDiv);
+
+const CHAT_WHEEL = new Map<number, string>([
+  [1, 'Hello'],
+  [10, 'Good luck, have fun'],
+  [2, 'Want to Chat?'],
+  [3, 'Mind if I undo?'],
+  [4, 'Do you want to undo?'],
+  [5, 'Yes'],
+  [6, 'No'],
+  [7, 'Thanks!'],
+  [8, 'Thinking... Please bear with me!'],
+  [9, 'Good game!']
+]);
+
+interface ChatWheelProps {
+  setChatEnabled: (arg0: boolean) => void;
+}
+
+interface ChatOptionsProps {
+  setModalDisplay: (arg0: boolean) => void;
+}
 
 export const ChatInput = () => {
   const { playerID, gameID, authKey } = useAppSelector(
@@ -87,10 +109,6 @@ export const ChatInput = () => {
   return <ChatWheel setChatEnabled={setChatEnabled} />;
 };
 
-interface ChatWheelProps {
-  setChatEnabled: (boolean) => void;
-}
-
 const ChatWheel = ({ setChatEnabled }: ChatWheelProps) => {
   const { playerID, gameID, authKey } = useAppSelector(
     getGameInfo,
@@ -98,9 +116,10 @@ const ChatWheel = ({ setChatEnabled }: ChatWheelProps) => {
   );
   const [modalDisplay, setModalDisplay] = useState<boolean>(false);
   const { refs, floatingStyles, context } = useFloating({
+    placement: 'left',
     open: modalDisplay,
     onOpenChange: setModalDisplay,
-    middleware: [offset(10), flip(), shift()],
+    middleware: [offset(20), flip(), shift()],
     whileElementsMounted: autoUpdate
   });
 
@@ -118,42 +137,74 @@ const ChatWheel = ({ setChatEnabled }: ChatWheelProps) => {
   return (
     <>
       <div className={styles.quickChatButton}>
-        <button ref={refs.setReference} {...getReferenceProps()}>
+        <button
+          ref={refs.setReference}
+          {...getReferenceProps({ onClick: (e) => e.preventDefault() })}
+        >
           Send a Message
         </button>
         <button
           onClick={(e) => {
+            // TODO: Submit a request to chat.
             e.preventDefault();
             setChatEnabled(true);
           }}
+          disabled
         >
-          Invite to Chat
+          Invite to Chat (coming soon)
         </button>
       </div>
-      {modalDisplay && (
-        <FloatingFocusManager context={context} modal={false}>
-          <div
-            ref={refs.setFloating}
-            style={floatingStyles}
-            className={styles.popOver}
-            {...getFloatingProps()}
-          >
-            <ChatOptions />
-          </div>
-        </FloatingFocusManager>
-      )}
+      {modalDisplay &&
+        createPortal(
+          <FloatingFocusManager context={context} modal={false}>
+            <div
+              ref={refs.setFloating}
+              style={floatingStyles}
+              className={styles.popOver}
+              {...getFloatingProps()}
+            >
+              <ChatOptions setModalDisplay={setModalDisplay} />
+            </div>
+          </FloatingFocusManager>,
+          document.body
+        )}
     </>
   );
 };
 
-const ChatOptions = () => {
+const ChatOptions = ({ setModalDisplay }: ChatOptionsProps) => {
+  const [submitChat, submitChatResult] = useSubmitChatMutation();
+  const { playerID, gameID, authKey } = useAppSelector(
+    getGameInfo,
+    shallowEqual
+  );
+  const elements = [] as React.ReactNode[];
+
+  CHAT_WHEEL.forEach((value, key) =>
+    elements.push(
+      <button
+        key={`quickChat${key}`}
+        onClick={(e) => {
+          e.preventDefault();
+          submitChat({
+            playerID,
+            gameID,
+            authKey,
+            quickChat: key
+          });
+          setModalDisplay(false);
+        }}
+      >
+        {value}
+      </button>
+    )
+  );
+
   return (
-    <div>
-      <button>Hello</button>
-      <button>Can I undo</button>
-      <button>You suck</button>
-      <button>I suck</button>
-    </div>
+    <>
+      <h4 className={styles.quickChatHeader}>Quick Chat</h4>
+      {elements.map((item) => item)}
+    </>
   );
 };
 
