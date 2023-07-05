@@ -12,7 +12,8 @@ const InitialGameState: GameState = {
   playerTwo: {},
   isUpdateInProgress: false,
   optionsMenu: { active: false },
-  showModals: true
+  showModals: true,
+  chatEnabled: false
 };
 
 export const OfflineTestingGameState: GameState = {
@@ -22,6 +23,7 @@ export const OfflineTestingGameState: GameState = {
     authKey: '',
     isPrivate: false
   },
+  chatEnabled: false,
   gameDynamicInfo: { lastUpdate: 0 },
   amIActivePlayer: false,
   oldCombatChain: [
