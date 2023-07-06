@@ -149,9 +149,8 @@ const ChatWheel = () => {
               submitButton({ button: { mode: PROCESS_INPUT.ENABLE_CHAT } })
             );
           }}
-          disabled
         >
-          Invite to Chat (coming soon)
+          Invite to Chat
         </button>
       </div>
       {modalDisplay &&
