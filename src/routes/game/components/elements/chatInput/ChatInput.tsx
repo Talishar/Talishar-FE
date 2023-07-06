@@ -20,7 +20,6 @@ import {
 } from '@floating-ui/react';
 import { createPortal } from 'react-dom';
 import { PROCESS_INPUT } from 'appConstants';
-import { useCookies } from 'react-cookie';
 
 const submitButtonClass = classNames('secondary', styles.buttonDiv);
 
@@ -46,11 +45,8 @@ export const ChatInput = () => {
     getGameInfo,
     shallowEqual
   );
-  // hardcode it to be true
-  // const chatEnabled = useAppSelector((state) => state.game.chatEnabled);
-  const chatEnabledState = useAppSelector((state) => state.game.chatEnabled);
-  const [cookies] = useCookies(['experimental']);
-  const chatEnabled = !cookies.experimental;
+  const chatEnabled = useAppSelector((state) => state.game.chatEnabled);
+
   const [chatInput, setChatInput] = useState('');
   const [submitChat, submitChatResult] = useSubmitChatMutation();
 
