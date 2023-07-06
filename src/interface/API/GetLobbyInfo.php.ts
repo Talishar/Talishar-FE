@@ -25,6 +25,7 @@ export interface Deck {
   quiver?: Weapon[];
   quiverSB?: Weapon[];
   handsSB: Weapon[];
+  demiHero?: string[];
 }
 
 export interface Weapon {
@@ -52,4 +53,5 @@ export interface DeckResponse {
   chest: string;
   arms: string;
   legs: string;
+  inventory?: string[];
 }

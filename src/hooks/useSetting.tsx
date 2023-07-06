@@ -6,7 +6,7 @@ import {
   getSettingsStatus,
   settingsSelectors
 } from 'features/options/optionsSlice';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { shallowEqual } from 'react-redux';
 
 export default function useSetting({ settingName }: { settingName: string }) {
@@ -15,8 +15,9 @@ export default function useSetting({ settingName }: { settingName: string }) {
   const settingsLoaded = useAppSelector(getSettingsStatus);
   useEffect(() => {
     if (gameInfo.gameID) {
-      if (settingsLoaded === QUERY_STATUS.IDLE)
+      if (settingsLoaded === QUERY_STATUS.IDLE) {
         dispatch(fetchAllSettings({ game: gameInfo }));
+      }
     }
   }, [settingsLoaded, gameInfo.gameID]);
 

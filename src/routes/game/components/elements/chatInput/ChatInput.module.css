@@ -32,3 +32,39 @@
   width: 2rem;
   height: 1.65rem !important;
 }
+
+.quickChatButton {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1em;
+}
+
+.quickChatButton button {
+  font-size: 0.8em;
+  padding: 0;
+  margin: 0;
+}
+
+.popOver {
+  background-color: var(--near-black);
+  border: 1px solid var(--primary);
+  color: white;
+  padding: 10px;
+  z-index: 1000;
+  overflow-y: auto;
+  max-height: 95vh;
+  max-height: 95dvh;
+  max-width: 50vw;
+  max-width: 50dvw;
+}
+
+.popOver button:last-child {
+  margin-bottom: 0;
+}
+
+.quickChatHeader {
+  text-align: center;
+  width: 100%;
+  display: block;
+  margin: 0 auto 5px auto;
+}
