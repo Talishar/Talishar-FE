@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
-import { useSubmitChatMutation } from 'features/api/apiSlice';
+import {
+  useChooseFirstPlayerMutation,
+  useSubmitChatMutation
+} from 'features/api/apiSlice';
 import styles from './ChatInput.module.css';
 import { GiChatBubble } from 'react-icons/gi';
 import classNames from 'classnames';
@@ -20,6 +23,8 @@ import {
 } from '@floating-ui/react';
 import { createPortal } from 'react-dom';
 import { PROCESS_INPUT } from 'appConstants';
+import { useLocation } from 'react-router-dom';
+import { toast } from 'react-hot-toast';
 
 const submitButtonClass = classNames('secondary', styles.buttonDiv);
 
@@ -113,6 +118,8 @@ const ChatWheel = () => {
     shallowEqual
   );
   const [modalDisplay, setModalDisplay] = useState<boolean>(false);
+  const [chooseFirstPlayer, chooseFirstPlayerData] =
+    useChooseFirstPlayerMutation();
   const dispatch = useAppDispatch();
   const { refs, floatingStyles, context } = useFloating({
     placement: 'left',
@@ -121,6 +128,8 @@ const ChatWheel = () => {
     middleware: [offset(20), flip(), shift()],
     whileElementsMounted: autoUpdate
   });
+  const location = useLocation();
+  const [sentChatRequest, setSentChatRequest] = useState<boolean>(false);
 
   const click = useClick(context);
   const dismiss = useDismiss(context);
@@ -132,6 +141,27 @@ const ChatWheel = () => {
     dismiss,
     role
   ]);
+
+  const submitChatRequest = async () => {
+    if (location.pathname.includes('/lobby/')) {
+      try {
+        await chooseFirstPlayer({
+          gameName: gameID,
+          playerID: playerID,
+          authKey: authKey,
+          action: 'Request Chat'
+        });
+        setSentChatRequest(true);
+      } catch (err) {
+        console.warn(err);
+        toast.error('There has been an error!');
+      }
+    } else {
+      dispatch(
+        submitButton({ button: { mode: PROCESS_INPUT.ENABLE_CHAT } })
+      ).then(() => setSentChatRequest(true));
+    }
+  };
 
   return (
     <>
@@ -145,10 +175,9 @@ const ChatWheel = () => {
         <button
           onClick={(e) => {
             e.preventDefault();
-            dispatch(
-              submitButton({ button: { mode: PROCESS_INPUT.ENABLE_CHAT } })
-            );
+            submitChatRequest();
           }}
+          disabled={sentChatRequest}
         >
           Invite to Chat
         </button>
