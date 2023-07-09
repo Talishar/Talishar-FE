@@ -507,6 +507,8 @@ export const gameSlice = createSlice({
       // set isFullRematch to false
       state.isFullRematch = false;
 
+      state.chatEnabled = action.payload.chatEnabled ?? false;
+
       return state;
     });
     builder.addCase(gameLobby.pending, (state, action) => {
