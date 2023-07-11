@@ -19,7 +19,8 @@ import {
   useDismiss,
   useRole,
   useInteractions,
-  FloatingFocusManager
+  FloatingFocusManager,
+  FloatingOverlay
 } from '@floating-ui/react';
 import { createPortal } from 'react-dom';
 import { PROCESS_INPUT } from 'appConstants';
@@ -184,16 +185,18 @@ const ChatWheel = () => {
       </div>
       {modalDisplay &&
         createPortal(
-          <FloatingFocusManager context={context} modal={false}>
-            <div
-              ref={refs.setFloating}
-              style={floatingStyles}
-              className={styles.popOver}
-              {...getFloatingProps()}
-            >
-              <ChatOptions setModalDisplay={setModalDisplay} />
-            </div>
-          </FloatingFocusManager>,
+          <FloatingOverlay lockScroll>
+            <FloatingFocusManager context={context} modal={false}>
+              <div
+                ref={refs.setFloating}
+                style={floatingStyles}
+                className={styles.popOver}
+                {...getFloatingProps()}
+              >
+                <ChatOptions setModalDisplay={setModalDisplay} />
+              </div>
+            </FloatingFocusManager>
+          </FloatingOverlay>,
           document.body
         )}
     </>
