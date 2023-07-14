@@ -5,10 +5,7 @@ const News = () => {
   return (
     <div>
       <hgroup>
-        <h1>Looking for DTD spoilers? Read up!</h1>
-        <h2>DTD Spoilers are limited to "Open Format"</h2>
-        <h2>Stats are not reported for DTD heroes until release</h2>
-        <h2>We're trying out less automation for this set, so pay attention to card effects!</h2>
+        <h1>DTD Cards now live in normal queue!</h1>
       </hgroup>
       <p>Please join our community:</p>
       <ul>
