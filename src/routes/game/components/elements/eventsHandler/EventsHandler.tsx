@@ -17,13 +17,33 @@ import CardDisplay from '../cardDisplay/CardDisplay';
 import CardImage from '../cardImage/CardImage';
 import styles from './EventsHandler.module.css';
 import { setupListeners } from '@reduxjs/toolkit/dist/query';
-import { ReactNode } from 'react';
+import { ReactNode, useState } from 'react';
+import { createPortal } from 'react-dom';
+import { getGameInfo } from 'features/game/GameSlice';
+import { PROCESS_INPUT } from 'appConstants';
+import { submitButton } from 'features/game/GameSlice';
 
 export const EventsHandler = React.memo(() => {
   const events = useAppSelector(
     (state: RootState) => state.game.events,
     shallowEqual
   );
+
+  const [showModal, setShowModal] = useState(false);
+  const [modal, setModal] = useState("");
+  const { playerID } = useAppSelector(getGameInfo, shallowEqual);
+  const dispatch = useAppDispatch();
+
+  const clickYes = (e: any) => {
+    e.preventDefault();
+    setShowModal(false);
+    dispatch(submitButton({ button: { mode: PROCESS_INPUT.ENABLE_CHAT } }));
+  };
+
+  const clickNo = (e: any) => {
+    e.preventDefault();
+    setShowModal(false);
+  };
 
   useEffect(() => {
     if (events) {
@@ -81,6 +101,13 @@ export const EventsHandler = React.memo(() => {
               </div>
             ));
             continue;
+          case 'REQUESTCHAT':
+            if(event.eventValue != playerID)
+            {
+              setShowModal(true);
+              setModal("Do you want to enable chat?");
+            }
+            continue;
           default:
             continue;
         }
@@ -88,6 +115,16 @@ export const EventsHandler = React.memo(() => {
     }
   }, [events]);
 
+  if(showModal) return (<>{createPortal(
+              <>
+                <dialog open className={styles.modal}>
+                  <article>
+                    <header>{modal}</header>
+                    <button onClick={clickYes}>YES</button>
+                    <button onClick={clickNo}>NO</button>
+                  </article>
+                </dialog>
+              </>, document.body)}</>);
   return null;
 });
 

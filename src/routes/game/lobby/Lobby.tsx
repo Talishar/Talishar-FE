@@ -170,8 +170,8 @@ const Lobby = () => {
 
   const mainClassNames = classNames(styles.lobbyClass);
 
-  const needToDoDisclaimer =
-    !acceptedDisclaimer && data.format === GAME_FORMAT.OPEN_FORMAT;
+  //const needToDoDisclaimer = !acceptedDisclaimer && data.format === GAME_FORMAT.OPEN_FORMAT;
+  const needToDoDisclaimer = false;
 
   const handleFormSubmission = async (values: DeckResponse) => {
     setIsSubmitting(true);
