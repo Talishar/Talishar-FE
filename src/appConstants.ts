@@ -157,7 +157,8 @@ export const URL_END_POINT = {
   GET_COSMETICS: `APIs/GetCosmetics.php`,
   DELETE_DECK: `APIs/DeleteDeckAPI.php`,
   PATREON_LOGIN: `AccountFiles/PatreonLoginAPI.php`,
-  LOAD_BUG_REPORT: `LoadBugReport.php`
+  LOAD_BUG_REPORT: `LoadBugReport.php`,
+  SUBMIT_LOBBY_INPUT: 'APIs/SubmitLobbyInput.php'
 };
 
 export const GAME_VISIBILITY = {

@@ -26,6 +26,7 @@ import {
   GetLobbyInfo,
   GetLobbyInfoResponse
 } from 'interface/API/GetLobbyInfo.php';
+import { SubmitLobbyInput } from 'interface/API/SubmitLobbyInput.php';
 import { ChooseFirstPlayer } from 'interface/API/ChooseFirstPlayer.php';
 import { SubmitSideboardAPI } from 'interface/API/SubmitSideboard.php';
 import { GetFavoriteDecksResponse } from 'interface/API/GetFavoriteDecks.php';
@@ -314,6 +315,16 @@ export const apiSlice = createApi({
         };
       }
     }),
+    submitLobbyInput: builder.mutation({
+      query: ({ ...body }: SubmitLobbyInput) => {
+        return {
+          url: URL_END_POINT.SUBMIT_LOBBY_INPUT,
+          method: 'POST',
+          body: body,
+          responseHandler: parseResponse
+        };
+      }
+    }),
     submitSideboard: builder.mutation({
       query: ({ ...body }: SubmitSideboardAPI) => {
         return {
@@ -378,5 +389,6 @@ export const {
   useSubmitSideboardMutation,
   useSubmitPatreonLoginMutation,
   useLoadDebugGameMutation,
-  useGetUserProfileQuery
+  useGetUserProfileQuery,
+  useSubmitLobbyInputMutation
 } = apiSlice;
