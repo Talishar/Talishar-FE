@@ -103,7 +103,7 @@ export const ChatInput = () => {
               }
             }}
             placeholder={
-              playerID === 3 ? 'Chat Disabled' : 'Hit return to send.'
+              playerID === 3 ? 'Chat Disabled' : 'Hit return to send'
             }
             disabled={playerID === 3}
           />
