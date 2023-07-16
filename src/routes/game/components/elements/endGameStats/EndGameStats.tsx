@@ -98,20 +98,19 @@ const EndGameStats = (data: EndGameData) => {
             <em>First turn omitted for first player</em>
             <br /> Total Damage Threatened: {data.totalDamageThreatened}
             <br />
-            Total Damage Dealt: {data.totalDamageDealt} <br />
+            Total Damage Dealt: {data.totalDamageDealt}
+            <br />
             Average Damage Threatened per turn:{' '}
-            {data.averageDamageThreatenedPerTurn} <br />
-            Average Damage Dealt per turn: {data.averageDamageDealtPerTurn}{' '}
+            {data.averageDamageThreatenedPerTurn}
+            <br />
+            Average Damage Dealt per turn: {data.averageDamageDealtPerTurn}
             <br />
             Average damage threatened per offensive card:{' '}
-            {data.averageDamageThreatenedPerCard} <br />
-            Average Resources Used per turn: {
-              data.averageResourcesUsedPerTurn
-            }{' '}
+            {data.averageDamageThreatenedPerCard}
             <br />
-            Average Cards Left Over per turn: {
-              data.averageCardsLeftOverPerTurn
-            }{' '}
+            Average Resources Used per turn: {data.averageResourcesUsedPerTurn}
+            <br />
+            Average Cards Left Over per turn: {data.averageCardsLeftOverPerTurn}
             <br />
             Average Value per turn (Damage threatened + block):{' '}
             {data.averageValuePerTurn}
