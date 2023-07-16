@@ -66,7 +66,7 @@ const StickyFooter = ({
             data-tooltip="Once you submit you can't change cards!"
             data-placement="left"
           >
-            Submit deck
+            Submit Deck
           </button>
           {isWidescreen && (
             <button className={leaveLobby} onClick={handleLeave}>
