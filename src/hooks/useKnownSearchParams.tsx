@@ -1,7 +1,7 @@
 import { useSearchParams } from 'react-router-dom';
 
 const knownSearchParams = ['gameName', 'playerID', 'authKey'] as const;
-type KnownSearchParamKeys = typeof knownSearchParams[number];
+type KnownSearchParamKeys = (typeof knownSearchParams)[number];
 type KnownSearchParams = Record<KnownSearchParamKeys, string>;
 type SetKnownSearchParams = (key: KnownSearchParamKeys, value: string) => void;
 

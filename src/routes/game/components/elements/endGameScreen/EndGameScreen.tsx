@@ -7,8 +7,8 @@ import { getGameInfo } from 'features/game/GameSlice';
 import EndGameStats, { EndGameData } from '../endGameStats/EndGameStats';
 import { shallowEqual } from 'react-redux';
 import useShowModal from 'hooks/useShowModals';
-import { FaEye, FaEyeSlash } from "react-icons/fa";
-import classNames from "classnames";
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import classNames from 'classnames';
 
 const EndGameScreen = () => {
   const gameInfo = useAppSelector(getGameInfo, shallowEqual);
@@ -23,7 +23,7 @@ const EndGameScreen = () => {
   const showModal = useShowModal();
   const cardListBoxClasses = classNames(styles.cardListBox, {
     [styles.reduced]: !showStats
-  })
+  });
 
   if (!showModal) return null;
 
@@ -43,7 +43,7 @@ const EndGameScreen = () => {
 
   const toggleShowStats = () => {
     setShowStats(!showStats);
-  }
+  };
 
   return (
     <div className={cardListBoxClasses}>
@@ -55,7 +55,11 @@ const EndGameScreen = () => {
               Switch player stats
             </div>
             <div className={styles.buttonDiv} onClick={toggleShowStats}>
-              {showStats ? <FaEye aria-hidden="true" fontSize={'2em'} /> : <FaEyeSlash aria-hidden="true" fontSize={'2em'} />}
+              {showStats ? (
+                <FaEye aria-hidden="true" fontSize={'2em'} />
+              ) : (
+                <FaEyeSlash aria-hidden="true" fontSize={'2em'} />
+              )}
             </div>
           </div>
         </div>

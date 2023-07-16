@@ -8,6 +8,7 @@
   flex-wrap: nowrap;
   justify-content: center;
   align-items: center;
+  gap: 5px;
 }
 
 .handZone div {
@@ -21,4 +22,7 @@
 
 .isOpponent {
   align-self: flex-end;
+  top: 3vh;
+  top: 3dvh;
+  z-index: 20;
 }
