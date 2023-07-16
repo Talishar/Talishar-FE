@@ -141,24 +141,18 @@ exports[`passes a snapshot test 1`] = `
          Total Damage Threatened: 
         <br />
         Total Damage Dealt: 
-         
         <br />
         Average Damage Threatened per turn:
          
-         
         <br />
         Average Damage Dealt per turn: 
-         
         <br />
         Average damage threatened per offensive card:
          
-         
         <br />
         Average Resources Used per turn: 
-         
         <br />
         Average Cards Left Over per turn: 
-         
         <br />
         Average Value per turn (Damage threatened + block):
          
