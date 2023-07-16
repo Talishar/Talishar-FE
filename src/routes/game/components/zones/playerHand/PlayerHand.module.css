@@ -1,15 +1,17 @@
 .handRow {
   position: fixed;
   min-width: 10%;
-  max-width: 50%;
-  max-height: 1vh;
-  bottom: 2vh;
+  max-width: 70%;
+  max-height: 3vh;
+  bottom: 5vh;
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
   justify-content: center;
+  justify-items: center;
+  align-content: center;
   align-items: center;
-  gap: 1vh;
+  gap: 18vh;
   user-select: none;
   z-index: 15;
   isolation: isolate;
@@ -20,6 +22,8 @@
     justify-content: space-around;
     max-width: 100%;
     width: 100%;
+    gap: 0;
+    bottom: 2vh;
   }
 }
 
