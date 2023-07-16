@@ -11,7 +11,7 @@ import {
   GiCardRandom,
   GiTreasureMap,
   RiLogoutBoxRLine
-} from "react-icons/all";
+} from 'react-icons/all';
 
 const Header = () => {
   const { isLoggedIn, logOut } = useAuth();
@@ -27,23 +27,41 @@ const Header = () => {
         <ul>
           <li>
             <Link to="/" className={styles.logo}>
-              <img src={TalisharLogo} alt={"Logo Talishar - link to homepage"} />
+              <img
+                src={TalisharLogo}
+                alt={'Logo Talishar - link to homepage'}
+              />
             </Link>
           </li>
         </ul>
         <ul>
           <li>
-            <a href="https://github.com/Talishar/Talishar" target={"_blank"} className={styles.social} title={"Github Link"}>
+            <a
+              href="https://github.com/Talishar/Talishar"
+              target={'_blank'}
+              className={styles.social}
+              title={'Github Link'}
+            >
               <BsGithub></BsGithub>
             </a>
           </li>
           <li>
-            <a href="https://discord.gg/JykuRkdd5S" target={"_blank"} className={styles.social} title={"Discord Link"}>
+            <a
+              href="https://discord.gg/JykuRkdd5S"
+              target={'_blank'}
+              className={styles.social}
+              title={'Discord Link'}
+            >
               <FaDiscord></FaDiscord>
             </a>
           </li>
           <li>
-            <a href="https://twitter.com/talishar_online" target={"_blank"} className={styles.social} title={"Twitter Link"}>
+            <a
+              href="https://twitter.com/talishar_online"
+              target={'_blank'}
+              className={styles.social}
+              title={'Twitter Link'}
+            >
               <FaTwitter></FaTwitter>
             </a>
           </li>
@@ -59,9 +77,13 @@ const Header = () => {
           </li>
           <li>
             {isLoggedIn ? (
-              <Link to="/user"><BsPersonFill></BsPersonFill> <span>Profile</span></Link>
+              <Link to="/user">
+                <BsPersonFill></BsPersonFill> <span>Profile</span>
+              </Link>
             ) : (
-              <Link to="/user/login" className={styles.login}><button>Login</button></Link>
+              <Link to="/user/login" className={styles.login}>
+                <button>Login</button>
+              </Link>
             )}
           </li>
           {isLoggedIn && (

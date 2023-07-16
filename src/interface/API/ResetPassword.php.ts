@@ -1,4 +1,3 @@
-
 export interface ResetPassword {
   selector: string;
   validator: string;

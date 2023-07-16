@@ -9,6 +9,8 @@
   gap: 1vh;
   overflow-y: auto;
   height: auto;
+  --spacing: 0.25rem;
+  --font-size: 0.85rem;
 }
 
 .cardTable {
@@ -30,4 +32,15 @@
 
 .threePitch {
   color: aqua;
+}
+
+.twoColumn {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  gap: 25px;
+}
+
+.twoColumn h2 {
+  margin-bottom: 5px;
 }

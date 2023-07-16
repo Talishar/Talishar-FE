@@ -1,5 +1,9 @@
-import React from 'react';
-import { useEffect } from 'react';
+import { useAppDispatch, useAppSelector } from 'app/Hooks';
+import { RootState } from 'app/Store';
+import { PROCESS_INPUT } from 'appConstants';
+import { getGameInfo, submitButton } from 'features/game/GameSlice';
+import React, { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { toast } from 'react-hot-toast';
 import {
   GiAngelOutfit,
@@ -11,17 +15,8 @@ import {
   GiDiceSixFacesTwo
 } from 'react-icons/gi';
 import { shallowEqual } from 'react-redux';
-import { useAppDispatch, useAppSelector } from 'app/Hooks';
-import { RootState } from 'app/Store';
 import CardDisplay from '../cardDisplay/CardDisplay';
-import CardImage from '../cardImage/CardImage';
 import styles from './EventsHandler.module.css';
-import { setupListeners } from '@reduxjs/toolkit/dist/query';
-import { ReactNode, useState } from 'react';
-import { createPortal } from 'react-dom';
-import { getGameInfo } from 'features/game/GameSlice';
-import { PROCESS_INPUT } from 'appConstants';
-import { submitButton } from 'features/game/GameSlice';
 
 export const EventsHandler = React.memo(() => {
   const events = useAppSelector(
@@ -30,7 +25,7 @@ export const EventsHandler = React.memo(() => {
   );
 
   const [showModal, setShowModal] = useState(false);
-  const [modal, setModal] = useState("");
+  const [modal, setModal] = useState('');
   const { playerID } = useAppSelector(getGameInfo, shallowEqual);
   const dispatch = useAppDispatch();
 
@@ -102,10 +97,9 @@ export const EventsHandler = React.memo(() => {
             ));
             continue;
           case 'REQUESTCHAT':
-            if(event.eventValue != playerID)
-            {
+            if (parseInt(event.eventValue ?? '0') !== playerID) {
               setShowModal(true);
-              setModal("Do you want to enable chat?");
+              setModal('Do you want to enable chat?');
             }
             continue;
           default:
@@ -115,16 +109,21 @@ export const EventsHandler = React.memo(() => {
     }
   }, [events]);
 
-  if(showModal) return (<>{createPortal(
-              <>
-                <dialog open className={styles.modal}>
-                  <article>
-                    <header>{modal}</header>
-                    <button onClick={clickYes}>YES</button>
-                    <button onClick={clickNo}>NO</button>
-                  </article>
-                </dialog>
-              </>, document.body)}</>);
+  if (showModal)
+    return (
+      <>
+        {createPortal(
+          <dialog open className={styles.modal}>
+            <article>
+              <header>{modal}</header>
+              <button onClick={clickYes}>YES</button>
+              <button onClick={clickNo}>NO</button>
+            </article>
+          </dialog>,
+          document.body
+        )}
+      </>
+    );
   return null;
 });
 

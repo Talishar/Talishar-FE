@@ -126,7 +126,8 @@ const ChatWheel = () => {
   const [modalDisplay, setModalDisplay] = useState<boolean>(false);
   const [chooseFirstPlayer, chooseFirstPlayerData] =
     useChooseFirstPlayerMutation();
-  const [submitLobbyInput, submitLobbyInputData] = useSubmitLobbyInputMutation();
+  const [submitLobbyInput, submitLobbyInputData] =
+    useSubmitLobbyInputMutation();
   const dispatch = useAppDispatch();
   const { refs, floatingStyles, context } = useFloating({
     placement: 'left',
