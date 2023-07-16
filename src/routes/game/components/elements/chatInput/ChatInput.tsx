@@ -42,7 +42,7 @@ const CHAT_WHEEL = new Map<number, string>([
   [8, 'Thinking... Please bear with me!'],
   [9, 'Good game!'],
   [11, 'Sorry!'],
-  [12, 'I think there\'s a bug'],
+  [12, "I think there's a bug"],
   [13, 'Got to go']
 ]);
 
@@ -125,7 +125,8 @@ const ChatWheel = () => {
   const [modalDisplay, setModalDisplay] = useState<boolean>(false);
   const [chooseFirstPlayer, chooseFirstPlayerData] =
     useChooseFirstPlayerMutation();
-  const [submitLobbyInput, submitLobbyInputData] = useSubmitLobbyInputMutation();
+  const [submitLobbyInput, submitLobbyInputData] =
+    useSubmitLobbyInputMutation();
   const dispatch = useAppDispatch();
   const { refs, floatingStyles, context } = useFloating({
     placement: 'left',

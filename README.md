@@ -17,16 +17,18 @@ Visit [Talishar.net](https://talishar.net/) to get playing Flesh & Blood in your
 This is a new front end client for talishar.net - completely separate from the back end. The players will be using this app to connect to the servers eventually.
 
 ## Project
- This is a [Vite](https://vitejs.dev/) single page [React](https://reactjs.org/) App using [Redux](https://redux.js.org/), [Redux Toolkit](https://redux-toolkit.js.org/), and [React Redux](https://react-redux.js.org/) bindings.
+
+This is a [Vite](https://vitejs.dev/) single page [React](https://reactjs.org/) App using [Redux](https://redux.js.org/), [Redux Toolkit](https://redux-toolkit.js.org/), and [React Redux](https://react-redux.js.org/) bindings.
 
 ## Requirements / How to install:
 
 ### Prerequesites:
- - [Volta](https://volta.sh/) or FNM to manage node installs.
- - node.js (currently 16.19.0), which would be managed automagically by Volta for you.
- - git
- - basic knowledge of the command line / terminal
-   * If you're on Windows, get Windows Powershell or wsl or something.
+
+- [Volta](https://volta.sh/) or FNM to manage node installs.
+- node.js (currently 16.19.0), which would be managed automagically by Volta for you.
+- git
+- basic knowledge of the command line / terminal
+  - If you're on Windows, get Windows Powershell or wsl or something.
 
 ```
 git clone https://github.com/Talishar/Talishar-FE
@@ -77,12 +79,14 @@ Otherwise try to keep everything as small as possible, Reacty-containers. And pu
 ## The plan for later:
 
 Accomplished so far:
- - ✅ automatic deployment to CDN
- - ✅ automatic testing for all MR and commits to main
+
+- ✅ automatic deployment to CDN
+- ✅ automatic testing for all MR and commits to main
 
 Still need help with:
- - More testing coverage
- - Building out features and helping with BE bugs etc.
+
+- More testing coverage
+- Building out features and helping with BE bugs etc.
 
 ## Learn More
 

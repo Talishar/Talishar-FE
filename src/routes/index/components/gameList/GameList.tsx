@@ -68,15 +68,14 @@ const GameList = () => {
     ? [...data.gamesInProgress]
     : [];
 
-  filteredGamesInProgress = filteredGamesInProgress
-    .filter((game) => {
-      return (
-        heroFilter.length === 0 ||
-        heroFilter.find((hero) => {
-          return hero === game.p1Hero || hero === game.p2Hero;
-        })
-      );
-    });
+  filteredGamesInProgress = filteredGamesInProgress.filter((game) => {
+    return (
+      heroFilter.length === 0 ||
+      heroFilter.find((hero) => {
+        return hero === game.p1Hero || hero === game.p2Hero;
+      })
+    );
+  });
 
   const handleReloadClick = () => {
     refetch();
@@ -129,23 +128,33 @@ const GameList = () => {
       {isLoggedIn ? (
         <>
           <FormatList
-            gameList={sortedOpenGames.filter((game) => game.format === GAME_FORMAT.BLITZ)}
+            gameList={sortedOpenGames.filter(
+              (game) => game.format === GAME_FORMAT.BLITZ
+            )}
             name="Blitz"
           />
           <FormatList
-            gameList={sortedOpenGames.filter((game) => game.format === GAME_FORMAT.COMPETITIVE_BLITZ)}
+            gameList={sortedOpenGames.filter(
+              (game) => game.format === GAME_FORMAT.COMPETITIVE_BLITZ
+            )}
             name="Competitive Blitz"
           />
           <FormatList
-            gameList={sortedOpenGames.filter((game) => game.format === GAME_FORMAT.CLASSIC_CONSTRUCTED)}
+            gameList={sortedOpenGames.filter(
+              (game) => game.format === GAME_FORMAT.CLASSIC_CONSTRUCTED
+            )}
             name="Classic Constructed"
           />
           <FormatList
-            gameList={sortedOpenGames.filter((game) => game.format === GAME_FORMAT.COMPETITIVE_CC)}
+            gameList={sortedOpenGames.filter(
+              (game) => game.format === GAME_FORMAT.COMPETITIVE_CC
+            )}
             name="Comp CC"
           />
           <FormatList
-            gameList={sortedOpenGames.filter((game) => otherFormats.includes(game.format))}
+            gameList={sortedOpenGames.filter((game) =>
+              otherFormats.includes(game.format)
+            )}
             name="Other"
             isOther
           />
@@ -163,23 +172,54 @@ const GameList = () => {
             Games in progress: <span>({data.gameInProgressCount})</span>
           </h4>
           <InProgressGameList
-            gameList={filteredGamesInProgress.filter((game) => [GAME_FORMAT.BLITZ, GAME_FORMAT_NUMBER.BLITZ].includes(game.format) )}
+            gameList={filteredGamesInProgress.filter((game) =>
+              [GAME_FORMAT.BLITZ, GAME_FORMAT_NUMBER.BLITZ].includes(
+                game.format
+              )
+            )}
             name="Blitz"
           />
           <InProgressGameList
-            gameList={filteredGamesInProgress.filter((game) => [GAME_FORMAT.COMPETITIVE_BLITZ, GAME_FORMAT_NUMBER.COMPETITIVE_BLITZ].includes(game.format) )}
+            gameList={filteredGamesInProgress.filter((game) =>
+              [
+                GAME_FORMAT.COMPETITIVE_BLITZ,
+                GAME_FORMAT_NUMBER.COMPETITIVE_BLITZ
+              ].includes(game.format)
+            )}
             name="Competitive Blitz"
           />
           <InProgressGameList
-            gameList={filteredGamesInProgress.filter((game) => [GAME_FORMAT.CLASSIC_CONSTRUCTED, GAME_FORMAT_NUMBER.CLASSIC_CONSTRUCTED].includes(game.format) )}
+            gameList={filteredGamesInProgress.filter((game) =>
+              [
+                GAME_FORMAT.CLASSIC_CONSTRUCTED,
+                GAME_FORMAT_NUMBER.CLASSIC_CONSTRUCTED
+              ].includes(game.format)
+            )}
             name="Classic Constructed"
           />
           <InProgressGameList
-            gameList={filteredGamesInProgress.filter((game) => [GAME_FORMAT.COMPETITIVE_CC, GAME_FORMAT_NUMBER.COMPETITIVE_CC].includes(game.format) )}
+            gameList={filteredGamesInProgress.filter((game) =>
+              [
+                GAME_FORMAT.COMPETITIVE_CC,
+                GAME_FORMAT_NUMBER.COMPETITIVE_CC
+              ].includes(game.format)
+            )}
             name="Competitive CC"
           />
           <InProgressGameList
-            gameList={filteredGamesInProgress.filter((game) => ![GAME_FORMAT.BLITZ, GAME_FORMAT_NUMBER.BLITZ, GAME_FORMAT.COMPETITIVE_BLITZ, GAME_FORMAT_NUMBER.COMPETITIVE_BLITZ, GAME_FORMAT.COMPETITIVE_CC, GAME_FORMAT.CLASSIC_CONSTRUCTED, GAME_FORMAT_NUMBER.CLASSIC_CONSTRUCTED, GAME_FORMAT_NUMBER.COMPETITIVE_CC].includes(game.format) )}
+            gameList={filteredGamesInProgress.filter(
+              (game) =>
+                ![
+                  GAME_FORMAT.BLITZ,
+                  GAME_FORMAT_NUMBER.BLITZ,
+                  GAME_FORMAT.COMPETITIVE_BLITZ,
+                  GAME_FORMAT_NUMBER.COMPETITIVE_BLITZ,
+                  GAME_FORMAT.COMPETITIVE_CC,
+                  GAME_FORMAT.CLASSIC_CONSTRUCTED,
+                  GAME_FORMAT_NUMBER.CLASSIC_CONSTRUCTED,
+                  GAME_FORMAT_NUMBER.COMPETITIVE_CC
+                ].includes(game.format)
+            )}
             name="Other"
           />
         </div>
@@ -198,13 +238,7 @@ const InProgressGameList = ({ gameList, name }: IInProgressGameList) => {
     <div className={styles.groupDiv} ref={parent}>
       <h5 className={styles.subSectionTitle}>{name}</h5>
       {gameList.map((entry, ix: number) => {
-        return (
-          <InProgressGame
-            entry={entry}
-            ix={ix}
-            key={entry.gameName}
-          />
-        );
+        return <InProgressGame entry={entry} ix={ix} key={entry.gameName} />;
       })}
     </div>
   );

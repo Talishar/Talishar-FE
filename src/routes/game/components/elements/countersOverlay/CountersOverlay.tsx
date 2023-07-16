@@ -47,7 +47,9 @@ export const CountersOverlay = ({
   return (
     <div className={styles.countersCover}>
       {countersMap && <ContinuousCounters countersMap={countersMap} />}
-      {activeCombatChain && <ActiveCardCounterOverlay activeCombatChain={activeCombatChain} />}
+      {activeCombatChain && (
+        <ActiveCardCounterOverlay activeCombatChain={activeCombatChain} />
+      )}
       {!!numTotal && (
         <div
           className={styles.number}
@@ -73,7 +75,12 @@ export const CountersOverlay = ({
         ></div>
       )}
       {gem !== 'none' && (
-        <GemSlider gem={gem} cardID={actionDataOverride} zone={zone} controller={controller} />
+        <GemSlider
+          gem={gem}
+          cardID={actionDataOverride}
+          zone={zone}
+          controller={controller}
+        />
       )}
     </div>
   );

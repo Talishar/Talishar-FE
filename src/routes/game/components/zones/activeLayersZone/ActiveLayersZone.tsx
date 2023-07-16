@@ -57,7 +57,8 @@ export default function ActiveLayersZone() {
                 comprehensive rulebook.
               </p>
               <p className={styles.orderingExplanation}>
-                The effects will resolve from right to left. Starting with the most right card.
+                The effects will resolve from right to left. Starting with the
+                most right card.
               </p>
             </div>
             {canPassPhase && (
