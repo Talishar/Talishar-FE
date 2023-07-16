@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import {
   useChooseFirstPlayerMutation,
-  useSubmitChatMutation
+  useSubmitChatMutation,
+  useSubmitLobbyInputMutation
 } from 'features/api/apiSlice';
 import styles from './ChatInput.module.css';
 import { GiChatBubble } from 'react-icons/gi';
@@ -124,6 +125,7 @@ const ChatWheel = () => {
   const [modalDisplay, setModalDisplay] = useState<boolean>(false);
   const [chooseFirstPlayer, chooseFirstPlayerData] =
     useChooseFirstPlayerMutation();
+  const [submitLobbyInput, submitLobbyInputData] = useSubmitLobbyInputMutation();
   const dispatch = useAppDispatch();
   const { refs, floatingStyles, context } = useFloating({
     placement: 'left',
@@ -149,7 +151,7 @@ const ChatWheel = () => {
   const submitChatRequest = async () => {
     if (location.pathname.includes('/lobby/')) {
       try {
-        await chooseFirstPlayer({
+        await submitLobbyInput({
           gameName: gameID,
           playerID: playerID,
           authKey: authKey,
