@@ -11,7 +11,8 @@ import deckValidation from './validation';
 import StickyFooter from './components/stickyFooter/StickyFooter';
 import {
   useGetLobbyInfoQuery,
-  useSubmitSideboardMutation
+  useSubmitSideboardMutation,
+  useSubmitLobbyInputMutation
 } from 'features/api/apiSlice';
 import { useAppSelector } from 'app/Hooks';
 import { shallowEqual } from 'react-redux';
@@ -31,6 +32,7 @@ import { getGameInfo } from 'features/game/GameSlice';
 import useSound from 'use-sound';
 import playerJoined from 'sounds/playerJoinedSound.mp3';
 import { createPortal } from 'react-dom';
+import { useAppDispatch } from 'app/Hooks';
 
 const Lobby = () => {
   const [activeTab, setActiveTab] = useState<string>('equipment');
@@ -58,6 +60,8 @@ const Lobby = () => {
 
   const [submitSideboardMutation, submitSideboardMutationData] =
     useSubmitSideboardMutation();
+
+  const [submitLobbyInput, submitLobbyInputData] = useSubmitLobbyInputMutation();
 
   useEffect(() => {
     if (gameLobby?.theirName != undefined && gameLobby?.theirName != '') {
@@ -170,6 +174,29 @@ const Lobby = () => {
 
   const mainClassNames = classNames(styles.lobbyClass);
 
+  const [showChatModal, setShowChatModal] = useState(true);
+  const [chatModal, setChatModal] = useState("");
+  const [modal, setModal] = useState("Do you want to enable chat?");
+  const dispatch = useAppDispatch();
+
+  const clickYes = (e: any) => {
+    e.preventDefault();
+    setShowChatModal(false);
+    submitLobbyInput({
+      gameName: gameID,
+      playerID: playerID,
+      authKey: authKey,
+      action: 'Request Chat'
+    });
+  };
+
+  const clickNo = (e: any) => {
+    e.preventDefault();
+    setShowChatModal(false);
+  };
+
+  console.log(gameLobby?.chatInvited + " " + showChatModal);
+
   //const needToDoDisclaimer = !acceptedDisclaimer && data.format === GAME_FORMAT.OPEN_FORMAT;
   const needToDoDisclaimer = false;
 
@@ -227,6 +254,16 @@ const Lobby = () => {
 
   return (
     <main className={mainClassNames}>
+    {gameLobby?.chatInvited && showChatModal && createPortal(
+            <>
+              <dialog open className={styles.modal}>
+                <article>
+                  <header>{modal}</header>
+                  <button onClick={clickYes}>YES</button>
+                  <button onClick={clickNo}>NO</button>
+                </article>
+              </dialog>
+            </>, document.body)}
       {needToDoDisclaimer &&
         createPortal(
           <>

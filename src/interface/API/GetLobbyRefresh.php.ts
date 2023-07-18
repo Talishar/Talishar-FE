@@ -24,6 +24,7 @@ export interface GetLobbyRefreshResponse {
   myDeckLink?: string;
   matchups?: Matchup[];
   chatEnabled?: boolean;
+  chatInvited?: boolean;
 }
 
 export interface Matchup {
