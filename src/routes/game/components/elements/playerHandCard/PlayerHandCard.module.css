@@ -1,8 +1,8 @@
 .handCard {
   height: 15vh;
   overflow: visible;
-  width: 1px;
-  flex-grow: 1;
+  width: 16dvh;
+  flex-shrink: 1;
 }
 
 .img {
@@ -20,7 +20,7 @@
 }
 
 .imgContainer {
-  position: relative;
+  position: absolute;
   height: 25vh;
   height: 25dvh;
   aspect-ratio: 2/3;
@@ -28,7 +28,7 @@
 }
 
 .imgContainer:hover {
-  top: -3vh;
+  top: -10vh;
 }
 
 .iconCol {
