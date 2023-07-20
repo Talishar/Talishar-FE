@@ -21,6 +21,8 @@ export interface EndGameData {
   averageResourcesUsedPerTurn?: number;
   averageCardsLeftOverPerTurn?: number;
   averageValuePerTurn?: number;
+  yourTime?: number;
+  totalTime?: number;
 }
 
 export interface CardResult {
@@ -44,8 +46,27 @@ export interface TurnResult {
 }
 
 const EndGameStats = (data: EndGameData) => {
+  function fancyTimeFormat(duration: number | undefined) {
+    duration = duration ?? 0;
+    // Hours, minutes and seconds
+    const hrs = ~~(duration / 3600);
+    const mins = ~~((duration % 3600) / 60);
+    const secs = ~~duration % 60;
+
+    let ret = '';
+
+    if (hrs > 0) {
+      ret += '' + hrs + ':' + (mins < 10 ? '0' : '');
+    }
+
+    ret += '' + mins + ':' + (secs < 10 ? '0' : '');
+    ret += '' + secs;
+
+    return ret;
+  }
+
   return (
-    <div className={styles.cardListContents} data-testid="test-stats">
+    <div className={styles.endGameStats} data-testid="test-stats">
       <EndGameMenuOptions />
       <div className={styles.twoColumn}>
         <div>
@@ -93,8 +114,11 @@ const EndGameStats = (data: EndGameData) => {
           </table>
         </div>
         <div>
-          <h2>Turn Stats</h2>
-          <p>
+          <h3>Game Time</h3>
+          <p>Your time: {fancyTimeFormat(data.yourTime)}</p>
+          <p>Total game time: {fancyTimeFormat(data.totalTime)}</p>
+          <h3>Turn Stats</h3>
+          <p style={{ marginBottom: '1em' }}>
             <em>First turn omitted for first player</em>
             <br /> Total Damage Threatened: {data.totalDamageThreatened}
             <br />

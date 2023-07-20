@@ -10,11 +10,12 @@
   padding: 2vh;
   border: 1px solid var(--primary);
   border-radius: 12px;
-  z-index: 10;
+  z-index: 950;
 }
 
 .cardListBox.reduced {
   bottom: auto;
+  z-index: 10;
 }
 
 .cardListTitleContainer {
