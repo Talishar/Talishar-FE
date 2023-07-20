@@ -24,20 +24,45 @@ export const EventsHandler = React.memo(() => {
     shallowEqual
   );
 
+  enum ModalType {
+    RequestChat = 0,
+    RequestUndo = 1,
+    RequestThisTurnUndo = 2,
+    RequestLastTurnUndo = 3
+  }
+
   const [showModal, setShowModal] = useState(false);
   const [modal, setModal] = useState('');
+  const [modalType, setModalType] = useState(ModalType.RequestChat);
   const { playerID } = useAppSelector(getGameInfo, shallowEqual);
   const dispatch = useAppDispatch();
 
   const clickYes = (e: any) => {
     e.preventDefault();
     setShowModal(false);
-    dispatch(submitButton({ button: { mode: PROCESS_INPUT.ENABLE_CHAT } }));
+    if (modalType == ModalType.RequestUndo)
+      dispatch(submitButton({ button: { mode: PROCESS_INPUT.CONFIRM_UNDO } }));
+    else if (modalType == ModalType.RequestThisTurnUndo)
+      dispatch(
+        submitButton({ button: { mode: PROCESS_INPUT.CONFIRM_THIS_TURN_UNDO } })
+      );
+    else if (modalType == ModalType.RequestLastTurnUndo)
+      dispatch(
+        submitButton({ button: { mode: PROCESS_INPUT.CONFIRM_LAST_TURN_UNDO } })
+      );
+    else
+      dispatch(submitButton({ button: { mode: PROCESS_INPUT.ENABLE_CHAT } }));
   };
 
   const clickNo = (e: any) => {
     e.preventDefault();
     setShowModal(false);
+    if (
+      modalType == ModalType.RequestUndo ||
+      modalType == ModalType.RequestThisTurnUndo ||
+      modalType == ModalType.RequestLastTurnUndo
+    )
+      dispatch(submitButton({ button: { mode: PROCESS_INPUT.DECLINE_UNDO } }));
   };
 
   useEffect(() => {
@@ -99,7 +124,33 @@ export const EventsHandler = React.memo(() => {
           case 'REQUESTCHAT':
             if (parseInt(event.eventValue ?? '0') !== playerID) {
               setShowModal(true);
+              setModalType(ModalType.RequestChat);
               setModal('Do you want to enable chat?');
+            }
+            continue;
+          case 'REQUESTUNDO':
+            if (parseInt(event.eventValue ?? '0') !== playerID) {
+              setShowModal(true);
+              setModalType(ModalType.RequestUndo);
+              setModal(
+                'Do you want to allow the opponent to undo the last action?'
+              );
+            }
+            continue;
+          case 'REQUESTTHISTURNUNDO':
+            if (parseInt(event.eventValue ?? '0') !== playerID) {
+              setShowModal(true);
+              setModalType(ModalType.RequestThisTurnUndo);
+              setModal('Do you want to allow the opponent to undo this turn?');
+            }
+            continue;
+          case 'REQUESTLASTTURNUNDO':
+            if (parseInt(event.eventValue ?? '0') !== playerID) {
+              setShowModal(true);
+              setModalType(ModalType.RequestLastTurnUndo);
+              setModal(
+                'Do you want to allow the opponent to revert to last turn?'
+              );
             }
             continue;
           default:
