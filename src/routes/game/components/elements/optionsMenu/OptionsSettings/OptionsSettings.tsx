@@ -74,7 +74,8 @@ const OptionsSettings = () => {
     streamerMode: settingsData['IsStreamerMode']?.value === '1',
     // Enum is BE: /Libraries/PlayerSettings.php - function GetCardBack($player)
     cardBack: String(settingsData['CardBack']?.value ?? '0'),
-    playMat: String(settingsData['Playmat']?.value ?? '0')
+    playMat: String(settingsData['Playmat']?.value ?? '0'),
+    alwaysAllowUndo: settingsData['AlwaysAllowUndo']?.value === '1',
   };
 
   return (
@@ -338,7 +339,23 @@ const OptionsSettings = () => {
                 })
               }
             />
-            Enable Cheat Mode (for manual board state corrections)
+            Enable Manual Mode (for board state corrections)
+          </label>
+          <label className={styles.optionLabel}>
+            <input
+              defaultChecked
+              type="checkbox"
+              name="alwaysAllowUndo"
+              area-disabled="true"
+              checked={initialValues.alwaysAllowUndo}
+              onClick={() =>
+                handleSettingsChange({
+                  name: optConst.ALWAYS_ALLOW_UNDO,
+                  value: initialValues.alwaysAllowUndo ? '0' : '1'
+                })
+              }
+            />
+            Always Allow Undo
           </label>
           <label className={styles.optionLabel}>
             <input
