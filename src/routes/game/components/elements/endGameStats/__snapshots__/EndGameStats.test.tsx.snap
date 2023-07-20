@@ -2,7 +2,7 @@
 
 exports[`passes a snapshot test 1`] = `
 <div
-  class="_cardListContents_8328d1"
+  class="_endGameStats_8328d1"
   data-testid="test-stats"
 >
   <div
@@ -130,10 +130,23 @@ exports[`passes a snapshot test 1`] = `
       </table>
     </div>
     <div>
-      <h2>
-        Turn Stats
-      </h2>
+      <h3>
+        Game Time
+      </h3>
       <p>
+        Your time: 
+        0:00
+      </p>
+      <p>
+        Total game time: 
+        0:00
+      </p>
+      <h3>
+        Turn Stats
+      </h3>
+      <p
+        style="margin-bottom: 1em;"
+      >
         <em>
           First turn omitted for first player
         </em>
