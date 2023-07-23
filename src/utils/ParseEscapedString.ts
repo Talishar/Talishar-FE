@@ -1,3 +1,7 @@
+
+import React from 'react';
+import CardPopUp from '../../cardPopUp/CardPopUp';
+
 const CARDRE = /{{(.+?)\|(.+?)(?:\|(.+?))?}}/g;
 
 const COLOR_MAPPING: { [key: string]: string } = {

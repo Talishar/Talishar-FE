@@ -8,6 +8,8 @@ import ReorderLayers from './ReorderLayers';
 import useShowModal from 'hooks/useShowModals';
 import { submitButton } from 'features/game/GameSlice';
 import { PROCESS_INPUT } from 'appConstants';
+import { replaceText } from 'utils/ParseEscapedString';
+import { BiTargetLock } from 'react-icons/bi';
 
 export default function ActiveLayersZone() {
   const showModal = useShowModal();
@@ -52,14 +54,6 @@ export default function ActiveLayersZone() {
               <p className={styles.orderingExplanation}>
                 Priority settings can be adjusted in the menu
               </p>
-              <p className={styles.orderingExplanation}>
-                For more info about trigger ordering, see rule 1.10.2c of the
-                comprehensive rulebook.
-              </p>
-              <p className={styles.orderingExplanation}>
-                The effects will resolve from right to left. Starting with the
-                most right card.
-              </p>
             </div>
             {canPassPhase && (
               <div className={styles.passTurnBox}>
@@ -83,8 +77,7 @@ export default function ActiveLayersZone() {
 }
 
 const Target = ({ target }: { target: string | undefined }) => {
-  // TODO: have this be useful
-  return null;
-
-  // return <h4 className={styles.target}>{target}</h4>;
+  return (target ? <div className={styles.targetContainer}><BiTargetLock />{" "}<span className={styles.target} dangerouslySetInnerHTML={{
+    __html: replaceText(target)
+  }}></span></div> : null);
 };
