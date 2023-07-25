@@ -3,9 +3,8 @@
   right: 0px;
 
   position: relative;
-  width: 14vh;
+  width: var(--card-size);
   height: 18vh;
-  width: 14dvh;
   height: 18dvh;
 
   z-index: 15;

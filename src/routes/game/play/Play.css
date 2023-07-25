@@ -10,6 +10,16 @@ body {
   width: 100dvw;
   height: 100vh;
   height: 100dvh;
+  --card-size: 13vh;
+  --card-size: 13dvh;
+}
+
+@media (orientation: portrait) {
+  html,
+  body {
+    --card-size: 12vw;
+    --card-size: 12dvw;
+  }
 }
 
 .centering {

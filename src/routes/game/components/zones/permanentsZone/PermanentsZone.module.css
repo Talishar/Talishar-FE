@@ -67,7 +67,13 @@
   display: block;
   position: relative;
   aspect-ratio: 1;
-  min-width: 13dvh;
+  min-width: var(--card-size);
+}
+
+@media (orientation: portrait) {
+  .cardContainer {
+    min-width: 0;
+  }
 }
 
 .stacked {
