@@ -5,7 +5,6 @@
   position: relative;
   width: var(--card-size);
   height: 18vh;
-  width: var(--card-size);
   height: 18dvh;
 
   z-index: 15;

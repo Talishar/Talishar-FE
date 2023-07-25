@@ -11,7 +11,7 @@
 
 .arsenalZone {
   height: 100%;
-  min-width: min(var(--card-size), var(--card-size));
+  min-width: var(--card-size);
   width: fit-content;
   display: flex;
   gap: 1dvh;
