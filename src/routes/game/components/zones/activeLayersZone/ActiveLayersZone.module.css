@@ -45,7 +45,7 @@
 }
 
 .activeLayersContents > div {
-  width: 14dvh;
+  width: var(--card-size);
 }
 
 .orderingExplanation {
@@ -68,7 +68,7 @@
 }
 
 .targetContainer {
-  display:flex;
+  display: flex;
   align-content: center;
   align-items: center;
   gap: 4px;
