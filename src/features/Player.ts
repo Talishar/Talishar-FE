@@ -20,6 +20,7 @@ export default interface Player {
   PitchRemaining?: number;
   DeckSize?: number;
   DeckBack?: Card;
+  Deck?: Card[];
   Name?: string;
   IsVerified?: boolean;
   Effects?: Card[];

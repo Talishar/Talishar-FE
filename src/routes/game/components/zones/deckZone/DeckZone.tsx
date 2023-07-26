@@ -7,11 +7,12 @@ import styles from './DeckZone.module.css';
 import useSetting from 'hooks/useSetting';
 import { MANUAL_MODE } from 'features/options/constants';
 import { PROCESS_INPUT } from 'appConstants';
-import { submitButton } from 'features/game/GameSlice';
+import { setCardListFocus, submitButton } from 'features/game/GameSlice';
 
 export const DeckZone = React.memo((prop: Displayrow) => {
   const { isPlayer } = prop;
   const isManualMode = useSetting({ settingName: MANUAL_MODE })?.value === '1';
+  const dispatch = useAppDispatch();
 
   const showCount = true;
 
@@ -22,12 +23,28 @@ export const DeckZone = React.memo((prop: Displayrow) => {
     isPlayer ? state.game.playerOne.DeckBack : state.game.playerTwo.DeckBack
   );
 
+
+  const deckZone = useAppSelector((state: RootState) =>
+    isPlayer ? state.game.playerOne.Deck : state.game.playerTwo.Deck
+  );
+
   if (deckCards === undefined || deckCards === 0) {
     return <div className={styles.deckZone}>Deck</div>;
   }
 
+  const deckZoneDisplay = () => {
+    if(deckZone.length === 0) return;
+    const isPlayerPronoun = isPlayer ? 'Your' : "Your Opponent's";
+    dispatch(
+      setCardListFocus({
+        cardList: deckZone,
+        name: `${isPlayerPronoun} Deck`
+      })
+    );
+  };
+
   return (
-    <div className={styles.deckZone}>
+    <div className={styles.deckZone} onClick={deckZoneDisplay}>
       <CardDisplay
         card={deckBack}
         num={showCount ? deckCards : undefined}
