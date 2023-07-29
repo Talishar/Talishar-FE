@@ -74,7 +74,8 @@ const OptionsSettings = () => {
     streamerMode: settingsData['IsStreamerMode']?.value === '1',
     // Enum is BE: /Libraries/PlayerSettings.php - function GetCardBack($player)
     cardBack: String(settingsData['CardBack']?.value ?? '0'),
-    playMat: String(settingsData['Playmat']?.value ?? '0')
+    playMat: String(settingsData['Playmat']?.value ?? '0'),
+    alwaysAllowUndo: settingsData['AlwaysAllowUndo']?.value === '1',
   };
 
   return (
@@ -298,6 +299,38 @@ const OptionsSettings = () => {
               type="checkbox"
               name="manualMode"
               area-disabled="true"
+              checked={initialValues.streamerMode}
+              onClick={() =>
+                handleSettingsChange({
+                  name: optConst.IS_STREAMER_MODE,
+                  value: initialValues.streamerMode ? '0' : '1'
+                })
+              }
+            />
+            Enable Streamer Mode
+          </label>
+          <label className={styles.optionLabel}>
+            <input
+              defaultChecked
+              type="checkbox"
+              name="manualMode"
+              area-disabled="true"
+              checked={initialValues.casterMode}
+              onClick={() =>
+                handleSettingsChange({
+                  name: optConst.IS_CASTER_MODE,
+                  value: initialValues.casterMode ? '0' : '1'
+                })
+              }
+            />
+            Enable Caster Mode
+          </label>
+          <label className={styles.optionLabel}>
+            <input
+              defaultChecked
+              type="checkbox"
+              name="manualMode"
+              area-disabled="true"
               checked={initialValues.manualMode}
               onClick={() =>
                 handleSettingsChange({
@@ -306,7 +339,23 @@ const OptionsSettings = () => {
                 })
               }
             />
-            Manual Mode
+            Enable Manual Mode (for board state corrections)
+          </label>
+          <label className={styles.optionLabel}>
+            <input
+              defaultChecked
+              type="checkbox"
+              name="alwaysAllowUndo"
+              area-disabled="true"
+              checked={initialValues.alwaysAllowUndo}
+              onClick={() =>
+                handleSettingsChange({
+                  name: optConst.ALWAYS_ALLOW_UNDO,
+                  value: initialValues.alwaysAllowUndo ? '0' : '1'
+                })
+              }
+            />
+            Always Allow Undo
           </label>
           <label className={styles.optionLabel}>
             <input
@@ -322,7 +371,7 @@ const OptionsSettings = () => {
                 })
               }
             />
-            Accessibility Mode
+            Enable Accessibility Mode
           </label>
           <label className={styles.optionLabel}>
             <input
@@ -337,7 +386,7 @@ const OptionsSettings = () => {
                 })
               }
             />
-            Mute
+            Mute Game Sounds
           </label>
           <label className={styles.optionLabel}>
             <input
@@ -352,7 +401,7 @@ const OptionsSettings = () => {
                 })
               }
             />
-            Disable Chat
+            Disable Chat (moreso)
           </label>
           <label className={styles.optionLabel}>
             <input

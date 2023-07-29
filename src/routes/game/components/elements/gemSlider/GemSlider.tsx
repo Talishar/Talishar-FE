@@ -20,11 +20,7 @@ const GemSlider = (props: GemSlider) => {
   if (props.gem === undefined) return null;
   if (props.gem === 'none') return null;
 
-  const { playerID } = useAppSelector(
-    getGameInfo,
-    shallowEqual
-  );
-
+  const { playerID } = useAppSelector(getGameInfo, shallowEqual);
 
   const dispatch = useAppDispatch();
 
@@ -34,7 +30,9 @@ const GemSlider = (props: GemSlider) => {
         button: {
           buttonInput: (!!props.zone ? props.zone + '-' : '') + props.cardID,
           mode: !!props.zone
-            ? (props.controller == playerID ? PROCESS_INPUT.TOGGLE_PERMANENT_ACTIVE : PROCESS_INPUT.TOGGLE_OPPONENT_PERMANENT_ACTIVE)
+            ? props.controller == playerID
+              ? PROCESS_INPUT.TOGGLE_PERMANENT_ACTIVE
+              : PROCESS_INPUT.TOGGLE_OPPONENT_PERMANENT_ACTIVE
             : PROCESS_INPUT.TOGGLE_EQUIPMENT_ACTIVE
         }
       })

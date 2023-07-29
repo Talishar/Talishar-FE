@@ -5,10 +5,17 @@ const News = () => {
   return (
     <div>
       <hgroup>
-        <h1>Looking for DTD spoilers? Read up!</h1>
-        <h2>DTD Spoilers are limited to "Open Format"</h2>
-        <h2>Stats are not reported for DTD heroes until release</h2>
-        <h2>We're trying out less automation for this set, so pay attention to card effects!</h2>
+        <a href="https://www.youtube.com/watch?v=sZcqOqBOzmQ" target="_blank">
+          <img
+            src="calling_birmingham_2023.jpg"
+            style={{
+              width: '100%',
+              height: 'auto',
+              maxHeight: '100%',
+              objectFit: 'cover'
+            }}
+          />
+        </a>
       </hgroup>
       <p>Please join our community:</p>
       <ul>
@@ -24,7 +31,14 @@ const News = () => {
         </li>
       </ul>
       <p>Disclaimer:</p>
-      <small>Talishar is in no way affiliated with Legend Story Studios. Legend Story Studios®, Flesh and Blood™, and set names are trademarks of Legend Story Studios. Flesh and Blood characters, cards, logos, and art are property of Legend Story Studios. Talishar is a fan made project that may have bugs; game interactions and rulings are the jurisdiction of LSS and judges. Card Images © Legend Story Studios</small>
+      <small>
+        Talishar is in no way affiliated with Legend Story Studios. Legend Story
+        Studios®, Flesh and Blood™, and set names are trademarks of Legend Story
+        Studios. Flesh and Blood characters, cards, logos, and art are property
+        of Legend Story Studios. Talishar is a fan made project that may have
+        bugs; game interactions and rulings are the jurisdiction of LSS and
+        judges. Card Images © Legend Story Studios
+      </small>
     </div>
   );
 };

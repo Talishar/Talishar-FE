@@ -1,4 +1,4 @@
-const mockGetNextTurn3 = {
+export const mockGetNextTurn3 = {
   lastUpdate: 559,
   initialLoad: {
     playerName: 'zorb',

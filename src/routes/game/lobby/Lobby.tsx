@@ -11,7 +11,8 @@ import deckValidation from './validation';
 import StickyFooter from './components/stickyFooter/StickyFooter';
 import {
   useGetLobbyInfoQuery,
-  useSubmitSideboardMutation
+  useSubmitSideboardMutation,
+  useSubmitLobbyInputMutation
 } from 'features/api/apiSlice';
 import { useAppSelector } from 'app/Hooks';
 import { shallowEqual } from 'react-redux';
@@ -31,6 +32,7 @@ import { getGameInfo } from 'features/game/GameSlice';
 import useSound from 'use-sound';
 import playerJoined from 'sounds/playerJoinedSound.mp3';
 import { createPortal } from 'react-dom';
+import { useAppDispatch } from 'app/Hooks';
 
 const Lobby = () => {
   const [activeTab, setActiveTab] = useState<string>('equipment');
@@ -59,6 +61,8 @@ const Lobby = () => {
   const [submitSideboardMutation, submitSideboardMutationData] =
     useSubmitSideboardMutation();
 
+  const [submitLobbyInput, submitLobbyInputData] = useSubmitLobbyInputMutation();
+
   useEffect(() => {
     if (gameLobby?.theirName != undefined && gameLobby?.theirName != '') {
       playLobbyJoin();
@@ -83,34 +87,6 @@ const Lobby = () => {
   };
 
   const handleMatchupClick = () => setActiveTab('matchups');
-
-  const handleFormSubmission = async (values: DeckResponse) => {
-    setIsSubmitting(true);
-    // encode it as an object
-    const deck = {
-      hero: data?.deck.hero,
-      hands: values.weapons.map((item) => item.id.substring(0, 6)),
-      head: values.head,
-      chest: values.chest,
-      arms: values.arms,
-      legs: values.legs,
-      deck: values.deck.map((card) => card.substring(0, 6))
-    };
-    const requestBody: SubmitSideboardAPI = {
-      gameName: gameID,
-      playerID: playerID,
-      authKey: authKey,
-      submission: JSON.stringify(deck) // the API unmarshals the JSON inside the unmarshaled JSON.
-    };
-
-    try {
-      const data: any = await submitSideboardMutation(requestBody).unwrap();
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
 
   if (data === undefined || data === null || Object.keys(data).length === 0) {
     data = testData;
@@ -198,11 +174,96 @@ const Lobby = () => {
 
   const mainClassNames = classNames(styles.lobbyClass);
 
-  const needToDoDisclaimer =
-    !acceptedDisclaimer && data.format === GAME_FORMAT.OPEN_FORMAT;
+  const [showChatModal, setShowChatModal] = useState(true);
+  const [chatModal, setChatModal] = useState("");
+  const [modal, setModal] = useState("Do you want to enable chat?");
+  const dispatch = useAppDispatch();
+
+  const clickYes = (e: any) => {
+    e.preventDefault();
+    setShowChatModal(false);
+    submitLobbyInput({
+      gameName: gameID,
+      playerID: playerID,
+      authKey: authKey,
+      action: 'Request Chat'
+    });
+  };
+
+  const clickNo = (e: any) => {
+    e.preventDefault();
+    setShowChatModal(false);
+  };
+
+  console.log(gameLobby?.chatInvited + " " + showChatModal);
+
+  //const needToDoDisclaimer = !acceptedDisclaimer && data.format === GAME_FORMAT.OPEN_FORMAT;
+  const needToDoDisclaimer = false;
+
+  const handleFormSubmission = async (values: DeckResponse) => {
+    setIsSubmitting(true);
+
+    const hands = values.weapons.map((item) => item.id.substring(0, 6));
+    const deck = values.deck.map((card) => card.substring(0, 6));
+    const inventory = [
+      ...weaponsIndexed
+        .concat(weaponsSBIndexed)
+        .map((item) => item.id.substring(0, 6))
+        .filter((item) => !hands.includes(item) && item !== 'NONE00'),
+      ...(data?.deck?.head ?? [])
+        .concat(data?.deck?.headSB ?? [])
+        .filter((item) => !values.head.includes(item) && item !== 'NONE00'),
+      ...(data?.deck?.chest ?? [])
+        .concat(data?.deck?.chestSB ?? [])
+        .filter((item) => !values.chest.includes(item) && item !== 'NONE00'),
+      ...(data?.deck?.arms ?? [])
+        .concat(data?.deck?.armsSB ?? [])
+        .filter((item) => !values.arms.includes(item) && item !== 'NONE00'),
+      ...(data?.deck?.legs ?? [])
+        .concat(data?.deck?.legsSB ?? [])
+        .filter((item) => !values.legs.includes(item) && item !== 'NONE00'),
+      ...(data?.deck?.demiHero ?? [])
+    ];
+
+    // encode it as an object
+    const submitDeck = {
+      hero: data?.deck.hero,
+      hands,
+      head: values.head,
+      chest: values.chest,
+      arms: values.arms,
+      legs: values.legs,
+      deck,
+      inventory
+    };
+    const requestBody: SubmitSideboardAPI = {
+      gameName: gameID,
+      playerID: playerID,
+      authKey: authKey,
+      submission: JSON.stringify(submitDeck) // the API unmarshals the JSON inside the unmarshaled JSON.
+    };
+
+    try {
+      const data: any = await submitSideboardMutation(requestBody).unwrap();
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <main className={mainClassNames}>
+    {gameLobby?.chatInvited && showChatModal && createPortal(
+            <>
+              <dialog open className={styles.modal}>
+                <article>
+                  <header>{modal}</header>
+                  <button onClick={clickYes}>YES</button>
+                  <button onClick={clickNo}>NO</button>
+                </article>
+              </dialog>
+            </>, document.body)}
       {needToDoDisclaimer &&
         createPortal(
           <>

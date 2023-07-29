@@ -9,7 +9,10 @@ it('renders without crashing', () => {
   const root = createRoot(div);
   root.render(
     <Provider store={store}>
-      <PlayerHandCard card={{ cardNumber: 'WTR001' }} />
+      <PlayerHandCard
+        card={{ cardNumber: 'WTR001' }}
+        addCardToPlayedCards={() => {}}
+      />
     </Provider>
   );
 });
@@ -19,7 +22,10 @@ it('renders a card', () => {
   const root = createRoot(div);
   root.render(
     <Provider store={store}>
-      <PlayerHandCard card={{ cardNumber: 'WTR001' }} />
+      <PlayerHandCard
+        card={{ cardNumber: 'WTR001' }}
+        addCardToPlayedCards={() => {}}
+      />
     </Provider>
   );
 });

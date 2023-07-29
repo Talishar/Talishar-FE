@@ -76,7 +76,11 @@ export const CardDisplay = (prop: CardProp) => {
       {(card.isBroken || card.onChain || card.isFrozen) && (
         <div className={equipStatus}></div>
       )}
-      <CountersOverlay {...card} num={num} activeCombatChain={activeCombatChain}/>
+      <CountersOverlay
+        {...card}
+        num={num}
+        activeCombatChain={activeCombatChain}
+      />
     </CardPopUp>
   );
 };

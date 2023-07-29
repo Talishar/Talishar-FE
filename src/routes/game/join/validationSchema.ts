@@ -6,15 +6,14 @@ const URL = 'Deck link must be a URL';
 const validationSchema = yup.object().shape(
   {
     deck: yup.string(),
-    fabdb: yup.string()
+    fabdb: yup.string(),
     /*.when(['favoriteDecks'], {
       is: (favoriteDecks: string | undefined) =>
         favoriteDecks === '' || favoriteDecks === undefined,
       then: (validationSchema) =>
         validationSchema.required(SELECT_DECK).url(URL),
       otherwise: (validationSchema) => validationSchema.optional().nullable()
-    })*/,
-    deckTestMode: yup.boolean().required(),
+    })*/ deckTestMode: yup.boolean().required(),
     decksToTry: yup.string(),
     favoriteDeck: yup.boolean(),
     favoriteDecks: yup.string().when(['fabdb'], {

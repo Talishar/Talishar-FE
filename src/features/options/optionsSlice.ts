@@ -64,6 +64,16 @@ export const fetchAllSettings = createAsyncThunk(
       toast.error(JSON.stringify(error));
       console.warn(error);
     }
+  },
+  {
+    condition: (userId, { getState }) => {
+      const { settings } = getState() as any;
+      const fetchStatus = settings.status;
+      if (fetchStatus === 'loading') {
+        // Already in progress, don't need to re-fetch
+        return false;
+      }
+    }
   }
 );
 

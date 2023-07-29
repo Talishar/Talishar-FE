@@ -41,8 +41,10 @@
     width: 100%;
   }
   .playerBoard {
-    grid-template-rows: 12dvw 12dvw 12dvw;
-    grid-template-columns: 12dvw 12dvw 1fr 12dvw 12dvw 12dvw 1fr 12dvw 12dvw;
+    grid-template-rows: var(--card-size) var(--card-size) var(--card-size);
+    grid-template-columns: var(--card-size) var(--card-size) 1fr var(
+        --card-size
+      ) var(--card-size) var(--card-size) 1fr var(--card-size) var(--card-size);
     gap: 1dvw;
     padding: 1dvw;
   }

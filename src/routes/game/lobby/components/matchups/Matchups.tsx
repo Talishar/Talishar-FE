@@ -43,11 +43,14 @@ const Matchups = ({ refetch }: Matchups) => {
     }
   };
 
+  const sortedMatchups = [...(gameLobby?.matchups ?? [])];
+  sortedMatchups.sort((a, b) => a.name.localeCompare(b.name));
+
   return (
     <article className={styles.matchupContainer}>
       <>
         <h4>Matchups</h4>
-        {gameLobby?.matchups?.map((matchup, ix) => (
+        {sortedMatchups.map((matchup, ix) => (
           <div key={ix}>
             <button
               disabled={isUpdating}

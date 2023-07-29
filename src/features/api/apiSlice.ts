@@ -26,6 +26,7 @@ import {
   GetLobbyInfo,
   GetLobbyInfoResponse
 } from 'interface/API/GetLobbyInfo.php';
+import { SubmitLobbyInput } from 'interface/API/SubmitLobbyInput.php';
 import { ChooseFirstPlayer } from 'interface/API/ChooseFirstPlayer.php';
 import { SubmitSideboardAPI } from 'interface/API/SubmitSideboard.php';
 import { GetFavoriteDecksResponse } from 'interface/API/GetFavoriteDecks.php';
@@ -37,6 +38,7 @@ import {
 } from 'interface/API/DeleteDeckAPI.php';
 import { PatreonLoginResponse } from 'routes/user/profile/linkpatreon/linkPatreon';
 import { UserProfileAPIResponse } from 'interface/API/UserProfileAPI.php';
+import { SubmitChatAPI } from 'interface/API/SubmitChat.php';
 
 // catch warnings and show a toast if we get one.
 export const rtkQueryErrorToaster: Middleware =
@@ -182,12 +184,13 @@ export const apiSlice = createApi({
         };
       }
     }),
-    submitChat: builder.mutation({
+    submitChat: builder.mutation<SubmitChatAPI, any>({
       query: ({
         gameID = 0,
         playerID = 0,
         chatText = '',
         authKey = '',
+        quickChat,
         ...rest
       }) => {
         return {
@@ -197,7 +200,8 @@ export const apiSlice = createApi({
             gameName: gameID,
             playerID: playerID,
             authKey: authKey,
-            chatText: chatText
+            chatText: chatText,
+            quickChat: quickChat
           },
           responseHandler: parseResponse
         };
@@ -311,6 +315,16 @@ export const apiSlice = createApi({
         };
       }
     }),
+    submitLobbyInput: builder.mutation({
+      query: ({ ...body }: SubmitLobbyInput) => {
+        return {
+          url: URL_END_POINT.SUBMIT_LOBBY_INPUT,
+          method: 'POST',
+          body: body,
+          responseHandler: parseResponse
+        };
+      }
+    }),
     submitSideboard: builder.mutation({
       query: ({ ...body }: SubmitSideboardAPI) => {
         return {
@@ -375,5 +389,6 @@ export const {
   useSubmitSideboardMutation,
   useSubmitPatreonLoginMutation,
   useLoadDebugGameMutation,
-  useGetUserProfileQuery
+  useGetUserProfileQuery,
+  useSubmitLobbyInputMutation
 } = apiSlice;

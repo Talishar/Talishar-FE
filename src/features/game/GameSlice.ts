@@ -433,6 +433,7 @@ export const gameSlice = createSlice({
         action.payload.gameDynamicInfo.lastUpdate;
       state.gameDynamicInfo.turnNo = action.payload.gameDynamicInfo.turnNo;
       state.hasPriority = action.payload.hasPriority;
+      state.chatEnabled = action.payload.chatEnabled;
 
       state.playerPrompt = action.payload.playerPrompt;
       state.canPassPhase = action.payload.canPassPhase;
@@ -505,6 +506,8 @@ export const gameSlice = createSlice({
 
       // set isFullRematch to false
       state.isFullRematch = false;
+
+      state.chatEnabled = action.payload.chatEnabled ?? false;
 
       return state;
     });

@@ -13,13 +13,13 @@
 }
 
 .reorderItem {
-  height: 14dvh;
-  width: 14dvh;
+  height: var(--card-size);
+  width: var(--card-size);
   margin: 0;
 }
 
 .reorderItem {
-  max-width: 14dvh;
+  max-width: var(--card-size);
   color: rgba(0, 0, 0, 0);
 }
 

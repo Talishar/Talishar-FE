@@ -90,7 +90,8 @@ export default function ParseGameState(input: any) {
     gameInfo: { gameID: 0, playerID: 0, authKey: '', isPrivate: false },
     gameDynamicInfo: {},
     playerOne: {},
-    playerTwo: {}
+    playerTwo: {},
+    chatEnabled: false
   };
 
   if (input.errorMessage) {
@@ -185,6 +186,10 @@ export default function ParseGameState(input: any) {
 
   result.playerTwo.DeckSize = input.opponentDeckCount;
   result.playerTwo.DeckBack = ParseCard(input.opponentDeckCard);
+  result.playerTwo.Deck = [];
+  for (const cardObj of input.opponentDeck.reverse()) {
+    result.playerTwo.Deck.push(ParseCard(cardObj));
+  }
 
   result.playerTwo.Banish = [];
   for (const cardObj of input.opponentBanish.reverse()) {
@@ -253,6 +258,10 @@ export default function ParseGameState(input: any) {
 
   result.playerOne.DeckSize = input.playerDeckCount;
   result.playerOne.DeckBack = ParseCard(input.playerDeckCard);
+  result.playerOne.Deck = [];
+  for (const cardObj of input.playerDeck.reverse()) {
+    result.playerOne.Deck.push(ParseCard(cardObj));
+  }
 
   result.playerOne.Banish = [];
   for (const cardObj of input.playerBanish.reverse()) {
@@ -341,6 +350,8 @@ export default function ParseGameState(input: any) {
   // playmat
   result.playerOne.Playmat = PLAYMATS[input.MyPlaymat];
   result.playerTwo.Playmat = PLAYMATS[input.TheirPlaymat];
+
+  result.chatEnabled = input.chatEnabled ?? false;
 
   return result;
 }

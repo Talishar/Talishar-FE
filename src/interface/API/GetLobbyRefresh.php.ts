@@ -23,6 +23,8 @@ export interface GetLobbyRefreshResponse {
   canSubmitSideboard?: boolean;
   myDeckLink?: string;
   matchups?: Matchup[];
+  chatEnabled?: boolean;
+  chatInvited?: boolean;
 }
 
 export interface Matchup {

@@ -45,7 +45,7 @@
 }
 
 .activeLayersContents > div {
-  width: 14dvh;
+  width: var(--card-size);
 }
 
 .orderingExplanation {
@@ -65,6 +65,13 @@
 
 .target {
   margin-bottom: 0;
+}
+
+.targetContainer {
+  display: flex;
+  align-content: center;
+  align-items: center;
+  gap: 4px;
 }
 
 @media (orientation: portrait) {

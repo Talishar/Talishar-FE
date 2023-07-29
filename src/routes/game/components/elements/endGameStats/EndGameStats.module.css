@@ -1,4 +1,4 @@
-.cardListContents {
+.endGameStats {
   padding-top: 2vh;
   display: flex;
   flex-grow: 1;
@@ -9,6 +9,10 @@
   gap: 1vh;
   overflow-y: auto;
   height: auto;
+  z-index: 950;
+  --spacing: 0.25rem;
+  --font-size: 0.85rem;
+  user-select: auto;
 }
 
 .cardTable {
@@ -30,4 +34,25 @@
 
 .threePitch {
   color: aqua;
+}
+
+.twoColumn {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  gap: 25px;
+}
+
+.twoColumn h3 {
+  margin-top: 0px;
+  margin-bottom: 5px;
+}
+
+.twoColumn h2 {
+  margin-top: 0px;
+  margin-bottom: 5px;
+}
+
+.twoColumn p {
+  margin-bottom: 0px;
 }

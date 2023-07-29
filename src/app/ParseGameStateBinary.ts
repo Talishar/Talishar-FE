@@ -121,7 +121,8 @@ export default function ParseGameState(input: string) {
     gameInfo: { gameID: 0, playerID: 0, authKey: '', isPrivate: false },
     gameDynamicInfo: {},
     playerOne: {},
-    playerTwo: {}
+    playerTwo: {},
+    chatEnabled: false
   };
 
   // index 7 is player2 char and equip

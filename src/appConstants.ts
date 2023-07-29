@@ -94,7 +94,12 @@ export const PROCESS_INPUT = {
   ROGUELIKE_RESUME_ADVENTURE: 100011,
   CREATE_REPLAY: 100012,
   ALLOW_SPECTATORS: 100013,
-  REPORT_PLAYER: 100014
+  REPORT_PLAYER: 100014,
+  ENABLE_CHAT: 100015,
+  CONFIRM_UNDO: 100016,
+  DECLINE_UNDO: 100017,
+  CONFIRM_THIS_TURN_UNDO: 100018,
+  CONFIRM_LAST_TURN_UNDO: 100019
 };
 
 // Default shortcut inputs
@@ -156,7 +161,8 @@ export const URL_END_POINT = {
   GET_COSMETICS: `APIs/GetCosmetics.php`,
   DELETE_DECK: `APIs/DeleteDeckAPI.php`,
   PATREON_LOGIN: `AccountFiles/PatreonLoginAPI.php`,
-  LOAD_BUG_REPORT: `LoadBugReport.php`
+  LOAD_BUG_REPORT: `LoadBugReport.php`,
+  SUBMIT_LOBBY_INPUT: 'APIs/SubmitLobbyInput.php'
 };
 
 export const GAME_VISIBILITY = {
