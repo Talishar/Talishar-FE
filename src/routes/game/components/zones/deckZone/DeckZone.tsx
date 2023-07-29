@@ -23,7 +23,6 @@ export const DeckZone = React.memo((prop: Displayrow) => {
     isPlayer ? state.game.playerOne.DeckBack : state.game.playerTwo.DeckBack
   );
 
-
   const deckZone = useAppSelector((state: RootState) =>
     isPlayer ? state.game.playerOne.Deck : state.game.playerTwo.Deck
   );
@@ -33,7 +32,7 @@ export const DeckZone = React.memo((prop: Displayrow) => {
   }
 
   const deckZoneDisplay = () => {
-    if(deckZone.length === 0) return;
+    if (deckZone?.length === 0) return;
     const isPlayerPronoun = isPlayer ? 'Your' : "Your Opponent's";
     dispatch(
       setCardListFocus({

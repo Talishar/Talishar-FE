@@ -1,6 +1,5 @@
-
 import React from 'react';
-import CardPopUp from '../../cardPopUp/CardPopUp';
+import CardPopUp from '../routes/game/components/elements/cardPopUp/CardPopUp';
 
 const CARDRE = /{{(.+?)\|(.+?)(?:\|(.+?))?}}/g;
 
