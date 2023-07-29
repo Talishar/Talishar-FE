@@ -5,7 +5,7 @@ const News = () => {
   return (
     <div>
       <hgroup>
-        <h1><a href="https://www.youtube.com/watch?v=sZcqOqBOzmQ" target="_blank">Check out the coverage for the Calling: Birmingham!</a></h1>
+        <a href="https://www.youtube.com/watch?v=sZcqOqBOzmQ" target="_blank"><img src="../../../public/calling_birmingham_2023.jpg" style={{ width: '100%', height: 'auto', maxHeight:'100%', objectFit: 'cover' }} /></a>
       </hgroup>
       <p>Please join our community:</p>
       <ul>
