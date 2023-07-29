@@ -4,12 +4,9 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-image: url('../../../../../img/elements/Banner.png');
   width: 100%;
   min-width: 100%;
-  height: 17em;
   font-size: 1em;
-  padding-top: 0.5em;
   background-position: center;
   background-size: contain;
   background-repeat: no-repeat;
@@ -24,8 +21,6 @@
   left: 15%;
   right: 15%;
   width: 100%;
-  margin-top: 2vh;
-  margin-top: 2dvh;
   height: 3vh;
   height: 3dvh;
   text-align: center;
