@@ -5,7 +5,7 @@ const News = () => {
   return (
     <div>
       <hgroup>
-        <h1>DTD Cards now live in normal queue!</h1>
+        <h1><a href="https://www.youtube.com/watch?v=sZcqOqBOzmQ" target="_blank">Check out the coverage for the Calling: Birmingham!</a></h1>
       </hgroup>
       <p>Please join our community:</p>
       <ul>
