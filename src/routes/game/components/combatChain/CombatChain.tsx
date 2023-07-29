@@ -4,8 +4,12 @@ import ChainLinks from '../elements/chainLinks/ChainLinks';
 import CurrentAttack from '../elements/currentAttack/CurrentAttack';
 import Reactions from '../elements/reactions/Reactions';
 import TurnWidget from '../elements/turnWidget/TurnWidget';
+import { useCookies } from 'react-cookie';
+import ExperimentalTurnWidget from '../elements/experimentalTurnWidget/ExperimentalTurnWidget';
 
 export default function CombatChain() {
+  const [cookies] = useCookies(['experimental']);
+  console.log('cookies', cookies);
   return (
     <div className={styles.combatChain}>
       <CurrentAttack />
@@ -13,7 +17,7 @@ export default function CombatChain() {
         <ChainLinks />
         <Reactions />
       </div>
-      <TurnWidget />
+      {cookies.experimental ? <ExperimentalTurnWidget /> : <TurnWidget />}
     </div>
   );
 }

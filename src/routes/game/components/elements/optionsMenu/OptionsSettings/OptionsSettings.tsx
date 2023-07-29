@@ -75,7 +75,7 @@ const OptionsSettings = () => {
     // Enum is BE: /Libraries/PlayerSettings.php - function GetCardBack($player)
     cardBack: String(settingsData['CardBack']?.value ?? '0'),
     playMat: String(settingsData['Playmat']?.value ?? '0'),
-    alwaysAllowUndo: settingsData['AlwaysAllowUndo']?.value === '1',
+    alwaysAllowUndo: settingsData['AlwaysAllowUndo']?.value === '1'
   };
 
   return (

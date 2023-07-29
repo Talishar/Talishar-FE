@@ -22,14 +22,11 @@ export const ExperimentalTurnWidget = () => {
   return (
     <div className={styles.widgetContainer}>
       <div className={widgetBackground}>
-        <div className={styles.widgetLeftCol}>
-          <ActionPointDisplay isPlayer />
-        </div>
-        <div className={styles.widgetRightCol}>
-          <HealthDisplay isPlayer={false} />
-          <PassTurnDisplay />
-          <HealthDisplay isPlayer />
-        </div>
+        <ActionPointDisplay isPlayer={false} />
+        <HealthDisplay isPlayer={false} />
+        <PassTurnDisplay />
+        <ActionPointDisplay isPlayer />
+        <HealthDisplay isPlayer />
       </div>
     </div>
   );

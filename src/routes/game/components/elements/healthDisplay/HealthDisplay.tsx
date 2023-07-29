@@ -17,7 +17,7 @@ export default function HealthDisplay(props: Player) {
 
   return (
     <div className={styles.health}>
-      <div>{health}</div>
+      {health}
       {isManualMode && <ManualMode isPlayer={props.isPlayer} />}
     </div>
   );

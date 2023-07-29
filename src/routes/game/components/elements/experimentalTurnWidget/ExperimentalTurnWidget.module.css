@@ -1,12 +1,12 @@
 .widgetContainer {
   top: 0px;
-  right: 0px;
+  right: -2dvh;
 
   position: relative;
-  width: 14vh;
-  height: 18vh;
-  width: 14dvh;
-  height: 18dvh;
+  width: 22vh;
+  height: 28vh;
+  width: 22dvh;
+  height: 28dvh;
 
   z-index: 15;
   user-select: none;
@@ -14,12 +14,12 @@
 
 .widgetBackground {
   background-position: right;
-  background-size: 10vh auto;
+  background-size: cover;
   background-repeat: no-repeat;
   height: 100%;
 
-  width: 15vh;
-  width: 15dvh;
+  width: 24vh;
+  width: 24dvh;
 
   position: absolute;
   right: 0px;
@@ -27,14 +27,17 @@
   align-items: center;
   justify-content: flex-end;
   flex-direction: row;
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  grid-template-rows: 1fr 0.5fr 1fr;
 }
 
 .myTurn {
-  background-image: url('../../../../../img/elements/turnwidget/turnWidget-Green.png');
+  background-image: url('../../../../../img/elements/experimentalTurnWidget/UsGreen.png');
 }
 
 .ourTurn {
-  background-image: url('../../../../../img/elements/turnwidget/turnWidget-Normal.png');
+  background-image: url('../../../../../img/elements/experimentalTurnWidget/Them.png');
 }
 
 .widgetLeftCol {
@@ -42,16 +45,12 @@
   align-items: center;
   justify-content: center;
   height: 100%;
-  color: black;
-  height: 100%;
   z-index: 11;
 }
 
 .widgetRightCol {
   width: 10vh;
-  height: 17vh;
-  width: 10dvh;
-  height: 17dvh;
+  width: 14dvh;
 
   padding: 1vh 0;
   padding: 1dvh 0;

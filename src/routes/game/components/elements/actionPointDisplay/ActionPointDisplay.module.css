@@ -3,6 +3,10 @@
   display: flex;
   align-items: flex-end;
   justify-content: flex-end;
+  place-self: center center;
+  margin-left: 2vh;
+  margin-left: 2dvh;
+  z-index: 20;
 }
 
 .actionPointCounter {
@@ -10,13 +14,10 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 2.2em;
-  width: 2.2em;
-  background-image: url('../../../../../img/elements/turnwidget/turnWidget-ActionPoint.png');
-  background-position: center;
-  background-size: contain;
+  height: 100%;
+  width: 100%;
   text-align: center;
-  font-size: 1.5em;
+  font-size: 3em;
   color: var(--white);
   text-shadow: -1px 1px 2px #000, 1px 1px 2px #000, 1px -1px 0 #000,
     -1px -1px 0 #000;

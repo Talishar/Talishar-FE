@@ -11,16 +11,17 @@ import { MANUAL_MODE } from 'features/options/constants';
 
 export default function ActionPointDisplay(props: Player) {
   const APAvailable = useAppSelector((state: RootState) =>
-    Math.max(
-      state.game.playerOne.ActionPoints ?? 0,
-      state.game.playerTwo.ActionPoints ?? 0
-    )
+    props.isPlayer
+      ? state.game.playerOne.ActionPoints
+      : state.game.playerTwo.ActionPoints
   );
   const isManualMode = useSetting({ settingName: MANUAL_MODE })?.value === '1';
 
   return (
     <div className={styles.actionPointDisplay}>
-      <div className={styles.actionPointCounter}>{`${APAvailable} AP`}</div>
+      {!!APAvailable && (
+        <div className={styles.actionPointCounter}>{`${APAvailable} AP`}</div>
+      )}
       {isManualMode && <ManualMode />}
     </div>
   );
