@@ -76,6 +76,7 @@ export const CardDisplay = (prop: CardProp) => {
       {(card.isBroken || card.onChain || card.isFrozen) && (
         <div className={equipStatus}></div>
       )}
+      //{card.numUses > 1 && <div className={classStyles}>test 123</div>}
       <CountersOverlay
         {...card}
         num={num}
