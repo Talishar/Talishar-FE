@@ -90,6 +90,20 @@
   background-size: 100% 100%;
 }
 
+.numUses {
+  position:absolute;
+  bottom:5px;
+  right:5px;
+}
+
+.numUsesCircle {
+  height: 16px;
+  width: 16px;
+  background-color: #eee;
+  border-radius: 50%;
+  border: 2px solid DarkGrey;
+}
+
 .border1 {
   border-color: deepskyblue;
   box-shadow: 0 0 3px 3px deepskyblue;

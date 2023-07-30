@@ -65,6 +65,14 @@ export const CardDisplay = (prop: CardProp) => {
     [styles.biggerSize]: prop.makeMeBigger
   });
 
+  const renderNumUses = (numUses) => {
+    let divs = [];
+    for(let i = 1; i <= numUses; i++) {
+      divs.push(<div className={styles.numUsesCircle} key={i}></div>);
+    }
+    return divs;
+  };
+
   return (
     <CardPopUp
       cardNumber={card.cardNumber}
@@ -76,7 +84,10 @@ export const CardDisplay = (prop: CardProp) => {
       {(card.isBroken || card.onChain || card.isFrozen) && (
         <div className={equipStatus}></div>
       )}
-      //{card.numUses > 1 && <div className={classStyles}>test 123</div>}
+      {card.numUses > 1 && <div className={styles.numUses}>
+        {renderNumUses(card.numUses)}
+        </div>
+      }
       <CountersOverlay
         {...card}
         num={num}
