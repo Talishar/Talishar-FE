@@ -84,7 +84,7 @@ export const CardDisplay = (prop: CardProp) => {
       {(card.isBroken || card.onChain || card.isFrozen) && (
         <div className={equipStatus}></div>
       )}
-      {card.numUses > 1 && <div className={styles.numUses}>
+      {card.numUses > 1 && card.numUses < 10 && <div className={styles.numUses}>
         {renderNumUses(card.numUses)}
         </div>
       }
