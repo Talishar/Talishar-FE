@@ -5,7 +5,7 @@ const News = () => {
   return (
     <div>
       <hgroup>
-        <a href="https://www.youtube.com/watch?v=sZcqOqBOzmQ" target="_blank">
+        <a href="https://www.youtube.com/watch?v=D-YZjgx5Ijk" target="_blank">
           <img
             src="calling_birmingham_2023.jpg"
             style={{
