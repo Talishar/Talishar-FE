@@ -61,7 +61,8 @@ const Lobby = () => {
   const [submitSideboardMutation, submitSideboardMutationData] =
     useSubmitSideboardMutation();
 
-  const [submitLobbyInput, submitLobbyInputData] = useSubmitLobbyInputMutation();
+  const [submitLobbyInput, submitLobbyInputData] =
+    useSubmitLobbyInputMutation();
 
   useEffect(() => {
     if (gameLobby?.theirName != undefined && gameLobby?.theirName != '') {
@@ -175,8 +176,8 @@ const Lobby = () => {
   const mainClassNames = classNames(styles.lobbyClass);
 
   const [showChatModal, setShowChatModal] = useState(true);
-  const [chatModal, setChatModal] = useState("");
-  const [modal, setModal] = useState("Do you want to enable chat?");
+  const [chatModal, setChatModal] = useState('');
+  const [modal, setModal] = useState('Do you want to enable chat?');
   const dispatch = useAppDispatch();
 
   const clickYes = (e: any) => {
@@ -195,7 +196,7 @@ const Lobby = () => {
     setShowChatModal(false);
   };
 
-  console.log(gameLobby?.chatInvited + " " + showChatModal);
+  console.log(gameLobby?.chatInvited + ' ' + showChatModal);
 
   //const needToDoDisclaimer = !acceptedDisclaimer && data.format === GAME_FORMAT.OPEN_FORMAT;
   const needToDoDisclaimer = false;
@@ -254,16 +255,20 @@ const Lobby = () => {
 
   return (
     <main className={mainClassNames}>
-    {gameLobby?.chatInvited && showChatModal && createPortal(
-            <>
-              <dialog open className={styles.modal}>
-                <article>
-                  <header>{modal}</header>
-                  <button onClick={clickYes}>YES</button>
-                  <button onClick={clickNo}>NO</button>
-                </article>
-              </dialog>
-            </>, document.body)}
+      {gameLobby?.chatInvited &&
+        showChatModal &&
+        createPortal(
+          <>
+            <dialog open className={styles.modal}>
+              <article>
+                <header>{modal}</header>
+                <button onClick={clickYes}>YES</button>
+                <button onClick={clickNo}>NO</button>
+              </article>
+            </dialog>
+          </>,
+          document.body
+        )}
       {needToDoDisclaimer &&
         createPortal(
           <>
@@ -353,7 +358,7 @@ const Lobby = () => {
             {gameLobby?.amIChoosingFirstPlayer && !needToDoDisclaimer
               ? createPortal(<ChooseFirstTurn />, document.body)
               : !isWideScreen && (
-                  <nav>
+                  <nav className={styles.mobileNav}>
                     <ul>
                       {!isWideScreen && (
                         <li>
