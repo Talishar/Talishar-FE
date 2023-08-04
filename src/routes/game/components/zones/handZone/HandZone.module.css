@@ -28,3 +28,10 @@
   top: calc(var(--card-size) * -0.4);
   z-index: 20;
 }
+
+@media (orientation: portrait) {
+  .isOpponent {
+    top: calc((var(--card-size) * -0.4) + 5vh);
+    top: calc((var(--card-size) * -0.4) + 5dvh);
+  }
+}

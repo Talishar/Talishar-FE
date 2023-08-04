@@ -86,3 +86,19 @@
 .column h3 {
   margin: 0.5em 0;
 }
+
+@media (orientation: portrait) {
+  .optionsContainer {
+    max-width: 100%;
+    left: 0;
+    right: 0;
+  }
+
+  .optionsContentContainer {
+    flex-direction: column-reverse;
+  }
+
+  .column {
+    width: 100%;
+  }
+}

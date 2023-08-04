@@ -76,6 +76,13 @@ nav {
   top: 32px;
 }
 
+.mobileNav {
+  max-width: 100vh;
+  max-width: 100dvh;
+  overflow-x: auto;
+  overflow-y: auto;
+}
+
 .contentContainer {
   padding: 0 0.5em;
 }

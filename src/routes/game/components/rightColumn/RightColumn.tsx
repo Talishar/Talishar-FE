@@ -12,17 +12,22 @@ export default function RightColumn() {
   const isStreamerMode =
     useSetting({ settingName: IS_STREAMER_MODE })?.value === '1';
   return (
-    <div className={styles.rightColumn}>
-      <div className={styles.topGroup}>
+    <>
+      <div className={styles.mobileTopBar}>
         <Menu />
-        <TurnNumber />
-        <LastPlayed />
-        {isStreamerMode ? <StreamerBox /> : <PhaseTracker />}
       </div>
-      <div className={styles.bottomGroup}>
-        <ChatBox />
+      <div className={styles.rightColumn}>
+        <div className={styles.topGroup}>
+          <Menu />
+          <TurnNumber />
+          <LastPlayed />
+          {isStreamerMode ? <StreamerBox /> : <PhaseTracker />}
+        </div>
+        <div className={styles.bottomGroup}>
+          <ChatBox />
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 
