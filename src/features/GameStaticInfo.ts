@@ -4,4 +4,5 @@ export default interface GameStaticInfo {
   authKey: string;
   isPrivate: boolean;
   roguelikeGameID?: number;
+  altArts?: [];
 }

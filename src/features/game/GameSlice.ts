@@ -444,6 +444,10 @@ export const gameSlice = createSlice({
         action.payload.gameInfo.roguelikeGameID ??
         state.gameInfo.roguelikeGameID;
 
+      state.gameInfo.altArts =
+        action.payload.gameInfo.altArts ??
+        state.gameInfo.altArts;
+
       state.preventPassPrompt = action.payload.preventPassPrompt;
 
       return state;

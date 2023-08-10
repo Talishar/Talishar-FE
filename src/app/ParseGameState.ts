@@ -336,6 +336,7 @@ export default function ParseGameState(input: any) {
     result.playerTwo.isPatron = input.initialLoad.opponentIsPatron;
     result.playerTwo.isContributor = input.initialLoad.opponentIsContributor;
     result.gameInfo.roguelikeGameID = input.initialLoad.roguelikeGameID;
+    result.gameInfo.altArts = input.initialLoad.altArts;
   }
 
   result.playerPrompt = input.playerPrompt;
