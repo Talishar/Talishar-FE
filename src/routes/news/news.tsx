@@ -4,6 +4,7 @@ import RoguelikeAnnouncement from 'img/RoguelikeAnnouncement.webp';
 const News = () => {
   return (
     <div>
+    {/*
       <hgroup>
         <a href="https://www.youtube.com/watch?v=D-YZjgx5Ijk" target="_blank">
           <img
@@ -17,6 +18,7 @@ const News = () => {
           />
         </a>
       </hgroup>
+      */}
       <p>Please join our community:</p>
       <ul>
         <li>
