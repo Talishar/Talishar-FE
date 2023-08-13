@@ -70,6 +70,7 @@ const OptionsSettings = () => {
     mute: settingsData['MuteSound']?.value === '1',
     disableChat: settingsData['MuteChat']?.value === '1',
     disableStats: settingsData['DisableStats']?.value === '1',
+    disableAltArts: settingsData['DisableAltArts']?.value === '1',
     casterMode: settingsData['IsCasterMode']?.value === '1',
     streamerMode: settingsData['IsStreamerMode']?.value === '1',
     // Enum is BE: /Libraries/PlayerSettings.php - function GetCardBack($player)
@@ -417,6 +418,21 @@ const OptionsSettings = () => {
               }
             />
             Disable Stats
+          </label>
+          <label className={styles.optionLabel}>
+            <input
+              defaultChecked
+              type="checkbox"
+              name="disableAltArts"
+              checked={initialValues.disableAltArts}
+              onClick={() =>
+                handleSettingsChange({
+                  name: optConst.DISABLE_ALT_ARTS,
+                  value: initialValues.disableAltArts ? '0' : '1'
+                })
+              }
+            />
+            Disable Alt Arts
           </label>
         </fieldset>
         <label className={styles.cardBackTitle}>

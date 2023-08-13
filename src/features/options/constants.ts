@@ -12,6 +12,7 @@ export const CARD_BACK = 'CardBack';
 export const IS_PATRON = 'IsPatron';
 export const MUTE_CHAT = 'MuteChat';
 export const DISABLE_STATS = 'DisableStats';
+export const DISABLE_ALT_ARTS = 'DisableAltArts';
 export const IS_CASTER_MODE = 'IsCasterMode';
 export const IS_STREAMER_MODE = 'IsStreamerMode';
 export const MY_PLAYMAT = 'Playmat';
