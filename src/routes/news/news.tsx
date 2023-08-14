@@ -4,11 +4,12 @@ import RoguelikeAnnouncement from 'img/RoguelikeAnnouncement.webp';
 const News = () => {
   return (
     <div>
-    {/*
+    {
       <hgroup>
-        <a href="https://www.youtube.com/watch?v=D-YZjgx5Ijk" target="_blank">
+        Support the BrandaoTCG patreon to get access to their card back and 16 alt-art tokens on Talishar!
+        <a href="https://www.patreon.com/brandaotcg" target="_blank">
           <img
-            src="calling_birmingham_2023.jpg"
+            src="brandaotcg.jpg"
             style={{
               width: '100%',
               height: 'auto',
@@ -18,7 +19,7 @@ const News = () => {
           />
         </a>
       </hgroup>
-      */}
+      }
       <p>Please join our community:</p>
       <ul>
         <li>
