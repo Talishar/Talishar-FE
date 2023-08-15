@@ -61,19 +61,6 @@ export const CountersOverlay = ({
       {label !== undefined && label !== '' && (
         <div className={styles.label}>{label}</div>
       )}
-      {facing && (
-        <div
-          className={classNames(
-            {
-              [styles.facingUp]: facing === 'UP',
-              [styles.facingDown]: facing === 'DOWN' || facing === 'DOWNALL'
-            },
-            styles.facing
-          )}
-          // data-tooltip={`facing ${facing.toLowerCase()}`}
-          title={`Card is face ${facing.toLowerCase()}`}
-        ></div>
-      )}
       {gem !== 'none' && (
         <GemSlider
           gem={gem}

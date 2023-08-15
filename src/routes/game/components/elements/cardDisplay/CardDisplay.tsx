@@ -8,6 +8,7 @@ import CardImage from '../cardImage/CardImage';
 import CardPopUp from '../cardPopUp/CardPopUp';
 import { ActiveCardCounterOverlay } from '../countersOverlay/components/ActiveChainCounters';
 import CombatChainLink from 'features/CombatChainLink';
+import { useAppSelector } from 'app/Hooks';
 
 export interface CardProp {
   makeMeBigger?: boolean;
@@ -22,12 +23,15 @@ export interface CardProp {
 export const CardDisplay = (prop: CardProp) => {
   const { card, preventUseOnClick, activeCombatChain, num } = prop;
   const dispatch = useAppDispatch();
+  const cardBack = useAppSelector((state: RootState) =>
+    state.game.gameInfo.playerID == 1 ? state.game.playerOne.DeckBack : state.game.playerTwo.DeckBack
+  );
 
   if (card == null || card.cardNumber === '') {
     return null;
   }
 
-  const eqImg = `/cardsquares/${card.cardNumber}.webp`;
+  const eqImg = card.facing === "DOWN" ? `/cardsquares/${cardBack.cardNumber}.webp` : `/cardsquares/${card.cardNumber}.webp`;
 
   function onClick() {
     if (preventUseOnClick) {
