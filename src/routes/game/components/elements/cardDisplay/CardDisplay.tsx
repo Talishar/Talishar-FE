@@ -18,13 +18,14 @@ export interface CardProp {
   useCardMode?: number;
   card?: Card;
   activeCombatChain?: CombatChainLink;
+  isPlayer?: boolean;
 }
 
 export const CardDisplay = (prop: CardProp) => {
-  const { card, preventUseOnClick, activeCombatChain, num } = prop;
+  const { card, preventUseOnClick, activeCombatChain, num, isPlayer } = prop;
   const dispatch = useAppDispatch();
   const cardBack = useAppSelector((state: RootState) =>
-    state.game.gameInfo.playerID == 1 ? state.game.playerOne.DeckBack : state.game.playerTwo.DeckBack
+    isPlayer ? state.game.playerOne.DeckBack : state.game.playerTwo.DeckBack
   );
 
   if (card == null || card.cardNumber === '') {

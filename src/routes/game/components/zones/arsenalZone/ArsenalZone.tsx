@@ -37,7 +37,7 @@ export default function ArsenalZone(prop: Displayrow) {
         {arsenalCards.map((card: Card, index) => {
           // if it doesn't belong to us we don't need to know if it's faceup or facedown.
           const cardCopy = { ...card };
-          return <CardDisplay card={cardCopy} key={index} />;
+          return <CardDisplay card={cardCopy} key={index} isPlayer={isPlayer} />;
         })}
       </div>
     </div>
