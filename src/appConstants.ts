@@ -202,5 +202,11 @@ export const PLAYMATS = [
   'pits',
   'savage',
   'solana',
-  'volcor'
+  'volcor',
+  'bare-fangs',
+  'erase-face',
+  'DuskTillDawnAHS',
+  'exude-confidence',
+  'cnc',
+  'swarming-gloomveil'
 ];
