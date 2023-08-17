@@ -33,6 +33,16 @@ const Header = () => {
               />
             </Link>
           </li>
+          <li>
+            <a
+              href="https://www.patreon.com/talishar"
+              target={'_blank'}
+              className={styles.social}
+              title={'Patreon Link'}
+            >
+              Support Us!
+            </a>
+          </li>
         </ul>
         <ul>
           <li>
