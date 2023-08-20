@@ -7,7 +7,7 @@ const News = () => {
     {
       <hgroup>
         To celebrate the launch of the Arthouse Syndicate Command and Conquer alter sleeves, there are now AHS playmats and alt art cards available on Talishar! Go check out their alter sleeves by clicking the image!
-        <a href="https://arthousesyndicate.com/products/arthouse-syndicate-altar-sleeves-3-pack" target="_blank">
+        <a href="https://arthousesyndicate.com/" target="_blank">
           <img
             src="ahs.webp"
             style={{
