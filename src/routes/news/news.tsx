@@ -6,10 +6,10 @@ const News = () => {
     <div>
     {
       <hgroup>
-        Support the BrandaoTCG patreon to get access to their card back and 16 alt-art tokens on Talishar!
-        <a href="https://www.patreon.com/brandaotcg" target="_blank">
+        To celebrate the launch of the Arthouse Syndicate Command and Conquer alter sleeves, there are now AHS playmats and alt art cards available on Talishar! Go check out their alter sleeves by clicking the image!
+        <a href="https://arthousesyndicate.com/products/arthouse-syndicate-altar-sleeves-3-pack" target="_blank">
           <img
-            src="brandaotcg.jpg"
+            src="ahs.webp"
             style={{
               width: '100%',
               height: 'auto',
