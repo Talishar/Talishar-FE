@@ -11,7 +11,7 @@ import { MANUAL_MODE } from 'features/options/constants';
 import useSetting from 'hooks/useSetting';
 import { getGameInfo, submitButton } from 'features/game/GameSlice';
 import { updateOptions } from 'features/options/optionsSlice';
-import { useProcessInputAPIMutation } from 'features/api/apiSlice';
+import { createPortal } from 'react-dom';
 import { PROCESS_INPUT } from 'appConstants';
 
 export default function PlayerHand() {
@@ -80,66 +80,71 @@ export default function PlayerHand() {
 
   return (
     <>
-      <div className={styles.handRow}>
-        <AnimatePresence>
-          {handCards !== undefined &&
-            handCards.map((card, ix) => {
-              const cardCount = cardsInHandsAlready.filter(
-                (value) => value === card.cardNumber
-              ).length;
-              cardsInHandsAlready.push(card.cardNumber);
-              return (
-                <PlayerHandCard
-                  card={card}
-                  key={`hand-${card.cardNumber}-${cardCount}`}
-                  addCardToPlayedCards={addCardToPlayedCards}
-                  zIndex={-ix}
-                />
-              );
-            })}
-          {hasArsenal &&
-            showArsenal &&
-            arsenalCards !== undefined &&
-            arsenalCards.map((card, ix) => {
-              const cardCount = cardsInHandsAlready.filter(
-                (value) => value === card.cardNumber
-              ).length;
-              cardsInHandsAlready.push(card.cardNumber);
-              return (
-                <PlayerHandCard
-                  card={card}
-                  isArsenal
-                  key={`arsenal-${card.cardNumber}-${cardCount}`}
-                  addCardToPlayedCards={addCardToPlayedCards}
-                  zIndex={-(ix + (handCards?.length ?? 0))}
-                />
-              );
-            })}
-          {playableBanishedCards !== undefined &&
-            playableBanishedCards.map((card, ix) => {
-              const cardCount = cardsInHandsAlready.filter(
-                (value) => value === card.cardNumber
-              ).length;
-              cardsInHandsAlready.push(card.cardNumber);
-              return (
-                <PlayerHandCard
-                  card={card}
-                  isBanished
-                  key={`banished-${card.cardNumber}-${cardCount}`}
-                  addCardToPlayedCards={addCardToPlayedCards}
-                  zIndex={
-                    -(
-                      ix +
-                      (arsenalCards?.length ?? 0) +
-                      (handCards?.length ?? 0)
-                    )
-                  }
-                />
-              );
-            })}
-        </AnimatePresence>
-      </div>
-      {isManualMode && <ManualMode />}
+      {createPortal(
+        <>
+          <div className={styles.handRow}>
+            <AnimatePresence>
+              {handCards !== undefined &&
+                handCards.map((card, ix) => {
+                  const cardCount = cardsInHandsAlready.filter(
+                    (value) => value === card.cardNumber
+                  ).length;
+                  cardsInHandsAlready.push(card.cardNumber);
+                  return (
+                    <PlayerHandCard
+                      card={card}
+                      key={`hand-${card.cardNumber}-${cardCount}`}
+                      addCardToPlayedCards={addCardToPlayedCards}
+                      zIndex={-ix}
+                    />
+                  );
+                })}
+              {hasArsenal &&
+                showArsenal &&
+                arsenalCards !== undefined &&
+                arsenalCards.map((card, ix) => {
+                  const cardCount = cardsInHandsAlready.filter(
+                    (value) => value === card.cardNumber
+                  ).length;
+                  cardsInHandsAlready.push(card.cardNumber);
+                  return (
+                    <PlayerHandCard
+                      card={card}
+                      isArsenal
+                      key={`arsenal-${card.cardNumber}-${cardCount}`}
+                      addCardToPlayedCards={addCardToPlayedCards}
+                      zIndex={-(ix + (handCards?.length ?? 0))}
+                    />
+                  );
+                })}
+              {playableBanishedCards !== undefined &&
+                playableBanishedCards.map((card, ix) => {
+                  const cardCount = cardsInHandsAlready.filter(
+                    (value) => value === card.cardNumber
+                  ).length;
+                  cardsInHandsAlready.push(card.cardNumber);
+                  return (
+                    <PlayerHandCard
+                      card={card}
+                      isBanished
+                      key={`banished-${card.cardNumber}-${cardCount}`}
+                      addCardToPlayedCards={addCardToPlayedCards}
+                      zIndex={
+                        -(
+                          ix +
+                          (arsenalCards?.length ?? 0) +
+                          (handCards?.length ?? 0)
+                        )
+                      }
+                    />
+                  );
+                })}
+            </AnimatePresence>
+          </div>
+          {isManualMode && <ManualMode />}
+        </>,
+        document.body
+      )}
     </>
   );
 }

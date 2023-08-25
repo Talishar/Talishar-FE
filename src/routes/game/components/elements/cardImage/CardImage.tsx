@@ -18,14 +18,13 @@ export const CardImage = (props: CardImage) => {
   const { altArts } = useAppSelector(getGameInfo, shallowEqual);
   let src = props.src;
 
-
-
   let srcArray = src.split('/');
-  let cardNumber = srcArray.pop().substring(0, 6);
+  let cardNumber = srcArray?.pop()?.substring(0, 6);
 
-  if(altArts) {
-    for(let i = 0; i < altArts.length; i++) {
-      if(cardNumber == altArts[i].cardId) src = srcArray.join('/') + `/${altArts[i].altPath}.webp`;
+  if (altArts) {
+    for (let i = 0; i < altArts.length; i++) {
+      if (cardNumber == altArts[i].cardId)
+        src = srcArray.join('/') + `/${altArts[i].altPath}.webp`;
     }
   }
 

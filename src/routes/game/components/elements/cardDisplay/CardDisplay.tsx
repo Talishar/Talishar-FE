@@ -6,9 +6,9 @@ import classNames from 'classnames';
 import CountersOverlay from '../countersOverlay/CountersOverlay';
 import CardImage from '../cardImage/CardImage';
 import CardPopUp from '../cardPopUp/CardPopUp';
-import { ActiveCardCounterOverlay } from '../countersOverlay/components/ActiveChainCounters';
 import CombatChainLink from 'features/CombatChainLink';
 import { useAppSelector } from 'app/Hooks';
+import { RootState } from 'app/Store';
 
 export interface CardProp {
   makeMeBigger?: boolean;
@@ -26,13 +26,16 @@ export const CardDisplay = (prop: CardProp) => {
   const dispatch = useAppDispatch();
   const cardBack = useAppSelector((state: RootState) =>
     isPlayer ? state.game.playerOne.DeckBack : state.game.playerTwo.DeckBack
-  );
+  ) ?? { cardNumber: '' };
 
   if (card == null || card.cardNumber === '') {
     return null;
   }
 
-  const eqImg = card.facing === "DOWN" ? `/cardsquares/${cardBack.cardNumber}.webp` : `/cardsquares/${card.cardNumber}.webp`;
+  const eqImg =
+    card.facing === 'DOWN'
+      ? `/cardsquares/${cardBack.cardNumber}.webp`
+      : `/cardsquares/${card.cardNumber}.webp`;
 
   function onClick() {
     if (preventUseOnClick) {
@@ -70,9 +73,9 @@ export const CardDisplay = (prop: CardProp) => {
     [styles.biggerSize]: prop.makeMeBigger
   });
 
-  const renderNumUses = (numUses) => {
+  const renderNumUses = (numUses: number) => {
     let divs = [];
-    for(let i = 1; i <= numUses; i++) {
+    for (let i = 1; i <= numUses; i++) {
       divs.push(<div className={styles.numUsesCircle} key={i}></div>);
     }
     return divs;
@@ -89,10 +92,9 @@ export const CardDisplay = (prop: CardProp) => {
       {(card.isBroken || card.onChain || card.isFrozen) && (
         <div className={equipStatus}></div>
       )}
-      {card.numUses > 1 && card.numUses < 10 && <div className={styles.numUses}>
-        {renderNumUses(card.numUses)}
-        </div>
-      }
+      {card.numUses && card.numUses > 1 && card.numUses < 10 && (
+        <div className={styles.numUses}>{renderNumUses(card.numUses)}</div>
+      )}
       <CountersOverlay
         {...card}
         num={num}

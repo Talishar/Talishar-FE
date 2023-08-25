@@ -15,6 +15,11 @@
   user-select: none;
   z-index: 15;
   isolation: isolate;
+  margin: auto;
+  left: 10vh;
+  left: 10dvh;
+  right: 20vh;
+  right: 20dvh;
 }
 
 @media (orientation: portrait) {
