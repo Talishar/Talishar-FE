@@ -29,6 +29,8 @@
     width: 100%;
     gap: 0;
     bottom: 2vh;
+    left: 0;
+    right: 0;
   }
 }
 
