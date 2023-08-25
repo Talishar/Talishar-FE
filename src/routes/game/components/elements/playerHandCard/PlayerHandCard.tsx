@@ -120,6 +120,7 @@ export const PlayerHandCard = ({
       initial={{ opacity: 0, y: 100 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.5 }}
+      whileHover={{ scale: 1.1, y: -50 }}
     >
       <CardPopUp
         containerClass={styles.imgContainer}

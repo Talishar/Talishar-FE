@@ -65,6 +65,14 @@ body {
   flex-direction: column;
   order: 2;
   width: 100%;
+  margin-bottom: 3vh;
+  margin-bottom: 3dvh;
+}
+
+@media (orientation: portrait) {
+  .gameZone {
+    margin-bottom: 0;
+  }
 }
 
 .defaultToast {
