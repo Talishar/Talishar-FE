@@ -27,10 +27,6 @@
   transition: transform 0.25s;
 }
 
-.imgContainer:hover {
-  top: -10vh;
-}
-
 .iconCol {
   display: flex;
   position: absolute;
