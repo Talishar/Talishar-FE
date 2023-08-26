@@ -35,6 +35,7 @@ function ParseCard(input: any) {
   card.zone = input.zone;
   card.facing = input.facing;
   card.numUses = input.numUses;
+  card.subcards = input.subcards;
 
   return card;
 }

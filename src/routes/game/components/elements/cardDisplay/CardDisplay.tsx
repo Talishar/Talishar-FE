@@ -66,7 +66,11 @@ export const CardDisplay = (prop: CardProp) => {
     [styles.border5]: card.borderColor == '5',
     [styles.border6]: card.borderColor == '6',
     [styles.border7]: card.borderColor == '7',
-    [styles.border8]: card.borderColor == '8'
+    [styles.border8]: card.borderColor == '8',
+  });
+
+  const subcardStyles = classNames(styles.img, {
+    [styles.subcard]: card.subcards && card.subcards.length > 0 && card.subcards[0]
   });
 
   const cardStyle = classNames(styles.card, styles.normalSize, {
@@ -87,6 +91,9 @@ export const CardDisplay = (prop: CardProp) => {
       containerClass={cardStyle}
       onClick={onClick}
     >
+    {card.subcards && card.subcards.length > 0 && card.subcards[0] && (
+      <CardImage src={`/cardsquares/${card.subcards[0]}.webp`} className={subcardStyles} />
+    )}
       <CardImage src={eqImg} className={imgStyles} />
       {card.overlay === 'disabled' && <div className={classStyles}></div>}
       {(card.isBroken || card.onChain || card.isFrozen) && (

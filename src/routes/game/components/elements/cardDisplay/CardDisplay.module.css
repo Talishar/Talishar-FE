@@ -143,6 +143,10 @@
   box-shadow: 0 0 0 2px var(--primary);
 }
 
+.subcard {
+  margin-top: -15px;
+}
+
 @media (orientation: portrait) {
   .normalSize {
     max-height: 14vw;
