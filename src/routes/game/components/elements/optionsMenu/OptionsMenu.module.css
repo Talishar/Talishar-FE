@@ -12,6 +12,7 @@
   padding: 2vh;
   border: 1px solid var(--primary);
   border-radius: 20px;
+  isolation: isolate;
   z-index: 1000;
 }
 
