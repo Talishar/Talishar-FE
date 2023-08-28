@@ -46,7 +46,8 @@ const CHAT_WHEEL = new Map<number, string>([
   [13, 'Got to go'],
   [14, 'Be right back'],
   [15, 'Are you there?'],
-  [16, 'Whoops!']
+  [16, 'Whoops!'],
+  [17, 'No problem!']
 ]);
 
 interface ChatOptionsProps {
