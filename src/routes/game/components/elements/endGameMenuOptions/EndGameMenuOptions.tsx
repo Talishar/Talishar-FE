@@ -12,6 +12,7 @@ const EndGameMenuOptions = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { roguelikeGameID } = useAppSelector(getGameInfo, shallowEqual);
+  const playerName = useAppSelector((state: RootState) => state.game.playerOne.Name);
   //Always player 1 in roguelike, which is only place this matters
   const health = useAppSelector(
     (state: RootState) => state.game.playerOne.Health ?? 0
@@ -52,6 +53,13 @@ const EndGameMenuOptions = () => {
             </div>
             <div className={styles.buttonDiv} onClick={handleFullRematch}>
               Full Rematch (new sideboard)
+            </div>
+          </>
+        )}
+        {!roguelikeGameID && playerName == "OotTheMonk" && (
+          <>
+            <div className={styles.buttonDiv} onClick={handleQuickRematch}>
+              Save Replay (beta)
             </div>
           </>
         )}
