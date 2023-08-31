@@ -6,10 +6,10 @@ const News = () => {
     <div>
     {
       <hgroup>
-        To celebrate the launch of the Arthouse Syndicate Command and Conquer alter sleeves, there are now AHS playmats and alt art cards available on Talishar! Go check out their alter sleeves by clicking the image!
-        <a href="https://arthousesyndicate.com/" target="_blank">
+        Join Team Second Cycle (LIVE) as they give a farewell to Rosetta Thorn!
+        <a href="https://www.youtube.com/watch?v=1zQaat9FfoQ" target="_blank">
           <img
-            src="ahs.webp"
+            src="TheSecondCycle.webp"
             style={{
               width: '100%',
               height: 'auto',
