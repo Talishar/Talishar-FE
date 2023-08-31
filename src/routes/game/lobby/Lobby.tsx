@@ -198,8 +198,8 @@ const Lobby = () => {
 
   console.log(gameLobby?.chatInvited + ' ' + showChatModal);
 
-  //const needToDoDisclaimer = !acceptedDisclaimer && data.format === GAME_FORMAT.OPEN_FORMAT;
-  const needToDoDisclaimer = false;
+  const needToDoDisclaimer = !acceptedDisclaimer && data.format === GAME_FORMAT.OPEN_FORMAT;
+  //const needToDoDisclaimer = false;
 
   const handleFormSubmission = async (values: DeckResponse) => {
     setIsSubmitting(true);
