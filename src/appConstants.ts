@@ -2,13 +2,13 @@
 export const GAME_LIMIT_LIVE = 1000000;
 export const GAME_LIMIT_BETA = 1000;
 
-export const BACKEND_URL = import.meta.env.MODE
+export const BACKEND_URL = import.meta.env.DEV
   ? '/api/'
   : `https://${import.meta.env.VITE_BACKEND_URL}/${
       import.meta.env.VITE_BACKEND_DIRECTORY
     }/`;
 
-export const DATADOLL_URL = import.meta.env.MODE
+export const DATADOLL_URL = import.meta.env.DEV
   ? '/datadoll/'
   : `https://${import.meta.env.VITE_DATADOLL_URL}:${
       import.meta.env.VITE_DATADOLL_PORT
