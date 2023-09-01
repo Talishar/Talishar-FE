@@ -91,9 +91,9 @@
 }
 
 .numUses {
-  position:absolute;
-  bottom:5px;
-  right:5px;
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
 }
 
 .numUsesCircle {
@@ -144,7 +144,8 @@
 }
 
 .subcard {
-  margin-top: -15px;
+  margin-top: -2vh;
+  margin-top: -2dvh;
 }
 
 @media (orientation: portrait) {
