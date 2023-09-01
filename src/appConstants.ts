@@ -10,9 +10,7 @@ export const BACKEND_URL = import.meta.env.DEV
 
 export const DATADOLL_URL = import.meta.env.DEV
   ? '/datadoll/'
-  : `https://${import.meta.env.VITE_DATADOLL_URL}:${
-      import.meta.env.VITE_DATADOLL_PORT
-    }/`;
+  : `https://${import.meta.env.VITE_DATADOLL_URL}/`;
 
 // what playmat is the default
 export const DEFAULT_PLAYMAT = `Default`;
