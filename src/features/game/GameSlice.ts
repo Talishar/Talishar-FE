@@ -82,7 +82,7 @@ export const gameLobby = createAsyncThunk(
     },
     { getState }
   ) => {
-    const queryURL = `${BACKEND_URL}${URL_END_POINT.GAME_STATE_POLL}`;
+    const queryURL = `${BACKEND_URL}${URL_END_POINT.GET_LOBBY_REFRESH}`;
 
     const requestBody = {
       gameName: params.game.gameID,
@@ -165,7 +165,7 @@ export const submitButton = createAsyncThunk(
   'game/submitButton',
   async (params: { button: Button }, { getState }) => {
     const { game } = getState() as { game: GameState };
-    const queryURL = `${BACKEND_URL}${URL_END_POINT.GAME_STATE_POLL}`;
+    const queryURL = `${BACKEND_URL}${URL_END_POINT.PROCESS_INPUT}`;
     const queryParams = new URLSearchParams({
       gameName: String(game.gameInfo.gameID),
       playerID: String(game.gameInfo.playerID),
@@ -193,7 +193,7 @@ export const submitMultiButton = createAsyncThunk(
   'game/submitButton',
   async (params: { mode?: number; extraParams: string }, { getState }) => {
     const { game } = getState() as { game: GameState };
-    const queryURL = `${BACKEND_URL}${URL_END_POINT.GAME_STATE_POLL}`;
+    const queryURL = `${BACKEND_URL}${URL_END_POINT.PROCESS_INPUT}`;
     const queryParams = new URLSearchParams({
       gameName: String(game.gameInfo.gameID),
       playerID: String(game.gameInfo.playerID),

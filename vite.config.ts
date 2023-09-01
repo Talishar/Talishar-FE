@@ -18,8 +18,6 @@ export default ({ mode }) => {
     ? process.env.VITE_BACKEND_DIRECTORY
     : 'game';
 
-  const http = process.env.DEV ? 'http' : 'https';
-
   return defineConfig({
     base: './',
     build: { outDir: './build' },
@@ -27,10 +25,26 @@ export default ({ mode }) => {
     server: {
       proxy: {
         '/api': {
-          target: `${http}://${devURL}:${devPort}/${devDirectory}`,
+          target: `http://${devURL}:${devPort}/${devDirectory}`,
           changeOrigin: true,
           secure: false,
-          rewrite: (path) => path.replace(/api\/dev\//, '')
+          rewrite: (path) => path.replace(/api\//, ''),
+          configure: (proxy, _options) => {
+            proxy.on('error', (err, _req, _res) => {
+              console.log('proxy error', err);
+            });
+            proxy.on('proxyReq', (proxyReq, req, _res) => {
+              console.log('Sending request:', req.method, req.url);
+            });
+            proxy.on('proxyRes', (proxyRes, req, _res) => {
+              console.log('Received response:', proxyRes.statusCode, req.url);
+            });
+          }
+        },
+        '/datadoll': {
+          target: `http://${process.env.VITE_DATADOLL_BACKEND}:${process.env.VITE_DATADOLL_PORT}/${process.env.VITE_DATADOLL_DIRECTORY}`,
+          changeOrigin: true,
+          secure: false
         }
       }
     },
