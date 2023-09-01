@@ -32,7 +32,6 @@ export default function ExperimentalTurnWidget() {
       <ActionPointDisplay isPlayer={false} />
       <HealthDisplay isPlayer={false} />
       <PassTurnDisplay />
-      <div>A</div>
       <ActionPointDisplay isPlayer />
       <HealthDisplay isPlayer />
     </div>
@@ -112,18 +111,27 @@ export function ActionPointDisplay(props: Player) {
   const showAPDisplay = amIActivePlayer && props.isPlayer;
 
   return (
-    <div>
+    <>
       <AnimatePresence>
-        {showAPDisplay && (
-          <motion.div className={styles.actionPointDisplay}>
+        {showAPDisplay ? (
+          <motion.div
+            className={classNames(styles.actionPointDisplay, {
+              [styles.actionPointsPlayer]: props.isPlayer,
+              [styles.actionPointsOpponent]: !props.isPlayer
+            })}
+            initial={{ y: props.isPlayer ? -50 : 50 }}
+            animate={{ y: 0 }}
+          >
             <div
               className={styles.actionPointCounter}
             >{`${APAvailable} AP`}</div>
             {isManualMode && <ManualMode />}
           </motion.div>
+        ) : (
+          <div></div>
         )}
       </AnimatePresence>
-    </div>
+    </>
   );
 }
 
@@ -227,13 +235,20 @@ export function PassTurnDisplay() {
   };
 
   if (canPassPhase === undefined) {
-    return <div className={styles.passTurnDisplay}></div>;
+    return (
+      <div
+        className={classNames(styles.passTurnDisplay, styles.passTurnInactive)}
+      ></div>
+    );
   }
 
   if (canPassPhase === true) {
     return (
       <>
-        <div className={styles.passTurnDisplayActive} onClick={onPassTurn}>
+        <div
+          className={classNames(styles.passTurnDisplay, styles.passTurnActive)}
+          onClick={onPassTurn}
+        >
           <div className={styles.passText}>PASS</div>
           <div className={styles.subThing}>[spacebar]</div>
         </div>
@@ -255,7 +270,13 @@ export function PassTurnDisplay() {
   }
 
   if (canPassPhase === false) {
-    return <div className={styles.passTurnDisplay}>WAIT</div>;
+    return (
+      <div
+        className={classNames(styles.passTurnDisplay, styles.passTurnInactive)}
+      >
+        WAIT
+      </div>
+    );
   }
 
   return null;

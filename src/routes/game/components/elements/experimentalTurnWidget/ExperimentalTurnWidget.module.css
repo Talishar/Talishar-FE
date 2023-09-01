@@ -1,6 +1,4 @@
 .widgetContainer {
-  background-color: blue;
-  outline: red;
   max-height: 200px;
   max-width: 225px;
   height: 100%;
@@ -10,98 +8,84 @@
   user-select: none;
 
   display: grid;
-  grid-template-columns: 1fr 64px;
-  grid-template-rows: 1fr 64px 1fr;
+  grid-template-columns: 2fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
+  gap: 5px;
+  isolation: isolate;
+
+  --grey-gradient: linear-gradient(
+    130deg,
+    hsl(0deg 0% 39%) 0%,
+    hsl(0deg 0% 38%) 16%,
+    hsl(0deg 0% 36%) 21%,
+    hsl(0deg 0% 35%) 25%,
+    hsl(0deg 0% 33%) 29%,
+    hsl(0deg 0% 31%) 34%,
+    hsl(0deg 0% 29%) 40%,
+    hsl(0deg 0% 27%) 47%,
+    hsl(0deg 0% 25%) 59%,
+    hsl(0deg 0% 23%) 93%
+  );
+
+  --green-gradient: linear-gradient(
+    130deg,
+    hsl(124deg 100% 36%) 0%,
+    hsl(124deg 100% 34%) 21%,
+    hsl(124deg 100% 32%) 30%,
+    hsl(124deg 100% 30%) 39%,
+    hsl(124deg 100% 27%) 46%,
+    hsl(124deg 100% 25%) 54%,
+    hsl(124deg 100% 22%) 61%,
+    hsl(124deg 100% 19%) 69%,
+    hsl(124deg 100% 15%) 79%,
+    hsl(124deg 100% 9%) 100%
+  );
 }
 
 .passTurnDisplay {
-  padding-left: 50px;
-  background-image: url('../../../../../img/elements/turnwidget/passInactive.png');
-  background-size: cover;
-}
-
-.passTurnDisplayActive {
-  padding-left: 50px;
-  background-image: url('../../../../../img/elements/turnwidget/passActive.png');
-  background-size: cover;
+  grid-column-start: 1;
+  grid-column-end: span 2;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  align-content: center;
   justify-content: center;
-  font-size: 16px;
-  height: 100%;
-}
-
-.passTurnDisplayActive > div {
-  margin: 0;
-}
-
-.passTurnDisplayActive:hover {
-  padding-left: 50px;
-  background-image: url('../../../../../img/elements/turnwidget/passHover.png');
-}
-
-.widgetContainer > * {
-  outline: 1px solid red;
-}
-
-.widgetBackground {
-  background-position: right;
-  background-size: 10vh auto;
-  background-repeat: no-repeat;
-  height: 100%;
-
-  width: 15vh;
-  width: 15dvh;
-
-  position: absolute;
-  right: 0px;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  flex-direction: row;
-}
-
-.myTurn {
-  background-image: url('../../../../../img/elements/turnwidget/turnWidget-Green.png');
-}
-
-.ourTurn {
-  background-image: url('../../../../../img/elements/turnwidget/turnWidget-Normal.png');
-}
-
-.widgetLeftCol {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  color: black;
-  height: 100%;
-  z-index: 11;
-}
-
-.widgetRightCol {
-  width: 10vh;
-  height: 17vh;
-  width: 10dvh;
-  height: 17dvh;
-
-  padding: 1vh 0;
-  padding: 1dvh 0;
-
-  gap: 1vh;
-  gap: 1dvh;
-
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-
-  top: 0px;
-  bottom: 0px;
-  right: 0px;
+  border-radius: 0.5dvh;
+  cursor: pointer;
   z-index: 10;
+  border-color: black;
+  border-width: 2px;
+}
+
+.passTurnActive {
+  background-image: var(--green-gradient);
+}
+
+.passTurnInactive {
+  background-image: var(--grey-gradient);
+}
+
+.health {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-image: var(--grey-gradient);
+  border-radius: 5px;
+}
+
+.actionPointDisplay {
+  width: 50%;
+  justify-self: end;
+  z-index: -1;
+}
+
+.actionPointsPlayer {
+  background-color: red;
+  align-self: start;
+}
+
+.actionPointsOpponent {
+  background-color: blue;
+  align-self: end;
 }
 
 @media (orientation: portrait) {
