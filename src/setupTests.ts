@@ -15,7 +15,7 @@ import mockOptionsMenuResponse from 'mocks/optionsmenu/mockOptionsMenuResponse';
 const store = setupStore();
 
 export const restHandlers = [
-  rest.get('api/live/GetPopupAPI.php', (req, res, ctx) => {
+  rest.get('api/GetPopupAPI.php', (req, res, ctx) => {
     return res(
       ctx.status(200),
       ctx.json({
@@ -25,7 +25,7 @@ export const restHandlers = [
       })
     );
   }),
-  rest.get('api/dev/GetPopupAPI.php', (req, res, ctx) => {
+  rest.get('api/GetPopupAPI.php', (req, res, ctx) => {
     switch (req.url.searchParams.get('popupType')) {
       case 'mySettings':
         return res(ctx.status(200), ctx.json(mockOptionsMenuResponse));
@@ -46,7 +46,7 @@ export const restHandlers = [
         );
     }
   }),
-  rest.post('/api/dev/APIs/CreateGame.php', (req, res, ctx) => {
+  rest.post('/api/APIs/CreateGame.php', (req, res, ctx) => {
     return res(
       ctx.status(200),
       ctx.json({

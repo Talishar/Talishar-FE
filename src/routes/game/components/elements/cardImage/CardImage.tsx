@@ -19,7 +19,6 @@ export const CardImage = (props: CardImage) => {
   let srcArray = src.split('/');
   let cardNumber = srcArray?.pop()?.substring(0, 6);
 
-  // TODO: If altArts is a string, then these will throw an error.
   if (altArts) {
     for (let i = 0; i < altArts.length; i++) {
       if (cardNumber == altArts[i].cardId)
