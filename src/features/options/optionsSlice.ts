@@ -29,7 +29,7 @@ const settingsAdapter = createEntityAdapter<Setting>({
   sortComparer: (a, b) => a.name.localeCompare(b.name)
 });
 
-const settingsInitialState = settingsAdapter.getInitialState({
+export const settingsInitialState = settingsAdapter.getInitialState({
   status: QUERY_STATUS.IDLE
 });
 

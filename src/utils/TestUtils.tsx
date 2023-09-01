@@ -9,6 +9,9 @@ import { AppStore, RootState, setupStore } from '../app/Store';
 
 import InitialGameState from '../features/game/InitialGameState';
 import { MemoryRouter } from 'react-router-dom';
+import optionsSlice, {
+  settingsInitialState
+} from '../features/options/optionsSlice';
 
 // This type interface extends the default options for render from RTL, as well
 // as allows the user to specify other things such as initialState, store.
@@ -23,7 +26,8 @@ export const renderWithProviders = (
     // @ts-ignore - I know I know...
     preloadedState = {
       game: InitialGameState,
-      auth: { user: null, userName: null, token: null }
+      auth: { user: null, userName: null, token: null },
+      settings: settingsInitialState
     },
     // Automatically create a store instance if no store was passed in
     store = setupStore(preloadedState),
