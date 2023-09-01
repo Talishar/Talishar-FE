@@ -138,7 +138,7 @@ export const playCard = createAsyncThunk(
         : params.cardIndex;
     const gameInfo = game.gameInfo;
 
-    const queryURL = `${BACKEND_URL}${URL_END_POINT.GAME_STATE_POLL}`;
+    const queryURL = `${BACKEND_URL}${URL_END_POINT.PROCESS_INPUT}`;
     const queryParams = new URLSearchParams({
       gameName: String(gameInfo.gameID),
       playerID: String(gameInfo.playerID),

@@ -177,7 +177,6 @@ export function PassTurnDisplay() {
   const frameNumber = useAppSelector(
     (state: RootState) => state.game.gameDynamicInfo.lastUpdate
   );
-  const [areYouSure, setAreYouSure] = useState<boolean>(false);
   const [showAreYouSureModal, setShowAreYouSureModal] =
     useState<boolean>(false);
   const [canPassController, setCanPassController] = useState<boolean>(false);
@@ -235,7 +234,7 @@ export function PassTurnDisplay() {
     return (
       <>
         <div className={styles.passTurnDisplayActive} onClick={onPassTurn}>
-          <div> PASS </div>
+          <div className={styles.passText}>PASS</div>
           <div className={styles.subThing}>[spacebar]</div>
         </div>
         {showAreYouSureModal &&

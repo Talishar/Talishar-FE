@@ -2,7 +2,7 @@
   background-color: blue;
   outline: red;
   max-height: 200px;
-  max-width: 200px;
+  max-width: 225px;
   height: 100%;
   width: 100%;
 
@@ -10,8 +10,36 @@
   user-select: none;
 
   display: grid;
-  grid-template-columns: 2fr 1fr;
-  grid-template-rows: 2fr 1fr 2fr;
+  grid-template-columns: 1fr 64px;
+  grid-template-rows: 1fr 64px 1fr;
+}
+
+.passTurnDisplay {
+  padding-left: 50px;
+  background-image: url('../../../../../img/elements/turnwidget/passInactive.png');
+  background-size: cover;
+}
+
+.passTurnDisplayActive {
+  padding-left: 50px;
+  background-image: url('../../../../../img/elements/turnwidget/passActive.png');
+  background-size: cover;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+  font-size: 16px;
+  height: 100%;
+}
+
+.passTurnDisplayActive > div {
+  margin: 0;
+}
+
+.passTurnDisplayActive:hover {
+  padding-left: 50px;
+  background-image: url('../../../../../img/elements/turnwidget/passHover.png');
 }
 
 .widgetContainer > * {
