@@ -80,7 +80,7 @@ export const GameStateHandler = React.memo(() => {
       })
     );
 
-    if (gameID === '101') {
+    if (import.meta.env.VITE_FREEZE_GAME) {
       dispatch(
         nextTurn({
           game: {

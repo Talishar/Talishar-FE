@@ -5,13 +5,7 @@ import { getGameInfo, nextTurn, setGameStart } from 'features/game/GameSlice';
 import { shallowEqual } from 'react-redux';
 import { useKnownSearchParams } from 'hooks/useKnownSearchParams';
 import { GameLocationState } from 'interface/GameLocationState';
-import {
-  API_URL_BETA,
-  API_URL_DEV,
-  API_URL_LIVE,
-  GAME_LIMIT_BETA,
-  GAME_LIMIT_LIVE
-} from 'appConstants';
+import { BACKEND_URL } from 'appConstants';
 import { RootState } from './Store';
 
 const ExperimentalGameStateHandler = () => {
@@ -35,19 +29,9 @@ const ExperimentalGameStateHandler = () => {
         authKey: gameInfo.authKey || authKey
       })
     );
-
-    let baseUrl = API_URL_DEV;
-    if (gameInfo.gameID > GAME_LIMIT_BETA) {
-      baseUrl = API_URL_BETA;
-    }
-    if (gameInfo.gameID > GAME_LIMIT_LIVE) {
-      baseUrl = API_URL_LIVE;
-    }
-    console.log('setting up listener to domain', baseUrl);
     const source = new EventSource(
-      `${baseUrl}GetUpdateSSE.php?gameName=${gameInfo.gameID}&playerID=${gameInfo.playerID}&authKey=${gameInfo.authKey}`
+      `${BACKEND_URL}GetUpdateSSE.php?gameName=${gameInfo.gameID}&playerID=${gameInfo.playerID}&authKey=${gameInfo.authKey}`
     );
-    console.log(source);
     source.onmessage = (e) => {
       console.log('update data:', e.data);
       dispatch(

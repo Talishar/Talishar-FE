@@ -7,15 +7,7 @@ import {
 } from '@reduxjs/toolkit/query/react';
 import { isRejectedWithValue } from '@reduxjs/toolkit';
 import type { MiddlewareAPI, Middleware } from '@reduxjs/toolkit';
-import { RootState } from 'app/Store';
-import {
-  API_URL_BETA,
-  API_URL_DEV,
-  API_URL_LIVE,
-  GAME_LIMIT_BETA,
-  GAME_LIMIT_LIVE,
-  URL_END_POINT
-} from 'appConstants';
+import { BACKEND_URL, URL_END_POINT } from 'appConstants';
 import {
   CreateGameAPI,
   CreateGameResponse
@@ -81,17 +73,7 @@ const dynamicBaseQuery: BaseQueryFn<
   unknown,
   FetchBaseQueryError
 > = async (args, webApi, extraOptions) => {
-  let baseUrl = API_URL_DEV;
-  const gameId = (webApi.getState() as RootState).game.gameInfo.gameID;
-  if (gameId > GAME_LIMIT_BETA) {
-    baseUrl = API_URL_BETA;
-  }
-  if (gameId > GAME_LIMIT_LIVE) {
-    baseUrl = API_URL_LIVE;
-  }
-  if (gameId === 0) {
-    baseUrl = import.meta.env.DEV ? API_URL_DEV : API_URL_LIVE;
-  }
+  const baseUrl = BACKEND_URL;
   const rawBaseQuery = fetchBaseQuery({
     baseUrl,
     credentials: 'include'

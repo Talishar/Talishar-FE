@@ -2,15 +2,17 @@
 export const GAME_LIMIT_LIVE = 1000000;
 export const GAME_LIMIT_BETA = 1000;
 
-export const API_URL_BETA = import.meta.env.DEV
-  ? `/api/beta/`
-  : 'https://beta.talishar.net/game/';
-export const API_URL_LIVE = import.meta.env.DEV
-  ? `/api/live/`
-  : 'https://api.talishar.net/game/';
-export const API_URL_DEV = import.meta.env.DEV
-  ? `/api/dev/`
-  : 'https://api.talishar.net/game/';
+export const BACKEND_URL = `${import.meta.env.MODE ? 'http' : 'https'}://${
+  import.meta.env.VITE_BACKEND_URL
+}:${import.meta.env.VITE_BACKEND_PORT}/${
+  import.meta.env.VITE_BACKEND_DIRECTORY
+}/`;
+
+export const DATADOLL_URL = `${import.meta.env.MODE ? 'http' : 'https'}://${
+  import.meta.env.VITE_DATADOLL_URL
+}:${import.meta.env.VITE_DATADOLL_PORT}/${
+  import.meta.env.VITE_DATADOLL_DIRECTORY
+}/`;
 
 // what playmat is the default
 export const DEFAULT_PLAYMAT = `Default`;

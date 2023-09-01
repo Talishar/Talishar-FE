@@ -6,7 +6,7 @@ import {
 import { RootState } from 'app/Store';
 import {
   API_URL_BETA,
-  API_URL_DEV,
+  BACKEND_URL,
   API_URL_LIVE,
   GAME_LIMIT_BETA,
   GAME_LIMIT_LIVE,
@@ -45,7 +45,7 @@ export const fetchAllSettings = createAsyncThunk(
         ? `${API_URL_LIVE}${URL_END_POINT.GET_POPUP}`
         : params.game.gameID > GAME_LIMIT_BETA
         ? `${API_URL_BETA}${URL_END_POINT.GET_POPUP}`
-        : `${API_URL_DEV}${URL_END_POINT.GET_POPUP}`;
+        : `${BACKEND_URL}${URL_END_POINT.GET_POPUP}`;
     const queryParams = new URLSearchParams({
       gameName: String(params.game.gameID),
       playerID: String(params.game.playerID),
@@ -87,7 +87,7 @@ export const updateOptions = createAsyncThunk(
         ? `${API_URL_LIVE}${URL_END_POINT.PROCESS_INPUT_POST}`
         : game.gameID > GAME_LIMIT_BETA
         ? `${API_URL_BETA}${URL_END_POINT.PROCESS_INPUT_POST}`
-        : `${API_URL_DEV}${URL_END_POINT.PROCESS_INPUT_POST}`;
+        : `${BACKEND_URL}${URL_END_POINT.PROCESS_INPUT_POST}`;
 
     try {
       const response = await fetch(queryURL, {

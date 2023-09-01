@@ -3,14 +3,7 @@ import ParseGameState from '../../app/ParseGameState';
 import InitialGameState from './InitialGameState';
 import GameStaticInfo from '../GameStaticInfo';
 import { Card } from '../Card';
-import {
-  API_URL_BETA,
-  API_URL_LIVE,
-  API_URL_DEV,
-  GAME_LIMIT_LIVE,
-  GAME_LIMIT_BETA,
-  URL_END_POINT
-} from 'appConstants';
+import { BACKEND_URL, URL_END_POINT } from 'appConstants';
 import Button from '../Button';
 import { toast } from 'react-hot-toast';
 import GameState from '../GameState';
@@ -35,12 +28,7 @@ export const nextTurn = createAsyncThunk(
     },
     { getState }
   ) => {
-    const queryURL =
-      params.game.gameID > GAME_LIMIT_LIVE
-        ? `${API_URL_LIVE}${URL_END_POINT.GAME_STATE_POLL}`
-        : params.game.gameID > GAME_LIMIT_BETA
-        ? `${API_URL_BETA}${URL_END_POINT.GAME_STATE_POLL}`
-        : `${API_URL_DEV}${URL_END_POINT.GAME_STATE_POLL}`;
+    const queryURL = `${BACKEND_URL}${URL_END_POINT.GAME_STATE_POLL}`;
     const queryParams = new URLSearchParams({
       gameName: String(params.game.gameID),
       playerID: String(params.game.playerID),
@@ -94,12 +82,7 @@ export const gameLobby = createAsyncThunk(
     },
     { getState }
   ) => {
-    const queryURL =
-      params.game.gameID > GAME_LIMIT_LIVE
-        ? `${API_URL_LIVE}${URL_END_POINT.GET_LOBBY_REFRESH}`
-        : params.game.gameID > GAME_LIMIT_BETA
-        ? `${API_URL_BETA}${URL_END_POINT.GET_LOBBY_REFRESH}`
-        : `${API_URL_DEV}${URL_END_POINT.GET_LOBBY_REFRESH}`;
+    const queryURL = `${BACKEND_URL}${URL_END_POINT.GAME_STATE_POLL}`;
 
     const requestBody = {
       gameName: params.game.gameID,
@@ -148,9 +131,6 @@ export const playCard = createAsyncThunk(
   'game/playCard',
   async (params: { cardParams: Card; cardIndex?: number }, { getState }) => {
     const { game } = getState() as { game: GameState };
-    // if (game.isPlayerInputInProgress) {
-    //   return;
-    // }
 
     const playNo =
       params.cardParams.actionDataOverride != ''
@@ -158,12 +138,7 @@ export const playCard = createAsyncThunk(
         : params.cardIndex;
     const gameInfo = game.gameInfo;
 
-    const queryURL =
-      gameInfo.gameID > GAME_LIMIT_LIVE
-        ? `${API_URL_LIVE}${URL_END_POINT.PROCESS_INPUT}`
-        : gameInfo.gameID > GAME_LIMIT_BETA
-        ? `${API_URL_BETA}${URL_END_POINT.PROCESS_INPUT}`
-        : `${API_URL_DEV}${URL_END_POINT.PROCESS_INPUT}`;
+    const queryURL = `${BACKEND_URL}${URL_END_POINT.GAME_STATE_POLL}`;
     const queryParams = new URLSearchParams({
       gameName: String(gameInfo.gameID),
       playerID: String(gameInfo.playerID),
@@ -190,12 +165,7 @@ export const submitButton = createAsyncThunk(
   'game/submitButton',
   async (params: { button: Button }, { getState }) => {
     const { game } = getState() as { game: GameState };
-    const queryURL =
-      game.gameInfo.gameID > GAME_LIMIT_LIVE
-        ? `${API_URL_LIVE}${URL_END_POINT.PROCESS_INPUT}`
-        : game.gameInfo.gameID > GAME_LIMIT_BETA
-        ? `${API_URL_BETA}${URL_END_POINT.PROCESS_INPUT}`
-        : `${API_URL_DEV}${URL_END_POINT.PROCESS_INPUT}`;
+    const queryURL = `${BACKEND_URL}${URL_END_POINT.GAME_STATE_POLL}`;
     const queryParams = new URLSearchParams({
       gameName: String(game.gameInfo.gameID),
       playerID: String(game.gameInfo.playerID),
@@ -223,12 +193,7 @@ export const submitMultiButton = createAsyncThunk(
   'game/submitButton',
   async (params: { mode?: number; extraParams: string }, { getState }) => {
     const { game } = getState() as { game: GameState };
-    const queryURL =
-      game.gameInfo.gameID > GAME_LIMIT_LIVE
-        ? `${API_URL_LIVE}${URL_END_POINT.PROCESS_INPUT}`
-        : game.gameInfo.gameID > GAME_LIMIT_BETA
-        ? `${API_URL_BETA}${URL_END_POINT.PROCESS_INPUT}`
-        : `${API_URL_DEV}${URL_END_POINT.PROCESS_INPUT}`;
+    const queryURL = `${BACKEND_URL}${URL_END_POINT.GAME_STATE_POLL}`;
     const queryParams = new URLSearchParams({
       gameName: String(game.gameInfo.gameID),
       playerID: String(game.gameInfo.playerID),
@@ -445,8 +410,7 @@ export const gameSlice = createSlice({
         state.gameInfo.roguelikeGameID;
 
       state.gameInfo.altArts =
-        action.payload.gameInfo.altArts ??
-        state.gameInfo.altArts;
+        action.payload.gameInfo.altArts ?? state.gameInfo.altArts;
 
       state.preventPassPrompt = action.payload.preventPassPrompt;
 
