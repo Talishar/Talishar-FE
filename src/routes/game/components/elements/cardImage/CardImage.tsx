@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import { useAppSelector } from 'app/Hooks';
-import { RootState } from 'app/Store';
-import styles from './CardImage.module.css';
 import { shallowEqual } from 'react-redux';
 import { getGameInfo } from 'features/game/GameSlice';
 

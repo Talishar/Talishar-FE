@@ -5,11 +5,7 @@ import {
 } from '@reduxjs/toolkit';
 import { RootState } from 'app/Store';
 import {
-  API_URL_BETA,
-  API_URL_DEV,
-  API_URL_LIVE,
-  GAME_LIMIT_BETA,
-  GAME_LIMIT_LIVE,
+  BACKEND_URL,
   PLAYER_OPTIONS,
   PROCESS_INPUT,
   QUERY_STATUS,
@@ -33,19 +29,14 @@ const settingsAdapter = createEntityAdapter<Setting>({
   sortComparer: (a, b) => a.name.localeCompare(b.name)
 });
 
-const settingsInitialState = settingsAdapter.getInitialState({
+export const settingsInitialState = settingsAdapter.getInitialState({
   status: QUERY_STATUS.IDLE
 });
 
 export const fetchAllSettings = createAsyncThunk(
   'options/fetchAllSettings',
   async (params: { game: GameStaticInfo }) => {
-    const queryURL =
-      params.game.gameID > GAME_LIMIT_LIVE
-        ? `${API_URL_LIVE}${URL_END_POINT.GET_POPUP}`
-        : params.game.gameID > GAME_LIMIT_BETA
-        ? `${API_URL_BETA}${URL_END_POINT.GET_POPUP}`
-        : `${API_URL_DEV}${URL_END_POINT.GET_POPUP}`;
+    const queryURL = `${BACKEND_URL}${URL_END_POINT.GET_POPUP}`;
     const queryParams = new URLSearchParams({
       gameName: String(params.game.gameID),
       playerID: String(params.game.playerID),
@@ -82,12 +73,7 @@ export const fetchAllSettings = createAsyncThunk(
 export const updateOptions = createAsyncThunk(
   'options/setSettings',
   async ({ game, settings }: { game: GameStaticInfo; settings: Setting[] }) => {
-    const queryURL =
-      game.gameID > GAME_LIMIT_LIVE
-        ? `${API_URL_LIVE}${URL_END_POINT.PROCESS_INPUT_POST}`
-        : game.gameID > GAME_LIMIT_BETA
-        ? `${API_URL_BETA}${URL_END_POINT.PROCESS_INPUT_POST}`
-        : `${API_URL_DEV}${URL_END_POINT.PROCESS_INPUT_POST}`;
+    const queryURL = ` ${BACKEND_URL}${URL_END_POINT.PROCESS_INPUT_POST}`;
 
     try {
       const response = await fetch(queryURL, {

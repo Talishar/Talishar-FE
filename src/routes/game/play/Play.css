@@ -10,15 +10,15 @@ body {
   width: 100dvw;
   height: 100vh;
   height: 100dvh;
-  --card-size: 13vh;
-  --card-size: 13dvh;
+  --card-size: calc(13vh * var(--card-scale));
+  --card-size: calc(13dvh * var(--card-scale));
 }
 
 @media (orientation: portrait) {
   html,
   body {
-    --card-size: 12vw;
-    --card-size: 12dvw;
+    --card-size: calc(12vw * var(--card-scale));
+    --card-size: calc(12dvw * var(--card-scale));
   }
 }
 

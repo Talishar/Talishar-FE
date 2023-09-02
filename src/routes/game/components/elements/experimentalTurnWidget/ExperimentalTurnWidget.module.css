@@ -1,0 +1,124 @@
+.widgetContainer {
+  max-height: 200px;
+  max-width: 225px;
+  height: 100%;
+  width: 100%;
+
+  z-index: 15;
+  user-select: none;
+
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
+  gap: 5px;
+  isolation: isolate;
+
+  --grey-gradient: linear-gradient(
+    130deg,
+    hsl(0deg 0% 39%) 0%,
+    hsl(0deg 0% 38%) 16%,
+    hsl(0deg 0% 36%) 21%,
+    hsl(0deg 0% 35%) 25%,
+    hsl(0deg 0% 33%) 29%,
+    hsl(0deg 0% 31%) 34%,
+    hsl(0deg 0% 29%) 40%,
+    hsl(0deg 0% 27%) 47%,
+    hsl(0deg 0% 25%) 59%,
+    hsl(0deg 0% 23%) 93%
+  );
+
+  --green-gradient: linear-gradient(
+    130deg,
+    hsl(124deg 100% 36%) 0%,
+    hsl(124deg 100% 34%) 21%,
+    hsl(124deg 100% 32%) 30%,
+    hsl(124deg 100% 30%) 39%,
+    hsl(124deg 100% 27%) 46%,
+    hsl(124deg 100% 25%) 54%,
+    hsl(124deg 100% 22%) 61%,
+    hsl(124deg 100% 19%) 69%,
+    hsl(124deg 100% 15%) 79%,
+    hsl(124deg 100% 9%) 100%
+  );
+}
+
+.passTurnDisplay {
+  grid-column-start: 1;
+  grid-column-end: span 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-radius: 0.5dvh;
+  z-index: 10;
+  border-color: black;
+  border-width: 2px;
+}
+
+.passTurnActive {
+  background-image: var(--green-gradient);
+  cursor: pointer;
+}
+
+.passTurnInactive {
+  background-image: var(--grey-gradient);
+}
+
+.health {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-image: var(--grey-gradient);
+  border-radius: 5px;
+}
+
+.actionPointDisplay {
+  width: 50%;
+  justify-self: end;
+  z-index: -1;
+}
+
+.actionPointsPlayer {
+  background-color: red;
+  align-self: start;
+}
+
+.actionPointsOpponent {
+  background-color: blue;
+  align-self: end;
+}
+
+@media (orientation: portrait) {
+  .widgetContainer {
+    top: 0px;
+    right: 0px;
+    position: absolute;
+
+    width: 20vw;
+    height: 26vw;
+    width: 20dvw;
+    height: 26dvw;
+
+    user-select: none;
+  }
+
+  .widgetLeftCol {
+    margin-right: 1em;
+  }
+
+  .widgetRightCol {
+    height: 95%;
+    right: 2em;
+    margin-right: 0.5em;
+  }
+
+  .widgetBackground {
+    background-size: 15dvw auto;
+    height: 100%;
+
+    width: 18vw;
+    width: 18dvw;
+
+    right: -1em;
+  }
+}

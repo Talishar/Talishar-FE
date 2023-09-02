@@ -13,8 +13,7 @@
   align-items: center;
   gap: 2vh;
   user-select: none;
-  z-index: 15;
-  isolation: isolate;
+  z-index: 1;
   margin: auto;
   left: 10vh;
   left: 10dvh;
@@ -42,9 +41,11 @@
   z-index: 500;
   bottom: 0;
   display: grid;
+  grid-template-columns: 3fr 1fr 1fr;
   gap: 10px;
   padding: 10px;
-  grid-template-columns: 3fr 1fr 1fr;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .manualMode > * {
