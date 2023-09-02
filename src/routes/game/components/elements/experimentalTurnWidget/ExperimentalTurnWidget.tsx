@@ -1,7 +1,7 @@
 import Player from 'interface/Player';
 import styles from './ExperimentalTurnWidget.module.css';
 import classNames from 'classnames';
-import { submitButton } from 'features/game/GameSlice';
+import { getGameInfo, submitButton } from 'features/game/GameSlice';
 import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai';
 import useSetting from 'hooks/useSetting';
 import { MANUAL_MODE } from 'features/options/constants';
@@ -14,6 +14,7 @@ import useSound from 'use-sound';
 import passTurnSound from 'sounds/prioritySound.wav';
 import { createPortal } from 'react-dom';
 import { AnimatePresence, motion } from 'framer-motion';
+import { shallowEqual } from 'react-redux';
 
 export default function ExperimentalTurnWidget() {
   const [heightRatio, setHeightRatio] = useState(1);
@@ -106,9 +107,11 @@ export function ActionPointDisplay(props: Player) {
   const amIActivePlayer = useAppSelector(
     (state: RootState) => state.game.amIActivePlayer
   );
+  const gameInfo = useAppSelector(getGameInfo, shallowEqual);
   const isManualMode = useSetting({ settingName: MANUAL_MODE })?.value === '1';
 
-  const showAPDisplay = amIActivePlayer && props.isPlayer;
+  const showAPDisplay =
+    (amIActivePlayer && props.isPlayer) || gameInfo.playerID === 3;
 
   return (
     <>
