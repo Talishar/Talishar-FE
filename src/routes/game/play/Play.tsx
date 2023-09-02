@@ -13,8 +13,26 @@ import CardListZone from '../components/zones/cardListZone/CardListZone';
 import ChainLinkSummaryContainer from '../components/elements/chainLinkSummary/ChainLinkSummary';
 import ActiveLayersZone from '../components/zones/activeLayersZone/ActiveLayersZone';
 import ExperimentalGameStateHandler from 'app/ExperimentalGameStateHandler';
+import { useCookies } from 'react-cookie';
+import { useEffect } from 'react';
 
 function Play() {
+  const [cookies, setCookie, removeCookie] = useCookies([
+    'experimental',
+    'cardSize'
+  ]);
+
+  useEffect(() => {
+    if (cookies.experimental && cookies.cardSize) {
+      document.documentElement.style.setProperty(
+        '--card-scale',
+        cookies.cardSize
+      );
+    } else {
+      document.documentElement.style.setProperty('--card-scale', '1');
+    }
+  }, [cookies.experimental, cookies.cardSize]);
+
   return (
     <div className="centering">
       <div className="app" key="app">
