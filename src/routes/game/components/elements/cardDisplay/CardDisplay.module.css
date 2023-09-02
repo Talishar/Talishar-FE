@@ -144,8 +144,7 @@
 }
 
 .subcard {
-  margin-top: -2vh;
-  margin-top: -2dvh;
+  margin-top: calc(var(--card-size) * -0.2);
 }
 
 @media (orientation: portrait) {

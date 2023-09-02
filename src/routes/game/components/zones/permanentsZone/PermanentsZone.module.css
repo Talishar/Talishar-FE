@@ -9,16 +9,17 @@
   width: 100%;
   height: var(--card-size);
   overflow: visible;
+  pointer-events: none;
 }
 
 .permanentsZone {
   position: absolute;
-  top: -2dvh;
+  top: calc(var(--card-size) * -0.2);
   left: 0;
   right: 0;
-  bottom: -1dvh;
-  padding-bottom: 1dvh;
-  padding-right: 2dvh;
+  bottom: calc(var(--card-size) * -0.1);
+  padding-bottom: calc(var(--card-size) * 0.1);
+  padding-right: calc(var(--card-size) * 0.2);
   display: flex;
   flex-direction: row;
   align-items: flex-end;
@@ -72,6 +73,7 @@
   width: var(--card-size);
   height: var(--card-size);
   flex-shrink: 0;
+  pointer-events: auto;
 }
 
 @media (orientation: portrait) {
