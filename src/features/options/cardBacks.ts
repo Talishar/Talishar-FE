@@ -55,7 +55,13 @@ export const CARD_BACK = {
   '53': 'CBOnHitEffect',
   '54': 'CBDaganWhite',
   '55': 'CBSonicDoom',
-  '56': 'CBBrandao'
+  '56': 'CBBrandao',
+  '57': 'CBFabrary3',
+  '58': 'CBFabrary4',
+  '59': 'CBFabrary5',
+  '60': 'CBFabrary6',
+  '61': 'CBFabrary7',
+  '62': 'CBFabrary8'
 } as { [key: string]: string };
 
 export const PLAYMATS = {
