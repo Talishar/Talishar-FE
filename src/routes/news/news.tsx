@@ -4,7 +4,6 @@ import RoguelikeAnnouncement from 'img/RoguelikeAnnouncement.webp';
 const News = () => {
   return (
     <div>
-    {
       <hgroup>
         Watch Team Second Cycle as they give a farewell to Rosetta Thorn!
         <a href="https://www.youtube.com/watch?v=1zQaat9FfoQ" target="_blank">
@@ -19,7 +18,7 @@ const News = () => {
           />
         </a>
       </hgroup>
-      }
+      <h3>The roguelike mode is temporarily unavailable</h3>
       <p>Please join our community:</p>
       <ul>
         <li>
