@@ -1,35 +1,34 @@
 .permanentsWrapper {
   position: relative;
+  overflow-x: scroll;
+  overflow-y: visible;
+  flex: 0 1 100%;
   border-radius: 0.5em;
   gap: 1vh;
   background: rgba(50, 50, 50, 0.5);
   color: var(--white);
+  grid-area: permanents;
   min-width: 100%;
   min-height: 100%;
   width: 100%;
-  height: var(--card-size);
-  overflow: visible;
-  pointer-events: none;
+  height: 100%;
+  padding-top:20px;
 }
 
 .permanentsZone {
   position: absolute;
-  top: calc(var(--card-size) * -0.2);
+  top: 0;
   left: 0;
   right: 0;
-  bottom: 0;
-  padding-bottom: 0;
-  padding-right: calc(var(--card-size) * 0.2);
+  bottom: -10px;
+  padding-bottom: 10px;
+  padding-top:10px;
   display: flex;
-  flex-direction: row;
-  align-items: flex-end;
+  justify-content: flex-start;
   gap: 1vh;
-  min-height: 100%;
-  min-width: 100%;
+  align-content: flex-start;
   flex-wrap: nowrap;
-  overflow-x: auto;
-  overflow-y: visible;
-  scroll-snap-type: x proximity;
+  min-height: var(--card-size);
 }
 
 .permanentsText {
@@ -70,10 +69,8 @@
 .cardContainer {
   display: block;
   position: relative;
-  width: var(--card-size);
-  height: var(--card-size);
-  flex-shrink: 0;
-  pointer-events: auto;
+  aspect-ratio: 1;
+  min-width: var(--card-size);
 }
 
 @media (orientation: portrait) {
