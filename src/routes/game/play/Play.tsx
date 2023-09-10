@@ -23,7 +23,7 @@ function Play() {
   ]);
 
   useEffect(() => {
-    if (cookies.experimental && cookies.cardSize) {
+    if (cookies.cardSize) {
       document.documentElement.style.setProperty(
         '--card-scale',
         cookies.cardSize
@@ -31,7 +31,7 @@ function Play() {
     } else {
       document.documentElement.style.setProperty('--card-scale', '1');
     }
-  }, [cookies.experimental, cookies.cardSize]);
+  }, [cookies.cardSize]);
 
   return (
     <div className="centering">

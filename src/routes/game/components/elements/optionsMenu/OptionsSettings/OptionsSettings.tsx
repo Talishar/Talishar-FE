@@ -517,44 +517,39 @@ const OptionsSettings = () => {
         </p>
       </div>
       <hr />
-      {cookies.experimental && (
-        <>
-          <fieldset>
-            <legend>
-              <strong>Experimental Settings</strong>
-            </legend>
-            <label className={styles.optionLabel}>
-              <input
-                name="cardSize"
-                type="range"
-                min="25"
-                max="100"
-                defaultValue={(cookies.cardSize ?? 1) * 100}
-                id="cardSize"
-                onChange={(e) =>
-                  setCookie('cardSize', parseInt(e.target.value) / 100)
-                }
-              />
-              Card Size is {cookies.cardSize * 100}% (range 25-100%)
-            </label>
-            <label className={styles.optionLabel}>
-              <input
-                name="playmatIntensity"
-                type="range"
-                min="10"
-                max="100"
-                defaultValue={(cookies.playmatIntensity ?? 0.65) * 100}
-                id="cardSize"
-                onChange={(e) =>
-                  setCookie('playmatIntensity', parseInt(e.target.value) / 100)
-                }
-              />
-              Playmat Intensity {cookies.playmatIntensity * 100}% (range
-              10-100%)
-            </label>
-          </fieldset>
-        </>
-      )}
+      <>
+        <fieldset>
+          <label className={styles.optionLabel}>
+            <input
+              name="cardSize"
+              type="range"
+              min="25"
+              max="100"
+              defaultValue={(cookies.cardSize ?? 1) * 100}
+              id="cardSize"
+              onChange={(e) =>
+                setCookie('cardSize', parseInt(e.target.value) / 100)
+              }
+            />
+            Card Size is {cookies.cardSize * 100}% (range 25-100%)
+          </label>
+          <label className={styles.optionLabel}>
+            <input
+              name="playmatIntensity"
+              type="range"
+              min="10"
+              max="100"
+              defaultValue={(cookies.playmatIntensity ?? 0.65) * 100}
+              id="cardSize"
+              onChange={(e) =>
+                setCookie('playmatIntensity', parseInt(e.target.value) / 100)
+              }
+            />
+            Playmat Intensity {cookies.playmatIntensity * 100}% (range
+            10-100%)
+          </label>
+        </fieldset>
+      </>
       <p>
         Talishar is in no way affiliated with Legend Story Studios. Legend Story
         Studios®, Flesh and Blood™, and set names are trademarks of Legend Story
