@@ -1,6 +1,6 @@
 .permanentsWrapper {
   position: relative;
-  overflow-x: scroll;
+  overflow-x: auto;
   overflow-y: visible;
   flex: 0 1 100%;
   border-radius: 0.5em;
