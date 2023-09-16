@@ -188,3 +188,16 @@
   grid-area: pOneGraveyard;
   aspect-ratio: 1;
 }
+
+.playerPromptWrapper {
+  position: fixed;
+  bottom: 0;
+  margin: auto;
+  width: 100%;
+  z-index: 20;
+}
+
+.playerPromptWrapper > div {
+  width: 50%;
+  margin: auto;
+}

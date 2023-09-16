@@ -22,6 +22,7 @@ import styles from './GridBoard.module.css';
 import { useCookies } from 'react-cookie';
 import ExperimentalTurnWidget from '../elements/experimentalTurnWidget';
 import TurnWidget from '../elements/turnWidget/TurnWidget';
+import { createPortal } from 'react-dom';
 
 const GridBoard = () => {
   const [cookies] = useCookies(['experimental']);
@@ -119,8 +120,13 @@ const GridBoard = () => {
         <Playmat isPlayer={true} />
         <div className={styles.combatChain}>
           <CombatChain />
-          {/* <PlayerPrompt /> */}
         </div>
+        {createPortal(
+          <div className={styles.playerPromptWrapper}>
+            <PlayerPrompt />
+          </div>,
+          document.body
+        )}
       </div>
     </>
   );

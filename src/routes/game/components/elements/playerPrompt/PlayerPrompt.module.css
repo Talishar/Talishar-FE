@@ -7,7 +7,7 @@
   width: 100%;
   text-align: center;
   position: relative;
-  border-radius: 0.5em;
+  border-radius: 5px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -15,10 +15,10 @@
   flex-wrap: nowrap;
   font-size: 1em;
   font-weight: 600;
-  padding: 4px 8px;
+  padding: 2px 4px;
   flex-direction: row;
   overflow-x: min-content;
-  gap: 0.2em;
+  gap: 5px;
 }
 
 .content {
@@ -52,12 +52,12 @@
   cursor: pointer;
 }
 
-@media (min-width: 1250px) {
+/* @media (min-width: 1250px) {
   .playerPrompt {
     font-size: 1.5em;
     font-weight: 600;
   }
-}
+} */
 
 @media (orientation: portrait) {
   .playerPrompt {
