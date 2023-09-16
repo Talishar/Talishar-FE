@@ -117,6 +117,8 @@
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
+  padding-right: 10px;
+  padding-left: 10px;
 }
 
 .pOneFeet {
