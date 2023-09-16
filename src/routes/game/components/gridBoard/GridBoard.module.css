@@ -195,9 +195,11 @@
   margin: auto;
   width: 100%;
   z-index: 20;
+  pointer-events: none;
 }
 
 .playerPromptWrapper > div {
   width: 50%;
   margin: auto;
+  pointer-events: all;
 }

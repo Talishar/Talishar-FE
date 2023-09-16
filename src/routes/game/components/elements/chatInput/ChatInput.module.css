@@ -68,3 +68,7 @@
   display: block;
   margin: 0 auto 5px auto;
 }
+
+.floatingOverlay {
+  z-index: 1000;
+}

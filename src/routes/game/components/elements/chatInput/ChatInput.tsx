@@ -195,7 +195,7 @@ const ChatWheel = () => {
       </div>
       {modalDisplay &&
         createPortal(
-          <FloatingOverlay lockScroll>
+          <FloatingOverlay lockScroll className={styles.floatingOverlay}>
             <FloatingFocusManager context={context} modal={false}>
               <div
                 ref={refs.setFloating}
