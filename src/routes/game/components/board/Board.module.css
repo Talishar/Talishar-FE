@@ -9,3 +9,20 @@
   margin-left: auto;
   margin-right: auto;
 }
+
+.chainMiddleContainer {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+}
+
+.healthContainer {
+  flex-shrink: 1;
+  min-width: 20vw;
+  min-width: 20dvw;
+  positon: relative;
+}
+
+.chainContainer {
+  flex-grow: 2;
+}

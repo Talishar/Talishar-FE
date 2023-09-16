@@ -1,4 +1,5 @@
 .gameBoardGrid {
+  position: relative;
   display: grid;
   grid-template-columns:
     5px var(--card-size) var(--card-size) 1fr var(--card-size)
@@ -13,17 +14,24 @@
   padding: 1vh;
   grid-template-areas:
     '. . . . . . . . . . .'
-    '.  pTwoHead pTwoPermanents pTwoPermanents pTwoPermanents pTwoArsenal pTwoArsenal pTwoArsenal pTwoCount pTwoBanish .'
+    '.  pTwoHead . . . pTwoArsenal pTwoArsenal pTwoArsenal pTwoCount pTwoBanish .'
     '. pTwoChest pTwoHands . pTwoWeaponLZone pTwoHero pTwoWeaponRZone . pTwoPitch pTwoDeck .'
-    '. pTwoFeet combatChain combatChain combatChain combatChain combatChain combatChain combatChain pTwoGraveyard .'
-    '. . combatChain combatChain combatChain combatChain combatChain combatChain combatChain . .'
-    '. . combatChain combatChain combatChain combatChain combatChain combatChain combatChain . .'
-    '. . combatChain combatChain combatChain combatChain combatChain combatChain combatChain . .'
-    '. . combatChain combatChain combatChain combatChain combatChain combatChain combatChain . .'
-    '. pOneHead combatChain combatChain combatChain combatChain combatChain combatChain combatChain pOneGraveyard .'
+    '. pTwoFeet pTwoPermanents pTwoPermanents pTwoPermanents pTwoPermanents pTwoPermanents pTwoPermanents healthWidget pTwoGraveyard .'
+    '. . combatChain combatChain combatChain combatChain combatChain combatChain healthWidget . .'
+    '. . combatChain combatChain combatChain combatChain combatChain combatChain healthWidget . .'
+    '. . combatChain combatChain combatChain combatChain combatChain combatChain healthWidget . .'
+    '. . combatChain combatChain combatChain combatChain combatChain combatChain healthWidget . .'
+    '. pOneHead pOnePermanents pOnePermanents pOnePermanents pOnePermanents pOnePermanents pOnePermanents healthWidget pOneGraveyard .'
     '. pOneChest pOneHands . pOneWeaponLZone pOneHero pOneWeaponRZone . pOnePitch pOneDeck .'
-    '. pOneFeet pOnePermanents pOnePermanents pOnePermanents pOneArsenal pOneArsenal pOneArsenal pOneCount pOneBanish .'
+    '. pOneFeet . . . pOneArsenal pOneArsenal pOneArsenal pOneCount pOneBanish .'
     '. . . . . . . . . . .';
+}
+
+.healthWidget {
+  grid-area: healthWidget;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .gameBoardGrid > div {
@@ -101,12 +109,16 @@
 }
 
 .combatChain {
+  position: absolute;
+  top: calc(var(--card-size) * -0.6);
   grid-area: combatChain;
   border-radius: 1em;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
+  padding-right: 10px;
+  padding-left: 10px;
 }
 
 .pOneFeet {
@@ -175,4 +187,17 @@
 .pOneGraveyard {
   grid-area: pOneGraveyard;
   aspect-ratio: 1;
+}
+
+.playerPromptWrapper {
+  position: fixed;
+  bottom: 0;
+  margin: auto;
+  width: 100%;
+  z-index: 20;
+}
+
+.playerPromptWrapper > div {
+  width: 50%;
+  margin: auto;
 }
