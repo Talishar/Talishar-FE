@@ -530,6 +530,7 @@ export const selectPermanentsAsStack = (
       ? state.game.playerOne.Permanents
       : state.game.playerTwo.Permanents) || [];
 
+  // adding a comment
   let initialCardStack: CardStack[] = [];
   return [...permanents]
     .sort((a, b) => a.cardNumber.localeCompare(b.cardNumber))
