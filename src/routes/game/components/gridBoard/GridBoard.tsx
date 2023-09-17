@@ -121,12 +121,6 @@ const GridBoard = () => {
         <div className={styles.combatChain}>
           <CombatChain />
         </div>
-        {/* {createPortal(
-          <div className={styles.playerPromptWrapper}>
-            <PlayerPrompt />
-          </div>,
-          document.body
-        )} */}
       </div>
     </>
   );

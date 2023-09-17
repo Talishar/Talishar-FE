@@ -13,12 +13,12 @@
   align-items: center;
   gap: 2vh;
   user-select: none;
-  z-index: 1;
   margin: auto;
   left: 10vh;
   left: 10dvh;
   right: 20vh;
   right: 20dvh;
+  z-index: 20;
 }
 
 @media (orientation: portrait) {
