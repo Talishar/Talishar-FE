@@ -17,6 +17,7 @@
   isolation: isolate;
   border: 1px solid goldenrod;
   background-color: var(--near-black);
+  pointer-events: auto;
 }
 
 .combatChain::before {
