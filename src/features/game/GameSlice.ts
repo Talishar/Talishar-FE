@@ -17,6 +17,8 @@ import {
   loadGameAuthKey,
   saveGameAuthKey
 } from 'utils/LocalKeyManagement';
+import isEqual from 'react-fast-compare';
+import { CardStack } from '../../routes/game/components/zones/permanentsZone/PermanentsZone';
 
 export const nextTurn = createAsyncThunk(
   'game/nextTurn',
@@ -518,3 +520,44 @@ export const {
 } = actions;
 
 export const getGameInfo = (state: RootState) => state.game.gameInfo;
+
+export const selectPermanentsAsStack = (
+  state: RootState,
+  isPlayer: boolean
+): CardStack[] => {
+  const permanents =
+    (isPlayer
+      ? state.game.playerOne.Permanents
+      : state.game.playerTwo.Permanents) || [];
+
+  let initialCardStack: CardStack[] = [];
+  return [...permanents]
+    .sort((a, b) => a.cardNumber.localeCompare(b.cardNumber))
+    .reduce((accumulator, currentCard) => {
+      const cardCopy = { ...currentCard };
+      const storedADO = currentCard.actionDataOverride;
+      cardCopy.actionDataOverride = '';
+      let isInAccumulator = false;
+      let index = 0;
+
+      // Stack cards.
+
+      // is current card in the cardStackArray already?
+      for (const [ix, cardStack] of accumulator.entries()) {
+        cardCopy.actionDataOverride = cardStack.card.actionDataOverride;
+        if (isEqual(cardStack.card, cardCopy)) {
+          isInAccumulator = true;
+          index = ix;
+          break;
+        }
+      }
+      // if it is, +1 to count
+      if (isInAccumulator) {
+        accumulator[index].count = accumulator[index].count + 1;
+        return accumulator;
+      }
+      // if it is not, append to accumulator.
+      accumulator.push({ card: currentCard, count: 1 });
+      return accumulator;
+    }, initialCardStack);
+};

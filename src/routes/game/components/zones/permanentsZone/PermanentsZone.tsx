@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import Displayrow from 'interface/Displayrow';
@@ -8,6 +8,9 @@ import { Card } from 'features/Card';
 import isEqual from 'react-fast-compare';
 import classNames from 'classnames';
 import { shallowEqual } from 'react-redux';
+import { HiRewind, HiFastForward } from 'react-icons/hi';
+import { motion } from 'framer-motion';
+import { selectPermanentsAsStack } from '../../../../../features/game/GameSlice';
 
 export interface CardStack {
   card: Card;
@@ -16,59 +19,44 @@ export interface CardStack {
 
 export default function PermanentsZone(prop: Displayrow) {
   const { isPlayer } = prop;
+  const [scrollCount, setScrollCount] = React.useState(0);
 
-  const permanents = useAppSelector(
-    (state: RootState) =>
-      isPlayer
-        ? state.game.playerOne.Permanents
-        : state.game.playerTwo.Permanents,
-    shallowEqual
+  const permanents = useAppSelector((state: RootState) =>
+    selectPermanentsAsStack(state, isPlayer)
   );
 
-  if (permanents === undefined || permanents.length === 0) {
+  useEffect(() => {
+    console.log('scrollCount', scrollCount);
+    console.log('permanents', permanents);
+    if (scrollCount < 0) {
+      setScrollCount(0);
+    }
+    if (scrollCount > permanents.length - 1) {
+      setScrollCount(permanents.length - 1);
+    }
+  }, [permanents.length]);
+
+  if (!permanents.length) {
     return (
       <div className={styles.permanentsWrapper}>
         <div className={styles.permanentsText}>
-          <div>Permanents</div>
+          . .<div>Permanents</div>
         </div>
       </div>
     );
   }
 
-  const sortedPermanents = [...permanents];
-  sortedPermanents.sort((a, b) => a.cardNumber.localeCompare(b.cardNumber));
-
-  // Stack cards.
-  let initialCardStack: CardStack[] = [];
-  const cardStackArray = sortedPermanents.reduce((accumulator, currentCard) => {
-    const cardCopy = { ...currentCard };
-    const storedADO = currentCard.actionDataOverride;
-    cardCopy.actionDataOverride = '';
-    let isInAccumulator = false;
-    let index = 0;
-    // is current card in the cardStackArray already?
-    for (const [ix, cardStack] of accumulator.entries()) {
-      cardCopy.actionDataOverride = cardStack.card.actionDataOverride;
-      if (isEqual(cardStack.card, cardCopy)) {
-        isInAccumulator = true;
-        index = ix;
-        break;
-      }
-    }
-    // if it is, +1 to count
-    if (isInAccumulator) {
-      accumulator[index].count = accumulator[index].count + 1;
-      return accumulator;
-    }
-    // if it is not, append to accumulator.
-    accumulator.push({ card: currentCard, count: 1 });
-    return accumulator;
-  }, initialCardStack);
+  const cardStackArray = permanents.slice(scrollCount);
 
   return (
     <div className={styles.permanentsWrapper}>
-      <div className={styles.permanentsText}>
-        <div>Permanents</div>
+      <div
+        className={classNames(styles.scrollBack, styles.scrollWidget)}
+        onClick={() => {
+          setScrollCount((s) => s - 1);
+        }}
+      >
+        <HiRewind />
       </div>
       <div className={styles.permanentsZone}>
         {cardStackArray.map((cardStack, ix) => {
@@ -79,7 +67,10 @@ export default function PermanentsZone(prop: Displayrow) {
             styles.cardContainer
           );
           return (
-            <div key={ix.toString()} className={cardContainerStyles}>
+            <motion.div
+              key={cardStack.card.cardNumber}
+              className={cardContainerStyles}
+            >
               <CardDisplay card={cardStack.card} key={ix.toString()} />
               {cardStack.count > 1 && (
                 <div
@@ -89,9 +80,17 @@ export default function PermanentsZone(prop: Displayrow) {
                   × {cardStack.count}
                 </div>
               )}
-            </div>
+            </motion.div>
           );
         })}
+      </div>
+      <div
+        className={classNames(styles.scrollForward, styles.scrollWidget)}
+        onClick={() => {
+          setScrollCount((s) => s + 1);
+        }}
+      >
+        <HiFastForward />
       </div>
     </div>
   );
