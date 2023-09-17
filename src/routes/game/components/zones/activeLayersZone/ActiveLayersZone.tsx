@@ -19,6 +19,9 @@ export default function ActiveLayersZone() {
   const canPassPhase = useAppSelector(
     (state: RootState) => state.game.canPassPhase
   );
+  const playerPrompt = useAppSelector(
+    (state: RootState) => state.game.playerPrompt
+  );
 
   const dispatch = useAppDispatch();
   const staticCards = activeLayer?.cardList?.filter(
@@ -70,6 +73,11 @@ export default function ActiveLayersZone() {
               })}
             <ReorderLayers cards={reorderableCards ?? []} />
           </div>
+          <div className={styles.activeLayersCallToAction}>
+            <div
+              dangerouslySetInnerHTML={{ __html: playerPrompt?.helpText ?? '' }}
+            ></div>
+          </div>
         </motion.div>
       )}
     </AnimatePresence>
@@ -77,7 +85,15 @@ export default function ActiveLayersZone() {
 }
 
 const Target = ({ target }: { target: string | undefined }) => {
-  return (target ? <div className={styles.targetContainer}><BiTargetLock />{" "}<span className={styles.target} dangerouslySetInnerHTML={{
-    __html: replaceText(target)
-  }}></span></div> : null);
+  return target ? (
+    <div className={styles.targetContainer}>
+      <BiTargetLock />{' '}
+      <span
+        className={styles.target}
+        dangerouslySetInnerHTML={{
+          __html: replaceText(target)
+        }}
+      ></span>
+    </div>
+  ) : null;
 };

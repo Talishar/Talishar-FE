@@ -9,12 +9,13 @@ import isEqual from 'react-fast-compare';
 import classNames from 'classnames';
 import { shallowEqual } from 'react-redux';
 import { HiRewind, HiFastForward } from 'react-icons/hi';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { selectPermanentsAsStack } from '../../../../../features/game/GameSlice';
 
 export interface CardStack {
   card: Card;
   count: number;
+  id: string;
 }
 
 export default function PermanentsZone(prop: Displayrow) {
@@ -26,21 +27,20 @@ export default function PermanentsZone(prop: Displayrow) {
   );
 
   useEffect(() => {
-    console.log('scrollCount', scrollCount);
-    console.log('permanents', permanents);
+    if (!permanents.length) return;
     if (scrollCount < 0) {
       setScrollCount(0);
     }
     if (scrollCount > permanents.length - 1) {
       setScrollCount(permanents.length - 1);
     }
-  }, [permanents.length]);
+  }, [scrollCount, permanents.length]);
 
   if (!permanents.length) {
     return (
       <div className={styles.permanentsWrapper}>
         <div className={styles.permanentsText}>
-          . .<div>Permanents</div>
+          <div>Permanents</div>
         </div>
       </div>
     );
@@ -53,41 +53,51 @@ export default function PermanentsZone(prop: Displayrow) {
       <div
         className={classNames(styles.scrollBack, styles.scrollWidget)}
         onClick={() => {
-          setScrollCount((s) => s - 1);
+          if (scrollCount === 0) return;
+          setScrollCount(scrollCount - 1);
         }}
       >
         <HiRewind />
       </div>
-      <div className={styles.permanentsZone}>
-        {cardStackArray.map((cardStack, ix) => {
-          const cardContainerStyles = classNames(
-            {
-              [styles.stacked]: cardStack.count > 1
-            },
-            styles.cardContainer
-          );
-          return (
-            <motion.div
-              key={cardStack.card.cardNumber}
-              className={cardContainerStyles}
-            >
-              <CardDisplay card={cardStack.card} key={ix.toString()} />
-              {cardStack.count > 1 && (
-                <div
-                  title={`Stack of ${cardStack.count}`}
-                  className={styles.counter}
+      <div className={styles.permanentsInner}>
+        <motion.div className={styles.permanentsZone} layout>
+          <AnimatePresence>
+            {cardStackArray.map((cardStack, ix) => {
+              const cardContainerStyles = classNames(
+                {
+                  [styles.stacked]: cardStack.count > 1
+                },
+                styles.cardContainer
+              );
+              return (
+                <motion.div
+                  key={cardStack.id}
+                  className={cardContainerStyles}
+                  initial={{ opacity: 0, left: -100 }}
+                  animate={{ opacity: 1, left: 0 }}
+                  exit={{ opacity: 0, left: -100 }}
+                  layout
                 >
-                  × {cardStack.count}
-                </div>
-              )}
-            </motion.div>
-          );
-        })}
+                  <CardDisplay card={cardStack.card} key={ix.toString()} />
+                  {cardStack.count > 1 && (
+                    <div
+                      title={`Stack of ${cardStack.count}`}
+                      className={styles.counter}
+                    >
+                      × {cardStack.count}
+                    </div>
+                  )}
+                </motion.div>
+              );
+            })}
+          </AnimatePresence>
+        </motion.div>
       </div>
       <div
         className={classNames(styles.scrollForward, styles.scrollWidget)}
         onClick={() => {
-          setScrollCount((s) => s + 1);
+          if (scrollCount >= permanents.length - 1) return;
+          setScrollCount(scrollCount + 1);
         }}
       >
         <HiFastForward />

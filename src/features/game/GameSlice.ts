@@ -530,7 +530,9 @@ export const selectPermanentsAsStack = (
       ? state.game.playerOne.Permanents
       : state.game.playerTwo.Permanents) || [];
 
+  // adding a comment
   let initialCardStack: CardStack[] = [];
+  let idIndex = 0;
   return [...permanents]
     .sort((a, b) => a.cardNumber.localeCompare(b.cardNumber))
     .reduce((accumulator, currentCard) => {
@@ -557,7 +559,11 @@ export const selectPermanentsAsStack = (
         return accumulator;
       }
       // if it is not, append to accumulator.
-      accumulator.push({ card: currentCard, count: 1 });
+      accumulator.push({
+        card: currentCard,
+        count: 1,
+        id: `${currentCard.cardNumber}-${idIndex++}`
+      });
       return accumulator;
     }, initialCardStack);
 };
