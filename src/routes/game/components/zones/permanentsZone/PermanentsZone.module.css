@@ -131,7 +131,8 @@
 
 @media (orientation: portrait) {
   .cardContainer {
-    min-width: 0;
+    /* min-width: var(--card-size);
+    min-height: var(--card-size); */
   }
 }
 
