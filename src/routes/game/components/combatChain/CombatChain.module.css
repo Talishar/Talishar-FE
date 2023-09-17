@@ -18,6 +18,7 @@
   border: 1px solid goldenrod;
   background-color: var(--near-black);
 }
+
 .combatChain::before {
   content: '';
   position: absolute;
@@ -39,8 +40,11 @@
   height: 100%;
   background-color: maroon;
   margin-right: 10px;
-  cursor: grab;
   border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
 }
 
 .chainCentre {
@@ -60,4 +64,22 @@
   .combatChain {
     height: 12em;
   }
+}
+
+.icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  border: var(--primary) solid 1px;
+  color: var(--white);
+  border-radius: 5px;
+  width: 1.5em;
+  height: 1.5em;
+  font-size: 1.75em;
+  padding: 2px;
+  margin: 0.25em;
+  pointer-events: auto;
+  user-select: none;
+  cursor: pointer;
 }

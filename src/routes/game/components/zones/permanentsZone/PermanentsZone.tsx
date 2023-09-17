@@ -9,7 +9,7 @@ import isEqual from 'react-fast-compare';
 import classNames from 'classnames';
 import { shallowEqual } from 'react-redux';
 import { HiRewind, HiFastForward } from 'react-icons/hi';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { selectPermanentsAsStack } from '../../../../../features/game/GameSlice';
 
 export interface CardStack {
@@ -60,29 +60,38 @@ export default function PermanentsZone(prop: Displayrow) {
         <HiRewind />
       </div>
       <div className={styles.permanentsInner}>
-        <div className={styles.permanentsZone}>
-          {cardStackArray.map((cardStack, ix) => {
-            const cardContainerStyles = classNames(
-              {
-                [styles.stacked]: cardStack.count > 1
-              },
-              styles.cardContainer
-            );
-            return (
-              <motion.div key={cardStack.id} className={cardContainerStyles}>
-                <CardDisplay card={cardStack.card} key={ix.toString()} />
-                {cardStack.count > 1 && (
-                  <div
-                    title={`Stack of ${cardStack.count}`}
-                    className={styles.counter}
-                  >
-                    × {cardStack.count}
-                  </div>
-                )}
-              </motion.div>
-            );
-          })}
-        </div>
+        <motion.div className={styles.permanentsZone} layout>
+          <AnimatePresence>
+            {cardStackArray.map((cardStack, ix) => {
+              const cardContainerStyles = classNames(
+                {
+                  [styles.stacked]: cardStack.count > 1
+                },
+                styles.cardContainer
+              );
+              return (
+                <motion.div
+                  key={cardStack.id}
+                  className={cardContainerStyles}
+                  initial={{ opacity: 0, left: -100 }}
+                  animate={{ opacity: 1, left: 0 }}
+                  exit={{ opacity: 0, left: -100 }}
+                  layout
+                >
+                  <CardDisplay card={cardStack.card} key={ix.toString()} />
+                  {cardStack.count > 1 && (
+                    <div
+                      title={`Stack of ${cardStack.count}`}
+                      className={styles.counter}
+                    >
+                      × {cardStack.count}
+                    </div>
+                  )}
+                </motion.div>
+              );
+            })}
+          </AnimatePresence>
+        </motion.div>
       </div>
       <div
         className={classNames(styles.scrollForward, styles.scrollWidget)}

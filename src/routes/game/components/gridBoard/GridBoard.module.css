@@ -110,7 +110,7 @@
 
 .combatChain {
   position: absolute;
-  top: calc(var(--card-size) * -0.6);
+  inset: calc(var(--card-size) * -0.6) 0 calc(var(--card-size) * -0.6) 0;
   grid-area: combatChain;
   border-radius: 1em;
   display: flex;
@@ -119,6 +119,7 @@
   align-items: center;
   padding-right: 10px;
   padding-left: 10px;
+  pointer-events: none;
 }
 
 .pOneFeet {
