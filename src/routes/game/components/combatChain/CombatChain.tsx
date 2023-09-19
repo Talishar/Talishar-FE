@@ -10,6 +10,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { BsArrowUpSquareFill, BsArrowDownSquareFill } from 'react-icons/bs';
 import Button from '../../../../features/Button';
 import { submitButton } from '../../../../features/game/GameSlice';
+import useWindowDimensions from '../../../../hooks/useWindowDimensions';
 
 export default function CombatChain() {
   const oldCombatChain =
@@ -25,6 +26,8 @@ export default function CombatChain() {
   const handleChangePositionClick = () => {
     setIsUp(!isUp);
   };
+  const [width, height] = useWindowDimensions();
+  const isPortrait = height > width;
 
   const showCombatChain =
     oldCombatChain?.length > 0 ||
@@ -66,7 +69,7 @@ export default function CombatChain() {
               <div></div>
             )}
           </div>
-          <PlayerPrompt />
+          {!isPortrait && <PlayerPrompt />}
         </motion.div>
       )}
     </AnimatePresence>
