@@ -4,6 +4,7 @@ import { RootState } from 'app/Store';
 import ChatInput from '../chatInput/ChatInput';
 import styles from './ChatBox.module.css';
 import { replaceText } from 'utils/ParseEscapedString';
+import classNames from 'classnames';
 
 const CHAT_RE = /<span[^>]*>(.*?):\s<\/span>/;
 
@@ -61,7 +62,10 @@ export default function ChatBox() {
     <div className={styles.chatBoxContainer}>
       <div className={styles.tabs}>
         <button
-          className={chatFilter === 'none' ? 'outline' : ''}
+          className={classNames(
+            chatFilter === 'none' ? 'outline' : '',
+            styles.buttonOverride
+          )}
           onClick={(e) => {
             e.preventDefault();
             setChatFilter('none');
