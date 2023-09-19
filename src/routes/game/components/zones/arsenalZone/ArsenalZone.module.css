@@ -22,3 +22,66 @@
   background: rgba(50, 50, 50, 0.5);
   color: var(--white);
 }
+
+.playerPrompt {
+  background-color: #fffdd0;
+  border: 1px solid #004225;
+  color: #004225;
+  text-align: center;
+  position: fixed;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: width 0.5s;
+  flex-wrap: nowrap;
+  font-size: 1em;
+  font-weight: 600;
+  padding: 2px 4px;
+  flex-direction: row;
+  overflow-x: min-content;
+  gap: 5px;
+  bottom: 20%;
+  right: 40vh;
+  right: 40dvh;
+  left: 30vh;
+  left: 30dvh;
+  z-index: 30;
+}
+
+.content {
+  display: flex;
+  align-items: row;
+  align-content: center;
+  justify-content: center;
+  justify-items: center;
+}
+
+.buttonDiv {
+  background-color: #004225;
+  color: #fffdd0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  min-width: 4vh;
+  height: auto;
+  border-radius: 5px;
+  border: 1px solid black;
+  flex-basis: auto;
+  padding: 0 1dvh;
+  margin-left: 1dvh;
+}
+
+.buttonDiv:hover {
+  background-color: #fffdd0;
+  color: #004225;
+  border: 1px solid #004225;
+  cursor: pointer;
+}
+
+@media (orientation: portrait) {
+  .playerPrompt {
+    top: 10px;
+  }
+}

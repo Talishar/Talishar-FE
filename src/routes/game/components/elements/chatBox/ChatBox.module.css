@@ -7,6 +7,19 @@
   right: 0;
 }
 
+.tabs > button {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  height: auto;
+  flex-basis: auto;
+  padding: 5px;
+  margin-left: 1dvh;
+  font-size: 1.2em;
+  height: auto;
+}
+
 .chatBoxContainer {
   position: relative;
   width: 100%;
@@ -35,7 +48,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   gap: 5px;
-  height: 50px;
+  height: 30px;
   margin-bottom: 5px;
 }
 
