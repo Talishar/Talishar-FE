@@ -32,4 +32,5 @@ export default interface Player {
   isContributor?: boolean;
   bloodDebtCount?: number;
   bloodDebtImmune?: boolean;
+  CardBack?: Card;
 }

@@ -192,6 +192,7 @@ export default function ParseGameState(input: any) {
   for (const cardObj of input.opponentDeck.reverse()) {
     result.playerTwo.Deck.push(ParseCard(cardObj));
   }
+  result.playerTwo.CardBack = input.playerCardBack;
 
   result.playerTwo.Banish = [];
   for (const cardObj of input.opponentBanish.reverse()) {
@@ -264,6 +265,7 @@ export default function ParseGameState(input: any) {
   for (const cardObj of input.playerDeck.reverse()) {
     result.playerOne.Deck.push(ParseCard(cardObj));
   }
+  result.playerOne.CardBack = input.playerCardBack;
 
   result.playerOne.Banish = [];
   for (const cardObj of input.playerBanish.reverse()) {

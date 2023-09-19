@@ -25,7 +25,7 @@ export const CardDisplay = (prop: CardProp) => {
   const { card, preventUseOnClick, activeCombatChain, num, isPlayer } = prop;
   const dispatch = useAppDispatch();
   const cardBack = useAppSelector((state: RootState) =>
-    isPlayer ? state.game.playerOne.DeckBack : state.game.playerTwo.DeckBack
+    isPlayer ? state.game.playerOne.CardBack : state.game.playerTwo.CardBack
   ) ?? { cardNumber: '' };
 
   if (card == null || card.cardNumber === '') {
