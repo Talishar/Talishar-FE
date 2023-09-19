@@ -86,13 +86,15 @@
 }
 
 .playerPrompt {
-  position: absolute;
   top: 100%;
-  left: 5%;
-  right: 5%;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  min-width: 10dvw;
   display: flex;
   justify-content: center;
   align-items: center;
+  align-content: center;
   flex-wrap: nowrap;
   background-color: var(--near-black);
   border-width: 0 1px 1px 1px;
@@ -126,4 +128,8 @@
   color: goldenrod;
   border: 1px solid goldenrod;
   cursor: pointer;
+}
+
+.content {
+  flex-grow: 1;
 }
