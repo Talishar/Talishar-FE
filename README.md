@@ -56,6 +56,8 @@ If you have problems running the development server, come to the discord and ask
 
 If you run into any trouble setting up the project please let LaustinSpayce know so we can fix it, and help make it a smoother process for future contributors.
 
+If you have any configuration that isn't the default for the backend, change the hostname, ports etc in the .env file. You can also twiddle with the .env if you want to develop the FE locally but hook up into the production backend (then you'll want to point to api.talishar.net)
+
 ## Optional happy fun things:
 
 Configure Prettier / ES Lint in your text editor of choice.

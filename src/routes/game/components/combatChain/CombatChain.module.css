@@ -84,3 +84,46 @@
   user-select: none;
   cursor: pointer;
 }
+
+.playerPrompt {
+  position: absolute;
+  top: 100%;
+  left: 5%;
+  right: 5%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: nowrap;
+  background-color: var(--near-black);
+  border-width: 0 1px 1px 1px;
+  border-radius: 0 0 5px 5px;
+  border-color: goldenrod;
+  padding: 5px;
+  border-style: solid;
+  font-size: 1.2em;
+  gap: 5px;
+  z-index: -5;
+}
+
+.buttonDiv {
+  background-color: goldenrod;
+  color: black;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  min-width: 4vh;
+  height: auto;
+  border-radius: 5px;
+  border: 1px solid black;
+  flex-basis: auto;
+  padding: 0 1dvh;
+  margin-left: 1dvh;
+}
+
+.buttonDiv:hover {
+  background-color: black;
+  color: goldenrod;
+  border: 1px solid goldenrod;
+  cursor: pointer;
+}
