@@ -5,10 +5,10 @@ const News = () => {
   return (
     <div>
       <hgroup>
-        Watch Team Second Cycle as they give a farewell to Rosetta Thorn!
-        <a href="https://www.youtube.com/watch?v=1zQaat9FfoQ" target="_blank">
+        Check out the Team Classic Constructed event commentated by Second Cycle!
+        <a href="https://www.youtube.com/watch?v=TVzXNXLowZ0" target="_blank">
           <img
-            src="TheSecondCycle.webp"
+            src="teamccad.jpg"
             style={{
               width: '100%',
               height: 'auto',
