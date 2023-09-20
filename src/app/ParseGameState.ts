@@ -192,7 +192,7 @@ export default function ParseGameState(input: any) {
   for (const cardObj of input.opponentDeck.reverse()) {
     result.playerTwo.Deck.push(ParseCard(cardObj));
   }
-  result.playerTwo.CardBack = input.playerCardBack;
+  result.playerTwo.CardBack = input.opponentCardBack;
 
   result.playerTwo.Banish = [];
   for (const cardObj of input.opponentBanish.reverse()) {
