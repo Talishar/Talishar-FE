@@ -38,11 +38,11 @@
 
 @media (orientation: portrait) {
     .popUpContainer {
-      bottom: auto !important;
+      /* bottom: auto !important; */
       right: auto !important;
       left: auto !important;
       top: auto !important;
-      height: 100dvh !important;
+      height: 60dvh !important;
     }
 
     .img {
