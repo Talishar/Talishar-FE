@@ -33,3 +33,23 @@
   position: absolute;
   left: -40vh;
 }
+
+
+
+@media (orientation: portrait) {
+    .popUpContainer {
+      bottom: auto !important;
+      right: auto !important;
+      left: auto !important;
+      top: auto !important;
+      height: 100dvh !important;
+    }
+
+    .img {
+      height: 40vh;
+    }
+
+    .doubleFacedCard {
+      position: static;
+    }
+}
