@@ -35,21 +35,23 @@
 }
 
 
-
 @media (orientation: portrait) {
-    .popUpContainer {
-      /* bottom: auto !important; */
-      right: auto !important;
-      left: auto !important;
-      top: auto !important;
-      height: 60dvh !important;
-    }
+  .popUpContainer {
+    bottom: auto !important;
+    right: auto !important;
+    left: auto !important;
+    top: auto !important;
+    height: 90dvh !important;
 
-    .img {
-      height: 40vh;
-    }
+    pointer-events: none;
+    background: url('../../../../../img/backgrounds/transparent-card.png');
+  }
 
-    .doubleFacedCard {
-      position: static;
-    }
+  .img {
+    height: 40dvh;
+  }
+
+  .doubleFacedCard {
+    position: static;
+  }
 }
