@@ -86,3 +86,11 @@
   border-color: purple;
   box-shadow: 0 0 5px 5px purple;
 }
+
+
+@media (orientation: portrait) {
+  .img {
+    user-select: none;
+    pointer-events: none;
+  }
+}
