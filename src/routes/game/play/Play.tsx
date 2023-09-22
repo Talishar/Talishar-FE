@@ -15,12 +15,19 @@ import ActiveLayersZone from '../components/zones/activeLayersZone/ActiveLayersZ
 import ExperimentalGameStateHandler from 'app/ExperimentalGameStateHandler';
 import { useCookies } from 'react-cookie';
 import { useEffect } from 'react';
+import useWindowDimensions from 'hooks/useWindowDimensions';
+import useShowChatMobile from 'hooks/useShowChatMobile';
 
 function Play() {
   const [cookies, setCookie, removeCookie] = useCookies([
     'experimental',
     'cardSize'
   ]);
+
+  const [width, height] = useWindowDimensions();
+  const isPortrait = height > width;
+  
+  const showChatMobile = useShowChatMobile();
 
   useEffect(() => {
     if (cookies.cardSize) {
@@ -43,10 +50,11 @@ function Play() {
           <Board />
           <ChainLinkSummaryContainer />
           <HandZone isPlayer />
-          <PlayerHand />
+          {!showChatMobile && <PlayerHand />}
         </div>
-        <RightColumn />
+      {!isPortrait && <RightColumn />}
       </div>
+      {isPortrait && <RightColumn />}
       <CardListZone />
       <ActiveLayersZone />
       <OptionsMenu />

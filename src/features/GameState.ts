@@ -110,4 +110,5 @@ export default interface GameState {
   isFullRematch?: boolean;
   preventPassPrompt?: string;
   chatEnabled: boolean;
+  showChatMobile: boolean;
 }

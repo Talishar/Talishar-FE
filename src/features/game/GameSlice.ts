@@ -363,6 +363,9 @@ export const gameSlice = createSlice({
     toggleShowModals: (state) => {
       state.showModals = !state.showModals;
     },
+    toggleShowChatMobile: (state) => {
+      state.showChatMobile = !state.showChatMobile;
+    },
     enableModals: (state) => {
       state.showModals = true;
     },
@@ -515,6 +518,7 @@ export const {
   clearGetLobbyRefresh,
   clearGameInfo,
   toggleShowModals,
+  toggleShowChatMobile,
   enableModals,
   disableModals
 } = actions;

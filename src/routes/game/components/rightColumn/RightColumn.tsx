@@ -7,10 +7,18 @@ import ChatBox from '../elements/chatBox/ChatBox';
 import PhaseTracker from '../elements/phaseTracker/PhaseTracker';
 import useSetting from 'hooks/useSetting';
 import { IS_STREAMER_MODE } from 'features/options/constants';
+import useShowChatMobile from 'hooks/useShowChatMobile';
+import useWindowDimensions from 'hooks/useWindowDimensions';
 
 export default function RightColumn() {
   const isStreamerMode =
     useSetting({ settingName: IS_STREAMER_MODE })?.value === '1';
+  
+  const showChatMobile = useShowChatMobile();
+
+  const [width, height] = useWindowDimensions();
+  const isPortrait = height > width;
+
   return (
     <>
       <div className={styles.mobileTopBar}>
@@ -23,9 +31,10 @@ export default function RightColumn() {
           <LastPlayed />
           {isStreamerMode ? <StreamerBox /> : <PhaseTracker />}
         </div>
+        {isPortrait && showChatMobile && (
         <div className={styles.bottomGroup}>
           <ChatBox />
-        </div>
+        </div>)}
       </div>
     </>
   );

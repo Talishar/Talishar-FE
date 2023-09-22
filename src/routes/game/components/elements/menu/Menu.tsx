@@ -10,6 +10,7 @@ import FullControlToggle from './FullControlToggle';
 import HideModalsToggle from './HideModalsToggle/HideModalsToggle';
 import OptionsMenuToggle from './OptionsMenuToggle';
 import useShortcut from 'hooks/useShortcut';
+import HideChatMobileToggle from './HideChatMobileToggle/HideChatMobileToggle';
 
 function FullScreenButton() {
   function toggleFullScreen() {
@@ -71,6 +72,7 @@ export default function Menu() {
       <div className={styles.menuList}>
         <FullControlToggle />
         <HideModalsToggle />
+        <HideChatMobileToggle />
       </div>
     </div>
   );

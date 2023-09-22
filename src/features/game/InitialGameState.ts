@@ -13,7 +13,8 @@ const InitialGameState: GameState = {
   isUpdateInProgress: false,
   optionsMenu: { active: false },
   showModals: true,
-  chatEnabled: false
+  chatEnabled: false,
+  showChatMobile: false
 };
 
 export const OfflineTestingGameState: GameState = {
@@ -294,7 +295,8 @@ export const OfflineTestingGameState: GameState = {
   optionsMenu: {
     active: false
   },
-  showModals: true
+  showModals: true,
+  showChatMobile: false
 };
 
 export default InitialGameState as GameState;

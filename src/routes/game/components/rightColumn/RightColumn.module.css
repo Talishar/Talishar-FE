@@ -23,7 +23,16 @@
 
 @media (orientation: portrait) {
   .rightColumn {
-    display: none;
+    /*display: none;*/
+    width: 100%;
+    position: absolute;
+    z-index: 2000;
+    max-width: 100%;
+    top: 10vh;
+    top: 10dvh;
+  }
+  .topGroup {
+    display: none !important;
   }
 
   .mobileTopBar {
