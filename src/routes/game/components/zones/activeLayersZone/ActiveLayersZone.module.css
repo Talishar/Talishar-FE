@@ -8,7 +8,7 @@
   background-color: var(--near-black);
   padding: 2vh;
   border: 1px solid var(--primary);
-  border-radius: 20px;
+  border-radius: 10px;
   max-width: 90vh;
   min-height: 200px;
   max-height: 50vh;
@@ -18,7 +18,7 @@
 }
 
 .activeLayersTitle {
-  font-size: 0.75em;
+  font-size: 0.8em;
   padding-left: 0.5em;
   display: flex;
   flex-direction: row;
@@ -49,7 +49,7 @@
 }
 
 .orderingExplanation {
-  font-size: 0.75em;
+  font-size: 0.9em;
   margin-bottom: 0;
 }
 
@@ -81,4 +81,19 @@
     right: 0px;
     width: 100%;
   }
+}
+
+.activeLayersCallToAction {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  font-size: 0.8em;
+}
+
+.buttonDiv {
+  padding: 5px;
+  width: auto;
+  margin-bottom: 0;
+  font-size: 1em;
 }

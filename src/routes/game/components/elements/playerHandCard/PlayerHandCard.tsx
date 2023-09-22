@@ -4,7 +4,12 @@ import {
   playCard,
   removeCardFromHand
 } from 'features/game/GameSlice';
-import { GiTombstone, GiFluffySwirl, GiCannon } from 'react-icons/gi';
+import {
+  GiTombstone,
+  GiFluffySwirl,
+  GiCannon,
+  GiDialPadlock
+} from 'react-icons/gi';
 import { Card } from 'features/Card';
 import styles from './PlayerHandCard.module.css';
 import { useAppDispatch } from 'app/Hooks';
@@ -141,6 +146,11 @@ export const PlayerHandCard = ({
           {isGraveyard === true && (
             <div className={styles.icon}>
               <GiTombstone title="Graveyard" />
+            </div>
+          )}
+          {!!card.restriction && (
+            <div className={styles.icon}>
+              <GiDialPadlock title="Cannot Play" />
             </div>
           )}
         </div>
