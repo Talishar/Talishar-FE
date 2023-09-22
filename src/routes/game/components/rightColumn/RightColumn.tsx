@@ -24,6 +24,7 @@ export default function RightColumn() {
       <div className={styles.mobileTopBar}>
         <Menu />
       </div>
+      {isPortrait && showChatMobile && (
       <div className={styles.rightColumn}>
         <div className={styles.topGroup}>
           <Menu />
@@ -36,6 +37,7 @@ export default function RightColumn() {
           <ChatBox />
         </div>)}
       </div>
+      )}
     </>
   );
 }
