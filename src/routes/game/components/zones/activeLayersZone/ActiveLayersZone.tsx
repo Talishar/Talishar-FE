@@ -35,6 +35,25 @@ export default function ActiveLayersZone() {
     dispatch(submitButton({ button: { mode: PROCESS_INPUT.PASS } }));
   };
 
+  const clickPromptButton = (button: Button) => {
+    dispatch(submitButton({ button: button }));
+  };
+
+  const buttons = playerPrompt?.buttons?.map((button, ix) => {
+    return (
+      <button
+        className={styles.buttonDiv}
+        onClick={(e) => {
+          e.preventDefault();
+          clickPromptButton(button);
+        }}
+        key={ix.toString()}
+      >
+        {button.caption}
+      </button>
+    );
+  });
+
   return (
     <AnimatePresence>
       {activeLayer?.active && showModal && (
@@ -77,6 +96,7 @@ export default function ActiveLayersZone() {
             <div
               dangerouslySetInnerHTML={{ __html: playerPrompt?.helpText ?? '' }}
             ></div>
+            {buttons}
           </div>
         </motion.div>
       )}
