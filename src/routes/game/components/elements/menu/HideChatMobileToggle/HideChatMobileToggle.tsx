@@ -5,6 +5,7 @@ import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import useShowChatMobile from 'hooks/useShowChatMobile';
 import { toggleShowChatMobile } from 'features/game/GameSlice';
 import classNames from 'classnames';
+import { BsChatFill } from 'react-icons/bs';
 
 const HideChatMobileToggle = () => {
   const showChatMobile = useShowChatMobile();
@@ -21,17 +22,14 @@ const HideChatMobileToggle = () => {
   return (
     <div>
       <button
-        className={classNames(styles.btn, {
-          [styles.buttonActive]: !showChatMobile
-        })}
+        className={classNames(styles.btn)}
         aria-label="Show Chat"
         onClick={handleClickHideChatToggle}
         title="Show Chat"
         data-tooltip="Show Chat"
         data-placement="bottom"
       >
-        {showChatMobile && <FaEye aria-hidden="true" fontSize={'2em'} />}
-        {!showChatMobile && <FaEyeSlash aria-hidden="true" fontSize={'2em'} />}
+        <BsChatFill aria-hidden="true" fontSize={'2em'} />
       </button>
     </div>
   );
