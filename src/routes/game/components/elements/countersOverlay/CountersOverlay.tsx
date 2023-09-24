@@ -6,6 +6,7 @@ import classNames from 'classnames';
 import { ActiveCardCounterOverlay } from './components/ActiveChainCounters';
 import CombatChainLink from 'features/CombatChainLink';
 import { ContinuousCounters } from './components/ContinuousCounters';
+import { GiDialPadlock, GiPadlock } from 'react-icons/gi';
 
 export interface CountersProp extends Card {
   num?: number;
@@ -23,7 +24,8 @@ export const CountersOverlay = ({
   facing,
   zone,
   activeCombatChain,
-  controller
+  controller,
+  restriction
 }: CountersProp) => {
   const includedCounters = [
     'defence',
@@ -49,6 +51,11 @@ export const CountersOverlay = ({
       {countersMap && <ContinuousCounters countersMap={countersMap} />}
       {activeCombatChain && (
         <ActiveCardCounterOverlay activeCombatChain={activeCombatChain} />
+      )}
+      {!!restriction && (
+        <div className={styles.icon} data-tooltip="Restricted">
+          <GiDialPadlock />
+        </div>
       )}
       {!!numTotal && (
         <div

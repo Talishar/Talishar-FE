@@ -10,6 +10,7 @@ import { submitButton } from 'features/game/GameSlice';
 import { PROCESS_INPUT } from 'appConstants';
 import { replaceText } from 'utils/ParseEscapedString';
 import { BiTargetLock } from 'react-icons/bi';
+import Button from '../../../../../features/Button';
 
 export default function ActiveLayersZone() {
   const showModal = useShowModal();
