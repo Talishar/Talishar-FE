@@ -55,7 +55,8 @@ export const CardDisplay = (prop: CardProp) => {
     styles.floatTint,
     { [styles.isBroken]: card.isBroken },
     { [styles.onChain]: card.onChain },
-    { [styles.isFrozen]: card.isFrozen }
+    { [styles.isFrozen]: card.isFrozen },
+    { [styles.isRestricted]: !!card.restriction }
   );
 
   const imgStyles = classNames(styles.img, {
@@ -100,9 +101,10 @@ export const CardDisplay = (prop: CardProp) => {
       )}
       <CardImage src={eqImg} className={imgStyles} />
       {card.overlay === 'disabled' && <div className={classStyles}></div>}
-      {(card.isBroken || card.onChain || card.isFrozen) && (
-        <div className={equipStatus}></div>
-      )}
+      {(card.isBroken ||
+        card.onChain ||
+        card.isFrozen ||
+        !!card.restriction) && <div className={equipStatus}></div>}
       {card.numUses && card.numUses > 1 && card.numUses < 10 && (
         <div className={styles.numUses}>{renderNumUses(card.numUses)}</div>
       )}
