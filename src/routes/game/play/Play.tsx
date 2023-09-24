@@ -15,12 +15,20 @@ import ActiveLayersZone from '../components/zones/activeLayersZone/ActiveLayersZ
 import ExperimentalGameStateHandler from 'app/ExperimentalGameStateHandler';
 import { useCookies } from 'react-cookie';
 import { useEffect } from 'react';
+import { useAppDispatch } from '../../../app/Hooks';
+import { setIsRoguelike } from '../../../features/game/GameSlice';
 
-function Play() {
+function Play({ isRoguelike }: { isRoguelike: boolean }) {
   const [cookies, setCookie, removeCookie] = useCookies([
     'experimental',
     'cardSize'
   ]);
+
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(setIsRoguelike(isRoguelike));
+  }, [isRoguelike]);
 
   useEffect(() => {
     if (cookies.cardSize) {
