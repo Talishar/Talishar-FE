@@ -18,7 +18,6 @@ const News = () => {
           />
         </a>
       </hgroup>
-      <h3>The roguelike mode is temporarily unavailable</h3>
       <p>Please join our community:</p>
       <ul>
         <li>
