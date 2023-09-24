@@ -93,11 +93,20 @@ export const router = createBrowserRouter(
         element={
           // disabled playguard as we need to redo this logic a bit
           // <PlayGuard>
-          <Play />
+          <Play isRoguelike={false} />
           // </PlayGuard>
         }
       />
-      <Route path="game/play" element={<Play />} />
+      <Route
+        path="roguelike/play/"
+        element={
+          // disabled playguard as we need to redo this logic a bit
+          // <PlayGuard>
+          <Play isRoguelike={true} />
+          // </PlayGuard>
+        }
+      />
+      <Route path="game/play" element={<Play isRoguelike={false} />} />
       <Route path="game/lobby/:gameID" element={<Lobby />} />
       <Route
         path="game/MainMenu.php"

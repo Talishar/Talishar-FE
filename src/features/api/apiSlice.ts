@@ -7,7 +7,7 @@ import {
 } from '@reduxjs/toolkit/query/react';
 import { isRejectedWithValue } from '@reduxjs/toolkit';
 import type { MiddlewareAPI, Middleware } from '@reduxjs/toolkit';
-import { BACKEND_URL, URL_END_POINT } from 'appConstants';
+import { BACKEND_URL, ROGUELIKE_URL, URL_END_POINT } from 'appConstants';
 import {
   CreateGameAPI,
   CreateGameResponse
@@ -31,6 +31,8 @@ import {
 import { PatreonLoginResponse } from 'routes/user/profile/linkpatreon/linkPatreon';
 import { UserProfileAPIResponse } from 'interface/API/UserProfileAPI.php';
 import { SubmitChatAPI } from 'interface/API/SubmitChat.php';
+import { getGameInfo } from '../game/GameSlice';
+import { RootState } from '../../app/Store';
 
 // catch warnings and show a toast if we get one.
 export const rtkQueryErrorToaster: Middleware =
@@ -73,7 +75,8 @@ const dynamicBaseQuery: BaseQueryFn<
   unknown,
   FetchBaseQueryError
 > = async (args, webApi, extraOptions) => {
-  const baseUrl = BACKEND_URL;
+  const { isRoguelike } = getGameInfo(webApi.getState() as RootState);
+  const baseUrl = isRoguelike ? ROGUELIKE_URL : BACKEND_URL;
   const rawBaseQuery = fetchBaseQuery({
     baseUrl,
     credentials: 'include'

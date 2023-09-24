@@ -8,6 +8,12 @@ export const BACKEND_URL = import.meta.env.DEV
       import.meta.env.VITE_BACKEND_DIRECTORY
     }/`;
 
+export const ROGUELIKE_URL = import.meta.env.DEV
+  ? '/roguelike/'
+  : `https://${import.meta.env.VITE_ROGUELIKE_URL}/${
+      import.meta.env.VITE_ROGUELIKE_DIRECTORY
+    }/`;
+
 export const DATADOLL_URL = import.meta.env.DEV
   ? '/datadoll/'
   : `https://${import.meta.env.VITE_DATADOLL_URL}/`;

@@ -3,7 +3,7 @@ import ParseGameState from '../../app/ParseGameState';
 import InitialGameState from './InitialGameState';
 import GameStaticInfo from '../GameStaticInfo';
 import { Card } from '../Card';
-import { BACKEND_URL, URL_END_POINT } from 'appConstants';
+import { BACKEND_URL, ROGUELIKE_URL, URL_END_POINT } from 'appConstants';
 import Button from '../Button';
 import { toast } from 'react-hot-toast';
 import GameState from '../GameState';
@@ -30,7 +30,9 @@ export const nextTurn = createAsyncThunk(
     },
     { getState }
   ) => {
-    const queryURL = `${BACKEND_URL}${URL_END_POINT.GAME_STATE_POLL}`;
+    const queryURL = params.game.isRoguelike
+      ? `${ROGUELIKE_URL}${URL_END_POINT.GAME_STATE_POLL}`
+      : `${BACKEND_URL}${URL_END_POINT.GAME_STATE_POLL}`;
     const queryParams = new URLSearchParams({
       gameName: String(params.game.gameID),
       playerID: String(params.game.playerID),
@@ -140,7 +142,9 @@ export const playCard = createAsyncThunk(
         : params.cardIndex;
     const gameInfo = game.gameInfo;
 
-    const queryURL = `${BACKEND_URL}${URL_END_POINT.PROCESS_INPUT}`;
+    const queryURL = gameInfo.isRoguelike
+      ? `${ROGUELIKE_URL}${URL_END_POINT.PROCESS_INPUT}`
+      : `${BACKEND_URL}${URL_END_POINT.PROCESS_INPUT}`;
     const queryParams = new URLSearchParams({
       gameName: String(gameInfo.gameID),
       playerID: String(gameInfo.playerID),
@@ -167,11 +171,14 @@ export const submitButton = createAsyncThunk(
   'game/submitButton',
   async (params: { button: Button }, { getState }) => {
     const { game } = getState() as { game: GameState };
-    const queryURL = `${BACKEND_URL}${URL_END_POINT.PROCESS_INPUT}`;
+    const gameInfo = game.gameInfo;
+    const queryURL = gameInfo.isRoguelike
+      ? `${ROGUELIKE_URL}${URL_END_POINT.PROCESS_INPUT}`
+      : `${BACKEND_URL}${URL_END_POINT.PROCESS_INPUT}`;
     const queryParams = new URLSearchParams({
-      gameName: String(game.gameInfo.gameID),
-      playerID: String(game.gameInfo.playerID),
-      authKey: String(game.gameInfo.authKey),
+      gameName: String(gameInfo.gameID),
+      playerID: String(gameInfo.playerID),
+      authKey: String(gameInfo.authKey),
       mode: String(params.button.mode),
       buttonInput: String(params.button.buttonInput),
       inputText: String(params.button.inputText),
@@ -195,11 +202,14 @@ export const submitMultiButton = createAsyncThunk(
   'game/submitButton',
   async (params: { mode?: number; extraParams: string }, { getState }) => {
     const { game } = getState() as { game: GameState };
-    const queryURL = `${BACKEND_URL}${URL_END_POINT.PROCESS_INPUT}`;
+    const gameInfo = game.gameInfo;
+    const queryURL = gameInfo.isRoguelike
+      ? `${ROGUELIKE_URL}${URL_END_POINT.PROCESS_INPUT}`
+      : `${BACKEND_URL}${URL_END_POINT.PROCESS_INPUT}`;
     const queryParams = new URLSearchParams({
-      gameName: String(game.gameInfo.gameID),
-      playerID: String(game.gameInfo.playerID),
-      authKey: String(game.gameInfo.authKey),
+      gameName: String(gameInfo.gameID),
+      playerID: String(gameInfo.playerID),
+      authKey: String(gameInfo.authKey),
       mode: String(params.mode)
     });
     const queryParamsString =
@@ -366,6 +376,9 @@ export const gameSlice = createSlice({
     enableModals: (state) => {
       state.showModals = true;
     },
+    setIsRoguelike: (state, action: PayloadAction<boolean>) => {
+      state.gameInfo.isRoguelike = action.payload;
+    },
     disableModals: (state) => {
       state.showModals = false;
     }
@@ -516,7 +529,8 @@ export const {
   clearGameInfo,
   toggleShowModals,
   enableModals,
-  disableModals
+  disableModals,
+  setIsRoguelike
 } = actions;
 
 export const getGameInfo = (state: RootState) => state.game.gameInfo;

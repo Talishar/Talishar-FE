@@ -5,6 +5,7 @@ export default interface GameStaticInfo {
   isPrivate: boolean;
   roguelikeGameID?: number;
   altArts?: AltArt[];
+  isRoguelike?: boolean;
 }
 
 export interface AltArt {

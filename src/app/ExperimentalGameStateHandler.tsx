@@ -42,7 +42,8 @@ const ExperimentalGameStateHandler = () => {
               gameInfo.playerID ||
               (locationState?.playerID ?? parseInt(playerID)),
             authKey: gameInfo.authKey || authKey,
-            isPrivate: gameInfo.isPrivate
+            isPrivate: gameInfo.isPrivate,
+            isRoguelike: gameInfo.isRoguelike
           },
           signal: undefined,
           lastUpdate: 0
