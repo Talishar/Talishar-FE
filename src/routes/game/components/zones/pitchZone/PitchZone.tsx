@@ -31,6 +31,7 @@ export default function PitchZone(prop: Displayrow) {
       <>
         <div className={styles.pitchZone}>
           <PitchDisplay isPlayer={isPlayer} DisplayRow={DisplayRow} />
+          {isManualMode && <ManualMode isPlayer={isPlayer} />}
         </div>
       </>
     );
