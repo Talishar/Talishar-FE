@@ -2,7 +2,7 @@ const axios = require('axios');
 const fs = require('fs');
 
 const url =
-  'https://raw.githubusercontent.com/the-fab-cube/flesh-and-blood-cards/dusk-till-dawn/json/english/card.json';
+  'https://raw.githubusercontent.com/the-fab-cube/flesh-and-blood-cards/bright-lights/json/english/card.json';
 const outputFile = 'src/constants/cardList.ts';
 
 axios
