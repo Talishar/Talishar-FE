@@ -89,7 +89,7 @@ export const CardDisplay = (prop: CardProp) => {
     ? card.subcards
     : card.subcards?.[0]
     ? [card.subcards[0]]
-    : undefined;
+    : [];
 
   return (
     <CardPopUp
@@ -100,24 +100,26 @@ export const CardDisplay = (prop: CardProp) => {
       onHoverEnd={() => setShowSubCards(false)}
     >
       <AnimatePresence>
-        {subCardsToShow?.map((card, ix) => {
-          return (
-            <motion.div
-              style={{
-                top: `calc(-0.2 * ${ix + 1} * var(--card-size))`,
-                zIndex: `-${ix + 1}`
-              }}
-              className={styles.subCard}
-              initial={{ y: `${2 * ix}em` }}
-              animate={{ y: 0 }}
-              transition={{ ease: 'easeIn', duration: 0.2 }}
-              exit={{ opacity: 0 }}
-              key={`${card}-${ix}`}
-            >
-              <CardDisplay card={{ cardNumber: card }} preventUseOnClick />
-            </motion.div>
-          );
-        })}
+        {!!subCardsToShow &&
+          subCardsToShow?.length > 0 &&
+          subCardsToShow?.map((card, ix) => {
+            return (
+              <motion.div
+                style={{
+                  top: `calc(-0.2 * ${ix + 1} * var(--card-size))`,
+                  zIndex: `-${ix + 1}`
+                }}
+                className={styles.subCard}
+                initial={{ y: `${2 * ix}em` }}
+                animate={{ y: 0 }}
+                transition={{ ease: 'easeIn', duration: 0.2 }}
+                exit={{ opacity: 0 }}
+                key={`${card}-${ix}`}
+              >
+                <CardDisplay card={{ cardNumber: card }} preventUseOnClick />
+              </motion.div>
+            );
+          })}
         <CardImage src={eqImg} className={imgStyles} />
         {card.overlay === 'disabled' && <div className={classStyles}></div>}
         {(card.isBroken ||
