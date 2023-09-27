@@ -9,6 +9,8 @@ import CardPopUp from '../cardPopUp/CardPopUp';
 import CombatChainLink from 'features/CombatChainLink';
 import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
+import { AnimatePresence, motion } from 'framer-motion';
+import { useState } from 'react';
 
 export interface CardProp {
   makeMeBigger?: boolean;
@@ -27,6 +29,7 @@ export const CardDisplay = (prop: CardProp) => {
   const cardBack = useAppSelector((state: RootState) =>
     isPlayer ? state.game.playerOne.CardBack : state.game.playerTwo.CardBack
   ) ?? { cardNumber: '' };
+  const [showSubCards, setShowSubCards] = useState<boolean>(false);
 
   if (card == null || card.cardNumber === '') {
     return null;
@@ -70,11 +73,6 @@ export const CardDisplay = (prop: CardProp) => {
     [styles.border8]: card.borderColor == '8'
   });
 
-  const subcardStyles = classNames(styles.img, {
-    [styles.subcard]:
-      card.subcards && card.subcards.length > 0 && card.subcards[0]
-  });
-
   const cardStyle = classNames(styles.card, styles.normalSize, {
     [styles.biggerSize]: prop.makeMeBigger
   });
@@ -87,32 +85,54 @@ export const CardDisplay = (prop: CardProp) => {
     return divs;
   };
 
+  const subCardsToShow = showSubCards
+    ? card.subcards
+    : card.subcards?.[0]
+    ? [card.subcards[0]]
+    : undefined;
+
   return (
     <CardPopUp
       cardNumber={card.cardNumber}
       containerClass={cardStyle}
       onClick={onClick}
+      onHoverStart={() => setShowSubCards(true)}
+      onHoverEnd={() => setShowSubCards(false)}
     >
-      {card.subcards && card.subcards.length > 0 && card.subcards[0] && (
-        <CardImage
-          src={`/cardsquares/${card.subcards[0]}.webp`}
-          className={subcardStyles}
+      <AnimatePresence>
+        {subCardsToShow?.map((card, ix) => {
+          return (
+            <motion.div
+              style={{
+                top: `calc(-0.2 * ${ix + 1} * var(--card-size))`,
+                zIndex: `-${ix + 1}`
+              }}
+              className={styles.subCard}
+              initial={{ y: `${2 * ix}em` }}
+              animate={{ y: 0 }}
+              transition={{ ease: 'easeIn', duration: 0.2 }}
+              exit={{ opacity: 0 }}
+              key={`${card}-${ix}`}
+            >
+              <CardDisplay card={{ cardNumber: card }} preventUseOnClick />
+            </motion.div>
+          );
+        })}
+        <CardImage src={eqImg} className={imgStyles} />
+        {card.overlay === 'disabled' && <div className={classStyles}></div>}
+        {(card.isBroken ||
+          card.onChain ||
+          card.isFrozen ||
+          !!card.restriction) && <div className={equipStatus}></div>}
+        {card.numUses && card.numUses > 1 && card.numUses < 10 && (
+          <div className={styles.numUses}>{renderNumUses(card.numUses)}</div>
+        )}
+        <CountersOverlay
+          {...card}
+          num={num}
+          activeCombatChain={activeCombatChain}
         />
-      )}
-      <CardImage src={eqImg} className={imgStyles} />
-      {card.overlay === 'disabled' && <div className={classStyles}></div>}
-      {(card.isBroken ||
-        card.onChain ||
-        card.isFrozen ||
-        !!card.restriction) && <div className={equipStatus}></div>}
-      {card.numUses && card.numUses > 1 && card.numUses < 10 && (
-        <div className={styles.numUses}>{renderNumUses(card.numUses)}</div>
-      )}
-      <CountersOverlay
-        {...card}
-        num={num}
-        activeCombatChain={activeCombatChain}
-      />
+      </AnimatePresence>
     </CardPopUp>
   );
 };

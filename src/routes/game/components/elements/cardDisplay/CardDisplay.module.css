@@ -143,8 +143,11 @@
   box-shadow: 0 0 0 2px var(--primary);
 }
 
-.subcard {
-  margin-top: calc(var(--card-size) * -0.2);
+.subCard {
+  width: 100%;
+  position: absolute;
+  left: 0px;
+  right: 0px;
 }
 
 @media (orientation: portrait) {

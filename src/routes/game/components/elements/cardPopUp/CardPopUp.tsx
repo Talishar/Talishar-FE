@@ -2,6 +2,7 @@ import { useAppDispatch } from 'app/Hooks';
 import { clearPopUp, setPopUp } from 'features/game/GameSlice';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import { ReactNode, useRef } from 'react';
+import { motion } from 'framer-motion';
 
 type CardPopUpProps = {
   children: ReactNode;
@@ -9,6 +10,8 @@ type CardPopUpProps = {
   containerClass?: string;
   onClick?: () => void;
   isHidden?: boolean;
+  onHoverStart?: () => void;
+  onHoverEnd?: () => void;
 };
 
 export default function CardPopUp({
@@ -16,7 +19,9 @@ export default function CardPopUp({
   cardNumber,
   containerClass,
   onClick,
-  isHidden
+  isHidden,
+  onHoverStart,
+  onHoverEnd
 }: CardPopUpProps) {
   const ref = useRef<HTMLDivElement>(null);
   const dispatch = useAppDispatch();
@@ -50,16 +55,18 @@ export default function CardPopUp({
   };
 
   return (
-    <div
+    <motion.div
       className={containerClass}
       onClick={handleOnClick}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       onTouchStart={handleMouseEnter}
       onTouchEnd={handleMouseLeave}
+      onHoverStart={onHoverStart}
+      onHoverEnd={onHoverEnd}
       ref={ref}
     >
       {children}
-    </div>
+    </motion.div>
   );
 }
