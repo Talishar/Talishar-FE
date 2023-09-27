@@ -22,7 +22,7 @@ const OpenGame = ({
         {!!entry.p1Hero && <img src={`/crops/${entry.p1Hero}_cropped.png`} />}
       </div>
       <div>{entry.description}</div>
-      {isOther && <div>{entry.format}</div>}
+      {isOther && <div>{entry.formatName}</div>}
       <div>
         <button
           className={buttonClass}
