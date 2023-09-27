@@ -42,7 +42,40 @@ function ParseCard(input: any) {
 
 // Important to use this before setting anything else to a player!
 function ParseEquipment(input: any) {
-  const result: Player = {};
+  const result: Player = {
+    HeadEq: undefined,
+    ChestEq: undefined,
+    GlovesEq: undefined,
+    FeetEq: undefined,
+    WeaponLEq: undefined,
+    Hero: undefined,
+    WeaponREq: undefined,
+    Health: undefined,
+    ActionPoints: undefined,
+    Hand: undefined,
+    Arsenal: undefined,
+    Banish: undefined,
+    BanishCount: undefined,
+    Graveyard: undefined,
+    GraveyardCount: undefined,
+    Pitch: undefined,
+    PitchRemaining: undefined,
+    DeckSize: undefined,
+    DeckBack: undefined,
+    Deck: undefined,
+    Name: undefined,
+    IsVerified: undefined,
+    Effects: undefined,
+    Permanents: undefined,
+    Soul: undefined,
+    SoulCount: undefined,
+    Playmat: undefined,
+    isPatron: undefined,
+    isContributor: undefined,
+    bloodDebtCount: undefined,
+    bloodDebtImmune: undefined,
+    CardBack: undefined
+  };
 
   if (input === undefined || input.length == 0) {
     return result;
@@ -53,7 +86,7 @@ function ParseEquipment(input: any) {
         result.Hero = ParseCard({ ...cardObj, zone: ZONE.HERO });
         break;
       case 'W': // weapon, possibly have two
-        if (result.WeaponLEq === undefined) {
+        if (result.WeaponLEq == undefined) {
           result.WeaponLEq = ParseCard(cardObj);
         } else {
           result.WeaponREq = ParseCard(cardObj);
