@@ -5,10 +5,10 @@ const News = () => {
   return (
     <div>
       <hgroup>
-        Check out the Team Classic Constructed event commentated by Second Cycle!
-        <a href="https://www.youtube.com/watch?v=TVzXNXLowZ0" target="_blank">
+        Meet Nate (OotTheMonk) from the dev team October 7th at Battle Hardened Milwaukee (Hosted by MinMax Games)!
+        <a href="https://www.minmaxgames.com/products/milwaukee-battle-hardened-battle-hardened-registration?_pos=2&_sid=05e5aa19a&_ss=r" target="_blank">
           <img
-            src="teamccad.jpg"
+            src="bhmilwaukee.webp"
             style={{
               width: '100%',
               height: 'auto',
