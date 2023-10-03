@@ -76,11 +76,6 @@ const Header = () => {
             </a>
           </li>
           <li>
-            <a href="https://www.draftfab.com/">
-              <GiCardRandom></GiCardRandom> <span>Limited</span>
-            </a>
-          </li>
-          <li>
             <a href="https://beta.talishar.net/game/Roguelike/CreateGame.php">
               <GiTreasureMap></GiTreasureMap> <span>RogueLike</span>
             </a>
