@@ -28,7 +28,7 @@ export default function CardPopUp({
   const [windowWidth, windowHeight] = useWindowDimensions();
 
   const handleMouseEnter = () => {
-    if (ref.current === null || isHidden === true) {
+    if (ref.current === null || isHidden === true || cardNumber === "ENDSTEP" || cardNumber === "ENDTURN" || cardNumber === "RESUMETURN" || cardNumber === "PHANTASM" || cardNumber === "MIRAGE" || cardNumber === "FINALIZECHAINLINK" || cardNumber === "DEFENDSTEP") {
       return;
     }
     const rect = ref.current.getBoundingClientRect();
