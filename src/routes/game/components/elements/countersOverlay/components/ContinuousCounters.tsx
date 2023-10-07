@@ -39,15 +39,6 @@ export const ContinuousCounters = (props: Props) => {
           <div>{countersMap?.steam}</div>
         </div>
       )}
-      {!!Number(countersMap?.life) && (
-        <div
-          className={styles.lifeCounter}
-          title={`${countersMap?.life} life counter(s)`}
-          data-tooltip={toTooltipString('Life', countersMap?.life)}
-        >
-          <div>{countersMap?.life}</div>
-        </div>
-      )}
       {!!Number(countersMap?.attack) && (
         <div
           className={styles.attackCounter}
@@ -55,6 +46,15 @@ export const ContinuousCounters = (props: Props) => {
           data-tooltip={toTooltipString('Attack', countersMap?.attack)}
         >
           <div>{countersMap?.attack}</div>
+        </div>
+      )}
+      {!!Number(countersMap?.life) && (
+        <div
+          className={styles.lifeCounter}
+          title={`${countersMap?.life} life counter(s)`}
+          data-tooltip={toTooltipString('Life', countersMap?.life)}
+        >
+          <div>{countersMap?.life}</div>
         </div>
       )}
       {!!Number(countersMap?.energy) && (
