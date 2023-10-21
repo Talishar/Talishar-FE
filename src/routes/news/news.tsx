@@ -6,10 +6,10 @@ const News = () => {
     <div>
       
       <hgroup>
-        LIVE! Watch Big Head Sleeve Guy try to figure out the Living Legend Format!
-        <a href="https://www.youtube.com/watch?v=2Koql0i6BP0" target="_blank">
+        Watch the Calling: Dallas LIVE!
+        <a href="https://www.youtube.com/watch?v=QUJVcKfucqc" target="_blank">
           <img
-            src="big-head-sleeve-guy.webp"
+            src="calling-dallas.webp"
             style={{
               width: '100%',
               height: 'auto',
