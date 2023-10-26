@@ -5,20 +5,6 @@ const News = () => {
   return (
     <div>
       
-      <hgroup>
-        Watch the Calling: Dallas LIVE!
-        <a href="https://www.youtube.com/watch?v=QUJVcKfucqc" target="_blank">
-          <img
-            src="calling-dallas.webp"
-            style={{
-              width: '100%',
-              height: 'auto',
-              maxHeight: '100%',
-              objectFit: 'cover'
-            }}
-          />
-        </a>
-      </hgroup>
 
       <p>Please join our community:</p>
       <ul>
@@ -45,5 +31,23 @@ const News = () => {
     </div>
   );
 };
+
+/*
+
+      <hgroup>
+        Watch the Calling: Dallas LIVE!
+        <a href="https://www.youtube.com/watch?v=QUJVcKfucqc" target="_blank">
+          <img
+            src="calling-dallas.webp"
+            style={{
+              width: '100%',
+              height: 'auto',
+              maxHeight: '100%',
+              objectFit: 'cover'
+            }}
+          />
+        </a>
+      </hgroup>
+      */
 
 export default News;
