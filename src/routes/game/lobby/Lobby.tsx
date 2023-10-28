@@ -135,9 +135,13 @@ const Lobby = () => {
   };
 
   let deckSize = 60;
+  let maxDeckSize = 99999;
   switch (data.format) {
     case GAME_FORMAT.BLITZ:
     case GAME_FORMAT.COMPETITIVE_BLITZ:
+      maxDeckSize = 40;
+      deckSize = 40;
+      break;
     case GAME_FORMAT.COMMONER:
     case GAME_FORMAT.CLASH:
       deckSize = 40;
@@ -314,7 +318,7 @@ const Lobby = () => {
           legs: [...data.deck.legs, ...data.deck.legsSB, 'NONE00'][0]
         }}
         onSubmit={handleFormSubmission}
-        validationSchema={deckValidation(deckSize)}
+        validationSchema={deckValidation(deckSize, maxDeckSize)}
         enableReinitialize
       >
         <Form className={styles.form}>
