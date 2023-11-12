@@ -4,20 +4,7 @@ import RoguelikeAnnouncement from 'img/RoguelikeAnnouncement.webp';
 const News = () => {
   return (
     <div>
-            <hgroup>
-        Watch Battle Hardened: St. Louis!
-        <a href="https://www.youtube.com/watch?v=9ADl9gDGtH0" target="_blank">
-          <img
-            src="bh-st-louis.webp"
-            style={{
-              width: '100%',
-              height: 'auto',
-              maxHeight: '100%',
-              objectFit: 'cover'
-            }}
-          />
-        </a>
-      </hgroup>
+
 
       <p>Please join our community:</p>
       <ul>
@@ -46,7 +33,20 @@ const News = () => {
 };
 
 /*
-
+            <hgroup>
+        Watch Battle Hardened: St. Louis!
+        <a href="https://www.youtube.com/watch?v=9ADl9gDGtH0" target="_blank">
+          <img
+            src="bh-st-louis.webp"
+            style={{
+              width: '100%',
+              height: 'auto',
+              maxHeight: '100%',
+              objectFit: 'cover'
+            }}
+          />
+        </a>
+      </hgroup>
 
       */
 
