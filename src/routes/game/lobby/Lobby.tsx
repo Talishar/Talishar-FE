@@ -139,6 +139,7 @@ const Lobby = () => {
   switch (data.format) {
     case GAME_FORMAT.BLITZ:
     case GAME_FORMAT.COMPETITIVE_BLITZ:
+    case GAME_FORMAT.LLBLITZ:
       maxDeckSize = 40;
       deckSize = 40;
       break;

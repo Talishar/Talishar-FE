@@ -222,6 +222,8 @@ const CreateGame = () => {
                 </option>
                 <option value={GAME_FORMAT.COMMONER}>Commoner</option>
                 <option value={GAME_FORMAT.CLASH}>Clash</option>
+                <option value={GAME_FORMAT.LLCC}>Living Legend CC</option>
+                <option value={GAME_FORMAT.LLBLITZ}>Living Legend Blitz</option>
                 <option value={GAME_FORMAT.SEALED}>
                   Sealed (DraftFaB decks only)
                 </option>
