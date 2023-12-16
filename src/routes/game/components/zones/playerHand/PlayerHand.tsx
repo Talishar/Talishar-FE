@@ -41,6 +41,12 @@ export default function PlayerHand() {
       (card) => card.action != null && card.action != 0
     );
   }, shallowEqual);
+
+  const playableGraveyardCards = useAppSelector((state: RootState) => {
+    return state.game.playerOne.Graveyard?.filter(
+      (card) => card.action != null && card.action != 0
+    );
+  }, shallowEqual);
   const isManualMode = useSetting({ settingName: MANUAL_MODE })?.value === '1';
 
   const addCardToPlayedCards = (cardName: string) => {
@@ -53,11 +59,12 @@ export default function PlayerHand() {
     if (
       (handCards?.length === 0 || handCards === undefined) &&
       (playableBanishedCards?.length === 0 ||
-        playableBanishedCards === undefined)
+        playableBanishedCards === undefined) && (playableGraveyardCards?.length === 0 ||
+          playableGraveyardCards === undefined)
     ) {
       setPlayedCards([]);
     }
-  }, [handCards, playableBanishedCards]);
+  }, [handCards, playableBanishedCards, playableGraveyardCards]);
 
   if (
     arsenalCards === undefined ||
@@ -71,6 +78,7 @@ export default function PlayerHand() {
   lengthOfCards += handCards?.length ?? 0;
   lengthOfCards += arsenalCards?.length ?? 0;
   lengthOfCards += playableBanishedCards?.length ?? 0;
+  lengthOfCards += playableGraveyardCards?.length ?? 0;
 
   if (playerID === 3) {
     return <></>;
@@ -128,6 +136,28 @@ export default function PlayerHand() {
                       card={card}
                       isBanished
                       key={`banished-${card.cardNumber}-${cardCount}`}
+                      addCardToPlayedCards={addCardToPlayedCards}
+                      zIndex={
+                        -(
+                          ix +
+                          (arsenalCards?.length ?? 0) +
+                          (handCards?.length ?? 0)
+                        )
+                      }
+                    />
+                  );
+                })}
+                {playableGraveyardCards !== undefined &&
+                playableGraveyardCards.map((card, ix) => {
+                  const cardCount = cardsInHandsAlready.filter(
+                    (value) => value === card.cardNumber
+                  ).length;
+                  cardsInHandsAlready.push(card.cardNumber);
+                  return (
+                    <PlayerHandCard
+                      card={card}
+                      isGraveyard
+                      key={`graveyard-${card.cardNumber}-${cardCount}`}
                       addCardToPlayedCards={addCardToPlayedCards}
                       zIndex={
                         -(
