@@ -34,6 +34,10 @@ const EndGameMenuOptions = () => {
   const handleContinueAdventure = () => {
     window.location.href = `https://beta.talishar.net/game/Roguelike/ContinueAdventure.php?gameName=${roguelikeGameID}&playerID=1&health=${health}`;
   };
+  
+  const handleSaveReplay = () => {
+    dispatch(submitButton({ button: { mode: PROCESS_INPUT.CREATE_REPLAY } }));
+  };
 
   return (
     <div className={styles.container}>
@@ -58,7 +62,7 @@ const EndGameMenuOptions = () => {
         )}
         {!roguelikeGameID && playerName == "OotTheMonk" && (
           <>
-            <div className={styles.buttonDiv} onClick={handleQuickRematch}>
+            <div className={styles.buttonDiv} onClick={handleSaveReplay}>
               Save Replay (beta)
             </div>
           </>
