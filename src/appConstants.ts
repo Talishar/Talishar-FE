@@ -127,7 +127,9 @@ export const GAME_FORMAT = {
   COMMONER: 'commoner',
   CLASH: 'clash',
   SEALED: 'sealed',
-  DRAFT: 'draft'
+  DRAFT: 'draft',
+  LLCC: 'llcc',
+  LLBLITZ: 'llblitz'
 };
 
 export const GAME_FORMAT_NUMBER = {
@@ -139,7 +141,9 @@ export const GAME_FORMAT_NUMBER = {
   COMMONER: '5',
   CLASH: '-1',
   SEALED: '6',
-  DRAFT: '7'
+  DRAFT: '7',
+  LLCC: '8',
+  LLBLITZ: '9'
 };
 
 export const URL_END_POINT = {

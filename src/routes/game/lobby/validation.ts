@@ -1,6 +1,6 @@
 import { array, boolean, object, string, number } from 'yup';
 
-export const deckValidation = (deckSize: number) => {
+export const deckValidation = (minDeckSize: number, maxDeckSize: number) => {
   return object({
     // maximum of two 1H items, or one 2H item.
     weapons: array()
@@ -27,7 +27,8 @@ export const deckValidation = (deckSize: number) => {
     deck: array()
       .required()
       .of(string())
-      .min(deckSize, `Minimum deck size is ${deckSize} cards.`)
+      .min(minDeckSize, `Minimum deck size is ${minDeckSize} cards.`)
+      .max(maxDeckSize, `Maximum deck size is ${maxDeckSize} cards.`)
   });
 };
 

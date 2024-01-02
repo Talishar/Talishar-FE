@@ -4,20 +4,8 @@ import RoguelikeAnnouncement from 'img/RoguelikeAnnouncement.webp';
 const News = () => {
   return (
     <div>
-      <hgroup>
-        Meet Nate from Talishar and Tyler from TheFabCube October 7th at Battle Hardened Milwaukee (Hosted by MinMax Games)!
-        <a href="https://www.minmaxgames.com/products/milwaukee-battle-hardened-battle-hardened-registration?_pos=2&_sid=05e5aa19a&_ss=r" target="_blank">
-          <img
-            src="bhmilwaukee.webp"
-            style={{
-              width: '100%',
-              height: 'auto',
-              maxHeight: '100%',
-              objectFit: 'cover'
-            }}
-          />
-        </a>
-      </hgroup>
+
+
       <p>Please join our community:</p>
       <ul>
         <li>
@@ -43,5 +31,23 @@ const News = () => {
     </div>
   );
 };
+
+/*
+            <hgroup>
+        Watch Battle Hardened: St. Louis!
+        <a href="https://www.youtube.com/watch?v=9ADl9gDGtH0" target="_blank">
+          <img
+            src="bh-st-louis.webp"
+            style={{
+              width: '100%',
+              height: 'auto',
+              maxHeight: '100%',
+              objectFit: 'cover'
+            }}
+          />
+        </a>
+      </hgroup>
+
+      */
 
 export default News;

@@ -7,8 +7,10 @@ import { GAME_FORMAT, GAME_FORMAT_NUMBER } from 'appConstants';
 import FormatList from '../formatList';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
 import useAuth from 'hooks/useAuth';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
+import { setGameStart } from 'features/game/GameSlice';
+import { useAppDispatch } from 'app/Hooks';
 
 export interface IOpenGame {
   p1Hero?: string;
@@ -36,6 +38,9 @@ export interface GameListResponse {
   openGames: IOpenGame[];
   canSeeQueue?: boolean;
   gameInProgressCount?: number;
+  LastGameName?: number;
+  LastPlayerID?: number;
+  LastAuthKey?: string;
 }
 
 const GAME_LIST_POLLING_INTERVAL = 10000; // in ms
@@ -51,6 +56,28 @@ const GameList = () => {
 
   const [parent] = useAutoAnimate();
 
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+
+  //Before displaying open games, check if we have a game in progress
+  if(!!data?.LastAuthKey && data.LastAuthKey != "")
+  {
+    console.log(data.LastAuthKey);
+    dispatch(
+      setGameStart({
+        playerID: data.LastPlayerID ?? 0,
+        gameID: data.LastGameName ?? 0,
+        authKey: data.LastAuthKey ?? ''
+      })
+    );
+    const searchParam = { playerID: String(data.LastPlayerID ?? '0') };
+    navigate(`/game/play/${data.LastGameName}`, {
+      state: { playerID: data.LastPlayerID ?? 0 }
+    });
+    return <></>;
+  }
+
+  //No game in progress, show open games
   let sortedOpenGames = data?.openGames ? [...data.openGames] : [];
   sortedOpenGames = sortedOpenGames
     .filter((game: IOpenGame) => {
@@ -86,7 +113,9 @@ const GameList = () => {
     GAME_FORMAT.COMMONER,
     GAME_FORMAT.CLASH,
     GAME_FORMAT.SEALED,
-    GAME_FORMAT.DRAFT
+    GAME_FORMAT.DRAFT,
+    GAME_FORMAT.LLCC,
+    GAME_FORMAT.LLBLITZ
   ];
 
   return (
