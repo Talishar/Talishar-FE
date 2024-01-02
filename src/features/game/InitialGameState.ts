@@ -98,6 +98,7 @@ export const OfflineTestingGameState: GameState = {
     dominate: true,
     overpower: true,
     wager: true,
+    phantasm: true,
     fused: true,
     damagePrevention: 5,
     attackTarget: 'Prism'
