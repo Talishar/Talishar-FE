@@ -6,9 +6,11 @@ import {
   GiElectric,
   GiShield,
   GiShoulderArmor,
-  GiZigzagLeaf
+  GiZigzagLeaf,
+  GiTwoCoins,
+  GiGhost,
+  GiMuscleFat 
 } from 'react-icons/gi';
-import { BiBullseye } from 'react-icons/bi';
 type Props = {
   activeCombatChain?: CombatChainLink;
 };
@@ -27,12 +29,22 @@ export const ActiveCardCounterOverlay = (props: Props) => {
       )}
       {activeCombatChain.dominate && (
         <div className={styles.icon} data-tooltip="Dominate">
-          <BiBullseye />
+          <GiMuscleFat  />
         </div>
       )}
       {activeCombatChain.overpower && (
         <div className={styles.icon} data-tooltip="Overpower">
           <GiElectric />
+        </div>
+      )}
+      {activeCombatChain.wager && (
+        <div className={styles.icon} data-tooltip="Wager">
+          <GiTwoCoins />
+        </div>
+      )}
+      {activeCombatChain.phantasm && (
+        <div className={styles.icon} data-tooltip="Phantasm">
+          <GiGhost />
         </div>
       )}
       {activeCombatChain.fused && (
