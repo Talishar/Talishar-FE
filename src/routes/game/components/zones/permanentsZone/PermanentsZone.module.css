@@ -28,7 +28,7 @@
   min-height: var(--card-size);
   max-width: 100%;
   overflow-x: scroll;
-  overflow-y: visible;
+  overflow-y: hidden;
 }
 
 .permanentsInner {
