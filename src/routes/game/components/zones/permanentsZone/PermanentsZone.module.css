@@ -123,6 +123,7 @@
   width: calc(--var(--card-size) * 1);
   padding: 5px;
   cursor: pointer;
+  border-radius: 5px;
 }
 
 .scrollWidget:hover {

@@ -48,6 +48,23 @@
   align-items: center;
 }
 
+.grabbyHandleButton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: var(--white);
+  border-radius: 5px;
+  width: 1.5em;
+  height: 1.5em;
+  font-size: 1.75em;
+  padding: 2px;
+  margin: 0.25em;
+  pointer-events: auto;
+  user-select: none;
+  cursor: pointer;
+}
+
 .chainCentre {
   padding-left: 1vh;
   height: 100%;
@@ -90,7 +107,7 @@
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  min-width: 10dvw;
+  min-width: 30dvw;
   display: flex;
   justify-content: center;
   align-items: center;
