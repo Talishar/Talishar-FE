@@ -34,8 +34,8 @@
 }
 
 .buttonDiv {
-  background-color: var(--dark-red);
-  color: var(--white);
+  background-color: var(--primary);
+  color: black;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -50,9 +50,9 @@
 }
 
 .buttonDiv:hover {
-  background-color: var(--white);
-  color: var(--dark-red);
-  border: 1px solid var(--dark-red);
+  background-color: black;
+  color: var(--primary);
+  border: 1px solid var(--primary);
   cursor: pointer;
 }
 
