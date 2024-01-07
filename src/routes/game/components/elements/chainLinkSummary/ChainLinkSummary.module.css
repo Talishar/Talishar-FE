@@ -71,7 +71,12 @@
 }
 
 .midColumn {
+  text-align: center;
   width: 50vh;
+}
+
+.rightColumn {
+  text-align: center;
 }
 
 .table {
