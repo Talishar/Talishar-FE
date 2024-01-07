@@ -16,7 +16,8 @@
   flex-basis: auto;
   padding: 5px;
   margin-left: 1dvh;
-  font-size: 1.2em;
+  font-size: 1em;
+  font-weight: 550;
   height: auto;
 }
 
@@ -38,7 +39,8 @@
   position: relative;
   overflow: clip;
   flex: 0 1 100%;
-  margin-bottom: 0.5em;
+  margin-top: 0.2em;
+  margin-bottom: 0.2em;
   outline: 2px solid black;
   background-color: var(--white);
   color: black;

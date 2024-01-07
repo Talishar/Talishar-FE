@@ -1,7 +1,10 @@
 .playerPrompt {
-  background-color: #fffdd0;
-  border: 1px solid #004225;
-  color: #004225;
+  background-color: var(--near-black);
+  border-width: 1px;
+  border-radius: 5px;
+  border-color: goldenrod;
+  border-style: solid;
+  color: var(--white);
   max-width: 100%;
   max-height: 100%;
   width: 100%;
@@ -13,12 +16,13 @@
   align-items: center;
   transition: width 0.5s;
   flex-wrap: nowrap;
-  font-size: 1em;
-  font-weight: 600;
+  font-size: 1.2em;
+  font-weight: 500;
   padding: 2px 4px;
   flex-direction: row;
   overflow-x: min-content;
   gap: 5px;
+  z-index: 30;
 }
 
 .content {
@@ -30,8 +34,8 @@
 }
 
 .buttonDiv {
-  background-color: #004225;
-  color: #fffdd0;
+  background-color: var(--primary);
+  color: black;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -46,9 +50,9 @@
 }
 
 .buttonDiv:hover {
-  background-color: #fffdd0;
-  color: #004225;
-  border: 1px solid #004225;
+  background-color: black;
+  color: var(--primary);
+  border: 1px solid var(--primary);
   cursor: pointer;
 }
 
