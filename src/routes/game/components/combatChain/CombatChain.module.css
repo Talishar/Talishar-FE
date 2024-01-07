@@ -107,7 +107,7 @@
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  min-width: 30dvw;
+  min-width: 10dvw;
   display: flex;
   justify-content: center;
   align-items: center;
