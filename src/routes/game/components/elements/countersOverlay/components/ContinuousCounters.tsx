@@ -24,7 +24,6 @@ export const ContinuousCounters = (props: Props) => {
       {!!Number(countersMap?.defence) && (
         <div
           className={styles.defCounter}
-          title={`${countersMap?.defence} defence counter(s)`}
           data-tooltip={toTooltipString('Defense', countersMap?.defence)}
         >
           <div>{countersMap?.defence}</div>
@@ -33,7 +32,6 @@ export const ContinuousCounters = (props: Props) => {
       {!!Number(countersMap?.steam) && (
         <div
           className={styles.steamCounter}
-          title={`${countersMap?.steam} steam counter(s)`}
           data-tooltip={toTooltipString('Steam', countersMap?.steam)}
         >
           <div>{countersMap?.steam}</div>
@@ -42,7 +40,6 @@ export const ContinuousCounters = (props: Props) => {
       {!!Number(countersMap?.attack) && (
         <div
           className={styles.attackCounter}
-          title={`${countersMap?.attack} attack counter(s)`}
           data-tooltip={toTooltipString('Attack', countersMap?.attack)}
         >
           <div>{countersMap?.attack}</div>
@@ -51,7 +48,6 @@ export const ContinuousCounters = (props: Props) => {
       {!!Number(countersMap?.life) && (
         <div
           className={styles.lifeCounter}
-          title={`${countersMap?.life} life counter(s)`}
           data-tooltip={toTooltipString('Life', countersMap?.life)}
         >
           <div>{countersMap?.life}</div>
@@ -60,7 +56,6 @@ export const ContinuousCounters = (props: Props) => {
       {!!Number(countersMap?.energy) && (
         <div
           className={styles.number}
-          title={`${countersMap?.energy} energy counter(s)`}
           data-tooltip={toTooltipString('Energy', countersMap?.energy)}
         >
           <div className={styles.text}>{countersMap?.energy}</div>
@@ -69,7 +64,6 @@ export const ContinuousCounters = (props: Props) => {
       {!!Number(countersMap?.aim) && (
         <div
           className={classNames(styles.aimCounter, styles.icon)}
-          title={`aim counter`}
           data-tooltip={toTooltipString('Aim', countersMap?.aim)}
         />
       )}
