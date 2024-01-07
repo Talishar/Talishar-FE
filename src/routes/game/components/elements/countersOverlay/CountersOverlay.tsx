@@ -60,6 +60,7 @@ export const CountersOverlay = ({
       {!!numTotal && (
         <div
           className={styles.number}
+          title={`${numTotal} ${numDescriptionFinal} counter(s)`}
         >
           <div className={styles.text}>{numTotal}</div>
         </div>
