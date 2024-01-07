@@ -520,6 +520,7 @@ const OptionsSettings = () => {
       <>
         <fieldset>
           <label className={styles.optionLabel}>
+          Card Size: {Math.floor(cookies.cardSize * 100)}%
             <input
               name="cardSize"
               type="range"
@@ -531,9 +532,9 @@ const OptionsSettings = () => {
                 setCookie('cardSize', parseInt(e.target.value) / 100)
               }
             />
-            Card Size is {cookies.cardSize * 100}% (range 25-100%)
           </label>
           <label className={styles.optionLabel}>
+            Playmat Intensity: {Math.floor(cookies.playmatIntensity * 100)}%
             <input
               name="playmatIntensity"
               type="range"
@@ -545,8 +546,6 @@ const OptionsSettings = () => {
                 setCookie('playmatIntensity', parseInt(e.target.value) / 100)
               }
             />
-            Playmat Intensity {cookies.playmatIntensity * 100}% (range
-            10-100%)
           </label>
         </fieldset>
       </>
