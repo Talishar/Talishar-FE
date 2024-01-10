@@ -280,7 +280,7 @@ const Lobby = () => {
             <dialog open={needToDoDisclaimer}>
               <article>
                 <header style={{ marginBottom: '1em' }}>
-                  Open Format Disclaimer:
+                ⚠️ Open Format Disclaimer
                 </header>
                 <p style={{ marginBottom: '1em' }}>
                   Note that new cards are added on a 'best-effort' basis and
