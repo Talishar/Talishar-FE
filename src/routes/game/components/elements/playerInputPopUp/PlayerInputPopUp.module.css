@@ -23,11 +23,11 @@
   width: 100%;
   justify-content: space-between;
   align-items: center;
-  padding-bottom: 1vh;
+  font-size: 0.9em;
 }
 
 .title {
-  font-size: 16px;
+  font-size: 0.9em;
   padding: 0px;
   margin: 0px;
 }
@@ -47,7 +47,7 @@
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  min-width: 64px;
+  min-width: 48px;
   height: 32px;
   border-radius: 5px;
   border: 1px solid var(--primary);
@@ -55,6 +55,8 @@
   padding: 8px;
   width: auto;
   margin-bottom: 0;
+  font-size: 0.8em;
+  font-weight: 550;
 }
 
 .buttonDiv:hover {
