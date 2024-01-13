@@ -259,7 +259,7 @@ const CreateGame = () => {
                 Single Player
               </label>
               
-              {isLoggedIn && isPatron && (
+              {isLoggedIn && (isPatron == "1") && (
                 <label>
                   AI Deck
                   <select
