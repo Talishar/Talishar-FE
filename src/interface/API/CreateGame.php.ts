@@ -9,6 +9,7 @@ export interface CreateGameAPI {
   favoriteDecks?: string; //This one is kind of weird. It's the favorite deck index, then the string "<fav>" then the favorite deck link
   gameDescription?: string; //Just a string with the game name
   user?: string; // User ID for external site like fabrary
+  deckTestDeck?: string;//Deck of the deck test opponent (AI)
 }
 
 export interface CreateGameFormik {

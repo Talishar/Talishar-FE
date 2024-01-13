@@ -7,6 +7,7 @@ import {
 import {
   selectCurrentUser,
   selectCurrentUserName,
+  selectIsPatron,
   setCredentialsReducer,
   logOutReducer
 } from 'features/auth/authSlice';
@@ -16,17 +17,19 @@ import { toast } from 'react-hot-toast';
 export default function useAuth() {
   const currentUserId = useAppSelector(selectCurrentUser);
   const currentUserName = useAppSelector(selectCurrentUserName);
+  const isPatron = useAppSelector(selectIsPatron);
   // const { refetch } = useGetFavoriteDecksQuery(undefined);
   const [logOutAPI, logOutData] = useLogOutMutation();
   const { isLoading, error, data } = useLoginWithCookieQuery({});
   const dispatch = useAppDispatch();
 
-  const setLoggedIn = (user: string, userName: string, token: string) => {
+  const setLoggedIn = (user: string, userName: string, token: string, patron:string) => {
     dispatch(
       setCredentialsReducer({
         user: user,
         userName: userName,
-        accessToken: token
+        accessToken: token,
+        isPatron: patron
       })
     );
   };
@@ -45,7 +48,7 @@ export default function useAuth() {
 
   useEffect(() => {
     if (data?.isUserLoggedIn) {
-      setLoggedIn(data.loggedInUserID, data.loggedInUserName, '');
+      setLoggedIn(data.loggedInUserID, data.loggedInUserName, '', data.isPatron);
       // refetch();
     }
   }, [isLoading]);
@@ -56,6 +59,7 @@ export default function useAuth() {
     currentUserName,
     isLoading,
     error,
+    isPatron,
     setLoggedIn,
     logOut
   };

@@ -146,6 +146,11 @@ export const GAME_FORMAT_NUMBER = {
   LLBLITZ: '9'
 };
 
+export const AI_DECK = {
+  COMBAT_DUMMY: 'Dummy',
+  IRABLITZ: 'Ira'
+};
+
 export const URL_END_POINT = {
   GET_GAME_LIST: 'APIs/GetGameList.php',
   CREATE_GAME: 'APIs/CreateGame.php',
