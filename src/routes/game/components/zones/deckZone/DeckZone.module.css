@@ -21,4 +21,5 @@
 .drawButton {
   padding: 2px;
   margin: 0;
+  border: 2px solid var(--near-black);
 }

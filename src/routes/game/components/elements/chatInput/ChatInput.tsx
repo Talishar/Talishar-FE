@@ -32,23 +32,23 @@ const submitButtonClass = classNames('secondary', styles.buttonDiv);
 
 const CHAT_WHEEL = new Map<number, string>([
   [1, 'Hello'],
-  [10, 'Good luck, have fun'],
-  [2, 'Want to Chat?'],
-  [3, 'Can I undo?'],
-  [4, 'Do you want to undo?'],
-  [5, 'Yes'],
-  [6, 'No'],
-  [7, 'Thanks!'],
-  [8, 'Thinking... Please bear with me!'],
-  [9, 'Good game!'],
-  [11, 'Sorry!'],
-  [12, "I think there's a bug"],
-  [13, 'Got to go'],
-  [14, 'Be right back'],
-  [15, 'Are you there?'],
-  [16, 'Whoops!'],
-  [17, 'No problem!'],
-  [18, 'Okay!']
+  [2, 'Good luck, have fun'],
+  [3, 'Are you there?'],
+  [4, 'Be right back'],
+  [5, 'Can I undo?'],
+  [6, 'Do you want to undo?'],
+  [7, 'Good game!'],
+  [8, 'Got to go'],
+  [9, 'I think there is a bug'],
+  [10, 'No'],
+  [11, 'No problem!'],
+  [12, 'Okay!'],
+  [13, 'Sorry!'],
+  [14, 'Thanks!'],
+  [15, 'Thinking... Please bear with me!'],
+  [16, 'Want to Chat?'],
+  [17, 'Whoops!'],
+  [18, 'Yes']
 ]);
 
 interface ChatOptionsProps {
