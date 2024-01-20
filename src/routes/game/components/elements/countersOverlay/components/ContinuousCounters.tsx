@@ -63,7 +63,7 @@ export const ContinuousCounters = (props: Props) => {
       )}
       {!!Number(countersMap?.aim) && (
         <div
-          className={classNames(styles.aimCounter, styles.icon)}
+          className={classNames(styles.aimCounter, styles.icon)} data-tooltip="Aim Counter"
           title={`aim counter`}
         />
       )}
