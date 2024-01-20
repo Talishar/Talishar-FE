@@ -272,6 +272,9 @@ const CreateGame = () => {
                     <option value={AI_DECK.IRABLITZ}>
                       Flic Flak Ira (Blitz)
                     </option>
+                    <option value={AI_DECK.FAICC}>
+                      Fai (CC)
+                    </option>
                   </select>
                 </label>
               )}
