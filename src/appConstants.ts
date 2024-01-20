@@ -225,5 +225,6 @@ export const PLAYMATS = [
   'Dusk-Till-Dawn-AHS',
   'Exude-Confidence-AHS',
   'Command-and-Conquer-AHS',
-  'Swarming-Gloomveil-AHS'
+  'Swarming-Gloomveil-AHS',
+  'FindCenter'
 ];
