@@ -23,11 +23,11 @@
   width: 100%;
   justify-content: space-between;
   align-items: center;
-  font-size: 0.9em;
+  padding-bottom: 1vh;
 }
 
 .title {
-  font-size: 0.9em;
+  font-size: 16px;
   padding: 0px;
   margin: 0px;
 }
@@ -37,7 +37,8 @@
   flex-direction: row;
   flex-wrap: wrap;
   align-items: flex-start;
-  gap: 1vh;
+  padding-left: .45em;
+  gap: 1.2dvw;
 }
 
 .buttonDiv {
@@ -47,7 +48,7 @@
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  min-width: 48px;
+  min-width: calc(6dvw * var(--card-scale));
   height: 32px;
   border-radius: 5px;
   border: 1px solid var(--primary);
@@ -55,8 +56,6 @@
   padding: 8px;
   width: auto;
   margin-bottom: 0;
-  font-size: 0.8em;
-  font-weight: 550;
 }
 
 .buttonDiv:hover {
