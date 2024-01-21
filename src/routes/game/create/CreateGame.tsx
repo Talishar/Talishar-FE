@@ -278,6 +278,11 @@ const CreateGame = () => {
                   </select>
                 </label>
               )}
+              {(isPatron != "1") && (
+                <label>
+                  Join our <a href='https://www.patreon.com/talishar' target='_blank'>Patreon</a> to play against custom coded AIs!
+                </label>
+              )}
             </fieldset>
           </div>
           <button
