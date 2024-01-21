@@ -35,10 +35,10 @@ const Header = () => {
           </li>
           <li>
             <a
-              href="https://www.patreon.com/talishar"
+              href="https://linktr.ee/Talishar"
               target={'_blank'}
               className={styles.social}
-              title={'Patreon Link'}
+              title={'Patreon Links'}
             >
               Support Us!
             </a>
