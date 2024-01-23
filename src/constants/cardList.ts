@@ -350,6 +350,7 @@ export const CARD_LIST: string[] = [
   'Deathly Delight',
   'Deathly Duet',
   'Deathly Wail',
+  'Deathmatch Arena',
   'Debilitate',
   'Decimator Great Axe',
   'Deep Blue',
