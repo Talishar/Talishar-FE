@@ -15,6 +15,7 @@
 
 .fullLog {
   overflow-y: scroll;
+  font-size: medium;
 }
 
 .cardListBox.reduced {
