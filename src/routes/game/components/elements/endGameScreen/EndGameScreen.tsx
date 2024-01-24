@@ -38,7 +38,7 @@ const EndGameScreen = () => {
     content = <div>{JSON.stringify(error)}</div>;
   } else if(showFullLog) {
     if(isPatron) {
-      content = <div>{data.fullLog}</div>;
+      content = <div dangerouslySetInnerHTML={{ __html: data.fullLog }} />;
     }
     else {
       content = <div>Support our <a href='https://www.patreon.com/talishar' target='_blank'>patreon</a> to access this feature.</div>;
