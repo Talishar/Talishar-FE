@@ -148,7 +148,8 @@ export const GAME_FORMAT_NUMBER = {
 
 export const AI_DECK = {
   COMBAT_DUMMY: 'Dummy',
-  IRABLITZ: 'Ira'
+  IRABLITZ: 'Ira',
+  FAICC: 'FaiCC'
 };
 
 export const URL_END_POINT = {
@@ -211,20 +212,19 @@ export const QUERY_STATUS = {
 };
 
 export const PLAYMATS = [
-  'Plain',
-  'Demonastery',
-  'Metrix',
-  'Misteria',
-  'Pits',
-  'Savage-Lands',
-  'Solana',
-  'Volcor',
-  'Data-Doll',
-  'Korshem',
+  'aria',
+  'demonastery',
+  'metrix',
+  'misteria',
+  'pits',
+  'savage',
+  'solana',
+  'volcor',
   'Bare-Fangs-AHS',
   'Erase-Face-AHS',
   'Dusk-Till-Dawn-AHS',
   'Exude-Confidence-AHS',
   'Command-and-Conquer-AHS',
-  'Swarming-Gloomveil-AHS'
+  'Swarming-Gloomveil-AHS',
+  'FindCenter'
 ];

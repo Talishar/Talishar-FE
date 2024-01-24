@@ -272,7 +272,15 @@ const CreateGame = () => {
                     <option value={AI_DECK.IRABLITZ}>
                       Flic Flak Ira (Blitz)
                     </option>
+                    <option value={AI_DECK.FAICC}>
+                      Fai (CC)
+                    </option>
                   </select>
+                </label>
+              )}
+              {(isPatron != "1") && (
+                <label>
+                  Join our <a href='https://www.patreon.com/talishar' target='_blank'>Patreon</a> to play against custom coded AIs!
                 </label>
               )}
             </fieldset>

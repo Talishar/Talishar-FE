@@ -68,22 +68,23 @@ export const CARD_BACK = {
 } as { [key: string]: string };
 
 export const PLAYMATS = {
-  '0': 'Plain',
-  '1': 'Demonastery',
-  '2': 'Metrix',
-  '3': 'Misteria',
-  '4': 'Pits',
-  '5': 'Savage-Lands',
-  '6': 'Solana',
-  '7': 'Volcor',
-  '8': 'Data Doll',
-  '9': 'Korshem',
-  '10': 'Bare Fangs AHS',
-  '11': 'Erase Face AHS',
-  '12': 'Dusk Till Dawn AHS',
-  '13': 'Exude Confidence AHS',
-  '14': 'Command and Conquer AHS',
-  '15': 'SwarmingeGloomveil AHS'
+  '0': 'plain',
+  '1': 'demonastery',
+  '2': 'metrix',
+  '3': 'misteria',
+  '4': 'pits',
+  '5': 'savage',
+  '6': 'solana',
+  '7': 'volcor',
+  '8': 'training-dummy',
+  '9': 'aria',
+  '10': 'Bare-Fangs-AHS',
+  '11': 'Erase-Face-AHS',
+  '12': 'Dusk-Till-Dawn-AHS',
+  '13': 'Exude-Confidence-AHS',
+  '14': 'Command-and-Conquer-AHS',
+  '15': 'Swarming-Gloomveil-AHS',
+  '16': 'FindCenter'
 } as { [key: string]: string };
 
-export const PLAYER_PLAYMATS = ['0', '9', '1', '2', '3', '4', '5', '6', '7', '10', '11', '12', '13', '14', '15'];
+export const PLAYER_PLAYMATS = ['0', '9', '1', '2', '3', '4', '5', '6', '7', '10', '11', '12', '13', '14', '15', '16'];

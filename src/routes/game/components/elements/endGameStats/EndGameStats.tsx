@@ -142,15 +142,21 @@ const EndGameStats = (data: EndGameData) => {
           <table className={styles.cardTable}>
             <thead>
               <tr>
-                <th>Turn Number</th>
-                <th>Cards Played</th>
-                <th>Cards Blocked</th>
-                <th>Cards Pitched</th>
-                <th>Resources Used</th>
-                <th>Resources Left</th>
-                <th>Cards Left</th>
-                <th>Damage Dealt</th>
-                <th>Damage Taken</th>
+                <th>Turn</th>
+                <th colSpan={4}>Cards</th>
+                <th colSpan={2}>Resources</th>
+                <th colSpan={2}>Damage</th>
+              </tr>
+              <tr>
+                <th>#</th>
+                <th>Played</th>
+                <th>Blocked</th>
+                <th>Pitched</th>
+                <th>Left</th>
+                <th>Used</th>
+                <th>Left</th>
+                <th>Dealt</th>
+                <th>Taken</th>
               </tr>
             </thead>
             <tbody>
@@ -173,15 +179,15 @@ const EndGameStats = (data: EndGameData) => {
                       </td>
                       <td className={styles.pitched}>
                         {/* @ts-ignore */}
+                        {data.turnResults[key]?.cardsLeft}
+                      </td>
+                      <td className={styles.pitched}>
+                        {/* @ts-ignore */}
                         {data.turnResults[key]?.resourcesUsed}
                       </td>
                       <td className={styles.pitched}>
                         {/* @ts-ignore */}
                         {data.turnResults[key]?.resourcesLeft}
-                      </td>
-                      <td className={styles.pitched}>
-                        {/* @ts-ignore */}
-                        {data.turnResults[key]?.cardsLeft}
                       </td>
                       <td className={styles.pitched}>
                         {/* @ts-ignore */}
