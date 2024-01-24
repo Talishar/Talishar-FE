@@ -9,11 +9,14 @@ import { shallowEqual } from 'react-redux';
 import useShowModal from 'hooks/useShowModals';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import classNames from 'classnames';
+import useAuth from 'hooks/useAuth';
 
 const EndGameScreen = () => {
   const gameInfo = useAppSelector(getGameInfo, shallowEqual);
   const [playerID, setPlayerID] = useState(gameInfo.playerID === 2 ? 2 : 1);
   const [showStats, setShowStats] = useState(true);
+  const [showFullLog, setShowFullLog] = useState(false);
+  const { isPatron } = useAuth();
   const { data, isLoading, error } = useGetPopUpContentQuery({
     gameID: gameInfo.gameID,
     playerID: playerID,
@@ -33,6 +36,13 @@ const EndGameScreen = () => {
     content = <div>Loading...</div>;
   } else if (error) {
     content = <div>{JSON.stringify(error)}</div>;
+  } else if(showFullLog) {
+    if(isPatron) {
+      content = <div>{data.fullLog}</div>;
+    }
+    else {
+      content = <div>Support our <a href='https://www.patreon.com/talishar' target='_blank'>patreon</a> to access this feature.</div>;
+    }
   } else {
     content = <EndGameStats {...(data as EndGameData)} />;
   }
@@ -45,12 +55,19 @@ const EndGameScreen = () => {
     setShowStats(!showStats);
   };
 
+  const toggleShowFullLog = () => {
+    setShowFullLog(!showFullLog);
+  };
+
   return (
     <div className={cardListBoxClasses}>
       <div className={styles.cardListTitleContainer}>
         <div className={styles.cardListTitle}>
           <h3 className={styles.title}>{'Game Over Summary'}</h3>
           <div className={styles.buttonGroup}>
+            <div className={styles.buttonDiv} onClick={toggleShowFullLog}>
+               Full Game Log
+            </div>
             <div className={styles.buttonDiv} onClick={switchPlayer}>
               Switch player stats
             </div>
