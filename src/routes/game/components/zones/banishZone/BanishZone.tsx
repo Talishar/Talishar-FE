@@ -16,7 +16,7 @@ export const BanishZone = React.memo((prop: Displayrow) => {
   );
 
   if (banishZone === undefined || banishZone.length === 0) {
-    return <div className={styles.banishZone}>Banish</div>;
+    return <div className={styles.banishZone}></div>;
   }
 
   const banishZoneDisplay = () => {

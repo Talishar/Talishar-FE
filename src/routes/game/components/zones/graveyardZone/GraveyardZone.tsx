@@ -15,7 +15,7 @@ export const GraveyardZone = React.memo((prop: Displayrow) => {
   );
 
   if (graveyardZone === undefined || graveyardZone.length === 0) {
-    return <div className={styles.graveyardZone}>Graveyard</div>;
+    return <div className={styles.graveyardZone}></div>;
   }
 
   const showCount = true;
