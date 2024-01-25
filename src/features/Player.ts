@@ -33,4 +33,5 @@ export default interface Player {
   bloodDebtCount?: number;
   bloodDebtImmune?: boolean;
   CardBack?: Card;
+  isPvtVoidPatron?: boolean;
 }
