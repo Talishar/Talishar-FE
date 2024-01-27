@@ -1,3 +1,4 @@
+
 .container {
   display: flex;
   flex-direction: column;
@@ -10,12 +11,18 @@
   height: calc(100dvh - 440px);
 }
 
-.spacer {
-  height: 5em;
+td {
+  padding:4px;
 }
 
-@media (min-width: 1200px) {
-  .spacer {
-    height: 0;
-  }
+.red {
+  color:#ff3333;
+}
+
+.yellow {
+  color:yellow;
+}
+
+.blue {
+  color:cyan;
 }

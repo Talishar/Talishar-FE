@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Deck from './components/deck/Deck';
 import LobbyChat from './components/lobbyChat/LobbyChat';
+import Calculator from './components/calculator/Calculator';
 import testData from './mockdata.json';
 import styles from './Lobby.module.css';
 import Equipment from './components/equipment/Equipment';
@@ -33,8 +34,10 @@ import useSound from 'use-sound';
 import playerJoined from 'sounds/playerJoinedSound.mp3';
 import { createPortal } from 'react-dom';
 import { useAppDispatch } from 'app/Hooks';
+import useAuth from 'hooks/useAuth';
 
 const Lobby = () => {
+  const [showCalculator, setShowCalculator] = useState(false);
   const [activeTab, setActiveTab] = useState<string>('equipment');
   const [unreadChat, setUnreadChat] = useState<boolean>(false);
   const [width, height] = useWindowDimensions();
@@ -51,6 +54,7 @@ const Lobby = () => {
     shallowEqual
   );
   const [playLobbyJoin] = useSound(playerJoined, { volume: 1 });
+  const { isPatron } = useAuth();
 
   let { data, isLoading, refetch } = useGetLobbyInfoQuery({
     gameName: gameID,
@@ -85,6 +89,10 @@ const Lobby = () => {
   const handleChatClick = () => {
     setUnreadChat(false);
     setActiveTab('chat');
+  };
+
+  const toggleShowCalculator = () => {
+    setShowCalculator(!showCalculator);
   };
 
   const handleMatchupClick = () => setActiveTab('matchups');
@@ -474,7 +482,28 @@ const Lobby = () => {
                 )}
               </>
             )}
-            {(activeTab === 'chat' || isWideScreen) && <LobbyChat />}
+          {(activeTab === 'chat' || isWideScreen) && showCalculator && <Calculator />}
+          {(activeTab === 'chat' || isWideScreen) && !showCalculator && <LobbyChat />}
+
+          {isPatron == "1" &&
+            <button
+              className={styles.smallButton}
+              onClick={(e) => {
+                e.preventDefault();
+                toggleShowCalculator();
+              }}
+              disabled={false} >
+              Calculator
+            </button>
+          }
+          
+          {isPatron != "1" &&
+            <div className={styles.patreonLink}>Support our <a href='https://www.patreon.com/talishar' target='_blank'>patreon</a> to use dynamic hypergeometric calculator!</div>
+          }
+            
+      <div className={styles.spacer}></div>
+
+
             {(activeTab === 'matchups' || isWideScreen) && (
               <Matchups refetch={refetch} />
             )}
