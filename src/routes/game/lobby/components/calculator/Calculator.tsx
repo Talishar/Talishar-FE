@@ -9,6 +9,7 @@ import { useGetLobbyInfoQuery } from 'features/api/apiSlice';
 
 function hgeo(totalPopulation:number, successPopulation:number, sampleSize:number, successesInSample:number) {
   if(successesInSample > successPopulation) return 0;
+  if(totalPopulation == successPopulation && successesInSample < sampleSize) return 0;
   function factorial(n:number) {
       let result = 1;
       for(let i = 2; i <= n; i++)
