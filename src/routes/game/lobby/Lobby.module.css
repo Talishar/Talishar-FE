@@ -26,6 +26,12 @@
   margin: 0;
 }
 
+.patreonLink {
+  font-size: 0.65em;
+  padding: 0;
+  margin: 0;
+}
+
 .leftCol {
   background-size: cover;
   height: 100%;

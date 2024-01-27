@@ -34,6 +34,7 @@ import useSound from 'use-sound';
 import playerJoined from 'sounds/playerJoinedSound.mp3';
 import { createPortal } from 'react-dom';
 import { useAppDispatch } from 'app/Hooks';
+import useAuth from 'hooks/useAuth';
 
 const Lobby = () => {
   const [showCalculator, setShowCalculator] = useState(false);
@@ -53,6 +54,7 @@ const Lobby = () => {
     shallowEqual
   );
   const [playLobbyJoin] = useSound(playerJoined, { volume: 1 });
+  const { isPatron } = useAuth();
 
   let { data, isLoading, refetch } = useGetLobbyInfoQuery({
     gameName: gameID,
@@ -483,15 +485,21 @@ const Lobby = () => {
           {(activeTab === 'chat' || isWideScreen) && showCalculator && <Calculator />}
           {(activeTab === 'chat' || isWideScreen) && !showCalculator && <LobbyChat />}
 
-          <button
-            className={styles.smallButton}
-            onClick={(e) => {
-              e.preventDefault();
-              toggleShowCalculator();
-            }}
-            disabled={false} >
-            Calculator
-          </button>
+          {isPatron == "1" &&
+            <button
+              className={styles.smallButton}
+              onClick={(e) => {
+                e.preventDefault();
+                toggleShowCalculator();
+              }}
+              disabled={false} >
+              Calculator
+            </button>
+          }
+          
+          {isPatron != "1" &&
+            <div className={styles.patreonLink}>Support our <a href='https://www.patreon.com/talishar' target='_blank'>patreon</a> to use dynamic hypergeometric calculator!</div>
+          }
             
       <div className={styles.spacer}></div>
 
