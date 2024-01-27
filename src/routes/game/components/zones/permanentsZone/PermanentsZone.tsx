@@ -40,6 +40,7 @@ export default function PermanentsZone(prop: Displayrow) {
     return (
       <div className={styles.permanentsWrapper}>
         <div className={styles.permanentsText}>
+          <div>Permanents</div>
         </div>
       </div>
     );
