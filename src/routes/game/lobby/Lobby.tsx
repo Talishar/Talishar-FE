@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Deck from './components/deck/Deck';
 import LobbyChat from './components/lobbyChat/LobbyChat';
+import Calculator from './components/calculator/Calculator';
 import testData from './mockdata.json';
 import styles from './Lobby.module.css';
 import Equipment from './components/equipment/Equipment';
@@ -35,6 +36,7 @@ import { createPortal } from 'react-dom';
 import { useAppDispatch } from 'app/Hooks';
 
 const Lobby = () => {
+  const [showCalculator, setShowCalculator] = useState(false);
   const [activeTab, setActiveTab] = useState<string>('equipment');
   const [unreadChat, setUnreadChat] = useState<boolean>(false);
   const [width, height] = useWindowDimensions();
@@ -85,6 +87,10 @@ const Lobby = () => {
   const handleChatClick = () => {
     setUnreadChat(false);
     setActiveTab('chat');
+  };
+
+  const toggleShowCalculator = () => {
+    setShowCalculator(!showCalculator);
   };
 
   const handleMatchupClick = () => setActiveTab('matchups');
@@ -474,7 +480,22 @@ const Lobby = () => {
                 )}
               </>
             )}
-            {(activeTab === 'chat' || isWideScreen) && <LobbyChat />}
+          {(activeTab === 'chat' || isWideScreen) && showCalculator && <Calculator />}
+          {(activeTab === 'chat' || isWideScreen) && !showCalculator && <LobbyChat />}
+
+          <button
+            className={styles.smallButton}
+            onClick={(e) => {
+              e.preventDefault();
+              toggleShowCalculator();
+            }}
+            disabled={false} >
+            Calculator
+          </button>
+            
+      <div className={styles.spacer}></div>
+
+
             {(activeTab === 'matchups' || isWideScreen) && (
               <Matchups refetch={refetch} />
             )}
