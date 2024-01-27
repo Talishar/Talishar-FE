@@ -10,3 +10,19 @@
   grid-area: chat;
   height: calc(100dvh - 440px);
 }
+
+td {
+  padding:4px;
+}
+
+.red {
+  color:#ff3333;
+}
+
+.yellow {
+  color:yellow;
+}
+
+.blue {
+  color:cyan;
+}
