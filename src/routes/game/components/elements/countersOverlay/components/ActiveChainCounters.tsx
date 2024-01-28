@@ -47,7 +47,7 @@ export const ActiveCardCounterOverlay = (props: Props) => {
           <GiGhost />
         </div>
       )}
-      {activeCombatChain.fused && (
+      {activeCombatChain.fusion && (
         <div className={styles.icon} data-tooltip="Fused">
           <GiZigzagLeaf />
         </div>
