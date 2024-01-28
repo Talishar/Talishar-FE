@@ -4,7 +4,7 @@ import styles from '../CountersOverlay.module.css';
 import {
   GiCycle,
   GiElectric,
-  GiShield,
+  GiShieldReflect ,
   GiShoulderArmor,
   GiZigzagLeaf,
   GiTwoCoins,
@@ -57,8 +57,12 @@ export const ActiveCardCounterOverlay = (props: Props) => {
           className={styles.icon}
           data-tooltip={`${activeCombatChain.damagePrevention} Damage Prevention`}
         >
-          <GiShield />
+          <GiShieldReflect  />
+          <div 
+            className={styles.iconText}
+          >
           {activeCombatChain.damagePrevention}
+          </div>
         </div>
       )}
       {activeCombatChain.numRequiredEquipBlock && (
