@@ -32,6 +32,6 @@
 }
 
 .container input[type='checkbox']:checked + div > img {
-  box-shadow: 0 0 0 1px var(--primary);
+  box-shadow: 0 0 0 2px var(--primary);
   filter: brightness(1);
 }

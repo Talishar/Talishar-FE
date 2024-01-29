@@ -7,7 +7,7 @@
   max-width: 100%;
   min-width: 0px;
   grid-area: chat;
-  height: calc(100dvh - 420px);
+  height: calc(100dvh - 440px);
 }
 
 .spacer {

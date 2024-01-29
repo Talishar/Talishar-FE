@@ -170,7 +170,7 @@
   border: var(--primary) solid 1px;
   color: var(--white);
   border-radius: 5px;
-  width: 1.5em;
+  min-width: 1.5em;
   height: 1.5em;
   font-size: 1.75em;
   padding: 2px;
@@ -178,4 +178,9 @@
   pointer-events: auto;
   user-select: none;
   cursor: default;
+}
+
+.iconText {
+  font-size: .9em;
+  padding-bottom: 2px;
 }

@@ -18,6 +18,20 @@
   z-index: 10;
 }
 
+.smallButton {
+  gap: 1em;
+  font-size: 0.85em;
+  font-weight: 550;
+  padding: 0;
+  margin: 0;
+}
+
+.patreonLink {
+  font-size: 0.65em;
+  padding: 0;
+  margin: 0;
+}
+
 .leftCol {
   background-size: cover;
   height: 100%;

@@ -37,7 +37,8 @@
   flex-direction: row;
   flex-wrap: wrap;
   align-items: flex-start;
-  gap: 1vh;
+  padding-left: .45em;
+  gap: 1.2dvw;
 }
 
 .buttonDiv {
@@ -47,7 +48,7 @@
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  min-width: 64px;
+  min-width: calc(6dvw * var(--card-scale));
   height: 32px;
   border-radius: 5px;
   border: 1px solid var(--primary);

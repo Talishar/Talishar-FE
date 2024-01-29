@@ -152,6 +152,7 @@ export default function ParseGameState(input: any) {
     result.activeChainLink.overpower = input.activeChainLink.overpower;
     result.activeChainLink.wager = input.activeChainLink.wager;
     result.activeChainLink.phantasm = input.activeChainLink.phantasm;
+    result.activeChainLink.fusion = input.activeChainLink.fusion;
     result.activeChainLink.damagePrevention = Number(
       input.activeChainLink.damagePrevention
     );
@@ -370,9 +371,11 @@ export default function ParseGameState(input: any) {
     result.playerOne.Name = input.initialLoad.playerName;
     result.playerOne.isPatron = input.initialLoad.playerIsPatron;
     result.playerOne.isContributor = input.initialLoad.playerIsContributor;
+    result.playerOne.isPvtVoidPatron = input.initialLoad.playerIsPvtVoidPatron;
     result.playerTwo.Name = input.initialLoad.opponentName;
     result.playerTwo.isPatron = input.initialLoad.opponentIsPatron;
     result.playerTwo.isContributor = input.initialLoad.opponentIsContributor;
+    result.playerTwo.isPvtVoidPatron = input.initialLoad.opponentIsPvtVoidPatron;
     result.gameInfo.roguelikeGameID = input.initialLoad.roguelikeGameID;
     result.gameInfo.altArts = input.initialLoad.altArts;
   }

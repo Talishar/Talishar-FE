@@ -12,8 +12,8 @@
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  min-width: 5vh;
-  height: 4vh;
+  min-width: 4.5vh;
+  height: 3.5vh;
   border-radius: 0.2em;
   border: 1px solid var(--primary);
   flex-basis: auto;

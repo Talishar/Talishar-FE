@@ -62,7 +62,7 @@ export const LoginForm = () => {
       if (resp?.isUserLoggedIn) {
         toast.success('logged in!', { position: 'top-center' });
         refetch();
-        setLoggedIn(resp?.loggedInUserID ?? '0', resp?.loggedInUserName, '');
+        setLoggedIn(resp?.loggedInUserID ?? '0', resp?.loggedInUserName, '', resp?.isPatron);
         // TODO: Have this go back in router history to the previous page or protected route.
         navigate(-1);
       }

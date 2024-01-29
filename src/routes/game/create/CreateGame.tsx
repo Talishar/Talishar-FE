@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo } from 'react';
 import { useAppDispatch } from 'app/Hooks';
 import classNames from 'classnames';
-import { GAME_FORMAT, GAME_VISIBILITY } from 'appConstants';
+import { GAME_FORMAT, GAME_VISIBILITY, AI_DECK } from 'appConstants';
 import {
   useCreateGameMutation,
   useGetFavoriteDecksQuery
@@ -19,7 +19,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { FaExclamationCircle } from 'react-icons/fa';
 
 const CreateGame = () => {
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, isPatron } = useAuth();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { data, isLoading, isSuccess } = useGetFavoriteDecksQuery(undefined);
@@ -63,7 +63,8 @@ const CreateGame = () => {
               (deck) => deck.index === data.lastUsedDeckIndex
             )?.key
           : '',
-      gameDescription: ''
+      gameDescription: '',
+      deckTestDeck: AI_DECK.COMBAT_DUMMY
     };
   }, [isSuccess, isLoggedIn]);
 
@@ -257,6 +258,31 @@ const CreateGame = () => {
                 />
                 Single Player
               </label>
+              
+              {isLoggedIn && (isPatron == "1") && (
+                <label>
+                  AI Deck
+                  <select
+                    id="deckTestDeck"
+                    aria-label="deckTestDeck"
+                    {...register('deckTestDeck')}
+                    aria-invalid={errors.format?.message ? 'true' : undefined}
+                  >
+                    <option value={AI_DECK.COMBAT_DUMMY}>Combat Dummy</option>
+                    <option value={AI_DECK.IRABLITZ}>
+                      Flic Flak Ira (Blitz)
+                    </option>
+                    <option value={AI_DECK.FAICC}>
+                      Fai (CC)
+                    </option>
+                  </select>
+                </label>
+              )}
+              {(isPatron != "1") && (
+                <label>
+                  Join our <a href='https://www.patreon.com/talishar' target='_blank'>Patreon</a> to play against custom coded AIs!
+                </label>
+              )}
             </fieldset>
           </div>
           <button

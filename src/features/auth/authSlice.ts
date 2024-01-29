@@ -7,15 +7,17 @@ const authSlice = createSlice({
   initialState: defaultAuth,
   reducers: {
     setCredentialsReducer: (state, action) => {
-      const { user, accessToken, userName } = action.payload;
+      const { user, accessToken, userName, isPatron } = action.payload;
       (state.user = user),
         (state.token = accessToken),
         (state.userName = userName);
+        (state.isPatron = isPatron);
     },
     logOutReducer: (state) => {
       state.user = null;
       state.userName = null;
       state.token = null;
+      state.isPatron = null;
     }
   }
 });
@@ -26,3 +28,4 @@ export const { setCredentialsReducer, logOutReducer } = actions;
 
 export const selectCurrentUser = (state: RootState) => state.auth.user;
 export const selectCurrentUserName = (state: RootState) => state.auth.userName;
+export const selectIsPatron = (state: RootState) => state.auth.isPatron;

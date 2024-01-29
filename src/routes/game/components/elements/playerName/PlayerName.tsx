@@ -22,13 +22,19 @@ export default function PlayerName(player: Player) {
       : state.game.playerTwo.isContributor
   );
 
+  const isPvtVoidPatron = useAppSelector((state: RootState) =>
+  player.isPlayer
+    ? state.game.playerOne.isPvtVoidPatron
+    : state.game.playerTwo.isPvtVoidPatron
+);
+
   return (
     <div className={styles.playerName}>
       {isPatron ? (
         <img
           className={styles.icon}
           src="/images/patronHeart.webp"
-          title="I am a patreon of Talishar!"
+          title="I am a patron of Talishar!"
         />
       ) : null}
       {isContributor ? (
@@ -36,6 +42,13 @@ export default function PlayerName(player: Player) {
           className={styles.icon}
           src="/images/copper.webp"
           title="I am a contributor to Talishar!"
+        />
+      ) : null}
+      {isPvtVoidPatron ? (
+        <img
+          className={styles.icon}
+          src="/images/patronEye.webp"
+          title="I am a patron of PvtVoid!"
         />
       ) : null}
       {playerName}

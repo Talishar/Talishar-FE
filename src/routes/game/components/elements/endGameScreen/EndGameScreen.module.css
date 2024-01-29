@@ -13,6 +13,11 @@
   z-index: 950;
 }
 
+.fullLog {
+  overflow-y: scroll;
+  font-size: medium;
+}
+
 .cardListBox.reduced {
   bottom: auto;
   z-index: 10;

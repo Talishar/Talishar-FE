@@ -63,7 +63,8 @@ export const CARD_BACK = {
   '61': 'CBFabrary7',
   '62': 'CBFabrary8',
   '63': 'CBOffTheRailsTCG',
-  '64': 'CBPummel'
+  '64': 'CBPummel',
+  '67': 'CBEmperorsRome'
 } as { [key: string]: string };
 
 export const PLAYMATS = {
@@ -82,7 +83,8 @@ export const PLAYMATS = {
   '12': 'Dusk-Till-Dawn-AHS',
   '13': 'Exude-Confidence-AHS',
   '14': 'Command-and-Conquer-AHS',
-  '15': 'Swarming-Gloomveil-AHS'
+  '15': 'Swarming-Gloomveil-AHS',
+  '16': 'FindCenter'
 } as { [key: string]: string };
 
-export const PLAYER_PLAYMATS = ['0', '9', '1', '2', '3', '4', '5', '6', '7', '10', '11', '12', '13', '14', '15'];
+export const PLAYER_PLAYMATS = ['0', '9', '1', '2', '3', '4', '5', '6', '7', '10', '11', '12', '13', '14', '15', '16'];

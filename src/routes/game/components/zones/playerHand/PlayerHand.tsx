@@ -220,7 +220,7 @@ const ManualMode = () => {
         onKeyDownCapture={(e) => {
           e.stopPropagation();
         }}
-        placeholder={'enter card code here'}
+        placeholder={'Enter card code here'}
       ></input>
       <button onClick={handleSubmitButton}>Add</button>
       <button onClick={handleCloseManualMode}>Close</button>

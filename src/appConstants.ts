@@ -146,6 +146,12 @@ export const GAME_FORMAT_NUMBER = {
   LLBLITZ: '9'
 };
 
+export const AI_DECK = {
+  COMBAT_DUMMY: 'Dummy',
+  IRABLITZ: 'Ira',
+  FAICC: 'FaiCC'
+};
+
 export const URL_END_POINT = {
   GET_GAME_LIST: 'APIs/GetGameList.php',
   CREATE_GAME: 'APIs/CreateGame.php',
@@ -219,5 +225,6 @@ export const PLAYMATS = [
   'Dusk-Till-Dawn-AHS',
   'Exude-Confidence-AHS',
   'Command-and-Conquer-AHS',
-  'Swarming-Gloomveil-AHS'
+  'Swarming-Gloomveil-AHS',
+  'FindCenter'
 ];
