@@ -4,7 +4,7 @@ export const youngToOldHeroesMapping: { [key: string]: string } = {
   ARC075: 'ARC076', // Viserai
   ARC113: 'ARC114', // kano
   DYN113: 'DYN114', // Arakni
-  ELE001: 'ELE002', // Oldhim'
+  ELE001: 'ELE002', // Oldhim
   ELE031: 'ELE032', // Lexi
   ELE062: 'ELE063', // Briar
   MON001: 'MON002', // Prism
@@ -20,17 +20,16 @@ export const youngToOldHeroesMapping: { [key: string]: string } = {
   WTR113: 'WTR114', // Dorinthea
   OUT001: 'OUT002', // Uzuri
   OUT091: 'OUT092', // Riptide
-  DTD002: 'DTD002', // Prism, Advent of Thrones
-  DTD134: 'DTD134', // Vynnset
-  TCC001: 'TCC001', // Professor Teklovossen
-  TCC027: 'TCC027', // Brevant, Civic Protector
-  TCC049: 'TCC049', // Melody, Sing-along
-  HER100: 'HER100', // Squizzy & Floof
-  HVY091: 'HVY002', // Kayo
-  HVY046: 'HVY046', // Betsy
-  HVY048: 'HVY048', // Victor Goldmane
-  HVY091: 'HVY091', // Kassai
-  HVY093: 'HVY093', // Olympia
+  DTD001: 'DTD002', // Prism, Advent of Thrones
+  DTD133: 'DTD134', // Vynnset
+  EVO002: 'EVO003', // Dash, Database 
+  EVO004: 'EVO005', // Maxx Nitro
+  EVO008: 'EVO009', // Teklovossen
+  HVY001: 'HVY002', // Kayo
+  HVY045: 'HVY046', // Betsy
+  HVY047: 'HVY048', // Victor Goldmane
+  HVY090: 'HVY091', // Kassai
+  HVY092: 'HVY093', // Olympia
 };
 
 export const HEROES_OF_RATHE: { value: string; label: string }[] = [
@@ -73,16 +72,20 @@ export const HEROES_OF_RATHE: { value: string; label: string }[] = [
   { value: 'LSS001', label: 'Ruu-di, Gem Keeper' },
   { value: 'LSS003', label: 'Taylor' },
   { value: 'LSS004', label: 'Yorick, Weaver of Tales' },
-  { value: 'DTD002', label: 'Prism, Advent of Thrones' },
-  { value: 'DTD134', label: 'Vynnset' },
+  { value: 'DTD001', label: 'Prism, Advent of Thrones' },
+  { value: 'DTD133', label: 'Vynnset' },
+  { value: 'JDG008', label: 'Theyron, Magister of justice' },
   { value: 'TCC001', label: 'Professor Teklovossen' },
   { value: 'TCC027', label: 'Brevant, Civic Protector' },
   { value: 'TCC049', label: 'Melody, Sing-along' },
+  { value: 'EVO001', label: 'Dash, Database' },
+  { value: 'EVO004', label: 'Maxx Nitro' },
+  { value: 'EVO007', label: 'Teklovossen' },
   { value: 'HER100', label: 'Squizzy & Floof' },
-  { value: 'HVY002', label: 'Kayo' },
-  { value: 'HVY046', label: 'Betsy' },
-  { value: 'HVY048', label: 'Victor Goldmane' },  
-  { value: 'HVY091', label: 'Kassai' },
-  { value: 'HVY093', label: 'Olympia' },  
+  { value: 'HVY001', label: 'Kayo' },
+  { value: 'HVY045', label: 'Betsy' },
+  { value: 'HVY047', label: 'Victor Goldmane' },  
+  { value: 'HVY090', label: 'Kassai' },
+  { value: 'HVY092', label: 'Olympia' },  
   { value: 'JDG024', label: 'Brutus, Summa Rudis' },
 ];
