@@ -30,7 +30,7 @@ export const youngToOldHeroesMapping: { [key: string]: string } = {
   HVY046: 'HVY046', // Betsy
   HVY048: 'HVY048', // Victor Goldmane
   HVY091: 'HVY091', // Kassai
-  HVY091: 'HVY093', // Olympia
+  HVY093: 'HVY093', // Olympia
 };
 
 export const HEROES_OF_RATHE: { value: string; label: string }[] = [
@@ -73,16 +73,16 @@ export const HEROES_OF_RATHE: { value: string; label: string }[] = [
   { value: 'LSS001', label: 'Ruu-di, Gem Keeper' },
   { value: 'LSS003', label: 'Taylor' },
   { value: 'LSS004', label: 'Yorick, Weaver of Tales' },
-  { value: 'DTD002', lavel: 'Prism, Advent of Thrones' },
-  { value: 'DTD134', lavel: 'Vynnset' },
-  { value: 'TCC001', lavel: 'Professor Teklovossen' },
-  { value: 'TCC027', lavel: 'Brevant, Civic Protector' },
-  { value: 'TCC049', lavel: 'Melody, Sing-along' },
-  { value: 'HER100', lavel: 'Squizzy & Floof' },
-  { value: 'HVY002', label: 'Kayo'},
-  { value: 'HVY046', label: 'Betsy'},
-  { value: 'HVY048', label: 'Victor Goldmane'},  
-  { value: 'HVY091', label: 'Kassai'},
-  { value: 'HVY093', label: 'Olympia'},  
+  { value: 'DTD002', label: 'Prism, Advent of Thrones' },
+  { value: 'DTD134', label: 'Vynnset' },
+  { value: 'TCC001', label: 'Professor Teklovossen' },
+  { value: 'TCC027', label: 'Brevant, Civic Protector' },
+  { value: 'TCC049', label: 'Melody, Sing-along' },
+  { value: 'HER100', label: 'Squizzy & Floof' },
+  { value: 'HVY002', label: 'Kayo' },
+  { value: 'HVY046', label: 'Betsy' },
+  { value: 'HVY048', label: 'Victor Goldmane' },  
+  { value: 'HVY091', label: 'Kassai' },
+  { value: 'HVY093', label: 'Olympia' },  
   { value: 'JDG024', label: 'Brutus, Summa Rudis' },
 ];
