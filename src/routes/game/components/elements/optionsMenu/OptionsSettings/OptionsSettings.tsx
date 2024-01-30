@@ -86,19 +86,6 @@ const OptionsSettings = () => {
   return (
     <div>
       <div className={styles.leftColumn}>
-        <h5>Disclaimer, please note:</h5>
-        <p>
-          Talishar is an open-source, fan-made platform not associated with LSS.
-          It may not be a completely accurate representation of the rules as
-          written. If you have questions about interactions or rulings, please
-          contact the judge community for clarification.
-        </p>
-        <p>
-          Talishar and its contributors are not responsible for any rules
-          misunderstandings or misplays because of innauccurate information on
-          this site. Legend Story Studios and their judges are the final
-          authority on all rulings.
-        </p>
         <fieldset>
           <legend>
             <strong>Priority Settings:</strong>
@@ -494,8 +481,8 @@ const OptionsSettings = () => {
             <p>Log in to customise your playmat</p>
           )}
         </label>
-        WARNING THIS MAY MAKE THE GAME MORE UNSTABLE. <br />
-        <label className={styles.optionLabel}>
+      {/* WARNING THIS MAY MAKE THE GAME MORE UNSTABLE. <br />
+         <label className={styles.optionLabel}>
           <input
             type="checkbox"
             name="manualMode"
@@ -514,7 +501,7 @@ const OptionsSettings = () => {
         <p>
           We are always trying new things to improve Talishar if you try the
           experiment please give feedback in our discord.
-        </p>
+        </p> */}
       </div>
       <hr />
       <>
@@ -549,7 +536,7 @@ const OptionsSettings = () => {
           </label>
         </fieldset>
       </>
-      <p>
+      <p className={styles.disclaimer}>
         Talishar is in no way affiliated with Legend Story Studios. Legend Story
         Studios®, Flesh and Blood™, and set names are trademarks of Legend Story
         Studios. Flesh and Blood characters, cards, logos, and art are property

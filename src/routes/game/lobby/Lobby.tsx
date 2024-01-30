@@ -7,6 +7,8 @@ import styles from './Lobby.module.css';
 import Equipment from './components/equipment/Equipment';
 import classNames from 'classnames';
 import { FaExclamationCircle } from 'react-icons/fa';
+import { GiCapeArmor } from "react-icons/gi";
+import { SiBookstack } from "react-icons/si";
 import { Form, Formik } from 'formik';
 import deckValidation from './validation';
 import StickyFooter from './components/stickyFooter/StickyFooter';
@@ -286,7 +288,7 @@ const Lobby = () => {
         createPortal(
           <>
             <dialog open={needToDoDisclaimer}>
-              <article>
+              <article className={styles.disclaimerArticles}>
                 <header style={{ marginBottom: '1em' }}>
                 ⚠️ Open Format Disclaimer
                 </header>
@@ -296,21 +298,25 @@ const Lobby = () => {
                   interactions than usual, since there are no official release
                   notes from Legend Story Studios yet.
                 </p>
+                <div className={styles.disclaimerButtons}>
                 <button
                   onClick={() => {
                     setAcceptedDisclaimer(true);
                   }}
                 >
-                  I accept
+                  I Accept!
                 </button>
+                </div>
+                <div className={styles.disclaimerButtons}>
                 <button
                   onClick={() => {
                     navigate('/');
                   }}
                   className="outline"
                 >
-                  No Thanks
+                  No Thanks!
                 </button>
+                </div>
               </article>
             </dialog>
           </>,
@@ -404,6 +410,10 @@ const Lobby = () => {
                           onClick={handleEquipmentClick}
                           type="button"
                         >
+                          <div 
+                            className={styles.icon}>
+                            <GiCapeArmor/>
+                          </div>
                           Equipment
                         </button>
                       </li>
@@ -413,7 +423,11 @@ const Lobby = () => {
                           onClick={handleDeckClick}
                           type="button"
                         >
-                          Deck
+                        <div 
+                          className={styles.icon}>
+                          <SiBookstack/>
+                        </div>
+                        Deck
                         </button>
                       </li>
                       <li>
@@ -439,11 +453,15 @@ const Lobby = () => {
                   <ul>
                     <li>
                       <button
-                        className={eqClasses}
+                        className= {eqClasses}
                         onClick={handleEquipmentClick}
                         type="button"
-                      >
-                        Equipment
+                      >        
+                          <div 
+                            className={styles.icon}>
+                            <GiCapeArmor/>
+                          </div>
+                          Equipment
                       </button>
                     </li>
                     <li>
@@ -452,6 +470,10 @@ const Lobby = () => {
                         onClick={handleDeckClick}
                         type="button"
                       >
+                        <div 
+                          className={styles.icon}>
+                          <SiBookstack/>
+                        </div>
                         Deck
                       </button>
                     </li>
@@ -485,7 +507,7 @@ const Lobby = () => {
           {(activeTab === 'chat' || isWideScreen) && showCalculator && <Calculator />}
           {(activeTab === 'chat' || isWideScreen) && !showCalculator && <LobbyChat />}
 
-          {isPatron == "1" &&
+          {isPatron == "1" && isWideScreen &&
             <button
               className={styles.smallButton}
               onClick={(e) => {
@@ -497,12 +519,11 @@ const Lobby = () => {
             </button>
           }
           
-          {isPatron != "1" &&
+          {isPatron != "1" && isWideScreen &&
             <div className={styles.patreonLink}>Support our <a href='https://www.patreon.com/talishar' target='_blank'>patreon</a> to use dynamic hypergeometric calculator!</div>
           }
             
       <div className={styles.spacer}></div>
-
 
             {(activeTab === 'matchups' || isWideScreen) && (
               <Matchups refetch={refetch} />

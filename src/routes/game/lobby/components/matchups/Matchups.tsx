@@ -51,10 +51,10 @@ const Matchups = ({ refetch }: Matchups) => {
       <>
         <h4>Matchups</h4>
         {sortedMatchups.map((matchup, ix) => (
-          <div key={ix}>
+          <div className={styles.matchups} key={ix}>
             <button
               disabled={isUpdating}
-              className="outline"
+              className={"outline"}
               onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                 e.preventDefault();
                 handleMatchupClick(matchup.matchupId);

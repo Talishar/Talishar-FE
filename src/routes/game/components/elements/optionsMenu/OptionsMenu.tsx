@@ -176,7 +176,6 @@ const OptionsContent = () => {
             </>
           ) : (
             <>
-              <span>{gameURL}</span>
               <button
                 style={{ marginTop: '0.5em' }}
                 className={styles.buttonDiv}
@@ -216,7 +215,7 @@ export default function OptionsMenu() {
           <div className={styles.optionsTitleContainer}>
             <hgroup className={styles.optionsTitle}>
               <h2 className={styles.title}>Main Options</h2>
-              <h4>(priority settings can be adjusted here)</h4>
+              <h4></h4>
             </hgroup>
             <div
               className={styles.optionsMenuCloseIcon}

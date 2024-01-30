@@ -73,3 +73,15 @@
 .floatingOverlay {
   z-index: 1000;
 }
+
+.icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 1em;
+  height: 1em;
+  font-size: 1em;
+  pointer-events: auto;
+  user-select: none;
+  cursor: pointer;
+}

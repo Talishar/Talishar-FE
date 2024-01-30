@@ -27,3 +27,18 @@
   height: 5em;
   width: 100vw;
 }
+
+.icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 1em;
+  height: 1em;
+  font-size: 1.5em;
+  margin-top: 0.1em;
+  margin-right: 0.2em;
+  margin-left: -0.2em;
+  pointer-events: auto;
+  user-select: none;
+  cursor: pointer;
+}

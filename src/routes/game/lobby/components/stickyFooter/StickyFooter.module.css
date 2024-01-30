@@ -37,3 +37,16 @@
 .clipboardButtonHolder {
   grid-area: clipboard;
 }
+
+.icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 1em;
+  height: 1em;
+  font-size: 1.3em;
+  margin-left: 0.1em;
+  pointer-events: auto;
+  user-select: none;
+  cursor: pointer;
+}
