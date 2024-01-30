@@ -9,7 +9,8 @@ import {
   GiZigzagLeaf,
   GiTwoCoins,
   GiGhost,
-  GiMuscleFat 
+  GiMuscleFat,
+  GiSpearfishing     
 } from 'react-icons/gi';
 type Props = {
   activeCombatChain?: CombatChainLink;
@@ -50,6 +51,11 @@ export const ActiveCardCounterOverlay = (props: Props) => {
       {activeCombatChain.fusion && (
         <div className={styles.icon} data-tooltip="Fused">
           <GiZigzagLeaf />
+        </div>
+      )}
+      {activeCombatChain.piercing && (
+        <div className={styles.icon} data-tooltip="Piercing">
+          <GiSpearfishing />
         </div>
       )}
       {!!activeCombatChain.damagePrevention && (
