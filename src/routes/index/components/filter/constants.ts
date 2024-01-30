@@ -30,7 +30,7 @@ export const youngToOldHeroesMapping: { [key: string]: string } = {
   HVY046: 'HVY046', // Betsy
   HVY048: 'HVY048', // Victor Goldmane
   HVY091: 'HVY091', // Kassai
-  HVY091: 'HVY093', // Olympia
+  HVY093: 'HVY093', // Olympia
 };
 
 export const HEROES_OF_RATHE: { value: string; label: string }[] = [
