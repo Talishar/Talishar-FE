@@ -23,7 +23,7 @@ export const deckValidation = (minDeckSize: number, maxDeckSize: number) => {
           return total + (row.numHands ?? 0);
         }, 0);
         return numHands <= handsTotal
-      })
+      }),
     head: string().required('You must have head equipment.'),
     chest: string().required('You must have chest equipment.'),
     arms: string().required('You must have arms equipment.'),
