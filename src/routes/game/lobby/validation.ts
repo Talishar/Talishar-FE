@@ -18,7 +18,7 @@ export const deckValidation = (minDeckSize: number, maxDeckSize: number) => {
       .test('hands', 'Too much equipment for your hands', (weapons = [], testContext) => {
         const hero = testContext.schema.hero;
         const oneHandedHeroes = ['HVY001', 'HVY002'];
-        const handsTotal = (oneHandedHeroes.contains(hero) ? 1 : 2;
+        const handsTotal = oneHandedHeroes.contains(hero) ? 1 : 2;
         const numHands = weapons.reduce((total, row) => {
           return total + (row.numHands ?? 0);
         }, 0);
