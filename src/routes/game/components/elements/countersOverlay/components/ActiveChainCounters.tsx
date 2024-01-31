@@ -3,13 +3,14 @@ import CombatChainLink from 'features/CombatChainLink';
 import styles from '../CountersOverlay.module.css';
 import {
   GiCycle,
-  GiElectric,
-  GiShieldReflect ,
+  GiStomp,
+  GiShieldReflect,
   GiShoulderArmor,
   GiZigzagLeaf,
   GiTwoCoins,
   GiGhost,
-  GiMuscleFat 
+  GiMuscleFat,
+  GiSpearfishing     
 } from 'react-icons/gi';
 type Props = {
   activeCombatChain?: CombatChainLink;
@@ -29,12 +30,12 @@ export const ActiveCardCounterOverlay = (props: Props) => {
       )}
       {activeCombatChain.dominate && (
         <div className={styles.icon} data-tooltip="Dominate">
-          <GiMuscleFat  />
+          <GiMuscleFat />
         </div>
       )}
       {activeCombatChain.overpower && (
         <div className={styles.icon} data-tooltip="Overpower">
-          <GiElectric />
+          <GiStomp />
         </div>
       )}
       {activeCombatChain.wager && (
@@ -52,12 +53,17 @@ export const ActiveCardCounterOverlay = (props: Props) => {
           <GiZigzagLeaf />
         </div>
       )}
+      {activeCombatChain.piercing && (
+        <div className={styles.icon} data-tooltip="Piercing">
+          <GiSpearfishing />
+        </div>
+      )}
       {!!activeCombatChain.damagePrevention && (
         <div
           className={styles.icon}
           data-tooltip={`${activeCombatChain.damagePrevention} Damage Prevention`}
         >
-          <GiShieldReflect  />
+          <GiShieldReflect />
           <div 
             className={styles.iconText}
           >

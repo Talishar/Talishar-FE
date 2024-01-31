@@ -113,7 +113,10 @@ export const ChatInput = () => {
             disabled={playerID === 3}
           />
           <button className={submitButtonClass} onClick={handleSubmit}>
-            <GiChatBubble />
+            <div 
+              className={styles.icon}>
+              <GiChatBubble />
+            </div>
           </button>
         </div>
       </div>
