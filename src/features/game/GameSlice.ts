@@ -314,7 +314,8 @@ export const gameSlice = createSlice({
       //If We don't currently have an Auth Key
       if (!state.gameInfo.authKey) {
         //And the payload is giving us an auth key
-        if (action.payload.authKey !== '') {
+        if(state.gameInfo.playerID == 3) state.gameInfo.authKey = 'spectator';
+        else if (action.payload.authKey !== '') {
           saveGameAuthKey(action.payload.gameID, action.payload.authKey);
           state.gameInfo.authKey = action.payload.authKey;
         }
