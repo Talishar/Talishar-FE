@@ -325,7 +325,6 @@ const Lobby = () => {
       <LobbyUpdateHandler isSubmitting={isSubmitting} />
       <Formik
         initialValues={{
-          hero: data?.deck.hero,
           deck: deckIndexed,
           weapons: weaponsIndexed,
           head: [...data.deck.head, ...data.deck.headSB, 'NONE00'][0],
