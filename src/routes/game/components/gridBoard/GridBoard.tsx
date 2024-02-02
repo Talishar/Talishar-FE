@@ -71,7 +71,7 @@ const GridBoard = () => {
         <div className={styles.pTwoGraveyard}>
           <GraveyardZone isPlayer={false} />
         </div>
-        <div className={styles.healthWidget}>
+        <div className={styles.lifeWidget}>
           {cookies.experimental ? <ExperimentalTurnWidget /> : <TurnWidget />}
         </div>
         <div className={styles.pOneGraveyard}>

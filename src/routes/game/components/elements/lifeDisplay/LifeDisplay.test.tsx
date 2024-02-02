@@ -2,14 +2,14 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { store } from 'app/Store';
 import { createRoot } from 'react-dom/client';
-import HealthDisplay from './HealthDisplay';
+import LifeDisplay from './LifeDisplay';
 
 it('renders without crashing iaPlayer true', () => {
   const div = document.createElement('div');
   const root = createRoot(div);
   root.render(
     <Provider store={store}>
-      <HealthDisplay isPlayer />
+      <LifeDisplay isPlayer />
     </Provider>
   );
 });
@@ -19,7 +19,7 @@ it('renders without crashing iaPlayer false', () => {
   const root = createRoot(div);
   root.render(
     <Provider store={store}>
-      <HealthDisplay isPlayer={false} />
+      <LifeDisplay isPlayer={false} />
     </Provider>
   );
 });

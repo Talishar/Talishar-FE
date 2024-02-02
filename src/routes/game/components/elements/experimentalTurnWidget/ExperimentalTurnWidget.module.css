@@ -63,7 +63,7 @@
   background-image: var(--grey-gradient);
 }
 
-.health {
+.life {
   display: flex;
   flex-direction: column;
   justify-content: center;

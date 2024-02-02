@@ -44,7 +44,7 @@ export const mockGetNextTurn3 = {
   opponentHand: [
     { cardNumber: 'CBTheCardGuyz', controller: 1, countersMap: {} }
   ],
-  opponentHealth: '1',
+  opponentLife: '1',
   opponentSoulCount: 0,
   opponentDiscard: [
     { cardNumber: 'OUT192', countersMap: {} },
@@ -180,7 +180,7 @@ export const mockGetNextTurn3 = {
     { cardNumber: 'CardBack', controller: 2, countersMap: {} },
     { cardNumber: 'CardBack', controller: 2, countersMap: {} }
   ],
-  playerHealth: '1',
+  playerLife: '1',
   playerSoulCount: 0,
   playerDiscard: [
     { cardNumber: 'OUT177', countersMap: {} },

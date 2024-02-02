@@ -2,22 +2,22 @@ import React from 'react';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import Player from 'interface/Player';
-import styles from './HealthDisplay.module.css';
+import styles from './LifeDisplay.module.css';
 import useSetting from 'hooks/useSetting';
 import { MANUAL_MODE } from 'features/options/constants';
 import { submitButton } from 'features/game/GameSlice';
 import { PROCESS_INPUT } from 'appConstants';
 import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai';
 
-export default function HealthDisplay(props: Player) {
-  const health = useAppSelector((state: RootState) =>
-    props.isPlayer ? state.game.playerOne.Health : state.game.playerTwo.Health
+export default function LifeDisplay(props: Player) {
+  const life = useAppSelector((state: RootState) =>
+    props.isPlayer ? state.game.playerOne.Life : state.game.playerTwo.Life
   );
   const isManualMode = useSetting({ settingName: MANUAL_MODE })?.value === '1';
 
   return (
-    <div className={styles.health}>
-      <div>{health}</div>
+    <div className={styles.life}>
+      <div>{life}</div>
       {isManualMode && <ManualMode isPlayer={props.isPlayer} />}
     </div>
   );

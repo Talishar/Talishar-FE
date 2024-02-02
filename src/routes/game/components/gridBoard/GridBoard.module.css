@@ -16,19 +16,19 @@
     '. . . . . . . . . . .'
     '.  pTwoHead . . . pTwoArsenal pTwoArsenal pTwoArsenal pTwoCount pTwoBanish .'
     '. pTwoChest pTwoHands . pTwoWeaponLZone pTwoHero pTwoWeaponRZone . pTwoPitch pTwoDeck .'
-    '. pTwoFeet pTwoPermanents pTwoPermanents pTwoPermanents pTwoPermanents pTwoPermanents pTwoPermanents healthWidget pTwoGraveyard .'
-    '. . combatChain combatChain combatChain combatChain combatChain combatChain healthWidget . .'
-    '. . combatChain combatChain combatChain combatChain combatChain combatChain healthWidget . .'
-    '. . combatChain combatChain combatChain combatChain combatChain combatChain healthWidget . .'
-    '. . combatChain combatChain combatChain combatChain combatChain combatChain healthWidget . .'
-    '. pOneHead pOnePermanents pOnePermanents pOnePermanents pOnePermanents pOnePermanents pOnePermanents healthWidget pOneGraveyard .'
+    '. pTwoFeet pTwoPermanents pTwoPermanents pTwoPermanents pTwoPermanents pTwoPermanents pTwoPermanents lifeWidget pTwoGraveyard .'
+    '. . combatChain combatChain combatChain combatChain combatChain combatChain lifeWidget . .'
+    '. . combatChain combatChain combatChain combatChain combatChain combatChain lifeWidget . .'
+    '. . combatChain combatChain combatChain combatChain combatChain combatChain lifeWidget . .'
+    '. . combatChain combatChain combatChain combatChain combatChain combatChain lifeWidget . .'
+    '. pOneHead pOnePermanents pOnePermanents pOnePermanents pOnePermanents pOnePermanents pOnePermanents lifeWidget pOneGraveyard .'
     '. pOneChest pOneHands . pOneWeaponLZone pOneHero pOneWeaponRZone . pOnePitch pOneDeck .'
     '. pOneFeet . . . pOneArsenal pOneArsenal pOneArsenal pOneCount pOneBanish .'
     '. . . . . . . . . . .';
 }
 
-.healthWidget {
-  grid-area: healthWidget;
+.lifeWidget {
+  grid-area: lifeWidget;
   display: flex;
   flex-direction: column;
   justify-content: center;

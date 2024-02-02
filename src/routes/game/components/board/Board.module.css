@@ -16,7 +16,7 @@
   flex-direction: row;
 }
 
-.healthContainer {
+.lifeContainer {
   flex-shrink: 1;
   min-width: 20vw;
   min-width: 20dvw;

@@ -50,7 +50,7 @@ function ParseEquipment(input: any) {
     WeaponLEq: undefined,
     Hero: undefined,
     WeaponREq: undefined,
-    Health: undefined,
+    Life: undefined,
     ActionPoints: undefined,
     Hand: undefined,
     Arsenal: undefined,
@@ -210,7 +210,7 @@ export default function ParseGameState(input: any) {
   result.playerTwo.SoulCount = input.opponentSoulCount;
   result.playerTwo.bloodDebtCount = input.opponentBloodDebtCount;
   result.playerTwo.bloodDebtImmune = input.isOpponentBloodDebtImmune;
-  result.playerTwo.Health = input.opponentHealth;
+  result.playerTwo.Life = input.opponentLife;
 
   result.playerTwo.Graveyard = [];
   for (const cardObj of input.opponentDiscard.reverse()) {
@@ -283,7 +283,7 @@ export default function ParseGameState(input: any) {
   result.playerOne.bloodDebtCount = input.myBloodDebtCount;
   result.playerOne.bloodDebtImmune = input.amIBloodDebtImmune;
   result.playerOne.SoulCount = input.playerSoulCount;
-  result.playerOne.Health = input.playerHealth;
+  result.playerOne.Life = input.playerLife;
 
   result.playerOne.Graveyard = [];
   for (const cardObj of input.playerDiscard.reverse()) {

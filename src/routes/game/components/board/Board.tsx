@@ -32,7 +32,7 @@ export function Board() {
           <div className={styles.chainContainer}>
             <CombatChain />
           </div>
-          <div className={styles.healthContainer}>
+          <div className={styles.lifeContainer}>
             {cookies.experimental ? <ExperimentalTurnWidget /> : <TurnWidget />}
           </div>
         </div>

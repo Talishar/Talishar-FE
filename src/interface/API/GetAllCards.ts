@@ -7,7 +7,7 @@ export interface FabCard {
   cost: string;
   power: string;
   defense: string;
-  health: string;
+  life: string;
   intelligence: string;
   types: string[];
   card_keywords: string[];

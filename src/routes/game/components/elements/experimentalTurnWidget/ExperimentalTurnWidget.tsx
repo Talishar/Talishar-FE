@@ -31,29 +31,29 @@ export default function ExperimentalTurnWidget() {
   return (
     <div className={styles.widgetContainer}>
       <ActionPointDisplay isPlayer={false} />
-      <HealthDisplay isPlayer={false} />
+      <LifeDisplay isPlayer={false} />
       <PassTurnDisplay />
       <ActionPointDisplay isPlayer />
-      <HealthDisplay isPlayer />
+      <LifeDisplay isPlayer />
     </div>
   );
 }
 
-function HealthDisplay(props: Player) {
-  const health = useAppSelector((state: RootState) =>
-    props.isPlayer ? state.game.playerOne.Health : state.game.playerTwo.Health
+function LifeDisplay(props: Player) {
+  const life = useAppSelector((state: RootState) =>
+    props.isPlayer ? state.game.playerOne.Life : state.game.playerTwo.Life
   );
   const isManualMode = useSetting({ settingName: MANUAL_MODE })?.value === '1';
 
   return (
-    <div className={styles.health}>
-      <div>{health}</div>
-      {isManualMode && <ManualModeHealth isPlayer={props.isPlayer} />}
+    <div className={styles.life}>
+      <div>{life}</div>
+      {isManualMode && <ManualModeLife isPlayer={props.isPlayer} />}
     </div>
   );
 }
 
-const ManualModeHealth = ({ isPlayer }: { isPlayer: Boolean }) => {
+const ManualModeLife = ({ isPlayer }: { isPlayer: Boolean }) => {
   const dispatch = useAppDispatch();
   const onAddResourceClick = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>

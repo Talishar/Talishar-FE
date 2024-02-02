@@ -8,7 +8,7 @@ export default interface Player {
   WeaponLEq?: Card;
   Hero?: Card;
   WeaponREq?: Card;
-  Health?: number;
+  Life?: number;
   ActionPoints?: number;
   Hand?: Card[];
   Arsenal?: Card[];
