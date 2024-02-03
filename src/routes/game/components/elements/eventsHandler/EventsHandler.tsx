@@ -133,7 +133,7 @@ export const EventsHandler = React.memo(() => {
               setShowModal(true);
               setModalType(ModalType.RequestUndo);
               setModal(
-                'Do you want to allow the opponent to undo the last action?'
+                'Do you want to allow the opponent to undo their last action?'
               );
             }
             continue;
