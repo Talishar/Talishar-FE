@@ -122,8 +122,8 @@
 
 .aimCounter.aimCounter {
   border-radius: 100%;
-  height: 2em;
-  width: 2em;
+  height: 1em;
+  width: 1em;
   background-image: url('../../../../../img/symbols/symbol-aim.png');
   background-position: center;
   background-size: contain;
