@@ -26,6 +26,7 @@ export interface Deck {
   quiverSB?: Weapon[];
   handsSB: Weapon[];
   demiHero?: string[];
+  cardDictionary?: CardData[];
 }
 
 export interface Weapon {
@@ -34,6 +35,11 @@ export interface Weapon {
   img?: string;
   numHands?: number;
   isQuiver?: boolean;
+}
+
+export interface CardData {
+  id:string;
+  pitch:number;
 }
 
 export interface GetLobbyInfoResponse {

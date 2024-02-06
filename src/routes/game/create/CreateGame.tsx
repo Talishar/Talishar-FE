@@ -256,7 +256,7 @@ const CreateGame = () => {
                     errors.deckTestMode?.message ? 'true' : undefined
                   }
                 />
-                Single Player
+                Single Player 🤖
               </label>
               
               {isLoggedIn && (isPatron == "1") && (

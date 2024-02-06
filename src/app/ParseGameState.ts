@@ -152,6 +152,8 @@ export default function ParseGameState(input: any) {
     result.activeChainLink.overpower = input.activeChainLink.overpower;
     result.activeChainLink.wager = input.activeChainLink.wager;
     result.activeChainLink.phantasm = input.activeChainLink.phantasm;
+    result.activeChainLink.fusion = input.activeChainLink.fusion;
+    result.activeChainLink.piercing = input.activeChainLink.piercing;
     result.activeChainLink.damagePrevention = Number(
       input.activeChainLink.damagePrevention
     );

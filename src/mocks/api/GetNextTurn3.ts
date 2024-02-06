@@ -20,7 +20,8 @@ export const mockGetNextTurn3 = {
     overpower: false,
     wager: false,
     phantasm: false,
-    fused: false,
+    fusion: false,
+    piercing: false,
     totalAttack: 0,
     totalDefence: 0
   },

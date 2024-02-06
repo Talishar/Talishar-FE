@@ -16,6 +16,7 @@
 }
 
 .cardTable {
+  line-height: 1.5em;
   width: 100%;
 }
 
@@ -55,4 +56,24 @@
 
 .twoColumn p {
   margin-bottom: 0px;
+}
+
+.played {
+  text-align: center;
+}
+
+.blocked {
+  text-align: center;
+}
+
+.pitched {
+  text-align: center;
+}
+
+.turnNo {
+  text-align: center;
+}
+
+.headersStats {
+  text-align: center;
 }

@@ -176,31 +176,51 @@ exports[`passes a snapshot test 1`] = `
         <thead>
           <tr>
             <th>
-              Turn Number
+              Turn
+            </th>
+            <th
+              colspan="4"
+            >
+              Cards
+            </th>
+            <th
+              colspan="2"
+            >
+              Resources
+            </th>
+            <th
+              colspan="2"
+            >
+              Damage
+            </th>
+          </tr>
+          <tr>
+            <th>
+              #
             </th>
             <th>
-              Cards Played
+              Played
             </th>
             <th>
-              Cards Blocked
+              Blocked
             </th>
             <th>
-              Cards Pitched
+              Pitched
             </th>
             <th>
-              Resources Used
+              Left
             </th>
             <th>
-              Resources Left
+              Used
             </th>
             <th>
-              Cards Left
+              Left
             </th>
             <th>
-              Damage Dealt
+              Dealt
             </th>
             <th>
-              Damage Taken
+              Taken
             </th>
           </tr>
         </thead>
@@ -229,16 +249,16 @@ exports[`passes a snapshot test 1`] = `
             <td
               class="_pitched_8328d1"
             >
+              1
+            </td>
+            <td
+              class="_pitched_8328d1"
+            >
               6
             </td>
             <td
               class="_pitched_8328d1"
             />
-            <td
-              class="_pitched_8328d1"
-            >
-              1
-            </td>
             <td
               class="_pitched_8328d1"
             >
@@ -278,12 +298,12 @@ exports[`passes a snapshot test 1`] = `
             </td>
             <td
               class="_pitched_8328d1"
-            />
-            <td
-              class="_pitched_8328d1"
             >
               0
             </td>
+            <td
+              class="_pitched_8328d1"
+            />
             <td
               class="_pitched_8328d1"
             >

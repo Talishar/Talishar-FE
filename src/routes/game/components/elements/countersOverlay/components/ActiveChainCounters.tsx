@@ -3,13 +3,14 @@ import CombatChainLink from 'features/CombatChainLink';
 import styles from '../CountersOverlay.module.css';
 import {
   GiCycle,
-  GiElectric,
-  GiShield,
+  GiStomp,
+  GiShieldReflect,
   GiShoulderArmor,
   GiZigzagLeaf,
   GiTwoCoins,
   GiGhost,
-  GiMuscleFat 
+  GiMuscleFat,
+  GiSpearfishing     
 } from 'react-icons/gi';
 type Props = {
   activeCombatChain?: CombatChainLink;
@@ -29,12 +30,12 @@ export const ActiveCardCounterOverlay = (props: Props) => {
       )}
       {activeCombatChain.dominate && (
         <div className={styles.icon} data-tooltip="Dominate">
-          <GiMuscleFat  />
+          <GiMuscleFat />
         </div>
       )}
       {activeCombatChain.overpower && (
         <div className={styles.icon} data-tooltip="Overpower">
-          <GiElectric />
+          <GiStomp />
         </div>
       )}
       {activeCombatChain.wager && (
@@ -47,9 +48,14 @@ export const ActiveCardCounterOverlay = (props: Props) => {
           <GiGhost />
         </div>
       )}
-      {activeCombatChain.fused && (
+      {activeCombatChain.fusion && (
         <div className={styles.icon} data-tooltip="Fused">
           <GiZigzagLeaf />
+        </div>
+      )}
+      {activeCombatChain.piercing && (
+        <div className={styles.icon} data-tooltip="Piercing">
+          <GiSpearfishing />
         </div>
       )}
       {!!activeCombatChain.damagePrevention && (
@@ -57,8 +63,12 @@ export const ActiveCardCounterOverlay = (props: Props) => {
           className={styles.icon}
           data-tooltip={`${activeCombatChain.damagePrevention} Damage Prevention`}
         >
-          <GiShield />
+          <GiShieldReflect />
+          <div 
+            className={styles.iconText}
+          >
           {activeCombatChain.damagePrevention}
+          </div>
         </div>
       )}
       {activeCombatChain.numRequiredEquipBlock && (
@@ -67,7 +77,11 @@ export const ActiveCardCounterOverlay = (props: Props) => {
           data-tooltip={`Chain link must be defended with at least ${activeCombatChain.numRequiredEquipBlock} equipment`}
         >
           <GiShoulderArmor />
+          <div 
+            className={styles.iconText}
+          >
           {activeCombatChain.numRequiredEquipBlock}
+          </div>
         </div>
       )}
     </>

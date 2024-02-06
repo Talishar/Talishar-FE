@@ -226,5 +226,6 @@ export const PLAYMATS = [
   'Exude-Confidence-AHS',
   'Command-and-Conquer-AHS',
   'Swarming-Gloomveil-AHS',
+  'Ponder-AHS',
   'FindCenter'
 ];

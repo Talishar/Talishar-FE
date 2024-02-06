@@ -45,7 +45,10 @@ const StickyFooter = ({
             data-tooltip="Copy invite link"
             data-placement="right"
           >
-            <HiClipboardCopy />
+            <div 
+              className={styles.icon}>
+              <HiClipboardCopy />
+            </div>
           </button>
         </div>
         <div className={styles.footerContent}>

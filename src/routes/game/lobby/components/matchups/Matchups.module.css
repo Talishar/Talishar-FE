@@ -10,3 +10,7 @@
   grid-area: matchups;
   overflow-x: hidden;
 }
+
+.matchups {
+  width: 100%;
+}

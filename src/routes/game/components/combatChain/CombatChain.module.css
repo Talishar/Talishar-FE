@@ -107,7 +107,7 @@
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  min-width: 10dvw;
+  min-width: 35dvw;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -120,7 +120,7 @@
   padding: 5px;
   border-style: solid;
   font-size: 1.2em;
-  gap: 5px;
+  gap: 3px;
   z-index: -5;
 }
 
@@ -131,13 +131,17 @@
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  min-width: 4vh;
-  height: auto;
+  width: fit-content;
+  height: fit-content;
+  min-width: 2em;
+  min-height: 2em;
   border-radius: 5px;
   border: 1px solid black;
   flex-basis: auto;
   padding: 0 1dvh;
-  margin-left: 1dvh;
+  margin-left: 5px;
+  font-size: 1em;
+  font-weight: 500;
 }
 
 .buttonDiv:hover {

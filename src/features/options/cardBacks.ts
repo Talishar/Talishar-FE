@@ -64,7 +64,15 @@ export const CARD_BACK = {
   '62': 'CBFabrary8',
   '63': 'CBOffTheRailsTCG',
   '64': 'CBPummel',
-  '67': 'CBEmperorsRome'
+  '67': 'CBEmperorsRome',
+  '68': 'CBSwarming',
+  '69': 'CBErase',
+  '70': 'CBPonder',
+  '71': 'CBExude',
+  '72': 'CBDTDLight',
+  '73': 'CBDTDDark',
+  '74': 'CBCnC',
+  '75': 'CBBareFangs'
 } as { [key: string]: string };
 
 export const PLAYMATS = {
@@ -84,7 +92,8 @@ export const PLAYMATS = {
   '13': 'Exude-Confidence-AHS',
   '14': 'Command-and-Conquer-AHS',
   '15': 'Swarming-Gloomveil-AHS',
-  '16': 'FindCenter'
+  '16': 'Ponder-AHS',
+  '17': 'FindCenter'
 } as { [key: string]: string };
 
-export const PLAYER_PLAYMATS = ['0', '9', '1', '2', '3', '4', '5', '6', '7', '10', '11', '12', '13', '14', '15', '16'];
+export const PLAYER_PLAYMATS = ['0', '9', '1', '2', '3', '4', '5', '6', '7', '10', '11', '12', '13', '14', '15', '16', '17'];

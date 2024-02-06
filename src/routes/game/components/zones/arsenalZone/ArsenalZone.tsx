@@ -12,6 +12,7 @@ import {
 import Button from '../../../../../features/Button';
 import { AnimatePresence, motion } from 'framer-motion';
 import useWindowDimensions from '../../../../../hooks/useWindowDimensions';
+import CombatChain from '../../combatChain/CombatChain';
 
 export default function ArsenalZone(prop: Displayrow) {
   const { isPlayer } = prop;
@@ -75,7 +76,7 @@ const ArsenalPrompt = () => {
 
   const showPrompt =
     (gameInfo.playerID !== 3 && turnPhase === 'ARS' || turnPhase === 'CHOOSEHAND' || turnPhase === 'MAYCHOOSEHAND') ||
-    playerPrompt?.helpText?.includes('Opponent is inactive');
+    (playerPrompt?.helpText?.includes('Opponent is inactive') && turnPhase != 'INSTANT' && turnPhase != 'B' && turnPhase != 'A' && turnPhase != 'D' && turnPhase != 'M');
 
   const buttons = playerPrompt?.buttons?.map((button, ix) => {
     return (
