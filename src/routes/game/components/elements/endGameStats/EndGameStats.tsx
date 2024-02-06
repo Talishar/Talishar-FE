@@ -59,8 +59,7 @@ const EndGameStats = (data: EndGameData) => {
       ret += '' + hrs + ':' + (mins < 10 ? '0' : '');
     }
 
-    ret += '' + mins + ':' + (secs < 10 ? '0' : '');
-    ret += '' + secs;
+    ret += '' + mins + (secs < 10 ? '0' : '');
 
     return ret;
   }
@@ -74,11 +73,11 @@ const EndGameStats = (data: EndGameData) => {
           <table className={styles.cardTable}>
             <thead>
               <tr>
-                <th>Img</th>
+                <th className={styles.headersStats}></th>
                 <th>Card Name</th>
-                <th>Played</th>
-                <th>Blocked</th>
-                <th>Pitched</th>
+                <th className={styles.headersStats}>Played</th>
+                <th className={styles.headersStats}>Blocked</th>
+                <th className={styles.headersStats}>Pitched</th>
               </tr>
             </thead>
             <tbody>
@@ -115,8 +114,8 @@ const EndGameStats = (data: EndGameData) => {
         </div>
         <div>
           <h3>Game Time</h3>
-          <p>Your time: {fancyTimeFormat(data.yourTime)}</p>
-          <p>Total game time: {fancyTimeFormat(data.totalTime)}</p>
+          <p>Your Time: {fancyTimeFormat(data.yourTime)}</p>
+          <p>Total Game Time: {fancyTimeFormat(data.totalTime)}</p>
           <h3>Turn Stats</h3>
           <p style={{ marginBottom: '1em' }}>
             <em>First turn omitted for first player</em>
@@ -124,31 +123,31 @@ const EndGameStats = (data: EndGameData) => {
             <br />
             Total Damage Dealt: {data.totalDamageDealt}
             <br />
-            Average Damage Threatened per turn:{' '}
+            Average Damage Threatened per Turn:{' '}
             {data.averageDamageThreatenedPerTurn}
             <br />
-            Average Damage Dealt per turn: {data.averageDamageDealtPerTurn}
+            Average Damage Dealt per Turn: {data.averageDamageDealtPerTurn}
             <br />
-            Average damage threatened per offensive card:{' '}
+            Average Damage Threatened per Offensive Card:{' '}
             {data.averageDamageThreatenedPerCard}
             <br />
-            Average Resources Used per turn: {data.averageResourcesUsedPerTurn}
+            Average Resources Used per Turn: {data.averageResourcesUsedPerTurn}
             <br />
-            Average Cards Left Over per turn: {data.averageCardsLeftOverPerTurn}
+            Average Cards Left Over per Turn: {data.averageCardsLeftOverPerTurn}
             <br />
-            Average Value per turn (Damage threatened + block):{' '}
+            Average Value per Turn (Damage Threatened + Block):{' '}
             {data.averageValuePerTurn}
           </p>
           <table className={styles.cardTable}>
             <thead>
               <tr>
-                <th>Turn</th>
-                <th colSpan={4}>Cards</th>
-                <th colSpan={2}>Resources</th>
-                <th colSpan={2}>Damage</th>
+                <th className={styles.headersStats}>Turn</th>
+                <th colSpan={4} className={styles.headersStats}>Cards</th>
+                <th colSpan={2} className={styles.headersStats}>Resources</th>
+                <th colSpan={2} className={styles.headersStats}>Damage</th>
               </tr>
               <tr>
-                <th>#</th>
+                <th className={styles.turnNo}>#</th>
                 <th>Played</th>
                 <th>Blocked</th>
                 <th>Pitched</th>
