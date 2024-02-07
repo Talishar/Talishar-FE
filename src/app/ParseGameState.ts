@@ -154,6 +154,7 @@ export default function ParseGameState(input: any) {
     result.activeChainLink.phantasm = input.activeChainLink.phantasm;
     result.activeChainLink.fusion = input.activeChainLink.fusion;
     result.activeChainLink.piercing = input.activeChainLink.piercing;
+    result.activeChainLink.tower = input.activeChainLink.tower;
     result.activeChainLink.damagePrevention = Number(
       input.activeChainLink.damagePrevention
     );

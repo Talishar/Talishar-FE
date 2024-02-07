@@ -10,6 +10,7 @@ import {
   GiTwoCoins,
   GiGhost,
   GiMuscleFat,
+  GiStoneTower,
   GiSpearfishing     
 } from 'react-icons/gi';
 type Props = {
@@ -58,6 +59,12 @@ export const ActiveCardCounterOverlay = (props: Props) => {
           <GiSpearfishing />
         </div>
       )}
+      {activeCombatChain.tower && (
+        <div className={styles.icon} data-tooltip="Tower Active">
+          <GiStoneTower />
+        </div>
+      )}
+
       {!!activeCombatChain.damagePrevention && (
         <div
           className={styles.icon}
