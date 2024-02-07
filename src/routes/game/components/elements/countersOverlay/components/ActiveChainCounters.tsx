@@ -7,9 +7,10 @@ import {
   GiShieldReflect,
   GiShoulderArmor,
   GiZigzagLeaf,
-  GiTwoCoins,
+  GiCash,
   GiGhost,
   GiMuscleFat,
+  GiStoneTower,
   GiSpearfishing     
 } from 'react-icons/gi';
 type Props = {
@@ -40,7 +41,7 @@ export const ActiveCardCounterOverlay = (props: Props) => {
       )}
       {activeCombatChain.wager && (
         <div className={styles.icon} data-tooltip="Wager">
-          <GiTwoCoins />
+          <GiCash />
         </div>
       )}
       {activeCombatChain.phantasm && (
@@ -58,6 +59,12 @@ export const ActiveCardCounterOverlay = (props: Props) => {
           <GiSpearfishing />
         </div>
       )}
+      {activeCombatChain.tower && (
+        <div className={styles.icon} data-tooltip="Tower Active">
+          <GiStoneTower />
+        </div>
+      )}
+
       {!!activeCombatChain.damagePrevention && (
         <div
           className={styles.icon}

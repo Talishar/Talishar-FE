@@ -100,6 +100,8 @@ export const OfflineTestingGameState: GameState = {
     wager: true,
     phantasm: true,
     fusion: true,
+    piercing: true,
+    tower: true,
     damagePrevention: 5,
     attackTarget: 'Prism'
   },
