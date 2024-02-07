@@ -7,7 +7,7 @@ import {
   GiShieldReflect,
   GiShoulderArmor,
   GiZigzagLeaf,
-  GiTwoCoins,
+  GiCash,
   GiGhost,
   GiMuscleFat,
   GiStoneTower,
@@ -41,7 +41,7 @@ export const ActiveCardCounterOverlay = (props: Props) => {
       )}
       {activeCombatChain.wager && (
         <div className={styles.icon} data-tooltip="Wager">
-          <GiTwoCoins />
+          <GiCash />
         </div>
       )}
       {activeCombatChain.phantasm && (
