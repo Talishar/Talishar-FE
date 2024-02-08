@@ -59,7 +59,8 @@ const EndGameStats = (data: EndGameData) => {
       ret += '' + hrs + ':' + (mins < 10 ? '0' : '');
     }
 
-    ret += '' + mins + (secs < 10 ? '0' : '');
+    ret += '' + mins + ':' + (secs < 10 ? '0' : '');
+    ret += '' + secs;
 
     return ret;
   }
