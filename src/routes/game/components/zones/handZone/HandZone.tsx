@@ -171,9 +171,59 @@ export default function PlayerHand() {
                 })}
             </AnimatePresence>
           </div>
+          {isManualMode && <ManualMode />}
         </>,
         document.body
       )}
     </>
   );
 }
+
+const ManualMode = () => {
+  const [card, setCard] = useState<string>('');
+  const dispatch = useAppDispatch();
+  const gameInfo = useAppSelector(getGameInfo, shallowEqual);
+
+  const handleCloseManualMode = () => {
+    dispatch(
+      updateOptions({
+        game: gameInfo,
+        settings: [
+          {
+            name: MANUAL_MODE,
+            value: '0'
+          }
+        ]
+      })
+    );
+  };
+
+  const handleSubmitButton = () => {
+    if (card === '') {
+      return;
+    }
+    dispatch(
+      submitButton({
+        button: { mode: PROCESS_INPUT.ADD_CARD_TO_HAND_SELF, cardID: card }
+      })
+    );
+    setCard('');
+  };
+
+  return (
+    <div className={styles.manualMode}>
+      <input
+        onChange={(e) => setCard(e.target.value)}
+        onKeyDown={(e) => {
+          e.stopPropagation();
+        }}
+        onKeyDownCapture={(e) => {
+          e.stopPropagation();
+        }}
+        placeholder={'Enter card code here'}
+      ></input>
+      <button onClick={handleSubmitButton}>Add</button>
+      <button onClick={handleCloseManualMode}>Close</button>
+    </div>
+  );
+};
