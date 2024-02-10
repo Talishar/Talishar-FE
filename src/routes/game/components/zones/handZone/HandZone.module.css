@@ -42,8 +42,13 @@
 }
 
 @media (orientation: portrait) {
-  .isOpponent {
-    top: calc((var(--card-size) * -0.4) + 5vh);
-    top: calc((var(--card-size) * -0.4) + 5dvh);
+  .handRow {
+    justify-content: center;
+    max-width: 100%;
+    width: 100%;
+    gap: 0;
+    top: 200vh;
+    left: 2vh;
+    right: 0;
   }
 }
