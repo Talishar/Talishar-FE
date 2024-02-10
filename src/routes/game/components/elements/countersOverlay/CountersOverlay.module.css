@@ -12,6 +12,7 @@
   z-index: 100;
   text-overflow: ellipsis;
   overflow: hidden;
+  font-size: .9em;
 }
 
 .countersCover.countersCover {

@@ -57,9 +57,9 @@ export default function PitchZone(prop: Displayrow) {
         {pitchOrder.map((card, ix) => {
           return (
             <motion.div
-              style={{ top: `-${2 * ix}em`, zIndex: `-${ix + 1}` }}
+              style={{ top: `-${1.3 * ix}em`, zIndex: `-${ix + 1}` }}
               className={styles.pitchCard}
-              initial={{ y: `${2 * ix}em` }}
+              initial={{ y: `${1.3 * ix}em` }}
               animate={{ y: 0 }}
               transition={{ ease: 'easeIn', duration: 0.2 }}
               exit={{ opacity: 0 }}
