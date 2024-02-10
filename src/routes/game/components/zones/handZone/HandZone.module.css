@@ -1,17 +1,29 @@
-.handZone {
-  display: flex;
+.handRow {
   position: fixed;
   min-width: 10%;
   max-width: 60%;
-  min-height: var(--card-size);
-  height: var(--card-size);
+  max-height: .1vh;
+  top: .1vh;
+  display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
   justify-content: center;
   justify-items: center;
   align-content: center;
   align-items: center;
-  gap: 5px;
+  gap: 1vh;
+  user-select: none;
+  margin: auto;
+  left: 10vh;
+  left: 10dvh;
+  right: 20vh;
+  right: 20dvh;
+  z-index: 60;
+  -webkit-transform: rotate(180deg);
+  -moz-transform: rotate(180deg);
+  -o-transform: rotate(180deg);
+  -ms-transform: rotate(180deg);
+  transform: rotate(180deg);
 }
 
 .handZone div {
