@@ -37,3 +37,8 @@
 .modal {
   z-index: 1000;
 }
+
+.preventButtons {
+  width: 70%;
+  margin-left: 15%;
+}
