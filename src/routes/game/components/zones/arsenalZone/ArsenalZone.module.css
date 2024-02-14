@@ -83,6 +83,12 @@
   cursor: pointer;
 }
 
+.drawButton {
+  padding: 2px 10px;
+  margin: 0;
+  border: 2px solid var(--near-black);
+}
+
 @media (orientation: portrait) {
   .playerPrompt {
     top: 10px;
