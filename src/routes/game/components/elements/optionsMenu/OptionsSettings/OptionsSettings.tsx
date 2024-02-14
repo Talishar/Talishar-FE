@@ -301,7 +301,7 @@ const OptionsSettings = () => {
             />
             Enable Streamer Mode
           </label>
-          <label className={styles.optionLabel}>
+{/*           <label className={styles.optionLabel}>
             <input
               defaultChecked
               type="checkbox"
@@ -316,7 +316,7 @@ const OptionsSettings = () => {
               }
             />
             Enable Caster Mode
-          </label>
+          </label> */}
           <label className={styles.optionLabel}>
             <input
               defaultChecked
@@ -331,7 +331,7 @@ const OptionsSettings = () => {
                 })
               }
             />
-            Enable Manual Mode (for board state corrections)
+            Enable Manual Mode (For Boardstate Corrections)
           </label>
           <label className={styles.optionLabel}>
             <input
