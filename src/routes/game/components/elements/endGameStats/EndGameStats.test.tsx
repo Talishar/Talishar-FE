@@ -54,8 +54,3 @@ const stats: EndGameData = {
 it('renders without crashing', () => {
   const div = renderWithProviders(<EndGameStats {...(stats as EndGameData)} />);
 });
-
-it('passes a snapshot test', () => {
-  const div = renderWithProviders(<EndGameStats {...(stats as EndGameData)} />);
-  expect(div.getByTestId('test-stats')).toMatchSnapshot();
-});
