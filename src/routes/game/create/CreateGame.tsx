@@ -190,7 +190,8 @@ const CreateGame = () => {
                 </label>
               )}
             </fieldset>
-            <label>
+            {isPatron == "1" && (
+              <label>
               Game Name
               <input
                 type="text"
@@ -198,11 +199,17 @@ const CreateGame = () => {
                 aria-label="Game Name"
                 {...register('gameDescription')}
                 aria-invalid={
-                  errors.gameDescription?.message ? 'true' : undefined
-                }
-                placeholder="Defaults to Game#14321542"
-              />
-            </label>
+                errors.gameDescription?.message ? 'true' : undefined
+               }
+               placeholder="Defaults to Game#14321542" />
+              </label>
+             )}
+             {(isPatron != "1") && (
+               <label>
+                Join our <a href='https://www.patreon.com/talishar' target='_blank'>Patreon</a> to customize your game name!
+                <div>&nbsp;</div>
+               </label>
+            )}
             <label>
               Format
               <select
