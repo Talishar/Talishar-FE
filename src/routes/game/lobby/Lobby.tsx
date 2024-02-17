@@ -188,6 +188,8 @@ const Lobby = () => {
     } as Weapon;
   });
 
+  const oneHandedHeroes = ['HVY001', 'HVY002'];
+  let handsTotal = oneHandedHeroes.includes(data.deck.hero) ? 1 : 2;
   const mainClassNames = classNames(styles.lobbyClass);
 
   const [showChatModal, setShowChatModal] = useState(true);
@@ -334,7 +336,7 @@ const Lobby = () => {
           legs: [...data.deck.legs, ...data.deck.legsSB, 'NONE00'][0]
         }}
         onSubmit={handleFormSubmission}
-        validationSchema={deckValidation(deckSize, maxDeckSize)}
+        validationSchema={deckValidation(deckSize, maxDeckSize, handsTotal)}
         enableReinitialize
       >
         <Form className={styles.form}>
