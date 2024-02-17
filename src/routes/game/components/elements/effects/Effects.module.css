@@ -38,7 +38,7 @@
 
 .img {
   flex-shrink: 0;
-  border: 1px solid var(--effect-border-color);
+  border: 1px solid red;
   width: 90%;
   max-width: 100%;
   max-height: 100%;

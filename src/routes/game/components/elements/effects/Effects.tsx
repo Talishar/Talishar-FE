@@ -9,17 +9,14 @@ export interface CardProp {
   card: Card;
   num?: number;
   name?: string;
-  borderColor?: string;
 }
 
 export function Effect(prop: CardProp) {
   const src = `/crops/${prop.card.cardNumber}_cropped.png`;
 
-  const borderStyle = { "--effect-border-color": prop.card.borderColor } as React.CSSProperties;
-  
   return (
     <CardPopUp cardNumber={prop.card.cardNumber} containerClass={styles.effect}>
-      <img src={src} className={styles.img} style={borderStyle}/>
+      <img src={src} className={styles.img} />
     </CardPopUp>
   );
 }
