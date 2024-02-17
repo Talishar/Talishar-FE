@@ -16,7 +16,8 @@ import { replaceText } from 'utils/ParseEscapedString';
 const PlayerInputFormTypeMap: {
   [key: string]: (props: FormProps) => JSX.Element;
 } = {
-  OPT: OptInput
+  OPT: OptInput,
+  HANDTOPBOTTOM: OptInput
 };
 
 export default function PlayerInputPopUp() {
