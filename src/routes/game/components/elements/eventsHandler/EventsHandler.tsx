@@ -113,7 +113,7 @@ export const EventsHandler = React.memo(() => {
           case 'SOUL':
             toast((t) => (
               <div className={styles.card}>
-                Into Soul <GiAngelOutfit />
+                Into Soul
                 <CardDisplay
                   card={{ cardNumber: event.eventValue ?? '' }}
                   makeMeBigger
