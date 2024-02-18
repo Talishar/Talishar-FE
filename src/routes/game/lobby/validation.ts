@@ -13,7 +13,7 @@ export const deckValidation = (minDeckSize: number, maxDeckSize: number, heroNum
         object().shape({
           id: string().required(),
           is1H: boolean(),
-          numHands: number()
+          WeaponNumHands: number()
         })
       )
       // Test that the sum of weapons.hands is less than 2. Unless it's Kayo. And hope LSS don't introduce heroes with only 1 hand, or 3 hands.
@@ -22,7 +22,7 @@ export const deckValidation = (minDeckSize: number, maxDeckSize: number, heroNum
         const oneHandedHeroes = ['HVY001', 'HVY002'];
         const handsTotal = oneHandedHeroes.includes(hero) ? 1 : 2;
         const numHands = weapons.reduce((total, row) => {
-          return total + (row.numHands ?? 0);
+          return total + (row.WeaponNumHands ?? 0);
         }, 0);
         return numHands <= handsTotal
       })
