@@ -29,6 +29,7 @@
 }
 
 .cardListContents {
+  padding-left: 1vh;
   padding-top: 2vh;
   display: flex;
   flex-grow: 1;
