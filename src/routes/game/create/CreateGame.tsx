@@ -190,7 +190,6 @@ const CreateGame = () => {
                 </label>
               )}
             </fieldset>
-            {isPatron == "1" && (
               <label>
               Game Name
               <input
@@ -203,13 +202,6 @@ const CreateGame = () => {
                }
                placeholder="Defaults to Game#14321542" />
               </label>
-             )}
-             {(isPatron != "1") && (
-               <label>
-                Join our <a href='https://www.patreon.com/talishar' target='_blank'>Patreon</a> to customize your game name!
-                <div>&nbsp;</div>
-               </label>
-            )}
             <label>
               Format
               <select
