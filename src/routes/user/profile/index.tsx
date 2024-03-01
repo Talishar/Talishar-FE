@@ -80,7 +80,7 @@ export const ProfilePage = () => {
   return (
     <div>
       <div className="container">
-        <h1>Profile Page</h1>
+        <h1 className={styles.title}>Profile Page</h1>
         <article>
           <h3>Profile:</h3>
           <div>
