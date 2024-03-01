@@ -68,7 +68,8 @@ export const CARD_BACK = {
   '66': 'CBPvtVoid',
   '67': 'CBEmperorsRome',
   '68': 'CBWeMakeBest',
-  "69": 'CBWeMakeBest2'
+  '69': 'CBWeMakeBest2',
+  '70': 'CBSunflowerSamurai'
 } as { [key: string]: string };
 
 export const PLAYMATS = {
