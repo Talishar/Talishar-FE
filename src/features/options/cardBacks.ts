@@ -71,7 +71,8 @@ export const CARD_BACK = {
   '69': 'CBWeMakeBest2',
   '70': 'CBSunflowerSamurai',
   '71': 'CBMnRCast',
-  '72': 'CBOnTheBauble'
+  '72': 'CBOnTheBauble',
+  '73': 'CBGorganianTome'
 } as { [key: string]: string };
 
 export const PLAYMATS = {
