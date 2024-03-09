@@ -15,6 +15,12 @@
   user-select: auto;
 }
 
+.advancedStatsBanner {
+  width:100%;
+  font-size: 24px;
+  text-align: center;
+}
+
 .cardTable {
   line-height: 1.5em;
   width: 100%;
@@ -67,6 +73,10 @@
 }
 
 .pitched {
+  text-align: center;
+}
+
+.cardStat {
   text-align: center;
 }
 

@@ -4,6 +4,7 @@ import { Effect } from '../effects/Effects';
 import EndGameMenuOptions from '../endGameMenuOptions/EndGameMenuOptions';
 import styles from './EndGameStats.module.css';
 import { NumberLiteralType } from 'typescript';
+import useAuth from 'hooks/useAuth';
 
 export interface EndGameData {
   deckID?: string;
@@ -30,6 +31,8 @@ export interface CardResult {
   blocked: number;
   pitched: number;
   played: number;
+  hits: number;
+  charged: number;
   cardName: string;
   pitchValue: number;
 }
@@ -46,6 +49,8 @@ export interface TurnResult {
 }
 
 const EndGameStats = (data: EndGameData) => {
+  const { isPatron } = useAuth();
+
   function fancyTimeFormat(duration: number | undefined) {
     duration = duration ?? 0;
     // Hours, minutes and seconds
@@ -64,10 +69,15 @@ const EndGameStats = (data: EndGameData) => {
 
     return ret;
   }
+  let numCharged: number = 0;
+  for (let i = 0; i < data.cardResults.length; i++) {
+    numCharged += data.cardResults[i].charged;
+  }
 
   return (
     <div className={styles.endGameStats} data-testid="test-stats">
       <EndGameMenuOptions />
+      {!isPatron && <div className={styles.advancedStatsBanner}>Support our <a href='https://www.patreon.com/talishar' target='_blank'>patreon</a> to see <a href='https://www.patreon.com/posts/100047090' target='_blank'>advanced stats!</a></div>}
       <div className={styles.twoColumn}>
         <div>
           <h2>Card Play Stats</h2>
@@ -79,6 +89,8 @@ const EndGameStats = (data: EndGameData) => {
                 <th className={styles.headersStats}>Played</th>
                 <th className={styles.headersStats}>Blocked</th>
                 <th className={styles.headersStats}>Pitched</th>
+                {isPatron && <th className={styles.headersStats}>Times Hit</th>}
+                {isPatron && numCharged > 0 && <th className={styles.headersStats}>Times Charged</th>}
               </tr>
             </thead>
             <tbody>
@@ -107,6 +119,8 @@ const EndGameStats = (data: EndGameData) => {
                       <td className={styles.played}>{result.played}</td>
                       <td className={styles.blocked}>{result.blocked}</td>
                       <td className={styles.pitched}>{result.pitched}</td>
+                      {isPatron && <th className={styles.cardStat}>{result.hits}</th>}
+                      {isPatron && numCharged > 0 && <th className={styles.cardStat}>{result.charged}</th>}
                     </tr>
                   );
                 })}
