@@ -42,6 +42,12 @@ export default function PlayerHand() {
     );
   }, shallowEqual);
 
+  const playableTheirBanishedCards = useAppSelector((state: RootState) => {
+    return state.game.playerTwo.Banish?.filter(
+      (card) => card.action != null && card.action != 0
+    );
+  }, shallowEqual);
+
   const playableGraveyardCards = useAppSelector((state: RootState) => {
     return state.game.playerOne.Graveyard?.filter(
       (card) => card.action != null && card.action != 0
@@ -59,12 +65,14 @@ export default function PlayerHand() {
     if (
       (handCards?.length === 0 || handCards === undefined) &&
       (playableBanishedCards?.length === 0 ||
-        playableBanishedCards === undefined) && (playableGraveyardCards?.length === 0 ||
+        playableBanishedCards === undefined) 
+        && (playableTheirBanishedCards?.length === 0 ||
+        playableTheirBanishedCards === undefined) && (playableGraveyardCards?.length === 0 ||
           playableGraveyardCards === undefined)
     ) {
       setPlayedCards([]);
     }
-  }, [handCards, playableBanishedCards, playableGraveyardCards]);
+  }, [handCards, playableBanishedCards, playableTheirBanishedCards, playableGraveyardCards]);
 
   if (
     arsenalCards === undefined ||
@@ -79,6 +87,7 @@ export default function PlayerHand() {
   lengthOfCards += arsenalCards?.length ?? 0;
   lengthOfCards += playableBanishedCards?.length ?? 0;
   lengthOfCards += playableGraveyardCards?.length ?? 0;
+  lengthOfCards += playableTheirBanishedCards?.length ?? 0;
 
   if (playerID === 3) {
     return <></>;
@@ -147,6 +156,29 @@ export default function PlayerHand() {
                     />
                   );
                 })}
+                {playableTheirBanishedCards !== undefined &&
+                playableTheirBanishedCards.map((card, ix) => {
+                  const cardCount = cardsInHandsAlready.filter(
+                    (value) => value === card.cardNumber
+                  ).length;
+                  cardsInHandsAlready.push(card.cardNumber);
+                  return (
+                    <PlayerHandCard
+                      card={card}
+                      isBanished
+                      key={`banished-${card.cardNumber}-${cardCount}`}
+                      addCardToPlayedCards={addCardToPlayedCards}
+                      zIndex={
+                        -(
+                          ix +
+                          (arsenalCards?.length ?? 0) +
+                          (handCards?.length ?? 0) +
+                          (playableBanishedCards?.length ?? 0)
+                        )
+                      }
+                    />
+                  );
+                })}
                 {playableGraveyardCards !== undefined &&
                 playableGraveyardCards.map((card, ix) => {
                   const cardCount = cardsInHandsAlready.filter(
@@ -163,7 +195,9 @@ export default function PlayerHand() {
                         -(
                           ix +
                           (arsenalCards?.length ?? 0) +
-                          (handCards?.length ?? 0)
+                          (handCards?.length ?? 0) +
+                          (playableBanishedCards?.length ?? 0) +
+                          (playableTheirBanishedCards?.length ?? 0)
                         )
                       }
                     />
