@@ -75,7 +75,9 @@ export const CARD_BACK = {
   '73': 'CBGorganianTome',
   '74': 'CBFABChaos',
   '75': 'CBColdFoilControl',
-  '76': 'CBDailyFab'
+  '76': 'CBDailyFab',
+  '77': 'CBRighteousGaming',
+  '78': 'CBRighteousGaming2'
 } as { [key: string]: string };
 
 export const PLAYMATS = {
