@@ -33,5 +33,27 @@ export const doubleFacedCardsMappings: { [key: string]: string } = {
   DTD012: 'DTD412',
   DTD164: 'DTD564',
   DTD564: 'DTD164',
-  DYN092: 'DYN492'
+  DYN092: 'DYN492',
+  DYN492: 'DYN092',
+
+  EVO010: 'EVO410',
+  EV4010: 'EVO010',
+  
+  MST010: 'MST410', 
+  MST032: 'MST432', 
+  MST053: 'MST453',
+  MST096: 'MST496', 
+  MST097: 'MST497', 
+  MST098: 'MST498', 
+  MST099: 'MST499', 
+  MST101: 'MST501',
+
+  MST410: 'MST010', 
+  MST432: 'MST032', 
+  MST453: 'MST053',
+  MST496: 'MST096', 
+  MST497: 'MST097', 
+  MST498: 'MST098', 
+  MST499: 'MST099', 
+  MST501: 'MST101'
 };
