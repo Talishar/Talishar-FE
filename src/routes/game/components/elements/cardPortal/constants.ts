@@ -48,6 +48,7 @@ export const doubleFacedCardsMappings: { [key: string]: string } = {
   MST099: 'MST499', 
   MST100: 'MST500',
   MST101: 'MST501',
+  MST102: 'MST502',
 
   MST410: 'MST010', 
   MST432: 'MST032', 
@@ -57,5 +58,6 @@ export const doubleFacedCardsMappings: { [key: string]: string } = {
   MST498: 'MST098', 
   MST499: 'MST099', 
   MST500: 'MST100',
-  MST501: 'MST101'
+  MST501: 'MST101',
+  MST502: 'MST102'
 };
