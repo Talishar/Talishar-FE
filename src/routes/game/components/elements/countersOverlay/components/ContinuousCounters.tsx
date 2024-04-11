@@ -55,10 +55,10 @@ export const ContinuousCounters = (props: Props) => {
       )}
       {!!Number(countersMap?.energy) && (
         <div
-          className={styles.number}
+          className={styles.energyCounter}
           title={`${countersMap?.energy} energy counter(s)`}
         >
-          <div className={styles.text}>{countersMap?.energy}</div>
+          <div>{countersMap?.energy}</div>
         </div>
       )}
       {!!Number(countersMap?.aim) && (
