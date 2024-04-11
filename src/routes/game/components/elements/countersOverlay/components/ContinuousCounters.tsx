@@ -11,6 +11,10 @@ const includedCounters = [
   'life',
   'attack',
   'energy',
+  'haunt',
+  'verse',
+  'doom',
+  'lesson',
   'aim'
 ];
 
@@ -55,15 +59,47 @@ export const ContinuousCounters = (props: Props) => {
       )}
       {!!Number(countersMap?.energy) && (
         <div
-          className={styles.number}
+          className={styles.energyCounter}
           title={`${countersMap?.energy} energy counter(s)`}
         >
-          <div className={styles.text}>{countersMap?.energy}</div>
+          <div>{countersMap?.energy}</div>
+        </div>
+      )}
+        {!!Number(countersMap?.haunt) && (
+        <div
+          className={styles.hauntCounter}
+          title={`${countersMap?.haunt} haunt counter(s)`}
+        >
+          <div>{countersMap?.haunt}</div>
+        </div>
+      )}
+        {!!Number(countersMap?.verse) && (
+        <div
+          className={styles.verseCounter}
+          title={`${countersMap?.verse} verse counter(s)`}
+        >
+          <div>{countersMap?.verse}</div>
+        </div>
+      )}
+        {!!Number(countersMap?.doom) && (
+        <div
+          className={styles.doomCounter}
+          title={`${countersMap?.doom} doom counter(s)`}
+        >
+          <div>{countersMap?.doom}</div>
+        </div>
+      )}
+      {!!Number(countersMap?.lesson) && (
+        <div
+          className={styles.lessonCounter}
+          title={`${countersMap?.lesson} lesson counter(s)`}
+        >
+          <div>{countersMap?.lesson}</div>
         </div>
       )}
       {!!Number(countersMap?.aim) && (
         <div
-          className={classNames(styles.aimCounter, styles.icon)} data-tooltip="Aim Counter"
+          className={classNames(styles.aimCounter, styles.icon)} data-tooltip="Aim counter(s)"
           title={`aim counter`}
         />
       )}

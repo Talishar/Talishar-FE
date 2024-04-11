@@ -33,6 +33,10 @@ export const CountersOverlay = ({
     'life',
     'attack',
     'energy',
+    'haunt',
+    'verse',
+    'doom',
+    'lesson',
     'aim'
   ];
 
@@ -60,7 +64,7 @@ export const CountersOverlay = ({
       {!!numTotal && (
         <div
           className={styles.number}
-          title={`${numTotal} ${numDescriptionFinal}card(s)`}
+          title={`${numTotal} ${numDescriptionFinal}`}
         >
           <div className={styles.text}>{numTotal}</div>
         </div>

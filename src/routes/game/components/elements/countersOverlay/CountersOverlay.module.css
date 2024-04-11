@@ -34,8 +34,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 2em;
-  width: 2em;
+  height: 1.75em;
+  width: 1.75em;
   font-size: 1.5em;
   background-color: var(--white);
   text-align: center;
@@ -47,8 +47,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 2em;
-  width: 2em;
+  height: 1.75em;
+  width: 1.75em;
   background-image: url('../../../../../img/symbols/symbol-defence.png');
   background-position: center;
   background-size: contain;
@@ -66,9 +66,104 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 2em;
-  width: 2em;
+  height: 1.75em;
+  width: 1.75em;
   background-image: url('../../../../../img/symbols/symbol-steamCounter.png');
+  background-position: center;
+  background-size: contain;
+  text-align: center;
+  font-size: 1.5em;
+  color: var(--white);
+  text-shadow: -1px 1px 2px #000, 1px 1px 2px #000, 1px -1px 0 #000,
+    -1px -1px 0 #000;
+  z-index: -1;
+  cursor: default;
+}
+
+.energyCounter.energyCounter {
+  border-radius: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 1.75em;
+  width: 1.75em;
+  background-image: url('../../../../../img/symbols/symbol-energyCounter.png');
+  background-position: center;
+  background-size: contain;
+  text-align: center;
+  font-size: 1.5em;
+  color: var(--white);
+  text-shadow: -1px 1px 2px #000, 1px 1px 2px #000, 1px -1px 0 #000,
+    -1px -1px 0 #000;
+  z-index: -1;
+  cursor: default;
+}
+
+.hauntCounter.hauntCounter {
+  border-radius: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 1.75em;
+  width: 1.75em;
+  background-image: url('../../../../../img/symbols/symbol-hauntCounter.png');
+  background-position: center;
+  background-size: contain;
+  text-align: center;
+  font-size: 1.5em;
+  color: var(--white);
+  text-shadow: -1px 1px 2px #000, 1px 1px 2px #000, 1px -1px 0 #000,
+    -1px -1px 0 #000;
+  z-index: -1;
+  cursor: default;
+}
+
+.verseCounter.verseCounter {
+  border-radius: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 1.75em;
+  width: 1.75em;
+  background-image: url('../../../../../img/symbols/symbol-verseCounter.png');
+  background-position: center;
+  background-size: contain;
+  text-align: center;
+  font-size: 1.5em;
+  color: var(--white);
+  text-shadow: -1px 1px 2px #000, 1px 1px 2px #000, 1px -1px 0 #000,
+    -1px -1px 0 #000;
+  z-index: -1;
+  cursor: default;
+}
+
+.doomCounter.doomCounter {
+  border-radius: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 1.75em;
+  width: 1.75em;
+  background-image: url('../../../../../img/symbols/symbol-doomCounter.png');
+  background-position: center;
+  background-size: contain;
+  text-align: center;
+  font-size: 1.5em;
+  color: var(--white);
+  text-shadow: -1px 1px 2px #000, 1px 1px 2px #000, 1px -1px 0 #000,
+    -1px -1px 0 #000;
+  z-index: -1;
+  cursor: default;
+}
+
+.lessonCounter.lessonCounter {
+  border-radius: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 1.75em;
+  width: 1.75em;
+  background-image: url('../../../../../img/symbols/symbol-lessonCounter.png');
   background-position: center;
   background-size: contain;
   text-align: center;
@@ -85,8 +180,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 2em;
-  width: 2em;
+  height: 1.75em;
+  width: 1.75em;
   background-image: url('../../../../../img/symbols/symbol-attack.png');
   background-position: center;
   background-size: contain;
@@ -104,8 +199,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 2em;
-  width: 2em;
+  height: 1.75em;
+  width: 1.75em;
   background-image: url('../../../../../img/symbols/symbol-health.png');
   background-position: center;
   background-size: contain;
@@ -133,8 +228,8 @@
 }
 
 .facing {
-  height: 2em;
-  width: 2em;
+  height: 1.75em;
+  width: 1.75em;
   background-position: center;
   background-size: contain;
 }
