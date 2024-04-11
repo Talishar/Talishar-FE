@@ -35,6 +35,7 @@ export const CountersOverlay = ({
     'energy',
     'haunt',
     'verse',
+    'doom',
     'aim'
   ];
 
