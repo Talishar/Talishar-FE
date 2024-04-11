@@ -11,6 +11,7 @@ const includedCounters = [
   'life',
   'attack',
   'energy',
+  'haunt',
   'aim'
 ];
 
@@ -61,9 +62,17 @@ export const ContinuousCounters = (props: Props) => {
           <div>{countersMap?.energy}</div>
         </div>
       )}
+        {!!Number(countersMap?.haunt) && (
+        <div
+          className={styles.hauntCounter}
+          title={`${countersMap?.haunt} haunt counter(s)`}
+        >
+          <div>{countersMap?.haunt}</div>
+        </div>
+      )}
       {!!Number(countersMap?.aim) && (
         <div
-          className={classNames(styles.aimCounter, styles.icon)} data-tooltip="Aim Counter"
+          className={classNames(styles.aimCounter, styles.icon)} data-tooltip="Aim counter(s)"
           title={`aim counter`}
         />
       )}
