@@ -17,6 +17,7 @@ const includedCounters = [
   'lesson',
   'rust',
   'flow',
+  'frost',
   'aim'
 ];
 
@@ -113,6 +114,14 @@ export const ContinuousCounters = (props: Props) => {
           title={`${countersMap?.flow} flow counter(s)`}
         >
           <div>{countersMap?.flow}</div>
+        </div>
+      )}
+      {!!Number(countersMap?.frost) && (
+        <div
+          className={styles.frostCounter}
+          title={`${countersMap?.frost} frost counter(s)`}
+        >
+          <div>{countersMap?.frost}</div>
         </div>
       )}
       {!!Number(countersMap?.aim) && (
