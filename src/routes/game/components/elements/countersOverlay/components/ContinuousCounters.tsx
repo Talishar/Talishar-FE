@@ -16,6 +16,7 @@ const includedCounters = [
   'doom',
   'lesson',
   'rust',
+  'flow',
   'aim'
 ];
 
@@ -104,6 +105,14 @@ export const ContinuousCounters = (props: Props) => {
           title={`${countersMap?.rust} rust counter(s)`}
         >
           <div>{countersMap?.rust}</div>
+        </div>
+      )}
+      {!!Number(countersMap?.flow) && (
+        <div
+          className={styles.flowCounter}
+          title={`${countersMap?.flow} flow counter(s)`}
+        >
+          <div>{countersMap?.flow}</div>
         </div>
       )}
       {!!Number(countersMap?.aim) && (
