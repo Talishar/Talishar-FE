@@ -40,6 +40,7 @@ export const CountersOverlay = ({
     'rust',
     'flow',
     'frost',
+    'balance',
     'aim'
   ];
 
