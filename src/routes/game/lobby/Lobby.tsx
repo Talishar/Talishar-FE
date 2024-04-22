@@ -227,19 +227,19 @@ const Lobby = () => {
       ...weaponsIndexed
         .concat(weaponsSBIndexed)
         .map((item) => item.id.substring(0, 6))
-        .filter((item) => !hands.includes(item) && item !== 'NONE00'),
+        .filter((item) => item !== 'NONE00'),
       ...(data?.deck?.head ?? [])
         .concat(data?.deck?.headSB ?? [])
-        .filter((item) => !values.head.includes(item) && item !== 'NONE00'),
+        .filter((item) => item !== 'NONE00'),
       ...(data?.deck?.chest ?? [])
         .concat(data?.deck?.chestSB ?? [])
-        .filter((item) => !values.chest.includes(item) && item !== 'NONE00'),
+        .filter((item) => item !== 'NONE00'),
       ...(data?.deck?.arms ?? [])
         .concat(data?.deck?.armsSB ?? [])
-        .filter((item) => !values.arms.includes(item) && item !== 'NONE00'),
+        .filter((item) => item !== 'NONE00'),
       ...(data?.deck?.legs ?? [])
         .concat(data?.deck?.legsSB ?? [])
-        .filter((item) => !values.legs.includes(item) && item !== 'NONE00'),
+        .filter((item) => item !== 'NONE00'),
       ...(data?.deck?.demiHero ?? [])
     ];
 
