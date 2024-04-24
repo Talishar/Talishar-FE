@@ -155,6 +155,7 @@ const Lobby = () => {
       break;
     case GAME_FORMAT.COMMONER:
     case GAME_FORMAT.CLASH:
+      maxDeckSize = 40;
       deckSize = 40;
       break;
     case GAME_FORMAT.SEALED:
