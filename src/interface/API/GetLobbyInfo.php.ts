@@ -26,6 +26,7 @@ export interface Deck {
   quiverSB?: Weapon[];
   handsSB: Weapon[];
   demiHero?: string[];
+  modular?: string[];
   cardDictionary?: CardData[];
 }
 

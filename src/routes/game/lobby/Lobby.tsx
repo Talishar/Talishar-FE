@@ -189,6 +189,16 @@ const Lobby = () => {
     } as Weapon;
   });
 
+  // TODO: remove the handling of EVO013 on the legs once backend is updated
+  const hasModular = (data.deck.modular?.length ?? 0) > 0 || data.deck.legs.concat(data.deck.legsSB).some(id => id === 'EVO013');
+  const initialEquipment = (main: string[], side: string[]) => {
+    if (hasModular) {
+      return [...main, 'NONE00'].filter(id => id !== 'EVO013')[0];
+    } else {
+      return [...main, ...side, 'NONE00'][0];
+    }
+  };
+
   const oneHandedHeroes = ['HVY001', 'HVY002'];
   let handsTotal = oneHandedHeroes.includes(data.deck.hero) ? 1 : 2;
   const mainClassNames = classNames(styles.lobbyClass);
@@ -227,22 +237,19 @@ const Lobby = () => {
     const inventory = [
       ...weaponsIndexed
         .concat(weaponsSBIndexed)
-        .map((item) => item.id.substring(0, 6))
-        .filter((item) => item !== 'NONE00'),
-      ...(data?.deck?.head ?? [])
-        .concat(data?.deck?.headSB ?? [])
-        .filter((item) => item !== 'NONE00'),
-      ...(data?.deck?.chest ?? [])
-        .concat(data?.deck?.chestSB ?? [])
-        .filter((item) => item !== 'NONE00'),
-      ...(data?.deck?.arms ?? [])
-        .concat(data?.deck?.armsSB ?? [])
-        .filter((item) => item !== 'NONE00'),
-      ...(data?.deck?.legs ?? [])
-        .concat(data?.deck?.legsSB ?? [])
-        .filter((item) => item !== 'NONE00'),
-      ...(data?.deck?.demiHero ?? [])
-    ];
+        .filter((item) => item.id !== 'NONE00')
+        .map((item) => item.id.substring(0, 6)),
+      ...data?.deck?.head ?? [],
+      ...data?.deck?.headSB ?? [],
+      ...data?.deck?.chest ?? [],
+      ...data?.deck?.chestSB ?? [],
+      ...data?.deck?.arms ?? [],
+      ...data?.deck?.armsSB ?? [],
+      ...data?.deck?.legs ?? [],
+      ...data?.deck?.legsSB ?? [],
+      ...data?.deck?.demiHero ?? [],
+      ...data?.deck?.modular ?? [],
+    ].filter((item) => item !== 'NONE00');
 
     // encode it as an object
     const submitDeck = {
@@ -331,10 +338,10 @@ const Lobby = () => {
           hero: data?.deck.hero,
           deck: deckIndexed,
           weapons: weaponsIndexed,
-          head: [...data.deck.head, ...data.deck.headSB, 'NONE00'][0],
-          chest: [...data.deck.chest, ...data.deck.chestSB, 'NONE00'][0],
-          arms: [...data.deck.arms, ...data.deck.armsSB, 'NONE00'][0],
-          legs: [...data.deck.legs, ...data.deck.legsSB, 'NONE00'][0]
+          head: initialEquipment(data.deck.head, data.deck.headSB),
+          chest: initialEquipment(data.deck.chest, data.deck.chestSB),
+          arms: initialEquipment(data.deck.arms, data.deck.armsSB),
+          legs: initialEquipment(data.deck.legs, data.deck.legsSB),
         }}
         onSubmit={handleFormSubmission}
         validationSchema={deckValidation(deckSize, maxDeckSize, handsTotal)}
@@ -414,7 +421,7 @@ const Lobby = () => {
                           onClick={handleEquipmentClick}
                           type="button"
                         >
-                          <div 
+                          <div
                             className={styles.icon}>
                             <GiCapeArmor/>
                           </div>
@@ -427,7 +434,7 @@ const Lobby = () => {
                           onClick={handleDeckClick}
                           type="button"
                         >
-                        <div 
+                        <div
                           className={styles.icon}>
                           <SiBookstack/>
                         </div>
@@ -460,8 +467,8 @@ const Lobby = () => {
                         className= {eqClasses}
                         onClick={handleEquipmentClick}
                         type="button"
-                      >        
-                          <div 
+                      >
+                          <div
                             className={styles.icon}>
                             <GiCapeArmor/>
                           </div>
@@ -474,7 +481,7 @@ const Lobby = () => {
                         onClick={handleDeckClick}
                         type="button"
                       >
-                        <div 
+                        <div
                           className={styles.icon}>
                           <SiBookstack/>
                         </div>
@@ -522,11 +529,11 @@ const Lobby = () => {
               Calculator
             </button>
           }
-          
+
           {isPatron != "1" && isWideScreen &&
             <div className={styles.patreonLink}>Support our <a href='https://www.patreon.com/talishar' target='_blank'>patreon</a> to use dynamic hypergeometric calculator!</div>
           }
-            
+
       <div className={styles.spacer}></div>
 
             {(activeTab === 'matchups' || isWideScreen) && (
