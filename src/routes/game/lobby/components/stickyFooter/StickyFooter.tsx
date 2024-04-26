@@ -35,8 +35,12 @@ const StickyFooter = ({
   const leaveLobby = classNames(styles.buttonClass, 'outline secondary');
 
   return (
+    
     <div className={styles.stickyFooter}>
       <div className={dynamicContainer}>
+        <div className={styles.footerStart}>
+              Copy invite link
+        </div>
         <div className={styles.clipboardButtonHolder}>
           <button
             className={styles.buttonClass}
@@ -51,15 +55,17 @@ const StickyFooter = ({
             </div>
           </button>
         </div>
-        <div className={styles.footerContent}>
-          <div>
-            Deck {values.deck.length}/{deckSize}
-          </div>
-          {!isValid && (
+        <div className={styles.footerAlarm}>
+        {!isValid && (
             <div className={styles.alarm}>
               <FaExclamationCircle /> {errorArray[0]}
             </div>
           )}
+        </div>
+        <div className={styles.footerContent}>
+          <div>
+            Deck {values.deck.length}/{deckSize}
+          </div>
         </div>
         <div className={styles.buttonHolder}>
           <button

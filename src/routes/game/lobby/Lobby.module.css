@@ -19,10 +19,10 @@
 }
 
 .smallButton {
-  gap: 1em;
+  gap: 0.5em;
   font-size: 0.85em;
   font-weight: 550;
-  padding: 0;
+  padding: 0.3em;
   margin: 0;
 }
 
