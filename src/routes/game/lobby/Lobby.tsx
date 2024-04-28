@@ -189,8 +189,7 @@ const Lobby = () => {
     } as Weapon;
   });
 
-  // TODO: remove the handling of EVO013 on the legs once backend is updated
-  const hasModular = (data.deck.modular?.length ?? 0) > 0 || data.deck.legs.concat(data.deck.legsSB).some(id => id === 'EVO013');
+  const hasModular = (data.deck.modular?.length ?? 0) > 0;
   const initialEquipment = (main: string[], side: string[]) => {
     if (hasModular) {
       return [...main, 'NONE00'].filter(id => id !== 'EVO013')[0];
