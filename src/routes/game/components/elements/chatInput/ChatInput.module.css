@@ -36,14 +36,15 @@
 .quickChatButton {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1em;
+  gap: 0.5em;
 }
 
 .quickChatButton button {
   font-size: 0.85em;
   font-weight: 550;
-  padding: 0;
+  padding: 0.3em;
   margin: 0;
+  margin-top: 0.1rem;
 }
 
 .popOver {
