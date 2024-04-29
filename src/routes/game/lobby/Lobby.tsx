@@ -163,7 +163,7 @@ const Lobby = () => {
       deckSize = 30;
       break;
     case GAME_FORMAT.OPEN_FORMAT:
-      deckSize = 60;
+      deckSize = 0;
       break;
     default:
   }
