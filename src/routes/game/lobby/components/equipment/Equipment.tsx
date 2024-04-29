@@ -16,15 +16,14 @@ type EquipmentProps = {
 };
 
 const Equipment = ({ lobbyInfo, weapons, weaponSB }: EquipmentProps) => {
-  // TODO: remove the handling of EVO013 on the legs once backend is updated
   const { values } = useFormikContext<DeckResponse>();
   const hands = [...weapons, ...weaponSB];
   const head = [...lobbyInfo.deck.head, ...lobbyInfo.deck.headSB, 'NONE00'];
   const chest = [...lobbyInfo.deck.chest, ...lobbyInfo.deck.chestSB, 'NONE00'];
   const arms = [...lobbyInfo.deck.arms, ...lobbyInfo.deck.armsSB, 'NONE00'];
-  const legs = [...lobbyInfo.deck.legs, ...lobbyInfo.deck.legsSB, 'NONE00'].filter(id => id !== 'EVO013');
+  const legs = [...lobbyInfo.deck.legs, ...lobbyInfo.deck.legsSB, 'NONE00'];
   const demiHero = [...lobbyInfo.deck.demiHero ?? []];
-  const modular = [...lobbyInfo.deck.modular ?? [], ...lobbyInfo.deck.legs.filter(id => id === 'EVO013')];
+  const modular = [...lobbyInfo.deck.modular ?? []];
 
   return (
     <div className={styles.container}>
