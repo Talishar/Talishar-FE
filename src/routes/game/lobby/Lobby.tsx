@@ -373,7 +373,7 @@ const Lobby = () => {
                 >
                   <div className={styles.dimPic}>
                     <h3 aria-busy={!gameLobby?.theirName}>
-                      {gameLobby?.theirName!.substring(0, 15) ?? ''}
+                      {gameLobby?.theirName?.substring(0, 15) ?? ''}
                     </h3>
                     <div className={styles.heroName}>
                       {gameLobby?.theirHeroName != ''
