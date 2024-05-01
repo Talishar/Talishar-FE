@@ -77,7 +77,8 @@ export const CARD_BACK = {
   '75': 'CBColdFoilControl',
   '76': 'CBDailyFab',
   '77': 'CBRighteousGaming',
-  '78': 'CBRighteousGaming2'
+  '78': 'CBRighteousGaming2',
+  '79': 'CBThePlagueHive'
 } as { [key: string]: string };
 
 export const PLAYMATS = {
