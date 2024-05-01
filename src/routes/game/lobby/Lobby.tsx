@@ -358,7 +358,7 @@ const Lobby = () => {
                   style={{ backgroundImage: leftPic }}
                 >
                   <div className={styles.dimPic}>
-                    <h3 aria-busy={isLoading}>{data.displayName.substring(0, 14)}</h3>
+                    <h3 aria-busy={isLoading}>{data.displayName.substring(0, 15)}</h3>
                     <div className={styles.heroName}>{data.deck.heroName}</div>
                   </div>
                 </div>
@@ -373,7 +373,7 @@ const Lobby = () => {
                 >
                   <div className={styles.dimPic}>
                     <h3 aria-busy={!gameLobby?.theirName}>
-                      {gameLobby?.theirName ?? ''}
+                      {gameLobby?.theirName!.substring(0, 15) ?? ''}
                     </h3>
                     <div className={styles.heroName}>
                       {gameLobby?.theirHeroName != ''
