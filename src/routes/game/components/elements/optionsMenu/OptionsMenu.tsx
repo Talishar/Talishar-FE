@@ -181,7 +181,7 @@ const OptionsContent = () => {
                 className={styles.buttonDiv}
                 onClick={clickCopySpectateToClipboardHandler}
               >
-                <FaLink />&nbsp;Copy Spectate Link
+                Copy Spectate Link
               </button>
             </>
           )}
