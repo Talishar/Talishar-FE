@@ -18,7 +18,7 @@ import OptionsSettings from './OptionsSettings';
 import { shallowEqual } from 'react-redux';
 
 const OptionsContent = () => {
-  const { gameID, playerID, isPrivate } = useAppSelector(
+  const { gameID, playerID, isPrivateLobby } = useAppSelector(
     getGameInfo,
     shallowEqual
   );
@@ -26,7 +26,7 @@ const OptionsContent = () => {
   const navigate = useNavigate();
   const [allowSpectator, setAllowSpectator] = useState(false);
 
-  const gameURL = `http://fe.talishar.net/game/play/${gameID}`;
+  const gameURL = `http://talishar.net/game/play/${gameID}`;
 
   const clickCloseOptionsHandler = () => {
     dispatch(closeOptionsMenu());
@@ -38,11 +38,11 @@ const OptionsContent = () => {
     dispatch(submitButton({ button: { mode: PROCESS_INPUT.CONCEDE_GAME } }));
   };
 
-  const clickPlayLegacyHandler = async (e: React.MouseEvent) => {
+/*   const clickPlayLegacyHandler = async (e: React.MouseEvent) => {
     e.preventDefault;
     await screenfull.exit();
     window.location.href = `https://legacy.talishar.net/game/NextTurn4.php?gameName=${gameID}&playerID=${playerID}`;
-  };
+  }; */
 
   // going to main menu means you concede the game
   const handleClickMainMenuButton = async (e: React.MouseEvent) => {
@@ -110,9 +110,9 @@ const OptionsContent = () => {
       <div className={styles.column}>
         <h3>Navigation</h3>
         <div className={styles.buttonColumn}>
-          <button className={styles.buttonDiv} onClick={clickPlayLegacyHandler}>
+          {/*<button className={styles.buttonDiv} onClick={clickPlayLegacyHandler}>
             Legacy Talishar Client
-          </button>
+          </button> */}
           <button
             className={styles.buttonDiv}
             onClick={handleClickMainMenuButton}
@@ -164,7 +164,7 @@ const OptionsContent = () => {
         </div>
         <h3>Invite Spectators</h3>
         <div className={styles.buttonColumn}>
-          {isPrivate && allowSpectator ? (
+          {isPrivateLobby && !allowSpectator ? (
             <>
               <button
                 style={{ marginTop: '0.5em' }}
@@ -181,7 +181,7 @@ const OptionsContent = () => {
                 className={styles.buttonDiv}
                 onClick={clickCopySpectateToClipboardHandler}
               >
-                Copy Spectate Link
+                <FaLink />&nbsp;Copy Spectate Link
               </button>
             </>
           )}
