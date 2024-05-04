@@ -161,7 +161,6 @@ const CreateGame = () => {
             <fieldset>
               <label>
                 Deck Link
-                Deck Link
                 <input
                   type="text"
                   id="fabdb"
@@ -266,7 +265,6 @@ const CreateGame = () => {
                 />
                 Single Player 🤖
                 <div>&nbsp;</div>
-                <div>&nbsp;</div>
               </label>
               {isLoggedIn && (isPatron == "1") && (
                 <label>
@@ -307,14 +305,6 @@ const CreateGame = () => {
               <FaExclamationCircle /> {errors.root?.serverError?.message}
             </div>
           )}
-          <p>
-            <small className={styles.disclaimer}>
-              Talishar is an open-source, fan-made platform not associated with
-              LSS. It may not be a completely accurate representation of the Rules
-              as written. If you have questions about interactions or rulings,
-              please contact the judge community for clarification.
-            </small>
-          </p>
         </form>
       </article>
     </div>
