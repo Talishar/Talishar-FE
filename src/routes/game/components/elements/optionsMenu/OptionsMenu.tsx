@@ -108,16 +108,13 @@ const OptionsContent = () => {
         <OptionsSettings />
       </div>
       <div className={styles.column}>
-        <h3>Navigation</h3>
+        <h3>General</h3>
         <div className={styles.buttonColumn}>
-          {/*<button className={styles.buttonDiv} onClick={clickPlayLegacyHandler}>
-            Legacy Talishar Client
-          </button> */}
           <button
             className={styles.buttonDiv}
             onClick={handleClickMainMenuButton}
           >
-            Home Page
+            Homepage
           </button>
           {playerID !== 3 && ( // If not a spectator then can change options
             <>
@@ -141,7 +138,14 @@ const OptionsContent = () => {
               >
                 Report Player
               </button>
-              <button
+            </>
+          )}
+        </div>
+        <h3>Gamestate Correction</h3>
+        <div className={styles.buttonColumn}>
+          {playerID !== 3 && ( // If not a spectator then can change options
+            <>
+               <button
                 className={styles.buttonDiv}
                 onClick={clickUndoButtonHandler}
               >
@@ -214,7 +218,7 @@ export default function OptionsMenu() {
         >
           <div className={styles.optionsTitleContainer}>
             <hgroup className={styles.optionsTitle}>
-              <h2 className={styles.title}>Main Options</h2>
+              <h2 className={styles.title}>Settings Menu</h2>
               <h4></h4>
             </hgroup>
             <div
@@ -222,7 +226,7 @@ export default function OptionsMenu() {
               onClick={closeOptions}
               data-testid="close-button"
             >
-              <FaTimes title="close options menu" />
+              <FaTimes title="Close Settings Menu" />
             </div>
           </div>
           <OptionsContent />

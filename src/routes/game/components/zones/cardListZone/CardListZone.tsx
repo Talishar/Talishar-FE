@@ -45,7 +45,7 @@ export const CardListZone = () => {
               <h3 className={styles.title}>{cardList?.name}</h3>
             </div>
             <div className={styles.cardListCloseIcon} onClick={closeCardList}>
-              <FaTimes title="close dialog" />
+              <FaTimes title="Close Dialog" />
             </div>
           </div>
           {cardList?.apiCall ? (
