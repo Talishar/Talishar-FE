@@ -264,6 +264,7 @@ const CreateGame = () => {
                   }
                 />
                 Single Player 🤖
+                <div>&nbsp;</div>
               </label>
               {isLoggedIn && (isPatron == "1") && (
                 <label>
