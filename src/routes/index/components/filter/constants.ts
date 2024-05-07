@@ -30,6 +30,9 @@ export const youngToOldHeroesMapping: { [key: string]: string } = {
   HVY047: 'HVY048', // Victor Goldmane
   HVY090: 'HVY091', // Kassai
   HVY092: 'HVY093', // Olympia
+  MST001: 'MST002', // Nuu
+  MST025: 'MST026', // Enigma
+  MST046: 'MST047', // Zen
 };
 
 export const HEROES_OF_RATHE: { value: string; label: string }[] = [
@@ -88,4 +91,7 @@ export const HEROES_OF_RATHE: { value: string; label: string }[] = [
   { value: 'HVY090', label: 'Kassai' },
   { value: 'HVY092', label: 'Olympia' },  
   { value: 'JDG024', label: 'Brutus, Summa Rudis' },
+  { value: 'MST001', label: 'Nuu' },
+  { value: 'MST025', label: 'Enigma' },
+  { value: 'MST046', label: 'Zen' },
 ];
