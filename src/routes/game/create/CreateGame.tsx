@@ -115,14 +115,17 @@ const CreateGame = () => {
     <div>
       <article className={styles.formContainer}>
         <h3>Create New Game</h3>
+{/*         <p className={styles.fieldError}>
+          <FaExclamationCircle /> Warning - In 1h at 11:00 AM CET a push for the new MST keyword <b>Cloaked</b> will be pushed to the live servers. The games in progress will crash and new games will be required.
+          </p> */}
         <p>
-          <small>
-            Talishar is an open-source, fan-made platform not associated with
-            LSS. It may not be a completely accurate representation of the Rules
-            as Written. If you have questions about interactions or rulings,
-            please contact the judge community for clarification.
-          </small>
-        </p>
+            <small className={styles.disclaimer}>
+              Talishar is an open-source, fan-made platform not associated with
+              LSS. It may not be a completely accurate representation of the Rules
+              as written. If you have questions about interactions or rulings,
+              please contact the judge community for clarification.
+            </small>
+          </p>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className={styles.formInner}>
             {isLoggedIn && !isLoading && (
@@ -160,7 +163,7 @@ const CreateGame = () => {
             />
             <fieldset>
               <label>
-                Deck Link:
+                Deck Link
                 <input
                   type="text"
                   id="fabdb"
@@ -264,8 +267,8 @@ const CreateGame = () => {
                   }
                 />
                 Single Player 🤖
+                <div>&nbsp;</div>
               </label>
-              
               {isLoggedIn && (isPatron == "1") && (
                 <label>
                   AI Deck

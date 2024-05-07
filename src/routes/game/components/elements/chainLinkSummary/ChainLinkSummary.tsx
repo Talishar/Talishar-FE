@@ -143,7 +143,7 @@ const ChainLinkSummary = ({
             <h3 className={styles.title}>{'Chain Link Summary'}</h3>
           </div>
           <div className={styles.cardListCloseIcon} onClick={closeCardList}>
-            <FaTimes title="close dialog" />
+            <FaTimes title="Close Dialog" />
           </div>
         </div>
         {content}

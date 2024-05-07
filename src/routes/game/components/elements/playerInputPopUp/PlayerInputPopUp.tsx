@@ -131,7 +131,7 @@ export default function PlayerInputPopUp() {
         </div>
         {inputPopUp.popup?.canClose ? (
           <div className={styles.inputPopUpCloseIcon} onClick={onPassTurn}>
-            <FaTimes title="close popup" />
+            <FaTimes title="Close Popup" />
           </div>
         ) : null}
       </div>

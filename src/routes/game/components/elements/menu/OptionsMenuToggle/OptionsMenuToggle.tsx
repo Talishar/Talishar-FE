@@ -31,7 +31,7 @@ function OptionsMenuToggle() {
         aria-label="Toggle main menu"
         title="Options Menu"
         onClick={() => toggleMenu()}
-        data-tooltip="Options Menu"
+        data-tooltip="Settings Menu"
         data-placement="bottom"
       >
         <GiHamburgerMenu aria-hidden="true" fontSize={'1.75em'} />

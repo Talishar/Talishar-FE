@@ -183,7 +183,7 @@ const OptionsSettings = () => {
         </fieldset>
         <fieldset>
           <legend>
-            <strong>Skip overrides</strong>
+            <strong>Skip Overrides</strong>
           </legend>
           <label className={styles.optionLabel}>
             <input
@@ -331,7 +331,7 @@ const OptionsSettings = () => {
                 })
               }
             />
-            Enable Manual Mode (for board state corrections)
+            Enable Manual Mode
           </label>
           <label className={styles.optionLabel}>
             <input

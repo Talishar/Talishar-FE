@@ -28,7 +28,7 @@ export default function CardPopUp({
   const [windowWidth, windowHeight] = useWindowDimensions();
 
   const handleMouseEnter = () => {
-    if (ref.current === null || isHidden === true || cardNumber === "ENDSTEP" || cardNumber === "ENDTURN" || cardNumber === "RESUMETURN" || cardNumber === "PHANTASM" || cardNumber === "MIRAGE" || cardNumber === "FINALIZECHAINLINK" || cardNumber === "DEFENDSTEP" || cardNumber == "ATTACKSTEP" || cardNumber == "CardBack" || cardNumber == "NONE00") {
+    if (ref.current === null || isHidden === true || cardNumber === "ENDSTEP" || cardNumber === "ENDTURN" || cardNumber === "RESUMETURN" || cardNumber === "PHANTASM" || cardNumber === "MIRAGE" || cardNumber === "FINALIZECHAINLINK" || cardNumber === "DEFENDSTEP" || cardNumber == "ATTACKSTEP" || cardNumber == "CardBack" || cardNumber == "NONE00" || cardNumber == "BLOODDEBT") {
       return;
     }
     const rect = ref.current.getBoundingClientRect();
