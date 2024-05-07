@@ -18,7 +18,7 @@ import OptionsSettings from './OptionsSettings';
 import { shallowEqual } from 'react-redux';
 
 const OptionsContent = () => {
-  const { gameID, playerID, isPrivateLobby } = useAppSelector(
+  const { gameID, playerID } = useAppSelector(
     getGameInfo,
     shallowEqual
   );
@@ -80,9 +80,7 @@ const OptionsContent = () => {
   };
 
   const handleAllowSpectators = () => {
-    dispatch(
-      submitButton({ button: { mode: PROCESS_INPUT.ALLOW_SPECTATORS } })
-    );
+    dispatch(submitButton({ button: { mode: PROCESS_INPUT.ALLOW_SPECTATORS } }));
     setAllowSpectator(true);
   };
 
@@ -168,7 +166,7 @@ const OptionsContent = () => {
         </div>
         <h3>Invite Spectators</h3>
         <div className={styles.buttonColumn}>
-          {isPrivateLobby && !allowSpectator ? (
+          {!allowSpectator ? (
             <>
               <button
                 style={{ marginTop: '0.5em' }}
