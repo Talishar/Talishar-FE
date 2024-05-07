@@ -32,7 +32,7 @@ export const youngToOldHeroesMapping: { [key: string]: string } = {
   HVY092: 'HVY093', // Olympia
   MST001: 'MST002', // Nuu
   MST025: 'MST026', // Enigma
-  MST045: 'MST047', // Zen
+  MST046: 'MST047', // Zen
 };
 
 export const HEROES_OF_RATHE: { value: string; label: string }[] = [
