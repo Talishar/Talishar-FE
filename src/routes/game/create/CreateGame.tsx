@@ -114,9 +114,9 @@ const CreateGame = () => {
     <div>
       <article className={styles.formContainer}>
         <h3>Create New Game</h3>
-{/*         <p className={styles.fieldError}>
-          <FaExclamationCircle /> Warning - SOON! an update will be pushed to the live servers. The games in progress will crash and new games will be required.
-          </p> */}
+       <p className={styles.fieldError}>
+          <FaExclamationCircle /> PSA - We are currently experiencing some issues. The servers should be back online in couple of hours.<br></br> Sorry for the inconvenience.
+          </p>
         <p>
             <small className={styles.disclaimer}>
               Talishar is an open-source, fan-made platform not associated with
