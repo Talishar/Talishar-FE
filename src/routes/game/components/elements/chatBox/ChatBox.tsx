@@ -51,7 +51,6 @@ export default function ChatBox() {
       return message
         .replace('Player 1', `<b>${amIPlayerOne ? myName.substring(0, 15) : oppName.substring(0, 15)}</b>`)
         .replace('Player 2', `<b>${amIPlayerOne ? oppName.substring(0, 15) : myName.substring(0, 15)}</b>`)
-        .replace('-', `Practice Dummy`);
     });
 
   useEffect(() => {
