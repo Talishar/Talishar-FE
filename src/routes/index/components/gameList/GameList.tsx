@@ -109,7 +109,8 @@ const GameList = () => {
   };
 
   const otherFormats = [
-    GAME_FORMAT.OPEN_FORMAT,
+    GAME_FORMAT.OPEN_FORMAT_CC,
+    GAME_FORMAT.OPEN_FORMAT_BLITZ,
     GAME_FORMAT.COMMONER,
     GAME_FORMAT.CLASH,
     GAME_FORMAT.SEALED,

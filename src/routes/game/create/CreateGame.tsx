@@ -42,12 +42,11 @@ const CreateGame = () => {
       deck: '',
       fabdb: searchParams.get('fabdb') ?? '',
       deckTestMode: false,
-      format:
-        searchParams.get('format') ?? isLoggedIn
-          ? data?.lastFormat !== undefined
+      format: searchParams.get('format') ?? isLoggedIn 
+         ? data?.lastFormat !== undefined
             ? data.lastFormat
             : GAME_FORMAT.CLASSIC_CONSTRUCTED
-          : GAME_FORMAT.OPEN_FORMAT,
+          : GAME_FORMAT.OPEN_FORMAT_CC,
       visibility:
         searchParams.get('visibility') ??
         (isLoggedIn
@@ -235,8 +234,11 @@ const CreateGame = () => {
                 <option value={GAME_FORMAT.CLASH}>Clash</option>
                 <option value={GAME_FORMAT.LLCC}>Living Legend CC</option>
                 <option value={GAME_FORMAT.LLBLITZ}>Living Legend Blitz</option>
-                <option value={GAME_FORMAT.OPEN_FORMAT}>
-                  Open Format (no restrictions!)
+                <option value={GAME_FORMAT.OPEN_FORMAT_CC}>
+                  Open Format CC (no restrictions!)
+                </option>
+                <option value={GAME_FORMAT.OPEN_FORMAT_BLITZ}>
+                  Open Format Blitz (no restrictions!)
                 </option>
               </select>
             </label>

@@ -162,7 +162,8 @@ const Lobby = () => {
     case GAME_FORMAT.DRAFT:
       deckSize = 30;
       break;
-    case GAME_FORMAT.OPEN_FORMAT:
+    case GAME_FORMAT.OPEN_FORMAT_CC:
+    case GAME_FORMAT.OPEN_FORMAT_BLITZ:
       deckSize = 0;
       break;
     default:
@@ -225,7 +226,7 @@ const Lobby = () => {
 
   console.log(gameLobby?.chatInvited + ' ' + showChatModal);
 
-  const needToDoDisclaimer = !acceptedDisclaimer && data.format === GAME_FORMAT.OPEN_FORMAT;
+  const needToDoDisclaimer = !acceptedDisclaimer && (data.format === GAME_FORMAT.OPEN_FORMAT_CC || data.format === GAME_FORMAT.OPEN_FORMAT_BLITZ);
   //const needToDoDisclaimer = false;
 
   const handleFormSubmission = async (values: DeckResponse) => {

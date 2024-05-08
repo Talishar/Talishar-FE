@@ -126,13 +126,14 @@ export const GAME_FORMAT = {
   COMPETITIVE_CC: 'compcc',
   BLITZ: 'blitz',
   COMPETITIVE_BLITZ: 'compblitz',
-  OPEN_FORMAT: 'livinglegendscc',
+  OPEN_FORMAT_CC: 'openformatcc',
   COMMONER: 'commoner',
   CLASH: 'clash',
   SEALED: 'sealed',
   DRAFT: 'draft',
   LLCC: 'llcc',
-  LLBLITZ: 'llblitz'
+  LLBLITZ: 'llblitz',
+  OPEN_FORMAT_BLITZ: 'openformatblitz'
 };
 
 export const GAME_FORMAT_NUMBER = {
@@ -140,13 +141,14 @@ export const GAME_FORMAT_NUMBER = {
   COMPETITIVE_CC: '1',
   BLITZ: '2',
   COMPETITIVE_BLITZ: '3',
-  OPEN_FORMAT: '4',
+  OPEN_FORMAT_CC: '4',
   COMMONER: '5',
   CLASH: '-1',
   SEALED: '6',
   DRAFT: '7',
   LLCC: '8',
-  LLBLITZ: '9'
+  LLBLITZ: '9',
+  OPEN_FORMAT_BLITZ: '10'
 };
 
 export const AI_DECK = {
