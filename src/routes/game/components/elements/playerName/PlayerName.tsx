@@ -51,7 +51,10 @@ export default function PlayerName(player: Player) {
           title="I am a patron of PvtVoid!"
         />
       ) : null}
-      { playerName?.substring(0, 30) }
+      {
+        playerName?.substring(0, 30)
+        .replace('-', `Practice Dummy`)
+      }
       
     </div>
   );
