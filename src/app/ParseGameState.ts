@@ -46,7 +46,7 @@ function ParseEquipment(input: any) {
     HeadEq: undefined,
     ChestEq: undefined,
     GlovesEq: undefined,
-    FeetEq: undefined,
+    LegsEq: undefined,
     WeaponLEq: undefined,
     Hero: undefined,
     WeaponREq: undefined,
@@ -104,7 +104,7 @@ function ParseEquipment(input: any) {
             result.GlovesEq = ParseCard(cardObj);
             break;
           case 'Legs':
-            result.FeetEq = ParseCard(cardObj);
+            result.LegsEq = ParseCard(cardObj);
             break;
           case 'Off-Hand': // make assumption we won't have two weapons AND an off-hand
           case 'Quiver': // make assumption that you can only have a 2H weapon AND a quiver

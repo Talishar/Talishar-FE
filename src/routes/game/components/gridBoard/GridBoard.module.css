@@ -16,14 +16,14 @@
     '. . . . . . . . . . .'
     '.  pTwoHead . . . pTwoArsenal pTwoArsenal pTwoArsenal pTwoCount pTwoBanish .'
     '. pTwoChest pTwoHands . pTwoWeaponLZone pTwoHero pTwoWeaponRZone . pTwoPitch pTwoDeck .'
-    '. pTwoFeet pTwoPermanents pTwoPermanents pTwoPermanents pTwoPermanents pTwoPermanents pTwoPermanents healthWidget pTwoGraveyard .'
+    '. pTwoLegs pTwoPermanents pTwoPermanents pTwoPermanents pTwoPermanents pTwoPermanents pTwoPermanents healthWidget pTwoGraveyard .'
     '. . combatChain combatChain combatChain combatChain combatChain combatChain healthWidget . .'
     '. . combatChain combatChain combatChain combatChain combatChain combatChain healthWidget . .'
     '. . combatChain combatChain combatChain combatChain combatChain combatChain healthWidget . .'
     '. . combatChain combatChain combatChain combatChain combatChain combatChain healthWidget . .'
     '. pOneHead pOnePermanents pOnePermanents pOnePermanents pOnePermanents pOnePermanents pOnePermanents healthWidget pOneGraveyard .'
     '. pOneChest pOneHands . pOneWeaponLZone pOneHero pOneWeaponRZone . pOnePitch pOneDeck .'
-    '. pOneFeet . . . pOneArsenal pOneArsenal pOneArsenal pOneCount pOneBanish .'
+    '. pOneLegs . . . pOneArsenal pOneArsenal pOneArsenal pOneCount pOneBanish .'
     '. . . . . . . . . . .';
 }
 
@@ -40,8 +40,8 @@
   z-index: 5;
 }
 
-.pTwoFeet {
-  grid-area: pTwoFeet;
+.pTwoLegs {
+  grid-area: pTwoLegs;
   aspect-ratio: 1;
 }
 
@@ -122,8 +122,8 @@
   pointer-events: none;
 }
 
-.pOneFeet {
-  grid-area: pOneFeet;
+.pOneLegs {
+  grid-area: pOneLegs;
   aspect-ratio: 1;
 }
 

@@ -16,7 +16,7 @@ import WeaponRZone from '../zones/weaponRZone/WeaponRZone';
 import HeroZone from '../zones/heroZone/HeroZone';
 import PitchZone from '../zones/pitchZone/PitchZone';
 import DeckZone from '../zones/deckZone/DeckZone';
-import FeetEqZone from '../zones/feetEqZone/FeetEqZone';
+import LegsEqZone from '../zones/legsEqZone/LegsEqZone';
 import ArsenalZone from '../zones/arsenalZone/ArsenalZone';
 import ZoneCounts from '../zones/zoneCountsZone/ZoneCounts';
 import BanishZone from '../zones/banishZone/BanishZone';
@@ -49,7 +49,7 @@ export default function PlayerBoardGrid() {
         <WeaponRZone isPlayer />
         <PitchZone isPlayer />
         <DeckZone isPlayer />
-        <FeetEqZone isPlayer />
+        <LegsEqZone isPlayer />
         <ArsenalZone isPlayer />
         <ZoneCounts isPlayer />
         <BanishZone isPlayer />

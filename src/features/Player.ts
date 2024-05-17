@@ -4,7 +4,7 @@ export default interface Player {
   HeadEq?: Card;
   ChestEq?: Card;
   GlovesEq?: Card;
-  FeetEq?: Card;
+  LegsEq?: Card;
   WeaponLEq?: Card;
   Hero?: Card;
   WeaponREq?: Card;

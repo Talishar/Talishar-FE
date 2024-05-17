@@ -18,7 +18,7 @@ export const ChestEqZone = React.memo((prop: Displayrow) => {
 
   return (
     <div className={styles.chestZone}>
-      <CardDisplay card={cardToDisplay} />
+      <CardDisplay card={cardToDisplay} isPlayer={isPlayer}/>
     </div>
   );
 });

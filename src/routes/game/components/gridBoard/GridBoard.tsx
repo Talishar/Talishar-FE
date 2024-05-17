@@ -4,7 +4,7 @@ import ArsenalZone from '../zones/arsenalZone/ArsenalZone';
 import BanishZone from '../zones/banishZone/BanishZone';
 import ChestEqZone from '../zones/chestEqZone/ChestEqZone';
 import DeckZone from '../zones/deckZone/DeckZone';
-import FeetEqZone from '../zones/feetEqZone/FeetEqZone';
+import LegsEqZone from '../zones/legsEqZone/LegsEqZone';
 import GraveyardZone from '../zones/graveyardZone/GraveyardZone';
 import GlovesEqZone from '../zones/glovesEqZone';
 import HeadEqZone from '../zones/headEqZone/HeadEqZone';
@@ -29,8 +29,8 @@ const GridBoard = () => {
   return (
     <>
       <div className={styles.gameBoardGrid}>
-        <div className={styles.pTwoFeet}>
-          <FeetEqZone isPlayer={false} />
+        <div className={styles.pTwoLegs}>
+          <LegsEqZone isPlayer={false} />
         </div>
         <div className={styles.pTwoPermanents}>
           <PermanentsZone isPlayer={false} />
@@ -113,8 +113,8 @@ const GridBoard = () => {
         <div className={styles.pOnePermanents}>
           <PermanentsZone isPlayer={true} />
         </div>
-        <div className={styles.pOneFeet}>
-          <FeetEqZone isPlayer={true} />
+        <div className={styles.pOneLegs}>
+          <LegsEqZone isPlayer={true} />
         </div>
         <Playmat isPlayer={false} />
         <Playmat isPlayer={true} />
