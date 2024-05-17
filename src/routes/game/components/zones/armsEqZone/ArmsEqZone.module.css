@@ -1,4 +1,4 @@
-.glovesZone {
+.armsZone {
   border-radius: 0.5em;
   background: rgba(50, 50, 50, 0.5);
   color: var(--white);
@@ -6,7 +6,7 @@
   justify-content: center;
   align-content: center;
   align-items: center;
-  grid-area: gloves;
+  grid-area: arms;
   min-width: 100%;
   min-height: 100%;
 }

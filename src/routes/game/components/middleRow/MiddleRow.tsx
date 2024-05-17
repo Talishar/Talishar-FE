@@ -1,7 +1,7 @@
 import React from 'react';
 import Player from '../../../../interface/Player';
 import ChestEqZone from '../zones/chestEqZone/ChestEqZone';
-import GlovesEqZone from '../zones/glovesEqZone/GlovesEqZone';
+import ArmsEqZone from '../zones/armsEqZone/ArmsEqZone';
 import HeroZone from '../zones/heroZone/HeroZone';
 import WeaponLZone from '../zones/weaponLZone/WeaponLZone';
 import WeaponRZone from '../zones/weaponRZone/WeaponRZone';
@@ -14,7 +14,7 @@ export default function MiddleRow(props: Player) {
     <div className={styles.middleRow}>
       <div className={styles.groupL}>
         <ChestEqZone DisplayRow="middleRow" isPlayer={props.isPlayer} />
-        <GlovesEqZone DisplayRow="middleRow" isPlayer={props.isPlayer} />
+        <ArmsEqZone DisplayRow="middleRow" isPlayer={props.isPlayer} />
       </div>
       <div className={styles.groupM}>
         <WeaponLZone DisplayRow="middleRow" isPlayer={props.isPlayer} />

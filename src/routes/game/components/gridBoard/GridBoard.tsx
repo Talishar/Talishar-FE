@@ -6,7 +6,7 @@ import ChestEqZone from '../zones/chestEqZone/ChestEqZone';
 import DeckZone from '../zones/deckZone/DeckZone';
 import LegsEqZone from '../zones/legsEqZone/LegsEqZone';
 import GraveyardZone from '../zones/graveyardZone/GraveyardZone';
-import GlovesEqZone from '../zones/glovesEqZone';
+import ArmsEqZone from '../zones/armsEqZone/ArmsEqZone';
 import HeadEqZone from '../zones/headEqZone/HeadEqZone';
 import HeroZone from '../zones/heroZone/HeroZone';
 import PermanentsZone from '../zones/permanentsZone/PermanentsZone';
@@ -48,7 +48,7 @@ const GridBoard = () => {
           <ChestEqZone isPlayer={false} />
         </div>
         <div className={styles.pTwoHands}>
-          <GlovesEqZone isPlayer={false} />
+          <ArmsEqZone isPlayer={false} />
         </div>
         <div className={styles.pTwoWeaponLZone}>
           <WeaponLZone isPlayer={false} />
@@ -96,7 +96,7 @@ const GridBoard = () => {
           <WeaponLZone isPlayer={true} />
         </div>
         <div className={styles.pOneHands}>
-          <GlovesEqZone isPlayer={true} />
+          <ArmsEqZone isPlayer={true} />
         </div>
         <div className={styles.pOneChest}>
           <ChestEqZone isPlayer={true} />

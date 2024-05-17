@@ -3,7 +3,7 @@ import { Card } from './Card';
 export default interface Player {
   HeadEq?: Card;
   ChestEq?: Card;
-  GlovesEq?: Card;
+  ArmsEq?: Card;
   LegsEq?: Card;
   WeaponLEq?: Card;
   Hero?: Card;

@@ -45,7 +45,7 @@ function ParseEquipment(input: any) {
   const result: Player = {
     HeadEq: undefined,
     ChestEq: undefined,
-    GlovesEq: undefined,
+    ArmsEq: undefined,
     LegsEq: undefined,
     WeaponLEq: undefined,
     Hero: undefined,
@@ -101,7 +101,7 @@ function ParseEquipment(input: any) {
             result.ChestEq = ParseCard(cardObj);
             break;
           case 'Arms':
-            result.GlovesEq = ParseCard(cardObj);
+            result.ArmsEq = ParseCard(cardObj);
             break;
           case 'Legs':
             result.LegsEq = ParseCard(cardObj);

@@ -10,7 +10,7 @@ import HeadEqZone from '../zones/headEqZone/HeadEqZone';
 import PermanentsZone from '../zones/permanentsZone/PermanentsZone';
 import GraveyardZone from '../zones/graveyardZone/GraveyardZone';
 import ChestEqZone from '../zones/chestEqZone/ChestEqZone';
-import GlovesEqZone from '../zones/glovesEqZone/GlovesEqZone';
+import ArmsEqZone from '../zones/armsEqZone/ArmsEqZone';
 import WeaponLZone from '../zones/weaponLZone/WeaponLZone';
 import WeaponRZone from '../zones/weaponRZone/WeaponRZone';
 import HeroZone from '../zones/heroZone/HeroZone';
@@ -43,7 +43,7 @@ export default function PlayerBoardGrid() {
         <PermanentsZone isPlayer />
         <GraveyardZone isPlayer />
         <ChestEqZone isPlayer />
-        <GlovesEqZone isPlayer />
+        <ArmsEqZone isPlayer />
         <WeaponLZone isPlayer />
         <HeroZone isPlayer />
         <WeaponRZone isPlayer />

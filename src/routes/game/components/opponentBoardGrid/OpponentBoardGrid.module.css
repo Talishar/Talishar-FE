@@ -6,7 +6,7 @@
   padding: 1vh;
   grid-template-areas:
     'legs . . arsenal arsenal arsenal . zonecounts banish'
-    'chest gloves . weaponl hero weaponr . pitch deck'
+    'chest arms . weaponl hero weaponr . pitch deck'
     'head permanents permanents permanents permanents permanents permanents permanents graveyard';
 }
 
