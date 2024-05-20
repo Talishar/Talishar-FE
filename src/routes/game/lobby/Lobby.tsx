@@ -228,6 +228,7 @@ const Lobby = () => {
 
   const needToDoDisclaimer = !acceptedDisclaimer && (data.format === GAME_FORMAT.OPEN_FORMAT_CC || data.format === GAME_FORMAT.OPEN_FORMAT_BLITZ);
   //const needToDoDisclaimer = false;
+  const leaveLobby = classNames(styles.buttonClass, 'outline');
 
   const handleFormSubmission = async (values: DeckResponse) => {
     setIsSubmitting(true);
@@ -322,7 +323,7 @@ const Lobby = () => {
                   onClick={() => {
                     navigate('/');
                   }}
-                  className="outline"
+                  className={leaveLobby}
                 >
                   No Thanks!
                 </button>

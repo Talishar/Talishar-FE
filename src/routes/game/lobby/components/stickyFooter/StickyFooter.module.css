@@ -36,7 +36,16 @@
 
 .buttonClass {
   margin-bottom: 0;
+  font-weight: 500;
 }
+
+.buttonClass:hover {
+  border-color: black;
+  background-color:var(--alarm);
+  color: black;
+  transition: 0.7s;
+}
+
 
 .alarm {
   color: var(--alarm);

@@ -175,6 +175,17 @@ button {
   margin-right: 30%;
 }
 
+.buttonClass {
+  color: var(--primary);
+}
+
+.buttonClass:hover {
+  border-color: black;
+  background-color:var(--alarm);
+  color: black;
+  transition: 0.7s;
+}
+
 .disclaimerArticles {
   padding-bottom: 1em;
 }
