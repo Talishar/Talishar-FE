@@ -23,6 +23,7 @@ export const mockGetNextTurn3 = {
     fusion: false,
     piercing: false,
     tower: false,
+    combo: false,
     totalAttack: 0,
     totalDefence: 0
   },
