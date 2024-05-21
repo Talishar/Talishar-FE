@@ -32,7 +32,7 @@ const StickyFooter = ({
   };
 
   const dynamicContainer = classNames(styles.dynamicContainer, 'container');
-  const leaveLobby = classNames(styles.buttonClass, 'outline secondary');
+  const leaveLobby = classNames(styles.buttonClassLeave, 'outline secondary');
 
   return (
     

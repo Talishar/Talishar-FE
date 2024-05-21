@@ -39,7 +39,12 @@
   font-weight: 500;
 }
 
-.buttonClass:hover {
+.buttonClassLeave {
+  margin-bottom: 0;
+  font-weight: 500;
+}
+
+.buttonClassLeave:hover {
   border-color: black;
   background-color:var(--alarm);
   color: black;
