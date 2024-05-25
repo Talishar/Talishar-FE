@@ -35,6 +35,7 @@ export interface CardResult {
   charged: number;
   cardName: string;
   pitchValue: number;
+  katsuDiscard: number;
 }
 
 export interface TurnResult {
@@ -74,10 +75,14 @@ const EndGameStats = (data: EndGameData) => {
     numCharged += data.cardResults[i].charged;
   }
 
+  let numKatsuDiscard: number = 0;
+  for (let i = 0; i < data.cardResults.length; i++) {
+    numKatsuDiscard += data.cardResults[i].katsuDiscard;
+  }
+
   return (
     <div className={styles.endGameStats} data-testid="test-stats">
       <EndGameMenuOptions />
-      {!isPatron && <div className={styles.advancedStatsBanner}>Support our <a href='https://www.patreon.com/talishar' target='_blank'>patreon</a> to see <a href='https://www.patreon.com/posts/100047090' target='_blank'>advanced stats!</a></div>}
       <div className={styles.twoColumn}>
         <div>
           <h2>Card Play Stats</h2>
@@ -89,8 +94,9 @@ const EndGameStats = (data: EndGameData) => {
                 <th className={styles.headersStats}>Played</th>
                 <th className={styles.headersStats}>Blocked</th>
                 <th className={styles.headersStats}>Pitched</th>
-                {isPatron && <th className={styles.headersStats}>Times Hit</th>}
-                {isPatron && numCharged > 0 && <th className={styles.headersStats}>Times Charged</th>}
+                <th className={styles.headersStats}>Times Hit</th>
+                {numCharged > 0 && <th className={styles.headersStats}>Times Charged</th>}
+                {numKatsuDiscard > 0 && <th className={styles.headersStats}>Times Katsu Discarded</th>}
               </tr>
             </thead>
             <tbody>
@@ -119,8 +125,9 @@ const EndGameStats = (data: EndGameData) => {
                       <td className={styles.played}>{result.played}</td>
                       <td className={styles.blocked}>{result.blocked}</td>
                       <td className={styles.pitched}>{result.pitched}</td>
-                      {isPatron && <th className={styles.cardStat}>{result.hits}</th>}
-                      {isPatron && numCharged > 0 && <th className={styles.cardStat}>{result.charged}</th>}
+                      <th className={styles.cardStat}>{result.hits}</th>
+                      {numCharged > 0 && <th className={styles.cardStat}>{result.charged}</th>}
+                      {numKatsuDiscard > 0 && <th className={styles.cardStat}>{result.katsuDiscard}</th>}
                     </tr>
                   );
                 })}
