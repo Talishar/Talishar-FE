@@ -309,7 +309,7 @@ const Lobby = () => {
                   interactions than usual, since there are no official release
                   notes from Legend Story Studios yet.
                 </p>
-                <div className={styles.disclaimerButtons}>
+                <div className={styles.disclaimerAcceptButtons}>
                 <button
                   onClick={() => {
                     setAcceptedDisclaimer(true);
