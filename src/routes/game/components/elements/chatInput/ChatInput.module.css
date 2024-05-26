@@ -58,6 +58,8 @@
   max-height: 95dvh;
   max-width: 50vw;
   max-width: 50dvw;
+  border-radius: 15px;
+  overflow-y: auto;
 }
 
 .popOver button:last-child {

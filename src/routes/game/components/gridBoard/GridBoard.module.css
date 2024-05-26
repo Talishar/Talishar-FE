@@ -8,13 +8,13 @@
     5px repeat(3, var(--card-size)) 1fr 5px 5px 1fr repeat(3, var(--card-size))
     5px;
   width: 100%;
-  height: 92vh;
-  height: 92dvh;
+  height: 90vh;
+  height: 90dvh;
   gap: 1dvh;
   padding: 1vh;
   grid-template-areas:
     '. . . . . . . . . . .'
-    '.  pTwoHead . . . pTwoArsenal pTwoArsenal pTwoArsenal pTwoCount pTwoBanish .'
+    '. pTwoHead . . . pTwoArsenal pTwoArsenal pTwoArsenal pTwoCount pTwoBanish .'
     '. pTwoChest pTwoHands . pTwoWeaponLZone pTwoHero pTwoWeaponRZone . pTwoPitch pTwoDeck .'
     '. pTwoLegs pTwoPermanents pTwoPermanents pTwoPermanents pTwoPermanents pTwoPermanents pTwoPermanents healthWidget pTwoGraveyard .'
     '. . combatChain combatChain combatChain combatChain combatChain combatChain healthWidget . .'

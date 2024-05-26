@@ -9,4 +9,5 @@
 .img {
   max-width: 95%;
   max-height: 100%;
+  border-radius: 6px;
 }
