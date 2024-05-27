@@ -46,8 +46,6 @@ const StickyFooter = ({
             className={styles.buttonClass}
             onClick={handleClipboardCopy}
             type="button"
-            data-tooltip="Copy invite link"
-            data-placement="right"
           >
             <div 
               className={styles.icon}>
@@ -72,8 +70,8 @@ const StickyFooter = ({
             className={styles.buttonClass}
             type="submit"
             disabled={!errors || !submitSideboard}
-            data-tooltip="Once you submit you can't change cards!"
-            data-placement="left"
+            data-tooltip="Once submitted you can't change your deck!"
+            data-placement="right"
           >
             Submit Deck
           </button>

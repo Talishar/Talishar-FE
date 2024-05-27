@@ -14,3 +14,9 @@
 .matchups {
   width: 100%;
 }
+
+.matchups:hover {
+  width: 110%;
+  transition: width .1s;
+  -webkit-transition: width .1s; /* Safari */
+}
