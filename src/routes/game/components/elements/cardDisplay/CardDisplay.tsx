@@ -106,7 +106,7 @@ export const CardDisplay = (prop: CardProp) => {
             return (
               <motion.div
                 style={{
-                  top: `calc(-0.2 * ${ix + 1} * var(--card-size))`,
+                  top: `calc(-0.15 * ${ix + 1} * var(--card-size))`,
                   zIndex: `-${ix + 1}`
                 }}
                 className={styles.subCard}

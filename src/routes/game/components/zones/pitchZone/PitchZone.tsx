@@ -57,15 +57,15 @@ export default function PitchZone(prop: Displayrow) {
         {pitchOrder.map((card, ix) => {
           return (
             <motion.div
-              style={{ top: `-${2 * ix}em`, zIndex: `-${ix + 1}` }}
+              style={{ top: `-${1.5 * ix}em`, zIndex: `-${ix + 1}` }}
               className={styles.pitchCard}
-              initial={{ y: `${2 * ix}em` }}
+              initial={{ y: `${1.5 * ix}em` }}
               animate={{ y: 0 }}
               transition={{ ease: 'easeIn', duration: 0.2 }}
               exit={{ opacity: 0 }}
               key={`${card.cardNumber}-${ix}`}
             >
-              <CardDisplay card={card} num={ix} preventUseOnClick />
+              <CardDisplay card={ card } preventUseOnClick />
             </motion.div>
           );
         })}
