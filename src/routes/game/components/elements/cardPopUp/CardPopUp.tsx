@@ -30,7 +30,7 @@ export default function CardPopUp({
   const handleMouseEnter = () => {
     if (ref.current === null 
       || isHidden === true 
-      || cardNumber === "ENDSTEP" 
+      || cardNumber === "ENDPHASE" 
       || cardNumber === "ENDTURN" 
       || cardNumber === "RESUMETURN" 
       || cardNumber === "PHANTASM" 
