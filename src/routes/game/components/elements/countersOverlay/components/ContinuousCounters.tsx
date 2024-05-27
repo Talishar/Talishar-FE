@@ -19,6 +19,7 @@ const includedCounters = [
   'flow',
   'frost',
   'balance',
+  'bind',
   'aim'
 ];
 
@@ -131,6 +132,14 @@ export const ContinuousCounters = (props: Props) => {
           title={`${countersMap?.balance} balance counter(s)`}
         >
           <div>{countersMap?.balance}</div>
+        </div>
+      )}
+      {!!Number(countersMap?.bind) && (
+        <div
+          className={styles.bindCounter}
+          title={`${countersMap?.bind} bind counter(s)`}
+        >
+          <div>{countersMap?.bind}</div>
         </div>
       )}
       {!!Number(countersMap?.aim) && (
