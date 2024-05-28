@@ -38,6 +38,7 @@
   align-items: center;
   cursor: pointer;
   user-select: none;
+  font-size: 1.15em;
 }
 
 .isRed {
