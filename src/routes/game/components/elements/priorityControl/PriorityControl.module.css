@@ -1,0 +1,47 @@
+.btn {
+  margin-bottom: 0;
+  font-weight: 400;
+  text-align: center;
+  vertical-align: middle;
+  touch-action: manipulation;
+  padding: 0.5em 0.6em;
+  font-size: 1em;
+  background-color: var(--primary);
+  color: black;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  min-width: 4.5vh;
+  height: 3.5vh;
+  border-radius: 0.2em;
+  border: 1px solid var(--primary);
+  flex-basis: auto;
+}
+
+.btn:hover {
+  background-color: black;
+  color: var(--primary);
+  border: 1px solid var(--primary);
+  cursor: pointer;
+}
+
+.menuList {
+  margin-top: 0.5em;
+  display: flex;
+  gap: 0.5em;
+  justify-content: center;
+}
+
+.buttonActive {
+  background-color: var(--alarm);
+  border-color: black;
+  color: var(--snow);
+}
+
+.buttonActive:hover {
+  background-color: var(--snow);
+  color: var(--alarm);
+  border: 1px solid var(--alarm);
+  cursor: pointer;
+}

@@ -1,4 +1,5 @@
 import React from 'react';
+import PriorityControl from '../elements/priorityControl/PriorityControl';
 import LastPlayed from '../elements/lastPlayed/LastPlayed';
 import Menu from '../elements/menu/Menu';
 import TurnNumber from '../elements/turnNumber/TurnNumber';
@@ -21,7 +22,8 @@ export default function RightColumn() {
           <Menu />
           <TurnNumber />
           <LastPlayed />
-          {isStreamerMode ? <StreamerBox /> : <PhaseTracker />}
+          <PriorityControl />
+          {isStreamerMode ?? <StreamerBox />}
         </div>
         <div className={styles.bottomGroup}>
           <ChatBox />
