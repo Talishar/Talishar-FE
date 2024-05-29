@@ -8,6 +8,7 @@ import styles from './PriorityControl.module.css';
 import { DEFAULT_SHORTCUTS, PROCESS_INPUT } from 'appConstants';
 import SkipAttackReactionsToggle from './SkipAttackReactions/SkipAttackReactionsToggle';
 import SkipDefenseReactionsToggle from './SkipDefenseReactions/SkipDefenseReactionsToggle';
+import SkipAllAttacksToggle from './SkipAllAttacks/SkipAllAttacksToggle';
 import useShortcut from 'hooks/useShortcut';
 
 function FullScreenButton() {
@@ -63,11 +64,11 @@ export default function Menu() {
   return (
     <div>
       <div className={styles.menuList}>
-      {/*!TODO*/}      
-      </div>
-      <div className={styles.menuList}>
         <SkipAttackReactionsToggle />
         <SkipDefenseReactionsToggle />
+      </div>
+      <div className={styles.menuList}>
+        <SkipAllAttacksToggle />
       </div>
     </div>
   );

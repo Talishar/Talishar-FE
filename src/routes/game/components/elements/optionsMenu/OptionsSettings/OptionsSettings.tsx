@@ -67,8 +67,7 @@ const OptionsSettings = () => {
     skipDefenseReactions: settingsData['SkipDRWindow']?.value === '1',
     skipNextDefenseReaction: settingsData['SkipNextDRWindow']?.value === '1',
     manualTargeting: settingsData['AutoTargetOpponent']?.value === '0', // reversed!
-    shortcutAttackThreshold:
-      settingsData[optConst.SHORTCUT_ATTACK_THRESHOLD]?.value,
+    shortcutAttackThreshold: settingsData[optConst.SHORTCUT_ATTACK_THRESHOLD]?.value,
     manualMode: settingsData['ManualMode']?.value === '1',
     accessibilityMode: settingsData['ColorblindMode']?.value === '1',
     mute: settingsData['MuteSound']?.value === '1',
