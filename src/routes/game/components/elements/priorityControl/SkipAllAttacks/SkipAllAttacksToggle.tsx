@@ -50,7 +50,7 @@ const SkipAllAttacksToggle = () => {
             value: Number(initialValues.shortcutAttackThreshold) ? 0 : 99
           })}
         data-tooltip="Skip All Attacks"
-        data-placement="bottom"
+        data-placement="left"
       >
         <GiBouncingSword aria-hidden="true" fontSize={'2em'} />
       </button>
