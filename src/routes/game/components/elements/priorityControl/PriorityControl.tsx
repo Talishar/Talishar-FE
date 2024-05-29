@@ -67,8 +67,6 @@ export default function Menu() {
       <div className={styles.menuList}>
         <SkipAttackReactionsToggle />
         <SkipDefenseReactionsToggle />
-      </div>
-      <div className={styles.menuList}>
         <Skip1PowerAttacksToggle />
         <SkipAllAttacksToggle />
       </div>

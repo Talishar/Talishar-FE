@@ -23,9 +23,9 @@ export default function RightColumn() {
           <TurnNumber />
           <LastPlayed />
           <PriorityControl />
-          {isStreamerMode ?? <StreamerBox />}
         </div>
         <div className={styles.bottomGroup}>
+          {isStreamerMode ? <StreamerBox /> : <PhaseTracker />}
           <ChatBox />
         </div>
       </div>

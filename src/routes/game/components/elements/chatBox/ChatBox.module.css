@@ -22,6 +22,7 @@
 }
 
 .chatBoxContainer {
+  padding-top: 1dvh;
   position: relative;
   width: 100%;
   flex-grow: 1;

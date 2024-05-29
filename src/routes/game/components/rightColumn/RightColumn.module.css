@@ -56,7 +56,6 @@
 
 .bottomGroup {
   width: 100%;
-  padding-top: 1dvh;
   height: 100%;
   display: flex;
   flex-direction: column;
