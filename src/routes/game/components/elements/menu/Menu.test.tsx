@@ -16,6 +16,7 @@ describe('menu', () => {
     expect(screen.getByTitle('Full Screen')).toBeDefined();
     expect(screen.getByTitle('Undo')).toBeDefined();
     expect(screen.getByTitle('Full Control')).toBeDefined();
+    expect(screen.getByTitle('Always Pass')).toBeDefined();
     expect(screen.getByTitle('Show Arena')).toBeDefined();
   });
 });

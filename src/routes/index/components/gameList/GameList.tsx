@@ -199,7 +199,7 @@ const GameList = () => {
       {data != undefined && (
         <div data-testid="games-in-progress" ref={parent}>
           <h4 className={styles.subSectionTitle}>
-            Games in progress: <span>({data.gameInProgressCount})</span>
+            Games in Progress: <span>{data.gameInProgressCount}</span>
           </h4>
           <InProgressGameList
             gameList={filteredGamesInProgress.filter((game) =>

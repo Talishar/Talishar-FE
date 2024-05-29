@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from '../Menu.module.css';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
-import { GiUsable } from 'react-icons/gi';
+import { BsFillSkipEndFill } from "react-icons/bs";
 import useSetting from 'hooks/useSetting';
 import classNames from 'classnames';
 import { updateOptions } from 'features/options/optionsSlice';
@@ -12,18 +12,18 @@ import {
 } from 'features/options/constants';
 import { shallowEqual } from 'react-redux';
 
-const FullControlToggle = () => {
+const AlwaysPassToggle = () => {
   const dispatch = useAppDispatch();
   const setting = useSetting({
     settingName: HOLD_PRIORITY_SETTING
   });
   const gameInfo = useAppSelector(getGameInfo, shallowEqual);
 
-  const handleClickFullControl = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleClickAlwaysPass = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     e.currentTarget.blur();
-    // If on full control, turn off full control
-    if (Number(setting?.value) === HOLD_PRIORITY_ENUM.ALWAYS_HOLD) {
+    // If on Always Pass, turn off Always Pass
+    if (Number(setting?.value) === HOLD_PRIORITY_ENUM.ALWAYS_PASS) {
       dispatch(
         updateOptions({
           game: gameInfo,
@@ -43,7 +43,7 @@ const FullControlToggle = () => {
         settings: [
           {
             name: HOLD_PRIORITY_SETTING,
-            value: HOLD_PRIORITY_ENUM.ALWAYS_HOLD
+            value: HOLD_PRIORITY_ENUM.ALWAYS_PASS
           }
         ]
       })
@@ -52,22 +52,22 @@ const FullControlToggle = () => {
 
   const buttonStyle = classNames(styles.btn, {
     [styles.buttonActive]:
-      Number(setting?.value) === HOLD_PRIORITY_ENUM.ALWAYS_HOLD
+      Number(setting?.value) === HOLD_PRIORITY_ENUM.ALWAYS_PASS
   });
   return (
     <div>
       <button
         className={buttonStyle}
-        aria-label="Always Hold Priority"
-        onClick={handleClickFullControl}
-        title="Always Hold Priority"
-        data-tooltip="Always Hold Priority"
+        aria-label="Always Pass Priority"
+        onClick={handleClickAlwaysPass}
+        title="Always Pass Priority"
+        data-tooltip="Always Pass Priority"
         data-placement="bottom"
       >
-        <GiUsable aria-hidden="true" fontSize={'2em'} />
+        <BsFillSkipEndFill aria-hidden="true" fontSize={'2em'} />
       </button>
     </div>
   );
 };
 
-export default FullControlToggle;
+export default AlwaysPassToggle;

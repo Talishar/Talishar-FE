@@ -23,5 +23,15 @@ export enum HOLD_PRIORITY_ENUM {
   ALWAYS_HOLD,
   HOLD_ALL_OPPONENT,
   HOLD_ALL_OPPONENT_ATTACKS,
-  ALWAYS_PASS
+  ALWAYS_PASS,
+}
+
+export enum HOLD_AR_ENUM {
+  AUTO = 0,
+  SKIP_AR
+}
+
+export enum HOLD_DR_ENUM {
+  AUTO = 0,
+  SKIP_DR
 }

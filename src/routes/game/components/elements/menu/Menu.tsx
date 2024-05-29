@@ -9,6 +9,7 @@ import { DEFAULT_SHORTCUTS, PROCESS_INPUT } from 'appConstants';
 import FullControlToggle from './FullControlToggle';
 import HideModalsToggle from './HideModalsToggle/HideModalsToggle';
 import OptionsMenuToggle from './OptionsMenuToggle';
+import AlwaysPassToggle from './AlwaysPassToggle/AlwaysPassToggle';
 import useShortcut from 'hooks/useShortcut';
 
 function FullScreenButton() {
@@ -70,6 +71,7 @@ export default function Menu() {
       </div>
       <div className={styles.menuList}>
         <FullControlToggle />
+        <AlwaysPassToggle />
         <HideModalsToggle />
       </div>
     </div>
