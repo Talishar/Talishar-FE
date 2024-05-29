@@ -2,7 +2,7 @@ import React from 'react';
 import styles from '../PriorityControl.module.css';
 import * as optConst from 'features/options/constants';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
-import { TbSwordOff } from "react-icons/tb";
+import { TbCircleNumber1 } from "react-icons/tb";
 import useSetting from 'hooks/useSetting';
 import classNames from 'classnames';
 import { 
@@ -13,19 +13,20 @@ import {
 import { getGameInfo } from 'features/game/GameSlice';
 import { shallowEqual } from 'react-redux';
 
-const SkipAttackReactionsToggle = () => {
+const Skip1PowerAttacksToggle = () => {
   const settingsData = useAppSelector(getSettingsEntity);
   const dispatch = useAppDispatch();
   const setting = useSetting({
-    settingName: optConst.SKIP_AR_WINDOW
+    settingName: optConst.SHORTCUT_ATTACK_THRESHOLD
   });
   const gameInfo = useAppSelector(getGameInfo, shallowEqual);
 
   const initialValues = {
-    skipAttackReactions: settingsData['SkipARWindow']?.value === '1',
+    shortcutAttackThreshold: settingsData[optConst.SHORTCUT_ATTACK_THRESHOLD]?.value,
+
   };
   
-  const handleClickAlwaysPassAttackReactions = ({ name, value }: Setting) => {
+  const handleClickSkip1PowerAttacks = ({ name, value }: Setting) => {
     dispatch(
       updateOptions({
         game: gameInfo,
@@ -36,26 +37,25 @@ const SkipAttackReactionsToggle = () => {
 
   const buttonStyle = classNames(styles.btn, {
     [styles.buttonActive]:
-      Number(initialValues.skipAttackReactions) === 1
+    Number(initialValues.shortcutAttackThreshold) === 1
   });
   return (
     <div>
       <button
         className={buttonStyle}
-        aria-label="Always Pass Attack Reactions"
+        aria-label="Skip 1 Power Attacks"
         onClick={() =>
-          handleClickAlwaysPassAttackReactions({
-            name: optConst.SKIP_AR_WINDOW,
-            value: initialValues.skipAttackReactions ? '0' : '1'
+          handleClickSkip1PowerAttacks({
+            name: optConst.SHORTCUT_ATTACK_THRESHOLD,
+            value: Number(initialValues.shortcutAttackThreshold) ? 0 : 1
           })}
-        data-tooltip="Always Pass Attack Reactions"
+        data-tooltip="Skip 1 Power Attacks"
         data-placement="bottom"
-        
       >
-        <TbSwordOff aria-hidden="true" fontSize={'2em'} />
+        <TbCircleNumber1 aria-hidden="true" fontSize={'2em'} />
       </button>
     </div>
   );
 };
 
-export default SkipAttackReactionsToggle;
+export default Skip1PowerAttacksToggle;

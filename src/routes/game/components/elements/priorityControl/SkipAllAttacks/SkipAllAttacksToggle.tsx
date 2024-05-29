@@ -2,7 +2,7 @@ import React from 'react';
 import styles from '../PriorityControl.module.css';
 import * as optConst from 'features/options/constants';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
-import { TbSwords } from "react-icons/tb";
+import { GiBouncingSword } from "react-icons/gi";
 import useSetting from 'hooks/useSetting';
 import classNames from 'classnames';
 import { 
@@ -49,11 +49,10 @@ const SkipAllAttacksToggle = () => {
             name: optConst.SHORTCUT_ATTACK_THRESHOLD,
             value: Number(initialValues.shortcutAttackThreshold) ? 0 : 99
           })}
-        title="Skip All AttacksAlways"
         data-tooltip="Skip All Attacks"
         data-placement="bottom"
       >
-        <TbSwords aria-hidden="true" fontSize={'2em'} />
+        <GiBouncingSword aria-hidden="true" fontSize={'2em'} />
       </button>
     </div>
   );

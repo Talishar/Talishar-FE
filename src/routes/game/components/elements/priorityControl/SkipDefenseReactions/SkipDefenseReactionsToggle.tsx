@@ -2,7 +2,7 @@ import React from 'react';
 import styles from '../PriorityControl.module.css';
 import * as optConst from 'features/options/constants';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
-import { TbShieldHalf } from "react-icons/tb";
+import { TbShieldOff } from "react-icons/tb";
 import useSetting from 'hooks/useSetting';
 import classNames from 'classnames';
 import { 
@@ -48,12 +48,11 @@ const SkipDefenseReactionsToggle = () => {
             name: optConst.SKIP_DR_WINDOW,
             value: initialValues.skipDefenseReactions ? '0' : '1'
           })}
-        title="Always Pass Defense Reactions"
         data-tooltip="Always Pass Defense Reactions"
         data-placement="bottom"
         
       >
-        <TbShieldHalf aria-hidden="true" fontSize={'2em'} />
+        <TbShieldOff aria-hidden="true" fontSize={'2em'} />
       </button>
     </div>
   );

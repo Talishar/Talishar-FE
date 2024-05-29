@@ -60,7 +60,6 @@ const FullControlToggle = () => {
         className={buttonStyle}
         aria-label="Always Hold Priority"
         onClick={handleClickFullControl}
-        title="Always Hold Priority"
         data-tooltip="Always Hold Priority"
         data-placement="bottom"
       >

@@ -29,7 +29,6 @@ function OptionsMenuToggle() {
       <button
         className={styles.btn}
         aria-label="Toggle main menu"
-        title="Options Menu"
         onClick={() => toggleMenu()}
         data-tooltip="Settings Menu"
         data-placement="bottom"

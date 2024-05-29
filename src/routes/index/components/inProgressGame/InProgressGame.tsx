@@ -3,8 +3,7 @@ import React from 'react';
 import { createSearchParams, useNavigate } from 'react-router-dom';
 import { IGameInProgress } from '../gameList/GameList';
 import styles from './InProgressGame.module.scss';
-import { GiCrossedSwords } from 'react-icons/all';
-
+import { RiSwordLine } from "react-icons/ri";
 export const InProgressGame = ({
   ix,
   entry
@@ -29,7 +28,7 @@ export const InProgressGame = ({
       <div>
         {!!entry.p1Hero && <img src={`/crops/${entry.p1Hero}_cropped.png`} />}
       </div>
-      <GiCrossedSwords />
+      <RiSwordLine />
       <div>
         {!!entry.p2Hero && <img src={`/crops/${entry.p2Hero}_cropped.png`} />}
       </div>

@@ -26,7 +26,6 @@ const HideModalsToggle = () => {
         })}
         aria-label="Show Arena"
         onClick={handleClickHideWindowsToggle}
-        title="Show Arena"
         data-tooltip="Show Arena"
         data-placement="bottom"
       >

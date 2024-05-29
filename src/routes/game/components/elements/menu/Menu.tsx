@@ -6,7 +6,7 @@ import { FaUndo } from 'react-icons/fa';
 import { GiExpand } from 'react-icons/gi';
 import styles from './Menu.module.css';
 import { DEFAULT_SHORTCUTS, PROCESS_INPUT } from 'appConstants';
-import FullControlToggle from './FullControlToggle';
+import FullControlToggle from './FullControlToggle/FullControlToggle';
 import HideModalsToggle from './HideModalsToggle/HideModalsToggle';
 import OptionsMenuToggle from './OptionsMenuToggle';
 import AlwaysPassToggle from './AlwaysPassToggle/AlwaysPassToggle';
@@ -22,7 +22,6 @@ function FullScreenButton() {
       <button
         className={styles.btn}
         aria-label="Full Screen"
-        title="Full Screen"
         onClick={() => toggleFullScreen()}
         data-tooltip="Fullscreen"
         data-placement="bottom"
@@ -51,7 +50,6 @@ function UndoButton() {
         className={styles.btn}
         aria-label="Undo"
         onClick={clickUndo}
-        title="Undo"
         data-tooltip="Undo"
         data-placement="bottom"
       >

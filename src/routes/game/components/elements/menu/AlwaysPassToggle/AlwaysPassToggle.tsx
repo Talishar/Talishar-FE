@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from '../Menu.module.css';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
-import { BsFillSkipEndFill } from "react-icons/bs";
+import { BiSkipNextCircle } from "react-icons/bi";
 import useSetting from 'hooks/useSetting';
 import classNames from 'classnames';
 import { updateOptions } from 'features/options/optionsSlice';
@@ -60,11 +60,10 @@ const AlwaysPassToggle = () => {
         className={buttonStyle}
         aria-label="Always Pass Priority"
         onClick={handleClickAlwaysPass}
-        title="Always Pass Priority"
         data-tooltip="Always Pass Priority"
         data-placement="bottom"
       >
-        <BsFillSkipEndFill aria-hidden="true" fontSize={'2em'} />
+        <BiSkipNextCircle  aria-hidden="true" fontSize={'2.4em'} />
       </button>
     </div>
   );
