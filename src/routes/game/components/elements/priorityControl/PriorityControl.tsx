@@ -7,6 +7,7 @@ import { GiExpand } from 'react-icons/gi';
 import styles from './PriorityControl.module.css';
 import { DEFAULT_SHORTCUTS, PROCESS_INPUT } from 'appConstants';
 import SkipAttackReactionsToggle from './SkipAttackReactions/SkipAttackReactionsToggle';
+import SkipDefenseReactionsToggle from './SkipDefenseReactions/SkipDefenseReactionsToggle';
 import useShortcut from 'hooks/useShortcut';
 
 function FullScreenButton() {
@@ -66,6 +67,7 @@ export default function Menu() {
       </div>
       <div className={styles.menuList}>
         <SkipAttackReactionsToggle />
+        <SkipDefenseReactionsToggle />
       </div>
     </div>
   );
