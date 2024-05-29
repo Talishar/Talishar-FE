@@ -63,7 +63,7 @@ const AlwaysPassToggle = () => {
         data-tooltip="Always Pass Priority"
         data-placement="bottom"
       >
-        <BiSkipNextCircle  aria-hidden="true" fontSize={'2.4em'} />
+        <BiSkipNextCircle  aria-hidden="true" fontSize={'2.2em'} />
       </button>
     </div>
   );
