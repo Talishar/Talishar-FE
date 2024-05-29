@@ -25,7 +25,7 @@ const SkipDefenseReactionsToggle = () => {
     skipDefenseReactions: settingsData['SkipDRWindow']?.value === '1',
   };
   
-  const handleClickAlwaysPassDefenseReactions = ({ name, value }: Setting) => {
+  const handleClickPassDefenseReactions = ({ name, value }: Setting) => {
     dispatch(
       updateOptions({
         game: gameInfo,
@@ -42,13 +42,13 @@ const SkipDefenseReactionsToggle = () => {
     <div>
       <button
         className={buttonStyle}
-        aria-label="Always Pass Defense Reactions"
+        aria-label="Pass Defense Reactions"
         onClick={() =>
-          handleClickAlwaysPassDefenseReactions({
+          handleClickPassDefenseReactions({
             name: optConst.SKIP_DR_WINDOW,
             value: initialValues.skipDefenseReactions ? '0' : '1'
           })}
-        data-tooltip="Always Pass Defense Reactions"
+        data-tooltip="Pass Defense Reactions"
         data-placement="bottom"
         
       >

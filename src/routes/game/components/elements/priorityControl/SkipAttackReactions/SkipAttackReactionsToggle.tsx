@@ -25,7 +25,7 @@ const SkipAttackReactionsToggle = () => {
     skipAttackReactions: settingsData['SkipARWindow']?.value === '1',
   };
   
-  const handleClickAlwaysPassAttackReactions = ({ name, value }: Setting) => {
+  const handleClickPassAttackReactions = ({ name, value }: Setting) => {
     dispatch(
       updateOptions({
         game: gameInfo,
@@ -42,13 +42,13 @@ const SkipAttackReactionsToggle = () => {
     <div>
       <button
         className={buttonStyle}
-        aria-label="Always Pass Attack Reactions"
+        aria-label="Pass Attack Reactions"
         onClick={() =>
-          handleClickAlwaysPassAttackReactions({
+          handleClickPassAttackReactions({
             name: optConst.SKIP_AR_WINDOW,
             value: initialValues.skipAttackReactions ? '0' : '1'
           })}
-        data-tooltip="Always Pass Attack Reactions"
+        data-tooltip="Pass Attack Reactions"
         data-placement="bottom"
         
       >

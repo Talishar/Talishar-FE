@@ -43,13 +43,13 @@ const SkipAllAttacksToggle = () => {
     <div>
       <button
         className={buttonStyle}
-        aria-label="Skip All Attacks"
+        aria-label="Skip Attacks"
         onClick={() =>
           handleClickSkipAllAttacks({
             name: optConst.SHORTCUT_ATTACK_THRESHOLD,
             value: Number(initialValues.shortcutAttackThreshold) ? 0 : 99
           })}
-        data-tooltip="Skip All Attacks"
+        data-tooltip="Skip Attacks"
         data-placement="left"
       >
         <GiBouncingSword aria-hidden="true" fontSize={'2em'} />
