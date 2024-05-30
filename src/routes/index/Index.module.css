@@ -10,6 +10,16 @@
   height: auto;
 }
 
+.NewsLogo {
+  display: block;
+  max-width: 1080px;
+  max-height: 483px;
+  width: 100%;
+  height: auto;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+}
+
 .grid {
   display: grid;
   gap: 30px;
