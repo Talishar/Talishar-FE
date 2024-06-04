@@ -28,34 +28,28 @@ export default function PlayerName(player: Player) {
     : state.game.playerTwo.isPvtVoidPatron
 );
 
-  return (
-    <div className={styles.playerName}>
-      {isPatron ? (
+const iconMap = [
+  { condition: isPatron, src: "/images/patronHeart.webp", title: "I am a patron of Talishar!" },
+  { condition: isContributor, src: "/images/copper.webp", title: "I am a contributor to Talishar!" },
+  { condition: isPvtVoidPatron, src: "/images/patronEye.webp", title: "I am a patron of PvtVoid!" },
+];
+  
+return (
+  <div className={styles.playerName}>
+    {iconMap.map((icon, index) => (
+      icon.condition && (
         <img
+          key={index}
           className={styles.icon}
-          src="/images/patronHeart.webp"
-          title="I am a patron of Talishar!"
+          src={icon.src}
+          title={icon.title}
         />
-      ) : null}
-      {isContributor ? (
-        <img
-          className={styles.icon}
-          src="/images/copper.webp"
-          title="I am a contributor to Talishar!"
-        />
-      ) : null}
-      {isPvtVoidPatron ? (
-        <img
-          className={styles.icon}
-          src="/images/patronEye.webp"
-          title="I am a patron of PvtVoid!"
-        />
-      ) : null}
+      )
+    ))}
       {
         playerName?.substring(0, 30)
         .replace('-', `Practice Dummy`)
       }
-      
-    </div>
+  </div>
   );
 }
