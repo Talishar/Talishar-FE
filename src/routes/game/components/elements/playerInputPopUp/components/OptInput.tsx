@@ -40,15 +40,25 @@ const OptOptionBox = ({ card, onClickButton }: OptOptionBoxProps) => {
 export const OptInput = (props: FormProps) => {
   const { cards, buttons, onClickButton, id } = props;
 
-  const cardWithButtons = cards.map((card, index) => {
-    return {
-      ...card,
-      key: index,
-      buttons: buttons.filter(
-        (button) => button.buttonInput === card.cardNumber
-      )
-    };
-  });
+const maxButtonsPerIndex = 2;
+const buttonsCountPerIndex = new Map();
+const cardWithButtons = cards.map((card, index) => {
+  buttonsCountPerIndex.set(index, 0);
+  return {
+    ...card,
+    key: index,
+    buttons: buttons.filter(
+      (button) => {
+        const buttonsAdded = buttonsCountPerIndex.get(index);
+        if (buttonsAdded < maxButtonsPerIndex && button.buttonInput === card.cardNumber) {
+          buttonsCountPerIndex.set(index, buttonsAdded + 1);
+          return true;
+        }
+        return false;
+      }
+    )
+  };
+});
 
   return (
     <form className={classNames(styles.form, styles.optForm)}>
