@@ -36,6 +36,7 @@ export const BanishZone = React.memo((prop: Displayrow) => {
     <div className={styles.banishZone} onClick={banishZoneDisplay}>
       <CardDisplay
         card={cardToDisplay}
+        isPlayer={isPlayer}
         num={showCount ? banishZone.length : undefined}
         preventUseOnClick
       />

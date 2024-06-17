@@ -36,6 +36,7 @@ export const GraveyardZone = React.memo((prop: Displayrow) => {
     <div className={styles.graveyardZone} onClick={graveyardZoneDisplay}>
       <CardDisplay
         card={cardToDisplay}
+        isPlayer={isPlayer}
         num={showCount ? graveyardZone.length : undefined}
         preventUseOnClick
       />
