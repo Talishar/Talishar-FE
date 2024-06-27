@@ -2,7 +2,11 @@ import { array, boolean, object, string, number } from 'yup';
 
 const oneHandedHeroes = ['HVY001', 'HVY002'];
 
-export const deckValidation = (minDeckSize: number, maxDeckSize: number, heroNumHands: number) => {
+export const deckValidation = (
+  minDeckSize: number,
+  maxDeckSize: number,
+  heroNumHands: number
+) => {
   return object({
     hero: string().required('You must have a hero!'),
     weapons: array()
@@ -13,7 +17,7 @@ export const deckValidation = (minDeckSize: number, maxDeckSize: number, heroNum
         object().shape({
           id: string().required(),
           is1H: boolean(),
-          numHands : number()
+          numHands: number()
         })
       )
       // Test that the sum of weapons.hands is less than our hero's available hands.

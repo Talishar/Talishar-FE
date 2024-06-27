@@ -82,7 +82,7 @@ export const CARD_BACK = {
   '80': 'CBDropcast',
   '81': 'CBSunflowerSamurai',
   '82': 'CBTalisharTeam',
-  '83': 'CBTalisharTeam2',
+  '83': 'CBTalisharTeam2'
 } as { [key: string]: string };
 
 export const PLAYMATS = {
@@ -105,4 +105,21 @@ export const PLAYMATS = {
   '16': 'FindCenter'
 } as { [key: string]: string };
 
-export const PLAYER_PLAYMATS = ['0', '9', '1', '2', '3', '4', '5', '6', '7', '10', '11', '12', '13', '14', '15', '16'];
+export const PLAYER_PLAYMATS = [
+  '0',
+  '9',
+  '1',
+  '2',
+  '3',
+  '4',
+  '5',
+  '6',
+  '7',
+  '10',
+  '11',
+  '12',
+  '13',
+  '14',
+  '15',
+  '16'
+];

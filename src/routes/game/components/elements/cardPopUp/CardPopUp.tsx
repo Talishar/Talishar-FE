@@ -28,21 +28,22 @@ export default function CardPopUp({
   const [windowWidth, windowHeight] = useWindowDimensions();
 
   const handleMouseEnter = () => {
-    if (ref.current === null 
-      || isHidden === true 
-      || cardNumber === "ENDPHASE" 
-      || cardNumber === "ENDTURN" 
-      || cardNumber === "RESUMETURN" 
-      || cardNumber === "PHANTASM" 
-      || cardNumber === "MIRAGE" 
-      || cardNumber === "FINALIZECHAINLINK" 
-      || cardNumber === "DEFENDSTEP" 
-      || cardNumber == "ATTACKSTEP" 
-      || cardNumber == "CardBack" 
-      || cardNumber == "NONE00" 
-      || cardNumber == "BLOODDEBT"
-      || cardNumber == "BEATCHEST"
-      || cardNumber == "MERIDIANWARD"
+    if (
+      ref.current === null ||
+      isHidden === true ||
+      cardNumber === 'ENDPHASE' ||
+      cardNumber === 'ENDTURN' ||
+      cardNumber === 'RESUMETURN' ||
+      cardNumber === 'PHANTASM' ||
+      cardNumber === 'MIRAGE' ||
+      cardNumber === 'FINALIZECHAINLINK' ||
+      cardNumber === 'DEFENDSTEP' ||
+      cardNumber == 'ATTACKSTEP' ||
+      cardNumber == 'CardBack' ||
+      cardNumber == 'NONE00' ||
+      cardNumber == 'BLOODDEBT' ||
+      cardNumber == 'BEATCHEST' ||
+      cardNumber == 'MERIDIANWARD'
     ) {
       return;
     }

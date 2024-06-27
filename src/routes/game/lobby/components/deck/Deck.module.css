@@ -24,8 +24,8 @@
 
 .card:hover {
   width: 105%;
-  transition: width .1s;
-  -webkit-transition: width .1s; /* Safari */
+  transition: width 0.1s;
+  -webkit-transition: width 0.1s; /* Safari */
 }
 
 .container input {

@@ -4,10 +4,7 @@ import { RootState } from 'app/Store';
 import { useChooseFirstPlayerMutation } from 'features/api/apiSlice';
 import { toast } from 'react-hot-toast';
 import styles from './ChooseFirstTurn.module.css';
-import { 
-  TbHexagonNumber1, 
-  TbHexagonNumber2
-} from "react-icons/tb";
+import { TbHexagonNumber1, TbHexagonNumber2 } from 'react-icons/tb';
 import { shallowEqual } from 'react-redux';
 import { getGameInfo } from 'features/game/GameSlice';
 
@@ -63,20 +60,17 @@ const ChooseFirstTurn = () => {
         </hgroup>
         <div className={styles.buttons}>
           <button onClick={chooseFirst}>
-            <div 
-              className={styles.icon}>
+            <div className={styles.icon}>
               <TbHexagonNumber1 />
             </div>
             First
-            </button>
+          </button>
           <button onClick={chooseSecond}>
-            <div 
-              className={styles.icon}>
+            <div className={styles.icon}>
               <TbHexagonNumber2 />
             </div>
-
             Second
-            </button>
+          </button>
         </div>
       </article>
     </dialog>

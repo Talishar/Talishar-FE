@@ -65,14 +65,20 @@ export default function PlayerHand() {
     if (
       (handCards?.length === 0 || handCards === undefined) &&
       (playableBanishedCards?.length === 0 ||
-        playableBanishedCards === undefined) 
-        && (playableTheirBanishedCards?.length === 0 ||
-        playableTheirBanishedCards === undefined) && (playableGraveyardCards?.length === 0 ||
-          playableGraveyardCards === undefined)
+        playableBanishedCards === undefined) &&
+      (playableTheirBanishedCards?.length === 0 ||
+        playableTheirBanishedCards === undefined) &&
+      (playableGraveyardCards?.length === 0 ||
+        playableGraveyardCards === undefined)
     ) {
       setPlayedCards([]);
     }
-  }, [handCards, playableBanishedCards, playableTheirBanishedCards, playableGraveyardCards]);
+  }, [
+    handCards,
+    playableBanishedCards,
+    playableTheirBanishedCards,
+    playableGraveyardCards
+  ]);
 
   if (
     arsenalCards === undefined ||
@@ -156,7 +162,7 @@ export default function PlayerHand() {
                     />
                   );
                 })}
-                {playableTheirBanishedCards !== undefined &&
+              {playableTheirBanishedCards !== undefined &&
                 playableTheirBanishedCards.map((card, ix) => {
                   const cardCount = cardsInHandsAlready.filter(
                     (value) => value === card.cardNumber
@@ -179,7 +185,7 @@ export default function PlayerHand() {
                     />
                   );
                 })}
-                {playableGraveyardCards !== undefined &&
+              {playableGraveyardCards !== undefined &&
                 playableGraveyardCards.map((card, ix) => {
                   const cardCount = cardsInHandsAlready.filter(
                     (value) => value === card.cardNumber

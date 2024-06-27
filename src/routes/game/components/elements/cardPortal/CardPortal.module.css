@@ -34,7 +34,6 @@
   left: -35vh;
 }
 
-
 @media (orientation: portrait) {
   .popUpContainer {
     bottom: auto !important;

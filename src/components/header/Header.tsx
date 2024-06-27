@@ -75,15 +75,13 @@ const Header = () => {
               <FaTwitter></FaTwitter>
             </a>
           </li>
-          {
-            /*
+          {/*
             <li>
             <a href="https://beta.talishar.net/game/Roguelike/CreateGame.php">
               <GiTreasureMap></GiTreasureMap> <span>RogueLike</span>
             </a>
             </li>
-            */
-          }
+            */}
           <li>
             {isLoggedIn ? (
               <Link to="/user">

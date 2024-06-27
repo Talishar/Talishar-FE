@@ -23,7 +23,12 @@ export default function useAuth() {
   const { isLoading, error, data } = useLoginWithCookieQuery({});
   const dispatch = useAppDispatch();
 
-  const setLoggedIn = (user: string, userName: string, token: string, patron:string) => {
+  const setLoggedIn = (
+    user: string,
+    userName: string,
+    token: string,
+    patron: string
+  ) => {
     dispatch(
       setCredentialsReducer({
         user: user,
@@ -48,7 +53,12 @@ export default function useAuth() {
 
   useEffect(() => {
     if (data?.isUserLoggedIn) {
-      setLoggedIn(data.loggedInUserID, data.loggedInUserName, '', data.isPatron);
+      setLoggedIn(
+        data.loggedInUserID,
+        data.loggedInUserName,
+        '',
+        data.isPatron
+      );
       // refetch();
     }
   }, [isLoading]);

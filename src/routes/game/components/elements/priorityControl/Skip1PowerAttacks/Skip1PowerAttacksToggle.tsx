@@ -2,12 +2,12 @@ import React from 'react';
 import styles from '../PriorityControl.module.css';
 import * as optConst from 'features/options/constants';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
-import { TbCircleNumber1 } from "react-icons/tb";
+import { TbCircleNumber1 } from 'react-icons/tb';
 import useSetting from 'hooks/useSetting';
 import classNames from 'classnames';
-import { 
-  updateOptions, 
-  Setting, 
+import {
+  updateOptions,
+  Setting,
   getSettingsEntity
 } from 'features/options/optionsSlice';
 import { getGameInfo } from 'features/game/GameSlice';
@@ -22,10 +22,10 @@ const Skip1PowerAttacksToggle = () => {
   const gameInfo = useAppSelector(getGameInfo, shallowEqual);
 
   const initialValues = {
-    shortcutAttackThreshold: settingsData[optConst.SHORTCUT_ATTACK_THRESHOLD]?.value,
-
+    shortcutAttackThreshold:
+      settingsData[optConst.SHORTCUT_ATTACK_THRESHOLD]?.value
   };
-  
+
   const handleClickSkip1PowerAttacks = ({ name, value }: Setting) => {
     dispatch(
       updateOptions({
@@ -36,8 +36,7 @@ const Skip1PowerAttacksToggle = () => {
   };
 
   const buttonStyle = classNames(styles.btn, {
-    [styles.buttonActive]:
-    Number(initialValues.shortcutAttackThreshold) === 1
+    [styles.buttonActive]: Number(initialValues.shortcutAttackThreshold) === 1
   });
   return (
     <div>
@@ -48,7 +47,8 @@ const Skip1PowerAttacksToggle = () => {
           handleClickSkip1PowerAttacks({
             name: optConst.SHORTCUT_ATTACK_THRESHOLD,
             value: Number(initialValues.shortcutAttackThreshold) ? 0 : 1
-          })}
+          })
+        }
         data-tooltip="Skip 1 Power Attacks"
         data-placement="bottom"
       >

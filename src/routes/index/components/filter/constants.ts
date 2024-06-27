@@ -22,7 +22,7 @@ export const youngToOldHeroesMapping: { [key: string]: string } = {
   OUT091: 'OUT092', // Riptide
   DTD001: 'DTD002', // Prism, Advent of Thrones
   DTD133: 'DTD134', // Vynnset
-  EVO002: 'EVO003', // Dash, Database 
+  EVO002: 'EVO003', // Dash, Database
   EVO004: 'EVO005', // Maxx Nitro
   EVO008: 'EVO009', // Teklovossen
   HVY001: 'HVY002', // Kayo
@@ -32,7 +32,7 @@ export const youngToOldHeroesMapping: { [key: string]: string } = {
   HVY092: 'HVY093', // Olympia
   MST001: 'MST002', // Nuu
   MST025: 'MST026', // Enigma
-  MST046: 'MST047', // Zen
+  MST046: 'MST047' // Zen
 };
 
 export const HEROES_OF_RATHE: { value: string; label: string }[] = [
@@ -87,11 +87,11 @@ export const HEROES_OF_RATHE: { value: string; label: string }[] = [
   { value: 'HER100', label: 'Squizzy & Floof' },
   { value: 'HVY001', label: 'Kayo' },
   { value: 'HVY045', label: 'Betsy' },
-  { value: 'HVY047', label: 'Victor Goldmane' },  
+  { value: 'HVY047', label: 'Victor Goldmane' },
   { value: 'HVY090', label: 'Kassai' },
-  { value: 'HVY092', label: 'Olympia' },  
+  { value: 'HVY092', label: 'Olympia' },
   { value: 'JDG024', label: 'Brutus, Summa Rudis' },
   { value: 'MST001', label: 'Nuu' },
   { value: 'MST025', label: 'Enigma' },
-  { value: 'MST046', label: 'Zen' },
+  { value: 'MST046', label: 'Zen' }
 ];

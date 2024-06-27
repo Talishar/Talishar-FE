@@ -67,7 +67,8 @@ const OptionsSettings = () => {
     skipDefenseReactions: settingsData['SkipDRWindow']?.value === '1',
     skipNextDefenseReaction: settingsData['SkipNextDRWindow']?.value === '1',
     manualTargeting: settingsData['AutoTargetOpponent']?.value === '0', // reversed!
-    shortcutAttackThreshold: settingsData[optConst.SHORTCUT_ATTACK_THRESHOLD]?.value,
+    shortcutAttackThreshold:
+      settingsData[optConst.SHORTCUT_ATTACK_THRESHOLD]?.value,
     manualMode: settingsData['ManualMode']?.value === '1',
     accessibilityMode: settingsData['ColorblindMode']?.value === '1',
     mute: settingsData['MuteSound']?.value === '1',
@@ -480,7 +481,7 @@ const OptionsSettings = () => {
             <p>Log in to customise your playmat</p>
           )}
         </label>
-      {/* WARNING THIS MAY MAKE THE GAME MORE UNSTABLE. <br />
+        {/* WARNING THIS MAY MAKE THE GAME MORE UNSTABLE. <br />
          <label className={styles.optionLabel}>
           <input
             type="checkbox"
@@ -506,7 +507,7 @@ const OptionsSettings = () => {
       <>
         <fieldset>
           <label className={styles.optionLabel}>
-          Card Size: {Math.floor(cookies.cardSize * 100)}%
+            Card Size: {Math.floor(cookies.cardSize * 100)}%
             <input
               name="cardSize"
               type="range"

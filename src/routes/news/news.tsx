@@ -6,8 +6,10 @@ import styles from '../index/Index.module.css';
 const News = () => {
   return (
     <div>
-      <h4 className={styles.headlines}>Happy Part the Mistveil launch!
-      <br></br>MST cards and heroes are now available in every format!🥳</h4>
+      <h4 className={styles.headlines}>
+        Happy Part the Mistveil launch!
+        <br></br>MST cards and heroes are now available in every format!🥳
+      </h4>
       <img src={MSTLogo} className={styles.NewsLogo} />
       <br></br>
       <p>Please join our community:</p>

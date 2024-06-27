@@ -122,14 +122,20 @@ export const EventsHandler = React.memo(() => {
             ));
             continue;
           case 'REQUESTCHAT':
-            if (parseInt(event.eventValue ?? '0') !== playerID && playerID !== 3) {
+            if (
+              parseInt(event.eventValue ?? '0') !== playerID &&
+              playerID !== 3
+            ) {
               setShowModal(true);
               setModalType(ModalType.RequestChat);
               setModal('Do you want to enable chat?');
             }
             continue;
           case 'REQUESTUNDO':
-            if (parseInt(event.eventValue ?? '0') !== playerID && playerID !== 3) {
+            if (
+              parseInt(event.eventValue ?? '0') !== playerID &&
+              playerID !== 3
+            ) {
               setShowModal(true);
               setModalType(ModalType.RequestUndo);
               setModal(
@@ -138,7 +144,10 @@ export const EventsHandler = React.memo(() => {
             }
             continue;
           case 'REQUESTTHISTURNUNDO':
-            if (parseInt(event.eventValue ?? '0') !== playerID && playerID !== 3) {
+            if (
+              parseInt(event.eventValue ?? '0') !== playerID &&
+              playerID !== 3
+            ) {
               setShowModal(true);
               setModalType(ModalType.RequestThisTurnUndo);
               setModal('Do you want to allow the opponent to undo this turn?');

@@ -60,8 +60,7 @@ const GameList = () => {
   const dispatch = useAppDispatch();
 
   //Before displaying open games, check if we have a game in progress
-  if(!!data?.LastAuthKey && data.LastAuthKey != "")
-  {
+  if (!!data?.LastAuthKey && data.LastAuthKey != '') {
     console.log(data.LastAuthKey);
     dispatch(
       setGameStart({

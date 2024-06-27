@@ -1,4 +1,3 @@
-
 .container {
   display: flex;
   flex-direction: column;
@@ -12,17 +11,17 @@
 }
 
 td {
-  padding:4px;
+  padding: 4px;
 }
 
 .red {
-  color:#ff3333;
+  color: #ff3333;
 }
 
 .yellow {
-  color:yellow;
+  color: yellow;
 }
 
 .blue {
-  color:cyan;
+  color: cyan;
 }
