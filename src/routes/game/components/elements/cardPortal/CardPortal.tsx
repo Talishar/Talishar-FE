@@ -5,6 +5,7 @@ import styles from './CardPortal.module.css';
 import { doubleFacedCardsMappings } from './constants';
 import classNames from 'classnames';
 import useWindowDimensions from 'hooks/useWindowDimensions';
+import { getCardImagesImagePath } from 'utils';
 
 const popUpGap = 10;
 
@@ -35,8 +36,8 @@ function getSrcs(cardNumber: string): Array<string> {
   if (doubleFacedCardsMappings[cardNumber] != null) {
     cardNumbers.push(doubleFacedCardsMappings[cardNumber]);
   }
-  return cardNumbers.map(
-    (currentCardNumber) => `/cardimages/${currentCardNumber}.webp`
+  return cardNumbers.map((currentCardNumber) =>
+    getCardImagesImagePath({ locale: 'es', cardNumber: currentCardNumber })
   );
 }
 

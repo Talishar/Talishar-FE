@@ -1,0 +1,1 @@
+export { getCardImagesImagePath } from './multilanguage';

@@ -5,6 +5,7 @@ import { clearPopUp, setPopUp } from 'features/game/GameSlice';
 import CardImage from '../cardImage/CardImage';
 import styles from './LastPlayed.module.css';
 import CardPopUp from '../cardPopUp/CardPopUp';
+import { getCardImagesImagePath } from 'utils';
 
 export default function LastPlayed() {
   let cardRedux = useAppSelector(
@@ -12,7 +13,8 @@ export default function LastPlayed() {
   );
   const hasNoLastPlayedCard = cardRedux == null;
   const cardNumber = cardRedux?.cardNumber ?? 'CardBack';
-  const src = `/cardimages/${cardNumber}.webp`;
+  const src = getCardImagesImagePath({ locale: 'es', cardNumber });
+  // const src = `/cardimages/${cardNumber}.webp`;
 
   return (
     <CardPopUp

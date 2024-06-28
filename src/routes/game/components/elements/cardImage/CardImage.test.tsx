@@ -8,7 +8,7 @@ it('renders without crashing', () => {
   expect(display).toMatchInlineSnapshot(`
     <div>
       <img
-        src="/cardimages/WTR001.webp"
+        src="/cardimages/english/WTR001.webp"
       />
     </div>
   `);

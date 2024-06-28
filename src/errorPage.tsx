@@ -41,7 +41,7 @@ export const ErrorPage = () => {
         </p>
         {!!errMessage && <p>{errMessage}</p>}
         <img
-          src="/cardimages/WTR224.webp"
+          src="/cardimages/english/WTR224.webp"
           style={{ maxWidth: '100%', maxHeight: '100%', marginBottom: '19px' }}
         />
         <button

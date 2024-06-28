@@ -19,6 +19,7 @@ import CardImage from '../cardImage/CardImage';
 import CardPopUp from '../cardPopUp/CardPopUp';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import { motion, PanInfo } from 'framer-motion';
+import { getCardImagesImagePath } from 'utils';
 
 const ScreenPercentageForCardPlayed = 0.25;
 
@@ -50,7 +51,12 @@ export const PlayerHandCard = ({
   if (card === undefined) {
     return <div className={styles.handCard}></div>;
   }
-  const src = `/cardimages/${card.cardNumber}.webp`;
+
+  // const src = `/cardimages/${card.cardNumber}.webp`;
+  const src = getCardImagesImagePath({
+    locale: 'es',
+    cardNumber: card.cardNumber
+  });
   const dispatch = useAppDispatch();
 
   const handleDragEnd = (
