@@ -1,4 +1,4 @@
-export const LOCALE_DICTIONARY = {
+export const LOCALE_DICTIONARY: { [index: string]: string } = {
   en: 'english',
   es: 'spanish',
   fr: 'french',

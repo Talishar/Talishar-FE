@@ -1,4 +1,4 @@
-export const historyPack1 = {
+export const historyPack1: { [index: string]: string } = {
   ARC000: '1HP000-2-RF',
   ARC002: '1HP181',
   ARC003: '1HP184',

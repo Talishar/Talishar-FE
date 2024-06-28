@@ -45,7 +45,7 @@ const isHistoryPack2Card = (
 ): boolean =>
   COLLECTIONS_HISTORY_PACK_2.includes(collectionCode) &&
   Object.keys(historyPack2).includes(cardNumber);
-  
+
 const isReprintedInHistoryPack2 = (cardNumber: string): boolean =>
   ADDITIONAL_REPRINTS_HISTORY_PACK_2.includes(cardNumber);
 

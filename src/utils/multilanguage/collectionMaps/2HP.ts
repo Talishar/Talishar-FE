@@ -1,4 +1,4 @@
-export const historyPack2 = {
+export const historyPack2: { [index: string]: string } = {
   ARC112: '2HP428',
   ARC150: '2HP474',
   CRU197: '2HP531',
