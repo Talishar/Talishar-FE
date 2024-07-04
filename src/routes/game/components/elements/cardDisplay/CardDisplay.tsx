@@ -13,7 +13,6 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useState } from 'react';
 import { useLanguageSelector } from 'hooks/useLanguageSelector';
 import { CARD_SQUARES_PATH, getCollectionCardImagePath, pathType } from 'utils';
-import { string } from 'yup';
 
 export interface CardProp {
   makeMeBigger?: boolean;
