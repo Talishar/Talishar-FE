@@ -34,4 +34,11 @@ export const ADDITIONAL_REPRINTS_HISTORY_PACK_2 = [
   'CRU197'
 ];
 
-export const ALTERNATIVE_ARTS_CODES = ['_Brandao', '-Brandao', '-T', '-T2', '-ManSant', '-InstantSpeed'];
+export const ALTERNATIVE_ARTS_CODES = [
+  '_Brandao',
+  '-Brandao',
+  '-T',
+  '-T2',
+  '-ManSant',
+  '-InstantSpeed'
+];

@@ -9,7 +9,8 @@ export const useLanguageSelector = () => {
   const dispatch = useAppDispatch();
   const languageLoadedStore = useAppSelector(getSettingsLanguage);
 
-  const getLanguage = () => languageLoadedStore ? languageLoadedStore : loadInitialLanguage();
+  const getLanguage = () =>
+    languageLoadedStore ? languageLoadedStore : loadInitialLanguage();
 
   const setLanguage = (languageSelected: string) => {
     dispatch(setLanguageSlice({ languageSelected }));

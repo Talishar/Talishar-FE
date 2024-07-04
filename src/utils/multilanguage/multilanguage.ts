@@ -64,7 +64,8 @@ const getHistoryPackCard = (cardNumber: string, collectionCode: string) => {
   }
 };
 
-const isAlternativeArt = (cardNumber: string): boolean => ALTERNATIVE_ARTS_CODES.some((code: string) => cardNumber.includes(code));
+const isAlternativeArt = (cardNumber: string): boolean =>
+  ALTERNATIVE_ARTS_CODES.some((code: string) => cardNumber.includes(code));
 
 export const getCollectionCardImagePath = ({
   path = CARD_IMAGES_PATH,

@@ -2,9 +2,9 @@ import LanguageSelector from '../LanguageSelector';
 import { renderWithProviders } from 'utils/TestUtils';
 
 it('LanguageSelector', () => {
-    renderWithProviders(<LanguageSelector />);
-    const display = document.querySelector('div');
-    expect(display).toMatchInlineSnapshot(`
+  renderWithProviders(<LanguageSelector />);
+  const display = document.querySelector('div');
+  expect(display).toMatchInlineSnapshot(`
       <div>
         <div>
           <select>

@@ -1,5 +1,5 @@
-import {CARD_IMAGES_PATH, CARD_SQUARES_PATH} from '../constants';
-import {getCollectionCardImagePath} from '../multilanguage';
+import { CARD_IMAGES_PATH, CARD_SQUARES_PATH } from '../constants';
+import { getCollectionCardImagePath } from '../multilanguage';
 
 const generateExpectedResult = ({
   path = CARD_IMAGES_PATH,
@@ -36,11 +36,11 @@ describe('Multilanguage', () => {
         cardNumber: 'WTR111_Brandao'
       });
       expect(result).to.equal(
-          generateExpectedResult({
-            path: CARD_IMAGES_PATH,
-            locale: 'English',
-            cardNumber: 'WTR111_Brandao'
-          })
+        generateExpectedResult({
+          path: CARD_IMAGES_PATH,
+          locale: 'English',
+          cardNumber: 'WTR111_Brandao'
+        })
       );
     });
   });
@@ -83,11 +83,11 @@ describe('Multilanguage', () => {
         cardNumber: 'MST111_Brandao'
       });
       expect(result).to.equal(
-          generateExpectedResult({
-            path: CARD_SQUARES_PATH,
-            locale: 'English',
-            cardNumber: 'MST111_Brandao'
-          })
+        generateExpectedResult({
+          path: CARD_SQUARES_PATH,
+          locale: 'English',
+          cardNumber: 'MST111_Brandao'
+        })
       );
     });
   });
@@ -175,11 +175,11 @@ describe('Multilanguage', () => {
         cardNumber: 'OUT111_Brandao'
       });
       expect(result).to.equal(
-          generateExpectedResult({
-            path: CARD_SQUARES_PATH,
-            locale: 'English',
-            cardNumber: 'OUT111_Brandao'
-          })
+        generateExpectedResult({
+          path: CARD_SQUARES_PATH,
+          locale: 'English',
+          cardNumber: 'OUT111_Brandao'
+        })
       );
     });
   });
