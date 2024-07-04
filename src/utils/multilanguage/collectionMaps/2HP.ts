@@ -533,6 +533,5 @@ export const historyPack2: { [index: string]: string } = {
   MON297: '2HP528',
   MON298: '2HP529',
   MON302: '2HP530',
-  WTR075: '2HP335',
-  WTR225: '2HP532'
+  WTR075: '2HP335'
 };

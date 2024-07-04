@@ -8,6 +8,8 @@ import {
 } from 'interface/API/GetLobbyInfo.php';
 import styles from './Equipment.module.css';
 import CardPopUp from 'routes/game/components/elements/cardPopUp/CardPopUp';
+import { useLanguageSelector } from 'hooks/useLanguageSelector';
+import { CARD_SQUARES_PATH, getCollectionCardImagePath } from 'utils';
 
 type EquipmentProps = {
   lobbyInfo: GetLobbyInfoResponse;
@@ -17,6 +19,7 @@ type EquipmentProps = {
 
 const Equipment = ({ lobbyInfo, weapons, weaponSB }: EquipmentProps) => {
   const { values } = useFormikContext<DeckResponse>();
+  const { getLanguage } = useLanguageSelector();
   const hands = [...weapons, ...weaponSB];
   const head = [...lobbyInfo.deck.head, ...lobbyInfo.deck.headSB, 'NONE00'];
   const chest = [...lobbyInfo.deck.chest, ...lobbyInfo.deck.chestSB, 'NONE00'];
@@ -24,6 +27,10 @@ const Equipment = ({ lobbyInfo, weapons, weaponSB }: EquipmentProps) => {
   const legs = [...lobbyInfo.deck.legs, ...lobbyInfo.deck.legsSB, 'NONE00'];
   const demiHero = [...(lobbyInfo.deck.demiHero ?? [])];
   const modular = [...(lobbyInfo.deck.modular ?? [])];
+
+  const locale = getLanguage();
+  const getCardSrc = (cardNumber: any) =>
+    getCollectionCardImagePath({ path: CARD_SQUARES_PATH, locale, cardNumber });
 
   return (
     <div className={styles.container}>
@@ -57,7 +64,7 @@ const Equipment = ({ lobbyInfo, weapons, weaponSB }: EquipmentProps) => {
                       />
                       <CardPopUp cardNumber={weapon.id.substring(0, 6)}>
                         <CardImage
-                          src={`/cardsquares/${weapon.id.substring(0, 6)}.webp`}
+                          src={getCardSrc(weapon.id.substring(0, 6))}
                           draggable={false}
                           className={styles.card}
                         />
@@ -80,7 +87,7 @@ const Equipment = ({ lobbyInfo, weapons, weaponSB }: EquipmentProps) => {
                   <Field type="radio" name="head" value={`${card}`} />
                   <CardPopUp cardNumber={card}>
                     <CardImage
-                      src={`/cardsquares/${card}.webp`}
+                      src={getCardSrc(card)}
                       draggable={false}
                       className={styles.card}
                     />
@@ -101,7 +108,7 @@ const Equipment = ({ lobbyInfo, weapons, weaponSB }: EquipmentProps) => {
                   <Field type="radio" name="chest" value={`${card}`} />
                   <CardPopUp cardNumber={card}>
                     <CardImage
-                      src={`/cardsquares/${card}.webp`}
+                      src={getCardSrc(card)}
                       draggable={false}
                       className={styles.card}
                     />
@@ -122,7 +129,7 @@ const Equipment = ({ lobbyInfo, weapons, weaponSB }: EquipmentProps) => {
                   <Field type="radio" name="arms" value={`${card}`} />
                   <CardPopUp cardNumber={card}>
                     <CardImage
-                      src={`/cardsquares/${card}.webp`}
+                      src={getCardSrc(card)}
                       draggable={false}
                       className={styles.card}
                     />
@@ -143,7 +150,7 @@ const Equipment = ({ lobbyInfo, weapons, weaponSB }: EquipmentProps) => {
                   <Field type="radio" name="legs" value={`${card}`} />
                   <CardPopUp cardNumber={card}>
                     <CardImage
-                      src={`/cardsquares/${card}.webp`}
+                      src={getCardSrc(card)}
                       draggable={false}
                       className={styles.card}
                     />
@@ -164,7 +171,7 @@ const Equipment = ({ lobbyInfo, weapons, weaponSB }: EquipmentProps) => {
                   <label>
                     <CardPopUp cardNumber={card}>
                       <CardImage
-                        src={`/cardsquares/${card}.webp`}
+                        src={getCardSrc(card)}
                         draggable={false}
                         className={styles.card}
                       />
@@ -186,7 +193,7 @@ const Equipment = ({ lobbyInfo, weapons, weaponSB }: EquipmentProps) => {
                   <label>
                     <CardPopUp cardNumber={card}>
                       <CardImage
-                        src={`/cardsquares/${card}.webp`}
+                        src={getCardSrc(card)}
                         draggable={false}
                         className={styles.card}
                       />

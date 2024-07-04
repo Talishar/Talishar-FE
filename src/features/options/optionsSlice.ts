@@ -1,7 +1,8 @@
 import {
   createAsyncThunk,
   createEntityAdapter,
-  createSlice
+  createSlice,
+  PayloadAction
 } from '@reduxjs/toolkit';
 import { RootState } from 'app/Store';
 import {
@@ -14,6 +15,7 @@ import {
 import GameStaticInfo from 'features/GameStaticInfo';
 import { ProcessInputAPI } from 'interface/API/ProcessInputAPI';
 import { toast } from 'react-hot-toast';
+import { loadInitialLanguage } from 'utils';
 
 export interface GameOptions {
   Settings: Setting[];
@@ -30,7 +32,8 @@ const settingsAdapter = createEntityAdapter<Setting>({
 });
 
 export const settingsInitialState = settingsAdapter.getInitialState({
-  status: QUERY_STATUS.IDLE
+  status: QUERY_STATUS.IDLE,
+  language: loadInitialLanguage()
 });
 
 export const fetchAllSettings = createAsyncThunk(
@@ -110,6 +113,12 @@ const optionsSlice = createSlice({
     settingAdded: settingsAdapter.addOne,
     settingsReceived(state, action) {
       settingsAdapter.setAll(state, action.payload.Settings);
+    },
+    setLanguage: (
+      state,
+      action: PayloadAction<{ languageSelected: string }>
+    ) => {
+      state.language = action.payload.languageSelected;
     }
   },
   extraReducers: (builder) => {
@@ -143,8 +152,10 @@ export const settingsSelectors = settingsAdapter.getSelectors<RootState>(
 
 export const getSettingsEntity = (state: RootState) => state.settings.entities;
 export const getSettingsStatus = (state: RootState) => state.settings.status;
+export const getSettingsLanguage = (state: RootState) =>
+  state.settings.language;
 
 export default optionsSlice.reducer;
 
 const { actions } = optionsSlice;
-export const { settingAdded, settingsReceived } = actions;
+export const { settingAdded, settingsReceived, setLanguage } = actions;

@@ -23,6 +23,8 @@ import CardPopUp from '../../cardPopUp/CardPopUp';
 import CardImage from '../../cardImage/CardImage';
 import classNames from 'classnames';
 import { useCookies } from 'react-cookie';
+import LanguageSelector from 'components/LanguageSelector/LanguageSelector';
+import { CARD_SQUARES_PATH, getCardBackImagePath } from 'utils';
 
 const OptionsSettings = () => {
   const gameInfo = useAppSelector(getGameInfo, shallowEqual);
@@ -86,6 +88,14 @@ const OptionsSettings = () => {
   return (
     <div>
       <div className={styles.leftColumn}>
+        <fieldset>
+          <legend>
+            <strong>Language Selector:</strong>
+          </legend>
+          <div>
+            <LanguageSelector />
+          </div>
+        </fieldset>
         <fieldset>
           <legend>
             <strong>Priority Settings:</strong>
@@ -448,7 +458,10 @@ const OptionsSettings = () => {
                   cardNumber={CARD_BACK[cardBack.id]}
                 >
                   <CardImage
-                    src={`/cardsquares/${CARD_BACK[cardBack.id]}.webp`}
+                    src={getCardBackImagePath({
+                      path: CARD_SQUARES_PATH,
+                      cardNumber: CARD_BACK[cardBack.id]
+                    })}
                     draggable={false}
                     className={cardClass}
                   />

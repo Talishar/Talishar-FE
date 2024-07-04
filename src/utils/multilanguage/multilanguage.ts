@@ -3,18 +3,16 @@ import {
   JAPANESE_LANGUAGE,
   JAPANESE_LANGUAGE_PRINTED_COLLECTIONS,
   LOCALE_DICTIONARY,
-  DEFAULT_LANGUAGE_CARDS,
+  DEFAULT_LANGUAGE,
   EUROPEAN_LANGUAGES_PRINTED_COLLECTIONS,
   COLLECTIONS_HISTORY_PACK_1,
   COLLECTIONS_HISTORY_PACK_2,
-  ADDITIONAL_REPRINTS_HISTORY_PACK_2
+  ADDITIONAL_REPRINTS_HISTORY_PACK_2,
+  ALTERNATIVE_ARTS_CODES,
+  CARD_IMAGES_PATH
 } from './constants';
 import { historyPack1, historyPack2 } from './collectionMaps';
-
-type getCardImagesImagePathType = {
-  locale: string;
-  cardNumber: string;
-};
+import { CollectionCardImagePathData, ImagePathNumber } from './types';
 
 const getCollectionCode = (cardNumber: string): string =>
   cardNumber.substring(0, 3);
@@ -66,17 +64,20 @@ const getHistoryPackCard = (cardNumber: string, collectionCode: string) => {
   }
 };
 
-export const getCardImagesImagePath = ({
+const isAlternativeArt = (cardNumber: string): boolean => ALTERNATIVE_ARTS_CODES.some((code: string) => cardNumber.includes(code));
+
+export const getCollectionCardImagePath = ({
+  path = CARD_IMAGES_PATH,
   locale = 'en',
   cardNumber = 'CardBack'
-}: getCardImagesImagePathType): string => {
+}: CollectionCardImagePathData): string => {
   const cardPathData = {
-    languagePath: LOCALE_DICTIONARY[DEFAULT_LANGUAGE_CARDS],
+    languagePath: LOCALE_DICTIONARY[DEFAULT_LANGUAGE],
     cardNumber
   };
   const collectionCode = getCollectionCode(cardNumber);
 
-  if (locale !== DEFAULT_LANGUAGE_CARDS) {
+  if (locale !== DEFAULT_LANGUAGE && !isAlternativeArt(cardNumber)) {
     if (isJapaneseCard(locale, collectionCode)) {
       Object.assign(cardPathData, { languagePath: LOCALE_DICTIONARY[locale] });
     } else if (isEuropeanCard(locale, cardNumber, collectionCode)) {
@@ -87,5 +88,17 @@ export const getCardImagesImagePath = ({
     }
   }
 
-  return `/cardimages/${cardPathData.languagePath}/${cardPathData.cardNumber}.webp`;
+  return `/${path}/${cardPathData.languagePath}/${cardPathData.cardNumber}.webp`;
+};
+
+export const getCardBackImagePath = ({
+  path,
+  cardNumber = 'CardBack'
+}: ImagePathNumber): string => `/${path}/cardback/${cardNumber}.webp`;
+
+export const loadInitialLanguage = () => {
+  const languageLoadedLocalStorage = localStorage.getItem('language');
+  return languageLoadedLocalStorage
+    ? languageLoadedLocalStorage
+    : DEFAULT_LANGUAGE;
 };

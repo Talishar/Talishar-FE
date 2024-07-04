@@ -4,6 +4,8 @@ import CardImage from 'routes/game/components/elements/cardImage/CardImage';
 import { DeckResponse } from 'interface/API/GetLobbyInfo.php';
 import styles from './Deck.module.css';
 import CardPopUp from 'routes/game/components/elements/cardPopUp/CardPopUp';
+import { useLanguageSelector } from 'hooks/useLanguageSelector';
+import { CARD_SQUARES_PATH, getCollectionCardImagePath } from 'utils';
 
 type DeckProps = {
   deck: String[];
@@ -11,6 +13,14 @@ type DeckProps = {
 
 const Deck = ({ deck }: DeckProps) => {
   const { values } = useFormikContext<DeckResponse>();
+  const { getLanguage } = useLanguageSelector();
+
+  const getImageSrc = (currentCardNumber: string) =>
+    getCollectionCardImagePath({
+      path: CARD_SQUARES_PATH,
+      locale: getLanguage(),
+      cardNumber: currentCardNumber
+    });
 
   return (
     <div className={styles.container}>
@@ -21,7 +31,7 @@ const Deck = ({ deck }: DeckProps) => {
               <Field type="checkbox" name="deck" value={`${card}`} />
               <CardPopUp cardNumber={card.substring(0, 6)}>
                 <CardImage
-                  src={`/cardsquares/${card.substring(0, 6)}.webp`}
+                  src={getImageSrc(card.substring(0, 6))}
                   draggable={false}
                   className={styles.card}
                 />

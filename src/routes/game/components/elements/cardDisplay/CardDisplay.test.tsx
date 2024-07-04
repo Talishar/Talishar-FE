@@ -18,7 +18,7 @@ it('renders a card', () => {
       >
         <img
           class="_img_877d58"
-          src="/cardsquares/WTR001.webp"
+          src="/cardsquares/English/WTR001.webp"
         />
         <div
           class="_countersCover_562030"

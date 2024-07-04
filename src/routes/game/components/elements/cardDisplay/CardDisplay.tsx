@@ -11,6 +11,13 @@ import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useState } from 'react';
+import { useLanguageSelector } from 'hooks/useLanguageSelector';
+import {
+  CARD_SQUARES_PATH,
+  getCollectionCardImagePath,
+  pathType
+} from 'utils';
+import { string } from 'yup';
 
 export interface CardProp {
   makeMeBigger?: boolean;
@@ -23,22 +30,31 @@ export interface CardProp {
   isPlayer?: boolean;
 }
 
+const getEqImg = (path: pathType, locale: string, cardNumber: string) =>
+  getCollectionCardImagePath({ path, locale, cardNumber });
+
 export const CardDisplay = (prop: CardProp) => {
   const { card, preventUseOnClick, activeCombatChain, num, isPlayer } = prop;
   const dispatch = useAppDispatch();
   const cardBack = useAppSelector((state: RootState) =>
     isPlayer ? state.game.playerOne.CardBack : state.game.playerTwo.CardBack
   ) ?? { cardNumber: '' };
+  const { getLanguage } = useLanguageSelector();
   const [showSubCards, setShowSubCards] = useState<boolean>(false);
 
   if (card == null || card.cardNumber === '') {
     return null;
   }
 
-  const eqImg =
-    card.facing === 'DOWN'
-      ? `/cardsquares/${cardBack.cardNumber}.webp`
-      : `/cardsquares/${card.cardNumber}.webp`;
+  const locale = getLanguage();
+  const cardNumber =
+    card.facing === 'DOWN' ? cardBack.cardNumber : card.cardNumber;
+
+  const eqImg = getCollectionCardImagePath({
+    path: CARD_SQUARES_PATH,
+    locale,
+    cardNumber
+  });
 
   function onClick() {
     if (preventUseOnClick) {

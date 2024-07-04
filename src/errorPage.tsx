@@ -1,5 +1,6 @@
 import { useNavigate, useRouteError } from 'react-router-dom';
 import styles from './errorPage.module.css';
+import { CARD_IMAGES_PATH, getCollectionCardImagePath } from 'utils';
 
 export const ErrorPage = () => {
   const error = useRouteError();
@@ -30,6 +31,12 @@ export const ErrorPage = () => {
     statusText = 'An unknown error happened!';
   }
 
+  const errorCardSrc = getCollectionCardImagePath({
+    path: CARD_IMAGES_PATH,
+    locale: 'en',
+    cardNumber: 'WTR224'
+  });
+
   return (
     <main className={styles.container}>
       <article className={styles.article}>
@@ -41,7 +48,7 @@ export const ErrorPage = () => {
         </p>
         {!!errMessage && <p>{errMessage}</p>}
         <img
-          src="/cardimages/english/WTR224.webp"
+          src={errorCardSrc}
           style={{ maxWidth: '100%', maxHeight: '100%', marginBottom: '19px' }}
         />
         <button

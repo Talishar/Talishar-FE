@@ -37,7 +37,7 @@ export const doubleFacedCardsMappings: { [key: string]: string } = {
   DYN492: 'DYN092',
 
   EVO010: 'EVO410',
-  EV4010: 'EVO010',
+  EVO410: 'EVO010',
 
   MST000: 'MST400',
   MST010: 'MST410',
