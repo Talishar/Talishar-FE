@@ -92,11 +92,6 @@ export const getCollectionCardImagePath = ({
   return `/${path}/${cardPathData.languagePath}/${cardPathData.cardNumber}.webp`;
 };
 
-export const getCardBackImagePath = ({
-  path,
-  cardNumber = 'CardBack'
-}: ImagePathNumber): string => `/${path}/cardback/${cardNumber}.webp`;
-
 export const loadInitialLanguage = () => {
   const languageLoadedLocalStorage = localStorage.getItem('language');
   return languageLoadedLocalStorage

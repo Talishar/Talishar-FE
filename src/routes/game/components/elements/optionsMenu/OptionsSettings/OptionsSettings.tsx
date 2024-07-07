@@ -24,7 +24,11 @@ import CardImage from '../../cardImage/CardImage';
 import classNames from 'classnames';
 import { useCookies } from 'react-cookie';
 import LanguageSelector from 'components/LanguageSelector/LanguageSelector';
-import { CARD_SQUARES_PATH, getCardBackImagePath } from 'utils';
+import {
+  CARD_SQUARES_PATH,
+  DEFAULT_LANGUAGE,
+  getCollectionCardImagePath
+} from 'utils';
 
 const OptionsSettings = () => {
   const gameInfo = useAppSelector(getGameInfo, shallowEqual);
@@ -458,8 +462,9 @@ const OptionsSettings = () => {
                   cardNumber={CARD_BACK[cardBack.id]}
                 >
                   <CardImage
-                    src={getCardBackImagePath({
+                    src={getCollectionCardImagePath({
                       path: CARD_SQUARES_PATH,
+                      locale: DEFAULT_LANGUAGE,
                       cardNumber: CARD_BACK[cardBack.id]
                     })}
                     draggable={false}

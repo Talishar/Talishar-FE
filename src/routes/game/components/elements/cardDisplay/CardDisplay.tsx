@@ -12,7 +12,7 @@ import { RootState } from 'app/Store';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useState } from 'react';
 import { useLanguageSelector } from 'hooks/useLanguageSelector';
-import { CARD_SQUARES_PATH, getCollectionCardImagePath, pathType } from 'utils';
+import { CARD_SQUARES_PATH, getCollectionCardImagePath } from 'utils';
 
 export interface CardProp {
   makeMeBigger?: boolean;
@@ -24,9 +24,6 @@ export interface CardProp {
   activeCombatChain?: CombatChainLink;
   isPlayer?: boolean;
 }
-
-const getEqImg = (path: pathType, locale: string, cardNumber: string) =>
-  getCollectionCardImagePath({ path, locale, cardNumber });
 
 export const CardDisplay = (prop: CardProp) => {
   const { card, preventUseOnClick, activeCombatChain, num, isPlayer } = prop;
@@ -45,7 +42,7 @@ export const CardDisplay = (prop: CardProp) => {
   const cardNumber =
     card.facing === 'DOWN' ? cardBack.cardNumber : card.cardNumber;
 
-  const eqImg = getCollectionCardImagePath({
+  const imageSrc = getCollectionCardImagePath({
     path: CARD_SQUARES_PATH,
     locale,
     cardNumber
@@ -131,7 +128,7 @@ export const CardDisplay = (prop: CardProp) => {
               </motion.div>
             );
           })}
-        <CardImage src={eqImg} className={imgStyles} />
+        <CardImage src={imageSrc} className={imgStyles} />
         {card.overlay === 'disabled' && <div className={classStyles}></div>}
         {(card.isBroken ||
           card.onChain ||
