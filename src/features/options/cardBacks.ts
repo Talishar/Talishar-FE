@@ -82,7 +82,8 @@ export const CARD_BACK = {
   '80': 'CBDropcast',
   '81': 'CBSunflowerSamurai',
   '82': 'CBTalisharTeam',
-  '83': 'CBTalisharTeam2'
+  '83': 'CBTalisharTeam2',
+  '84': 'CBTideBreakers',
 } as { [key: string]: string };
 
 export const PLAYMATS = {
