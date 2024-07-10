@@ -70,7 +70,7 @@ export const ContinuousCounters = (props: Props) => {
           <div>{countersMap?.energy}</div>
         </div>
       )}
-        {!!Number(countersMap?.haunt) && (
+      {!!Number(countersMap?.haunt) && (
         <div
           className={styles.hauntCounter}
           title={`${countersMap?.haunt} haunt counter(s)`}
@@ -78,7 +78,7 @@ export const ContinuousCounters = (props: Props) => {
           <div>{countersMap?.haunt}</div>
         </div>
       )}
-        {!!Number(countersMap?.verse) && (
+      {!!Number(countersMap?.verse) && (
         <div
           className={styles.verseCounter}
           title={`${countersMap?.verse} verse counter(s)`}
@@ -86,7 +86,7 @@ export const ContinuousCounters = (props: Props) => {
           <div>{countersMap?.verse}</div>
         </div>
       )}
-        {!!Number(countersMap?.doom) && (
+      {!!Number(countersMap?.doom) && (
         <div
           className={styles.doomCounter}
           title={`${countersMap?.doom} doom counter(s)`}
@@ -144,7 +144,8 @@ export const ContinuousCounters = (props: Props) => {
       )}
       {!!Number(countersMap?.aim) && (
         <div
-          className={classNames(styles.aimCounter, styles.icon)} data-tooltip="Aim counter(s)"
+          className={classNames(styles.aimCounter, styles.icon)}
+          data-tooltip="Aim counter(s)"
           title={`aim counter`}
         />
       )}

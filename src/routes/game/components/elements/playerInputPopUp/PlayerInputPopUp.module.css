@@ -37,7 +37,7 @@
   flex-direction: row;
   flex-wrap: wrap;
   align-items: flex-start;
-  padding-left: .45em;
+  padding-left: 0.45em;
   gap: 1.2dvw;
 }
 

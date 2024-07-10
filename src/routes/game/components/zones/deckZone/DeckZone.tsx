@@ -44,10 +44,7 @@ export const DeckZone = React.memo((prop: Displayrow) => {
 
   return (
     <div className={styles.deckZone} onClick={deckZoneDisplay}>
-      <CardDisplay
-        card={deckBack}
-        num={showCount ? deckCards : undefined}
-      />
+      <CardDisplay card={deckBack} num={showCount ? deckCards : undefined} />
       {isManualMode && <ManualMode isPlayer={isPlayer} />}
     </div>
   );

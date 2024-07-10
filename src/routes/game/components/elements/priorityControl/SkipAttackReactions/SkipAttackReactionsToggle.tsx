@@ -2,12 +2,12 @@ import React from 'react';
 import styles from '../PriorityControl.module.css';
 import * as optConst from 'features/options/constants';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
-import { TbSwordOff } from "react-icons/tb";
+import { TbSwordOff } from 'react-icons/tb';
 import useSetting from 'hooks/useSetting';
 import classNames from 'classnames';
-import { 
-  updateOptions, 
-  Setting, 
+import {
+  updateOptions,
+  Setting,
   getSettingsEntity
 } from 'features/options/optionsSlice';
 import { getGameInfo } from 'features/game/GameSlice';
@@ -22,9 +22,9 @@ const SkipAttackReactionsToggle = () => {
   const gameInfo = useAppSelector(getGameInfo, shallowEqual);
 
   const initialValues = {
-    skipAttackReactions: settingsData['SkipARWindow']?.value === '1',
+    skipAttackReactions: settingsData['SkipARWindow']?.value === '1'
   };
-  
+
   const handleClickPassAttackReactions = ({ name, value }: Setting) => {
     dispatch(
       updateOptions({
@@ -35,8 +35,7 @@ const SkipAttackReactionsToggle = () => {
   };
 
   const buttonStyle = classNames(styles.btn, {
-    [styles.buttonActive]:
-      Number(initialValues.skipAttackReactions) === 1
+    [styles.buttonActive]: Number(initialValues.skipAttackReactions) === 1
   });
   return (
     <div>
@@ -47,10 +46,10 @@ const SkipAttackReactionsToggle = () => {
           handleClickPassAttackReactions({
             name: optConst.SKIP_AR_WINDOW,
             value: initialValues.skipAttackReactions ? '0' : '1'
-          })}
+          })
+        }
         data-tooltip="Pass Attack Reactions"
         data-placement="bottom"
-        
       >
         <TbSwordOff aria-hidden="true" fontSize={'2em'} />
       </button>

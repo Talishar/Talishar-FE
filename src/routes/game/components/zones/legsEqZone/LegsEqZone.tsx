@@ -18,7 +18,7 @@ export const LegsEqZone = React.memo((prop: Displayrow) => {
 
   return (
     <div className={styles.legsZone}>
-      <CardDisplay card={cardToDisplay} isPlayer={isPlayer}/>
+      <CardDisplay card={cardToDisplay} isPlayer={isPlayer} />
     </div>
   );
 });

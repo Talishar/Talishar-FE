@@ -2,12 +2,12 @@ import React from 'react';
 import styles from '../PriorityControl.module.css';
 import * as optConst from 'features/options/constants';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
-import { GiBouncingSword } from "react-icons/gi";
+import { GiBouncingSword } from 'react-icons/gi';
 import useSetting from 'hooks/useSetting';
 import classNames from 'classnames';
-import { 
-  updateOptions, 
-  Setting, 
+import {
+  updateOptions,
+  Setting,
   getSettingsEntity
 } from 'features/options/optionsSlice';
 import { getGameInfo } from 'features/game/GameSlice';
@@ -22,10 +22,10 @@ const SkipAllAttacksToggle = () => {
   const gameInfo = useAppSelector(getGameInfo, shallowEqual);
 
   const initialValues = {
-    shortcutAttackThreshold: settingsData[optConst.SHORTCUT_ATTACK_THRESHOLD]?.value,
-
+    shortcutAttackThreshold:
+      settingsData[optConst.SHORTCUT_ATTACK_THRESHOLD]?.value
   };
-  
+
   const handleClickSkipAllAttacks = ({ name, value }: Setting) => {
     dispatch(
       updateOptions({
@@ -36,8 +36,7 @@ const SkipAllAttacksToggle = () => {
   };
 
   const buttonStyle = classNames(styles.btn, {
-    [styles.buttonActive]:
-    Number(initialValues.shortcutAttackThreshold) >= 2
+    [styles.buttonActive]: Number(initialValues.shortcutAttackThreshold) >= 2
   });
   return (
     <div>
@@ -48,7 +47,8 @@ const SkipAllAttacksToggle = () => {
           handleClickSkipAllAttacks({
             name: optConst.SHORTCUT_ATTACK_THRESHOLD,
             value: Number(initialValues.shortcutAttackThreshold) ? 0 : 99
-          })}
+          })
+        }
         data-tooltip="Skip Attacks"
         data-placement="left"
       >

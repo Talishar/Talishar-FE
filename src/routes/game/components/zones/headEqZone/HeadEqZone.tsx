@@ -17,7 +17,7 @@ export const HeadEqZone = React.memo((prop: Displayrow) => {
 
   return (
     <div className={styles.headZone}>
-      <CardDisplay card={cardToDisplay} isPlayer={isPlayer}/>
+      <CardDisplay card={cardToDisplay} isPlayer={isPlayer} />
     </div>
   );
 });

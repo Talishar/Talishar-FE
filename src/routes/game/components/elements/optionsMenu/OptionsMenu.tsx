@@ -18,10 +18,7 @@ import OptionsSettings from './OptionsSettings';
 import { shallowEqual } from 'react-redux';
 
 const OptionsContent = () => {
-  const { gameID, playerID } = useAppSelector(
-    getGameInfo,
-    shallowEqual
-  );
+  const { gameID, playerID } = useAppSelector(getGameInfo, shallowEqual);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const [allowSpectator, setAllowSpectator] = useState(false);
@@ -38,7 +35,7 @@ const OptionsContent = () => {
     dispatch(submitButton({ button: { mode: PROCESS_INPUT.CONCEDE_GAME } }));
   };
 
-/*   const clickPlayLegacyHandler = async (e: React.MouseEvent) => {
+  /*   const clickPlayLegacyHandler = async (e: React.MouseEvent) => {
     e.preventDefault;
     await screenfull.exit();
     window.location.href = `https://legacy.talishar.net/game/NextTurn4.php?gameName=${gameID}&playerID=${playerID}`;
@@ -80,7 +77,9 @@ const OptionsContent = () => {
   };
 
   const handleAllowSpectators = () => {
-    dispatch(submitButton({ button: { mode: PROCESS_INPUT.ALLOW_SPECTATORS } }));
+    dispatch(
+      submitButton({ button: { mode: PROCESS_INPUT.ALLOW_SPECTATORS } })
+    );
     setAllowSpectator(true);
   };
 
@@ -143,7 +142,7 @@ const OptionsContent = () => {
         <div className={styles.buttonColumn}>
           {playerID !== 3 && ( // If not a spectator then can change options
             <>
-               <button
+              <button
                 className={styles.buttonDiv}
                 onClick={clickUndoButtonHandler}
               >

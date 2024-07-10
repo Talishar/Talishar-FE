@@ -12,7 +12,9 @@ const EndGameMenuOptions = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { roguelikeGameID } = useAppSelector(getGameInfo, shallowEqual);
-  const playerName = useAppSelector((state: RootState) => state.game.playerOne.Name);
+  const playerName = useAppSelector(
+    (state: RootState) => state.game.playerOne.Name
+  );
   //Always player 1 in roguelike, which is only place this matters
   const health = useAppSelector(
     (state: RootState) => state.game.playerOne.Health ?? 0
@@ -34,7 +36,7 @@ const EndGameMenuOptions = () => {
   const handleContinueAdventure = () => {
     window.location.href = `https://beta.talishar.net/game/Roguelike/ContinueAdventure.php?gameName=${roguelikeGameID}&playerID=1&health=${health}`;
   };
-  
+
   const handleSaveReplay = () => {
     dispatch(submitButton({ button: { mode: PROCESS_INPUT.CREATE_REPLAY } }));
   };
@@ -60,7 +62,7 @@ const EndGameMenuOptions = () => {
             </div>
           </>
         )}
-        {!roguelikeGameID && playerName == "OotTheMonk" && (
+        {!roguelikeGameID && playerName == 'OotTheMonk' && (
           <>
             <div className={styles.buttonDiv} onClick={handleSaveReplay}>
               Save Replay (beta)

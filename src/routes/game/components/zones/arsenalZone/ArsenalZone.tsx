@@ -81,8 +81,10 @@ const ArsenalPrompt = () => {
   };
 
   const showPrompt =
-    (gameInfo.playerID !== 3 && turnPhase === 'ARS' || turnPhase === 'CHOOSEHAND' || turnPhase === 'MAYCHOOSEHAND') ||
-    (playerPrompt?.helpText?.includes('Opponent is inactive'));
+    (gameInfo.playerID !== 3 && turnPhase === 'ARS') ||
+    turnPhase === 'CHOOSEHAND' ||
+    turnPhase === 'MAYCHOOSEHAND' ||
+    playerPrompt?.helpText?.includes('Opponent is inactive');
 
   const buttons = playerPrompt?.buttons?.map((button, ix) => {
     return (

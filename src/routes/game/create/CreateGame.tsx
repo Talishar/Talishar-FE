@@ -42,8 +42,9 @@ const CreateGame = () => {
       deck: '',
       fabdb: searchParams.get('fabdb') ?? '',
       deckTestMode: false,
-      format: searchParams.get('format') ?? isLoggedIn 
-         ? data?.lastFormat !== undefined
+      format:
+        searchParams.get('format') ?? isLoggedIn
+          ? data?.lastFormat !== undefined
             ? data.lastFormat
             : GAME_FORMAT.CLASSIC_CONSTRUCTED
           : GAME_FORMAT.OPEN_FORMAT_CC,
@@ -114,17 +115,17 @@ const CreateGame = () => {
     <div>
       <article className={styles.formContainer}>
         <h3>Create New Game</h3>
-{/*         <p className={styles.fieldError}>
+        {/*         <p className={styles.fieldError}>
           <FaExclamationCircle /> Warning - SOON! an update will be pushed to the live servers. The games in progress will crash and new games will be required.
           </p> */}
         <p>
-            <small className={styles.disclaimer}>
-              Talishar is an open-source, fan-made platform not associated with
-              LSS. It may not be a completely accurate representation of the Rules
-              as written. If you have questions about interactions or rulings,
-              please contact the judge community for clarification.
-            </small>
-          </p>
+          <small className={styles.disclaimer}>
+            Talishar is an open-source, fan-made platform not associated with
+            LSS. It may not be a completely accurate representation of the Rules
+            as written. If you have questions about interactions or rulings,
+            please contact the judge community for clarification.
+          </small>
+        </p>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className={styles.formInner}>
             {isLoggedIn && !isLoading && (
@@ -192,25 +193,30 @@ const CreateGame = () => {
                 </label>
               )}
             </fieldset>
-            {isPatron == "1" && (
+            {isPatron == '1' && (
               <label>
-              Game Name
-              <input
-                type="text"
-                id="gameDescription"
-                aria-label="Game Name"
-                {...register('gameDescription')}
-                aria-invalid={
-                errors.gameDescription?.message ? 'true' : undefined
-               }
-               placeholder="Defaults to Game#14321542" />
+                Game Name
+                <input
+                  type="text"
+                  id="gameDescription"
+                  aria-label="Game Name"
+                  {...register('gameDescription')}
+                  aria-invalid={
+                    errors.gameDescription?.message ? 'true' : undefined
+                  }
+                  placeholder="Defaults to Game#14321542"
+                />
               </label>
-             )}
-             {(isPatron != "1") && (
-               <label>
-                Join our <a href='https://www.patreon.com/talishar' target='_blank'>Patreon</a> to customize your game name!
+            )}
+            {isPatron != '1' && (
+              <label>
+                Join our{' '}
+                <a href="https://www.patreon.com/talishar" target="_blank">
+                  Patreon
+                </a>{' '}
+                to customize your game name!
                 <div>&nbsp;</div>
-               </label>
+              </label>
             )}
             <label>
               Format
@@ -271,7 +277,7 @@ const CreateGame = () => {
                 Single Player 🤖
                 <div>&nbsp;</div>
               </label>
-              {isLoggedIn && (isPatron == "1") && (
+              {isLoggedIn && isPatron == '1' && (
                 <label>
                   AI Deck
                   <select
@@ -284,15 +290,17 @@ const CreateGame = () => {
                     <option value={AI_DECK.IRABLITZ}>
                       Flic Flak Ira (Blitz)
                     </option>
-                    <option value={AI_DECK.FAICC}>
-                      Fai (CC)
-                    </option>
+                    <option value={AI_DECK.FAICC}>Fai (CC)</option>
                   </select>
                 </label>
               )}
-              {(isPatron != "1") && (
+              {isPatron != '1' && (
                 <label>
-                  Join our <a href='https://www.patreon.com/talishar' target='_blank'>Patreon</a> to play against custom coded AIs!
+                  Join our{' '}
+                  <a href="https://www.patreon.com/talishar" target="_blank">
+                    Patreon
+                  </a>{' '}
+                  to play against custom coded AIs!
                 </label>
               )}
             </fieldset>

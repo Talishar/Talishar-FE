@@ -27,7 +27,7 @@ const EndGameScreen = () => {
   const cardListBoxClasses = classNames(styles.cardListBox, {
     [styles.reduced]: !showStats
   });
-  const fullLogClasses = classNames(styles.fullLog, { });
+  const fullLogClasses = classNames(styles.fullLog, {});
 
   if (!showModal) return null;
 
@@ -37,12 +37,24 @@ const EndGameScreen = () => {
     content = <div>Loading...</div>;
   } else if (error) {
     content = <div>{JSON.stringify(error)}</div>;
-  } else if(showFullLog) {
-    if(isPatron) {
-      content = <div className={fullLogClasses} dangerouslySetInnerHTML={{ __html: data.fullLog }} />;
-    }
-    else {
-      content = <div>Support our <a href='https://www.patreon.com/talishar' target='_blank'>patreon</a> to access this feature.</div>;
+  } else if (showFullLog) {
+    if (isPatron) {
+      content = (
+        <div
+          className={fullLogClasses}
+          dangerouslySetInnerHTML={{ __html: data.fullLog }}
+        />
+      );
+    } else {
+      content = (
+        <div>
+          Support our{' '}
+          <a href="https://www.patreon.com/talishar" target="_blank">
+            patreon
+          </a>{' '}
+          to access this feature.
+        </div>
+      );
     }
   } else {
     content = <EndGameStats {...(data as EndGameData)} />;
@@ -67,7 +79,7 @@ const EndGameScreen = () => {
           <h3 className={styles.title}>{'Game Over Summary'}</h3>
           <div className={styles.buttonGroup}>
             <div className={styles.buttonDiv} onClick={toggleShowFullLog}>
-               Full Game Log
+              Full Game Log
             </div>
             <div className={styles.buttonDiv} onClick={switchPlayer}>
               Switch player stats

@@ -1,10 +1,12 @@
 import { useAppSelector } from 'app/Hooks';
+import { useLanguageSelector } from 'hooks/useLanguageSelector';
 import { RootState } from 'app/Store';
 import CardImage from '../cardImage/CardImage';
 import styles from './CardPortal.module.css';
 import { doubleFacedCardsMappings } from './constants';
 import classNames from 'classnames';
 import useWindowDimensions from 'hooks/useWindowDimensions';
+import { CARD_IMAGES_PATH, getCollectionCardImagePath } from 'utils';
 
 const popUpGap = 10;
 
@@ -30,18 +32,29 @@ function CardDetails({
   );
 }
 
-function getSrcs(cardNumber: string): Array<string> {
+function getSrcs({
+  locale,
+  cardNumber
+}: {
+  locale: string;
+  cardNumber: string;
+}): Array<string> {
   const cardNumbers = [cardNumber];
   if (doubleFacedCardsMappings[cardNumber] != null) {
     cardNumbers.push(doubleFacedCardsMappings[cardNumber]);
   }
-  return cardNumbers.map(
-    (currentCardNumber) => `/cardimages/${currentCardNumber}.webp`
+  return cardNumbers.map((currentCardNumber) =>
+    getCollectionCardImagePath({
+      path: CARD_IMAGES_PATH,
+      locale,
+      cardNumber: currentCardNumber
+    })
   );
 }
 
 export default function CardPortal() {
   const popup = useAppSelector((state: RootState) => state.game.popup);
+  const { getLanguage } = useLanguageSelector();
   const [windowWidth, windowHeight] = useWindowDimensions();
   if (
     popup === undefined ||
@@ -51,7 +64,10 @@ export default function CardPortal() {
     return null;
   }
 
-  const [src, dfcSrc] = getSrcs(popup.popupCard.cardNumber);
+  const [src, dfcSrc] = getSrcs({
+    locale: getLanguage(),
+    cardNumber: popup.popupCard.cardNumber
+  });
 
   if (popup.xCoord === undefined || popup.yCoord === undefined) {
     return <CardDetails src={src} />;

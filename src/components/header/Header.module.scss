@@ -109,6 +109,13 @@
         }
       }
     }
+
+    li.languageSelectorListElement {
+      height: auto;
+      display: flex;
+      align-content: center;
+      margin-right: 10px;
+    }
   }
 }
 

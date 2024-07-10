@@ -11,6 +11,8 @@ import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useState } from 'react';
+import { useLanguageSelector } from 'hooks/useLanguageSelector';
+import { CARD_SQUARES_PATH, getCollectionCardImagePath } from 'utils';
 
 export interface CardProp {
   makeMeBigger?: boolean;
@@ -29,16 +31,22 @@ export const CardDisplay = (prop: CardProp) => {
   const cardBack = useAppSelector((state: RootState) =>
     isPlayer ? state.game.playerOne.CardBack : state.game.playerTwo.CardBack
   ) ?? { cardNumber: '' };
+  const { getLanguage } = useLanguageSelector();
   const [showSubCards, setShowSubCards] = useState<boolean>(false);
 
   if (card == null || card.cardNumber === '') {
     return null;
   }
 
-  const eqImg =
-    card.facing === 'DOWN'
-      ? `/cardsquares/${cardBack.cardNumber}.webp`
-      : `/cardsquares/${card.cardNumber}.webp`;
+  const locale = getLanguage();
+  const cardNumber =
+    card.facing === 'DOWN' ? cardBack.cardNumber : card.cardNumber;
+
+  const imageSrc = getCollectionCardImagePath({
+    path: CARD_SQUARES_PATH,
+    locale,
+    cardNumber
+  });
 
   function onClick() {
     if (preventUseOnClick) {
@@ -120,7 +128,7 @@ export const CardDisplay = (prop: CardProp) => {
               </motion.div>
             );
           })}
-        <CardImage src={eqImg} className={imgStyles} />
+        <CardImage src={imageSrc} className={imgStyles} />
         {card.overlay === 'disabled' && <div className={classStyles}></div>}
         {(card.isBroken ||
           card.onChain ||

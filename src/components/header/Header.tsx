@@ -12,6 +12,7 @@ import {
   GiTreasureMap,
   RiLogoutBoxRLine
 } from 'react-icons/all';
+import LanguageSelector from 'components/LanguageSelector/LanguageSelector';
 
 const Header = () => {
   const { isLoggedIn, logOut } = useAuth();
@@ -45,6 +46,9 @@ const Header = () => {
           </li>
         </ul>
         <ul>
+          <li className={styles.languageSelectorListElement}>
+            <LanguageSelector />
+          </li>
           <li>
             <a
               href="https://github.com/Talishar/Talishar"
@@ -75,15 +79,13 @@ const Header = () => {
               <FaTwitter></FaTwitter>
             </a>
           </li>
-          {
-            /*
+          {/*
             <li>
             <a href="https://beta.talishar.net/game/Roguelike/CreateGame.php">
               <GiTreasureMap></GiTreasureMap> <span>RogueLike</span>
             </a>
             </li>
-            */
-          }
+            */}
           <li>
             {isLoggedIn ? (
               <Link to="/user">

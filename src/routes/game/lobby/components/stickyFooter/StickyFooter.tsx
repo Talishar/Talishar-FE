@@ -35,26 +35,22 @@ const StickyFooter = ({
   const leaveLobby = classNames(styles.buttonClassLeave, 'outline secondary');
 
   return (
-    
     <div className={styles.stickyFooter}>
       <div className={dynamicContainer}>
-        <div className={styles.footerStart}>
-              Copy invite link
-        </div>
+        <div className={styles.footerStart}>Copy invite link</div>
         <div className={styles.clipboardButtonHolder}>
           <button
             className={styles.buttonClass}
             onClick={handleClipboardCopy}
             type="button"
           >
-            <div 
-              className={styles.icon}>
+            <div className={styles.icon}>
               <HiClipboardCopy />
             </div>
           </button>
         </div>
         <div className={styles.footerAlarm}>
-        {!isValid && (
+          {!isValid && (
             <div className={styles.alarm}>
               <FaExclamationCircle /> {errorArray[0]}
             </div>

@@ -19,6 +19,8 @@ import CardImage from '../cardImage/CardImage';
 import CardPopUp from '../cardPopUp/CardPopUp';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import { motion, PanInfo } from 'framer-motion';
+import { CARD_IMAGES_PATH, getCollectionCardImagePath } from 'utils';
+import { useLanguageSelector } from 'hooks/useLanguageSelector';
 
 const ScreenPercentageForCardPlayed = 0.25;
 
@@ -42,6 +44,7 @@ export const PlayerHandCard = ({
   const [canPopUp, setCanPopup] = useState(true);
   const [, windowHeight] = useWindowDimensions();
   const [snapback, setSnapback] = useState<boolean>(true);
+  const { getLanguage } = useLanguageSelector();
 
   // ref to determine if we have a long press or a short tap.
   const timerRef = useRef<ReturnType<typeof setTimeout>>();
@@ -50,7 +53,12 @@ export const PlayerHandCard = ({
   if (card === undefined) {
     return <div className={styles.handCard}></div>;
   }
-  const src = `/cardimages/${card.cardNumber}.webp`;
+
+  const src = getCollectionCardImagePath({
+    path: CARD_IMAGES_PATH,
+    locale: getLanguage(),
+    cardNumber: card.cardNumber
+  });
   const dispatch = useAppDispatch();
 
   const handleDragEnd = (

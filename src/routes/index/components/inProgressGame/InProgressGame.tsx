@@ -3,7 +3,7 @@ import React from 'react';
 import { createSearchParams, useNavigate } from 'react-router-dom';
 import { IGameInProgress } from '../gameList/GameList';
 import styles from './InProgressGame.module.scss';
-import { RiSwordLine } from "react-icons/ri";
+import { RiSwordLine } from 'react-icons/ri';
 export const InProgressGame = ({
   ix,
   entry

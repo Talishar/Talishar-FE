@@ -7,8 +7,8 @@ import styles from './Lobby.module.css';
 import Equipment from './components/equipment/Equipment';
 import classNames from 'classnames';
 import { FaExclamationCircle } from 'react-icons/fa';
-import { GiCapeArmor } from "react-icons/gi";
-import { SiBookstack } from "react-icons/si";
+import { GiCapeArmor } from 'react-icons/gi';
+import { SiBookstack } from 'react-icons/si';
 import { Form, Formik } from 'formik';
 import deckValidation from './validation';
 import StickyFooter from './components/stickyFooter/StickyFooter';
@@ -193,7 +193,7 @@ const Lobby = () => {
   const hasModular = (data.deck.modular?.length ?? 0) > 0;
   const initialEquipment = (main: string[], side: string[]) => {
     if (hasModular) {
-      return [...main, 'NONE00'].filter(id => id !== 'EVO013')[0];
+      return [...main, 'NONE00'].filter((id) => id !== 'EVO013')[0];
     } else {
       return [...main, ...side, 'NONE00'][0];
     }
@@ -226,7 +226,10 @@ const Lobby = () => {
 
   console.log(gameLobby?.chatInvited + ' ' + showChatModal);
 
-  const needToDoDisclaimer = !acceptedDisclaimer && (data.format === GAME_FORMAT.OPEN_FORMAT_CC || data.format === GAME_FORMAT.OPEN_FORMAT_BLITZ);
+  const needToDoDisclaimer =
+    !acceptedDisclaimer &&
+    (data.format === GAME_FORMAT.OPEN_FORMAT_CC ||
+      data.format === GAME_FORMAT.OPEN_FORMAT_BLITZ);
   //const needToDoDisclaimer = false;
   const leaveLobby = classNames(styles.buttonClass, 'outline');
 
@@ -240,16 +243,16 @@ const Lobby = () => {
         .concat(weaponsSBIndexed)
         .filter((item) => item.id !== 'NONE00')
         .map((item) => item.id.substring(0, 6)),
-      ...data?.deck?.head ?? [],
-      ...data?.deck?.headSB ?? [],
-      ...data?.deck?.chest ?? [],
-      ...data?.deck?.chestSB ?? [],
-      ...data?.deck?.arms ?? [],
-      ...data?.deck?.armsSB ?? [],
-      ...data?.deck?.legs ?? [],
-      ...data?.deck?.legsSB ?? [],
-      ...data?.deck?.demiHero ?? [],
-      ...data?.deck?.modular ?? [],
+      ...(data?.deck?.head ?? []),
+      ...(data?.deck?.headSB ?? []),
+      ...(data?.deck?.chest ?? []),
+      ...(data?.deck?.chestSB ?? []),
+      ...(data?.deck?.arms ?? []),
+      ...(data?.deck?.armsSB ?? []),
+      ...(data?.deck?.legs ?? []),
+      ...(data?.deck?.legsSB ?? []),
+      ...(data?.deck?.demiHero ?? []),
+      ...(data?.deck?.modular ?? [])
     ].filter((item) => item !== 'NONE00');
 
     // encode it as an object
@@ -301,7 +304,7 @@ const Lobby = () => {
             <dialog open={needToDoDisclaimer}>
               <article className={styles.disclaimerArticles}>
                 <header style={{ marginBottom: '1em' }}>
-                ⚠️ Open Format Disclaimer
+                  ⚠️ Open Format Disclaimer
                 </header>
                 <p style={{ marginBottom: '1em' }}>
                   Note that new cards are added on a 'best-effort' basis and
@@ -310,23 +313,23 @@ const Lobby = () => {
                   notes from Legend Story Studios yet.
                 </p>
                 <div className={styles.disclaimerAcceptButtons}>
-                <button
-                  onClick={() => {
-                    setAcceptedDisclaimer(true);
-                  }}
-                >
-                  I Accept!
-                </button>
+                  <button
+                    onClick={() => {
+                      setAcceptedDisclaimer(true);
+                    }}
+                  >
+                    I Accept!
+                  </button>
                 </div>
                 <div className={styles.disclaimerButtons}>
-                <button
-                  onClick={() => {
-                    navigate('/');
-                  }}
-                  className={leaveLobby}
-                >
-                  No Thanks!
-                </button>
+                  <button
+                    onClick={() => {
+                      navigate('/');
+                    }}
+                    className={leaveLobby}
+                  >
+                    No Thanks!
+                  </button>
                 </div>
               </article>
             </dialog>
@@ -342,7 +345,7 @@ const Lobby = () => {
           head: initialEquipment(data.deck.head, data.deck.headSB),
           chest: initialEquipment(data.deck.chest, data.deck.chestSB),
           arms: initialEquipment(data.deck.arms, data.deck.armsSB),
-          legs: initialEquipment(data.deck.legs, data.deck.legsSB),
+          legs: initialEquipment(data.deck.legs, data.deck.legsSB)
         }}
         onSubmit={handleFormSubmission}
         validationSchema={deckValidation(deckSize, maxDeckSize, handsTotal)}
@@ -360,7 +363,9 @@ const Lobby = () => {
                   style={{ backgroundImage: leftPic }}
                 >
                   <div className={styles.dimPic}>
-                    <h3 aria-busy={isLoading}>{data.displayName.substring(0, 15)}</h3>
+                    <h3 aria-busy={isLoading}>
+                      {data.displayName.substring(0, 15)}
+                    </h3>
                     <div className={styles.heroName}>{data.deck.heroName}</div>
                   </div>
                 </div>
@@ -422,9 +427,8 @@ const Lobby = () => {
                           onClick={handleEquipmentClick}
                           type="button"
                         >
-                          <div
-                            className={styles.icon}>
-                            <GiCapeArmor/>
+                          <div className={styles.icon}>
+                            <GiCapeArmor />
                           </div>
                           Equipment
                         </button>
@@ -435,11 +439,10 @@ const Lobby = () => {
                           onClick={handleDeckClick}
                           type="button"
                         >
-                        <div
-                          className={styles.icon}>
-                          <SiBookstack/>
-                        </div>
-                        Deck
+                          <div className={styles.icon}>
+                            <SiBookstack />
+                          </div>
+                          Deck
                         </button>
                       </li>
                       <li>
@@ -465,15 +468,14 @@ const Lobby = () => {
                   <ul>
                     <li>
                       <button
-                        className= {eqClasses}
+                        className={eqClasses}
                         onClick={handleEquipmentClick}
                         type="button"
                       >
-                          <div
-                            className={styles.icon}>
-                            <GiCapeArmor/>
-                          </div>
-                          Equipment
+                        <div className={styles.icon}>
+                          <GiCapeArmor />
+                        </div>
+                        Equipment
                       </button>
                     </li>
                     <li>
@@ -482,9 +484,8 @@ const Lobby = () => {
                         onClick={handleDeckClick}
                         type="button"
                       >
-                        <div
-                          className={styles.icon}>
-                          <SiBookstack/>
+                        <div className={styles.icon}>
+                          <SiBookstack />
                         </div>
                         Deck
                       </button>
@@ -516,26 +517,37 @@ const Lobby = () => {
                 )}
               </>
             )}
-          {(activeTab === 'chat' || isWideScreen) && showCalculator && <Calculator />}
-          {(activeTab === 'chat' || isWideScreen) && !showCalculator && <LobbyChat />}
+            {(activeTab === 'chat' || isWideScreen) && showCalculator && (
+              <Calculator />
+            )}
+            {(activeTab === 'chat' || isWideScreen) && !showCalculator && (
+              <LobbyChat />
+            )}
 
-          {isPatron == "1" && isWideScreen &&
-            <button
-              className={styles.smallButton}
-              onClick={(e) => {
-                e.preventDefault();
-                toggleShowCalculator();
-              }}
-              disabled={false} >
-              Calculator
-            </button>
-          }
+            {isPatron == '1' && isWideScreen && (
+              <button
+                className={styles.smallButton}
+                onClick={(e) => {
+                  e.preventDefault();
+                  toggleShowCalculator();
+                }}
+                disabled={false}
+              >
+                Calculator
+              </button>
+            )}
 
-          {isPatron != "1" && isWideScreen &&
-            <div className={styles.patreonLink}>Support our <a href='https://www.patreon.com/talishar' target='_blank'>patreon</a> to use dynamic hypergeometric calculator!</div>
-          }
+            {isPatron != '1' && isWideScreen && (
+              <div className={styles.patreonLink}>
+                Support our{' '}
+                <a href="https://www.patreon.com/talishar" target="_blank">
+                  patreon
+                </a>{' '}
+                to use dynamic hypergeometric calculator!
+              </div>
+            )}
 
-      <div className={styles.spacer}></div>
+            <div className={styles.spacer}></div>
 
             {(activeTab === 'matchups' || isWideScreen) && (
               <Matchups refetch={refetch} />

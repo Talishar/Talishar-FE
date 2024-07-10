@@ -76,10 +76,8 @@ export const ActiveCardCounterOverlay = (props: Props) => {
           data-tooltip={`${activeCombatChain.damagePrevention} Damage Prevention`}
         >
           <GiShieldReflect />
-          <div 
-            className={styles.iconText}
-          >
-          {activeCombatChain.damagePrevention}
+          <div className={styles.iconText}>
+            {activeCombatChain.damagePrevention}
           </div>
         </div>
       )}
@@ -89,10 +87,8 @@ export const ActiveCardCounterOverlay = (props: Props) => {
           data-tooltip={`Chain link must be defended with at least ${activeCombatChain.numRequiredEquipBlock} equipment`}
         >
           <GiShoulderArmor />
-          <div 
-            className={styles.iconText}
-          >
-          {activeCombatChain.numRequiredEquipBlock}
+          <div className={styles.iconText}>
+            {activeCombatChain.numRequiredEquipBlock}
           </div>
         </div>
       )}

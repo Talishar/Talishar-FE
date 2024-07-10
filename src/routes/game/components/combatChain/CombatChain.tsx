@@ -54,11 +54,17 @@ export default function CombatChain() {
           </div>
           <div className={styles.grabbyHandle}>
             {isUp ? (
-              <div className={styles.grabbyHandleButton} onClick={handleChangePositionClick}>
+              <div
+                className={styles.grabbyHandleButton}
+                onClick={handleChangePositionClick}
+              >
                 <BsArrowDownSquareFill />
               </div>
             ) : (
-              <div className={styles.grabbyHandleButton} onClick={handleChangePositionClick}>
+              <div
+                className={styles.grabbyHandleButton}
+                onClick={handleChangePositionClick}
+              >
                 <BsArrowUpSquareFill />
               </div>
             )}

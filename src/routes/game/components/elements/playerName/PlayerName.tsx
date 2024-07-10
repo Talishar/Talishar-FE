@@ -23,33 +23,43 @@ export default function PlayerName(player: Player) {
   );
 
   const isPvtVoidPatron = useAppSelector((state: RootState) =>
-  player.isPlayer
-    ? state.game.playerOne.isPvtVoidPatron
-    : state.game.playerTwo.isPvtVoidPatron
-);
+    player.isPlayer
+      ? state.game.playerOne.isPvtVoidPatron
+      : state.game.playerTwo.isPvtVoidPatron
+  );
 
-const iconMap = [
-  { condition: isPatron, src: "/images/patronHeart.webp", title: "I am a patron of Talishar!" },
-  { condition: isContributor, src: "/images/copper.webp", title: "I am a contributor to Talishar!" },
-  { condition: isPvtVoidPatron, src: "/images/patronEye.webp", title: "I am a patron of PvtVoid!" },
-];
-  
-return (
-  <div className={styles.playerName}>
-    {iconMap.map((icon, index) => (
-      icon.condition && (
-        <img
-          key={index}
-          className={styles.icon}
-          src={icon.src}
-          title={icon.title}
-        />
-      )
-    ))}
-      {
-        playerName?.substring(0, 30)
-        .replace('-', `Practice Dummy`)
-      }
-  </div>
+  const iconMap = [
+    {
+      condition: isPatron,
+      src: '/images/patronHeart.webp',
+      title: 'I am a patron of Talishar!'
+    },
+    {
+      condition: isContributor,
+      src: '/images/copper.webp',
+      title: 'I am a contributor to Talishar!'
+    },
+    {
+      condition: isPvtVoidPatron,
+      src: '/images/patronEye.webp',
+      title: 'I am a patron of PvtVoid!'
+    }
+  ];
+
+  return (
+    <div className={styles.playerName}>
+      {iconMap.map(
+        (icon, index) =>
+          icon.condition && (
+            <img
+              key={index}
+              className={styles.icon}
+              src={icon.src}
+              title={icon.title}
+            />
+          )
+      )}
+      {playerName?.substring(0, 30).replace('-', `Practice Dummy`)}
+    </div>
   );
 }

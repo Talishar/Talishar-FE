@@ -39,8 +39,8 @@ export interface Weapon {
 }
 
 export interface CardData {
-  id:string;
-  pitch:number;
+  id: string;
+  pitch: number;
 }
 
 export interface GetLobbyInfoResponse {

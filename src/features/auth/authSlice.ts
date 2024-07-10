@@ -11,7 +11,7 @@ const authSlice = createSlice({
       (state.user = user),
         (state.token = accessToken),
         (state.userName = userName);
-        (state.isPatron = isPatron);
+      state.isPatron = isPatron;
     },
     logOutReducer: (state) => {
       state.user = null;

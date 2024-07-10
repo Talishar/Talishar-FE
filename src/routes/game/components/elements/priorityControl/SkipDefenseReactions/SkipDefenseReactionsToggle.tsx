@@ -2,12 +2,12 @@ import React from 'react';
 import styles from '../PriorityControl.module.css';
 import * as optConst from 'features/options/constants';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
-import { TbShieldOff } from "react-icons/tb";
+import { TbShieldOff } from 'react-icons/tb';
 import useSetting from 'hooks/useSetting';
 import classNames from 'classnames';
-import { 
-  updateOptions, 
-  Setting, 
+import {
+  updateOptions,
+  Setting,
   getSettingsEntity
 } from 'features/options/optionsSlice';
 import { getGameInfo } from 'features/game/GameSlice';
@@ -22,9 +22,9 @@ const SkipDefenseReactionsToggle = () => {
   const gameInfo = useAppSelector(getGameInfo, shallowEqual);
 
   const initialValues = {
-    skipDefenseReactions: settingsData['SkipDRWindow']?.value === '1',
+    skipDefenseReactions: settingsData['SkipDRWindow']?.value === '1'
   };
-  
+
   const handleClickPassDefenseReactions = ({ name, value }: Setting) => {
     dispatch(
       updateOptions({
@@ -35,8 +35,7 @@ const SkipDefenseReactionsToggle = () => {
   };
 
   const buttonStyle = classNames(styles.btn, {
-    [styles.buttonActive]:
-      Number(initialValues.skipDefenseReactions) === 1
+    [styles.buttonActive]: Number(initialValues.skipDefenseReactions) === 1
   });
   return (
     <div>
@@ -47,10 +46,10 @@ const SkipDefenseReactionsToggle = () => {
           handleClickPassDefenseReactions({
             name: optConst.SKIP_DR_WINDOW,
             value: initialValues.skipDefenseReactions ? '0' : '1'
-          })}
+          })
+        }
         data-tooltip="Pass Defense Reactions"
         data-placement="bottom"
-        
       >
         <TbShieldOff aria-hidden="true" fontSize={'2em'} />
       </button>

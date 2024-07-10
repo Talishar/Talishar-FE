@@ -23,6 +23,12 @@ import CardPopUp from '../../cardPopUp/CardPopUp';
 import CardImage from '../../cardImage/CardImage';
 import classNames from 'classnames';
 import { useCookies } from 'react-cookie';
+import LanguageSelector from 'components/LanguageSelector/LanguageSelector';
+import {
+  CARD_SQUARES_PATH,
+  DEFAULT_LANGUAGE,
+  getCollectionCardImagePath
+} from 'utils';
 
 const OptionsSettings = () => {
   const gameInfo = useAppSelector(getGameInfo, shallowEqual);
@@ -67,7 +73,8 @@ const OptionsSettings = () => {
     skipDefenseReactions: settingsData['SkipDRWindow']?.value === '1',
     skipNextDefenseReaction: settingsData['SkipNextDRWindow']?.value === '1',
     manualTargeting: settingsData['AutoTargetOpponent']?.value === '0', // reversed!
-    shortcutAttackThreshold: settingsData[optConst.SHORTCUT_ATTACK_THRESHOLD]?.value,
+    shortcutAttackThreshold:
+      settingsData[optConst.SHORTCUT_ATTACK_THRESHOLD]?.value,
     manualMode: settingsData['ManualMode']?.value === '1',
     accessibilityMode: settingsData['ColorblindMode']?.value === '1',
     mute: settingsData['MuteSound']?.value === '1',
@@ -85,6 +92,14 @@ const OptionsSettings = () => {
   return (
     <div>
       <div className={styles.leftColumn}>
+        <fieldset>
+          <legend>
+            <strong>Language Selector:</strong>
+          </legend>
+          <div>
+            <LanguageSelector />
+          </div>
+        </fieldset>
         <fieldset>
           <legend>
             <strong>Priority Settings:</strong>
@@ -447,7 +462,11 @@ const OptionsSettings = () => {
                   cardNumber={CARD_BACK[cardBack.id]}
                 >
                   <CardImage
-                    src={`/cardsquares/${CARD_BACK[cardBack.id]}.webp`}
+                    src={getCollectionCardImagePath({
+                      path: CARD_SQUARES_PATH,
+                      locale: DEFAULT_LANGUAGE,
+                      cardNumber: CARD_BACK[cardBack.id]
+                    })}
                     draggable={false}
                     className={cardClass}
                   />
@@ -480,7 +499,7 @@ const OptionsSettings = () => {
             <p>Log in to customise your playmat</p>
           )}
         </label>
-      {/* WARNING THIS MAY MAKE THE GAME MORE UNSTABLE. <br />
+        {/* WARNING THIS MAY MAKE THE GAME MORE UNSTABLE. <br />
          <label className={styles.optionLabel}>
           <input
             type="checkbox"
@@ -506,7 +525,7 @@ const OptionsSettings = () => {
       <>
         <fieldset>
           <label className={styles.optionLabel}>
-          Card Size: {Math.floor(cookies.cardSize * 100)}%
+            Card Size: {Math.floor(cookies.cardSize * 100)}%
             <input
               name="cardSize"
               type="range"

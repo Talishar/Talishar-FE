@@ -54,7 +54,7 @@ const Matchups = ({ refetch }: Matchups) => {
           <div className={styles.matchups} key={ix}>
             <button
               disabled={isUpdating}
-              className={"outline"}
+              className={'outline'}
               onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                 e.preventDefault();
                 handleMatchupClick(matchup.matchupId);

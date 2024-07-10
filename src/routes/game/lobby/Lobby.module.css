@@ -185,7 +185,8 @@ button {
 
 /* Keyframes */
 @keyframes wiggle {
-  0%, 7% {
+  0%,
+  7% {
     transform: rotateZ(0);
   }
   15% {
@@ -203,7 +204,8 @@ button {
   35% {
     transform: rotateZ(-4deg);
   }
-  40%, 100% {
+  40%,
+  100% {
     transform: rotateZ(0);
   }
 }
@@ -214,7 +216,7 @@ button {
 
 .buttonClass:hover {
   border-color: black;
-  background-color:var(--alarm);
+  background-color: var(--alarm);
   color: black;
   transition: 0.7s;
 }

@@ -95,8 +95,12 @@ const EndGameStats = (data: EndGameData) => {
                 <th className={styles.headersStats}>Blocked</th>
                 <th className={styles.headersStats}>Pitched</th>
                 <th className={styles.headersStats}>Times Hit</th>
-                {numCharged > 0 && <th className={styles.headersStats}>Times Charged</th>}
-                {numKatsuDiscard > 0 && <th className={styles.headersStats}>Times Katsu Discarded</th>}
+                {numCharged > 0 && (
+                  <th className={styles.headersStats}>Times Charged</th>
+                )}
+                {numKatsuDiscard > 0 && (
+                  <th className={styles.headersStats}>Times Katsu Discarded</th>
+                )}
               </tr>
             </thead>
             <tbody>
@@ -126,8 +130,14 @@ const EndGameStats = (data: EndGameData) => {
                       <td className={styles.blocked}>{result.blocked}</td>
                       <td className={styles.pitched}>{result.pitched}</td>
                       <th className={styles.cardStat}>{result.hits}</th>
-                      {numCharged > 0 && <th className={styles.cardStat}>{result.charged}</th>}
-                      {numKatsuDiscard > 0 && <th className={styles.cardStat}>{result.katsuDiscard}</th>}
+                      {numCharged > 0 && (
+                        <th className={styles.cardStat}>{result.charged}</th>
+                      )}
+                      {numKatsuDiscard > 0 && (
+                        <th className={styles.cardStat}>
+                          {result.katsuDiscard}
+                        </th>
+                      )}
                     </tr>
                   );
                 })}
@@ -164,9 +174,15 @@ const EndGameStats = (data: EndGameData) => {
             <thead>
               <tr>
                 <th className={styles.headersStats}>Turn</th>
-                <th colSpan={4} className={styles.headersStats}>Cards</th>
-                <th colSpan={2} className={styles.headersStats}>Resources</th>
-                <th colSpan={2} className={styles.headersStats}>Damage</th>
+                <th colSpan={4} className={styles.headersStats}>
+                  Cards
+                </th>
+                <th colSpan={2} className={styles.headersStats}>
+                  Resources
+                </th>
+                <th colSpan={2} className={styles.headersStats}>
+                  Damage
+                </th>
               </tr>
               <tr>
                 <th className={styles.turnNo}>#</th>

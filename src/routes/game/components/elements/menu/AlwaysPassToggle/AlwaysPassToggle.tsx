@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from '../Menu.module.css';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
-import { BiSkipNextCircle } from "react-icons/bi";
+import { BiSkipNextCircle } from 'react-icons/bi';
 import useSetting from 'hooks/useSetting';
 import classNames from 'classnames';
 import { updateOptions } from 'features/options/optionsSlice';
@@ -63,7 +63,7 @@ const AlwaysPassToggle = () => {
         data-tooltip="Always Pass Priority"
         data-placement="bottom"
       >
-        <BiSkipNextCircle  aria-hidden="true" fontSize={'2.2em'} />
+        <BiSkipNextCircle aria-hidden="true" fontSize={'2.2em'} />
       </button>
     </div>
   );

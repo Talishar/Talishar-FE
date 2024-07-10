@@ -65,7 +65,7 @@ export default function PitchZone(prop: Displayrow) {
               exit={{ opacity: 0 }}
               key={`${card.cardNumber}-${ix}`}
             >
-              <CardDisplay card={ card } preventUseOnClick />
+              <CardDisplay card={card} preventUseOnClick />
             </motion.div>
           );
         })}
