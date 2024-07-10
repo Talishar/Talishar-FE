@@ -19,7 +19,7 @@ import CardImage from '../cardImage/CardImage';
 import CardPopUp from '../cardPopUp/CardPopUp';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import { motion, PanInfo } from 'framer-motion';
-import { CARD_IMAGES_PATH, CARD_SQUARES_PATH, getCollectionCardImagePath } from 'utils';
+import { CARD_SQUARES_PATH, getCollectionCardImagePath } from 'utils';
 import { useLanguageSelector } from 'hooks/useLanguageSelector';
 
 const ScreenPercentageForCardPlayed = 0.25;
