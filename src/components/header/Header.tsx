@@ -46,7 +46,7 @@ const Header = () => {
           </li>
         </ul>
         <ul>
-          <li className={styles.languageSelectorListElement}>
+          <li className={styles.languageSelectorListElement} hidden>
             <LanguageSelector />
           </li>
           <li>
