@@ -59,11 +59,11 @@
     <script>
       function ShowDetail(e, imgSource) {
         imgSource = imgSource.replace('_cropped', '');
-        imgSource = imgSource.replace('./crops/', '/cardimages/');
+        imgSource = imgSource.replace('./crops/', '/cardimages/English/');
         imgSource = imgSource.replace('_concat', '');
-        imgSource = imgSource.replace('./concat/', '/cardimages/');
-        imgSource = imgSource.replace('./undefined./WebpImages', '/cardimages');
-        imgSource = imgSource.replace('./WebpImages/', '/cardimages/');
+        imgSource = imgSource.replace('./concat/', '/cardimages/English/');
+        imgSource = imgSource.replace('./undefined./WebpImages', '/cardimages/English');
+        imgSource = imgSource.replace('./WebpImages/', '/cardimages/English/');
         imgSource = imgSource.replace('.png', '.webp');
         var el = document.getElementById('cardDetail');
         el.innerHTML = "<img src='" + imgSource + "' />";

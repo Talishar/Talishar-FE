@@ -72,6 +72,7 @@ export const getCollectionCardImagePath = ({
   locale = 'en',
   cardNumber = 'CardBack'
 }: CollectionCardImagePathData): string => {
+  /*
   const cardPathData = {
     languagePath: LOCALE_DICTIONARY[DEFAULT_LANGUAGE],
     cardNumber
@@ -90,6 +91,8 @@ export const getCollectionCardImagePath = ({
   }
 
   return `/${path}/${cardPathData.languagePath}/${cardPathData.cardNumber}.webp`;
+  */
+  return `/${path}/${LOCALE_DICTIONARY[DEFAULT_LANGUAGE]}/${cardNumber}.webp`;
 };
 
 export const loadInitialLanguage = () => {

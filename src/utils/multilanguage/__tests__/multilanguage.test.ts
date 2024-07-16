@@ -54,7 +54,7 @@ describe('Multilanguage', () => {
       });
     });
 
-    describe('Japanese language', () => {
+    describe.skip('Japanese language', () => {
       it('should return valid japanese value with an existing card', () => {
         const result = getCollectionCardImagePath({
           path: CARD_SQUARES_PATH,
@@ -101,7 +101,7 @@ describe('Multilanguage', () => {
       });
     });
 
-    describe('European language', () => {
+    describe.skip('European language', () => {
       it('should return valid european value with a current collection', () => {
         const result = getCollectionCardImagePath({
           path: CARD_IMAGES_PATH,
