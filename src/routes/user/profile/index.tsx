@@ -7,6 +7,7 @@ import { DeleteDeckAPIResponse } from 'interface/API/DeleteDeckAPI.php';
 import { toast } from 'react-hot-toast';
 import { GiNotebook, GiTrashCan } from 'react-icons/gi';
 import styles from './profile.module.css';
+import { generateCroppedImageUrl } from 'utils/cropImages';
 
 const CODE = 'code';
 const CLIENT_ID =
@@ -125,7 +126,7 @@ export const ProfilePage = () => {
                   <th scope="row">
                     {!!deck.hero && (
                       <img
-                        src={`/crops/${deck.hero}_cropped.png`}
+                        src={generateCroppedImageUrl(deck.hero)}
                         className={styles.heroImage}
                       />
                     )}

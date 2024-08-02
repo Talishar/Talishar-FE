@@ -92,7 +92,7 @@ const OptionsSettings = () => {
   return (
     <div>
       <div className={styles.leftColumn}>
-        <fieldset hidden>
+        <fieldset>
           <legend>
             <strong>Language Selector:</strong>
           </legend>

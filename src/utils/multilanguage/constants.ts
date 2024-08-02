@@ -1,10 +1,10 @@
 export const LOCALE_DICTIONARY: { [index: string]: string } = {
-  en: 'English',
-  es: 'Spanish',
-  fr: 'French',
-  de: 'German',
-  it: 'Italian',
-  jp: 'Japanese'
+  en: 'english',
+  es: 'spanish',
+  fr: 'french',
+  de: 'german',
+  it: 'italian',
+  jp: 'japanese'
 };
 
 export const CARD_IMAGES_PATH = 'cardimages';

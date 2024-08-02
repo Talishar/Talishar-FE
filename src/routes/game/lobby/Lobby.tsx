@@ -22,7 +22,7 @@ import { shallowEqual } from 'react-redux';
 import { RootState } from 'app/Store';
 import { DeckResponse, Weapon } from 'interface/API/GetLobbyInfo.php';
 import LobbyUpdateHandler from './components/updateHandler/SideboardUpdateHandler';
-import { GAME_FORMAT, BREAKPOINT_EXTRA_LARGE } from 'appConstants';
+import { GAME_FORMAT, BREAKPOINT_EXTRA_LARGE, CLOUD_IMAGES_URL } from 'appConstants';
 import ChooseFirstTurn from './components/chooseFirstTurn/ChooseFirstTurn';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import { SubmitSideboardAPI } from 'interface/API/SubmitSideboard.php';
@@ -37,6 +37,7 @@ import playerJoined from 'sounds/playerJoinedSound.mp3';
 import { createPortal } from 'react-dom';
 import { useAppDispatch } from 'app/Hooks';
 import useAuth from 'hooks/useAuth';
+import { generateCroppedImageUrl } from 'utils/cropImages';
 
 const Lobby = () => {
   const [showCalculator, setShowCalculator] = useState(false);
@@ -125,12 +126,11 @@ const Lobby = () => {
     .sort()
     .map((card, ix) => `${card}-${ix + deckIndexed.length}`);
 
-  const leftPic = `url(/crops/${
-    data.deck.hero === 'CardBack' ? 'UNKNOWNHERO' : data.deck.hero
-  }_cropped.png)`;
-  const rightPic = `url(/crops/${
-    gameLobby?.theirHero === 'CardBack' ? 'UNKNOWNHERO' : gameLobby?.theirHero
-  }_cropped.png)`;
+    const leftHero = data.deck.hero === 'CardBack' ? 'UNKNOWNHERO' : data.deck.hero;
+    const rightHero = gameLobby?.theirHero === 'CardBack' ? 'UNKNOWNHERO' : gameLobby?.theirHero;
+
+  const leftPic = `url(${generateCroppedImageUrl(leftHero)})`;
+  const rightPic = `url(${generateCroppedImageUrl(rightHero ?? 'UNKNOWNHERO')})`;
 
   const eqClasses = classNames({ secondary: activeTab !== 'equipment' });
   const deckClasses = classNames({ secondary: activeTab !== 'deck' });

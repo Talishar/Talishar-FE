@@ -8,12 +8,13 @@ import {
   getCollectionCardImagePath,
   loadInitialLanguage
 } from '../multilanguage';
+import {CLOUD_IMAGES_URL} from "../../../appConstants";
 
 const generateExpectedResult = ({
   path = CARD_IMAGES_PATH,
-  locale = 'English',
+  locale = 'english',
   cardNumber = 'CardBack'
-}) => `/${path}/${locale}/${cardNumber}.webp`;
+}) => `${CLOUD_IMAGES_URL}/${path}/${locale}/${cardNumber}.webp`;
 
 describe('Multilanguage', () => {
   describe('getCollectionCardImagePath', () => {
@@ -32,7 +33,7 @@ describe('Multilanguage', () => {
         expect(result).to.equal(
           generateExpectedResult({
             path: CARD_IMAGES_PATH,
-            locale: 'English',
+            locale: 'english',
             cardNumber: 'WTR111'
           })
         );
@@ -47,7 +48,7 @@ describe('Multilanguage', () => {
         expect(result).to.equal(
           generateExpectedResult({
             path: CARD_IMAGES_PATH,
-            locale: 'English',
+            locale: 'english',
             cardNumber: 'WTR111_Brandao'
           })
         );
@@ -79,7 +80,7 @@ describe('Multilanguage', () => {
         expect(result).to.equal(
           generateExpectedResult({
             path: CARD_SQUARES_PATH,
-            locale: 'English',
+            locale: 'english',
             cardNumber: 'WTR111'
           })
         );
@@ -94,7 +95,7 @@ describe('Multilanguage', () => {
         expect(result).to.equal(
           generateExpectedResult({
             path: CARD_SQUARES_PATH,
-            locale: 'English',
+            locale: 'english',
             cardNumber: 'MST111_Brandao'
           })
         );
@@ -171,7 +172,7 @@ describe('Multilanguage', () => {
         expect(result).to.equal(
           generateExpectedResult({
             path: CARD_SQUARES_PATH,
-            locale: 'English',
+            locale: 'english',
             cardNumber: 'TEST111'
           })
         );
@@ -186,7 +187,7 @@ describe('Multilanguage', () => {
         expect(result).to.equal(
           generateExpectedResult({
             path: CARD_SQUARES_PATH,
-            locale: 'English',
+            locale: 'english',
             cardNumber: 'OUT111_Brandao'
           })
         );
