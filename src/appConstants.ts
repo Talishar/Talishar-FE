@@ -2,6 +2,8 @@
 export const GAME_LIMIT_LIVE = 1000000;
 export const GAME_LIMIT_BETA = 1000;
 
+export const CLOUD_IMAGES_URL = 'https://images.talishar.net/public';
+
 export const BACKEND_URL = import.meta.env.DEV
   ? '/api/'
   : `https://${import.meta.env.VITE_BACKEND_URL}/${

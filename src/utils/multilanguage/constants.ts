@@ -1,10 +1,10 @@
 export const LOCALE_DICTIONARY: { [index: string]: string } = {
-  en: 'English',
-  es: 'Spanish',
-  fr: 'French',
-  de: 'German',
-  it: 'Italian',
-  jp: 'Japanese'
+  en: 'english',
+  es: 'spanish',
+  fr: 'french',
+  de: 'german',
+  it: 'italian',
+  jp: 'japanese'
 };
 
 export const CARD_IMAGES_PATH = 'cardimages';
@@ -23,7 +23,7 @@ export const EUROPEAN_LANGUAGES_PRINTED_COLLECTIONS = [
   'HVY',
   'MST'
 ];
-export const JAPANESE_LANGUAGE_PRINTED_COLLECTIONS = ['IRA', 'MST'];
+export const JAPANESE_LANGUAGE_PRINTED_COLLECTIONS = ['IRA', 'HVY', 'MST'];
 
 export const COLLECTIONS_HISTORY_PACK_1 = ['WTR', 'ARC', 'CRU'];
 export const COLLECTIONS_HISTORY_PACK_2 = ['MON', 'ELE', 'EVR'];

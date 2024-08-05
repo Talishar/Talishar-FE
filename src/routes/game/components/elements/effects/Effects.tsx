@@ -4,6 +4,8 @@ import styles from './Effects.module.css';
 import { Card } from 'features/Card';
 import { useAppSelector } from 'app/Hooks';
 import CardPopUp from '../cardPopUp/CardPopUp';
+import { CLOUD_IMAGES_URL } from 'appConstants';
+import { generateCroppedImageUrl } from 'utils/cropImages';
 
 export interface CardProp {
   card: Card;
@@ -12,7 +14,7 @@ export interface CardProp {
 }
 
 export function Effect(prop: CardProp) {
-  const src = `/crops/${prop.card.cardNumber}_cropped.png`;
+  const src = generateCroppedImageUrl(prop.card.cardNumber);
 
   return (
     <CardPopUp cardNumber={prop.card.cardNumber} containerClass={styles.effect}>

@@ -4,6 +4,7 @@ import { createSearchParams, useNavigate } from 'react-router-dom';
 import { IGameInProgress } from '../gameList/GameList';
 import styles from './InProgressGame.module.scss';
 import { RiSwordLine } from 'react-icons/ri';
+import { generateCroppedImageUrl } from '../../../../utils/cropImages';
 export const InProgressGame = ({
   ix,
   entry
@@ -26,11 +27,11 @@ export const InProgressGame = ({
       }}
     >
       <div>
-        {!!entry.p1Hero && <img src={`/crops/${entry.p1Hero}_cropped.png`} />}
+        {!!entry.p1Hero && <img src={generateCroppedImageUrl(entry.p1Hero)} />}
       </div>
       <RiSwordLine />
       <div>
-        {!!entry.p2Hero && <img src={`/crops/${entry.p2Hero}_cropped.png`} />}
+        {!!entry.p2Hero && <img src={generateCroppedImageUrl(entry.p2Hero)} />}
       </div>
       <div>
         <button className={buttonClass}>Spectate</button>

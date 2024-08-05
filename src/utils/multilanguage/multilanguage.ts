@@ -13,6 +13,7 @@ import {
 } from './constants';
 import { historyPack1, historyPack2 } from './collectionMaps';
 import { CollectionCardImagePathData, ImagePathNumber } from './types';
+import { CLOUD_IMAGES_URL } from 'appConstants';
 
 const getCollectionCode = (cardNumber: string): string =>
   cardNumber.substring(0, 3);
@@ -72,7 +73,6 @@ export const getCollectionCardImagePath = ({
   locale = 'en',
   cardNumber = 'CardBack'
 }: CollectionCardImagePathData): string => {
-  /*
   const cardPathData = {
     languagePath: LOCALE_DICTIONARY[DEFAULT_LANGUAGE],
     cardNumber
@@ -90,9 +90,7 @@ export const getCollectionCardImagePath = ({
     }
   }
 
-  return `/${path}/${cardPathData.languagePath}/${cardPathData.cardNumber}.webp`;
-  */
-  return `/${path}/${LOCALE_DICTIONARY[DEFAULT_LANGUAGE]}/${cardNumber}.webp`;
+  return `${CLOUD_IMAGES_URL}/${path}/${cardPathData.languagePath}/${cardPathData.cardNumber}.webp`;
 };
 
 export const loadInitialLanguage = () => {

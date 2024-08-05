@@ -3,6 +3,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { IOpenGame } from '../gameList/GameList';
 import styles from './OpenGame.module.css';
+import { generateCroppedImageUrl } from '../../../../utils/cropImages';
 
 const OpenGame = ({
   ix,
@@ -19,7 +20,7 @@ const OpenGame = ({
   return (
     <div key={ix} className={styles.gameItem}>
       <div>
-        {!!entry.p1Hero && <img src={`/crops/${entry.p1Hero}_cropped.png`} />}
+        {!!entry.p1Hero && <img src={generateCroppedImageUrl(entry.p1Hero)} />}
       </div>
       <div>{entry.description}</div>
       {isOther && <div>{entry.formatName}</div>}
