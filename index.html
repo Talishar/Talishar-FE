@@ -58,12 +58,13 @@
     -->
     <script>
       function ShowDetail(e, imgSource) {
+        const imgSrcPath = 'https://images.talishar.net/public/cardimages/english/';
         imgSource = imgSource.replace('_cropped', '');
-        imgSource = imgSource.replace('./crops/', '/cardimages/english/');
+        imgSource = imgSource.replace('./crops/', imgSrcPath);
         imgSource = imgSource.replace('_concat', '');
-        imgSource = imgSource.replace('./concat/', '/cardimages/english/');
-        imgSource = imgSource.replace('./undefined./WebpImages', '/cardimages/english');
-        imgSource = imgSource.replace('./WebpImages/', '/cardimages/english/');
+        imgSource = imgSource.replace('./concat/', imgSrcPath);
+        imgSource = imgSource.replace('./undefined./WebpImages', imgSrcPath);
+        imgSource = imgSource.replace('./WebpImages/', imgSrcPath);
         imgSource = imgSource.replace('.png', '.webp');
         var el = document.getElementById('cardDetail');
         el.innerHTML = "<img src='" + imgSource + "' />";
