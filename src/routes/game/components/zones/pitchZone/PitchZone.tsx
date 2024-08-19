@@ -54,7 +54,7 @@ export default function PitchZone(prop: Displayrow) {
   return (
     <div className={styles.pitchZone} onClick={pitchZoneDisplay}>
       <AnimatePresence>
-        {pitchOrder.map((card, ix) => {
+        {pitchOrder.slice(0, 4).map((card, ix) => {
           return (
             <motion.div
               style={{ top: `-${1.5 * ix}em`, zIndex: `-${ix + 1}` }}
@@ -64,6 +64,7 @@ export default function PitchZone(prop: Displayrow) {
               transition={{ ease: 'easeIn', duration: 0.2 }}
               exit={{ opacity: 0 }}
               key={`${card.cardNumber}-${ix}`}
+              data-testid='pitch-motion-div'
             >
               <CardDisplay card={card} preventUseOnClick />
             </motion.div>
