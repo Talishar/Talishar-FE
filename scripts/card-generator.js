@@ -1,7 +1,7 @@
 const axios = require('axios');
 const fs = require('fs');
 
-const url = 'https://raw.githubusercontent.com/the-fab-cube/flesh-and-blood-cards/part-the-mistveil/json/english/card.json'; //MST
+const url = 'https://raw.githubusercontent.com/the-fab-cube/flesh-and-blood-cards/rosetta/json/english/card.json'; //ROS
 //const url = 'https://raw.githubusercontent.com/the-fab-cube/flesh-and-blood-cards/develop/json/english/card.json'; //AKO
 
 
