@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { GiAngelOutfit, GiDrop } from 'react-icons/gi';
+import { GiAngelOutfit, GiDrop, GiGroundSprout } from 'react-icons/gi';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import { setCardListLoadFocus } from 'features/game/GameSlice';
@@ -20,7 +20,13 @@ export const ZoneCounts = (prop: Displayrow) => {
       : state.game.playerTwo.bloodDebtCount
   );
 
-  if (!soulCount && !bloodDebt) {
+  const earthCount = useAppSelector((state: RootState) =>
+    prop.isPlayer
+      ? state.game.playerOne.earthCount
+      : state.game.playerTwo.earthCount
+  );
+
+  if (!soulCount && !bloodDebt && !earthCount) {
     return null;
   }
 
@@ -29,6 +35,7 @@ export const ZoneCounts = (prop: Displayrow) => {
       <div className={styles.column}>
         <SoulCount {...prop} />
         <BloodDebtCount {...prop} />
+        <EarthCount {...prop} />
       </div>
     </div>
   );
@@ -66,6 +73,32 @@ const SoulCount = (prop: Displayrow) => {
           onClick={soulDisplay}
         >
           <GiAngelOutfit /> {soulCount}
+        </div>
+      )}
+    </>
+  );
+};
+
+const EarthCount = (prop: Displayrow) => {
+  const [hasEarth, setHasEarth] = useState(false);
+  const dispatch = useAppDispatch();
+  const { isPlayer } = prop;
+  const earthCount = useAppSelector((state: RootState) =>
+    isPlayer ? state.game.playerOne.earthCount : state.game.playerTwo.earthCount
+  );
+
+  if (!hasEarth && earthCount != undefined && earthCount > 0) {
+    setHasEarth(true);
+  }
+
+  return (
+    <>
+      {!!hasEarth && (
+        <div
+          title="Earth Cards Count"
+          className={styles.clickableItem}
+        >
+          <GiGroundSprout /> {earthCount}
         </div>
       )}
     </>
