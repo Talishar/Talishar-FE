@@ -21,9 +21,26 @@ export const EUROPEAN_LANGUAGES_PRINTED_COLLECTIONS = [
   'DTD',
   'EVO',
   'HVY',
-  'MST'
+  'MST',
+  'AAZ',
+  'AKO',
+  'ASB',
+  'AUR',
+  'ROS',
+  'TER'
 ];
-export const JAPANESE_LANGUAGE_PRINTED_COLLECTIONS = ['IRA', 'HVY', 'MST'];
+export const JAPANESE_LANGUAGE_PRINTED_COLLECTIONS = [
+  'IRA',
+  'HVY',
+  'MST',
+  'AAZ',
+  'AKO',
+  'ASB',
+  'AUR',
+  'HVY',
+  'ROS',
+  'TER'
+];
 
 export const COLLECTIONS_HISTORY_PACK_1 = ['WTR', 'ARC', 'CRU'];
 export const COLLECTIONS_HISTORY_PACK_2 = ['MON', 'ELE', 'EVR'];
