@@ -164,6 +164,8 @@ const Lobby = () => {
       break;
     case GAME_FORMAT.OPEN_FORMAT_CC:
     case GAME_FORMAT.OPEN_FORMAT_BLITZ:
+    case GAME_FORMAT.OPEN_FORMAT_LL_CC:
+    case GAME_FORMAT.OPEN_FORMAT_LL_BLITZ:
       deckSize = 0;
       break;
     default:
@@ -229,7 +231,9 @@ const Lobby = () => {
   const needToDoDisclaimer =
     !acceptedDisclaimer &&
     (data.format === GAME_FORMAT.OPEN_FORMAT_CC ||
-      data.format === GAME_FORMAT.OPEN_FORMAT_BLITZ);
+      data.format === GAME_FORMAT.OPEN_FORMAT_BLITZ ||
+      data.format === GAME_FORMAT.OPEN_FORMAT_LL_CC ||
+      data.format === GAME_FORMAT.OPEN_FORMAT_LL_BLITZ);
   //const needToDoDisclaimer = false;
   const leaveLobby = classNames(styles.buttonClass, 'outline');
 

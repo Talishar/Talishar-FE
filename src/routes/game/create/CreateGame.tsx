@@ -246,6 +246,12 @@ const CreateGame = () => {
                 <option value={GAME_FORMAT.OPEN_FORMAT_BLITZ}>
                   Open Format Blitz (no restrictions!)
                 </option>
+                <option value={GAME_FORMAT.OPEN_FORMAT_LL_CC}>
+                  Open Format Living Legend CC (no restrictions!)
+                </option>
+                <option value={GAME_FORMAT.OPEN_FORMAT_LL_BLITZ}>
+                  Open Format Living Legend Blitz (no restrictions!)
+                </option>
               </select>
             </label>
             <fieldset>
