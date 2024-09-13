@@ -6,7 +6,7 @@
   align-items: center;
   background: rgba(50, 50, 50, 0.5);
   color: var(--white);
-  border-radius: 0.5em;
+  border-radius: 0.25em;
   grid-area: zonecounts;
   line-height: normal;
   min-width: 100%;
