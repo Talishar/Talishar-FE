@@ -160,6 +160,7 @@ const Lobby = () => {
       break;
     case GAME_FORMAT.SEALED:
     case GAME_FORMAT.DRAFT:
+      maxDeckSize = 30;
       deckSize = 30;
       break;
     case GAME_FORMAT.OPEN_FORMAT_CC:

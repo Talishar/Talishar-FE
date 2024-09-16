@@ -168,7 +168,7 @@ const GameList = () => {
             gameList={sortedOpenGames.filter(
               (game) => game.format === GAME_FORMAT.COMPETITIVE_BLITZ
             )}
-            name="Request Undo Blitz"
+            name="Competitive Blitz"
           />
           <FormatList
             gameList={sortedOpenGames.filter(
@@ -180,7 +180,7 @@ const GameList = () => {
             gameList={sortedOpenGames.filter(
               (game) => game.format === GAME_FORMAT.COMPETITIVE_CC
             )}
-            name="Request Undo CC"
+            name="Competitive CC"
           />
           <FormatList
             gameList={sortedOpenGames.filter((game) =>
@@ -217,7 +217,7 @@ const GameList = () => {
                 GAME_FORMAT_NUMBER.COMPETITIVE_BLITZ
               ].includes(game.format)
             )}
-            name="Request Undo Blitz"
+            name="Competitive Blitz"
           />
           <InProgressGameList
             gameList={filteredGamesInProgress.filter((game) =>
@@ -235,7 +235,7 @@ const GameList = () => {
                 GAME_FORMAT_NUMBER.COMPETITIVE_CC
               ].includes(game.format)
             )}
-            name="Request Undo CC"
+            name="Competitive CC"
           />
           <InProgressGameList
             gameList={filteredGamesInProgress.filter(
