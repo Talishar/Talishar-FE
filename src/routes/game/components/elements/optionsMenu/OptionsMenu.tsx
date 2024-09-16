@@ -35,12 +35,6 @@ const OptionsContent = () => {
     dispatch(submitButton({ button: { mode: PROCESS_INPUT.CONCEDE_GAME } }));
   };
 
-  /*   const clickPlayLegacyHandler = async (e: React.MouseEvent) => {
-    e.preventDefault;
-    await screenfull.exit();
-    window.location.href = `https://legacy.talishar.net/game/NextTurn4.php?gameName=${gameID}&playerID=${playerID}`;
-  }; */
-
   // going to main menu means you concede the game
   const handleClickMainMenuButton = async (e: React.MouseEvent) => {
     e.preventDefault;

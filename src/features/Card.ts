@@ -1,10 +1,10 @@
 export interface Card {
   cardNumber: string; // Card number = card ID (e.g. WTR000 = Heart of Fyendal)
-  action?: number; // action = (ProcessInput2 mode)
+  action?: number; // action = (ProcessInput mode)
   overlay?: 'none' | 'disabled'; // overlay = 0 is none, 1 is grayed out/disabled
   borderColor?: string; // borderColor = Border Color
   counters?: number; // Counters = number of counters
-  actionDataOverride?: string; // actionDataOverride = The value to give to ProcessInput2
+  actionDataOverride?: string; // actionDataOverride = The value to give to ProcessInput
   lifeCounters?: number; // lifeCounters = Number of life counters
   defCounters?: number; // defCounters = Number of defense counters
   atkCounters?: number; // atkCounters = Number of attack counters
