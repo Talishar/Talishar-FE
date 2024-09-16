@@ -231,10 +231,13 @@ const CreateGame = () => {
                   Classic Constructed
                 </option>
                 <option value={GAME_FORMAT.COMPETITIVE_BLITZ}>
-                  Request Undo Blitz
+                  Competitive Blitz
                 </option>
                 <option value={GAME_FORMAT.COMPETITIVE_CC}>
-                  Request Undo CC
+                  Competitive CC
+                </option>
+                <option value={GAME_FORMAT.DRAFT}>
+                  Rosetta Limited
                 </option>
                 <option value={GAME_FORMAT.COMMONER}>Commoner</option>
                 <option value={GAME_FORMAT.CLASH}>Clash</option>
