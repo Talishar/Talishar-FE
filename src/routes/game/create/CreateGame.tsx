@@ -47,7 +47,7 @@ const CreateGame = () => {
           ? data?.lastFormat !== undefined
             ? data.lastFormat
             : GAME_FORMAT.CLASSIC_CONSTRUCTED
-          : GAME_FORMAT.OPEN_FORMAT_CC,
+          : GAME_FORMAT.OPEN_CC,
       visibility:
         searchParams.get('visibility') ??
         (isLoggedIn
@@ -243,17 +243,17 @@ const CreateGame = () => {
                 <option value={GAME_FORMAT.CLASH}>Clash</option>
                 <option value={GAME_FORMAT.LLCC}>Living Legend CC</option>
                 <option value={GAME_FORMAT.LLBLITZ}>Living Legend Blitz</option>
-                <option value={GAME_FORMAT.OPEN_FORMAT_CC}>
-                  Open Format CC (no restrictions!)
+                <option value={GAME_FORMAT.OPEN_CC}>
+                  Open CC (no restrictions!)
                 </option>
-                <option value={GAME_FORMAT.OPEN_FORMAT_BLITZ}>
-                  Open Format Blitz (no restrictions!)
+                <option value={GAME_FORMAT.OPEN_BLITZ}>
+                  Open Blitz (no restrictions!)
                 </option>
-                <option value={GAME_FORMAT.OPEN_FORMAT_LL_CC}>
-                  Open Format Living Legend CC (no restrictions!)
+                <option value={GAME_FORMAT.OPEN_LL_CC}>
+                  Open Living Legend CC (no restrictions!)
                 </option>
-                <option value={GAME_FORMAT.OPEN_FORMAT_LL_BLITZ}>
-                  Open Format Living Legend Blitz (no restrictions!)
+                <option value={GAME_FORMAT.OPEN_LL_BLITZ}>
+                  Open Living Legend Blitz (no restrictions!)
                 </option>
               </select>
             </label>
