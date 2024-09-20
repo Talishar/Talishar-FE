@@ -1,11 +1,15 @@
 import React from 'react';
-import RoguelikeAnnouncement from 'img/RoguelikeAnnouncement.webp';
-import MSTLogo from '../../img/backgrounds/part_the_mistveil_key_art.jpg';
 import styles from '../index/Index.module.css';
+import RosettaLogo from '../../img/Rosetta.webp';
+
 
 const News = () => {
   return (
     <div>
+      <h4 className={styles.headlines}>🌹Happy Rosetta Release Day!🌹</h4>
+      <p className={styles.headlines}>Rosetta cards are now available in all queues!</p>
+      <img src={RosettaLogo} className={styles.NewsLogo} />
+    <br/>
       <p>Please join our community:</p>
       <ul>
         <li>
