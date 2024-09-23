@@ -32,7 +32,11 @@ export const youngToOldHeroesMapping: { [key: string]: string } = {
   HVY092: 'HVY093', // Olympia
   MST001: 'MST002', // Nuu
   MST025: 'MST026', // Enigma
-  MST046: 'MST047' // Zen
+  MST046: 'MST047', // Zen
+  ROS002: 'ROS001', // Florian, Rotwood Harbinger
+  ROS008: 'ROS007', // Aurora, Shooting Star
+  ROS014: 'ROS013', // Verdance, Thorn of the Rose
+  ROS020: 'ROS019' // Oscilio, Constella Intelligence
 };
 
 export const HEROES_OF_RATHE: { value: string; label: string }[] = [
@@ -71,27 +75,26 @@ export const HEROES_OF_RATHE: { value: string; label: string }[] = [
   { value: 'DVR001', label: 'Dorinthea, Quicksilver Prodigy' },
   { value: 'DYN001', label: 'Emperor, Dracai of Aesir ' },
   { value: 'DYN025', label: 'Yoji, Royal Protector' },
-  { value: 'JDG002', label: 'Taipanis, Dracai of Judgement' },
-  { value: 'LSS001', label: 'Ruu-di, Gem Keeper' },
-  { value: 'LSS003', label: 'Taylor' },
-  { value: 'LSS004', label: 'Yorick, Weaver of Tales' },
   { value: 'DTD001', label: 'Prism, Advent of Thrones' },
   { value: 'DTD133', label: 'Vynnset' },
-  { value: 'JDG008', label: 'Theyron, Magister of justice' },
   { value: 'TCC001', label: 'Professor Teklovossen' },
   { value: 'TCC027', label: 'Brevant, Civic Protector' },
   { value: 'TCC049', label: 'Melody, Sing-along' },
   { value: 'EVO001', label: 'Dash, Database' },
   { value: 'EVO004', label: 'Maxx Nitro' },
   { value: 'EVO007', label: 'Teklovossen' },
-  { value: 'HER100', label: 'Squizzy & Floof' },
   { value: 'HVY001', label: 'Kayo' },
   { value: 'HVY045', label: 'Betsy' },
   { value: 'HVY047', label: 'Victor Goldmane' },
   { value: 'HVY090', label: 'Kassai' },
   { value: 'HVY092', label: 'Olympia' },
-  { value: 'JDG024', label: 'Brutus, Summa Rudis' },
   { value: 'MST001', label: 'Nuu' },
   { value: 'MST025', label: 'Enigma' },
-  { value: 'MST046', label: 'Zen' }
+  { value: 'MST046', label: 'Zen' },
+  { value: 'TER001', label: 'Terra' },
+  { value: 'HER117', label: 'Blaze, Firemind' },
+  { value: 'ROS002', label: 'Florian' },
+  { value: 'ROS008', label: 'Aurora' },
+  { value: 'ROS014', label: 'Verdance' },
+  { value: 'ROS020', label: 'Oscilio' }
 ];

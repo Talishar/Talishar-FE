@@ -25,7 +25,7 @@ const Filter = ({
         id="filterByHero"
         onChange={handleSelectHero}
       >
-        <option value="">None</option>
+        <option value="">Filter by Hero</option>
         {HEROES_OF_RATHE.map((hero, ix) => {
           return (
             <option value={hero.value} key={hero.value}>
