@@ -118,14 +118,6 @@ const CreateGame = () => {
         {/*         <p className={styles.fieldError}>
           <FaExclamationCircle /> Warning - SOON! an update will be pushed to the live servers. The games in progress will crash and new games will be required.
           </p> */}
-        <p>
-          <small className={styles.disclaimer}>
-            Talishar is an open-source, fan-made platform not associated with
-            LSS. It may not be a completely accurate representation of the Rules
-            as written. If you have questions about interactions or rulings,
-            please contact the judge community for clarification.
-          </small>
-        </p>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className={styles.formInner}>
             {isLoggedIn && !isLoading && (
@@ -286,7 +278,7 @@ const CreateGame = () => {
                 Single Player 🤖
                 <div>&nbsp;</div>
               </label>
-              {isLoggedIn && isPatron == '1' && (
+              {isLoggedIn && (
                 <label>
                   AI Deck
                   <select
@@ -301,15 +293,6 @@ const CreateGame = () => {
                     </option>
                     <option value={AI_DECK.FAICC}>Fai (CC)</option>
                   </select>
-                </label>
-              )}
-              {isPatron != '1' && (
-                <label>
-                  Join our{' '}
-                  <a href="https://www.patreon.com/talishar" target="_blank">
-                    Patreon
-                  </a>{' '}
-                  to play against custom coded AIs!
                 </label>
               )}
             </fieldset>

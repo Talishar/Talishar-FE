@@ -21,6 +21,13 @@
   height: auto;
 }
 
+.tabs > button:hover {
+  background-color: black;
+  color: var(--primary);
+  border: 1px solid var(--primary);
+  cursor: pointer;
+}
+
 .chatBoxContainer {
   padding-top: 1dvh;
   position: relative;

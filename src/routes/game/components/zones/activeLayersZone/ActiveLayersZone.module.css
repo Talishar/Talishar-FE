@@ -97,3 +97,10 @@
   margin-bottom: 0;
   font-size: 1em;
 }
+
+.buttonDiv:hover {
+  background-color: black;
+  color: var(--primary);
+  border: 1px solid var(--primary);
+  cursor: pointer;
+}

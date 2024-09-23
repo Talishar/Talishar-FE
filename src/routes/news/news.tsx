@@ -24,7 +24,12 @@ const News = () => {
         </li>
       </ul>
       <p>Disclaimer:</p>
-      <small>
+      <small className={styles.disclaimer}>
+        Talishar is an open-source, fan-made platform not associated with
+        LSS. It may not be a completely accurate representation of the Rules
+        as written. If you have questions about interactions or rulings,
+        please contact the judge community for clarification.
+        <br/><br/>
         Talishar is in no way affiliated with Legend Story Studios. Legend Story
         Studios®, Flesh and Blood™, and set names are trademarks of Legend Story
         Studios. Flesh and Blood characters, cards, logos, and art are property

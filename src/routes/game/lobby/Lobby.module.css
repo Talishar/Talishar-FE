@@ -26,6 +26,13 @@
   margin: 0;
 }
 
+.smallButton:hover {
+  background-color: black;
+  color: var(--primary);
+  border: 1px solid var(--primary);
+  cursor: pointer;
+}
+
 .patreonLink {
   font-size: 0.65em;
   padding: 0;

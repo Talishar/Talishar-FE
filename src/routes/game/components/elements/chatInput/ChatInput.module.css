@@ -47,6 +47,13 @@
   margin-top: 0.1rem;
 }
 
+.quickChatButton button:hover {
+  background-color: black;
+  color: var(--primary);
+  border: 1px solid var(--primary);
+  cursor: pointer;
+}
+
 .popOver {
   background-color: var(--near-black);
   border: 1px solid var(--primary);

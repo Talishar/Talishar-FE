@@ -529,7 +529,7 @@ const Lobby = () => {
               <LobbyChat />
             )}
 
-            {isPatron == '1' && isWideScreen && (
+            {isWideScreen &&(
               <button
                 className={styles.smallButton}
                 onClick={(e) => {
@@ -538,18 +538,8 @@ const Lobby = () => {
                 }}
                 disabled={false}
               >
-                Calculator
+                Hand Draw Probabilities
               </button>
-            )}
-
-            {isPatron != '1' && isWideScreen && (
-              <div className={styles.patreonLink}>
-                Support our{' '}
-                <a href="https://www.patreon.com/talishar" target="_blank">
-                  patreon
-                </a>{' '}
-                to use dynamic hypergeometric calculator!
-              </div>
             )}
 
             <div className={styles.spacer}></div>
