@@ -21,6 +21,7 @@ export interface EndGameData {
   averageDamageThreatenedPerCard?: number;
   averageResourcesUsedPerTurn?: number;
   averageCardsLeftOverPerTurn?: number;
+  totalLifeGained?: number;
   averageValuePerTurn?: number;
   yourTime?: number;
   totalTime?: number;
@@ -155,6 +156,12 @@ const EndGameStats = (data: EndGameData) => {
             <br />
             Total Damage Dealt: {data.totalDamageDealt}
             <br />
+            {isPatron ? (
+              `Total Life Gained: ${data.totalLifeGained}`
+            ) : (
+              <span dangerouslySetInnerHTML={{ __html: "Support our <a href='https://www.patreon.com/talishar' target='_blank'>patreon</a> to access life gain stats" }} />
+            )}
+            <br />
             Average Damage Threatened per Turn:{' '}
             {data.averageDamageThreatenedPerTurn}
             <br />
@@ -183,6 +190,9 @@ const EndGameStats = (data: EndGameData) => {
                 <th colSpan={2} className={styles.headersStats}>
                   Damage
                 </th>
+                <th colSpan={1} className={styles.headersStats}>
+                  Life
+                </th>
               </tr>
               <tr>
                 <th className={styles.turnNo}>#</th>
@@ -194,6 +204,7 @@ const EndGameStats = (data: EndGameData) => {
                 <th>Left</th>
                 <th>Dealt</th>
                 <th>Taken</th>
+                <th>Life Gained</th>
               </tr>
             </thead>
             <tbody>
@@ -233,6 +244,10 @@ const EndGameStats = (data: EndGameData) => {
                       <td className={styles.pitched}>
                         {/* @ts-ignore */}
                         {data.turnResults[key]?.damageTaken}
+                      </td>
+                      <td className={styles.pitched}>
+                        {/* @ts-ignore */}
+                        {isPatron ? `${data.turnResults[key]?.lifeGained}` : `X`}
                       </td>
                     </tr>
                   );
