@@ -159,7 +159,7 @@ const EndGameStats = (data: EndGameData) => {
             {isPatron ? (
               `Total Life Gained: ${data.totalLifeGained}`
             ) : (
-              <span dangerouslySetInnerHTML={{ __html: "Support our <a href='https://www.patreon.com/talishar' target='_blank'>patreon</a> to access life gain stats" }} />
+              <span dangerouslySetInnerHTML={{ __html: "Support our <a href='https://linktr.ee/Talishar' target='_blank'>patreon</a> to access life gain stats" }} />
             )}
             <br />
             Average Damage Threatened per Turn:{' '}

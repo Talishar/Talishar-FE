@@ -49,7 +49,7 @@ const EndGameScreen = () => {
       content = (
         <div>
           Support our{' '}
-          <a href="https://www.patreon.com/talishar" target="_blank">
+          <a href="https://linktr.ee/Talishar" target="_blank">
             patreon
           </a>{' '}
           to access this feature.

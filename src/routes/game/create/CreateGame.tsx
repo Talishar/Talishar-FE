@@ -203,7 +203,7 @@ const CreateGame = () => {
             {isPatron != '1' && (
               <label>
                 Join our{' '}
-                <a href="https://www.patreon.com/talishar" target="_blank">
+                <a href="https://linktr.ee/Talishar" target="_blank">
                   Patreon
                 </a>{' '}
                 to customize your game name!
