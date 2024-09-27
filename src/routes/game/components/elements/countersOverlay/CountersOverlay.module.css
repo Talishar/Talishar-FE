@@ -361,7 +361,7 @@
   border: var(--primary) solid 1px;
   color: var(--white);
   border-radius: 5px;
-  min-width: 1.5em;
+  min-width: 2em;
   height: 1.5em;
   font-size: 1.75em;
   padding: 2px;
@@ -372,6 +372,11 @@
 }
 
 .iconText {
-  font-size: 0.9em;
-  padding-bottom: 2px;
+  padding: 2px;
 }
+
+.iconTextCombatChain {
+  padding: 2px;
+  padding-bottom: 5px;
+}
+

@@ -76,7 +76,7 @@ export const ActiveCardCounterOverlay = (props: Props) => {
           data-tooltip={`${activeCombatChain.damagePrevention} Damage Prevention`}
         >
           <GiShieldReflect />
-          <div className={styles.iconText}>
+          <div className={styles.iconTextCombatChain}>
             {activeCombatChain.damagePrevention}
           </div>
         </div>
