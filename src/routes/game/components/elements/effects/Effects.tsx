@@ -4,8 +4,8 @@ import styles from './Effects.module.css';
 import { Card } from 'features/Card';
 import { useAppSelector } from 'app/Hooks';
 import CardPopUp from '../cardPopUp/CardPopUp';
-import { CLOUD_IMAGES_URL } from 'appConstants';
 import { generateCroppedImageUrl } from 'utils/cropImages';
+import CountersOverlay from '../countersOverlay/CountersOverlay';
 
 export interface CardProp {
   card: Card;
@@ -14,11 +14,15 @@ export interface CardProp {
 }
 
 export function Effect(prop: CardProp) {
+  const { card, num } = prop;
   const src = generateCroppedImageUrl(prop.card.cardNumber);
 
   return (
     <CardPopUp cardNumber={prop.card.cardNumber} containerClass={styles.effect}>
-      <img src={src} className={styles.img} />
+      <div className={styles.overlayContainer}>
+        <img src={src} className={styles.img} />
+        <CountersOverlay {...card} num={num} />
+      </div>
     </CardPopUp>
   );
 }

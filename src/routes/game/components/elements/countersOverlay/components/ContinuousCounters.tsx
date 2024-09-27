@@ -22,6 +22,7 @@ const includedCounters = [
   'balance',
   'bind',
   'lightning',
+  'amp',
   'aim'
 ];
 
@@ -151,6 +152,17 @@ export const ContinuousCounters = (props: Props) => {
         >
           <div className={styles.iconText}>
             {countersMap?.lightning}
+          </div>
+          <GiLightningArc />
+        </div>
+      )}
+      {!!Number(countersMap?.amp) && (
+        <div
+          className={styles.iconEffects}
+          title={`${countersMap?.amp} Arcane Bonus`}
+        >
+          <div className={styles.iconTextEffect}>
+            {countersMap?.amp}
           </div>
           <GiLightningArc />
         </div>

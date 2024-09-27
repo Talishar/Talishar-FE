@@ -1,12 +1,10 @@
-import React, { useRef } from 'react';
 import { Card } from 'features/Card';
 import styles from './CountersOverlay.module.css';
 import GemSlider from '../gemSlider/GemSlider';
-import classNames from 'classnames';
 import { ActiveCardCounterOverlay } from './components/ActiveChainCounters';
 import CombatChainLink from 'features/CombatChainLink';
 import { ContinuousCounters } from './components/ContinuousCounters';
-import { GiDialPadlock, GiPadlock } from 'react-icons/gi';
+import { GiDialPadlock } from 'react-icons/gi';
 
 export interface CountersProp extends Card {
   num?: number;
@@ -43,6 +41,7 @@ export const CountersOverlay = ({
     'balance',
     'bind',
     'lightning',
+    'amp',
     'aim'
   ];
 
