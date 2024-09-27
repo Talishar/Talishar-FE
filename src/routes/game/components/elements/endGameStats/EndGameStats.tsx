@@ -22,6 +22,7 @@ export interface EndGameData {
   averageResourcesUsedPerTurn?: number;
   averageCardsLeftOverPerTurn?: number;
   totalLifeGained?: number;
+  totalDamagePrevented?: number;
   averageValuePerTurn?: number;
   yourTime?: number;
   totalTime?: number;
@@ -157,6 +158,12 @@ const EndGameStats = (data: EndGameData) => {
             Total Damage Dealt: {data.totalDamageDealt}
             <br />
             {isPatron ? (
+              `Total Damage Prevented: ${data.totalDamagePrevented}`
+            ) : (
+              <span dangerouslySetInnerHTML={{ __html: "Support our <a href='https://linktr.ee/Talishar' target='_blank'>patreon</a> to access life gain stats" }} />
+            )}
+            <br />
+            {isPatron ? (
               `Total Life Gained: ${data.totalLifeGained}`
             ) : (
               <span dangerouslySetInnerHTML={{ __html: "Support our <a href='https://linktr.ee/Talishar' target='_blank'>patreon</a> to access life gain stats" }} />
@@ -187,7 +194,7 @@ const EndGameStats = (data: EndGameData) => {
                 <th colSpan={2} className={styles.headersStats}>
                   Resources
                 </th>
-                <th colSpan={2} className={styles.headersStats}>
+                <th colSpan={3} className={styles.headersStats}>
                   Damage
                 </th>
                 <th colSpan={1} className={styles.headersStats}>
@@ -203,6 +210,7 @@ const EndGameStats = (data: EndGameData) => {
                 <th>Used</th>
                 <th>Left</th>
                 <th>Dealt</th>
+                <th>Prevented</th>
                 <th>Taken</th>
                 <th>Life Gained</th>
               </tr>
@@ -240,6 +248,10 @@ const EndGameStats = (data: EndGameData) => {
                       <td className={styles.pitched}>
                         {/* @ts-ignore */}
                         {data.turnResults[key]?.damageDealt}
+                      </td>
+                      <td className={styles.pitched}>
+                        {/* @ts-ignore */}
+                        {data.turnResults[key]?.damagePrevented}
                       </td>
                       <td className={styles.pitched}>
                         {/* @ts-ignore */}
