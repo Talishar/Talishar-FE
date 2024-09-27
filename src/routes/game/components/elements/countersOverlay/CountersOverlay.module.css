@@ -361,7 +361,7 @@
   border: var(--primary) solid 1px;
   color: var(--white);
   border-radius: 5px;
-  min-width: 2em;
+  min-width: 1.5em;
   height: 1.5em;
   font-size: 1.75em;
   padding: 2px;
