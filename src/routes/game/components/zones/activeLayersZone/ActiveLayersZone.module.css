@@ -18,7 +18,7 @@
 }
 
 .activeLayersTitle {
-  font-size: 0.8em;
+  font-size: 0.9em;
   padding-left: 0.5em;
   display: flex;
   flex-direction: row;
@@ -88,7 +88,7 @@
   flex-direction: row;
   gap: 10px;
   align-items: center;
-  font-size: 0.8em;
+  font-size: 0.9em;
 }
 
 .buttonDiv {
