@@ -91,6 +91,7 @@ export const HEROES_OF_RATHE: { value: string; label: string }[] = [
   { value: 'MST001', label: 'Nuu' },
   { value: 'MST025', label: 'Enigma' },
   { value: 'MST046', label: 'Zen' },
+  { value: 'JDG024', label: 'Brutus, Summa Rudis'},
   { value: 'TER001', label: 'Terra' },
   { value: 'HER117', label: 'Blaze, Firemind' },
   { value: 'ROS002', label: 'Florian' },
