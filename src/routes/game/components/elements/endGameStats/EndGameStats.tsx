@@ -210,8 +210,8 @@ const EndGameStats = (data: EndGameData) => {
                 <th>Used</th>
                 <th>Left</th>
                 <th>Dealt</th>
-                <th>Prevented</th>
                 <th>Taken</th>
+                <th>Prevented</th>
                 <th>Life Gained</th>
               </tr>
             </thead>
@@ -251,11 +251,11 @@ const EndGameStats = (data: EndGameData) => {
                       </td>
                       <td className={styles.pitched}>
                         {/* @ts-ignore */}
-                        {data.turnResults[key]?.damagePrevented}
+                        {data.turnResults[key]?.damageTaken}
                       </td>
                       <td className={styles.pitched}>
                         {/* @ts-ignore */}
-                        {data.turnResults[key]?.damageTaken}
+                        {data.turnResults[key]?.damagePrevented}
                       </td>
                       <td className={styles.pitched}>
                         {/* @ts-ignore */}
