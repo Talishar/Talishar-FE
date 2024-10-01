@@ -23,6 +23,7 @@ export interface EndGameData {
   averageCardsLeftOverPerTurn?: number;
   totalLifeGained?: number;
   totalDamagePrevented?: number;
+  averageCombatValuePerTurn?: number;
   averageValuePerTurn?: number;
   yourTime?: number;
   totalTime?: number;
@@ -180,9 +181,15 @@ const EndGameStats = (data: EndGameData) => {
             Average Resources Used per Turn: {data.averageResourcesUsedPerTurn}
             <br />
             Average Cards Left Over per Turn: {data.averageCardsLeftOverPerTurn}
+            {!isPatron ? (
+              `<br />Average Combat Value per Turn (Damage Threatened + Block): ${data.averageCombatValuePerTurn}`
+            ) : (<></>)}
             <br />
-            Average Value per Turn (Damage Threatened + Block):{' '}
-            {data.averageValuePerTurn}
+            {isPatron ? (
+              `Average Value per Turn (Damage, Block, Prevent, Life Gain): ${data.averageValuePerTurn}`
+            ) : (
+              <span dangerouslySetInnerHTML={{ __html: "Support our <a href='https://linktr.ee/Talishar' target='_blank'>patreon</a> to access average value per turn" }} />
+            )}
           </p>
           <table className={styles.cardTable}>
             <thead>
