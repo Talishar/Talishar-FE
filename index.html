@@ -67,7 +67,7 @@
         imgSource = imgSource.replace('./WebpImages/', imgSrcPath);
         imgSource = imgSource.replace('.png', '.webp');
         var el = document.getElementById('cardDetail');
-        el.innerHTML = "<img src='" + imgSource + "' />";
+        el.innerHTML = "<img src='" + imgSource + "' style='border-radius: 5%;'/>";
         el.style.display = 'inline';
       }
 
