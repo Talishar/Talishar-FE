@@ -46,7 +46,10 @@ export interface TurnResult {
   cardsLeft: number;
   cardsPitched: number;
   cardsUsed: number;
+  damageThreatened: number;
   damageDealt: number;
+  damageBlocked: number;
+  damagePrevented: number;
   damageTaken: number;
   resourcesUsed: number;
   resourcesLeft: number;
@@ -54,7 +57,7 @@ export interface TurnResult {
 
 const EndGameStats = (data: EndGameData) => {
   const { isPatron } = useAuth();
-  
+
   function fancyTimeFormat(duration: number | undefined) {
     duration = duration ?? 0;
     // Hours, minutes and seconds
@@ -206,7 +209,7 @@ const EndGameStats = (data: EndGameData) => {
                 <th colSpan={2} className={styles.headersStats}>
                   Resources
                 </th>
-                <th colSpan={3} className={styles.headersStats}>
+                <th colSpan={5} className={styles.headersStats}>
                   Damage
                 </th>
                 <th colSpan={1} className={styles.headersStats}>
@@ -221,9 +224,11 @@ const EndGameStats = (data: EndGameData) => {
                 <th>Left</th>
                 <th>Used</th>
                 <th>Left</th>
+                <th>Threatened</th>
                 <th>Dealt</th>
-                <th>Taken</th>
+                <th>Blocked</th>
                 <th>Prevented</th>
+                <th>Taken</th>
                 <th>Life Gained</th>
               </tr>
             </thead>
@@ -259,15 +264,23 @@ const EndGameStats = (data: EndGameData) => {
                       </td>
                       <td className={styles.pitched}>
                         {/* @ts-ignore */}
+                        {isPatron ? `${data.turnResults[key]?.damageThreatened}` : `X`}
+                      </td>
+                      <td className={styles.pitched}>
+                        {/* @ts-ignore */}
                         {data.turnResults[key]?.damageDealt}
                       </td>
                       <td className={styles.pitched}>
                         {/* @ts-ignore */}
-                        {data.turnResults[key]?.damageTaken}
+                        {isPatron ? `${data.turnResults[key]?.damageBlocked}` : `X`}
                       </td>
                       <td className={styles.pitched}>
                         {/* @ts-ignore */}
                         {isPatron ? `${data.turnResults[key]?.damagePrevented}` : `X`}
+                      </td>
+                      <td className={styles.pitched}>
+                        {/* @ts-ignore */}
+                        {data.turnResults[key]?.damageTaken}
                       </td>
                       <td className={styles.pitched}>
                         {/* @ts-ignore */}
