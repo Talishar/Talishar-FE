@@ -215,6 +215,9 @@ const EndGameStats = (data: EndGameData) => {
                 <th colSpan={1} className={styles.headersStats}>
                   Life
                 </th>
+                <th colSpan={1} className={styles.headersStats}>
+                  Value
+                </th>
               </tr>
               <tr>
                 <th className={styles.turnNo}>#</th>
@@ -230,6 +233,7 @@ const EndGameStats = (data: EndGameData) => {
                 <th>Prevented</th>
                 <th>Taken</th>
                 <th>Life Gained</th>
+                <th>This Turn</th>
               </tr>
             </thead>
             <tbody>
@@ -285,6 +289,10 @@ const EndGameStats = (data: EndGameData) => {
                       <td className={styles.pitched}>
                         {/* @ts-ignore */}
                         {isPatron ? `${data.turnResults[key]?.lifeGained}` : `X`}
+                      </td>
+                      <td className={styles.pitched}>
+                        {/* @ts-ignore */}
+                        {isPatron ? (+data.turnResults[key]?.damageThreatened + +data.turnResults[key]?.damageBlocked + +data.turnResults[key]?.damagePrevented + +data.turnResults[key]?.lifeGained).toString() : `X`}
                       </td>
                     </tr>
                   );
