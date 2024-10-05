@@ -54,7 +54,7 @@ export interface TurnResult {
 
 const EndGameStats = (data: EndGameData) => {
   const { isPatron } = useAuth();
-
+  
   function fancyTimeFormat(duration: number | undefined) {
     duration = duration ?? 0;
     // Hours, minutes and seconds
@@ -182,8 +182,13 @@ const EndGameStats = (data: EndGameData) => {
             <br />
             Average Cards Left Over per Turn: {data.averageCardsLeftOverPerTurn}
             {!isPatron ? (
-              `<br />Average Combat Value per Turn (Damage Threatened + Block): ${data.averageCombatValuePerTurn}`
-            ) : (<></>)}
+              <>
+              <br />
+              Average Combat Value per Turn (Damage Threatened + Block): {data.averageCombatValuePerTurn}
+              </>
+            ) : (
+              <></>
+            )}
             <br />
             {isPatron ? (
               `Average Value per Turn (Damage, Block, Prevent, Life Gain): ${data.averageValuePerTurn}`
@@ -262,7 +267,7 @@ const EndGameStats = (data: EndGameData) => {
                       </td>
                       <td className={styles.pitched}>
                         {/* @ts-ignore */}
-                        {data.turnResults[key]?.damagePrevented}
+                        {isPatron ? `${data.turnResults[key]?.damagePrevented}` : `X`}
                       </td>
                       <td className={styles.pitched}>
                         {/* @ts-ignore */}
