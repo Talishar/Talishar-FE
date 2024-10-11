@@ -33,7 +33,6 @@ export const CARD_BACK = {
   '31': 'CBFreshAndBuds',
   '32': 'CBSloopdoop',
   '33': 'CBDMArmada',
-  '34': 'CBInstantSpeed',
   '35': 'CBTheCardGuyz',
   '36': 'CBHomeTownTCG',
   '37': 'CBAscentGaming',
