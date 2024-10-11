@@ -34,5 +34,6 @@ export default interface Player {
   bloodDebtImmune?: boolean;
   CardBack?: Card;
   earthCount?: number;
+  blessingsCount?: number;
   isPvtVoidPatron?: boolean;
 }

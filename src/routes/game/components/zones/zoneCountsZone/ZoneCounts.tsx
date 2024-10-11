@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { GiAngelOutfit, GiDrop, GiGroundSprout } from 'react-icons/gi';
+import { GiAngelOutfit, GiGroundSprout } from 'react-icons/gi';
+import { GiDroplets } from "react-icons/gi";
+import { FaPrayingHands } from "react-icons/fa";
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import { setCardListLoadFocus } from 'features/game/GameSlice';
@@ -26,7 +28,13 @@ export const ZoneCounts = (prop: Displayrow) => {
       : state.game.playerTwo.earthCount
   );
 
-  if (!soulCount && !bloodDebt && !earthCount) {
+  const blessingsCount = useAppSelector((state: RootState) =>
+    prop.isPlayer
+      ? state.game.playerOne.blessingsCount
+      : state.game.playerTwo.blessingsCount
+  );
+
+  if (!soulCount && !bloodDebt && !earthCount && !blessingsCount) {
     return null;
   }
 
@@ -36,6 +44,7 @@ export const ZoneCounts = (prop: Displayrow) => {
         <SoulCount {...prop} />
         <BloodDebtCount {...prop} />
         <EarthCount {...prop} />
+        <BlessingsCount {...prop} />
       </div>
     </div>
   );
@@ -105,6 +114,32 @@ const EarthCount = (prop: Displayrow) => {
   );
 };
 
+const BlessingsCount = (prop: Displayrow) => {
+  const [hasBlessings, setHasBlessings] = useState(false);
+  const dispatch = useAppDispatch();
+  const { isPlayer } = prop;
+  const blessingsCount = useAppSelector((state: RootState) =>
+    isPlayer ? state.game.playerOne.blessingsCount : state.game.playerTwo.blessingsCount
+  );
+
+  if (!hasBlessings && blessingsCount != undefined && blessingsCount > 0) {
+    setHasBlessings(true);
+  }
+
+  return (
+    <>
+      {!!hasBlessings && (
+        <div
+          title="Count Your Blessings"
+          className={styles.clickableItem}
+        >
+          <FaPrayingHands /> {blessingsCount}
+        </div>
+      )}
+    </>
+  );
+};
+
 const BloodDebtCount = (prop: Displayrow) => {
   const [hasBloodDebt, setHasBloodDebt] = useState(false);
   const dispatch = useAppDispatch();
@@ -143,8 +178,8 @@ const BloodDebtCount = (prop: Displayrow) => {
   return (
     <>
       {!!hasBloodDebt ? (
-        <div title="BloodDebt" className={bloodDebtItem}>
-          <GiDrop /> {bloodDebtCount}
+        <div title="Blood Debts" className={bloodDebtItem}>
+          <GiDroplets /> {bloodDebtCount}
         </div>
       ) : (
         <div className={styles.item}> </div>

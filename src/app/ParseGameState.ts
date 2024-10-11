@@ -75,7 +75,8 @@ function ParseEquipment(input: any) {
     bloodDebtCount: undefined,
     bloodDebtImmune: undefined,
     CardBack: undefined,
-    earthCount: undefined
+    earthCount: undefined,
+    blessingsCount: undefined
   };
 
   if (input === undefined || input.length == 0) {
@@ -215,6 +216,7 @@ export default function ParseGameState(input: any) {
   result.playerTwo.bloodDebtCount = input.opponentBloodDebtCount;
   result.playerTwo.bloodDebtImmune = input.isOpponentBloodDebtImmune;
   result.playerTwo.earthCount = input.opponentEarthCount;
+  result.playerTwo.blessingsCount = input.opponentBlessingsCount;
   result.playerTwo.Health = input.opponentHealth;
 
   result.playerTwo.Graveyard = [];
@@ -288,6 +290,7 @@ export default function ParseGameState(input: any) {
   result.playerOne.bloodDebtCount = input.myBloodDebtCount;
   result.playerOne.bloodDebtImmune = input.amIBloodDebtImmune;
   result.playerOne.earthCount = input.myEarthCount;
+  result.playerOne.blessingsCount = input.myBlessingsCount;
   result.playerOne.SoulCount = input.playerSoulCount;
   result.playerOne.Health = input.playerHealth;
 
