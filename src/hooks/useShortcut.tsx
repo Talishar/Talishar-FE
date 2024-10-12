@@ -1,26 +1,26 @@
-import { useCallback, useEffect, useLayoutEffect, useRef } from 'react';
+import { useCallback } from 'react';
 
-const useShortcut = (keyCode: String, callback: Function) => {
-  // callback ref pattern
-  const callbackRef = useRef(callback);
-  useLayoutEffect(() => {
-    callbackRef.current = callback;
-  });
+const shortcutListeners = new Map<string, (event: KeyboardEvent) => void>();
 
+const useShortcut = (keyCode: string, callback: Function) => {
   const handleKeyPress = useCallback(
     (event: KeyboardEvent) => {
       if (event.code === keyCode) {
-        callbackRef.current(event);
+        callback(event);
+        event.preventDefault(); // prevent default behavior
       }
     },
-    [keyCode]
+    [keyCode, callback]
   );
 
-  useEffect(() => {
-    document.addEventListener('keydown', handleKeyPress);
+  if (!shortcutListeners.has(keyCode)) {
+    shortcutListeners.set(keyCode, handleKeyPress);
+    window.addEventListener('keydown', handleKeyPress);
+  }
 
-    return () => document.removeEventListener('keydown', handleKeyPress);
-  }, [handleKeyPress]);
+  return () => {
+    window.removeEventListener('keydown', handleKeyPress);
+  };
 };
 
 export default useShortcut;
