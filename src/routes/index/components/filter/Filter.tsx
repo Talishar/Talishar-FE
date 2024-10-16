@@ -18,24 +18,24 @@ const Filter = ({
     setHeroFilter(heroArray);
   };
 
-  return (
-    <>
-      <select
-        name="Filter by hero"
-        id="filterByHero"
-        onChange={handleSelectHero}
-      >
-        <option value="">Filter by Hero</option>
-        {HEROES_OF_RATHE.map((hero, ix) => {
-          return (
-            <option value={hero.value} key={hero.value}>
-              {hero.label}
-            </option>
-          );
-        })}
-      </select>
-    </>
-  );
+return (
+  <>
+    <select
+      name="Filter by hero"
+      id="filterByHero"
+      onChange={handleSelectHero}
+    >
+      <option value="">Filter by Hero</option>
+      {HEROES_OF_RATHE.sort((a, b) => a.label.localeCompare(b.label)).map((hero, ix) => {
+        return (
+          <option value={hero.value} key={hero.value}>
+            {hero.label}
+          </option>
+        );
+      })}
+    </select>
+  </>
+);
 };
 
 export default Filter;
