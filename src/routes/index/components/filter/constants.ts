@@ -97,5 +97,6 @@ export const HEROES_OF_RATHE: { value: string; label: string }[] = [
   { value: 'ROS002', label: 'Florian' },
   { value: 'ROS008', label: 'Aurora' },
   { value: 'ROS014', label: 'Verdance' },
-  { value: 'ROS020', label: 'Oscilio' }
+  { value: 'ROS020', label: 'Oscilio' },
+  { value: 'AJV001', label: 'Jarl Vetreiđi' }
 ];
