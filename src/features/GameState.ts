@@ -14,6 +14,7 @@ export default interface GameState {
   activeChainLink?: CombatChainLink;
   oldCombatChain?: CombatChainLink[];
   amIActivePlayer?: boolean;
+  turnPlayer?: number;
   popup?: {
     popupOn?: boolean;
     popupCard?: Card;

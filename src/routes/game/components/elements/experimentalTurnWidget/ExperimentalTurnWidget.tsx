@@ -1,20 +1,4 @@
-import Player from 'interface/Player';
-import styles from './ExperimentalTurnWidget.module.css';
-import classNames from 'classnames';
-import { getGameInfo, submitButton } from 'features/game/GameSlice';
-import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai';
-import useSetting from 'hooks/useSetting';
-import { MANUAL_MODE } from 'features/options/constants';
-import React, { useEffect, useMemo, useState } from 'react';
-import { useAppSelector, useAppDispatch } from 'app/Hooks';
-import { RootState } from 'app/Store';
-import { DEFAULT_SHORTCUTS, PROCESS_INPUT } from 'appConstants';
-import useShortcut from 'hooks/useShortcut';
-import useSound from 'use-sound';
-import passTurnSound from 'sounds/prioritySound.wav';
-import { createPortal } from 'react-dom';
-import { AnimatePresence, motion } from 'framer-motion';
-import { shallowEqual } from 'react-redux';
+
 
 export default function ExperimentalTurnWidget() {
   const [heightRatio, setHeightRatio] = useState(1);

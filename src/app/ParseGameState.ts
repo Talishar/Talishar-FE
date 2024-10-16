@@ -360,6 +360,9 @@ export default function ParseGameState(input: any) {
   // activeplayer
   result.amIActivePlayer = input.amIActivePlayer as boolean;
 
+  // turn player
+  result.turnPlayer = input.turnPlayer as number;
+
   // last update frame
   result.gameDynamicInfo.lastUpdate = input.lastUpdate;
 

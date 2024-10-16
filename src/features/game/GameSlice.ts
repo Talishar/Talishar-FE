@@ -404,6 +404,7 @@ export const gameSlice = createSlice({
       state.oldCombatChain = action.payload.oldCombatChain;
       state.chatLog = action.payload.chatLog;
       state.amIActivePlayer = action.payload.amIActivePlayer;
+      state.turnPlayer = action.payload.turnPlayer;
       state.turnPhase = action.payload.turnPhase;
       state.playerInputPopUp = action.payload.playerInputPopUp;
 
