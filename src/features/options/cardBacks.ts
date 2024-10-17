@@ -85,7 +85,8 @@ export const CARD_BACK = {
   '84': 'CBTideBreakers',
   '85': 'CBCD1',
   '86': 'CBCD2',
-  '87': 'CBCupofTCG'
+  '87': 'CBCupofTCG',
+  '88': 'CBScowlingFleshBag',
 } as { [key: string]: string };
 
 export const PLAYMATS = {
