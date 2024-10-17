@@ -1,14 +1,19 @@
 import React from 'react';
 import styles from '../index/Index.module.css';
-import RosettaLogo from '../../img/Rosetta.webp';
+import ArmoryDeckDash from '../../img/ArmoryDeckDash.webp';
 
 
 const News = () => {
   return (
     <div>
-      <h4 className={styles.headlines}>🌹Happy Rosetta Release Day!🌹</h4>
-      <p className={styles.headlines}>Rosetta cards are now available in all queues!</p>
-      <img src={RosettaLogo} className={styles.NewsLogo} />
+    <h4 className={styles.headlines}>⚙️ Armory Deck: Dash! ⚙️</h4>
+    <p className={styles.headlinesParagraphs}>
+      Dash I/O armory deck cards are now available in all queues!<br/>For more information about the product, 
+      <a href="https://fabtcg.com/en/products/booster-set/armory-deck-dash/" target="_blank"> click here!</a>
+    </p>
+    <a href="https://fabtcg.com/en/products/booster-set/armory-deck-dash/" target="_blank">
+      <img src={ArmoryDeckDash} className={styles.NewsLogoRectangle} />
+    </a>
     <br/>
       <p>Please join our community:</p>
       <ul>
@@ -28,14 +33,12 @@ const News = () => {
         Talishar is an open-source, fan-made platform not associated with
         LSS. It may not be a completely accurate representation of the Rules
         as written. If you have questions about interactions or rulings,
-        please contact the judge community for clarification.
+        please contact the <a href="https://discord.gg/flesh-and-blood-judge-hub-874145774135558164" target="_blank">JudgeHub Discord</a> for clarification.
         <br/><br/>
         Talishar is in no way affiliated with Legend Story Studios. Legend Story
         Studios®, Flesh and Blood™, and set names are trademarks of Legend Story
         Studios. Flesh and Blood characters, cards, logos, and art are property
-        of Legend Story Studios. Talishar is a fan made project that may have
-        bugs; game interactions and rulings are the jurisdiction of LSS and
-        judges. Card Images © Legend Story Studios
+        of <a href="https://legendstory.com/" target="_blank">Legend Story Studios</a>. Card Images © Legend Story Studios
       </small>
     </div>
   );

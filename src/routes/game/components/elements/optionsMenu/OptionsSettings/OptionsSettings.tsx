@@ -561,10 +561,10 @@ const OptionsSettings = () => {
         </fieldset>
       </>
       <p className={styles.disclaimer}>
-        Talishar is in no way affiliated with Legend Story Studios. Legend Story
+      Talishar is in no way affiliated with Legend Story Studios. Legend Story
         Studios®, Flesh and Blood™, and set names are trademarks of Legend Story
         Studios. Flesh and Blood characters, cards, logos, and art are property
-        of Legend Story Studios. Card Images © Legend Story Studios.
+        of <a href="https://legendstory.com/" target="_blank">Legend Story Studios</a>. Card Images © Legend Story Studios
       </p>
     </div>
   );

@@ -313,9 +313,11 @@ const Lobby = () => {
                 </header>
                 <p style={{ marginBottom: '1em' }}>
                   Note that new cards are added on a 'best-effort' basis and
-                  there may be more bugs and/or other innacurate card
-                  interactions than usual, since there are no official release
-                  notes from Legend Story Studios yet.
+                  there may be more bugs and innacurate card interactions. 
+                  It may not be a completely accurate representation of the Rules
+                  as written. If you have questions about interactions or rulings,
+                  please contact the <a href="https://discord.gg/flesh-and-blood-judge-hub-874145774135558164" target="_blank">JudgeHub Discord</a> 
+                  for clarification.
                 </p>
                 <div className={styles.disclaimerAcceptButtons}>
                   <button
