@@ -2,7 +2,6 @@ import React from 'react';
 import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import styles from './TurnNumber.module.css';
-import Player from 'interface/Player';
 
 export default function TurnNumber() {
   let turnNumber = useAppSelector(
@@ -17,8 +16,12 @@ export default function TurnNumber() {
     (state: RootState) => state.game.turnPlayer
   );
 
+  const amIPlayerOne = useAppSelector((state: RootState) => {
+    return state.game.gameInfo.playerID === 1;
+  });
+
   const playerName = useAppSelector((state: RootState) =>
-    state.game.turnPlayer ? state.game.playerOne.Name : state.game.playerTwo.Name
+    (turnPlayer == 1 && amIPlayerOne || turnPlayer == 2 && !amIPlayerOne) ? state.game.playerOne.Name : state.game.playerTwo.Name
   );
 
   return (
