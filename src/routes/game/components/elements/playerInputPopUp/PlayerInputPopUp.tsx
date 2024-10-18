@@ -127,7 +127,7 @@ export default function PlayerInputPopUp() {
       <div className={styles.optionsTitleContainer}>
         <div className={styles.optionsTitle}>
           <h3 className={styles.title} dangerouslySetInnerHTML={title}></h3>
-          {inputPopUp.popup?.additionalComments}
+          <h4 className={styles.subtitle}>{inputPopUp.popup?.additionalComments}</h4>
         </div>
         {inputPopUp.popup?.canClose ? (
           <div className={styles.inputPopUpCloseIcon} onClick={onPassTurn}>

@@ -32,6 +32,13 @@
   margin: 0px;
 }
 
+.subtitle {
+  font-size: 0.7em;
+  padding: 0px;
+  margin: 2px;
+  font-weight: normal;
+}
+
 .buttonList {
   display: flex;
   flex-direction: row;
