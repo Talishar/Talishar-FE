@@ -29,6 +29,8 @@ import {
   DEFAULT_LANGUAGE,
   getCollectionCardImagePath
 } from 'utils';
+import { DEFAULT_SHORTCUTS } from 'appConstants';
+import useShortcut from 'hooks/useShortcut';
 
 const OptionsSettings = () => {
   const gameInfo = useAppSelector(getGameInfo, shallowEqual);
@@ -88,6 +90,10 @@ const OptionsSettings = () => {
     playMat: String(settingsData['Playmat']?.value ?? '0'),
     alwaysAllowUndo: settingsData['AlwaysAllowUndo']?.value === '1'
   };
+  
+  useShortcut(DEFAULT_SHORTCUTS.TOGGLE_MANUAL_MODE, () => {
+    handleSettingsChange({ name: optConst.MANUAL_MODE, value: '1' });
+  });
 
   return (
     <div>
