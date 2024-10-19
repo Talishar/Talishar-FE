@@ -121,8 +121,7 @@ export const DEFAULT_SHORTCUTS = {
   PASS_TURN: 'Space',
   CLOSE_WINDOW: 'Escape',
   UNDO: 'KeyU',
-  UNDOALT: 'KeyZ',
-  TOGGLE_MANUAL_MODE: 'KeyN'
+  UNDOALT: 'KeyZ'
 };
 
 export const GAME_FORMAT = {
