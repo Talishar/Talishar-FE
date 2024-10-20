@@ -6,7 +6,6 @@
   flex: 0 1 100%;
   border-radius: 0.5em;
   gap: 1vh;
-  background: rgba(50, 50, 50, 0.5);
   color: var(--white);
   grid-area: permanents;
   overflow: visible;

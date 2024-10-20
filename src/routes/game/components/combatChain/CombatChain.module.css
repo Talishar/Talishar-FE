@@ -1,14 +1,13 @@
 .combatChain {
   position: relative;
-  height: 20vh;
   height: 20dvh;
   margin: auto;
-  width: 100%;
+  width: 95%;
   padding: 1vh;
   background: none;
   border: none;
   outline: none;
-  border-radius: 1em;
+  border-radius: 0.75em;
   text-align: center;
   display: flex;
   align-items: center;
@@ -16,7 +15,7 @@
   color: var(--white);
   isolation: isolate;
   border: 1px solid goldenrod;
-  background-color: var(--near-black);
+  background-color: rgba(0, 0, 0, 0.75);
   pointer-events: auto;
 }
 
@@ -40,7 +39,6 @@
   width: calc(var(--card-size) * 0.3);
   height: 100%;
   background-color: maroon;
-  margin-right: 10px;
   border-radius: 10px;
   display: flex;
   flex-direction: column;
@@ -113,9 +111,9 @@
   align-items: center;
   align-content: center;
   flex-wrap: nowrap;
-  background-color: var(--near-black);
-  border-width: 0 1px 1px 1px;
-  border-radius: 0 0 5px 5px;
+  background-color: rgba(0, 0, 0, 0.75);
+  border-width: 1px 1px 1px 1px;
+  border-radius: 0 0 0.5em 0.5em;
   border-color: goldenrod;
   padding: 5px;
   border-style: solid;

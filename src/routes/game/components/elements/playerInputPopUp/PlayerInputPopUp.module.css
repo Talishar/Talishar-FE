@@ -9,7 +9,7 @@
   left: 20%;
   right: 20%;
   background-color: var(--near-black);
-  padding: 2vh;
+  padding: 1.5vh;
   border: 1px solid var(--primary);
   border-radius: 20px;
   z-index: 900;
@@ -23,6 +23,7 @@
   width: 100%;
   justify-content: space-between;
   align-items: center;
+  padding-left: 1vh;
   padding-bottom: 1vh;
 }
 

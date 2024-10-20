@@ -65,8 +65,8 @@ body {
   flex-direction: column;
   order: 2;
   width: 100%;
-  margin-bottom: 3vh;
-  margin-bottom: 3dvh;
+  margin-bottom: 1.5vh;
+  margin-bottom: 1.5dvh;
 }
 
 @media (orientation: portrait) {
@@ -77,7 +77,7 @@ body {
 
 .defaultToast {
   background-color: var(--near-black);
-  padding: 2vh;
+  padding: 1.5vh;
   border: 1px solid var(--primary);
   border-radius: 12px;
   color: var(--primary);

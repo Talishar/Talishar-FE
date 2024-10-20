@@ -1,5 +1,5 @@
 .currentAttack {
-  width: 20vh;
+  width: 15vh;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -26,7 +26,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgba(0, 0, 0, 0.5);
   border: var(--primary) solid 1px;
   color: var(--white);
   border-radius: 5px;

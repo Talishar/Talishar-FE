@@ -7,7 +7,7 @@
   left: 10vw;
   right: 10vw;
   background-color: var(--near-black);
-  padding: 2vh;
+  padding: 1.5vh;
   border: 1px solid var(--primary);
   border-radius: 12px;
   z-index: 950;

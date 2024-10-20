@@ -6,7 +6,7 @@
   top: 10vh;
   left: 20%;
   background-color: var(--near-black);
-  padding: 2vh;
+  padding: 1.5vh;
   border: 1px solid var(--primary);
   border-radius: 10px;
   max-width: 90vh;
@@ -42,6 +42,7 @@
   gap: 5px;
   min-width: fit-content;
   max-width: 1920px;
+  margin-bottom: 0;
 }
 
 .activeLayersContents > div {
@@ -49,7 +50,8 @@
 }
 
 .orderingExplanation {
-  font-size: 0.9em;
+  font-size: 0.8em;
+  margin-top: 0.2em;
   margin-bottom: 0;
 }
 
@@ -68,6 +70,7 @@
 }
 
 .targetContainer {
+  font-size: 1.1em;
   display: flex;
   align-content: center;
   align-items: center;
