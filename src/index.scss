@@ -20,6 +20,14 @@ body {
   --near-black: rgba(0, 0, 0, var(--transparency-intensity));
   --primary-inverse: #000000;
   --alarm: #c62828;
+
+  --card-background-color: #1e2329;
+  --form-element-background-color: #33383d;
+  --form-element-active-background-color: #33383d;
+  --form-element-border-color: #797c80;
+  --secondary: #33383d;
+  --switch-background-color: #33383d;
+  --card-sectionning-background-color: #1e2329;
 }
 // Import Pico
 @import '@picocss/pico/scss/pico';
