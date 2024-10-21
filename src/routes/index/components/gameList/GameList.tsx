@@ -133,12 +133,12 @@ const GameList = () => {
         </button>
       )}
       <div className={styles.titleDiv}>
-        <h1 className={styles.title}>Games</h1>
+        <h3 className={styles.title}>Games</h3>
         <button
           onClick={handleReloadClick}
+          className={styles.reloadButton}
           aria-busy={isFetching}
           disabled={isFetching}
-          className={styles.reloadButton}
         >
           Reload
         </button>
@@ -193,7 +193,7 @@ const GameList = () => {
       ) : (
         !isLoading && (
           <p>
-            Please <Link to="/user/login">log in</Link> to view open lobbies
+            Please <Link to="/user/login">log in</Link> to view open lobbies!
           </p>
         )
       )}
