@@ -55,7 +55,7 @@
 }
 
 .popOver {
-  background-color: var(--near-black);
+  background-color: black;
   border: 1px solid var(--primary);
   color: white;
   padding: 10px;
