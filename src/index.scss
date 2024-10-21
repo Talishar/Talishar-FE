@@ -17,10 +17,9 @@ body {
 body {
   --white: var(--snow);
   --dark-red: #6f0000;
-  --near-black: rgba(0, 0, 0, 0.90);
+  --near-black: rgba(0, 0, 0, var(--transparency-intensity));
   --primary-inverse: #000000;
   --alarm: #c62828;
 }
-
 // Import Pico
 @import '@picocss/pico/scss/pico';

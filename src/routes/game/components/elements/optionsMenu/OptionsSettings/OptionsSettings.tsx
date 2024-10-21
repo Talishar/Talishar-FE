@@ -42,7 +42,8 @@ const OptionsSettings = () => {
   const [cookies, setCookie, removeCookie] = useCookies([
     'experimental',
     'cardSize',
-    'playmatIntensity'
+    'playmatIntensity',
+    'transparencyIntensity'
   ]);
 
   // fetch all settings when options is loaded
@@ -552,9 +553,23 @@ const OptionsSettings = () => {
               min="10"
               max="100"
               defaultValue={(cookies.playmatIntensity ?? 0.65) * 100}
-              id="cardSize"
+              id="playmatIntensity"
               onChange={(e) =>
                 setCookie('playmatIntensity', parseInt(e.target.value) / 100)
+              }
+            />
+          </label>
+          <label className={styles.optionLabel}>
+            Transparency Intensity: {Math.floor(cookies.transparencyIntensity * 100)}%
+            <input
+              name="transparencyIntensity"
+              type="range"
+              min="50"
+              max="100"
+              defaultValue={(cookies.transparencyIntensity ?? 0.65) * 90}
+              id="transparencyIntensity"
+              onChange={(e) =>
+                setCookie('transparencyIntensity', parseInt(e.target.value) / 100)
               }
             />
           </label>

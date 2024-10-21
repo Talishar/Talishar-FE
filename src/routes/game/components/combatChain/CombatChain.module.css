@@ -15,7 +15,7 @@
   color: var(--white);
   isolation: isolate;
   border: 1px solid goldenrod;
-  background-color: rgba(0, 0, 0, 0.75);
+  background-color: var(--near-black);
   pointer-events: auto;
 }
 
@@ -111,7 +111,7 @@
   align-items: center;
   align-content: center;
   flex-wrap: nowrap;
-  background-color: rgba(0, 0, 0, 0.75);
+  background-color: var(--near-black);
   border-width: 1px 1px 1px 1px;
   border-radius: 0 0 0.5em 0.5em;
   border-color: goldenrod;

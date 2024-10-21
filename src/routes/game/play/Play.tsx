@@ -21,7 +21,8 @@ import { setIsRoguelike } from '../../../features/game/GameSlice';
 function Play({ isRoguelike }: { isRoguelike: boolean }) {
   const [cookies, setCookie, removeCookie] = useCookies([
     'experimental',
-    'cardSize'
+    'cardSize',
+    'transparencyIntensity',
   ]);
 
   const dispatch = useAppDispatch();
@@ -40,6 +41,17 @@ function Play({ isRoguelike }: { isRoguelike: boolean }) {
       document.documentElement.style.setProperty('--card-scale', '1');
     }
   }, [cookies.cardSize]);
+
+  useEffect(() => {
+    if (cookies.transparencyIntensity) {
+      document.documentElement.style.setProperty(
+        '--transparency-intensity',
+        cookies.transparencyIntensity
+      );
+    } else {
+      document.documentElement.style.setProperty('--transparency-intensity', '1');
+    }
+  }, [cookies.transparencyIntensity]);
 
   return (
     <div className="centering">
