@@ -27,16 +27,9 @@ export default function PhaseTracker() {
 
   return (
     <div className={styles.phaseTrackerContainer}>
-      <div className={styles.titleContainer}>
-        <div className={styles.titleInterior}>{phase}</div>
-      </div>
-      <PhaseTrackerWidget phase={phaseEnum} />
-      <div className={styles.phaseTrackerBottomContainer}>
-        <div
-          className={styles.bottomInterior}
-          dangerouslySetInnerHTML={{ __html: turnPhase?.caption ?? '' }}
-        ></div>
-      </div>
+      <div className={styles.phaseTrackerTopContainer} />
+        <PhaseTrackerWidget phase={phaseEnum} />
+      <div className={styles.phaseTrackerBottomContainer} />
     </div>
   );
 }

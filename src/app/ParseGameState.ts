@@ -372,6 +372,9 @@ export default function ParseGameState(input: any) {
   // turn number
   result.gameDynamicInfo.turnNo = input.turnNo;
 
+  //clock
+  result.gameDynamicInfo.clock = input.clock;
+
   // turn phase
   if (input.turnPhase !== undefined) {
     result.turnPhase = input.turnPhase;

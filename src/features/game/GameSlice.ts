@@ -409,11 +409,10 @@ export const gameSlice = createSlice({
       state.playerInputPopUp = action.payload.playerInputPopUp;
 
       // gameInfo
-      state.gameDynamicInfo.lastPlayed =
-        action.payload.gameDynamicInfo.lastPlayed;
-      state.gameDynamicInfo.lastUpdate =
-        action.payload.gameDynamicInfo.lastUpdate;
+      state.gameDynamicInfo.lastPlayed = action.payload.gameDynamicInfo.lastPlayed;
+      state.gameDynamicInfo.lastUpdate = action.payload.gameDynamicInfo.lastUpdate;
       state.gameDynamicInfo.turnNo = action.payload.gameDynamicInfo.turnNo;
+      state.gameDynamicInfo.clock = action.payload.gameDynamicInfo.clock;
       state.hasPriority = action.payload.hasPriority;
       state.chatEnabled = action.payload.chatEnabled;
 

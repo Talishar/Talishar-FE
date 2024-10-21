@@ -63,6 +63,11 @@
   align-items: flex-end;
 }
 
+.inlineContainer {
+  display: flex;
+  align-items: center;
+}
+
 .turnNumber {
   padding-top: 1em;
 }

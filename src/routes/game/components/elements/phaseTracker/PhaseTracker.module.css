@@ -6,15 +6,13 @@
   justify-content: center;
   width: 100%;
   min-width: 100%;
-  font-size: 1.1em;
-  font-weight: 550;
   background-position: center;
   background-size: contain;
   background-repeat: no-repeat;
   color: var(--primary);
 }
 
-.titleContainer {
+.phaseTrackerTopContainer {
   display: flex;
   justify-content: center;
   align-content: center;
@@ -22,8 +20,8 @@
   left: 15%;
   right: 15%;
   width: 100%;
-  height: 3vh;
-  height: 3dvh;
+  height: 1.5vh;
+  height: 1.5dvh;
   text-align: center;
 }
 

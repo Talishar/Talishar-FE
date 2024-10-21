@@ -3,6 +3,7 @@ import PriorityControl from '../elements/priorityControl/PriorityControl';
 import LastPlayed from '../elements/lastPlayed/LastPlayed';
 import Menu from '../elements/menu/Menu';
 import TurnNumber from '../elements/turnNumber/TurnNumber';
+import Timer from '../elements/timer/timer';
 import styles from './RightColumn.module.css';
 import ChatBox from '../elements/chatBox/ChatBox';
 import PhaseTracker from '../elements/phaseTracker/PhaseTracker';
@@ -21,6 +22,7 @@ export default function RightColumn() {
         <div className={styles.topGroup}>
           <Menu />
           <TurnNumber />
+          <Timer />
           <LastPlayed />
           <PriorityControl />
         </div>

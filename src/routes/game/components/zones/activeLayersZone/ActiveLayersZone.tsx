@@ -81,7 +81,7 @@ export default function ActiveLayersZone() {
             {canPassPhase && (
               <div className={styles.passTurnBox}>
                 <button onClick={handlePassTurn}>
-                  <small>Pass</small>
+                  Pass
                 </button>
               </div>
             )}

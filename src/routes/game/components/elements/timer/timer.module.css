@@ -1,0 +1,12 @@
+.timerStyle {
+  font-size: 1.1em;
+  font-weight: 550;
+  color: var(--primary);
+  text-align: center;
+}
+
+.timerStyle svg {
+  vertical-align: middle;
+  margin-bottom: 3px;
+  font-weight: 550;
+}

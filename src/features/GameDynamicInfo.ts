@@ -4,4 +4,5 @@ export interface GameDynamicInfo {
   turnNo?: number;
   lastPlayed?: Card;
   lastUpdate?: number;
+  clock?: number;
 }
