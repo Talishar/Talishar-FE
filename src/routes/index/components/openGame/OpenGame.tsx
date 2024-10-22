@@ -20,7 +20,7 @@ const OpenGame = ({
   return (
     <div key={ix} className={styles.gameItem}>
       <div>
-        {!!entry.p1Hero && <img src={generateCroppedImageUrl(entry.p1Hero)} />}
+        {!!entry.p1Hero && <img className={styles.heroImg} src={generateCroppedImageUrl(entry.p1Hero)} />}
       </div>
       <div>{entry.description}</div>
       {isOther && <div>{entry.formatName}</div>}

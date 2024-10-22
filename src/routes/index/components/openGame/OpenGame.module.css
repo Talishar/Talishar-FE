@@ -17,3 +17,8 @@
 img {
   max-height: 3em;
 }
+
+.heroImg {
+  border-radius: 5%;
+  border: 0.5px solid var(--form-element-border-color);
+}
