@@ -27,11 +27,11 @@ export const InProgressGame = ({
       }}
     >
       <div>
-        {!!entry.p1Hero && <img src={generateCroppedImageUrl(entry.p1Hero)} />}
+        {!!entry.p1Hero && <img className={styles.heroImg} src={generateCroppedImageUrl(entry.p1Hero)} />}
       </div>
       <RiSwordLine />
       <div>
-        {!!entry.p2Hero && <img src={generateCroppedImageUrl(entry.p2Hero)} />}
+        {!!entry.p2Hero && <img className={styles.heroImg} src={generateCroppedImageUrl(entry.p2Hero)} />}
       </div>
       <div>
         <button className={buttonClass}>Spectate</button>

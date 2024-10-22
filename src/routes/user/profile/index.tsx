@@ -5,7 +5,8 @@ import {
 } from 'features/api/apiSlice';
 import { DeleteDeckAPIResponse } from 'interface/API/DeleteDeckAPI.php';
 import { toast } from 'react-hot-toast';
-import { GiNotebook, GiTrashCan } from 'react-icons/gi';
+import { RiEdit2Line, RiDeleteBin5Line } from "react-icons/ri";
+import { CiEdit } from "react-icons/ci";
 import styles from './profile.module.css';
 import { generateCroppedImageUrl } from 'utils/cropImages';
 
@@ -83,10 +84,7 @@ export const ProfilePage = () => {
       <div className="container">
         <h1 className={styles.title}>Profile Page</h1>
         <article>
-          <h3>Profile:</h3>
-          <div>
-            <h5>Username: {profileData?.userName}</h5>
-          </div>
+          <h5>Username: {profileData?.userName}</h5>
           <div>
             {profileIsLoading && <p>Loading Profile...</p>}
             {!profileIsLoading && profileData?.isPatreonLinked && (
@@ -106,7 +104,7 @@ export const ProfilePage = () => {
               </p>
             )}
           </div>
-          <h3>Your decks:</h3>
+          <h3 className={styles.title}>Your decks:</h3>
           <table>
             <thead>
               <tr>
@@ -115,7 +113,7 @@ export const ProfilePage = () => {
                 <th scope="col">Format</th>
                 <th scope="col">Card Back</th>
                 <th scope="col">Playmat</th>
-                <th scope="col">View / Edit</th>
+                <th scope="col">Edit</th>
                 <th scope="col">Delete</th>
               </tr>
             </thead>
@@ -132,15 +130,14 @@ export const ProfilePage = () => {
                     )}
                   </th>
                   <td>{deck.name}</td>
-                  <td>{deck.format}</td>
-                  <td>{deck.cardBack}</td>
-                  <td>{deck.playmat}</td>
-                  <td className={styles.editButton}>
+                  <td>{deck.format.charAt(0).toUpperCase() + deck.format.slice(1)}</td>
+                  <td>{deck.cardBack.charAt(0).toUpperCase() + deck.cardBack.slice(1).toLowerCase()}</td>
+                  <td>{deck.playmat.charAt(0).toUpperCase() + deck.playmat.slice(1).toLowerCase()}</td>                  <td className={styles.editButton}>
                     <button
                       className={styles.button}
                       onClick={() => handleEditDeck(deck.link)}
                     >
-                      <GiNotebook
+                      <RiEdit2Line
                         fontSize={'1.5em'}
                         className={styles.trashcanIcon}
                       />
@@ -151,7 +148,7 @@ export const ProfilePage = () => {
                       className={styles.button}
                       onClick={() => handleDeleteDeck(deck.link)}
                     >
-                      <GiTrashCan
+                      <RiDeleteBin5Line
                         fontSize={'1.5em'}
                         className={styles.trashcanIcon}
                       />

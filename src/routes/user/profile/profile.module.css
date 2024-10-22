@@ -11,3 +11,15 @@
 .title {
   margin-bottom: 0;
 }
+
+th {
+  text-align: center;
+}
+
+td {
+  text-align: center;
+}
+
+.heroImage {
+  border-radius: 5%;
+}

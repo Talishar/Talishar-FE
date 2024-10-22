@@ -21,4 +21,10 @@
 .button {
   background-color: var(--secondary);
   margin-bottom: 0;
+  border: 0.5px solid var(--form-element-border-color);
+}
+
+.heroImg {
+  border-radius: 5%;
+  border: 0.5px solid var(--form-element-border-color);
 }
