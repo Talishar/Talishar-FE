@@ -24,6 +24,6 @@
 }
 
 .heroImg {
-  border-radius: 5%;
+  border-radius: var(--border-radius);
   border: 0.5px solid var(--form-element-border-color);
 }
