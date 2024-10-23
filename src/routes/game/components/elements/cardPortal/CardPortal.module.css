@@ -32,7 +32,7 @@
 
 .doubleFacedCard {
   position: absolute;
-  left: -35vh;
+  left: calc(-38vh * var(--hover-img-scale));
 }
 
 @media (orientation: portrait) {
