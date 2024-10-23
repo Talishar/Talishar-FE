@@ -43,7 +43,8 @@ const OptionsSettings = () => {
     'experimental',
     'cardSize',
     'playmatIntensity',
-    'transparencyIntensity'
+    'transparencyIntensity',
+    'hoverImageSize'
   ]);
 
   // fetch all settings when options is loaded
@@ -542,6 +543,20 @@ const OptionsSettings = () => {
               id="cardSize"
               onChange={(e) =>
                 setCookie('cardSize', parseInt(e.target.value) / 100)
+              }
+            />
+          </label>
+          <label className={styles.optionLabel}>
+            Card Preview Size: {Math.floor(cookies.hoverImageSize * 100)}%
+            <input
+              name="hoverImageSize"
+              type="range"
+              min="75"
+              max="150"
+              defaultValue={(cookies.hoverImageSize ?? 1) * 100}
+              id="hoverImageSize"
+              onChange={(e) =>
+                setCookie('hoverImageSize', parseInt(e.target.value) / 100)
               }
             />
           </label>

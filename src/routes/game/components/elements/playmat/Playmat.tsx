@@ -5,7 +5,7 @@ import { useCookies } from 'react-cookie';
 
 import styles from './Playmat.module.css';
 export const Playmat = ({ isPlayer }: { isPlayer: boolean }) => {
-  const [cookies, setCookie, removeCookie] = useCookies(['playmatIntensity']);
+  const [cookies] = useCookies(['playmatIntensity']);
   let playmat = useAppSelector((state: RootState) =>
     isPlayer ? state.game.playerOne.Playmat : state.game.playerTwo.Playmat
   );

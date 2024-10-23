@@ -1,8 +1,8 @@
 .popUpContainer {
   position: fixed;
   z-index: 2000;
-  height: 53vh;
-  height: 53dvh;
+  min-height: calc(53vh - (1.5 - var(--hover-img-scale)) * 20vh);
+  height: calc(55vh * var(--hover-img-scale));
 }
 
 .popUp {
@@ -19,7 +19,7 @@
 }
 
 .img {
-  height: 45vh;
+  height: calc(50vh * var(--hover-img-scale));
   display: block;
   max-width: 100%;
   max-height: 100%;

@@ -7,8 +7,9 @@ import { doubleFacedCardsMappings } from './constants';
 import classNames from 'classnames';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import { CARD_IMAGES_PATH, getCollectionCardImagePath } from 'utils';
+import { useCookies } from 'react-cookie';
 
-const popUpGap = 10;
+const popUpGap = 120;
 
 function CardDetails({
   src,
@@ -54,6 +55,8 @@ function getSrcs({
 
 export default function CardPortal() {
   const popup = useAppSelector((state: RootState) => state.game.popup);
+  const [cookies] = useCookies(['hoverImageSize']);
+  const hoverImageSize = Number(cookies.hoverImageSize) || 1;
   const { getLanguage } = useLanguageSelector();
   const [windowWidth, windowHeight] = useWindowDimensions();
   if (
@@ -73,21 +76,31 @@ export default function CardPortal() {
     return <CardDetails src={src} />;
   }
 
-  const popUpStyle: Record<string, string> = {};
+const popUpStyle: Record<string, string> = {};
 
+if (hoverImageSize > 1.2) {
   if (popup.xCoord > windowWidth / 2) {
     popUpStyle.right =
-      (windowWidth - (popup.xCoord - popUpGap)).toString() + 'px';
+      (windowWidth - popup.xCoord).toString() + 'px';
   } else {
-    popUpStyle.left = (popup.xCoord + popUpGap).toString() + 'px';
+    popUpStyle.left = popup.xCoord.toString() + 'px';
+  }
+  popUpStyle.bottom = '10vh';
+} else {
+  if (popup.xCoord > windowWidth / 2) {
+    popUpStyle.right =
+      (windowWidth - popup.xCoord).toString() + 'px';
+  } else {
+    popUpStyle.left = popup.xCoord.toString() + 'px';
   }
 
   if (popup.yCoord < windowHeight / 2) {
-    popUpStyle.top = popup.yCoord.toString() + 'px';
+    popUpStyle.top = (popup.yCoord - popUpGap).toString() + 'px';
   } else {
     popUpStyle.bottom =
-      (windowHeight - popup.yCoord + popUpGap).toString() + 'px';
+      (windowHeight - popup.yCoord).toString() + 'px';
   }
+}
 
   return (
     <div className={styles.popUpContainer} style={popUpStyle}>

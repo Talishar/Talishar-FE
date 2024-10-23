@@ -19,10 +19,11 @@ import { useAppDispatch } from '../../../app/Hooks';
 import { setIsRoguelike } from '../../../features/game/GameSlice';
 
 function Play({ isRoguelike }: { isRoguelike: boolean }) {
-  const [cookies, setCookie, removeCookie] = useCookies([
+  const [cookies] = useCookies([
     'experimental',
     'cardSize',
     'transparencyIntensity',
+    'hoverImageSize'
   ]);
 
   const dispatch = useAppDispatch();
@@ -52,6 +53,17 @@ function Play({ isRoguelike }: { isRoguelike: boolean }) {
       document.documentElement.style.setProperty('--transparency-intensity', '1');
     }
   }, [cookies.transparencyIntensity]);
+
+  useEffect(() => {
+    if (cookies.hoverImageSize) {
+      document.documentElement.style.setProperty(
+        '--hover-img-scale',
+        cookies.hoverImageSize
+      );
+    } else {
+      document.documentElement.style.setProperty('--hover-img-scale', '1');
+    }
+  }, [cookies.hoverImageSize]);
 
   return (
     <div className="centering">
