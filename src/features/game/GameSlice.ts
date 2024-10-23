@@ -549,8 +549,17 @@ export const selectPermanentsAsStack = (
   let initialCardStack: CardStack[] = [];
   let idIndex = 0;
   return [...permanents]
-    .sort((a, b) => a.cardNumber.localeCompare(b.cardNumber))
-    .reduce((accumulator, currentCard) => {
+  .sort((a, b) => a.cardNumber.localeCompare(b.cardNumber))
+  .reduce((accumulator, currentCard) => {
+      if (currentCard.cardNumber === 'EVR070') {
+        // Don't stack, just add to accumulator
+        accumulator.push({
+          card: currentCard,
+          count: 1,
+          id: `${currentCard.cardNumber}-${idIndex++}`
+        });
+        return accumulator;
+      }
       const cardCopy = { ...currentCard };
       const storedADO = currentCard.actionDataOverride;
       cardCopy.actionDataOverride = '';
