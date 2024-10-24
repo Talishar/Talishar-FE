@@ -55,7 +55,7 @@ export const SignUpForm = () => {
       });
       setError('root.serverError', {
         type: 'custom',
-        message: `There has been a network error while signing up. Please try again. If you still get an error please report on our discord and let them know the following: ${JSON.stringify(
+        message: `There has been a network error while signing up. Please try again. If you still get an error please report on our discord and let us know the following: ${JSON.stringify(
           err
         )}`
       });
@@ -168,7 +168,7 @@ export const SignUpForm = () => {
           <p>
             Welcome to Talishar, a fan-made website where you can play the
             trading card game Flesh & Blood by Legend Story Studios in your
-            browser! We want to make sure you have a fun and enjoyable
+            browser! We want to ensure you have a fun and enjoyable
             experience playing the game online.
           </p>
           <p>
@@ -176,7 +176,7 @@ export const SignUpForm = () => {
             enjoyable gaming experience, there may be bugs or errors in the
             software that could impact the game's accuracy and functionality.
             Therefore, it's important to note that Talishar has no
-            responsibility and no warranty for the accuracy of the game rules on
+            responsibility or warranty for the accuracy of the game rules on
             our website. It's always a good idea to familiarize yourself with
             the official rules and regulations of Flesh & Blood before playing
             on Talishar.
@@ -186,12 +186,12 @@ export const SignUpForm = () => {
             event, you should not use "it works that way on Talishar" as an
             excuse if you're caught performing an illegal move, missing
             triggers, or doing something out of order. The ultimate
-            responsibility for knowing the rules of the game lies with the
-            player themselves, not the software. The ultimate authority on the
-            rules of Flesh & Blood is Legend Story Studios and their judges.
+            responsibility for knowing the game's rules lies with the
+            players themselves, not the software. The ultimate authority on the
+            rules of Flesh & Blood is Legend Story Studios.
           </p>
           <p>
-            At Talishar, we're open source, which means we welcome contributions
+            At Talishar, we're open-source, which means we welcome contributions
             and bug reports to help us improve the website. If you're interested
             in contributing, please visit our GitHub page. We appreciate all
             feedback and suggestions for improvement.

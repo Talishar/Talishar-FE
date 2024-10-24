@@ -49,7 +49,7 @@ export const ResetPasswordForm = () => {
       console.warn(err);
       setError('root.serverError', {
         type: 'custom',
-        message: `There has been a network error submitting the password reset. Please try again. If you still get an error please report on our discord and let them know the following: ${JSON.stringify(
+        message: `There has been a network error submitting the password reset. Please try again. If you still get an error please report on our discord and let us know the following: ${JSON.stringify(
           err
         )}`
       });

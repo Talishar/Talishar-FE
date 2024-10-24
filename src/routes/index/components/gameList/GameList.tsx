@@ -149,7 +149,7 @@ const GameList = () => {
           <h2>There has been an error!</h2>
           <p>
             Please refresh the page and try again, if you still get an error
-            loading the gamelist. Please report on our discord and let them know
+            loading the gamelist. Please report on our discord and let us know
             the following:
           </p>
           <p>{JSON.stringify(error)}</p>
