@@ -3,13 +3,13 @@
   display: flex;
   flex-direction: column;
   top: 10vh;
-  bottom: 20vh;
+  bottom: 40vh;
   left: 20vw;
   right: 20vw;
   background-color: var(--near-black);
   padding: 1.5vh;
   border: 1px solid var(--primary);
-  border-radius: 12px;
+  border-radius: 20px;
   z-index: 100;
 }
 
@@ -21,6 +21,7 @@
   width: 100%;
   justify-content: space-between;
   align-items: center;
+  padding-left: 1vh;
 }
 
 .title {
@@ -30,7 +31,7 @@
 
 .cardListContents {
   padding-left: 1vh;
-  padding-top: 2vh;
+  padding-top: 1vh;
   display: flex;
   flex-grow: 1;
   flex-direction: row;

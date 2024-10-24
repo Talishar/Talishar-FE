@@ -9,7 +9,7 @@
   background-color: var(--near-black);
   padding: 1.5vh;
   border: 1px solid var(--primary);
-  border-radius: 12px;
+  border-radius: 20px;
   z-index: 950;
 }
 
@@ -36,6 +36,7 @@
   width: 100%;
   justify-content: space-between;
   align-items: center;
+  padding-left: 1vh;
 }
 
 .cardListTitle {

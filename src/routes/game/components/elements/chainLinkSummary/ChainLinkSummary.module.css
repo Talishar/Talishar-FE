@@ -9,7 +9,7 @@
   background-color: var(--near-black);
   padding: 1.5vh;
   border: 1px solid var(--primary);
-  border-radius: 12px;
+  border-radius: 20px;
 }
 
 .cardListTitleContainer {
@@ -20,6 +20,7 @@
   width: 100%;
   justify-content: space-between;
   align-items: center;
+  padding-left: 1vh;
 }
 
 .title {
@@ -28,7 +29,7 @@
 }
 
 .cardListContents {
-  padding-top: 2vh;
+  padding-top: 1vh;
   display: flex;
   flex-grow: 1;
   flex-direction: column;

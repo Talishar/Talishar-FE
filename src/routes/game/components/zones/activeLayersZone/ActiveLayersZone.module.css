@@ -2,7 +2,7 @@
   position: fixed;
   display: flex;
   flex-direction: column;
-  min-width: 10%;
+  min-width: 20%;
   top: 10vh;
   left: 20%;
   background-color: var(--near-black);
@@ -12,7 +12,6 @@
   max-width: 90vh;
   min-height: 200px;
   max-height: 50vh;
-  max-height: 60dvh;
   z-index: 99;
   overflow-y: auto;
 }
@@ -96,9 +95,7 @@
 }
 
 .buttonDiv {
-  padding: 5px;
   width: auto;
-  margin-bottom: 0;
   font-size: 1em;
 }
 
@@ -107,4 +104,10 @@
   color: var(--primary);
   border: 1px solid var(--primary);
   cursor: pointer;
+}
+
+.passTurnBox {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
