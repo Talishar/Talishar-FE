@@ -27,7 +27,7 @@ export default function RightColumn() {
           <PriorityControl />
         </div>
         <div className={styles.bottomGroup}>
-          {isStreamerMode ? <StreamerBox /> : <PhaseTracker />}
+          {isStreamerMode ? <StreamerBox /> : ""}
           <ChatBox />
         </div>
       </div>
