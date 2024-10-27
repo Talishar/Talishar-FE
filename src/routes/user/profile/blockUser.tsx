@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import styles from './profile.module.css';
+import { BACKEND_URL, URL_END_POINT } from 'appConstants';
 
 const BlockList = () => {
     useEffect(() => {
@@ -46,21 +47,25 @@ const BlockList = () => {
     const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       const userInput = document.querySelector('input[name="userToBlock"]') as HTMLInputElement;
-      const formData = new FormData();
+      const formData = new URLSearchParams();
+      formData.append('block-user-submit', 'block-user-submit');
       formData.append('userToBlock', userInput.value);
       try {
-        const response = await fetch('includes/BlockUser.php', {
-          method: 'POST',
-          body: formData,
-        });
-        const message = await response.text();
-        const messageElement = document.getElementById('block-user-message')!;
-        messageElement.innerText = message;
-        fetchBlockedUsers();
+          const response = await fetch(`${BACKEND_URL}${URL_END_POINT.BLOCK_USER}`, {
+              method: 'POST',
+              body: formData.toString(),
+              headers: {
+                  'Content-Type': 'application/x-www-form-urlencoded',
+              },
+          });
+          const message = await response.text();
+          const messageElement = document.getElementById('block-user-message')!;
+          messageElement.innerText = message;
+          fetchBlockedUsers();
       } catch (error) {
-        console.error(error);
+          console.error(error);
       }
-    };
+  };
   
     return (
       <div>

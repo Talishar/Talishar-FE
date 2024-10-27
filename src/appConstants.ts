@@ -192,7 +192,8 @@ export const URL_END_POINT = {
   DELETE_DECK: `APIs/DeleteDeckAPI.php`,
   PATREON_LOGIN: `AccountFiles/PatreonLoginAPI.php`,
   LOAD_BUG_REPORT: `LoadBugReport.php`,
-  SUBMIT_LOBBY_INPUT: 'APIs/SubmitLobbyInput.php'
+  SUBMIT_LOBBY_INPUT: 'APIs/SubmitLobbyInput.php',
+  BLOCK_USER: 'include/BlockUser.php'
 };
 
 export const GAME_VISIBILITY = {
