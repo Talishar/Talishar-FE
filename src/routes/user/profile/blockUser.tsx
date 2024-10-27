@@ -64,7 +64,7 @@ const BlockList = () => {
   
     return (
       <div>
-        <h3>Block List</h3>
+        <h3>Block List - Work in Progress</h3>
         <div className={styles.BlockList} id="blocked-users"></div>
         <form className="form-resetpwd" id="block-user-form" onSubmit={handleFormSubmit}>
           <input type="text" name="userToBlock" placeholder="User to block" />
