@@ -9,7 +9,7 @@ import useWindowDimensions from 'hooks/useWindowDimensions';
 import { CARD_IMAGES_PATH, getCollectionCardImagePath } from 'utils';
 import { useCookies } from 'react-cookie';
 
-const popUpGap = 120;
+const popUpGap = 20;
 
 function CardDetails({
   src,
@@ -89,16 +89,16 @@ if (hoverImageSize > 1.2) {
 } else {
   if (popup.xCoord > windowWidth / 2) {
     popUpStyle.right =
-      (windowWidth - popup.xCoord).toString() + 'px';
+      (windowWidth - (popup.xCoord - popUpGap)).toString() + 'px';
   } else {
-    popUpStyle.left = popup.xCoord.toString() + 'px';
+    popUpStyle.left = (popup.xCoord + popUpGap).toString() + 'px';
   }
 
   if (popup.yCoord < windowHeight / 2) {
-    popUpStyle.top = (popup.yCoord - popUpGap).toString() + 'px';
+    popUpStyle.top = popup.yCoord.toString() + 'px';
   } else {
     popUpStyle.bottom =
-      (windowHeight - popup.yCoord).toString() + 'px';
+      (windowHeight - popup.yCoord + popUpGap).toString() + 'px';
   }
 }
 
