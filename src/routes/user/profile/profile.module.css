@@ -23,3 +23,10 @@ td {
 .heroImage {
   border-radius: 5%;
 }
+
+.BlockList {
+  left:60%; 
+  right:20px; 
+  top:60px; 
+  height:90%;
+}

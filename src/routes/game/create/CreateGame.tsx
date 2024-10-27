@@ -115,7 +115,7 @@ const CreateGame = () => {
     <div>
       <article className={styles.formContainer}>
         <h3>Create New Game</h3>
-        {/*         <p className={styles.fieldError}>
+        {/*<p className={styles.fieldError}>
           <FaExclamationCircle /> Warning - SOON! an update will be pushed to the live servers. The games in progress will crash and new games will be required.
           </p> */}
         <form onSubmit={handleSubmit(onSubmit)}>
