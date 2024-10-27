@@ -3,14 +3,14 @@
   display: flex;
   flex-direction: column;
   top: 10vh;
-  bottom: 40vh;
+  bottom: 20vh;
   left: 20vw;
   right: 20vw;
   background-color: var(--near-black);
   padding: 1.5vh;
   border: 1px solid var(--primary);
   border-radius: 20px;
-  z-index: 100;
+  z-index: 1000;
 }
 
 .cardListTitleContainer {
