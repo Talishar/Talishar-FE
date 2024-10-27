@@ -11,6 +11,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import { setGameStart } from 'features/game/GameSlice';
 import { useAppDispatch } from 'app/Hooks';
+import { useLocation } from 'react-router-dom';
 
 export interface IOpenGame {
   p1Hero?: string;
@@ -58,21 +59,23 @@ const GameList = () => {
 
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const location = useLocation();
 
   //Before displaying open games, check if we have a game in progress
   if (!!data?.LastAuthKey && data.LastAuthKey != '') {
-    console.log(data.LastAuthKey);
-    dispatch(
-      setGameStart({
-        playerID: data.LastPlayerID ?? 0,
-        gameID: data.LastGameName ?? 0,
-        authKey: data.LastAuthKey ?? ''
-      })
-    );
-    const searchParam = { playerID: String(data.LastPlayerID ?? '0') };
-    navigate(`/game/play/${data.LastGameName}`, {
-      state: { playerID: data.LastPlayerID ?? 0 }
-    });
+    if (location.pathname !== '/user/profile') {
+      dispatch(
+        setGameStart({
+          playerID: data.LastPlayerID ?? 0,
+          gameID: data.LastGameName ?? 0,
+          authKey: data.LastAuthKey ?? ''
+        })
+      );
+      const searchParam = { playerID: String(data.LastPlayerID ?? '0') };
+      navigate(`/game/play/${data.LastGameName}`, {
+        state: { playerID: data.LastPlayerID ?? 0 }
+      });
+    }
     return <></>;
   }
 
