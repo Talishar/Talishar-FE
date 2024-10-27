@@ -9,7 +9,12 @@
 }
 
 .title {
-  margin-bottom: 0;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+.articleTitle {
+  margin-top: 0.2em;
 }
 
 th {

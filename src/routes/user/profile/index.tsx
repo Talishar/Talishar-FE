@@ -86,7 +86,7 @@ export const ProfilePage = () => {
     <div>
       <div className="container">
         <h1 className={styles.title}>Profile Page</h1>
-        <article>
+        <article className={styles.articleTitle}>
           <h5>Username: {profileData?.userName}</h5>
           <div>
             {profileIsLoading && <p>Loading Profile...</p>}

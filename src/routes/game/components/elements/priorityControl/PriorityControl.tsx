@@ -9,7 +9,6 @@ import { DEFAULT_SHORTCUTS, PROCESS_INPUT } from 'appConstants';
 import SkipAttackReactionsToggle from './SkipAttackReactions/SkipAttackReactionsToggle';
 import SkipDefenseReactionsToggle from './SkipDefenseReactions/SkipDefenseReactionsToggle';
 import SkipAllAttacksToggle from './SkipAllAttacks/SkipAllAttacksToggle';
-import Skip1PowerAttacksToggle from './Skip1PowerAttacks/Skip1PowerAttacksToggle';
 import useShortcut from 'hooks/useShortcut';
 
 function FullScreenButton() {
