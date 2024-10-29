@@ -95,10 +95,10 @@ if (hoverImageSize > 1.2) {
   }
 
   if (popup.yCoord < windowHeight / 2) {
-    popUpStyle.top = popup.yCoord.toString() + 'px';
+    popUpStyle.top = (popup.yCoord/2).toString() + 'px';
   } else {
     popUpStyle.bottom =
-      (windowHeight - popup.yCoord + popUpGap).toString() + 'px';
+      ((popup.yCoord + popUpGap)/2).toString() + 'px';
   }
 }
 

@@ -74,6 +74,10 @@ const ArsenalPrompt = () => {
   );
   const gameInfo = useAppSelector(getGameInfo);
 
+  const oldCombatChain = useAppSelector((state: RootState) => state.game.oldCombatChain) ?? [];
+  const activeCombatChain = useAppSelector((state: RootState) => state.game.activeChainLink);
+  const showCombatChain = oldCombatChain?.length > 0 || (activeCombatChain?.attackingCard && activeCombatChain?.attackingCard?.cardNumber !== 'blank');
+
   const dispatch = useAppDispatch();
 
   const clickButton = (button: Button) => {
@@ -102,7 +106,7 @@ const ArsenalPrompt = () => {
 
   return (
     <AnimatePresence>
-      {showPrompt && (
+      {showPrompt && !showCombatChain && (
         <motion.div
           className={styles.playerPrompt}
           initial={{ opacity: 0 }}
