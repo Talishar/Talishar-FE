@@ -121,6 +121,13 @@
   align-items: center;
 }
 
+.buttonRow {
+  margin-top: 0.25rem;
+  justify-content: center;
+  width: 90%; /* add this line */
+  margin-left: 5%;
+}
+
 .optForm.buttonDiv {
   margin: 0 0.25em;
 }
