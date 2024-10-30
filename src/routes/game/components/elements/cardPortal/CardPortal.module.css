@@ -42,7 +42,6 @@
     left: auto !important;
     top: auto !important;
     height: 90dvh !important;
-
     pointer-events: none;
     background: url('../../../../../img/backgrounds/transparent-card.png');
   }

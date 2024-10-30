@@ -552,7 +552,7 @@ const OptionsSettings = () => {
               name="hoverImageSize"
               type="range"
               min="75"
-              max="150"
+              max="125"
               defaultValue={(cookies.hoverImageSize ?? 1) * 100}
               id="hoverImageSize"
               onChange={(e) =>

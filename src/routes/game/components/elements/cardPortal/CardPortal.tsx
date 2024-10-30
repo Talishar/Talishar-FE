@@ -9,7 +9,7 @@ import useWindowDimensions from 'hooks/useWindowDimensions';
 import { CARD_IMAGES_PATH, getCollectionCardImagePath } from 'utils';
 import { useCookies } from 'react-cookie';
 
-const popUpGap = 20;
+const popUpGap = 130;
 
 function CardDetails({
   src,
@@ -78,29 +78,24 @@ export default function CardPortal() {
 
 const popUpStyle: Record<string, string> = {};
 
-if (hoverImageSize > 1.2) {
+
   if (popup.xCoord > windowWidth / 2) {
-    popUpStyle.right =
-      (windowWidth - popup.xCoord).toString() + 'px';
+    popUpStyle.right = (windowWidth - (popup.xCoord - popUpGap * hoverImageSize)).toString() + 'px';
   } else {
-    popUpStyle.left = popup.xCoord.toString() + 'px';
-  }
-  popUpStyle.bottom = '10vh';
-} else {
-  if (popup.xCoord > windowWidth / 2) {
-    popUpStyle.right =
-      (windowWidth - (popup.xCoord - popUpGap)).toString() + 'px';
-  } else {
-    popUpStyle.left = (popup.xCoord + popUpGap).toString() + 'px';
+    popUpStyle.left = (popup.xCoord + popUpGap * hoverImageSize).toString() + 'px';
   }
 
   if (popup.yCoord < windowHeight / 2) {
-    popUpStyle.top = (popup.yCoord/2).toString() + 'px';
+    popUpStyle.top = ((popup.yCoord + popUpGap)/2).toString() + 'px';
   } else {
-    popUpStyle.bottom =
-      ((popup.yCoord + popUpGap)/3).toString() + 'px';
+    if (hoverImageSize < 1.1) {
+      popUpStyle.bottom = (windowHeight - popup.yCoord).toString() + 'px';
+    }
+    else {
+      popUpStyle.bottom = '10vh';    
+    }
+    
   }
-}
 
   return (
     <div className={styles.popUpContainer} style={popUpStyle}>

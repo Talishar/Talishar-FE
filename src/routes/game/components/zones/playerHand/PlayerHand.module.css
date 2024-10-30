@@ -18,7 +18,6 @@
   left: 10dvh;
   right: 20vh;
   right: 20dvh;
-  z-index: 20;
 }
 
 @media (orientation: portrait) {
