@@ -2,7 +2,7 @@ const axios = require('axios');
 const fs = require('fs');
 
 //const url = 'https://raw.githubusercontent.com/the-fab-cube/flesh-and-blood-cards/rosetta/json/english/card.json'; //ROS
-const url = 'https://raw.githubusercontent.com/the-fab-cube/flesh-and-blood-cards/refs/heads/develop/json/english/card.json'; 
+const url = "https://raw.githubusercontent.com/the-fab-cube/flesh-and-blood-cards/refs/heads/the-hunters/json/english/card.json"; //!HNT
 
 
 const outputFile = 'src/constants/cardList.ts';
