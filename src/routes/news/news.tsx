@@ -1,18 +1,18 @@
 import React from 'react';
 import styles from '../index/Index.module.css';
-import ArmoryDeckDash from '../../img/ArmoryDeckDash.webp';
+import ArmoryDeck from '../../img/ArmoryDeck.webp';
 
 
 const News = () => {
   return (
     <div>
-    <h4 className={styles.headlines}>⚙️ Armory Deck: Dash! ⚙️</h4>
+    <h4 className={styles.headlines}>🪓 Armory Deck: Jarl Vetreiđi 🪓</h4>
     <p className={styles.headlinesParagraphs}>
-      Dash I/O armory deck cards are now available in all queues!<br/>For more information about the product, 
-      <a href="https://fabtcg.com/en/products/booster-set/armory-deck-dash/" target="_blank"> click here!</a>
+      Jarl Vetreiđi armory deck cards are now available in all queues!<br/>For more information about the product, 
+      <a href="https://fabtcg.com/en/products/booster-set/armory-deck-origins-jarl-vetreidi/" target="_blank"> click here</a>!
     </p>
-    <a href="https://fabtcg.com/en/products/booster-set/armory-deck-dash/" target="_blank">
-      <img src={ArmoryDeckDash} className={styles.NewsLogoRectangle} />
+    <a href="https://fabtcg.com/en/products/booster-set/armory-deck-origins-jarl-vetreidi/" target="_blank">
+      <img src={ArmoryDeck} className={styles.NewsLogoRectangle} />
     </a>
     <br/>
       <p>Please join our community:</p>
