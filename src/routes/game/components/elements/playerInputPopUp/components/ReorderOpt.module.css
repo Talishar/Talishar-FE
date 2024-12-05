@@ -1,10 +1,82 @@
+.reorderCards {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  flex-grow: 1;
+  gap: 0.5em;
+  padding: 0 0.5em;
+  height: 50%;
+  width: 100%;
+  margin: 0;
+}
+
+.reorderItem {
+  height: var(--card-size);
+  width: var(--card-size);
+  margin: 0;
+}
+
+.reorderItem {
+  max-width: var(--card-size);
+  color: rgba(0, 0, 0, 0);
+}
+
+.reorderItem ::marker {
+  visibility: none;
+}
+
+.countersCover {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  inset: 0;
+  z-index: 2;
+  cursor: default;
+}
+
+.number {
+  border-radius: 100%;
+  border-style: solid;
+  border-color: black;
+  border-width: 2px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 2em;
+  width: 2em;
+  font-size: 1.5em;
+  background-color: var(--white);
+  text-align: center;
+  cursor: default;
+}
+
+.text {
+  color: black;
+}
+
+.subtitle {
+  font-size: 1.25em;
+  padding: 0 0 0 0.25em;
+  margin: 0px;
+}
+
+.orderingExplanation {
+  font-size: 0.75em;
+  padding-left: 0.5em;
+  margin-bottom: 0;
+}
+
 .optionsContainer {
   position: fixed;
   display: flex;
   flex-direction: column;
   min-width: 30%;
   max-width: 90%;
-  top: 50%;
+  top: 60%;
   bottom: 5vh;
   left: 15%;
   right: 25%;
@@ -125,7 +197,6 @@
   margin-top: 0.25rem;
   justify-content: center;
   width: 90%; /* add this line */
-  margin-left: 5%;
 }
 
 .optForm.buttonDiv {
@@ -174,4 +245,20 @@
     max-height: 14vw;
     max-height: 14dvw;
   }
+}
+
+.topAndBottomContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+  height: 100%;
+  overflow-x: auto;
+}
+
+.topAndBottomText {
+  display: flex;
+  align-items: center; /* Vertically centers the text */
+  justify-content: center; /* Horizontally centers the text */
+  height: 50%;
 }
