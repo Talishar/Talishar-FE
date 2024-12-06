@@ -262,3 +262,7 @@
   justify-content: center; /* Horizontally centers the text */
   height: 50%;
 }
+
+.reorderCardWrapper {
+  all: unset;
+}
