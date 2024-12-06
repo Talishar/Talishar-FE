@@ -9,6 +9,7 @@ import { PROCESS_INPUT } from 'appConstants';
 import { motion } from 'framer-motion';
 import useShowModal from 'hooks/useShowModals';
 import { OptInput } from './components/OptInput';
+import { NewOptInput } from './components/NewOptInput';
 import { FormProps } from './playerInputPopupTypes';
 import { OtherInput } from './components/OtherInput';
 import { replaceText } from 'utils/ParseEscapedString';
@@ -17,7 +18,7 @@ const PlayerInputFormTypeMap: {
   [key: string]: (props: FormProps) => JSX.Element;
 } = {
   OPT: OptInput,
-  NEWOPT: OptInput,
+  NEWOPT: NewOptInput,
   HANDTOPBOTTOM: OptInput
 };
 
@@ -124,7 +125,11 @@ export default function PlayerInputPopUp() {
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.8 }}
       key="playerInputPopupBox"
-      className={styles.optionsContainer}
+      className={
+        inputPopUp.popup?.id === 'NEWOPT'
+          ? styles.optOptionsContainer
+          : styles.optionsContainer
+      }
     >
       <div className={styles.optionsTitleContainer}>
         <div className={styles.optionsTitle}>
