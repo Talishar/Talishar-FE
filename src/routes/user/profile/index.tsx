@@ -134,9 +134,10 @@ export const ProfilePage = () => {
                     )}
                   </th>
                   <td>{deck.name}</td>
-                  <td>{deck.format.charAt(0).toUpperCase() + deck.format.slice(1)}</td>
-                  <td>{deck.cardBack.charAt(0).toUpperCase() + deck.cardBack.slice(1).toLowerCase()}</td>
-                  <td>{deck.playmat.charAt(0).toUpperCase() + deck.playmat.slice(1).toLowerCase()}</td>                  <td className={styles.editButton}>
+                  <td>{deck.format ? deck.format.charAt(0).toUpperCase() + deck.format.slice(1) : ""}</td>
+                  <td>{deck.cardBack ? deck.cardBack.charAt(0).toUpperCase() + deck.cardBack.slice(1).toLowerCase() : ""}</td>
+                  <td>{deck.playmat ? deck.playmat.charAt(0).toUpperCase() + deck.playmat.slice(1).toLowerCase() : ""}</td>
+                  <td className={styles.editButton}>
                     <button
                       className={styles.button}
                       onClick={() => handleEditDeck(deck.link)}
