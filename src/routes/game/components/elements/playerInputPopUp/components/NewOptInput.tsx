@@ -27,15 +27,24 @@ const ReorderOpt = ({
 
   const [cardListTop, setCardListTop] = React.useState<Card[]>([]);
   const [cardListBottom, setCardListBottom] = React.useState<Card[]>([]);
+
   useMemo(() => {
     setCardListTop(
-      topCards.map((card) => {
-        return { ...card, borderColor: '8' } as Card;
+      topCards.map((card, index) => {
+        return {
+          ...card,
+          borderColor: '8',
+          uniqueId: `${card.cardNumber}-${index}`
+        } as Card;
       }) ?? []
     );
     setCardListBottom(
-      bottomCards.map((card) => {
-        return { ...card, borderColor: '8' } as Card;
+      bottomCards.map((card, index) => {
+        return {
+          ...card,
+          borderColor: '8',
+          uniqueId: `${card.cardNumber}-${index}`
+        } as Card;
       }) ?? []
     );
   }, [topCards, bottomCards]);
@@ -154,7 +163,7 @@ const ReorderOpt = ({
               cardInLayer.push(card.cardNumber);
               return (
                 <Reorder.Item
-                  key={`${card.cardNumber}${layerCount}`}
+                  key={card.uniqueId}
                   value={card}
                   className={classNames(styles.newOptForm, styles.reorderItem)}
                   onDragEnd={handleDragEnd}
