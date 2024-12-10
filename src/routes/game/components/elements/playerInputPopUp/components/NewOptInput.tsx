@@ -9,8 +9,10 @@ import { useProcessInputAPIMutation } from 'features/api/apiSlice';
 import { getGameInfo } from 'features/game/GameSlice';
 import { shallowEqual } from 'react-redux';
 import classNames from 'classnames';
+import { on } from 'events';
 
 let change = false;
+let buttonClick = false;
 const ReorderOpt = ({
   topCards,
   bottomCards
@@ -54,11 +56,17 @@ const ReorderOpt = ({
   const moveCardToBottom = (card: Card, index: number) => {
     setCardListTop((prev) => prev.filter((_, i) => i !== index));
     setCardListBottom((prev) => [...prev, card]);
-    change = true;
+    buttonClick = true;
+  };
+
+  const moveCardToTop = (card: Card, index: number) => {
+    setCardListBottom((prev) => prev.filter((_, i) => i !== index));
+    setCardListTop((prev) => [...prev, card]);
+    buttonClick = true;
   };
 
   useEffect(() => {
-    if (change) {
+    if (buttonClick) {
       const cardNamesTop = cardListTop.map((card) => card.cardNumber);
       const cardNamesBottom = cardListBottom.map((card) => card.cardNumber);
       const body = {
@@ -73,14 +81,9 @@ const ReorderOpt = ({
       };
       processInputAPI(body);
       change = false;
+      buttonClick = false;
     }
   }, [cardListTop, cardListBottom]);
-
-  const moveCardToTop = (card: Card, index: number) => {
-    setCardListBottom((prev) => prev.filter((_, i) => i !== index));
-    setCardListTop((prev) => [...prev, card]);
-    change = true;
-  };
 
   const handleDragEnd = () => {
     if (change) {
@@ -154,7 +157,7 @@ const ReorderOpt = ({
                   key={`${card.cardNumber}${layerCount}`}
                   value={card}
                   className={classNames(styles.newOptForm, styles.reorderItem)}
-                  //onDragEnd={handleDragEnd}
+                  onDragEnd={handleDragEnd}
                 >
                   <CardDisplay card={card} key={ix} />
                   <div
@@ -203,6 +206,7 @@ const ReorderOpt = ({
                   key={`${card.cardNumber}${layerCount}`}
                   value={card}
                   className={classNames(styles.newOptForm, styles.reorderItem)}
+                  onDragEnd={handleDragEnd}
                 >
                   <CardDisplay card={card} key={ix} />
                   <div
