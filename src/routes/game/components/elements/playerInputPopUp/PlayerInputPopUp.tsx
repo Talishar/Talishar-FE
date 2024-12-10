@@ -9,6 +9,7 @@ import { PROCESS_INPUT } from 'appConstants';
 import { motion } from 'framer-motion';
 import useShowModal from 'hooks/useShowModals';
 import { OptInput } from './components/OptInput';
+import { NewOptInput } from './components/NewOptInput';
 import { FormProps } from './playerInputPopupTypes';
 import { OtherInput } from './components/OtherInput';
 import { replaceText } from 'utils/ParseEscapedString';
@@ -17,6 +18,7 @@ const PlayerInputFormTypeMap: {
   [key: string]: (props: FormProps) => JSX.Element;
 } = {
   OPT: OptInput,
+  NEWOPT: NewOptInput,
   HANDTOPBOTTOM: OptInput
 };
 
@@ -116,18 +118,25 @@ export default function PlayerInputPopUp() {
     PlayerInputFormTypeMap[inputPopUp.popup?.id || ''] || OtherInput;
   //Title comes back as a HTML string so we need to dangeously set it vs just using it for the moment
   const title = { __html: replaceText(inputPopUp?.popup?.title ?? '') };
+
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.8 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.8 }}
       key="playerInputPopupBox"
-      className={styles.optionsContainer}
+      className={
+        inputPopUp.popup?.id === 'NEWOPT'
+          ? styles.optOptionsContainer
+          : styles.optionsContainer
+      }
     >
       <div className={styles.optionsTitleContainer}>
         <div className={styles.optionsTitle}>
           <h3 className={styles.title} dangerouslySetInnerHTML={title}></h3>
-          <h4 className={styles.subtitle}>{inputPopUp.popup?.additionalComments}</h4>
+          <h4 className={styles.subtitle}>
+            {inputPopUp.popup?.additionalComments}
+          </h4>
         </div>
         {inputPopUp.popup?.canClose ? (
           <div className={styles.inputPopUpCloseIcon} onClick={onPassTurn}>
@@ -138,6 +147,8 @@ export default function PlayerInputPopUp() {
       <div className={styles.contentContainer}>
         <FormDisplay
           cards={inputPopUp.popup?.cards || []}
+          topCards={inputPopUp.popup?.topCards || []}
+          bottomCards={inputPopUp.popup?.bottomCards || []}
           buttons={inputPopUp.buttons || []}
           onClickButton={onClickButton}
           id={inputPopUp.popup?.id || ''}

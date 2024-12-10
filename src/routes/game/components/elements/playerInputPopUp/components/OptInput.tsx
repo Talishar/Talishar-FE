@@ -16,7 +16,6 @@ type OptOptionBoxProps = {
 };
 
 const OptOptionBox = ({ card, onClickButton }: OptOptionBoxProps) => {
-
   return (
     <div className={styles.cardDiv} key={card.key.toString()}>
       <CardDisplay card={card} />
@@ -45,7 +44,7 @@ export const OptInput = (props: FormProps) => {
   const buttonsCountPerIndex = new Map();
   const cardWithButtons = cards.map((card, index) => {
     buttonsCountPerIndex.set(index, 0);
-    const chooseButton = buttons.find((b) => b.caption === "Choose");
+    const chooseButton = buttons.find((b) => b.caption === 'Choose');
     const effectiveMaxButtonsPerIndex = chooseButton ? 1 : maxButtonsPerIndex;
     return {
       ...card,
