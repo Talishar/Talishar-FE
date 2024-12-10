@@ -201,7 +201,7 @@
 .topAndBottomText {
   display: flex;
   align-items: center; /* Vertically centers the text */
-  justify-content: right;
+  justify-content: center;
   width: 50px;
 }
 
