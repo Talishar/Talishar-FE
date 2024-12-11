@@ -2,6 +2,8 @@ import React from 'react';
 
 export interface FormProps {
   cards: Card[];
+  topCards: Card[];
+  bottomCards: Card[];
   buttons: Button[];
   onClickButton: (button: Button) => void;
   id: 'OPT' | string;

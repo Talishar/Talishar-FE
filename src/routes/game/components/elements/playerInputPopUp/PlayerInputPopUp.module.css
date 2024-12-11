@@ -128,8 +128,24 @@
   margin-left: 5%;
 }
 
+.newOptForm.buttonRow {
+  margin-top: 0.25rem;
+  justify-content: center;
+  width: 90%;
+}
 .optForm.buttonDiv {
   margin: 0 0.25em;
+}
+
+.newOptForm.topBottomButtonDiv {
+  min-width: 0;
+}
+
+.newOptForm.submitButtonDiv {
+  min-width: 0;
+  width: var(--card-size);
+  flex: 1;
+  margin-bottom: 10px;
 }
 
 .optForm.cardDiv {
@@ -174,4 +190,65 @@
     max-height: 14vw;
     max-height: 14dvw;
   }
+}
+
+.topAndBottomContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.topAndBottomText {
+  display: flex;
+  align-items: center; /* Vertically centers the text */
+  justify-content: center;
+  width: 50px;
+}
+
+.reorderCards {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  flex: 2;
+  gap: 0.5em;
+  padding: 0 0.5em;
+  width: 100%;
+  margin: 0;
+  margin-top: 5px;
+  height: 50%;
+}
+
+.reorderItem {
+  margin: 0;
+  color: rgba(0, 0, 0, 0);
+  width: var(--card-size);
+}
+
+.optOptionsContainer {
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  min-width: 30%;
+  max-width: 90%;
+  top: 40%;
+  bottom: 12vh;
+  left: 15%;
+  right: 25%;
+  background-color: var(--near-black);
+  padding: 1.5vh;
+  border: 1px solid var(--primary);
+  border-radius: 20px;
+  z-index: 900;
+}
+
+.optFormContainer {
+  height: 100%;
+  width: 100%;
+}
+
+.newOptForm.cardsContainer {
+  height: 90%;
+  width: 100%;
 }
