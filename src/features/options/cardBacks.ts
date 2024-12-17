@@ -94,6 +94,7 @@ export const CARD_BACK = {
   '93': 'CBDazzyfizzle4',
   '94': 'CBDazzyfizzle5',
   '95': 'CBDazzyfizzle6',
+  '96': 'CBThaiCardsShop',
 } as { [key: string]: string };
 
 export const PLAYMATS = {
