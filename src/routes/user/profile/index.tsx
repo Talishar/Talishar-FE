@@ -107,8 +107,8 @@ export const ProfilePage = () => {
               </p>
             )}
           </div>
-          <BlockList />
-          <h3 className={styles.title}>Your decks:</h3>
+        {/* <BlockList /> */}
+        <h3 className={styles.title}>Your decks:</h3>
           <table>
             <thead>
               <tr>
