@@ -18,7 +18,14 @@ const OpenGame = ({
   const buttonClass = classNames(styles.button, 'secondary');
 
   return (
-    <div key={ix} className={styles.gameItem}>
+    <div 
+      key={ix} 
+      className={styles.gameItem}
+      onClick={(e) => {
+        e.preventDefault();
+        navigate(`/game/join/${entry.gameName}`);
+      }}
+      >
       <div>
         {!!entry.p1Hero && <img className={styles.heroImg} src={generateCroppedImageUrl(entry.p1Hero)} />}
       </div>

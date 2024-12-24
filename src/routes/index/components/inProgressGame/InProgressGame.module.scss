@@ -11,6 +11,7 @@
   transition: background-color 300ms, left 300ms;
   left: 0;
   background: transparent;
+  border-radius: var(--border-radius);
 
   &:hover {
     left: 0.3rem;
