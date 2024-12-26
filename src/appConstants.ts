@@ -136,10 +136,10 @@ export const GAME_FORMAT = {
   SEALED: 'sealed',
   DRAFT: 'draft',
   LLCC: 'llcc',
-  LLBLITZ: 'llblitz',
+  //LLBLITZ: 'llblitz',
   OPEN_BLITZ: 'openformatblitz',
   OPEN_LL_CC: 'openformatllcc',
-  OPEN_LL_BLITZ: 'openformatllblitz'
+  //OPEN_LL_BLITZ: 'openformatllblitz'
 };
 
 export const GAME_FORMAT_NUMBER = {
@@ -153,10 +153,10 @@ export const GAME_FORMAT_NUMBER = {
   SEALED: '6',
   DRAFT: '7',
   LLCC: '8',
-  LLBLITZ: '9',
+  //LLBLITZ: '9',
   OPEN_BLITZ: '10',
   OPEN_LL_CC: '11',
-  OPEN_LL_BLITZ: '12'
+  //OPEN_LL_BLITZ: '12'
 };
 
 export const AI_DECK = {
