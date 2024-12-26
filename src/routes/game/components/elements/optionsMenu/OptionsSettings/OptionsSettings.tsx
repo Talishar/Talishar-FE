@@ -406,21 +406,6 @@ const OptionsSettings = () => {
             <input
               defaultChecked
               type="checkbox"
-              name="disableChat"
-              checked={initialValues.disableChat}
-              onClick={() =>
-                handleSettingsChange({
-                  name: optConst.MUTE_CHAT,
-                  value: initialValues.disableChat ? '0' : '1'
-                })
-              }
-            />
-            Disable Chat (moreso)
-          </label>
-          <label className={styles.optionLabel}>
-            <input
-              defaultChecked
-              type="checkbox"
               name="disableStats"
               checked={initialValues.disableStats}
               onClick={() =>
