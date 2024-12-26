@@ -155,7 +155,7 @@ const CreateGame = () => {
             />
             <fieldset>
               <label>
-                Deck Link (URL from <a href="https://fabrary.net"  target="_blank">fabrary.net</a>)
+                Deck Link (URL from <a href="https://FaBrary.net"  target="_blank">FaBrary.net</a>)
                 <input
                   type="text"
                   id="fabdb"
