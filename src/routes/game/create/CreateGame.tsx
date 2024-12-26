@@ -233,7 +233,7 @@ const CreateGame = () => {
                 </option>
                 <option value={GAME_FORMAT.COMMONER}>Commoner</option>
                 <option value={GAME_FORMAT.CLASH}>Clash</option>
-                <option value={GAME_FORMAT.LLCC}>Living Legend CC</option>
+                <option value={GAME_FORMAT.LLCC}>Living Legend</option>
                 {/* <option value={GAME_FORMAT.LLBLITZ}>Living Legend Blitz</option> */}
                 <option value={GAME_FORMAT.OPEN_CC}>
                   Open CC (no restrictions!)
@@ -242,7 +242,7 @@ const CreateGame = () => {
                   Open Blitz (no restrictions!)
                 </option>
                 <option value={GAME_FORMAT.OPEN_LL_CC}>
-                  Open Living Legend CC (no restrictions!)
+                  Open Living Legend (no restrictions!)
                 </option>
                 {/* <option value={GAME_FORMAT.OPEN_LL_BLITZ}>
                   Open Living Legend Blitz (no restrictions!)
