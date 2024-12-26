@@ -18,12 +18,14 @@
   z-index: 10;
 }
 
+
 .smallButton {
   gap: 0.5em;
   font-size: 0.85em;
   font-weight: 550;
   padding: 0.3em;
   margin: 0;
+  margin-top: .5em;
 }
 
 .smallButton:hover {

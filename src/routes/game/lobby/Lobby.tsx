@@ -524,24 +524,20 @@ const Lobby = () => {
                 )}
               </>
             )}
-            {(activeTab === 'chat' || isWideScreen) && showCalculator && (
-              <Calculator />
-            )}
-            {(activeTab === 'chat' || isWideScreen) && !showCalculator && (
-              <LobbyChat />
-            )}
-
-            {isWideScreen &&(
-              <button
-                className={styles.smallButton}
-                onClick={(e) => {
-                  e.preventDefault();
-                  toggleShowCalculator();
-                }}
-                disabled={false}
-              >
-                Hand Draw Probabilities
-              </button>
+            {(activeTab === 'chat' || isWideScreen) && (
+              <div>
+                {showCalculator ? <Calculator /> : <LobbyChat />}
+                <button
+                  className={styles.smallButton}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    toggleShowCalculator();
+                  }}
+                  disabled={false}
+                >
+                  Hand Draw Probabilities
+                </button>
+              </div>
             )}
 
             <div className={styles.spacer}></div>
