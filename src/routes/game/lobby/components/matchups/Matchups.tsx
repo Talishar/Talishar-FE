@@ -46,27 +46,34 @@ const Matchups = ({ refetch }: Matchups) => {
   const sortedMatchups = [...(gameLobby?.matchups ?? [])];
   sortedMatchups.sort((a, b) => a.name.localeCompare(b.name));
 
-  return (
-    <article className={styles.matchupContainer}>
-      <>
-        <h4>Matchups</h4>
-        {sortedMatchups.map((matchup, ix) => (
-          <div className={styles.matchups} key={ix}>
-            <button
-              disabled={isUpdating}
-              className={'outline'}
-              onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
-                e.preventDefault();
-                handleMatchupClick(matchup.matchupId);
-              }}
-            >
-              {matchup.name}
-            </button>
-          </div>
-        ))}
-      </>
-    </article>
-  );
+  if (sortedMatchups.length > 0) {
+    return (
+      <article className={styles.matchupContainer}>
+        <>
+          <h4>Matchups</h4>
+          {sortedMatchups.map((matchup, ix) => (
+            <div className={styles.matchups} key={ix}>
+              <button
+                disabled={isUpdating}
+                className={'outline'}
+                onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                  e.preventDefault();
+                  handleMatchupClick(matchup.matchupId);
+                }}
+              >
+                {matchup.name}
+              </button>
+            </div>
+          ))}
+        </>
+      </article>
+    );
+  } else {
+    return (
+      <article className={styles.emptyMatchupContainer}>
+      </article>
+    );
+  }
 };
 
 export default Matchups;

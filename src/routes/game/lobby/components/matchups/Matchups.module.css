@@ -11,6 +11,20 @@
   overflow-x: hidden;
 }
 
+.emptyMatchupContainer {
+  margin: 0 auto;
+  height: auto;
+  display: flex;
+  width: 100px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-direction: column;
+  overflow-y: auto;
+  grid-area: matchups;
+  overflow-x: hidden;
+  opacity: 0;
+}
+
 .matchups {
   width: 100%;
 }
