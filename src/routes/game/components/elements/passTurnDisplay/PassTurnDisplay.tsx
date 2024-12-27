@@ -8,6 +8,8 @@ import useShortcut from 'hooks/useShortcut';
 import useSound from 'use-sound';
 import passTurnSound from 'sounds/prioritySound.wav';
 import { createPortal } from 'react-dom';
+import * as optConst from 'features/options/constants';
+import { getSettingsEntity } from 'features/options/optionsSlice';
 
 export default function PassTurnDisplay() {
   const canPassPhase = useAppSelector(
@@ -27,14 +29,16 @@ export default function PassTurnDisplay() {
   const preventPassPrompt = useAppSelector(
     (state: RootState) => state.game.preventPassPrompt
   );
-
+  const settingsData = useAppSelector(getSettingsEntity);
+  const initialValues = { mute: settingsData['MuteSound']?.value === '1' };
+  
   const dispatch = useAppDispatch();
-
-  useMemo(() => {
-    if (hasPriority) {
+  
+  useEffect(() => {
+    if (hasPriority && !initialValues.mute) {
       playPassTurnSound();
     }
-  }, [frameNumber]);
+  }, [frameNumber, hasPriority, initialValues.mute]);
 
   useEffect(() => {
     let link = document.getElementById('favicon') as HTMLLinkElement;
