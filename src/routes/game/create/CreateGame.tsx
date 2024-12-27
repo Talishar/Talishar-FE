@@ -102,9 +102,9 @@ const CreateGame = () => {
       toast.error(String(error), { position: 'top-center' });
       setError('root.serverError', {
         type: 'custom',
-        message: `There has been an error while creating your game. Message: ${JSON.stringify(
+        message: `There has been an error while creating your game. Error: ${JSON.stringify(
           error
-        )} Please try again`
+        )} Please try again.`
       });
     }
   };
