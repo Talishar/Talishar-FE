@@ -90,7 +90,8 @@ const OptionsSettings = () => {
     // Enum is BE: /Libraries/PlayerSettings.php - function GetCardBack($player)
     cardBack: String(settingsData['CardBack']?.value ?? '0'),
     playMat: String(settingsData['Playmat']?.value ?? '0'),
-    alwaysAllowUndo: settingsData['AlwaysAllowUndo']?.value === '1'
+    alwaysAllowUndo: settingsData['AlwaysAllowUndo']?.value === '1',
+    manualTunic: settingsData['ManualTunic']?.value === '1',
   };
   
   useShortcut(DEFAULT_SHORTCUTS.TOGGLE_MANUAL_MODE, () => {
@@ -431,6 +432,21 @@ const OptionsSettings = () => {
               }
             />
             Disable Alt Arts
+          </label>
+          <label className={styles.optionLabel}>
+            <input
+              defaultChecked
+              type="checkbox"
+              name="manualTunic"
+              checked={initialValues.manualTunic}
+              onClick={() =>
+                handleSettingsChange({
+                  name: optConst.MANUAL_TUNIC,
+                  value: initialValues.manualTunic ? '0' : '1'
+                })
+              }
+            />
+            Manual Tunic Mode
           </label>
         </fieldset>
         <label className={styles.cardBackTitle}>
