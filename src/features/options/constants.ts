@@ -17,6 +17,7 @@ export const IS_CASTER_MODE = 'IsCasterMode';
 export const IS_STREAMER_MODE = 'IsStreamerMode';
 export const MY_PLAYMAT = 'Playmat';
 export const ALWAYS_ALLOW_UNDO = 'AlwaysAllowUndo';
+export const MANUAL_TUNIC = 'ManualTunic';
 
 export enum HOLD_PRIORITY_ENUM {
   AUTO = 0,
