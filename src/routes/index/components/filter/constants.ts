@@ -36,7 +36,10 @@ export const youngToOldHeroesMapping: { [key: string]: string } = {
   ROS002: 'ROS001', // Florian, Rotwood Harbinger
   ROS008: 'ROS007', // Aurora, Shooting Star
   ROS014: 'ROS013', // Verdance, Thorn of the Rose
-  ROS020: 'ROS019' // Oscilio, Constella Intelligence
+  ROS020: 'ROS019', // Oscilio, Constella Intelligence
+  HNT002: 'HNT001', // Arakni, Web of Deceit
+  HNT055: 'HNT054', // Cindra
+  HNT099: 'HNT098', // Fang
 };
 
 export const HEROES_OF_RATHE: { value: string; label: string }[] = [
@@ -91,12 +94,15 @@ export const HEROES_OF_RATHE: { value: string; label: string }[] = [
   { value: 'MST001', label: 'Nuu' },
   { value: 'MST025', label: 'Enigma' },
   { value: 'MST046', label: 'Zen' },
-  { value: 'JDG024', label: 'Brutus, Summa Rudis'},
   { value: 'TER001', label: 'Terra' },
   { value: 'HER117', label: 'Blaze, Firemind' },
   { value: 'ROS002', label: 'Florian' },
   { value: 'ROS008', label: 'Aurora' },
   { value: 'ROS014', label: 'Verdance' },
   { value: 'ROS020', label: 'Oscilio' },
-  { value: 'AJV001', label: 'Jarl Vetreiđi' }
+  { value: 'AJV001', label: 'Jarl Vetreiđi' },
+  { value: 'HNT001', label: 'Arakni, Marionette' },
+  { value: 'HNT002', label: 'Arakni, Web of Deceit' },
+  { value: 'HNT054', label: 'Cindra' },
+  { value: 'HNT056', label: 'Fang' }
 ];
