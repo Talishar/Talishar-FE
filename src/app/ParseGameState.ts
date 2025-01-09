@@ -89,6 +89,7 @@ function ParseEquipment(input: any) {
         break;
       case 'W':
       case 'W,E': // weapon, possibly have two
+      case 'W,T':
         if (result.WeaponLEq == undefined) {
           result.WeaponLEq = ParseCard(cardObj);
         } else {
