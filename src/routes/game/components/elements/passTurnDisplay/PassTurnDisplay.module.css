@@ -42,3 +42,13 @@
   width: 70%;
   margin-left: 15%;
 }
+
+@media (orientation: portrait) {
+  .passTurnDisplayActive {
+    font-size: 1.5em;
+  }
+  
+  .subThing {
+    display: none;
+  }
+}
