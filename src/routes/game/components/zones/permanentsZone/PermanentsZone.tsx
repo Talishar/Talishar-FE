@@ -56,6 +56,10 @@ export default function PermanentsZone(prop: Displayrow) {
           if (scrollCount === 0) return;
           setScrollCount(scrollCount - 1);
         }}
+        onTouchStart={() => {
+          if (scrollCount === 0) return;
+          setScrollCount(scrollCount - 1);
+        }}
       >
         <HiRewind />
       </div>
@@ -96,6 +100,10 @@ export default function PermanentsZone(prop: Displayrow) {
       <div
         className={classNames(styles.scrollForward, styles.scrollWidget)}
         onClick={() => {
+          if (scrollCount >= permanents.length - 1) return;
+          setScrollCount(scrollCount + 1);
+        }}
+        onTouchStart={() => {
           if (scrollCount >= permanents.length - 1) return;
           setScrollCount(scrollCount + 1);
         }}
