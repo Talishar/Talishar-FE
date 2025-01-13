@@ -9,7 +9,7 @@
   background-color: var(--near-black);
   padding: 1.5vh;
   border: 1px solid var(--primary);
-  border-radius: 20px;
+  border-radius: 10px;
   z-index: 1000;
 }
 
