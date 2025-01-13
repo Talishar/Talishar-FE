@@ -88,7 +88,7 @@ export default function PermanentsZone(prop: Displayrow) {
                       title={`Stack of ${cardStack.count}`}
                       className={styles.counter}
                     >
-                      × {cardStack.count}
+                      x {cardStack.count}
                     </div>
                   )}
                 </motion.div>
