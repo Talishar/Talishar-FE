@@ -173,7 +173,8 @@ export default function ParseGameState(input: any) {
   let ix = 0;
   for (const chainLinkObj of input.combatChainLinks) {
     const chainLink: CombatChainLink = {
-      didItHit: chainLinkObj === 'hit' ? true : false,
+      didItHit: chainLinkObj.result === 'hit' ? true : false,
+      isDraconic: chainLinkObj.isDraconic,
       index: ix
     };
     ix++;

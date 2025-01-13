@@ -39,6 +39,7 @@ export default function ChainLinks() {
             className={styles.chainLinkSummary}
             key={ix.toString()}
             onClick={() => clickChainLink(ix)}
+            title={ChainLink.isDraconic ? 'Draconic Chain Link' : ''}
           >
             <div className={styles.chainLinkSymbol}>
               <img src={hitPic} className={styles.chainLinkSymbol} />
