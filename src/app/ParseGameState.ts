@@ -88,8 +88,9 @@ function ParseEquipment(input: any) {
         result.Hero = ParseCard({ ...cardObj, zone: ZONE.HERO });
         break;
       case 'W':
-      case 'W,E': // weapon, possibly have two
-      case 'W,T':
+      case 'W,T': // token weapon (i.e. Graphene Chelicera)
+      case 'W,T,E': // weapon token equipment (none as of 1/13/25 but futureproofing)
+      case 'W,E': // weapon equipment (Parry Blade, Nitro Mechanoid, etc.)
         if (result.WeaponLEq == undefined) {
           result.WeaponLEq = ParseCard(cardObj);
         } else {
