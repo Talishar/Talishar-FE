@@ -66,8 +66,6 @@ const StickyFooter = ({
             className={styles.buttonClass}
             type="submit"
             disabled={!errors || !submitSideboard}
-            data-tooltip="Once submitted you can't change your deck!"
-            data-placement="right"
           >
             Submit Deck
           </button>
