@@ -38,7 +38,7 @@ const Header = () => {
             <a
               href="https://linktr.ee/Talishar"
               target={'_blank'}
-              className={styles.social}
+              className={styles.support}
               title={'Patreon Link'}
             >
               Support Us!

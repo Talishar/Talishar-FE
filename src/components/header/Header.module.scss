@@ -15,7 +15,8 @@
   // hide animation on these items
   .logo,
   .social,
-  .login {
+  .login,
+  .support {
     &::before,
     &::after {
       content: none;
@@ -49,6 +50,10 @@
         gap: 2px;
 
         &.social {
+          min-width: 40px;
+        }
+
+        &.support {
           min-width: 40px;
         }
 
