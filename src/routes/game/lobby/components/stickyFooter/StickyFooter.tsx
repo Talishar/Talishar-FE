@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useFormikContext } from 'formik';
 import { FaExclamationCircle } from 'react-icons/fa';
 import { DeckResponse } from 'interface/API/GetLobbyInfo.php';
@@ -24,6 +24,8 @@ const StickyFooter = ({
   for (const [key, value] of Object.entries(errors)) {
     errorArray.push(String(value));
   }
+
+  const [sideboardSubmitted, setSideboardSubmitted] = useState(false);
 
   const handleClipboardCopy = () => {
     navigator.clipboard.writeText(
@@ -66,8 +68,9 @@ const StickyFooter = ({
             className={styles.buttonClass}
             type="submit"
             disabled={!errors || !submitSideboard}
+            onClick={() => setSideboardSubmitted(true)}
           >
-            Submit Deck
+            {sideboardSubmitted ? 'Resubmit Deck' : 'Submit Deck'}
           </button>
           {isWidescreen && (
             <button className={leaveLobby} onClick={handleLeave}>
