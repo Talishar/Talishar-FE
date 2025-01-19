@@ -33,7 +33,7 @@ const Equipment = ({ lobbyInfo, weapons, weaponSB }: EquipmentProps) => {
     getCollectionCardImagePath({ path: CARD_SQUARES_PATH, locale, cardNumber });
 
   return (
-    <div className={styles.container}>
+    <div className={styles.container} onContextMenu={(e)=> e.preventDefault()}>
       <div className={styles.eqCategory}>
         <h3>Weapons / Off-Hand</h3>
         <FieldArray

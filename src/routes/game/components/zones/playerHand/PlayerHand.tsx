@@ -105,7 +105,7 @@ export default function PlayerHand() {
     <>
       {createPortal(
         <>
-          <div className={styles.handRow}>
+          <div className={styles.handRow} onContextMenu={(e)=> e.preventDefault()}>
             <AnimatePresence>
               {handCards !== undefined &&
                 handCards.map((card, ix) => {

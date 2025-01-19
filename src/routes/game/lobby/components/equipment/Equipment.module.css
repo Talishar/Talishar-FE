@@ -21,6 +21,7 @@
 .cardContainer {
   height: 100px;
   width: 100px;
+  -webkit-touch-callout: none;
 }
 
 .card {
