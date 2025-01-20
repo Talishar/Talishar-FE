@@ -87,8 +87,10 @@ export const PlayerHandCard = ({
   const onDrag = () => {
     if (canPopUp) {
       setSnapback(true);
-      dispatch(clearPopUp());
-      setCanPopup(false);
+      if (!isLongPress.current) {
+        dispatch(clearPopUp());
+        setCanPopup(false);
+      }
     }
   };
 
