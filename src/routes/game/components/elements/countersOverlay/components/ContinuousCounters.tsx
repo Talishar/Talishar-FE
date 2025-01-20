@@ -149,13 +149,10 @@ export const ContinuousCounters = (props: Props) => {
       )}
       {!!Number(countersMap?.stain) && (
         <div
-          className={styles.icon}
+          className={styles.stainCounter}
           title={`${countersMap?.stain} stain counter(s)`}
         >
-          <div className={styles.iconText}>
-            {countersMap?.stain}
-          </div>
-          <GiBlood />
+          <div>{countersMap?.stain}</div>
         </div>
       )}
       {!!Number(countersMap?.lightning) && (
