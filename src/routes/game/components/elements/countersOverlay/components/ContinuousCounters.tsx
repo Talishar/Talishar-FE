@@ -1,6 +1,7 @@
 import classNames from 'classnames';
 import styles from '../CountersOverlay.module.css';
 import { GiLightningArc } from "react-icons/gi";
+import { GiBlood } from "react-icons/gi";
 
 type Props = {
   countersMap: { [key: string]: number };
@@ -21,6 +22,7 @@ const includedCounters = [
   'frost',
   'balance',
   'bind',
+  'stain',
   'lightning',
   'amp',
   'aim'
@@ -143,6 +145,17 @@ export const ContinuousCounters = (props: Props) => {
           title={`${countersMap?.bind} bind counter(s)`}
         >
           <div>{countersMap?.bind}</div>
+        </div>
+      )}
+      {!!Number(countersMap?.stain) && (
+        <div
+          className={styles.icon}
+          title={`${countersMap?.stain} stain counter(s)`}
+        >
+          <div className={styles.iconText}>
+            {countersMap?.stain}
+          </div>
+          <GiBlood />
         </div>
       )}
       {!!Number(countersMap?.lightning) && (
