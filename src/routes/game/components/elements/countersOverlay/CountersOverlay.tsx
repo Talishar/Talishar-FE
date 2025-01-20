@@ -40,6 +40,7 @@ export const CountersOverlay = ({
     'frost',
     'balance',
     'bind',
+    'stain',
     'lightning',
     'amp',
     'aim'
