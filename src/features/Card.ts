@@ -25,4 +25,5 @@ export interface Card {
   reorderable?: boolean; // can be reordered in the active layers window
   numUses?: number; //How many uses it has remaining (number of weapon attacks for example)
   subcards?: string[]; //What cards are under this one? (For example, Material cards)
+  marked?: boolean; // marked = 1 if marked
 }

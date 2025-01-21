@@ -87,6 +87,13 @@
   background-size: 100% 100%;
 }
 
+.marked {
+  background-image: url('../../../../../img/elements/markedOverlay.png');
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  opacity: 0.8;
+}
+
 .numUses {
   position: absolute;
   top: 8px;
