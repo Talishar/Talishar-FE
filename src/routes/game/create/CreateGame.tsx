@@ -229,7 +229,7 @@ const CreateGame = () => {
                   Competitive CC
                 </option>
                 <option value={GAME_FORMAT.DRAFT}>
-                  Rosetta Limited
+                  Limited
                 </option>
                 <option value={GAME_FORMAT.COMMONER}>Commoner</option>
                 <option value={GAME_FORMAT.CLASH}>Clash</option>
