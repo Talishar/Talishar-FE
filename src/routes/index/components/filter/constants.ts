@@ -40,6 +40,7 @@ export const youngToOldHeroesMapping: { [key: string]: string } = {
   HNT002: 'HNT001', // Arakni, Web of Deceit
   HNT055: 'HNT054', // Cindra
   HNT099: 'HNT098', // Fang
+  CRU046: 'HER123', // Ira
 };
 
 export const HEROES_OF_RATHE: { value: string; label: string }[] = [
