@@ -1,19 +1,26 @@
 import React from 'react';
 import styles from '../index/Index.module.css';
 import ArmoryDeck from '../../img/ArmoryDeck.webp';
+import NewSetLogo from '../../img/NewSetLogo.webp';
 
 
 const News = () => {
   return (
     <div>
-    <h4 className={styles.headlines}>🪓 Armory Deck: Jarl Vetreiđi 🪓</h4>
+    {/*<h4 className={styles.headlines}>🪓 Armory Deck: Jarl Vetreiđi 🪓</h4>
     <p className={styles.headlinesParagraphs}>
       Jarl Vetreiđi armory deck cards are now available in all queues!<br/>For more information about the product, 
       <a href="https://fabtcg.com/en/products/booster-set/armory-deck-origins-jarl-vetreidi/" target="_blank"> click here</a>!
     </p>
     <a href="https://fabtcg.com/en/products/booster-set/armory-deck-origins-jarl-vetreidi/" target="_blank">
       <img src={ArmoryDeck} className={styles.NewsLogoRectangle} />
-    </a>
+    </a> */}
+
+    <h4 className={styles.headlines}>🗡️Happy Hunting Season Release Day!🗡️</h4>
+      <p className={styles.headlines}>The Hunted cards are now available in all queues!</p>
+      <a href="https://fabtcg.com/en/articles/hnt/" target="_blank">
+        <img src={NewSetLogo} className={styles.NewsLogoSquare} />
+      </a>
     <br/>
       <p>Please join our community:</p>
       <ul>
