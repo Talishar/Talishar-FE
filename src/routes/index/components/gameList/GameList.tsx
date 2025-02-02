@@ -126,137 +126,137 @@ const GameList = () => {
   return (
     <article className={styles.gameList}>
       {cookies.experimental && (
-        <button
-          onClick={(e) => {
-            e.preventDefault();
-            removeCookie('experimental');
-          }}
-        >
-          Disable experimental features
-        </button>
+      <button
+        onClick={(e) => {
+        e.preventDefault();
+        removeCookie('experimental');
+        }}
+      >
+        Disable experimental features
+      </button>
       )}
       <div className={styles.titleDiv}>
-        <h3 className={styles.title}>Games</h3>
-        <button
-          onClick={handleReloadClick}
-          className={styles.reloadButton}
-          aria-busy={isFetching}
-          disabled={isFetching}
-        >
-          Reload
-        </button>
+      <h3 className={styles.title}>Games</h3>
+      <button
+        onClick={handleReloadClick}
+        className={styles.reloadButton}
+        aria-busy={isFetching}
+        disabled={isFetching}
+      >
+        Reload
+      </button>
       </div>
       {isLoading ? <div aria-busy="true">Loading games please wait</div> : null}
       {error ? (
-        <div>
-          <h2>There has been an error!</h2>
-          <p>
-            Please refresh the page and try again, if you still get an error
-            loading the gamelist. Please report on our discord and let us know
-            the following:
-          </p>
-          <p>{JSON.stringify(error)}</p>
-        </div>
+      <div>
+        <h2>There has been an error!</h2>
+        <p>
+        Please refresh the page and try again, if you still get an error
+        loading the gamelist. Please report on our discord and let us know
+        the following:
+        </p>
+        <p>{JSON.stringify(error)}</p>
+      </div>
       ) : null}
       {!isLoading && !error && <Filter setHeroFilter={setHeroFilter} />}
       {isLoggedIn ? (
-        <>
-          <FormatList
-            gameList={sortedOpenGames.filter(
-              (game) => game.format === GAME_FORMAT.BLITZ
-            )}
-            name="Blitz"
-          />
-          <FormatList
-            gameList={sortedOpenGames.filter(
-              (game) => game.format === GAME_FORMAT.COMPETITIVE_BLITZ
-            )}
-            name="Competitive Blitz"
-          />
-          <FormatList
-            gameList={sortedOpenGames.filter(
-              (game) => game.format === GAME_FORMAT.CLASSIC_CONSTRUCTED
-            )}
-            name="Classic Constructed"
-          />
-          <FormatList
-            gameList={sortedOpenGames.filter(
-              (game) => game.format === GAME_FORMAT.COMPETITIVE_CC
-            )}
-            name="Competitive CC"
-          />
-          <FormatList
-            gameList={sortedOpenGames.filter((game) =>
-              otherFormats.includes(game.format)
-            )}
-            name="Other"
-            isOther
-          />
-        </>
-      ) : (
-        !isLoading && (
-          <p>
-            Please <Link to="/user/login">log in</Link> to view open lobbies!
-          </p>
-        )
-      )}
-      {data != undefined && (
+      <>
+        <FormatList
+        gameList={sortedOpenGames.filter(
+          (game) => game.format === GAME_FORMAT.BLITZ
+        )}
+        name="Blitz"
+        />
+        <FormatList
+        gameList={sortedOpenGames.filter(
+          (game) => game.format === GAME_FORMAT.COMPETITIVE_BLITZ
+        )}
+        name="Competitive Blitz"
+        />
+        <FormatList
+        gameList={sortedOpenGames.filter(
+          (game) => game.format === GAME_FORMAT.CLASSIC_CONSTRUCTED
+        )}
+        name="Classic Constructed"
+        />
+        <FormatList
+        gameList={sortedOpenGames.filter(
+          (game) => game.format === GAME_FORMAT.COMPETITIVE_CC
+        )}
+        name="Competitive CC"
+        />
+        <FormatList
+        gameList={sortedOpenGames.filter((game) =>
+          otherFormats.includes(game.format)
+        )}
+        name="Other"
+        isOther
+        />
+        {data != undefined && (
         <div data-testid="games-in-progress" ref={parent}>
           <h4 className={styles.subSectionTitle}>
-            Games in Progress: <span>{data.gameInProgressCount}</span>
+          Games in Progress: <span>{data.gameInProgressCount}</span>
           </h4>
           <InProgressGameList
-            gameList={filteredGamesInProgress.filter((game) =>
-              [GAME_FORMAT.BLITZ, GAME_FORMAT_NUMBER.BLITZ].includes(
-                game.format
-              )
-            )}
-            name="Blitz"
+          gameList={filteredGamesInProgress.filter((game) =>
+            [GAME_FORMAT.BLITZ, GAME_FORMAT_NUMBER.BLITZ].includes(
+            game.format
+            )
+          )}
+          name="Blitz"
           />
           <InProgressGameList
-            gameList={filteredGamesInProgress.filter((game) =>
-              [
-                GAME_FORMAT.COMPETITIVE_BLITZ,
-                GAME_FORMAT_NUMBER.COMPETITIVE_BLITZ
-              ].includes(game.format)
-            )}
-            name="Competitive Blitz"
+          gameList={filteredGamesInProgress.filter((game) =>
+            [
+            GAME_FORMAT.COMPETITIVE_BLITZ,
+            GAME_FORMAT_NUMBER.COMPETITIVE_BLITZ
+            ].includes(game.format)
+          )}
+          name="Competitive Blitz"
           />
           <InProgressGameList
-            gameList={filteredGamesInProgress.filter((game) =>
-              [
-                GAME_FORMAT.CLASSIC_CONSTRUCTED,
-                GAME_FORMAT_NUMBER.CLASSIC_CONSTRUCTED
-              ].includes(game.format)
-            )}
-            name="Classic Constructed"
+          gameList={filteredGamesInProgress.filter((game) =>
+            [
+            GAME_FORMAT.CLASSIC_CONSTRUCTED,
+            GAME_FORMAT_NUMBER.CLASSIC_CONSTRUCTED
+            ].includes(game.format)
+          )}
+          name="Classic Constructed"
           />
           <InProgressGameList
-            gameList={filteredGamesInProgress.filter((game) =>
-              [
-                GAME_FORMAT.COMPETITIVE_CC,
-                GAME_FORMAT_NUMBER.COMPETITIVE_CC
-              ].includes(game.format)
-            )}
-            name="Competitive CC"
+          gameList={filteredGamesInProgress.filter((game) =>
+            [
+            GAME_FORMAT.COMPETITIVE_CC,
+            GAME_FORMAT_NUMBER.COMPETITIVE_CC
+            ].includes(game.format)
+          )}
+          name="Competitive CC"
           />
           <InProgressGameList
-            gameList={filteredGamesInProgress.filter(
-              (game) =>
-                ![
-                  GAME_FORMAT.BLITZ,
-                  GAME_FORMAT_NUMBER.BLITZ,
-                  GAME_FORMAT.COMPETITIVE_BLITZ,
-                  GAME_FORMAT_NUMBER.COMPETITIVE_BLITZ,
-                  GAME_FORMAT.COMPETITIVE_CC,
-                  GAME_FORMAT.CLASSIC_CONSTRUCTED,
-                  GAME_FORMAT_NUMBER.CLASSIC_CONSTRUCTED,
-                  GAME_FORMAT_NUMBER.COMPETITIVE_CC
-                ].includes(game.format)
-            )}
-            name="Other"
+          gameList={filteredGamesInProgress.filter(
+            (game) =>
+            ![
+              GAME_FORMAT.BLITZ,
+              GAME_FORMAT_NUMBER.BLITZ,
+              GAME_FORMAT.COMPETITIVE_BLITZ,
+              GAME_FORMAT_NUMBER.COMPETITIVE_BLITZ,
+              GAME_FORMAT.COMPETITIVE_CC,
+              GAME_FORMAT.CLASSIC_CONSTRUCTED,
+              GAME_FORMAT_NUMBER.CLASSIC_CONSTRUCTED,
+              GAME_FORMAT_NUMBER.COMPETITIVE_CC
+            ].includes(game.format)
+          )}
+          name="Other"
           />
         </div>
+        )}
+      </>
+      ) : (
+      !isLoading && (
+        <p>
+        Please <Link to="/user/login">log in</Link> to view open lobbies and spectate games!
+        </p>
+      )
       )}
     </article>
   );
