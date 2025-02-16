@@ -62,9 +62,9 @@ const Equipment = ({ lobbyInfo, weapons, weaponSB }: EquipmentProps) => {
                           }
                         }}
                       />
-                      <CardPopUp cardNumber={weapon.id.substring(0, 6)}>
+                      <CardPopUp cardNumber={weapon.id.split("-")[0]}>
                         <CardImage
-                          src={getCardSrc(weapon.id.substring(0, 6))}
+                          src={getCardSrc(weapon.id.split("-")[0])}
                           draggable={false}
                           className={styles.card}
                         />
