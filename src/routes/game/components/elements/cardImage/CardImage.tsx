@@ -17,7 +17,7 @@ export const CardImage = (props: CardImage) => {
   let src = props.src;
 
   let srcArray = src.split('/');
-  let cardNumber = srcArray?.pop()?.substring(0, 6);
+  let cardNumber = srcArray?.pop()?.substring(0);
 
   if (altArts) {
     for (let i = 0; i < altArts.length; i++) {
