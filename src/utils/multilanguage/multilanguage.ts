@@ -11,12 +11,19 @@ import {
   ALTERNATIVE_ARTS_CODES,
   CARD_IMAGES_PATH
 } from './constants';
-import { historyPack1, historyPack2 } from './collectionMaps';
+import { historyPack1, historyPack2, setIDs } from './collectionMaps';
 import { CollectionCardImagePathData, ImagePathNumber } from './types';
 import { CLOUD_IMAGES_URL } from 'appConstants';
 
 const getCollectionCode = (cardNumber: string): string =>
-  cardNumber.substring(0, 3);
+  Object.keys(setIDs).includes(cardNumber)
+  ? setIDs[cardNumber].substring(0, 3)
+  : cardNumber.substring(0, 3);
+
+const getSetID = (cardNumber: string): string =>
+  Object.keys(setIDs).includes(cardNumber)
+  ? setIDs[cardNumber]
+  : cardNumber;
 
 const isJapaneseCard = (locale: string, collectionCode: string): boolean =>
   locale === JAPANESE_LANGUAGE;// &&
@@ -78,14 +85,15 @@ export const getCollectionCardImagePath = ({
     cardNumber
   };
   const collectionCode = getCollectionCode(cardNumber);
+  const setID = getSetID(cardNumber);
 
   if (locale !== DEFAULT_LANGUAGE && !isAlternativeArt(cardNumber)) {
     if (isJapaneseCard(locale, collectionCode)) {
       Object.assign(cardPathData, { languagePath: LOCALE_DICTIONARY[locale] });
-    } else if (isEuropeanCard(locale, cardNumber, collectionCode)) {
+    } else if (isEuropeanCard(locale, setID, collectionCode)) {
       Object.assign(cardPathData, {
         languagePath: LOCALE_DICTIONARY[locale],
-        cardNumber: getHistoryPackCard(cardNumber, collectionCode) || cardNumber
+        cardNumber: getHistoryPackCard(setID, collectionCode) || setID
       });
     }
   }

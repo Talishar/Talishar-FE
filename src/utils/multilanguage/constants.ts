@@ -45,10 +45,10 @@ export const JAPANESE_LANGUAGE_PRINTED_COLLECTIONS = [
 export const COLLECTIONS_HISTORY_PACK_1 = ['WTR', 'ARC', 'CRU'];
 export const COLLECTIONS_HISTORY_PACK_2 = ['MON', 'ELE', 'EVR'];
 export const ADDITIONAL_REPRINTS_HISTORY_PACK_2 = [
-  'WTR075',
-  'ARC112',
-  'ARC150',
-  'CRU197'
+  'seismic_surge',
+  'runechant',
+  'arcanite_skullcap',
+  'copper'
 ];
 
 export const ALTERNATIVE_ARTS_CODES = [
