@@ -19,8 +19,8 @@ const getCollectionCode = (cardNumber: string): string =>
   cardNumber.substring(0, 3);
 
 const isJapaneseCard = (locale: string, collectionCode: string): boolean =>
-  locale === JAPANESE_LANGUAGE &&
-  JAPANESE_LANGUAGE_PRINTED_COLLECTIONS.includes(collectionCode);
+  locale === JAPANESE_LANGUAGE;// &&
+  // JAPANESE_LANGUAGE_PRINTED_COLLECTIONS.includes(collectionCode);
 
 const isEuropeanCard = (
   locale: string,
