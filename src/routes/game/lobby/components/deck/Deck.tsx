@@ -29,9 +29,9 @@ const Deck = ({ deck }: DeckProps) => {
           <div key={`deck${ix}`} className={styles.deckCardContainer}>
             <label>
               <Field type="checkbox" name="deck" value={`${card}`} />
-              <CardPopUp cardNumber={card.substring(0, 6)}>
+              <CardPopUp cardNumber={card.split("-")[0]}>
                 <CardImage
-                  src={getImageSrc(card.substring(0, 6))}
+                  src={getImageSrc(card.split("-")[0])}
                   draggable={false}
                   className={styles.card}
                 />

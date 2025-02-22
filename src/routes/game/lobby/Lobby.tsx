@@ -242,13 +242,13 @@ const Lobby = () => {
   const handleFormSubmission = async (values: DeckResponse) => {
     setIsSubmitting(true);
 
-    const hands = values.weapons.map((item) => item.id.substring(0, 6));
-    const deck = values.deck.map((card) => card.substring(0, 6));
+    const hands = values.weapons.map((item) => item.id.split("-")[0]);
+    const deck = values.deck.map((card) => card.split("-")[0]);
     const inventory = [
       ...weaponsIndexed
         .concat(weaponsSBIndexed)
         .filter((item) => item.id !== 'NONE00')
-        .map((item) => item.id.substring(0, 6)),
+        .map((item) => item.id.split("-")[0]),
       ...(data?.deck?.head ?? []),
       ...(data?.deck?.headSB ?? []),
       ...(data?.deck?.chest ?? []),
