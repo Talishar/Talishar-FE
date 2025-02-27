@@ -66,6 +66,7 @@
         imgSource = imgSource.replace('./undefined./WebpImages', imgSrcPath);
         imgSource = imgSource.replace('./WebpImages/', imgSrcPath);
         imgSource = imgSource.replace('.png', '.webp');
+        imgSource = imgSource.replaceAll(' ', '_');
         var el = document.getElementById('cardDetail');
         el.innerHTML = "<img src='" + imgSource + "' style='border-radius: 5%;'/>";
         el.style.display = 'inline';
