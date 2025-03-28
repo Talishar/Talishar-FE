@@ -13,7 +13,7 @@ axios
     const cards = jsonString.data;
 
     const cardNames = cards.reduce((acc, card) => {
-      const name = card.name;
+      const name = card.name.trim();
 
       if (card.types.includes('Token')) {
         return acc;
@@ -22,10 +22,13 @@ axios
       // if name has "//" split into two names
       if (name.includes("//")) {
         const [name1, name2] = name.split("//");
-        if (acc.includes(name1.trim()) || acc.includes(name2.trim())) {
-          return acc;
+        if (!acc.includes(name1.trim())) {
+          acc.push(name1.trim());
         }
-        return acc.concat(name1.trim(), name2.trim());
+        if (!acc.includes(name2.trim())) {
+          acc.push(name2.trim());
+        }
+        return acc;
       }
 
       if (!acc.includes(name)) {
