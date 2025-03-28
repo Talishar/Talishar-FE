@@ -22,9 +22,9 @@ axios
       // if name has "//" split into two names
       if (name.includes("//")) {
         const [name1, name2] = name.split("//");
-        if (acc.includes(name1.trim())) {
-          return acc
-        };
+        if (acc.includes(name1.trim()) || acc.includes(name2.trim())) {
+          return acc;
+        }
         return acc.concat(name1.trim(), name2.trim());
       }
 
