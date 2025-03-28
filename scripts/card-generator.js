@@ -19,6 +19,15 @@ axios
         return acc;
       }
 
+      // if name has "//" split into two names
+      if (name.includes("//")) {
+        const [name1, name2] = name.split("//");
+        if (acc.includes(name1.trim())) {
+          return acc
+        };
+        return acc.concat(name1.trim(), name2.trim());
+      }
+
       if (!acc.includes(name)) {
         acc.push(name);
       }
