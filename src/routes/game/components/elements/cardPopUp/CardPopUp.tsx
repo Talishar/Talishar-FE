@@ -39,6 +39,8 @@ export default function CardPopUp({
       cardNumber === 'FINALIZECHAINLINK' ||
       cardNumber === 'DEFENDSTEP' ||
       cardNumber == 'ATTACKSTEP' ||
+      cardNumber == 'RESOLUTIONSTEP' ||
+      cardNumber == 'CLOSINGCHAIN' ||
       cardNumber == 'CardBack' ||
       cardNumber == 'NONE00' ||
       cardNumber == 'BLOODDEBT' ||
