@@ -95,7 +95,7 @@
   opacity: 0.7;
 }
 
-.tapped {
+.tapped.tapped {
   transform: rotate(90deg);
 }
 
