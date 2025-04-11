@@ -68,6 +68,7 @@ export const CardDisplay = (prop: CardProp) => {
     { [styles.onChain]: card.onChain },
     { [styles.isFrozen]: card.isFrozen },
     { [styles.marked]: card.marked },
+    { [styles.tapped]: card.tapped },
     { [styles.isRestricted]: !!card.restriction }
   );
 
@@ -129,7 +130,7 @@ export const CardDisplay = (prop: CardProp) => {
               </motion.div>
             );
           })}
-        <CardImage src={imageSrc} className={imgStyles} />
+        <CardImage src={imageSrc} className={classNames(imgStyles, { [styles.tapped]: card.tapped })} />
         {card.overlay === 'disabled' && <div className={classStyles}></div>}
         {(card.isBroken ||
           card.onChain ||

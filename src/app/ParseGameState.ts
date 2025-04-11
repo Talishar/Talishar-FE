@@ -37,6 +37,7 @@ function ParseCard(input: any) {
   card.numUses = input.numUses;
   card.subcards = input.subcards;
   card.marked = input.marked ? Boolean(input.marked) : false;
+  card.tapped = input.tapped ? Boolean(input.tapped) : false;
   return card;
 }
 

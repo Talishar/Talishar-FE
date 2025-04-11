@@ -94,6 +94,10 @@
   opacity: 0.7;
 }
 
+.tapped {
+  transform: rotate(90deg);
+}
+
 .numUses {
   position: absolute;
   top: 8px;
