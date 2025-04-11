@@ -99,7 +99,8 @@ export const CARD_BACK = {
   '98': 'CBDazzyfizzle7',
   '99': 'CBDazzyfizzle8',
   '100': 'CBSmilingFleshBag',
-  '101': 'CBDashciples'
+  '101': 'CBDashciples',
+  '102': 'CBBlitzkriegMeph'
 } as { [key: string]: string };
 
 export const PLAYMATS = {
