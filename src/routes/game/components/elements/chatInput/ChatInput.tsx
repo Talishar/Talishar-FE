@@ -207,7 +207,9 @@ const ChatWheel = () => {
                 className={styles.popOver}
                 {...getFloatingProps()}
               >
-                <ChatOptions setModalDisplay={setModalDisplay} />
+                <div className={styles.chatOptionsContainer}>
+                  <ChatOptions setModalDisplay={setModalDisplay} />
+                </div>              
               </div>
             </FloatingFocusManager>
           </FloatingOverlay>,
@@ -229,6 +231,7 @@ const ChatOptions = ({ setModalDisplay }: ChatOptionsProps) => {
     elements.push(
       <button
         key={`quickChat${key}`}
+        className={styles.chatWheelButton}
         onClick={(e) => {
           e.preventDefault();
           submitChat({

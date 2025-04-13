@@ -374,6 +374,9 @@ export const gameSlice = createSlice({
     toggleShowModals: (state) => {
       state.showModals = !state.showModals;
     },
+    toggleChatModal: (state) => {
+      state.showChatModal = !state.showChatModal;
+    },
     enableModals: (state) => {
       state.showModals = true;
     },
@@ -529,6 +532,7 @@ export const {
   clearGetLobbyRefresh,
   clearGameInfo,
   toggleShowModals,
+  toggleChatModal,
   enableModals,
   disableModals,
   setIsRoguelike

@@ -107,6 +107,7 @@ export default interface GameState {
   }[];
   gameLobby?: GetLobbyRefreshResponse;
   showModals?: boolean;
+  showChatModal?: boolean;
   landmark?: Card;
   hasPriority?: boolean;
   isFullRematch?: boolean;

@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState, useEffect } from 'react';
 import screenfull from 'screenfull';
 import { useAppDispatch } from 'app/Hooks';
 import { submitButton } from 'features/game/GameSlice';
@@ -9,6 +9,7 @@ import { DEFAULT_SHORTCUTS, PROCESS_INPUT } from 'appConstants';
 import FullControlToggle from './FullControlToggle/FullControlToggle';
 import HideModalsToggle from './HideModalsToggle/HideModalsToggle';
 import OptionsMenuToggle from './OptionsMenuToggle';
+import ShowMobileChat from './ShowMobileChat';
 import AlwaysPassToggle from './AlwaysPassToggle/AlwaysPassToggle';
 import useShortcut from 'hooks/useShortcut';
 
@@ -60,6 +61,22 @@ function UndoButton() {
 }
 
 export default function Menu() {
+
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 768) { // adjust the breakpoint as needed
+        setIsMobile(true);
+      } else {
+        setIsMobile(false);
+      }
+    };
+    window.addEventListener('resize', handleResize);
+    handleResize();
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   return (
     <div>
       <div className={styles.menuList}>
@@ -71,6 +88,9 @@ export default function Menu() {
         <FullControlToggle />
         <AlwaysPassToggle />
         <HideModalsToggle />
+        {isMobile && (
+          <ShowMobileChat />
+        )}
       </div>
     </div>
   );
