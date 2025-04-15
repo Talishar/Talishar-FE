@@ -50,14 +50,29 @@
 
 @media (orientation: portrait) {
   .playerPlaymat {
+    top: 2vh;
+    position: relative;
+    margin: auto;
     width: 100%;
+    border-radius: 0.5em;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    max-width: 100%;
+    max-height: 100vh;
   }
   .playerBoard {
+    transform: scale(0.9);
+    transform-origin: top left; 
     grid-template-rows: var(--card-size) var(--card-size) var(--card-size);
     grid-template-columns:
       var(--card-size) var(--card-size) 1fr var(--card-size)
       var(--card-size) var(--card-size) 1fr var(--card-size) var(--card-size);
     gap: 1dvw;
     padding: 1dvw;
+    grid-template-areas:
+    'head permanents permanents permanents permanents permanents permanents permanents graveyard'
+    'chest arms . weaponl hero weaponr . pitch deck'
+    'legs . . . arsenal arsenal . zonecounts banish'; 
   }
 }
