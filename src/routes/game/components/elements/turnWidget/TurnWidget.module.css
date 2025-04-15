@@ -1,12 +1,10 @@
 .widgetContainer {
   top: 0px;
   right: 0px;
-
   position: relative;
   width: var(--card-size);
   height: 18vh;
   height: 18dvh;
-
   z-index: 15;
   user-select: none;
 }
@@ -16,10 +14,8 @@
   background-size: 10vh auto;
   background-repeat: no-repeat;
   height: 100%;
-
   width: 15vh;
   width: 15dvh;
-
   position: absolute;
   right: 0px;
   display: flex;
@@ -51,18 +47,14 @@
   height: 17vh;
   width: 10dvh;
   height: 17dvh;
-
   padding: 1vh 0;
   padding: 1dvh 0;
-
   gap: 1vh;
   gap: 1dvh;
-
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-
   top: 0px;
   bottom: 0px;
   right: 0px;
@@ -73,17 +65,9 @@
   .widgetContainer {
     top: 0px;
     right: 0px;
-
     width: 20vw;
     height: 26vw;
-    width: 20dvw;
-    height: 26dvw;
-
     user-select: none;
-  }
-
-  .widgetLeftCol {
-    margin-right: 1.6em;
   }
 
   .widgetRightCol {
@@ -91,23 +75,16 @@
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
-    
-    height: 105%;
-    margin-right: 1.6em;
-    margin-bottom: 2em;
-  }
-
-  .widgetRightCol > * {
-    margin-bottom: -1em;
+    margin-right: 0.5em;
+    margin-bottom: auto;
+    height: 100%;
+    width: 100%;
   }
 
   .widgetBackground {
     background-size: 15dvw auto;
     height: 100%;
-
-    width: 18vw;
-    width: 18dvw;
-
+    width: 100%;
     right: -1em;
   }
 }
