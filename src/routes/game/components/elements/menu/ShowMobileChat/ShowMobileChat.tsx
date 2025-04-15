@@ -24,18 +24,17 @@ const ShowMobileChat = () => {
       <div style={{ width: '10%' }}>
         <button
           className={classNames(styles.btn, {
-            [styles.buttonActive]: !showChatModal
+            [styles.buttonActive]: showChatModal
           })}
           aria-label="Show Chat"
           onClick={handleClickShowMobileChatToggle}
-          data-tooltip="Show Chat"
           data-placement="bottom"
         >
           {showChatModal && <BsChatFill aria-hidden="true" style={{ fontSize: '2em', width: '20px' }} />}
           {!showChatModal && <BsChatFill aria-hidden="true" style={{ fontSize: '2em', width: '20px' }} />}
         </button>
       </div>
-      {!showChatModal && (
+      {showChatModal && (
         <div>
           <ChatBoxMobile />
         </div>
