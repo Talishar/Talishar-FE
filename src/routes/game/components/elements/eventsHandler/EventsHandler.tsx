@@ -62,7 +62,14 @@ export const EventsHandler = React.memo(() => {
       modalType == ModalType.RequestThisTurnUndo ||
       modalType == ModalType.RequestLastTurnUndo
     )
-      dispatch(submitButton({ button: { mode: PROCESS_INPUT.DECLINE_UNDO } }));
+      dispatch(
+        submitButton({ button: { mode: PROCESS_INPUT.DECLINE_UNDO } })
+      );
+    else
+      dispatch(
+        submitButton({ button: { mode: PROCESS_INPUT.DECLINE_CHAT } })
+    );
+
   };
 
   useEffect(() => {
