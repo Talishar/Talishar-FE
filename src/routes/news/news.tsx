@@ -16,13 +16,13 @@ const News = () => {
       <img src={ArmoryDeck} className={styles.NewsLogoRectangle} />
     </a> */}
 
-    <h4 className={styles.headlines}>🗡️Happy Hunting Season Release Day!🗡️</h4>
-      <p className={styles.headlines}>The Hunted cards are now available in all queues!</p>
-      <a href="https://fabtcg.com/en/articles/hnt/" target="_blank">
+    <h4 className={styles.headlines}> 🏴‍☠️ High Seas Pre-Release FAQ: 🏴‍☠️</h4>
+     {/* <p className={styles.headlines}>The Hunted cards are now available in all queues!</p> */}
+      <a href="https://fabtcg.com/en/retailer-news/sea-pr/" target="_blank">
         <img src={NewSetLogo} className={styles.NewsLogoSquare} />
       </a>
     <br/>
-      <p>Please join our community:</p>
+      <p>Join our community ⤵️</p>
       <ul>
         <li>
           <a href="https://discord.gg/JykuRkdd5S" target="_blank">
