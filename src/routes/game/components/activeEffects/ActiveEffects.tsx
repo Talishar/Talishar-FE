@@ -6,11 +6,11 @@ import LandmarkZone from '../zones/LandmarkZone';
 export default function ActiveEffects() {
   return (
     <div className={styles.activeEffects}>
-      <div className={styles.text}>Opp effects</div>
+      <div className={styles.textOpp}>Opp effects</div>
       <Effects isPlayer={false} />
       <LandmarkZone />
       <Effects isPlayer />
-      <div className={styles.text}>Your effects</div>
+      <div className={styles.textPlayer}>Your effects</div>
     </div>
   );
 }

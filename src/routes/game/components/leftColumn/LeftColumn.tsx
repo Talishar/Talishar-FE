@@ -1,14 +1,34 @@
-import React from 'react';
+import { useState, useEffect } from 'react';
 import ActiveEffects from '../activeEffects/ActiveEffects';
 import PlayerName from '../elements/playerName/PlayerName';
 import styles from './LeftColumn.module.css';
 
 export default function LeftColumn() {
+
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 768) { // adjust the breakpoint as needed
+        setIsMobile(true);
+      } else {
+        setIsMobile(false);
+      }
+    };
+    window.addEventListener('resize', handleResize);
+    handleResize();
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   return (
     <div className={styles.leftColumn}>
-      <PlayerName isPlayer={false} />
+      {!isMobile && (
+        <PlayerName isPlayer={false} />
+      )}
       <ActiveEffects />
-      <PlayerName isPlayer />
+      {!isMobile && (
+        <PlayerName isPlayer />
+      )}
     </div>
   );
 }

@@ -62,7 +62,7 @@
     max-height: 100vh;
   }
   .playerBoard {
-    transform: scale(0.9);
+    transform: scale(0.95);
     transform-origin: top left; 
     grid-template-rows: var(--card-size) var(--card-size) var(--card-size);
     grid-template-columns:

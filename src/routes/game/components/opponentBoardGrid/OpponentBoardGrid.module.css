@@ -41,7 +41,7 @@
     width: 100%;
   }
   .playerBoard {
-    transform: scale(0.9);
+    transform: scale(0.95);
     transform-origin: bottom left; 
     grid-template-rows: var(--card-size) var(--card-size) var(--card-size);
     grid-template-columns:
