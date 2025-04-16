@@ -1,7 +1,7 @@
 .gameBoard {
   justify-self: center;
   display: flex;
-  width: 90%;
+  width: 95%;
   flex-direction: column;
   justify-content: center;
   align-items: center;

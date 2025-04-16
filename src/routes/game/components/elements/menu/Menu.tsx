@@ -66,7 +66,7 @@ export default function Menu() {
 
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth < 768) { // adjust the breakpoint as needed
+      if (window.innerWidth < 941) { // adjust the breakpoint as needed
         setIsMobile(true);
       } else {
         setIsMobile(false);
