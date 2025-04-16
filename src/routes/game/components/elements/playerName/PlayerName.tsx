@@ -28,6 +28,12 @@ export default function PlayerName(player: Player) {
       : state.game.playerTwo.isPvtVoidPatron
   );
 
+  const isPracticeDummy = useAppSelector((state: RootState) =>
+    player.isPlayer
+      ? state.game.playerOne.Name === 'Practice Dummy'
+      : state.game.playerTwo.Name === 'Practice Dummy'
+  );
+  
   const iconMap = [
     {
       condition: isPatron,
@@ -43,6 +49,11 @@ export default function PlayerName(player: Player) {
       condition: isPvtVoidPatron,
       src: '/images/patronEye.webp',
       title: 'I am a patron of PvtVoid!'
+    },
+    {
+      condition: isPracticeDummy,
+      src: '/images/practiceDummy.webp',
+      title: 'I am a bot!'
     }
   ];
 
