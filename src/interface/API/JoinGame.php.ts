@@ -3,7 +3,7 @@ export interface JoinGameAPI {
   playerID?: number;
   deck?: string; // This is for limited game modes (see JoinGameInput.php)
   fabdb?: string; // Deck builder decklink (any deckbuilder, name comes from when fabdb was the only one)
-  deckTestMode?: boolean; // If this is populated with ANYTHING, will start a game against the combat dummy
+  deckTestMode?: boolean; // If this is populated with ANYTHING, will start a game against the practice dummy
   decksToTry?: string; // This is only used if there's no favorite deck or decklink. 1 = ira
   favoriteDeck?: boolean; //Set this to true to save the provided deck link to your favorites
   favoriteDecks?: string; //This one is kind of weird. It's the favorite deck index, then the string "<fav>" then the favorite deck link

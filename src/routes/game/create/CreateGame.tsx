@@ -287,7 +287,7 @@ const CreateGame = () => {
                     {...register('deckTestDeck')}
                     aria-invalid={errors.format?.message ? 'true' : undefined}
                   >
-                    <option value={AI_DECK.COMBAT_DUMMY}>Combat Dummy</option>
+                    <option value={AI_DECK.COMBAT_DUMMY}>Practice Dummy</option>
                     <option value={AI_DECK.IRABLITZ}>
                       Flic Flak Ira (Blitz)
                     </option>

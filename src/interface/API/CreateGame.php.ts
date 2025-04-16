@@ -1,7 +1,7 @@
 export interface CreateGameAPI {
   deck?: string; // This is for limited game modes (see JoinGameInput.php)
   fabdb?: string; // Deck builder decklink (any deckbuilder, name comes from when fabdb was the only one)
-  deckTestMode?: boolean; // If this is populated with ANYTHING, will start a game against the combat dummy
+  deckTestMode?: boolean; // If this is populated with ANYTHING, will start a game against the practice dummy
   format?: string | number; // Format of the game enum (can also be a number)
   visibility?: string; // "public" = public game, "private" = private game
   decksToTry?: string; // This is only used if there's no favorite deck or decklink. 1 = ira
