@@ -38,17 +38,20 @@ export default function PlayerName(player: Player) {
     {
       condition: isPatron,
       src: '/images/patronHeart.webp',
-      title: 'I am a patron of Talishar!'
+      title: 'I am a patron of Talishar!',
+      href: 'https://linktr.ee/Talishar'
     },
     {
       condition: isContributor,
       src: '/images/copper.webp',
-      title: 'I am a contributor to Talishar!'
+      title: 'I am a contributor to Talishar!',
+      href: 'https://linktr.ee/Talishar'
     },
     {
       condition: isPvtVoidPatron,
       src: '/images/patronEye.webp',
-      title: 'I am a patron of PvtVoid!'
+      title: 'I am a patron of PvtVoid!',
+      href: 'https://linktr.ee/Talishar'
     },
     {
       condition: isPracticeDummy,
@@ -62,12 +65,14 @@ export default function PlayerName(player: Player) {
       {iconMap.map(
         (icon, index) =>
           icon.condition && (
-            <img
-              key={index}
-              className={styles.icon}
-              src={icon.src}
-              title={icon.title}
-            />
+            <a href={icon.href} target="_blank" rel="noopener noreferrer">
+              <img
+                key={index}
+                className={styles.icon}
+                src={icon.src}
+                title={icon.title}
+              />
+            </a>
           )
       )}
       {playerName?.substring(0, 30).replace('-', `Practice Dummy`)}
