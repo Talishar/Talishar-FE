@@ -10,7 +10,7 @@ const News = () => {
     <h4 className={styles.headlines}>🔧 Armory Deck: Maxx Nitro 🔧</h4>
     <p className={styles.headlinesParagraphs}>
     Maxx Nitro armory deck cards are now available in all queues!<br/>For more information about the product, 
-      <a href="https://fabtcg.com/en/products/booster-set/armory-deck-maxx-nitro/" target="_blank">click here</a>!
+      <a href="https://fabtcg.com/en/products/booster-set/armory-deck-maxx-nitro/" target="_blank"> click here</a>!
     </p>
     <a href="https://fabtcg.com/en/products/booster-set/armory-deck-maxx-nitro/" target="_blank">
       <img src={ArmoryDeck} className={styles.NewsLogoRectangle} />
