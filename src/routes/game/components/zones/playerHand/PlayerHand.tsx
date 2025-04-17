@@ -244,7 +244,7 @@ const ManualMode = () => {
     }
     dispatch(
       submitButton({
-        button: { mode: PROCESS_INPUT.ADD_CARD_TO_HAND_SELF, cardID: card }
+        button: { mode: PROCESS_INPUT.ADD_CARD_TO_HAND_SELF, cardID: card.toLowerCase() }
       })
     );
     setCard('');
