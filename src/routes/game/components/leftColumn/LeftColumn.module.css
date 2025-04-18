@@ -14,7 +14,7 @@
 
 @media (orientation: portrait) {
   .leftColumn {
-    position: fixed; /* Add this line */
+    position: fixed;
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
@@ -23,9 +23,8 @@
     left: 0px;
     top: 0px;
     bottom: 0px;
-    width: 5vh;
-    width: 5dvh;
+    width: 4vh;
+    width: 4dvh;
     height: 100vh;
-    z-index: 1; /* Add this line to ensure it's on top of other elements */
   }
 }
