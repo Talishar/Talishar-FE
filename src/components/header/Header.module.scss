@@ -55,6 +55,7 @@
 
         &.support {
           min-width: 40px;
+          white-space: nowrap;
         }
 
         &.login {
@@ -124,14 +125,38 @@
   }
 }
 
-@media only screen and (max-width: 500px) {
+@media only screen and (max-width: 600px) {
   // hide social icons on small screen, so it won't be too small
   .navBar {
+    font-size: smaller;
+    padding: 0px;
     .social {
       display: none;
     }
     ul li a {
       padding: 0 5px;
+    }
+    span {
+      font-size: smaller;
+    }
+
+    li.languageSelectorListElement {
+      height: auto;
+      display: flex;
+      align-content: center;
+      margin-right: 5px;
+      transform: scale(0.9);
+    }
+
+    overflow-x: hidden;
+    width: 100%;
+  }
+}
+
+@media (max-width: 400px) {
+  .navBar {
+    li.languageSelectorListElement {
+      display: none !important;
     }
   }
 }

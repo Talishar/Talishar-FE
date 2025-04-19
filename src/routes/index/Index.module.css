@@ -5,6 +5,7 @@
 .logo {
   display: block;
   max-width: 1080px;
+  max-width: 100vw;
   max-height: 483px;
   width: 100%;
   height: auto;
@@ -13,6 +14,7 @@
 .NewsLogoSquare {
   display: block;
   max-width: 1080px;
+  max-width: 100vw;
   max-height: 483px;
   width: 100%;
   height: auto;
@@ -23,6 +25,7 @@
 .NewsLogoRectangle {
   display: block;
   max-width: 450px;
+  max-width: 100vw;
   max-height: 450px;
   width: auto;
   height: auto;
@@ -39,8 +42,12 @@
   max-width: 100%;
 }
 
-.createGameContainer {
+.gameListContainer {
   order: 1;
+}
+
+.createGameContainer {
+  order: 2;
 }
 
 .newsContainer {
@@ -51,28 +58,19 @@
   max-width: 600px;
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 10px;
-  order: 2;
-}
-
-.gameListContainer {
   order: 3;
 }
+
 
 @media (min-width: 1080px) {
   .grid {
     grid-template-columns: 1fr 1fr 1fr;
-  }
-
-  .gameListContainer {
-    order: 1;
-  }
-
-  .createGameContainer {
-    order: 2;
-  }
-
-  .newsContainer {
-    order: 3;
+    gap: 30px;
+    margin: 0 auto;
+    padding: 0 1em;
+    max-width: 100%;
+    overflow-x: hidden;
+    width: 100vw;
   }
 }
 
@@ -87,4 +85,39 @@
 
 .disclaimer {
   font-size: 0.8em;
+}
+
+@media only screen and (max-width: 768px) and (orientation: portrait) {
+  .grid {
+    gap: 0px;
+    margin: 0 auto;
+    max-width: 100%;
+    overflow-x: hidden;
+    width: 100vw;
+    line-height: normal;
+  }
+
+  .gameListContainer {
+    overflow-x: hidden;
+    width: 100%;
+  }
+  
+  .newsContainer {
+    overflow-x: hidden;
+    width: 100%;
+  }
+
+  .logo {
+    max-width: 100vw;
+  }
+  
+  .NewsLogoSquare {
+    max-width: 100vw;
+    width: 100%;
+  }
+  
+  .NewsLogoRectangle {
+    max-width: 100vw;
+    width: 100%;
+  }
 }
