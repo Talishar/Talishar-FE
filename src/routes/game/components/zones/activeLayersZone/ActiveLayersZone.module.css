@@ -44,10 +44,6 @@
   margin-bottom: 0;
 }
 
-.activeLayersContents > div {
-  width: var(--card-size);
-}
-
 .orderingExplanation {
   font-size: 0.8em;
   margin-top: 0.2em;
@@ -76,15 +72,6 @@
   gap: 4px;
 }
 
-@media (orientation: portrait) {
-  .activeLayersBox {
-    position: fixed;
-    left: 0px;
-    right: 0px;
-    width: 100%;
-  }
-}
-
 .activeLayersCallToAction {
   display: flex;
   flex-direction: row;
@@ -96,7 +83,10 @@
 
 .buttonDiv {
   width: auto;
-  font-size: 1em;
+  font-size: 0.8em;
+  margin: 0px;
+  padding: 6px 8px;
+  white-space: nowrap;
 }
 
 .buttonDiv:hover {
@@ -110,4 +100,19 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+@media only screen and (max-width: 768px) {
+  .activeLayersBox {
+    left: 10%;
+    right: 10%;
+  }
+
+  .activeLayersContents {
+    height: auto;
+  }
+
+  .activeLayersCallToAction {
+    font-size: 0.8em;
+  }
 }

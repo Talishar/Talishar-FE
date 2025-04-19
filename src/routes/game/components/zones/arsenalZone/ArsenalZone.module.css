@@ -32,15 +32,14 @@
   color: var(--white);
   text-align: center;
   position: fixed;
-  border-radius: 5px;
+  border-radius: 0.5em;
   display: flex;
   justify-content: center;
   align-items: center;
   transition: width 0.5s;
   flex-wrap: nowrap;
   font-size: 1.2em;
-  font-weight: 500;
-  padding: 2px 4px;
+  padding: 1vh;
   flex-direction: row;
   overflow-x: min-content;
   gap: 5px;
@@ -89,8 +88,11 @@
   border: 2px solid var(--near-black);
 }
 
-@media (orientation: portrait) {
+@media only screen and (max-width: 768px) {
   .playerPrompt {
-    top: 10px;
+    right: 10vh;
+    right: 10dvh;
+    left: 5vh;
+    left: 5dvh;
   }
 }

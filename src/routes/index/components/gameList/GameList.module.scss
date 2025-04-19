@@ -41,7 +41,7 @@ img {
   display: flex;
   flex-direction: column;
   gap: 1em;
-  max-width: 600px;
+  max-width: 768px;
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 10px;
 }
@@ -63,7 +63,7 @@ img {
   gap: 2em;
 }
 
-@media (max-width: 767px) {
+@media (max-width: 768px) {
   .gameList {
     width: 100%;
     border: none;
