@@ -24,3 +24,17 @@
   margin: 0;
   border: 2px solid var(--near-black);
 }
+
+
+@media (orientation: portrait) {
+  .manualMode {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    top: -10px;
+    bottom: 0px;
+    z-index: 999;
+    right: -40px;
+  }
+}
