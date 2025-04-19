@@ -92,3 +92,10 @@
 .experimental {
   background-image: none;
 }
+
+@media (orientation: portrait) {
+  .breakChain {
+    width: 2.5dvh;
+    height: 2.5dvh;
+  }
+}
