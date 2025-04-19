@@ -21,7 +21,7 @@ const ShowMobileChat = () => {
 
   return (
     <div>
-      <div style={{ width: '10%' }}>
+      <div style={{width:'10%'}}>
         <button
           className={classNames(styles.btn, {
             [styles.buttonActive]: showChatModal
@@ -35,9 +35,7 @@ const ShowMobileChat = () => {
         </button>
       </div>
       {showChatModal && (
-        <div>
           <ChatBoxMobile />
-        </div>
       )}
     </div>
   );
