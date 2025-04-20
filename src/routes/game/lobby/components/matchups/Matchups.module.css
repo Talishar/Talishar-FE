@@ -34,3 +34,9 @@
   transition: width 0.1s;
   -webkit-transition: width 0.1s; /* Safari */
 }
+
+@media (max-width: 1024px) {
+  .matchupContainer {
+    height: 110vh;
+  }
+}

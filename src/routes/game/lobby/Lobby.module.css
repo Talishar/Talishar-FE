@@ -100,8 +100,6 @@ nav {
 }
 
 .mobileNav {
-  max-width: 100vh;
-  max-width: 100dvh;
   overflow-x: auto;
   overflow-y: auto;
 }
