@@ -1,16 +1,14 @@
 .matchupContainer {
   margin: 0 auto;
-  height: 100vh;
+  height: auto;
   display: flex;
   max-width: 200px;
   align-items: center;
   justify-content: flex-start;
   flex-direction: column;
   overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
   grid-area: matchups;
   overflow-x: hidden;
-  z-index: 1;
 }
 
 .emptyMatchupContainer {
