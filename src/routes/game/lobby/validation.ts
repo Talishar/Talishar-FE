@@ -1,6 +1,6 @@
 import { array, boolean, object, string, number } from 'yup';
 
-const oneHandedHeroes = ['HVY001', 'HVY002'];
+const oneHandedHeroes = ['kayo', 'kayo_armed_and_dangerous'];
 
 export const deckValidation = (
   minDeckSize: number,
