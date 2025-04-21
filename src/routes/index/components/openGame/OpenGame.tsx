@@ -36,15 +36,17 @@ const OpenGame = ({
       <div>{entry.description}</div>
       {isOther && <div>{entry.formatName}</div>}
       <div>
-        <button
+        <a
           className={buttonClass}
+          href={`/game/join/${entry.gameName}`}
+          role="button"
           onClick={(e) => {
             e.preventDefault();
             navigate(`/game/join/${entry.gameName}`);
           }}
         >
           Join
-        </button>
+        </a>
       </div>
     </div>
   );
