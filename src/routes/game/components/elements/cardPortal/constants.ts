@@ -78,6 +78,9 @@ export const doubleFacedCardsMappings: { [key: string]: string } = {
   MST101_inner_chi_blue: 'stir_the_pot_blue',
   MST102_inner_chi_blue: 'the_grain_that_tips_the_scale_blue',
 
+  construct_bank_breaker_yellow: 'bank_breaker',
+  bank_breaker: 'construct_bank_breaker_yellow',
+
   UPR006: 'UPR406',
   UPR007: 'UPR407',
   UPR008: 'UPR408',
