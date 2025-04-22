@@ -45,7 +45,8 @@ export default function CardPopUp({
       cardNumber == 'NONE00' ||
       cardNumber == 'BLOODDEBT' ||
       cardNumber == 'BEATCHEST' ||
-      cardNumber == 'MERIDIANWARD'
+      cardNumber == 'MERIDIANWARD' ||
+      cardNumber == 'HIGHTIDE'
     ) {
       return;
     }
