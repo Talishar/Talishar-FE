@@ -162,6 +162,7 @@ export default function ParseGameState(input: any) {
     result.activeChainLink.piercing = input.activeChainLink.piercing;
     result.activeChainLink.tower = input.activeChainLink.tower;
     result.activeChainLink.combo = input.activeChainLink.combo;
+    result.activeChainLink.highTide = input.activeChainLink.highTide;
     result.activeChainLink.damagePrevention = Number(
       input.activeChainLink.damagePrevention
     );

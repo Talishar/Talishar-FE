@@ -16,6 +16,7 @@ export default interface CombatChainLink {
   piercing?: boolean;
   tower?: boolean;
   combo?: boolean;
+  highTide?: boolean;
   damagePrevention?: number;
   attackTarget?: string;
   isDraconic?: boolean;

@@ -24,6 +24,7 @@ export const mockGetNextTurn = {
     piercing: false,
     tower: false,
     combo: false,
+    highTide: false,
     totalAttack: 0,
     totalDefence: 0
   },

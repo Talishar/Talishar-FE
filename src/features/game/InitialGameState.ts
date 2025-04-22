@@ -103,6 +103,7 @@ export const OfflineTestingGameState: GameState = {
     piercing: true,
     tower: true,
     combo: true,
+    highTide: true,
     damagePrevention: 5,
     attackTarget: 'Prism'
   },

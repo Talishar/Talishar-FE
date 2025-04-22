@@ -12,7 +12,8 @@ import {
   GiMuscleFat,
   GiStoneTower,
   GiSpearfishing,
-  GiNinjaStar
+  GiNinjaStar,
+  GiWaterSplash 
 } from 'react-icons/gi';
 type Props = {
   activeCombatChain?: CombatChainLink;
@@ -68,6 +69,11 @@ export const ActiveCardCounterOverlay = (props: Props) => {
       {activeCombatChain.combo && (
         <div className={styles.icon} data-tooltip="Combo Active">
           <GiNinjaStar />
+        </div>
+      )}
+      {activeCombatChain.highTide && (
+        <div className={styles.icon} data-tooltip="High Tide Active">
+          <GiWaterSplash  />
         </div>
       )}
       {!!activeCombatChain.damagePrevention && (
