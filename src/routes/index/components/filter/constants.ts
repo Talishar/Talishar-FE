@@ -41,6 +41,9 @@ export const youngToOldHeroesMapping: { [key: string]: string } = {
   HNT055: 'HNT054', // Cindra
   HNT099: 'HNT098', // Fang
   CRU046: 'HER123', // Ira
+  SEA002: 'SEA001', // Puffin
+  SEA044: 'SEA043', // Gravy
+  SEA083: 'SEA082', // Marlynn
 };
 
 export const HEROES_OF_RATHE: { value: string; label: string }[] = [
@@ -105,5 +108,8 @@ export const HEROES_OF_RATHE: { value: string; label: string }[] = [
   { value: 'HNT001', label: 'Arakni, Marionette' },
   { value: 'HNT002', label: 'Arakni, Web of Deceit' },
   { value: 'HNT054', label: 'Cindra' },
-  { value: 'HNT099', label: 'Fang' }
+  { value: 'HNT099', label: 'Fang' },
+  { value: 'SEA001', label: 'Puffin, Hightail' },
+  { value: 'SEA043', label: 'Gravy Bones, Shipwrecked Looter' },
+  { value: 'SEA082', label: 'Marlynn, Treasure Hunter' },
 ];

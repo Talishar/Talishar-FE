@@ -36,6 +36,7 @@ export interface Weapon {
   img?: string;
   numHands?: number;
   isQuiver?: boolean;
+  isOffhand?: boolean;
 }
 
 export interface CardData {

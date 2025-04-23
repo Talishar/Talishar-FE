@@ -11,22 +11,29 @@ export const deckValidation = (
     hero: string().required('You must have a hero!'),
     weapons: array()
       .required()
-      .min(1, 'Pick at least one weapon.')
-      .max(heroNumHands, 'Too many weapons equipped.')
-      .of(
-        object().shape({
-          id: string().required(),
-          is1H: boolean(),
-          numHands: number()
-        })
-      )
+      .test('offhands', 'Too many offhands equipped', (weapons = []) => {
+        const offhands = weapons.filter((weapon) => weapon.isOffhand);
+        return offhands.length <= 1;
+      })
       // Test that the sum of weapons.hands is less than our hero's available hands.
       .test('hands', 'Too many weapons for your hands', (weapons = []) => {
+        console.log('weapons:', weapons);
         const numHands = weapons.reduce((total, row) => {
           return total + (row.numHands ?? 0);
         }, 0);
         return numHands <= heroNumHands;
-      }),
+      })
+      .min(1, 'Pick at least one weapon/off-hand.')
+      .max(heroNumHands, 'Too many weapons/off-hands equipped.')
+      .of(
+        object().shape({
+          id: string().required(),
+          is1H: boolean(),
+          numHands: number(),
+          isQuiver: boolean(),
+          isOffhand: boolean()
+        })
+      ),
     head: string().required('You must have head equipment.'),
     chest: string().required('You must have chest equipment.'),
     arms: string().required('You must have arms equipment.'),
