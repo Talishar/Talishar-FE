@@ -37,11 +37,13 @@
 .buttonClass {
   margin-bottom: 0;
   font-weight: 500;
+  white-space: nowrap;
 }
 
 .buttonClassLeave {
   margin-bottom: 0;
   font-weight: 500;
+  white-space: nowrap;
 }
 
 .buttonClassLeave:hover {
