@@ -115,8 +115,8 @@ export const ProfilePage = () => {
                 <th scope="col">Hero</th>
                 <th scope="col">Name</th>
                 <th scope="col">Format</th>
-                <th scope="col">Card Back</th>
-                <th scope="col">Playmat</th>
+                {/* <th scope="col">Card Back</th>
+                <th scope="col">Playmat</th> */}
                 <th scope="col">Edit</th>
                 <th scope="col">Delete</th>
               </tr>
@@ -135,8 +135,8 @@ export const ProfilePage = () => {
                   </th>
                   <td>{deck.name}</td>
                   <td>{deck.format ? deck.format.charAt(0).toUpperCase() + deck.format.slice(1) : ""}</td>
-                  <td>{deck.cardBack ? deck.cardBack.charAt(0).toUpperCase() + deck.cardBack.slice(1).toLowerCase() : ""}</td>
-                  <td>{deck.playmat ? deck.playmat.charAt(0).toUpperCase() + deck.playmat.slice(1).toLowerCase() : ""}</td>
+                  {/* <td>{deck.cardBack ? deck.cardBack.charAt(0).toUpperCase() + deck.cardBack.slice(1).toLowerCase() : ""}</td>
+                  <td>{deck.playmat ? deck.playmat.charAt(0).toUpperCase() + deck.playmat.slice(1).toLowerCase() : ""}</td> */}
                   <td className={styles.editButton}>
                     <button
                       className={styles.button}
