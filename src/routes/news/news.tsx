@@ -7,20 +7,20 @@ import NewSetLogo from '../../img/NewSetLogo.webp';
 const News = () => {
   return (
     <div>
-    <h4 className={styles.headlines}>🔧 Armory Deck: Maxx Nitro 🔧</h4>
+    {/* <h4 className={styles.headlines}>🔧 Armory Deck: Maxx Nitro 🔧</h4>
     <p className={styles.headlinesParagraphs}>
     Maxx Nitro armory deck cards are now available in all queues!<br/>For more information about the product, 
       <a href="https://fabtcg.com/en/products/booster-set/armory-deck-maxx-nitro/" target="_blank"> click here</a>!
     </p>
     <a href="https://fabtcg.com/en/products/booster-set/armory-deck-maxx-nitro/" target="_blank">
       <img src={ArmoryDeck} className={styles.NewsLogoRectangle} />
-    </a> 
+    </a>  */}
 
-    {/*<h4 className={styles.headlines}> 🏴‍☠️ High Seas Pre-Release 🏴‍☠️</h4>
-      <p className={styles.headlines}>The Hunted cards are now available in all queues!</p> 
+    <h4 className={styles.headlines}> 🏴‍☠️ High Seas Pre-Releases 🏴‍☠️</h4>
+      {/* <p className={styles.headlines}>The Hunted cards are now available in all queues!</p>  */}
       <a href="https://fabtcg.com/en/retailer-news/sea-pr/" target="_blank">
         <img src={NewSetLogo} className={styles.NewsLogoSquare} />
-      </a>*/}
+      </a>
     <br/>
       <p>Join our community ⤵️</p>
       <ul>
