@@ -17,6 +17,10 @@
   margin-top: 0.2em;
 }
 
+table {
+  max-width: 100%;
+}
+
 th {
   text-align: center;
 }
@@ -34,4 +38,32 @@ td {
   right:20px; 
   top:60px; 
   height:90%;
+}
+
+@media (max-width: 575px) {
+  th, td {
+    font-size: 14px;
+  }
+
+  .button {
+    margin: 0;
+    padding: 6px;
+    width: auto;
+    display: block;
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 425px) {
+    /* hide certain columns on smaller screens */
+    th:nth-child(3), td:nth-child(3) {
+      display: none;
+    }
+}
+
+@media (max-width: 375px) {
+  /* hide certain columns on smaller screens */
+  th:nth-child(4), td:nth-child(4) {
+    display: none;
+  }
 }
