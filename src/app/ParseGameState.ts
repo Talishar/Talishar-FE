@@ -151,7 +151,7 @@ export default function ParseGameState(input: any) {
     for (const chainLinkObj of input.activeChainLink.reactions) {
       result.activeChainLink.reactionCards?.push(ParseCard(chainLinkObj));
     }
-    result.activeChainLink.totalAttack = input.activeChainLink.totalAttack;
+    result.activeChainLink.totalPower = input.activeChainLink.totalPower;
     result.activeChainLink.totalDefence = input.activeChainLink.totalDefence;
     result.activeChainLink.goAgain = input.activeChainLink.goAgain;
     result.activeChainLink.dominate = input.activeChainLink.dominate;

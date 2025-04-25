@@ -31,8 +31,8 @@ it('will show the current attack with attack and defence values', async () => {
     }
   });
 
-  const attackValue = await screen.findByTestId('attack-value');
-  expect(attackValue).toMatchInlineSnapshot(`
+  const powerValue = await screen.findByTestId('attack-value');
+  expect(powerValue).toMatchInlineSnapshot(`
     <div
       class="_attDiv_c76636"
       data-testid="attack-value"

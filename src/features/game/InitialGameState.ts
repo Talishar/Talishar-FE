@@ -39,7 +39,7 @@ export const OfflineTestingGameState: GameState = {
           cardNumber: 'ARC044'
         }
       ],
-      totalAttack: 88,
+      totalPower: 88,
       totalDefence: 44,
       isDraconic: true
     },
@@ -55,7 +55,7 @@ export const OfflineTestingGameState: GameState = {
           cardNumber: 'ARC044'
         }
       ],
-      totalAttack: 88,
+      totalPower: 88,
       totalDefence: 44,
       didItHit: true,
       isDraconic: false
@@ -73,7 +73,7 @@ export const OfflineTestingGameState: GameState = {
           cardNumber: 'ARC044'
         }
       ],
-      totalAttack: 88,
+      totalPower: 88,
       totalDefence: 44,
       didItHit: true,
       isDraconic: true
@@ -91,7 +91,7 @@ export const OfflineTestingGameState: GameState = {
         cardNumber: 'ARC044'
       }
     ],
-    totalAttack: 88,
+    totalPower: 88,
     totalDefence: 44,
     didItHit: true,
     goAgain: true,

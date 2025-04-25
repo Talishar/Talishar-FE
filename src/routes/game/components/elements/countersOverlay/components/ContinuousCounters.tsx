@@ -53,7 +53,7 @@ export const ContinuousCounters = (props: Props) => {
       )}
       {!!Number(countersMap?.attack) && (
         <div
-          className={styles.attackCounter}
+          className={styles.powerCounter}
           title={`${countersMap?.attack} attack counter(s)`}
         >
           <div>{countersMap?.attack}</div>

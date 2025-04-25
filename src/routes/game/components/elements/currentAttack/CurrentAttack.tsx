@@ -24,7 +24,7 @@ export default function CurrentAttack() {
     dispatch(showChainLinkSummary({ chainLink: -1 }));
   };
 
-  const attackValue = activeCombatChain.totalAttack;
+  const powerValue = activeCombatChain.totalPower;
   const defValue = activeCombatChain.totalDefence;
   const attCard = activeCombatChain.attackingCard;
 
@@ -32,7 +32,7 @@ export default function CurrentAttack() {
     <div className={styles.currentAttack}>
       <div className={styles.attDefRow}>
         <div className={styles.attDiv} data-testid="attack-value">
-          {attackValue}
+          {powerValue}
         </div>
         <div className={styles.attackSymbol} onClick={attackZoneDisplay}>
           <img

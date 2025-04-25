@@ -293,7 +293,7 @@
   cursor: default;
 }
 
-.attackCounter.attackCounter {
+.powerCounter.powerCounter {
   border-radius: 100%;
   display: flex;
   justify-content: center;

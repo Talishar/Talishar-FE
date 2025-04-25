@@ -25,7 +25,7 @@ export const mockGetNextTurn = {
     tower: false,
     combo: false,
     highTide: false,
-    totalAttack: 0,
+    totalPower: 0,
     totalDefence: 0
   },
   tracker: { color: 'red', position: 'Main' },
