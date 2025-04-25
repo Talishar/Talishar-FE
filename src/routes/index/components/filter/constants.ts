@@ -106,7 +106,6 @@ export const HEROES_OF_RATHE: { value: string; label: string }[] = [
   { value: 'ROS020', label: 'Oscilio' },
   { value: 'AJV001', label: 'Jarl Vetreiđi' },
   { value: 'HNT001', label: 'Arakni, Marionette' },
-  { value: 'HNT002', label: 'Arakni, Web of Deceit' },
   { value: 'HNT054', label: 'Cindra' },
   { value: 'HNT099', label: 'Fang' },
   { value: 'SEA001', label: 'Puffin, Hightail' },
