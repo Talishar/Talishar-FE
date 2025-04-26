@@ -43,7 +43,7 @@ export const youngToOldHeroesMapping: { [key: string]: string } = {
   CRU046: 'HER123', // Ira
   SEA002: 'SEA001', // Puffin
   SEA044: 'SEA043', // Gravy
-  SEA083: 'SEA082', // Marlynn
+  SEA083: 'SEA082', // Marlynn.
 };
 
 export const HEROES_OF_RATHE: { value: string; label: string }[] = [
@@ -66,7 +66,7 @@ export const HEROES_OF_RATHE: { value: string; label: string }[] = [
   { value: 'UPR044', label: 'Fai' },
   { value: 'OUT001', label: 'Uzuri' },
   { value: 'OUT091', label: 'Riptide' },
-  { value: 'OUT003', label: 'Arakni, Solitary Confinement' },
+  { value: 'HER130', label: 'Arakni, 5L!p3d 7hRu 7h3 cR4X' },
   { value: 'UPR102', label: 'Iyslander' },
   { value: 'DYN113', label: 'Arakni' },
   { value: 'CRU002', label: 'Kayo, Berserker Runt' },
