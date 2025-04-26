@@ -189,7 +189,7 @@ const GameList = () => {
         gameList={sortedOpenGames.filter((game) =>
           otherFormats.includes(game.format)
         )}
-        name="Other"
+        name="Other Formats"
         isOther
         />
         {data != undefined && (
@@ -246,7 +246,7 @@ const GameList = () => {
               GAME_FORMAT_NUMBER.COMPETITIVE_CC
             ].includes(game.format)
           )}
-          name="Other"
+          name="Other Formats"
           />
         </div>
         )}
@@ -265,14 +265,11 @@ const GameList = () => {
 const InProgressGameList = ({ gameList, name }: IInProgressGameList) => {
   const [parent] = useAutoAnimate();
   const [isMobile, setIsMobile] = useState(window.innerWidth < 1025);
-
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 1025);
     };
-
     window.addEventListener('resize', handleResize);
-
     return () => {
       window.removeEventListener('resize', handleResize);
     };
