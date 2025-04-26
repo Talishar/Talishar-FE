@@ -3,7 +3,12 @@ export const youngToOldHeroesMapping: { [key: string]: string } = {
   ARC038: 'ARC039', // Azalea
   ARC075: 'ARC076', // Viserai
   ARC113: 'ARC114', // kano
-  DYN113: 'DYN114', // Arakni
+  DYN113: 'HNT001', // Arakni
+  DYN114: 'HNT001', // Arakni
+  OUT003: 'HNT001', // Arakni
+  HNT002: 'HNT001', // Arakni
+  HER130: 'HNT001', // Arakni 
+
   ELE001: 'ELE002', // Oldhim
   ELE031: 'ELE032', // Lexi
   ELE062: 'ELE063', // Briar
@@ -37,7 +42,6 @@ export const youngToOldHeroesMapping: { [key: string]: string } = {
   ROS008: 'ROS007', // Aurora, Shooting Star
   ROS014: 'ROS013', // Verdance, Thorn of the Rose
   ROS020: 'ROS019', // Oscilio, Constella Intelligence
-  HNT002: 'HNT001', // Arakni, Web of Deceit
   HNT055: 'HNT054', // Cindra
   HNT099: 'HNT098', // Fang
   CRU046: 'HER123', // Ira
@@ -66,9 +70,7 @@ export const HEROES_OF_RATHE: { value: string; label: string }[] = [
   { value: 'UPR044', label: 'Fai' },
   { value: 'OUT001', label: 'Uzuri' },
   { value: 'OUT091', label: 'Riptide' },
-  { value: 'OUT003', label: 'Arakni, Solitary Confinement' },
   { value: 'UPR102', label: 'Iyslander' },
-  { value: 'DYN113', label: 'Arakni' },
   { value: 'CRU002', label: 'Kayo, Berserker Runt' },
   { value: 'CRU046', label: 'Ira, Crimson Haze' },
   { value: 'CRU047', label: 'Benji, the Piercing Wind' },
@@ -105,7 +107,7 @@ export const HEROES_OF_RATHE: { value: string; label: string }[] = [
   { value: 'ROS014', label: 'Verdance' },
   { value: 'ROS020', label: 'Oscilio' },
   { value: 'AJV001', label: 'Jarl Vetreiđi' },
-  { value: 'HNT001', label: 'Arakni, Marionette' },
+  { value: 'HNT001', label: 'Arakni' },
   { value: 'HNT054', label: 'Cindra' },
   { value: 'HNT099', label: 'Fang' },
   { value: 'SEA001', label: 'Puffin, Hightail' },
