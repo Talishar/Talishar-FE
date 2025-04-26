@@ -278,7 +278,7 @@ const InProgressGameList = ({ gameList, name }: IInProgressGameList) => {
     };
   }, []);
 
-  const limitedGameList = isMobile ? gameList.slice(0, 15) : gameList;
+  const limitedGameList = isMobile ? gameList.slice(0, 10) : gameList.slice(0, 15);
 
   if (limitedGameList.length === 0) {
     return null;
