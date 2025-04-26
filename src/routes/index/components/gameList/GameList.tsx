@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useGetGameListQuery } from 'features/api/apiSlice';
 import styles from './GameList.module.scss';
 import InProgressGame from '../inProgressGame';
@@ -264,14 +264,30 @@ const GameList = () => {
 
 const InProgressGameList = ({ gameList, name }: IInProgressGameList) => {
   const [parent] = useAutoAnimate();
-  if (gameList.length === 0) {
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 1025);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 1025);
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+  const limitedGameList = isMobile ? gameList.slice(0, 15) : gameList;
+
+  if (limitedGameList.length === 0) {
     return null;
   }
 
   return (
     <div className={styles.groupDiv} ref={parent}>
       <h5 className={styles.subSectionTitle}>{name}</h5>
-      {gameList.map((entry, ix: number) => {
+      {limitedGameList.map((entry, ix: number) => {
         return <InProgressGame entry={entry} ix={ix} key={entry.gameName} />;
       })}
     </div>
