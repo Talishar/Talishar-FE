@@ -150,6 +150,10 @@ const Lobby = () => {
       case GAME_FORMAT.SEALED:
       case GAME_FORMAT.DRAFT:
         return { deckSize: 30, maxDeckSize: 30 };
+      case GAME_FORMAT.OPEN_CC:
+      case GAME_FORMAT.OPEN_BLITZ:
+      case GAME_FORMAT.OPEN_LL_CC:
+        return { deckSize: 0, maxDeckSize: 99999 };
       default:
         return { deckSize: 60, maxDeckSize: 99999 };
     }
