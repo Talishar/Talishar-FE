@@ -1,8 +1,6 @@
-import React from 'react';
 import { RootState } from 'app/Store';
 import styles from './PlayerName.module.css';
 import Player from 'interface/Player';
-import { FaCertificate } from 'react-icons/fa';
 import { useAppSelector } from 'app/Hooks';
 
 export default function PlayerName(player: Player) {
@@ -63,14 +61,14 @@ export default function PlayerName(player: Player) {
   return (
     <div className={styles.playerName}>
       {iconMap.map(
-        (icon, index) =>
+        (icon) =>
           icon.condition && (
-            <a href={icon.href} target="_blank" rel="noopener noreferrer">
+            <a href={icon.href} target="_blank" rel="noopener noreferrer" key={icon.src}>
               <img
-                key={index}
                 className={styles.icon}
                 src={icon.src}
                 title={icon.title}
+                alt={icon.title}
               />
             </a>
           )
