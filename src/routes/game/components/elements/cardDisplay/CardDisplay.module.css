@@ -166,6 +166,29 @@
   right: 0px;
 }
 
+.subcard-transition-enter {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.subcard-transition-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 200ms ease, transform 200ms ease;
+}
+
+.subcard-transition-exit {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.subcard-transition-exit-active {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 200ms ease, transform 200ms ease;
+}
+
+
 @media (orientation: portrait) {
   .normalSize {
     max-height: 14vw;

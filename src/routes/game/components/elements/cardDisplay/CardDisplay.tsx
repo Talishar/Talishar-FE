@@ -9,10 +9,10 @@ import CardPopUp from '../cardPopUp/CardPopUp';
 import CombatChainLink from 'features/CombatChainLink';
 import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
-import { AnimatePresence, motion } from 'framer-motion';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useLanguageSelector } from 'hooks/useLanguageSelector';
 import { CARD_SQUARES_PATH, getCollectionCardImagePath } from 'utils';
+import { CSSTransition } from 'react-transition-group';
 
 export interface CardProp {
   makeMeBigger?: boolean;
@@ -33,6 +33,7 @@ export const CardDisplay = (prop: CardProp) => {
   ) ?? { cardNumber: '' };
   const { getLanguage } = useLanguageSelector();
   const [showSubCards, setShowSubCards] = useState<boolean>(false);
+  const subCardRef = useRef(null);
 
   if (card == null || card.cardNumber === '') {
     return null;
@@ -95,11 +96,11 @@ export const CardDisplay = (prop: CardProp) => {
     return divs;
   };
 
-  const subCardsToShow = showSubCards
-    ? card.subcards
-    : card.subcards?.[0]
-    ? [card.subcards[0]]
-    : [];
+  const subCardsToShow = (() => {
+    if (!card.subcards || card.subcards.length === 0) return [];
+    const validSubcards = card.subcards.filter(subCard => !!subCard);  
+    return showSubCards ? validSubcards : validSubcards.length ? [validSubcards[0]] : [];
+  })();
 
   return (
     <CardPopUp
@@ -109,43 +110,48 @@ export const CardDisplay = (prop: CardProp) => {
       onHoverStart={() => setShowSubCards(true)}
       onHoverEnd={() => setShowSubCards(false)}
     >
-      <AnimatePresence>
-        {!!subCardsToShow &&
-          subCardsToShow?.length > 0 &&
-          subCardsToShow?.map((card, ix) => {
-            return (
-              <motion.div
-                style={{
-                  top: `calc(-0.15 * ${ix + 1} * var(--card-size))`,
-                  zIndex: `-${ix + 1}`
-                }}
-                className={styles.subCard}
-                initial={{ y: `${2 * ix}em` }}
-                animate={{ y: 0 }}
-                transition={{ ease: 'easeIn', duration: 0.2 }}
-                exit={{ opacity: 0 }}
-                key={`${card}-${ix}`}
-              >
-                <CardDisplay card={{ cardNumber: card }} preventUseOnClick />
-              </motion.div>
-            );
-          })}
-        <CardImage src={imageSrc} className={classNames(imgStyles, { [styles.tapped]: card.tapped })} />
-        {card.overlay === 'disabled' && <div className={classStyles}></div>}
-        {(card.isBroken ||
-          card.onChain ||
-          card.isFrozen ||
-          card.marked ||
-          !!card.restriction) && <div className={equipStatus}></div>}
-        {card.numUses && card.numUses > 1 && card.numUses < 10 && (
-          <div className={styles.numUses}>{renderNumUses(card.numUses)}</div>
-        )}
-        <CountersOverlay
-          {...card}
-          num={num}
-          activeCombatChain={activeCombatChain}
-        />
-      </AnimatePresence>
+      {subCardsToShow.map((subCardNumber, ix) => {
+        if (!subCardNumber || typeof subCardNumber !== 'string' || subCardNumber.trim() === '') return null;
+        const subCardKey = `subcard-${card.cardNumber}-${subCardNumber}-${ix}`;
+        
+        return (
+          <CSSTransition
+            key={subCardKey}
+            in={showSubCards}
+            timeout={200}
+            classNames="subcard-transition"
+            unmountOnExit
+            nodeRef={subCardRef} 
+          >
+            <div
+              ref={subCardRef}
+              style={{
+                top: `calc(-0.15 * ${ix + 1} * var(--card-size))`,
+                zIndex: `-${ix + 1}`,
+              }}
+              className={styles.subCard}
+            >
+              <CardDisplay card={{ cardNumber: subCardNumber }} preventUseOnClick />
+            </div>
+          </CSSTransition>
+        );
+      })}
+
+      <CardImage src={imageSrc} className={classNames(imgStyles, { [styles.tapped]: card.tapped })} />
+      {card.overlay === 'disabled' && <div className={classStyles}></div>}
+      {(card.isBroken ||
+        card.onChain ||
+        card.isFrozen ||
+        card.marked ||
+        !!card.restriction) && <div className={equipStatus}></div>}
+      {card.numUses && card.numUses > 1 && card.numUses < 10 && (
+        <div className={styles.numUses}>{renderNumUses(card.numUses)}</div>
+      )}
+      <CountersOverlay
+        {...card}
+        num={num}
+        activeCombatChain={activeCombatChain}
+      />
     </CardPopUp>
   );
 };

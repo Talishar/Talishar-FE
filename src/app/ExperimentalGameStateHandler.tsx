@@ -33,7 +33,7 @@ const ExperimentalGameStateHandler = () => {
       `${BACKEND_URL}GetUpdateSSE.php?gameName=${gameInfo.gameID}&playerID=${gameInfo.playerID}&authKey=${gameInfo.authKey}`
     );
     source.onmessage = (e) => {
-      console.log('update data:', e.data);
+      //console.log('update data:', e.data);
       dispatch(
         nextTurn({
           game: {
@@ -52,7 +52,7 @@ const ExperimentalGameStateHandler = () => {
     };
 
     return () => {
-      console.log('closing eventstream');
+      //console.log('closing eventstream');
       source.close();
     };
   }, [gameInfo.playerID, gameInfo.gameID, gameInfo.authKey]);

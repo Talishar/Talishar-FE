@@ -201,14 +201,14 @@ const CreateGame = () => {
               </label>
             )}
             {isPatron != '1' && (
-              <label>
+              <div>
                 Join our{' '}
                 <a href="https://linktr.ee/Talishar" target="_blank">
                   Patreon
                 </a>{' '}
                 to customize your game name!
                 <div>&nbsp;</div>
-              </label>
+              </div>
             )}
             <label>
               Format
