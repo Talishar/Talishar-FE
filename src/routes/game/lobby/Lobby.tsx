@@ -173,7 +173,7 @@ const Lobby = () => {
 
   const weaponsSBIndexed = [
     ...data.deck.handsSB,
-    { id: `NONE00`, is1H: true, img: `NONE00`, numHands: 2 }
+    { id: `NONE00`, is1H: true, img: `NONE00`, numHands: 0 }
   ].map((card, ix) => {
     return {
       id: `${card.id}-${ix + weaponsIndexed.length}`,
