@@ -145,6 +145,7 @@ const Lobby = () => {
   const { deckSize, maxDeckSize } = useMemo(() => {
     switch (data.format) {
       case GAME_FORMAT.BLITZ:
+      case GAME_FORMAT.COMMONER:
       case GAME_FORMAT.COMPETITIVE_BLITZ:
         return { deckSize: 40, maxDeckSize: 40 };
       case GAME_FORMAT.SEALED:
