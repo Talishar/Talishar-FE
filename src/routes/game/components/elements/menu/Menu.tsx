@@ -66,7 +66,7 @@ export default function Menu() {
 
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth < 1080) {
+      if (window.innerWidth <= 1080) {
         setIsMobile(true);
       } else {
         setIsMobile(false);
