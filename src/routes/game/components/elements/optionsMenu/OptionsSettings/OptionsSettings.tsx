@@ -122,7 +122,7 @@ const OptionsSettings = () => {
                 Number(initialValues.holdPriority) ===
                 optConst.HOLD_PRIORITY_ENUM.AUTO
               }
-              onClick={() =>
+              onChange={() =>
                 handleSettingsChange({
                   name: optConst.HOLD_PRIORITY_SETTING,
                   value: optConst.HOLD_PRIORITY_ENUM.AUTO
@@ -140,7 +140,7 @@ const OptionsSettings = () => {
                 Number(initialValues.holdPriority) ===
                 optConst.HOLD_PRIORITY_ENUM.ALWAYS_PASS
               }
-              onClick={() =>
+              onChange={() =>
                 handleSettingsChange({
                   name: optConst.HOLD_PRIORITY_SETTING,
                   value: optConst.HOLD_PRIORITY_ENUM.ALWAYS_PASS
@@ -158,7 +158,7 @@ const OptionsSettings = () => {
                 Number(initialValues.holdPriority) ===
                 optConst.HOLD_PRIORITY_ENUM.ALWAYS_HOLD
               }
-              onClick={() =>
+              onChange={() =>
                 handleSettingsChange({
                   name: optConst.HOLD_PRIORITY_SETTING,
                   value: optConst.HOLD_PRIORITY_ENUM.ALWAYS_HOLD
@@ -176,7 +176,7 @@ const OptionsSettings = () => {
                 Number(initialValues.holdPriority) ===
                 optConst.HOLD_PRIORITY_ENUM.HOLD_ALL_OPPONENT
               }
-              onClick={() =>
+              onChange={() =>
                 handleSettingsChange({
                   name: optConst.HOLD_PRIORITY_SETTING,
                   value: optConst.HOLD_PRIORITY_ENUM.HOLD_ALL_OPPONENT
@@ -194,7 +194,7 @@ const OptionsSettings = () => {
                 Number(initialValues.holdPriority) ===
                 optConst.HOLD_PRIORITY_ENUM.HOLD_ALL_OPPONENT_ATTACKS
               }
-              onClick={() =>
+              onChange={() =>
                 handleSettingsChange({
                   name: optConst.HOLD_PRIORITY_SETTING,
                   value: optConst.HOLD_PRIORITY_ENUM.HOLD_ALL_OPPONENT_ATTACKS
@@ -210,11 +210,10 @@ const OptionsSettings = () => {
           </legend>
           <label className={styles.optionLabel}>
             <input
-              defaultChecked
               type="checkbox"
               name="skipAttackReactions"
               checked={initialValues.skipAttackReactions}
-              onClick={() =>
+              onChange={() =>
                 handleSettingsChange({
                   name: optConst.SKIP_AR_WINDOW,
                   value: initialValues.skipAttackReactions ? '0' : '1'
@@ -225,11 +224,10 @@ const OptionsSettings = () => {
           </label>
           <label className={styles.optionLabel}>
             <input
-              defaultChecked
               type="checkbox"
               name="skipDefenseReactions"
               checked={initialValues.skipDefenseReactions}
-              onClick={() =>
+              onChange={() =>
                 handleSettingsChange({
                   name: optConst.SKIP_DR_WINDOW,
                   value: initialValues.skipDefenseReactions ? '0' : '1'
@@ -240,11 +238,10 @@ const OptionsSettings = () => {
           </label>
           <label className={styles.optionLabel}>
             <input
-              defaultChecked
               type="checkbox"
               name="manualTargeting"
               checked={initialValues.manualTargeting}
-              onClick={() =>
+              onChange={() =>
                 handleSettingsChange({
                   name: optConst.AUTO_TARGET_OPPONENT,
                   value: initialValues.manualTargeting ? '1' : '0' // reversed!
@@ -264,7 +261,7 @@ const OptionsSettings = () => {
               name="attackSkip"
               value="neverSkip"
               checked={Number(initialValues.shortcutAttackThreshold) === 0}
-              onClick={() =>
+              onChange={() =>
                 handleSettingsChange({
                   name: optConst.SHORTCUT_ATTACK_THRESHOLD,
                   value: 0
@@ -279,7 +276,7 @@ const OptionsSettings = () => {
               name="attackSkip"
               value="skipOnes"
               checked={Number(initialValues.shortcutAttackThreshold) === 1}
-              onClick={() =>
+              onChange={() =>
                 handleSettingsChange({
                   name: optConst.SHORTCUT_ATTACK_THRESHOLD,
                   value: 1
@@ -294,7 +291,7 @@ const OptionsSettings = () => {
               name="attackSkip"
               value="skipAll"
               checked={Number(initialValues.shortcutAttackThreshold) >= 2}
-              onClick={() =>
+              onChange={() =>
                 handleSettingsChange({
                   name: optConst.SHORTCUT_ATTACK_THRESHOLD,
                   value: 99
@@ -310,12 +307,11 @@ const OptionsSettings = () => {
           </legend>
           <label className={styles.optionLabel}>
             <input
-              defaultChecked
               type="checkbox"
               name="manualMode"
               area-disabled="true"
               checked={initialValues.streamerMode}
-              onClick={() =>
+              onChange={() =>
                 handleSettingsChange({
                   name: optConst.IS_STREAMER_MODE,
                   value: initialValues.streamerMode ? '0' : '1'
@@ -326,12 +322,11 @@ const OptionsSettings = () => {
           </label>
           <label className={styles.optionLabel}>
             <input
-              defaultChecked
               type="checkbox"
               name="manualMode"
               area-disabled="true"
               checked={initialValues.casterMode}
-              onClick={() =>
+              onChange={() =>
                 handleSettingsChange({
                   name: optConst.IS_CASTER_MODE,
                   value: initialValues.casterMode ? '0' : '1'
@@ -342,12 +337,11 @@ const OptionsSettings = () => {
           </label>
           <label className={styles.optionLabel}>
             <input
-              defaultChecked
               type="checkbox"
               name="manualMode"
               area-disabled="true"
               checked={initialValues.manualMode}
-              onClick={() =>
+              onChange={() =>
                 handleSettingsChange({
                   name: optConst.MANUAL_MODE,
                   value: initialValues.manualMode ? '0' : '1'
@@ -358,12 +352,11 @@ const OptionsSettings = () => {
           </label>
           <label className={styles.optionLabel}>
             <input
-              defaultChecked
               type="checkbox"
               name="alwaysAllowUndo"
               area-disabled="true"
               checked={initialValues.alwaysAllowUndo}
-              onClick={() =>
+              onChange={() =>
                 handleSettingsChange({
                   name: optConst.ALWAYS_ALLOW_UNDO,
                   value: initialValues.alwaysAllowUndo ? '0' : '1'
@@ -374,12 +367,11 @@ const OptionsSettings = () => {
           </label>
           <label className={styles.optionLabel}>
             <input
-              defaultChecked
               type="checkbox"
               name="accessibilityMode"
               area-disabled="true"
               checked={initialValues.accessibilityMode}
-              onClick={() =>
+              onChange={() =>
                 handleSettingsChange({
                   name: optConst.COLORBLIND_MODE,
                   value: initialValues.accessibilityMode ? '0' : '1'
@@ -390,11 +382,10 @@ const OptionsSettings = () => {
           </label>
           <label className={styles.optionLabel}>
             <input
-              defaultChecked
               type="checkbox"
               name="mute"
               checked={initialValues.mute}
-              onClick={() =>
+              onChange={() =>
                 handleSettingsChange({
                   name: optConst.MUTE_SOUND,
                   value: initialValues.mute ? '0' : '1'
@@ -405,11 +396,10 @@ const OptionsSettings = () => {
           </label>
           <label className={styles.optionLabel}>
             <input
-              defaultChecked
               type="checkbox"
               name="disableStats"
               checked={initialValues.disableStats}
-              onClick={() =>
+              onChange={() =>
                 handleSettingsChange({
                   name: optConst.DISABLE_STATS,
                   value: initialValues.disableStats ? '0' : '1'
@@ -420,11 +410,10 @@ const OptionsSettings = () => {
           </label>
           <label className={styles.optionLabel}>
             <input
-              defaultChecked
               type="checkbox"
               name="disableAltArts"
               checked={initialValues.disableAltArts}
-              onClick={() =>
+              onChange={() =>
                 handleSettingsChange({
                   name: optConst.DISABLE_ALT_ARTS,
                   value: initialValues.disableAltArts ? '0' : '1'
@@ -435,11 +424,10 @@ const OptionsSettings = () => {
           </label>
           <label className={styles.optionLabel}>
             <input
-              defaultChecked
               type="checkbox"
               name="manualTunic"
               checked={initialValues.manualTunic}
-              onClick={() =>
+              onChange={() =>
                 handleSettingsChange({
                   name: optConst.MANUAL_TUNIC,
                   value: initialValues.manualTunic ? '0' : '1'
@@ -515,7 +503,7 @@ const OptionsSettings = () => {
             name="manualMode"
             area-disabled="true"
             checked={cookies.experimental === 'true'}
-            onClick={() => {
+            onChange={() => {
               if (cookies.experimental) {
                 removeCookie('experimental');
               } else {
