@@ -1,4 +1,4 @@
-import React, { useEffect, useState,useMemo } from 'react';
+import React, { useEffect, useState } from 'react';
 import Deck from './components/deck/Deck';
 import LobbyChat from './components/lobbyChat/LobbyChat';
 import Calculator from './components/calculator/Calculator';
@@ -100,11 +100,13 @@ const Lobby = () => {
 
   const handleMatchupClick = () => setActiveTab('matchups');
 
-  if (!data || !data.deck || Object.keys(data).length === 0) {
+  if (data === undefined || data === null || Object.keys(data).length === 0) {
     data = testData;
   }
 
-  if (!data || !data.deck) return null;
+  if (data === undefined || data === null || !data.deck) {
+    return null;
+  }
 
   // if the game is ready then let's join the main game
   if (gameLobby?.isMainGameReady) {
@@ -142,19 +144,33 @@ const Lobby = () => {
     navigate(`/`);
   };
 
-  const { deckSize, maxDeckSize } = useMemo(() => {
-    switch (data.format) {
-      case GAME_FORMAT.BLITZ:
-      case GAME_FORMAT.COMPETITIVE_BLITZ:
-        return { deckSize: 40, maxDeckSize: 40 };
-      case GAME_FORMAT.SEALED:
-      case GAME_FORMAT.DRAFT:
-        return { deckSize: 30, maxDeckSize: 30 };
-      default:
-        return { deckSize: 60, maxDeckSize: 99999 };
-    }
-  }, [data.format]);
-  
+  let deckSize = 60;
+  let maxDeckSize = 99999;
+  switch (data.format) {
+    case GAME_FORMAT.BLITZ:
+    case GAME_FORMAT.COMPETITIVE_BLITZ:
+    // case GAME_FORMAT.LLBLITZ:
+      maxDeckSize = 40;
+      deckSize = 40;
+      break;
+    case GAME_FORMAT.COMMONER:
+    case GAME_FORMAT.CLASH:
+      maxDeckSize = 40;
+      deckSize = 40;
+      break;
+    case GAME_FORMAT.SEALED:
+    case GAME_FORMAT.DRAFT:
+      maxDeckSize = 30;
+      deckSize = 30;
+      break;
+    case GAME_FORMAT.OPEN_CC:
+    case GAME_FORMAT.OPEN_BLITZ:
+    case GAME_FORMAT.OPEN_LL_CC:
+    // case GAME_FORMAT.OPEN_LL_BLITZ:
+      deckSize = 0;
+      break;
+    default:
+  }
 
   const weaponsIndexed = [...data.deck.hands].map((card, ix) => {
     return {
@@ -214,6 +230,9 @@ const Lobby = () => {
     e.preventDefault();
     setShowChatModal(false);
   };
+
+  console.log(gameLobby?.chatInvited + ' ' + showChatModal);
+
   const needToDoDisclaimer =
     !acceptedDisclaimer &&
     (data.format === GAME_FORMAT.OPEN_CC ||
@@ -391,7 +410,6 @@ const Lobby = () => {
                       {!isWideScreen && (
                         <li>
                           <button
-                            aria-label="Leave the lobby"
                             className={leaveClasses}
                             onClick={handleLeave}
                             type="button"
