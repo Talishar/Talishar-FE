@@ -43,8 +43,8 @@ export const rtkQueryErrorToaster: Middleware =
       const errorStatus = action.payload?.status ?? 0;
       console.log('errorStatus:', errorStatus);
       console.log('errorMessage:', errorMessage);
-      console.log('action.payload:', action.payload); // Add this line to log the payload
-      console.log('action.error:', action.error); // Add this line to log the error object
+      console.log('action.payload:', action.payload);
+      console.log('action.error:', action.error);
       toast.error(
         `A network error happened, please try again. Error:\n${errorStatus}\n${errorMessage}`
       );

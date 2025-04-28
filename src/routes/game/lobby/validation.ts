@@ -17,7 +17,6 @@ export const deckValidation = (
       })
       // Test that the sum of weapons.hands is less than our hero's available hands.
       .test('hands', 'Too many weapons for your hands', (weapons = []) => {
-        console.log('weapons:', weapons);
         const numHands = weapons.reduce((total, row) => {
           return total + (row.numHands ?? 0);
         }, 0);

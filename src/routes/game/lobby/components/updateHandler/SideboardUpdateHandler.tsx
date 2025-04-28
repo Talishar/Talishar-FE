@@ -57,13 +57,13 @@ export const LobbyUpdateHandler = React.memo(
 
       // timeout if longer than 10 seconds. Will clear this interval on next poll
       const timeOut = setTimeout(() => {
-        console.log('timed out');
+        //console.log('timed out');
         abortRef.current?.abort;
         dispatch(setIsUpdateInProgressFalse());
       }, 10000);
 
       return () => {
-        console.log('timeout cleared');
+        //console.log('timeout cleared');
         clearTimeout(timeOut);
       };
     }, [gameInfo.gameID, isUpdateInProgress, dispatch]);
