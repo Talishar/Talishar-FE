@@ -21,7 +21,7 @@
   display: none;
 }
 
-@media (orientation: portrait) {
+@media (max-width: 1080px) {
   .rightColumn {
     display: none;
   }
