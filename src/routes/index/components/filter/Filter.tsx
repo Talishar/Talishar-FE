@@ -7,7 +7,6 @@ const Filter = ({
   setHeroFilter: React.Dispatch<React.SetStateAction<string[]>>;
   heroOptions: { value: string; label: string }[];
 }) => {
-  // Deduplicate heroOptions by label, keeping the first occurrence
   const uniqueHeroOptions = Array.from(
     new Map(heroOptions.map((hero) => [hero.label, hero])).values()
   );

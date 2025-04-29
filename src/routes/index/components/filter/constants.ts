@@ -100,6 +100,7 @@ export const HEROES_OF_RATHE: { value: string; label: string }[] = [
   { value: 'HNT055', label: 'Cindra' },
   { value: 'HNT098', label: 'Fang' },
   { value: 'HNT099', label: 'Fang' },
+  { value: 'HNT261', label: 'Arakni' }, //Slippy
   { value: 'HER130', label: 'Arakni' }, //Slippy
   { value: 'SEA001', label: 'Puffin' },
   { value: 'SEA002', label: 'Puffin' },
