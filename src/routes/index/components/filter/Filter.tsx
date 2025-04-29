@@ -8,22 +8,22 @@ const Filter = ({
   heroOptions: { value: string; label: string }[];
 }) => {
   const handleSelectHero = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    if (e.target.value === '') {
+    const selectedHeroId = e.target.value;
+    if (selectedHeroId === '') {
       setHeroFilter([]);
-      return;
+    } else {
+      setHeroFilter([selectedHeroId]);
     }
   };
-  
+
   return (
-    <select name="Filter by hero" id="filterByHero" onChange={handleSelectHero}>
+    <select id="filterByHero" onChange={handleSelectHero}>
       <option value="">Filter by Hero</option>
-      {heroOptions
-        .sort((a, b) => a.label.localeCompare(b.label))
-        .map((hero) => (
-          <option value={hero.value} key={hero.value}>
-            {hero.label}
-          </option>
-        ))}
+      {heroOptions.map((hero) => (
+        <option key={hero.value} value={hero.value}>
+          {hero.label}
+        </option>
+      ))}
     </select>
   );
 };
