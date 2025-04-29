@@ -26,7 +26,7 @@ export default function TurnNumber() {
 
   return (
     <div className={styles.turnNumber}>
-      <div>{(playerName.substring(0, 15) + "'s Turn")}</div>      
+      <div>{(playerName?.substring(0, 15) ?? "Unknown") + "'s Turn"}</div>
       <div>Turn #{turnNumber}</div>
     </div>
   );
