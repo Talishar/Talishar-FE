@@ -19,7 +19,7 @@ export const Wrapper: React.FC<ExtendedRenderOptions> = ({
   children,
   store
 }) => {
-  console.log(OfflineTestingGameState);
+  //console.log(OfflineTestingGameState);
   store = setupStore({ game: OfflineTestingGameState });
   return (
     <>

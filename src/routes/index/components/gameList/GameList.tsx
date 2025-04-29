@@ -12,6 +12,7 @@ import { useCookies } from 'react-cookie';
 import { setGameStart } from 'features/game/GameSlice';
 import { useAppDispatch } from 'app/Hooks';
 import { useLocation } from 'react-router-dom';
+import { HEROES_OF_RATHE } from '../filter/constants';
 
 export interface IOpenGame {
   p1Hero?: string;
@@ -61,6 +62,25 @@ const GameList = () => {
   const dispatch = useAppDispatch();
   const location = useLocation();
 
+  const activeHeroIds = new Set<string>();
+
+  if (data?.openGames) {
+    data.openGames.forEach(game => {
+      if (game.p1Hero) activeHeroIds.add(game.p1Hero);
+    });
+  }
+  
+  if (data?.gamesInProgress) {
+    data.gamesInProgress.forEach(game => {
+      if (game.p1Hero) activeHeroIds.add(game.p1Hero);
+      if (game.p2Hero) activeHeroIds.add(game.p2Hero);
+    });
+  }
+  
+  const filteredHeroOptions = HEROES_OF_RATHE.filter(hero =>
+    activeHeroIds.has(hero.value)
+  );
+  
   //Before displaying open games, check if we have a game in progress
   if (!!data?.LastAuthKey && data.LastAuthKey != '') {
     if (location.pathname !== '/user/profile') {
@@ -158,7 +178,12 @@ const GameList = () => {
         <p>{JSON.stringify(error)}</p>
       </div>
       ) : null}
-      {!isLoading && !error && <Filter setHeroFilter={setHeroFilter} />}
+      {!isLoading && !error && 
+      <Filter
+        setHeroFilter={setHeroFilter}
+        heroOptions={filteredHeroOptions}
+      />
+}
       {isLoggedIn ? (
       <>
         <FormatList
