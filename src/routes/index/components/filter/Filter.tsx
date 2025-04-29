@@ -7,30 +7,34 @@ const Filter = ({
   setHeroFilter: React.Dispatch<React.SetStateAction<string[]>>;
   heroOptions: { value: string; label: string }[];
 }) => {
-  const uniqueHeroOptions = Array.from(
-    new Map(heroOptions.map((hero) => [hero.label, hero])).values()
-  );
+  const heroMap = heroOptions.reduce((acc, hero) => {
+    if (!acc[hero.label]) {
+      acc[hero.label] = [];
+    }
+    acc[hero.label].push(hero.value);
+    return acc;
+  }, {} as Record<string, string[]>);
+
+  const uniqueHeroLabels = Object.keys(heroMap).sort((a, b) => a.localeCompare(b));
 
   const handleSelectHero = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedHeroId = e.target.value;
+    const selectedLabel = e.target.value;
 
-    if (selectedHeroId === '') {
+    if (selectedLabel === '') {
       setHeroFilter([]);
     } else {
-      setHeroFilter([selectedHeroId]);
+      setHeroFilter(heroMap[selectedLabel]);
     }
   };
 
   return (
     <select id="filterByHero" onChange={handleSelectHero}>
       <option value="">Filter by Hero</option>
-      {uniqueHeroOptions
-        .sort((a, b) => a.label.localeCompare(b.label))
-        .map((hero) => (
-          <option key={hero.value} value={hero.value}>
-            {hero.label}
-          </option>
-        ))}
+      {uniqueHeroLabels.map((label) => (
+        <option key={label} value={label}>
+          {label}
+        </option>
+      ))}
     </select>
   );
 };
