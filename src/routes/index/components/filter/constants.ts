@@ -1,114 +1,114 @@
-export const youngToOldHeroesMapping: { [key: string]: string } = {
-  ARC001: 'ARC002', // Dash
-  ARC038: 'ARC039', // Azalea
-  ARC075: 'ARC076', // Viserai
-  ARC113: 'ARC114', // kano
-  DYN113: 'DYN114', // Arakni
-  ELE001: 'ELE002', // Oldhim
-  ELE031: 'ELE032', // Lexi
-  ELE062: 'ELE063', // Briar
-  MON001: 'MON002', // Prism
-  MON029: 'MON030', // Boltyn
-  MON119: 'MON120', // Levia
-  MON153: 'MON154', // Chane
-  UPR001: 'UPR002', // Dromai
-  UPR044: 'UPR045', // Fai
-  UPR102: 'UPR103', // Iyslander
-  WTR001: 'WTR002', // Rhinar
-  WTR038: 'WTR039', // Bravo
-  WTR076: 'WTR077', // Katsu
-  WTR113: 'WTR114', // Dorinthea
-  OUT001: 'OUT002', // Uzuri
-  OUT091: 'OUT092', // Riptide
-  DTD001: 'DTD002', // Prism, Advent of Thrones
-  DTD133: 'DTD134', // Vynnset
-  EVO002: 'EVO003', // Dash, Database
-  EVO004: 'EVO005', // Maxx Nitro
-  EVO008: 'EVO009', // Teklovossen
-  HVY001: 'HVY002', // Kayo
-  HVY045: 'HVY046', // Betsy
-  HVY047: 'HVY048', // Victor Goldmane
-  HVY090: 'HVY091', // Kassai
-  HVY092: 'HVY093', // Olympia
-  MST001: 'MST002', // Nuu
-  MST025: 'MST026', // Enigma
-  MST046: 'MST047', // Zen
-  ROS002: 'ROS001', // Florian, Rotwood Harbinger
-  ROS008: 'ROS007', // Aurora, Shooting Star
-  ROS014: 'ROS013', // Verdance, Thorn of the Rose
-  ROS020: 'ROS019', // Oscilio, Constella Intelligence
-  HNT002: 'HNT001', // Arakni, Web of Deceit
-  HNT055: 'HNT054', // Cindra
-  HNT099: 'HNT098', // Fang
-  CRU046: 'HER123', // Ira
-  SEA002: 'SEA001', // Puffin
-  SEA044: 'SEA043', // Gravy
-  SEA083: 'SEA082', // Marlynn.
-};
-
 export const HEROES_OF_RATHE: { value: string; label: string }[] = [
   { value: 'WTR001', label: 'Rhinar' },
+  { value: 'WTR002', label: 'Rhinar' },
   { value: 'WTR038', label: 'Bravo' },
+  { value: 'WTR039', label: 'Bravo' },
   { value: 'WTR076', label: 'Katsu' },
+  { value: 'WTR077', label: 'Katsu' },
   { value: 'WTR113', label: 'Dorinthea' },
+  { value: 'WTR114', label: 'Dorinthea' },
   { value: 'ARC001', label: 'Dash' },
+  { value: 'ARC002', label: 'Dash' },
   { value: 'ARC038', label: 'Azalea' },
+  { value: 'ARC039', label: 'Azalea' },
   { value: 'ARC075', label: 'Viserai' },
+  { value: 'ARC076', label: 'Viserai' },
   { value: 'ARC113', label: 'Kano' },
-  { value: 'MON001', label: 'Prism' },
-  { value: 'MON029', label: 'Boltyn' },
-  { value: 'MON119', label: 'Levia' },
-  { value: 'MON153', label: 'Chane' },
-  { value: 'ELE001', label: 'Oldhim' },
-  { value: 'ELE031', label: 'Lexi' },
-  { value: 'ELE062', label: 'Briar' },
-  { value: 'UPR001', label: 'Dromai' },
-  { value: 'UPR044', label: 'Fai' },
-  { value: 'OUT001', label: 'Uzuri' },
-  { value: 'OUT091', label: 'Riptide' },
-  { value: 'HER130', label: 'Arakni, 5L!p3d 7hRu 7h3 cR4X' },
-  { value: 'UPR102', label: 'Iyslander' },
-  { value: 'DYN113', label: 'Arakni' },
-  { value: 'CRU002', label: 'Kayo, Berserker Runt' },
-  { value: 'CRU046', label: 'Ira, Crimson Haze' },
-  { value: 'CRU047', label: 'Benji, the Piercing Wind' },
-  { value: 'CRU077', label: 'Kassai, Cintari Sellsword' },
+  { value: 'ARC114', label: 'Kano' },
+  { value: 'CRU002', label: 'Kayot' },
+  { value: 'CRU046', label: 'Ira' },
+  { value: 'CRU047', label: 'Benji' },
+  { value: 'CRU077', label: 'Kassai' },
   { value: 'CRU097', label: 'Shiyana, Diamond Gemini' },
   { value: 'CRU099', label: 'Data Doll MKII' },
   { value: 'CRU118', label: 'Kavdaen, Trader of Skins' },
+  { value: 'MON001', label: 'Prism' },
+  { value: 'MON002', label: 'Prism' },
+  { value: 'MON029', label: 'Boltyn' },
+  { value: 'MON030', label: 'Boltyn' },
+  { value: 'MON119', label: 'Levia' },
+  { value: 'MON120', label: 'Levia' },
+  { value: 'MON153', label: 'Chane' },
+  { value: 'MON154', label: 'Chane' },
+  { value: 'ELE001', label: 'Oldhim' },
+  { value: 'ELE002', label: 'Oldhim' },
+  { value: 'ELE031', label: 'Lexi' },
+  { value: 'ELE032', label: 'Lexi' },
+  { value: 'ELE062', label: 'Briar' },
+  { value: 'ELE063', label: 'Briar' },
+  { value: 'UPR001', label: 'Dromai' },
+  { value: 'UPR002', label: 'Dromai' },
+  { value: 'UPR044', label: 'Fai' },
+  { value: 'UPR045', label: 'Fai' },
+  { value: 'OUT001', label: 'Uzuri' },
+  { value: 'OUT002', label: 'Uzuri' },
+  { value: 'OUT003', label: 'Arakni' },
+  { value: 'OUT091', label: 'Riptide' },
+  { value: 'OUT092', label: 'Riptide' },
+  { value: 'UPR102', label: 'Iyslander' },
+  { value: 'UPR103', label: 'Iyslander' },
+  { value: 'DYN113', label: 'Arakni' },
+  { value: 'DYN114', label: 'Arakni' },
   { value: 'EVR017', label: 'Bravo, Star of the Show' },
-  { value: 'EVR019', label: 'Valda, Brightaxe' },
+  { value: 'EVR019', label: 'Valda' },
   { value: 'EVR085', label: 'Genis Wotchuneed' },
-  { value: 'DVR001', label: 'Dorinthea, Quicksilver Prodigy' },
-  { value: 'DYN001', label: 'Emperor, Dracai of Aesir ' },
-  { value: 'DYN025', label: 'Yoji, Royal Protector' },
-  { value: 'DTD001', label: 'Prism, Advent of Thrones' },
+  { value: 'DVR001', label: 'Dorinthea' },
+  { value: 'DYN001', label: 'Emperor' },
+  { value: 'DYN025', label: 'Yoji' },
+  { value: 'DTD001', label: 'Prism' },
   { value: 'DTD133', label: 'Vynnset' },
-  { value: 'TCC001', label: 'Professor Teklovossen' },
-  { value: 'TCC027', label: 'Brevant, Civic Protector' },
-  { value: 'TCC049', label: 'Melody, Sing-along' },
-  { value: 'EVO001', label: 'Dash, Database' },
+  { value: 'DTD134', label: 'Vynnset' },
+  { value: 'TCC001', label: 'Teklovossen' },
+  { value: 'TCC027', label: 'Brevant' },
+  { value: 'TCC049', label: 'Melody' },
+  { value: 'EVO001', label: 'Dash, I/O' },
+  { value: 'EVO002', label: 'Dash, I/O' },
   { value: 'EVO004', label: 'Maxx Nitro' },
+  { value: 'EVO005', label: 'Maxx Nitro' },
   { value: 'EVO007', label: 'Teklovossen' },
+  { value: 'EVO008', label: 'Teklovossen' },
   { value: 'HVY001', label: 'Kayo' },
+  { value: 'HVY002', label: 'Kayo' },
   { value: 'HVY045', label: 'Betsy' },
+  { value: 'HVY046', label: 'Betsy' },
   { value: 'HVY047', label: 'Victor Goldmane' },
+  { value: 'HVY048', label: 'Victor Goldmane' },
   { value: 'HVY090', label: 'Kassai' },
+  { value: 'HVY091', label: 'Kassai' },
   { value: 'HVY092', label: 'Olympia' },
+  { value: 'HVY093', label: 'Olympia' },
   { value: 'MST001', label: 'Nuu' },
+  { value: 'MST002', label: 'Nuu' },
   { value: 'MST025', label: 'Enigma' },
+  { value: 'MST026', label: 'Enigma' },
   { value: 'MST046', label: 'Zen' },
+  { value: 'MST047', label: 'Zen' },
   { value: 'TER001', label: 'Terra' },
-  { value: 'HER117', label: 'Blaze, Firemind' },
+  { value: 'HER117', label: 'Blaze' },
+  { value: 'ROS001', label: 'Florian' },
   { value: 'ROS002', label: 'Florian' },
+  { value: 'ROS007', label: 'Aurora' },
   { value: 'ROS008', label: 'Aurora' },
+  { value: 'ROS013', label: 'Verdance' },
   { value: 'ROS014', label: 'Verdance' },
+  { value: 'ROS019', label: 'Oscilio' },
   { value: 'ROS020', label: 'Oscilio' },
   { value: 'AJV001', label: 'Jarl Vetreiđi' },
-  { value: 'HNT001', label: 'Arakni, Marionette' },
+  { value: 'HNT001', label: 'Arakni' },
+  { value: 'HNT002', label: 'Arakni' },
   { value: 'HNT054', label: 'Cindra' },
+  { value: 'HNT055', label: 'Cindra' },
+  { value: 'HNT098', label: 'Fang' },
   { value: 'HNT099', label: 'Fang' },
-  { value: 'SEA001', label: 'Puffin, Hightail' },
-  { value: 'SEA043', label: 'Gravy Bones, Shipwrecked Looter' },
-  { value: 'SEA082', label: 'Marlynn, Treasure Hunter' },
+  { value: 'HNT261', label: 'Arakni' }, //Slippy
+  { value: 'HER130', label: 'Arakni' }, //Slippy
+  { value: 'SEA001', label: 'Puffin' },
+  { value: 'SEA002', label: 'Puffin' },
+  { value: 'SEA043', label: 'Gravy Bones' },
+  { value: 'SEA044', label: 'Gravy Bones' },
+  { value: 'SEA082', label: 'Marlynn' },
+  { value: 'SEA083', label: 'Marlynn' },
+  { value: 'HER123', label: 'Ira' },
+  { value: 'MPG001', label: 'Valda' },
+  { value: 'HER135', label: 'Valda' },
 ];

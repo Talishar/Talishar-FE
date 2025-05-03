@@ -95,7 +95,7 @@ const ChainLinkSummary = ({
   } else {
     content = (
       <div className={styles.cardListContents}>
-        <div>Total Damage: {data.TotalDamageDealt}</div>
+        <div className={styles.totalDamage}>Total Damage: {data.TotalDamageDealt}</div>
         <table className={styles.table}>
           <thead>
             <tr>
@@ -110,7 +110,7 @@ const ChainLinkSummary = ({
                 const card: Card = { cardNumber: entry.cardID };
                 return (
                   <tr key={`cardList${ix}`}>
-                    <td className={styles.column}>
+                    <td className={styles.columnCards}>
                       <Effect card={card} />
                     </td>
                     <td className={styles.column}>
@@ -121,7 +121,7 @@ const ChainLinkSummary = ({
                     </td>
                     <td className={styles.column}>
                       {entry.modifier > 0 ? '+' : ''}
-                      {entry.modifier}
+                      {entry.modifier === 0 ? '' : entry.modifier}
                     </td>
                   </tr>
                 );

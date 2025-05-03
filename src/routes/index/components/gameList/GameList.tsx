@@ -12,6 +12,7 @@ import { useCookies } from 'react-cookie';
 import { setGameStart } from 'features/game/GameSlice';
 import { useAppDispatch } from 'app/Hooks';
 import { useLocation } from 'react-router-dom';
+import { HEROES_OF_RATHE } from '../filter/constants';
 
 export interface IOpenGame {
   p1Hero?: string;
@@ -61,50 +62,48 @@ const GameList = () => {
   const dispatch = useAppDispatch();
   const location = useLocation();
 
-  //Before displaying open games, check if we have a game in progress
-  if (!!data?.LastAuthKey && data.LastAuthKey != '') {
-    if (location.pathname !== '/user/profile') {
-      dispatch(
-        setGameStart({
-          playerID: data.LastPlayerID ?? 0,
-          gameID: data.LastGameName ?? 0,
-          authKey: data.LastAuthKey ?? ''
-        })
-      );
-      const searchParam = { playerID: String(data.LastPlayerID ?? '0') };
-      navigate(`/game/play/${data.LastGameName}`, {
-        state: { playerID: data.LastPlayerID ?? 0 }
-      });
-    }
-    return <></>;
+  const activeHeroIds = new Set<string>();
+
+  if (data?.openGames) {
+    data.openGames.forEach(game => {
+      if (game.p1Hero) activeHeroIds.add(game.p1Hero);
+    });
   }
+  
+  if (data?.gamesInProgress) {
+    data.gamesInProgress.forEach(game => {
+      if (game.p1Hero) activeHeroIds.add(game.p1Hero);
+      if (game.p2Hero) activeHeroIds.add(game.p2Hero);
+    });
+  }
+  
+  const filteredHeroOptions = HEROES_OF_RATHE.filter(hero =>
+    activeHeroIds.has(hero.value)
+  );
 
-  //No game in progress, show open games
-  let sortedOpenGames = data?.openGames ? [...data.openGames] : [];
-  sortedOpenGames = sortedOpenGames
-    .filter((game: IOpenGame) => {
-      return (
-        heroFilter.length === 0 ||
-        heroFilter.find((hero) => hero === game.p1Hero)
-      );
-    })
-    .filter((game: IOpenGame) => {
-      return formatFilter === null || game.format === formatFilter;
-    })
-    .sort((a, b) => a.format.localeCompare(b.format));
-
-  let filteredGamesInProgress = data?.gamesInProgress
-    ? [...data.gamesInProgress]
+  // Filter games
+  const filteredGamesInProgress = data?.gamesInProgress
+    ? data.gamesInProgress.filter((game) => {
+        return (
+          heroFilter.length === 0 ||
+          heroFilter.find((hero) => hero === game.p1Hero || hero === game.p2Hero)
+        );
+      })
     : [];
 
-  filteredGamesInProgress = filteredGamesInProgress.filter((game) => {
-    return (
-      heroFilter.length === 0 ||
-      heroFilter.find((hero) => {
-        return hero === game.p1Hero || hero === game.p2Hero;
-      })
-    );
-  });
+  const sortedOpenGames = data?.openGames
+    ? data.openGames
+        .filter((game: IOpenGame) => {
+          return (
+            heroFilter.length === 0 ||
+            heroFilter.find((hero) => hero === game.p1Hero)
+          );
+        })
+        .filter((game: IOpenGame) => {
+          return formatFilter === null || game.format === formatFilter;
+        })
+        .sort((a, b) => a.format.localeCompare(b.format))
+    : [];
 
   const handleReloadClick = () => {
     refetch();
@@ -114,7 +113,6 @@ const GameList = () => {
     GAME_FORMAT.OPEN_CC,
     GAME_FORMAT.OPEN_BLITZ,
     GAME_FORMAT.OPEN_LL_CC,
-    // GAME_FORMAT.OPEN_LL_BLITZ,
     GAME_FORMAT.COMMONER,
     GAME_FORMAT.CLASH,
     GAME_FORMAT.SEALED,
@@ -127,137 +125,131 @@ const GameList = () => {
   return (
     <article className={styles.gameList}>
       {cookies.experimental && (
-      <button
-        onClick={(e) => {
-        e.preventDefault();
-        removeCookie('experimental');
-        }}
-      >
-        Disable experimental features
-      </button>
+        <button
+          onClick={(e) => {
+            e.preventDefault();
+            removeCookie('experimental');
+          }}
+        >
+          Disable experimental features
+        </button>
       )}
       <div className={styles.titleDiv}>
-      <h3 className={styles.title}>Games</h3>
-      <button
-        onClick={handleReloadClick}
-        className={styles.reloadButton}
-        aria-busy={isFetching}
-        disabled={isFetching}
-      >
-        Reload
-      </button>
+        <h3 className={styles.title}>Games</h3>
+        <button
+          onClick={handleReloadClick}
+          className={styles.reloadButton}
+          aria-busy={isFetching}
+          disabled={isFetching}
+        >
+          Reload
+        </button>
       </div>
       {isLoading ? <div aria-busy="true">Loading games please wait</div> : null}
       {error ? (
-      <div>
-        <h2>There has been an error!</h2>
-        <p>
-        Please refresh the page and try again, if you still get an error
-        loading the gamelist. Please report on our discord and let us know
-        the following:
-        </p>
-        <p>{JSON.stringify(error)}</p>
-      </div>
-      ) : null}
-      {!isLoading && !error && <Filter setHeroFilter={setHeroFilter} />}
-      {isLoggedIn ? (
-      <>
-        <FormatList
-        gameList={sortedOpenGames.filter(
-          (game) => game.format === GAME_FORMAT.BLITZ
-        )}
-        name="Blitz"
-        />
-        <FormatList
-        gameList={sortedOpenGames.filter(
-          (game) => game.format === GAME_FORMAT.COMPETITIVE_BLITZ
-        )}
-        name="Competitive Blitz"
-        />
-        <FormatList
-        gameList={sortedOpenGames.filter(
-          (game) => game.format === GAME_FORMAT.CLASSIC_CONSTRUCTED
-        )}
-        name="Classic Constructed"
-        />
-        <FormatList
-        gameList={sortedOpenGames.filter(
-          (game) => game.format === GAME_FORMAT.COMPETITIVE_CC
-        )}
-        name="Competitive CC"
-        />
-        <FormatList
-        gameList={sortedOpenGames.filter((game) =>
-          otherFormats.includes(game.format)
-        )}
-        name="Other Formats"
-        isOther
-        />
-        {data != undefined && (
-        <div data-testid="games-in-progress" ref={parent}>
-          <h4 className={styles.subSectionTitle}>
-          Games in Progress: <span>{data.gameInProgressCount}</span>
-          </h4>
-          <InProgressGameList
-          gameList={filteredGamesInProgress.filter((game) =>
-            [GAME_FORMAT.BLITZ, GAME_FORMAT_NUMBER.BLITZ].includes(
-            game.format
-            )
-          )}
-          name="Blitz"
-          />
-          <InProgressGameList
-          gameList={filteredGamesInProgress.filter((game) =>
-            [
-            GAME_FORMAT.COMPETITIVE_BLITZ,
-            GAME_FORMAT_NUMBER.COMPETITIVE_BLITZ
-            ].includes(game.format)
-          )}
-          name="Competitive Blitz"
-          />
-          <InProgressGameList
-          gameList={filteredGamesInProgress.filter((game) =>
-            [
-            GAME_FORMAT.CLASSIC_CONSTRUCTED,
-            GAME_FORMAT_NUMBER.CLASSIC_CONSTRUCTED
-            ].includes(game.format)
-          )}
-          name="Classic Constructed"
-          />
-          <InProgressGameList
-          gameList={filteredGamesInProgress.filter((game) =>
-            [
-            GAME_FORMAT.COMPETITIVE_CC,
-            GAME_FORMAT_NUMBER.COMPETITIVE_CC
-            ].includes(game.format)
-          )}
-          name="Competitive CC"
-          />
-          <InProgressGameList
-          gameList={filteredGamesInProgress.filter(
-            (game) =>
-            ![
-              GAME_FORMAT.BLITZ,
-              GAME_FORMAT_NUMBER.BLITZ,
-              GAME_FORMAT.COMPETITIVE_BLITZ,
-              GAME_FORMAT_NUMBER.COMPETITIVE_BLITZ,
-              GAME_FORMAT.COMPETITIVE_CC,
-              GAME_FORMAT.CLASSIC_CONSTRUCTED,
-              GAME_FORMAT_NUMBER.CLASSIC_CONSTRUCTED,
-              GAME_FORMAT_NUMBER.COMPETITIVE_CC
-            ].includes(game.format)
-          )}
-          name="Other Formats"
-          />
+        <div>
+          <h2>There has been an error!</h2>
+          <p>
+            Please refresh the page and try again, if you still get an error
+            loading the gamelist. Please report on our discord and let us know
+            the following:
+          </p>
+          <p>{JSON.stringify(error)}</p>
         </div>
-        )}
-      </>
+      ) : null}
+      {!isLoading && !error && (
+        <Filter
+          setHeroFilter={setHeroFilter}
+          heroOptions={filteredHeroOptions}
+        />
+      )}
+      {isLoggedIn ? (
+        <>
+          <FormatList
+            gameList={sortedOpenGames.filter(
+              (game) => game.format === GAME_FORMAT.BLITZ
+            )}
+            name="Blitz"
+          />
+          <FormatList
+            gameList={sortedOpenGames.filter(
+              (game) => game.format === GAME_FORMAT.COMPETITIVE_BLITZ
+            )}
+            name="Competitive Blitz"
+          />
+          <FormatList
+            gameList={sortedOpenGames.filter(
+              (game) => game.format === GAME_FORMAT.CLASSIC_CONSTRUCTED
+            )}
+            name="Classic Constructed"
+          />
+          <FormatList
+            gameList={sortedOpenGames.filter(
+              (game) => game.format === GAME_FORMAT.COMPETITIVE_CC
+            )}
+            name="Competitive CC"
+          />
+          <FormatList
+            gameList={sortedOpenGames.filter((game) =>
+              otherFormats.includes(game.format)
+            )}
+            name="Other Formats"
+            isOther
+          />
+          {data != undefined && (
+            <div data-testid="games-in-progress" ref={parent}>
+              <h4 className={styles.subSectionTitle}>
+                Games in Progress: <span>{data.gameInProgressCount}</span>
+              </h4>
+              <InProgressGameList
+                gameList={filteredGamesInProgress.filter((game) =>
+                  [GAME_FORMAT.BLITZ, GAME_FORMAT_NUMBER.BLITZ].includes(game.format)
+                )}
+                name="Blitz"
+              />
+              <InProgressGameList
+                gameList={filteredGamesInProgress.filter((game) =>
+                  [GAME_FORMAT.COMPETITIVE_BLITZ, GAME_FORMAT_NUMBER.COMPETITIVE_BLITZ].includes(game.format)
+                )}
+                name="Competitive Blitz"
+              />
+              <InProgressGameList
+                gameList={filteredGamesInProgress.filter((game) =>
+                  [GAME_FORMAT.CLASSIC_CONSTRUCTED, GAME_FORMAT_NUMBER.CLASSIC_CONSTRUCTED].includes(game.format)
+                )}
+                name="Classic Constructed"
+              />
+              <InProgressGameList
+                gameList={filteredGamesInProgress.filter((game) =>
+                  [GAME_FORMAT.COMPETITIVE_CC, GAME_FORMAT_NUMBER.COMPETITIVE_CC].includes(game.format)
+                )}
+                name="Competitive CC"
+              />
+              <InProgressGameList
+                gameList={filteredGamesInProgress.filter(
+                  (game) =>
+                    ![
+                      GAME_FORMAT.BLITZ,
+                      GAME_FORMAT_NUMBER.BLITZ,
+                      GAME_FORMAT.COMPETITIVE_BLITZ,
+                      GAME_FORMAT_NUMBER.COMPETITIVE_BLITZ,
+                      GAME_FORMAT.COMPETITIVE_CC,
+                      GAME_FORMAT.CLASSIC_CONSTRUCTED,
+                      GAME_FORMAT_NUMBER.CLASSIC_CONSTRUCTED,
+                      GAME_FORMAT_NUMBER.COMPETITIVE_CC,
+                    ].includes(game.format)
+                )}
+                name="Other Formats"
+              />
+            </div>
+          )}
+        </>
       ) : (
-      !isLoading && (
-        <p>
-        Please <Link to="/user/login">log in</Link> to view open lobbies and spectate games!
-        </p>
-      )
+        !isLoading && (
+          <p>
+            Please <Link to="/user/login">log in</Link> to view open lobbies and spectate games!
+          </p>
+        )
       )}
     </article>
   );

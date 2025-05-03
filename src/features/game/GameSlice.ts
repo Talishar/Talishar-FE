@@ -114,7 +114,7 @@ export const gameLobby = createAsyncThunk(
         data = data.toString().trim();
         const indexOfBraces = data.indexOf('{');
         if (indexOfBraces !== 0) {
-          console.log(data.substring(0, indexOfBraces));
+          //console.log(data.substring(0, indexOfBraces));
           data = data.substring(indexOfBraces);
         }
         const parsedData = JSON.parse(data) as GetLobbyRefreshResponse;
@@ -124,7 +124,7 @@ export const gameLobby = createAsyncThunk(
           return;
         }
         waitingForJSONResponse = false;
-        console.log(e);
+        //console.log(e);
         return console.error(e);
       }
     }
