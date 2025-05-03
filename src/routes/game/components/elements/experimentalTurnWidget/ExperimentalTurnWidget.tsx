@@ -210,14 +210,14 @@ export function PassTurnDisplay() {
 
   const clickYes = (e: any) => {
     e.preventDefault();
-    console.log('yes!');
+    //console.log('yes!');
     setShowAreYouSureModal(false);
     dispatch(submitButton({ button: { mode: PROCESS_INPUT.PASS } }));
   };
 
   const clickNo = (e: any) => {
     e.preventDefault();
-    console.log('no!');
+    //console.log('no!');
     setShowAreYouSureModal(false);
   };
 

@@ -1,41 +1,42 @@
 import React from 'react';
-import styles from './Filter.module.css';
-import { HEROES_OF_RATHE, youngToOldHeroesMapping } from './constants';
 
 const Filter = ({
-  setHeroFilter
+  setHeroFilter,
+  heroOptions
 }: {
   setHeroFilter: React.Dispatch<React.SetStateAction<string[]>>;
+  heroOptions: { value: string; label: string }[];
 }) => {
-  const handleSelectHero = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    if (e.target.value === '') {
-      setHeroFilter([]);
-      return;
+  const heroMap = heroOptions.reduce((acc, hero) => {
+    if (!acc[hero.label]) {
+      acc[hero.label] = [];
     }
-    const secondHero = youngToOldHeroesMapping[e.target.value] ?? null;
-    const heroArray = [e.target.value];
-    if (secondHero) heroArray.push(secondHero);
-    setHeroFilter(heroArray);
+    acc[hero.label].push(hero.value);
+    return acc;
+  }, {} as Record<string, string[]>);
+
+  const uniqueHeroLabels = Object.keys(heroMap).sort((a, b) => a.localeCompare(b));
+
+  const handleSelectHero = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedLabel = e.target.value;
+
+    if (selectedLabel === '') {
+      setHeroFilter([]);
+    } else {
+      setHeroFilter(heroMap[selectedLabel]);
+    }
   };
 
-return (
-  <>
-    <select
-      name="Filter by hero"
-      id="filterByHero"
-      onChange={handleSelectHero}
-    >
+  return (
+    <select id="filterByHero" onChange={handleSelectHero}>
       <option value="">Filter by Hero</option>
-      {HEROES_OF_RATHE.sort((a, b) => a.label.localeCompare(b.label)).map((hero, ix) => {
-        return (
-          <option value={hero.value} key={hero.value}>
-            {hero.label}
-          </option>
-        );
-      })}
+      {uniqueHeroLabels.map((label) => (
+        <option key={label} value={label}>
+          {label}
+        </option>
+      ))}
     </select>
-  </>
-);
+  );
 };
 
 export default Filter;

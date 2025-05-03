@@ -28,6 +28,12 @@
   margin: 0px;
 }
 
+.totalDamage {
+  padding-left: 1vh;
+  margin: 0px;
+  font-size: 1.5vh;
+}
+
 .cardListContents {
   padding-top: 1vh;
   display: flex;
@@ -86,4 +92,9 @@
 
 .column {
   text-align: center;
+}
+
+.columnCards {
+  text-align: center;
+  width: 7vh;
 }
