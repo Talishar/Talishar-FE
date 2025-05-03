@@ -244,6 +244,10 @@ const CreateGame = () => {
                 <option value={GAME_FORMAT.OPEN_LL_CC}>
                   Open Living Legend (no restrictions!)
                 </option>
+                {/* <option value={GAME_FORMAT.BRAWL}>
+                  Brawl
+                </option> */}
+                <option value={GAME_FORMAT.PRECON}>Precon</option>
                 {/* <option value={GAME_FORMAT.OPEN_LL_BLITZ}>
                   Open Living Legend Blitz (no restrictions!)
                 </option> */}

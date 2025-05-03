@@ -120,6 +120,7 @@ const GameList = () => {
     GAME_FORMAT.SEALED,
     GAME_FORMAT.DRAFT,
     GAME_FORMAT.LLCC,
+    GAME_FORMAT.PRECON,
     // GAME_FORMAT.LLBLITZ
   ];
 
