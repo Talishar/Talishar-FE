@@ -101,7 +101,8 @@ export const CARD_BACK = {
   '100': 'CBSmilingFleshBag',
   '101': 'CBDashciples',
   '102': 'CBBlitzkriegMeph',
-  '103': 'CBHamMan215'
+  '103': 'CBHamMan215',
+  '104': 'CBNewHorizons',
 } as { [key: string]: string };
 
 export const PLAYMATS = {
