@@ -45,7 +45,8 @@
   border-radius: 7%;
   max-height: 100%;
   max-width: 100%;
-  transition: box-shadow 0.25s, border-color 0.25s;
+  transform: rotate(0);
+  transition: box-shadow 0.25s, border-color 0.25s, transform 0.25s;
   -webkit-user-drag: none;
   -khtml-user-drag: none;
   -moz-user-drag: none;
@@ -94,7 +95,7 @@
   opacity: 0.7;
 }
 
-.tapped {
+.tapped.tapped {
   transform: rotate(90deg);
   background-color: black;
   opacity: 0.5;
