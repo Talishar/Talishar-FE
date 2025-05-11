@@ -38,6 +38,14 @@ const preconDeckNames = [
   "Kayo, Armed and Dangerous",
 ];
 
+// Create sorted arrays for the precon decks
+const sortedPreconDecks = preconDeckNames
+  .map((name, index) => ({ name, link: preconDecklinks[index] }))
+  .sort((a, b) => a.name.localeCompare(b.name));
+
+const sortedPreconDeckNames = sortedPreconDecks.map(deck => deck.name);
+const sortedPreconDecklinks = sortedPreconDecks.map(deck => deck.link);
+
 const CreateGame = () => {
   const { isLoggedIn, isPatron } = useAuth();
   const navigate = useNavigate();
@@ -94,7 +102,7 @@ const CreateGame = () => {
   const handleFormatChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedFormat(e.target.value);
     if (e.target.value === GAME_FORMAT.PRECON) {
-      setValue('fabdb', preconDecklinks[0]);
+      setValue('fabdb', sortedPreconDecklinks[0]);
     }
   };
 
@@ -193,11 +201,11 @@ const CreateGame = () => {
                       aria-label="Decks"
                       {...register('fabdb')}
                       aria-invalid={errors.deck?.message ? 'true' : undefined}
-                      defaultValue={preconDecklinks[0]}
+                      defaultValue={sortedPreconDecklinks[0]}
                     >
-                      {preconDecklinks.map((link, index) => (
+                      {sortedPreconDecklinks.map((link, index) => (
                         <option key={index} value={link}>
-                          {preconDeckNames[index]}
+                          {sortedPreconDeckNames[index]}
                         </option>
                       ))}
                     </select>
