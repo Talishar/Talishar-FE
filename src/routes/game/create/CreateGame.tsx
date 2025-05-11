@@ -18,6 +18,26 @@ import { ErrorMessage } from '@hookform/error-message';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { FaExclamationCircle } from 'react-icons/fa';
 
+const preconDecklinks = [
+  "https://fabrary.net/decks/01JRH0631MH5A9JPVGTP3TKJXN", //maxx
+  "https://fabrary.net/decks/01JN2DEG4X2V8DVMCWFBWQTTSC", //aurora
+  "https://fabrary.net/decks/01JCPPENK52DTRBJZMWQF8S0X2", //jarl
+  "https://fabrary.net/decks/01J9822H5PANJAFQVMC4TPK4Z1", //dio
+  "https://fabrary.net/decks/01J3GKKSTM773CW7BG3RRJ5FJH", //azalea
+  "https://fabrary.net/decks/01J202NH0RG8S0V8WXH1FWB2AH", //boltyn
+  "https://fabrary.net/decks/01HWNCK2BYPVKK6701052YYXMZ", //kayo
+];
+
+const preconDeckNames = [
+  "Maxx, the Hype Nitro",
+  "Aurora, Shooting Star",
+  "Jarl Vetreiđi",
+  "Dash I/O",
+  "Azalea, Ace in the Hole",
+  "Ser Boltyn, Breaker of Dawn",
+  "Kayo, Armed and Dangerous",
+];
+
 const CreateGame = () => {
   const { isLoggedIn, isPatron } = useAuth();
   const navigate = useNavigate();
@@ -31,7 +51,8 @@ const CreateGame = () => {
     register,
     handleSubmit,
     setError,
-    reset
+    reset,
+    setValue
   } = useForm<CreateGameAPI>({
     mode: 'onBlur',
     resolver: yupResolver(validationSchema)
@@ -67,6 +88,15 @@ const CreateGame = () => {
       deckTestDeck: AI_DECK.COMBAT_DUMMY
     };
   }, [isSuccess, isLoggedIn]);
+
+  const [selectedFormat, setSelectedFormat] = React.useState(initialValues.format);
+
+  const handleFormatChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedFormat(e.target.value);
+    if (e.target.value === GAME_FORMAT.PRECON) {
+      setValue('fabdb', preconDecklinks[0]);
+    }
+  };
 
   useEffect(() => {
     reset(initialValues);
@@ -155,14 +185,35 @@ const CreateGame = () => {
             />
             <fieldset>
               <label>
-                Deck Link (URL from <a href="https://FaBrary.net"  target="_blank">FaBrary.net</a>)
-                <input
-                  type="text"
-                  id="fabdb"
-                  aria-label="Deck Link"
-                  {...register('fabdb')}
-                  aria-invalid={errors.deck?.message ? 'true' : undefined}
-                />
+                {selectedFormat === GAME_FORMAT.PRECON ? (
+                  <>
+                    Decks
+                    <select
+                      id="fabdb"
+                      aria-label="Decks"
+                      {...register('fabdb')}
+                      aria-invalid={errors.deck?.message ? 'true' : undefined}
+                      defaultValue={preconDecklinks[0]}
+                    >
+                      {preconDecklinks.map((link, index) => (
+                        <option key={index} value={link}>
+                          {preconDeckNames[index]}
+                        </option>
+                      ))}
+                    </select>
+                  </>
+                ) : (
+                  <>
+                    Deck Link (URL from <a href="https://FaBrary.net" target="_blank">FaBrary.net</a>)
+                    <input
+                      type="text"
+                      id="fabdb"
+                      aria-label="Deck Link"
+                      {...register('fabdb')}
+                      aria-invalid={errors.deck?.message ? 'true' : undefined}
+                    />
+                  </>
+                )}
                 <ErrorMessage
                   errors={errors}
                   name="fabdb"
@@ -217,6 +268,10 @@ const CreateGame = () => {
                 aria-label="format"
                 {...register('format')}
                 aria-invalid={errors.format?.message ? 'true' : undefined}
+                onChange={(e) => {
+                  handleFormatChange(e);
+                  register('format').onChange(e);
+                }}
               >
                 <option value={GAME_FORMAT.BLITZ}>Blitz</option>
                 <option value={GAME_FORMAT.CLASSIC_CONSTRUCTED}>
@@ -247,7 +302,7 @@ const CreateGame = () => {
                 {/* <option value={GAME_FORMAT.BRAWL}>
                   Brawl
                 </option> */}
-                <option value={GAME_FORMAT.PRECON}>Precon</option>
+                <option value={GAME_FORMAT.PRECON}>Preconstructed Decks</option>
                 {/* <option value={GAME_FORMAT.OPEN_LL_BLITZ}>
                   Open Living Legend Blitz (no restrictions!)
                 </option> */}
