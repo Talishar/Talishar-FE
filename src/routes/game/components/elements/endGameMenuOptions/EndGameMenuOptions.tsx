@@ -1,3 +1,4 @@
+import React, { useState } from 'react';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { submitButton } from 'features/game/GameSlice';
 import styles from './EndGameMenuOptions.module.css';
@@ -7,6 +8,9 @@ import { RootState } from 'app/Store';
 import { useNavigate } from 'react-router-dom';
 import { shallowEqual } from 'react-redux';
 import { getGameInfo } from 'features/game/GameSlice';
+import useSound from 'use-sound';
+import rematchSound from 'sounds/swordClash.wav';
+
 
 const EndGameMenuOptions = () => {
   const dispatch = useAppDispatch();
@@ -19,17 +23,34 @@ const EndGameMenuOptions = () => {
   const health = useAppSelector(
     (state: RootState) => state.game.playerOne.Health ?? 0
   );
+  const [playRematchSound] = useSound(rematchSound);
 
   const handleMainMenu = async () => {
     dispatch(submitButton({ button: { mode: PROCESS_INPUT.MAIN_MENU } }));
     navigate('/');
   };
 
+  const [isSoundPlaying, setIsSoundPlaying] = useState(false);
+
   const handleQuickRematch = () => {
+    if (!isSoundPlaying) {
+      setIsSoundPlaying(true);
+      playRematchSound();
+      setTimeout(() => {
+        setIsSoundPlaying(false);
+      }, 2000);
+    }
     dispatch(submitButton({ button: { mode: PROCESS_INPUT.QUICK_REMATCH } }));
   };
 
   const handleFullRematch = () => {
+    if (!isSoundPlaying) {
+      setIsSoundPlaying(true);
+      playRematchSound();
+      setTimeout(() => {
+        setIsSoundPlaying(false);
+      }, 2000);
+    }
     dispatch(submitButton({ button: { mode: PROCESS_INPUT.FULL_REMATCH } }));
   };
 

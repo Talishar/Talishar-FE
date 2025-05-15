@@ -186,8 +186,9 @@ button {
 .disclaimerAcceptButtons {
   margin-left: 30%;
   margin-right: 30%;
-  animation: wiggle 2s linear 2;
+  animation: wiggle 3s linear 2;
   animation-delay: 5s;
+  animation-iteration-count: infinite;
 }
 
 /* Keyframes */
