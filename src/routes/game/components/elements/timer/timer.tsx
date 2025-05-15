@@ -3,20 +3,32 @@ import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import styles from './timer.module.css';
 import { FaRegClock } from "react-icons/fa";
+import { useCookies } from 'react-cookie';
+
+const getGameIdFromUrl = () => {
+  const url = window.location.href;
+  const gameId = url.split('/').pop();
+  return gameId;
+};
 
 export default function Timer() {
-  const initialTimer = useAppSelector((state: RootState) => state.game.gameDynamicInfo.clock);
-  const [timer, setTimer] = useState(initialTimer ?? 0);
+  const gameId = getGameIdFromUrl();
+  const cookieName = `timer-${gameId}`;
+  const [cookies, setCookie, removeCookie] = useCookies([cookieName]);
+  const initialTimer = cookies[cookieName] ? parseInt(cookies[cookieName]) : 0;
+  const [timer, setTimer] = useState(initialTimer);
 
   useEffect(() => {
     const intervalId = setInterval(() => {
       setTimer(timer + 1);
+      setCookie(cookieName, timer + 1, { path: '/' });
     }, 1000); // update every 1 second
 
     return () => {
       clearInterval(intervalId);
     };
   }, [timer]);
+
   function fancyTimeFormat(duration: number | undefined) {
     duration = duration ?? 0;
     // Hours, minutes and seconds
