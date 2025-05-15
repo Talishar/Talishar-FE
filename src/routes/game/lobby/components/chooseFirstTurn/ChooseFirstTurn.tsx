@@ -59,13 +59,13 @@ const ChooseFirstTurn = () => {
           <h5>Would you like to go first or second?</h5>
         </hgroup>
         <div className={styles.buttons}>
-          <button onClick={chooseFirst}>
+          <button className='firstButton' onClick={chooseFirst}>
             <div className={styles.icon}>
               <TbHexagonNumber1 />
             </div>
             First
           </button>
-          <button onClick={chooseSecond}>
+          <button className='secondButton' onClick={chooseSecond}>
             <div className={styles.icon}>
               <TbHexagonNumber2 />
             </div>
