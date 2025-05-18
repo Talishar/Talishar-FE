@@ -1206,6 +1206,7 @@ export const CARD_LIST: string[] = [
   "Metacarpus Node",
   "Metis, Archangel of Tenacity",
   "Micro-processor",
+  "Midas Touch",
   "Mighty Windup",
   "Miller's Grindstone",
   "Mind Warp",
