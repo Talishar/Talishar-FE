@@ -928,6 +928,7 @@ export const CARD_LIST: string[] = [
   "Herald of Protection",
   "Herald of Ravages",
   "Herald of Rebirth",
+  "Herald of Sekem",
   "Herald of Tenacity",
   "Herald of Triumph",
   "Heron's Flight",
