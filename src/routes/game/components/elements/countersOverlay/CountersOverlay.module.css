@@ -429,7 +429,7 @@
   align-items: center;
   background-color: rgba(0, 0, 0, 0.8);
   border: var(--primary) solid 1px;
-  color: var(--green);
+  color: var(--white);
   border-radius: 5px;
   min-width: 1.5em;
   height: 1.5em;
