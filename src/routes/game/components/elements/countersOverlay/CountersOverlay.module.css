@@ -24,6 +24,7 @@
   inset: 0;
   z-index: 2;
   cursor: default;
+  align-content: center;
 }
 
 .number.number {
@@ -409,7 +410,7 @@
   align-items: center;
   background-color: rgba(0, 0, 0, 0.8);
   border: var(--primary) solid 1px;
-  color: var(--white);
+  color: var(--green);
   border-radius: 5px;
   min-width: 1.5em;
   height: 1.5em;
