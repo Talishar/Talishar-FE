@@ -7,12 +7,12 @@
   left: 5px;
   right: 3px;
   text-align: center;
-  border: 1px black solid;
+  border: .5px solid var(--primary);
   border-radius: 5px;
   z-index: 100;
   text-overflow: ellipsis;
   overflow: hidden;
-  font-weight: 550;
+  font-weight: 500;
 }
 
 .countersCover.countersCover {
@@ -283,6 +283,25 @@
   height: 1.75em;
   width: 1.75em;
   background-image: url('../../../../../img/symbols/symbol-stainCounter.png');
+  background-position: center;
+  background-size: contain;
+  text-align: center;
+  font-size: 1.5em;
+  color: var(--white);
+  text-shadow: -1px 1px 2px #000, 1px 1px 2px #000, 1px -1px 0 #000,
+    -1px -1px 0 #000;
+  z-index: -1;
+  cursor: default;
+}
+
+.goldCounter.goldCounter {
+  border-radius: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 1.75em;
+  width: 1.75em;
+  background-image: url('../../../../../img/symbols/symbol-goldCounter.png');
   background-position: center;
   background-size: contain;
   text-align: center;

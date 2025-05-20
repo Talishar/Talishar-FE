@@ -41,6 +41,7 @@ export const CountersOverlay = ({
     'balance',
     'bind',
     'stain',
+    'gold',
     'lightning',
     'amp',
     'aim'
