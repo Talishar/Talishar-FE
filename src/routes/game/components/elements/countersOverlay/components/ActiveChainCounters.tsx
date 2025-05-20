@@ -13,7 +13,8 @@ import {
   GiStoneTower,
   GiSpearfishing,
   GiNinjaStar,
-  GiWaterSplash 
+  GiWaterSplash,
+  GiArmorPunch 
 } from 'react-icons/gi';
 type Props = {
   activeCombatChain?: CombatChainLink;
@@ -39,6 +40,11 @@ export const ActiveCardCounterOverlay = (props: Props) => {
       {activeCombatChain.overpower && (
         <div className={styles.icon} data-tooltip="Overpower">
           <GiStomp />
+        </div>
+      )}
+      {activeCombatChain.activeOnHits && (
+        <div className={styles.icon} data-tooltip="Active On Hit">
+          <GiArmorPunch />
         </div>
       )}
       {activeCombatChain.wager && (

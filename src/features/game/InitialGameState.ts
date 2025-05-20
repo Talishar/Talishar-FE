@@ -97,6 +97,7 @@ export const OfflineTestingGameState: GameState = {
     goAgain: true,
     dominate: true,
     overpower: true,
+    activeOnHits: true,
     wager: true,
     phantasm: true,
     fusion: true,

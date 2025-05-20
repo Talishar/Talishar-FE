@@ -18,6 +18,7 @@ export const mockGetNextTurn = {
     goAgain: false,
     dominate: false,
     overpower: false,
+    activeOnHits: false,
     wager: false,
     phantasm: false,
     fusion: false,
