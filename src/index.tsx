@@ -25,7 +25,11 @@ root.render(
               background: 'var(--dark-red)',
               color: 'var(--white)',
               border: '1px solid var(--primary)',
-              padding: '0.5rem'
+              padding: '0.5rem',
+              wordBreak: 'break-word', // add this
+              maxWidth: '100vh', // add this, adjust the value as needed
+              overflow: 'hidden', // add this
+              textOverflow: 'ellipsis', // add this
             }
           }}
         />

@@ -58,7 +58,8 @@ export const nextTurn = createAsyncThunk(
         data = data.toString().trim();
         const indexOfBraces = data.indexOf('{');
         if (indexOfBraces !== 0) {
-          toast.error(`Backend Warning:\n${data.substring(0, indexOfBraces)}`);
+          const warningMessage = data.substring(0, indexOfBraces).replace(/<[^>]*>/g, '');
+          toast.error(`Backend Warning: ${warningMessage}`);          
           console.warn(data.substring(0, indexOfBraces));
           data = data.substring(indexOfBraces);
         }
