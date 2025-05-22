@@ -202,48 +202,55 @@ const GameList = () => {
                 Games in Progress: <span>{data.gameInProgressCount}</span>
               </h4>
               <InProgressGameList
-                gameList={filteredGamesInProgress.filter((game) =>
-                  [GAME_FORMAT.BLITZ, GAME_FORMAT_NUMBER.BLITZ].includes(game.format)
-                )}
+                gameList={[
+                  ...filteredGamesInProgress.filter((game) =>
+                    [GAME_FORMAT.BLITZ, GAME_FORMAT_NUMBER.BLITZ].includes(game.format)
+                  ),
+                ].sort((a, b) => a.gameName - b.gameName)}
                 name="Blitz"
               />
               <InProgressGameList
-                gameList={filteredGamesInProgress.filter((game) =>
-                  [GAME_FORMAT.COMPETITIVE_BLITZ, GAME_FORMAT_NUMBER.COMPETITIVE_BLITZ].includes(game.format)
-                )}
+                gameList={[
+                  ...filteredGamesInProgress.filter((game) =>
+                    [GAME_FORMAT.COMPETITIVE_BLITZ, GAME_FORMAT_NUMBER.COMPETITIVE_BLITZ].includes(
+                      game.format
+                    )
+                  ),
+                ].sort((a, b) => a.gameName - b.gameName)}
                 name="Competitive Blitz"
               />
               <InProgressGameList
-                gameList={filteredGamesInProgress.filter((game) =>
-                  [GAME_FORMAT.CLASSIC_CONSTRUCTED, GAME_FORMAT_NUMBER.CLASSIC_CONSTRUCTED].includes(game.format)
-                )}
+                gameList={[
+                  ...filteredGamesInProgress.filter((game) =>
+                    [GAME_FORMAT.CLASSIC_CONSTRUCTED, GAME_FORMAT_NUMBER.CLASSIC_CONSTRUCTED].includes(
+                      game.format
+                    )
+                  ),
+                ].sort((a, b) => a.gameName - b.gameName)}
                 name="Classic Constructed"
               />
               <InProgressGameList
-                gameList={filteredGamesInProgress.filter((game) =>
-                  [GAME_FORMAT.COMPETITIVE_CC, GAME_FORMAT_NUMBER.COMPETITIVE_CC].includes(game.format)
-                )}
+                gameList={[
+                  ...filteredGamesInProgress.filter((game) =>
+                    [GAME_FORMAT.COMPETITIVE_CC, GAME_FORMAT_NUMBER.COMPETITIVE_CC].includes(
+                      game.format
+                    )
+                  ),
+                ].sort((a, b) => a.gameName - b.gameName)}
                 name="Competitive CC"
               />
               <InProgressGameList
-                gameList={filteredGamesInProgress.filter(
-                  (game) =>
-                    ![
-                      GAME_FORMAT.BLITZ,
-                      GAME_FORMAT_NUMBER.BLITZ,
-                      GAME_FORMAT.COMPETITIVE_BLITZ,
-                      GAME_FORMAT_NUMBER.COMPETITIVE_BLITZ,
-                      GAME_FORMAT.COMPETITIVE_CC,
-                      GAME_FORMAT.CLASSIC_CONSTRUCTED,
-                      GAME_FORMAT_NUMBER.CLASSIC_CONSTRUCTED,
-                      GAME_FORMAT_NUMBER.COMPETITIVE_CC,
-                    ].includes(game.format)
-                )}
+                gameList={[
+                  ...filteredGamesInProgress.filter(
+                    (game) =>
+                      ![GAME_FORMAT.BLITZ, GAME_FORMAT_NUMBER.BLITZ, GAME_FORMAT.COMPETITIVE_BLITZ, GAME_FORMAT_NUMBER.COMPETITIVE_BLITZ, GAME_FORMAT.COMPETITIVE_CC, GAME_FORMAT.CLASSIC_CONSTRUCTED, GAME_FORMAT_NUMBER.CLASSIC_CONSTRUCTED, GAME_FORMAT_NUMBER.COMPETITIVE_CC].includes(game.format)
+                  ),
+                ].sort((a, b) => a.gameName - b.gameName)}
                 name="Other Formats"
               />
             </div>
-          )}
-        </>
+          )}        
+          </>
       ) : (
         !isLoading && (
           <p>
