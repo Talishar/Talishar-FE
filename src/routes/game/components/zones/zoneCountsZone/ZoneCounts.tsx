@@ -178,7 +178,7 @@ const BloodDebtCount = (prop: Displayrow) => {
   return (
     <>
       {!!hasBloodDebt ? (
-        <div title="Blood Debts" className={bloodDebtItem}>
+        <div title={`Blood Debt${bloodDebtCount === 1 ? '' : 's'}`} className={bloodDebtItem}>
           <GiDroplets /> {bloodDebtCount}
         </div>
       ) : (
