@@ -206,7 +206,7 @@ const GameList = () => {
                   ...filteredGamesInProgress.filter((game) =>
                     [GAME_FORMAT.BLITZ, GAME_FORMAT_NUMBER.BLITZ].includes(game.format)
                   ),
-                ].sort((a, b) => a.gameName - b.gameName)}
+                ].sort((a, b) => b.gameName - a.gameName)}
                 name="Blitz"
               />
               <InProgressGameList
@@ -216,7 +216,7 @@ const GameList = () => {
                       game.format
                     )
                   ),
-                ].sort((a, b) => a.gameName - b.gameName)}
+                ].sort((a, b) => b.gameName - a.gameName)}
                 name="Competitive Blitz"
               />
               <InProgressGameList
@@ -226,7 +226,7 @@ const GameList = () => {
                       game.format
                     )
                   ),
-                ].sort((a, b) => a.gameName - b.gameName)}
+                ].sort((a, b) => b.gameName - a.gameName)}
                 name="Classic Constructed"
               />
               <InProgressGameList
@@ -236,7 +236,7 @@ const GameList = () => {
                       game.format
                     )
                   ),
-                ].sort((a, b) => a.gameName - b.gameName)}
+                ].sort((a, b) => b.gameName - a.gameName)}
                 name="Competitive CC"
               />
               <InProgressGameList
@@ -245,11 +245,11 @@ const GameList = () => {
                     (game) =>
                       ![GAME_FORMAT.BLITZ, GAME_FORMAT_NUMBER.BLITZ, GAME_FORMAT.COMPETITIVE_BLITZ, GAME_FORMAT_NUMBER.COMPETITIVE_BLITZ, GAME_FORMAT.COMPETITIVE_CC, GAME_FORMAT.CLASSIC_CONSTRUCTED, GAME_FORMAT_NUMBER.CLASSIC_CONSTRUCTED, GAME_FORMAT_NUMBER.COMPETITIVE_CC].includes(game.format)
                   ),
-                ].sort((a, b) => a.gameName - b.gameName)}
+                ].sort((a, b) => b.gameName - a.gameName)}
                 name="Other Formats"
               />
             </div>
-          )}        
+          )}
           </>
       ) : (
         !isLoading && (
