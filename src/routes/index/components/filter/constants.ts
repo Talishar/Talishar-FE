@@ -111,4 +111,5 @@ export const HEROES_OF_RATHE: { value: string; label: string }[] = [
   { value: 'HER123', label: 'Ira' },
   { value: 'MPG001', label: 'Valda' },
   { value: 'HER135', label: 'Valda' },
+  { value: 'SEA123', label: 'Scurv' },
 ];
