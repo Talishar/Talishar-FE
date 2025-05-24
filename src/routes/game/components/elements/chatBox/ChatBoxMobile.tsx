@@ -71,8 +71,8 @@ export default function ChatBox() {
     // Added inline styles for fixed positioning
     <div className={styles.chatBoxMobileContainer} style={{
       position: 'fixed',
-      top: '10px',
-      right: '10px', 
+      top: '2vh',
+      right: '2vh', 
       zIndex: 1000, 
     }}>
       <div className={styles.chatBoxMobileInner}>
