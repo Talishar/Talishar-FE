@@ -68,7 +68,13 @@ export default function ChatBox() {
   }, [chatLog, chatFilter]);
 
   return (
-    <div className={styles.chatBoxMobileContainer}>
+    // Added inline styles for fixed positioning
+    <div className={styles.chatBoxMobileContainer} style={{
+      position: 'fixed',
+      top: '10px',
+      right: '10px', 
+      zIndex: 1000, 
+    }}>
       <div className={styles.chatBoxMobileInner}>
         <div className={styles.chatMobileBox}>
           {chatMessages &&
