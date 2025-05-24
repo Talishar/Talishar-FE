@@ -129,7 +129,7 @@ export const CARD_LIST: string[] = [
   "Ball Breaker",
   "Ball Lightning",
   "Bam Bam",
-  "Bandana of the Blue Beyonds",
+  "Bandana of the Blue Beyond",
   "Bank Breaker",
   "Banksy",
   "Banneret of Courage",
