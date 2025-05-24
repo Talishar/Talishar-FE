@@ -79,7 +79,7 @@
 }
 
 .chatBoxMobileInner {
-  min-height: 250px;
+  min-height: 25vh;
   overflow-y: auto;
   font-weight: 400;
   font-size: max(1em, 7px);
