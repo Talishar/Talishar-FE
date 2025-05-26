@@ -103,6 +103,7 @@ export const CARD_BACK = {
   '102': 'CBBlitzkriegMeph',
   '103': 'CBHamMan215',
   '104': 'CBNewHorizons',
+  '105': 'CBMetalFab',
 } as { [key: string]: string };
 
 export const PLAYMATS = {
