@@ -17,8 +17,9 @@ export default function CombatChain() {
   const activeCombatChain = useAppSelector(
     (state: RootState) => state.game.activeChainLink
   );
-  const [canSkipBlock] = React.useState(false);
-  const [canSkipBlockAndDef] = React.useState(false);
+  const [isUp, setIsUp] = React.useState(false);
+  const [canSkipBlock, setCanSkipBlock] = React.useState(false);
+  const [canSkipBlockAndDef, setCanSkipBlockAndDef] = React.useState(false);
   const [position, setPosition] = React.useState('default');
 
   const handleChangePositionClick = (newPosition: 'up' | 'down') => {
@@ -89,9 +90,10 @@ export default function CombatChain() {
               )}
             </div>
           </div>
-          {canSkipBlock ? <div className={styles.icon}></div> : <div></div>}
-          {canSkipBlockAndDef ? (
-            <div className={styles.icon}></div>
+           {!isPortrait && <PlayerPrompt />}
+            {canSkipBlock ? <div className={styles.icon}></div> : <div></div>}
+            {canSkipBlockAndDef ? (
+              <div className={styles.icon}></div>
           ) : (
             <div></div>
           )}
