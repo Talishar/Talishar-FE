@@ -1,7 +1,6 @@
 import {
   EUROPEAN_LANGUAGES,
   JAPANESE_LANGUAGE,
-  JAPANESE_LANGUAGE_PRINTED_COLLECTIONS,
   LOCALE_DICTIONARY,
   DEFAULT_LANGUAGE,
   EUROPEAN_LANGUAGES_PRINTED_COLLECTIONS,
@@ -26,8 +25,17 @@ const getSetID = (cardNumber: string): string =>
   : cardNumber;
 
 const isJapaneseCard = (locale: string, collectionCode: string): boolean =>
-  locale === JAPANESE_LANGUAGE;// &&
+  locale === JAPANESE_LANGUAGE // && 
   // JAPANESE_LANGUAGE_PRINTED_COLLECTIONS.includes(collectionCode);
+
+// This condition is created due to LSS removing support to Spanish, German and Italian languages from "High Seas" set
+// Uncomment when this when cards from FRENCH_PRINTED_COLLECTIONS are in setIDs object
+/*
+const isFrenchNewSupportedSets = (locale: string, collectionCode: string): boolean => (
+  locale === 'fr' &&
+  FRENCH_PRINTED_COLLECTIONS.includes(collectionCode)
+);
+*/
 
 const isEuropeanCard = (
   locale: string,
@@ -36,7 +44,9 @@ const isEuropeanCard = (
 ): boolean =>
   EUROPEAN_LANGUAGES.includes(locale) &&
   (EUROPEAN_LANGUAGES_PRINTED_COLLECTIONS.includes(collectionCode) ||
-    isHistoryPackCard(collectionCode, cardNumber));
+    isHistoryPackCard(collectionCode, cardNumber) 
+    // || isFrenchNewSupportedSets(locale, collectionCode) // Uncomment when this when cards from FRENCH_PRINTED_COLLECTIONS are in setIDs object
+  );
 
 const isHistoryPack1Card = (
   collectionCode: string,
