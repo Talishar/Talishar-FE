@@ -3,7 +3,6 @@ import styles from './CombatChain.module.css';
 import ChainLinks from '../elements/chainLinks/ChainLinks';
 import CurrentAttack from '../elements/currentAttack/CurrentAttack';
 import Reactions from '../elements/reactions/Reactions';
-import { useCookies } from 'react-cookie';
 import { useAppDispatch, useAppSelector } from '../../../../app/Hooks';
 import { RootState } from 'app/Store';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -18,14 +17,26 @@ export default function CombatChain() {
   const activeCombatChain = useAppSelector(
     (state: RootState) => state.game.activeChainLink
   );
-  const [isUp, setIsUp] = React.useState(false);
-  const [canSkipBlock, setCanSkipBlock] = React.useState(false);
-  const [canSkipBlockAndDef, setCanSkipBlockAndDef] = React.useState(false);
-  const [cookies] = useCookies(['experimental']);
+  const [canSkipBlock] = React.useState(false);
+  const [canSkipBlockAndDef] = React.useState(false);
+  const [position, setPosition] = React.useState('default');
 
-  const handleChangePositionClick = () => {
-    setIsUp(!isUp);
+  const handleChangePositionClick = (newPosition: 'up' | 'down') => {
+    if (newPosition === 'up') {
+      if (position === 'down') {
+        setPosition('default');
+      } else {
+        setPosition('up');
+      }
+    } else if (newPosition === 'down') {
+      if (position === 'up') {
+        setPosition('default');
+      } else {
+        setPosition('down');
+      }
+    }
   };
+
   const [width, height] = useWindowDimensions();
   const isPortrait = height > width;
 
@@ -39,9 +50,13 @@ export default function CombatChain() {
         <motion.div
           initial={{ opacity: 0 }}
           animate={
-            isUp
+            position === 'up'
               ? { opacity: 1, x: 0, y: '-30dvh' }
-              : { opacity: 1, x: 0, y: 0 }
+              : position === 'down'
+              ? { opacity: 1, x: 0, y: '20dvh' }
+              : position === 'default'
+              ? { opacity: 1, x: 0, y: '-10dvh' }
+              : { opacity: 1, x: 0, y: '-10dvh' }
           }
           transition={{ type: 'tween' }}
           exit={{ opacity: 0 }}
@@ -53,29 +68,33 @@ export default function CombatChain() {
             <Reactions />
           </div>
           <div className={styles.grabbyHandle}>
-            {isUp ? (
-              <div
-                className={styles.grabbyHandleButton}
-                onClick={handleChangePositionClick}
-              >
-                <BsArrowDownSquareFill />
-              </div>
-            ) : (
-              <div
-                className={styles.grabbyHandleButton}
-                onClick={handleChangePositionClick}
-              >
-                <BsArrowUpSquareFill />
-              </div>
-            )}
-            {canSkipBlock ? <div className={styles.icon}></div> : <div></div>}
-            {canSkipBlockAndDef ? (
-              <div className={styles.icon}></div>
-            ) : (
-              <div></div>
-            )}
+                <div className={styles.grabbyHandleButtonContainer}>
+              {(position !== 'up') && (
+                <div
+                  className={styles.grabbyHandleButton}
+                  onClick={() => handleChangePositionClick('up')}
+                >
+                  <BsArrowUpSquareFill />
+                </div>
+              )}
+            </div>
+                <div className={styles.grabbyHandleButtonContainer}>
+              {(position !== 'down') && (
+                <div
+                  className={styles.grabbyHandleButton}
+                  onClick={() => handleChangePositionClick('down')}
+                >
+                  <BsArrowDownSquareFill />
+                </div>
+              )}
+            </div>
           </div>
-          {!isPortrait && <PlayerPrompt />}
+          {canSkipBlock ? <div className={styles.icon}></div> : <div></div>}
+          {canSkipBlockAndDef ? (
+            <div className={styles.icon}></div>
+          ) : (
+            <div></div>
+          )}
         </motion.div>
       )}
     </AnimatePresence>

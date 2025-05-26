@@ -46,6 +46,13 @@
   align-items: center;
 }
 
+.grabbyHandleButtonContainer {
+  height: '50%';
+  display: 'flex'; 
+  justify-content: 'center';
+  align-Items: 'center';
+}
+
 .grabbyHandleButton {
   display: flex;
   justify-content: center;
@@ -152,3 +159,4 @@
 .content {
   flex-grow: 1;
 }
+
