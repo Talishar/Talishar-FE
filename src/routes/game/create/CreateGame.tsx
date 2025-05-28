@@ -26,6 +26,7 @@ const preconDecklinks = [
   "https://fabrary.net/decks/01J3GKKSTM773CW7BG3RRJ5FJH", //azalea
   "https://fabrary.net/decks/01J202NH0RG8S0V8WXH1FWB2AH", //boltyn
   "https://fabrary.net/decks/01HWNCK2BYPVKK6701052YYXMZ", //kayo
+  "https://fabrary.net/decks/01JVYZ0NCHP49HAP40C23P14E3", //gravy
 ];
 
 const preconDeckNames = [
@@ -36,6 +37,7 @@ const preconDeckNames = [
   "Azalea, Ace in the Hole",
   "Ser Boltyn, Breaker of Dawn",
   "Kayo, Armed and Dangerous",
+  "Gravy Bones, Shipwrecked Looter",
 ];
 
 // Create sorted arrays for the precon decks

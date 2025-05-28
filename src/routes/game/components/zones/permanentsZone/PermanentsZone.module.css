@@ -127,13 +127,6 @@
   color: black;
 }
 
-@media (orientation: portrait) {
-  .cardContainer {
-    /* min-width: var(--card-size);
-    min-height: var(--card-size); */
-  }
-}
-
 .stacked {
   display: block;
   aspect-ratio: 1;
