@@ -68,8 +68,8 @@
 
 .chatBoxMobileContainer {
   width: 100%;
-  width: 30vw;
-  padding-top: 1dvh;
+  width: 25vw;
+  padding-top: 3vh;  
   position: relative;
   flex-grow: 1;
   flex-basis: 100%;
