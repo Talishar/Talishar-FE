@@ -53,10 +53,12 @@ export const CardListZone = () => {
             </div>
             {(cardList && cardList.name && 
               (
-                cardList.name.includes('Your Opponent\'s Graveyard') ||
                 cardList.name.includes('Your Graveyard') ||
+                cardList.name.includes('Your Opponent\'s Graveyard') ||
                 cardList.name.includes('Your Banish') ||
-                cardList.name.includes('Your Opponent\'s Banish')
+                cardList.name.includes('Your Opponent\'s Banish') ||
+                cardList.name.includes('Your Deck') ||
+                cardList.name.includes('Your Opponent\'s Deck')
               )) && (
               <button className={styles.button} onClick={handleSort}>Sort</button>
             )}
