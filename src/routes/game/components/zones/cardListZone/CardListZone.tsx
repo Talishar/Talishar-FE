@@ -30,11 +30,11 @@ export const CardListZone = () => {
   useShortcut(DEFAULT_SHORTCUTS.CLOSE_WINDOW, closeCardList);
 
   const handleSort = () => {
-  if (cardList && cardList.cardList && cardList.name) {
-    const sortedCardList = [...cardList.cardList].sort((a, b) => a.cardNumber.localeCompare(b.cardNumber));
-    dispatch(setCardListFocus({ cardList: sortedCardList, name: cardList.name }));
-  }
-};
+    if (cardList && cardList.cardList && cardList.name) {
+      const sortedCardList = [...cardList.cardList].sort((a, b) => b.cardNumber.localeCompare(a.cardNumber));
+      dispatch(setCardListFocus({ cardList: sortedCardList, name: cardList.name }));
+    }
+  };
 
   return (
     <AnimatePresence>
