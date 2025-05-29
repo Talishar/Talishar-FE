@@ -42,7 +42,7 @@ export default function PitchZone(prop: Displayrow) {
     dispatch(
       setCardListFocus({
         cardList: pitchZone,
-        name: `${isPlayerPronoun} Pitch Zone`
+        name: `${isPlayerPronoun} Pitch`
       })
     );
   };

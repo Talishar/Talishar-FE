@@ -58,7 +58,11 @@ export const CardListZone = () => {
                 cardList.name.includes('Your Banish') ||
                 cardList.name.includes('Your Opponent\'s Banish') ||
                 cardList.name.includes('Your Deck') ||
-                cardList.name.includes('Your Opponent\'s Deck')
+                cardList.name.includes('Your Opponent\'s Deck') ||
+                cardList.name.includes('Your Soul') ||
+                cardList.name.includes('Your Opponent\'s Soul') ||
+                cardList.name.includes('Your Pitch') ||
+                cardList.name.includes('Your Opponent\'s Pitch')
               )) && (
               <button className={styles.button} onClick={handleSort}>Sort</button>
             )}
