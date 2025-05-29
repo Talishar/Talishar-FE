@@ -53,6 +53,15 @@
   width: 8vh;
   height: 4vh;
   border-radius: 5px;
+  background-color: black;
+  color: var(--h3-color);
+  --font-weight: 700;
+  border: 1px solid var(--primary-focus);
+}
+
+.button:hover {
+  background-color: var(--primary);
+  color: black;
 }
 
 .cardListCloseIcon {
@@ -63,6 +72,7 @@
   width: 4vh;
   height: 4vh;
   border-radius: 5px;
+  font-size: 1.5em;
 }
 
 .cardListCloseIcon:hover {
