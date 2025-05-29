@@ -19,7 +19,7 @@
   right: 0;
   bottom: 0;
   display: flex;
-  gap: 5px;
+  gap: 8px;
   justify-content: flex-start;
   align-items: flex-end;
   flex-wrap: nowrap;

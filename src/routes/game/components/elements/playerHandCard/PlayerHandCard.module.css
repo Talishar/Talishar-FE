@@ -54,35 +54,35 @@
 
 .border1 {
   border-color: deepskyblue;
-  box-shadow: 0 0 5px 5px deepskyblue;
+  box-shadow: 0 0 3px 3px deepskyblue;
 }
 
 .border2 {
   border-color: red;
-  box-shadow: 0 0 5px 5px red;
+  box-shadow: 0 0 3px 3px red;
 }
 
 .border3 {
   border-color: var(--primary);
-  box-shadow: 0 0 5px 5px var(--primary);
+  box-shadow: 0 0 3px 3px var(--primary);
 }
 
 .border4 {
   border-color: gray;
-  box-shadow: 0 0 5px 5px gray;
+  box-shadow: 0 0 3px 3px gray;
 }
 
 .border5 {
   border-color: tan;
-  box-shadow: 0 0 5px 5px tan;
+  box-shadow: 0 0 3px 3px tan;
 }
 
 .border6 {
   border-color: chartreuse;
-  box-shadow: 0 0 5px 5px chartreuse;
+  box-shadow: 0 0 3px 3px chartreuse;
 }
 
 .border7 {
   border-color: purple;
-  box-shadow: 0 0 5px 5px purple;
+  box-shadow: 0 0 3px 3px purple;
 }
