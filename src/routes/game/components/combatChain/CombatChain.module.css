@@ -17,6 +17,7 @@
   border: 1px solid goldenrod;
   background-color: var(--near-black);
   pointer-events: auto;
+  z-index: 10;
 }
 
 .combatChain::before {
