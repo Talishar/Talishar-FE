@@ -48,7 +48,7 @@
 }
 
 .orderingExplanation {
-  font-size: 0.7em;
+  font-size: 0.8em;
   margin-top: 0.2em;
   margin-bottom: 0;
 }
@@ -128,7 +128,6 @@
   .orderingExplanation {
     max-width: 40vw; 
     font-size: 0.7em;
-    
   }
 
   .passTurnBox {
