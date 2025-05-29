@@ -17,11 +17,15 @@
   position: relative;
   display: flex;
   flex-direction: row;
-  flex-grow: 0;
-  width: 100%;
   justify-content: space-between;
   align-items: center;
-  padding-left: 1vh;
+}
+
+.cardListTitleContainer button {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
 }
 
 .title {
@@ -42,6 +46,13 @@
   gap: 1vh;
   overflow-y: auto;
   height: auto;
+}
+
+.button {
+  margin-right: 4vh;
+  width: 8vh;
+  height: 4vh;
+  border-radius: 5px;
 }
 
 .cardListCloseIcon {

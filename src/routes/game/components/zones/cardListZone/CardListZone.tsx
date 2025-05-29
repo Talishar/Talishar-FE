@@ -1,7 +1,7 @@
 import React from 'react';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
-import { clearCardListFocus, getGameInfo } from 'features/game/GameSlice';
+import { clearCardListFocus, setCardListFocus, getGameInfo } from 'features/game/GameSlice';
 import CardDisplay from '../../elements/cardDisplay/CardDisplay';
 import { FaTimes } from 'react-icons/fa';
 import styles from './CardListZone.module.css';
@@ -29,6 +29,13 @@ export const CardListZone = () => {
 
   useShortcut(DEFAULT_SHORTCUTS.CLOSE_WINDOW, closeCardList);
 
+  const handleSort = () => {
+  if (cardList && cardList.cardList && cardList.name) {
+    const sortedCardList = [...cardList.cardList].sort((a, b) => a.cardNumber.localeCompare(b.cardNumber));
+    dispatch(setCardListFocus({ cardList: sortedCardList, name: cardList.name }));
+  }
+};
+
   return (
     <AnimatePresence>
       {showModal && cardList?.active && (
@@ -44,6 +51,15 @@ export const CardListZone = () => {
             <div className={styles.cardListTitle}>
               <h3 className={styles.title}>{cardList?.name}</h3>
             </div>
+            {(cardList && cardList.name && 
+              (
+                cardList.name.includes('Your Opponent\'s Graveyard') ||
+                cardList.name.includes('Your Graveyard') ||
+                cardList.name.includes('Your Banish') ||
+                cardList.name.includes('Your Opponent\'s Banish')
+              )) && (
+              <button className={styles.button} onClick={handleSort}>Sort</button>
+            )}
             <div className={styles.cardListCloseIcon} onClick={closeCardList}>
               <FaTimes title="Close Dialog" />
             </div>
@@ -61,7 +77,6 @@ export const CardListZone = () => {
         </motion.div>
       )}
     </AnimatePresence>
-    // </div>
   );
 };
 
