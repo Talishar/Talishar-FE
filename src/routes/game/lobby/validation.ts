@@ -11,7 +11,7 @@ export const deckValidation = (
     hero: string().required('You must have a hero!'),
     weapons: array()
       .required()
-      .test('offhands', 'Too many offhands equipped', (weapons = []) => {
+      .test('offhands', 'Too many off-hands equipped', (weapons = []) => {
         const offhands = weapons.filter((weapon) => weapon.isOffhand);
         return offhands.length <= 1;
       })
