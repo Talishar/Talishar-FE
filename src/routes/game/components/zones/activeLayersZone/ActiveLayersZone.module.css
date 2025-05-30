@@ -2,7 +2,7 @@
   position: fixed;
   display: flex;
   flex-direction: column;
-  min-width: 30vh;
+  min-width: 40vh;
   top: 8vh;
   left: 20%;
   background-color: var(--near-black);
@@ -117,6 +117,10 @@
 }
 
 @media only screen and (max-width: 768px) {
+  .activeLayersBox {
+    min-width: 30vh;
+  }
+  
   .activeLayersCallToAction {
     font-size: 0.7em;
   }
