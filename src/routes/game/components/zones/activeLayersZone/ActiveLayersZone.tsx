@@ -78,7 +78,7 @@ export default function ActiveLayersZone() {
                 Priority settings can be adjusted in the menu
               </p> */}
             </div>
-            {canPassPhase && (
+              {canPassPhase && (
               <div className={styles.passTurnBox}>
                 <button className={styles.passTurn} onClick={handlePassTurn}>
                   Pass

@@ -94,12 +94,13 @@
 
 .passTurn {
   position: absolute;
-  top: 10px;
-  right: 10px;
-  width: 6vh;
+  top: .75vh;
+  right: .75vh;
+  width: 6.5vh;
+  font-size: 1.25em;
   margin-top: 10px;
   margin-right: 10px;
-  padding: 0.5rem;
+  padding: 4px;
   z-index: 1;
 }
 
