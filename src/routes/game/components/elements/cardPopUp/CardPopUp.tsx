@@ -47,7 +47,8 @@ export default function CardPopUp({
       cardNumber == 'BEATCHEST' ||
       cardNumber == 'MERIDIANWARD' ||
       cardNumber == 'HIGHTIDE' ||
-      cardNumber == "WATERYGRAVE"
+      cardNumber == "WATERYGRAVE" || 
+      cardNumber == "DUMMYDISHONORED"
     ) {
       return;
     }
