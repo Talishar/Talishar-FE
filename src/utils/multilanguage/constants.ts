@@ -31,14 +31,11 @@ export const EUROPEAN_LANGUAGES_PRINTED_COLLECTIONS = [
   'HNT'
 ];
 
-// Uncomment when this when cards are in setIDs object
 export const FRENCH_PRINTED_COLLECTIONS = [
-  /*
   'AIO',
   'AJV',
   'AMX',
   'SEA'
-  */
 ];
 
 export const JAPANESE_LANGUAGE_PRINTED_COLLECTIONS = [
@@ -56,7 +53,7 @@ export const JAPANESE_LANGUAGE_PRINTED_COLLECTIONS = [
   'AIO',
   'AJV',
   'AMX',
-  // 'SEA' // Uncomment when this when cards are in setIDs object
+  'SEA'
 ];
 
 export const COLLECTIONS_HISTORY_PACK_1 = ['WTR', 'ARC', 'CRU'];
