@@ -12,7 +12,6 @@ import { RootState } from 'app/Store';
 import { useState, useRef } from 'react';
 import { useLanguageSelector } from 'hooks/useLanguageSelector';
 import { CARD_SQUARES_PATH, getCollectionCardImagePath } from 'utils';
-import { CSSTransition } from 'react-transition-group';
 
 export interface CardProp {
   makeMeBigger?: boolean;
@@ -32,8 +31,7 @@ export const CardDisplay = (prop: CardProp) => {
     isPlayer ? state.game.playerOne.CardBack : state.game.playerTwo.CardBack
   ) ?? { cardNumber: '' };
   const { getLanguage } = useLanguageSelector();
-  const [showSubCards, setShowSubCards] = useState<boolean>(false);
-  const subCardRef = useRef(null);
+  const [showSubCards, setShowSubCards] = useState(true);  const subCardRef = useRef(null);
 
   if (card == null || card.cardNumber === '') {
     return null;
@@ -115,14 +113,6 @@ export const CardDisplay = (prop: CardProp) => {
         const subCardKey = `subcard-${card.cardNumber}-${subCardNumber}-${ix}`;
         
         return (
-          <CSSTransition
-            key={subCardKey}
-            in={showSubCards}
-            timeout={200}
-            classNames="subcard-transition"
-            unmountOnExit
-            nodeRef={subCardRef} 
-          >
             <div
               ref={subCardRef}
               style={{
@@ -133,7 +123,6 @@ export const CardDisplay = (prop: CardProp) => {
             >
               <CardDisplay card={{ cardNumber: subCardNumber }} preventUseOnClick />
             </div>
-          </CSSTransition>
         );
       })}
 
