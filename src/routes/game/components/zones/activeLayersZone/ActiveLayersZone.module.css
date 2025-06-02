@@ -102,6 +102,7 @@
   margin-right: 10px;
   padding: 4px;
   z-index: 1;
+  user-select: none;
 }
 
 .buttonDiv:hover {
