@@ -56,8 +56,8 @@ export default function CombatChain() {
               : position === 'down'
               ? { opacity: 1, x: 0, y: '20dvh' }
               : position === 'default'
-              ? { opacity: 1, x: 0, y: '-10dvh' }
-              : { opacity: 1, x: 0, y: '-10dvh' }
+              ? { opacity: 1, x: 0, y: '0dvh' }
+              : { opacity: 1, x: 0, y: '0dvh' }
           }
           transition={{ type: 'tween' }}
           exit={{ opacity: 0 }}

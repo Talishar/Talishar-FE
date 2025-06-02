@@ -2,22 +2,25 @@
   position: fixed;
   display: flex;
   flex-direction: column;
-  min-width: 20%;
-  top: 10vh;
+  min-width: 40vh;
+  top: 8vh;
   left: 20%;
   background-color: var(--near-black);
   padding: 1.5vh;
   border: 1px solid var(--primary);
   border-radius: 10px;
   max-width: 90vh;
-  min-height: 200px;
-  max-height: 50vh;
+  max-height: 40vh;
   z-index: 99;
   overflow-y: auto;
 }
 
+.activeLayersContents > div {
+  width: var(--card-size);
+}
+
 .activeLayersTitle {
-  font-size: 0.9em;
+  font-size: 0.8em;
   padding-left: 0.5em;
   display: flex;
   flex-direction: row;
@@ -77,12 +80,8 @@
   flex-direction: row;
   gap: 10px;
   align-items: center;
-  font-size: 0.9em;
+  font-size: 0.8em;
   padding-left: 0.5em;
-}
-
-.activeLayersContents > div {
-  width: var(--card-size);
 }
 
 .buttonDiv {
@@ -91,6 +90,19 @@
   margin: 0px;
   padding: 6px 8px;
   white-space: nowrap;
+}
+
+.passTurn {
+  position: absolute;
+  top: .75vh;
+  right: .75vh;
+  width: 6.5vh;
+  font-size: 1.25em;
+  margin-top: 10px;
+  margin-right: 10px;
+  padding: 4px;
+  z-index: 1;
+  user-select: none;
 }
 
 .buttonDiv:hover {
@@ -108,15 +120,28 @@
 
 @media only screen and (max-width: 768px) {
   .activeLayersBox {
-    left: 10%;
-    right: 10%;
+    min-width: 30vh;
   }
-
-  .activeLayersContents {
-    height: auto;
-  }
-
+  
   .activeLayersCallToAction {
-    font-size: 0.8em;
+    font-size: 0.7em;
+  }
+
+  .activeLayersTitle {
+    font-size: 0.9em;
+    gap: 10px;
+  }
+
+  .title {
+    font-size: 1em;
+  }
+
+  .orderingExplanation {
+    max-width: 40vw; 
+    font-size: 0.7em;
+  }
+
+  .passTurnBox {
+    display: none;
   }
 }

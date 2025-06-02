@@ -86,8 +86,8 @@ export default function PermanentsZone(prop: Displayrow) {
                   {cardStack.count > 1 && (
                     <div
                       title={`Stack of ${cardStack.count}`}
-                      className={styles.counter}
-                    >
+                      className={isPlayer ? styles.counter : styles.counterOpponent}
+                      >
                       x {cardStack.count}
                     </div>
                   )}

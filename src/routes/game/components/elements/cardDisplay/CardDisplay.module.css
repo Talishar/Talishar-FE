@@ -115,42 +115,42 @@
   width: 20px;
   background-color: #eee;
   border-radius: 50%;
-  border: 3px solid var(--near-black);
+  border: 2px solid var(--near-black);
 }
 
 .border1 {
   border-color: deepskyblue;
-  box-shadow: 0 0 3px 3px deepskyblue;
+  box-shadow: 0 0 2px 2px deepskyblue;
 }
 
 .border2 {
   border-color: red;
-  box-shadow: 0 0 3px 3px red;
+  box-shadow: 0 0 2px 2px red;
 }
 
 .border3 {
   border-color: var(--primary);
-  box-shadow: 0 0 3px 3px var(--primary);
+  box-shadow: 0 0 2px 2px var(--primary);
 }
 
 .border4 {
   border-color: gray;
-  box-shadow: 0 0 3px 3px gray;
+  box-shadow: 0 0 2px 2px gray;
 }
 
 .border5 {
   border-color: tan;
-  box-shadow: 0 0 5px 5px tan;
+  box-shadow: 0 0 3px 3px tan;
 }
 
 .border6 {
   border-color: chartreuse;
-  box-shadow: 0 0 3px 3px chartreuse;
+  box-shadow: 0 0 2px 2px chartreuse;
 }
 
 .border7 {
   border-color: purple;
-  box-shadow: 0 0 5px 5px purple;
+  box-shadow: 0 0 3px 3px purple;
 }
 
 .border8 {

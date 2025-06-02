@@ -21,7 +21,7 @@
   display: none;
 }
 
-@media (max-width: 1520px) {
+@media (max-width: 1200px) {
   .rightColumn {
     display: none;
   }
