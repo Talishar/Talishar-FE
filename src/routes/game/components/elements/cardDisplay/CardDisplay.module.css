@@ -88,10 +88,19 @@
 }
 
 .marked {
+  animation: glitch 0.1s;
+  animation-delay: 0.2s;
   background-image: url('../../../../../img/elements/markedOverlay.png');
   background-repeat: no-repeat;
   background-size: 100% 100%;
-  opacity: 0.7;
+  opacity: 0.8;
+}
+
+@keyframes glitch {
+  50% {
+    filter: blur(20px);
+    transform: skew(45deg);
+  }
 }
 
 .tapped {
@@ -107,6 +116,9 @@
 @keyframes rotate {
   0% {
     transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(45deg);
   }
   100% {
     transform: rotate(90deg);
