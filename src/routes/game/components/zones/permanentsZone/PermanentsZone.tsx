@@ -79,7 +79,7 @@ export default function PermanentsZone(prop: Displayrow) {
                   className={cardContainerStyles}
                   initial={{ opacity: 0, left: -100 }}
                   animate={{ opacity: 1, left: 0 }}
-                  exit={{ opacity: 0, left: -100 }}
+                  exit={{ opacity: 0, transition: { duration: 0.3, ease: 'easeOut' } }}                  
                   layout
                 >
                   <CardDisplay card={cardStack.card} key={ix.toString()} />
