@@ -46,6 +46,11 @@
   margin-left: 15%;
 }
 
+.container {
+  border: 1px solid var(--primary);
+  border-radius: 15px;
+}
+
 @media (orientation: portrait) {
   .passTurnDisplayActive {
     font-size: 1.5em;

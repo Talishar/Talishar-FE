@@ -12,3 +12,8 @@
   font-size: 5em;
   line-height: normal;
 }
+
+.container {
+  border: 1px solid var(--primary);
+  border-radius: 15px;
+}

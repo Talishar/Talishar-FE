@@ -289,8 +289,8 @@ const Lobby = () => {
             <dialog open className={styles.modal}>
               <article>
                 <header>{modal}</header>
-                <button onClick={clickYes}>YES</button>
-                <button onClick={clickNo}>NO</button>
+                <button onClick={clickYes}>Yes</button>
+                <button onClick={clickNo}>No</button>
               </article>
             </dialog>
           </>,

@@ -231,4 +231,11 @@ button {
 
 .disclaimerArticles {
   padding-bottom: 1em;
+  border: 1px solid var(--primary);
+  border-radius: 15px;  
+}
+
+.container {
+  border: 1px solid var(--primary);
+  border-radius: 15px;
 }

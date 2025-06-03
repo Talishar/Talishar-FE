@@ -88,13 +88,13 @@ export default function PassTurnDisplay() {
           createPortal(
             <>
               <dialog open={showAreYouSureModal} className={styles.modal}>
-                <article>
+                <article className={styles.container}>
                   <header>{preventPassPrompt}</header>
                   <button className={styles.preventButtons} onClick={clickYes}>
-                    YES
+                    Yes
                   </button>
                   <button className={styles.preventButtons} onClick={clickNo}>
-                    NO
+                    No
                   </button>
                 </article>
               </dialog>

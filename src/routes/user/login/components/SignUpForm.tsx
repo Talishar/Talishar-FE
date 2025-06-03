@@ -156,7 +156,7 @@ export const SignUpForm = () => {
         </small>
       </article>
       <dialog open={disclaimerOpen}>
-        <article>
+        <article className={styles.container}>
           <header>
             <span
               aria-label="Close"

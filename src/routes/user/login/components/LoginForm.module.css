@@ -53,3 +53,8 @@
   text-align: center;
   margin: 18px auto 0 auto;
 }
+
+.container {
+  border: 1px solid var(--primary);
+  border-radius: 15px;
+}
