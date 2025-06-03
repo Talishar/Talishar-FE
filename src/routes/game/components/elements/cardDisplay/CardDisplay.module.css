@@ -95,12 +95,22 @@
 }
 
 .tapped {
+  animation: rotate 0.3s;
   transform: rotate(90deg);
   position: absolute;
   left: 0px;
   right: 0px;
   top: 0px;
   bottom: 0px;
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(90deg);
+  }
 }
 
 .numUses {
