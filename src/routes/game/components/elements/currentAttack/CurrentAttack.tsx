@@ -28,6 +28,9 @@ export default function CurrentAttack() {
   const defValue = activeCombatChain.totalDefence;
   const attCard = activeCombatChain.attackingCard;
 
+  const targets = activeCombatChain.attackTarget?.split('|');
+  const tooltipText = targets && targets.length > 1 ? `Attack targets: ${targets.join(', ')}` : `Attack target: ${targets?.[0]}`;
+
   return (
     <div className={styles.currentAttack}>
       <div className={styles.attDefRow}>
@@ -54,7 +57,7 @@ export default function CurrentAttack() {
         {activeCombatChain.attackTarget ? (
           <div
             className={styles.icon}
-            data-tooltip={`Attack target: ${activeCombatChain.attackTarget?.replace('|', ', ')}`}
+            data-tooltip={tooltipText}
           >
             <BiTargetLock />
           </div>
