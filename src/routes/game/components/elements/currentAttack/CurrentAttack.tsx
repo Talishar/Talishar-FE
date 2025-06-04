@@ -54,7 +54,7 @@ export default function CurrentAttack() {
         {activeCombatChain.attackTarget ? (
           <div
             className={styles.icon}
-            data-tooltip={`Attack target: ${activeCombatChain.attackTarget}`}
+            data-tooltip={`Attack target: ${activeCombatChain.attackTarget?.replace('|', ', ')}`}
           >
             <BiTargetLock />
           </div>

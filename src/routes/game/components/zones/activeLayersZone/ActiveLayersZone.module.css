@@ -68,11 +68,12 @@
 }
 
 .targetContainer {
-  font-size: 1.1em;
+  font-size: 1em;
   display: flex;
   align-content: center;
   align-items: center;
   gap: 4px;
+  padding-top: 10px;
 }
 
 .activeLayersCallToAction {
