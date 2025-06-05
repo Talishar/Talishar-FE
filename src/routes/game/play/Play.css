@@ -19,6 +19,10 @@ body {
   body {
     --card-size: calc(12vw * var(--card-scale));
     --card-size: calc(12dvw * var(--card-scale));
+    -webkit-user-select: none;
+    -moz-user-select: none;   
+    -ms-user-select: none;    
+    user-select: none;     
   }
 }
 
