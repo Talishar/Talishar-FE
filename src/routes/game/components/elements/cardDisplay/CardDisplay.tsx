@@ -68,6 +68,7 @@ export const CardDisplay = (prop: CardProp) => {
     { [styles.isFrozen]: card.isFrozen },
     { [styles.marked]: card.marked },
     { [styles.tapped]: card.tapped },
+    { [styles.isDeckShuffling]: card.isDeckShuffling },
     { [styles.isRestricted]: !!card.restriction }
   );
 
@@ -126,7 +127,13 @@ export const CardDisplay = (prop: CardProp) => {
         );
       })}
 
-      <CardImage src={imageSrc} className={classNames(imgStyles, { [styles.tapped]: card.tapped })} />
+      <CardImage
+        src={imageSrc}
+        className={classNames(imgStyles, {
+          [styles.tapped]: card.tapped,
+          [styles.isDeckShuffling]: card.isDeckShuffling
+        })}
+      />
       {card.overlay === 'disabled' && <div className={classStyles}></div>}
       {(card.isBroken ||
         card.onChain ||
