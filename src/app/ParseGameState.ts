@@ -38,7 +38,6 @@ function ParseCard(input: any) {
   card.subcards = input.subcards;
   card.marked = input.marked ? Boolean(input.marked) : false;
   card.tapped = input.tapped ? Boolean(input.tapped) : false;
-  card.isDeckShuffling = input.isDeckShuffling ? Boolean(input.isDeckShuffling) : false;
   return card;
 }
 

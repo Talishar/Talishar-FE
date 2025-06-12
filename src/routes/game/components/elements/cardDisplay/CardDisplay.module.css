@@ -125,39 +125,6 @@
   }
 }
 
-.isDeckShuffling {
-  animation: shuffle-trail 0.5s ease-in-out;
-  position: relative;
-  z-index: 1;
-}
-
-@keyframes shuffle-trail {
-  0% {
-    transform: rotate(0deg) scale(1);
-    opacity: 1;
-  }
-  20% {
-    transform: rotate(72deg) scale(0.95);
-    opacity: 1;
-  }
-  40% {
-    transform: rotate(144deg) scale(0.9);
-    opacity: 1;
-  }
-  60% {
-    transform: rotate(216deg) scale(0.85);
-    opacity: 1;
-  }
-  80% {
-    transform: rotate(288deg) scale(0.8);
-    opacity: 1;
-  }
-  100% {
-    transform: rotate(360deg) scale(1);
-    opacity: 1;
-  }
-}
-
 .numUses {
   position: absolute;
   top: 8px;

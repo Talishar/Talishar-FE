@@ -27,5 +27,4 @@ export interface Card {
   subcards?: string[]; //What cards are under this one? (For example, Material cards)
   marked?: boolean; // marked = 1 if marked
   tapped?: boolean; // tapped = 1 if tapped
-  isDeckShuffling?: boolean; // isDeckShuffling = 1 if deck shuffling
 }
