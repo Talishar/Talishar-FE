@@ -113,4 +113,6 @@ export default interface GameState {
   isFullRematch?: boolean;
   preventPassPrompt?: string;
   chatEnabled: boolean;
+  shufflingPlayerId: number | null;
+  isShuffling: boolean;
 }

@@ -22,10 +22,11 @@ export interface CardProp {
   card?: Card;
   activeCombatChain?: CombatChainLink;
   isPlayer?: boolean;
+  isShuffling?: boolean; 
 }
 
 export const CardDisplay = (prop: CardProp) => {
-  const { card, preventUseOnClick, activeCombatChain, num, isPlayer } = prop;
+  const { card, preventUseOnClick, activeCombatChain, num, isPlayer, isShuffling } = prop;
   const dispatch = useAppDispatch();
   const cardBack = useAppSelector((state: RootState) =>
     isPlayer ? state.game.playerOne.CardBack : state.game.playerTwo.CardBack
@@ -96,7 +97,7 @@ export const CardDisplay = (prop: CardProp) => {
 
   const subCardsToShow = (() => {
     if (!card.subcards || card.subcards.length === 0) return [];
-    const validSubcards = card.subcards.filter(subCard => !!subCard);  
+    const validSubcards = card.subcards.filter(subCard => !!subCard);
     return showSubCards ? validSubcards : validSubcards.length ? [validSubcards[0]] : [];
   })();
 
@@ -111,7 +112,7 @@ export const CardDisplay = (prop: CardProp) => {
       {subCardsToShow.map((subCardNumber, ix) => {
         if (!subCardNumber || typeof subCardNumber !== 'string' || subCardNumber.trim() === '') return null;
         const subCardKey = `subcard-${card.cardNumber}-${subCardNumber}-${ix}`;
-        
+
         return (
             <div
               ref={subCardRef}
@@ -126,7 +127,11 @@ export const CardDisplay = (prop: CardProp) => {
         );
       })}
 
-      <CardImage src={imageSrc} className={classNames(imgStyles, { [styles.tapped]: card.tapped })} />
+      <CardImage
+        src={imageSrc}
+        className={classNames(imgStyles, { [styles.tapped]: card.tapped })}
+        isShuffling={isShuffling}
+      />
       {card.overlay === 'disabled' && <div className={classStyles}></div>}
       {(card.isBroken ||
         card.onChain ||

@@ -27,6 +27,16 @@ export const DeckZone = React.memo((prop: Displayrow) => {
     isPlayer ? state.game.playerOne.Deck : state.game.playerTwo.Deck
   );
 
+  const shufflingPlayerId = useAppSelector((state: RootState) => state.game.shufflingPlayerId);
+  const isShuffling = useAppSelector((state: RootState) => state.game.isShuffling);
+  const playerID = useAppSelector((state: RootState) => state.game.gameInfo.playerID);
+  const otherPlayerID = useAppSelector((state: RootState) => state.game.gameInfo.playerID === 1 ? 2 : 1);
+
+  const shouldAnimateShuffling = isShuffling && (
+    (isPlayer && shufflingPlayerId === playerID) ||
+    (!isPlayer && shufflingPlayerId === otherPlayerID)
+  );
+
   if (deckCards === undefined || deckCards === 0) {
     return <div className={styles.deckZone}>Deck</div>;
   }
@@ -41,10 +51,13 @@ export const DeckZone = React.memo((prop: Displayrow) => {
       })
     );
   };
-
   return (
     <div className={styles.deckZone} onClick={deckZoneDisplay}>
-      <CardDisplay card={deckBack} num={showCount ? deckCards : undefined} />
+      <CardDisplay
+        card={deckBack}
+        num={showCount ? deckCards : undefined}
+        isShuffling={shouldAnimateShuffling} 
+      />
       {isManualMode && <ManualMode isPlayer={isPlayer} />}
     </div>
   );

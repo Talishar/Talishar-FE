@@ -25,9 +25,31 @@
   -khtml-user-drag: none;
   -moz-user-drag: none;
   -o-user-drag: none;
-  user-drag: none;
 }
 
 .popUpInside {
   z-index: 111;
+}
+
+.shuffling {
+  animation: shuffle-animation 0.6s ease-in-out;
+  border-radius: 5%;
+}
+
+@keyframes shuffle-animation {
+  0% {
+    transform: rotate(0deg);
+  }
+  25%{
+    transform: rotate(540deg);
+  }
+  50%{
+    transform: rotate(1080deg);
+  }
+  75%{
+    transform: rotate(540deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
 }

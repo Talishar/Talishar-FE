@@ -17,6 +17,7 @@ import {
 import { shallowEqual } from 'react-redux';
 import CardDisplay from '../cardDisplay/CardDisplay';
 import styles from './EventsHandler.module.css';
+import { setShuffling } from 'features/game/GameSlice';
 
 export const EventsHandler = React.memo(() => {
   const events = useAppSelector(
@@ -69,7 +70,6 @@ export const EventsHandler = React.memo(() => {
       dispatch(
         submitButton({ button: { mode: PROCESS_INPUT.DECLINE_CHAT } })
     );
-
   };
 
   useEffect(() => {
@@ -168,6 +168,16 @@ export const EventsHandler = React.memo(() => {
                 'Do you want to allow the opponent to revert to last turn?'
               );
             }
+            continue;
+          case "SHUFFLE":
+            const PlayerShuffling = event.eventValue !== undefined ? parseInt(event.eventValue) : null;
+
+            dispatch(setShuffling({ playerId: PlayerShuffling, isShuffling: true }));
+            requestAnimationFrame(() => {
+              setTimeout(() => {
+                dispatch(setShuffling({ playerId: null, isShuffling: false }));
+              }, 1000);
+            });
             continue;
           default:
             continue;
