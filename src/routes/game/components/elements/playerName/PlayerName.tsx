@@ -34,12 +34,6 @@ export default function PlayerName(player: Player) {
   
   const iconMap = [
     {
-      condition: isPatron,
-      src: '/images/patronHeart.webp',
-      title: 'I am a patron of Talishar!',
-      href: 'https://linktr.ee/Talishar'
-    },
-    {
       condition: isContributor,
       src: '/images/copper.webp',
       title: 'I am a contributor to Talishar!',
@@ -49,6 +43,12 @@ export default function PlayerName(player: Player) {
       condition: isPvtVoidPatron,
       src: '/images/patronEye.webp',
       title: 'I am a patron of PvtVoid!',
+      href: 'https://linktr.ee/Talishar'
+    },
+    {
+      condition: isPatron,
+      src: '/images/patronHeart.webp',
+      title: 'I am a patron of Talishar!',
       href: 'https://linktr.ee/Talishar'
     },
     {

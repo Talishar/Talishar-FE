@@ -1,6 +1,6 @@
 .playerName {
-  margin: 0.5em 0.5em;
-  padding: 1em 0.5em 1em 0.5em;
+  margin: 0.25em;
+  padding: 0.25em;
   height: 3em;
   width: 20em;
   border-radius: 0.3em;
@@ -15,6 +15,8 @@
 }
 
 .icon {
-  height: 3vh;
-  width: 3vh;
+  height: 2.8vh;
+  width: 2.8vh;
+  height: 2.8dvh;
+  width: 2.8dvh;
 }
