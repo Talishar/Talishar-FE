@@ -41,6 +41,15 @@
   font-size: 1em;
 }
 
+.NotClickableItem {
+  width: 100%;
+  justify-content: space-around;
+  display: flex;
+  align-items: center;
+  user-select: none;
+  font-size: 1em;
+}
+
 .isRed {
   color: var(--alarm);
 }

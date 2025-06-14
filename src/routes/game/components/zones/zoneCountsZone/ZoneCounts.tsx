@@ -105,7 +105,7 @@ const EarthCount = (prop: Displayrow) => {
       {!!hasEarth && (
         <div
           title="Earth Cards Count"
-          className={styles.clickableItem}
+          className={styles.NotClickableItem}
         >
           <GiGroundSprout /> {earthCount}
         </div>
@@ -131,7 +131,7 @@ const BlessingsCount = (prop: Displayrow) => {
       {!!hasBlessings && (
         <div
           title="Count Your Blessings"
-          className={styles.clickableItem}
+          className={styles.NotClickableItem}
         >
           <FaPrayingHands /> {blessingsCount}
         </div>
@@ -172,7 +172,7 @@ const BloodDebtCount = (prop: Displayrow) => {
 
   const bloodDebtItem = classNames(
     { [styles.isRed]: !isImmune },
-    styles.clickableItem
+    styles.NotClickableItem
   );
 
   return (
