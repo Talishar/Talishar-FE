@@ -132,7 +132,9 @@ export default function ParseGameState(input: any) {
     gameDynamicInfo: {},
     playerOne: {},
     playerTwo: {},
-    chatEnabled: false
+    chatEnabled: false,
+    shufflingPlayerId: null,
+    isShuffling: false
   };
 
   if (input.errorMessage) {
@@ -397,8 +399,7 @@ export default function ParseGameState(input: any) {
     result.playerTwo.Name = input.initialLoad.opponentName;
     result.playerTwo.isPatron = input.initialLoad.opponentIsPatron;
     result.playerTwo.isContributor = input.initialLoad.opponentIsContributor;
-    result.playerTwo.isPvtVoidPatron =
-      input.initialLoad.opponentIsPvtVoidPatron;
+    result.playerTwo.isPvtVoidPatron = input.initialLoad.opponentIsPvtVoidPatron;
     result.gameInfo.roguelikeGameID = input.initialLoad.roguelikeGameID;
     result.gameInfo.altArts = input.initialLoad.altArts;
   }
