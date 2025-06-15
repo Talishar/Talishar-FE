@@ -32,7 +32,7 @@
 }
 
 .shuffling {
-  animation: shuffle-animation 0.4s ease-in-out;
+  animation: shuffle-animation 0.8s ease-in-out;
   border-radius: 5%;
 }
 
