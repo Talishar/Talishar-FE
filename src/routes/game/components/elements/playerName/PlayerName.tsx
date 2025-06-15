@@ -60,20 +60,17 @@ export default function PlayerName(player: Player) {
 
   return (
     <div className={styles.playerName}>
-      {iconMap.map(
-        (icon) =>
-          icon.condition && (
-            <a href={icon.href} target="_blank" rel="noopener noreferrer" key={icon.src}>
-              <img
-                className={styles.icon}
-                src={icon.src}
-                title={icon.title}
-                alt={icon.title}
-              />
-            </a>
-          )
-      )}
+      {iconMap.filter(icon => icon.condition).map(icon => (
+        <a href={icon.href} target="_blank" rel="noopener noreferrer" key={icon.src}>
+          <img
+            className={styles.icon}
+            src={icon.src}
+            title={icon.title}
+            alt={icon.title}
+          />
+        </a>
+      ))}
       {playerName?.substring(0, 30).replace('-', `Practice Dummy`)}
     </div>
   );
-}
+  }
