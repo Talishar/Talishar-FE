@@ -74,9 +74,9 @@ export default function ActiveLayersZone() {
                   : null}
               </h3>
               <Target target={activeLayer.target} />
-              {/* <p className={styles.orderingExplanation}>
+              <p className={styles.orderingExplanation}>
                 Priority settings can be adjusted in the menu
-              </p> */}
+              </p>
             </div>
               {canPassPhase && (
               <div className={styles.passTurnBox}>
