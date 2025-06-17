@@ -133,6 +133,7 @@ export const PLAYMATS = {
   '19': 'Exude-Confidence-AHS',
   '20': 'Command-and-Conquer-AHS',
   '21': 'Swarming-Gloomveil-AHS',
+  '22': 'ThreeFloating',
 } as { [key: string]: string };
 
 export const PLAYER_PLAYMATS = [

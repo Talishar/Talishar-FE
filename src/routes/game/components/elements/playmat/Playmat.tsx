@@ -13,7 +13,7 @@ export const Playmat = ({ isPlayer }: { isPlayer: boolean }) => {
   const styleToApply = {
     backgroundImage: `url(/playmats/${playmat}.webp)`,
     filter: `brightness(${cookies.playmatIntensity ?? 0.65})`,
-    borderRadius: `10px`
+    borderRadius: `10px`,
   };
 
   const playmatClass = isPlayer ? styles.playerOne : styles.playerTwo;
