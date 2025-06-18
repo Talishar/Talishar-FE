@@ -134,6 +134,8 @@ export const PLAYMATS = {
   '20': 'Command-and-Conquer-AHS',
   '21': 'Swarming-Gloomveil-AHS',
   '22': 'ThreeFloating',
+  '23': 'ManSant',
+  '24': 'TheTablePit'
 } as { [key: string]: string };
 
 export const PLAYER_PLAYMATS = [
