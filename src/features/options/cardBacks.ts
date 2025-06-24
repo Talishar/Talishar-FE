@@ -108,6 +108,9 @@ export const CARD_BACK = {
   '107': 'CBThreeFloating1',
   '108': 'CBThreeFloating2',
   '109': 'CBThreeFloating3',
+  '110': 'CBSteelfur',
+  '111': 'CBFleshAndBad',
+  '112': 'CBFabledBrazil',
 } as { [key: string]: string };
 
 export const PLAYMATS = {
@@ -135,7 +138,11 @@ export const PLAYMATS = {
   '21': 'Swarming-Gloomveil-AHS',
   '22': 'ThreeFloating',
   '23': 'ManSant',
-  '24': 'TheTablePit'
+  '24': 'TheTablePit',
+  '25': 'Steelfur',
+  '26': 'FleshAndBad',
+  '27': 'FabledBrazil',
+  '28': 'NewHorizons'
 } as { [key: string]: string };
 
 export const PLAYER_PLAYMATS = [
