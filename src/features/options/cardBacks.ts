@@ -142,7 +142,7 @@ export const PLAYMATS = {
   '25': 'Steelfur',
   '26': 'FleshAndBad',
   '27': 'FabledBrazil',
-  '28': 'NewHorizons'
+  '28': 'NewHorizons',
 } as { [key: string]: string };
 
 export const PLAYER_PLAYMATS = [
