@@ -3,7 +3,7 @@ import json
 from unidecode import unidecode
 import re
 
-version_str = "high-seas"
+version_str = "super-slam"
 
 ordered_sets = ['WTR', 'ARC', 'CRU', "MON", "ELE", "EVR", "UPR", "DVR", "RVD", "DYN", "OUT", "DTD", "TCC", "EVO", "HVY",
                "AKO", "MST", "ROS", "TER", "AIO", "AJV", "HNT", "AST", "AMX", "SEA", "AGB", "MPG", "ASR", "APR", "AVS", "BDD",
