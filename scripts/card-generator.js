@@ -2,7 +2,7 @@ const axios = require('axios');
 const fs = require('fs');
 
 // updated for high seas, avast ye
-const url = "https://raw.githubusercontent.com/the-fab-cube/flesh-and-blood-cards/refs/heads/high-seas/json/english/card.json";
+const url = "https://raw.githubusercontent.com/the-fab-cube/flesh-and-blood-cards/refs/heads/super-slam/json/english/card.json";
 
 
 const outputFile = 'src/constants/cardList.ts';
