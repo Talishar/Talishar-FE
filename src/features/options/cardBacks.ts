@@ -112,6 +112,10 @@ export const CARD_BACK = {
   '111': 'CBFleshAndBad',
   '112': 'CBFabledBrazil',
   '113': 'CBSilvarisGarden',
+  '114': 'CBDazzyfizzle9',
+  '115': 'CBDazzyfizzle10',
+  '116': 'CBDazzyfizzle11',
+  '117': 'CBDazzyfizzle12',
 } as { [key: string]: string };
 
 export const PLAYMATS = {
