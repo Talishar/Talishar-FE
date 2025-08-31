@@ -236,7 +236,6 @@ const Lobby = () => {
 
     const hands = values.weapons.map((item) => item.id.split("-")[0]);
     const deck = values.deck.map((card) => card.split("-")[0]);
-    const inventoryDeck = deckSBIndexed.map((card) => card.split("-"[0]));
     const inventory = [
       ...weaponsIndexed
         .concat(weaponsSBIndexed)
@@ -252,7 +251,7 @@ const Lobby = () => {
       ...(data?.deck?.legsSB ?? []),
       ...(data?.deck?.demiHero ?? []),
       ...(data?.deck?.modular ?? []),
-      ...(data?.deck?.cardsSB ?? [])
+      ...(data?.deck?.cardsSB.concat(data?.deck?.cards).filter(x => !deck.includes(x)) ?? [])
     ].filter((item) => item !== 'NONE00');
 
     // encode it as an object
