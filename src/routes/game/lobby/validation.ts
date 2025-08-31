@@ -22,6 +22,7 @@ export const deckValidation = (
         }, 0);
         return numHands <= heroNumHands;
       })
+      .min(1, 'Pick at least one weapon/off-hand.')
       .max(heroNumHands, 'Too many weapons/off-hands equipped.')
       .of(
         object().shape({
