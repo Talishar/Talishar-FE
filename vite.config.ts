@@ -27,7 +27,7 @@ export default ({ mode }) => {
         '/api': {
           target: `http://${devURL}:${devPort}/${devDirectory}`,
           changeOrigin: true,
-          secure: false,
+          secure: process.env.NODE_ENV === 'production',
           rewrite: (path) => path.replace(/api\//, ''),
           configure: (proxy, _options) => {
             proxy.on('error', (err, _req, _res) => {
@@ -44,7 +44,7 @@ export default ({ mode }) => {
         '/datadoll': {
           target: `http://${process.env.VITE_DATADOLL_BACKEND}:${process.env.VITE_DATADOLL_PORT}/${process.env.VITE_DATADOLL_DIRECTORY}`,
           changeOrigin: true,
-          secure: false
+          secure: process.env.NODE_ENV === 'production'
         }
       }
     },

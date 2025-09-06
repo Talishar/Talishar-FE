@@ -13,6 +13,7 @@ import { NewOptInput } from './components/NewOptInput';
 import { FormProps } from './playerInputPopupTypes';
 import { OtherInput } from './components/OtherInput';
 import { replaceText } from 'utils/ParseEscapedString';
+import { sanitizeHtml } from 'utils/sanitizeHtml';
 
 const PlayerInputFormTypeMap: {
   [key: string]: (props: FormProps) => JSX.Element;
@@ -116,8 +117,8 @@ export default function PlayerInputPopUp() {
 
   const FormDisplay =
     PlayerInputFormTypeMap[inputPopUp.popup?.id || ''] || OtherInput;
-  //Title comes back as a HTML string so we need to dangeously set it vs just using it for the moment
-  const title = { __html: replaceText(inputPopUp?.popup?.title ?? '') };
+  //Title comes back as a HTML string so we need to sanitize it before using dangerouslySetInnerHTML
+  const title = { __html: sanitizeHtml(replaceText(inputPopUp?.popup?.title ?? '')) };
 
   return (
     <motion.div
