@@ -251,7 +251,7 @@ const Lobby = () => {
       ...(data?.deck?.legsSB ?? []),
       ...(data?.deck?.demiHero ?? []),
       ...(data?.deck?.modular ?? []),
-      ...(data?.deck?.cardsSB.concat(data?.deck?.cards).filter(x => !deck.includes(x)) ?? [])
+      ...(((deckIndexed.concat(deckSBIndexed)).filter(x => !values.deck.includes(x))).map((card) => card.split("-")[0]) ?? [])
     ].filter((item) => item !== 'NONE00');
 
     // encode it as an object
