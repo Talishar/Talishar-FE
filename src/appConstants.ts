@@ -141,7 +141,8 @@ export const GAME_FORMAT = {
   OPEN_BLITZ: 'openformatblitz',
   OPEN_LL_CC: 'openformatllcc',
   BRAWL: 'brawl',
-  PRECON: 'precon'
+  PRECON: 'precon',
+  COMPETITIVE_LL: "compllcc"
   //OPEN_LL_BLITZ: 'openformatllblitz'
 };
 
@@ -161,6 +162,7 @@ export const GAME_FORMAT_NUMBER = {
   OPEN_LL_CC: '11',
   //OPEN_LL_BLITZ: '12'
   PRECON: '-2',
+  COMPETITIVE_LL: '13',
 };
 
 export const AI_DECK = {

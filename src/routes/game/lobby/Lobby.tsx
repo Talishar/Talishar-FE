@@ -197,7 +197,7 @@ const Lobby = () => {
     }
   };
 
-  const oneHandedHeroes = ['HVY001', 'HVY002'];
+  const oneHandedHeroes = ['kayo_armed_and_dangerous', 'kayo', 'kayo_underhanded_cheat', 'kayo_strong_arm'];
   let handsTotal = oneHandedHeroes.includes(data.deck.hero) ? 1 : 2;
   const mainClassNames = classNames(styles.lobbyClass);
 
@@ -250,7 +250,8 @@ const Lobby = () => {
       ...(data?.deck?.legs ?? []),
       ...(data?.deck?.legsSB ?? []),
       ...(data?.deck?.demiHero ?? []),
-      ...(data?.deck?.modular ?? [])
+      ...(data?.deck?.modular ?? []),
+      ...(((deckIndexed.concat(deckSBIndexed)).filter(x => !values.deck.includes(x))).map((card) => card.split("-")[0]) ?? [])
     ].filter((item) => item !== 'NONE00');
 
     // encode it as an object

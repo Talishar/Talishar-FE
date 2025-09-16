@@ -318,6 +318,9 @@ const CreateGame = () => {
                 {/* <option value={GAME_FORMAT.OPEN_LL_BLITZ}>
                   Open Living Legend Blitz (no restrictions!)
                 </option> */}
+                <option value={GAME_FORMAT.COMPETITIVE_LL}>
+                  Competitive LL
+                </option>
               </select>
             </label>
             <fieldset>

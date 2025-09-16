@@ -117,7 +117,6 @@ const GameList = () => {
     GAME_FORMAT.CLASH,
     GAME_FORMAT.SEALED,
     GAME_FORMAT.DRAFT,
-    GAME_FORMAT.LLCC,
     GAME_FORMAT.PRECON,
     // GAME_FORMAT.LLBLITZ
   ];
@@ -190,6 +189,18 @@ const GameList = () => {
             name="Competitive CC"
           />
           <FormatList
+            gameList={sortedOpenGames.filter(
+              (game) => game.format === GAME_FORMAT.LLCC
+            )}
+            name="Living Legend"
+          />
+          <FormatList
+            gameList={sortedOpenGames.filter(
+              (game) => game.format === GAME_FORMAT.COMPETITIVE_LL
+            )}
+            name="Competitive LL"
+          />
+          <FormatList
             gameList={sortedOpenGames.filter((game) =>
               otherFormats.includes(game.format)
             )}
@@ -241,9 +252,29 @@ const GameList = () => {
               />
               <InProgressGameList
                 gameList={[
+                  ...filteredGamesInProgress.filter((game) =>
+                    [GAME_FORMAT.LLCC, GAME_FORMAT_NUMBER.LLCC].includes(
+                      game.format
+                    )
+                  ),
+                ].sort((a, b) => b.gameName - a.gameName)}
+                name="Living Legend"
+              />
+              <InProgressGameList
+                gameList={[
+                  ...filteredGamesInProgress.filter((game) =>
+                    [GAME_FORMAT.COMPETITIVE_LL, GAME_FORMAT_NUMBER.COMPETITIVE_LL].includes(
+                      game.format
+                    )
+                  ),
+                ].sort((a, b) => b.gameName - a.gameName)}
+                name="Competitive LL"
+              />
+              <InProgressGameList
+                gameList={[
                   ...filteredGamesInProgress.filter(
                     (game) =>
-                      ![GAME_FORMAT.BLITZ, GAME_FORMAT_NUMBER.BLITZ, GAME_FORMAT.COMPETITIVE_BLITZ, GAME_FORMAT_NUMBER.COMPETITIVE_BLITZ, GAME_FORMAT.COMPETITIVE_CC, GAME_FORMAT.CLASSIC_CONSTRUCTED, GAME_FORMAT_NUMBER.CLASSIC_CONSTRUCTED, GAME_FORMAT_NUMBER.COMPETITIVE_CC].includes(game.format)
+                      ![GAME_FORMAT.BLITZ, GAME_FORMAT_NUMBER.BLITZ, GAME_FORMAT.COMPETITIVE_BLITZ, GAME_FORMAT_NUMBER.COMPETITIVE_BLITZ, GAME_FORMAT.COMPETITIVE_CC, GAME_FORMAT.CLASSIC_CONSTRUCTED, GAME_FORMAT_NUMBER.CLASSIC_CONSTRUCTED, GAME_FORMAT_NUMBER.COMPETITIVE_CC, GAME_FORMAT.COMPETITIVE_LL, GAME_FORMAT.LLCC, GAME_FORMAT_NUMBER.LLCC, GAME_FORMAT_NUMBER.COMPETITIVE_LL].includes(game.format)
                   ),
                 ].sort((a, b) => b.gameName - a.gameName)}
                 name="Other Formats"
