@@ -82,14 +82,12 @@ export const LoginForm = () => {
       }
     } catch (err) {
       console.warn(err);
-      toast.error(`Network error: ${JSON.stringify(err)}`, {
+      toast.error('Network error occurred while logging in', {
         position: 'top-center'
       });
       setError('root.serverError', {
         type: 'custom',
-        message: `There has been a network error while logging in. Please try again. If you still get an error please report on our discord and let us know the following: ${JSON.stringify(
-          err
-        )}`
+        message: 'There has been a network error while logging in. Please try again. If you still get an error please report on our discord.'
       });
     }
   };
