@@ -16,7 +16,7 @@ const News = () => {
       <img src={ArmoryDeck} className={styles.NewsLogoRectangle} />
     </a>  */}
 
-    <h4 className={styles.headlines}> 🤼 Super Slam is NOW available in OPEN queues! 🤼</h4>
+    <h4 className={styles.headlines}> 🤼 Super Slam is now available in ALL queues! 🤼</h4>
       {/* <p className={styles.headlines}>The Hunted cards are now available in all queues!</p>  */}
       <a href="https://fabtcg.com/en/products/booster-set/super-slam/" target="_blank">
         <img src={NewSetLogo} className={styles.NewsLogoSquare} />
