@@ -158,6 +158,7 @@ export default function ParseGameState(input: any) {
     result.activeChainLink.goAgain = input.activeChainLink.goAgain;
     result.activeChainLink.dominate = input.activeChainLink.dominate;
     result.activeChainLink.overpower = input.activeChainLink.overpower;
+    result.activeChainLink.confidence = input.activeChainLink.confidence;
     result.activeChainLink.activeOnHits = input.activeChainLink.activeOnHits;
     result.activeChainLink.wager = input.activeChainLink.wager;
     result.activeChainLink.phantasm = input.activeChainLink.phantasm;
