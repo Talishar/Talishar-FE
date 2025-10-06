@@ -53,6 +53,7 @@ const Calculator = () => {
     authKey: authKey
   });
 
+  let numColorless = 0;
   let numRed = 0;
   let numYellow = 0;
   let numBlue = 0;
@@ -64,6 +65,7 @@ const Calculator = () => {
         if (card.pitch == 1) ++numRed;
         else if (card.pitch == 2) ++numYellow;
         else if (card.pitch == 3) ++numBlue;
+        else if (card.pitch == 0) ++numColorless;
       }
     });
   });
@@ -89,6 +91,13 @@ const Calculator = () => {
     );
   }
 
+  const colorlessRows: any = [];
+  for (let i = 0; i <= 4; i++) {
+    colorlessRows.push(
+      <td>{formatProbability(hgeo(values.deck.length, numColorless, 4, i))}</td>
+    );
+  }
+
   return (
     <div className={styles.container}>
       <table>
@@ -99,6 +108,10 @@ const Calculator = () => {
           <th>2</th>
           <th>3</th>
           <th>4</th>
+        </tr>
+        <tr>
+          <td className={styles.white}>Colorless ({numColorless})</td>
+          {colorlessRows}
         </tr>
         <tr>
           <td className={styles.red}>Red ({numRed})</td>
