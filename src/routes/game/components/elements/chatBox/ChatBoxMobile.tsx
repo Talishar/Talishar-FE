@@ -4,6 +4,7 @@ import { RootState } from 'app/Store';
 import ChatInput from '../chatInput/ChatInput';
 import styles from './ChatBox.module.css';
 import { replaceText } from 'utils/ParseEscapedString';
+import { sanitizeHtml } from 'utils/sanitizeHtml';
 import classNames from 'classnames';
 
 const CHAT_RE = /<span[^>]*>(.*?):\s<\/span>/;
@@ -82,7 +83,7 @@ export default function ChatBox() {
               return (
                 <div
                   dangerouslySetInnerHTML={{
-                    __html: replaceText(chat)
+                    __html: sanitizeHtml(replaceText(chat))
                   }}
                   key={ix}
                   ref={messagesEndRef}

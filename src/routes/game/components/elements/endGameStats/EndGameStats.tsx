@@ -5,6 +5,7 @@ import EndGameMenuOptions from '../endGameMenuOptions/EndGameMenuOptions';
 import styles from './EndGameStats.module.css';
 import { NumberLiteralType } from 'typescript';
 import useAuth from 'hooks/useAuth';
+import { sanitizeHtml } from 'utils/sanitizeHtml';
 
 export interface EndGameData {
   deckID?: string;
@@ -164,13 +165,13 @@ const EndGameStats = (data: EndGameData) => {
             {isPatron ? (
               `Total Damage Prevented: ${data.totalDamagePrevented}`
             ) : (
-              <span dangerouslySetInnerHTML={{ __html: "Support our <a href='https://linktr.ee/Talishar' target='_blank'>patreon</a> to access life gain stats" }} />
+              <span dangerouslySetInnerHTML={{ __html: sanitizeHtml("Support our <a href='https://linktr.ee/Talishar' target='_blank'>patreon</a> to access life gain stats") }} />
             )}
             <br />
             {isPatron ? (
               `Total Life Gained: ${data.totalLifeGained}`
             ) : (
-              <span dangerouslySetInnerHTML={{ __html: "Support our <a href='https://linktr.ee/Talishar' target='_blank'>patreon</a> to access life gain stats" }} />
+              <span dangerouslySetInnerHTML={{ __html: sanitizeHtml("Support our <a href='https://linktr.ee/Talishar' target='_blank'>patreon</a> to access life gain stats") }} />
             )}
             <br />
             Average Damage Threatened per Turn:{' '}
@@ -196,7 +197,7 @@ const EndGameStats = (data: EndGameData) => {
             {isPatron ? (
               `Average Value per Turn (Damage, Block, Prevent, Life Gain): ${data.averageValuePerTurn}`
             ) : (
-              <span dangerouslySetInnerHTML={{ __html: "Support our <a href='https://linktr.ee/Talishar' target='_blank'>patreon</a> to access average value per turn" }} />
+              <span dangerouslySetInnerHTML={{ __html: sanitizeHtml("Support our <a href='https://linktr.ee/Talishar' target='_blank'>patreon</a> to access average value per turn") }} />
             )}
           </p>
           <table className={styles.cardTable}>

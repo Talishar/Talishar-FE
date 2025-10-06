@@ -10,6 +10,7 @@ import { GiChatBubble } from 'react-icons/gi';
 import classNames from 'classnames';
 import { shallowEqual } from 'react-redux';
 import { getGameInfo, submitButton } from 'features/game/GameSlice';
+import { escapeHtml } from 'utils/sanitizeHtml';
 import {
   useFloating,
   autoUpdate,
@@ -81,7 +82,7 @@ export const ChatInput = () => {
         gameID: gameID,
         playerID: playerID,
         authKey: authKey,
-        chatText: chatInput
+        chatText: escapeHtml(chatInput.trim())
       });
     } catch (err) {
       console.error(err);
