@@ -38,6 +38,7 @@ function ParseCard(input: any) {
   card.subcards = input.subcards;
   card.marked = input.marked ? Boolean(input.marked) : false;
   card.tapped = input.tapped ? Boolean(input.tapped) : false;
+  card.uniqueId = input.uniqueID ? String(input.uniqueID) : "-";
   return card;
 }
 

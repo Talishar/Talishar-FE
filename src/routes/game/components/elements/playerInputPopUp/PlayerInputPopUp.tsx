@@ -10,6 +10,7 @@ import { motion } from 'framer-motion';
 import useShowModal from 'hooks/useShowModals';
 import { OptInput } from './components/OptInput';
 import { NewOptInput } from './components/NewOptInput';
+import { TriggerOrderInput } from './components/TriggerOrderInput';
 import { FormProps } from './playerInputPopupTypes';
 import { OtherInput } from './components/OtherInput';
 import { replaceText } from 'utils/ParseEscapedString';
@@ -19,7 +20,8 @@ const PlayerInputFormTypeMap: {
 } = {
   OPT: OptInput,
   NEWOPT: NewOptInput,
-  HANDTOPBOTTOM: OptInput
+  HANDTOPBOTTOM: OptInput,
+  TRIGGERORDER: TriggerOrderInput
 };
 
 export default function PlayerInputPopUp() {
