@@ -10,6 +10,7 @@ import useShowModal from 'hooks/useShowModals';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import classNames from 'classnames';
 import useAuth from 'hooks/useAuth';
+import { sanitizeHtml } from 'utils/sanitizeHtml';
 
 const EndGameScreen = () => {
   const gameInfo = useAppSelector(getGameInfo, shallowEqual);
@@ -42,7 +43,7 @@ const EndGameScreen = () => {
       content = (
         <div
           className={fullLogClasses}
-          dangerouslySetInnerHTML={{ __html: data.fullLog }}
+          dangerouslySetInnerHTML={{ __html: sanitizeHtml(data.fullLog) }}
         />
       );
     } else {
