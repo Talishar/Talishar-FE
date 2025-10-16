@@ -174,6 +174,7 @@ export const AI_DECK = {
 export const URL_END_POINT = {
   GET_GAME_LIST: 'APIs/GetGameList.php',
   CREATE_GAME: 'APIs/CreateGame.php',
+  REPLAYS: "APIs/CreateReplayGame.php",
   SUBMIT_CHAT: 'SubmitChat.php',
   GET_POPUP: 'GetPopupAPI.php',
   GAME_STATE_POLL: 'GetNextTurn.php?',

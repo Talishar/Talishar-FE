@@ -1,0 +1,36 @@
+.formContainer {
+  max-width: 768px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  margin: 1.5em auto;
+}
+
+@media (max-width: 768px) {
+  .formContainer {
+    width: 100%;
+    border: none;
+  }
+}
+
+.fieldError {
+  color: red;
+}
+
+.disclaimer {
+  padding: 1px;
+  text-align: center;
+}
+
+.button {
+  color: var(--primary-inverse);
+  margin-top: 32px;
+  width: 100%;
+}
+
+.alarm {
+  color: var(--alarm);
+}
+
+.formContainer > h3 {
+  margin-bottom: 0.5em;
+}

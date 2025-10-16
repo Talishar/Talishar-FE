@@ -2,6 +2,7 @@ import { useAppDispatch } from 'app/Hooks';
 import { clearGameInfo } from 'features/game/GameSlice';
 import { useEffect } from 'react';
 import CreateGame from '../game/create/CreateGame';
+import LoadReplay from '../game/load/LoadReplay';
 import GameList from './components/gameList';
 import styles from './Index.module.css';
 import TalisharLogo from '../../img/TalisharLogo.webp';
@@ -30,10 +31,13 @@ const Index = () => {
         <div className={styles.createGameContainer}>
           <CreateGame />
         </div>
-        <article className={styles.newsContainer}>
+        <div className={styles.createGameContainer}>
+          <LoadReplay />
+        </div>
+        {/* <article className={styles.newsContainer}>
           <img src={TalisharLogo} className={styles.logo} />
           <News />
-        </article>
+        </article> */}
       </div>
     </main>
   );
