@@ -118,6 +118,7 @@ export const CARD_BACK = {
   '117': 'CBDazzyfizzle12',
   '118': 'CBAggroBlaze',
   '119': 'CBFatAndFurious',
+  '120': 'CBRighteousGaming3',
 } as { [key: string]: string };
 
 export const PLAYMATS = {
