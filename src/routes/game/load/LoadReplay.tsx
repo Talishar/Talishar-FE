@@ -4,7 +4,7 @@ import { useLoadReplayMutation } from 'features/api/apiSlice';
 import { toast } from 'react-hot-toast';
 import classNames from 'classnames';
 import { LoadReplayAPI } from 'interface/API/LoadReplayAPI.php';
-import { setGameStart } from 'features/game/GameSlice';
+import { setReplayStart } from 'features/game/GameSlice';
 import { useNavigate } from 'react-router-dom';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import styles from './LoadReplay.module.css';
@@ -20,8 +20,7 @@ const LoadReplay = () => {
 };
 
 const ReplayGame = () => {
-  const replayNumber = useId();
-  const [gameID, setGameID] = useState<string | undefined>(undefined);
+  const [replayNumber, setReplayNumber] = useState<string | undefined>(undefined);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [loadReplay, loadReplayResult] = useLoadReplayMutation();
@@ -46,10 +45,10 @@ const ReplayGame = () => {
           throw new Error('A required param is missing');
         }
         dispatch(
-          setGameStart({
+          setReplayStart({
             playerID: response.playerID ?? 0,
             gameID: response.gameName ?? 0,
-            authKey: response.authKey ?? ''
+            authKey: response.authKey ?? '',
           })
         );
         navigate(`/game/play/${response.gameName}`, {
@@ -76,7 +75,7 @@ const ReplayGame = () => {
         <label htmlFor={replayNumber}>Replay game number:</label>
         <input
             id={replayNumber}
-            onChange={(e) => setGameID(e.target.value)}
+            onChange={(e) => setReplayNumber(e.target.value)}
         ></input>
         <button
             type="submit"
