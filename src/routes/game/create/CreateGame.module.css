@@ -34,3 +34,64 @@
 .formContainer > h3 {
   margin-bottom: 0.5em;
 }
+
+.heroSelection {
+  margin-top: 1rem;
+  padding: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.heroSelection > label {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.heroCheckboxes {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 0.5rem;
+  max-height: 200px;
+  overflow-y: auto;
+  padding: 0.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.heroCheckbox {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  margin: 0 !important;
+  padding: 0.25rem;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.heroCheckbox:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.heroCheckbox input[type="checkbox"] {
+  margin: 0;
+  width: auto;
+  height: auto;
+}
+
+.heroCheckbox input[type="checkbox"]:disabled {
+  opacity: 0.5;
+}
+
+.selectedHeroesPreview {
+  margin-top: 0.75rem;
+  padding: 0.5rem;
+  background-color: rgba(0, 123, 255, 0.1);
+  border: 1px solid rgba(0, 123, 255, 0.3);
+  border-radius: 4px;
+  font-style: italic;
+  color: var(--primary);
+}

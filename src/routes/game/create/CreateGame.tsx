@@ -17,6 +17,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { ErrorMessage } from '@hookform/error-message';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { FaExclamationCircle } from 'react-icons/fa';
+import { HEROES_OF_RATHE } from '../../index/components/filter/constants';
 
 const preconDecklinks = [
   "https://fabrary.net/decks/01JRH0631MH5A9JPVGTP3TKJXN", //maxx
@@ -102,6 +103,14 @@ const CreateGame = () => {
   }, [isSuccess, isLoggedIn]);
 
   const [selectedFormat, setSelectedFormat] = React.useState(initialValues.format);
+  const [selectedHeroes, setSelectedHeroes] = React.useState<string[]>([]);
+  const [gameDescription, setGameDescription] = React.useState('');
+
+  // Get unique hero names (no duplicates)
+  const uniqueHeroes = useMemo(() => {
+    const heroNames = new Set(HEROES_OF_RATHE.map(hero => hero.label));
+    return Array.from(heroNames).sort();
+  }, []);
 
   const handleFormatChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedFormat(e.target.value);
@@ -110,8 +119,48 @@ const CreateGame = () => {
     }
   };
 
+  const handleGameDescriptionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = e.target.value;
+    setGameDescription(value);
+    
+    if (value !== 'Looking for a specific hero') {
+      setSelectedHeroes([]);
+      setValue('gameDescription', value);
+    } else {
+      setValue('gameDescription', 'Looking for a specific hero');
+    }
+  };
+
+  const handleHeroSelection = (heroName: string, isChecked: boolean) => {
+    let newSelectedHeroes: string[];
+    
+    if (isChecked) {
+      // Add hero if not already selected and under limit of 3
+      if (selectedHeroes.length < 3 && !selectedHeroes.includes(heroName)) {
+        newSelectedHeroes = [...selectedHeroes, heroName];
+      } else {
+        return; // Don't add if limit reached or already selected
+      }
+    } else {
+      // Remove hero
+      newSelectedHeroes = selectedHeroes.filter(hero => hero !== heroName);
+    }
+    
+    setSelectedHeroes(newSelectedHeroes);
+    
+    // Update the gameDescription field with the formatted string
+    if (newSelectedHeroes.length > 0) {
+      const heroList = newSelectedHeroes.join(', ');
+      setValue('gameDescription', `Looking for ${heroList}`);
+    } else {
+      setValue('gameDescription', 'Looking for a specific hero');
+    }
+  };
+
   useEffect(() => {
     reset(initialValues);
+    setGameDescription(initialValues.gameDescription || '');
+    setSelectedHeroes([]);
   }, [initialValues, reset]);
 
   const onSubmit: SubmitHandler<CreateGameAPI> = async (
@@ -257,10 +306,16 @@ const CreateGame = () => {
                   aria-invalid={
                     errors.gameDescription?.message ? 'true' : undefined
                   }
+                  value={gameDescription}
+                  onChange={(e) => {
+                    handleGameDescriptionChange(e);
+                    register('gameDescription').onChange(e);
+                  }}
                 >
                   <option value="">Default Game #</option>
                   <option value="Looking for best deck in the format">Looking for best deck in the format</option>
                   <option value="Looking for meta heroes">Looking for meta heroes</option>
+                  <option value="Looking for a specific hero">Looking for a specific hero</option>
                   <option value="Prepping for event">Prepping for event</option>
                   <option value="Playing spicy brews">Playing spicy brews</option>
                   <option value="Casual play">Casual play</option>
@@ -268,6 +323,30 @@ const CreateGame = () => {
                   <option value="Learning a new hero">Learning a new hero</option>
                 </select>
               </label>
+              
+              {gameDescription === 'Looking for a specific hero' && (
+                <div className={styles.heroSelection}>
+                  <label>Select Heroes (up to 3):</label>
+                  <div className={styles.heroCheckboxes}>
+                    {uniqueHeroes.map((heroName) => (
+                      <label key={heroName} className={styles.heroCheckbox}>
+                        <input
+                          type="checkbox"
+                          checked={selectedHeroes.includes(heroName)}
+                          onChange={(e) => handleHeroSelection(heroName, e.target.checked)}
+                          disabled={!selectedHeroes.includes(heroName) && selectedHeroes.length >= 3}
+                        />
+                        {heroName}
+                      </label>
+                    ))}
+                  </div>
+                  {selectedHeroes.length > 0 && (
+                    <div className={styles.selectedHeroesPreview}>
+                      Preview: Looking for {selectedHeroes.join(', ')}
+                    </div>
+                  )}
+                </div>
+              )}
             <label>
               Format
               <select
