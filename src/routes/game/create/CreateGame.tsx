@@ -316,7 +316,6 @@ const CreateGame = () => {
                   <option value="Looking for best deck in the format">Looking for best deck in the format</option>
                   <option value="Looking for meta heroes">Looking for meta heroes</option>
                   <option value="Looking for a specific hero">Looking for a specific hero</option>
-                  <option value="Prepping for event">Prepping for event</option>
                   <option value="Playing spicy brews">Playing spicy brews</option>
                   <option value="Casual play">Casual play</option>
                   <option value="New player help">New player help</option>
