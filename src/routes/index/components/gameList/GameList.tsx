@@ -49,12 +49,14 @@ export interface GameListResponse {
   LastAuthKey?: string;
 }
 
-const GAME_LIST_POLLING_INTERVAL = 10000; // in ms
+const GAME_LIST_POLLING_INTERVAL = 5000; // in ms
 
 const GameList = () => {
   const [cookies, setCookie, removeCookie] = useCookies(['experimental']);
   const { data, isLoading, error, refetch, isFetching } =
-    useGetGameListQuery(undefined);
+    useGetGameListQuery(undefined, {
+      pollingInterval: GAME_LIST_POLLING_INTERVAL,
+    });
   const { isLoggedIn } = useAuth();
   const { blockedUsers } = useBlockedUsers();
 
@@ -150,12 +152,21 @@ const GameList = () => {
         </button>
       )}
       <div className={styles.titleDiv}>
-        <h3 className={styles.title}>Games</h3>
+        <h3 className={styles.title}>
+          Games
+          <span 
+            className={styles.autoRefreshText}
+            title={`Auto-refreshes every ${GAME_LIST_POLLING_INTERVAL / 1000} seconds`}
+          >
+            (Auto-refresh: {GAME_LIST_POLLING_INTERVAL / 1000}s)
+          </span>
+        </h3>
         <button
           onClick={handleReloadClick}
           className={styles.reloadButton}
           aria-busy={isFetching}
           disabled={isFetching}
+          title="Manually refresh game list"
         >
           Reload
         </button>
