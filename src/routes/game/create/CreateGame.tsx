@@ -248,7 +248,6 @@ const CreateGame = () => {
                 </label>
               )}
             </fieldset>
-            {isPatron == '1' && (
               <label>
                 Game Name
                 <select
@@ -268,17 +267,6 @@ const CreateGame = () => {
                   <option value="New player help">New player help</option>
                 </select>
               </label>
-            )}
-            {isPatron != '1' && (
-              <div>
-                Join our{' '}
-                <a href="https://linktr.ee/Talishar" target="_blank">
-                  Patreon
-                </a>{' '}
-                to customize your game name!
-                <div>&nbsp;</div>
-              </div>
-            )}
             <label>
               Format
               <select
