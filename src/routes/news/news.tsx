@@ -39,6 +39,11 @@ const News = () => {
             Facebook
           </a>
         </li>
+        <li>
+          <a href="https://linktr.ee/Talishar" target="_blank">
+            Patreon
+          </a>
+        </li>
       </ul>
       <p>Disclaimer:</p>
       <small className={styles.disclaimer}>
