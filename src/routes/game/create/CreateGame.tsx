@@ -321,6 +321,9 @@ const CreateGame = () => {
                 <option value={GAME_FORMAT.COMPETITIVE_LL}>
                   Competitive LL
                 </option>
+                <option value={GAME_FORMAT.SAGE}>
+                  Silver Age
+                </option>
               </select>
             </label>
             <fieldset>

@@ -149,6 +149,7 @@ const Lobby = () => {
       case GAME_FORMAT.COMPETITIVE_BLITZ:
       case GAME_FORMAT.COMMONER:
       case GAME_FORMAT.CLASH:
+      case GAME_FORMAT.SAGE:
         return { deckSize: 40, maxDeckSize: 40 };
       case GAME_FORMAT.SEALED:
       case GAME_FORMAT.DRAFT:
