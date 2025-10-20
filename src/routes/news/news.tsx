@@ -16,9 +16,9 @@ const News = () => {
       <img src={ArmoryDeck} className={styles.NewsLogoRectangle} />
     </a>  */}
 
-    <h4 className={styles.headlines}> 🤼 Super Slam is now available in ALL queues! 🤼</h4>
+    <h4 className={styles.headlines}> ❄️ Silver Age is now available on Talisahr! ❄️</h4>
       {/* <p className={styles.headlines}>The Hunted cards are now available in all queues!</p>  */}
-      <a href="https://fabtcg.com/en/products/booster-set/super-slam/" target="_blank">
+      <a href="https://fabtcg.com/products/product/silver-age/" target="_blank">
         <img src={NewSetLogo} className={styles.NewsLogoSquare} />
       </a>
     <br/>
@@ -32,6 +32,11 @@ const News = () => {
         <li>
           <a href="https://twitter.com/talishar_online" target="_blank">
             Twitter
+          </a>
+        </li>
+        <li>
+          <a href="https://www.facebook.com/groups/fabtcg" target="_blank">
+            Facebook
           </a>
         </li>
       </ul>
