@@ -358,48 +358,28 @@ const CreateGame = () => {
                   register('format').onChange(e);
                 }}
               >
-                <option value={GAME_FORMAT.BLITZ}>Blitz</option>
-                <option value={GAME_FORMAT.CLASSIC_CONSTRUCTED}>
-                  Classic Constructed
-                </option>
-{/*                 <option value={GAME_FORMAT.COMPETITIVE_BLITZ}>
-                  Competitive Blitz
-                </option> */}
-                <option value={GAME_FORMAT.COMPETITIVE_CC}>
-                  Competitive CC
-                </option>
-                <option value={GAME_FORMAT.DRAFT}>
-                  Limited
-                </option>
-                <option value={GAME_FORMAT.COMMONER}>Commoner</option>
-                <option value={GAME_FORMAT.CLASH}>Clash</option>
-                <option value={GAME_FORMAT.LLCC}>Living Legend</option>
-                {/* <option value={GAME_FORMAT.LLBLITZ}>Living Legend Blitz</option> */}
-                <option value={GAME_FORMAT.OPEN_CC}>
-                  Open CC (no restrictions!)
-                </option>
-                <option value={GAME_FORMAT.OPEN_BLITZ}>
-                  Open Blitz (no restrictions!)
-                </option>
-                <option value={GAME_FORMAT.OPEN_LL_CC}>
-                  Open Living Legend (no restrictions!)
-                </option>
-                {/* <option value={GAME_FORMAT.BRAWL}>
-                  Brawl
-                </option> */}
-                <option value={GAME_FORMAT.PRECON}>Preconstructed Decks</option>
-                {/* <option value={GAME_FORMAT.OPEN_LL_BLITZ}>
-                  Open Living Legend Blitz (no restrictions!)
-                </option> */}
-                <option value={GAME_FORMAT.COMPETITIVE_LL}>
-                  Competitive LL
-                </option>
-                <option value={GAME_FORMAT.SAGE}>
-                  Silver Age
-                </option>
-                <option value={GAME_FORMAT.COMPETITIVE_SAGE}>
-                  Competitive Silver Age
-                </option>
+                <optgroup label="Popular Formats">
+                  <option value={GAME_FORMAT.CLASSIC_CONSTRUCTED}>Classic Constructed</option>
+                  <option value={GAME_FORMAT.SAGE}>Silver Age</option>
+                  <option value={GAME_FORMAT.LLCC}>Living Legend</option>
+                  <option value={GAME_FORMAT.COMMONER}>Commoner</option>
+                </optgroup>
+                <optgroup label="Competitive Formats">
+                  <option value={GAME_FORMAT.COMPETITIVE_CC}>Competitive Classic Constructed</option>
+                  <option value={GAME_FORMAT.COMPETITIVE_SAGE}>Competitive Silver Age</option>
+                  <option value={GAME_FORMAT.COMPETITIVE_LL}>Competitive Living Legend</option>
+                </optgroup>
+                <optgroup label="Other Formats">
+                  <option value={GAME_FORMAT.BLITZ}>Blitz</option>
+                  <option value={GAME_FORMAT.DRAFT}>Draft / Limited</option>
+                  <option value={GAME_FORMAT.CLASH}>Clash</option>
+                  <option value={GAME_FORMAT.PRECON}>Preconstructed Decks</option>
+                </optgroup>
+                <optgroup label="Open Formats (No Restrictions)">
+                  <option value={GAME_FORMAT.OPEN_BLITZ}>Open Blitz</option>
+                  <option value={GAME_FORMAT.OPEN_CC}>Open CC</option>
+                  <option value={GAME_FORMAT.OPEN_LL_CC}>Open Living Legend</option>
+                </optgroup>
               </select>
             </label>
             <fieldset>
