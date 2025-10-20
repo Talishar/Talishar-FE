@@ -16,7 +16,7 @@ const News = () => {
       <img src={ArmoryDeck} className={styles.NewsLogoRectangle} />
     </a>  */}
 
-    <h4 className={styles.headlines}> ❄️ Silver Age is now available on Talisahr! ❄️</h4>
+    <h4 className={styles.headlines}> ❄️ Silver Age now available on Talishar! ❄️</h4>
       {/* <p className={styles.headlines}>The Hunted cards are now available in all queues!</p>  */}
       <a href="https://fabtcg.com/products/product/silver-age/" target="_blank">
         <img src={NewSetLogo} className={styles.NewsLogoSquare} />
