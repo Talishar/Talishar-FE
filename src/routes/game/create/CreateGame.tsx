@@ -362,9 +362,9 @@ const CreateGame = () => {
                 <option value={GAME_FORMAT.CLASSIC_CONSTRUCTED}>
                   Classic Constructed
                 </option>
-                <option value={GAME_FORMAT.COMPETITIVE_BLITZ}>
+{/*                 <option value={GAME_FORMAT.COMPETITIVE_BLITZ}>
                   Competitive Blitz
-                </option>
+                </option> */}
                 <option value={GAME_FORMAT.COMPETITIVE_CC}>
                   Competitive CC
                 </option>
@@ -396,6 +396,9 @@ const CreateGame = () => {
                 </option>
                 <option value={GAME_FORMAT.SAGE}>
                   Silver Age
+                </option>
+                <option value={GAME_FORMAT.COMPETITIVE_SAGE}>
+                  Competitive Silver Age
                 </option>
               </select>
             </label>

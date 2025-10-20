@@ -130,7 +130,7 @@ export const GAME_FORMAT = {
   CLASSIC_CONSTRUCTED: 'cc',
   COMPETITIVE_CC: 'compcc',
   BLITZ: 'blitz',
-  COMPETITIVE_BLITZ: 'compblitz',
+  //COMPETITIVE_BLITZ: 'compblitz',
   OPEN_CC: 'openformatcc',
   COMMONER: 'commoner',
   CLASH: 'clash',
@@ -143,7 +143,8 @@ export const GAME_FORMAT = {
   BRAWL: 'brawl',
   PRECON: 'precon',
   COMPETITIVE_LL: "compllcc",
-  SAGE: "sage"
+  SAGE: "sage",
+  COMPETITIVE_SAGE: "compsage"
   //OPEN_LL_BLITZ: 'openformatllblitz'
 };
 
@@ -151,7 +152,7 @@ export const GAME_FORMAT_NUMBER = {
   CLASSIC_CONSTRUCTED: '0',
   COMPETITIVE_CC: '1',
   BLITZ: '2',
-  COMPETITIVE_BLITZ: '3',
+  //COMPETITIVE_BLITZ: '3',
   OPEN_CC: '4',
   COMMONER: '5',
   CLASH: '-1',
@@ -164,7 +165,8 @@ export const GAME_FORMAT_NUMBER = {
   //OPEN_LL_BLITZ: '12'
   PRECON: '-2',
   COMPETITIVE_LL: '13',
-  SAGE: '14'
+  SAGE: '14',
+  COMPETITIVE_SAGE: '15'
 };
 
 export const AI_DECK = {

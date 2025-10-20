@@ -213,12 +213,12 @@ const GameList = () => {
             )}
             name="Blitz"
           />
-          <FormatList
+{/*           <FormatList
             gameList={sortedOpenGames.filter(
               (game) => game.format === GAME_FORMAT.COMPETITIVE_BLITZ
             )}
             name="Competitive Blitz"
-          />
+          /> */}
           <FormatList
             gameList={sortedOpenGames.filter(
               (game) => game.format === GAME_FORMAT.CLASSIC_CONSTRUCTED
@@ -250,6 +250,12 @@ const GameList = () => {
             name="Silver Age"
           />
           <FormatList
+            gameList={sortedOpenGames.filter(
+              (game) => game.format === GAME_FORMAT.COMPETITIVE_SAGE
+            )}
+            name="Competitive Silver Age"
+          />
+          <FormatList
             gameList={sortedOpenGames.filter((game) =>
               otherFormats.includes(game.format)
             )}
@@ -275,7 +281,7 @@ const GameList = () => {
                 ].sort((a, b) => b.gameName - a.gameName)}
                 name="Blitz"
               />
-              <InProgressGameList
+{/*               <InProgressGameList
                 gameList={[
                   ...filteredGamesInProgress.filter((game) =>
                     [GAME_FORMAT.COMPETITIVE_BLITZ, GAME_FORMAT_NUMBER.COMPETITIVE_BLITZ].includes(
@@ -284,7 +290,7 @@ const GameList = () => {
                   ),
                 ].sort((a, b) => b.gameName - a.gameName)}
                 name="Competitive Blitz"
-              />
+              /> */}
               <InProgressGameList
                 gameList={[
                   ...filteredGamesInProgress.filter((game) =>
@@ -337,9 +343,19 @@ const GameList = () => {
               />
               <InProgressGameList
                 gameList={[
+                  ...filteredGamesInProgress.filter((game) =>
+                    [GAME_FORMAT.COMPETITIVE_SAGE, GAME_FORMAT_NUMBER.COMPETITIVE_SAGE].includes(
+                      game.format
+                    )
+                  ),
+                ].sort((a, b) => b.gameName - a.gameName)}
+                name="Competitive Silver Age"
+              />
+              <InProgressGameList
+                gameList={[
                   ...filteredGamesInProgress.filter(
                     (game) =>
-                      ![GAME_FORMAT.BLITZ, GAME_FORMAT_NUMBER.BLITZ, GAME_FORMAT.COMPETITIVE_BLITZ, GAME_FORMAT_NUMBER.COMPETITIVE_BLITZ, GAME_FORMAT.COMPETITIVE_CC, GAME_FORMAT.CLASSIC_CONSTRUCTED, GAME_FORMAT_NUMBER.CLASSIC_CONSTRUCTED, GAME_FORMAT_NUMBER.COMPETITIVE_CC, GAME_FORMAT.COMPETITIVE_LL, GAME_FORMAT.LLCC, GAME_FORMAT_NUMBER.LLCC, GAME_FORMAT_NUMBER.COMPETITIVE_LL, GAME_FORMAT.SAGE, GAME_FORMAT_NUMBER.SAGE].includes(game.format)
+                      ![GAME_FORMAT.BLITZ, GAME_FORMAT_NUMBER.BLITZ, GAME_FORMAT.COMPETITIVE_CC, GAME_FORMAT.CLASSIC_CONSTRUCTED, GAME_FORMAT_NUMBER.CLASSIC_CONSTRUCTED, GAME_FORMAT_NUMBER.COMPETITIVE_CC, GAME_FORMAT.COMPETITIVE_LL, GAME_FORMAT.LLCC, GAME_FORMAT_NUMBER.LLCC, GAME_FORMAT_NUMBER.COMPETITIVE_LL, GAME_FORMAT.SAGE, GAME_FORMAT_NUMBER.SAGE, GAME_FORMAT.COMPETITIVE_SAGE, GAME_FORMAT_NUMBER.COMPETITIVE_SAGE].includes(game.format)
                   ),
                 ].sort((a, b) => b.gameName - a.gameName)}
                 name="Other Formats"
