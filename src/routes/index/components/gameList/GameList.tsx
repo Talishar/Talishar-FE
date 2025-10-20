@@ -7,6 +7,7 @@ import { GAME_FORMAT, GAME_FORMAT_NUMBER } from 'appConstants';
 import FormatList from '../formatList';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
 import useAuth from 'hooks/useAuth';
+import { useBlockedUsers } from 'hooks/useBlockedUsers';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import { setGameStart } from 'features/game/GameSlice';
@@ -20,6 +21,7 @@ export interface IOpenGame {
   formatName?: string;
   description?: string;
   gameName: number;
+  gameCreator?: string; // Username of the game creator
 }
 
 export interface IGameInProgress {
@@ -28,6 +30,7 @@ export interface IGameInProgress {
   format: string;
   gameName: number;
   secondsSinceLastUpdate?: number;
+  gameCreator?: string; // Username of the game creator
 }
 
 export interface IInProgressGameList {
@@ -52,6 +55,7 @@ const GameList = () => {
   const { data, isLoading, error, refetch, isFetching } =
     useGetGameListQuery(undefined);
   const { isLoggedIn } = useAuth();
+  const { blockedUsers } = useBlockedUsers();
 
   const [heroFilter, setHeroFilter] = useState<string[]>([]);
   const [formatFilter, setFormatFilter] = useState<string | null>(null);
@@ -84,6 +88,11 @@ const GameList = () => {
   // Filter games
   const filteredGamesInProgress = data?.gamesInProgress
     ? data.gamesInProgress.filter((game) => {
+        // Hide games created by blocked users
+        if (game.gameCreator && blockedUsers.includes(game.gameCreator)) {
+          return false;
+        }
+        
         return (
           heroFilter.length === 0 ||
           heroFilter.find((hero) => hero === game.p1Hero || hero === game.p2Hero)
@@ -94,6 +103,11 @@ const GameList = () => {
   const sortedOpenGames = data?.openGames
     ? data.openGames
         .filter((game: IOpenGame) => {
+          // Hide games created by blocked users
+          if (game.gameCreator && blockedUsers.includes(game.gameCreator)) {
+            return false;
+          }
+          
           return (
             heroFilter.length === 0 ||
             heroFilter.find((hero) => hero === game.p1Hero)
