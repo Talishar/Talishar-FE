@@ -11,24 +11,34 @@ import {
 import { getGameInfo } from 'features/game/GameSlice';
 import { shallowEqual } from 'react-redux';
 import * as optConst from 'features/options/constants';
+import HeroZone from 'routes/game/components/zones/heroZone/HeroZone';
+import CardDisplay from '../../cardDisplay/CardDisplay';
+import {
+  CARD_BACK,
+  PLAYER_PLAYMATS,
+  PLAYMATS
+} from 'features/options/cardBacks';
+import { useGetCosmeticsQuery } from 'features/api/apiSlice';
+import CardPopUp from '../../cardPopUp/CardPopUp';
+import CardImage from '../../cardImage/CardImage';
+import classNames from 'classnames';
 import { useCookies } from 'react-cookie';
+import LanguageSelector from 'components/LanguageSelector/LanguageSelector';
+import {
+  CARD_SQUARES_PATH,
+  DEFAULT_LANGUAGE,
+  getCollectionCardImagePath
+} from 'utils';
 import { DEFAULT_SHORTCUTS } from 'appConstants';
 import useShortcut from 'hooks/useShortcut';
-import {
-  CheckboxSetting,
-  RadioGroup,
-  RangeSlider,
-  PresetButtons,
-  Fieldset
-} from './FormComponents';
-import { CosmeticsSection } from './CosmeticsSection';
-import { VisualSlider, VisualPreset } from './VisualSettings';
 
 const OptionsSettings = () => {
   const gameInfo = useAppSelector(getGameInfo, shallowEqual);
   const settingsData = useAppSelector(getSettingsEntity);
   const isLoading = useAppSelector(getSettingsStatus);
   const dispatch = useAppDispatch();
+  const [openCardBacks, setOpenCardBacks] = useState<boolean>(false);
+  const { data } = useGetCosmeticsQuery(undefined);
   const [cookies, setCookie, removeCookie] = useCookies([
     'experimental',
     'cardSize',
@@ -51,6 +61,14 @@ const OptionsSettings = () => {
     );
   };
 
+  const handleCardBackOnClick = () => {
+    setOpenCardBacks(true);
+  };
+
+  const closeCardBack = () => {
+    setOpenCardBacks(false);
+  };
+
   const initialValues = {
     holdPriority: settingsData['HoldPrioritySetting']?.value,
     tryReactUI: settingsData['TryReactUI']?.value === '1',
@@ -69,6 +87,9 @@ const OptionsSettings = () => {
     disableAltArts: settingsData['DisableAltArts']?.value === '1',
     casterMode: settingsData['IsCasterMode']?.value === '1',
     streamerMode: settingsData['IsStreamerMode']?.value === '1',
+    // Enum is BE: /Libraries/PlayerSettings.php - function GetCardBack($player)
+    cardBack: String(settingsData['CardBack']?.value ?? '0'),
+    playMat: String(settingsData['Playmat']?.value ?? '0'),
     alwaysAllowUndo: settingsData['AlwaysAllowUndo']?.value === '1',
     manualTunic: settingsData['ManualTunic']?.value === '1',
   };
@@ -77,265 +98,494 @@ const OptionsSettings = () => {
     handleSettingsChange({ name: optConst.MANUAL_MODE, value: '1' });
   });
 
-  const priorityOptions = [
-    {
-      value: 'autoPass',
-      label: 'Auto-Pass Priority',
-      enumValue: optConst.HOLD_PRIORITY_ENUM.AUTO
-    },
-    {
-      value: 'alwaysPass',
-      label: 'Always Pass Priority',
-      enumValue: optConst.HOLD_PRIORITY_ENUM.ALWAYS_PASS
-    },
-    {
-      value: 'alwaysHold',
-      label: 'Always Hold Priority',
-      enumValue: optConst.HOLD_PRIORITY_ENUM.ALWAYS_HOLD
-    },
-    {
-      value: 'holdAllOpp',
-      label: 'Hold Priority for all Opponent Actions',
-      enumValue: optConst.HOLD_PRIORITY_ENUM.HOLD_ALL_OPPONENT
-    },
-    {
-      value: 'holdOppAtt',
-      label: 'Hold Priority for all Opponent Attacks',
-      enumValue: optConst.HOLD_PRIORITY_ENUM.HOLD_ALL_OPPONENT_ATTACKS
-    }
-  ];
-
-  const attackShortcutOptions = [
-    { value: 'neverSkip', label: 'Never Skip Attacks', enumValue: 0 },
-    { value: 'skipOnes', label: 'Skip 1 Power Attacks', enumValue: 1 },
-    { value: 'skipAll', label: 'Skip All Attacks', enumValue: 99 }
-  ];
-
-  const transparencyPresets = [
-    { value: 0.5, label: '50%' },
-    { value: 0.65, label: '65%' },
-    { value: 0.8, label: '80%' },
-    { value: 1.0, label: '100%' }
-  ];
-
   return (
-    <div className={styles.leftColumn}>
-      <Fieldset legend="⚡ Priority Settings">
-        <RadioGroup
-          name="holdPriority"
-          options={priorityOptions}
-          checked={Number(initialValues.holdPriority)}
-          onChange={(value) =>
-            handleSettingsChange({
-              name: optConst.HOLD_PRIORITY_SETTING,
-              value: value
-            })
-          }
-        />
-      </Fieldset>
-      <Fieldset legend="⏭️ Skip Overrides">
-        <CheckboxSetting
-          name="skipAttackReactions"
-          label="Skip Attack Reactions"
-          checked={initialValues.skipAttackReactions}
-          onChange={() =>
-            handleSettingsChange({
-              name: optConst.SKIP_AR_WINDOW,
-              value: initialValues.skipAttackReactions ? '0' : '1'
-            })
-          }
-        />
-        <CheckboxSetting
-          name="skipDefenseReactions"
-          label="Skip Defense Reactions"
-          checked={initialValues.skipDefenseReactions}
-          onChange={() =>
-            handleSettingsChange({
-              name: optConst.SKIP_DR_WINDOW,
-              value: initialValues.skipDefenseReactions ? '0' : '1'
-            })
-          }
-        />
-        <CheckboxSetting
-          name="manualTargeting"
-          label="Manual Targeting"
-          checked={initialValues.manualTargeting}
-          onChange={() =>
-            handleSettingsChange({
-              name: optConst.AUTO_TARGET_OPPONENT,
-              value: initialValues.manualTargeting ? '1' : '0'
-            })
-          }
-        />
-      </Fieldset>
-
-      <Fieldset legend="⚔️ Attack Shortcut Threshold">
-        <RadioGroup
-          name="attackSkip"
-          options={attackShortcutOptions}
-          checked={Number(initialValues.shortcutAttackThreshold)}
-          onChange={(value) =>
-            handleSettingsChange({
-              name: optConst.SHORTCUT_ATTACK_THRESHOLD,
-              value: value
-            })
-          }
-        />
-      </Fieldset>
-
-      <Fieldset legend="♿ Accessibility & Other">
-        <CheckboxSetting
-          name="alwaysAllowUndo"
-          label="Always Allow Undo"
-          checked={initialValues.alwaysAllowUndo}
-          onChange={() =>
-            handleSettingsChange({
-              name: optConst.ALWAYS_ALLOW_UNDO,
-              value: initialValues.alwaysAllowUndo ? '0' : '1'
-            })
-          }
-          ariaDisabled={true}
-        />
-        <CheckboxSetting
-          name="accessibilityMode"
-          label="Enable Accessibility Mode"
-          checked={initialValues.accessibilityMode}
-          onChange={() =>
-            handleSettingsChange({
-              name: optConst.COLORBLIND_MODE,
-              value: initialValues.accessibilityMode ? '0' : '1'
-            })
-          }
-          ariaDisabled={true}
-        />
-        <CheckboxSetting
-          name="mute"
-          label="Mute Game Sounds"
-          checked={initialValues.mute}
-          onChange={() =>
-            handleSettingsChange({
-              name: optConst.MUTE_SOUND,
-              value: initialValues.mute ? '0' : '1'
-            })
-          }
-        />
-        <CheckboxSetting
-          name="disableStats"
-          label="Disable Stats"
-          checked={initialValues.disableStats}
-          onChange={() =>
-            handleSettingsChange({
-              name: optConst.DISABLE_STATS,
-              value: initialValues.disableStats ? '0' : '1'
-            })
-          }
-        />
-        <CheckboxSetting
-          name="disableAltArts"
-          label="Disable Alt Arts"
-          checked={initialValues.disableAltArts}
-          onChange={() =>
-            handleSettingsChange({
-              name: optConst.DISABLE_ALT_ARTS,
-              value: initialValues.disableAltArts ? '0' : '1'
-            })
-          }
-        />
-      </Fieldset>
-
-      <Fieldset legend="🎮 Modes">
-        <CheckboxSetting
-          name="streamerMode"
-          label="Enable Streamer Mode"
-          checked={initialValues.streamerMode}
-          onChange={() =>
-            handleSettingsChange({
-              name: optConst.IS_STREAMER_MODE,
-              value: initialValues.streamerMode ? '0' : '1'
-            })
-          }
-          ariaDisabled={true}
-        />
-        <CheckboxSetting
-          name="casterMode"
-          label="Enable Caster Mode"
-          checked={initialValues.casterMode}
-          onChange={() =>
-            handleSettingsChange({
-              name: optConst.IS_CASTER_MODE,
-              value: initialValues.casterMode ? '0' : '1'
-            })
-          }
-          ariaDisabled={true}
-        />
-        <CheckboxSetting
-          name="manualMode"
-          label="Enable Manual Mode"
-          checked={initialValues.manualMode}
-          onChange={() =>
-            handleSettingsChange({
-              name: optConst.MANUAL_MODE,
-              value: initialValues.manualMode ? '0' : '1'
-            })
-          }
-          ariaDisabled={true}
-        />
-        <CheckboxSetting
-          name="manualTunic"
-          label="Manual Tunic Mode"
-          checked={initialValues.manualTunic}
-          onChange={() =>
-            handleSettingsChange({
-              name: optConst.MANUAL_TUNIC,
-              value: initialValues.manualTunic ? '0' : '1'
-            })
-          }
-        />
-      </Fieldset>
-
-      <Fieldset legend="🎨 Visual Settings">
-        <VisualSlider
-          label="Card Size"
-          value={cookies.cardSize ?? 1}
-          min={25}
-          max={100}
-          onChange={(value) => setCookie('cardSize', value)}
-        />
-
-        <VisualSlider
-          label="Card Preview Size"
-          value={cookies.hoverImageSize ?? 1}
-          min={75}
-          max={125}
-          onChange={(value) => setCookie('hoverImageSize', value)}
-        />
-
-        <VisualPreset
-          label="Transparency"
-          currentValue={cookies.transparencyIntensity ?? 1}
-          presets={transparencyPresets}
-          onChange={(value) => setCookie('transparencyIntensity', value)}
-        />
-
-        <VisualSlider
-          label="Playmat Intensity"
-          value={cookies.playmatIntensity ?? 0.65}
-          min={10}
-          max={100}
-          onChange={(value) => setCookie('playmatIntensity', value)}
-        />
-      </Fieldset>
-
-      {/* Disclaimer */}
+    <div>
+      <div className={styles.leftColumn}>
+        <fieldset>
+          <legend>
+            <strong>Language Selector:</strong>
+          </legend>
+          <div>
+            <LanguageSelector />
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>
+            <strong>Priority Settings:</strong>
+          </legend>
+          <label className={styles.optionLabel}>
+            <input
+              type="radio"
+              name="holdPriority"
+              value="autoPass"
+              checked={
+                Number(initialValues.holdPriority) ===
+                optConst.HOLD_PRIORITY_ENUM.AUTO
+              }
+              onChange={() =>
+                handleSettingsChange({
+                  name: optConst.HOLD_PRIORITY_SETTING,
+                  value: optConst.HOLD_PRIORITY_ENUM.AUTO
+                })
+              }
+            />
+            Auto-Pass Priority
+          </label>
+          <label className={styles.optionLabel}>
+            <input
+              type="radio"
+              name="holdPriority"
+              value="alwaysPass"
+              checked={
+                Number(initialValues.holdPriority) ===
+                optConst.HOLD_PRIORITY_ENUM.ALWAYS_PASS
+              }
+              onChange={() =>
+                handleSettingsChange({
+                  name: optConst.HOLD_PRIORITY_SETTING,
+                  value: optConst.HOLD_PRIORITY_ENUM.ALWAYS_PASS
+                })
+              }
+            />
+            Always Pass Priority
+          </label>
+          <label className={styles.optionLabel}>
+            <input
+              type="radio"
+              name="holdPriority"
+              value="alwaysHold"
+              checked={
+                Number(initialValues.holdPriority) ===
+                optConst.HOLD_PRIORITY_ENUM.ALWAYS_HOLD
+              }
+              onChange={() =>
+                handleSettingsChange({
+                  name: optConst.HOLD_PRIORITY_SETTING,
+                  value: optConst.HOLD_PRIORITY_ENUM.ALWAYS_HOLD
+                })
+              }
+            />
+            Always Hold Priority
+          </label>
+          <label className={styles.optionLabel}>
+            <input
+              type="radio"
+              name="holdPriority"
+              value="holdAllOpp"
+              checked={
+                Number(initialValues.holdPriority) ===
+                optConst.HOLD_PRIORITY_ENUM.HOLD_ALL_OPPONENT
+              }
+              onChange={() =>
+                handleSettingsChange({
+                  name: optConst.HOLD_PRIORITY_SETTING,
+                  value: optConst.HOLD_PRIORITY_ENUM.HOLD_ALL_OPPONENT
+                })
+              }
+            />
+            Hold Priority for all Opponent Actions
+          </label>
+          <label className={styles.optionLabel}>
+            <input
+              type="radio"
+              name="holdPriority"
+              value="holdOppAtt"
+              checked={
+                Number(initialValues.holdPriority) ===
+                optConst.HOLD_PRIORITY_ENUM.HOLD_ALL_OPPONENT_ATTACKS
+              }
+              onChange={() =>
+                handleSettingsChange({
+                  name: optConst.HOLD_PRIORITY_SETTING,
+                  value: optConst.HOLD_PRIORITY_ENUM.HOLD_ALL_OPPONENT_ATTACKS
+                })
+              }
+            />
+            Hold Priority for all Opponent Attacks
+          </label>
+        </fieldset>
+        <fieldset>
+          <legend>
+            <strong>Skip Overrides</strong>
+          </legend>
+          <label className={styles.optionLabel}>
+            <input
+              type="checkbox"
+              name="skipAttackReactions"
+              checked={initialValues.skipAttackReactions}
+              onChange={() =>
+                handleSettingsChange({
+                  name: optConst.SKIP_AR_WINDOW,
+                  value: initialValues.skipAttackReactions ? '0' : '1'
+                })
+              }
+            />
+            Skip Attack Reactions
+          </label>
+          <label className={styles.optionLabel}>
+            <input
+              type="checkbox"
+              name="skipDefenseReactions"
+              checked={initialValues.skipDefenseReactions}
+              onChange={() =>
+                handleSettingsChange({
+                  name: optConst.SKIP_DR_WINDOW,
+                  value: initialValues.skipDefenseReactions ? '0' : '1'
+                })
+              }
+            />
+            Skip Defense Reactions
+          </label>
+          <label className={styles.optionLabel}>
+            <input
+              type="checkbox"
+              name="manualTargeting"
+              checked={initialValues.manualTargeting}
+              onChange={() =>
+                handleSettingsChange({
+                  name: optConst.AUTO_TARGET_OPPONENT,
+                  value: initialValues.manualTargeting ? '1' : '0' // reversed!
+                })
+              }
+            />
+            Manual Targeting
+          </label>
+        </fieldset>
+        <fieldset>
+          <legend>
+            <strong>Attack Shortcut Threshold</strong>
+          </legend>
+          <label className={styles.optionLabel}>
+            <input
+              type="radio"
+              name="attackSkip"
+              value="neverSkip"
+              checked={Number(initialValues.shortcutAttackThreshold) === 0}
+              onChange={() =>
+                handleSettingsChange({
+                  name: optConst.SHORTCUT_ATTACK_THRESHOLD,
+                  value: 0
+                })
+              }
+            />
+            Never Skip Attacks
+          </label>
+          <label className={styles.optionLabel}>
+            <input
+              type="radio"
+              name="attackSkip"
+              value="skipOnes"
+              checked={Number(initialValues.shortcutAttackThreshold) === 1}
+              onChange={() =>
+                handleSettingsChange({
+                  name: optConst.SHORTCUT_ATTACK_THRESHOLD,
+                  value: 1
+                })
+              }
+            />
+            Skip 1 Power Attacks
+          </label>
+          <label className={styles.optionLabel}>
+            <input
+              type="radio"
+              name="attackSkip"
+              value="skipAll"
+              checked={Number(initialValues.shortcutAttackThreshold) >= 2}
+              onChange={() =>
+                handleSettingsChange({
+                  name: optConst.SHORTCUT_ATTACK_THRESHOLD,
+                  value: 99
+                })
+              }
+            />
+            Skip All Attacks
+          </label>
+        </fieldset>
+        <fieldset>
+          <legend>
+            <strong>Other Settings</strong>
+          </legend>
+          <label className={styles.optionLabel}>
+            <input
+              type="checkbox"
+              name="manualMode"
+              area-disabled="true"
+              checked={initialValues.streamerMode}
+              onChange={() =>
+                handleSettingsChange({
+                  name: optConst.IS_STREAMER_MODE,
+                  value: initialValues.streamerMode ? '0' : '1'
+                })
+              }
+            />
+            Enable Streamer Mode
+          </label>
+          <label className={styles.optionLabel}>
+            <input
+              type="checkbox"
+              name="manualMode"
+              area-disabled="true"
+              checked={initialValues.casterMode}
+              onChange={() =>
+                handleSettingsChange({
+                  name: optConst.IS_CASTER_MODE,
+                  value: initialValues.casterMode ? '0' : '1'
+                })
+              }
+            />
+            Enable Caster Mode
+          </label>
+          <label className={styles.optionLabel}>
+            <input
+              type="checkbox"
+              name="manualMode"
+              area-disabled="true"
+              checked={initialValues.manualMode}
+              onChange={() =>
+                handleSettingsChange({
+                  name: optConst.MANUAL_MODE,
+                  value: initialValues.manualMode ? '0' : '1'
+                })
+              }
+            />
+            Enable Manual Mode
+          </label>
+          <label className={styles.optionLabel}>
+            <input
+              type="checkbox"
+              name="alwaysAllowUndo"
+              area-disabled="true"
+              checked={initialValues.alwaysAllowUndo}
+              onChange={() =>
+                handleSettingsChange({
+                  name: optConst.ALWAYS_ALLOW_UNDO,
+                  value: initialValues.alwaysAllowUndo ? '0' : '1'
+                })
+              }
+            />
+            Always Allow Undo
+          </label>
+          <label className={styles.optionLabel}>
+            <input
+              type="checkbox"
+              name="accessibilityMode"
+              area-disabled="true"
+              checked={initialValues.accessibilityMode}
+              onChange={() =>
+                handleSettingsChange({
+                  name: optConst.COLORBLIND_MODE,
+                  value: initialValues.accessibilityMode ? '0' : '1'
+                })
+              }
+            />
+            Enable Accessibility Mode
+          </label>
+          <label className={styles.optionLabel}>
+            <input
+              type="checkbox"
+              name="mute"
+              checked={initialValues.mute}
+              onChange={() =>
+                handleSettingsChange({
+                  name: optConst.MUTE_SOUND,
+                  value: initialValues.mute ? '0' : '1'
+                })
+              }
+            />
+            Mute Game Sounds
+          </label>
+          <label className={styles.optionLabel}>
+            <input
+              type="checkbox"
+              name="disableStats"
+              checked={initialValues.disableStats}
+              onChange={() =>
+                handleSettingsChange({
+                  name: optConst.DISABLE_STATS,
+                  value: initialValues.disableStats ? '0' : '1'
+                })
+              }
+            />
+            Disable Stats
+          </label>
+          <label className={styles.optionLabel}>
+            <input
+              type="checkbox"
+              name="disableAltArts"
+              checked={initialValues.disableAltArts}
+              onChange={() =>
+                handleSettingsChange({
+                  name: optConst.DISABLE_ALT_ARTS,
+                  value: initialValues.disableAltArts ? '0' : '1'
+                })
+              }
+            />
+            Disable Alt Arts
+          </label>
+          <label className={styles.optionLabel}>
+            <input
+              type="checkbox"
+              name="manualTunic"
+              checked={initialValues.manualTunic}
+              onChange={() =>
+                handleSettingsChange({
+                  name: optConst.MANUAL_TUNIC,
+                  value: initialValues.manualTunic ? '0' : '1'
+                })
+              }
+            />
+            Manual Tunic Mode
+          </label>
+        </fieldset>
+        <label className={styles.cardBackTitle}>
+          <strong>Card Back</strong>
+          {!data?.cardBacks.length && (
+            <p>Link your patreon on your profile page to unlock card backs</p>
+          )}
+          <div className={styles.cardBackListContainer}>
+            {data?.cardBacks.map((cardBack) => {
+              const cardClass = classNames(styles.cardBack, {
+                [styles.selected]: initialValues.cardBack === cardBack.id
+              });
+              return (
+                <CardPopUp
+                  key={`cardBack${cardBack.id}`}
+                  onClick={() =>
+                    handleSettingsChange({
+                      name: optConst.CARD_BACK,
+                      value: cardBack.id
+                    })
+                  }
+                  cardNumber={CARD_BACK[cardBack.id]}
+                >
+                  <CardImage
+                    src={getCollectionCardImagePath({
+                      path: CARD_SQUARES_PATH,
+                      locale: DEFAULT_LANGUAGE,
+                      cardNumber: CARD_BACK[cardBack.id]
+                    })}
+                    draggable={false}
+                    className={cardClass}
+                  />
+                </CardPopUp>
+              );
+            })}
+          </div>
+        </label>
+        <label className={styles.cardBackTitle}>
+          <strong>Playmat</strong>
+          {!!data?.playmats?.length ? (
+            <select
+              defaultValue={initialValues.playMat}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                handleSettingsChange({
+                  name: optConst.MY_PLAYMAT,
+                  value: e.target.value
+                })
+              }
+            >
+              {data?.playmats?.map((playmatKey) => {
+                return (
+                  <option value={playmatKey.id}>
+                    {PLAYMATS[playmatKey.id]}
+                  </option>
+                );
+              })}
+            </select>
+          ) : (
+            <p>Log in to customise your playmat</p>
+          )}
+        </label>
+        {/* WARNING THIS MAY MAKE THE GAME MORE UNSTABLE. <br />
+         <label className={styles.optionLabel}>
+          <input
+            type="checkbox"
+            name="manualMode"
+            area-disabled="true"
+            checked={cookies.experimental === 'true'}
+            onChange={() => {
+              if (cookies.experimental) {
+                removeCookie('experimental');
+              } else {
+                setCookie('experimental', 'true');
+              }
+            }}
+          />
+          Enable Experimental Features.
+        </label>
+        <p>
+          We are always trying new things to improve Talishar if you try the
+          experiment please give feedback in our discord.
+        </p> */}
+      </div>
+      <hr />
+      <>
+        <fieldset>
+          <label className={styles.optionLabel}>
+            Card Size: {Math.floor(cookies.cardSize * 100)}%
+            <input
+              name="cardSize"
+              type="range"
+              min="25"
+              max="100"
+              defaultValue={(cookies.cardSize ?? 1) * 100}
+              id="cardSize"
+              onChange={(e) =>
+                setCookie('cardSize', parseInt(e.target.value) / 100)
+              }
+            />
+          </label>
+          <label className={styles.optionLabel}>
+            Card Preview Size: {Math.floor(cookies.hoverImageSize * 100)}%
+            <input
+              name="hoverImageSize"
+              type="range"
+              min="75"
+              max="125"
+              defaultValue={(cookies.hoverImageSize ?? 1) * 100}
+              id="hoverImageSize"
+              onChange={(e) =>
+                setCookie('hoverImageSize', parseInt(e.target.value) / 100)
+              }
+            />
+          </label>
+          <label className={styles.optionLabel}>
+            Playmat Intensity: {Math.floor(cookies.playmatIntensity * 100)}%
+            <input
+              name="playmatIntensity"
+              type="range"
+              min="10"
+              max="100"
+              defaultValue={(cookies.playmatIntensity ?? 0.65) * 100}
+              id="playmatIntensity"
+              onChange={(e) =>
+                setCookie('playmatIntensity', parseInt(e.target.value) / 100)
+              }
+            />
+          </label>
+          <label className={styles.optionLabel}>
+            Transparency Intensity: {Math.floor(cookies.transparencyIntensity * 100)}%
+            <input
+              name="transparencyIntensity"
+              type="range"
+              min="50"
+              max="100"
+              defaultValue={(cookies.transparencyIntensity ?? 0.65) * 90}
+              id="transparencyIntensity"
+              onChange={(e) =>
+                setCookie('transparencyIntensity', parseInt(e.target.value) / 100)
+              }
+            />
+          </label>
+        </fieldset>
+      </>
       <p className={styles.disclaimer}>
-        Talishar is in no way affiliated with Legend Story Studios. Legend Story
+      Talishar is in no way affiliated with Legend Story Studios. Legend Story
         Studios®, Flesh and Blood™, and set names are trademarks of Legend Story
         Studios. Flesh and Blood characters, cards, logos, and art are property
-        of <a href="https://legendstory.com/" target="_blank" rel="noreferrer">Legend Story Studios</a>. 
-        Card Images © Legend Story Studios
+        of <a href="https://legendstory.com/" target="_blank">Legend Story Studios</a>. Card Images © Legend Story Studios
       </p>
     </div>
   );
 };
-
 export default OptionsSettings;
