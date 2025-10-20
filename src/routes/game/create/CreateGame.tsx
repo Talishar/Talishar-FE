@@ -249,10 +249,10 @@ const CreateGame = () => {
               )}
             </fieldset>
               <label>
-                Game Name
+                Game Description
                 <select
                   id="gameDescription"
-                  aria-label="Game Name"
+                  aria-label="Game Description"
                   {...register('gameDescription')}
                   aria-invalid={
                     errors.gameDescription?.message ? 'true' : undefined
@@ -265,6 +265,7 @@ const CreateGame = () => {
                   <option value="Playing spicy brews">Playing spicy brews</option>
                   <option value="Casual play">Casual play</option>
                   <option value="New player help">New player help</option>
+                  <option value="Learning a new hero">Learning a new hero</option>
                 </select>
               </label>
             <label>

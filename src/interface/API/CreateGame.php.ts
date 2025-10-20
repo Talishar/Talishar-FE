@@ -7,7 +7,7 @@ export interface CreateGameAPI {
   decksToTry?: string; // This is only used if there's no favorite deck or decklink. 1 = ira
   favoriteDeck?: boolean; //Set this to true to save the provided deck link to your favorites
   favoriteDecks?: string; //This one is kind of weird. It's the favorite deck index, then the string "<fav>" then the favorite deck link
-  gameDescription?: string; //Just a string with the game name
+  gameDescription?: string; //Just a string with the game description
   user?: string; // User ID for external site like fabrary
   deckTestDeck?: string; //Deck of the deck test opponent (AI)
 }
