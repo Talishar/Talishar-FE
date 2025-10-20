@@ -15,7 +15,7 @@ export const HEROES_OF_RATHE: { value: string; label: string }[] = [
   { value: 'ARC076', label: 'Viserai' },
   { value: 'ARC113', label: 'Kano' },
   { value: 'ARC114', label: 'Kano' },
-  { value: 'CRU002', label: 'Kayot' },
+  { value: 'CRU002', label: 'Kayo' },
   { value: 'CRU046', label: 'Ira' },
   { value: 'CRU047', label: 'Benji' },
   { value: 'CRU077', label: 'Kassai' },
