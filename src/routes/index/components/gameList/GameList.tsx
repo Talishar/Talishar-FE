@@ -213,12 +213,12 @@ const GameList = () => {
             )}
             name="Blitz"
           />
-{/*           <FormatList
+          <FormatList
             gameList={sortedOpenGames.filter(
               (game) => game.format === GAME_FORMAT.COMPETITIVE_BLITZ
             )}
             name="Competitive Blitz"
-          /> */}
+          />
           <FormatList
             gameList={sortedOpenGames.filter(
               (game) => game.format === GAME_FORMAT.CLASSIC_CONSTRUCTED
@@ -281,7 +281,7 @@ const GameList = () => {
                 ].sort((a, b) => b.gameName - a.gameName)}
                 name="Blitz"
               />
-{/*               <InProgressGameList
+              <InProgressGameList
                 gameList={[
                   ...filteredGamesInProgress.filter((game) =>
                     [GAME_FORMAT.COMPETITIVE_BLITZ, GAME_FORMAT_NUMBER.COMPETITIVE_BLITZ].includes(
@@ -290,7 +290,7 @@ const GameList = () => {
                   ),
                 ].sort((a, b) => b.gameName - a.gameName)}
                 name="Competitive Blitz"
-              /> */}
+              />
               <InProgressGameList
                 gameList={[
                   ...filteredGamesInProgress.filter((game) =>

@@ -366,6 +366,7 @@ const CreateGame = () => {
                 </optgroup>
                 <optgroup label="Competitive Formats">
                   <option value={GAME_FORMAT.COMPETITIVE_CC}>Competitive Classic Constructed</option>
+                  <option value={GAME_FORMAT.COMPETITIVE_BLITZ}>Competitive Blitz</option>
                   <option value={GAME_FORMAT.COMPETITIVE_SAGE}>Competitive Silver Age</option>
                   <option value={GAME_FORMAT.COMPETITIVE_LL}>Competitive Living Legend</option>
                 </optgroup>

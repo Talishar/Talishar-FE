@@ -146,7 +146,7 @@ const Lobby = () => {
     switch (data.format) {
       case GAME_FORMAT.BLITZ:
       case GAME_FORMAT.COMMONER:
-      //case GAME_FORMAT.COMPETITIVE_BLITZ:
+      case GAME_FORMAT.COMPETITIVE_BLITZ:
       case GAME_FORMAT.COMMONER:
       case GAME_FORMAT.CLASH:
       case GAME_FORMAT.SAGE:
