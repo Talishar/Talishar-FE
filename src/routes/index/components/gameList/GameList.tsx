@@ -14,6 +14,7 @@ import { setGameStart } from 'features/game/GameSlice';
 import { useAppDispatch } from 'app/Hooks';
 import { useLocation } from 'react-router-dom';
 import { HEROES_OF_RATHE } from '../filter/constants';
+import { IoMdArrowDropright } from "react-icons/io";
 
 export interface IOpenGame {
   p1Hero?: string;
@@ -59,6 +60,7 @@ const GameList = () => {
 
   const [heroFilter, setHeroFilter] = useState<string[]>([]);
   const [formatFilter, setFormatFilter] = useState<string | null>(null);
+  const [gamesInProgressExpanded, setGamesInProgressExpanded] = useState(true); // Default to open
 
   const [parent] = useAutoAnimate();
 
@@ -229,10 +231,16 @@ const GameList = () => {
           />
           {data != undefined && (
             <div data-testid="games-in-progress" ref={parent}>
-              <h4 className={styles.subSectionTitle}>
-                Games in Progress: <span>{data.gameInProgressCount}</span>
+              <h4 
+                className={styles.subSectionTitle} 
+                onClick={() => setGamesInProgressExpanded(!gamesInProgressExpanded)}
+                style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', userSelect: 'none' }}
+              >
+                Games in Progress:&nbsp;<span>{data.gameInProgressCount}</span>
               </h4>
-              <InProgressGameList
+              {gamesInProgressExpanded && (
+                <>
+                  <InProgressGameList
                 gameList={[
                   ...filteredGamesInProgress.filter((game) =>
                     [GAME_FORMAT.BLITZ, GAME_FORMAT_NUMBER.BLITZ].includes(game.format)
@@ -309,9 +317,11 @@ const GameList = () => {
                 ].sort((a, b) => b.gameName - a.gameName)}
                 name="Other Formats"
               />
+                </>
+              )}
             </div>
           )}
-          </>
+        </>
       ) : (
         !isLoading && (
           <p>
@@ -325,7 +335,9 @@ const GameList = () => {
 
 const InProgressGameList = ({ gameList, name }: IInProgressGameList) => {
   const [parent] = useAutoAnimate();
+  const [isExpanded, setIsExpanded] = useState(true); // Default to open
   const [isMobile, setIsMobile] = useState(window.innerWidth < 1025);
+  
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 1025);
@@ -342,10 +354,24 @@ const InProgressGameList = ({ gameList, name }: IInProgressGameList) => {
     return null;
   }
 
+  const toggleExpanded = () => {
+    setIsExpanded(!isExpanded);
+  };
+
   return (
     <div className={styles.groupDiv} ref={parent}>
-      <h5 className={styles.subSectionTitle}>{name}</h5>
-      {limitedGameList.map((entry, ix: number) => {
+      <h5 className={styles.subSectionTitle} onClick={toggleExpanded} style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', userSelect: 'none' }}>
+        {name}
+        <span style={{ 
+          marginLeft: isExpanded ? '6px' : '0px', 
+          marginTop: isExpanded ? '6px' : '0px',
+          transform: isExpanded ? 'rotate(90deg)' : 'rotate(0deg)', 
+          transition: 'transform 0.2s ease',
+        }}>
+          <IoMdArrowDropright />
+        </span>
+      </h5>
+      {isExpanded && limitedGameList.map((entry, ix: number) => {
         return <InProgressGame entry={entry} ix={ix} key={entry.gameName} />;
       })}
     </div>
