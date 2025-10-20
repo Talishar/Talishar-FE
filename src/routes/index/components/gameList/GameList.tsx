@@ -49,13 +49,15 @@ export interface GameListResponse {
   LastAuthKey?: string;
 }
 
-const GAME_LIST_POLLING_INTERVAL = 5000; // in ms
+const GAME_LIST_POLLING_INTERVAL = 10000; // in ms
 
 const GameList = () => {
   const [cookies, setCookie, removeCookie] = useCookies(['experimental']);
+  const [isTabActive, setIsTabActive] = useState(true);
+  
   const { data, isLoading, error, refetch, isFetching } =
     useGetGameListQuery(undefined, {
-      pollingInterval: GAME_LIST_POLLING_INTERVAL,
+      pollingInterval: isTabActive ? GAME_LIST_POLLING_INTERVAL : 0, // Stop polling when tab inactive
     });
   const { isLoggedIn } = useAuth();
   const { blockedUsers } = useBlockedUsers();
@@ -69,6 +71,20 @@ const GameList = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const location = useLocation();
+
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      setIsTabActive(!document.hidden);
+      if (!document.hidden) {
+        refetch();
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [refetch]);
 
   const activeHeroIds = new Set<string>();
 
