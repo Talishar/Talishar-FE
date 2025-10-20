@@ -251,16 +251,22 @@ const CreateGame = () => {
             {isPatron == '1' && (
               <label>
                 Game Name
-                <input
-                  type="text"
+                <select
                   id="gameDescription"
                   aria-label="Game Name"
                   {...register('gameDescription')}
                   aria-invalid={
                     errors.gameDescription?.message ? 'true' : undefined
                   }
-                  placeholder="Defaults to Game#14321542"
-                />
+                >
+                  <option value="">Default Game #</option>
+                  <option value="Looking for best deck in the format">Looking for best deck in the format</option>
+                  <option value="Looking for meta heroes">Looking for meta heroes</option>
+                  <option value="Prepping for event">Prepping for event</option>
+                  <option value="Playing spicy brews">Playing spicy brews</option>
+                  <option value="Casual play">Casual play</option>
+                  <option value="New player help">New player help</option>
+                </select>
               </label>
             )}
             {isPatron != '1' && (
