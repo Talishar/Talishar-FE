@@ -8,20 +8,143 @@
   min-width: 0px;
   grid-area: chat;
   height: calc(100dvh - 440px);
+  padding: 1rem;
+  overflow-y: auto;
 }
 
-td {
-  padding: 4px;
+.calculatorCard {
+  background: rgba(0, 0, 0, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  padding: 1rem 1rem 0 1rem;
+  backdrop-filter: blur(5px);
+  width: 100%;
+  max-width: 600px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.header h3 {
+  color: var(--primary);
+  font-size: 1.3em;
+  font-weight: 600;
+  margin: 0 0 0.5rem 0;
+}
+
+.header p {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9em;
+  margin: 0;
+}
+
+.tableContainer {
+  overflow-x: auto;
+}
+
+.probabilityTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9em;
+}
+
+.probabilityTable th {
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.9);
+  padding: 0.5rem 0.5rem;
+  text-align: center;
+  font-weight: 600;
+  font-size: 0.85em;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.labelHeader {
+  text-align: left !important;
+  min-width: 140px;
+}
+
+.probabilityTable td {
+  padding: 0.75rem 0.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.labelCell {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 500;
+  min-width: 140px;
+}
+
+.probabilityCell {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 500;
+}
+
+.colorIndicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.colorless {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.colorless .colorIndicator {
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 .red {
-  color: #ff3333;
+  color: #ff6b6b;
+}
+
+.red .colorIndicator {
+  background: #ff6b6b;
+  box-shadow: 0 0 8px rgba(255, 107, 107, 0.3);
 }
 
 .yellow {
-  color: yellow;
+  color: #ffd93d;
+}
+
+.yellow .colorIndicator {
+  background: #ffd93d;
+  box-shadow: 0 0 8px rgba(255, 217, 61, 0.3);
 }
 
 .blue {
-  color: cyan;
+  color: #74c0fc;
+}
+
+.blue .colorIndicator {
+  background: #74c0fc;
+  box-shadow: 0 0 8px rgba(116, 192, 252, 0.3);
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .calculatorCard {
+    padding: 1rem;
+  }
+  
+  .probabilityTable {
+    font-size: 0.8em;
+  }
+  
+  .probabilityTable th,
+  .probabilityTable td {
+    padding: 0.5rem 0.25rem;
+  }
+  
+  .labelCell {
+    font-size: 0.8em;
+  }
 }

@@ -100,32 +100,66 @@ const Calculator = () => {
 
   return (
     <div className={styles.container}>
-      <table>
-        <tr>
-          <th>Count</th>
-          <th>0</th>
-          <th>1</th>
-          <th>2</th>
-          <th>3</th>
-          <th>4</th>
-        </tr>
-        <tr>
-          <td className={styles.white}>Colorless ({numColorless})</td>
-          {colorlessRows}
-        </tr>
-        <tr>
-          <td className={styles.red}>Red ({numRed})</td>
-          {redRows}
-        </tr>
-        <tr>
-          <td className={styles.yellow}>Yellow ({numYellow})</td>
-          {yellowRows}
-        </tr>
-        <tr>
-          <td className={styles.blue}>Blue ({numBlue})</td>
-          {blueRows}
-        </tr>
-      </table>
+      <div className={styles.calculatorCard}>
+        <div className={styles.header}>
+          <h3>Hand Draw Probabilities</h3>
+          <p>Probability of drawing cards by pitch value in opening hand</p>
+        </div>
+        <div className={styles.tableContainer}>
+          <table className={styles.probabilityTable}>
+            <thead>
+              <tr>
+                <th className={styles.labelHeader}>Card Type</th>
+                <th>0</th>
+                <th>1</th>
+                <th>2</th>
+                <th>3</th>
+                <th>4</th>
+              </tr>
+            </thead>
+            <tbody>
+              {numColorless > 0 && (
+                <tr>
+                  <td className={`${styles.labelCell} ${styles.colorless}`}>
+                    <span className={styles.colorIndicator}></span>
+                    Colorless ( {numColorless} )
+                  </td>
+                  {colorlessRows.map((cell: any, index: number) => (
+                    <td key={index} className={styles.probabilityCell}>{cell.props.children}</td>
+                  ))}
+                </tr>
+              )}
+              <tr>
+                <td className={`${styles.labelCell} ${styles.red}`}>
+                  <span className={styles.colorIndicator}></span>
+                  Red ( {numRed} )
+                </td>
+                {redRows.map((cell: any, index: number) => (
+                  <td key={index} className={styles.probabilityCell}>{cell.props.children}</td>
+                ))}
+              </tr>
+              <tr>
+                <td className={`${styles.labelCell} ${styles.yellow}`}>
+                  <span className={styles.colorIndicator}></span>
+                  Yellow ( {numYellow}  )
+                </td>
+                {yellowRows.map((cell: any, index: number) => (
+                  <td key={index} className={styles.probabilityCell}>{cell.props.children}</td>
+                ))}
+              </tr>
+              <tr>
+                <td className={`${styles.labelCell} ${styles.blue}`}>
+                  <span className={styles.colorIndicator}></span>
+                  Blue ( {numBlue} )
+                </td>
+                {blueRows.map((cell: any, index: number) => (
+                  <td key={index} className={styles.probabilityCell}>{cell.props.children}</td>
+                ))}
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   );
 };
