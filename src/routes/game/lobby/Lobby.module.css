@@ -54,13 +54,75 @@
 
 .leftCol {
   background-size: cover;
+  background-position: center;
   height: 100%;
+  border-radius: 12px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  position: relative;
+}
+
+.leftCol::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255, 184, 77, 0.08) 0%, transparent 40%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.leftCol:hover {
+  border-color: var(--primary);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4), 0 0 20px rgba(255, 184, 77, 0.2);
+}
+
+.leftCol:hover::before {
+  opacity: 1;
 }
 
 .rightCol {
   text-align: right;
   background-size: cover;
+  background-position: center;
   height: 100%;
+  border-radius: 12px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  position: relative;
+}
+
+.rightCol::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(225deg, rgba(255, 184, 77, 0.08) 0%, transparent 40%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.rightCol:hover {
+  border-color: var(--primary);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4), 0 0 20px rgba(255, 184, 77, 0.2);
+}
+
+.rightCol:hover::before {
+  opacity: 1;
 }
 
 .dimPic {
@@ -69,27 +131,63 @@
   justify-content: flex-end;
   width: 100%;
   height: 100%;
-  padding: 1em;
-  padding-bottom: 0.2em;
+  padding: 1.2em;
+  padding-bottom: 0.8em;
   color: var(--white);
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9), -1px -1px 2px rgba(0, 0, 0, 0.8);
-  background: linear-gradient(transparent 0%, transparent 40%, rgba(0, 0, 0, 0.7) 100%);
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.9), 0 0 4px rgba(0, 0, 0, 0.8);
+  background: linear-gradient(transparent 0%, transparent 30%, rgba(0, 0, 0, 0.4) 70%, rgba(0, 0, 0, 0.8) 100%);
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 2;
+}
+
+.leftCol:hover .dimPic,
+.rightCol:hover .dimPic {
+  background: linear-gradient(transparent 0%, transparent 20%, rgba(0, 0, 0, 0.5) 60%, rgba(0, 0, 0, 0.9) 100%);
+  transform: translateY(-1px);
 }
 
 .dimPic > h3 {
-  margin-bottom: 0.5em;
-  font-size: 1.2em;
-  font-weight: bold;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9), -1px -1px 2px rgba(0, 0, 0, 0.8);
+  margin-bottom: 0.3em;
+  font-size: 1.3em;
+  font-weight: 700;
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.9), 0 0 4px rgba(0, 0, 0, 0.8);
   color: white;
+  transition: all 0.3s ease;
+  letter-spacing: 0.5px;
+}
+
+.leftCol:hover .dimPic > h3,
+.rightCol:hover .dimPic > h3 {
+  color: var(--primary);
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 184, 77, 0.3);
+  transform: translateY(-2px);
 }
 
 .heroName {
-  color: var(--white);
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9), -1px -1px 2px rgba(0, 0, 0, 0.8);
+  color: rgba(255, 255, 255, 0.95);
+  text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.9), 0 0 4px rgba(0, 0, 0, 0.8);
   margin-bottom: 0px;
   font-weight: 600;
   font-size: 1.1em;
+  transition: all 0.3s ease;
+  opacity: 0.9;
+}
+
+.leftCol:hover .heroName,
+.rightCol:hover .heroName {
+  color: white;
+  opacity: 1;
+  text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.9), 0 0 6px rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
+}
+
+.leftCol:hover {
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4), 0 0 20px rgba(255, 184, 77, 0.2);
+}
+
+.rightCol:hover {
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4), 0 0 20px rgba(255, 184, 77, 0.2);
 }
 
 .inLineNav {
@@ -105,7 +203,7 @@
 }
 
 nav {
-  position: -webkit-sticky; /* Safari */
+  position: -webkit-sticky;
   position: sticky;
   padding: 0 1em;
   top: 0;
@@ -291,7 +389,6 @@ button.secondary:hover {
   color: white;
 }
 
-/* Keyframes */
 @keyframes wiggle {
   0%,
   7% {
@@ -340,7 +437,6 @@ button.secondary:hover {
   border-radius: 15px;
 }
 
-/* Modal Styling */
 .modal {
   background: var(--near-black);
   border: 1px solid var(--primary);
