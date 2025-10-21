@@ -1,89 +1,256 @@
 .endGameStats {
-  padding-top: 1vh;
+  padding: 1.5rem;
   display: flex;
   flex-grow: 1;
   flex-direction: column;
   justify-content: flex-start;
-  align-items: flex-start;
-  align-content: flex-start;
-  gap: 1vh;
+  align-items: stretch;
+  gap: 1.5rem;
   overflow-y: auto;
+  overflow-x: hidden; /* Prevent horizontal scroll */
   height: auto;
   z-index: 950;
-  --spacing: 0.25rem;
-  --font-size: 0.85rem;
   user-select: auto;
+  background: var(--near-black);
 }
 
-.advancedStatsBanner {
+.statsContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 500px), 1fr));
+  gap: 1.5rem;
   width: 100%;
-  font-size: 24px;
-  text-align: center;
+}
+
+.statsSection {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 1.25rem;
+  background: rgba(0, 0, 0, 0.3);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-height: 0; /* Allow flexbox to shrink properly */
+}
+
+.sectionHeader {
+  color: var(--primary);
+  font-size: 1.1em;
+  font-weight: 600;
+  margin: 0 0 .5rem 0;
+}
+
+.infoBox {
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.statsBox {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding-top: 0.5rem;
+}
+
+.infoRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.35rem 0;
+  font-size: 0.95em;
+}
+
+.infoLabel {
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 500;
+}
+
+.infoValue {
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.disclaimer {
+  font-size: 0.85em;
+  color: rgba(255, 255, 255, 0.5);
+  font-style: italic;
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  background: rgba(255, 184, 77, 0.05);
+  border-left: 2px solid var(--primary);
+  border-radius: 4px;
+}
+
+.disclaimer a {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.disclaimer a:hover {
+  text-decoration: underline;
 }
 
 .cardTable {
-  line-height: 1.5em;
   width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: .95em;
+  margin-top: 0.5rem;
+}
+
+.cardTable thead {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.cardTable thead th {
+  background: rgba(0, 0, 0, 0.5);
+  padding: 0.5rem 0.3rem;
+  text-align: center;
+  font-weight: 600;
+  color: var(--primary);
+  border-bottom: 2px solid rgba(255, 255, 255, 0.15);
+  font-size: 0.9em;
+  white-space: nowrap;
+}
+
+.cardTable thead th[style*="cursor: pointer"] {
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.cardTable thead th[style*="cursor: pointer"]:hover {
+  background: rgba(255, 184, 77, 0.15);
+  color: #ffb84d;
+}
+
+.cardTable tbody tr {
+  transition: background-color 0.2s;
+}
+
+.cardTable tbody tr:hover {
+  background-color: rgba(255, 255, 255, 0.03);
+}
+
+.cardTable tbody tr:nth-child(even) {
+  background-color: rgba(0, 0, 0, 0.15);
+}
+
+.cardTable tbody tr:nth-child(even):hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.cardTable tbody td {
+  padding: 0.3rem 0.3rem;
+  text-align: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .card {
-  width: 5vh;
-  width: 5dvh;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
 }
 
 .onePitch {
-  color: red;
+  color: #ff6b6b;
+  font-weight: 600;
 }
 
 .twoPitch {
   color: var(--primary);
+  font-weight: 600;
 }
 
 .threePitch {
-  color: aqua;
+  color: #4ecdc4;
+  font-weight: 600;
 }
 
-.twoColumn {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  gap: 25px;
-}
-
-.twoColumn h3 {
-  margin-top: 0px;
-  margin-bottom: 5px;
-}
-
-.twoColumn h2 {
-  margin-top: 0px;
-  margin-bottom: 5px;
-}
-
-.twoColumn p {
-  margin-bottom: 0px;
-}
-
-.played {
-  text-align: center;
-}
-
-.blocked {
-  text-align: center;
-}
-
-.pitched {
-  text-align: center;
-}
-
-.cardStat {
-  text-align: center;
-}
-
+.played,
+.blocked,
+.pitched,
+.cardStat,
 .turnNo {
   text-align: center;
+  font-weight: 500;
 }
 
 .headersStats {
   text-align: center;
+}
+
+.tableContainer {
+  overflow-x: auto;
+  overflow-y: auto;
+  max-height: none; 
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(0, 0, 0, 0.2);
+  flex: 1; 
+}
+
+.tableContainer::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.tableContainer::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
+
+.tableContainer::-webkit-scrollbar-thumb {
+  background: rgba(255, 184, 77, 0.3);
+  border-radius: 4px;
+}
+
+.tableContainer::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 184, 77, 0.5);
+}
+
+@media (max-width: 1200px) {
+  .statsContainer {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .endGameStats {
+    padding: 1rem;
+  }
+
+  .statsSection {
+    padding: 1rem;
+  }
+
+  .cardTable {
+    font-size: 0.85em;
+  }
+
+  .cardTable thead th,
+  .cardTable tbody td {
+    padding: 0.5rem 0.3rem;
+  }
+
+  .sectionHeader {
+    font-size: 1em;
+  }
+
+  .infoRow {
+    font-size: 0.85em;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
 }

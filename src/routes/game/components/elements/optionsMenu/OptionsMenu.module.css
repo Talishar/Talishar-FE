@@ -27,8 +27,10 @@
 }
 
 .title {
-  padding: 0px;
-  margin: 0px;
+  padding: 0;
+  margin: 0;
+  font-size: 1.5em;
+  font-weight: 600;
 }
 
 .optionsMenuCloseIcon {
@@ -63,6 +65,9 @@
 
 .column {
   width: 50%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 .buttonColumn {
@@ -79,13 +84,57 @@
 }
 
 .buttonDiv {
-  width: 75%;
+  width: 70%;
   padding: 0.25em;
   margin-bottom: 0.5em;
 }
 
+/* Section Container - Match left side fieldset styling */
+.sectionContainer {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 1rem;
+  margin: 0;
+  background: rgba(0, 0, 0, 0.2);
+  position: relative;
+}
+
+/* Section Headers - Positioned like fieldset legend */
+.sectionHeader {
+  color: var(--primary);
+  font-size: 0.95em;
+  font-weight: 600;
+  padding: 0 0.5rem;
+  background: var(--near-black);
+  position: absolute;
+  top: -0.6em;
+  left: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.sectionContent {
+  padding-top: 0.5rem;
+}
+
+.sectionContent .buttonColumn {
+  padding-right: 0;
+  margin: 0;
+}
+
+/* Legacy h3 support - deprecated but kept for compatibility */
 .column h3 {
   margin: 0.5em 0;
+  color: var(--primary);
+  font-size: 0.95em;
+  font-weight: 600;
+}
+
+.cosmeticsSection {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 @media (orientation: portrait) {

@@ -76,7 +76,7 @@ const EndGameScreen = () => {
     <div className={cardListBoxClasses}>
       <div className={styles.cardListTitleContainer}>
         <div className={styles.cardListTitle}>
-          <h3 className={styles.title}>{'Game Over Summary'}</h3>
+          <h2 className={styles.title}>Game Over Summary</h2>
           <div className={styles.buttonGroup}>
             <div className={styles.buttonDiv} onClick={toggleShowFullLog}>
               Full Game Log
@@ -86,9 +86,9 @@ const EndGameScreen = () => {
             </div>
             <div className={styles.buttonDiv} onClick={toggleShowStats}>
               {showStats ? (
-                <FaEye aria-hidden="true" fontSize={'2em'} />
+                <FaEye aria-hidden="true" fontSize={'1.5em'} />
               ) : (
-                <FaEyeSlash aria-hidden="true" fontSize={'2em'} />
+                <FaEyeSlash aria-hidden="true" fontSize={'1.5em'} />
               )}
             </div>
           </div>
