@@ -200,7 +200,7 @@
 .threePitch {
   color: #4ecdc4;
   font-weight: 600;
-  font-size: 0.9em !important;
+  font-size: 0.9em;
   max-width: 200px;
   overflow: hidden;
   text-overflow: ellipsis;
