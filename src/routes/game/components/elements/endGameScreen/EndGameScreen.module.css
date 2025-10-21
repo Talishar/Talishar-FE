@@ -4,8 +4,8 @@
   flex-direction: column;
   top: 5vh;
   bottom: 10vh;
-  left: 5vw;
-  right: 5vw;
+  left: 10vw;
+  right: 10vw;
   background-color: var(--near-black);
   padding: 1.5rem;
   border: 1px solid var(--primary);
