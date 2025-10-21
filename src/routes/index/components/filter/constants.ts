@@ -45,7 +45,7 @@ export const HEROES_OF_RATHE: { value: string; label: string }[] = [
   { value: 'OUT003', label: 'Arakni, Slippy' },
   { value: 'OUT091', label: 'Riptide' },
   { value: 'OUT092', label: 'Riptide' },
-  { value: 'UPR102', label: 'Iyslander' },
+  { value: 'EVR120', label: 'Iyslander' },
   { value: 'UPR103', label: 'Iyslander' },
   { value: 'DYN113', label: 'Arakni, Huntsman' },
   { value: 'DYN114', label: 'Arakni, Huntsman' },
