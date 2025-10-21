@@ -47,8 +47,8 @@ export const HEROES_OF_RATHE: { value: string; label: string }[] = [
   { value: 'OUT092', label: 'Riptide' },
   { value: 'UPR102', label: 'Iyslander' },
   { value: 'UPR103', label: 'Iyslander' },
-  { value: 'DYN113', label: 'Arakni' },
-  { value: 'DYN114', label: 'Arakni' },
+  { value: 'DYN113', label: 'Arakni, Huntsman' },
+  { value: 'DYN114', label: 'Arakni, Huntsman' },
   { value: 'EVR017', label: 'Bravo, Star of the Show' },
   { value: 'EVR019', label: 'Valda' },
   { value: 'EVR085', label: 'Genis Wotchuneed' },
@@ -94,14 +94,14 @@ export const HEROES_OF_RATHE: { value: string; label: string }[] = [
   { value: 'ROS019', label: 'Oscilio' },
   { value: 'ROS020', label: 'Oscilio' },
   { value: 'AJV001', label: 'Jarl' },
-  { value: 'HNT001', label: 'Arakni' },
-  { value: 'HNT002', label: 'Arakni' },
+  { value: 'HNT001', label: 'Arakni, Marionette' },
+  { value: 'HNT002', label: 'Arakni, Marionette' },
   { value: 'HNT054', label: 'Cindra' },
   { value: 'HNT055', label: 'Cindra' },
   { value: 'HNT098', label: 'Fang' },
   { value: 'HNT099', label: 'Fang' },
-  { value: 'HNT261', label: 'Arakni' }, //Slippy
-  { value: 'HER130', label: 'Arakni' }, //Slippy
+  { value: 'HNT261', label: 'Arakni, Slippy' }, //Slippy
+  { value: 'HER130', label: 'Arakni, Slippy' }, //Slippy
   { value: 'SEA001', label: 'Puffin' },
   { value: 'SEA002', label: 'Puffin' },
   { value: 'SEA043', label: 'Gravy Bones' },
