@@ -35,7 +35,7 @@
 
 .sectionHeader {
   color: var(--primary);
-  font-size: 1.1em;
+  font-size: 1.3em;
   font-weight: 600;
   margin: 0 0 .5rem 0;
 }
@@ -102,7 +102,7 @@
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
-  font-size: .95em;
+  font-size: 1.05em;
   margin-top: 0.5rem;
 }
 
@@ -115,12 +115,12 @@
 
 .cardTable thead th {
   background: rgba(0, 0, 0, 0.5);
-  padding: 0.5rem 0.3rem;
+  padding: 0.75rem 0.5rem;
   text-align: center;
   font-weight: 600;
   color: var(--primary);
   border-bottom: 2px solid rgba(255, 255, 255, 0.15);
-  font-size: 1.1em;
+  font-size: 1.15em;
   white-space: nowrap;
 }
 
@@ -150,14 +150,15 @@
 }
 
 .cardTable tbody td {
-  padding: 0.3rem 0.3rem;
+  padding: 0.6rem 0.5rem;
   text-align: center;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  font-size: 1.05em;
 }
 
 .card {
-  width: 60px;
-  height: 60px;
+  width: 70px;
+  height: 70px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -167,19 +168,19 @@
 .onePitch {
   color: #ff6b6b;
   font-weight: 600;
-  font-size: 1em;
+  font-size: 1.1em;
 }
 
 .twoPitch {
   color: var(--primary);
   font-weight: 600;
-  font-size: 1em;
+  font-size: 1.1em;
 }
 
 .threePitch {
   color: #4ecdc4;
   font-weight: 600;
-  font-size: 1em;
+  font-size: 1.1em;
 }
 
 .played,
@@ -189,7 +190,7 @@
 .turnNo {
   text-align: center;
   font-weight: 500;
-  font-size: 1em;
+  font-size: 1.05em;
 }
 
 .headersStats {
@@ -229,6 +230,23 @@
   .statsContainer {
     grid-template-columns: 1fr;
   }
+
+  .cardTable {
+    font-size: 1.02em;
+  }
+
+  .cardTable thead th {
+    font-size: 1.12em;
+    padding: 0.7rem 0.45rem;
+  }
+
+  .cardTable tbody td {
+    padding: 0.55rem 0.45rem;
+  }
+
+  .sectionHeader {
+    font-size: 1.25em;
+  }
 }
 
 @media (max-width: 768px) {
@@ -241,22 +259,45 @@
   }
 
   .cardTable {
-    font-size: 0.95em;
-  }
-
-  .cardTable thead th,
-  .cardTable tbody td {
-    padding: 0.5rem 0.3rem;
-  }
-
-  .sectionHeader {
     font-size: 1em;
   }
 
+  .cardTable thead th {
+    padding: 0.65rem 0.4rem;
+    font-size: 1.1em;
+  }
+
+  .cardTable tbody td {
+    padding: 0.55rem 0.4rem;
+    font-size: 1em;
+  }
+
+  .card {
+    width: 65px;
+    height: 65px;
+  }
+
+  .sectionHeader {
+    font-size: 1.2em;
+  }
+
   .infoRow {
-    font-size: 0.95em;
+    font-size: 1em;
     flex-direction: column;
     align-items: flex-start;
     gap: 0.25rem;
+  }
+
+  .infoLabel,
+  .infoValue {
+    font-size: 1.05em;
+  }
+
+  .played,
+  .blocked,
+  .pitched,
+  .cardStat,
+  .turnNo {
+    font-size: 1em;
   }
 }
