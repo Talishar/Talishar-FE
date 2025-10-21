@@ -7,6 +7,15 @@ export const LOCALE_DICTIONARY: { [index: string]: string } = {
   jp: 'japanese'
 };
 
+export const LOCALE_FLAGS: { [index: string]: string } = {
+  en: '🇬🇧',
+  es: '🇪🇸',
+  fr: '🇫🇷',
+  de: '🇩🇪',
+  it: '🇮🇹',
+  jp: '🇯🇵'
+};
+
 export const CARD_IMAGES_PATH = 'cardimages';
 export const CARD_SQUARES_PATH = 'cardsquares';
 

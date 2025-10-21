@@ -1,7 +1,7 @@
 import react, { useState } from 'react';
 import { useLanguageSelector } from 'hooks/useLanguageSelector';
 import { toast } from 'react-hot-toast';
-import { LOCALE_DICTIONARY } from 'utils/multilanguage/constants';
+import { LOCALE_DICTIONARY, LOCALE_FLAGS } from 'utils/multilanguage/constants';
 
 const capitalizeFirstLetter = (text: string): string => text.charAt(0).toUpperCase() + text.slice(1);
 
@@ -35,7 +35,7 @@ const LanguageSelector = () => {
             className="dropdown-item"
             value={language}
           >
-            {capitalizeFirstLetter(LOCALE_DICTIONARY[language])}
+            {LOCALE_FLAGS[language]} {capitalizeFirstLetter(LOCALE_DICTIONARY[language])}
           </option>
         ))}
       </select>
