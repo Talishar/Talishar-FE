@@ -16,7 +16,7 @@
 
 .statsContainer {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 500px), 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 400px), 1fr));
   gap: 1rem;
   width: 100%;
 }
@@ -24,13 +24,13 @@
 .statsSection {
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 8px;
-  padding: 1rem;
+  padding: 0.75rem;
   background: rgba(0, 0, 0, 0.3);
   position: relative;
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
-  min-height: 0; /* Allow flexbox to shrink properly */
+  min-height: 0;
 }
 
 .sectionHeader {
@@ -42,7 +42,6 @@
 
 .infoBox {
   background: rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 6px;
   padding: 0.75rem;
   display: flex;
@@ -217,7 +216,6 @@
   overflow-y: auto;
   max-height: none; 
   border-radius: 6px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
   background: rgba(0, 0, 0, 0.2);
   flex: 1;
   -webkit-overflow-scrolling: touch;
