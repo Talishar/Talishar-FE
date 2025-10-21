@@ -259,7 +259,7 @@ const EndGameStats = (data: EndGameData) => {
           </div>
         </div>
 
-        {/* Game Time & Turn Stats Section */}
+        {/* Game Time & Summary Section */}
         <div className={styles.statsSection}>
           <h2 className={styles.sectionHeader}>Game Time & Summary</h2>
           
@@ -350,10 +350,17 @@ const EndGameStats = (data: EndGameData) => {
               </span>
             </div>
           </div>
+        </div>
+      </div>
 
-          <h3 className={styles.sectionHeader} style={{ marginTop: '1rem' }}>Turn by Turn Breakdown</h3>
-          <div className={styles.tableContainer}>
-            <table className={styles.cardTable}>
+      {/* Turn by Turn Breakdown - Full Width Section */}
+      <div className={styles.turnBreakdownSection}>
+        <h2 className={styles.sectionHeader}>Turn by Turn Breakdown</h2>
+        <div className={styles.disclaimer}>
+          <em>First turn omitted for first player</em>
+        </div>
+        <div className={styles.tableContainer}>
+          <table className={styles.cardTable}>
               <thead>
                 <tr>
                   <th className={styles.headersStats}>Turn</th>
@@ -586,7 +593,6 @@ const EndGameStats = (data: EndGameData) => {
             </table>
           </div>
         </div>
-      </div>
     </div>
   );
 };

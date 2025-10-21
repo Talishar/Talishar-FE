@@ -33,6 +33,19 @@
   min-height: 0;
 }
 
+.turnBreakdownSection {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 0.75rem;
+  background: rgba(0, 0, 0, 0.3);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: 100%;
+  margin-top: 1rem;
+}
+
 .sectionHeader {
   color: var(--primary);
   font-size: 1.2em;
