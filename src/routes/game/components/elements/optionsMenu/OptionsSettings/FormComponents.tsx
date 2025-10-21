@@ -147,7 +147,7 @@ interface FieldsetProps {
 
 export const Fieldset: React.FC<FieldsetProps> = ({ legend, children }) => {
   return (
-    <fieldset>
+    <fieldset className={styles.fieldset}>
       <legend>
         <strong>{legend}</strong>
       </legend>

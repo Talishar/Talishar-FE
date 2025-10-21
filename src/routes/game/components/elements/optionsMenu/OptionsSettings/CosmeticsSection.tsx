@@ -33,7 +33,7 @@ export const CosmeticsSection: React.FC<CosmeticsSectionProps> = ({
   return (
     <>
         <label className={styles.cardBackTitle}>
-        <strong>🎯 Playmat</strong>
+        <strong>Playmat</strong>
         {!!data?.playmats?.length ? (
           <select
             defaultValue={selectedPlaymat}
@@ -57,7 +57,7 @@ export const CosmeticsSection: React.FC<CosmeticsSectionProps> = ({
         )}
       </label>
       <label className={styles.cardBackTitle}>
-        <strong>🎴 Card Back</strong>
+        <strong>Card Back</strong>
         {!data?.cardBacks?.length && (
           <p>Link your patreon on your profile page to unlock card backs</p>
         )}

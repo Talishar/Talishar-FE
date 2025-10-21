@@ -120,7 +120,7 @@ const OptionsSettings = () => {
 
   return (
     <div className={styles.leftColumn}>
-      <Fieldset legend="⚡ Priority Settings">
+      <Fieldset legend="Priority Settings">
         <RadioGroup
           name="holdPriority"
           options={priorityOptions}
@@ -133,7 +133,7 @@ const OptionsSettings = () => {
           }
         />
       </Fieldset>
-      <Fieldset legend="⏭️ Skip Overrides">
+      <Fieldset legend="Skip Overrides">
         <CheckboxSetting
           name="skipAttackReactions"
           label="Skip Attack Reactions"
@@ -169,7 +169,7 @@ const OptionsSettings = () => {
         />
       </Fieldset>
 
-      <Fieldset legend="⚔️ Attack Shortcut Threshold">
+      <Fieldset legend="Attack Shortcut Threshold">
         <RadioGroup
           name="attackSkip"
           options={attackShortcutOptions}
@@ -183,7 +183,7 @@ const OptionsSettings = () => {
         />
       </Fieldset>
 
-      <Fieldset legend="♿ Accessibility & Other">
+      <Fieldset legend="Accessibility & Other">
         <CheckboxSetting
           name="alwaysAllowUndo"
           label="Always Allow Undo"
@@ -243,7 +243,7 @@ const OptionsSettings = () => {
         />
       </Fieldset>
 
-      <Fieldset legend="🎮 Modes">
+      <Fieldset legend="Modes">
         <CheckboxSetting
           name="streamerMode"
           label="Enable Streamer Mode"
@@ -293,7 +293,7 @@ const OptionsSettings = () => {
         />
       </Fieldset>
 
-      <Fieldset legend="🎨 Visual Settings">
+      <Fieldset legend="Visual Settings">
         <VisualSlider
           label="Card Size"
           value={cookies.cardSize ?? 1}
@@ -326,7 +326,6 @@ const OptionsSettings = () => {
         />
       </Fieldset>
 
-      {/* Disclaimer */}
       <p className={styles.disclaimer}>
         Talishar is in no way affiliated with Legend Story Studios. Legend Story
         Studios®, Flesh and Blood™, and set names are trademarks of Legend Story

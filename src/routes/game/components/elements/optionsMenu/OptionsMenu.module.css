@@ -27,8 +27,10 @@
 }
 
 .title {
-  padding: 0px;
-  margin: 0px;
+  padding: 0;
+  margin: 0;
+  font-size: 1.5em;
+  font-weight: 600;
 }
 
 .optionsMenuCloseIcon {
@@ -82,7 +84,7 @@
 }
 
 .buttonDiv {
-  width: 75%;
+  width: 70%;
   padding: 0.25em;
   margin-bottom: 0.5em;
 }
