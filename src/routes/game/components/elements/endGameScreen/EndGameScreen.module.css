@@ -12,6 +12,8 @@
   border-radius: 10px;
   z-index: 950;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .fullLog {
@@ -34,6 +36,7 @@
   display: flex;
   flex-direction: row;
   flex-grow: 0;
+  flex-shrink: 0;
   width: 100%;
   justify-content: space-between;
   align-items: center;
@@ -108,39 +111,63 @@
   transform: translateY(0);
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
   .cardListBox {
-    top: 5vh;
-    bottom: 5vh;
-    left: 5vw;
-    right: 5vw;
-    padding: 1rem;
+    top: 2vh;
+    bottom: 2vh;
+    left: 2vw;
+    right: 2vw;
+    padding: 0.75rem;
   }
 
   .cardListTitleContainer {
     flex-direction: column;
     align-items: flex-start;
-    gap: 1rem;
+    gap: 0.5rem;
+    padding-bottom: 0.5rem;
+    margin-bottom: 0.5rem;
   }
 
   .cardListTitle {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.75rem;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    width: 100%;
   }
 
   .title {
-    font-size: 1.25em;
+    font-size: 1.1em;
+    flex: 1;
   }
 
   .buttonGroup {
     width: 100%;
-    flex-direction: column;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 0.4rem;
+    order: 2;
   }
 
   .buttonDiv {
-    width: 100%;
+    flex: 1 1 0;
+    min-width: 0;
     justify-content: center;
+    font-size: 0.75em;
+    min-height: 2rem;
+    padding: 0.4rem 0.5rem;
+    white-space: normal;
+    text-align: center;
+    line-height: 1.3;
+  }
+
+  .buttonDiv:has(svg) {
+    flex: 0 0 auto;
+    min-width: 2.25rem;
+    padding: 0.4rem;
+  }
+
+  .buttonDiv svg {
+    font-size: 1.2em;
   }
 }

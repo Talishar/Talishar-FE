@@ -1,5 +1,5 @@
 .container {
-  margin: 0.5em;
+  margin: 0 0.5em 0.5em 0.5em;
   width: 100%;
 }
 
@@ -18,13 +18,15 @@
   flex-direction: row;
   align-items: center;
   justify-content: center;
+  text-align: center;
   min-width: 8vh;
-  height: 4vh;
+  min-height: 4.5vh;
   border-radius: 5px;
   border: 1px solid var(--primary);
   flex-basis: auto;
-  padding: 0vh 1vh;
+  padding: 0.7vh 1.2vh;
   font-size: 1.1em;
+  line-height: 1.2;
 }
 
 .buttonDiv:hover {
@@ -41,7 +43,6 @@
   box-shadow: 0 2px 4px rgba(255, 184, 77, 0.2);
 }
 
-/* Tablet styles */
 @media (max-width: 1200px) {
   .buttons {
     gap: 0.65rem;
@@ -55,80 +56,40 @@
   }
 }
 
-/* Mobile styles */
 @media (max-width: 768px) {
+  .container {
+    margin: 0 0.25em 0.5em 0.25em;
+  }
+
   .buttons {
-    flex-direction: column;
-    gap: 0.75rem;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0.4rem;
     width: 100%;
   }
 
   .buttonDiv {
-    width: 100%;
-    min-width: unset;
-    min-height: 48px;
-    padding: 0.875rem 1rem;
-    font-size: 1em;
-    flex: 0 0 auto;
+    flex: 1 1 calc(50% - 0.2rem);
+    min-width: calc(50% - 0.2rem);
+    min-height: 36px;
+    padding: 0.5rem 0.6rem;
+    font-size: 0.8em;
     white-space: normal;
     line-height: 1.3;
+    text-align: center;
   }
 }
 
-/* Small mobile styles */
 @media (max-width: 480px) {
   .buttons {
-    gap: 0.65rem;
+    gap: 0.35rem;
   }
 
   .buttonDiv {
-    min-height: 50px;
-    padding: 1rem;
-    font-size: 1.05em;
+    flex: 1 1 calc(50% - 0.175rem);
+    min-width: calc(50% - 0.175rem);
+    min-height: 34px;
+    padding: 0.45rem 0.5rem;
+    font-size: 0.75em;
   }
-}
-
-.ratings {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5em;
-  margin: 0.5em;
-}
-
-.thumbUpIcon {
-  height: 3em;
-  width: 3em;
-  border: 1px solid var(--primary);
-  border-radius: 0.5em;
-  color: green;
-  font-size: 2em;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.thumbUpIcon:hover {
-  cursor: pointer;
-  color: black;
-  background-color: green;
-}
-
-.thumbDownIcon {
-  height: 3em;
-  width: 3em;
-  border: 1px solid var(--primary);
-  border-radius: 0.5em;
-  color: red;
-  font-size: 2em;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.thumbDownIcon:hover {
-  cursor: pointer;
-  background-color: red;
-  color: black;
 }

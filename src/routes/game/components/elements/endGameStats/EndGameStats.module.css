@@ -1,13 +1,13 @@
 .endGameStats {
-  padding: 1rem;
+  padding: 0;
   display: flex;
-  flex-grow: 1;
+  flex-grow: 0;
   flex-direction: column;
   justify-content: flex-start;
   align-items: stretch;
   gap: 1rem;
-  overflow-y: auto;
-  overflow-x: visible; /* Allow horizontal scroll for child elements on mobile */
+  overflow-y: visible;
+  overflow-x: visible;
   height: auto;
   z-index: 950;
   user-select: auto;
