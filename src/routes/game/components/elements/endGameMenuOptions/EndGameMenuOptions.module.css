@@ -24,6 +24,7 @@
   border: 1px solid var(--primary);
   flex-basis: auto;
   padding: 0vh 1vh;
+  font-size: 1.1em;
 }
 
 .buttonDiv:hover {
