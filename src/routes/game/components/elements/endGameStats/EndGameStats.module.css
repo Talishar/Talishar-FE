@@ -43,10 +43,10 @@
 .infoBox {
   background: rgba(0, 0, 0, 0.2);
   border-radius: 6px;
-  padding: 0.75rem;
+  padding: 0.5rem;
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
+  gap: 0.25rem;
 }
 
 .statsBox {
@@ -57,11 +57,22 @@
 }
 
 .infoRow {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 2rem;
   align-items: center;
-  padding: 0.25rem 0;
+  padding: 0.5rem 0.75rem;
   font-size: 1em;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.infoRow:nth-child(even) {
+  background-color: rgba(255, 255, 255, 0.03);
+}
+
+.infoRow:hover {
+  background-color: rgba(255, 184, 77, 0.08);
 }
 
 .infoLabel {
@@ -74,6 +85,8 @@
   color: var(--primary);
   font-weight: 600;
   font-size: 1em;
+  text-align: right;
+  white-space: nowrap;
 }
 
 .disclaimer {
