@@ -61,7 +61,7 @@ const EndGameStats = (data: EndGameData) => {
   const [sortField, setSortField] = useState<'played' | 'blocked' | 'pitched' | 'hits' | null>(null);
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
   
-  const [turnSortField, setTurnSortField] = useState<'cardsUsed' | 'cardsBlocked' | 'cardsPitched' | 'cardsLeft' | 'resourcesUsed' | 'resourcesLeft' | 'damageThreatened' | 'damageDealt' | 'damageBlocked' | 'damagePrevented' | 'damageTaken' | 'lifeGained' | 'totalValue' | null>(null);
+  const [turnSortField, setTurnSortField] = useState<'turnNo' | 'cardsUsed' | 'cardsBlocked' | 'cardsPitched' | 'cardsLeft' | 'resourcesUsed' | 'resourcesLeft' | 'damageThreatened' | 'damageDealt' | 'damageBlocked' | 'damagePrevented' | 'damageTaken' | 'lifeGained' | 'totalValue' | null>(null);
   const [turnSortDirection, setTurnSortDirection] = useState<'asc' | 'desc'>('desc');
 
   const handleSort = (field: 'played' | 'blocked' | 'pitched' | 'hits') => {
@@ -75,7 +75,7 @@ const EndGameStats = (data: EndGameData) => {
     }
   };
 
-  const handleTurnSort = (field: 'cardsUsed' | 'cardsBlocked' | 'cardsPitched' | 'cardsLeft' | 'resourcesUsed' | 'resourcesLeft' | 'damageThreatened' | 'damageDealt' | 'damageBlocked' | 'damagePrevented' | 'damageTaken' | 'lifeGained' | 'totalValue') => {
+  const handleTurnSort = (field: 'turnNo' | 'cardsUsed' | 'cardsBlocked' | 'cardsPitched' | 'cardsLeft' | 'resourcesUsed' | 'resourcesLeft' | 'damageThreatened' | 'damageDealt' | 'damageBlocked' | 'damagePrevented' | 'damageTaken' | 'lifeGained' | 'totalValue') => {
     if (turnSortField === field) {
       // Toggle direction if same field
       setTurnSortDirection(turnSortDirection === 'desc' ? 'asc' : 'desc');
@@ -374,7 +374,11 @@ const EndGameStats = (data: EndGameData) => {
                   </th>
                 </tr>
                 <tr>
-                  <th className={styles.turnNo}>#</th>
+                  <th onClick={() => handleTurnSort('turnNo')}
+                    style={{ cursor: 'pointer', userSelect: 'none' }}
+                    title="Click to sort">
+                  # {turnSortField === 'turnNo' && (turnSortDirection === 'desc' ? '↓' : '↑')}
+                  </th>
                   <th
                     onClick={() => handleTurnSort('cardsUsed')}
                     style={{ cursor: 'pointer', userSelect: 'none' }}

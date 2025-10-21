@@ -150,21 +150,21 @@
 }
 
 .cardTable tbody tr:hover {
-  background-color: rgba(255, 255, 255, 0.03);
+  background-color: rgba(255, 184, 77, 0.08);
 }
 
 .cardTable tbody tr:nth-child(even) {
-  background-color: rgba(0, 0, 0, 0.15);
+  background-color: rgba(255, 255, 255, 0.03);
 }
 
 .cardTable tbody tr:nth-child(even):hover {
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: rgba(255, 184, 77, 0.08);
 }
 
 .cardTable tbody td {
   padding: 0.5rem 0.4rem;
   text-align: center;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0);
   font-size: 1em;
 }
 
