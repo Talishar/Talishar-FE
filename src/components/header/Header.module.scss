@@ -12,17 +12,6 @@
     }
   }
 
-  // hide animation on these items
-  .logo,
-  .social,
-  .login,
-  .support {
-    &::before,
-    &::after {
-      content: none;
-    }
-  }
-
   ul {
     // overwrite pico styling
     &:first-of-type,
@@ -59,6 +48,19 @@
           font-weight: 700;
           position: relative;
           animation: rainbow-text 4s linear infinite;
+          overflow: visible;
+          
+          // Don't use before/after for default animation
+          &::before,
+          &::after {
+            content: none !important;
+          }
+          
+          // Sparkle effect using box-shadow on hover
+          &:hover {
+            filter: drop-shadow(0 0 8px rgba(255, 200, 87, 0.8));
+            animation: rainbow-flow 5s linear infinite, pulse 3s ease-in-out infinite;
+          }
         }
         
         @supports (background-clip: text) or (-webkit-background-clip: text) {
@@ -212,5 +214,21 @@
   }
   83% {
     color: #feca57;
+  }
+}
+
+// Pulse animation for Support Us hover
+@keyframes pulse {
+  0%, 100% {
+    filter: drop-shadow(0 0 8px rgba(255, 200, 87, 0.6));
+  }
+  25% {
+    filter: drop-shadow(0 0 10px rgba(255, 200, 87, 0.8)) drop-shadow(0 0 15px rgba(255, 100, 255, 0.3));
+  }
+  50% {
+    filter: drop-shadow(0 0 15px rgba(255, 200, 87, 1)) drop-shadow(0 0 25px rgba(255, 100, 255, 0.5));
+  }
+  75% {
+    filter: drop-shadow(0 0 10px rgba(255, 200, 87, 0.8)) drop-shadow(0 0 15px rgba(255, 100, 255, 0.3));
   }
 }
