@@ -49,10 +49,20 @@
 }
 
 .quickChatButton button:hover {
-  background-color: black;
-  color: var(--primary);
-  border: 1px solid var(--primary);
-  cursor: pointer;
+  background-color: rgba(255, 184, 77, 0.9);
+  border-color: var(--primary);
+  color: var(--primary-inverse);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(255, 184, 77, 0.3);
+}
+
+.quickChatButton button:disabled {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.5);
+  border-color: rgba(255, 255, 255, 0.2);
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }
 
 .popOver {
