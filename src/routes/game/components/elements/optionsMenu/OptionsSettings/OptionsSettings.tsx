@@ -183,6 +183,56 @@ const OptionsSettings = () => {
         />
       </Fieldset>
 
+      <Fieldset legend="Modes">
+        <CheckboxSetting
+          name="streamerMode"
+          label="Enable Streamer Mode"
+          checked={initialValues.streamerMode}
+          onChange={() =>
+            handleSettingsChange({
+              name: optConst.IS_STREAMER_MODE,
+              value: initialValues.streamerMode ? '0' : '1'
+            })
+          }
+          ariaDisabled={true}
+        />
+        <CheckboxSetting
+          name="casterMode"
+          label="Enable Caster Mode"
+          checked={initialValues.casterMode}
+          onChange={() =>
+            handleSettingsChange({
+              name: optConst.IS_CASTER_MODE,
+              value: initialValues.casterMode ? '0' : '1'
+            })
+          }
+          ariaDisabled={true}
+        />
+        <CheckboxSetting
+          name="manualMode"
+          label="Enable Manual Mode"
+          checked={initialValues.manualMode}
+          onChange={() =>
+            handleSettingsChange({
+              name: optConst.MANUAL_MODE,
+              value: initialValues.manualMode ? '0' : '1'
+            })
+          }
+          ariaDisabled={true}
+        />
+        <CheckboxSetting
+          name="manualTunic"
+          label="Manual Tunic Mode"
+          checked={initialValues.manualTunic}
+          onChange={() =>
+            handleSettingsChange({
+              name: optConst.MANUAL_TUNIC,
+              value: initialValues.manualTunic ? '0' : '1'
+            })
+          }
+        />
+      </Fieldset>
+
       <Fieldset legend="Accessibility & Other">
         <CheckboxSetting
           name="alwaysAllowUndo"
@@ -238,56 +288,6 @@ const OptionsSettings = () => {
             handleSettingsChange({
               name: optConst.DISABLE_ALT_ARTS,
               value: initialValues.disableAltArts ? '0' : '1'
-            })
-          }
-        />
-      </Fieldset>
-
-      <Fieldset legend="Modes">
-        <CheckboxSetting
-          name="streamerMode"
-          label="Enable Streamer Mode"
-          checked={initialValues.streamerMode}
-          onChange={() =>
-            handleSettingsChange({
-              name: optConst.IS_STREAMER_MODE,
-              value: initialValues.streamerMode ? '0' : '1'
-            })
-          }
-          ariaDisabled={true}
-        />
-        <CheckboxSetting
-          name="casterMode"
-          label="Enable Caster Mode"
-          checked={initialValues.casterMode}
-          onChange={() =>
-            handleSettingsChange({
-              name: optConst.IS_CASTER_MODE,
-              value: initialValues.casterMode ? '0' : '1'
-            })
-          }
-          ariaDisabled={true}
-        />
-        <CheckboxSetting
-          name="manualMode"
-          label="Enable Manual Mode"
-          checked={initialValues.manualMode}
-          onChange={() =>
-            handleSettingsChange({
-              name: optConst.MANUAL_MODE,
-              value: initialValues.manualMode ? '0' : '1'
-            })
-          }
-          ariaDisabled={true}
-        />
-        <CheckboxSetting
-          name="manualTunic"
-          label="Manual Tunic Mode"
-          checked={initialValues.manualTunic}
-          onChange={() =>
-            handleSettingsChange({
-              name: optConst.MANUAL_TUNIC,
-              value: initialValues.manualTunic ? '0' : '1'
             })
           }
         />
