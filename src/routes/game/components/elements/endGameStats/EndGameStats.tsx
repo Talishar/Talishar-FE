@@ -174,7 +174,7 @@ const EndGameStats = (data: EndGameData) => {
             <table className={styles.cardTable}>
               <thead>
                 <tr className={styles.headers}>
-                  <th className={styles.headersStats}></th>
+                  <th className={styles.firstHeadersStats}></th>
                   <th>Card Name</th>
                   <th 
                     className={styles.headersStats} 
@@ -238,7 +238,7 @@ const EndGameStats = (data: EndGameData) => {
                         <td className={styles.card}>
                           <Effect card={card} />
                         </td>
-                        <td className={cardStyle}>{result.cardName}</td>
+                        <td className={cardStyle} title={result.cardName}>{result.cardName}</td>
                         <td className={styles.played}>{result.played}</td>
                         <td className={styles.blocked}>{result.blocked}</td>
                         <td className={styles.pitched}>{result.pitched}</td>
