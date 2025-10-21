@@ -94,7 +94,7 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 8px;
   padding: 1rem;
-  margin: 0;
+  margin-top: 0.75em;
   background: rgba(0, 0, 0, 0.2);
   position: relative;
 }
@@ -104,14 +104,15 @@
   color: var(--primary);
   font-size: 0.95em;
   font-weight: 600;
-  padding: 0 0.5rem;
+  padding: 0.1em 0.5rem;
   background: var(--near-black);
   position: absolute;
-  top: -0.6em;
+  top: -0.7em;
   left: 1rem;
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  line-height: 1.2;
 }
 
 .sectionContent {
