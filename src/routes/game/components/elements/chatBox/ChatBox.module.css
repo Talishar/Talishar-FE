@@ -104,3 +104,7 @@
   left: 0.1em;
   right: 0;
 }
+
+.chatMobileBox * {
+  font-size: max(1em, 7px) !important;
+}
