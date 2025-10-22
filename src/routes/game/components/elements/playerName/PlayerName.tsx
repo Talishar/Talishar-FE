@@ -70,7 +70,7 @@ export default function PlayerName(player: Player) {
           />
         </a>
       ))}
-      {playerName?.substring(0, 30).replace('-', `Practice Dummy`)}
+      {String(playerName ?? '').substring(0, 30).replace('-', `Practice Dummy`)}
     </div>
   );
   }
