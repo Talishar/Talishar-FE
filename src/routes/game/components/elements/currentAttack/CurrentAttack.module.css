@@ -177,4 +177,24 @@
     height: 10em;
     gap: 0.5em;
   }
+
+  .attDefRow {
+    height: 2em;
+    gap: 0.3em;
+  }
+
+  .attDiv,
+  .defDiv {
+    font-size: 1.3em;
+  }
+
+  .attackSymbol {
+    height: 2em;
+    width: 2em;
+  }
+
+  .chainSymbols {
+    height: 1.8em;
+    width: 1.8em;
+  }
 }
