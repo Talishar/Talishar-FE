@@ -12,17 +12,6 @@
     }
   }
 
-  // hide animation on these items
-  .logo,
-  .social,
-  .login,
-  .support {
-    &::before,
-    &::after {
-      content: none;
-    }
-  }
-
   ul {
     // overwrite pico styling
     &:first-of-type,
@@ -57,22 +46,41 @@
           min-width: 40px;
           white-space: nowrap;
           font-weight: 700;
-          background: linear-gradient(
-            90deg,
-            #ff6b6b,
-            #feca57,
-            #48dbfb,
-            #ff9ff3,
-            #54a0ff,
-            #feca57,
-            #ff6b6b
-          );
-          background-size: 200% auto;
-          background-clip: text;
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          animation: rainbow-flow 5s linear infinite;
           position: relative;
+          animation: rainbow-text 4s linear infinite;
+          overflow: visible;
+          
+          // Don't use before/after for default animation
+          &::before,
+          &::after {
+            content: none !important;
+          }
+          
+          // Sparkle effect using box-shadow on hover
+          &:hover {
+            filter: drop-shadow(0 0 8px rgba(255, 200, 87, 0.8));
+            animation: rainbow-flow 5s linear infinite, pulse 3s ease-in-out infinite;
+          }
+        }
+        
+        @supports (background-clip: text) or (-webkit-background-clip: text) {
+          &.support {
+            background: linear-gradient(
+              90deg,
+              #ff6b6b,
+              #feca57,
+              #48dbfb,
+              #ff9ff3,
+              #54a0ff,
+              #feca57,
+              #ff6b6b
+            );
+            background-size: 200% auto;
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: rainbow-flow 4s linear infinite;
+          }
         }
 
         &.login {
@@ -178,12 +186,49 @@
   }
 }
 
-// Rainbow and sparkle animations for Support Us link
+// Rainbow animation for Support Us link
 @keyframes rainbow-flow {
   0% {
     background-position: 0% center;
   }
   100% {
     background-position: 200% center;
+  }
+}
+
+@keyframes rainbow-text {
+  0%, 100% {
+    color: #ff6b6b;
+  }
+  16% {
+    color: #feca57;
+  }
+  33% {
+    color: #48dbfb;
+  }
+  50% {
+    color: #ff9ff3;
+  }
+  66% {
+    color: #54a0ff;
+  }
+  83% {
+    color: #feca57;
+  }
+}
+
+// Pulse animation for Support Us hover
+@keyframes pulse {
+  0%, 100% {
+    filter: drop-shadow(0 0 8px rgba(255, 200, 87, 0.6));
+  }
+  25% {
+    filter: drop-shadow(0 0 10px rgba(255, 200, 87, 0.8)) drop-shadow(0 0 15px rgba(255, 100, 255, 0.3));
+  }
+  50% {
+    filter: drop-shadow(0 0 15px rgba(255, 200, 87, 1)) drop-shadow(0 0 25px rgba(255, 100, 255, 0.5));
+  }
+  75% {
+    filter: drop-shadow(0 0 10px rgba(255, 200, 87, 0.8)) drop-shadow(0 0 15px rgba(255, 100, 255, 0.3));
   }
 }

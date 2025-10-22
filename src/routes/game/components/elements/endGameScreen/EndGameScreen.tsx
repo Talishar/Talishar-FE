@@ -74,27 +74,39 @@ const EndGameScreen = () => {
 
   return (
     <div className={cardListBoxClasses}>
-      <div className={styles.cardListTitleContainer}>
-        <div className={styles.cardListTitle}>
-          <h2 className={styles.title}>Game Over Summary</h2>
-          <div className={styles.buttonGroup}>
-            <div className={styles.buttonDiv} onClick={toggleShowFullLog}>
-              Full Game Log
+      {showStats && (
+        <>
+          <div className={styles.cardListTitleContainer}>
+            <div className={styles.cardListTitle}>
+              <h2 className={styles.title}>Game Over Summary</h2>
+              <div className={styles.buttonGroup}>
+                <div className={styles.buttonDiv} onClick={toggleShowFullLog}>
+                  Full Game Log
+                </div>
+                <div className={styles.buttonDiv} onClick={switchPlayer}>
+                  Switch player stats
+                </div>
+                <div className={styles.buttonDiv} onClick={toggleShowStats}>
+                  <FaEye aria-hidden="true" fontSize={'1.5em'} />
+                </div>
+              </div>
             </div>
-            <div className={styles.buttonDiv} onClick={switchPlayer}>
-              Switch player stats
-            </div>
-            <div className={styles.buttonDiv} onClick={toggleShowStats}>
-              {showStats ? (
-                <FaEye aria-hidden="true" fontSize={'1.5em'} />
-              ) : (
+          </div>
+          {content}
+        </>
+      )}
+      {!showStats && (
+        <div className={styles.cardListTitleContainer}>
+          <div className={styles.cardListTitle}>
+            <h2 className={styles.title}>Game Over Summary</h2>
+            <div className={styles.buttonGroup}>
+              <div className={styles.buttonDiv} onClick={toggleShowStats}>
                 <FaEyeSlash aria-hidden="true" fontSize={'1.5em'} />
-              )}
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      {showStats && content}
+      )}
     </div>
   );
 };
