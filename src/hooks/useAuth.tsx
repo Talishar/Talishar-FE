@@ -8,16 +8,30 @@ import {
   selectCurrentUser,
   selectCurrentUserName,
   selectIsPatron,
+  selectIsMod,
   setCredentialsReducer,
   logOutReducer
 } from 'features/auth/authSlice';
 import { useEffect } from 'react';
 import { toast } from 'react-hot-toast';
 
+// List of mod usernames - should match backend list
+const MOD_USERNAMES = [
+  'OotTheMonk',
+  'Launch',
+  'LaustinSpayce',
+  'Star_Seraph',
+  'bavverst',
+  'Tower',
+  'PvtVoid',
+  'Aegisworn'
+];
+
 export default function useAuth() {
   const currentUserId = useAppSelector(selectCurrentUser);
   const currentUserName = useAppSelector(selectCurrentUserName);
   const isPatron = useAppSelector(selectIsPatron);
+  const isMod = useAppSelector(selectIsMod);
   // const { refetch } = useGetFavoriteDecksQuery(undefined);
   const [logOutAPI, logOutData] = useLogOutMutation();
   const { isLoading, error, data } = useLoginWithCookieQuery({});
@@ -27,14 +41,16 @@ export default function useAuth() {
     user: string,
     userName: string,
     token: string,
-    patron: string
+    patron: string,
+    isMod?: boolean
   ) => {
     dispatch(
       setCredentialsReducer({
         user: user,
         userName: userName,
         accessToken: token,
-        isPatron: patron
+        isPatron: patron,
+        isMod: isMod || false
       })
     );
   };
@@ -53,11 +69,13 @@ export default function useAuth() {
 
   useEffect(() => {
     if (data?.isUserLoggedIn) {
+      const userIsMod = MOD_USERNAMES.includes(data.loggedInUserName);
       setLoggedIn(
         data.loggedInUserID,
         data.loggedInUserName,
         '',
-        data.isPatron
+        data.isPatron,
+        userIsMod
       );
       // refetch();
     }
@@ -70,6 +88,7 @@ export default function useAuth() {
     isLoading,
     error,
     isPatron,
+    isMod,
     setLoggedIn,
     logOut
   };

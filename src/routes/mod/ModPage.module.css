@@ -1,0 +1,130 @@
+.container {
+  min-height: 100vh;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.modPagePanel {
+  position: relative;
+  padding: 20px;
+  width: 100%;
+  max-width: 600px;
+  background-color: rgba(74, 74, 74, 0.9);
+  border: 2px solid #1a1a1a;
+  border-radius: 5px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.title {
+  color: #ffffff;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.form {
+  margin-bottom: 30px;
+  padding: 15px;
+  background-color: rgba(50, 50, 50, 0.5);
+  border-radius: 5px;
+}
+
+.form h2 {
+  color: #ffffff;
+  margin-bottom: 15px;
+  font-size: 1.2rem;
+}
+
+.form label {
+  display: block;
+  color: #ffffff;
+  font-weight: bold;
+  margin: 10px 0 5px 0;
+}
+
+.form input {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #666;
+  border-radius: 3px;
+  background-color: #2a2a2a;
+  color: #ffffff;
+  box-sizing: border-box;
+}
+
+.form input:focus {
+  outline: none;
+  border-color: #4a9eff;
+}
+
+.form button {
+  padding: 10px 20px;
+  background-color: #4a9eff;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.2s;
+}
+
+.form button:hover {
+  background-color: #3a8eef;
+}
+
+.form button:active {
+  background-color: #2a7edf;
+}
+
+.dataSection {
+  margin-bottom: 30px;
+  padding: 15px;
+  background-color: rgba(50, 50, 50, 0.5);
+  border-radius: 5px;
+}
+
+.dataSection h2 {
+  color: #ffffff;
+  margin-bottom: 15px;
+  font-size: 1.2rem;
+}
+
+.dataSection p {
+  color: #cccccc;
+}
+
+.dataList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.dataList li {
+  color: #ffffff;
+  padding: 8px;
+  margin-bottom: 5px;
+  background-color: rgba(30, 30, 30, 0.5);
+  border-radius: 3px;
+  border-left: 3px solid #4a9eff;
+}
+
+.errorMessage {
+  background-color: rgba(220, 53, 69, 0.9);
+  color: white;
+  padding: 12px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+
+.successMessage {
+  background-color: rgba(40, 167, 69, 0.9);
+  color: white;
+  padding: 12px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  font-weight: bold;
+}
