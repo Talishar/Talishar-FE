@@ -115,8 +115,8 @@ const ProfileSettings = () => {
   ];
 
   const transparencyPresets = [
-    { value: 0.5, label: '50%' },
     { value: 0.65, label: '65%' },
+    { value: 0.75, label: '75%' },
     { value: 0.8, label: '80%' },
     { value: 1.0, label: '100%' }
   ];

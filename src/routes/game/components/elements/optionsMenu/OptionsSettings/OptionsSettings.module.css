@@ -83,6 +83,24 @@ fieldset legend strong {
   border-color: var(--primary);
 }
 
+.playmatPreview {
+  margin-top: 1rem;
+  width: 100%;
+  min-height: 180px;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.playmatPreviewImage {
+  width: 100%;
+  min-height: 180px;
+  height: auto;
+  display: block;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
 .cardBackListContainer {
   width: 100%;
   display: flex;
