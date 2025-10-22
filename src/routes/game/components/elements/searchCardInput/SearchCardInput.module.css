@@ -51,6 +51,8 @@
   white-space: nowrap;
   height: 15vh;
   height: 15dvh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   font-style: normal;
   font-weight: var(--font-weight);
   font-size: var(--font-size);
@@ -94,6 +96,9 @@
 
 .button {
   width: min(20rem, 100%);
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
 }
 
 .styledInput > input {
