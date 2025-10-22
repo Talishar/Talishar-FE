@@ -17,8 +17,15 @@
   margin-top: 0.2em;
 }
 
+article {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+}
+
 table {
   max-width: 100%;
+  width: 100%;
+  overflow-x: auto;
 }
 
 th {
@@ -40,6 +47,81 @@ td {
   height:90%;
 }
 
+.wideContainer {
+  width: 100%;
+  max-width: 90vw;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.twoColumnLayout {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 2rem;
+  margin-top: 1rem;
+  align-items: start; 
+}
+
+.leftColumn {
+  min-width: 0;
+  width: 100%;
+}
+
+.rightColumns {
+  display: contents; 
+}
+
+.leftColumn table {
+  width: 100%;
+  overflow-x: auto;
+  display: block;
+}
+
+.leftColumn tbody,
+.leftColumn thead,
+.leftColumn tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+
+@media (max-width: 1400px) {
+  .twoColumnLayout {
+    grid-template-columns: 1fr 1fr;
+  }
+  
+  .rightColumns {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .twoColumnLayout {
+    grid-template-columns: 1fr;
+  }
+  
+  .rightColumns {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+  
+  .leftColumn table {
+    display: table;
+  }
+  
+  .leftColumn tbody,
+  .leftColumn thead,
+  .leftColumn tr {
+    display: table-row-group;
+  }
+  
+  .leftColumn tr {
+    display: table-row;
+  }
+}
+
 @media (max-width: 575px) {
   th, td {
     font-size: 14px;
@@ -55,14 +137,12 @@ td {
 }
 
 @media (max-width: 425px) {
-    /* hide certain columns on smaller screens */
     th:nth-child(3), td:nth-child(3) {
       display: none;
     }
 }
 
 @media (max-width: 375px) {
-  /* hide certain columns on smaller screens */
   th:nth-child(4), td:nth-child(4) {
     display: none;
   }

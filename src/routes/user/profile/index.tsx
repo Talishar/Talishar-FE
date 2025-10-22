@@ -12,6 +12,7 @@ import { generateCroppedImageUrl } from 'utils/cropImages';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import BlockList from './blockUser';
+import ProfileSettings from './ProfileSettings';
 
 const CODE = 'code';
 const CLIENT_ID =
@@ -84,86 +85,93 @@ export const ProfilePage = () => {
 
   return (
     <div>
-      <div className="container">
+      <div className={styles.wideContainer}>
         <h1 className={styles.title}>Profile Page</h1>
-        <article className={styles.articleTitle}>
-          <h5>Username: {profileData?.userName}</h5>
-          <div>
-            {profileIsLoading && <p>Loading Profile...</p>}
-            {!profileIsLoading && profileData?.isPatreonLinked && (
-              <p>
-                You have linked your patreon. <br />
-                <a href={PATREON_URL + PatreonOAuthParam.toString()}>
-                  Refresh your patreon connection
-                </a>{' '}
-                (in case you have new patreons and can't access their perks yet)
-              </p>
-            )}
-            {!profileIsLoading && !profileData?.isPatreonLinked && (
-              <p>
-                <a href={PATREON_URL + PatreonOAuthParam.toString()}>
-                  Connect to Patreon
-                </a>
-              </p>
-            )}
-          </div>
-        {/* <BlockList /> */}
-        <h3 className={styles.title}>Your decks:</h3>
-          <table>
-            <thead>
-              <tr>
-                <th scope="col">Hero</th>
-                <th scope="col">Name</th>
-                <th scope="col">Format</th>
-                {/* <th scope="col">Card Back</th>
+        <div className={styles.twoColumnLayout}>
+          <div className={styles.leftColumn}>
+            <article className={styles.articleTitle}>
+              <h5>Username: {profileData?.userName}</h5>
+              <div>
+                {profileIsLoading && <p>Loading Profile...</p>}
+                {!profileIsLoading && profileData?.isPatreonLinked && (
+                  <p>
+                    You have linked your patreon. <br />
+                    <a href={PATREON_URL + PatreonOAuthParam.toString()}>
+                      Refresh your patreon connection
+                    </a>{' '}
+                    (in case you have new patreons and can't access their perks yet)
+                  </p>
+                )}
+                {!profileIsLoading && !profileData?.isPatreonLinked && (
+                  <p>
+                    <a href={PATREON_URL + PatreonOAuthParam.toString()}>
+                      Connect to Patreon
+                    </a>
+                  </p>
+                )}
+              </div>
+              {/* <BlockList /> */}
+              <h3 className={styles.title}>Your decks:</h3>
+              <table>
+                <thead>
+                  <tr>
+                    <th scope="col">Hero</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Format</th>
+                    {/* <th scope="col">Card Back</th>
                 <th scope="col">Playmat</th> */}
-                <th scope="col">Edit</th>
-                <th scope="col">Delete</th>
-              </tr>
-            </thead>
-            <tbody>
-              {deckIsLoading && <div>Loading...</div>}
-              {decksData?.favoriteDecks.map((deck, ix) => (
-                <tr key={deck.key}>
-                  <th scope="row">
-                    {!!deck.hero && (
-                      <img
-                        src={generateCroppedImageUrl(deck.hero)}
-                        className={styles.heroImage}
-                      />
-                    )}
-                  </th>
-                  <td>{deck.name}</td>
-                  <td>{deck.format ? deck.format.charAt(0).toUpperCase() + deck.format.slice(1) : ""}</td>
-                  {/* <td>{deck.cardBack ? deck.cardBack.charAt(0).toUpperCase() + deck.cardBack.slice(1).toLowerCase() : ""}</td>
+                    <th scope="col">Edit</th>
+                    <th scope="col">Delete</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {deckIsLoading && <div>Loading...</div>}
+                  {decksData?.favoriteDecks.map((deck, ix) => (
+                    <tr key={deck.key}>
+                      <th scope="row">
+                        {!!deck.hero && (
+                          <img
+                            src={generateCroppedImageUrl(deck.hero)}
+                            className={styles.heroImage}
+                          />
+                        )}
+                      </th>
+                      <td>{deck.name}</td>
+                      <td>{deck.format ? deck.format.charAt(0).toUpperCase() + deck.format.slice(1) : ""}</td>
+                      {/* <td>{deck.cardBack ? deck.cardBack.charAt(0).toUpperCase() + deck.cardBack.slice(1).toLowerCase() : ""}</td>
                   <td>{deck.playmat ? deck.playmat.charAt(0).toUpperCase() + deck.playmat.slice(1).toLowerCase() : ""}</td> */}
-                  <td className={styles.editButton}>
-                    <button
-                      className={styles.button}
-                      onClick={() => handleEditDeck(deck.link)}
-                    >
-                      <RiEdit2Line
-                        fontSize={'1.5em'}
-                        className={styles.trashcanIcon}
-                      />
-                    </button>
-                  </td>
-                  <td className={styles.deleteButton}>
-                    <button
-                      className={styles.button}
-                      onClick={() => handleDeleteDeck(deck.link)}
-                    >
-                      <RiDeleteBin5Line
-                        fontSize={'1.5em'}
-                        className={styles.trashcanIcon}
-                      />
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </article>
+                      <td className={styles.editButton}>
+                        <button
+                          className={styles.button}
+                          onClick={() => handleEditDeck(deck.link)}
+                        >
+                          <RiEdit2Line
+                            fontSize={'1.5em'}
+                            className={styles.trashcanIcon}
+                          />
+                        </button>
+                      </td>
+                      <td className={styles.deleteButton}>
+                        <button
+                          className={styles.button}
+                          onClick={() => handleDeleteDeck(deck.link)}
+                        >
+                          <RiDeleteBin5Line
+                            fontSize={'1.5em'}
+                            className={styles.trashcanIcon}
+                          />
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </article>
+          </div>
+          <div className={styles.rightColumns}>
+            <ProfileSettings />
+          </div>
+        </div>
       </div>
     </div>
   );
