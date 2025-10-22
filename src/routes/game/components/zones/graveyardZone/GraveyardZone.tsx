@@ -21,7 +21,7 @@ export const GraveyardZone = React.memo((prop: Displayrow) => {
   const showCount = true;
 
   const graveyardZoneDisplay = () => {
-    const isPlayerPronoun = isPlayer ? 'Your' : "Your Opponent's";
+    const isPlayerPronoun = isPlayer ? 'Your' : "Opponent's";
     dispatch(
       setCardListFocus({
         cardList: graveyardZone,

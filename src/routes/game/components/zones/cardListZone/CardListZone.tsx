@@ -48,27 +48,27 @@ export const CardListZone = () => {
           key="playerInputPopupBox"
         >
           <div className={styles.cardListTitleContainer}>
+            <div className={styles.cardListCloseIcon} onClick={closeCardList}>
+              <FaTimes title="Close Dialog" />
+            </div>
             <div className={styles.cardListTitle}>
               <h3 className={styles.title}>{cardList?.name}</h3>
             </div>
             {(cardList && cardList.name && 
               (
                 cardList.name.includes('Your Graveyard') ||
-                cardList.name.includes('Your Opponent\'s Graveyard') ||
+                cardList.name.includes('Opponent\'s Graveyard') ||
                 cardList.name.includes('Your Banish') ||
-                cardList.name.includes('Your Opponent\'s Banish') ||
+                cardList.name.includes('Opponent\'s Banish') ||
                 cardList.name.includes('Your Deck') ||
-                cardList.name.includes('Your Opponent\'s Deck') ||
+                cardList.name.includes('Opponent\'s Deck') ||
                 cardList.name.includes('Your Soul') ||
-                cardList.name.includes('Your Opponent\'s Soul') ||
+                cardList.name.includes('Opponent\'s Soul') ||
                 cardList.name.includes('Your Pitch') ||
-                cardList.name.includes('Your Opponent\'s Pitch')
+                cardList.name.includes('Opponent\'s Pitch')
               )) && (
               <button className={styles.button} onClick={handleSort}>Sort</button>
             )}
-            <div className={styles.cardListCloseIcon} onClick={closeCardList}>
-              <FaTimes title="Close Dialog" />
-            </div>
           </div>
           {cardList?.apiCall ? (
             <CardListZoneAPI name={cardList.apiQuery ?? ''} />
