@@ -13,7 +13,6 @@
   z-index: 1000;
 }
 
-/* Mobile and tablet responsive layout */
 @media (max-width: 812px) {
   .cardListBox {
     top: 5vh;
