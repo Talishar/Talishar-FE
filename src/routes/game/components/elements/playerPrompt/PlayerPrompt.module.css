@@ -60,13 +60,6 @@
   cursor: pointer;
 }
 
-/* @media (min-width: 1250px) {
-  .playerPrompt {
-    font-size: 1.5em;
-    font-weight: 600;
-  }
-} */
-
 @media (orientation: portrait) {
   .playerPrompt {
     top: 10px;
