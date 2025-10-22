@@ -40,13 +40,17 @@
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  min-width: 4vh;
-  height: auto;
+  min-width: 5em;
+  min-height: 2.2em;
   border-radius: 5px;
   border: 1px solid black;
   flex-basis: auto;
-  padding: 0 1dvh;
-  margin-left: 1dvh;
+  flex-shrink: 0;
+  padding: 0.4em 1em;
+  margin-left: 0.5em;
+  white-space: nowrap;
+  font-size: 1em;
+  line-height: 1.2;
 }
 
 .buttonDiv:hover {
@@ -66,5 +70,12 @@
 @media (orientation: portrait) {
   .playerPrompt {
     top: 10px;
+  }
+  
+  .buttonDiv {
+    min-width: 4em;
+    min-height: 2em;
+    padding: 0.3em 0.8em;
+    font-size: 0.9em;
   }
 }
