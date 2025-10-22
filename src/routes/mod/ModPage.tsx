@@ -41,15 +41,28 @@ const ModPage: React.FC = () => {
         credentials: 'include'
       });
       
+      console.log('Response status:', response.status);
+      console.log('Response headers:', response.headers);
+      
       if (!response.ok) {
-        throw new Error('Failed to fetch mod page data');
+        const text = await response.text();
+        console.error('Error response:', text);
+        throw new Error(`Failed to fetch mod page data: ${response.status} ${response.statusText}`);
       }
 
-      const data = await response.json();
+      const text = await response.text();
+      console.log('Raw response:', text);
+      
+      const data = JSON.parse(text);
+      console.log('Mod Page Data received:', data);
+      console.log('Banned Players:', data.bannedPlayers);
+      console.log('Recent Accounts:', data.recentAccounts);
+      console.log('Banned IPs:', data.bannedIPs);
       setBannedPlayers(data.bannedPlayers || []);
       setBannedIPs(data.bannedIPs || []);
       setRecentAccounts(data.recentAccounts || []);
     } catch (err) {
+      console.error('Full error:', err);
       setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
       setLoading(false);
