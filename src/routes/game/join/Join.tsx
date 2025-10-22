@@ -17,6 +17,16 @@ import classNames from 'classnames';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { ErrorMessage } from '@hookform/error-message';
+import { generateCroppedImageUrl } from 'utils/cropImages';
+import { ImageSelect, ImageSelectOption } from 'components/ImageSelect';
+
+// Helper function to shorten format names
+const shortenFormat = (format: string): string => {
+  if (!format) return '';
+  if (format.toLowerCase() === 'classic constructed') return 'CC';
+  // Capitalize first letter of other formats
+  return format.charAt(0).toUpperCase() + format.slice(1).toLowerCase();
+};
 
 const JoinGame = () => {
   const navigate = useNavigate();
@@ -36,11 +46,14 @@ const JoinGame = () => {
     register,
     handleSubmit,
     setError,
-    reset
+    reset,
+    setValue
   } = useForm<JoinGameAPI>({
     mode: 'onBlur',
     resolver: yupResolver(validationSchema)
   });
+
+  const [selectedFavoriteDeck, setSelectedFavoriteDeck] = React.useState<string>('');
 
   const initialValues: JoinGameAPI = useMemo(() => {
     return {
@@ -61,7 +74,18 @@ const JoinGame = () => {
 
   useEffect(() => {
     reset(initialValues);
+    setSelectedFavoriteDeck(initialValues.favoriteDecks || '');
   }, [initialValues, reset]);
+
+  // Convert favorite decks to ImageSelect options
+  const favoriteDeckOptions: ImageSelectOption[] = React.useMemo(() => {
+    if (!data?.favoriteDecks) return [];
+    return data.favoriteDecks.map(deck => ({
+      value: deck.key,
+      label: `${deck.name}${deck.format ? ` (${shortenFormat(deck.format)})` : ''}`,
+      imageUrl: generateCroppedImageUrl(deck.hero)
+    }));
+  }, [data?.favoriteDecks]);
 
   const onSubmit: SubmitHandler<JoinGameAPI> = async (values: JoinGameAPI) => {
     values.playerID = parseInt(playerID);
@@ -104,20 +128,23 @@ const JoinGame = () => {
             {isLoggedIn && !isLoading && (
               <label>
                 Favorite Deck
-                <select
+                <ImageSelect
                   id="favoriteDecks"
+                  options={favoriteDeckOptions}
+                  value={selectedFavoriteDeck}
+                  onChange={(value) => {
+                    setSelectedFavoriteDeck(value);
+                    setValue('favoriteDecks', value);
+                  }}
+                  placeholder="Select a deck"
                   aria-busy={isLoading}
+                  aria-invalid={errors.favoriteDecks?.message ? 'true' : undefined}
+                />
+                <input
+                  type="hidden"
                   {...register('favoriteDecks')}
-                  aria-invalid={
-                    errors.favoriteDecks?.message ? 'true' : undefined
-                  }
-                >
-                  {data?.favoriteDecks.map((deck, ix) => (
-                    <option value={deck.key} key={deck.index}>
-                      {deck.name}
-                    </option>
-                  ))}
-                </select>
+                  value={selectedFavoriteDeck}
+                />
                 <ErrorMessage
                   errors={errors}
                   name="favoriteDecks"

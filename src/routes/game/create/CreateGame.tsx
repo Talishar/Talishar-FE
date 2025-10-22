@@ -18,6 +18,8 @@ import { ErrorMessage } from '@hookform/error-message';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { FaExclamationCircle } from 'react-icons/fa';
 import { HEROES_OF_RATHE } from '../../index/components/filter/constants';
+import { generateCroppedImageUrl } from 'utils/cropImages';
+import { ImageSelect, ImageSelectOption } from 'components/ImageSelect';
 
 const preconDecklinks = [
   "https://fabrary.net/decks/01JRH0631MH5A9JPVGTP3TKJXN", //maxx
@@ -50,6 +52,14 @@ const sortedPreconDecks = preconDeckNames
 
 const sortedPreconDeckNames = sortedPreconDecks.map(deck => deck.name);
 const sortedPreconDecklinks = sortedPreconDecks.map(deck => deck.link);
+
+// Helper function to shorten format names
+const shortenFormat = (format: string): string => {
+  if (!format) return '';
+  if (format.toLowerCase() === 'classic constructed') return 'CC';
+  // Capitalize first letter of other formats
+  return format.charAt(0).toUpperCase() + format.slice(1).toLowerCase();
+};
 
 const CreateGame = () => {
   const { isLoggedIn, isPatron } = useAuth();
@@ -105,6 +115,7 @@ const CreateGame = () => {
   const [selectedFormat, setSelectedFormat] = React.useState(initialValues.format);
   const [selectedHeroes, setSelectedHeroes] = React.useState<string[]>([]);
   const [gameDescription, setGameDescription] = React.useState('');
+  const [selectedFavoriteDeck, setSelectedFavoriteDeck] = React.useState<string>(initialValues.favoriteDecks || '');
 
   // Get unique hero names (no duplicates)
   const uniqueHeroes = useMemo(() => {
@@ -161,7 +172,18 @@ const CreateGame = () => {
     reset(initialValues);
     setGameDescription(initialValues.gameDescription || '');
     setSelectedHeroes([]);
+    setSelectedFavoriteDeck(initialValues.favoriteDecks || '');
   }, [initialValues, reset]);
+
+  // Convert favorite decks to ImageSelect options
+  const favoriteDeckOptions: ImageSelectOption[] = React.useMemo(() => {
+    if (!data?.favoriteDecks) return [];
+    return data.favoriteDecks.map(deck => ({
+      value: deck.key,
+      label: `${deck.name}${deck.format ? ` (${shortenFormat(deck.format)})` : ''}`,
+      imageUrl: generateCroppedImageUrl(deck.hero)
+    }));
+  }, [data?.favoriteDecks]);
 
   const onSubmit: SubmitHandler<CreateGameAPI> = async (
     values: CreateGameAPI
@@ -214,20 +236,23 @@ const CreateGame = () => {
             {isLoggedIn && !isLoading && (
               <label>
                 Favorite Deck
-                <select
+                <ImageSelect
                   id="favoriteDecks"
+                  options={favoriteDeckOptions}
+                  value={selectedFavoriteDeck}
+                  onChange={(value) => {
+                    setSelectedFavoriteDeck(value);
+                    setValue('favoriteDecks', value);
+                  }}
+                  placeholder="Select a deck"
                   aria-busy={isLoading}
+                  aria-invalid={errors.favoriteDecks?.message ? 'true' : undefined}
+                />
+                <input
+                  type="hidden"
                   {...register('favoriteDecks')}
-                  aria-invalid={
-                    errors.favoriteDecks?.message ? 'true' : undefined
-                  }
-                >
-                  {data?.favoriteDecks.map((deck, ix) => (
-                    <option value={deck.key} key={deck.index}>
-                      {deck.name}
-                    </option>
-                  ))}
-                </select>
+                  value={selectedFavoriteDeck}
+                />
                 <ErrorMessage
                   errors={errors}
                   name="favoriteDecks"
