@@ -10,6 +10,7 @@ import useShowModal from 'hooks/useShowModals';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import classNames from 'classnames';
 import useAuth from 'hooks/useAuth';
+import { PiFileCsvFill, PiCameraFill } from "react-icons/pi";
 
 const EndGameScreen = () => {
   const gameInfo = useAppSelector(getGameInfo, shallowEqual);
@@ -58,7 +59,7 @@ const EndGameScreen = () => {
       );
     }
   } else {
-    content = <EndGameStats ref={endGameStatsRef} {...(data as EndGameData)} />;
+    content = <EndGameStats ref={endGameStatsRef} {...(data as EndGameData)} playerID={playerID} />;
   }
 
   const switchPlayer = () => {
@@ -77,6 +78,10 @@ const EndGameScreen = () => {
     endGameStatsRef.current?.exportScreenshot();
   };
 
+  const handleExportCSV = () => {
+    endGameStatsRef.current?.exportCSV();
+  };
+
   return (
     <div className={cardListBoxClasses}>
       {showStats && (
@@ -86,9 +91,14 @@ const EndGameScreen = () => {
               <h2 className={styles.title}>Game Over Summary</h2>
               <div className={styles.buttonGroup}>
                 {!showFullLog && (
-                  <div className={styles.buttonDiv} onClick={handleExportStats}>
-                    📸 Export Stats as Image
-                  </div>
+                  <>
+                    <div className={styles.buttonDiv} onClick={handleExportStats}>
+                      <PiCameraFill size="1.5em" />&nbsp;Export as Image
+                    </div>
+                    <div className={styles.buttonDiv} onClick={handleExportCSV}>
+                      <PiFileCsvFill size="1.5em" />&nbsp;Export as CSV
+                    </div>
+                  </>
                 )}
                 <div className={styles.buttonDiv} onClick={toggleShowFullLog}>
                   Full Game Log

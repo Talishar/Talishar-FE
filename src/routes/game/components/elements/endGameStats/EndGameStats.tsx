@@ -15,8 +15,9 @@ export interface EndGameData {
   gameID?: string;
   result?: number;
   turns?: number;
+  playerID?: number;
   cardResults: CardResult[];
-  turnResults: Map<string, TurnResult>;
+  turnResults: { [key: string]: TurnResult };
   totalDamageThreatened?: number;
   totalDamageDealt?: number;
   averageDamageThreatenedPerTurn?: number;
@@ -56,10 +57,12 @@ export interface TurnResult {
   damageTaken: number;
   resourcesUsed: number;
   resourcesLeft: number;
+  lifeGained: number;
 }
 
 export interface EndGameStatsRef {
   exportScreenshot: () => Promise<void>;
+  exportCSV: () => void;
 }
 
 const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
@@ -150,9 +153,109 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
     }
   };
 
+  const handleExportCSV = () => {
+    try {
+      // Prepare CSV content
+      const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5);
+      let csvContent = 'data:text/csv;charset=utf-8,';
+      
+      // Add Game Summary Section
+      csvContent += 'GAME SUMMARY\n';
+      csvContent += `Game ID,${data.gameID || 'N/A'}\n`;
+      csvContent += `Deck ID,${data.deckID || 'N/A'}\n`;
+      
+      // Determine first player label
+      let firstPlayerLabel = 'N/A';
+      if (data.firstPlayer && data.playerID) {
+        // If firstPlayer matches the current playerID we're viewing, it's "You", otherwise "Opponent"
+        firstPlayerLabel = data.firstPlayer === data.playerID ? 'You' : 'Opponent';
+      } else if (data.firstPlayer) {
+        firstPlayerLabel = data.firstPlayer.toString();
+      }
+      csvContent += `First Player,${firstPlayerLabel}\n`;
+      
+      csvContent += `Result,${data.result || 'N/A'}\n`;
+      csvContent += `Turns,${data.turns || 'N/A'}\n`;
+      csvContent += `Your Time,${fancyTimeFormat(data.yourTime)}\n`;
+      csvContent += `Total Game Time,${fancyTimeFormat(data.totalTime)}\n\n`;
+      
+      // Add Statistics Section
+      csvContent += 'GAME STATISTICS\n';
+      csvContent += `Avg Value per Turn,${isPatron ? data.averageValuePerTurn : 'Patreon Only'}\n`;
+      csvContent += `Avg Damage Threatened per Turn,${data.averageDamageThreatenedPerTurn || 0}\n`;
+      csvContent += `Avg Damage Dealt per Turn,${data.averageDamageDealtPerTurn || 0}\n`;
+      csvContent += `Avg Damage Threatened per Card,${data.averageDamageThreatenedPerCard || 0}\n`;
+      csvContent += `Avg Resources Used per Turn,${data.averageResourcesUsedPerTurn || 0}\n`;
+      csvContent += `Avg Cards Left Over per Turn,${data.averageCardsLeftOverPerTurn || 0}\n`;
+      if (!isPatron) {
+        csvContent += `Avg Combat Value per Turn,${data.averageCombatValuePerTurn || 0}\n`;
+      }
+      csvContent += `Total Damage Threatened,${data.totalDamageThreatened || 0}\n`;
+      csvContent += `Total Damage Dealt,${data.totalDamageDealt || 0}\n`;
+      csvContent += `Total Damage Prevented,${isPatron ? (data.totalDamagePrevented || 0) : 'Patreon Only'}\n`;
+      csvContent += `Total Life Gained,${isPatron ? (data.totalLifeGained || 0) : 'Patreon Only'}\n\n`;
+      
+      // Add Card Play Stats Section
+      csvContent += 'CARD PLAY STATS\n';
+      csvContent += 'Card Name,Played,Blocked,Pitched,Times Hit';
+      if (numCharged > 0) csvContent += ',Times Charged';
+      if (numKatsuDiscard > 0) csvContent += ',Times Katsu Discarded';
+      csvContent += '\n';
+      
+      const cardsToExport = sortedCardResults || data.cardResults;
+      cardsToExport?.forEach((result) => {
+        const cardName = result.cardName.replace(/,/g, ';'); // Escape commas in card names
+        const cardNameWithPitch = result.pitchValue > 0 ? `${cardName} (${result.pitchValue})` : cardName;
+        csvContent += `"${cardNameWithPitch}",${result.played},${result.blocked},${result.pitched},${result.hits}`;
+        if (numCharged > 0) csvContent += `,${result.charged}`;
+        if (numKatsuDiscard > 0) csvContent += `,${result.katsuDiscard}`;
+        csvContent += '\n';
+      });
+      
+      // Add Turn by Turn Breakdown Section
+      csvContent += '\nTURN BY TURN BREAKDOWN\n';
+      csvContent += 'Turn,Cards Played,Cards Blocked,Cards Pitched,Cards Left,Resources Used,Resources Left,';
+      csvContent += 'Damage Threatened,Damage Dealt,Damage Blocked,Damage Prevented,Damage Taken,Life Gained,Total Value\n';
+      
+      if (sortedTurnResults && sortedTurnResults.length > 0) {
+        sortedTurnResults.forEach((turnData, ix) => {
+          const turnNo = Object.keys(data.turnResults).indexOf(turnData.key) + 1;
+          const totalValue = isPatron ? (+turnData.damageThreatened + +turnData.damageBlocked + +turnData.damagePrevented + +turnData.lifeGained) : 'X';
+          csvContent += `${turnNo},${turnData.cardsUsed},${turnData.cardsBlocked},${turnData.cardsPitched},${turnData.cardsLeft},`;
+          csvContent += `${turnData.resourcesUsed},${turnData.resourcesLeft},`;
+          csvContent += `${isPatron ? turnData.damageThreatened : 'X'},${turnData.damageDealt},`;
+          csvContent += `${isPatron ? turnData.damageBlocked : 'X'},${isPatron ? turnData.damagePrevented : 'X'},`;
+          csvContent += `${turnData.damageTaken},${isPatron ? turnData.lifeGained : 'X'},${totalValue}\n`;
+        });
+      } else if (data.turnResults && Object.keys(data.turnResults).length > 0) {
+        Object.keys(data.turnResults).forEach((key, ix) => {
+          const turn = data.turnResults[key];
+          const totalValue = isPatron ? (+turn.damageThreatened + +turn.damageBlocked + +turn.damagePrevented + +turn.lifeGained) : 'X';
+          csvContent += `${ix + 1},${turn.cardsUsed},${turn.cardsBlocked},${turn.cardsPitched},${turn.cardsLeft},`;
+          csvContent += `${turn.resourcesUsed},${turn.resourcesLeft},`;
+          csvContent += `${isPatron ? turn.damageThreatened : 'X'},${turn.damageDealt},`;
+          csvContent += `${isPatron ? turn.damageBlocked : 'X'},${isPatron ? turn.damagePrevented : 'X'},`;
+          csvContent += `${turn.damageTaken},${isPatron ? turn.lifeGained : 'X'},${totalValue}\n`;
+        });
+      }
+      
+      // Create and trigger download
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement('a');
+      link.setAttribute('href', encodedUri);
+      link.setAttribute('download', `game-stats-${timestamp}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error('Error exporting CSV:', error);
+    }
+  };
+
   // Expose the export function to parent component
   useImperativeHandle(ref, () => ({
-    exportScreenshot: handleExportScreenshot
+    exportScreenshot: handleExportScreenshot,
+    exportCSV: handleExportCSV
   }));
 
   const sortedCardResults = useMemo(() => {
@@ -186,7 +289,11 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
       let aValue: number;
       let bValue: number;
 
-      if (turnSortField === 'totalValue') {
+      if (turnSortField === 'turnNo') {
+        // Sort by turn number (the index in the original object)
+        aValue = Object.keys(data.turnResults).indexOf(a.key);
+        bValue = Object.keys(data.turnResults).indexOf(b.key);
+      } else if (turnSortField === 'totalValue') {
         aValue = (a.damageThreatened || 0) + (a.damageBlocked || 0) + (a.damagePrevented || 0) + (a.lifeGained || 0);
         bValue = (b.damageThreatened || 0) + (b.damageBlocked || 0) + (b.damagePrevented || 0) + (b.lifeGained || 0);
       } else {
