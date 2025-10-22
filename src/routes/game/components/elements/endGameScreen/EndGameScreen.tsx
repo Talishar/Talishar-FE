@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { useAppSelector } from 'app/Hooks';
+import { useAppSelector, useAppDispatch } from 'app/Hooks';
 import styles from './EndGameScreen.module.css';
+import menuStyles from '../menu/Menu.module.css';
 import { useGetPopUpContentQuery } from 'features/api/apiSlice';
 import { END_GAME_STATS } from 'appConstants';
-import { getGameInfo } from 'features/game/GameSlice';
+import { getGameInfo, toggleShowModals } from 'features/game/GameSlice';
 import EndGameStats, { EndGameData } from '../endGameStats/EndGameStats';
 import { shallowEqual } from 'react-redux';
 import useShowModal from 'hooks/useShowModals';
@@ -13,19 +14,19 @@ import useAuth from 'hooks/useAuth';
 
 const EndGameScreen = () => {
   const gameInfo = useAppSelector(getGameInfo, shallowEqual);
+  const dispatch = useAppDispatch();
   const [playerID, setPlayerID] = useState(gameInfo.playerID === 2 ? 2 : 1);
-  const [showStats, setShowStats] = useState(true);
   const [showFullLog, setShowFullLog] = useState(false);
   const { isPatron } = useAuth();
+  const showModal = useShowModal();
   const { data, isLoading, error } = useGetPopUpContentQuery({
     gameID: gameInfo.gameID,
     playerID: playerID,
     authKey: gameInfo.authKey,
     popupType: END_GAME_STATS
   });
-  const showModal = useShowModal();
   const cardListBoxClasses = classNames(styles.cardListBox, {
-    [styles.reduced]: !showStats
+    [styles.reduced]: !showModal
   });
   const fullLogClasses = classNames(styles.fullLog, {});
 
@@ -64,8 +65,11 @@ const EndGameScreen = () => {
     playerID === 2 ? setPlayerID(1) : setPlayerID(2);
   };
 
-  const toggleShowStats = () => {
-    setShowStats(!showStats);
+  const handleClickHideWindowsToggle = (
+    e: React.MouseEvent<HTMLDivElement>
+  ) => {
+    e.preventDefault();
+    dispatch(toggleShowModals());
   };
 
   const toggleShowFullLog = () => {
@@ -74,7 +78,7 @@ const EndGameScreen = () => {
 
   return (
     <div className={cardListBoxClasses}>
-      {showStats && (
+      {showModal && (
         <>
           <div className={styles.cardListTitleContainer}>
             <div className={styles.cardListTitle}>
@@ -86,26 +90,20 @@ const EndGameScreen = () => {
                 <div className={styles.buttonDiv} onClick={switchPlayer}>
                   Switch player stats
                 </div>
-                <div className={styles.buttonDiv} onClick={toggleShowStats}>
-                  <FaEye aria-hidden="true" fontSize={'1.5em'} />
+                <div
+                  className={styles.buttonDiv}
+                  onClick={handleClickHideWindowsToggle}
+                  aria-label="Hide End Game Stats"
+                  data-placement="bottom"
+                >
+                  {showModal && <FaEye aria-hidden="true" fontSize={'1.5em'} />}
+                  {!showModal && <FaEyeSlash aria-hidden="true" fontSize={'1.5em'} />}
                 </div>
               </div>
             </div>
           </div>
           {content}
         </>
-      )}
-      {!showStats && (
-        <div className={styles.cardListTitleContainer}>
-          <div className={styles.cardListTitle}>
-            <h2 className={styles.title}>Game Over Summary</h2>
-            <div className={styles.buttonGroup}>
-              <div className={styles.buttonDiv} onClick={toggleShowStats}>
-                <FaEyeSlash aria-hidden="true" fontSize={'1.5em'} />
-              </div>
-            </div>
-          </div>
-        </div>
       )}
     </div>
   );
