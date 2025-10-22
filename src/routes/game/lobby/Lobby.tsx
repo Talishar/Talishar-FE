@@ -38,6 +38,7 @@ import { createPortal } from 'react-dom';
 import { useAppDispatch } from 'app/Hooks';
 import useAuth from 'hooks/useAuth';
 import { generateCroppedImageUrl } from 'utils/cropImages';
+import { getSettingsEntity } from 'features/options/optionsSlice';
 
 const Lobby = () => {
   const [showCalculator, setShowCalculator] = useState(false);
@@ -58,6 +59,8 @@ const Lobby = () => {
   );
   const [playLobbyJoin] = useSound(playerJoined, { volume: 1 });
   const { isPatron } = useAuth();
+  const settingsData = useAppSelector(getSettingsEntity);
+  const isMuted = settingsData['MuteSound']?.value === '1';
 
   let { data, isLoading, refetch } = useGetLobbyInfoQuery({
     gameName: gameID,
@@ -72,10 +75,10 @@ const Lobby = () => {
     useSubmitLobbyInputMutation();
 
   useEffect(() => {
-    if (gameLobby?.theirName != undefined && gameLobby?.theirName != '') {
+    if (gameLobby?.theirName != undefined && gameLobby?.theirName != '' && !isMuted) {
       playLobbyJoin();
     }
-  }, [gameLobby?.theirName]);
+  }, [gameLobby?.theirName, isMuted]);
 
   useEffect(() => {
     setIsWideScreen(width > BREAKPOINT_EXTRA_LARGE);

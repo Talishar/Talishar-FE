@@ -30,28 +30,44 @@ export const CosmeticsSection: React.FC<CosmeticsSectionProps> = ({
   selectedPlaymat,
   onSettingsChange
 }) => {
+  const getPlaymatImagePath = (playmatId: string) => {
+    const playmatName = PLAYMATS[playmatId];
+    return `/playmats/${playmatName}.webp`;
+  };
+
   return (
     <>
         <label className={styles.cardBackTitle}>
         <strong>Playmat</strong>
         {!!data?.playmats?.length ? (
-          <select
-            defaultValue={selectedPlaymat}
-            onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-              onSettingsChange({
-                name: optConst.MY_PLAYMAT,
-                value: e.target.value
-              })
-            }
-          >
-            {data?.playmats?.map((playmatKey) => {
-              return (
-                <option key={playmatKey.id} value={playmatKey.id}>
-                  {PLAYMATS[playmatKey.id]}
-                </option>
-              );
-            })}
-          </select>
+          <>
+            <select
+              defaultValue={selectedPlaymat}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                onSettingsChange({
+                  name: optConst.MY_PLAYMAT,
+                  value: e.target.value
+                })
+              }
+            >
+              {data?.playmats?.map((playmatKey) => {
+                return (
+                  <option key={playmatKey.id} value={playmatKey.id}>
+                    {PLAYMATS[playmatKey.id]}
+                  </option>
+                );
+              })}
+            </select>
+            {selectedPlaymat && PLAYMATS[selectedPlaymat] && (
+              <div className={styles.playmatPreview}>
+                <img 
+                  src={getPlaymatImagePath(selectedPlaymat)} 
+                  alt={PLAYMATS[selectedPlaymat]}
+                  className={styles.playmatPreviewImage}
+                />
+              </div>
+            )}
+          </>
         ) : (
           <p>Log in to customise your playmat</p>
         )}

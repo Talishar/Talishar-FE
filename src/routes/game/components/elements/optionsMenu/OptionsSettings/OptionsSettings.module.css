@@ -10,6 +10,7 @@
   border-radius: 8px;
   padding: 1rem;
   margin: 0;
+  margin-bottom: 1rem;
   background: rgba(0, 0, 0, 0.2);
 }
 
@@ -23,7 +24,6 @@ fieldset legend strong {
   font-weight: 600;
 }
 
-/* Option Label Styling */
 .optionLabel {
   display: flex;
   align-items: center;
@@ -49,7 +49,6 @@ fieldset legend strong {
   flex-shrink: 0;
 }
 
-/* Card Back Section */
 .cardBackTitle {
   display: block;
   margin-top: 1.5rem;
@@ -84,6 +83,24 @@ fieldset legend strong {
   border-color: var(--primary);
 }
 
+.playmatPreview {
+  margin-top: 1rem;
+  width: 100%;
+  min-height: 180px;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.playmatPreviewImage {
+  width: 100%;
+  min-height: 180px;
+  height: auto;
+  display: block;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
 .cardBackListContainer {
   width: 100%;
   display: flex;
@@ -115,14 +132,12 @@ fieldset legend strong {
   filter: brightness(1);
 }
 
-/* Visual Settings */
 hr {
   border: none;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   margin: 1.5rem 0;
 }
 
-/* Visual Settings - Redesigned */
 .visualSettingItem {
   display: flex;
   flex-direction: column;
@@ -206,7 +221,6 @@ hr {
   box-shadow: 0 0 0 4px rgba(255, 184, 77, 0.2);
 }
 
-/* Preset Buttons - Redesigned */
 .presetButtons {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -254,7 +268,6 @@ hr {
   transform: translateY(-2px);
 }
 
-/* Legacy support - hide old optionLabel input ranges */
 .optionLabel input[type="range"] {
   display: none;
 }

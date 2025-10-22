@@ -1,0 +1,27 @@
+.settingsColumn {
+  padding: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  background-color: var(--card-background-color, rgba(0, 0, 0, 0.3));
+}
+
+.title {
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+.disclaimer {
+  margin-top: 2rem;
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.5;
+}
+
+.disclaimer a {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.disclaimer a:hover {
+  text-decoration: underline;
+}
