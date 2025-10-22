@@ -121,4 +121,5 @@ export const HEROES_OF_RATHE: { value: string; label: string }[] = [
   { value: 'SUP064', label: 'Kayo' },
   { value: 'SUP071', label: 'Lyath Goldmane' },
   { value: 'SUP072', label: 'Lyath Goldmane' },
+  { value: 'SMP002', label: 'Bravo' },
 ];

@@ -14,16 +14,39 @@
   justify-content: center;
   min-width: 4.5vh;
   height: 3.5vh;
-  border-radius: 0.2em;
-  border: 1px solid var(--primary);
+  border-radius: 0.4em;
+  border: 2px solid rgba(0, 0, 0, 0.2);
   flex-basis: auto;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3),
+              0 1px 2px rgba(0, 0, 0, 0.2),
+              inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  transition: all 0.2s ease;
+  position: relative;
+  z-index: 1;
+}
+
+.btn svg {
+  font-size: 1.8em !important;  
+  width: auto !important;
+  height: auto !important;
 }
 
 .btn:hover {
   background-color: black;
   color: var(--primary);
-  border: 1px solid var(--primary);
+  border: 2px solid var(--primary);
   cursor: pointer;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4),
+              0 2px 4px rgba(0, 0, 0, 0.3),
+              0 0 8px rgba(255, 215, 0, 0.3);
+  transform: translateY(-1px);
+  z-index: 10;
+}
+
+.btn:active {
+  transform: translateY(1px);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3),
+              inset 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .menuList {
@@ -35,13 +58,54 @@
 
 .buttonActive {
   background-color: var(--alarm);
-  border-color: black;
+  border-color: rgba(0, 0, 0, 0.3);
   color: var(--snow);
+  box-shadow: 0 2px 4px rgba(220, 20, 60, 0.4),
+              0 1px 2px rgba(0, 0, 0, 0.3),
+              inset 0 1px 0 rgba(255, 255, 255, 0.2),
+              0 0 8px rgba(220, 20, 60, 0.3);
+  z-index: 1;
 }
 
 .buttonActive:hover {
   background-color: var(--snow);
   color: var(--alarm);
-  border: 1px solid var(--alarm);
+  border: 2px solid var(--alarm);
   cursor: pointer;
+  box-shadow: 0 3px 6px rgba(220, 20, 60, 0.5),
+              0 2px 4px rgba(0, 0, 0, 0.3),
+              0 0 10px rgba(220, 20, 60, 0.4);
+  transform: translateY(-1px);
+  z-index: 10;
+}
+
+.buttonActive:active {
+  transform: translateY(1px);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3),
+              inset 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Fix tooltip positioning to prevent off-screen issues */
+.btn[data-tooltip]::before,
+.btn[data-tooltip]::after {
+  left: 50% !important;
+  right: auto !important;
+  transform: translateX(-50%) !important;
+  white-space: nowrap !important;
+}
+
+.btn[data-tooltip][data-placement="bottom"]::before,
+.btn[data-tooltip][data-placement="bottom"]::after {
+  bottom: auto !important;
+  top: 100% !important;
+  margin-top: 0.5em !important;
+}
+
+/* Ensure tooltips appear above buttons */
+.btn[data-tooltip]::before {
+  z-index: 100 !important;
+}
+
+.btn[data-tooltip]::after {
+  z-index: 99 !important;
 }

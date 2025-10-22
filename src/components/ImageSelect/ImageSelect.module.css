@@ -1,0 +1,139 @@
+.imageSelect {
+  position: relative;
+  width: 100%;
+}
+
+.selectTrigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem;
+  background: var(--form-element-background-color, #fff);
+  border: 1px solid var(--form-element-border-color, #ccc);
+  border-radius: 0.5rem;
+  cursor: pointer;
+  min-height: 2.5rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.selectTrigger:hover {
+  border-color: var(--form-element-hover-border-color, #999);
+}
+
+.selectTrigger:focus {
+  outline: none;
+  border-color: var(--primary, #0066cc);
+  box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+}
+
+.selectTrigger.open {
+  border-color: var(--primary, #0066cc);
+}
+
+.selectTrigger.invalid {
+  border-color: var(--form-element-invalid-border-color, #dc3545);
+}
+
+.disabled .selectTrigger {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.selectedOption {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex: 1;
+}
+
+.placeholder {
+  color: var(--form-element-placeholder-color, #999);
+}
+
+.optionImage {
+  width: 2rem;
+  height: 2rem;
+  object-fit: cover;
+  border-radius: 0.25rem;
+  flex-shrink: 0;
+}
+
+.arrow {
+  flex-shrink: 0;
+  transition: transform 0.2s;
+}
+
+.selectTrigger.open .arrow {
+  transform: rotate(180deg);
+}
+
+.optionsList {
+  position: absolute;
+  top: calc(100% + 0.25rem);
+  left: 0;
+  right: 0;
+  background: var(--form-element-background-color, #fff);
+  border: 1px solid var(--form-element-border-color, #ccc);
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  max-height: 400px;
+  overflow-y: auto;
+  z-index: 1000;
+  animation: slideDown 0.2s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-0.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+.option:hover {
+  background-color: var(--form-element-hover-background-color, #f0f0f0);
+}
+
+.option:focus {
+  outline: none;
+  background-color: var(--form-element-hover-background-color, #f0f0f0);
+}
+
+.option.selected {
+  background-color: var(--primary-focus, rgba(0, 102, 204, 0.1));
+  font-weight: 500;
+}
+
+.option.selected:hover {
+  background-color: var(--primary-focus, rgba(0, 102, 204, 0.15));
+}
+
+/* Scrollbar styling */
+.optionsList::-webkit-scrollbar {
+  width: 8px;
+}
+
+.optionsList::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.optionsList::-webkit-scrollbar-thumb {
+  background: var(--form-element-border-color, #ccc);
+  border-radius: 4px;
+}
+
+.optionsList::-webkit-scrollbar-thumb:hover {
+  background: var(--form-element-hover-border-color, #999);
+}

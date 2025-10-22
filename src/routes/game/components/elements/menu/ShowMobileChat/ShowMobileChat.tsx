@@ -21,7 +21,7 @@ const ShowMobileChat = () => {
 
   return (
     <div>
-      <div style={{width:'10%'}}>
+      <div style={{width:'10%', position: 'relative', zIndex: 1001}}>
         <button
           className={classNames(styles.btn, {
             [styles.buttonActive]: showChatModal

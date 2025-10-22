@@ -15,13 +15,13 @@ export default function ChatBox() {
   const [chatFilter, setChatFilter] = useState<'none' | 'chat' | 'log'>('none');
   const chatLog = useAppSelector((state: RootState) => state.game.chatLog);
   const myName =
-    useAppSelector((state: RootState) => {
+    String(useAppSelector((state: RootState) => {
       return state.game.playerOne.Name;
-    }) ?? 'you';
+    }) ?? 'you');
   const oppName =
-    useAppSelector((state: RootState) => {
+    String(useAppSelector((state: RootState) => {
       return state.game.playerTwo.Name;
-    }) ?? 'your opponent';
+    }) ?? 'your opponent');
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {

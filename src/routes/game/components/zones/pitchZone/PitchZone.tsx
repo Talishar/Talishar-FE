@@ -38,7 +38,7 @@ export default function PitchZone(prop: Displayrow) {
   }
 
   const pitchZoneDisplay = () => {
-    const isPlayerPronoun = isPlayer ? 'Your' : "Your Opponent's";
+    const isPlayerPronoun = isPlayer ? 'Your' : "Opponent's";
     dispatch(
       setCardListFocus({
         cardList: pitchZone,

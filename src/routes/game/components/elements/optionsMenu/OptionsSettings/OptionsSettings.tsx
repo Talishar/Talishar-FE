@@ -23,12 +23,15 @@ import {
 } from './FormComponents';
 import { CosmeticsSection } from './CosmeticsSection';
 import { VisualSlider, VisualPreset } from './VisualSettings';
+import useWindowDimensions from 'hooks/useWindowDimensions';
 
 const OptionsSettings = () => {
   const gameInfo = useAppSelector(getGameInfo, shallowEqual);
   const settingsData = useAppSelector(getSettingsEntity);
   const isLoading = useAppSelector(getSettingsStatus);
   const dispatch = useAppDispatch();
+  const [windowWidth] = useWindowDimensions();
+  const isMobile = windowWidth < 768;
   const [cookies, setCookie, removeCookie] = useCookies([
     'experimental',
     'cardSize',
@@ -297,8 +300,8 @@ const OptionsSettings = () => {
         <VisualSlider
           label="Card Size"
           value={cookies.cardSize ?? 1}
-          min={25}
-          max={100}
+          min={isMobile ? 100 : 50}
+          max={125}
           onChange={(value) => setCookie('cardSize', value)}
         />
 
