@@ -119,27 +119,52 @@
   align-items: center;
 }
 
-@media only screen and (max-width: 768px) {
+@media only screen and (max-width: 938px) {
   .activeLayersBox {
-    min-width: 30vh;
+    left: 5%;
+    right: 5%;
+    min-width: unset;
+    width: 90vw;
+    max-width: 90vw;
   }
   
   .activeLayersCallToAction {
-    font-size: 0.7em;
+    font-size: 0.85em;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    padding: 0;
   }
 
   .activeLayersTitle {
     font-size: 0.9em;
-    gap: 10px;
+    flex-direction: column;
+    gap: 8px;
+    padding-left: 0;
+  }
+
+  .titlesColumn {
+    width: 100%;
   }
 
   .title {
-    font-size: 1em;
+    font-size: 1.1em;
   }
 
   .orderingExplanation {
-    max-width: 40vw; 
-    font-size: 0.7em;
+    max-width: 100%; 
+    font-size: 0.75em;
+  }
+
+  .buttonDiv {
+    padding: 10px 12px;
+    font-size: 0.9em;
+    min-height: 44px;
+  }
+
+  .targetContainer {
+    font-size: 0.9em;
+    padding-top: 4px;
   }
 
   .passTurnBox {
