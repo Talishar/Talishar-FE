@@ -269,17 +269,48 @@ const EndGameStats = (data: EndGameData) => {
               <em>First turn omitted for first player</em>
             </div>
             
-            {/* Game Time */}
+            {/* Avg Value per Turn - Top Priority */}
             <div className={styles.infoRow}>
-              <span className={styles.infoLabel}>Your Time:</span>
-              <span className={styles.infoValue}>{fancyTimeFormat(data.yourTime)}</span>
-            </div>
-            <div className={styles.infoRow}>
-              <span className={styles.infoLabel}>Total Game Time:</span>
-              <span className={styles.infoValue}>{fancyTimeFormat(data.totalTime)}</span>
+              <span className={styles.infoLabel}>Avg Value per Turn:</span>
+              <span className={styles.infoValue}>
+                {isPatron ? (
+                  data.averageValuePerTurn
+                ) : (
+                  <span dangerouslySetInnerHTML={{ __html: "Support our <a href='https://linktr.ee/Talishar' target='_blank'>patreon</a>" }} />
+                )}
+              </span>
             </div>
             
-            {/* Turn Stats Summary */}
+            {/* Other Average Values */}
+            <div className={styles.infoRow}>
+              <span className={styles.infoLabel}>Avg Damage Threatened per Turn:</span>
+              <span className={styles.infoValue}>{data.averageDamageThreatenedPerTurn}</span>
+            </div>
+            <div className={styles.infoRow}>
+              <span className={styles.infoLabel}>Avg Damage Dealt per Turn:</span>
+              <span className={styles.infoValue}>{data.averageDamageDealtPerTurn}</span>
+            </div>
+            <div className={styles.infoRow}>
+              <span className={styles.infoLabel}>Avg Damage Threatened per Card:</span>
+              <span className={styles.infoValue}>{data.averageDamageThreatenedPerCard}</span>
+            </div>
+            <div className={styles.infoRow}>
+              <span className={styles.infoLabel}>Avg Resources Used per Turn:</span>
+              <span className={styles.infoValue}>{data.averageResourcesUsedPerTurn}</span>
+            </div>
+            <div className={styles.infoRow}>
+              <span className={styles.infoLabel}>Avg Cards Left Over per Turn:</span>
+              <span className={styles.infoValue}>{data.averageCardsLeftOverPerTurn}</span>
+            </div>
+            
+            {!isPatron && (
+              <div className={styles.infoRow}>
+                <span className={styles.infoLabel}>Avg Combat Value per Turn:</span>
+                <span className={styles.infoValue}>{data.averageCombatValuePerTurn}</span>
+              </div>
+            )}
+            
+            {/* Total Damage/Life Values */}
             <div className={styles.infoRow}>
               <span className={styles.infoLabel}>Total Damage Threatened:</span>
               <span className={styles.infoValue}>{data.totalDamageThreatened}</span>
@@ -311,43 +342,14 @@ const EndGameStats = (data: EndGameData) => {
               </span>
             </div>
             
+            {/* Time Values */}
             <div className={styles.infoRow}>
-              <span className={styles.infoLabel}>Avg Damage Threatened per Turn:</span>
-              <span className={styles.infoValue}>{data.averageDamageThreatenedPerTurn}</span>
+              <span className={styles.infoLabel}>Your Time:</span>
+              <span className={styles.infoValue}>{fancyTimeFormat(data.yourTime)}</span>
             </div>
             <div className={styles.infoRow}>
-              <span className={styles.infoLabel}>Avg Damage Dealt per Turn:</span>
-              <span className={styles.infoValue}>{data.averageDamageDealtPerTurn}</span>
-            </div>
-            <div className={styles.infoRow}>
-              <span className={styles.infoLabel}>Avg Damage Threatened per Card:</span>
-              <span className={styles.infoValue}>{data.averageDamageThreatenedPerCard}</span>
-            </div>
-            <div className={styles.infoRow}>
-              <span className={styles.infoLabel}>Avg Resources Used per Turn:</span>
-              <span className={styles.infoValue}>{data.averageResourcesUsedPerTurn}</span>
-            </div>
-            <div className={styles.infoRow}>
-              <span className={styles.infoLabel}>Avg Cards Left Over per Turn:</span>
-              <span className={styles.infoValue}>{data.averageCardsLeftOverPerTurn}</span>
-            </div>
-            
-            {!isPatron && (
-              <div className={styles.infoRow}>
-                <span className={styles.infoLabel}>Avg Combat Value per Turn:</span>
-                <span className={styles.infoValue}>{data.averageCombatValuePerTurn}</span>
-              </div>
-            )}
-            
-            <div className={styles.infoRow}>
-              <span className={styles.infoLabel}>Avg Value per Turn:</span>
-              <span className={styles.infoValue}>
-                {isPatron ? (
-                  data.averageValuePerTurn
-                ) : (
-                  <span dangerouslySetInnerHTML={{ __html: "Support our <a href='https://linktr.ee/Talishar' target='_blank'>patreon</a>" }} />
-                )}
-              </span>
+              <span className={styles.infoLabel}>Total Game Time:</span>
+              <span className={styles.infoValue}>{fancyTimeFormat(data.totalTime)}</span>
             </div>
           </div>
         </div>
