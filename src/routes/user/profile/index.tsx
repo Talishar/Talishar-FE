@@ -9,9 +9,6 @@ import { RiEdit2Line, RiDeleteBin5Line } from "react-icons/ri";
 import { CiEdit } from "react-icons/ci";
 import styles from './profile.module.css';
 import { generateCroppedImageUrl } from 'utils/cropImages';
-import React from 'react';
-import ReactDOM from 'react-dom';
-import BlockList from './blockUser';
 import ProfileSettings from './ProfileSettings';
 
 const CODE = 'code';
@@ -110,7 +107,6 @@ export const ProfilePage = () => {
                   </p>
                 )}
               </div>
-              {/* <BlockList /> */}
               <h3 className={styles.title}>Your decks:</h3>
               <table>
                 <thead>
