@@ -5,7 +5,9 @@ import EndGameMenuOptions from '../endGameMenuOptions/EndGameMenuOptions';
 import styles from './EndGameStats.module.css';
 import { NumberLiteralType } from 'typescript';
 import useAuth from 'hooks/useAuth';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useRef, useImperativeHandle, forwardRef } from 'react';
+import html2canvas from 'html2canvas';
+import TalisharLogo from 'img/TalisharLogo.webp';
 
 export interface EndGameData {
   deckID?: string;
@@ -56,10 +58,16 @@ export interface TurnResult {
   resourcesLeft: number;
 }
 
-const EndGameStats = (data: EndGameData) => {
+export interface EndGameStatsRef {
+  exportScreenshot: () => Promise<void>;
+}
+
+const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
   const { isPatron } = useAuth();
   const [sortField, setSortField] = useState<'played' | 'blocked' | 'pitched' | 'hits' | null>(null);
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
+  const statsRef = useRef<HTMLDivElement>(null);
+  const [isExporting, setIsExporting] = useState(false);
   
   const [turnSortField, setTurnSortField] = useState<'turnNo' | 'cardsUsed' | 'cardsBlocked' | 'cardsPitched' | 'cardsLeft' | 'resourcesUsed' | 'resourcesLeft' | 'damageThreatened' | 'damageDealt' | 'damageBlocked' | 'damagePrevented' | 'damageTaken' | 'lifeGained' | 'totalValue' | null>(null);
   const [turnSortDirection, setTurnSortDirection] = useState<'asc' | 'desc'>('desc');
@@ -85,6 +93,67 @@ const EndGameStats = (data: EndGameData) => {
       setTurnSortDirection('desc');
     }
   };
+
+  const handleExportScreenshot = async () => {
+    if (!statsRef.current) return;
+    
+    setIsExporting(true);
+    
+    try {
+      // Show watermark and hide card images for export
+      const hideElements = statsRef.current.querySelectorAll(`.${styles.hideOnExport}`);
+      const watermark = statsRef.current.querySelector(`.${styles.watermark}`) as HTMLElement;
+      
+      // Hide card image column
+      hideElements.forEach((el) => {
+        (el as HTMLElement).style.display = 'none';
+      });
+      
+      // Show watermark
+      if (watermark) {
+        watermark.style.display = 'block';
+      }
+      
+      const canvas = await html2canvas(statsRef.current, {
+        backgroundColor: '#0a0a0a',
+        scale: 2, // Higher quality
+        logging: false,
+        useCORS: true,
+        allowTaint: true,
+      });
+      
+      // Restore original visibility
+      hideElements.forEach((el) => {
+        (el as HTMLElement).style.display = '';
+      });
+      
+      if (watermark) {
+        watermark.style.display = 'none';
+      }
+      
+      // Convert to blob and download
+      canvas.toBlob((blob) => {
+        if (blob) {
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5);
+          link.download = `game-stats-${timestamp}.png`;
+          link.href = url;
+          link.click();
+          URL.revokeObjectURL(url);
+        }
+      });
+    } catch (error) {
+      console.error('Error exporting screenshot:', error);
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
+  // Expose the export function to parent component
+  useImperativeHandle(ref, () => ({
+    exportScreenshot: handleExportScreenshot
+  }));
 
   const sortedCardResults = useMemo(() => {
     if (!data.cardResults || !sortField) {
@@ -166,15 +235,16 @@ const EndGameStats = (data: EndGameData) => {
   return (
     <div className={styles.endGameStats} data-testid="test-stats">
       <EndGameMenuOptions />
-      
-      <div className={styles.statsContainer}>
+
+      <div ref={statsRef} className={styles.statsContent}>
+        <div className={styles.statsContainer}>
         <div className={styles.statsSection}>
           <h2 className={styles.sectionHeader}>Card Play Stats</h2>
           <div className={styles.tableContainer}>
             <table className={styles.cardTable}>
               <thead>
                 <tr className={styles.headers}>
-                  <th className={styles.firstHeadersStats}></th>
+                  <th className={`${styles.firstHeadersStats} ${styles.hideOnExport}`}></th>
                   <th>Card Name</th>
                   <th 
                     className={styles.headersStats} 
@@ -235,7 +305,7 @@ const EndGameStats = (data: EndGameData) => {
                     }
                     return (
                       <tr key={`cardList${ix}`}>
-                        <td className={styles.card}>
+                        <td className={`${styles.card} ${styles.hideOnExport}`}>
                           <Effect card={card} />
                         </td>
                         <td className={cardStyle} title={result.cardName}>{result.cardName}</td>
@@ -350,6 +420,15 @@ const EndGameStats = (data: EndGameData) => {
             <div className={styles.infoRow}>
               <span className={styles.infoLabel}>Total Game Time:</span>
               <span className={styles.infoValue}>{fancyTimeFormat(data.totalTime)}</span>
+            </div>
+          </div>
+          
+          {/* Watermark - only visible in exports */}
+          <div className={styles.watermark}>
+            <div className={styles.watermarkContent}>
+              <span>Stats provided to you by</span>
+              <img src={TalisharLogo} alt="Talishar" className={styles.watermarkLogo} />
+              <span>Support our work on <a href="https://linktr.ee/Talishar" target="_blank" rel="noopener noreferrer">Patreon</a>! ❤️</span>
             </div>
           </div>
         </div>
@@ -595,8 +674,11 @@ const EndGameStats = (data: EndGameData) => {
             </table>
           </div>
         </div>
+      </div>
     </div>
   );
-};
+});
+
+EndGameStats.displayName = 'EndGameStats';
 
 export default EndGameStats;

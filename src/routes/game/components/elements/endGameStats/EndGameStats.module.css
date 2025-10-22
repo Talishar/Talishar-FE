@@ -14,6 +14,12 @@
   background: var(--near-black);
 }
 
+.statsContent {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
 .statsContainer {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 400px), 1fr));
@@ -111,6 +117,42 @@
   background: rgba(255, 184, 77, 0.05);
   border-left: 2px solid var(--primary);
   border-radius: 4px;
+}
+
+/* Watermark - hidden by default, shown only in exports */
+.watermark {
+  display: none;
+  margin-top: 1rem;
+  padding: 1rem;
+  text-align: center;
+  background: rgba(255, 184, 77, 0.1);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 184, 77, 0.3);
+}
+
+.watermarkContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1em;
+}
+
+.watermarkLogo {
+  height: 60px;
+  width: auto;
+  margin: 0.25rem 0;
+}
+
+.watermarkContent a {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.watermarkContent a:hover {
+  text-decoration: underline;
 }
 
 .disclaimer a {
