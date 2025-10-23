@@ -1,15 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useAppSelector } from 'app/Hooks';
 import styles from './EndGameScreen.module.css';
 import { useGetPopUpContentQuery } from 'features/api/apiSlice';
 import { END_GAME_STATS } from 'appConstants';
 import { getGameInfo } from 'features/game/GameSlice';
-import EndGameStats, { EndGameData } from '../endGameStats/EndGameStats';
+import EndGameStats, { EndGameData, EndGameStatsRef } from '../endGameStats/EndGameStats';
 import { shallowEqual } from 'react-redux';
 import useShowModal from 'hooks/useShowModals';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import classNames from 'classnames';
 import useAuth from 'hooks/useAuth';
+import { PiFileCsvFill, PiCameraFill } from "react-icons/pi";
 
 const EndGameScreen = () => {
   const gameInfo = useAppSelector(getGameInfo, shallowEqual);
@@ -17,6 +18,7 @@ const EndGameScreen = () => {
   const [showStats, setShowStats] = useState(true);
   const [showFullLog, setShowFullLog] = useState(false);
   const { isPatron } = useAuth();
+  const endGameStatsRef = useRef<EndGameStatsRef>(null);
   const { data, isLoading, error } = useGetPopUpContentQuery({
     gameID: gameInfo.gameID,
     playerID: playerID,
@@ -57,7 +59,7 @@ const EndGameScreen = () => {
       );
     }
   } else {
-    content = <EndGameStats {...(data as EndGameData)} />;
+    content = <EndGameStats ref={endGameStatsRef} {...(data as EndGameData)} playerID={playerID} />;
   }
 
   const switchPlayer = () => {
@@ -72,6 +74,14 @@ const EndGameScreen = () => {
     setShowFullLog(!showFullLog);
   };
 
+  const handleExportStats = () => {
+    endGameStatsRef.current?.exportScreenshot();
+  };
+
+  const handleExportCSV = () => {
+    endGameStatsRef.current?.exportCSV();
+  };
+
   return (
     <div className={cardListBoxClasses}>
       {showStats && (
@@ -80,6 +90,16 @@ const EndGameScreen = () => {
             <div className={styles.cardListTitle}>
               <h2 className={styles.title}>Game Over Summary</h2>
               <div className={styles.buttonGroup}>
+                {!showFullLog && (
+                  <>
+                    <div className={styles.buttonDiv} onClick={handleExportStats}>
+                      <PiCameraFill size="1.5em" />&nbsp;Export as Image
+                    </div>
+                    <div className={styles.buttonDiv} onClick={handleExportCSV}>
+                      <PiFileCsvFill size="1.5em" />&nbsp;Export as CSV
+                    </div>
+                  </>
+                )}
                 <div className={styles.buttonDiv} onClick={toggleShowFullLog}>
                   Full Game Log
                 </div>

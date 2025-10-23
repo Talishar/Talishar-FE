@@ -73,7 +73,7 @@ fieldset legend strong {
   padding: 0.5rem;
   border-radius: 4px;
   background-color: rgba(0, 0, 0, 0.3);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1); 
   color: white;
   cursor: pointer;
   font-size: 0.95em;
@@ -90,6 +90,7 @@ fieldset legend strong {
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.1); 
 }
 
 .playmatPreviewImage {
@@ -114,12 +115,14 @@ fieldset legend strong {
 
 .cardBack {
   border-radius: 10px;
-  height: 120px;
-  width: 120px;
-  max-height: 120px;
-  filter: brightness(0.65);
+  height: 150px;
+  width: 150px;
+  max-height: 150px;
+  filter: brightness(0.85);
   transition: filter 0.25s, box-shadow 0.25s, transform 0.2s;
   cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(0, 0, 0, 0.1); 
 }
 
 .cardBack:hover {

@@ -5,7 +5,9 @@
   width: 20em;
   border-radius: 0.3em;
   font-weight: 550;
-  background-color: var(--dark-red);
+  background-color: rgba(50, 10, 10, 0.6);
+  border: 2px solid rgba(111, 0, 0, 0.3);
+  backdrop-filter: blur(4px);
   color: var(--secondary-inverse);
   z-index: 1;
   display: flex;
