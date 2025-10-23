@@ -56,7 +56,8 @@
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  min-width: calc(6dvw * var(--card-scale));
+  min-width: calc(15dvw * var(--card-scale));
+  max-width: calc(15dvw * var(--card-scale));
   height: 32px;
   border-radius: 5px;
   border: 1px solid var(--primary);
@@ -101,6 +102,7 @@
   height: 100%;
   max-height: 100%;
   padding: 0.5em;
+  -webkit-overflow-scrolling: touch;
 }
 
 .form {
