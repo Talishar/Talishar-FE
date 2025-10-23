@@ -203,7 +203,10 @@ export const URL_END_POINT = {
   PATREON_LOGIN: `AccountFiles/PatreonLoginAPI.php`,
   LOAD_BUG_REPORT: `LoadBugReport.php`,
   SUBMIT_LOBBY_INPUT: 'APIs/SubmitLobbyInput.php',
-  BLOCK_USER: 'include/BlockUser.php'
+  BLOCK_USER: 'include/BlockUser.php',
+  GET_MOD_PAGE_DATA: 'APIs/GetModPageData.php',
+  BAN_PLAYER: 'BanPlayer.php',
+  CLOSE_GAME: 'CloseGame.php'
 };
 
 export const GAME_VISIBILITY = {
