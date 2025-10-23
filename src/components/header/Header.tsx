@@ -94,7 +94,7 @@ const Header = () => {
           {isLoggedIn && isMod && (
             <li>
               <Link to="/mod">
-                <BsShieldFillCheck></BsShieldFillCheck> <span>Mod Page</span>
+                <BsShieldFillCheck size="0.9em"></BsShieldFillCheck> <span>Mod Page</span>
               </Link>
             </li>
           )}

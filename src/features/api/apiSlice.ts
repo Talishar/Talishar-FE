@@ -46,7 +46,7 @@ export const rtkQueryErrorToaster: Middleware =
     if (isRejectedWithValue(action)) {
       //console.warn('Rejected action:', action);
       const errorMessage = action.error?.message ?? 'an error happened';
-      const errorStatus = action.payload?.status ?? 0;
+      const errorStatus = (action.payload as any)?.status ?? 0;
       //console.log('errorStatus:', errorStatus);
       //console.log('errorMessage:', errorMessage);
       //console.log('action.payload:', action.payload);
