@@ -54,13 +54,7 @@ export default ({ mode }: { mode: string }) => {
       coverage: {
         provider: 'v8'
       },
-      setupFiles: './src/setupTests.ts',
-      pool: 'forks',
-      poolOptions: {
-        forks: {
-          singleFork: true
-        }
-      }
+      setupFiles: './src/setupTests.ts'
     }
   });
 };
