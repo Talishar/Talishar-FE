@@ -18,6 +18,7 @@ const EndGameScreen = () => {
   const [playerID, setPlayerID] = useState(gameInfo.playerID === 2 ? 2 : 1);
   const [showStats, setShowStats] = useState(true);
   const [showFullLog, setShowFullLog] = useState(false);
+  const [bothPlayersData, setBothPlayersData] = useState<{ [key: number]: any }>({});
   const { isPatron } = useAuth();
   const endGameStatsRef = useRef<EndGameStatsRef>(null);
   const { data, isLoading, error } = useGetPopUpContentQuery({
@@ -26,6 +27,16 @@ const EndGameScreen = () => {
     authKey: gameInfo.authKey,
     popupType: END_GAME_STATS
   });
+  
+  // Cache both players' data as they're loaded
+  React.useEffect(() => {
+    if (data && playerID) {
+      setBothPlayersData(prev => ({
+        ...prev,
+        [playerID]: data
+      }));
+    }
+  }, [data, playerID]);
   const showModal = useShowModal();
   const cardListBoxClasses = classNames(styles.cardListBox, {
     [styles.reduced]: !showStats
@@ -68,7 +79,11 @@ const EndGameScreen = () => {
     const endGameDataWithHeroes: EndGameData = {
       ...(data as EndGameData),
       yourHero: yourHero,
-      opponentHero: opponentHero
+      opponentHero: opponentHero,
+      playerID: playerID,
+      authKey: gameInfo.authKey,
+      gameID: gameInfo.gameID?.toString(),
+      bothPlayersData: bothPlayersData
     };
     content = (
       <EndGameStats 
@@ -91,11 +106,19 @@ const EndGameScreen = () => {
   };
 
   const handleExportStats = () => {
-    endGameStatsRef.current?.exportScreenshot();
+    if (!endGameStatsRef.current) {
+      console.error('Export ref not available');
+      return;
+    }
+    endGameStatsRef.current.exportScreenshot();
   };
 
-  const handleExportCSV = () => {
-    endGameStatsRef.current?.exportCSV();
+  const handleExportCSV = async () => {
+    if (!endGameStatsRef.current) {
+      console.error('Export CSV ref not available');
+      return;
+    }
+    await endGameStatsRef.current.exportCSV();
   };
 
   return (
