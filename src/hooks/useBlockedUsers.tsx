@@ -9,13 +9,41 @@ export const useBlockedUsers = () => {
     try {
       setIsLoading(true);
       const response = await fetch('includes/GetBlockedUsers.php');
-      const data = await response.json();
-      setBlockedUsers(data);
-      setError(null);
+      
+      // Handle 404 and other error statuses silently
+      if (!response.ok) {
+        setBlockedUsers([]);
+        setError(null);
+        return;
+      }
+      
+      const text = await response.text();
+      
+      // Check if response is empty
+      if (!text || text.trim() === '') {
+        setBlockedUsers([]);
+        setError(null);
+        return;
+      }
+      
+      // Check if response is HTML (error/redirect page)
+      if (text.trim().startsWith('<') || text.trim().startsWith('<!DOCTYPE')) {
+        setBlockedUsers([]);
+        setError(null);
+        return;
+      }
+      
+      try {
+        const data = JSON.parse(text);
+        setBlockedUsers(Array.isArray(data) ? data : []);
+        setError(null);
+      } catch (parseErr) {
+        setBlockedUsers([]);
+        setError(null);
+      }
     } catch (err) {
-      console.error('Error fetching blocked users:', err);
-      setError('Failed to fetch blocked users');
       setBlockedUsers([]);
+      setError(null);
     } finally {
       setIsLoading(false);
     }

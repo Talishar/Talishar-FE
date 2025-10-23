@@ -350,7 +350,10 @@ export const gameSlice = createSlice({
     },
     // for main menu, zero out all active game info.
     clearGameInfo: (state) => {
-      deleteGameAuthKey(state.gameInfo.gameID);
+      // Only delete auth key if we have a valid game ID
+      if (state.gameInfo.gameID > 0) {
+        deleteGameAuthKey(state.gameInfo.gameID);
+      }
       state.gameInfo.gameID = 0;
       state.gameInfo.playerID = 0;
       state.gameInfo.authKey = '';
