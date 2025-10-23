@@ -161,6 +161,9 @@ const ReorderOpt = ({
                 (value) => value === card.cardNumber
               ).length;
               cardInLayer.push(card.cardNumber);
+              const isFirst = ix === 0;
+              const isLast = ix === cardListTop.length - 1;
+              const showLabels = cardListTop.length > 1;
               return (
                 <Reorder.Item
                   key={card.uniqueId}
@@ -168,7 +171,19 @@ const ReorderOpt = ({
                   className={classNames(styles.newOptForm, styles.reorderItem)}
                   onDragEnd={handleDragEnd}
                 >
-                  <CardDisplay card={card} key={ix} />
+                  <div className={styles.cardWrapper}>
+                    {showLabels && isFirst && (
+                      <div className={classNames(styles.positionLabel, styles.firstLabel)}>
+                        FIRST
+                      </div>
+                    )}
+                    {showLabels && isLast && (
+                      <div className={classNames(styles.positionLabel, styles.lastLabel)}>
+                        LAST
+                      </div>
+                    )}
+                    <CardDisplay card={card} key={ix} />
+                  </div>
                   <div
                     className={classNames(styles.newOptForm, styles.buttonRow)}
                   >
@@ -209,6 +224,9 @@ const ReorderOpt = ({
                 (value) => value === card.cardNumber
               ).length;
               cardInLayer.push(card.cardNumber);
+              const isFirst = ix === 0;
+              const isLast = ix === cardListBottom.length - 1;
+              const showLabels = cardListBottom.length > 1;
 
               return (
                 <Reorder.Item
@@ -217,7 +235,19 @@ const ReorderOpt = ({
                   className={classNames(styles.newOptForm, styles.reorderItem)}
                   onDragEnd={handleDragEnd}
                 >
-                  <CardDisplay card={card} key={ix} />
+                  <div className={styles.cardWrapper}>
+                    {showLabels && isFirst && (
+                      <div className={classNames(styles.positionLabel, styles.firstLabel)}>
+                        FIRST
+                      </div>
+                    )}
+                    {showLabels && isLast && (
+                      <div className={classNames(styles.positionLabel, styles.lastLabel)}>
+                        LAST
+                      </div>
+                    )}
+                    <CardDisplay card={card} key={ix} />
+                  </div>
                   <div
                     className={classNames(styles.newOptForm, styles.buttonRow)}
                   >
