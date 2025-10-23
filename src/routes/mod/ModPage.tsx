@@ -149,6 +149,23 @@ const ModPage: React.FC = () => {
             </form>
           </div>
 
+          <div className={styles.middleColumn}>
+            <div className={styles.dataSection}>
+              <h2>Most Recently Created Accounts</h2>
+              {isLoading ? (
+                <p>Loading...</p>
+              ) : modPageData?.recentAccounts && modPageData.recentAccounts.length > 0 ? (
+                <ul className={styles.dataList}>
+                  {modPageData.recentAccounts.map((account, index) => (
+                    <li key={index}>{account}</li>
+                  ))}
+                </ul>
+              ) : (
+                <p>No recent accounts</p>
+              )}
+            </div>
+          </div>
+
           <div className={styles.rightColumn}>
             <div className={styles.dataSection}>
               <h2>Banned Players</h2>
@@ -162,21 +179,6 @@ const ModPage: React.FC = () => {
                 </ul>
               ) : (
                 <p>No banned players</p>
-              )}
-            </div>
-
-            <div className={styles.dataSection}>
-              <h2>Most Recently Created Accounts</h2>
-              {isLoading ? (
-                <p>Loading...</p>
-              ) : modPageData?.recentAccounts && modPageData.recentAccounts.length > 0 ? (
-                <ul className={styles.dataList}>
-                  {modPageData.recentAccounts.map((account, index) => (
-                    <li key={index}>{account}</li>
-                  ))}
-                </ul>
-              ) : (
-                <p>No recent accounts</p>
               )}
             </div>
 
