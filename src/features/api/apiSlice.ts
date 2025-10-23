@@ -31,6 +31,12 @@ import {
 import { PatreonLoginResponse } from 'routes/user/profile/linkpatreon/linkPatreon';
 import { UserProfileAPIResponse } from 'interface/API/UserProfileAPI.php';
 import { SubmitChatAPI } from 'interface/API/SubmitChat.php';
+import {
+  ModPageDataResponse,
+  BanPlayerByIPRequest,
+  BanPlayerByNameRequest,
+  CloseGameRequest
+} from 'interface/API/ModPageAPI';
 import { getGameInfo } from '../game/GameSlice';
 import { RootState } from '../../app/Store';
 
@@ -40,7 +46,7 @@ export const rtkQueryErrorToaster: Middleware =
     if (isRejectedWithValue(action)) {
       //console.warn('Rejected action:', action);
       const errorMessage = action.error?.message ?? 'an error happened';
-      const errorStatus = action.payload?.status ?? 0;
+      const errorStatus = (action.payload as any)?.status ?? 0;
       //console.log('errorStatus:', errorStatus);
       //console.log('errorMessage:', errorMessage);
       //console.log('action.payload:', action.payload);
@@ -352,6 +358,52 @@ export const apiSlice = createApi({
           responseHandler: parseResponse
         };
       }
+    }),
+    getModPageData: builder.query<ModPageDataResponse, void>({
+      query: () => {
+        return {
+          url: URL_END_POINT.GET_MOD_PAGE_DATA,
+          method: 'GET',
+          responseHandler: parseResponse
+        };
+      }
+    }),
+    banPlayerByIP: builder.mutation<any, BanPlayerByIPRequest>({
+      query: ({ ipToBan, playerNumberToBan }) => {
+        return {
+          url: URL_END_POINT.BAN_PLAYER,
+          method: 'GET',
+          params: {
+            ipToBan: ipToBan,
+            playerNumberToBan: playerNumberToBan
+          },
+          responseHandler: parseResponse
+        };
+      }
+    }),
+    banPlayerByName: builder.mutation<any, BanPlayerByNameRequest>({
+      query: ({ playerToBan }) => {
+        return {
+          url: URL_END_POINT.BAN_PLAYER,
+          method: 'GET',
+          params: {
+            playerToBan: playerToBan
+          },
+          responseHandler: parseResponse
+        };
+      }
+    }),
+    closeGame: builder.mutation<any, CloseGameRequest>({
+      query: ({ gameToClose }) => {
+        return {
+          url: URL_END_POINT.CLOSE_GAME,
+          method: 'GET',
+          params: {
+            gameToClose: gameToClose
+          },
+          responseHandler: parseResponse
+        };
+      }
     })
   })
 });
@@ -379,5 +431,9 @@ export const {
   useSubmitPatreonLoginMutation,
   useLoadDebugGameMutation,
   useGetUserProfileQuery,
-  useSubmitLobbyInputMutation
+  useSubmitLobbyInputMutation,
+  useGetModPageDataQuery,
+  useBanPlayerByIPMutation,
+  useBanPlayerByNameMutation,
+  useCloseGameMutation
 } = apiSlice;

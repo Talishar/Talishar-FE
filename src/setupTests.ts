@@ -6,7 +6,7 @@ import '@testing-library/jest-dom/extend-expect';
 import '@testing-library/jest-dom';
 import 'isomorphic-fetch';
 import { setupServer } from 'msw/node';
-import { rest } from 'msw';
+import { http } from 'msw';
 import { apiSlice } from './features/api/apiSlice';
 import { setupStore } from './app/Store';
 import { vi } from 'vitest';
@@ -15,25 +15,26 @@ import mockOptionsMenuResponse from 'mocks/optionsmenu/mockOptionsMenuResponse';
 const store = setupStore();
 
 export const restHandlers = [
-  rest.get('api/GetPopupAPI.php', (req, res, ctx) => {
-    return res(
-      ctx.status(200),
-      ctx.json({
+  http.get('api/GetPopupAPI.php', () => {
+    return new Response(
+      JSON.stringify({
         Cards: [
           { Player: '2', Name: 'Zipper Hit', cardID: 'ARC030', modifier: '4' }
         ]
-      })
+      }),
+      { status: 200 }
     );
   }),
-  rest.get('api/GetPopupAPI.php', (req, res, ctx) => {
-    switch (req.url.searchParams.get('popupType')) {
+  http.get('api/GetPopupAPI.php', ({ request }) => {
+    const url = new URL(request.url);
+    const popupType = url.searchParams.get('popupType');
+    switch (popupType) {
       case 'mySettings':
-        return res(ctx.status(200), ctx.json(mockOptionsMenuResponse));
+        return new Response(JSON.stringify(mockOptionsMenuResponse), { status: 200 });
 
       default:
-        return res(
-          ctx.status(200),
-          ctx.json({
+        return new Response(
+          JSON.stringify({
             Cards: [
               {
                 Player: '2',
@@ -42,28 +43,28 @@ export const restHandlers = [
                 modifier: '4'
               }
             ]
-          })
+          }),
+          { status: 200 }
         );
     }
   }),
-  rest.post('/api/APIs/CreateGame.php', (req, res, ctx) => {
-    return res(
-      ctx.status(200),
-      ctx.json({
+  http.post('/api/APIs/CreateGame.php', () => {
+    return new Response(
+      JSON.stringify({
         message: 'success',
         gameName: 870609,
         playerID: 1,
         authKey:
           '75391d54a09cdfe877cfe9fc641dfab449e7d4ef37a1536e27cae2c0596c78d9'
-      })
+      }),
+      { status: 200 }
     );
   }),
-  rest.get(
+  http.get(
     'http://127.0.0.1:5173/api/live/APIs/GetGameList.php',
-    (req, res, ctx) => {
-      return res(
-        ctx.status(200),
-        ctx.json({
+    () => {
+      return new Response(
+        JSON.stringify({
           gamesInProgress: [
             {
               p1Hero: 'ELE062',
@@ -109,7 +110,8 @@ export const restHandlers = [
           ],
           canSeeQueue: false,
           gameInProgressCount: 3
-        })
+        }),
+        { status: 200 }
       );
     }
   )

@@ -5,7 +5,7 @@ import viteTsconfigPaths from 'vite-tsconfig-paths';
 import svgrPlugin from 'vite-plugin-svgr';
 
 // https://vitejs.dev/config/
-export default ({ mode }) => {
+export default ({ mode }: { mode: string }) => {
   process.env = { ...process.env, ...loadEnv(mode, process.cwd()) };
 
   const devURL = !!process.env.VITE_BACKEND_URL
@@ -52,7 +52,7 @@ export default ({ mode }) => {
       globals: true,
       environment: 'jsdom',
       coverage: {
-        provider: 'c8'
+        provider: 'v8'
       },
       setupFiles: './src/setupTests.ts'
     }

@@ -18,7 +18,6 @@ import { toast } from 'react-hot-toast';
 // List of mod usernames - should match backend list
 const MOD_USERNAMES = [
   'OotTheMonk',
-  'Launch',
   'LaustinSpayce',
   'Star_Seraph',
   'bavverst',

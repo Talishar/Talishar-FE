@@ -20,6 +20,21 @@ import {
 import isEqual from 'react-fast-compare';
 import { CardStack } from '../../routes/game/components/zones/permanentsZone/PermanentsZone';
 
+/**
+ * Sanitizes HTML content by removing all HTML tags.
+ * Applies the regex replacement repeatedly until no more replacements occur
+ * to prevent bypassing via nested/overlapping tag patterns.
+ */
+const sanitizeHtmlTags = (input: string): string => {
+  let previous;
+  let result = input;
+  do {
+    previous = result;
+    result = result.replace(/<[^>]*>/g, '');
+  } while (result !== previous);
+  return result;
+};
+
 export const nextTurn = createAsyncThunk(
   'game/nextTurn',
   async (
@@ -58,7 +73,7 @@ export const nextTurn = createAsyncThunk(
         data = data.toString().trim();
         const indexOfBraces = data.indexOf('{');
         if (indexOfBraces !== 0) {
-          const warningMessage = data.substring(0, indexOfBraces).replace(/<[^>]*>/g, '');
+          const warningMessage = sanitizeHtmlTags(data.substring(0, indexOfBraces));
           toast.error(`Backend Warning: ${warningMessage}`);          
           console.warn(data.substring(0, indexOfBraces));
           data = data.substring(indexOfBraces);

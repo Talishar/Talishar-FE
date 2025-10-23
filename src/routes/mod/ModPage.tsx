@@ -2,7 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useAuth from 'hooks/useAuth';
 import styles from './ModPage.module.css';
-import { BACKEND_URL } from 'appConstants';
+import {
+  useGetModPageDataQuery,
+  useBanPlayerByIPMutation,
+  useBanPlayerByNameMutation,
+  useCloseGameMutation
+} from 'features/api/apiSlice';
 
 const ModPage: React.FC = () => {
   const { isLoggedIn, isMod } = useAuth();
@@ -13,13 +18,21 @@ const ModPage: React.FC = () => {
   const [gameToClose, setGameToClose] = useState('');
   const [playerToBan, setPlayerToBan] = useState('');
 
-  const [bannedPlayers, setBannedPlayers] = useState<string[]>([]);
-  const [bannedIPs, setBannedIPs] = useState<string[]>([]);
-  const [recentAccounts, setRecentAccounts] = useState<string[]>([]);
-
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
+  // Use RTK Query hooks
+  const {
+    data: modPageData,
+    isLoading,
+    error: fetchError,
+    refetch
+  } = useGetModPageDataQuery(undefined, {
+    skip: !isLoggedIn || !isMod
+  });
+
+  const [banByIP, { isLoading: isBanningByIP }] = useBanPlayerByIPMutation();
+  const [banByName, { isLoading: isBanningByName }] = useBanPlayerByNameMutation();
+  const [closeGameMutation, { isLoading: isClosingGame }] = useCloseGameMutation();
 
   useEffect(() => {
     if (!isLoggedIn || !isMod) {
@@ -27,111 +40,48 @@ const ModPage: React.FC = () => {
     }
   }, [isLoggedIn, isMod, navigate]);
 
-  useEffect(() => {
-    if (isLoggedIn && isMod) {
-      fetchModPageData();
-    }
-  }, [isLoggedIn, isMod]);
-
-  const fetchModPageData = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const response = await fetch(`${BACKEND_URL}APIs/GetModPageData.php`, {
-        credentials: 'include'
-      });
-      
-      console.log('Response status:', response.status);
-      console.log('Response headers:', response.headers);
-      
-      if (!response.ok) {
-        const text = await response.text();
-        console.error('Error response:', text);
-        throw new Error(`Failed to fetch mod page data: ${response.status} ${response.statusText}`);
-      }
-
-      const text = await response.text();
-      console.log('Raw response:', text);
-      
-      const data = JSON.parse(text);
-      console.log('Mod Page Data received:', data);
-      console.log('Banned Players:', data.bannedPlayers);
-      console.log('Recent Accounts:', data.recentAccounts);
-      console.log('Banned IPs:', data.bannedIPs);
-      setBannedPlayers(data.bannedPlayers || []);
-      setBannedIPs(data.bannedIPs || []);
-      setRecentAccounts(data.recentAccounts || []);
-    } catch (err) {
-      console.error('Full error:', err);
-      setError(err instanceof Error ? err.message : 'An error occurred');
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const handleBanByIP = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
     setSuccessMessage(null);
 
     try {
-      const response = await fetch(`${BACKEND_URL}BanPlayer.php?ipToBan=${encodeURIComponent(ipToBan)}&playerNumberToBan=${encodeURIComponent(playerNumberToBan)}`, {
-        credentials: 'include'
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to ban player by IP');
-      }
-
+      await banByIP({ ipToBan, playerNumberToBan }).unwrap();
       setSuccessMessage('Player banned by IP successfully');
       setIpToBan('');
       setPlayerNumberToBan('');
-      fetchModPageData(); // Refresh data
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to ban player');
+      refetch(); // Refresh data
+    } catch (err: any) {
+      console.error('Failed to ban player:', err);
+      // Error will be shown via toast from RTK Query error handler
     }
   };
 
   const handleCloseGame = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
     setSuccessMessage(null);
 
     try {
-      const response = await fetch(`${BACKEND_URL}CloseGame.php?gameToClose=${encodeURIComponent(gameToClose)}`, {
-        credentials: 'include'
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to close game');
-      }
-
+      await closeGameMutation({ gameToClose }).unwrap();
       setSuccessMessage('Game closed successfully');
       setGameToClose('');
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to close game');
+    } catch (err: any) {
+      console.error('Failed to close game:', err);
+      // Error will be shown via toast from RTK Query error handler
     }
   };
 
   const handleBanPlayer = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
     setSuccessMessage(null);
 
     try {
-      const response = await fetch(`${BACKEND_URL}BanPlayer.php?playerToBan=${encodeURIComponent(playerToBan)}`, {
-        credentials: 'include'
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to ban player');
-      }
-
+      await banByName({ playerToBan }).unwrap();
       setSuccessMessage('Player banned successfully');
       setPlayerToBan('');
-      fetchModPageData(); // Refresh data
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to ban player');
+      refetch(); // Refresh data
+    } catch (err: any) {
+      console.error('Failed to ban player:', err);
+      // Error will be shown via toast from RTK Query error handler
     }
   };
 
@@ -139,104 +89,114 @@ const ModPage: React.FC = () => {
     return null;
   }
 
+  const errorMessage = fetchError ? 'NetworkError when attempting to fetch resource.' : null;
+
   return (
     <div className={styles.container}>
       <div className={styles.modPagePanel}>
         <h1 className={styles.title}>Moderator Panel</h1>
 
-        {error && <div className={styles.errorMessage}>{error}</div>}
+        {errorMessage && <div className={styles.errorMessage}>{errorMessage}</div>}
         {successMessage && <div className={styles.successMessage}>{successMessage}</div>}
 
-        <form onSubmit={handleBanByIP} className={styles.form}>
-          <h2>IP Ban from Game</h2>
-          <label htmlFor="ipToBan">Game to IP ban from:</label>
-          <input
-            type="text"
-            id="ipToBan"
-            value={ipToBan}
-            onChange={(e) => setIpToBan(e.target.value)}
-            required
-          />
-          <label htmlFor="playerNumberToBan">Player to ban? (1 or 2):</label>
-          <input
-            type="text"
-            id="playerNumberToBan"
-            value={playerNumberToBan}
-            onChange={(e) => setPlayerNumberToBan(e.target.value)}
-            required
-          />
-          <button type="submit">Ban</button>
-        </form>
+        <div className={styles.contentWrapper}>
+          <div className={styles.leftColumn}>
+            <form onSubmit={handleBanByIP} className={styles.form}>
+              <h2>IP Ban from Game</h2>
+              <label htmlFor="ipToBan">Game to IP ban from:</label>
+              <input
+                type="text"
+                id="ipToBan"
+                value={ipToBan}
+                onChange={(e) => setIpToBan(e.target.value)}
+                required
+              />
+              <label htmlFor="playerNumberToBan">Player to ban? (1 or 2):</label>
+              <input
+                type="text"
+                id="playerNumberToBan"
+                value={playerNumberToBan}
+                onChange={(e) => setPlayerNumberToBan(e.target.value)}
+                required
+              />
+              <button type="submit">Ban</button>
+            </form>
 
-        <form onSubmit={handleCloseGame} className={styles.form}>
-          <h2>Close Game</h2>
-          <label htmlFor="gameToClose">Game to close:</label>
-          <input
-            type="text"
-            id="gameToClose"
-            value={gameToClose}
-            onChange={(e) => setGameToClose(e.target.value)}
-            required
-          />
-          <button type="submit">Close Game</button>
-        </form>
+            <form onSubmit={handleCloseGame} className={styles.form}>
+              <h2>Close Game</h2>
+              <label htmlFor="gameToClose">Game to close:</label>
+              <input
+                type="text"
+                id="gameToClose"
+                value={gameToClose}
+                onChange={(e) => setGameToClose(e.target.value)}
+                required
+              />
+              <button type="submit">Close Game</button>
+            </form>
 
-        <form onSubmit={handleBanPlayer} className={styles.form}>
-          <h2>Ban Player by Username</h2>
-          <label htmlFor="playerToBan">Player to ban:</label>
-          <input
-            type="text"
-            id="playerToBan"
-            value={playerToBan}
-            onChange={(e) => setPlayerToBan(e.target.value)}
-            required
-          />
-          <button type="submit">Ban</button>
-        </form>
+            <form onSubmit={handleBanPlayer} className={styles.form}>
+              <h2>Ban Player by Username</h2>
+              <label htmlFor="playerToBan">Player to ban:</label>
+              <input
+                type="text"
+                id="playerToBan"
+                value={playerToBan}
+                onChange={(e) => setPlayerToBan(e.target.value)}
+                required
+              />
+              <button type="submit">Ban</button>
+            </form>
+          </div>
 
-        <div className={styles.dataSection}>
-          <h2>Banned Players</h2>
-          {loading ? (
-            <p>Loading...</p>
-          ) : bannedPlayers.length > 0 ? (
-            <ul className={styles.dataList}>
-              {bannedPlayers.map((player, index) => (
-                <li key={index}>{player}</li>
-              ))}
-            </ul>
-          ) : (
-            <p>No banned players</p>
-          )}
-        </div>
+          <div className={styles.middleColumn}>
+            <div className={styles.dataSection}>
+              <h2>Most Recently Created Accounts</h2>
+              {isLoading ? (
+                <p>Loading...</p>
+              ) : modPageData?.recentAccounts && modPageData.recentAccounts.length > 0 ? (
+                <ul className={styles.dataList}>
+                  {modPageData.recentAccounts.map((account, index) => (
+                    <li key={index}>{account}</li>
+                  ))}
+                </ul>
+              ) : (
+                <p>No recent accounts</p>
+              )}
+            </div>
+          </div>
 
-        <div className={styles.dataSection}>
-          <h2>Most Recently Created Accounts</h2>
-          {loading ? (
-            <p>Loading...</p>
-          ) : recentAccounts.length > 0 ? (
-            <ul className={styles.dataList}>
-              {recentAccounts.map((account, index) => (
-                <li key={index}>{account}</li>
-              ))}
-            </ul>
-          ) : (
-            <p>No recent accounts</p>
-          )}
-        </div>
+          <div className={styles.rightColumn}>
+            <div className={styles.dataSection}>
+              <h2>Banned Players</h2>
+              {isLoading ? (
+                <p>Loading...</p>
+              ) : modPageData?.bannedPlayers && modPageData.bannedPlayers.length > 0 ? (
+                <ul className={styles.dataList}>
+                  {modPageData.bannedPlayers.map((player, index) => (
+                    <li key={index}>{player}</li>
+                  ))}
+                </ul>
+              ) : (
+                <p>No banned players</p>
+              )}
+            </div>
 
-        <div className={styles.dataSection}>
-          <h2>Banned IPs</h2>
-          {loading ? (
-            <p>Loading...</p>
-          ) : bannedIPs.length > 0 ? (
-            <ul className={styles.dataList}>
-              {bannedIPs.map((ip, index) => (
-                <li key={index}>{ip}</li>
-              ))}
-            </ul>
-          ) : (
-            <p>No banned IPs</p>
-          )}
+            <div className={styles.dataSection}>
+              <h2>Banned IPs</h2>
+              {isLoading ? (
+                <p>Loading...</p>
+              ) : modPageData?.bannedIPs && modPageData.bannedIPs.length > 0 ? (
+                <ul className={styles.dataList}>
+                  {modPageData.bannedIPs.map((ip, index) => (
+                    <li key={index}>{ip}</li>
+                  ))}
+                </ul>
+              ) : (
+                <p>No banned IPs</p>
+              )}
+            </div>
+          </div>
         </div>
       </div>
     </div>

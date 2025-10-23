@@ -112,7 +112,7 @@ const Target = ({ target }: { target: string | undefined }) => {
       <span
         className={styles.target}
         dangerouslySetInnerHTML={{
-          __html: replaceText(target?.replace('|', ', '))
+          __html: replaceText(target?.replace(/\|/g, ', '))
         }}
       ></span>
     </div>
