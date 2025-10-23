@@ -41,6 +41,16 @@ export default ({ mode }: { mode: string }) => {
             });
           }
         },
+        '/APIs': {
+          target: `http://${devURL}:${devPort}/${devDirectory}`,
+          changeOrigin: true,
+          secure: false
+        },
+        '/AccountFiles': {
+          target: `http://${devURL}:${devPort}/${devDirectory}`,
+          changeOrigin: true,
+          secure: false
+        },
         '/datadoll': {
           target: `http://${process.env.VITE_DATADOLL_BACKEND}:${process.env.VITE_DATADOLL_PORT}/${process.env.VITE_DATADOLL_DIRECTORY}`,
           changeOrigin: true,
