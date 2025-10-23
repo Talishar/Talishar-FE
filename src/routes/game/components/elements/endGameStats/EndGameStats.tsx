@@ -5,9 +5,11 @@ import EndGameMenuOptions from '../endGameMenuOptions/EndGameMenuOptions';
 import styles from './EndGameStats.module.css';
 import { NumberLiteralType } from 'typescript';
 import useAuth from 'hooks/useAuth';
-import { useState, useMemo, useRef, useImperativeHandle, forwardRef } from 'react';
+import { useState, useMemo, useRef, useImperativeHandle, forwardRef, useEffect } from 'react';
 import html2canvas from 'html2canvas';
 import TalisharLogo from 'img/TalisharLogo.webp';
+import { generateCroppedImageUrl } from 'utils/cropImages';
+import { BACKEND_URL } from 'appConstants';
 
 export interface EndGameData {
   deckID?: string;
@@ -16,6 +18,9 @@ export interface EndGameData {
   result?: number;
   turns?: number;
   playerID?: number;
+  yourHero?: string;
+  opponentHero?: string;
+  winner?: number;
   cardResults: CardResult[];
   turnResults: { [key: string]: TurnResult };
   totalDamageThreatened?: number;
@@ -71,9 +76,63 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
   const statsRef = useRef<HTMLDivElement>(null);
   const [isExporting, setIsExporting] = useState(false);
+  const [heroDataUrls, setHeroDataUrls] = useState<{ yourHero?: string; opponentHero?: string }>({});
   
   const [turnSortField, setTurnSortField] = useState<'turnNo' | 'cardsUsed' | 'cardsBlocked' | 'cardsPitched' | 'cardsLeft' | 'resourcesUsed' | 'resourcesLeft' | 'damageThreatened' | 'damageDealt' | 'damageBlocked' | 'damagePrevented' | 'damageTaken' | 'lifeGained' | 'totalValue' | null>(null);
   const [turnSortDirection, setTurnSortDirection] = useState<'asc' | 'desc'>('desc');
+
+  // Preload hero images as data URLs via backend proxy
+  const imageToDataUrl = async (heroName: string): Promise<string | null> => {
+    try {
+      const response = await fetch(`${BACKEND_URL}GetHeroImage.php?hero=${encodeURIComponent(heroName)}`);
+      
+      if (!response.ok) {
+        console.error('Failed to fetch hero image from backend:', response.status);
+        return null;
+      }
+      
+      const data = await response.json();
+      
+      if (data.error) {
+        console.error('Backend error:', data.error);
+        return null;
+      }
+      
+      if (data.dataUrl) {
+        return data.dataUrl;
+      }
+      
+      return null;
+    } catch (error) {
+      console.error('Failed to fetch hero image from backend:', heroName, error);
+      return null;
+    }
+  };
+
+  // Load hero images on component mount or when data changes
+  useEffect(() => {
+    const loadHeroImages = async () => {
+      const urls: { yourHero?: string; opponentHero?: string } = {};
+      
+      if (data.yourHero) {
+        const dataUrl = await imageToDataUrl(data.yourHero);
+        if (dataUrl) {
+          urls.yourHero = dataUrl;
+        }
+      }
+      
+      if (data.opponentHero) {
+        const dataUrl = await imageToDataUrl(data.opponentHero);
+        if (dataUrl) {
+          urls.opponentHero = dataUrl;
+        }
+      }
+      
+      setHeroDataUrls(urls);
+    };
+    
+    loadHeroImages();
+  }, [data.yourHero, data.opponentHero]);
 
   const handleSort = (field: 'played' | 'blocked' | 'pitched' | 'hits') => {
     if (sortField === field) {
@@ -106,32 +165,39 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
       // Show watermark and hide card images for export
       const hideElements = statsRef.current.querySelectorAll(`.${styles.hideOnExport}`);
       const watermark = statsRef.current.querySelector(`.${styles.watermark}`) as HTMLElement;
+      const heroPortraits = statsRef.current.querySelector(`.${styles.showOnExport}`) as HTMLElement;
       
       // Hide card image column
       hideElements.forEach((el) => {
         (el as HTMLElement).style.display = 'none';
       });
       
-      // Show watermark
       if (watermark) {
         watermark.style.display = 'block';
+      }
+
+      if (heroPortraits) {
+        heroPortraits.style.display = 'flex';
       }
       
       const canvas = await html2canvas(statsRef.current, {
         backgroundColor: '#0a0a0a',
-        scale: 2, // Higher quality
+        scale: 2,
         logging: false,
         useCORS: true,
         allowTaint: true,
       });
       
-      // Restore original visibility
       hideElements.forEach((el) => {
         (el as HTMLElement).style.display = '';
       });
       
       if (watermark) {
         watermark.style.display = 'none';
+      }
+
+      if (heroPortraits) {
+        heroPortraits.style.display = 'none';
       }
       
       // Convert to blob and download
@@ -529,6 +595,58 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
               <span className={styles.infoValue}>{fancyTimeFormat(data.totalTime)}</span>
             </div>
           </div>
+
+          {/* Hero Portraits Section */}
+          {data.yourHero && data.opponentHero && (
+            <div className={`${styles.heroPortraitsContainer} ${styles.showOnExport}`}>
+              <h3 className={styles.heroTitle}>Hero Matchup</h3>
+              <div className={styles.heroPortraits}>
+                <div className={styles.heroColumn}>
+                  <p className={styles.heroLabel}>Your Hero</p>
+                  <div className={styles.heroImageWrapper}>
+                    {heroDataUrls.yourHero ? (
+                      <img 
+                        src={heroDataUrls.yourHero} 
+                        alt="Your Hero" 
+                        className={styles.heroImage}
+                        onError={(e) => { 
+                          console.error('Failed to display your hero image');
+                          (e.target as HTMLImageElement).style.display = 'none'; 
+                        }}
+                      />
+                    ) : (
+                      <div className={styles.heroNameBox}>{data.yourHero}</div>
+                    )}
+                    {data.result === 0 && (
+                      <div className={styles.winnerBadge}>Winner!</div>
+                    )}
+                  </div>
+                </div>
+                <div className={styles.heroVsLabel}>VS</div>
+                <div className={styles.heroColumn}>
+                  <p className={styles.heroLabel}>Opponent Hero</p>
+                  <div className={styles.heroImageWrapper}>
+                    {heroDataUrls.opponentHero ? (
+                      <img 
+                        src={heroDataUrls.opponentHero} 
+                        alt="Opponent Hero" 
+                        className={styles.heroImage}
+                        onError={(e) => { 
+                          console.error('Failed to display opponent hero image');
+                          (e.target as HTMLImageElement).style.display = 'none'; 
+                        }}
+                      />
+                    ) : (
+                      <div className={styles.heroNameBox}>{data.opponentHero}</div>
+                    )}
+                    {data.result === 1 && (
+                      <div className={styles.winnerBadge}>Winner!</div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
           
           {/* Watermark - only visible in exports */}
           <div className={styles.watermark}>

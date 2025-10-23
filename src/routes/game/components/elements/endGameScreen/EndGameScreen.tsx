@@ -14,6 +14,7 @@ import { PiFileCsvFill, PiCameraFill } from "react-icons/pi";
 
 const EndGameScreen = () => {
   const gameInfo = useAppSelector(getGameInfo, shallowEqual);
+  const gameState = useAppSelector((state: any) => state.game, shallowEqual);
   const [playerID, setPlayerID] = useState(gameInfo.playerID === 2 ? 2 : 1);
   const [showStats, setShowStats] = useState(true);
   const [showFullLog, setShowFullLog] = useState(false);
@@ -30,6 +31,11 @@ const EndGameScreen = () => {
     [styles.reduced]: !showStats
   });
   const fullLogClasses = classNames(styles.fullLog, {});
+
+  const playerOne = gameState?.playerOne;
+  const playerTwo = gameState?.playerTwo;
+  const yourHero = playerID === 1 ? playerOne?.Hero?.cardNumber : playerTwo?.Hero?.cardNumber;
+  const opponentHero = playerID === 1 ? playerTwo?.Hero?.cardNumber : playerOne?.Hero?.cardNumber;
 
   if (!showModal) return null;
 
@@ -59,7 +65,17 @@ const EndGameScreen = () => {
       );
     }
   } else {
-    content = <EndGameStats ref={endGameStatsRef} {...(data as EndGameData)} playerID={playerID} />;
+    const endGameDataWithHeroes: EndGameData = {
+      ...(data as EndGameData),
+      yourHero: yourHero,
+      opponentHero: opponentHero
+    };
+    content = (
+      <EndGameStats 
+        ref={endGameStatsRef} 
+        {...endGameDataWithHeroes}
+      />
+    );
   }
 
   const switchPlayer = () => {

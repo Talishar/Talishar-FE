@@ -108,6 +108,88 @@
   white-space: nowrap;
 }
 
+.heroPortraitsContainer {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 6px;
+  padding: 1rem;
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.heroTitle {
+  color: var(--primary);
+  font-size: 1.1em;
+  font-weight: 600;
+  margin: 0;
+}
+
+.heroPortraits {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  width: 100%;
+}
+
+.heroColumn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.heroLabel {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.95em;
+  font-weight: 500;
+  margin: 0;
+}
+
+.heroImageWrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.heroImage {
+  max-width: 150px;
+  max-height: 200px;
+  width: auto;
+  height: auto;
+  border-radius: 6px;
+  border: 2px solid var(--primary);
+  box-shadow: 0 4px 12px rgba(255, 184, 77, 0.2);
+  object-fit: cover;
+}
+
+.winnerBadge {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  color: var(--primary);
+  font-weight: 700;
+  font-size: 1.1em;
+  text-shadow: 
+    -1px -1px 0 #000,
+    1px -1px 0 #000,
+    -1px 1px 0 #000,
+    1px 1px 0 #000,
+    -2px 0 0 #000,
+    2px 0 0 #000,
+    0 -2px 0 #000,
+    0 2px 0 #000;
+  z-index: 10;
+}
+
+.heroVsLabel {
+  color: var(--primary);
+  font-weight: 700;
+  font-size: 1.2em;
+  white-space: nowrap;
+}
+
 .disclaimer {
   font-size: 0.9em;
   color: rgba(255, 255, 255, 0.5);
@@ -128,6 +210,11 @@
   background: rgba(255, 184, 77, 0.1);
   border-radius: 8px;
   border: 1px solid rgba(255, 184, 77, 0.3);
+}
+
+/* Hero Portraits - shown only in exports */
+.showOnExport {
+  display: none;
 }
 
 .watermarkContent {
@@ -329,7 +416,6 @@
   }
 }
 
-/* iPad and Tablet optimizations */
 @media (max-width: 1024px) {
   .endGameStats {
     padding: 0.75rem;
@@ -494,6 +580,18 @@
     margin-top: 0.25rem;
   }
 
+  .heroPortraitsContainer {
+    padding: 0.75rem;
+  }
+
+  .heroPortraits {
+    gap: 1rem;
+  }
+
+  .heroImage {
+    max-width: 120px;
+  }
+
 }
 
 @media (max-width: 480px) {
@@ -541,5 +639,25 @@
   .infoLabel,
   .infoValue {
     font-size: 1.5em;
+  }
+
+  .heroPortraitsContainer {
+    padding: 0.5rem;
+  }
+
+  .heroPortraits {
+    gap: 0.75rem;
+  }
+
+  .heroImage {
+    max-width: 100px;
+  }
+
+  .heroVsLabel {
+    font-size: 1em;
+  }
+
+  .heroTitle {
+    font-size: 1em;
   }
 }
