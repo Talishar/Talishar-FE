@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo } from 'react';
 import { useAppDispatch } from 'app/Hooks';
 import classNames from 'classnames';
-import { GAME_FORMAT, GAME_VISIBILITY, AI_DECK } from 'appConstants';
+import { GAME_FORMAT, GAME_VISIBILITY, AI_DECK, isPreconFormat } from 'appConstants';
 import {
   useCreateGameMutation,
   useGetFavoriteDecksQuery
@@ -45,13 +45,27 @@ const preconDeckNames = [
   "Ira, Scarlet Revenger",
 ];
 
+// Map precon deck names to hero card IDs for image display
+const preconDeckHeroes = [
+  "EVO004", // Maxx
+  "ROS007", // Aurora
+  "AJV001", // Jarl
+  "EVO001", // Dash
+  "ARC038", // Azalea
+  "MON029", // Boltyn
+  "HVY001", // Kayo
+  "SEA043", // Gravy
+  "HER123"  // Ira
+];
+
 // Create sorted arrays for the precon decks
 const sortedPreconDecks = preconDeckNames
-  .map((name, index) => ({ name, link: preconDecklinks[index] }))
+  .map((name, index) => ({ name, link: preconDecklinks[index], hero: preconDeckHeroes[index] }))
   .sort((a, b) => a.name.localeCompare(b.name));
 
 const sortedPreconDeckNames = sortedPreconDecks.map(deck => deck.name);
 const sortedPreconDecklinks = sortedPreconDecks.map(deck => deck.link);
+const sortedPreconDeckHeroes = sortedPreconDecks.map(deck => deck.hero);
 
 // Helper function to shorten format names
 const shortenFormat = (format: string): string => {
@@ -75,7 +89,8 @@ const CreateGame = () => {
     handleSubmit,
     setError,
     reset,
-    setValue
+    setValue,
+    watch
   } = useForm<CreateGameAPI>({
     mode: 'onBlur',
     resolver: yupResolver(validationSchema)
@@ -87,11 +102,12 @@ const CreateGame = () => {
       fabdb: searchParams.get('fabdb') ?? '',
       deckTestMode: false,
       format:
-        searchParams.get('format') ?? isLoggedIn
+        searchParams.get('format') ??
+        (isLoggedIn
           ? data?.lastFormat !== undefined
             ? data.lastFormat
             : GAME_FORMAT.CLASSIC_CONSTRUCTED
-          : GAME_FORMAT.OPEN_CC,
+          : GAME_FORMAT.OPEN_CC),
       visibility:
         searchParams.get('visibility') ??
         (isLoggedIn
@@ -116,6 +132,18 @@ const CreateGame = () => {
   const [selectedHeroes, setSelectedHeroes] = React.useState<string[]>([]);
   const [gameDescription, setGameDescription] = React.useState('');
   const [selectedFavoriteDeck, setSelectedFavoriteDeck] = React.useState<string>(initialValues.favoriteDecks || '');
+  const [selectedPreconDeck, setSelectedPreconDeck] = React.useState<string>(sortedPreconDecklinks[0]);
+
+  const formFormat = watch('format');
+
+  // Debug logging
+  React.useEffect(() => {
+  }, [selectedFormat, formFormat]);
+
+  // Sync selectedFormat with form field
+  React.useEffect(() => {
+    setValue('format', selectedFormat);
+  }, [selectedFormat, setValue]);
 
   // Get unique hero names (no duplicates)
   const uniqueHeroes = useMemo(() => {
@@ -125,7 +153,8 @@ const CreateGame = () => {
 
   const handleFormatChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedFormat(e.target.value);
-    if (e.target.value === GAME_FORMAT.PRECON) {
+    if (isPreconFormat(e.target.value)) {
+      setSelectedPreconDeck(sortedPreconDecklinks[0]);
       setValue('fabdb', sortedPreconDecklinks[0]);
     }
   };
@@ -173,6 +202,7 @@ const CreateGame = () => {
     setGameDescription(initialValues.gameDescription || '');
     setSelectedHeroes([]);
     setSelectedFavoriteDeck(initialValues.favoriteDecks || '');
+    setSelectedPreconDeck(sortedPreconDecklinks[0]);
   }, [initialValues, reset]);
 
   // Convert favorite decks to ImageSelect options
@@ -184,6 +214,15 @@ const CreateGame = () => {
       imageUrl: generateCroppedImageUrl(deck.hero)
     }));
   }, [data?.favoriteDecks]);
+
+  // Convert precon decks to ImageSelect options
+  const preconDeckOptions: ImageSelectOption[] = React.useMemo(() => {
+    return sortedPreconDecklinks.map((link, index) => ({
+      value: link,
+      label: sortedPreconDeckNames[index],
+      imageUrl: generateCroppedImageUrl(sortedPreconDeckHeroes[index])
+    }));
+  }, []);
 
   const onSubmit: SubmitHandler<CreateGameAPI> = async (
     values: CreateGameAPI
@@ -233,7 +272,7 @@ const CreateGame = () => {
           </p> */}
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className={styles.formInner}>
-            {isLoggedIn && !isLoading && (
+            {isLoggedIn && !isLoading && !isPreconFormat(formFormat || selectedFormat) && (
               <label>
                 Favorite Deck
                 <ImageSelect
@@ -271,22 +310,25 @@ const CreateGame = () => {
             />
             <fieldset>
               <label>
-                {selectedFormat === GAME_FORMAT.PRECON ? (
+                {isPreconFormat(formFormat || selectedFormat) ? (
                   <>
-                    Decks
-                    <select
-                      id="fabdb"
-                      aria-label="Decks"
-                      {...register('fabdb')}
+                    Preconstructed Deck
+                    <ImageSelect
+                      id="preconDecks"
+                      options={preconDeckOptions}
+                      value={selectedPreconDeck}
+                      onChange={(value) => {
+                        setSelectedPreconDeck(value);
+                        setValue('fabdb', value);
+                      }}
+                      placeholder="Select a deck"
                       aria-invalid={errors.deck?.message ? 'true' : undefined}
-                      defaultValue={sortedPreconDecklinks[0]}
-                    >
-                      {sortedPreconDecklinks.map((link, index) => (
-                        <option key={index} value={link}>
-                          {sortedPreconDeckNames[index]}
-                        </option>
-                      ))}
-                    </select>
+                    />
+                    <input
+                      type="hidden"
+                      {...register('fabdb')}
+                      value={selectedPreconDeck}
+                    />
                   </>
                 ) : (
                   <>
