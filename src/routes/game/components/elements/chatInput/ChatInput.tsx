@@ -54,6 +54,7 @@ const CHAT_WHEEL = new Map<number, string>([
   [21, 'Yes']
 ]);
 
+
 interface ChatOptionsProps {
   setModalDisplay: (arg0: boolean) => void;
 }
