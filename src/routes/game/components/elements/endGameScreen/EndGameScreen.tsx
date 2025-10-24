@@ -14,9 +14,11 @@ import { PiFileCsvFill, PiCameraFill } from "react-icons/pi";
 
 const EndGameScreen = () => {
   const gameInfo = useAppSelector(getGameInfo, shallowEqual);
+  const gameState = useAppSelector((state: any) => state.game, shallowEqual);
   const [playerID, setPlayerID] = useState(gameInfo.playerID === 2 ? 2 : 1);
   const [showStats, setShowStats] = useState(true);
   const [showFullLog, setShowFullLog] = useState(false);
+  const [bothPlayersData, setBothPlayersData] = useState<{ [key: number]: any }>({});
   const { isPatron } = useAuth();
   const endGameStatsRef = useRef<EndGameStatsRef>(null);
   const { data, isLoading, error } = useGetPopUpContentQuery({
@@ -25,11 +27,26 @@ const EndGameScreen = () => {
     authKey: gameInfo.authKey,
     popupType: END_GAME_STATS
   });
+  
+  // Cache both players' data as they're loaded
+  React.useEffect(() => {
+    if (data && playerID) {
+      setBothPlayersData(prev => ({
+        ...prev,
+        [playerID]: data
+      }));
+    }
+  }, [data, playerID]);
   const showModal = useShowModal();
   const cardListBoxClasses = classNames(styles.cardListBox, {
     [styles.reduced]: !showStats
   });
   const fullLogClasses = classNames(styles.fullLog, {});
+
+  const playerOne = gameState?.playerOne;
+  const playerTwo = gameState?.playerTwo;
+  const yourHero = playerID === 1 ? playerOne?.Hero?.cardNumber : playerTwo?.Hero?.cardNumber;
+  const opponentHero = playerID === 1 ? playerTwo?.Hero?.cardNumber : playerOne?.Hero?.cardNumber;
 
   if (!showModal) return null;
 
@@ -59,7 +76,21 @@ const EndGameScreen = () => {
       );
     }
   } else {
-    content = <EndGameStats ref={endGameStatsRef} {...(data as EndGameData)} playerID={playerID} />;
+    const endGameDataWithHeroes: EndGameData = {
+      ...(data as EndGameData),
+      yourHero: yourHero,
+      opponentHero: opponentHero,
+      playerID: playerID,
+      authKey: gameInfo.authKey,
+      gameID: gameInfo.gameID?.toString(),
+      bothPlayersData: bothPlayersData
+    };
+    content = (
+      <EndGameStats 
+        ref={endGameStatsRef} 
+        {...endGameDataWithHeroes}
+      />
+    );
   }
 
   const switchPlayer = () => {
@@ -75,11 +106,19 @@ const EndGameScreen = () => {
   };
 
   const handleExportStats = () => {
-    endGameStatsRef.current?.exportScreenshot();
+    if (!endGameStatsRef.current) {
+      console.error('Export ref not available');
+      return;
+    }
+    endGameStatsRef.current.exportScreenshot();
   };
 
-  const handleExportCSV = () => {
-    endGameStatsRef.current?.exportCSV();
+  const handleExportCSV = async () => {
+    if (!endGameStatsRef.current) {
+      console.error('Export CSV ref not available');
+      return;
+    }
+    await endGameStatsRef.current.exportCSV();
   };
 
   return (

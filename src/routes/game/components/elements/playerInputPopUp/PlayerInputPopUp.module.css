@@ -28,7 +28,7 @@
 }
 
 .title {
-  font-size: 18px;
+  font-size: 0.9em;
   padding: 0px;
   margin: 0px;
 }
@@ -56,7 +56,8 @@
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  min-width: calc(6dvw * var(--card-scale));
+  min-width: calc(15dvw * var(--card-scale));
+  max-width: calc(15dvw * var(--card-scale));
   height: 32px;
   border-radius: 5px;
   border: 1px solid var(--primary);
@@ -101,6 +102,7 @@
   height: 100%;
   max-height: 100%;
   padding: 0.5em;
+  -webkit-overflow-scrolling: touch;
 }
 
 .form {
@@ -251,4 +253,125 @@
 .newOptForm.cardsContainer {
   height: 90%;
   width: 100%;
+}
+
+/* Card position indicators */
+.cardWrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.positionLabel {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  font-weight: bold;
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 3px;
+  letter-spacing: 1px;
+  z-index: 10;
+}
+
+.firstLabel {
+  background-color: var(--primary);
+  color: black;
+  border : 1px solid var(--near-black);
+}
+
+.lastLabel {
+  background-color: black;
+  color: var(--primary);
+  border: 1px solid var(--primary);
+}
+
+/* Responsive styles for mobile and tablet */
+@media (orientation: portrait) {
+  .positionLabel {
+    font-size: 8px;
+    padding: 1px 4px;
+    border-radius: 2px;
+    letter-spacing: 0.5px;
+  }
+}
+
+@media (max-width: 768px) {
+  .positionLabel {
+    font-size: 8px;
+    padding: 1px 4px;
+    border-radius: 2px;
+    letter-spacing: 0.5px;
+  }
+}
+
+@media (max-width: 480px) {
+  .positionLabel {
+    font-size: 7px;
+    padding: 1px 3px;
+    border-radius: 2px;
+    letter-spacing: 0.3px;
+  }
+}
+
+/* Submit button responsive fixes */
+@media (orientation: portrait) {
+  .newOptForm.submitButtonDiv {
+    width: auto;
+    min-width: 120px;
+    max-width: 200px;
+    margin-bottom: 15px;
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 768px) {
+  .newOptForm.submitButtonDiv {
+    width: auto;
+    min-width: 100px;
+    max-width: 180px;
+    margin-bottom: 12px;
+    padding: 8px 16px;
+    font-size: 13px;
+  }
+
+  .buttonDiv {
+    font-size: 0.7em;
+  }
+
+  .topAndBottomText {
+    font-size: 0.7em;
+  }
+
+  .reorderCards {
+    margin-top: 0;
+    height: 40%;
+  }
+}
+
+@media (max-width: 480px) {
+  .newOptForm.submitButtonDiv {
+    width: auto;
+    min-width: 80px;
+    max-width: 150px;
+    margin-bottom: 10px;
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+
+  .buttonDiv {
+    font-size: 0.7em;
+  }
+
+  .topAndBottomText {
+    font-size: 0.7em;
+  }
+
+    .reorderCards {
+    margin-top: 0;
+    height: 40%
+  }
 }

@@ -5,9 +5,11 @@ import EndGameMenuOptions from '../endGameMenuOptions/EndGameMenuOptions';
 import styles from './EndGameStats.module.css';
 import { NumberLiteralType } from 'typescript';
 import useAuth from 'hooks/useAuth';
-import { useState, useMemo, useRef, useImperativeHandle, forwardRef } from 'react';
+import { useState, useMemo, useRef, useImperativeHandle, forwardRef, useEffect } from 'react';
 import html2canvas from 'html2canvas';
 import TalisharLogo from 'img/TalisharLogo.webp';
+import { generateCroppedImageUrl } from 'utils/cropImages';
+import { BACKEND_URL } from 'appConstants';
 
 export interface EndGameData {
   deckID?: string;
@@ -16,6 +18,11 @@ export interface EndGameData {
   result?: number;
   turns?: number;
   playerID?: number;
+  yourHero?: string;
+  opponentHero?: string;
+  winner?: number;
+  authKey?: string;
+  bothPlayersData?: { [key: number]: any };
   cardResults: CardResult[];
   turnResults: { [key: string]: TurnResult };
   totalDamageThreatened?: number;
@@ -62,7 +69,7 @@ export interface TurnResult {
 
 export interface EndGameStatsRef {
   exportScreenshot: () => Promise<void>;
-  exportCSV: () => void;
+  exportCSV: () => Promise<void>;
 }
 
 const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
@@ -71,9 +78,62 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
   const statsRef = useRef<HTMLDivElement>(null);
   const [isExporting, setIsExporting] = useState(false);
+  const [heroDataUrls, setHeroDataUrls] = useState<{ yourHero?: string; opponentHero?: string }>({});
   
   const [turnSortField, setTurnSortField] = useState<'turnNo' | 'cardsUsed' | 'cardsBlocked' | 'cardsPitched' | 'cardsLeft' | 'resourcesUsed' | 'resourcesLeft' | 'damageThreatened' | 'damageDealt' | 'damageBlocked' | 'damagePrevented' | 'damageTaken' | 'lifeGained' | 'totalValue' | null>(null);
   const [turnSortDirection, setTurnSortDirection] = useState<'asc' | 'desc'>('desc');
+
+  const imageToDataUrl = async (heroName: string): Promise<string | null> => {
+    try {
+      const response = await fetch(`${BACKEND_URL}GetHeroImage.php?hero=${encodeURIComponent(heroName)}`);
+      
+      if (!response.ok) {
+        console.error('Failed to fetch hero image from backend:', response.status);
+        return null;
+      }
+      
+      const data = await response.json();
+      
+      if (data.error) {
+        console.error('Backend error:', data.error);
+        return null;
+      }
+      
+      if (data.dataUrl) {
+        return data.dataUrl;
+      }
+      
+      return null;
+    } catch (error) {
+      console.error('Failed to fetch hero image from backend:', heroName, error);
+      return null;
+    }
+  };
+
+  // Load hero images on component mount or when data changes
+  useEffect(() => {
+    const loadHeroImages = async () => {
+      const urls: { yourHero?: string; opponentHero?: string } = {};
+      
+      if (data.yourHero) {
+        const dataUrl = await imageToDataUrl(data.yourHero);
+        if (dataUrl) {
+          urls.yourHero = dataUrl;
+        }
+      }
+      
+      if (data.opponentHero) {
+        const dataUrl = await imageToDataUrl(data.opponentHero);
+        if (dataUrl) {
+          urls.opponentHero = dataUrl;
+        }
+      }
+      
+      setHeroDataUrls(urls);
+    };
+    
+    loadHeroImages();
+  }, [data.yourHero, data.opponentHero]);
 
   const handleSort = (field: 'played' | 'blocked' | 'pitched' | 'hits') => {
     if (sortField === field) {
@@ -106,32 +166,39 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
       // Show watermark and hide card images for export
       const hideElements = statsRef.current.querySelectorAll(`.${styles.hideOnExport}`);
       const watermark = statsRef.current.querySelector(`.${styles.watermark}`) as HTMLElement;
+      const heroPortraits = statsRef.current.querySelector(`.${styles.showOnExport}`) as HTMLElement;
       
       // Hide card image column
       hideElements.forEach((el) => {
         (el as HTMLElement).style.display = 'none';
       });
       
-      // Show watermark
       if (watermark) {
         watermark.style.display = 'block';
+      }
+
+      if (heroPortraits) {
+        heroPortraits.style.display = 'flex';
       }
       
       const canvas = await html2canvas(statsRef.current, {
         backgroundColor: '#0a0a0a',
-        scale: 2, // Higher quality
+        scale: 2,
         logging: false,
         useCORS: true,
         allowTaint: true,
       });
       
-      // Restore original visibility
       hideElements.forEach((el) => {
         (el as HTMLElement).style.display = '';
       });
       
       if (watermark) {
         watermark.style.display = 'none';
+      }
+
+      if (heroPortraits) {
+        heroPortraits.style.display = 'none';
       }
       
       // Convert to blob and download
@@ -153,90 +220,132 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
     }
   };
 
-  const handleExportCSV = () => {
+  const handleExportCSV = async () => {
     try {
-      // Prepare CSV content
+      console.log('=== Starting CSV export ===');
+      console.log('Current player ID:', data.playerID);
+      console.log('Both players data available:', data.bothPlayersData);
+      
       const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5);
       let csvContent = 'data:text/csv;charset=utf-8,';
       
-      // Add Game Summary Section
-      csvContent += 'GAME SUMMARY\n';
-      csvContent += `Game ID,${data.gameID || 'N/A'}\n`;
-      csvContent += `Deck ID,${data.deckID || 'N/A'}\n`;
+      csvContent += '========== STATS PROVIDED BY TALISHAR ==========\n';
+      csvContent += 'Support our work on Patreon!\n';
+      csvContent += 'https://linktr.ee/Talishar\n\n';
       
-      // Determine first player label
-      let firstPlayerLabel = 'N/A';
-      if (data.firstPlayer && data.playerID) {
-        // If firstPlayer matches the current playerID we're viewing, it's "You", otherwise "Opponent"
-        firstPlayerLabel = data.firstPlayer === data.playerID ? 'You' : 'Opponent';
-      } else if (data.firstPlayer) {
-        firstPlayerLabel = data.firstPlayer.toString();
-      }
-      csvContent += `First Player,${firstPlayerLabel}\n`;
+      const formatHeroName = (heroName: string): string => {
+        return heroName
+          .split('_')
+          .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+          .join(' ');
+      };
       
-      csvContent += `Result,${data.result || 'N/A'}\n`;
-      csvContent += `Turns,${data.turns || 'N/A'}\n`;
-      csvContent += `Your Time,${fancyTimeFormat(data.yourTime)}\n`;
-      csvContent += `Total Game Time,${fancyTimeFormat(data.totalTime)}\n\n`;
-      
-      // Add Statistics Section
-      csvContent += 'GAME STATISTICS\n';
-      csvContent += `Avg Value per Turn,${isPatron ? data.averageValuePerTurn : 'Patreon Only'}\n`;
-      csvContent += `Avg Damage Threatened per Turn,${data.averageDamageThreatenedPerTurn || 0}\n`;
-      csvContent += `Avg Damage Dealt per Turn,${data.averageDamageDealtPerTurn || 0}\n`;
-      csvContent += `Avg Damage Threatened per Card,${data.averageDamageThreatenedPerCard || 0}\n`;
-      csvContent += `Avg Resources Used per Turn,${data.averageResourcesUsedPerTurn || 0}\n`;
-      csvContent += `Avg Cards Left Over per Turn,${data.averageCardsLeftOverPerTurn || 0}\n`;
-      if (!isPatron) {
-        csvContent += `Avg Combat Value per Turn,${data.averageCombatValuePerTurn || 0}\n`;
-      }
-      csvContent += `Total Damage Threatened,${data.totalDamageThreatened || 0}\n`;
-      csvContent += `Total Damage Dealt,${data.totalDamageDealt || 0}\n`;
-      csvContent += `Total Damage Prevented,${isPatron ? (data.totalDamagePrevented || 0) : 'Patreon Only'}\n`;
-      csvContent += `Total Life Gained,${isPatron ? (data.totalLifeGained || 0) : 'Patreon Only'}\n\n`;
-      
-      // Add Card Play Stats Section
-      csvContent += 'CARD PLAY STATS\n';
-      csvContent += 'Card Name,Played,Blocked,Pitched,Times Hit';
-      if (numCharged > 0) csvContent += ',Times Charged';
-      if (numKatsuDiscard > 0) csvContent += ',Times Katsu Discarded';
-      csvContent += '\n';
-      
-      const cardsToExport = sortedCardResults || data.cardResults;
-      cardsToExport?.forEach((result) => {
-        const cardName = result.cardName.replace(/,/g, ';'); // Escape commas in card names
-        const cardNameWithPitch = result.pitchValue > 0 ? `${cardName} (${result.pitchValue})` : cardName;
-        csvContent += `"${cardNameWithPitch}",${result.played},${result.blocked},${result.pitched},${result.hits}`;
-        if (numCharged > 0) csvContent += `,${result.charged}`;
-        if (numKatsuDiscard > 0) csvContent += `,${result.katsuDiscard}`;
-        csvContent += '\n';
-      });
-      
-      // Add Turn by Turn Breakdown Section
-      csvContent += '\nTURN BY TURN BREAKDOWN\n';
-      csvContent += 'Turn,Cards Played,Cards Blocked,Cards Pitched,Cards Left,Resources Used,Resources Left,';
-      csvContent += 'Damage Threatened,Damage Dealt,Damage Blocked,Damage Prevented,Damage Taken,Life Gained,Total Value\n';
-      
-      if (sortedTurnResults && sortedTurnResults.length > 0) {
-        sortedTurnResults.forEach((turnData, ix) => {
-          const turnNo = Object.keys(data.turnResults).indexOf(turnData.key) + 1;
-          const totalValue = isPatron ? (+turnData.damageThreatened + +turnData.damageBlocked + +turnData.damagePrevented + +turnData.lifeGained) : 'X';
-          csvContent += `${turnNo},${turnData.cardsUsed},${turnData.cardsBlocked},${turnData.cardsPitched},${turnData.cardsLeft},`;
-          csvContent += `${turnData.resourcesUsed},${turnData.resourcesLeft},`;
-          csvContent += `${isPatron ? turnData.damageThreatened : 'X'},${turnData.damageDealt},`;
-          csvContent += `${isPatron ? turnData.damageBlocked : 'X'},${isPatron ? turnData.damagePrevented : 'X'},`;
-          csvContent += `${turnData.damageTaken},${isPatron ? turnData.lifeGained : 'X'},${totalValue}\n`;
+      const generatePlayerStatsSection = (playerData: EndGameData, playerName: string, heroName?: string) => {
+        let content = `\n========== ${playerName} ==========\n`;
+        if (heroName) {
+          const formattedHeroName = formatHeroName(heroName);
+          content += `Hero: ${formattedHeroName}\n`;
+        }
+        content += `\nGAME SUMMARY\n`;
+        
+        let firstPlayerLabel = 'N/A';
+        if (playerData.firstPlayer !== undefined && playerData.firstPlayer !== null) {
+          if (playerData.playerID && playerData.firstPlayer === playerData.playerID) {
+            firstPlayerLabel = 'Yes';
+          } else if (playerData.playerID && playerData.firstPlayer !== playerData.playerID) {
+            firstPlayerLabel = 'No';
+          } else {
+            firstPlayerLabel = playerData.firstPlayer.toString();
+          }
+        }
+        content += `First Player,${firstPlayerLabel}\n`;
+        
+        let resultLabel = 'N/A';
+        if (playerData.result !== undefined && playerData.result !== null) {
+          if (playerData.playerID) {
+            resultLabel = playerData.result === 0 ? 'Winner' : 'Loser';
+          } else {
+            resultLabel = playerData.result === 0 ? 'Player 1 Wins' : 'Player 2 Wins';
+          }
+        }
+        content += `Result,${resultLabel}\n`;
+        content += `Turns,${playerData.turns || 'N/A'}\n`;
+        content += `Your Time,${fancyTimeFormat(playerData.yourTime)}\n`;
+        content += `Total Game Time,${fancyTimeFormat(playerData.totalTime)}\n\n`;
+        
+        content += 'GAME STATISTICS\n';
+        content += `Avg Value per Turn,${isPatron ? playerData.averageValuePerTurn : 'Patreon Only'}\n`;
+        content += `Avg Damage Threatened per Turn,${playerData.averageDamageThreatenedPerTurn || 0}\n`;
+        content += `Avg Damage Dealt per Turn,${playerData.averageDamageDealtPerTurn || 0}\n`;
+        content += `Avg Damage Threatened per Card,${playerData.averageDamageThreatenedPerCard || 0}\n`;
+        content += `Avg Resources Used per Turn,${playerData.averageResourcesUsedPerTurn || 0}\n`;
+        content += `Avg Cards Left Over per Turn,${playerData.averageCardsLeftOverPerTurn || 0}\n`;
+        if (!isPatron) {
+          content += `Avg Combat Value per Turn,${playerData.averageCombatValuePerTurn || 0}\n`;
+        }
+        content += `Total Damage Threatened,${playerData.totalDamageThreatened || 0}\n`;
+        content += `Total Damage Dealt,${playerData.totalDamageDealt || 0}\n`;
+        content += `Total Damage Prevented,${isPatron ? (playerData.totalDamagePrevented || 0) : 'Patreon Only'}\n`;
+        content += `Total Life Gained,${isPatron ? (playerData.totalLifeGained || 0) : 'Patreon Only'}\n\n`;
+        
+        content += 'CARD PLAY STATS\n';
+        content += 'Card Name,Played,Blocked,Pitched,Times Hit';
+        
+        const hasCharged = playerData.cardResults?.some(c => c.charged > 0);
+        const hasKatsuDiscard = playerData.cardResults?.some(c => c.katsuDiscard > 0);
+        
+        if (hasCharged) content += ',Times Charged';
+        if (hasKatsuDiscard) content += ',Times Katsu Discarded';
+        content += '\n';
+        
+        playerData.cardResults?.forEach((result) => {
+          const cardName = result.cardName.replace(/,/g, ';');
+          const cardNameWithPitch = result.pitchValue > 0 ? `${cardName} (${result.pitchValue})` : cardName;
+          content += `"${cardNameWithPitch}",${result.played},${result.blocked},${result.pitched},${result.hits}`;
+          if (hasCharged) content += `,${result.charged}`;
+          if (hasKatsuDiscard) content += `,${result.katsuDiscard}`;
+          content += '\n';
         });
-      } else if (data.turnResults && Object.keys(data.turnResults).length > 0) {
-        Object.keys(data.turnResults).forEach((key, ix) => {
-          const turn = data.turnResults[key];
-          const totalValue = isPatron ? (+turn.damageThreatened + +turn.damageBlocked + +turn.damagePrevented + +turn.lifeGained) : 'X';
-          csvContent += `${ix + 1},${turn.cardsUsed},${turn.cardsBlocked},${turn.cardsPitched},${turn.cardsLeft},`;
-          csvContent += `${turn.resourcesUsed},${turn.resourcesLeft},`;
-          csvContent += `${isPatron ? turn.damageThreatened : 'X'},${turn.damageDealt},`;
-          csvContent += `${isPatron ? turn.damageBlocked : 'X'},${isPatron ? turn.damagePrevented : 'X'},`;
-          csvContent += `${turn.damageTaken},${isPatron ? turn.lifeGained : 'X'},${totalValue}\n`;
-        });
+        
+        content += '\nTURN BY TURN BREAKDOWN\n';
+        content += 'Turn,Cards Played,Cards Blocked,Cards Pitched,Cards Left,Resources Used,Resources Left,';
+        content += 'Damage Threatened,Damage Dealt,Damage Blocked,Damage Prevented,Damage Taken,Life Gained,Total Value\n';
+        
+        if (playerData.turnResults && Object.keys(playerData.turnResults).length > 0) {
+          Object.keys(playerData.turnResults).forEach((key, ix) => {
+            const turn = playerData.turnResults[key];
+            const totalValue = isPatron ? (+turn.damageThreatened + +turn.damageBlocked + +turn.damagePrevented + +turn.lifeGained) : 'X';
+            content += `${ix + 1},${turn.cardsUsed},${turn.cardsBlocked},${turn.cardsPitched},${turn.cardsLeft},`;
+            content += `${turn.resourcesUsed},${turn.resourcesLeft},`;
+            content += `${isPatron ? turn.damageThreatened : 'X'},${turn.damageDealt},`;
+            content += `${isPatron ? turn.damageBlocked : 'X'},${isPatron ? turn.damagePrevented : 'X'},`;
+            content += `${turn.damageTaken},${isPatron ? turn.lifeGained : 'X'},${totalValue}\n`;
+          });
+        }
+        
+        return content;
+      };
+      
+      csvContent += generatePlayerStatsSection(data, `PLAYER ${data.playerID}`, data.yourHero);
+      
+      if (data.bothPlayersData) {
+        const opponentPlayerID = data.playerID === 1 ? 2 : 1;
+        const opponentData = data.bothPlayersData[opponentPlayerID];
+        
+        if (opponentData && opponentData.cardResults) {
+          console.log('Using cached opponent data for player', opponentPlayerID);
+          const opponentDataWithID = {
+            ...opponentData,
+            playerID: opponentPlayerID
+          };
+          csvContent += generatePlayerStatsSection(opponentDataWithID as EndGameData, `PLAYER ${opponentPlayerID}`, data.opponentHero);
+        } else {
+          console.warn('Opponent data not yet loaded. Please click "Switch player stats" to load opponent data before exporting.');
+          csvContent += '\n\nNote: Opponent stats not available. Click "Switch player stats" to load them first.\n';
+        }
+      } else {
+        console.warn('No bothPlayersData cache available');
+        csvContent += '\n\nNote: Opponent stats not available\n';
       }
       
       // Create and trigger download
@@ -245,10 +354,13 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
       link.setAttribute('href', encodedUri);
       link.setAttribute('download', `game-stats-${timestamp}.csv`);
       document.body.appendChild(link);
+      console.log('Triggering CSV download');
       link.click();
       document.body.removeChild(link);
+      console.log('CSV download completed');
     } catch (error) {
       console.error('Error exporting CSV:', error);
+      alert(`Error exporting CSV: ${error}`);
     }
   };
 
@@ -529,6 +641,58 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
               <span className={styles.infoValue}>{fancyTimeFormat(data.totalTime)}</span>
             </div>
           </div>
+
+          {/* Hero Portraits Section */}
+          {data.yourHero && data.opponentHero && (
+            <div className={`${styles.heroPortraitsContainer} ${styles.showOnExport}`}>
+              <h3 className={styles.heroTitle}>Hero Matchup</h3>
+              <div className={styles.heroPortraits}>
+                <div className={styles.heroColumn}>
+                  <p className={styles.heroLabel}>Your Hero</p>
+                  <div className={styles.heroImageWrapper}>
+                    {heroDataUrls.yourHero ? (
+                      <img 
+                        src={heroDataUrls.yourHero} 
+                        alt="Your Hero" 
+                        className={styles.heroImage}
+                        onError={(e) => { 
+                          console.error('Failed to display your hero image');
+                          (e.target as HTMLImageElement).style.display = 'none'; 
+                        }}
+                      />
+                    ) : (
+                      <div className={styles.heroNameBox}>{data.yourHero}</div>
+                    )}
+                    {data.result === 0 && (
+                      <div className={styles.winnerBadge}>Winner!</div>
+                    )}
+                  </div>
+                </div>
+                <div className={styles.heroVsLabel}>VS</div>
+                <div className={styles.heroColumn}>
+                  <p className={styles.heroLabel}>Opponent Hero</p>
+                  <div className={styles.heroImageWrapper}>
+                    {heroDataUrls.opponentHero ? (
+                      <img 
+                        src={heroDataUrls.opponentHero} 
+                        alt="Opponent Hero" 
+                        className={styles.heroImage}
+                        onError={(e) => { 
+                          console.error('Failed to display opponent hero image');
+                          (e.target as HTMLImageElement).style.display = 'none'; 
+                        }}
+                      />
+                    ) : (
+                      <div className={styles.heroNameBox}>{data.opponentHero}</div>
+                    )}
+                    {data.result === 1 && (
+                      <div className={styles.winnerBadge}>Winner!</div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
           
           {/* Watermark - only visible in exports */}
           <div className={styles.watermark}>

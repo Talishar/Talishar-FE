@@ -18,11 +18,10 @@ import {
 } from 'react-router-dom';
 import { GameLocationState } from 'interface/GameLocationState';
 import { toast } from 'react-hot-toast';
-import { TimeoutId } from '@reduxjs/toolkit/dist/query/core/buildMiddleware/types';
 
 export const GameStateHandler = React.memo(() => {
-  const abortRef = useRef<AbortController>();
-  const timeOutRef = useRef<TimeoutId>();
+  const abortRef = useRef<AbortController | undefined>(undefined);
+  const timeOutRef = useRef<NodeJS.Timeout | undefined>(undefined);
   const navigate = useNavigate();
   const location = useLocation();
   const locationState = location.state as GameLocationState | undefined;
@@ -87,7 +86,7 @@ export const GameStateHandler = React.memo(() => {
             gameID: parseInt(gameID ?? gameName),
             playerID: 3,
             authKey: '',
-            isPrivate: false
+            isPrivateLobby: false
           },
           signal: abortRef.current?.signal,
           lastUpdate: 0
