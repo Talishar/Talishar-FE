@@ -8,6 +8,12 @@ import svgrPlugin from 'vite-plugin-svgr';
 export default ({ mode }: { mode: string }) => {
   process.env = { ...process.env, ...loadEnv(mode, process.cwd()) };
 
+  // Polyfill for Node.js crypto module in build environments
+  if (!global.crypto) {
+    const { webcrypto } = require('crypto');
+    global.crypto = webcrypto as Crypto;
+  }
+
   const devURL = !!process.env.VITE_BACKEND_URL
     ? process.env.VITE_BACKEND_URL
     : 'localhost';
@@ -21,22 +27,9 @@ export default ({ mode }: { mode: string }) => {
   return defineConfig({
     base: './',
     build: { 
-      outDir: './build',
-      rollupOptions: {
-        output: {
-          manualChunks: {}
-        }
-      }
+      outDir: './build'
     },
     plugins: [react(), viteTsconfigPaths(), svgrPlugin()],
-    ssr: {
-      noExternal: []
-    },
-    resolve: {
-      alias: {
-        crypto: 'crypto-browserify'
-      }
-    },
     server: {
       proxy: {
         '/api': {
