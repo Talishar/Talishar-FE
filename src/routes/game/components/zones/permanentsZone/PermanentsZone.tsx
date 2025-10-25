@@ -82,7 +82,7 @@ export default function PermanentsZone(prop: Displayrow) {
                   exit={{ opacity: 0, transition: { duration: 0.3, ease: 'easeOut' } }}                  
                   layout
                 >
-                  <CardDisplay card={cardStack.card} key={ix.toString()} />
+                  <CardDisplay card={cardStack.card} />
                   {cardStack.count > 1 && (
                     <div
                       title={`Stack of ${cardStack.count}`}
