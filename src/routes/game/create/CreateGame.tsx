@@ -133,6 +133,7 @@ const CreateGame = () => {
   const [gameDescription, setGameDescription] = React.useState('');
   const [selectedFavoriteDeck, setSelectedFavoriteDeck] = React.useState<string>(initialValues.favoriteDecks || '');
   const [selectedPreconDeck, setSelectedPreconDeck] = React.useState<string>(sortedPreconDecklinks[0]);
+  const [isInitialized, setIsInitialized] = React.useState(false);
 
   const formFormat = watch('format');
 
@@ -144,6 +145,13 @@ const CreateGame = () => {
   React.useEffect(() => {
     setValue('format', selectedFormat);
   }, [selectedFormat, setValue]);
+
+  // Sync selectedPreconDeck with form field for precon formats
+  React.useEffect(() => {
+    if (isPreconFormat(formFormat || selectedFormat) && isInitialized) {
+      setValue('fabdb', selectedPreconDeck);
+    }
+  }, [selectedPreconDeck, formFormat, selectedFormat, isInitialized, setValue]);
 
   // Get unique hero names (no duplicates)
   const uniqueHeroes = useMemo(() => {
@@ -203,7 +211,10 @@ const CreateGame = () => {
     setSelectedHeroes([]);
     setSelectedFavoriteDeck(initialValues.favoriteDecks || '');
     setSelectedPreconDeck(sortedPreconDecklinks[0]);
-  }, [initialValues, reset]);
+    // Ensure fabdb is set for precon decks on initial load
+    setValue('fabdb', sortedPreconDecklinks[0]);
+    setIsInitialized(true);
+  }, [initialValues, reset, setValue]);
 
   // Convert favorite decks to ImageSelect options
   const favoriteDeckOptions: ImageSelectOption[] = React.useMemo(() => {
