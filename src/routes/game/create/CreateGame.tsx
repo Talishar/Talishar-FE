@@ -213,8 +213,10 @@ const CreateGame = () => {
     setSelectedHeroes([]);
     setSelectedFavoriteDeck(initialValues.favoriteDecks || '');
     setSelectedPreconDeck(sortedPreconDecklinks[0]);
-    // Ensure fabdb is set for precon decks on initial load
-    setValue('fabdb', sortedPreconDecklinks[0]);
+    // Only set fabdb to precon deck if format is precon
+    if (isPreconFormat(initialValues.format)) {
+      setValue('fabdb', sortedPreconDecklinks[0]);
+    }
     setIsInitialized(true);
   }, [initialValues, reset, setValue]);
 
