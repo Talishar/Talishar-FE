@@ -5,7 +5,6 @@ import styles from './Header.module.scss';
 import TalisharLogo from '../../img/CoinLogo.png';
 import { BsGithub, BsPersonFill, BsShieldFillCheck } from 'react-icons/bs';
 import { FaDiscord, FaTwitter } from 'react-icons/fa';
-import { FaBluesky } from 'react-icons/fa6';
 import { RiLogoutBoxRLine } from 'react-icons/ri';
 import LanguageSelector from 'components/LanguageSelector/LanguageSelector';
 
@@ -71,7 +70,7 @@ const Header = () => {
               className={styles.social}
               title={'Bluesky Link'}
             >
-              <FaBluesky></FaBluesky>
+              <FaTwitter></FaTwitter>
             </a>
           </li>
           <li>

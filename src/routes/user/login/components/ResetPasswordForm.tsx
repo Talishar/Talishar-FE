@@ -7,13 +7,19 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { toast } from 'react-hot-toast';
-import { useAutoAnimate } from '@formkit/auto-animate/react';
+import autoAnimate from '@formkit/auto-animate';
+import { useRef, useEffect } from 'react';
 
 export const ResetPasswordForm = () => {
   const navigate = useNavigate();
   const [params] = useSearchParams();
   const [resetPassword] = useResetPasswordMutation();
-  const [parent] = useAutoAnimate();
+  const parent = useRef(null);
+  
+  useEffect(() => {
+    parent.current && autoAnimate(parent.current);
+  }, [parent]);
+
   const {
     register,
     handleSubmit,

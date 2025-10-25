@@ -4,18 +4,23 @@ import { Link, useNavigate } from 'react-router-dom';
 import classNames from 'classnames';
 import { SignUpType, signUpValidationSchema } from './validation';
 import { FaExclamationCircle } from 'react-icons/fa';
-import { useAutoAnimate } from '@formkit/auto-animate/react';
+import autoAnimate from '@formkit/auto-animate';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import useAuth from 'hooks/useAuth';
 import { toast } from 'react-hot-toast';
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 export const SignUpForm = () => {
   const [disclaimerOpen, setDisclaimerOpen] = useState(false);
   const { isLoggedIn } = useAuth();
   const [signup, signupResult] = useSignUpMutation();
-  const [parent] = useAutoAnimate();
+  const parent = useRef(null);
+  
+  useEffect(() => {
+    parent.current && autoAnimate(parent.current);
+  }, [parent]);
+
   const navigate = useNavigate();
 
   const {
