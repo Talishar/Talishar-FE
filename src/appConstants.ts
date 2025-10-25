@@ -169,6 +169,37 @@ export const GAME_FORMAT_NUMBER = {
   COMPETITIVE_SAGE: '15'
 };
 
+// Create a mapping from number format to string format for normalization
+const FORMAT_NUMBER_TO_STRING: { [key: string]: string } = Object.entries(GAME_FORMAT_NUMBER).reduce(
+  (acc, [key, value]) => {
+    const stringKey = key as keyof typeof GAME_FORMAT;
+    if (stringKey in GAME_FORMAT) {
+      acc[value] = GAME_FORMAT[stringKey];
+    }
+    return acc;
+  },
+  {} as { [key: string]: string }
+);
+
+/**
+ * Normalizes format values to their string representation (GAME_FORMAT values)
+ * Handles both string formats ('precon') and number formats ('-2')
+ */
+export const normalizeFormat = (format: string | number | null | undefined): string | null => {
+  if (!format) return null;
+  const formatStr = String(format);
+  // If it's a number format, convert to string format
+  return FORMAT_NUMBER_TO_STRING[formatStr] || formatStr;
+};
+
+/**
+ * Checks if a format is preconstructed, handling both string and number formats
+ */
+export const isPreconFormat = (format: string | number | null | undefined): boolean => {
+  const normalized = normalizeFormat(format);
+  return normalized === GAME_FORMAT.PRECON;
+};
+
 export const AI_DECK = {
   COMBAT_DUMMY: 'Dummy',
   IRABLITZ: 'Ira',

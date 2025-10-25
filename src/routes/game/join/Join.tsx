@@ -2,7 +2,8 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useAppDispatch } from 'app/Hooks';
 import {
   useGetFavoriteDecksQuery,
-  useJoinGameMutation
+  useJoinGameMutation,
+  useGetGameListQuery
 } from 'features/api/apiSlice';
 import { JoinGameAPI } from 'interface/API/JoinGame.php';
 import { Link, useNavigate, useParams } from 'react-router-dom';
@@ -19,6 +20,52 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { ErrorMessage } from '@hookform/error-message';
 import { generateCroppedImageUrl } from 'utils/cropImages';
 import { ImageSelect, ImageSelectOption } from 'components/ImageSelect';
+import { GAME_FORMAT, isPreconFormat } from 'appConstants';
+
+const preconDecklinks = [
+  'https://fabrary.net/decks/01JRH0631MH5A9JPVGTP3TKJXN', //maxx
+  'https://fabrary.net/decks/01JN2DEG4X2V8DVMCWFBWQTTSC', //aurora
+  'https://fabrary.net/decks/01JCPPENK52DTRBJZMWQF8S0X2', //jarl
+  'https://fabrary.net/decks/01J9822H5PANJAFQVMC4TPK4Z1', //dio
+  'https://fabrary.net/decks/01J3GKKSTM773CW7BG3RRJ5FJH', //azalea
+  'https://fabrary.net/decks/01J202NH0RG8S0V8WXH1FWB2AH', //boltyn
+  'https://fabrary.net/decks/01HWNCK2BYPVKK6701052YYXMZ', //kayo
+  'https://fabrary.net/decks/01JVYZ0NCHP49HAP40C23P14E3', //gravy
+  'https://fabrary.net/decks/01JZ97KZ5TQV8E0FYMAM0XVNX7', //ira
+];
+
+const preconDeckNames = [
+  'Maxx, the Hype Nitro',
+  'Aurora, Shooting Star',
+  'Jarl Vetreiđi',
+  'Dash I/O',
+  'Azalea, Ace in the Hole',
+  'Ser Boltyn, Breaker of Dawn',
+  'Kayo, Armed and Dangerous',
+  'Gravy Bones, Shipwrecked Looter',
+  'Ira, Scarlet Revenger'
+];
+
+// Map precon deck names to hero card IDs for image display
+const preconDeckHeroes = [
+  "EVO004", // Maxx
+  "ROS007", // Aurora
+  "AJV001", // Jarl
+  "EVO001", // Dash
+  "ARC038", // Azalea
+  "MON029", // Boltyn
+  "HVY001", // Kayo
+  "SEA043", // Gravy
+  "HER123"  // Ira
+];
+
+const sortedPreconDecks = preconDeckNames
+  .map((name, index) => ({ name, link: preconDecklinks[index], hero: preconDeckHeroes[index] }))
+  .sort((a, b) => a.name.localeCompare(b.name));
+
+const sortedPreconDeckNames = sortedPreconDecks.map(deck => deck.name);
+const sortedPreconDecklinks = sortedPreconDecks.map(deck => deck.link);
+const sortedPreconDeckHeroes = sortedPreconDecks.map(deck => deck.hero);
 
 // Helper function to shorten format names
 const shortenFormat = (format: string): string => {
@@ -35,11 +82,14 @@ const JoinGame = () => {
   const { data, isLoading, isSuccess } = useGetFavoriteDecksQuery(undefined);
   const { isLoggedIn } = useAuth();
 
-  let [{ gameName = '0', playerID = '2', authKey = '' }] =
+  let [{ gameName: searchGameName = '0', playerID = '2', authKey = '' }] =
     useKnownSearchParams();
 
   const { gameID } = useParams();
-  gameName = gameID ?? gameName;
+  const finalGameName = gameID ?? searchGameName;
+
+  // Fetch game list to get the format for this specific game
+  const { data: gameListData, isLoading: gameListLoading } = useGetGameListQuery(undefined);
 
   const {
     formState: { isSubmitting, errors },
@@ -54,6 +104,8 @@ const JoinGame = () => {
   });
 
   const [selectedFavoriteDeck, setSelectedFavoriteDeck] = React.useState<string>('');
+  const [selectedPreconDeck, setSelectedPreconDeck] = React.useState<string>(sortedPreconDecklinks[0]);
+  const [gameFormat, setGameFormat] = React.useState<string | null>(null);
 
   const initialValues: JoinGameAPI = useMemo(() => {
     return {
@@ -75,7 +127,24 @@ const JoinGame = () => {
   useEffect(() => {
     reset(initialValues);
     setSelectedFavoriteDeck(initialValues.favoriteDecks || '');
+    setSelectedPreconDeck(sortedPreconDecklinks[0]);
   }, [initialValues, reset]);
+
+  // Update gameFormat when game list loads - find this game in the list
+  useEffect(() => {
+    if (gameListData) {
+      const gameNameStr = finalGameName;
+      
+      const openGame = gameListData.openGames?.find((g) => String(g.gameName) === gameNameStr);
+      const inProgressGame = gameListData.gamesInProgress?.find((g) => String(g.gameName) === gameNameStr);
+      const foundGame = openGame || inProgressGame;
+      
+      if (foundGame?.format) {
+        console.log('Game found! Format:', foundGame.format, 'isPrecon:', isPreconFormat(foundGame.format));
+        setGameFormat(foundGame.format);
+      }
+    }
+  }, [gameListData, finalGameName]);
 
   // Convert favorite decks to ImageSelect options
   const favoriteDeckOptions: ImageSelectOption[] = React.useMemo(() => {
@@ -87,9 +156,24 @@ const JoinGame = () => {
     }));
   }, [data?.favoriteDecks]);
 
+  // Convert precon decks to ImageSelect options
+  const preconDeckOptions: ImageSelectOption[] = React.useMemo(() => {
+    return sortedPreconDecklinks.map((link, index) => ({
+      value: link,
+      label: sortedPreconDeckNames[index],
+      imageUrl: generateCroppedImageUrl(sortedPreconDeckHeroes[index])
+    }));
+  }, []);
+
+  const isPrecon = isPreconFormat(gameFormat);
+
+  // Debug logging
+  React.useEffect(() => {
+  }, [isPrecon, gameFormat, gameListLoading]);
+
   const onSubmit: SubmitHandler<JoinGameAPI> = async (values: JoinGameAPI) => {
     values.playerID = parseInt(playerID);
-    values.gameName = parseInt(gameName);
+    values.gameName = parseInt(finalGameName);
 
     try {
       const response = await joinGame(values).unwrap();
@@ -125,74 +209,103 @@ const JoinGame = () => {
       <article className={styles.formContainer}>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className={styles.formInner}>
-            {isLoggedIn && !isLoading && (
+            {isPrecon ? (
               <label>
-                Favorite Deck
+                Preconstructed Deck
                 <ImageSelect
-                  id="favoriteDecks"
-                  options={favoriteDeckOptions}
-                  value={selectedFavoriteDeck}
+                  id="preconDecks"
+                  options={preconDeckOptions}
+                  value={selectedPreconDeck}
                   onChange={(value) => {
-                    setSelectedFavoriteDeck(value);
-                    setValue('favoriteDecks', value);
+                    setSelectedPreconDeck(value);
+                    setValue('fabdb', value);
                   }}
                   placeholder="Select a deck"
-                  aria-busy={isLoading}
-                  aria-invalid={errors.favoriteDecks?.message ? 'true' : undefined}
+                  aria-invalid={errors.deck?.message ? 'true' : undefined}
                 />
                 <input
                   type="hidden"
-                  {...register('favoriteDecks')}
-                  value={selectedFavoriteDeck}
-                />
-                <ErrorMessage
-                  errors={errors}
-                  name="favoriteDecks"
-                  render={({ message }) => <p>{message}</p>}
-                />
-              </label>
-            )}
-            <ErrorMessage
-              errors={errors}
-              name="favoriteDecks"
-              render={({ message }) => (
-                <p className={styles.fieldError}>
-                  <FaExclamationCircle /> {message}
-                </p>
-              )}
-            />
-            <fieldset>
-              <label>
-                Deck Link (URL from <a href="https://FaBrary.net"  target="_blank">FaBrary.net</a>)
-                <input
-                  type="text"
-                  id="fabdb"
-                  aria-label="Deck Link"
                   {...register('fabdb')}
-                  aria-invalid={errors.deck?.message ? 'true' : undefined}
+                  value={selectedPreconDeck}
                 />
                 <ErrorMessage
                   errors={errors}
                   name="fabdb"
+                  render={({ message }) => <p>{message}</p>}
+                />
+              </label>
+            ) : (
+              <>
+                {isLoggedIn && !isLoading && (
+                  <label>
+                    Favorite Deck
+                    <ImageSelect
+                      id="favoriteDecks"
+                      options={favoriteDeckOptions}
+                      value={selectedFavoriteDeck}
+                      onChange={(value) => {
+                        setSelectedFavoriteDeck(value);
+                        setValue('favoriteDecks', value);
+                      }}
+                      placeholder="Select a deck"
+                      aria-busy={isLoading}
+                      aria-invalid={errors.favoriteDecks?.message ? 'true' : undefined}
+                    />
+                    <input
+                      type="hidden"
+                      {...register('favoriteDecks')}
+                      value={selectedFavoriteDeck}
+                    />
+                    <ErrorMessage
+                      errors={errors}
+                      name="favoriteDecks"
+                      render={({ message }) => <p>{message}</p>}
+                    />
+                  </label>
+                )}
+                <ErrorMessage
+                  errors={errors}
+                  name="favoriteDecks"
                   render={({ message }) => (
                     <p className={styles.fieldError}>
                       <FaExclamationCircle /> {message}
                     </p>
                   )}
                 />
-              </label>
-              {isLoggedIn && (
-                <label>
-                  <input
-                    type="checkbox"
-                    role="switch"
-                    id="favoriteDeck"
-                    {...register('favoriteDeck')}
-                  />
-                  Save Deck to ❤️ Favorites
-                </label>
-              )}
-            </fieldset>
+                <fieldset>
+                  <label>
+                    Deck Link (URL from <a href="https://FaBrary.net"  target="_blank">FaBrary.net</a>)
+                    <input
+                      type="text"
+                      id="fabdb"
+                      aria-label="Deck Link"
+                      {...register('fabdb')}
+                      aria-invalid={errors.deck?.message ? 'true' : undefined}
+                    />
+                    <ErrorMessage
+                      errors={errors}
+                      name="fabdb"
+                      render={({ message }) => (
+                        <p className={styles.fieldError}>
+                          <FaExclamationCircle /> {message}
+                        </p>
+                      )}
+                    />
+                  </label>
+                  {isLoggedIn && (
+                    <label>
+                      <input
+                        type="checkbox"
+                        role="switch"
+                        id="favoriteDeck"
+                        {...register('favoriteDeck')}
+                      />
+                      Save Deck to ❤️ Favorites
+                    </label>
+                  )}
+                </fieldset>
+              </>
+            )}
           </div>
           {!isLoggedIn && (
             <p>
@@ -206,6 +319,7 @@ const JoinGame = () => {
             type="submit"
             className={styles.buttonClass}
             aria-busy={isSubmitting}
+            style={{ marginTop: '27px' }}
           >
             Join Game
           </button>
