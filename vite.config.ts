@@ -20,8 +20,23 @@ export default ({ mode }: { mode: string }) => {
 
   return defineConfig({
     base: './',
-    build: { outDir: './build' },
+    build: { 
+      outDir: './build',
+      rollupOptions: {
+        output: {
+          manualChunks: {}
+        }
+      }
+    },
     plugins: [react(), viteTsconfigPaths(), svgrPlugin()],
+    ssr: {
+      noExternal: []
+    },
+    resolve: {
+      alias: {
+        crypto: 'crypto-browserify'
+      }
+    },
     server: {
       proxy: {
         '/api': {
