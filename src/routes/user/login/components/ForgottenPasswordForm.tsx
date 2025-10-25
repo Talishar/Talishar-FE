@@ -10,19 +10,13 @@ import classNames from 'classnames';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { toast } from 'react-hot-toast';
-import autoAnimate from '@formkit/auto-animate';
-import { useRef, useEffect } from 'react';
+import { useAutoAnimate } from '@formkit/auto-animate/react';
 
 export const ForgottenPasswordForm = () => {
   const navigate = useNavigate();
   const [forgottenPassword, forgottenPasswordResult] =
     useForgottenPasswordMutation();
-  const parent = useRef(null);
-  
-  useEffect(() => {
-    parent.current && autoAnimate(parent.current);
-  }, [parent]);
-
+  const [parent] = useAutoAnimate();
   const {
     register,
     handleSubmit,

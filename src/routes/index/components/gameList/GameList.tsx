@@ -1,11 +1,11 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { useGetGameListQuery } from 'features/api/apiSlice';
 import styles from './GameList.module.scss';
 import InProgressGame from '../inProgressGame';
 import Filter from '../filter';
 import { GAME_FORMAT, GAME_FORMAT_NUMBER } from 'appConstants';
 import FormatList from '../formatList';
-import autoAnimate from '@formkit/auto-animate';
+import { useAutoAnimate } from '@formkit/auto-animate/react';
 import useAuth from 'hooks/useAuth';
 import { useBlockedUsers } from 'hooks/useBlockedUsers';
 import { Link, useNavigate } from 'react-router-dom';
@@ -66,11 +66,7 @@ const GameList = () => {
   const [formatFilter, setFormatFilter] = useState<string | null>(null);
   const [gamesInProgressExpanded, setGamesInProgressExpanded] = useState(true); // Default to open
 
-  const parent = useRef(null);
-
-  useEffect(() => {
-    parent.current && autoAnimate(parent.current);
-  }, [parent]);
+  const [parent] = useAutoAnimate();
 
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -381,12 +377,7 @@ const GameList = () => {
 };
 
 const InProgressGameList = ({ gameList, name }: IInProgressGameList) => {
-  const parent = useRef(null);
-  
-  useEffect(() => {
-    parent.current && autoAnimate(parent.current);
-  }, [parent]);
-
+  const [parent] = useAutoAnimate();
   const [isExpanded, setIsExpanded] = useState(true); // Default to open
   const [isMobile, setIsMobile] = useState(window.innerWidth < 1025);
   

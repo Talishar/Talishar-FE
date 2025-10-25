@@ -1,8 +1,8 @@
-import React, { useRef, useEffect } from 'react';
+import React from 'react';
 import styles from './FormatList.module.css';
 import { IOpenGame } from '../gameList/GameList';
 import OpenGame from '../openGame/OpenGame';
-import autoAnimate from '@formkit/auto-animate';
+import { useAutoAnimate } from '@formkit/auto-animate/react';
 
 export interface IFormatList {
   gameList: IOpenGame[];
@@ -10,12 +10,7 @@ export interface IFormatList {
   isOther?: boolean;
 }
 const FormatList = ({ gameList, name, isOther }: IFormatList) => {
-  const parent = useRef(null);
-  
-  useEffect(() => {
-    parent.current && autoAnimate(parent.current);
-  }, [parent]);
-
+  const [parent] = useAutoAnimate();
   if (gameList.length === 0) {
     return null;
   }
