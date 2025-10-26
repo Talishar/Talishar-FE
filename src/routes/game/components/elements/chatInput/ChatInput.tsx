@@ -27,6 +27,7 @@ import { createPortal } from 'react-dom';
 import { PROCESS_INPUT } from 'appConstants';
 import { useLocation } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
+import useAuth from 'hooks/useAuth';
 
 const submitButtonClass = classNames('secondary', styles.buttonDiv);
 
@@ -64,12 +65,16 @@ export const ChatInput = () => {
     getGameInfo,
     shallowEqual
   );
+  const { isMod } = useAuth();
   const chatEnabled = useAppSelector((state) => state.game.chatEnabled);
 
   const [chatInput, setChatInput] = useState('');
   const [submitChat, submitChatResult] = useSubmitChatMutation();
 
-  if (playerID === 3) {
+  // Allow players (playerID 1-2) or mods spectating (playerID 3 but isMod true)
+  const canChat = playerID !== 3 || (playerID === 3 && isMod);
+
+  if (!canChat) {
     return null;
   }
 
@@ -112,9 +117,9 @@ export const ChatInput = () => {
               }
             }}
             placeholder={
-              playerID === 3 ? 'Chat Disabled' : 'Hit return to send'
+              playerID === 3 && !isMod ? 'Chat Disabled' : 'Hit return to send'
             }
-            disabled={playerID === 3}
+            disabled={playerID === 3 && !isMod}
           />
           <button className={submitButtonClass} onClick={handleSubmit}>
             <div className={styles.icon}>

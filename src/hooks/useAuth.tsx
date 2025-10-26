@@ -19,8 +19,6 @@ import { toast } from 'react-hot-toast';
 const MOD_USERNAMES = [
   'OotTheMonk',
   'LaustinSpayce',
-  'Star_Seraph',
-  'bavverst',
   'Tower',
   'PvtVoid',
   'Aegisworn'
