@@ -385,6 +385,9 @@ export default function ParseGameState(input: any) {
   //clock
   result.gameDynamicInfo.clock = input.clock;
 
+  // spectator count
+  result.gameDynamicInfo.spectatorCount = input.spectatorCount ?? 0;
+
   // turn phase
   if (input.turnPhase !== undefined) {
     result.turnPhase = input.turnPhase;

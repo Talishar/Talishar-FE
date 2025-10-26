@@ -5,4 +5,5 @@ export interface GameDynamicInfo {
   lastPlayed?: Card;
   lastUpdate?: number;
   clock?: number;
+  spectatorCount?: number;
 }
