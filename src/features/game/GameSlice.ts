@@ -131,7 +131,6 @@ export const gameLobby = createAsyncThunk(
         data = data.toString().trim();
         const indexOfBraces = data.indexOf('{');
         if (indexOfBraces !== 0) {
-          //console.log(data.substring(0, indexOfBraces));
           data = data.substring(indexOfBraces);
         }
         const parsedData = JSON.parse(data) as GetLobbyRefreshResponse;
@@ -141,7 +140,6 @@ export const gameLobby = createAsyncThunk(
           return;
         }
         waitingForJSONResponse = false;
-        //console.log(e);
         return console.error(e);
       }
     }
@@ -341,14 +339,12 @@ export const gameSlice = createSlice({
         const storedPlayerID = loadGamePlayerID(action.payload.gameID);
         if (storedPlayerID > 0 && storedPlayerID !== 3) {
           state.gameInfo.playerID = storedPlayerID;
-          console.log(`Restored playerID ${storedPlayerID} from storage for game ${action.payload.gameID}`);
         } else {
           state.gameInfo.playerID = action.payload.playerID;
         }
       } else {
         // New game - always use provided playerID, don't search storage
         state.gameInfo.playerID = action.payload.playerID;
-        console.log(`Starting new game ${action.payload.gameID} as playerID ${action.payload.playerID}`);
       }
       
       //If We don't currently have an Auth Key
@@ -366,7 +362,6 @@ export const gameSlice = createSlice({
           const storedAuthKey = loadGameAuthKey(state.gameInfo.gameID);
           if (storedAuthKey !== '') {
             state.gameInfo.authKey = storedAuthKey;
-            console.log(`Restored authKey from storage for game ${action.payload.gameID}`);
           }
         }
       } else {

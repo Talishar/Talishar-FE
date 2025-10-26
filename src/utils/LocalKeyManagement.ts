@@ -80,8 +80,6 @@ export const saveGameAuthKey = (gameId: number, authKey: string, playerID?: numb
   
   // Save as current game for quick recovery
   localStorage.setItem(CURRENT_GAME_KEY, String(gameId));
-  
-  console.log(`Saved game session for gameId ${gameId}, playerID ${sessionData.playerID}`);
 };
 
 /**
