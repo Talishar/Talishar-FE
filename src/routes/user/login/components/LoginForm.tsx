@@ -122,7 +122,6 @@ export const LoginForm = () => {
           <input
             id="rememberMe"
             type="checkbox"
-            role="checkbox"
             {...register('rememberMe')}
           />
           <label htmlFor="rememberMe">Remember me</label>
