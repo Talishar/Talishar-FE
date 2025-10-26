@@ -58,8 +58,15 @@ export default function PlayerName(player: Player) {
     }
   ];
 
+  const getStatusClass = () => {
+    if (isPvtVoidPatron) return styles.pvtVoidPatron;
+    if (isContributor) return styles.contributor;
+    if (isPatron) return styles.patron;
+    return '';
+  };
+
   return (
-    <div className={styles.playerName}>
+    <div className={`${styles.playerName} ${getStatusClass()}`}>
       {iconMap.filter(icon => icon.condition).map(icon => (
         <a href={icon.href} target="_blank" rel="noopener noreferrer" key={icon.src}>
           <img
