@@ -119,7 +119,12 @@ export const LoginForm = () => {
           {errors.password?.message && (
             <div className={styles.fieldError}>{errors.password?.message}</div>
           )}
-          <input type="checkbox" role="checkbox" {...register('rememberMe')} />
+          <input
+            id="rememberMe"
+            type="checkbox"
+            role="checkbox"
+            {...register('rememberMe')}
+          />
           <label htmlFor="rememberMe">Remember me</label>
           {errors.rememberMe?.message && (
             <div className={styles.fieldError}>
