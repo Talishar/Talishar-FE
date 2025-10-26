@@ -17,7 +17,7 @@ export default function SpectatorCount() {
   return (
     <div className={styles.spectatorCountStyle}>
       <div>
-        <FaEye /> Spectators: {spectatorCount}
+        <FaEye /> {spectatorCount === 1 ? 'Spectator' : 'Spectators'}: {spectatorCount}
       </div>
     </div>
   );
