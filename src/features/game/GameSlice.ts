@@ -15,7 +15,8 @@ import { RootState } from 'app/Store';
 import {
   deleteGameAuthKey,
   loadGameAuthKey,
-  saveGameAuthKey
+  saveGameAuthKey,
+  loadGamePlayerID
 } from 'utils/LocalKeyManagement';
 import isEqual from 'react-fast-compare';
 import { CardStack } from '../../routes/game/components/zones/permanentsZone/PermanentsZone';
@@ -323,23 +324,58 @@ export const gameSlice = createSlice({
       }>
     ) => {
       state.isFullRematch = false;
+      const previousGameID = state.gameInfo.gameID;
       state.gameInfo.gameID = action.payload.gameID;
-      state.gameInfo.playerID = !!state.gameInfo.playerID
-        ? state.gameInfo.playerID
-        : action.payload.playerID;
+      
+      // Check if this is a NEW game or a RECONNECTION to the same game
+      const isNewGame = previousGameID !== action.payload.gameID;
+      
+      // Priority order for determining playerID:
+      // 1. Use existing playerID if reconnecting to same game (ongoing game)
+      // 2. Only try to restore from storage if reconnecting (same gameID)
+      // 3. Use provided playerID from action (new game)
+      if (!isNewGame && state.gameInfo.playerID && state.gameInfo.playerID !== 0) {
+        // Reconnecting to same game, keep existing player ID
+      } else if (!isNewGame) {
+        // Reconnecting to same game but playerID not set - try storage recovery
+        const storedPlayerID = loadGamePlayerID(action.payload.gameID);
+        if (storedPlayerID > 0 && storedPlayerID !== 3) {
+          state.gameInfo.playerID = storedPlayerID;
+          console.log(`Restored playerID ${storedPlayerID} from storage for game ${action.payload.gameID}`);
+        } else {
+          state.gameInfo.playerID = action.payload.playerID;
+        }
+      } else {
+        // New game - always use provided playerID, don't search storage
+        state.gameInfo.playerID = action.payload.playerID;
+        console.log(`Starting new game ${action.payload.gameID} as playerID ${action.payload.playerID}`);
+      }
+      
       //If We don't currently have an Auth Key
       if (!state.gameInfo.authKey) {
         //And the payload is giving us an auth key
-        if (state.gameInfo.playerID == 3) state.gameInfo.authKey = 'spectator';
-        else if (action.payload.authKey !== '') {
-          saveGameAuthKey(action.payload.gameID, action.payload.authKey);
+        if (state.gameInfo.playerID == 3) {
+          state.gameInfo.authKey = 'spectator';
+        } else if (action.payload.authKey !== '') {
+          // Save both authKey and playerID for recovery on reconnection
+          saveGameAuthKey(action.payload.gameID, action.payload.authKey, state.gameInfo.playerID);
           state.gameInfo.authKey = action.payload.authKey;
         }
-        //Else try to set from local storage
-        else {
-          state.gameInfo.authKey = loadGameAuthKey(state.gameInfo.gameID);
+        //Else try to set from local storage (ONLY if reconnecting to same game)
+        else if (!isNewGame) {
+          const storedAuthKey = loadGameAuthKey(state.gameInfo.gameID);
+          if (storedAuthKey !== '') {
+            state.gameInfo.authKey = storedAuthKey;
+            console.log(`Restored authKey from storage for game ${action.payload.gameID}`);
+          }
+        }
+      } else {
+        // Already have an auth key, but ensure it's stored for future recovery
+        if (action.payload.authKey !== '') {
+          saveGameAuthKey(action.payload.gameID, action.payload.authKey, state.gameInfo.playerID);
         }
       }
+      
       state.gameDynamicInfo.lastUpdate = 0;
       state.playerOne = {};
       state.playerTwo = {};
