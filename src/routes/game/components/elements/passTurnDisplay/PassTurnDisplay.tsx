@@ -44,7 +44,7 @@ export default function PassTurnDisplay() {
   const dispatch = useAppDispatch();
   
   useEffect(() => {
-    if (hasPriority && !initialValues.mute) {
+    if (hasPriority && !initialValues.mute && playerID !== 3) {
       playPassTurnSound();
     }
   }, [frameNumber, hasPriority, initialValues.mute]);
@@ -88,7 +88,8 @@ export default function PassTurnDisplay() {
   if (playerID === 3) {
     // Use priorityPlayer to determine which player has priority
     // priorityPlayer 1 = top player, priorityPlayer 2 = bottom player
-    const priority = priorityPlayer ?? 1;
+    // Fallback to checking hasPriority if priorityPlayer is undefined
+    const priority = priorityPlayer ?? (hasPriority ? 1 : 2);
     const arrow = priority === 1 ? '▲' : '▼';
     
     return (
