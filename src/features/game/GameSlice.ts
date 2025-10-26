@@ -365,9 +365,18 @@ export const gameSlice = createSlice({
           }
         }
       } else {
-        // Already have an auth key, but ensure it's stored for future recovery
+        // Already have an auth key
         if (action.payload.authKey !== '') {
+          // For rematch (same gameID), always update with new authKey if provided
+          // For new game or reconnection, update if different
           saveGameAuthKey(action.payload.gameID, action.payload.authKey, state.gameInfo.playerID);
+          state.gameInfo.authKey = action.payload.authKey;
+        } else if (!isNewGame) {
+          // For rematch/reconnection with no authKey in payload, try to load from storage
+          const storedAuthKey = loadGameAuthKey(state.gameInfo.gameID);
+          if (storedAuthKey !== '') {
+            state.gameInfo.authKey = storedAuthKey;
+          }
         }
       }
       
