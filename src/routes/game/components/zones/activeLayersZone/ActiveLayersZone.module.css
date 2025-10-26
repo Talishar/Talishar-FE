@@ -119,55 +119,51 @@
   align-items: center;
 }
 
-@media only screen and (max-width: 938px) {
+@media only screen and (max-width: 768px) {
   .activeLayersBox {
+    min-width: auto;
     left: 5%;
-    right: 5%;
-    min-width: unset;
-    width: 90vw;
-    max-width: 90vw;
+    padding: 1vh;
+    max-height: 50vh;
   }
   
   .activeLayersCallToAction {
-    font-size: 0.85em;
-    flex-direction: column;
-    align-items: stretch;
-    gap: 8px;
-    padding: 0;
+    font-size: 0.65em;
+    gap: 5px;
+    padding-left: 0.25em;
   }
 
   .activeLayersTitle {
-    font-size: 0.9em;
-    flex-direction: column;
-    gap: 8px;
-    padding-left: 0;
-  }
-
-  .titlesColumn {
-    width: 100%;
+    font-size: 0.75em;
+    gap: 5px;
+    padding-left: 0.25em;
   }
 
   .title {
-    font-size: 1.1em;
-  }
-
-  .orderingExplanation {
-    max-width: 100%; 
-    font-size: 0.75em;
-  }
-
-  .buttonDiv {
-    padding: 10px 12px;
     font-size: 0.9em;
-    min-height: 44px;
+    margin: 0px;
   }
 
   .targetContainer {
-    font-size: 0.9em;
+    font-size: 0.85em;
+    gap: 2px;
     padding-top: 4px;
+  }
+
+  .activeLayersContents {
+    gap: 2px;
+  }
+
+  .orderingExplanation {
+    display: none;
   }
 
   .passTurnBox {
     display: none;
+  }
+
+  .buttonDiv {
+    font-size: 0.65em;
+    padding: 4px 6px;
   }
 }
