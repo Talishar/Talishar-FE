@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { submitButton } from 'features/game/GameSlice';
 import { useAppSelector, useAppDispatch } from 'app/Hooks';
 import { RootState } from 'app/Store';
@@ -8,7 +8,6 @@ import useShortcut from 'hooks/useShortcut';
 import useSound from 'use-sound';
 import passTurnSound from 'sounds/prioritySound.wav';
 import { createPortal } from 'react-dom';
-import * as optConst from 'features/options/constants';
 import { getSettingsEntity } from 'features/options/optionsSlice';
 
 export default function PassTurnDisplay() {
@@ -30,10 +29,8 @@ export default function PassTurnDisplay() {
   const priorityPlayer = useAppSelector(
     (state: RootState) => state.game.priorityPlayer
   );
-  const [areYouSure, setAreYouSure] = useState<boolean>(false);
   const [showAreYouSureModal, setShowAreYouSureModal] =
     useState<boolean>(false);
-  const [canPassController, setCanPassController] = useState<boolean>(false);
   const [playPassTurnSound] = useSound(passTurnSound);
   const preventPassPrompt = useAppSelector(
     (state: RootState) => state.game.preventPassPrompt
@@ -47,7 +44,7 @@ export default function PassTurnDisplay() {
     if (hasPriority && !initialValues.mute && playerID !== 3) {
       playPassTurnSound();
     }
-  }, [frameNumber, hasPriority, initialValues.mute]);
+  }, [frameNumber, hasPriority, initialValues.mute, playerID, playPassTurnSound]);
 
   useEffect(() => {
     let link = document.getElementById('favicon') as HTMLLinkElement;
@@ -56,26 +53,25 @@ export default function PassTurnDisplay() {
     } else if (link) {
       link.href = '/images/priorityGrey.ico';
     }
-  }, [hasPriority]);
+  }, [hasPriority, playerID]);
 
-  const onPassTurn = () => {
+  const onPassTurn = useCallback(() => {
     if (preventPassPrompt && !showAreYouSureModal) {
       setShowAreYouSureModal(true);
     } else {
       dispatch(submitButton({ button: { mode: PROCESS_INPUT.PASS } }));
     }
-    setCanPassController(true);
-  };
+  }, [preventPassPrompt, showAreYouSureModal, dispatch]);
 
   useShortcut(DEFAULT_SHORTCUTS.PASS_TURN, onPassTurn);
 
-  const clickYes = (e: any) => {
+  const clickYes = (e: React.SyntheticEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setShowAreYouSureModal(false);
     dispatch(submitButton({ button: { mode: PROCESS_INPUT.PASS } }));
   };
 
-  const clickNo = (e: any) => {
+  const clickNo = (e: React.SyntheticEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setShowAreYouSureModal(false);
   };
