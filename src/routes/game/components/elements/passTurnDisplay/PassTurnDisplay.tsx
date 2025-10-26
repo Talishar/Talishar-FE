@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { submitButton } from 'features/game/GameSlice';
 import { useAppSelector, useAppDispatch } from 'app/Hooks';
 import { RootState } from 'app/Store';
@@ -21,6 +21,15 @@ export default function PassTurnDisplay() {
   const frameNumber = useAppSelector(
     (state: RootState) => state.game.gameDynamicInfo.lastUpdate
   );
+  const playerID = useAppSelector(
+    (state: RootState) => state.game.gameInfo.playerID
+  );
+  const turnPlayer = useAppSelector(
+    (state: RootState) => state.game.turnPlayer
+  );
+  const priorityPlayer = useAppSelector(
+    (state: RootState) => state.game.priorityPlayer
+  );
   const [areYouSure, setAreYouSure] = useState<boolean>(false);
   const [showAreYouSureModal, setShowAreYouSureModal] =
     useState<boolean>(false);
@@ -42,7 +51,7 @@ export default function PassTurnDisplay() {
 
   useEffect(() => {
     let link = document.getElementById('favicon') as HTMLLinkElement;
-    if (hasPriority && link) {
+    if (hasPriority && link && playerID !== 3) {
       link.href = '/images/priorityGreen.ico';
     } else if (link) {
       link.href = '/images/priorityGrey.ico';
@@ -62,19 +71,34 @@ export default function PassTurnDisplay() {
 
   const clickYes = (e: any) => {
     e.preventDefault();
-    //console.log('yes!');
     setShowAreYouSureModal(false);
     dispatch(submitButton({ button: { mode: PROCESS_INPUT.PASS } }));
   };
 
   const clickNo = (e: any) => {
     e.preventDefault();
-    //console.log('no!');
     setShowAreYouSureModal(false);
   };
 
   if (canPassPhase === undefined) {
     return <div className={styles.passTurnDisplay}></div>;
+  }
+
+  // Spectator view - show priority indicator
+  if (playerID === 3) {
+    // Use priorityPlayer to determine which player has priority
+    // priorityPlayer 1 = top player, priorityPlayer 2 = bottom player
+    const priority = priorityPlayer ?? 1;
+    const arrow = priority === 1 ? '▲' : '▼';
+    
+    return (
+      <div className={styles.passTurnDisplay}>
+        <div className={styles.spectatorDisplay}>
+          <div className={styles.spectatorArrow}>{arrow}</div>
+          <div className={styles.spectatorPlayerName}>Priority</div>
+        </div>
+      </div>
+    );
   }
 
   if (canPassPhase === true) {

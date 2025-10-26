@@ -110,6 +110,7 @@ export default interface GameState {
   showChatModal?: boolean;
   landmark?: Card;
   hasPriority?: boolean;
+  priorityPlayer?: number;
   isFullRematch?: boolean;
   preventPassPrompt?: string;
   chatEnabled: boolean;

@@ -140,7 +140,6 @@ const JoinGame = () => {
       const foundGame = openGame || inProgressGame;
       
       if (foundGame?.format) {
-        console.log('Game found! Format:', foundGame.format, 'isPrecon:', isPreconFormat(foundGame.format));
         setGameFormat(foundGame.format);
       }
     }

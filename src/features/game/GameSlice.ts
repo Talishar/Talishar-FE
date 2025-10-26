@@ -483,6 +483,7 @@ export const gameSlice = createSlice({
       state.gameDynamicInfo.turnNo = action.payload.gameDynamicInfo.turnNo;
       state.gameDynamicInfo.clock = action.payload.gameDynamicInfo.clock;
       state.hasPriority = action.payload.hasPriority;
+      state.priorityPlayer = action.payload.priorityPlayer;
       state.chatEnabled = action.payload.chatEnabled;
 
       state.playerPrompt = action.payload.playerPrompt;
