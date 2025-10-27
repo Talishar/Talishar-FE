@@ -44,8 +44,9 @@ const ProfileSettings = () => {
 
   // fetch all settings when component is loaded
   useEffect(() => {
-    // Only fetch if settings are not already loaded and not currently loading
-    if (Object.keys(settingsData).length === 0 && isLoading !== 'loading') {
+    // Skip fetching settings when not in an active game (gameID === 0)
+    // Settings are stored locally and will be synced when entering a game
+    if (Object.keys(settingsData).length === 0 && isLoading !== 'loading' && profileGameInfo.gameID !== 0) {
       dispatch(fetchAllSettings({ game: profileGameInfo }));
     }
   }, [dispatch, settingsData, isLoading]);
