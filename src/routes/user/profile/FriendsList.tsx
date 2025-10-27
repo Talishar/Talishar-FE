@@ -228,7 +228,7 @@ export const FriendsList: React.FC<FriendsListProps> = ({ className }) => {
             <thead>
               <tr>
                 <th scope="col">Sent To</th>
-                <th scope="col" style={{ width: '120px' }}>Action</th>
+                <th scope="col" className={styles.actionColumnHeader}>Action</th>
               </tr>
             </thead>
             <tbody>
@@ -259,7 +259,7 @@ export const FriendsList: React.FC<FriendsListProps> = ({ className }) => {
             <thead>
               <tr>
                 <th scope="col">From</th>
-                <th scope="col" style={{ width: '120px' }}>Action</th>
+                <th scope="col" className={styles.actionColumnHeader}>Action</th>
               </tr>
             </thead>
             <tbody>
@@ -299,7 +299,7 @@ export const FriendsList: React.FC<FriendsListProps> = ({ className }) => {
               <thead>
                 <tr>
                   <th scope="col">Friend</th>
-                  <th scope="col" style={{ width: '150px' }}>Action</th>
+                  <th scope="col" className={styles.actionColumnHeader}>Action</th>
                 </tr>
               </thead>
               <tbody>

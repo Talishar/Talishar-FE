@@ -180,6 +180,11 @@
   white-space: nowrap;
 }
 
+.actionColumnHeader {
+  width: 100px;
+  text-align: right;
+}
+
 .friendsTable td {
   padding: 0.5rem 1rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
@@ -343,10 +348,15 @@
 }
 
 .nickname {
-  color: #a8a8a8;
+  color: #1a1a1a;
   font-style: italic;
-  font-weight: 400;
+  font-weight: 500;
   font-size: 0.95em;
+  background: rgba(212, 175, 55, 0.8);
+  padding: 0.3rem 0.7rem;
+  border-radius: 4px;
+  margin-left: 0.4rem;
+  display: inline-block;
 }
 
 .modalOverlay {
@@ -363,8 +373,8 @@
 }
 
 .modalContent {
-  background: rgba(0, 0, 0, 0.5);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(0, 0, 0, 0.85);
+  border: 2px solid rgba(212, 175, 55, 0.6);
   border-radius: 8px;
   padding: 2rem;
   max-width: 400px;
