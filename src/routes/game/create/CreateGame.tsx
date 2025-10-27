@@ -65,8 +65,12 @@ const CreateGame = () => {
       visibility:
         searchParams.get('visibility') ??
         (isLoggedIn
-          ? data?.lastVisibility !== undefined && data.lastVisibility == 1
-            ? GAME_VISIBILITY.PUBLIC
+          ? data?.lastVisibility !== undefined
+            ? data.lastVisibility == 1
+              ? GAME_VISIBILITY.PUBLIC
+              : data.lastVisibility == 2
+              ? GAME_VISIBILITY.FRIENDS_ONLY
+              : GAME_VISIBILITY.PRIVATE
             : GAME_VISIBILITY.PRIVATE
           : GAME_VISIBILITY.PRIVATE),
       decksToTry: '',
