@@ -49,7 +49,8 @@ const ModPage: React.FC = () => {
       setSuccessMessage('Player banned by IP successfully');
       setIpToBan('');
       setPlayerNumberToBan('');
-      refetch(); // Refresh data
+      // Refresh data after successful ban
+      await refetch();
     } catch (err: any) {
       console.error('Failed to ban player:', err);
       // Error will be shown via toast from RTK Query error handler
@@ -78,7 +79,8 @@ const ModPage: React.FC = () => {
       await banByName({ playerToBan }).unwrap();
       setSuccessMessage('Player banned successfully');
       setPlayerToBan('');
-      refetch(); // Refresh data
+      // Refresh data after successful ban
+      await refetch();
     } catch (err: any) {
       console.error('Failed to ban player:', err);
       // Error will be shown via toast from RTK Query error handler
