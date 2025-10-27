@@ -24,6 +24,7 @@ import useAuth from 'hooks/useAuth';
 import Header from 'components/header/Header';
 import Privacy from 'routes/privacy';
 import CreateGame from 'routes/game/create/CreateGame';
+import LoadReplay from 'routes/game/load/LoadReplay';
 import LinkPatreon from 'routes/user/profile/linkpatreon';
 import ModPage from 'routes/mod/ModPage';
 
@@ -127,6 +128,7 @@ export const router = createBrowserRouter(
         </Route>
         <Route path="game/join/:gameID" element={<JoinGame />} />
         <Route path="game/create" element={<CreateGame />} />
+        <Route path="game/load" element={<LoadReplay />} />
         <Route path="privacy" element={<Privacy />} />
         <Route path="mod" element={<ModPage />} />
         <Route path="user">
