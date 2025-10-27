@@ -1,6 +1,7 @@
 export interface Friend {
   friendUserId: number;
   username: string;
+  nickname?: string;
 }
 
 export interface User {

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { useAddFriendMutation, useGetFriendsListQuery, useRemoveFriendMutation, useSearchUsersQuery, useGetPendingRequestsQuery, useAcceptRequestMutation, useRejectRequestMutation, useGetSentRequestsQuery, useCancelRequestMutation } from 'features/api/apiSlice';
+import { useAddFriendMutation, useGetFriendsListQuery, useRemoveFriendMutation, useSearchUsersQuery, useGetPendingRequestsQuery, useAcceptRequestMutation, useRejectRequestMutation, useGetSentRequestsQuery, useCancelRequestMutation, useUpdateFriendNicknameMutation } from 'features/api/apiSlice';
 import { toast } from 'react-hot-toast';
 import { RiDeleteBin5Line } from 'react-icons/ri';
-import { MdPersonAdd, MdCheckCircle, MdCancel, MdBlock } from 'react-icons/md';
+import { MdPersonAdd, MdCheckCircle, MdCancel, MdBlock, MdEdit } from 'react-icons/md';
 import { IoMdArrowDropright } from 'react-icons/io';
 import styles from './FriendsList.module.css';
 import { Friend } from 'interface/API/FriendListAPI.php';
@@ -11,11 +11,17 @@ interface FriendsListProps {
   className?: string;
 }
 
+interface NicknameEditState {
+  friendUserId: number | null;
+  nickname: string;
+}
+
 export const FriendsList: React.FC<FriendsListProps> = ({ className }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [showSearchResults, setShowSearchResults] = useState(false);
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
   const [isExpanded, setIsExpanded] = useState(true);
+  const [nicknameEdit, setNicknameEdit] = useState<NicknameEditState>({ friendUserId: null, nickname: '' });
 
   const {
     data: friendsData,
@@ -28,6 +34,7 @@ export const FriendsList: React.FC<FriendsListProps> = ({ className }) => {
   const [acceptRequest] = useAcceptRequestMutation();
   const [rejectRequest] = useRejectRequestMutation();
   const [cancelRequest] = useCancelRequestMutation();
+  const [updateFriendNickname] = useUpdateFriendNicknameMutation();
 
   const {
     data: pendingData,
@@ -124,6 +131,30 @@ export const FriendsList: React.FC<FriendsListProps> = ({ className }) => {
     } catch (err: any) {
       toast.error(err.error || 'Failed to cancel friend request');
     }
+  };
+
+  const handleEditNickname = (friend: Friend) => {
+    setNicknameEdit({ friendUserId: friend.friendUserId, nickname: friend.nickname || '' });
+  };
+
+  const handleSaveNickname = async () => {
+    if (nicknameEdit.friendUserId === null) return;
+
+    try {
+      await updateFriendNickname({ 
+        friendUserId: nicknameEdit.friendUserId, 
+        nickname: nicknameEdit.nickname 
+      }).unwrap();
+      toast.success('Nickname updated successfully');
+      setNicknameEdit({ friendUserId: null, nickname: '' });
+      refetchFriends();
+    } catch (err: any) {
+      toast.error(err.error || 'Failed to update nickname');
+    }
+  };
+
+  const handleCancelNicknameEdit = () => {
+    setNicknameEdit({ friendUserId: null, nickname: '' });
   };
 
   return (
@@ -263,34 +294,82 @@ export const FriendsList: React.FC<FriendsListProps> = ({ className }) => {
         {friendsLoading ? (
           <p className={styles.loadingText}>Loading friends...</p>
         ) : friendsData?.friends && friendsData.friends.length > 0 ? (
-          <table className={styles.friendsTable}>
-            <thead>
-              <tr>
-                <th scope="col">Friend</th>
-                <th scope="col" style={{ width: '80px' }}>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {friendsData.friends.map((friend) => (
-                <tr key={friend.friendUserId}>
-                  <td>{friend.username}</td>
-                  <td className={styles.deleteColumn}>
-                    <button
-                      className={styles.deleteButton}
-                      onClick={() => handleRemoveFriend(friend)}
-                      title="Remove friend"
-                    >
-                      <RiDeleteBin5Line fontSize="1.5em" />
-                    </button>
-                  </td>
+          <>
+            <table className={styles.friendsTable}>
+              <thead>
+                <tr>
+                  <th scope="col">Friend</th>
+                  <th scope="col" style={{ width: '150px' }}>Action</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {friendsData.friends.map((friend) => (
+                  <tr key={friend.friendUserId}>
+                    <td>
+                      <div className={styles.friendNameContainer}>
+                        <span className={styles.username}>{friend.username}</span>
+                        {friend.nickname && (
+                          <span className={styles.nickname}>({friend.nickname})</span>
+                        )}
+                      </div>
+                    </td>
+                    <td className={styles.deleteColumn}>
+                      <button
+                        className={styles.editButton}
+                        onClick={() => handleEditNickname(friend)}
+                        title="Edit nickname"
+                      >
+                        <MdEdit fontSize="1.5em" />
+                      </button>
+                      <button
+                        className={styles.deleteButton}
+                        onClick={() => handleRemoveFriend(friend)}
+                        title="Remove friend"
+                      >
+                        <RiDeleteBin5Line fontSize="1.5em" />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </>
         ) : (
           <p></p>
         )}
       </div>
+
+      {/* Nickname Edit Modal */}
+      {nicknameEdit.friendUserId !== null && (
+        <div className={styles.modalOverlay} onClick={handleCancelNicknameEdit}>
+          <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+            <h3>Edit Nickname</h3>
+            <input
+              type="text"
+              placeholder="Enter nickname (optional)"
+              value={nicknameEdit.nickname}
+              onChange={(e) => setNicknameEdit({ ...nicknameEdit, nickname: e.target.value })}
+              maxLength={50}
+              className={styles.nicknameInput}
+              autoFocus
+            />
+            <div className={styles.modalActions}>
+              <button 
+                className={styles.saveButton}
+                onClick={handleSaveNickname}
+              >
+                Save
+              </button>
+              <button 
+                className={styles.cancelButton}
+                onClick={handleCancelNicknameEdit}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
         </>
       )}
     </article>
