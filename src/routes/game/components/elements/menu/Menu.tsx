@@ -12,6 +12,7 @@ import OptionsMenuToggle from './OptionsMenuToggle';
 import ShowMobileChat from './ShowMobileChat';
 import AlwaysPassToggle from './AlwaysPassToggle/AlwaysPassToggle';
 import useShortcut from 'hooks/useShortcut';
+import PlayerName from '../playerName/PlayerName';
 
 function FullScreenButton() {
   function toggleFullScreen() {
@@ -63,14 +64,13 @@ function UndoButton() {
 export default function Menu() {
 
   const [isMobile, setIsMobile] = useState(false);
+  const [isTablet, setIsTablet] = useState(false);
 
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth < 1200) {
-        setIsMobile(true);
-      } else {
-        setIsMobile(false);
-      }
+      const width = window.innerWidth;
+      setIsMobile(width < 600);
+      setIsTablet(width >= 600 && width < 1200);
     };
     window.addEventListener('resize', handleResize);
     handleResize();
@@ -79,6 +79,9 @@ export default function Menu() {
 
   return (
     <div>
+      {isTablet && (
+        <PlayerName isPlayer={false} />
+      )}
       <div className={styles.menuList}>
         <UndoButton />
         <OptionsMenuToggle />
@@ -89,7 +92,9 @@ export default function Menu() {
         <AlwaysPassToggle />
         <HideModalsToggle />
         {isMobile && (
-          <ShowMobileChat />
+          <>
+            <ShowMobileChat />
+          </>
         )}
       </div>
     </div>
