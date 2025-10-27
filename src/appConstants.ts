@@ -305,7 +305,8 @@ export const URL_END_POINT = {
 
 export const GAME_VISIBILITY = {
   PUBLIC: 'public',
-  PRIVATE: 'private'
+  PRIVATE: 'private',
+  FRIENDS_ONLY: 'friends-only'
 };
 
 export const ADD_DECK_TO_FAVORITES = {
