@@ -203,8 +203,8 @@ export default function PlayerName(player: Player) {
           <span className={styles.name}>{String(playerName ?? '').substring(0, 30).replace('-', `Practice Dummy`)}</span>
         </div>
 
-        {/* Dropdown arrow for opponent */}
-        {!player.isPlayer && (
+        {/* Dropdown arrow for opponent - hidden for Practice Dummy */}
+        {!player.isPlayer && !isPracticeDummy && (
           <div className={styles.dropdownContainer}>
             <button
               className={styles.dropdownButton}
@@ -217,8 +217,8 @@ export default function PlayerName(player: Player) {
         )}
       </div>
 
-      {/* Dropdown menu rendered as portal for opponent */}
-      {!player.isPlayer && isDropdownOpen && createPortal(
+      {/* Dropdown menu rendered as portal for opponent - hidden for Practice Dummy */}
+      {!player.isPlayer && !isPracticeDummy && isDropdownOpen && createPortal(
         <div 
           className={`${styles.dropdown} ${getStatusClass()}`}
           style={{
