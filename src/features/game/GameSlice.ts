@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction, createSelector } from '@reduxjs/toolkit';
 import ParseGameState from '../../app/ParseGameState';
 import InitialGameState from './InitialGameState';
 import GameStaticInfo from '../GameStaticInfo';
@@ -15,7 +15,8 @@ import { RootState } from 'app/Store';
 import {
   deleteGameAuthKey,
   loadGameAuthKey,
-  saveGameAuthKey
+  saveGameAuthKey,
+  loadGamePlayerID
 } from 'utils/LocalKeyManagement';
 import isEqual from 'react-fast-compare';
 import { CardStack } from '../../routes/game/components/zones/permanentsZone/PermanentsZone';
@@ -130,7 +131,6 @@ export const gameLobby = createAsyncThunk(
         data = data.toString().trim();
         const indexOfBraces = data.indexOf('{');
         if (indexOfBraces !== 0) {
-          //console.log(data.substring(0, indexOfBraces));
           data = data.substring(indexOfBraces);
         }
         const parsedData = JSON.parse(data) as GetLobbyRefreshResponse;
@@ -140,7 +140,6 @@ export const gameLobby = createAsyncThunk(
           return;
         }
         waitingForJSONResponse = false;
-        //console.log(e);
         return console.error(e);
       }
     }
@@ -323,23 +322,64 @@ export const gameSlice = createSlice({
       }>
     ) => {
       state.isFullRematch = false;
+      const previousGameID = state.gameInfo.gameID;
       state.gameInfo.gameID = action.payload.gameID;
-      state.gameInfo.playerID = !!state.gameInfo.playerID
-        ? state.gameInfo.playerID
-        : action.payload.playerID;
+      
+      // Check if this is a NEW game or a RECONNECTION to the same game
+      const isNewGame = previousGameID !== action.payload.gameID;
+      
+      // Priority order for determining playerID:
+      // 1. Use existing playerID if reconnecting to same game (ongoing game)
+      // 2. Only try to restore from storage if reconnecting (same gameID)
+      // 3. Use provided playerID from action (new game)
+      if (!isNewGame && state.gameInfo.playerID && state.gameInfo.playerID !== 0) {
+        // Reconnecting to same game, keep existing player ID
+      } else if (!isNewGame) {
+        // Reconnecting to same game but playerID not set - try storage recovery
+        const storedPlayerID = loadGamePlayerID(action.payload.gameID);
+        if (storedPlayerID > 0 && storedPlayerID !== 3) {
+          state.gameInfo.playerID = storedPlayerID;
+        } else {
+          state.gameInfo.playerID = action.payload.playerID;
+        }
+      } else {
+        // New game - always use provided playerID, don't search storage
+        state.gameInfo.playerID = action.payload.playerID;
+      }
+      
       //If We don't currently have an Auth Key
       if (!state.gameInfo.authKey) {
         //And the payload is giving us an auth key
-        if (state.gameInfo.playerID == 3) state.gameInfo.authKey = 'spectator';
-        else if (action.payload.authKey !== '') {
-          saveGameAuthKey(action.payload.gameID, action.payload.authKey);
+        if (state.gameInfo.playerID == 3) {
+          state.gameInfo.authKey = 'spectator';
+        } else if (action.payload.authKey !== '') {
+          // Save both authKey and playerID for recovery on reconnection
+          saveGameAuthKey(action.payload.gameID, action.payload.authKey, state.gameInfo.playerID);
           state.gameInfo.authKey = action.payload.authKey;
         }
-        //Else try to set from local storage
-        else {
-          state.gameInfo.authKey = loadGameAuthKey(state.gameInfo.gameID);
+        //Else try to set from local storage (ONLY if reconnecting to same game)
+        else if (!isNewGame) {
+          const storedAuthKey = loadGameAuthKey(state.gameInfo.gameID);
+          if (storedAuthKey !== '') {
+            state.gameInfo.authKey = storedAuthKey;
+          }
+        }
+      } else {
+        // Already have an auth key
+        if (action.payload.authKey !== '') {
+          // For rematch (same gameID), always update with new authKey if provided
+          // For new game or reconnection, update if different
+          saveGameAuthKey(action.payload.gameID, action.payload.authKey, state.gameInfo.playerID);
+          state.gameInfo.authKey = action.payload.authKey;
+        } else if (!isNewGame) {
+          // For rematch/reconnection with no authKey in payload, try to load from storage
+          const storedAuthKey = loadGameAuthKey(state.gameInfo.gameID);
+          if (storedAuthKey !== '') {
+            state.gameInfo.authKey = storedAuthKey;
+          }
         }
       }
+      
       state.gameDynamicInfo.lastUpdate = 0;
       state.playerOne = {};
       state.playerTwo = {};
@@ -442,7 +482,9 @@ export const gameSlice = createSlice({
       state.gameDynamicInfo.lastUpdate = action.payload.gameDynamicInfo.lastUpdate;
       state.gameDynamicInfo.turnNo = action.payload.gameDynamicInfo.turnNo;
       state.gameDynamicInfo.clock = action.payload.gameDynamicInfo.clock;
+      state.gameDynamicInfo.spectatorCount = action.payload.gameDynamicInfo.spectatorCount;
       state.hasPriority = action.payload.hasPriority;
+      state.priorityPlayer = action.payload.priorityPlayer;
       state.chatEnabled = action.payload.chatEnabled;
 
       state.playerPrompt = action.payload.playerPrompt;
@@ -567,58 +609,102 @@ export const {
 
 export const getGameInfo = (state: RootState) => state.game.gameInfo;
 
-export const selectPermanentsAsStack = (
-  state: RootState,
-  isPlayer: boolean
-): CardStack[] => {
-  const permanents =
-    (isPlayer
-      ? state.game.playerOne.Permanents
-      : state.game.playerTwo.Permanents) || [];
+const selectPlayerOnePermanents = (state: RootState) => state.game.playerOne.Permanents;
+const selectPlayerTwoPermanents = (state: RootState) => state.game.playerTwo.Permanents;
 
-  // adding a comment
-  let initialCardStack: CardStack[] = [];
-  let idIndex = 0;
-  return [...permanents]
-  .sort((a, b) => a.cardNumber.localeCompare(b.cardNumber))
-  .reduce((accumulator, currentCard) => {
-      if (currentCard.cardNumber === 'EVR070') {
-        // Don't stack, just add to accumulator
+// Memoized selector factories for player one and player two
+const selectPlayerOnePermanentsAsStack = createSelector(
+  [selectPlayerOnePermanents],
+  (permanents: Card[] | undefined) => {
+    const cards = permanents || [];
+    let initialCardStack: CardStack[] = [];
+    let idIndex = 0;
+    return [...cards]
+      .sort((a, b) => a.cardNumber.localeCompare(b.cardNumber))
+      .reduce((accumulator, currentCard) => {
+        if (currentCard.cardNumber === 'EVR070') {
+          accumulator.push({
+            card: currentCard,
+            count: 1,
+            id: `${currentCard.cardNumber}-${idIndex++}`
+          });
+          return accumulator;
+        }
+        const cardCopy = { ...currentCard };
+        const storedADO = currentCard.actionDataOverride;
+        cardCopy.actionDataOverride = '';
+        let isInAccumulator = false;
+        let index = 0;
+
+        for (const [ix, cardStack] of accumulator.entries()) {
+          cardCopy.actionDataOverride = cardStack.card.actionDataOverride;
+          if (isEqual(cardStack.card, cardCopy)) {
+            isInAccumulator = true;
+            index = ix;
+            break;
+          }
+        }
+        if (isInAccumulator) {
+          accumulator[index].count = accumulator[index].count + 1;
+          return accumulator;
+        }
         accumulator.push({
           card: currentCard,
           count: 1,
           id: `${currentCard.cardNumber}-${idIndex++}`
         });
+        cardCopy.actionDataOverride = storedADO;
         return accumulator;
-      }
-      const cardCopy = { ...currentCard };
-      const storedADO = currentCard.actionDataOverride;
-      cardCopy.actionDataOverride = '';
-      let isInAccumulator = false;
-      let index = 0;
+      }, initialCardStack);
+  }
+);
 
-      // Stack cards.
-
-      // is current card in the cardStackArray already?
-      for (const [ix, cardStack] of accumulator.entries()) {
-        cardCopy.actionDataOverride = cardStack.card.actionDataOverride;
-        if (isEqual(cardStack.card, cardCopy)) {
-          isInAccumulator = true;
-          index = ix;
-          break;
+const selectPlayerTwoPermanentsAsStack = createSelector(
+  [selectPlayerTwoPermanents],
+  (permanents: Card[] | undefined) => {
+    const cards = permanents || [];
+    let initialCardStack: CardStack[] = [];
+    let idIndex = 0;
+    return [...cards]
+      .sort((a, b) => a.cardNumber.localeCompare(b.cardNumber))
+      .reduce((accumulator, currentCard) => {
+        if (currentCard.cardNumber === 'EVR070') {
+          accumulator.push({
+            card: currentCard,
+            count: 1,
+            id: `${currentCard.cardNumber}-${idIndex++}`
+          });
+          return accumulator;
         }
-      }
-      // if it is, +1 to count
-      if (isInAccumulator) {
-        accumulator[index].count = accumulator[index].count + 1;
+        const cardCopy = { ...currentCard };
+        const storedADO = currentCard.actionDataOverride;
+        cardCopy.actionDataOverride = '';
+        let isInAccumulator = false;
+        let index = 0;
+
+        for (const [ix, cardStack] of accumulator.entries()) {
+          cardCopy.actionDataOverride = cardStack.card.actionDataOverride;
+          if (isEqual(cardStack.card, cardCopy)) {
+            isInAccumulator = true;
+            index = ix;
+            break;
+          }
+        }
+        if (isInAccumulator) {
+          accumulator[index].count = accumulator[index].count + 1;
+          return accumulator;
+        }
+        accumulator.push({
+          card: currentCard,
+          count: 1,
+          id: `${currentCard.cardNumber}-${idIndex++}`
+        });
+        cardCopy.actionDataOverride = storedADO;
         return accumulator;
-      }
-      // if it is not, append to accumulator.
-      accumulator.push({
-        card: currentCard,
-        count: 1,
-        id: `${currentCard.cardNumber}-${idIndex++}`
-      });
-      return accumulator;
-    }, initialCardStack);
+      }, initialCardStack);
+  }
+);
+
+export const selectPermanentsAsStack = (state: RootState, isPlayer: boolean): CardStack[] => {
+  return isPlayer ? selectPlayerOnePermanentsAsStack(state) : selectPlayerTwoPermanentsAsStack(state);
 };

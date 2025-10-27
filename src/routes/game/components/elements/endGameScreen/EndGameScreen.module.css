@@ -4,8 +4,8 @@
   flex-direction: column;
   top: 10vh;
   bottom: 10vh;
-  left: 10vw;
-  right: 10vw;
+  left: 9vw;
+  right: 13vw;
   background-color: var(--near-black);
   padding: 1.5rem;
   border: 1px solid var(--primary);
@@ -111,10 +111,9 @@
   transform: translateY(0);
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1080px) {
   .cardListBox {
-    top: 2vh;
-    bottom: 2vh;
+    bottom: 10vh;
     left: 2vw;
     right: 2vw;
     padding: 0.75rem;
@@ -123,30 +122,32 @@
   .cardListTitleContainer {
     flex-direction: column;
     align-items: flex-start;
-    gap: 0.5rem;
+    gap: 0.75rem;
     padding-bottom: 0.5rem;
     margin-bottom: 0.5rem;
   }
 
   .cardListTitle {
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
     gap: 0.5rem;
     width: 100%;
   }
 
   .title {
     font-size: 1.1em;
-    flex: 1;
+    flex: none;
+    width: 100%;
   }
 
   .buttonGroup {
     width: 100%;
     flex-direction: row;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
     gap: 0.4rem;
     order: 2;
+    margin-top: 0.5rem;
   }
 
   .buttonDiv {

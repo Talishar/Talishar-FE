@@ -206,6 +206,67 @@ export const AI_DECK = {
   FAICC: 'FaiCC'
 };
 
+// Preconstructed deck data
+const PRECON_DECK_DATA = [
+  {
+    name: 'Maxx, the Hype Nitro',
+    link: 'https://fabrary.net/decks/01JRH0631MH5A9JPVGTP3TKJXN',
+    hero: 'EVO004'
+  },
+  {
+    name: 'Aurora, Shooting Star',
+    link: 'https://fabrary.net/decks/01JN2DEG4X2V8DVMCWFBWQTTSC',
+    hero: 'ROS007'
+  },
+  {
+    name: 'Jarl Vetreiđi',
+    link: 'https://fabrary.net/decks/01JCPPENK52DTRBJZMWQF8S0X2',
+    hero: 'AJV001'
+  },
+  {
+    name: 'Dash I/O',
+    link: 'https://fabrary.net/decks/01J9822H5PANJAFQVMC4TPK4Z1',
+    hero: 'EVO001'
+  },
+  {
+    name: 'Azalea, Ace in the Hole',
+    link: 'https://fabrary.net/decks/01J3GKKSTM773CW7BG3RRJ5FJH',
+    hero: 'ARC038'
+  },
+  {
+    name: 'Ser Boltyn, Breaker of Dawn',
+    link: 'https://fabrary.net/decks/01J202NH0RG8S0V8WXH1FWB2AH',
+    hero: 'MON029'
+  },
+  {
+    name: 'Kayo, Armed and Dangerous',
+    link: 'https://fabrary.net/decks/01HWNCK2BYPVKK6701052YYXMZ',
+    hero: 'HVY001'
+  },
+  {
+    name: 'Gravy Bones, Shipwrecked Looter',
+    link: 'https://fabrary.net/decks/01JVYZ0NCHP49HAP40C23P14E3',
+    hero: 'SEA043'
+  },
+  {
+    name: 'Ira, Scarlet Revenger',
+    link: 'https://fabrary.net/decks/01JZ97KZ5TQV8E0FYMAM0XVNX7',
+    hero: 'HER123'
+  }
+];
+
+// Create sorted arrays for easier consumption
+const SORTED_PRECON_DECKS = PRECON_DECK_DATA
+  .map((deck) => ({ ...deck }))
+  .sort((a, b) => a.name.localeCompare(b.name));
+
+export const PRECON_DECKS = {
+  DATA: SORTED_PRECON_DECKS,
+  LINKS: SORTED_PRECON_DECKS.map((deck) => deck.link),
+  NAMES: SORTED_PRECON_DECKS.map((deck) => deck.name),
+  HEROES: SORTED_PRECON_DECKS.map((deck) => deck.hero)
+};
+
 export const URL_END_POINT = {
   GET_GAME_LIST: 'APIs/GetGameList.php',
   CREATE_GAME: 'APIs/CreateGame.php',
@@ -237,12 +298,15 @@ export const URL_END_POINT = {
   BLOCK_USER: 'include/BlockUser.php',
   GET_MOD_PAGE_DATA: 'APIs/GetModPageData.php',
   BAN_PLAYER: 'BanPlayer.php',
-  CLOSE_GAME: 'CloseGame.php'
+  CLOSE_GAME: 'CloseGame.php',
+  FRIEND_LIST: 'APIs/FriendListAPI.php',
+  BLOCKED_USERS: 'APIs/BlockedUsersAPI.php'
 };
 
 export const GAME_VISIBILITY = {
   PUBLIC: 'public',
-  PRIVATE: 'private'
+  PRIVATE: 'private',
+  FRIENDS_ONLY: 'friends-only'
 };
 
 export const ADD_DECK_TO_FAVORITES = {

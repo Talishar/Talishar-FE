@@ -385,6 +385,9 @@ export default function ParseGameState(input: any) {
   //clock
   result.gameDynamicInfo.clock = input.clock;
 
+  // spectator count
+  result.gameDynamicInfo.spectatorCount = input.spectatorCount ?? 0;
+
   // turn phase
   if (input.turnPhase !== undefined) {
     result.turnPhase = input.turnPhase;
@@ -413,6 +416,20 @@ export default function ParseGameState(input: any) {
   result.events = input.newEvents?.eventArray;
 
   result.hasPriority = !!input.havePriority;
+
+  // Determine which player has priority (1 or 2)
+  // If playerID is 1, priorityPlayer is 1 when havePriority is true, 2 when false
+  // If playerID is 2, priorityPlayer is 2 when havePriority is true, 1 when false
+  // For spectators (playerID 3), backend now sends havePriority as if they were player 1
+  if (input.playerID === 1) {
+    result.priorityPlayer = input.havePriority ? 1 : 2;
+  } else if (input.playerID === 2) {
+    result.priorityPlayer = input.havePriority ? 2 : 1;
+  } else if (input.playerID === 3) {
+    // For spectators, backend sends havePriority as if spectator were player 1
+    // So we can use the same logic as player 1
+    result.priorityPlayer = input.havePriority ? 1 : 2;
+  }
 
   result.preventPassPrompt = input.preventPassPrompt;
 

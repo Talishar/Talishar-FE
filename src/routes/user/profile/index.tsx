@@ -10,6 +10,8 @@ import { CiEdit } from "react-icons/ci";
 import styles from './profile.module.css';
 import { generateCroppedImageUrl } from 'utils/cropImages';
 import ProfileSettings from './ProfileSettings';
+import FriendsList from './FriendsList';
+import BlockedUsers from './BlockedUsers';
 
 const CODE = 'code';
 const CLIENT_ID =
@@ -107,7 +109,9 @@ export const ProfilePage = () => {
                   </p>
                 )}
               </div>
-              <h3 className={styles.title}>Your decks:</h3>
+              <FriendsList className={styles.friendsSection} />
+              <BlockedUsers className={styles.friendsSection} />
+              <h3 className={styles.title}>Your Decks</h3>
               <table>
                 <thead>
                   <tr>

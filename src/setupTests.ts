@@ -1,4 +1,4 @@
-// jest-dom adds custom jest matchers for asserting on DOM nodes.
+﻿// jest-dom adds custom jest matchers for asserting on DOM nodes.
 // allows you to do things like:
 // expect(element).toHaveTextContent(/react/i)
 // learn more: https://github.com/testing-library/jest-dom
@@ -6,7 +6,7 @@ import '@testing-library/jest-dom/extend-expect';
 import '@testing-library/jest-dom';
 import 'isomorphic-fetch';
 import { setupServer } from 'msw/node';
-import { http } from 'msw';
+import { rest } from 'msw';
 import { apiSlice } from './features/api/apiSlice';
 import { setupStore } from './app/Store';
 import { vi } from 'vitest';
@@ -15,26 +15,26 @@ import mockOptionsMenuResponse from 'mocks/optionsmenu/mockOptionsMenuResponse';
 const store = setupStore();
 
 export const restHandlers = [
-  http.get('api/GetPopupAPI.php', () => {
-    return new Response(
-      JSON.stringify({
+  rest.get('api/GetPopupAPI.php', (req, res, ctx) => {
+    return res(
+      ctx.status(200),
+      ctx.json({
         Cards: [
           { Player: '2', Name: 'Zipper Hit', cardID: 'ARC030', modifier: '4' }
         ]
-      }),
-      { status: 200 }
+      })
     );
   }),
-  http.get('api/GetPopupAPI.php', ({ request }) => {
-    const url = new URL(request.url);
-    const popupType = url.searchParams.get('popupType');
+  rest.get('api/GetPopupAPI.php', (req, res, ctx) => {
+    const popupType = req.url.searchParams.get('popupType');
     switch (popupType) {
       case 'mySettings':
-        return new Response(JSON.stringify(mockOptionsMenuResponse), { status: 200 });
+        return res(ctx.status(200), ctx.json(mockOptionsMenuResponse));
 
       default:
-        return new Response(
-          JSON.stringify({
+        return res(
+          ctx.status(200),
+          ctx.json({
             Cards: [
               {
                 Player: '2',
@@ -43,28 +43,28 @@ export const restHandlers = [
                 modifier: '4'
               }
             ]
-          }),
-          { status: 200 }
+          })
         );
     }
   }),
-  http.post('/api/APIs/CreateGame.php', () => {
-    return new Response(
-      JSON.stringify({
+  rest.post('/api/APIs/CreateGame.php', (req, res, ctx) => {
+    return res(
+      ctx.status(200),
+      ctx.json({
         message: 'success',
         gameName: 870609,
         playerID: 1,
         authKey:
           '75391d54a09cdfe877cfe9fc641dfab449e7d4ef37a1536e27cae2c0596c78d9'
-      }),
-      { status: 200 }
+      })
     );
   }),
-  http.get(
+  rest.get(
     'http://127.0.0.1:5173/api/live/APIs/GetGameList.php',
-    () => {
-      return new Response(
-        JSON.stringify({
+    (req, res, ctx) => {
+      return res(
+        ctx.status(200),
+        ctx.json({
           gamesInProgress: [
             {
               p1Hero: 'ELE062',
@@ -110,8 +110,7 @@ export const restHandlers = [
           ],
           canSeeQueue: false,
           gameInProgressCount: 3
-        }),
-        { status: 200 }
+        })
       );
     }
   )

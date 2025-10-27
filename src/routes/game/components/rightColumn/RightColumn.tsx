@@ -4,9 +4,9 @@ import LastPlayed from '../elements/lastPlayed/LastPlayed';
 import Menu from '../elements/menu/Menu';
 import TurnNumber from '../elements/turnNumber/TurnNumber';
 import Timer from '../elements/timer/timer';
+import SpectatorCount from '../elements/spectatorCount/SpectatorCount';
 import styles from './RightColumn.module.css';
 import ChatBox from '../elements/chatBox/ChatBox';
-import PhaseTracker from '../elements/phaseTracker/PhaseTracker';
 import useSetting from 'hooks/useSetting';
 import { IS_STREAMER_MODE } from 'features/options/constants';
 
@@ -24,6 +24,7 @@ export default function RightColumn() {
           <TurnNumber />
           <Timer />
           <LastPlayed />
+          <SpectatorCount />
           <PriorityControl />
         </div>
         <div className={styles.bottomGroup}>

@@ -20,52 +20,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { ErrorMessage } from '@hookform/error-message';
 import { generateCroppedImageUrl } from 'utils/cropImages';
 import { ImageSelect, ImageSelectOption } from 'components/ImageSelect';
-import { GAME_FORMAT, isPreconFormat } from 'appConstants';
-
-const preconDecklinks = [
-  'https://fabrary.net/decks/01JRH0631MH5A9JPVGTP3TKJXN', //maxx
-  'https://fabrary.net/decks/01JN2DEG4X2V8DVMCWFBWQTTSC', //aurora
-  'https://fabrary.net/decks/01JCPPENK52DTRBJZMWQF8S0X2', //jarl
-  'https://fabrary.net/decks/01J9822H5PANJAFQVMC4TPK4Z1', //dio
-  'https://fabrary.net/decks/01J3GKKSTM773CW7BG3RRJ5FJH', //azalea
-  'https://fabrary.net/decks/01J202NH0RG8S0V8WXH1FWB2AH', //boltyn
-  'https://fabrary.net/decks/01HWNCK2BYPVKK6701052YYXMZ', //kayo
-  'https://fabrary.net/decks/01JVYZ0NCHP49HAP40C23P14E3', //gravy
-  'https://fabrary.net/decks/01JZ97KZ5TQV8E0FYMAM0XVNX7', //ira
-];
-
-const preconDeckNames = [
-  'Maxx, the Hype Nitro',
-  'Aurora, Shooting Star',
-  'Jarl Vetreiđi',
-  'Dash I/O',
-  'Azalea, Ace in the Hole',
-  'Ser Boltyn, Breaker of Dawn',
-  'Kayo, Armed and Dangerous',
-  'Gravy Bones, Shipwrecked Looter',
-  'Ira, Scarlet Revenger'
-];
-
-// Map precon deck names to hero card IDs for image display
-const preconDeckHeroes = [
-  "EVO004", // Maxx
-  "ROS007", // Aurora
-  "AJV001", // Jarl
-  "EVO001", // Dash
-  "ARC038", // Azalea
-  "MON029", // Boltyn
-  "HVY001", // Kayo
-  "SEA043", // Gravy
-  "HER123"  // Ira
-];
-
-const sortedPreconDecks = preconDeckNames
-  .map((name, index) => ({ name, link: preconDecklinks[index], hero: preconDeckHeroes[index] }))
-  .sort((a, b) => a.name.localeCompare(b.name));
-
-const sortedPreconDeckNames = sortedPreconDecks.map(deck => deck.name);
-const sortedPreconDecklinks = sortedPreconDecks.map(deck => deck.link);
-const sortedPreconDeckHeroes = sortedPreconDecks.map(deck => deck.hero);
+import { GAME_FORMAT, isPreconFormat, PRECON_DECKS } from 'appConstants';
 
 // Helper function to shorten format names
 const shortenFormat = (format: string): string => {
@@ -104,7 +59,7 @@ const JoinGame = () => {
   });
 
   const [selectedFavoriteDeck, setSelectedFavoriteDeck] = React.useState<string>('');
-  const [selectedPreconDeck, setSelectedPreconDeck] = React.useState<string>(sortedPreconDecklinks[0]);
+  const [selectedPreconDeck, setSelectedPreconDeck] = React.useState<string>(PRECON_DECKS.LINKS[0]);
   const [gameFormat, setGameFormat] = React.useState<string | null>(null);
 
   const initialValues: JoinGameAPI = useMemo(() => {
@@ -127,8 +82,12 @@ const JoinGame = () => {
   useEffect(() => {
     reset(initialValues);
     setSelectedFavoriteDeck(initialValues.favoriteDecks || '');
-    setSelectedPreconDeck(sortedPreconDecklinks[0]);
-  }, [initialValues, reset]);
+    setSelectedPreconDeck(PRECON_DECKS.LINKS[0]);
+    // Only set fabdb to precon deck if format is precon
+    if (isPreconFormat(gameFormat)) {
+      setValue('fabdb', PRECON_DECKS.LINKS[0]);
+    }
+  }, [initialValues, reset, gameFormat, setValue]);
 
   // Update gameFormat when game list loads - find this game in the list
   useEffect(() => {
@@ -140,11 +99,17 @@ const JoinGame = () => {
       const foundGame = openGame || inProgressGame;
       
       if (foundGame?.format) {
-        console.log('Game found! Format:', foundGame.format, 'isPrecon:', isPreconFormat(foundGame.format));
         setGameFormat(foundGame.format);
       }
     }
   }, [gameListData, finalGameName]);
+
+  // Sync selectedPreconDeck with form field for precon formats
+  useEffect(() => {
+    if (isPreconFormat(gameFormat)) {
+      setValue('fabdb', selectedPreconDeck);
+    }
+  }, [selectedPreconDeck, gameFormat, setValue]);
 
   // Convert favorite decks to ImageSelect options
   const favoriteDeckOptions: ImageSelectOption[] = React.useMemo(() => {
@@ -158,10 +123,10 @@ const JoinGame = () => {
 
   // Convert precon decks to ImageSelect options
   const preconDeckOptions: ImageSelectOption[] = React.useMemo(() => {
-    return sortedPreconDecklinks.map((link, index) => ({
+    return PRECON_DECKS.LINKS.map((link, index) => ({
       value: link,
-      label: sortedPreconDeckNames[index],
-      imageUrl: generateCroppedImageUrl(sortedPreconDeckHeroes[index])
+      label: PRECON_DECKS.NAMES[index],
+      imageUrl: generateCroppedImageUrl(PRECON_DECKS.HEROES[index])
     }));
   }, []);
 

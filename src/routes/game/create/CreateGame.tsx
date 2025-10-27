@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo } from 'react';
 import { useAppDispatch } from 'app/Hooks';
 import classNames from 'classnames';
-import { GAME_FORMAT, GAME_VISIBILITY, AI_DECK, isPreconFormat } from 'appConstants';
+import { GAME_FORMAT, GAME_VISIBILITY, AI_DECK, isPreconFormat, PRECON_DECKS } from 'appConstants';
 import {
   useCreateGameMutation,
   useGetFavoriteDecksQuery
@@ -20,52 +20,6 @@ import { FaExclamationCircle } from 'react-icons/fa';
 import { HEROES_OF_RATHE } from '../../index/components/filter/constants';
 import { generateCroppedImageUrl } from 'utils/cropImages';
 import { ImageSelect, ImageSelectOption } from 'components/ImageSelect';
-
-const preconDecklinks = [
-  "https://fabrary.net/decks/01JRH0631MH5A9JPVGTP3TKJXN", //maxx
-  "https://fabrary.net/decks/01JN2DEG4X2V8DVMCWFBWQTTSC", //aurora
-  "https://fabrary.net/decks/01JCPPENK52DTRBJZMWQF8S0X2", //jarl
-  "https://fabrary.net/decks/01J9822H5PANJAFQVMC4TPK4Z1", //dio
-  "https://fabrary.net/decks/01J3GKKSTM773CW7BG3RRJ5FJH", //azalea
-  "https://fabrary.net/decks/01J202NH0RG8S0V8WXH1FWB2AH", //boltyn
-  "https://fabrary.net/decks/01HWNCK2BYPVKK6701052YYXMZ", //kayo
-  "https://fabrary.net/decks/01JVYZ0NCHP49HAP40C23P14E3", //gravy
-  "https://fabrary.net/decks/01JZ97KZ5TQV8E0FYMAM0XVNX7", //ira
-];
-
-const preconDeckNames = [
-  "Maxx, the Hype Nitro",
-  "Aurora, Shooting Star",
-  "Jarl Vetreiđi",
-  "Dash I/O",
-  "Azalea, Ace in the Hole",
-  "Ser Boltyn, Breaker of Dawn",
-  "Kayo, Armed and Dangerous",
-  "Gravy Bones, Shipwrecked Looter",
-  "Ira, Scarlet Revenger",
-];
-
-// Map precon deck names to hero card IDs for image display
-const preconDeckHeroes = [
-  "EVO004", // Maxx
-  "ROS007", // Aurora
-  "AJV001", // Jarl
-  "EVO001", // Dash
-  "ARC038", // Azalea
-  "MON029", // Boltyn
-  "HVY001", // Kayo
-  "SEA043", // Gravy
-  "HER123"  // Ira
-];
-
-// Create sorted arrays for the precon decks
-const sortedPreconDecks = preconDeckNames
-  .map((name, index) => ({ name, link: preconDecklinks[index], hero: preconDeckHeroes[index] }))
-  .sort((a, b) => a.name.localeCompare(b.name));
-
-const sortedPreconDeckNames = sortedPreconDecks.map(deck => deck.name);
-const sortedPreconDecklinks = sortedPreconDecks.map(deck => deck.link);
-const sortedPreconDeckHeroes = sortedPreconDecks.map(deck => deck.hero);
 
 // Helper function to shorten format names
 const shortenFormat = (format: string): string => {
@@ -111,8 +65,12 @@ const CreateGame = () => {
       visibility:
         searchParams.get('visibility') ??
         (isLoggedIn
-          ? data?.lastVisibility !== undefined && data.lastVisibility == 1
-            ? GAME_VISIBILITY.PUBLIC
+          ? data?.lastVisibility !== undefined
+            ? data.lastVisibility == 1
+              ? GAME_VISIBILITY.PUBLIC
+              : data.lastVisibility == 2
+              ? GAME_VISIBILITY.FRIENDS_ONLY
+              : GAME_VISIBILITY.PRIVATE
             : GAME_VISIBILITY.PRIVATE
           : GAME_VISIBILITY.PRIVATE),
       decksToTry: '',
@@ -132,7 +90,7 @@ const CreateGame = () => {
   const [selectedHeroes, setSelectedHeroes] = React.useState<string[]>([]);
   const [gameDescription, setGameDescription] = React.useState('');
   const [selectedFavoriteDeck, setSelectedFavoriteDeck] = React.useState<string>(initialValues.favoriteDecks || '');
-  const [selectedPreconDeck, setSelectedPreconDeck] = React.useState<string>(sortedPreconDecklinks[0]);
+  const [selectedPreconDeck, setSelectedPreconDeck] = React.useState<string>(PRECON_DECKS.LINKS[0]);
   const [isInitialized, setIsInitialized] = React.useState(false);
 
   const formFormat = watch('format');
@@ -162,8 +120,8 @@ const CreateGame = () => {
   const handleFormatChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedFormat(e.target.value);
     if (isPreconFormat(e.target.value)) {
-      setSelectedPreconDeck(sortedPreconDecklinks[0]);
-      setValue('fabdb', sortedPreconDecklinks[0]);
+      setSelectedPreconDeck(PRECON_DECKS.LINKS[0]);
+      setValue('fabdb', PRECON_DECKS.LINKS[0]);
     } else {
       setValue('fabdb', '');
     }
@@ -212,10 +170,10 @@ const CreateGame = () => {
     setGameDescription(initialValues.gameDescription || '');
     setSelectedHeroes([]);
     setSelectedFavoriteDeck(initialValues.favoriteDecks || '');
-    setSelectedPreconDeck(sortedPreconDecklinks[0]);
+    setSelectedPreconDeck(PRECON_DECKS.LINKS[0]);
     // Only set fabdb to precon deck if format is precon
     if (isPreconFormat(initialValues.format)) {
-      setValue('fabdb', sortedPreconDecklinks[0]);
+      setValue('fabdb', PRECON_DECKS.LINKS[0]);
     }
     setIsInitialized(true);
   }, [initialValues, reset, setValue]);
@@ -232,10 +190,10 @@ const CreateGame = () => {
 
   // Convert precon decks to ImageSelect options
   const preconDeckOptions: ImageSelectOption[] = React.useMemo(() => {
-    return sortedPreconDecklinks.map((link, index) => ({
+    return PRECON_DECKS.LINKS.map((link, index) => ({
       value: link,
-      label: sortedPreconDeckNames[index],
-      imageUrl: generateCroppedImageUrl(sortedPreconDeckHeroes[index])
+      label: PRECON_DECKS.NAMES[index],
+      imageUrl: generateCroppedImageUrl(PRECON_DECKS.HEROES[index])
     }));
   }, []);
 
@@ -478,6 +436,9 @@ const CreateGame = () => {
                     <option value={GAME_VISIBILITY.PUBLIC}>Public</option>
                   )}
                   <option value={GAME_VISIBILITY.PRIVATE}>Private</option>
+                  {isLoggedIn && (
+                    <option value={GAME_VISIBILITY.FRIENDS_ONLY}>Friends Only</option>
+                  )}
                 </select>
               </label>
               <label>

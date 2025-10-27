@@ -4,15 +4,18 @@ import { useNavigate } from 'react-router-dom';
 import { IOpenGame } from '../gameList/GameList';
 import styles from './OpenGame.module.css';
 import { generateCroppedImageUrl } from '../../../../utils/cropImages';
+import FriendBadge from '../gameList/FriendBadge';
 
 const OpenGame = ({
   ix,
   entry,
-  isOther
+  isOther,
+  isFriendsGame = false
 }: {
   ix: number;
   entry: IOpenGame;
   isOther?: boolean;
+  isFriendsGame?: boolean;
 }) => {
   const navigate = useNavigate();
   const buttonClass = classNames(styles.button, 'secondary');
@@ -35,6 +38,7 @@ const OpenGame = ({
       </div>
       <div>{entry.description}</div>
       {isOther && <div>{entry.formatName}</div>}
+      <FriendBadge isFriendsGame={isFriendsGame} size="small" />
       <div>
         <a
           className={buttonClass}

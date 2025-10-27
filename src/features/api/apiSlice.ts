@@ -37,6 +37,8 @@ import {
   BanPlayerByNameRequest,
   CloseGameRequest
 } from 'interface/API/ModPageAPI';
+import { FriendListAPIResponse } from 'interface/API/FriendListAPI.php';
+import { BlockedUsersAPIResponse } from 'interface/API/BlockedUsersAPI.php';
 import { getGameInfo } from '../game/GameSlice';
 import { RootState } from '../../app/Store';
 
@@ -404,6 +406,130 @@ export const apiSlice = createApi({
           responseHandler: parseResponse
         };
       }
+    }),
+    getFriendsList: builder.query<FriendListAPIResponse, void>({
+      query: () => {
+        return {
+          url: URL_END_POINT.FRIEND_LIST,
+          method: 'POST',
+          body: { action: 'getFriends' },
+          responseHandler: parseResponse
+        };
+      }
+    }),
+    addFriend: builder.mutation<FriendListAPIResponse, { friendUsername: string }>({
+      query: ({ friendUsername }) => {
+        return {
+          url: URL_END_POINT.FRIEND_LIST,
+          method: 'POST',
+          body: { action: 'addFriend', friendUsername: friendUsername },
+          responseHandler: parseResponse
+        };
+      }
+    }),
+    removeFriend: builder.mutation<FriendListAPIResponse, { friendUserId: number }>({
+      query: ({ friendUserId }) => {
+        return {
+          url: URL_END_POINT.FRIEND_LIST,
+          method: 'POST',
+          body: { action: 'removeFriend', friendUserId: friendUserId },
+          responseHandler: parseResponse
+        };
+      }
+    }),
+    searchUsers: builder.query<FriendListAPIResponse, { searchTerm: string; limit?: number }>({
+      query: ({ searchTerm, limit = 10 }) => {
+        return {
+          url: URL_END_POINT.FRIEND_LIST,
+          method: 'POST',
+          body: { action: 'searchUsers', searchTerm: searchTerm, limit: limit },
+          responseHandler: parseResponse
+        };
+      }
+    }),
+    getPendingRequests: builder.query<FriendListAPIResponse, void>({
+      query: () => {
+        return {
+          url: URL_END_POINT.FRIEND_LIST,
+          method: 'POST',
+          body: { action: 'getPendingRequests' },
+          responseHandler: parseResponse
+        };
+      }
+    }),
+    acceptRequest: builder.mutation<FriendListAPIResponse, { requesterUserId: number }>({
+      query: ({ requesterUserId }) => {
+        return {
+          url: URL_END_POINT.FRIEND_LIST,
+          method: 'POST',
+          body: { action: 'acceptRequest', requesterUserId: requesterUserId },
+          responseHandler: parseResponse
+        };
+      }
+    }),
+    rejectRequest: builder.mutation<FriendListAPIResponse, { requesterUserId: number }>({
+      query: ({ requesterUserId }) => {
+        return {
+          url: URL_END_POINT.FRIEND_LIST,
+          method: 'POST',
+          body: { action: 'rejectRequest', requesterUserId: requesterUserId },
+          responseHandler: parseResponse
+        };
+      }
+    }),
+    getSentRequests: builder.query<FriendListAPIResponse, void>({
+      query: () => {
+        return {
+          url: URL_END_POINT.FRIEND_LIST,
+          method: 'POST',
+          body: { action: 'getSentRequests' },
+          responseHandler: parseResponse
+        };
+      }
+    }),
+    cancelRequest: builder.mutation<FriendListAPIResponse, { recipientUserId: number }>({
+      query: ({ recipientUserId }) => {
+        return {
+          url: URL_END_POINT.FRIEND_LIST,
+          method: 'POST',
+          body: { action: 'cancelRequest', recipientUserId: recipientUserId },
+          responseHandler: parseResponse
+        };
+      }
+    }),
+
+    // Blocked Users endpoints
+    getBlockedUsers: builder.query<BlockedUsersAPIResponse, void>({
+      query: () => {
+        return {
+          url: URL_END_POINT.BLOCKED_USERS,
+          method: 'POST',
+          body: { action: 'getBlockedUsers' },
+          responseHandler: parseResponse
+        };
+      }
+    }),
+
+    blockUser: builder.mutation<BlockedUsersAPIResponse, { blockedUsername: string }>({
+      query: ({ blockedUsername }) => {
+        return {
+          url: URL_END_POINT.BLOCKED_USERS,
+          method: 'POST',
+          body: { action: 'blockUser', blockedUsername: blockedUsername },
+          responseHandler: parseResponse
+        };
+      }
+    }),
+
+    unblockUser: builder.mutation<BlockedUsersAPIResponse, { blockedUserId: number }>({
+      query: ({ blockedUserId }) => {
+        return {
+          url: URL_END_POINT.BLOCKED_USERS,
+          method: 'POST',
+          body: { action: 'unblockUser', blockedUserId: blockedUserId },
+          responseHandler: parseResponse
+        };
+      }
     })
   })
 });
@@ -435,5 +561,17 @@ export const {
   useGetModPageDataQuery,
   useBanPlayerByIPMutation,
   useBanPlayerByNameMutation,
-  useCloseGameMutation
+  useCloseGameMutation,
+  useGetFriendsListQuery,
+  useAddFriendMutation,
+  useRemoveFriendMutation,
+  useSearchUsersQuery,
+  useGetPendingRequestsQuery,
+  useAcceptRequestMutation,
+  useRejectRequestMutation,
+  useGetSentRequestsQuery,
+  useCancelRequestMutation,
+  useGetBlockedUsersQuery,
+  useBlockUserMutation,
+  useUnblockUserMutation
 } = apiSlice;
