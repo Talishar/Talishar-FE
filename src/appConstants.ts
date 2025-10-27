@@ -238,7 +238,8 @@ export const URL_END_POINT = {
   GET_MOD_PAGE_DATA: 'APIs/GetModPageData.php',
   BAN_PLAYER: 'BanPlayer.php',
   CLOSE_GAME: 'CloseGame.php',
-  FRIEND_LIST: 'APIs/FriendListAPI.php'
+  FRIEND_LIST: 'APIs/FriendListAPI.php',
+  BLOCKED_USERS: 'APIs/BlockedUsersAPI.php'
 };
 
 export const GAME_VISIBILITY = {
