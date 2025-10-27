@@ -124,7 +124,9 @@ const optionsSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(fetchAllSettings.fulfilled, (state, action) => {
-      settingsAdapter.setAll(state, action.payload as any);
+      // Handle cases where payload might be undefined or null
+      const settings = action.payload ?? [];
+      settingsAdapter.setAll(state, settings);
       state.status = QUERY_STATUS.SUCCESS;
     });
     builder.addCase(fetchAllSettings.rejected, (state, action) => {
