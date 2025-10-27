@@ -15,6 +15,8 @@ export default function PlayerName(player: Player) {
   const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
   const dropdownRef = useRef<HTMLDivElement>(null);
 
+  const playerID = useAppSelector((state: RootState) => state.game.gameInfo.playerID);
+
   const playerName = useAppSelector((state: RootState) =>
     player.isPlayer ? state.game.playerOne.Name : state.game.playerTwo.Name
   );
@@ -203,8 +205,8 @@ export default function PlayerName(player: Player) {
           <span className={styles.name}>{String(playerName ?? '').substring(0, 30).replace('-', `Practice Dummy`)}</span>
         </div>
 
-        {/* Dropdown arrow for opponent - hidden for Practice Dummy */}
-        {!player.isPlayer && !isPracticeDummy && (
+        {/* Dropdown arrow for opponent - hidden for Practice Dummy and spectators */}
+        {!player.isPlayer && !isPracticeDummy && playerID !== 3 && (
           <div className={styles.dropdownContainer}>
             <button
               className={styles.dropdownButton}
@@ -217,8 +219,8 @@ export default function PlayerName(player: Player) {
         )}
       </div>
 
-      {/* Dropdown menu rendered as portal for opponent - hidden for Practice Dummy */}
-      {!player.isPlayer && !isPracticeDummy && isDropdownOpen && createPortal(
+      {/* Dropdown menu rendered as portal for opponent - hidden for Practice Dummy and spectators */}
+      {!player.isPlayer && !isPracticeDummy && playerID !== 3 && isDropdownOpen && createPortal(
         <div 
           className={`${styles.dropdown} ${getStatusClass()}`}
           style={{
