@@ -125,6 +125,7 @@
   font-size: 0.85em;
   white-space: nowrap;
   flex-shrink: 0;
+  margin-bottom: 0;
 }
 
 .dropdownOption:hover:not(.disabled) {
