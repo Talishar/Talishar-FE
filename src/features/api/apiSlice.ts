@@ -379,8 +379,8 @@ export const apiSlice = createApi({
       query: ({ ipToBan, playerNumberToBan }) => {
         return {
           url: URL_END_POINT.BAN_PLAYER,
-          method: 'GET',
-          params: {
+          method: 'POST',
+          body: {
             ipToBan: ipToBan,
             playerNumberToBan: playerNumberToBan
           },
@@ -392,8 +392,8 @@ export const apiSlice = createApi({
       query: ({ playerToBan }) => {
         return {
           url: URL_END_POINT.BAN_PLAYER,
-          method: 'GET',
-          params: {
+          method: 'POST',
+          body: {
             playerToBan: playerToBan
           },
           responseHandler: parseResponse
@@ -404,8 +404,8 @@ export const apiSlice = createApi({
       query: ({ gameToClose }) => {
         return {
           url: URL_END_POINT.CLOSE_GAME,
-          method: 'GET',
-          params: {
+          method: 'POST',
+          body: {
             gameToClose: gameToClose
           },
           responseHandler: parseResponse
