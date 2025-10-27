@@ -1,0 +1,203 @@
+.container {
+  padding: 20px;
+  background: #2a2a2a;
+  border-radius: 8px;
+  margin-bottom: 30px;
+  color: #e0e0e0;
+}
+
+.container h2 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  color: #fff;
+  font-size: 1.5em;
+}
+
+.summary {
+  background: #1a1a1a;
+  border-left: 4px solid #ff9800;
+  padding: 15px;
+  margin-bottom: 20px;
+  border-radius: 4px;
+}
+
+.summary p {
+  margin: 0;
+  font-size: 0.95em;
+}
+
+.controls {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.selectAllButton,
+.banButton,
+.refreshButton,
+.banSingleButton {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.9em;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.selectAllButton {
+  background: #2196f3;
+  color: white;
+}
+
+.selectAllButton:hover:not(:disabled) {
+  background: #1976d2;
+}
+
+.banButton {
+  background: #f44336;
+  color: white;
+}
+
+.banButton:hover:not(:disabled) {
+  background: #d32f2f;
+}
+
+.refreshButton {
+  background: #4caf50;
+  color: white;
+}
+
+.refreshButton:hover:not(:disabled) {
+  background: #388e3c;
+}
+
+.banSingleButton {
+  background: #ff9800;
+  color: white;
+  padding: 6px 12px;
+  font-size: 0.85em;
+}
+
+.banSingleButton:hover:not(:disabled) {
+  background: #e68900;
+}
+
+.selectAllButton:disabled,
+.banButton:disabled,
+.refreshButton:disabled,
+.banSingleButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.usersList {
+  overflow-x: auto;
+}
+
+.usersTable {
+  width: 100%;
+  border-collapse: collapse;
+  background: #1a1a1a;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.usersTable thead {
+  background: #1a1a1a;
+  border-bottom: 2px solid #444;
+}
+
+.usersTable th {
+  padding: 12px;
+  text-align: left;
+  font-weight: 600;
+  color: #b0b0b0;
+  font-size: 0.9em;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.usersTable td {
+  padding: 12px;
+  border-bottom: 1px solid #333;
+  color: #e0e0e0;
+}
+
+.usersTable tbody tr:hover {
+  background: #252525;
+}
+
+.usersTable input[type='checkbox'] {
+  cursor: pointer;
+  accent-color: #2196f3;
+}
+
+.usernameCell {
+  font-weight: 500;
+  color: #fff;
+  max-width: 200px;
+  word-break: break-word;
+}
+
+.details {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid #444;
+  color: #999;
+  font-size: 0.85em;
+}
+
+.patternCell {
+  font-family: 'Courier New', monospace;
+  font-size: 0.9em;
+  color: #ffa726;
+}
+
+.pattern {
+  background: #3a2a1a;
+  padding: 4px 8px;
+  border-radius: 3px;
+  display: inline-block;
+}
+
+.actionCell {
+  text-align: center;
+}
+
+.noResults {
+  text-align: center;
+  padding: 40px 20px;
+  color: #888;
+  font-size: 1.1em;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 15px;
+  }
+
+  .controls {
+    flex-direction: column;
+  }
+
+  .selectAllButton,
+  .banButton,
+  .refreshButton {
+    width: 100%;
+  }
+
+  .usersTable {
+    font-size: 0.9em;
+  }
+
+  .usersTable th,
+  .usersTable td {
+    padding: 8px;
+  }
+
+  .usernameCell {
+    max-width: 120px;
+  }
+}

@@ -42,6 +42,10 @@ import {
   CloseGameRequest
 } from 'interface/API/ModPageAPI';
 import { FriendListAPIResponse } from 'interface/API/FriendListAPI.php';
+import {
+  UsernamesModerationResponse,
+  BanOffensiveUsernameRequest
+} from 'interface/API/UsernameModerationAPI';
 import { BlockedUsersAPIResponse } from 'interface/API/BlockedUsersAPI.php';
 import { getGameInfo } from '../game/GameSlice';
 import { RootState } from '../../app/Store';
@@ -552,6 +556,29 @@ export const apiSlice = createApi({
           responseHandler: parseResponse
         };
       }
+    }),
+
+    // Username Moderation endpoints
+    getOffensiveUsernames: builder.query<UsernamesModerationResponse, void>({
+      query: () => {
+        return {
+          url: URL_END_POINT.USERNAME_MODERATION,
+          method: 'POST',
+          body: { action: 'getOffensiveUsernames' },
+          responseHandler: parseResponse
+        };
+      }
+    }),
+
+    banOffensiveUsername: builder.mutation<any, BanOffensiveUsernameRequest>({
+      query: ({ username }) => {
+        return {
+          url: URL_END_POINT.USERNAME_MODERATION,
+          method: 'POST',
+          body: { action: 'banOffensiveUsername', username: username },
+          responseHandler: parseResponse
+        };
+      }
     })
   })
 });
@@ -596,5 +623,7 @@ export const {
   useCancelRequestMutation,
   useGetBlockedUsersQuery,
   useBlockUserMutation,
-  useUnblockUserMutation
+  useUnblockUserMutation,
+  useGetOffensiveUsernamesQuery,
+  useBanOffensiveUsernameMutation
 } = apiSlice;

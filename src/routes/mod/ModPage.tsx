@@ -8,6 +8,7 @@ import {
   useBanPlayerByNameMutation,
   useCloseGameMutation
 } from 'features/api/apiSlice';
+import UsernameModeration from './UsernameModeration';
 
 const ModPage: React.FC = () => {
   const { isLoggedIn, isMod } = useAuth();
@@ -201,6 +202,9 @@ const ModPage: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Username Moderation Section */}
+      <UsernameModeration />
     </div>
   );
 };
