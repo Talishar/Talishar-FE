@@ -56,14 +56,14 @@
   flex-direction: row;
   align-items: center;
   justify-content: center;
+  min-width: calc(6dvw * var(--card-scale));
   height: 32px;
-  width: 100px;
   border-radius: 5px;
   border: 1px solid var(--primary);
-  padding: 8px 12px;
+  flex-basis: auto;
+  padding: 8px;
+  width: auto;
   margin-bottom: 0.25rem;
-  white-space: nowrap;
-  flex: 0 0 auto;
 }
 
 .buttonDiv:hover {
