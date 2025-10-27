@@ -7,9 +7,14 @@ import { BsGithub, BsPersonFill, BsShieldFillCheck } from 'react-icons/bs';
 import { FaDiscord, FaTwitter } from 'react-icons/fa';
 import { RiLogoutBoxRLine } from 'react-icons/ri';
 import LanguageSelector from 'components/LanguageSelector/LanguageSelector';
+import { useGetPendingRequestsQuery } from 'features/api/apiSlice';
 
 const Header = () => {
   const { isLoggedIn, isMod, logOut } = useAuth();
+  const { data: pendingData } = useGetPendingRequestsQuery(undefined, {
+    skip: !isLoggedIn
+  });
+  const pendingRequestCount = pendingData?.requests?.length || 0;
 
   const handleLogOut = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -101,8 +106,11 @@ const Header = () => {
           )}
           <li>
             {isLoggedIn ? (
-              <Link to="/user">
+              <Link to="/user" className={styles.profileLink}>
                 <BsPersonFill></BsPersonFill> <span>Profile</span>
+                {pendingRequestCount > 0 && (
+                  <span className={styles.notificationBadge}>{pendingRequestCount}</span>
+                )}
               </Link>
             ) : (
               <Link to="/user/login" className={styles.login}>

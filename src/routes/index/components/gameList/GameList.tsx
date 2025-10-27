@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useGetGameListQuery } from 'features/api/apiSlice';
+import { useGetGameListQuery, useGetFriendsListQuery } from 'features/api/apiSlice';
 import styles from './GameList.module.scss';
 import InProgressGame from '../inProgressGame';
 import Filter from '../filter';
@@ -37,6 +37,8 @@ export interface IGameInProgress {
 export interface IInProgressGameList {
   gameList: IGameInProgress[];
   name: string;
+  isFriendsSection?: boolean;
+  friendUsernames?: Set<string>;
 }
 
 export interface GameListResponse {
@@ -59,6 +61,7 @@ const GameList = () => {
     useGetGameListQuery(undefined, {
       pollingInterval: isTabActive ? GAME_LIST_POLLING_INTERVAL : 0, // Stop polling when tab inactive
     });
+  const { data: friendsData } = useGetFriendsListQuery(undefined);
   const { isLoggedIn } = useAuth();
   const { blockedUsers } = useBlockedUsers();
 
@@ -105,6 +108,9 @@ const GameList = () => {
     activeHeroIds.has(hero.value)
   );
 
+  // Create a set of friend usernames for quick lookup
+  const friendUsernames = new Set(friendsData?.friends?.map(f => f.username) || []);
+
   // Filter games
   const filteredGamesInProgress = data?.gamesInProgress
     ? data.gamesInProgress.filter((game) => {
@@ -119,6 +125,14 @@ const GameList = () => {
         );
       })
     : [];
+
+  // Separate friend games from other games
+  const friendGamesInProgress = filteredGamesInProgress.filter(game =>
+    game.gameCreator && friendUsernames.has(game.gameCreator)
+  );
+  const otherGamesInProgress = filteredGamesInProgress.filter(game =>
+    !game.gameCreator || !friendUsernames.has(game.gameCreator)
+  );
 
   const sortedOpenGames = data?.openGames
     ? data.openGames
@@ -212,48 +226,56 @@ const GameList = () => {
               (game) => game.format === GAME_FORMAT.BLITZ
             )}
             name="Blitz"
+            friendUsernames={friendUsernames}
           />
           <FormatList
             gameList={sortedOpenGames.filter(
               (game) => game.format === GAME_FORMAT.COMPETITIVE_BLITZ
             )}
             name="Competitive Blitz"
+            friendUsernames={friendUsernames}
           />
           <FormatList
             gameList={sortedOpenGames.filter(
               (game) => game.format === GAME_FORMAT.CLASSIC_CONSTRUCTED
             )}
             name="Classic Constructed"
+            friendUsernames={friendUsernames}
           />
           <FormatList
             gameList={sortedOpenGames.filter(
               (game) => game.format === GAME_FORMAT.COMPETITIVE_CC
             )}
             name="Competitive CC"
+            friendUsernames={friendUsernames}
           />
           <FormatList
             gameList={sortedOpenGames.filter(
               (game) => game.format === GAME_FORMAT.LLCC
             )}
             name="Living Legend"
+            friendUsernames={friendUsernames}
           />
           <FormatList
             gameList={sortedOpenGames.filter(
               (game) => game.format === GAME_FORMAT.COMPETITIVE_LL
             )}
             name="Competitive LL"
+            friendUsernames={friendUsernames}
           />
           <FormatList
             gameList={sortedOpenGames.filter(
               (game) => game.format === GAME_FORMAT.SAGE
             )}
             name="Silver Age"
+            friendUsernames={friendUsernames}
           />
           <FormatList
             gameList={sortedOpenGames.filter(
               (game) => game.format === GAME_FORMAT.COMPETITIVE_SAGE
             )}
             name="Competitive Silver Age"
+            friendUsernames={friendUsernames}
           />
           <FormatList
             gameList={sortedOpenGames.filter((game) =>
@@ -261,6 +283,7 @@ const GameList = () => {
             )}
             name="Other Formats"
             isOther
+            friendUsernames={friendUsernames}
           />
           {data != undefined && (
             <div data-testid="games-in-progress" ref={parent}>
@@ -273,92 +296,111 @@ const GameList = () => {
               </h4>
               {gamesInProgressExpanded && (
                 <>
-                  <InProgressGameList
+                  {friendGamesInProgress.length > 0 && (
+                    <>
+                      <InProgressGameList
+                        gameList={friendGamesInProgress.sort((a, b) => b.gameName - a.gameName)}
+                        name="Friends' Games"
+                        isFriendsSection={true}
+                        friendUsernames={friendUsernames}
+                      />
+                    </>
+                  )}
+              <InProgressGameList
                 gameList={[
-                  ...filteredGamesInProgress.filter((game) =>
+                  ...otherGamesInProgress.filter((game) =>
                     [GAME_FORMAT.BLITZ, GAME_FORMAT_NUMBER.BLITZ].includes(game.format)
                   ),
                 ].sort((a, b) => b.gameName - a.gameName)}
                 name="Blitz"
+                friendUsernames={friendUsernames}
               />
               <InProgressGameList
                 gameList={[
-                  ...filteredGamesInProgress.filter((game) =>
+                  ...otherGamesInProgress.filter((game) =>
                     [GAME_FORMAT.COMPETITIVE_BLITZ, GAME_FORMAT_NUMBER.COMPETITIVE_BLITZ].includes(
                       game.format
                     )
                   ),
                 ].sort((a, b) => b.gameName - a.gameName)}
                 name="Competitive Blitz"
+                friendUsernames={friendUsernames}
               />
               <InProgressGameList
                 gameList={[
-                  ...filteredGamesInProgress.filter((game) =>
+                  ...otherGamesInProgress.filter((game) =>
                     [GAME_FORMAT.CLASSIC_CONSTRUCTED, GAME_FORMAT_NUMBER.CLASSIC_CONSTRUCTED].includes(
                       game.format
                     )
                   ),
                 ].sort((a, b) => b.gameName - a.gameName)}
                 name="Classic Constructed"
+                friendUsernames={friendUsernames}
               />
               <InProgressGameList
                 gameList={[
-                  ...filteredGamesInProgress.filter((game) =>
+                  ...otherGamesInProgress.filter((game) =>
                     [GAME_FORMAT.COMPETITIVE_CC, GAME_FORMAT_NUMBER.COMPETITIVE_CC].includes(
                       game.format
                     )
                   ),
                 ].sort((a, b) => b.gameName - a.gameName)}
                 name="Competitive CC"
+                friendUsernames={friendUsernames}
               />
               <InProgressGameList
                 gameList={[
-                  ...filteredGamesInProgress.filter((game) =>
+                  ...otherGamesInProgress.filter((game) =>
                     [GAME_FORMAT.LLCC, GAME_FORMAT_NUMBER.LLCC].includes(
                       game.format
                     )
                   ),
                 ].sort((a, b) => b.gameName - a.gameName)}
                 name="Living Legend"
+                friendUsernames={friendUsernames}
               />
               <InProgressGameList
                 gameList={[
-                  ...filteredGamesInProgress.filter((game) =>
+                  ...otherGamesInProgress.filter((game) =>
                     [GAME_FORMAT.COMPETITIVE_LL, GAME_FORMAT_NUMBER.COMPETITIVE_LL].includes(
                       game.format
                     )
                   ),
                 ].sort((a, b) => b.gameName - a.gameName)}
                 name="Competitive LL"
+                friendUsernames={friendUsernames}
               />
               <InProgressGameList
                 gameList={[
-                  ...filteredGamesInProgress.filter((game) =>
+                  ...otherGamesInProgress.filter((game) =>
                     [GAME_FORMAT.SAGE, GAME_FORMAT_NUMBER.SAGE].includes(
                       game.format
                     )
                   ),
                 ].sort((a, b) => b.gameName - a.gameName)}
                 name="Silver Age"
+                friendUsernames={friendUsernames}
               />
               <InProgressGameList
                 gameList={[
-                  ...filteredGamesInProgress.filter((game) =>
+                  ...otherGamesInProgress.filter((game) =>
                     [GAME_FORMAT.COMPETITIVE_SAGE, GAME_FORMAT_NUMBER.COMPETITIVE_SAGE].includes(
                       game.format
                     )
                   ),
                 ].sort((a, b) => b.gameName - a.gameName)}
                 name="Competitive Silver Age"
+                friendUsernames={friendUsernames}
               />
               <InProgressGameList
                 gameList={[
-                  ...filteredGamesInProgress.filter(
+                  ...otherGamesInProgress.filter(
                     (game) =>
                       ![GAME_FORMAT.BLITZ, GAME_FORMAT_NUMBER.BLITZ, GAME_FORMAT.COMPETITIVE_CC, GAME_FORMAT.CLASSIC_CONSTRUCTED, GAME_FORMAT_NUMBER.CLASSIC_CONSTRUCTED, GAME_FORMAT_NUMBER.COMPETITIVE_CC, GAME_FORMAT.COMPETITIVE_LL, GAME_FORMAT.LLCC, GAME_FORMAT_NUMBER.LLCC, GAME_FORMAT_NUMBER.COMPETITIVE_LL, GAME_FORMAT.SAGE, GAME_FORMAT_NUMBER.SAGE, GAME_FORMAT.COMPETITIVE_SAGE, GAME_FORMAT_NUMBER.COMPETITIVE_SAGE].includes(game.format)
                   ),
                 ].sort((a, b) => b.gameName - a.gameName)}
                 name="Other Formats"
+                friendUsernames={friendUsernames}
               />
                 </>
               )}
@@ -376,7 +418,7 @@ const GameList = () => {
   );
 };
 
-const InProgressGameList = ({ gameList, name }: IInProgressGameList) => {
+const InProgressGameList = ({ gameList, name, isFriendsSection, friendUsernames = new Set() }: IInProgressGameList) => {
   const [parent] = useAutoAnimate();
   const [isExpanded, setIsExpanded] = useState(true); // Default to open
   const [isMobile, setIsMobile] = useState(window.innerWidth < 1025);
@@ -415,7 +457,8 @@ const InProgressGameList = ({ gameList, name }: IInProgressGameList) => {
         </span>
       </h5>
       {isExpanded && limitedGameList.map((entry, ix: number) => {
-        return <InProgressGame entry={entry} ix={ix} key={entry.gameName} />;
+        const isFriendsGame = isFriendsSection || !!(entry.gameCreator && friendUsernames.has(entry.gameCreator));
+        return <InProgressGame entry={entry} ix={ix} key={entry.gameName} isFriendsGame={isFriendsGame} />;
       })}
     </div>
   );

@@ -37,7 +37,7 @@ const PlayGuard = ({ children }: { children: JSX.Element }) => {
           pathname: '/',
           search: createSearchParams(searchParams).toString()
         }}
-        state={{ from: location }}
+        replace={true}
       />
     );
   }
@@ -55,7 +55,7 @@ const IndexGuard = ({ children }: { children: JSX.Element }) => {
           pathname: '/game/play',
           search: createSearchParams(searchParams).toString()
         }}
-        state={{ from: location }}
+        replace={true}
       />
     );
   }
@@ -78,7 +78,7 @@ const LoggedInGuard = ({
         to={{
           pathname: '/'
         }}
-        state={{ from: location }}
+        replace={true}
       />
     );
   }

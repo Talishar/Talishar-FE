@@ -5,12 +5,16 @@ import { IGameInProgress } from '../gameList/GameList';
 import styles from './InProgressGame.module.scss';
 import { RiSwordLine } from 'react-icons/ri';
 import { generateCroppedImageUrl } from '../../../../utils/cropImages';
+import FriendBadge from '../gameList/FriendBadge';
+
 export const InProgressGame = ({
   ix,
-  entry
+  entry,
+  isFriendsGame = false
 }: {
   ix: number;
   entry: IGameInProgress;
+  isFriendsGame?: boolean;
 }) => {
   const navigate = useNavigate();
   const spectateHandler = (gameName: number) => {
@@ -33,6 +37,7 @@ export const InProgressGame = ({
       <div>
         {!!entry.p2Hero && <img className={styles.heroImg} src={generateCroppedImageUrl(entry.p2Hero)} />}
       </div>
+      <FriendBadge isFriendsGame={isFriendsGame} size="small" />
       <div>
         <a className={buttonClass} href={`/game/play/${entry.gameName}`} role="button">Spectate</a>
       </div>
