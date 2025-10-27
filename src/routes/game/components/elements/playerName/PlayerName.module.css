@@ -18,6 +18,22 @@
   overflow: visible;
 }
 
+@media (max-width: 1200px) {
+  .playerName {
+    position: fixed;
+    top: 0;
+    left: 0;
+    margin: 0.5rem;
+    padding: 0.35rem 0.5rem;
+    height: auto;
+    width: auto;
+    max-width: 180px;
+    font-size: 0.75rem;
+    z-index: 500;
+    border-radius: 0.2em;
+  }
+}
+
 .nameContainer {
   display: flex;
   align-items: center;
@@ -178,4 +194,13 @@
   width: 2.8vh;
   height: 2.8dvh;
   width: 2.8dvh;
+}
+
+@media (max-width: 1200px) {
+  .icon {
+    height: 1.2rem;
+    width: 1.2rem;
+    height: 1.2dvh;
+    width: 1.2dvh;
+  }
 }

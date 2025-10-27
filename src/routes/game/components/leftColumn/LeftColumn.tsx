@@ -9,7 +9,7 @@ export default function LeftColumn() {
 
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth < 941) { // adjust the breakpoint as needed
+      if (window.innerWidth < 1200) { // Standardized breakpoint
         setIsMobile(true);
       } else {
         setIsMobile(false);
