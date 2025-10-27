@@ -56,10 +56,18 @@ export default function useAuth() {
     try {
       await logOutAPI({}).unwrap();
       dispatch(logOutReducer());
-      toast.success('logged out', { position: 'top-center' });
+      toast.success('Logged Out', { position: 'top-center' });
+      // Force a reload to clear all app state and prevent auto-login
+      setTimeout(() => {
+        window.location.href = '/';
+      }, 50);
     } catch (err) {
       console.warn(err);
-      toast.error('error logging out', { position: 'top-center' });
+      toast.error('Error Logging Out', { position: 'top-center' });
+      // Still redirect on error to clear state
+      setTimeout(() => {
+        window.location.href = '/';
+      }, 50);
     }
   };
   const isLoggedIn = !!currentUserId;

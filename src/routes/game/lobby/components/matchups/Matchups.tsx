@@ -37,7 +37,7 @@ const Matchups = ({ refetch }: Matchups) => {
       );
     } catch (err) {
       console.warn(err);
-      toast.error('some error happened', { position: 'top-center' });
+      toast.error('Some error happened', { position: 'top-center' });
     } finally {
       setIsUpdating(false);
     }
