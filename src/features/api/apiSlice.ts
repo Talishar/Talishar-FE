@@ -57,9 +57,14 @@ export const rtkQueryErrorToaster: Middleware =
       //console.log('errorMessage:', errorMessage);
       //console.log('action.payload:', action.payload);
       //console.log('action.error:', action.error);
-      toast.error(
-        `A network error happened, please try again. Error:\n${errorStatus}\n${errorMessage}`
-      );
+      
+      // Suppress 401 Unauthorized errors - these are often benign (e.g., logging out/in quickly)
+      // and not user-facing errors that need a toast notification
+      if (errorStatus !== 401) {
+        toast.error(
+          `A network error happened, please try again. Error:\n${errorStatus}\n${errorMessage}`
+        );
+      }
     }
     return next(action);
   };
