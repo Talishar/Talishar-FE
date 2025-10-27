@@ -523,6 +523,16 @@ export const apiSlice = createApi({
         };
       }
     }),
+    updateFriendNickname: builder.mutation<FriendListAPIResponse, { friendUserId: number; nickname: string }>({
+      query: ({ friendUserId, nickname }) => {
+        return {
+          url: URL_END_POINT.FRIEND_LIST,
+          method: 'POST',
+          body: { action: 'updateNickname', friendUserId: friendUserId, nickname: nickname },
+          responseHandler: parseResponse
+        };
+      }
+    }),
 
     // Blocked Users endpoints
     getBlockedUsers: builder.query<BlockedUsersAPIResponse, void>({
@@ -621,6 +631,7 @@ export const {
   useRejectRequestMutation,
   useGetSentRequestsQuery,
   useCancelRequestMutation,
+  useUpdateFriendNicknameMutation,
   useGetBlockedUsersQuery,
   useBlockUserMutation,
   useUnblockUserMutation,
