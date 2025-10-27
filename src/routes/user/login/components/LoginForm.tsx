@@ -60,7 +60,7 @@ export const LoginForm = () => {
         toast.error(resp.error, { position: 'top-center' });
       }
       if (resp?.isUserLoggedIn) {
-        toast.success('logged in!', { position: 'top-center' });
+        toast.success('Logged In!', { position: 'top-center' });
         refetch();
         setLoggedIn(
           resp?.loggedInUserID ?? '0',
