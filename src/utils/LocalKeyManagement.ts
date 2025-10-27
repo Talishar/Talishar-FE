@@ -102,7 +102,38 @@ export const loadGameAuthKey = (gameId: number): string => {
     sessionDataJson = localStorage.getItem(storageKey);
   }
   
+  // MIGRATION: If not found with new format, try old format (pre-commit 3eff64f)
+  // Old format was just the gameId as the key
   if (!sessionDataJson) {
+    const oldFormatKey = String(gameId);
+    const oldSessionData = sessionStorage.getItem(oldFormatKey);
+    if (oldSessionData) {
+      console.log(`Migrating auth key from old format for game ${gameId}`);
+      // Old format was just an encrypted string, not a JSON object
+      const migratedAuthKey = xorDecrypt(oldSessionData, gameId);
+      if (migratedAuthKey) {
+        // Save in new format to prevent repeated migration
+        saveGameAuthKey(gameId, migratedAuthKey);
+        // Clean up old format key
+        sessionStorage.removeItem(oldFormatKey);
+        return migratedAuthKey;
+      }
+    }
+    
+    // Also check localStorage for old format
+    const oldLocalData = localStorage.getItem(oldFormatKey);
+    if (oldLocalData) {
+      console.log(`Migrating auth key from old localStorage format for game ${gameId}`);
+      const migratedAuthKey = xorDecrypt(oldLocalData, gameId);
+      if (migratedAuthKey) {
+        // Save in new format
+        saveGameAuthKey(gameId, migratedAuthKey);
+        // Clean up old format key
+        localStorage.removeItem(oldFormatKey);
+        return migratedAuthKey;
+      }
+    }
+    
     console.warn(`No auth key found for game ${gameId} in either storage`);
     return '';
   }
