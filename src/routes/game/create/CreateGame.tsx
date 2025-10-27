@@ -429,12 +429,12 @@ const CreateGame = () => {
                   aria-invalid={errors.visibility?.message ? 'true' : undefined}
                 >
                   {isLoggedIn && (
-                    <>
-                      <option value={GAME_VISIBILITY.PUBLIC}>Public</option>
-                      <option value={GAME_VISIBILITY.FRIENDS_ONLY}>Friends Only</option>
-                    </>
+                    <option value={GAME_VISIBILITY.PUBLIC}>Public</option>
                   )}
                   <option value={GAME_VISIBILITY.PRIVATE}>Private</option>
+                  {isLoggedIn && (
+                    <option value={GAME_VISIBILITY.FRIENDS_ONLY}>Friends Only</option>
+                  )}
                 </select>
               </label>
               <label>
