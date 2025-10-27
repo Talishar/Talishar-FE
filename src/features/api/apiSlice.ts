@@ -37,6 +37,7 @@ import {
   BanPlayerByNameRequest,
   CloseGameRequest
 } from 'interface/API/ModPageAPI';
+import { FriendListAPIResponse } from 'interface/API/FriendListAPI.php';
 import { getGameInfo } from '../game/GameSlice';
 import { RootState } from '../../app/Store';
 
@@ -404,6 +405,96 @@ export const apiSlice = createApi({
           responseHandler: parseResponse
         };
       }
+    }),
+    getFriendsList: builder.query<FriendListAPIResponse, void>({
+      query: () => {
+        return {
+          url: URL_END_POINT.FRIEND_LIST,
+          method: 'POST',
+          body: { action: 'getFriends' },
+          responseHandler: parseResponse
+        };
+      }
+    }),
+    addFriend: builder.mutation<FriendListAPIResponse, { friendUsername: string }>({
+      query: ({ friendUsername }) => {
+        return {
+          url: URL_END_POINT.FRIEND_LIST,
+          method: 'POST',
+          body: { action: 'addFriend', friendUsername: friendUsername },
+          responseHandler: parseResponse
+        };
+      }
+    }),
+    removeFriend: builder.mutation<FriendListAPIResponse, { friendUserId: number }>({
+      query: ({ friendUserId }) => {
+        return {
+          url: URL_END_POINT.FRIEND_LIST,
+          method: 'POST',
+          body: { action: 'removeFriend', friendUserId: friendUserId },
+          responseHandler: parseResponse
+        };
+      }
+    }),
+    searchUsers: builder.query<FriendListAPIResponse, { searchTerm: string; limit?: number }>({
+      query: ({ searchTerm, limit = 10 }) => {
+        return {
+          url: URL_END_POINT.FRIEND_LIST,
+          method: 'POST',
+          body: { action: 'searchUsers', searchTerm: searchTerm, limit: limit },
+          responseHandler: parseResponse
+        };
+      }
+    }),
+    getPendingRequests: builder.query<FriendListAPIResponse, void>({
+      query: () => {
+        return {
+          url: URL_END_POINT.FRIEND_LIST,
+          method: 'POST',
+          body: { action: 'getPendingRequests' },
+          responseHandler: parseResponse
+        };
+      }
+    }),
+    acceptRequest: builder.mutation<FriendListAPIResponse, { requesterUserId: number }>({
+      query: ({ requesterUserId }) => {
+        return {
+          url: URL_END_POINT.FRIEND_LIST,
+          method: 'POST',
+          body: { action: 'acceptRequest', requesterUserId: requesterUserId },
+          responseHandler: parseResponse
+        };
+      }
+    }),
+    rejectRequest: builder.mutation<FriendListAPIResponse, { requesterUserId: number }>({
+      query: ({ requesterUserId }) => {
+        return {
+          url: URL_END_POINT.FRIEND_LIST,
+          method: 'POST',
+          body: { action: 'rejectRequest', requesterUserId: requesterUserId },
+          responseHandler: parseResponse
+        };
+      }
+    }),
+    getSentRequests: builder.query<FriendListAPIResponse, void>({
+      query: () => {
+        return {
+          url: URL_END_POINT.FRIEND_LIST,
+          method: 'POST',
+          body: { action: 'getSentRequests' },
+          responseHandler: parseResponse
+        };
+      }
+    }),
+    cancelRequest: builder.mutation<FriendListAPIResponse, { recipientUserId: number }>({
+      query: ({ recipientUserId }) => {
+        return {
+          url: URL_END_POINT.FRIEND_LIST,
+          method: 'POST',
+          body: { action: 'cancelRequest', recipientUserId: recipientUserId },
+          responseHandler: parseResponse
+        };
+      }
     })
   })
 });
@@ -435,5 +526,14 @@ export const {
   useGetModPageDataQuery,
   useBanPlayerByIPMutation,
   useBanPlayerByNameMutation,
-  useCloseGameMutation
+  useCloseGameMutation,
+  useGetFriendsListQuery,
+  useAddFriendMutation,
+  useRemoveFriendMutation,
+  useSearchUsersQuery,
+  useGetPendingRequestsQuery,
+  useAcceptRequestMutation,
+  useRejectRequestMutation,
+  useGetSentRequestsQuery,
+  useCancelRequestMutation
 } = apiSlice;

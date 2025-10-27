@@ -87,6 +87,10 @@
           padding: 5px;
         }
 
+        &.profileLink {
+          position: relative;
+        }
+
         svg {
           font-size: 30px;
         }
@@ -231,4 +235,22 @@
   75% {
     filter: drop-shadow(0 0 10px rgba(255, 200, 87, 0.8)) drop-shadow(0 0 15px rgba(255, 100, 255, 0.3));
   }
+}
+
+.notificationBadge {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  background-color: #d4af37;
+  color: #000;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(212, 175, 55, 0.5);
 }
