@@ -3,6 +3,7 @@ import { useAddFriendMutation, useGetFriendsListQuery, useRemoveFriendMutation, 
 import { toast } from 'react-hot-toast';
 import { RiDeleteBin5Line } from 'react-icons/ri';
 import { MdPersonAdd, MdCheckCircle, MdCancel, MdBlock } from 'react-icons/md';
+import { IoMdArrowDropright } from 'react-icons/io';
 import styles from './FriendsList.module.css';
 import { Friend } from 'interface/API/FriendListAPI.php';
 
@@ -14,6 +15,7 @@ export const FriendsList: React.FC<FriendsListProps> = ({ className }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [showSearchResults, setShowSearchResults] = useState(false);
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
+  const [isExpanded, setIsExpanded] = useState(true);
 
   const {
     data: friendsData,
@@ -126,10 +128,27 @@ export const FriendsList: React.FC<FriendsListProps> = ({ className }) => {
 
   return (
     <article className={`${styles.friendsListContainer} ${className}`}>
-      <h3 className={styles.title}>Friends List</h3>
+      <h3 
+        className={styles.title}
+        onClick={() => setIsExpanded(!isExpanded)}
+        style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', userSelect: 'none' }}
+      >
+        Friends List
+        <span style={{ 
+          marginLeft: '8px',
+          transform: isExpanded ? 'rotate(90deg)' : 'rotate(0deg)', 
+          transition: 'transform 0.2s ease',
+          display: 'flex',
+          alignItems: 'center'
+        }}>
+          <IoMdArrowDropright />
+        </span>
+      </h3>
 
-      {/* Add Friend Section */}
-      <div className={styles.addFriendSection}>
+      {isExpanded && (
+        <>
+          {/* Add Friend Section */}
+          <div className={styles.addFriendSection}>
         <div className={styles.searchContainer}>
           <input
             type="text"
@@ -272,6 +291,8 @@ export const FriendsList: React.FC<FriendsListProps> = ({ className }) => {
           <p></p>
         )}
       </div>
+        </>
+      )}
     </article>
   );
 };

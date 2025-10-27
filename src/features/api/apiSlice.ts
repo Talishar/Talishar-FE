@@ -38,6 +38,7 @@ import {
   CloseGameRequest
 } from 'interface/API/ModPageAPI';
 import { FriendListAPIResponse } from 'interface/API/FriendListAPI.php';
+import { BlockedUsersAPIResponse } from 'interface/API/BlockedUsersAPI.php';
 import { getGameInfo } from '../game/GameSlice';
 import { RootState } from '../../app/Store';
 
@@ -495,6 +496,40 @@ export const apiSlice = createApi({
           responseHandler: parseResponse
         };
       }
+    }),
+
+    // Blocked Users endpoints
+    getBlockedUsers: builder.query<BlockedUsersAPIResponse, void>({
+      query: () => {
+        return {
+          url: URL_END_POINT.BLOCKED_USERS,
+          method: 'POST',
+          body: { action: 'getBlockedUsers' },
+          responseHandler: parseResponse
+        };
+      }
+    }),
+
+    blockUser: builder.mutation<BlockedUsersAPIResponse, { blockedUsername: string }>({
+      query: ({ blockedUsername }) => {
+        return {
+          url: URL_END_POINT.BLOCKED_USERS,
+          method: 'POST',
+          body: { action: 'blockUser', blockedUsername: blockedUsername },
+          responseHandler: parseResponse
+        };
+      }
+    }),
+
+    unblockUser: builder.mutation<BlockedUsersAPIResponse, { blockedUserId: number }>({
+      query: ({ blockedUserId }) => {
+        return {
+          url: URL_END_POINT.BLOCKED_USERS,
+          method: 'POST',
+          body: { action: 'unblockUser', blockedUserId: blockedUserId },
+          responseHandler: parseResponse
+        };
+      }
     })
   })
 });
@@ -535,5 +570,8 @@ export const {
   useAcceptRequestMutation,
   useRejectRequestMutation,
   useGetSentRequestsQuery,
-  useCancelRequestMutation
+  useCancelRequestMutation,
+  useGetBlockedUsersQuery,
+  useBlockUserMutation,
+  useUnblockUserMutation
 } = apiSlice;

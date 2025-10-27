@@ -1,4 +1,4 @@
-.friendsListContainer {
+.blockedUsersContainer {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
@@ -15,14 +15,7 @@
   color: #e0e0e0;
 }
 
-.subtitle {
-  margin: 0 0 0.75rem 0;
-  font-size: 1rem;
-  font-weight: 600;
-  color: #e0e0e0;
-}
-
-.addFriendSection {
+.blockUserSection {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
@@ -95,17 +88,17 @@
   font-weight: 500;
 }
 
-.addButton {
+.blockButton {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 2rem;
   height: 2rem;
   padding: 0;
-  background: var(--color-primary, #d4af37);
+  background: #c41e3a;
   border: none;
   border-radius: 4px;
-  color: #000;
+  color: #fff;
   cursor: pointer;
   font-size: 1rem;
   transition: background-color 0.2s, transform 0.1s;
@@ -113,28 +106,28 @@
   margin-bottom: 0;
 }
 
-.addButton:hover {
-  background-color: #e8c547;
+.blockButton:hover {
+  background-color: #a01830;
   transform: scale(1.05);
 }
 
-.addButton:active {
+.blockButton:active {
   transform: scale(0.95);
 }
 
-.addButtonDisabled {
+.blockButtonDisabled {
   background-color: #888;
   color: #ccc;
   cursor: not-allowed;
   opacity: 0.6;
 }
 
-.addButtonDisabled:hover {
+.blockButtonDisabled:hover {
   background-color: #888;
   transform: none;
 }
 
-.addButtonDisabled:active {
+.blockButtonDisabled:active {
   transform: none;
 }
 
@@ -151,26 +144,26 @@
   color: rgba(255, 255, 255, 0.5);
 }
 
-.friendsTableContainer {
+.blockedUsersTableContainer {
   overflow-x: auto;
   border-radius: 10px;
   overflow: hidden;
 }
 
-.friendsTable {
+.blockedUsersTable {
   width: 100%;
   border-collapse: collapse;
   background: transparent;
   border-radius: 10px;
 }
 
-.friendsTable thead {
+.blockedUsersTable thead {
   background: rgba(0, 0, 0, 0.3);
   border-bottom: 2px solid rgba(255, 255, 255, 0.2);
   border-radius: 10px 10px 0 0;
 }
 
-.friendsTable th {
+.blockedUsersTable th {
   padding: 0.6rem 1rem;
   text-align: left;
   color: #e0e0e0;
@@ -179,7 +172,7 @@
   white-space: nowrap;
 }
 
-.friendsTable td {
+.blockedUsersTable td {
   padding: 0.5rem 1rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   color: #e0e0e0;
@@ -192,7 +185,7 @@
   min-width: 100px;
 }
 
-.friendsTable td:last-child {
+.blockedUsersTable td:last-child {
   overflow: visible;
   text-overflow: unset;
   white-space: normal;
@@ -200,17 +193,17 @@
   min-width: unset;
 }
 
-.friendsTable tbody tr {
+.blockedUsersTable tbody tr {
   background-color: rgba(0, 0, 0, 0.2);
   transition: background-color 0.2s;
   height: 3rem;
 }
 
-.friendsTable tbody tr:nth-child(odd) {
+.blockedUsersTable tbody tr:nth-child(odd) {
   background-color: rgba(0, 0, 0, 0.4);
 }
 
-.friendsTable tbody tr:hover {
+.blockedUsersTable tbody tr:hover {
   background-color: rgba(212, 175, 55, 0.15);
 }
 
@@ -222,7 +215,7 @@
   gap: 0.5rem;
 }
 
-.deleteButton {
+.unblockButton {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -240,65 +233,11 @@
   margin-bottom: 0;
 }
 
-.deleteButton:hover {
+.unblockButton:hover {
   background-color: #a01830;
 }
 
-.deleteButton:active {
-  transform: scale(0.95);
-}
-
-.acceptButton {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 2rem;
-  height: 2rem;
-  padding: 0;
-  background: #28a745;
-  border: none;
-  border-radius: 4px;
-  color: white;
-  cursor: pointer;
-  transition: background-color 0.2s, transform 0.1s;
-  flex-shrink: 0;
-  font-size: 1em;
-  margin-bottom: 0;
-}
-
-.acceptButton:hover {
-  background-color: #218838;
-  transform: scale(1.05);
-}
-
-.acceptButton:active {
-  transform: scale(0.95);
-}
-
-.rejectButton {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 2rem;
-  height: 2rem;
-  padding: 0;
-  background: #dc3545;
-  border: none;
-  border-radius: 4px;
-  color: white;
-  cursor: pointer;
-  transition: background-color 0.2s, transform 0.1s;
-  flex-shrink: 0;
-  font-size: 1em;
-  margin-bottom: 0;
-}
-
-.rejectButton:hover {
-  background-color: #c82333;
-  transform: scale(1.05);
-}
-
-.rejectButton:active {
+.unblockButton:active {
   transform: scale(0.95);
 }
 
@@ -310,7 +249,7 @@
 }
 
 @media (max-width: 768px) {
-  .friendsListContainer {
+  .blockedUsersContainer {
     padding: 1rem;
     gap: 1rem;
   }
@@ -323,12 +262,12 @@
     max-height: 250px;
   }
 
-  .friendsTable {
+  .blockedUsersTable {
     font-size: 0.9rem;
   }
 
-  .friendsTable th,
-  .friendsTable td {
+  .blockedUsersTable th,
+  .blockedUsersTable td {
     padding: 0.5rem 0.75rem;
   }
 }

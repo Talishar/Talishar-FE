@@ -8,36 +8,25 @@ export const useBlockedUsers = () => {
   const fetchBlockedUsers = async () => {
     try {
       setIsLoading(true);
-      const response = await fetch('includes/GetBlockedUsers.php');
+      const response = await fetch('APIs/BlockedUsersAPI.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'getBlockedUsers' })
+      });
       
-      // Handle 404 and other error statuses silently
+      // Handle error statuses silently
       if (!response.ok) {
         setBlockedUsers([]);
         setError(null);
         return;
       }
       
-      const text = await response.text();
+      const data = await response.json();
       
-      // Check if response is empty
-      if (!text || text.trim() === '') {
-        setBlockedUsers([]);
+      if (data && data.blockedUsers && Array.isArray(data.blockedUsers)) {
+        setBlockedUsers(data.blockedUsers.map((u: any) => u.username));
         setError(null);
-        return;
-      }
-      
-      // Check if response is HTML (error/redirect page)
-      if (text.trim().startsWith('<') || text.trim().startsWith('<!DOCTYPE')) {
-        setBlockedUsers([]);
-        setError(null);
-        return;
-      }
-      
-      try {
-        const data = JSON.parse(text);
-        setBlockedUsers(Array.isArray(data) ? data : []);
-        setError(null);
-      } catch (parseErr) {
+      } else {
         setBlockedUsers([]);
         setError(null);
       }
