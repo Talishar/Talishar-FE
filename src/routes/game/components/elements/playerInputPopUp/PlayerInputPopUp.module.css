@@ -56,15 +56,14 @@
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  min-width: calc(15dvw * var(--card-scale));
-  max-width: calc(15dvw * var(--card-scale));
   height: 32px;
+  width: 100px;
   border-radius: 5px;
   border: 1px solid var(--primary);
-  flex-basis: auto;
-  padding: 8px;
-  width: auto;
+  padding: 8px 12px;
   margin-bottom: 0.25rem;
+  white-space: nowrap;
+  flex: 0 0 auto;
 }
 
 .buttonDiv:hover {
@@ -119,14 +118,21 @@
 
 .optForm.buttonRow {
   display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 0.5rem;
   margin-top: 0.5rem;
   align-items: center;
 }
 
 .buttonRow {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 0.5rem;
   margin-top: 0.25rem;
   justify-content: center;
-  width: 90%; /* add this line */
+  width: 90%;
   margin-left: 5%;
 }
 
@@ -157,6 +163,10 @@
   max-height: none;
   max-width: none;
   height: 100%;
+}
+
+.optForm.buttonDiv {
+  margin: 0;
 }
 
 .cardList {
@@ -339,7 +349,9 @@
   }
 
   .buttonDiv {
+    width: 10dvw;
     font-size: 0.7em;
+    flex: 0 1 auto;
   }
 
   .topAndBottomText {
