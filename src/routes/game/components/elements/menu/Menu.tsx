@@ -91,7 +91,7 @@ export default function Menu() {
         <FullControlToggle />
         <AlwaysPassToggle />
         <HideModalsToggle />
-        {isMobile && (
+        {(isMobile || isTablet) && (
           <>
             <ShowMobileChat />
           </>
