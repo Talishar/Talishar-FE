@@ -32,6 +32,10 @@ import {
   DeleteDeckAPIRequest,
   DeleteDeckAPIResponse
 } from 'interface/API/DeleteDeckAPI.php';
+import {
+  DeleteAccountAPIRequest,
+  DeleteAccountAPIResponse
+} from 'interface/API/DeleteAccountAPI.php';
 import { PatreonLoginResponse } from 'routes/user/profile/linkpatreon/linkPatreon';
 import { UserProfileAPIResponse } from 'interface/API/UserProfileAPI.php';
 import { SubmitChatAPI } from 'interface/API/SubmitChat.php';
@@ -260,6 +264,16 @@ export const apiSlice = createApi({
         return {
           url: URL_END_POINT.DELETE_DECK,
           method: 'post',
+          body: body,
+          responseHandler: parseResponse
+        };
+      }
+    }),
+    deleteAccount: builder.mutation<DeleteAccountAPIResponse, DeleteAccountAPIRequest>({
+      query: (body: DeleteAccountAPIRequest) => {
+        return {
+          url: URL_END_POINT.DELETE_ACCOUNT,
+          method: 'POST',
           body: body,
           responseHandler: parseResponse
         };
@@ -601,6 +615,7 @@ export const {
   useGetCosmeticsQuery,
   useGetFavoriteDecksQuery,
   useDeleteDeckMutation,
+  useDeleteAccountMutation,
   useLoginMutation,
   useLoginWithCookieQuery,
   useLogOutMutation,

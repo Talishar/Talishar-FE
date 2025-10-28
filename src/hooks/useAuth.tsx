@@ -12,7 +12,7 @@ import {
   setCredentialsReducer,
   logOutReducer
 } from 'features/auth/authSlice';
-import { useEffect } from 'react';
+import { useEffect, useCallback } from 'react';
 import { toast } from 'react-hot-toast';
 
 // List of mod usernames - should match backend list
@@ -31,26 +31,29 @@ export default function useAuth() {
   const isMod = useAppSelector(selectIsMod);
   // const { refetch } = useGetFavoriteDecksQuery(undefined);
   const [logOutAPI, logOutData] = useLogOutMutation();
-  const { isLoading, error, data } = useLoginWithCookieQuery({});
+  const { isLoading: isQueryLoading, isFetching, error, data } = useLoginWithCookieQuery({});
   const dispatch = useAppDispatch();
 
-  const setLoggedIn = (
-    user: string,
-    userName: string,
-    token: string,
-    patron: string,
-    isMod?: boolean
-  ) => {
-    dispatch(
-      setCredentialsReducer({
-        user: user,
-        userName: userName,
-        accessToken: token,
-        isPatron: patron,
-        isMod: isMod || false
-      })
-    );
-  };
+  const setLoggedIn = useCallback(
+    (
+      user: string,
+      userName: string,
+      token: string,
+      patron: string,
+      isMod?: boolean
+    ) => {
+      dispatch(
+        setCredentialsReducer({
+          user: user,
+          userName: userName,
+          accessToken: token,
+          isPatron: patron,
+          isMod: isMod || false
+        })
+      );
+    },
+    [dispatch]
+  );
 
   const logOut = async () => {
     try {
@@ -70,21 +73,32 @@ export default function useAuth() {
       }, 50);
     }
   };
-  const isLoggedIn = !!currentUserId;
+  
+  // Auth check is complete when we have data (even if user is not logged in) or there's an error
+  const isLoading = data === undefined && error === undefined;
+  
+  // isLoggedIn should be based on the query result if available, otherwise use Redux
+  // This ensures we show logged-in state as soon as the query returns, before Redux is updated
+  const isLoggedIn = data?.isUserLoggedIn ?? !!currentUserId;
 
   useEffect(() => {
-    if (data?.isUserLoggedIn) {
-      const userIsMod = MOD_USERNAMES.includes(data.loggedInUserName);
-      setLoggedIn(
-        data.loggedInUserID,
-        data.loggedInUserName,
-        '',
-        data.isPatron,
-        userIsMod
-      );
-      // refetch();
+    // Only run when query has completed (data exists or error exists)
+    if (data !== undefined) {
+      if (data?.isUserLoggedIn) {
+        const userIsMod = MOD_USERNAMES.includes(data.loggedInUserName);
+        setLoggedIn(
+          data.loggedInUserID,
+          data.loggedInUserName,
+          '',
+          data.isPatron,
+          userIsMod
+        );
+      } else {
+        // User is not logged in, clear any stale auth state
+        dispatch(logOutReducer());
+      }
     }
-  }, [isLoading]);
+  }, [data, setLoggedIn, dispatch]);
 
   return {
     isLoggedIn,

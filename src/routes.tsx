@@ -71,7 +71,16 @@ const LoggedInGuard = ({
   children: JSX.Element;
   shouldBeLoggedIn: boolean;
 }) => {
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, isLoading } = useAuth();
+
+  // Don't redirect while loading auth status on page refresh
+  if (isLoading) {
+    return (
+      <div style={{ textAlign: 'center', padding: '2rem' }}>
+        Loading authentication...
+      </div>
+    );
+  }
 
   if (isLoggedIn === !shouldBeLoggedIn) {
     return (
@@ -87,18 +96,41 @@ const LoggedInGuard = ({
   return children;
 };
 
+// Component that initializes auth on app load
+const AuthInitializer = ({ children }: { children: JSX.Element }) => {
+  const { isLoading } = useAuth();
+
+  // Block rendering of all routes until auth check is complete
+  if (isLoading) {
+    return (
+      <div style={{ textAlign: 'center', padding: '2rem' }}>
+        Initializing...
+      </div>
+    );
+  }
+
+  return children;
+};
+
 export const router = createBrowserRouter(
   createRoutesFromElements(
     <Route errorElement={<ErrorPage />}>
       <Route
-        path="game/play/:gameID"
         element={
-          // disabled playguard as we need to redo this logic a bit
-          // <PlayGuard>
-          <Play isRoguelike={false} />
-          // </PlayGuard>
+          <AuthInitializer>
+            <Outlet />
+          </AuthInitializer>
         }
-      />
+      >
+        <Route
+          path="game/play/:gameID"
+          element={
+            // disabled playguard as we need to redo this logic a bit
+            // <PlayGuard>
+            <Play isRoguelike={false} />
+            // </PlayGuard>
+          }
+        />
       <Route
         path="roguelike/play/"
         element={
@@ -167,6 +199,7 @@ export const router = createBrowserRouter(
             <Route path="signup" element={<SignUpForm />} />
           </Route>
         </Route>
+      </Route>
       </Route>
     </Route>
   )

@@ -68,8 +68,10 @@ export const LoginForm = () => {
           '',
           resp?.isPatron
         );
-        // TODO: Have this go back in router history to the previous page or protected route.
-        navigate(-1);
+        // Force a hard refresh to clear all cached state and show updated UI
+        setTimeout(() => {
+          window.location.href = '/';
+        }, 500);
       }
       if (resp?.isUserLoggedIn === false) {
         toast.error('Incorrect username or password.', {
