@@ -72,7 +72,7 @@ const CreateGame = () => {
               : data.lastVisibility == 2
               ? GAME_VISIBILITY.FRIENDS_ONLY
               : GAME_VISIBILITY.PRIVATE
-            : GAME_VISIBILITY.PRIVATE
+            : GAME_VISIBILITY.PUBLIC
           : GAME_VISIBILITY.PRIVATE),
       decksToTry: '',
       favoriteDeck: false,
