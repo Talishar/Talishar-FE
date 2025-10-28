@@ -36,6 +36,7 @@ function FullScreenButton() {
 
 function UndoButton() {
   const dispatch = useAppDispatch();
+  const undoClickCountRef = useRef(0);
   const undoTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [undoHint, setUndoHint] = useState<string>('');
 
@@ -46,21 +47,26 @@ function UndoButton() {
   };
 
   const handleUndo = () => {
-    // Clear any existing timeout to prevent duplicate dispatches
+    // Increment click count for multi-undo tracking
+    undoClickCountRef.current += 1;
+    
+    // Clear any existing timeout
     if (undoTimeoutRef.current) {
       clearTimeout(undoTimeoutRef.current);
     }
 
-    // Clear the hint immediately
-    setUndoHint('');
+    // Show hint about current undo count (optional visual feedback)
+    setUndoHint(undoClickCountRef.current > 1 ? `×${undoClickCountRef.current}` : '');
 
-    // Send exactly one undo action to backend
-    dispatch(submitButton({ button: { mode: PROCESS_INPUT.UNDO } }));
-
-    // Debounce subsequent undo attempts for 300ms to prevent accidental double-undos
+    // Reset the undo count after 500ms of inactivity
+    // This allows rapid clicks to stack, but resets if user pauses
     undoTimeoutRef.current = setTimeout(() => {
-      undoTimeoutRef.current = null;
-    }, 300);
+      undoClickCountRef.current = 0;
+      setUndoHint('');
+    }, 500);
+
+    // Always send undo action to backend
+    dispatch(submitButton({ button: { mode: PROCESS_INPUT.UNDO } }));
   };
 
   useShortcut(DEFAULT_SHORTCUTS.UNDO, handleUndo);
@@ -74,10 +80,31 @@ function UndoButton() {
         onClick={clickUndo}
         data-tooltip="Undo"
         data-placement="bottom"
-        title="Undo last action"
+        title="Click multiple times to undo multiple actions (up to 3 available states)"
       >
         <FaUndo aria-hidden="true" fontSize={'1.5em'} />
       </button>
+      {undoHint && (
+        <span
+          style={{
+            position: 'absolute',
+            top: '-8px',
+            right: '-8px',
+            fontSize: '0.8em',
+            fontWeight: 'bold',
+            backgroundColor: '#ff6b6b',
+            color: 'white',
+            borderRadius: '50%',
+            width: '20px',
+            height: '20px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          {undoHint}
+        </span>
+      )}
     </div>
   );
 }
