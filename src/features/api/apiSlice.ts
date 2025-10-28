@@ -13,6 +13,7 @@ import {
   CreateGameResponse
 } from 'interface/API/CreateGame.php';
 import { toast } from 'react-hot-toast';
+import { cleanErrorText } from 'utils/cleanErrorText';
 import { JoinGameAPI, JoinGameResponse } from 'interface/API/JoinGame.php';
 import {
   GetLobbyInfo,
@@ -87,8 +88,9 @@ export const parseResponse = async (response: any) => {
     } else {
       errorString = stringData.substring(0, indexOfBraces);
     }
-    console.warn(`BE Response:`, errorString);
-    toast.error(`BE Response:\n${errorString}`);
+    const cleanedError = cleanErrorText(errorString);
+    console.warn(`BE Response:`, cleanedError);
+    toast.error(`BE Response:\n${cleanedError}`);
     stringData = stringData.substring(indexOfBraces);
   }
   return JSON.parse(stringData);
