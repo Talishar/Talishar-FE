@@ -88,6 +88,7 @@ const CreateGame = () => {
   }, [isSuccess, isLoggedIn]);
 
   const [selectedFormat, setSelectedFormat] = React.useState(initialValues.format);
+  const [previousFormat, setPreviousFormat] = React.useState<string>(String(initialValues.format || ''));
   const [selectedHeroes, setSelectedHeroes] = React.useState<string[]>([]);
   const [gameDescription, setGameDescription] = React.useState('');
   const [selectedFavoriteDeck, setSelectedFavoriteDeck] = React.useState<string>(initialValues.favoriteDecks || '');
@@ -119,13 +120,21 @@ const CreateGame = () => {
   }, []);
 
   const handleFormatChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedFormat(e.target.value);
-    if (isPreconFormat(e.target.value)) {
+    const newFormat = e.target.value;
+    const wasPrecon = isPreconFormat(previousFormat);
+    const isNewPrecon = isPreconFormat(newFormat);
+
+    setSelectedFormat(newFormat);
+    setPreviousFormat(newFormat);
+
+    if (isNewPrecon) {
       setSelectedPreconDeck(PRECON_DECKS.LINKS[0]);
       setValue('fabdb', PRECON_DECKS.LINKS[0]);
-    } else {
+    } else if (wasPrecon && !isNewPrecon) {
+      // Only clear when switching OUT of precon format
       setValue('fabdb', '');
     }
+    // If switching between non-precon formats, don't touch fabdb
   };
 
   const handleGameDescriptionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
