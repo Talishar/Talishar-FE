@@ -21,6 +21,12 @@ export interface LoadReplayResponse {
   gameName?: number;
   playerID?: number;
   authKey?: string;
+  success?: boolean;
+  missingFiles?: Record<string, string>;
+  copyErrors?: string[];
+  debug?: {
+    [key: string]: any;
+  };
 }
 
 /*
