@@ -85,25 +85,18 @@ td {
 .leftColumn table {
   width: 100%;
   overflow-x: auto;
-  display: block;
 }
 
 .leftColumn thead {
-  display: table;
-  width: 100%;
-  table-layout: fixed;
+  display: table-header-group;
 }
 
 .leftColumn tbody {
-  display: table;
-  width: 100%;
-  table-layout: fixed;
+  display: table-row-group;
 }
 
 .leftColumn tr {
-  display: table;
-  width: 100%;
-  table-layout: fixed;
+  display: table-row;
 }
 
 @media (max-width: 1400px) {
@@ -127,20 +120,6 @@ td {
     display: grid;
     grid-template-columns: 1fr;
   }
-  
-  .leftColumn table {
-    display: table;
-  }
-  
-  .leftColumn tbody,
-  .leftColumn thead,
-  .leftColumn tr {
-    display: table-row-group;
-  }
-  
-  .leftColumn tr {
-    display: table-row;
-  }
 }
 
 @media (max-width: 575px) {
@@ -162,55 +141,78 @@ td {
   }
 
   .leftColumn table {
-    display: block;
+    width: 100%;
+    display: table;
+    table-layout: auto;
     overflow-x: auto;
-    border-collapse: collapse;
   }
 
   .leftColumn thead,
   .leftColumn tbody,
   .leftColumn tr {
-    display: table;
-    width: 100%;
-    min-width: 360px;
-    table-layout: fixed;
+    display: table-row-group;
+  }
+
+  .leftColumn tr {
+    display: table-row;
   }
 
   .leftColumn th:nth-child(1),
   .leftColumn td:nth-child(1) {
-    width: 40px;
+    width: auto;
+    min-width: 50px;
+    max-width: 60px;
   }
 
   .leftColumn th:nth-child(2),
   .leftColumn td:nth-child(2) {
-    width: 140px;
+    width: auto;
+    min-width: 80px;
   }
 
   .leftColumn th:nth-child(3),
   .leftColumn td:nth-child(3) {
-    width: 90px;
+    width: auto;
+    min-width: 60px;
   }
 
   .leftColumn th:nth-child(4),
   .leftColumn td:nth-child(4) {
-    width: 45px;
+    width: auto;
+    min-width: 45px;
   }
 
   .leftColumn th:nth-child(5),
   .leftColumn td:nth-child(5) {
-    width: 45px;
+    width: auto;
+    min-width: 45px;
+  }
+
+  /* Hide Format column on very small screens */
+  .leftColumn th:nth-child(3),
+  .leftColumn td:nth-child(3) {
+    display: none;
   }
 }
 
-@media (max-width: 425px) {
-    th:nth-child(3), td:nth-child(3) {
-      display: none;
-    }
+@media (max-width: 450px) {
+  /* On extremely small screens, also hide Delete button */
+  .leftColumn th:nth-child(5),
+  .leftColumn td:nth-child(5) {
+    display: none;
+  }
 }
 
-@media (max-width: 375px) {
-  th:nth-child(4), td:nth-child(4) {
-    display: none;
+@media (max-width: 350px) {
+  /* On ultra-small screens, just show Hero, Name, and Edit */
+  th, td {
+    font-size: 11px;
+    padding: 0.2em 0.05em;
+  }
+
+  .leftColumn th:nth-child(4),
+  .leftColumn td:nth-child(4) {
+    min-width: 40px;
   }
 }
 
