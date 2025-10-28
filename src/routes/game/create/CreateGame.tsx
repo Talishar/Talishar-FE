@@ -20,6 +20,7 @@ import { FaExclamationCircle } from 'react-icons/fa';
 import { HEROES_OF_RATHE } from '../../index/components/filter/constants';
 import { generateCroppedImageUrl } from 'utils/cropImages';
 import { ImageSelect, ImageSelectOption } from 'components/ImageSelect';
+import GoogleAdSense from 'components/GoogleAdSense';
 
 // Helper function to shorten format names
 const shortenFormat = (format: string): string => {
@@ -488,6 +489,10 @@ const CreateGame = () => {
             </div>
           )}
         </form>
+        {/* Google AdSense Ad */}
+        <div style={{ marginTop: '20px', textAlign: 'center' }}>
+          <GoogleAdSense slot="3126621164" format="auto" />
+        </div>
       </article>
     </div>
   );

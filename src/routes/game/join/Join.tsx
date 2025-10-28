@@ -21,6 +21,7 @@ import { ErrorMessage } from '@hookform/error-message';
 import { generateCroppedImageUrl } from 'utils/cropImages';
 import { ImageSelect, ImageSelectOption } from 'components/ImageSelect';
 import { GAME_FORMAT, isPreconFormat, PRECON_DECKS } from 'appConstants';
+import GoogleAdSense from 'components/GoogleAdSense';
 
 // Helper function to shorten format names
 const shortenFormat = (format: string): string => {
@@ -306,6 +307,10 @@ const JoinGame = () => {
         >
           Back
         </button>
+        {/* Google AdSense Ad */}
+        <div style={{ marginTop: '20px' }}>
+          <GoogleAdSense slot="2328544815" format="auto" />
+        </div>
       </article>
     </main>
   );
