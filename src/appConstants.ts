@@ -290,6 +290,7 @@ export const URL_END_POINT = {
   SIGNUP: `AccountFiles/SignupAPI.php`,
   FORGOT_PASSWORD: `AccountFiles/PasswordResetRequestAPI.php`,
   RESET_PASSWORD: `AccountFiles/ResetPassword.php`,
+  DELETE_ACCOUNT: `AccountFiles/DeleteAccountAPI.php`,
   GET_COSMETICS: `APIs/GetCosmetics.php`,
   DELETE_DECK: `APIs/DeleteDeckAPI.php`,
   PATREON_LOGIN: `AccountFiles/PatreonLoginAPI.php`,
@@ -300,7 +301,8 @@ export const URL_END_POINT = {
   BAN_PLAYER: 'BanPlayer.php',
   CLOSE_GAME: 'CloseGame.php',
   FRIEND_LIST: 'APIs/FriendListAPI.php',
-  BLOCKED_USERS: 'APIs/BlockedUsersAPI.php'
+  BLOCKED_USERS: 'APIs/BlockedUsersAPI.php',
+  USERNAME_MODERATION: 'APIs/UsernameModeration.php'
 };
 
 export const GAME_VISIBILITY = {

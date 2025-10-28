@@ -71,7 +71,8 @@ export const SignUpForm = () => {
           <label htmlFor="userId">Username</label>
           <input
             type="text"
-            placeholder="bravo"
+            placeholder="Bravo"
+            autoComplete="username"
             {...register('userId')}
             aria-invalid={errors.userId?.message ? 'true' : undefined}
           />
@@ -81,7 +82,8 @@ export const SignUpForm = () => {
           <label htmlFor="email">Email</label>
           <input
             type="email"
-            placeholder="bravo@talishar.net"
+            placeholder="Bravo@talishar.net"
+            autoComplete="email"
             {...register('email')}
             aria-invalid={errors.email?.message ? 'true' : undefined}
           />
@@ -92,6 +94,7 @@ export const SignUpForm = () => {
           <input
             type="password"
             placeholder="********"
+            autoComplete="new-password"
             {...register('password')}
             aria-invalid={errors.password?.message ? 'true' : undefined}
           />
@@ -102,6 +105,7 @@ export const SignUpForm = () => {
           <input
             type="password"
             placeholder="********"
+            autoComplete="new-password"
             {...register('passwordRepeat')}
             aria-invalid={errors.passwordRepeat?.message ? 'true' : undefined}
           />

@@ -13,6 +13,7 @@ import {
   CreateGameResponse
 } from 'interface/API/CreateGame.php';
 import { toast } from 'react-hot-toast';
+import { cleanErrorText } from 'utils/cleanErrorText';
 import { JoinGameAPI, JoinGameResponse } from 'interface/API/JoinGame.php';
 import {
   GetLobbyInfo,
@@ -28,6 +29,10 @@ import {
   DeleteDeckAPIRequest,
   DeleteDeckAPIResponse
 } from 'interface/API/DeleteDeckAPI.php';
+import {
+  DeleteAccountAPIRequest,
+  DeleteAccountAPIResponse
+} from 'interface/API/DeleteAccountAPI.php';
 import { PatreonLoginResponse } from 'routes/user/profile/linkpatreon/linkPatreon';
 import { UserProfileAPIResponse } from 'interface/API/UserProfileAPI.php';
 import { SubmitChatAPI } from 'interface/API/SubmitChat.php';
@@ -38,6 +43,10 @@ import {
   CloseGameRequest
 } from 'interface/API/ModPageAPI';
 import { FriendListAPIResponse } from 'interface/API/FriendListAPI.php';
+import {
+  UsernamesModerationResponse,
+  BanOffensiveUsernameRequest
+} from 'interface/API/UsernameModerationAPI';
 import { BlockedUsersAPIResponse } from 'interface/API/BlockedUsersAPI.php';
 import { getGameInfo } from '../game/GameSlice';
 import { RootState } from '../../app/Store';
@@ -53,9 +62,14 @@ export const rtkQueryErrorToaster: Middleware =
       //console.log('errorMessage:', errorMessage);
       //console.log('action.payload:', action.payload);
       //console.log('action.error:', action.error);
-      toast.error(
-        `A network error happened, please try again. Error:\n${errorStatus}\n${errorMessage}`
-      );
+      
+      // Suppress 401 Unauthorized errors - these are often benign (e.g., logging out/in quickly)
+      // and not user-facing errors that need a toast notification
+      if (errorStatus !== 401) {
+        toast.error(
+          `A network error happened, please try again. Error:\n${errorStatus}\n${errorMessage}`
+        );
+      }
     }
     return next(action);
   };
@@ -74,8 +88,9 @@ export const parseResponse = async (response: any) => {
     } else {
       errorString = stringData.substring(0, indexOfBraces);
     }
-    console.warn(`BE Response:`, errorString);
-    toast.error(`BE Response:\n${errorString}`);
+    const cleanedError = cleanErrorText(errorString);
+    console.warn(`BE Response:`, cleanedError);
+    toast.error(`BE Response:\n${cleanedError}`);
     stringData = stringData.substring(indexOfBraces);
   }
   return JSON.parse(stringData);
@@ -252,6 +267,16 @@ export const apiSlice = createApi({
         };
       }
     }),
+    deleteAccount: builder.mutation<DeleteAccountAPIResponse, DeleteAccountAPIRequest>({
+      query: (body: DeleteAccountAPIRequest) => {
+        return {
+          url: URL_END_POINT.DELETE_ACCOUNT,
+          method: 'POST',
+          body: body,
+          responseHandler: parseResponse
+        };
+      }
+    }),
     createGame: builder.mutation<CreateGameResponse, CreateGameAPI>({
       query: (body: CreateGameAPI) => {
         return {
@@ -374,8 +399,8 @@ export const apiSlice = createApi({
       query: ({ ipToBan, playerNumberToBan }) => {
         return {
           url: URL_END_POINT.BAN_PLAYER,
-          method: 'GET',
-          params: {
+          method: 'POST',
+          body: {
             ipToBan: ipToBan,
             playerNumberToBan: playerNumberToBan
           },
@@ -387,8 +412,8 @@ export const apiSlice = createApi({
       query: ({ playerToBan }) => {
         return {
           url: URL_END_POINT.BAN_PLAYER,
-          method: 'GET',
-          params: {
+          method: 'POST',
+          body: {
             playerToBan: playerToBan
           },
           responseHandler: parseResponse
@@ -399,8 +424,8 @@ export const apiSlice = createApi({
       query: ({ gameToClose }) => {
         return {
           url: URL_END_POINT.CLOSE_GAME,
-          method: 'GET',
-          params: {
+          method: 'POST',
+          body: {
             gameToClose: gameToClose
           },
           responseHandler: parseResponse
@@ -497,6 +522,16 @@ export const apiSlice = createApi({
         };
       }
     }),
+    updateFriendNickname: builder.mutation<FriendListAPIResponse, { friendUserId: number; nickname: string }>({
+      query: ({ friendUserId, nickname }) => {
+        return {
+          url: URL_END_POINT.FRIEND_LIST,
+          method: 'POST',
+          body: { action: 'updateNickname', friendUserId: friendUserId, nickname: nickname },
+          responseHandler: parseResponse
+        };
+      }
+    }),
 
     // Blocked Users endpoints
     getBlockedUsers: builder.query<BlockedUsersAPIResponse, void>({
@@ -530,6 +565,29 @@ export const apiSlice = createApi({
           responseHandler: parseResponse
         };
       }
+    }),
+
+    // Username Moderation endpoints
+    getOffensiveUsernames: builder.query<UsernamesModerationResponse, void>({
+      query: () => {
+        return {
+          url: URL_END_POINT.USERNAME_MODERATION,
+          method: 'POST',
+          body: { action: 'getOffensiveUsernames' },
+          responseHandler: parseResponse
+        };
+      }
+    }),
+
+    banOffensiveUsername: builder.mutation<any, BanOffensiveUsernameRequest>({
+      query: ({ username }) => {
+        return {
+          url: URL_END_POINT.USERNAME_MODERATION,
+          method: 'POST',
+          body: { action: 'banOffensiveUsername', username: username },
+          responseHandler: parseResponse
+        };
+      }
     })
   })
 });
@@ -542,6 +600,7 @@ export const {
   useGetCosmeticsQuery,
   useGetFavoriteDecksQuery,
   useDeleteDeckMutation,
+  useDeleteAccountMutation,
   useLoginMutation,
   useLoginWithCookieQuery,
   useLogOutMutation,
@@ -571,7 +630,10 @@ export const {
   useRejectRequestMutation,
   useGetSentRequestsQuery,
   useCancelRequestMutation,
+  useUpdateFriendNicknameMutation,
   useGetBlockedUsersQuery,
   useBlockUserMutation,
-  useUnblockUserMutation
+  useUnblockUserMutation,
+  useGetOffensiveUsernamesQuery,
+  useBanOffensiveUsernameMutation
 } = apiSlice;
