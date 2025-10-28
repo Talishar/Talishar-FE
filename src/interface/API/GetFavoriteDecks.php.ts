@@ -3,7 +3,6 @@ export interface GetFavoriteDecksResponse {
   lastUsedDeckIndex: number;
   lastFormat: string;
   lastVisibility: number;
-  lastGameDescription: string;
 }
 
 export interface FavoriteDeck {
