@@ -82,7 +82,7 @@ const CreateGame = () => {
               (deck) => deck.index === data.lastUsedDeckIndex
             )?.key
           : '',
-      gameDescription: '',
+      gameDescription: data?.lastGameDescription ?? '',
       deckTestDeck: AI_DECK.COMBAT_DUMMY
     };
   }, [isSuccess, isLoggedIn]);
@@ -90,7 +90,7 @@ const CreateGame = () => {
   const [selectedFormat, setSelectedFormat] = React.useState(initialValues.format);
   const [previousFormat, setPreviousFormat] = React.useState<string>(String(initialValues.format || ''));
   const [selectedHeroes, setSelectedHeroes] = React.useState<string[]>([]);
-  const [gameDescription, setGameDescription] = React.useState('');
+  const [gameDescription, setGameDescription] = React.useState(initialValues.gameDescription || '');
   const [selectedFavoriteDeck, setSelectedFavoriteDeck] = React.useState<string>(initialValues.favoriteDecks || '');
   const [selectedPreconDeck, setSelectedPreconDeck] = React.useState<string>(PRECON_DECKS.LINKS[0]);
   const [isInitialized, setIsInitialized] = React.useState(false);
