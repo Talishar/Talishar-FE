@@ -41,7 +41,7 @@ const News = () => {
         </li>
         <li>
           <a href="https://linktr.ee/Talishar" target="_blank">
-            Patreon
+            Support our work!
           </a>
         </li>
       </ul>
