@@ -111,8 +111,26 @@ const InProgressGameFilter = ({
   };
 
   const handleResetFilters = () => {
-    // Unselect all boxes
-    onFilterChange(new Set<string>());
+    // Select all boxes
+    const allFormats = new Set<string>();
+    formatOptions.forEach((format) => {
+      if (format.isGroup && format.groupValues) {
+        format.groupValues.forEach(val => {
+          allFormats.add(val);
+          const numericFormat = formatNumberMapping[val];
+          if (numericFormat) {
+            allFormats.add(numericFormat);
+          }
+        });
+      } else {
+        allFormats.add(format.value);
+        const numericFormat = formatNumberMapping[format.value];
+        if (numericFormat) {
+          allFormats.add(numericFormat);
+        }
+      }
+    });
+    onFilterChange(allFormats);
   };
 
   const handleFriendsGamesChange = () => {
