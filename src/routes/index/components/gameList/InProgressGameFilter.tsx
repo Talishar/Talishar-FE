@@ -83,37 +83,14 @@ const InProgressGameFilter = ({
     };
   }, []);
 
-  const updateDropdownPosition = () => {
+  useEffect(() => {
     if (isOpen && buttonRef.current) {
       const rect = buttonRef.current.getBoundingClientRect();
       setDropdownStyle({
         top: `${rect.bottom + 8}px`,
         left: `${rect.right - 280}px`,
-        maxWidth: '90vw',
       });
     }
-  };
-
-  useEffect(() => {
-    updateDropdownPosition();
-  }, [isOpen]);
-
-  // Recalculate position whenever button position might change
-  useEffect(() => {
-    if (!isOpen || !buttonRef.current) return;
-
-    // Listen to window scroll and resize events
-    const handleWindowChange = () => {
-      updateDropdownPosition();
-    };
-
-    window.addEventListener('scroll', handleWindowChange, true);
-    window.addEventListener('resize', handleWindowChange);
-
-    return () => {
-      window.removeEventListener('scroll', handleWindowChange, true);
-      window.removeEventListener('resize', handleWindowChange);
-    };
   }, [isOpen]);
 
   const handleFormatChange = (formatValue: string, groupValues?: string[]) => {
