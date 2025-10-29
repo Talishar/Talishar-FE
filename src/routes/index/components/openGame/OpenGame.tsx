@@ -36,8 +36,8 @@ const OpenGame = ({
         <img className={styles.heroImg} src="https://images.talishar.net/public/crops/UNKNOWNHERO_cropped.png" />
       )}
       </div>
-      <div>{entry.description}</div>
-      {isOther && <div>{entry.formatName}</div>}
+      <div className={styles.description}>{entry.description}</div>
+      {isOther && <div className={styles.formatName}>{entry.formatName}</div>}
       <FriendBadge isFriendsGame={isFriendsGame} size="small" />
       <div>
         <a
