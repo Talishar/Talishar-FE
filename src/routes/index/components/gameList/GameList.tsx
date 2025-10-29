@@ -14,7 +14,7 @@ import { setGameStart } from 'features/game/GameSlice';
 import { useAppDispatch } from 'app/Hooks';
 import { useLocation } from 'react-router-dom';
 import { HEROES_OF_RATHE } from '../filter/constants';
-import { IoMdArrowDropright } from "react-icons/io";
+import InProgressGameFilter from './InProgressGameFilter';
 
 export interface IOpenGame {
   p1Hero?: string;
@@ -54,7 +54,7 @@ export interface GameListResponse {
 const GAME_LIST_POLLING_INTERVAL = 10000; // in ms
 
 const GameList = () => {
-  const [cookies, setCookie, removeCookie] = useCookies(['experimental']);
+  const [cookies, setCookie, removeCookie] = useCookies(['experimental', 'inProgressGameFilters', 'inProgressGameFriendsFilter']);
   const [isTabActive, setIsTabActive] = useState(true);
   
   const { data, isLoading, error, refetch, isFetching } =
@@ -68,6 +68,62 @@ const GameList = () => {
   const [heroFilter, setHeroFilter] = useState<string[]>([]);
   const [formatFilter, setFormatFilter] = useState<string | null>(null);
   const [gamesInProgressExpanded, setGamesInProgressExpanded] = useState(true); // Default to open
+  
+  // Initialize filters from cookies
+  const defaultFormats = new Set([
+    GAME_FORMAT.BLITZ,
+    GAME_FORMAT.COMPETITIVE_BLITZ,
+    GAME_FORMAT.CLASSIC_CONSTRUCTED,
+    GAME_FORMAT.COMPETITIVE_CC,
+    GAME_FORMAT.LLCC,
+    GAME_FORMAT.COMPETITIVE_LL,
+    GAME_FORMAT.SAGE,
+    GAME_FORMAT.COMPETITIVE_SAGE,
+    GAME_FORMAT.OPEN_CC,
+    GAME_FORMAT.OPEN_BLITZ,
+    GAME_FORMAT.OPEN_LL_CC,
+    GAME_FORMAT.COMMONER,
+    GAME_FORMAT.CLASH,
+    GAME_FORMAT.SEALED,
+    GAME_FORMAT.DRAFT,
+    GAME_FORMAT.PRECON,
+    // Also include numeric format values
+    GAME_FORMAT_NUMBER.BLITZ,
+    GAME_FORMAT_NUMBER.COMPETITIVE_BLITZ,
+    GAME_FORMAT_NUMBER.CLASSIC_CONSTRUCTED,
+    GAME_FORMAT_NUMBER.COMPETITIVE_CC,
+    GAME_FORMAT_NUMBER.LLCC,
+    GAME_FORMAT_NUMBER.COMPETITIVE_LL,
+    GAME_FORMAT_NUMBER.SAGE,
+    GAME_FORMAT_NUMBER.COMPETITIVE_SAGE,
+    GAME_FORMAT_NUMBER.OPEN_CC,
+    GAME_FORMAT_NUMBER.OPEN_BLITZ,
+    GAME_FORMAT_NUMBER.OPEN_LL_CC,
+    GAME_FORMAT_NUMBER.COMMONER,
+    GAME_FORMAT_NUMBER.CLASH,
+    GAME_FORMAT_NUMBER.SEALED,
+    GAME_FORMAT_NUMBER.DRAFT,
+    GAME_FORMAT_NUMBER.PRECON,
+  ]);
+
+  const [inProgressFormatFilters, setInProgressFormatFilters] = useState<Set<string>>(() => {
+    if (cookies.inProgressGameFilters) {
+      try {
+        const parsed = JSON.parse(cookies.inProgressGameFilters);
+        return new Set(parsed);
+      } catch {
+        return defaultFormats;
+      }
+    }
+    return defaultFormats;
+  });
+
+  const [includeFriendsGames, setIncludeFriendsGames] = useState(() => {
+    if (cookies.inProgressGameFriendsFilter !== undefined) {
+      return cookies.inProgressGameFriendsFilter === 'true';
+    }
+    return true;
+  });
 
   const [parent] = useAutoAnimate();
 
@@ -88,6 +144,30 @@ const GameList = () => {
       document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
   }, [refetch]);
+
+  // Save format filters to cookies when they change
+  useEffect(() => {
+    setCookie('inProgressGameFilters', JSON.stringify(Array.from(inProgressFormatFilters)), {
+      path: '/',
+      maxAge: 86400 * 30, // 30 days
+    });
+  }, [inProgressFormatFilters, setCookie]);
+
+  // Save friends games filter to cookies when it changes
+  useEffect(() => {
+    setCookie('inProgressGameFriendsFilter', String(includeFriendsGames), {
+      path: '/',
+      maxAge: 86400 * 30, // 30 days
+    });
+  }, [includeFriendsGames, setCookie]);
+
+  const handleInProgressFilterChange = (formats: Set<string>) => {
+    setInProgressFormatFilters(formats);
+  };
+
+  const handleFriendsGamesFilterChange = (include: boolean) => {
+    setIncludeFriendsGames(include);
+  };
 
   const activeHeroIds = new Set<string>();
 
@@ -119,17 +199,29 @@ const GameList = () => {
           return false;
         }
         
-        return (
-          heroFilter.length === 0 ||
-          heroFilter.find((hero) => hero === game.p1Hero || hero === game.p2Hero)
-        );
+        // Apply hero filter
+        if (heroFilter.length > 0) {
+          if (!heroFilter.find((hero) => hero === game.p1Hero || hero === game.p2Hero)) {
+            return false;
+          }
+        }
+
+        // Apply format filter
+        if (!inProgressFormatFilters.has(game.format)) {
+          return false;
+        }
+        
+        return true;
       })
     : [];
 
   // Separate friend games from other games
-  const friendGamesInProgress = filteredGamesInProgress.filter(game =>
+  const allFriendGames = filteredGamesInProgress.filter(game =>
     game.gameCreator && friendUsernames.has(game.gameCreator)
   );
+  
+  const friendGamesInProgress = includeFriendsGames ? allFriendGames : [];
+  
   const otherGamesInProgress = filteredGamesInProgress.filter(game =>
     !game.gameCreator || !friendUsernames.has(game.gameCreator)
   );
@@ -168,6 +260,26 @@ const GameList = () => {
     GAME_FORMAT.PRECON,
     // GAME_FORMAT.LLBLITZ
   ];
+
+  // Create mapping from string formats to numeric formats
+  const formatNumberMapping = {
+    [GAME_FORMAT.BLITZ]: GAME_FORMAT_NUMBER.BLITZ,
+    [GAME_FORMAT.COMPETITIVE_BLITZ]: GAME_FORMAT_NUMBER.COMPETITIVE_BLITZ,
+    [GAME_FORMAT.CLASSIC_CONSTRUCTED]: GAME_FORMAT_NUMBER.CLASSIC_CONSTRUCTED,
+    [GAME_FORMAT.COMPETITIVE_CC]: GAME_FORMAT_NUMBER.COMPETITIVE_CC,
+    [GAME_FORMAT.LLCC]: GAME_FORMAT_NUMBER.LLCC,
+    [GAME_FORMAT.COMPETITIVE_LL]: GAME_FORMAT_NUMBER.COMPETITIVE_LL,
+    [GAME_FORMAT.SAGE]: GAME_FORMAT_NUMBER.SAGE,
+    [GAME_FORMAT.COMPETITIVE_SAGE]: GAME_FORMAT_NUMBER.COMPETITIVE_SAGE,
+    [GAME_FORMAT.OPEN_CC]: GAME_FORMAT_NUMBER.OPEN_CC,
+    [GAME_FORMAT.OPEN_BLITZ]: GAME_FORMAT_NUMBER.OPEN_BLITZ,
+    [GAME_FORMAT.OPEN_LL_CC]: GAME_FORMAT_NUMBER.OPEN_LL_CC,
+    [GAME_FORMAT.COMMONER]: GAME_FORMAT_NUMBER.COMMONER,
+    [GAME_FORMAT.CLASH]: GAME_FORMAT_NUMBER.CLASH,
+    [GAME_FORMAT.SEALED]: GAME_FORMAT_NUMBER.SEALED,
+    [GAME_FORMAT.DRAFT]: GAME_FORMAT_NUMBER.DRAFT,
+    [GAME_FORMAT.PRECON]: GAME_FORMAT_NUMBER.PRECON,
+  };
 
   return (
     <article className={styles.gameList}>
@@ -287,13 +399,33 @@ const GameList = () => {
           />
           {data != undefined && (
             <div data-testid="games-in-progress" ref={parent}>
-              <h4 
-                className={styles.subSectionTitle} 
-                onClick={() => setGamesInProgressExpanded(!gamesInProgressExpanded)}
-                style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', userSelect: 'none' }}
-              >
-                Games in Progress:&nbsp;<span>{data.gameInProgressCount}</span>
-              </h4>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1em' }}>
+                <h4 
+                  className={styles.subSectionTitle} 
+                  onClick={() => setGamesInProgressExpanded(!gamesInProgressExpanded)}
+                  style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', userSelect: 'none', margin: 0, flex: 1 }}
+                >
+                  Games in Progress:&nbsp;<span>{data.gameInProgressCount}</span>
+                </h4>
+                <InProgressGameFilter
+                  selectedFormats={inProgressFormatFilters}
+                  onFilterChange={handleInProgressFilterChange}
+                  formatOptions={[
+                    { label: 'Classic Constructed', value: GAME_FORMAT.CLASSIC_CONSTRUCTED },
+                    { label: 'Competitive CC', value: GAME_FORMAT.COMPETITIVE_CC },
+                    { label: 'Living Legend', value: GAME_FORMAT.LLCC },
+                    { label: 'Competitive LLL', value: GAME_FORMAT.COMPETITIVE_LL },
+                    { label: 'Silver Age', value: GAME_FORMAT.SAGE },
+                    { label: 'Competitive Silver Age', value: GAME_FORMAT.COMPETITIVE_SAGE },
+                    { label: 'Blitz', value: GAME_FORMAT.BLITZ },
+                    { label: 'Competitive Blitz', value: GAME_FORMAT.COMPETITIVE_BLITZ },
+                    { label: 'Other Formats', value: 'otherFormats', isGroup: true, groupValues: otherFormats },
+                  ]}
+                  includeFriendsGames={includeFriendsGames}
+                  onFriendsGamesChange={handleFriendsGamesFilterChange}
+                  formatNumberMapping={formatNumberMapping}
+                />
+              </div>
               {gamesInProgressExpanded && (
                 <>
                   {friendGamesInProgress.length > 0 && (
@@ -420,7 +552,6 @@ const GameList = () => {
 
 const InProgressGameList = ({ gameList, name, isFriendsSection, friendUsernames = new Set() }: IInProgressGameList) => {
   const [parent] = useAutoAnimate();
-  const [isExpanded, setIsExpanded] = useState(true); // Default to open
   const [isMobile, setIsMobile] = useState(window.innerWidth < 1025);
   
   useEffect(() => {
@@ -433,30 +564,18 @@ const InProgressGameList = ({ gameList, name, isFriendsSection, friendUsernames 
     };
   }, []);
 
-  const limitedGameList = isMobile ? gameList.slice(0, 10) : gameList.slice(0, 15);
+  const limitedGameList = isMobile ? gameList.slice(0, 10) : gameList.slice(0, 20);
 
   if (limitedGameList.length === 0) {
     return null;
   }
 
-  const toggleExpanded = () => {
-    setIsExpanded(!isExpanded);
-  };
-
   return (
     <div className={styles.groupDiv} ref={parent}>
-      <h5 className={styles.subSectionTitle} onClick={toggleExpanded} style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', userSelect: 'none' }}>
+      <h5 className={styles.subSectionTitle} style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', userSelect: 'none' }}>
         {name}
-        <span style={{ 
-          marginLeft: isExpanded ? '6px' : '0px', 
-          marginTop: isExpanded ? '6px' : '0px',
-          transform: isExpanded ? 'rotate(90deg)' : 'rotate(0deg)', 
-          transition: 'transform 0.2s ease',
-        }}>
-          <IoMdArrowDropright />
-        </span>
       </h5>
-      {isExpanded && limitedGameList.map((entry, ix: number) => {
+      {limitedGameList.map((entry, ix: number) => {
         const isFriendsGame = isFriendsSection || !!(entry.gameCreator && friendUsernames.has(entry.gameCreator));
         return <InProgressGame entry={entry} ix={ix} key={entry.gameName} isFriendsGame={isFriendsGame} />;
       })}
