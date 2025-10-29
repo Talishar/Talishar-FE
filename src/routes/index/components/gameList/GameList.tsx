@@ -107,20 +107,41 @@ const GameList = () => {
   ]);
 
   const [inProgressFormatFilters, setInProgressFormatFilters] = useState<Set<string>>(() => {
+    // Try to load from cookies first, then fallback to localStorage
     if (cookies.inProgressGameFilters) {
       try {
         const parsed = JSON.parse(cookies.inProgressGameFilters);
         return new Set(parsed);
       } catch {
-        return defaultFormats;
+        // Cookie parsing failed, try localStorage
       }
+    }
+    // Fallback to localStorage
+    try {
+      const stored = localStorage.getItem('inProgressGameFilters');
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        return new Set(parsed);
+      }
+    } catch {
+      // localStorage parsing failed
     }
     return defaultFormats;
   });
 
   const [includeFriendsGames, setIncludeFriendsGames] = useState(() => {
+    // Try to load from cookies first, then fallback to localStorage
     if (cookies.inProgressGameFriendsFilter !== undefined) {
       return cookies.inProgressGameFriendsFilter === 'true';
+    }
+    // Fallback to localStorage
+    try {
+      const stored = localStorage.getItem('inProgressGameFriendsFilter');
+      if (stored) {
+        return JSON.parse(stored);
+      }
+    } catch {
+      // localStorage parsing failed
     }
     return true;
   });
@@ -145,20 +166,32 @@ const GameList = () => {
     };
   }, [refetch]);
 
-  // Save format filters to cookies when they change
+  // Save format filters to cookies and localStorage when they change
   useEffect(() => {
     setCookie('inProgressGameFilters', JSON.stringify(Array.from(inProgressFormatFilters)), {
       path: '/',
       maxAge: 86400 * 30, // 30 days
     });
+    // Also save to localStorage as backup
+    try {
+      localStorage.setItem('inProgressGameFilters', JSON.stringify(Array.from(inProgressFormatFilters)));
+    } catch {
+      console.error('Failed to save filters to localStorage');
+    }
   }, [inProgressFormatFilters, setCookie]);
 
-  // Save friends games filter to cookies when it changes
+  // Save friends games filter to cookies and localStorage when it changes
   useEffect(() => {
     setCookie('inProgressGameFriendsFilter', String(includeFriendsGames), {
       path: '/',
       maxAge: 86400 * 30, // 30 days
     });
+    // Also save to localStorage as backup
+    try {
+      localStorage.setItem('inProgressGameFriendsFilter', JSON.stringify(includeFriendsGames));
+    } catch {
+      console.error('Failed to save friends filter to localStorage');
+    }
   }, [includeFriendsGames, setCookie]);
 
   const handleInProgressFilterChange = (formats: Set<string>) => {
@@ -414,7 +447,7 @@ const GameList = () => {
                     { label: 'Classic Constructed', value: GAME_FORMAT.CLASSIC_CONSTRUCTED },
                     { label: 'Competitive CC', value: GAME_FORMAT.COMPETITIVE_CC },
                     { label: 'Living Legend', value: GAME_FORMAT.LLCC },
-                    { label: 'Competitive LLL', value: GAME_FORMAT.COMPETITIVE_LL },
+                    { label: 'Competitive LL', value: GAME_FORMAT.COMPETITIVE_LL },
                     { label: 'Silver Age', value: GAME_FORMAT.SAGE },
                     { label: 'Competitive Silver Age', value: GAME_FORMAT.COMPETITIVE_SAGE },
                     { label: 'Blitz', value: GAME_FORMAT.BLITZ },
