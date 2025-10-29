@@ -174,7 +174,7 @@ const InProgressGameFilter = ({
       {isOpen && (
         <div className={styles.dropdown} style={dropdownStyle}>
           <div className={styles.dropdownHeader}>
-            <h5 className={styles.dropdownTitle}>Filter Games</h5>
+            <h5 className={styles.dropdownTitle}>Filter Games in Progress</h5>
           </div>
 
           <div className={styles.checklistContainer}>
