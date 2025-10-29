@@ -1,7 +1,45 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import styles from './InProgressGameFilter.module.scss';
 import { IoMdArrowDropright } from 'react-icons/io';
 import { IoFunnel } from "react-icons/io5";
+
+// Utility functions for persisting filters to local storage
+const FILTER_STORAGE_KEY = 'inProgressGameFilters';
+const FRIENDS_FILTER_STORAGE_KEY = 'inProgressGameFriendsFilter';
+
+const loadFiltersFromStorage = (): string[] => {
+  try {
+    const stored = localStorage.getItem(FILTER_STORAGE_KEY);
+    return stored ? JSON.parse(stored) : [];
+  } catch {
+    return [];
+  }
+};
+
+const saveFiltersToStorage = (formats: Set<string>): void => {
+  try {
+    localStorage.setItem(FILTER_STORAGE_KEY, JSON.stringify(Array.from(formats)));
+  } catch {
+    console.error('Failed to save filters to localStorage');
+  }
+};
+
+const loadFriendsFilterFromStorage = (): boolean => {
+  try {
+    const stored = localStorage.getItem(FRIENDS_FILTER_STORAGE_KEY);
+    return stored ? JSON.parse(stored) : true;
+  } catch {
+    return true;
+  }
+};
+
+const saveFriendsFilterToStorage = (include: boolean): void => {
+  try {
+    localStorage.setItem(FRIENDS_FILTER_STORAGE_KEY, JSON.stringify(include));
+  } catch {
+    console.error('Failed to save friends filter to localStorage');
+  }
+};
 
 export interface FormatOption {
   label: string;
@@ -108,6 +146,7 @@ const InProgressGameFilter = ({
       }
     }
     onFilterChange(newFormats);
+    saveFiltersToStorage(newFormats);
   };
 
   const handleResetFilters = () => {
@@ -131,10 +170,13 @@ const InProgressGameFilter = ({
       }
     });
     onFilterChange(allFormats);
+    saveFiltersToStorage(allFormats);
   };
 
   const handleFriendsGamesChange = () => {
-    onFriendsGamesChange(!includeFriendsGames);
+    const newValue = !includeFriendsGames;
+    onFriendsGamesChange(newValue);
+    saveFriendsFilterToStorage(newValue);
   };
 
   const isGroupSelected = (groupValues?: string[]) => {
