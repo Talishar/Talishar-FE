@@ -87,9 +87,21 @@
   font-size: 0.8em;
 }
 
+@media (max-width: 1079px) {
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 30px;
+    margin: 0 auto;
+    padding: 0 1em;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+}
+
 @media only screen and (max-width: 768px) and (orientation: portrait) {
   .grid {
-    gap: 0px;
+    grid-template-columns: 1fr;
+    gap: 20px;
     margin: 0 auto;
     max-width: 100%;
     overflow-x: hidden;
@@ -100,11 +112,19 @@
   .gameListContainer {
     overflow-x: hidden;
     width: 100%;
+    order: 1;
+  }
+
+  .createGameContainer {
+    overflow-x: hidden;
+    width: 100%;
+    order: 2;
   }
   
   .newsContainer {
     overflow-x: hidden;
     width: 100%;
+    order: 3;
   }
 
   .logo {
