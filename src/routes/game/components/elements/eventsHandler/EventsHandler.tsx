@@ -169,6 +169,11 @@ export const EventsHandler = React.memo(() => {
               );
             }
             continue;
+          case 'UNDODENIEDNOTICE':
+            if (parseInt(event.eventValue ?? '0') === playerID) {
+              toast.error('Your undo requests have been declined too many times. No more undo requests allowed this turn.');
+            }
+            continue;
           case "SHUFFLE":
             const PlayerShuffling = event.eventValue !== undefined ? parseInt(event.eventValue) : null;
 
