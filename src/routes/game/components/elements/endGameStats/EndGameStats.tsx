@@ -163,6 +163,31 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
     setIsExporting(true);
     
     try {
+      // Wait for hero images to load if they haven't yet
+      const requiredHeroImages = [];
+      if (data.yourHero) requiredHeroImages.push('yourHero');
+      if (data.opponentHero) requiredHeroImages.push('opponentHero');
+      
+      // Wait for all required hero images to be loaded (max 5 seconds)
+      if (requiredHeroImages.length > 0) {
+        const startTime = Date.now();
+        const maxWait = 5000; // 5 second timeout
+        
+        while (Date.now() - startTime < maxWait) {
+          const allLoaded = requiredHeroImages.every(hero => heroDataUrls[hero as keyof typeof heroDataUrls]);
+          if (allLoaded) {
+            console.log('All hero images loaded');
+            break;
+          }
+          // Wait a bit before checking again
+          await new Promise(resolve => setTimeout(resolve, 100));
+        }
+        
+        if (!requiredHeroImages.every(hero => heroDataUrls[hero as keyof typeof heroDataUrls])) {
+          console.warn('Some hero images did not load within timeout, proceeding with export anyway');
+        }
+      }
+
       // Show watermark and hide card images for export
       const hideElements = statsRef.current.querySelectorAll(`.${styles.hideOnExport}`);
       const watermark = statsRef.current.querySelector(`.${styles.watermark}`) as HTMLElement;
@@ -263,9 +288,9 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
         let resultLabel = 'N/A';
         if (playerData.result !== undefined && playerData.result !== null) {
           if (playerData.playerID) {
-            resultLabel = playerData.result === 0 ? 'Winner' : 'Loser';
+            resultLabel = playerData.result === 1 ? 'Winner' : 'Loser';
           } else {
-            resultLabel = playerData.result === 0 ? 'Player 1 Wins' : 'Player 2 Wins';
+            resultLabel = playerData.result === 1 ? 'Player 1 Wins' : 'Player 2 Wins';
           }
         }
         content += `Result,${resultLabel}\n`;
@@ -565,7 +590,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                 {isPatron ? (
                   data.averageValuePerTurn
                 ) : (
-                  <span dangerouslySetInnerHTML={{ __html: "Support our <a href='https://linktr.ee/Talishar' target='_blank'>patreon</a>" }} />
+                  <span dangerouslySetInnerHTML={{ __html: "<a href='https://linktr.ee/Talishar' target='_blank'>Support us!</a>" }} />
                 )}
               </span>
             </div>
@@ -615,7 +640,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                 {isPatron ? (
                   data.totalDamagePrevented
                 ) : (
-                  <span dangerouslySetInnerHTML={{ __html: "Support our <a href='https://linktr.ee/Talishar' target='_blank'>patreon</a>" }} />
+                  <span dangerouslySetInnerHTML={{ __html: "<a href='https://linktr.ee/Talishar' target='_blank'>Support us!</a>" }} />
                 )}
               </span>
             </div>
@@ -626,7 +651,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                 {isPatron ? (
                   data.totalLifeGained
                 ) : (
-                  <span dangerouslySetInnerHTML={{ __html: "Support our <a href='https://linktr.ee/Talishar' target='_blank'>patreon</a>" }} />
+                  <span dangerouslySetInnerHTML={{ __html: "<a href='https://linktr.ee/Talishar' target='_blank'>Support us!</a>" }} />
                 )}
               </span>
             </div>
@@ -663,7 +688,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                     ) : (
                       <div className={styles.heroNameBox}>{data.yourHero}</div>
                     )}
-                    {data.result === 0 && (
+                    {data.result === 1 && (
                       <div className={styles.winnerBadge}>Winner!</div>
                     )}
                   </div>
@@ -685,7 +710,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                     ) : (
                       <div className={styles.heroNameBox}>{data.opponentHero}</div>
                     )}
-                    {data.result === 1 && (
+                    {data.result === 0 && (
                       <div className={styles.winnerBadge}>Winner!</div>
                     )}
                   </div>
