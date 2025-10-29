@@ -22,27 +22,35 @@ const ExperimentalGameStateHandler = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    // Determine the correct gameID and playerID
+    const currentGameID = parseInt(gameID ?? gameName);
+    const currentPlayerID = locationState?.playerID ?? parseInt(playerID);
+    
+    // For authKey priority:
+    // 1. Use URL authKey parameter if provided (new game creation or direct link)
+    // 2. Only fall back to stored gameInfo.authKey if no URL authKey (reconnection scenario)
+    // This prevents stale authKeys from previous games being used
+    const currentAuthKey = authKey || gameInfo.authKey;
+    
     dispatch(
       setGameStart({
-        gameID: parseInt(gameID ?? gameName),
-        playerID: locationState?.playerID ?? parseInt(playerID),
-        authKey: gameInfo.authKey || authKey
+        gameID: currentGameID,
+        playerID: currentPlayerID,
+        authKey: currentAuthKey
       })
     );
     const source = new EventSource(
-      `${BACKEND_URL}GetUpdateSSE.php?gameName=${gameInfo.gameID}&playerID=${gameInfo.playerID}&authKey=${gameInfo.authKey}`
+      `${BACKEND_URL}GetUpdateSSE.php?gameName=${currentGameID}&playerID=${currentPlayerID}&authKey=${currentAuthKey}`
     );
     source.onmessage = (e) => {
       //console.log('update data:', e.data);
       dispatch(
         nextTurn({
           game: {
-            gameID: gameInfo.gameID || parseInt(gameID ?? gameName),
-            playerID:
-              gameInfo.playerID ||
-              (locationState?.playerID ?? parseInt(playerID)),
-            authKey: gameInfo.authKey || authKey,
-            isPrivate: gameInfo.isPrivate,
+            gameID: currentGameID,
+            playerID: currentPlayerID,
+            authKey: currentAuthKey,
+            isPrivateLobby: gameInfo.isPrivateLobby,
             isRoguelike: gameInfo.isRoguelike
           },
           signal: undefined,
@@ -51,11 +59,16 @@ const ExperimentalGameStateHandler = () => {
       );
     };
 
+    source.onerror = (error) => {
+      console.error('EventSource connection error:', error);
+      source.close();
+    };
+
     return () => {
       //console.log('closing eventstream');
       source.close();
     };
-  }, [gameInfo.playerID, gameInfo.gameID, gameInfo.authKey]);
+  }, [gameInfo.playerID, gameInfo.gameID, gameInfo.authKey, gameID, gameName, playerID, authKey, locationState?.playerID, dispatch]);
 
   useEffect(() => {
     isFullRematch ? navigate(`/game/lobby/${gameID}`) : null;
