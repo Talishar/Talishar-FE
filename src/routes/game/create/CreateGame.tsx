@@ -52,6 +52,9 @@ const CreateGame = () => {
   });
 
   const initialValues: CreateGameAPI = useMemo(() => {
+    // Load game description from localStorage
+    const savedGameDescription = localStorage.getItem('lastGameDescription') || '';
+    
     return {
       deck: '',
       fabdb: searchParams.get('fabdb') ?? '',
@@ -82,7 +85,7 @@ const CreateGame = () => {
               (deck) => deck.index === data.lastUsedDeckIndex
             )?.key
           : '',
-      gameDescription: '',
+      gameDescription: savedGameDescription,
       deckTestDeck: AI_DECK.COMBAT_DUMMY
     };
   }, [isSuccess, isLoggedIn]);
@@ -214,6 +217,12 @@ const CreateGame = () => {
       // if you're not logged in you can ONLY make a private game.
       if (!isLoggedIn) values.visibility = GAME_VISIBILITY.PRIVATE;
       values.user = searchParams.get('user') ?? undefined;
+      
+      // Save game description to localStorage
+      if (values.gameDescription) {
+        localStorage.setItem('lastGameDescription', values.gameDescription);
+      }
+      
       const response = await createGame(values).unwrap();
       if (response.error) {
         throw response.error;

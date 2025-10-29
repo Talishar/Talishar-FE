@@ -36,7 +36,7 @@
 
 .grid {
   display: grid;
-  gap: 30px;
+  gap: 25px;
   margin: 0 auto;
   padding: 0 1em;
   max-width: 100%;
@@ -62,15 +62,43 @@
 }
 
 
-@media (min-width: 1080px) {
+@media (min-width: 1350px) {
   .grid {
     grid-template-columns: 1fr 1fr 1fr;
-    gap: 30px;
+    gap: 25px;
     margin: 0 auto;
     padding: 0 1em;
     max-width: 100%;
     overflow-x: hidden;
     width: 100vw;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1349px) {
+  .grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+    margin: 0 auto;
+    padding: 0 1em;
+    max-width: 100%;
+    overflow-x: hidden;
+    grid-template-areas:
+      "gameList createGame"
+      "gameList news";
+  }
+
+  .gameListContainer {
+    grid-area: gameList;
+  }
+
+  .createGameContainer {
+    grid-area: createGame;
+  }
+
+  .newsContainer {
+    grid-area: news;
+    max-width: 100%;
+    margin: 0;
   }
 }
 
@@ -89,7 +117,8 @@
 
 @media only screen and (max-width: 768px) and (orientation: portrait) {
   .grid {
-    gap: 0px;
+    grid-template-columns: 1fr;
+    gap: 25px;
     margin: 0 auto;
     max-width: 100%;
     overflow-x: hidden;
@@ -100,11 +129,19 @@
   .gameListContainer {
     overflow-x: hidden;
     width: 100%;
+    order: 1;
+  }
+
+  .createGameContainer {
+    overflow-x: hidden;
+    width: 100%;
+    order: 2;
   }
   
   .newsContainer {
     overflow-x: hidden;
     width: 100%;
+    order: 3;
   }
 
   .logo {

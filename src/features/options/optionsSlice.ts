@@ -52,11 +52,19 @@ export const fetchAllSettings = createAsyncThunk(
         headers: {},
         credentials: 'include'
       });
-      const data = await response.json();
+      
+      // Check if response is ok before trying to parse
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
+      const text = await response.text();
+      const data = JSON.parse(text);
       return data.Settings as Setting[];
     } catch (error) {
-      toast.error(JSON.stringify(error));
-      console.warn(error);
+      console.error('Failed to fetch settings:', error);
+      // Return empty array instead of showing error toast for settings
+      return [] as Setting[];
     }
   },
   {

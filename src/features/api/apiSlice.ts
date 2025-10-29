@@ -93,7 +93,19 @@ export const parseResponse = async (response: any) => {
     toast.error(`BE Response:\n${cleanedError}`);
     stringData = stringData.substring(indexOfBraces);
   }
-  return JSON.parse(stringData);
+  
+  // Only try to parse if we have valid JSON-like content
+  if (stringData.length === 0 || stringData === '{}' || !stringData.startsWith('{')) {
+    return {};
+  }
+  
+  try {
+    return JSON.parse(stringData);
+  } catch (e) {
+    console.error('JSON Parse Error:', e, 'Input:', stringData);
+    toast.error('Failed to parse server response. Please try again.');
+    return {};
+  }
 };
 
 // Different request URLs depending on the gameID number, beta, live or dev.
@@ -588,6 +600,17 @@ export const apiSlice = createApi({
           responseHandler: parseResponse
         };
       }
+    }),
+
+    whitelistOffensiveUsername: builder.mutation<any, { username: string }>({
+      query: ({ username }) => {
+        return {
+          url: URL_END_POINT.USERNAME_MODERATION,
+          method: 'POST',
+          body: { action: 'whitelistOffensiveUsername', username: username },
+          responseHandler: parseResponse
+        };
+      }
     })
   })
 });
@@ -635,5 +658,6 @@ export const {
   useBlockUserMutation,
   useUnblockUserMutation,
   useGetOffensiveUsernamesQuery,
-  useBanOffensiveUsernameMutation
+  useBanOffensiveUsernameMutation,
+  useWhitelistOffensiveUsernameMutation
 } = apiSlice;
