@@ -108,6 +108,46 @@ export const UsernameModeration: React.FC = () => {
     }
   };
 
+  const handleWhitelistSelected = async () => {
+    if (selectedUsers.size === 0) {
+      toast.error('No users selected');
+      return;
+    }
+
+    const usersToWhitelist = moderationData?.offensiveUsers.filter((user) =>
+      selectedUsers.has(user.usersId)
+    ) || [];
+
+    if (
+      !window.confirm(
+        `Whitelist ${usersToWhitelist.length} user(s)?\n\n${usersToWhitelist
+          .map((u) => u.username)
+          .join(', ')}`
+      )
+    ) {
+      return;
+    }
+
+    let successCount = 0;
+    let failureCount = 0;
+
+    for (const user of usersToWhitelist) {
+      try {
+        await whitelistUsername({ username: user.username }).unwrap();
+        successCount++;
+      } catch (err: any) {
+        console.error(`Failed to whitelist ${user.username}:`, err);
+        failureCount++;
+      }
+    }
+
+    toast.success(
+      `Whitelisted ${successCount} user(s)${failureCount > 0 ? ` (${failureCount} failed)` : ''}`
+    );
+    setSelectedUsers(new Set());
+    await refetch();
+  };
+
   const offensiveUsers = moderationData?.offensiveUsers || [];
 
   return (
@@ -142,6 +182,14 @@ export const UsernameModeration: React.FC = () => {
               disabled={selectedUsers.size === 0 || isBanning || isWhitelisting}
             >
               {isBanning ? 'Banning...' : `Ban Selected (${selectedUsers.size})`}
+            </button>
+
+            <button
+              className={styles.whitelistSelectedButton}
+              onClick={handleWhitelistSelected}
+              disabled={selectedUsers.size === 0 || isBanning || isWhitelisting}
+            >
+              {isWhitelisting ? 'Whitelisting...' : `Whitelist Selected (${selectedUsers.size})`}
             </button>
 
             <button className={styles.refreshButton} onClick={() => refetch()} disabled={isBanning || isWhitelisting}>

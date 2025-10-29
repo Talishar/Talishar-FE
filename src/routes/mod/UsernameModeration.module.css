@@ -28,13 +28,15 @@
 
 .controls {
   display: flex;
-  gap: 10px;
+  gap: 12px;
   margin-bottom: 20px;
   flex-wrap: wrap;
+  align-items: center;
 }
 
 .selectAllButton,
 .banButton,
+.whitelistSelectedButton,
 .refreshButton,
 .banSingleButton,
 .whitelistButton {
@@ -45,6 +47,7 @@
   cursor: pointer;
   font-weight: 500;
   transition: all 0.2s ease;
+  white-space: nowrap;
 }
 
 .selectAllButton {
@@ -54,6 +57,8 @@
 
 .selectAllButton:hover:not(:disabled) {
   background: #1976d2;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(33, 150, 243, 0.3);
 }
 
 .banButton {
@@ -63,15 +68,30 @@
 
 .banButton:hover:not(:disabled) {
   background: #d32f2f;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(244, 67, 54, 0.3);
 }
 
-.refreshButton {
+.whitelistSelectedButton {
   background: #4caf50;
   color: white;
 }
 
-.refreshButton:hover:not(:disabled) {
+.whitelistSelectedButton:hover:not(:disabled) {
   background: #388e3c;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+}
+
+.refreshButton {
+  background: #9c27b0;
+  color: white;
+}
+
+.refreshButton:hover:not(:disabled) {
+  background: #7b1fa2;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(156, 39, 176, 0.3);
 }
 
 .banSingleButton {
@@ -83,6 +103,8 @@
 
 .banSingleButton:hover:not(:disabled) {
   background: #e68900;
+  transform: translateY(-1px);
+  box-shadow: 0 1px 4px rgba(255, 152, 0, 0.3);
 }
 
 .whitelistButton {
@@ -95,10 +117,13 @@
 
 .whitelistButton:hover:not(:disabled) {
   background: #388e3c;
+  transform: translateY(-1px);
+  box-shadow: 0 1px 4px rgba(76, 175, 80, 0.3);
 }
 
 .selectAllButton:disabled,
 .banButton:disabled,
+.whitelistSelectedButton:disabled,
 .refreshButton:disabled,
 .banSingleButton:disabled,
 .whitelistButton:disabled {
@@ -194,10 +219,12 @@
 
   .controls {
     flex-direction: column;
+    gap: 8px;
   }
 
   .selectAllButton,
   .banButton,
+  .whitelistSelectedButton,
   .refreshButton {
     width: 100%;
   }
