@@ -600,6 +600,17 @@ export const apiSlice = createApi({
           responseHandler: parseResponse
         };
       }
+    }),
+
+    whitelistOffensiveUsername: builder.mutation<any, { username: string }>({
+      query: ({ username }) => {
+        return {
+          url: URL_END_POINT.USERNAME_MODERATION,
+          method: 'POST',
+          body: { action: 'whitelistOffensiveUsername', username: username },
+          responseHandler: parseResponse
+        };
+      }
     })
   })
 });
@@ -647,5 +658,6 @@ export const {
   useBlockUserMutation,
   useUnblockUserMutation,
   useGetOffensiveUsernamesQuery,
-  useBanOffensiveUsernameMutation
+  useBanOffensiveUsernameMutation,
+  useWhitelistOffensiveUsernameMutation
 } = apiSlice;
