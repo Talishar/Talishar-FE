@@ -36,7 +36,8 @@
 .selectAllButton,
 .banButton,
 .refreshButton,
-.banSingleButton {
+.banSingleButton,
+.whitelistButton {
   padding: 10px 16px;
   border: none;
   border-radius: 4px;
@@ -84,10 +85,23 @@
   background: #e68900;
 }
 
+.whitelistButton {
+  background: #4caf50;
+  color: white;
+  padding: 6px 12px;
+  font-size: 0.85em;
+  margin-left: 6px;
+}
+
+.whitelistButton:hover:not(:disabled) {
+  background: #388e3c;
+}
+
 .selectAllButton:disabled,
 .banButton:disabled,
 .refreshButton:disabled,
-.banSingleButton:disabled {
+.banSingleButton:disabled,
+.whitelistButton:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
@@ -199,5 +213,18 @@
 
   .usernameCell {
     max-width: 120px;
+  }
+
+  .actionCell {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .banSingleButton,
+  .whitelistButton {
+    margin-left: 0;
+    padding: 6px 8px;
+    font-size: 0.8em;
   }
 }
