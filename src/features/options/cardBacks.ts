@@ -122,6 +122,7 @@ export const CARD_BACK = {
   '121': 'CBFreshAndBuds2',
 } as { [key: string]: string };
 
+/* All available playmats - CSS class names (must match image files) */
 export const PLAYMATS = {
   '0': 'Default',
   '1': 'Demonastery',
@@ -153,8 +154,49 @@ export const PLAYMATS = {
   '27': 'FabledBrazil',
   '28': 'NewHorizons',
   '29': 'SilvarisGarden',
+  '30': 'Candleheim',
+  '31': 'Isenloft',
+  '32': 'Volthaven'
 } as { [key: string]: string };
 
+/* Display names for playmats (user-friendly formatting) */
+export const PLAYMAT_DISPLAY_NAMES = {
+  '0': 'Default',
+  '1': 'Demonastery',
+  '2': 'Metrix',
+  '3': 'Misteria',
+  '4': 'The Pits',
+  '5': 'Savage Lands',
+  '6': 'Solana',
+  '7': 'Ironsong Determination',
+  '8': 'Volcor',
+  '9': 'Data Doll',
+  '10': 'Korshem',
+  '11': 'Dynasty',
+  '12': 'Everfest',
+  '13': 'Find Center',
+  '14': 'Part The Mistveil',
+  '15': 'Rosetta',
+  '16': 'Bare Fangs AHS',
+  '17': 'Erase Face AHS',
+  '18': 'Dusk Till Dawn AHS',
+  '19': 'Exude Confidence AHS',
+  '20': 'Command and Conquer AHS',
+  '21': 'Swarming Gloomveil AHS',
+  '22': 'Three Floating',
+  '23': 'Man Sant',
+  '24': 'The Table Pit',
+  '25': 'Steelfur',
+  '26': 'Flesh And Bad',
+  '27': 'Fabled Brazil',
+  '28': 'New Horizons',
+  '29': 'Silvaris Garden',
+  '30': 'Candleheim',
+  '31': 'Isenloft',
+  '32': 'Volthaven'
+} as { [key: string]: string };
+
+/* Default playmats available to all players */
 export const PLAYER_PLAYMATS = [
   '0',
   '9',
@@ -165,11 +207,21 @@ export const PLAYER_PLAYMATS = [
   '5',
   '6',
   '7',
+  '8',
+  '9',
   '10',
   '11',
   '12',
   '13',
   '14',
   '15',
-  '16'
+  '16',
+  '17',
+  '18',
+  '19',
+  '20',
+  '21',
+  '30',
+  '31',
+  '32'
 ];

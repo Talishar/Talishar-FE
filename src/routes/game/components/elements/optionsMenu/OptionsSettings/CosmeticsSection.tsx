@@ -13,8 +13,8 @@ import { Setting } from 'features/options/optionsSlice';
 import styles from './OptionsSettings.module.css';
 
 interface CosmeticsData {
-  cardBacks?: Array<{ id: string }>;
-  playmats?: Array<{ id: string }>;
+  cardBacks?: Array<{ id: string; name?: string }>;
+  playmats?: Array<{ id: string; name?: string }>;
 }
 
 interface CosmeticsSectionProps {
@@ -53,7 +53,7 @@ export const CosmeticsSection: React.FC<CosmeticsSectionProps> = ({
               {data?.playmats?.map((playmatKey) => {
                 return (
                   <option key={playmatKey.id} value={playmatKey.id}>
-                    {PLAYMATS[playmatKey.id]}
+                    {playmatKey.name || PLAYMATS[playmatKey.id]}
                   </option>
                 );
               })}
