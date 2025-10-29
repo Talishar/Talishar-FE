@@ -109,16 +109,14 @@ const Lobby = () => {
 
   if (!data || !data.deck) return null;
 
-  // if the game is ready then let's join the main game
-  if (gameLobby?.isMainGameReady) {
-    const searchParam = {
-      playerID: String(playerID),
-      gameName: String(gameID)
-    };
-    navigate(`/game/play/${gameID}`, {
-      state: { playerID: playerID ?? 0 } as GameLocationState
-    });
-  }
+  // Navigate to main game when ready - must be in useEffect to avoid setState during render
+  useEffect(() => {
+    if (gameLobby?.isMainGameReady) {
+      navigate(`/game/play/${gameID}`, {
+        state: { playerID: playerID ?? 0 } as GameLocationState
+      });
+    }
+  }, [gameLobby?.isMainGameReady, gameID, playerID, navigate]);
 
   const deckClone = [...data.deck.cards];
   const deckSBClone = [...data.deck.cardsSB];
