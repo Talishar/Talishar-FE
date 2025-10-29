@@ -96,30 +96,12 @@ const LoggedInGuard = ({
   return children;
 };
 
-// Component that initializes auth on app load
-const AuthInitializer = ({ children }: { children: JSX.Element }) => {
-  const { isLoading } = useAuth();
-
-  // Block rendering of all routes until auth check is complete
-  if (isLoading) {
-    return (
-      <div style={{ textAlign: 'center', padding: '2rem' }}>
-        Initializing...
-      </div>
-    );
-  }
-
-  return children;
-};
-
 export const router = createBrowserRouter(
   createRoutesFromElements(
     <Route errorElement={<ErrorPage />}>
       <Route
         element={
-          <AuthInitializer>
-            <Outlet />
-          </AuthInitializer>
+          <Outlet />
         }
       >
         <Route
