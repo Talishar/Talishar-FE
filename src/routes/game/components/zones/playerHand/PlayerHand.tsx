@@ -221,6 +221,7 @@ export default function PlayerHand() {
 
 const ManualMode = () => {
   const [card, setCard] = useState<string>('');
+  const [isLoading, setIsLoading] = useState(false);
   const dispatch = useAppDispatch();
   const gameInfo = useAppSelector(getGameInfo, shallowEqual);
 
@@ -239,31 +240,47 @@ const ManualMode = () => {
   };
 
   const handleSubmitButton = () => {
-    if (card === '') {
+    if (card === '' || isLoading) {
       return;
     }
+    
+    setIsLoading(true);
+    
     dispatch(
       submitButton({
         button: { mode: PROCESS_INPUT.ADD_CARD_TO_HAND_SELF, cardID: card.toLowerCase() }
       })
     );
-    setCard('');
+    
+    // Reset loading state after request completes
+    setTimeout(() => setIsLoading(false), 300);
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    e.stopPropagation();
+    if (e.key === 'Enter') {
+      handleSubmitButton();
+    }
   };
 
   return (
     <div className={styles.manualMode}>
       <input
+        value={card}
         onChange={(e) => setCard(e.target.value)}
-        onKeyDown={(e) => {
-          e.stopPropagation();
-        }}
+        onKeyDown={handleKeyPress}
         onKeyDownCapture={(e) => {
           e.stopPropagation();
         }}
         placeholder={'Enter card code here'}
+        disabled={isLoading}
       ></input>
-      <button onClick={handleSubmitButton}>Add</button>
-      <button onClick={handleCloseManualMode}>Close</button>
+      <button onClick={handleSubmitButton} disabled={isLoading}>
+        {isLoading ? 'Adding...' : 'Add'}
+      </button>
+      <button onClick={handleCloseManualMode} disabled={isLoading}>
+        Close
+      </button>
     </div>
   );
 };
