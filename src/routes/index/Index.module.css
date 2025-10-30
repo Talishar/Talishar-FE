@@ -38,6 +38,7 @@
   display: grid;
   gap: 25px;
   margin: 0 auto;
+  margin-top: 3em;
   padding: 0 1em;
   max-width: 100%;
 }
@@ -67,6 +68,7 @@
     grid-template-columns: 1fr 1fr 1fr;
     gap: 25px;
     margin: 0 auto;
+    margin-top: 3em;
     padding: 0 1em;
     max-width: 100%;
     overflow-x: hidden;
@@ -79,6 +81,7 @@
     grid-template-columns: 1fr 1fr;
     gap: 25px;
     margin: 0 auto;
+    margin-top: 3em;
     padding: 0 1em;
     max-width: 100%;
     overflow-x: hidden;
@@ -124,6 +127,7 @@
     overflow-x: hidden;
     width: 100vw;
     line-height: normal;
+    margin-top: 3.5em;
   }
 
   .gameListContainer {
