@@ -522,7 +522,7 @@ const CreateGame = () => {
             color: 'rgba(255, 255, 255, 0.6)',
             fontSize: '0.85rem'
           }}>
-            Advertisement - Supports Free Access to Talishar
+            Advertisement - Supports Voluntary Work on Talishar
           </small>
           <GoogleAdSense slot="3126621164" format="auto" />
         </div>
