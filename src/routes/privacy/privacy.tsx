@@ -37,13 +37,113 @@ export const Privacy = () => {
           not receive this cookie, you must not play the game.
         </p>
         <h1>Talishar Privacy Policy</h1>
+        
+        <h2>Data Collection and Use</h2>
         <p>
-          Third party vendors, including Google, use cookies to serve ads based
-          on your prior visits to Talishar or other websites. Google's use of
-          advertising cookies enables it and its partners to serve ads to you
-          based on your visit to Talishar and/or other sites on the Internet.
-          Users may opt out of personalized advertising by visiting{' '}
-          <a href="https://www.google.com/settings/ads">Ads Settings</a>.
+          Talishar uses third-party advertising services, including Google AdSense,
+          to serve advertisements when you visit our website. These companies may
+          use information about your visits to this and other websites to provide
+          relevant advertisements about goods and services.
+        </p>
+
+        <h2>Google AdSense and Cookies</h2>
+        <p>
+          Google, as a third party vendor, uses cookies to serve ads on Talishar.
+          Google's use of advertising cookies enables it and its partners to serve
+          ads to you based on your visit to Talishar and/or other sites on the
+          Internet. These cookies allow Google and its partners to:
+        </p>
+        <ul>
+          <li>Display personalized ads based on your interests</li>
+          <li>Measure ad performance and engagement</li>
+          <li>Analyze site traffic and user behavior</li>
+          <li>Provide aggregate reporting to advertisers</li>
+        </ul>
+        <p>
+          Third party vendors, including Google, may place and read cookies on
+          your browser, or use web beacons or other technologies to collect
+          information as a result of ad serving on Talishar.
+        </p>
+        <p>
+          <strong>Learn more:</strong> For more information about how Google
+          uses data when you use our site, please visit{' '}
+          <a href="https://policies.google.com/technologies/partner-sites" target="_blank" rel="noopener noreferrer">
+            How Google uses data when you use our partners' sites or apps
+          </a>.
+        </p>
+
+        <h2>Your Privacy Choices</h2>
+        <p>
+          You have the right to control how your data is used for advertising:
+        </p>
+        <ul>
+          <li>
+            <strong>Opt out of personalized advertising:</strong> Visit{' '}
+            <a href="https://www.google.com/settings/ads" target="_blank" rel="noopener noreferrer">
+              Google Ads Settings
+            </a>{' '}
+            to manage your ad preferences and opt out of personalized advertising.
+          </li>
+          <li>
+            <strong>Opt out of third-party cookies:</strong> Visit{' '}
+            <a href="http://www.aboutads.info/choices/" target="_blank" rel="noopener noreferrer">
+              aboutads.info
+            </a>{' '}
+            or{' '}
+            <a href="http://www.youronlinechoices.eu/" target="_blank" rel="noopener noreferrer">
+              youronlinechoices.eu
+            </a>{' '}
+            (for EU users) to opt out of interest-based advertising from
+            participating companies.
+          </li>
+          <li>
+            <strong>Browser settings:</strong> You can configure your browser
+            to refuse all cookies or to alert you when a cookie is being set.
+            Note that some features of Talishar may not function properly
+            without cookies.
+          </li>
+        </ul>
+
+        <h2>Children's Privacy (COPPA Compliance)</h2>
+        <p>
+          Talishar does not knowingly collect personal information from children
+          under the age of 13. Our website is not directed at children under 13,
+          and we do not use Google AdSense to target personalized ads to children.
+          If you are under 13 years of age, please do not use our website or
+          provide any personal information without parental consent.
+        </p>
+        <p>
+          Parents and guardians: If you believe your child has provided personal
+          information on our site, please contact us via our Discord community
+          and we will delete such information.
+        </p>
+
+        <h2>International Users and GDPR</h2>
+        <p>
+          If you are accessing Talishar from the European Economic Area (EEA),
+          United Kingdom, or other regions with data protection laws, please note
+          that we comply with applicable privacy regulations. You have rights
+          regarding your personal data, including:
+        </p>
+        <ul>
+          <li>The right to access your personal data</li>
+          <li>The right to rectify inaccurate data</li>
+          <li>The right to erasure ("right to be forgotten")</li>
+          <li>The right to restrict or object to processing</li>
+          <li>The right to data portability</li>
+        </ul>
+        <p>
+          To exercise these rights, please contact us through our Discord community.
+        </p>
+
+        <h2>Changes to Privacy Policy</h2>
+        <p>
+          We may update this privacy policy from time to time. We will notify
+          users of any material changes by posting the new policy on this page
+          with an updated revision date.
+        </p>
+        <p>
+          <strong>Last updated:</strong> October 30, 2025
         </p>
         <h1>Sources</h1>
         <p>

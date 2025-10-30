@@ -1,0 +1,172 @@
+.cookieConsentOverlay {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 10000;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.95), rgba(0, 0, 0, 0.85));
+  backdrop-filter: blur(10px);
+  padding: 0.75rem 1rem;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.5);
+  animation: slideUp 0.4s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.cookieConsentBanner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.content {
+  flex: 1;
+}
+
+.title {
+  margin: 0 0 0.4rem 0;
+  font-size: 1rem;
+  color: var(--primary, #ffb84d);
+  font-weight: 600;
+}
+
+.description {
+  margin: 0.3rem 0;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.expandedContent {
+  margin-top: 0.6rem;
+  padding-top: 0.6rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.expandedContent .description {
+  margin: 0.4rem 0;
+  font-size: 0.8rem;
+}
+
+.expandedContent a {
+  color: var(--primary, #ffb84d);
+  text-decoration: underline;
+}
+
+.expandedContent a:hover {
+  opacity: 0.8;
+}
+
+.learnMoreButton {
+  background: none;
+  border: none;
+  color: var(--primary, #ffb84d);
+  cursor: pointer;
+  padding: 0.2rem 0;
+  font-size: 0.8rem;
+  text-decoration: underline;
+  margin-top: 0.3rem;
+}
+
+.learnMoreButton:hover {
+  opacity: 0.8;
+}
+
+.actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  align-items: center;
+  padding-top: 0.6rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.acceptButton {
+  background: var(--primary, #ffb84d);
+  color: #000;
+}
+
+.acceptButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 184, 77, 0.4);
+}
+
+.essentialButton {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.essentialButton:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.privacyLink {
+  margin-left: auto;
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+  font-size: 0.8rem;
+  padding: 0.3rem;
+}
+
+.privacyLink:hover {
+  color: var(--primary, #ffb84d);
+  text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+  .cookieConsentOverlay {
+    padding: 0.6rem;
+  }
+
+  .cookieConsentBanner {
+    gap: 0.5rem;
+  }
+
+  .title {
+    font-size: 0.95rem;
+  }
+
+  .description {
+    font-size: 0.8rem;
+  }
+
+  .actions {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .button {
+    width: 100%;
+    padding: 0.6rem;
+    font-size: 0.85rem;
+  }
+
+  .privacyLink {
+    margin-left: 0;
+    text-align: center;
+    width: 100%;
+  }
+}

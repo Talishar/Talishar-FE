@@ -8,6 +8,11 @@ import './index.scss';
 import { Toaster } from 'react-hot-toast';
 import { router } from 'routes';
 import { RouterProvider } from 'react-router-dom';
+import CookieConsent from 'components/CookieConsent';
+import { initializeAdSense } from 'utils/adsenseInit';
+
+// Initialize AdSense if user has already consented
+initializeAdSense();
 
 // Because we *must* have a root else the site won't work at all.
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
