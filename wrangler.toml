@@ -1,0 +1,14 @@
+name = "talishar-fe"
+type = "javascript"
+
+[build]
+command = "npm run build"
+cwd = "./"
+watch-paths = ["src/**/*.ts", "src/**/*.tsx"]
+
+[env.production]
+route = "talishar.net"
+zone_id = ""
+
+[site]
+bucket = "./build"
