@@ -111,7 +111,7 @@ const GoogleAdSense: React.FC<GoogleAdSenseProps> = ({
             rel="noopener noreferrer"
             style={{ color: '#FF424D', textDecoration: 'none' }}
           >
-            Support Talishar
+            Support Talishar on Patreon
           </a>{' '}
           to support the site!
         </p>
@@ -141,7 +141,7 @@ const GoogleAdSense: React.FC<GoogleAdSenseProps> = ({
             rel="noopener noreferrer"
             style={{ color: '#FF424D', textDecoration: 'none' }}
           >
-            Support Talishar
+            Support Talishar on Patreon
           </a>{' '}
           to hide ads and enjoy more features!
         </p>

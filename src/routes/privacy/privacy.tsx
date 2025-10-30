@@ -142,6 +142,83 @@ export const Privacy = () => {
           users of any material changes by posting the new policy on this page
           with an updated revision date.
         </p>
+
+        <h2>US State Privacy Laws (CCPA, CPRA, and Others)</h2>
+        <p>
+          If you are a resident of California, Virginia, Colorado, Connecticut,
+          Utah, or other states with privacy laws, you may have additional rights
+          regarding your personal information. Talishar complies with applicable
+          state privacy laws including:
+        </p>
+        <ul>
+          <li>
+            <strong>California Consumer Privacy Act (CCPA):</strong> Provides rights
+            to know, delete, and opt-out of the sale of personal information
+          </li>
+          <li>
+            <strong>California Privacy Rights Act (CPRA):</strong> Enhanced CCPA
+            protections including the right to correct and limit use of information
+          </li>
+          <li>
+            <strong>Virginia Consumer Data Protection Act (VCDPA):</strong> Provides
+            rights to access, delete, and correct personal data
+          </li>
+          <li>
+            <strong>Colorado Privacy Act (CPA):</strong> Similar protections for
+            Colorado residents
+          </li>
+          <li>
+            <strong>Connecticut Data Privacy Act (CTDPA):</strong> Protections for
+            Connecticut residents
+          </li>
+          <li>
+            <strong>Utah Consumer Privacy Act (UCPA):</strong> Privacy protections
+            for Utah residents
+          </li>
+        </ul>
+        <p>
+          <strong>Your Rights Under US State Laws:</strong>
+        </p>
+        <ul>
+          <li>
+            <strong>Right to Know:</strong> You can request what personal information
+            we collect about you
+          </li>
+          <li>
+            <strong>Right to Delete:</strong> You can request deletion of your
+            personal information (subject to certain exceptions)
+          </li>
+          <li>
+            <strong>Right to Access:</strong> You can access and download your
+            personal information
+          </li>
+          <li>
+            <strong>Right to Correct:</strong> You can request correction of
+            inaccurate personal information
+          </li>
+          <li>
+            <strong>Right to Opt-Out:</strong> You can opt out of the sale or
+            sharing of your personal information
+          </li>
+        </ul>
+        <p>
+          <strong>How to Exercise Your Rights:</strong>
+        </p>
+        <p>
+          To exercise any of these rights, please contact us through our{' '}
+          <a href="https://discord.gg/JykuRkdd5S" target="_blank" rel="noopener noreferrer">
+            Discord community
+          </a>
+          . We will respond to verified requests within 45 days (or as otherwise
+          required by applicable law). We will not discriminate against you for
+          exercising your rights under these laws.
+        </p>
+        <p>
+          <strong>Non-Discrimination:</strong> We will not deny, charge different
+          prices for, or provide different quality of service based on your
+          exercise of these privacy rights, except as permitted by law.
+        </p>
+
         <p>
           <strong>Last updated:</strong> October 30, 2025
         </p>
