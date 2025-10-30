@@ -188,6 +188,21 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
         }
       }
 
+      // Pre-load all images in the canvas to ensure they're rendered
+      const images = statsRef.current.querySelectorAll('img');
+      const imageLoadPromises = Array.from(images).map(img => {
+        return new Promise<void>((resolve) => {
+          if (img.complete) {
+            resolve();
+          } else {
+            img.onload = () => resolve();
+            img.onerror = () => resolve(); // Continue even if image fails
+          }
+        });
+      });
+      
+      await Promise.all(imageLoadPromises);
+
       // Show watermark and hide card images for export
       const hideElements = statsRef.current.querySelectorAll(`.${styles.hideOnExport}`);
       const watermark = statsRef.current.querySelector(`.${styles.watermark}`) as HTMLElement;
@@ -206,9 +221,12 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
         heroPortraits.style.display = 'flex';
       }
       
+      // Add small delay to ensure DOM has settled
+      await new Promise(resolve => setTimeout(resolve, 100));
+      
       const canvas = await html2canvas(statsRef.current, {
         backgroundColor: '#0a0a0a',
-        scale: 2,
+        scale: Math.min(window.devicePixelRatio, 2),
         logging: false,
         useCORS: true,
         allowTaint: true,
