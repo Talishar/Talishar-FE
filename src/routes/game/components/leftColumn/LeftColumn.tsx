@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import ActiveEffects from '../activeEffects/ActiveEffects';
 import PlayerName from '../elements/playerName/PlayerName';
+import DevToolPanel from './DevToolPanel/DevToolPanel';
 import styles from './LeftColumn.module.css';
 
 export default function LeftColumn() {
@@ -29,6 +30,7 @@ export default function LeftColumn() {
       {!isMobile && (
         <PlayerName isPlayer />
       )}
+      <DevToolPanel />
     </div>
   );
 }

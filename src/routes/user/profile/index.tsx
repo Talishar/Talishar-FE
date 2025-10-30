@@ -8,7 +8,6 @@ import { DeleteDeckAPIResponse } from 'interface/API/DeleteDeckAPI.php';
 import { DeleteAccountAPIResponse } from 'interface/API/DeleteAccountAPI.php';
 import { toast } from 'react-hot-toast';
 import { RiEdit2Line, RiDeleteBin5Line } from "react-icons/ri";
-import { CiEdit } from "react-icons/ci";
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './profile.module.css';
