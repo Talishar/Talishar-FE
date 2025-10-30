@@ -9,6 +9,7 @@ import { RiLogoutBoxRLine } from 'react-icons/ri';
 import LanguageSelector from 'components/LanguageSelector/LanguageSelector';
 import { useGetPendingRequestsQuery } from 'features/api/apiSlice';
 import CookieConsent from 'components/CookieConsent';
+import AdBlockingRecovery from 'components/AdBlockingRecovery';
 
 const Header = () => {
   const { isLoggedIn, isMod, logOut } = useAuth();
@@ -130,6 +131,7 @@ const Header = () => {
       </nav>
       <Outlet />
       <CookieConsent />
+      <AdBlockingRecovery />
     </div>
   );
 };
