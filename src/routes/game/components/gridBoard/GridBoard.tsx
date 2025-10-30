@@ -23,11 +23,13 @@ import { useCookies } from 'react-cookie';
 import ExperimentalTurnWidget from '../elements/experimentalTurnWidget';
 import TurnWidget from '../elements/turnWidget/TurnWidget';
 import { createPortal } from 'react-dom';
+import ManualModePanel from '../leftColumn/ManualModePanel/ManualModePanel';
 
 const GridBoard = () => {
   const [cookies] = useCookies(['experimental']);
   return (
     <>
+      <ManualModePanel />
       <div className={styles.gameBoardGrid}>
         <div className={styles.pTwoLegs}>
           <LegsEqZone isPlayer={false} />

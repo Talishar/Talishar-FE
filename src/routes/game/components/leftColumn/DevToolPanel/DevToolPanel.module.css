@@ -1,7 +1,7 @@
 .devToolTab {
   position: fixed;
   left: 0;
-  top: 50%;
+  top: 45%;
   transform: translateY(-50%);
   width: 6rem;
   height: 3rem;
@@ -26,6 +26,10 @@
 
   &:active {
     transform: translateY(-50%) scale(0.95);
+  }
+
+  &.hidden {
+    display: none;
   }
 }
 

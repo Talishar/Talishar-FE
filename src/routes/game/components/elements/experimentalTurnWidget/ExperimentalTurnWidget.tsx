@@ -49,7 +49,7 @@ const ManualModeHealth = ({ isPlayer }: { isPlayer: Boolean }) => {
         button: {
           mode: isPlayer
             ? PROCESS_INPUT.ADD_1_HP_SELF
-            : PROCESS_INPUT.ADD_1_HP_OPPOENNT
+            : PROCESS_INPUT.ADD_1_HP_OPPONENT
         }
       })
     );
