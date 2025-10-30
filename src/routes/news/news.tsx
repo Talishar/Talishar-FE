@@ -22,7 +22,7 @@ const News = () => {
         <img src={NewSetLogo} className={styles.NewsLogoSquare} />
       </a>
     <br/>
-      <p>Join our community ⤵️</p>
+      <p>Join our communities, provide feedback, and get involved ⤵️</p>
       <ul>
         <li>
           <a href="https://discord.gg/JykuRkdd5S" target="_blank">
@@ -41,7 +41,7 @@ const News = () => {
         </li>
         <li>
           <a href="https://linktr.ee/Talishar" target="_blank">
-            Support our work!
+            Patreon
           </a>
         </li>
       </ul>
