@@ -43,10 +43,14 @@ const EndGameScreen = () => {
   });
   const fullLogClasses = classNames(styles.fullLog, {});
 
-  const playerOne = gameState?.playerOne;
-  const playerTwo = gameState?.playerTwo;
-  const yourHero = playerID === 1 ? playerOne?.Hero?.cardNumber : playerTwo?.Hero?.cardNumber;
-  const opponentHero = playerID === 1 ? playerTwo?.Hero?.cardNumber : playerOne?.Hero?.cardNumber;
+  // Extract heroes - prefer API data, but fall back to gameState for compatibility
+  // When switching players, the API returns fresh character data for that player
+  const yourHero = data?.character?.[0]?.cardId || 
+    (playerID === 1 ? gameState?.playerOne?.Hero?.cardNumber : gameState?.playerTwo?.Hero?.cardNumber) || 
+    null;
+  const opponentHero = data?.opposingHero || 
+    (playerID === 1 ? gameState?.playerTwo?.Hero?.cardNumber : gameState?.playerOne?.Hero?.cardNumber) || 
+    null;
 
   if (!showModal) return null;
 
