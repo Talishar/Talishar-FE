@@ -24,6 +24,15 @@ export const initializeAdSense = () => {
   // Add COPPA compliance: site is not directed at children
   script.setAttribute('data-ad-frequency-hint', '30s');
   
+  // Add error handling for script load failures
+  script.onerror = () => {
+    console.warn('Failed to load Google AdSense script. This may be due to ad blockers or network issues.');
+  };
+  
+  script.onload = () => {
+    console.log('Google AdSense script loaded successfully.');
+  };
+  
   document.head.appendChild(script);
 
   // Initialize adsbygoogle array if it doesn't exist

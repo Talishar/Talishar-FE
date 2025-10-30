@@ -47,15 +47,16 @@ const GoogleAdSense: React.FC<GoogleAdSenseProps> = ({
         return () => clearTimeout(timer);
       }
     } catch (error) {
-      console.error('AdSense error:', error);
+      console.warn('AdSense error (may be due to ad blocker or CORS restrictions):', error);
       // On error, show fallback
       setAdBlocked(true);
     }
 
     // Also check with a longer timeout in case script is slow to load
     const checkAdBlocker = setTimeout(() => {
-      // If still no adsbygoogle, it's blocked
+      // If still no adsbygoogle, it's blocked or failed to load
       if (!window.adsbygoogle) {
+        console.warn('Google AdSense script not available. Ad blocker or network issue detected.');
         setAdBlocked(true);
         return;
       }
@@ -67,6 +68,7 @@ const GoogleAdSense: React.FC<GoogleAdSenseProps> = ({
         const hasIframe = adContainer.querySelector('iframe');
         if (!hasIframe) {
           // No iframe means ad failed to load
+          console.warn('AdSense ad failed to render. Ad blocker or content restriction detected.');
           setAdBlocked(true);
         }
       } else {
