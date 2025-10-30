@@ -8,34 +8,61 @@ const AdBlockingRecovery: React.FC = () => {
   const [isDismissed, setIsDismissed] = useState(false);
 
   useEffect(() => {
-    // Check if ad blocker is active
-    // This works by trying to fetch an ad and seeing if it's blocked
-    const detectAdBlocker = async () => {
-      try {
-        // Check if adsbygoogle script loaded
-        if (!window.adsbygoogle) {
-          setIsAdBlockerDetected(true);
-          return;
-        }
-
-        // Try to fetch a pixel from ad networks
-        const response = await fetch(
-          'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js',
-          { mode: 'no-cors' }
-        );
-
-        // If fetch fails, ad blocker is likely active
-        if (!response.ok) {
-          setIsAdBlockerDetected(true);
-        }
-      } catch {
-        // Fetch error likely means ad blocker is active
+    // Check if ad blocker is active by detecting if Google AdSense script loaded
+    const detectAdBlocker = () => {
+      // Method 1: Check if adsbygoogle array exists and is properly initialized
+      const hasAdsByGoogle = typeof window.adsbygoogle !== 'undefined' && Array.isArray(window.adsbygoogle);
+      
+      // If adsbygoogle script didn't load at all, it's likely blocked
+      if (!hasAdsByGoogle) {
         setIsAdBlockerDetected(true);
+        return;
+      }
+      
+      // Method 2: Check if any ad elements are hidden/blocked
+      const adElements = document.querySelectorAll('.adsbygoogle');
+      
+      // If no ad elements exist on the page, we can't determine if ads are blocked
+      // This could mean ads aren't set up yet or AdSense isn't approved
+      if (adElements.length === 0) {
+        setIsAdBlockerDetected(false);
+        return;
+      }
+      
+      let hasVisibleAds = false;
+      let hasErroredAds = false;
+      
+      adElements.forEach((adEl) => {
+        const el = adEl as HTMLElement;
+        const adStatus = el.getAttribute('data-adsbygoogle-status');
+        
+        // Check if element has been successfully filled by AdSense
+        if (adStatus === 'done' && (el.children.length > 0 || el.offsetHeight > 0)) {
+          hasVisibleAds = true;
+        }
+        
+        // Check if AdSense returned an error (not approved, policy violation, etc.)
+        if (adStatus === 'unfilled' || adStatus === 'error') {
+          hasErroredAds = true;
+        }
+      });
+      
+      // Only mark as blocked if:
+      // 1. Ad elements exist
+      // 2. None are visible
+      // 3. AdSense didn't report errors (which would indicate account/approval issues)
+      if (!hasVisibleAds && !hasErroredAds) {
+        // Ads should work but aren't rendering - likely blocked by ad blocker
+        setIsAdBlockerDetected(true);
+      } else {
+        // Either ads are working OR AdSense reported issues (not user's fault)
+        setIsAdBlockerDetected(false);
       }
     };
 
-    // Run detection after a short delay to ensure scripts have time to load
-    const timer = setTimeout(detectAdBlocker, 2000);
+    // Run detection after a delay to give ads time to load
+    // Use longer delay to ensure ads have actually tried to render
+    const timer = setTimeout(detectAdBlocker, 3000);
     return () => clearTimeout(timer);
   }, []);
 
