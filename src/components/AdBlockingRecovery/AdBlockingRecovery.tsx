@@ -65,7 +65,7 @@ const AdBlockingRecovery: React.FC = () => {
       <div className={styles.message}>
         <h3 className={styles.title}>We Notice You're Using an Ad Blocker</h3>
         <p className={styles.description}>
-          Talishar is free to play thanks to ad revenue. Our ads are carefully selected
+          Talishar is free to play thanks to ad revenue and Patreon support. Our ads placement is carefully selected
           to not interfere with gameplay. Please consider disabling your ad blocker to
           support our work.
         </p>
@@ -79,7 +79,7 @@ const AdBlockingRecovery: React.FC = () => {
           >
             support us on Patreon
           </a>{' '}
-          to help keep Talishar running!
+          to help keep Talishar running and hide all ads!
         </p>
         <button
           className={styles.dismissButton}
