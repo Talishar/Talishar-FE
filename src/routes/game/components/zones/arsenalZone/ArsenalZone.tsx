@@ -13,9 +13,6 @@ import Button from '../../../../../features/Button';
 import { AnimatePresence, motion } from 'framer-motion';
 import useWindowDimensions from '../../../../../hooks/useWindowDimensions';
 import { PROCESS_INPUT } from 'appConstants';
-import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai';
-import useSetting from 'hooks/useSetting';
-import { MANUAL_MODE } from 'features/options/constants';
 
 export default function ArsenalZone(prop: Displayrow) {
   const { isPlayer } = prop;
@@ -23,8 +20,6 @@ export default function ArsenalZone(prop: Displayrow) {
   const isSpectator = useAppSelector((state: RootState) => {
     return state.game.gameInfo.playerID === 3;
   });
-
-  const isManualMode = useSetting({ settingName: MANUAL_MODE })?.value === '1';
 
   const arsenalCards = useAppSelector((state: RootState) => {
     return isPlayer
@@ -59,7 +54,6 @@ export default function ArsenalZone(prop: Displayrow) {
           );
         })}
       </div>
-      {isManualMode && <ManualMode />}
       <ArsenalPrompt />
     </div>
   );
@@ -122,29 +116,5 @@ const ArsenalPrompt = () => {
         </motion.div>
       )}
     </AnimatePresence>
-  );
-};
-
-const ManualMode = () => {
-  const dispatch = useAppDispatch();
-  const onRemoveArsenalClick = (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) => {
-    e.preventDefault();
-    e.stopPropagation();
-    dispatch(
-      submitButton({
-        button: {
-          mode: PROCESS_INPUT.REMOVE_ARSENAL_FROM_SELF
-        }
-      })
-    );
-  };
-  return (
-    <div className={styles.manualMode}>
-      <button className={styles.drawButton} onClick={onRemoveArsenalClick}>
-        Remove Arsenal
-      </button>
-    </div>
   );
 };

@@ -22,7 +22,7 @@ export default function DevToolPanel() {
   return (
     <>
       <button 
-        className={styles.devToolTab} 
+        className={`${styles.devToolTab} ${isOpen ? styles.hidden : ''}`}
         onClick={() => setIsOpen(!isOpen)}
         title="Toggle Dev Tool"
       >
