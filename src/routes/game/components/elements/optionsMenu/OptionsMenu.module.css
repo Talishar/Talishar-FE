@@ -61,6 +61,7 @@
   align-items: flex-start;
   gap: 4em;
   overflow-y: auto;
+  scroll-behavior: auto;
 }
 
 .column {
@@ -146,7 +147,7 @@
   }
 
   .optionsContentContainer {
-    flex-direction: column-reverse;
+    flex-direction: column;
   }
 
   .column {

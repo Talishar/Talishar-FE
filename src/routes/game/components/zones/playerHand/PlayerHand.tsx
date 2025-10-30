@@ -7,12 +7,7 @@ import PlayerHandCard from '../../elements/playerHandCard/PlayerHandCard';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import { AnimatePresence } from 'framer-motion';
-import { MANUAL_MODE } from 'features/options/constants';
-import useSetting from 'hooks/useSetting';
-import { getGameInfo, submitButton } from 'features/game/GameSlice';
-import { updateOptions } from 'features/options/optionsSlice';
 import { createPortal } from 'react-dom';
-import { PROCESS_INPUT } from 'appConstants';
 
 export default function PlayerHand() {
   const isPlayable = (card: Card) => {
@@ -53,7 +48,6 @@ export default function PlayerHand() {
       (card) => card.action != null && card.action != 0
     );
   }, shallowEqual);
-  const isManualMode = useSetting({ settingName: MANUAL_MODE })?.value === '1';
 
   const addCardToPlayedCards = (cardName: string) => {
     const newArray = playedCards;
@@ -211,59 +205,9 @@ export default function PlayerHand() {
                 })}
             </AnimatePresence>
           </div>
-          {isManualMode && <ManualMode />}
         </>,
         document.body
       )}
     </>
   );
 }
-
-const ManualMode = () => {
-  const [card, setCard] = useState<string>('');
-  const dispatch = useAppDispatch();
-  const gameInfo = useAppSelector(getGameInfo, shallowEqual);
-
-  const handleCloseManualMode = () => {
-    dispatch(
-      updateOptions({
-        game: gameInfo,
-        settings: [
-          {
-            name: MANUAL_MODE,
-            value: '0'
-          }
-        ]
-      })
-    );
-  };
-
-  const handleSubmitButton = () => {
-    if (card === '') {
-      return;
-    }
-    dispatch(
-      submitButton({
-        button: { mode: PROCESS_INPUT.ADD_CARD_TO_HAND_SELF, cardID: card.toLowerCase() }
-      })
-    );
-    setCard('');
-  };
-
-  return (
-    <div className={styles.manualMode}>
-      <input
-        onChange={(e) => setCard(e.target.value)}
-        onKeyDown={(e) => {
-          e.stopPropagation();
-        }}
-        onKeyDownCapture={(e) => {
-          e.stopPropagation();
-        }}
-        placeholder={'Enter card code here'}
-      ></input>
-      <button onClick={handleSubmitButton}>Add</button>
-      <button onClick={handleCloseManualMode}>Close</button>
-    </div>
-  );
-};

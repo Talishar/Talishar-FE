@@ -8,6 +8,7 @@ import useWindowDimensions from 'hooks/useWindowDimensions';
 import { useCookies } from 'react-cookie';
 import ExperimentalTurnWidget from '../elements/experimentalTurnWidget';
 import TurnWidget from '../elements/turnWidget/TurnWidget';
+import ManualModePanel from '../leftColumn/ManualModePanel/ManualModePanel';
 
 export interface playAreaDimensions {
   dimension: number;
@@ -23,6 +24,7 @@ export function Board() {
   if (useOldScreen) {
     return (
       <div className={styles.gameBoard}>
+        <ManualModePanel />
         <OpponentBoardGrid />
         <div className={styles.chainMiddleContainer}>
           <div className={styles.chainContainer}>
