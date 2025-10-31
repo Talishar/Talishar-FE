@@ -332,7 +332,7 @@ const Lobby = () => {
 
   return (
     <main className={mainClassNames}>
-      <ChatBar />
+      {isWideScreen && <ChatBar />}
       {gameLobby?.chatInvited &&
         showChatModal &&
         createPortal(
@@ -645,7 +645,7 @@ const Lobby = () => {
                 submitSideboard={gameLobby?.canSubmitSideboard ?? false}
                 handleLeave={handleLeave}
                 isWidescreen={isWideScreen}
-                onSendInviteClick={() => setShowFriendsPanel(!showFriendsPanel)}
+                onSendInviteClick={isWideScreen ? () => setShowFriendsPanel(!showFriendsPanel) : undefined}
               />
             ) : null}
           </div>
