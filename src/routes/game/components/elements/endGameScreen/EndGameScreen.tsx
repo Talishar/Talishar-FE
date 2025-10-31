@@ -43,14 +43,13 @@ const EndGameScreen = () => {
   });
   const fullLogClasses = classNames(styles.fullLog, {});
 
-  // Extract heroes - prefer API data, but fall back to gameState for compatibility
-  // When switching players, the API returns fresh character data for that player
-  const yourHero = data?.character?.[0]?.cardId || 
-    (playerID === 1 ? gameState?.playerOne?.Hero?.cardNumber : gameState?.playerTwo?.Hero?.cardNumber) || 
-    null;
-  const opponentHero = data?.opposingHero || 
-    (playerID === 1 ? gameState?.playerTwo?.Hero?.cardNumber : gameState?.playerOne?.Hero?.cardNumber) || 
-    null;
+  // Extract heroes - use gameState as primary source since it's always correct for the viewing player
+  // gameState contains the actual player heroes regardless of turn order
+  const yourHero = (playerID === 1 ? gameState?.playerOne?.Hero?.cardNumber : gameState?.playerTwo?.Hero?.cardNumber) || null;
+  
+  // For opponent hero: get from gameState for the opponent player
+  const opponentPlayerID = playerID === 1 ? 2 : 1;
+  const opponentHero = (opponentPlayerID === 1 ? gameState?.playerOne?.Hero?.cardNumber : gameState?.playerTwo?.Hero?.cardNumber) || null;
 
   if (!showModal) return null;
 

@@ -728,7 +728,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                     ) : (
                       <div className={styles.heroNameBox}>{data.opponentHero}</div>
                     )}
-                    {data.result === 0 && (
+                    {data.result !== 1 && (
                       <div className={styles.winnerBadge}>Winner!</div>
                     )}
                   </div>
