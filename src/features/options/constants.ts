@@ -18,6 +18,7 @@ export const IS_STREAMER_MODE = 'IsStreamerMode';
 export const MY_PLAYMAT = 'Playmat';
 export const ALWAYS_ALLOW_UNDO = 'AlwaysAllowUndo';
 export const MANUAL_TUNIC = 'ManualTunic';
+export const DISABLE_FABINSIGHTS = 'DisableFabInsights';
 
 export enum HOLD_PRIORITY_ENUM {
   AUTO = 0,

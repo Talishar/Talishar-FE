@@ -79,6 +79,7 @@ const ProfileSettings = () => {
     manualTunic: settingsData['ManualTunic']?.value === '1',
     cardBack: String(settingsData['CardBack']?.value ?? '0'),
     playMat: String(settingsData['Playmat']?.value ?? '0'),
+    disableFabInsights: settingsData['DisableFabInsights']?.value === '1',
   };
 
   const priorityOptions = [
@@ -279,12 +280,23 @@ const ProfileSettings = () => {
           />
           <CheckboxSetting
             name="disableStats"
-            label="Disable Stats"
+            label="Disable Fabrary Stats"
             checked={initialValues.disableStats}
             onChange={() =>
               handleSettingsChange({
                 name: optConst.DISABLE_STATS,
                 value: initialValues.disableStats ? '0' : '1'
+              })
+            }
+          />
+          <CheckboxSetting
+            name="disableFabInsights"
+            label="Disable Global Stats"
+            checked={initialValues.disableFabInsights}
+            onChange={() =>
+              handleSettingsChange({
+                name: optConst.DISABLE_FABINSIGHTS,
+                value: initialValues.disableFabInsights ? '0' : '1'
               })
             }
           />
