@@ -11,7 +11,6 @@ import {
 } from 'features/api/apiSlice';
 import { Friend } from 'interface/API/FriendListAPI.php';
 import { PrivateMessage } from 'interface/API/PrivateMessagingAPI.php';
-import { BiChat } from 'react-icons/bi';
 import { IoMdClose, IoMdSend } from 'react-icons/io';
 import { MdGames } from 'react-icons/md';
 import { AiOutlineUser } from 'react-icons/ai';
