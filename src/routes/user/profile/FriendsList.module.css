@@ -370,8 +370,8 @@
 }
 
 .modalContent {
-  background: rgba(0, 0, 0, 0.85);
-  border: 2px solid rgba(212, 175, 55, 0.6);
+  background: var(--card-background-color);
+  border: 2px solid rgba(255, 255, 255, 0.2);
   border-radius: 8px;
   padding: 2rem;
   max-width: 400px;

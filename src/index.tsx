@@ -42,6 +42,11 @@ root.render(
             }
           }}
         />
+        <style>{`
+          div[role="status"]:first-of-type {
+            margin-top: 70px !important;
+          }
+        `}</style>
         <RouterProvider router={router} />
       </Provider>
     </CookiesProvider>
