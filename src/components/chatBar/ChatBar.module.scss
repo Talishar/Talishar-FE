@@ -8,7 +8,7 @@
   align-items: flex-end;
   gap: 10px;
   padding: 10px 10px 0 0;
-  pointer-events: auto;
+  pointer-events: none; // Allow clicks through the container
   max-height: 70vh;
   overflow-y: hidden;
   overflow-x: auto;
@@ -45,7 +45,7 @@
 }
 
 .chatBar > * {
-  pointer-events: auto;
+  pointer-events: auto; // Re-enable pointer events for child elements
 }
 
 /* Friends List Toggle Button */
@@ -223,10 +223,10 @@
   flex-direction: row !important;
   align-items: flex-end !important;
   gap: 10px !important;
-  pointer-events: auto !important;
+  pointer-events: none !important; // Allow clicks through empty space
   flex-wrap: nowrap !important;
   justify-content: flex-end !important;
-  width: 100% !important;
+  width: auto !important; // Only take up space needed by children
   touch-action: pan-x !important;
   
   /* Mobile: allow horizontal scrolling */
@@ -237,6 +237,11 @@
   @media (max-width: 640px) {
     gap: 6px !important;
   }
+}
+
+// Re-enable pointer events for actual chat windows
+.chatContainer > * {
+  pointer-events: auto !important;
 }
 
 .friendsPanelHeader {
