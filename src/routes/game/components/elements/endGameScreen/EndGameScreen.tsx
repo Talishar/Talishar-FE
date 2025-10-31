@@ -51,6 +51,15 @@ const EndGameScreen = () => {
   const opponentPlayerID = playerID === 1 ? 2 : 1;
   const opponentHero = (opponentPlayerID === 1 ? gameState?.playerOne?.Hero?.cardNumber : gameState?.playerTwo?.Hero?.cardNumber) || null;
 
+  // Translate result to the viewing player's perspective
+  // data.result is from player 1's perspective (1 = player 1 won, 0 = player 1 lost)
+  // We need: 1 = viewing player won, 0 = viewing player lost
+  let viewingPlayerResult = data?.result;
+  if (data?.result !== undefined && data?.result !== null && playerID === 2) {
+    // If player 2 is viewing and data.result is player 1's result, invert it
+    viewingPlayerResult = data.result === 1 ? 0 : 1;
+  }
+
   if (!showModal) return null;
 
   let content;
@@ -84,6 +93,7 @@ const EndGameScreen = () => {
       yourHero: yourHero,
       opponentHero: opponentHero,
       playerID: playerID,
+      result: viewingPlayerResult,
       authKey: gameInfo.authKey,
       gameID: gameInfo.gameID?.toString(),
       bothPlayersData: bothPlayersData
