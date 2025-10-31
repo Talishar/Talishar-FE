@@ -90,7 +90,7 @@ export const ChatBar: React.FC = () => {
     };
   }, []);
 
-  // Auto-create minimized chat tabs for all friends (so they can receive notifications)
+  // Auto-create minimized chat tabs ONLY for friends with unread messages
   useEffect(() => {
     if (!isLoggedIn || !friendsData) return;
 
@@ -102,19 +102,19 @@ export const ChatBar: React.FC = () => {
     setOpenChats((prevChats) => {
       const newChats = new Map(prevChats);
       
-      // For each friend, create a minimized chat if not already open, or update unread count if it exists
+      // For each friend with unread messages, create a minimized chat if not already open
       friends.forEach((friend) => {
         const unreadCount = unreadByFriend[friend.friendUserId] ?? 0;
         
-        if (!newChats.has(friend.friendUserId)) {
-          // Create new minimized chat
+        if (unreadCount > 0 && !newChats.has(friend.friendUserId)) {
+          // Create new minimized chat ONLY if there are unread messages
           newChats.set(friend.friendUserId, {
             friend,
             isMinimized: true,
             unreadCount
           });
-        } else {
-          // Update unread count for existing chat (important for minimized tabs)
+        } else if (newChats.has(friend.friendUserId)) {
+          // Update unread count for existing chat
           const existing = newChats.get(friend.friendUserId)!;
           newChats.set(friend.friendUserId, {
             ...existing,
