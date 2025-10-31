@@ -10,6 +10,7 @@ import LanguageSelector from 'components/LanguageSelector/LanguageSelector';
 import { useGetPendingRequestsQuery } from 'features/api/apiSlice';
 import CookieConsent from 'components/CookieConsent';
 import AdBlockingRecovery from 'components/AdBlockingRecovery';
+import ChatBar from 'components/chatBar/ChatBar';
 
 const Header = () => {
   const { isLoggedIn, isMod, logOut } = useAuth();
@@ -132,6 +133,7 @@ const Header = () => {
       <Outlet />
       <CookieConsent />
       <AdBlockingRecovery />
+      <ChatBar />
     </div>
   );
 };

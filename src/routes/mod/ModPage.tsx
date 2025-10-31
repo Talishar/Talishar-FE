@@ -1,6 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import useAuth from 'hooks/useAuth';
+import React, { useState } from 'react';
 import styles from './ModPage.module.css';
 import {
   useGetModPageDataQuery,
@@ -11,9 +9,6 @@ import {
 import UsernameModeration from './UsernameModeration';
 
 const ModPage: React.FC = () => {
-  const { isLoggedIn, isMod } = useAuth();
-  const navigate = useNavigate();
-
   const [ipToBan, setIpToBan] = useState('');
   const [playerNumberToBan, setPlayerNumberToBan] = useState('');
   const [gameToClose, setGameToClose] = useState('');
@@ -27,19 +22,11 @@ const ModPage: React.FC = () => {
     isLoading,
     error: fetchError,
     refetch
-  } = useGetModPageDataQuery(undefined, {
-    skip: !isLoggedIn || !isMod
-  });
+  } = useGetModPageDataQuery(undefined);
 
   const [banByIP, { isLoading: isBanningByIP }] = useBanPlayerByIPMutation();
   const [banByName, { isLoading: isBanningByName }] = useBanPlayerByNameMutation();
   const [closeGameMutation, { isLoading: isClosingGame }] = useCloseGameMutation();
-
-  useEffect(() => {
-    if (!isLoggedIn || !isMod) {
-      navigate('/');
-    }
-  }, [isLoggedIn, isMod, navigate]);
 
   const handleBanByIP = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -87,10 +74,6 @@ const ModPage: React.FC = () => {
       // Error will be shown via toast from RTK Query error handler
     }
   };
-
-  if (!isLoggedIn || !isMod) {
-    return null;
-  }
 
   const errorMessage = fetchError ? 'NetworkError when attempting to fetch resource.' : null;
 

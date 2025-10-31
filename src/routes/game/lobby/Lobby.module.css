@@ -46,6 +46,14 @@
   box-shadow: 0 4px 8px rgba(255, 184, 77, 0.3);
 }
 
+.smallButton.active {
+  background-color: var(--primary);
+  border-color: var(--primary);
+  color: var(--primary-inverse);
+  box-shadow: 0 2px 6px rgba(255, 184, 77, 0.4) inset, 0 2px 6px rgba(255, 184, 77, 0.2);
+  transform: translateY(1px);
+}
+
 .patreonLink {
   font-size: 0.65em;
   padding: 0;
@@ -193,6 +201,8 @@
 .inLineNav {
   position: relative;
   top: 0;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
 }
 
 .deckSelectorContainer {
@@ -487,4 +497,116 @@ button.secondary:hover {
 .modal article button:last-of-type:hover {
   background-color: rgba(255, 255, 255, 0.2);
   color: white;
+}
+
+/* Friends Panel Styles */
+.friendsPanel {
+  padding: 1rem;
+  background: var(--card-background-color);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  max-height: 400px;
+  overflow-y: auto;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(6px);
+}
+
+.friendsPanelHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.friendsPanelHeader h3 {
+  margin: 0;
+}
+
+.friendsPanelCloseButton {
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  font-size: 1.2rem;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  margin-bottom: 0;
+}
+
+.friendsPanelCloseButton:hover {
+  color: var(--primary);
+  transform: scale(1.2);
+}
+
+.friendsList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.friendItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  gap: 0.5rem;
+}
+
+.friendOnlineIndicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background-color: #95a5a6;
+  transition: all 0.3s;
+}
+
+.friendOnlineIndicator.online {
+  background: #3d8d3d;
+  box-shadow: 0 0 5px #3d8d3d;
+}
+
+.friendName {
+  margin-right: auto;
+}
+
+.friendInviteButton {
+  background-color: var(--primary) !important;
+  color: var(--primary-inverse) !important;
+  border: 1px solid var(--primary) !important;
+  padding: 0.5rem 1rem !important;
+  border-radius: 4px !important;
+  cursor: pointer !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.4rem !important;
+  font-size: 0.9rem !important;
+  flex-shrink: 0 !important;
+  white-space: nowrap !important;
+  width: auto !important;
+  margin-bottom: 0;
+}
+
+.friendInviteButton:hover {
+  background-color: rgba(255, 184, 77, 0.9) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 2px 8px rgba(255, 184, 77, 0.3) !important;
+}
+
+.friendsEmptyState {
+  color: #999;
+}
+
+.mobileBottomActions {
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }

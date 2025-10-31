@@ -303,7 +303,8 @@ export const URL_END_POINT = {
   CLOSE_GAME: 'CloseGame.php',
   FRIEND_LIST: 'APIs/FriendListAPI.php',
   BLOCKED_USERS: 'APIs/BlockedUsersAPI.php',
-  USERNAME_MODERATION: 'APIs/UsernameModeration.php'
+  USERNAME_MODERATION: 'APIs/UsernameModeration.php',
+  PRIVATE_MESSAGING: 'APIs/PrivateMessagingAPI.php'
 };
 
 export const GAME_VISIBILITY = {

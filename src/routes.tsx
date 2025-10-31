@@ -95,6 +95,32 @@ const LoggedInGuard = ({
   return children;
 };
 
+const ModGuard = ({ children }: { children: JSX.Element }) => {
+  const { isLoggedIn, isMod, isLoading } = useAuth();
+
+  // Don't redirect while loading auth status on page refresh
+  if (isLoading) {
+    return (
+      <div style={{ textAlign: 'center', padding: '2rem' }}>
+        Loading authentication...
+      </div>
+    );
+  }
+
+  if (!isLoggedIn || !isMod) {
+    return (
+      <Navigate
+        to={{
+          pathname: '/'
+        }}
+        replace={true}
+      />
+    );
+  }
+
+  return children;
+};
+
 export const router = createBrowserRouter(
   createRoutesFromElements(
     <Route errorElement={<ErrorPage />}>
@@ -142,7 +168,7 @@ export const router = createBrowserRouter(
         <Route path="game/join/:gameID" element={<JoinGame />} />
         <Route path="game/create" element={<CreateGame />} />
         <Route path="privacy" element={<Privacy />} />
-        <Route path="mod" element={<ModPage />} />
+        <Route path="mod" element={<ModGuard><ModPage /></ModGuard>} />
         <Route path="user">
           <Route index element={<Navigate to={'./profile'} />} />
           <Route path="profile/linkpatreon" element={<LinkPatreon />} />
