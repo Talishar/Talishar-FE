@@ -377,7 +377,14 @@ export const apiSlice = createApi({
           url: URL_END_POINT.LOAD_BUG_REPORT,
           method: 'POST',
           body: body,
-          responseHandler: parseResponse
+          responseHandler: async (response: any) => {
+            // Check for non-2xx status codes
+            if (!response.ok) {
+              const data = await response.json();
+              throw new Error(data.error || `HTTP ${response.status}`);
+            }
+            return parseResponse(response);
+          }
         };
       }
     }),
