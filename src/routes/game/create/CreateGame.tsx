@@ -219,9 +219,9 @@ const CreateGame = () => {
       values.user = searchParams.get('user') ?? undefined;
       
       // Save game description to localStorage
-      if (values.gameDescription) {
-        localStorage.setItem('lastGameDescription', values.gameDescription);
-      }
+      // Save even if empty string to preserve "Default Game #" selection
+      localStorage.setItem('lastGameDescription', values.gameDescription || '');
+
       
       const response = await createGame(values).unwrap();
       if (response.error) {
