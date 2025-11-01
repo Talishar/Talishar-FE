@@ -44,17 +44,20 @@ const ProfileSettings = () => {
 
   // fetch all settings when component is loaded
   useEffect(() => {
-    // Skip fetching settings when not in an active game (gameID === 0)
-    // Settings are stored locally and will be synced when entering a game
-    if (Object.keys(settingsData).length === 0 && isLoading !== 'loading' && profileGameInfo.gameID !== 0) {
-      dispatch(fetchAllSettings({ game: profileGameInfo }));
-    }
-  }, [dispatch, settingsData, isLoading]);
+    // Load settings from backend for profile context - only on mount
+    dispatch(fetchAllSettings({ game: profileGameInfo }));
+  }, [dispatch]); // Only depend on dispatch to run once on mount
 
   const handleSettingsChange = ({ name, value }: Setting) => {
-    // Update Redux state directly without making API call since we're not in a game
-    // The settings will be persisted locally and synced when the user enters a game
+    // Update Redux state
     dispatch(settingUpdated({ name, value }));
+    // Also persist to backend via the updateOptions API
+    dispatch(
+      updateOptions({
+        game: profileGameInfo,
+        settings: [{ name: name, value: value }]
+      })
+    );
   };
 
   const initialValues = {
@@ -67,19 +70,19 @@ const ProfileSettings = () => {
     manualTargeting: settingsData['AutoTargetOpponent']?.value === '0', // reversed!
     shortcutAttackThreshold:
       settingsData[optConst.SHORTCUT_ATTACK_THRESHOLD]?.value ?? 0,
-    manualMode: settingsData['ManualMode']?.value === '1',
-    accessibilityMode: settingsData['ColorblindMode']?.value === '1',
-    mute: settingsData['MuteSound']?.value === '1',
-    disableChat: settingsData['MuteChat']?.value === '1',
-    disableStats: settingsData['DisableStats']?.value === '1',
-    disableAltArts: settingsData['DisableAltArts']?.value === '1',
-    casterMode: settingsData['IsCasterMode']?.value === '1',
-    streamerMode: settingsData['IsStreamerMode']?.value === '1',
-    alwaysAllowUndo: settingsData['AlwaysAllowUndo']?.value === '1',
-    manualTunic: settingsData['ManualTunic']?.value === '1',
+    manualMode: String(settingsData['ManualMode']?.value) === '1',
+    accessibilityMode: String(settingsData['ColorblindMode']?.value) === '1',
+    mute: String(settingsData['MuteSound']?.value) === '1',
+    disableChat: String(settingsData['MuteChat']?.value) === '1',
+    disableStats: String(settingsData['DisableStats']?.value) === '1',
+    disableAltArts: String(settingsData['DisableAltArts']?.value) === '1',
+    casterMode: String(settingsData['IsCasterMode']?.value) === '1',
+    streamerMode: String(settingsData['IsStreamerMode']?.value) === '1',
+    alwaysAllowUndo: String(settingsData['AlwaysAllowUndo']?.value) === '1',
+    manualTunic: String(settingsData['ManualTunic']?.value) === '1',
     cardBack: String(settingsData['CardBack']?.value ?? '0'),
     playMat: String(settingsData['Playmat']?.value ?? '0'),
-    disableFabInsights: settingsData['DisableFabInsights']?.value === '1',
+    disableFabInsights: String(settingsData['DisableFabInsights']?.value) === '1',
   };
 
   const priorityOptions = [
