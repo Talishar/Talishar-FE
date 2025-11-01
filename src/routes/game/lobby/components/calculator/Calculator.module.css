@@ -3,7 +3,7 @@
   flex-direction: column;
   align-content: center;
   justify-content: flex-end;
-  align-items: flex-end;
+  align-items: center;
   max-width: 100%;
   min-width: 0px;
   grid-area: chat;

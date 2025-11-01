@@ -610,3 +610,7 @@ button.secondary:hover {
   flex-direction: column;
   gap: 0.5rem;
 }
+
+.spacer {
+  height: var(--sticky-footer-height, 80px);
+}
