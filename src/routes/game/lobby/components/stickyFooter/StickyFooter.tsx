@@ -69,7 +69,8 @@ const StickyFooter = ({
       <div className={dynamicContainer}>
         <div style={{display: 'flex', gap: '2rem', alignItems: 'center', flex: 1}}>
           <div style={{display: 'flex', alignItems: 'center', gap: '0.5rem'}}>
-            <span style={{whiteSpace: 'nowrap'}}>Copy Invite Link</span>
+            <span style={{whiteSpace: 'nowrap'}} className={styles.labelTextLong}>Copy Invite Link</span>
+            <span style={{whiteSpace: 'nowrap'}} className={styles.labelTextShort}>Copy Link</span>
             <div className={styles.clipboardButtonHolder}>
               <button
                 className={styles.buttonClass}
@@ -85,7 +86,8 @@ const StickyFooter = ({
           </div>
           {onSendInviteClick && (
             <div style={{display: 'flex', alignItems: 'center', gap: '0.5rem'}}>
-              <span style={{whiteSpace: 'nowrap'}}>Send Friends Invite</span>
+              <span style={{whiteSpace: 'nowrap'}} className={styles.labelTextLong}>Send Friends Invite</span>
+              <span style={{whiteSpace: 'nowrap'}} className={styles.labelTextShort}>Send Invite</span>
               <button
                 className={styles.buttonClass}
                 onClick={onSendInviteClick}

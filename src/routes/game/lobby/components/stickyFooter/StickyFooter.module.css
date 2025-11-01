@@ -84,6 +84,18 @@
   grid-area: clipboard;
 }
 
+.labelText {
+  display: inline;
+}
+
+.labelTextLong {
+  display: inline;
+}
+
+.labelTextShort {
+  display: none;
+}
+
 .icon {
   display: flex;
   justify-content: center;
@@ -98,36 +110,120 @@
 }
 
 /* Tablet and smaller screens */
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
+  .stickyFooter > .dynamicContainer > div:first-child {
+    flex: none;
+    gap: 1em !important;
+  }
+
   .dynamicContainer {
-    grid-template-columns: 2em auto 2em 1fr auto;
-    grid-template-areas:
-      'clipboard start content deckCount submit'
-      'alarm alarm alarm alarm alarm';
+    display: flex;
+    flex-wrap: wrap;
+    padding: 0.6em 0.3em;
+    gap: 0.3em;
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  .labelText {
+    display: inline;
+    font-size: 0.9em;
+  }
+
+  .footerContent {
+    font-size: 0.9em;
+    white-space: nowrap;
+    flex: 1;
+    text-align: right;
+    min-width: 60px;
+    margin-right: 0.1em;
+  }
+
+  .buttonHolder {
+    display: flex;
+    flex-direction: row;
+    gap: 0.2em;
+    flex: 0 0 auto;
+    margin-left: 0;
+  }
+
+  .buttonClass {
+    font-size: 0.8em;
+    padding: 0.4rem 0.6rem;
+    white-space: nowrap;
+    width: auto;
+  }
+
+  .footerAlarm {
+    width: 100%;
+    order: 10;
   }
 }
 
 /* Mobile screens */
 @media (max-width: 480px) {
+  .stickyFooter > .dynamicContainer > div:first-child {
+    flex: none;
+    gap: 0.5em !important;
+  }
+
   .dynamicContainer {
-    grid-template-columns: 1fr auto;
-    padding: 0.75em 0.5em;
-    gap: 0.25em;
-    grid-template-areas:
-      'clipboard submit'
-      'start submit'
-      'content deckCount'
-      'alarm alarm';
+    display: flex;
+    flex-wrap: wrap;
+    padding: 0.4em 0.2em;
+    gap: 0.1em;
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  .labelTextLong {
+    display: none;
+  }
+
+  .labelTextShort {
+    display: none;
   }
 
   .buttonHolder {
-    grid-column: 2;
-    flex-direction: column;
-    gap: 0.25em;
+    display: flex;
+    flex-direction: row;
+    gap: 0.1em;
+    flex: 0 0 auto;
   }
 
   .buttonClass {
-    font-size: 0.9em;
+    font-size: 0.75em;
+    padding: 0.35rem 0.4rem;
+    white-space: nowrap;
+    width: auto;
+  }
+
+  .buttonClassLeave {
+    font-size: 0.75em;
+    padding: 0.35rem 0.4rem;
+    white-space: nowrap;
+  }
+
+  .footerContent {
+    font-size: 0.8em;
+    white-space: nowrap;
+    flex: 1;
+    text-align: center;
+    min-width: 50px;
+  }
+
+  .alarm {
+    font-size: 0.8rem;
+  }
+
+  .stickyFooter {
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+  }
+
+  .footerAlarm {
+    width: 100%;
+    order: 10;
+    min-height: 0;
   }
 }
 

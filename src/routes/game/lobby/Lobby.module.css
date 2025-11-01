@@ -13,7 +13,6 @@
   width: 100%;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 0.5em;
   background-color: black;
   z-index: 10;
 }
@@ -64,9 +63,8 @@
   background-size: cover;
   background-position: center;
   height: 100%;
-  border-radius: 12px;
-  border: 2px solid rgba(255, 255, 255, 0.1);
-  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  overflow: visible;
   transition: all 0.3s ease;
   cursor: pointer;
   position: relative;
@@ -101,9 +99,8 @@
   background-size: cover;
   background-position: center;
   height: 100%;
-  border-radius: 12px;
-  border: 2px solid rgba(255, 255, 255, 0.1);
-  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  overflow: visible;
   transition: all 0.3s ease;
   cursor: pointer;
   position: relative;
@@ -137,15 +134,17 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  width: 100%;
-  height: 100%;
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
   padding: 1.2em;
   padding-bottom: 0.8em;
   color: var(--white);
   text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.9), 0 0 4px rgba(0, 0, 0, 0.8);
   background: linear-gradient(transparent 0%, transparent 30%, rgba(0, 0, 0, 0.4) 70%, rgba(0, 0, 0, 0.8) 100%);
   transition: all 0.3s ease;
-  position: relative;
   z-index: 2;
 }
 
@@ -225,6 +224,10 @@ nav {
 .mobileNav {
   overflow-x: auto;
   overflow-y: auto;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 0 0 8px 8px;
+  display: flex;
+  gap: 0.4rem;
 }
 
 .contentContainer {
@@ -266,6 +269,84 @@ nav {
   color: var(--alarm);
 }
 
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  .titleContainer {
+    height: 160px;
+    top: -128px;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .smallButton {
+    font-size: 0.75em;
+    padding: 0.5rem 0.75rem;
+    margin-top: 0.25em;
+  }
+
+  .dimPic {
+    padding: 0.8em;
+    padding-bottom: 0.5em;
+  }
+
+  .dimPic > h3 {
+    font-size: 1.1em;
+    margin-bottom: 0.2em;
+  }
+
+  .heroName {
+    font-size: 0.95em;
+  }
+
+  nav {
+    padding: 0 0.5em;
+  }
+
+  .contentContainer {
+    padding: 0.75rem;
+    margin: 0.25rem 0;
+  }
+
+  .lobbyChat {
+    padding: 0.75rem;
+  }
+
+  .matchupsContainer {
+    padding: 0.75rem;
+  }
+
+  .mobileNav {
+    max-height: 120px;
+    overflow-y: auto;
+  }
+
+  .mobileNav ul {
+    display: flex;
+    gap: 0.4rem;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+
+  .mobileNav ul:first-child {
+    order: 2;
+  }
+
+  .mobileNav ul:last-child {
+    order: 1;
+  }
+
+  .mobileNav button {
+    font-size: 0.75em;
+    padding: 0.35rem 0.5rem;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+}
+
 @media (min-width: 1200px) {
   .lobbyClass {
     position: fixed;
@@ -295,6 +376,41 @@ nav {
 
   .titleContainer {
     grid-area: hero;
+  }
+}
+
+/* Tablet optimization (769px - 1199px) */
+@media (min-width: 769px) and (max-width: 1199px) {
+  .mobileNav {
+    max-height: 100px;
+    padding: 0.5rem;
+  }
+
+  .mobileNav ul {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+
+  .mobileNav ul:first-child {
+    order: 2;
+  }
+
+  .mobileNav ul:last-child {
+    order: 1;
+  }
+
+  .mobileNav button {
+    font-size: 0.9em;
+    padding: 0.6rem 1rem;
+    flex: 1 1 calc(50% - 0.4rem);
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 }
 

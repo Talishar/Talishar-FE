@@ -645,7 +645,7 @@ const Lobby = () => {
                 submitSideboard={gameLobby?.canSubmitSideboard ?? false}
                 handleLeave={handleLeave}
                 isWidescreen={isWideScreen}
-                onSendInviteClick={isWideScreen ? () => setShowFriendsPanel(!showFriendsPanel) : undefined}
+                onSendInviteClick={() => setShowFriendsPanel(!showFriendsPanel)}
               />
             ) : null}
           </div>
