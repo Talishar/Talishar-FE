@@ -95,7 +95,7 @@ fieldset legend strong {
 
 .playmatPreviewImage {
   width: 100%;
-  min-height: 180px;
+  min-height: 350px;
   height: auto;
   display: block;
   border-radius: 8px;
@@ -260,14 +260,14 @@ hr {
 .presetButtonActive {
   background-color: var(--primary);
   border-color: var(--primary);
-  color: var(--near-black);
+  color: #000000;
   font-weight: 600;
 }
 
 .presetButtonActive:hover {
   background-color: var(--primary);
   border-color: var(--primary);
-  color: var(--near-black);
+  color: #000000;
   transform: translateY(-2px);
 }
 
