@@ -17,6 +17,7 @@ import {
   ResetPasswordForm
 } from 'routes/user/login';
 import { DecksPage, ProfilePage } from 'routes/user';
+import SettingsPage from 'routes/user/settings';
 import JoinGame from 'routes/game/join/Join';
 import Lobby from 'routes/game/lobby/Lobby';
 import { SignUpForm } from 'routes/user/login/components/SignUpForm';
@@ -177,6 +178,14 @@ export const router = createBrowserRouter(
             element={
               <LoggedInGuard shouldBeLoggedIn={true}>
                 <ProfilePage />
+              </LoggedInGuard>
+            }
+          />
+          <Route
+            path="settings"
+            element={
+              <LoggedInGuard shouldBeLoggedIn={true}>
+                <SettingsPage />
               </LoggedInGuard>
             }
           />

@@ -3,7 +3,7 @@ import React from 'react';
 import { Link, Outlet } from 'react-router-dom';
 import styles from './Header.module.scss';
 import TalisharLogo from '../../img/CoinLogo.png';
-import { BsGithub, BsPersonFill, BsShieldFillCheck } from 'react-icons/bs';
+import { BsGithub, BsPersonFill, BsShieldFillCheck, BsGear } from 'react-icons/bs';
 import { FaDiscord, FaTwitter } from 'react-icons/fa';
 import { RiLogoutBoxRLine } from 'react-icons/ri';
 import LanguageSelector from 'components/LanguageSelector/LanguageSelector';
@@ -142,6 +142,13 @@ const Header = () => {
               </Link>
             )}
           </li>
+          {isLoggedIn && (
+            <li>
+              <Link to="/user/settings">
+                <BsGear></BsGear> <span>Settings</span>
+              </Link>
+            </li>
+          )}
           {isLoggedIn && (
             <li>
               <a href="" onClick={handleLogOut}>

@@ -23,7 +23,14 @@
 }
 
 .button {
-  margin: 0;
+  margin: 0 auto;
+  max-width: 54px;
+  width: 54px;
+  height: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
 }
 
 .title {
@@ -68,7 +75,7 @@ td {
 
 .twoColumnLayout {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr;
   gap: 2rem;
   margin-top: 1rem;
   align-items: start; 
@@ -79,8 +86,12 @@ td {
   width: 100%;
 }
 
-.rightColumns {
-  display: contents; 
+.rightColumn {
+  min-width: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
 .leftColumn table {
@@ -104,21 +115,10 @@ td {
   .twoColumnLayout {
     grid-template-columns: 1fr 1fr;
   }
-  
-  .rightColumns {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 1rem;
-  }
 }
 
 @media (max-width: 1024px) {
   .twoColumnLayout {
-    grid-template-columns: 1fr;
-  }
-  
-  .rightColumns {
-    display: grid;
     grid-template-columns: 1fr;
   }
 }
