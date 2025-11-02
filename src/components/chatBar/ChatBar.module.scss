@@ -419,6 +419,7 @@
   align-items: center;
   background: rgba(0, 0, 0, 0.3);
   gap: 8px;
+  flex-shrink: 0;
 
   .chatHeaderInfo {
     display: flex;
@@ -478,6 +479,46 @@
 
     &:hover {
       background: rgba(255, 255, 255, 0.1);
+    }
+  }
+
+  /* Mobile: reduce padding and font sizes */
+  @media (max-width: 768px) {
+    padding: 8px 12px;
+
+    .chatHeaderInfo {
+      gap: 6px;
+
+      .chatFriendName {
+        font-size: 0.9em;
+      }
+    }
+
+    button {
+      padding: 3px 4px;
+      font-size: 0.95em;
+    }
+  }
+
+  @media (max-width: 640px) {
+    padding: 6px 10px;
+
+    .chatHeaderInfo {
+      gap: 5px;
+
+      .onlineIndicator {
+        width: 8px;
+        height: 8px;
+      }
+
+      .chatFriendName {
+        font-size: 0.85em;
+      }
+    }
+
+    button {
+      padding: 2px 3px;
+      font-size: 0.9em;
     }
   }
 }
