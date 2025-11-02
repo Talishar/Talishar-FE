@@ -11,6 +11,7 @@ import { useGetPendingRequestsQuery } from 'features/api/apiSlice';
 import CookieConsent from 'components/CookieConsent';
 import AdBlockingRecovery from 'components/AdBlockingRecovery';
 import ChatBar from 'components/chatBar/ChatBar';
+import { Toaster } from 'react-hot-toast';
 
 const Header = () => {
   const { isLoggedIn, isMod, logOut } = useAuth();
@@ -27,6 +28,26 @@ const Header = () => {
   return (
     <div>
       <nav className={styles.navBar}>
+        <Toaster
+          position="top-left"
+          toastOptions={{
+            style: {
+              background: 'var(--dark-red)',
+              color: 'var(--white)',
+              border: '1px solid var(--primary)',
+              padding: '0.5rem',
+              wordBreak: 'break-word',
+              maxWidth: '100vh', 
+              overflow: 'hidden', 
+              textOverflow: 'ellipsis', 
+              userSelect: 'none',
+              msUserSelect: 'none',
+              WebkitUserSelect: 'none',
+              MozUserSelect: 'none',
+              zIndex: 10001,
+            }
+          }}
+        />
         <ul>
           <li>
             <Link to="/" className={styles.logo}>

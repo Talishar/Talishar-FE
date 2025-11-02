@@ -17,6 +17,7 @@ import { useCookies } from 'react-cookie';
 import { useEffect } from 'react';
 import { useAppDispatch } from '../../../app/Hooks';
 import { setIsRoguelike } from '../../../features/game/GameSlice';
+import { Toaster } from 'react-hot-toast';
 
 function Play({ isRoguelike }: { isRoguelike: boolean }) {
   const [cookies] = useCookies([
@@ -67,6 +68,26 @@ function Play({ isRoguelike }: { isRoguelike: boolean }) {
 
   return (
     <div className="centering">
+      <Toaster
+        position="top-left"
+        toastOptions={{
+          style: {
+            background: 'var(--dark-red)',
+            color: 'var(--white)',
+            border: '1px solid var(--primary)',
+            padding: '0.5rem',
+            wordBreak: 'break-word',
+            maxWidth: '100vh', 
+            overflow: 'hidden', 
+            textOverflow: 'ellipsis', 
+            userSelect: 'none',
+            msUserSelect: 'none',
+            WebkitUserSelect: 'none',
+            MozUserSelect: 'none',
+            zIndex: 10001,
+          }
+        }}
+      />
       <div className="app" key="app">
         <ChatCardDetail />
         <LeftColumn />
