@@ -13,7 +13,12 @@ const InitialGameState: GameState = {
   isUpdateInProgress: false,
   optionsMenu: { active: false },
   showModals: true,
-  chatEnabled: false
+  chatEnabled: false,
+  inactivityWarning: {
+    lastActionTime: Date.now(),
+    firstWarningShown: false,
+    secondWarningShown: false
+  }
 };
 
 export const OfflineTestingGameState: GameState = {
