@@ -9,6 +9,10 @@ export interface BanPlayerByNameRequest {
   playerToBan: string;
 }
 
+export interface DeleteUsernameRequest {
+  usernameToDelete: string;
+}
+
 export interface CloseGameRequest {
   gameToClose: string;
 }

@@ -4,7 +4,8 @@ import {
   useGetModPageDataQuery,
   useBanPlayerByIPMutation,
   useBanPlayerByNameMutation,
-  useCloseGameMutation
+  useCloseGameMutation,
+  useDeleteUsernameMutation
 } from 'features/api/apiSlice';
 import UsernameModeration from './UsernameModeration';
 
@@ -13,6 +14,7 @@ const ModPage: React.FC = () => {
   const [playerNumberToBan, setPlayerNumberToBan] = useState('');
   const [gameToClose, setGameToClose] = useState('');
   const [playerToBan, setPlayerToBan] = useState('');
+  const [usernameToDelete, setUsernameToDelete] = useState('');
 
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
@@ -27,6 +29,7 @@ const ModPage: React.FC = () => {
   const [banByIP, { isLoading: isBanningByIP }] = useBanPlayerByIPMutation();
   const [banByName, { isLoading: isBanningByName }] = useBanPlayerByNameMutation();
   const [closeGameMutation, { isLoading: isClosingGame }] = useCloseGameMutation();
+  const [deleteUsername, { isLoading: isDeletingUsername }] = useDeleteUsernameMutation();
 
   const handleBanByIP = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -71,6 +74,20 @@ const ModPage: React.FC = () => {
       await refetch();
     } catch (err: any) {
       console.error('Failed to ban player:', err);
+      // Error will be shown via toast from RTK Query error handler
+    }
+  };
+
+  const handleDeleteUsername = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSuccessMessage(null);
+
+    try {
+      await deleteUsername({ usernameToDelete }).unwrap();
+      setSuccessMessage('Username deleted successfully from database');
+      setUsernameToDelete('');
+    } catch (err: any) {
+      console.error('Failed to delete username:', err);
       // Error will be shown via toast from RTK Query error handler
     }
   };
@@ -132,6 +149,21 @@ const ModPage: React.FC = () => {
                 required
               />
               <button type="submit">Ban</button>
+            </form>
+
+            <form onSubmit={handleDeleteUsername} className={styles.form}>
+              <h2>Delete Username from Database</h2>
+              <label htmlFor="usernameToDelete">Username to delete:</label>
+              <input
+                type="text"
+                id="usernameToDelete"
+                value={usernameToDelete}
+                onChange={(e) => setUsernameToDelete(e.target.value)}
+                required
+              />
+              <button type="submit" disabled={isDeletingUsername}>
+                {isDeletingUsername ? 'Deleting...' : 'Delete Username'}
+              </button>
             </form>
           </div>
 

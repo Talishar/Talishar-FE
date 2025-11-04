@@ -40,7 +40,8 @@ import {
   ModPageDataResponse,
   BanPlayerByIPRequest,
   BanPlayerByNameRequest,
-  CloseGameRequest
+  CloseGameRequest,
+  DeleteUsernameRequest
 } from 'interface/API/ModPageAPI';
 import { FriendListAPIResponse } from 'interface/API/FriendListAPI.php';
 import {
@@ -444,6 +445,18 @@ export const apiSlice = createApi({
       },
       invalidatesTags: [{ type: 'ModPageData', id: 'LIST' }]
     }),
+    deleteUsername: builder.mutation<any, DeleteUsernameRequest>({
+      query: ({ usernameToDelete }) => {
+        return {
+          url: URL_END_POINT.BAN_PLAYER,
+          method: 'POST',
+          body: {
+            usernameToDelete: usernameToDelete
+          },
+          responseHandler: parseResponse
+        };
+      }
+    }),
     closeGame: builder.mutation<any, CloseGameRequest>({
       query: ({ gameToClose }) => {
         return {
@@ -737,6 +750,7 @@ export const {
   useGetModPageDataQuery,
   useBanPlayerByIPMutation,
   useBanPlayerByNameMutation,
+  useDeleteUsernameMutation,
   useCloseGameMutation,
   useGetFriendsListQuery,
   useAddFriendMutation,
