@@ -129,7 +129,7 @@ const dynamicBaseQuery: BaseQueryFn<
 export const apiSlice = createApi({
   reducerPath: 'api',
   baseQuery: dynamicBaseQuery,
-  tagTypes: ['ModPageData'],
+  tagTypes: ['ModPageData', 'UserSearch'],
   endpoints: (builder) => ({
     getPopUpContent: builder.query({
       query: ({
@@ -456,7 +456,10 @@ export const apiSlice = createApi({
           responseHandler: parseResponse
         };
       },
-      invalidatesTags: [{ type: 'ModPageData', id: 'LIST' }]
+      invalidatesTags: [
+        { type: 'ModPageData', id: 'LIST' },
+        'UserSearch'
+      ]
     }),
     closeGame: builder.mutation<any, CloseGameRequest>({
       query: ({ gameToClose }) => {
@@ -508,7 +511,8 @@ export const apiSlice = createApi({
           body: { action: 'searchUsers', searchTerm: searchTerm, limit: limit },
           responseHandler: parseResponse
         };
-      }
+      },
+      providesTags: ['UserSearch']
     }),
     getPendingRequests: builder.query<FriendListAPIResponse, void>({
       query: () => {
