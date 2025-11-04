@@ -27,12 +27,9 @@ export interface ContentVideo {
 // Discord API - Fetches latest messages from #release-notes channel
 export const fetchDiscordReleaseNotes = async (maxMessages: number = 5): Promise<DiscordMessage[]> => {
   try {
-    // On production: /game/GetDiscordReleaseNotes.php (backend served at /game/)
-    // On dev: /api/GetDiscordReleaseNotes.php (Vite proxy)
-    const isProduction = process.env.NODE_ENV === 'production';
-    const url = isProduction 
-      ? `/game/GetDiscordReleaseNotes.php?maxMessages=${maxMessages}`
-      : `/api/GetDiscordReleaseNotes.php?maxMessages=${maxMessages}`;
+    // Determine API URL - try to get backend URL from window location or use environment variable
+    const backendUrl = getBackendUrl();
+    const url = `${backendUrl}/GetDiscordReleaseNotes.php?maxMessages=${maxMessages}`;
     console.log('Fetching Discord notes from:', url);
     
     const response = await fetch(url);
@@ -57,6 +54,22 @@ export const fetchDiscordReleaseNotes = async (maxMessages: number = 5): Promise
     return [];
   }
 };
+
+// Helper function to determine backend URL
+function getBackendUrl(): string {
+  // On production: use same domain with /game/ path
+  // On dev: use localhost:8080
+  const isProduction = process.env.NODE_ENV === 'production';
+  
+  if (isProduction) {
+    // Get the current domain and use /game/ as the backend
+    const currentUrl = new URL(window.location.href);
+    return `${currentUrl.protocol}//${currentUrl.host}/game`;
+  } else {
+    // Development: use Vite proxy /api/ path
+    return '/api';
+  }
+}
 
 // Combined content feed
 export const fetchCommunityContent = async () => {
@@ -88,12 +101,8 @@ export interface ContentCarouselResponse {
 
 export const fetchDiscordContentCarousel = async (maxMessages: number = 20): Promise<ContentVideo[]> => {
   try {
-    // On production: /game/GetDiscordContentCarousel.php (backend served at /game/)
-    // On dev: /api/GetDiscordContentCarousel.php (Vite proxy)
-    const isProduction = process.env.NODE_ENV === 'production';
-    const url = isProduction 
-      ? `/game/GetDiscordContentCarousel.php?maxMessages=${maxMessages}`
-      : `/api/GetDiscordContentCarousel.php?maxMessages=${maxMessages}`;
+    const backendUrl = getBackendUrl();
+    const url = `${backendUrl}/GetDiscordContentCarousel.php?maxMessages=${maxMessages}`;
     const response = await fetch(url);
     const text = await response.text();
     
