@@ -87,8 +87,6 @@ const ModPage: React.FC = () => {
       await deleteUsername({ usernameToDelete }).unwrap();
       setSuccessMessage('Username deleted successfully from database');
       setUsernameToDelete('');
-      // Refresh data after successful deletion
-      await refetch();
     } catch (err: any) {
       console.error('Failed to delete username:', err);
       // Error will be shown via toast from RTK Query error handler
