@@ -32,15 +32,22 @@ export const fetchDiscordReleaseNotes = async (maxMessages: number = 5): Promise
     console.log('Fetching Discord notes from:', url);
     
     const response = await fetch(url);
+    const text = await response.text();
     
     if (!response.ok) {
       console.warn('Discord fetch failed:', response.statusText, response.status);
+      console.warn('Response text:', text);
       return [];
     }
     
-    const data = await response.json();
-    console.log('Discord response:', data);
-    return data.messages || [];
+    try {
+      const data = JSON.parse(text);
+      console.log('Discord response:', data);
+      return data.messages || [];
+    } catch (parseError) {
+      console.error('Failed to parse Discord response. Raw text:', text);
+      return [];
+    }
   } catch (error) {
     console.error('Error fetching Discord messages:', error);
     return [];
@@ -77,15 +84,23 @@ export interface ContentCarouselResponse {
 
 export const fetchDiscordContentCarousel = async (maxMessages: number = 20): Promise<ContentVideo[]> => {
   try {
-    const response = await fetch(`/api/GetDiscordContentCarousel.php?maxMessages=${maxMessages}`);
+    const url = `/api/GetDiscordContentCarousel.php?maxMessages=${maxMessages}`;
+    const response = await fetch(url);
+    const text = await response.text();
     
     if (!response.ok) {
       console.warn('Content carousel fetch failed:', response.statusText);
+      console.warn('Response text:', text);
       return [];
     }
     
-    const data: ContentCarouselResponse = await response.json();
-    return data.videos || [];
+    try {
+      const data: ContentCarouselResponse = JSON.parse(text);
+      return data.videos || [];
+    } catch (parseError) {
+      console.error('Failed to parse carousel response. Raw text:', text);
+      return [];
+    }
   } catch (error) {
     console.warn('Error fetching Discord content carousel:', error);
     return [];
