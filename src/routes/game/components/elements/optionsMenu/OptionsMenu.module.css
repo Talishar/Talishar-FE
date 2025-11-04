@@ -8,7 +8,6 @@
   bottom: 10vh;
   left: 9vw;
   right: 13vw;
-  background: linear-gradient(135deg, rgba(30, 35, 41, 0.9) 0%, rgba(30, 35, 41, 0.95) 100%);
   padding: 1.5vh;
   border: 1px solid var(--primary);
   border-radius: 10px;
