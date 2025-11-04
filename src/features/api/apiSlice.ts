@@ -455,7 +455,8 @@ export const apiSlice = createApi({
           },
           responseHandler: parseResponse
         };
-      }
+      },
+      invalidatesTags: [{ type: 'ModPageData', id: 'LIST' }]
     }),
     closeGame: builder.mutation<any, CloseGameRequest>({
       query: ({ gameToClose }) => {
