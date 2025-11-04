@@ -25,7 +25,7 @@
   gap: 1.5rem;
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 10px;
-  background: var(--card-background-color);
+  background: linear-gradient(135deg, rgba(30, 35, 41, 0.8) 0%, rgba(30, 35, 41, 0.85) 100%);
   padding: 1rem;
 }
 

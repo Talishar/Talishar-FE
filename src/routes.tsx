@@ -27,6 +27,8 @@ import Privacy from 'routes/privacy';
 import CreateGame from 'routes/game/create/CreateGame';
 import LinkPatreon from 'routes/user/profile/linkpatreon';
 import ModPage from 'routes/mod/ModPage';
+import PrivacyPolicy from 'routes/legal/PrivacyPolicy';
+import TermsOfService from 'routes/legal/TermsOfService';
 
 const PlayGuard = ({ children }: { children: JSX.Element }) => {
   const [searchParams] = useKnownSearchParams();
@@ -169,6 +171,8 @@ export const router = createBrowserRouter(
         <Route path="game/join/:gameID" element={<JoinGame />} />
         <Route path="game/create" element={<CreateGame />} />
         <Route path="privacy" element={<Privacy />} />
+        <Route path="privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="terms-of-service" element={<TermsOfService />} />
         <Route path="mod" element={<ModGuard><ModPage /></ModGuard>} />
         <Route path="user">
           <Route index element={<Navigate to={'./profile'} />} />

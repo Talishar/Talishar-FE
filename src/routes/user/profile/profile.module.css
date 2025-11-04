@@ -40,6 +40,8 @@
 
 .articleTitle {
   margin-top: 0.2em;
+    background: linear-gradient(135deg, rgba(30, 35, 41, 0.8) 0%, rgba(30, 35, 41, 0.85) 100%);
+
 }
 
 article {

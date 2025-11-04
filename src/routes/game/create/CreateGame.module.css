@@ -4,6 +4,7 @@
   border-radius: 10px;
   margin: 1.5em auto;
   margin-bottom: 0;
+  background: linear-gradient(135deg, rgba(30, 35, 41, 0.8) 0%, rgba(30, 35, 41, 0.85) 100%);
 }
 
 @media (max-width: 768px) {
@@ -42,7 +43,7 @@
   padding: 1rem;
   border: 1px solid rgba(255, 255, 255, 0.4);
   border-radius: 8px;
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: rgba(30, 35, 41, 0.5);
 }
 
 .heroSelection > label {

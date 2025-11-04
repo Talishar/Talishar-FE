@@ -58,7 +58,7 @@ export const ChatBar: React.FC = () => {
     data: unreadByFriendData
   } = useGetUnreadMessageCountByFriendQuery(undefined, {
     skip: !isLoggedIn,
-    pollingInterval: 2000 // Poll every 2 seconds for real-time notifications
+    pollingInterval: 15000 // Poll every 15 seconds for real-time notifications
   });
 
   const [sendMessage] = useSendPrivateMessageMutation();
