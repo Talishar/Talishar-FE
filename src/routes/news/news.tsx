@@ -46,10 +46,23 @@ const News = () => {
               <div key={message.id} className={styles.messageItem}>
                 <div className={styles.messageHeader}>
                   <strong>
-                    {message.author} - {new Date(message.timestamp).toLocaleDateString()}
+                    {message.author} - {new Date(message.timestamp).toLocaleDateString('en-US', { 
+                      day: 'numeric',
+                      month: 'short',
+                      year: 'numeric'
+                    }).replace(/(\d+)/, (day) => {
+                      const d = parseInt(day);
+                      const suffix = d % 10 === 1 && d !== 11 ? 'st' : d % 10 === 2 && d !== 12 ? 'nd' : d % 10 === 3 && d !== 13 ? 'rd' : 'th';
+                      return day + suffix;
+                    })}
                   </strong>
                 </div>
-                {message.content && <p className={styles.messageContent}>{message.content}</p>}
+                {message.content && (
+                  <p 
+                    className={styles.messageContent}
+                    dangerouslySetInnerHTML={{ __html: message.content }}
+                  />
+                )}
                 
                 {/* Attachments */}
                 {message.attachments && message.attachments.length > 0 && (
