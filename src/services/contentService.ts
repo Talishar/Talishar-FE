@@ -27,36 +27,25 @@ export interface ContentVideo {
 // Discord API - Fetches latest messages from #release-notes channel
 export const fetchDiscordReleaseNotes = async (maxMessages: number = 5): Promise<DiscordMessage[]> => {
   try {
-    // Use API proxy that's in public/ folder (won't get caught by frontend router)
-    const isProduction = process.env.NODE_ENV === 'production';
-    const url = isProduction 
-      ? `/api-proxy.php?file=GetDiscordReleaseNotes.php&maxMessages=${maxMessages}`
-      : `/api/GetDiscordReleaseNotes.php?maxMessages=${maxMessages}`;
+    // Call backend endpoint through Vite proxy (configured for /api path)
+    const url = `/api/GetDiscordReleaseNotes.php?maxMessages=${maxMessages}`;
     console.log('Fetching Discord notes from:', url);
     
     const response = await fetch(url);
-    const text = await response.text();
     
     if (!response.ok) {
       console.warn('Discord fetch failed:', response.statusText, response.status);
-      console.warn('Response text:', text.substring(0, 200));
       return [];
     }
     
-    try {
-      const data = JSON.parse(text);
-      console.log('Discord response:', data);
-      return data.messages || [];
-    } catch (parseError) {
-      console.error('Failed to parse Discord response. Raw text:', text.substring(0, 200));
-      return [];
-    }
+    const data = await response.json();
+    console.log('Discord response:', data);
+    return data.messages || [];
   } catch (error) {
     console.error('Error fetching Discord messages:', error);
     return [];
   }
 };
-
 
 // Combined content feed
 export const fetchCommunityContent = async () => {
@@ -88,26 +77,15 @@ export interface ContentCarouselResponse {
 
 export const fetchDiscordContentCarousel = async (maxMessages: number = 20): Promise<ContentVideo[]> => {
   try {
-    const isProduction = process.env.NODE_ENV === 'production';
-    const url = isProduction 
-      ? `/api-proxy.php?file=GetDiscordContentCarousel.php&maxMessages=${maxMessages}`
-      : `/api/GetDiscordContentCarousel.php?maxMessages=${maxMessages}`;
-    const response = await fetch(url);
-    const text = await response.text();
+    const response = await fetch(`/api/GetDiscordContentCarousel.php?maxMessages=${maxMessages}`);
     
     if (!response.ok) {
       console.warn('Content carousel fetch failed:', response.statusText);
-      console.warn('Response text:', text.substring(0, 200));
       return [];
     }
     
-    try {
-      const data: ContentCarouselResponse = JSON.parse(text);
-      return data.videos || [];
-    } catch (parseError) {
-      console.error('Failed to parse carousel response. Raw text:', text.substring(0, 200));
-      return [];
-    }
+    const data: ContentCarouselResponse = await response.json();
+    return data.videos || [];
   } catch (error) {
     console.warn('Error fetching Discord content carousel:', error);
     return [];
