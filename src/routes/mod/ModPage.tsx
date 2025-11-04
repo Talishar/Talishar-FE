@@ -8,6 +8,7 @@ import {
   useDeleteUsernameMutation
 } from 'features/api/apiSlice';
 import UsernameModeration from './UsernameModeration';
+import UsernameAutocomplete from './UsernameAutocomplete';
 
 const ModPage: React.FC = () => {
   const [ipToBan, setIpToBan] = useState('');
@@ -140,26 +141,24 @@ const ModPage: React.FC = () => {
 
             <form onSubmit={handleBanPlayer} className={styles.form}>
               <h2>Ban Player by Username</h2>
-              <label htmlFor="playerToBan">Player to ban:</label>
-              <input
-                type="text"
-                id="playerToBan"
+              <UsernameAutocomplete
                 value={playerToBan}
-                onChange={(e) => setPlayerToBan(e.target.value)}
-                required
+                onChange={setPlayerToBan}
+                placeholder="Search for a player to ban..."
+                inputId="playerToBan"
+                label="Player to ban:"
               />
               <button type="submit">Ban</button>
             </form>
 
             <form onSubmit={handleDeleteUsername} className={styles.form}>
               <h2>Delete Username from Database</h2>
-              <label htmlFor="usernameToDelete">Username to delete:</label>
-              <input
-                type="text"
-                id="usernameToDelete"
+              <UsernameAutocomplete
                 value={usernameToDelete}
-                onChange={(e) => setUsernameToDelete(e.target.value)}
-                required
+                onChange={setUsernameToDelete}
+                placeholder="Search for a username to delete..."
+                inputId="usernameToDelete"
+                label="Username to delete:"
               />
               <button type="submit" disabled={isDeletingUsername}>
                 {isDeletingUsername ? 'Deleting...' : 'Delete Username'}

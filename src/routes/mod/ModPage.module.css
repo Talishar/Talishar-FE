@@ -171,3 +171,106 @@
   margin-bottom: 20px;
   font-weight: bold;
 }
+
+/* Autocomplete Styles */
+.autocompleteContainer {
+  position: relative;
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+.autocompleteContainer label {
+  display: block;
+  margin-bottom: 5px;
+  color: #ffffff;
+  font-weight: bold;
+  font-size: 0.95rem;
+}
+
+.autocompleteInput {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #666666;
+  border-radius: 3px;
+  background-color: rgba(50, 50, 50, 0.8);
+  color: #ffffff;
+  font-size: 0.95rem;
+  transition: border-color 0.2s, background-color 0.2s;
+  box-sizing: border-box;
+}
+
+.autocompleteInput::placeholder {
+  color: #999999;
+}
+
+.autocompleteInput:focus {
+  outline: none;
+  border-color: #4a9eff;
+  background-color: rgba(50, 50, 50, 1);
+}
+
+.autocompleteResults {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background-color: rgba(50, 50, 50, 0.95);
+  border: 1px solid #666666;
+  border-top: none;
+  border-radius: 0 0 3px 3px;
+  max-height: 300px;
+  overflow-y: auto;
+  z-index: 1000;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.resultsList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.resultItem {
+  padding: 0;
+  margin: 0;
+}
+
+.resultButton {
+  width: 100%;
+  padding: 10px 12px;
+  background: none;
+  border: none;
+  color: #e0e0e0;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  font-size: 0.95rem;
+  display: block;
+}
+
+.resultButton:hover {
+  background-color: rgba(212, 175, 55, 0.15);
+  color: #d4af37;
+}
+
+.resultButton:active {
+  background-color: rgba(212, 175, 55, 0.25);
+}
+
+.loadingText {
+  padding: 12px;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.5);
+  font-style: italic;
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.noResults {
+  padding: 12px;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.5);
+  margin: 0;
+  font-size: 0.9rem;
+}
+
