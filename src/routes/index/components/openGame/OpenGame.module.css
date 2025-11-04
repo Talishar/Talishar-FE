@@ -126,8 +126,10 @@ h3 {
   }
 
   .description {
-    flex: 0 0 auto;
-    display: none;
+    flex: 1 1 50px;
+    min-width: 50px;
+    max-width: 150px;
+    display: block;
   }
 
   .formatName {
