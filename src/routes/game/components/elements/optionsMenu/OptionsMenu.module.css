@@ -8,6 +8,7 @@
   bottom: 10vh;
   left: 9vw;
   right: 13vw;
+  background: black;
   padding: 1.5vh;
   border: 1px solid var(--primary);
   border-radius: 10px;
