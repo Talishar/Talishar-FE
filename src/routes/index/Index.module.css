@@ -41,7 +41,6 @@
   margin-top: 3em;
   padding: 0 1em;
   max-width: 100%;
-  align-items: start;
 }
 
 .gameListContainer {
@@ -75,12 +74,6 @@
     max-width: 100%;
     overflow-x: hidden;
     width: 100vw;
-    align-items: start;
-  }
-
-  .gameListContainer {
-    max-height: calc(100vh - 150px);
-    overflow-y: auto;
   }
 
   .newsContainer {
@@ -101,13 +94,10 @@
     grid-template-areas:
       "gameList createGame"
       "gameList news";
-    align-items: start;
   }
 
   .gameListContainer {
     grid-area: gameList;
-    max-height: calc(100vh - 150px);
-    overflow-y: auto;
   }
 
   .createGameContainer {
