@@ -27,9 +27,12 @@ export interface ContentVideo {
 // Discord API - Fetches latest messages from #release-notes channel
 export const fetchDiscordReleaseNotes = async (maxMessages: number = 5): Promise<DiscordMessage[]> => {
   try {
-    // On production, the backend API files are at the backend URL, not /api/
-    // On dev, Vite proxy handles /api/ -> backend
-    const url = `/GetDiscordReleaseNotes.php?maxMessages=${maxMessages}`;
+    // On production: /game/GetDiscordReleaseNotes.php (backend served at /game/)
+    // On dev: /api/GetDiscordReleaseNotes.php (Vite proxy)
+    const isProduction = process.env.NODE_ENV === 'production';
+    const url = isProduction 
+      ? `/game/GetDiscordReleaseNotes.php?maxMessages=${maxMessages}`
+      : `/api/GetDiscordReleaseNotes.php?maxMessages=${maxMessages}`;
     console.log('Fetching Discord notes from:', url);
     
     const response = await fetch(url);
@@ -37,7 +40,7 @@ export const fetchDiscordReleaseNotes = async (maxMessages: number = 5): Promise
     
     if (!response.ok) {
       console.warn('Discord fetch failed:', response.statusText, response.status);
-      console.warn('Response text:', text);
+      console.warn('Response text:', text.substring(0, 200));
       return [];
     }
     
@@ -85,7 +88,12 @@ export interface ContentCarouselResponse {
 
 export const fetchDiscordContentCarousel = async (maxMessages: number = 20): Promise<ContentVideo[]> => {
   try {
-    const url = `/GetDiscordContentCarousel.php?maxMessages=${maxMessages}`;
+    // On production: /game/GetDiscordContentCarousel.php (backend served at /game/)
+    // On dev: /api/GetDiscordContentCarousel.php (Vite proxy)
+    const isProduction = process.env.NODE_ENV === 'production';
+    const url = isProduction 
+      ? `/game/GetDiscordContentCarousel.php?maxMessages=${maxMessages}`
+      : `/api/GetDiscordContentCarousel.php?maxMessages=${maxMessages}`;
     const response = await fetch(url);
     const text = await response.text();
     
