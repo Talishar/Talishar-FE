@@ -27,8 +27,9 @@ export interface ContentVideo {
 // Discord API - Fetches latest messages from #release-notes channel
 export const fetchDiscordReleaseNotes = async (maxMessages: number = 5): Promise<DiscordMessage[]> => {
   try {
-    // Call backend endpoint through Vite proxy (configured for /api path)
-    const url = `/api/GetDiscordReleaseNotes.php?maxMessages=${maxMessages}`;
+    // On production, the backend API files are at the backend URL, not /api/
+    // On dev, Vite proxy handles /api/ -> backend
+    const url = `/GetDiscordReleaseNotes.php?maxMessages=${maxMessages}`;
     console.log('Fetching Discord notes from:', url);
     
     const response = await fetch(url);
@@ -45,7 +46,7 @@ export const fetchDiscordReleaseNotes = async (maxMessages: number = 5): Promise
       console.log('Discord response:', data);
       return data.messages || [];
     } catch (parseError) {
-      console.error('Failed to parse Discord response. Raw text:', text);
+      console.error('Failed to parse Discord response. Raw text:', text.substring(0, 200));
       return [];
     }
   } catch (error) {
@@ -84,13 +85,13 @@ export interface ContentCarouselResponse {
 
 export const fetchDiscordContentCarousel = async (maxMessages: number = 20): Promise<ContentVideo[]> => {
   try {
-    const url = `/api/GetDiscordContentCarousel.php?maxMessages=${maxMessages}`;
+    const url = `/GetDiscordContentCarousel.php?maxMessages=${maxMessages}`;
     const response = await fetch(url);
     const text = await response.text();
     
     if (!response.ok) {
       console.warn('Content carousel fetch failed:', response.statusText);
-      console.warn('Response text:', text);
+      console.warn('Response text:', text.substring(0, 200));
       return [];
     }
     
@@ -98,7 +99,7 @@ export const fetchDiscordContentCarousel = async (maxMessages: number = 20): Pro
       const data: ContentCarouselResponse = JSON.parse(text);
       return data.videos || [];
     } catch (parseError) {
-      console.error('Failed to parse carousel response. Raw text:', text);
+      console.error('Failed to parse carousel response. Raw text:', text.substring(0, 200));
       return [];
     }
   } catch (error) {
