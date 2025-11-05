@@ -16,6 +16,7 @@
 }
 
 .formContainer {
+  background: var(--theme-card-background, #1e2329);
   scroll-margin-top: 100px;
   margin-top: 20px;
   width: 460px;
