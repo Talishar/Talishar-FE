@@ -23,12 +23,13 @@
 
 .tabs > button:hover {
   background-color: black;
-  color: var(--primary);
-  border: 1px solid var(--primary);
+  color: var(--theme-primary);
+  border: 1px solid var(--theme-primary);
   cursor: pointer;
 }
 
 .chatBoxContainer {
+  padding-top: 1dvh;
   position: relative;
   width: 100%;
   flex-grow: 1;

@@ -10,7 +10,7 @@
 }
 
 .button {
-  background-color: var(--secondary);
+  background-color: var(--theme-secondary);
   margin-bottom: 0;
 }
 
@@ -53,7 +53,7 @@ img {
   border-radius: 10px;
   margin-bottom: 0;
   padding: 1em;
-  background: linear-gradient(135deg, rgba(30, 35, 41, 0.8) 0%, rgba(30, 35, 41, 0.85) 100%);
+  background: var(--theme-section-background);
 }
 
 .reloadButton {

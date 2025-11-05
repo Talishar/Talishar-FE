@@ -1,8 +1,8 @@
 .aboutContainer {
   width: 100%;
-  background: linear-gradient(135deg, rgba(30, 35, 41, 0.8) 0%, rgba(30, 35, 41, 0.85) 100%);
-  border-top: 2px solid rgba(255, 255, 255, 0.1);
-  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+  background: var(--theme-section-background, linear-gradient(135deg, rgba(30, 35, 41, 0.8) 0%, rgba(30, 35, 41, 0.85) 100%));
+  border-top: 2px solid var(--theme-border-light, rgba(255, 255, 255, 0.1));
+  border-bottom: 2px solid var(--theme-border-light, rgba(255, 255, 255, 0.1));
   padding: 2em 1em;
   margin-top: 2em;
 }

@@ -8,9 +8,9 @@
   bottom: 10vh;
   left: 9vw;
   right: 13vw;
-  background: black;
+  background: rgba(0, 0, 0, calc(1 - (1 - var(--transparency-intensity, 1)) * 0.7));
   padding: 1.5vh;
-  border: 1px solid var(--primary);
+  border: 1px solid var(--theme-primary);
   border-radius: 10px;
   isolation: isolate;
   z-index: 1000;
@@ -35,7 +35,7 @@
 
 .optionsMenuCloseIcon {
   display: flex;
-  color: var(--primary);
+  color: var(--theme-primary);
   flex-direction: row;
   align-items: center;
   justify-content: center;
@@ -45,7 +45,7 @@
 }
 
 .optionsMenuCloseIcon:hover {
-  background-color: var(--primary);
+  background-color: var(--theme-primary);
   color: var(--primary-inverse);
 }
 
@@ -102,7 +102,7 @@
 
 /* Section Headers - Positioned like fieldset legend */
 .sectionHeader {
-  color: var(--primary);
+  color: var(--theme-primary);
   font-size: 0.95em;
   font-weight: 600;
   padding: 0.1em 0.5rem;
@@ -128,7 +128,7 @@
 /* Legacy h3 support - deprecated but kept for compatibility */
 .column h3 {
   margin: 0.5em 0;
-  color: var(--primary);
+  color: var(--theme-primary);
   font-size: 0.95em;
   font-weight: 600;
 }

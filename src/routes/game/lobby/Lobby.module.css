@@ -25,8 +25,8 @@
   padding: 0.75rem 1rem;
   margin: 0;
   margin-top: 0.5em;
-  border: 1px solid var(--primary);
-  background-color: var(--primary);
+  border: 1px solid var(--theme-primary);
+  background-color: var(--theme-primary);
   color: var(--primary-inverse);
   border-radius: 6px;
   transition: all 0.2s;
@@ -38,18 +38,18 @@
 }
 
 .smallButton:hover {
-  background-color: rgba(255, 184, 77, 0.9);
-  border-color: var(--primary);
+  background-color: var(--primary-hover);
+  border-color: var(--primary-hover);
   color: var(--primary-inverse);
   transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(255, 184, 77, 0.3);
+  box-shadow: 0 4px 8px var(--primary-focus);
 }
 
 .smallButton.active {
-  background-color: var(--primary);
-  border-color: var(--primary);
+  background-color: var(--theme-primary);
+  border-color: var(--theme-primary);
   color: var(--primary-inverse);
-  box-shadow: 0 2px 6px rgba(255, 184, 77, 0.4) inset, 0 2px 6px rgba(255, 184, 77, 0.2);
+  box-shadow: 0 2px 6px var(--primary-focus) inset, 0 2px 6px var(--primary-focus);
   transform: translateY(1px);
 }
 
@@ -104,7 +104,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(135deg, rgba(255, 184, 77, 0.08) 0%, transparent 40%);
+  background: linear-gradient(135deg, var(--primary-focus) 0%, transparent 40%);
   opacity: 0;
   transition: opacity 0.3s ease;
   z-index: 1;
@@ -112,9 +112,9 @@
 }
 
 .leftCol:hover {
-  border-color: var(--primary);
+  border-color: var(--theme-primary);
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4), 0 0 20px rgba(255, 184, 77, 0.2);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4), 0 0 20px var(--primary-focus);
 }
 
 .leftCol:hover::before {
@@ -140,7 +140,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(225deg, rgba(255, 184, 77, 0.08) 0%, transparent 40%);
+  background: linear-gradient(225deg, var(--primary-focus) 0%, transparent 40%);
   opacity: 0;
   transition: opacity 0.3s ease;
   z-index: 1;
@@ -148,9 +148,9 @@
 }
 
 .rightCol:hover {
-  border-color: var(--primary);
+  border-color: var(--theme-primary);
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4), 0 0 20px rgba(255, 184, 77, 0.2);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4), 0 0 20px var(--primary-focus);
 }
 
 .rightCol:hover::before {
@@ -193,8 +193,8 @@
 
 .leftCol:hover .dimPic > h3,
 .rightCol:hover .dimPic > h3 {
-  color: var(--primary);
-  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 184, 77, 0.3);
+  color: var(--theme-primary);
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.9), 0 0 8px var(--primary-focus);
   transform: translateY(-2px);
 }
 
@@ -217,11 +217,11 @@
 }
 
 .leftCol:hover {
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4), 0 0 20px rgba(255, 184, 77, 0.2);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4), 0 0 20px var(--primary-focus);
 }
 
 .rightCol:hover {
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4), 0 0 20px rgba(255, 184, 77, 0.2);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4), 0 0 20px var(--primary-focus);
 }
 
 .inLineNav {
@@ -243,7 +243,7 @@ nav {
   position: sticky;
   padding: 0 1em;
   top: 0;
-  background-color: var(--card-background-color);
+  background-color: var(--theme-card-background, #1e2329);
   z-index: 10;
   top: 32px;
 }
@@ -464,8 +464,8 @@ button {
   width: 100%;
   padding: 0.75rem 1rem;
   border-radius: 6px;
-  border: 1px solid var(--primary);
-  background-color: var(--primary);
+  border: 1px solid var(--theme-primary);
+  background-color: var(--theme-primary);
   color: var(--primary-inverse);
   transition: all 0.2s;
   cursor: pointer;
@@ -474,24 +474,24 @@ button {
 }
 
 button:hover {
-  background-color: rgba(255, 184, 77, 0.9);
-  border-color: var(--primary);
+  background-color: var(--primary-hover);
+  border-color: var(--theme-primary);
   color: var(--primary-inverse);
   transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(255, 184, 77, 0.3);
+  box-shadow: 0 4px 8px var(--primary-focus);
 }
 
 button.secondary {
-  background-color: rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 0.8);
-  border-color: rgba(255, 255, 255, 0.3);
+  background-color: var(--theme-secondary);
+  color: var(--secondary-inverse);
+  border-color: var(--theme-border);
 }
 
 button.secondary:hover {
-  background-color: var(--primary);
-  color: var(--primary-inverse);
-  border-color: var(--primary);
-  box-shadow: 0 4px 8px rgba(255, 184, 77, 0.3);
+  background-color: var(--secondary-hover);
+  color: var(--secondary-inverse);
+  border-color: var(--secondary-hover);
+  box-shadow: 0 4px 8px var(--secondary-focus);
 }
 
 .disclaimerButtons {
@@ -512,9 +512,9 @@ button.secondary:hover {
 }
 
 .disclaimerAcceptButtons button {
-  background-color: var(--primary);
+  background-color: var(--theme-primary);
   color: var(--primary-inverse);
-  border: 1px solid var(--primary);
+  border: 1px solid var(--theme-primary);
   font-weight: 600;
   padding: 0.75rem 2rem;
   border-radius: 8px;
@@ -522,9 +522,9 @@ button.secondary:hover {
 }
 
 .disclaimerAcceptButtons button:hover {
-  background-color: rgba(255, 184, 77, 0.9);
+  background-color: var(--primary-hover);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(255, 184, 77, 0.3);
+  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
 }
 
 .disclaimerButtons button {
@@ -569,7 +569,7 @@ button.secondary:hover {
 }
 
 .buttonClass {
-  color: var(--primary);
+  color: var(--theme-primary);
 }
 
 .buttonClass:hover {
@@ -581,18 +581,18 @@ button.secondary:hover {
 
 .disclaimerArticles {
   padding-bottom: 1em;
-  border: 1px solid var(--primary);
+  border: 1px solid var(--theme-primary);
   border-radius: 15px;  
 }
 
 .container {
-  border: 1px solid var(--primary);
+  border: 1px solid var(--theme-primary);
   border-radius: 15px;
 }
 
 .modal {
   background: var(--near-black);
-  border: 1px solid var(--primary);
+  border: 1px solid var(--theme-primary);
   border-radius: 12px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
 }
@@ -604,7 +604,7 @@ button.secondary:hover {
 }
 
 .modal article header {
-  color: var(--primary);
+  color: var(--theme-primary);
   font-size: 1.2em;
   font-weight: 600;
   margin-bottom: 2rem;
@@ -620,32 +620,32 @@ button.secondary:hover {
 }
 
 .modal article button:first-of-type {
-  background-color: var(--primary);
+  background-color: var(--theme-primary);
   color: var(--primary-inverse);
-  border: 1px solid var(--primary);
+  border: 1px solid var(--theme-primary);
 }
 
 .modal article button:first-of-type:hover {
-  background-color: rgba(255, 184, 77, 0.9);
+  background-color: var(--primary-hover);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(255, 184, 77, 0.3);
+  box-shadow: 0 4px 12px var(--primary-focus);
 }
 
 .modal article button:last-of-type {
-  background-color: rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background-color: var(--theme-secondary);
+  color: var(--secondary-inverse);
+  border: 1px solid var(--theme-border);
 }
 
 .modal article button:last-of-type:hover {
-  background-color: rgba(255, 255, 255, 0.2);
-  color: white;
+  background-color: var(--secondary-hover);
+  color: var(--secondary-inverse);
 }
 
 /* Friends Panel Styles */
 .friendsPanel {
   padding: 1rem;
-  background: var(--card-background-color);
+  background: var(--theme-card-background, #1e2329);
   border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 12px;
   max-height: 400px;
@@ -682,7 +682,7 @@ button.secondary:hover {
 }
 
 .friendsPanelCloseButton:hover {
-  color: var(--primary);
+  color: var(--theme-primary);
   transform: scale(1.2);
 }
 
@@ -721,9 +721,9 @@ button.secondary:hover {
 }
 
 .friendInviteButton {
-  background-color: var(--primary) !important;
+  background-color: var(--theme-primary) !important;
   color: var(--primary-inverse) !important;
-  border: 1px solid var(--primary) !important;
+  border: 1px solid var(--theme-primary) !important;
   padding: 0.5rem 1rem !important;
   border-radius: 4px !important;
   cursor: pointer !important;
@@ -738,9 +738,9 @@ button.secondary:hover {
 }
 
 .friendInviteButton:hover {
-  background-color: rgba(255, 184, 77, 0.9) !important;
+  background-color: var(--primary-hover) !important;
   transform: translateY(-1px) !important;
-  box-shadow: 0 2px 8px rgba(255, 184, 77, 0.3) !important;
+  box-shadow: 0 2px 8px var(--primary-focus) !important;
 }
 
 .friendsEmptyState {

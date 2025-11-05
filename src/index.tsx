@@ -9,6 +9,7 @@ import { router } from 'routes';
 import { RouterProvider } from 'react-router-dom';
 import CookieConsent from 'components/CookieConsent';
 import { initializeAdSense } from 'utils/adsenseInit';
+import { ThemeProvider } from './themes/ThemeContext';
 
 // Initialize AdSense if user has already consented
 initializeAdSense();
@@ -21,9 +22,11 @@ const root = createRoot(container);
 root.render(
   <StrictMode>
     <CookiesProvider>
-      <Provider store={store}>
-        <RouterProvider router={router} />
-      </Provider>
+      <ThemeProvider>
+        <Provider store={store}>
+          <RouterProvider router={router} />
+        </Provider>
+      </ThemeProvider>
     </CookiesProvider>
   </StrictMode>
 );

@@ -22,7 +22,7 @@
 }
 
 .button {
-  background-color: var(--secondary);
+  background-color: var(--theme-secondary);
   margin-bottom: 0;
   flex-shrink: 0;
 }

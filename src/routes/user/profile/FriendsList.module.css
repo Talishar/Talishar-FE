@@ -3,23 +3,23 @@
   flex-direction: column;
   gap: 1.5rem;
   padding: 1.5rem;
-  background: rgba(0, 0, 0, 0.2);
+  background: var(--theme-section-background, rgba(0, 0, 0, 0.2));
   border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.2));
 }
 
 .title {
   margin: 0 0 1rem 0;
   font-size: 1.3rem;
   font-weight: 600;
-  color: #e0e0e0;
+  color: var(--theme-text, #e0e0e0);
 }
 
 .subtitle {
   margin: 0 0 0.75rem 0;
   font-size: 1rem;
   font-weight: 600;
-  color: #e0e0e0;
+  color: var(--theme-text, #e0e0e0);
 }
 
 .addFriendSection {
@@ -36,22 +36,22 @@
 .searchInput {
   flex: 1;
   padding: 0.75rem;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid var(--theme-form-border, rgba(255, 255, 255, 0.2));
   border-radius: 4px;
-  background: rgba(255, 255, 255, 0.05);
-  color: #e0e0e0;
+  background: var(--theme-form-background, rgba(255, 255, 255, 0.05));
+  color: var(--theme-text, #e0e0e0);
   font-size: 0.95rem;
   transition: border-color 0.2s, background-color 0.2s;
 }
 
 .searchInput::placeholder {
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--theme-text-muted, rgba(255, 255, 255, 0.4));
 }
 
 .searchInput:focus {
   outline: none;
-  border-color: #d4af37;
-  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--theme-primary, #d4af37);
+  background: var(--theme-form-active, rgba(255, 255, 255, 0.08));
 }
 
 .searchResults {
@@ -60,9 +60,9 @@
   gap: 0.5rem;
   max-height: 300px;
   overflow-y: auto;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid var(--theme-form-border, rgba(255, 255, 255, 0.2));
   border-radius: 4px;
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--theme-form-background, rgba(255, 255, 255, 0.05));
 }
 
 .resultsList {
@@ -78,7 +78,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 0.75rem 1rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid var(--theme-border-light, rgba(255, 255, 255, 0.1));
   transition: background-color 0.2s;
 }
 
@@ -87,11 +87,11 @@
 }
 
 .resultItem:hover {
-  background-color: rgba(212, 175, 55, 0.1);
+  background-color: var(--theme-primary-focus, rgba(212, 175, 55, 0.1));
 }
 
 .resultItem span {
-  color: #e0e0e0;
+  color: var(--theme-text, #e0e0e0);
   font-weight: 500;
 }
 
@@ -102,10 +102,10 @@
   width: 2rem;
   height: 2rem;
   padding: 0;
-  background: var(--color-primary, #d4af37);
+  background: var(--theme-primary, #d4af37);
   border: none;
   border-radius: 4px;
-  color: #000;
+  color: var(--theme-primary-inverse, #000);
   cursor: pointer;
   font-size: 1rem;
   transition: background-color 0.2s, transform 0.1s;
@@ -114,7 +114,7 @@
 }
 
 .addButton:hover {
-  background-color: #e8c547;
+  background-color: var(--theme-primary-hover, #e8c547);
   transform: scale(1.05);
 }
 
@@ -123,14 +123,14 @@
 }
 
 .addButtonDisabled {
-  background-color: #888;
-  color: #ccc;
+  background-color: var(--theme-secondary, #888);
+  color: var(--theme-secondary-inverse, #ccc);
   cursor: not-allowed;
   opacity: 0.6;
 }
 
 .addButtonDisabled:hover {
-  background-color: #888;
+  background-color: var(--theme-secondary, #888);
   transform: none;
 }
 
@@ -141,14 +141,14 @@
 .loadingText {
   padding: 1rem;
   text-align: center;
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--theme-text-muted, rgba(255, 255, 255, 0.5));
   font-style: italic;
 }
 
 .noResults {
   padding: 1rem;
   text-align: center;
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--theme-text-muted, rgba(255, 255, 255, 0.5));
   margin-bottom: 0;
 }
 
@@ -166,15 +166,15 @@
 }
 
 .friendsTable thead {
-  background: rgba(0, 0, 0, 0.3);
-  border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+  background: var(--theme-form-background, rgba(0, 0, 0, 0.3));
+  border-bottom: 2px solid var(--theme-border, rgba(255, 255, 255, 0.2));
   border-radius: 10px 10px 0 0;
 }
 
 .friendsTable th {
   padding: 0.6rem 1rem;
   text-align: left;
-  color: #e0e0e0;
+  color: var(--theme-text, #e0e0e0);
   font-weight: 600;
   font-size: 0.9rem;
   white-space: nowrap;
@@ -187,8 +187,8 @@
 
 .friendsTable td {
   padding: 0.5rem 1rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  color: #e0e0e0;
+  border-bottom: 1px solid var(--theme-border-light, rgba(255, 255, 255, 0.1));
+  color: var(--theme-text, #e0e0e0);
   text-align: left;
   vertical-align: middle;
   overflow: hidden;
@@ -207,17 +207,17 @@
 }
 
 .friendsTable tbody tr {
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: var(--theme-form-background, rgba(0, 0, 0, 0.2));
   transition: background-color 0.2s;
   height: 3rem;
 }
 
 .friendsTable tbody tr:nth-child(odd) {
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: var(--theme-form-active, rgba(0, 0, 0, 0.4));
 }
 
 .friendsTable tbody tr:hover {
-  background-color: rgba(212, 175, 55, 0.15);
+  background-color: var(--theme-primary-focus, rgba(212, 175, 55, 0.15));
 }
 
 .deleteColumn {
@@ -235,7 +235,7 @@
   width: 2rem;
   height: 2rem;
   padding: 0;
-  background: #c41e3a;
+  background: var(--theme-danger, #dc3545);
   border: none;
   border-radius: 4px;
   color: white;
@@ -247,7 +247,8 @@
 }
 
 .deleteButton:hover {
-  background-color: #a01830;
+  background-color: var(--theme-danger, #c82333);
+  transform: scale(1.05);
 }
 
 .deleteButton:active {
@@ -261,7 +262,7 @@
   width: 2rem;
   height: 2rem;
   padding: 0;
-  background: #28a745;
+  background: var(--theme-success, #28a745);
   border: none;
   border-radius: 4px;
   color: white;
@@ -273,7 +274,7 @@
 }
 
 .acceptButton:hover {
-  background-color: #218838;
+  background-color: var(--theme-success, #218838);
   transform: scale(1.05);
 }
 
@@ -288,7 +289,7 @@
   width: 2rem;
   height: 2rem;
   padding: 0;
-  background: #dc3545;
+  background: var(--theme-danger, #dc3545);
   border: none;
   border-radius: 4px;
   color: white;
@@ -300,7 +301,7 @@
 }
 
 .rejectButton:hover {
-  background-color: #c82333;
+  background-color: var(--theme-danger, #c82333);
   transform: scale(1.05);
 }
 
@@ -315,7 +316,7 @@
   width: 2rem;
   height: 2rem;
   padding: 0;
-  background: #d4af37;
+  background: var(--theme-primary, #d4af37);
   border: none;
   border-radius: 4px;
   color: #000;
@@ -327,7 +328,7 @@
 }
 
 .editButton:hover {
-  background-color: #e8c547;
+  background-color: var(--theme-primary-hover, #e8c547);
   transform: scale(1.05);
 }
 
@@ -348,7 +349,7 @@
 }
 
 .nickname {
-  color: #888888;
+  color: var(--theme-text-muted, #888888);
   font-style: italic;
   font-weight: 400;
   font-size: 0.95em;
@@ -370,28 +371,28 @@
 }
 
 .modalContent {
-  background: var(--card-background-color);
-  border: 2px solid rgba(255, 255, 255, 0.2);
+  background: var(--theme-card-background, var(--card-background-color));
+  border: 2px solid var(--theme-border, rgba(255, 255, 255, 0.2));
   border-radius: 8px;
   padding: 2rem;
   max-width: 400px;
   width: 90%;
-  color: #e0e0e0;
+  color: var(--theme-text, #e0e0e0);
 }
 
 .modalContent h3 {
   margin: 0 0 1rem 0;
   font-size: 1.2rem;
-  color: #e0e0e0;
+  color: var(--theme-text, #e0e0e0);
 }
 
 .nicknameInput {
   width: 100%;
   padding: 0.75rem;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid var(--theme-form-border, rgba(255, 255, 255, 0.2));
   border-radius: 4px;
-  background: rgba(255, 255, 255, 0.05);
-  color: #e0e0e0;
+  background: var(--theme-form-background, rgba(255, 255, 255, 0.05));
+  color: var(--theme-text, #e0e0e0);
   font-size: 0.95rem;
   margin-bottom: 1.5rem;
   box-sizing: border-box;
@@ -399,13 +400,13 @@
 }
 
 .nicknameInput::placeholder {
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--theme-text-muted, rgba(255, 255, 255, 0.4));
 }
 
 .nicknameInput:focus {
   outline: none;
-  border-color: #d4af37;
-  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--theme-primary, #d4af37);
+  background: var(--theme-form-active, rgba(255, 255, 255, 0.08));
 }
 
 .modalActions {
@@ -419,7 +420,7 @@
   align-items: center;
   justify-content: center;
   padding: 0.6rem 1.2rem;
-  background: #28a745;
+  background: var(--theme-success, #28a745);
   border: none;
   border-radius: 4px;
   color: white;
@@ -429,7 +430,7 @@
 }
 
 .saveButton:hover {
-  background-color: #218838;
+  background-color: var(--theme-success, #218838);
   transform: scale(1.05);
 }
 
@@ -442,17 +443,17 @@
   align-items: center;
   justify-content: center;
   padding: 0.6rem 1.2rem;
-  background: #6c757d;
+  background: var(--theme-secondary, #6c757d);
   border: none;
   border-radius: 4px;
-  color: white;
+  color: var(--theme-secondary-inverse, white);
   cursor: pointer;
   font-weight: 500;
   transition: background-color 0.2s, transform 0.1s;
 }
 
 .cancelButton:hover {
-  background-color: #5a6268;
+  background-color: var(--theme-secondary-hover, #5a6268);
   transform: scale(1.05);
 }
 
@@ -463,7 +464,7 @@
 .emptyText {
   text-align: center;
   padding: 2rem 1rem;
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--theme-text-muted, rgba(255, 255, 255, 0.5));
   font-style: italic;
 }
 

@@ -75,17 +75,17 @@
   width: 3.8dvh;
   height: 3.8vh;
   height: 3.8dvh;
-  border: 1px solid var(--primary);
+  border: 1px solid var(--theme-primary);
   border-radius: 5px;
   display: flex;
   justify-content: center;
   align-items: center;
-  color: var(--primary);
+  color: var(--theme-primary);
   cursor: pointer;
 }
 
 .breakChain:hover {
-  background-color: var(--primary);
+  background-color: var(--theme-primary);
   color: black;
 }
 

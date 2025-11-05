@@ -3,16 +3,16 @@
   flex-direction: column;
   gap: 1.5rem;
   padding: 1.5rem;
-  background: rgba(0, 0, 0, 0.2);
+  background: var(--theme-section-background, rgba(0, 0, 0, 0.2));
   border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.2));
 }
 
 .title {
   margin: 0 0 1rem 0;
   font-size: 1.3rem;
   font-weight: 600;
-  color: #e0e0e0;
+  color: var(--theme-text, #e0e0e0);
 }
 
 .blockUserSection {
@@ -29,22 +29,22 @@
 .searchInput {
   flex: 1;
   padding: 0.75rem;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid var(--theme-form-border, rgba(255, 255, 255, 0.2));
   border-radius: 4px;
-  background: rgba(255, 255, 255, 0.05);
-  color: #e0e0e0;
+  background: var(--theme-form-background, rgba(255, 255, 255, 0.05));
+  color: var(--theme-text, #e0e0e0);
   font-size: 0.95rem;
   transition: border-color 0.2s, background-color 0.2s;
 }
 
 .searchInput::placeholder {
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--theme-text-muted, rgba(255, 255, 255, 0.4));
 }
 
 .searchInput:focus {
   outline: none;
-  border-color: #d4af37;
-  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--theme-primary, #d4af37);
+  background: var(--theme-form-active, rgba(255, 255, 255, 0.08));
 }
 
 .searchResults {
@@ -53,9 +53,9 @@
   gap: 0.5rem;
   max-height: 300px;
   overflow-y: auto;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid var(--theme-form-border, rgba(255, 255, 255, 0.2));
   border-radius: 4px;
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--theme-form-background, rgba(255, 255, 255, 0.05));
 }
 
 .resultsList {
@@ -71,7 +71,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 0.75rem 1rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid var(--theme-border-light, rgba(255, 255, 255, 0.1));
   transition: background-color 0.2s;
 }
 
@@ -80,11 +80,11 @@
 }
 
 .resultItem:hover {
-  background-color: rgba(212, 175, 55, 0.1);
+  background-color: var(--theme-primary-focus, rgba(212, 175, 55, 0.1));
 }
 
 .resultItem span {
-  color: #e0e0e0;
+  color: var(--theme-text, #e0e0e0);
   font-weight: 500;
 }
 
@@ -95,7 +95,7 @@
   width: 2rem;
   height: 2rem;
   padding: 0;
-  background: #c41e3a;
+  background: var(--theme-danger, #c41e3a);
   border: none;
   border-radius: 4px;
   color: #fff;
@@ -107,7 +107,7 @@
 }
 
 .blockButton:hover {
-  background-color: #a01830;
+  background-color: var(--theme-danger, #a01830);
   transform: scale(1.05);
 }
 
@@ -116,14 +116,14 @@
 }
 
 .blockButtonDisabled {
-  background-color: #888;
-  color: #ccc;
+  background-color: var(--theme-secondary, #888);
+  color: var(--theme-secondary-inverse, #ccc);
   cursor: not-allowed;
   opacity: 0.6;
 }
 
 .blockButtonDisabled:hover {
-  background-color: #888;
+  background-color: var(--theme-secondary, #888);
   transform: none;
 }
 
@@ -134,14 +134,14 @@
 .loadingText {
   padding: 1rem;
   text-align: center;
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--theme-text-muted, rgba(255, 255, 255, 0.5));
   font-style: italic;
 }
 
 .noResults {
   padding: 1rem;
   text-align: center;
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--theme-text-muted, rgba(255, 255, 255, 0.5));
   margin-bottom: 0;
 }
 
@@ -159,15 +159,15 @@
 }
 
 .blockedUsersTable thead {
-  background: rgba(0, 0, 0, 0.3);
-  border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+  background: var(--theme-form-background, rgba(0, 0, 0, 0.3));
+  border-bottom: 2px solid var(--theme-border, rgba(255, 255, 255, 0.2));
   border-radius: 10px 10px 0 0;
 }
 
 .blockedUsersTable th {
   padding: 0.6rem 1rem;
   text-align: left;
-  color: #e0e0e0;
+  color: var(--theme-text, #e0e0e0);
   font-weight: 600;
   font-size: 0.9rem;
   white-space: nowrap;
@@ -175,8 +175,8 @@
 
 .blockedUsersTable td {
   padding: 0.5rem 1rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  color: #e0e0e0;
+  border-bottom: 1px solid var(--theme-border-light, rgba(255, 255, 255, 0.1));
+  color: var(--theme-text, #e0e0e0);
   text-align: left;
   vertical-align: middle;
   overflow: hidden;
@@ -195,17 +195,17 @@
 }
 
 .blockedUsersTable tbody tr {
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: var(--theme-form-background, rgba(0, 0, 0, 0.2));
   transition: background-color 0.2s;
   height: 3rem;
 }
 
 .blockedUsersTable tbody tr:nth-child(odd) {
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: var(--theme-form-active, rgba(0, 0, 0, 0.4));
 }
 
 .blockedUsersTable tbody tr:hover {
-  background-color: rgba(212, 175, 55, 0.15);
+  background-color: var(--theme-primary-focus, rgba(212, 175, 55, 0.15));
 }
 
 .deleteColumn {
@@ -223,7 +223,7 @@
   width: 2rem;
   height: 2rem;
   padding: 0;
-  background: #c41e3a;
+  background: var(--theme-danger);
   border: none;
   border-radius: 4px;
   color: white;

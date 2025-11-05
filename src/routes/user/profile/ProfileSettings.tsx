@@ -23,6 +23,7 @@ import { VisualSlider, VisualPreset } from '../../game/components/elements/optio
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import { CosmeticsSection } from '../../game/components/elements/optionsMenu/OptionsSettings/CosmeticsSection';
 import { useGetCosmeticsQuery } from 'features/api/apiSlice';
+import ThemeToggle from 'themes/ThemeToggle';
 
 const ProfileSettings = () => {
   const settingsData = useAppSelector(getSettingsEntity);
@@ -319,6 +320,10 @@ const ProfileSettings = () => {
 
       <div className={styles.settingsColumn}>
         <h3 className={styles.title}>Visual Settings</h3>
+        
+        <Fieldset legend="Theme">
+          <ThemeToggle />
+        </Fieldset>
         
         <Fieldset legend="Display">
           <VisualSlider

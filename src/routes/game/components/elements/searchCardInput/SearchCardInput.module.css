@@ -29,7 +29,7 @@
 }
 
 .focused {
-  border-color: var(--primary);
+  border-color: var(--theme-primary)
 }
 
 .menuList {

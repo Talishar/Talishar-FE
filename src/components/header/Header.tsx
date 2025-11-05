@@ -32,9 +32,9 @@ const Header = () => {
           position="top-left"
           toastOptions={{
             style: {
-              background: 'var(--dark-red)',
+              background: 'var(--theme-tertiary)',
               color: 'var(--white)',
-              border: '1px solid var(--primary)',
+              border: '1px solid var(--theme-tertiary-focus)',
               padding: '0.5rem',
               wordBreak: 'break-word',
               maxWidth: '100vh', 

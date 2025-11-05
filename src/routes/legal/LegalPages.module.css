@@ -1,6 +1,6 @@
 .legalContainer {
   width: 100%;
-  background: linear-gradient(135deg, rgba(30, 35, 41, 0.95) 0%, rgba(30, 35, 41, 0.95) 100%);
+  background: var(--theme-section-background, linear-gradient(135deg, rgba(30, 35, 41, 0.95) 0%, rgba(30, 35, 41, 0.95) 100%));
   min-height: calc(100vh - 100px);
   padding: 3em 1em;
 }

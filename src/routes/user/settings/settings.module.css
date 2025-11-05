@@ -23,9 +23,9 @@
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.2));
   border-radius: 10px;
-  background: linear-gradient(135deg, rgba(30, 35, 41, 0.8) 0%, rgba(30, 35, 41, 0.85) 100%);
+  background: var(--theme-section-background, linear-gradient(135deg, rgba(30, 35, 41, 0.8) 0%, rgba(30, 35, 41, 0.85) 100%));
   padding: 1rem;
 }
 
@@ -52,14 +52,14 @@
 
 .disclaimer {
   font-size: 0.85em;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--theme-text-muted, rgba(255, 255, 255, 0.6));
   margin-top: 2rem;
   padding-top: 1rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 1px solid var(--theme-border-light, rgba(255, 255, 255, 0.1));
 }
 
 .disclaimer a {
-  color: var(--primary);
+  color: var(--theme-primary);
   text-decoration: none;
 }
 
