@@ -132,11 +132,11 @@ export const LoginForm = () => {
               {errors.rememberMe?.message}
             </div>
           )}
-          <Link to={'./password-recovery'}>
+{/*           <Link to={'./password-recovery'}>
             <p className={styles.forgottenPassword}>
               <small>Forgotten Password?</small>
             </p>
-          </Link>
+          </Link> */}
           <button
             type="submit"
             disabled={isSubmitting}
