@@ -7,6 +7,23 @@ const CommunityContent: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(true);
 
+  // Helper function to clean titles by removing HTML tags and URLs
+  const cleanTitle = (title: string): string => {
+    // Remove URLs
+    let cleaned = title.replace(/https?:\/\/\S+/gi, '').trim();
+    // Remove HTML tags and decode HTML entities
+    cleaned = cleaned.replace(/<[^>]*>/g, '');
+    cleaned = cleaned
+      .replace(/&lt;/g, '<')
+      .replace(/&gt;/g, '>')
+      .replace(/&amp;/g, '&')
+      .replace(/&quot;/g, '"')
+      .replace(/&#039;/g, "'");
+    // Clean up extra whitespace
+    cleaned = cleaned.replace(/\s+/g, ' ').trim();
+    return cleaned;
+  };
+
   useEffect(() => {
     const loadContent = async () => {
       setLoading(true);
@@ -136,7 +153,7 @@ const CommunityContent: React.FC = () => {
 
             {/* Video Info */}
             <div className={styles.videoInfo}>
-              <h3>{currentVideo.title}</h3>
+              <h3>{cleanTitle(currentVideo.title)}</h3>
               <p className={styles.videoMeta}>
                 <span className={styles.author}>By {currentVideo.author}</span>
                 <span className={styles.timestamp}>
