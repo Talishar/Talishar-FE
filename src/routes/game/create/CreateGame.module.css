@@ -5,6 +5,8 @@
   margin: 1.5em auto;
   margin-bottom: 0;
   background: var(--theme-section-background, linear-gradient(135deg, rgba(30, 35, 41, 0.8) 0%, rgba(30, 35, 41, 0.85) 100%));
+  scroll-margin-top: 100px;
+  margin-top: 20px;
 }
 
 @media (max-width: 768px) {

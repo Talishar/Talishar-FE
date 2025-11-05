@@ -16,8 +16,10 @@
 }
 
 .formContainer {
+  scroll-margin-top: 100px;
+  margin-top: 20px;
   width: 460px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.2));
   border-radius: 10px;
 }
 
