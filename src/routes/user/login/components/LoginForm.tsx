@@ -137,6 +137,10 @@ export const LoginForm = () => {
               <small>Forgotten Password?</small>
             </p>
           </Link> */}
+          <p className={styles.fieldError}>
+            <br />
+              <small>⚠️ Due to some recent issues on the website, your account might have been deleted. If you cannot login, try signing up again. Thank you for your comprehension</small>
+            </p>
           <button
             type="submit"
             disabled={isSubmitting}
