@@ -61,6 +61,13 @@
   border-radius: 10px;
   order: 3;
   background: linear-gradient(135deg, rgba(30, 35, 41, 0.8) 0%, rgba(30, 35, 41, 0.85) 100%);
+  max-height: 200vh;
+}
+
+.newsWrapper {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 }
 
 
@@ -294,7 +301,7 @@ h3 {
 
 /* News Container Scrolling */
 .newsContent {
-  max-height: 70vh;
+  flex: 1;
   overflow-y: auto;
   background: transparent;
   border-radius: 0;

@@ -27,7 +27,7 @@ const News = () => {
   }, []);
 
   return (
-    <div>
+    <div className={styles.newsWrapper}>
       {/* Featured Section */}
 {/*       <h4 className={styles.headlines}> ❄️ Silver Age now available on Talishar! ❄️</h4>
        <a href="https://fabtcg.com/products/product/silver-age/" target="_blank" rel="noopener noreferrer">
