@@ -596,7 +596,7 @@ const InProgressGameList = ({ gameList, name, isFriendsSection, friendUsernames 
     };
   }, []);
 
-  const limitedGameList = isMobile ? gameList.slice(0, 10) : gameList.slice(0, 15);
+  const limitedGameList = isMobile ? gameList.slice(0, 8) : gameList.slice(0, 10);
 
   if (limitedGameList.length === 0) {
     return null;
