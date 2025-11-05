@@ -54,6 +54,7 @@ const Lobby = () => {
   const [showFriendsPanel, setShowFriendsPanel] = useState(false);
   const [width, height] = useWindowDimensions();
   const [isWideScreen, setIsWideScreen] = useState<boolean>(false);
+  const [isDeckValid, setIsDeckValid] = useState(true);
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [hasPlayedJoinSound, setHasPlayedJoinSound] = useState(false);
@@ -569,7 +570,7 @@ const Lobby = () => {
               </>
             )}
             {(activeTab === 'chat' || isWideScreen) && (
-              <div>
+              <div className={!isDeckValid ? styles.chatAreaContainerRestrained : styles.chatAreaContainer}>
                 {showFriendsPanel ? (
                   // Friends Panel
                   <div className={styles.friendsPanel}>
@@ -646,6 +647,7 @@ const Lobby = () => {
                 handleLeave={handleLeave}
                 isWidescreen={isWideScreen}
                 onSendInviteClick={() => setShowFriendsPanel(!showFriendsPanel)}
+                onIsValidChange={setIsDeckValid}
               />
             ) : null}
           </div>

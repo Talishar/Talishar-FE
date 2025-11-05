@@ -53,6 +53,33 @@
   transform: translateY(1px);
 }
 
+.chatAreaContainerRestrained {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  overflow-y: auto;
+  padding-bottom: 2em;
+}
+
+.chatAreaContainer {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  overflow-y: auto;
+}
+
+@media (min-width: 1200px) {
+  .chatAreaContainerRestrained {
+    grid-area: chat;
+    min-height: 0;
+  }
+
+  .chatAreaContainer {
+    grid-area: chat;
+    min-height: 0;
+  }
+}
+
 .patreonLink {
   font-size: 0.65em;
   padding: 0;
@@ -725,8 +752,4 @@ button.secondary:hover {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-}
-
-.spacer {
-  height: var(--sticky-footer-height, 80px);
 }

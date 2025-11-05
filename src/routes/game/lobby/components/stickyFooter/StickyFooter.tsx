@@ -13,6 +13,7 @@ export type DeckSize = {
   isWidescreen: boolean;
   handleLeave: (e: React.MouseEvent<HTMLButtonElement>) => void;
   onSendInviteClick?: () => void;
+  onIsValidChange?: (isValid: boolean) => void;
 };
 
 const StickyFooter = ({
@@ -20,7 +21,8 @@ const StickyFooter = ({
   submitSideboard,
   isWidescreen,
   handleLeave,
-  onSendInviteClick
+  onSendInviteClick,
+  onIsValidChange
 }: DeckSize) => {
   const { errors, values, isValid } = useFormikContext<DeckResponse>();
   const footerRef = useRef<HTMLDivElement>(null);
@@ -54,6 +56,11 @@ const StickyFooter = ({
       window.removeEventListener('resize', updateFooterHeight);
     };
   }, []);
+
+  // Call the callback when isValid changes
+  useEffect(() => {
+    onIsValidChange?.(isValid);
+  }, [isValid, onIsValidChange]);
 
   const handleClipboardCopy = () => {
     navigator.clipboard.writeText(
