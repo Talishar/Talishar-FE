@@ -24,6 +24,7 @@ const InactivityWarning = () => {
   const { level, secondsInactive, secondsUntilOpponentInactivePrompt } = useInactivityWarning();
   const hasPriority = useAppSelector((state: RootState) => state.game.hasPriority);
   const gameInfo = useAppSelector((state: RootState) => state.game.gameInfo);
+  const turnPhase = useAppSelector((state: RootState) => state.game.turnPhase?.turnPhase);
   const inactivityWarning = useAppSelector(
     (state: RootState) => state.game.inactivityWarning
   );
@@ -51,8 +52,8 @@ const InactivityWarning = () => {
     </div>
   );
 
-  // Don't show warnings for spectators or players without priority
-  if (!hasPriority || gameInfo.playerID === 3) {
+  // Don't show warnings for spectators, players without priority, or when game is over
+  if (!hasPriority || gameInfo.playerID === 3 || turnPhase === "OVER") {
     return debugDisplay;
   }
 

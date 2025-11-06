@@ -110,6 +110,11 @@ export const useInactivityWarning = (): InactivityWarningState => {
       return;
     }
 
+    // Don't track inactivity when the game is over
+    if (turnPhase === "OVER") {
+      return;
+    }
+
     // Check inactivity every second
     intervalRef.current = setInterval(() => {
       const state = getInactivityLevel(
