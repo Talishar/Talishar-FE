@@ -40,7 +40,29 @@
     <meta name="keywords" content="Flesh and Blood TCG, online card game, Talishar, FAB, trading card game, digital TCG, browser game, free to play" />
     <meta name="author" content="Talishar Community" />
     <meta name="robots" content="index, follow" />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://static.cloudflareinsights.com https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data: https:; connect-src 'self' https:; frame-src 'self' https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net; object-src 'none';" />
+    <meta http-equiv="Content-Security-Policy"
+      content="
+        default-src 'self';
+        script-src 'self' 'unsafe-inline' 'unsafe-eval'
+          https://static.cloudflareinsights.com
+          https://pagead2.googlesyndication.com
+          https://googleads.g.doubleclick.net
+          https://cdn.jsdelivr.net
+          https://www.googletagmanager.com
+          https://www.google-analytics.com;
+        style-src 'self' 'unsafe-inline';
+        img-src 'self' data: https:;
+        font-src 'self' data: https:;
+        connect-src 'self' https:;
+        frame-src 'self'
+          https://pagead2.googlesyndication.com
+          https://googleads.g.doubleclick.net
+          https://tpc.googlesyndication.com
+          https://www.youtube.com
+          https://www.youtube-nocookie.com;
+        object-src 'none';
+      "
+    />
     <base href="/" />
     <link rel="manifest" href="/manifest.json" />
     <link rel="canonical" href="https://talishar.net/" />
