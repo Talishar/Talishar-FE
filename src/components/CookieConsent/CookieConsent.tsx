@@ -31,16 +31,6 @@ const CookieConsent: React.FC<CookieConsentProps> = ({ onConsent }) => {
     localStorage.setItem('cookieConsentDate', new Date().toISOString());
     setIsVisible(false);
     
-    // Dispatch storage event to notify other components in the same tab
-    window.dispatchEvent(
-      new StorageEvent('storage', {
-        key: 'cookieConsent',
-        newValue: 'accepted',
-        oldValue: null,
-        storageArea: localStorage,
-      })
-    );
-    
     // Initialize AdSense after consent
     initializeAdSense();
     
@@ -51,17 +41,6 @@ const CookieConsent: React.FC<CookieConsentProps> = ({ onConsent }) => {
     localStorage.setItem('cookieConsent', 'declined');
     localStorage.setItem('cookieConsentDate', new Date().toISOString());
     setIsVisible(false);
-    
-    // Dispatch storage event to notify other components in the same tab
-    window.dispatchEvent(
-      new StorageEvent('storage', {
-        key: 'cookieConsent',
-        newValue: 'declined',
-        oldValue: null,
-        storageArea: localStorage,
-      })
-    );
-    
     if (onConsent) onConsent(false);
   };
 
