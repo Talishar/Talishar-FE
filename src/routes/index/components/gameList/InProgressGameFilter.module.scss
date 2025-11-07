@@ -131,9 +131,15 @@
   }
 }
 
+.buttonContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  padding: 0.75em 1em;
+}
+
 .resetButton {
-  width: calc(100% - 2em);
-  margin: 0.75em 1em;
+  width: 100%;
   padding: 0.5em;
   background-color: var(--theme-tertiary, #8b5a2b);
   border: 1px solid var(--theme-form-border, #797c80);
@@ -143,6 +149,30 @@
   font-size: 0.85em;
   font-weight: 500;
   transition: all 0.2s ease;
+  margin-bottom: 0;
+
+  &:hover {
+    background-color: var(--theme-primary, #d4af37);
+    border-color: var(--theme-primary, #d4af37);
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+.deselectButton {
+  width: 100%;
+  padding: 0.5em;
+  background-color: var(--theme-tertiary, #8b5a2b);
+  border: 1px solid var(--theme-form-border, #797c80);
+  border-radius: 4px;
+  color: var(--theme-text, #f4eded);
+  cursor: pointer;
+  font-size: 0.85em;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  margin-bottom: 0;
 
   &:hover {
     background-color: var(--theme-primary, #d4af37);
