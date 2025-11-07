@@ -53,6 +53,24 @@ const GoogleAdSense: React.FC<GoogleAdSenseProps> = ({
       if (window.adsbygoogle) {
         console.log('AdSense: Pushing ad to adsbygoogle array');
         window.adsbygoogle.push({});
+        
+        // Check immediately if this is a real Google implementation or just our fallback array
+        // The real Google implementation has specific properties/methods
+        const isRealGoogleAdSense = window.adsbygoogle && (
+          typeof window.adsbygoogle.push === 'function' &&
+          window.adsbygoogle.length !== undefined &&
+          // Check if the push actually did something (Google adds event listeners)
+          document.readyState === 'complete' || 
+          // Or check if script loaded successfully
+          (window as any).adsbygoogleLoaded === true
+        );
+        
+        if (!isRealGoogleAdSense) {
+          console.warn('⚠️ AdSense: Array exists but appears to be our fallback, not Google\'s');
+          // Show fallback immediately
+          setTimeout(() => setAdBlocked(true), 100);
+          return;
+        }
       } else {
         // Script not loaded, show fallback immediately
         console.warn('AdSense: Script not loaded yet, waiting...');
@@ -91,17 +109,14 @@ const GoogleAdSense: React.FC<GoogleAdSenseProps> = ({
         console.log(`   Has iframe: ${!!hasIframe}, Has mock ad: ${!!hasMockAd}`);
         
         if (hasIframe) {
-          console.log('AdSense: Real ad rendered successfully!');
+          console.log('✅ AdSense: Real ad rendered successfully!');
         } else if (hasMockAd) {
-          console.log('AdSense: Mock ad rendered for development!');
+          console.log('✅ AdSense: Mock ad rendered for development!');
         } else {
           // No iframe or mock means ad failed to load
-          console.warn('AdSense: Ad container exists but no content. Ad may still be loading...');
-          // In production, don't mark as blocked - ads can take time or may not be approved
-          // Only mark as blocked in development (mock)
-          if (import.meta.env.DEV) {
-            setAdBlocked(true);
-          }
+          console.warn('⚠️ AdSense: Ad container exists but no content. Showing fallback...');
+          // In production, show fallback if no ad appeared
+          setAdBlocked(true);
         }
       } else {
         // Container doesn't exist, mark as blocked

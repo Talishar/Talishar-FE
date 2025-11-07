@@ -87,8 +87,11 @@ export const initializeAdSense = () => {
   // Load the AdSense script dynamically
   const script = document.createElement('script');
   script.async = true;
-  script.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8442966023291783';
+  script.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js';
   script.crossOrigin = 'anonymous';
+  
+  // Add the client ID as an attribute instead of query param
+  script.setAttribute('data-ad-client', 'ca-pub-8442966023291783');
   
   script.onload = () => {
     console.log('✅ Google AdSense script loaded successfully');
