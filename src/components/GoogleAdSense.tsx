@@ -34,16 +34,24 @@ const GoogleAdSense: React.FC<GoogleAdSenseProps> = ({
   useEffect(() => {
     // Don't load ads if user hasn't consented or declined personalized ads
     if (hasConsent === null || hasConsent === false) {
+      console.log('AdSense: Not loading - consent status:', hasConsent);
       return;
     }
 
     // Try to push ad to adsbygoogle
     try {
       if (window.adsbygoogle) {
+        console.log('AdSense: Pushing ad to adsbygoogle array');
         window.adsbygoogle.push({});
       } else {
         // Script not loaded, show fallback immediately
-        const timer = setTimeout(() => setAdBlocked(true), 500);
+        console.warn('AdSense: Script not loaded yet, waiting...');
+        const timer = setTimeout(() => {
+          if (!window.adsbygoogle) {
+            console.warn('AdSense: Script still not available after 500ms');
+            setAdBlocked(true);
+          }
+        }, 500);
         return () => clearTimeout(timer);
       }
     } catch (error) {
@@ -56,7 +64,7 @@ const GoogleAdSense: React.FC<GoogleAdSenseProps> = ({
     const checkAdBlocker = setTimeout(() => {
       // If still no adsbygoogle, it's blocked or failed to load
       if (!window.adsbygoogle) {
-        console.warn('Google AdSense script not available. Ad blocker or network issue detected.');
+        console.warn('AdSense: Script not available after 3s. Likely blocked or failed to load.');
         setAdBlocked(true);
         return;
       }
@@ -66,13 +74,16 @@ const GoogleAdSense: React.FC<GoogleAdSenseProps> = ({
       if (adContainer) {
         // Check for iframe - this means ad successfully rendered
         const hasIframe = adContainer.querySelector('iframe');
-        if (!hasIframe) {
+        if (hasIframe) {
+          console.log('AdSense: Ad rendered successfully!');
+        } else {
           // No iframe means ad failed to load
-          console.warn('AdSense ad failed to render. Ad blocker or content restriction detected.');
+          console.warn('AdSense: Ad container exists but no iframe. Likely content restriction or approval issue.');
           setAdBlocked(true);
         }
       } else {
         // Container doesn't exist, mark as blocked
+        console.warn('AdSense: Ad container not found in DOM');
         setAdBlocked(true);
       }
     }, 3000);
