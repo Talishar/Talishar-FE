@@ -57,7 +57,6 @@ export const initializeAdSense = () => {
   
   // Only initialize AdSense if user has explicitly accepted
   if (consentStatus !== 'accepted') {
-    console.log('🔒 AdSense: User has not accepted cookies');
     return;
   }
 
@@ -66,81 +65,24 @@ export const initializeAdSense = () => {
     if (!window.adsbygoogle) {
       (window as any).adsbygoogle = createMockAdSense();
     }
-    console.log('🚀 Mock AdSense initialized for local development.');
+    console.log('Mock AdSense initialized for local development.');
     return;
   }
 
-  // Production: Load Google AdSense script dynamically
-  console.log('📡 Production mode: Loading Google AdSense script...');
-
-  // Pre-initialize array if not already done
+  // Script is loaded from index.html in production, just ensure adsbygoogle array exists
   if (!window.adsbygoogle) {
     (window as any).adsbygoogle = [];
   }
 
-  // Check if script is already loaded
-  if ((window as any).adsbygoogleLoaded) {
-    console.log('✅ AdSense script already loaded');
-    return;
-  }
-
-  // Strategy: Load via local proxy first (bypasses CORS), then fall back to direct Google CDN
-  
-  const loadDirectGoogle = () => {
-    console.log('� Loading Google AdSense directly from CDN...');
-    const script = document.createElement('script');
-    script.async = true;
-    script.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js';
-    script.setAttribute('data-ad-client', 'ca-pub-8442966023291783');
-    
-    script.onload = () => {
-      console.log('✅ Google AdSense loaded successfully from CDN');
-      (window as any).adsbygoogleLoaded = true;
-      
-      if (window.adsbygoogle && Array.isArray(window.adsbygoogle)) {
-        try {
-          window.adsbygoogle.push({});
-        } catch (e) {
-          console.log('Ad processing queued');
-        }
-      }
-    };
-
-    script.onerror = () => {
-      console.warn('❌ Failed to load from Google CDN');
-      (window as any).adsbygoogleLoaded = false;
-    };
-
-    document.head.appendChild(script);
-  };
-
-  // Primary approach: Load via local proxy (same-domain, no CORS issues)
-  console.log('� Loading AdSense via local proxy at /adsbygoogle.js...');
-  const proxyScript = document.createElement('script');
-  proxyScript.async = true;
-  proxyScript.src = '/adsbygoogle.js';
-  
-  proxyScript.onload = () => {
-    console.log('✅ AdSense proxy loaded successfully');
-    (window as any).adsbygoogleLoaded = true;
-  };
-
-  proxyScript.onerror = () => {
-    console.warn('❌ Failed to load AdSense proxy, falling back to direct Google CDN...');
-    (window as any).adsbygoogleLoaded = false;
-    // Fallback to direct Google after brief delay
-    setTimeout(loadDirectGoogle, 500);
-  };
-
-  // Set timeout as additional failsafe
-  setTimeout(() => {
-    if (!(window as any).adsbygoogleLoaded && !document.querySelector('script[src="/adsbygoogle.js"]')) {
-      console.warn('⏱️ Proxy load timeout, attempting direct Google CDN...');
-      loadDirectGoogle();
+  // Push any pending ads
+  try {
+    if (window.adsbygoogle) {
+      window.adsbygoogle.push({});
     }
-  }, 3000);
-
-  document.head.appendChild(proxyScript);
+    console.log('Google AdSense initialized successfully.');
+  } catch (error) {
+    console.warn('AdSense initialization error:', error);
+  }
 };
 
 // Function to check if AdSense should be loaded

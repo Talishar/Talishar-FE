@@ -40,38 +40,15 @@
     <meta name="keywords" content="Flesh and Blood TCG, online card game, Talishar, FAB, trading card game, digital TCG, browser game, free to play" />
     <meta name="author" content="Talishar Community" />
     <meta name="robots" content="index, follow" />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data: https:; connect-src 'self' https:; frame-src 'self' https://www.youtube.com https://youtube.com https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net; object-src 'none';" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://static.cloudflareinsights.com https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data: https:; connect-src 'self' https:; frame-src 'self' https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net; object-src 'none';" />
     <base href="/" />
     <link rel="manifest" href="/manifest.json" />
     <link rel="canonical" href="https://talishar.net/" />
     <title>Talishar - Free Flesh & Blood Online Platform</title>
-    <!-- Google AdSense - Inlined stub to bypass CORS issues -->
-    <script>
-      // Pre-initialize adsbygoogle array before Google's script loads
-      window.adsbygoogle = window.adsbygoogle || [];
-      
-      // Log that stub is loaded
-      console.log('Stub: adsbygoogle array initialized in index.html');
-      
-      // Try loading Google's script directly - it may work on this request
-      (function() {
-        if (!document.querySelector('script[src*="pagead2.googlesyndication.com"]')) {
-          var script = document.createElement('script');
-          script.async = true;
-          script.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8442966023291783';
-          script.setAttribute('data-ad-client', 'ca-pub-8442966023291783');
-          script.onload = function() {
-            console.log('Direct Google AdSense script loaded');
-            window.adsbygoogleLoaded = true;
-          };
-          script.onerror = function() {
-            console.warn('Direct Google script failed - CORS issue');
-          };
-          document.head.appendChild(script);
-        }
-      })();
-    </script>
-
+    <!-- Google AdSense - Loaded dynamically after cookie consent -->
+    <meta name="google-adsense-account" content="ca-pub-8442966023291783">
+    <!-- Google AdSense Script -->
+    
     <!-- Schema.org Structured Data - Organization -->
     <script type="application/ld+json">
     {
@@ -176,40 +153,6 @@
         var el = document.getElementById('cardDetail');
         el.style.display = 'none';
       }
-    </script>
-    
-    <!-- Fallback AdSense script - loads after page loads if consent is given -->
-    <script>
-      window.addEventListener('DOMContentLoaded', function() {
-        var checkAndLoadAdSense = setInterval(function() {
-          if (window.adsbygoogleLoaded || window.adsbygoogle?.push) {
-            clearInterval(checkAndLoadAdSense);
-            return;
-          }
-          
-          var consent = localStorage.getItem('cookieConsent');
-          if (consent === 'accepted' && !window.adsbygoogleLoaded) {
-            // Try to load AdSense script
-            if (!document.querySelector('script[src*="adsbygoogle"]')) {
-              console.log('🔄 Attempting fallback AdSense script load...');
-              var script = document.createElement('script');
-              script.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js';
-              script.setAttribute('data-ad-client', 'ca-pub-8442966023291783');
-              script.onload = function() {
-                console.log('✅ Fallback AdSense script loaded');
-                window.adsbygoogleLoaded = true;
-              };
-              script.onerror = function() {
-                console.warn('❌ Fallback AdSense script failed to load');
-              };
-              document.head.appendChild(script);
-            }
-          }
-        }, 500);
-        
-        // Clear interval after 30 seconds
-        setTimeout(function() { clearInterval(checkAndLoadAdSense); }, 30000);
-      });
     </script>
   </body>
 </html>

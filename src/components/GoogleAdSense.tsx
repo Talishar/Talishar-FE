@@ -27,83 +27,82 @@ const GoogleAdSense: React.FC<GoogleAdSenseProps> = ({
 
   // Check for cookie consent on mount and when it changes
   useEffect(() => {
-    const updateConsent = () => {
-      const consentStatus = localStorage.getItem('cookieConsent');
-      const accepted = consentStatus === 'accepted';
-      console.log('🔍 Checking consent status:', consentStatus, '- Accepted:', accepted);
-      setHasConsent(accepted);
+    const consentStatus = localStorage.getItem('cookieConsent');
+    setHasConsent(consentStatus === 'accepted');
+
+    // Listen for storage changes (when consent is set in another component)
+    const handleStorageChange = () => {
+      const updatedConsent = localStorage.getItem('cookieConsent');
+      setHasConsent(updatedConsent === 'accepted');
+      console.log('✅ Cookie consent changed:', updatedConsent);
     };
 
-    // Initial check
-    updateConsent();
-
-    // Listen for storage changes (when consent is set in another tab or programmatically dispatched)
-    window.addEventListener('storage', updateConsent);
-    
-    return () => window.removeEventListener('storage', updateConsent);
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
 
   useEffect(() => {
     // Don't load ads if user hasn't consented or declined personalized ads
-    if (hasConsent === null) {
-      console.log('📋 AdSense: Waiting for consent decision (consent is null)');
+    if (hasConsent === null || hasConsent === false) {
+      console.log('AdSense: Not loading - consent status:', hasConsent);
       return;
     }
-
-    if (hasConsent === false) {
-      console.log('❌ AdSense: Not loading - user declined personalized ads');
-      return;
-    }
-
-    console.log('✅ AdSense: User has consented, attempting to load ads');
-    console.log('   window.adsbygoogle exists:', !!window.adsbygoogle);
-    console.log('   window.adsbygoogleLoaded:', (window as any).adsbygoogleLoaded);
 
     // Try to push ad to adsbygoogle
-    if (!window.adsbygoogle) {
-      console.warn('⚠️ AdSense: window.adsbygoogle not found - script may not have loaded yet');
-    } else {
-      try {
-        console.log('📤 AdSense: Pushing ad to adsbygoogle array');
+    try {
+      if (window.adsbygoogle) {
+        console.log('AdSense: Pushing ad to adsbygoogle array');
         window.adsbygoogle.push({});
-      } catch (error) {
-        console.warn('⚠️ AdSense: Error pushing to array:', error);
+      } else {
+        // Script not loaded, show fallback immediately
+        console.warn('AdSense: Script not loaded yet, waiting...');
+        const timer = setTimeout(() => {
+          if (!window.adsbygoogle) {
+            console.warn('AdSense: Script still not available after 500ms');
+            setAdBlocked(true);
+          }
+        }, 500);
+        return () => clearTimeout(timer);
       }
+    } catch (error) {
+      console.warn('AdSense error (may be due to ad blocker or CORS restrictions):', error);
+      // On error, show fallback
+      setAdBlocked(true);
     }
 
-    // Check with a timeout to see if ad loaded
-    const checkAdLoadTimer = setTimeout(() => {
-      console.log('🔍 Checking if ad loaded after 3 seconds...');
-      console.log('   window.adsbygoogle exists:', !!window.adsbygoogle);
-      console.log('   window.adsbygoogleLoaded:', (window as any).adsbygoogleLoaded);
-
-      const adContainer = document.querySelector(`.adsbygoogle[data-ad-slot="${slot}"]`);
-      
-      if (!adContainer) {
-        console.warn(`❌ AdSense: Ad container not found for slot ${slot}`);
+    // Also check with a longer timeout in case script is slow to load
+    const checkAdBlocker = setTimeout(() => {
+      // If still no adsbygoogle, it's blocked or failed to load
+      if (!window.adsbygoogle) {
+        console.warn('AdSense: Script not available after 3s. Likely blocked or failed to load.');
         setAdBlocked(true);
         return;
       }
 
-      console.log(`✅ AdSense: Ad container found for slot ${slot}`);
-
-      // Check for iframe (real ad) or mock ad indicator
-      const hasIframe = !!adContainer.querySelector('iframe');
-      const hasMockAd = !!adContainer.querySelector('[data-mock-ad]');
-
-      console.log(`   📊 Status - Has iframe: ${hasIframe}, Has mock ad: ${hasMockAd}`);
-
-      if (hasIframe) {
-        console.log('🎉 AdSense: Real ad rendered successfully!');
-      } else if (hasMockAd) {
-        console.log('🎨 AdSense: Mock ad rendered for development!');
+      // Check if ad container exists and has content (mock or real)
+      const adContainer = document.querySelector(`.adsbygoogle[data-ad-slot="${slot}"]`);
+      if (adContainer) {
+        // Check for iframe (real ad) or mock ad indicator
+        const hasIframe = adContainer.querySelector('iframe');
+        const hasMockAd = adContainer.querySelector('[data-mock-ad]');
+        
+        if (hasIframe) {
+          console.log('AdSense: Real ad rendered successfully!');
+        } else if (hasMockAd) {
+          console.log('AdSense: Mock ad rendered for development!');
+        } else {
+          // No iframe or mock means ad failed to load
+          console.warn('AdSense: Ad container exists but no content. Likely content restriction or approval issue.');
+          setAdBlocked(true);
+        }
       } else {
-        console.warn('⚠️ AdSense: Ad container exists but no content rendered. Showing fallback...');
+        // Container doesn't exist, mark as blocked
+        console.warn('AdSense: Ad container not found in DOM');
         setAdBlocked(true);
       }
     }, 3000);
 
-    return () => clearTimeout(checkAdLoadTimer);
+    return () => clearTimeout(checkAdBlocker);
   }, [slot, hasConsent]);
 
   // Hide ads for Patreon members
