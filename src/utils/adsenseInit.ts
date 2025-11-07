@@ -70,27 +70,47 @@ export const initializeAdSense = () => {
     return;
   }
 
-  // Production: Script is loaded from index.html
-  console.log('📡 Production mode: Checking for Google AdSense script...');
-  console.log('   window.adsbygoogle exists:', !!window.adsbygoogle);
-  console.log('   window.adsbygoogle is array:', Array.isArray(window.adsbygoogle));
-  
+  // Production: Load Google AdSense script dynamically
+  console.log('📡 Production mode: Loading Google AdSense script...');
+
+  // Pre-initialize array if not already done
   if (!window.adsbygoogle) {
-    console.log('   ⚠️ Creating adsbygoogle array (script may not have loaded yet)');
     (window as any).adsbygoogle = [];
   }
 
-  // Push any pending ads
-  try {
-    if (window.adsbygoogle && Array.isArray(window.adsbygoogle)) {
-      window.adsbygoogle.push({});
-      console.log('✅ Google AdSense initialized successfully.');
-    } else {
-      console.warn('❌ window.adsbygoogle is not an array');
-    }
-  } catch (error) {
-    console.warn('❌ AdSense initialization error:', error);
+  // Check if script is already loaded
+  if ((window as any).adsbygoogleLoaded) {
+    console.log('✅ AdSense script already loaded');
+    return;
   }
+
+  // Load the AdSense script dynamically
+  const script = document.createElement('script');
+  script.async = true;
+  script.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8442966023291783';
+  script.crossOrigin = 'anonymous';
+  
+  script.onload = () => {
+    console.log('✅ Google AdSense script loaded successfully');
+    (window as any).adsbygoogleLoaded = true;
+    
+    // Re-process any ads that were already rendered
+    if (window.adsbygoogle && Array.isArray(window.adsbygoogle)) {
+      try {
+        window.adsbygoogle.push({});
+      } catch (e) {
+        console.log('Ad processing queued for next opportunity');
+      }
+    }
+  };
+
+  script.onerror = () => {
+    console.warn('❌ Failed to load Google AdSense script (likely CORS blocked)');
+    (window as any).adsbygoogleLoaded = false;
+    // Leave array empty so fallback (Patreon link) shows
+  };
+
+  document.head.appendChild(script);
 };
 
 // Function to check if AdSense should be loaded
