@@ -32,7 +32,6 @@ export const fetchDiscordReleaseNotes = async (maxMessages: number = 5): Promise
     const url = isProduction 
       ? `https://legacy.talishar.net/game/GetDiscordReleaseNotes.php?maxMessages=${maxMessages}`
       : `/api/GetDiscordReleaseNotes.php?maxMessages=${maxMessages}`;
-    console.log('Fetching Discord notes from:', url);
     
     const response = await fetch(url);
     
@@ -42,7 +41,6 @@ export const fetchDiscordReleaseNotes = async (maxMessages: number = 5): Promise
     }
     
     const data = await response.json();
-    console.log('Discord response:', data);
     return data.messages || [];
   } catch (error) {
     console.error('Error fetching Discord messages:', error);
