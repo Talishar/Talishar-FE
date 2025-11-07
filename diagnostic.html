@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AdSense Diagnostic Tool</title>
+    <style>
+        body {
+            font-family: monospace;
+            background: #1a1a1a;
+            color: #00ff00;
+            padding: 20px;
+            margin: 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .test-result {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #00ff00;
+            border-radius: 4px;
+        }
+        .success { background: rgba(0, 255, 0, 0.1); }
+        .error { background: rgba(255, 0, 0, 0.1); color: #ff0000; }
+        .warning { background: rgba(255, 255, 0, 0.1); color: #ffff00; }
+        h1 { color: #00ff00; }
+        button {
+            background: #00ff00;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            margin: 10px 0;
+            cursor: pointer;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        button:hover { background: #00cc00; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 AdSense Diagnostic Tool</h1>
+        <button onclick="runAllTests()">Run All Tests</button>
+        <button onclick="testAdSenseLoad()">Test AdSense Script Load</button>
+        <button onclick="clearResults()">Clear Results</button>
+        
+        <div id="results"></div>
+    </div>
+
+    <script>
+        const resultsDiv = document.getElementById('results');
+
+        function log(message, type = 'info') {
+            const div = document.createElement('div');
+            div.className = `test-result ${type}`;
+            div.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            resultsDiv.appendChild(div);
+            console.log(message);
+        }
+
+        function clearResults() {
+            resultsDiv.innerHTML = '';
+        }
+
+        async function testAdSenseLoad() {
+            log('Starting AdSense script load test...', 'warning');
+            
+            try {
+                const response = await fetch('https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js', {
+                    method: 'HEAD',
+                    mode: 'no-cors'
+                });
+                log(`✅ AdSense server reachable (status: ${response.status})`, 'success');
+            } catch (error) {
+                log(`❌ Failed to reach AdSense server: ${error.message}`, 'error');
+            }
+
+            // Try to load the script
+            const script = document.createElement('script');
+            script.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js';
+            script.setAttribute('data-ad-client', 'ca-pub-8442966023291783');
+
+            script.onload = function() {
+                log('✅ AdSense script loaded successfully!', 'success');
+                log('window.adsbygoogle exists: ' + (typeof window.adsbygoogle), 'success');
+            };
+
+            script.onerror = function() {
+                log('❌ Failed to load AdSense script', 'error');
+            };
+
+            script.onabort = function() {
+                log('⚠️ AdSense script load was aborted', 'warning');
+            };
+
+            document.head.appendChild(script);
+
+            // Set timeout to check after 5 seconds
+            setTimeout(() => {
+                log(`window.adsbygoogle status after 5s: ${typeof window.adsbygoogle}`, 'info');
+            }, 5000);
+        }
+
+        async function runAllTests() {
+            clearResults();
+            log('=== Starting Comprehensive Diagnostic ===', 'warning');
+            
+            // Test 1: Browser capabilities
+            log('Browser: ' + navigator.userAgent.substring(0, 50) + '...', 'info');
+            log('Location: ' + window.location.href, 'info');
+            
+            // Test 2: LocalStorage
+            try {
+                localStorage.setItem('test', 'test');
+                localStorage.removeItem('test');
+                log('✅ LocalStorage working', 'success');
+            } catch (e) {
+                log('❌ LocalStorage error: ' + e.message, 'error');
+            }
+
+            // Test 3: Cookie consent
+            const consent = localStorage.getItem('cookieConsent');
+            log(`Cookie consent status: ${consent || 'not set'}`, 'info');
+
+            // Test 4: Network connectivity
+            try {
+                const response = await fetch('https://www.google.com', { mode: 'no-cors' });
+                log('✅ External HTTPS requests working (Google)', 'success');
+            } catch (error) {
+                log(`❌ Cannot reach Google: ${error.message}`, 'error');
+            }
+
+            // Test 5: AdSense server
+            try {
+                const response = await fetch('https://pagead2.googlesyndication.com/', { mode: 'no-cors' });
+                log('✅ AdSense domain reachable', 'success');
+            } catch (error) {
+                log(`❌ Cannot reach AdSense domain: ${error.message}`, 'error');
+            }
+
+            // Test 6: Try loading script
+            log('Attempting to load AdSense script...', 'warning');
+            await testAdSenseLoad();
+
+            // Test 7: Check CSP
+            const cspMeta = document.querySelector('meta[http-equiv="Content-Security-Policy"]');
+            if (cspMeta) {
+                log('CSP found: ' + cspMeta.getAttribute('content').substring(0, 100) + '...', 'info');
+            } else {
+                log('⚠️ No CSP meta tag found', 'warning');
+            }
+
+            log('=== Diagnostic Complete ===', 'success');
+        }
+
+        // Auto-run on load
+        window.addEventListener('load', function() {
+            log('Page loaded. Ready to run tests.', 'success');
+        });
+    </script>
+</body>
+</html>
