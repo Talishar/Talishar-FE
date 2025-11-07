@@ -25,10 +25,20 @@ const GoogleAdSense: React.FC<GoogleAdSenseProps> = ({
   const [adBlocked, setAdBlocked] = useState(false);
   const [hasConsent, setHasConsent] = useState<boolean | null>(null);
 
-  // Check for cookie consent on mount
+  // Check for cookie consent on mount and when it changes
   useEffect(() => {
     const consentStatus = localStorage.getItem('cookieConsent');
     setHasConsent(consentStatus === 'accepted');
+
+    // Listen for storage changes (when consent is set in another component)
+    const handleStorageChange = () => {
+      const updatedConsent = localStorage.getItem('cookieConsent');
+      setHasConsent(updatedConsent === 'accepted');
+      console.log('✅ Cookie consent changed:', updatedConsent);
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
 
   useEffect(() => {
