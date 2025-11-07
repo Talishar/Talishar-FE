@@ -635,6 +635,9 @@ export const gameSlice = createSlice({
       state.gameInfo.altArts =
         action.payload.gameInfo.altArts ?? state.gameInfo.altArts;
 
+      state.gameInfo.isPrivate =
+        action.payload.gameInfo.isPrivate ?? state.gameInfo.isPrivate;
+
       state.preventPassPrompt = action.payload.preventPassPrompt;
 
       // Don't reset inactivity warning on every game state update

@@ -48,12 +48,14 @@ const InactivityWarning = () => {
         <div>LastActionTime: <strong>{inactivityWarning?.lastActionTime}</strong></div>
         <div>FirstWarningShown: <strong>{inactivityWarning?.firstWarningShown ? '✅' : '❌'}</strong></div>
         <div>SecondWarningShown: <strong>{inactivityWarning?.secondWarningShown ? '✅' : '❌'}</strong></div>
+        <div>IsGamePrivate: <strong>{gameInfo.isPrivate ? '✅' : '❌'}</strong></div>
+        <div>IsGameOver: <strong>{turnPhase === 'OVER' ? '✅' : '❌'}</strong></div>
       </div>
     </div>
   );
 
-  // Don't show warnings for spectators, players without priority, or when game is over
-  if (!hasPriority || gameInfo.playerID === 3 || turnPhase === "OVER") {
+  // Don't show warnings for spectators, players without priority, when game is over, or in private games
+  if (!hasPriority || gameInfo.playerID === 3 || turnPhase === "OVER" || gameInfo.isPrivate) {
     return debugDisplay;
   }
 
