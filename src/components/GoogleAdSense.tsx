@@ -56,10 +56,12 @@ const GoogleAdSense: React.FC<GoogleAdSenseProps> = ({
     }
 
     console.log('✅ AdSense: User has consented, attempting to load ads');
+    console.log('   window.adsbygoogle exists:', !!window.adsbygoogle);
+    console.log('   window.adsbygoogleLoaded:', (window as any).adsbygoogleLoaded);
 
     // Try to push ad to adsbygoogle
     if (!window.adsbygoogle) {
-      console.warn('⚠️ AdSense: window.adsbygoogle not found - script may not have loaded');
+      console.warn('⚠️ AdSense: window.adsbygoogle not found - script may not have loaded yet');
     } else {
       try {
         console.log('📤 AdSense: Pushing ad to adsbygoogle array');
@@ -71,6 +73,10 @@ const GoogleAdSense: React.FC<GoogleAdSenseProps> = ({
 
     // Check with a timeout to see if ad loaded
     const checkAdLoadTimer = setTimeout(() => {
+      console.log('🔍 Checking if ad loaded after 3 seconds...');
+      console.log('   window.adsbygoogle exists:', !!window.adsbygoogle);
+      console.log('   window.adsbygoogleLoaded:', (window as any).adsbygoogleLoaded);
+
       const adContainer = document.querySelector(`.adsbygoogle[data-ad-slot="${slot}"]`);
       
       if (!adContainer) {

@@ -88,7 +88,9 @@ export const initializeAdSense = () => {
   const script = document.createElement('script');
   script.async = true;
   script.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js';
-  script.crossOrigin = 'anonymous';
+  
+  // Don't use crossOrigin='anonymous' - let the browser handle it without CORS restriction
+  // Google's AdSense script doesn't require CORS for basic loading
   
   // Add the client ID as an attribute instead of query param
   script.setAttribute('data-ad-client', 'ca-pub-8442966023291783');
@@ -108,10 +110,17 @@ export const initializeAdSense = () => {
   };
 
   script.onerror = () => {
-    console.warn('❌ Failed to load Google AdSense script (likely CORS blocked)');
+    console.warn('❌ Failed to load Google AdSense script');
+    console.warn('   This is typically due to CORS restrictions or ad blocker');
+    console.warn('   The site will display a Patreon support link instead');
     (window as any).adsbygoogleLoaded = false;
     // Leave array empty so fallback (Patreon link) shows
   };
+
+  // Add error handler for network issues
+  script.addEventListener('error', () => {
+    console.warn('❌ Network error loading AdSense script');
+  });
 
   document.head.appendChild(script);
 };
