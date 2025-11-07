@@ -494,6 +494,11 @@ button.secondary:hover {
   box-shadow: 0 4px 8px var(--secondary-focus);
 }
 
+.disclaimerHeader {
+  background: var(--theme-section-background);
+  margin-bottom: 1em;
+}
+
 .disclaimerButtons {
   margin: 1rem auto;
   width: 60%;
@@ -582,12 +587,14 @@ button.secondary:hover {
 .disclaimerArticles {
   padding-bottom: 1em;
   border: 1px solid var(--theme-primary);
-  border-radius: 15px;  
+  border-radius: 15px;
+  background: var(--theme-section-background);
 }
 
 .container {
   border: 1px solid var(--theme-primary);
   border-radius: 15px;
+  background: var(--theme-section-background);
 }
 
 .modal {

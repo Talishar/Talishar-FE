@@ -353,7 +353,7 @@ const Lobby = () => {
           <>
             <dialog open={needToDoDisclaimer}>
               <article className={styles.disclaimerArticles}>
-                <header style={{ marginBottom: '1em' }}>
+                <header className={styles.disclaimerHeader}>
                   ⚠️ Open Format Disclaimer
                 </header>
                 <p style={{ marginBottom: '1em' }}>
