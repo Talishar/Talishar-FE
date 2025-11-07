@@ -44,24 +44,16 @@ const GoogleAdSense: React.FC<GoogleAdSenseProps> = ({
   useEffect(() => {
     // Don't load ads if user hasn't consented or declined personalized ads
     if (hasConsent === null || hasConsent === false) {
-      console.log('AdSense: Not loading - consent status:', hasConsent);
       return;
     }
 
     // Try to push ad to adsbygoogle
     try {
       if (window.adsbygoogle) {
-        console.log('AdSense: Pushing ad to adsbygoogle array');
         window.adsbygoogle.push({});
       } else {
         // Script not loaded, show fallback immediately
-        console.warn('AdSense: Script not loaded yet, waiting...');
-        const timer = setTimeout(() => {
-          if (!window.adsbygoogle) {
-            console.warn('AdSense: Script still not available after 500ms');
-            setAdBlocked(true);
-          }
-        }, 500);
+        const timer = setTimeout(() => setAdBlocked(true), 500);
         return () => clearTimeout(timer);
       }
     } catch (error) {
@@ -74,7 +66,7 @@ const GoogleAdSense: React.FC<GoogleAdSenseProps> = ({
     const checkAdBlocker = setTimeout(() => {
       // If still no adsbygoogle, it's blocked or failed to load
       if (!window.adsbygoogle) {
-        console.warn('AdSense: Script not available after 3s. Likely blocked or failed to load.');
+        console.warn('Google AdSense script not available. Ad blocker or network issue detected.');
         setAdBlocked(true);
         return;
       }
@@ -84,20 +76,15 @@ const GoogleAdSense: React.FC<GoogleAdSenseProps> = ({
       if (adContainer) {
         // Check for iframe (real ad) or mock ad indicator
         const hasIframe = adContainer.querySelector('iframe');
-        const hasMockAd = adContainer.querySelector('[data-mock-ad]');
-        
         if (hasIframe) {
-          console.log('AdSense: Real ad rendered successfully!');
-        } else if (hasMockAd) {
-          console.log('AdSense: Mock ad rendered for development!');
+          console.log('AdSense: Ad rendered successfully!');
         } else {
-          // No iframe or mock means ad failed to load
-          console.warn('AdSense: Ad container exists but no content. Likely content restriction or approval issue.');
+          // No iframe means ad failed to load
+          console.warn('AdSense: Ad container exists but no iframe. Likely content restriction or approval issue.');
           setAdBlocked(true);
         }
       } else {
         // Container doesn't exist, mark as blocked
-        console.warn('AdSense: Ad container not found in DOM');
         setAdBlocked(true);
       }
     }, 3000);
