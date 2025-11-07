@@ -7,6 +7,7 @@ export default interface GameStaticInfo {
   roguelikeGameID?: number;
   altArts?: AltArt[];
   isRoguelike?: boolean;
+  isOpponentAI?: boolean;
 }
 
 export interface AltArt {

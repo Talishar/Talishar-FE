@@ -49,13 +49,14 @@ const InactivityWarning = () => {
         <div>FirstWarningShown: <strong>{inactivityWarning?.firstWarningShown ? '✅' : '❌'}</strong></div>
         <div>SecondWarningShown: <strong>{inactivityWarning?.secondWarningShown ? '✅' : '❌'}</strong></div>
         <div>IsGamePrivate: <strong>{gameInfo.isPrivate ? '✅' : '❌'}</strong></div>
+        <div>IsOpponentAI: <strong>{gameInfo.isOpponentAI ? '✅' : '❌'}</strong></div>
         <div>IsGameOver: <strong>{turnPhase === 'OVER' ? '✅' : '❌'}</strong></div>
       </div>
     </div>
   );
 
-  // Don't show warnings for spectators, players without priority, when game is over, or in private games
-  if (!hasPriority || gameInfo.playerID === 3 || turnPhase === "OVER" || gameInfo.isPrivate) {
+  // Don't show warnings for spectators, players without priority, when game is over, is private or against AI
+  if (!hasPriority || gameInfo.playerID === 3 || turnPhase === "OVER" || gameInfo.isPrivate || gameInfo.isOpponentAI) {
     return debugDisplay;
   }
 

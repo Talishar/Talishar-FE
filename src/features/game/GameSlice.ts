@@ -638,6 +638,9 @@ export const gameSlice = createSlice({
       state.gameInfo.isPrivate =
         action.payload.gameInfo.isPrivate ?? state.gameInfo.isPrivate;
 
+      state.gameInfo.isOpponentAI =
+        action.payload.gameInfo.isOpponentAI ?? state.gameInfo.isOpponentAI;
+
       state.preventPassPrompt = action.payload.preventPassPrompt;
 
       // Don't reset inactivity warning on every game state update

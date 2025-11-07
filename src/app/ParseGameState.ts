@@ -442,5 +442,8 @@ export default function ParseGameState(input: any) {
   // game visibility (private or public)
   result.gameInfo.isPrivate = input.isPrivate ?? false;
 
+  // opponent AI status (from initialLoad)
+  result.gameInfo.isOpponentAI = input.initialLoad?.isOpponentAI ?? false;
+
   return result;
 }
