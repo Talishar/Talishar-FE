@@ -47,9 +47,16 @@
     <title>Talishar - Free Flesh & Blood Online Platform</title>
     <!-- Google AdSense - Loaded dynamically after cookie consent -->
     <meta name="google-adsense-account" content="ca-pub-8442966023291783">
-    <!-- Google AdSense Script -->
+    <!-- Google AdSense Script - Pre-initialize array -->
+    <script>
+      // Pre-initialize the adsbygoogle array before the script loads
+      (window.adsbygoogle = window.adsbygoogle || []);
+      console.log('📡 Pre-initialized window.adsbygoogle array');
+    </script>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8442966023291783"
-     crossorigin="anonymous"></script>
+     crossorigin="anonymous"
+     onerror="console.error('❌ Failed to load AdSense script'); window.adsbygoogle = window.adsbygoogle || [];">
+    </script>
 
     <!-- Schema.org Structured Data - Organization -->
     <script type="application/ld+json">

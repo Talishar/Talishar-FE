@@ -97,7 +97,11 @@ const GoogleAdSense: React.FC<GoogleAdSenseProps> = ({
         } else {
           // No iframe or mock means ad failed to load
           console.warn('AdSense: Ad container exists but no content. Ad may still be loading...');
-          // Don't mark as blocked - ads take time to render
+          // In production, don't mark as blocked - ads can take time or may not be approved
+          // Only mark as blocked in development (mock)
+          if (import.meta.env.DEV) {
+            setAdBlocked(true);
+          }
         }
       } else {
         // Container doesn't exist, mark as blocked
