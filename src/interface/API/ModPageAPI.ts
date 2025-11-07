@@ -34,3 +34,16 @@ export interface ModPageDataResponse {
   bannedIPs: string[];
   recentAccounts: string[];
 }
+
+export interface SearchUsernamesRequest {
+  searchQuery: string;
+}
+
+export interface UserSearchResult {
+  username: string;
+  email: string;
+}
+
+export interface SearchUsernamesResponse {
+  users: UserSearchResult[];
+}

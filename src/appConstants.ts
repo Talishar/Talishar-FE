@@ -299,6 +299,7 @@ export const URL_END_POINT = {
   SUBMIT_LOBBY_INPUT: 'APIs/SubmitLobbyInput.php',
   BLOCK_USER: 'include/BlockUser.php',
   GET_MOD_PAGE_DATA: 'APIs/GetModPageData.php',
+  SEARCH_USERNAMES: 'APIs/SearchUsernames.php',
   BAN_PLAYER: 'BanPlayer.php',
   CLOSE_GAME: 'CloseGame.php',
   FRIEND_LIST: 'APIs/FriendListAPI.php',

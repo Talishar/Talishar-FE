@@ -41,7 +41,9 @@ import {
   BanPlayerByIPRequest,
   BanPlayerByNameRequest,
   CloseGameRequest,
-  DeleteUsernameRequest
+  DeleteUsernameRequest,
+  SearchUsernamesRequest,
+  SearchUsernamesResponse
 } from 'interface/API/ModPageAPI';
 import { FriendListAPIResponse } from 'interface/API/FriendListAPI.php';
 import {
@@ -469,6 +471,15 @@ export const apiSlice = createApi({
         };
       }
     }),
+    searchUsernames: builder.query<SearchUsernamesResponse, string>({
+      query: (searchQuery) => {
+        return {
+          url: `${URL_END_POINT.SEARCH_USERNAMES}?q=${encodeURIComponent(searchQuery)}`,
+          method: 'GET',
+          responseHandler: parseResponse
+        };
+      }
+    }),
     getFriendsList: builder.query<FriendListAPIResponse, void>({
       query: () => {
         return {
@@ -752,6 +763,7 @@ export const {
   useBanPlayerByNameMutation,
   useDeleteUsernameMutation,
   useCloseGameMutation,
+  useSearchUsernamesQuery,
   useGetFriendsListQuery,
   useAddFriendMutation,
   useRemoveFriendMutation,

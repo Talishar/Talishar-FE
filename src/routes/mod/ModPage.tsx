@@ -8,6 +8,7 @@ import {
   useDeleteUsernameMutation
 } from 'features/api/apiSlice';
 import UsernameModeration from './UsernameModeration';
+import DeleteUsernameAutocomplete from './DeleteUsernameAutocomplete';
 
 const ModPage: React.FC = () => {
   const [ipToBan, setIpToBan] = useState('');
@@ -15,6 +16,7 @@ const ModPage: React.FC = () => {
   const [gameToClose, setGameToClose] = useState('');
   const [playerToBan, setPlayerToBan] = useState('');
   const [usernameToDelete, setUsernameToDelete] = useState('');
+  const [selectedUserEmail, setSelectedUserEmail] = useState<string | null>(null);
 
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
@@ -82,10 +84,15 @@ const ModPage: React.FC = () => {
     e.preventDefault();
     setSuccessMessage(null);
 
+    if (!usernameToDelete.trim()) {
+      return;
+    }
+
     try {
       await deleteUsername({ usernameToDelete }).unwrap();
       setSuccessMessage('Username deleted successfully from database');
       setUsernameToDelete('');
+      setSelectedUserEmail(null);
     } catch (err: any) {
       console.error('Failed to delete username:', err);
       // Error will be shown via toast from RTK Query error handler
@@ -154,14 +161,15 @@ const ModPage: React.FC = () => {
             <form onSubmit={handleDeleteUsername} className={styles.form}>
               <h2>Delete Username from Database</h2>
               <label htmlFor="usernameToDelete">Username to delete:</label>
-              <input
-                type="text"
-                id="usernameToDelete"
+              <DeleteUsernameAutocomplete
                 value={usernameToDelete}
-                onChange={(e) => setUsernameToDelete(e.target.value)}
-                required
+                onChange={(newValue) => setUsernameToDelete(newValue)}
+                onSelect={(username, email) => {
+                  setUsernameToDelete(username);
+                  setSelectedUserEmail(email);
+                }}
               />
-              <button type="submit" disabled={isDeletingUsername}>
+              <button type="submit" disabled={isDeletingUsername || !usernameToDelete.trim()}>
                 {isDeletingUsername ? 'Deleting...' : 'Delete Username'}
               </button>
             </form>
