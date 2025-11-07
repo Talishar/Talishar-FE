@@ -81,10 +81,14 @@ const GoogleAdSense: React.FC<GoogleAdSenseProps> = ({
 
       // Check if ad container exists and has content (mock or real)
       const adContainer = document.querySelector(`.adsbygoogle[data-ad-slot="${slot}"]`);
+      console.log(`📦 Ad container for slot ${slot}:`, adContainer ? 'Found ✅' : 'Not found ❌');
+      
       if (adContainer) {
         // Check for iframe (real ad) or mock ad indicator
         const hasIframe = adContainer.querySelector('iframe');
         const hasMockAd = adContainer.querySelector('[data-mock-ad]');
+        
+        console.log(`   Has iframe: ${!!hasIframe}, Has mock ad: ${!!hasMockAd}`);
         
         if (hasIframe) {
           console.log('AdSense: Real ad rendered successfully!');
@@ -92,8 +96,8 @@ const GoogleAdSense: React.FC<GoogleAdSenseProps> = ({
           console.log('AdSense: Mock ad rendered for development!');
         } else {
           // No iframe or mock means ad failed to load
-          console.warn('AdSense: Ad container exists but no content. Likely content restriction or approval issue.');
-          setAdBlocked(true);
+          console.warn('AdSense: Ad container exists but no content. Ad may still be loading...');
+          // Don't mark as blocked - ads take time to render
         }
       } else {
         // Container doesn't exist, mark as blocked

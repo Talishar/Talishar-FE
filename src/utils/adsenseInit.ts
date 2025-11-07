@@ -57,6 +57,7 @@ export const initializeAdSense = () => {
   
   // Only initialize AdSense if user has explicitly accepted
   if (consentStatus !== 'accepted') {
+    console.log('🔒 AdSense: User has not accepted cookies');
     return;
   }
 
@@ -65,23 +66,30 @@ export const initializeAdSense = () => {
     if (!window.adsbygoogle) {
       (window as any).adsbygoogle = createMockAdSense();
     }
-    console.log('Mock AdSense initialized for local development.');
+    console.log('🚀 Mock AdSense initialized for local development.');
     return;
   }
 
-  // Script is loaded from index.html in production, just ensure adsbygoogle array exists
+  // Production: Script is loaded from index.html
+  console.log('📡 Production mode: Checking for Google AdSense script...');
+  console.log('   window.adsbygoogle exists:', !!window.adsbygoogle);
+  console.log('   window.adsbygoogle is array:', Array.isArray(window.adsbygoogle));
+  
   if (!window.adsbygoogle) {
+    console.log('   ⚠️ Creating adsbygoogle array (script may not have loaded yet)');
     (window as any).adsbygoogle = [];
   }
 
   // Push any pending ads
   try {
-    if (window.adsbygoogle) {
+    if (window.adsbygoogle && Array.isArray(window.adsbygoogle)) {
       window.adsbygoogle.push({});
+      console.log('✅ Google AdSense initialized successfully.');
+    } else {
+      console.warn('❌ window.adsbygoogle is not an array');
     }
-    console.log('Google AdSense initialized successfully.');
   } catch (error) {
-    console.warn('AdSense initialization error:', error);
+    console.warn('❌ AdSense initialization error:', error);
   }
 };
 
