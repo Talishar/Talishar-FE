@@ -45,8 +45,32 @@
     <link rel="manifest" href="/manifest.json" />
     <link rel="canonical" href="https://talishar.net/" />
     <title>Talishar - Free Flesh & Blood Online Platform</title>
-    <!-- Google AdSense - Loaded dynamically after cookie consent -->
-    <meta name="google-adsense-account" content="ca-pub-8442966023291783">
+    <!-- Google AdSense - Inlined stub to bypass CORS issues -->
+    <script>
+      // Pre-initialize adsbygoogle array before Google's script loads
+      window.adsbygoogle = window.adsbygoogle || [];
+      
+      // Log that stub is loaded
+      console.log('Stub: adsbygoogle array initialized in index.html');
+      
+      // Try loading Google's script directly - it may work on this request
+      (function() {
+        if (!document.querySelector('script[src*="pagead2.googlesyndication.com"]')) {
+          var script = document.createElement('script');
+          script.async = true;
+          script.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8442966023291783';
+          script.setAttribute('data-ad-client', 'ca-pub-8442966023291783');
+          script.onload = function() {
+            console.log('Direct Google AdSense script loaded');
+            window.adsbygoogleLoaded = true;
+          };
+          script.onerror = function() {
+            console.warn('Direct Google script failed - CORS issue');
+          };
+          document.head.appendChild(script);
+        }
+      })();
+    </script>
 
     <!-- Schema.org Structured Data - Organization -->
     <script type="application/ld+json">
