@@ -309,7 +309,7 @@ const JoinGame = () => {
         </button>
         {/* Google AdSense Ad */}
         <div style={{ marginTop: '20px' }}>
-          <GoogleAdSense slot="2328544815" format="auto" />
+          <GoogleAdSense slot="1377353396" format="auto" />
         </div>
       </article>
     </main>
