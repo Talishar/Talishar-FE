@@ -73,6 +73,7 @@ $primary-700: #f9a91e;
   // Overlays
   --theme-near-black: rgba(0, 0, 0, 0.85);
   --theme-overlay: rgba(0, 0, 0, 0.7);
+  --modal-overlay-background-color: rgba(0, 0, 0, 0.7);
   
   // Legacy variables for backward compatibility
   --snow: var(--theme-text);
