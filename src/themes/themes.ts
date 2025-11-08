@@ -391,65 +391,65 @@ export const themes: Theme[] = [
   },
   {
     name: 'Emerald Green',
-    id: 'green',
+    id: 'emerald-Green',
     colors: {
-      background: 'radial-gradient(transparent, #0a150d)',
+      background: 'radial-gradient(transparent, #0d1410)',
       backgroundTexture: "url('./img/backgrounds/dark_bg_texture.webp')",
-      cardBackground: '#151f1a',
-      sectionBackground: 'linear-gradient(135deg, rgba(21, 31, 26, 0.85) 0%, rgba(12, 18, 15, 0.95) 100%)',
-      sectionBackgroundTransparent: 'rgba(21, 31, 26, 0.85)',
+      cardBackground: '#1a2120',
+      sectionBackground: 'linear-gradient(135deg, rgba(26, 33, 32, 0.85) 0%, rgba(13, 20, 16, 0.95) 100%)',
+      sectionBackgroundTransparent: 'rgba(26, 33, 32, 0.85)',
       
-      text: '#e0e8e4',
-      textSecondary: '#d0d8d4',
-      textMuted: 'rgba(224, 232, 228, 0.6)',
-      color: '#e0e8e4',
+      text: '#d8e5df',
+      textSecondary: '#c8d5cf',
+      textMuted: 'rgba(216, 229, 223, 0.6)',
+      color: '#d8e5df',
       
-      h1Color: '#f0f8f4',
-      h2Color: '#e0e8e4',
-      h3Color: '#d0d8d4',
-      h4Color: '#5fd3a5',
-      h5Color: '#45c991',
-      h6Color: '#2fb76d',
+      h1Color: '#eef5f0',
+      h2Color: '#d8e5df',
+      h3Color: '#c8d5cf',
+      h4Color: '#c89968',
+      h5Color: '#b8895a',
+      h6Color: '#a8794c',
       
       primary: '#34d356',
-      primaryInverse: '#0a150d',
+      primaryInverse: '#0d1410',
       primaryHover: '#52e070',
       primaryFocus: 'rgba(52, 211, 86, 0.125)',
       
-      secondary: '#2a3f36',
-      secondaryHover: '#3a4f46',
-      secondaryInverse: '#f0f8f4',
-      secondaryFocus: 'rgba(42, 63, 54, 0.125)',
+      secondary: '#3a4548',
+      secondaryHover: '#4a5558',
+      secondaryInverse: '#eef5f0',
+      secondaryFocus: 'rgba(58, 69, 72, 0.125)',
       
-      tertiary: '#1a2f26',
-      tertiaryHover: '#2a3f36',
+      tertiary: '#2a3035',
+      tertiaryHover: '#3a4548',
       
-      contrast: '#e0e8e4',
-      contrastHover: '#f0f8f4',
-      contrastInverse: '#0a150d',
-      contrastFocus: 'rgba(224, 232, 228, 0.125)',
+      contrast: '#d8e5df',
+      contrastHover: '#eef5f0',
+      contrastInverse: '#0d1410',
+      contrastFocus: 'rgba(216, 229, 223, 0.125)',
       
-      border: 'rgba(201, 162, 39, 0.3)',
-      borderLight: 'rgba(201, 162, 39, 0.15)',
-      mutedBorderColor: '#1a2f26',
-      mutedColor: '#6ec89a',
-      formBackground: '#1f2f28',
-      formBorder: '#2a3f36',
-      formActive: '#1a2f26',
+      border: 'rgba(46, 168, 118, 0.3)',
+      borderLight: 'rgba(46, 168, 118, 0.15)',
+      mutedBorderColor: '#2a3035',
+      mutedColor: '#8a9ca0',
+      formBackground: '#232b2a',
+      formBorder: '#3a4548',
+      formActive: '#2a3035',
       
       // Dropdown colors
-      dropdownBackground: '#1f2f28',
-      dropdownBorder: '#2a3f36',
-      dropdownColor: '#e0e8e4',
-      dropdownHoverBackground: 'rgba(201, 162, 39, 0.15)',
+      dropdownBackground: '#232b2a',
+      dropdownBorder: '#3a4548',
+      dropdownColor: '#d8e5df',
+      dropdownHoverBackground: 'rgba(46, 168, 118, 0.15)',
       
       alarm: '#f43f5e',
       success: '#22c55e',
       warning: '#f59e0b',
       danger: '#dc2626',
       
-      nearBlack: 'rgba(10, 21, 13, 0.9)',
-      overlay: 'rgba(10, 21, 13, 0.8)',
+      nearBlack: 'rgba(13, 20, 16, 0.9)',
+      overlay: 'rgba(13, 20, 16, 0.8)',
     }
   },
   {
@@ -516,7 +516,7 @@ export const themes: Theme[] = [
     }
   },
   {
-    name: 'Bronze Brown & Gold',
+    name: 'Bronze & Gold',
     id: 'bronze',
     colors: {
       background: 'radial-gradient(transparent, #15100a)',
@@ -702,6 +702,132 @@ export const themes: Theme[] = [
       
       nearBlack: 'rgba(10, 14, 18, 0.9)',
       overlay: 'rgba(10, 14, 18, 0.8)',
+    }
+  },
+  {
+    name: 'Sapphire & Copper',
+    id: 'sapphire-copper',
+    colors: {
+      background: 'radial-gradient(transparent, #0a0f1a)',
+      backgroundTexture: "url('./img/backgrounds/dark_bg_texture.webp')",
+      cardBackground: '#131d2a',
+      sectionBackground: 'linear-gradient(135deg, rgba(19, 29, 42, 0.85) 0%, rgba(10, 15, 26, 0.95) 100%)',
+      sectionBackgroundTransparent: 'rgba(19, 29, 42, 0.85)',
+      
+      text: '#d9e2ed',
+      textSecondary: '#c9d2dd',
+      textMuted: 'rgba(217, 226, 237, 0.6)',
+      color: '#d9e2ed',
+      
+      h1Color: '#eff5ff',
+      h2Color: '#d9e2ed',
+      h3Color: '#c9d2dd',
+      h4Color: '#d4944a',
+      h5Color: '#c4843c',
+      h6Color: '#b4742e',
+      
+      primary: '#2563eb',
+      primaryInverse: '#0a0f1a',
+      primaryHover: '#3b82f6',
+      primaryFocus: 'rgba(37, 99, 235, 0.125)',
+      
+      secondary: '#3d4a5f',
+      secondaryHover: '#4d5a6f',
+      secondaryInverse: '#eff5ff',
+      secondaryFocus: 'rgba(61, 74, 95, 0.125)',
+      
+      tertiary: '#2a3545',
+      tertiaryHover: '#3d4a5f',
+      
+      contrast: '#d9e2ed',
+      contrastHover: '#eff5ff',
+      contrastInverse: '#0a0f1a',
+      contrastFocus: 'rgba(217, 226, 237, 0.125)',
+      
+      border: 'rgba(37, 99, 235, 0.3)',
+      borderLight: 'rgba(37, 99, 235, 0.15)',
+      mutedBorderColor: '#2a3545',
+      mutedColor: '#8a96b0',
+      formBackground: '#1f2835',
+      formBorder: '#3d4a5f',
+      formActive: '#2a3545',
+      
+      // Dropdown colors
+      dropdownBackground: '#1f2835',
+      dropdownBorder: '#3d4a5f',
+      dropdownColor: '#d9e2ed',
+      dropdownHoverBackground: 'rgba(37, 99, 235, 0.15)',
+      
+      alarm: '#f43f5e',
+      success: '#22c55e',
+      warning: '#f59e0b',
+      danger: '#dc2626',
+      
+      nearBlack: 'rgba(10, 15, 26, 0.9)',
+      overlay: 'rgba(10, 15, 26, 0.8)',
+    }
+  },
+  {
+    name: 'Sunset & Cream',
+    id: 'sunset-cream',
+    colors: {
+      background: 'radial-gradient(transparent, #15100a)',
+      backgroundTexture: "url('./img/backgrounds/dark_bg_texture.webp')",
+      cardBackground: '#211a0f',
+      sectionBackground: 'linear-gradient(135deg, rgba(33, 26, 15, 0.85) 0%, rgba(21, 16, 10, 0.95) 100%)',
+      sectionBackgroundTransparent: 'rgba(33, 26, 15, 0.85)',
+      
+      text: '#e8dcc8',
+      textSecondary: '#d8ccb8',
+      textMuted: 'rgba(232, 220, 200, 0.6)',
+      color: '#e8dcc8',
+      
+      h1Color: '#f5ede0',
+      h2Color: '#e8dcc8',
+      h3Color: '#d8ccb8',
+      h4Color: '#dd8c42',
+      h5Color: '#cd7c32',
+      h6Color: '#bd6c22',
+      
+      primary: '#e67e22',
+      primaryInverse: '#15100a',
+      primaryHover: '#f59e3f',
+      primaryFocus: 'rgba(230, 126, 34, 0.125)',
+      
+      secondary: '#464032',
+      secondaryHover: '#56504f',
+      secondaryInverse: '#f5ede0',
+      secondaryFocus: 'rgba(70, 64, 50, 0.125)',
+      
+      tertiary: '#32291d',
+      tertiaryHover: '#464032',
+      
+      contrast: '#e8dcc8',
+      contrastHover: '#f5ede0',
+      contrastInverse: '#15100a',
+      contrastFocus: 'rgba(232, 220, 200, 0.125)',
+      
+      border: 'rgba(230, 126, 34, 0.3)',
+      borderLight: 'rgba(230, 126, 34, 0.15)',
+      mutedBorderColor: '#32291d',
+      mutedColor: '#8a8ca0',
+      formBackground: '#2a2115',
+      formBorder: '#464032',
+      formActive: '#32291d',
+      
+      // Dropdown colors
+      dropdownBackground: '#2a2115',
+      dropdownBorder: '#464032',
+      dropdownColor: '#e8dcc8',
+      dropdownHoverBackground: 'rgba(230, 126, 34, 0.15)',
+      
+      alarm: '#f43f5e',
+      success: '#22c55e',
+      warning: '#f59e0b',
+      danger: '#dc2626',
+      
+      nearBlack: 'rgba(21, 16, 10, 0.9)',
+      overlay: 'rgba(21, 16, 10, 0.8)',
     }
   }
 ];
