@@ -57,7 +57,6 @@ const Lobby = () => {
   const [isDeckValid, setIsDeckValid] = useState(true);
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  const [hasPlayedJoinSound, setHasPlayedJoinSound] = useState(false);
   const { isLoggedIn } = useAuth();
   const { playerID, gameID, authKey } = useAppSelector(
     getGameInfo,
@@ -99,11 +98,12 @@ const Lobby = () => {
   const [createQuickGame] = useCreateQuickGameMutation();
 
   useEffect(() => {
-    if (gameLobby?.theirName != undefined && gameLobby?.theirName != '' && !isMuted && !hasPlayedJoinSound) {
+    // Only play sound when opponent first joins (when theirName becomes populated)
+    // Don't play on other updates like messages, invites, etc.
+    if (gameLobby?.theirName && gameLobby.theirName !== '' && !isMuted) {
       playLobbyJoin();
-      setHasPlayedJoinSound(true);
     }
-  }, [gameLobby?.theirName, isMuted, hasPlayedJoinSound, playLobbyJoin]);
+  }, [gameLobby?.theirName, isMuted]);
 
   useEffect(() => {
     setIsWideScreen(width > BREAKPOINT_EXTRA_LARGE);
