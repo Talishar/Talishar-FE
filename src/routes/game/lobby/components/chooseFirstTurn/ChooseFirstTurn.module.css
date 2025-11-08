@@ -8,6 +8,7 @@
   margin: auto;
   pointer-events: auto;
   touch-action: manipulation;
+  background: var(--theme-section-background, linear-gradient(135deg, rgba(30, 35, 41, 0.8) 0%, rgba(30, 35, 41, 0.85) 100%));
 }
 
 .container > h3 {

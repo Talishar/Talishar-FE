@@ -17,8 +17,6 @@
 
 .formContainer {
   background: var(--theme-card-background, #1e2329);
-  scroll-margin-top: 100px;
-  margin-top: 20px;
   width: 460px;
   border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.2));
   border-radius: 10px;

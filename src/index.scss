@@ -169,3 +169,13 @@ body {
 
 // Import Pico
 @import '@picocss/pico/scss/pico';
+
+// Override Pico's excessive h2 margin-bottom
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin-bottom: 0.5rem;
+}
