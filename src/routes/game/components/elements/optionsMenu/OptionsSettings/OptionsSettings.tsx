@@ -24,6 +24,7 @@ import {
 import { CosmeticsSection } from './CosmeticsSection';
 import { VisualSlider, VisualPreset } from './VisualSettings';
 import useWindowDimensions from 'hooks/useWindowDimensions';
+import ThemeToggle from 'themes/ThemeToggle';
 
 const OptionsSettings = () => {
   const gameInfo = useAppSelector(getGameInfo, shallowEqual);
@@ -306,6 +307,10 @@ const OptionsSettings = () => {
             })
           }
         />
+      </Fieldset>
+
+      <Fieldset legend="Theme">
+        <ThemeToggle />
       </Fieldset>
 
       <Fieldset legend="Visual Settings">
