@@ -555,7 +555,7 @@ const Lobby = () => {
                   />
                 )}
                 {activeTab === 'deck' && (
-                  <Deck deck={[...deckIndexed, ...deckSBIndexed]} />
+                  <Deck deck={[...deckIndexed, ...deckSBIndexed]} cardDictionary={data?.deck?.cardDictionary} />
                 )}
               </div>
             ) : (
@@ -568,7 +568,7 @@ const Lobby = () => {
                   />
                 )}
                 {activeTab === 'deck' && (
-                  <Deck deck={[...deckIndexed, ...deckSBIndexed]} />
+                  <Deck deck={[...deckIndexed, ...deckSBIndexed]} cardDictionary={data?.deck?.cardDictionary} />
                 )}
               </>
             )}

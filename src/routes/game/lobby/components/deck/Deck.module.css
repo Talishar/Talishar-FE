@@ -1,3 +1,103 @@
+.deckContainer {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
+
+.sortControls {
+  padding: 0.75em;
+  border-bottom: 1px solid var(--theme-border-light);
+  background-color: var(--theme-section-background);
+  flex-shrink: 0;
+}
+
+.sortButtonGroup {
+  display: flex;
+  gap: 0.5em;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.sortButton {
+  padding: 0.5em 1em;
+  border: 1px solid var(--theme-border);
+  background-color: var(--theme-card-background);
+  border-radius: 0.25em;
+  cursor: pointer;
+  font-size: 0.9em;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  color: var(--theme-text-secondary);
+  white-space: nowrap;
+  width: auto;
+  min-width: fit-content;
+  margin-bottom: 0;
+}
+
+.sortButton:hover {
+  background-color: var(--theme-section-background);
+  border-color: var(--theme-primary);
+  color: var(--theme-text);
+}
+
+.sortButton.active {
+  background-color: var(--theme-primary);
+  color: var(--theme-primary-inverse);
+  border-color: var(--theme-primary);
+  font-weight: 600;
+}
+
+.sortHeader {
+  display: none;
+  padding: 0.5em 0;
+  margin-bottom: 0.5em;
+}
+
+.expandButton {
+  padding: 0.5em 1em;
+  border: 1px solid var(--theme-border);
+  background-color: var(--theme-card-background);
+  border-radius: 0.25em;
+  cursor: pointer;
+  font-size: 0.9em;
+  font-weight: 500;
+  color: var(--theme-text-secondary);
+  width: 100%;
+  text-align: left;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  margin-bottom: 0;
+  width: auto;
+}
+
+.expandButton:hover {
+  background-color: var(--theme-section-background);
+  border-color: var(--theme-primary);
+  color: var(--theme-text);
+}
+
+@media (max-width: 768px) {
+  .sortHeader {
+    display: block;
+  }
+
+  .sortControls {
+    padding: 0.5em 0.75em;
+  }
+
+  .sortButtonGroup {
+    gap: 0.5em;
+  }
+
+  .sortButton {
+    padding: 0.4em 0.8em;
+    font-size: 0.85em;
+  }
+}
+
 .container {
   display: flex;
   flex-direction: row;
@@ -7,11 +107,36 @@
   padding: 1em 0.5em 5em 0.5em;
   min-width: 0px;
   overflow-y: auto;
+  flex: 1;
+}
+
+.pitchGroup {
+  margin-bottom: 1.5em;
+  width: 100%;
+}
+
+.pitchHeader {
+  padding: 0.5em 0.5em;
+  font-weight: 600;
+  font-size: 0.95em;
+  color: var(--theme-text-secondary);
+  background-color: var(--theme-section-background);
+  border-left: 3px solid var(--theme-primary);
+  margin-bottom: 0.5em;
+  border-radius: 0.25em;
+}
+
+.cardsGroup {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 0.5em;
 }
 
 .deckCardContainer {
   height: 100px;
   width: 100px;
+  flex-shrink: 0;
 }
 
 .card {
@@ -25,7 +150,7 @@
 .card:hover {
   width: 105%;
   transition: width 0.1s;
-  -webkit-transition: width 0.1s; /* Safari */
+  -webkit-transition: width 0.1s;
 }
 
 .container input {
