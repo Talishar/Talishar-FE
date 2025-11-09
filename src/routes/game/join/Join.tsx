@@ -22,6 +22,7 @@ import { generateCroppedImageUrl } from 'utils/cropImages';
 import { ImageSelect, ImageSelectOption } from 'components/ImageSelect';
 import { GAME_FORMAT, isPreconFormat, PRECON_DECKS } from 'appConstants';
 import GoogleAdSense from 'components/GoogleAdSense';
+import { getReadableFormatName } from 'utils/formatUtils';
 
 // Helper function to shorten format names
 const shortenFormat = (format: string): string => {
@@ -29,35 +30,6 @@ const shortenFormat = (format: string): string => {
   if (format.toLowerCase() === 'classic constructed') return 'CC';
   // Capitalize first letter of other formats
   return format.charAt(0).toUpperCase() + format.slice(1).toLowerCase();
-};
-
-// Helper function to convert format codes to readable names
-const getReadableFormatName = (format: string): string => {
-  if (!format) return '';
-  
-  const formatMap: { [key: string]: string } = {
-    'classicconstructed': 'Classic Constructed',
-    'sage': 'Silver Age',
-    'llcc': 'Living Legend',
-    'commoner': 'Commoner',
-    'competitivecc': 'Competitive Classic Constructed',
-    'competitiveblitz': 'Competitive Blitz',
-    'competitivesage': 'Competitive Silver Age',
-    'competitivell': 'Competitive Living Legend',
-    'blitz': 'Blitz',
-    'draft': 'Draft / Limited',
-    'clash': 'Clash',
-    'precon': 'Preconstructed Decks',
-    'openblitz': 'Open Blitz',
-    'openformatblitz': 'Open Blitz',
-    'opencc': 'Open Classic Constructed',
-    'openformatcc': 'Open Classic Constructed',
-    'openllcc': 'Open Living Legend',
-    'openformatllcc': 'Open Living Legend'
-  };
-  
-  const key = format.toLowerCase().replace(/[_\s]/g, '');
-  return formatMap[key] || format;
 };
 
 const JoinGame = () => {

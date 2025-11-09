@@ -30,6 +30,7 @@ import { RootState } from 'app/Store';
 import { DeckResponse, Weapon } from 'interface/API/GetLobbyInfo.php';
 import LobbyUpdateHandler from './components/updateHandler/SideboardUpdateHandler';
 import { GAME_FORMAT, BREAKPOINT_EXTRA_LARGE, CLOUD_IMAGES_URL } from 'appConstants';
+import { getReadableFormatName } from 'utils/formatUtils';
 import ChooseFirstTurn from './components/chooseFirstTurn/ChooseFirstTurn';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import { SubmitSideboardAPI } from 'interface/API/SubmitSideboard.php';
@@ -131,10 +132,12 @@ const Lobby = () => {
 
       // Send the current lobby link to the friend
       const gameJoinLink = `${window.location.origin}/game/join/${gameID}`;
+      const readableFormat = getReadableFormatName(data?.format || '');
+      const message = readableFormat ? `Join my ${readableFormat} game!` : 'Join my game!';
       
       await sendMessage({
         toUserId: friendUserId,
-        message: 'Join my game!',
+        message: message,
         gameLink: gameJoinLink
       }).unwrap();
 
@@ -599,7 +602,7 @@ const Lobby = () => {
                                 onClick={() => handleSendGameInviteFromLobby(friend.friendUserId)}
                                 className={styles.friendInviteButton}
                               >
-                                <MdGames size={16} />
+                                <MdGames size={18} />
                                 Invite
                               </button>
                             </div>

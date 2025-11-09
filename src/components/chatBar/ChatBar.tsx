@@ -18,6 +18,7 @@ import { IoChatbubble } from 'react-icons/io5';
 import styles from './ChatBar.module.scss';
 import useAuth from 'hooks/useAuth';
 import { toast } from 'react-hot-toast';
+import { getReadableFormatName } from 'utils/formatUtils';
 
 interface ChatWindow {
   friend: Friend;
@@ -218,11 +219,13 @@ export const ChatBar: React.FC = () => {
 
       // Generate the join link
       const gameJoinLink = `${window.location.origin}/game/join/${gameResponse.gameName}`;
+      const readableFormat = getReadableFormatName('cc');
+      const message = `Join my ${readableFormat} game!`;
       
       // Send message with game link
       await sendMessage({
         toUserId: friendUserId,
-        message: 'Join my game!',
+        message: message,
         gameLink: gameJoinLink
       }).unwrap();
 
@@ -601,17 +604,20 @@ const ChatWindowComponent: React.FC<ChatWindowProps> = ({
               key={message.messageId}
               className={`${styles.message} ${message.fromUserId !== friendUserId ? styles.sent : styles.received}`}
             >
-              <div className={styles.messageContent}>{message.message}</div>
-              {message.gameLink && (
+              {message.gameLink ? (
                 <a
                   href={message.gameLink}
-                  className={styles.gameInvite}
+                  className={styles.messageContentLink}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  <MdGames className={styles.inviteIcon} size={20} />
-                  <span className={styles.inviteText}>Join Game</span>
+                  <div className={styles.messageContent}>
+                    <MdGames size={18} className={styles.gameIcon} />
+                    {message.message}
+                  </div>
                 </a>
+              ) : (
+                <div className={styles.messageContent}>{message.message}</div>
               )}
               <div className={styles.messageTime}>{formatTime(message.createdAt)}</div>
             </div>
