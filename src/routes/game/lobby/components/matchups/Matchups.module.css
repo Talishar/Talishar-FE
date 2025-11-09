@@ -9,6 +9,7 @@
   overflow-y: auto;
   grid-area: matchups;
   overflow-x: hidden;
+  background: var(--theme-section-background, linear-gradient(135deg, rgba(30, 35, 41, 0.8) 0%, rgba(30, 35, 41, 0.85) 100%));
 }
 
 .emptyMatchupContainer {

@@ -12,7 +12,7 @@
   padding: 20px;
   width: 100%;
   max-width: 1600px;
-  background-color: var(--theme-card-background);
+  background: var(--theme-section-background, linear-gradient(135deg, rgba(30, 35, 41, 0.8) 0%, rgba(30, 35, 41, 0.85) 100%));
   border: 1px solid var(--theme-border);
   border-radius: 5px;
   overflow-y: auto;

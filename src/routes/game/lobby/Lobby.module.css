@@ -227,7 +227,7 @@
 .inLineNav {
   position: relative;
   top: 0;
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.15));
   border-radius: 8px;
 }
 
@@ -251,7 +251,7 @@ nav {
 .mobileNav {
   overflow-x: auto;
   overflow-y: auto;
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.15));
   border-radius: 0 0 8px 8px;
   display: flex;
   gap: 0.4rem;
@@ -653,7 +653,7 @@ button.secondary:hover {
 .friendsPanel {
   padding: 1rem;
   background: var(--theme-card-background, #1e2329);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.15));
   border-radius: 12px;
   max-height: 400px;
   overflow-y: auto;
