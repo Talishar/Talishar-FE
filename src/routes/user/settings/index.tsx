@@ -21,6 +21,7 @@ import { useCookies } from 'react-cookie';
 import * as optConst from 'features/options/constants';
 import styles from './settings.module.css';
 import ThemeToggle from 'themes/ThemeToggle';
+import LanguageSelector from 'components/LanguageSelector/LanguageSelector';
 
 const SettingsPage = () => {
   const settingsData = useAppSelector(getSettingsEntity);
@@ -320,6 +321,10 @@ const SettingsPage = () => {
         <div className={styles.settingsColumn}>
           <h3 className={styles.title}>Visual Settings</h3>
           
+          <Fieldset legend="Cards Language">
+            <LanguageSelector />
+          </Fieldset>
+
           <Fieldset legend="Theme">
             <ThemeToggle />
           </Fieldset>

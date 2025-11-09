@@ -24,6 +24,7 @@ import useWindowDimensions from 'hooks/useWindowDimensions';
 import { CosmeticsSection } from '../../game/components/elements/optionsMenu/OptionsSettings/CosmeticsSection';
 import { useGetCosmeticsQuery } from 'features/api/apiSlice';
 import ThemeToggle from 'themes/ThemeToggle';
+import LanguageSelector from 'components/LanguageSelector/LanguageSelector';
 
 const ProfileSettings = () => {
   const settingsData = useAppSelector(getSettingsEntity);
@@ -321,10 +322,14 @@ const ProfileSettings = () => {
       <div className={styles.settingsColumn}>
         <h3 className={styles.title}>Visual Settings</h3>
         
+        <Fieldset legend="Cards Language">
+          <LanguageSelector />
+        </Fieldset>
+
         <Fieldset legend="Theme">
           <ThemeToggle />
         </Fieldset>
-        
+  
         <Fieldset legend="Display">
           <VisualSlider
             label="Card Size"

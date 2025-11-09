@@ -10,7 +10,6 @@
   border-radius: 8px;
   padding: 1rem;
   margin: 0;
-  margin-bottom: 1rem;
   background: rgba(0, 0, 0, 0.2);
 }
 
@@ -18,6 +17,7 @@
   padding: 0 0.5rem;
   color: var(--theme-primary);
   font-size: 0.95em;
+  overflow: auto;
 }
 
 fieldset legend strong {

@@ -25,6 +25,7 @@ import { CosmeticsSection } from './CosmeticsSection';
 import { VisualSlider, VisualPreset } from './VisualSettings';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import ThemeToggle from 'themes/ThemeToggle';
+import LanguageSelector from 'components/LanguageSelector/LanguageSelector';
 
 const OptionsSettings = () => {
   const gameInfo = useAppSelector(getGameInfo, shallowEqual);
@@ -309,6 +310,10 @@ const OptionsSettings = () => {
         />
       </Fieldset>
 
+      <Fieldset legend="Cards Language">
+        <LanguageSelector />
+      </Fieldset>
+      
       <Fieldset legend="Theme">
         <ThemeToggle />
       </Fieldset>
