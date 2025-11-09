@@ -437,7 +437,7 @@ const CreateGame = () => {
                 </optgroup>
                 <optgroup label="Open Formats (No Restrictions)">
                   <option value={GAME_FORMAT.OPEN_BLITZ}>Open Blitz</option>
-                  <option value={GAME_FORMAT.OPEN_CC}>Open CC</option>
+                  <option value={GAME_FORMAT.OPEN_CC}>Open Classic Constructed</option>
                   <option value={GAME_FORMAT.OPEN_LL_CC}>Open Living Legend</option>
                 </optgroup>
               </select>

@@ -31,6 +31,35 @@ const shortenFormat = (format: string): string => {
   return format.charAt(0).toUpperCase() + format.slice(1).toLowerCase();
 };
 
+// Helper function to convert format codes to readable names
+const getReadableFormatName = (format: string): string => {
+  if (!format) return '';
+  
+  const formatMap: { [key: string]: string } = {
+    'classicconstructed': 'Classic Constructed',
+    'sage': 'Silver Age',
+    'llcc': 'Living Legend',
+    'commoner': 'Commoner',
+    'competitivecc': 'Competitive Classic Constructed',
+    'competitiveblitz': 'Competitive Blitz',
+    'competitivesage': 'Competitive Silver Age',
+    'competitivell': 'Competitive Living Legend',
+    'blitz': 'Blitz',
+    'draft': 'Draft / Limited',
+    'clash': 'Clash',
+    'precon': 'Preconstructed Decks',
+    'openblitz': 'Open Blitz',
+    'openformatblitz': 'Open Blitz',
+    'opencc': 'Open Classic Constructed',
+    'openformatcc': 'Open Classic Constructed',
+    'openllcc': 'Open Living Legend',
+    'openformatllcc': 'Open Living Legend'
+  };
+  
+  const key = format.toLowerCase().replace(/[_\s]/g, '');
+  return formatMap[key] || format;
+};
+
 const JoinGame = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -269,6 +298,17 @@ const JoinGame = () => {
                       Save Deck to ❤️ Favorites
                     </label>
                   )}
+                  <label style={{ marginTop: '1rem' }}>
+                    Game Format
+                    <input
+                      type="text"
+                      id="gameFormat"
+                      aria-label="Game Format"
+                      value={getReadableFormatName(gameFormat || '')}
+                      disabled
+                      readOnly
+                    />
+                  </label>
                 </fieldset>
               </>
             )}
