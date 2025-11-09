@@ -2,10 +2,12 @@ import {
   useDeleteDeckMutation,
   useDeleteAccountMutation,
   useGetFavoriteDecksQuery,
-  useGetUserProfileQuery
+  useGetUserProfileQuery,
+  useCreateGameMutation
 } from 'features/api/apiSlice';
 import { DeleteDeckAPIResponse } from 'interface/API/DeleteDeckAPI.php';
 import { DeleteAccountAPIResponse } from 'interface/API/DeleteAccountAPI.php';
+import { CreateGameAPI } from 'interface/API/CreateGame.php';
 import { toast } from 'react-hot-toast';
 import { RiEdit2Line, RiDeleteBin5Line } from "react-icons/ri";
 import { useState } from 'react';
@@ -26,6 +28,8 @@ export const ProfilePage = () => {
   const navigate = useNavigate();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [confirmationUsername, setConfirmationUsername] = useState('');
+  const [newDeckUrl, setNewDeckUrl] = useState('');
+  const [isAddingDeck, setIsAddingDeck] = useState(false);
   const {
     data: decksData,
     isLoading: deckIsLoading,
@@ -37,6 +41,7 @@ export const ProfilePage = () => {
     refetch: profileRefetch
   } = useGetUserProfileQuery(undefined);
   const [deleteDeck] = useDeleteDeckMutation();
+  const [createGame] = useCreateGameMutation();
   const [deleteAccount, { isLoading: isDeleting }] = useDeleteAccountMutation();
 
   const handleDeleteDeckMessage = (resp: DeleteDeckAPIResponse): string => {
@@ -75,6 +80,55 @@ export const ProfilePage = () => {
 
   const handleEditDeck = (deckLink: string) => {
     window.location.href = deckLink;
+  };
+
+  const handleAddDeck = async () => {
+    if (!newDeckUrl.trim()) {
+      toast.error('Please enter a deck URL', {
+        position: 'top-center'
+      });
+      return;
+    }
+
+    setIsAddingDeck(true);
+    try {
+      // Reuse the existing CreateGame flow to save the deck to favorites
+      const gamePayload: CreateGameAPI = {
+        deck: '',
+        fabdb: newDeckUrl,
+        deckTestMode: false,
+        format: 'cc',
+        visibility: 'private',
+        decksToTry: '',
+        favoriteDeck: true, // This is the key - flag the deck to be saved
+        favoriteDecks: '',
+        gameDescription: ''
+      };
+
+      const addDeckPromise = createGame(gamePayload).unwrap();
+      toast.promise(
+        addDeckPromise,
+        {
+          loading: 'Adding deck to favorites...',
+          success: () => 'Deck added to favorites successfully!',
+          error: (err) =>
+            `Error adding deck: ${err?.message || err?.error || err?.toString() || 'Invalid deck URL or deck not accessible'}`
+        },
+        {
+          style: {
+            minWidth: '250px'
+          },
+          position: 'top-center'
+        }
+      );
+      await addDeckPromise;
+      setNewDeckUrl('');
+    } catch (err) {
+      console.warn(err);
+    } finally {
+      setIsAddingDeck(false);
+      deckRefetch();
+    }
   };
 
   const handleDeleteAccountConfirm = async () => {
@@ -217,6 +271,29 @@ export const ProfilePage = () => {
           <div className={styles.rightColumn}>
             <article className={styles.articleTitle}>
               <h3 className={styles.title}>Your Decks</h3>
+              {/* Add Deck Section */}
+              <div className={styles.addDeckSection}>
+                <p>
+                  Paste a deck link from <a href="https://FaBrary.net" target="_blank" rel="noopener noreferrer">FaBrary.net</a> to add it to your favorites.
+                </p>
+                <div className={styles.addDeckContainer}>
+                  <input
+                    type="text"
+                    placeholder="Paste deck URL here..."
+                    value={newDeckUrl}
+                    onChange={(e) => setNewDeckUrl(e.target.value)}
+                    disabled={isAddingDeck}
+                    className={styles.addDeckInput}
+                  />
+                  <button
+                    onClick={handleAddDeck}
+                    disabled={isAddingDeck || !newDeckUrl.trim()}
+                    className={styles.addDeckButton}
+                  >
+                    {isAddingDeck ? 'Adding...' : 'Add Deck'}
+                  </button>
+                </div>
+              </div>
               <table>
                 <thead>
                   <tr>
