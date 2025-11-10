@@ -1,4 +1,24 @@
+import React, { useState, useMemo, useEffect } from 'react';
+import { useAppSelector, useAppDispatch } from 'app/Hooks';
+import { RootState } from 'app/Store';
+import Player from 'interface/Player';
+import styles from './ExperimentalTurnWidget.module.css';
+import classNames from 'classnames';
+import { submitButton } from 'features/game/GameSlice';
+import { PROCESS_INPUT } from 'appConstants';
+import useSetting from 'hooks/useSetting';
+import { motion, AnimatePresence } from 'framer-motion';
+import { shallowEqual } from 'react-redux';
+import { getGameInfo } from 'features/game/GameSlice';
+import { AiOutlinePlus, AiOutlineMinus } from 'react-icons/ai';
+import useSound from 'use-sound';
+import passTurnSound from 'sounds/prioritySound.wav';
+import { createPortal } from 'react-dom';
+import useShortcut from 'hooks/useShortcut';
+import { DEFAULT_SHORTCUTS } from 'appConstants';
+import { toast } from 'react-hot-toast';
 
+const MANUAL_MODE = 'ManualMode';
 
 export default function ExperimentalTurnWidget() {
   const [heightRatio, setHeightRatio] = useState(1);
@@ -7,10 +27,14 @@ export default function ExperimentalTurnWidget() {
     (state: RootState) => state.game.canPassPhase
   );
 
-  const widgetBackground = classNames(styles.widgetBackground, {
-    [styles.myTurn]: canPassPhase,
-    [styles.ourTurn]: !canPassPhase
-  });
+  const widgetBackground = useMemo(() => {
+    // Ensure canPassPhase is a boolean to prevent classnames parsing issues
+    const isCanPass = Boolean(canPassPhase === true);
+    return classNames(styles.widgetBackground, {
+      [styles.myTurn]: isCanPass,
+      [styles.ourTurn]: !isCanPass
+    });
+  }, [canPassPhase]);
 
   return (
     <div className={styles.widgetContainer}>
