@@ -158,11 +158,11 @@
 }
 
 .container input + div > img {
-  opacity: 0.6;
-  transition: opacity 0.25s, box-shadow 0.25s;
+  filter: brightness(0.5);
+  transition: filter 0.25s, box-shadow 0.25s;
 }
 
 .container input[type='checkbox']:checked + div > img {
   box-shadow: 0 0 0 2px var(--theme-primary);
-  opacity: 1;
+  filter: brightness(1);
 }
