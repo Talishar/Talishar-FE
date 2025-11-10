@@ -46,11 +46,125 @@ npm install
 npm run dev
 ```
 
-Access the server at http://localhost:5173/ (Port 5173 by default, if you configure it to something else in Vite then it'll be there instead).
+Access the server at **http://localhost:5173/** (Port 5173 by default, if you configure it to something else in Vite then it'll be there instead).
+
+### Backend Requirement
+
+You must have the Talishar backend running locally to develop. The backend runs on **localhost:8000** (via Docker)
 
 You will also need the local dev talishar backend running.
 
 If you have problems running the development server, come to the discord and ask for help.
+
+## State Management (Redux)
+
+Talishar-FE uses Redux Toolkit for centralized state management. The game state flows from the backend through Redux to React components.
+
+### Key Files
+- **`src/redux/GameSlice.ts`** - Redux slice managing the game state (actions, reducers, selectors)
+- **`src/redux/hooks.ts`** - Custom hooks for accessing Redux (`useAppSelector`, `useAppDispatch`)
+- **`src/features/api/apiSlice.ts`** - Redux-based API integration (fetch backend data)
+- **`ParseGameState.ts`** - Transforms backend JSON response to Redux-compatible format
+
+### State Flow
+```
+Backend (GetNextTurn.php)
+    ↓ (JSON response)
+Frontend API call
+    ↓ (response data)
+ParseGameState.ts (transforms data)
+    ↓ (normalized format)
+GameSlice reducers (updates Redux)
+    ↓ (state changes)
+Components (subscribe via selectors)
+    ↓ (re-render with new data)
+UI updates
+```
+
+### Using Redux in Components
+
+**Access game state:**
+```typescript
+import { useAppSelector } from '@/redux/hooks';
+import { selectGameState, selectCurrentPlayer } from '@/redux/slices/GameSlice';
+
+export const MyComponent = () => {
+  const gameState = useAppSelector(selectGameState);
+  const currentPlayer = useAppSelector(selectCurrentPlayer);
+  
+  return <div>{/* Use gameState and currentPlayer */}</div>;
+};
+```
+
+**Dispatch game actions:**
+```typescript
+import { useAppDispatch } from '@/redux/hooks';
+import { updateGameState } from '@/redux/slices/GameSlice';
+
+export const MyComponent = () => {
+  const dispatch = useAppDispatch();
+  
+  const handleAction = () => {
+    dispatch(updateGameState(newState));
+  };
+  
+  return <button onClick={handleAction}>Take Action</button>;
+};
+```
+
+## Component Structure
+
+### Directory Organization
+```
+src/routes/game/components/
+├── GameBoard/           # Main game board display
+├── Hand/                # Player's hand zone
+├── PlayArea/            # Cards in play
+├── ActionPrompts/       # User interaction prompts
+├── Chat/                # Game chat
+├── PlayerStats/         # Player health, resources
+└── ...other features
+```
+
+### Component Connection Pattern
+
+Components connect to game state through Redux selectors:
+
+1. **Container Components** (smart components)
+   - Use `useAppSelector` to access Redux state
+   - Use `useAppDispatch` to trigger actions
+   - Located at feature level (e.g., `GameBoard/GameBoard.tsx`)
+
+2. **Presentational Components** (dumb components)
+   - Receive data via props
+   - Don't directly access Redux
+   - Reusable across different contexts
+
+**Example:**
+```typescript
+// Container component (smart)
+export const GameBoard = () => {
+  const gameState = useAppSelector(selectGameState);
+  const dispatch = useAppDispatch();
+  
+  const handlePlayCard = (cardId: string) => {
+    dispatch(playCard(cardId));
+  };
+  
+  return <GameBoardView state={gameState} onPlayCard={handlePlayCard} />;
+};
+
+// Presentational component (dumb)
+export const GameBoardView = ({ state, onPlayCard }: Props) => {
+  return (
+    <div>
+      {state.cards.map(card => (
+        <Card key={card.id} onClick={() => onPlayCard(card.id)} />
+      ))}
+    </div>
+  );
+};
+```
 
 ### Important!
 
@@ -75,11 +189,6 @@ The codebase is organized with small, focused React components and containers. I
 ### Completed
 - Automatic deployment to CDN
 - Automatic testing for all merge requests and commits to main
-
-### In Progress / Help Wanted
-- Expand testing coverage
-- Build out new features
-- Help with backend integration and bug fixes
 
 ## Learn More
 
