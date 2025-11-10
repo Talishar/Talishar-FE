@@ -488,6 +488,31 @@ export const gameSlice = createSlice({
     setIsRoguelike: (state, action: PayloadAction<boolean>) => {
       state.gameInfo.isRoguelike = action.payload;
     },
+    setHeroInfo: (
+      state,
+      action: PayloadAction<{
+        heroName?: string;
+        yourHeroCardNumber?: string;
+        opponentHeroName?: string;
+        opponentHeroCardNumber?: string;
+      }>
+    ) => {
+      if (action.payload.heroName !== undefined) {
+        state.gameInfo.heroName = action.payload.heroName;
+      }
+      if (action.payload.yourHeroCardNumber !== undefined) {
+        state.gameInfo.yourHeroCardNumber = action.payload.yourHeroCardNumber;
+      }
+      if (action.payload.opponentHeroName !== undefined) {
+        state.gameInfo.opponentHeroName = action.payload.opponentHeroName;
+      }
+      if (action.payload.opponentHeroCardNumber !== undefined) {
+        state.gameInfo.opponentHeroCardNumber = action.payload.opponentHeroCardNumber;
+      }
+    },
+    markHeroIntroAsShown: (state) => {
+      state.gameInfo.hasShownHeroIntro = true;
+    },
     disableModals: (state) => {
       state.showModals = false;
     },
@@ -788,6 +813,8 @@ export const {
   enableModals,
   disableModals,
   setIsRoguelike,
+  setHeroInfo,
+  markHeroIntroAsShown,
   setShuffling,
   updateActionTimestamp,
   setFirstWarningShown,
