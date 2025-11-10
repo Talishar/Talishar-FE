@@ -14,11 +14,13 @@ import ChainLinkSummaryContainer from '../components/elements/chainLinkSummary/C
 import ActiveLayersZone from '../components/zones/activeLayersZone/ActiveLayersZone';
 import InactivityWarning from '../components/elements/inactivityWarning/InactivityWarning';
 import ExperimentalGameStateHandler from 'app/ExperimentalGameStateHandler';
+import HeroVsHeroIntro from '../components/elements/heroVsHeroIntro/HeroVsHeroIntro';
 import { useCookies } from 'react-cookie';
 import { useEffect } from 'react';
-import { useAppDispatch } from '../../../app/Hooks';
-import { setIsRoguelike } from '../../../features/game/GameSlice';
+import { useAppDispatch, useAppSelector } from '../../../app/Hooks';
+import { setIsRoguelike, setHeroInfo } from '../../../features/game/GameSlice';
 import { Toaster } from 'react-hot-toast';
+import { shallowEqual } from 'react-redux';
 
 function Play({ isRoguelike }: { isRoguelike: boolean }) {
   const [cookies] = useCookies([
@@ -29,10 +31,39 @@ function Play({ isRoguelike }: { isRoguelike: boolean }) {
   ]);
 
   const dispatch = useAppDispatch();
+  const gameState = useAppSelector((state: any) => state.game, shallowEqual);
 
   useEffect(() => {
     dispatch(setIsRoguelike(isRoguelike));
   }, [isRoguelike]);
+
+  // Dispatch hero info once game state is fully populated
+  useEffect(() => {
+    const playerID = gameState?.gameInfo?.playerID;
+    const playerOneHero = gameState?.playerOne?.Hero;
+    const playerTwoHero = gameState?.playerTwo?.Hero;
+    
+    if (playerID && playerOneHero?.cardNumber && playerTwoHero?.cardNumber) {
+      // Get current hero names from gameInfo (may have been set from Lobby)
+      const currentHeroName = gameState?.gameInfo?.heroName;
+      const currentOpponentHeroName = gameState?.gameInfo?.opponentHeroName;
+      
+      // Only dispatch if we don't have opponent hero name yet (first load)
+      if (!currentOpponentHeroName) {
+        const yourCardNumber = playerID === 1 ? playerOneHero.cardNumber : playerTwoHero.cardNumber;
+        const opponentCardNumber = playerID === 1 ? playerTwoHero.cardNumber : playerOneHero.cardNumber;
+        
+        dispatch(
+          setHeroInfo({
+            heroName: currentHeroName,
+            yourHeroCardNumber: yourCardNumber,
+            opponentHeroName: opponentCardNumber,
+            opponentHeroCardNumber: opponentCardNumber
+          })
+        );
+      }
+    }
+  }, [gameState?.playerOne?.Hero?.cardNumber, gameState?.playerTwo?.Hero?.cardNumber, gameState?.gameInfo?.playerID, dispatch]);
 
   useEffect(() => {
     if (cookies.cardSize) {
@@ -101,6 +132,7 @@ function Play({ isRoguelike }: { isRoguelike: boolean }) {
         </div>
         <RightColumn />
       </div>
+      <HeroVsHeroIntro />
       <CardListZone />
       <ActiveLayersZone />
       <OptionsMenu />
