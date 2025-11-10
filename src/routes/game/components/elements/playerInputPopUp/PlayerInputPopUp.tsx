@@ -13,7 +13,7 @@ import { NewOptInput } from './components/NewOptInput';
 import { TriggerOrderInput } from './components/TriggerOrderInput';
 import { FormProps } from './playerInputPopupTypes';
 import { OtherInput } from './components/OtherInput';
-import { replaceText } from 'utils/ParseEscapedString';
+import { parseTextToElements } from 'utils/ParseEscapedString';
 
 const PlayerInputFormTypeMap: {
   [key: string]: (props: FormProps) => JSX.Element;
@@ -118,8 +118,8 @@ export default function PlayerInputPopUp() {
 
   const FormDisplay =
     PlayerInputFormTypeMap[inputPopUp.popup?.id || ''] || OtherInput;
-  //Title comes back as a HTML string so we need to dangeously set it vs just using it for the moment
-  const title = { __html: replaceText(inputPopUp?.popup?.title ?? '') };
+  
+  const titleElements = parseTextToElements(inputPopUp?.popup?.title ?? '');
 
   return (
     <motion.div
@@ -135,7 +135,7 @@ export default function PlayerInputPopUp() {
     >
       <div className={styles.optionsTitleContainer}>
         <div className={styles.optionsTitle}>
-          <h3 className={styles.title} dangerouslySetInnerHTML={title}></h3>
+          <h3 className={styles.title}>{titleElements}</h3>
           <h4 className={styles.subtitle}>
             {inputPopUp.popup?.additionalComments}
           </h4>
