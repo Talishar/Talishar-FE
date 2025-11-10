@@ -13,15 +13,23 @@ const HeroVsHeroIntro = () => {
   
   const gameID = gameState?.gameInfo?.gameID;
   const playerID = gameState?.gameInfo?.playerID;
+  
+  // Get hero names from Redux gameInfo (dispatched from Lobby)
+  const yourHeroName = gameState?.gameInfo?.heroName;
+  const opponentHeroName = gameState?.gameInfo?.opponentHeroName;
+  
+  // Get hero card numbers from game state
+  const yourHeroCardNumber = gameState?.gameInfo?.yourHeroCardNumber;
+  const opponentHeroCardNumber = gameState?.gameInfo?.opponentHeroCardNumber;
 
-  // Get hero card numbers from game state (same source as EndGameStats)
+  // Fallback to parsing from players if not available in gameInfo
   const playerOneHero = gameState?.playerOne?.Hero?.cardNumber;
   const playerTwoHero = gameState?.playerTwo?.Hero?.cardNumber;
   
-  const yourHero = playerID === 1 ? playerOneHero : playerTwoHero;
-  const opponentHero = playerID === 1 ? playerTwoHero : playerOneHero;
+  const yourHero = yourHeroCardNumber || (playerID === 1 ? playerOneHero : playerTwoHero);
+  const opponentHero = opponentHeroCardNumber || (playerID === 1 ? playerTwoHero : playerOneHero);
 
-  // Helper to format card ID to readable name (e.g., "puffin_hightail" -> "Puffin Hightail")
+  // Helper to format card ID to readable name (e.g., "gravy_bones_shipwrecked_looter" -> "Gravy Bones Shipwrecked Looter")
   const formatHeroName = (cardId: string): string => {
     if (!cardId) return '';
     return cardId
@@ -30,9 +38,9 @@ const HeroVsHeroIntro = () => {
       .join(' ');
   };
 
-  // Display names - always format from the card ID
-  const displayYourHeroName = formatHeroName(yourHero) || 'Your Hero';
-  const displayOpponentHeroName = formatHeroName(opponentHero) || 'Opponent';
+  // Display names with fallbacks: use Redux name first, then format the card ID if available
+  const displayYourHeroName = yourHeroName || formatHeroName(yourHero) || 'Your Hero';
+  const displayOpponentHeroName = formatHeroName(opponentHeroName || opponentHero) || 'Opponent';
 
   // Check localStorage to see if intro was already shown in this game session
   useEffect(() => {
@@ -46,10 +54,9 @@ const HeroVsHeroIntro = () => {
     }
   }, [gameID, dispatch]);
   
-  // Auto-dismiss after 2 seconds
+  // Auto-dismiss after 3 seconds
   useEffect(() => {
     if (!isVisible) return;
-
     const timer = setTimeout(() => {
       setIsFadingOut(true);
       setTimeout(() => {
@@ -59,8 +66,7 @@ const HeroVsHeroIntro = () => {
           localStorage.setItem(`heroIntroShown_${gameID}`, 'true');
         }
       }, 500); // Wait for fade-out animation to complete
-    }, 5000);
-
+    }, 2000);
     return () => clearTimeout(timer);
 
   }, [isVisible, dispatch, gameID]);
@@ -74,9 +80,6 @@ const HeroVsHeroIntro = () => {
     ? gameState?.playerTwo?.isPatron || gameState?.playerTwo?.isPvtVoidPatron || gameState?.playerTwo?.isContributor
     : gameState?.playerOne?.isPatron || gameState?.playerOne?.isPvtVoidPatron || gameState?.playerOne?.isContributor;
 
-  // Temporarily disabled due to browser crashes - return null to hide component
-  return null;
-  
   // Don't render if not visible or if missing hero data
   if (!isVisible || !yourHero || !opponentHero) {
     return null;
@@ -116,7 +119,6 @@ const HeroVsHeroIntro = () => {
           <div className={styles.heroLabel}>{displayOpponentHeroName}</div>
         </div>
       </div>
-
       {/* Close Button (accessibility) */}
       <button
         className={styles.closeButton}
