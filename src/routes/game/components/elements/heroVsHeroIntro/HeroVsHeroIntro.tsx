@@ -9,7 +9,6 @@ const HeroVsHeroIntro = () => {
   const dispatch = useAppDispatch();
   const gameState = useAppSelector((state: any) => state.game, shallowEqual);
   const [isVisible, setIsVisible] = useState(true);
-  const [isFadingOut, setIsFadingOut] = useState(false);
   
   const gameID = gameState?.gameInfo?.gameID;
   const playerID = gameState?.gameInfo?.playerID;
@@ -54,19 +53,18 @@ const HeroVsHeroIntro = () => {
     }
   }, [gameID, dispatch]);
   
-  // Auto-dismiss after 3 seconds
+  // Auto-dismiss after 2 seconds
   useEffect(() => {
     if (!isVisible) return;
+
     const timer = setTimeout(() => {
-      setIsFadingOut(true);
-      setTimeout(() => {
-        setIsVisible(false);
-        dispatch(markHeroIntroAsShown());
-        if (gameID) {
-          localStorage.setItem(`heroIntroShown_${gameID}`, 'true');
-        }
-      }, 500); // Wait for fade-out animation to complete
+      setIsVisible(false);
+      dispatch(markHeroIntroAsShown());
+      if (gameID) {
+        localStorage.setItem(`heroIntroShown_${gameID}`, 'true');
+      }
     }, 2000);
+
     return () => clearTimeout(timer);
 
   }, [isVisible, dispatch, gameID]);
@@ -89,7 +87,7 @@ const HeroVsHeroIntro = () => {
   const opponentHeroImage = generateCroppedImageUrl(opponentHero);
 
   return (
-    <div className={`${styles.introContainer} ${isFadingOut ? styles.fadeOut : ''}`}>
+    <div className={styles.introContainer}>
       <div className={styles.introContent}>
         {/* Left Hero */}
         <div className={styles.heroSection}>
@@ -123,14 +121,11 @@ const HeroVsHeroIntro = () => {
       <button
         className={styles.closeButton}
         onClick={() => {
-          setIsFadingOut(true);
-          setTimeout(() => {
-            setIsVisible(false);
-            dispatch(markHeroIntroAsShown());
-            if (gameID) {
-              localStorage.setItem(`heroIntroShown_${gameID}`, 'true');
-            }
-          }, 500); // Wait for fade-out animation to complete
+          setIsVisible(false);
+          dispatch(markHeroIntroAsShown());
+          if (gameID) {
+            localStorage.setItem(`heroIntroShown_${gameID}`, 'true');
+          }
         }}
         aria-label="Close hero intro"
       >
