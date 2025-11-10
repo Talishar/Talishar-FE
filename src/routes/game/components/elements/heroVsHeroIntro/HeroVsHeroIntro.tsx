@@ -65,7 +65,7 @@ const HeroVsHeroIntro = () => {
       if (gameID) {
         localStorage.setItem(`heroIntroShown_${gameID}`, 'true');
       }
-    }, 10000);
+    }, 2000);
 
     return () => clearTimeout(timer);
 
