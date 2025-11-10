@@ -54,17 +54,10 @@ const HeroVsHeroIntro = () => {
     }
   }, [gameID, dispatch]);
   
-  // Get patron status
-  const yourPatronStatus = playerID === 1 
-    ? gameState?.playerOne?.isPatron || gameState?.playerOne?.isPvtVoidPatron || gameState?.playerOne?.isContributor
-    : gameState?.playerTwo?.isPatron || gameState?.playerTwo?.isPvtVoidPatron || gameState?.playerTwo?.isContributor;
-
-  const opponentPatronStatus = playerID === 1 
-    ? gameState?.playerTwo?.isPatron || gameState?.playerTwo?.isPvtVoidPatron || gameState?.playerTwo?.isContributor
-    : gameState?.playerOne?.isPatron || gameState?.playerOne?.isPvtVoidPatron || gameState?.playerOne?.isContributor;
-
   // Auto-dismiss after 3 seconds
   useEffect(() => {
+    if (!isVisible) return;
+    
     const timer = setTimeout(() => {
       setIsFadingOut(true);
       setTimeout(() => {
@@ -77,8 +70,18 @@ const HeroVsHeroIntro = () => {
     }, 3000);
 
     return () => clearTimeout(timer);
-  }, [dispatch, gameID]);
+  }, [isVisible, dispatch, gameID]);
+  
+  // Get patron status
+  const yourPatronStatus = playerID === 1 
+    ? gameState?.playerOne?.isPatron || gameState?.playerOne?.isPvtVoidPatron || gameState?.playerOne?.isContributor
+    : gameState?.playerTwo?.isPatron || gameState?.playerTwo?.isPvtVoidPatron || gameState?.playerTwo?.isContributor;
 
+  const opponentPatronStatus = playerID === 1 
+    ? gameState?.playerTwo?.isPatron || gameState?.playerTwo?.isPvtVoidPatron || gameState?.playerTwo?.isContributor
+    : gameState?.playerOne?.isPatron || gameState?.playerOne?.isPvtVoidPatron || gameState?.playerOne?.isContributor;
+
+  // Don't render if not visible or if missing hero data
   if (!isVisible || !yourHero || !opponentHero) {
     return null;
   }
@@ -118,7 +121,6 @@ const HeroVsHeroIntro = () => {
         </div>
       </div>
 
-      {/* Close Button (accessibility) */}
       <button
         className={styles.closeButton}
         onClick={() => {
