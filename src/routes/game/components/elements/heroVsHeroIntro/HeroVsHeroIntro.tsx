@@ -13,23 +13,15 @@ const HeroVsHeroIntro = () => {
   
   const gameID = gameState?.gameInfo?.gameID;
   const playerID = gameState?.gameInfo?.playerID;
-  
-  // Get hero names from Redux gameInfo (dispatched from Lobby)
-  const yourHeroName = gameState?.gameInfo?.heroName;
-  const opponentHeroName = gameState?.gameInfo?.opponentHeroName;
-  
-  // Get hero card numbers from game state
-  const yourHeroCardNumber = gameState?.gameInfo?.yourHeroCardNumber;
-  const opponentHeroCardNumber = gameState?.gameInfo?.opponentHeroCardNumber;
 
-  // Fallback to parsing from players if not available in gameInfo
+  // Get hero card numbers from game state (same source as EndGameStats)
   const playerOneHero = gameState?.playerOne?.Hero?.cardNumber;
   const playerTwoHero = gameState?.playerTwo?.Hero?.cardNumber;
   
-  const yourHero = yourHeroCardNumber || (playerID === 1 ? playerOneHero : playerTwoHero);
-  const opponentHero = opponentHeroCardNumber || (playerID === 1 ? playerTwoHero : playerOneHero);
+  const yourHero = playerID === 1 ? playerOneHero : playerTwoHero;
+  const opponentHero = playerID === 1 ? playerTwoHero : playerOneHero;
 
-  // Helper to format card ID to readable name (e.g., "gravy_bones_shipwrecked_looter" -> "Gravy Bones Shipwrecked Looter")
+  // Helper to format card ID to readable name (e.g., "puffin_hightail" -> "Puffin Hightail")
   const formatHeroName = (cardId: string): string => {
     if (!cardId) return '';
     return cardId
@@ -38,9 +30,9 @@ const HeroVsHeroIntro = () => {
       .join(' ');
   };
 
-  // Display names with fallbacks: use Redux name first, then format the card ID if available
-  const displayYourHeroName = yourHeroName || formatHeroName(yourHero) || 'Your Hero';
-  const displayOpponentHeroName = formatHeroName(opponentHeroName || opponentHero) || 'Opponent';
+  // Display names - always format from the card ID
+  const displayYourHeroName = formatHeroName(yourHero) || 'Your Hero';
+  const displayOpponentHeroName = formatHeroName(opponentHero) || 'Opponent';
 
   // Check localStorage to see if intro was already shown in this game session
   useEffect(() => {
@@ -67,7 +59,7 @@ const HeroVsHeroIntro = () => {
           localStorage.setItem(`heroIntroShown_${gameID}`, 'true');
         }
       }, 500); // Wait for fade-out animation to complete
-    }, 2000);
+    }, 5000);
 
     return () => clearTimeout(timer);
 
