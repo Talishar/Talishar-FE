@@ -57,7 +57,7 @@ const HeroVsHeroIntro = () => {
   // Auto-dismiss after 3 seconds
   useEffect(() => {
     if (!isVisible) return;
-    
+
     const timer = setTimeout(() => {
       setIsFadingOut(true);
       setTimeout(() => {
@@ -70,6 +70,7 @@ const HeroVsHeroIntro = () => {
     }, 3000);
 
     return () => clearTimeout(timer);
+
   }, [isVisible, dispatch, gameID]);
   
   // Get patron status
@@ -121,6 +122,7 @@ const HeroVsHeroIntro = () => {
         </div>
       </div>
 
+      {/* Close Button (accessibility) */}
       <button
         className={styles.closeButton}
         onClick={() => {
