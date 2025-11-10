@@ -10,7 +10,7 @@ import { FaExclamationCircle } from 'react-icons/fa';
 import { GiCapeArmor } from 'react-icons/gi';
 import { SiBookstack } from 'react-icons/si';
 import { MdGames } from 'react-icons/md';
-import { Form, Formik } from 'formik';
+import { Form, Formik, useFormikContext } from 'formik';
 import deckValidation from './validation';
 import StickyFooter from './components/stickyFooter/StickyFooter';
 import { toast } from 'react-hot-toast';
@@ -546,6 +546,9 @@ const Lobby = () => {
                       </button>
                     </li>
                   </ul>
+                  <div style={{ marginLeft: 'auto' }}>
+                    <DesktopDeckSelectionButtons deckIndexed={deckIndexed} deckSBIndexed={deckSBIndexed} activeTab={activeTab} />
+                  </div>
                 </nav>
                 {activeTab !== 'deck' && (
                   <Equipment
@@ -658,6 +661,46 @@ const Lobby = () => {
       </Formik>
       <CardPortal />
     </main>
+  );
+};
+
+// Component to handle Select All/None buttons for desktop - has access to Formik context
+const DesktopDeckSelectionButtons = ({ deckIndexed, deckSBIndexed, activeTab }: { deckIndexed: string[], deckSBIndexed: string[], activeTab: string }) => {
+  const { setFieldValue } = useFormikContext<DeckResponse>();
+  
+  const handleSelectAll = () => {
+    const allCards = [...deckIndexed, ...deckSBIndexed];
+    setFieldValue('deck', allCards);
+  };
+
+  const handleSelectNone = () => {
+    setFieldValue('deck', []);
+  };
+
+  // Only show buttons when Deck tab is active
+  if (activeTab !== 'deck') {
+    return null;
+  }
+
+  return (
+    <div className={styles.selectionButtons}>
+      <button
+        className={styles.selectionButton}
+        onClick={handleSelectAll}
+        type="button"
+        title="Select all cards"
+      >
+        Select All
+      </button>
+      <button
+        className={styles.selectionButton}
+        onClick={handleSelectNone}
+        type="button"
+        title="Deselect all cards"
+      >
+        Select None
+      </button>
+    </div>
   );
 };
 

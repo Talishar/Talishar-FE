@@ -229,6 +229,10 @@
   top: 0;
   border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.15));
   border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
 }
 
 .deckSelectorContainer {
@@ -760,4 +764,40 @@ button.secondary:hover {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+}
+
+.selectionButtons {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.selectionButton {
+  padding: 0.5em 1em;
+  border: 1px solid var(--theme-border);
+  background-color: var(--theme-card-background);
+  border-radius: 0.25em;
+  cursor: pointer;
+  font-size: 0.9em;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  color: var(--theme-text-secondary);
+  white-space: nowrap;
+  width: auto;
+  min-width: fit-content;
+  margin-bottom: 0;
+}
+
+.selectionButton:hover {
+  background-color: var(--theme-section-background);
+  border-color: var(--theme-primary);
+  color: var(--theme-text);
+}
+
+.selectionButton:active {
+  background-color: var(--theme-primary);
+  color: var(--theme-primary-inverse);
+  border-color: var(--theme-primary);
+  font-weight: 600;
 }

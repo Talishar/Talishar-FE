@@ -10,6 +10,11 @@
   border-bottom: 1px solid var(--theme-border-light);
   background-color: var(--theme-section-background);
   flex-shrink: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.75em;
+  flex-wrap: wrap;
 }
 
 .sortButtonGroup {
@@ -50,8 +55,6 @@
 
 .sortHeader {
   display: none;
-  padding: 0.5em 0;
-  margin-bottom: 0.5em;
 }
 
 .expandButton {
@@ -63,7 +66,6 @@
   font-size: 0.9em;
   font-weight: 500;
   color: var(--theme-text-secondary);
-  width: 100%;
   text-align: left;
   transition: all 0.2s ease;
   display: flex;
@@ -79,22 +81,27 @@
   color: var(--theme-text);
 }
 
-@media (max-width: 768px) {
-  .sortHeader {
-    display: block;
-  }
 
+
+@media (min-width: 1200px) and (max-width: 1400px) {
   .sortControls {
-    padding: 0.5em 0.75em;
-  }
-
-  .sortButtonGroup {
-    gap: 0.5em;
+    padding: 0.5em 0.5em;
+    gap: 0.4em;
   }
 
   .sortButton {
-    padding: 0.4em 0.8em;
-    font-size: 0.85em;
+    padding: 0.35em 0.7em;
+    font-size: 0.8em;
+  }
+
+  .expandButton {
+    padding: 0.35em 0.7em;
+    font-size: 0.8em;
+  }
+
+  .selectionButton {
+    padding: 0.35em 0.7em;
+    font-size: 0.8em;
   }
 }
 
@@ -165,4 +172,44 @@
 .container input[type='checkbox']:checked + div > img {
   box-shadow: 0 0 0 2px var(--theme-primary);
   filter: brightness(1);
+}
+
+.selectionButtons {
+  display: flex;
+  gap: 0.5em;
+}
+
+.selectionButton {
+  padding: 0.5em 1em;
+  border: 1px solid var(--theme-border);
+  background-color: var(--theme-card-background);
+  border-radius: 0.25em;
+  cursor: pointer;
+  font-size: 0.9em;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  color: var(--theme-text-secondary);
+  white-space: nowrap;
+  width: auto;
+  min-width: fit-content;
+  margin-bottom: 0;
+}
+
+.selectionButton:hover {
+  background-color: var(--theme-section-background);
+  border-color: var(--theme-primary);
+  color: var(--theme-text);
+}
+
+.selectionButton:active {
+  background-color: var(--theme-primary);
+  color: var(--theme-primary-inverse);
+  border-color: var(--theme-primary);
+  font-weight: 600;
+}
+
+@media (min-width: 1200px) {
+  .selectionButtons {
+    display: none;
+  }
 }

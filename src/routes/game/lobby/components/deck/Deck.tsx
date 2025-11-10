@@ -21,6 +21,39 @@ const Deck = ({ deck, cardDictionary = [] }: DeckProps) => {
   const [sortMode, setSortMode] = useState<SortMode>('none');
   const [filtersExpanded, setFiltersExpanded] = useState(true);
 
+  const DeckSelectionButtons = () => {
+    const { setFieldValue } = useFormikContext<DeckResponse>();
+
+    const handleSelectAll = () => {
+      setFieldValue('deck', deck);
+    };
+
+    const handleSelectNone = () => {
+      setFieldValue('deck', []);
+    };
+
+    return (
+      <div className={styles.selectionButtons}>
+        <button
+          className={styles.selectionButton}
+          onClick={handleSelectAll}
+          type="button"
+          title="Select all cards"
+        >
+          Select All
+        </button>
+        <button
+          className={styles.selectionButton}
+          onClick={handleSelectNone}
+          type="button"
+          title="Deselect all cards"
+        >
+          Select None
+        </button>
+      </div>
+    );
+  };
+
   const getImageSrc = (currentCardNumber: string) =>
     getCollectionCardImagePath({
       path: CARD_SQUARES_PATH,
@@ -491,92 +524,91 @@ const Deck = ({ deck, cardDictionary = [] }: DeckProps) => {
   return (
     <div className={styles.deckContainer}>
       <div className={styles.sortControls}>
-        <div className={styles.sortHeader}>
-          <button
-            className={styles.expandButton}
-            onClick={() => setFiltersExpanded(!filtersExpanded)}
-            type="button"
-            title={filtersExpanded ? 'Collapse filters' : 'Expand filters'}
-          >
-            {filtersExpanded ? <MdArrowDropDown /> : <MdArrowRight />}
-            Filters
-          </button>
-        </div>
+        <button
+          className={styles.expandButton}
+          onClick={() => setFiltersExpanded(!filtersExpanded)}
+          type="button"
+          title={filtersExpanded ? 'Collapse filters' : 'Expand filters'}
+        >
+          {filtersExpanded ? <MdArrowDropDown size={24} /> : <MdArrowRight size={24} />}
+          Filters
+        </button>
+        <DeckSelectionButtons />
         {filtersExpanded && (
-          <div className={styles.sortButtonGroup}>
-          <button
-            className={`${styles.sortButton} ${sortMode === 'none' ? styles.active : ''}`}
-            onClick={() => setSortMode('none')}
-            type="button"
-            title="Display cards in original order"
-          >
-            Default
-          </button>
-          <button
-            className={`${styles.sortButton} ${sortMode === 'pitch' ? styles.active : ''}`}
-            onClick={() => setSortMode('pitch')}
-            type="button"
-            title="Sort cards by pitch only"
-          >
-            By Pitch
-          </button>
-          <button
-            className={`${styles.sortButton} ${sortMode === 'name' ? styles.active : ''}`}
-            onClick={() => setSortMode('name')}
-            type="button"
-            title="Group cards by pitch, then sort by name"
-          >
-            By Pitch & Name
-          </button>
-          <button
-            className={`${styles.sortButton} ${sortMode === 'power' ? styles.active : ''}`}
-            onClick={() => setSortMode('power')}
-            type="button"
-            title="Sort cards by power (higher first)"
-          >
-            By Power
-          </button>
-          <button
-            className={`${styles.sortButton} ${sortMode === 'blockValue' ? styles.active : ''}`}
-            onClick={() => setSortMode('blockValue')}
-            type="button"
-            title="Sort cards by block value (higher first)"
-          >
-            By Block Value
-          </button>
-          <button
-            className={`${styles.sortButton} ${sortMode === 'class' ? styles.active : ''}`}
-            onClick={() => setSortMode('class')}
-            type="button"
-            title="Group cards by class"
-          >
-            By Class
-          </button>
-          <button
-            className={`${styles.sortButton} ${sortMode === 'talent' ? styles.active : ''}`}
-            onClick={() => setSortMode('talent')}
-            type="button"
-            title="Group cards by talent"
-          >
-            By Talent
-          </button>
-          <button
-            className={`${styles.sortButton} ${sortMode === 'subtype' ? styles.active : ''}`}
-            onClick={() => setSortMode('subtype')}
-            type="button"
-            title="Group cards by subtype"
-          >
-            By Subtype
-          </button>
-          <button
-            className={`${styles.sortButton} ${sortMode === 'cost' ? styles.active : ''}`}
-            onClick={() => setSortMode('cost')}
-            type="button"
-            title="Sort cards by cost (lowest first)"
-          >
-            By Cost
-          </button>
-        </div>
+          <>
+            <button
+              className={`${styles.sortButton} ${sortMode === 'none' ? styles.active : ''}`}
+              onClick={() => setSortMode('none')}
+              type="button"
+              title="Display cards in original order"
+            >
+              Default
+            </button>
+            <button
+              className={`${styles.sortButton} ${sortMode === 'pitch' ? styles.active : ''}`}
+              onClick={() => setSortMode('pitch')}
+              type="button"
+              title="Sort cards by pitch only"
+            >
+              Pitch
+            </button>
+            <button
+              className={`${styles.sortButton} ${sortMode === 'name' ? styles.active : ''}`}
+              onClick={() => setSortMode('name')}
+              type="button"
+              title="Group cards by pitch, then sort by name"
+            >
+              Pitch & Name
+            </button>
+            <button
+              className={`${styles.sortButton} ${sortMode === 'power' ? styles.active : ''}`}
+              onClick={() => setSortMode('power')}
+              type="button"
+              title="Sort cards by power (higher first)"
+            >
+              Power
+            </button>
+            <button
+              className={`${styles.sortButton} ${sortMode === 'blockValue' ? styles.active : ''}`}
+              onClick={() => setSortMode('blockValue')}
+              type="button"
+              title="Sort cards by block value (higher first)"
+            >
+              Block Value
+            </button>
+            <button
+              className={`${styles.sortButton} ${sortMode === 'class' ? styles.active : ''}`}
+              onClick={() => setSortMode('class')}
+              type="button"
+              title="Group cards by class"
+            >
+              Class
+            </button>
+            <button
+              className={`${styles.sortButton} ${sortMode === 'talent' ? styles.active : ''}`}
+              onClick={() => setSortMode('talent')}
+              type="button"
+              title="Group cards by talent"
+            >
+              Talent
+            </button>
+            <button
+              className={`${styles.sortButton} ${sortMode === 'subtype' ? styles.active : ''}`}
+              onClick={() => setSortMode('subtype')}
+              type="button"
+              title="Group cards by subtype"
+            >
+              Subtype
+            </button>
+            <button
+              className={`${styles.sortButton} ${sortMode === 'cost' ? styles.active : ''}`}
+              onClick={() => setSortMode('cost')}
+              type="button"
+              title="Sort cards by cost (lowest first)"
+            >
+              Cost
+            </button>
+          </>
         )}
       </div>
 
