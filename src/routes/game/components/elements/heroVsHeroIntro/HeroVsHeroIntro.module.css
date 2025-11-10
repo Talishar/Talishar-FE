@@ -165,7 +165,7 @@
   letter-spacing: 2px;
   position: relative;
   z-index: 2;
-  animation: vsPulse 1.5s ease-in-out 0.8s infinite;
+  animation: vsPulse 1.5s ease-in-out 0.8s forwards;
 }
 
 @keyframes vsPulse {
@@ -185,7 +185,8 @@
   height: 120px;
   border: 3px solid rgba(255, 215, 0, 0.4);
   border-radius: 50%;
-  animation: expandPulse 1.5s ease-out 0.8s infinite;
+  animation: expandPulse 1.5s ease-out 0.8s forwards;
+  pointer-events: none;
 }
 
 @keyframes expandPulse {
