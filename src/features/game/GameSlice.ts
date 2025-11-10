@@ -73,6 +73,11 @@ export const nextTurn = createAsyncThunk(
         waitingForJSONResponse = false;
         data = data.toString().trim();
         const indexOfBraces = data.indexOf('{');
+        if (indexOfBraces === -1) {
+          // No JSON object found - backend returned an error message or non-JSON response
+          toast.error(`Backend Error: ${sanitizeHtmlTags(data)}`);
+          return console.error(`Backend returned non-JSON response: ${data}`);
+        }
         if (indexOfBraces !== 0) {
           const warningMessage = sanitizeHtmlTags(data.substring(0, indexOfBraces));
           toast.error(`Backend Warning: ${warningMessage}`);          
@@ -130,6 +135,11 @@ export const gameLobby = createAsyncThunk(
         waitingForJSONResponse = false;
         data = data.toString().trim();
         const indexOfBraces = data.indexOf('{');
+        if (indexOfBraces === -1) {
+          // No JSON object found - backend returned an error message or non-JSON response
+          toast.error(`Backend Error: ${sanitizeHtmlTags(data)}`);
+          return console.error(`Backend returned non-JSON response: ${data}`);
+        }
         if (indexOfBraces !== 0) {
           data = data.substring(indexOfBraces);
         }
