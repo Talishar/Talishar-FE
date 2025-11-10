@@ -82,6 +82,7 @@ const SettingsPage = () => {
     cardBack: String(settingsData['CardBack']?.value ?? '0'),
     playMat: String(settingsData['Playmat']?.value ?? '0'),
     disableFabInsights: String(settingsData['DisableFabInsights']?.value) === '1',
+    disableHeroIntro: String(settingsData['DisableHeroIntro']?.value) === '1',
   };
 
   const priorityOptions = [
@@ -312,6 +313,17 @@ const SettingsPage = () => {
                 handleSettingsChange({
                   name: optConst.DISABLE_ALT_ARTS,
                   value: initialValues.disableAltArts ? '0' : '1'
+                })
+              }
+            />
+            <CheckboxSetting
+              name="disableHeroIntro"
+              label="Disable Hero Intro Animation"
+              checked={initialValues.disableHeroIntro}
+              onChange={() =>
+                handleSettingsChange({
+                  name: optConst.DISABLE_HERO_INTRO,
+                  value: initialValues.disableHeroIntro ? '0' : '1'
                 })
               }
             />

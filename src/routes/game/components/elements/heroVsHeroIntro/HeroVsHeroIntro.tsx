@@ -3,11 +3,13 @@ import { useAppSelector, useAppDispatch } from 'app/Hooks';
 import { shallowEqual } from 'react-redux';
 import { generateCroppedImageUrl } from 'utils/cropImages';
 import { markHeroIntroAsShown } from 'features/game/GameSlice';
+import { getSettingsEntity } from 'features/options/optionsSlice';
 import styles from './HeroVsHeroIntro.module.css';
 
 const HeroVsHeroIntro = () => {
   const dispatch = useAppDispatch();
   const gameState = useAppSelector((state: any) => state.game, shallowEqual);
+  const settingsData = useAppSelector(getSettingsEntity);
   const [isVisible, setIsVisible] = useState(true);
   
   const gameID = gameState?.gameInfo?.gameID;
@@ -38,8 +40,8 @@ const HeroVsHeroIntro = () => {
   };
 
   // Display names with fallbacks: use Redux name first, then format the card ID if available
-  const displayYourHeroName = yourHeroName || formatHeroName(yourHero) || 'Your Hero';
-  const displayOpponentHeroName = formatHeroName(opponentHeroName || opponentHero) || 'Opponent';
+  const displayYourHeroName = formatHeroName(yourHero) || 'Your Hero';
+  const displayOpponentHeroName = formatHeroName(opponentHero) || 'Opponent';
 
   // Check localStorage to see if intro was already shown in this game session
   useEffect(() => {
@@ -63,7 +65,7 @@ const HeroVsHeroIntro = () => {
       if (gameID) {
         localStorage.setItem(`heroIntroShown_${gameID}`, 'true');
       }
-    }, 2000);
+    }, 10000);
 
     return () => clearTimeout(timer);
 
@@ -78,8 +80,11 @@ const HeroVsHeroIntro = () => {
     ? gameState?.playerTwo?.isPatron || gameState?.playerTwo?.isPvtVoidPatron || gameState?.playerTwo?.isContributor
     : gameState?.playerOne?.isPatron || gameState?.playerOne?.isPvtVoidPatron || gameState?.playerOne?.isContributor;
 
-  // Don't render if not visible or if missing hero data
-  if (!isVisible || !yourHero || !opponentHero) {
+  // Check if hero intro is disabled
+  const disableHeroIntro = settingsData['DisableHeroIntro']?.value === '1';
+
+  // Don't render if not visible or if missing hero data or if disabled
+  if (!isVisible || !yourHero || !opponentHero || disableHeroIntro) {
     return null;
   }
 

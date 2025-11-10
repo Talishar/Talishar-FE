@@ -77,6 +77,7 @@ const OptionsSettings = () => {
     alwaysAllowUndo: settingsData['AlwaysAllowUndo']?.value === '1',
     manualTunic: settingsData['ManualTunic']?.value === '1',
     disableFabInsights: settingsData['DisableFabInsights']?.value === '1',
+    disableHeroIntro: settingsData['DisableHeroIntro']?.value === '1',
   };
   
   useShortcut(DEFAULT_SHORTCUTS.TOGGLE_MANUAL_MODE, () => {
@@ -305,6 +306,17 @@ const OptionsSettings = () => {
             handleSettingsChange({
               name: optConst.DISABLE_ALT_ARTS,
               value: initialValues.disableAltArts ? '0' : '1'
+            })
+          }
+        />
+        <CheckboxSetting
+          name="disableHeroIntro"
+          label="Disable Hero Intro Animation"
+          checked={initialValues.disableHeroIntro}
+          onChange={() =>
+            handleSettingsChange({
+              name: optConst.DISABLE_HERO_INTRO,
+              value: initialValues.disableHeroIntro ? '0' : '1'
             })
           }
         />

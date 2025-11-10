@@ -48,8 +48,8 @@ function Play({ isRoguelike }: { isRoguelike: boolean }) {
       const currentHeroName = gameState?.gameInfo?.heroName;
       const currentOpponentHeroName = gameState?.gameInfo?.opponentHeroName;
       
-      // Only dispatch if we don't have opponent hero name yet (first load)
-      if (!currentOpponentHeroName) {
+      // Only dispatch if we don't have opponent hero card number yet (first load)
+      if (!gameState?.gameInfo?.opponentHeroCardNumber) {
         const yourCardNumber = playerID === 1 ? playerOneHero.cardNumber : playerTwoHero.cardNumber;
         const opponentCardNumber = playerID === 1 ? playerTwoHero.cardNumber : playerOneHero.cardNumber;
         
@@ -57,7 +57,6 @@ function Play({ isRoguelike }: { isRoguelike: boolean }) {
           setHeroInfo({
             heroName: currentHeroName,
             yourHeroCardNumber: yourCardNumber,
-            opponentHeroName: opponentCardNumber,
             opponentHeroCardNumber: opponentCardNumber
           })
         );

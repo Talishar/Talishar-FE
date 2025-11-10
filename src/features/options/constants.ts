@@ -19,6 +19,7 @@ export const MY_PLAYMAT = 'Playmat';
 export const ALWAYS_ALLOW_UNDO = 'AlwaysAllowUndo';
 export const MANUAL_TUNIC = 'ManualTunic';
 export const DISABLE_FABINSIGHTS = 'DisableFabInsights';
+export const DISABLE_HERO_INTRO = 'DisableHeroIntro';
 
 export enum HOLD_PRIORITY_ENUM {
   AUTO = 0,
