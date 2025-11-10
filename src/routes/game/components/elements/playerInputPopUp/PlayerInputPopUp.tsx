@@ -13,7 +13,7 @@ import { NewOptInput } from './components/NewOptInput';
 import { TriggerOrderInput } from './components/TriggerOrderInput';
 import { FormProps } from './playerInputPopupTypes';
 import { OtherInput } from './components/OtherInput';
-import { parseTextToElements } from 'utils/ParseEscapedString';
+import { parseHtmlToReactElements } from 'utils/ParseEscapedString';
 
 const PlayerInputFormTypeMap: {
   [key: string]: (props: FormProps) => JSX.Element;
@@ -119,7 +119,7 @@ export default function PlayerInputPopUp() {
   const FormDisplay =
     PlayerInputFormTypeMap[inputPopUp.popup?.id || ''] || OtherInput;
   
-  const titleElements = parseTextToElements(inputPopUp?.popup?.title ?? '');
+  const titleElements = parseHtmlToReactElements(inputPopUp?.popup?.title ?? '');
 
   return (
     <motion.div

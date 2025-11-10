@@ -8,7 +8,7 @@ import ReorderLayers from './ReorderLayers';
 import useShowModal from 'hooks/useShowModals';
 import { submitButton } from 'features/game/GameSlice';
 import { PROCESS_INPUT } from 'appConstants';
-import { parseTextToElements } from 'utils/ParseEscapedString';
+import { parseHtmlToReactElements, parseTextToElements } from 'utils/ParseEscapedString';
 import { BiTargetLock } from 'react-icons/bi';
 import Button from '../../../../../features/Button';
 
@@ -94,9 +94,9 @@ export default function ActiveLayersZone() {
             <ReorderLayers cards={reorderableCards ?? []} />
           </div>
           <div className={styles.activeLayersCallToAction}>
-            <div
-              dangerouslySetInnerHTML={{ __html: playerPrompt?.helpText ?? '' }}
-            ></div>
+            <div>
+              {parseHtmlToReactElements(playerPrompt?.helpText ?? '')}
+            </div>
             {buttons}
           </div>
         </motion.div>
