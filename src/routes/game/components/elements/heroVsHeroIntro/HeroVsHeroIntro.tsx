@@ -74,6 +74,9 @@ const HeroVsHeroIntro = () => {
     ? gameState?.playerTwo?.isPatron || gameState?.playerTwo?.isPvtVoidPatron || gameState?.playerTwo?.isContributor
     : gameState?.playerOne?.isPatron || gameState?.playerOne?.isPvtVoidPatron || gameState?.playerOne?.isContributor;
 
+  // Temporarily disabled due to browser crashes - return null to hide component
+  return null;
+  
   // Don't render if not visible or if missing hero data
   if (!isVisible || !yourHero || !opponentHero) {
     return null;
