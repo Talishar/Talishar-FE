@@ -39,7 +39,7 @@ import CardPortal from '../components/elements/cardPortal/CardPortal';
 import Matchups from './components/matchups/Matchups';
 import { GameLocationState } from 'interface/GameLocationState';
 import CardPopUp from '../components/elements/cardPopUp/CardPopUp';
-import { getGameInfo } from 'features/game/GameSlice';
+import { getGameInfo, setHeroInfo } from 'features/game/GameSlice';
 import useSound from 'use-sound';
 import playerJoined from 'sounds/playerJoinedSound.mp3';
 import { createPortal } from 'react-dom';
@@ -57,6 +57,7 @@ const Lobby = () => {
   const [isWideScreen, setIsWideScreen] = useState<boolean>(false);
   const [isDeckValid, setIsDeckValid] = useState(true);
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const { isLoggedIn } = useAuth();
   const { playerID, gameID, authKey } = useAppSelector(
@@ -162,11 +163,21 @@ const Lobby = () => {
   // Navigate to main game when ready - must be in useEffect to avoid setState during render
   useEffect(() => {
     if (gameLobby?.isMainGameReady) {
+      // Dispatch hero info to Redux before navigating
+      dispatch(
+        setHeroInfo({
+          heroName: data?.deck?.heroName,
+          yourHeroCardNumber: data?.deck?.hero,
+          opponentHeroName: gameLobby?.theirHeroName,
+          opponentHeroCardNumber: gameLobby?.theirHero
+        })
+      );
+      
       navigate(`/game/play/${gameID}`, {
         state: { playerID: playerID ?? 0 } as GameLocationState
       });
     }
-  }, [gameLobby?.isMainGameReady, gameID, playerID, navigate]);
+  }, [gameLobby?.isMainGameReady, gameID, playerID, navigate, dispatch, data?.deck?.heroName, data?.deck?.hero, gameLobby?.theirHeroName, gameLobby?.theirHero]);
 
   const deckClone = [...data.deck.cards];
   const deckSBClone = [...data.deck.cardsSB];
@@ -257,7 +268,6 @@ const Lobby = () => {
   const [showChatModal, setShowChatModal] = useState(true);
   const [chatModal, setChatModal] = useState('');
   const [modal, setModal] = useState('Do you want to enable chat?');
-  const dispatch = useAppDispatch();
 
   const clickYes = (e: any) => {
     e.preventDefault();
