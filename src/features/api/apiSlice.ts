@@ -278,7 +278,7 @@ export const apiSlice = createApi({
       query: (body: DeleteDeckAPIRequest) => {
         return {
           url: URL_END_POINT.DELETE_DECK,
-          method: 'post',
+          method: 'POST',
           body: body,
           responseHandler: parseResponse
         };
