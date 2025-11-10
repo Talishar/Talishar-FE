@@ -32,6 +32,7 @@ function Play({ isRoguelike }: { isRoguelike: boolean }) {
 
   const dispatch = useAppDispatch();
   const gameState = useAppSelector((state: any) => state.game, shallowEqual);
+  const heroIntroShown = useAppSelector((state: any) => state.game.heroIntroShown);
 
   useEffect(() => {
     dispatch(setIsRoguelike(isRoguelike));
@@ -131,7 +132,7 @@ function Play({ isRoguelike }: { isRoguelike: boolean }) {
         </div>
         <RightColumn />
       </div>
-      <HeroVsHeroIntro />
+      {!heroIntroShown && <HeroVsHeroIntro />}
       <CardListZone />
       <ActiveLayersZone />
       <OptionsMenu />
