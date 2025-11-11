@@ -109,6 +109,11 @@ const HeroVsHeroIntro = () => {
   // Check if hero intro is disabled
   const disableHeroIntro = settingsData['DisableHeroIntro']?.value === '1';
 
+  // Don't render if player is spectating
+  if (playerID === 3) {
+    return null;
+  }
+
   // Don't render if not visible or if missing hero data or if disabled
   if (!isVisible || !yourHero || !opponentHero || disableHeroIntro) {
     return null;
