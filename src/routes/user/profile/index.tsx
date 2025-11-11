@@ -53,15 +53,29 @@ export const ProfilePage = () => {
   };
 
   const handleDeleteDeck = async (deckLink: string) => {
+    console.log('[Deck Deletion] Starting deck deletion for:', deckLink);
     try {
       const deleteDeckPromise = deleteDeck({ deckLink }).unwrap();
       toast.promise(
         deleteDeckPromise,
         {
           loading: 'Deleting deck...',
-          success: (data) => handleDeleteDeckMessage(data),
-          error: (err) =>
-            `There has been an error, please try again. Error: ${err.toString()}`
+          success: (data) => {
+            console.log('[Deck Deletion] Success response:', data);
+            return handleDeleteDeckMessage(data);
+          },
+          error: (err) => {
+            console.error('[Deck Deletion] Error response:', {
+              errorObject: err,
+              message: err?.message,
+              error: err?.error,
+              status: err?.status,
+              statusCode: err?.statusCode,
+              data: err?.data,
+              toString: err?.toString()
+            });
+            return `There has been an error, please try again. Error: ${err.toString()}`;
+          }
         },
         {
           style: {
@@ -71,9 +85,17 @@ export const ProfilePage = () => {
         }
       );
       const resp = await deleteDeckPromise;
+      console.log('[Deck Deletion] Full API response:', resp);
     } catch (err) {
-      console.warn(err);
+      console.error('[Deck Deletion] Caught exception:', {
+        errorObject: err,
+        message: err instanceof Error ? err.message : 'Unknown error',
+        stack: err instanceof Error ? err.stack : 'No stack trace',
+        toString: err?.toString(),
+        type: typeof err
+      });
     } finally {
+      console.log('[Deck Deletion] Refetching decks list');
       deckRefetch();
     }
   };
@@ -91,6 +113,7 @@ export const ProfilePage = () => {
     }
 
     setIsAddingDeck(true);
+    console.log('[Deck Addition] Starting deck addition with URL:', newDeckUrl);
     try {
       // Reuse the existing CreateGame flow to save the deck to favorites
       const gamePayload: CreateGameAPI = {
@@ -105,14 +128,30 @@ export const ProfilePage = () => {
         gameDescription: ''
       };
 
+      console.log('[Deck Addition] Game payload created:', gamePayload);
+
       const addDeckPromise = createGame(gamePayload).unwrap();
       toast.promise(
         addDeckPromise,
         {
           loading: 'Adding deck to favorites...',
-          success: () => 'Deck added to favorites successfully!',
-          error: (err) =>
-            `Error adding deck: ${err?.message || err?.error || err?.toString() || 'Invalid deck URL or deck not accessible'}`
+          success: (data) => {
+            console.log('[Deck Addition] Success response:', data);
+            return 'Deck added to favorites successfully!';
+          },
+          error: (err) => {
+            console.error('[Deck Addition] Error response:', {
+              errorObject: err,
+              message: err?.message,
+              error: err?.error,
+              status: err?.status,
+              statusCode: err?.statusCode,
+              originalStatus: err?.originalStatus,
+              data: err?.data,
+              toString: err?.toString()
+            });
+            return `Error adding deck: ${err?.message || err?.error || err?.toString() || 'Invalid deck URL or deck not accessible'}`;
+          }
         },
         {
           style: {
@@ -121,11 +160,19 @@ export const ProfilePage = () => {
           position: 'top-center'
         }
       );
-      await addDeckPromise;
+      const result = await addDeckPromise;
+      console.log('[Deck Addition] Full API response:', result);
       setNewDeckUrl('');
     } catch (err) {
-      console.warn(err);
+      console.error('[Deck Addition] Caught exception:', {
+        errorObject: err,
+        message: err instanceof Error ? err.message : 'Unknown error',
+        stack: err instanceof Error ? err.stack : 'No stack trace',
+        toString: err?.toString(),
+        type: typeof err
+      });
     } finally {
+      console.log('[Deck Addition] Refetching decks list');
       setIsAddingDeck(false);
       deckRefetch();
     }
