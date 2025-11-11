@@ -25,10 +25,20 @@ const GoogleAdSense: React.FC<GoogleAdSenseProps> = ({
   const [adBlocked, setAdBlocked] = useState(false);
   const [hasConsent, setHasConsent] = useState<boolean | null>(null);
 
-  // Check for cookie consent on mount
+  // Check for cookie consent on mount and when it changes
   useEffect(() => {
     const consentStatus = localStorage.getItem('cookieConsent');
     setHasConsent(consentStatus === 'accepted');
+
+    // Listen for storage changes (when consent is set in another component)
+    const handleStorageChange = () => {
+      const updatedConsent = localStorage.getItem('cookieConsent');
+      setHasConsent(updatedConsent === 'accepted');
+      console.log('✅ Cookie consent changed:', updatedConsent);
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
 
   useEffect(() => {
@@ -61,14 +71,16 @@ const GoogleAdSense: React.FC<GoogleAdSenseProps> = ({
         return;
       }
 
-      // Check if ad container exists and has content
+      // Check if ad container exists and has content (mock or real)
       const adContainer = document.querySelector(`.adsbygoogle[data-ad-slot="${slot}"]`);
       if (adContainer) {
-        // Check for iframe - this means ad successfully rendered
+        // Check for iframe (real ad) or mock ad indicator
         const hasIframe = adContainer.querySelector('iframe');
-        if (!hasIframe) {
+        if (hasIframe) {
+          console.log('AdSense: Ad rendered successfully!');
+        } else {
           // No iframe means ad failed to load
-          console.warn('AdSense ad failed to render. Ad blocker or content restriction detected.');
+          console.warn('AdSense: Ad container exists but no iframe. Likely content restriction or approval issue.');
           setAdBlocked(true);
         }
       } else {

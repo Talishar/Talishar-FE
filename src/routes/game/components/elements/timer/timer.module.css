@@ -1,7 +1,7 @@
 .timerStyle {
   font-size: 1.1em;
   font-weight: 550;
-  color: var(--primary);
+  color: var(--theme-primary);
   text-align: center;
 }
 

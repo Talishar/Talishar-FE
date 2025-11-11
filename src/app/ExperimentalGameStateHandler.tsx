@@ -60,7 +60,7 @@ const ExperimentalGameStateHandler = () => {
     };
 
     source.onerror = (error) => {
-      console.error('EventSource connection error:', error);
+      //console.error('EventSource connection error:', error);
       source.close();
     };
 

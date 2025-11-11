@@ -8,6 +8,8 @@ import styles from './Index.module.css';
 import TalisharLogo from '../../img/TalisharLogo.webp';
 import News from 'routes/news';
 import DevTool from './components/devTool';
+import AboutSection from './components/AboutSection';
+import CommunityContent from './components/CommunityContent';
 
 const Index = () => {
   const dispatch = useAppDispatch();
@@ -31,14 +33,13 @@ const Index = () => {
         <div className={styles.createGameContainer}>
           <CreateGame />
         </div>
-        <div className={styles.createGameContainer}>
-          <LoadReplay />
-        </div>
-        {/* <article className={styles.newsContainer}>
-          <img src={TalisharLogo} className={styles.logo} />
+        <article className={styles.newsContainer}>
+          <img src={TalisharLogo} className={styles.logo} alt="Talishar Logo" />
           <News />
-        </article> */}
+        </article> */
       </div>
+      <CommunityContent />
+      <AboutSection />
     </main>
   );
 };

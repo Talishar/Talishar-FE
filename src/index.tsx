@@ -5,11 +5,11 @@ import { store } from './app/Store';
 import reportWebVitals from './reportWebVitals';
 import { CookiesProvider } from 'react-cookie';
 import './index.scss';
-import { Toaster } from 'react-hot-toast';
 import { router } from 'routes';
 import { RouterProvider } from 'react-router-dom';
 import CookieConsent from 'components/CookieConsent';
 import { initializeAdSense } from 'utils/adsenseInit';
+import { ThemeProvider } from './themes/ThemeContext';
 
 // Initialize AdSense if user has already consented
 initializeAdSense();
@@ -22,28 +22,11 @@ const root = createRoot(container);
 root.render(
   <StrictMode>
     <CookiesProvider>
-      <Provider store={store}>
-        <Toaster
-          position="top-left"
-          toastOptions={{
-            style: {
-              background: 'var(--dark-red)',
-              color: 'var(--white)',
-              border: '1px solid var(--primary)',
-              padding: '0.5rem',
-              wordBreak: 'break-word',
-              maxWidth: '100vh', 
-              overflow: 'hidden', 
-              textOverflow: 'ellipsis', 
-              userSelect: 'none',
-              msUserSelect: 'none',
-              WebkitUserSelect: 'none',
-              MozUserSelect: 'none',
-            }
-          }}
-        />
-        <RouterProvider router={router} />
-      </Provider>
+      <ThemeProvider>
+        <Provider store={store}>
+          <RouterProvider router={router} />
+        </Provider>
+      </ThemeProvider>
     </CookiesProvider>
   </StrictMode>
 );

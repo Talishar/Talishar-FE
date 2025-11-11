@@ -8,30 +8,34 @@
   align-items: center;
   justify-content: space-between;
   padding: 0.5rem;
-  background: var(--form-element-background-color, #fff);
-  border: 1px solid var(--form-element-border-color, #ccc);
+  background: var(--theme-form-background, #33383d);
+  color: var(--theme-text, #f4eded);
+  border: 1px solid var(--theme-form-border, #797c80);
   border-radius: 0.5rem;
   cursor: pointer;
   min-height: 2.5rem;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
+  margin-bottom: var(--spacing);
 }
 
 .selectTrigger:hover {
-  border-color: var(--form-element-hover-border-color, #999);
+  border-color: var(--theme-primary, #d4af37);
+  background: var(--theme-form-active, #3d424a);
 }
 
 .selectTrigger:focus {
   outline: none;
-  border-color: var(--primary, #0066cc);
-  box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+  border-color: var(--theme-primary, #d4af37);
+  box-shadow: 0 0 0 3px var(--theme-primary-focus, rgba(212, 175, 55, 0.1));
 }
 
 .selectTrigger.open {
-  border-color: var(--primary, #0066cc);
+  border-color: var(--theme-primary, #d4af37);
+  background: var(--theme-form-active, rgba(212, 175, 55, 0.1));
 }
 
 .selectTrigger.invalid {
-  border-color: var(--form-element-invalid-border-color, #dc3545);
+  border-color: var(--theme-error, #dc3545);
 }
 
 .disabled .selectTrigger {
@@ -47,7 +51,7 @@
 }
 
 .placeholder {
-  color: var(--form-element-placeholder-color, #999);
+  color: var(--theme-text-muted, #999);
 }
 
 .optionImage {
@@ -72,8 +76,8 @@
   top: calc(100% + 0.25rem);
   left: 0;
   right: 0;
-  background: var(--form-element-background-color, #fff);
-  border: 1px solid var(--form-element-border-color, #ccc);
+  background: var(--theme-form-background, #33383d);
+  border: 1px solid var(--theme-form-border, #797c80);
   border-radius: 0.5rem;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   max-height: 400px;
@@ -100,24 +104,26 @@
   padding: 0.5rem;
   cursor: pointer;
   transition: background-color 0.15s;
+  color: var(--theme-text, #f4eded);
 }
 
 .option:hover {
-  background-color: var(--form-element-hover-background-color, #f0f0f0);
+  background-color: var(--theme-form-active, rgba(212, 175, 55, 0.1));
 }
 
 .option:focus {
   outline: none;
-  background-color: var(--form-element-hover-background-color, #f0f0f0);
+  background-color: var(--theme-form-active, rgba(212, 175, 55, 0.1));
 }
 
 .option.selected {
-  background-color: var(--primary-focus, rgba(0, 102, 204, 0.1));
+  background-color: var(--theme-primary-focus, rgba(212, 175, 55, 0.2));
+  color: var(--theme-primary, #d4af37);
   font-weight: 500;
 }
 
 .option.selected:hover {
-  background-color: var(--primary-focus, rgba(0, 102, 204, 0.15));
+  background-color: var(--theme-primary-focus, rgba(212, 175, 55, 0.3));
 }
 
 /* Scrollbar styling */
@@ -130,10 +136,10 @@
 }
 
 .optionsList::-webkit-scrollbar-thumb {
-  background: var(--form-element-border-color, #ccc);
+  background: var(--theme-form-border, #797c80);
   border-radius: 4px;
 }
 
 .optionsList::-webkit-scrollbar-thumb:hover {
-  background: var(--form-element-hover-border-color, #999);
+  background: var(--theme-primary, #d4af37);
 }

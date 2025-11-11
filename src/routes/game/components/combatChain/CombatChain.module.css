@@ -14,7 +14,7 @@
   justify-content: space-between;
   color: var(--white);
   isolation: isolate;
-  border: 1px solid goldenrod;
+  border: 1px solid var(--theme-primary);
   background-color: var(--near-black);
   pointer-events: auto;
   z-index: 10;
@@ -39,7 +39,7 @@
 .grabbyHandle {
   width: calc(var(--card-size) * 0.3);
   height: 100%;
-  background-color: maroon;
+  background-color: var(--theme-tertiary);
   border-radius: 10px;
   display: flex;
   flex-direction: column;
@@ -95,7 +95,7 @@
   justify-content: center;
   align-items: center;
   background-color: rgba(0, 0, 0, 0.5);
-  border: var(--primary) solid 1px;
+  border: var(--theme-primary) solid 1px;
   color: var(--white);
   border-radius: 5px;
   width: 1.5em;
@@ -122,7 +122,7 @@
   background-color: var(--near-black);
   border-width: 1px 1px 1px 1px;
   border-radius: 0 0 0.5em 0.5em;
-  border-color: goldenrod;
+  border-color: var(--theme-primary);
   padding: 5px;
   border-style: solid;
   font-size: 1.2em;
@@ -131,7 +131,7 @@
 }
 
 .buttonDiv {
-  background-color: goldenrod;
+  background-color: var(--theme-primary);
   color: black;
   display: flex;
   flex-direction: row;
@@ -152,8 +152,8 @@
 
 .buttonDiv:hover {
   background-color: black;
-  color: goldenrod;
-  border: 1px solid goldenrod;
+  color: var(--theme-primary);
+  border: 1px solid var(--theme-primary);
   cursor: pointer;
 }
 

@@ -13,6 +13,7 @@
   background: transparent;
   border-radius: var(--border-radius);
   gap: 0.5rem;
+  row-gap: 0.4rem;
 
   &:hover {
     left: 0.3rem;
@@ -21,32 +22,61 @@
 }
 
 .button {
-  background-color: var(--secondary);
+  background-color: var(--theme-secondary);
   margin-bottom: 0;
   flex-shrink: 0;
 }
 
 .description {
-  flex: 1 1 auto;
-  min-width: 100px;
+  flex: 1 1 50px;
+  min-width: 50px;
+  max-width: 200px;
   text-align: center;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0.25rem;
+  padding: 0.1rem;
   word-wrap: break-word;
   overflow-wrap: break-word;
+  font-size: 0.9em;
+  white-space: normal;
 }
 
 .formatName {
   flex: 0.8 1 auto;
-  white-space: nowrap;
+  white-space: normal;
   text-align: center;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  max-width: 130px;
+  font-size: 0.8em;
 }
 
 img {
   max-height: 3em;
   flex-shrink: 0;
+}
+
+/* Allow larger images for Discord embeds and attachments */
+img:is([class*="attachmentImage"], [class*="embedImage"]) {
+  max-height: none;
+}
+
+/* Special handling for reaction emojis */
+img[class*="reactionEmoji"] {
+  max-height: 1em !important;
+  flex-shrink: 0 !important;
+  display: inline !important;
+}
+
+/* Remove margin from Discord message content */
+p:is([class*="messageContent"]) {
+  margin-bottom: 1em !important;
+}
+
+/* Reduce h3 margin in news section */
+h3 {
+  margin-bottom: 0.5em !important;
 }
 
 .heroImg {
@@ -56,45 +86,58 @@ img {
 
 @media (max-width: 1024px) {
   .gameItem {
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
     padding: 0.2rem 0.3rem;
     gap: 0.3rem;
+    row-gap: 0.35rem;
   }
 
   .description {
-    min-width: 70px;
-    padding: 0.1rem;
-    font-size: 0.85em;
-    flex: 1 1 auto;
+    flex: 1 1 60px;
+    min-width: 60px;
+    max-width: 150px;
+    padding: 0.08rem;
+    font-size: 0.8em;
+    white-space: normal;
   }
 
   .formatName {
-    flex: 0.6 1 auto;
-    font-size: 0.85em;
+    flex: 0 0 auto;
+    font-size: 0.8em;
+    white-space: nowrap;
   }
 
   img {
     max-height: 2.2em;
   }
+
+  .button {
+    flex: 0 0 auto;
+    padding: 0.3em 0.5em;
+  }
 }
 
 @media (max-width: 768px) {
   .gameItem {
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
     padding: 0.15rem 0.25rem;
-    gap: 0.25rem;
+    gap: 0.2rem;
+    row-gap: 0.3rem;
   }
 
   .description {
+    flex: 1 1 50px;
     min-width: 50px;
-    padding: 0.05rem;
-    font-size: 0.75em;
-    flex: 1 1 auto;
+    max-width: 150px;
+    display: block;
   }
 
   .formatName {
-    flex: 0.5 1 auto;
-    font-size: 0.75em;
+    flex: 1 1 auto;
+    min-width: 80px;
+    font-size: 0.8em;
+    white-space: normal;
+    text-align: center;
   }
 
   img {
@@ -104,5 +147,6 @@ img {
   .button {
     padding: 0.3em 0.5em;
     font-size: 0.85em;
+    flex: 0 0 auto;
   }
 }

@@ -3,31 +3,180 @@ $primary-500: #f9c116;
 $primary-600: #fbb81d;
 $primary-700: #f9a91e;
 
+// Default theme variables (will be overridden by ThemeContext)
+:root {
+  // Theme colors (set dynamically by ThemeContext)
+  --theme-background: radial-gradient(transparent, black);
+  --theme-card-background: #1e2329;
+  --theme-section-background: linear-gradient(135deg, rgba(30, 35, 41, 0.8) 0%, rgba(26, 31, 38, 0.9) 100%);
+  --theme-section-background-transparent: rgba(30, 35, 41, 0.8);
+  
+  // Text colors
+  --theme-text: #f4eded;
+  --theme-text-secondary: #e0e0e0;
+  --theme-text-muted: rgba(255, 255, 255, 0.6);
+  --color: #f4eded;
+  
+  // Heading colors
+  --h1-color: #f4eded;
+  --h2-color: #e0e0e0;
+  --h3-color: #d4d4d4;
+  --h4-color: #c8c8c8;
+  --h5-color: #bcbcbc;
+  --h6-color: #b0b0b0;
+  
+  // Primary colors
+  --theme-primary: #d4af37;
+  --theme-primary-inverse: #000000;
+  --theme-primary-hover: #e8c547;
+  --theme-primary-focus: rgba(212, 175, 55, 0.125);
+  
+  // Secondary colors
+  --theme-secondary: #606569;
+  --theme-secondary-hover: #757a7f;
+  --theme-secondary-inverse: #ffffff;
+  --theme-secondary-focus: rgba(96, 101, 105, 0.125);
+  
+  // Tertiary colors
+  --theme-tertiary: #4a5056;
+  --theme-tertiary-hover: #5a6066;
+  --theme-tertiary-inverse: #ffffff;
+  --theme-tertiary-focus: rgba(74, 80, 86, 0.125);
+  
+  // Contrast colors
+  --theme-contrast: #f4eded;
+  --theme-contrast-hover: #ffffff;
+  --theme-contrast-inverse: #000000;
+  --theme-contrast-focus: rgba(244, 237, 237, 0.125);
+  
+  // Borders and UI
+  --theme-border: rgba(255, 255, 255, 0.2);
+  --theme-border-light: rgba(255, 255, 255, 0.1);
+  --muted-border-color: #202632;
+  --muted-color: #7b8495;
+  --theme-form-background: #33383d;
+  --theme-form-border: #797c80;
+  --theme-form-active: #33383d;
+  
+  // Dropdown colors
+  --dropdown-background-color: #33383d;
+  --dropdown-border-color: #797c80;
+  --dropdown-color: #f4eded;
+  --dropdown-hover-background-color: rgba(212, 175, 55, 0.15);
+  
+  // Status colors
+  --theme-alarm: #c62828;
+  --theme-success: #28a745;
+  --theme-warning: #feca57;
+  --theme-danger: #c41e3a;
+  
+  // Overlays
+  --theme-near-black: rgba(0, 0, 0, 0.85);
+  --theme-overlay: rgba(0, 0, 0, 0.7);
+  --modal-overlay-background-color: rgba(0, 0, 0, 0.7);
+  
+  // Legacy variables for backward compatibility
+  --snow: var(--theme-text);
+  --white: var(--theme-text);
+  --dark-red: #6f0000;
+  --near-black: var(--theme-near-black);
+  --primary: var(--theme-primary);
+  --primary-inverse: var(--theme-primary-inverse);
+  --primary-hover: var(--theme-primary-hover);
+  --primary-focus: var(--theme-primary-focus);
+  --alarm: var(--theme-alarm);
+  
+  --secondary: var(--theme-secondary);
+  --secondary-hover: var(--theme-secondary-hover);
+  --secondary-inverse: var(--theme-secondary-inverse);
+  --secondary-focus: var(--theme-secondary-focus);
+  
+  --tertiary: var(--theme-tertiary);
+  --tertiary-hover: var(--theme-tertiary-hover);
+  
+  --contrast: var(--theme-contrast);
+  --contrast-hover: var(--theme-contrast-hover);
+  --contrast-inverse: var(--theme-contrast-inverse);
+  --contrast-focus: var(--theme-contrast-focus);
+  
+  --card-background-color: var(--theme-card-background);
+  --form-element-background-color: var(--theme-form-background);
+  --form-element-active-background-color: var(--theme-form-active);
+  --form-element-border-color: var(--theme-form-border);
+  --switch-background-color: var(--theme-form-background);
+  --card-sectionning-background-color: var(--theme-card-background);
+}
+
+// Global styles for select elements
+select {
+  background-color: var(--dropdown-background-color, var(--theme-form-background, #33383d)) !important;
+  color: var(--dropdown-color, var(--theme-text, #f4eded)) !important;
+  border-color: var(--dropdown-border-color, var(--theme-form-border, #797c80)) !important;
+}
+
+select option {
+  background-color: var(--dropdown-background-color, var(--theme-form-background, #33383d)) !important;
+  color: var(--dropdown-color, var(--theme-text, #f4eded)) !important;
+}
+
+select option:hover,
+select option:focus {
+  background-color: var(--dropdown-hover-background-color, rgba(212, 175, 55, 0.15)) !important;
+  color: var(--dropdown-color, var(--theme-text, #f4eded)) !important;
+}
+
+// Global styles for input elements
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="url"],
+textarea {
+  background-color: var(--theme-form-background, #33383d) !important;
+  color: var(--theme-text, #f4eded) !important;
+  border-color: var(--theme-form-border, #797c80) !important;
+  caret-color: var(--theme-text, #f4eded) !important;
+}
+
+input[type="text"]::placeholder,
+input[type="email"]::placeholder,
+input[type="password"]::placeholder,
+input[type="number"]::placeholder,
+input[type="url"]::placeholder,
+textarea::placeholder {
+  color: var(--theme-text-muted, rgba(255, 255, 255, 0.6)) !important;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="number"]:focus,
+input[type="url"]:focus,
+textarea:focus {
+  background-color: var(--theme-form-active, #33383d) !important;
+  border-color: var(--theme-primary, #d4af37) !important;
+  box-shadow: 0 0 0 3px var(--theme-primary-focus, rgba(212, 175, 55, 0.1)) !important;
+}
+
 html,
 body {
   overflow-y: auto;
-  background: radial-gradient(transparent, black),
-    url('./img/backgrounds/dark_bg_texture.webp');
+  background: var(--theme-background), url('./img/backgrounds/dark_bg_texture.webp');
   background-position: center;
   background-size: cover;
-  background-color: rgba(50, 50, 50, 0.5);
-  --snow: #f4eded;
+  background-color: var(--theme-card-background);
+  color: var(--theme-text);
 }
 
-body {
-  --white: var(--snow);
-  --dark-red: #6f0000;
-  --near-black: rgba(0, 0, 0, var(--transparency-intensity));
-  --primary-inverse: #000000;
-  --alarm: #c62828;
-
-  --card-background-color: #1e2329;
-  --form-element-background-color: #33383d;
-  --form-element-active-background-color: #33383d;
-  --form-element-border-color: #797c80;
-  --secondary: #33383d;
-  --switch-background-color: #33383d;
-  --card-sectionning-background-color: #1e2329;
-}
 // Import Pico
 @import '@picocss/pico/scss/pico';
+
+// Override Pico's excessive h2 margin-bottom
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin-bottom: 0.5rem;
+}
