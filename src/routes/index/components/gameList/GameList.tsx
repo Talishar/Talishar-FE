@@ -51,7 +51,7 @@ export interface GameListResponse {
   LastAuthKey?: string;
 }
 
-const GAME_LIST_POLLING_INTERVAL = 15000; // in ms (15 seconds)
+const GAME_LIST_POLLING_INTERVAL = 10000; // in ms
 
 const GameList = () => {
   const [cookies, setCookie, removeCookie] = useCookies(['experimental', 'inProgressGameFilters', 'inProgressGameFriendsFilter']);
@@ -364,7 +364,7 @@ const GameList = () => {
           heroOptions={filteredHeroOptions}
         />
       )}
-      {isLoggedIn && (
+      {isLoggedIn ? (
         <>
           <FormatList
             gameList={sortedOpenGames.filter(
@@ -430,14 +430,7 @@ const GameList = () => {
             isOther
             friendUsernames={friendUsernames}
           />
-        </>
-      )}
-      {!isLoggedIn && !isLoading && (
-        <p style={{ textAlign: 'center' }}>
-          Please <Link to="/user/login">log in</Link> to view open lobbies!
-        </p>
-      )}
-      {data != undefined && (
+          {data != undefined && (
             <div data-testid="games-in-progress" ref={parent}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5em', gap: '0.5em', flexWrap: 'wrap' }}>
                 <h4 
@@ -578,6 +571,14 @@ const GameList = () => {
               )}
             </div>
           )}
+        </>
+      ) : (
+        !isLoading && (
+          <p>
+            Please <Link to="/user/login">log in</Link> to view open lobbies and spectate games!
+          </p>
+        )
+      )}
     </article>
   );
 };
@@ -596,7 +597,7 @@ const InProgressGameList = ({ gameList, name, isFriendsSection, friendUsernames 
     };
   }, []);
 
-  const limitedGameList = isMobile ? gameList.slice(0, 8) : gameList.slice(0, 10);
+  const limitedGameList = isMobile ? gameList.slice(0, 10) : gameList.slice(0, 20);
 
   if (limitedGameList.length === 0) {
     return null;

@@ -22,7 +22,6 @@ import { generateCroppedImageUrl } from 'utils/cropImages';
 import { ImageSelect, ImageSelectOption } from 'components/ImageSelect';
 import { GAME_FORMAT, isPreconFormat, PRECON_DECKS } from 'appConstants';
 import GoogleAdSense from 'components/GoogleAdSense';
-import { getReadableFormatName } from 'utils/formatUtils';
 
 // Helper function to shorten format names
 const shortenFormat = (format: string): string => {
@@ -270,17 +269,6 @@ const JoinGame = () => {
                       Save Deck to ❤️ Favorites
                     </label>
                   )}
-                  <label style={{ marginTop: '1rem' }}>
-                    Game Format
-                    <input
-                      type="text"
-                      id="gameFormat"
-                      aria-label="Game Format"
-                      value={getReadableFormatName(gameFormat || '')}
-                      disabled
-                      readOnly
-                    />
-                  </label>
                 </fieldset>
               </>
             )}
@@ -319,16 +307,9 @@ const JoinGame = () => {
         >
           Back
         </button>
-        {/* Advertisement Section - Clearly separated from form */}
-        <hr style={{ margin: '2rem 0', opacity: 0.3 }} />
-        <div style={{ 
-          marginTop: '1.5rem', 
-          padding: '1rem',
-          textAlign: 'center',
-          backgroundColor: 'rgba(0, 0, 0, 0.2)',
-          borderRadius: '8px',
-        }}>
-          <GoogleAdSense slot="1377353396" format="auto" />
+        {/* Google AdSense Ad */}
+        <div style={{ marginTop: '20px' }}>
+          <GoogleAdSense slot="2328544815" format="auto" />
         </div>
       </article>
     </main>

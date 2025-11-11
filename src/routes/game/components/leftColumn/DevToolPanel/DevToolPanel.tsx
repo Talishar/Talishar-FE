@@ -35,10 +35,8 @@ export default function DevToolPanel() {
 
 function DevToolContent({ gameIdFromUrl, onClose }: { gameIdFromUrl: string; onClose: () => void }) {
   const gameIDInput = useId();
-  const variantInput = useId();
   const localIDInput = useId();
   const [gameID, setGameID] = useState<string | undefined>(undefined);
-  const [variant, setVariant] = useState<string>('0');
   const [localGame, setLocalGame] = useState<string | undefined>(gameIdFromUrl);
   const [debugGameMutation] = useLoadDebugGameMutation();
 
@@ -48,42 +46,18 @@ function DevToolContent({ gameIdFromUrl, onClose }: { gameIdFromUrl: string; onC
     e.preventDefault();
     
     const performMutation = async () => {
-      // Construct the source game ID with variant
-      const sourceGameID = `${gameID?.trim()}-${variant}`;
-      
-      try {
-        const result = await debugGameMutation({ 
-          source: sourceGameID, 
-          target: localGame?.trim() 
-        }).unwrap();
-        
-        // Only reload if mutation succeeds
-        window.location.reload();
-      } catch (error: any) {
-        // Parse the error message from the backend or network error
-        let errorMessage = 'Failed to load game state';
-        
-        if (error?.data?.error) {
-          errorMessage = error.data.error;
-        } else if (error?.message) {
-          errorMessage = error.message;
-        }
-        
-        // Improve message for missing bug reports
-        if (errorMessage.includes('does not exist')) {
-          errorMessage = `Bug report ${sourceGameID} does not exist. Please check the ID and variant.`;
-        } else if (errorMessage.includes('PARSING ERROR')) {
-          errorMessage = `Invalid bug report data for ${sourceGameID}. The files may be corrupted.`;
-        }
-        
-        throw new Error(errorMessage);
-      }
+      // Trim spaces from game IDs before sending
+      await debugGameMutation({ 
+        source: gameID?.trim(), 
+        target: localGame?.trim() 
+      });
+      window.location.reload();
     };
     
     toast.promise(performMutation(), {
       loading: 'Loading debug game state...',
       success: 'Reloading...',
-      error: (err: Error) => err.message || 'Failed to load game state'
+      error: 'Failed to load game state'
     });
   };
 
@@ -102,22 +76,8 @@ function DevToolContent({ gameIdFromUrl, onClose }: { gameIdFromUrl: string; onC
             id={gameIDInput}
             type="text"
             onChange={(e) => setGameID(e.target.value)}
-            placeholder="Enter game ID (e.g., 111)"
+            placeholder="Enter game ID"
           />
-        </div>
-        <div className={styles.formGroup}>
-          <label htmlFor={variantInput}>Bug report variant:</label>
-          <input
-            id={variantInput}
-            type="number"
-            min="0"
-            value={variant}
-            onChange={(e) => setVariant(e.target.value)}
-            placeholder="0"
-          />
-          <small style={{ display: 'block', marginTop: '4px', color: '#888' }}>
-            Will load 111-0, 111-1, 111-2, etc.
-          </small>
         </div>
         <div className={styles.formGroup}>
           <label htmlFor={localIDInput}>Local game ID to overwrite:</label>

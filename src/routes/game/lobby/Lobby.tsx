@@ -9,20 +9,13 @@ import classNames from 'classnames';
 import { FaExclamationCircle } from 'react-icons/fa';
 import { GiCapeArmor } from 'react-icons/gi';
 import { SiBookstack } from 'react-icons/si';
-import { MdGames } from 'react-icons/md';
-import { Form, Formik, useFormikContext } from 'formik';
+import { Form, Formik } from 'formik';
 import deckValidation from './validation';
 import StickyFooter from './components/stickyFooter/StickyFooter';
-import { toast } from 'react-hot-toast';
-import useAuth from 'hooks/useAuth';
 import {
   useGetLobbyInfoQuery,
   useSubmitSideboardMutation,
-  useSubmitLobbyInputMutation,
-  useGetFriendsListQuery,
-  useSendPrivateMessageMutation,
-  useCreateQuickGameMutation,
-  useGetOnlineFriendsQuery
+  useSubmitLobbyInputMutation
 } from 'features/api/apiSlice';
 import { useAppSelector } from 'app/Hooks';
 import { shallowEqual } from 'react-redux';
@@ -30,7 +23,6 @@ import { RootState } from 'app/Store';
 import { DeckResponse, Weapon } from 'interface/API/GetLobbyInfo.php';
 import LobbyUpdateHandler from './components/updateHandler/SideboardUpdateHandler';
 import { GAME_FORMAT, BREAKPOINT_EXTRA_LARGE, CLOUD_IMAGES_URL } from 'appConstants';
-import { getReadableFormatName } from 'utils/formatUtils';
 import ChooseFirstTurn from './components/chooseFirstTurn/ChooseFirstTurn';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import { SubmitSideboardAPI } from 'interface/API/SubmitSideboard.php';
@@ -39,27 +31,23 @@ import CardPortal from '../components/elements/cardPortal/CardPortal';
 import Matchups from './components/matchups/Matchups';
 import { GameLocationState } from 'interface/GameLocationState';
 import CardPopUp from '../components/elements/cardPopUp/CardPopUp';
-import { getGameInfo, setHeroInfo } from 'features/game/GameSlice';
+import { getGameInfo } from 'features/game/GameSlice';
 import useSound from 'use-sound';
 import playerJoined from 'sounds/playerJoinedSound.mp3';
 import { createPortal } from 'react-dom';
 import { useAppDispatch } from 'app/Hooks';
+import useAuth from 'hooks/useAuth';
 import { generateCroppedImageUrl } from 'utils/cropImages';
 import { getSettingsEntity } from 'features/options/optionsSlice';
-import { ChatBar } from '../../../components/chatBar/ChatBar';
 
 const Lobby = () => {
   const [showCalculator, setShowCalculator] = useState(false);
   const [activeTab, setActiveTab] = useState<string>('equipment');
   const [unreadChat, setUnreadChat] = useState<boolean>(false);
-  const [showFriendsPanel, setShowFriendsPanel] = useState(false);
   const [width, height] = useWindowDimensions();
   const [isWideScreen, setIsWideScreen] = useState<boolean>(false);
-  const [isDeckValid, setIsDeckValid] = useState(true);
   const navigate = useNavigate();
-  const dispatch = useAppDispatch();
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  const { isLoggedIn } = useAuth();
   const { playerID, gameID, authKey } = useAppSelector(
     getGameInfo,
     shallowEqual
@@ -86,23 +74,8 @@ const Lobby = () => {
   const [submitLobbyInput, submitLobbyInputData] =
     useSubmitLobbyInputMutation();
 
-  // Friends and game invite queries/mutations
-  const { data: friendsData } = useGetFriendsListQuery(undefined, {
-    skip: !isLoggedIn
-  });
-
-  const { data: onlineFriendsData } = useGetOnlineFriendsQuery(undefined, {
-    skip: !isLoggedIn,
-    pollingInterval: 30000 // Poll every 30 seconds
-  });
-
-  const [sendMessage] = useSendPrivateMessageMutation();
-  const [createQuickGame] = useCreateQuickGameMutation();
-
   useEffect(() => {
-    // Only play sound when opponent first joins (when theirName becomes populated)
-    // Don't play on other updates like messages, invites, etc.
-    if (gameLobby?.theirName && gameLobby.theirName !== '' && !isMuted) {
+    if (gameLobby?.theirName != undefined && gameLobby?.theirName != '' && !isMuted) {
       playLobbyJoin();
     }
   }, [gameLobby?.theirName, isMuted]);
@@ -124,30 +97,6 @@ const Lobby = () => {
     setActiveTab('chat');
   };
 
-  const handleSendGameInviteFromLobby = async (friendUserId: number) => {
-    try {
-      if (!gameID) {
-        toast.error('Game not started yet. Create a game first!');
-        return;
-      }
-
-      // Send the current lobby link to the friend
-      const gameJoinLink = `${window.location.origin}/game/join/${gameID}`;
-      const readableFormat = getReadableFormatName(data?.format || '');
-      const message = readableFormat ? `Join my ${readableFormat} game!` : 'Join my game!';
-      
-      await sendMessage({
-        toUserId: friendUserId,
-        message: message,
-        gameLink: gameJoinLink
-      }).unwrap();
-
-      toast.success(`Invite sent to friend!`);
-    } catch (err: any) {
-      toast.error(err.error || 'Failed to send invite');
-    }
-  };
-
   const toggleShowCalculator = () => {
     setShowCalculator(!showCalculator);
   };
@@ -163,21 +112,11 @@ const Lobby = () => {
   // Navigate to main game when ready - must be in useEffect to avoid setState during render
   useEffect(() => {
     if (gameLobby?.isMainGameReady) {
-      // Dispatch hero info to Redux before navigating
-      dispatch(
-        setHeroInfo({
-          heroName: data?.deck?.heroName,
-          yourHeroCardNumber: data?.deck?.hero,
-          opponentHeroName: gameLobby?.theirHeroName,
-          opponentHeroCardNumber: gameLobby?.theirHero
-        })
-      );
-      
       navigate(`/game/play/${gameID}`, {
         state: { playerID: playerID ?? 0 } as GameLocationState
       });
     }
-  }, [gameLobby?.isMainGameReady, gameID, playerID, navigate, dispatch, data?.deck?.heroName, data?.deck?.hero, gameLobby?.theirHeroName, gameLobby?.theirHero]);
+  }, [gameLobby?.isMainGameReady, gameID, playerID, navigate]);
 
   const deckClone = [...data.deck.cards];
   const deckSBClone = [...data.deck.cardsSB];
@@ -192,11 +131,11 @@ const Lobby = () => {
   const leftPic = `url(${generateCroppedImageUrl(leftHero)})`;
   const rightPic = `url(${generateCroppedImageUrl(rightHero ?? 'UNKNOWNHERO')})`;
 
-  const eqClasses = classNames({});
-  const deckClasses = classNames({});
-  const chatClasses = classNames({});
-  const matchupClasses = classNames({});
-  const leaveClasses = classNames('outline');
+  const eqClasses = classNames({ secondary: activeTab !== 'equipment' });
+  const deckClasses = classNames({ secondary: activeTab !== 'deck' });
+  const chatClasses = classNames({ secondary: activeTab !== 'chat' });
+  const matchupClasses = classNames({ secondary: activeTab !== 'matchups' });
+  const leaveClasses = classNames('secondary outline');
 
   const handleLeave = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -268,6 +207,7 @@ const Lobby = () => {
   const [showChatModal, setShowChatModal] = useState(true);
   const [chatModal, setChatModal] = useState('');
   const [modal, setModal] = useState('Do you want to enable chat?');
+  const dispatch = useAppDispatch();
 
   const clickYes = (e: any) => {
     e.preventDefault();
@@ -346,7 +286,6 @@ const Lobby = () => {
 
   return (
     <main className={mainClassNames}>
-      {isWideScreen && <ChatBar />}
       {gameLobby?.chatInvited &&
         showChatModal &&
         createPortal(
@@ -366,7 +305,7 @@ const Lobby = () => {
           <>
             <dialog open={needToDoDisclaimer}>
               <article className={styles.disclaimerArticles}>
-                <header className={styles.disclaimerHeader}>
+                <header style={{ marginBottom: '1em' }}>
                   ⚠️ Open Format Disclaimer
                 </header>
                 <p style={{ marginBottom: '1em' }}>
@@ -416,9 +355,7 @@ const Lobby = () => {
         enableReinitialize
       >
         <Form className={styles.form}>
-          <div className={classNames(styles.gridLayout, {
-            [styles.noMatchups]: !gameLobby?.matchups || gameLobby.matchups.length === 0
-          })}>
+          <div className={styles.gridLayout}>
             <div className={styles.titleContainer}>
               <CardPopUp
                 cardNumber={data.deck.hero}
@@ -558,9 +495,6 @@ const Lobby = () => {
                       </button>
                     </li>
                   </ul>
-                  <div style={{ marginLeft: 'auto' }}>
-                    <DesktopDeckSelectionButtons deckIndexed={deckIndexed} deckSBIndexed={deckSBIndexed} activeTab={activeTab} />
-                  </div>
                 </nav>
                 {activeTab !== 'deck' && (
                   <Equipment
@@ -570,7 +504,7 @@ const Lobby = () => {
                   />
                 )}
                 {activeTab === 'deck' && (
-                  <Deck deck={[...deckIndexed, ...deckSBIndexed]} cardDictionary={data?.deck?.cardDictionary} />
+                  <Deck deck={[...deckIndexed, ...deckSBIndexed]} />
                 )}
               </div>
             ) : (
@@ -583,73 +517,23 @@ const Lobby = () => {
                   />
                 )}
                 {activeTab === 'deck' && (
-                  <Deck deck={[...deckIndexed, ...deckSBIndexed]} cardDictionary={data?.deck?.cardDictionary} />
+                  <Deck deck={[...deckIndexed, ...deckSBIndexed]} />
                 )}
               </>
             )}
             {(activeTab === 'chat' || isWideScreen) && (
-              <div className={!isDeckValid ? styles.chatAreaContainerRestrained : styles.chatAreaContainer}>
-                {showFriendsPanel ? (
-                  // Friends Panel
-                  <div className={styles.friendsPanel}>
-                    <div className={styles.friendsPanelHeader}>
-                      <h3>Invite Friends</h3>
-                      <button 
-                        onClick={() => setShowFriendsPanel(false)}
-                        className={styles.friendsPanelCloseButton}
-                      >
-                        ×
-                      </button>
-                    </div>
-                    {friendsData?.friends && friendsData.friends.length > 0 ? (
-                      <div className={styles.friendsList}>
-                        {friendsData.friends.map((friend) => {
-                          const onlineFriend = onlineFriendsData?.onlineFriends?.find(
-                            (f: any) => f.userId === friend.friendUserId
-                          );
-                          const isOnline = onlineFriend?.isOnline === true;
-                          
-                          return (
-                            <div key={friend.friendUserId} className={styles.friendItem}>
-                              <div className={classNames(styles.friendOnlineIndicator, { [styles.online]: isOnline })} />
-                              <span className={styles.friendName}>{friend.nickname || friend.username}</span>
-                              <button 
-                                onClick={() => handleSendGameInviteFromLobby(friend.friendUserId)}
-                                className={styles.friendInviteButton}
-                              >
-                                <MdGames size={18} />
-                                Invite
-                              </button>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    ) : (
-                      <p className={styles.friendsEmptyState}>No friends to invite</p>
-                    )}
-                  </div>
-                ) : (
-                  <>
-                    {showCalculator ? <Calculator /> : <LobbyChat />}
-                  </>
-                )}
-                {!showFriendsPanel && (
-                  <button
-                    className={classNames(styles.smallButton, { [styles.active]: showCalculator })}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      toggleShowCalculator();
-                    }}
-                    disabled={false}
-                  >
-                    Hand Draw Probabilities
-                  </button>
-                )}
-              </div>
-            )}
-
-            {!isWideScreen && (activeTab !== 'chat') && (
-              <div className={styles.mobileBottomActions}>
+              <div>
+                {showCalculator ? <Calculator /> : <LobbyChat />}
+                <button
+                  className={styles.smallButton}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    toggleShowCalculator();
+                  }}
+                  disabled={false}
+                >
+                  Hand Draw Probabilities
+                </button>
               </div>
             )}
 
@@ -664,8 +548,6 @@ const Lobby = () => {
                 submitSideboard={gameLobby?.canSubmitSideboard ?? false}
                 handleLeave={handleLeave}
                 isWidescreen={isWideScreen}
-                onSendInviteClick={() => setShowFriendsPanel(!showFriendsPanel)}
-                onIsValidChange={setIsDeckValid}
               />
             ) : null}
           </div>
@@ -673,46 +555,6 @@ const Lobby = () => {
       </Formik>
       <CardPortal />
     </main>
-  );
-};
-
-// Component to handle Select All/None buttons for desktop - has access to Formik context
-const DesktopDeckSelectionButtons = ({ deckIndexed, deckSBIndexed, activeTab }: { deckIndexed: string[], deckSBIndexed: string[], activeTab: string }) => {
-  const { setFieldValue } = useFormikContext<DeckResponse>();
-  
-  const handleSelectAll = () => {
-    const allCards = [...deckIndexed, ...deckSBIndexed];
-    setFieldValue('deck', allCards);
-  };
-
-  const handleSelectNone = () => {
-    setFieldValue('deck', []);
-  };
-
-  // Only show buttons when Deck tab is active
-  if (activeTab !== 'deck') {
-    return null;
-  }
-
-  return (
-    <div className={styles.selectionButtons}>
-      <button
-        className={styles.selectionButton}
-        onClick={handleSelectAll}
-        type="button"
-        title="Select all cards"
-      >
-        Select All
-      </button>
-      <button
-        className={styles.selectionButton}
-        onClick={handleSelectNone}
-        type="button"
-        title="Deselect all cards"
-      >
-        Select None
-      </button>
-    </div>
   );
 };
 

@@ -10,23 +10,6 @@
   }
 }
 
-.deleteButton .button {
-  background-color: var(--theme-danger, #dc3545);
-  color: white;
-  border: none;
-  border-radius: 4px;
-  transition: background-color 0.2s, transform 0.1s;
-}
-
-.deleteButton .button:hover {
-  background-color: var(--theme-danger, #c82333);
-  transform: scale(1.05);
-}
-
-.deleteButton .button:active {
-  transform: scale(0.95);
-}
-
 .editButton {
   margin: 0;
   padding: 0.5em;
@@ -40,14 +23,7 @@
 }
 
 .button {
-  margin: 0 auto;
-  max-width: 54px;
-  width: 54px;
-  height: 54px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
+  margin: 0;
 }
 
 .title {
@@ -57,11 +33,10 @@
 
 .articleTitle {
   margin-top: 0.2em;
-  background: var(--theme-section-background, linear-gradient(135deg, rgba(30, 35, 41, 0.8) 0%, rgba(30, 35, 41, 0.85) 100%));
 }
 
 article {
-  border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.2));
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 10px;
 }
 
@@ -93,7 +68,7 @@ td {
 
 .twoColumnLayout {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 2fr 1fr 1fr;
   gap: 2rem;
   margin-top: 1rem;
   align-items: start; 
@@ -104,12 +79,8 @@ td {
   width: 100%;
 }
 
-.rightColumn {
-  min-width: 0;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
+.rightColumns {
+  display: contents; 
 }
 
 .leftColumn table {
@@ -133,10 +104,21 @@ td {
   .twoColumnLayout {
     grid-template-columns: 1fr 1fr;
   }
+  
+  .rightColumns {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
 }
 
 @media (max-width: 1024px) {
   .twoColumnLayout {
+    grid-template-columns: 1fr;
+  }
+  
+  .rightColumns {
+    display: grid;
     grid-template-columns: 1fr;
   }
 }
@@ -249,12 +231,10 @@ td {
   font-weight: 600;
   transition: background-color 0.3s ease;
   margin-bottom: 1em;
-  background-color: var(--theme-danger, #dc3545);
-  color: white;
 }
 
 .deleteAccountButton:hover {
-  background-color: var(--theme-danger, #b71c1c);
+  background-color: #b71c1c;
 }
 
 .deleteAccountButton:active {
@@ -267,7 +247,7 @@ td {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: var(--theme-overlay, rgba(0, 0, 0, 0.7));
+  background-color: rgba(0, 0, 0, 0.7);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -275,44 +255,42 @@ td {
 }
 
 .modal {
-  background-color: var(--theme-card-background, #1e1e1e);
-  border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.2));
+  background-color: #1e1e1e;
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 10px;
   padding: 2em;
   max-width: 500px;
   width: 90%;
-  box-shadow: 0 8px 32px var(--theme-overlay, rgba(0, 0, 0, 0.8));
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8);
 }
 
 .modal h4 {
   margin-top: 0;
   margin-bottom: 1em;
   font-size: 1.3em;
-  color: var(--theme-text, #f4eded);
 }
 
 .modal p {
   margin: 0.5em 0;
   line-height: 1.5;
-  color: var(--theme-text, #f4eded);
 }
 
 .modalInput {
   width: 100%;
   padding: 0.75em;
   margin: 1em 0;
-  background-color: var(--theme-form-background, #2d2d2d);
-  border: 1px solid var(--theme-form-border, rgba(255, 255, 255, 0.3));
+  background-color: #2d2d2d;
+  border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 5px;
-  color: var(--theme-text, #ffffff);
+  color: white;
   font-size: 1em;
   box-sizing: border-box;
 }
 
 .modalInput:focus {
   outline: none;
-  border-color: var(--theme-danger, #d32f2f);
-  box-shadow: 0 0 8px var(--theme-danger, rgba(211, 47, 47, 0.3));
+  border-color: #d32f2f;
+  box-shadow: 0 0 8px rgba(211, 47, 47, 0.3);
 }
 
 .modalButtons {
@@ -323,18 +301,12 @@ td {
 }
 
 .cancelButton {
-  border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.2));
+  border: none;
   padding: 0.75em 1.5em;
   border-radius: 5px;
   cursor: pointer;
   font-size: 1em;
-  background-color: var(--theme-form-background, #33383d);
-  color: var(--theme-text, #f4eded);
   transition: background-color 0.3s ease;
-}
-
-.cancelButton:hover:not(:disabled) {
-  background-color: var(--theme-form-active, #3a3f44);
 }
 
 .cancelButton:disabled {
@@ -343,7 +315,7 @@ td {
 }
 
 .confirmDeleteButton {
-  background-color: var(--theme-danger, #d32f2f);
+  background-color: #d32f2f;
   color: white;
   border: none;
   padding: 0.75em 1.5em;
@@ -355,89 +327,10 @@ td {
 }
 
 .confirmDeleteButton:hover:not(:disabled) {
-  background-color: var(--theme-danger, #b71c1c);
+  background-color: #b71c1c;
 }
 
 .confirmDeleteButton:disabled {
-  cursor: not-allowed;
-  opacity: 0.7;
-}
-
-.addDeckSection {
-  margin-bottom: 1.5em;
-  padding-bottom: 1.5em;
-  border-bottom: 1px solid var(--theme-border, rgba(255, 255, 255, 0.2));
-}
-
-.addDeckSection h4 {
-  margin-bottom: 0.5em;
-  color: var(--theme-text, #f4eded);
-}
-
-.addDeckSection p {
-  font-size: 0.9em;
-  color: var(--theme-text-muted, rgba(255, 255, 255, 0.6));
-  margin-bottom: 0.75em;
-}
-
-.addDeckSection a {
-  color: var(--theme-primary, #d4af37);
-  text-decoration: none;
-}
-
-.addDeckSection a:hover {
-  text-decoration: underline;
-}
-
-.addDeckContainer {
-  display: flex;
-  gap: 0.5em;
-  margin-bottom: 0.5em;
-}
-
-.addDeckInput {
-  flex: 1;
-  padding: 0.75em 0.75em;
-  border-radius: 4px;
-  border: 1px solid var(--theme-form-border, #797c80);
-  background-color: var(--theme-form-background, #33383d);
-  color: var(--theme-text, #f4eded);
-  font-size: 1em;
-  height: 100%;
-  box-sizing: border-box;
-  transition: border-color 0.2s ease, background-color 0.2s ease;
-}
-
-.addDeckInput:focus {
-  outline: none;
-  border-color: var(--theme-primary, #d4af37);
-  background-color: var(--theme-form-active, #33383d);
-}
-
-.addDeckInput:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.addDeckButton {
-  padding: 0.75em 1.5em;
-  background-color: var(--theme-primary, #d4af37);
-  color: var(--theme-primary-inverse, #000000);
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: bold;
-  white-space: nowrap;
-  transition: background-color 0.2s ease;
-  width: auto;
-}
-
-.addDeckButton:hover:not(:disabled) {
-  background-color: var(--theme-primary-hover, #e8c547);
-}
-
-.addDeckButton:disabled {
-  background-color: var(--theme-form-border, #797c80);
   cursor: not-allowed;
   opacity: 0.7;
 }
