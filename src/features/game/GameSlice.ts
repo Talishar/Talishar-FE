@@ -498,6 +498,40 @@ export const gameSlice = createSlice({
       state.shufflingPlayerId = action.payload.playerId;
       state.isShuffling = action.payload.isShuffling;
     },
+    setReplayStart: (
+      state,
+      action: PayloadAction<{
+        playerID: number;
+        gameID: number;
+        authKey: string;
+      }>
+    ) => {
+      state.isFullRematch = false;
+      state.gameInfo.gameID = action.payload.gameID;
+      state.gameInfo.playerID = !!state.gameInfo.playerID
+        ? state.gameInfo.playerID
+        : action.payload.playerID;
+      //If We don't currently have an Auth Key
+      if (!state.gameInfo.authKey) {
+        //And the payload is giving us an auth key
+        if (state.gameInfo.playerID == 3) state.gameInfo.authKey = 'spectator';
+        else if (action.payload.authKey !== '') {
+          saveGameAuthKey(action.payload.gameID, action.payload.authKey);
+          state.gameInfo.authKey = action.payload.authKey;
+        }
+        //Else try to set from local storage
+        else {
+          state.gameInfo.authKey = loadGameAuthKey(state.gameInfo.gameID);
+        }
+      }
+      state.gameDynamicInfo.lastUpdate = 0;
+      state.playerOne = {};
+      state.playerTwo = {};
+      state.activeLayers = undefined;
+      state.activeChainLink = undefined;
+
+      return state;
+    },
     updateActionTimestamp: (state) => {
       if (!state.inactivityWarning) {
         state.inactivityWarning = {
