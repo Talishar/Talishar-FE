@@ -111,10 +111,10 @@
   flex-wrap: wrap;
   align-content: flex-start;
   gap: 0.5em;
-  padding: 1em 0.5em 5em 0.5em;
+  padding: 1em 0.5em 0 0.5em;
   min-width: 0px;
-  overflow-y: auto;
   flex: 1;
+  overflow-y: auto;
 }
 
 .pitchGroup {
