@@ -74,7 +74,6 @@ const OptionsSettings = () => {
     streamerMode: settingsData['IsStreamerMode']?.value === '1',
     alwaysAllowUndo: settingsData['AlwaysAllowUndo']?.value === '1',
     manualTunic: settingsData['ManualTunic']?.value === '1',
-    disableFabInsights: settingsData['DisableFabInsights']?.value === '1',
   };
   
   useShortcut(DEFAULT_SHORTCUTS.TOGGLE_MANUAL_MODE, () => {
@@ -275,23 +274,12 @@ const OptionsSettings = () => {
         />
         <CheckboxSetting
           name="disableStats"
-          label="Disable Fabrary Stats"
+          label="Disable Stats"
           checked={initialValues.disableStats}
           onChange={() =>
             handleSettingsChange({
               name: optConst.DISABLE_STATS,
               value: initialValues.disableStats ? '0' : '1'
-            })
-          }
-        />
-        <CheckboxSetting
-          name="disableFabInsights"
-          label="Disable Global Stats"
-          checked={initialValues.disableFabInsights}
-          onChange={() =>
-            handleSettingsChange({
-              name: optConst.DISABLE_FABINSIGHTS,
-              value: initialValues.disableFabInsights ? '0' : '1'
             })
           }
         />

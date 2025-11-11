@@ -2,7 +2,7 @@
   background-color: var(--near-black);
   border-width: 1px;
   border-radius: 5px;
-  border-color: var(--theme-primary);
+  border-color: goldenrod;
   border-style: solid;
   color: var(--white);
   max-width: 100%;
@@ -34,7 +34,7 @@
 }
 
 .buttonDiv {
-  background-color: var(--theme-primary);
+  background-color: var(--primary);
   color: black;
   display: flex;
   flex-direction: row;
@@ -55,8 +55,8 @@
 
 .buttonDiv:hover {
   background-color: black;
-  color: var(--theme-primary);
-  border: 1px solid var(--theme-primary);
+  color: var(--primary);
+  border: 1px solid var(--primary);
   cursor: pointer;
 }
 

@@ -132,15 +132,11 @@ export const LoginForm = () => {
               {errors.rememberMe?.message}
             </div>
           )}
-{/*           <Link to={'./password-recovery'}>
+          <Link to={'./password-recovery'}>
             <p className={styles.forgottenPassword}>
               <small>Forgotten Password?</small>
             </p>
-          </Link> */}
-          <p className={styles.fieldError}>
-            <br />
-              <small>⚠️ Due to some recent issues on the website, your account might have been deleted. If you cannot login, try signing up again. Thank you for your comprehension</small>
-            </p>
+          </Link>
           <button
             type="submit"
             disabled={isSubmitting}

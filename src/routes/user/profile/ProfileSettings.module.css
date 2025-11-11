@@ -1,8 +1,8 @@
 .settingsColumn {
   padding: 1rem;
-  border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.2));
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 10px;
-  background: var(--theme-section-background, linear-gradient(135deg, rgba(30, 35, 41, 0.8) 0%, rgba(30, 35, 41, 0.85) 100%));
+  background-color: var(--card-background-color, rgba(0, 0, 0, 0.3));
 }
 
 .title {
@@ -13,12 +13,12 @@
 .disclaimer {
   margin-top: 2rem;
   font-size: 0.875rem;
-  color: var(--theme-text-muted, rgba(255, 255, 255, 0.7));
+  color: rgba(255, 255, 255, 0.7);
   line-height: 1.5;
 }
 
 .disclaimer a {
-  color: var(--theme-primary);
+  color: var(--primary);
   text-decoration: none;
 }
 

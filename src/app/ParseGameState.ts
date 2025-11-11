@@ -129,7 +129,7 @@ function ParseEquipment(input: any) {
 
 export default function ParseGameState(input: any) {
   const result: GameState = {
-    gameInfo: { gameID: 0, playerID: 0, authKey: '', isPrivateLobby: false, isPrivate: false },
+    gameInfo: { gameID: 0, playerID: 0, authKey: '', isPrivateLobby: false },
     gameDynamicInfo: {},
     playerOne: {},
     playerTwo: {},
@@ -438,12 +438,6 @@ export default function ParseGameState(input: any) {
   result.playerTwo.Playmat = PLAYMATS[input.TheirPlaymat];
 
   result.chatEnabled = input.chatEnabled ?? false;
-
-  // game visibility (private or public)
-  result.gameInfo.isPrivate = input.isPrivate ?? false;
-
-  // opponent AI status (from initialLoad)
-  result.gameInfo.isOpponentAI = input.initialLoad?.isOpponentAI ?? false;
 
   return result;
 }

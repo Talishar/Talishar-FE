@@ -1,5 +1,4 @@
 import React from 'react';
-import styles from './Filter.module.css';
 
 const Filter = ({
   setHeroFilter,
@@ -29,7 +28,7 @@ const Filter = ({
   };
 
   return (
-    <select id="filterByHero" className={styles.filterSelect} onChange={handleSelectHero}>
+    <select id="filterByHero" onChange={handleSelectHero}>
       <option value="">Filter by Hero</option>
       {uniqueHeroLabels.map((label) => (
         <option key={label} value={label}>

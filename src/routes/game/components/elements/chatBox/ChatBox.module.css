@@ -23,8 +23,8 @@
 
 .tabs > button:hover {
   background-color: black;
-  color: var(--theme-primary);
-  border: 1px solid var(--theme-primary);
+  color: var(--primary);
+  border: 1px solid var(--primary);
   cursor: pointer;
 }
 

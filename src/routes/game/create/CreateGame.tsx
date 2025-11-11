@@ -219,9 +219,9 @@ const CreateGame = () => {
       values.user = searchParams.get('user') ?? undefined;
       
       // Save game description to localStorage
-      // Save even if empty string to preserve "Default Game #" selection
-      localStorage.setItem('lastGameDescription', values.gameDescription || '');
-
+      if (values.gameDescription) {
+        localStorage.setItem('lastGameDescription', values.gameDescription);
+      }
       
       const response = await createGame(values).unwrap();
       if (response.error) {
@@ -516,6 +516,14 @@ const CreateGame = () => {
           backgroundColor: 'rgba(0, 0, 0, 0.2)',
           borderRadius: '8px'
         }}>
+          <small style={{ 
+            display: 'block', 
+            marginBottom: '0.75rem', 
+            color: 'rgba(255, 255, 255, 0.6)',
+            fontSize: '0.85rem'
+          }}>
+            Advertisement - Supports Voluntary Work on Talishar
+          </small>
           <GoogleAdSense slot="3126621164" format="auto" />
         </div>
       </article>

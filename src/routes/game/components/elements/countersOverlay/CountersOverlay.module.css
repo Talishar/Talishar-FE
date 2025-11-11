@@ -1,13 +1,13 @@
 .label.label {
   background-color: var(--near-black);
-  color: var(--theme-primary);
+  color: var(--primary);
   order: 99;
   position: absolute;
   bottom: 5px;
   left: 5px;
   right: 3px;
   text-align: center;
-  border: .5px solid var(--theme-primary);
+  border: .5px solid var(--primary);
   border-radius: 5px;
   z-index: 100;
   text-overflow: ellipsis;
@@ -400,8 +400,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgba(0, 0, 0);
-  border: var(--theme-primary) solid 1px;
+  background-color: rgba(0, 0, 0, 0.8);
+  border: var(--primary) solid 1px;
   color: var(--white);
   border-radius: 5px;
   min-width: 1.5em;
@@ -428,7 +428,7 @@
   justify-content: center;
   align-items: center;
   background-color: rgba(0, 0, 0, 0.8);
-  border: var(--theme-primary) solid 1px;
+  border: var(--primary) solid 1px;
   color: var(--white);
   border-radius: 5px;
   min-width: 1.5em;

@@ -1,3 +1,6 @@
+:root {
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
@@ -7,23 +10,4 @@ html,
 body {
   overflow-y: auto;
   --primary-inverse: #000000;
-  padding-top: 80px;
-}
-
-/* Link styling to differentiate from headings */
-a {
-  color: var(--theme-primary, #d4af37) !important;
-  text-decoration: underline;
-  text-decoration-thickness: 2px;
-  text-underline-offset: 4px;
-  transition: opacity 0.2s ease, color 0.2s ease;
-}
-
-a:hover {
-  opacity: 0.85;
-  text-decoration-thickness: 3px;
-}
-
-a:visited {
-  opacity: 0.7;
 }

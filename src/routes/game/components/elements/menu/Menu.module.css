@@ -6,7 +6,7 @@
   touch-action: manipulation;
   padding: 0.5em 0.6em;
   font-size: 1em;
-  background-color: var(--theme-primary);
+  background-color: var(--primary);
   color: black;
   display: flex;
   flex-direction: row;
@@ -33,8 +33,8 @@
 
 .btn:hover {
   background-color: black;
-  color: var(--theme-primary);
-  border: 2px solid var(--theme-primary);
+  color: var(--primary);
+  border: 2px solid var(--primary);
   cursor: pointer;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4),
               0 2px 4px rgba(0, 0, 0, 0.3),

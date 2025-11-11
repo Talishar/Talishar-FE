@@ -46,7 +46,6 @@ export const fetchAllSettings = createAsyncThunk(
       authKey: String(params.game.authKey),
       popupType: PLAYER_OPTIONS
     });
-    
     try {
       const response = await fetch(queryURL + '?' + queryParams, {
         method: 'GET',
@@ -85,45 +84,32 @@ export const fetchAllSettings = createAsyncThunk(
 export const updateOptions = createAsyncThunk(
   'options/setSettings',
   async ({ game, settings }: { game: GameStaticInfo; settings: Setting[] }) => {
-    const queryURL = `${BACKEND_URL}${URL_END_POINT.PROCESS_INPUT_POST}`;
-    const payload = {
-      playerID: game.playerID,
-      gameName: game.gameID,
-      authKey: game.authKey,
-      mode: PROCESS_INPUT.CHANGE_SETTING,
-      submission: { settings: [...settings] }
-    };
+    const queryURL = ` ${BACKEND_URL}${URL_END_POINT.PROCESS_INPUT_POST}`;
 
     try {
       const response = await fetch(queryURL, {
         method: 'POST',
         headers: {},
         credentials: 'include',
-        body: JSON.stringify(payload as ProcessInputAPI)
+        body: JSON.stringify({
+          playerID: game.playerID,
+          gameName: game.gameID,
+          authKey: game.authKey,
+          mode: PROCESS_INPUT.CHANGE_SETTING,
+          submission: { settings: [...settings] }
+        } as ProcessInputAPI)
       });
-      
-      // Get response text first to debug
-      const text = await response.text();
-      
-      // Try to parse as JSON
-      try {
-        const data = JSON.parse(text);
-        return data;
-      } catch (parseErr) {
-        console.error('Failed to parse response:', text);
-        // Return a valid response object even on parse error
-        return { message: 'Settings updated', parsed: false };
-      }
+      const data = await response.json();
+      return data;
     } catch (err) {
-      console.warn('Fetch error:', err);
+      console.warn(err);
       toast.error(
         `There has been a network error. Please try again. Error:\n${JSON.stringify(
           err
         )}`,
         { position: 'top-center' }
       );
-      // Return a valid response on fetch error
-      return { error: 'Network error', success: false };
+    } finally {
     }
   }
 );

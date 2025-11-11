@@ -121,10 +121,10 @@
 .dropdown.patron,
 .dropdown.pvtVoidPatron,
 .dropdown.contributor {
-  border: 2px solid var(--theme-primary-focus);
+  border: 2px solid rgba(255, 215, 0, 0.4);
   background: linear-gradient(rgba(30, 10, 10, 0.95), rgba(30, 10, 10, 0.95)),
-              linear-gradient(135deg, var(--theme-primary-focus), rgba(255, 237, 78, 0.05));
-  box-shadow: 0 0 12px var(--theme-primary-focus), inset 0 0 8px var(--theme-primary-focus), 0 4px 12px rgba(0, 0, 0, 0.5);
+              linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 237, 78, 0.05));
+  box-shadow: 0 0 12px rgba(255, 215, 0, 0.4), inset 0 0 8px rgba(255, 215, 0, 0.15), 0 4px 12px rgba(0, 0, 0, 0.5);
 }
 
 .dropdownOption {
@@ -146,7 +146,7 @@
 
 .dropdownOption:hover:not(.disabled) {
   background-color: rgba(111, 0, 0, 0.3);
-  color: var(--theme-primary);
+  color: rgba(255, 215, 0, 0.9);
 }
 
 .dropdownOption.disabled {
@@ -166,26 +166,26 @@
 }
 
 .playerName.patron {
-  border: 2px solid var(--theme-primary-focus);
+  border: 2px solid rgba(255, 215, 0, 0.4);
   background: linear-gradient(rgba(50, 10, 10, 0.6), rgba(50, 10, 10, 0.6)),
-              linear-gradient(135deg, var(--theme-primary-focus), rgba(255, 237, 78, 0.05));
-  box-shadow: 0 0 12px var(--theme-primary-focus), inset 0 0 8px var(--theme-primary-focus);
+              linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 237, 78, 0.05));
+  box-shadow: 0 0 12px rgba(255, 215, 0, 0.4), inset 0 0 8px rgba(255, 215, 0, 0.15);
   border-radius: 0.3em;
 }
 
 .playerName.pvtVoidPatron {
-  border: 2px solid var(--theme-primary-focus);
+  border: 2px solid rgba(255, 215, 0, 0.4);
   background: linear-gradient(rgba(50, 10, 10, 0.6), rgba(50, 10, 10, 0.6)),
-              linear-gradient(135deg, var(--theme-primary-focus), rgba(255, 237, 78, 0.05));
-  box-shadow: 0 0 12px var(--theme-primary-focus), inset 0 0 8px var(--theme-primary-focus);
+              linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 237, 78, 0.05));
+  box-shadow: 0 0 12px rgba(255, 215, 0, 0.4), inset 0 0 8px rgba(255, 215, 0, 0.15);
   border-radius: 0.3em;
 }
 
 .playerName.contributor {
-  border: 2px solid var(--theme-primary-focus);
+  border: 2px solid rgba(255, 215, 0, 0.4);
   background: linear-gradient(rgba(50, 10, 10, 0.6), rgba(50, 10, 10, 0.6)),
-              linear-gradient(135deg, var(--theme-primary-focus), rgba(255, 237, 78, 0.05));
-  box-shadow: 0 0 12px var(--theme-primary-focus), inset 0 0 8px var(--theme-primary-focus);
+              linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 237, 78, 0.05));
+  box-shadow: 0 0 12px rgba(255, 215, 0, 0.4), inset 0 0 8px rgba(255, 215, 0, 0.15);
   border-radius: 0.3em;
 }
 

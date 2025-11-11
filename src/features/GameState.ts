@@ -116,10 +116,4 @@ export default interface GameState {
   chatEnabled: boolean;
   shufflingPlayerId: number | null;
   isShuffling: boolean;
-  inactivityWarning?: {
-    lastActionTime: number;
-    firstWarningShown: boolean;
-    secondWarningShown: boolean;
-    secondWarningStartTime?: number; // Timestamp when second warning triggered
-  };
 }

@@ -8,7 +8,7 @@
   right: 13vw;
   background-color: var(--near-black);
   padding: 1.5rem;
-  border: 1px solid var(--theme-primary);
+  border: 1px solid var(--primary);
   border-radius: 10px;
   z-index: 950;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
@@ -71,7 +71,7 @@
 }
 
 .cardListCloseIcon:hover {
-  background-color: var(--theme-primary);
+  background-color: var(--primary);
   color: black;
 }
 

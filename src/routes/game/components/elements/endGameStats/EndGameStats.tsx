@@ -311,10 +311,6 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
             resultLabel = playerData.result === 1 ? 'Player 1 Wins' : 'Player 2 Wins';
           }
         }
-        // Override resultLabel if we have winner data available
-        if (data.winner !== undefined && data.winner !== null && playerData.playerID) {
-          resultLabel = data.winner === playerData.playerID ? 'Winner' : 'Loser';
-        }
         content += `Result,${resultLabel}\n`;
         content += `Turns,${playerData.turns || 'N/A'}\n`;
         content += `Your Time,${fancyTimeFormat(playerData.yourTime)}\n`;
@@ -710,7 +706,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                     ) : (
                       <div className={styles.heroNameBox}>{data.yourHero}</div>
                     )}
-                    {data.winner === data.playerID && (
+                    {data.result === 1 && (
                       <div className={styles.winnerBadge}>Winner!</div>
                     )}
                   </div>
@@ -732,7 +728,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                     ) : (
                       <div className={styles.heroNameBox}>{data.opponentHero}</div>
                     )}
-                    {data.winner !== data.playerID && data.winner !== undefined && (
+                    {data.result === 0 && (
                       <div className={styles.winnerBadge}>Winner!</div>
                     )}
                   </div>

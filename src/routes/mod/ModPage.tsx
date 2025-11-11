@@ -1,22 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import useAuth from 'hooks/useAuth';
 import styles from './ModPage.module.css';
 import {
   useGetModPageDataQuery,
   useBanPlayerByIPMutation,
   useBanPlayerByNameMutation,
-  useCloseGameMutation,
-  useDeleteUsernameMutation
+  useCloseGameMutation
 } from 'features/api/apiSlice';
 import UsernameModeration from './UsernameModeration';
-import DeleteUsernameAutocomplete from './DeleteUsernameAutocomplete';
 
 const ModPage: React.FC = () => {
+  const { isLoggedIn, isMod } = useAuth();
+  const navigate = useNavigate();
+
   const [ipToBan, setIpToBan] = useState('');
   const [playerNumberToBan, setPlayerNumberToBan] = useState('');
   const [gameToClose, setGameToClose] = useState('');
   const [playerToBan, setPlayerToBan] = useState('');
-  const [usernameToDelete, setUsernameToDelete] = useState('');
-  const [selectedUserEmail, setSelectedUserEmail] = useState<string | null>(null);
 
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
@@ -26,12 +27,19 @@ const ModPage: React.FC = () => {
     isLoading,
     error: fetchError,
     refetch
-  } = useGetModPageDataQuery(undefined);
+  } = useGetModPageDataQuery(undefined, {
+    skip: !isLoggedIn || !isMod
+  });
 
   const [banByIP, { isLoading: isBanningByIP }] = useBanPlayerByIPMutation();
   const [banByName, { isLoading: isBanningByName }] = useBanPlayerByNameMutation();
   const [closeGameMutation, { isLoading: isClosingGame }] = useCloseGameMutation();
-  const [deleteUsername, { isLoading: isDeletingUsername }] = useDeleteUsernameMutation();
+
+  useEffect(() => {
+    if (!isLoggedIn || !isMod) {
+      navigate('/');
+    }
+  }, [isLoggedIn, isMod, navigate]);
 
   const handleBanByIP = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -80,24 +88,9 @@ const ModPage: React.FC = () => {
     }
   };
 
-  const handleDeleteUsername = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setSuccessMessage(null);
-
-    if (!usernameToDelete.trim()) {
-      return;
-    }
-
-    try {
-      await deleteUsername({ usernameToDelete }).unwrap();
-      setSuccessMessage('Username deleted successfully from database');
-      setUsernameToDelete('');
-      setSelectedUserEmail(null);
-    } catch (err: any) {
-      console.error('Failed to delete username:', err);
-      // Error will be shown via toast from RTK Query error handler
-    }
-  };
+  if (!isLoggedIn || !isMod) {
+    return null;
+  }
 
   const errorMessage = fetchError ? 'NetworkError when attempting to fetch resource.' : null;
 
@@ -156,22 +149,6 @@ const ModPage: React.FC = () => {
                 required
               />
               <button type="submit">Ban</button>
-            </form>
-
-            <form onSubmit={handleDeleteUsername} className={styles.form}>
-              <h2>Delete Username from Database</h2>
-              <label htmlFor="usernameToDelete">Username to delete:</label>
-              <DeleteUsernameAutocomplete
-                value={usernameToDelete}
-                onChange={(newValue) => setUsernameToDelete(newValue)}
-                onSelect={(username, email) => {
-                  setUsernameToDelete(username);
-                  setSelectedUserEmail(email);
-                }}
-              />
-              <button type="submit" disabled={isDeletingUsername || !usernameToDelete.trim()}>
-                {isDeletingUsername ? 'Deleting...' : 'Delete Username'}
-              </button>
             </form>
           </div>
 

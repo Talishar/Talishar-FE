@@ -5,9 +5,9 @@
   min-width: 40vh;
   top: 8vh;
   left: 20%;
-  background-color: rgba(0, 0, 0, calc(1 - (1 - var(--transparency-intensity, 1)) * 0.15));
+  background-color: var(--near-black);
   padding: 1.5vh;
-  border: 1px solid var(--theme-primary);
+  border: 1px solid var(--primary);
   border-radius: 10px;
   max-width: 90vh;
   max-height: 40vh;
@@ -108,8 +108,8 @@
 
 .buttonDiv:hover {
   background-color: black;
-  color: var(--theme-primary);
-  border: 1px solid var(--theme-primary);
+  color: var(--primary);
+  border: 1px solid var(--primary);
   cursor: pointer;
 }
 

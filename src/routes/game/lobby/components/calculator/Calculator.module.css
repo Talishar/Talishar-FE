@@ -3,7 +3,7 @@
   flex-direction: column;
   align-content: center;
   justify-content: flex-end;
-  align-items: center;
+  align-items: flex-end;
   max-width: 100%;
   min-width: 0px;
   grid-area: chat;
@@ -29,7 +29,7 @@
 }
 
 .header h3 {
-  color: var(--theme-primary);
+  color: var(--primary);
   font-size: 1.3em;
   font-weight: 600;
   margin: 0 0 0.5rem 0;

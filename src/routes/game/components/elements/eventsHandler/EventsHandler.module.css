@@ -14,15 +14,6 @@
 }
 
 .container {
-  background-image: var(--theme-section-background);
-  border: 1px solid var(--theme-primary);
+  border: 1px solid var(--primary);
   border-radius: 15px;
-}
-
-.container header {
-  background-image: var(--theme-section-background);
-  border-bottom: 1px solid var(--theme-primary);
-  border-top-left-radius: 14px;
-  border-top-right-radius: 14px;
-  padding: 1em;
 }

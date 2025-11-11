@@ -6,9 +6,9 @@
   bottom: 20vh;
   left: 20vw;
   right: 20vw;
-  background-color: rgba(0, 0, 0, 0.95);
+  background-color: var(--near-black);
   padding: 1.5vh;
-  border: 1px solid var(--theme-primary-focus);
+  border: 1px solid var(--primary);
   border-radius: 10px;
   z-index: 1000;
 }
@@ -130,7 +130,7 @@
   background-color: black;
   color: var(--h3-color);
   --font-weight: 700;
-  border: 1px solid var(--theme-primary-focus);
+  border: 1px solid var(--primary-focus);
   flex-shrink: 0;
   cursor: pointer;
   font-size: clamp(0.75rem, 1.6vh, 0.9rem);
@@ -150,7 +150,7 @@
 }
 
 .button:hover {
-  background-color: var(--theme-primary);
+  background-color: var(--primary);
   color: black;
 }
 
@@ -182,7 +182,7 @@
 }
 
 .cardListCloseIcon:hover {
-  background-color: var(--theme-primary);
+  background-color: var(--primary);
   color: black;
 }
 

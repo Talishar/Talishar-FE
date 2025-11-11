@@ -12,13 +12,11 @@ import ChatCardDetail from '../components/elements/chatCardDetail/ChatCardDetail
 import CardListZone from '../components/zones/cardListZone/CardListZone';
 import ChainLinkSummaryContainer from '../components/elements/chainLinkSummary/ChainLinkSummary';
 import ActiveLayersZone from '../components/zones/activeLayersZone/ActiveLayersZone';
-import InactivityWarning from '../components/elements/inactivityWarning/InactivityWarning';
 import ExperimentalGameStateHandler from 'app/ExperimentalGameStateHandler';
 import { useCookies } from 'react-cookie';
 import { useEffect } from 'react';
 import { useAppDispatch } from '../../../app/Hooks';
 import { setIsRoguelike } from '../../../features/game/GameSlice';
-import { Toaster } from 'react-hot-toast';
 
 function Play({ isRoguelike }: { isRoguelike: boolean }) {
   const [cookies] = useCookies([
@@ -69,26 +67,6 @@ function Play({ isRoguelike }: { isRoguelike: boolean }) {
 
   return (
     <div className="centering">
-      <Toaster
-        position="top-left"
-        toastOptions={{
-          style: {
-            background: 'var(--theme-tertiary)',
-            color: 'var(--white)',
-            border: '1px solid var(--theme-tertiary-focus)',
-            padding: '0.5rem',
-            wordBreak: 'break-word',
-            maxWidth: '100vh', 
-            overflow: 'hidden', 
-            textOverflow: 'ellipsis', 
-            userSelect: 'none',
-            msUserSelect: 'none',
-            WebkitUserSelect: 'none',
-            MozUserSelect: 'none',
-            zIndex: 10001,
-          }
-        }}
-      />
       <div className="app" key="app">
         <ChatCardDetail />
         <LeftColumn />
@@ -106,7 +84,6 @@ function Play({ isRoguelike }: { isRoguelike: boolean }) {
       <OptionsMenu />
       <PlayerInputPopUp />
       <CardPortal />
-      <InactivityWarning />
       <ExperimentalGameStateHandler />
       <EventsHandler />
     </div>

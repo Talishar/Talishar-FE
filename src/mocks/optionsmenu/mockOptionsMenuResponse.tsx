@@ -57,10 +57,6 @@ export const mockOptionsMenuResponse = {
       value: '0'
     },
     {
-      name: 'DisableFabInsights',
-      value: '0'
-    },
-    {
       name: 'IsCasterMode',
       value: '0'
     },
