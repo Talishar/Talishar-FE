@@ -10,6 +10,23 @@
   }
 }
 
+.deleteButton .button {
+  background-color: var(--theme-danger, #dc3545);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+.deleteButton .button:hover {
+  background-color: var(--theme-danger, #c82333);
+  transform: scale(1.05);
+}
+
+.deleteButton .button:active {
+  transform: scale(0.95);
+}
+
 .editButton {
   margin: 0;
   padding: 0.5em;
@@ -23,7 +40,14 @@
 }
 
 .button {
-  margin: 0;
+  margin: 0 auto;
+  max-width: 54px;
+  width: 54px;
+  height: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
 }
 
 .title {
@@ -33,10 +57,11 @@
 
 .articleTitle {
   margin-top: 0.2em;
+  background: var(--theme-section-background, linear-gradient(135deg, rgba(30, 35, 41, 0.8) 0%, rgba(30, 35, 41, 0.85) 100%));
 }
 
 article {
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.2));
   border-radius: 10px;
 }
 
@@ -68,7 +93,7 @@ td {
 
 .twoColumnLayout {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr;
   gap: 2rem;
   margin-top: 1rem;
   align-items: start; 
@@ -79,8 +104,12 @@ td {
   width: 100%;
 }
 
-.rightColumns {
-  display: contents; 
+.rightColumn {
+  min-width: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
 .leftColumn table {
@@ -104,21 +133,10 @@ td {
   .twoColumnLayout {
     grid-template-columns: 1fr 1fr;
   }
-  
-  .rightColumns {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 1rem;
-  }
 }
 
 @media (max-width: 1024px) {
   .twoColumnLayout {
-    grid-template-columns: 1fr;
-  }
-  
-  .rightColumns {
-    display: grid;
     grid-template-columns: 1fr;
   }
 }

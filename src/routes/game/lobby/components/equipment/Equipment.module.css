@@ -63,12 +63,12 @@
 }
 
 .eqCategory input[type='radio']:checked + div > img {
-  box-shadow: 0 0 0 0.2em var(--primary);
+  box-shadow: 0 0 0 0.2em var(--theme-primary);
   filter: brightness(1);
 }
 
 .eqCategory input[type='checkbox']:checked + div > img {
-  box-shadow: 0 0 0 0.2em var(--primary);
+  box-shadow: 0 0 0 0.2em var(--theme-primary);
   filter: brightness(1);
 }
 

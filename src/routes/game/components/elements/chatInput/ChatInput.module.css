@@ -38,14 +38,14 @@
               inset 0 1px 0 rgba(255, 255, 255, 0.3);
   transition: all 0.2s ease;
   position: relative;
-  background-color: var(--primary);
+  background-color: var(--theme-primary);
   color: black;
 }
 
 .buttonDiv:hover {
   background-color: black;
-  color: var(--primary);
-  border: 2px solid var(--primary);
+  color: var(--theme-primary);
+  border: 2px solid var(--theme-primary);
   cursor: pointer;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4),
               0 2px 4px rgba(0, 0, 0, 0.3),
@@ -78,14 +78,14 @@
               inset 0 1px 0 rgba(255, 255, 255, 0.3);
   transition: all 0.2s ease;
   position: relative;
-  background-color: var(--primary);
+  background-color: var(--theme-primary);
   color: black;
 }
 
 .quickChatButton button:hover {
   background-color: black;
-  color: var(--primary);
-  border: 2px solid var(--primary);
+  color: var(--theme-primary);
+  border: 2px solid var(--theme-primary);
   cursor: pointer;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4),
               0 2px 4px rgba(0, 0, 0, 0.3),
@@ -110,7 +110,7 @@
 
 .popOver {
   background-color: black;
-  border: 1px solid var(--primary);
+  border: 1px solid var(--theme-primary);
   color: white;
   padding: 10px;
   z-index: 1000;

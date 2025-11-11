@@ -14,7 +14,7 @@
   justify-content: space-between;
   align-items: stretch;
   align-content: stretch;
-  background-color: rgba(50, 50, 50, 0.5);
+  background-color: rgba(0, 0, 0, calc(1 - (1 - var(--transparency-intensity, 1)) * 0.5));
 }
 
 .mobileTopBar {

@@ -3,13 +3,15 @@ import React from 'react';
 import { Link, Outlet } from 'react-router-dom';
 import styles from './Header.module.scss';
 import TalisharLogo from '../../img/CoinLogo.png';
-import { BsGithub, BsPersonFill, BsShieldFillCheck } from 'react-icons/bs';
+import { BsGithub, BsPersonFill, BsShieldFillCheck, BsGear } from 'react-icons/bs';
 import { FaDiscord, FaTwitter } from 'react-icons/fa';
 import { RiLogoutBoxRLine } from 'react-icons/ri';
 import LanguageSelector from 'components/LanguageSelector/LanguageSelector';
 import { useGetPendingRequestsQuery } from 'features/api/apiSlice';
 import CookieConsent from 'components/CookieConsent';
 import AdBlockingRecovery from 'components/AdBlockingRecovery';
+import ChatBar from 'components/chatBar/ChatBar';
+import { Toaster } from 'react-hot-toast';
 
 const Header = () => {
   const { isLoggedIn, isMod, logOut } = useAuth();
@@ -26,6 +28,26 @@ const Header = () => {
   return (
     <div>
       <nav className={styles.navBar}>
+        <Toaster
+          position="top-left"
+          toastOptions={{
+            style: {
+              background: 'var(--theme-tertiary)',
+              color: 'var(--white)',
+              border: '1px solid var(--theme-tertiary-focus)',
+              padding: '0.5rem',
+              wordBreak: 'break-word',
+              maxWidth: '100vh', 
+              overflow: 'hidden', 
+              textOverflow: 'ellipsis', 
+              userSelect: 'none',
+              msUserSelect: 'none',
+              WebkitUserSelect: 'none',
+              MozUserSelect: 'none',
+              zIndex: 10001,
+            }
+          }}
+        />
         <ul>
           <li>
             <Link to="/" className={styles.logo}>
@@ -122,6 +144,13 @@ const Header = () => {
           </li>
           {isLoggedIn && (
             <li>
+              <Link to="/user/settings">
+                <BsGear></BsGear> <span>Settings</span>
+              </Link>
+            </li>
+          )}
+          {isLoggedIn && (
+            <li>
               <a href="" onClick={handleLogOut}>
                 <RiLogoutBoxRLine></RiLogoutBoxRLine> <span>Logout</span>
               </a>
@@ -132,6 +161,7 @@ const Header = () => {
       <Outlet />
       <CookieConsent />
       <AdBlockingRecovery />
+      <ChatBar />
     </div>
   );
 };

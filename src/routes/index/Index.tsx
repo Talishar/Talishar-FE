@@ -8,6 +8,8 @@ import styles from './Index.module.css';
 import TalisharLogo from '../../img/TalisharLogo.webp';
 import News from 'routes/news';
 import DevTool from './components/devTool';
+import AboutSection from './components/AboutSection';
+import CommunityContent from './components/CommunityContent';
 
 const Index = () => {
   const dispatch = useAppDispatch();
@@ -39,6 +41,8 @@ const Index = () => {
           <News />
         </article> */}
       </div>
+      <CommunityContent />
+      <AboutSection />
     </main>
   );
 };

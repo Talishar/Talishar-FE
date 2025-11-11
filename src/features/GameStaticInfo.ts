@@ -3,9 +3,11 @@ export default interface GameStaticInfo {
   playerID: number;
   authKey: string;
   isPrivateLobby: boolean;
+  isPrivate?: boolean;
   roguelikeGameID?: number;
   altArts?: AltArt[];
   isRoguelike?: boolean;
+  isOpponentAI?: boolean;
 }
 
 export interface AltArt {

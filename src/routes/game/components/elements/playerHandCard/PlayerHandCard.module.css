@@ -11,7 +11,6 @@
   -khtml-user-drag: none;
   -moz-user-drag: none;
   -o-user-drag: none;
-  user-drag: none;
   border-radius: 1vh;
   border-radius: 1dvh;
   max-height: 100%;
@@ -42,7 +41,7 @@
 
 .icon {
   background-color: var(--near-black);
-  border: var(--primary) solid 1px;
+  border: var(--theme-primary) solid 1px;
   color: var(--white);
   border-radius: 5px;
   font-size: 1.5em;
@@ -63,8 +62,8 @@
 }
 
 .border3 {
-  border-color: var(--primary);
-  box-shadow: 0 0 3px 3px var(--primary);
+  border-color: var(--theme-primary);
+  box-shadow: 0 0 3px 3px var(--theme-primary);
 }
 
 .border4 {

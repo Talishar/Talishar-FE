@@ -126,9 +126,9 @@ export const PresetButtons: React.FC<PresetButtonsProps> = ({
           style={
             currentValue === preset.value
               ? {
-                  backgroundColor: 'var(--primary)',
+                  backgroundColor: 'var(--theme-primary)',
                   color: 'var(--primary-inverse)',
-                  borderColor: 'var(--primary)'
+                  borderColor: 'var(--theme-primary)'
                 }
               : undefined
           }
