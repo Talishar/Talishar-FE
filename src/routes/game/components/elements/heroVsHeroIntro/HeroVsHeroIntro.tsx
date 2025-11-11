@@ -13,7 +13,32 @@ const HeroVsHeroIntro = () => {
   const [isVisible, setIsVisible] = useState(true);
   
   const gameID = gameState?.gameInfo?.gameID;
+  const gameGUID = gameState?.gameInfo?.gameGUID;
   const playerID = gameState?.gameInfo?.playerID;
+  
+  // Generate a UUID for local use if gameGUID is not available yet
+  const generateLocalUUID = (): string => {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+      const r = (Math.random() * 16) | 0;
+      const v = c === 'x' ? r : (r & 0x3) | 0x8;
+      return v.toString(16);
+    });
+  };
+  
+  // Use gameGUID if available, otherwise fall back to localStorage storage for generated UUID
+  const getLocalStorageKey = (): string => {
+    if (gameGUID) {
+      return `heroIntroShown_${gameGUID}`;
+    }
+    // For the initial load before gameGUID is set, generate and store a local UUID
+    const storageKeyName = `heroIntroLocalUUID_${gameID}`;
+    let localUUID = localStorage.getItem(storageKeyName);
+    if (!localUUID) {
+      localUUID = generateLocalUUID();
+      localStorage.setItem(storageKeyName, localUUID);
+    }
+    return `heroIntroShown_${localUUID}`;
+  };
   
   // Get hero names from Redux gameInfo (dispatched from Lobby)
   const yourHeroName = gameState?.gameInfo?.heroName;
@@ -46,14 +71,14 @@ const HeroVsHeroIntro = () => {
   // Check localStorage to see if intro was already shown in this game session
   useEffect(() => {
     if (gameID) {
-      const localStorageKey = `heroIntroShown_${gameID}`;
+      const localStorageKey = getLocalStorageKey();
       const wasShownBefore = localStorage.getItem(localStorageKey) === 'true';
       if (wasShownBefore) {
         setIsVisible(false);
         dispatch(markHeroIntroAsShown());
       }
     }
-  }, [gameID, dispatch]);
+  }, [gameID, gameGUID, dispatch]);
   
   // Auto-dismiss after 2 seconds
   useEffect(() => {
@@ -62,14 +87,15 @@ const HeroVsHeroIntro = () => {
     const timer = setTimeout(() => {
       setIsVisible(false);
       dispatch(markHeroIntroAsShown());
+      const localStorageKey = getLocalStorageKey();
       if (gameID) {
-        localStorage.setItem(`heroIntroShown_${gameID}`, 'true');
+        localStorage.setItem(localStorageKey, 'true');
       }
     }, 2000);
 
     return () => clearTimeout(timer);
 
-  }, [isVisible, dispatch, gameID]);
+  }, [isVisible, dispatch, gameID, gameGUID]);
   
   // Get patron status
   const yourPatronStatus = playerID === 1 
@@ -128,8 +154,9 @@ const HeroVsHeroIntro = () => {
         onClick={() => {
           setIsVisible(false);
           dispatch(markHeroIntroAsShown());
+          const localStorageKey = getLocalStorageKey();
           if (gameID) {
-            localStorage.setItem(`heroIntroShown_${gameID}`, 'true');
+            localStorage.setItem(localStorageKey, 'true');
           }
         }}
         aria-label="Close hero intro"

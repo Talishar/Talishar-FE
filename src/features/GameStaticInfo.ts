@@ -1,5 +1,6 @@
 export default interface GameStaticInfo {
   gameID: number;
+  gameGUID?: string;
   playerID: number;
   authKey: string;
   isPrivateLobby: boolean;
