@@ -352,7 +352,6 @@ nav {
 
   .mobileNav ul {
     display: flex;
-    gap: 0.4rem;
     padding: 0;
     margin: 0;
     list-style: none;
@@ -398,11 +397,18 @@ nav {
     min-height: 100%;
     overflow-y: hidden;
     display: grid;
-    grid-template-columns: 1fr 2fr 200px;
+    grid-template-columns: 1fr 2fr 260px;
     grid-template-rows: 240px 1fr;
     grid-template-areas:
       'hero weapons matchups'
       'chat weapons matchups';
+  }
+
+  .gridLayout.noMatchups {
+    grid-template-columns: 1fr 2fr 0px;
+    grid-template-areas:
+      'hero weapons'
+      'chat weapons';
   }
 
   .titleContainer {

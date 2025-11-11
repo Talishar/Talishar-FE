@@ -179,6 +179,22 @@ const Lobby = () => {
     }
   }, [gameLobby?.isMainGameReady, gameID, playerID, navigate, dispatch, data?.deck?.heroName, data?.deck?.hero, gameLobby?.theirHeroName, gameLobby?.theirHero]);
 
+  // Debug logging for matchups with preferred turn order
+  useEffect(() => {
+    if (gameLobby?.matchups && gameLobby.matchups.length > 0) {
+      console.log('=== MATCHUPS DATA ===');
+      console.log('Matchups JSON:', JSON.stringify(gameLobby.matchups, null, 2));
+      gameLobby.matchups.forEach((matchup, index) => {
+        console.log(`Matchup ${index}:`, matchup);
+      });
+      console.log('Keys:', Object.keys(gameLobby.matchups[0] || {}).join(', '));
+      const hasPreference = gameLobby.matchups.some(m => m.preferredTurnOrder);
+      if (hasPreference) {
+        console.log('✓ Found matchups with preferredTurnOrder');
+      }
+    }
+  }, [gameLobby?.matchups]);
+
   const deckClone = [...data.deck.cards];
   const deckSBClone = [...data.deck.cardsSB];
   const deckIndexed = deckClone.sort().map((card, ix) => `${card}-${ix}`);
@@ -416,7 +432,9 @@ const Lobby = () => {
         enableReinitialize
       >
         <Form className={styles.form}>
-          <div className={styles.gridLayout}>
+          <div className={classNames(styles.gridLayout, {
+            [styles.noMatchups]: !gameLobby?.matchups || gameLobby.matchups.length === 0
+          })}>
             <div className={styles.titleContainer}>
               <CardPopUp
                 cardNumber={data.deck.hero}

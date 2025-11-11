@@ -121,7 +121,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     root.style.setProperty('--theme-near-black', colors.nearBlack);
     root.style.setProperty('--near-black', colors.nearBlack); // Keep for backward compatibility
     root.style.setProperty('--theme-overlay', colors.overlay);
-    root.style.setProperty('--modal-overlay-background-color', colors.overlay); // Use theme overlay for dialog backdrop
+    root.style.setProperty('--modal-overlay-background-color', 'rgba(0, 0, 0, 0.4)'); // Very transparent for dialog backdrop
 
     // Update body background - use dark texture as fallback for light theme
     const bgTexture = currentTheme.id === 'light' 
