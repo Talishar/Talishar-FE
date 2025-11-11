@@ -195,6 +195,13 @@ const InProgressGameFilter = ({
     saveFiltersToStorage(allFormats);
   };
 
+  const handleDeselectAll = () => {
+    // Deselect all boxes
+    const emptyFormats = new Set<string>();
+    onFilterChange(emptyFormats);
+    saveFiltersToStorage(emptyFormats);
+  };
+
   const handleFriendsGamesChange = () => {
     const newValue = !includeFriendsGames;
     onFriendsGamesChange(newValue);
@@ -255,9 +262,14 @@ const InProgressGameFilter = ({
             ))}
           </div>
 
-          <button className={styles.resetButton} onClick={handleResetFilters}>
-            Reset Filters
-          </button>
+          <div className={styles.buttonContainer}>
+            <button className={styles.resetButton} onClick={handleResetFilters}>
+              Reset Filters
+            </button>
+            <button className={styles.deselectButton} onClick={handleDeselectAll}>
+              Uncheck All
+            </button>
+          </div>
         </div>
       )}
     </div>

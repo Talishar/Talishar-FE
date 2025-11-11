@@ -189,7 +189,7 @@ export default function PlayerName(player: Player) {
   };
 
   return (
-    <div className={`${styles.playerName} ${getStatusClass()}`} ref={dropdownRef}>
+    <div className={`${styles.playerName} ${getStatusClass()} ${player.isPlayer ? styles.playerTwo : ''}`} ref={dropdownRef}>
       <div className={styles.nameContainer}>
         <div className={styles.nameContent}>
           {iconMap.filter(icon => icon.condition).map(icon => (

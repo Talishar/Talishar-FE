@@ -92,7 +92,6 @@ export const PROCESS_INPUT = {
   REMOVE_RESOURCE_FROM_POOL_SELF: 10015,
   REMOVE_ARSENAL_FROM_SELF: 10016,
   REMOVE_ARSENAL_FROM_OPPONENT: 10017,
-  HOP_TO_TURN: 10018,
 
   // End game options
   QUICK_REMATCH: 100000,
@@ -272,7 +271,6 @@ export const PRECON_DECKS = {
 export const URL_END_POINT = {
   GET_GAME_LIST: 'APIs/GetGameList.php',
   CREATE_GAME: 'APIs/CreateGame.php',
-  REPLAYS: "APIs/CreateReplayGame.php",
   SUBMIT_CHAT: 'SubmitChat.php',
   GET_POPUP: 'GetPopupAPI.php',
   GAME_STATE_POLL: 'GetNextTurn.php?',
@@ -301,11 +299,13 @@ export const URL_END_POINT = {
   SUBMIT_LOBBY_INPUT: 'APIs/SubmitLobbyInput.php',
   BLOCK_USER: 'include/BlockUser.php',
   GET_MOD_PAGE_DATA: 'APIs/GetModPageData.php',
+  SEARCH_USERNAMES: 'APIs/SearchUsernames.php',
   BAN_PLAYER: 'BanPlayer.php',
   CLOSE_GAME: 'CloseGame.php',
   FRIEND_LIST: 'APIs/FriendListAPI.php',
   BLOCKED_USERS: 'APIs/BlockedUsersAPI.php',
-  USERNAME_MODERATION: 'APIs/UsernameModeration.php'
+  USERNAME_MODERATION: 'APIs/UsernameModeration.php',
+  PRIVATE_MESSAGING: 'APIs/PrivateMessagingAPI.php'
 };
 
 export const GAME_VISIBILITY = {

@@ -42,9 +42,7 @@ export default function ManualModePanel() {
 
 function ManualModeContent({ onClose }: { onClose: () => void }) {
   const [cardInput, setCardInput] = useState('');
-  const [turnHopper, hopToTurn] = useState('');
   const [isCardLoading, setIsCardLoading] = useState(false);
-  const [isTurnLoading, setisTurnLoading] = useState(false);
   const dispatch = useAppDispatch();
   const gameInfo = useAppSelector(getGameInfo, shallowEqual);
   const playerHealth = useAppSelector(
@@ -102,16 +100,6 @@ function ManualModeContent({ onClose }: { onClose: () => void }) {
     handleDispatchWithParam(PROCESS_INPUT.ADD_CARD_TO_HAND_SELF, cardInput);
     setCardInput('');
     setTimeout(() => setIsCardLoading(false), 300);
-  };
-
-  const handleTurnHop = () => {
-    if (turnHopper === '' || isTurnLoading) {
-      return;
-    }
-    setisTurnLoading(true);
-    handleDispatchWithParam(PROCESS_INPUT.HOP_TO_TURN, turnHopper);
-    hopToTurn('');
-    setTimeout(() => setisTurnLoading(false), 300);
   };
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -279,30 +267,6 @@ function ManualModeContent({ onClose }: { onClose: () => void }) {
             disabled={isCardLoading || cardInput === ''}
           >
             {isCardLoading ? 'Adding...' : 'Add'}
-          </button>
-        </div>
-
-        {/* Hop to Turn */}
-        <div className={styles.formGroup}>
-          <label htmlFor="turnHopper">Go to turn # (only works in replays)</label>
-          <input
-            id="turnHopper"
-            type="text"
-            value={turnHopper}
-            onChange={(e) => hopToTurn(e.target.value)}
-            onKeyDown={handleKeyPress}
-            onKeyDownCapture={(e) => {
-              e.stopPropagation();
-            }}
-            placeholder="turn# (player-turn)"
-            disabled={isTurnLoading}
-          />
-          <button 
-            className={styles.buttonFull}
-            onClick={handleTurnHop}
-            disabled={isTurnLoading || turnHopper === ''}
-          >
-            {isTurnLoading ? 'Loading turn...' : 'Hop'}
           </button>
         </div>
 

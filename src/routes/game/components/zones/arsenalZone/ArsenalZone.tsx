@@ -13,6 +13,7 @@ import Button from '../../../../../features/Button';
 import { AnimatePresence, motion } from 'framer-motion';
 import useWindowDimensions from '../../../../../hooks/useWindowDimensions';
 import { PROCESS_INPUT } from 'appConstants';
+import { parseHtmlToReactElements } from 'utils/ParseEscapedString';
 
 export default function ArsenalZone(prop: Displayrow) {
   const { isPlayer } = prop;
@@ -108,9 +109,9 @@ const ArsenalPrompt = () => {
           exit={{ opacity: 0 }}
         >
           <div className={styles.content}>
-            <div
-              dangerouslySetInnerHTML={{ __html: playerPrompt?.helpText ?? '' }}
-            ></div>
+            <div>
+              {parseHtmlToReactElements(playerPrompt?.helpText ?? '')}
+            </div>
           </div>
           {buttons}
         </motion.div>

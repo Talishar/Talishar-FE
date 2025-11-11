@@ -10,7 +10,7 @@
 }
 
 .button {
-  background-color: var(--secondary);
+  background-color: var(--theme-secondary);
   margin-bottom: 0;
 }
 
@@ -49,10 +49,11 @@ img {
   flex-direction: column;
   gap: 0.5em;
   max-width: 768px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.2));
   border-radius: 10px;
   margin-bottom: 0;
   padding: 1em;
+  background: var(--theme-section-background);
 }
 
 .reloadButton {

@@ -12,10 +12,6 @@ import {
   CreateGameAPI,
   CreateGameResponse
 } from 'interface/API/CreateGame.php';
-import {
-  LoadReplayAPI,
-  LoadReplayResponse
-} from 'interface/API/LoadReplayAPI.php';
 import { toast } from 'react-hot-toast';
 import { cleanErrorText } from 'utils/cleanErrorText';
 import { JoinGameAPI, JoinGameResponse } from 'interface/API/JoinGame.php';
@@ -44,7 +40,10 @@ import {
   ModPageDataResponse,
   BanPlayerByIPRequest,
   BanPlayerByNameRequest,
-  CloseGameRequest
+  CloseGameRequest,
+  DeleteUsernameRequest,
+  SearchUsernamesRequest,
+  SearchUsernamesResponse
 } from 'interface/API/ModPageAPI';
 import { FriendListAPIResponse } from 'interface/API/FriendListAPI.php';
 import {
@@ -52,6 +51,7 @@ import {
   BanOffensiveUsernameRequest
 } from 'interface/API/UsernameModerationAPI';
 import { BlockedUsersAPIResponse } from 'interface/API/BlockedUsersAPI.php';
+import { PrivateMessagingAPIResponse } from 'interface/API/PrivateMessagingAPI.php';
 import { getGameInfo } from '../game/GameSlice';
 import { RootState } from '../../app/Store';
 
@@ -131,6 +131,7 @@ const dynamicBaseQuery: BaseQueryFn<
 export const apiSlice = createApi({
   reducerPath: 'api',
   baseQuery: dynamicBaseQuery,
+  tagTypes: ['ModPageData'],
   endpoints: (builder) => ({
     getPopUpContent: builder.query({
       query: ({
@@ -277,7 +278,7 @@ export const apiSlice = createApi({
       query: (body: DeleteDeckAPIRequest) => {
         return {
           url: URL_END_POINT.DELETE_DECK,
-          method: 'post',
+          method: 'POST',
           body: body,
           responseHandler: parseResponse
         };
@@ -379,22 +380,16 @@ export const apiSlice = createApi({
           url: URL_END_POINT.LOAD_BUG_REPORT,
           method: 'POST',
           body: body,
-          responseHandler: parseResponse
+          responseHandler: async (response: any) => {
+            // Check for non-2xx status codes
+            if (!response.ok) {
+              const data = await response.json();
+              throw new Error(data.error || `HTTP ${response.status}`);
+            }
+            return parseResponse(response);
+          }
         };
       }
-    }),
-    loadReplay: builder.mutation<LoadReplayResponse, LoadReplayAPI>({
-      query: ({ ...body }: LoadReplayAPI) => {
-        return {
-          url: URL_END_POINT.REPLAYS,
-          method: 'POST',
-          body: body,
-          responseHandler: parseResponse
-        };
-      },
-      // Pick out errors and prevent nested properties in a hook or selector
-      transformErrorResponse: (response: { status: string | number }) =>
-        response.status
     }),
     submitPatreonLogin: builder.mutation<
       PatreonLoginResponse,
@@ -422,7 +417,8 @@ export const apiSlice = createApi({
           method: 'GET',
           responseHandler: parseResponse
         };
-      }
+      },
+      providesTags: [{ type: 'ModPageData', id: 'LIST' }]
     }),
     banPlayerByIP: builder.mutation<any, BanPlayerByIPRequest>({
       query: ({ ipToBan, playerNumberToBan }) => {
@@ -435,7 +431,8 @@ export const apiSlice = createApi({
           },
           responseHandler: parseResponse
         };
-      }
+      },
+      invalidatesTags: [{ type: 'ModPageData', id: 'LIST' }]
     }),
     banPlayerByName: builder.mutation<any, BanPlayerByNameRequest>({
       query: ({ playerToBan }) => {
@@ -444,6 +441,19 @@ export const apiSlice = createApi({
           method: 'POST',
           body: {
             playerToBan: playerToBan
+          },
+          responseHandler: parseResponse
+        };
+      },
+      invalidatesTags: [{ type: 'ModPageData', id: 'LIST' }]
+    }),
+    deleteUsername: builder.mutation<any, DeleteUsernameRequest>({
+      query: ({ usernameToDelete }) => {
+        return {
+          url: URL_END_POINT.BAN_PLAYER,
+          method: 'POST',
+          body: {
+            usernameToDelete: usernameToDelete
           },
           responseHandler: parseResponse
         };
@@ -457,6 +467,15 @@ export const apiSlice = createApi({
           body: {
             gameToClose: gameToClose
           },
+          responseHandler: parseResponse
+        };
+      }
+    }),
+    searchUsernames: builder.query<SearchUsernamesResponse, string>({
+      query: (searchQuery) => {
+        return {
+          url: `${URL_END_POINT.SEARCH_USERNAMES}?q=${encodeURIComponent(searchQuery)}`,
+          method: 'GET',
           responseHandler: parseResponse
         };
       }
@@ -628,6 +647,88 @@ export const apiSlice = createApi({
           responseHandler: parseResponse
         };
       }
+    }),
+
+    // Private Messaging endpoints
+    sendPrivateMessage: builder.mutation<PrivateMessagingAPIResponse, { toUserId: number; message: string; gameLink?: string }>({
+      query: ({ toUserId, message, gameLink }) => {
+        return {
+          url: URL_END_POINT.PRIVATE_MESSAGING,
+          method: 'POST',
+          body: { action: 'sendMessage', toUserId, message, gameLink },
+          responseHandler: parseResponse
+        };
+      }
+    }),
+    getPrivateMessages: builder.query<PrivateMessagingAPIResponse, { friendUserId: number; limit?: number }>({
+      query: ({ friendUserId, limit = 50 }) => {
+        return {
+          url: URL_END_POINT.PRIVATE_MESSAGING,
+          method: 'POST',
+          body: { action: 'getMessages', friendUserId, limit },
+          responseHandler: parseResponse
+        };
+      }
+    }),
+    markMessagesAsRead: builder.mutation<PrivateMessagingAPIResponse, { messageIds: number[] }>({
+      query: ({ messageIds }) => {
+        return {
+          url: URL_END_POINT.PRIVATE_MESSAGING,
+          method: 'POST',
+          body: { action: 'markAsRead', messageIds },
+          responseHandler: parseResponse
+        };
+      }
+    }),
+    getOnlineFriends: builder.query<PrivateMessagingAPIResponse, void>({
+      query: () => {
+        return {
+          url: URL_END_POINT.PRIVATE_MESSAGING,
+          method: 'POST',
+          body: { action: 'getOnlineFriends' },
+          responseHandler: parseResponse
+        };
+      }
+    }),
+    getUnreadMessageCount: builder.query<PrivateMessagingAPIResponse, void>({
+      query: () => {
+        return {
+          url: URL_END_POINT.PRIVATE_MESSAGING,
+          method: 'POST',
+          body: { action: 'getUnreadCount' },
+          responseHandler: parseResponse
+        };
+      }
+    }),
+    getUnreadMessageCountByFriend: builder.query<PrivateMessagingAPIResponse, void>({
+      query: () => {
+        return {
+          url: URL_END_POINT.PRIVATE_MESSAGING,
+          method: 'POST',
+          body: { action: 'getUnreadCountByFriend' },
+          responseHandler: parseResponse
+        };
+      }
+    }),
+    createQuickGame: builder.mutation<CreateGameResponse, { format: string; visibility: string }>({
+      query: (prefs) => {
+        return {
+          url: URL_END_POINT.CREATE_GAME,
+          method: 'POST',
+          body: {
+            format: prefs.format,
+            visibility: prefs.visibility,
+            deckTestMode: false,
+            deck: '',
+            fabdb: '',
+            decksToTry: '1',
+            favoriteDeck: false,
+            favoriteDecks: '',
+            gameDescription: 'Invite from Friends'
+          },
+          responseHandler: parseResponse
+        };
+      }
     })
   })
 });
@@ -656,12 +757,13 @@ export const {
   useSubmitPatreonLoginMutation,
   useLoadDebugGameMutation,
   useGetUserProfileQuery,
-  useLoadReplayMutation,
   useSubmitLobbyInputMutation,
   useGetModPageDataQuery,
   useBanPlayerByIPMutation,
   useBanPlayerByNameMutation,
+  useDeleteUsernameMutation,
   useCloseGameMutation,
+  useSearchUsernamesQuery,
   useGetFriendsListQuery,
   useAddFriendMutation,
   useRemoveFriendMutation,
@@ -677,5 +779,12 @@ export const {
   useUnblockUserMutation,
   useGetOffensiveUsernamesQuery,
   useBanOffensiveUsernameMutation,
-  useWhitelistOffensiveUsernameMutation
+  useWhitelistOffensiveUsernameMutation,
+  useSendPrivateMessageMutation,
+  useGetPrivateMessagesQuery,
+  useMarkMessagesAsReadMutation,
+  useGetOnlineFriendsQuery,
+  useGetUnreadMessageCountQuery,
+  useGetUnreadMessageCountByFriendQuery,
+  useCreateQuickGameMutation
 } = apiSlice;

@@ -119,35 +119,6 @@
   }
 }
 
-@media (min-width: 769px) and (max-width: 1349px) {
-  .grid {
-    grid-template-columns: 1fr 1fr;
-    gap: 25px;
-    margin: 0 auto;
-    margin-top: 3em;
-    padding: 0 1em;
-    max-width: 100%;
-    overflow-x: hidden;
-    grid-template-areas:
-      "gameList createGame"
-      "gameList news";
-  }
-
-  .gameListContainer {
-    grid-area: gameList;
-  }
-
-  .createGameContainer {
-    grid-area: createGame;
-  }
-
-  .newsContainer {
-    grid-area: news;
-    max-width: 100%;
-    margin: 0;
-  }
-}
-
 .headlines {
   text-align: center;
 }
