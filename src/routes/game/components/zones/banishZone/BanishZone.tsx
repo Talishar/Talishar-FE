@@ -31,12 +31,15 @@ export const BanishZone = React.memo((prop: Displayrow) => {
 
   const cardToDisplay = { ...banishZone[0], borderColor: '' };
 
+  // Count only face-up cards (overlay !== 'disabled')
+  const faceUpCount = banishZone.filter(card => card.overlay !== 'disabled').length;
+
   return (
     <div className={styles.banishZone} onClick={banishZoneDisplay}>
       <CardDisplay
         card={cardToDisplay}
         isPlayer={isPlayer}
-        num={showCount ? banishZone.length : undefined}
+        num={showCount ? faceUpCount : undefined}
         preventUseOnClick
       />
     </div>

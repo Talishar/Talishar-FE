@@ -10,6 +10,7 @@ import html2canvas from 'html2canvas';
 import TalisharLogo from 'img/TalisharLogo.webp';
 import { generateCroppedImageUrl } from 'utils/cropImages';
 import { BACKEND_URL } from 'appConstants';
+import { parseHtmlToReactElements } from 'utils/ParseEscapedString';
 
 export interface EndGameData {
   deckID?: string;
@@ -612,7 +613,9 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                 {isPatron ? (
                   data.averageValuePerTurn
                 ) : (
-                  <span dangerouslySetInnerHTML={{ __html: "<a href='https://linktr.ee/Talishar' target='_blank'>Support us!</a>" }} />
+                  <span>
+                    {parseHtmlToReactElements("<a href='https://linktr.ee/Talishar' target='_blank'>Support us!</a>")}
+                  </span>
                 )}
               </span>
             </div>
@@ -662,7 +665,9 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                 {isPatron ? (
                   data.totalDamagePrevented
                 ) : (
-                  <span dangerouslySetInnerHTML={{ __html: "<a href='https://linktr.ee/Talishar' target='_blank'>Support us!</a>" }} />
+                  <span>
+                    {parseHtmlToReactElements("<a href='https://linktr.ee/Talishar' target='_blank'>Support us!</a>")}
+                  </span>
                 )}
               </span>
             </div>
@@ -673,7 +678,9 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                 {isPatron ? (
                   data.totalLifeGained
                 ) : (
-                  <span dangerouslySetInnerHTML={{ __html: "<a href='https://linktr.ee/Talishar' target='_blank'>Support us!</a>" }} />
+                  <span>
+                    {parseHtmlToReactElements("<a href='https://linktr.ee/Talishar' target='_blank'>Support us!</a>")}
+                  </span>
                 )}
               </span>
             </div>

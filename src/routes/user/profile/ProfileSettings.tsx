@@ -24,6 +24,7 @@ import useWindowDimensions from 'hooks/useWindowDimensions';
 import { CosmeticsSection } from '../../game/components/elements/optionsMenu/OptionsSettings/CosmeticsSection';
 import { useGetCosmeticsQuery } from 'features/api/apiSlice';
 import ThemeToggle from 'themes/ThemeToggle';
+import LanguageSelector from 'components/LanguageSelector/LanguageSelector';
 
 const ProfileSettings = () => {
   const settingsData = useAppSelector(getSettingsEntity);
@@ -84,6 +85,7 @@ const ProfileSettings = () => {
     cardBack: String(settingsData['CardBack']?.value ?? '0'),
     playMat: String(settingsData['Playmat']?.value ?? '0'),
     disableFabInsights: String(settingsData['DisableFabInsights']?.value) === '1',
+    disableHeroIntro: String(settingsData['DisableHeroIntro']?.value) === '1',
   };
 
   const priorityOptions = [
@@ -315,16 +317,31 @@ const ProfileSettings = () => {
               })
             }
           />
+          <CheckboxSetting
+            name="disableHeroIntro"
+            label="Disable Hero Intro Animation"
+            checked={initialValues.disableHeroIntro}
+            onChange={() =>
+              handleSettingsChange({
+                name: optConst.DISABLE_HERO_INTRO,
+                value: initialValues.disableHeroIntro ? '0' : '1'
+              })
+            }
+          />
         </Fieldset>
       </div>
 
       <div className={styles.settingsColumn}>
         <h3 className={styles.title}>Visual Settings</h3>
         
+        <Fieldset legend="Cards Language">
+          <LanguageSelector />
+        </Fieldset>
+
         <Fieldset legend="Theme">
           <ThemeToggle />
         </Fieldset>
-        
+  
         <Fieldset legend="Display">
           <VisualSlider
             label="Card Size"

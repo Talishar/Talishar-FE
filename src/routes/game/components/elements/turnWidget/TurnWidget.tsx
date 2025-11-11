@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import ActionPointDisplay from '../actionPointDisplay/ActionPointDisplay';
@@ -14,10 +14,14 @@ export default function TurnWidget() {
     (state: RootState) => state.game.canPassPhase
   );
 
-  const widgetBackground = classNames(styles.widgetBackground, {
-    [styles.myTurn]: canPassPhase,
-    [styles.ourTurn]: !canPassPhase
-  });
+  const widgetBackground = useMemo(() => {
+    // Ensure canPassPhase is a boolean to prevent classnames parsing issues
+    const isCanPass = Boolean(canPassPhase === true);
+    return classNames(styles.widgetBackground, {
+      [styles.myTurn]: isCanPass,
+      [styles.ourTurn]: !isCanPass
+    });
+  }, [canPassPhase]);
 
   return (
     <div className={styles.widgetContainer}>

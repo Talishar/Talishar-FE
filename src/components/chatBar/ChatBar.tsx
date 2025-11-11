@@ -18,6 +18,7 @@ import { IoChatbubble } from 'react-icons/io5';
 import styles from './ChatBar.module.scss';
 import useAuth from 'hooks/useAuth';
 import { toast } from 'react-hot-toast';
+import { getReadableFormatName } from 'utils/formatUtils';
 
 interface ChatWindow {
   friend: Friend;
@@ -191,7 +192,6 @@ export const ChatBar: React.FC = () => {
 
     try {
       await sendMessage({ toUserId: friendUserId, message: message.trim(), gameLink }).unwrap();
-      toast.success('Message sent!');
     } catch (err: any) {
       toast.error(err.error || 'Failed to send message');
       console.error('Send message error:', err);
@@ -219,11 +219,13 @@ export const ChatBar: React.FC = () => {
 
       // Generate the join link
       const gameJoinLink = `${window.location.origin}/game/join/${gameResponse.gameName}`;
+      const readableFormat = getReadableFormatName('cc');
+      const message = `Join my ${readableFormat} game!`;
       
       // Send message with game link
       await sendMessage({
         toUserId: friendUserId,
-        message: 'Join my game!',
+        message: message,
         gameLink: gameJoinLink
       }).unwrap();
 
@@ -292,13 +294,14 @@ export const ChatBar: React.FC = () => {
                     (f: any) => f.userId === friend.friendUserId
                   );
                   const isOnline = onlineFriend?.isOnline === true;
+                  const isAway = onlineFriend?.isAway === true;
                   
                   return (
                     <div
                       key={friend.friendUserId}
                       className={styles.friendItem}
                     >
-                      <div className={`${styles.onlineIndicator} ${isOnline ? styles.online : styles.offline}`} />
+                      <div className={`${styles.onlineIndicator} ${isOnline ? styles.online : isAway ? styles.away : styles.offline}`} />
                       <div 
                         className={styles.friendInfo}
                         onClick={() => {
@@ -315,6 +318,12 @@ export const ChatBar: React.FC = () => {
                             {friend.username}
                           </div>
                         )}
+                        <div className={styles.friendStatus}>
+                          {isAway && onlineFriend?.timeSinceActivity && (() => {
+                            const minutesAway = Math.floor((onlineFriend.timeSinceActivity - 60) / 60);
+                            return minutesAway > 0 ? `(away ${minutesAway}m)` : '(away)';
+                          })()}
+                        </div>
                       </div>
                       <button
                         className={styles.friendMessageButton}
@@ -345,6 +354,11 @@ export const ChatBar: React.FC = () => {
             onClick={() => setFriendsPanelOpen(true)}
           >
             <span>Friends</span>
+            {onlineFriendsData?.onlineFriends && onlineFriendsData.onlineFriends.filter((f: any) => f.isOnline).length > 0 && (
+              <span className={styles.onlineFriendsCount}>
+                ({onlineFriendsData.onlineFriends.filter((f: any) => f.isOnline).length} friend{onlineFriendsData.onlineFriends.filter((f: any) => f.isOnline).length !== 1 ? 's' : ''} online)
+              </span>
+            )}
           </button>
         )}
       </div>
@@ -530,12 +544,29 @@ const ChatWindowComponent: React.FC<ChatWindowProps> = ({
               (f: any) => f.userId === friendUserId
             );
             const isOnline = onlineFriend?.isOnline === true;
+            const isAway = onlineFriend?.isAway === true;
             return (
-              <div className={`${styles.onlineIndicator} ${isOnline ? styles.online : styles.offline}`} />
+              <div className={`${styles.onlineIndicator} ${isOnline ? styles.online : isAway ? styles.away : styles.offline}`} />
             );
           })()}
           <div className={styles.chatFriendName}>
-            {chat.friend.nickname || chat.friend.username}
+            <div>
+              {chat.friend.nickname || chat.friend.username}
+            </div>
+            {(() => {
+              const onlineFriend = onlineFriendsData?.onlineFriends?.find(
+                (f: any) => f.userId === friendUserId
+              );
+              const isAway = onlineFriend?.isAway === true;
+              return (
+                <div className={styles.friendStatus}>
+                  {isAway && onlineFriend?.timeSinceActivity && (() => {
+                    const minutesAway = Math.floor((onlineFriend.timeSinceActivity - 60) / 60);
+                    return minutesAway > 0 ? `(away ${minutesAway}m)` : '(away)';
+                  })()}
+                </div>
+              );
+            })()}
           </div>
         </div>
         <div className={styles.chatActions}>
@@ -573,17 +604,20 @@ const ChatWindowComponent: React.FC<ChatWindowProps> = ({
               key={message.messageId}
               className={`${styles.message} ${message.fromUserId !== friendUserId ? styles.sent : styles.received}`}
             >
-              <div className={styles.messageContent}>{message.message}</div>
-              {message.gameLink && (
+              {message.gameLink ? (
                 <a
                   href={message.gameLink}
-                  className={styles.gameInvite}
+                  className={styles.messageContentLink}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  <MdGames className={styles.inviteIcon} size={20} />
-                  <span className={styles.inviteText}>Join Game</span>
+                  <div className={styles.messageContent}>
+                    <MdGames size={18} className={styles.gameIcon} />
+                    {message.message}
+                  </div>
                 </a>
+              ) : (
+                <div className={styles.messageContent}>{message.message}</div>
               )}
               <div className={styles.messageTime}>{formatTime(message.createdAt)}</div>
             </div>

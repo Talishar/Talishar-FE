@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from './AboutSection.module.css';
+import { parseHtmlToReactElements } from 'utils/ParseEscapedString';
 
 const AboutSection: React.FC = () => {
   const [expandedFAQ, setExpandedFAQ] = React.useState<number | null>(null);
@@ -198,7 +199,9 @@ const AboutSection: React.FC = () => {
                 </button>
                 {expandedFAQ === index && (
                   <div className={styles.faqAnswer}>
-                    <p dangerouslySetInnerHTML={{ __html: faq.answer }} />
+                    <p>
+                      {parseHtmlToReactElements(faq.answer)}
+                    </p>
                   </div>
                 )}
               </div>

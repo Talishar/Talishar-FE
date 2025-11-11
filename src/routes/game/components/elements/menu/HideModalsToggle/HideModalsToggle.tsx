@@ -29,8 +29,8 @@ const HideModalsToggle = () => {
         data-tooltip="Show Arena"
         data-placement="bottom"
       >
-        {showModal && <FaEye aria-hidden="true" fontSize={'2em'} />}
-        {!showModal && <FaEyeSlash aria-hidden="true" fontSize={'2em'} />}
+        {showModal && <FaEye aria-hidden="true" />}
+        {!showModal && <FaEyeSlash aria-hidden="true" />}
       </button>
     </div>
   );

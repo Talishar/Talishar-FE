@@ -11,6 +11,7 @@ import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import classNames from 'classnames';
 import useAuth from 'hooks/useAuth';
 import { PiFileCsvFill, PiCameraFill } from "react-icons/pi";
+import { parseHtmlToReactElements } from 'utils/ParseEscapedString';
 
 const EndGameScreen = () => {
   const gameInfo = useAppSelector(getGameInfo, shallowEqual);
@@ -62,10 +63,9 @@ const EndGameScreen = () => {
   } else if (showFullLog) {
     if (isPatron) {
       content = (
-        <div
-          className={fullLogClasses}
-          dangerouslySetInnerHTML={{ __html: data.fullLog }}
-        />
+        <div className={fullLogClasses}>
+          {parseHtmlToReactElements(data.fullLog)}
+        </div>
       );
     } else {
       content = (

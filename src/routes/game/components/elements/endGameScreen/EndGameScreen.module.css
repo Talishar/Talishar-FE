@@ -8,7 +8,7 @@
   right: 13vw;
   background-color: var(--near-black);
   padding: 1.5rem;
-  border: 1px solid var(--theme-primary);
+  border: 2px solid var(--theme-border);
   border-radius: 10px;
   z-index: 950;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
@@ -91,7 +91,7 @@
   min-height: 2.5rem;
   padding: 0.5rem 1rem;
   border-radius: 6px;
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.15));
   white-space: nowrap;
   font-size: 1em;
   font-weight: 500;

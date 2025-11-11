@@ -110,7 +110,7 @@ export default function PassTurnDisplay() {
             <>
               <dialog open={showAreYouSureModal} className={styles.modal}>
                 <article className={styles.container}>
-                  <header>{preventPassPrompt}</header>
+                  <header className={styles.header}>{preventPassPrompt}</header>
                   <button className={styles.preventButtons} onClick={clickYes}>
                     Yes
                   </button>

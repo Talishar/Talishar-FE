@@ -10,7 +10,7 @@ import { FaExclamationCircle } from 'react-icons/fa';
 import { GiCapeArmor } from 'react-icons/gi';
 import { SiBookstack } from 'react-icons/si';
 import { MdGames } from 'react-icons/md';
-import { Form, Formik } from 'formik';
+import { Form, Formik, useFormikContext } from 'formik';
 import deckValidation from './validation';
 import StickyFooter from './components/stickyFooter/StickyFooter';
 import { toast } from 'react-hot-toast';
@@ -30,6 +30,7 @@ import { RootState } from 'app/Store';
 import { DeckResponse, Weapon } from 'interface/API/GetLobbyInfo.php';
 import LobbyUpdateHandler from './components/updateHandler/SideboardUpdateHandler';
 import { GAME_FORMAT, BREAKPOINT_EXTRA_LARGE, CLOUD_IMAGES_URL } from 'appConstants';
+import { getReadableFormatName } from 'utils/formatUtils';
 import ChooseFirstTurn from './components/chooseFirstTurn/ChooseFirstTurn';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import { SubmitSideboardAPI } from 'interface/API/SubmitSideboard.php';
@@ -38,7 +39,7 @@ import CardPortal from '../components/elements/cardPortal/CardPortal';
 import Matchups from './components/matchups/Matchups';
 import { GameLocationState } from 'interface/GameLocationState';
 import CardPopUp from '../components/elements/cardPopUp/CardPopUp';
-import { getGameInfo } from 'features/game/GameSlice';
+import { getGameInfo, setHeroInfo } from 'features/game/GameSlice';
 import useSound from 'use-sound';
 import playerJoined from 'sounds/playerJoinedSound.mp3';
 import { createPortal } from 'react-dom';
@@ -56,6 +57,7 @@ const Lobby = () => {
   const [isWideScreen, setIsWideScreen] = useState<boolean>(false);
   const [isDeckValid, setIsDeckValid] = useState(true);
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const { isLoggedIn } = useAuth();
   const { playerID, gameID, authKey } = useAppSelector(
@@ -131,10 +133,12 @@ const Lobby = () => {
 
       // Send the current lobby link to the friend
       const gameJoinLink = `${window.location.origin}/game/join/${gameID}`;
+      const readableFormat = getReadableFormatName(data?.format || '');
+      const message = readableFormat ? `Join my ${readableFormat} game!` : 'Join my game!';
       
       await sendMessage({
         toUserId: friendUserId,
-        message: 'Join my game!',
+        message: message,
         gameLink: gameJoinLink
       }).unwrap();
 
@@ -159,11 +163,21 @@ const Lobby = () => {
   // Navigate to main game when ready - must be in useEffect to avoid setState during render
   useEffect(() => {
     if (gameLobby?.isMainGameReady) {
+      // Dispatch hero info to Redux before navigating
+      dispatch(
+        setHeroInfo({
+          heroName: data?.deck?.heroName,
+          yourHeroCardNumber: data?.deck?.hero,
+          opponentHeroName: gameLobby?.theirHeroName,
+          opponentHeroCardNumber: gameLobby?.theirHero
+        })
+      );
+      
       navigate(`/game/play/${gameID}`, {
         state: { playerID: playerID ?? 0 } as GameLocationState
       });
     }
-  }, [gameLobby?.isMainGameReady, gameID, playerID, navigate]);
+  }, [gameLobby?.isMainGameReady, gameID, playerID, navigate, dispatch, data?.deck?.heroName, data?.deck?.hero, gameLobby?.theirHeroName, gameLobby?.theirHero]);
 
   const deckClone = [...data.deck.cards];
   const deckSBClone = [...data.deck.cardsSB];
@@ -254,7 +268,6 @@ const Lobby = () => {
   const [showChatModal, setShowChatModal] = useState(true);
   const [chatModal, setChatModal] = useState('');
   const [modal, setModal] = useState('Do you want to enable chat?');
-  const dispatch = useAppDispatch();
 
   const clickYes = (e: any) => {
     e.preventDefault();
@@ -403,7 +416,9 @@ const Lobby = () => {
         enableReinitialize
       >
         <Form className={styles.form}>
-          <div className={styles.gridLayout}>
+          <div className={classNames(styles.gridLayout, {
+            [styles.noMatchups]: !gameLobby?.matchups || gameLobby.matchups.length === 0
+          })}>
             <div className={styles.titleContainer}>
               <CardPopUp
                 cardNumber={data.deck.hero}
@@ -543,6 +558,9 @@ const Lobby = () => {
                       </button>
                     </li>
                   </ul>
+                  <div style={{ marginLeft: 'auto' }}>
+                    <DesktopDeckSelectionButtons deckIndexed={deckIndexed} deckSBIndexed={deckSBIndexed} activeTab={activeTab} />
+                  </div>
                 </nav>
                 {activeTab !== 'deck' && (
                   <Equipment
@@ -552,7 +570,7 @@ const Lobby = () => {
                   />
                 )}
                 {activeTab === 'deck' && (
-                  <Deck deck={[...deckIndexed, ...deckSBIndexed]} />
+                  <Deck deck={[...deckIndexed, ...deckSBIndexed]} cardDictionary={data?.deck?.cardDictionary} />
                 )}
               </div>
             ) : (
@@ -565,7 +583,7 @@ const Lobby = () => {
                   />
                 )}
                 {activeTab === 'deck' && (
-                  <Deck deck={[...deckIndexed, ...deckSBIndexed]} />
+                  <Deck deck={[...deckIndexed, ...deckSBIndexed]} cardDictionary={data?.deck?.cardDictionary} />
                 )}
               </>
             )}
@@ -599,7 +617,7 @@ const Lobby = () => {
                                 onClick={() => handleSendGameInviteFromLobby(friend.friendUserId)}
                                 className={styles.friendInviteButton}
                               >
-                                <MdGames size={16} />
+                                <MdGames size={18} />
                                 Invite
                               </button>
                             </div>
@@ -655,6 +673,46 @@ const Lobby = () => {
       </Formik>
       <CardPortal />
     </main>
+  );
+};
+
+// Component to handle Select All/None buttons for desktop - has access to Formik context
+const DesktopDeckSelectionButtons = ({ deckIndexed, deckSBIndexed, activeTab }: { deckIndexed: string[], deckSBIndexed: string[], activeTab: string }) => {
+  const { setFieldValue } = useFormikContext<DeckResponse>();
+  
+  const handleSelectAll = () => {
+    const allCards = [...deckIndexed, ...deckSBIndexed];
+    setFieldValue('deck', allCards);
+  };
+
+  const handleSelectNone = () => {
+    setFieldValue('deck', []);
+  };
+
+  // Only show buttons when Deck tab is active
+  if (activeTab !== 'deck') {
+    return null;
+  }
+
+  return (
+    <div className={styles.selectionButtons}>
+      <button
+        className={styles.selectionButton}
+        onClick={handleSelectAll}
+        type="button"
+        title="Select all cards"
+      >
+        Select All
+      </button>
+      <button
+        className={styles.selectionButton}
+        onClick={handleSelectNone}
+        type="button"
+        title="Deselect all cards"
+      >
+        Select None
+      </button>
+    </div>
   );
 };
 

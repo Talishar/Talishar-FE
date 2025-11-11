@@ -129,7 +129,7 @@ function ParseEquipment(input: any) {
 
 export default function ParseGameState(input: any) {
   const result: GameState = {
-    gameInfo: { gameID: 0, playerID: 0, authKey: '', isPrivateLobby: false, isPrivate: false },
+    gameInfo: { gameID: 0, gameGUID: '', playerID: 0, authKey: '', isPrivateLobby: false, isPrivate: false },
     gameDynamicInfo: {},
     playerOne: {},
     playerTwo: {},
@@ -406,6 +406,7 @@ export default function ParseGameState(input: any) {
     result.playerTwo.isContributor = input.initialLoad.opponentIsContributor;
     result.playerTwo.isPvtVoidPatron = input.initialLoad.opponentIsPvtVoidPatron;
     result.gameInfo.roguelikeGameID = input.initialLoad.roguelikeGameID;
+    result.gameInfo.gameGUID = input.initialLoad.gameGUID;
     result.gameInfo.altArts = input.initialLoad.altArts;
   }
 

@@ -23,14 +23,19 @@
     position: fixed;
     top: 0;
     left: 0;
-    margin: 0.5rem;
-    padding: 0.35rem 0.5rem;
+    margin: 0.25rem;
+    padding: 0.15rem 0.2rem;
     height: auto;
     width: auto;
-    max-width: 180px;
-    font-size: 0.75rem;
+    max-width: 140px;
+    font-size: 0.55rem;
     z-index: 500;
     border-radius: 0.2em;
+  }
+
+  .playerName.playerTwo {
+    top: auto;
+    bottom: 0;
   }
 }
 
@@ -49,9 +54,15 @@
   align-items: center;
   justify-content: flex-start;
   flex: 1;
-  gap: 0.5em;
+  gap: 0.2em;
   min-width: 0;
   max-width: 100%;
+}
+
+@media (max-width: 1200px) {
+  .nameContent {
+    gap: 0.15em;
+  }
 }
 
 .name {
@@ -198,9 +209,9 @@
 
 @media (max-width: 1200px) {
   .icon {
-    height: 1.2rem;
-    width: 1.2rem;
-    height: 1.2dvh;
-    width: 1.2dvh;
+    height: 1.8rem;
+    width: 1.8rem;
+    height: 1.8dvh;
+    width: 1.8dvh;
   }
 }

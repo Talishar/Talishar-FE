@@ -227,8 +227,12 @@
 .inLineNav {
   position: relative;
   top: 0;
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.15));
   border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
 }
 
 .deckSelectorContainer {
@@ -251,7 +255,7 @@ nav {
 .mobileNav {
   overflow-x: auto;
   overflow-y: auto;
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.15));
   border-radius: 0 0 8px 8px;
   display: flex;
   gap: 0.4rem;
@@ -260,7 +264,7 @@ nav {
 .contentContainer {
   padding: 1rem;
   border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.2));
   background: rgba(0, 0, 0, 0.7);
   backdrop-filter: blur(5px);
   margin: 0.5rem 0;
@@ -269,14 +273,14 @@ nav {
 .lobbyChat {
   background: rgba(0, 0, 0, 0.8);
   border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.2));
   padding: 1rem;
 }
 
 .matchupsContainer {
   background: rgba(0, 0, 0, 0.7);
   border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.2));
   padding: 1rem;
   backdrop-filter: blur(5px);
 }
@@ -348,7 +352,6 @@ nav {
 
   .mobileNav ul {
     display: flex;
-    gap: 0.4rem;
     padding: 0;
     margin: 0;
     list-style: none;
@@ -394,11 +397,18 @@ nav {
     min-height: 100%;
     overflow-y: hidden;
     display: grid;
-    grid-template-columns: 1fr 2fr 200px;
+    grid-template-columns: 1fr 2fr 260px;
     grid-template-rows: 240px 1fr;
     grid-template-areas:
       'hero weapons matchups'
       'chat weapons matchups';
+  }
+
+  .gridLayout.noMatchups {
+    grid-template-columns: 1fr 2fr 0px;
+    grid-template-areas:
+      'hero weapons'
+      'chat weapons';
   }
 
   .titleContainer {
@@ -535,7 +545,7 @@ button.secondary:hover {
 .disclaimerButtons button {
   background-color: rgba(255, 255, 255, 0.1);
   color: rgba(255, 255, 255, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.2));
   padding: 0.75rem 2rem;
   border-radius: 8px;
   transition: all 0.2s;
@@ -653,7 +663,7 @@ button.secondary:hover {
 .friendsPanel {
   padding: 1rem;
   background: var(--theme-card-background, #1e2329);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.15));
   border-radius: 12px;
   max-height: 400px;
   overflow-y: auto;
@@ -736,6 +746,7 @@ button.secondary:hover {
   cursor: pointer !important;
   display: flex !important;
   align-items: center !important;
+  justify-content: center !important;
   gap: 0.4rem !important;
   font-size: 0.9rem !important;
   flex-shrink: 0 !important;
@@ -759,4 +770,40 @@ button.secondary:hover {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+}
+
+.selectionButtons {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.selectionButton {
+  padding: 0.5em 1em;
+  border: 1px solid var(--theme-border);
+  background-color: var(--theme-card-background);
+  border-radius: 0.25em;
+  cursor: pointer;
+  font-size: 0.9em;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  color: var(--theme-text-secondary);
+  white-space: nowrap;
+  width: auto;
+  min-width: fit-content;
+  margin-bottom: 0;
+}
+
+.selectionButton:hover {
+  background-color: var(--theme-section-background);
+  border-color: var(--theme-primary);
+  color: var(--theme-text);
+}
+
+.selectionButton:active {
+  background-color: var(--theme-primary);
+  color: var(--theme-primary-inverse);
+  border-color: var(--theme-primary);
+  font-weight: 600;
 }

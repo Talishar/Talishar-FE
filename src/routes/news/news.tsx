@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styles from '../index/Index.module.css';
 import NewSetLogo from '../../img/NewSetLogo.webp';
 import { fetchDiscordReleaseNotes, DiscordMessage } from '../../services/contentService';
+import { parseHtmlToReactElements } from 'utils/ParseEscapedString';
 
 const News = () => {
   const [discordMessages, setDiscordMessages] = useState<DiscordMessage[]>([]);
@@ -58,10 +59,9 @@ const News = () => {
                   </strong>
                 </div>
                 {message.content && (
-                  <p 
-                    className={styles.messageContent}
-                    dangerouslySetInnerHTML={{ __html: message.content }}
-                  />
+                  <p className={styles.messageContent}>
+                    {parseHtmlToReactElements(message.content)}
+                  </p>
                 )}
                 
                 {/* Attachments */}

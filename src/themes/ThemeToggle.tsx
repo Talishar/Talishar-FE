@@ -7,9 +7,6 @@ const ThemeToggle: React.FC = () => {
 
   return (
     <div className={styles.themeToggleContainer}>
-      <label htmlFor="theme-selector" className={styles.label}>
-        Theme
-      </label>
       <select
         id="theme-selector"
         value={currentTheme.id}

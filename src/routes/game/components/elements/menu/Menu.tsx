@@ -28,7 +28,7 @@ function FullScreenButton() {
         data-tooltip="Fullscreen"
         data-placement="bottom"
       >
-        <GiExpand aria-hidden="true" fontSize={'2em'} />
+        <GiExpand aria-hidden="true" />
       </button>
     </div>
   );
@@ -55,7 +55,7 @@ function UndoButton() {
         data-tooltip="Undo"
         data-placement="bottom"
       >
-        <FaUndo aria-hidden="true" fontSize={'1.5em'} />
+        <FaUndo aria-hidden="true" />
       </button>
     </div>
   );

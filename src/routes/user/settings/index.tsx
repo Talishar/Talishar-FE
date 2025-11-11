@@ -21,6 +21,7 @@ import { useCookies } from 'react-cookie';
 import * as optConst from 'features/options/constants';
 import styles from './settings.module.css';
 import ThemeToggle from 'themes/ThemeToggle';
+import LanguageSelector from 'components/LanguageSelector/LanguageSelector';
 
 const SettingsPage = () => {
   const settingsData = useAppSelector(getSettingsEntity);
@@ -81,6 +82,7 @@ const SettingsPage = () => {
     cardBack: String(settingsData['CardBack']?.value ?? '0'),
     playMat: String(settingsData['Playmat']?.value ?? '0'),
     disableFabInsights: String(settingsData['DisableFabInsights']?.value) === '1',
+    disableHeroIntro: String(settingsData['DisableHeroIntro']?.value) === '1',
   };
 
   const priorityOptions = [
@@ -314,12 +316,27 @@ const SettingsPage = () => {
                 })
               }
             />
+            <CheckboxSetting
+              name="disableHeroIntro"
+              label="Disable Hero Intro Animation"
+              checked={initialValues.disableHeroIntro}
+              onChange={() =>
+                handleSettingsChange({
+                  name: optConst.DISABLE_HERO_INTRO,
+                  value: initialValues.disableHeroIntro ? '0' : '1'
+                })
+              }
+            />
           </Fieldset>
         </div>
 
         <div className={styles.settingsColumn}>
           <h3 className={styles.title}>Visual Settings</h3>
           
+          <Fieldset legend="Cards Language">
+            <LanguageSelector />
+          </Fieldset>
+
           <Fieldset legend="Theme">
             <ThemeToggle />
           </Fieldset>

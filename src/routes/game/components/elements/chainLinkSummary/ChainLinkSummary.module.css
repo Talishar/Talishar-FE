@@ -8,7 +8,7 @@
   right: 20vw;
   background-color: rgba(0, 0, 0, 0.95);
   padding: 1.5vh;
-  border: 1px solid var(--theme-primary);
+  border: 2px solid var(--theme-border);
   border-radius: 10px;
 }
 

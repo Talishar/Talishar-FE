@@ -73,6 +73,11 @@ export const nextTurn = createAsyncThunk(
         waitingForJSONResponse = false;
         data = data.toString().trim();
         const indexOfBraces = data.indexOf('{');
+        if (indexOfBraces === -1) {
+          // No JSON object found - backend returned an error message or non-JSON response
+          toast.error(`Backend Error: ${sanitizeHtmlTags(data)}`);
+          return console.error(`Backend returned non-JSON response: ${data}`);
+        }
         if (indexOfBraces !== 0) {
           const warningMessage = sanitizeHtmlTags(data.substring(0, indexOfBraces));
           toast.error(`Backend Warning: ${warningMessage}`);          
@@ -130,6 +135,11 @@ export const gameLobby = createAsyncThunk(
         waitingForJSONResponse = false;
         data = data.toString().trim();
         const indexOfBraces = data.indexOf('{');
+        if (indexOfBraces === -1) {
+          // No JSON object found - backend returned an error message or non-JSON response
+          toast.error(`Backend Error: ${sanitizeHtmlTags(data)}`);
+          return console.error(`Backend returned non-JSON response: ${data}`);
+        }
         if (indexOfBraces !== 0) {
           data = data.substring(indexOfBraces);
         }
@@ -488,6 +498,31 @@ export const gameSlice = createSlice({
     setIsRoguelike: (state, action: PayloadAction<boolean>) => {
       state.gameInfo.isRoguelike = action.payload;
     },
+    setHeroInfo: (
+      state,
+      action: PayloadAction<{
+        heroName?: string;
+        yourHeroCardNumber?: string;
+        opponentHeroName?: string;
+        opponentHeroCardNumber?: string;
+      }>
+    ) => {
+      if (action.payload.heroName !== undefined) {
+        state.gameInfo.heroName = action.payload.heroName;
+      }
+      if (action.payload.yourHeroCardNumber !== undefined) {
+        state.gameInfo.yourHeroCardNumber = action.payload.yourHeroCardNumber;
+      }
+      if (action.payload.opponentHeroName !== undefined) {
+        state.gameInfo.opponentHeroName = action.payload.opponentHeroName;
+      }
+      if (action.payload.opponentHeroCardNumber !== undefined) {
+        state.gameInfo.opponentHeroCardNumber = action.payload.opponentHeroCardNumber;
+      }
+    },
+    markHeroIntroAsShown: (state) => {
+      state.gameInfo.hasShownHeroIntro = true;
+    },
     disableModals: (state) => {
       state.showModals = false;
     },
@@ -822,6 +857,8 @@ export const {
   enableModals,
   disableModals,
   setIsRoguelike,
+  setHeroInfo,
+  markHeroIntroAsShown,
   setShuffling,
   setReplayStart,
   updateActionTimestamp,

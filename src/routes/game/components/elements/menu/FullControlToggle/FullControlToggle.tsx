@@ -63,7 +63,7 @@ const FullControlToggle = () => {
         data-tooltip="Always Hold Priority"
         data-placement="bottom"
       >
-        <GiUsable aria-hidden="true" fontSize={'2em'} />
+        <GiUsable aria-hidden="true" />
       </button>
     </div>
   );

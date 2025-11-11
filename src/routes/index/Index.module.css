@@ -18,7 +18,7 @@
   max-height: 483px;
   width: 100%;
   height: auto;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.2));
   border-radius: 10px;
 }
 
@@ -30,7 +30,7 @@
   width: auto;
   height: auto;
   margin: auto;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.2));
   border-radius: 10px;
 }
 
@@ -392,7 +392,7 @@ h3 {
   .newsTab {
     padding: 0.75em 1.5em;
     background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.15));
     border-radius: 6px;
     color: #aaa;
     cursor: pointer;

@@ -42,6 +42,12 @@ export interface Weapon {
 export interface CardData {
   id: string;
   pitch: number;
+  power?: number;
+  blockValue?: number;
+  class?: string;
+  talent?: string;
+  subtype?: string;
+  cost?: number;
 }
 
 export interface GetLobbyInfoResponse {

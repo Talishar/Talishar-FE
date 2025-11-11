@@ -10,6 +10,7 @@ import { BsArrowUpSquareFill, BsArrowDownSquareFill } from 'react-icons/bs';
 import Button from '../../../../features/Button';
 import { submitButton } from '../../../../features/game/GameSlice';
 import useWindowDimensions from '../../../../hooks/useWindowDimensions';
+import { parseHtmlToReactElements } from 'utils/ParseEscapedString';
 
 export default function CombatChain() {
   const oldCombatChain =
@@ -137,9 +138,9 @@ const PlayerPrompt = () => {
         key={`${playerPrompt?.helpText?.substring(0, 10)}`}
       >
         <div className={styles.content}>
-          <div
-            dangerouslySetInnerHTML={{ __html: playerPrompt?.helpText ?? '' }}
-          ></div>
+          <div>
+            {parseHtmlToReactElements(playerPrompt?.helpText ?? '')}
+          </div>
         </div>
         {buttons}
       </motion.div>
