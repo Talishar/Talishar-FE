@@ -6,9 +6,16 @@
   padding: 1em;
   max-width: 512px;
   margin: auto;
+  pointer-events: auto;
+  touch-action: manipulation;
+  background: var(--theme-section-background, linear-gradient(135deg, rgba(30, 35, 41, 0.8) 0%, rgba(30, 35, 41, 0.85) 100%));
 }
 
 .container > h3 {
+  margin-bottom: 1em;
+}
+
+h5 {
   margin-bottom: 1em;
 }
 
@@ -16,6 +23,8 @@
   display: flex;
   flex-direction: row;
   gap: 1em;
+  width: 100%;
+  pointer-events: auto;
 }
 
 .buttons > button {
@@ -24,6 +33,19 @@
   animation: wiggle 3s linear 2;
   animation-delay: 5s;
   animation-iteration-count: infinite;
+  pointer-events: auto;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  min-height: 3rem;
+}
+
+.firstButton,
+.secondButton {
+  pointer-events: auto;
 }
 
 .spacer {

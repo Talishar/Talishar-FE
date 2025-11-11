@@ -17,6 +17,7 @@ import {
   ResetPasswordForm
 } from 'routes/user/login';
 import { DecksPage, ProfilePage } from 'routes/user';
+import SettingsPage from 'routes/user/settings';
 import JoinGame from 'routes/game/join/Join';
 import Lobby from 'routes/game/lobby/Lobby';
 import { SignUpForm } from 'routes/user/login/components/SignUpForm';
@@ -24,9 +25,10 @@ import useAuth from 'hooks/useAuth';
 import Header from 'components/header/Header';
 import Privacy from 'routes/privacy';
 import CreateGame from 'routes/game/create/CreateGame';
-import LoadReplay from 'routes/game/load/LoadReplay';
 import LinkPatreon from 'routes/user/profile/linkpatreon';
 import ModPage from 'routes/mod/ModPage';
+import PrivacyPolicy from 'routes/legal/PrivacyPolicy';
+import TermsOfService from 'routes/legal/TermsOfService';
 
 const PlayGuard = ({ children }: { children: JSX.Element }) => {
   const [searchParams] = useKnownSearchParams();
@@ -96,6 +98,32 @@ const LoggedInGuard = ({
   return children;
 };
 
+const ModGuard = ({ children }: { children: JSX.Element }) => {
+  const { isLoggedIn, isMod, isLoading } = useAuth();
+
+  // Don't redirect while loading auth status on page refresh
+  if (isLoading) {
+    return (
+      <div style={{ textAlign: 'center', padding: '2rem' }}>
+        Loading authentication...
+      </div>
+    );
+  }
+
+  if (!isLoggedIn || !isMod) {
+    return (
+      <Navigate
+        to={{
+          pathname: '/'
+        }}
+        replace={true}
+      />
+    );
+  }
+
+  return children;
+};
+
 export const router = createBrowserRouter(
   createRoutesFromElements(
     <Route errorElement={<ErrorPage />}>
@@ -142,9 +170,10 @@ export const router = createBrowserRouter(
         </Route>
         <Route path="game/join/:gameID" element={<JoinGame />} />
         <Route path="game/create" element={<CreateGame />} />
-        <Route path="game/load" element={<LoadReplay />} />
         <Route path="privacy" element={<Privacy />} />
-        <Route path="mod" element={<ModPage />} />
+        <Route path="privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="terms-of-service" element={<TermsOfService />} />
+        <Route path="mod" element={<ModGuard><ModPage /></ModGuard>} />
         <Route path="user">
           <Route index element={<Navigate to={'./profile'} />} />
           <Route path="profile/linkpatreon" element={<LinkPatreon />} />
@@ -153,6 +182,14 @@ export const router = createBrowserRouter(
             element={
               <LoggedInGuard shouldBeLoggedIn={true}>
                 <ProfilePage />
+              </LoggedInGuard>
+            }
+          />
+          <Route
+            path="settings"
+            element={
+              <LoggedInGuard shouldBeLoggedIn={true}>
+                <SettingsPage />
               </LoggedInGuard>
             }
           />

@@ -5,10 +5,17 @@ import { LOCALE_DICTIONARY, LOCALE_FLAGS } from 'utils/multilanguage/constants';
 
 const capitalizeFirstLetter = (text: string): string => text.charAt(0).toUpperCase() + text.slice(1);
 
+const isChromiumBased = () => {
+  if (typeof window === 'undefined') return false;
+  const userAgent = window.navigator.userAgent;
+  return /Chrome|Chromium|Edge/.test(userAgent) && !/Firefox/.test(userAgent);
+};
+
 const LanguageSelector = () => {
   const { getLanguage, setLanguage } = useLanguageSelector();
   const [isToastShown, setIsToastShown] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState(getLanguage());
+  const isChromium = isChromiumBased();
 
   const handleLanguageSelect = (event: { target: { value: any } }) => {
     const language = event.target.value;
@@ -35,7 +42,7 @@ const LanguageSelector = () => {
             className="dropdown-item"
             value={language}
           >
-            {LOCALE_FLAGS[language]} {capitalizeFirstLetter(LOCALE_DICTIONARY[language])}
+            {!isChromium && LOCALE_FLAGS[language]} {capitalizeFirstLetter(LOCALE_DICTIONARY[language])}
           </option>
         ))}
       </select>

@@ -1,3 +1,25 @@
-# https://www.robotstxt.org/robotstxt.html
+# Allow all crawlers to index the site
 User-agent: *
-Disallow:
+Allow: /
+
+# Sitemap location
+Sitemap: https://talishar.net/sitemap.xml
+
+# Crawl delay in seconds (1 second)
+Crawl-delay: 1
+
+# Disallow crawling of admin/sensitive areas if they exist
+Disallow: /admin/
+Disallow: /api/
+Disallow: /*.json$
+Disallow: /*?*sort=
+Disallow: /*/*/edit/
+
+# Allow Google bot to crawl all areas
+User-agent: Googlebot
+Allow: /
+
+# Specific rules for Bing
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1

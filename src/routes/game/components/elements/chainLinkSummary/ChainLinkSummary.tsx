@@ -16,6 +16,7 @@ import EndGameScreen from '../endGameScreen/EndGameScreen';
 import useShortcut from 'hooks/useShortcut';
 import { DEFAULT_SHORTCUTS } from 'appConstants';
 import { shallowEqual } from 'react-redux';
+import { useEffect } from 'react';
 
 export const ChainLinkSummaryContainer = () => {
   const chainLinkSummary = useAppSelector(
@@ -33,8 +34,14 @@ export const ChainLinkSummaryContainer = () => {
   const dispatch = useAppDispatch();
 
   // if the game is over display the end game stats screen
+  useEffect(() => {
+    if (!!turnPhase && turnPhase === 'OVER') {
+      dispatch(hideActiveLayer());
+    }
+  }, [turnPhase, dispatch]);
+
+  // Check if game is over to show end game screen
   if (!!turnPhase && turnPhase === 'OVER') {
-    dispatch(hideActiveLayer());
     return (
       <div>
         <EndGameScreen />

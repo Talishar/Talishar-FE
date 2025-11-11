@@ -24,6 +24,8 @@ import {
 import { CosmeticsSection } from './CosmeticsSection';
 import { VisualSlider, VisualPreset } from './VisualSettings';
 import useWindowDimensions from 'hooks/useWindowDimensions';
+import ThemeToggle from 'themes/ThemeToggle';
+import LanguageSelector from 'components/LanguageSelector/LanguageSelector';
 
 const OptionsSettings = () => {
   const gameInfo = useAppSelector(getGameInfo, shallowEqual);
@@ -74,6 +76,8 @@ const OptionsSettings = () => {
     streamerMode: settingsData['IsStreamerMode']?.value === '1',
     alwaysAllowUndo: settingsData['AlwaysAllowUndo']?.value === '1',
     manualTunic: settingsData['ManualTunic']?.value === '1',
+    disableFabInsights: settingsData['DisableFabInsights']?.value === '1',
+    disableHeroIntro: settingsData['DisableHeroIntro']?.value === '1',
   };
   
   useShortcut(DEFAULT_SHORTCUTS.TOGGLE_MANUAL_MODE, () => {
@@ -274,12 +278,23 @@ const OptionsSettings = () => {
         />
         <CheckboxSetting
           name="disableStats"
-          label="Disable Stats"
+          label="Disable Fabrary Stats"
           checked={initialValues.disableStats}
           onChange={() =>
             handleSettingsChange({
               name: optConst.DISABLE_STATS,
               value: initialValues.disableStats ? '0' : '1'
+            })
+          }
+        />
+        <CheckboxSetting
+          name="disableFabInsights"
+          label="Disable Global Stats"
+          checked={initialValues.disableFabInsights}
+          onChange={() =>
+            handleSettingsChange({
+              name: optConst.DISABLE_FABINSIGHTS,
+              value: initialValues.disableFabInsights ? '0' : '1'
             })
           }
         />
@@ -294,6 +309,25 @@ const OptionsSettings = () => {
             })
           }
         />
+        <CheckboxSetting
+          name="disableHeroIntro"
+          label="Disable Hero Intro Animation"
+          checked={initialValues.disableHeroIntro}
+          onChange={() =>
+            handleSettingsChange({
+              name: optConst.DISABLE_HERO_INTRO,
+              value: initialValues.disableHeroIntro ? '0' : '1'
+            })
+          }
+        />
+      </Fieldset>
+
+      <Fieldset legend="Cards Language">
+        <LanguageSelector />
+      </Fieldset>
+      
+      <Fieldset legend="Theme">
+        <ThemeToggle />
       </Fieldset>
 
       <Fieldset legend="Visual Settings">

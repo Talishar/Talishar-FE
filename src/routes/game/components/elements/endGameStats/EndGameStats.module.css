@@ -53,7 +53,7 @@
 }
 
 .sectionHeader {
-  color: var(--primary);
+  color: var(--theme-primary);
   font-size: 1.2em;
   font-weight: 600;
   margin: 0 0 .25rem 0;
@@ -91,7 +91,7 @@
 }
 
 .infoRow:hover {
-  background-color: rgba(255, 184, 77, 0.08);
+  background-color: var(--theme-primary-focus);
 }
 
 .infoLabel {
@@ -101,7 +101,7 @@
 }
 
 .infoValue {
-  color: var(--primary);
+  color: var(--theme-primary);
   font-weight: 600;
   font-size: 1.1em;
   text-align: right;
@@ -120,7 +120,7 @@
 }
 
 .heroTitle {
-  color: var(--primary);
+  color: var(--theme-primary);
   font-size: 1.1em;
   font-weight: 600;
   margin: 0;
@@ -159,8 +159,8 @@
   width: auto;
   height: auto;
   border-radius: 6px;
-  border: 2px solid var(--primary);
-  box-shadow: 0 4px 12px rgba(255, 184, 77, 0.2);
+  border: 2px solid var(--theme-primary);
+  box-shadow: 0 4px 12px var(--theme-primary-focus);
   object-fit: cover;
 }
 
@@ -171,9 +171,9 @@
   width: 150px;
   height: 200px;
   border-radius: 6px;
-  border: 2px solid var(--primary);
-  background: rgba(255, 184, 77, 0.1);
-  color: var(--primary);
+  border: 2px solid var(--theme-primary);
+  background: var(--theme-primary-focus);
+  color: var(--theme-primary);
   font-weight: 600;
   text-align: center;
   padding: 1rem;
@@ -184,7 +184,7 @@
   position: absolute;
   bottom: 8px;
   right: 8px;
-  color: var(--primary);
+  color: var(--theme-primary);
   font-weight: 700;
   font-size: 1.1em;
   text-shadow: 
@@ -200,7 +200,7 @@
 }
 
 .heroVsLabel {
-  color: var(--primary);
+  color: var(--theme-primary);
   font-weight: 700;
   font-size: 1.2em;
   white-space: nowrap;
@@ -212,8 +212,8 @@
   font-style: italic;
   margin-top: 0.5rem;
   padding: 0.5rem;
-  background: rgba(255, 184, 77, 0.05);
-  border-left: 2px solid var(--primary);
+  background: rgba(212, 105, 31, 0.05);
+  border-left: 2px solid var(--theme-primary);
   border-radius: 4px;
 }
 
@@ -223,9 +223,9 @@
   margin-top: 1rem;
   padding: 1rem;
   text-align: center;
-  background: rgba(255, 184, 77, 0.1);
+  background: rgba(212, 105, 31, 0.1);
   border-radius: 8px;
-  border: 1px solid rgba(255, 184, 77, 0.3);
+  border: 1px solid var(--theme-primary-focus);
 }
 
 /* Hero Portraits - shown only in exports */
@@ -249,7 +249,7 @@
 }
 
 .watermarkContent a {
-  color: var(--primary);
+  color: var(--theme-primary);
   text-decoration: none;
   font-weight: 600;
 }
@@ -259,7 +259,7 @@
 }
 
 .disclaimer a {
-  color: var(--primary);
+  color: var(--theme-primary);
   text-decoration: none;
   font-weight: 500;
 }
@@ -288,7 +288,7 @@
   padding: 0.6rem 0.4rem;
   text-align: center;
   font-weight: 600;
-  color: var(--primary);
+  color: var(--theme-primary);
   border-bottom: 2px solid rgba(255, 255, 255, 0.15);
   font-size: 1.1em;
   white-space: nowrap;
@@ -299,8 +299,8 @@
 }
 
 .cardTable thead th[style*="cursor: pointer"]:hover {
-  background: rgba(255, 184, 77, 0.15);
-  color: #ffb84d;
+  background: var(--theme-primary-focus);
+  color: var(--white);
 }
 
 .cardTable tbody tr {
@@ -308,7 +308,7 @@
 }
 
 .cardTable tbody tr:hover {
-  background-color: rgba(255, 184, 77, 0.08);
+  background-color: var(--theme-primary-focus);
 }
 
 .cardTable tbody tr:nth-child(even) {
@@ -316,7 +316,7 @@
 }
 
 .cardTable tbody tr:nth-child(even):hover {
-  background-color: rgba(255, 184, 77, 0.08);
+  background-color: var(--theme-primary-focus);
 }
 
 .cardTable tbody td {
@@ -404,13 +404,13 @@
 }
 
 .tableContainer::-webkit-scrollbar-thumb {
-  background: rgba(255, 184, 77, 0.5);
+  background: var(--theme-primary-focus);
   border-radius: 6px;
   border: 2px solid rgba(0, 0, 0, 0.3);
 }
 
 .tableContainer::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 184, 77, 0.7);
+  background: var(--theme-primary);
 }
 
 @media (max-width: 1200px) {
@@ -515,12 +515,12 @@
     bottom: 0;
     display: block;
     padding: 0.5rem;
-    background: rgba(255, 184, 77, 0.15);
-    color: var(--primary);
+    background: var(--theme-primary-focus);
+    color: var(--white);
     text-align: center;
     font-size: 1.2em;
     font-weight: 600;
-    border-top: 1px solid rgba(255, 184, 77, 0.3);
+    border-top: 1px solid var(--theme-primary-focus);
     pointer-events: none;
     animation: scrollHint 2s ease-in-out infinite;
   }

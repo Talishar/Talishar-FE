@@ -21,6 +21,17 @@ const Matchups = ({ refetch }: Matchups) => {
   const { gameID, playerID } = useAppSelector(getGameInfo, shallowEqual);
   const [joinGameMutation, joinGameMutationData] = useJoinGameMutation();
 
+  const getTurnOrderIndicator = (preferredTurnOrder: string | null | undefined) => {
+    if (!preferredTurnOrder) return null;
+    
+    if (preferredTurnOrder === '1st') {
+      return '1st';
+    } else if (preferredTurnOrder === '2nd') {
+      return '2nd';
+    }
+    return null;
+  };
+
   const handleMatchupClick = async (matchupID: string) => {
     setIsUpdating(true);
     try {
@@ -51,20 +62,28 @@ const Matchups = ({ refetch }: Matchups) => {
       <article className={styles.matchupContainer}>
         <>
           <h4>Matchups</h4>
-          {sortedMatchups.map((matchup, ix) => (
-            <div className={styles.matchups} key={ix}>
-              <button
-                disabled={isUpdating}
-                className={'outline'}
-                onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
-                  e.preventDefault();
-                  handleMatchupClick(matchup.matchupId);
-                }}
-              >
-                {matchup.name}
-              </button>
-            </div>
-          ))}
+          {sortedMatchups.map((matchup, ix) => {
+            const turnOrderIndicator = getTurnOrderIndicator(matchup.preferredTurnOrder);
+            return (
+              <div className={styles.matchups} key={ix}>
+                <button
+                  disabled={isUpdating}
+                  className={'outline'}
+                  onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                    e.preventDefault();
+                    handleMatchupClick(matchup.matchupId);
+                  }}
+                >
+                  <span className={styles.matchupName}>{matchup.name}</span>
+                  {turnOrderIndicator && (
+                    <span className={styles.turnOrderBadge}>
+                      {turnOrderIndicator}
+                    </span>
+                  )}
+                </button>
+              </div>
+            );
+          })}
         </>
       </article>
     );

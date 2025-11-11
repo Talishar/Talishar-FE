@@ -10,14 +10,14 @@
   border-radius: 8px;
   padding: 1rem;
   margin: 0;
-  margin-bottom: 1rem;
   background: rgba(0, 0, 0, 0.2);
 }
 
 .fieldset legend {
   padding: 0 0.5rem;
-  color: var(--primary);
+  color: var(--theme-primary);
   font-size: 0.95em;
+  overflow: auto;
 }
 
 fieldset legend strong {
@@ -57,7 +57,7 @@ fieldset legend strong {
 
 .cardBackTitle strong {
   display: block;
-  color: var(--primary);
+  color: var(--theme-primary);
   font-size: 1em;
   margin-bottom: 0.5rem;
 }
@@ -80,7 +80,7 @@ fieldset legend strong {
 }
 
 .cardBackTitle select:hover {
-  border-color: var(--primary);
+  border-color: var(--theme-primary);
 }
 
 .playmatPreview {
@@ -95,7 +95,7 @@ fieldset legend strong {
 
 .playmatPreviewImage {
   width: 100%;
-  min-height: 180px;
+  min-height: 350px;
   height: auto;
   display: block;
   border-radius: 8px;
@@ -131,7 +131,7 @@ fieldset legend strong {
 }
 
 .selected {
-  box-shadow: 0 0 0 3px var(--primary);
+  box-shadow: 0 0 0 3px var(--theme-primary);
   filter: brightness(1);
 }
 
@@ -186,7 +186,7 @@ hr {
   width: 100%;
   height: 6px;
   cursor: pointer;
-  accent-color: var(--primary);
+  accent-color: var(--theme-primary);
   background: rgba(255, 255, 255, 0.1);
   border-radius: 3px;
   outline: none;
@@ -197,7 +197,7 @@ hr {
   appearance: none;
   width: 16px;
   height: 16px;
-  background: var(--primary);
+  background: var(--theme-primary);
   cursor: pointer;
   border-radius: 50%;
   border: 2px solid var(--near-black);
@@ -212,7 +212,7 @@ hr {
 .visualSettingControl input[type="range"]::-moz-range-thumb {
   width: 16px;
   height: 16px;
-  background: var(--primary);
+  background: var(--theme-primary);
   cursor: pointer;
   border-radius: 50%;
   border: 2px solid var(--near-black);
@@ -235,7 +235,7 @@ hr {
   padding: 0.5rem;
   min-height: 2.25rem;
   cursor: pointer;
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.15));
   background-color: rgba(0, 0, 0, 0.3);
   color: rgba(255, 255, 255, 0.8);
   border-radius: 6px;
@@ -258,16 +258,16 @@ hr {
 }
 
 .presetButtonActive {
-  background-color: var(--primary);
-  border-color: var(--primary);
-  color: var(--near-black);
+  background-color: var(--theme-primary);
+  border-color: var(--theme-primary);
+  color: #000000;
   font-weight: 600;
 }
 
 .presetButtonActive:hover {
-  background-color: var(--primary);
-  border-color: var(--primary);
-  color: var(--near-black);
+  background-color: var(--theme-primary);
+  border-color: var(--theme-primary);
+  color: #000000;
   transform: translateY(-2px);
 }
 
@@ -282,7 +282,7 @@ hr {
 }
 
 .disclaimer a {
-  color: var(--primary);
+  color: var(--theme-primary);
   text-decoration: none;
   transition: opacity 0.2s;
 }

@@ -235,6 +235,4 @@ export const deleteGameAuthKey = (gameId: number): void => {
   if (getLastActiveGameId() === gameId) {
     localStorage.removeItem(CURRENT_GAME_KEY);
   }
-  
-  console.log(`Deleted game session for gameId ${gameId}`);
 };

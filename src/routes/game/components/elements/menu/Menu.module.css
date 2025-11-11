@@ -6,7 +6,7 @@
   touch-action: manipulation;
   padding: 0.5em 0.6em;
   font-size: 1em;
-  background-color: var(--primary);
+  background-color: var(--theme-primary);
   color: black;
   display: flex;
   flex-direction: row;
@@ -26,15 +26,15 @@
 }
 
 .btn svg {
-  font-size: 1.65em !important;
-  width: auto !important;
-  height: auto !important;
+  font-size: 1.4em !important;
+  width: 1.2em !important;
+  height: 1.2em !important;
 }
 
 .btn:hover {
   background-color: black;
-  color: var(--primary);
-  border: 2px solid var(--primary);
+  color: var(--theme-primary);
+  border: 2px solid var(--theme-primary);
   cursor: pointer;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4),
               0 2px 4px rgba(0, 0, 0, 0.3),

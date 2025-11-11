@@ -3,7 +3,7 @@
   margin: 1em auto;
   margin-bottom: -2.5em;
   max-width: 1080px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.2));
 }
 
 .gridContainer {

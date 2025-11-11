@@ -23,14 +23,19 @@
     position: fixed;
     top: 0;
     left: 0;
-    margin: 0.5rem;
-    padding: 0.35rem 0.5rem;
+    margin: 0.25rem;
+    padding: 0.15rem 0.2rem;
     height: auto;
     width: auto;
-    max-width: 180px;
-    font-size: 0.75rem;
+    max-width: 140px;
+    font-size: 0.55rem;
     z-index: 500;
     border-radius: 0.2em;
+  }
+
+  .playerName.playerTwo {
+    top: auto;
+    bottom: 0;
   }
 }
 
@@ -49,9 +54,15 @@
   align-items: center;
   justify-content: flex-start;
   flex: 1;
-  gap: 0.5em;
+  gap: 0.2em;
   min-width: 0;
   max-width: 100%;
+}
+
+@media (max-width: 1200px) {
+  .nameContent {
+    gap: 0.15em;
+  }
 }
 
 .name {
@@ -121,10 +132,10 @@
 .dropdown.patron,
 .dropdown.pvtVoidPatron,
 .dropdown.contributor {
-  border: 2px solid rgba(255, 215, 0, 0.4);
+  border: 2px solid var(--theme-primary-focus);
   background: linear-gradient(rgba(30, 10, 10, 0.95), rgba(30, 10, 10, 0.95)),
-              linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 237, 78, 0.05));
-  box-shadow: 0 0 12px rgba(255, 215, 0, 0.4), inset 0 0 8px rgba(255, 215, 0, 0.15), 0 4px 12px rgba(0, 0, 0, 0.5);
+              linear-gradient(135deg, var(--theme-primary-focus), rgba(255, 237, 78, 0.05));
+  box-shadow: 0 0 12px var(--theme-primary-focus), inset 0 0 8px var(--theme-primary-focus), 0 4px 12px rgba(0, 0, 0, 0.5);
 }
 
 .dropdownOption {
@@ -146,7 +157,7 @@
 
 .dropdownOption:hover:not(.disabled) {
   background-color: rgba(111, 0, 0, 0.3);
-  color: rgba(255, 215, 0, 0.9);
+  color: var(--theme-primary);
 }
 
 .dropdownOption.disabled {
@@ -166,26 +177,26 @@
 }
 
 .playerName.patron {
-  border: 2px solid rgba(255, 215, 0, 0.4);
+  border: 2px solid var(--theme-primary-focus);
   background: linear-gradient(rgba(50, 10, 10, 0.6), rgba(50, 10, 10, 0.6)),
-              linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 237, 78, 0.05));
-  box-shadow: 0 0 12px rgba(255, 215, 0, 0.4), inset 0 0 8px rgba(255, 215, 0, 0.15);
+              linear-gradient(135deg, var(--theme-primary-focus), rgba(255, 237, 78, 0.05));
+  box-shadow: 0 0 12px var(--theme-primary-focus), inset 0 0 8px var(--theme-primary-focus);
   border-radius: 0.3em;
 }
 
 .playerName.pvtVoidPatron {
-  border: 2px solid rgba(255, 215, 0, 0.4);
+  border: 2px solid var(--theme-primary-focus);
   background: linear-gradient(rgba(50, 10, 10, 0.6), rgba(50, 10, 10, 0.6)),
-              linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 237, 78, 0.05));
-  box-shadow: 0 0 12px rgba(255, 215, 0, 0.4), inset 0 0 8px rgba(255, 215, 0, 0.15);
+              linear-gradient(135deg, var(--theme-primary-focus), rgba(255, 237, 78, 0.05));
+  box-shadow: 0 0 12px var(--theme-primary-focus), inset 0 0 8px var(--theme-primary-focus);
   border-radius: 0.3em;
 }
 
 .playerName.contributor {
-  border: 2px solid rgba(255, 215, 0, 0.4);
+  border: 2px solid var(--theme-primary-focus);
   background: linear-gradient(rgba(50, 10, 10, 0.6), rgba(50, 10, 10, 0.6)),
-              linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 237, 78, 0.05));
-  box-shadow: 0 0 12px rgba(255, 215, 0, 0.4), inset 0 0 8px rgba(255, 215, 0, 0.15);
+              linear-gradient(135deg, var(--theme-primary-focus), rgba(255, 237, 78, 0.05));
+  box-shadow: 0 0 12px var(--theme-primary-focus), inset 0 0 8px var(--theme-primary-focus);
   border-radius: 0.3em;
 }
 
@@ -198,9 +209,9 @@
 
 @media (max-width: 1200px) {
   .icon {
-    height: 1.2rem;
-    width: 1.2rem;
-    height: 1.2dvh;
-    width: 1.2dvh;
+    height: 1.8rem;
+    width: 1.8rem;
+    height: 1.8dvh;
+    width: 1.8dvh;
   }
 }

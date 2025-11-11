@@ -3,7 +3,7 @@
   flex-direction: column;
   align-content: center;
   justify-content: flex-end;
-  align-items: flex-end;
+  align-items: center;
   max-width: 100%;
   min-width: 0px;
   grid-area: chat;
@@ -14,7 +14,7 @@
 
 .calculatorCard {
   background: rgba(0, 0, 0, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.2));
   border-radius: 12px;
   padding: 1rem 1rem 0 1rem;
   backdrop-filter: blur(5px);
@@ -29,7 +29,7 @@
 }
 
 .header h3 {
-  color: var(--primary);
+  color: var(--theme-primary);
   font-size: 1.3em;
   font-weight: 600;
   margin: 0 0 0.5rem 0;

@@ -9,8 +9,8 @@
   display: flex;
   align-items: center;
   padding: 0.5em;
-  background-color: var(--secondary);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background-color: var(--theme-secondary, #8b5a2b);
+  border: 1px solid var(--theme-form-border, #797c80);
   border-radius: 4px;
   color: inherit;
   cursor: pointer;
@@ -22,8 +22,8 @@
   margin-bottom: 0;
 
   &:hover {
-    background-color: var(--tertiary);
-    border-color: rgba(255, 255, 255, 0.4);
+    background-color: var(--theme-primary, #d4af37);
+    border-color: var(--theme-primary, #d4af37);
   }
 
   &:active {
@@ -60,8 +60,8 @@
 
 .dropdown {
   position: fixed;
-  background-color: var(--secondary);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background-color: var(--theme-form-background, #33383d);
+  border: 1px solid var(--theme-form-border, #797c80);
   border-radius: 4px;
   min-width: 280px;
   max-width: 90vw;
@@ -88,7 +88,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 0.75em 1em;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid var(--theme-form-border, #797c80);
 }
 
 .dropdownTitle {
@@ -114,7 +114,7 @@
   white-space: nowrap;
 
   &:hover {
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: var(--theme-form-active, rgba(212, 175, 55, 0.1));
   }
 
   input[type='checkbox'] {
@@ -131,22 +131,52 @@
   }
 }
 
+.buttonContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  padding: 0.75em 1em;
+}
+
 .resetButton {
-  width: calc(100% - 2em);
-  margin: 0.75em 1em;
+  width: 100%;
   padding: 0.5em;
-  background-color: var(--tertiary);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background-color: var(--theme-tertiary, #8b5a2b);
+  border: 1px solid var(--theme-form-border, #797c80);
   border-radius: 4px;
-  color: inherit;
+  color: var(--theme-text, #f4eded);
   cursor: pointer;
   font-size: 0.85em;
   font-weight: 500;
   transition: all 0.2s ease;
+  margin-bottom: 0;
 
   &:hover {
-    background-color: var(--accent, #4a9eff);
-    border-color: var(--accent, #4a9eff);
+    background-color: var(--theme-primary, #d4af37);
+    border-color: var(--theme-primary, #d4af37);
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+.deselectButton {
+  width: 100%;
+  padding: 0.5em;
+  background-color: var(--theme-tertiary, #8b5a2b);
+  border: 1px solid var(--theme-form-border, #797c80);
+  border-radius: 4px;
+  color: var(--theme-text, #f4eded);
+  cursor: pointer;
+  font-size: 0.85em;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  margin-bottom: 0;
+
+  &:hover {
+    background-color: var(--theme-primary, #d4af37);
+    border-color: var(--theme-primary, #d4af37);
   }
 
   &:active {

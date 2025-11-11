@@ -120,6 +120,7 @@ export const CARD_BACK = {
   '119': 'CBFatAndFurious',
   '120': 'CBRighteousGaming3',
   '121': 'CBFreshAndBuds2',
+  '122': 'CBNull',
 } as { [key: string]: string };
 
 /* All available playmats - CSS class names (must match image files) */
@@ -156,7 +157,9 @@ export const PLAYMATS = {
   '29': 'SilvarisGarden',
   '30': 'Candleheim',
   '31': 'Isenloft',
-  '32': 'Volthaven'
+  '32': 'Volthaven',
+  '33': 'High-Seas',
+  '34': 'High-Seas-Necro'
 } as { [key: string]: string };
 
 /* Display names for playmats (user-friendly formatting) */
@@ -193,7 +196,9 @@ export const PLAYMAT_DISPLAY_NAMES = {
   '29': 'Silvaris Garden',
   '30': 'Candleheim',
   '31': 'Isenloft',
-  '32': 'Volthaven'
+  '32': 'Volthaven',
+  '33': 'High Seas',
+  '34': 'High Seas Necro'
 } as { [key: string]: string };
 
 /* Default playmats available to all players */
@@ -223,5 +228,7 @@ export const PLAYER_PLAYMATS = [
   '21',
   '30',
   '31',
-  '32'
+  '32',
+  '33',
+  '34'
 ];

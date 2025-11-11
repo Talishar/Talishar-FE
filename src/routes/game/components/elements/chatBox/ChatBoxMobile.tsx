@@ -3,7 +3,7 @@ import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import ChatInput from '../chatInput/ChatInput';
 import styles from './ChatBox.module.css';
-import { replaceText } from 'utils/ParseEscapedString';
+import { parseHtmlToReactElements } from 'utils/ParseEscapedString';
 import classNames from 'classnames';
 
 const CHAT_RE = /<span[^>]*>(.*?):\s<\/span>/;
@@ -80,13 +80,9 @@ export default function ChatBox() {
           {chatMessages &&
             chatMessages.map((chat, ix) => {
               return (
-                <div
-                  dangerouslySetInnerHTML={{
-                    __html: replaceText(chat)
-                  }}
-                  key={ix}
-                  ref={messagesEndRef}
-                ></div>
+                <div key={ix} ref={messagesEndRef}>
+                  {parseHtmlToReactElements(chat)}
+                </div>
               );
             })}
         </div>

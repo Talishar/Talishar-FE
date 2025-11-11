@@ -54,15 +54,15 @@ const EndGameMenuOptions = () => {
         )}
         {!roguelikeGameID && (
           <>
-            <div className={styles.buttonDiv} onClick={handleQuickRematch}>
+{/*             <div className={styles.buttonDiv} onClick={handleQuickRematch}>
               Quick Rematch (no sideboarding)
-            </div>
+            </div> */}
             <div className={styles.buttonDiv} onClick={handleFullRematch}>
-              Full Rematch (new sideboard)
+              Send Rematch Invitation
             </div>
           </>
         )}
-        {!roguelikeGameID && (
+        {!roguelikeGameID && playerName == 'OotTheMonk' && (
           <>
             <div className={styles.buttonDiv} onClick={handleSaveReplay}>
               Save Replay (beta)

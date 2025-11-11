@@ -1,7 +1,8 @@
 .formContainer {
   width: 460px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.2));
   border-radius: 10px;
+  background: var(--theme-section-background, linear-gradient(135deg, rgba(30, 35, 41, 0.8) 0%, rgba(30, 35, 41, 0.85) 100%));
 }
 
 @media (max-width: 768px) {
@@ -45,7 +46,7 @@
 
 .link {
   font-weight: 600;
-  color: var(--primary);
+  color: var(--theme-primary);
 }
 
 .privacy {
@@ -55,6 +56,6 @@
 }
 
 .container {
-  border: 1px solid var(--primary);
+  border: 1px solid var(--theme-primary);
   border-radius: 15px;
 }

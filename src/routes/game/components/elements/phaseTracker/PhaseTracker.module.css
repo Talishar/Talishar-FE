@@ -9,7 +9,7 @@
   background-position: center;
   background-size: contain;
   background-repeat: no-repeat;
-  color: var(--primary);
+  color: var(--theme-primary);
 }
 
 .phaseTrackerTopContainer {

@@ -32,12 +32,15 @@ export const GraveyardZone = React.memo((prop: Displayrow) => {
 
   const cardToDisplay = { ...graveyardZone[0], borderColor: '' };
 
+  // Count only face-up cards (overlay !== 'disabled')
+  const faceUpCount = graveyardZone.filter(card => card.overlay !== 'disabled').length;
+
   return (
     <div className={styles.graveyardZone} onClick={graveyardZoneDisplay}>
       <CardDisplay
         card={cardToDisplay}
         isPlayer={isPlayer}
-        num={showCount ? graveyardZone.length : undefined}
+        num={showCount ? faceUpCount : undefined}
         preventUseOnClick
       />
     </div>

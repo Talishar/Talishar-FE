@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import {
   clearPopUp,
   playCard,
@@ -49,6 +49,7 @@ export const PlayerHandCard = ({
   // ref to determine if we have a long press or a short tap.
   const timerRef = useRef<ReturnType<typeof setTimeout>>();
   const isLongPress = useRef<boolean>();
+  const hasDispatchedClearRef = useRef<boolean>(false);
 
   if (card === undefined) {
     return <div className={styles.handCard}></div>;
@@ -74,6 +75,7 @@ export const PlayerHandCard = ({
       addCardToPlayedCards(card.cardNumber);
     }
     setCanPopup(true);
+    hasDispatchedClearRef.current = false;
   };
 
   const playCardFunc = () => {
@@ -85,10 +87,11 @@ export const PlayerHandCard = ({
   };
 
   const onDrag = () => {
-    if (canPopUp) {
+    if (canPopUp && !hasDispatchedClearRef.current) {
       setSnapback(true);
       if (!isLongPress.current) {
         dispatch(clearPopUp());
+        hasDispatchedClearRef.current = true;
         setCanPopup(false);
       }
     }

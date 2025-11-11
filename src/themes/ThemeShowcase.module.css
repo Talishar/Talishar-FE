@@ -1,0 +1,155 @@
+.showcase {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.title {
+  color: var(--theme-text);
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+
+.subtitle {
+  color: var(--theme-text-secondary);
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.themesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.themeCard {
+  background: var(--theme-card-background);
+  border: 2px solid var(--theme-border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.themeCard:hover {
+  border-color: var(--theme-primary);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px var(--theme-overlay);
+}
+
+.themeCard.active {
+  border-color: var(--theme-primary);
+  background: var(--theme-section-background-transparent);
+}
+
+.themeHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.themeHeader h3 {
+  color: var(--theme-text);
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.badge {
+  background: var(--theme-primary);
+  color: var(--theme-primary-inverse);
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.colorPalette {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.colorSwatch {
+  width: 50px;
+  height: 50px;
+  border-radius: 8px;
+  border: 2px solid var(--theme-border-light);
+  cursor: help;
+  transition: transform 0.2s ease;
+}
+
+.colorSwatch:hover {
+  transform: scale(1.1);
+}
+
+.preview {
+  margin-top: 1rem;
+}
+
+.previewContent {
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.previewContent p {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.previewButton {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: opacity 0.2s ease;
+  align-self: flex-start;
+}
+
+.previewButton:hover {
+  opacity: 0.9;
+}
+
+.info {
+  text-align: center;
+  padding: 1.5rem;
+  background: var(--theme-section-background-transparent);
+  border-radius: 8px;
+  border: 1px solid var(--theme-border-light);
+}
+
+.info p {
+  color: var(--theme-text-secondary);
+  margin: 0.5rem 0;
+}
+
+.info strong {
+  color: var(--theme-primary);
+}
+
+.hint {
+  font-size: 0.875rem;
+  color: var(--theme-text-muted);
+  font-style: italic;
+}
+
+@media (max-width: 768px) {
+  .showcase {
+    padding: 1rem;
+  }
+  
+  .themesGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .themeCard {
+    padding: 1rem;
+  }
+}

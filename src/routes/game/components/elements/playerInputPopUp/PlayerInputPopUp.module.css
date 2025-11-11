@@ -10,7 +10,7 @@
   right: 25%;
   background-color: var(--near-black);
   padding: 1.5vh;
-  border: 1px solid var(--primary);
+  border: 1px solid var(--theme-primary);
   border-radius: 10px;
   z-index: 900;
 }
@@ -50,7 +50,7 @@
 }
 
 .buttonDiv {
-  background-color: var(--primary);
+  background-color: var(--theme-primary);
   color: black;
   display: flex;
   flex-direction: row;
@@ -59,7 +59,7 @@
   min-width: calc(6dvw * var(--card-scale));
   height: 32px;
   border-radius: 5px;
-  border: 1px solid var(--primary);
+  border: 1px solid var(--theme-primary);
   flex-basis: auto;
   padding: 8px;
   width: auto;
@@ -68,8 +68,8 @@
 
 .buttonDiv:hover {
   background-color: black;
-  color: var(--primary);
-  border: 1px solid var(--primary);
+  color: var(--theme-primary);
+  border: 1px solid var(--theme-primary);
   cursor: pointer;
 }
 
@@ -84,7 +84,7 @@
 }
 
 .optionsMenuCloseIcon:hover {
-  background-color: var(--primary);
+  background-color: var(--theme-primary);
   color: black;
 }
 
@@ -250,7 +250,7 @@
   right: 25%;
   background-color: var(--near-black);
   padding: 1.5vh;
-  border: 1px solid var(--primary);
+  border: 1px solid var(--theme-primary);
   border-radius: 10px;
   z-index: 900;
 }
@@ -287,15 +287,15 @@
 }
 
 .firstLabel {
-  background-color: var(--primary);
+  background-color: var(--theme-primary);
   color: black;
   border : 1px solid var(--near-black);
 }
 
 .lastLabel {
   background-color: black;
-  color: var(--primary);
-  border: 1px solid var(--primary);
+  color: var(--theme-primary);
+  border: 1px solid var(--theme-primary);
 }
 
 /* Responsive styles for mobile and tablet */

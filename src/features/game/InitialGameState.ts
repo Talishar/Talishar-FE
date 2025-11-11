@@ -3,8 +3,10 @@ import GameState from '../GameState';
 const InitialGameState: GameState = {
   gameInfo: {
     gameID: 0,
+    gameGUID: '',
     playerID: 0,
     authKey: '',
+    isPrivateLobby: false,
     isPrivate: false
   },
   gameDynamicInfo: {},
@@ -13,14 +15,23 @@ const InitialGameState: GameState = {
   isUpdateInProgress: false,
   optionsMenu: { active: false },
   showModals: true,
-  chatEnabled: false
+  chatEnabled: false,
+  shufflingPlayerId: null,
+  isShuffling: false,
+  inactivityWarning: {
+    lastActionTime: Date.now(),
+    firstWarningShown: false,
+    secondWarningShown: false
+  }
 };
 
 export const OfflineTestingGameState: GameState = {
   gameInfo: {
     gameID: 0,
+    gameGUID: '',
     playerID: 3,
     authKey: '',
+    isPrivateLobby: false,
     isPrivate: false
   },
   chatEnabled: false,
