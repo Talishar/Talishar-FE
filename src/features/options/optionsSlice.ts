@@ -60,6 +60,10 @@ export const fetchAllSettings = createAsyncThunk(
       }
       
       const text = await response.text();
+      if (!text || text.trim() === '') {
+        console.warn('Settings endpoint returned empty response');
+        return [] as Setting[];
+      }
       const data = JSON.parse(text);
       return data.Settings as Setting[];
     } catch (error) {

@@ -9,7 +9,7 @@ const InitialGameState: GameState = {
     isPrivateLobby: false,
     isPrivate: false
   },
-  gameDynamicInfo: {},
+  gameDynamicInfo: { spectatorCount: 0 },
   playerOne: {},
   playerTwo: {},
   isUpdateInProgress: false,
@@ -35,7 +35,7 @@ export const OfflineTestingGameState: GameState = {
     isPrivate: false
   },
   chatEnabled: false,
-  gameDynamicInfo: { lastUpdate: 0 },
+  gameDynamicInfo: { lastUpdate: 0, spectatorCount: 0 },
   amIActivePlayer: false,
   oldCombatChain: [
     {
