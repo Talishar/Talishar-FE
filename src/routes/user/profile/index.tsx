@@ -395,6 +395,57 @@ export const ProfilePage = () => {
                   ))}
                 </tbody>
               </table>
+              
+              <h3 className={styles.title}>Delete Account</h3>
+              <p style={{ color: '#fa3737ff', marginBottom: '1em' }}>
+                <strong>Warning:</strong> This action is permanent and cannot be undone. All your account data will be deleted.
+              </p>
+              <button
+                className={styles.deleteAccountButton}
+                onClick={() => setShowDeleteModal(true)}
+              >
+                Delete My Account
+              </button>
+
+              {showDeleteModal && (
+                <div className={styles.modalOverlay}>
+                  <div className={styles.modal}>
+                    <h4>Delete Account Confirmation</h4>
+                    <p>
+                      Are you sure you want to delete your account? This action is <strong>permanent</strong> and cannot be undone.
+                    </p>
+                    <p>
+                      Please type your username <strong>{profileData?.userName}</strong> to confirm:
+                    </p>
+                    <input
+                      type="text"
+                      placeholder="Enter your username"
+                      value={confirmationUsername}
+                      onChange={(e) => setConfirmationUsername(e.target.value)}
+                      className={styles.modalInput}
+                    />
+                    <div className={styles.modalButtons}>
+                      <button
+                        className={styles.cancelButton}
+                        onClick={() => {
+                          setShowDeleteModal(false);
+                          setConfirmationUsername('');
+                        }}
+                        disabled={isDeleting}
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        className={styles.confirmDeleteButton}
+                        onClick={handleDeleteAccountConfirm}
+                        disabled={isDeleting || confirmationUsername !== profileData?.userName}
+                      >
+                        {isDeleting ? 'Deleting...' : 'Delete Account'}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
             </article>
           </div>
         </div>

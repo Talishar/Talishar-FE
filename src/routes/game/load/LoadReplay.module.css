@@ -1,0 +1,162 @@
+.formContainer {
+  max-width: 768px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  margin: 1.5em auto;
+}
+
+@media (max-width: 768px) {
+  .formContainer {
+    width: 100%;
+    border: none;
+  }
+}
+
+.fieldError {
+  color: red;
+}
+
+.disclaimer {
+  padding: 1px;
+  text-align: center;
+}
+
+.button {
+  color: var(--primary-inverse);
+  margin-top: 32px;
+  width: 100%;
+}
+
+.alarm {
+  color: var(--alarm);
+}
+
+.formContainer > h3 {
+  margin-bottom: 0.5em;
+}
+
+/* Error Display Styles */
+.errorContainer {
+  margin-top: 1.5rem;
+  padding: 1.5rem;
+  background-color: #2a1a1a;
+  border-left: 4px solid #ff6b6b;
+  border-radius: 4px;
+  color: #ffb3b3;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+.errorTitle {
+  font-size: 1.2em;
+  display: block;
+  margin-bottom: 1rem;
+  color: #ff9999;
+}
+
+.errorMessage {
+  background-color: #1a1a1a;
+  padding: 1rem;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+  font-size: 0.95em;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  font-family: Consolas, Monaco, monospace;
+  border: 1px solid #444;
+  color: #ddd;
+  overflow-x: auto;
+}
+
+.troubleshootingDetails {
+  cursor: pointer;
+  margin-top: 1rem;
+}
+
+.troubleshootingSummary {
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  padding: 0.5rem;
+  background-color: #3a2a2a;
+  border-radius: 3px;
+  user-select: none;
+  color: #ffcc99;
+}
+
+.troubleshootingContent {
+  margin-top: 1rem;
+  font-size: 0.95em;
+  line-height: 1.8;
+  padding-left: 0.5rem;
+  color: #ccc;
+}
+
+.troubleshootingList {
+  margin-left: 1.5rem;
+  margin-top: 0.5rem;
+  list-style-position: inside;
+}
+
+.troubleshootingListItem {
+  margin-bottom: 0.5rem;
+}
+
+.kbd {
+  background-color: #3a3a3a;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-family: monospace;
+  color: #fff;
+  border: 1px solid #555;
+}
+
+.codeInline {
+  background-color: #1a2a3a;
+  padding: 2px 6px;
+  border-radius: 3px;
+  color: #66ccff;
+}
+
+.pathBox {
+  background-color: #1a1a1a;
+  padding: 0.5rem 0.75rem;
+  border-radius: 3px;
+  margin-top: 0.3rem;
+  font-family: monospace;
+  font-size: 0.9em;
+  border-left: 2px solid #66ccff;
+  color: #66ccff;
+}
+
+.filesList {
+  margin-left: 1rem;
+  margin-top: 0.3rem;
+}
+
+.fileItem {
+  background-color: #1a1a1a;
+  padding: 0.3rem 0.6rem;
+  border-radius: 2px;
+  margin-bottom: 0.25rem;
+  font-family: monospace;
+  font-size: 0.9em;
+  color: #66ff99;
+}
+
+.fileItemLast {
+  background-color: #1a1a1a;
+  padding: 0.3rem 0.6rem;
+  border-radius: 2px;
+  font-family: monospace;
+  font-size: 0.9em;
+  color: #66ff99;
+}
+
+.loadingState {
+  margin-top: 1rem;
+  padding: 0.5rem;
+  color: #66ccff;
+  background-color: #1a2a3a;
+  border-radius: 4px;
+  border-left: 3px solid #66ccff;
+}

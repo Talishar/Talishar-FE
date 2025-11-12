@@ -62,7 +62,7 @@ const EndGameMenuOptions = () => {
             </div>
           </>
         )}
-        {!roguelikeGameID && playerName == 'OotTheMonk' && (
+        {!roguelikeGameID && (
           <>
             <div className={styles.buttonDiv} onClick={handleSaveReplay}>
               Save Replay (beta)

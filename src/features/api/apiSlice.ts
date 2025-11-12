@@ -12,6 +12,10 @@ import {
   CreateGameAPI,
   CreateGameResponse
 } from 'interface/API/CreateGame.php';
+import {
+  LoadReplayAPI,
+  LoadReplayResponse
+} from 'interface/API/LoadReplayAPI.php';
 import { toast } from 'react-hot-toast';
 import { cleanErrorText } from 'utils/cleanErrorText';
 import { JoinGameAPI, JoinGameResponse } from 'interface/API/JoinGame.php';
@@ -391,6 +395,19 @@ export const apiSlice = createApi({
         };
       }
     }),
+    loadReplay: builder.mutation<LoadReplayResponse, LoadReplayAPI>({
+      query: ({ ...body }: LoadReplayAPI) => {
+        return {
+          url: URL_END_POINT.REPLAYS,
+          method: 'POST',
+          body: body,
+          responseHandler: parseResponse
+        };
+      },
+      // Pick out errors and prevent nested properties in a hook or selector
+      transformErrorResponse: (response: { status: string | number }) =>
+        response.status
+    }),
     submitPatreonLogin: builder.mutation<
       PatreonLoginResponse,
       {
@@ -757,6 +774,7 @@ export const {
   useSubmitPatreonLoginMutation,
   useLoadDebugGameMutation,
   useGetUserProfileQuery,
+  useLoadReplayMutation,
   useSubmitLobbyInputMutation,
   useGetModPageDataQuery,
   useBanPlayerByIPMutation,
