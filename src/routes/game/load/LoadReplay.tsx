@@ -12,7 +12,7 @@ import { GameLocationState } from 'interface/GameLocationState';
 
 const LoadReplay = () => {
   return (
-    <article>
+    <article className={styles.articleContainer}>
       <h2>Replay Tool</h2>
       <ReplayGame />
     </article>

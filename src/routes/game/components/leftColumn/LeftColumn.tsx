@@ -13,10 +13,6 @@ export default function LeftColumn() {
   const { playerID } = useAppSelector(getGameInfo, shallowEqual);
 
   useEffect(() => {
-    console.log('LeftColumn - playerID:', playerID, 'isMobile:', isMobile);
-  }, [playerID, isMobile]);
-
-  useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 1200) { // Standardized breakpoint
         setIsMobile(true);
