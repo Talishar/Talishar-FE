@@ -185,26 +185,28 @@
   border-radius: 6px;
   color: var(--theme-warning-text, #ffc107);
   border: 1px solid var(--theme-warning-border-light, rgba(255, 152, 0, 0.3));
+  line-height: 1.8;
 }
 
 .betaDisclaimer strong {
   display: block;
-  margin-bottom: 0.75rem;
+  margin-bottom: 1rem;
   font-size: 1.1em;
   color: var(--theme-warning-accent, #ffb74d);
 }
 
 .betaDisclaimer p {
-  margin: 0;
+  margin: 0.5rem 0;
   font-size: 0.95em;
   line-height: 1.6;
   color: var(--theme-text-primary, #fff);
-  display: inline;
+  display: block;
 }
 
 .betaDisclaimerHighlight {
-  color: var(--theme-warning-accent, #ffb74d);
-  font-weight: 600;
+  color: var(--theme-text-primary, #fff);
+  font-weight: 650;
+  display: inline;
 }
 
 .betaDisclaimer a {

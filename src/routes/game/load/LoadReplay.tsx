@@ -18,12 +18,11 @@ const LoadReplay = () => {
         <div className={styles.betaDisclaimer}>
         <strong>⚠️ The Replay Tool is currently in Beta</strong>
         <p>
-          The Replay Tool is currently in beta. If you encounter any issues, please report them in our Discord <a href="https://discord.gg/JykuRkdd5S" target="_blank" rel="noopener noreferrer">#bug-reports</a> channel with your
+          The Replay Tool is currently in beta. If you encounter any issues, please report them in our Discord{' '}
+          <a href="https://discord.gg/JykuRkdd5S" target="_blank" rel="noopener noreferrer">#bug-reports</a> channel with your{' '}
+          <span className={styles.betaDisclaimerHighlight}>Talishar username</span> and{' '}
+          <span className={styles.betaDisclaimerHighlight}>replay number</span>.
         </p>
-        <p className={styles.betaDisclaimerHighlight}> Talishar username</p>
-        <p> and </p>
-        <p className={styles.betaDisclaimerHighlight}>replay number</p>
-        <p>.</p>
         <p>
           Please note: Replays you save might randomly stop working as engine changes get made during development.
         </p>
