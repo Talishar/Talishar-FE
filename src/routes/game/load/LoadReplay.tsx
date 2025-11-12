@@ -18,7 +18,7 @@ const LoadReplay = () => {
         <div className={styles.betaDisclaimer}>
         <strong>⚠️ The Replay Tool is currently in Beta</strong>
         <p>
-          The Replay Tool is currently in beta. If you encounter any issues, please report them in the <a href="https://discord.gg/JykuRkdd5S" target="_blank" rel="noopener noreferrer">Discord #bug-reports channel</a> with your
+          The Replay Tool is currently in beta. If you encounter any issues, please report them in our Discord <a href="https://discord.gg/JykuRkdd5S" target="_blank" rel="noopener noreferrer">#bug-reports</a> channel with your
         </p>
         <p className={styles.betaDisclaimerHighlight}> Talishar username</p>
         <p> and </p>
