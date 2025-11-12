@@ -5,7 +5,7 @@ import styles from './Header.module.scss';
 import TalisharLogo from '../../img/CoinLogo.png';
 import { BsPersonFill, BsShieldFillCheck, BsGear } from 'react-icons/bs';
 import { RiLogoutBoxRLine } from 'react-icons/ri';
-import { MdPlaylistPlay } from 'react-icons/md';
+import { MdVideoLibrary } from 'react-icons/md';
 import SocialDropdown from 'components/header/SocialDropdown';
 import { useGetPendingRequestsQuery } from 'features/api/apiSlice';
 import CookieConsent from 'components/CookieConsent';
@@ -79,7 +79,7 @@ const Header = () => {
           {isLoggedIn && isMod && (
             <li>
               <Link to="/game/load">
-                <MdPlaylistPlay size="0.9em"></MdPlaylistPlay> <span>Load Replay</span>
+                <MdVideoLibrary></MdVideoLibrary> <span>Replays</span>
               </Link>
             </li>
           )}
