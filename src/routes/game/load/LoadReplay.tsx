@@ -24,6 +24,9 @@ const LoadReplay = () => {
         <p> and </p>
         <p className={styles.betaDisclaimerHighlight}>replay number</p>
         <p>.</p>
+        <p>
+          Please note: Replays you save might randomly stop working as engine changes get made during development.
+        </p>
       </div>
     </article>
   );
