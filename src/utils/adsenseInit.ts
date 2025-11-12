@@ -90,4 +90,3 @@ export const shouldLoadAds = (): boolean => {
   const consentStatus = localStorage.getItem('cookieConsent');
   return consentStatus === 'accepted';
 };
-

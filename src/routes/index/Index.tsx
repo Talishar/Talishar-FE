@@ -33,7 +33,7 @@ const Index = () => {
           <CreateGame />
         </div>
         <article className={styles.newsContainer}>
-          <img src={TalisharLogo} className={styles.logo} alt="Talishar Logo" />
+          <img src={TalisharLogo} className={styles.logo} />
           <News />
         </article>
       </div>
