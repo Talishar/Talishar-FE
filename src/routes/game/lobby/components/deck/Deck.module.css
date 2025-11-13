@@ -135,6 +135,15 @@
   border-left: 3px solid var(--theme-primary);
   margin-bottom: 0.5em;
   border-radius: 0.25em;
+  display: flex;
+  gap: 0.5em;
+  align-items: center;
+}
+
+.cardCount {
+  font-size: 0.75em;
+  color: var(--theme-text-tertiary);
+  font-weight: 400;
 }
 
 .cardsGroup {

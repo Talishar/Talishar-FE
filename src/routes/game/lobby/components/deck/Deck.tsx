@@ -719,10 +719,15 @@ const Deck = ({ deck, cardDictionary = [] }: DeckProps) => {
                     // For pitch, sort ascending
                     return (keyA as number) - (keyB as number);
                   })
-                  .map(([key, cards]: [number, string[]]) => (
+                  .map(([key, cards]: [number, string[]]) => {
+                    const selectedCount = cards.filter((card) => values.deck.includes(card)).length;
+                    return (
                     <div key={`${sortMode}-${key}`} className={styles.pitchGroup}>
                       <div className={styles.pitchHeader}>
                         {`${groupedCards.headerPrefix} ${key}`}
+                        <span className={styles.cardCount}>
+                           ({selectedCount}/{cards.length})
+                        </span>
                       </div>
                       <div className={styles.cardsGroup}>
                         {cards.map((card: string, ix: number) => (
@@ -741,17 +746,23 @@ const Deck = ({ deck, cardDictionary = [] }: DeckProps) => {
                         ))}
                       </div>
                     </div>
-                  ))}
+                    );
+                  })}
               </>
             ) : (
               // String grouping (class, talent)
               <>
                 {Array.from(groupedCards.groups as Map<string, string[]>)
                   .sort(([keyA, ], [keyB, ]) => (keyA as string).localeCompare(keyB as string))
-                  .map(([key, cards]: [string, string[]]) => (
+                  .map(([key, cards]: [string, string[]]) => {
+                    const selectedCount = cards.filter((card) => values.deck.includes(card)).length;
+                    return (
                     <div key={`${sortMode}-${key}`} className={styles.pitchGroup}>
                       <div className={styles.pitchHeader}>
                         {`${groupedCards.headerPrefix} ${key}`}
+                        <span className={styles.cardCount}>
+                           ({selectedCount}/{cards.length})
+                        </span>
                       </div>
                       <div className={styles.cardsGroup}>
                         {cards.map((card: string, ix: number) => (
@@ -770,13 +781,17 @@ const Deck = ({ deck, cardDictionary = [] }: DeckProps) => {
                         ))}
                       </div>
                     </div>
-                  ))}
+                    );
+                  })}
               </>
             )}
             {groupedCards.noValueCards.length > 0 && (
               <div className={styles.pitchGroup}>
                 <div className={styles.pitchHeader}>
                   No {groupedCards.headerPrefix}
+                  <span className={styles.cardCount}>
+                    ({groupedCards.noValueCards.filter((card) => values.deck.includes(card)).length}/{groupedCards.noValueCards.length})
+                  </span>
                 </div>
                 <div className={styles.cardsGroup}>
                   {groupedCards.noValueCards.map((card: string, ix: number) => (
