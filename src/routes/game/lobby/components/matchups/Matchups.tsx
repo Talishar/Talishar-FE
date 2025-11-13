@@ -87,12 +87,9 @@ const Matchups = ({ refetch }: Matchups) => {
         </>
       </article>
     );
-  } else {
-    return (
-      <article className={styles.emptyMatchupContainer}>
-      </article>
-    );
   }
+  
+  return null;
 };
 
 export default Matchups;
