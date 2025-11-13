@@ -115,6 +115,11 @@
   min-width: 0px;
   overflow-y: auto;
   flex: 1;
+  scrollbar-width: none; /* Hide scrollbar for Firefox */
+}
+
+.container::-webkit-scrollbar {
+  display: none; /* Hide scrollbar for Chrome, Safari, Edge */
 }
 
 .pitchGroup {
