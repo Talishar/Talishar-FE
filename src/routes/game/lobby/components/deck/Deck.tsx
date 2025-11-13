@@ -8,7 +8,23 @@ import { useLanguageSelector } from 'hooks/useLanguageSelector';
 import { CARD_SQUARES_PATH, getCollectionCardImagePath } from 'utils';
 import { MdArrowDropDown, MdArrowRight } from 'react-icons/md';
 
-type SortMode = 'none' | 'pitch' | 'name' | 'power' | 'blockValue' | 'class' | 'talent' | 'subtype' | 'cost';
+type SortMode = 'none' | 'pitch' | 'name' | 'power' | 'blockValue' | 'class' | 'talent' | 'type' | 'subtype' | 'cost';
+
+// Map of card type codes to human-readable labels
+const TYPE_LABELS: Record<string, string> = {
+  'A': 'Non-Attack Action',
+  'AA': 'Attack Action',
+  'B': 'Block',
+  'AR': 'Attack Reaction',
+  'DR': 'Defense Reaction',
+  'E': 'Equipment',
+  'R': 'Resource',
+  'I': 'Instant',
+  'M': 'Mentor',
+  'T': 'Token',
+  'C': 'Companion',
+  'W': 'Weapon',
+};
 
 type DeckProps = {
   deck: string[];
@@ -70,6 +86,12 @@ const Deck = ({ deck, cardDictionary = [] }: DeckProps) => {
       .map(part => part.trim())
       .map(part => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())
       .join(', ');
+  };
+
+  // Utility function to format type codes to human-readable labels
+  const formatTypeLabel = (typeCode: string | undefined): string => {
+    if (!typeCode) return 'Unknown';
+    return TYPE_LABELS[typeCode] || typeCode;
   };
 
   // Create a map of card ID to pitch for quick lookup
@@ -135,6 +157,19 @@ const Deck = ({ deck, cardDictionary = [] }: DeckProps) => {
     return map;
   }, [cardDictionary]);
 
+  // Create a map of card ID to type for quick lookup
+  const cardTypeMap = useMemo(() => {
+    const map = new Map<string, string>();
+    if (cardDictionary && cardDictionary.length > 0) {
+      cardDictionary.forEach((card: CardData) => {
+        if (card.type !== undefined) {
+          map.set(card.id, card.type);
+        }
+      });
+    }
+    return map;
+  }, [cardDictionary]);
+
   // Create a map of card ID to subtype for quick lookup
   const cardSubtypeMap = useMemo(() => {
     const map = new Map<string, string>();
@@ -184,6 +219,11 @@ const Deck = ({ deck, cardDictionary = [] }: DeckProps) => {
   // Get talent for a card
   const getTalent = (cardId: string): string | undefined => {
     return cardTalentMap.get(cardId);
+  };
+
+  // Get type for a card
+  const getType = (cardId: string): string | undefined => {
+    return cardTypeMap.get(cardId);
   };
 
   // Get subtype for a card
@@ -298,6 +338,27 @@ const Deck = ({ deck, cardDictionary = [] }: DeckProps) => {
       });
     }
 
+    if (sortMode === 'type') {
+      return deckArray.sort((a, b) => {
+        const cardAId = a.split('-')[0];
+        const cardBId = b.split('-')[0];
+        const typeA = getType(cardAId);
+        const typeB = getType(cardBId);
+        
+        // Sort by type name, then by card ID
+        if (typeA !== undefined && typeB !== undefined) {
+          if (typeA !== typeB) {
+            return typeA.localeCompare(typeB);
+          }
+        } else if (typeA !== undefined) {
+          return -1;
+        } else if (typeB !== undefined) {
+          return 1;
+        }
+        return cardAId.localeCompare(cardBId);
+      });
+    }
+
     if (sortMode === 'subtype') {
       return deckArray.sort((a, b) => {
         const cardAId = a.split('-')[0];
@@ -360,7 +421,7 @@ const Deck = ({ deck, cardDictionary = [] }: DeckProps) => {
     }
 
     return deckArray;
-  }, [deck, sortMode, cardPitchMap, cardPowerMap, cardBlockValueMap, cardClassMap, cardTalentMap, cardSubtypeMap, cardCostMap, getPitch, getPower, getBlockValue, getClass, getTalent, getSubtype, getCost]);
+  }, [deck, sortMode, cardPitchMap, cardPowerMap, cardBlockValueMap, cardClassMap, cardTalentMap, cardTypeMap, cardSubtypeMap, cardCostMap, getPitch, getPower, getBlockValue, getClass, getTalent, getType, getSubtype, getCost]);
 
   // Group cards by various attributes
   const groupedCards = useMemo(() => {
@@ -475,6 +536,28 @@ const Deck = ({ deck, cardDictionary = [] }: DeckProps) => {
       return { type: 'string', groups: talentGroups, noValueCards: noTalentCards, headerPrefix: 'Talent' };
     }
 
+    if (sortMode === 'type') {
+      const typeGroups = new Map<string, string[]>();
+      const noTypeCards: string[] = [];
+      
+      sortedDeck.forEach((card) => {
+        const cardId = card.split('-')[0];
+        const type = getType(cardId);
+        
+        if (type !== undefined && type !== '') {
+          const key = formatTypeLabel(type);
+          if (!typeGroups.has(key)) {
+            typeGroups.set(key, []);
+          }
+          typeGroups.get(key)!.push(card);
+        } else {
+          noTypeCards.push(card);
+        }
+      });
+
+      return { type: 'string', groups: typeGroups, noValueCards: noTypeCards, headerPrefix: '' };
+    }
+
     if (sortMode === 'subtype') {
       const subtypeGroups = new Map<string, string[]>();
       const noSubtypeCards: string[] = [];
@@ -519,7 +602,7 @@ const Deck = ({ deck, cardDictionary = [] }: DeckProps) => {
     }
 
     return null;
-  }, [sortedDeck, sortMode, cardPitchMap, cardPowerMap, cardBlockValueMap, cardClassMap, cardTalentMap, cardSubtypeMap, cardCostMap, getPitch, getPower, getBlockValue, getClass, getTalent, getSubtype, getCost]);
+  }, [sortedDeck, sortMode, cardPitchMap, cardPowerMap, cardBlockValueMap, cardClassMap, cardTalentMap, cardTypeMap, cardSubtypeMap, cardCostMap, getPitch, getPower, getBlockValue, getClass, getTalent, getType, getSubtype, getCost]);
 
   return (
     <div className={styles.deckContainer}>
@@ -591,6 +674,14 @@ const Deck = ({ deck, cardDictionary = [] }: DeckProps) => {
               title="Group cards by talent"
             >
               Talent
+            </button>
+            <button
+              className={`${styles.sortButton} ${sortMode === 'type' ? styles.active : ''}`}
+              onClick={() => setSortMode('type')}
+              type="button"
+              title="Group cards by type"
+            >
+              Type
             </button>
             <button
               className={`${styles.sortButton} ${sortMode === 'subtype' ? styles.active : ''}`}

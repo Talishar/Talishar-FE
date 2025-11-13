@@ -46,6 +46,7 @@ export interface CardData {
   blockValue?: number;
   class?: string;
   talent?: string;
+  type?: string;
   subtype?: string;
   cost?: number;
 }
