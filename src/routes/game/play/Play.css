@@ -82,7 +82,7 @@ body {
 .defaultToast {
   background-color: var(--near-black);
   padding: 1.5vh;
-  border: 1px solid var(--theme-primary)
+  border: 1px solid var(--theme-primary);
   border-radius: 10px;
   color: var(--theme-primary)
 }

@@ -21,7 +21,7 @@
 }
 
 .message {
-  background: var(--theme-secondary, #1a1a1a);
+  background: var(--theme-card-background, #1a1a1a);
   border: 1px solid var(--theme-border, rgba(76, 175, 80, 0.3));
   border-radius: 8px;
   padding: 1rem;
