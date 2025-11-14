@@ -8,7 +8,19 @@
   margin: auto;
   pointer-events: auto;
   touch-action: manipulation;
-  background: var(--theme-section-background, linear-gradient(135deg, rgba(30, 35, 41, 0.8) 0%, rgba(30, 35, 41, 0.85) 100%));
+  background: var(--theme-card-background);
+  border: 1px solid var(--theme-primary);
+
+}
+
+dialog {
+  background: transparent;
+  border: none;
+}
+
+dialog::backdrop {
+  background: transparent;
+  backdrop-filter: none;
 }
 
 .container > h3 {

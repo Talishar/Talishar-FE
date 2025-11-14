@@ -505,7 +505,7 @@ button.secondary:hover {
 }
 
 .disclaimerHeader {
-  background: var(--theme-section-background);
+  background: var(--theme-card-background);
   margin-bottom: 1em;
 }
 
@@ -598,13 +598,13 @@ button.secondary:hover {
   padding-bottom: 1em;
   border: 1px solid var(--theme-primary);
   border-radius: 15px;
-  background: var(--theme-section-background);
+  background: var(--theme-card-background);
 }
 
 .container {
   border: 1px solid var(--theme-primary);
   border-radius: 15px;
-  background: var(--theme-section-background);
+  background: var(--theme-card-background);
 }
 
 .modal {
