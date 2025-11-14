@@ -3,7 +3,7 @@ import styles from './SessionRecovery.module.css';
 import useAuth from 'hooks/useAuth';
 import { useGetLastActiveGameQuery } from 'features/api/apiSlice';
 import { useNavigate } from 'react-router-dom';
-import { deleteGameAuthKey, getLastActiveGameId } from 'utils/LocalKeyManagement';
+import { deleteGameAuthKey } from 'utils/LocalKeyManagement';
 
 const SessionRecovery: React.FC = () => {
   const navigate = useNavigate();
@@ -39,6 +39,24 @@ const SessionRecovery: React.FC = () => {
       setIsDismissed(false);
     }
   }, [data?.gameName]);
+
+  // Auto-cleanup finished/invalid games
+  useEffect(() => {
+    if (!data?.gameName) return;
+    
+    // If game doesn't exist or is not in progress, auto-cleanup
+    if (data?.gameExists === false || data?.gameInProgress === false) {
+      // Game is finished or invalid, clear the stored data
+      deleteGameAuthKey(data.gameName);
+      
+      // Mark as dismissed to prevent re-checking for 2 hours
+      const dismissalKey = `sessionRecoveryDismissed_${data.gameName}`;
+      localStorage.setItem(dismissalKey, new Date().toISOString());
+      
+      setIsDismissed(true);
+      setShowPrompt(false);
+    }
+  }, [data?.gameName, data?.gameExists, data?.gameInProgress]);
 
   // Show prompt only if:
   // 1. User is logged in
