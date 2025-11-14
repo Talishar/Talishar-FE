@@ -1,0 +1,151 @@
+.container {
+  position: fixed;
+  top: 90px;
+  right: 1rem;
+  z-index: 9999;
+  max-width: 380px;
+  animation: slideIn 0.3s ease-out;
+  border: 2px solid var(--theme-border, rgba(76, 175, 80, 0.3));
+  border-radius: 10px;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(400px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.message {
+  background: var(--theme-secondary, #1a1a1a);
+  border: 1px solid var(--theme-border, rgba(76, 175, 80, 0.3));
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+.title {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--primary, #4caf50);
+}
+
+.description {
+  margin: 0.5rem 0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--text-primary, rgba(255, 255, 255, 0.85));
+}
+
+.gameId {
+  font-weight: 600;
+  color: var(--primary, #4caf50);
+  font-family: monospace;
+}
+
+.opponentStatus {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.85rem;
+  color: var(--text-danger, #ff6b6b);
+  font-weight: 500;
+}
+
+.opponentInfo {
+  margin: 0.75rem 0 0 0;
+  font-size: 0.85rem;
+  color: var(--text-secondary, rgba(255, 255, 255, 0.8));
+}
+
+.opponentName {
+  font-weight: 500;
+  color: var(--primary, #4caf50);
+  font-style: italic;
+}
+
+.buttonGroup {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.rejoinButton {
+  flex: 1;
+  padding: 0.65rem 0.75rem;
+  background: var(--theme-tertiary, #2a2a2a);
+  border: 1px solid var(--primary, #4caf50);
+  color: var(--primary, #4caf50);
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.rejoinButton:hover {
+  background: var(--primary, #4caf50);
+  color: var(--theme-secondary, #1a1a1a);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px var(--primary, rgba(76, 175, 80, 0.2));
+}
+
+.dismissButton {
+  flex: 0.8;
+  padding: 0.65rem 0.5rem;
+  background: transparent;
+  border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.15));
+  color: var(--text-secondary, rgba(255, 255, 255, 0.7));
+  border-radius: 6px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.dismissButton:hover {
+  background: var(--theme-tertiary, rgba(255, 255, 255, 0.05));
+  border-color: var(--theme-border-focus, rgba(255, 255, 255, 0.25));
+}
+
+@media (max-width: 768px) {
+  .container {
+    top: auto;
+    bottom: 80px;
+    right: 0.5rem;
+    left: 0.5rem;
+    max-width: none;
+  }
+
+  .message {
+    padding: 0.75rem;
+  }
+
+  .title {
+    font-size: 1rem;
+  }
+
+  .description {
+    font-size: 0.85rem;
+  }
+
+  .opponentInfo {
+    font-size: 0.8rem;
+  }
+
+  .buttonGroup {
+    flex-direction: column;
+  }
+
+  .rejoinButton {
+    width: 100%;
+  }
+
+  .dismissButton {
+    width: 100%;
+    flex: 1;
+  }
+}

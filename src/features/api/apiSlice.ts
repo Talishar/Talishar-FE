@@ -59,6 +59,17 @@ import { PrivateMessagingAPIResponse } from 'interface/API/PrivateMessagingAPI.p
 import { getGameInfo } from '../game/GameSlice';
 import { RootState } from '../../app/Store';
 
+export interface GetLastActiveGameResponse {
+  gameExists: boolean;
+  gameInProgress: boolean;
+  gameName?: number;
+  playerID?: number;
+  authKey?: string;
+  opponentName?: string;
+  opponentDisconnected?: boolean;
+  authKeyMismatch?: boolean;
+}
+
 // catch warnings and show a toast if we get one.
 export const rtkQueryErrorToaster: Middleware =
   (api: MiddlewareAPI) => (next) => (action) => {
@@ -746,6 +757,16 @@ export const apiSlice = createApi({
           responseHandler: parseResponse
         };
       }
+    }),
+    getLastActiveGame: builder.query<GetLastActiveGameResponse, void>({
+      query: () => {
+        return {
+          url: URL_END_POINT.GET_LAST_ACTIVE_GAME,
+          method: 'POST',
+          body: {},
+          responseHandler: parseResponse
+        };
+      }
     })
   })
 });
@@ -804,5 +825,6 @@ export const {
   useGetOnlineFriendsQuery,
   useGetUnreadMessageCountQuery,
   useGetUnreadMessageCountByFriendQuery,
-  useCreateQuickGameMutation
+  useCreateQuickGameMutation,
+  useGetLastActiveGameQuery
 } = apiSlice;

@@ -10,6 +10,7 @@ import SocialDropdown from 'components/header/SocialDropdown';
 import { useGetPendingRequestsQuery } from 'features/api/apiSlice';
 import CookieConsent from 'components/CookieConsent';
 import AdBlockingRecovery from 'components/AdBlockingRecovery';
+import SessionRecovery from 'components/SessionRecovery';
 import ChatBar from 'components/chatBar/ChatBar';
 import { Toaster } from 'react-hot-toast';
 
@@ -117,6 +118,7 @@ const Header = () => {
       <Outlet />
       <CookieConsent />
       <AdBlockingRecovery />
+      <SessionRecovery />
       <ChatBar />
     </div>
   );
