@@ -1,14 +1,15 @@
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { submitButton } from 'features/game/GameSlice';
 import styles from './EndGameMenuOptions.module.css';
-import { useEffect } from 'react';
 import { PROCESS_INPUT } from 'appConstants';
 import { RootState } from 'app/Store';
 import { useNavigate } from 'react-router-dom';
 import { shallowEqual } from 'react-redux';
 import { getGameInfo } from 'features/game/GameSlice';
+import useAuth from 'hooks/useAuth';
 
 const EndGameMenuOptions = () => {
+  const { isMod } = useAuth();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { roguelikeGameID } = useAppSelector(getGameInfo, shallowEqual);
@@ -62,7 +63,7 @@ const EndGameMenuOptions = () => {
             </div>
           </>
         )}
-        {!roguelikeGameID && (
+        {!roguelikeGameID && isMod && (
           <>
             <div className={styles.buttonDiv} onClick={handleSaveReplay}>
               Save Replay (beta)
