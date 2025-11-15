@@ -1,11 +1,11 @@
-.devToolTab {
+.replayTab {
   position: fixed;
   left: 0;
-  top: 42.5%;
+  top: 50%;
   transform: translateY(-50%);
   width: 6rem;
   height: 3rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #ff6b6b 0%, #ff5252 100%);
   border: 2px solid rgba(255, 255, 255, 0.2);
   color: white;
   font-weight: bold;
@@ -19,9 +19,9 @@
   font-size: 0.85rem;
 
   &:hover {
-    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+    background: linear-gradient(135deg, #ff5252 0%, #ff6b6b 100%);
     border-color: rgba(255, 255, 255, 0.4);
-    box-shadow: 0 0 15px rgba(102, 126, 234, 0.5);
+    box-shadow: 0 0 15px rgba(255, 107, 107, 0.5);
   }
 
   &:active {
@@ -33,14 +33,14 @@
   }
 }
 
-.devToolPanel {
+.replayPanel {
   position: fixed;
   left: 0;
   top: 0;
   width: 300px;
   height: 100vh;
   background: rgba(0, 0, 0, 0.95);
-  border-right: 2px solid rgba(255, 215, 0, 0.2);
+  border-right: 2px solid rgba(255, 107, 107, 0.2);
   box-shadow: 2px 0 20px rgba(0, 0, 0, 0.7);
   z-index: 99;
   display: flex;
@@ -65,13 +65,13 @@
   justify-content: space-between;
   align-items: center;
   padding: 1rem;
-  border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+  border-bottom: 1px solid rgba(255, 107, 107, 0.2);
   background: rgba(0, 0, 0, 0.5);
 }
 
 .header h3 {
   margin: 0;
-  color: #ffd700;
+  color: #ff6b6b;
   font-size: 1.1rem;
 }
 
@@ -90,7 +90,7 @@
   transition: all 0.2s ease;
 
   &:hover {
-    color: #667eea;
+    color: #ff6b6b;
     transform: rotate(90deg);
   }
 }
@@ -118,17 +118,22 @@
 .formGroup input {
   padding: 0.6rem;
   background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 215, 0, 0.2);
+  border: 1px solid rgba(255, 107, 107, 0.2);
   border-radius: 4px;
   color: white;
   font-size: 0.9rem;
   transition: all 0.2s ease;
 
+  &:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 107, 107, 0.4);
+  }
+
   &:focus {
     outline: none;
     background: rgba(255, 255, 255, 0.06);
-    border-color: #ffd700;
-    box-shadow: 0 0 8px rgba(255, 215, 0, 0.15);
+    border-color: #ff6b6b;
+    box-shadow: 0 0 8px rgba(255, 107, 107, 0.15);
   }
 
   &::placeholder {
@@ -147,23 +152,80 @@
   margin-top: 0.5rem;
 
   &:hover {
-    box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
-    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+    background: rgba(255, 107, 107, 0.15);
   }
 
   &:active {
-    transform: translateY(0);
+    transform: translateY(1px);
   }
+}
+
+.actionButton {
+  padding: 0.8rem;
+  border: 1px solid rgba(255, 107, 107, 0.3);
+  border-radius: 4px;
+  background: rgba(255, 107, 107, 0.1);
+  color: #ff9999;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: rgba(255, 107, 107, 0.2);
+    color: #ff6b6b;
+    box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+  }
+
+  &:active {
+    transform: translateY(1px);
+  }
+}
+
+.navButtons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.navButton {
+  padding: 0.7rem;
+  border: 1px solid rgba(255, 107, 107, 0.2);
+  border-radius: 4px;
+  background: rgba(255, 107, 107, 0.05);
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 500;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: rgba(255, 107, 107, 0.15);
+    color: #ff6b6b;
+    border-color: rgba(255, 107, 107, 0.4);
+  }
+
+  &:active {
+    transform: translateY(-1px);
+  }
+}
+
+.divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 107, 107, 0.2), transparent);
+  margin: 0.5rem 0;
 }
 
 /* Mobile responsiveness */
 @media (max-width: 768px) {
-  .devToolPanel {
+  .replayPanel {
     width: 80vw;
     max-width: 250px;
   }
 
-  .devToolTab {
+  .replayTab {
     width: 2.5rem;
     height: 2.5rem;
     font-size: 0.75rem;

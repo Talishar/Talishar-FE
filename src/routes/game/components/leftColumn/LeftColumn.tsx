@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import ActiveEffects from '../activeEffects/ActiveEffects';
 import PlayerName from '../elements/playerName/PlayerName';
 import DevToolPanel from './DevToolPanel/DevToolPanel';
+import ReplayPanel from './ReplayPanel/ReplayPanel';
 import styles from './LeftColumn.module.css';
 import { useAppSelector } from 'app/Hooks';
 import { shallowEqual } from 'react-redux';
@@ -34,6 +35,7 @@ export default function LeftColumn() {
       {(!isMobile || playerID === 3) && (
         <PlayerName isPlayer={true} />
       )}
+      <ReplayPanel />
       <DevToolPanel />
     </div>
   );

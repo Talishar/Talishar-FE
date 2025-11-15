@@ -5,6 +5,7 @@ export default interface GameStaticInfo {
   authKey: string;
   isPrivateLobby: boolean;
   isPrivate?: boolean;
+  isReplay?: boolean;
   roguelikeGameID?: number;
   altArts?: AltArt[];
   isRoguelike?: boolean;

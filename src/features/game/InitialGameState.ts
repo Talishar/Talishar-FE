@@ -7,7 +7,8 @@ const InitialGameState: GameState = {
     playerID: 0,
     authKey: '',
     isPrivateLobby: false,
-    isPrivate: false
+    isPrivate: false,
+    isReplay: false
   },
   gameDynamicInfo: { spectatorCount: 0 },
   playerOne: {},
@@ -32,7 +33,8 @@ export const OfflineTestingGameState: GameState = {
     playerID: 3,
     authKey: '',
     isPrivateLobby: false,
-    isPrivate: false
+    isPrivate: false,
+    isReplay: false
   },
   chatEnabled: false,
   gameDynamicInfo: { lastUpdate: 0, spectatorCount: 0 },

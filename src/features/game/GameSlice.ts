@@ -707,6 +707,9 @@ export const gameSlice = createSlice({
       state.gameInfo.isPrivate =
         action.payload.gameInfo.isPrivate ?? state.gameInfo.isPrivate;
 
+      state.gameInfo.isReplay =
+        action.payload.gameInfo.isReplay ?? state.gameInfo.isReplay;
+
       state.gameInfo.isOpponentAI =
         action.payload.gameInfo.isOpponentAI ?? state.gameInfo.isOpponentAI;
 
