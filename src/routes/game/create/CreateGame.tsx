@@ -425,20 +425,20 @@ const CreateGame = () => {
                 </optgroup>
                 <optgroup label="Competitive Formats">
                   <option value={GAME_FORMAT.COMPETITIVE_CC}>Competitive Classic Constructed</option>
-                  <option value={GAME_FORMAT.COMPETITIVE_BLITZ}>Competitive Blitz</option>
                   <option value={GAME_FORMAT.COMPETITIVE_SAGE}>Competitive Silver Age</option>
                   <option value={GAME_FORMAT.COMPETITIVE_LL}>Competitive Living Legend</option>
+                  <option value={GAME_FORMAT.COMPETITIVE_BLITZ}>Competitive Blitz</option>
                 </optgroup>
                 <optgroup label="Other Formats">
+                  <option value={GAME_FORMAT.PRECON}>Preconstructed Decks</option>
                   <option value={GAME_FORMAT.BLITZ}>Blitz</option>
                   <option value={GAME_FORMAT.DRAFT}>Draft / Limited</option>
                   <option value={GAME_FORMAT.CLASH}>Clash</option>
-                  <option value={GAME_FORMAT.PRECON}>Preconstructed Decks</option>
                 </optgroup>
                 <optgroup label="Open Formats (No Restrictions)">
-                  <option value={GAME_FORMAT.OPEN_BLITZ}>Open Blitz</option>
                   <option value={GAME_FORMAT.OPEN_CC}>Open Classic Constructed</option>
                   <option value={GAME_FORMAT.OPEN_LL_CC}>Open Living Legend</option>
+                  <option value={GAME_FORMAT.OPEN_BLITZ}>Open Blitz</option>
                 </optgroup>
               </select>
             </label>
