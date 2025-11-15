@@ -30,7 +30,8 @@ const ALLOWED_ATTRS: { [tag: string]: Set<string> } = {
 const handleCardMouseOver = (e: React.MouseEvent<HTMLSpanElement>, imgPath: string) => {
   // Call the global ShowDetail function if it exists
   if (typeof (window as any).ShowDetail === 'function') {
-    (window as any).ShowDetail(e, imgPath);
+    // Pass the native event to ensure clientX/clientY are available
+    (window as any).ShowDetail(e.nativeEvent, imgPath);
   }
 };
 
@@ -75,44 +76,61 @@ const parseStyleString = (styleStr: string): { [key: string]: string } => {
 export const parseHtmlToReactElements = (htmlString: string): ReactNode => {
   if (!htmlString) return null;
 
+  // First, replace card references with placeholder markers to preserve them through HTML parsing
+  const cardElements: React.ReactElement[] = [];
+  let cardIndex = 0;
+  
+  // Replace {{cardID|cardName|colorCode}} with a unique placeholder
+  const processedHtml = htmlString.replace(CARDRE, (match, cardID, cardName, colorCode = '0') => {
+    const color = COLOR_MAPPING[colorCode];
+    const imgPath = `./WebpImages/${cardID}.webp`;
+    const placeholder = `__CARD_${cardIndex}__`;
+    
+    cardElements.push(
+      React.createElement(
+        'span',
+        {
+          key: `card-${cardIndex}`,
+          onMouseOver: (e: React.MouseEvent<HTMLSpanElement>) => handleCardMouseOver(e, imgPath),
+          onMouseOut: handleCardMouseOut,
+          style: { color }
+        },
+        cardName
+      )
+    );
+    
+    cardIndex++;
+    return placeholder;
+  });
+
   // Create a temporary container to parse the HTML
   const temp = document.createElement('div');
-  temp.innerHTML = htmlString;
+  temp.innerHTML = processedHtml;
 
-  let cardIndex = 0;
+  let elementIndex = 0;
 
   const processNode = (node: Node): ReactNode => {
     if (node.nodeType === Node.TEXT_NODE) {
       const text = node.textContent || '';
-      // Check for card references in text
+      // Check for placeholder markers in text
       const parts: ReactNode[] = [];
       let lastIndex = 0;
-      const regex = new RegExp(CARDRE.source, 'g');
+      const placeholderRegex = /__CARD_(\d+)__/g;
       let match;
 
-      while ((match = regex.exec(text)) !== null) {
+      while ((match = placeholderRegex.exec(text)) !== null) {
         // Add text before match
         if (match.index > lastIndex) {
           parts.push(text.substring(lastIndex, match.index));
         }
 
-        // Add card element
-        const [, cardID, cardName, colorCode = '0'] = match;
-        const color = COLOR_MAPPING[colorCode];
-        const imgPath = `./WebpImages/${cardID}.webp`;
-
-        parts.push(
-          React.createElement(
-            'span',
-            {
-              key: `card-${cardIndex++}`,
-              onMouseOver: (e: React.MouseEvent<HTMLSpanElement>) => handleCardMouseOver(e, imgPath),
-              onMouseOut: handleCardMouseOut,
-              style: { color }
-            },
-            cardName
-          )
-        );
+        // Get the card index from placeholder
+        const cardIdx = parseInt(match[1]);
+        if (cardIdx < cardElements.length) {
+          parts.push(React.cloneElement(cardElements[cardIdx], {
+            key: `card-${cardIdx}-${elementIndex++}`
+          }));
+        }
 
         lastIndex = match.index + match[0].length;
       }
@@ -126,6 +144,42 @@ export const parseHtmlToReactElements = (htmlString: string): ReactNode => {
     } else if (node.nodeType === Node.ELEMENT_NODE) {
       const element = node as HTMLElement;
       const tagName = element.tagName;
+
+      // Check if this span has a ShowDetail onmouseover handler (old format)
+      if (tagName === 'SPAN' && element.hasAttribute('onmouseover')) {
+        const onmouseoverAttr = element.getAttribute('onmouseover') || '';
+        const imgPathMatch = onmouseoverAttr.match(/ShowDetail\(event,\s*'([^']+)'/);
+        
+        if (imgPathMatch) {
+          const imgPath = imgPathMatch[1];
+          const cardText = element.textContent || '';
+          
+          // Process children of this span to get styled text
+          const children: ReactNode[] = [];
+          for (let i = 0; i < element.childNodes.length; i++) {
+            const child = element.childNodes[i];
+            const processed = processNode(child);
+            if (processed !== null) {
+              children.push(processed);
+            }
+          }
+          
+          // Get the style attribute if it exists
+          const styleStr = element.getAttribute('style') || '';
+          const style = parseStyleString(styleStr);
+          
+          return React.createElement(
+            'span',
+            {
+              key: `card-old-${elementIndex++}`,
+              onMouseOver: (e: React.MouseEvent<HTMLSpanElement>) => handleCardMouseOver(e, imgPath),
+              onMouseOut: handleCardMouseOut,
+              style
+            },
+            children.length > 0 ? children : cardText
+          );
+        }
+      }
 
       // Skip disallowed tags
       if (!ALLOWED_TAGS.has(tagName)) {
@@ -151,7 +205,7 @@ export const parseHtmlToReactElements = (htmlString: string): ReactNode => {
       }
 
       const props: any = {
-        key: `elem-${cardIndex++}`
+        key: `elem-${elementIndex++}`
       };
 
       // Get allowed attributes

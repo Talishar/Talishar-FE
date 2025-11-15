@@ -1,17 +1,17 @@
 .cardDetailContainer {
   display: none;
-  position: absolute;
+  position: fixed;
   z-index: 1000;
-
-  /* current size of RightColumn */
-  right: 20dvh;
-  right: 20vh;
-
-  bottom: 10px;
   box-shadow: 3px 3px 5px black;
   border-radius: 7%;
+  pointer-events: none;
+  will-change: left, top;
 }
 
 .cardDetailContainer img {
   max-height: 50vh;
+  max-width: 500px;
+  display: block;
+  width: 100%;
+  height: auto;
 }

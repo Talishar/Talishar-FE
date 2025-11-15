@@ -166,9 +166,43 @@
         imgSource = imgSource.replace('./WebpImages/', imgSrcPath);
         imgSource = imgSource.replace('.png', '.webp');
         imgSource = imgSource.replaceAll(' ', '_');
+        
         var el = document.getElementById('cardDetail');
-        el.innerHTML = "<img src='" + imgSource + "' style='border-radius: 5%;'/>";
-        el.style.display = 'inline';
+        
+        // Update the image src instead of innerHTML to avoid flashing
+        var img = el.querySelector('img');
+        if (!img) {
+          img = document.createElement('img');
+          img.style.height = '523px';
+          img.style.width = '375px';
+          el.innerHTML = '';
+          el.appendChild(img);
+        }
+        img.src = imgSource;
+        
+        // Position near cursor with slight offset to avoid hiding it
+        // Use a smaller offset (15px) so card follows cursor more closely
+        var offsetX = 15;
+        var offsetY = 15;
+        
+        el.style.left = (e.clientX + offsetX) + 'px';
+        el.style.top = (e.clientY + offsetY) + 'px';
+        
+        // Check bounds and adjust if card goes off-screen
+        // After a small delay to account for image dimensions
+        setTimeout(function() {
+          var rect = el.getBoundingClientRect();
+          if (rect.right > window.innerWidth) {
+            el.style.left = (e.clientX - 375 - offsetX) + 'px';
+          }
+          if (rect.bottom > window.innerHeight) {
+            el.style.top = (e.clientY - 523 - offsetY) + 'px';
+          }
+        }, 0);
+        
+        el.style.position = 'fixed';
+        el.style.zIndex = '100000';
+        el.style.display = 'block';
       }
 
       function HideCardDetail() {
