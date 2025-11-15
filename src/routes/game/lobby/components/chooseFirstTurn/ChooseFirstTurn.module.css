@@ -15,6 +15,7 @@
 
 dialog {
   background: transparent !important;
+  backdrop-filter: none !important;
   border: none !important;
 }
 
