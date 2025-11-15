@@ -85,8 +85,8 @@
 
 .heroImageWrapper {
   position: relative;
-  width: 200px;
-  height: 280px;
+  width: 240px;
+  height: 340px;
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 20px rgba(255, 255, 255, 0.1);
@@ -155,7 +155,7 @@
 }
 
 .vsText {
-  font-size: 3.5rem;
+  font-size: 4rem;
   font-weight: 900;
   color: #ffffff;
   text-shadow: 
@@ -181,8 +181,8 @@
 
 .vsPulse {
   position: absolute;
-  width: 120px;
-  height: 120px;
+  width: 150px;
+  height: 150px;
   border: 3px solid rgba(255, 215, 0, 0.4);
   border-radius: 50%;
   animation: expandPulse 1.5s ease-out 0.8s forwards;
@@ -191,13 +191,13 @@
 
 @keyframes expandPulse {
   from {
-    width: 120px;
-    height: 120px;
+    width: 150px;
+    height: 150px;
     opacity: 1;
   }
   to {
-    width: 200px;
-    height: 200px;
+    width: 240px;
+    height: 240px;
     opacity: 0;
   }
 }
