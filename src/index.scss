@@ -180,3 +180,8 @@ h5,
 h6 {
   margin-bottom: 0.5rem;
 }
+
+// Override Pico's modal backdrop blur effect
+dialog::backdrop {
+  backdrop-filter: none !important;
+}
