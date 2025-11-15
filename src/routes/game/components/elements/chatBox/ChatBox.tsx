@@ -52,13 +52,17 @@ export default function ChatBox() {
         .replace(
           'Player 1',
           `<b>${
-            amIPlayerOne ? myName.substring(0, 15) : oppName.substring(0, 15)
+            amIPlayerOne
+              ? myName && myName.trim() ? myName.substring(0, 15) : 'Player 1'
+              : oppName && oppName.trim() ? oppName.substring(0, 15) : 'Player 1'
           }</b>`
         )
         .replace(
           'Player 2',
           `<b>${
-            amIPlayerOne ? oppName.substring(0, 15) : myName.substring(0, 15)
+            amIPlayerOne
+              ? oppName && oppName.trim() ? oppName.substring(0, 15) : 'Player 2'
+              : myName && myName.trim() ? myName.substring(0, 15) : 'Player 2'
           }</b>`
         );
     });
