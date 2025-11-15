@@ -14,13 +14,14 @@
 }
 
 dialog {
-  background: transparent;
-  border: none;
+  background: transparent !important;
+  border: none !important;
 }
 
 dialog::backdrop {
-  background: transparent;
-  backdrop-filter: none;
+  background: var(--theme-modal-backdrop-background, transparent) !important;
+  backdrop-filter: var(--theme-modal-backdrop-filter, none) !important;
+  opacity: var(--theme-modal-backdrop-opacity, 1) !important;
 }
 
 .container > h3 {

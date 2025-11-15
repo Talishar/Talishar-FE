@@ -122,6 +122,11 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     root.style.setProperty('--near-black', colors.nearBlack); // Keep for backward compatibility
     root.style.setProperty('--theme-overlay', colors.overlay);
     root.style.setProperty('--modal-overlay-background-color', 'rgba(0, 0, 0, 0.4)'); // Very transparent for dialog backdrop
+    
+    // Modal backdrop styling - ensures no blur effect on modals
+    root.style.setProperty('--theme-modal-backdrop-background', 'transparent');
+    root.style.setProperty('--theme-modal-backdrop-filter', 'none');
+    root.style.setProperty('--theme-modal-backdrop-opacity', '1');
 
     // Update body background - use dark texture as fallback for light theme
     const bgTexture = currentTheme.id === 'light' 
