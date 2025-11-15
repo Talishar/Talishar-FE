@@ -182,6 +182,6 @@ h6 {
 }
 
 // Override Pico's modal backdrop blur effect
-dialog::backdrop {
+dialog {
   backdrop-filter: none !important;
 }
