@@ -348,7 +348,8 @@ export const apiSlice = createApi({
       },
       transformResponse: (response: GetLobbyInfoResponse, meta, arg) => {
         return response;
-      }
+      },
+      pollingInterval: 500
     }),
     getUserProfile: builder.query<UserProfileAPIResponse, undefined>({
       query: () => {
@@ -758,6 +759,20 @@ export const apiSlice = createApi({
         };
       }
     }),
+    chatTyping: builder.mutation<any, { gameID: string; playerID: number; authKey: string }>({
+      query: ({ gameID, playerID, authKey }) => {
+        return {
+          url: URL_END_POINT.CHAT_TYPING,
+          method: 'POST',
+          body: {
+            gameName: gameID,
+            playerID: playerID,
+            authKey: authKey
+          },
+          responseHandler: parseResponse
+        };
+      }
+    }),
     getLastActiveGame: builder.query<GetLastActiveGameResponse, void>({
       query: () => {
         return {
@@ -826,5 +841,6 @@ export const {
   useGetUnreadMessageCountQuery,
   useGetUnreadMessageCountByFriendQuery,
   useCreateQuickGameMutation,
-  useGetLastActiveGameQuery
+  useGetLastActiveGameQuery,
+  useChatTypingMutation
 } = apiSlice;

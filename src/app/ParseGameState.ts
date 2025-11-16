@@ -440,6 +440,9 @@ export default function ParseGameState(input: any) {
 
   result.chatEnabled = input.chatEnabled ?? false;
 
+  // opponent typing status
+  result.opponentTyping = input.opponentTyping ?? false;
+
   // game visibility (private or public)
   result.gameInfo.isPrivate = input.isPrivate ?? false;
 

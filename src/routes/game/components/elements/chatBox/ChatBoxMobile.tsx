@@ -14,6 +14,7 @@ export default function ChatBox() {
   });
   const [chatFilter, setChatFilter] = useState<'none' | 'chat' | 'log'>('none');
   const chatLog = useAppSelector((state: RootState) => state.game.chatLog);
+  const opponentTyping = useAppSelector((state: RootState) => state.game.opponentTyping);
   const myName =
     String(useAppSelector((state: RootState) => {
       return state.game.playerOne.Name;
@@ -23,12 +24,12 @@ export default function ChatBox() {
       return state.game.playerTwo.Name;
     }) ?? 'your opponent');
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const chatBoxRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({
-      behavior: 'smooth',
-      block: 'end'
-    });
+    if (chatBoxRef.current) {
+      chatBoxRef.current.scrollTop = chatBoxRef.current.scrollHeight;
+    }
   };
 
   const chatMessages = chatLog
@@ -67,6 +68,16 @@ export default function ChatBox() {
     scrollToBottom();
   }, [chatLog, chatFilter]);
 
+  // Scroll when typing indicator appears (with small delay for DOM to update)
+  useEffect(() => {
+    if (opponentTyping) {
+      const timer = setTimeout(() => {
+        scrollToBottom();
+      }, 10);
+      return () => clearTimeout(timer);
+    }
+  }, [opponentTyping]);
+
   return (
     // Added inline styles for fixed positioning
     <div className={styles.chatBoxMobileContainer} style={{
@@ -76,15 +87,21 @@ export default function ChatBox() {
       zIndex: 1000, 
     }}>
       <div className={styles.chatBoxMobileInner}>
-        <div className={styles.chatMobileBox}>
+        <div className={styles.chatMobileBox} ref={chatBoxRef}>
           {chatMessages &&
             chatMessages.map((chat, ix) => {
               return (
-                <div key={ix} ref={messagesEndRef}>
+                <div key={ix}>
                   {parseHtmlToReactElements(chat)}
                 </div>
               );
             })}
+          {opponentTyping && (
+            <div className={styles.typingIndicator}>
+              <i>{oppName.substring(0, 15)} is typing...</i>
+            </div>
+          )}
+          <div ref={messagesEndRef} />
         </div>
       </div>
       <ChatInput />
