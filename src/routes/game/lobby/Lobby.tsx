@@ -39,7 +39,7 @@ import CardPortal from '../components/elements/cardPortal/CardPortal';
 import Matchups from './components/matchups/Matchups';
 import { GameLocationState } from 'interface/GameLocationState';
 import CardPopUp from '../components/elements/cardPopUp/CardPopUp';
-import { getGameInfo, setHeroInfo, setOpponentTyping } from 'features/game/GameSlice';
+import { getGameInfo, setHeroInfo } from 'features/game/GameSlice';
 import useSound from 'use-sound';
 import playerJoined from 'sounds/playerJoinedSound.mp3';
 import { createPortal } from 'react-dom';
@@ -106,13 +106,6 @@ const Lobby = () => {
       playLobbyJoin();
     }
   }, [gameLobby?.theirName, isMuted]);
-
-  // Update opponent typing status from GetLobbyInfo query
-  useEffect(() => {
-    if (data?.opponentTyping !== undefined) {
-      dispatch(setOpponentTyping(data.opponentTyping));
-    }
-  }, [data?.opponentTyping, dispatch]);
 
   useEffect(() => {
     setIsWideScreen(width > BREAKPOINT_EXTRA_LARGE);
