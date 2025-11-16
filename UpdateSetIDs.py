@@ -3,11 +3,12 @@ import json
 from unidecode import unidecode
 import re
 
-version_str = "super-slam"
+version_str = "compendium-of-rathe"
 
 ordered_sets = ['WTR', 'ARC', 'CRU', "MON", "ELE", "EVR", "UPR", "DVR", "RVD", "DYN", "OUT", "DTD", "TCC", "EVO", "HVY",
-               "AKO", "MST", "ROS", "TER", "AIO", "AJV", "HNT", "AST", "AMX", "SEA", "AGB", "MPG", "ASR", "APR", "AVS", "BDD",
-                "SMP"]
+                "AKO", "MST", "ROS", "TER", "AIO", "AJV", "HNT", "AST", "AMX", "SEA", "AGB", "MPG", "ASR", "APR", "AVS", "BDD",
+                "SMP", "ARR", "PEN", "AAC", "AHA"]
+
 other_sets = ["AUR", "BOL", "FAB", "HER", "JDG", "LGS", "LSS", "ROG"]
 
 setIds_loc = "./src/utils/multilanguage/collectionMaps/setIDs.ts"
