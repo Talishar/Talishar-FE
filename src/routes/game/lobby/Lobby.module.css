@@ -615,9 +615,11 @@ button.secondary:hover {
 }
 
 .modal article {
-  background: transparent;
-  border: none;
+  background: var(--theme-card-background, #1e2329);
+  border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.2));
   padding: 2rem;
+  border-radius: 10px;
+  overflow: hidden;
 }
 
 .modal article header {
@@ -625,7 +627,13 @@ button.secondary:hover {
   font-size: 1.2em;
   font-weight: 600;
   margin-bottom: 2rem;
+  margin-top: 0;
+  margin-left: 0;
+  margin-right: 0;
+  padding: 0;
   text-align: center;
+  background: transparent;
+  border-bottom: none;
 }
 
 .modal article button {
