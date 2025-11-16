@@ -17,7 +17,6 @@ const InitialGameState: GameState = {
   optionsMenu: { active: false },
   showModals: true,
   chatEnabled: false,
-  opponentTyping: false,
   shufflingPlayerId: null,
   isShuffling: false,
   inactivityWarning: {
@@ -38,7 +37,6 @@ export const OfflineTestingGameState: GameState = {
     isReplay: false
   },
   chatEnabled: false,
-  opponentTyping: false,
   gameDynamicInfo: { lastUpdate: 0, spectatorCount: 0 },
   amIActivePlayer: false,
   oldCombatChain: [

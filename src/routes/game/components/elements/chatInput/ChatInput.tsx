@@ -3,8 +3,7 @@ import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import {
   useChooseFirstPlayerMutation,
   useSubmitChatMutation,
-  useSubmitLobbyInputMutation,
-  useChatTypingMutation
+  useSubmitLobbyInputMutation
 } from 'features/api/apiSlice';
 import styles from './ChatInput.module.css';
 import { GiChatBubble } from 'react-icons/gi';
@@ -47,8 +46,6 @@ export const ChatInput = () => {
 
   const [chatInput, setChatInput] = useState('');
   const [submitChat, submitChatResult] = useSubmitChatMutation();
-  const [chatTyping, chatTypingResult] = useChatTypingMutation();
-  const [typingTimeoutId, setTypingTimeoutId] = useState<NodeJS.Timeout | null>(null);
 
   // Allow players (playerID 1-2) or mods spectating (playerID 3 but isMod true)
   const canChat = playerID !== 3 || (playerID === 3 && isMod);
@@ -73,41 +70,12 @@ export const ChatInput = () => {
       console.error(err);
     }
     setChatInput('');
-    
-    // Clear typing indicator when message is sent
-    if (typingTimeoutId) {
-      clearTimeout(typingTimeoutId);
-      setTypingTimeoutId(null);
-    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.stopPropagation();
     e.stopPropagation();
     setChatInput(e.target?.value);
-    
-    // Clear existing timeout
-    if (typingTimeoutId) {
-      clearTimeout(typingTimeoutId);
-    }
-    
-    // Send typing indicator when user types
-    if (e.target?.value.trim().length > 0) {
-      chatTyping({
-        gameID: String(gameID),
-        playerID: playerID,
-        authKey: authKey
-      }).catch(err => {
-        // Silently fail - typing indicator is non-critical
-        console.error('Typing indicator failed:', err);
-      });
-      
-      // Set timeout to clear typing after input loses focus or user stops typing for 3 seconds
-      const newTimeout = setTimeout(() => {
-        setTypingTimeoutId(null);
-      }, 3000);
-      setTypingTimeoutId(newTimeout);
-    }
   };
 
   if (chatEnabled) {

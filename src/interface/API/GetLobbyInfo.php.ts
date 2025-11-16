@@ -59,7 +59,6 @@ export interface GetLobbyInfoResponse {
   overlayURL: string;
   deck: Deck;
   format: string;
-  opponentTyping?: boolean;
 }
 
 export interface DeckResponse {

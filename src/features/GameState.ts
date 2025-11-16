@@ -114,7 +114,6 @@ export default interface GameState {
   isFullRematch?: boolean;
   preventPassPrompt?: string;
   chatEnabled: boolean;
-  opponentTyping: boolean;
   shufflingPlayerId: number | null;
   isShuffling: boolean;
   inactivityWarning?: {

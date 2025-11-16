@@ -108,21 +108,3 @@
 .chatMobileBox * {
   font-size: max(1em, 7px) !important;
 }
-
-.typingIndicator {
-  padding: 0.5em 0;
-  color: var(--theme-secondary);
-  font-style: italic;
-  opacity: 0.8;
-  animation: fadeInOut 1.5s infinite;
-}
-
-@keyframes fadeInOut {
-  0%, 100% {
-    opacity: 0.6;
-  }
-  50% {
-    opacity: 1;
-  }
-}
-
