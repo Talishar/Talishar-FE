@@ -41,6 +41,7 @@ export default interface GameState {
     isReorderable?: boolean;
   };
   chatLog?: string[];
+  opponentIsTyping?: boolean;
   isUpdateInProgress?: boolean;
   isPlayerInputInProgress?: boolean;
   turnPhase?: {

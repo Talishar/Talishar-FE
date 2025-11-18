@@ -5,15 +5,56 @@ import ChatInput from '../chatInput/ChatInput';
 import styles from './ChatBox.module.css';
 import { parseHtmlToReactElements } from 'utils/ParseEscapedString';
 import classNames from 'classnames';
+import { useCheckOpponentTypingQuery } from 'features/api/apiSlice';
 
 const CHAT_RE = /<span[^>]*>(.*?):\s<\/span>/;
+const TYPING_TIMEOUT_MS = 5000; // 5 seconds
 
 export default function ChatBox() {
   const amIPlayerOne = useAppSelector((state: RootState) => {
     return state.game.gameInfo.playerID === 1;
   });
+  const gameID = useAppSelector((state: RootState) => state.game.gameInfo.gameID);
+  const playerID = useAppSelector((state: RootState) => state.game.gameInfo.playerID);
   const [chatFilter, setChatFilter] = useState<'none' | 'chat' | 'log'>('none');
   const chatLog = useAppSelector((state: RootState) => state.game.chatLog);
+  const [displayTyping, setDisplayTyping] = useState(false);
+  const typingTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  const { data: typingData, error: typingError } = useCheckOpponentTypingQuery(
+    { gameID, playerID },
+    {
+      skip: !gameID || playerID === 3 || playerID === 0,
+      pollingInterval: 1000
+    }
+  );
+
+  // When typing data updates, refresh the timer
+  useEffect(() => {
+    if (typingData?.opponentIsTyping) {
+      setDisplayTyping(true);
+
+      // Clear existing timer
+      if (typingTimerRef.current) {
+        clearTimeout(typingTimerRef.current);
+      }
+
+      // Set timer to hide typing indicator after 5 seconds
+      typingTimerRef.current = setTimeout(() => {
+        setDisplayTyping(false);
+      }, TYPING_TIMEOUT_MS);
+    }
+  }, [typingData?.opponentIsTyping]);
+
+  // Cleanup timer on unmount
+  useEffect(() => {
+    return () => {
+      if (typingTimerRef.current) {
+        clearTimeout(typingTimerRef.current);
+      }
+    };
+  }, []);
+
   const myName =
     String(useAppSelector((state: RootState) => {
       return state.game.playerOne.Name;
@@ -23,12 +64,12 @@ export default function ChatBox() {
       return state.game.playerTwo.Name;
     }) ?? 'your opponent');
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const chatBoxRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({
-      behavior: 'smooth',
-      block: 'end'
-    });
+    if (chatBoxRef.current) {
+      chatBoxRef.current.scrollTop = chatBoxRef.current.scrollHeight;
+    }
   };
 
   const chatMessages = chatLog
@@ -69,7 +110,7 @@ export default function ChatBox() {
 
   useEffect(() => {
     scrollToBottom();
-  }, [chatLog, chatFilter]);
+  }, [chatLog, chatFilter, displayTyping]);
 
   return (
     <div className={styles.chatBoxContainer}>
@@ -106,15 +147,21 @@ export default function ChatBox() {
         </button>
       </div>
       <div className={styles.chatBoxInner}>
-        <div className={styles.chatBox}>
+        <div className={styles.chatBox} ref={chatBoxRef}>
           {chatMessages &&
             chatMessages.map((chat, ix) => {
               return (
-                <div key={ix} ref={messagesEndRef}>
+                <div key={ix}>
                   {parseHtmlToReactElements(chat)}
                 </div>
               );
             })}
+          {displayTyping && (
+            <div className={styles.typingIndicator} ref={messagesEndRef}>
+              <em>Opponent is typing…</em>
+            </div>
+          )}
+          {!displayTyping && <div ref={messagesEndRef} />}
         </div>
       </div>
       <ChatInput />

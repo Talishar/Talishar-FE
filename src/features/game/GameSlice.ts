@@ -677,6 +677,7 @@ export const gameSlice = createSlice({
       state.activeLayers = action.payload.activeLayers;
       state.oldCombatChain = action.payload.oldCombatChain;
       state.chatLog = action.payload.chatLog;
+      state.opponentIsTyping = action.payload.opponentIsTyping ?? false;
       state.amIActivePlayer = action.payload.amIActivePlayer;
       state.turnPlayer = action.payload.turnPlayer;
       state.turnPhase = action.payload.turnPhase;

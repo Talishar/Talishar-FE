@@ -108,3 +108,20 @@
 .chatMobileBox * {
   font-size: max(1em, 7px) !important;
 }
+
+.typingIndicator {
+  padding: 8px 0;
+  font-style: italic;
+  color: #666;
+  animation: blink 1.4s infinite;
+}
+
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}

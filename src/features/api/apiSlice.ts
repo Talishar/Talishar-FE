@@ -767,6 +767,32 @@ export const apiSlice = createApi({
           responseHandler: parseResponse
         };
       }
+    }),
+    reportTyping: builder.mutation<any, { gameID: number; playerID: number }>({
+      query: ({ gameID = 0, playerID = 0 }) => {
+        return {
+          url: 'APIs/ChatTyping.php',
+          method: 'GET',
+          params: {
+            gameName: gameID,
+            playerID: playerID
+          },
+          responseHandler: parseResponse
+        };
+      }
+    }),
+    checkOpponentTyping: builder.query<{ opponentIsTyping: boolean }, { gameID: number; playerID: number }>({
+      query: ({ gameID = 0, playerID = 0 }) => {
+        return {
+          url: 'APIs/CheckOpponentTyping.php',
+          method: 'GET',
+          params: {
+            gameName: gameID,
+            playerID: playerID
+          },
+          responseHandler: parseResponse
+        };
+      }
     })
   })
 });
@@ -826,5 +852,7 @@ export const {
   useGetUnreadMessageCountQuery,
   useGetUnreadMessageCountByFriendQuery,
   useCreateQuickGameMutation,
-  useGetLastActiveGameQuery
+  useGetLastActiveGameQuery,
+  useReportTypingMutation,
+  useCheckOpponentTypingQuery
 } = apiSlice;
