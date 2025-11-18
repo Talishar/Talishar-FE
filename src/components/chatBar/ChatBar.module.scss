@@ -343,6 +343,33 @@
       overflow: hidden;
       text-overflow: ellipsis;
       color: var(--theme-text, #f4eded);
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .friendIcons {
+      display: flex;
+      align-items: center;
+      gap: 0.2rem;
+      flex-shrink: 0;
+    }
+
+    .friendIcon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .friendIcon img {
+      height: 1rem;
+      width: 1rem;
+      display: block;
+    }
+
+    .friendIcon:hover {
+      opacity: 0.8;
     }
 
     .friendNickname {

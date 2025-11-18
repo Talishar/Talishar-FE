@@ -11,6 +11,7 @@ import { MdBlock } from 'react-icons/md';
 import { MdNotes } from 'react-icons/md';
 import { IoMdArrowDropdown } from 'react-icons/io';
 import PlayerNoteModal from './PlayerNoteModal';
+import { createPatreonIconMap } from 'utils/patronIcons';
 
 export default function PlayerName(player: Player) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -223,31 +224,7 @@ export default function PlayerName(player: Player) {
     }
   };
   
-  const iconMap = [
-    {
-      condition: isContributor,
-      src: '/images/copper.webp',
-      title: 'I am a contributor to Talishar!',
-      href: 'https://linktr.ee/Talishar'
-    },
-    {
-      condition: isPvtVoidPatron,
-      src: '/images/patronEye.webp',
-      title: 'I am a patron of PvtVoid!',
-      href: 'https://linktr.ee/Talishar'
-    },
-    {
-      condition: isPatron,
-      src: '/images/patronHeart.webp',
-      title: 'I am a patron of Talishar!',
-      href: 'https://linktr.ee/Talishar'
-    },
-    {
-      condition: isPracticeDummy,
-      src: '/images/practiceDummy.webp',
-      title: 'I am a bot!'
-    }
-  ];
+  const iconMap = createPatreonIconMap(isContributor, isPvtVoidPatron, isPatron, isPracticeDummy);
 
   const getStatusClass = () => {
     if (isPvtVoidPatron) return styles.pvtVoidPatron;
