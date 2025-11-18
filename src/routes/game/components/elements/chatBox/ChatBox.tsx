@@ -16,16 +16,20 @@ export default function ChatBox() {
   });
   const gameID = useAppSelector((state: RootState) => state.game.gameInfo.gameID);
   const playerID = useAppSelector((state: RootState) => state.game.gameInfo.playerID);
+  const chatEnabled = useAppSelector((state: RootState) => state.game.chatEnabled);
   const [chatFilter, setChatFilter] = useState<'none' | 'chat' | 'log'>('none');
   const chatLog = useAppSelector((state: RootState) => state.game.chatLog);
   const [displayTyping, setDisplayTyping] = useState(false);
   const typingTimerRef = useRef<NodeJS.Timeout | null>(null);
 
+  // Only poll when chat is enabled and we're a valid player (skip spectators)
+  const shouldPoll = chatEnabled && (playerID === 1 || playerID === 2) && !!gameID;
+
   const { data: typingData, error: typingError } = useCheckOpponentTypingQuery(
     { gameID, playerID },
     {
-      skip: !gameID || playerID === 3 || playerID === 0,
-      pollingInterval: 1000
+      skip: !shouldPoll,
+      pollingInterval: 3000 // 3 seconds
     }
   );
 
