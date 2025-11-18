@@ -74,6 +74,12 @@ const Lobby = () => {
   const settingsData = useAppSelector(getSettingsEntity);
   const isMuted = settingsData['MuteSound']?.value === '1';
 
+  // Note tooltip state
+  const [opponentNote, setOpponentNote] = useState('');
+  const [isNoteTooltipOpen, setIsNoteTooltipOpen] = useState(false);
+  const [noteTooltipPosition, setNoteTooltipPosition] = useState({ top: 0, left: 0 });
+  const opponentNameRef = React.useRef<HTMLHeadingElement>(null);
+
   let { data, isLoading, refetch } = useGetLobbyInfoQuery({
     gameName: gameID,
     playerID: playerID,
@@ -153,6 +159,36 @@ const Lobby = () => {
   };
 
   const handleMatchupClick = () => setActiveTab('matchups');
+
+  // Note functions
+  const getPlayerNoteKey = (username: string) => `player_note_${username}`;
+
+  const loadPlayerNote = (username: string) => {
+    try {
+      return localStorage.getItem(getPlayerNoteKey(username)) || '';
+    } catch {
+      return '';
+    }
+  };
+
+  const handleNoteTooltipOpen = () => {
+    if (opponentNameRef.current && gameLobby?.theirName) {
+      const note = loadPlayerNote(gameLobby.theirName);
+      if (note) {
+        const rect = opponentNameRef.current.getBoundingClientRect();
+        setNoteTooltipPosition({
+          top: rect.bottom + window.scrollY + 8,
+          left: rect.left + window.scrollX
+        });
+        setOpponentNote(note);
+        setIsNoteTooltipOpen(true);
+      }
+    }
+  };
+
+  const handleNoteTooltipClose = () => {
+    setIsNoteTooltipOpen(false);
+  };
 
   if (!data || !data.deck || Object.keys(data).length === 0) {
     data = testData;
@@ -445,7 +481,13 @@ const Lobby = () => {
                   style={{ backgroundImage: rightPic }}
                 >
                   <div className={styles.dimPic}>
-                    <h3 aria-busy={!gameLobby?.theirName}>
+                    <h3 
+                      ref={opponentNameRef}
+                      onMouseEnter={handleNoteTooltipOpen}
+                      onMouseLeave={handleNoteTooltipClose}
+                      aria-busy={!gameLobby?.theirName}
+                      style={{ cursor: opponentNote ? 'help' : 'default' }}
+                    >
                       {String(gameLobby?.theirName ?? '').substring(0, 15)}
                     </h3>
                     <div className={styles.heroName}>
@@ -672,6 +714,20 @@ const Lobby = () => {
         </Form>
       </Formik>
       <CardPortal />
+
+      {/* Opponent note tooltip in lobby */}
+      {opponentNote && isNoteTooltipOpen && createPortal(
+        <div
+          className={styles.noteTooltip}
+          style={{
+            top: `${noteTooltipPosition.top}px`,
+            left: `${noteTooltipPosition.left}px`
+          }}
+        >
+          {opponentNote}
+        </div>,
+        document.body
+      )}
     </main>
   );
 };

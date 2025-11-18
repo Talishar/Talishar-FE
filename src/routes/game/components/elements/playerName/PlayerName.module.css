@@ -176,6 +176,25 @@
   flex-shrink: 0;
 }
 
+.noteTooltip {
+  position: fixed;
+  background-color: rgba(20, 20, 20, 0.98);
+  border: 1px solid rgba(111, 0, 0, 0.6);
+  border-radius: 0.3em;
+  backdrop-filter: blur(4px);
+  color: var(--secondary-inverse);
+  padding: 0.75em 1em;
+  max-width: 300px;
+  max-height: 150px;
+  overflow-y: auto;
+  word-wrap: break-word;
+  z-index: 10000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+  font-size: 0.9em;
+  line-height: 1.4;
+  pointer-events: none;
+}
+
 .playerName.patron {
   border: 2px solid var(--theme-primary-focus);
   background: linear-gradient(rgba(50, 10, 10, 0.6), rgba(50, 10, 10, 0.6)),
