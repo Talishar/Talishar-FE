@@ -11,9 +11,6 @@ export default function ReplayPanel() {
   const gameInfo = useAppSelector(getGameInfo);
   const location = useLocation();
 
-  // Debug: Log the isReplay status
-  console.log('[ReplayPanel] gameInfo.isReplay:', gameInfo.isReplay);
-
   // Only show if this is a replay and not on CreateGame page
   if (!gameInfo.isReplay || location.pathname.includes('/create')) {
     return null;

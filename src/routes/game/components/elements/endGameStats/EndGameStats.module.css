@@ -12,6 +12,8 @@
   z-index: 950;
   user-select: auto;
   background: var(--near-black);
+  border-radius:  10px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .statsContent {

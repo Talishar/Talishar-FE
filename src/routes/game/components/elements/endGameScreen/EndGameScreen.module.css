@@ -6,7 +6,7 @@
   bottom: 10vh;
   left: 9vw;
   right: 13vw;
-  background-color: var(--near-black);
+  background-color: black;
   padding: 1.5rem;
   border: 2px solid var(--theme-border);
   border-radius: 10px;
@@ -32,17 +32,20 @@
 }
 
 .cardListTitleContainer {
-  position: relative;
+  position: sticky;
+  top: -1.5rem;
   display: flex;
   flex-direction: row;
   flex-grow: 0;
   flex-shrink: 0;
-  width: 100%;
+  width: calc(100% + 3rem);
   justify-content: space-between;
   align-items: center;
-  padding: 0 0 1rem 0;
+  padding: 1.5rem 1.5rem 1rem 1.5rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  margin-bottom: 1rem;
+  margin: -1.5rem -1.5rem 1rem -1.5rem;
+  background-color: var(--near-black);
+  z-index: 1000;
 }
 
 .cardListTitle {
