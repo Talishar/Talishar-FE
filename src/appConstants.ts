@@ -254,6 +254,16 @@ const PRECON_DECK_DATA = [
     name: 'Ira, Scarlet Revenger',
     link: 'https://fabrary.net/decks/01JZ97KZ5TQV8E0FYMAM0XVNX7',
     hero: 'HER123'
+  },
+  {
+    name: 'Pleiades, Superstar',
+    link: 'https://fabrary.net/decks/01K4XX1ERKXRYW8XHWE9BTAS4W',
+    hero: 'SUP009'
+  },
+  {
+    name: 'Rhinar, Reckless Rampage',
+    link: 'https://fabrary.net/decks/01K74RSFG9RTVPVN534DZPJJNQ',
+    hero: 'WTR001'
   }
 ];
 
