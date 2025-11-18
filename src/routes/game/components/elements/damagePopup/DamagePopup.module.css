@@ -1,0 +1,37 @@
+.damagePopup {
+  position: absolute;
+  top: 0px;
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: none;
+  z-index: 1000;
+}
+
+.damageText {
+  font-size: 64px;
+  font-weight: 900;
+  color: #ff4444;
+  text-shadow:
+    -2px -2px 0 #000,
+    2px -2px 0 #000,
+    -2px 2px 0 #000,
+    2px 2px 0 #000,
+    -2px 0px 0 #000,
+    2px 0px 0 #000,
+    0px -2px 0 #000,
+    0px 2px 0 #000,
+    0 6px 12px rgba(0, 0, 0, 0.8);
+  white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+  .damageText {
+    font-size: 48px;
+  }
+}
+
+@media (max-width: 480px) {
+  .damageText {
+    font-size: 40px;
+  }
+}

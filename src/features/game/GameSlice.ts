@@ -342,6 +342,45 @@ export const gameSlice = createSlice({
     clearCardListFocus: (state) => {
       state.cardListFocus = undefined;
     },
+    addDamagePopup: (
+      state,
+      action: PayloadAction<{
+        isPlayer: boolean;
+        amount: number;
+      }>
+    ) => {
+      const id = `${Date.now()}-${Math.random()}`;
+      const popup = { id, amount: action.payload.amount };
+      if (action.payload.isPlayer) {
+        if (!state.damagePopups) {
+          state.damagePopups = { playerOne: [], playerTwo: [] };
+        }
+        state.damagePopups.playerOne.push(popup);
+      } else {
+        if (!state.damagePopups) {
+          state.damagePopups = { playerOne: [], playerTwo: [] };
+        }
+        state.damagePopups.playerTwo.push(popup);
+      }
+    },
+    removeDamagePopup: (
+      state,
+      action: PayloadAction<{
+        isPlayer: boolean;
+        id: string;
+      }>
+    ) => {
+      if (!state.damagePopups) return;
+      if (action.payload.isPlayer) {
+        state.damagePopups.playerOne = state.damagePopups.playerOne.filter(
+          (p) => p.id !== action.payload.id
+        );
+      } else {
+        state.damagePopups.playerTwo = state.damagePopups.playerTwo.filter(
+          (p) => p.id !== action.payload.id
+        );
+      }
+    },
     openOptionsMenu: (state) => {
       state.optionsMenu = { active: true };
     },
@@ -869,7 +908,9 @@ export const {
   setFirstWarningShown,
   setSecondWarningShown,
   resetInactivityTimer,
-  stillHereButtonClicked
+  stillHereButtonClicked,
+  addDamagePopup,
+  removeDamagePopup
 } = actions;
 
 export const getGameInfo = (state: RootState) => state.game.gameInfo;

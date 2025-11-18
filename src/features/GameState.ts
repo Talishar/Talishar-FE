@@ -123,4 +123,8 @@ export default interface GameState {
     secondWarningShown: boolean;
     secondWarningStartTime?: number; // Timestamp when second warning triggered
   };
+  damagePopups?: {
+    playerOne: Array<{ id: string; amount: number }>;
+    playerTwo: Array<{ id: string; amount: number }>;
+  };
 }
