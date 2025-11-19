@@ -7,11 +7,9 @@ const isProduction = import.meta.env.PROD;
 const createMockAdSense = () => {
   return {
     push: (config: any) => {
-      console.log('Mock AdSense: Ad pushed with config:', config);
       // Find and populate all ad containers immediately and repeatedly
       const injectMockAds = () => {
         const adContainers = document.querySelectorAll('.adsbygoogle[data-ad-slot]');
-        console.log(`Mock AdSense: Found ${adContainers.length} ad containers`);
         
         adContainers.forEach((container: Element) => {
           // Only inject if not already injected
@@ -35,7 +33,6 @@ const createMockAdSense = () => {
               <small style="color: #999;">(Mock - Real Google Ads in production)</small>
             `;
             container.appendChild(mockAd);
-            console.log(`Mock AdSense: Injected ad for slot ${(container as any).dataset?.adSlot}`);
           }
         });
       };
@@ -65,7 +62,6 @@ export const initializeAdSense = () => {
     if (!window.adsbygoogle) {
       (window as any).adsbygoogle = createMockAdSense();
     }
-    console.log('Mock AdSense initialized for local development.');
     return;
   }
 

@@ -34,7 +34,6 @@ const GoogleAdSense: React.FC<GoogleAdSenseProps> = ({
     const handleStorageChange = () => {
       const updatedConsent = localStorage.getItem('cookieConsent');
       setHasConsent(updatedConsent === 'accepted');
-      console.log('✅ Cookie consent changed:', updatedConsent);
     };
 
     window.addEventListener('storage', handleStorageChange);
