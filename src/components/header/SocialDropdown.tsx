@@ -51,7 +51,7 @@ const SocialDropdown = () => {
             <FaDiscord /> <span>Discord</span>
           </a>
           <a
-            href="https://bsky.app/profile/pvtvoid.bsky.social"
+            href="https://bsky.app/profile/talishar.bsky.social"
             target="_blank"
             rel="noopener noreferrer"
             className={styles.socialLink}
