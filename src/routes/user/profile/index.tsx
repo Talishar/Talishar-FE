@@ -14,6 +14,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './profile.module.css';
 import { generateCroppedImageUrl } from 'utils/cropImages';
+import { getReadableFormatName } from 'utils/formatUtils';
 import FriendsList from './FriendsList';
 import BlockedUsers from './BlockedUsers';
 
@@ -361,7 +362,7 @@ export const ProfilePage = () => {
                         )}
                       </th>
                       <td>{deck.name}</td>
-                      <td>{deck.format ? deck.format.charAt(0).toUpperCase() + deck.format.slice(1) : ""}</td>
+                      <td>{getReadableFormatName(deck.format || '')}</td>
                       {/* <td>{deck.cardBack ? deck.cardBack.charAt(0).toUpperCase() + deck.cardBack.slice(1).toLowerCase() : ""}</td>
                   <td>{deck.playmat ? deck.playmat.charAt(0).toUpperCase() + deck.playmat.slice(1).toLowerCase() : ""}</td> */}
                       <td className={styles.editButton}>

@@ -24,6 +24,32 @@ import { GAME_FORMAT, isPreconFormat, PRECON_DECKS } from 'appConstants';
 import GoogleAdSense from 'components/GoogleAdSense';
 import { getReadableFormatName } from 'utils/formatUtils';
 
+// Helper function to extract base format type for matching
+// "Open CC", "Competitive CC", "Classic Constructed" all map to "Classic Constructed" base
+const getBaseFormatType = (format: string | null): string => {
+  if (!format) return '';
+  const readable = getReadableFormatName(format).toLowerCase();
+  
+  // Extract base format by removing qualifiers like "open", "competitive"
+  if (readable.includes('classic constructed') || readable.includes('cc')) return 'classic constructed';
+  if (readable.includes('blitz')) return 'blitz';
+  if (readable.includes('silver age') || readable.includes('sage')) return 'silver age';
+  if (readable.includes('living legend') || readable.includes('ll')) return 'living legend';
+  if (readable.includes('commoner')) return 'commoner';
+  if (readable.includes('clash')) return 'clash';
+  if (readable.includes('sealed')) return 'sealed';
+  if (readable.includes('draft') || readable.includes('limited')) return 'draft / limited';
+  if (readable.includes('precon')) return 'preconstructed decks';
+  
+  return readable;
+};
+
+// Helper function to normalize format for comparison (backend format codes vs deck format names)
+const normalizeFormatForComparison = (format: string | null): string => {
+  if (!format) return '';
+  return getReadableFormatName(format).toLowerCase();
+};
+
 // Helper function to shorten format names
 const shortenFormat = (format: string): string => {
   if (!format) return '';
@@ -116,12 +142,19 @@ const JoinGame = () => {
   // Convert favorite decks to ImageSelect options
   const favoriteDeckOptions: ImageSelectOption[] = React.useMemo(() => {
     if (!data?.favoriteDecks) return [];
-    return data.favoriteDecks.map(deck => ({
+    const baseGameFormat = getBaseFormatType(gameFormat);
+    const filtered = data.favoriteDecks
+      .filter(deck => {
+        if (!deck.format) return false;
+        const baseDeckFormat = getBaseFormatType(deck.format);
+        return baseDeckFormat === baseGameFormat;
+      });
+    return filtered.map(deck => ({
       value: deck.key,
       label: `${deck.name}${deck.format ? ` (${shortenFormat(deck.format)})` : ''}`,
       imageUrl: generateCroppedImageUrl(deck.hero)
     }));
-  }, [data?.favoriteDecks]);
+  }, [data?.favoriteDecks, gameFormat]);
 
   // Convert precon decks to ImageSelect options
   const preconDeckOptions: ImageSelectOption[] = React.useMemo(() => {
