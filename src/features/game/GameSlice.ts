@@ -18,6 +18,7 @@ import {
   saveGameAuthKey,
   loadGamePlayerID
 } from 'utils/LocalKeyManagement';
+import isEqual from 'react-fast-compare';
 import { CardStack } from '../../routes/game/components/zones/permanentsZone/PermanentsZone';
 
 /**
@@ -33,38 +34,6 @@ const sanitizeHtmlTags = (input: string): string => {
     result = result.replace(/<[^>]*>/g, '');
   } while (result !== previous);
   return result;
-};
-
-/**
- * Single fetch attempt with NO polling/retry logic.
- * Polling should be handled by EventSource in the component.
- * This thunk is called BY the EventSource updates, not polling independently.
- */
-const fetchGameStateOnce = async (
-  queryURL: string,
-  queryParams: URLSearchParams,
-  signal?: AbortSignal
-): Promise<string> => {
-  try {
-    const response = await fetch(queryURL + queryParams, {
-      method: 'GET',
-      headers: {},
-      credentials: 'include',
-      signal
-    });
-    
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}`);
-    }
-    
-    const data = await response.text();
-    return data.trim();
-  } catch (e) {
-    if (signal?.aborted) {
-      throw e;
-    }
-    throw e;
-  }
 };
 
 export const nextTurn = createAsyncThunk(
@@ -87,37 +56,44 @@ export const nextTurn = createAsyncThunk(
       lastUpdate: String(params.lastUpdate)
     });
 
-    try {
-      const data = await fetchGameStateOnce(queryURL, queryParams, params.signal);
-      
-      // Skip empty responses (no update from backend)
-      if (!data || data === '0') {
-        return undefined;
+    let waitingForJSONResponse = true;
+    while (waitingForJSONResponse) {
+      try {
+        const response = await fetch(queryURL + queryParams, {
+          method: 'POST',
+          headers: {},
+          credentials: 'include',
+          signal: params.signal,
+          body: JSON.stringify(queryParams)
+        });
+        let data = await response.text();
+        if (data.toString().trim() === '0') {
+          continue;
+        }
+        waitingForJSONResponse = false;
+        data = data.toString().trim();
+        const indexOfBraces = data.indexOf('{');
+        if (indexOfBraces === -1) {
+          // No JSON object found - backend returned an error message or non-JSON response
+          toast.error(`Backend Error: ${sanitizeHtmlTags(data)}`);
+          return console.error(`Backend returned non-JSON response: ${data}`);
+        }
+        if (indexOfBraces !== 0) {
+          const warningMessage = sanitizeHtmlTags(data.substring(0, indexOfBraces));
+          toast.error(`Backend Warning: ${warningMessage}`);          
+          console.warn(data.substring(0, indexOfBraces));
+          data = data.substring(indexOfBraces);
+        }
+        const parsedData = JSON.parse(data);
+        const gs = ParseGameState(parsedData);
+        return gs;
+      } catch (e) {
+        if (params.signal?.aborted) {
+          return;
+        }
+        waitingForJSONResponse = false;
+        return console.error(e);
       }
-      
-      const indexOfBraces = data.indexOf('{');
-      if (indexOfBraces === -1) {
-        // No JSON object found - backend returned an error message or non-JSON response
-        toast.error(`Backend Error: ${sanitizeHtmlTags(data)}`);
-        return console.error(`Backend returned non-JSON response: ${data}`);
-      }
-      
-      let jsonData = data;
-      if (indexOfBraces !== 0) {
-        const warningMessage = sanitizeHtmlTags(data.substring(0, indexOfBraces));
-        toast.error(`Backend Warning: ${warningMessage}`);          
-        console.warn(data.substring(0, indexOfBraces));
-        jsonData = data.substring(indexOfBraces);
-      }
-      
-      const parsedData = JSON.parse(jsonData);
-      const gs = ParseGameState(parsedData);
-      return gs;
-    } catch (e) {
-      if (params.signal?.aborted) {
-        return;
-      }
-      return console.error(e);
     }
   }
 );
@@ -134,40 +110,48 @@ export const gameLobby = createAsyncThunk(
   ) => {
     const queryURL = `${BACKEND_URL}${URL_END_POINT.GET_LOBBY_REFRESH}`;
 
-    const queryParams = new URLSearchParams({
-      gameName: String(params.game.gameID),
-      playerID: String(params.game.playerID),
-      authKey: String(params.game.authKey),
-      lastUpdate: String(params.lastUpdate)
-    });
+    const requestBody = {
+      gameName: params.game.gameID,
+      playerID: params.game.playerID,
+      authKey: params.game.authKey,
+      lastUpdate: params.lastUpdate
+    } as GetLobbyRefresh;
 
-    try {
-      const data = await fetchGameStateOnce(queryURL, queryParams, params.signal);
-      
-      // Skip empty responses
-      if (!data || data === '0') {
-        return undefined;
+    let waitingForJSONResponse = true;
+    while (waitingForJSONResponse) {
+      try {
+        const response = await fetch(queryURL, {
+          method: 'POST',
+          headers: {},
+          credentials: 'include',
+          signal: params.signal,
+          body: JSON.stringify(requestBody)
+        });
+
+        let data = await response.text();
+        if (data.toString().trim() === '0') {
+          continue;
+        }
+        waitingForJSONResponse = false;
+        data = data.toString().trim();
+        const indexOfBraces = data.indexOf('{');
+        if (indexOfBraces === -1) {
+          // No JSON object found - backend returned an error message or non-JSON response
+          toast.error(`Backend Error: ${sanitizeHtmlTags(data)}`);
+          return console.error(`Backend returned non-JSON response: ${data}`);
+        }
+        if (indexOfBraces !== 0) {
+          data = data.substring(indexOfBraces);
+        }
+        const parsedData = JSON.parse(data) as GetLobbyRefreshResponse;
+        return parsedData;
+      } catch (e) {
+        if (params.signal?.aborted) {
+          return;
+        }
+        waitingForJSONResponse = false;
+        return console.error(e);
       }
-      
-      const indexOfBraces = data.indexOf('{');
-      if (indexOfBraces === -1) {
-        // No JSON object found - backend returned an error message or non-JSON response
-        toast.error(`Backend Error: ${sanitizeHtmlTags(data)}`);
-        return console.error(`Backend returned non-JSON response: ${data}`);
-      }
-      
-      let jsonData = data;
-      if (indexOfBraces !== 0) {
-        jsonData = data.substring(indexOfBraces);
-      }
-      
-      const parsedData = JSON.parse(jsonData) as GetLobbyRefreshResponse;
-      return parsedData;
-    } catch (e) {
-      if (params.signal?.aborted) {
-        return;
-      }
-      return console.error(e);
     }
   }
 );
@@ -934,84 +918,97 @@ export const getGameInfo = (state: RootState) => state.game.gameInfo;
 const selectPlayerOnePermanents = (state: RootState) => state.game.playerOne.Permanents;
 const selectPlayerTwoPermanents = (state: RootState) => state.game.playerTwo.Permanents;
 
-/**
- * Fast shallow comparison of two cards for stacking purposes.
- * Only compares properties that matter for card grouping, not deep equality.
- * This is 10-100x faster than isEqual() for large card collections.
- */
-const cardsAreStackable = (card1: Card, card2: Card): boolean => {
-  // Compare critical properties only - if these are the same, cards can stack
-  return (
-    card1.cardNumber === card2.cardNumber &&
-    card1.controller === card2.controller &&
-    card1.isBroken === card2.isBroken &&
-    card1.isFrozen === card2.isFrozen &&
-    card1.tapped === card2.tapped &&
-    card1.counters === card2.counters &&
-    card1.lifeCounters === card2.lifeCounters &&
-    card1.defCounters === card2.defCounters &&
-    card1.atkCounters === card2.atkCounters &&
-    card1.actionDataOverride === card2.actionDataOverride
-  );
-};
-
-/**
- * Helper function to build card stacks from permanents array.
- * Reduces memory allocation by reusing the same logic for both players.
- */
-const buildPermanentStacks = (permanents: Card[] | undefined): CardStack[] => {
-  const cards = permanents || [];
-  const stacks: CardStack[] = [];
-  let idIndex = 0;
-  
-  // Sort once for all cards
-  const sortedCards = [...cards].sort((a, b) => a.cardNumber.localeCompare(b.cardNumber));
-  
-  for (const currentCard of sortedCards) {
-    // Special case: EVR070 never stacks
-    if (currentCard.cardNumber === 'EVR070') {
-      stacks.push({
-        card: currentCard,
-        count: 1,
-        id: `${currentCard.cardNumber}-${idIndex++}`
-      });
-      continue;
-    }
-    
-    // Fast search for stackable card in existing stacks
-    let foundStackIndex = -1;
-    for (let i = 0; i < stacks.length; i++) {
-      if (cardsAreStackable(stacks[i].card, currentCard)) {
-        foundStackIndex = i;
-        break;
-      }
-    }
-    
-    if (foundStackIndex !== -1) {
-      // Card already in stack, increment count
-      stacks[foundStackIndex].count++;
-    } else {
-      // New stack
-      stacks.push({
-        card: currentCard,
-        count: 1,
-        id: `${currentCard.cardNumber}-${idIndex++}`
-      });
-    }
-  }
-  
-  return stacks;
-};
-
 // Memoized selector factories for player one and player two
 const selectPlayerOnePermanentsAsStack = createSelector(
   [selectPlayerOnePermanents],
-  (permanents: Card[] | undefined) => buildPermanentStacks(permanents)
+  (permanents: Card[] | undefined) => {
+    const cards = permanents || [];
+    let initialCardStack: CardStack[] = [];
+    let idIndex = 0;
+    return [...cards]
+      .sort((a, b) => a.cardNumber.localeCompare(b.cardNumber))
+      .reduce((accumulator, currentCard) => {
+        if (currentCard.cardNumber === 'EVR070') {
+          accumulator.push({
+            card: currentCard,
+            count: 1,
+            id: `${currentCard.cardNumber}-${idIndex++}`
+          });
+          return accumulator;
+        }
+        const cardCopy = { ...currentCard };
+        const storedADO = currentCard.actionDataOverride;
+        cardCopy.actionDataOverride = '';
+        let isInAccumulator = false;
+        let index = 0;
+
+        for (const [ix, cardStack] of accumulator.entries()) {
+          cardCopy.actionDataOverride = cardStack.card.actionDataOverride;
+          if (isEqual(cardStack.card, cardCopy)) {
+            isInAccumulator = true;
+            index = ix;
+            break;
+          }
+        }
+        if (isInAccumulator) {
+          accumulator[index].count = accumulator[index].count + 1;
+          return accumulator;
+        }
+        accumulator.push({
+          card: currentCard,
+          count: 1,
+          id: `${currentCard.cardNumber}-${idIndex++}`
+        });
+        cardCopy.actionDataOverride = storedADO;
+        return accumulator;
+      }, initialCardStack);
+  }
 );
 
 const selectPlayerTwoPermanentsAsStack = createSelector(
   [selectPlayerTwoPermanents],
-  (permanents: Card[] | undefined) => buildPermanentStacks(permanents)
+  (permanents: Card[] | undefined) => {
+    const cards = permanents || [];
+    let initialCardStack: CardStack[] = [];
+    let idIndex = 0;
+    return [...cards]
+      .sort((a, b) => a.cardNumber.localeCompare(b.cardNumber))
+      .reduce((accumulator, currentCard) => {
+        if (currentCard.cardNumber === 'EVR070') {
+          accumulator.push({
+            card: currentCard,
+            count: 1,
+            id: `${currentCard.cardNumber}-${idIndex++}`
+          });
+          return accumulator;
+        }
+        const cardCopy = { ...currentCard };
+        const storedADO = currentCard.actionDataOverride;
+        cardCopy.actionDataOverride = '';
+        let isInAccumulator = false;
+        let index = 0;
+
+        for (const [ix, cardStack] of accumulator.entries()) {
+          cardCopy.actionDataOverride = cardStack.card.actionDataOverride;
+          if (isEqual(cardStack.card, cardCopy)) {
+            isInAccumulator = true;
+            index = ix;
+            break;
+          }
+        }
+        if (isInAccumulator) {
+          accumulator[index].count = accumulator[index].count + 1;
+          return accumulator;
+        }
+        accumulator.push({
+          card: currentCard,
+          count: 1,
+          id: `${currentCard.cardNumber}-${idIndex++}`
+        });
+        cardCopy.actionDataOverride = storedADO;
+        return accumulator;
+      }, initialCardStack);
+  }
 );
 
 export const selectPermanentsAsStack = (state: RootState, isPlayer: boolean): CardStack[] => {
