@@ -7,7 +7,7 @@
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  max-width: 900px;
+  max-width: var(--aspect);
   margin: 0 auto;
   padding-top: 50px;
 }
@@ -18,7 +18,7 @@
 
 .formContainer {
   background: var(--theme-card-background, #1e2329);
-  max-width: 900px;
+  width: 460px;
   border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.2));
   border-radius: 10px;
 }
