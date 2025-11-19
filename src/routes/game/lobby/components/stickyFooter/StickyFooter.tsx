@@ -124,7 +124,7 @@ const StickyFooter = ({
           <button
             className={styles.buttonClass}
             type="submit"
-            disabled={!errors || !submitSideboard}
+            disabled={isValid === false || !submitSideboard}
             onClick={() => setSideboardSubmitted(true)}
           >
             {sideboardSubmitted ? 'Resubmit Deck' : 'Submit Deck'}

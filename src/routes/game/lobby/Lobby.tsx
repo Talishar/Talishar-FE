@@ -449,6 +449,9 @@ const Lobby = () => {
         }}
         onSubmit={handleFormSubmission}
         validationSchema={deckValidation(deckSize, maxDeckSize, handsTotal)}
+        validateOnChange={true}
+        validateOnBlur={true}
+        validateOnMount={true}
         enableReinitialize
       >
         <Form className={styles.form}>
