@@ -38,6 +38,7 @@ import { useNavigate } from 'react-router-dom';
 import CardPortal from '../components/elements/cardPortal/CardPortal';
 import Matchups from './components/matchups/Matchups';
 import { GameLocationState } from 'interface/GameLocationState';
+import { saveGameAuthKey } from 'utils/LocalKeyManagement';
 import CardPopUp from '../components/elements/cardPopUp/CardPopUp';
 import { getGameInfo, setHeroInfo } from 'features/game/GameSlice';
 import useSound from 'use-sound';
@@ -373,6 +374,14 @@ const Lobby = () => {
 
     try {
       const data: any = await submitSideboardMutation(requestBody).unwrap();
+      
+      // If game started, capture and store the auth key for future use
+      if (data?.gameStarted && data?.authKey && gameID) {
+        saveGameAuthKey(gameID, data.authKey, playerID);
+        console.log("Game started! Auth key stored. Waiting for lobby to be ready...");
+        // The existing useEffect in this component will navigate to /game/play/{gameID}
+        // when gameLobby?.isMainGameReady becomes true
+      }
     } catch (err) {
       console.error(err);
     } finally {

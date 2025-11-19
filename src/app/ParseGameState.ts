@@ -179,14 +179,16 @@ export default function ParseGameState(input: any) {
   // previous combat chain links
   result.oldCombatChain = [];
   let ix = 0;
-  for (const chainLinkObj of input.combatChainLinks) {
-    const chainLink: CombatChainLink = {
-      didItHit: chainLinkObj.result === 'hit' ? true : false,
-      isDraconic: chainLinkObj.isDraconic,
-      index: ix
-    };
-    ix++;
-    result.oldCombatChain.push(chainLink);
+  if (input.combatChainLinks && Array.isArray(input.combatChainLinks)) {
+    for (const chainLinkObj of input.combatChainLinks) {
+      const chainLink: CombatChainLink = {
+        didItHit: chainLinkObj.result === 'hit' ? true : false,
+        isDraconic: chainLinkObj.isDraconic,
+        index: ix
+      };
+      ix++;
+      result.oldCombatChain.push(chainLink);
+    }
   }
 
   // layers
@@ -218,8 +220,10 @@ export default function ParseGameState(input: any) {
   result.playerTwo = ParseEquipment(input.opponentEquipment);
 
   result.playerTwo.Hand = [];
-  for (const cardObj of input.opponentHand) {
-    result.playerTwo.Hand.push(ParseCard(cardObj));
+  if (input.opponentHand && Array.isArray(input.opponentHand)) {
+    for (const cardObj of input.opponentHand) {
+      result.playerTwo.Hand.push(ParseCard(cardObj));
+    }
   }
 
   result.playerTwo.SoulCount = input.opponentSoulCount;
@@ -230,27 +234,35 @@ export default function ParseGameState(input: any) {
   result.playerTwo.Health = input.opponentHealth;
 
   result.playerTwo.Graveyard = [];
-  for (const cardObj of input.opponentDiscard.reverse()) {
-    result.playerTwo.Graveyard.push(ParseCard(cardObj));
+  if (input.opponentDiscard && Array.isArray(input.opponentDiscard)) {
+    for (const cardObj of input.opponentDiscard.reverse()) {
+      result.playerTwo.Graveyard.push(ParseCard(cardObj));
+    }
   }
 
   result.playerTwo.PitchRemaining = input.opponentPitchCount;
   result.playerTwo.Pitch = [];
-  for (const cardObj of input.opponentPitch.reverse()) {
-    result.playerTwo.Pitch.push(ParseCard(cardObj));
+  if (input.opponentPitch && Array.isArray(input.opponentPitch)) {
+    for (const cardObj of input.opponentPitch.reverse()) {
+      result.playerTwo.Pitch.push(ParseCard(cardObj));
+    }
   }
 
   result.playerTwo.DeckSize = input.opponentDeckCount;
   result.playerTwo.DeckBack = ParseCard(input.opponentDeckCard);
   result.playerTwo.Deck = [];
-  for (const cardObj of input.opponentDeck.reverse()) {
-    result.playerTwo.Deck.push(ParseCard(cardObj));
+  if (input.opponentDeck && Array.isArray(input.opponentDeck)) {
+    for (const cardObj of input.opponentDeck.reverse()) {
+      result.playerTwo.Deck.push(ParseCard(cardObj));
+    }
   }
   result.playerTwo.CardBack = input.opponentCardBack;
 
   result.playerTwo.Banish = [];
-  for (const cardObj of input.opponentBanish.reverse()) {
-    result.playerTwo.Banish.push(ParseCard(cardObj));
+  if (input.opponentBanish && Array.isArray(input.opponentBanish)) {
+    for (const cardObj of input.opponentBanish.reverse()) {
+      result.playerTwo.Banish.push(ParseCard(cardObj));
+    }
   }
 
   if (input.landmarks?.length > 0) {
@@ -258,32 +270,44 @@ export default function ParseGameState(input: any) {
   }
 
   result.playerTwo.Arsenal = [];
-  for (const cardObj of input.opponentArse) {
-    result.playerTwo.Arsenal.push(ParseCard(cardObj));
+  if (input.opponentArse && Array.isArray(input.opponentArse)) {
+    for (const cardObj of input.opponentArse) {
+      result.playerTwo.Arsenal.push(ParseCard(cardObj));
+    }
   }
 
   // Stick all permanents in the same pile.
   result.playerTwo.Permanents = [];
-  for (const cardObj of input.opponentAllies) {
-    result.playerTwo.Permanents.push(ParseCard(cardObj));
+  if (input.opponentAllies && Array.isArray(input.opponentAllies)) {
+    for (const cardObj of input.opponentAllies) {
+      result.playerTwo.Permanents.push(ParseCard(cardObj));
+    }
   }
-  for (const cardObj of input.opponentAuras) {
-    result.playerTwo.Permanents.push(
-      ParseCard({ ...cardObj, zone: ZONE.AURAS })
-    );
+  if (input.opponentAuras && Array.isArray(input.opponentAuras)) {
+    for (const cardObj of input.opponentAuras) {
+      result.playerTwo.Permanents.push(
+        ParseCard({ ...cardObj, zone: ZONE.AURAS })
+      );
+    }
   }
-  for (const cardObj of input.opponentItems) {
-    result.playerTwo.Permanents.push(
-      ParseCard({ ...cardObj, zone: ZONE.ITEMS })
-    );
+  if (input.opponentItems && Array.isArray(input.opponentItems)) {
+    for (const cardObj of input.opponentItems) {
+      result.playerTwo.Permanents.push(
+        ParseCard({ ...cardObj, zone: ZONE.ITEMS })
+      );
+    }
   }
-  for (const cardObj of input.opponentPermanents) {
-    result.playerTwo.Permanents.push(ParseCard(cardObj));
+  if (input.opponentPermanents && Array.isArray(input.opponentPermanents)) {
+    for (const cardObj of input.opponentPermanents) {
+      result.playerTwo.Permanents.push(ParseCard(cardObj));
+    }
   }
 
   result.playerTwo.Effects = [];
-  for (const cardObj of input.opponentEffects) {
-    result.playerTwo.Effects.push(ParseCard(cardObj));
+  if (input.opponentEffects && Array.isArray(input.opponentEffects)) {
+    for (const cardObj of input.opponentEffects) {
+      result.playerTwo.Effects.push(ParseCard(cardObj));
+    }
   }
 
   result.playerTwo.ActionPoints = input.opponentAP;
@@ -293,8 +317,10 @@ export default function ParseGameState(input: any) {
   result.playerOne = ParseEquipment(input.playerEquipment);
 
   result.playerOne.Hand = [];
-  for (const cardObj of input.playerHand) {
-    result.playerOne.Hand.push(ParseCard(cardObj));
+  if (input.playerHand && Array.isArray(input.playerHand)) {
+    for (const cardObj of input.playerHand) {
+      result.playerOne.Hand.push(ParseCard(cardObj));
+    }
   }
 
   result.playerOne.bloodDebtCount = input.myBloodDebtCount;
@@ -305,65 +331,85 @@ export default function ParseGameState(input: any) {
   result.playerOne.Health = input.playerHealth;
 
   result.playerOne.Graveyard = [];
-  for (const cardObj of input.playerDiscard.reverse()) {
-    result.playerOne.Graveyard.push(ParseCard(cardObj));
+  if (input.playerDiscard && Array.isArray(input.playerDiscard)) {
+    for (const cardObj of input.playerDiscard.reverse()) {
+      result.playerOne.Graveyard.push(ParseCard(cardObj));
+    }
   }
 
   result.playerOne.PitchRemaining = input.playerPitchCount;
   result.playerOne.Pitch = [];
-  for (const cardObj of input.playerPitch.reverse()) {
-    result.playerOne.Pitch.push(ParseCard(cardObj));
+  if (input.playerPitch && Array.isArray(input.playerPitch)) {
+    for (const cardObj of input.playerPitch.reverse()) {
+      result.playerOne.Pitch.push(ParseCard(cardObj));
+    }
   }
 
   result.playerOne.DeckSize = input.playerDeckCount;
   result.playerOne.DeckBack = ParseCard(input.playerDeckCard);
   result.playerOne.Deck = [];
-  for (const cardObj of input.playerDeck.reverse()) {
-    result.playerOne.Deck.push(ParseCard(cardObj));
+  if (input.playerDeck && Array.isArray(input.playerDeck)) {
+    for (const cardObj of input.playerDeck.reverse()) {
+      result.playerOne.Deck.push(ParseCard(cardObj));
+    }
   }
   result.playerOne.CardBack = input.playerCardBack;
 
   result.playerOne.Banish = [];
-  for (const cardObj of input.playerBanish.reverse()) {
-    result.playerOne.Banish.push(ParseCard(cardObj));
+  if (input.playerBanish && Array.isArray(input.playerBanish)) {
+    for (const cardObj of input.playerBanish.reverse()) {
+      result.playerOne.Banish.push(ParseCard(cardObj));
+    }
   }
 
   result.playerOne.Arsenal = [];
-  for (const cardObj of input.playerArse) {
-    result.playerOne.Arsenal.push(ParseCard(cardObj));
+  if (input.playerArse && Array.isArray(input.playerArse)) {
+    for (const cardObj of input.playerArse) {
+      result.playerOne.Arsenal.push(ParseCard(cardObj));
+    }
   }
 
   // Stick all permanents in the same pile.
   result.playerOne.Permanents = [];
-  for (const cardObj of input.playerAllies) {
-    result.playerOne.Permanents.push(ParseCard(cardObj));
+  if (input.playerAllies && Array.isArray(input.playerAllies)) {
+    for (const cardObj of input.playerAllies) {
+      result.playerOne.Permanents.push(ParseCard(cardObj));
+    }
   }
-  for (const cardObj of input.playerAuras) {
-    result.playerOne.Permanents.push(
-      ParseCard({ ...cardObj, zone: ZONE.AURAS })
-    );
+  if (input.playerAuras && Array.isArray(input.playerAuras)) {
+    for (const cardObj of input.playerAuras) {
+      result.playerOne.Permanents.push(
+        ParseCard({ ...cardObj, zone: ZONE.AURAS })
+      );
+    }
   }
-  for (const cardObj of input.playerItems) {
-    result.playerOne.Permanents.push(
-      ParseCard({ ...cardObj, zone: ZONE.ITEMS })
-    );
+  if (input.playerItems && Array.isArray(input.playerItems)) {
+    for (const cardObj of input.playerItems) {
+      result.playerOne.Permanents.push(
+        ParseCard({ ...cardObj, zone: ZONE.ITEMS })
+      );
+    }
   }
-  for (const cardObj of input.playerPermanents) {
-    result.playerOne.Permanents.push(ParseCard(cardObj));
+  if (input.playerPermanents && Array.isArray(input.playerPermanents)) {
+    for (const cardObj of input.playerPermanents) {
+      result.playerOne.Permanents.push(ParseCard(cardObj));
+    }
   }
 
   result.playerOne.Effects = [];
-  for (const cardObj of input.playerEffects) {
-    result.playerOne.Effects.push(ParseCard(cardObj));
+  if (input.playerEffects && Array.isArray(input.playerEffects)) {
+    for (const cardObj of input.playerEffects) {
+      result.playerOne.Effects.push(ParseCard(cardObj));
+    }
   }
 
   result.playerOne.ActionPoints = input.playerAP;
 
   // Chat log.
-  const chatArray = input.chatLog.split('<br>') as string[];
+  const chatArray = input.chatLog ? input.chatLog.split('<br>') : [];
   const re = /.\/Images\//gm;
 
-  result.chatLog = chatArray.map((message) => {
+  result.chatLog = chatArray.map((message: string) => {
     return message.replace(re, '/images/');
   });
 

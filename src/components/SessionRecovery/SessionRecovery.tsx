@@ -3,7 +3,7 @@ import styles from './SessionRecovery.module.css';
 import useAuth from 'hooks/useAuth';
 import { useGetLastActiveGameQuery } from 'features/api/apiSlice';
 import { useNavigate } from 'react-router-dom';
-import { deleteGameAuthKey } from 'utils/LocalKeyManagement';
+import { deleteGameAuthKey, saveGameAuthKey } from 'utils/LocalKeyManagement';
 
 const SessionRecovery: React.FC = () => {
   const navigate = useNavigate();
@@ -80,6 +80,8 @@ const SessionRecovery: React.FC = () => {
 
   const handleRejoin = () => {
     if (data?.gameName && data?.playerID && data?.authKey) {
+      // Save auth key before navigating - ensures it persists across page navigation
+      saveGameAuthKey(data.gameName, data.authKey, data.playerID);
       // Navigate to the game lobby
       navigate(`/game/lobby/${data.gameName}`, {
         state: { playerID: data.playerID }
