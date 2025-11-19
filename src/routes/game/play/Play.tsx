@@ -21,6 +21,7 @@ import { useAppDispatch, useAppSelector } from '../../../app/Hooks';
 import { setIsRoguelike, setHeroInfo } from '../../../features/game/GameSlice';
 import { Toaster } from 'react-hot-toast';
 import { shallowEqual } from 'react-redux';
+import { PanelProvider } from '../components/leftColumn/PanelContext';
 
 function Play({ isRoguelike }: { isRoguelike: boolean }) {
   const [cookies] = useCookies([
@@ -99,49 +100,51 @@ function Play({ isRoguelike }: { isRoguelike: boolean }) {
   }, [cookies.hoverImageSize]);
 
   return (
-    <div className="centering">
-      <Toaster
-        position="top-left"
-        toastOptions={{
-          style: {
-            background: 'var(--theme-tertiary)',
-            color: 'var(--white)',
-            border: '1px solid var(--theme-tertiary-focus)',
-            padding: '0.5rem',
-            wordBreak: 'break-word',
-            maxWidth: '100vh', 
-            overflow: 'hidden', 
-            textOverflow: 'ellipsis', 
-            userSelect: 'none',
-            msUserSelect: 'none',
-            WebkitUserSelect: 'none',
-            MozUserSelect: 'none',
-            zIndex: 10001,
-          }
-        }}
-      />
-      <div className="app" key="app">
-        <ChatCardDetail />
-        <LeftColumn />
-        <div className="gameZone">
-          <HandZone isPlayer={false} />
-          <Board />
-          <ChainLinkSummaryContainer />
-          <HandZone isPlayer />
-          <PlayerHand />
+    <PanelProvider>
+      <div className="centering">
+        <Toaster
+          position="top-left"
+          toastOptions={{
+            style: {
+              background: 'var(--theme-tertiary)',
+              color: 'var(--white)',
+              border: '1px solid var(--theme-tertiary-focus)',
+              padding: '0.5rem',
+              wordBreak: 'break-word',
+              maxWidth: '100vh', 
+              overflow: 'hidden', 
+              textOverflow: 'ellipsis', 
+              userSelect: 'none',
+              msUserSelect: 'none',
+              WebkitUserSelect: 'none',
+              MozUserSelect: 'none',
+              zIndex: 10001,
+            }
+          }}
+        />
+        <div className="app" key="app">
+          <ChatCardDetail />
+          <LeftColumn />
+          <div className="gameZone">
+            <HandZone isPlayer={false} />
+            <Board />
+            <ChainLinkSummaryContainer />
+            <HandZone isPlayer />
+            <PlayerHand />
+          </div>
+          <RightColumn />
         </div>
-        <RightColumn />
+        {!heroIntroShown && <HeroVsHeroIntro />}
+        <CardListZone />
+        <ActiveLayersZone />
+        <OptionsMenu />
+        <PlayerInputPopUp />
+        <CardPortal />
+        <InactivityWarning />
+        <ExperimentalGameStateHandler />
+        <EventsHandler />
       </div>
-      {!heroIntroShown && <HeroVsHeroIntro />}
-      <CardListZone />
-      <ActiveLayersZone />
-      <OptionsMenu />
-      <PlayerInputPopUp />
-      <CardPortal />
-      <InactivityWarning />
-      <ExperimentalGameStateHandler />
-      <EventsHandler />
-    </div>
+    </PanelProvider>
   );
 }
 

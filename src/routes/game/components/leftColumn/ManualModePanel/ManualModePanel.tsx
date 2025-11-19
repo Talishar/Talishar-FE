@@ -9,9 +9,11 @@ import { PROCESS_INPUT } from 'appConstants';
 import { shallowEqual } from 'react-redux';
 import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai';
 import { RootState } from 'app/Store';
+import { usePanelContext } from '../PanelContext';
 
 export default function ManualModePanel() {
   const [isOpen, setIsOpen] = useState(false);
+  const { setIsManualModeOpen, isDevToolOpen } = usePanelContext();
   const isManualMode = useSetting({ settingName: MANUAL_MODE })?.value === '1';
   const isLocalEnvironment = import.meta.env.MODE === 'development' || window.location.hostname === 'localhost';
 
@@ -29,13 +31,19 @@ export default function ManualModePanel() {
   return (
     <>
       <button 
-        className={`${styles.manualModeTab} ${isOpen ? styles.hidden : ''}`}
-        onClick={() => setIsOpen(!isOpen)}
+        className={`${styles.manualModeTab} ${isOpen || isDevToolOpen ? styles.hidden : ''}`}
+        onClick={() => {
+          setIsOpen(!isOpen);
+          setIsManualModeOpen(!isOpen);
+        }}
         title="Toggle Manual Mode"
       >
         Manual Mode
       </button>
-      {isOpen && <ManualModeContent onClose={() => setIsOpen(false)} />}
+      {isOpen && <ManualModeContent onClose={() => {
+        setIsOpen(false);
+        setIsManualModeOpen(false);
+      }} />}
     </>
   );
 }

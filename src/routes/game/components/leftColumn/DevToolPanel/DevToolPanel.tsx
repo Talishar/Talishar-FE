@@ -3,9 +3,11 @@ import { useLocation } from 'react-router-dom';
 import styles from './DevToolPanel.module.css';
 import { useLoadDebugGameMutation } from 'features/api/apiSlice';
 import { toast } from 'react-hot-toast';
+import { usePanelContext } from '../PanelContext';
 
 export default function DevToolPanel() {
   const [isOpen, setIsOpen] = useState(false);
+  const { setIsDevToolOpen, isManualModeOpen } = usePanelContext();
   const location = useLocation();
 
   // Extract game ID from URL (e.g., /game/play/1145 -> 1145)
@@ -22,13 +24,19 @@ export default function DevToolPanel() {
   return (
     <>
       <button 
-        className={`${styles.devToolTab} ${isOpen ? styles.hidden : ''}`}
-        onClick={() => setIsOpen(!isOpen)}
+        className={`${styles.devToolTab} ${isOpen || isManualModeOpen ? styles.hidden : ''}`}
+        onClick={() => {
+          setIsOpen(!isOpen);
+          setIsDevToolOpen(!isOpen);
+        }}
         title="Toggle Dev Tool"
       >
         Dev Tool
       </button>
-      {isOpen && <DevToolContent gameIdFromUrl={gameIdFromUrl} onClose={() => setIsOpen(false)} />}
+      {isOpen && <DevToolContent gameIdFromUrl={gameIdFromUrl} onClose={() => {
+        setIsOpen(false);
+        setIsDevToolOpen(false);
+      }} />}
     </>
   );
 }
