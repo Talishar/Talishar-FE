@@ -3,11 +3,11 @@ import {
   useDeleteAccountMutation,
   useGetFavoriteDecksQuery,
   useGetUserProfileQuery,
-  useCreateGameMutation
+  useAddFavoriteDeckMutation
 } from 'features/api/apiSlice';
 import { DeleteDeckAPIResponse } from 'interface/API/DeleteDeckAPI.php';
 import { DeleteAccountAPIResponse } from 'interface/API/DeleteAccountAPI.php';
-import { CreateGameAPI } from 'interface/API/CreateGame.php';
+import { AddFavoriteDeckRequest } from 'interface/API/AddFavoriteDeck.php';
 import { toast } from 'react-hot-toast';
 import { RiEdit2Line, RiDeleteBin5Line } from "react-icons/ri";
 import { useState } from 'react';
@@ -41,7 +41,7 @@ export const ProfilePage = () => {
     refetch: profileRefetch
   } = useGetUserProfileQuery(undefined);
   const [deleteDeck] = useDeleteDeckMutation();
-  const [createGame] = useCreateGameMutation();
+  const [addFavoriteDeck] = useAddFavoriteDeckMutation();
   const [deleteAccount, { isLoading: isDeleting }] = useDeleteAccountMutation();
 
   const handleDeleteDeckMessage = (resp: DeleteDeckAPIResponse): string => {
@@ -115,22 +115,13 @@ export const ProfilePage = () => {
     setIsAddingDeck(true);
     console.log('[Deck Addition] Starting deck addition with URL:', newDeckUrl);
     try {
-      // Reuse the existing CreateGame flow to save the deck to favorites
-      const gamePayload: CreateGameAPI = {
-        deck: '',
-        fabdb: newDeckUrl,
-        deckTestMode: false,
-        format: 'cc',
-        visibility: 'private',
-        decksToTry: '',
-        favoriteDeck: true, // This is the key - flag the deck to be saved
-        favoriteDecks: '',
-        gameDescription: ''
+      const deckPayload: AddFavoriteDeckRequest = {
+        fabdb: newDeckUrl
       };
 
-      console.log('[Deck Addition] Game payload created:', gamePayload);
+      console.log('[Deck Addition] Deck payload created:', deckPayload);
 
-      const addDeckPromise = createGame(gamePayload).unwrap();
+      const addDeckPromise = addFavoriteDeck(deckPayload).unwrap();
       toast.promise(
         addDeckPromise,
         {
@@ -354,7 +345,11 @@ export const ProfilePage = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {deckIsLoading && <div>Loading...</div>}
+                  {deckIsLoading && (
+                    <tr>
+                      <td colSpan={5}>Loading...</td>
+                    </tr>
+                  )}
                   {decksData?.favoriteDecks.map((deck, ix) => (
                     <tr key={deck.key}>
                       <th scope="row">
