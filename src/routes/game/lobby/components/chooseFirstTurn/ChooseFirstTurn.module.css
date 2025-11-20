@@ -17,12 +17,14 @@ dialog {
   background: transparent !important;
   backdrop-filter: none !important;
   border: none !important;
+  z-index: 1001;
 }
 
 dialog::backdrop {
   background: var(--theme-modal-backdrop-background, transparent) !important;
   backdrop-filter: var(--theme-modal-backdrop-filter, none) !important;
   opacity: var(--theme-modal-backdrop-opacity, 1) !important;
+  pointer-events: none;
 }
 
 .container > h3 {
@@ -65,6 +67,7 @@ h5 {
 .spacer {
   height: 5em;
   width: 100vw;
+  display: none;
 }
 
 .icon {

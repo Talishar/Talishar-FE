@@ -712,16 +712,15 @@ const Lobby = () => {
             {(activeTab === 'matchups' || isWideScreen) && (
               <Matchups refetch={refetch} />
             )}
-            {!gameLobby?.amIChoosingFirstPlayer ? (
-              <StickyFooter
-                deckSize={deckSize}
-                submitSideboard={gameLobby?.canSubmitSideboard ?? false}
-                handleLeave={handleLeave}
-                isWidescreen={isWideScreen}
-                onSendInviteClick={() => setShowFriendsPanel(!showFriendsPanel)}
-                onIsValidChange={setIsDeckValid}
-              />
-            ) : null}
+            <StickyFooter
+              deckSize={deckSize}
+              submitSideboard={gameLobby?.canSubmitSideboard ?? false}
+              handleLeave={handleLeave}
+              isWidescreen={isWideScreen}
+              needToDoDisclaimer={needToDoDisclaimer}
+              onSendInviteClick={() => setShowFriendsPanel(!showFriendsPanel)}
+              onIsValidChange={setIsDeckValid}
+            />
           </div>
         </Form>
       </Formik>
