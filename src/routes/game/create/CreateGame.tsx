@@ -376,7 +376,8 @@ const CreateGame = () => {
                   <option value="Looking for meta heroes">Looking for meta heroes</option>
                   <option value="Looking for a specific hero">Looking for a specific hero</option>
                   <option value="Playing spicy brews">Playing spicy brews</option>
-                  <option value="CC legal including unreleased cards">CC legal including PEN</option>
+                  <option value="Classic Constructed legal including unreleased cards">Classic Constructed legal including PEN</option>
+                  <option value="Silver Age legal including unreleased cards">Silver Age legal including PEN</option>
                   <option value="Casual play">Casual play</option>
                   <option value="New player help">New player help</option>
                   <option value="Learning a new hero">Learning a new hero</option>
