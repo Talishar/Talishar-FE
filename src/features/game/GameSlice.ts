@@ -118,7 +118,11 @@ export const nextTurn = createAsyncThunk(
           });
           
           // Handle specific error types
-          if (errorMsg.includes('Invalid Authkey')) {
+          if (errorMsg === '1234REMATCH') {
+            console.log('[nextTurn] REMATCH detected!');
+            const gs = ParseGameState(parsedData);
+            return gs;
+          } else if (errorMsg.includes('Invalid Authkey')) {
             console.error('[nextTurn] INVALID_AUTHKEY detected! Game:', params.game.gameID, 'Player:', params.game.playerID);
             toast.error('Your session has expired. Please rejoin the game.', { position: 'top-center' });
             return rejectWithValue({ error: 'INVALID_AUTHKEY', message: errorMsg });
