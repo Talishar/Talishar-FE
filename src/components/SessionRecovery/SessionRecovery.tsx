@@ -80,6 +80,10 @@ const SessionRecovery: React.FC = () => {
 
   const handleRejoin = () => {
     if (data?.gameName && data?.playerID && data?.authKey) {
+      // Reject spectators (playerID == 3) from saving auth keys
+      if (data.playerID === 3) {
+        return;
+      }
       // Save auth key before navigating - ensures it persists across page navigation
       saveGameAuthKey(data.gameName, data.authKey, data.playerID);
       // Navigate to the game lobby
