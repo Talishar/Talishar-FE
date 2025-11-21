@@ -75,7 +75,6 @@ export const initializeAdSense = () => {
     if (window.adsbygoogle) {
       window.adsbygoogle.push({});
     }
-    console.log('Google AdSense initialized successfully.');
   } catch (error) {
     console.warn('AdSense initialization error:', error);
   }
