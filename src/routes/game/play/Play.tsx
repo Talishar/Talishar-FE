@@ -34,21 +34,10 @@ function Play({ isRoguelike }: { isRoguelike: boolean }) {
   const dispatch = useAppDispatch();
   const gameState = useAppSelector((state: any) => state.game, shallowEqual);
   const heroIntroShown = useAppSelector((state: any) => state.game.heroIntroShown);
-  const gameError = useAppSelector((state: any) => state.game.gameError);
 
   useEffect(() => {
     dispatch(setIsRoguelike(isRoguelike));
   }, [isRoguelike]);
-
-  // Handle game errors
-  useEffect(() => {
-    if (gameError) {
-      console.error('[Play] Game error detected:', {
-        errorType: gameError.type,
-        errorMessage: gameError.message
-      });
-    }
-  }, [gameError]);
 
   // Dispatch hero info once game state is fully populated
   useEffect(() => {

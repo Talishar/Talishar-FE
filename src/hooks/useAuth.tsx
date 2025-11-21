@@ -34,13 +34,6 @@ export default function useAuth() {
   const { isLoading: isQueryLoading, isFetching, error, data } = useLoginWithCookieQuery({});
   const dispatch = useAppDispatch();
 
-  console.log('[useAuth] Auth state:', {
-    isQueryLoading,
-    hasData: !!data,
-    hasError: !!error,
-    currentUserId
-  });
-
   const setLoggedIn = useCallback(
     (
       user: string,
@@ -49,7 +42,6 @@ export default function useAuth() {
       patron: string,
       isMod?: boolean
     ) => {
-      console.log('[useAuth] Setting logged in user:', { user, userName });
       dispatch(
         setCredentialsReducer({
           user: user,
@@ -65,7 +57,6 @@ export default function useAuth() {
 
   const logOut = async () => {
     try {
-      console.log('[useAuth] Logging out user');
       await logOutAPI({}).unwrap();
       dispatch(logOutReducer());
       toast.success('Logged Out', { position: 'top-center' });
@@ -74,7 +65,7 @@ export default function useAuth() {
         window.location.href = '/';
       }, 50);
     } catch (err) {
-      console.warn('[useAuth] Error during logout:', err);
+      console.warn(err);
       toast.error('Error Logging Out', { position: 'top-center' });
       // Still redirect on error to clear state
       setTimeout(() => {
@@ -86,8 +77,6 @@ export default function useAuth() {
   // Auth check is complete when we have data (even if user is not logged in) or there's an error
   const isLoading = data === undefined && error === undefined;
   
-  console.log('[useAuth] isLoading:', isLoading, { data: !!data, error: !!error });
-  
   // isLoggedIn should be based on the query result if available, otherwise use Redux
   // This ensures we show logged-in state as soon as the query returns, before Redux is updated
   const isLoggedIn = data?.isUserLoggedIn ?? !!currentUserId;
@@ -95,10 +84,6 @@ export default function useAuth() {
   useEffect(() => {
     // Only run when query has completed (data exists or error exists)
     if (data !== undefined) {
-      console.log('[useAuth] Query completed with data:', {
-        isUserLoggedIn: data?.isUserLoggedIn,
-        loggedInUserName: data?.loggedInUserName
-      });
       if (data?.isUserLoggedIn) {
         const userIsMod = MOD_USERNAMES.includes(data.loggedInUserName);
         setLoggedIn(
@@ -110,7 +95,6 @@ export default function useAuth() {
         );
       } else {
         // User is not logged in, clear any stale auth state
-        console.log('[useAuth] User not logged in, clearing state');
         dispatch(logOutReducer());
       }
     }

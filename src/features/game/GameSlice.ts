@@ -44,15 +44,8 @@ export const nextTurn = createAsyncThunk(
       signal: AbortSignal | undefined;
       lastUpdate: number;
     },
-    { getState, rejectWithValue }
+    { getState }
   ) => {
-    console.log('[nextTurn] Starting game state poll', {
-      gameID: params.game.gameID,
-      playerID: params.game.playerID,
-      authKey: params.game.authKey ? `${params.game.authKey.substring(0, 8)}...` : 'EMPTY',
-      lastUpdate: params.lastUpdate
-    });
-
     const queryURL = params.game.isRoguelike
       ? `${ROGUELIKE_URL}${URL_END_POINT.GAME_STATE_POLL}`
       : `${BACKEND_URL}${URL_END_POINT.GAME_STATE_POLL}`;
@@ -64,10 +57,7 @@ export const nextTurn = createAsyncThunk(
     });
 
     let waitingForJSONResponse = true;
-    let attemptCount = 0;
     while (waitingForJSONResponse) {
-      attemptCount++;
-      console.log(`[nextTurn] Fetch attempt ${attemptCount}`, { url: queryURL });
       try {
         const response = await fetch(queryURL + queryParams, {
           method: 'POST',
@@ -76,83 +66,33 @@ export const nextTurn = createAsyncThunk(
           signal: params.signal,
           body: JSON.stringify(queryParams)
         });
-        console.log('[nextTurn] Fetch response received', {
-          status: response.status,
-          statusText: response.statusText
-        });
-
         let data = await response.text();
-        console.log('[nextTurn] Response data (first 200 chars):', data.substring(0, 200));
-
         if (data.toString().trim() === '0') {
-          console.log('[nextTurn] Received keep-alive (0), continuing...');
           continue;
         }
         waitingForJSONResponse = false;
         data = data.toString().trim();
         const indexOfBraces = data.indexOf('{');
-        
         if (indexOfBraces === -1) {
           // No JSON object found - backend returned an error message or non-JSON response
-          console.error('[nextTurn] No JSON object found in response:', data);
           toast.error(`Backend Error: ${sanitizeHtmlTags(data)}`);
-          return rejectWithValue({ error: data });
+          return console.error(`Backend returned non-JSON response: ${data}`);
         }
-        
         if (indexOfBraces !== 0) {
           const warningMessage = sanitizeHtmlTags(data.substring(0, indexOfBraces));
-          console.warn('[nextTurn] Warning message before JSON:', warningMessage);
           toast.error(`Backend Warning: ${warningMessage}`);          
+          console.warn(data.substring(0, indexOfBraces));
           data = data.substring(indexOfBraces);
         }
-        
         const parsedData = JSON.parse(data);
-        console.log('[nextTurn] Parsed response data keys:', Object.keys(parsedData));
-        
-        // Check for error responses from backend
-        if (parsedData.errorMessage) {
-          const errorMsg = sanitizeHtmlTags(parsedData.errorMessage);
-          console.error('[nextTurn] Backend returned errorMessage:', {
-            errorMsg,
-            fullResponse: parsedData
-          });
-          
-          // Handle specific error types
-          if (errorMsg === '1234REMATCH') {
-            console.log('[nextTurn] REMATCH detected!');
-            const gs = ParseGameState(parsedData);
-            return gs;
-          } else if (errorMsg.includes('Invalid Authkey')) {
-            console.error('[nextTurn] INVALID_AUTHKEY detected! Game:', params.game.gameID, 'Player:', params.game.playerID);
-            toast.error('Your session has expired. Please rejoin the game.', { position: 'top-center' });
-            return rejectWithValue({ error: 'INVALID_AUTHKEY', message: errorMsg });
-          } else if (errorMsg.includes('The game no longer exists')) {
-            console.error('[nextTurn] GAME_NOT_FOUND detected!');
-            toast.error('The game no longer exists on the server.', { position: 'top-center' });
-            return rejectWithValue({ error: 'GAME_NOT_FOUND', message: errorMsg });
-          } else {
-            console.error('[nextTurn] BACKEND_ERROR detected!');
-            toast.error(`Error: ${errorMsg}`, { position: 'top-center' });
-            return rejectWithValue({ error: 'BACKEND_ERROR', message: errorMsg });
-          }
-        }
-        
-        console.log('[nextTurn] Successfully parsed game state');
         const gs = ParseGameState(parsedData);
-        console.log('[nextTurn] Game state transformation complete');
         return gs;
       } catch (e) {
         if (params.signal?.aborted) {
-          console.log('[nextTurn] Request was aborted');
           return;
         }
         waitingForJSONResponse = false;
-        console.error('[nextTurn] Exception caught:', {
-          error: e,
-          message: e instanceof Error ? e.message : String(e),
-          stack: e instanceof Error ? e.stack : undefined
-        });
-        return rejectWithValue({ error: 'PARSE_ERROR', message: String(e) });
+        return console.error(e);
       }
     }
   }
@@ -168,12 +108,6 @@ export const gameLobby = createAsyncThunk(
     },
     { getState }
   ) => {
-    console.log('[gameLobby] Starting lobby refresh', {
-      gameID: params.game.gameID,
-      playerID: params.game.playerID,
-      authKey: params.game.authKey ? `${params.game.authKey.substring(0, 8)}...` : 'EMPTY'
-    });
-
     const queryURL = `${BACKEND_URL}${URL_END_POINT.GET_LOBBY_REFRESH}`;
 
     const requestBody = {
@@ -184,10 +118,7 @@ export const gameLobby = createAsyncThunk(
     } as GetLobbyRefresh;
 
     let waitingForJSONResponse = true;
-    let attemptCount = 0;
     while (waitingForJSONResponse) {
-      attemptCount++;
-      console.log(`[gameLobby] Fetch attempt ${attemptCount}`);
       try {
         const response = await fetch(queryURL, {
           method: 'POST',
@@ -197,12 +128,8 @@ export const gameLobby = createAsyncThunk(
           body: JSON.stringify(requestBody)
         });
 
-        console.log('[gameLobby] Response received', { status: response.status });
         let data = await response.text();
-        console.log('[gameLobby] Response data (first 200 chars):', data.substring(0, 200));
-
         if (data.toString().trim() === '0') {
-          console.log('[gameLobby] Keep-alive (0), continuing...');
           continue;
         }
         waitingForJSONResponse = false;
@@ -210,27 +137,19 @@ export const gameLobby = createAsyncThunk(
         const indexOfBraces = data.indexOf('{');
         if (indexOfBraces === -1) {
           // No JSON object found - backend returned an error message or non-JSON response
-          console.error('[gameLobby] No JSON found:', data);
           toast.error(`Backend Error: ${sanitizeHtmlTags(data)}`);
           return console.error(`Backend returned non-JSON response: ${data}`);
         }
         if (indexOfBraces !== 0) {
-          console.warn('[gameLobby] Non-JSON prefix:', data.substring(0, indexOfBraces));
           data = data.substring(indexOfBraces);
         }
         const parsedData = JSON.parse(data) as GetLobbyRefreshResponse;
-        console.log('[gameLobby] Successfully parsed lobby response');
         return parsedData;
       } catch (e) {
         if (params.signal?.aborted) {
-          console.log('[gameLobby] Request aborted');
           return;
         }
         waitingForJSONResponse = false;
-        console.error('[gameLobby] Exception caught:', {
-          error: e,
-          message: e instanceof Error ? e.message : String(e)
-        });
         return console.error(e);
       }
     }
@@ -783,12 +702,7 @@ export const gameSlice = createSlice({
   extraReducers: (builder) => {
     // nextTurn
     builder.addCase(nextTurn.fulfilled, (state, action) => {
-      console.log('[nextTurn.fulfilled] Game state update successful', {
-        hasPayload: !!action.payload,
-        payloadKeys: action.payload ? Object.keys(action.payload).slice(0, 5) : undefined
-      });
       if (action.payload === undefined) {
-        console.warn('[nextTurn.fulfilled] Payload is undefined, keeping state unchanged');
         return state;
       }
       state.isUpdateInProgress = false;
@@ -862,15 +776,10 @@ export const gameSlice = createSlice({
       return state;
     });
     builder.addCase(nextTurn.pending, (state, action) => {
-      console.log('[nextTurn.pending] Game state update in progress');
       state.isUpdateInProgress = true;
       return state;
     });
     builder.addCase(nextTurn.rejected, (state, action) => {
-      console.error('[nextTurn.rejected] Game state update failed', {
-        hasPayload: !!action.payload,
-        payload: action.payload
-      });
       state.isUpdateInProgress = false;
       return state;
     });
