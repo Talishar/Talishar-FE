@@ -1,14 +1,11 @@
 import { Card } from 'features/Card';
-import { number } from 'yup';
 import { Effect } from '../effects/Effects';
 import EndGameMenuOptions from '../endGameMenuOptions/EndGameMenuOptions';
 import styles from './EndGameStats.module.css';
-import { NumberLiteralType } from 'typescript';
 import useAuth from 'hooks/useAuth';
 import { useState, useMemo, useRef, useImperativeHandle, forwardRef, useEffect } from 'react';
 import html2canvas from 'html2canvas';
 import TalisharLogo from 'img/TalisharLogo.webp';
-import { generateCroppedImageUrl } from 'utils/cropImages';
 import { BACKEND_URL } from 'appConstants';
 import { parseHtmlToReactElements } from 'utils/ParseEscapedString';
 
