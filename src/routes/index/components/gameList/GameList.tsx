@@ -51,7 +51,7 @@ export interface GameListResponse {
   LastAuthKey?: string;
 }
 
-const GAME_LIST_POLLING_INTERVAL = 15000; // in ms (15 seconds)
+const GAME_LIST_POLLING_INTERVAL = 10000; // in ms (10 seconds)
 
 const GameList = () => {
   const [cookies, setCookie, removeCookie] = useCookies(['experimental', 'inProgressGameFilters', 'inProgressGameFriendsFilter']);
