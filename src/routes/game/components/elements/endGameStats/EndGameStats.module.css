@@ -355,7 +355,7 @@
 .onePitch {
   color: #af1518;
   font-weight: 600;
-  font-size: 0.9em;
+  font-size: 1em !important;
   max-width: 200px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -365,7 +365,7 @@
 .twoPitch {
   color: #daa520;
   font-weight: 600;
-  font-size: 0.9em;
+  font-size: 1em !important;
   max-width: 200px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -375,7 +375,7 @@
 .threePitch {
   color: #4b84ff;
   font-weight: 600;
-  font-size: 0.9em;
+  font-size: 1em !important;
   max-width: 200px;
   overflow: hidden;
   text-overflow: ellipsis;
