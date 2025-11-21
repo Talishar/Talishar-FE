@@ -75,7 +75,7 @@ export interface EndGameStatsRef {
 
 const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
   const { isPatron } = useAuth();
-  const [sortField, setSortField] = useState<'played' | 'blocked' | 'pitched' | 'hits' | null>(null);
+  const [sortField, setSortField] = useState<'played' | 'blocked' | 'pitched' | 'hits' | 'cardName' | null>(null);
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
   const statsRef = useRef<HTMLDivElement>(null);
   const [isExporting, setIsExporting] = useState(false);
@@ -136,7 +136,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
     loadHeroImages();
   }, [data.yourHero, data.opponentHero]);
 
-  const handleSort = (field: 'played' | 'blocked' | 'pitched' | 'hits') => {
+  const handleSort = (field: 'played' | 'blocked' | 'pitched' | 'hits' | 'cardName') => {
     if (sortField === field) {
       // Toggle direction if same field
       setSortDirection(sortDirection === 'desc' ? 'asc' : 'desc');
@@ -424,13 +424,24 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
     }
 
     return [...data.cardResults].sort((a, b) => {
-      const aValue = a[sortField];
-      const bValue = b[sortField];
-      
-      if (sortDirection === 'desc') {
-        return bValue - aValue;
+      if (sortField === 'cardName') {
+        const aValue = a.cardName.toLowerCase();
+        const bValue = b.cardName.toLowerCase();
+        
+        if (sortDirection === 'desc') {
+          return bValue.localeCompare(aValue);
+        } else {
+          return aValue.localeCompare(bValue);
+        }
       } else {
-        return aValue - bValue;
+        const aValue = a[sortField];
+        const bValue = b[sortField];
+        
+        if (sortDirection === 'desc') {
+          return bValue - aValue;
+        } else {
+          return aValue - bValue;
+        }
       }
     });
   }, [data.cardResults, sortField, sortDirection]);
@@ -512,7 +523,13 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
               <thead>
                 <tr className={styles.headers}>
                   <th className={`${styles.firstHeadersStats} ${styles.hideOnExport}`}></th>
-                  <th>Card Name</th>
+                  <th 
+                    onClick={() => handleSort('cardName')}
+                    style={{ cursor: 'pointer', userSelect: 'none' }}
+                    title="Click to sort"
+                  >
+                    Card Name {sortField === 'cardName' && (sortDirection === 'desc' ? '↓' : '↑')}
+                  </th>
                   <th 
                     className={styles.headersStats} 
                     onClick={() => handleSort('played')}
@@ -558,22 +575,26 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                   sortedCardResults?.map((result, ix) => {
                     const card: Card = { cardNumber: result.cardId };
                     let cardStyle = '';
+                    let cardBorderStyle = '';
                     switch (result.pitchValue) {
                       case 1:
                         cardStyle = styles.onePitch;
+                        cardBorderStyle = styles.cardOnePitch;
                         break;
                       case 2:
                         cardStyle = styles.twoPitch;
+                        cardBorderStyle = styles.cardTwoPitch;
                         break;
                       case 3:
                         cardStyle = styles.threePitch;
+                        cardBorderStyle = styles.cardThreePitch;
                         break;
                       default:
                     }
                     return (
                       <tr key={`cardList${ix}`}>
                         <td className={`${styles.card} ${styles.hideOnExport}`}>
-                          <Effect card={card} />
+                          <Effect card={card} imgClassName={cardBorderStyle} />
                         </td>
                         <td className={cardStyle} title={result.cardName}>{result.cardName}</td>
                         <td className={styles.played}>{result.played}</td>

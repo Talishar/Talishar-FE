@@ -103,29 +103,29 @@
 }
 
 .red {
-  color: #ff6b6b;
+  color: #af1518;
 }
 
 .red .colorIndicator {
-  background: #ff6b6b;
+  background: #af1518;
   box-shadow: 0 0 8px rgba(255, 107, 107, 0.3);
 }
 
 .yellow {
-  color: #ffd93d;
+  color: #fdd141;
 }
 
 .yellow .colorIndicator {
-  background: #ffd93d;
+  background: #fdd141;
   box-shadow: 0 0 8px rgba(255, 217, 61, 0.3);
 }
 
 .blue {
-  color: #74c0fc;
+  color: #4b84ff;
 }
 
 .blue .colorIndicator {
-  background: #74c0fc;
+  background: #4b84ff;
   box-shadow: 0 0 8px rgba(116, 192, 252, 0.3);
 }
 

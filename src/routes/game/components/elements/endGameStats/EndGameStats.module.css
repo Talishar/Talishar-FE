@@ -322,7 +322,7 @@
 }
 
 .cardTable tbody td {
-  padding: 0.5rem 0.4rem;
+  padding: 0.1rem;
   text-align: center;
   border-bottom: 1px solid rgba(255, 255, 255, 0);
   font-size: 1.1em;
@@ -330,15 +330,30 @@
 
 .card {
   width: 55px;
-  height: 55px;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 0;
 }
 
+.cardOnePitch {
+  border: 1px solid;
+  border-color: #af1518;
+}
+
+.cardTwoPitch {
+  border: 1px solid;
+  border-color: #fdd141;
+}
+
+.cardThreePitch {
+  border: 1px solid;
+  border-color: #4b84ff;
+}
+
 .onePitch {
-  color: #ff6b6b;
+  color: #af1518;
   font-weight: 600;
   font-size: 0.9em;
   max-width: 200px;
@@ -358,7 +373,7 @@
 }
 
 .threePitch {
-  color: #4ecdc4;
+  color: #4b84ff;
   font-weight: 600;
   font-size: 0.9em;
   max-width: 200px;
@@ -425,10 +440,6 @@
     padding: 0.7rem 0.45rem;
   }
 
-  .cardTable tbody td {
-    padding: 0.55rem 0.45rem;
-  }
-
   .sectionHeader {
     font-size: 1.25em;
   }
@@ -453,7 +464,6 @@
   }
 
   .cardTable tbody td {
-    padding: 0.45rem 0.3rem;
     font-size: 0.9em;
   }
 
@@ -546,7 +556,6 @@
   }
 
   .cardTable tbody td {
-    padding: 0.4rem 0.25rem;
     font-size: 1em;
   }
 
@@ -643,10 +652,6 @@
     display: table-cell;
     padding: 0.35rem 0.2rem;
     font-size: 1em;
-  }
-
-  .cardTable tbody td {
-    padding: 0.35rem 0.2rem;
   }
 
   .firstHeadersStats{

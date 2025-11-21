@@ -3,10 +3,10 @@ import React, { ReactNode } from 'react';
 const CARDRE = /{{(.+?)\|(.+?)(?:\|(.+?))?}}/g;
 
 const COLOR_MAPPING: { [key: string]: string } = {
-  '0': 'gray',
-  '1': 'red',
-  '2': 'yellow',
-  '3': 'blue'
+  '0': '#999999',
+  '1': '#af1518',
+  '2': '#fdd141',
+  '3': '#009ddf'
 };
 
 // Whitelist of allowed HTML tags

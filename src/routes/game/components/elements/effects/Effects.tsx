@@ -11,16 +11,17 @@ export interface CardProp {
   card: Card;
   num?: number;
   name?: string;
+  imgClassName?: string;
 }
 
 export function Effect(prop: CardProp) {
-  const { card, num } = prop;
+  const { card, num, imgClassName } = prop;
   const src = generateCroppedImageUrl(prop.card.cardNumber);
 
   return (
     <CardPopUp cardNumber={prop.card.cardNumber} containerClass={styles.effect}>
       <div className={styles.overlayContainer}>
-        <img src={src} className={styles.img} />
+        <img src={src} className={`${styles.img} ${imgClassName || ''}`} />
         <CountersOverlay {...card} num={num} />
       </div>
     </CardPopUp>
