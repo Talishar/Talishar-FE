@@ -27,6 +27,35 @@
     '. . . . . . . . . . .';
 }
 
+.MirroredGameBoardGrid {
+  position: relative;
+  display: grid;
+  grid-template-columns:
+    5px var(--card-size) var(--card-size) 1fr var(--card-size)
+    var(--card-size) var(--card-size) 1fr var(--card-size) var(--card-size) 5px;
+  grid-template-rows:
+    5px repeat(3, var(--card-size)) 1fr 5px 5px 1fr repeat(3, var(--card-size))
+    5px;
+  width: 100%;
+  height: 90vh;
+  height: 90dvh;
+  gap: 1dvh;
+  padding: 1vh;
+  grid-template-areas:
+    '. . . . . . . . . . .'
+    '. pTwoBanish pTwoCount . . pTwoArsenal pTwoArsenal pTwoArsenal . pTwoLegs .'
+    '. pTwoDeck pTwoPitch . pTwoWeaponRZone pTwoHero pTwoWeaponLZone . pTwoHands pTwoChest .'
+    '. pTwoGraveyard pTwoPermanents pTwoPermanents pTwoPermanents pTwoPermanents pTwoPermanents pTwoPermanents healthWidget pTwoHead .'
+    '. . combatChain combatChain combatChain combatChain combatChain combatChain healthWidget . .'
+    '. . combatChain combatChain combatChain combatChain combatChain combatChain healthWidget . .'
+    '. . combatChain combatChain combatChain combatChain combatChain combatChain healthWidget . .'
+    '. . combatChain combatChain combatChain combatChain combatChain combatChain healthWidget . .'
+    '. pOneHead pOnePermanents pOnePermanents pOnePermanents pOnePermanents pOnePermanents pOnePermanents healthWidget pOneGraveyard .'
+    '. pOneChest pOneHands . pOneWeaponLZone pOneHero pOneWeaponRZone . pOnePitch pOneDeck .'
+    '. pOneLegs . . . pOneArsenal pOneArsenal pOneArsenal pOneCount pOneBanish .'
+    '. . . . . . . . . . .';
+}
+
 .healthWidget {
   grid-area: healthWidget;
   display: flex;
@@ -35,6 +64,12 @@
 }
 
 .gameBoardGrid > div {
+  min-width: 100%;
+  min-height: 100%;
+  z-index: 5;
+}
+
+.MirroredGameBoardGrid > div {
   min-width: 100%;
   min-height: 100%;
   z-index: 5;

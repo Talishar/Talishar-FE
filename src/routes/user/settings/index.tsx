@@ -12,8 +12,7 @@ import {
   getSettingsEntity,
   getSettingsStatus,
   Setting,
-  updateOptions,
-  settingUpdated
+  updateOptions
 } from 'features/options/optionsSlice';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import { useEffect } from 'react';
@@ -48,9 +47,6 @@ const SettingsPage = () => {
   }, [dispatch]); // Only depend on dispatch to run once on mount
 
   const handleSettingsChange = ({ name, value }: Setting) => {
-    // Update Redux state
-    dispatch(settingUpdated({ name, value }));
-    // Also persist to backend via the updateOptions API
     dispatch(
       updateOptions({
         game: profileGameInfo,
@@ -83,6 +79,7 @@ const SettingsPage = () => {
     playMat: String(settingsData['Playmat']?.value ?? '0'),
     disableFabInsights: String(settingsData['DisableFabInsights']?.value) === '1',
     disableHeroIntro: String(settingsData['DisableHeroIntro']?.value) === '1',
+    mirroredBoardLayout: settingsData[optConst.MIRRORED_BOARD_LAYOUT]?.value === '1',
   };
 
   const priorityOptions = [
@@ -124,6 +121,11 @@ const SettingsPage = () => {
     { value: 0.75, label: '75%' },
     { value: 0.8, label: '80%' },
     { value: 1.0, label: '100%' }
+  ];
+
+  const boardLayoutOptions = [
+    { value: 'normal', label: 'Talishar Classic Board', enumValue: 0 },
+    { value: 'mirrored', label: 'Mirrored Board', enumValue: 1 }
   ];
 
   return (
@@ -341,7 +343,20 @@ const SettingsPage = () => {
             <ThemeToggle />
           </Fieldset>
           
-          <Fieldset legend="Display">
+          <Fieldset legend="Visual Settings">
+
+            <RadioGroup
+              name="boardLayout"
+              options={boardLayoutOptions}
+              checked={initialValues.mirroredBoardLayout ? 1 : 0}
+              onChange={(value) =>
+                handleSettingsChange({
+                  name: optConst.MIRRORED_BOARD_LAYOUT,
+                  value: value === 1 ? '1' : '0'
+                })
+              }
+            />
+
             <VisualSlider
               label="Card Size"
               value={cookies.cardSize ?? 1}

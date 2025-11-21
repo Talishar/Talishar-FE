@@ -1,4 +1,8 @@
 import React from 'react';
+import { useAppSelector } from 'app/Hooks';
+import { getSettingsEntity } from 'features/options/optionsSlice';
+import * as optConst from 'features/options/constants';
+import classNames from 'classnames';
 
 import ArsenalZone from '../zones/arsenalZone/ArsenalZone';
 import BanishZone from '../zones/banishZone/BanishZone';
@@ -27,10 +31,18 @@ import ManualModePanel from '../leftColumn/ManualModePanel/ManualModePanel';
 
 const GridBoard = () => {
   const [cookies] = useCookies(['experimental']);
+  const settingsData = useAppSelector(getSettingsEntity);
+  const isMirroredBoard = settingsData && settingsData[optConst.MIRRORED_BOARD_LAYOUT]?.value === '1';
+  
+  const gridBoardClass = classNames({
+    [styles.gameBoardGrid]: !isMirroredBoard,
+    [styles.MirroredGameBoardGrid]: isMirroredBoard
+  });
+  
   return (
     <>
       <ManualModePanel />
-      <div className={styles.gameBoardGrid}>
+      <div className={gridBoardClass}>
         <div className={styles.pTwoLegs}>
           <LegsEqZone isPlayer={false} />
         </div>

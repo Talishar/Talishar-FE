@@ -78,6 +78,7 @@ const OptionsSettings = () => {
     manualTunic: settingsData['ManualTunic']?.value === '1',
     disableFabInsights: settingsData['DisableFabInsights']?.value === '1',
     disableHeroIntro: settingsData['DisableHeroIntro']?.value === '1',
+    mirroredBoardLayout: settingsData[optConst.MIRRORED_BOARD_LAYOUT]?.value === '1',
   };
   
   useShortcut(DEFAULT_SHORTCUTS.TOGGLE_MANUAL_MODE, () => {
@@ -123,6 +124,11 @@ const OptionsSettings = () => {
     { value: 0.75, label: '75%' },
     { value: 0.8, label: '80%' },
     { value: 1.0, label: '100%' }
+  ];
+
+  const boardLayoutOptions = [
+    { value: 'normal', label: 'Talishar Classic Board', enumValue: 0 },
+    { value: 'mirrored', label: 'Mirrored Board', enumValue: 1 }
   ];
 
   return (
@@ -331,6 +337,18 @@ const OptionsSettings = () => {
       </Fieldset>
 
       <Fieldset legend="Visual Settings">
+        <RadioGroup
+          name="boardLayout"
+          options={boardLayoutOptions}
+          checked={initialValues.mirroredBoardLayout ? 1 : 0}
+          onChange={(value) =>
+            handleSettingsChange({
+              name: optConst.MIRRORED_BOARD_LAYOUT,
+              value: value === 1 ? '1' : '0'
+            })
+          }
+        />
+
         <VisualSlider
           label="Card Size"
           value={cookies.cardSize ?? 1}
