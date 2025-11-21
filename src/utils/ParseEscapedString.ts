@@ -5,7 +5,7 @@ const CARDRE = /{{(.+?)\|(.+?)(?:\|(.+?))?}}/g;
 const COLOR_MAPPING: { [key: string]: string } = {
   '0': '#999999',
   '1': '#af1518',
-  '2': '#fdd141',
+  '2': '#daa520',
   '3': '#009ddf'
 };
 

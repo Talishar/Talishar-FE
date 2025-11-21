@@ -344,7 +344,7 @@
 
 .cardTwoPitch {
   border: 1px solid;
-  border-color: #fdd141;
+  border-color: #daa520;
 }
 
 .cardThreePitch {
@@ -363,7 +363,7 @@
 }
 
 .twoPitch {
-  color: #fdd141;
+  color: #daa520;
   font-weight: 600;
   font-size: 0.9em;
   max-width: 200px;
