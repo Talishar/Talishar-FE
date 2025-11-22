@@ -13,15 +13,15 @@ export default function PitchDisplay(prop: Displayrow) {
       : state.game.playerTwo.PitchRemaining
   );
 
-  const numericPitch = Number(pitchAmount);
+  if (pitchAmount === undefined) {
+    pitchAmount = 0;
+  }
 
-  return numericPitch !== 0 ? (
+  return (
     <div className={styles.pitchOverlay}>
       <div className={styles.pitchBackground}>
         <div className={styles.pitchValue}>{pitchAmount}</div>
       </div>
     </div>
-  ) : (
-    <div>Pitch</div>
   );
 }
