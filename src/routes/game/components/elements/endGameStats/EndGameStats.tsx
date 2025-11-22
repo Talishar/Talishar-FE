@@ -71,7 +71,6 @@ export interface EndGameStatsRef {
 }
 
 const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
-  const { isPatron } = useAuth();
   const [sortField, setSortField] = useState<'played' | 'blocked' | 'pitched' | 'hits' | 'cardName' | null>(null);
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
   const statsRef = useRef<HTMLDivElement>(null);
@@ -319,19 +318,17 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
         content += `Total Game Time,${fancyTimeFormat(playerData.totalTime)}\n\n`;
         
         content += 'GAME STATISTICS\n';
-        content += `Avg Value per Turn,${isPatron ? playerData.averageValuePerTurn : 'Patreon Only'}\n`;
+        content += `Avg Value per Turn,${playerData.averageValuePerTurn || 0}\n`;
         content += `Avg Damage Threatened per Turn,${playerData.averageDamageThreatenedPerTurn || 0}\n`;
         content += `Avg Damage Dealt per Turn,${playerData.averageDamageDealtPerTurn || 0}\n`;
         content += `Avg Damage Threatened per Card,${playerData.averageDamageThreatenedPerCard || 0}\n`;
         content += `Avg Resources Used per Turn,${playerData.averageResourcesUsedPerTurn || 0}\n`;
         content += `Avg Cards Left Over per Turn,${playerData.averageCardsLeftOverPerTurn || 0}\n`;
-        if (!isPatron) {
-          content += `Avg Combat Value per Turn,${playerData.averageCombatValuePerTurn || 0}\n`;
-        }
+        content += `Avg Combat Value per Turn,${playerData.averageCombatValuePerTurn || 0}\n`;
         content += `Total Damage Threatened,${playerData.totalDamageThreatened || 0}\n`;
         content += `Total Damage Dealt,${playerData.totalDamageDealt || 0}\n`;
-        content += `Total Damage Prevented,${isPatron ? (playerData.totalDamagePrevented || 0) : 'Patreon Only'}\n`;
-        content += `Total Life Gained,${isPatron ? (playerData.totalLifeGained || 0) : 'Patreon Only'}\n\n`;
+        content += `Total Damage Prevented,${playerData.totalDamagePrevented || 0}\n`;
+        content += `Total Life Gained,${playerData.totalLifeGained || 0}\n\n`;
         
         content += 'CARD PLAY STATS\n';
         content += 'Card Name,Played,Blocked,Pitched,Times Hit';
@@ -359,12 +356,12 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
         if (playerData.turnResults && Object.keys(playerData.turnResults).length > 0) {
           Object.keys(playerData.turnResults).forEach((key, ix) => {
             const turn = playerData.turnResults[key];
-            const totalValue = isPatron ? (+turn.damageThreatened + +turn.damageBlocked + +turn.damagePrevented + +turn.lifeGained) : 'X';
+            const totalValue = (+turn.damageThreatened + +turn.damageBlocked + +turn.damagePrevented + +turn.lifeGained);
             content += `${ix + 1},${turn.cardsUsed},${turn.cardsBlocked},${turn.cardsPitched},${turn.cardsLeft},`;
             content += `${turn.resourcesUsed},${turn.resourcesLeft},`;
-            content += `${isPatron ? turn.damageThreatened : 'X'},${turn.damageDealt},`;
-            content += `${isPatron ? turn.damageBlocked : 'X'},${isPatron ? turn.damagePrevented : 'X'},`;
-            content += `${turn.damageTaken},${isPatron ? turn.lifeGained : 'X'},${totalValue}\n`;
+            content += `${turn.damageThreatened},${turn.damageDealt},`;
+            content += `${turn.damageBlocked},${turn.damagePrevented},`;
+            content += `${turn.damageTaken},${turn.lifeGained},${totalValue}\n`;
           });
         }
         
@@ -627,15 +624,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
             {/* Avg Value per Turn - Top Priority */}
             <div className={styles.infoRow}>
               <span className={styles.infoLabel}>Avg Value per Turn:</span>
-              <span className={styles.infoValue}>
-                {isPatron ? (
-                  data.averageValuePerTurn
-                ) : (
-                  <span>
-                    {parseHtmlToReactElements("<a href='https://linktr.ee/Talishar' target='_blank'>Support us!</a>")}
-                  </span>
-                )}
-              </span>
+              <span className={styles.infoValue}>{data.averageValuePerTurn}</span>
             </div>
             
             {/* Other Average Values */}
@@ -659,13 +648,10 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
               <span className={styles.infoLabel}>Avg Cards Left Over per Turn:</span>
               <span className={styles.infoValue}>{data.averageCardsLeftOverPerTurn}</span>
             </div>
-            
-            {!isPatron && (
-              <div className={styles.infoRow}>
-                <span className={styles.infoLabel}>Avg Combat Value per Turn:</span>
-                <span className={styles.infoValue}>{data.averageCombatValuePerTurn}</span>
-              </div>
-            )}
+            <div className={styles.infoRow}>
+              <span className={styles.infoLabel}>Avg Combat Value per Turn:</span>
+              <span className={styles.infoValue}>{data.averageCombatValuePerTurn}</span>
+            </div>
             
             {/* Total Damage/Life Values */}
             <div className={styles.infoRow}>
@@ -679,28 +665,12 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
             
             <div className={styles.infoRow}>
               <span className={styles.infoLabel}>Total Damage Prevented:</span>
-              <span className={styles.infoValue}>
-                {isPatron ? (
-                  data.totalDamagePrevented
-                ) : (
-                  <span>
-                    {parseHtmlToReactElements("<a href='https://linktr.ee/Talishar' target='_blank'>Support us!</a>")}
-                  </span>
-                )}
-              </span>
+              <span className={styles.infoValue}>{data.totalDamagePrevented}</span>
             </div>
             
             <div className={styles.infoRow}>
               <span className={styles.infoLabel}>Total Life Gained:</span>
-              <span className={styles.infoValue}>
-                {isPatron ? (
-                  data.totalLifeGained
-                ) : (
-                  <span>
-                    {parseHtmlToReactElements("<a href='https://linktr.ee/Talishar' target='_blank'>Support us!</a>")}
-                  </span>
-                )}
-              </span>
+              <span className={styles.infoValue}>{data.totalLifeGained}</span>
             </div>
             
             {/* Time Values */}
@@ -928,25 +898,25 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                           {turnData.resourcesLeft}
                         </td>
                         <td className={styles.pitched}>
-                          {isPatron ? `${turnData.damageThreatened}` : `X`}
+                          {turnData.damageThreatened}
                         </td>
                         <td className={styles.pitched}>
                           {turnData.damageDealt}
                         </td>
                         <td className={styles.pitched}>
-                          {isPatron ? `${turnData.damageBlocked}` : `X`}
+                          {turnData.damageBlocked}
                         </td>
                         <td className={styles.pitched}>
-                          {isPatron ? `${turnData.damagePrevented}` : `X`}
+                          {turnData.damagePrevented}
                         </td>
                         <td className={styles.pitched}>
                           {turnData.damageTaken}
                         </td>
                         <td className={styles.pitched}>
-                          {isPatron ? `${turnData.lifeGained}` : `X`}
+                          {turnData.lifeGained}
                         </td>
                         <td className={styles.pitched}>
-                          {isPatron ? (+turnData.damageThreatened + +turnData.damageBlocked + +turnData.damagePrevented + +turnData.lifeGained).toString() : `X`}
+                          {( +turnData.damageThreatened + +turnData.damageBlocked + +turnData.damagePrevented + +turnData.lifeGained).toString()}
                         </td>
                       </tr>
                     );
@@ -983,7 +953,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                         </td>
                         <td className={styles.pitched}>
                           {/* @ts-ignore */}
-                          {isPatron ? `${data.turnResults[key]?.damageThreatened}` : `X`}
+                          {data.turnResults[key]?.damageThreatened}
                         </td>
                         <td className={styles.pitched}>
                           {/* @ts-ignore */}
@@ -991,11 +961,11 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                         </td>
                         <td className={styles.pitched}>
                           {/* @ts-ignore */}
-                          {isPatron ? `${data.turnResults[key]?.damageBlocked}` : `X`}
+                          {data.turnResults[key]?.damageBlocked}
                         </td>
                         <td className={styles.pitched}>
                           {/* @ts-ignore */}
-                          {isPatron ? `${data.turnResults[key]?.damagePrevented}` : `X`}
+                          {data.turnResults[key]?.damagePrevented}
                         </td>
                         <td className={styles.pitched}>
                           {/* @ts-ignore */}
@@ -1003,11 +973,11 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                         </td>
                         <td className={styles.pitched}>
                           {/* @ts-ignore */}
-                          {isPatron ? `${data.turnResults[key]?.lifeGained}` : `X`}
+                          {data.turnResults[key]?.lifeGained}
                         </td>
                         <td className={styles.pitched}>
                           {/* @ts-ignore */}
-                          {isPatron ? (+data.turnResults[key]?.damageThreatened + +data.turnResults[key]?.damageBlocked + +data.turnResults[key]?.damagePrevented + +data.turnResults[key]?.lifeGained).toString() : `X`}
+                          {( +data.turnResults[key]?.damageThreatened + +data.turnResults[key]?.damageBlocked + +data.turnResults[key]?.damagePrevented + +data.turnResults[key]?.lifeGained).toString()}
                         </td>
                       </tr>
                     );
