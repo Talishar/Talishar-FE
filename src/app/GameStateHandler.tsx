@@ -1,8 +1,7 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from './Hooks';
 import { getGameInfo, nextTurn, setGameStart } from 'features/game/GameSlice';
-import { shallowEqual } from 'react-redux';
 import { useKnownSearchParams } from 'hooks/useKnownSearchParams';
 import { GameLocationState } from 'interface/GameLocationState';
 import { BACKEND_URL } from 'appConstants';
@@ -10,7 +9,7 @@ import { RootState } from './Store';
 
 const GameStateHandler = () => {
   const { gameID } = useParams();
-  const gameInfo = useAppSelector(getGameInfo, shallowEqual);
+  const gameInfo = useAppSelector(getGameInfo);
   const dispatch = useAppDispatch();
   const [{ gameName = '0', playerID = '3', authKey = '' }] =
     useKnownSearchParams();
@@ -20,30 +19,48 @@ const GameStateHandler = () => {
     (state: RootState) => state.game.isFullRematch
   );
   const navigate = useNavigate();
+  
+  const sourceRef = useRef<EventSource | null>(null);
+  const gameParamsRef = useRef({ gameID: 0, playerID: 0, authKey: '' });
 
   useEffect(() => {
-    // Determine the correct gameID and playerID
     const currentGameID = parseInt(gameID ?? gameName);
     const currentPlayerID = locationState?.playerID ?? parseInt(playerID);
-    
-    // For authKey priority:
-    // 1. Use URL authKey parameter if provided (new game creation or direct link)
-    // 2. Only fall back to stored gameInfo.authKey if no URL authKey (reconnection scenario)
-    // This prevents stale authKeys from previous games being used
     const currentAuthKey = authKey || gameInfo.authKey;
     
-    dispatch(
-      setGameStart({
-        gameID: currentGameID,
-        playerID: currentPlayerID,
-        authKey: currentAuthKey
-      })
-    );
+    // Only dispatch if values actually changed
+    if (
+      gameParamsRef.current.gameID !== currentGameID ||
+      gameParamsRef.current.playerID !== currentPlayerID ||
+      gameParamsRef.current.authKey !== currentAuthKey
+    ) {
+      dispatch(
+        setGameStart({
+          gameID: currentGameID,
+          playerID: currentPlayerID,
+          authKey: currentAuthKey
+        })
+      );
+      gameParamsRef.current = { gameID: currentGameID, playerID: currentPlayerID, authKey: currentAuthKey };
+    }
+  }, [gameID, gameName, playerID, authKey, gameInfo.authKey, locationState?.playerID, dispatch]);
+
+  useEffect(() => {
+    const currentGameID = gameParamsRef.current.gameID;
+    const currentPlayerID = gameParamsRef.current.playerID;
+    const currentAuthKey = gameParamsRef.current.authKey;
+
+    // Close existing connection before creating new one
+    if (sourceRef.current) {
+      sourceRef.current.close();
+    }
+
     const source = new EventSource(
       `${BACKEND_URL}GetUpdateSSE.php?gameName=${currentGameID}&playerID=${currentPlayerID}&authKey=${currentAuthKey}`
     );
-    source.onmessage = (e) => {
-      //console.log('update data:', e.data);
+    sourceRef.current = source;
+
+    source.onmessage = () => {
       dispatch(
         nextTurn({
           game: {
@@ -59,20 +76,21 @@ const GameStateHandler = () => {
       );
     };
 
-    source.onerror = (error) => {
-      //console.error('EventSource connection error:', error);
+    source.onerror = () => {
       source.close();
     };
 
     return () => {
-      //console.log('closing eventstream');
       source.close();
+      sourceRef.current = null;
     };
-  }, [gameInfo.playerID, gameInfo.gameID, gameInfo.authKey, gameID, gameName, playerID, authKey, locationState?.playerID, dispatch]);
+  }, []);
 
   useEffect(() => {
-    isFullRematch ? navigate(`/game/lobby/${gameID}`) : null;
-  }, [isFullRematch]);
+    if (isFullRematch && gameID) {
+      navigate(`/game/lobby/${gameID}`);
+    }
+  }, [isFullRematch, gameID, navigate]);
 
   return null;
 };
