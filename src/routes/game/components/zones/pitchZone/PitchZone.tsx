@@ -25,9 +25,11 @@ export default function PitchZone(prop: Displayrow) {
     pitchZone[0].cardNumber === 'blankZone'
   ) {
     return (
+      <>
         <div className={styles.pitchZone}>
-          Pitch
+          <PitchDisplay isPlayer={isPlayer} DisplayRow={DisplayRow} />
         </div>
+      </>
     );
   }
 
