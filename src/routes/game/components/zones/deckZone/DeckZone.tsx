@@ -4,7 +4,7 @@ import { RootState } from 'app/Store';
 import Displayrow from 'interface/Displayrow';
 import CardDisplay from '../../elements/cardDisplay/CardDisplay';
 import styles from './DeckZone.module.css';
-import { setCardListFocus } from 'features/game/GameSlice';
+import { setCardListFocus, clearCardListFocus } from 'features/game/GameSlice';
 
 export const DeckZone = React.memo((prop: Displayrow) => {
   const { isPlayer } = prop;
@@ -23,6 +23,8 @@ export const DeckZone = React.memo((prop: Displayrow) => {
     isPlayer ? state.game.playerOne.Deck : state.game.playerTwo.Deck
   );
 
+  const cardListFocus = useAppSelector((state: RootState) => state.game.cardListFocus);
+
   const shufflingPlayerId = useAppSelector((state: RootState) => state.game.shufflingPlayerId);
   const isShuffling = useAppSelector((state: RootState) => state.game.isShuffling);
   const playerID = useAppSelector((state: RootState) => state.game.gameInfo.playerID);
@@ -40,12 +42,21 @@ export const DeckZone = React.memo((prop: Displayrow) => {
   const deckZoneDisplay = () => {
     if (deckZone?.length === 0) return;
     const isPlayerPronoun = isPlayer ? 'Your' : "Opponent's";
-    dispatch(
-      setCardListFocus({
-        cardList: deckZone,
-        name: `${isPlayerPronoun} Deck`
-      })
-    );
+    const zoneTitle = `${isPlayerPronoun} Deck`;
+
+    // Check if this zone is already open
+    if (cardListFocus?.active && cardListFocus?.name === zoneTitle) {
+      // Close it
+      dispatch(clearCardListFocus());
+    } else {
+      // Open it
+      dispatch(
+        setCardListFocus({
+          cardList: deckZone,
+          name: zoneTitle
+        })
+      );
+    }
   };
   return (
     <div className={styles.deckZone} onClick={deckZoneDisplay}>

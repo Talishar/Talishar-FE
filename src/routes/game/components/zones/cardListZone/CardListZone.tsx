@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
-import { clearCardListFocus, setCardListFocus, getGameInfo } from 'features/game/GameSlice';
+import { clearCardListFocus, setCardListFocus, toggleCardListSort, getGameInfo } from 'features/game/GameSlice';
 import CardDisplay from '../../elements/cardDisplay/CardDisplay';
 import { FaTimes } from 'react-icons/fa';
 import styles from './CardListZone.module.css';
@@ -12,12 +12,40 @@ import { motion, AnimatePresence } from 'framer-motion';
 import useShowModal from 'hooks/useShowModals';
 import { shallowEqual } from 'react-redux';
 
+const SORT_PREFERENCE_KEY = 'cardListZone_sortPreference';
+
 export const CardListZone = () => {
   const showModal = useShowModal();
   const cardList = useAppSelector(
     (state: RootState) => state.game.cardListFocus
   );
   const dispatch = useAppDispatch();
+  const [lastOpenedName, setLastOpenedName] = React.useState<string | null>(null);
+  const [lastSortState, setLastSortState] = React.useState<boolean | null>(null);
+
+  // Apply sort preference when a new card list is opened
+  useEffect(() => {
+    if (cardList?.active && cardList?.name && cardList?.name !== lastOpenedName && !cardList?.apiCall) {
+      const savedSortPreference = localStorage.getItem(SORT_PREFERENCE_KEY) === 'true';
+      if (savedSortPreference && !cardList.isSorted) {
+        dispatch(toggleCardListSort());
+      }
+      setLastOpenedName(cardList.name);
+      setLastSortState(cardList.isSorted ?? false);
+    } else if (!cardList?.active && lastOpenedName && lastSortState !== null) {
+      // Save sort preference when closing
+      localStorage.setItem(SORT_PREFERENCE_KEY, String(lastSortState));
+      setLastOpenedName(null);
+      setLastSortState(null);
+    }
+  }, [cardList?.active, cardList?.name, lastSortState]);
+
+  // Track sort state changes while open
+  useEffect(() => {
+    if (cardList?.active) {
+      setLastSortState(cardList.isSorted ?? false);
+    }
+  }, [cardList?.isSorted]);
 
   const reversedList = cardList?.cardList
     ? [...cardList.cardList].reverse()
@@ -25,15 +53,16 @@ export const CardListZone = () => {
 
   const closeCardList = () => {
     dispatch(clearCardListFocus());
+    setLastOpenedName(null);
   };
 
   useShortcut(DEFAULT_SHORTCUTS.CLOSE_WINDOW, closeCardList);
 
   const handleSort = () => {
-    if (cardList && cardList.cardList && cardList.name) {
-      const sortedCardList = [...cardList.cardList].sort((a, b) => b.cardNumber.localeCompare(a.cardNumber));
-      dispatch(setCardListFocus({ cardList: sortedCardList, name: cardList.name }));
-    }
+    dispatch(toggleCardListSort());
+    // Save the sort preference after toggling
+    const newSortState = !cardList?.isSorted;
+    localStorage.setItem(SORT_PREFERENCE_KEY, String(newSortState));
   };
 
   return (
@@ -67,7 +96,13 @@ export const CardListZone = () => {
                 cardList.name.includes('Your Pitch') ||
                 cardList.name.includes('Opponent\'s Pitch')
               )) && (
-              <button className={styles.button} onClick={handleSort}>Sort</button>
+              <button 
+                className={`${styles.button} ${cardList?.isSorted ? styles.active : ''}`}
+                onClick={handleSort}
+                title={cardList?.isSorted ? 'Click to unsort' : 'Click to sort'}
+              >
+                Sort
+              </button>
             )}
           </div>
           {cardList?.apiCall ? (

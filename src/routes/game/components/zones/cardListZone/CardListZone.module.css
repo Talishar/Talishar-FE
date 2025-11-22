@@ -154,6 +154,12 @@
   color: black;
 }
 
+.button.active {
+  background-color: var(--theme-primary);
+  color: black;
+  font-weight: 600;
+}
+
 .cardListCloseIcon {
   display: flex;
   flex-direction: row;

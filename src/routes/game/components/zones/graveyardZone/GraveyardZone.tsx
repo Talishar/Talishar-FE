@@ -1,7 +1,7 @@
 import React from 'react';
 import { RootState } from 'app/Store';
 import Displayrow from 'interface/Displayrow';
-import { setCardListFocus } from 'features/game/GameSlice';
+import { setCardListFocus, clearCardListFocus } from 'features/game/GameSlice';
 import CardDisplay from '../../elements/cardDisplay/CardDisplay';
 import styles from './GraveyardZone.module.css';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
@@ -14,6 +14,8 @@ export const GraveyardZone = React.memo((prop: Displayrow) => {
     isPlayer ? state.game.playerOne.Graveyard : state.game.playerTwo.Graveyard
   );
 
+  const cardListFocus = useAppSelector((state: RootState) => state.game.cardListFocus);
+
   if (graveyardZone === undefined || graveyardZone.length === 0) {
     return <div className={styles.graveyardZone}>Graveyard</div>;
   }
@@ -22,12 +24,21 @@ export const GraveyardZone = React.memo((prop: Displayrow) => {
 
   const graveyardZoneDisplay = () => {
     const isPlayerPronoun = isPlayer ? 'Your' : "Opponent's";
-    dispatch(
-      setCardListFocus({
-        cardList: graveyardZone,
-        name: `${isPlayerPronoun} Graveyard`
-      })
-    );
+    const zoneTitle = `${isPlayerPronoun} Graveyard`;
+
+    // Check if this zone is already open
+    if (cardListFocus?.active && cardListFocus?.name === zoneTitle) {
+      // Close it
+      dispatch(clearCardListFocus());
+    } else {
+      // Open it
+      dispatch(
+        setCardListFocus({
+          cardList: graveyardZone,
+          name: zoneTitle
+        })
+      );
+    }
   };
 
   const cardToDisplay = { ...graveyardZone[0], borderColor: '' };

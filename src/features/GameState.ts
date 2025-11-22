@@ -28,11 +28,13 @@ export default interface GameState {
   };
   cardListFocus?: {
     cardList?: Card[];
+    originalCardList?: Card[];
     name?: string;
     active?: boolean;
     apiCall?: boolean;
     apiQuery?: string;
     popupType?: string;
+    isSorted?: boolean;
   };
   activeLayers?: {
     active?: boolean;

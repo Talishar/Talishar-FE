@@ -321,8 +321,10 @@ export const gameSlice = createSlice({
       state.cardListFocus = {
         active: true,
         cardList: action.payload.cardList,
+        originalCardList: action.payload.cardList,
         name: action.payload.name,
-        apiCall: false
+        apiCall: false,
+        isSorted: false
       };
     },
     setCardListLoadFocus: (
@@ -341,6 +343,21 @@ export const gameSlice = createSlice({
     },
     clearCardListFocus: (state) => {
       state.cardListFocus = undefined;
+    },
+    toggleCardListSort: (state) => {
+      if (state.cardListFocus && state.cardListFocus.originalCardList) {
+        const isSorted = state.cardListFocus.isSorted;
+        if (isSorted) {
+          // Revert to original order
+          state.cardListFocus.cardList = state.cardListFocus.originalCardList;
+          state.cardListFocus.isSorted = false;
+        } else {
+          // Sort the cards
+          const sortedCardList = [...state.cardListFocus.cardList || []].sort((a, b) => b.cardNumber.localeCompare(a.cardNumber));
+          state.cardListFocus.cardList = sortedCardList;
+          state.cardListFocus.isSorted = true;
+        }
+      }
     },
     addDamagePopup: (
       state,
@@ -885,6 +902,7 @@ export const {
   setCardListFocus,
   setCardListLoadFocus,
   clearCardListFocus,
+  toggleCardListSort,
   removeCardFromHand,
   openOptionsMenu,
   closeOptionsMenu,
