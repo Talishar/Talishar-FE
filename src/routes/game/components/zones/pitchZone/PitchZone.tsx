@@ -19,15 +19,23 @@ export default function PitchZone(prop: Displayrow) {
 
   const cardListFocus = useAppSelector((state: RootState) => state.game.cardListFocus);
 
+  let pitchAmount = useAppSelector((state: RootState) =>
+    isPlayer
+      ? state.game.playerOne.PitchRemaining
+      : state.game.playerTwo.PitchRemaining
+  );
+  const numericPitch = Number(pitchAmount);
+
   if (
-    pitchZone === undefined ||
+    (pitchZone === undefined ||
     pitchZone.length === 0 ||
-    pitchZone[0].cardNumber === 'blankZone'
+    pitchZone[0].cardNumber === 'blankZone') &&
+    numericPitch === 0
   ) {
     return (
       <>
         <div className={styles.pitchZone}>
-          <PitchDisplay isPlayer={isPlayer} DisplayRow={DisplayRow} />
+          Pitch
         </div>
       </>
     );
@@ -52,9 +60,9 @@ export default function PitchZone(prop: Displayrow) {
     }
   };
 
-  const pitchOrder = [...pitchZone].reverse();
-  const numInPitch = pitchZone.length;
-  const cardToDisplay = { ...pitchZone[numInPitch - 1], borderColor: '' };
+  const pitchOrder = pitchZone ? [...pitchZone].reverse() : [];
+  const numInPitch = pitchZone ? pitchZone.length : 0;
+  const cardToDisplay = numInPitch > 0 ? { ...pitchZone![numInPitch - 1], borderColor: '' } : null;
 
   return (
     <div className={styles.pitchZone} onClick={pitchZoneDisplay}>
