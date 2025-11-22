@@ -9,7 +9,7 @@ import classNames from 'classnames';
 import { FaExclamationCircle } from 'react-icons/fa';
 import { GiCapeArmor } from 'react-icons/gi';
 import { SiBookstack } from 'react-icons/si';
-import { MdGames } from 'react-icons/md';
+import { MdGames, MdArrowDropDown, MdArrowRight } from 'react-icons/md';
 import { Form, Formik, useFormikContext } from 'formik';
 import deckValidation from './validation';
 import StickyFooter from './components/stickyFooter/StickyFooter';
@@ -54,6 +54,7 @@ const Lobby = () => {
   const [activeTab, setActiveTab] = useState<string>('equipment');
   const [unreadChat, setUnreadChat] = useState<boolean>(false);
   const [showFriendsPanel, setShowFriendsPanel] = useState(false);
+  const [filtersExpanded, setFiltersExpanded] = useState(true);
   const [width, height] = useWindowDimensions();
   const [isWideScreen, setIsWideScreen] = useState<boolean>(false);
   const [isDeckValid, setIsDeckValid] = useState(true);
@@ -613,7 +614,7 @@ const Lobby = () => {
                     </li>
                   </ul>
                   <div style={{ marginLeft: 'auto' }}>
-                    <DesktopDeckSelectionButtons deckIndexed={deckIndexed} deckSBIndexed={deckSBIndexed} activeTab={activeTab} />
+                    <DesktopDeckSelectionButtons deckIndexed={deckIndexed} deckSBIndexed={deckSBIndexed} activeTab={activeTab} filtersExpanded={filtersExpanded} setFiltersExpanded={setFiltersExpanded} />
                   </div>
                 </nav>
                 {activeTab !== 'deck' && (
@@ -624,7 +625,13 @@ const Lobby = () => {
                   />
                 )}
                 {activeTab === 'deck' && (
-                  <Deck deck={[...deckIndexed, ...deckSBIndexed]} cardDictionary={data?.deck?.cardDictionary} />
+                  <Deck 
+                    deck={[...deckIndexed, ...deckSBIndexed]} 
+                    cardDictionary={data?.deck?.cardDictionary}
+                    filtersExpanded={filtersExpanded}
+                    setFiltersExpanded={setFiltersExpanded}
+                    isDesktop={true}
+                  />
                 )}
               </div>
             ) : (
@@ -637,7 +644,13 @@ const Lobby = () => {
                   />
                 )}
                 {activeTab === 'deck' && (
-                  <Deck deck={[...deckIndexed, ...deckSBIndexed]} cardDictionary={data?.deck?.cardDictionary} />
+                  <Deck 
+                    deck={[...deckIndexed, ...deckSBIndexed]} 
+                    cardDictionary={data?.deck?.cardDictionary}
+                    filtersExpanded={filtersExpanded}
+                    setFiltersExpanded={setFiltersExpanded}
+                    isDesktop={false}
+                  />
                 )}
               </>
             )}
@@ -743,8 +756,8 @@ const Lobby = () => {
   );
 };
 
-// Component to handle Select All/None buttons for desktop - has access to Formik context
-const DesktopDeckSelectionButtons = ({ deckIndexed, deckSBIndexed, activeTab }: { deckIndexed: string[], deckSBIndexed: string[], activeTab: string }) => {
+// Component to handle Filters, Select All/None buttons for desktop - has access to Formik context
+const DesktopDeckSelectionButtons = ({ deckIndexed, deckSBIndexed, activeTab, filtersExpanded, setFiltersExpanded }: { deckIndexed: string[], deckSBIndexed: string[], activeTab: string, filtersExpanded: boolean, setFiltersExpanded: (value: boolean) => void }) => {
   const { setFieldValue } = useFormikContext<DeckResponse>();
   
   const handleSelectAll = () => {
@@ -763,6 +776,15 @@ const DesktopDeckSelectionButtons = ({ deckIndexed, deckSBIndexed, activeTab }: 
 
   return (
     <div className={styles.selectionButtons}>
+      <button
+        className={styles.selectionButton}
+        onClick={() => setFiltersExpanded(!filtersExpanded)}
+        type="button"
+        title={filtersExpanded ? 'Collapse filters' : 'Expand filters'}
+      >
+        {filtersExpanded ? <MdArrowDropDown size={24} /> : <MdArrowRight size={24} />}
+        Filters
+      </button>
       <button
         className={styles.selectionButton}
         onClick={handleSelectAll}

@@ -29,13 +29,15 @@ const TYPE_LABELS: Record<string, string> = {
 type DeckProps = {
   deck: string[];
   cardDictionary?: CardData[];
+  filtersExpanded?: boolean;
+  setFiltersExpanded?: (value: boolean) => void;
+  isDesktop?: boolean;
 };
 
-const Deck = ({ deck, cardDictionary = [] }: DeckProps) => {
+const Deck = ({ deck, cardDictionary = [], filtersExpanded = true, setFiltersExpanded, isDesktop = true }: DeckProps) => {
   const { values } = useFormikContext<DeckResponse>();
   const { getLanguage } = useLanguageSelector();
   const [sortMode, setSortMode] = useState<SortMode>('none');
-  const [filtersExpanded, setFiltersExpanded] = useState(true);
 
   const DeckSelectionButtons = () => {
     const { setFieldValue } = useFormikContext<DeckResponse>();
@@ -50,6 +52,15 @@ const Deck = ({ deck, cardDictionary = [] }: DeckProps) => {
 
     return (
       <div className={styles.selectionButtons}>
+        <button
+          className={styles.expandButton}
+          onClick={() => setFiltersExpanded && setFiltersExpanded(!filtersExpanded)}
+          type="button"
+          title={filtersExpanded ? 'Collapse filters' : 'Expand filters'}
+        >
+          {filtersExpanded ? <MdArrowDropDown size={24} /> : <MdArrowRight size={24} />}
+          Filters
+        </button>
         <button
           className={styles.selectionButton}
           onClick={handleSelectAll}
@@ -606,16 +617,7 @@ const Deck = ({ deck, cardDictionary = [] }: DeckProps) => {
 
   return (
     <div className={styles.deckContainer}>
-      <div className={styles.sortControls}>
-        <button
-          className={styles.expandButton}
-          onClick={() => setFiltersExpanded(!filtersExpanded)}
-          type="button"
-          title={filtersExpanded ? 'Collapse filters' : 'Expand filters'}
-        >
-          {filtersExpanded ? <MdArrowDropDown size={24} /> : <MdArrowRight size={24} />}
-          Filters
-        </button>
+      <div className={styles.sortControls} style={{ padding: isDesktop ? (filtersExpanded ? '15px' : 0) : '15px' }}>
         <DeckSelectionButtons />
         {filtersExpanded && (
           <>
