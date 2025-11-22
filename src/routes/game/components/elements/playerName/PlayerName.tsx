@@ -237,8 +237,8 @@ export default function PlayerName(player: Player) {
     <div className={`${styles.playerName} ${getStatusClass()} ${player.isPlayer ? styles.playerTwo : ''}`} ref={dropdownRef}>
       <div className={styles.nameContainer}>
         <div className={styles.nameContent}>
-          {iconMap.filter(icon => icon.condition).map(icon => (
-            <a href={icon.href} target="_blank" rel="noopener noreferrer" key={icon.src}>
+          {iconMap.filter(icon => icon.condition).map((icon, index) => (
+            <a href={icon.href} target="_blank" rel="noopener noreferrer" key={`${icon.title}-${index}`}>
               <img
                 className={styles.icon}
                 src={icon.src}
