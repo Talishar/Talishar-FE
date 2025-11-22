@@ -34,6 +34,17 @@ export interface EndGameData {
   totalDamagePrevented?: number;
   averageCombatValuePerTurn?: number;
   averageValuePerTurn?: number;
+  totalDamageThreatened_NoLast?: number;
+  totalDamageDealt_NoLast?: number;
+  averageDamageThreatenedPerTurn_NoLast?: number;
+  averageDamageDealtPerTurn_NoLast?: number;
+  averageDamageThreatenedPerCard_NoLast?: number;
+  averageResourcesUsedPerTurn_NoLast?: number;
+  averageCardsLeftOverPerTurn_NoLast?: number;
+  totalLifeGained_NoLast?: number;
+  totalDamagePrevented_NoLast?: number;
+  averageCombatValuePerTurn_NoLast?: number;
+  averageValuePerTurn_NoLast?: number;
   yourTime?: number;
   totalTime?: number;
 }
@@ -76,6 +87,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
   const statsRef = useRef<HTMLDivElement>(null);
   const [isExporting, setIsExporting] = useState(false);
   const [heroDataUrls, setHeroDataUrls] = useState<{ yourHero?: string; opponentHero?: string }>({});
+  const [excludeLastTurn, setExcludeLastTurn] = useState(false);
   
   const [turnSortField, setTurnSortField] = useState<'turnNo' | 'cardsUsed' | 'cardsBlocked' | 'cardsPitched' | 'cardsLeft' | 'resourcesUsed' | 'resourcesLeft' | 'damageThreatened' | 'damageDealt' | 'damageBlocked' | 'damagePrevented' | 'damageTaken' | 'lifeGained' | 'totalValue' | null>(null);
   const [turnSortDirection, setTurnSortDirection] = useState<'asc' | 'desc'>('desc');
@@ -153,6 +165,40 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
       setTurnSortDirection('desc');
     }
   };
+
+  // Helper function to get stats based on toggle
+  const getStats = () => {
+    if (excludeLastTurn) {
+      return {
+        totalDamageThreatened: data.totalDamageThreatened_NoLast,
+        totalDamageDealt: data.totalDamageDealt_NoLast,
+        averageDamageThreatenedPerTurn: data.averageDamageThreatenedPerTurn_NoLast,
+        averageDamageDealtPerTurn: data.averageDamageDealtPerTurn_NoLast,
+        averageDamageThreatenedPerCard: data.averageDamageThreatenedPerCard_NoLast,
+        averageResourcesUsedPerTurn: data.averageResourcesUsedPerTurn_NoLast,
+        averageCardsLeftOverPerTurn: data.averageCardsLeftOverPerTurn_NoLast,
+        totalLifeGained: data.totalLifeGained_NoLast,
+        totalDamagePrevented: data.totalDamagePrevented_NoLast,
+        averageCombatValuePerTurn: data.averageCombatValuePerTurn_NoLast,
+        averageValuePerTurn: data.averageValuePerTurn_NoLast,
+      };
+    }
+    return {
+      totalDamageThreatened: data.totalDamageThreatened,
+      totalDamageDealt: data.totalDamageDealt,
+      averageDamageThreatenedPerTurn: data.averageDamageThreatenedPerTurn,
+      averageDamageDealtPerTurn: data.averageDamageDealtPerTurn,
+      averageDamageThreatenedPerCard: data.averageDamageThreatenedPerCard,
+      averageResourcesUsedPerTurn: data.averageResourcesUsedPerTurn,
+      averageCardsLeftOverPerTurn: data.averageCardsLeftOverPerTurn,
+      totalLifeGained: data.totalLifeGained,
+      totalDamagePrevented: data.totalDamagePrevented,
+      averageCombatValuePerTurn: data.averageCombatValuePerTurn,
+      averageValuePerTurn: data.averageValuePerTurn,
+    };
+  };
+
+  const stats = useMemo(getStats, [excludeLastTurn, data]);
 
   const handleExportScreenshot = async () => {
     if (!statsRef.current) return;
@@ -519,39 +565,35 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                   <th className={`${styles.firstHeadersStats} ${styles.hideOnExport}`}></th>
                   <th 
                     onClick={() => handleSort('cardName')}
-                    style={{ cursor: 'pointer', userSelect: 'none' }}
+                    className={styles.sortableHeader}
                     title="Click to sort"
                   >
                     Card Name {sortField === 'cardName' && (sortDirection === 'desc' ? '↓' : '↑')}
                   </th>
                   <th 
-                    className={styles.headersStats} 
+                    className={`${styles.headersStats} ${styles.sortableHeader}`}
                     onClick={() => handleSort('played')}
-                    style={{ cursor: 'pointer', userSelect: 'none' }}
                     title="Click to sort"
                   >
                     Played {sortField === 'played' && (sortDirection === 'desc' ? '↓' : '↑')}
                   </th>
                   <th 
-                    className={styles.headersStats}
+                    className={`${styles.headersStats} ${styles.sortableHeader}`}
                     onClick={() => handleSort('blocked')}
-                    style={{ cursor: 'pointer', userSelect: 'none' }}
                     title="Click to sort"
                   >
                     Blocked {sortField === 'blocked' && (sortDirection === 'desc' ? '↓' : '↑')}
                   </th>
                   <th 
-                    className={styles.headersStats}
+                    className={`${styles.headersStats} ${styles.sortableHeader}`}
                     onClick={() => handleSort('pitched')}
-                    style={{ cursor: 'pointer', userSelect: 'none' }}
                     title="Click to sort"
                   >
                     Pitched {sortField === 'pitched' && (sortDirection === 'desc' ? '↓' : '↑')}
                   </th>
                   <th 
-                    className={styles.headersStats}
+                    className={`${styles.headersStats} ${styles.sortableHeader}`}
                     onClick={() => handleSort('hits')}
-                    style={{ cursor: 'pointer', userSelect: 'none' }}
                     title="Click to sort"
                   >
                     Times Hit {sortField === 'hits' && (sortDirection === 'desc' ? '↓' : '↑')}
@@ -613,64 +655,75 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
 
         {/* Game Time & Summary Section */}
         <div className={styles.statsSection}>
-          <h2 className={styles.sectionHeader}>Game Time & Summary</h2>
+          <div className={styles.sectionHeaderContainer}>
+            <h2 className={styles.sectionHeader}>Game Time & Summary</h2>
+            <label className={styles.excludeLastTurnLabel}>
+              <input
+                type="checkbox"
+                checked={excludeLastTurn}
+                onChange={(e) => setExcludeLastTurn(e.target.checked)}
+                className={styles.excludeLastTurnCheckbox}
+              />
+              <span className={styles.excludeLastTurnText}>Exclude Last Turn</span>
+            </label>
+          </div>
           
           {/* Unified Stats Box */}
           <div className={styles.infoBox}>
             <div className={styles.disclaimer}>
-              <em>First turn omitted for first player</em>
+              <em>Turn 0 automatically omitted for average calculations</em>
             </div>
             
             {/* Avg Value per Turn - Top Priority */}
             <div className={styles.infoRow}>
               <span className={styles.infoLabel}>Avg Value per Turn:</span>
-              <span className={styles.infoValue}>{data.averageValuePerTurn}</span>
+              <span className={styles.infoValue}>{stats.averageValuePerTurn}</span>
             </div>
             
             {/* Other Average Values */}
             <div className={styles.infoRow}>
               <span className={styles.infoLabel}>Avg Damage Threatened per Turn:</span>
-              <span className={styles.infoValue}>{data.averageDamageThreatenedPerTurn}</span>
+              <span className={styles.infoValue}>{stats.averageDamageThreatenedPerTurn}</span>
             </div>
             <div className={styles.infoRow}>
               <span className={styles.infoLabel}>Avg Damage Dealt per Turn:</span>
-              <span className={styles.infoValue}>{data.averageDamageDealtPerTurn}</span>
+              <span className={styles.infoValue}>{stats.averageDamageDealtPerTurn}</span>
             </div>
             <div className={styles.infoRow}>
               <span className={styles.infoLabel}>Avg Damage Threatened per Card:</span>
-              <span className={styles.infoValue}>{data.averageDamageThreatenedPerCard}</span>
+              <span className={styles.infoValue}>{stats.averageDamageThreatenedPerCard}</span>
             </div>
             <div className={styles.infoRow}>
               <span className={styles.infoLabel}>Avg Resources Used per Turn:</span>
-              <span className={styles.infoValue}>{data.averageResourcesUsedPerTurn}</span>
+              <span className={styles.infoValue}>{stats.averageResourcesUsedPerTurn}</span>
             </div>
             <div className={styles.infoRow}>
               <span className={styles.infoLabel}>Avg Cards Left Over per Turn:</span>
-              <span className={styles.infoValue}>{data.averageCardsLeftOverPerTurn}</span>
+              <span className={styles.infoValue}>{stats.averageCardsLeftOverPerTurn}</span>
             </div>
             <div className={styles.infoRow}>
               <span className={styles.infoLabel}>Avg Combat Value per Turn:</span>
-              <span className={styles.infoValue}>{data.averageCombatValuePerTurn}</span>
+              <span className={styles.infoValue}>{stats.averageCombatValuePerTurn}</span>
             </div>
             
             {/* Total Damage/Life Values */}
             <div className={styles.infoRow}>
               <span className={styles.infoLabel}>Total Damage Threatened:</span>
-              <span className={styles.infoValue}>{data.totalDamageThreatened}</span>
+              <span className={styles.infoValue}>{stats.totalDamageThreatened}</span>
             </div>
             <div className={styles.infoRow}>
               <span className={styles.infoLabel}>Total Damage Dealt:</span>
-              <span className={styles.infoValue}>{data.totalDamageDealt}</span>
+              <span className={styles.infoValue}>{stats.totalDamageDealt}</span>
             </div>
             
             <div className={styles.infoRow}>
               <span className={styles.infoLabel}>Total Damage Prevented:</span>
-              <span className={styles.infoValue}>{data.totalDamagePrevented}</span>
+              <span className={styles.infoValue}>{stats.totalDamagePrevented}</span>
             </div>
             
             <div className={styles.infoRow}>
               <span className={styles.infoLabel}>Total Life Gained:</span>
-              <span className={styles.infoValue}>{data.totalLifeGained}</span>
+              <span className={styles.infoValue}>{stats.totalLifeGained}</span>
             </div>
             
             {/* Time Values */}
@@ -750,9 +803,6 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
       {/* Turn by Turn Breakdown - Full Width Section */}
       <div className={styles.turnBreakdownSection}>
         <h2 className={styles.sectionHeader}>Turn by Turn Breakdown</h2>
-        <div className={styles.disclaimer}>
-          <em>First turn omitted for first player</em>
-        </div>
         <div className={styles.tableContainer}>
           <table className={styles.cardTable}>
               <thead>
@@ -776,97 +826,97 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                 </tr>
                 <tr>
                   <th onClick={() => handleTurnSort('turnNo')}
-                    style={{ cursor: 'pointer', userSelect: 'none' }}
+                    className={styles.sortableHeader}
                     title="Click to sort">
                   # {turnSortField === 'turnNo' && (turnSortDirection === 'desc' ? '↓' : '↑')}
                   </th>
                   <th
                     onClick={() => handleTurnSort('cardsUsed')}
-                    style={{ cursor: 'pointer', userSelect: 'none' }}
+                    className={styles.sortableHeader}
                     title="Click to sort"
                   >
                     Played {turnSortField === 'cardsUsed' && (turnSortDirection === 'desc' ? '↓' : '↑')}
                   </th>
                   <th
                     onClick={() => handleTurnSort('cardsBlocked')}
-                    style={{ cursor: 'pointer', userSelect: 'none' }}
+                    className={styles.sortableHeader}
                     title="Click to sort"
                   >
                     Blocked {turnSortField === 'cardsBlocked' && (turnSortDirection === 'desc' ? '↓' : '↑')}
                   </th>
                   <th
                     onClick={() => handleTurnSort('cardsPitched')}
-                    style={{ cursor: 'pointer', userSelect: 'none' }}
+                    className={styles.sortableHeader}
                     title="Click to sort"
                   >
                     Pitched {turnSortField === 'cardsPitched' && (turnSortDirection === 'desc' ? '↓' : '↑')}
                   </th>
                   <th
                     onClick={() => handleTurnSort('cardsLeft')}
-                    style={{ cursor: 'pointer', userSelect: 'none' }}
+                    className={styles.sortableHeader}
                     title="Click to sort"
                   >
                     Left {turnSortField === 'cardsLeft' && (turnSortDirection === 'desc' ? '↓' : '↑')}
                   </th>
                   <th
                     onClick={() => handleTurnSort('resourcesUsed')}
-                    style={{ cursor: 'pointer', userSelect: 'none' }}
+                    className={styles.sortableHeader}
                     title="Click to sort"
                   >
                     Used {turnSortField === 'resourcesUsed' && (turnSortDirection === 'desc' ? '↓' : '↑')}
                   </th>
                   <th
                     onClick={() => handleTurnSort('resourcesLeft')}
-                    style={{ cursor: 'pointer', userSelect: 'none' }}
+                    className={styles.sortableHeader}
                     title="Click to sort"
                   >
                     Left {turnSortField === 'resourcesLeft' && (turnSortDirection === 'desc' ? '↓' : '↑')}
                   </th>
                   <th
                     onClick={() => handleTurnSort('damageThreatened')}
-                    style={{ cursor: 'pointer', userSelect: 'none' }}
+                    className={styles.sortableHeader}
                     title="Click to sort"
                   >
                     Threatened {turnSortField === 'damageThreatened' && (turnSortDirection === 'desc' ? '↓' : '↑')}
                   </th>
                   <th
                     onClick={() => handleTurnSort('damageDealt')}
-                    style={{ cursor: 'pointer', userSelect: 'none' }}
+                    className={styles.sortableHeader}
                     title="Click to sort"
                   >
                     Dealt {turnSortField === 'damageDealt' && (turnSortDirection === 'desc' ? '↓' : '↑')}
                   </th>
                   <th
                     onClick={() => handleTurnSort('damageBlocked')}
-                    style={{ cursor: 'pointer', userSelect: 'none' }}
+                    className={styles.sortableHeader}
                     title="Click to sort"
                   >
                     Blocked {turnSortField === 'damageBlocked' && (turnSortDirection === 'desc' ? '↓' : '↑')}
                   </th>
                   <th
                     onClick={() => handleTurnSort('damagePrevented')}
-                    style={{ cursor: 'pointer', userSelect: 'none' }}
+                    className={styles.sortableHeader}
                     title="Click to sort"
                   >
                     Prevented {turnSortField === 'damagePrevented' && (turnSortDirection === 'desc' ? '↓' : '↑')}
                   </th>
                   <th
                     onClick={() => handleTurnSort('damageTaken')}
-                    style={{ cursor: 'pointer', userSelect: 'none' }}
+                    className={styles.sortableHeader}
                     title="Click to sort"
                   >
                     Taken {turnSortField === 'damageTaken' && (turnSortDirection === 'desc' ? '↓' : '↑')}
                   </th>
                   <th
                     onClick={() => handleTurnSort('lifeGained')}
-                    style={{ cursor: 'pointer', userSelect: 'none' }}
+                    className={styles.sortableHeader}
                     title="Click to sort"
                   >
                     Life Gained {turnSortField === 'lifeGained' && (turnSortDirection === 'desc' ? '↓' : '↑')}
                   </th>
                   <th
                     onClick={() => handleTurnSort('totalValue')}
-                    style={{ cursor: 'pointer', userSelect: 'none' }}
+                    className={styles.sortableHeader}
                     title="Click to sort"
                   >
                     This Turn {turnSortField === 'totalValue' && (turnSortDirection === 'desc' ? '↓' : '↑')}
@@ -878,7 +928,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                   sortedTurnResults.map((turnData, ix) => {
                     return (
                       <tr key={`turnList${ix}`}>
-                        <td className={styles.turnNo}>{Object.keys(data.turnResults).indexOf(turnData.key) + 1}</td>
+                        <td className={styles.turnNo}>{data.firstPlayer === data.playerID ? Object.keys(data.turnResults).indexOf(turnData.key) : Object.keys(data.turnResults).indexOf(turnData.key) + 1}</td>
                         <td className={styles.played}>
                           {turnData.cardsUsed}
                         </td>
@@ -926,7 +976,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                   Object.keys(data.turnResults).map((key, ix) => {
                     return (
                       <tr key={`turnList${ix}`}>
-                        <td className={styles.turnNo}>{ix + 1}</td>
+                        <td className={styles.turnNo}>{data.firstPlayer === data.playerID ? ix : ix + 1}</td>
                         <td className={styles.played}>
                           {/* @ts-ignore */}
                           {data.turnResults[key]?.cardsUsed}

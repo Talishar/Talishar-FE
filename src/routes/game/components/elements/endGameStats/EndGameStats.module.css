@@ -704,3 +704,32 @@
     font-size: 1em;
   }
 }
+
+/* Inline style replacements */
+.sectionHeaderContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.excludeLastTurnLabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.excludeLastTurnCheckbox {
+  cursor: pointer;
+  width: 18px;
+  height: 18px;
+}
+
+.excludeLastTurnText {
+  user-select: none;
+}
+
+.sortableHeader {
+  cursor: pointer;
+  user-select: none;
+}
