@@ -32,11 +32,14 @@ import ManualModePanel from '../leftColumn/ManualModePanel/ManualModePanel';
 const GridBoard = () => {
   const [cookies] = useCookies(['experimental']);
   const settingsData = useAppSelector(getSettingsEntity);
-  const isMirroredBoard = settingsData && settingsData[optConst.MIRRORED_BOARD_LAYOUT]?.value === '1';
+  const isMirroredOpponent = settingsData?.[optConst.MIRRORED_BOARD_LAYOUT]?.value === '1';
+  const isMirroredPlayer = settingsData?.[optConst.MIRRORED_PLAYER_BOARD_LAYOUT]?.value === '1';
   
   const gridBoardClass = classNames({
-    [styles.gameBoardGrid]: !isMirroredBoard,
-    [styles.MirroredGameBoardGrid]: isMirroredBoard
+    [styles.gameBoardGrid]: !isMirroredOpponent && !isMirroredPlayer,
+    [styles.MirroredOpponentGameBoardGrid]: isMirroredOpponent && !isMirroredPlayer,
+    [styles.MirroredPlayerGameBoardGrid]: isMirroredPlayer && !isMirroredOpponent,
+    [styles.MirroredBothGameBoardGrid]: isMirroredOpponent && isMirroredPlayer
   });
   
   return (

@@ -86,6 +86,8 @@ const ProfileSettings = () => {
     playMat: String(settingsData['Playmat']?.value ?? '0'),
     disableFabInsights: String(settingsData['DisableFabInsights']?.value) === '1',
     disableHeroIntro: String(settingsData['DisableHeroIntro']?.value) === '1',
+    mirroredBoardLayout: settingsData?.[optConst.MIRRORED_BOARD_LAYOUT]?.value === '1',
+    mirroredPlayerBoardLayout: settingsData?.[optConst.MIRRORED_PLAYER_BOARD_LAYOUT]?.value === '1',
   };
 
   const priorityOptions = [
@@ -342,6 +344,32 @@ const ProfileSettings = () => {
           <ThemeToggle />
         </Fieldset>
   
+        <Fieldset legend="Board Layout">
+          <CheckboxSetting
+            name="mirroredOpponent"
+            label="Mirror Opponent Board"
+            checked={initialValues.mirroredBoardLayout}
+            onChange={() =>
+              handleSettingsChange({
+                name: optConst.MIRRORED_BOARD_LAYOUT,
+                value: initialValues.mirroredBoardLayout ? '0' : '1'
+              })
+            }
+          />
+
+          <CheckboxSetting
+            name="mirroredPlayer"
+            label="Mirror Player Board"
+            checked={initialValues.mirroredPlayerBoardLayout}
+            onChange={() =>
+              handleSettingsChange({
+                name: optConst.MIRRORED_PLAYER_BOARD_LAYOUT,
+                value: initialValues.mirroredPlayerBoardLayout ? '0' : '1'
+              })
+            }
+          />
+        </Fieldset>
+
         <Fieldset legend="Display">
           <VisualSlider
             label="Card Size"

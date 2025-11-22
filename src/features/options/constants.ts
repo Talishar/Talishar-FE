@@ -21,6 +21,7 @@ export const MANUAL_TUNIC = 'ManualTunic';
 export const DISABLE_FABINSIGHTS = 'DisableFabInsights';
 export const DISABLE_HERO_INTRO = 'DisableHeroIntro';
 export const MIRRORED_BOARD_LAYOUT = 'MirroredBoardLayout';
+export const MIRRORED_PLAYER_BOARD_LAYOUT = 'MirroredPlayerBoardLayout';
 
 export enum HOLD_PRIORITY_ENUM {
   AUTO = 0,
