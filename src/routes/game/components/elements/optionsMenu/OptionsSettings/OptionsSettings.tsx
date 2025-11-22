@@ -80,6 +80,7 @@ const OptionsSettings = () => {
     disableHeroIntro: settingsData['DisableHeroIntro']?.value === '1',
     mirroredBoardLayout: settingsData[optConst.MIRRORED_BOARD_LAYOUT]?.value === '1',
     mirroredPlayerBoardLayout: settingsData[optConst.MIRRORED_PLAYER_BOARD_LAYOUT]?.value === '1',
+    alwaysShowCounters: String(settingsData[optConst.ALWAYS_SHOW_COUNTERS]?.value) === '1',
   };
   
   useShortcut(DEFAULT_SHORTCUTS.TOGGLE_MANUAL_MODE, () => {
@@ -353,6 +354,18 @@ const OptionsSettings = () => {
             handleSettingsChange({
               name: optConst.MIRRORED_PLAYER_BOARD_LAYOUT,
               value: initialValues.mirroredPlayerBoardLayout ? '0' : '1'
+            })
+          }
+        />
+
+        <CheckboxSetting
+          name="alwaysShowCounters"
+          label="Always Show Counters on Cards"
+          checked={initialValues.alwaysShowCounters}
+          onChange={() =>
+            handleSettingsChange({
+              name: optConst.ALWAYS_SHOW_COUNTERS,
+              value: initialValues.alwaysShowCounters ? '0' : '1'
             })
           }
         />

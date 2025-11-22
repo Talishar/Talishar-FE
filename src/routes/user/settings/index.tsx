@@ -81,6 +81,7 @@ const SettingsPage = () => {
     disableHeroIntro: String(settingsData['DisableHeroIntro']?.value) === '1',
     mirroredBoardLayout: settingsData?.[optConst.MIRRORED_BOARD_LAYOUT]?.value === '1',
     mirroredPlayerBoardLayout: settingsData?.[optConst.MIRRORED_PLAYER_BOARD_LAYOUT]?.value === '1',
+    alwaysShowCounters: String(settingsData[optConst.ALWAYS_SHOW_COUNTERS]?.value) === '1',
   };
 
   const priorityOptions = [
@@ -365,6 +366,18 @@ const SettingsPage = () => {
               }
             />
 
+            <CheckboxSetting
+              name="alwaysShowCounters"
+              label="Always Show Counters on Cards"
+              checked={initialValues.alwaysShowCounters}
+              onChange={() =>
+                handleSettingsChange({
+                  name: optConst.ALWAYS_SHOW_COUNTERS,
+                  value: initialValues.alwaysShowCounters ? '0' : '1'
+                })
+              }
+            />
+
             <VisualSlider
               label="Card Size"
               value={cookies.cardSize ?? 1}
@@ -394,6 +407,18 @@ const SettingsPage = () => {
               min={10}
               max={100}
               onChange={(value) => setCookie('playmatIntensity', value)}
+            />
+
+            <CheckboxSetting
+              name="alwaysShowCounters"
+              label="Always Show Counters (disable hover-to-show)"
+              checked={initialValues.alwaysShowCounters}
+              onChange={() =>
+                handleSettingsChange({
+                  name: optConst.ALWAYS_SHOW_COUNTERS,
+                  value: initialValues.alwaysShowCounters ? '0' : '1'
+                })
+              }
             />
           </Fieldset>
 
