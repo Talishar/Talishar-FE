@@ -8,7 +8,7 @@ import { GameLocationState } from 'interface/GameLocationState';
 import { BACKEND_URL } from 'appConstants';
 import { RootState } from './Store';
 
-const ExperimentalGameStateHandler = () => {
+const GameStateHandler = () => {
   const { gameID } = useParams();
   const gameInfo = useAppSelector(getGameInfo, shallowEqual);
   const dispatch = useAppDispatch();
@@ -77,4 +77,4 @@ const ExperimentalGameStateHandler = () => {
   return null;
 };
 
-export default ExperimentalGameStateHandler;
+export default GameStateHandler;
