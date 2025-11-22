@@ -44,7 +44,7 @@
   grid-template-areas:
     '. . . . . . . . . . .'
     '. pTwoBanish pTwoCount . . pTwoArsenal pTwoArsenal pTwoArsenal . pTwoLegs .'
-    '. pTwoDeck pTwoPitch . pTwoWeaponRZone pTwoHero pTwoWeaponLZone . pTwoHands pTwoChest .'
+    '. pTwoDeck pTwoPitch . pTwoWeaponLZone pTwoHero pTwoWeaponRZone . pTwoHands pTwoChest .'
     '. pTwoGraveyard pTwoPermanents pTwoPermanents pTwoPermanents pTwoPermanents pTwoPermanents pTwoPermanents healthWidget pTwoHead .'
     '. . combatChain combatChain combatChain combatChain combatChain combatChain healthWidget . .'
     '. . combatChain combatChain combatChain combatChain combatChain combatChain healthWidget . .'
@@ -102,7 +102,7 @@
   grid-template-areas:
     '. . . . . . . . . . .'
     '. pTwoBanish pTwoCount . . pTwoArsenal pTwoArsenal pTwoArsenal . pTwoLegs .'
-    '. pTwoDeck pTwoPitch . pTwoWeaponRZone pTwoHero pTwoWeaponLZone . pTwoHands pTwoChest .'
+    '. pTwoDeck pTwoPitch . pTwoWeaponLZone pTwoHero pTwoWeaponRZone . pTwoHands pTwoChest .'
     '. pTwoGraveyard pTwoPermanents pTwoPermanents pTwoPermanents pTwoPermanents pTwoPermanents pTwoPermanents healthWidget pTwoHead .'
     '. . combatChain combatChain combatChain combatChain combatChain combatChain healthWidget . .'
     '. . combatChain combatChain combatChain combatChain combatChain combatChain healthWidget . .'
