@@ -687,7 +687,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                 Avg Value per Turn:
                 <span 
                   className={styles.tooltipIcon}
-                  title="(Damage Threatened + Damage Blocked + Life Gained + Damage Prevented) ÷ Number of Turns (Excluding turn 0)"
+                  title="(Damage Threatened + Damage Blocked + Life Gained - Life Lost + Damage Prevented) ÷ Number of Turns (Excluding turn 0)"
                 >
                 ?
                 </span>
