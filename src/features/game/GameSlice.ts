@@ -450,6 +450,7 @@ export const gameSlice = createSlice({
         playerID: number;
         gameID: number;
         authKey: string;
+        username?: string;
       }>
     ) => {
       state.isFullRematch = false;
@@ -487,8 +488,8 @@ export const gameSlice = createSlice({
         if (state.gameInfo.playerID === 3) {
           state.gameInfo.authKey = 'spectator';
         } else if (action.payload.authKey !== '') {
-          // Save new authKey to storage
-          saveGameAuthKey(newGameID, action.payload.authKey, state.gameInfo.playerID);
+          // Save new authKey to storage with username
+          saveGameAuthKey(newGameID, action.payload.authKey, state.gameInfo.playerID, action.payload.username);
           state.gameInfo.authKey = action.payload.authKey;
         } else {
           // No authKey provided for new game (shouldn't happen, but handle gracefully)
@@ -497,8 +498,8 @@ export const gameSlice = createSlice({
       } else {
         // RECONNECTION to same game: Prefer provided authKey, fall back to stored/existing
         if (action.payload.authKey !== '') {
-          // Update with fresh authKey from server
-          saveGameAuthKey(newGameID, action.payload.authKey, state.gameInfo.playerID);
+          // Update with fresh authKey from server with username
+          saveGameAuthKey(newGameID, action.payload.authKey, state.gameInfo.playerID, action.payload.username);
           state.gameInfo.authKey = action.payload.authKey;
         } else if (!state.gameInfo.authKey || state.gameInfo.authKey === '') {
           // Try to load from storage if we don't have one
@@ -634,6 +635,7 @@ export const gameSlice = createSlice({
         playerID: number;
         gameID: number;
         authKey: string;
+        username?: string;
       }>
     ) => {
       state.isFullRematch = false;
@@ -646,7 +648,7 @@ export const gameSlice = createSlice({
         //And the payload is giving us an auth key
         if (state.gameInfo.playerID == 3) state.gameInfo.authKey = 'spectator';
         else if (action.payload.authKey !== '') {
-          saveGameAuthKey(action.payload.gameID, action.payload.authKey);
+          saveGameAuthKey(action.payload.gameID, action.payload.authKey, action.payload.playerID, action.payload.username);
           state.gameInfo.authKey = action.payload.authKey;
         }
         //Else try to set from local storage
