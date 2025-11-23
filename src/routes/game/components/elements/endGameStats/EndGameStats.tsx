@@ -32,6 +32,7 @@ export interface EndGameData {
   averageCardsLeftOverPerTurn?: number;
   totalLifeGained?: number;
   totalDamagePrevented?: number;
+  totalLifeLost?: number;
   averageCombatValuePerTurn?: number;
   averageValuePerTurn?: number;
   totalDamageThreatened_NoLast?: number;
@@ -43,6 +44,7 @@ export interface EndGameData {
   averageCardsLeftOverPerTurn_NoLast?: number;
   totalLifeGained_NoLast?: number;
   totalDamagePrevented_NoLast?: number;
+  totalLifeLost_NoLast?: number;
   averageCombatValuePerTurn_NoLast?: number;
   averageValuePerTurn_NoLast?: number;
   yourTime?: number;
@@ -74,6 +76,7 @@ export interface TurnResult {
   resourcesUsed: number;
   resourcesLeft: number;
   lifeGained: number;
+  lifeLost: number;
 }
 
 export interface EndGameStatsRef {
@@ -89,7 +92,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
   const [heroDataUrls, setHeroDataUrls] = useState<{ yourHero?: string; opponentHero?: string }>({});
   const [excludeLastTurn, setExcludeLastTurn] = useState(false);
   
-  const [turnSortField, setTurnSortField] = useState<'turnNo' | 'cardsUsed' | 'cardsBlocked' | 'cardsPitched' | 'cardsLeft' | 'resourcesUsed' | 'resourcesLeft' | 'damageThreatened' | 'damageDealt' | 'damageBlocked' | 'damagePrevented' | 'damageTaken' | 'lifeGained' | 'totalValue' | null>(null);
+  const [turnSortField, setTurnSortField] = useState<'turnNo' | 'cardsUsed' | 'cardsBlocked' | 'cardsPitched' | 'cardsLeft' | 'resourcesUsed' | 'resourcesLeft' | 'damageThreatened' | 'damageDealt' | 'damageBlocked' | 'damagePrevented' | 'damageTaken' | 'lifeGained' | 'lifeLost' | 'totalValue' | null>(null);
   const [turnSortDirection, setTurnSortDirection] = useState<'asc' | 'desc'>('desc');
 
   const imageToDataUrl = async (heroName: string): Promise<string | null> => {
@@ -155,7 +158,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
     }
   };
 
-  const handleTurnSort = (field: 'turnNo' | 'cardsUsed' | 'cardsBlocked' | 'cardsPitched' | 'cardsLeft' | 'resourcesUsed' | 'resourcesLeft' | 'damageThreatened' | 'damageDealt' | 'damageBlocked' | 'damagePrevented' | 'damageTaken' | 'lifeGained' | 'totalValue') => {
+  const handleTurnSort = (field: 'turnNo' | 'cardsUsed' | 'cardsBlocked' | 'cardsPitched' | 'cardsLeft' | 'resourcesUsed' | 'resourcesLeft' | 'damageThreatened' | 'damageDealt' | 'damageBlocked' | 'damagePrevented' | 'damageTaken' | 'lifeGained' | 'lifeLost' | 'totalValue') => {
     if (turnSortField === field) {
       // Toggle direction if same field
       setTurnSortDirection(turnSortDirection === 'desc' ? 'asc' : 'desc');
@@ -179,6 +182,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
         averageCardsLeftOverPerTurn: data.averageCardsLeftOverPerTurn_NoLast,
         totalLifeGained: data.totalLifeGained_NoLast,
         totalDamagePrevented: data.totalDamagePrevented_NoLast,
+        totalLifeLost: data.totalLifeLost_NoLast,
         averageCombatValuePerTurn: data.averageCombatValuePerTurn_NoLast,
         averageValuePerTurn: data.averageValuePerTurn_NoLast,
       };
@@ -193,6 +197,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
       averageCardsLeftOverPerTurn: data.averageCardsLeftOverPerTurn,
       totalLifeGained: data.totalLifeGained,
       totalDamagePrevented: data.totalDamagePrevented,
+      totalLifeLost: data.totalLifeLost,
       averageCombatValuePerTurn: data.averageCombatValuePerTurn,
       averageValuePerTurn: data.averageValuePerTurn,
     };
@@ -374,7 +379,8 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
         content += `Total Damage Threatened,${playerData.totalDamageThreatened || 0}\n`;
         content += `Total Damage Dealt,${playerData.totalDamageDealt || 0}\n`;
         content += `Total Damage Prevented,${playerData.totalDamagePrevented || 0}\n`;
-        content += `Total Life Δ,${playerData.totalLifeGained || 0}\n\n`;
+        content += `Total Life Gained,${playerData.totalLifeGained || 0}\n\n`;
+        content += `Total Life Lost,${playerData.totalLifeLost || 0}\n\n`;
         
         content += 'CARD PLAY STATS\n';
         content += 'Card Name,Played,Blocked,Pitched,Times Hit';
@@ -402,12 +408,13 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
         if (playerData.turnResults && Object.keys(playerData.turnResults).length > 0) {
           Object.keys(playerData.turnResults).forEach((key, ix) => {
             const turn = playerData.turnResults[key];
-            const totalValue = (+turn.damageThreatened + +turn.damageBlocked + +turn.damagePrevented + +turn.lifeGained);
+            const totalValue = (+turn.damageThreatened + +turn.damageBlocked + +turn.damagePrevented + +turn.lifeGained + +turn.lifeLost);
             content += `${ix + 1},${turn.cardsUsed},${turn.cardsBlocked},${turn.cardsPitched},${turn.cardsLeft},`;
             content += `${turn.resourcesUsed},${turn.resourcesLeft},`;
             content += `${turn.damageThreatened},${turn.damageDealt},`;
             content += `${turn.damageBlocked},${turn.damagePrevented},`;
             content += `${turn.damageTaken},${turn.lifeGained},${totalValue}\n`;
+            content += `${turn.lifeLost}\n`;
           });
         }
         
@@ -505,8 +512,8 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
         aValue = Object.keys(data.turnResults).indexOf(a.key);
         bValue = Object.keys(data.turnResults).indexOf(b.key);
       } else if (turnSortField === 'totalValue') {
-        aValue = (a.damageThreatened || 0) + (a.damageBlocked || 0) + (a.damagePrevented || 0) + (a.lifeGained || 0);
-        bValue = (b.damageThreatened || 0) + (b.damageBlocked || 0) + (b.damagePrevented || 0) + (b.lifeGained || 0);
+        aValue = (a.damageThreatened || 0) + (a.damageBlocked || 0) + (a.damagePrevented || 0) + (a.lifeGained || 0) + (a.lifeLost || 0);
+        bValue = (b.damageThreatened || 0) + (b.damageBlocked || 0) + (b.damagePrevented || 0) + (b.lifeGained || 0) + (b.lifeLost || 0);
       } else {
         aValue = a[turnSortField] || 0;
         bValue = b[turnSortField] || 0;
@@ -730,8 +737,12 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
             </div>
             
             <div className={styles.infoRow}>
-              <span className={styles.infoLabel}>Total Life Δ:</span>
+              <span className={styles.infoLabel}>Total Life Gained:</span>
               <span className={styles.infoValue}>{stats.totalLifeGained}</span>
+            </div>
+            <div className={styles.infoRow}>
+              <span className={styles.infoLabel}>Total Life Lost:</span>
+              <span className={styles.infoValue}>{stats.totalLifeLost}</span>
             </div>
             
             {/* Time Values */}
@@ -825,7 +836,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                   <th colSpan={5} className={styles.headersStats}>
                     Damage
                   </th>
-                  <th colSpan={1} className={styles.headersStats}>
+                  <th colSpan={2} className={styles.headersStats}>
                     Life
                   </th>
                   <th colSpan={1} className={styles.headersStats}>
@@ -920,7 +931,14 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                     className={styles.sortableHeader}
                     title="Click to sort"
                   >
-                    Life Δ {turnSortField === 'lifeGained' && (turnSortDirection === 'desc' ? '↓' : '↑')}
+                    Life Gained {turnSortField === 'lifeGained' && (turnSortDirection === 'desc' ? '↓' : '↑')}
+                  </th>
+                  <th
+                    onClick={() => handleTurnSort('lifeLost')}
+                    className={styles.sortableHeader}
+                    title="Click to sort"
+                  >
+                    Life Lost {turnSortField === 'lifeLost' && (turnSortDirection === 'desc' ? '↓' : '↑')}
                   </th>
                   <th
                     onClick={() => handleTurnSort('totalValue')}
@@ -974,7 +992,10 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                           {turnData.lifeGained}
                         </td>
                         <td className={styles.pitched}>
-                          {( +turnData.damageThreatened + +turnData.damageBlocked + +turnData.damagePrevented + +turnData.lifeGained).toString()}
+                          {turnData.lifeLost}
+                        </td>
+                        <td className={styles.pitched}>
+                          {( +turnData.damageThreatened + +turnData.damageBlocked + +turnData.damagePrevented + +turnData.lifeGained + +turnData.lifeLost ).toString()}
                         </td>
                       </tr>
                     );
@@ -1035,7 +1056,11 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                         </td>
                         <td className={styles.pitched}>
                           {/* @ts-ignore */}
-                          {( +data.turnResults[key]?.damageThreatened + +data.turnResults[key]?.damageBlocked + +data.turnResults[key]?.damagePrevented + +data.turnResults[key]?.lifeGained).toString()}
+                          {data.turnResults[key]?.lifeLost}
+                        </td>
+                        <td className={styles.pitched}>
+                          {/* @ts-ignore */}
+                          {( +data.turnResults[key]?.damageThreatened + +data.turnResults[key]?.damageBlocked + +data.turnResults[key]?.damagePrevented + +data.turnResults[key]?.lifeGained + +data.turnResults[key]?.lifeLost ).toString()}
                         </td>
                       </tr>
                     );
