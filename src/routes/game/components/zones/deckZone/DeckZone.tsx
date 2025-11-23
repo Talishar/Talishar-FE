@@ -4,11 +4,14 @@ import { RootState } from 'app/Store';
 import Displayrow from 'interface/Displayrow';
 import CardDisplay from '../../elements/cardDisplay/CardDisplay';
 import styles from './DeckZone.module.css';
-import { setCardListFocus } from 'features/game/GameSlice';
+import { setCardListFocus, clearCardListFocus } from 'features/game/GameSlice';
+import * as optConst from 'features/options/constants';
 
 export const DeckZone = React.memo((prop: Displayrow) => {
   const { isPlayer } = prop;
   const dispatch = useAppDispatch();
+  const settingsData = useAppSelector((state: RootState) => state.settings.entities);
+  const alwaysShowCounters = String(settingsData?.[optConst.ALWAYS_SHOW_COUNTERS]?.value) === '1';
 
   const showCount = true;
 
@@ -22,6 +25,8 @@ export const DeckZone = React.memo((prop: Displayrow) => {
   const deckZone = useAppSelector((state: RootState) =>
     isPlayer ? state.game.playerOne.Deck : state.game.playerTwo.Deck
   );
+
+  const cardListFocus = useAppSelector((state: RootState) => state.game.cardListFocus);
 
   const shufflingPlayerId = useAppSelector((state: RootState) => state.game.shufflingPlayerId);
   const isShuffling = useAppSelector((state: RootState) => state.game.isShuffling);
@@ -40,20 +45,54 @@ export const DeckZone = React.memo((prop: Displayrow) => {
   const deckZoneDisplay = () => {
     if (deckZone?.length === 0) return;
     const isPlayerPronoun = isPlayer ? 'Your' : "Opponent's";
-    dispatch(
-      setCardListFocus({
-        cardList: deckZone,
-        name: `${isPlayerPronoun} Deck`
-      })
-    );
+    const zoneTitle = `${isPlayerPronoun} Deck`;
+
+    // Check if this zone is already open
+    if (cardListFocus?.active && cardListFocus?.name === zoneTitle) {
+      // Close it
+      dispatch(clearCardListFocus());
+    } else {
+      // Open it
+      dispatch(
+        setCardListFocus({
+          cardList: deckZone,
+          name: zoneTitle
+        })
+      );
+    }
   };
+  // Calculate number of visible layers based on deck size
+  const isMobileOrTablet = window.innerWidth <= 1024;
+  const visibleLayers = deckCards;
+  const layerOffsetY = 0.25; // pixels per layer (down)
+  const layerOffsetX = -0.25; // pixels per layer (left)
+  const baseOffsetY = visibleLayers * 0.24 * -1; // pixels (up, based on card count)
+  const baseOffsetX = visibleLayers * 0.24; // pixels (right, based on card count)
+
   return (
     <div className={styles.deckZone} onClick={deckZoneDisplay}>
-      <CardDisplay
-        card={deckBack}
-        num={showCount ? deckCards : undefined}
-        isShuffling={shouldAnimateShuffling} 
-      />
+      <div className={styles.zoneStack}>
+        {/* Render background layers for 3D effect - only on desktop */}
+        {!isMobileOrTablet && Array.from({ length: visibleLayers - 1 }).map((_, index) => (
+          <div
+            key={`layer-${index}`}
+            className={styles.zoneLayer}
+            style={{
+              transform: `translateY(${baseOffsetY}px) translateX(${baseOffsetX}px) translateY(${(index + 1) * layerOffsetY}px) translateX(${(index + 1) * layerOffsetX}px)`,
+              zIndex: visibleLayers - index - 1
+            }}
+          />
+        ))}
+        {/* Main card on top */}
+        <div className={styles.cardWrapper} style={!isMobileOrTablet ? { transform: `translateY(${baseOffsetY}px) translateX(${baseOffsetX}px)` } : {}}>
+          <CardDisplay
+            card={deckBack}
+            num={showCount ? deckCards : undefined}
+            isShuffling={shouldAnimateShuffling}
+            showCountersOnHover={!alwaysShowCounters}
+          />
+        </div>
+      </div>
     </div>
   );
 });

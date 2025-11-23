@@ -1,0 +1,120 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+}
+
+.modal {
+  background-color: #2a2a2a;
+  border-radius: 8px;
+  border: 1px solid #444;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
+  width: 100%;
+  max-width: 400px;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid #444;
+}
+
+.header h2 {
+  margin: 0;
+  font-size: 18px;
+  color: #fff;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: #999;
+  cursor: pointer;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.closeButton:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.textarea {
+  flex: 1;
+  padding: 16px;
+  border: none;
+  background-color: #1a1a1a;
+  color: #fff;
+  font-family: inherit;
+  font-size: 14px;
+  resize: none;
+  outline: none;
+}
+
+.textarea::placeholder {
+  color: #666;
+}
+
+.charCount {
+  padding: 0 16px 8px 16px;
+  font-size: 12px;
+  color: #888;
+  text-align: right;
+}
+
+.footer {
+  display: flex;
+  gap: 8px;
+  padding: 16px;
+  border-top: 1px solid #444;
+}
+
+.buttonCancel,
+.buttonSave {
+  flex: 1;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.buttonCancel {
+  background-color: #444;
+  color: #fff;
+}
+
+.buttonCancel:hover {
+  background-color: #555;
+}
+
+.buttonSave {
+  background-color: #4a9eff;
+  color: #fff;
+}
+
+.buttonSave:hover {
+  background-color: #3a8ee5;
+}

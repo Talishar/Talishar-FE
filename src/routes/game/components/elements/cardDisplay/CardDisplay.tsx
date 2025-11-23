@@ -22,11 +22,12 @@ export interface CardProp {
   card?: Card;
   activeCombatChain?: CombatChainLink;
   isPlayer?: boolean;
-  isShuffling?: boolean; 
+  isShuffling?: boolean;
+  showCountersOnHover?: boolean;
 }
 
 export const CardDisplay = (prop: CardProp) => {
-  const { card, preventUseOnClick, activeCombatChain, num, isPlayer, isShuffling } = prop;
+  const { card, preventUseOnClick, activeCombatChain, num, isPlayer, isShuffling, showCountersOnHover } = prop;
   const dispatch = useAppDispatch();
   const cardBack = useAppSelector((state: RootState) =>
     isPlayer ? state.game.playerOne.CardBack : state.game.playerTwo.CardBack
@@ -84,7 +85,8 @@ export const CardDisplay = (prop: CardProp) => {
   });
 
   const cardStyle = classNames(styles.card, styles.normalSize, {
-    [styles.biggerSize]: prop.makeMeBigger
+    [styles.biggerSize]: prop.makeMeBigger,
+    [styles.showCountersOnHover]: showCountersOnHover
   });
 
   const renderNumUses = (numUses: number) => {

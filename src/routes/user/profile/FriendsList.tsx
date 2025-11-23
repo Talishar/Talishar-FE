@@ -6,6 +6,7 @@ import { MdPersonAdd, MdCheckCircle, MdCancel, MdBlock, MdEdit } from 'react-ico
 import { IoMdArrowDropright } from 'react-icons/io';
 import styles from './FriendsList.module.css';
 import { Friend } from 'interface/API/FriendListAPI.php';
+import { createPatreonIconMap } from 'utils/patronIcons';
 
 interface FriendsListProps {
   className?: string;
@@ -234,7 +235,32 @@ export const FriendsList: React.FC<FriendsListProps> = ({ className }) => {
             <tbody>
               {sentData.sentRequests.map((request: any) => (
                 <tr key={request.friendshipId}>
-                  <td>{request.recipientUsername}</td>
+                  <td>
+                    <div className={styles.friendNameContainer}>
+                      <div className={styles.friendIcons}>
+                        {createPatreonIconMap(
+                          request.isContributor,
+                          request.isPvtVoidPatron,
+                          request.isPatron,
+                          false
+                        )
+                          .filter(icon => icon.condition)
+                          .map(icon => (
+                            <a
+                              key={icon.src}
+                              href={icon.href}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              title={icon.title}
+                              className={styles.friendIcon}
+                            >
+                              <img src={icon.src} alt={icon.title} />
+                            </a>
+                          ))}
+                      </div>
+                      <span>{request.recipientUsername}</span>
+                    </div>
+                  </td>
                   <td className={styles.deleteColumn}>
                     <button
                       className={styles.rejectButton}
@@ -265,7 +291,32 @@ export const FriendsList: React.FC<FriendsListProps> = ({ className }) => {
             <tbody>
               {pendingData.requests.map((request: any) => (
                 <tr key={request.friendshipId}>
-                  <td>{request.requesterUsername}</td>
+                  <td>
+                    <div className={styles.friendNameContainer}>
+                      <div className={styles.friendIcons}>
+                        {createPatreonIconMap(
+                          request.isContributor,
+                          request.isPvtVoidPatron,
+                          request.isPatron,
+                          false
+                        )
+                          .filter(icon => icon.condition)
+                          .map(icon => (
+                            <a
+                              key={icon.src}
+                              href={icon.href}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              title={icon.title}
+                              className={styles.friendIcon}
+                            >
+                              <img src={icon.src} alt={icon.title} />
+                            </a>
+                          ))}
+                      </div>
+                      <span>{request.requesterUsername}</span>
+                    </div>
+                  </td>
                   <td className={styles.deleteColumn}>
                     <button
                       className={styles.acceptButton}
@@ -307,6 +358,27 @@ export const FriendsList: React.FC<FriendsListProps> = ({ className }) => {
                   <tr key={friend.friendUserId}>
                     <td>
                       <div className={styles.friendNameContainer}>
+                        <div className={styles.friendIcons}>
+                          {createPatreonIconMap(
+                            friend.isContributor,
+                            friend.isPvtVoidPatron,
+                            friend.isPatron,
+                            false
+                          )
+                            .filter(icon => icon.condition)
+                            .map(icon => (
+                              <a
+                                key={icon.src}
+                                href={icon.href}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                title={icon.title}
+                                className={styles.friendIcon}
+                              >
+                                <img src={icon.src} alt={icon.title} />
+                              </a>
+                            ))}
+                        </div>
                         <span className={styles.username}>{friend.username}</span>
                         {friend.nickname && (
                           <span className={styles.nickname}>({friend.nickname})</span>

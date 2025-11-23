@@ -321,8 +321,10 @@ export const gameSlice = createSlice({
       state.cardListFocus = {
         active: true,
         cardList: action.payload.cardList,
+        originalCardList: action.payload.cardList,
         name: action.payload.name,
-        apiCall: false
+        apiCall: false,
+        isSorted: false
       };
     },
     setCardListLoadFocus: (
@@ -341,6 +343,99 @@ export const gameSlice = createSlice({
     },
     clearCardListFocus: (state) => {
       state.cardListFocus = undefined;
+    },
+    toggleCardListSort: (state) => {
+      if (state.cardListFocus && state.cardListFocus.originalCardList) {
+        const isSorted = state.cardListFocus.isSorted;
+        if (isSorted) {
+          // Revert to original order
+          state.cardListFocus.cardList = state.cardListFocus.originalCardList;
+          state.cardListFocus.isSorted = false;
+        } else {
+          // Sort the cards
+          const sortedCardList = [...state.cardListFocus.cardList || []].sort((a, b) => b.cardNumber.localeCompare(a.cardNumber));
+          state.cardListFocus.cardList = sortedCardList;
+          state.cardListFocus.isSorted = true;
+        }
+      }
+    },
+    addDamagePopup: (
+      state,
+      action: PayloadAction<{
+        isPlayer: boolean;
+        amount: number;
+      }>
+    ) => {
+      const id = `${Date.now()}-${Math.random()}`;
+      const popup = { id, amount: action.payload.amount };
+      if (action.payload.isPlayer) {
+        if (!state.damagePopups) {
+          state.damagePopups = { playerOne: [], playerTwo: [] };
+        }
+        state.damagePopups.playerOne.push(popup);
+      } else {
+        if (!state.damagePopups) {
+          state.damagePopups = { playerOne: [], playerTwo: [] };
+        }
+        state.damagePopups.playerTwo.push(popup);
+      }
+    },
+    removeDamagePopup: (
+      state,
+      action: PayloadAction<{
+        isPlayer: boolean;
+        id: string;
+      }>
+    ) => {
+      if (!state.damagePopups) return;
+      if (action.payload.isPlayer) {
+        state.damagePopups.playerOne = state.damagePopups.playerOne.filter(
+          (p) => p.id !== action.payload.id
+        );
+      } else {
+        state.damagePopups.playerTwo = state.damagePopups.playerTwo.filter(
+          (p) => p.id !== action.payload.id
+        );
+      }
+    },
+    addHealingPopup: (
+      state,
+      action: PayloadAction<{
+        isPlayer: boolean;
+        amount: number;
+      }>
+    ) => {
+      const id = `${Date.now()}-${Math.random()}`;
+      const popup = { id, amount: action.payload.amount };
+      if (action.payload.isPlayer) {
+        if (!state.healingPopups) {
+          state.healingPopups = { playerOne: [], playerTwo: [] };
+        }
+        state.healingPopups.playerOne.push(popup);
+      } else {
+        if (!state.healingPopups) {
+          state.healingPopups = { playerOne: [], playerTwo: [] };
+        }
+        state.healingPopups.playerTwo.push(popup);
+      }
+    },
+    removeHealingPopup: (
+      state,
+      action: PayloadAction<{
+        isPlayer: boolean;
+        id: string;
+      }>
+    ) => {
+      if (!state.healingPopups) return;
+      if (action.payload.isPlayer) {
+        state.healingPopups.playerOne = state.healingPopups.playerOne.filter(
+          (p) => p.id !== action.payload.id
+        );
+      } else {
+        state.healingPopups.playerTwo = state.healingPopups.playerTwo.filter(
+          (p) => p.id !== action.payload.id
+        );
+      }
     },
     openOptionsMenu: (state) => {
       state.optionsMenu = { active: true };
@@ -677,6 +772,7 @@ export const gameSlice = createSlice({
       state.activeLayers = action.payload.activeLayers;
       state.oldCombatChain = action.payload.oldCombatChain;
       state.chatLog = action.payload.chatLog;
+      state.opponentIsTyping = action.payload.opponentIsTyping ?? false;
       state.amIActivePlayer = action.payload.amIActivePlayer;
       state.turnPlayer = action.payload.turnPlayer;
       state.turnPhase = action.payload.turnPhase;
@@ -845,6 +941,7 @@ export const {
   setCardListFocus,
   setCardListLoadFocus,
   clearCardListFocus,
+  toggleCardListSort,
   removeCardFromHand,
   openOptionsMenu,
   closeOptionsMenu,
@@ -868,7 +965,11 @@ export const {
   setFirstWarningShown,
   setSecondWarningShown,
   resetInactivityTimer,
-  stillHereButtonClicked
+  stillHereButtonClicked,
+  addDamagePopup,
+  removeDamagePopup,
+  addHealingPopup,
+  removeHealingPopup
 } = actions;
 
 export const getGameInfo = (state: RootState) => state.game.gameInfo;

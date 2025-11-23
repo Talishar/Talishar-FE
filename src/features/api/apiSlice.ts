@@ -37,6 +37,10 @@ import {
   DeleteAccountAPIRequest,
   DeleteAccountAPIResponse
 } from 'interface/API/DeleteAccountAPI.php';
+import {
+  AddFavoriteDeckRequest,
+  AddFavoriteDeckResponse
+} from 'interface/API/AddFavoriteDeck.php';
 import { PatreonLoginResponse } from 'routes/user/profile/linkpatreon/linkPatreon';
 import { UserProfileAPIResponse } from 'interface/API/UserProfileAPI.php';
 import { SubmitChatAPI } from 'interface/API/SubmitChat.php';
@@ -293,6 +297,16 @@ export const apiSlice = createApi({
       query: (body: DeleteDeckAPIRequest) => {
         return {
           url: URL_END_POINT.DELETE_DECK,
+          method: 'POST',
+          body: body,
+          responseHandler: parseResponse
+        };
+      }
+    }),
+    addFavoriteDeck: builder.mutation<AddFavoriteDeckResponse, AddFavoriteDeckRequest>({
+      query: (body: AddFavoriteDeckRequest) => {
+        return {
+          url: URL_END_POINT.ADD_FAVORITE_DECK,
           method: 'POST',
           body: body,
           responseHandler: parseResponse
@@ -767,6 +781,32 @@ export const apiSlice = createApi({
           responseHandler: parseResponse
         };
       }
+    }),
+    reportTyping: builder.mutation<any, { gameID: number; playerID: number }>({
+      query: ({ gameID = 0, playerID = 0 }) => {
+        return {
+          url: 'APIs/ChatTyping.php',
+          method: 'GET',
+          params: {
+            gameName: gameID,
+            playerID: playerID
+          },
+          responseHandler: parseResponse
+        };
+      }
+    }),
+    checkOpponentTyping: builder.query<{ opponentIsTyping: boolean }, { gameID: number; playerID: number }>({
+      query: ({ gameID = 0, playerID = 0 }) => {
+        return {
+          url: 'APIs/CheckOpponentTyping.php',
+          method: 'GET',
+          params: {
+            gameName: gameID,
+            playerID: playerID
+          },
+          responseHandler: parseResponse
+        };
+      }
     })
   })
 });
@@ -779,6 +819,7 @@ export const {
   useGetCosmeticsQuery,
   useGetFavoriteDecksQuery,
   useDeleteDeckMutation,
+  useAddFavoriteDeckMutation,
   useDeleteAccountMutation,
   useLoginMutation,
   useLoginWithCookieQuery,
@@ -826,5 +867,7 @@ export const {
   useGetUnreadMessageCountQuery,
   useGetUnreadMessageCountByFriendQuery,
   useCreateQuickGameMutation,
-  useGetLastActiveGameQuery
+  useGetLastActiveGameQuery,
+  useReportTypingMutation,
+  useCheckOpponentTypingQuery
 } = apiSlice;

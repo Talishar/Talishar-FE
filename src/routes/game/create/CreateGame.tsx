@@ -376,6 +376,7 @@ const CreateGame = () => {
                   <option value="Looking for meta heroes">Looking for meta heroes</option>
                   <option value="Looking for a specific hero">Looking for a specific hero</option>
                   <option value="Playing spicy brews">Playing spicy brews</option>
+                  <option value="CC legal including unreleased cards">CC legal including PEN</option>
                   <option value="Casual play">Casual play</option>
                   <option value="New player help">New player help</option>
                   <option value="Learning a new hero">Learning a new hero</option>
@@ -438,6 +439,7 @@ const CreateGame = () => {
                 <optgroup label="Open Formats (No Restrictions)">
                   <option value={GAME_FORMAT.OPEN_CC}>Open Classic Constructed</option>
                   <option value={GAME_FORMAT.OPEN_LL_CC}>Open Living Legend</option>
+                  <option value={GAME_FORMAT.OPEN_SAGE}>Open Silver Age</option>
                   <option value={GAME_FORMAT.OPEN_BLITZ}>Open Blitz</option>
                 </optgroup>
               </select>

@@ -146,7 +146,8 @@ export const GAME_FORMAT = {
   PRECON: 'precon',
   COMPETITIVE_LL: "compllcc",
   SAGE: "sage",
-  COMPETITIVE_SAGE: "compsage"
+  COMPETITIVE_SAGE: "compsage",
+  OPEN_SAGE: 'opensage'
   //OPEN_LL_BLITZ: 'openformatllblitz'
 };
 
@@ -168,7 +169,8 @@ export const GAME_FORMAT_NUMBER = {
   PRECON: '-2',
   COMPETITIVE_LL: '13',
   SAGE: '14',
-  COMPETITIVE_SAGE: '15'
+  COMPETITIVE_SAGE: '15',
+  OPEN_SAGE: '16'
 };
 
 // Create a mapping from number format to string format for normalization
@@ -306,6 +308,7 @@ export const URL_END_POINT = {
   DELETE_ACCOUNT: `AccountFiles/DeleteAccountAPI.php`,
   GET_COSMETICS: `APIs/GetCosmetics.php`,
   DELETE_DECK: `APIs/DeleteDeckAPI.php`,
+  ADD_FAVORITE_DECK: `APIs/AddFavoriteDeck.php`,
   PATREON_LOGIN: `AccountFiles/PatreonLoginAPI.php`,
   LOAD_BUG_REPORT: `LoadBugReport.php`,
   SUBMIT_LOBBY_INPUT: 'APIs/SubmitLobbyInput.php',

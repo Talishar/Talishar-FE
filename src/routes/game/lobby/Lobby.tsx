@@ -9,7 +9,7 @@ import classNames from 'classnames';
 import { FaExclamationCircle } from 'react-icons/fa';
 import { GiCapeArmor } from 'react-icons/gi';
 import { SiBookstack } from 'react-icons/si';
-import { MdGames } from 'react-icons/md';
+import { MdGames, MdArrowDropDown, MdArrowRight } from 'react-icons/md';
 import { Form, Formik, useFormikContext } from 'formik';
 import deckValidation from './validation';
 import StickyFooter from './components/stickyFooter/StickyFooter';
@@ -38,6 +38,7 @@ import { useNavigate } from 'react-router-dom';
 import CardPortal from '../components/elements/cardPortal/CardPortal';
 import Matchups from './components/matchups/Matchups';
 import { GameLocationState } from 'interface/GameLocationState';
+import { saveGameAuthKey } from 'utils/LocalKeyManagement';
 import CardPopUp from '../components/elements/cardPopUp/CardPopUp';
 import { getGameInfo, setHeroInfo } from 'features/game/GameSlice';
 import useSound from 'use-sound';
@@ -53,6 +54,7 @@ const Lobby = () => {
   const [activeTab, setActiveTab] = useState<string>('equipment');
   const [unreadChat, setUnreadChat] = useState<boolean>(false);
   const [showFriendsPanel, setShowFriendsPanel] = useState(false);
+  const [filtersExpanded, setFiltersExpanded] = useState(true);
   const [width, height] = useWindowDimensions();
   const [isWideScreen, setIsWideScreen] = useState<boolean>(false);
   const [isDeckValid, setIsDeckValid] = useState(true);
@@ -73,6 +75,12 @@ const Lobby = () => {
   const { isPatron } = useAuth();
   const settingsData = useAppSelector(getSettingsEntity);
   const isMuted = settingsData['MuteSound']?.value === '1';
+
+  // Note tooltip state
+  const [opponentNote, setOpponentNote] = useState('');
+  const [isNoteTooltipOpen, setIsNoteTooltipOpen] = useState(false);
+  const [noteTooltipPosition, setNoteTooltipPosition] = useState({ top: 0, left: 0 });
+  const opponentNameRef = React.useRef<HTMLHeadingElement>(null);
 
   let { data, isLoading, refetch } = useGetLobbyInfoQuery({
     gameName: gameID,
@@ -154,6 +162,36 @@ const Lobby = () => {
 
   const handleMatchupClick = () => setActiveTab('matchups');
 
+  // Note functions
+  const getPlayerNoteKey = (username: string) => `player_note_${username}`;
+
+  const loadPlayerNote = (username: string) => {
+    try {
+      return localStorage.getItem(getPlayerNoteKey(username)) || '';
+    } catch {
+      return '';
+    }
+  };
+
+  const handleNoteTooltipOpen = () => {
+    if (opponentNameRef.current && gameLobby?.theirName) {
+      const note = loadPlayerNote(gameLobby.theirName);
+      if (note) {
+        const rect = opponentNameRef.current.getBoundingClientRect();
+        setNoteTooltipPosition({
+          top: rect.bottom + window.scrollY + 8,
+          left: rect.left + window.scrollX
+        });
+        setOpponentNote(note);
+        setIsNoteTooltipOpen(true);
+      }
+    }
+  };
+
+  const handleNoteTooltipClose = () => {
+    setIsNoteTooltipOpen(false);
+  };
+
   if (!data || !data.deck || Object.keys(data).length === 0) {
     data = testData;
   }
@@ -220,6 +258,7 @@ const Lobby = () => {
       case GAME_FORMAT.OPEN_CC:
       case GAME_FORMAT.OPEN_BLITZ:
       case GAME_FORMAT.OPEN_LL_CC:
+      case GAME_FORMAT.OPEN_SAGE:
         return { deckSize: 0, maxDeckSize: 99999 };
       default:
         return { deckSize: 60, maxDeckSize: 99999 };
@@ -288,7 +327,8 @@ const Lobby = () => {
     !acceptedDisclaimer &&
     (data.format === GAME_FORMAT.OPEN_CC ||
       data.format === GAME_FORMAT.OPEN_BLITZ ||
-      data.format === GAME_FORMAT.OPEN_LL_CC
+      data.format === GAME_FORMAT.OPEN_LL_CC ||
+      data.format === GAME_FORMAT.OPEN_SAGE
       // data.format === GAME_FORMAT.OPEN_LL_BLITZ
     );
   //const needToDoDisclaimer = false;
@@ -337,6 +377,14 @@ const Lobby = () => {
 
     try {
       const data: any = await submitSideboardMutation(requestBody).unwrap();
+      
+      // If game started, capture and store the auth key for future use
+      if (data?.gameStarted && data?.authKey && gameID) {
+        saveGameAuthKey(gameID, data.authKey, playerID);
+        console.log("Game started! Auth key stored. Waiting for lobby to be ready...");
+        // The existing useEffect in this component will navigate to /game/play/{gameID}
+        // when gameLobby?.isMainGameReady becomes true
+      }
     } catch (err) {
       console.error(err);
     } finally {
@@ -413,6 +461,9 @@ const Lobby = () => {
         }}
         onSubmit={handleFormSubmission}
         validationSchema={deckValidation(deckSize, maxDeckSize, handsTotal)}
+        validateOnChange={true}
+        validateOnBlur={true}
+        validateOnMount={true}
         enableReinitialize
       >
         <Form className={styles.form}>
@@ -445,7 +496,13 @@ const Lobby = () => {
                   style={{ backgroundImage: rightPic }}
                 >
                   <div className={styles.dimPic}>
-                    <h3 aria-busy={!gameLobby?.theirName}>
+                    <h3 
+                      ref={opponentNameRef}
+                      onMouseEnter={handleNoteTooltipOpen}
+                      onMouseLeave={handleNoteTooltipClose}
+                      aria-busy={!gameLobby?.theirName}
+                      style={{ cursor: opponentNote ? 'help' : 'default' }}
+                    >
                       {String(gameLobby?.theirName ?? '').substring(0, 15)}
                     </h3>
                     <div className={styles.heroName}>
@@ -559,7 +616,7 @@ const Lobby = () => {
                     </li>
                   </ul>
                   <div style={{ marginLeft: 'auto' }}>
-                    <DesktopDeckSelectionButtons deckIndexed={deckIndexed} deckSBIndexed={deckSBIndexed} activeTab={activeTab} />
+                    <DesktopDeckSelectionButtons deckIndexed={deckIndexed} deckSBIndexed={deckSBIndexed} activeTab={activeTab} filtersExpanded={filtersExpanded} setFiltersExpanded={setFiltersExpanded} />
                   </div>
                 </nav>
                 {activeTab !== 'deck' && (
@@ -570,7 +627,13 @@ const Lobby = () => {
                   />
                 )}
                 {activeTab === 'deck' && (
-                  <Deck deck={[...deckIndexed, ...deckSBIndexed]} cardDictionary={data?.deck?.cardDictionary} />
+                  <Deck 
+                    deck={[...deckIndexed, ...deckSBIndexed]} 
+                    cardDictionary={data?.deck?.cardDictionary}
+                    filtersExpanded={filtersExpanded}
+                    setFiltersExpanded={setFiltersExpanded}
+                    isDesktop={true}
+                  />
                 )}
               </div>
             ) : (
@@ -583,7 +646,13 @@ const Lobby = () => {
                   />
                 )}
                 {activeTab === 'deck' && (
-                  <Deck deck={[...deckIndexed, ...deckSBIndexed]} cardDictionary={data?.deck?.cardDictionary} />
+                  <Deck 
+                    deck={[...deckIndexed, ...deckSBIndexed]} 
+                    cardDictionary={data?.deck?.cardDictionary}
+                    filtersExpanded={filtersExpanded}
+                    setFiltersExpanded={setFiltersExpanded}
+                    isDesktop={false}
+                  />
                 )}
               </>
             )}
@@ -658,26 +727,39 @@ const Lobby = () => {
             {(activeTab === 'matchups' || isWideScreen) && (
               <Matchups refetch={refetch} />
             )}
-            {!gameLobby?.amIChoosingFirstPlayer ? (
-              <StickyFooter
-                deckSize={deckSize}
-                submitSideboard={gameLobby?.canSubmitSideboard ?? false}
-                handleLeave={handleLeave}
-                isWidescreen={isWideScreen}
-                onSendInviteClick={() => setShowFriendsPanel(!showFriendsPanel)}
-                onIsValidChange={setIsDeckValid}
-              />
-            ) : null}
+            <StickyFooter
+              deckSize={deckSize}
+              submitSideboard={gameLobby?.canSubmitSideboard ?? false}
+              handleLeave={handleLeave}
+              isWidescreen={isWideScreen}
+              needToDoDisclaimer={needToDoDisclaimer}
+              onSendInviteClick={() => setShowFriendsPanel(!showFriendsPanel)}
+              onIsValidChange={setIsDeckValid}
+            />
           </div>
         </Form>
       </Formik>
       <CardPortal />
+
+      {/* Opponent note tooltip in lobby */}
+      {opponentNote && isNoteTooltipOpen && createPortal(
+        <div
+          className={styles.noteTooltip}
+          style={{
+            top: `${noteTooltipPosition.top}px`,
+            left: `${noteTooltipPosition.left}px`
+          }}
+        >
+          {opponentNote}
+        </div>,
+        document.body
+      )}
     </main>
   );
 };
 
-// Component to handle Select All/None buttons for desktop - has access to Formik context
-const DesktopDeckSelectionButtons = ({ deckIndexed, deckSBIndexed, activeTab }: { deckIndexed: string[], deckSBIndexed: string[], activeTab: string }) => {
+// Component to handle Filters, Select All/None buttons for desktop - has access to Formik context
+const DesktopDeckSelectionButtons = ({ deckIndexed, deckSBIndexed, activeTab, filtersExpanded, setFiltersExpanded }: { deckIndexed: string[], deckSBIndexed: string[], activeTab: string, filtersExpanded: boolean, setFiltersExpanded: (value: boolean) => void }) => {
   const { setFieldValue } = useFormikContext<DeckResponse>();
   
   const handleSelectAll = () => {
@@ -696,6 +778,15 @@ const DesktopDeckSelectionButtons = ({ deckIndexed, deckSBIndexed, activeTab }: 
 
   return (
     <div className={styles.selectionButtons}>
+      <button
+        className={styles.selectionButton}
+        onClick={() => setFiltersExpanded(!filtersExpanded)}
+        type="button"
+        title={filtersExpanded ? 'Collapse filters' : 'Expand filters'}
+      >
+        {filtersExpanded ? <MdArrowDropDown size={24} /> : <MdArrowRight size={24} />}
+        Filters
+      </button>
       <button
         className={styles.selectionButton}
         onClick={handleSelectAll}

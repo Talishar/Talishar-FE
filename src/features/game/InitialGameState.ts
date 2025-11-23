@@ -23,6 +23,10 @@ const InitialGameState: GameState = {
     lastActionTime: Date.now(),
     firstWarningShown: false,
     secondWarningShown: false
+  },
+  damagePopups: {
+    playerOne: [],
+    playerTwo: []
   }
 };
 

@@ -25,6 +25,9 @@
   z-index: 2;
   cursor: default;
   align-content: center;
+  opacity: var(--counters-opacity, 1);
+  transition: opacity 0.2s ease;
+  pointer-events: var(--counters-pointer-events, auto);
 }
 
 .number.number {

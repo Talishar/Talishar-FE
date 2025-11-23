@@ -12,6 +12,8 @@
   z-index: 950;
   user-select: auto;
   background: var(--near-black);
+  border-radius:  10px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .statsContent {
@@ -95,6 +97,9 @@
 }
 
 .infoLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   color: rgba(255, 255, 255, 0.7);
   font-weight: 500;
   font-size: 1.1em;
@@ -106,6 +111,53 @@
   font-size: 1.1em;
   text-align: right;
   white-space: nowrap;
+}
+
+.tooltipIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.2em;
+  height: 1.2em;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.7em;
+  font-weight: 600;
+  cursor: help;
+  position: relative;
+  transition: background-color 0.2s, color 0.2s;
+  margin-left: -0.5em;
+  margin-top: 0em;
+  align-self: flex-start;
+}
+
+.tooltipIcon:hover {
+  background-color: var(--theme-primary);
+  color: var(--near-black);
+}
+
+.tooltipIconBreakdown{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.2em;
+  height: 1.2em;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.7em;
+  font-weight: 600;
+  cursor: help;
+  position: relative;
+  transition: background-color 0.2s, color 0.2s;
+  margin-left: 0.5em;
+  align-self: flex-start;
+}
+
+.tooltipIconBreakdown:hover {
+  background-color: var(--theme-primary);
+  color: var(--near-black);
 }
 
 .heroPortraitsContainer {
@@ -320,7 +372,7 @@
 }
 
 .cardTable tbody td {
-  padding: 0.5rem 0.4rem;
+  padding: 0.1rem;
   text-align: center;
   border-bottom: 1px solid rgba(255, 255, 255, 0);
   font-size: 1.1em;
@@ -328,17 +380,32 @@
 
 .card {
   width: 55px;
-  height: 55px;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 0;
 }
 
+.cardOnePitch {
+  border: 1px solid;
+  border-color: #af1518;
+}
+
+.cardTwoPitch {
+  border: 1px solid;
+  border-color: #daa520;
+}
+
+.cardThreePitch {
+  border: 1px solid;
+  border-color: #4b84ff;
+}
+
 .onePitch {
-  color: #ff6b6b;
+  color: #af1518;
   font-weight: 600;
-  font-size: 0.9em;
+  font-size: 1em !important;
   max-width: 200px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -346,9 +413,9 @@
 }
 
 .twoPitch {
-  color: #fdd141;
+  color: #daa520;
   font-weight: 600;
-  font-size: 0.9em;
+  font-size: 1em !important;
   max-width: 200px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -356,9 +423,9 @@
 }
 
 .threePitch {
-  color: #4ecdc4;
+  color: #4b84ff;
   font-weight: 600;
-  font-size: 0.9em;
+  font-size: 1em !important;
   max-width: 200px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -380,6 +447,11 @@
 .headersStats {
   display: table-cell;
   text-align: center;
+}
+
+.headerGroupSeparator {
+  border-right: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0 5px 1px 0;
 }
 
 .tableContainer {
@@ -423,10 +495,6 @@
     padding: 0.7rem 0.45rem;
   }
 
-  .cardTable tbody td {
-    padding: 0.55rem 0.45rem;
-  }
-
   .sectionHeader {
     font-size: 1.25em;
   }
@@ -451,7 +519,6 @@
   }
 
   .cardTable tbody td {
-    padding: 0.45rem 0.3rem;
     font-size: 0.9em;
   }
 
@@ -544,7 +611,6 @@
   }
 
   .cardTable tbody td {
-    padding: 0.4rem 0.25rem;
     font-size: 1em;
   }
 
@@ -643,10 +709,6 @@
     font-size: 1em;
   }
 
-  .cardTable tbody td {
-    padding: 0.35rem 0.2rem;
-  }
-
   .firstHeadersStats{
     display: none !important;
   }
@@ -696,4 +758,33 @@
   .heroTitle {
     font-size: 1em;
   }
+}
+
+/* Inline style replacements */
+.sectionHeaderContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.excludeLastTurnLabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.excludeLastTurnCheckbox {
+  cursor: pointer;
+  width: 18px;
+  height: 18px;
+}
+
+.excludeLastTurnText {
+  user-select: none;
+}
+
+.sortableHeader {
+  cursor: pointer;
+  user-select: none;
 }

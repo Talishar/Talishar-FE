@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import {
   useChooseFirstPlayerMutation,
   useSubmitChatMutation,
-  useSubmitLobbyInputMutation
+  useSubmitLobbyInputMutation,
+  useReportTypingMutation
 } from 'features/api/apiSlice';
 import styles from './ChatInput.module.css';
 import { GiChatBubble } from 'react-icons/gi';
@@ -43,12 +44,74 @@ export const ChatInput = () => {
   );
   const { isMod } = useAuth();
   const chatEnabled = useAppSelector((state) => state.game.chatEnabled);
+  const dispatch = useAppDispatch();
 
   const [chatInput, setChatInput] = useState('');
   const [submitChat, submitChatResult] = useSubmitChatMutation();
+  const [reportTyping] = useReportTypingMutation();
+  const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const typingRefreshRef = useRef<NodeJS.Timeout | null>(null);
 
   // Allow players (playerID 1-2) or mods spectating (playerID 3 but isMod true)
   const canChat = playerID !== 3 || (playerID === 3 && isMod);
+
+  const handleTyping = async () => {
+    // Clear existing timeout
+    if (typingTimeoutRef.current) {
+      clearTimeout(typingTimeoutRef.current);
+    }
+
+    // Report typing to backend
+    try {
+      await reportTyping({
+        gameID: gameID,
+        playerID: playerID
+      });
+    } catch (err) {
+      console.error('Failed to report typing:', err);
+    }
+
+    // Set timeout to stop reporting after 5 seconds of inactivity
+    typingTimeoutRef.current = setTimeout(() => {
+      typingTimeoutRef.current = null;
+    }, 5000);
+  };
+
+  const handleInputFocus = () => {
+    handleTyping();
+    
+    // Start refresh interval to keep sending typing updates every 2.5 seconds
+    if (typingRefreshRef.current) {
+      clearInterval(typingRefreshRef.current);
+    }
+    typingRefreshRef.current = setInterval(() => {
+      handleTyping();
+    }, 2500);
+  };
+
+  const handleInputBlur = () => {
+    // Clear timeout when input loses focus
+    if (typingTimeoutRef.current) {
+      clearTimeout(typingTimeoutRef.current);
+      typingTimeoutRef.current = null;
+    }
+    // Clear refresh interval
+    if (typingRefreshRef.current) {
+      clearInterval(typingRefreshRef.current);
+      typingRefreshRef.current = null;
+    }
+  };
+
+  useEffect(() => {
+    return () => {
+      if (typingTimeoutRef.current) {
+        clearTimeout(typingTimeoutRef.current);
+      }
+      if (typingRefreshRef.current) {
+        clearInterval(typingRefreshRef.current);
+      }
+    };
+  }, []);
 
   if (!canChat) {
     return null;
@@ -76,6 +139,9 @@ export const ChatInput = () => {
     e.stopPropagation();
     e.stopPropagation();
     setChatInput(e.target?.value);
+    if (e.target?.value.trim() !== '') {
+      handleTyping();
+    }
   };
 
   if (chatEnabled) {
@@ -86,6 +152,8 @@ export const ChatInput = () => {
             className={styles.chatInput}
             value={chatInput}
             onChange={handleChange}
+            onFocus={handleInputFocus}
+            onBlur={handleInputBlur}
             onKeyDownCapture={(e) => {
               e.stopPropagation();
               if (e.key === 'Enter' || e.key === 'Return') {

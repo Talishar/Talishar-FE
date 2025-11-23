@@ -673,7 +673,8 @@ button.secondary:hover {
   background: var(--theme-card-background, #1e2329);
   border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.15));
   border-radius: 12px;
-  max-height: 400px;
+  height: auto;
+  max-height: calc(100vh - 180px);
   overflow-y: auto;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.08);
   backdrop-filter: blur(6px);
@@ -814,4 +815,23 @@ button.secondary:hover {
   color: var(--theme-primary-inverse);
   border-color: var(--theme-primary);
   font-weight: 600;
+}
+
+.noteTooltip {
+  position: fixed;
+  background-color: rgba(20, 20, 20, 0.98);
+  border: 1px solid rgba(111, 0, 0, 0.6);
+  border-radius: 0.3em;
+  backdrop-filter: blur(4px);
+  color: var(--secondary-inverse);
+  padding: 0.75em 1em;
+  max-width: 300px;
+  max-height: 150px;
+  overflow-y: auto;
+  word-wrap: break-word;
+  z-index: 10000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+  font-size: 0.9em;
+  line-height: 1.4;
+  pointer-events: none;
 }

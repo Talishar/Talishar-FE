@@ -8,18 +8,87 @@ import { useAddFriendMutation, useGetSentRequestsQuery, useCancelRequestMutation
 import { toast } from 'react-hot-toast';
 import { MdPersonAdd } from 'react-icons/md';
 import { MdBlock } from 'react-icons/md';
+import { MdNotes } from 'react-icons/md';
 import { IoMdArrowDropdown } from 'react-icons/io';
+import PlayerNoteModal from './PlayerNoteModal';
+import { createPatreonIconMap } from 'utils/patronIcons';
 
 export default function PlayerName(player: Player) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
+  const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
+  const [playerNote, setPlayerNote] = useState('');
+  const [isNoteTooltipOpen, setIsNoteTooltipOpen] = useState(false);
+  const [noteTooltipPosition, setNoteTooltipPosition] = useState({ top: 0, left: 0 });
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const noteButtonRef = useRef<HTMLButtonElement>(null);
 
   const playerID = useAppSelector((state: RootState) => state.game.gameInfo.playerID);
 
   const playerName = useAppSelector((state: RootState) =>
     player.isPlayer ? state.game.playerOne.Name : state.game.playerTwo.Name
   );
+
+  // Load and manage player notes from localStorage
+  const getPlayerNoteKey = (username: string) => `player_note_${username}`;
+
+  const loadPlayerNote = (username: string) => {
+    try {
+      return localStorage.getItem(getPlayerNoteKey(username)) || '';
+    } catch {
+      return '';
+    }
+  };
+
+  const savePlayerNote = (username: string, note: string) => {
+    try {
+      if (note.trim()) {
+        localStorage.setItem(getPlayerNoteKey(username), note);
+      } else {
+        localStorage.removeItem(getPlayerNoteKey(username));
+      }
+    } catch {
+      toast.error('Failed to save note');
+    }
+  };
+
+  // Load note when playerName changes
+  useEffect(() => {
+    if (playerName) {
+      setPlayerNote(loadPlayerNote(playerName));
+    }
+  }, [playerName]);
+
+  const handleNoteModalOpen = () => {
+    setIsNoteModalOpen(true);
+  };
+
+  const handleNoteModalClose = () => {
+    setIsNoteModalOpen(false);
+  };
+
+  const handleNoteSave = (note: string) => {
+    if (playerName) {
+      savePlayerNote(playerName, note);
+      setPlayerNote(note);
+      toast.success('Note saved!');
+    }
+  };
+
+  const handleNoteTooltipOpen = () => {
+    if (noteButtonRef.current && playerNote) {
+      const rect = noteButtonRef.current.getBoundingClientRect();
+      setNoteTooltipPosition({
+        top: rect.bottom + window.scrollY + 8,
+        left: rect.left + window.scrollX
+      });
+      setIsNoteTooltipOpen(true);
+    }
+  };
+
+  const handleNoteTooltipClose = () => {
+    setIsNoteTooltipOpen(false);
+  };
 
   const isPatron = useAppSelector((state: RootState) =>
     player.isPlayer
@@ -155,31 +224,7 @@ export default function PlayerName(player: Player) {
     }
   };
   
-  const iconMap = [
-    {
-      condition: isContributor,
-      src: '/images/copper.webp',
-      title: 'I am a contributor to Talishar!',
-      href: 'https://linktr.ee/Talishar'
-    },
-    {
-      condition: isPvtVoidPatron,
-      src: '/images/patronEye.webp',
-      title: 'I am a patron of PvtVoid!',
-      href: 'https://linktr.ee/Talishar'
-    },
-    {
-      condition: isPatron,
-      src: '/images/patronHeart.webp',
-      title: 'I am a patron of Talishar!',
-      href: 'https://linktr.ee/Talishar'
-    },
-    {
-      condition: isPracticeDummy,
-      src: '/images/practiceDummy.webp',
-      title: 'I am a bot!'
-    }
-  ];
+  const iconMap = createPatreonIconMap(isContributor, isPvtVoidPatron, isPatron, isPracticeDummy);
 
   const getStatusClass = () => {
     if (isPvtVoidPatron) return styles.pvtVoidPatron;
@@ -192,8 +237,8 @@ export default function PlayerName(player: Player) {
     <div className={`${styles.playerName} ${getStatusClass()} ${player.isPlayer ? styles.playerTwo : ''}`} ref={dropdownRef}>
       <div className={styles.nameContainer}>
         <div className={styles.nameContent}>
-          {iconMap.filter(icon => icon.condition).map(icon => (
-            <a href={icon.href} target="_blank" rel="noopener noreferrer" key={icon.src}>
+          {iconMap.filter(icon => icon.condition).map((icon, index) => (
+            <a href={icon.href} target="_blank" rel="noopener noreferrer" key={`${icon.title}-${index}`}>
               <img
                 className={styles.icon}
                 src={icon.src}
@@ -244,6 +289,41 @@ export default function PlayerName(player: Player) {
             <MdBlock className={styles.optionIcon} />
             {isBlocked ? 'Blocked' : 'Block User'}
           </button>
+          <button
+            ref={noteButtonRef}
+            className={styles.dropdownOption}
+            onClick={handleNoteModalOpen}
+            onMouseEnter={handleNoteTooltipOpen}
+            onMouseLeave={handleNoteTooltipClose}
+          >
+            <MdNotes className={styles.optionIcon} />
+            {playerNote ? 'Edit Note' : 'Add Note'}
+          </button>
+        </div>,
+        document.body
+      )}
+
+      {/* Note modal for editing player notes */}
+      {!player.isPlayer && !isPracticeDummy && playerID !== 3 && (
+        <PlayerNoteModal
+          isOpen={isNoteModalOpen}
+          onClose={handleNoteModalClose}
+          onSave={handleNoteSave}
+          initialNote={playerNote}
+          playerName={playerName || 'Player'}
+        />
+      )}
+
+      {/* Note tooltip for quick preview */}
+      {playerNote && isNoteTooltipOpen && createPortal(
+        <div
+          className={styles.noteTooltip}
+          style={{
+            top: `${noteTooltipPosition.top}px`,
+            left: `${noteTooltipPosition.left}px`
+          }}
+        >
+          {playerNote}
         </div>,
         document.body
       )}

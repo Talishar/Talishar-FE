@@ -8,6 +8,7 @@
   border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.15));
   padding: 0 0.5rem;
   border-radius: 8px 8px 0 0;
+  z-index: 1000;
 }
 
 .dynamicContainer {

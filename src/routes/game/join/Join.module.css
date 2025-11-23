@@ -6,9 +6,10 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  min-height: 100vh;
   max-width: var(--aspect);
   margin: 0 auto;
+  padding-top: 50px;
 }
 
 .fieldError {

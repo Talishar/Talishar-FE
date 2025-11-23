@@ -343,6 +343,28 @@
   flex-wrap: wrap;
 }
 
+.friendIcons {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.friendIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.friendIcon img {
+  height: 1.4rem;
+  width: 1.4rem;
+  display: block;
+}
+
+.friendIcon:hover {
+  opacity: 0.8;
+}
+
 .username {
   color: #e0e0e0;
   font-weight: 500;

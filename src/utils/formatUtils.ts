@@ -8,11 +8,13 @@ export const getReadableFormatName = (format: string): string => {
   const formatMap: { [key: string]: string } = {
     'classicconstructed': 'Classic Constructed',
     'sage': 'Silver Age',
+    'silverage': 'Silver Age',
+    'compsage': 'Competitive Silver Age',
+    'competitivesage': 'Competitive Silver Age',
     'llcc': 'Living Legend',
     'commoner': 'Commoner',
     'competitivecc': 'Competitive Classic Constructed',
     'competitiveblitz': 'Competitive Blitz',
-    'competitivesage': 'Competitive Silver Age',
     'competitivell': 'Competitive Living Legend',
     'blitz': 'Blitz',
     'draft': 'Draft / Limited',
@@ -24,7 +26,9 @@ export const getReadableFormatName = (format: string): string => {
     'openformatcc': 'Open CC',
     'openllcc': 'Open Living Legend',
     'openformatllcc': 'Open Living Legend',
-    'cc': 'Classic Constructed'
+    'cc': 'Classic Constructed',
+    'opensage': 'Open Silver Age',
+    'openformatsage': 'Open Silver Age'
   };
   
   const key = format.toLowerCase().replace(/[_\s]/g, '');

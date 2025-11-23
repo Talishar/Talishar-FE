@@ -1,14 +1,11 @@
 import { Card } from 'features/Card';
-import { number } from 'yup';
 import { Effect } from '../effects/Effects';
 import EndGameMenuOptions from '../endGameMenuOptions/EndGameMenuOptions';
 import styles from './EndGameStats.module.css';
-import { NumberLiteralType } from 'typescript';
 import useAuth from 'hooks/useAuth';
 import { useState, useMemo, useRef, useImperativeHandle, forwardRef, useEffect } from 'react';
 import html2canvas from 'html2canvas';
 import TalisharLogo from 'img/TalisharLogo.webp';
-import { generateCroppedImageUrl } from 'utils/cropImages';
 import { BACKEND_URL } from 'appConstants';
 import { parseHtmlToReactElements } from 'utils/ParseEscapedString';
 
@@ -35,8 +32,21 @@ export interface EndGameData {
   averageCardsLeftOverPerTurn?: number;
   totalLifeGained?: number;
   totalDamagePrevented?: number;
+  totalLifeLost?: number;
   averageCombatValuePerTurn?: number;
   averageValuePerTurn?: number;
+  totalDamageThreatened_NoLast?: number;
+  totalDamageDealt_NoLast?: number;
+  averageDamageThreatenedPerTurn_NoLast?: number;
+  averageDamageDealtPerTurn_NoLast?: number;
+  averageDamageThreatenedPerCard_NoLast?: number;
+  averageResourcesUsedPerTurn_NoLast?: number;
+  averageCardsLeftOverPerTurn_NoLast?: number;
+  totalLifeGained_NoLast?: number;
+  totalDamagePrevented_NoLast?: number;
+  totalLifeLost_NoLast?: number;
+  averageCombatValuePerTurn_NoLast?: number;
+  averageValuePerTurn_NoLast?: number;
   yourTime?: number;
   totalTime?: number;
 }
@@ -66,6 +76,7 @@ export interface TurnResult {
   resourcesUsed: number;
   resourcesLeft: number;
   lifeGained: number;
+  lifeLost: number;
 }
 
 export interface EndGameStatsRef {
@@ -74,14 +85,14 @@ export interface EndGameStatsRef {
 }
 
 const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
-  const { isPatron } = useAuth();
-  const [sortField, setSortField] = useState<'played' | 'blocked' | 'pitched' | 'hits' | null>(null);
+  const [sortField, setSortField] = useState<'played' | 'blocked' | 'pitched' | 'hits' | 'cardName' | null>(null);
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
   const statsRef = useRef<HTMLDivElement>(null);
   const [isExporting, setIsExporting] = useState(false);
   const [heroDataUrls, setHeroDataUrls] = useState<{ yourHero?: string; opponentHero?: string }>({});
+  const [excludeLastTurn, setExcludeLastTurn] = useState(false);
   
-  const [turnSortField, setTurnSortField] = useState<'turnNo' | 'cardsUsed' | 'cardsBlocked' | 'cardsPitched' | 'cardsLeft' | 'resourcesUsed' | 'resourcesLeft' | 'damageThreatened' | 'damageDealt' | 'damageBlocked' | 'damagePrevented' | 'damageTaken' | 'lifeGained' | 'totalValue' | null>(null);
+  const [turnSortField, setTurnSortField] = useState<'turnNo' | 'cardsUsed' | 'cardsBlocked' | 'cardsPitched' | 'cardsLeft' | 'resourcesUsed' | 'resourcesLeft' | 'damageThreatened' | 'damageDealt' | 'damageBlocked' | 'damagePrevented' | 'damageTaken' | 'lifeGained' | 'lifeLost' | 'totalValue' | null>(null);
   const [turnSortDirection, setTurnSortDirection] = useState<'asc' | 'desc'>('desc');
 
   const imageToDataUrl = async (heroName: string): Promise<string | null> => {
@@ -136,7 +147,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
     loadHeroImages();
   }, [data.yourHero, data.opponentHero]);
 
-  const handleSort = (field: 'played' | 'blocked' | 'pitched' | 'hits') => {
+  const handleSort = (field: 'played' | 'blocked' | 'pitched' | 'hits' | 'cardName') => {
     if (sortField === field) {
       // Toggle direction if same field
       setSortDirection(sortDirection === 'desc' ? 'asc' : 'desc');
@@ -147,7 +158,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
     }
   };
 
-  const handleTurnSort = (field: 'turnNo' | 'cardsUsed' | 'cardsBlocked' | 'cardsPitched' | 'cardsLeft' | 'resourcesUsed' | 'resourcesLeft' | 'damageThreatened' | 'damageDealt' | 'damageBlocked' | 'damagePrevented' | 'damageTaken' | 'lifeGained' | 'totalValue') => {
+  const handleTurnSort = (field: 'turnNo' | 'cardsUsed' | 'cardsBlocked' | 'cardsPitched' | 'cardsLeft' | 'resourcesUsed' | 'resourcesLeft' | 'damageThreatened' | 'damageDealt' | 'damageBlocked' | 'damagePrevented' | 'damageTaken' | 'lifeGained' | 'lifeLost' | 'totalValue') => {
     if (turnSortField === field) {
       // Toggle direction if same field
       setTurnSortDirection(turnSortDirection === 'desc' ? 'asc' : 'desc');
@@ -157,6 +168,42 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
       setTurnSortDirection('desc');
     }
   };
+
+  // Helper function to get stats based on toggle
+  const getStats = () => {
+    if (excludeLastTurn) {
+      return {
+        totalDamageThreatened: data.totalDamageThreatened_NoLast,
+        totalDamageDealt: data.totalDamageDealt_NoLast,
+        averageDamageThreatenedPerTurn: data.averageDamageThreatenedPerTurn_NoLast,
+        averageDamageDealtPerTurn: data.averageDamageDealtPerTurn_NoLast,
+        averageDamageThreatenedPerCard: data.averageDamageThreatenedPerCard_NoLast,
+        averageResourcesUsedPerTurn: data.averageResourcesUsedPerTurn_NoLast,
+        averageCardsLeftOverPerTurn: data.averageCardsLeftOverPerTurn_NoLast,
+        totalLifeGained: data.totalLifeGained_NoLast,
+        totalDamagePrevented: data.totalDamagePrevented_NoLast,
+        totalLifeLost: data.totalLifeLost_NoLast,
+        averageCombatValuePerTurn: data.averageCombatValuePerTurn_NoLast,
+        averageValuePerTurn: data.averageValuePerTurn_NoLast,
+      };
+    }
+    return {
+      totalDamageThreatened: data.totalDamageThreatened,
+      totalDamageDealt: data.totalDamageDealt,
+      averageDamageThreatenedPerTurn: data.averageDamageThreatenedPerTurn,
+      averageDamageDealtPerTurn: data.averageDamageDealtPerTurn,
+      averageDamageThreatenedPerCard: data.averageDamageThreatenedPerCard,
+      averageResourcesUsedPerTurn: data.averageResourcesUsedPerTurn,
+      averageCardsLeftOverPerTurn: data.averageCardsLeftOverPerTurn,
+      totalLifeGained: data.totalLifeGained,
+      totalDamagePrevented: data.totalDamagePrevented,
+      totalLifeLost: data.totalLifeLost,
+      averageCombatValuePerTurn: data.averageCombatValuePerTurn,
+      averageValuePerTurn: data.averageValuePerTurn,
+    };
+  };
+
+  const stats = useMemo(getStats, [excludeLastTurn, data]);
 
   const handleExportScreenshot = async () => {
     if (!statsRef.current) return;
@@ -322,19 +369,18 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
         content += `Total Game Time,${fancyTimeFormat(playerData.totalTime)}\n\n`;
         
         content += 'GAME STATISTICS\n';
-        content += `Avg Value per Turn,${isPatron ? playerData.averageValuePerTurn : 'Patreon Only'}\n`;
+        content += `Avg Value per Turn,${playerData.averageValuePerTurn || 0}\n`;
         content += `Avg Damage Threatened per Turn,${playerData.averageDamageThreatenedPerTurn || 0}\n`;
         content += `Avg Damage Dealt per Turn,${playerData.averageDamageDealtPerTurn || 0}\n`;
         content += `Avg Damage Threatened per Card,${playerData.averageDamageThreatenedPerCard || 0}\n`;
         content += `Avg Resources Used per Turn,${playerData.averageResourcesUsedPerTurn || 0}\n`;
         content += `Avg Cards Left Over per Turn,${playerData.averageCardsLeftOverPerTurn || 0}\n`;
-        if (!isPatron) {
-          content += `Avg Combat Value per Turn,${playerData.averageCombatValuePerTurn || 0}\n`;
-        }
+        content += `Avg Combat Value per Turn,${playerData.averageCombatValuePerTurn || 0}\n`;
         content += `Total Damage Threatened,${playerData.totalDamageThreatened || 0}\n`;
         content += `Total Damage Dealt,${playerData.totalDamageDealt || 0}\n`;
-        content += `Total Damage Prevented,${isPatron ? (playerData.totalDamagePrevented || 0) : 'Patreon Only'}\n`;
-        content += `Total Life Gained,${isPatron ? (playerData.totalLifeGained || 0) : 'Patreon Only'}\n\n`;
+        content += `Total Damage Prevented,${playerData.totalDamagePrevented || 0}\n`;
+        content += `Total Life Gained,${playerData.totalLifeGained || 0}\n\n`;
+        content += `Total Life Self-Lost,${playerData.totalLifeLost || 0}\n\n`;
         
         content += 'CARD PLAY STATS\n';
         content += 'Card Name,Played,Blocked,Pitched,Times Hit';
@@ -362,12 +408,13 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
         if (playerData.turnResults && Object.keys(playerData.turnResults).length > 0) {
           Object.keys(playerData.turnResults).forEach((key, ix) => {
             const turn = playerData.turnResults[key];
-            const totalValue = isPatron ? (+turn.damageThreatened + +turn.damageBlocked + +turn.damagePrevented + +turn.lifeGained) : 'X';
+            const totalValue = (+turn.damageThreatened + +turn.damageBlocked + +turn.damagePrevented + +turn.lifeGained + +turn.lifeLost);
             content += `${ix + 1},${turn.cardsUsed},${turn.cardsBlocked},${turn.cardsPitched},${turn.cardsLeft},`;
             content += `${turn.resourcesUsed},${turn.resourcesLeft},`;
-            content += `${isPatron ? turn.damageThreatened : 'X'},${turn.damageDealt},`;
-            content += `${isPatron ? turn.damageBlocked : 'X'},${isPatron ? turn.damagePrevented : 'X'},`;
-            content += `${turn.damageTaken},${isPatron ? turn.lifeGained : 'X'},${totalValue}\n`;
+            content += `${turn.damageThreatened},${turn.damageDealt},`;
+            content += `${turn.damageBlocked},${turn.damagePrevented},`;
+            content += `${turn.damageTaken},${turn.lifeGained},${totalValue}\n`;
+            content += `${turn.lifeLost}\n`;
           });
         }
         
@@ -424,13 +471,24 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
     }
 
     return [...data.cardResults].sort((a, b) => {
-      const aValue = a[sortField];
-      const bValue = b[sortField];
-      
-      if (sortDirection === 'desc') {
-        return bValue - aValue;
+      if (sortField === 'cardName') {
+        const aValue = a.cardName.toLowerCase();
+        const bValue = b.cardName.toLowerCase();
+        
+        if (sortDirection === 'desc') {
+          return bValue.localeCompare(aValue);
+        } else {
+          return aValue.localeCompare(bValue);
+        }
       } else {
-        return aValue - bValue;
+        const aValue = a[sortField];
+        const bValue = b[sortField];
+        
+        if (sortDirection === 'desc') {
+          return bValue - aValue;
+        } else {
+          return aValue - bValue;
+        }
       }
     });
   }, [data.cardResults, sortField, sortDirection]);
@@ -454,8 +512,8 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
         aValue = Object.keys(data.turnResults).indexOf(a.key);
         bValue = Object.keys(data.turnResults).indexOf(b.key);
       } else if (turnSortField === 'totalValue') {
-        aValue = (a.damageThreatened || 0) + (a.damageBlocked || 0) + (a.damagePrevented || 0) + (a.lifeGained || 0);
-        bValue = (b.damageThreatened || 0) + (b.damageBlocked || 0) + (b.damagePrevented || 0) + (b.lifeGained || 0);
+        aValue = (a.damageThreatened || 0) + (a.damageBlocked || 0) + (a.damagePrevented || 0) + (a.lifeGained || 0) + (a.lifeLost || 0);
+        bValue = (b.damageThreatened || 0) + (b.damageBlocked || 0) + (b.damagePrevented || 0) + (b.lifeGained || 0) + (b.lifeLost || 0);
       } else {
         aValue = a[turnSortField] || 0;
         bValue = b[turnSortField] || 0;
@@ -470,6 +528,37 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
 
     return sorted;
   }, [data.turnResults, turnSortField, turnSortDirection]);
+
+  // Helper function to check if columns should be hidden - We hide those 3 collumns for irrelevant heroes
+  const shouldHideDamagePrevented = useMemo(() => {
+    if (!data.turnResults || Object.keys(data.turnResults).length === 0) return false;
+    const allZero = Object.values(data.turnResults).every(turn => {
+      const value = typeof turn.damagePrevented === 'number' ? turn.damagePrevented : 0;
+      return value === 0;
+    });
+    return allZero;
+  }, [data.turnResults]);
+
+  const shouldHideLifeGained = useMemo(() => {
+    if (!data.turnResults || Object.keys(data.turnResults).length === 0) return false;
+    const allZero = Object.values(data.turnResults).every(turn => {
+      const value = typeof turn.lifeGained === 'number' ? turn.lifeGained : 0;
+      return value === 0;
+    });
+    return allZero;
+  }, [data.turnResults]);
+
+  const shouldHideLifeLost = useMemo(() => {
+    if (!data.turnResults || Object.keys(data.turnResults).length === 0) return false;
+    const allZero = Object.values(data.turnResults).every(turn => {
+      const value = typeof turn.lifeLost === 'number' ? turn.lifeLost : 0;
+      return value === 0;
+    });
+    return allZero;
+  }, [data.turnResults]);
+
+  // Calculate the Life column span based on hidden columns
+  const lifeColSpan = (shouldHideLifeGained ? 0 : 1) + (shouldHideLifeLost ? 0 : 1);
 
   function fancyTimeFormat(duration: number | undefined) {
     duration = duration ?? 0;
@@ -512,44 +601,46 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
               <thead>
                 <tr className={styles.headers}>
                   <th className={`${styles.firstHeadersStats} ${styles.hideOnExport}`}></th>
-                  <th>Card Name</th>
                   <th 
-                    className={styles.headersStats} 
+                    onClick={() => handleSort('cardName')}
+                    className={`${styles.headersStats} ${styles.sortableHeader} ${styles.headerGroupSeparator}`}
+                    title="Click to sort"
+                  >
+                    Card Name {sortField === 'cardName' && (sortDirection === 'desc' ? '↓' : '↑')}
+                  </th>
+                  <th 
+                    className={`${styles.headersStats} ${styles.sortableHeader} ${styles.headerGroupSeparator}`}
                     onClick={() => handleSort('played')}
-                    style={{ cursor: 'pointer', userSelect: 'none' }}
                     title="Click to sort"
                   >
                     Played {sortField === 'played' && (sortDirection === 'desc' ? '↓' : '↑')}
                   </th>
                   <th 
-                    className={styles.headersStats}
+                    className={`${styles.headersStats} ${styles.sortableHeader} ${styles.headerGroupSeparator}`}
                     onClick={() => handleSort('blocked')}
-                    style={{ cursor: 'pointer', userSelect: 'none' }}
                     title="Click to sort"
                   >
                     Blocked {sortField === 'blocked' && (sortDirection === 'desc' ? '↓' : '↑')}
                   </th>
                   <th 
-                    className={styles.headersStats}
+                    className={`${styles.headersStats} ${styles.sortableHeader} ${styles.headerGroupSeparator}`}
                     onClick={() => handleSort('pitched')}
-                    style={{ cursor: 'pointer', userSelect: 'none' }}
                     title="Click to sort"
                   >
                     Pitched {sortField === 'pitched' && (sortDirection === 'desc' ? '↓' : '↑')}
                   </th>
                   <th 
-                    className={styles.headersStats}
+                    className={`${styles.headersStats} ${styles.sortableHeader} ${styles.headerGroupSeparator}`}
                     onClick={() => handleSort('hits')}
-                    style={{ cursor: 'pointer', userSelect: 'none' }}
                     title="Click to sort"
                   >
                     Times Hit {sortField === 'hits' && (sortDirection === 'desc' ? '↓' : '↑')}
                   </th>
                   {numCharged > 0 && (
-                    <th className={styles.headersStats}>Times Charged</th>
+                    <th className={`${styles.headersStats} ${styles.headerGroupSeparator}`}>Times Charged</th>
                   )}
                   {numKatsuDiscard > 0 && (
-                    <th className={styles.headersStats}>Times Katsu Discarded</th>
+                    <th className={`${styles.headersStats} ${styles.headerGroupSeparator}`}>Times Katsu Discarded</th>
                   )}
                 </tr>
               </thead>
@@ -558,22 +649,26 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                   sortedCardResults?.map((result, ix) => {
                     const card: Card = { cardNumber: result.cardId };
                     let cardStyle = '';
+                    let cardBorderStyle = '';
                     switch (result.pitchValue) {
                       case 1:
                         cardStyle = styles.onePitch;
+                        cardBorderStyle = styles.cardOnePitch;
                         break;
                       case 2:
                         cardStyle = styles.twoPitch;
+                        cardBorderStyle = styles.cardTwoPitch;
                         break;
                       case 3:
                         cardStyle = styles.threePitch;
+                        cardBorderStyle = styles.cardThreePitch;
                         break;
                       default:
                     }
                     return (
                       <tr key={`cardList${ix}`}>
                         <td className={`${styles.card} ${styles.hideOnExport}`}>
-                          <Effect card={card} />
+                          <Effect card={card} imgClassName={cardBorderStyle} />
                         </td>
                         <td className={cardStyle} title={result.cardName}>{result.cardName}</td>
                         <td className={styles.played}>{result.played}</td>
@@ -598,91 +693,87 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
 
         {/* Game Time & Summary Section */}
         <div className={styles.statsSection}>
-          <h2 className={styles.sectionHeader}>Game Time & Summary</h2>
+          <div className={styles.sectionHeaderContainer}>
+            <h2 className={styles.sectionHeader}>Game Time & Summary</h2>
+            <label className={styles.excludeLastTurnLabel}>
+              <input
+                type="checkbox"
+                checked={excludeLastTurn}
+                onChange={(e) => setExcludeLastTurn(e.target.checked)}
+                className={styles.excludeLastTurnCheckbox}
+              />
+              <span className={styles.excludeLastTurnText}>Exclude Last Turn</span>
+            </label>
+          </div>
           
           {/* Unified Stats Box */}
           <div className={styles.infoBox}>
             <div className={styles.disclaimer}>
-              <em>First turn omitted for first player</em>
+              <em>Turn 0 automatically omitted for average calculations</em>
             </div>
             
             {/* Avg Value per Turn - Top Priority */}
             <div className={styles.infoRow}>
-              <span className={styles.infoLabel}>Avg Value per Turn:</span>
-              <span className={styles.infoValue}>
-                {isPatron ? (
-                  data.averageValuePerTurn
-                ) : (
-                  <span>
-                    {parseHtmlToReactElements("<a href='https://linktr.ee/Talishar' target='_blank'>Support us!</a>")}
-                  </span>
-                )}
+              <span className={styles.infoLabel}>
+                Avg Value per Turn:
+                <span 
+                  className={styles.tooltipIcon}
+                  title="(Damage Threatened + Damage Blocked + Life Gained - Life Self-Lost + Damage Prevented) ÷ Number of Turns (Excluding turn 0)"
+                >
+                ?
+                </span>
               </span>
+              <span className={styles.infoValue}>{stats.averageValuePerTurn}</span>
             </div>
             
             {/* Other Average Values */}
             <div className={styles.infoRow}>
               <span className={styles.infoLabel}>Avg Damage Threatened per Turn:</span>
-              <span className={styles.infoValue}>{data.averageDamageThreatenedPerTurn}</span>
+              <span className={styles.infoValue}>{stats.averageDamageThreatenedPerTurn}</span>
             </div>
             <div className={styles.infoRow}>
               <span className={styles.infoLabel}>Avg Damage Dealt per Turn:</span>
-              <span className={styles.infoValue}>{data.averageDamageDealtPerTurn}</span>
+              <span className={styles.infoValue}>{stats.averageDamageDealtPerTurn}</span>
             </div>
             <div className={styles.infoRow}>
               <span className={styles.infoLabel}>Avg Damage Threatened per Card:</span>
-              <span className={styles.infoValue}>{data.averageDamageThreatenedPerCard}</span>
+              <span className={styles.infoValue}>{stats.averageDamageThreatenedPerCard}</span>
             </div>
             <div className={styles.infoRow}>
               <span className={styles.infoLabel}>Avg Resources Used per Turn:</span>
-              <span className={styles.infoValue}>{data.averageResourcesUsedPerTurn}</span>
+              <span className={styles.infoValue}>{stats.averageResourcesUsedPerTurn}</span>
             </div>
             <div className={styles.infoRow}>
               <span className={styles.infoLabel}>Avg Cards Left Over per Turn:</span>
-              <span className={styles.infoValue}>{data.averageCardsLeftOverPerTurn}</span>
+              <span className={styles.infoValue}>{stats.averageCardsLeftOverPerTurn}</span>
             </div>
-            
-            {!isPatron && (
-              <div className={styles.infoRow}>
-                <span className={styles.infoLabel}>Avg Combat Value per Turn:</span>
-                <span className={styles.infoValue}>{data.averageCombatValuePerTurn}</span>
-              </div>
-            )}
+            <div className={styles.infoRow}>
+              <span className={styles.infoLabel}>Avg Combat Value per Turn:</span>
+              <span className={styles.infoValue}>{stats.averageCombatValuePerTurn}</span>
+            </div>
             
             {/* Total Damage/Life Values */}
             <div className={styles.infoRow}>
               <span className={styles.infoLabel}>Total Damage Threatened:</span>
-              <span className={styles.infoValue}>{data.totalDamageThreatened}</span>
+              <span className={styles.infoValue}>{stats.totalDamageThreatened}</span>
             </div>
             <div className={styles.infoRow}>
               <span className={styles.infoLabel}>Total Damage Dealt:</span>
-              <span className={styles.infoValue}>{data.totalDamageDealt}</span>
+              <span className={styles.infoValue}>{stats.totalDamageDealt}</span>
             </div>
             
             <div className={styles.infoRow}>
               <span className={styles.infoLabel}>Total Damage Prevented:</span>
-              <span className={styles.infoValue}>
-                {isPatron ? (
-                  data.totalDamagePrevented
-                ) : (
-                  <span>
-                    {parseHtmlToReactElements("<a href='https://linktr.ee/Talishar' target='_blank'>Support us!</a>")}
-                  </span>
-                )}
-              </span>
+              <span className={styles.infoValue}>{stats.totalDamagePrevented}</span>
             </div>
             
             <div className={styles.infoRow}>
               <span className={styles.infoLabel}>Total Life Gained:</span>
-              <span className={styles.infoValue}>
-                {isPatron ? (
-                  data.totalLifeGained
-                ) : (
-                  <span>
-                    {parseHtmlToReactElements("<a href='https://linktr.ee/Talishar' target='_blank'>Support us!</a>")}
-                  </span>
-                )}
-              </span>
+              <span className={styles.infoValue}>{stats.totalLifeGained}</span>
+            </div>
+            <div className={styles.infoRow}>
+              <span className={styles.infoLabel}>Total Life Self-Lost:</span>
+              <span className={styles.infoValue}>{stats.totalLifeLost}</span>
             </div>
             
             {/* Time Values */}
@@ -761,124 +852,143 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
 
       {/* Turn by Turn Breakdown - Full Width Section */}
       <div className={styles.turnBreakdownSection}>
-        <h2 className={styles.sectionHeader}>Turn by Turn Breakdown</h2>
-        <div className={styles.disclaimer}>
-          <em>First turn omitted for first player</em>
-        </div>
+        <h2 className={styles.sectionHeader}>Turn by Turn Breakdown
+          <span 
+            className={styles.tooltipIconBreakdown}
+            title="Certains columns may be hidden if they contain no data (e.g. Damage Prevented, Life Gained/Self-Lost)"
+          >
+          ?
+          </span>
+        </h2>
         <div className={styles.tableContainer}>
           <table className={styles.cardTable}>
               <thead>
                 <tr>
-                  <th className={styles.headersStats}>Turn</th>
-                  <th colSpan={4} className={styles.headersStats}>
+                  <th className={`${styles.headersStats} ${styles.headerGroupSeparator}`}>Turn</th>
+                  <th colSpan={4} className={`${styles.headersStats} ${styles.headerGroupSeparator}`}>
                     Cards
                   </th>
-                  <th colSpan={2} className={styles.headersStats}>
+                  <th colSpan={2} className={`${styles.headersStats} ${styles.headerGroupSeparator}`}>
                     Resources
                   </th>
-                  <th colSpan={5} className={styles.headersStats}>
+                  <th colSpan={shouldHideDamagePrevented ? 4 : 5} className={`${styles.headersStats} ${styles.headerGroupSeparator}`}>
                     Damage
                   </th>
-                  <th colSpan={1} className={styles.headersStats}>
-                    Life
-                  </th>
+                  {lifeColSpan > 0 && (
+                    <th colSpan={lifeColSpan} className={`${styles.headersStats} ${styles.headerGroupSeparator}`}>
+                      Life
+                    </th>
+                  )}
                   <th colSpan={1} className={styles.headersStats}>
                     Value
                   </th>
                 </tr>
                 <tr>
                   <th onClick={() => handleTurnSort('turnNo')}
-                    style={{ cursor: 'pointer', userSelect: 'none' }}
+                    className={styles.sortableHeader}
                     title="Click to sort">
                   # {turnSortField === 'turnNo' && (turnSortDirection === 'desc' ? '↓' : '↑')}
                   </th>
                   <th
                     onClick={() => handleTurnSort('cardsUsed')}
-                    style={{ cursor: 'pointer', userSelect: 'none' }}
+                    className={styles.sortableHeader}
                     title="Click to sort"
                   >
                     Played {turnSortField === 'cardsUsed' && (turnSortDirection === 'desc' ? '↓' : '↑')}
                   </th>
                   <th
                     onClick={() => handleTurnSort('cardsBlocked')}
-                    style={{ cursor: 'pointer', userSelect: 'none' }}
+                    className={styles.sortableHeader}
                     title="Click to sort"
                   >
                     Blocked {turnSortField === 'cardsBlocked' && (turnSortDirection === 'desc' ? '↓' : '↑')}
                   </th>
                   <th
                     onClick={() => handleTurnSort('cardsPitched')}
-                    style={{ cursor: 'pointer', userSelect: 'none' }}
+                    className={styles.sortableHeader}
                     title="Click to sort"
                   >
                     Pitched {turnSortField === 'cardsPitched' && (turnSortDirection === 'desc' ? '↓' : '↑')}
                   </th>
                   <th
                     onClick={() => handleTurnSort('cardsLeft')}
-                    style={{ cursor: 'pointer', userSelect: 'none' }}
+                    className={styles.sortableHeader}
                     title="Click to sort"
                   >
                     Left {turnSortField === 'cardsLeft' && (turnSortDirection === 'desc' ? '↓' : '↑')}
                   </th>
                   <th
                     onClick={() => handleTurnSort('resourcesUsed')}
-                    style={{ cursor: 'pointer', userSelect: 'none' }}
+                    className={styles.sortableHeader}
                     title="Click to sort"
                   >
                     Used {turnSortField === 'resourcesUsed' && (turnSortDirection === 'desc' ? '↓' : '↑')}
                   </th>
                   <th
                     onClick={() => handleTurnSort('resourcesLeft')}
-                    style={{ cursor: 'pointer', userSelect: 'none' }}
+                    className={styles.sortableHeader}
                     title="Click to sort"
                   >
                     Left {turnSortField === 'resourcesLeft' && (turnSortDirection === 'desc' ? '↓' : '↑')}
                   </th>
                   <th
                     onClick={() => handleTurnSort('damageThreatened')}
-                    style={{ cursor: 'pointer', userSelect: 'none' }}
+                    className={styles.sortableHeader}
                     title="Click to sort"
                   >
                     Threatened {turnSortField === 'damageThreatened' && (turnSortDirection === 'desc' ? '↓' : '↑')}
                   </th>
                   <th
                     onClick={() => handleTurnSort('damageDealt')}
-                    style={{ cursor: 'pointer', userSelect: 'none' }}
+                    className={styles.sortableHeader}
                     title="Click to sort"
                   >
                     Dealt {turnSortField === 'damageDealt' && (turnSortDirection === 'desc' ? '↓' : '↑')}
                   </th>
                   <th
                     onClick={() => handleTurnSort('damageBlocked')}
-                    style={{ cursor: 'pointer', userSelect: 'none' }}
+                    className={styles.sortableHeader}
                     title="Click to sort"
                   >
                     Blocked {turnSortField === 'damageBlocked' && (turnSortDirection === 'desc' ? '↓' : '↑')}
                   </th>
-                  <th
-                    onClick={() => handleTurnSort('damagePrevented')}
-                    style={{ cursor: 'pointer', userSelect: 'none' }}
-                    title="Click to sort"
-                  >
-                    Prevented {turnSortField === 'damagePrevented' && (turnSortDirection === 'desc' ? '↓' : '↑')}
-                  </th>
+                  {!shouldHideDamagePrevented && (
+                    <th
+                      onClick={() => handleTurnSort('damagePrevented')}
+                      className={styles.sortableHeader}
+                      title="Click to sort"
+                    >
+                      Prevented {turnSortField === 'damagePrevented' && (turnSortDirection === 'desc' ? '↓' : '↑')}
+                    </th>
+                  )}
                   <th
                     onClick={() => handleTurnSort('damageTaken')}
-                    style={{ cursor: 'pointer', userSelect: 'none' }}
+                    className={styles.sortableHeader}
                     title="Click to sort"
                   >
                     Taken {turnSortField === 'damageTaken' && (turnSortDirection === 'desc' ? '↓' : '↑')}
                   </th>
-                  <th
-                    onClick={() => handleTurnSort('lifeGained')}
-                    style={{ cursor: 'pointer', userSelect: 'none' }}
-                    title="Click to sort"
-                  >
-                    Life Gained {turnSortField === 'lifeGained' && (turnSortDirection === 'desc' ? '↓' : '↑')}
-                  </th>
+                  {!shouldHideLifeGained && (
+                    <th
+                      onClick={() => handleTurnSort('lifeGained')}
+                      className={styles.sortableHeader}
+                      title="Click to sort"
+                    >
+                      Life Gained {turnSortField === 'lifeGained' && (turnSortDirection === 'desc' ? '↓' : '↑')}
+                    </th>
+                  )}
+                  {!shouldHideLifeLost && (
+                    <th
+                      onClick={() => handleTurnSort('lifeLost')}
+                      className={styles.sortableHeader}
+                      title="Click to sort"
+                    >
+                      Life Self-Lost {turnSortField === 'lifeLost' && (turnSortDirection === 'desc' ? '↓' : '↑')}
+                    </th>
+                  )}
                   <th
                     onClick={() => handleTurnSort('totalValue')}
-                    style={{ cursor: 'pointer', userSelect: 'none' }}
+                    className={styles.sortableHeader}
                     title="Click to sort"
                   >
                     This Turn {turnSortField === 'totalValue' && (turnSortDirection === 'desc' ? '↓' : '↑')}
@@ -890,7 +1000,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                   sortedTurnResults.map((turnData, ix) => {
                     return (
                       <tr key={`turnList${ix}`}>
-                        <td className={styles.turnNo}>{Object.keys(data.turnResults).indexOf(turnData.key) + 1}</td>
+                        <td className={styles.turnNo}>{data.firstPlayer === data.playerID ? Object.keys(data.turnResults).indexOf(turnData.key) : Object.keys(data.turnResults).indexOf(turnData.key) + 1}</td>
                         <td className={styles.played}>
                           {turnData.cardsUsed}
                         </td>
@@ -910,25 +1020,34 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                           {turnData.resourcesLeft}
                         </td>
                         <td className={styles.pitched}>
-                          {isPatron ? `${turnData.damageThreatened}` : `X`}
+                          {turnData.damageThreatened}
                         </td>
                         <td className={styles.pitched}>
                           {turnData.damageDealt}
                         </td>
                         <td className={styles.pitched}>
-                          {isPatron ? `${turnData.damageBlocked}` : `X`}
+                          {turnData.damageBlocked}
                         </td>
-                        <td className={styles.pitched}>
-                          {isPatron ? `${turnData.damagePrevented}` : `X`}
-                        </td>
+                        {!shouldHideDamagePrevented && (
+                          <td className={styles.pitched}>
+                            {turnData.damagePrevented}
+                          </td>
+                        )}
                         <td className={styles.pitched}>
                           {turnData.damageTaken}
                         </td>
+                        {!shouldHideLifeGained && (
+                          <td className={styles.pitched}>
+                            {turnData.lifeGained}
+                          </td>
+                        )}
+                        {!shouldHideLifeLost && (
+                          <td className={styles.pitched}>
+                            {turnData.lifeLost}
+                          </td>
+                        )}
                         <td className={styles.pitched}>
-                          {isPatron ? `${turnData.lifeGained}` : `X`}
-                        </td>
-                        <td className={styles.pitched}>
-                          {isPatron ? (+turnData.damageThreatened + +turnData.damageBlocked + +turnData.damagePrevented + +turnData.lifeGained).toString() : `X`}
+                          {( +turnData.damageThreatened + +turnData.damageBlocked + +turnData.damagePrevented + +turnData.lifeGained + +turnData.lifeLost ).toString()}
                         </td>
                       </tr>
                     );
@@ -938,7 +1057,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                   Object.keys(data.turnResults).map((key, ix) => {
                     return (
                       <tr key={`turnList${ix}`}>
-                        <td className={styles.turnNo}>{ix + 1}</td>
+                        <td className={styles.turnNo}>{data.firstPlayer === data.playerID ? ix : ix + 1}</td>
                         <td className={styles.played}>
                           {/* @ts-ignore */}
                           {data.turnResults[key]?.cardsUsed}
@@ -965,7 +1084,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                         </td>
                         <td className={styles.pitched}>
                           {/* @ts-ignore */}
-                          {isPatron ? `${data.turnResults[key]?.damageThreatened}` : `X`}
+                          {data.turnResults[key]?.damageThreatened}
                         </td>
                         <td className={styles.pitched}>
                           {/* @ts-ignore */}
@@ -973,23 +1092,33 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                         </td>
                         <td className={styles.pitched}>
                           {/* @ts-ignore */}
-                          {isPatron ? `${data.turnResults[key]?.damageBlocked}` : `X`}
+                          {data.turnResults[key]?.damageBlocked}
                         </td>
-                        <td className={styles.pitched}>
-                          {/* @ts-ignore */}
-                          {isPatron ? `${data.turnResults[key]?.damagePrevented}` : `X`}
-                        </td>
+                        {!shouldHideDamagePrevented && (
+                          <td className={styles.pitched}>
+                            {/* @ts-ignore */}
+                            {data.turnResults[key]?.damagePrevented}
+                          </td>
+                        )}
                         <td className={styles.pitched}>
                           {/* @ts-ignore */}
                           {data.turnResults[key]?.damageTaken}
                         </td>
+                        {!shouldHideLifeGained && (
+                          <td className={styles.pitched}>
+                            {/* @ts-ignore */}
+                            {data.turnResults[key]?.lifeGained}
+                          </td>
+                        )}
+                        {!shouldHideLifeLost && (
+                          <td className={styles.pitched}>
+                            {/* @ts-ignore */}
+                            {data.turnResults[key]?.lifeLost}
+                          </td>
+                        )}
                         <td className={styles.pitched}>
                           {/* @ts-ignore */}
-                          {isPatron ? `${data.turnResults[key]?.lifeGained}` : `X`}
-                        </td>
-                        <td className={styles.pitched}>
-                          {/* @ts-ignore */}
-                          {isPatron ? (+data.turnResults[key]?.damageThreatened + +data.turnResults[key]?.damageBlocked + +data.turnResults[key]?.damagePrevented + +data.turnResults[key]?.lifeGained).toString() : `X`}
+                          {( +data.turnResults[key]?.damageThreatened + +data.turnResults[key]?.damageBlocked + +data.turnResults[key]?.damagePrevented + +data.turnResults[key]?.lifeGained + +data.turnResults[key]?.lifeLost ).toString()}
                         </td>
                       </tr>
                     );

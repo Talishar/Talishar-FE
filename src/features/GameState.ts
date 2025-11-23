@@ -28,11 +28,13 @@ export default interface GameState {
   };
   cardListFocus?: {
     cardList?: Card[];
+    originalCardList?: Card[];
     name?: string;
     active?: boolean;
     apiCall?: boolean;
     apiQuery?: string;
     popupType?: string;
+    isSorted?: boolean;
   };
   activeLayers?: {
     active?: boolean;
@@ -41,6 +43,7 @@ export default interface GameState {
     isReorderable?: boolean;
   };
   chatLog?: string[];
+  opponentIsTyping?: boolean;
   isUpdateInProgress?: boolean;
   isPlayerInputInProgress?: boolean;
   turnPhase?: {
@@ -121,5 +124,13 @@ export default interface GameState {
     firstWarningShown: boolean;
     secondWarningShown: boolean;
     secondWarningStartTime?: number; // Timestamp when second warning triggered
+  };
+  damagePopups?: {
+    playerOne: Array<{ id: string; amount: number }>;
+    playerTwo: Array<{ id: string; amount: number }>;
+  };
+  healingPopups?: {
+    playerOne: Array<{ id: string; amount: number }>;
+    playerTwo: Array<{ id: string; amount: number }>;
   };
 }

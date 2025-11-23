@@ -1,109 +1,98 @@
-import React, { useRef, useState } from 'react';
-import { useEffect } from 'react';
-import { RootState } from './Store';
-import {
-  getGameInfo,
-  nextTurn,
-  setGameStart,
-  setIsUpdateInProgressFalse
-} from '../features/game/GameSlice';
+import React, { useEffect, useRef } from 'react';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from './Hooks';
-import { shallowEqual } from 'react-redux';
+import { getGameInfo, nextTurn, setGameStart } from 'features/game/GameSlice';
 import { useKnownSearchParams } from 'hooks/useKnownSearchParams';
-import {
-  redirect,
-  useLocation,
-  useNavigate,
-  useParams
-} from 'react-router-dom';
 import { GameLocationState } from 'interface/GameLocationState';
-import { toast } from 'react-hot-toast';
+import { BACKEND_URL } from 'appConstants';
+import { RootState } from './Store';
 
-export const GameStateHandler = React.memo(() => {
-  const abortRef = useRef<AbortController | undefined>(undefined);
-  const timeOutRef = useRef<NodeJS.Timeout | undefined>(undefined);
-  const navigate = useNavigate();
-  const location = useLocation();
-  const locationState = location.state as GameLocationState | undefined;
+const GameStateHandler = () => {
+  const { gameID } = useParams();
+  const gameInfo = useAppSelector(getGameInfo);
+  const dispatch = useAppDispatch();
   const [{ gameName = '0', playerID = '3', authKey = '' }] =
     useKnownSearchParams();
-  const { gameID } = useParams();
-  const gameInfo = useAppSelector(getGameInfo, shallowEqual);
-  const lastUpdate = useAppSelector(
-    (state: RootState) => state.game.gameDynamicInfo.lastUpdate
+  const location = useLocation();
+  const locationState = location.state as GameLocationState | undefined;
+  const isFullRematch = useAppSelector(
+    (state: RootState) => state.game.isFullRematch
   );
-  const [firstPoll, setFirstPoll] = useState(true);
-  const isUpdateInProgress = useAppSelector(
-    (state: RootState) => state.game.isUpdateInProgress
-  );
-  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  
+  const sourceRef = useRef<EventSource | null>(null);
+  const gameParamsRef = useRef({ gameID: 0, playerID: 0, authKey: '' });
 
-  if (gameID === undefined && gameName === '0') {
-    navigate('/');
-    toast.error('No GameID defined');
-  }
-
-  // setup long poll
   useEffect(() => {
-    if (gameInfo.gameID == 0 || isUpdateInProgress || gameInfo.gameID === 101) {
-      return;
+    const currentGameID = parseInt(gameID ?? gameName);
+    const currentPlayerID = locationState?.playerID ?? parseInt(playerID);
+    const currentAuthKey = authKey || gameInfo.authKey;
+    
+    // Only dispatch if values actually changed
+    if (
+      gameParamsRef.current.gameID !== currentGameID ||
+      gameParamsRef.current.playerID !== currentPlayerID ||
+      gameParamsRef.current.authKey !== currentAuthKey
+    ) {
+      dispatch(
+        setGameStart({
+          gameID: currentGameID,
+          playerID: currentPlayerID,
+          authKey: currentAuthKey
+        })
+      );
+      gameParamsRef.current = { gameID: currentGameID, playerID: currentPlayerID, authKey: currentAuthKey };
+    }
+  }, [gameID, gameName, playerID, authKey, gameInfo.authKey, locationState?.playerID, dispatch]);
+
+  useEffect(() => {
+    const currentGameID = gameParamsRef.current.gameID;
+    const currentPlayerID = gameParamsRef.current.playerID;
+    const currentAuthKey = gameParamsRef.current.authKey;
+
+    // Close existing connection before creating new one
+    if (sourceRef.current) {
+      sourceRef.current.close();
     }
 
-    clearTimeout(timeOutRef.current);
-    abortRef.current?.abort();
-
-    abortRef.current = new AbortController();
-    dispatch(
-      nextTurn({
-        game: gameInfo,
-        signal: abortRef.current?.signal,
-        lastUpdate: lastUpdate ?? 0
-      })
+    const source = new EventSource(
+      `${BACKEND_URL}GetUpdateSSE.php?gameName=${currentGameID}&playerID=${currentPlayerID}&authKey=${currentAuthKey}`
     );
+    sourceRef.current = source;
 
-    // timeout if longer than 10 seconds. Will clear this interval on next poll
-    timeOutRef.current = setTimeout(() => {
-      abortRef.current?.abort;
-      dispatch(setIsUpdateInProgressFalse());
-    }, 10000);
-  }, [gameInfo.gameID, isUpdateInProgress, dispatch]);
-
-  // on mount, write gameID etc.
-  useEffect(() => {
-    abortRef.current = new AbortController();
-    dispatch(
-      setGameStart({
-        gameID: parseInt(gameID ?? gameName),
-        playerID: locationState?.playerID ?? parseInt(playerID),
-        authKey: authKey
-      })
-    );
-
-    if (import.meta.env.VITE_FREEZE_GAME) {
+    source.onmessage = () => {
       dispatch(
         nextTurn({
           game: {
-            gameID: parseInt(gameID ?? gameName),
-            playerID: 3,
-            authKey: '',
-            isPrivateLobby: false
+            gameID: currentGameID,
+            playerID: currentPlayerID,
+            authKey: currentAuthKey,
+            isPrivateLobby: gameInfo.isPrivateLobby,
+            isRoguelike: gameInfo.isRoguelike
           },
-          signal: abortRef.current?.signal,
+          signal: undefined,
           lastUpdate: 0
         })
       );
+    };
 
-      return;
-    }
+    source.onerror = () => {
+      source.close();
+    };
 
     return () => {
-      abortRef.current?.abort();
-      dispatch(setIsUpdateInProgressFalse());
+      source.close();
+      sourceRef.current = null;
     };
   }, []);
 
-  return null;
-});
+  useEffect(() => {
+    if (isFullRematch && gameID) {
+      navigate(`/game/lobby/${gameID}`);
+    }
+  }, [isFullRematch, gameID, navigate]);
 
-GameStateHandler.displayName = 'GameStateHandler';
+  return null;
+};
+
 export default GameStateHandler;

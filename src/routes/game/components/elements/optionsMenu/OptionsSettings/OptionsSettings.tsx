@@ -78,6 +78,9 @@ const OptionsSettings = () => {
     manualTunic: settingsData['ManualTunic']?.value === '1',
     disableFabInsights: settingsData['DisableFabInsights']?.value === '1',
     disableHeroIntro: settingsData['DisableHeroIntro']?.value === '1',
+    mirroredBoardLayout: settingsData[optConst.MIRRORED_BOARD_LAYOUT]?.value === '1',
+    mirroredPlayerBoardLayout: settingsData[optConst.MIRRORED_PLAYER_BOARD_LAYOUT]?.value === '1',
+    alwaysShowCounters: String(settingsData[optConst.ALWAYS_SHOW_COUNTERS]?.value) === '1',
   };
   
   useShortcut(DEFAULT_SHORTCUTS.TOGGLE_MANUAL_MODE, () => {
@@ -331,6 +334,42 @@ const OptionsSettings = () => {
       </Fieldset>
 
       <Fieldset legend="Visual Settings">
+        <CheckboxSetting
+          name="mirroredOpponent"
+          label="Mirror Opponent Board"
+          checked={initialValues.mirroredBoardLayout}
+          onChange={() =>
+            handleSettingsChange({
+              name: optConst.MIRRORED_BOARD_LAYOUT,
+              value: initialValues.mirroredBoardLayout ? '0' : '1'
+            })
+          }
+        />
+
+        <CheckboxSetting
+          name="mirroredPlayer"
+          label="Mirror Player Board"
+          checked={initialValues.mirroredPlayerBoardLayout}
+          onChange={() =>
+            handleSettingsChange({
+              name: optConst.MIRRORED_PLAYER_BOARD_LAYOUT,
+              value: initialValues.mirroredPlayerBoardLayout ? '0' : '1'
+            })
+          }
+        />
+
+        <CheckboxSetting
+          name="alwaysShowCounters"
+          label="Always Show Counters on Cards"
+          checked={initialValues.alwaysShowCounters}
+          onChange={() =>
+            handleSettingsChange({
+              name: optConst.ALWAYS_SHOW_COUNTERS,
+              value: initialValues.alwaysShowCounters ? '0' : '1'
+            })
+          }
+        />
+
         <VisualSlider
           label="Card Size"
           value={cookies.cardSize ?? 1}

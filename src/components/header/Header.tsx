@@ -35,7 +35,7 @@ const Header = () => {
             style: {
               background: 'var(--theme-tertiary)',
               color: 'var(--white)',
-              border: '1px solid var(--theme-tertiary-focus)',
+              border: '1px solid var(--theme-border)',
               padding: '0.5rem',
               wordBreak: 'break-word',
               maxWidth: '100vh', 

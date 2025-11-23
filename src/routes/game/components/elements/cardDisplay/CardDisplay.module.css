@@ -231,3 +231,13 @@
     background-position: 0em -2.5em;
   }
 }
+
+.showCountersOnHover {
+  --counters-opacity: 0;
+  --counters-pointer-events: none;
+}
+
+.showCountersOnHover:hover {
+  --counters-opacity: 1;
+  --counters-pointer-events: auto;
+}

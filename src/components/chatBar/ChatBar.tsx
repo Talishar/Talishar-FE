@@ -19,6 +19,7 @@ import styles from './ChatBar.module.scss';
 import useAuth from 'hooks/useAuth';
 import { toast } from 'react-hot-toast';
 import { getReadableFormatName } from 'utils/formatUtils';
+import { createPatreonIconMap } from 'utils/patronIcons';
 
 interface ChatWindow {
   friend: Friend;
@@ -311,6 +312,27 @@ export const ChatBar: React.FC = () => {
                         style={{ cursor: 'pointer' }}
                       >
                         <div className={styles.friendName}>
+                          <div className={styles.friendIcons}>
+                            {createPatreonIconMap(
+                              friend.isContributor,
+                              friend.isPvtVoidPatron,
+                              friend.isPatron,
+                              false
+                            )
+                              .filter(icon => icon.condition)
+                              .map(icon => (
+                                <a
+                                  key={icon.src}
+                                  href={icon.href}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  title={icon.title}
+                                  className={styles.friendIcon}
+                                >
+                                  <img src={icon.src} alt={icon.title} />
+                                </a>
+                              ))}
+                          </div>
                           {friend.nickname || friend.username}
                         </div>
                         {friend.nickname && (

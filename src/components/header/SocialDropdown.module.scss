@@ -19,6 +19,7 @@
     transition: color 0.2s ease;
     flex-direction: column;
     gap: 2px;
+    position: relative;
 
     svg {
       font-size: 30px;
@@ -29,8 +30,46 @@
       white-space: nowrap;
     }
 
+    &:focus,
     &:hover {
-      color: var(--theme-primary, #4a90e2);
+      color: var(--theme-primary);
+      background-color: rgba(0, 0, 0, 0.1);
+
+      &::before {
+        rotate: 225deg;
+      }
+
+      &::before,
+      &::after {
+        transform: scale(1);
+      }
+    }
+
+    &::before,
+    &::after {
+      display: block;
+      content: '';
+      position: absolute;
+      background-color: var(--theme-primary);
+      transition: all 300ms;
+      transform: scale(0);
+      transform-origin: center;
+    }
+
+    &::before {
+      $width: 10px;
+      width: $width;
+      height: $width;
+      bottom: -(calc($width/2) - 1);
+      left: calc(50% - ($width/2));
+      rotate: 45deg;
+    }
+
+    &::after {
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
     }
   }
 

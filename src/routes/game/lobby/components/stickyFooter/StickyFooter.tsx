@@ -11,6 +11,7 @@ export type DeckSize = {
   deckSize: number;
   submitSideboard: boolean;
   isWidescreen: boolean;
+  needToDoDisclaimer: boolean;
   handleLeave: (e: React.MouseEvent<HTMLButtonElement>) => void;
   onSendInviteClick?: () => void;
   onIsValidChange?: (isValid: boolean) => void;
@@ -20,6 +21,7 @@ const StickyFooter = ({
   deckSize,
   submitSideboard,
   isWidescreen,
+  needToDoDisclaimer,
   handleLeave,
   onSendInviteClick,
   onIsValidChange
@@ -124,7 +126,7 @@ const StickyFooter = ({
           <button
             className={styles.buttonClass}
             type="submit"
-            disabled={!errors || !submitSideboard}
+            disabled={isValid === false || !submitSideboard || needToDoDisclaimer}
             onClick={() => setSideboardSubmitted(true)}
           >
             {sideboardSubmitted ? 'Resubmit Deck' : 'Submit Deck'}

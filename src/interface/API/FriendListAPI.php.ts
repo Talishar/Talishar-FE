@@ -2,6 +2,9 @@ export interface Friend {
   friendUserId: number;
   username: string;
   nickname?: string;
+  isPatron?: boolean;
+  isPvtVoidPatron?: boolean;
+  isContributor?: boolean;
 }
 
 export interface User {

@@ -12,6 +12,45 @@
   grid-area: deck;
 }
 
+@media (max-width: 1200px) {
+  .deckZone {
+    border-radius: 0;
+  }
+}
+
+.zoneStack {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.cardWrapper {
+  position: relative;
+  width: var(--card-size);
+  height: var(--card-size);
+  z-index: 100;
+}
+
+.zoneLayer {
+  position: absolute;
+  width: var(--card-size);
+  height: var(--card-size);
+  background: var(--theme-contrast);
+  border: 2px solid var(--theme-contrastHover);
+  border-radius: 12px;
+  pointer-events: none;
+  box-shadow: inset 0 0 2px var(--theme-overlay), 1px 1px 2px var(--theme-overlay);
+}
+
+.zoneLayer:nth-child(1),
+.zoneLayer:nth-child(2),
+.zoneLayer:nth-child(3) {
+  background: transparent;
+}
+
 .manualMode {
   position: absolute;
   top: 3px;

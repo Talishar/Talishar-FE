@@ -12,8 +12,7 @@ import {
   getSettingsEntity,
   getSettingsStatus,
   Setting,
-  updateOptions,
-  settingUpdated
+  updateOptions
 } from 'features/options/optionsSlice';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import { useEffect } from 'react';
@@ -48,9 +47,6 @@ const SettingsPage = () => {
   }, [dispatch]); // Only depend on dispatch to run once on mount
 
   const handleSettingsChange = ({ name, value }: Setting) => {
-    // Update Redux state
-    dispatch(settingUpdated({ name, value }));
-    // Also persist to backend via the updateOptions API
     dispatch(
       updateOptions({
         game: profileGameInfo,
@@ -83,6 +79,9 @@ const SettingsPage = () => {
     playMat: String(settingsData['Playmat']?.value ?? '0'),
     disableFabInsights: String(settingsData['DisableFabInsights']?.value) === '1',
     disableHeroIntro: String(settingsData['DisableHeroIntro']?.value) === '1',
+    mirroredBoardLayout: settingsData?.[optConst.MIRRORED_BOARD_LAYOUT]?.value === '1',
+    mirroredPlayerBoardLayout: settingsData?.[optConst.MIRRORED_PLAYER_BOARD_LAYOUT]?.value === '1',
+    alwaysShowCounters: String(settingsData[optConst.ALWAYS_SHOW_COUNTERS]?.value) === '1',
   };
 
   const priorityOptions = [
@@ -341,7 +340,44 @@ const SettingsPage = () => {
             <ThemeToggle />
           </Fieldset>
           
-          <Fieldset legend="Display">
+          <Fieldset legend="Visual Settings">
+
+            <CheckboxSetting
+              name="mirroredOpponent"
+              label="Mirror Opponent Board"
+              checked={initialValues.mirroredBoardLayout}
+              onChange={() =>
+                handleSettingsChange({
+                  name: optConst.MIRRORED_BOARD_LAYOUT,
+                  value: initialValues.mirroredBoardLayout ? '0' : '1'
+                })
+              }
+            />
+
+            <CheckboxSetting
+              name="mirroredPlayer"
+              label="Mirror Player Board"
+              checked={initialValues.mirroredPlayerBoardLayout}
+              onChange={() =>
+                handleSettingsChange({
+                  name: optConst.MIRRORED_PLAYER_BOARD_LAYOUT,
+                  value: initialValues.mirroredPlayerBoardLayout ? '0' : '1'
+                })
+              }
+            />
+
+            <CheckboxSetting
+              name="alwaysShowCounters"
+              label="Always Show Counters on Cards"
+              checked={initialValues.alwaysShowCounters}
+              onChange={() =>
+                handleSettingsChange({
+                  name: optConst.ALWAYS_SHOW_COUNTERS,
+                  value: initialValues.alwaysShowCounters ? '0' : '1'
+                })
+              }
+            />
+
             <VisualSlider
               label="Card Size"
               value={cookies.cardSize ?? 1}
@@ -371,6 +407,18 @@ const SettingsPage = () => {
               min={10}
               max={100}
               onChange={(value) => setCookie('playmatIntensity', value)}
+            />
+
+            <CheckboxSetting
+              name="alwaysShowCounters"
+              label="Always Show Counters (disable hover-to-show)"
+              checked={initialValues.alwaysShowCounters}
+              onChange={() =>
+                handleSettingsChange({
+                  name: optConst.ALWAYS_SHOW_COUNTERS,
+                  value: initialValues.alwaysShowCounters ? '0' : '1'
+                })
+              }
             />
           </Fieldset>
 

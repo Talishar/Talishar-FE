@@ -3,17 +3,18 @@ import {
   useDeleteAccountMutation,
   useGetFavoriteDecksQuery,
   useGetUserProfileQuery,
-  useCreateGameMutation
+  useAddFavoriteDeckMutation
 } from 'features/api/apiSlice';
 import { DeleteDeckAPIResponse } from 'interface/API/DeleteDeckAPI.php';
 import { DeleteAccountAPIResponse } from 'interface/API/DeleteAccountAPI.php';
-import { CreateGameAPI } from 'interface/API/CreateGame.php';
+import { AddFavoriteDeckRequest } from 'interface/API/AddFavoriteDeck.php';
 import { toast } from 'react-hot-toast';
 import { RiEdit2Line, RiDeleteBin5Line } from "react-icons/ri";
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './profile.module.css';
 import { generateCroppedImageUrl } from 'utils/cropImages';
+import { getReadableFormatName } from 'utils/formatUtils';
 import FriendsList from './FriendsList';
 import BlockedUsers from './BlockedUsers';
 
@@ -41,7 +42,7 @@ export const ProfilePage = () => {
     refetch: profileRefetch
   } = useGetUserProfileQuery(undefined);
   const [deleteDeck] = useDeleteDeckMutation();
-  const [createGame] = useCreateGameMutation();
+  const [addFavoriteDeck] = useAddFavoriteDeckMutation();
   const [deleteAccount, { isLoading: isDeleting }] = useDeleteAccountMutation();
 
   const handleDeleteDeckMessage = (resp: DeleteDeckAPIResponse): string => {
@@ -115,22 +116,13 @@ export const ProfilePage = () => {
     setIsAddingDeck(true);
     console.log('[Deck Addition] Starting deck addition with URL:', newDeckUrl);
     try {
-      // Reuse the existing CreateGame flow to save the deck to favorites
-      const gamePayload: CreateGameAPI = {
-        deck: '',
-        fabdb: newDeckUrl,
-        deckTestMode: false,
-        format: 'cc',
-        visibility: 'private',
-        decksToTry: '',
-        favoriteDeck: true, // This is the key - flag the deck to be saved
-        favoriteDecks: '',
-        gameDescription: ''
+      const deckPayload: AddFavoriteDeckRequest = {
+        fabdb: newDeckUrl
       };
 
-      console.log('[Deck Addition] Game payload created:', gamePayload);
+      console.log('[Deck Addition] Deck payload created:', deckPayload);
 
-      const addDeckPromise = createGame(gamePayload).unwrap();
+      const addDeckPromise = addFavoriteDeck(deckPayload).unwrap();
       toast.promise(
         addDeckPromise,
         {
@@ -354,7 +346,11 @@ export const ProfilePage = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {deckIsLoading && <div>Loading...</div>}
+                  {deckIsLoading && (
+                    <tr>
+                      <td colSpan={5}>Loading...</td>
+                    </tr>
+                  )}
                   {decksData?.favoriteDecks.map((deck, ix) => (
                     <tr key={deck.key}>
                       <th scope="row">
@@ -366,7 +362,7 @@ export const ProfilePage = () => {
                         )}
                       </th>
                       <td>{deck.name}</td>
-                      <td>{deck.format ? deck.format.charAt(0).toUpperCase() + deck.format.slice(1) : ""}</td>
+                      <td>{getReadableFormatName(deck.format || '')}</td>
                       {/* <td>{deck.cardBack ? deck.cardBack.charAt(0).toUpperCase() + deck.cardBack.slice(1).toLowerCase() : ""}</td>
                   <td>{deck.playmat ? deck.playmat.charAt(0).toUpperCase() + deck.playmat.slice(1).toLowerCase() : ""}</td> */}
                       <td className={styles.editButton}>

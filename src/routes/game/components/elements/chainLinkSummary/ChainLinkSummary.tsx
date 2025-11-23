@@ -98,46 +98,53 @@ const ChainLinkSummary = ({
   if (isLoading) {
     content = <div>Loading...</div>;
   } else if (error) {
-    content = <div>{JSON.stringify(error)}</div>;
+    content = <div className={styles.error}>{JSON.stringify(error)}</div>;
   } else {
     content = (
       <div className={styles.cardListContents}>
-        <div className={styles.totalDamage}>Total Damage: {data.TotalDamageDealt}</div>
-        <table className={styles.table}>
-          <thead>
-            <tr>
-              <th className={styles.leftColumn}></th>
-              <th className={styles.midColumn}>Card</th>
-              <th className={styles.rightColumn}>Effect</th>
-            </tr>
-          </thead>
-          <tbody>
-            {data.Cards != undefined ? (
-              data.Cards.map((entry: any, ix: number) => {
-                const card: Card = { cardNumber: entry.cardID };
-                return (
-                  <tr key={`cardList${ix}`}>
-                    <td className={styles.columnCards}>
-                      <Effect card={card} />
-                    </td>
-                    <td className={styles.column}>
-                      <CardTextLink
-                        cardName={entry.Name}
-                        cardNumber={entry.cardID}
-                      />
-                    </td>
-                    <td className={styles.column}>
-                      {entry.modifier > 0 ? '+' : ''}
-                      {entry.modifier === 0 ? '' : entry.modifier}
-                    </td>
-                  </tr>
-                );
-              })
-            ) : (
-              <div>{JSON.stringify(data)}</div>
-            )}
-          </tbody>
-        </table>
+        <div className={styles.totalDamageContainer}>
+          <span className={styles.totalDamageLabel}>Total Damage Dealt: </span>
+          <span className={styles.totalDamageValue}>{data.TotalDamageDealt}</span>
+        </div>
+        <div className={styles.tableWrapper}>
+          <table className={styles.table}>
+            <thead>
+              <tr>
+                <th className={styles.cardImageCol}></th>
+                <th className={styles.cardNameCol}>Card</th>
+                <th className={styles.effectCol}>Effect</th>
+              </tr>
+            </thead>
+            <tbody>
+              {data.Cards != undefined ? (
+                data.Cards.map((entry: any, ix: number) => {
+                  const card: Card = { cardNumber: entry.cardID };
+                  return (
+                    <tr key={`cardList${ix}`} className={styles.tableRow}>
+                      <td className={styles.cardImageCol}>
+                        <Effect card={card} />
+                      </td>
+                      <td className={styles.cardNameCol}>
+                        <CardTextLink
+                          cardName={entry.Name}
+                          cardNumber={entry.cardID}
+                        />
+                      </td>
+                      <td className={styles.effectCol}>
+                        <span className={entry.modifier > 0 ? styles.positive : entry.modifier < 0 ? styles.negative : ''}>
+                          {entry.modifier > 0 ? '+' : ''}
+                          {entry.modifier === 0 ? '-' : entry.modifier}
+                        </span>
+                      </td>
+                    </tr>
+                  );
+                })
+              ) : (
+                <tr><td colSpan={3} className={styles.error}>{JSON.stringify(data)}</td></tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
     );
   }

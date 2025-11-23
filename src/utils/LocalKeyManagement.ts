@@ -56,6 +56,11 @@ export const saveGameAuthKey = (gameId: number, authKey: string, playerID?: numb
     return;
   }
   
+  // Spectators (playerID 3) must never save auth keys
+  if (playerID === 3) {
+    return;
+  }
+  
   if (!authKey || authKey.trim() === '') {
     console.error('Invalid authKey, cannot save empty key for game:', gameId);
     return;

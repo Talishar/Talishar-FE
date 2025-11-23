@@ -2,14 +2,16 @@
   position: fixed;
   display: flex;
   flex-direction: column;
-  top: 20vh;
-  bottom: 20vh;
-  left: 20vw;
-  right: 20vw;
-  background-color: rgba(0, 0, 0, 0.95);
-  padding: 1.5vh;
-  border: 2px solid var(--theme-border);
-  border-radius: 10px;
+  top: 15vh;
+  bottom: 15vh;
+  left: 15vw;
+  right: 15vw;
+  background: linear-gradient(135deg, rgba(20, 20, 30, 0.98) 0%, rgba(10, 10, 20, 0.98) 100%);
+  padding: 2.5vh;
+  border: 2px solid var(--theme-primary);
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
 }
 
 .cardListTitleContainer {
@@ -20,31 +22,141 @@
   width: 100%;
   justify-content: space-between;
   align-items: center;
-  padding-left: 1vh;
+  padding-bottom: 1.5vh;
+  border-bottom: 1px solid rgba(var(--theme-primary-rgb), 0.3);
+  margin-bottom: 1.5vh;
 }
 
 .title {
-  padding: 0px;
-  margin: 0px;
+  padding: 0;
+  margin: 0;
+  font-size: 2.2vh;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  color: var(--theme-primary);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
-.totalDamage {
-  padding-left: 1vh;
-  margin: 0px;
-  font-size: 1.5vh;
+.totalDamageContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5vh 1.5vh;
+  background: rgba(var(--theme-primary-rgb), 0.08);
+  border: 1px solid rgba(var(--theme-primary-rgb), 0.3);
+  border-radius: 8px;
+  margin-bottom: 1.5vh;
+  gap: 1vh;
+}
+
+.totalDamageLabel {
+  font-size: 1.3vh;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.7);
+  letter-spacing: 0.5px;
+}
+
+.totalDamageValue {
+  font-size: 2vh;
+  font-weight: 700;
+  color: var(--theme-primary);
+  text-shadow: 0 2px 8px rgba(var(--theme-primary-rgb), 0.3);
 }
 
 .cardListContents {
-  padding-top: 1vh;
+  padding: 0;
   display: flex;
   flex-grow: 1;
   flex-direction: column;
   justify-content: flex-start;
-  align-items: flex-start;
-  align-content: flex-start;
-  gap: 1vh;
-  overflow-y: auto;
+  align-items: stretch;
+  gap: 0;
+  overflow: hidden;
   height: auto;
+}
+
+.tableWrapper {
+  flex: 1;
+  overflow-y: auto;
+  border-radius: 8px;
+  border: 1px solid rgba(var(--theme-primary-rgb), 0.2);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 1.4vh;
+}
+
+.table thead {
+  position: sticky;
+  top: 0;
+  background: rgba(var(--theme-primary-rgb), 0.15);
+  border-bottom: 2px solid var(--theme-primary);
+  z-index: 10;
+}
+
+.table th {
+  padding: 1.2vh 1vh;
+  text-align: center;
+  font-weight: 600;
+  color: var(--theme-primary);
+  text-transform: uppercase;
+  font-size: 1.2vh;
+  letter-spacing: 0.5px;
+}
+
+.cardImageCol {
+  width: 10vh;
+  padding: 1.2vh 2vh !important;
+  text-align: center;
+}
+
+.cardNameCol {
+  flex: 1;
+  text-align: center;
+  padding: 1.2vh 0vh !important;
+  min-width: 200px;
+}
+
+.effectCol {
+  width: 10vh;
+  text-align: center;
+  padding: 1.2vh 2vh !important;
+}
+
+.tableRow {
+  border-bottom: 1px solid rgba(var(--theme-primary-rgb), 0.15);
+  transition: background-color 0.2s ease;
+}
+
+.tableRow:hover {
+  background-color: rgba(var(--theme-primary-rgb), 0.1);
+}
+
+.tableRow:last-child {
+  border-bottom: none;
+}
+
+.table td {
+  padding: 1.2vh 1vh;
+  vertical-align: middle;
+}
+
+.table td:first-child {
+  text-align: center;
+}
+
+.positive {
+  color: #4ade80;
+  font-weight: 600;
+  text-shadow: 0 0 8px rgba(74, 222, 128, 0.3);
+}
+
+.negative {
+  color: #f87171;
+  font-weight: 600;
+  text-shadow: 0 0 8px rgba(248, 113, 113, 0.3);
 }
 
 .cardListCloseIcon {
@@ -52,49 +164,37 @@
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  width: 4vh;
-  height: 4vh;
-  border-radius: 5px;
+  width: 4.5vh;
+  height: 4.5vh;
+  border-radius: 6px;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.6);
+  transition: all 0.2s ease;
+  font-size: 1.8vh;
 }
 
 .cardListCloseIcon:hover {
   background-color: var(--theme-primary);
   color: black;
+  transform: scale(1.1);
 }
 
 .emptyOutside {
   position: fixed;
-  top: 0px;
-  right: 0px;
-  top: 0px;
-  bottom: 0px;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   z-index: 100;
+  background-color: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(2px);
 }
 
-.leftColumn {
-  width: 5vh;
-}
-
-.midColumn {
+.error {
+  color: #f87171;
+  padding: 1.5vh;
   text-align: center;
-  width: 50vh;
-}
-
-.rightColumn {
-  text-align: center;
-}
-
-.table {
-  width: 100%;
-}
-
-.column {
-  text-align: center;
-}
-
-.columnCards {
-  text-align: center;
-  width: 7vh;
+  font-size: 1.1vh;
 }
