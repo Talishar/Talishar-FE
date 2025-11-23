@@ -4,7 +4,8 @@ import { RootState } from 'app/Store';
 import Displayrow from 'interface/Displayrow';
 import CardDisplay from '../../elements/cardDisplay/CardDisplay';
 import DamagePopup from '../../elements/damagePopup/DamagePopup';
-import { removeDamagePopup, addDamagePopup } from 'features/game/GameSlice';
+import HealingPopup from '../../elements/healingPopup/HealingPopup';
+import { removeDamagePopup, addDamagePopup, addHealingPopup, removeHealingPopup } from 'features/game/GameSlice';
 import styles from './HeroZone.module.css';
 
 export const HeroZone = React.memo((prop: Displayrow) => {
@@ -28,7 +29,14 @@ export const HeroZone = React.memo((prop: Displayrow) => {
     return Array.isArray(popups) ? popups : [];
   });
 
-  // Track health changes and spawn damage popups
+  const healingPopups = useAppSelector((state: RootState) => {
+    const popups = isPlayer
+      ? state.game.healingPopups?.playerOne
+      : state.game.healingPopups?.playerTwo;
+    return Array.isArray(popups) ? popups : [];
+  });
+
+  // Track health changes and spawn damage/healing popups
   useEffect(() => {
     if (previousHealthRef.current !== undefined && health !== undefined) {
       const healthDifference = previousHealthRef.current - health;
@@ -37,6 +45,13 @@ export const HeroZone = React.memo((prop: Displayrow) => {
           addDamagePopup({
             isPlayer,
             amount: healthDifference
+          })
+        );
+      } else if (healthDifference < 0) {
+        dispatch(
+          addHealingPopup({
+            isPlayer,
+            amount: Math.abs(healthDifference)
           })
         );
       }
@@ -48,6 +63,10 @@ export const HeroZone = React.memo((prop: Displayrow) => {
     dispatch(removeDamagePopup({ isPlayer, id }));
   };
 
+  const handleHealingPopupComplete = (id: string) => {
+    dispatch(removeHealingPopup({ isPlayer, id }));
+  };
+
   return (
     <div className={styles.heroZone}>
       <CardDisplay card={cardToDisplay} />
@@ -57,6 +76,14 @@ export const HeroZone = React.memo((prop: Displayrow) => {
           id={popup.id}
           amount={popup.amount}
           onComplete={handleDamagePopupComplete}
+        />
+      ))}
+      {healingPopups.map((popup) => (
+        <HealingPopup
+          key={popup.id}
+          id={popup.id}
+          amount={popup.amount}
+          onComplete={handleHealingPopupComplete}
         />
       ))}
     </div>

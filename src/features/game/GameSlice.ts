@@ -398,6 +398,45 @@ export const gameSlice = createSlice({
         );
       }
     },
+    addHealingPopup: (
+      state,
+      action: PayloadAction<{
+        isPlayer: boolean;
+        amount: number;
+      }>
+    ) => {
+      const id = `${Date.now()}-${Math.random()}`;
+      const popup = { id, amount: action.payload.amount };
+      if (action.payload.isPlayer) {
+        if (!state.healingPopups) {
+          state.healingPopups = { playerOne: [], playerTwo: [] };
+        }
+        state.healingPopups.playerOne.push(popup);
+      } else {
+        if (!state.healingPopups) {
+          state.healingPopups = { playerOne: [], playerTwo: [] };
+        }
+        state.healingPopups.playerTwo.push(popup);
+      }
+    },
+    removeHealingPopup: (
+      state,
+      action: PayloadAction<{
+        isPlayer: boolean;
+        id: string;
+      }>
+    ) => {
+      if (!state.healingPopups) return;
+      if (action.payload.isPlayer) {
+        state.healingPopups.playerOne = state.healingPopups.playerOne.filter(
+          (p) => p.id !== action.payload.id
+        );
+      } else {
+        state.healingPopups.playerTwo = state.healingPopups.playerTwo.filter(
+          (p) => p.id !== action.payload.id
+        );
+      }
+    },
     openOptionsMenu: (state) => {
       state.optionsMenu = { active: true };
     },
@@ -928,7 +967,9 @@ export const {
   resetInactivityTimer,
   stillHereButtonClicked,
   addDamagePopup,
-  removeDamagePopup
+  removeDamagePopup,
+  addHealingPopup,
+  removeHealingPopup
 } = actions;
 
 export const getGameInfo = (state: RootState) => state.game.gameInfo;

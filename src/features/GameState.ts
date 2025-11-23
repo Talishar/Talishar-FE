@@ -129,4 +129,8 @@ export default interface GameState {
     playerOne: Array<{ id: string; amount: number }>;
     playerTwo: Array<{ id: string; amount: number }>;
   };
+  healingPopups?: {
+    playerOne: Array<{ id: string; amount: number }>;
+    playerTwo: Array<{ id: string; amount: number }>;
+  };
 }
