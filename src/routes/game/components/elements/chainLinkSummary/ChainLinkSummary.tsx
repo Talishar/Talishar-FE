@@ -103,7 +103,7 @@ const ChainLinkSummary = ({
     content = (
       <div className={styles.cardListContents}>
         <div className={styles.totalDamageContainer}>
-          <span className={styles.totalDamageLabel}>Total Damage</span>
+          <span className={styles.totalDamageLabel}>Total Damage Dealt: </span>
           <span className={styles.totalDamageValue}>{data.TotalDamageDealt}</span>
         </div>
         <div className={styles.tableWrapper}>
