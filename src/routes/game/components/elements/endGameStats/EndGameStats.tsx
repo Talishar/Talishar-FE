@@ -374,7 +374,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
         content += `Total Damage Threatened,${playerData.totalDamageThreatened || 0}\n`;
         content += `Total Damage Dealt,${playerData.totalDamageDealt || 0}\n`;
         content += `Total Damage Prevented,${playerData.totalDamagePrevented || 0}\n`;
-        content += `Total Life Gained,${playerData.totalLifeGained || 0}\n\n`;
+        content += `Total Life Δ,${playerData.totalLifeGained || 0}\n\n`;
         
         content += 'CARD PLAY STATS\n';
         content += 'Card Name,Played,Blocked,Pitched,Times Hit';
@@ -730,7 +730,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
             </div>
             
             <div className={styles.infoRow}>
-              <span className={styles.infoLabel}>Total Life Gained:</span>
+              <span className={styles.infoLabel}>Total Life Δ:</span>
               <span className={styles.infoValue}>{stats.totalLifeGained}</span>
             </div>
             
@@ -920,7 +920,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                     className={styles.sortableHeader}
                     title="Click to sort"
                   >
-                    Life Gained {turnSortField === 'lifeGained' && (turnSortDirection === 'desc' ? '↓' : '↑')}
+                    Life Δ {turnSortField === 'lifeGained' && (turnSortDirection === 'desc' ? '↓' : '↑')}
                   </th>
                   <th
                     onClick={() => handleTurnSort('totalValue')}
