@@ -50,6 +50,13 @@ const GameStateHandler = () => {
     const currentPlayerID = gameParamsRef.current.playerID;
     const currentAuthKey = gameParamsRef.current.authKey;
 
+    // Don't create EventSource if authKey is empty for actual players (playerID 1 or 2)
+    // Spectators (playerID 3) don't need authKey, but players do
+    if ((currentPlayerID === 1 || currentPlayerID === 2) && !currentAuthKey) {
+      // Wait for authKey to be available before connecting
+      return;
+    }
+
     // Close existing connection before creating new one
     if (sourceRef.current) {
       sourceRef.current.close();
@@ -84,7 +91,7 @@ const GameStateHandler = () => {
       source.close();
       sourceRef.current = null;
     };
-  }, []);
+  }, [gameParamsRef.current.gameID, gameParamsRef.current.playerID, gameParamsRef.current.authKey, dispatch, gameInfo.isPrivateLobby]);
 
   useEffect(() => {
     if (isFullRematch && gameID) {

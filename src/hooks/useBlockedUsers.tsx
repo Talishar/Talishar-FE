@@ -11,7 +11,8 @@ export const useBlockedUsers = () => {
       const response = await fetch('APIs/BlockedUsersAPI.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'getBlockedUsers' })
+        body: JSON.stringify({ action: 'getBlockedUsers' }),
+        credentials: 'include'
       });
       
       // Handle error statuses silently
