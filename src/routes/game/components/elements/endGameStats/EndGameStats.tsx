@@ -572,44 +572,44 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                   <th className={`${styles.firstHeadersStats} ${styles.hideOnExport}`}></th>
                   <th 
                     onClick={() => handleSort('cardName')}
-                    className={styles.sortableHeader}
+                    className={`${styles.headersStats} ${styles.sortableHeader} ${styles.headerGroupSeparator}`}
                     title="Click to sort"
                   >
                     Card Name {sortField === 'cardName' && (sortDirection === 'desc' ? '↓' : '↑')}
                   </th>
                   <th 
-                    className={`${styles.headersStats} ${styles.sortableHeader}`}
+                    className={`${styles.headersStats} ${styles.sortableHeader} ${styles.headerGroupSeparator}`}
                     onClick={() => handleSort('played')}
                     title="Click to sort"
                   >
                     Played {sortField === 'played' && (sortDirection === 'desc' ? '↓' : '↑')}
                   </th>
                   <th 
-                    className={`${styles.headersStats} ${styles.sortableHeader}`}
+                    className={`${styles.headersStats} ${styles.sortableHeader} ${styles.headerGroupSeparator}`}
                     onClick={() => handleSort('blocked')}
                     title="Click to sort"
                   >
                     Blocked {sortField === 'blocked' && (sortDirection === 'desc' ? '↓' : '↑')}
                   </th>
                   <th 
-                    className={`${styles.headersStats} ${styles.sortableHeader}`}
+                    className={`${styles.headersStats} ${styles.sortableHeader} ${styles.headerGroupSeparator}`}
                     onClick={() => handleSort('pitched')}
                     title="Click to sort"
                   >
                     Pitched {sortField === 'pitched' && (sortDirection === 'desc' ? '↓' : '↑')}
                   </th>
                   <th 
-                    className={`${styles.headersStats} ${styles.sortableHeader}`}
+                    className={`${styles.headersStats} ${styles.sortableHeader} ${styles.headerGroupSeparator}`}
                     onClick={() => handleSort('hits')}
                     title="Click to sort"
                   >
                     Times Hit {sortField === 'hits' && (sortDirection === 'desc' ? '↓' : '↑')}
                   </th>
                   {numCharged > 0 && (
-                    <th className={styles.headersStats}>Times Charged</th>
+                    <th className={`${styles.headersStats} ${styles.headerGroupSeparator}`}>Times Charged</th>
                   )}
                   {numKatsuDiscard > 0 && (
-                    <th className={styles.headersStats}>Times Katsu Discarded</th>
+                    <th className={`${styles.headersStats} ${styles.headerGroupSeparator}`}>Times Katsu Discarded</th>
                   )}
                 </tr>
               </thead>
@@ -826,17 +826,17 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
           <table className={styles.cardTable}>
               <thead>
                 <tr>
-                  <th className={styles.headersStats}>Turn</th>
-                  <th colSpan={4} className={styles.headersStats}>
+                  <th className={`${styles.headersStats} ${styles.headerGroupSeparator}`}>Turn</th>
+                  <th colSpan={4} className={`${styles.headersStats} ${styles.headerGroupSeparator}`}>
                     Cards
                   </th>
-                  <th colSpan={2} className={styles.headersStats}>
+                  <th colSpan={2} className={`${styles.headersStats} ${styles.headerGroupSeparator}`}>
                     Resources
                   </th>
-                  <th colSpan={5} className={styles.headersStats}>
+                  <th colSpan={5} className={`${styles.headersStats} ${styles.headerGroupSeparator}`}>
                     Damage
                   </th>
-                  <th colSpan={2} className={styles.headersStats}>
+                  <th colSpan={2} className={`${styles.headersStats} ${styles.headerGroupSeparator}`}>
                     Life
                   </th>
                   <th colSpan={1} className={styles.headersStats}>

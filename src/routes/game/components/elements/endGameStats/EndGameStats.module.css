@@ -426,6 +426,11 @@
   text-align: center;
 }
 
+.headerGroupSeparator {
+  border-right: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0 5px 1px 0;
+}
+
 .tableContainer {
   overflow-x: auto;
   overflow-y: auto;
