@@ -26,7 +26,9 @@ export const getReadableFormatName = (format: string): string => {
     'openformatcc': 'Open CC',
     'openllcc': 'Open Living Legend',
     'openformatllcc': 'Open Living Legend',
-    'cc': 'Classic Constructed'
+    'cc': 'Classic Constructed',
+    'opensage': 'Open Silver Age',
+    'openformatsage': 'Open Silver Age'
   };
   
   const key = format.toLowerCase().replace(/[_\s]/g, '');

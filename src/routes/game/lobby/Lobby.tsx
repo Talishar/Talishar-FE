@@ -258,6 +258,7 @@ const Lobby = () => {
       case GAME_FORMAT.OPEN_CC:
       case GAME_FORMAT.OPEN_BLITZ:
       case GAME_FORMAT.OPEN_LL_CC:
+      case GAME_FORMAT.OPEN_SAGE:
         return { deckSize: 0, maxDeckSize: 99999 };
       default:
         return { deckSize: 60, maxDeckSize: 99999 };
@@ -326,7 +327,8 @@ const Lobby = () => {
     !acceptedDisclaimer &&
     (data.format === GAME_FORMAT.OPEN_CC ||
       data.format === GAME_FORMAT.OPEN_BLITZ ||
-      data.format === GAME_FORMAT.OPEN_LL_CC
+      data.format === GAME_FORMAT.OPEN_LL_CC ||
+      data.format === GAME_FORMAT.OPEN_SAGE
       // data.format === GAME_FORMAT.OPEN_LL_BLITZ
     );
   //const needToDoDisclaimer = false;
