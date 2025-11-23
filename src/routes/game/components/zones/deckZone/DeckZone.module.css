@@ -12,6 +12,12 @@
   grid-area: deck;
 }
 
+@media (max-width: 1200px) {
+  .deckZone {
+    border-radius: 0;
+  }
+}
+
 .zoneStack {
   position: relative;
   width: 100%;

@@ -62,6 +62,7 @@ export const DeckZone = React.memo((prop: Displayrow) => {
     }
   };
   // Calculate number of visible layers based on deck size
+  const isMobileOrTablet = window.innerWidth <= 1024;
   const visibleLayers = deckCards;
   const layerOffsetY = 0.25; // pixels per layer (down)
   const layerOffsetX = -0.25; // pixels per layer (left)
@@ -71,8 +72,8 @@ export const DeckZone = React.memo((prop: Displayrow) => {
   return (
     <div className={styles.deckZone} onClick={deckZoneDisplay}>
       <div className={styles.zoneStack}>
-        {/* Render background layers for 3D effect */}
-        {Array.from({ length: visibleLayers - 1 }).map((_, index) => (
+        {/* Render background layers for 3D effect - only on desktop */}
+        {!isMobileOrTablet && Array.from({ length: visibleLayers - 1 }).map((_, index) => (
           <div
             key={`layer-${index}`}
             className={styles.zoneLayer}
@@ -83,7 +84,7 @@ export const DeckZone = React.memo((prop: Displayrow) => {
           />
         ))}
         {/* Main card on top */}
-        <div className={styles.cardWrapper} style={{ transform: `translateY(${baseOffsetY}px) translateX(${baseOffsetX}px)` }}>
+        <div className={styles.cardWrapper} style={!isMobileOrTablet ? { transform: `translateY(${baseOffsetY}px) translateX(${baseOffsetX}px)` } : {}}>
           <CardDisplay
             card={deckBack}
             num={showCount ? deckCards : undefined}

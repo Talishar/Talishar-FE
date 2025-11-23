@@ -48,6 +48,7 @@ export const GraveyardZone = React.memo((prop: Displayrow) => {
 
   // Count only face-up cards (overlay !== 'disabled')
   const faceUpCount = graveyardZone.filter(card => card.overlay !== 'disabled').length;
+  const isMobileOrTablet = window.innerWidth <= 1024;
   const totalCards = graveyardZone.length;
   const layerOffsetY = 0.25; // pixels per layer (down)
   const layerOffsetX = -0.25; // pixels per layer (left)
@@ -57,8 +58,8 @@ export const GraveyardZone = React.memo((prop: Displayrow) => {
   return (
     <div className={styles.graveyardZone} onClick={graveyardZoneDisplay}>
       <div className={styles.zoneStack}>
-        {/* Render background layers for 3D effect */}
-        {Array.from({ length: totalCards - 1 }).map((_, index) => (
+        {/* Render background layers for 3D effect - only on desktop */}
+        {!isMobileOrTablet && Array.from({ length: totalCards - 1 }).map((_, index) => (
           <div
             key={`layer-${index}`}
             className={styles.zoneLayer}
@@ -69,7 +70,7 @@ export const GraveyardZone = React.memo((prop: Displayrow) => {
           />
         ))}
         {/* Main card on top */}
-        <div className={styles.cardWrapper} style={{ transform: `translateY(${baseOffsetY}px) translateX(${baseOffsetX}px)` }}>
+        <div className={styles.cardWrapper} style={!isMobileOrTablet ? { transform: `translateY(${baseOffsetY}px) translateX(${baseOffsetX}px)` } : {}}>
           <CardDisplay
             card={cardToDisplay}
             isPlayer={isPlayer}

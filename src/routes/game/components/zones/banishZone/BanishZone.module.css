@@ -13,6 +13,12 @@
   min-height: 100%;
 }
 
+@media (max-width: 1200px) {
+  .banishZone {
+    border-radius: 0.25em;
+  }
+}
+
 .zoneStack {
   position: relative;
   width: 100%;
