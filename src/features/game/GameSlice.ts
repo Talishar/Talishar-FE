@@ -338,14 +338,20 @@ export const gameSlice = createSlice({
         active: true,
         name: action.payload.name,
         apiQuery: action.payload.query,
-        apiCall: true
+        apiCall: true,
+        isSorted: false
       };
     },
     clearCardListFocus: (state) => {
       state.cardListFocus = undefined;
     },
     toggleCardListSort: (state) => {
-      if (state.cardListFocus && state.cardListFocus.originalCardList) {
+      if (state.cardListFocus && state.cardListFocus.cardList) {
+        // If originalCardList doesn't exist, set it now (for API-based popups)
+        if (!state.cardListFocus.originalCardList) {
+          state.cardListFocus.originalCardList = state.cardListFocus.cardList;
+        }
+        
         const isSorted = state.cardListFocus.isSorted;
         if (isSorted) {
           // Revert to original order
@@ -353,7 +359,7 @@ export const gameSlice = createSlice({
           state.cardListFocus.isSorted = false;
         } else {
           // Sort the cards
-          const sortedCardList = [...state.cardListFocus.cardList || []].sort((a, b) => b.cardNumber.localeCompare(a.cardNumber));
+          const sortedCardList = [...state.cardListFocus.cardList].sort((a, b) => b.cardNumber.localeCompare(a.cardNumber));
           state.cardListFocus.cardList = sortedCardList;
           state.cardListFocus.isSorted = true;
         }
