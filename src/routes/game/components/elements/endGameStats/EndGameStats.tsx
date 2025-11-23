@@ -380,7 +380,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
         content += `Total Damage Dealt,${playerData.totalDamageDealt || 0}\n`;
         content += `Total Damage Prevented,${playerData.totalDamagePrevented || 0}\n`;
         content += `Total Life Gained,${playerData.totalLifeGained || 0}\n\n`;
-        content += `Total Life Lost,${playerData.totalLifeLost || 0}\n\n`;
+        content += `Total Life Self-Lost,${playerData.totalLifeLost || 0}\n\n`;
         
         content += 'CARD PLAY STATS\n';
         content += 'Card Name,Played,Blocked,Pitched,Times Hit';
@@ -528,6 +528,37 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
 
     return sorted;
   }, [data.turnResults, turnSortField, turnSortDirection]);
+
+  // Helper function to check if columns should be hidden - We hide those 3 collumns for irrelevant heroes
+  const shouldHideDamagePrevented = useMemo(() => {
+    if (!data.turnResults || Object.keys(data.turnResults).length === 0) return false;
+    const allZero = Object.values(data.turnResults).every(turn => {
+      const value = typeof turn.damagePrevented === 'number' ? turn.damagePrevented : 0;
+      return value === 0;
+    });
+    return allZero;
+  }, [data.turnResults]);
+
+  const shouldHideLifeGained = useMemo(() => {
+    if (!data.turnResults || Object.keys(data.turnResults).length === 0) return false;
+    const allZero = Object.values(data.turnResults).every(turn => {
+      const value = typeof turn.lifeGained === 'number' ? turn.lifeGained : 0;
+      return value === 0;
+    });
+    return allZero;
+  }, [data.turnResults]);
+
+  const shouldHideLifeLost = useMemo(() => {
+    if (!data.turnResults || Object.keys(data.turnResults).length === 0) return false;
+    const allZero = Object.values(data.turnResults).every(turn => {
+      const value = typeof turn.lifeLost === 'number' ? turn.lifeLost : 0;
+      return value === 0;
+    });
+    return allZero;
+  }, [data.turnResults]);
+
+  // Calculate the Life column span based on hidden columns
+  const lifeColSpan = (shouldHideLifeGained ? 0 : 1) + (shouldHideLifeLost ? 0 : 1);
 
   function fancyTimeFormat(duration: number | undefined) {
     duration = duration ?? 0;
@@ -687,7 +718,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                 Avg Value per Turn:
                 <span 
                   className={styles.tooltipIcon}
-                  title="(Damage Threatened + Damage Blocked + Life Gained - Life Lost + Damage Prevented) ÷ Number of Turns (Excluding turn 0)"
+                  title="(Damage Threatened + Damage Blocked + Life Gained - Life Self-Lost + Damage Prevented) ÷ Number of Turns (Excluding turn 0)"
                 >
                 ?
                 </span>
@@ -741,7 +772,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
               <span className={styles.infoValue}>{stats.totalLifeGained}</span>
             </div>
             <div className={styles.infoRow}>
-              <span className={styles.infoLabel}>Total Life Lost:</span>
+              <span className={styles.infoLabel}>Total Life Self-Lost:</span>
               <span className={styles.infoValue}>{stats.totalLifeLost}</span>
             </div>
             
@@ -821,7 +852,14 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
 
       {/* Turn by Turn Breakdown - Full Width Section */}
       <div className={styles.turnBreakdownSection}>
-        <h2 className={styles.sectionHeader}>Turn by Turn Breakdown</h2>
+        <h2 className={styles.sectionHeader}>Turn by Turn Breakdown
+          <span 
+            className={styles.tooltipIconBreakdown}
+            title="Certains columns may be hidden if they contain no data (e.g. Damage Prevented, Life Gained/Self-Lost)"
+          >
+          ?
+          </span>
+        </h2>
         <div className={styles.tableContainer}>
           <table className={styles.cardTable}>
               <thead>
@@ -833,12 +871,14 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                   <th colSpan={2} className={`${styles.headersStats} ${styles.headerGroupSeparator}`}>
                     Resources
                   </th>
-                  <th colSpan={5} className={`${styles.headersStats} ${styles.headerGroupSeparator}`}>
+                  <th colSpan={shouldHideDamagePrevented ? 4 : 5} className={`${styles.headersStats} ${styles.headerGroupSeparator}`}>
                     Damage
                   </th>
-                  <th colSpan={2} className={`${styles.headersStats} ${styles.headerGroupSeparator}`}>
-                    Life
-                  </th>
+                  {lifeColSpan > 0 && (
+                    <th colSpan={lifeColSpan} className={`${styles.headersStats} ${styles.headerGroupSeparator}`}>
+                      Life
+                    </th>
+                  )}
                   <th colSpan={1} className={styles.headersStats}>
                     Value
                   </th>
@@ -912,13 +952,15 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                   >
                     Blocked {turnSortField === 'damageBlocked' && (turnSortDirection === 'desc' ? '↓' : '↑')}
                   </th>
-                  <th
-                    onClick={() => handleTurnSort('damagePrevented')}
-                    className={styles.sortableHeader}
-                    title="Click to sort"
-                  >
-                    Prevented {turnSortField === 'damagePrevented' && (turnSortDirection === 'desc' ? '↓' : '↑')}
-                  </th>
+                  {!shouldHideDamagePrevented && (
+                    <th
+                      onClick={() => handleTurnSort('damagePrevented')}
+                      className={styles.sortableHeader}
+                      title="Click to sort"
+                    >
+                      Prevented {turnSortField === 'damagePrevented' && (turnSortDirection === 'desc' ? '↓' : '↑')}
+                    </th>
+                  )}
                   <th
                     onClick={() => handleTurnSort('damageTaken')}
                     className={styles.sortableHeader}
@@ -926,20 +968,24 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                   >
                     Taken {turnSortField === 'damageTaken' && (turnSortDirection === 'desc' ? '↓' : '↑')}
                   </th>
-                  <th
-                    onClick={() => handleTurnSort('lifeGained')}
-                    className={styles.sortableHeader}
-                    title="Click to sort"
-                  >
-                    Life Gained {turnSortField === 'lifeGained' && (turnSortDirection === 'desc' ? '↓' : '↑')}
-                  </th>
-                  <th
-                    onClick={() => handleTurnSort('lifeLost')}
-                    className={styles.sortableHeader}
-                    title="Click to sort"
-                  >
-                    Life Lost {turnSortField === 'lifeLost' && (turnSortDirection === 'desc' ? '↓' : '↑')}
-                  </th>
+                  {!shouldHideLifeGained && (
+                    <th
+                      onClick={() => handleTurnSort('lifeGained')}
+                      className={styles.sortableHeader}
+                      title="Click to sort"
+                    >
+                      Life Gained {turnSortField === 'lifeGained' && (turnSortDirection === 'desc' ? '↓' : '↑')}
+                    </th>
+                  )}
+                  {!shouldHideLifeLost && (
+                    <th
+                      onClick={() => handleTurnSort('lifeLost')}
+                      className={styles.sortableHeader}
+                      title="Click to sort"
+                    >
+                      Life Self-Lost {turnSortField === 'lifeLost' && (turnSortDirection === 'desc' ? '↓' : '↑')}
+                    </th>
+                  )}
                   <th
                     onClick={() => handleTurnSort('totalValue')}
                     className={styles.sortableHeader}
@@ -982,18 +1028,24 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                         <td className={styles.pitched}>
                           {turnData.damageBlocked}
                         </td>
-                        <td className={styles.pitched}>
-                          {turnData.damagePrevented}
-                        </td>
+                        {!shouldHideDamagePrevented && (
+                          <td className={styles.pitched}>
+                            {turnData.damagePrevented}
+                          </td>
+                        )}
                         <td className={styles.pitched}>
                           {turnData.damageTaken}
                         </td>
-                        <td className={styles.pitched}>
-                          {turnData.lifeGained}
-                        </td>
-                        <td className={styles.pitched}>
-                          {turnData.lifeLost}
-                        </td>
+                        {!shouldHideLifeGained && (
+                          <td className={styles.pitched}>
+                            {turnData.lifeGained}
+                          </td>
+                        )}
+                        {!shouldHideLifeLost && (
+                          <td className={styles.pitched}>
+                            {turnData.lifeLost}
+                          </td>
+                        )}
                         <td className={styles.pitched}>
                           {( +turnData.damageThreatened + +turnData.damageBlocked + +turnData.damagePrevented + +turnData.lifeGained + +turnData.lifeLost ).toString()}
                         </td>
@@ -1042,22 +1094,28 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                           {/* @ts-ignore */}
                           {data.turnResults[key]?.damageBlocked}
                         </td>
-                        <td className={styles.pitched}>
-                          {/* @ts-ignore */}
-                          {data.turnResults[key]?.damagePrevented}
-                        </td>
+                        {!shouldHideDamagePrevented && (
+                          <td className={styles.pitched}>
+                            {/* @ts-ignore */}
+                            {data.turnResults[key]?.damagePrevented}
+                          </td>
+                        )}
                         <td className={styles.pitched}>
                           {/* @ts-ignore */}
                           {data.turnResults[key]?.damageTaken}
                         </td>
-                        <td className={styles.pitched}>
-                          {/* @ts-ignore */}
-                          {data.turnResults[key]?.lifeGained}
-                        </td>
-                        <td className={styles.pitched}>
-                          {/* @ts-ignore */}
-                          {data.turnResults[key]?.lifeLost}
-                        </td>
+                        {!shouldHideLifeGained && (
+                          <td className={styles.pitched}>
+                            {/* @ts-ignore */}
+                            {data.turnResults[key]?.lifeGained}
+                          </td>
+                        )}
+                        {!shouldHideLifeLost && (
+                          <td className={styles.pitched}>
+                            {/* @ts-ignore */}
+                            {data.turnResults[key]?.lifeLost}
+                          </td>
+                        )}
                         <td className={styles.pitched}>
                           {/* @ts-ignore */}
                           {( +data.turnResults[key]?.damageThreatened + +data.turnResults[key]?.damageBlocked + +data.turnResults[key]?.damagePrevented + +data.turnResults[key]?.lifeGained + +data.turnResults[key]?.lifeLost ).toString()}

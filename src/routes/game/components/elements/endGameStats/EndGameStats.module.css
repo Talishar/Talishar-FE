@@ -137,6 +137,29 @@
   color: var(--near-black);
 }
 
+.tooltipIconBreakdown{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.2em;
+  height: 1.2em;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.7em;
+  font-weight: 600;
+  cursor: help;
+  position: relative;
+  transition: background-color 0.2s, color 0.2s;
+  margin-left: 0.5em;
+  align-self: flex-start;
+}
+
+.tooltipIconBreakdown:hover {
+  background-color: var(--theme-primary);
+  color: var(--near-black);
+}
+
 .heroPortraitsContainer {
   background: rgba(0, 0, 0, 0.2);
   border-radius: 6px;
