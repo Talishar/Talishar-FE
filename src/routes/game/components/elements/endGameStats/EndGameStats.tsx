@@ -77,6 +77,7 @@ export interface TurnResult {
   resourcesLeft: number;
   lifeGained: number;
   lifeLost: number;
+  turnNo?: number;
 }
 
 export interface EndGameStatsRef {
@@ -508,9 +509,9 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
       let bValue: number;
 
       if (turnSortField === 'turnNo') {
-        // Sort by turn number (the index in the original object)
-        aValue = Object.keys(data.turnResults).indexOf(a.key);
-        bValue = Object.keys(data.turnResults).indexOf(b.key);
+        // Sort by turn number (use turnNo from data or fallback to calculation)
+        aValue = a.turnNo !== undefined ? a.turnNo : Object.keys(data.turnResults).indexOf(a.key);
+        bValue = b.turnNo !== undefined ? b.turnNo : Object.keys(data.turnResults).indexOf(b.key);
       } else if (turnSortField === 'totalValue') {
         aValue = (a.damageThreatened || 0) + (a.damageBlocked || 0) + (a.damagePrevented || 0) + (a.lifeGained || 0) + (a.lifeLost || 0);
         bValue = (b.damageThreatened || 0) + (b.damageBlocked || 0) + (b.damagePrevented || 0) + (b.lifeGained || 0) + (b.lifeLost || 0);
@@ -998,9 +999,12 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
               <tbody>
                 {sortedTurnResults ? (
                   sortedTurnResults.map((turnData, ix) => {
+                    const turnIndex = Object.keys(data.turnResults).indexOf(turnData.key);
+                    // Hide turn #0 for the non-first player
+                    if (data.firstPlayer === 0 && turnIndex === 0) return null;
                     return (
                       <tr key={`turnList${ix}`}>
-                        <td className={styles.turnNo}>{data.firstPlayer === data.playerID ? Object.keys(data.turnResults).indexOf(turnData.key) : Object.keys(data.turnResults).indexOf(turnData.key) + 1}</td>
+                        <td className={styles.turnNo}>{turnIndex}</td>
                         <td className={styles.played}>
                           {turnData.cardsUsed}
                         </td>
@@ -1055,9 +1059,12 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                 ) : (
                   !!data.turnResults &&
                   Object.keys(data.turnResults).map((key, ix) => {
+                    const turnNo = data.turnResults[key]?.turnNo;
+                    // Hide turn #0 for the non-first player
+                    if (data.firstPlayer === 0 && ix === 0) return null;
                     return (
                       <tr key={`turnList${ix}`}>
-                        <td className={styles.turnNo}>{data.firstPlayer === data.playerID ? ix : ix + 1}</td>
+                        <td className={styles.turnNo}>{turnNo !== undefined ? turnNo : ix}</td>
                         <td className={styles.played}>
                           {/* @ts-ignore */}
                           {data.turnResults[key]?.cardsUsed}
