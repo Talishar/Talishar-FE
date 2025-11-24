@@ -531,30 +531,30 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
 
   // Helper function to check if columns should be hidden - We hide those 3 collumns for irrelevant heroes
   const shouldHideDamagePrevented = useMemo(() => {
-    if (!data.turnResults || Object.keys(data.turnResults).length === 0) return false;
-    const allZero = Object.values(data.turnResults).every(turn => {
-      const value = typeof turn.damagePrevented === 'number' ? turn.damagePrevented : 0;
-      return value === 0;
+    if (!data.turnResults || Object.keys(data.turnResults).length === 0) return true;
+    const hasAnyNonZero = Object.values(data.turnResults).some(turn => {
+      const value = parseInt(String(turn.damagePrevented), 10) || 0;
+      return value !== 0;
     });
-    return allZero;
+    return !hasAnyNonZero;
   }, [data.turnResults]);
 
   const shouldHideLifeGained = useMemo(() => {
-    if (!data.turnResults || Object.keys(data.turnResults).length === 0) return false;
-    const allZero = Object.values(data.turnResults).every(turn => {
-      const value = typeof turn.lifeGained === 'number' ? turn.lifeGained : 0;
-      return value === 0;
+    if (!data.turnResults || Object.keys(data.turnResults).length === 0) return true;
+    const hasAnyNonZero = Object.values(data.turnResults).some(turn => {
+      const value = parseInt(String(turn.lifeGained), 10) || 0;
+      return value !== 0;
     });
-    return allZero;
+    return !hasAnyNonZero;
   }, [data.turnResults]);
 
   const shouldHideLifeLost = useMemo(() => {
-    if (!data.turnResults || Object.keys(data.turnResults).length === 0) return false;
-    const allZero = Object.values(data.turnResults).every(turn => {
-      const value = typeof turn.lifeLost === 'number' ? turn.lifeLost : 0;
-      return value === 0;
+    if (!data.turnResults || Object.keys(data.turnResults).length === 0) return true;
+    const hasAnyNonZero = Object.values(data.turnResults).some(turn => {
+      const value = parseInt(String(turn.lifeLost), 10) || 0;
+      return value !== 0;
     });
-    return allZero;
+    return !hasAnyNonZero;
   }, [data.turnResults]);
 
   // Calculate the Life column span based on hidden columns
@@ -1020,10 +1020,10 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                           {turnData.resourcesLeft}
                         </td>
                         <td className={styles.pitched}>
-                          {turnData.damageThreatened}
+                          {parseInt(String(turnData.damageThreatened), 10) || 0}
                         </td>
                         <td className={styles.pitched}>
-                          {turnData.damageDealt}
+                          {parseInt(String(turnData.damageDealt), 10) || 0}
                         </td>
                         <td className={styles.pitched}>
                           {turnData.damageBlocked}
@@ -1084,11 +1084,11 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                         </td>
                         <td className={styles.pitched}>
                           {/* @ts-ignore */}
-                          {data.turnResults[key]?.damageThreatened}
+                          {parseInt(String(data.turnResults[key]?.damageThreatened), 10) || 0}
                         </td>
                         <td className={styles.pitched}>
                           {/* @ts-ignore */}
-                          {data.turnResults[key]?.damageDealt}
+                          {parseInt(String(data.turnResults[key]?.damageDealt), 10) || 0}
                         </td>
                         <td className={styles.pitched}>
                           {/* @ts-ignore */}
