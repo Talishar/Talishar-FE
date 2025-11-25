@@ -69,15 +69,17 @@ const HeroVsHeroIntro = () => {
   const displayOpponentHeroName = formatHeroName(opponentHero) || 'Opponent';
 
   // Check localStorage to see if intro was already shown in this game session
-  // Also cleanup stale localStorage entries from previous games
   useEffect(() => {
     if (gameID) {
-      // Clean up old temporary hero intro keys from previous games
+      // Clean up all old hero intro keys from previous games
       const keysToRemove: string[] = [];
       for (let i = 0; i < localStorage.length; i++) {
         const key = localStorage.key(i);
-        if (key && key.startsWith('heroIntroShown_') && !key.includes(gameGUID)) {
-          keysToRemove.push(key);
+        if (key && (key.startsWith('heroIntroShown_') || key.startsWith('heroIntroLocalUUID_'))) {
+          // Only keep keys that match current gameID for the local UUID tracking
+          if (!key.includes(gameID.toString())) {
+            keysToRemove.push(key);
+          }
         }
       }
       keysToRemove.forEach(key => localStorage.removeItem(key));
@@ -126,7 +128,7 @@ const HeroVsHeroIntro = () => {
   }
 
   // Don't render if not visible or if missing hero data or if disabled
-  if (!isVisible || !yourHero || !opponentHero || disableHeroIntro) {
+  if (!isVisible || !yourHero || !opponentHero || yourHero === opponentHero || disableHeroIntro) {
     return null;
   }
 
