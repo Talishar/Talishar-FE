@@ -75,7 +75,15 @@ export const nextTurn = createAsyncThunk(
         const indexOfBraces = data.indexOf('{');
         if (indexOfBraces === -1) {
           // No JSON object found - backend returned an error message or non-JSON response
-          toast.error(`Backend Error: ${sanitizeHtmlTags(data)}`);
+          const errorMessage = sanitizeHtmlTags(data);
+          toast.error(`Backend Error: ${errorMessage}`);
+          
+          // Check for fatal errors that should end the game
+          if (errorMessage.includes('game no longer exists') || errorMessage.includes('does not exist')) {
+            // Return special error marker that will be handled by the rejected handler
+            throw new Error(`GAME_NOT_FOUND: ${errorMessage}`);
+          }
+          
           return console.error(`Backend returned non-JSON response: ${data}`);
         }
         if (indexOfBraces !== 0) {
@@ -92,7 +100,8 @@ export const nextTurn = createAsyncThunk(
           return;
         }
         waitingForJSONResponse = false;
-        return console.error(e);
+        // Re-throw to trigger rejected handler
+        throw e;
       }
     }
   }
@@ -845,6 +854,14 @@ export const gameSlice = createSlice({
     });
     builder.addCase(nextTurn.rejected, (state, action) => {
       state.isUpdateInProgress = false;
+      
+      // Check if this was a "game not found" error
+      const errorMessage = action.error?.message || '';
+      if (errorMessage.includes('GAME_NOT_FOUND')) {
+        console.error('Game not found on server, marking for navigation');
+        window.sessionStorage.setItem('gameNotFound', String(state.gameInfo.gameID));
+      }
+      
       return state;
     });
 

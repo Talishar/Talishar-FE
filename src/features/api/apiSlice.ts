@@ -632,6 +632,29 @@ export const apiSlice = createApi({
           body: { action: 'getBlockedUsers' },
           responseHandler: parseResponse
         };
+      },
+      // Handle errors gracefully - don't crash if BlockedUsersAPI is unavailable
+      queryFn: async (arg, api, extraOptions, baseQuery) => {
+        try {
+          const result = await baseQuery({
+            url: URL_END_POINT.BLOCKED_USERS,
+            method: 'POST',
+            body: { action: 'getBlockedUsers' },
+            responseHandler: parseResponse
+          });
+          
+          // If we get a 405 or other error, return empty blocked users list instead of error
+          if (!result.data) {
+            console.warn('BlockedUsersAPI unavailable, continuing without blocked users');
+            return { data: { blockedUsers: [] } as BlockedUsersAPIResponse };
+          }
+          
+          return result;
+        } catch (error) {
+          console.warn('Failed to fetch blocked users:', error);
+          // Return empty list instead of error to not crash the game
+          return { data: { blockedUsers: [] } as BlockedUsersAPIResponse };
+        }
       }
     }),
 
@@ -643,6 +666,17 @@ export const apiSlice = createApi({
           body: { action: 'blockUser', blockedUsername: blockedUsername },
           responseHandler: parseResponse
         };
+      },
+      // Handle errors gracefully - don't crash if BlockedUsersAPI is unavailable
+      async onQueryStarted({ blockedUsername }, { dispatch, queryFulfilled, getState }) {
+        try {
+          await queryFulfilled;
+        } catch (error: any) {
+          if (error.error?.status === 405 || error.error?.status === 401) {
+            // If API is unavailable, just log a warning and continue
+            console.warn(`Could not block user ${blockedUsername}:`, error.error?.data?.error || 'API unavailable');
+          }
+        }
       }
     }),
 
@@ -654,6 +688,17 @@ export const apiSlice = createApi({
           body: { action: 'unblockUser', blockedUserId: blockedUserId },
           responseHandler: parseResponse
         };
+      },
+      // Handle errors gracefully - don't crash if BlockedUsersAPI is unavailable
+      async onQueryStarted({ blockedUserId }, { dispatch, queryFulfilled, getState }) {
+        try {
+          await queryFulfilled;
+        } catch (error: any) {
+          if (error.error?.status === 405 || error.error?.status === 401) {
+            // If API is unavailable, just log a warning and continue
+            console.warn(`Could not unblock user ${blockedUserId}:`, error.error?.data?.error || 'API unavailable');
+          }
+        }
       }
     }),
 

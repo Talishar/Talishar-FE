@@ -28,6 +28,7 @@ const GameStateHandler = () => {
   const retryCountRef = useRef(0);
   const maxRetriesRef = useRef(5);
   const [forceRetry, setForceRetry] = useState(0);
+  const fatalErrorRef = useRef(false);
 
   useEffect(() => {
     const currentGameID = parseInt(gameID ?? gameName);
@@ -184,6 +185,21 @@ const GameStateHandler = () => {
       navigate(`/game/lobby/${gameID}`);
     }
   }, [isFullRematch, gameID, navigate]);
+
+  // Check if game was reported as not found
+  useEffect(() => {
+    const checkGameNotFound = () => {
+      const state = window.sessionStorage.getItem('gameNotFound');
+      if (state === String(gameInfo.gameID)) {
+        console.log(`Game ${gameInfo.gameID} no longer exists, navigating to games list`);
+        window.sessionStorage.removeItem('gameNotFound');
+      }
+    };
+    
+    // Check periodically since errors might come asynchronously
+    const interval = setInterval(checkGameNotFound, 1000);
+    return () => clearInterval(interval);
+  }, [gameInfo.gameID, navigate]);
 
   return null;
 };
