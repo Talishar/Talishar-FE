@@ -160,6 +160,52 @@
   color: var(--near-black);
 }
 
+.tooltipIcon[data-tooltip]::before,
+.tooltipIcon[data-tooltip]::after,
+.tooltipIconBreakdown[data-tooltip]::before,
+.tooltipIconBreakdown[data-tooltip]::after {
+  position: absolute;
+  z-index: 1000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-bottom: 0.5em;
+  font-size: 1.2em;
+}
+
+.tooltipIcon[data-tooltip]::before,
+.tooltipIconBreakdown[data-tooltip]::before {
+  content: attr(data-tooltip);
+  padding: 0.5em 0.75em;
+  border-radius: 4px;
+  font-weight: 400;
+  max-width: 400px;
+  width: max-content;
+  white-space: normal;
+  word-wrap: break-word;
+}
+
+.tooltipIcon[data-tooltip]::after,
+.tooltipIconBreakdown[data-tooltip]::after {
+  content: '';
+  border: 5px solid transparent;
+  bottom: calc(100% - 5px);
+  margin-bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.tooltipIcon:hover[data-tooltip]::before,
+.tooltipIcon:hover[data-tooltip]::after,
+.tooltipIconBreakdown:hover[data-tooltip]::before,
+.tooltipIconBreakdown:hover[data-tooltip]::after {
+  opacity: 1;
+  pointer-events: auto;
+}
+
 .heroPortraitsContainer {
   background: rgba(0, 0, 0, 0.2);
   border-radius: 6px;

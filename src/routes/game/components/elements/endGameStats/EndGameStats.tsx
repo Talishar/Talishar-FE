@@ -719,7 +719,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                 Avg Value per Turn:
                 <span 
                   className={styles.tooltipIcon}
-                  title="(Damage Threatened + Damage Blocked + Life Gained - Life Self-Lost + Damage Prevented) ÷ Number of Turns (Excluding turn 0)"
+                  data-tooltip="(Damage Threatened + Damage Blocked + Life Gained - Life Self-Lost + Damage Prevented) ÷ Number of Turns (Excluding turn 0)"
                 >
                 ?
                 </span>
@@ -856,7 +856,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
         <h2 className={styles.sectionHeader}>Turn by Turn Breakdown
           <span 
             className={styles.tooltipIconBreakdown}
-            title="Certains columns may be hidden if they contain no data (e.g. Damage Prevented, Life Gained/Self-Lost)"
+            data-tooltip="Certain columns may be hidden if they contain no data (e.g. Damage Prevented, Life Gained/Self-Lost)"
           >
           ?
           </span>
