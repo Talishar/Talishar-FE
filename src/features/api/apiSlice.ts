@@ -8,6 +8,7 @@ import {
 import { isRejectedWithValue } from '@reduxjs/toolkit';
 import type { MiddlewareAPI, Middleware } from '@reduxjs/toolkit';
 import { BACKEND_URL, ROGUELIKE_URL, URL_END_POINT } from 'appConstants';
+import { detectVpnBlock, logVpnBlock } from 'utils/VpnDetection';
 import {
   CreateGameAPI,
   CreateGameResponse
@@ -143,7 +144,23 @@ const dynamicBaseQuery: BaseQueryFn<
     baseUrl,
     credentials: 'include'
   });
-  return rawBaseQuery(args, webApi, extraOptions);
+  
+  const result = await rawBaseQuery(args, webApi, extraOptions);
+  
+  // Check for VPN provider blocks in response headers
+  if (result.meta?.response?.headers) {
+    const vpnBlock = detectVpnBlock(result.meta.response.headers);
+    if (vpnBlock) {
+      logVpnBlock(vpnBlock);
+      
+      // For BlockedUsersAPI specifically, gracefully degrade instead of erroring
+      if (typeof args === 'object' && (args as any).url?.includes('BlockedUsersAPI')) {
+        return { data: { blockedUsers: [] } };
+      }
+    }
+  }
+  
+  return result;
 };
 
 // Define our single API slice object
