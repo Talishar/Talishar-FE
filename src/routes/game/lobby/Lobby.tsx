@@ -212,10 +212,13 @@ const Lobby = () => {
       );
       
       navigate(`/game/play/${gameID}`, {
-        state: { playerID: playerID ?? 0 } as GameLocationState
+        state: { 
+          playerID: playerID ?? 0,
+          authKey: authKey
+        } as GameLocationState
       });
     }
-  }, [gameLobby?.isMainGameReady, gameID, playerID, navigate, dispatch, data?.deck?.heroName, data?.deck?.hero, gameLobby?.theirHeroName, gameLobby?.theirHero]);
+  }, [gameLobby?.isMainGameReady, gameID, playerID, authKey, navigate, dispatch, data?.deck?.heroName, data?.deck?.hero, gameLobby?.theirHeroName, gameLobby?.theirHero]);
 
   const deckClone = [...data.deck.cards];
   const deckSBClone = [...data.deck.cardsSB];

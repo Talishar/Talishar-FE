@@ -6,9 +6,8 @@ import { useKnownSearchParams } from 'hooks/useKnownSearchParams';
 import { GameLocationState } from 'interface/GameLocationState';
 import { BACKEND_URL } from 'appConstants';
 import { RootState } from './Store';
-import { logAuthKeyLoss } from 'utils/AuthKeyMonitoring';
 import { selectCurrentUserName } from 'features/auth/authSlice';
-import { getCurrentUsername, cacheCurrentUsername } from 'utils/LocalKeyManagement';
+import { getCurrentUsername, cacheCurrentUsername, loadGameAuthKey } from 'utils/LocalKeyManagement';
 
 const GameStateHandler = () => {
   const { gameID } = useParams();
@@ -33,7 +32,15 @@ const GameStateHandler = () => {
   useEffect(() => {
     const currentGameID = parseInt(gameID ?? gameName);
     const currentPlayerID = locationState?.playerID ?? parseInt(playerID);
-    const currentAuthKey = authKey || gameInfo.authKey;
+    
+    let currentAuthKey = locationState?.authKey || authKey;
+    if (!currentAuthKey) {
+      currentAuthKey = gameInfo.authKey;
+    }
+    if (!currentAuthKey && currentGameID > 0) {
+      // Last resort: try to load from localStorage for same game
+      currentAuthKey = loadGameAuthKey(currentGameID);
+    }
     
     // Only dispatch if values actually changed
     if (
@@ -69,7 +76,6 @@ const GameStateHandler = () => {
     if ((currentPlayerID === 1 || currentPlayerID === 2) && !currentAuthKey) {
       // This is expected while authKey is loading, only log once per game change
       if (gameParamsRef.current.gameID !== currentGameID) {
-        logAuthKeyLoss(currentGameID, currentPlayerID, 'EventSource.setup.waiting');
         console.warn(`⏳ AuthKey loading for game ${currentGameID}, player ${currentPlayerID}...`);
       }
       // Wait for authKey to be available before connecting
@@ -119,12 +125,19 @@ const GameStateHandler = () => {
         };
 
         source.onerror = () => {
+          // Only process error if connection was actually established (not just interruption during page load)
+          if (!hasConnected && retryCountRef.current === 0) {
+            console.warn('⚠️ EventSource connection interrupted during page load');
+            // Treat interruptions during load as transient, retry once quickly
+            setTimeout(() => {
+              setForceRetry(prev => prev + 1);
+            }, 500);
+            return;
+          }
+          
           console.error('❌ EventSource connection failed');
           source.close();
           sourceRef.current = null;
-          
-          // Log the error
-          logAuthKeyLoss(currentGameID, currentPlayerID, 'EventSource.error');
           
           // Retry with exponential backoff
           if (retryCountRef.current < maxRetriesRef.current) {
@@ -136,12 +149,24 @@ const GameStateHandler = () => {
               setForceRetry(prev => prev + 1); // Trigger the effect again
             }, retryDelay);
           } else {
-            console.error(`❌ EventSource failed after ${maxRetriesRef.current + 1} attempts. Game may not update properly.`);
+            console.error(`❌ EventSource failed after ${maxRetriesRef.current + 1} attempts. Falling back to polling.`);
+            // Fall back to polling by calling nextTurn directly
+            dispatch(
+              nextTurn({
+                game: {
+                  gameID: currentGameID,
+                  playerID: currentPlayerID,
+                  authKey: currentAuthKey,
+                  isPrivateLobby: gameInfo.isPrivateLobby
+                },
+                signal: undefined,
+                lastUpdate: 0
+              })
+            );
           }
         };
       } catch (error) {
         console.error('Failed to create EventSource:', error);
-        logAuthKeyLoss(currentGameID, currentPlayerID, 'EventSource.creation');
       }
     }, 100); // Small delay to ensure page is ready
 
