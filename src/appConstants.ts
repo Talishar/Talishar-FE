@@ -147,7 +147,7 @@ export const GAME_FORMAT = {
   COMPETITIVE_LL: "compllcc",
   SAGE: "sage",
   COMPETITIVE_SAGE: "compsage",
-  OPEN_SAGE: 'opensage'
+  OPEN_SAGE: 'openformatsage'
   //OPEN_LL_BLITZ: 'openformatllblitz'
 };
 
