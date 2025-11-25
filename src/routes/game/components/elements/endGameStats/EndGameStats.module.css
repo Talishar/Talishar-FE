@@ -410,6 +410,8 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  text-align: left !important;
+  padding-left: 0 !important;
 }
 
 .twoPitch {
@@ -420,6 +422,8 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  text-align: left !important;
+  padding-left: 0 !important;
 }
 
 .threePitch {
@@ -430,6 +434,8 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  text-align: left !important;
+  padding-left: 0 !important;
 }
 
 .played,
