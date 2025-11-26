@@ -984,7 +984,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                       className={styles.sortableHeader}
                       title="Click to sort"
                     >
-                      Life Self-Lost {turnSortField === 'lifeLost' && (turnSortDirection === 'desc' ? '↓' : '↑')}
+                      Self-Lost {turnSortField === 'lifeLost' && (turnSortDirection === 'desc' ? '↓' : '↑')}
                     </th>
                   )}
                   <th
