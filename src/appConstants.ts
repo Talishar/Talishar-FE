@@ -309,6 +309,7 @@ export const URL_END_POINT = {
   GET_COSMETICS: `APIs/GetCosmetics.php`,
   DELETE_DECK: `APIs/DeleteDeckAPI.php`,
   ADD_FAVORITE_DECK: `APIs/AddFavoriteDeck.php`,
+  UPDATE_FAVORITE_DECK: `APIs/UpdateFavoriteDeck.php`,
   PATREON_LOGIN: `AccountFiles/PatreonLoginAPI.php`,
   LOAD_BUG_REPORT: `LoadBugReport.php`,
   SUBMIT_LOBBY_INPUT: 'APIs/SubmitLobbyInput.php',
