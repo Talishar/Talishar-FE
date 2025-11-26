@@ -17,7 +17,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { ErrorMessage } from '@hookform/error-message';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { FaExclamationCircle } from 'react-icons/fa';
-import { HEROES_OF_RATHE } from '../../index/components/filter/constants';
+import { HEROES_OF_RATHE, CLASS_OF_RATHE } from '../../index/components/filter/constants';
 import { generateCroppedImageUrl } from 'utils/cropImages';
 import { ImageSelect, ImageSelectOption } from 'components/ImageSelect';
 import GoogleAdSense from 'components/GoogleAdSense';
@@ -93,6 +93,7 @@ const CreateGame = () => {
   const [selectedFormat, setSelectedFormat] = React.useState(initialValues.format);
   const [previousFormat, setPreviousFormat] = React.useState<string>(String(initialValues.format || ''));
   const [selectedHeroes, setSelectedHeroes] = React.useState<string[]>([]);
+  const [selectedClasses, setSelectedClasses] = React.useState<string[]>([]);
   const [gameDescription, setGameDescription] = React.useState('');
   const [selectedFavoriteDeck, setSelectedFavoriteDeck] = React.useState<string>(initialValues.favoriteDecks || '');
   const [selectedPreconDeck, setSelectedPreconDeck] = React.useState<string>(PRECON_DECKS.LINKS[0]);
@@ -122,6 +123,11 @@ const CreateGame = () => {
     return Array.from(heroNames).sort();
   }, []);
 
+  const uniqueClasses = useMemo(() => {
+    const classNames = new Set(CLASS_OF_RATHE.map(classObj => classObj.label));
+    return Array.from(classNames).sort();
+  }, [])
+
   const handleFormatChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newFormat = e.target.value;
     const wasPrecon = isPreconFormat(previousFormat);
@@ -144,12 +150,15 @@ const CreateGame = () => {
     const value = e.target.value;
     setGameDescription(value);
     
-    if (value !== 'Looking for a specific hero') {
+    if (value !== 'Looking for a specific hero' && value !== 'Looking for a specific class') {
       setSelectedHeroes([]);
+      setSelectedClasses([]);
       setValue('gameDescription', value);
-    } else {
+    } 
+    else {
       setValue('gameDescription', 'Looking for a specific hero');
     }
+
   };
 
   const handleHeroSelection = (heroName: string, isChecked: boolean) => {
@@ -178,10 +187,34 @@ const CreateGame = () => {
     }
   };
 
+  const handleClassSelection = (className: string, isChecked: boolean) => {
+    let newSelectedClasses: string[];
+    
+    if (isChecked) {
+      if (selectedClasses.length < 3 && !selectedClasses.includes(className)) {
+        newSelectedClasses = [...selectedClasses, className];
+      } else {
+        return; // Don't add if limit reached or already selected
+      }
+    } else {
+      newSelectedClasses = selectedClasses.filter(classNameItem => classNameItem !== className);
+    }
+    
+    setSelectedClasses(newSelectedClasses);
+    
+    if (newSelectedClasses.length > 0) {
+      const classList = newSelectedClasses.join(', ');
+      setValue('gameDescription', `Looking for ${classList}`);
+    } else {
+      setValue('gameDescription', 'Looking for a specific class');
+    }
+  };
+
   useEffect(() => {
     reset(initialValues);
     setGameDescription(initialValues.gameDescription || '');
     setSelectedHeroes([]);
+    setSelectedClasses([]);
     setSelectedFavoriteDeck(initialValues.favoriteDecks || '');
     setSelectedPreconDeck(PRECON_DECKS.LINKS[0]);
     // Only set fabdb to precon deck if format is precon
@@ -375,6 +408,7 @@ const CreateGame = () => {
                   <option value="Looking for best deck in the format">Looking for best deck in the format</option>
                   <option value="Looking for meta heroes">Looking for meta heroes</option>
                   <option value="Looking for a specific hero">Looking for a specific hero</option>
+                  <option value="Looking for a specific class">Looking for a specific class</option>
                   <option value="Playing spicy brews">Playing spicy brews</option>
                   <option value="CC legal including unreleased cards">CC legal including PEN</option>
                   <option value="Casual play">Casual play</option>
@@ -402,6 +436,29 @@ const CreateGame = () => {
                   {selectedHeroes.length > 0 && (
                     <div className={styles.selectedHeroesPreview}>
                       Preview: Looking for {selectedHeroes.join(', ')}
+                    </div>
+                  )}
+                </div>
+              )}
+              {gameDescription === 'Looking for a specific class' && (
+                <div className={styles.heroSelection}>
+                  <label>Select Classes (up to 3):</label>
+                  <div className={styles.heroCheckboxes}>
+                    {uniqueClasses.map((className) => (
+                      <label key={className} className={styles.heroCheckbox}>
+                        <input
+                          type="checkbox"
+                          checked={selectedClasses.includes(className)}
+                          onChange={(e) => handleClassSelection(className, e.target.checked)}
+                          disabled={!selectedClasses.includes(className) && selectedClasses.length >= 3}
+                        />
+                        {className}
+                      </label>
+                    ))}
+                  </div>
+                  {selectedClasses.length > 0 && (
+                    <div className={styles.selectedHeroesPreview}>
+                      Preview: Looking for {selectedClasses.join(', ')}
                     </div>
                   )}
                 </div>

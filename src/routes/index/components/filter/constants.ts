@@ -124,3 +124,18 @@ export const HEROES_OF_RATHE: { value: string; label: string; young?: boolean }[
   { value: 'SUP072', label: 'Lyath Goldmane', young: true },
   { value: 'SMP002', label: 'Bravo', young: true },
 ];
+
+export const CLASS_OF_RATHE: { label: string }[] = [
+  { label: 'Assassin' },
+  { label: 'Brute' },
+  { label: 'Guardian' },
+  { label: 'Illusionist' },
+  { label: 'Mechanologist' },
+  { label: 'Necromancer' },
+  { label: 'Ninja' },
+  { label: 'Pirate' },
+  { label: 'Ranger' },
+  { label: 'Runeblade' },
+  { label: 'Warrior' },
+  { label: 'Wizard' },
+];
