@@ -5,7 +5,7 @@
   align-items: center;
   gap: 0.5em;
   line-height: normal;
-  min-width: calc(10dvh * var(--card-scale));
+  min-width: calc(12dvh * var(--card-scale));
 }
 
 .die {
