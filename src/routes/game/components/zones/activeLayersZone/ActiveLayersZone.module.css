@@ -5,7 +5,7 @@
   min-width: 40vh;
   top: 8vh;
   left: 20%;
-  background-color: rgba(0, 0, 0, calc(1 - (1 - var(--transparency-intensity, 1)) * 0.15));
+  background-color: var(--theme-near-black);
   padding: 1.5vh;
   border: 1px solid var(--theme-primary);
   border-radius: 10px;

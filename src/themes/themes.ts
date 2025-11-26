@@ -2,6 +2,7 @@
 export interface Theme {
   name: string;
   id: string;
+  transparency?: number; // 0-1, defaults to 0.98
   colors: {
     // Background colors
     background: string;
@@ -133,7 +134,7 @@ export const themes: Theme[] = [
       warning: '#feca57',
       danger: '#dc3545',
       
-      nearBlack: 'rgba(0, 0, 0, 0.85)',
+      nearBlack: 'rgba(0, 0, 0, var(--transparency-intensity, 0.98))',
       overlay: 'rgba(0, 0, 0, 0.7)',
     }
   },
@@ -196,7 +197,7 @@ export const themes: Theme[] = [
       warning: '#f59e0b',
       danger: '#dc2626',
       
-      nearBlack: 'rgba(26, 26, 26, 0.9)',
+      nearBlack: 'rgba(26, 26, 26, var(--transparency-intensity, 0.98))',
       overlay: 'rgba(26, 26, 26, 0.75)',
     }
   },
@@ -259,7 +260,7 @@ export const themes: Theme[] = [
       warning: '#f59e0b',
       danger: '#dc2626',
       
-      nearBlack: 'rgba(10, 14, 39, 0.85)',
+      nearBlack: 'rgba(10, 14, 39, var(--transparency-intensity, 0.98))',
       overlay: 'rgba(10, 14, 39, 0.7)',
     }
   },
@@ -322,7 +323,7 @@ export const themes: Theme[] = [
       warning: '#f59e0b',
       danger: '#dc2626',
       
-      nearBlack: 'rgba(15, 10, 21, 0.9)',
+      nearBlack: 'rgba(15, 10, 21, var(--transparency-intensity, 0.98))',
       overlay: 'rgba(15, 10, 21, 0.75)',
     }
   },
@@ -385,7 +386,7 @@ export const themes: Theme[] = [
       warning: '#f59e0b',
       danger: '#dc2626',
       
-      nearBlack: 'rgba(13, 10, 10, 0.9)',
+      nearBlack: 'rgba(13, 10, 10, var(--transparency-intensity, 0.98))',
       overlay: 'rgba(13, 10, 10, 0.8)',
     }
   },
@@ -448,7 +449,7 @@ export const themes: Theme[] = [
       warning: '#f59e0b',
       danger: '#dc2626',
       
-      nearBlack: 'rgba(13, 20, 16, 0.9)',
+      nearBlack: 'rgba(13, 20, 16, var(--transparency-intensity, 0.98))',
       overlay: 'rgba(13, 20, 16, 0.8)',
     }
   },
@@ -511,7 +512,7 @@ export const themes: Theme[] = [
       warning: '#f59e0b',
       danger: '#dc2626',
       
-      nearBlack: 'rgba(17, 9, 20, 0.9)',
+      nearBlack: 'rgba(17, 9, 20, var(--transparency-intensity, 0.98))',
       overlay: 'rgba(17, 9, 20, 0.8)',
     }
   },
@@ -574,7 +575,7 @@ export const themes: Theme[] = [
       warning: '#f59e0b',
       danger: '#dc2626',
       
-      nearBlack: 'rgba(15, 13, 10, 0.9)',
+      nearBlack: 'rgba(15, 13, 10, var(--transparency-intensity, 0.98))',
       overlay: 'rgba(15, 13, 10, 0.8)',
     }
   },
@@ -637,7 +638,7 @@ export const themes: Theme[] = [
       warning: '#f59e0b',
       danger: '#dc2626',
       
-      nearBlack: 'rgba(15, 20, 25, 0.9)',
+      nearBlack: 'rgba(15, 20, 25, var(--transparency-intensity, 0.98))',
       overlay: 'rgba(15, 20, 25, 0.8)',
     }
   },
@@ -700,7 +701,7 @@ export const themes: Theme[] = [
       warning: '#f59e0b',
       danger: '#dc2626',
       
-      nearBlack: 'rgba(10, 14, 18, 0.9)',
+      nearBlack: 'rgba(10, 14, 18, var(--transparency-intensity, 0.98))',
       overlay: 'rgba(10, 14, 18, 0.8)',
     }
   },
@@ -763,7 +764,7 @@ export const themes: Theme[] = [
       warning: '#f59e0b',
       danger: '#dc2626',
       
-      nearBlack: 'rgba(10, 15, 26, 0.9)',
+      nearBlack: 'rgba(10, 15, 26, var(--transparency-intensity, 0.98))',
       overlay: 'rgba(10, 15, 26, 0.8)',
     }
   },
@@ -826,12 +827,21 @@ export const themes: Theme[] = [
       warning: '#f59e0b',
       danger: '#dc2626',
       
-      nearBlack: 'rgba(21, 16, 10, 0.9)',
+      nearBlack: 'rgba(21, 16, 10, var(--transparency-intensity, 0.98))',
       overlay: 'rgba(21, 16, 10, 0.8)',
     }
   }
 ];
 
-export const getThemeById = (id: string): Theme => {
-  return themes.find(theme => theme.id === id) || themes[0];
+export const getThemeById = (id: string, transparency: number = 0.98): Theme => {
+  const theme = themes.find(theme => theme.id === id) || themes[0];
+  const clampedTransparency = Math.max(0, Math.min(1, transparency)); // Clamp between 0 and 1
+  
+  return {
+    ...theme,
+    transparency: clampedTransparency,
+    colors: {
+      ...theme.colors
+    }
+  };
 };

@@ -119,9 +119,10 @@ const SettingsPage = () => {
   ];
 
   const transparencyPresets = [
-    { value: 0.65, label: '65%' },
     { value: 0.75, label: '75%' },
-    { value: 0.8, label: '80%' },
+    { value: 0.85, label: '85%' },
+    { value: 0.90, label: '90%' },
+    { value: 0.95, label: '95%' },
     { value: 1.0, label: '100%' }
   ];
 
