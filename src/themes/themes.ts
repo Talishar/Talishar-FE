@@ -76,7 +76,7 @@ export interface Theme {
 
 export const themes: Theme[] = [
   {
-    name: 'Dark (Default)',
+    name: '🌙 Dark (Default)',
     id: 'dark',
     colors: {
       background: 'radial-gradient(transparent, black)',
@@ -139,7 +139,7 @@ export const themes: Theme[] = [
     }
   },
   {
-    name: 'Light',
+    name: '☀️ Light',
     id: 'light',
     colors: {
       background: 'radial-gradient(transparent, #252525)',
@@ -202,7 +202,7 @@ export const themes: Theme[] = [
     }
   },
   {
-    name: 'Midnight Blue',
+    name: '🌌 Midnight Blue',
     id: 'blue',
     colors: {
       background: 'radial-gradient(transparent, #0a0e27)',
@@ -261,11 +261,11 @@ export const themes: Theme[] = [
       danger: '#dc2626',
       
       nearBlack: 'rgba(10, 14, 39, var(--transparency-intensity, 0.98))',
-      overlay: 'rgba(10, 14, 39, 0.7)',
+      overlay: 'rgba(10, 14, 39, 0.75)',
     }
   },
   {
-    name: 'Royal Purple',
+    name: '👑 Royal Purple',
     id: 'purple',
     colors: {
       background: 'radial-gradient(transparent, #0f0a15)',
@@ -324,11 +324,11 @@ export const themes: Theme[] = [
       danger: '#dc2626',
       
       nearBlack: 'rgba(15, 10, 21, var(--transparency-intensity, 0.98))',
-      overlay: 'rgba(15, 10, 21, 0.75)',
+      overlay: 'rgba(58, 12, 12, 0.75)',
     }
   },
   {
-    name: 'Crimson Red',
+    name: '🔴 Crimson Red',
     id: 'red',
     colors: {
       background: 'radial-gradient(transparent, #0d0a0a)',
@@ -391,8 +391,8 @@ export const themes: Theme[] = [
     }
   },
   {
-    name: 'Emerald Green',
-    id: 'emerald-Green',
+    name: '💚 Emerald Green',
+    id: 'emerald-green',
     colors: {
       background: 'radial-gradient(transparent, #0d1410)',
       backgroundTexture: "url('./img/backgrounds/dark_bg_texture.webp')",
@@ -450,11 +450,11 @@ export const themes: Theme[] = [
       danger: '#dc2626',
       
       nearBlack: 'rgba(13, 20, 16, var(--transparency-intensity, 0.98))',
-      overlay: 'rgba(13, 20, 16, 0.8)',
+      overlay: 'rgba(77, 20, 77, 0.75)',
     }
   },
   {
-    name: 'Magenta Pink',
+    name: '💗 Magenta Pink',
     id: 'magenta',
     colors: {
       background: 'radial-gradient(transparent, #110914)',
@@ -517,7 +517,7 @@ export const themes: Theme[] = [
     }
   },
   {
-    name: 'Bronze & Gold',
+    name: '⭐ Bronze & Gold',
     id: 'bronze',
     colors: {
       background: 'radial-gradient(transparent, #15100a)',
@@ -580,7 +580,7 @@ export const themes: Theme[] = [
     }
   },
   {
-    name: 'Navy Blue & Gold',
+    name: '⚓ Navy Blue & Gold',
     id: 'navy-blue-gold',
     colors: {
       background: 'radial-gradient(transparent, #0f1419)',
@@ -643,7 +643,7 @@ export const themes: Theme[] = [
     }
   },
   {
-    name: 'Crimson & Silver',
+    name: '🧛 Crimson & Silver',
     id: 'crimson-silver',
     colors: {
       background: 'radial-gradient(transparent, #0a0e12)',
@@ -706,7 +706,7 @@ export const themes: Theme[] = [
     }
   },
   {
-    name: 'Sapphire & Copper',
+    name: '💎 Sapphire & Copper',
     id: 'sapphire-copper',
     colors: {
       background: 'radial-gradient(transparent, #0a0f1a)',
@@ -769,7 +769,7 @@ export const themes: Theme[] = [
     }
   },
   {
-    name: 'Sunset & Cream',
+    name: '🌅 Sunset & Cream',
     id: 'sunset-cream',
     colors: {
       background: 'radial-gradient(transparent, #15100a)',
