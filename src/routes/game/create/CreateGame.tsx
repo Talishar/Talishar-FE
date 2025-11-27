@@ -117,11 +117,26 @@ const CreateGame = () => {
     }
   }, [selectedPreconDeck, formFormat, selectedFormat, isInitialized, setValue]);
 
-  // Get unique hero names (no duplicates)
+  // Get unique hero names (no duplicates), filtered by format
   const uniqueHeroes = useMemo(() => {
-    const heroNames = new Set(HEROES_OF_RATHE.map(hero => hero.label));
+    const currentFormat = String(formFormat || selectedFormat);
+    // LL and CC formats should only show non-young heroes
+    const isRestrictedFormat = [
+      GAME_FORMAT.CLASSIC_CONSTRUCTED,
+      GAME_FORMAT.COMPETITIVE_CC,
+      GAME_FORMAT.LLCC,
+      GAME_FORMAT.COMPETITIVE_LL,
+      GAME_FORMAT.OPEN_CC,
+      GAME_FORMAT.OPEN_LL_CC
+    ].includes(currentFormat);
+    
+    const filteredHeroes = isRestrictedFormat
+      ? HEROES_OF_RATHE.filter(hero => !hero.young)
+      : HEROES_OF_RATHE;
+    
+    const heroNames = new Set(filteredHeroes.map(hero => hero.label));
     return Array.from(heroNames).sort();
-  }, []);
+  }, [formFormat, selectedFormat]);
 
   const uniqueClasses = useMemo(() => {
     const classNames = new Set(CLASS_OF_RATHE.map(classObj => classObj.label));
