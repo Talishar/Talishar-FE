@@ -150,13 +150,15 @@ const CreateGame = () => {
     const value = e.target.value;
     setGameDescription(value);
     
-    if (value !== 'Looking for a specific hero' && value !== 'Looking for a specific class') {
+    if (value !== 'Looking for a specific hero' && value !== 'Looking for a specific class' && value !== 'No interest in playing against specific hero') {
       setSelectedHeroes([]);
       setSelectedClasses([]);
       setValue('gameDescription', value);
     } 
-    else {
-      setValue('gameDescription', 'Looking for a specific hero');
+    else if (value === 'Looking for a specific hero' || value === 'No interest in playing against specific hero') {
+      setValue('gameDescription', value);
+    } else if (value === 'Looking for a specific class') {
+      setValue('gameDescription', 'Looking for a specific class');
     }
 
   };
@@ -181,9 +183,14 @@ const CreateGame = () => {
     // Update the gameDescription field with the formatted string
     if (newSelectedHeroes.length > 0) {
       const heroList = newSelectedHeroes.join(', ');
-      setValue('gameDescription', `Looking for ${heroList}`);
+      // Check if current mode is preference or exclusion
+      if (gameDescription.startsWith('No interest')) {
+        setValue('gameDescription', `No interest in playing against ${heroList}`);
+      } else {
+        setValue('gameDescription', `Looking for ${heroList}`);
+      }
     } else {
-      setValue('gameDescription', 'Looking for a specific hero');
+      setValue('gameDescription', gameDescription.startsWith('No interest') ? 'No interest in playing against specific hero' : 'Looking for a specific hero');
     }
   };
 
@@ -408,6 +415,7 @@ const CreateGame = () => {
                   <option value="Looking for best deck in the format">Looking for best deck in the format</option>
                   <option value="Looking for meta heroes">Looking for meta heroes</option>
                   <option value="Looking for a specific hero">Looking for a specific hero</option>
+                  <option value="No interest in playing against specific hero">No interest in playing against specific hero</option>
                   <option value="Looking for a specific class">Looking for a specific class</option>
                   <option value="Playing spicy brews">Playing spicy brews</option>
                   {[GAME_FORMAT.OPEN_CC, GAME_FORMAT.OPEN_BLITZ, GAME_FORMAT.OPEN_LL_CC, GAME_FORMAT.OPEN_SAGE].includes(String(formFormat || selectedFormat)) && (
@@ -438,6 +446,29 @@ const CreateGame = () => {
                   {selectedHeroes.length > 0 && (
                     <div className={styles.selectedHeroesPreview}>
                       Preview: Looking for {selectedHeroes.join(', ')}
+                    </div>
+                  )}
+                </div>
+              )}
+              {gameDescription === 'No interest in playing against specific hero' && (
+                <div className={styles.heroSelection}>
+                  <label>Select Heroes (up to 3):</label>
+                  <div className={styles.heroCheckboxes}>
+                    {uniqueHeroes.map((heroName) => (
+                      <label key={heroName} className={styles.heroCheckbox}>
+                        <input
+                          type="checkbox"
+                          checked={selectedHeroes.includes(heroName)}
+                          onChange={(e) => handleHeroSelection(heroName, e.target.checked)}
+                          disabled={!selectedHeroes.includes(heroName) && selectedHeroes.length >= 3}
+                        />
+                        {heroName}
+                      </label>
+                    ))}
+                  </div>
+                  {selectedHeroes.length > 0 && (
+                    <div className={styles.selectedHeroesPreview}>
+                      Preview: Not interested in {selectedHeroes.join(', ')}
                     </div>
                   )}
                 </div>
