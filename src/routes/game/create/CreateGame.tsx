@@ -410,7 +410,9 @@ const CreateGame = () => {
                   <option value="Looking for a specific hero">Looking for a specific hero</option>
                   <option value="Looking for a specific class">Looking for a specific class</option>
                   <option value="Playing spicy brews">Playing spicy brews</option>
-                  <option value="CC legal including unreleased cards">CC legal including PEN</option>
+                  {[GAME_FORMAT.OPEN_CC, GAME_FORMAT.OPEN_BLITZ, GAME_FORMAT.OPEN_LL_CC, GAME_FORMAT.OPEN_SAGE].includes(String(formFormat || selectedFormat)) && (
+                    <option value="Legal deck including unreleased cards">Legal deck including PEN</option>
+                  )}
                   <option value="Casual play">Casual play</option>
                   <option value="New player help">New player help</option>
                   <option value="Learning a new hero">Learning a new hero</option>
