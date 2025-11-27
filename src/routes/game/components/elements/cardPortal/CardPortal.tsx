@@ -85,7 +85,7 @@ export default function CardPortal() {
       popUpStyle.right = (windowWidth - (popup.xCoord - popUpGap * hoverImageSize)).toString() + 'px';
     } 
     else {
-      popUpStyle.left =  (popup.xCoord + popUpGap * hoverImageSize*3).toString() + 'px';
+      popUpStyle.left =  (popup.xCoord + popUpGap * hoverImageSize*3.5).toString() + 'px';
     }
   } else {
     // For single cards, use the existing logic to position left or right of cursor
