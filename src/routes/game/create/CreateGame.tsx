@@ -196,7 +196,7 @@ const CreateGame = () => {
     setSelectedHeroes(newSelectedHeroes);
     
     // Update the gameDescription field with the formatted string
-    if (newSelectedHeroes.length > 0) {
+    if (newSelectedHeroes.length > 0 && gameDescription.startsWith('No interest') || gameDescription === 'Looking for a specific hero') {
       const heroList = newSelectedHeroes.join(', ');
       // Check if current mode is preference or exclusion
       if (gameDescription.startsWith('No interest')) {
@@ -205,7 +205,7 @@ const CreateGame = () => {
         setValue('gameDescription', `Looking for ${heroList}`);
       }
     } else {
-      setValue('gameDescription', gameDescription.startsWith('No interest') ? 'No interest in playing against specific hero' : 'Looking for a specific hero');
+      setValue('gameDescription', initialValues.gameDescription || '');
     }
   };
 
