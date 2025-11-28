@@ -352,17 +352,6 @@ const JoinGame = () => {
         >
           Back
         </button>
-        {/* Advertisement Section - Clearly separated from form */}
-        <hr style={{ margin: '2rem 0', opacity: 0.3 }} />
-        <div style={{ 
-          marginTop: '1.5rem', 
-          padding: '1rem',
-          textAlign: 'center',
-          backgroundColor: 'rgba(0, 0, 0, 0.2)',
-          borderRadius: '8px',
-        }}>
-          <GoogleAdSense slot="1377353396" format="auto" />
-        </div>
       </article>
     </main>
   );
