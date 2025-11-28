@@ -94,12 +94,29 @@ const CreateGame = () => {
   const [previousFormat, setPreviousFormat] = React.useState<string>(String(initialValues.format || ''));
   const [selectedHeroes, setSelectedHeroes] = React.useState<string[]>([]);
   const [selectedClasses, setSelectedClasses] = React.useState<string[]>([]);
-  const [gameDescription, setGameDescription] = React.useState('');
+  const [gameDescription, setGameDescription] = React.useState(() => initialValues.gameDescription || '');
   const [selectedFavoriteDeck, setSelectedFavoriteDeck] = React.useState<string>(initialValues.favoriteDecks || '');
   const [selectedPreconDeck, setSelectedPreconDeck] = React.useState<string>(PRECON_DECKS.LINKS[0]);
   const [isInitialized, setIsInitialized] = React.useState(false);
 
   const formFormat = watch('format');
+
+  // Normalize localStorage on mount - extract base option from expanded descriptions
+  React.useEffect(() => {
+    const stored = localStorage.getItem('lastGameDescription') || '';
+    // If it contains hero/class names (has commas), extract the base option
+    if (stored && stored.includes(',')) {
+      let baseDescription = '';
+      if (stored.startsWith('Looking for ')) {
+        baseDescription = 'Looking for a specific hero';
+      } else if (stored.startsWith('No interest')) {
+        baseDescription = 'No interest in playing against specific hero';
+      }
+      if (baseDescription) {
+        localStorage.setItem('lastGameDescription', baseDescription);
+      }
+    }
+  }, []);
 
   // Debug logging
   React.useEffect(() => {
@@ -171,6 +188,7 @@ const CreateGame = () => {
       setValue('gameDescription', value);
     } 
     else if (value === 'Looking for a specific hero' || value === 'No interest in playing against specific hero') {
+      // Save only the base option, not the expanded version with heroes
       setValue('gameDescription', value);
     } else if (value === 'Looking for a specific class') {
       setValue('gameDescription', 'Looking for a specific class');
@@ -273,9 +291,21 @@ const CreateGame = () => {
       if (!isLoggedIn) values.visibility = GAME_VISIBILITY.PRIVATE;
       values.user = searchParams.get('user') ?? undefined;
       
-      // Save game description to localStorage
-      // Save even if empty string to preserve "Default Game #" selection
-      localStorage.setItem('lastGameDescription', values.gameDescription || '');
+      // Extract base game description (remove hero/class names)
+      let baseGameDescription = values.gameDescription || '';
+      if (baseGameDescription.startsWith('Looking for ') && baseGameDescription.includes(',')) {
+        // "Looking for Arakni, Briar..." -> "Looking for a specific hero"
+        if (baseGameDescription.includes('in playing')) {
+          baseGameDescription = 'No interest in playing against specific hero';
+        } else {
+          baseGameDescription = 'Looking for a specific hero';
+        }
+      } else if (baseGameDescription.startsWith('No interest in playing against ') && baseGameDescription.includes(',')) {
+        baseGameDescription = 'No interest in playing against specific hero';
+      }
+      
+      // Save only the base option to localStorage
+      localStorage.setItem('lastGameDescription', baseGameDescription);
 
       
       const response = await createGame(values).unwrap();
