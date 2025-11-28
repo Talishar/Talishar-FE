@@ -69,20 +69,35 @@ export const DeckZone = React.memo((prop: Displayrow) => {
   const baseOffsetY = visibleLayers * 0.24 * -1; // pixels (up, based on card count)
   const baseOffsetX = visibleLayers * 0.24; // pixels (right, based on card count)
 
+  // Determine how many layers to animate during shuffle (3-10 layers plus the top card)
+  const shuffleLayerCount = Math.min(3, Math.max(5, visibleLayers - 1));
+  
+  // Generate random delays for each layer (0ms to 400ms)
+  const layerDelays = React.useMemo(() => {
+    return Array.from({ length: visibleLayers - 1 }).map(() => Math.random() * 400);
+  }, [shouldAnimateShuffling, visibleLayers]);
+
   return (
     <div className={styles.deckZone} onClick={deckZoneDisplay}>
       <div className={styles.zoneStack}>
         {/* Render background layers for 3D effect - only on desktop */}
-        {!isMobileOrTablet && Array.from({ length: visibleLayers - 1 }).map((_, index) => (
-          <div
-            key={`layer-${index}`}
-            className={styles.zoneLayer}
-            style={{
-              transform: `translateY(${baseOffsetY}px) translateX(${baseOffsetX}px) translateY(${(index + 1) * layerOffsetY}px) translateX(${(index + 1) * layerOffsetX}px)`,
-              zIndex: visibleLayers - index - 1
-            }}
-          />
-        ))}
+        {!isMobileOrTablet && Array.from({ length: visibleLayers - 1 }).map((_, index) => {
+          // Apply shuffling animation to the top shuffleLayerCount layers
+          const shouldAnimateLayer = shouldAnimateShuffling && index < shuffleLayerCount;
+          const animationDelay = shouldAnimateLayer ? `${layerDelays[index]}ms` : '0ms';
+          
+          return (
+            <div
+              key={`layer-${index}`}
+              className={shouldAnimateLayer ? styles.zoneLayerShuffling : styles.zoneLayer}
+              style={{
+                transform: `translateY(${baseOffsetY}px) translateX(${baseOffsetX}px) translateY(${(index + 1) * layerOffsetY}px) translateX(${(index + 1) * layerOffsetX}px)`,
+                zIndex: visibleLayers - index - 1,
+                animationDelay: animationDelay
+              }}
+            />
+          );
+        })}
         {/* Main card on top */}
         <div className={styles.cardWrapper} style={!isMobileOrTablet ? { transform: `translateY(${baseOffsetY}px) translateX(${baseOffsetX}px)` } : {}}>
           <CardDisplay
