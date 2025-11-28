@@ -10,7 +10,7 @@ const COLOR_MAPPING: { [key: string]: string } = {
 };
 
 // Whitelist of allowed HTML tags
-const ALLOWED_TAGS = new Set(['SPAN', 'A', 'IMG', 'B', 'I', 'STRONG', 'EM', 'P']);
+const ALLOWED_TAGS = new Set(['SPAN', 'A', 'IMG', 'B', 'I', 'STRONG', 'EM', 'P', 'BR']);
 
 // Whitelist of allowed attributes
 const ALLOWED_ATTRS: { [tag: string]: Set<string> } = {
@@ -21,7 +21,8 @@ const ALLOWED_ATTRS: { [tag: string]: Set<string> } = {
   'I': new Set(['style']),
   'STRONG': new Set(['style']),
   'EM': new Set(['style']),
-  'P': new Set(['style'])
+  'P': new Set(['style']),
+  'BR': new Set([])
 };
 
 /**
