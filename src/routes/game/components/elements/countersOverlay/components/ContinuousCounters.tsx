@@ -24,6 +24,7 @@ const includedCounters = [
   'bind',
   'stain',
   'gold',
+  'suspense',
   'lightning',
   'amp',
   'aim'
@@ -162,6 +163,14 @@ export const ContinuousCounters = (props: Props) => {
           title={`${countersMap?.gold} gold counter(s)`}
         >
           <div>{countersMap?.gold}</div>
+        </div>
+      )}
+      {!!Number(countersMap?.suspense) && (
+        <div
+          className={styles.suspenseCounter}
+          title={`${countersMap?.suspense} suspense counter(s)`}
+        >
+          <div>{countersMap?.suspense}</div>
         </div>
       )}
       {!!Number(countersMap?.lightning) && (
