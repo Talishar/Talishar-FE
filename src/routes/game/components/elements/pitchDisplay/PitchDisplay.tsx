@@ -31,7 +31,6 @@ export default function PitchDisplay(prop: Displayrow) {
     if (pitchZone && pitchZone.length > 0) {
       const lastCard = pitchZone[pitchZone.length - 1];
       const isChiCard = lastCard.cardNumber.includes('inner_chi');
-      console.log('Pitched card:', lastCard.cardNumber, 'isChi:', isChiCard);
 
       // Spawn 3 particles for the newly pitched card
       for (let i = 0; i < 3; i++) {
