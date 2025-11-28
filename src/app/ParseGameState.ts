@@ -24,7 +24,7 @@ function ParseCard(input: any) {
   card.atkCounters = input.atkCounters ? Number(input.atkCounters) : 0;
   card.controller = input.controller ? Number(input.controller) : 0;
   card.type = input.type ? String(input.type) : undefined;
-  card.sType = input.sType ? String(input.type) : undefined;
+  card.sType = input.sType ? String(input.sType) : undefined;
   card.restriction = input.restriction ? String(input.restriction) : undefined;
   card.isBroken = input.isBroken ? Boolean(input.isBroken) : false;
   card.onChain = input.onChain ? Boolean(input.onChain) : false;
