@@ -22,13 +22,13 @@ export default function ResourcesParticle({ isChiCard, onAnimationComplete }: Re
         x: startPosition.x,
         y: startPosition.y,
         opacity: 1,
-        scale: 0.5
+        scale: 0.7
       }}
       animate={{
         x: 0, // Move toward center (pitch overlay)
         y: 0,
         opacity: 0,
-        scale: 0.3
+        scale: 0.5
       }}
       transition={{
         duration: 0.7,
