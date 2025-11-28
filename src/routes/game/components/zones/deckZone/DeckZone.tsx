@@ -112,7 +112,7 @@ export const DeckZone = React.memo((prop: Displayrow) => {
         </div>
         {/* Add card animation */}
         {shouldAnimateAddBotDeck && (
-          <div className={styles.addBotDeckAnimationCard}>
+          <div key="addBotDeckAnimation" className={styles.addBotDeckAnimationCard}>
             <CardDisplay
               card={deckBack}
               showCountersOnHover={!alwaysShowCounters}
