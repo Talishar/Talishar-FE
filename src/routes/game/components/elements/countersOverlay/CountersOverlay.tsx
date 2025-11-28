@@ -10,6 +10,7 @@ export interface CountersProp extends Card {
   num?: number;
   numDescription?: string;
   activeCombatChain?: CombatChainLink;
+  excludeFancyCounters?: boolean;
 }
 
 export const CountersOverlay = ({
@@ -23,7 +24,8 @@ export const CountersOverlay = ({
   zone,
   activeCombatChain,
   controller,
-  restriction
+  restriction,
+  excludeFancyCounters
 }: CountersProp) => {
   const includedCounters = [
     'defence',
@@ -51,16 +53,18 @@ export const CountersOverlay = ({
   let numTotal = num ?? 0;
   let numDescriptionFinal = numDescription ?? '';
 
-  for (const counter in countersMap) {
-    if (!includedCounters.includes(counter)) {
-      numTotal += Number(countersMap[counter]);
-      numDescriptionFinal = counter;
+  if (countersMap && !excludeFancyCounters) {
+    for (const counter in countersMap) {
+      if (!includedCounters.includes(counter)) {
+        numTotal += Number(countersMap[counter]);
+        numDescriptionFinal = counter;
+      }
     }
   }
 
   return (
     <div className={styles.countersCover}>
-      {countersMap && <ContinuousCounters countersMap={countersMap} />}
+      {countersMap && !excludeFancyCounters && <ContinuousCounters countersMap={countersMap} excludeFancyCounters={excludeFancyCounters} />}
       {activeCombatChain && (
         <ActiveCardCounterOverlay activeCombatChain={activeCombatChain} />
       )}
