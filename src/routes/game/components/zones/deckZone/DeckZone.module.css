@@ -99,3 +99,22 @@
   margin: 0;
   border: 2px solid var(--near-black);
 }
+
+.addBotDeckAnimationCard {
+  position: absolute;
+  width: var(--card-size);
+  height: var(--card-size);
+  animation: addBotDeckSlide 1s ease-in-out forwards;
+}
+
+@keyframes addBotDeckSlide {
+  0% {
+    opacity: 0;
+    transform: translateX(-150px) translateY(0);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) translateY(0);
+  }
+}
+

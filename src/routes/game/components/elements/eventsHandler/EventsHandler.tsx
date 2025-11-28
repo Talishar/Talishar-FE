@@ -17,7 +17,7 @@ import {
 import { shallowEqual } from 'react-redux';
 import CardDisplay from '../cardDisplay/CardDisplay';
 import styles from './EventsHandler.module.css';
-import { setShuffling } from 'features/game/GameSlice';
+import { setShuffling, setAddBotDeck } from 'features/game/GameSlice';
 
 export const EventsHandler = React.memo(() => {
   const events = useAppSelector(
@@ -184,12 +184,22 @@ export const EventsHandler = React.memo(() => {
               }, 1000);
             });
             continue;
+          case "ADDBOTDECK":
+            const PlayerAddingCard = event.eventValue !== undefined ? parseInt(event.eventValue.split(',')[0]) : null;
+            const CardToAdd = event.eventValue !== undefined ? event.eventValue.split(',')[1] : '';
+            dispatch(setAddBotDeck({ playerId: PlayerAddingCard, cardNumber: CardToAdd }));
+            requestAnimationFrame(() => {
+              setTimeout(() => {
+                dispatch(setAddBotDeck({ playerId: null, cardNumber: '' }));
+              }, 1000);
+            });
+            continue;
           default:
             continue;
         }
       }
     }
-  }, [events]);
+  }, [events, dispatch, playerID]);
 
   if (showModal)
     return (

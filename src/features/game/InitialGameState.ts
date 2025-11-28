@@ -19,6 +19,8 @@ const InitialGameState: GameState = {
   chatEnabled: false,
   shufflingPlayerId: null,
   isShuffling: false,
+  addBotDeckPlayerId: null,
+  addBotDeckCard: '',
   inactivityWarning: {
     lastActionTime: Date.now(),
     firstWarningShown: false,

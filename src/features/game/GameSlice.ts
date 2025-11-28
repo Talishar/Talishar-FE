@@ -644,6 +644,13 @@ export const gameSlice = createSlice({
       state.shufflingPlayerId = action.payload.playerId;
       state.isShuffling = action.payload.isShuffling;
     },
+    setAddBotDeck: (
+      state,
+      action: PayloadAction<{ playerId: number | null; cardNumber: string }>
+    ) => {
+      state.addBotDeckPlayerId = action.payload.playerId;
+      state.addBotDeckCard = action.payload.cardNumber;
+    },
     setReplayStart: (
       state,
       action: PayloadAction<{
@@ -985,6 +992,7 @@ export const {
   setHeroInfo,
   markHeroIntroAsShown,
   setShuffling,
+  setAddBotDeck,
   setReplayStart,
   updateActionTimestamp,
   setFirstWarningShown,

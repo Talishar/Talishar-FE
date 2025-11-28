@@ -119,6 +119,8 @@ export default interface GameState {
   chatEnabled: boolean;
   shufflingPlayerId: number | null;
   isShuffling: boolean;
+  addBotDeckPlayerId: number | null;
+  addBotDeckCard: string;
   inactivityWarning?: {
     lastActionTime: number;
     firstWarningShown: boolean;

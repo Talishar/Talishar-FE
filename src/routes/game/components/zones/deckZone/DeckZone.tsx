@@ -30,12 +30,19 @@ export const DeckZone = React.memo((prop: Displayrow) => {
 
   const shufflingPlayerId = useAppSelector((state: RootState) => state.game.shufflingPlayerId);
   const isShuffling = useAppSelector((state: RootState) => state.game.isShuffling);
+  const addBotDeckPlayerId = useAppSelector((state: RootState) => state.game.addBotDeckPlayerId);
+  const addBotDeckCard = useAppSelector((state: RootState) => state.game.addBotDeckCard);
   const playerID = useAppSelector((state: RootState) => state.game.gameInfo.playerID);
   const otherPlayerID = useAppSelector((state: RootState) => state.game.gameInfo.playerID === 1 ? 2 : 1);
 
   const shouldAnimateShuffling = isShuffling && (
     (isPlayer && shufflingPlayerId === playerID) ||
     (!isPlayer && shufflingPlayerId === otherPlayerID)
+  );
+
+  const shouldAnimateAddBotDeck = addBotDeckPlayerId !== null && (
+    (isPlayer && addBotDeckPlayerId === playerID) ||
+    (!isPlayer && addBotDeckPlayerId === otherPlayerID)
   );
 
   if (deckCards === undefined || deckCards === 0) {
@@ -71,11 +78,6 @@ export const DeckZone = React.memo((prop: Displayrow) => {
 
   // Determine how many layers to animate during shuffle (3-10 layers plus the top card)
   const shuffleLayerCount = Math.min(3, Math.max(5, visibleLayers - 1));
-  
-  // Generate random delays for each layer (0ms to 400ms)
-  const layerDelays = React.useMemo(() => {
-    return Array.from({ length: visibleLayers - 1 }).map(() => Math.random() * 400);
-  }, [shouldAnimateShuffling, visibleLayers]);
 
   return (
     <div className={styles.deckZone} onClick={deckZoneDisplay}>
@@ -84,7 +86,8 @@ export const DeckZone = React.memo((prop: Displayrow) => {
         {!isMobileOrTablet && Array.from({ length: visibleLayers - 1 }).map((_, index) => {
           // Apply shuffling animation to the top shuffleLayerCount layers
           const shouldAnimateLayer = shouldAnimateShuffling && index < shuffleLayerCount;
-          const animationDelay = shouldAnimateLayer ? `${layerDelays[index]}ms` : '0ms';
+          // Generate random delay (0ms to 400ms) for this layer
+          const animationDelay = shouldAnimateLayer ? `${Math.random() * 400}ms` : '0ms';
           
           return (
             <div
@@ -107,6 +110,15 @@ export const DeckZone = React.memo((prop: Displayrow) => {
             showCountersOnHover={!alwaysShowCounters}
           />
         </div>
+        {/* Add card animation */}
+        {shouldAnimateAddBotDeck && (
+          <div className={styles.addBotDeckAnimationCard}>
+            <CardDisplay
+              card={deckBack}
+              showCountersOnHover={!alwaysShowCounters}
+            />
+          </div>
+        )}
       </div>
     </div>
   );

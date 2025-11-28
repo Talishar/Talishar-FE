@@ -13,6 +13,28 @@
   line-height: normal;
 }
 
+.addBotDeckCard {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5em;
+  line-height: normal;
+  min-width: calc(12dvh * var(--card-scale));
+  animation: addBotDeckSlide 1s ease-in-out;
+}
+
+@keyframes addBotDeckSlide {
+  0% {
+    opacity: 0;
+    transform: translateX(-100px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
 .container {
   background-image: var(--theme-section-background);
   border: 1px solid var(--theme-primary);
