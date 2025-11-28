@@ -28,10 +28,10 @@ export default function ResourcesParticle({ isChiCard, onAnimationComplete }: Re
         x: 0, // Move toward center (pitch overlay)
         y: 0,
         opacity: 0,
-        scale: 0.4
+        scale: 0.3
       }}
       transition={{
-        duration: 0.8,
+        duration: 0.7,
         ease: 'easeIn'
       }}
       onAnimationComplete={onAnimationComplete}
