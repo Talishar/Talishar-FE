@@ -10,7 +10,7 @@ import passTurnSound from 'sounds/prioritySound.wav';
 import { createPortal } from 'react-dom';
 import { getSettingsEntity } from 'features/options/optionsSlice';
 
-export default function PassTurnDisplay() {
+export default function PassTurnDisplay({ onStateChange }: { onStateChange?: (state: 'normal' | 'hover' | 'press') => void }) {
   const canPassPhase = useAppSelector(
     (state: RootState) => state.game.canPassPhase
   );
@@ -23,14 +23,13 @@ export default function PassTurnDisplay() {
   const playerID = useAppSelector(
     (state: RootState) => state.game.gameInfo.playerID
   );
-  const turnPlayer = useAppSelector(
-    (state: RootState) => state.game.turnPlayer
-  );
   const priorityPlayer = useAppSelector(
     (state: RootState) => state.game.priorityPlayer
   );
   const [showAreYouSureModal, setShowAreYouSureModal] =
     useState<boolean>(false);
+  const [isHovering, setIsHovering] = useState<boolean>(false);
+  const [isPressed, setIsPressed] = useState<boolean>(false);
   const [playPassTurnSound] = useSound(passTurnSound);
   const preventPassPrompt = useAppSelector(
     (state: RootState) => state.game.preventPassPrompt
@@ -101,7 +100,29 @@ export default function PassTurnDisplay() {
   if (canPassPhase === true) {
     return (
       <>
-        <div className={styles.passTurnDisplayActive} onClick={onPassTurn}>
+        <div 
+          className={styles.passTurnDisplayActive} 
+          onClick={onPassTurn}
+          onMouseDown={() => {
+            setIsPressed(true);
+            onStateChange?.('press');
+          }}
+          onMouseUp={() => {
+            setIsPressed(false);
+            onStateChange?.(isHovering ? 'hover' : 'normal');
+          }}
+          onMouseLeave={() => {
+            setIsHovering(false);
+            setIsPressed(false);
+            onStateChange?.('normal');
+          }}
+          onMouseEnter={() => {
+            setIsHovering(true);
+            onStateChange?.('hover');
+          }}
+          data-hovering={isHovering}
+          data-pressed={isPressed}
+        >
           <div> PASS </div>
           <div className={styles.subThing}>[spacebar]</div>
         </div>
