@@ -1,14 +1,15 @@
 .passTurnDisplay {
-  font-size: 1.3em;
+  font-size: 1.8em;
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 7vh;
-  height: 7dvh;
-  padding: 0;
+  height: 6vh;
+  height: 6dvh;
+  width: 5em;
   text-shadow: -1px 1px 2px #000, 1px 1px 2px #000, 1px -1px 0 #000,
     -1px -1px 0 #000;
   user-select: none;
+  padding-left: 2em;
 }
 
 .spectatorDisplay {
@@ -26,13 +27,13 @@
 }
 
 .spectatorArrow {
-  font-size: 1.2em;
+  font-size: 1em;
   font-weight: bold;
   line-height: 1;
 }
 
 .spectatorPlayerName {
-  font-size: 0.9em;
+  font-size: 0.7em;
   font-weight: 700;
   white-space: nowrap;
   width: 100%;
@@ -49,28 +50,30 @@
 
 .passTurnDisplayActive {
   font-size: 2em;
-  line-height: 0.9em;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 7vh;
-  height: 7dvh;
-  padding: 0;
+  height: auto;
+  width: 5em;
   text-shadow: -1px 1px 2px #000, 1px 1px 2px #000, 1px -1px 0 #000,
     -1px -1px 0 #000;
   user-select: none;
+  white-space: nowrap;
+  padding-left: 2em;
+  pointer-events: all;
 }
 
 .passTurnDisplayActive:hover {
-  font-size: 2.2em;
   cursor: pointer;
 }
 
 .subThing {
-  font-size: 0.5em;
-  padding: 0;
+  font-size: 0.4em;
   user-select: none;
+  white-space: nowrap;
+  margin-top: -0.5em;
+  margin-bottom: 1em;
 }
 
 .modal {
@@ -92,9 +95,31 @@
   background: var(--theme-section-background, linear-gradient(135deg, rgba(30, 35, 41, 0.8) 0%, rgba(30, 35, 41, 0.85) 100%));
 }
 
-@media (orientation: portrait) {
+@media (orientation: portrait) and (min-width: 600px) {
+  .passTurnDisplay {
+    font-size: 1.3em;
+    height: 4vh;
+    height: 4dvh;
+    margin: -0.7vh 0;
+    margin: -0.7dvh 0;
+  }
+
+  .spectatorArrow {
+    font-size: 1.2em;
+  }
+
+  .spectatorPlayerName {
+    font-size: 0.9em;
+  }
+
   .passTurnDisplayActive {
     font-size: 1.5em;
+    height: 5vh;
+    height: 5dvh;
+  }
+
+  .passTurnDisplayActive:hover {
+    font-size: 2.2em;
   }
   
   .subThing {
@@ -103,5 +128,23 @@
 
   .spectatorPlayerName {
     display: none;
+  }
+}
+
+@media (orientation: portrait) and (max-width: 600px) {
+  .passTurnDisplay {
+    font-size: 1.2em;
+    height: 3.2vh;
+    height: 3.2dvh;
+    margin: -0.5vh 0;
+    margin: -0.5dvh 0;
+  }
+  .passTurnDisplayActive {
+    font-size: 1.2em;
+    padding-left: 1em;
+    height: 3.2vh;
+    height: 3.2dvh;
+    margin: -0.5vh 0;
+    margin: -0.5dvh 0;
   }
 }
