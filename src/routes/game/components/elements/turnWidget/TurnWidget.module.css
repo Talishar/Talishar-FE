@@ -1,69 +1,51 @@
 .widgetContainer {
-  top: 51%;
-  right: 19%;
-  transform: translateY(-50%);
-  position: fixed;
-  width: calc(2 * var(--card-size));
-  height: 19vh;
-  height: 19dvh;
+  top: 0px;
+  right: 0px;
+  position: relative;
+  width: var(--card-size);
+  height: 18vh;
+  height: 18dvh;
   z-index: 15;
   user-select: none;
 }
 
 .widgetBackground {
   background-position: right;
-  background-size: 100% 100%;
+  background-size: 10vh auto;
   background-repeat: no-repeat;
   height: 100%;
-  width: 100%;
+  width: 15vh;
+  width: 15dvh;
   position: absolute;
   right: 0px;
   display: flex;
   align-items: center;
-  justify-content: center;
-  flex-direction: column;
-}
-
-.mainContent {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
   justify-content: flex-end;
-  height: 100%;
-  width: 100%;
-  position: relative;
-  gap: 0.3vh;
-  gap: 0.3dvh;
+  flex-direction: row;
 }
 
 .myTurn {
-  background-image: url('../../../../../img/elements/turnwidget/passActiveBG.png');
-}
-
-.myTurnHover {
-  background-image: url('../../../../../img/elements/turnwidget/passHoverBG.png');
-}
-
-.myTurnPress {
-  background-image: url('../../../../../img/elements/turnwidget/passPressBG.png');
+  background-image: url('../../../../../img/elements/turnwidget/turnWidget-Green.png');
 }
 
 .ourTurn {
-  background-image: url('../../../../../img/elements/turnwidget/passInactiveBG.png');
+  background-image: url('../../../../../img/elements/turnwidget/turnWidget-Normal.png');
 }
 
 .widgetLeftCol {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
+  height: 100%;
+  color: black;
+  height: 100%;
   z-index: 11;
 }
 
 .widgetRightCol {
-  width: 9vh;
-  width: 9dvh;
+  width: 10vh;
   height: 17vh;
+  width: 10dvh;
   height: 17dvh;
   padding: 1vh 0;
   padding: 1dvh 0;
@@ -79,39 +61,29 @@
   z-index: 10;
 }
 
-@media (orientation: portrait) and (min-width: 600px) {
+@media (orientation: portrait) {
   .widgetContainer {
-    right: 5%;
+    top: 0px;
+    right: 0px;
+    width: 21vw;
+    height: 26vw;
+    user-select: none;
   }
 
   .widgetRightCol {
-    width: 35%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: auto;
+    height: 100%;
+    width: 100%;
   }
 
-  .widgetLeftCol {
-    width: 65%;
-    margin: -1.5vh;
-    margin: -1.5dvh;
-  }
-}
-
-@media (orientation: portrait) and (max-width: 600px) {
-  .widgetContainer {
-    right: 5%;
-    top: 49%;
-    height:14vh;
-  }
-
-  .widgetRightCol {
-    width: 35%;
-    height: 13vh;
-    height: 13dvh;
-  }
-
-  .widgetLeftCol {
-    width: 65%;
-    margin: 0;
-    gap: 0.5vh;
-    gap: 0.5dvh;
+  .widgetBackground {
+    background-size: 15dvw auto;
+    height: 100%;
+    width: 100%;
+    right: -1em;
   }
 }
