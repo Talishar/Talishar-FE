@@ -20,7 +20,6 @@ import { FaExclamationCircle } from 'react-icons/fa';
 import { HEROES_OF_RATHE, CLASS_OF_RATHE } from '../../index/components/filter/constants';
 import { generateCroppedImageUrl } from 'utils/cropImages';
 import { ImageSelect, ImageSelectOption } from 'components/ImageSelect';
-import GoogleAdSense from 'components/GoogleAdSense';
 
 // Helper function to shorten format names
 const shortenFormat = (format: string): string => {
@@ -92,14 +91,33 @@ const CreateGame = () => {
 
   const [selectedFormat, setSelectedFormat] = React.useState(initialValues.format);
   const [previousFormat, setPreviousFormat] = React.useState<string>(String(initialValues.format || ''));
-  const [selectedHeroes, setSelectedHeroes] = React.useState<string[]>([]);
-  const [selectedClasses, setSelectedClasses] = React.useState<string[]>([]);
-  const [gameDescription, setGameDescription] = React.useState(() => initialValues.gameDescription || '');
   const [selectedFavoriteDeck, setSelectedFavoriteDeck] = React.useState<string>(initialValues.favoriteDecks || '');
   const [selectedPreconDeck, setSelectedPreconDeck] = React.useState<string>(PRECON_DECKS.LINKS[0]);
   const [isInitialized, setIsInitialized] = React.useState(false);
 
   const formFormat = watch('format');
+  const gameDescription = watch('gameDescription');
+  const selectedHeroes = React.useMemo(() => {
+    // Extract heroes from gameDescription if present
+    if (gameDescription?.startsWith('Looking for ') && gameDescription.includes(',')) {
+      const heroPart = gameDescription.replace('Looking for ', '');
+      return heroPart.split(', ').map(h => h.trim());
+    }
+    if (gameDescription?.startsWith('No interest in playing against ') && gameDescription.includes(',')) {
+      const heroPart = gameDescription.replace('No interest in playing against ', '');
+      return heroPart.split(', ').map(h => h.trim());
+    }
+    return [];
+  }, [gameDescription]);
+
+  const selectedClasses = React.useMemo(() => {
+    // Extract classes from gameDescription if present
+    if (gameDescription?.startsWith('Looking for ') && gameDescription.includes(',')) {
+      const classPart = gameDescription.replace('Looking for ', '');
+      return classPart.split(', ').map(c => c.trim());
+    }
+    return [];
+  }, [gameDescription]);
 
   // Normalize localStorage on mount - extract base option from expanded descriptions
   React.useEffect(() => {
@@ -178,73 +196,34 @@ const CreateGame = () => {
     // If switching between non-precon formats, don't touch fabdb
   };
 
-  const handleGameDescriptionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const value = e.target.value;
-    setGameDescription(value);
-    
-    if (value !== 'Looking for a specific hero' && value !== 'Looking for a specific class' && value !== 'No interest in playing against specific hero') {
-      setSelectedHeroes([]);
-      setSelectedClasses([]);
-      setValue('gameDescription', value);
-    } 
-    else if (value === 'Looking for a specific hero' || value === 'No interest in playing against specific hero') {
-      // Save only the base option, not the expanded version with heroes
-      setValue('gameDescription', value);
-    } else if (value === 'Looking for a specific class') {
-      setValue('gameDescription', 'Looking for a specific class');
-    }
-
-  };
-
   const handleHeroSelection = (heroName: string, isChecked: boolean) => {
-    let newSelectedHeroes: string[];
-    
-    if (isChecked) {
-      // Add hero if not already selected and under limit of 3
-      if (selectedHeroes.length < 3 && !selectedHeroes.includes(heroName)) {
-        newSelectedHeroes = [...selectedHeroes, heroName];
-      } else {
-        return; // Don't add if limit reached or already selected
-      }
+    const newHeroes = isChecked
+      ? [...selectedHeroes, heroName].slice(0, 3)
+      : selectedHeroes.filter(hero => hero !== heroName);
+
+    let newDescription = '';
+    if (newHeroes.length > 0) {
+      const baseText = gameDescription?.startsWith('No interest') 
+        ? 'No interest in playing against '
+        : 'Looking for ';
+      newDescription = baseText + newHeroes.join(', ');
     } else {
-      // Remove hero
-      newSelectedHeroes = selectedHeroes.filter(hero => hero !== heroName);
+      // Reset to base option if no heroes selected
+      const baseText = gameDescription?.startsWith('No interest')
+        ? 'No interest in playing against specific hero'
+        : 'Looking for a specific hero';
+      newDescription = baseText;
     }
-    
-    setSelectedHeroes(newSelectedHeroes);
-    
-    // Update the gameDescription field with the formatted string
-    if (newSelectedHeroes.length > 0 && gameDescription.startsWith('No interest') || gameDescription === 'Looking for a specific hero') {
-      const heroList = newSelectedHeroes.join(', ');
-      // Check if current mode is preference or exclusion
-      if (gameDescription.startsWith('No interest')) {
-        setValue('gameDescription', `No interest in playing against ${heroList}`);
-      } else {
-        setValue('gameDescription', `Looking for ${heroList}`);
-      }
-    } else {
-      setValue('gameDescription', initialValues.gameDescription || '');
-    }
+    setValue('gameDescription', newDescription);
   };
 
   const handleClassSelection = (className: string, isChecked: boolean) => {
-    let newSelectedClasses: string[];
-    
-    if (isChecked) {
-      if (selectedClasses.length < 3 && !selectedClasses.includes(className)) {
-        newSelectedClasses = [...selectedClasses, className];
-      } else {
-        return; // Don't add if limit reached or already selected
-      }
-    } else {
-      newSelectedClasses = selectedClasses.filter(classNameItem => classNameItem !== className);
-    }
-    
-    setSelectedClasses(newSelectedClasses);
-    
-    if (newSelectedClasses.length > 0) {
-      const classList = newSelectedClasses.join(', ');
-      setValue('gameDescription', `Looking for ${classList}`);
+    const newClasses = isChecked
+      ? [...selectedClasses, className].slice(0, 3)
+      : selectedClasses.filter(classNameItem => classNameItem !== className);
+
+    if (newClasses.length > 0) {
+      setValue('gameDescription', `Looking for ${newClasses.join(', ')}`);
     } else {
       setValue('gameDescription', 'Looking for a specific class');
     }
@@ -252,9 +231,6 @@ const CreateGame = () => {
 
   useEffect(() => {
     reset(initialValues);
-    setGameDescription(initialValues.gameDescription || '');
-    setSelectedHeroes([]);
-    setSelectedClasses([]);
     setSelectedFavoriteDeck(initialValues.favoriteDecks || '');
     setSelectedPreconDeck(PRECON_DECKS.LINKS[0]);
     // Only set fabdb to precon deck if format is precon
@@ -450,11 +426,7 @@ const CreateGame = () => {
                   aria-invalid={
                     errors.gameDescription?.message ? 'true' : undefined
                   }
-                  value={gameDescription}
-                  onChange={(e) => {
-                    handleGameDescriptionChange(e);
-                    register('gameDescription').onChange(e);
-                  }}
+                  value={gameDescription || ''}
                 >
                   <option value="">Default Game #</option>
                   <option value="Looking for best deck in the format">Looking for best deck in the format</option>
