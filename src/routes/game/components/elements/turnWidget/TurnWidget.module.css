@@ -81,24 +81,15 @@
 
 @media (orientation: portrait) and (min-width: 600px) {
   .widgetContainer {
-    right: 1%;
-    height: 12vh;
-    height: 12dvh;
-  }
-
-  .widgetBackground{
-    width: calc(2 * var(--card-size) * 0.9);
+    right: 5%;
   }
 
   .widgetRightCol {
-    width: 50%;
-    height: 12vh;
-    height: 12dvh;
-    margin-right: -1.5vh;
+    width: 35%;
   }
 
   .widgetLeftCol {
-    width: 50%;
+    width: 65%;
     margin: -1.5vh;
     margin: -1.5dvh;
   }
@@ -106,21 +97,21 @@
 
 @media (orientation: portrait) and (max-width: 600px) {
   .widgetContainer {
-    right: 1%;
+    right: 5%;
     top: 49%;
-    height:10vh;
+    height:14vh;
   }
 
   .widgetRightCol {
-    width: 50%;
-    height: 10vh;
-    height: 10dvh;
-    margin-right: -.9vh;
+    width: 35%;
+    height: 13vh;
+    height: 13dvh;
   }
 
   .widgetLeftCol {
-    width: 50%;
+    width: 65%;
     margin: 0;
-    gap: 0;
+    gap: 0.5vh;
+    gap: 0.5dvh;
   }
 }

@@ -98,10 +98,8 @@
 @media (orientation: portrait) and (min-width: 600px) {
   .passTurnDisplay {
     font-size: 1.3em;
-    height: 4vh;
-    height: 4dvh;
-    margin: -0.7vh 0;
-    margin: -0.7dvh 0;
+    height: 5vh;
+    height: 5dvh;
   }
 
   .spectatorArrow {
@@ -134,17 +132,13 @@
 @media (orientation: portrait) and (max-width: 600px) {
   .passTurnDisplay {
     font-size: 1.2em;
-    height: 3.2vh;
-    height: 3.2dvh;
-    margin: -0.5vh 0;
-    margin: -0.5dvh 0;
+    height: 3vh;
+    height: 3dvh;
   }
   .passTurnDisplayActive {
     font-size: 1.2em;
-    padding-left: 1em;
-    height: 3.2vh;
-    height: 3.2dvh;
-    margin: -0.5vh 0;
-    margin: -0.5dvh 0;
+    padding-left: 1em;  
+    height: 3vh;
+    height: 3dvh;
   }
 }

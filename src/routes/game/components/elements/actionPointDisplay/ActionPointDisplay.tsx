@@ -23,8 +23,6 @@ export default function ActionPointDisplay(props: Player) {
 
   // Show opponent display when it's NOT your turn, show player display when it IS your turn
   const isYourTurn = Number(turnPlayer) === Number(PlayerID)
-
-  //const shouldHide = false; //debug
   const shouldHide = (isYourTurn && !isPlayer) || (!isYourTurn && isPlayer) && Number(PlayerID) !== 3;
 
   return (
