@@ -76,13 +76,24 @@ export default function CardPortal() {
     return <CardDetails src={src} />;
   }
 
-const popUpStyle: Record<string, string> = {};
+  const isDFC = dfcSrc != null;
+  const popUpStyle: Record<string, string> = {};
 
-
-  if (popup.xCoord > windowWidth / 2) {
-    popUpStyle.right = (windowWidth - (popup.xCoord - popUpGap * hoverImageSize)).toString() + 'px';
+  if (isDFC) {
+    // For DFC cards, position at cursor position and let absolute positioning handle left/right
+    if (popup.xCoord > windowWidth / 2) {
+      popUpStyle.right = (windowWidth - (popup.xCoord - popUpGap * hoverImageSize)).toString() + 'px';
+    } 
+    else {
+      popUpStyle.left =  (popup.xCoord + popUpGap * hoverImageSize*3.5).toString() + 'px';
+    }
   } else {
-    popUpStyle.left = (popup.xCoord + popUpGap * hoverImageSize).toString() + 'px';
+    // For single cards, use the existing logic to position left or right of cursor
+    if (popup.xCoord > windowWidth / 2) {
+      popUpStyle.right = (windowWidth - (popup.xCoord - popUpGap * hoverImageSize)).toString() + 'px';
+    } else {
+      popUpStyle.left = (popup.xCoord + popUpGap * hoverImageSize).toString() + 'px';
+    }
   }
 
   if (popup.yCoord < windowHeight / 2) {
@@ -99,7 +110,7 @@ const popUpStyle: Record<string, string> = {};
 
   return (
     <div className={styles.popUpContainer} style={popUpStyle}>
-      {dfcSrc != null && (
+      {isDFC && (
         <CardDetails
           src={dfcSrc}
           containerClass={classNames(styles.popUp, styles.doubleFacedCard)}

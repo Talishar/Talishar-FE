@@ -3,11 +3,13 @@ import {
   useDeleteAccountMutation,
   useGetFavoriteDecksQuery,
   useGetUserProfileQuery,
-  useAddFavoriteDeckMutation
+  useAddFavoriteDeckMutation,
+  useUpdateFavoriteDeckMutation
 } from 'features/api/apiSlice';
 import { DeleteDeckAPIResponse } from 'interface/API/DeleteDeckAPI.php';
 import { DeleteAccountAPIResponse } from 'interface/API/DeleteAccountAPI.php';
 import { AddFavoriteDeckRequest } from 'interface/API/AddFavoriteDeck.php';
+import { UpdateFavoriteDeckRequest } from 'interface/API/UpdateFavoriteDeck.php';
 import { toast } from 'react-hot-toast';
 import { RiEdit2Line, RiDeleteBin5Line } from "react-icons/ri";
 import { useState } from 'react';
@@ -15,6 +17,7 @@ import { useNavigate } from 'react-router-dom';
 import styles from './profile.module.css';
 import { generateCroppedImageUrl } from 'utils/cropImages';
 import { getReadableFormatName } from 'utils/formatUtils';
+import { HEROES_OF_RATHE } from 'routes/index/components/filter/constants';
 import FriendsList from './FriendsList';
 import BlockedUsers from './BlockedUsers';
 
@@ -31,6 +34,8 @@ export const ProfilePage = () => {
   const [confirmationUsername, setConfirmationUsername] = useState('');
   const [newDeckUrl, setNewDeckUrl] = useState('');
   const [isAddingDeck, setIsAddingDeck] = useState(false);
+  const [selectedHeroByDeck, setSelectedHeroByDeck] = useState<Record<string, string>>({});
+  const [updatingDeckLink, setUpdatingDeckLink] = useState<string | null>(null);
   const {
     data: decksData,
     isLoading: deckIsLoading,
@@ -43,6 +48,7 @@ export const ProfilePage = () => {
   } = useGetUserProfileQuery(undefined);
   const [deleteDeck] = useDeleteDeckMutation();
   const [addFavoriteDeck] = useAddFavoriteDeckMutation();
+  const [updateFavoriteDeck] = useUpdateFavoriteDeckMutation();
   const [deleteAccount, { isLoading: isDeleting }] = useDeleteAccountMutation();
 
   const handleDeleteDeckMessage = (resp: DeleteDeckAPIResponse): string => {
@@ -102,7 +108,63 @@ export const ProfilePage = () => {
   };
 
   const handleEditDeck = (deckLink: string) => {
-    window.location.href = deckLink;
+    window.open(deckLink, '_blank');
+  };
+
+  const handleHeroChange = async (deckLink: string, newHeroValue: string) => {
+    setUpdatingDeckLink(deckLink);
+    console.log('[Hero Update] Starting hero update for deck:', deckLink, 'Hero:', newHeroValue);
+    try {
+      const updatePayload: UpdateFavoriteDeckRequest = {
+        decklink: deckLink,
+        heroID: newHeroValue
+      };
+
+      console.log('[Hero Update] Update payload created:', updatePayload);
+
+      const updatePromise = updateFavoriteDeck(updatePayload).unwrap();
+      toast.promise(
+        updatePromise,
+        {
+          loading: 'Updating hero...',
+          success: (data) => {
+            console.log('[Hero Update] Success response:', data);
+            setSelectedHeroByDeck(prev => ({ ...prev, [deckLink]: newHeroValue }));
+            return 'Hero updated successfully!';
+          },
+          error: (err) => {
+            console.error('[Hero Update] Error response:', {
+              errorObject: err,
+              message: err?.message,
+              error: err?.error,
+              status: err?.status,
+              data: err?.data,
+              toString: err?.toString()
+            });
+            return `Error updating hero: ${err?.message || err?.error || err?.toString() || 'Unknown error'}`;
+          }
+        },
+        {
+          style: {
+            minWidth: '250px'
+          },
+          position: 'top-center'
+        }
+      );
+      await updatePromise;
+      console.log('[Hero Update] Refetching decks list');
+      deckRefetch();
+    } catch (err) {
+      console.error('[Hero Update] Caught exception:', {
+        errorObject: err,
+        message: err instanceof Error ? err.message : 'Unknown error',
+        stack: err instanceof Error ? err.stack : 'No stack trace',
+        toString: err?.toString(),
+        type: typeof err
+      });
+    } finally {
+      setUpdatingDeckLink(null);
+    }
   };
 
   const handleAddDeck = async () => {
@@ -337,6 +399,7 @@ export const ProfilePage = () => {
                 <thead>
                   <tr>
                     <th scope="col">Hero</th>
+                    <th scope="col">Select Hero</th>
                     <th scope="col">Name</th>
                     <th scope="col">Format</th>
                     {/* <th scope="col">Card Back</th>
@@ -348,7 +411,7 @@ export const ProfilePage = () => {
                 <tbody>
                   {deckIsLoading && (
                     <tr>
-                      <td colSpan={5}>Loading...</td>
+                      <td colSpan={6}>Loading...</td>
                     </tr>
                   )}
                   {decksData?.favoriteDecks.map((deck, ix) => (
@@ -361,6 +424,24 @@ export const ProfilePage = () => {
                           />
                         )}
                       </th>
+                      <td>
+                        <select
+                          value={selectedHeroByDeck[deck.link] || deck.hero || ''}
+                          onChange={(e) => handleHeroChange(deck.link, e.target.value)}
+                          disabled={updatingDeckLink === deck.link}
+                          className={styles.heroSelect}
+                        >
+                          <option value="">-- Select Hero --</option>
+                          {HEROES_OF_RATHE.map((hero) => {
+                            const displayLabel = hero.young ? `${hero.label} - Young` : hero.label;
+                            return (
+                              <option key={hero.value} value={hero.value}>
+                                {displayLabel}
+                              </option>
+                            );
+                          })}
+                        </select>
+                      </td>
                       <td>{deck.name}</td>
                       <td>{getReadableFormatName(deck.format || '')}</td>
                       {/* <td>{deck.cardBack ? deck.cardBack.charAt(0).toUpperCase() + deck.cardBack.slice(1).toLowerCase() : ""}</td>

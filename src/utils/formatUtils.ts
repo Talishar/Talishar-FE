@@ -27,7 +27,6 @@ export const getReadableFormatName = (format: string): string => {
     'openllcc': 'Open Living Legend',
     'openformatllcc': 'Open Living Legend',
     'cc': 'Classic Constructed',
-    'opensage': 'Open Silver Age',
     'openformatsage': 'Open Silver Age'
   };
   

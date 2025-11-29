@@ -8,7 +8,7 @@
   bottom: 10vh;
   left: 9vw;
   right: 13vw;
-  background: rgba(0, 0, 0, calc(1 - (1 - var(--transparency-intensity, 1)) * 0.7));
+  background: var(--near-black);
   padding: 1.5vh;
   border: 1px solid var(--theme-primary);
   border-radius: 10px;

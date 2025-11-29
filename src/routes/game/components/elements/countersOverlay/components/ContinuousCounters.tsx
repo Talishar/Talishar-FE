@@ -5,6 +5,7 @@ import { GiBlood } from "react-icons/gi";
 
 type Props = {
   countersMap: { [key: string]: number };
+  excludeFancyCounters?: boolean;
 };
 
 const includedCounters = [
@@ -24,6 +25,8 @@ const includedCounters = [
   'bind',
   'stain',
   'gold',
+  'suspense',
+  'sand',
   'lightning',
   'amp',
   'aim'
@@ -32,7 +35,12 @@ const includedCounters = [
 const toTooltipString = (type: string, value: number) =>
   `${value > 1 ? value : ''} ${type} counter${value > 1 ? 's' : ''}`;
 export const ContinuousCounters = (props: Props) => {
-  const { countersMap } = props;
+  const { countersMap, excludeFancyCounters } = props;
+
+  // Hide all fancy counter displays when excludeFancyCounters is true
+  if (excludeFancyCounters) {
+    return null;
+  }
 
   return (
     <>
@@ -162,6 +170,22 @@ export const ContinuousCounters = (props: Props) => {
           title={`${countersMap?.gold} gold counter(s)`}
         >
           <div>{countersMap?.gold}</div>
+        </div>
+      )}
+      {!!Number(countersMap?.suspense) && (
+        <div
+          className={styles.suspenseCounter}
+          title={`${countersMap?.suspense} suspense counter(s)`}
+        >
+          <div>{countersMap?.suspense}</div>
+        </div>
+      )}
+      {!!Number(countersMap?.sand) && (
+        <div
+          className={styles.sandCounter}
+          title={`${countersMap?.sand} sand counter(s)`}
+        >
+          <div>{countersMap?.sand}</div>
         </div>
       )}
       {!!Number(countersMap?.lightning) && (

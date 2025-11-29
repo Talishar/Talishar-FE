@@ -15,14 +15,15 @@ export interface CardProp {
 }
 
 export function Effect(prop: CardProp) {
-  const { card, num, imgClassName } = prop;
+  const { card, imgClassName } = prop;
   const src = generateCroppedImageUrl(prop.card.cardNumber);
-
+  // Get the number value - check counters first, then use num from card if available
+  const numValue = card.counters ?? (card as any).num ?? 0;
   return (
     <CardPopUp cardNumber={prop.card.cardNumber} containerClass={styles.effect}>
       <div className={styles.overlayContainer}>
         <img src={src} className={`${styles.img} ${imgClassName || ''}`} />
-        <CountersOverlay {...card} num={num} />
+        <CountersOverlay {...card} num={numValue} excludeFancyCounters={true} />
       </div>
     </CardPopUp>
   );

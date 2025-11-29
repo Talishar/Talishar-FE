@@ -127,6 +127,10 @@ interface CardListZoneAPI {
 
 const CardListZoneAPI = ({ name }: CardListZoneAPI) => {
   const gameInfo = useAppSelector(getGameInfo, shallowEqual);
+  const cardList = useAppSelector(
+    (state: RootState) => state.game.cardListFocus
+  );
+  const dispatch = useAppDispatch();
   const { lastUpdate } = useAppSelector(
     (state: RootState) => state.game.gameDynamicInfo
   );
@@ -136,6 +140,19 @@ const CardListZoneAPI = ({ name }: CardListZoneAPI) => {
     popupType: name
   });
 
+  // When API data arrives, populate the Redux cardList state so sorting can work
+  useEffect(() => {
+    if (data?.cards && cardList?.apiCall && !cardList?.cardList) {
+      dispatch(setCardListFocus({
+        cardList: data.cards,
+        name: cardList?.name
+      }));
+    }
+  }, [data?.cards, cardList?.apiCall, cardList?.cardList, cardList?.name, dispatch]);
+
+  // Use Redux cardList if available (for sorting), otherwise use API data
+  const cardsToDisplay = cardList?.cardList || data?.cards;
+
   let content;
   if (isLoading) {
     content = <div>Loading...</div>;
@@ -143,10 +160,10 @@ const CardListZoneAPI = ({ name }: CardListZoneAPI) => {
   if (isError) {
     content = <div>Error!</div>;
   }
-  if (data != undefined) {
+  if (cardsToDisplay != undefined) {
     content = (
       <div className={styles.cardListContents}>
-        {data.cards.map((card: any, ix: number) => {
+        {cardsToDisplay.map((card: any, ix: number) => {
           return <CardDisplay card={card} key={ix} />;
         })}
       </div>

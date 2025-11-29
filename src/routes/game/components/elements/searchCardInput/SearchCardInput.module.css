@@ -1,11 +1,9 @@
 .searchBox {
-  padding-right: calc(var(--form-element-spacing-horizontal));
-  padding-left: var(--form-element-spacing-horizontal);
   padding-inline-start: var(--form-element-spacing-horizontal);
-  padding-inline-end: calc(var(--form-element-spacing-horizontal));
-  background-repeat: no-repeat;
-  margin-bottom: var(--spacing);
-  --background-color: var(--form-element-background-color);
+  padding-inline-end: var(--form-element-spacing-horizontal);
+  margin: 0;
+  margin-bottom: 0px;
+  --background-color: var(--near-black);
   --border-color: var(--form-element-border-color);
   --color: var(--form-element-color);
   --box-shadow: none;
@@ -18,14 +16,11 @@
   font-weight: var(--font-weight);
   transition: background-color var(--transition), border-color var(--transition),
     color var(--transition), box-shadow var(--transition);
-  margin: 0;
-  margin-bottom: 0px;
   font-size: 1rem;
   line-height: var(--line-height);
   font-family: inherit;
   letter-spacing: inherit;
   text-transform: none;
-  --box-shadow: none;
 }
 
 .focused {
@@ -103,4 +98,12 @@
 
 .styledInput > input {
   box-shadow: none;
+  min-width: 0 !important;
+  opacity: 0  !important;
+}
+
+.styledInput::after,
+.styledInput::before {
+  display: none !important;
+  min-width: 0 !important;
 }

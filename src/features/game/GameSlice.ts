@@ -75,7 +75,15 @@ export const nextTurn = createAsyncThunk(
         const indexOfBraces = data.indexOf('{');
         if (indexOfBraces === -1) {
           // No JSON object found - backend returned an error message or non-JSON response
-          toast.error(`Backend Error: ${sanitizeHtmlTags(data)}`);
+          const errorMessage = sanitizeHtmlTags(data);
+          toast.error(`Backend Error: ${errorMessage}`);
+          
+          // Check for fatal errors that should end the game
+          if (errorMessage.includes('game no longer exists') || errorMessage.includes('does not exist')) {
+            // Return special error marker that will be handled by the rejected handler
+            throw new Error(`GAME_NOT_FOUND: ${errorMessage}`);
+          }
+          
           return console.error(`Backend returned non-JSON response: ${data}`);
         }
         if (indexOfBraces !== 0) {
@@ -92,7 +100,8 @@ export const nextTurn = createAsyncThunk(
           return;
         }
         waitingForJSONResponse = false;
-        return console.error(e);
+        // Re-throw to trigger rejected handler
+        throw e;
       }
     }
   }
@@ -338,14 +347,20 @@ export const gameSlice = createSlice({
         active: true,
         name: action.payload.name,
         apiQuery: action.payload.query,
-        apiCall: true
+        apiCall: true,
+        isSorted: false
       };
     },
     clearCardListFocus: (state) => {
       state.cardListFocus = undefined;
     },
     toggleCardListSort: (state) => {
-      if (state.cardListFocus && state.cardListFocus.originalCardList) {
+      if (state.cardListFocus && state.cardListFocus.cardList) {
+        // If originalCardList doesn't exist, set it now (for API-based popups)
+        if (!state.cardListFocus.originalCardList) {
+          state.cardListFocus.originalCardList = state.cardListFocus.cardList;
+        }
+        
         const isSorted = state.cardListFocus.isSorted;
         if (isSorted) {
           // Revert to original order
@@ -353,7 +368,7 @@ export const gameSlice = createSlice({
           state.cardListFocus.isSorted = false;
         } else {
           // Sort the cards
-          const sortedCardList = [...state.cardListFocus.cardList || []].sort((a, b) => b.cardNumber.localeCompare(a.cardNumber));
+          const sortedCardList = [...state.cardListFocus.cardList].sort((a, b) => b.cardNumber.localeCompare(a.cardNumber));
           state.cardListFocus.cardList = sortedCardList;
           state.cardListFocus.isSorted = true;
         }
@@ -450,6 +465,7 @@ export const gameSlice = createSlice({
         playerID: number;
         gameID: number;
         authKey: string;
+        username?: string;
       }>
     ) => {
       state.isFullRematch = false;
@@ -487,8 +503,8 @@ export const gameSlice = createSlice({
         if (state.gameInfo.playerID === 3) {
           state.gameInfo.authKey = 'spectator';
         } else if (action.payload.authKey !== '') {
-          // Save new authKey to storage
-          saveGameAuthKey(newGameID, action.payload.authKey, state.gameInfo.playerID);
+          // Save new authKey to storage with username
+          saveGameAuthKey(newGameID, action.payload.authKey, state.gameInfo.playerID, action.payload.username);
           state.gameInfo.authKey = action.payload.authKey;
         } else {
           // No authKey provided for new game (shouldn't happen, but handle gracefully)
@@ -497,8 +513,8 @@ export const gameSlice = createSlice({
       } else {
         // RECONNECTION to same game: Prefer provided authKey, fall back to stored/existing
         if (action.payload.authKey !== '') {
-          // Update with fresh authKey from server
-          saveGameAuthKey(newGameID, action.payload.authKey, state.gameInfo.playerID);
+          // Update with fresh authKey from server with username
+          saveGameAuthKey(newGameID, action.payload.authKey, state.gameInfo.playerID, action.payload.username);
           state.gameInfo.authKey = action.payload.authKey;
         } else if (!state.gameInfo.authKey || state.gameInfo.authKey === '') {
           // Try to load from storage if we don't have one
@@ -628,12 +644,20 @@ export const gameSlice = createSlice({
       state.shufflingPlayerId = action.payload.playerId;
       state.isShuffling = action.payload.isShuffling;
     },
+    setAddBotDeck: (
+      state,
+      action: PayloadAction<{ playerId: number | null; cardNumber: string }>
+    ) => {
+      state.addBotDeckPlayerId = action.payload.playerId;
+      state.addBotDeckCard = action.payload.cardNumber;
+    },
     setReplayStart: (
       state,
       action: PayloadAction<{
         playerID: number;
         gameID: number;
         authKey: string;
+        username?: string;
       }>
     ) => {
       state.isFullRematch = false;
@@ -646,7 +670,7 @@ export const gameSlice = createSlice({
         //And the payload is giving us an auth key
         if (state.gameInfo.playerID == 3) state.gameInfo.authKey = 'spectator';
         else if (action.payload.authKey !== '') {
-          saveGameAuthKey(action.payload.gameID, action.payload.authKey);
+          saveGameAuthKey(action.payload.gameID, action.payload.authKey, action.payload.playerID, action.payload.username);
           state.gameInfo.authKey = action.payload.authKey;
         }
         //Else try to set from local storage
@@ -837,6 +861,14 @@ export const gameSlice = createSlice({
     });
     builder.addCase(nextTurn.rejected, (state, action) => {
       state.isUpdateInProgress = false;
+      
+      // Check if this was a "game not found" error
+      const errorMessage = action.error?.message || '';
+      if (errorMessage.includes('GAME_NOT_FOUND')) {
+        console.error('Game not found on server, marking for navigation');
+        window.sessionStorage.setItem('gameNotFound', String(state.gameInfo.gameID));
+      }
+      
       return state;
     });
 
@@ -960,6 +992,7 @@ export const {
   setHeroInfo,
   markHeroIntroAsShown,
   setShuffling,
+  setAddBotDeck,
   setReplayStart,
   updateActionTimestamp,
   setFirstWarningShown,

@@ -77,6 +77,7 @@ export interface TurnResult {
   resourcesLeft: number;
   lifeGained: number;
   lifeLost: number;
+  turnNo?: number;
 }
 
 export interface EndGameStatsRef {
@@ -508,9 +509,9 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
       let bValue: number;
 
       if (turnSortField === 'turnNo') {
-        // Sort by turn number (the index in the original object)
-        aValue = Object.keys(data.turnResults).indexOf(a.key);
-        bValue = Object.keys(data.turnResults).indexOf(b.key);
+        // Sort by turn number (use turnNo from data or fallback to calculation)
+        aValue = a.turnNo !== undefined ? a.turnNo : Object.keys(data.turnResults).indexOf(a.key);
+        bValue = b.turnNo !== undefined ? b.turnNo : Object.keys(data.turnResults).indexOf(b.key);
       } else if (turnSortField === 'totalValue') {
         aValue = (a.damageThreatened || 0) + (a.damageBlocked || 0) + (a.damagePrevented || 0) + (a.lifeGained || 0) + (a.lifeLost || 0);
         bValue = (b.damageThreatened || 0) + (b.damageBlocked || 0) + (b.damagePrevented || 0) + (b.lifeGained || 0) + (b.lifeLost || 0);
@@ -531,30 +532,30 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
 
   // Helper function to check if columns should be hidden - We hide those 3 collumns for irrelevant heroes
   const shouldHideDamagePrevented = useMemo(() => {
-    if (!data.turnResults || Object.keys(data.turnResults).length === 0) return false;
-    const allZero = Object.values(data.turnResults).every(turn => {
-      const value = typeof turn.damagePrevented === 'number' ? turn.damagePrevented : 0;
-      return value === 0;
+    if (!data.turnResults || Object.keys(data.turnResults).length === 0) return true;
+    const hasAnyNonZero = Object.values(data.turnResults).some(turn => {
+      const value = parseInt(String(turn.damagePrevented), 10) || 0;
+      return value !== 0;
     });
-    return allZero;
+    return !hasAnyNonZero;
   }, [data.turnResults]);
 
   const shouldHideLifeGained = useMemo(() => {
-    if (!data.turnResults || Object.keys(data.turnResults).length === 0) return false;
-    const allZero = Object.values(data.turnResults).every(turn => {
-      const value = typeof turn.lifeGained === 'number' ? turn.lifeGained : 0;
-      return value === 0;
+    if (!data.turnResults || Object.keys(data.turnResults).length === 0) return true;
+    const hasAnyNonZero = Object.values(data.turnResults).some(turn => {
+      const value = parseInt(String(turn.lifeGained), 10) || 0;
+      return value !== 0;
     });
-    return allZero;
+    return !hasAnyNonZero;
   }, [data.turnResults]);
 
   const shouldHideLifeLost = useMemo(() => {
-    if (!data.turnResults || Object.keys(data.turnResults).length === 0) return false;
-    const allZero = Object.values(data.turnResults).every(turn => {
-      const value = typeof turn.lifeLost === 'number' ? turn.lifeLost : 0;
-      return value === 0;
+    if (!data.turnResults || Object.keys(data.turnResults).length === 0) return true;
+    const hasAnyNonZero = Object.values(data.turnResults).some(turn => {
+      const value = parseInt(String(turn.lifeLost), 10) || 0;
+      return value !== 0;
     });
-    return allZero;
+    return !hasAnyNonZero;
   }, [data.turnResults]);
 
   // Calculate the Life column span based on hidden columns
@@ -718,7 +719,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                 Avg Value per Turn:
                 <span 
                   className={styles.tooltipIcon}
-                  title="(Damage Threatened + Damage Blocked + Life Gained - Life Self-Lost + Damage Prevented) ÷ Number of Turns (Excluding turn 0)"
+                  data-tooltip="(Damage Threatened + Damage Blocked + Life Gained - Life Self-Lost + Damage Prevented) ÷ Number of Turns (Excluding turn 0)"
                 >
                 ?
                 </span>
@@ -855,7 +856,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
         <h2 className={styles.sectionHeader}>Turn by Turn Breakdown
           <span 
             className={styles.tooltipIconBreakdown}
-            title="Certains columns may be hidden if they contain no data (e.g. Damage Prevented, Life Gained/Self-Lost)"
+            data-tooltip="Certain columns may be hidden if they contain no data (e.g. Damage Prevented, Life Gained/Self-Lost)"
           >
           ?
           </span>
@@ -983,7 +984,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                       className={styles.sortableHeader}
                       title="Click to sort"
                     >
-                      Life Self-Lost {turnSortField === 'lifeLost' && (turnSortDirection === 'desc' ? '↓' : '↑')}
+                      Self-Lost {turnSortField === 'lifeLost' && (turnSortDirection === 'desc' ? '↓' : '↑')}
                     </th>
                   )}
                   <th
@@ -998,9 +999,11 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
               <tbody>
                 {sortedTurnResults ? (
                   sortedTurnResults.map((turnData, ix) => {
+                    // Hide turn #0 for the non-first player
+                    if (data.firstPlayer === 0 && turnData.turnNo === 0) return null;
                     return (
                       <tr key={`turnList${ix}`}>
-                        <td className={styles.turnNo}>{data.firstPlayer === data.playerID ? Object.keys(data.turnResults).indexOf(turnData.key) : Object.keys(data.turnResults).indexOf(turnData.key) + 1}</td>
+                        <td className={styles.turnNo}>{turnData.turnNo !== undefined ? turnData.turnNo : Object.keys(data.turnResults).indexOf(turnData.key)}</td>
                         <td className={styles.played}>
                           {turnData.cardsUsed}
                         </td>
@@ -1020,10 +1023,10 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                           {turnData.resourcesLeft}
                         </td>
                         <td className={styles.pitched}>
-                          {turnData.damageThreatened}
+                          {parseInt(String(turnData.damageThreatened), 10) || 0}
                         </td>
                         <td className={styles.pitched}>
-                          {turnData.damageDealt}
+                          {parseInt(String(turnData.damageDealt), 10) || 0}
                         </td>
                         <td className={styles.pitched}>
                           {turnData.damageBlocked}
@@ -1055,9 +1058,12 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                 ) : (
                   !!data.turnResults &&
                   Object.keys(data.turnResults).map((key, ix) => {
+                    const turnNo = data.turnResults[key]?.turnNo;
+                    // Hide turn #0 for the non-first player
+                    if (data.firstPlayer === 0 && turnNo === 0) return null;
                     return (
                       <tr key={`turnList${ix}`}>
-                        <td className={styles.turnNo}>{data.firstPlayer === data.playerID ? ix : ix + 1}</td>
+                        <td className={styles.turnNo}>{turnNo !== undefined ? turnNo : ix}</td>
                         <td className={styles.played}>
                           {/* @ts-ignore */}
                           {data.turnResults[key]?.cardsUsed}
@@ -1084,11 +1090,11 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                         </td>
                         <td className={styles.pitched}>
                           {/* @ts-ignore */}
-                          {data.turnResults[key]?.damageThreatened}
+                          {parseInt(String(data.turnResults[key]?.damageThreatened), 10) || 0}
                         </td>
                         <td className={styles.pitched}>
                           {/* @ts-ignore */}
-                          {data.turnResults[key]?.damageDealt}
+                          {parseInt(String(data.turnResults[key]?.damageDealt), 10) || 0}
                         </td>
                         <td className={styles.pitched}>
                           {/* @ts-ignore */}

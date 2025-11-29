@@ -1,59 +1,67 @@
 .actionPointDisplay {
   position: relative;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: flex-end;
+  left: 16%;
+  height: 2.5em;
 }
 
 .actionPointCounter {
-  border-radius: 100%;
   display: flex;
-  justify-content: center;
+  justify-content: flex-end;
   align-items: center;
-  height: 2.5em;
-  width: 2.5em;
-  background-image: url('../../../../../img/elements/turnwidget/turnWidget-ActionPoint.png');
+  height: 2em;
+  width: 6em;
   background-position: center;
   background-size: contain;
   text-align: center;
-  font-size: 1.5em;
+  font-size: 1.8em;
   color: var(--white);
   text-shadow: -1px 1px 2px #000, 1px 1px 2px #000, 1px -1px 0 #000,
     -1px -1px 0 #000;
   z-index: -1;
+  padding-right: .5em;
 }
 
-.manualMode {
-  position: absolute;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  top: -40px;
-  bottom: -40px;
-  z-index: 999;
+.actionPointDisplay[data-player='player'] .actionPointCounter {
+  background-image: url('../../../../../img/elements/turnwidget/BlueTracker.png');
 }
 
-.drawButton {
-  padding: 2px 10px;
+.actionPointDisplay[data-player='player'] {
   margin: 0;
-  border: 2px solid var(--near-black);
 }
 
-@media (orientation: portrait) {
+.actionPointDisplay[data-player='opponent'] .actionPointCounter {
+  background-image: url('../../../../../img/elements/turnwidget/RedTracker.png');
+}
+
+.actionPointDisplay[data-player='opponent'] {
+  margin: 0;
+}
+
+@media (orientation: portrait) and (min-width: 600px) {
+  .actionPointDisplay {
+    left: .25em;
+  }
+
   .actionPointCounter {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 2.5em;
-    width: 2.5em;
-    background-image: url('../../../../../img/elements/turnwidget/turnWidget-ActionPoint.png');
-    background-position: center;
-    background-size: contain;
-    text-align: center;
-    font-size: 1.2em;
-    color: var(--white);
-    text-shadow: -1px 1px 2px #000, 1px 1px 2px #000, 1px -1px 0 #000,
-      -1px -1px 0 #000;
-    z-index: -1;
+    height: 3.5em;
+    width: 4.5em;
+  }
+
+  .actionPointDisplay[data-player='opponent'] {
+    margin-top: .5em;
+  }
+}
+
+@media (orientation: portrait) and (max-width: 600px) {
+  .actionPointDisplay {
+    left: .6em;
+  }
+
+  .actionPointCounter {
+    height: 3.5em;
+    width: 4em;
   }
 }

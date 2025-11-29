@@ -6,6 +6,8 @@ interface GameSessionData {
   playerID: number;
   authKey: string;
   timestamp: number;
+  username?: string; // Added for recovery validation
+  recoveryAttempts?: number; // Track recovery attempts to prevent infinite loops
 }
 
 /**
@@ -45,12 +47,141 @@ const xorDecrypt = (encoded: string, seed: number): string => {
 
 const STORAGE_KEY_PREFIX = 'talishar_game_';
 const CURRENT_GAME_KEY = 'talishar_current_game';
+const INDEXEDDB_NAME = 'TalisharGameSessions';
+const INDEXEDDB_STORE = 'authKeys';
+const RECOVERY_ATTEMPTS_LIMIT = 3;
+
+/**
+ * Initialize IndexedDB for fallback storage
+ */
+const initIndexedDB = (): Promise<IDBDatabase | null> => {
+  return new Promise((resolve) => {
+    if (!('indexedDB' in window)) {
+      console.warn('IndexedDB not supported');
+      resolve(null);
+      return;
+    }
+
+    try {
+      const request = indexedDB.open(INDEXEDDB_NAME, 1);
+      
+      request.onerror = () => {
+        console.error('IndexedDB open error:', request.error);
+        resolve(null);
+      };
+      
+      request.onsuccess = () => {
+        resolve(request.result);
+      };
+      
+      request.onupgradeneeded = (event) => {
+        const db = (event.target as IDBOpenDBRequest).result;
+        if (!db.objectStoreNames.contains(INDEXEDDB_STORE)) {
+          const store = db.createObjectStore(INDEXEDDB_STORE, { keyPath: 'gameId' });
+          store.createIndex('timestamp', 'timestamp', { unique: false });
+        }
+      };
+    } catch (error) {
+      console.error('IndexedDB initialization error:', error);
+      resolve(null);
+    }
+  });
+};
+
+/**
+ * Save to IndexedDB as fallback
+ */
+const saveToIndexedDB = async (sessionData: GameSessionData): Promise<void> => {
+  try {
+    const db = await initIndexedDB();
+    if (!db) return;
+
+    const transaction = db.transaction([INDEXEDDB_STORE], 'readwrite');
+    const store = transaction.objectStore(INDEXEDDB_STORE);
+    
+    store.put(sessionData);
+    
+    return new Promise((resolve, reject) => {
+      transaction.oncomplete = () => resolve();
+      transaction.onerror = () => reject(transaction.error);
+    });
+  } catch (error) {
+    console.warn('Failed to save to IndexedDB:', error);
+  }
+};
+
+/**
+ * Load from IndexedDB as fallback
+ */
+const loadFromIndexedDB = async (gameId: number): Promise<GameSessionData | null> => {
+  try {
+    const db = await initIndexedDB();
+    if (!db) return null;
+
+    const transaction = db.transaction([INDEXEDDB_STORE], 'readonly');
+    const store = transaction.objectStore(INDEXEDDB_STORE);
+    
+    return new Promise((resolve, reject) => {
+      const request = store.get(gameId);
+      request.onsuccess = () => resolve(request.result || null);
+      request.onerror = () => reject(request.error);
+    });
+  } catch (error) {
+    console.warn('Failed to load from IndexedDB:', error);
+    return null;
+  }
+};
+
+/**
+ * Get the current username from various sources (Redux, localStorage, session storage)
+ * Useful for getting username when Redux hasn't loaded yet
+ */
+export const getCurrentUsername = (reduxUsername?: string | null): string | undefined => {
+  // First try Redux username if provided
+  if (reduxUsername) {
+    return reduxUsername;
+  }
+
+  // Try to get from localStorage (may be cached from previous session)
+  try {
+    const lastUsername = localStorage.getItem('talishar_lastUsername');
+    if (lastUsername) {
+      return lastUsername;
+    }
+  } catch (e) {
+    // localStorage might not be available
+  }
+
+  // Try to get from sessionStorage
+  try {
+    const sessionUsername = sessionStorage.getItem('talishar_currentUsername');
+    if (sessionUsername) {
+      return sessionUsername;
+    }
+  } catch (e) {
+    // sessionStorage might not be available
+  }
+
+  return undefined;
+};
+
+/**
+ * Save the current username for later retrieval
+ */
+export const cacheCurrentUsername = (username: string): void => {
+  try {
+    localStorage.setItem('talishar_lastUsername', username);
+    sessionStorage.setItem('talishar_currentUsername', username);
+  } catch (e) {
+    console.warn('Failed to cache username:', e);
+  }
+};
 
 /**
  * Save both game auth key and player ID to localStorage (persists across page refreshes)
- * Also keep a copy in sessionStorage for faster access
+ * Also keep a copy in sessionStorage for faster access and IndexedDB for backup
  */
-export const saveGameAuthKey = (gameId: number, authKey: string, playerID?: number): void => {
+export const saveGameAuthKey = (gameId: number, authKey: string, playerID?: number, username?: string): void => {
   if (gameId <= 0) {
     console.error('Invalid game ID, cannot save authKey for game:', gameId);
     return;
@@ -66,6 +197,14 @@ export const saveGameAuthKey = (gameId: number, authKey: string, playerID?: numb
     return;
   }
   
+  // Get username from various sources if not provided
+  const usernameToSave = username || getCurrentUsername();
+  
+  // Cache the username for future use
+  if (usernameToSave) {
+    cacheCurrentUsername(usernameToSave);
+  }
+  
   // Encrypt the auth key before storing (XOR + base64 encoding)
   const encryptedAuthKey = xorEncrypt(authKey, gameId);
   const storageKey = STORAGE_KEY_PREFIX + gameId;
@@ -75,7 +214,9 @@ export const saveGameAuthKey = (gameId: number, authKey: string, playerID?: numb
     gameId,
     playerID: playerID || 1, // Default to player 1 if not provided
     authKey: encryptedAuthKey,
-    timestamp: Date.now()
+    timestamp: Date.now(),
+    username: usernameToSave,
+    recoveryAttempts: 0
   };
   
   // Save to both sessionStorage (for current session) and localStorage (for persistence across refreshes)
@@ -83,13 +224,16 @@ export const saveGameAuthKey = (gameId: number, authKey: string, playerID?: numb
   sessionStorage.setItem(storageKey, sessionDataJson);
   localStorage.setItem(storageKey, sessionDataJson);
   
+  // Also save to IndexedDB for additional fallback
+  saveToIndexedDB(sessionData).catch(err => console.warn('IndexedDB save failed:', err));
+  
   // Save as current game for quick recovery
   localStorage.setItem(CURRENT_GAME_KEY, String(gameId));
 };
 
 /**
  * Load game auth key and player ID from storage
- * Tries sessionStorage first (fastest), then falls back to localStorage (survives page refresh)
+ * Tries sessionStorage first (fastest), then localStorage, then IndexedDB (survives data clearing)
  */
 export const loadGameAuthKey = (gameId: number): string => {
   if (gameId <= 0) {
@@ -162,6 +306,32 @@ export const loadGameAuthKey = (gameId: number): string => {
 };
 
 /**
+ * Load game auth key from IndexedDB as fallback (async)
+ * Use this when primary storage fails
+ */
+export const loadGameAuthKeyFromIndexedDB = async (gameId: number): Promise<string> => {
+  if (gameId <= 0) return '';
+  
+  try {
+    const sessionData = await loadFromIndexedDB(gameId);
+    if (sessionData && sessionData.gameId === gameId) {
+      const authKey = xorDecrypt(sessionData.authKey, gameId);
+      if (authKey) {
+        console.log(`Recovered authKey from IndexedDB for game ${gameId}`);
+        // Restore to primary storage
+        const storageKey = STORAGE_KEY_PREFIX + gameId;
+        sessionStorage.setItem(storageKey, JSON.stringify(sessionData));
+        localStorage.setItem(storageKey, JSON.stringify(sessionData));
+        return authKey;
+      }
+    }
+  } catch (error) {
+    console.warn('Failed to load from IndexedDB:', error);
+  }
+  return '';
+};
+
+/**
  * Load player ID from storage for a given game
  */
 export const loadGamePlayerID = (gameId: number): number => {
@@ -197,6 +367,40 @@ export const loadGamePlayerID = (gameId: number): number => {
     console.error('Failed to parse stored game session for playerID:', error);
     return 0;
   }
+};
+
+/**
+ * Load stored username for a given game
+ */
+export const loadGameUsername = (gameId: number): string | null => {
+  if (gameId <= 0) {
+    return null;
+  }
+
+  const storageKey = STORAGE_KEY_PREFIX + gameId;
+  
+  // Try sessionStorage first
+  let sessionDataJson = sessionStorage.getItem(storageKey);
+  
+  // If not in sessionStorage, try localStorage
+  if (!sessionDataJson) {
+    sessionDataJson = localStorage.getItem(storageKey);
+  }
+  
+  if (!sessionDataJson) {
+    return null;
+  }
+  
+  try {
+    const sessionData: GameSessionData = JSON.parse(sessionDataJson);
+    if (sessionData.gameId === gameId && sessionData.username) {
+      return sessionData.username;
+    }
+  } catch (error) {
+    console.error('Failed to parse stored game session for username:', error);
+  }
+  
+  return null;
 };
 
 /**

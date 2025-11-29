@@ -7,6 +7,8 @@ import { useAppDispatch } from 'app/Hooks';
 import { PROCESS_INPUT } from 'appConstants';
 import { submitButton } from 'features/game/GameSlice';
 
+const DropdownIndicator = null;
+
 // TODO: replace the any
 const customStyles = {
   container: (state: any) => styles.container,
@@ -58,6 +60,7 @@ export const SearchCardInput = () => {
         classNames={customStyles}
         onChange={handleChange}
         isSearchable
+        components={{ DropdownIndicator }}
       />
       <hr />
       <button className={styles.button} onClick={handleOnClick}>

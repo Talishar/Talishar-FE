@@ -2,6 +2,7 @@
 export interface Theme {
   name: string;
   id: string;
+  transparency?: number; // 0-1, defaults to 0.98
   colors: {
     // Background colors
     background: string;
@@ -75,7 +76,7 @@ export interface Theme {
 
 export const themes: Theme[] = [
   {
-    name: 'Dark (Default)',
+    name: '🌙 Dark (Default)',
     id: 'dark',
     colors: {
       background: 'radial-gradient(transparent, black)',
@@ -133,12 +134,12 @@ export const themes: Theme[] = [
       warning: '#feca57',
       danger: '#dc3545',
       
-      nearBlack: 'rgba(0, 0, 0, 0.85)',
+      nearBlack: 'rgba(0, 0, 0, var(--transparency-intensity, 0.98))',
       overlay: 'rgba(0, 0, 0, 0.7)',
     }
   },
   {
-    name: 'Light',
+    name: '☀️ Light',
     id: 'light',
     colors: {
       background: 'radial-gradient(transparent, #252525)',
@@ -196,12 +197,12 @@ export const themes: Theme[] = [
       warning: '#f59e0b',
       danger: '#dc2626',
       
-      nearBlack: 'rgba(26, 26, 26, 0.9)',
+      nearBlack: 'rgba(26, 26, 26, var(--transparency-intensity, 0.98))',
       overlay: 'rgba(26, 26, 26, 0.75)',
     }
   },
   {
-    name: 'Midnight Blue',
+    name: '🌌 Midnight Blue',
     id: 'blue',
     colors: {
       background: 'radial-gradient(transparent, #0a0e27)',
@@ -259,12 +260,12 @@ export const themes: Theme[] = [
       warning: '#f59e0b',
       danger: '#dc2626',
       
-      nearBlack: 'rgba(10, 14, 39, 0.85)',
-      overlay: 'rgba(10, 14, 39, 0.7)',
+      nearBlack: 'rgba(10, 14, 39, var(--transparency-intensity, 0.98))',
+      overlay: 'rgba(10, 14, 39, 0.75)',
     }
   },
   {
-    name: 'Royal Purple',
+    name: '👑 Royal Purple',
     id: 'purple',
     colors: {
       background: 'radial-gradient(transparent, #0f0a15)',
@@ -322,12 +323,12 @@ export const themes: Theme[] = [
       warning: '#f59e0b',
       danger: '#dc2626',
       
-      nearBlack: 'rgba(15, 10, 21, 0.9)',
-      overlay: 'rgba(15, 10, 21, 0.75)',
+      nearBlack: 'rgba(15, 10, 21, var(--transparency-intensity, 0.98))',
+      overlay: 'rgba(58, 12, 12, 0.75)',
     }
   },
   {
-    name: 'Crimson Red',
+    name: '🔴 Crimson Red',
     id: 'red',
     colors: {
       background: 'radial-gradient(transparent, #0d0a0a)',
@@ -385,13 +386,13 @@ export const themes: Theme[] = [
       warning: '#f59e0b',
       danger: '#dc2626',
       
-      nearBlack: 'rgba(13, 10, 10, 0.9)',
+      nearBlack: 'rgba(13, 10, 10, var(--transparency-intensity, 0.98))',
       overlay: 'rgba(13, 10, 10, 0.8)',
     }
   },
   {
-    name: 'Emerald Green',
-    id: 'emerald-Green',
+    name: '💚 Emerald Green',
+    id: 'emerald-green',
     colors: {
       background: 'radial-gradient(transparent, #0d1410)',
       backgroundTexture: "url('./img/backgrounds/dark_bg_texture.webp')",
@@ -448,12 +449,12 @@ export const themes: Theme[] = [
       warning: '#f59e0b',
       danger: '#dc2626',
       
-      nearBlack: 'rgba(13, 20, 16, 0.9)',
-      overlay: 'rgba(13, 20, 16, 0.8)',
+      nearBlack: 'rgba(13, 20, 16, var(--transparency-intensity, 0.98))',
+      overlay: 'rgba(77, 20, 77, 0.75)',
     }
   },
   {
-    name: 'Magenta Pink',
+    name: '💗 Magenta Pink',
     id: 'magenta',
     colors: {
       background: 'radial-gradient(transparent, #110914)',
@@ -511,12 +512,12 @@ export const themes: Theme[] = [
       warning: '#f59e0b',
       danger: '#dc2626',
       
-      nearBlack: 'rgba(17, 9, 20, 0.9)',
+      nearBlack: 'rgba(17, 9, 20, var(--transparency-intensity, 0.98))',
       overlay: 'rgba(17, 9, 20, 0.8)',
     }
   },
   {
-    name: 'Bronze & Gold',
+    name: '⭐ Bronze & Gold',
     id: 'bronze',
     colors: {
       background: 'radial-gradient(transparent, #15100a)',
@@ -574,12 +575,12 @@ export const themes: Theme[] = [
       warning: '#f59e0b',
       danger: '#dc2626',
       
-      nearBlack: 'rgba(15, 13, 10, 0.9)',
+      nearBlack: 'rgba(15, 13, 10, var(--transparency-intensity, 0.98))',
       overlay: 'rgba(15, 13, 10, 0.8)',
     }
   },
   {
-    name: 'Navy Blue & Gold',
+    name: '⚓ Navy Blue & Gold',
     id: 'navy-blue-gold',
     colors: {
       background: 'radial-gradient(transparent, #0f1419)',
@@ -637,12 +638,12 @@ export const themes: Theme[] = [
       warning: '#f59e0b',
       danger: '#dc2626',
       
-      nearBlack: 'rgba(15, 20, 25, 0.9)',
+      nearBlack: 'rgba(15, 20, 25, var(--transparency-intensity, 0.98))',
       overlay: 'rgba(15, 20, 25, 0.8)',
     }
   },
   {
-    name: 'Crimson & Silver',
+    name: '🧛 Crimson & Silver',
     id: 'crimson-silver',
     colors: {
       background: 'radial-gradient(transparent, #0a0e12)',
@@ -700,12 +701,12 @@ export const themes: Theme[] = [
       warning: '#f59e0b',
       danger: '#dc2626',
       
-      nearBlack: 'rgba(10, 14, 18, 0.9)',
+      nearBlack: 'rgba(10, 14, 18, var(--transparency-intensity, 0.98))',
       overlay: 'rgba(10, 14, 18, 0.8)',
     }
   },
   {
-    name: 'Sapphire & Copper',
+    name: '💎 Sapphire & Copper',
     id: 'sapphire-copper',
     colors: {
       background: 'radial-gradient(transparent, #0a0f1a)',
@@ -763,12 +764,12 @@ export const themes: Theme[] = [
       warning: '#f59e0b',
       danger: '#dc2626',
       
-      nearBlack: 'rgba(10, 15, 26, 0.9)',
+      nearBlack: 'rgba(10, 15, 26, var(--transparency-intensity, 0.98))',
       overlay: 'rgba(10, 15, 26, 0.8)',
     }
   },
   {
-    name: 'Sunset & Cream',
+    name: '🌅 Sunset & Cream',
     id: 'sunset-cream',
     colors: {
       background: 'radial-gradient(transparent, #15100a)',
@@ -826,12 +827,21 @@ export const themes: Theme[] = [
       warning: '#f59e0b',
       danger: '#dc2626',
       
-      nearBlack: 'rgba(21, 16, 10, 0.9)',
+      nearBlack: 'rgba(21, 16, 10, var(--transparency-intensity, 0.98))',
       overlay: 'rgba(21, 16, 10, 0.8)',
     }
   }
 ];
 
-export const getThemeById = (id: string): Theme => {
-  return themes.find(theme => theme.id === id) || themes[0];
+export const getThemeById = (id: string, transparency: number = 0.98): Theme => {
+  const theme = themes.find(theme => theme.id === id) || themes[0];
+  const clampedTransparency = Math.max(0, Math.min(1, transparency)); // Clamp between 0 and 1
+  
+  return {
+    ...theme,
+    transparency: clampedTransparency,
+    colors: {
+      ...theme.colors
+    }
+  };
 };

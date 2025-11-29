@@ -1,22 +1,14 @@
 .health {
   position: relative;
   text-shadow: 0 0 10px rgb(0, 255, 38);
-  height: 9vh;
-  height: 9dvh;
+  height: auto;
   font-size: 2em;
   display: flex;
   align-items: center;
-}
-
-.manualMode {
-  position: absolute;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  top: -15px;
-  bottom: 0px;
-  z-index: 999;
-  right: -50px;
+  justify-content: center;
+  width: auto;
+  padding: 0;
+  margin: 0;
 }
 
 .drawButton {
@@ -25,16 +17,8 @@
   border: 2px solid var(--near-black);
 }
 
-
 @media (orientation: portrait) {
-  .manualMode {
-    position: absolute;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    top: -10px;
-    bottom: 0px;
-    z-index: 999;
-    right: -40px;
+  .health {
+    font-size: 1.8em;
   }
 }

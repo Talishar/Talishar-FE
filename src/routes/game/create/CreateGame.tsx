@@ -17,7 +17,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { ErrorMessage } from '@hookform/error-message';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { FaExclamationCircle } from 'react-icons/fa';
-import { HEROES_OF_RATHE } from '../../index/components/filter/constants';
+import { HEROES_OF_RATHE, CLASS_OF_RATHE } from '../../index/components/filter/constants';
 import { generateCroppedImageUrl } from 'utils/cropImages';
 import { ImageSelect, ImageSelectOption } from 'components/ImageSelect';
 import GoogleAdSense from 'components/GoogleAdSense';
@@ -93,12 +93,30 @@ const CreateGame = () => {
   const [selectedFormat, setSelectedFormat] = React.useState(initialValues.format);
   const [previousFormat, setPreviousFormat] = React.useState<string>(String(initialValues.format || ''));
   const [selectedHeroes, setSelectedHeroes] = React.useState<string[]>([]);
-  const [gameDescription, setGameDescription] = React.useState('');
+  const [selectedClasses, setSelectedClasses] = React.useState<string[]>([]);
+  const [gameDescription, setGameDescription] = React.useState(() => initialValues.gameDescription || '');
   const [selectedFavoriteDeck, setSelectedFavoriteDeck] = React.useState<string>(initialValues.favoriteDecks || '');
   const [selectedPreconDeck, setSelectedPreconDeck] = React.useState<string>(PRECON_DECKS.LINKS[0]);
   const [isInitialized, setIsInitialized] = React.useState(false);
 
   const formFormat = watch('format');
+
+  // Normalize localStorage on mount - extract base option from expanded descriptions
+  React.useEffect(() => {
+    const stored = localStorage.getItem('lastGameDescription') || '';
+    // If it contains hero/class names (has commas), extract the base option
+    if (stored && stored.includes(',')) {
+      let baseDescription = '';
+      if (stored.startsWith('Looking for ')) {
+        baseDescription = 'Looking for a specific hero';
+      } else if (stored.startsWith('No interest')) {
+        baseDescription = 'No interest in playing against specific hero';
+      }
+      if (baseDescription) {
+        localStorage.setItem('lastGameDescription', baseDescription);
+      }
+    }
+  }, []);
 
   // Debug logging
   React.useEffect(() => {
@@ -116,11 +134,31 @@ const CreateGame = () => {
     }
   }, [selectedPreconDeck, formFormat, selectedFormat, isInitialized, setValue]);
 
-  // Get unique hero names (no duplicates)
+  // Get unique hero names (no duplicates), filtered by format
   const uniqueHeroes = useMemo(() => {
-    const heroNames = new Set(HEROES_OF_RATHE.map(hero => hero.label));
+    const currentFormat = String(formFormat || selectedFormat);
+    // LL and CC formats should only show non-young heroes
+    const isRestrictedFormat = [
+      GAME_FORMAT.CLASSIC_CONSTRUCTED,
+      GAME_FORMAT.COMPETITIVE_CC,
+      GAME_FORMAT.LLCC,
+      GAME_FORMAT.COMPETITIVE_LL,
+      GAME_FORMAT.OPEN_CC,
+      GAME_FORMAT.OPEN_LL_CC
+    ].includes(currentFormat);
+    
+    const filteredHeroes = isRestrictedFormat
+      ? HEROES_OF_RATHE.filter(hero => !hero.young)
+      : HEROES_OF_RATHE;
+    
+    const heroNames = new Set(filteredHeroes.map(hero => hero.label));
     return Array.from(heroNames).sort();
-  }, []);
+  }, [formFormat, selectedFormat]);
+
+  const uniqueClasses = useMemo(() => {
+    const classNames = new Set(CLASS_OF_RATHE.map(classObj => classObj.label));
+    return Array.from(classNames).sort();
+  }, [])
 
   const handleFormatChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newFormat = e.target.value;
@@ -144,11 +182,13 @@ const CreateGame = () => {
     const value = e.target.value;
     setGameDescription(value);
     
-    if (value !== 'Looking for a specific hero') {
+    if (value !== 'Looking for a specific hero' && value !== 'Looking for a specific class' && value !== 'No interest in playing against specific hero') {
       setSelectedHeroes([]);
+      setSelectedClasses([]);
       setValue('gameDescription', value);
-    } else {
-      setValue('gameDescription', 'Looking for a specific hero');
+    } 
+    else if (value === 'Looking for a specific hero' || value === 'No interest in playing against specific hero' || value === 'Looking for a specific class') {
+      setValue('gameDescription', value);
     }
   };
 
@@ -170,11 +210,39 @@ const CreateGame = () => {
     setSelectedHeroes(newSelectedHeroes);
     
     // Update the gameDescription field with the formatted string
-    if (newSelectedHeroes.length > 0) {
+    if (newSelectedHeroes.length > 0 && gameDescription === 'No interest in playing against specific hero' || gameDescription === 'Looking for a specific hero') {
       const heroList = newSelectedHeroes.join(', ');
-      setValue('gameDescription', `Looking for ${heroList}`);
+      // Check if current mode is preference or exclusion
+      if (gameDescription === 'No interest in playing against specific hero') {
+        setValue('gameDescription', `No interest in playing against ${heroList}`);
+      } else {
+        setValue('gameDescription', `Looking for ${heroList}`);
+      }
     } else {
-      setValue('gameDescription', 'Looking for a specific hero');
+      setValue('gameDescription', initialValues.gameDescription || '');
+    }
+  };
+
+  const handleClassSelection = (className: string, isChecked: boolean) => {
+    let newSelectedClasses: string[];
+    
+    if (isChecked) {
+      if (selectedClasses.length < 3 && !selectedClasses.includes(className)) {
+        newSelectedClasses = [...selectedClasses, className];
+      } else {
+        return; // Don't add if limit reached or already selected
+      }
+    } else {
+      newSelectedClasses = selectedClasses.filter(classNameItem => classNameItem !== className);
+    }
+    
+    setSelectedClasses(newSelectedClasses);
+    
+    if (newSelectedClasses.length > 0) {
+      const classList = newSelectedClasses.join(', ');
+      setValue('gameDescription', `Looking for ${classList}`);
+    } else {
+      setValue('gameDescription', 'Looking for a specific class');
     }
   };
 
@@ -182,6 +250,7 @@ const CreateGame = () => {
     reset(initialValues);
     setGameDescription(initialValues.gameDescription || '');
     setSelectedHeroes([]);
+    setSelectedClasses([]);
     setSelectedFavoriteDeck(initialValues.favoriteDecks || '');
     setSelectedPreconDeck(PRECON_DECKS.LINKS[0]);
     // Only set fabdb to precon deck if format is precon
@@ -218,9 +287,21 @@ const CreateGame = () => {
       if (!isLoggedIn) values.visibility = GAME_VISIBILITY.PRIVATE;
       values.user = searchParams.get('user') ?? undefined;
       
-      // Save game description to localStorage
-      // Save even if empty string to preserve "Default Game #" selection
-      localStorage.setItem('lastGameDescription', values.gameDescription || '');
+      // Extract base game description (remove hero/class names)
+      let baseGameDescription = values.gameDescription || '';
+      if (baseGameDescription.startsWith('Looking for ') && baseGameDescription.includes(',')) {
+        // "Looking for Arakni, Briar..." -> "Looking for a specific hero"
+        if (baseGameDescription.includes('in playing')) {
+          baseGameDescription = 'No interest in playing against specific hero';
+        } else {
+          baseGameDescription = 'Looking for a specific hero';
+        }
+      } else if (baseGameDescription.startsWith('No interest in playing against') && baseGameDescription.includes(',')) {
+        baseGameDescription = 'No interest in playing against specific hero';
+      }
+      
+      // Save only the base option to localStorage
+      localStorage.setItem('lastGameDescription', baseGameDescription);
 
       
       const response = await createGame(values).unwrap();
@@ -375,8 +456,12 @@ const CreateGame = () => {
                   <option value="Looking for best deck in the format">Looking for best deck in the format</option>
                   <option value="Looking for meta heroes">Looking for meta heroes</option>
                   <option value="Looking for a specific hero">Looking for a specific hero</option>
+                  <option value="No interest in playing against specific hero">No interest in playing against specific hero</option>
+                  <option value="Looking for a specific class">Looking for a specific class</option>
                   <option value="Playing spicy brews">Playing spicy brews</option>
-                  <option value="CC legal including unreleased cards">CC legal including PEN</option>
+                  {[GAME_FORMAT.OPEN_CC, GAME_FORMAT.OPEN_BLITZ, GAME_FORMAT.OPEN_LL_CC, GAME_FORMAT.OPEN_SAGE].includes(String(formFormat || selectedFormat)) && (
+                    <option value="Legal deck including unreleased cards">Legal deck including PEN</option>
+                  )}
                   <option value="Casual play">Casual play</option>
                   <option value="New player help">New player help</option>
                   <option value="Learning a new hero">Learning a new hero</option>
@@ -402,6 +487,52 @@ const CreateGame = () => {
                   {selectedHeroes.length > 0 && (
                     <div className={styles.selectedHeroesPreview}>
                       Preview: Looking for {selectedHeroes.join(', ')}
+                    </div>
+                  )}
+                </div>
+              )}
+              {gameDescription === 'No interest in playing against specific hero' && (
+                <div className={styles.heroSelection}>
+                  <label>Select Heroes (up to 3):</label>
+                  <div className={styles.heroCheckboxes}>
+                    {uniqueHeroes.map((heroName) => (
+                      <label key={heroName} className={styles.heroCheckbox}>
+                        <input
+                          type="checkbox"
+                          checked={selectedHeroes.includes(heroName)}
+                          onChange={(e) => handleHeroSelection(heroName, e.target.checked)}
+                          disabled={!selectedHeroes.includes(heroName) && selectedHeroes.length >= 3}
+                        />
+                        {heroName}
+                      </label>
+                    ))}
+                  </div>
+                  {selectedHeroes.length > 0 && (
+                    <div className={styles.selectedHeroesPreview}>
+                      Preview: Not interested in {selectedHeroes.join(', ')}
+                    </div>
+                  )}
+                </div>
+              )}
+              {gameDescription === 'Looking for a specific class' && (
+                <div className={styles.heroSelection}>
+                  <label>Select Classes (up to 3):</label>
+                  <div className={styles.heroCheckboxes}>
+                    {uniqueClasses.map((className) => (
+                      <label key={className} className={styles.heroCheckbox}>
+                        <input
+                          type="checkbox"
+                          checked={selectedClasses.includes(className)}
+                          onChange={(e) => handleClassSelection(className, e.target.checked)}
+                          disabled={!selectedClasses.includes(className) && selectedClasses.length >= 3}
+                        />
+                        {className}
+                      </label>
+                    ))}
+                  </div>
+                  {selectedClasses.length > 0 && (
+                    <div className={styles.selectedHeroesPreview}>
+                      Preview: Looking for {selectedClasses.join(', ')}
                     </div>
                   )}
                 </div>
@@ -509,17 +640,6 @@ const CreateGame = () => {
             </div>
           )}
         </form>
-        {/* Advertisement Section - Clearly separated from form */}
-        <hr style={{ margin: '2rem 0', opacity: 0.3 }} />
-        <div style={{ 
-          marginTop: '1.5rem', 
-          padding: '1rem',
-          textAlign: 'center',
-          backgroundColor: 'rgba(0, 0, 0, 0.2)',
-          borderRadius: '8px'
-        }}>
-          <GoogleAdSense slot="3126621164" format="auto" />
-        </div>
       </article>
     </div>
   );

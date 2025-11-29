@@ -8,6 +8,7 @@ import {
 import { isRejectedWithValue } from '@reduxjs/toolkit';
 import type { MiddlewareAPI, Middleware } from '@reduxjs/toolkit';
 import { BACKEND_URL, ROGUELIKE_URL, URL_END_POINT } from 'appConstants';
+import { detectVpnBlock, logVpnBlock } from 'utils/VpnDetection';
 import {
   CreateGameAPI,
   CreateGameResponse
@@ -41,6 +42,10 @@ import {
   AddFavoriteDeckRequest,
   AddFavoriteDeckResponse
 } from 'interface/API/AddFavoriteDeck.php';
+import {
+  UpdateFavoriteDeckRequest,
+  UpdateFavoriteDeckResponse
+} from 'interface/API/UpdateFavoriteDeck.php';
 import { PatreonLoginResponse } from 'routes/user/profile/linkpatreon/linkPatreon';
 import { UserProfileAPIResponse } from 'interface/API/UserProfileAPI.php';
 import { SubmitChatAPI } from 'interface/API/SubmitChat.php';
@@ -143,7 +148,23 @@ const dynamicBaseQuery: BaseQueryFn<
     baseUrl,
     credentials: 'include'
   });
-  return rawBaseQuery(args, webApi, extraOptions);
+  
+  const result = await rawBaseQuery(args, webApi, extraOptions);
+  
+  // Check for VPN provider blocks in response headers
+  if (result.meta?.response?.headers) {
+    const vpnBlock = detectVpnBlock(result.meta.response.headers);
+    if (vpnBlock) {
+      logVpnBlock(vpnBlock);
+      
+      // For BlockedUsersAPI specifically, gracefully degrade instead of erroring
+      if (typeof args === 'object' && (args as any).url?.includes('BlockedUsersAPI')) {
+        return { data: { blockedUsers: [] } };
+      }
+    }
+  }
+  
+  return result;
 };
 
 // Define our single API slice object
@@ -307,6 +328,16 @@ export const apiSlice = createApi({
       query: (body: AddFavoriteDeckRequest) => {
         return {
           url: URL_END_POINT.ADD_FAVORITE_DECK,
+          method: 'POST',
+          body: body,
+          responseHandler: parseResponse
+        };
+      }
+    }),
+    updateFavoriteDeck: builder.mutation<UpdateFavoriteDeckResponse, UpdateFavoriteDeckRequest>({
+      query: (body: UpdateFavoriteDeckRequest) => {
+        return {
+          url: URL_END_POINT.UPDATE_FAVORITE_DECK,
           method: 'POST',
           body: body,
           responseHandler: parseResponse
@@ -632,6 +663,29 @@ export const apiSlice = createApi({
           body: { action: 'getBlockedUsers' },
           responseHandler: parseResponse
         };
+      },
+      // Handle errors gracefully - don't crash if BlockedUsersAPI is unavailable
+      queryFn: async (arg, api, extraOptions, baseQuery) => {
+        try {
+          const result = await baseQuery({
+            url: URL_END_POINT.BLOCKED_USERS,
+            method: 'POST',
+            body: { action: 'getBlockedUsers' },
+            responseHandler: parseResponse
+          });
+          
+          // If we get a 405 or other error, return empty blocked users list instead of error
+          if (!result.data) {
+            console.warn('BlockedUsersAPI unavailable, continuing without blocked users');
+            return { data: { blockedUsers: [] } as BlockedUsersAPIResponse };
+          }
+          
+          return result;
+        } catch (error) {
+          console.warn('Failed to fetch blocked users:', error);
+          // Return empty list instead of error to not crash the game
+          return { data: { blockedUsers: [] } as BlockedUsersAPIResponse };
+        }
       }
     }),
 
@@ -643,6 +697,17 @@ export const apiSlice = createApi({
           body: { action: 'blockUser', blockedUsername: blockedUsername },
           responseHandler: parseResponse
         };
+      },
+      // Handle errors gracefully - don't crash if BlockedUsersAPI is unavailable
+      async onQueryStarted({ blockedUsername }, { dispatch, queryFulfilled, getState }) {
+        try {
+          await queryFulfilled;
+        } catch (error: any) {
+          if (error.error?.status === 405 || error.error?.status === 401) {
+            // If API is unavailable, just log a warning and continue
+            console.warn(`Could not block user ${blockedUsername}:`, error.error?.data?.error || 'API unavailable');
+          }
+        }
       }
     }),
 
@@ -654,6 +719,17 @@ export const apiSlice = createApi({
           body: { action: 'unblockUser', blockedUserId: blockedUserId },
           responseHandler: parseResponse
         };
+      },
+      // Handle errors gracefully - don't crash if BlockedUsersAPI is unavailable
+      async onQueryStarted({ blockedUserId }, { dispatch, queryFulfilled, getState }) {
+        try {
+          await queryFulfilled;
+        } catch (error: any) {
+          if (error.error?.status === 405 || error.error?.status === 401) {
+            // If API is unavailable, just log a warning and continue
+            console.warn(`Could not unblock user ${blockedUserId}:`, error.error?.data?.error || 'API unavailable');
+          }
+        }
       }
     }),
 
@@ -820,6 +896,7 @@ export const {
   useGetFavoriteDecksQuery,
   useDeleteDeckMutation,
   useAddFavoriteDeckMutation,
+  useUpdateFavoriteDeckMutation,
   useDeleteAccountMutation,
   useLoginMutation,
   useLoginWithCookieQuery,

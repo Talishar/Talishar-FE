@@ -5,6 +5,8 @@ interface ThemeContextType {
   currentTheme: Theme;
   setTheme: (themeId: string) => void;
   availableThemes: Theme[];
+  transparency: number;
+  setTransparency: (value: number) => void;
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
@@ -22,16 +24,37 @@ interface ThemeProviderProps {
 }
 
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
-  const [currentTheme, setCurrentTheme] = useState<Theme>(() => {
+  const [themeId, setThemeId] = useState<string>(() => {
     // Load theme from localStorage or default to dark
-    const savedThemeId = localStorage.getItem('talishar-theme');
-    return getThemeById(savedThemeId || 'dark');
+    return localStorage.getItem('talishar-theme') || 'dark';
   });
 
-  const setTheme = (themeId: string) => {
-    const theme = getThemeById(themeId);
+  const [transparency, setTransparencyState] = useState<number>(() => {
+    // Load transparency from localStorage or default to 0.98
+    const saved = localStorage.getItem('talishar-transparency');
+    return saved ? parseFloat(saved) : 0.98;
+  });
+
+  const [currentTheme, setCurrentTheme] = useState<Theme>(() => {
+    const savedThemeId = localStorage.getItem('talishar-theme') || 'dark';
+    const savedTransparency = localStorage.getItem('talishar-transparency');
+    const trans = savedTransparency ? parseFloat(savedTransparency) : 0.98;
+    return getThemeById(savedThemeId, trans);
+  });
+
+  const setTheme = (newThemeId: string) => {
+    setThemeId(newThemeId);
+    const theme = getThemeById(newThemeId, transparency);
     setCurrentTheme(theme);
-    localStorage.setItem('talishar-theme', themeId);
+    localStorage.setItem('talishar-theme', newThemeId);
+  };
+
+  const setTransparency = (value: number) => {
+    const clampedValue = Math.max(0, Math.min(1, value));
+    setTransparencyState(clampedValue);
+    const theme = getThemeById(themeId, clampedValue);
+    setCurrentTheme(theme);
+    localStorage.setItem('talishar-transparency', clampedValue.toString());
   };
 
   useEffect(() => {
@@ -121,6 +144,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     root.style.setProperty('--theme-near-black', colors.nearBlack);
     root.style.setProperty('--near-black', colors.nearBlack); // Keep for backward compatibility
     root.style.setProperty('--theme-overlay', colors.overlay);
+    root.style.setProperty('--transparency-intensity', transparency.toString()); // Set transparency for CSS calc
     root.style.setProperty('--modal-overlay-background-color', 'rgba(0, 0, 0, 0.4)'); // Very transparent for dialog backdrop
     
     // Modal backdrop styling - ensures no blur effect on modals
@@ -144,7 +168,9 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
   const value: ThemeContextType = {
     currentTheme,
     setTheme,
-    availableThemes: themes
+    availableThemes: themes,
+    transparency,
+    setTransparency
   };
 
   return (
