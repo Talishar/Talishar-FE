@@ -3,7 +3,7 @@
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  left: 16%;
+  left: 15%;
   height: 2.5em;
 }
 
@@ -42,26 +42,35 @@
 
 @media (orientation: portrait) and (min-width: 600px) {
   .actionPointDisplay {
-    left: .25em;
+    left: 1.1vw;
+    height: 2.2em;
+    margin: -0.4em 0;
   }
 
   .actionPointCounter {
-    height: 3.5em;
-    width: 4.5em;
+    font-size: 1.4em;
+    height: 4.2em;
+    width: 4.2em;
   }
 
   .actionPointDisplay[data-player='opponent'] {
-    margin-top: .5em;
+    margin-top: 0;
+  }
+  .actionPointDisplay[data-player='player'] {
+    margin-bottom: 0;
   }
 }
 
 @media (orientation: portrait) and (max-width: 600px) {
   .actionPointDisplay {
-    left: .6em;
+    left: 3.85vw;
+    height: 2em;
+    margin: -0.4em 0;
   }
 
   .actionPointCounter {
-    height: 3.5em;
+    font-size: 1.4em;
+    height: 4em;
     width: 4em;
   }
 }
