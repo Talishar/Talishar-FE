@@ -187,13 +187,9 @@ const CreateGame = () => {
       setSelectedClasses([]);
       setValue('gameDescription', value);
     } 
-    else if (value === 'Looking for a specific hero' || value === 'No interest in playing against specific hero') {
-      // Save only the base option, not the expanded version with heroes
+    else if (value === 'Looking for a specific hero' || value === 'No interest in playing against specific hero' || value === 'Looking for a specific class') {
       setValue('gameDescription', value);
-    } else if (value === 'Looking for a specific class') {
-      setValue('gameDescription', 'Looking for a specific class');
     }
-
   };
 
   const handleHeroSelection = (heroName: string, isChecked: boolean) => {
@@ -214,10 +210,10 @@ const CreateGame = () => {
     setSelectedHeroes(newSelectedHeroes);
     
     // Update the gameDescription field with the formatted string
-    if (newSelectedHeroes.length > 0 && gameDescription.startsWith('No interest') || gameDescription === 'Looking for a specific hero') {
+    if (newSelectedHeroes.length > 0 && gameDescription === 'No interest in playing against specific hero' || gameDescription === 'Looking for a specific hero') {
       const heroList = newSelectedHeroes.join(', ');
       // Check if current mode is preference or exclusion
-      if (gameDescription.startsWith('No interest')) {
+      if (gameDescription === 'No interest in playing against specific hero') {
         setValue('gameDescription', `No interest in playing against ${heroList}`);
       } else {
         setValue('gameDescription', `Looking for ${heroList}`);
@@ -300,7 +296,7 @@ const CreateGame = () => {
         } else {
           baseGameDescription = 'Looking for a specific hero';
         }
-      } else if (baseGameDescription.startsWith('No interest in playing against ') && baseGameDescription.includes(',')) {
+      } else if (baseGameDescription.startsWith('No interest in playing against') && baseGameDescription.includes(',')) {
         baseGameDescription = 'No interest in playing against specific hero';
       }
       
