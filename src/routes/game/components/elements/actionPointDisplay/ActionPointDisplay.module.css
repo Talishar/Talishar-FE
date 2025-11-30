@@ -23,22 +23,6 @@
   z-index: -1;
 }
 
-.manualMode {
-  position: absolute;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  top: -40px;
-  bottom: -40px;
-  z-index: 999;
-}
-
-.drawButton {
-  padding: 2px 10px;
-  margin: 0;
-  border: 2px solid var(--near-black);
-}
-
 @media (orientation: portrait) {
   .actionPointCounter {
     display: flex;
