@@ -98,12 +98,5 @@
 
 .styledInput > input {
   box-shadow: none;
-  min-width: 0 !important;
-  opacity: 0  !important;
-}
-
-.styledInput::after,
-.styledInput::before {
-  display: none !important;
-  min-width: 0 !important;
+  background-color: transparent !important;
 }
