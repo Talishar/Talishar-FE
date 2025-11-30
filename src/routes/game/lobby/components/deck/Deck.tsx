@@ -34,7 +34,7 @@ type DeckProps = {
   isDesktop?: boolean;
 };
 
-const Deck = ({ deck, cardDictionary = [], filtersExpanded = true, setFiltersExpanded, isDesktop = true }: DeckProps) => {
+const Deck = ({ deck, cardDictionary = [], filtersExpanded = false, setFiltersExpanded, isDesktop = true }: DeckProps) => {
   const { values } = useFormikContext<DeckResponse>();
   const { getLanguage } = useLanguageSelector();
   const [sortMode, setSortMode] = useState<SortMode>('none');
