@@ -31,7 +31,8 @@ export interface IGameInProgress {
   format: string;
   gameName: number;
   secondsSinceLastUpdate?: number;
-  gameCreator?: string; // Username of the game creator
+  gameCreator?: string; // Username of the game creator (p1)
+  p2Username?: string; // Username of player 2
 }
 
 export interface IInProgressGameList {
@@ -252,13 +253,17 @@ const GameList = () => {
 
   // Separate friend games from other games
   const allFriendGames = filteredGamesInProgress.filter(game =>
-    game.gameCreator && friendUsernames.has(game.gameCreator)
+    (game.gameCreator && friendUsernames.has(game.gameCreator)) ||
+    (game.p2Username && friendUsernames.has(game.p2Username))
   );
   
   const friendGamesInProgress = includeFriendsGames ? allFriendGames : [];
   
   const otherGamesInProgress = filteredGamesInProgress.filter(game =>
-    !game.gameCreator || !friendUsernames.has(game.gameCreator)
+    !(
+      (game.gameCreator && friendUsernames.has(game.gameCreator)) ||
+      (game.p2Username && friendUsernames.has(game.p2Username))
+    )
   );
 
   const sortedOpenGames = data?.openGames
@@ -612,7 +617,10 @@ const InProgressGameList = ({ gameList, name, isFriendsSection, friendUsernames 
         {name}
       </h5>
       {limitedGameList.map((entry, ix: number) => {
-        const isFriendsGame = isFriendsSection || !!(entry.gameCreator && friendUsernames.has(entry.gameCreator));
+        const isFriendsGame = isFriendsSection || !!(
+          (entry.gameCreator && friendUsernames.has(entry.gameCreator)) || 
+          (entry.p2Username && friendUsernames.has(entry.p2Username))
+        );
         return <InProgressGame entry={entry} ix={ix} key={entry.gameName} isFriendsGame={isFriendsGame} />;
       })}
     </div>
