@@ -61,6 +61,7 @@ export interface CardResult {
   cardName: string;
   pitchValue: number;
   katsuDiscard: number;
+  discarded: number;
 }
 
 export interface TurnResult {
@@ -68,6 +69,7 @@ export interface TurnResult {
   cardsLeft: number;
   cardsPitched: number;
   cardsUsed: number;
+  cardsDiscarded: number;
   damageThreatened: number;
   damageDealt: number;
   damageBlocked: number;
@@ -86,14 +88,14 @@ export interface EndGameStatsRef {
 }
 
 const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
-  const [sortField, setSortField] = useState<'played' | 'blocked' | 'pitched' | 'hits' | 'cardName' | null>(null);
+  const [sortField, setSortField] = useState<'played' | 'blocked' | 'pitched' | 'discarded' | 'hits' | 'cardName' | null>(null);
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
   const statsRef = useRef<HTMLDivElement>(null);
   const [isExporting, setIsExporting] = useState(false);
   const [heroDataUrls, setHeroDataUrls] = useState<{ yourHero?: string; opponentHero?: string }>({});
   const [excludeLastTurn, setExcludeLastTurn] = useState(false);
   
-  const [turnSortField, setTurnSortField] = useState<'turnNo' | 'cardsUsed' | 'cardsBlocked' | 'cardsPitched' | 'cardsLeft' | 'resourcesUsed' | 'resourcesLeft' | 'damageThreatened' | 'damageDealt' | 'damageBlocked' | 'damagePrevented' | 'damageTaken' | 'lifeGained' | 'lifeLost' | 'totalValue' | null>(null);
+  const [turnSortField, setTurnSortField] = useState<'turnNo' | 'cardsUsed' | 'cardsBlocked' | 'cardsPitched' | 'cardsDiscarded' | 'cardsLeft' | 'resourcesUsed' | 'resourcesLeft' | 'damageThreatened' | 'damageDealt' | 'damageBlocked' | 'damagePrevented' | 'damageTaken' | 'lifeGained' | 'lifeLost' | 'totalValue' | null>(null);
   const [turnSortDirection, setTurnSortDirection] = useState<'asc' | 'desc'>('desc');
 
   const imageToDataUrl = async (heroName: string): Promise<string | null> => {
@@ -148,7 +150,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
     loadHeroImages();
   }, [data.yourHero, data.opponentHero]);
 
-  const handleSort = (field: 'played' | 'blocked' | 'pitched' | 'hits' | 'cardName') => {
+  const handleSort = (field: 'played' | 'blocked' | 'pitched' | 'discarded' | 'hits' | 'cardName') => {
     if (sortField === field) {
       // Toggle direction if same field
       setSortDirection(sortDirection === 'desc' ? 'asc' : 'desc');
@@ -159,7 +161,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
     }
   };
 
-  const handleTurnSort = (field: 'turnNo' | 'cardsUsed' | 'cardsBlocked' | 'cardsPitched' | 'cardsLeft' | 'resourcesUsed' | 'resourcesLeft' | 'damageThreatened' | 'damageDealt' | 'damageBlocked' | 'damagePrevented' | 'damageTaken' | 'lifeGained' | 'lifeLost' | 'totalValue') => {
+  const handleTurnSort = (field: 'turnNo' | 'cardsUsed' | 'cardsBlocked' | 'cardsPitched' | 'cardsDiscarded' | 'cardsLeft' | 'resourcesUsed' | 'resourcesLeft' | 'damageThreatened' | 'damageDealt' | 'damageBlocked' | 'damagePrevented' | 'damageTaken' | 'lifeGained' | 'lifeLost' | 'totalValue') => {
     if (turnSortField === field) {
       // Toggle direction if same field
       setTurnSortDirection(turnSortDirection === 'desc' ? 'asc' : 'desc');
@@ -384,7 +386,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
         content += `Total Life Self-Lost,${playerData.totalLifeLost || 0}\n\n`;
         
         content += 'CARD PLAY STATS\n';
-        content += 'Card Name,Played,Blocked,Pitched,Times Hit';
+        content += 'Card Name,Played,Blocked,Pitched,Discarded,Times Hit';
         
         const hasCharged = playerData.cardResults?.some(c => c.charged > 0);
         const hasKatsuDiscard = playerData.cardResults?.some(c => c.katsuDiscard > 0);
@@ -396,21 +398,21 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
         playerData.cardResults?.forEach((result) => {
           const cardName = result.cardName.replace(/,/g, ';');
           const cardNameWithPitch = result.pitchValue > 0 ? `${cardName} (${result.pitchValue})` : cardName;
-          content += `"${cardNameWithPitch}",${result.played},${result.blocked},${result.pitched},${result.hits}`;
+          content += `"${cardNameWithPitch}",${result.played},${result.blocked},${result.pitched},${result.discarded},${result.hits}`;
           if (hasCharged) content += `,${result.charged}`;
           if (hasKatsuDiscard) content += `,${result.katsuDiscard}`;
           content += '\n';
         });
         
         content += '\nTURN BY TURN BREAKDOWN\n';
-        content += 'Turn,Cards Played,Cards Blocked,Cards Pitched,Cards Left,Resources Used,Resources Left,';
+        content += 'Turn,Cards Played,Cards Blocked,Cards Pitched,Cards Discarded,Cards Left,Resources Used,Resources Left,';
         content += 'Damage Threatened,Damage Dealt,Damage Blocked,Damage Prevented,Damage Taken,Life Gained,Total Value\n';
         
         if (playerData.turnResults && Object.keys(playerData.turnResults).length > 0) {
           Object.keys(playerData.turnResults).forEach((key, ix) => {
             const turn = playerData.turnResults[key];
             const totalValue = (+turn.damageThreatened + +turn.damageBlocked + +turn.damagePrevented + +turn.lifeGained + +turn.lifeLost);
-            content += `${ix + 1},${turn.cardsUsed},${turn.cardsBlocked},${turn.cardsPitched},${turn.cardsLeft},`;
+            content += `${ix + 1},${turn.cardsUsed},${turn.cardsBlocked},${turn.cardsPitched},${turn.cardsDiscarded},${turn.cardsLeft}`;
             content += `${turn.resourcesUsed},${turn.resourcesLeft},`;
             content += `${turn.damageThreatened},${turn.damageDealt},`;
             content += `${turn.damageBlocked},${turn.damagePrevented},`;
@@ -632,6 +634,13 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                   </th>
                   <th 
                     className={`${styles.headersStats} ${styles.sortableHeader} ${styles.headerGroupSeparator}`}
+                    onClick={() => handleSort('discarded')}
+                    title="Click to sort"
+                  >
+                    Discarded {sortField === 'discarded' && (sortDirection === 'desc' ? '↓' : '↑')}
+                  </th>
+                  <th 
+                    className={`${styles.headersStats} ${styles.sortableHeader} ${styles.headerGroupSeparator}`}
                     onClick={() => handleSort('hits')}
                     title="Click to sort"
                   >
@@ -675,6 +684,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                         <td className={styles.played}>{result.played}</td>
                         <td className={styles.blocked}>{result.blocked}</td>
                         <td className={styles.pitched}>{result.pitched}</td>
+                        <td className={styles.cardStat}>{result.discarded}</td>
                         <td className={styles.cardStat}>{result.hits}</td>
                         {numCharged > 0 && (
                           <td className={styles.cardStat}>{result.charged}</td>
@@ -866,7 +876,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
               <thead>
                 <tr>
                   <th className={`${styles.headersStats} ${styles.headerGroupSeparator}`}>Turn</th>
-                  <th colSpan={4} className={`${styles.headersStats} ${styles.headerGroupSeparator}`}>
+                  <th colSpan={5} className={`${styles.headersStats} ${styles.headerGroupSeparator}`}>
                     Cards
                   </th>
                   <th colSpan={2} className={`${styles.headersStats} ${styles.headerGroupSeparator}`}>
@@ -910,6 +920,13 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                     title="Click to sort"
                   >
                     Pitched {turnSortField === 'cardsPitched' && (turnSortDirection === 'desc' ? '↓' : '↑')}
+                  </th>
+                  <th
+                    onClick={() => handleTurnSort('cardsDiscarded')}
+                    className={styles.sortableHeader}
+                    title="Click to sort"
+                  >
+                    Discarded {turnSortField === 'cardsDiscarded' && (turnSortDirection === 'desc' ? '↓' : '↑')}
                   </th>
                   <th
                     onClick={() => handleTurnSort('cardsLeft')}
@@ -1014,6 +1031,9 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                           {turnData.cardsPitched}
                         </td>
                         <td className={styles.pitched}>
+                          {turnData.cardsDiscarded}
+                        </td>
+                        <td className={styles.pitched}>
                           {turnData.cardsLeft}
                         </td>
                         <td className={styles.pitched}>
@@ -1075,6 +1095,10 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                         <td className={styles.pitched}>
                           {/* @ts-ignore */}
                           {data.turnResults[key]?.cardsPitched}
+                        </td>
+                        <td className={styles.pitched}>
+                          {/* @ts-ignore */}
+                          {data.turnResults[key]?.cardsDiscarded}
                         </td>
                         <td className={styles.pitched}>
                           {/* @ts-ignore */}
