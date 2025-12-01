@@ -40,26 +40,25 @@
 .totalDamageContainer {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   padding: 1.5vh 1.5vh;
   background: rgba(var(--theme-primary-rgb), 0.08);
   border: 1px solid rgba(var(--theme-primary-rgb), 0.3);
   border-radius: 8px;
   margin-bottom: 1.5vh;
-  gap: 1vh;
+  gap: 0.5vh;
 }
 
 .totalDamageLabel {
   font-size: 1.3vh;
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--theme-text);
   letter-spacing: 0.5px;
 }
 
 .totalDamageValue {
-  font-size: 2vh;
+  font-size: 1.7vh;
   font-weight: 700;
-  color: var(--theme-primary);
+  color: var(--theme-text);
   text-shadow: 0 2px 8px rgba(var(--theme-primary-rgb), 0.3);
 }
 
