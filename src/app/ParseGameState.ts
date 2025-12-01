@@ -99,7 +99,7 @@ function ParseEquipment(input: any) {
           result.WeaponREq = ParseCard(cardObj);
         }
         break;
-      case 'E':
+      default: // if not hero or weapon it's equipment
         switch (cardObj.sType) {
           case 'Head':
             result.HeadEq = ParseCard(cardObj);
@@ -120,8 +120,6 @@ function ParseEquipment(input: any) {
           default:
             break;
         }
-        break;
-      default:
         break;
     }
   }

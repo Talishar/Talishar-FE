@@ -342,24 +342,6 @@ const Lobby = () => {
 
     const hands = values.weapons.map((item) => item.id.split("-")[0]);
     const deck = values.deck.map((card) => card.split("-")[0]);
-    const modularOriginal = [...(data?.deck?.modular ?? [])];
-    const assigned = (values as any).assignedModulars || { head: [], chest: [], arms: [], legs: [] };
-
-    const removeOne = (arr: string[], val: string) => {
-      const i = arr.indexOf(val);
-      if (i === -1) return arr.slice();
-      const copy = arr.slice();
-      copy.splice(i, 1);
-      return copy;
-    };
-
-    let modularRemaining = modularOriginal.slice();
-    Object.keys(assigned).forEach((k) => {
-      const list: string[] = (assigned as any)[k] || [];
-      list.forEach((c) => {
-        modularRemaining = removeOne(modularRemaining, c);
-      });
-    });
     const inventory = [
       ...weaponsIndexed
         .concat(weaponsSBIndexed)
@@ -374,7 +356,7 @@ const Lobby = () => {
       ...(data?.deck?.legs ?? []),
       ...(data?.deck?.legsSB ?? []),
       ...(data?.deck?.demiHero ?? []),
-      ...modularRemaining,
+      ...(data?.deck?.modular ?? []),
       ...(((deckIndexed.concat(deckSBIndexed)).filter(x => !values.deck.includes(x))).map((card) => card.split("-")[0]) ?? [])
     ].filter((item) => item !== 'NONE00');
 
@@ -478,8 +460,7 @@ const Lobby = () => {
           head: initialEquipment(data.deck.head, data.deck.headSB),
           chest: initialEquipment(data.deck.chest, data.deck.chestSB),
           arms: initialEquipment(data.deck.arms, data.deck.armsSB),
-          legs: initialEquipment(data.deck.legs, data.deck.legsSB),
-          assignedModulars: { head: [], chest: [], arms: [], legs: [] }
+          legs: initialEquipment(data.deck.legs, data.deck.legsSB)
         }}
         onSubmit={handleFormSubmission}
         validationSchema={deckValidation(deckSize, maxDeckSize, handsTotal)}
