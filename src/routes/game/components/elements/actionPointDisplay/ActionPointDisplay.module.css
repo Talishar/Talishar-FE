@@ -12,7 +12,7 @@
   align-items: center;
   height: 2.5em;
   width: 2.5em;
-  background-image: url('../../../../../img/elements/turnwidget/turnWidget-ActionPoint.png');
+  background-image: url('../../../../../img/elements/turnwidget/turnWidget-ActionPointBlue.png');
   background-position: center;
   background-size: contain;
   text-align: center;
@@ -23,6 +23,10 @@
   z-index: -1;
 }
 
+.actionPointRed {
+  background-image: url('../../../../../img/elements/turnwidget/turnWidget-ActionPointRed.png');
+}
+
 @media (orientation: portrait) {
   .actionPointCounter {
     display: flex;
@@ -30,7 +34,7 @@
     align-items: center;
     height: 2.5em;
     width: 2.5em;
-    background-image: url('../../../../../img/elements/turnwidget/turnWidget-ActionPoint.png');
+    background-image: url('../../../../../img/elements/turnwidget/turnWidget-ActionPointBlue.png');
     background-position: center;
     background-size: contain;
     text-align: center;
@@ -39,5 +43,9 @@
     text-shadow: -1px 1px 2px #000, 1px 1px 2px #000, 1px -1px 0 #000,
       -1px -1px 0 #000;
     z-index: -1;
+  }
+
+  .actionPointRed {
+    background-image: url('../../../../../img/elements/turnwidget/turnWidget-ActionPointRed.png');
   }
 }

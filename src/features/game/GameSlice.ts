@@ -799,6 +799,7 @@ export const gameSlice = createSlice({
       state.opponentIsTyping = action.payload.opponentIsTyping ?? false;
       state.amIActivePlayer = action.payload.amIActivePlayer;
       state.turnPlayer = action.payload.turnPlayer;
+      state.otherPlayer = action.payload.otherPlayer;
       state.turnPhase = action.payload.turnPhase;
       state.playerInputPopUp = action.payload.playerInputPopUp;
 

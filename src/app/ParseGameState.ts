@@ -417,7 +417,10 @@ export default function ParseGameState(input: any) {
   result.amIActivePlayer = input.amIActivePlayer as boolean;
 
   // turn player
-  result.turnPlayer = input.turnPlayer as number;
+  result.turnPlayer = Number(input.turnPlayer);
+
+  // other player (opponent's player ID)
+  result.otherPlayer = Number(input.otherPlayer);
 
   // last update frame
   result.gameDynamicInfo.lastUpdate = input.lastUpdate;

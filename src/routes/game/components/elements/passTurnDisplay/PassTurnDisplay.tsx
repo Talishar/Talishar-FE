@@ -23,9 +23,6 @@ export default function PassTurnDisplay() {
   const playerID = useAppSelector(
     (state: RootState) => state.game.gameInfo.playerID
   );
-  const turnPlayer = useAppSelector(
-    (state: RootState) => state.game.turnPlayer
-  );
   const priorityPlayer = useAppSelector(
     (state: RootState) => state.game.priorityPlayer
   );
