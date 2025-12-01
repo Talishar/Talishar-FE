@@ -15,6 +15,7 @@ export default interface GameState {
   oldCombatChain?: CombatChainLink[];
   amIActivePlayer?: boolean;
   turnPlayer?: number;
+  otherPlayer?: number;
   clock?: number;
   popup?: {
     popupOn?: boolean;
@@ -66,6 +67,8 @@ export default interface GameState {
       canClose?: number;
       additionalComments?: string;
       cards?: Card[];
+      topCards?: Card[];
+      bottomCards?: Card[];
       customInput?: string;
     };
     multiChooseText?: {

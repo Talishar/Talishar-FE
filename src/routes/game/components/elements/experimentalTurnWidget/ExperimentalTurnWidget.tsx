@@ -94,7 +94,7 @@ const ManualModeHealth = ({ isPlayer }: { isPlayer: Boolean }) => {
     );
   };
   return (
-    <div className={styles.manualMode}>
+    <div>
       <button className={styles.drawButton} onClick={onAddResourceClick}>
         <AiOutlinePlus />
       </button>
@@ -175,7 +175,7 @@ const ManualMode = () => {
     );
   };
   return (
-    <div className={styles.manualMode}>
+    <div>
       <button className={styles.drawButton} onClick={onAddResourceClick}>
         <AiOutlinePlus />
       </button>

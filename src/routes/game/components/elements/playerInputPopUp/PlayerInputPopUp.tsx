@@ -39,7 +39,18 @@ export default function PlayerInputPopUp() {
     const cardsArrLength = inputPopUp?.popup?.cards?.length ?? 0;
     const optionsArrLength = inputPopUp?.multiChooseText?.length ?? 0;
     const checkBoxLength = Math.max(cardsArrLength, optionsArrLength);
-    setCheckedState(new Array(checkBoxLength).fill(false));
+    
+    // Initialize checked state from multiChooseText default values
+    const initialState = new Array(checkBoxLength).fill(false);
+    if (inputPopUp?.multiChooseText) {
+      inputPopUp.multiChooseText.forEach((option, index) => {
+        if (option.check !== undefined) {
+          initialState[index] = option.check;
+        }
+      });
+    }
+    
+    setCheckedState(initialState);
   }, [inputPopUp]);
 
   const onPassTurn = () => {
@@ -106,7 +117,7 @@ export default function PlayerInputPopUp() {
               type="checkbox"
               id={`multi-choose-text-${String(option.input)}`}
               name={option.label}
-              value={checkedState[ix]}
+              checked={checkedState[ix]}
               onChange={() => handleCheckBoxChange(option.input)}
               className={styles.checkBox}
             />

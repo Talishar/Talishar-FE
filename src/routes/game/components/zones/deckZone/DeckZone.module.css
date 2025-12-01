@@ -88,18 +88,6 @@
   }
 }
 
-.manualMode {
-  position: absolute;
-  top: 3px;
-  z-index: 999;
-}
-
-.drawButton {
-  padding: 2px;
-  margin: 0;
-  border: 2px solid var(--near-black);
-}
-
 .addBotDeckAnimationCard {
   position: absolute;
   width: var(--card-size);
