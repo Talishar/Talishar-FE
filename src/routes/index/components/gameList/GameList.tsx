@@ -448,11 +448,11 @@ const GameList = () => {
       )}
       {data != undefined && (
             <div data-testid="games-in-progress" ref={parent}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5em', gap: '0.5em', flexWrap: 'wrap' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '0.5em', gap: '0.5em', flexWrap: 'wrap', position: 'relative' }}>
                 <h4 
                   className={styles.subSectionTitle} 
                   onClick={() => setGamesInProgressExpanded(!gamesInProgressExpanded)}
-                  style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', userSelect: 'none', margin: 0, flex: 1, minWidth: '200px' }}
+                  style={{ cursor: 'pointer', userSelect: 'none', margin: 0 }}
                 >
                   Games in Progress:&nbsp;<span>{data.gameInProgressCount}</span>
                 </h4>
