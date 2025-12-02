@@ -130,7 +130,6 @@ function ParseEquipment(input: any) {
         console.log("Companion processed without assignment", cardObj);
         break;
       default:
-        console.log("Equipment processed without assignment", cardObj);
         break;
     }
   }
