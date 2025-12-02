@@ -121,7 +121,11 @@ function ParseEquipment(input: any) {
             break;
         }
         break;
+      case 'Companion':
+        result.WeaponREq = ParseCard(cardObj);
+        break;
       default:
+        console.log("Broke without assignment", cardObj);
         break;
     }
   }
