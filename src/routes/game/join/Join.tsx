@@ -31,10 +31,10 @@ const getBaseFormatType = (format: string | null): string => {
   const readable = getReadableFormatName(format).toLowerCase();
   
   // Extract base format by removing qualifiers like "open", "competitive"
+  if (readable.includes('living legend') || readable.includes('ll')) return 'living legend';
   if (readable.includes('classic constructed') || readable.includes('cc')) return 'classic constructed';
   if (readable.includes('blitz')) return 'blitz';
   if (readable.includes('silver age') || readable.includes('sage')) return 'silver age';
-  if (readable.includes('living legend') || readable.includes('ll')) return 'living legend';
   if (readable.includes('commoner')) return 'commoner';
   if (readable.includes('clash')) return 'clash';
   if (readable.includes('sealed')) return 'sealed';
