@@ -89,7 +89,7 @@ const HeroVsHeroIntro = () => {
     }
   }, [gameID, gameGUID, dispatch]);
   
-  // Auto-dismiss after 2.5 seconds
+  // Auto-dismiss after 2 seconds
   useEffect(() => {
     if (!isVisible) return;
 
@@ -100,7 +100,7 @@ const HeroVsHeroIntro = () => {
       if (gameID) {
         localStorage.setItem(localStorageKey, 'true');
       }
-    }, 2500);
+    }, 2000);
 
     return () => clearTimeout(timer);
 
