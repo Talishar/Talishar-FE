@@ -99,10 +99,6 @@ function ParseEquipment(input: any) {
         case 'Legs':
           result.LegsEq = ParseCard(cardObj);
           break;
-        case 'Off-Hand':
-        case 'Quiver':
-          result.WeaponREq = ParseCard(cardObj);
-          break;
         default:
           console.log("Frostbite processed without assignment", cardObj);
           break;
