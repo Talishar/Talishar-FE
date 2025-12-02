@@ -118,14 +118,19 @@ function ParseEquipment(input: any) {
             result.WeaponREq = ParseCard(cardObj);
             break;
           default:
+            console.log("Equipment with E type processed without assignment", cardObj);
             break;
         }
         break;
       case 'Companion':
-        result.WeaponREq = ParseCard(cardObj);
+        if (cardObj.sType == 'Off-Hand') {
+          result.WeaponREq = ParseCard(cardObj);
+          break;
+        }
+        console.log("Companion processed without assignment", cardObj);
         break;
       default:
-        console.log("Broke without assignment", cardObj);
+        console.log("Equipment processed without assignment", cardObj);
         break;
     }
   }
