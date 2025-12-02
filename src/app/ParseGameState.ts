@@ -85,52 +85,77 @@ function ParseEquipment(input: any) {
     return result;
   }
   for (const cardObj of input) {
-    switch (cardObj.type) {
-      case 'C': // hero
-        result.Hero = ParseCard({ ...cardObj, zone: ZONE.HERO });
-        break;
-      case 'W':
-      case 'W,T': // token weapon (i.e. Graphene Chelicera)
-      case 'W,T,E': // weapon token equipment (none as of 1/13/25 but futureproofing)
-      case 'W,E': // weapon equipment (Parry Blade, Nitro Mechanoid, etc.)
-        if (result.WeaponLEq == undefined) {
-          result.WeaponLEq = ParseCard(cardObj);
-        } else {
-          result.WeaponREq = ParseCard(cardObj);
-        }
-        break;
-      case 'E':
-        switch (cardObj.sType) {
-          case 'Head':
-            result.HeadEq = ParseCard(cardObj);
-            break;
-          case 'Chest':
-            result.ChestEq = ParseCard(cardObj);
-            break;
-          case 'Arms':
-            result.ArmsEq = ParseCard(cardObj);
-            break;
-          case 'Legs':
-            result.LegsEq = ParseCard(cardObj);
-            break;
-          case 'Off-Hand': // make assumption we won't have two weapons AND an off-hand
-          case 'Quiver': // make assumption that you can only have a 2H weapon AND a quiver
-            result.WeaponREq = ParseCard(cardObj);
-            break;
-          default:
-            console.log("Equipment with E type processed without assignment", cardObj);
-            break;
-        }
-        break;
-      case 'Companion':
-        if (cardObj.sType == 'Off-Hand') {
+    if (cardObj.cardNumber == 'frostbite') {
+      switch (cardObj.sType) {
+        case 'Head':
+          result.HeadEq = ParseCard(cardObj);
+          break;
+        case 'Chest':
+          result.ChestEq = ParseCard(cardObj);
+          break;
+        case 'Arms':
+          result.ArmsEq = ParseCard(cardObj);
+          break;
+        case 'Legs':
+          result.LegsEq = ParseCard(cardObj);
+          break;
+        case 'Off-Hand':
+        case 'Quiver':
           result.WeaponREq = ParseCard(cardObj);
           break;
-        }
-        console.log("Companion processed without assignment", cardObj);
-        break;
-      default:
-        break;
+        default:
+          console.log("Frostbite processed without assignment", cardObj);
+          break;
+      }
+      break;
+    } else {
+      switch (cardObj.type) {
+        case 'C': // hero
+          result.Hero = ParseCard({ ...cardObj, zone: ZONE.HERO });
+          break;
+        case 'W':
+        case 'W,T': // token weapon (i.e. Graphene Chelicera)
+        case 'W,T,E': // weapon token equipment (none as of 1/13/25 but futureproofing)
+        case 'W,E': // weapon equipment (Parry Blade, Nitro Mechanoid, etc.)
+          if (result.WeaponLEq == undefined) {
+            result.WeaponLEq = ParseCard(cardObj);
+          } else {
+            result.WeaponREq = ParseCard(cardObj);
+          }
+          break;
+        case 'E':
+          switch (cardObj.sType) {
+            case 'Head':
+              result.HeadEq = ParseCard(cardObj);
+              break;
+            case 'Chest':
+              result.ChestEq = ParseCard(cardObj);
+              break;
+            case 'Arms':
+              result.ArmsEq = ParseCard(cardObj);
+              break;
+            case 'Legs':
+              result.LegsEq = ParseCard(cardObj);
+              break;
+            case 'Off-Hand': // make assumption we won't have two weapons AND an off-hand
+            case 'Quiver': // make assumption that you can only have a 2H weapon AND a quiver
+              result.WeaponREq = ParseCard(cardObj);
+              break;
+            default:
+              console.log("Equipment with E type processed without assignment", cardObj);
+              break;
+          }
+          break;
+        case 'Companion':
+          if (cardObj.sType == 'Off-Hand') {
+            result.WeaponREq = ParseCard(cardObj);
+            break;
+          }
+          console.log("Companion processed without assignment", cardObj);
+          break;
+        default:
+          break;
+      }
     }
   }
 
