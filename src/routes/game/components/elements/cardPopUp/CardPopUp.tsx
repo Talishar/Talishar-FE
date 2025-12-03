@@ -3,6 +3,7 @@ import { clearPopUp, setPopUp } from 'features/game/GameSlice';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import { ReactNode, useRef } from 'react';
 import { motion } from 'framer-motion';
+import { CARD_BACK } from 'features/options/cardBacks';
 
 type CardPopUpProps = {
   children: ReactNode;
@@ -28,9 +29,12 @@ export default function CardPopUp({
   const [windowWidth, windowHeight] = useWindowDimensions();
 
   const handleMouseEnter = () => {
+    const cardBackValues = Object.values(CARD_BACK);
+    
     if (
       ref.current === null ||
       isHidden === true ||
+      cardBackValues.includes(cardNumber) ||
       cardNumber === 'ENDPHASE' ||
       cardNumber === 'ENDTURN' ||
       cardNumber === 'RESUMETURN' ||
@@ -41,7 +45,6 @@ export default function CardPopUp({
       cardNumber == 'ATTACKSTEP' ||
       cardNumber == 'RESOLUTIONSTEP' ||
       cardNumber == 'CLOSINGCHAIN' ||
-      cardNumber == 'CardBack' ||
       cardNumber == 'NONE00' ||
       cardNumber == 'BLOODDEBT' ||
       cardNumber == 'BEATCHEST' ||
