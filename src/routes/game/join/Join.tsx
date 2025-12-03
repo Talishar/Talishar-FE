@@ -3,7 +3,8 @@ import { useAppDispatch } from 'app/Hooks';
 import {
   useGetFavoriteDecksQuery,
   useJoinGameMutation,
-  useGetGameListQuery
+  useGetGameListQuery,
+  useGetGameInfoQuery
 } from 'features/api/apiSlice';
 import { JoinGameAPI } from 'interface/API/JoinGame.php';
 import { Link, useNavigate, useParams } from 'react-router-dom';
@@ -74,6 +75,11 @@ const JoinGame = () => {
   // Fetch game list to get the format for this specific game
   const { data: gameListData, isLoading: gameListLoading } = useGetGameListQuery(undefined);
 
+  // Fallback: fetch game info directly if not in public list
+  const { data: gameInfoData } = useGetGameInfoQuery(finalGameName, {
+    skip: gameListData !== undefined // Only skip if we already have game list data
+  });
+
   const {
     formState: { isSubmitting, errors },
     register,
@@ -128,9 +134,15 @@ const JoinGame = () => {
       
       if (foundGame?.format) {
         setGameFormat(foundGame.format);
+        return; // Found in public list, don't need private API
       }
     }
-  }, [gameListData, finalGameName]);
+
+    // Fallback: use gameInfoData if game not found in public list (private/friends-only game)
+    if (gameInfoData?.format) {
+      setGameFormat(gameInfoData.format);
+    }
+  }, [gameListData, gameInfoData, finalGameName]);
 
   // Sync selectedPreconDeck with form field for precon formats
   useEffect(() => {

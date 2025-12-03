@@ -283,6 +283,7 @@ export const PRECON_DECKS = {
 
 export const URL_END_POINT = {
   GET_GAME_LIST: 'APIs/GetGameList.php',
+  GET_GAME_INFO: 'APIs/GetGameInfo.php',
   CREATE_GAME: 'APIs/CreateGame.php',
   REPLAYS: "APIs/CreateReplayGame.php",
   SUBMIT_CHAT: 'SubmitChat.php',

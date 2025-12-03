@@ -295,6 +295,16 @@ export const apiSlice = createApi({
         };
       }
     }),
+    getGameInfo: builder.query<{ format?: string; error?: string }, string>({
+      query: (gameName) => {
+        return {
+          url: URL_END_POINT.GET_GAME_INFO,
+          method: 'POST',
+          body: { gameName },
+          responseHandler: parseResponse
+        };
+      }
+    }),
     getCosmetics: builder.query<GetCosmeticsResponse, undefined>({
       query: () => {
         return {
@@ -892,6 +902,7 @@ export const {
   useGetPopUpContentQuery,
   useSubmitChatMutation,
   useGetGameListQuery,
+  useGetGameInfoQuery,
   useGetCosmeticsQuery,
   useGetFavoriteDecksQuery,
   useDeleteDeckMutation,
