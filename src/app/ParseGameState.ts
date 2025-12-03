@@ -84,7 +84,6 @@ function ParseEquipment(input: any) {
   if (input === undefined || input.length == 0) {
     return result;
   }
-  console.log("Starting equipment: ", input);
   let count = 0;
   for (const cardObj of input) {
     if (cardObj.cardNumber == 'frostbite') {
@@ -140,6 +139,7 @@ function ParseEquipment(input: any) {
               result.WeaponREq = ParseCard(cardObj);
               break;
             default:
+              console.log("Starting equipment: ", input);
               if (input[count - 1].type == 'W,E') {
                 result.HeadEq = ParseCard(cardObj);
                 console.log('Made a best guess');
