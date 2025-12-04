@@ -552,13 +552,13 @@ export const apiSlice = createApi({
       },
       invalidatesTags: [{ type: 'ModPageData', id: 'LIST' }]
     }),
-    deleteUsername: builder.mutation<any, DeleteUsernameRequest>({
+    deleteUsername: builder.mutation<DeleteAccountAPIResponse, DeleteUsernameRequest>({
       query: ({ usernameToDelete }) => {
         return {
-          url: URL_END_POINT.BAN_PLAYER,
+          url: URL_END_POINT.DELETE_ACCOUNT,
           method: 'POST',
           body: {
-            usernameToDelete: usernameToDelete
+            confirmationUsername: usernameToDelete
           },
           responseHandler: parseResponse
         };
