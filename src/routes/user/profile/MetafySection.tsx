@@ -42,7 +42,10 @@ const MetafySection: React.FC<MetafySectionProps> = ({
       )}
       {isMetafyLinked && (
         <>
-          <p>You have linked your Metafy account.</p>
+          <p>
+            You have linked your Metafy account. <br />
+            <a href={metafyInfo}>Refresh your Metafy connection</a>
+          </p>
           <button
             onClick={() => setShowCommunities(!showCommunities)}
             className={styles.metafyToggleButton}

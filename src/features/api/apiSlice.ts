@@ -413,7 +413,8 @@ export const apiSlice = createApi({
           method: 'GET',
           responseHandler: parseResponse
         };
-      }
+      },
+      providesTags: [{ type: 'UserProfile', id: 'LIST' }]
     }),
     chooseFirstPlayer: builder.mutation({
       query: ({ ...body }: ChooseFirstPlayer) => {
@@ -511,7 +512,8 @@ export const apiSlice = createApi({
           },
           responseHandler: parseResponse
         };
-      }
+      },
+      invalidatesTags: [{ type: 'UserProfile', id: 'LIST' }]
     }),
     getModPageData: builder.query<ModPageDataResponse, void>({
       query: () => {

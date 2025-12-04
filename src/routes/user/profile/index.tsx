@@ -304,9 +304,9 @@ export const ProfilePage = () => {
                 {profileIsLoading && <p>Loading Profile...</p>}
                 {!profileIsLoading && profileData?.isPatreonLinked && (
                   <p>
-                    You have linked your patreon. <br />
+                    Your Patreon account is linked. <br />
                     <a href={PATREON_URL + PatreonOAuthParam.toString()}>
-                      Refresh your patreon connection
+                      Refresh your Patreon connection
                     </a>{' '}
                     (in case you have new patreons and can't access their perks yet)
                   </p>
