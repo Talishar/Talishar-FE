@@ -84,7 +84,6 @@ function ParseEquipment(input: any) {
   if (input === undefined || input.length == 0) {
     return result;
   }
-  let count = 0;
   for (const cardObj of input) {
     if (cardObj.cardNumber == 'frostbite') {
       switch (cardObj.sType) {
@@ -120,7 +119,6 @@ function ParseEquipment(input: any) {
           }
           break;
         case 'E':
-          console.log('Count: ', count, cardObj);
           switch (cardObj.sType) {
             case 'Head':
               result.HeadEq = ParseCard(cardObj);
@@ -153,7 +151,6 @@ function ParseEquipment(input: any) {
           break;
       }
     }
-    count++;
   }
 
   return result;
