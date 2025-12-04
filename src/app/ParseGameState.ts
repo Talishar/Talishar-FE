@@ -84,7 +84,6 @@ function ParseEquipment(input: any) {
   if (input === undefined || input.length == 0) {
     return result;
   }
-  let count = 0;
   for (const cardObj of input) {
     if (cardObj.cardNumber == 'frostbite') {
       switch (cardObj.sType) {
@@ -138,21 +137,6 @@ function ParseEquipment(input: any) {
               result.WeaponREq = ParseCard(cardObj);
               break;
             default:
-              if (input[count - 1].type == 'W,E') {
-                result.HeadEq = ParseCard(cardObj);
-                console.log('Made a best guess');
-              } else if (input[count - 1].sType == 'Head') {
-                result.ChestEq = ParseCard(cardObj);
-                console.log('Made a best guess');
-              } else if (input[count - 1].sType == 'Chest') {
-                result.ArmsEq = ParseCard(cardObj);
-                console.log('Made a best guess');
-              } else if (input[count - 1].sType == 'Arms') {
-                result.LegsEq = ParseCard(cardObj);
-                console.log('Made a best guess');
-              } else {
-                console.log("Equipment with E type processed without assignment", cardObj);
-              }
               break;
           }
           break;
@@ -167,7 +151,6 @@ function ParseEquipment(input: any) {
           break;
       }
     }
-    count++;
   }
 
   return result;
