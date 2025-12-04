@@ -104,7 +104,6 @@ function ParseEquipment(input: any) {
           console.log("Frostbite processed without assignment", cardObj);
           break;
       }
-      break;
     } else {
       switch (cardObj.type) {
         case 'C': // hero
@@ -139,7 +138,6 @@ function ParseEquipment(input: any) {
               result.WeaponREq = ParseCard(cardObj);
               break;
             default:
-              console.log("Starting equipment: ", input);
               if (input[count - 1].type == 'W,E') {
                 result.HeadEq = ParseCard(cardObj);
                 console.log('Made a best guess');
