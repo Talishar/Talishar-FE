@@ -172,7 +172,7 @@ const dynamicBaseQuery: BaseQueryFn<
 export const apiSlice = createApi({
   reducerPath: 'api',
   baseQuery: dynamicBaseQuery,
-  tagTypes: ['ModPageData'],
+  tagTypes: ['ModPageData', 'UserProfile'],
   endpoints: (builder) => ({
     getPopUpContent: builder.query({
       query: ({
@@ -552,13 +552,13 @@ export const apiSlice = createApi({
       },
       invalidatesTags: [{ type: 'ModPageData', id: 'LIST' }]
     }),
-    deleteUsername: builder.mutation<any, DeleteUsernameRequest>({
+    deleteUsername: builder.mutation<DeleteAccountAPIResponse, DeleteUsernameRequest>({
       query: ({ usernameToDelete }) => {
         return {
-          url: URL_END_POINT.BAN_PLAYER,
+          url: URL_END_POINT.DELETE_ACCOUNT,
           method: 'POST',
           body: {
-            usernameToDelete: usernameToDelete
+            confirmationUsername: usernameToDelete
           },
           responseHandler: parseResponse
         };
@@ -688,18 +688,9 @@ export const apiSlice = createApi({
 
     // Blocked Users endpoints
     getBlockedUsers: builder.query<BlockedUsersAPIResponse, void>({
-      query: () => {
-        return {
-          url: URL_END_POINT.BLOCKED_USERS,
-          method: 'POST',
-          body: { action: 'getBlockedUsers' },
-          responseHandler: parseResponse
-        };
-      },
-      // Handle errors gracefully - don't crash if BlockedUsersAPI is unavailable
       queryFn: async (arg, api, extraOptions, baseQuery) => {
         try {
-          const result = await baseQuery({
+          const result: any = await baseQuery({
             url: URL_END_POINT.BLOCKED_USERS,
             method: 'POST',
             body: { action: 'getBlockedUsers' },

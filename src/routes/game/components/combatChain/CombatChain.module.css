@@ -43,32 +43,36 @@
   border-radius: 10px;
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
-  align-items: center;
-}
-
-.grabbyHandleButtonContainer {
-  height: '50%';
-  display: 'flex'; 
-  justify-content: 'center';
-  align-Items: 'center';
-}
-
-.grabbyHandleButton {
-  display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgba(0, 0, 0, 0.5);
-  color: var(--white);
-  border-radius: 5px;
-  width: 1.5em;
-  height: 1.5em;
-  font-size: 1.75em;
-  padding: 2px;
-  margin: 0.25em;
-  pointer-events: auto;
+  cursor: grab;
   user-select: none;
-  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 0.5em;
+  box-sizing: border-box;
+}
+
+.grabbyHandle:active {
+  cursor: grabbing;
+}
+
+.grabbyHandleDragging {
+  background-color: var(--theme-secondary);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.gripIcon {
+  color: var(--white);
+  opacity: 0.8;
+  transition: opacity 0.2s ease;
+  width: 100%;
+  height: 100%;
+  max-width: 1.5em;
+  max-height: 1.5em;
+}
+
+.grabbyHandle:hover .gripIcon {
+  opacity: 1;
 }
 
 .chainCentre {

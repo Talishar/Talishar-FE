@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styles from './ModPage.module.css';
+import { toast } from 'react-hot-toast';
 import {
   useGetModPageDataQuery,
   useBanPlayerByIPMutation,
@@ -85,17 +86,47 @@ const ModPage: React.FC = () => {
     setSuccessMessage(null);
 
     if (!usernameToDelete.trim()) {
+      toast.error('Please enter a username to delete', {
+        position: 'top-center'
+      });
       return;
     }
 
     try {
-      await deleteUsername({ usernameToDelete }).unwrap();
-      setSuccessMessage('Username deleted successfully from database');
+      console.log('[ModPage Delete Username] Starting deletion for:', usernameToDelete);
+      const response = await deleteUsername({ usernameToDelete }).unwrap();
+      console.log('[ModPage Delete Username] Success response:', response);
+      
+      // Show success toast
+      toast.success(response.message || 'Username deleted successfully from database', {
+        style: {
+          minWidth: '300px'
+        },
+        position: 'top-center'
+      });
+      
+      setSuccessMessage(response.message || 'Username deleted successfully from database');
       setUsernameToDelete('');
       setSelectedUserEmail(null);
     } catch (err: any) {
-      console.error('Failed to delete username:', err);
-      // Error will be shown via toast from RTK Query error handler
+      console.error('[ModPage Delete Username] Error response:', {
+        errorObject: err,
+        message: err?.message,
+        error: err?.error,
+        status: err?.status,
+        data: err?.data,
+        toString: err?.toString()
+      });
+      
+      const errorMessage = err?.data?.message || err?.message || err?.error || err?.toString() || 'Unknown error';
+      
+      // Show error toast
+      toast.error(`Error deleting username: ${errorMessage}`, {
+        style: {
+          minWidth: '300px'
+        },
+        position: 'top-center'
+      });
     }
   };
 
