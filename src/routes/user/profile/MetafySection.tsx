@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { toast } from 'react-hot-toast';
 import styles from './profile.module.css';
 import { MetafyCommunity } from 'interface/API/MetafyAPI.php';
@@ -19,6 +19,16 @@ const MetafySection: React.FC<MetafySectionProps> = ({
   className
 }) => {
   const [showCommunities, setShowCommunities] = useState(false);
+
+  // Debug logging
+  React.useEffect(() => {
+    console.log('MetafySection props:', {
+      isMetafyLinked,
+      metafyCommunities,
+      metafyInfo,
+      isMod
+    });
+  }, [isMetafyLinked, metafyCommunities, metafyInfo, isMod]);
 
   // Only show this section to moderators
   if (!isMod) {

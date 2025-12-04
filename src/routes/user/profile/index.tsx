@@ -12,7 +12,7 @@ import { AddFavoriteDeckRequest } from 'interface/API/AddFavoriteDeck.php';
 import { UpdateFavoriteDeckRequest } from 'interface/API/UpdateFavoriteDeck.php';
 import { toast } from 'react-hot-toast';
 import { RiEdit2Line, RiDeleteBin5Line } from "react-icons/ri";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppSelector } from 'app/Hooks';
 import { selectIsMod } from 'features/auth/authSlice';
@@ -51,6 +51,15 @@ export const ProfilePage = () => {
     refetch: profileRefetch
   } = useGetUserProfileQuery(undefined);
   const [deleteDeck] = useDeleteDeckMutation();
+
+  // Debug logging for profile data
+  useEffect(() => {
+    console.log('Profile data updated:', {
+      profileData,
+      isMetafyLinked: profileData?.isMetafyLinked,
+      isLoading: profileIsLoading
+    });
+  }, [profileData, profileIsLoading]);
   const [addFavoriteDeck] = useAddFavoriteDeckMutation();
   const [updateFavoriteDeck] = useUpdateFavoriteDeckMutation();
   const [deleteAccount, { isLoading: isDeleting }] = useDeleteAccountMutation();
