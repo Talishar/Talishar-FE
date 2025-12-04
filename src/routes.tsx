@@ -27,6 +27,7 @@ import Privacy from 'routes/privacy';
 import CreateGame from 'routes/game/create/CreateGame';
 import LoadReplay from 'routes/game/load/LoadReplay';
 import LinkPatreon from 'routes/user/profile/linkpatreon';
+import LinkMetafy from 'routes/user/profile/linkmetafy/linkMetafy';
 import ModPage from 'routes/mod/ModPage';
 import PrivacyPolicy from 'routes/legal/PrivacyPolicy';
 import TermsOfService from 'routes/legal/TermsOfService';
@@ -179,6 +180,7 @@ export const router = createBrowserRouter(
         <Route path="user">
           <Route index element={<Navigate to={'./profile'} />} />
           <Route path="profile/linkpatreon" element={<LinkPatreon />} />
+          <Route path="profile/linkmetafy" element={<LinkMetafy />} />
           <Route
             path="profile"
             element={
