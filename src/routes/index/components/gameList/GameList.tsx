@@ -448,32 +448,34 @@ const GameList = () => {
       )}
       {data != undefined && (
             <div data-testid="games-in-progress" ref={parent}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5em', gap: '0.5em', flexWrap: 'wrap' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '0.5em', gap: '0.5em', flexWrap: 'wrap', position: 'relative', width: '100%' }}>
                 <h4 
                   className={styles.subSectionTitle} 
                   onClick={() => setGamesInProgressExpanded(!gamesInProgressExpanded)}
-                  style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', userSelect: 'none', margin: 0, flex: 1, minWidth: '200px' }}
+                  style={{ cursor: 'pointer', userSelect: 'none', margin: 0, flex: '1 1 auto', textAlign: 'center' }}
                 >
                   Games in Progress:&nbsp;<span>{data.gameInProgressCount}</span>
                 </h4>
-                <InProgressGameFilter
-                  selectedFormats={inProgressFormatFilters}
-                  onFilterChange={handleInProgressFilterChange}
-                  formatOptions={[
-                    { label: 'Classic Constructed', value: GAME_FORMAT.CLASSIC_CONSTRUCTED },
-                    { label: 'Competitive CC', value: GAME_FORMAT.COMPETITIVE_CC },
-                    { label: 'Living Legend', value: GAME_FORMAT.LLCC },
-                    { label: 'Competitive LL', value: GAME_FORMAT.COMPETITIVE_LL },
-                    { label: 'Silver Age', value: GAME_FORMAT.SAGE },
-                    { label: 'Competitive Silver Age', value: GAME_FORMAT.COMPETITIVE_SAGE },
-                    { label: 'Blitz', value: GAME_FORMAT.BLITZ },
-                    { label: 'Competitive Blitz', value: GAME_FORMAT.COMPETITIVE_BLITZ },
-                    { label: 'Other Formats', value: 'otherFormats', isGroup: true, groupValues: otherFormats },
-                  ]}
-                  includeFriendsGames={includeFriendsGames}
-                  onFriendsGamesChange={handleFriendsGamesFilterChange}
-                  formatNumberMapping={formatNumberMapping}
-                />
+                <div style={{ position: 'absolute', right: 0 }}>
+                  <InProgressGameFilter
+                    selectedFormats={inProgressFormatFilters}
+                    onFilterChange={handleInProgressFilterChange}
+                    formatOptions={[
+                      { label: 'Classic Constructed', value: GAME_FORMAT.CLASSIC_CONSTRUCTED },
+                      { label: 'Competitive CC', value: GAME_FORMAT.COMPETITIVE_CC },
+                      { label: 'Living Legend', value: GAME_FORMAT.LLCC },
+                      { label: 'Competitive LL', value: GAME_FORMAT.COMPETITIVE_LL },
+                      { label: 'Silver Age', value: GAME_FORMAT.SAGE },
+                      { label: 'Competitive Silver Age', value: GAME_FORMAT.COMPETITIVE_SAGE },
+                      { label: 'Blitz', value: GAME_FORMAT.BLITZ },
+                      { label: 'Competitive Blitz', value: GAME_FORMAT.COMPETITIVE_BLITZ },
+                      { label: 'Other Formats', value: 'otherFormats', isGroup: true, groupValues: otherFormats },
+                    ]}
+                    includeFriendsGames={includeFriendsGames}
+                    onFriendsGamesChange={handleFriendsGamesFilterChange}
+                    formatNumberMapping={formatNumberMapping}
+                  />
+                </div>
               </div>
               {gamesInProgressExpanded && (
                 <>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAppSelector, useAppDispatch } from 'app/Hooks';
 import { shallowEqual } from 'react-redux';
 import { generateCroppedImageUrl } from 'utils/cropImages';
@@ -10,45 +10,36 @@ const HeroVsHeroIntro = () => {
   const dispatch = useAppDispatch();
   const gameState = useAppSelector((state: any) => state.game, shallowEqual);
   const settingsData = useAppSelector(getSettingsEntity);
-  const [isVisible, setIsVisible] = useState(true);
   
+  const playerID = gameState?.gameInfo?.playerID;
   const gameID = gameState?.gameInfo?.gameID;
   const gameGUID = gameState?.gameInfo?.gameGUID;
-  const playerID = gameState?.gameInfo?.playerID;
+  const heroIntroShown = gameState?.gameInfo?.heroIntroShown;
   
-  // Generate a UUID for local use if gameGUID is not available yet
-  const generateLocalUUID = (): string => {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
-      const r = (Math.random() * 16) | 0;
-      const v = c === 'x' ? r : (r & 0x3) | 0x8;
-      return v.toString(16);
-    });
-  };
-  
-  // Use gameID as primary key since it's immediately available and persistent across page refreshes
-  // gameGUID will update the key once available for additional tracking
+  // Initialize isVisible from localStorage if available, otherwise true
   const getLocalStorageKey = (): string => {
-    let key = `heroIntroShown_${gameID}`;
-    if (gameGUID) {
-      key = `heroIntroShown_${gameGUID}`;
-    }
-    return key;
+    return gameGUID || `heroIntro_${gameID}`;
   };
   
-  // Get hero names from Redux gameInfo (dispatched from Lobby)
-  const yourHeroName = gameState?.gameInfo?.heroName;
-  const opponentHeroName = gameState?.gameInfo?.opponentHeroName;
-  
-  // Get hero card numbers from game state
-  const yourHeroCardNumber = gameState?.gameInfo?.yourHeroCardNumber;
-  const opponentHeroCardNumber = gameState?.gameInfo?.opponentHeroCardNumber;
+  const [isVisible, setIsVisible] = useState(true);
 
-  // Fallback to parsing from players if not available in gameInfo
+  // Sync isVisible with localStorage whenever gameID or gameGUID changes
+  useEffect(() => {
+    if (!gameID) return;
+    
+    const key = getLocalStorageKey();
+    const stored = localStorage.getItem(key);
+    if (stored === 'false') {
+      setIsVisible(false);
+    }
+  }, [gameID, gameGUID]);
+  
+  // Get hero card numbers directly from Redux state
   const playerOneHero = gameState?.playerOne?.Hero?.cardNumber;
   const playerTwoHero = gameState?.playerTwo?.Hero?.cardNumber;
   
-  const yourHero = yourHeroCardNumber || (playerID === 1 ? playerOneHero : playerTwoHero);
-  const opponentHero = opponentHeroCardNumber || (playerID === 1 ? playerTwoHero : playerOneHero);
+  const yourHero = playerID === 1 ? playerOneHero : playerTwoHero;
+  const opponentHero = playerID === 1 ? playerTwoHero : playerOneHero;
 
   // Helper to format card ID to readable name (e.g., "gravy_bones_shipwrecked_looter" -> "Gravy Bones Shipwrecked Looter")
   const formatHeroName = (cardId: string): string => {
@@ -59,48 +50,20 @@ const HeroVsHeroIntro = () => {
       .join(' ');
   };
 
-  // Display names with fallbacks: use Redux name first, then format the card ID if available
+  // Display names with fallbacks: format the card ID if available
   const displayYourHeroName = formatHeroName(yourHero) || 'Your Hero';
   const displayOpponentHeroName = formatHeroName(opponentHero) || 'Opponent';
 
-  // Check localStorage to see if intro was already shown in this game session
-  // Also cleanup stale localStorage entries from previous games
-  useEffect(() => {
-    if (gameID) {
-      // Clean up all old hero intro keys from previous games
-      const keysToRemove: string[] = [];
-      for (let i = 0; i < localStorage.length; i++) {
-        const key = localStorage.key(i);
-        if (key && key.startsWith('heroIntroShown_')) {
-          // Only keep the key for the current game
-          if (key !== `heroIntroShown_${gameID}` && key !== `heroIntroShown_${gameGUID}`) {
-            keysToRemove.push(key);
-          }
-        }
-      }
-      keysToRemove.forEach(key => localStorage.removeItem(key));
-
-      const localStorageKey = getLocalStorageKey();
-      const wasShownBefore = localStorage.getItem(localStorageKey) === 'true';
-      if (wasShownBefore) {
-        setIsVisible(false);
-        dispatch(markHeroIntroAsShown());
-      }
-    }
-  }, [gameID, gameGUID, dispatch]);
-  
-  // Auto-dismiss after 2 seconds
+  // Auto-dismiss after 2.5 seconds
   useEffect(() => {
     if (!isVisible) return;
 
     const timer = setTimeout(() => {
       setIsVisible(false);
       dispatch(markHeroIntroAsShown());
-      const localStorageKey = getLocalStorageKey();
-      if (gameID) {
-        localStorage.setItem(localStorageKey, 'true');
-      }
-    }, 2000);
+      const key = getLocalStorageKey();
+      localStorage.setItem(key, 'false');
+    }, 2500);
 
     return () => clearTimeout(timer);
 
@@ -168,10 +131,8 @@ const HeroVsHeroIntro = () => {
         onClick={() => {
           setIsVisible(false);
           dispatch(markHeroIntroAsShown());
-          const localStorageKey = getLocalStorageKey();
-          if (gameID) {
-            localStorage.setItem(localStorageKey, 'true');
-          }
+          const key = getLocalStorageKey();
+          localStorage.setItem(key, 'false');
         }}
         aria-label="Close hero intro"
       >

@@ -48,6 +48,7 @@ import {
 } from 'interface/API/UpdateFavoriteDeck.php';
 import { PatreonLoginResponse } from 'routes/user/profile/linkpatreon/linkPatreon';
 import { UserProfileAPIResponse } from 'interface/API/UserProfileAPI.php';
+import { MetafyLoginResponse } from 'interface/API/MetafyAPI.php';
 import { SubmitChatAPI } from 'interface/API/SubmitChat.php';
 import {
   ModPageDataResponse,
@@ -295,6 +296,16 @@ export const apiSlice = createApi({
         };
       }
     }),
+    getGameInfo: builder.query<{ format?: string; error?: string }, string>({
+      query: (gameName) => {
+        return {
+          url: URL_END_POINT.GET_GAME_INFO,
+          method: 'POST',
+          body: { gameName },
+          responseHandler: parseResponse
+        };
+      }
+    }),
     getCosmetics: builder.query<GetCosmeticsResponse, undefined>({
       query: () => {
         return {
@@ -402,7 +413,8 @@ export const apiSlice = createApi({
           method: 'GET',
           responseHandler: parseResponse
         };
-      }
+      },
+      providesTags: [{ type: 'UserProfile', id: 'LIST' }]
     }),
     chooseFirstPlayer: builder.mutation({
       query: ({ ...body }: ChooseFirstPlayer) => {
@@ -482,6 +494,26 @@ export const apiSlice = createApi({
           responseHandler: parseResponse
         };
       }
+    }),
+    submitMetafyLogin: builder.mutation<
+      MetafyLoginResponse,
+      {
+        code: string;
+        redirect_uri: string;
+      }
+    >({
+      query: ({ code, redirect_uri }) => {
+        return {
+          url: URL_END_POINT.METAFY_LOGIN,
+          method: 'GET',
+          params: {
+            code: code,
+            redirect_uri: redirect_uri
+          },
+          responseHandler: parseResponse
+        };
+      },
+      invalidatesTags: [{ type: 'UserProfile', id: 'LIST' }]
     }),
     getModPageData: builder.query<ModPageDataResponse, void>({
       query: () => {
@@ -892,6 +924,7 @@ export const {
   useGetPopUpContentQuery,
   useSubmitChatMutation,
   useGetGameListQuery,
+  useGetGameInfoQuery,
   useGetCosmeticsQuery,
   useGetFavoriteDecksQuery,
   useDeleteDeckMutation,
@@ -911,6 +944,7 @@ export const {
   useChooseFirstPlayerMutation,
   useSubmitSideboardMutation,
   useSubmitPatreonLoginMutation,
+  useSubmitMetafyLoginMutation,
   useLoadDebugGameMutation,
   useGetUserProfileQuery,
   useLoadReplayMutation,

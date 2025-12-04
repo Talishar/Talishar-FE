@@ -9,7 +9,6 @@ import { getGameInfo } from 'features/game/GameSlice';
 import useAuth from 'hooks/useAuth';
 
 const EndGameMenuOptions = () => {
-  const { isMod } = useAuth();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { roguelikeGameID } = useAppSelector(getGameInfo, shallowEqual);
@@ -63,7 +62,7 @@ const EndGameMenuOptions = () => {
             </div>
           </>
         )}
-        {!roguelikeGameID && isMod && (
+        {!roguelikeGameID && (
           <>
             <div className={styles.buttonDiv} onClick={handleSaveReplay}>
               Save Replay (beta)

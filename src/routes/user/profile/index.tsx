@@ -12,14 +12,17 @@ import { AddFavoriteDeckRequest } from 'interface/API/AddFavoriteDeck.php';
 import { UpdateFavoriteDeckRequest } from 'interface/API/UpdateFavoriteDeck.php';
 import { toast } from 'react-hot-toast';
 import { RiEdit2Line, RiDeleteBin5Line } from "react-icons/ri";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAppSelector } from 'app/Hooks';
+import { selectIsMod } from 'features/auth/authSlice';
 import styles from './profile.module.css';
 import { generateCroppedImageUrl } from 'utils/cropImages';
 import { getReadableFormatName } from 'utils/formatUtils';
 import { HEROES_OF_RATHE } from 'routes/index/components/filter/constants';
 import FriendsList from './FriendsList';
 import BlockedUsers from './BlockedUsers';
+import MetafySection from './MetafySection';
 
 const CODE = 'code';
 const CLIENT_ID =
@@ -30,6 +33,7 @@ const PATREON_URL = 'https://www.patreon.com/oauth2/authorize?';
 
 export const ProfilePage = () => {
   const navigate = useNavigate();
+  const isMod = useAppSelector(selectIsMod);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [confirmationUsername, setConfirmationUsername] = useState('');
   const [newDeckUrl, setNewDeckUrl] = useState('');
@@ -300,9 +304,9 @@ export const ProfilePage = () => {
                 {profileIsLoading && <p>Loading Profile...</p>}
                 {!profileIsLoading && profileData?.isPatreonLinked && (
                   <p>
-                    You have linked your patreon. <br />
+                    Your Patreon account is linked. <br />
                     <a href={PATREON_URL + PatreonOAuthParam.toString()}>
-                      Refresh your patreon connection
+                      Refresh your Patreon connection
                     </a>{' '}
                     (in case you have new patreons and can't access their perks yet)
                   </p>
@@ -315,6 +319,14 @@ export const ProfilePage = () => {
                   </p>
                 )}
               </div>
+              {profileData?.metafyInfo && (
+                <MetafySection
+                  isMetafyLinked={profileData?.isMetafyLinked ?? false}
+                  metafyCommunities={profileData?.metafyCommunities ?? []}
+                  metafyInfo={profileData?.metafyInfo ?? ''}
+                  isMod={isMod}
+                />
+              )}
               <FriendsList className={styles.friendsSection} />
               <BlockedUsers className={styles.friendsSection} />
               <h3 className={styles.title}>Delete Account</h3>
