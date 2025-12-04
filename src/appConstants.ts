@@ -312,6 +312,7 @@ export const URL_END_POINT = {
   ADD_FAVORITE_DECK: `APIs/AddFavoriteDeck.php`,
   UPDATE_FAVORITE_DECK: `APIs/UpdateFavoriteDeck.php`,
   PATREON_LOGIN: `AccountFiles/PatreonLoginAPI.php`,
+  METAFY_LOGIN: `AccountFiles/MetafyLoginAPI.php`,
   LOAD_BUG_REPORT: `LoadBugReport.php`,
   SUBMIT_LOBBY_INPUT: 'APIs/SubmitLobbyInput.php',
   BLOCK_USER: 'include/BlockUser.php',

@@ -48,6 +48,7 @@ import {
 } from 'interface/API/UpdateFavoriteDeck.php';
 import { PatreonLoginResponse } from 'routes/user/profile/linkpatreon/linkPatreon';
 import { UserProfileAPIResponse } from 'interface/API/UserProfileAPI.php';
+import { MetafyLoginResponse } from 'interface/API/MetafyAPI.php';
 import { SubmitChatAPI } from 'interface/API/SubmitChat.php';
 import {
   ModPageDataResponse,
@@ -493,6 +494,25 @@ export const apiSlice = createApi({
         };
       }
     }),
+    submitMetafyLogin: builder.mutation<
+      MetafyLoginResponse,
+      {
+        code: string;
+        redirect_uri: string;
+      }
+    >({
+      query: ({ code, redirect_uri }) => {
+        return {
+          url: URL_END_POINT.METAFY_LOGIN,
+          method: 'GET',
+          params: {
+            code: code,
+            redirect_uri: redirect_uri
+          },
+          responseHandler: parseResponse
+        };
+      }
+    }),
     getModPageData: builder.query<ModPageDataResponse, void>({
       query: () => {
         return {
@@ -922,6 +942,7 @@ export const {
   useChooseFirstPlayerMutation,
   useSubmitSideboardMutation,
   useSubmitPatreonLoginMutation,
+  useSubmitMetafyLoginMutation,
   useLoadDebugGameMutation,
   useGetUserProfileQuery,
   useLoadReplayMutation,
