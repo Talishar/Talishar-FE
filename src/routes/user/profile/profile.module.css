@@ -369,6 +369,18 @@ td {
   border-color: rgba(157, 78, 221, 0.5);
 }
 
+.metafyCommunityLogo {
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+
+.metafyCommunityLogo img {
+  max-width: 100px;
+  max-height: 100px;
+  border-radius: 4px;
+  object-fit: contain;
+}
+
 .metafyCommunityName {
   font-weight: bold;
   color: #e0aaff;
@@ -386,6 +398,20 @@ td {
 .metafyCommunityLink {
   font-size: 0.8rem;
   margin-top: 0.25rem;
+}
+
+.metafyCommunityTiers {
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid rgba(157, 78, 221, 0.2);
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.metafyCommunityTier {
+  padding: 0.25rem 0;
+  margin-left: 0.5rem;
+  color: #d4af37;
 }
 
 .metafyCommunityId {

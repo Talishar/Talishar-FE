@@ -20,15 +20,6 @@ const MetafySection: React.FC<MetafySectionProps> = ({
 }) => {
   const [showCommunities, setShowCommunities] = useState(false);
 
-  // Debug logging
-  React.useEffect(() => {
-    console.log('MetafySection props:', {
-      isMetafyLinked,
-      metafyCommunities,
-      metafyInfo,
-      isMod
-    });
-  }, [isMetafyLinked, metafyCommunities, metafyInfo, isMod]);
 
   // Only show this section to moderators
   if (!isMod) {
@@ -73,23 +64,38 @@ const MetafySection: React.FC<MetafySectionProps> = ({
                       key={community.id || index}
                       className={styles.metafyCommunityItem}
                     >
+                      {community.logo_url && (
+                        <div className={styles.metafyCommunityLogo}>
+                          <img src={community.logo_url} alt={community.title} />
+                        </div>
+                      )}
                       <div className={styles.metafyCommunityName}>
-                        {community.name || 'Unnamed Community'}
+                        {community.title || 'Unnamed Community'}
                       </div>
                       {community.description && (
                         <div className={styles.metafyCommunityDescription}>
                           {community.description}
                         </div>
                       )}
-                      {community.website && (
+                      {community.url && (
                         <div className={styles.metafyCommunityLink}>
                           <a
-                            href={community.website}
+                            href={community.url}
                             target="_blank"
                             rel="noopener noreferrer"
                           >
                             Visit Community →
                           </a>
+                        </div>
+                      )}
+                      {community.tiers && community.tiers.length > 0 && (
+                        <div className={styles.metafyCommunityTiers}>
+                          <strong>Tiers:</strong>
+                          {community.tiers.map((tier: any, tierIndex: number) => (
+                            <div key={tierIndex} className={styles.metafyCommunityTier}>
+                              {tier.name}
+                            </div>
+                          ))}
                         </div>
                       )}
                       <div className={styles.metafyCommunityId}>
@@ -105,18 +111,6 @@ const MetafySection: React.FC<MetafySectionProps> = ({
               )}
             </div>
           )}
-
-          <div className={styles.metafyActionButtons}>
-            <a href={metafyInfo} className={styles.metafyRefreshButton}>
-              Refresh Connection
-            </a>
-            <button
-              onClick={handleDisconnect}
-              className={styles.metafyDisconnectButton}
-            >
-              Disconnect Metafy
-            </button>
-          </div>
         </>
       )}
     </div>
