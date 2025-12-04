@@ -106,7 +106,7 @@ export default function CombatChain() {
       {showCombatChain && (
         <motion.div
           ref={containerRef}
-          initial={{ opacity: 0 }}
+          initial={{ opacity: 0, y: `${yOffset}dvh` }}
           animate={{ opacity: 1, x: 0, y: `${yOffset}dvh` }}
           transition={isDragging ? { type: 'tween', duration: 0 } : { type: 'tween' }}
           exit={{ opacity: 0 }}
