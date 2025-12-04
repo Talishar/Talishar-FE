@@ -51,15 +51,6 @@ export const ProfilePage = () => {
     refetch: profileRefetch
   } = useGetUserProfileQuery(undefined);
   const [deleteDeck] = useDeleteDeckMutation();
-
-  // Debug logging for profile data
-  useEffect(() => {
-    console.log('Profile data updated:', {
-      profileData,
-      isMetafyLinked: profileData?.isMetafyLinked,
-      isLoading: profileIsLoading
-    });
-  }, [profileData, profileIsLoading]);
   const [addFavoriteDeck] = useAddFavoriteDeckMutation();
   const [updateFavoriteDeck] = useUpdateFavoriteDeckMutation();
   const [deleteAccount, { isLoading: isDeleting }] = useDeleteAccountMutation();
