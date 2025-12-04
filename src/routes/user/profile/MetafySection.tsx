@@ -62,8 +62,15 @@ const MetafySection: React.FC<MetafySectionProps> = ({
                   {metafyCommunities.map((community, index) => (
                     <div
                       key={community.id || index}
-                      className={styles.metafyCommunityItem}
+                      className={`${styles.metafyCommunityItem} ${
+                        community.type === 'owned' ? styles.metafyCommunityOwned : styles.metafyCommunitySupported
+                      }`}
                     >
+                      {community.type && (
+                        <div className={styles.metafyCommunityBadge}>
+                          {community.type === 'owned' ? '👑 Owner' : '💖 Supporter'}
+                        </div>
+                      )}
                       {community.logo_url && (
                         <div className={styles.metafyCommunityLogo}>
                           <img src={community.logo_url} alt={community.title} />
