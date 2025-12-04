@@ -6,11 +6,15 @@ import Reactions from '../elements/reactions/Reactions';
 import { useAppDispatch, useAppSelector } from '../../../../app/Hooks';
 import { RootState } from 'app/Store';
 import { motion, AnimatePresence } from 'framer-motion';
-import { BsArrowUpSquareFill, BsArrowDownSquareFill } from 'react-icons/bs';
 import Button from '../../../../features/Button';
 import { submitButton } from '../../../../features/game/GameSlice';
 import useWindowDimensions from '../../../../hooks/useWindowDimensions';
 import { parseHtmlToReactElements } from 'utils/ParseEscapedString';
+import { MdDragHandle } from 'react-icons/md';
+
+const STORAGE_KEY = 'combatChainPosition';
+const MAX_Y_OFFSET = 30; // dvh
+const MIN_Y_OFFSET = -35; // dvh
 
 export default function CombatChain() {
   const oldCombatChain =
@@ -18,29 +22,80 @@ export default function CombatChain() {
   const activeCombatChain = useAppSelector(
     (state: RootState) => state.game.activeChainLink
   );
-  const [isUp, setIsUp] = React.useState(false);
   const [canSkipBlock, setCanSkipBlock] = React.useState(false);
   const [canSkipBlockAndDef, setCanSkipBlockAndDef] = React.useState(false);
-  const [position, setPosition] = React.useState('default');
-
-  const handleChangePositionClick = (newPosition: 'up' | 'down') => {
-    if (newPosition === 'up') {
-      if (position === 'down') {
-        setPosition('default');
-      } else {
-        setPosition('up');
-      }
-    } else if (newPosition === 'down') {
-      if (position === 'up') {
-        setPosition('default');
-      } else {
-        setPosition('down');
-      }
-    }
-  };
-
+  const [yOffset, setYOffset] = React.useState(() => {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    return stored ? parseFloat(stored) : 0;
+  });
+  const [isDragging, setIsDragging] = React.useState(false);
+  const [dragStartY, setDragStartY] = React.useState(0);
+  const [dragStartOffset, setDragStartOffset] = React.useState(0);
+  const containerRef = React.useRef<HTMLDivElement>(null);
   const [width, height] = useWindowDimensions();
   const isPortrait = height > width;
+
+  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+    setIsDragging(true);
+    setDragStartY(e.clientY);
+    setDragStartOffset(yOffset);
+  };
+
+  const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+    setIsDragging(true);
+    setDragStartY(e.touches[0].clientY);
+    setDragStartOffset(yOffset);
+  };
+
+  React.useEffect(() => {
+    if (!isDragging) return;
+
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!containerRef.current) return;
+      const delta = e.clientY - dragStartY;
+      const deltaDvh = (delta / window.innerHeight) * 100;
+      let newOffset = dragStartOffset + deltaDvh;
+
+      // Constrain the position to stay on screen
+      newOffset = Math.max(MIN_Y_OFFSET, Math.min(MAX_Y_OFFSET, newOffset));
+      setYOffset(newOffset);
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      if (!containerRef.current) return;
+      const delta = e.touches[0].clientY - dragStartY;
+      const deltaDvh = (delta / window.innerHeight) * 100;
+      let newOffset = dragStartOffset + deltaDvh;
+
+      // Constrain the position to stay on screen
+      newOffset = Math.max(MIN_Y_OFFSET, Math.min(MAX_Y_OFFSET, newOffset));
+      setYOffset(newOffset);
+    };
+
+    const handleMouseUp = () => {
+      setIsDragging(false);
+      localStorage.setItem(STORAGE_KEY, yOffset.toString());
+    };
+
+    const handleTouchEnd = () => {
+      setIsDragging(false);
+      localStorage.setItem(STORAGE_KEY, yOffset.toString());
+    };
+
+    if (isDragging) {
+      document.addEventListener('mousemove', handleMouseMove);
+      document.addEventListener('touchmove', handleTouchMove);
+      document.addEventListener('mouseup', handleMouseUp);
+      document.addEventListener('touchend', handleTouchEnd);
+
+      return () => {
+        document.removeEventListener('mousemove', handleMouseMove);
+        document.removeEventListener('touchmove', handleTouchMove);
+        document.removeEventListener('mouseup', handleMouseUp);
+        document.removeEventListener('touchend', handleTouchEnd);
+      };
+    }
+  }, [isDragging, dragStartY, dragStartOffset, yOffset]);
 
   const showCombatChain =
     oldCombatChain?.length > 0 ||
@@ -50,17 +105,10 @@ export default function CombatChain() {
     <AnimatePresence>
       {showCombatChain && (
         <motion.div
+          ref={containerRef}
           initial={{ opacity: 0 }}
-          animate={
-            position === 'up'
-              ? { opacity: 1, x: 0, y: '-30dvh' }
-              : position === 'down'
-              ? { opacity: 1, x: 0, y: '20dvh' }
-              : position === 'default'
-              ? { opacity: 1, x: 0, y: '0dvh' }
-              : { opacity: 1, x: 0, y: '0dvh' }
-          }
-          transition={{ type: 'tween' }}
+          animate={{ opacity: 1, x: 0, y: `${yOffset}dvh` }}
+          transition={isDragging ? { type: 'tween', duration: 0 } : { type: 'tween' }}
           exit={{ opacity: 0 }}
           className={styles.combatChain}
         >
@@ -69,32 +117,21 @@ export default function CombatChain() {
             <ChainLinks />
             <Reactions />
           </div>
-          <div className={styles.grabbyHandle}>
-                <div className={styles.grabbyHandleButtonContainer}>
-              {(position !== 'up') && (
-                <div
-                  className={styles.grabbyHandleButton}
-                  onClick={() => handleChangePositionClick('up')}
-                >
-                  <BsArrowUpSquareFill />
-                </div>
-              )}
-            </div>
-                <div className={styles.grabbyHandleButtonContainer}>
-              {(position !== 'down') && (
-                <div
-                  className={styles.grabbyHandleButton}
-                  onClick={() => handleChangePositionClick('down')}
-                >
-                  <BsArrowDownSquareFill />
-                </div>
-              )}
-            </div>
+          <div 
+            className={`${styles.grabbyHandle} ${isDragging ? styles.grabbyHandleDragging : ''}`}
+            onMouseDown={handleMouseDown}
+            onTouchStart={handleTouchStart}
+          >
+            <MdDragHandle 
+              size={32} 
+              className={styles.gripIcon}
+              aria-label="Drag to move combat chain"
+            />
           </div>
-           {!isPortrait && <PlayerPrompt />}
-            {canSkipBlock ? <div className={styles.icon}></div> : <div></div>}
-            {canSkipBlockAndDef ? (
-              <div className={styles.icon}></div>
+          {!isPortrait && <PlayerPrompt />}
+          {canSkipBlock ? <div className={styles.icon}></div> : <div></div>}
+          {canSkipBlockAndDef ? (
+            <div className={styles.icon}></div>
           ) : (
             <div></div>
           )}
