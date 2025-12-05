@@ -213,6 +213,33 @@
   box-shadow: 0 0 8px rgba(161, 29, 29, 0.3);
 }
 
+.ice {
+  color: #1d4ed8;
+}
+
+.ice .classIndicator {
+  background: #1d4ed8;
+  box-shadow: 0 0 8px rgba(29, 78, 216, 0.3);
+}
+
+.earth {
+  color: #4d7c0f;
+}
+
+.earth .classIndicator {
+  background: #4d7c0f;
+  box-shadow: 0 0 8px rgba(77, 124, 15, 0.3);
+}
+
+.lightning {
+  color: #d9b206;
+}
+
+.lightning .classIndicator {
+  background: #d9b206;
+  box-shadow: 0 0 8px rgba(217, 178, 6, 0.3);
+}
+
 /* Responsive adjustments */
 @media (max-width: 600px) {
   .calculatorCard {

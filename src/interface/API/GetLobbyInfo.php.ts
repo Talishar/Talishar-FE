@@ -52,6 +52,9 @@ export interface CardData {
   hasStealth?: boolean;
   hasBloodDebt?: boolean;
   hasBoost?: boolean;
+  hasEssenceOfIce?: boolean;
+  hasEssenceOfEarth?: boolean;
+  hasEssenceOfLightning?: boolean;
 }
 
 export interface GetLobbyInfoResponse {

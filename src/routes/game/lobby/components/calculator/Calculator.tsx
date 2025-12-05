@@ -40,11 +40,22 @@ function formatProbability(probability: number) {
   return (Math.round(probability * 1000) / 10).toString() + '%';
 }
 
-// Helper function to check if subtype contains a value
 function subtypeContains(subtype: string | undefined, find: string): boolean {
   if (!subtype) return false;
   const subtypes = subtype.split(',').map((s) => s.trim());
   return subtypes.includes(find);
+}
+
+function talentContains(talent: string | undefined, find: string): boolean {
+  if (!talent) return false;
+  const talents = talent.split(',').map((t) => t.trim());
+  return talents.includes(find);
+}
+
+function classContains(class_: string | undefined, find: string): boolean {
+  if (!class_) return false;
+  const classes = class_.split(',').map((c) => c.trim());
+  return classes.includes(find);
 }
 
 const Calculator = () => {
@@ -80,17 +91,23 @@ const Calculator = () => {
     let numRunebladeAA = 0;
     let numRunebladeA = 0;
     let numPower6Plus = 0;
-    let numMechanologistItem = 0;
+    let numItems = 0;
     let numAllies = 0;
     let numStealth = 0;
     let numBloodDebt = 0;
     let numBoost = 0;
     let numDraconic = 0;
+    let numIce = 0;
+    let numEarth = 0;
+    let numLightning = 0;
 
     // Get hero class from cardDictionary
     const heroId = data?.deck?.hero;
     let heroClass = '';
     let heroTalent = '';
+    let iceHero = false;
+    let earthHero = false;
+    let lightningHero = false;
     
     // Try to find hero in cardDictionary first
     if (heroId && data?.deck?.cardDictionary) {
@@ -101,6 +118,15 @@ const Calculator = () => {
       if (heroCard?.talent) {
         heroTalent = (heroCard.talent).trim();
       }
+      if (heroCard?.hasEssenceOfIce) {
+        iceHero = true;
+      }
+      if (heroCard?.hasEssenceOfEarth) {
+        earthHero = true;
+      }
+      if (heroCard?.hasEssenceOfLightning) {
+        lightningHero = true;
+      }
     }
 
     values.deck.forEach((cardId: string) => {
@@ -110,50 +136,56 @@ const Calculator = () => {
       );
 
       if (card) {
-        // Pitch counts
         if (card.pitch === 1) ++numRed;
         else if (card.pitch === 2) ++numYellow;
         else if (card.pitch === 3) ++numBlue;
         else if (card.pitch === 0) ++numColorless;
 
-        // Runeblade Attack/Non-Attack Actions - only if hero is Runeblade
-        if (heroClass?.toLowerCase().includes('runeblade')) {
+        if (classContains(heroClass, 'RUNEBLADE')) {
           if (card.type === 'AA') ++numRunebladeAA;
           else if (card.type === 'A') ++numRunebladeA;
         }
 
-        // Brute/Guardian Power >= 6 - only if hero is Brute or Guardian
-        if ((heroClass?.toLowerCase().includes('brute') || heroClass?.toLowerCase().includes('guardian')) && card.power !== undefined && card.power >= 6) {
+        if ((classContains(heroClass, 'BRUTE') || classContains(heroClass, 'GUARDIAN')) && card.power !== undefined && card.power >= 6) {
           ++numPower6Plus;
         }
 
-        // Mechanologist Items - only if hero is Mechanologist
-        if (heroClass?.toLowerCase().includes('mechanologist') && card.subtype && subtypeContains(card.subtype, 'Item')) {
-          ++numMechanologistItem;
+        if (classContains(heroClass, 'MECHANOLOGIST') && card.subtype && subtypeContains(card.subtype, 'Item')) {
+          ++numItems;
         }
 
-        // Necromancer Allies - only if hero is Necromancer
-        if (heroClass?.toLowerCase().includes('necromancer') || heroClass?.toLowerCase().includes('illusionist') && subtypeContains(card.subtype, 'Ally')) {
+        if ((classContains(heroClass, 'NECROMANCER') || classContains(heroClass, 'ILLUSIONIST')) && subtypeContains(card.subtype, 'Ally')) {
           ++numAllies;
         }
 
-        // Assassin Stealth cards - only if hero is Assassin
-        if (heroClass?.toLowerCase().includes('assassin') && card.hasStealth) {
+        if (classContains(heroClass, 'ASSASSIN') && card.hasStealth) {
           ++numStealth;
         }
 
-        // Shadow Blood Debt cards - only if hero has Shadow talent
-        if (heroTalent?.toLowerCase() === 'shadow' && card.hasBloodDebt) {
+        if (talentContains(heroTalent, 'SHADOW') && card.hasBloodDebt) {
           ++numBloodDebt;
         }
 
-        // Mechanologist Boost cards - only if hero is Mechanologist
-        if (heroClass?.toLowerCase().includes('mechanologist') && card.hasBoost) {
+        if (classContains(heroClass, 'MECHANOLOGIST') && card.hasBoost) {
           ++numBoost;
         }
-        if (heroTalent?.toLowerCase().includes('draconic') && card.talent?.toLowerCase().includes('draconic')) {
+
+        if (talentContains(heroTalent, 'DRACONIC') && talentContains(card.talent, 'DRACONIC')) {
           ++numDraconic;
         }
+
+        if (talentContains(card.talent, 'ICE') && iceHero) {
+          ++numIce;
+        }
+
+        if (talentContains(card.talent, 'EARTH') && earthHero) {
+          ++numEarth;
+        }
+
+        if (talentContains(card.talent, 'LIGHTNING') && lightningHero) {
+          ++numLightning;
+        }
+
       }
     });
 
@@ -165,12 +197,15 @@ const Calculator = () => {
       runebladeAA: numRunebladeAA,
       runebladeA: numRunebladeA,
       bruteGuardianPower6Plus: numPower6Plus,
-      mechanologistItem: numMechanologistItem,
+      mechanologistItem: numItems,
       necromancerAlly: numAllies,
       assassinStealth: numStealth,
       shadowBloodDebt: numBloodDebt,
       mechanologistBoost: numBoost,
-      draconic: numDraconic
+      draconic: numDraconic,
+      ice: numIce,
+      earth: numEarth,
+      lightning: numLightning
     };
   }, [values.deck, data?.deck.cardDictionary, data?.deck?.hero]);
 
@@ -306,6 +341,33 @@ const Calculator = () => {
                     Draconic ({cardCounts.draconic})
                   </td>
                   {createProbabilityRows(cardCounts.draconic)}
+                </tr>
+              )}
+              {cardCounts.ice > 0 && (
+                <tr className={styles.classSpecificRow}>
+                  <td className={`${styles.labelCell} ${styles.ice}`}>
+                    <span className={styles.classIndicator}></span>
+                    Ice ({cardCounts.ice})
+                  </td>
+                  {createProbabilityRows(cardCounts.ice)}
+                </tr>
+              )}
+              {cardCounts.earth > 0 && (
+                <tr className={styles.classSpecificRow}>
+                  <td className={`${styles.labelCell} ${styles.earth}`}>
+                    <span className={styles.classIndicator}></span>
+                    Earth ({cardCounts.earth})
+                  </td>
+                  {createProbabilityRows(cardCounts.earth)}
+                </tr>
+              )}
+              {cardCounts.lightning > 0 && (
+                <tr className={styles.classSpecificRow}>
+                  <td className={`${styles.labelCell} ${styles.lightning}`}>
+                    <span className={styles.classIndicator}></span>
+                    Lightning ({cardCounts.lightning})
+                  </td>
+                  {createProbabilityRows(cardCounts.lightning)}
                 </tr>
               )}
             </tbody>
