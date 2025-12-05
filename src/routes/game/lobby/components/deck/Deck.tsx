@@ -24,6 +24,8 @@ const TYPE_LABELS: Record<string, string> = {
   'T': 'Token',
   'C': 'Companion',
   'W': 'Weapon',
+  'A,I': 'Action/Instant',
+  'I,I': 'Instant',
 };
 
 type DeckProps = {
@@ -588,7 +590,7 @@ const Deck = ({ deck, cardDictionary = [], filtersExpanded = false, setFiltersEx
         }
       });
 
-      return { type: 'string', groups: subtypeGroups, noValueCards: noSubtypeCards, headerPrefix: 'Subtype' };
+      return { type: 'string', groups: subtypeGroups, noValueCards: noSubtypeCards, headerPrefix: '' };
     }
 
     if (sortMode === 'cost') {
@@ -790,7 +792,7 @@ const Deck = ({ deck, cardDictionary = [], filtersExpanded = false, setFiltersEx
             {groupedCards.noValueCards.length > 0 && (
               <div className={styles.pitchGroup}>
                 <div className={styles.pitchHeader}>
-                  No {groupedCards.headerPrefix}
+                  {sortMode === 'subtype' ? 'No Subtype' : `No ${groupedCards.headerPrefix}`}
                   <span className={styles.cardCount}>
                     ({groupedCards.noValueCards.filter((card) => values.deck.includes(card)).length}/{groupedCards.noValueCards.length})
                   </span>
