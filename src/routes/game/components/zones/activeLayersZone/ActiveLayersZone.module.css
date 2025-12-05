@@ -30,7 +30,7 @@
 
 .title {
   font-size: 1.5em;
-  margin: 0px;
+  margin: 0px !important;
 }
 
 .activeLayersContents {
