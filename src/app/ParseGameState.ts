@@ -164,7 +164,9 @@ export default function ParseGameState(input: any) {
     playerTwo: {},
     chatEnabled: false,
     shufflingPlayerId: null,
-    isShuffling: false
+    isShuffling: false,
+    addBotDeckPlayerId: null,
+    addBotDeckCard: ''
   };
 
   if (input.errorMessage) {

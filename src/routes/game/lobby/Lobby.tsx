@@ -302,7 +302,44 @@ const Lobby = () => {
       return [...main, ...side, 'NONE00'][0];
     }
   };
+  
+  type EquipFieldName = 'head' | 'chest' | 'arms' | 'legs';
+  
+  const [assigned, setAssigned] = React.useState<
+    Record<EquipFieldName, string[]>
+  >({
+    head: [],
+    chest: [],
+    arms: [],
+    legs: []
+  });
 
+  const hands = React.useMemo(
+    () => [...weaponsIndexed, ...weaponsSBIndexed],
+    [weaponsIndexed, weaponsSBIndexed]
+  );
+  
+  const baseEquipment = React.useMemo(
+    () => ({
+      head: [...data.deck.head, ...data.deck.headSB],
+      chest: [...data.deck.chest, ...data.deck.chestSB],
+      arms: [...data.deck.arms, ...data.deck.armsSB],
+      legs: [...data.deck.legs, ...data.deck.legsSB],
+      demi: data.deck.demiHero ?? [],
+      modular: data.deck.modular ?? []
+    }),
+    [data.deck]
+  );
+  
+  const [modularState, setModularState] = React.useState<string[]>(
+    baseEquipment.modular
+  );
+
+  React.useEffect(() => {
+    setAssigned({ head: [], chest: [], arms: [], legs: [] });
+    setModularState(baseEquipment.modular);
+  }, [baseEquipment.modular]);
+  
   const oneHandedHeroes = ['kayo_armed_and_dangerous', 'kayo', 'kayo_underhanded_cheat', 'kayo_strong_arm'];
   let handsTotal = oneHandedHeroes.includes(data.deck.hero) ? 1 : 2;
   const mainClassNames = classNames(styles.lobbyClass);
@@ -646,7 +683,12 @@ const Lobby = () => {
                     lobbyInfo={data}
                     weapons={weaponsIndexed}
                     weaponSB={weaponsSBIndexed}
-                  />
+                    assigned={assigned}
+                    setAssigned={setAssigned}
+                    baseEquipment={baseEquipment}
+                    hands={hands}
+                    modularState={modularState}
+                    setModularState={setModularState} />
                 )}
                 {activeTab === 'deck' && (
                   <Deck 
@@ -665,7 +707,12 @@ const Lobby = () => {
                     lobbyInfo={data}
                     weapons={weaponsIndexed}
                     weaponSB={weaponsSBIndexed}
-                  />
+                    assigned={assigned}
+                    setAssigned={setAssigned}
+                    baseEquipment={baseEquipment}
+                    hands={hands}
+                    modularState={modularState}
+                    setModularState={setModularState} />
                 )}
                 {activeTab === 'deck' && (
                   <Deck 

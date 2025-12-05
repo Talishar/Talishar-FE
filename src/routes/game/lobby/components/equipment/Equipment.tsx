@@ -13,68 +13,83 @@ import CardPopUp from 'routes/game/components/elements/cardPopUp/CardPopUp';
 import { useLanguageSelector } from 'hooks/useLanguageSelector';
 import { CARD_SQUARES_PATH, getCollectionCardImagePath } from 'utils';
 
-type EquipmentProps = {
+export type EquipFieldName = 'head' | 'chest' | 'arms' | 'legs';
+const EQUIP_FIELDS: EquipFieldName[] = ['head', 'chest', 'arms', 'legs'];
+
+export interface AssignedState {
+  head: string[];
+  chest: string[];
+  arms: string[];
+  legs: string[];
+}
+
+export interface BaseEquipment {
+  head: string[];
+  chest: string[];
+  arms: string[];
+  legs: string[];
+  demi: string[];
+}
+
+export interface HandWeapon {
+  id: string;
+}
+
+export interface EquipmentProps {
   lobbyInfo: GetLobbyInfoResponse;
   weapons: Weapon[];
   weaponSB: Weapon[];
-};
+  baseEquipment: BaseEquipment;
+  hands: HandWeapon[];
+  modularState: string[];
+  setModularState: React.Dispatch<React.SetStateAction<string[]>>;
+  assigned: AssignedState;
+  setAssigned: React.Dispatch<React.SetStateAction<AssignedState>>;
+}
 
-type EquipFieldName = 'head' | 'chest' | 'arms' | 'legs';
+interface DragPayload {
+  card: string;
+  from?: string;
+}
 
-const EQUIP_FIELDS: EquipFieldName[] = ['head', 'chest', 'arms', 'legs'];
-
-const Equipment = ({ lobbyInfo, weapons, weaponSB }: EquipmentProps) => {
+const Equipment = ({
+  baseEquipment,
+  hands,
+  modularState,
+  setModularState,
+  assigned,
+  setAssigned
+}: EquipmentProps) => {
   const { values, setFieldValue } = useFormikContext<DeckResponse>();
   const dispatch = useAppDispatch();
   const { getLanguage } = useLanguageSelector();
   const locale = getLanguage();
 
-  const hands = React.useMemo(
-    () => [...weapons, ...weaponSB],
-    [weapons, weaponSB]
-  );
-
-  const baseEquipment = React.useMemo(
-    () => ({
-      head: [...lobbyInfo.deck.head, ...lobbyInfo.deck.headSB],
-      chest: [...lobbyInfo.deck.chest, ...lobbyInfo.deck.chestSB],
-      arms: [...lobbyInfo.deck.arms, ...lobbyInfo.deck.armsSB],
-      legs: [...lobbyInfo.deck.legs, ...lobbyInfo.deck.legsSB],
-      demi: lobbyInfo.deck.demiHero ?? [],
-      modular: lobbyInfo.deck.modular ?? []
-    }),
-    [lobbyInfo.deck]
-  );
-
-  const [assigned, setAssigned] = React.useState<
-    Record<EquipFieldName, string[]>
-  >({
-    head: [],
-    chest: [],
-    arms: [],
-    legs: []
-  });
-
-  const [modularState, setModularState] = React.useState<string[]>(
-    baseEquipment.modular
-  );
-
-  React.useEffect(() => {
-    setAssigned({ head: [], chest: [], arms: [], legs: [] });
-    setModularState(baseEquipment.modular);
-  }, [baseEquipment.modular]);
-
-  // Sync with Formik submit
   React.useEffect(() => {
     setFieldValue('assignedModulars', assigned);
   }, [assigned, setFieldValue]);
 
-  const removeOne = (arr: string[], value: string) => {
-    const next = arr.slice();
-    const idx = next.indexOf(value);
-    if (idx !== -1) next.splice(idx, 1);
-    return next;
+  const removeOne = (arr: string[], value: string): string[] => {
+    const idx = arr.indexOf(value);
+    if (idx === -1) return arr;
+    return [...arr.slice(0, idx), ...arr.slice(idx + 1)];
   };
+
+  const parseDragPayload = (e: React.DragEvent): DragPayload | null => {
+    try {
+      return JSON.parse(e.dataTransfer.getData('text/plain'));
+    } catch {
+      return null;
+    }
+  };
+
+  const getCardSrc = (card: string) =>
+    getCollectionCardImagePath({
+      path: CARD_SQUARES_PATH,
+      locale,
+      cardNumber: card
+    });
+
 
   const handleModularDragStart = (e: React.DragEvent, card: string) => {
     dispatch(clearPopUp());
@@ -99,13 +114,8 @@ const Equipment = ({ lobbyInfo, weapons, weaponSB }: EquipmentProps) => {
 
   const handleEquipmentDrop = (e: React.DragEvent, field: EquipFieldName) => {
     e.preventDefault();
-
-    let data: { card: string; from?: string };
-    try {
-      data = JSON.parse(e.dataTransfer.getData('text/plain'));
-    } catch {
-      return;
-    }
+    const data = parseDragPayload(e);
+    if (!data) return;
 
     const { card, from } = data;
 
@@ -127,9 +137,8 @@ const Equipment = ({ lobbyInfo, weapons, weaponSB }: EquipmentProps) => {
     }
 
     setAssigned((prev) => ({
-      ...prev, [field]: [...prev[field], card]
-      // [...prev[field], card]
-      // [field]: prev[field].includes(card) ? prev[field] : [...prev[field], card]
+      ...prev,
+      [field]: [...prev[field], card]
     }));
 
     setFieldValue(field, card);
@@ -137,16 +146,10 @@ const Equipment = ({ lobbyInfo, weapons, weaponSB }: EquipmentProps) => {
 
   const handleReturnToModular = (e: React.DragEvent) => {
     e.preventDefault();
-
-    let data: { card: string; from?: string };
-    try {
-      data = JSON.parse(e.dataTransfer.getData('text/plain'));
-    } catch {
-      return;
-    }
+    const data = parseDragPayload(e);
+    if (!data) return;
 
     const { card, from } = data;
-
     if (!from || !EQUIP_FIELDS.includes(from as EquipFieldName)) return;
 
     const fromField = from as EquipFieldName;
@@ -163,12 +166,6 @@ const Equipment = ({ lobbyInfo, weapons, weaponSB }: EquipmentProps) => {
     setModularState((prev) => [...prev, card]);
   };
 
-  const getCardSrc = (card: string) =>
-    getCollectionCardImagePath({
-      path: CARD_SQUARES_PATH,
-      locale,
-      cardNumber: card
-    });
 
   const renderEquipZone = (
     label: string,
@@ -243,7 +240,7 @@ const Equipment = ({ lobbyInfo, weapons, weaponSB }: EquipmentProps) => {
                             const idx = values.weapons.findIndex(
                               (w) => w.id === weapon.id
                             );
-                            arrayHelpers.remove(idx);
+                            if (idx !== -1) arrayHelpers.remove(idx);
                           }
                         }}
                       />
