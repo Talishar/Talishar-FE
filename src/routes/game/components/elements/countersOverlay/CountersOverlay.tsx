@@ -65,7 +65,7 @@ export const CountersOverlay = ({
 
   return (
     <div className={styles.countersCover}>
-      {countersMap && !excludeFancyCounters && <ContinuousCounters countersMap={countersMap} excludeFancyCounters={excludeFancyCounters} />}
+      {countersMap && (!excludeFancyCounters || countersMap?.amp) && <ContinuousCounters countersMap={countersMap} excludeFancyCounters={excludeFancyCounters} />}
       {activeCombatChain && (
         <ActiveCardCounterOverlay activeCombatChain={activeCombatChain} />
       )}

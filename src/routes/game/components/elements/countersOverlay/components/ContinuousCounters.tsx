@@ -38,8 +38,8 @@ const toTooltipString = (type: string, value: number) =>
 export const ContinuousCounters = (props: Props) => {
   const { countersMap, excludeFancyCounters } = props;
 
-  // Hide all fancy counter displays when excludeFancyCounters is true
-  if (excludeFancyCounters) {
+  // Only return null if excluding fancy counters and there's no amp counter
+  if (excludeFancyCounters && !countersMap?.amp) {
     return null;
   }
 
