@@ -210,15 +210,15 @@ const Calculator = () => {
           ++numMark;
         }
 
-        if (typeContains(card.type, 'Instant') && heroId?.includes('Oscilio')) {
+        if (typeContains(card.type, 'Instant') && heroId?.toLowerCase().includes('oscilio')) {
           ++numInstant;
         }
 
-        if (typeContains(card.type, 'AR') && heroId?.includes('Dorinthea')) {
+        if (typeContains(card.type, 'AR') && heroId?.toLowerCase().includes('dorinthea')) {
           ++numAtkReaction;
         }
 
-        if (card.hasCharge && heroId?.includes('Boltyn')) {
+        if (card.hasCharge && heroId?.toLowerCase().includes('boltyn')) {
           ++numCharge;
         }
       }
