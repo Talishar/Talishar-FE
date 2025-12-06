@@ -2,14 +2,14 @@
   position: fixed;
   display: flex;
   flex-direction: column;
-  min-width: 40vh;
+  min-width: 35vh;
   top: 8vh;
   left: 20%;
   background-color: var(--theme-near-black);
   padding: 1.5vh;
   border: 1px solid var(--theme-primary);
   border-radius: 10px;
-  max-width: 90vh;
+  max-width: 95vh;
   max-height: 40vh;
   z-index: 99;
   overflow-y: auto;
@@ -122,9 +122,6 @@
 @media only screen and (max-width: 768px) {
   .activeLayersBox {
     min-width: auto;
-    left: 5%;
-    padding: 1vh;
-    max-height: 50vh;
   }
   
   .activeLayersCallToAction {
