@@ -395,17 +395,6 @@
   text-shadow: none;
 }
 
-.aimCounter.aimCounter {
-  border-radius: 100%;
-  height: 1em;
-  width: 1em;
-  background-image: url('../../../../../img/symbols/symbol-aim.png');
-  background-position: center;
-  background-size: contain;
-  border: none;
-  cursor: default;
-}
-
 .facing {
   height: 1.75em;
   width: 1.75em;
