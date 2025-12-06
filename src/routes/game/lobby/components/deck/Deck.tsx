@@ -7,26 +7,9 @@ import CardPopUp from 'routes/game/components/elements/cardPopUp/CardPopUp';
 import { useLanguageSelector } from 'hooks/useLanguageSelector';
 import { CARD_SQUARES_PATH, getCollectionCardImagePath } from 'utils';
 import { MdArrowDropDown, MdArrowRight } from 'react-icons/md';
+import { TYPE_LABELS } from 'constants/cardConstants';
 
 type SortMode = 'none' | 'pitch' | 'name' | 'power' | 'blockValue' | 'class' | 'talent' | 'type' | 'subtype' | 'cost';
-
-// Map of card type codes to human-readable labels
-const TYPE_LABELS: Record<string, string> = {
-  'A': 'Non-Attack Action',
-  'AA': 'Attack Action',
-  'B': 'Block',
-  'AR': 'Attack Reaction',
-  'DR': 'Defense Reaction',
-  'E': 'Equipment',
-  'R': 'Resource',
-  'I': 'Instant',
-  'M': 'Mentor',
-  'T': 'Token',
-  'C': 'Companion',
-  'W': 'Weapon',
-  'A,I': 'Action/Instant',
-  'I,I': 'Instant',
-};
 
 type DeckProps = {
   deck: string[];

@@ -6,6 +6,7 @@ import { useAppSelector } from 'app/Hooks';
 import { getGameInfo } from 'features/game/GameSlice';
 import { shallowEqual } from 'react-redux';
 import { useGetLobbyInfoQuery } from 'features/api/apiSlice';
+import { TYPE_LABELS } from 'constants/cardConstants';
 
 function hgeo(
   totalPopulation: number,
@@ -40,12 +41,6 @@ function formatProbability(probability: number) {
   return (Math.round(probability * 1000) / 10).toString() + '%';
 }
 
-function typeContains(type: string | undefined, find: string): boolean {
-  if (!type) return false;
-  const types = type.split(',').map((t) => t.trim());
-  return types.includes(find);
-}
-
 function subtypeContains(subtype: string | undefined, find: string): boolean {
   if (!subtype) return false;
   const subtypes = subtype.split(',').map((s) => s.trim());
@@ -62,6 +57,16 @@ function classContains(class_: string | undefined, find: string): boolean {
   if (!class_) return false;
   const classes = class_.split(',').map((c) => c.trim());
   return classes.includes(find);
+}
+
+function typeContains(type: string | undefined, find: string): boolean {
+  if (!type) return false;
+  // Check if the label for this type code matches the find parameter
+  const label = TYPE_LABELS[type];
+  if (label && label === find) return true;
+  // Also support checking by code directly for backward compatibility
+  const types = type.split(',').map((t) => t.trim());
+  return types.includes(find);
 }
 
 const Calculator = () => {
@@ -214,7 +219,7 @@ const Calculator = () => {
           ++numInstant;
         }
 
-        if (typeContains(card.type, 'AR') && heroId?.toLowerCase().includes('dorinthea')) {
+        if (typeContains(card.type, 'Attack Reaction') && heroId?.toLowerCase().includes('dorinthea')) {
           ++numAtkReaction;
         }
 
