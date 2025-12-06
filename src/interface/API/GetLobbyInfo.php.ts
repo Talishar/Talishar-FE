@@ -55,6 +55,7 @@ export interface CardData {
   hasEssenceOfIce?: boolean;
   hasEssenceOfEarth?: boolean;
   hasEssenceOfLightning?: boolean;
+  hasDecompose?: boolean;
 }
 
 export interface GetLobbyInfoResponse {

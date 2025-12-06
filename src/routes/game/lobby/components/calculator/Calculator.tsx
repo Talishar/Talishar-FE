@@ -100,6 +100,7 @@ const Calculator = () => {
     let numIce = 0;
     let numEarth = 0;
     let numLightning = 0;
+    let numDecompose = 0;
 
     // Get hero class from cardDictionary
     const heroId = data?.deck?.hero;
@@ -182,6 +183,10 @@ const Calculator = () => {
           ++numEarth;
         }
 
+        if (earthHero && card.hasDecompose) {
+          ++numDecompose;
+        }
+
         if (talentContains(card.talent, 'LIGHTNING') && lightningHero) {
           ++numLightning;
         }
@@ -205,7 +210,8 @@ const Calculator = () => {
       draconic: numDraconic,
       ice: numIce,
       earth: numEarth,
-      lightning: numLightning
+      lightning: numLightning,
+      decompose: numDecompose
     };
   }, [values.deck, data?.deck.cardDictionary, data?.deck?.hero]);
 
@@ -368,6 +374,15 @@ const Calculator = () => {
                     Lightning ({cardCounts.lightning})
                   </td>
                   {createProbabilityRows(cardCounts.lightning)}
+                </tr>
+              )}
+              {cardCounts.decompose > 0 && (
+                <tr className={styles.classSpecificRow}>
+                  <td className={`${styles.labelCell} ${styles.decompose}`}>
+                    <span className={styles.classIndicator}></span>
+                    Decompose ({cardCounts.decompose})
+                  </td>
+                  {createProbabilityRows(cardCounts.decompose)}
                 </tr>
               )}
             </tbody>

@@ -240,6 +240,15 @@
   box-shadow: 0 0 8px rgba(217, 178, 6, 0.3);
 }
 
+.decompose {
+  color: #6e971b;
+}
+
+.decompose .classIndicator {
+  background: #6e971b;
+  box-shadow: 0 0 8px rgba(110, 151, 27, 0.3);
+}
+
 /* Responsive adjustments */
 @media (max-width: 600px) {
   .calculatorCard {
