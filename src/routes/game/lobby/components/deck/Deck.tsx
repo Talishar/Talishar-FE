@@ -9,7 +9,7 @@ import { CARD_SQUARES_PATH, getCollectionCardImagePath } from 'utils';
 import { MdArrowDropDown, MdArrowRight } from 'react-icons/md';
 import { TYPE_LABELS } from 'constants/cardConstants';
 
-type SortMode = 'none' | 'pitch' | 'name' | 'power' | 'blockValue' | 'class' | 'talent' | 'type' | 'subtype' | 'cost';
+type SortMode = 'none' | 'pitch' | 'power' | 'blockValue' | 'class' | 'talent' | 'type' | 'subtype' | 'cost';
 
 type DeckProps = {
   deck: string[];
@@ -250,7 +250,11 @@ const Deck = ({ deck, cardDictionary = [], filtersExpanded = false, setFiltersEx
         // Cards with pitch come first, sorted by pitch value
         // Cards without pitch come last
         if (pitchA !== undefined && pitchB !== undefined) {
-          return pitchA - pitchB;
+          if (pitchA !== pitchB) {
+            return pitchA - pitchB;
+          }
+          // Same pitch, sort by card name
+          return cardAId.localeCompare(cardBId);
         }
         if (pitchA !== undefined) return -1;
         if (pitchB !== undefined) return 1;
@@ -393,29 +397,6 @@ const Deck = ({ deck, cardDictionary = [], filtersExpanded = false, setFiltersEx
       });
     }
 
-    if (sortMode === 'name') {
-      return deckArray.sort((a, b) => {
-        const cardAId = a.split('-')[0];
-        const cardBId = b.split('-')[0];
-        const pitchA = getPitch(cardAId);
-        const pitchB = getPitch(cardBId);
-        
-        // First sort by pitch (with pitch first, then without)
-        if (pitchA !== undefined && pitchB !== undefined) {
-          if (pitchA !== pitchB) {
-            return pitchA - pitchB;
-          }
-        } else if (pitchA !== undefined) {
-          return -1;
-        } else if (pitchB !== undefined) {
-          return 1;
-        }
-        
-        // Then by card name (ID)
-        return cardAId.localeCompare(cardBId);
-      });
-    }
-
     return deckArray;
   }, [deck, sortMode, cardPitchMap, cardPowerMap, cardBlockValueMap, cardClassMap, cardTalentMap, cardTypeMap, cardSubtypeMap, cardCostMap, getPitch, getPower, getBlockValue, getClass, getTalent, getType, getSubtype, getCost]);
 
@@ -425,7 +406,7 @@ const Deck = ({ deck, cardDictionary = [], filtersExpanded = false, setFiltersEx
       return null;
     }
 
-    if (sortMode === 'pitch' || sortMode === 'name') {
+    if (sortMode === 'pitch') {
       const pitchGroups = new Map<number, string[]>();
       const noPitchCards: string[] = [];
       
@@ -618,17 +599,9 @@ const Deck = ({ deck, cardDictionary = [], filtersExpanded = false, setFiltersEx
               className={`${styles.sortButton} ${sortMode === 'pitch' ? styles.active : ''}`}
               onClick={() => setSortMode('pitch')}
               type="button"
-              title="Sort cards by pitch only"
+              title="Sort cards by pitch"
             >
               Pitch
-            </button>
-            <button
-              className={`${styles.sortButton} ${sortMode === 'name' ? styles.active : ''}`}
-              onClick={() => setSortMode('name')}
-              type="button"
-              title="Group cards by pitch, then sort by name"
-            >
-              Pitch & Name
             </button>
             <button
               className={`${styles.sortButton} ${sortMode === 'power' ? styles.active : ''}`}
