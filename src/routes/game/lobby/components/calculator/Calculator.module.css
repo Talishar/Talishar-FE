@@ -249,6 +249,41 @@
   box-shadow: 0 0 8px rgba(110, 151, 27, 0.3);
 }
 
+.mark {
+  color: #3f0522;
+}
+.mark .classIndicator {
+  background: #3f0522;
+  box-shadow: 0 0 8px rgba(63, 5, 34, 0.3);
+}
+
+.instant {
+  color: #f3eeb6;
+}
+
+.instant .classIndicator {
+  background: #f3eeb6;
+  box-shadow: 0 0 8px rgba(243, 238, 182, 0.3);
+}
+
+.atkReaction {
+  color: #b2f7ef;
+} 
+
+.atkReaction .classIndicator {
+  background: #b2f7ef;
+  box-shadow: 0 0 8px rgba(178, 247, 239, 0.3);
+}
+
+.charge {
+  color: #ffdd57;
+}
+
+.charge .classIndicator {
+  background: #ffdd57;
+  box-shadow: 0 0 8px rgba(255, 221, 87, 0.3);
+}
+
 /* Responsive adjustments */
 @media (max-width: 600px) {
   .calculatorCard {

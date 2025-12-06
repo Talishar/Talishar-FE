@@ -40,6 +40,12 @@ function formatProbability(probability: number) {
   return (Math.round(probability * 1000) / 10).toString() + '%';
 }
 
+function typeContains(type: string | undefined, find: string): boolean {
+  if (!type) return false;
+  const types = type.split(',').map((t) => t.trim());
+  return types.includes(find);
+}
+
 function subtypeContains(subtype: string | undefined, find: string): boolean {
   if (!subtype) return false;
   const subtypes = subtype.split(',').map((s) => s.trim());
@@ -101,6 +107,10 @@ const Calculator = () => {
     let numEarth = 0;
     let numLightning = 0;
     let numDecompose = 0;
+    let numMark = 0;
+    let numInstant = 0;
+    let numAtkReaction = 0;
+    let numCharge = 0;
 
     // Get hero class from cardDictionary
     const heroId = data?.deck?.hero;
@@ -109,6 +119,7 @@ const Calculator = () => {
     let iceHero = false;
     let earthHero = false;
     let lightningHero = false;
+    let fangOrCindraHero = false;
     
     // Try to find hero in cardDictionary first
     if (heroId && data?.deck?.cardDictionary) {
@@ -127,6 +138,10 @@ const Calculator = () => {
       }
       if (heroCard?.hasEssenceOfLightning) {
         lightningHero = true;
+      }
+      // Check if hero name contains 'Fang' or 'Cindra'
+      if (heroId.includes('Fang') || heroId.includes('Cindra')) {
+        fangOrCindraHero = true;
       }
     }
 
@@ -191,8 +206,25 @@ const Calculator = () => {
           ++numLightning;
         }
 
+        if ((classContains(heroClass, 'ASSASSIN') || fangOrCindraHero) && card.hasMark) {
+          ++numMark;
+        }
+
+        if (typeContains(card.type, 'Instant') && heroId?.includes('Oscilio')) {
+          ++numInstant;
+        }
+
+        if (typeContains(card.type, 'AR') && heroId?.includes('Dorinthea')) {
+          ++numAtkReaction;
+        }
+
+        if (card.hasCharge && heroId?.includes('Boltyn')) {
+          ++numCharge;
+        }
       }
     });
+
+
 
     return {
       colorless: numColorless,
@@ -211,7 +243,11 @@ const Calculator = () => {
       ice: numIce,
       earth: numEarth,
       lightning: numLightning,
-      decompose: numDecompose
+      decompose: numDecompose,
+      mark: numMark,
+      instant: numInstant,
+      atkReaction: numAtkReaction,
+      charge: numCharge
     };
   }, [values.deck, data?.deck.cardDictionary, data?.deck?.hero]);
 
@@ -383,6 +419,43 @@ const Calculator = () => {
                     Decompose ({cardCounts.decompose})
                   </td>
                   {createProbabilityRows(cardCounts.decompose)}
+                </tr>
+              )}
+              {cardCounts.mark > 0 && (
+                <tr className={styles.classSpecificRow}>
+                  <td className={`${styles.labelCell} ${styles.mark}`}>
+                    <span className={styles.classIndicator}></span>
+                    Mark ({cardCounts.mark})
+                  </td>
+                  {createProbabilityRows(cardCounts.mark)}
+                </tr>
+              )}
+
+              {cardCounts.instant > 0 && (
+                <tr className={styles.classSpecificRow}>
+                  <td className={`${styles.labelCell} ${styles.instant}`}>
+                    <span className={styles.classIndicator}></span>
+                    Instant ({cardCounts.instant})
+                  </td>
+                  {createProbabilityRows(cardCounts.instant)}
+                </tr>
+              )}
+              {cardCounts.atkReaction > 0 && (
+                <tr className={styles.classSpecificRow}>
+                  <td className={`${styles.labelCell} ${styles.atkReaction}`}>
+                    <span className={styles.classIndicator}></span>
+                    Attack Reaction ({cardCounts.atkReaction})
+                  </td>
+                  {createProbabilityRows(cardCounts.atkReaction)}
+                </tr>
+              )}
+              {cardCounts.charge > 0 && (
+                <tr className={styles.classSpecificRow}>
+                  <td className={`${styles.labelCell} ${styles.charge}`}>
+                    <span className={styles.classIndicator}></span>
+                    Charge ({cardCounts.charge})
+                  </td>
+                  {createProbabilityRows(cardCounts.charge)}
                 </tr>
               )}
             </tbody>
