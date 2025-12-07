@@ -397,22 +397,20 @@ const Lobby = () => {
         modularRemaining = removeOne(modularRemaining, c);
       });
     });
+
     const inventory = [
-      ...weaponsIndexed
-        .concat(weaponsSBIndexed)
+      ...weaponsSBIndexed
         .filter((item) => item.id !== 'NONE00')
         .map((item) => item.id.split("-")[0]),
-      ...(data?.deck?.head ?? []),
       ...(data?.deck?.headSB ?? []),
-      ...(data?.deck?.chest ?? []),
       ...(data?.deck?.chestSB ?? []),
-      ...(data?.deck?.arms ?? []),
       ...(data?.deck?.armsSB ?? []),
-      ...(data?.deck?.legs ?? []),
       ...(data?.deck?.legsSB ?? []),
       ...(data?.deck?.demiHero ?? []),
       ...modularRemaining,
-      ...(((deckIndexed.concat(deckSBIndexed)).filter(x => !values.deck.includes(x))).map((card) => card.split("-")[0]) ?? [])
+      ...(((deckIndexed.concat(deckSBIndexed))
+      .filter(x => !values.deck.includes(x)))
+      .map((card) => card.split("-")[0]) ?? [])
     ].filter((item) => item !== 'NONE00');
 
     // encode it as an object
