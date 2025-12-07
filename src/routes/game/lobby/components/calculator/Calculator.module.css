@@ -16,7 +16,7 @@
   background: rgba(0, 0, 0, 0.7);
   border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.2));
   border-radius: 12px;
-  padding: 1rem 1rem 0 1rem;
+  padding: 1rem;
   backdrop-filter: blur(5px);
   width: 100%;
   max-width: 600px;
@@ -127,6 +127,179 @@
 .blue .colorIndicator {
   background: #4b84ff;
   box-shadow: 0 0 8px rgba(116, 192, 252, 0.3);
+}
+
+/* Class/Talent-specific row styling */
+.classSpecificRow {
+  border-top: 2px solid rgba(255, 255, 255, 0.15);
+}
+
+.classIndicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.runebladeAA {
+  color: #ff6b9d;
+}
+
+.runebladeAA .classIndicator {
+  background: #ff6b9d;
+  box-shadow: 0 0 8px rgba(255, 107, 157, 0.3);
+}
+
+.runebladeA {
+  color: #c77dff;
+}
+
+.runebladeA .classIndicator {
+  background: #c77dff;
+  box-shadow: 0 0 8px rgba(199, 125, 255, 0.3);
+}
+
+.bruteGuardian {
+  color: #ffa630;
+}
+
+.bruteGuardian .classIndicator {
+  background: #ffa630;
+  box-shadow: 0 0 8px rgba(255, 166, 48, 0.3);
+}
+
+.assassin {
+  color: #36f9ef;
+}
+
+.assassin .classIndicator {
+  background: #36f9ef;
+  box-shadow: 0 0 8px rgba(54, 249, 239, 0.3);
+}
+
+.mechanologist {
+  color: #ff6b6b;
+}
+
+.mechanologist .classIndicator {
+  background: #ff6b6b;
+  box-shadow: 0 0 8px rgba(255, 107, 107, 0.3);
+}
+
+.necromancer {
+  color: #9d4edd;
+}
+
+.necromancer .classIndicator {
+  background: #9d4edd;
+  box-shadow: 0 0 8px rgba(157, 78, 221, 0.3);
+}
+
+.shadow {
+  color: #5a189a;
+}
+
+.shadow .classIndicator {
+  background: #5a189a;
+  box-shadow: 0 0 8px rgba(90, 24, 154, 0.3);
+}
+
+.draconic {
+  color: #a11d1d;
+}
+
+.draconic .classIndicator {
+  background: #a11d1d;
+  box-shadow: 0 0 8px rgba(161, 29, 29, 0.3);
+}
+
+.ice {
+  color: #1d4ed8;
+}
+
+.ice .classIndicator {
+  background: #1d4ed8;
+  box-shadow: 0 0 8px rgba(29, 78, 216, 0.3);
+}
+
+.earth {
+  color: #4d7c0f;
+}
+
+.earth .classIndicator {
+  background: #4d7c0f;
+  box-shadow: 0 0 8px rgba(77, 124, 15, 0.3);
+}
+
+.lightning {
+  color: #d9b206;
+}
+
+.lightning .classIndicator {
+  background: #d9b206;
+  box-shadow: 0 0 8px rgba(217, 178, 6, 0.3);
+}
+
+.decompose {
+  color: #6e971b;
+}
+
+.decompose .classIndicator {
+  background: #6e971b;
+  box-shadow: 0 0 8px rgba(110, 151, 27, 0.3);
+}
+
+.mark {
+  color: #3f0522;
+}
+.mark .classIndicator {
+  background: #3f0522;
+  box-shadow: 0 0 8px rgba(63, 5, 34, 0.3);
+}
+
+.instant {
+  color: #f3eeb6;
+}
+
+.instant .classIndicator {
+  background: #f3eeb6;
+  box-shadow: 0 0 8px rgba(243, 238, 182, 0.3);
+}
+
+.atkReaction {
+  color: #b2f7ef;
+} 
+
+.atkReaction .classIndicator {
+  background: #b2f7ef;
+  box-shadow: 0 0 8px rgba(178, 247, 239, 0.3);
+}
+
+.charge {
+  color: #ffdd57;
+}
+
+.charge .classIndicator {
+  background: #ffdd57;
+  box-shadow: 0 0 8px rgba(255, 221, 87, 0.3);
+}
+
+.suspense {
+  color: #d658f0;
+}
+
+.suspense .classIndicator {
+  background: #d658f0;
+  box-shadow: 0 0 8px rgba(214, 88, 240, 0.3);
+}
+
+.evo {
+  color: #5792ff;
+}
+
+.evo .classIndicator {
+  background: #5792ff;
+  box-shadow: 0 0 8px rgba(87, 146, 255, 0.3);
 }
 
 /* Responsive adjustments */

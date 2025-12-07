@@ -49,6 +49,16 @@ export interface CardData {
   type?: string;
   subtype?: string;
   cost?: number;
+  hasStealth?: boolean;
+  hasBloodDebt?: boolean;
+  hasBoost?: boolean;
+  hasEssenceOfIce?: boolean;
+  hasEssenceOfEarth?: boolean;
+  hasEssenceOfLightning?: boolean;
+  hasDecompose?: boolean;
+  hasMark?: boolean;
+  hasCharge?: boolean;
+  hasSuspense?: boolean;
 }
 
 export interface GetLobbyInfoResponse {

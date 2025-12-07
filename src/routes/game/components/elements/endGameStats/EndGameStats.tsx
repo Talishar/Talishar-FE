@@ -147,8 +147,11 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
       setHeroDataUrls(urls);
     };
     
-    loadHeroImages();
-  }, [data.yourHero, data.opponentHero]);
+    // Don't fetch hero images for spectators
+    if (data.playerID !== 3) {
+      loadHeroImages();
+    }
+  }, [data.yourHero, data.opponentHero, data.playerID]);
 
   const handleSort = (field: 'played' | 'blocked' | 'pitched' | 'discarded' | 'hits' | 'cardName') => {
     if (sortField === field) {

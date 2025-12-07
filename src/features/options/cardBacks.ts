@@ -156,7 +156,7 @@ export const PLAYMATS = {
   '27': 'FabledBrazil',
   '28': 'NewHorizons',
   '29': 'SilvarisGarden',
-  '30': 'Candleheim',
+  '30': 'Candlehold',
   '31': 'Isenloft',
   '32': 'Volthaven',
   '33': 'High-Seas',

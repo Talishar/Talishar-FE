@@ -6,6 +6,8 @@ const CommunityContent: React.FC = () => {
   const [videos, setVideos] = useState<ContentVideo[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [autoAdvanceInterval, setAutoAdvanceInterval] = useState(5000); // 5 seconds by default
+  const autoAdvanceTimerRef = React.useRef<NodeJS.Timeout | null>(null);
 
   // Helper function to clean titles by removing HTML tags and URLs
   const cleanTitle = (title: string): string => {
@@ -43,27 +45,45 @@ const CommunityContent: React.FC = () => {
     return () => clearInterval(interval);
   }, []);
 
-  // Auto-scroll carousel every 5 seconds
+  // Auto-scroll carousel with resetable timer
   useEffect(() => {
     if (videos.length === 0) return;
 
-    const autoScrollInterval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % videos.length);
-    }, 5000);
+    // Clear existing timer if any
+    if (autoAdvanceTimerRef.current) {
+      clearInterval(autoAdvanceTimerRef.current);
+    }
 
-    return () => clearInterval(autoScrollInterval);
-  }, [videos.length]);
+    // Set new timer with current interval
+    autoAdvanceTimerRef.current = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % videos.length);
+    }, autoAdvanceInterval);
+
+    return () => {
+      if (autoAdvanceTimerRef.current) {
+        clearInterval(autoAdvanceTimerRef.current);
+      }
+    };
+  }, [videos.length, autoAdvanceInterval]);
+
+  // Helper function to reset the auto-advance timer
+  const resetAutoAdvanceTimer = () => {
+    setAutoAdvanceInterval(12000); // Set to 12 seconds after user interaction
+  };
 
   const nextSlide = () => {
     setCurrentIndex((prev) => (prev + 1) % videos.length);
+    resetAutoAdvanceTimer();
   };
 
   const prevSlide = () => {
     setCurrentIndex((prev) => (prev - 1 + videos.length) % videos.length);
+    resetAutoAdvanceTimer();
   };
 
   const goToSlide = (index: number) => {
     setCurrentIndex(index);
+    resetAutoAdvanceTimer();
   };
 
   if (loading) {
