@@ -58,6 +58,7 @@ export interface CardData {
   hasDecompose?: boolean;
   hasMark?: boolean;
   hasCharge?: boolean;
+  hasSuspense?: boolean;
 }
 
 export interface GetLobbyInfoResponse {

@@ -116,6 +116,8 @@ const Calculator = () => {
     let numInstant = 0;
     let numAtkReaction = 0;
     let numCharge = 0;
+    let numSuspense = 0;
+    let numEvo = 0;
 
     // Get hero class from cardDictionary
     const heroId = data?.deck?.hero;
@@ -166,70 +168,59 @@ const Calculator = () => {
           if (card.type === 'AA') ++numRunebladeAA;
           else if (card.type === 'A') ++numRunebladeA;
         }
-
         if ((classContains(heroClass, 'BRUTE') || classContains(heroClass, 'GUARDIAN')) && card.power !== undefined && card.power >= 6) {
           ++numPower6Plus;
         }
-
         if (classContains(heroClass, 'MECHANOLOGIST') && card.subtype && subtypeContains(card.subtype, 'Item')) {
           ++numItems;
         }
-
         if ((classContains(heroClass, 'NECROMANCER') || classContains(heroClass, 'ILLUSIONIST')) && subtypeContains(card.subtype, 'Ally')) {
           ++numAllies;
         }
-
         if (classContains(heroClass, 'ASSASSIN') && card.hasStealth) {
           ++numStealth;
         }
-
         if (talentContains(heroTalent, 'SHADOW') && card.hasBloodDebt) {
           ++numBloodDebt;
         }
-
         if (classContains(heroClass, 'MECHANOLOGIST') && card.hasBoost) {
           ++numBoost;
         }
-
         if (talentContains(heroTalent, 'DRACONIC') && talentContains(card.talent, 'DRACONIC')) {
           ++numDraconic;
         }
-
         if (talentContains(card.talent, 'ICE') && iceHero) {
           ++numIce;
         }
-
         if (talentContains(card.talent, 'EARTH') && earthHero) {
           ++numEarth;
         }
-
         if (earthHero && card.hasDecompose) {
           ++numDecompose;
         }
-
         if (talentContains(card.talent, 'LIGHTNING') && lightningHero) {
           ++numLightning;
         }
-
         if ((classContains(heroClass, 'ASSASSIN') || fangOrCindraHero) && card.hasMark) {
           ++numMark;
         }
-
         if (typeContains(card.type, 'Instant') && heroId?.toLowerCase().includes('oscilio')) {
           ++numInstant;
         }
-
         if (typeContains(card.type, 'Attack Reaction') && heroId?.toLowerCase().includes('dorinthea')) {
           ++numAtkReaction;
         }
-
         if (card.hasCharge && heroId?.toLowerCase().includes('boltyn')) {
           ++numCharge;
         }
+        if (card.hasSuspense && heroId?.toLowerCase().includes('pleiades') || heroId?.toLowerCase().includes('lyath')) {
+          ++numSuspense;
+        }
+        if (subtypeContains(card.subtype, 'Evo') && heroId?.toLowerCase().includes('teklovossen')) {
+          ++numEvo;
+        }
       }
     });
-
-
 
     return {
       colorless: numColorless,
@@ -252,7 +243,9 @@ const Calculator = () => {
       mark: numMark,
       instant: numInstant,
       atkReaction: numAtkReaction,
-      charge: numCharge
+      charge: numCharge,
+      suspense: numSuspense,
+      evo: numEvo
     };
   }, [values.deck, data?.deck.cardDictionary, data?.deck?.hero]);
 
@@ -461,6 +454,24 @@ const Calculator = () => {
                     Charge ({cardCounts.charge})
                   </td>
                   {createProbabilityRows(cardCounts.charge)}
+                </tr>
+              )}
+              {cardCounts.suspense > 0 && (
+                <tr className={styles.classSpecificRow}>
+                  <td className={`${styles.labelCell} ${styles.suspense}`}>
+                    <span className={styles.classIndicator}></span>
+                    Suspense ({cardCounts.suspense})
+                  </td>
+                  {createProbabilityRows(cardCounts.suspense)}
+                </tr>
+              )}
+              {cardCounts.evo > 0 && (
+                <tr className={styles.classSpecificRow}>
+                  <td className={`${styles.labelCell} ${styles.evo}`}>
+                    <span className={styles.classIndicator}></span>
+                    Evo ({cardCounts.evo})
+                  </td>
+                  {createProbabilityRows(cardCounts.evo)}
                 </tr>
               )}
             </tbody>

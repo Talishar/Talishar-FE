@@ -284,6 +284,24 @@
   box-shadow: 0 0 8px rgba(255, 221, 87, 0.3);
 }
 
+.suspense {
+  color: #d658f0;
+}
+
+.suspense .classIndicator {
+  background: #d658f0;
+  box-shadow: 0 0 8px rgba(214, 88, 240, 0.3);
+}
+
+.evo {
+  color: #5792ff;
+}
+
+.evo .classIndicator {
+  background: #5792ff;
+  box-shadow: 0 0 8px rgba(87, 146, 255, 0.3);
+}
+
 /* Responsive adjustments */
 @media (max-width: 600px) {
   .calculatorCard {
