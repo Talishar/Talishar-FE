@@ -266,6 +266,11 @@ const PRECON_DECK_DATA = [
     name: 'Rhinar, Reckless Rampage',
     link: 'https://fabrary.net/decks/01K74RSFG9RTVPVN534DZPJJNQ',
     hero: 'WTR001'
+  },
+  {
+    name: 'Arakni, 5L!p3d 7hRu 7h3 cR4X',
+    link: 'https://fabrary.net/decks/01K74RXDPRPJT9YWGFVAPHECDF',
+    hero: 'HER131'
   }
 ];
 
