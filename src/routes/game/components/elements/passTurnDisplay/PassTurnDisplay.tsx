@@ -53,14 +53,31 @@ export default function PassTurnDisplay() {
   }, [hasPriority, playerID]);
 
   const onPassTurn = useCallback(() => {
-    if (preventPassPrompt && !showAreYouSureModal) {
-      setShowAreYouSureModal(true);
+    if (preventPassPrompt) {
+      if (showAreYouSureModal) {
+        // Modal is already open, treat SPACE shortucut as clicking Yes
+        setShowAreYouSureModal(false);
+        dispatch(submitButton({ button: { mode: PROCESS_INPUT.PASS } }));
+      } else {
+        setShowAreYouSureModal(true);
+      }
     } else {
       dispatch(submitButton({ button: { mode: PROCESS_INPUT.PASS } }));
     }
   }, [preventPassPrompt, showAreYouSureModal, dispatch]);
 
+  const onUndoKeyPress = useCallback(() => {
+    if (showAreYouSureModal) {
+      // If modal is open, treat UNDO shortcut as clicking No (close modal)
+      setShowAreYouSureModal(false);
+    } else {
+      // If modal is not open, allow normal undo action
+      dispatch(submitButton({ button: { mode: PROCESS_INPUT.UNDO } }));
+    }
+  }, [showAreYouSureModal, dispatch]);
+
   useShortcut(DEFAULT_SHORTCUTS.PASS_TURN, onPassTurn);
+  useShortcut(DEFAULT_SHORTCUTS.UNDO, onUndoKeyPress);
 
   const clickYes = (e: React.SyntheticEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -102,7 +119,7 @@ export default function PassTurnDisplay() {
           <div> PASS </div>
           <div className={styles.subThing}>[spacebar]</div>
         </div>
-        {showAreYouSureModal &&
+        {showAreYouSureModal && preventPassPrompt &&
           createPortal(
             <>
               <dialog open={showAreYouSureModal} className={styles.modal}>
