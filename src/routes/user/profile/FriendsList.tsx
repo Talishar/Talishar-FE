@@ -192,18 +192,28 @@ export const FriendsList: React.FC<FriendsListProps> = ({ className }) => {
         </div>
 
         {/* Search Results */}
-        {showSearchResults && (
-          <div className={styles.searchResults}>
-            {searchLoading && <p className={styles.loadingText}>Searching...</p>}
-            {!searchLoading && searchResults?.users && searchResults.users.length > 0 ? (
+        {!searchLoading && searchResults?.users && searchResults.users.length > 0 ? (
+          (() => {
+            const sortedResults = [...searchResults.users].sort((a, b) => {
+              const aExact = a.username === searchTerm;
+              const bExact = b.username === searchTerm;
+
+              if (aExact && !bExact) return -1;
+              if (bExact && !aExact) return 1;
+              return 0;
+            });
+
+            return (
               <ul className={styles.resultsList}>
-                {searchResults.users.map((user) => {
+                {sortedResults.map((user) => {
                   const hasRequestSent = sentRequestUserIds.has(user.usersId);
                   return (
                     <li key={user.usersId} className={styles.resultItem}>
                       <span>{user.username}</span>
                       <button
-                        className={`${styles.addButton} ${hasRequestSent ? styles.addButtonDisabled : ''}`}
+                        className={`${styles.addButton} ${
+                          hasRequestSent ? styles.addButtonDisabled : ''
+                        }`}
                         onClick={() => !hasRequestSent && handleAddFriend(user.username)}
                         disabled={hasRequestSent}
                         title={hasRequestSent ? 'Friend request already sent' : 'Add friend'}
@@ -214,10 +224,10 @@ export const FriendsList: React.FC<FriendsListProps> = ({ className }) => {
                   );
                 })}
               </ul>
-            ) : (
-              !searchLoading && <p className={styles.noResults}>No users found</p>
-            )}
-          </div>
+            );
+          })()
+        ) : (
+          !searchLoading && <p className={styles.noResults}>No users found</p>
         )}
       </div>
 

@@ -114,22 +114,34 @@ export const BlockedUsers: React.FC<BlockedUsersProps> = ({ className }) => {
                 {searchLoading && <p className={styles.loadingText}>Searching...</p>}
                 {!searchLoading && searchResults?.users && searchResults.users.length > 0 ? (
                   <ul className={styles.resultsList}>
-                    {searchResults.users.map((user) => {
-                      const isBlocked = blockedUserIds.has(user.usersId);
-                      return (
-                        <li key={user.usersId} className={styles.resultItem}>
-                          <span>{user.username}</span>
-                          <button
-                            className={`${styles.blockButton} ${isBlocked ? styles.blockButtonDisabled : ''}`}
-                            onClick={() => !isBlocked && handleBlockUser(user.username)}
-                            disabled={isBlocked}
-                            title={isBlocked ? 'User already blocked' : 'Block user'}
-                          >
-                            {isBlocked ? '✓ Blocked' : <MdPersonAdd />}
-                          </button>
-                        </li>
-                      );
-                    })}
+                    {[...searchResults.users]
+                      .sort((a, b) => {
+                        const term = searchTerm.toLowerCase();
+                        const aExact = a.username.toLowerCase() === term;
+                        const bExact = b.username.toLowerCase() === term;
+
+                        if (aExact && !bExact) return -1;
+                        if (bExact && !aExact) return 1;
+                        return 0;
+                      })
+                      .map((user) => {
+                        const isBlocked = blockedUserIds.has(user.usersId);
+                        return (
+                          <li key={user.usersId} className={styles.resultItem}>
+                            <span>{user.username}</span>
+                            <button
+                              className={`${styles.blockButton} ${
+                                isBlocked ? styles.blockButtonDisabled : ''
+                              }`}
+                              onClick={() => !isBlocked && handleBlockUser(user.username)}
+                              disabled={isBlocked}
+                              title={isBlocked ? 'User already blocked' : 'Block user'}
+                            >
+                              {isBlocked ? '✓ Blocked' : <MdPersonAdd />}
+                            </button>
+                          </li>
+                        );
+                      })}
                   </ul>
                 ) : (
                   !searchLoading && <p className={styles.noResults}>No users found</p>
