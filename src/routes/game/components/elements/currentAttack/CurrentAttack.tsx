@@ -12,6 +12,7 @@ export default function CurrentAttack() {
   const activeCombatChain = useAppSelector(
     (state: RootState) => state.game.activeChainLink
   );
+  const playerID = useAppSelector((state: RootState) => state.game.gameInfo.playerID);
   const dispatch = useAppDispatch();
   if (
     activeCombatChain === undefined ||
@@ -27,6 +28,7 @@ export default function CurrentAttack() {
   const powerValue = activeCombatChain.totalPower;
   const defValue = activeCombatChain.totalDefence;
   const attCard = activeCombatChain.attackingCard;
+  const isPlayer = playerID === attCard.controller;
 
   const targets = activeCombatChain.attackTarget?.split('|');
   const tooltipText = targets && targets.length > 1 ? `Attack targets: ${targets.join(', ')}` : `Attack target: ${targets?.[0]}`;
@@ -64,7 +66,7 @@ export default function CurrentAttack() {
         ) : null}
       </div>
       <div className={styles.attack}>
-        <CardDisplay card={attCard} activeCombatChain={activeCombatChain} />
+        <CardDisplay card={attCard} activeCombatChain={activeCombatChain} isPlayer={isPlayer} />
       </div>
     </div>
   );

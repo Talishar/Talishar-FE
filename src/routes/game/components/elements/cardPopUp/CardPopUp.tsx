@@ -13,6 +13,7 @@ type CardPopUpProps = {
   isHidden?: boolean;
   onHoverStart?: () => void;
   onHoverEnd?: () => void;
+  isOpponent?: boolean;
 };
 
 export default function CardPopUp({
@@ -22,7 +23,8 @@ export default function CardPopUp({
   onClick,
   isHidden,
   onHoverStart,
-  onHoverEnd
+  onHoverEnd,
+  isOpponent
 }: CardPopUpProps) {
   const ref = useRef<HTMLDivElement>(null);
   const dispatch = useAppDispatch();
@@ -63,7 +65,8 @@ export default function CardPopUp({
       setPopUp({
         cardNumber,
         xCoord,
-        yCoord
+        yCoord,
+        isOpponent
       })
     );
   };

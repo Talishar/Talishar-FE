@@ -79,7 +79,7 @@ export default function PitchZone(prop: Displayrow) {
               key={`${card.cardNumber}-${ix}`}
               data-testid='pitch-motion-div'
             >
-              <CardDisplay card={card} preventUseOnClick />
+              <CardDisplay card={card} preventUseOnClick isPlayer={isPlayer} />
             </motion.div>
           );
         })}

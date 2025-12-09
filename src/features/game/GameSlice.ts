@@ -299,13 +299,15 @@ export const gameSlice = createSlice({
         cardNumber: string;
         xCoord?: number;
         yCoord?: number;
+        isOpponent?: boolean;
       }>
     ) => {
       state.popup = {
         popupOn: true,
         xCoord: action.payload.xCoord,
         yCoord: action.payload.yCoord,
-        popupCard: { cardNumber: action.payload.cardNumber }
+        popupCard: { cardNumber: action.payload.cardNumber },
+        isOpponent: action.payload.isOpponent
       };
     },
     clearPopUp: (state) => {
@@ -824,6 +826,9 @@ export const gameSlice = createSlice({
 
       state.gameInfo.altArts =
         action.payload.gameInfo.altArts ?? state.gameInfo.altArts;
+
+      state.gameInfo.opponentAltArts =
+        action.payload.gameInfo.opponentAltArts ?? state.gameInfo.opponentAltArts;
 
       state.gameInfo.isPrivate =
         action.payload.gameInfo.isPrivate ?? state.gameInfo.isPrivate;
