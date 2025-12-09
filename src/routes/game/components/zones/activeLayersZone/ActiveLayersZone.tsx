@@ -32,6 +32,8 @@ export default function ActiveLayersZone() {
     (card) => card.reorderable
   );
 
+  const playerID = useAppSelector((state: RootState) => state.game.gameInfo.playerID);
+
   const handlePassTurn = () => {
     dispatch(submitButton({ button: { mode: PROCESS_INPUT.PASS } }));
   };
@@ -89,7 +91,8 @@ export default function ActiveLayersZone() {
           <div className={styles.activeLayersContents}>
             {staticCards &&
               staticCards.map((card, ix) => {
-                return <CardDisplay card={card} key={ix} />;
+                const isPlayer = playerID === card.controller;
+                return <CardDisplay card={card} key={ix} isPlayer={isPlayer}/>;
               })}
             <ReorderLayers cards={reorderableCards ?? []} />
           </div>
