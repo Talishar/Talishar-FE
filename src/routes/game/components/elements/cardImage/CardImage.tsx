@@ -13,17 +13,23 @@ export interface CardImage {
   //@ts-ignore Booleanish is allowed, right?
   draggable?: Booleanish;
   isShuffling?: boolean;
+  isOpponent?: boolean;
 }
 
 export const CardImage = (props: CardImage) => {
-  const { altArts } = useAppSelector(getGameInfo, shallowEqual);
+  const { altArts, opponentAltArts } = useAppSelector(getGameInfo, shallowEqual);
   let src = props.src;
-  const { isShuffling } = props;
+  const { isShuffling, isOpponent } = props;
 
   let srcArray = src.split('/');
   let cardNumber = srcArray?.pop()?.split(".")[0]?.split('-')[0];
 
-  if (altArts) {
+  if (isOpponent && opponentAltArts) {
+    for (let i = 0; i < opponentAltArts.length; i++) {
+      if (cardNumber == opponentAltArts[i].cardId)
+        src = srcArray.join('/') + `/${opponentAltArts[i].altPath}.webp`;
+    }
+  } else if (altArts) {
     for (let i = 0; i < altArts.length; i++) {
       if (cardNumber == altArts[i].cardId)
         src = srcArray.join('/') + `/${altArts[i].altPath}.webp`;

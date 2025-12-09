@@ -110,6 +110,7 @@ export const CardDisplay = (prop: CardProp) => {
       onClick={onClick}
       onHoverStart={() => setShowSubCards(true)}
       onHoverEnd={() => setShowSubCards(false)}
+      isOpponent={!isPlayer}
     >
       {subCardsToShow.map((subCardNumber, ix) => {
         if (!subCardNumber || typeof subCardNumber !== 'string' || subCardNumber.trim() === '') return null;
@@ -133,6 +134,7 @@ export const CardDisplay = (prop: CardProp) => {
         src={imageSrc}
         className={classNames(imgStyles, { [styles.tapped]: card.tapped })}
         isShuffling={isShuffling}
+        isOpponent={!isPlayer}
       />
       {card.overlay === 'disabled' && <div className={classStyles}></div>}
       {(card.isBroken ||

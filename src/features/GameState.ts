@@ -22,6 +22,7 @@ export default interface GameState {
     popupCard?: Card;
     xCoord?: number;
     yCoord?: number;
+    isOpponent?: boolean;
   };
   playCardMessage?: {
     popUpOn?: boolean;

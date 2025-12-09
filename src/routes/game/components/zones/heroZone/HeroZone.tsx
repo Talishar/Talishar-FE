@@ -69,7 +69,7 @@ export const HeroZone = React.memo((prop: Displayrow) => {
 
   return (
     <div className={styles.heroZone}>
-      <CardDisplay card={cardToDisplay} />
+      <CardDisplay card={cardToDisplay} isPlayer={isPlayer} />
       {damagePopups.map((popup) => (
         <DamagePopup
           key={popup.id}

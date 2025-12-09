@@ -14,11 +14,13 @@ const popUpGap = 130;
 function CardDetails({
   src,
   containerClass,
-  containerStyle
+  containerStyle,
+  isOpponent
 }: {
   src: string;
   containerClass?: string;
   containerStyle?: Record<string, string>;
+  isOpponent?: boolean;
 }) {
   const containerClassName =
     containerClass != null
@@ -27,7 +29,7 @@ function CardDetails({
   return (
     <div className={containerClassName} style={containerStyle}>
       <div className={styles.popUpInside} key={src}>
-        <CardImage src={src} className={styles.img} />
+        <CardImage src={src} className={styles.img} isOpponent={isOpponent} />
       </div>
     </div>
   );
@@ -114,12 +116,14 @@ export default function CardPortal() {
         <CardDetails
           src={dfcSrc}
           containerClass={classNames(styles.popUp, styles.doubleFacedCard)}
+          isOpponent={popup.isOpponent}
         />
       )}
       <CardDetails
         src={src}
         containerClass={styles.popUp}
         containerStyle={popUpStyle}
+        isOpponent={popup.isOpponent}
       />
     </div>
   );

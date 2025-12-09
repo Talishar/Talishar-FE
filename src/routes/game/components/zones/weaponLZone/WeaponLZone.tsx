@@ -12,7 +12,7 @@ export const WeaponLZone = React.memo((prop: Displayrow) => {
   );
   return (
     <div className={styles.weaponLZone}>
-      <CardDisplay card={cardToDisplay} />
+      <CardDisplay card={cardToDisplay} isPlayer={isPlayer} />
     </div>
   );
 });
