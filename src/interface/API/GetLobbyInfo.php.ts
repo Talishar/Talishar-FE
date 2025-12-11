@@ -33,7 +33,7 @@ export interface Deck {
 export interface Weapon {
   id: string;
   is1H: boolean;
-  img?: string;
+  img: string;
   numHands?: number;
   isQuiver?: boolean;
   isOffhand?: boolean;
