@@ -11,6 +11,7 @@ import { submitButton } from '../../../../features/game/GameSlice';
 import useWindowDimensions from '../../../../hooks/useWindowDimensions';
 import { parseHtmlToReactElements } from 'utils/ParseEscapedString';
 import { MdDragHandle } from 'react-icons/md';
+import useShowModal from '../../../../hooks/useShowModals';
 
 const STORAGE_KEY = 'combatChainPosition';
 const MAX_Y_OFFSET = 30; // dvh
@@ -22,6 +23,7 @@ export default function CombatChain() {
   const activeCombatChain = useAppSelector(
     (state: RootState) => state.game.activeChainLink
   );
+  const showModals = useShowModal();
   const [canSkipBlock, setCanSkipBlock] = React.useState(false);
   const [canSkipBlockAndDef, setCanSkipBlockAndDef] = React.useState(false);
   const [yOffset, setYOffset] = React.useState(() => {
@@ -98,9 +100,10 @@ export default function CombatChain() {
   }, [isDragging, dragStartY, dragStartOffset, yOffset]);
 
   const showCombatChain =
-    oldCombatChain?.length > 0 ||
-    (activeCombatChain?.attackingCard &&
-      activeCombatChain?.attackingCard?.cardNumber !== 'blank');
+    showModals &&
+    (oldCombatChain?.length > 0 ||
+      (activeCombatChain?.attackingCard &&
+        activeCombatChain?.attackingCard?.cardNumber !== 'blank'));
   return (
     <AnimatePresence>
       {showCombatChain && (
