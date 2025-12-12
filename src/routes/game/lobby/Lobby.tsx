@@ -398,10 +398,28 @@ const Lobby = () => {
       });
     });
 
+    const filterWeaponsSB = (totalWeapons: Weapon[], equippedWeapons: string[]) => {
+    const indexedWeapons: any = {};
+
+    for (const weaponName of equippedWeapons) {
+      indexedWeapons[weaponName] = (indexedWeapons[weaponName] || 0) + 1;
+    }
+
+      return totalWeapons.filter((weapon) => {
+        if (indexedWeapons[weapon.img]) { //img = name = id
+          indexedWeapons[weapon.img]--;
+          return false;
+        }
+        return true;
+      });
+    };
+
+    const weaponsSB = filterWeaponsSB([...weaponsIndexed, ...weaponsSBIndexed], [...hands])
+      .filter((item: { id: string; }) => item.id !== 'NONE00')
+      .map((item: { id: string; }) => item.id.split("-")[0]);
+
     const inventory = [
-      ...weaponsSBIndexed
-        .filter((item) => item.id !== 'NONE00')
-        .map((item) => item.id.split("-")[0]),
+      ...weaponsSB,
       ...(data?.deck?.headSB ?? []),
       ...(data?.deck?.chestSB ?? []),
       ...(data?.deck?.armsSB ?? []),
@@ -413,7 +431,6 @@ const Lobby = () => {
       .map((card) => card.split("-")[0]) ?? [])
     ].filter((item) => item !== 'NONE00');
 
-    // encode it as an object
     const submitDeck = {
       hero: data?.deck.hero,
       hands,
