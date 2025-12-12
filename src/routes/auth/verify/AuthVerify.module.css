@@ -1,0 +1,271 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 2rem;
+}
+
+.card {
+  width: 100%;
+  max-width: 480px;
+  border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.2));
+  border-radius: 10px;
+  background: var(--theme-section-background, linear-gradient(135deg, rgba(30, 35, 41, 0.8) 0%, rgba(30, 35, 41, 0.85) 100%));
+  padding: 2rem;
+}
+
+.card h2 {
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.appRequest {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+}
+
+.appInfo {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+}
+
+.appInfo h3 {
+  margin: 0 0 0.5rem 0;
+  color: var(--theme-primary, #4a9eff);
+}
+
+.appInfo p {
+  margin: 0;
+  opacity: 0.8;
+}
+
+.permissions {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.permissions h4 {
+  margin: 0 0 0.75rem 0;
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+.permissions ul {
+  margin: 0;
+  padding-left: 1.5rem;
+}
+
+.permissions li {
+  margin-bottom: 0.25rem;
+}
+
+.actions {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.allowButton,
+.denyButton {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.1s;
+}
+
+.allowButton {
+  background: var(--primary, #ffb84d);
+  color: #000;
+}
+
+.allowButton:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 184, 77, 0.4);
+}
+
+.allowButton:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.denyButton {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.denyButton:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.denyButton:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.allowButton:disabled,
+.denyButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.disclaimer {
+  font-size: 0.8rem;
+  text-align: center;
+  opacity: 0.7;
+  margin: 0;
+}
+
+.error {
+  color: var(--theme-danger, #dc3545);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.error code {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 0.125rem 0.375rem;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+.homeLink {
+  display: block;
+  text-align: center;
+  margin-top: 1.5rem;
+  color: var(--theme-primary, #4a9eff);
+}
+
+/* Login form styles */
+.loginForm {
+  margin-top: 1rem;
+}
+
+.loginForm form {
+  display: flex;
+  flex-direction: column;
+}
+
+.loginForm label {
+  margin-bottom: 0.25rem;
+  font-size: 0.9rem;
+}
+
+.loginForm input[type="text"],
+.loginForm input[type="password"] {
+  margin-bottom: 1rem;
+  padding: 0.75rem;
+  border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.2));
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  color: inherit;
+  font-size: 1rem;
+}
+
+.loginForm input[type="text"]:focus,
+.loginForm input[type="password"]:focus {
+  outline: none;
+  border-color: var(--theme-primary, #4a9eff);
+}
+
+.loginForm input[aria-invalid="true"] {
+  border-color: var(--theme-danger, #dc3545);
+}
+
+.rememberMe {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.rememberMe input[type="checkbox"] {
+  width: auto;
+  margin: 0;
+}
+
+.rememberMe label {
+  margin: 0;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.submitButton {
+  padding: 0.75rem 1rem;
+  background: var(--theme-primary, #4a9eff);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.submitButton:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.submitButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.fieldError {
+  color: var(--theme-danger, #dc3545);
+  font-size: 0.85rem;
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.signupLink {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--theme-border, rgba(255, 255, 255, 0.1));
+  text-align: center;
+}
+
+.signupLink p {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.signupLink a {
+  color: var(--theme-primary, #4a9eff);
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+
+  .card {
+    padding: 1.5rem;
+  }
+
+  .actions {
+    flex-direction: column;
+  }
+}

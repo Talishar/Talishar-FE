@@ -31,6 +31,7 @@ import LinkMetafy from 'routes/user/profile/linkmetafy/linkMetafy';
 import ModPage from 'routes/mod/ModPage';
 import PrivacyPolicy from 'routes/legal/PrivacyPolicy';
 import TermsOfService from 'routes/legal/TermsOfService';
+import AuthVerify from 'routes/auth/verify';
 
 const PlayGuard = ({ children }: { children: JSX.Element }) => {
   const [searchParams] = useKnownSearchParams();
@@ -176,6 +177,7 @@ export const router = createBrowserRouter(
         <Route path="privacy" element={<Privacy />} />
         <Route path="privacy-policy" element={<PrivacyPolicy />} />
         <Route path="terms-of-service" element={<TermsOfService />} />
+        <Route path="auth/verify" element={<AuthVerify />} />
         <Route path="mod" element={<ModGuard><ModPage /></ModGuard>} />
         <Route path="user">
           <Route index element={<Navigate to={'./profile'} />} />

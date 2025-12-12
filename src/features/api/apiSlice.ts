@@ -906,6 +906,33 @@ export const apiSlice = createApi({
           responseHandler: parseResponse
         };
       }
+    }),
+    // External app auth endpoints
+    getAppInfo: builder.query<
+      { app_id: string; name: string; description: string; error?: string },
+      { app_id: string; redirect_uri: string }
+    >({
+      query: ({ app_id, redirect_uri }) => {
+        return {
+          url: URL_END_POINT.GET_APP_INFO,
+          method: 'GET',
+          params: { app_id, redirect_uri },
+          responseHandler: parseResponse
+        };
+      }
+    }),
+    generateAuthToken: builder.mutation<
+      { token: string; error?: string },
+      { app_id: string; redirect_uri: string }
+    >({
+      query: ({ app_id, redirect_uri }) => {
+        return {
+          url: URL_END_POINT.GENERATE_AUTH_TOKEN,
+          method: 'POST',
+          body: { app_id, redirect_uri },
+          responseHandler: parseResponse
+        };
+      }
     })
   })
 });
@@ -971,5 +998,7 @@ export const {
   useCreateQuickGameMutation,
   useGetLastActiveGameQuery,
   useReportTypingMutation,
-  useCheckOpponentTypingQuery
+  useCheckOpponentTypingQuery,
+  useGetAppInfoQuery,
+  useGenerateAuthTokenMutation
 } = apiSlice;
