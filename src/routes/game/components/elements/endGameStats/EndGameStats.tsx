@@ -103,14 +103,12 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
       const response = await fetch(`${BACKEND_URL}GetHeroImage.php?hero=${encodeURIComponent(heroName)}`);
       
       if (!response.ok) {
-        console.error('Failed to fetch hero image from backend:', response.status);
         return null;
       }
       
       const data = await response.json();
       
       if (data.error) {
-        console.error('Backend error:', data.error);
         return null;
       }
       
@@ -120,7 +118,6 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
       
       return null;
     } catch (error) {
-      console.error('Failed to fetch hero image from backend:', heroName, error);
       return null;
     }
   };
