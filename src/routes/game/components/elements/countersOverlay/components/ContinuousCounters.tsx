@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import styles from '../CountersOverlay.module.css';
 import { GiLightningArc } from "react-icons/gi";
-import { GiBlood } from "react-icons/gi";
+import { GiTombstone } from "react-icons/gi";
 import { TbTargetArrow } from "react-icons/tb";
 
 type Props = {
@@ -30,7 +30,8 @@ const includedCounters = [
   'sand',
   'lightning',
   'amp',
-  'aim'
+  'aim',
+  'wateryGrave'
 ];
 
 const toTooltipString = (type: string, value: number) =>
@@ -215,11 +216,18 @@ export const ContinuousCounters = (props: Props) => {
         <div
           className={styles.icon}
           data-tooltip="Aim counter(s)"
-          title={`aim counter`}
         >
           <TbTargetArrow />
         </div>
       )}
-    </>
+      {!!Number(countersMap?.wateryGrave) && (
+        <div
+          className={styles.wateryGraveIcon}
+          data-tooltip="Watery Grave"
+        >
+          <GiTombstone />
+        </div>
+      )}    
+      </>
   );
 };

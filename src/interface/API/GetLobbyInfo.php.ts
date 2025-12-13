@@ -59,6 +59,7 @@ export interface CardData {
   hasMark?: boolean;
   hasCharge?: boolean;
   hasSuspense?: boolean;
+  wateryGraveIcon?: boolean;
 }
 
 export interface GetLobbyInfoResponse {

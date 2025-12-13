@@ -391,6 +391,24 @@
   cursor: default;
 }
 
+.wateryGraveIcon.wateryGraveIcon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--near-black);
+  border: var(--theme-primary) solid 1px;
+  color: var(--white);
+  border-radius: 8px;
+  min-width: 1.5em;
+  height: 1.5em;
+  font-size: 1.4em;
+  padding: 2px;
+  margin: 0.1em;
+  pointer-events: auto;
+  user-select: none;
+  cursor: default;
+}
+
 [data-tooltip]::before {
   text-shadow: none;
 }

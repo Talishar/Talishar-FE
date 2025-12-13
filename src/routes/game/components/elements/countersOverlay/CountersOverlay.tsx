@@ -48,7 +48,8 @@ export const CountersOverlay = ({
     'sand',
     'lightning',
     'amp',
-    'aim'
+    'aim',
+    'wateryGrave'
   ];
 
   let numTotal = num ?? 0;
