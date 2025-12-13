@@ -95,7 +95,7 @@ export default interface GameState {
     statsEnabled: boolean;
     casterModeEnabled: boolean;
     attackReactionsSkip: boolean;
-    defenceReactionsSkip: boolean;
+    defenseReactionsSkip: boolean;
     manualTargetingEnabled: boolean;
     holdPrioritySetting: number;
   };

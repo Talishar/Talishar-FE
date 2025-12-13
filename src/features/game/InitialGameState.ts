@@ -59,7 +59,7 @@ export const OfflineTestingGameState: GameState = {
         }
       ],
       totalPower: 88,
-      totalDefence: 44,
+      totalDefense: 44,
       isDraconic: true
     },
     {
@@ -75,7 +75,7 @@ export const OfflineTestingGameState: GameState = {
         }
       ],
       totalPower: 88,
-      totalDefence: 44,
+      totalDefense: 44,
       didItHit: true,
       isDraconic: false
     },
@@ -93,7 +93,7 @@ export const OfflineTestingGameState: GameState = {
         }
       ],
       totalPower: 88,
-      totalDefence: 44,
+      totalDefense: 44,
       didItHit: true,
       isDraconic: true
     }
@@ -111,7 +111,7 @@ export const OfflineTestingGameState: GameState = {
       }
     ],
     totalPower: 88,
-    totalDefence: 44,
+    totalDefense: 44,
     didItHit: true,
     goAgain: true,
     dominate: true,

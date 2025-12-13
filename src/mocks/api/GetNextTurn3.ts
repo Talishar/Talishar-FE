@@ -28,7 +28,7 @@ export const mockGetNextTurn = {
     highTide: false,
     confidence: false,
     totalPower: 0,
-    totalDefence: 0
+    totalDefense: 0
   },
   tracker: { color: 'red', position: 'Main' },
   layerDisplay: {
@@ -107,7 +107,7 @@ export const mockGetNextTurn = {
       isBroken: false,
       onChain: false,
       isFrozen: false,
-      countersMap: { counters: 0, defence: '0', attack: 0 }
+      countersMap: { counters: 0, defense: '0', attack: 0 }
     },
     {
       cardNumber: 'ELE222',
@@ -121,7 +121,7 @@ export const mockGetNextTurn = {
       isBroken: false,
       onChain: false,
       isFrozen: false,
-      countersMap: { counters: 0, defence: '0', attack: '0' }
+      countersMap: { counters: 0, defense: '0', attack: '0' }
     },
     {
       cardNumber: 'UPR182',
@@ -135,7 +135,7 @@ export const mockGetNextTurn = {
       isBroken: true,
       onChain: false,
       isFrozen: false,
-      countersMap: { counters: 0, defence: '0', attack: 0 }
+      countersMap: { counters: 0, defense: '0', attack: 0 }
     },
     {
       cardNumber: 'WTR150',
@@ -149,7 +149,7 @@ export const mockGetNextTurn = {
       isBroken: false,
       onChain: false,
       isFrozen: true,
-      countersMap: { counters: 0, defence: '0', attack: 0 }
+      countersMap: { counters: 0, defense: '0', attack: 0 }
     },
     {
       cardNumber: 'ARC078',
@@ -163,7 +163,7 @@ export const mockGetNextTurn = {
       isBroken: false,
       onChain: false,
       isFrozen: false,
-      countersMap: { counters: 0, defence: '-2', attack: 0 }
+      countersMap: { counters: 0, defense: '-2', attack: 0 }
     },
     {
       cardNumber: 'WTR154',
@@ -177,7 +177,7 @@ export const mockGetNextTurn = {
       isBroken: true,
       onChain: false,
       isFrozen: false,
-      countersMap: { counters: 0, defence: '0', attack: 0 }
+      countersMap: { counters: 0, defense: '0', attack: 0 }
     }
   ],
   playerHand: [
@@ -331,7 +331,7 @@ export const mockGetNextTurn = {
       isBroken: false,
       onChain: false,
       isFrozen: false,
-      countersMap: { counters: 0, life: 0, defence: '0', attack: 0 },
+      countersMap: { counters: 0, life: 0, defense: '0', attack: 0 },
       numUses: '1'
     },
     {
@@ -354,7 +354,7 @@ export const mockGetNextTurn = {
       countersMap: {
         counters: 0,
         life: 0,
-        defence: '0',
+        defense: '0',
         attack: '0'
       },
       numUses: '1'
@@ -376,7 +376,7 @@ export const mockGetNextTurn = {
       isBroken: true,
       onChain: false,
       isFrozen: false,
-      countersMap: { counters: 0, life: 0, defence: '0', attack: 0 },
+      countersMap: { counters: 0, life: 0, defense: '0', attack: 0 },
       numUses: '1'
     },
     {
@@ -396,7 +396,7 @@ export const mockGetNextTurn = {
       isBroken: true,
       onChain: false,
       isFrozen: false,
-      countersMap: { counters: 0, life: 0, defence: '0', attack: 0 },
+      countersMap: { counters: 0, life: 0, defense: '0', attack: 0 },
       numUses: '1'
     },
     {
@@ -416,7 +416,7 @@ export const mockGetNextTurn = {
       isBroken: true,
       onChain: false,
       isFrozen: false,
-      countersMap: { counters: 0, life: 0, defence: '0', attack: 0 },
+      countersMap: { counters: 0, life: 0, defense: '0', attack: 0 },
       numUses: '1'
     },
     {
@@ -436,7 +436,7 @@ export const mockGetNextTurn = {
       isBroken: true,
       onChain: false,
       isFrozen: false,
-      countersMap: { counters: 0, life: 0, defence: '0', attack: 0 },
+      countersMap: { counters: 0, life: 0, defense: '0', attack: 0 },
       numUses: '1'
     }
   ],

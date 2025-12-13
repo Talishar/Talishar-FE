@@ -28,7 +28,7 @@ export const CountersOverlay = ({
   excludeFancyCounters
 }: CountersProp) => {
   const includedCounters = [
-    'defence',
+    'defense',
     'steam',
     'life',
     'attack',
