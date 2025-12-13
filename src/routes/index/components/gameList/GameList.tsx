@@ -14,7 +14,7 @@ import { setGameStart } from 'features/game/GameSlice';
 import { useAppDispatch } from 'app/Hooks';
 import { useLocation } from 'react-router-dom';
 import { HEROES_OF_RATHE } from '../filter/constants';
-import InProgressGameFilter from './InProgressGameFilter';
+import GameFilter from './GameFilter';
 
 export interface IOpenGame {
   p1Hero?: string;
@@ -55,7 +55,7 @@ export interface GameListResponse {
 const GAME_LIST_POLLING_INTERVAL = 10000; // in ms (10 seconds)
 
 const GameList = () => {
-  const [cookies, setCookie, removeCookie] = useCookies(['experimental', 'inProgressGameFilters', 'inProgressGameFriendsFilter']);
+  const [cookies, setCookie, removeCookie] = useCookies(['experimental', 'gameFilters', 'gameFriendsFilter']);
   const [isTabActive, setIsTabActive] = useState(true);
   
   const { data, isLoading, error, refetch, isFetching } =
@@ -67,7 +67,6 @@ const GameList = () => {
   const { blockedUsers } = useBlockedUsers();
 
   const [heroFilter, setHeroFilter] = useState<string[]>([]);
-  const [formatFilter, setFormatFilter] = useState<string | null>(null);
   const [gamesInProgressExpanded, setGamesInProgressExpanded] = useState(true); // Default to open
   
   // Initialize filters from cookies
@@ -111,9 +110,9 @@ const GameList = () => {
 
   const [inProgressFormatFilters, setInProgressFormatFilters] = useState<Set<string>>(() => {
     // Try to load from cookies first, then fallback to localStorage
-    if (cookies.inProgressGameFilters) {
+    if (cookies.gameFilters) {
       try {
-        const parsed = JSON.parse(cookies.inProgressGameFilters);
+        const parsed = JSON.parse(cookies.gameFilters);
         return new Set(parsed);
       } catch {
         // Cookie parsing failed, try localStorage
@@ -121,7 +120,7 @@ const GameList = () => {
     }
     // Fallback to localStorage
     try {
-      const stored = localStorage.getItem('inProgressGameFilters');
+      const stored = localStorage.getItem('gameFilters');
       if (stored) {
         const parsed = JSON.parse(stored);
         return new Set(parsed);
@@ -134,12 +133,12 @@ const GameList = () => {
 
   const [includeFriendsGames, setIncludeFriendsGames] = useState(() => {
     // Try to load from cookies first, then fallback to localStorage
-    if (cookies.inProgressGameFriendsFilter !== undefined) {
-      return cookies.inProgressGameFriendsFilter === 'true';
+    if (cookies.gameFriendsFilter !== undefined) {
+      return cookies.gameFriendsFilter === 'true';
     }
     // Fallback to localStorage
     try {
-      const stored = localStorage.getItem('inProgressGameFriendsFilter');
+      const stored = localStorage.getItem('gameFriendsFilter');
       if (stored) {
         return JSON.parse(stored);
       }
@@ -171,13 +170,13 @@ const GameList = () => {
 
   // Save format filters to cookies and localStorage when they change
   useEffect(() => {
-    setCookie('inProgressGameFilters', JSON.stringify(Array.from(inProgressFormatFilters)), {
+    setCookie('gameFilters', JSON.stringify(Array.from(inProgressFormatFilters)), {
       path: '/',
       maxAge: 86400 * 30, // 30 days
     });
     // Also save to localStorage as backup
     try {
-      localStorage.setItem('inProgressGameFilters', JSON.stringify(Array.from(inProgressFormatFilters)));
+      localStorage.setItem('gameFilters', JSON.stringify(Array.from(inProgressFormatFilters)));
     } catch {
       console.error('Failed to save filters to localStorage');
     }
@@ -185,13 +184,13 @@ const GameList = () => {
 
   // Save friends games filter to cookies and localStorage when it changes
   useEffect(() => {
-    setCookie('inProgressGameFriendsFilter', String(includeFriendsGames), {
+    setCookie('gameFriendsFilter', String(includeFriendsGames), {
       path: '/',
       maxAge: 86400 * 30, // 30 days
     });
     // Also save to localStorage as backup
     try {
-      localStorage.setItem('inProgressGameFriendsFilter', JSON.stringify(includeFriendsGames));
+      localStorage.setItem('gameFriendsFilter', JSON.stringify(includeFriendsGames));
     } catch {
       console.error('Failed to save friends filter to localStorage');
     }
@@ -274,13 +273,12 @@ const GameList = () => {
             return false;
           }
           
-          return (
-            heroFilter.length === 0 ||
-            heroFilter.find((hero) => hero === game.p1Hero)
-          );
-        })
-        .filter((game: IOpenGame) => {
-          return formatFilter === null || game.format === formatFilter;
+          // Apply hero filter
+          if (heroFilter.length === 0 || heroFilter.find((hero) => hero === game.p1Hero)) {
+            // Apply format filter
+            return inProgressFormatFilters.has(game.format);
+          }
+          return false;
         })
         .sort((a, b) => a.format.localeCompare(b.format))
     : [];
@@ -368,10 +366,34 @@ const GameList = () => {
         </div>
       ) : null}
       {!isLoading && !error && (
-        <Filter
-          setHeroFilter={setHeroFilter}
-          heroOptions={filteredHeroOptions}
-        />
+        <>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1em', marginBottom: '1em', flexWrap: 'wrap' }}>
+            <div style={{ flex: '1 1 auto', minWidth: '250px' }}>
+              <Filter
+                setHeroFilter={setHeroFilter}
+                heroOptions={filteredHeroOptions}
+              />
+            </div>
+            <GameFilter
+              selectedFormats={inProgressFormatFilters}
+              onFilterChange={handleInProgressFilterChange}
+              formatOptions={[
+                { label: 'Classic Constructed', value: GAME_FORMAT.CLASSIC_CONSTRUCTED },
+                { label: 'Competitive CC', value: GAME_FORMAT.COMPETITIVE_CC },
+                { label: 'Living Legend', value: GAME_FORMAT.LLCC },
+                { label: 'Competitive LL', value: GAME_FORMAT.COMPETITIVE_LL },
+                { label: 'Silver Age', value: GAME_FORMAT.SAGE },
+                { label: 'Competitive Silver Age', value: GAME_FORMAT.COMPETITIVE_SAGE },
+                { label: 'Blitz', value: GAME_FORMAT.BLITZ },
+                { label: 'Competitive Blitz', value: GAME_FORMAT.COMPETITIVE_BLITZ },
+                { label: 'Other Formats', value: 'otherFormats', isGroup: true, groupValues: otherFormats },
+              ]}
+              includeFriendsGames={includeFriendsGames}
+              onFriendsGamesChange={handleFriendsGamesFilterChange}
+              formatNumberMapping={formatNumberMapping}
+            />
+          </div>
+        </>
       )}
       {isLoggedIn && (
         <>
@@ -456,26 +478,6 @@ const GameList = () => {
                 >
                   Games in Progress:&nbsp;<span>{data.gameInProgressCount}</span>
                 </h4>
-                <div style={{ position: 'absolute', right: 0 }}>
-                  <InProgressGameFilter
-                    selectedFormats={inProgressFormatFilters}
-                    onFilterChange={handleInProgressFilterChange}
-                    formatOptions={[
-                      { label: 'Classic Constructed', value: GAME_FORMAT.CLASSIC_CONSTRUCTED },
-                      { label: 'Competitive CC', value: GAME_FORMAT.COMPETITIVE_CC },
-                      { label: 'Living Legend', value: GAME_FORMAT.LLCC },
-                      { label: 'Competitive LL', value: GAME_FORMAT.COMPETITIVE_LL },
-                      { label: 'Silver Age', value: GAME_FORMAT.SAGE },
-                      { label: 'Competitive Silver Age', value: GAME_FORMAT.COMPETITIVE_SAGE },
-                      { label: 'Blitz', value: GAME_FORMAT.BLITZ },
-                      { label: 'Competitive Blitz', value: GAME_FORMAT.COMPETITIVE_BLITZ },
-                      { label: 'Other Formats', value: 'otherFormats', isGroup: true, groupValues: otherFormats },
-                    ]}
-                    includeFriendsGames={includeFriendsGames}
-                    onFriendsGamesChange={handleFriendsGamesFilterChange}
-                    formatNumberMapping={formatNumberMapping}
-                  />
-                </div>
               </div>
               {gamesInProgressExpanded && (
                 <>
