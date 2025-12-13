@@ -28,6 +28,7 @@
   opacity: var(--counters-opacity, 1);
   transition: opacity 0.2s ease;
   pointer-events: var(--counters-pointer-events, auto);
+  
 }
 
 .number.number {
@@ -67,6 +68,7 @@
     -1px -1px 0 #000;
   z-index: -1;
   cursor: default;
+  border: 0px;
 }
 
 .steamCounter.steamCounter {
@@ -86,6 +88,7 @@
     -1px -1px 0 #000;
   z-index: -1;
   cursor: default;
+  border: 0px;
 }
 
 .energyCounter.energyCounter {
@@ -105,6 +108,7 @@
     -1px -1px 0 #000;
   z-index: -1;
   cursor: default;
+  border: 0px;
 }
 
 .hauntCounter.hauntCounter {
@@ -124,6 +128,7 @@
     -1px -1px 0 #000;
   z-index: -1;
   cursor: default;
+  border: 0px;
 }
 
 .verseCounter.verseCounter {
@@ -143,6 +148,7 @@
     -1px -1px 0 #000;
   z-index: -1;
   cursor: default;
+  border: 0px;
 }
 
 .doomCounter.doomCounter {
@@ -162,6 +168,7 @@
     -1px -1px 0 #000;
   z-index: -1;
   cursor: default;
+  border: 0px;
 }
 
 .lessonCounter.lessonCounter {
@@ -181,6 +188,7 @@
     -1px -1px 0 #000;
   z-index: -1;
   cursor: default;
+  border: 0px;
 }
 
 .rustCounter.rustCounter {
@@ -200,6 +208,7 @@
     -1px -1px 0 #000;
   z-index: -1;
   cursor: default;
+  border: 0px;
 }
 
 .flowCounter.flowCounter {
@@ -219,6 +228,7 @@
     -1px -1px 0 #000;
   z-index: -1;
   cursor: default;
+  border: 0px;
 }
 
 .frostCounter.frostCounter {
@@ -238,6 +248,7 @@
     -1px -1px 0 #000;
   z-index: -1;
   cursor: default;
+  border: 0px;
 }
 
 .balanceCounter.balanceCounter {
@@ -257,6 +268,7 @@
     -1px -1px 0 #000;
   z-index: -1;
   cursor: default;
+  border: 0px;
 }
 
 .bindCounter.bindCounter {
@@ -276,6 +288,7 @@
     -1px -1px 0 #000;
   z-index: -1;
   cursor: default;
+  border: 0px;
 }
 
 .stainCounter.stainCounter {
@@ -295,6 +308,7 @@
     -1px -1px 0 #000;
   z-index: -1;
   cursor: default;
+  border: 0px;
 }
 
 .goldCounter.goldCounter {
@@ -314,6 +328,7 @@
     -1px -1px 0 #000;
   z-index: -1;
   cursor: default;
+  border: 0px;
 }
 
 .suspenseCounter.suspenseCounter {
@@ -333,6 +348,7 @@
     -1px -1px 0 #000;
   z-index: -1;
   cursor: default;
+  border: 0px;
 }
 
 .sandCounter.sandCounter {
@@ -352,6 +368,7 @@
     -1px -1px 0 #000;
   z-index: -1;
   cursor: default;
+  border: 0px;
 }
 
 .powerCounter.powerCounter {
@@ -371,6 +388,7 @@
     -1px -1px 0 #000;
   z-index: -1;
   cursor: default;
+  border: 0px;
 }
 
 .lifeCounter.lifeCounter {
@@ -389,6 +407,7 @@
   text-shadow: -1px 1px 2px #000, 1px 1px 2px #000, 1px -1px 0 #000,
     -1px -1px 0 #000;
   cursor: default;
+  border: 0px;
 }
 
 .wateryGraveIcon.wateryGraveIcon {
