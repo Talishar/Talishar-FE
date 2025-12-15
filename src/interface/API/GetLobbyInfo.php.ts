@@ -33,7 +33,7 @@ export interface Deck {
 export interface Weapon {
   id: string;
   is1H: boolean;
-  img?: string;
+  img: string;
   numHands?: number;
   isQuiver?: boolean;
   isOffhand?: boolean;
@@ -59,6 +59,7 @@ export interface CardData {
   hasMark?: boolean;
   hasCharge?: boolean;
   hasSuspense?: boolean;
+  wateryGraveIcon?: boolean;
 }
 
 export interface GetLobbyInfoResponse {

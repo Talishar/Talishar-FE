@@ -8,7 +8,7 @@ export interface FabCard {
   power: string;
   defense: string;
   health: string;
-  intelligence: string;
+  intellect: string;
   types: string[];
   card_keywords: string[];
   abilities_and_effects: AbilitiesAndEffect[];

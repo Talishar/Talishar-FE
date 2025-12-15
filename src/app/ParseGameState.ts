@@ -186,7 +186,7 @@ export default function ParseGameState(input: any) {
       result.activeChainLink.reactionCards?.push(ParseCard(chainLinkObj));
     }
     result.activeChainLink.totalPower = input.activeChainLink.totalPower;
-    result.activeChainLink.totalDefence = input.activeChainLink.totalDefence;
+    result.activeChainLink.totalDefense = input.activeChainLink.totalDefense;
     result.activeChainLink.goAgain = input.activeChainLink.goAgain;
     result.activeChainLink.dominate = input.activeChainLink.dominate;
     result.activeChainLink.overpower = input.activeChainLink.overpower;
@@ -532,6 +532,9 @@ export default function ParseGameState(input: any) {
 
   // opponent AI status (from initialLoad)
   result.gameInfo.isOpponentAI = input.initialLoad?.isOpponentAI ?? false;
+
+  // AI infinite HP status for manual mode
+  result.aiHasInfiniteHP = input.aiHasInfiniteHP ?? false;
 
   return result;
 }

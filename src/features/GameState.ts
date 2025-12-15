@@ -95,7 +95,7 @@ export default interface GameState {
     statsEnabled: boolean;
     casterModeEnabled: boolean;
     attackReactionsSkip: boolean;
-    defenceReactionsSkip: boolean;
+    defenseReactionsSkip: boolean;
     manualTargetingEnabled: boolean;
     holdPrioritySetting: number;
   };
@@ -139,4 +139,5 @@ export default interface GameState {
     playerOne: Array<{ id: string; amount: number }>;
     playerTwo: Array<{ id: string; amount: number }>;
   };
+  aiHasInfiniteHP?: boolean;
 }

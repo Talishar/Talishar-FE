@@ -1,11 +1,11 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
-import styles from './InProgressGameFilter.module.scss';
+import styles from './GameFilter.module.scss';
 import { IoMdArrowDropright } from 'react-icons/io';
 import { IoFunnel } from "react-icons/io5";
 
 // Utility functions for persisting filters to local storage
-const FILTER_STORAGE_KEY = 'inProgressGameFilters';
-const FRIENDS_FILTER_STORAGE_KEY = 'inProgressGameFriendsFilter';
+const FILTER_STORAGE_KEY = 'gameFilters';
+const FRIENDS_FILTER_STORAGE_KEY = 'gameFriendsFilter';
 
 const loadFiltersFromStorage = (): string[] => {
   try {
@@ -48,7 +48,7 @@ export interface FormatOption {
   groupValues?: string[];
 }
 
-export interface InProgressGameFilterProps {
+export interface GameFilterProps {
   selectedFormats: Set<string>;
   onFilterChange: (formats: Set<string>) => void;
   formatOptions: Array<FormatOption>;
@@ -57,14 +57,14 @@ export interface InProgressGameFilterProps {
   formatNumberMapping?: { [key: string]: string }; // Map string format to numeric format
 }
 
-const InProgressGameFilter = ({
+const GameFilter = ({
   selectedFormats,
   onFilterChange,
   formatOptions,
   includeFriendsGames,
   onFriendsGamesChange,
   formatNumberMapping = {},
-}: InProgressGameFilterProps) => {
+}: GameFilterProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -227,7 +227,7 @@ const InProgressGameFilter = ({
         ref={buttonRef}
         className={styles.filterButton}
         onClick={() => setIsOpen(!isOpen)}
-        title="Filter Games in Progress"
+        title="Filter Games"
       >
         <span className={styles.filterIcon}>
           <IoFunnel />
@@ -245,7 +245,7 @@ const InProgressGameFilter = ({
       {isOpen && (
         <div className={styles.dropdown} style={dropdownStyle}>
           <div className={styles.dropdownHeader}>
-            <h5 className={styles.dropdownTitle}>Filter Games in Progress</h5>
+            <h5 className={styles.dropdownTitle}>Filter Games</h5>
           </div>
 
           <div className={styles.checklistContainer}>
@@ -276,4 +276,4 @@ const InProgressGameFilter = ({
   );
 };
 
-export default InProgressGameFilter;
+export default GameFilter;

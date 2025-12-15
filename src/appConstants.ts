@@ -93,6 +93,7 @@ export const PROCESS_INPUT = {
   REMOVE_ARSENAL_FROM_SELF: 10016,
   REMOVE_ARSENAL_FROM_OPPONENT: 10017,
   HOP_TO_TURN: 10018,
+  TOGGLE_AI_INFINITE_HP: 10019,
 
   // End game options
   QUICK_REMATCH: 100000,
@@ -329,7 +330,9 @@ export const URL_END_POINT = {
   BLOCKED_USERS: 'APIs/BlockedUsersAPI.php',
   USERNAME_MODERATION: 'APIs/UsernameModeration.php',
   PRIVATE_MESSAGING: 'APIs/PrivateMessagingAPI.php',
-  GET_LAST_ACTIVE_GAME: 'APIs/GetLastActiveGame.php'
+  GET_LAST_ACTIVE_GAME: 'APIs/GetLastActiveGame.php',
+  GET_APP_INFO: 'AccountFiles/GetAppInfoAPI.php',
+  GENERATE_AUTH_TOKEN: 'AccountFiles/GenerateAuthTokenAPI.php'
 };
 
 export const GAME_VISIBILITY = {

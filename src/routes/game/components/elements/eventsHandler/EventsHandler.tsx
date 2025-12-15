@@ -6,7 +6,6 @@ import React, { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { toast } from 'react-hot-toast';
 import {
-  GiAngelOutfit,
   GiDiceSixFacesFive,
   GiDiceSixFacesFour,
   GiDiceSixFacesOne,

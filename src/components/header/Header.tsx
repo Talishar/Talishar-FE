@@ -15,11 +15,12 @@ import ChatBar from 'components/chatBar/ChatBar';
 import { Toaster } from 'react-hot-toast';
 
 const Header = () => {
-  const { isLoggedIn, isMod, logOut } = useAuth();
+  const { isLoggedIn, isMod, isPatron, currentUserName, logOut } = useAuth();
   const { data: pendingData } = useGetPendingRequestsQuery(undefined, {
     skip: !isLoggedIn
   });
   const pendingRequestCount = pendingData?.requests?.length || 0;
+  const canAccessReplays = isMod || currentUserName === 'Tegunn' || isPatron;
 
   const handleLogOut = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -77,7 +78,7 @@ const Header = () => {
               </Link>
             </li>
           )}
-          {isLoggedIn && isMod && (
+          {isLoggedIn && canAccessReplays && (
             <li>
               <Link to="/game/load">
                 <MdVideoLibrary></MdVideoLibrary> <span>Replays</span>

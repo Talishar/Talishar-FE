@@ -12,17 +12,19 @@ export interface CardProp {
   num?: number;
   name?: string;
   imgClassName?: string;
+  isPlayer?: boolean;
 }
 
 export function Effect(prop: CardProp) {
-  const { card, imgClassName } = prop;
+  const { card, imgClassName, isPlayer } = prop;
   const src = generateCroppedImageUrl(prop.card.cardNumber);
   // Get the number value - check counters first, then use num from card if available
   const numValue = card.counters ?? (card as any).num ?? 0;
+  const imgBorderClass = isPlayer ? styles.imgPlayerBorder : styles.imgOpponentBorder;
   return (
     <CardPopUp cardNumber={prop.card.cardNumber} containerClass={styles.effect}>
       <div className={styles.overlayContainer}>
-        <img src={src} className={`${styles.img} ${imgClassName || ''}`} />
+        <img src={src} className={`${styles.img} ${imgBorderClass} ${imgClassName || ''}`} />
         <CountersOverlay {...card} num={numValue} excludeFancyCounters={true} />
       </div>
     </CardPopUp>
@@ -42,7 +44,7 @@ export default function Effects(props: Player) {
   return (
     <div className={classCSS}>
       {effects.map((card: Card, index) => {
-        return <Effect card={card} key={index} />;
+        return <Effect card={card} key={index} isPlayer={props.isPlayer} />;
       })}
     </div>
   );

@@ -4,7 +4,7 @@ export default interface CombatChainLink {
   attackingCard?: Card;
   reactionCards?: Card[];
   totalPower?: number;
-  totalDefence?: number;
+  totalDefense?: number;
   didItHit?: boolean;
   index?: number;
   goAgain?: boolean;

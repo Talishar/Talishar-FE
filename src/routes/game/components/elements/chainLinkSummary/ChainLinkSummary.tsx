@@ -119,10 +119,11 @@ const ChainLinkSummary = ({
               {data.Cards != undefined ? (
                 data.Cards.map((entry: any, ix: number) => {
                   const card: Card = { cardNumber: entry.cardID };
+                  const isPlayer = parseInt(entry.Player) === playerID;
                   return (
                     <tr key={`cardList${ix}`} className={styles.tableRow}>
                       <td className={styles.cardImageCol}>
-                        <Effect card={card} />
+                        <Effect card={card} isPlayer={isPlayer} />
                       </td>
                       <td className={styles.cardNameCol}>
                         <CardTextLink

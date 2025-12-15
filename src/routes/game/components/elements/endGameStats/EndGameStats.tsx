@@ -103,14 +103,12 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
       const response = await fetch(`${BACKEND_URL}GetHeroImage.php?hero=${encodeURIComponent(heroName)}`);
       
       if (!response.ok) {
-        console.error('Failed to fetch hero image from backend:', response.status);
         return null;
       }
       
       const data = await response.json();
       
       if (data.error) {
-        console.error('Backend error:', data.error);
         return null;
       }
       
@@ -120,7 +118,6 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
       
       return null;
     } catch (error) {
-      console.error('Failed to fetch hero image from backend:', heroName, error);
       return null;
     }
   };
@@ -1020,7 +1017,6 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                 {sortedTurnResults ? (
                   sortedTurnResults.map((turnData, ix) => {
                     // Hide turn #0 for the non-first player
-                    if (data.firstPlayer === 0 && turnData.turnNo === 0) return null;
                     return (
                       <tr key={`turnList${ix}`}>
                         <td className={styles.turnNo}>{turnData.turnNo !== undefined ? turnData.turnNo : Object.keys(data.turnResults).indexOf(turnData.key)}</td>
@@ -1083,7 +1079,6 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                   Object.keys(data.turnResults).map((key, ix) => {
                     const turnNo = data.turnResults[key]?.turnNo;
                     // Hide turn #0 for the non-first player
-                    if (data.firstPlayer === 0 && turnNo === 0) return null;
                     return (
                       <tr key={`turnList${ix}`}>
                         <td className={styles.turnNo}>{turnNo !== undefined ? turnNo : ix}</td>

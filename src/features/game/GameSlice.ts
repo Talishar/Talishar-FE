@@ -216,7 +216,8 @@ export const submitButton = createAsyncThunk(
       mode: String(params.button.mode),
       buttonInput: String(params.button.buttonInput),
       inputText: String(params.button.inputText),
-      cardID: String(params.button.cardID)
+      cardID: String(params.button.cardID),
+      numMode: String(params.button.numMode ?? '')
     });
     try {
       const response = await fetch(queryURL + queryParams, {
@@ -838,6 +839,8 @@ export const gameSlice = createSlice({
 
       state.gameInfo.isOpponentAI =
         action.payload.gameInfo.isOpponentAI ?? state.gameInfo.isOpponentAI;
+
+      state.aiHasInfiniteHP = action.payload.aiHasInfiniteHP ?? false;
 
       state.preventPassPrompt = action.payload.preventPassPrompt;
 

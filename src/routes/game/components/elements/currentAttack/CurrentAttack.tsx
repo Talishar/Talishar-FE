@@ -3,7 +3,7 @@ import { RootState } from 'app/Store';
 import { BiTargetLock } from 'react-icons/bi';
 import styles from './CurrentAttack.module.css';
 import attackSymbol from '../../../../../img/symbols/symbol-attack.png';
-import defSymbol from '../../../../../img/symbols/symbol-defence.png';
+import defSymbol from '../../../../../img/symbols/symbol-defense.png';
 import CardDisplay from '../cardDisplay/CardDisplay';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { showChainLinkSummary } from 'features/game/GameSlice';
@@ -26,7 +26,7 @@ export default function CurrentAttack() {
   };
 
   const powerValue = activeCombatChain.totalPower;
-  const defValue = activeCombatChain.totalDefence;
+  const defValue = activeCombatChain.totalDefense;
   const attCard = activeCombatChain.attackingCard;
   const isPlayer = playerID === attCard.controller;
 
@@ -50,10 +50,10 @@ export default function CurrentAttack() {
           <img
             className={styles.chainSymbols}
             src={defSymbol}
-            alt="defence symbol"
+            alt="defense symbol"
           />
         </div>
-        <div className={styles.defDiv} data-testid="defence-value">
+        <div className={styles.defDiv} data-testid="defense-value">
           {defValue}
         </div>
         {activeCombatChain.attackTarget ? (
