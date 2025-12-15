@@ -29,7 +29,8 @@ const InitialGameState: GameState = {
   damagePopups: {
     playerOne: [],
     playerTwo: []
-  }
+  },
+  aiHasInfiniteHP: false
 };
 
 export const OfflineTestingGameState: GameState = {

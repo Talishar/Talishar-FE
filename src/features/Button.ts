@@ -1,5 +1,6 @@
 export default interface Button {
   mode?: number;
+  numMode?: number;
   buttonInput?: string;
   fullRefresh?: boolean;
   prompt?: string;

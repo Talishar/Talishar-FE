@@ -16,15 +16,18 @@ export default function ManualModePanel() {
   const { setIsManualModeOpen, isDevToolOpen } = usePanelContext();
   const isManualMode = useSetting({ settingName: MANUAL_MODE })?.value === '1';
   const isLocalEnvironment = import.meta.env.MODE === 'development' || window.location.hostname === 'localhost';
+  const isPracticeDummy = useAppSelector(
+    (state: RootState) => state.game.playerTwo.Name === 'Practice Dummy'
+  );
 
   useEffect(() => {
-    if (isManualMode) {
+    if (isManualMode || isPracticeDummy) {
       setIsOpen(true);
     }
-  }, [isManualMode]);
+  }, [isManualMode, isPracticeDummy]);
 
-  // In local environment, always show the tab. In production, hide if manual mode is off
-  if (!isLocalEnvironment && !isManualMode) {
+  // In local environment, always show the tab. In production, hide if manual mode is off (unless against Practice Dummy)
+  if (!isLocalEnvironment && !isManualMode && !isPracticeDummy) {
     return null;
   }
 
@@ -43,13 +46,14 @@ export default function ManualModePanel() {
       {isOpen && <ManualModeContent onClose={() => {
         setIsOpen(false);
         setIsManualModeOpen(false);
-      }} />}
+      }} isPracticeDummy={isPracticeDummy} />}
     </>
   );
 }
 
-function ManualModeContent({ onClose }: { onClose: () => void }) {
+function ManualModeContent({ onClose, isPracticeDummy }: { onClose: () => void; isPracticeDummy: boolean }) {
   const [cardInput, setCardInput] = useState('');
+  const [opponentHealthInput, setOpponentHealthInput] = useState('');
   const [isCardLoading, setIsCardLoading] = useState(false);
   const dispatch = useAppDispatch();
   const gameInfo = useAppSelector(getGameInfo, shallowEqual);
@@ -68,6 +72,15 @@ function ManualModeContent({ onClose }: { onClose: () => void }) {
   const opponentResources = useAppSelector(
     (state: RootState) => state.game.playerTwo.PitchRemaining ?? 0
   );
+  const aiHasInfiniteHP = useAppSelector(
+    (state: RootState) => (state.game as any).aiHasInfiniteHP ?? false
+  );
+
+  useEffect(() => {
+    if (isPracticeDummy) {
+      setOpponentHealthInput(String(opponentHealth));
+    }
+  }, [opponentHealth, isPracticeDummy]);
 
   const handleClose = () => {
     dispatch(
@@ -126,6 +139,23 @@ function ManualModeContent({ onClose }: { onClose: () => void }) {
         </button>
       </div>
       <div className={styles.content}>
+        {/* AI Infinite HP Toggle - Only show against Practice Dummy */}
+        {isPracticeDummy && (
+          <div className={styles.toggleGroup}>
+            <label className={styles.toggleLabel}>
+              <input
+                type="checkbox"
+                checked={aiHasInfiniteHP}
+                onChange={() => {
+                  handleDispatchWithParam(PROCESS_INPUT.TOGGLE_AI_INFINITE_HP, aiHasInfiniteHP ? 0 : 1);
+                }}
+                className={styles.toggleCheckbox}
+              />
+              <span>AI Infinite HP</span>
+            </label>
+          </div>
+        )}
+
         {/* Player Life */}
         <div className={styles.controlGroup}>
           <span className={styles.label}>Player Life</span>

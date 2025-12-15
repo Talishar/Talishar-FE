@@ -267,3 +267,59 @@
   position: relative;
   z-index: 20;
 }
+
+.healthInput {
+  width: 100%;
+  padding: 0.5rem;
+  background: rgba(0, 0, 0, 0.9);
+  border: 1px solid var(--theme-primary-focus);
+  color: var(--theme-primary);
+  border-radius: 4px;
+  font-size: 1rem;
+  font-weight: bold;
+  transition: all 0.2s ease;
+  text-align: center;
+  margin: 0;
+
+  &:focus {
+    outline: none;
+    border-color: var(--theme-primary);
+    background: rgba(0, 0, 0, 1);
+    box-shadow: 0 0 8px var(--theme-primary-focus);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.toggleGroup {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--theme-primary-focus);
+  border-radius: 6px;
+  gap: 0.5rem;
+}
+
+.toggleLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  user-select: none;
+  margin: 0;
+}
+
+.toggleCheckbox {
+  width: 1rem;
+  height: 1rem;
+  cursor: pointer;
+  accent-color: var(--theme-primary);
+  margin: 0;
+}

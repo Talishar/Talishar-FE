@@ -533,5 +533,8 @@ export default function ParseGameState(input: any) {
   // opponent AI status (from initialLoad)
   result.gameInfo.isOpponentAI = input.initialLoad?.isOpponentAI ?? false;
 
+  // AI infinite HP status for manual mode
+  result.aiHasInfiniteHP = input.aiHasInfiniteHP ?? false;
+
   return result;
 }
