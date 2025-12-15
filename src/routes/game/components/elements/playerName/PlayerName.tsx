@@ -108,8 +108,10 @@ export default function PlayerName(player: Player) {
       : state.game.playerTwo.isPvtVoidPatron
   );
 
-  const isPracticeDummy = useAppSelector(
-    (state: RootState) => state.game.playerTwo.Name === 'Practice Dummy'
+  const isPracticeDummy = useAppSelector((state: RootState) =>
+    player.isPlayer
+      ? state.game.playerOne.Name === 'Practice Dummy'
+      : state.game.playerTwo.Name === 'Practice Dummy'
   );
 
   // Friend request and block mutations
