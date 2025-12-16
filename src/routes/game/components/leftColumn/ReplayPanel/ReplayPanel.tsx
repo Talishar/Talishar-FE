@@ -1,10 +1,10 @@
 import React, { useId, useState } from 'react';
-import { useAppSelector } from 'app/Hooks';
-import { getGameInfo } from 'features/game/GameSlice';
+import { useAppDispatch, useAppSelector } from 'app/Hooks';
+import { submitButton, getGameInfo } from 'features/game/GameSlice';
 import { useLocation } from 'react-router-dom';
 import styles from './ReplayPanel.module.css';
 import { toast } from 'react-hot-toast';
-import { BACKEND_URL, URL_END_POINT } from 'appConstants';
+import { BACKEND_URL, URL_END_POINT, PROCESS_INPUT } from 'appConstants';
 
 export default function ReplayPanel() {
   const [isOpen, setIsOpen] = useState(false);
@@ -39,33 +39,20 @@ function ReplayContent({
 }) {
   const turnInputId = useId();
   const [turnNumber, setTurnNumber] = useState<string>('0');
+  const dispatch = useAppDispatch();
+
+  const handleDispatchWithParam = (mode: number, param: string | number) => {
+    dispatch(
+      submitButton({
+        button: { mode, ...(typeof param === 'string' ? { cardID: param.toLowerCase() } : { numMode: param }) }
+      })
+    );
+  };
 
   const loadTurn = async (turn: number) => {
     const performLoad = async () => {
       try {
-        const response = await fetch(
-          `${BACKEND_URL}LoadReplayTurn.php?gameName=${gameInfo.gameID}&playerID=${gameInfo.playerID}&turnNumber=${turn}`,
-          {
-            method: 'GET',
-            credentials: 'include'
-          }
-        );
-
-        const data = await response.json();
-
-        if (data.errorMessage) {
-          // Build detailed error message with available turns if provided
-          let errorMsg = data.errorMessage;
-          if (data.availableTurns && data.availableTurns.length > 0) {
-            errorMsg += '\n\nAvailable turns: ' + data.availableTurns.join(', ');
-          }
-          throw new Error(errorMsg);
-        }
-
-        if (data.success) {
-          // Reload the page to refresh the game state
-          window.location.reload();
-        }
+        handleDispatchWithParam(PROCESS_INPUT.HOP_TO_TURN, String(turn));
       } catch (error: any) {
         const errorMsg = error?.message || 'Failed to load turn';
         throw new Error(errorMsg);
