@@ -532,11 +532,9 @@
   padding: 0.5em 0.75em;
   border-radius: 4px;
   font-size: 0.875rem;
-  font-weight: 550;
   white-space: nowrap;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.95);
   line-height: 1.4;
-  border: var(--theme-primary) solid 1px;
   animation: tooltipSlideIn 0.3s ease-out;
 }
 
