@@ -1,5 +1,6 @@
 import classNames from 'classnames';
 import styles from '../CountersOverlay.module.css';
+import { TooltipWrapper } from './TooltipWrapper';
 import { GiLightningArc } from "react-icons/gi";
 import { GiTombstone } from "react-icons/gi";
 import { TbTargetArrow } from "react-icons/tb";
@@ -47,186 +48,186 @@ export const ContinuousCounters = (props: Props) => {
   return (
     <>
       {!!Number(countersMap?.defense) && (
-        <div
+        <TooltipWrapper
           className={styles.defCounter}
-          data-tooltip={`${countersMap?.defense} defense(s)`}
+          tooltip={`${countersMap?.defense} defense(s)`}
         >
           <div>{countersMap?.defense}</div>
-        </div>
+        </TooltipWrapper>
       )}
       {!!Number(countersMap?.steam) && (
-        <div
+        <TooltipWrapper
           className={styles.steamCounter}
-          data-tooltip={`${countersMap?.steam} steam counter(s)`}
+          tooltip={`${countersMap?.steam} steam counter(s)`}
         >
           <div>{countersMap?.steam}</div>
-        </div>
+        </TooltipWrapper>
       )}
       {!!Number(countersMap?.attack) && (
-        <div
+        <TooltipWrapper
           className={styles.powerCounter}
-          data-tooltip={`${countersMap?.attack} power(s)`}
+          tooltip={`${countersMap?.attack} power(s)`}
         >
           <div>{countersMap?.attack}</div>
-        </div>
+        </TooltipWrapper>
       )}
       {!!Number(countersMap?.life) && (
-        <div
+        <TooltipWrapper
           className={styles.lifeCounter}
-          data-tooltip={`${countersMap?.life} life(s)`}
+          tooltip={`${countersMap?.life} life(s)`}
         >
           <div>{countersMap?.life}</div>
-        </div>
+        </TooltipWrapper>
       )}
       {!!Number(countersMap?.energy) && (
-        <div
+        <TooltipWrapper
           className={styles.energyCounter}
-          data-tooltip={`${countersMap?.energy} energy counter(s)`}
+          tooltip={`${countersMap?.energy} energy counter(s)`}
         >
           <div>{countersMap?.energy}</div>
-        </div>
+        </TooltipWrapper>
       )}
       {!!Number(countersMap?.haunt) && (
-        <div
+        <TooltipWrapper
           className={styles.hauntCounter}
-          data-tooltip={`${countersMap?.haunt} haunt counter(s)`}
+          tooltip={`${countersMap?.haunt} haunt counter(s)`}
         >
           <div>{countersMap?.haunt}</div>
-        </div>
+        </TooltipWrapper>
       )}
       {!!Number(countersMap?.verse) && (
-        <div
+        <TooltipWrapper
           className={styles.verseCounter}
-          data-tooltip={`${countersMap?.verse} verse counter(s)`}
+          tooltip={`${countersMap?.verse} verse counter(s)`}
         >
           <div>{countersMap?.verse}</div>
-        </div>
+        </TooltipWrapper>
       )}
       {!!Number(countersMap?.doom) && (
-        <div
+        <TooltipWrapper
           className={styles.doomCounter}
-          data-tooltip={`${countersMap?.doom} doom counter(s)`}
+          tooltip={`${countersMap?.doom} doom counter(s)`}
         >
           <div>{countersMap?.doom}</div>
-        </div>
+        </TooltipWrapper>
       )}
       {!!Number(countersMap?.lesson) && (
-        <div
+        <TooltipWrapper
           className={styles.lessonCounter}
-          data-tooltip={`${countersMap?.lesson} lesson counter(s)`}
+          tooltip={`${countersMap?.lesson} lesson counter(s)`}
         >
           <div>{countersMap?.lesson}</div>
-        </div>
+        </TooltipWrapper>
       )}
       {!!Number(countersMap?.rust) && (
-        <div
+        <TooltipWrapper
           className={styles.rustCounter}
-          data-tooltip={`${countersMap?.rust} rust counter(s)`}
+          tooltip={`${countersMap?.rust} rust counter(s)`}
         >
           <div>{countersMap?.rust}</div>
-        </div>
+        </TooltipWrapper>
       )}
       {!!Number(countersMap?.flow) && (
-        <div
+        <TooltipWrapper
           className={styles.flowCounter}
-          data-tooltip={`${countersMap?.flow} flow counter(s)`}
+          tooltip={`${countersMap?.flow} flow counter(s)`}
         >
           <div>{countersMap?.flow}</div>
-        </div>
+        </TooltipWrapper>
       )}
       {!!Number(countersMap?.frost) && (
-        <div
+        <TooltipWrapper
           className={styles.frostCounter}
-          data-tooltip={`${countersMap?.frost} frost counter(s)`}
+          tooltip={`${countersMap?.frost} frost counter(s)`}
         >
           <div>{countersMap?.frost}</div>
-        </div>
+        </TooltipWrapper>
       )}
       {!!Number(countersMap?.balance) && (
-        <div
+        <TooltipWrapper
           className={styles.balanceCounter}
-          data-tooltip={`${countersMap?.balance} balance counter(s)`}
+          tooltip={`${countersMap?.balance} balance counter(s)`}
         >
           <div>{countersMap?.balance}</div>
-        </div>
+        </TooltipWrapper>
       )}
       {!!Number(countersMap?.bind) && (
-        <div
+        <TooltipWrapper
           className={styles.bindCounter}
-          data-tooltip={`${countersMap?.bind} bind counter(s)`}
+          tooltip={`${countersMap?.bind} bind counter(s)`}
         >
           <div>{countersMap?.bind}</div>
-        </div>
+        </TooltipWrapper>
       )}
       {!!Number(countersMap?.stain) && (
-        <div
+        <TooltipWrapper
           className={styles.stainCounter}
-          data-tooltip={`${countersMap?.stain} stain counter(s)`}
+          tooltip={`${countersMap?.stain} stain counter(s)`}
         >
           <div>{countersMap?.stain}</div>
-        </div>
+        </TooltipWrapper>
       )}
       {!!Number(countersMap?.gold) && (
-        <div
+        <TooltipWrapper
           className={styles.goldCounter}
-          data-tooltip={`${countersMap?.gold} gold counter(s)`}
+          tooltip={`${countersMap?.gold} gold counter(s)`}
         >
           <div>{countersMap?.gold}</div>
-        </div>
+        </TooltipWrapper>
       )}
       {!!Number(countersMap?.suspense) && (
-        <div
+        <TooltipWrapper
           className={styles.suspenseCounter}
-          data-tooltip={`${countersMap?.suspense} suspense counter(s)`}
+          tooltip={`${countersMap?.suspense} suspense counter(s)`}
         >
           <div>{countersMap?.suspense}</div>
-        </div>
+        </TooltipWrapper>
       )}
       {!!Number(countersMap?.sand) && (
-        <div
+        <TooltipWrapper
           className={styles.sandCounter}
-          data-tooltip={`${countersMap?.sand} sand counter(s)`}
+          tooltip={`${countersMap?.sand} sand counter(s)`}
         >
           <div>{countersMap?.sand}</div>
-        </div>
+        </TooltipWrapper>
       )}
       {!!Number(countersMap?.lightning) && (
-        <div
+        <TooltipWrapper
           className={styles.icon}
-          data-tooltip={`${countersMap?.lightning} lightning card(s) played`}
+          tooltip={`${countersMap?.lightning} lightning card(s) played`}
         >
           <div className={styles.iconText}>
             {countersMap?.lightning}
           </div>
           <GiLightningArc />
-        </div>
+        </TooltipWrapper>
       )}
       {!!Number(countersMap?.amp) && (
-        <div
-          className={styles.iconEffects}
-          data-tooltip={`${countersMap?.amp} Arcane Bonus`}
+        <TooltipWrapper
+          className={styles.icon}
+          tooltip={`${countersMap?.amp} Arcane Bonus`}
         >
-          <div className={styles.iconTextEffect}>
+          <div className={styles.iconText}>
             {countersMap?.amp}
           </div>
           <GiLightningArc />
-        </div>
+        </TooltipWrapper>
       )}
       {!!Number(countersMap?.aim) && (
-        <div
+        <TooltipWrapper
           className={styles.icon}
-          data-tooltip="Aim counter(s)"
+          tooltip="Aim counter(s)"
         >
           <TbTargetArrow />
-        </div>
+        </TooltipWrapper>
       )}
       {!!Number(countersMap?.wateryGrave) && (
-        <div
+        <TooltipWrapper
           className={styles.wateryGraveIcon}
-          data-tooltip="Watery Grave"
+          tooltip="Watery Grave"
         >
           <GiTombstone />
-        </div>
+        </TooltipWrapper>
       )}    
       </>
   );

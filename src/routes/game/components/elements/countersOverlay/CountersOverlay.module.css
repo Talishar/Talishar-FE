@@ -28,6 +28,7 @@
   opacity: var(--counters-opacity, 1);
   transition: opacity 0.2s ease;
   pointer-events: var(--counters-pointer-events, auto);
+  overflow: visible !important;
   
 }
 
@@ -69,6 +70,7 @@
   z-index: -1;
   cursor: default;
   border: 0px;
+  overflow: visible;
 }
 
 .steamCounter.steamCounter {
@@ -428,10 +430,6 @@
   cursor: default;
 }
 
-[data-tooltip]::before {
-  text-shadow: none;
-}
-
 .facing {
   height: 1.75em;
   width: 1.75em;
@@ -490,24 +488,6 @@
   padding-bottom: 5px;
 }
 
-.iconEffects{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: rgba(0, 0, 0, 0.8);
-  border: var(--theme-primary) solid 1px;
-  color: var(--white);
-  border-radius: 5px;
-  min-width: 1.5em;
-  height: 1.5em;
-  font-size: 1.5em;
-  padding: 2px;
-  margin: 0.1em;
-  pointer-events: auto;
-  user-select: none;
-  cursor: default;
-}
-
 .iconTextEffect{
   padding: 2px;
 }
@@ -531,11 +511,45 @@
     height: 1.75em;
     font-size: 1.85em;
   }
+}
 
-  .iconEffects {
-    min-width: 1.75em;
-    height: 1.75em;
-    font-size: 1.6em;
+/* Keyframe animation for tooltip entrance */
+@keyframes tooltipSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
+/* Tooltip box for portal-based tooltips */
+.tooltipBox {
+  background-color: var(--near-black);
+  color: #fff;
+  padding: 0.5em 0.75em;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  font-weight: 550;
+  white-space: nowrap;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.95);
+  line-height: 1.4;
+  border: var(--theme-primary) solid 1px;
+  animation: tooltipSlideIn 0.3s ease-out;
+}
+
+/* Tooltip arrow for portal-based tooltips */
+.tooltipArrow {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 6px solid rgba(0, 0, 0, 0.95);
+  animation: tooltipSlideIn 0.3s ease-out;
+}
