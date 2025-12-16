@@ -1,6 +1,7 @@
 import React from 'react';
 import CombatChainLink from 'features/CombatChainLink';
 import styles from '../CountersOverlay.module.css';
+import { TooltipWrapper } from './TooltipWrapper';
 import {
   GiCycle,
   GiStomp,
@@ -29,86 +30,86 @@ export const ActiveCardCounterOverlay = (props: Props) => {
   return (
     <>
       {activeCombatChain.goAgain && (
-        <div className={styles.icon} data-tooltip="Go Again">
+        <TooltipWrapper className={styles.icon} tooltip="Go Again">
           <GiCycle />
-        </div>
+        </TooltipWrapper>
       )}
       {activeCombatChain.dominate && (
-        <div className={styles.icon} data-tooltip="Dominate">
+        <TooltipWrapper className={styles.icon} tooltip="Dominate">
           <GiMuscleFat />
-        </div>
+        </TooltipWrapper>
       )}
       {activeCombatChain.overpower && (
-        <div className={styles.icon} data-tooltip="Overpower">
+        <TooltipWrapper className={styles.icon} tooltip="Overpower">
           <GiStomp />
-        </div>
+        </TooltipWrapper>
       )}
       {activeCombatChain.confidence && (
-        <div className={styles.icon} data-tooltip="Confidence">
+        <TooltipWrapper className={styles.icon} tooltip="Confidence">
           <GiGuitar />
-        </div>
+        </TooltipWrapper>
       )}
       {activeCombatChain.activeOnHits && (
-        <div className={styles.icon} data-tooltip="Active On Hit">
+        <TooltipWrapper className={styles.icon} tooltip="Active On Hit">
           <GiArmorPunch />
-        </div>
+        </TooltipWrapper>
       )}
       {activeCombatChain.wager && (
-        <div className={styles.icon} data-tooltip="Wager">
+        <TooltipWrapper className={styles.icon} tooltip="Wager">
           <GiCash />
-        </div>
+        </TooltipWrapper>
       )}
       {activeCombatChain.phantasm && (
-        <div className={styles.icon} data-tooltip="Phantasm">
+        <TooltipWrapper className={styles.icon} tooltip="Phantasm">
           <GiGhost />
-        </div>
+        </TooltipWrapper>
       )}
       {activeCombatChain.fusion && (
-        <div className={styles.icon} data-tooltip="Fused">
+        <TooltipWrapper className={styles.icon} tooltip="Fused">
           <GiZigzagLeaf />
-        </div>
+        </TooltipWrapper>
       )}
       {activeCombatChain.piercing && (
-        <div className={styles.icon} data-tooltip="Piercing">
+        <TooltipWrapper className={styles.icon} tooltip="Piercing">
           <GiSpearfishing />
-        </div>
+        </TooltipWrapper>
       )}
       {activeCombatChain.tower && (
-        <div className={styles.icon} data-tooltip="Tower Active">
+        <TooltipWrapper className={styles.icon} tooltip="Tower Active">
           <GiStoneTower />
-        </div>
+        </TooltipWrapper>
       )}
       {activeCombatChain.combo && (
-        <div className={styles.icon} data-tooltip="Combo Active">
+        <TooltipWrapper className={styles.icon} tooltip="Combo Active">
           <GiNinjaStar />
-        </div>
+        </TooltipWrapper>
       )}
       {activeCombatChain.highTide && (
-        <div className={styles.icon} data-tooltip="High Tide Active">
+        <TooltipWrapper className={styles.icon} tooltip="High Tide Active">
           <GiWaterSplash  />
-        </div>
+        </TooltipWrapper>
       )}
       {!!activeCombatChain.damagePrevention && (
-        <div
+        <TooltipWrapper
           className={styles.icon}
-          data-tooltip={`${activeCombatChain.damagePrevention} Damage Prevention`}
+          tooltip={`${activeCombatChain.damagePrevention} Damage Prevention`}
         >
           <GiShieldReflect />
           <div className={styles.iconTextCombatChain}>
             {activeCombatChain.damagePrevention}
           </div>
-        </div>
+        </TooltipWrapper>
       )}
       {activeCombatChain.numRequiredEquipBlock && (
-        <div
+        <TooltipWrapper
           className={styles.icon}
-          data-tooltip={`Chain link must be defended with at least ${activeCombatChain.numRequiredEquipBlock} equipment`}
+          tooltip={`Chain link must be defended with at least ${activeCombatChain.numRequiredEquipBlock} equipment`}
         >
           <GiShoulderArmor />
           <div className={styles.iconText}>
             {activeCombatChain.numRequiredEquipBlock}
           </div>
-        </div>
+        </TooltipWrapper>
       )}
     </>
   );

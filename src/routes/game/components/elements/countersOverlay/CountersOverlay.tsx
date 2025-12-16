@@ -4,6 +4,7 @@ import GemSlider from '../gemSlider/GemSlider';
 import { ActiveCardCounterOverlay } from './components/ActiveChainCounters';
 import CombatChainLink from 'features/CombatChainLink';
 import { ContinuousCounters } from './components/ContinuousCounters';
+import { TooltipWrapper } from './components/TooltipWrapper';
 import { GiDialPadlock } from 'react-icons/gi';
 
 export interface CountersProp extends Card {
@@ -71,9 +72,12 @@ export const CountersOverlay = ({
         <ActiveCardCounterOverlay activeCombatChain={activeCombatChain} />
       )}
       {!!restriction && (
-        <div className={styles.icon} data-tooltip="Restricted">
+        <TooltipWrapper 
+          className={styles.icon} 
+          tooltip="Restricted"
+        >
           <GiDialPadlock />
-        </div>
+        </TooltipWrapper>
       )}
       {!!numTotal && (
         <div className={styles.number}>
