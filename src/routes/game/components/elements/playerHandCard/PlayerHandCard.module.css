@@ -53,35 +53,40 @@
 
 .border1 {
   border-color: deepskyblue;
-  box-shadow: 0 0 3px 3px deepskyblue;
+  box-shadow: 0 0 4px 4px deepskyblue;
 }
 
 .border2 {
   border-color: red;
-  box-shadow: 0 0 3px 3px red;
+  box-shadow: 0 0 4px 4px red;
 }
 
 .border3 {
   border-color: var(--theme-primary);
-  box-shadow: 0 0 3px 3px var(--theme-primary);
+  box-shadow: 0 0 4px 4px var(--theme-primary);
 }
 
 .border4 {
   border-color: gray;
-  box-shadow: 0 0 3px 3px gray;
+  box-shadow: 0 0 4px 5px rgb(100, 100, 100);
 }
 
 .border5 {
   border-color: tan;
-  box-shadow: 0 0 3px 3px tan;
+  box-shadow: 0 0 4px 4px tan;
 }
 
 .border6 {
   border-color: chartreuse;
-  box-shadow: 0 0 3px 3px chartreuse;
+  box-shadow: 0 0 4px 4px chartreuse;
 }
 
 .border7 {
   border-color: purple;
-  box-shadow: 0 0 3px 3px purple;
+  box-shadow: 0 0 4px 4px purple;
+}
+
+.border8 {
+  border-color: goldenrod;
+  box-shadow: 0 0 5px 5px goldenrod;
 }
