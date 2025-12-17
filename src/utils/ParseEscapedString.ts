@@ -15,8 +15,8 @@ const ELEMENT_COLOR_MAPPING: { [key: string]: { color: string; textShadow: strin
     textShadow: '0 0 10px rgba(102, 204, 255, 0.8), 0 0 20px rgba(102, 204, 255, 0.5)'
   },
   '2': {
-    color: '#ecd823ff',
-    textShadow: '0 0 10px #ecd823ff, 0 0 20px rgba(255, 200, 0, 0.5)'
+    color: '#dac71fff',
+    textShadow: '0 0 10px #dac71fff, 0 0 20px rgba(255, 200, 0, 0.5)'
   },
   '3': {
     color: '#8bc34a',
