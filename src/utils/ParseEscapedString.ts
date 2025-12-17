@@ -9,6 +9,21 @@ const COLOR_MAPPING: { [key: string]: string } = {
   '3': '#009ddf'
 };
 
+const ELEMENT_COLOR_MAPPING: { [key: string]: { color: string; textShadow: string } } = {
+  '1': {
+    color: '#66ccff', 
+    textShadow: '0 0 10px rgba(102, 204, 255, 0.8), 0 0 20px rgba(102, 204, 255, 0.5)'
+  },
+  '2': {
+    color: '#ecd823ff',
+    textShadow: '0 0 10px #ecd823ff, 0 0 20px rgba(255, 200, 0, 0.5)'
+  },
+  '3': {
+    color: '#8bc34a',
+    textShadow: '0 0 10px rgba(139, 195, 74, 0.8), 0 0 20px rgba(76, 175, 80, 0.5)'
+  }
+};
+
 // Whitelist of allowed HTML tags
 const ALLOWED_TAGS = new Set(['SPAN', 'A', 'IMG', 'B', 'I', 'STRONG', 'EM', 'P', 'BR']);
 
@@ -83,22 +98,42 @@ export const parseHtmlToReactElements = (htmlString: string): ReactNode => {
   
   // Replace {{cardID|cardName|colorCode}} with a unique placeholder
   const processedHtml = htmlString.replace(CARDRE, (match, cardID, cardName, colorCode = '0') => {
-    const color = COLOR_MAPPING[colorCode];
-    const imgPath = `./WebpImages/${cardID}.webp`;
     const placeholder = `__CARD_${cardIndex}__`;
     
-    cardElements.push(
-      React.createElement(
-        'span',
-        {
-          key: `card-${cardIndex}`,
-          onMouseOver: (e: React.MouseEvent<HTMLSpanElement>) => handleCardMouseOver(e, imgPath),
-          onMouseOut: handleCardMouseOut,
-          style: { color }
-        },
-        cardName
-      )
-    );
+    // Check if this is an element reference (cardID === 'element')
+    if (cardID === 'element') {
+      const elementStyle = ELEMENT_COLOR_MAPPING[colorCode] || { color: '#999999', textShadow: 'none' };
+      cardElements.push(
+        React.createElement(
+          'span',
+          {
+            key: `element-${cardIndex}`,
+            style: {
+              color: elementStyle.color,
+              fontWeight: 'bold',
+              textShadow: elementStyle.textShadow
+            }
+          },
+          cardName
+        )
+      );
+    } else {
+      // Regular card reference
+      const color = COLOR_MAPPING[colorCode];
+      const imgPath = `./WebpImages/${cardID}.webp`;
+      cardElements.push(
+        React.createElement(
+          'span',
+          {
+            key: `card-${cardIndex}`,
+            onMouseOver: (e: React.MouseEvent<HTMLSpanElement>) => handleCardMouseOver(e, imgPath),
+            onMouseOut: handleCardMouseOut,
+            style: { color }
+          },
+          cardName
+        )
+      );
+    }
     
     cardIndex++;
     return placeholder;
