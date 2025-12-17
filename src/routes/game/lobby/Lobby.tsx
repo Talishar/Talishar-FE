@@ -254,14 +254,13 @@ const Lobby = () => {
       case GAME_FORMAT.CLASH:
       case GAME_FORMAT.SAGE:
       case GAME_FORMAT.COMPETITIVE_SAGE:
+      case GAME_FORMAT.OPEN_SAGE:
         return { deckSize: 40, maxDeckSize: 40 };
       case GAME_FORMAT.SEALED:
       case GAME_FORMAT.DRAFT:
         return { deckSize: 30, maxDeckSize: 30 };
-      case GAME_FORMAT.OPEN_CC:
       case GAME_FORMAT.OPEN_BLITZ:
-      case GAME_FORMAT.OPEN_LL_CC:
-      case GAME_FORMAT.OPEN_SAGE:
+      case GAME_FORMAT.OPEN:
         return { deckSize: 0, maxDeckSize: 99999 };
       default:
         return { deckSize: 60, maxDeckSize: 99999 };
