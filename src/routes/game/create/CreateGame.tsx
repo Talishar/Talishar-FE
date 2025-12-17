@@ -559,6 +559,11 @@ const CreateGame = () => {
                   <option value={GAME_FORMAT.COMPETITIVE_SAGE}>Competitive Silver Age</option>
                   <option value={GAME_FORMAT.COMPETITIVE_LL}>Competitive Living Legend</option>
                 </optgroup>
+                <optgroup label="Future Formats (Play with spoiled cards!)">
+                  <option value={GAME_FORMAT.OPEN_CC}>Future Classic Constructed</option>
+                  <option value={GAME_FORMAT.OPEN_LL_CC}>Future Living Legend</option>
+                  <option value={GAME_FORMAT.OPEN_SAGE}>Future Silver Age</option>
+                </optgroup>
                 <optgroup label="Other Formats">
                   <option value={GAME_FORMAT.PRECON}>Preconstructed Decks</option>
                   <option value={GAME_FORMAT.BLITZ}>Blitz</option>
@@ -566,12 +571,6 @@ const CreateGame = () => {
                   <option value={GAME_FORMAT.CLASH}>Clash</option>
                   <option value={GAME_FORMAT.COMMONER}>Commoner</option>
                   <option value={GAME_FORMAT.OPEN}>Open (no restrictions)</option>
-                </optgroup>
-                <optgroup label="Future Formats (Play with spoiled cards!)">
-                  <option value={GAME_FORMAT.OPEN_CC}>Future Classic Constructed</option>
-                  <option value={GAME_FORMAT.OPEN_LL_CC}>Future Living Legend</option>
-                  <option value={GAME_FORMAT.OPEN_SAGE}>Future Silver Age</option>
-                  {/* <option value={GAME_FORMAT.OPEN_BLITZ}>Open Blitz</option> */}
                 </optgroup>
               </select>
             </label>
