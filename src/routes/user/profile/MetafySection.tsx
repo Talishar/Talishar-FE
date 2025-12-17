@@ -7,7 +7,6 @@ interface MetafySectionProps {
   isMetafyLinked: boolean;
   metafyCommunities: MetafyCommunity[];
   metafyInfo: string;
-  isMod?: boolean;
   className?: string;
 }
 
@@ -15,16 +14,9 @@ const MetafySection: React.FC<MetafySectionProps> = ({
   isMetafyLinked,
   metafyCommunities,
   metafyInfo,
-  isMod = false,
   className
 }) => {
   const [showCommunities, setShowCommunities] = useState(false);
-
-
-  // Only show this section to moderators
-  if (!isMod) {
-    return null;
-  }
 
   const handleDisconnect = async () => {
     // For now, we'll show a placeholder message
