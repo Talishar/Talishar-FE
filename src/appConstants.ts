@@ -134,7 +134,7 @@ export const GAME_FORMAT = {
   COMPETITIVE_CC: 'compcc',
   BLITZ: 'blitz',
   COMPETITIVE_BLITZ: 'compblitz',
-  OPEN_CC: 'openformatcc',
+  OPEN_CC: 'futurecc',
   COMMONER: 'commoner',
   CLASH: 'clash',
   SEALED: 'sealed',
@@ -142,13 +142,14 @@ export const GAME_FORMAT = {
   LLCC: 'llcc',
   //LLBLITZ: 'llblitz',
   OPEN_BLITZ: 'openformatblitz',
-  OPEN_LL_CC: 'openformatllcc',
+  OPEN_LL_CC: 'futurell',
   BRAWL: 'brawl',
   PRECON: 'precon',
   COMPETITIVE_LL: "compllcc",
   SAGE: "sage",
   COMPETITIVE_SAGE: "compsage",
-  OPEN_SAGE: 'openformatsage'
+  OPEN_SAGE: 'futuresage',
+  OPEN: "open"
   //OPEN_LL_BLITZ: 'openformatllblitz'
 };
 
@@ -171,7 +172,8 @@ export const GAME_FORMAT_NUMBER = {
   COMPETITIVE_LL: '13',
   SAGE: '14',
   COMPETITIVE_SAGE: '15',
-  OPEN_SAGE: '16'
+  OPEN_SAGE: '16',
+  OPEN: '17'
 };
 
 // Create a mapping from number format to string format for normalization
