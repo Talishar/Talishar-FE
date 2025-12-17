@@ -95,16 +95,6 @@ const MetafySection: React.FC<MetafySectionProps> = ({
                           </a>
                         </div>
                       )}
-                      {community.tiers && community.tiers.length > 0 && (
-                        <div className={styles.metafyCommunityTiers}>
-                          <strong>Tiers:</strong>
-                          {community.tiers.map((tier: any, tierIndex: number) => (
-                            <div key={tierIndex} className={styles.metafyCommunityTier}>
-                              {tier.name}
-                            </div>
-                          ))}
-                        </div>
-                      )}
                       <div className={styles.metafyCommunityId}>
                         ID: {community.id}
                       </div>
