@@ -119,7 +119,6 @@ function ManualModeContent({ onClose, isPracticeDummy }: { onClose: () => void; 
     }
     setIsCardLoading(true);
     handleDispatchWithParam(PROCESS_INPUT.ADD_CARD_TO_HAND_SELF, cardInput);
-    setCardInput('');
     setTimeout(() => setIsCardLoading(false), 300);
   };
 
@@ -280,7 +279,7 @@ function ManualModeContent({ onClose, isPracticeDummy }: { onClose: () => void; 
             onClick={() => handleDispatch(PROCESS_INPUT.DRAW_CARD_OPPONENT)}
             title="Draw a card for opponent"
           >
-            Draw Card (Opponent)
+            Draw Card (Opp.)
           </button>
         </div>
 
@@ -322,7 +321,7 @@ function ManualModeContent({ onClose, isPracticeDummy }: { onClose: () => void; 
             onClick={() => handleDispatch(PROCESS_INPUT.REMOVE_ARSENAL_FROM_OPPONENT)}
             title="Remove arsenal from opponent"
           >
-            Remove Arsenal (Opponent)
+            Remove Arsenal (Opp.)
           </button>
         </div>
       </div>
