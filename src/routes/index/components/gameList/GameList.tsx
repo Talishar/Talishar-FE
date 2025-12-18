@@ -297,7 +297,7 @@ const GameList = () => {
     GAME_FORMAT.SEALED,
     GAME_FORMAT.DRAFT,
     GAME_FORMAT.PRECON,
-    // GAME_FORMAT.LLBLITZ
+    GAME_FORMAT.OPEN
   ];
 
   // Create mapping from string formats to numeric formats
