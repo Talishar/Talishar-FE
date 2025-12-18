@@ -180,6 +180,11 @@
   box-shadow: 0 0 4px 4px goldenrod;
 }
 
+.border9 {
+  border-color: rgb(192, 6, 6);
+  box-shadow: 0 0 5px 5px rgb(192, 6, 6);
+}
+
 .subCard {
   width: 100%;
   position: absolute;
