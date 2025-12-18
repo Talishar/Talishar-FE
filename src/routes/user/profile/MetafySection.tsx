@@ -7,7 +7,6 @@ interface MetafySectionProps {
   isMetafyLinked: boolean;
   metafyCommunities: MetafyCommunity[];
   metafyInfo: string;
-  isMod?: boolean;
   className?: string;
 }
 
@@ -15,16 +14,9 @@ const MetafySection: React.FC<MetafySectionProps> = ({
   isMetafyLinked,
   metafyCommunities,
   metafyInfo,
-  isMod = false,
   className
 }) => {
   const [showCommunities, setShowCommunities] = useState(false);
-
-
-  // Only show this section to moderators
-  if (!isMod) {
-    return null;
-  }
 
   const handleDisconnect = async () => {
     // For now, we'll show a placeholder message
@@ -93,16 +85,6 @@ const MetafySection: React.FC<MetafySectionProps> = ({
                           >
                             Visit Community →
                           </a>
-                        </div>
-                      )}
-                      {community.tiers && community.tiers.length > 0 && (
-                        <div className={styles.metafyCommunityTiers}>
-                          <strong>Tiers:</strong>
-                          {community.tiers.map((tier: any, tierIndex: number) => (
-                            <div key={tierIndex} className={styles.metafyCommunityTier}>
-                              {tier.name}
-                            </div>
-                          ))}
                         </div>
                       )}
                       <div className={styles.metafyCommunityId}>

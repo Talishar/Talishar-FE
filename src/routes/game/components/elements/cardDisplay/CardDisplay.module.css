@@ -167,7 +167,7 @@
 
 .border6 {
   border-color: chartreuse;
-  box-shadow: 0 0 2px 2px chartreuse;
+  box-shadow: 0 0 3px 3px chartreuse;
 }
 
 .border7 {
@@ -176,7 +176,8 @@
 }
 
 .border8 {
-  box-shadow: 0 0 0 2px var(--theme-primary);
+  border-color: goldenrod;
+  box-shadow: 0 0 4px 4px goldenrod;
 }
 
 .subCard {

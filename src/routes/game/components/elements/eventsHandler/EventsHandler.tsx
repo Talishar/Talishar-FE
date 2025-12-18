@@ -81,7 +81,7 @@ export const EventsHandler = React.memo(() => {
                 Die rolled, result:
                 <div className={styles.die}>{dieRoll(event.eventValue)}</div>
               </div>
-            ));
+            ), { duration: 5000 });
             continue;
           case 'REVEAL':
             toast((t) => (
@@ -92,7 +92,7 @@ export const EventsHandler = React.memo(() => {
                   makeMeBigger
                 />
               </div>
-            ));
+            ), { duration: 5000 });
             continue;
           case 'DISCARD':
             toast((t) => (
@@ -103,7 +103,7 @@ export const EventsHandler = React.memo(() => {
                   makeMeBigger
                 />
               </div>
-            ));
+            ), { duration: 5000 });
             continue;
           case 'BANISH':
             toast((t) => (
@@ -114,7 +114,7 @@ export const EventsHandler = React.memo(() => {
                   makeMeBigger
                 />
               </div>
-            ));
+            ), { duration: 5000 });
             continue;
           case 'SOUL':
             toast((t) => (
@@ -125,7 +125,7 @@ export const EventsHandler = React.memo(() => {
                   makeMeBigger
                 />
               </div>
-            ));
+            ), { duration: 5000 });
             continue;
           case 'REQUESTCHAT':
             if (
@@ -170,7 +170,7 @@ export const EventsHandler = React.memo(() => {
             continue;
           case 'UNDODENIEDNOTICE':
             if (parseInt(event.eventValue ?? '0') === playerID) {
-              toast.error('Your undo requests have been declined too many times. No more undo requests allowed this turn.');
+              toast.error('Your undo requests have been declined too many times. No more undo requests allowed this turn.', { duration: 5000 });
             }
             continue;
           case "SHUFFLE":

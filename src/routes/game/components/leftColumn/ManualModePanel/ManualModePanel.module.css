@@ -72,7 +72,8 @@
 .header h3 {
   margin: 0;
   color: var(--theme-primary);
-  font-size: 1.1rem;
+  font-size: 1.2rem;
+  line-height: 1;
 }
 
 .closeButton {
@@ -90,7 +91,7 @@
   transition: all 0.2s ease;
   flex-shrink: 0;
   line-height: 1;
-  margin-bottom: 0;
+  margin-bottom: 0.1em;
 
   &:hover {
     transform: rotate(90deg);
@@ -101,8 +102,8 @@
 .content {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
-  padding: 1.5rem;
+  gap: .75rem;
+  padding: 1rem;
   flex: 1;
 }
 
