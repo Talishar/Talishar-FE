@@ -14,8 +14,6 @@ import { toast } from 'react-hot-toast';
 import { RiEdit2Line, RiDeleteBin5Line } from "react-icons/ri";
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAppSelector } from 'app/Hooks';
-import { selectIsMod } from 'features/auth/authSlice';
 import styles from './profile.module.css';
 import { generateCroppedImageUrl } from 'utils/cropImages';
 import { getReadableFormatName } from 'utils/formatUtils';
@@ -33,7 +31,6 @@ const PATREON_URL = 'https://www.patreon.com/oauth2/authorize?';
 
 export const ProfilePage = () => {
   const navigate = useNavigate();
-  const isMod = useAppSelector(selectIsMod);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [confirmationUsername, setConfirmationUsername] = useState('');
   const [newDeckUrl, setNewDeckUrl] = useState('');
@@ -302,31 +299,34 @@ export const ProfilePage = () => {
               <h5>Username: {profileData?.userName}</h5>
               <div>
                 {profileIsLoading && <p>Loading Profile...</p>}
-                {!profileIsLoading && profileData?.isPatreonLinked && (
-                  <p>
-                    Your Patreon account is linked. <br />
-                    <a href={PATREON_URL + PatreonOAuthParam.toString()}>
-                      Refresh your Patreon connection
-                    </a>{' '}
-                    (in case you have new patreons and can't access their perks yet)
-                  </p>
-                )}
-                {!profileIsLoading && !profileData?.isPatreonLinked && (
-                  <p>
-                    <a href={PATREON_URL + PatreonOAuthParam.toString()}>
-                      Connect to Patreon
-                    </a>
-                  </p>
-                )}
-              </div>
-              {profileData?.metafyInfo && (
+                {profileData?.metafyInfo && (
                 <MetafySection
                   isMetafyLinked={profileData?.isMetafyLinked ?? false}
                   metafyCommunities={profileData?.metafyCommunities ?? []}
                   metafyInfo={profileData?.metafyInfo ?? ''}
-                  isMod={isMod}
                 />
               )}
+                {!profileIsLoading && (
+                  <div className={styles.patreonSection}>
+                    <h3>Patreon</h3>
+                    {profileData?.isPatreonLinked ? (
+                      <p>
+                        Your Patreon account is linked. <br />
+                        <a href={PATREON_URL + PatreonOAuthParam.toString()}>
+                          Refresh your Patreon connection
+                        </a>
+                      </p>
+                    ) : (
+                      <p>
+                        <a href={PATREON_URL + PatreonOAuthParam.toString()}>
+                          Connect to Patreon
+                        </a>
+                      </p>
+                    )}
+                  </div>
+                )}
+              </div>
+
               <FriendsList className={styles.friendsSection} />
               <BlockedUsers className={styles.friendsSection} />
               <h3 className={styles.title}>Delete Account</h3>

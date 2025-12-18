@@ -321,6 +321,38 @@ td {
   text-decoration: underline;
 }
 
+.patreonSection {
+  margin: 1.5rem 0;
+  padding: 1.5rem;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 8px;
+  border-left: 4px solid #FF424D;
+}
+
+.patreonSection h3 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  color: #FF9CA0;
+  font-size: 1.3em;
+}
+
+.patreonSection p {
+  margin: 0.5rem 0;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.patreonSection a {
+  color: #d4af37;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.patreonSection a:hover {
+  color: #e8c547;
+  text-decoration: underline;
+}
+
 .metafyToggleButton {
   padding: 0.5rem 1rem;
   margin: 1rem 0;
