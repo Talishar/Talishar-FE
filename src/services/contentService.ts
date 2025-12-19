@@ -43,7 +43,6 @@ export const fetchDiscordReleaseNotes = async (maxMessages: number = 5): Promise
     const data = await response.json();
     return data.messages || [];
   } catch (error) {
-    console.error('Error fetching Discord messages:', error);
     return [];
   }
 };
