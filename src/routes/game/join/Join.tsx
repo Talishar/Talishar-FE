@@ -154,9 +154,12 @@ const JoinGame = () => {
   // Convert favorite decks to ImageSelect options
   const favoriteDeckOptions: ImageSelectOption[] = React.useMemo(() => {
     if (!data?.favoriteDecks) return [];
+    const isOpenFormat = gameFormat && getReadableFormatName(gameFormat).toLowerCase().includes('open');
     const baseGameFormat = getBaseFormatType(gameFormat);
     const filtered = data.favoriteDecks
       .filter(deck => {
+        // Show all decks for OPEN format
+        if (isOpenFormat) return true;
         if (!deck.format) return false;
         const baseDeckFormat = getBaseFormatType(deck.format);
         return baseDeckFormat === baseGameFormat;
