@@ -367,7 +367,8 @@ const Lobby = () => {
     (data.format === GAME_FORMAT.OPEN_CC ||
       data.format === GAME_FORMAT.OPEN_BLITZ ||
       data.format === GAME_FORMAT.OPEN_LL_CC ||
-      data.format === GAME_FORMAT.OPEN_SAGE
+      data.format === GAME_FORMAT.OPEN_SAGE ||
+      data.format === GAME_FORMAT.OPEN
       // data.format === GAME_FORMAT.OPEN_LL_BLITZ
     );
   //const needToDoDisclaimer = false;
