@@ -130,14 +130,11 @@ const ModPage: React.FC = () => {
     }
   };
 
-  const errorMessage = fetchError ? 'NetworkError when attempting to fetch resource.' : null;
-
   return (
     <div className={styles.container}>
       <div className={styles.modPagePanel}>
         <h1 className={styles.title}>Moderator Panel</h1>
 
-        {errorMessage && <div className={styles.errorMessage}>{errorMessage}</div>}
         {successMessage && <div className={styles.successMessage}>{successMessage}</div>}
 
         <div className={styles.contentWrapper}>
