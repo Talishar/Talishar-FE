@@ -187,18 +187,31 @@ const GameStateHandler = () => {
   }, [isFullRematch, gameID, navigate]);
 
   // Check if game was reported as not found
+  const gameNotFoundTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  
   useEffect(() => {
     const checkGameNotFound = () => {
       const state = window.sessionStorage.getItem('gameNotFound');
       if (state === String(gameInfo.gameID)) {
-        console.log(`Game ${gameInfo.gameID} no longer exists, navigating to games list`);
-        window.sessionStorage.removeItem('gameNotFound');
+        // Only schedule navigation once
+        if (!gameNotFoundTimeoutRef.current) {
+          console.log(`Game ${gameInfo.gameID} no longer exists, will navigate to games list in 60s`);
+          gameNotFoundTimeoutRef.current = setTimeout(() => {
+            window.sessionStorage.removeItem('gameNotFound');
+            navigate('/');
+          }, 60000);
+        }
       }
     };
     
     // Check periodically since errors might come asynchronously
     const interval = setInterval(checkGameNotFound, 1000);
-    return () => clearInterval(interval);
+    return () => {
+      clearInterval(interval);
+      if (gameNotFoundTimeoutRef.current) {
+        clearTimeout(gameNotFoundTimeoutRef.current);
+      }
+    };
   }, [gameInfo.gameID, navigate]);
 
   return null;
