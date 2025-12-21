@@ -55,7 +55,7 @@ fieldset legend strong {
   min-width: 16px;
   border-radius: 50%;
   border: 1.5px solid rgba(255, 255, 255, 0.5);
-  font-size: 0.75em;
+  font-size: 0.5em;
   font-weight: bold;
   color: rgba(255, 255, 255, 0.7);
   cursor: help;
