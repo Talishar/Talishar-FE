@@ -7,6 +7,7 @@ interface CheckboxSettingProps {
   checked: boolean;
   onChange: () => void;
   ariaDisabled?: boolean;
+  tooltip?: string;
 }
 
 export const CheckboxSetting: React.FC<CheckboxSettingProps> = ({
@@ -14,8 +15,11 @@ export const CheckboxSetting: React.FC<CheckboxSettingProps> = ({
   label,
   checked,
   onChange,
-  ariaDisabled = false
+  ariaDisabled = false,
+  tooltip
 }) => {
+  const [isTooltipVisible, setIsTooltipVisible] = React.useState(false);
+
   return (
     <label className={styles.optionLabel}>
       <input
@@ -25,7 +29,22 @@ export const CheckboxSetting: React.FC<CheckboxSettingProps> = ({
         checked={checked}
         onChange={onChange}
       />
-      {label}
+      <span className={styles.labelWithTooltip}>
+        {label}
+        {tooltip && (
+          <span
+            className={styles.tooltipIcon}
+            onMouseEnter={() => setIsTooltipVisible(true)}
+            onMouseLeave={() => setIsTooltipVisible(false)}
+            title={tooltip}
+          >
+            ?
+            {isTooltipVisible && (
+              <span className={styles.tooltipContent}>{tooltip}</span>
+            )}
+          </span>
+        )}
+      </span>
     </label>
   );
 };

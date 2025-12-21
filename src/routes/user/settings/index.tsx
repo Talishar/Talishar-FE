@@ -297,6 +297,7 @@ const SettingsPage = () => {
             <CheckboxSetting
               name="disableFabInsights"
               label="Disable Global Stats"
+              tooltip="Disables sending game statistics to FaB Insights and FaBlazing for stats tracking."
               checked={initialValues.disableFabInsights}
               onChange={() =>
                 handleSettingsChange({
@@ -307,7 +308,7 @@ const SettingsPage = () => {
             />
             <CheckboxSetting
               name="disableAltArts"
-              label="Disable Alt Arts"
+              label="Disable Alternate Arts"
               checked={initialValues.disableAltArts}
               onChange={() =>
                 handleSettingsChange({
