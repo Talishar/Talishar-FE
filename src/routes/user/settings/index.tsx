@@ -263,7 +263,7 @@ const SettingsPage = () => {
             />
             <CheckboxSetting
               name="accessibilityMode"
-              label="Enable Accessibility Mode"
+              label="Color Accessibility Mode"
               checked={initialValues.accessibilityMode}
               onChange={() =>
                 handleSettingsChange({
