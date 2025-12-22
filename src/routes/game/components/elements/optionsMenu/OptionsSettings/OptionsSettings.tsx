@@ -197,7 +197,7 @@ const OptionsSettings = () => {
       <Fieldset legend="Modes">
         <CheckboxSetting
           name="streamerMode"
-          label="Enable Streamer Mode"
+          label="Streamer Mode"
           checked={initialValues.streamerMode}
           onChange={() =>
             handleSettingsChange({
@@ -209,7 +209,8 @@ const OptionsSettings = () => {
         />
         <CheckboxSetting
           name="casterMode"
-          label="Enable Caster Mode"
+          label="Caster Mode"
+          tooltip="Show both players hands for casting purposes, only if both players have the setting enabled."
           checked={initialValues.casterMode}
           onChange={() =>
             handleSettingsChange({
@@ -221,7 +222,7 @@ const OptionsSettings = () => {
         />
         <CheckboxSetting
           name="manualMode"
-          label="Enable Manual Mode"
+          label="Manual Mode"
           checked={initialValues.manualMode}
           onChange={() =>
             handleSettingsChange({
@@ -259,7 +260,7 @@ const OptionsSettings = () => {
         />
         <CheckboxSetting
           name="accessibilityMode"
-          label="Enable Accessibility Mode"
+          label="Color Accessibility Mode"
           checked={initialValues.accessibilityMode}
           onChange={() =>
             handleSettingsChange({
@@ -294,6 +295,7 @@ const OptionsSettings = () => {
         <CheckboxSetting
           name="disableFabInsights"
           label="Disable Global Stats"
+          tooltip="Disables sending game statistics to FaB Insights and FaBlazing for stats tracking."
           checked={initialValues.disableFabInsights}
           onChange={() =>
             handleSettingsChange({
@@ -304,7 +306,7 @@ const OptionsSettings = () => {
         />
         <CheckboxSetting
           name="disableAltArts"
-          label="Disable Alt Arts"
+          label="Disable Alternate Arts"
           checked={initialValues.disableAltArts}
           onChange={() =>
             handleSettingsChange({

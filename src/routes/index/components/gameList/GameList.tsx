@@ -88,6 +88,7 @@ const GameList = () => {
     GAME_FORMAT.SEALED,
     GAME_FORMAT.DRAFT,
     GAME_FORMAT.PRECON,
+    GAME_FORMAT.OPEN,
     // Also include numeric format values
     GAME_FORMAT_NUMBER.BLITZ,
     GAME_FORMAT_NUMBER.COMPETITIVE_BLITZ,
@@ -106,6 +107,7 @@ const GameList = () => {
     GAME_FORMAT_NUMBER.SEALED,
     GAME_FORMAT_NUMBER.DRAFT,
     GAME_FORMAT_NUMBER.PRECON,
+    GAME_FORMAT_NUMBER.OPEN,
   ]);
 
   const [inProgressFormatFilters, setInProgressFormatFilters] = useState<Set<string>>(() => {
@@ -319,6 +321,7 @@ const GameList = () => {
     [GAME_FORMAT.SEALED]: GAME_FORMAT_NUMBER.SEALED,
     [GAME_FORMAT.DRAFT]: GAME_FORMAT_NUMBER.DRAFT,
     [GAME_FORMAT.PRECON]: GAME_FORMAT_NUMBER.PRECON,
+    [GAME_FORMAT.OPEN]: GAME_FORMAT_NUMBER.OPEN,
   };
 
   return (

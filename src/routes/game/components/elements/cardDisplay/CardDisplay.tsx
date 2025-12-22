@@ -82,7 +82,8 @@ export const CardDisplay = (prop: CardProp) => {
     [styles.border6]: card.borderColor == '6',
     [styles.border7]: card.borderColor == '7',
     [styles.border8]: card.borderColor == '8',
-    [styles.border9]: card.borderColor == '9'
+    [styles.border9]: card.borderColor == '9',
+    [styles.border10]: card.borderColor == '10'
   });
 
   const cardStyle = classNames(styles.card, styles.normalSize, {

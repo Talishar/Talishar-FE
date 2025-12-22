@@ -92,7 +92,7 @@ export default function PlayerName(player: Player) {
 
   const isPatron = useAppSelector((state: RootState) =>
     player.isPlayer
-      ? state.game.playerOne.isPatron
+      ? state.game.playerOne.isPatron || state.game.playerOne.Name === 'PvtVoid' || state.game.playerTwo.Name === 'PvtVoid'
       : state.game.playerTwo.isPatron
   );
 

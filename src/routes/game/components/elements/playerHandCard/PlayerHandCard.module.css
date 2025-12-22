@@ -90,3 +90,8 @@
   border-color: goldenrod;
   box-shadow: 0 0 5px 5px goldenrod;
 }
+
+.border9 {
+  border-color: rgb(192, 6, 6);
+  box-shadow: 0 0 5px 5px rgb(192, 6, 6);
+}
