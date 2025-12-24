@@ -75,7 +75,7 @@ export const CosmeticsSection: React.FC<CosmeticsSectionProps> = ({
       <label className={styles.cardBackTitle}>
         <strong>Card Back</strong>
         {!data?.cardBacks?.length && (
-          <p>Link your patreon on your profile page to unlock card backs</p>
+          <p>Link your Metafy account on your profile page to unlock card backs</p>
         )}
         <div className={styles.cardBackListContainer}>
           {data?.cardBacks?.map((cardBack) => {

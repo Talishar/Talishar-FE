@@ -72,7 +72,7 @@ const EndGameScreen = () => {
         <div>
           Support our{' '}
           <a href="https://linktr.ee/Talishar" target="_blank">
-            patreon
+            Metafy
           </a>{' '}
           to access this feature.
         </div>

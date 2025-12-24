@@ -8,7 +8,7 @@ const AboutSection: React.FC = () => {
   const faqs = [
     {
       question: "Is Talishar free to play?",
-      answer: "Yes! Talishar is completely free to play. You can enjoy all features without spending any money. We offer optional Patreon cosmetics that support those who want to help fund development."
+      answer: "Yes! Talishar is completely free to play. You can enjoy all features without spending any money. We offer exclusive cosmetics for our supporters and those who want to help fund development."
     },
     {
       question: "Do I need to download anything?",
@@ -75,7 +75,7 @@ const AboutSection: React.FC = () => {
           <p>
             Talishar is maintained by a dedicated team of volunteer developers and community members who are passionate about Flesh & Blood. 
             Our team works entirely on a volunteer basis to keep the platform running, code new card sets, fix bugs, and implement new features. 
-            We're supported by the community through optional contributions platform like Patreon. It help cover server costs and fund development.
+            We're supported by the community through optional contributions platform like Metafy. It help cover server costs and fund development.
           </p>
           <p className={styles.contributorInfo}>
             Want to contribute? Talishar is open-source! Join us on <a href="https://discord.gg/JykuRkdd5S" target="_blank" rel="noopener noreferrer">Discord</a> or 

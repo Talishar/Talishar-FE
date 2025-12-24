@@ -324,7 +324,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
       let csvContent = 'data:text/csv;charset=utf-8,';
       
       csvContent += '========== STATS PROVIDED BY TALISHAR ==========\n';
-      csvContent += 'Support our work on Patreon!\n';
+      csvContent += 'Support our work on Metafy!\n';
       csvContent += 'https://linktr.ee/Talishar\n\n';
       
       const formatHeroName = (heroName: string): string => {
