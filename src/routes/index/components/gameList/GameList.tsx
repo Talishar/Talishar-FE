@@ -10,9 +10,7 @@ import useAuth from 'hooks/useAuth';
 import { useBlockedUsers } from 'hooks/useBlockedUsers';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
-import { setGameStart } from 'features/game/GameSlice';
 import { useAppDispatch } from 'app/Hooks';
-import { useLocation } from 'react-router-dom';
 import { HEROES_OF_RATHE } from '../filter/constants';
 import GameFilter from './GameFilter';
 
@@ -151,10 +149,6 @@ const GameList = () => {
   });
 
   const [parent] = useAutoAnimate();
-
-  const navigate = useNavigate();
-  const dispatch = useAppDispatch();
-  const location = useLocation();
 
   useEffect(() => {
     const handleVisibilityChange = () => {
