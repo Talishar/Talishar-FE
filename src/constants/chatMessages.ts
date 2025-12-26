@@ -19,11 +19,12 @@ export const CHAT_WHEEL = new Map<number, string>([
   [14, 'Rematch?'],
   [15, 'Sorry!'],
   [16, 'Thanks!'],
-  [17, 'That was really cool!'],
-  [18, 'Thinking... Please bear with me!'],
-  [19, 'Want to Chat?'],
-  [20, 'Whoops!'],
-  [21, 'Yes']
+  [17, 'Thanks for the game!'],
+  [18, 'That was really cool!'],
+  [19, 'Thinking... Please bear with me!'],
+  [20, 'Want to Chat?'],
+  [21, 'Whoops!'],
+  [22, 'Yes']
 ]);
 
 /**
