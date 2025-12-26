@@ -445,14 +445,13 @@ export const ProfilePage = () => {
                         >
                           <option value="">-- Select Hero --</option>
                           {[...HEROES_OF_RATHE].sort((a, b) => {
-                            const displayLabelA = a.young ? `${a.label} - Young` : a.label;
-                            const displayLabelB = b.young ? `${b.label} - Young` : b.label;
+                            const displayLabelA = a.label;
+                            const displayLabelB = b.label;
                             return displayLabelA.localeCompare(displayLabelB);
                           }).map((hero) => {
-                            const displayLabel = hero.young ? `${hero.label} - Young` : hero.label;
                             return (
                               <option key={hero.value} value={hero.value}>
-                                {displayLabel}
+                                {hero.label}
                               </option>
                             );
                           })}
