@@ -161,7 +161,9 @@ export const PLAYMATS = {
   '31': 'Isenloft',
   '32': 'Volthaven',
   '33': 'High-Seas',
-  '34': 'High-Seas-Necro'
+  '34': 'High-Seas-Necro',
+  '35': 'The-Hunted',
+  '36': 'Deathmatch-Arena',
 } as { [key: string]: string };
 
 /* Display names for playmats (user-friendly formatting) */
@@ -200,7 +202,9 @@ export const PLAYMAT_DISPLAY_NAMES = {
   '31': 'Isenloft',
   '32': 'Volthaven',
   '33': 'High Seas',
-  '34': 'High Seas Necro'
+  '34': 'High Seas Necro',
+  '35': 'The Hunted',
+  '36': 'Deathmatch Arena',
 } as { [key: string]: string };
 
 /* Default playmats available to all players */
@@ -232,5 +236,7 @@ export const PLAYER_PLAYMATS = [
   '31',
   '32',
   '33',
-  '34'
+  '34',
+  '35',
+  '36',
 ];
