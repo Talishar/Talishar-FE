@@ -9,7 +9,7 @@ const COLOR_MAPPING: { [key: string]: string } = {
   '3': '#009ddf'
 };
 
-const ELEMENT_COLOR_MAPPING: { [key: string]: { color: string; textShadow: string } } = {
+const ELEMENT_COLOR_MAPPING: { [key: string]: { color: string; textShadow: string; background?: string; backgroundClip?: string; WebkitBackgroundClip?: string; WebkitTextFillColor?: string } } = {
   '1': {
     color: '#66ccff', 
     textShadow: '0 0 10px rgba(102, 204, 255, 0.8), 0 0 20px rgba(102, 204, 255, 0.5)'
@@ -21,6 +21,14 @@ const ELEMENT_COLOR_MAPPING: { [key: string]: { color: string; textShadow: strin
   '3': {
     color: '#8bc34a',
     textShadow: '0 0 10px rgba(139, 195, 74, 0.8), 0 0 20px rgba(76, 175, 80, 0.5)'
+  },
+  '4': {
+    color: 'transparent',
+    textShadow: '0 0 10px rgba(255, 0, 150, 0.9), 0 0 20px rgba(255, 100, 0, 0.8), 0 0 30px rgba(0, 200, 255, 0.8), 0 0 40px rgba(100, 0, 255, 0.7)',
+    background: 'linear-gradient(90deg, #ff0080 0%, #ff6b00 25%, #00ff00 50%, #0080ff 75%, #ff00ff 100%)',
+    backgroundClip: 'text',
+    WebkitBackgroundClip: 'text',
+    WebkitTextFillColor: 'transparent'
   }
 };
 
@@ -103,16 +111,27 @@ export const parseHtmlToReactElements = (htmlString: string): ReactNode => {
     // Check if this is an element reference (cardID === 'element')
     if (cardID === 'element') {
       const elementStyle = ELEMENT_COLOR_MAPPING[colorCode] || { color: '#999999', textShadow: 'none' };
+      const styleObj: any = {
+        fontWeight: 'bold',
+        textShadow: elementStyle.textShadow
+      };
+      
+      // Apply rainbow gradient if available
+      if (elementStyle.background) {
+        styleObj.background = elementStyle.background;
+        styleObj.backgroundClip = elementStyle.backgroundClip;
+        styleObj.WebkitBackgroundClip = elementStyle.WebkitBackgroundClip;
+        styleObj.WebkitTextFillColor = elementStyle.WebkitTextFillColor;
+      } else {
+        styleObj.color = elementStyle.color;
+      }
+      
       cardElements.push(
         React.createElement(
           'span',
           {
             key: `element-${cardIndex}`,
-            style: {
-              color: elementStyle.color,
-              fontWeight: 'bold',
-              textShadow: elementStyle.textShadow
-            }
+            style: styleObj
           },
           cardName
         )
