@@ -99,16 +99,6 @@ const SettingsPage = () => {
       value: 'alwaysHold',
       label: 'Always Hold Priority',
       enumValue: optConst.HOLD_PRIORITY_ENUM.ALWAYS_HOLD
-    },
-    {
-      value: 'holdAllOpp',
-      label: 'Hold Priority for all Opponent Actions',
-      enumValue: optConst.HOLD_PRIORITY_ENUM.HOLD_ALL_OPPONENT
-    },
-    {
-      value: 'holdOppAtt',
-      label: 'Hold Priority for all Opponent Attacks',
-      enumValue: optConst.HOLD_PRIORITY_ENUM.HOLD_ALL_OPPONENT_ATTACKS
     }
   ];
 

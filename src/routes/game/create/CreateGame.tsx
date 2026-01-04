@@ -565,8 +565,6 @@ const CreateGame = () => {
                   <option value={GAME_FORMAT.PRECON}>Preconstructed Decks</option>
                   <option value={GAME_FORMAT.BLITZ}>Blitz</option>
                   <option value={GAME_FORMAT.DRAFT}>Draft / Limited</option>
-                  <option value={GAME_FORMAT.CLASH}>Clash</option>
-                  <option value={GAME_FORMAT.COMMONER}>Commoner</option>
                   <option value={GAME_FORMAT.OPEN}>Open (no restrictions)</option>
                 </optgroup>
               </select>
