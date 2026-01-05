@@ -467,7 +467,8 @@ export default function ParseGameState(input: any) {
 
   // spectator count
   result.gameDynamicInfo.spectatorCount = input.spectatorCount ?? 0;
-
+  // spectator names
+  result.gameDynamicInfo.spectatorNames = input.spectatorNames ?? [];
   // turn phase
   if (input.turnPhase !== undefined) {
     result.turnPhase = input.turnPhase;

@@ -6,4 +6,5 @@ export interface GameDynamicInfo {
   lastUpdate?: number;
   clock?: number;
   spectatorCount?: number;
+  spectatorNames?: string[];
 }

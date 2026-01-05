@@ -12,8 +12,41 @@
   white-space: nowrap;
 }
 
-.spectatorCountStyle div {
+.spectatorCountContainer {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  position: relative;
+  cursor: pointer;
 }
+
+.tooltip {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(30, 30, 30, 0.95);
+  color: #e0e0e0;
+  padding: 0.5rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  z-index: 1000;
+  border: 1px solid rgba(100, 100, 100, 0.5);
+  margin-bottom: 0.5rem;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.tooltip div {
+  margin: 0.25rem 0;
+}
+
+.tooltip div:first-child {
+  margin-top: 0;
+}
+
+.tooltip div:last-child {
+  margin-bottom: 0;
+}
+
