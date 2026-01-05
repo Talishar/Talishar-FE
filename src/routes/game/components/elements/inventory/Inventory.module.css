@@ -1,0 +1,199 @@
+.inventoryButton {
+  margin-bottom: 0;
+  font-weight: 400;
+  text-align: center;
+  vertical-align: middle;
+  touch-action: manipulation;
+  padding: 0.5em 0.6em;
+  font-size: 1em;
+  background-color: var(--theme-primary);
+  color: black;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  min-width: 4.5vh;
+  height: 3.5vh;
+  border-radius: 0.4em;
+  border: 2px solid rgba(0, 0, 0, 0.2);
+  flex-basis: auto;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3),
+              0 1px 2px rgba(0, 0, 0, 0.2),
+              inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  transition: all 0.2s ease;
+  position: relative;
+  z-index: 1;
+}
+
+.inventoryButton svg {
+  font-size: 1.4em !important;
+  width: 1.2em !important;
+  height: 1.2em !important;
+}
+
+.inventoryButton:hover {
+  background-color: black;
+  color: var(--theme-primary);
+  border: 2px solid var(--theme-primary);
+  cursor: pointer;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4),
+              0 2px 4px rgba(0, 0, 0, 0.3),
+              0 0 8px rgba(255, 215, 0, 0.3);
+  transform: translateY(-1px);
+  z-index: 10;
+}
+
+.inventoryButton:active {
+  transform: translateY(1px);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3),
+              inset 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.modalBackdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--theme-overlay, rgba(0, 0, 0, 0.7));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9998;
+}
+
+.inventoryModal {
+  background-color: var(--theme-card-background, #1e1e1e) !important;
+  border: 2px solid var(--theme-border, rgba(255, 255, 255, 0.2)) !important;
+  border-radius: 8px;
+  padding: 0;
+  width: 90%  !important;
+  max-width: 600px  !important;
+  max-height: 80vh  !important;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 8px 32px var(--theme-overlay, rgba(0, 0, 0, 0.8));
+  backdrop-filter: none !important;
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  min-height: 60px;
+
+  h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: var(--theme-text, #f4eded);
+  }
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  color: var(--theme-text, #f4eded);
+  cursor: pointer;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+  margin-bottom: 0;
+  margin-left: 0.5rem;
+
+  &:hover {
+    background-color: var(--theme-button-hover, rgba(255, 255, 255, 0.1));
+  }
+}
+
+.modalContent {
+  padding: 1.5rem;
+  overflow-y: auto;
+  overflow-x: visible;
+  flex: 1;
+}
+
+.cardGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 1rem;
+}
+
+.cardContainer {
+  position: relative;
+  overflow: visible;
+  border-radius: 10px;
+}
+
+.cardItem {
+  position: relative;
+  overflow: hidden;
+  border-radius: 10px;
+  background-color: var(--theme-card-dark, #0d0d0d);
+  border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.1));
+  cursor: pointer;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+  aspect-ratio: 1 / 1;
+
+  &:hover {
+    transform: scale(1.05);
+    border-color: var(--theme-border-hover, rgba(255, 255, 255, 0.3));
+  }
+}
+
+.cardImage {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  max-height: none;
+}
+
+.counterBadge {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background-color: var(--theme-danger, rgba(220, 53, 69, 0.9));
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: bold;
+  min-width: 1.5rem;
+  text-align: center;
+}
+
+.emptyState {
+  text-align: center;
+  color: var(--theme-text-secondary, #999);
+  padding: 3rem 1rem;
+  font-style: italic;
+  font-size: 1rem;
+}
+
+@media (max-width: 600px) {
+  .inventoryModal {
+    width: 95%;
+    max-height: 90vh;
+  }
+
+  .cardGrid {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 0.75rem;
+  }
+
+  .modalHeader {
+    padding: 1rem;
+
+    h2 {
+      font-size: 1.25rem;
+    }
+  }
+
+  .modalContent {
+    padding: 1rem;
+  }
+}

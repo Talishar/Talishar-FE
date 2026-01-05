@@ -10,6 +10,7 @@ import SkipAttackReactionsToggle from './SkipAttackReactions/SkipAttackReactions
 import SkipDefenseReactionsToggle from './SkipDefenseReactions/SkipDefenseReactionsToggle';
 import SkipAllAttacksToggle from './SkipAllAttacks/SkipAllAttacksToggle';
 import useShortcut from 'hooks/useShortcut';
+import Inventory from '../inventory/Inventory';
 
 function FullScreenButton() {
   function toggleFullScreen() {
@@ -67,6 +68,7 @@ export default function Menu() {
         <SkipAttackReactionsToggle />
         <SkipDefenseReactionsToggle />
         {/* <Skip1PowerAttacksToggle /> */} <SkipAllAttacksToggle />
+        <Inventory />
       </div>
     </div>
   );

@@ -7,4 +7,5 @@ export interface GameDynamicInfo {
   clock?: number;
   spectatorCount?: number;
   spectatorNames?: string[];
+  playerInventory?: Card[];
 }
