@@ -1,13 +1,14 @@
 import React from 'react';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
-import { clearPopUp, setPopUp } from 'features/game/GameSlice';
+import { clearPopUp, setPopUp, getGameInfo } from 'features/game/GameSlice';
 import CardImage from '../cardImage/CardImage';
 import styles from './LastPlayed.module.css';
 import CardPopUp from '../cardPopUp/CardPopUp';
 import { CARD_IMAGES_PATH, getCollectionCardImagePath } from 'utils';
 import { useLanguageSelector } from 'hooks/useLanguageSelector';
 import classNames from 'classnames';
+import { shallowEqual } from 'react-redux';
 
 // Cards with Meld mechanics that need to be rotated
 const MELD_CARDS = new Set([
@@ -28,6 +29,7 @@ export default function LastPlayed() {
   let cardRedux = useAppSelector(
     (state: RootState) => state.game.gameDynamicInfo.lastPlayed
   );
+  const gameInfo = useAppSelector(getGameInfo, shallowEqual);
   const { getLanguage } = useLanguageSelector();
   const hasNoLastPlayedCard = cardRedux == null;
   const cardNumber = cardRedux?.cardNumber ?? 'CardBack';
@@ -37,6 +39,10 @@ export default function LastPlayed() {
     locale: getLanguage(),
     cardNumber
   });
+
+  // Determine if the card is controlled by the opponent
+  // cardRedux.controller is 1 or 2 for players
+  const isOpponent = cardRedux?.controller && cardRedux.controller !== gameInfo.playerID;
 
   const imgClassNames = classNames(styles.img, {
     [styles.rotated]: hasMeld
@@ -48,7 +54,7 @@ export default function LastPlayed() {
       cardNumber={cardNumber}
       containerClass={styles.lastPlayed}
     >
-      <CardImage src={imageSrc} className={imgClassNames} />
+      <CardImage src={imageSrc} className={imgClassNames} isOpponent={isOpponent} />
     </CardPopUp>
   );
 }

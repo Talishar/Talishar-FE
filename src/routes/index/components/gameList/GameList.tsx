@@ -392,7 +392,7 @@ const GameList = () => {
           </div>
         </>
       )}
-      {isLoggedIn && (
+      {isLoggedIn ? (
         <>
           <FormatList
             gameList={sortedOpenGames.filter(
@@ -458,14 +458,7 @@ const GameList = () => {
             isOther
             friendUsernames={friendUsernames}
           />
-        </>
-      )}
-      {!isLoggedIn && !isLoading && (
-        <p style={{ textAlign: 'center' }}>
-          Please <Link to="/user/login">log in</Link> to view open lobbies!
-        </p>
-      )}
-      {data != undefined && (
+          {data != undefined && (
             <div data-testid="games-in-progress" ref={parent}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '0.5em', gap: '0.5em', flexWrap: 'wrap', position: 'relative', width: '100%' }}>
                 <h4 
@@ -588,6 +581,14 @@ const GameList = () => {
               )}
             </div>
           )}
+        </>
+      ) : (
+        !isLoading && (
+          <p>
+            Please <Link to="/user/login">log in</Link> to view open lobbies and spectate games!
+          </p>
+        )
+      )}
     </article>
   );
 };
