@@ -433,6 +433,11 @@
   padding: 0;
 }
 
+.cardZeroPitch {
+  border: 1px solid;
+  border-color: rgba(219, 209, 163);
+}
+
 .cardOnePitch {
   border: 1px solid;
   border-color: #af1518;
@@ -446,6 +451,18 @@
 .cardThreePitch {
   border: 1px solid;
   border-color: #4b84ff;
+}
+
+.zeroPitch {
+  color: rgba(219, 209, 163);
+  font-weight: 600;
+  font-size: 1em !important;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: left !important;
+  padding-left: 0 !important;
 }
 
 .onePitch {
@@ -579,6 +596,7 @@
     height: 50px;
   }
 
+  .zeroPitch,
   .onePitch,
   .twoPitch,
   .threePitch {
@@ -674,6 +692,7 @@
     display: none;
   }
 
+  .zeroPitch,
   .onePitch,
   .twoPitch,
   .threePitch {
@@ -769,6 +788,7 @@
     display: none;
   }
 
+  .zeroPitch,
   .onePitch,
   .twoPitch,
   .threePitch {
