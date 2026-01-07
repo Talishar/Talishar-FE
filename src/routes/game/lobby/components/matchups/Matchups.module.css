@@ -109,48 +109,116 @@
   margin-left: auto;
 }
 
-/* Tablet: 2 columns, better height */
-@media (max-width: 1200px) {
+/* Tablet: 2-3 columns, compact spacing */
+@media (max-width: 1200px) and (min-width: 769px) {
   .matchupContainer {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    max-width: 90%;
-    height: calc(100vh - var(--sticky-footer-height, 80px) - 260px - 120px);
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    max-width: 100%;
+    padding: 0.75rem 0.5rem;
+    gap: 0.5rem;
+    height: auto;
+    max-height: calc(100vh - var(--sticky-footer-height, 80px) - 130px - 120px);
     overflow-y: auto;
-    min-height: 0;
+  }
+  
+  .matchupContainer h4 {
+    display: none;
+  }
+  
+  .matchups {
+    width: 100%;
   }
   
   .matchups button {
-    margin-bottom: 0.5em;
+    padding: 0.6rem 0.75rem;
+    font-size: 0.9rem;
+    margin-bottom: 0;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  
+  .matchupName {
+    text-align: center;
+    width: 100%;
+  }
+  
+  .turnOrderBadge {
+    width: 100%;
+    min-width: unset;
   }
 }
 
-/* Mobile: full width, 1 column, scrollable */
+/* Mobile: full width, 2-column grid, compact */
 @media (max-width: 768px) {
   .matchupContainer {
-    display: flex;
-    flex-direction: column;
-    max-width: 90%;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    max-width: 100%;
     width: 100%;
-    height: calc(100vh - var(--sticky-footer-height, 80px) - 130px - 120px);
-    min-height: 0;
+    padding: 0.75rem 0.5rem;
+    gap: 0.4rem;
+    height: auto;
+    max-height: calc(100vh - var(--sticky-footer-height, 80px) - 130px - 120px);
     overflow-y: auto;
-    align-items: stretch;
+  }
+  
+  .matchupContainer h4 {
+    display: none;
+  }
+  
+  .matchups {
+    width: 100%;
+  }
+  
+  .matchups button {
+    padding: 0.5rem 0.6rem;
+    font-size: 0.8rem;
+    margin-bottom: 0;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+  
+  .matchupName {
+    text-align: center;
+    width: 100%;
+    font-size: 0.9em;
+  }
+  
+  .turnOrderBadge {
+    font-size: 0.6rem;
+    padding: 0.15rem 0.25rem;
+    min-width: unset;
+    width: 100%;
   }
 }
 
-/* Small mobile: adjust padding and gap */
+/* Small mobile: optimized for very small screens */
 @media (max-width: 480px) {
   .matchupContainer {
-    padding: 0.75rem;
-    gap: 0.5rem;
-    height: calc(100vh - var(--sticky-footer-height, 80px) - 130px - 120px);
-    min-height: 0;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    padding: 0.5rem 0.4rem;
+    gap: 0.3rem;
+  }
+
+  .matchupContainer h4 {
+    font-size: 0.9rem;
+    margin-bottom: 0.2rem;
   }
 
   .matchups button {
-    padding: 0.5rem 0.75rem;
-    font-size: 0.85rem;
-    margin-bottom: 0.25em;
+    padding: 0.4rem 0.5rem;
+    font-size: 0.75rem;
+    gap: 0.25rem;
+  }
+  
+  .matchupName {
+    font-size: 0.85em;
+    word-break: break-word;
+  }
+  
+  .turnOrderBadge {
+    font-size: 0.55rem;
+    padding: 0.1rem 0.2rem;
   }
 }
