@@ -34,11 +34,12 @@
   background: rgba(0, 0, 0, 0.9);
   color: #d4af37;
   padding: 0.5em 0.75em;
-  border-radius: 4px;
+  border-radius: 8px;
   font-size: 0.85rem;
   white-space: nowrap;
   z-index: 1000;
   pointer-events: none;
   transform: translateX(-50%);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
-  border: 1px solid rgba(212, 175, 55, 0.3);}
+  border: 1px solid rgba(212, 175, 55, 0.3);
+}
