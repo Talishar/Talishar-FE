@@ -54,6 +54,9 @@ img {
   margin-bottom: 0;
   padding: 1em;
   background: var(--theme-section-background);
+  max-height: 150vh;
+  overflow-y: auto;
+  box-sizing: border-box;
 }
 
 .reloadButton {
