@@ -607,9 +607,7 @@ const InProgressGameList = ({ gameList, name, isFriendsSection, friendUsernames 
     };
   }, []);
 
-  const limitedGameList = isMobile ? gameList.slice(0, 8) : gameList.slice(0, 10);
-
-  if (limitedGameList.length === 0) {
+  if (gameList.length === 0) {
     return null;
   }
 
@@ -618,7 +616,7 @@ const InProgressGameList = ({ gameList, name, isFriendsSection, friendUsernames 
       <h5 className={styles.subSectionTitle} style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', userSelect: 'none' }}>
         {name}
       </h5>
-      {limitedGameList.map((entry, ix: number) => {
+      {gameList.map((entry, ix: number) => {
         const isFriendsGame = isFriendsSection || !!(
           (entry.gameCreator && friendUsernames.has(entry.gameCreator)) || 
           (entry.p2Username && friendUsernames.has(entry.p2Username))
