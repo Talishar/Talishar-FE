@@ -10,11 +10,13 @@ import FriendBadge from '../gameList/FriendBadge';
 export const InProgressGame = ({
   ix,
   entry,
-  isFriendsGame = false
+  isFriendsGame = false,
+  friendName
 }: {
   ix: number;
   entry: IGameInProgress;
   isFriendsGame?: boolean;
+  friendName?: string;
 }) => {
   const navigate = useNavigate();
   const spectateHandler = (gameName: number) => {
@@ -37,7 +39,7 @@ export const InProgressGame = ({
       <div>
         {!!entry.p2Hero && <img className={styles.heroImg} src={generateCroppedImageUrl(entry.p2Hero)} />}
       </div>
-      <FriendBadge isFriendsGame={isFriendsGame} size="small" />
+      <FriendBadge isFriendsGame={isFriendsGame} friendName={friendName} size="small" />
       <div>
         <a className={buttonClass} href={`/game/play/${entry.gameName}`} role="button">Spectate</a>
       </div>

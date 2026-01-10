@@ -621,7 +621,10 @@ const InProgressGameList = ({ gameList, name, isFriendsSection, friendUsernames 
           (entry.gameCreator && friendUsernames.has(entry.gameCreator)) || 
           (entry.p2Username && friendUsernames.has(entry.p2Username))
         );
-        return <InProgressGame entry={entry} ix={ix} key={entry.gameName} isFriendsGame={isFriendsGame} />;
+        const friendName = entry.gameCreator && friendUsernames.has(entry.gameCreator) 
+          ? entry.gameCreator 
+          : (entry.p2Username && friendUsernames.has(entry.p2Username) ? entry.p2Username : undefined);
+        return <InProgressGame entry={entry} ix={ix} key={entry.gameName} isFriendsGame={isFriendsGame} friendName={friendName} />;
       })}
     </div>
   );
