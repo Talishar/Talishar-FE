@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { 
   useGetFriendsListQuery, 
   useGetPrivateMessagesQuery,
@@ -68,6 +68,36 @@ export const ChatBar: React.FC = () => {
   const [createQuickGame] = useCreateQuickGameMutation();
 
   const totalUnread = unreadCountData?.unreadCount ?? 0;
+
+  // Sort friends by online status, then alphabetically
+  const sortedFriends = useMemo(() => {
+    if (!friendsData?.friends) return [];
+    
+    return [...friendsData.friends].sort((a, b) => {
+      const aOnlineData = onlineFriendsData?.onlineFriends?.find((f: any) => f.userId === a.friendUserId);
+      const bOnlineData = onlineFriendsData?.onlineFriends?.find((f: any) => f.userId === b.friendUserId);
+      
+      const aIsOnline = aOnlineData?.isOnline === true;
+      const aIsAway = aOnlineData?.isAway === true;
+      const bIsOnline = bOnlineData?.isOnline === true;
+      const bIsAway = bOnlineData?.isAway === true;
+      
+      const getStatusPriority = (isOnline: boolean, isAway: boolean) => {
+        if (isOnline && !isAway) return 0; // Online
+        if (isAway) return 1; // Away
+        return 2; // Offline
+      };
+      
+      const aPriority = getStatusPriority(aIsOnline, aIsAway);
+      const bPriority = getStatusPriority(bIsOnline, bIsAway);
+      
+      if (aPriority !== bPriority) return aPriority - bPriority;
+      
+      const aName = a.nickname || a.username;
+      const bName = b.nickname || b.username;
+      return aName.localeCompare(bName);
+    });
+  }, [friendsData?.friends, onlineFriendsData?.onlineFriends]);
 
   // Update ChatBar position to align with sticky footer (only in Lobby)
   useEffect(() => {
@@ -289,8 +319,8 @@ export const ChatBar: React.FC = () => {
               {friendsLoading && (
                 <div className={styles.emptyMessage}>Loading friends...</div>
               )}
-              {!friendsLoading && friendsData?.friends && friendsData.friends.length > 0 ? (
-                friendsData.friends.map((friend) => {
+              {!friendsLoading && sortedFriends && sortedFriends.length > 0 ? (
+                sortedFriends.map((friend) => {
                   const onlineFriend = onlineFriendsData?.onlineFriends?.find(
                     (f: any) => f.userId === friend.friendUserId
                   );
