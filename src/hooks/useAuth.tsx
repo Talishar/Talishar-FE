@@ -12,7 +12,7 @@ import {
   setCredentialsReducer,
   logOutReducer
 } from 'features/auth/authSlice';
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, useState } from 'react';
 import { toast } from 'react-hot-toast';
 
 // List of mod usernames - should match backend list
@@ -32,6 +32,7 @@ export default function useAuth() {
   // const { refetch } = useGetFavoriteDecksQuery(undefined);
   const [logOutAPI, logOutData] = useLogOutMutation();
   const { isLoading: isQueryLoading, isFetching, error, data } = useLoginWithCookieQuery({});
+  const [authCheckTimedOut, setAuthCheckTimedOut] = useState(false);
   const dispatch = useAppDispatch();
 
   const setLoggedIn = useCallback(
@@ -75,11 +76,31 @@ export default function useAuth() {
   };
   
   // Auth check is complete when we have data (even if user is not logged in) or there's an error
-  const isLoading = data === undefined && error === undefined;
+  // OR if the auth check has timed out (to prevent infinite loading state)
+  const isLoading = !authCheckTimedOut && data === undefined && error === undefined;
   
   // isLoggedIn should be based on the query result if available, otherwise use Redux
   // This ensures we show logged-in state as soon as the query returns, before Redux is updated
   const isLoggedIn = data?.isUserLoggedIn ?? !!currentUserId;
+
+  // Add a timeout for auth check - if it doesn't complete within 5 seconds, assume user isn't logged in
+  // This prevents infinite loading state when cookies are rejected due to SameSite policy
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      if (data === undefined && error === undefined) {
+        setAuthCheckTimedOut(true);
+        console.warn('Auth check timed out after 5s - proceeding without authentication');
+      }
+    }, 5000);
+
+    // Clear timeout if query completes before timeout
+    if (data !== undefined || error !== undefined) {
+      clearTimeout(timeoutId);
+      setAuthCheckTimedOut(false);
+    }
+
+    return () => clearTimeout(timeoutId);
+  }, [data, error]);
 
   useEffect(() => {
     // Only run when query has completed (data exists or error exists)

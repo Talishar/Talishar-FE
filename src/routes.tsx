@@ -76,13 +76,18 @@ const LoggedInGuard = ({
   children: JSX.Element;
   shouldBeLoggedIn: boolean;
 }) => {
-  const { isLoggedIn, isLoading } = useAuth();
+  const { isLoggedIn, isLoading, error } = useAuth();
 
   // Don't redirect while loading auth status on page refresh
   if (isLoading) {
     return (
       <div style={{ textAlign: 'center', padding: '2rem' }}>
-        Loading authentication...
+        <p>Loading authentication...</p>
+        {error && (
+          <p style={{ fontSize: '0.9rem', color: '#ff6b6b', marginTop: '1rem' }}>
+            If this persists, please try refreshing the page or clearing your browser cookies.
+          </p>
+        )}
       </div>
     );
   }
@@ -102,13 +107,18 @@ const LoggedInGuard = ({
 };
 
 const ModGuard = ({ children }: { children: JSX.Element }) => {
-  const { isLoggedIn, isMod, isLoading } = useAuth();
+  const { isLoggedIn, isMod, isLoading, error } = useAuth();
 
   // Don't redirect while loading auth status on page refresh
   if (isLoading) {
     return (
       <div style={{ textAlign: 'center', padding: '2rem' }}>
-        Loading authentication...
+        <p>Loading authentication...</p>
+        {error && (
+          <p style={{ fontSize: '0.9rem', color: '#ff6b6b', marginTop: '1rem' }}>
+            If this persists, please try refreshing the page or clearing your browser cookies.
+          </p>
+        )}
       </div>
     );
   }
