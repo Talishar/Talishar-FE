@@ -674,6 +674,8 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                         cardBorderStyle = styles.cardThreePitch;
                         break;
                       default:
+                        cardStyle = styles.zeroPitch;
+                        cardBorderStyle = styles.cardZeroPitch;
                     }
                     return (
                       <tr key={`cardList${ix}`}>

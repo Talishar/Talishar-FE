@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { BsGithub } from 'react-icons/bs';
-import { FaDiscord, FaTwitter } from 'react-icons/fa';
+import { FaDiscord, FaTwitter, FaYoutube } from 'react-icons/fa';
 import styles from './SocialDropdown.module.scss';
 
 const SocialDropdown = () => {
@@ -84,6 +84,15 @@ const SocialDropdown = () => {
             title="Twitter Link"
           >
             <FaTwitter /> <span>Twitter</span>
+          </a>
+          <a
+            href="https://www.youtube.com/@pvtvoid"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={styles.socialLink}
+            title="YouTube Channel"
+          >
+            <FaYoutube /> <span>YouTube</span>
           </a>
         </div>
       )}

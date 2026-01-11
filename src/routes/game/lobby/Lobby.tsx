@@ -107,6 +107,38 @@ const Lobby = () => {
   const [sendMessage] = useSendPrivateMessageMutation();
   const [createQuickGame] = useCreateQuickGameMutation();
 
+  // Sort friends by status (online, away, offline) then alphabetically
+  const sortedFriends = useMemo(() => {
+    if (!friendsData?.friends) return [];
+    
+    return [...friendsData.friends].sort((a, b) => {
+      const aOnlineData = onlineFriendsData?.onlineFriends?.find((f: any) => f.userId === a.friendUserId);
+      const bOnlineData = onlineFriendsData?.onlineFriends?.find((f: any) => f.userId === b.friendUserId);
+      
+      const aStatus = (aOnlineData as any)?.status || 'offline';
+      const bStatus = (bOnlineData as any)?.status || 'offline';
+      
+      // Determine status priority
+      const getStatusPriority = (status: string) => {
+        if (status === 'online') return 0; // Online first
+        if (status === 'away' || status === 'idle') return 1; // Away second
+        return 2; // Offline last
+      };
+      
+      const aPriority = getStatusPriority(aStatus);
+      const bPriority = getStatusPriority(bStatus);
+      
+      if (aPriority !== bPriority) {
+        return aPriority - bPriority;
+      }
+      
+      // Within same status, sort alphabetically by nickname or username
+      const aName = a.nickname || a.username;
+      const bName = b.nickname || b.username;
+      return aName.localeCompare(bName);
+    });
+  }, [friendsData?.friends, onlineFriendsData?.onlineFriends]);
+
   useEffect(() => {
     // Only play sound when opponent first joins (when theirName becomes populated)
     // Don't play on other updates like messages, invites, etc.
@@ -756,7 +788,7 @@ const Lobby = () => {
                     </div>
                     {friendsData?.friends && friendsData.friends.length > 0 ? (
                       <div className={styles.friendsList}>
-                        {friendsData.friends.map((friend) => {
+                        {sortedFriends.map((friend) => {
                           const onlineFriend = onlineFriendsData?.onlineFriends?.find(
                             (f: any) => f.userId === friend.friendUserId
                           );

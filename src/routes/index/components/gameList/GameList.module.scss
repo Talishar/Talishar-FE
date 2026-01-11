@@ -54,6 +54,9 @@ img {
   margin-bottom: 0;
   padding: 1em;
   background: var(--theme-section-background);
+  max-height: 150vh;
+  overflow-y: auto;
+  box-sizing: border-box;
 }
 
 .reloadButton {
@@ -96,6 +99,10 @@ img {
     padding: 0.5em;
     gap: 0.25em;
     margin: 1em 0;
+    border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.2));
+    border-radius: 10px;
+    max-height: 60vh;
+    overflow-y: auto;
   }
 
   .titleDiv {

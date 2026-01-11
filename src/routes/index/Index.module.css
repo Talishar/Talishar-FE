@@ -1,5 +1,4 @@
 .gameListContainer {
-  overflow-y: auto;
 }
 
 .logo {
@@ -51,6 +50,16 @@
   order: 2;
 }
 
+@media (max-width: 768px) {
+  .gameListContainer {
+    order: 2;
+  }
+
+  .createGameContainer {
+    order: 1;
+  }
+}
+
 .newsContainer {
   margin: 1.5em auto;
   display: flex;
@@ -61,7 +70,7 @@
   border-radius: 10px;
   order: 3;
   background: var(--theme-section-background, linear-gradient(135deg, rgba(30, 35, 41, 0.8) 0%, rgba(30, 35, 41, 0.85) 100%));
-  max-height: 200vh;
+  max-height: 150vh;
 }
 
 .newsWrapper {

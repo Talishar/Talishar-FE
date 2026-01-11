@@ -10,7 +10,8 @@
 @media (max-width: 768px) {
   .formContainer {
     width: 100%;
-    border: none;
+    border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.2));
+    border-radius: 10px;
   }
 }
 
