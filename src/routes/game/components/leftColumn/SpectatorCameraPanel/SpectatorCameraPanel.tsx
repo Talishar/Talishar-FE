@@ -41,6 +41,15 @@ function CameraPanel({
   onToggleView: (view: number) => void;
   onClose: () => void; 
 }) {
+  const [isRequestInProgress, setIsRequestInProgress] = useState(false);
+  
+  const handleToggleView = (view: number) => {
+    if (isRequestInProgress) return;
+    setIsRequestInProgress(true);
+    onToggleView(view);
+    // Reset after a short delay to prevent rapid re-clicks
+    setTimeout(() => setIsRequestInProgress(false), 300);
+  };
   return (
     <div className={styles.cameraPanel}>
       <div className={styles.header}>
@@ -54,14 +63,16 @@ function CameraPanel({
         
         <button 
           className={`${styles.viewButton} ${currentView === 1 ? styles.active : ''}`}
-          onClick={() => onToggleView(1)}
+          onClick={() => handleToggleView(1)}
+          disabled={isRequestInProgress}
         >
           Player 1
         </button>
         
         <button 
           className={`${styles.viewButton} ${currentView === 2 ? styles.active : ''}`}
-          onClick={() => onToggleView(2)}
+          onClick={() => handleToggleView(2)}
+          disabled={isRequestInProgress}
         >
           Player 2
         </button>

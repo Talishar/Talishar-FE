@@ -55,6 +55,7 @@ function ManualModeContent({ onClose, isPracticeDummy }: { onClose: () => void; 
   const [cardInput, setCardInput] = useState('');
   const [opponentHealthInput, setOpponentHealthInput] = useState('');
   const [isCardLoading, setIsCardLoading] = useState(false);
+  const [isRequestInProgress, setIsRequestInProgress] = useState(false);
   const dispatch = useAppDispatch();
   const gameInfo = useAppSelector(getGameInfo, shallowEqual);
   const playerHealth = useAppSelector(
@@ -98,19 +99,23 @@ function ManualModeContent({ onClose, isPracticeDummy }: { onClose: () => void; 
   };
 
   const handleDispatch = (mode: number) => {
+    if (isRequestInProgress) return;
+    setIsRequestInProgress(true);
     dispatch(
       submitButton({
         button: { mode }
       })
-    );
+    ).finally(() => setIsRequestInProgress(false));
   };
 
   const handleDispatchWithParam = (mode: number, param: string | number) => {
+    if (isRequestInProgress) return;
+    setIsRequestInProgress(true);
     dispatch(
       submitButton({
         button: { mode, ...(typeof param === 'string' ? { cardID: param.toLowerCase() } : { numMode: param }) }
       })
-    );
+    ).finally(() => setIsRequestInProgress(false));
   };
 
   const handleAddCard = () => {
@@ -146,9 +151,12 @@ function ManualModeContent({ onClose, isPracticeDummy }: { onClose: () => void; 
                 type="checkbox"
                 checked={aiHasInfiniteHP}
                 onChange={() => {
-                  handleDispatchWithParam(PROCESS_INPUT.TOGGLE_AI_INFINITE_HP, aiHasInfiniteHP ? 0 : 1);
+                  if (!isRequestInProgress) {
+                    handleDispatchWithParam(PROCESS_INPUT.TOGGLE_AI_INFINITE_HP, aiHasInfiniteHP ? 0 : 1);
+                  }
                 }}
                 className={styles.toggleCheckbox}
+                disabled={isRequestInProgress}
               />
               <span>AI Infinite HP</span>
             </label>
@@ -163,6 +171,7 @@ function ManualModeContent({ onClose, isPracticeDummy }: { onClose: () => void; 
               className={styles.buttonSmall}
               onClick={() => handleDispatch(PROCESS_INPUT.SUBTRACT_1_HP_SELF)}
               title="Remove 1 HP from player"
+              disabled={isRequestInProgress}
             >
               <AiOutlineMinus />
             </button>
@@ -171,6 +180,7 @@ function ManualModeContent({ onClose, isPracticeDummy }: { onClose: () => void; 
               className={styles.buttonSmall}
               onClick={() => handleDispatch(PROCESS_INPUT.ADD_1_HP_SELF)}
               title="Add 1 HP to player"
+              disabled={isRequestInProgress}
             >
               <AiOutlinePlus />
             </button>
@@ -185,6 +195,7 @@ function ManualModeContent({ onClose, isPracticeDummy }: { onClose: () => void; 
               className={styles.buttonSmall}
               onClick={() => handleDispatch(PROCESS_INPUT.SUBTRACT_1_HP_OPPONENT)}
               title="Remove 1 HP from opponent"
+              disabled={isRequestInProgress}
             >
               <AiOutlineMinus />
             </button>
@@ -193,6 +204,7 @@ function ManualModeContent({ onClose, isPracticeDummy }: { onClose: () => void; 
               className={styles.buttonSmall}
               onClick={() => handleDispatch(PROCESS_INPUT.ADD_1_HP_OPPONENT)}
               title="Add 1 HP to opponent"
+              disabled={isRequestInProgress}
             >
               <AiOutlinePlus />
             </button>
@@ -207,6 +219,7 @@ function ManualModeContent({ onClose, isPracticeDummy }: { onClose: () => void; 
               className={styles.buttonSmall}
               onClick={() => handleDispatch(PROCESS_INPUT.SUBTRACT_ACTION_POINT)}
               title="Remove 1 Action Point"
+              disabled={isRequestInProgress}
             >
               <AiOutlineMinus />
             </button>
@@ -215,6 +228,7 @@ function ManualModeContent({ onClose, isPracticeDummy }: { onClose: () => void; 
               className={styles.buttonSmall}
               onClick={() => handleDispatch(PROCESS_INPUT.ADD_ACTION_POINT)}
               title="Add 1 Action Point"
+              disabled={isRequestInProgress}
             >
               <AiOutlinePlus />
             </button>
@@ -229,6 +243,7 @@ function ManualModeContent({ onClose, isPracticeDummy }: { onClose: () => void; 
               className={styles.buttonSmall}
               onClick={() => handleDispatch(PROCESS_INPUT.REMOVE_RESOURCE_FROM_POOL_SELF)}
               title="Remove 1 resource from player pool"
+              disabled={isRequestInProgress}
             >
               <AiOutlineMinus />
             </button>
@@ -237,6 +252,7 @@ function ManualModeContent({ onClose, isPracticeDummy }: { onClose: () => void; 
               className={styles.buttonSmall}
               onClick={() => handleDispatch(PROCESS_INPUT.ADD_RESOURCE_TO_POOL_SELF)}
               title="Add 1 resource to player pool"
+              disabled={isRequestInProgress}
             >
               <AiOutlinePlus />
             </button>
@@ -251,6 +267,7 @@ function ManualModeContent({ onClose, isPracticeDummy }: { onClose: () => void; 
               className={styles.buttonSmall}
               onClick={() => handleDispatch(PROCESS_INPUT.REMOVE_RESOURCE_FROM_POOL_OPPONENT)}
               title="Remove 1 resource from opponent pool"
+              disabled={isRequestInProgress}
             >
               <AiOutlineMinus />
             </button>
@@ -259,6 +276,7 @@ function ManualModeContent({ onClose, isPracticeDummy }: { onClose: () => void; 
               className={styles.buttonSmall}
               onClick={() => handleDispatch(PROCESS_INPUT.ADD_RESOURCE_TO_POOL_OPPONENT)}
               title="Add 1 resource to opponent pool"
+              disabled={isRequestInProgress}
             >
               <AiOutlinePlus />
             </button>
@@ -271,6 +289,7 @@ function ManualModeContent({ onClose, isPracticeDummy }: { onClose: () => void; 
             className={styles.buttonFull}
             onClick={() => handleDispatch(PROCESS_INPUT.DRAW_CARD_SELF)}
             title="Draw a card"
+            disabled={isRequestInProgress}
           >
             Draw Card (Player)
           </button>
@@ -278,6 +297,7 @@ function ManualModeContent({ onClose, isPracticeDummy }: { onClose: () => void; 
             className={styles.buttonFull}
             onClick={() => handleDispatch(PROCESS_INPUT.DRAW_CARD_OPPONENT)}
             title="Draw a card for opponent"
+            disabled={isRequestInProgress}
           >
             Draw Card (Opp.)
           </button>
@@ -296,12 +316,12 @@ function ManualModeContent({ onClose, isPracticeDummy }: { onClose: () => void; 
               e.stopPropagation();
             }}
             placeholder="Enter card ID"
-            disabled={isCardLoading}
+            disabled={isCardLoading || isRequestInProgress}
           />
           <button 
             className={styles.buttonFull}
             onClick={handleAddCard}
-            disabled={isCardLoading || cardInput === ''}
+            disabled={isCardLoading || isRequestInProgress || cardInput === ''}
           >
             {isCardLoading ? 'Adding...' : 'Add'}
           </button>
@@ -313,6 +333,7 @@ function ManualModeContent({ onClose, isPracticeDummy }: { onClose: () => void; 
             className={styles.buttonFull}
             onClick={() => handleDispatch(PROCESS_INPUT.REMOVE_ARSENAL_FROM_SELF)}
             title="Remove arsenal from player"
+            disabled={isRequestInProgress}
           >
             Remove Arsenal (Player)
           </button>
@@ -320,6 +341,7 @@ function ManualModeContent({ onClose, isPracticeDummy }: { onClose: () => void; 
             className={styles.buttonFull}
             onClick={() => handleDispatch(PROCESS_INPUT.REMOVE_ARSENAL_FROM_OPPONENT)}
             title="Remove arsenal from opponent"
+            disabled={isRequestInProgress}
           >
             Remove Arsenal (Opp.)
           </button>

@@ -39,14 +39,17 @@ function ReplayContent({
 }) {
   const turnInputId = useId();
   const [turnNumber, setTurnNumber] = useState<string>('0');
+  const [isRequestInProgress, setIsRequestInProgress] = useState(false);
   const dispatch = useAppDispatch();
 
   const handleDispatchWithParam = (mode: number, param: string | number) => {
+    if (isRequestInProgress) return;
+    setIsRequestInProgress(true);
     dispatch(
       submitButton({
         button: { mode, ...(typeof param === 'string' ? { cardID: param.toLowerCase() } : { numMode: param }) }
       })
-    );
+    ).finally(() => setIsRequestInProgress(false));
   };
 
   const loadTurn = async (turn: number) => {
@@ -113,23 +116,24 @@ function ReplayContent({
             value={turnNumber}
             onChange={(e) => setTurnNumber(e.target.value)}
             placeholder="0"
+            disabled={isRequestInProgress}
           />
         </div>
-        <button className={styles.submitButton} onClick={handleLoadTurn}>
+        <button className={styles.submitButton} onClick={handleLoadTurn} disabled={isRequestInProgress}>
           Load Turn
         </button>
         
         <div className={styles.divider}></div>
         
-        <button className={styles.actionButton} onClick={handleReturnToStart}>
+        <button className={styles.actionButton} onClick={handleReturnToStart} disabled={isRequestInProgress}>
           Return to Start
         </button>
         
         <div className={styles.navButtons}>
-          <button className={styles.navButton} onClick={handlePreviousTurn} title="Load previous turn">
+          <button className={styles.navButton} onClick={handlePreviousTurn} title="Load previous turn" disabled={isRequestInProgress}>
             ← Previous
           </button>
-          <button className={styles.navButton} onClick={handleNextTurn} title="Load next turn">
+          <button className={styles.navButton} onClick={handleNextTurn} title="Load next turn" disabled={isRequestInProgress}>
             Next →
           </button>
         </div>
