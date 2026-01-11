@@ -1,0 +1,136 @@
+.cameraTab {
+  position: fixed;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 6rem;
+  height: 3rem;
+  background: linear-gradient(135deg, #4a9eff 0%, #3a7edf 100%);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  z-index: 100;
+  border-radius: 0 8px 8px 0;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    background: linear-gradient(135deg, #3a7edf 0%, #4a9eff 100%);
+    border-color: rgba(255, 255, 255, 0.4);
+    box-shadow: 0 0 15px rgba(74, 158, 255, 0.5);
+  }
+
+  &:active {
+    transform: translateY(-50%) scale(0.95);
+  }
+
+  &.hidden {
+    display: none;
+  }
+}
+
+.cameraPanel {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 300px;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.95);
+  border-right: 2px solid rgba(74, 158, 255, 0.2);
+  box-shadow: 2px 0 20px rgba(0, 0, 0, 0.7);
+  z-index: 99;
+  display: flex;
+  flex-direction: column;
+  animation: slideIn 0.3s ease-out;
+  overflow-y: auto;
+
+  @keyframes slideIn {
+    from {
+      transform: translateX(-100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border-bottom: 1px solid rgba(74, 158, 255, 0.2);
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.header h3 {
+  margin: 0;
+  color: #4a9eff;
+  font-size: 1.1rem;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0;
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+
+  &:hover {
+    color: #4a9eff;
+    transform: rotate(90deg);
+  }
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem 1rem;
+  gap: 1rem;
+}
+
+.description {
+  margin: 0 0 0.5rem 0;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9rem;
+}
+
+.viewButton {
+  padding: 1rem;
+  background: rgba(74, 158, 255, 0.1);
+  border: 2px solid rgba(74, 158, 255, 0.3);
+  color: #4a9eff;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  font-size: 1rem;
+
+  &:hover {
+    background: rgba(74, 158, 255, 0.2);
+    border-color: rgba(74, 158, 255, 0.6);
+  }
+
+  &.active {
+    background: linear-gradient(135deg, #4a9eff 0%, #3a7edf 100%);
+    border-color: #4a9eff;
+    color: white;
+    box-shadow: 0 0 10px rgba(74, 158, 255, 0.5);
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+}

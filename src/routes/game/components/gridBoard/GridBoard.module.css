@@ -114,6 +114,122 @@
     '. . . . . . . . . . .';
 }
 
+.SwappedGameBoardGrid {
+  position: relative;
+  display: grid;
+  grid-template-columns:
+    5px var(--card-size) var(--card-size) 1fr var(--card-size)
+    var(--card-size) var(--card-size) 1fr var(--card-size) var(--card-size) 5px;
+  grid-template-rows:
+    5px repeat(3, var(--card-size)) 1fr 5px 5px 1fr repeat(3, var(--card-size))
+    5px;
+  width: 100%;
+  height: 90vh;
+  height: 90dvh;
+  gap: 1dvh;
+  padding: 1vh;
+  grid-template-areas:
+    '. . . . . . . . . . .'
+    '. pOneHead . . . pOneArsenal pOneArsenal pOneArsenal pOneCount pOneBanish .'
+    '. pOneChest pOneHands . pOneWeaponLZone pOneHero pOneWeaponRZone . pOnePitch pOneDeck .'
+    '. pOneLegs pOnePermanents pOnePermanents pOnePermanents pOnePermanents pOnePermanents pOnePermanents healthWidget pOneGraveyard .'
+    '. . combatChain combatChain combatChain combatChain combatChain combatChain healthWidget . .'
+    '. . combatChain combatChain combatChain combatChain combatChain combatChain healthWidget . .'
+    '. . combatChain combatChain combatChain combatChain combatChain combatChain healthWidget . .'
+    '. . combatChain combatChain combatChain combatChain combatChain combatChain healthWidget . .'
+    '. pTwoHead pTwoPermanents pTwoPermanents pTwoPermanents pTwoPermanents pTwoPermanents pTwoPermanents healthWidget pTwoGraveyard .'
+    '. pTwoChest pTwoHands . pTwoWeaponLZone pTwoHero pTwoWeaponRZone . pTwoPitch pTwoDeck .'
+    '. pTwoLegs . . . pTwoArsenal pTwoArsenal pTwoArsenal pTwoCount pTwoBanish .'
+    '. . . . . . . . . . .';
+}
+
+.SwappedMirroredOpponentGameBoardGrid {
+  position: relative;
+  display: grid;
+  grid-template-columns:
+    5px var(--card-size) var(--card-size) 1fr var(--card-size)
+    var(--card-size) var(--card-size) 1fr var(--card-size) var(--card-size) 5px;
+  grid-template-rows:
+    5px repeat(3, var(--card-size)) 1fr 5px 5px 1fr repeat(3, var(--card-size))
+    5px;
+  width: 100%;
+  height: 90vh;
+  height: 90dvh;
+  gap: 1dvh;
+  padding: 1vh;
+  grid-template-areas:
+    '. . . . . . . . . . .'
+    '. pOneBanish pOneCount . . pOneArsenal pOneArsenal pOneArsenal . pOneLegs .'
+    '. pOneDeck pOnePitch . pOneWeaponLZone pOneHero pOneWeaponRZone . pOneHands pOneChest .'
+    '. pOneGraveyard pOnePermanents pOnePermanents pOnePermanents pOnePermanents pOnePermanents pOnePermanents healthWidget pOneHead .'
+    '. . combatChain combatChain combatChain combatChain combatChain combatChain healthWidget . .'
+    '. . combatChain combatChain combatChain combatChain combatChain combatChain healthWidget . .'
+    '. . combatChain combatChain combatChain combatChain combatChain combatChain healthWidget . .'
+    '. . combatChain combatChain combatChain combatChain combatChain combatChain healthWidget . .'
+    '. pTwoHead pTwoPermanents pTwoPermanents pTwoPermanents pTwoPermanents pTwoPermanents pTwoPermanents healthWidget pTwoGraveyard .'
+    '. pTwoChest pTwoHands . pTwoWeaponLZone pTwoHero pTwoWeaponRZone . pTwoPitch pTwoDeck .'
+    '. pTwoLegs . . . pTwoArsenal pTwoArsenal pTwoArsenal pTwoCount pTwoBanish .'
+    '. . . . . . . . . . .';
+}
+
+.SwappedMirroredPlayerGameBoardGrid {
+  position: relative;
+  display: grid;
+  grid-template-columns:
+    5px var(--card-size) var(--card-size) 1fr var(--card-size)
+    var(--card-size) var(--card-size) 1fr var(--card-size) var(--card-size) 5px;
+  grid-template-rows:
+    5px repeat(3, var(--card-size)) 1fr 5px 5px 1fr repeat(3, var(--card-size))
+    5px;
+  width: 100%;
+  height: 90vh;
+  height: 90dvh;
+  gap: 1dvh;
+  padding: 1vh;
+  grid-template-areas:
+    '. . . . . . . . . . .'
+    '. pOneHead . . . pOneArsenal pOneArsenal pOneArsenal pOneCount pOneBanish .'
+    '. pOneChest pOneHands . pOneWeaponLZone pOneHero pOneWeaponRZone . pOnePitch pOneDeck .'
+    '. pOneLegs pOnePermanents pOnePermanents pOnePermanents pOnePermanents pOnePermanents pOnePermanents healthWidget pOneGraveyard .'
+    '. . combatChain combatChain combatChain combatChain combatChain combatChain healthWidget . .'
+    '. . combatChain combatChain combatChain combatChain combatChain combatChain healthWidget . .'
+    '. . combatChain combatChain combatChain combatChain combatChain combatChain healthWidget . .'
+    '. . combatChain combatChain combatChain combatChain combatChain combatChain healthWidget . .'
+    '. pTwoGraveyard pTwoPermanents pTwoPermanents pTwoPermanents pTwoPermanents pTwoPermanents pTwoPermanents healthWidget pTwoHead .'
+    '. pTwoDeck pTwoPitch . pTwoWeaponLZone pTwoHero pTwoWeaponRZone . pTwoHands pTwoChest .'
+    '. pTwoBanish pTwoCount . . pTwoArsenal pTwoArsenal pTwoArsenal . pTwoLegs .'
+    '. . . . . . . . . . .';
+}
+
+.SwappedMirroredBothGameBoardGrid {
+  position: relative;
+  display: grid;
+  grid-template-columns:
+    5px var(--card-size) var(--card-size) 1fr var(--card-size)
+    var(--card-size) var(--card-size) 1fr var(--card-size) var(--card-size) 5px;
+  grid-template-rows:
+    5px repeat(3, var(--card-size)) 1fr 5px 5px 1fr repeat(3, var(--card-size))
+    5px;
+  width: 100%;
+  height: 90vh;
+  height: 90dvh;
+  gap: 1dvh;
+  padding: 1vh;
+  grid-template-areas:
+    '. . . . . . . . . . .'
+    '. pOneBanish pOneCount . . pOneArsenal pOneArsenal pOneArsenal . pOneLegs .'
+    '. pOneDeck pOnePitch . pOneWeaponLZone pOneHero pOneWeaponRZone . pOneHands pOneChest .'
+    '. pOneGraveyard pOnePermanents pOnePermanents pOnePermanents pOnePermanents pOnePermanents pOnePermanents healthWidget pOneHead .'
+    '. . combatChain combatChain combatChain combatChain combatChain combatChain healthWidget . .'
+    '. . combatChain combatChain combatChain combatChain combatChain combatChain healthWidget . .'
+    '. . combatChain combatChain combatChain combatChain combatChain combatChain healthWidget . .'
+    '. . combatChain combatChain combatChain combatChain combatChain combatChain healthWidget . .'
+    '. pTwoGraveyard pTwoPermanents pTwoPermanents pTwoPermanents pTwoPermanents pTwoPermanents pTwoPermanents healthWidget pTwoHead .'
+    '. pTwoDeck pTwoPitch . pTwoWeaponLZone pTwoHero pTwoWeaponRZone . pTwoHands pTwoChest .'
+    '. pTwoBanish pTwoCount . . pTwoArsenal pTwoArsenal pTwoArsenal . pTwoLegs .'
+    '. . . . . . . . . . .';
+}
+
 .healthWidget {
   grid-area: healthWidget;
   display: flex;
@@ -122,28 +238,53 @@
 }
 
 .gameBoardGrid > div {
-  min-width: 100%;
-  min-height: 100%;
+  width: 100%;
+  height: 100%;
   z-index: 5;
 }
 
 .MirroredOpponentGameBoardGrid > div {
-  min-width: 100%;
-  min-height: 100%;
+  width: 100%;
+  height: 100%;
   z-index: 5;
 }
 
 .MirroredPlayerGameBoardGrid > div {
-  min-width: 100%;
-  min-height: 100%;
+  width: 100%;
+  height: 100%;
   z-index: 5;
 }
 
 .MirroredBothGameBoardGrid > div {
-  min-width: 100%;
-  min-height: 100%;
+  width: 100%;
+  height: 100%;
   z-index: 5;
 }
+
+.SwappedGameBoardGrid > div {
+  width: 100%;
+  height: 100%;
+  z-index: 5;
+}
+
+.SwappedMirroredOpponentGameBoardGrid > div {
+  width: 100%;
+  height: 100%;
+  z-index: 5;
+}
+
+.SwappedMirroredPlayerGameBoardGrid > div {
+  width: 100%;
+  height: 100%;
+  z-index: 5;
+}
+
+.SwappedMirroredBothGameBoardGrid > div {
+  width: 100%;
+  height: 100%;
+  z-index: 5;
+}
+
 .pTwoLegs {
   grid-area: pTwoLegs;
   aspect-ratio: 1;

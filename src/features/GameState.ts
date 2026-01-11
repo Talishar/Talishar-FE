@@ -140,4 +140,5 @@ export default interface GameState {
     playerTwo: Array<{ id: string; amount: number }>;
   };
   aiHasInfiniteHP?: boolean;
+  spectatorCameraView?: number; // 1 for player 1 view, 2 for player 2 view
 }

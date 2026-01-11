@@ -570,6 +570,9 @@ export const gameSlice = createSlice({
       state.gameDynamicInfo.lastUpdate = 0;
       return state;
     },
+    setSpectatorCameraView: (state, action: PayloadAction<number>) => {
+      state.spectatorCameraView = action.payload;
+    },
     removeCardFromHand: (state, action: PayloadAction<{ card: Card }>) => {
       state.playerOne.Hand = state.playerOne?.Hand?.filter(
         (cardObj) =>
@@ -1013,7 +1016,8 @@ export const {
   addDamagePopup,
   removeDamagePopup,
   addHealingPopup,
-  removeHealingPopup
+  removeHealingPopup,
+  setSpectatorCameraView
 } = actions;
 
 export const getGameInfo = (state: RootState) => state.game.gameInfo;

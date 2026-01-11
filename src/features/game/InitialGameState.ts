@@ -30,7 +30,8 @@ const InitialGameState: GameState = {
     playerOne: [],
     playerTwo: []
   },
-  aiHasInfiniteHP: false
+  aiHasInfiniteHP: false,
+  spectatorCameraView: 1
 };
 
 export const OfflineTestingGameState: GameState = {
