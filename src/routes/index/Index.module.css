@@ -50,6 +50,16 @@
   order: 2;
 }
 
+@media (max-width: 768px) {
+  .gameListContainer {
+    order: 2;
+  }
+
+  .createGameContainer {
+    order: 1;
+  }
+}
+
 .newsContainer {
   margin: 1.5em auto;
   display: flex;
