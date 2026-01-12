@@ -24,10 +24,27 @@ export default function PlayerName(player: Player) {
   const noteButtonRef = useRef<HTMLButtonElement>(null);
 
   const playerID = useAppSelector((state: RootState) => state.game.gameInfo.playerID);
+  const spectatorCameraView = useAppSelector((state: RootState) => state.game.spectatorCameraView);
 
-  const playerName = useAppSelector((state: RootState) =>
-    player.isPlayer ? state.game.playerOne.Name : state.game.playerTwo.Name
-  );
+  // Get both player names
+  const playerOneName = useAppSelector((state: RootState) => state.game.playerOne.Name);
+  const playerTwoName = useAppSelector((state: RootState) => state.game.playerTwo.Name);
+
+  // Determine which player name to display
+  let playerName;
+  if (playerID === 3) {
+    // Spectator: show names based on their camera view
+    if (spectatorCameraView === 2) {
+      // Viewing player 2: board is swapped, so top (isPlayer=false) is player 1, bottom (isPlayer=true) is player 2
+      playerName = player.isPlayer ? playerTwoName : playerOneName;
+    } else {
+      // Viewing player 1 (default): board is normal, so top (isPlayer=false) is player 2, bottom (isPlayer=true) is player 1
+      playerName = player.isPlayer ? playerOneName : playerTwoName;
+    }
+  } else {
+    // Regular player: always show own name if isPlayer, opponent's if not
+    playerName = player.isPlayer ? playerOneName : playerTwoName;
+  }
 
   // Load and manage player notes from localStorage
   const getPlayerNoteKey = (username: string) => `player_note_${username}`;

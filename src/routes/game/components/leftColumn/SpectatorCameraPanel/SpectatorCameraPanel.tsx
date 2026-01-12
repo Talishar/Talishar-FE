@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { getGameInfo, setSpectatorCameraView } from 'features/game/GameSlice';
 import styles from './SpectatorCameraPanel.module.css';
 
 export default function SpectatorCameraPanel() {
-  const [isOpen, setIsOpen] = useState(false);
   const dispatch = useAppDispatch();
   const { playerID } = useAppSelector(getGameInfo);
   const spectatorCameraView = useAppSelector((state: any) => state.game.spectatorCameraView);
@@ -14,69 +13,18 @@ export default function SpectatorCameraPanel() {
     return null;
   }
 
-  const toggleView = (view: number) => {
-    dispatch(setSpectatorCameraView(view));
+  const toggleView = () => {
+    const newView = spectatorCameraView === 1 ? 2 : 1;
+    dispatch(setSpectatorCameraView(newView));
   };
 
   return (
-    <>
-      <button 
-        className={`${styles.cameraTab} ${isOpen ? styles.hidden : ''}`}
-        onClick={() => setIsOpen(!isOpen)}
-        title="Toggle Camera View"
-      >
-        Change View
-      </button>
-      {isOpen && <CameraPanel currentView={spectatorCameraView} onToggleView={toggleView} onClose={() => setIsOpen(false)} />}
-    </>
-  );
-}
-
-function CameraPanel({ 
-  currentView,
-  onToggleView,
-  onClose 
-}: { 
-  currentView: number;
-  onToggleView: (view: number) => void;
-  onClose: () => void; 
-}) {
-  const [isRequestInProgress, setIsRequestInProgress] = useState(false);
-  
-  const handleToggleView = (view: number) => {
-    if (isRequestInProgress) return;
-    setIsRequestInProgress(true);
-    onToggleView(view);
-    // Reset after a short delay to prevent rapid re-clicks
-    setTimeout(() => setIsRequestInProgress(false), 300);
-  };
-  return (
-    <div className={styles.cameraPanel}>
-      <div className={styles.header}>
-        <h3>Camera View</h3>
-        <button className={styles.closeButton} onClick={onClose}>
-          ×
-        </button>
-      </div>
-      <div className={styles.content}>
-        <p className={styles.description}>Choose which player to view:</p>
-        
-        <button 
-          className={`${styles.viewButton} ${currentView === 1 ? styles.active : ''}`}
-          onClick={() => handleToggleView(1)}
-          disabled={isRequestInProgress}
-        >
-          Player 1
-        </button>
-        
-        <button 
-          className={`${styles.viewButton} ${currentView === 2 ? styles.active : ''}`}
-          onClick={() => handleToggleView(2)}
-          disabled={isRequestInProgress}
-        >
-          Player 2
-        </button>
-      </div>
-    </div>
+    <button 
+      className={styles.cameraTab}
+      onClick={toggleView}
+      title={`Switch to Player ${spectatorCameraView === 1 ? 2 : 1} View`}
+    >
+      {spectatorCameraView === 1 ? 'View: Player 1' : 'View: Player 2'}
+    </button>
   );
 }

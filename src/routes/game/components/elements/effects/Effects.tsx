@@ -33,9 +33,24 @@ export function Effect(prop: CardProp) {
 
 export default function Effects(props: Player) {
   const classCSS = props.isPlayer ? styles.isPlayer : styles.isOpponent;
-  const effects = useAppSelector((state: RootState) =>
-    props.isPlayer ? state.game.playerOne.Effects : state.game.playerTwo.Effects
-  );
+  
+  const playerID = useAppSelector((state: RootState) => state.game.gameInfo.playerID);
+  const spectatorCameraView = useAppSelector((state: RootState) => state.game.spectatorCameraView);
+
+  // Get both effects
+  const playerOneEffects = useAppSelector((state: RootState) => state.game.playerOne.Effects);
+  const playerTwoEffects = useAppSelector((state: RootState) => state.game.playerTwo.Effects);
+
+  let effects;
+  if (playerID === 3) {
+    if (spectatorCameraView === 2) {
+      effects = props.isPlayer ? playerTwoEffects : playerOneEffects;
+    } else {
+      effects = props.isPlayer ? playerOneEffects : playerTwoEffects;
+    }
+  } else {
+    effects = props.isPlayer ? playerOneEffects : playerTwoEffects;
+  }
 
   if (effects === undefined) {
     return <div className={classCSS}></div>;

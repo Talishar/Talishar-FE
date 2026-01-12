@@ -1,8 +1,7 @@
 .cameraTab {
   position: fixed;
   left: 0;
-  top: 50%;
-  transform: translateY(-50%);
+  top: 47.5%;
   width: 6rem;
   height: 3rem;
   background: linear-gradient(135deg, #4a9eff 0%, #3a7edf 100%);

@@ -148,7 +148,6 @@
 
   &:hover {
     box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
-    transform: translateY(-1px);
   }
 
   &:active {
