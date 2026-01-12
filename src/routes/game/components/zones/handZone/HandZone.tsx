@@ -20,6 +20,7 @@ export default function HandZone(prop: Player) {
   const playerOneHand = useAppSelector((state: RootState) => state.game.playerOne.Hand);
   const playerTwoHand = useAppSelector((state: RootState) => state.game.playerTwo.Hand);
 
+  let handCards;
   if (playerID === 3) {
     if (spectatorCameraView === 2) {
       handCards = isPlayer ? playerTwoHand : playerOneHand;
