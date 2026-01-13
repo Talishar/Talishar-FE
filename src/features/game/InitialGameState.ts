@@ -30,6 +30,14 @@ const InitialGameState: GameState = {
     playerOne: [],
     playerTwo: []
   },
+  healingPopups: {
+    playerOne: [],
+    playerTwo: []
+  },
+  actionPointPopups: {
+    playerOne: [],
+    playerTwo: []
+  },
   aiHasInfiniteHP: false,
   spectatorCameraView: 1
 };

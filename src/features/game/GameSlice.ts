@@ -455,6 +455,45 @@ export const gameSlice = createSlice({
         );
       }
     },
+    addActionPointPopup: (
+      state,
+      action: PayloadAction<{
+        isPlayer: boolean;
+        amount: number;
+      }>
+    ) => {
+      const id = `${Date.now()}-${Math.random()}`;
+      const popup = { id, amount: action.payload.amount };
+      if (action.payload.isPlayer) {
+        if (!state.actionPointPopups) {
+          state.actionPointPopups = { playerOne: [], playerTwo: [] };
+        }
+        state.actionPointPopups.playerOne.push(popup);
+      } else {
+        if (!state.actionPointPopups) {
+          state.actionPointPopups = { playerOne: [], playerTwo: [] };
+        }
+        state.actionPointPopups.playerTwo.push(popup);
+      }
+    },
+    removeActionPointPopup: (
+      state,
+      action: PayloadAction<{
+        isPlayer: boolean;
+        id: string;
+      }>
+    ) => {
+      if (!state.actionPointPopups) return;
+      if (action.payload.isPlayer) {
+        state.actionPointPopups.playerOne = state.actionPointPopups.playerOne.filter(
+          (p) => p.id !== action.payload.id
+        );
+      } else {
+        state.actionPointPopups.playerTwo = state.actionPointPopups.playerTwo.filter(
+          (p) => p.id !== action.payload.id
+        );
+      }
+    },
     openOptionsMenu: (state) => {
       state.optionsMenu = { active: true };
     },
@@ -1017,6 +1056,8 @@ export const {
   removeDamagePopup,
   addHealingPopup,
   removeHealingPopup,
+  addActionPointPopup,
+  removeActionPointPopup,
   setSpectatorCameraView
 } = actions;
 
