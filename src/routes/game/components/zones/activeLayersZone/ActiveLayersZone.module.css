@@ -17,6 +17,11 @@
 
 .activeLayersContents > div {
   width: var(--card-size);
+  margin-right: -3.5vh;
+}
+
+.activeLayersContents > div:last-child {
+  margin-right: 0;
 }
 
 .activeLayersTitle {
@@ -41,10 +46,11 @@
   justify-items: flex-start;
   align-content: flex-start;
   align-items: center;
-  gap: 5px;
+  gap: 0;
   min-width: fit-content;
   max-width: 1920px;
   margin-bottom: 0;
+  padding-right: 1.5vh;
 }
 
 .orderingExplanation {
