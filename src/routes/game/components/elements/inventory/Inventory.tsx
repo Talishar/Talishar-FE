@@ -8,8 +8,10 @@ import { MdClose, MdInventory2 } from 'react-icons/md';
 export default function Inventory() {
   const [isOpen, setIsOpen] = useState(false);
   const gameState = useAppSelector((state: RootState) => state.game);
+  const playerID = gameState?.gameInfo?.playerID;
 
   const inventoryCards = gameState?.gameDynamicInfo?.playerInventory || [];
+  const isSpectator = playerID === 3;
   
   const handleClose = () => {
     setIsOpen(false);
@@ -20,8 +22,9 @@ export default function Inventory() {
       <button
         className={styles.inventoryButton}
         onClick={() => setIsOpen(true)}
-        title="View your inventory"
+        title={isSpectator ? "Spectators cannot access inventory" : "View your inventory"}
         aria-label="Inventory"
+        disabled={isSpectator}
       >
         <MdInventory2 />
       </button>
