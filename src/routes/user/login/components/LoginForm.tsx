@@ -124,6 +124,7 @@ export const LoginForm = () => {
           <input
             id="rememberMe"
             type="checkbox"
+            autoComplete="off"
             {...register('rememberMe')}
           />
           <label htmlFor="rememberMe">Remember me</label>
