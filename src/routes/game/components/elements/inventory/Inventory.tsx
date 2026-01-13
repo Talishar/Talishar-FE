@@ -22,7 +22,8 @@ export default function Inventory() {
       <button
         className={styles.inventoryButton}
         onClick={() => setIsOpen(true)}
-        title={isSpectator ? "Spectators cannot access inventory" : "View your inventory"}
+        data-tooltip={isSpectator ? "Spectators cannot access inventory" : "View your inventory"}
+        data-placement="bottom"
         aria-label="Inventory"
         disabled={isSpectator}
       >
