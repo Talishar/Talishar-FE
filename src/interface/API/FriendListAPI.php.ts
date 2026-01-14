@@ -5,6 +5,7 @@ export interface Friend {
   isPatron?: boolean;
   isPvtVoidPatron?: boolean;
   isContributor?: boolean;
+  metafyTiers?: string[];
 }
 
 export interface User {
@@ -17,6 +18,10 @@ export interface FriendRequest {
   requesterUserId: number;
   requesterUsername: string;
   createdAt: string;
+  isPatron?: boolean;
+  isPvtVoidPatron?: boolean;
+  isContributor?: boolean;
+  metafyTiers?: string[];
 }
 
 export interface SentFriendRequest {
@@ -24,6 +29,10 @@ export interface SentFriendRequest {
   recipientUserId: number;
   recipientUsername: string;
   createdAt: string;
+  isPatron?: boolean;
+  isPvtVoidPatron?: boolean;
+  isContributor?: boolean;
+  metafyTiers?: string[];
 }
 
 export interface FriendListAPIResponse {
@@ -36,3 +45,4 @@ export interface FriendListAPIResponse {
   requests?: FriendRequest[];
   sentRequests?: SentFriendRequest[];
 }
+

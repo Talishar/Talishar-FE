@@ -131,6 +131,12 @@ export default function PlayerName(player: Player) {
       : state.game.playerTwo.Name === 'Practice Dummy'
   );
 
+  const metafyTiers = useAppSelector((state: RootState) =>
+    player.isPlayer
+      ? state.game.playerOne.metafyTiers
+      : state.game.playerTwo.metafyTiers
+  );
+
   // Friend request and block mutations
   const [addFriend] = useAddFriendMutation();
   const [cancelRequest] = useCancelRequestMutation();
@@ -241,7 +247,7 @@ export default function PlayerName(player: Player) {
     }
   };
   
-  const iconMap = createPatreonIconMap(isContributor, isPvtVoidPatron, isPatron, isPracticeDummy);
+  const iconMap = createPatreonIconMap(isContributor, isPvtVoidPatron, isPatron, isPracticeDummy, metafyTiers);
 
   const getStatusClass = () => {
     if (isPvtVoidPatron) return styles.pvtVoidPatron;

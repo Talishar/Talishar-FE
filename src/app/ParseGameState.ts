@@ -74,6 +74,8 @@ function ParseEquipment(input: any) {
     Playmat: undefined,
     isPatron: undefined,
     isContributor: undefined,
+    isPvtVoidPatron: undefined,
+    metafyTiers: undefined,
     bloodDebtCount: undefined,
     bloodDebtImmune: undefined,
     CardBack: undefined,
@@ -486,10 +488,12 @@ export default function ParseGameState(input: any) {
     result.playerOne.isPatron = input.initialLoad.playerIsPatron;
     result.playerOne.isContributor = input.initialLoad.playerIsContributor;
     result.playerOne.isPvtVoidPatron = input.initialLoad.playerIsPvtVoidPatron;
+    result.playerOne.metafyTiers = input.initialLoad.playerMetafyTiers || [];
     result.playerTwo.Name = input.initialLoad.opponentName;
     result.playerTwo.isPatron = input.initialLoad.opponentIsPatron;
     result.playerTwo.isContributor = input.initialLoad.opponentIsContributor;
     result.playerTwo.isPvtVoidPatron = input.initialLoad.opponentIsPvtVoidPatron;
+    result.playerTwo.metafyTiers = input.initialLoad.opponentMetafyTiers || [];
     result.gameInfo.roguelikeGameID = input.initialLoad.roguelikeGameID;
     result.gameInfo.gameGUID = input.initialLoad.gameGUID;
     result.gameInfo.altArts = input.initialLoad.altArts;
