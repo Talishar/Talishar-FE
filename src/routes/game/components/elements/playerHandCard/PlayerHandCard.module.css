@@ -1,5 +1,5 @@
 .handCard {
-  height: 12vh;
+  height: 12dvh;
   overflow: visible;
   width: 16dvh;
   flex-shrink: 0;
@@ -7,7 +7,7 @@
 
 @media (orientation: portrait) {
   .handCard {
-    height: 12vh;
+    height: 9dvh;
     width: 14%;
     flex-shrink: 0;
     min-width: 14%;
