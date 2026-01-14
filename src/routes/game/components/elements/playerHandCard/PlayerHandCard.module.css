@@ -2,7 +2,16 @@
   height: 12vh;
   overflow: visible;
   width: 16dvh;
-  flex-shrink: 1;
+  flex-shrink: 0;
+}
+
+@media (orientation: portrait) {
+  .handCard {
+    height: 12vh;
+    width: 14%;
+    flex-shrink: 0;
+    min-width: 14%;
+  }
 }
 
 .img {

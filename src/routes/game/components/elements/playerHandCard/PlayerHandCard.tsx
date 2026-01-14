@@ -66,10 +66,13 @@ export const PlayerHandCard = ({
     event: MouseEvent | TouchEvent | PointerEvent,
     info: PanInfo
   ) => {
-    if (
-      Math.abs(info.offset.y) >
-      windowHeight * ScreenPercentageForCardPlayed
-    ) {
+    // Only play card on drag if vertical movement is significant (prevent accidental plays on scroll)
+    const isMobile = windowHeight > 800;
+    const dragThreshold = isMobile 
+      ? windowHeight * ScreenPercentageForCardPlayed * 1.5 // Higher threshold on mobile
+      : windowHeight * ScreenPercentageForCardPlayed;
+    
+    if (Math.abs(info.offset.y) > dragThreshold) {
       setSnapback(false);
       playCardFunc();
       addCardToPlayedCards(card.cardNumber);
@@ -98,8 +101,10 @@ export const PlayerHandCard = ({
   };
 
   const handleOnClick = () => {
+    // Tap to play card (unless it was a long press which shows preview)
     if (!isLongPress.current) {
       playCardFunc();
+      addCardToPlayedCards(card.cardNumber);
     }
   };
 

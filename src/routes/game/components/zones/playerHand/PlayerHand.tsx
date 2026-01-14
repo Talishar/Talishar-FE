@@ -95,11 +95,19 @@ export default function PlayerHand() {
 
   const cardsInHandsAlready = [...playedCards];
 
+  const getCardCountClass = () => {
+    const handCardCount = handCards?.length ?? 0;
+    if (handCardCount <= 3) return styles.cardCount3;
+    if (handCardCount <= 4) return styles.cardCount4;
+    if (handCardCount <= 5) return styles.cardCount5;
+    return styles.cardCount6Plus;
+  };
+
   return (
     <>
       {createPortal(
         <>
-          <div className={styles.handRow} onContextMenu={(e)=> e.preventDefault()}>
+          <div className={`${styles.handRow} ${getCardCountClass()}`} onContextMenu={(e)=> e.preventDefault()}>
             <AnimatePresence>
               {handCards !== undefined &&
                 handCards.map((card, ix) => {
