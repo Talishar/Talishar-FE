@@ -22,7 +22,7 @@
 
 @media (orientation: portrait) and (max-width: 768px) {
   .handRow {
-    justify-content: flex-start;
+    justify-content: center;
     max-width: 100%;
     width: 100%;
     gap: 5dvh;
@@ -39,10 +39,12 @@
   }
 
   .cardCount5 {
+    justify-content: flex-start;
     gap: 1dvh;
   }
 
   .cardCount6Plus {
+    justify-content: flex-start;
     gap: 0.25dvh;
   }
 }
