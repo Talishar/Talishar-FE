@@ -24,27 +24,26 @@
   .handRow {
     justify-content: center;
     max-width: 100%;
-    width: 100%;
     gap: 5dvh;
     bottom: 2dvh;
-    left: 0;
-    right: 0;
     padding: 0 0.5dvh;
     max-height: 18dvh;
     scroll-snap-type: x mandatory;
   }
 
-  .cardCount4 {
-    gap: 3dvh;
-  }
-
   .cardCount5 {
     justify-content: flex-start;
+    width: 100%;
+    left: 0;
+    right: 0;
     gap: 1dvh;
   }
 
   .cardCount6Plus {
     justify-content: flex-start;
+    width: 100%;
+    left: 0;
+    right: 0;
     gap: 0.25dvh;
   }
 }
@@ -53,25 +52,25 @@
   .handRow {
     justify-content: center;
     max-width: 100%;
-    width: 100%;
     gap: 5dvh;
     bottom: 2dvh;
-    left: 0;
-    right: 0;
     padding: 0 0.5dvh;
     max-height: 18dvh;
     scroll-snap-type: x mandatory;
   }
 
-  .cardCount4 {
-    gap: 3dvh;
-  }
 
   .cardCount5 {
+    width: 100%;
+    left: 0;
+    right: 0;
     gap: 1dvh;
   }
 
   .cardCount6Plus {
+    width: 100%;
+    left: 0;
+    right: 0;
     gap: 0.25dvh;
   }
 }
