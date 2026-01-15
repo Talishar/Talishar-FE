@@ -142,7 +142,7 @@ const AboutSection: React.FC = () => {
           </div>
           <div className={styles.stat}>
             <span className={styles.statNumber}>500+</span>
-            <span className={styles.statLabel}>Patreon Supporters</span>
+            <span className={styles.statLabel}>Active Supporters</span>
           </div>
         </div>
 
