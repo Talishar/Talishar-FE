@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
+import { BACKEND_URL } from 'appConstants';
 
 const MetafySignup = () => {
   const [searchParams] = useSearchParams();
@@ -33,7 +34,7 @@ const MetafySignup = () => {
   const processMetafySignup = async (code: string) => {
     try {
       const response = await fetch(
-        `/game/AccountFiles/MetafySignupAPI.php?code=${encodeURIComponent(code)}`,
+        `${BACKEND_URL}/AccountFiles/MetafySignupAPI.php?code=${encodeURIComponent(code)}`,
         {
           method: 'GET',
           credentials: 'include',
@@ -42,6 +43,10 @@ const MetafySignup = () => {
           }
         }
       );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
 
       const data = await response.json();
 
