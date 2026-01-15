@@ -46,6 +46,23 @@
   order: 1;
 }
 
+.gameListContainer::-webkit-scrollbar {
+  width: 12px;
+}
+
+.gameListContainer::-webkit-scrollbar-track {
+  background: #1a1d21;
+}
+
+.gameListContainer::-webkit-scrollbar-thumb {
+  background: #5a5f66;
+  border-radius: 6px;
+}
+
+.gameListContainer::-webkit-scrollbar-thumb:hover {
+  background: #d4af37;
+}
+
 .createGameContainer {
   order: 2;
 }
@@ -71,6 +88,23 @@
   order: 3;
   background: var(--theme-section-background, linear-gradient(135deg, rgba(30, 35, 41, 0.8) 0%, rgba(30, 35, 41, 0.85) 100%));
   max-height: 150vh;
+}
+
+.newsContainer::-webkit-scrollbar {
+  width: 12px;
+}
+
+.newsContainer::-webkit-scrollbar-track {
+  background: #1a1d21;
+}
+
+.newsContainer::-webkit-scrollbar-thumb {
+  background: #5a5f66;
+  border-radius: 6px;
+}
+
+.newsContainer::-webkit-scrollbar-thumb:hover {
+  background: #d4af37;
 }
 
 .newsWrapper {
@@ -344,6 +378,23 @@ h3 {
   background: transparent;
   border-radius: 0;
   border: none;
+}
+
+.newsContent::-webkit-scrollbar {
+  width: 12px;
+}
+
+.newsContent::-webkit-scrollbar-track {
+  background: #1a1d21;
+}
+
+.newsContent::-webkit-scrollbar-thumb {
+  background: #5a5f66;
+  border-radius: 6px;
+}
+
+.newsContent::-webkit-scrollbar-thumb:hover {
+  background: #d4af37;
 }
 
 @media only screen and (max-width: 768px) and (orientation: portrait) {

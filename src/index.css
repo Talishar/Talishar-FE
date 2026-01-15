@@ -10,6 +10,24 @@ body {
   padding-top: 80px;
 }
 
+/* Scrollbar styling for main body */
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1a1d21;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #5a5f66;
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #d4af37;
+}
+
 /* Link styling to differentiate from headings */
 a {
   color: var(--theme-primary, #d4af37) !important;
