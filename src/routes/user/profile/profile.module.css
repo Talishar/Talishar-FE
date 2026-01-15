@@ -773,3 +773,231 @@ td {
     padding-bottom: .5em;
   }
 }
+/* ===== Upgrade Section Styles ===== */
+
+.upgradeSection {
+  padding: 1.5em;
+  margin-bottom: 1.5em;
+  border-radius: 8px;
+  border: 2px solid var(--theme-border, rgba(255, 255, 255, 0.2));
+  background: var(--theme-section-background, linear-gradient(135deg, rgba(30, 35, 41, 0.8) 0%, rgba(30, 35, 41, 0.85) 100%));
+}
+
+.upgradeSection h3 {
+  margin-top: 0;
+  margin-bottom: 0.5em;
+  font-size: 1.3em;
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+}
+
+.upgradeSection h4 {
+  margin-top: 1em;
+  margin-bottom: 0.5em;
+  font-size: 1.1em;
+  color: var(--theme-primary, #d4af37);
+}
+
+/* Supporter Badge */
+.supporterBadge {
+  border-left: 5px solid #ffd700;
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, rgba(255, 215, 0, 0.05) 100%);
+}
+
+.supporterBadge h3 {
+  color: #ffd700;
+}
+
+.supporterText {
+  color: rgba(255, 255, 255, 0.8);
+  margin: 0.5em 0;
+  line-height: 1.6;
+}
+
+.supporterThanks {
+  color: #ffd700;
+  font-style: italic;
+  padding: 1em;
+  background: rgba(255, 215, 0, 0.1);
+  border-radius: 4px;
+  margin: 1em 0 0 0;
+}
+
+/* Free User Badge */
+.freeUserBadge {
+  border-left: 5px solid #4a90e2;
+  background: linear-gradient(135deg, rgba(74, 144, 226, 0.1) 0%, rgba(74, 144, 226, 0.05) 100%);
+}
+
+.upgradeHeader {
+  display: flex;
+  align-items: center;
+  gap: 1em;
+  margin-bottom: 1em;
+}
+
+.upgradeHeader h3 {
+  margin: 0;
+  color: var(--theme-text, #f4eded);
+}
+
+.freeBadge {
+  background: #4a90e2;
+  color: white;
+  padding: 0.4em 0.8em;
+  border-radius: 20px;
+  font-size: 0.8em;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+}
+
+.upgradeDescription {
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 1.5em;
+  line-height: 1.6;
+  font-size: 1em;
+}
+
+.benefitsSection {
+  margin: 1.5em 0;
+}
+
+.benefitsList {
+  list-style: none;
+  padding: 0;
+  margin: 0.5em 0;
+}
+
+.benefitsList li {
+  padding: 0.6em 0;
+  padding-left: 1.5em;
+  color: rgba(255, 255, 255, 0.9);
+  position: relative;
+  line-height: 1.5;
+}
+
+.benefitsList li:before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: #4a90e2;
+  font-weight: bold;
+  font-size: 1.1em;
+}
+
+.upgradeButtonSection {
+  margin: 1.5em 0;
+  padding: 1.5em;
+  background: rgba(74, 144, 226, 0.1);
+  border-radius: 6px;
+  text-align: center;
+  border: 1px solid rgba(74, 144, 226, 0.3);
+}
+
+.upgradePrompt {
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0 0 1em 0;
+  font-size: 1.05em;
+  font-weight: 500;
+}
+
+.upgradeButton {
+  display: inline-block;
+  padding: 1em 2em;
+  background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
+  color: white;
+  text-decoration: none;
+  border-radius: 6px;
+  font-weight: bold;
+  font-size: 1.05em;
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(74, 144, 226, 0.3);
+}
+
+.upgradeButton:hover {
+  background: linear-gradient(135deg, #5a9ff5 0%, #4589d4 100%);
+  box-shadow: 0 6px 20px rgba(74, 144, 226, 0.4);
+  transform: translateY(-2px);
+  text-decoration: none;
+}
+
+.upgradeButton:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 10px rgba(74, 144, 226, 0.3);
+}
+
+.upgradeNote {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9em;
+  margin: 1em 0 0 0;
+  font-style: italic;
+}
+
+.supportersInfo {
+  margin: 1.5em 0 0 0;
+  padding: 1em;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+  border-left: 3px solid var(--theme-primary, #d4af37);
+}
+
+.supportersInfo h4 {
+  margin-top: 0;
+}
+
+.metafyInfo {
+  color: rgba(255, 255, 255, 0.8);
+  margin: 0.5em 0;
+  line-height: 1.6;
+}
+
+.metafyBenefits {
+  list-style: none;
+  padding: 0;
+  margin: 0.75em 0;
+}
+
+.metafyBenefits li {
+  padding: 0.4em 0;
+  padding-left: 1.3em;
+  color: rgba(255, 255, 255, 0.8);
+  position: relative;
+  font-size: 0.95em;
+}
+
+.metafyBenefits li:before {
+  content: "→";
+  position: absolute;
+  left: 0;
+  color: var(--theme-primary, #d4af37);
+  font-weight: bold;
+}
+
+@media (max-width: 575px) {
+  .upgradeSection {
+    padding: 1em;
+  }
+
+  .upgradeButtonSection {
+    padding: 1em;
+  }
+
+  .upgradeButton {
+    width: 100%;
+    padding: 0.75em 1em;
+    font-size: 1em;
+  }
+
+  .upgradeHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5em;
+  }
+
+  .upgradeHeader h3 {
+    margin: 0;
+  }
+}

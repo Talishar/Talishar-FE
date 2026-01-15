@@ -21,6 +21,7 @@ import { HEROES_OF_RATHE } from 'routes/index/components/filter/constants';
 import FriendsList from './FriendsList';
 import BlockedUsers from './BlockedUsers';
 import MetafySection from './MetafySection';
+import UpgradeSection from './UpgradeSection';
 
 const CODE = 'code';
 const CLIENT_ID =
@@ -299,6 +300,14 @@ export const ProfilePage = () => {
               <h5>Username: {profileData?.userName}</h5>
               <div>
                 {profileIsLoading && <p>Loading Profile...</p>}
+                
+                {/* Show Upgrade/Supporter Status */}
+                <UpgradeSection
+                  isSupporter={profileData?.isPatron === "1" || profileData?.isPatron === true}
+                  userName={profileData?.userName}
+                />
+
+                {/* Metafy Section */}
                 {profileData?.metafyInfo && (
                 <MetafySection
                   isMetafyLinked={profileData?.isMetafyLinked ?? false}
@@ -306,6 +315,8 @@ export const ProfilePage = () => {
                   metafyInfo={profileData?.metafyInfo ?? ''}
                 />
               )}
+                
+                {/* Patreon Section */}
                 {!profileIsLoading && (
                   <div className={styles.patreonSection}>
                     <h3>Patreon</h3>
