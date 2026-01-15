@@ -59,6 +59,23 @@ img {
   box-sizing: border-box;
 }
 
+.gameList::-webkit-scrollbar {
+  width: 12px;
+}
+
+.gameList::-webkit-scrollbar-track {
+  background: #1a1d21;
+}
+
+.gameList::-webkit-scrollbar-thumb {
+  background: #5a5f66;
+  border-radius: 6px;
+}
+
+.gameList::-webkit-scrollbar-thumb:hover {
+  background: #d4af37;
+}
+
 .reloadButton {
   max-width: 7em;
   max-height: 2.5em;
