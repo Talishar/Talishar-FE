@@ -158,7 +158,7 @@ export const LoginForm = () => {
         </form>
         <hr className={styles.divider} />
         <a
-          href={`https://metafy.gg/auth/authorize?client_id=${import.meta.env.VITE_METAFY_LOGIN_CLIENT_ID || ''}&redirect_uri=${encodeURIComponent('https://talishar.net/AccountFiles/MetafySignupAPI.php')}&response_type=code&scope=profile`}
+          href={`https://metafy.gg/auth/authorize?client_id=${import.meta.env.VITE_METAFY_LOGIN_CLIENT_ID || ''}&redirect_uri=${encodeURIComponent('https://talishar.net/auth/metafy-signup')}&response_type=code&scope=profile`}
           className={classnames(styles.signupButton, 'outline')}
           style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5em' }}
         >
