@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import { BACKEND_URL } from 'appConstants';
@@ -6,10 +6,16 @@ import { BACKEND_URL } from 'appConstants';
 const MetafySignup = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const hasProcessedRef = useRef(false);
 
   useEffect(() => {
     const code = searchParams.get('code');
     const error = searchParams.get('error');
+
+    // Prevent double-processing (React StrictMode or other causes)
+    if (hasProcessedRef.current) {
+      return;
+    }
 
     if (error) {
       toast.error(`Metafy signup error: ${error}`, {
@@ -27,6 +33,7 @@ const MetafySignup = () => {
       return;
     }
 
+    hasProcessedRef.current = true;
     // Call backend API to process the Metafy signup
     processMetafySignup(code);
   }, [searchParams, navigate]);
