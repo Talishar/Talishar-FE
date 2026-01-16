@@ -79,7 +79,14 @@ const MetafySignup = () => {
     // Set the ref immediately and synchronously to prevent race conditions
     isProcessingRef.current = true;
     processMetafySignup(code);
-  }, [searchParams, navigate, processMetafySignup]);
+
+    // Cleanup function to reset on unmount (though this shouldn't be needed in normal flow)
+    return () => {
+      // Note: we intentionally don't reset isProcessingRef here to prevent
+      // duplicate calls even if the component remounts
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Empty dependency array - only run once on mount
 
   return (
     <div style={{ textAlign: 'center', padding: '2rem' }}>
