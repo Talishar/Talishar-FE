@@ -88,6 +88,7 @@ const MetafySignup = () => {
             window.location.href = '/';
           }, 500);
           */
+          window.location.href = '/';
         } else {
           toast.error(`Signup failed: ${data.error || 'Unknown error'}`, {
             position: 'top-center'
