@@ -80,12 +80,14 @@ const MetafySignup = () => {
           toast.success('Signup successful! Redirecting...', {
             position: 'top-center'
           });
-          
+          /*
+          Do we actually need this timeout?
           // Give time for the cookie to be set and Redux to update before redirecting
           setTimeout(() => {
             // Force a hard refresh to ensure all auth state is synced
             window.location.href = '/';
           }, 500);
+          */
         } else {
           toast.error(`Signup failed: ${data.error || 'Unknown error'}`, {
             position: 'top-center'
