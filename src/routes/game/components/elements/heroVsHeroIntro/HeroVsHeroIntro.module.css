@@ -97,15 +97,77 @@
 }
 
 .heroImageWrapper.patron {
-  border: 3px solid var(--theme-primary-focus);
+  border: 4px solid;
+  border-image: linear-gradient(135deg, #FFD700, #FFA500, #FFD700, #FFA500) 1;
   box-shadow: 
-    0 0 8px var(--theme-primary-focus),
-    0 0 16px var(--theme-primary-focus),
+    0 0 12px var(--theme-primary-focus),
     0 0 24px var(--theme-primary-focus),
-    0 0 32px var(--theme-primary-focus),
-    inset 0 0 12px var(--theme-primary-focus),
-    inset 0 0 20px rgba(255, 215, 0, 0.4),
+    0 0 36px var(--theme-primary-focus),
+    0 0 48px var(--theme-primary-focus),
+    0 0 60px rgba(255, 215, 0, 0.8),
+    inset 0 0 16px var(--theme-primary-focus),
+    inset 0 0 28px rgba(255, 215, 0, 0.6),
     0 8px 32px rgba(0, 0, 0, 0.3);
+  position: relative;
+  animation: patronShine 2s ease-in-out infinite;
+  filter: brightness(0.95) saturate(1.1);
+}
+
+.heroImageWrapper.patron::before {
+  content: '';
+  position: absolute;
+  top: -4px;
+  left: -4px;
+  right: -4px;
+  bottom: -4px;
+  border-radius: 12px;
+  background: linear-gradient(45deg, transparent 25%, rgba(255, 215, 0, 0.08) 25%, rgba(255, 215, 0, 0.08) 50%, transparent 50%, transparent 75%, rgba(255, 215, 0, 0.08) 75%, rgba(255, 215, 0, 0.08));
+  background-size: 30px 30px;
+  animation: patronShimmer 3s linear infinite;
+  pointer-events: none;
+  border-radius: 16px;
+  z-index: -1;
+  opacity: 0.6;
+}
+
+.heroImageWrapper.patron::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 12px;
+  background: none;
+  pointer-events: none;
+  display: none;
+}
+
+@keyframes patronShine {
+  0%, 100% {
+    filter: brightness(1.1) saturate(1.2);
+  }
+  50% {
+    filter: brightness(1.25) saturate(1.4);
+  }
+}
+
+@keyframes patronShimmer {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 60px 60px;
+  }
+}
+
+@keyframes patronGlow {
+  0%, 100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
 }
 
 .heroImage {

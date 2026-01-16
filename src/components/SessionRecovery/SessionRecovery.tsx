@@ -83,7 +83,7 @@ const SessionRecovery: React.FC = () => {
   /**
    * Attempt to recover authKey from multiple sources if primary is unavailable
    */
-  const attemptAuthKeyRecovery = async (gameId: number | string, playerID: number): Promise<string | null> => {
+  const attemptAuthKeyRecovery = async (gameId: number | string, playerID: number): Promise<string | undefined> => {
     try {
       // First try IndexedDB backup
       const idbAuthKey = await loadGameAuthKeyFromIndexedDB(gameId as number);
@@ -112,7 +112,7 @@ const SessionRecovery: React.FC = () => {
     } catch (error) {
       console.warn('Auth key recovery attempt failed:', error);
     }
-    return null;
+    return undefined;
   };
 
   const handleRejoin = async () => {

@@ -3,6 +3,7 @@ import ActiveEffects from '../activeEffects/ActiveEffects';
 import PlayerName from '../elements/playerName/PlayerName';
 import DevToolPanel from './DevToolPanel/DevToolPanel';
 import ReplayPanel from './ReplayPanel/ReplayPanel';
+import SpectatorCameraPanel from './SpectatorCameraPanel/SpectatorCameraPanel';
 import styles from './LeftColumn.module.css';
 import { useAppSelector } from 'app/Hooks';
 import { shallowEqual } from 'react-redux';
@@ -36,6 +37,7 @@ export default function LeftColumn() {
         <PlayerName isPlayer={true} />
       )}
       <ReplayPanel />
+      <SpectatorCameraPanel />
       <DevToolPanel />
     </div>
   );

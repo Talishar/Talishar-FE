@@ -455,6 +455,45 @@ export const gameSlice = createSlice({
         );
       }
     },
+    addActionPointPopup: (
+      state,
+      action: PayloadAction<{
+        isPlayer: boolean;
+        amount: number;
+      }>
+    ) => {
+      const id = `${Date.now()}-${Math.random()}`;
+      const popup = { id, amount: action.payload.amount };
+      if (action.payload.isPlayer) {
+        if (!state.actionPointPopups) {
+          state.actionPointPopups = { playerOne: [], playerTwo: [] };
+        }
+        state.actionPointPopups.playerOne.push(popup);
+      } else {
+        if (!state.actionPointPopups) {
+          state.actionPointPopups = { playerOne: [], playerTwo: [] };
+        }
+        state.actionPointPopups.playerTwo.push(popup);
+      }
+    },
+    removeActionPointPopup: (
+      state,
+      action: PayloadAction<{
+        isPlayer: boolean;
+        id: string;
+      }>
+    ) => {
+      if (!state.actionPointPopups) return;
+      if (action.payload.isPlayer) {
+        state.actionPointPopups.playerOne = state.actionPointPopups.playerOne.filter(
+          (p) => p.id !== action.payload.id
+        );
+      } else {
+        state.actionPointPopups.playerTwo = state.actionPointPopups.playerTwo.filter(
+          (p) => p.id !== action.payload.id
+        );
+      }
+    },
     openOptionsMenu: (state) => {
       state.optionsMenu = { active: true };
     },
@@ -569,6 +608,9 @@ export const gameSlice = createSlice({
       state.gameInfo.authKey = '';
       state.gameDynamicInfo.lastUpdate = 0;
       return state;
+    },
+    setSpectatorCameraView: (state, action: PayloadAction<number>) => {
+      state.spectatorCameraView = action.payload;
     },
     removeCardFromHand: (state, action: PayloadAction<{ card: Card }>) => {
       state.playerOne.Hand = state.playerOne?.Hand?.filter(
@@ -811,8 +853,8 @@ export const gameSlice = createSlice({
       state.gameDynamicInfo.lastUpdate = action.payload.gameDynamicInfo.lastUpdate;
       state.gameDynamicInfo.turnNo = action.payload.gameDynamicInfo.turnNo;
       state.gameDynamicInfo.clock = action.payload.gameDynamicInfo.clock;
-      state.gameDynamicInfo.spectatorCount = action.payload.gameDynamicInfo.spectatorCount;
-      state.gameDynamicInfo.spectatorNames = action.payload.gameDynamicInfo.spectatorNames;
+      state.gameDynamicInfo.spectatorCount = action.payload.gameDynamicInfo.spectatorCount ?? 0;
+      state.gameDynamicInfo.spectatorNames = action.payload.gameDynamicInfo.spectatorNames ?? [];
       state.gameDynamicInfo.playerInventory = action.payload.gameDynamicInfo.playerInventory;
       state.hasPriority = action.payload.hasPriority;
       state.priorityPlayer = action.payload.priorityPlayer;
@@ -1013,7 +1055,10 @@ export const {
   addDamagePopup,
   removeDamagePopup,
   addHealingPopup,
-  removeHealingPopup
+  removeHealingPopup,
+  addActionPointPopup,
+  removeActionPointPopup,
+  setSpectatorCameraView
 } = actions;
 
 export const getGameInfo = (state: RootState) => state.game.gameInfo;

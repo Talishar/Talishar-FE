@@ -167,6 +167,11 @@ export const PLAYMATS = {
   '34': 'High-Seas-Necro',
   '35': 'The-Hunted',
   '36': 'Deathmatch-Arena',
+  '37': 'TalisharDark',
+  '38': 'TalisharRed',
+  '39': 'TalisharBlue',
+  '40': 'TalisharGreen',  
+  '41': 'TalisharPurple',
 } as { [key: string]: string };
 
 /* Display names for playmats (user-friendly formatting) */
@@ -208,12 +213,16 @@ export const PLAYMAT_DISPLAY_NAMES = {
   '34': 'High Seas Necro',
   '35': 'The Hunted',
   '36': 'Deathmatch Arena',
+  '37': 'Talishar Dark',
+  '38': 'Talishar Red',
+  '39': 'Talishar Blue',
+  '40': 'Talishar Green',
+  '41': 'Talishar Purple',
 } as { [key: string]: string };
 
 /* Default playmats available to all players */
 export const PLAYER_PLAYMATS = [
   '0',
-  '9',
   '1',
   '2',
   '3',

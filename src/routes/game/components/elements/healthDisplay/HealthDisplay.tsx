@@ -5,9 +5,22 @@ import Player from 'interface/Player';
 import styles from './HealthDisplay.module.css';
 
 export default function HealthDisplay(props: Player) {
-  const health = useAppSelector((state: RootState) =>
-    props.isPlayer ? state.game.playerOne.Health : state.game.playerTwo.Health
-  );
+  const playerID = useAppSelector((state: RootState) => state.game.gameInfo.playerID);
+  const spectatorCameraView = useAppSelector((state: RootState) => state.game.spectatorCameraView);
+
+  const playerOneHealth = useAppSelector((state: RootState) => state.game.playerOne.Health);
+  const playerTwoHealth = useAppSelector((state: RootState) => state.game.playerTwo.Health);
+
+  let health;
+  if (playerID === 3) {
+    if (spectatorCameraView === 2) {
+      health = props.isPlayer ? playerTwoHealth : playerOneHealth;
+    } else {
+      health = props.isPlayer ? playerOneHealth : playerTwoHealth;
+    }
+  } else {
+    health = props.isPlayer ? playerOneHealth : playerTwoHealth;
+  }
 
   return (
     <div className={styles.health}>

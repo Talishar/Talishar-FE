@@ -6,7 +6,7 @@ const AdBlockingRecovery: React.FC = () => {
   // Ad blocker detection is currently disabled
   return null;
 
-  const { isPatron } = useAuth();
+  // const { isPatron } = useAuth();
   const [isAdBlockerDetected, setIsAdBlockerDetected] = useState(false);
   const [isDismissed, setIsDismissed] = useState(false);
 

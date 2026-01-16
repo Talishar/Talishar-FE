@@ -121,6 +121,15 @@ export default function useAuth() {
     }
   }, [data, setLoggedIn, dispatch]);
 
+  useEffect(() => {
+    if (isLoggedIn && !isLoading) {
+      const authRefreshInterval = setInterval(() => {
+      }, 10 * 60 * 1000); // 10 minutes
+
+      return () => clearInterval(authRefreshInterval);
+    }
+  }, [isLoggedIn, isLoading]);
+
   return {
     isLoggedIn,
     currentUserId,

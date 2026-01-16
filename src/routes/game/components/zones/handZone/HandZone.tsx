@@ -9,12 +9,27 @@ import { useAppSelector } from 'app/Hooks';
 export default function HandZone(prop: Player) {
   const { isPlayer } = prop;
 
-  const handCards = useAppSelector((state: RootState) =>
-    isPlayer ? state.game.playerOne.Hand : state.game.playerTwo.Hand
-  );
   const playerID = useAppSelector(
     (state: RootState) => state.game.gameInfo.playerID
   );
+  const spectatorCameraView = useAppSelector(
+    (state: RootState) => state.game.spectatorCameraView
+  );
+
+  // Get both hands
+  const playerOneHand = useAppSelector((state: RootState) => state.game.playerOne.Hand);
+  const playerTwoHand = useAppSelector((state: RootState) => state.game.playerTwo.Hand);
+
+  let handCards;
+  if (playerID === 3) {
+    if (spectatorCameraView === 2) {
+      handCards = isPlayer ? playerTwoHand : playerOneHand;
+    } else {
+      handCards = isPlayer ? playerOneHand : playerTwoHand;
+    }
+  } else {
+    handCards = isPlayer ? playerOneHand : playerTwoHand;
+  }
 
   let displayRow = isPlayer ? styles.isPlayer : styles.isOpponent;
   displayRow = `${displayRow} ${styles.handZone}`;

@@ -30,10 +30,11 @@ export default interface Player {
   Playmat?: string;
   isPatron?: boolean;
   isContributor?: boolean;
+  isPvtVoidPatron?: boolean;
+  metafyTiers?: string[];
   bloodDebtCount?: number;
   bloodDebtImmune?: boolean;
   CardBack?: Card;
   earthCount?: number;
   blessingsCount?: number;
-  isPvtVoidPatron?: boolean;
 }

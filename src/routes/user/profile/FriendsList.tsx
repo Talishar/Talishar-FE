@@ -252,7 +252,8 @@ export const FriendsList: React.FC<FriendsListProps> = ({ className }) => {
                           request.isContributor,
                           request.isPvtVoidPatron,
                           request.isPatron,
-                          false
+                          false,
+                          request.metafyTiers
                         )
                           .filter(icon => icon.condition)
                           .map(icon => (
@@ -308,7 +309,8 @@ export const FriendsList: React.FC<FriendsListProps> = ({ className }) => {
                           request.isContributor,
                           request.isPvtVoidPatron,
                           request.isPatron,
-                          false
+                          false,
+                          request.metafyTiers
                         )
                           .filter(icon => icon.condition)
                           .map(icon => (
@@ -373,7 +375,8 @@ export const FriendsList: React.FC<FriendsListProps> = ({ className }) => {
                             friend.isContributor,
                             friend.isPvtVoidPatron,
                             friend.isPatron,
-                            false
+                            false,
+                            friend.metafyTiers
                           )
                             .filter(icon => icon.condition)
                             .map(icon => (

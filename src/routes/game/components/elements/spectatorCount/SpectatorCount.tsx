@@ -6,10 +6,10 @@ import { FaEye } from 'react-icons/fa';
 
 export default function SpectatorCount() {
   const spectatorCount = useAppSelector(
-    (state: RootState) => state.game.gameDynamicInfo.spectatorCount ?? 0
+    (state: RootState) => state.game?.gameDynamicInfo?.spectatorCount ?? 0
   );
   const spectatorNames = useAppSelector(
-    (state: RootState) => state.game.gameDynamicInfo.spectatorNames ?? []
+    (state: RootState) => state.game?.gameDynamicInfo?.spectatorNames ?? []
   );
   const [showTooltip, setShowTooltip] = useState(false);
 

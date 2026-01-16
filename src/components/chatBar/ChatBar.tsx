@@ -347,7 +347,8 @@ export const ChatBar: React.FC = () => {
                               friend.isContributor,
                               friend.isPvtVoidPatron,
                               friend.isPatron,
-                              false
+                              false,
+                              friend.metafyTiers
                             )
                               .filter(icon => icon.condition)
                               .map(icon => (

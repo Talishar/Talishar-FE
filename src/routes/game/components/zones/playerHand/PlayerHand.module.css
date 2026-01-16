@@ -20,14 +20,57 @@
   right: 20dvh;
 }
 
-@media (orientation: portrait) {
+@media (orientation: portrait) and (max-width: 768px) {
   .handRow {
     justify-content: center;
     max-width: 100%;
+    gap: 5dvh;
+    bottom: 2dvh;
+    padding: 0 0.5dvh;
+    max-height: 18dvh;
+    scroll-snap-type: x mandatory;
+  }
+
+  .cardCount5 {
+    justify-content: flex-start;
     width: 100%;
-    gap: 0;
-    bottom: 2vh;
     left: 0;
     right: 0;
+    gap: 1dvh;
+  }
+
+  .cardCount6Plus {
+    justify-content: flex-start;
+    width: 100%;
+    left: 0;
+    right: 0;
+    gap: 0.25dvh;
+  }
+}
+
+@media (orientation: portrait) and (min-width: 769px) {
+  .handRow {
+    justify-content: center;
+    max-width: 100%;
+    gap: 5dvh;
+    bottom: 2dvh;
+    padding: 0 0.5dvh;
+    max-height: 18dvh;
+    scroll-snap-type: x mandatory;
+  }
+
+
+  .cardCount5 {
+    width: 100%;
+    left: 0;
+    right: 0;
+    gap: 1dvh;
+  }
+
+  .cardCount6Plus {
+    width: 100%;
+    left: 0;
+    right: 0;
+    gap: 0.25dvh;
   }
 }

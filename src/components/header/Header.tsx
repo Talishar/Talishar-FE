@@ -61,10 +61,10 @@ const Header = () => {
           </li>
           <li>
             <a
-              href="https://linktr.ee/Talishar"
+              href="https://metafy.gg/@talishar"
               target={'_blank'}
               className={styles.support}
-              title={'Patreon Link'}
+              title={'Metafy Link'}
             >
               Support Us!
             </a>

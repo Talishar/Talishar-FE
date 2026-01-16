@@ -28,6 +28,8 @@ export default function PassTurnDisplay() {
   );
   const [showAreYouSureModal, setShowAreYouSureModal] =
     useState<boolean>(false);
+  const [isPassClickDebounced, setIsPassClickDebounced] =
+    useState<boolean>(false);
   const [playPassTurnSound] = useSound(passTurnSound);
   const preventPassPrompt = useAppSelector(
     (state: RootState) => state.game.preventPassPrompt
@@ -53,6 +55,15 @@ export default function PassTurnDisplay() {
   }, [hasPriority, playerID]);
 
   const onPassTurn = useCallback(() => {
+    if (isPassClickDebounced) {
+      return;
+    }
+
+    setIsPassClickDebounced(true);
+    const debounceTimer = setTimeout(() => {
+      setIsPassClickDebounced(false);
+    }, 500);
+
     if (preventPassPrompt) {
       if (showAreYouSureModal) {
         // Modal is already open, treat SPACE shortucut as clicking Yes
@@ -64,7 +75,9 @@ export default function PassTurnDisplay() {
     } else {
       dispatch(submitButton({ button: { mode: PROCESS_INPUT.PASS } }));
     }
-  }, [preventPassPrompt, showAreYouSureModal, dispatch]);
+
+    return () => clearTimeout(debounceTimer);
+  }, [preventPassPrompt, showAreYouSureModal, dispatch, isPassClickDebounced]);
 
   const onUndoKeyPress = useCallback(() => {
     if (showAreYouSureModal) {

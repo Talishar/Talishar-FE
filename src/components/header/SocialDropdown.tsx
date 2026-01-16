@@ -33,7 +33,7 @@ const SocialDropdown = () => {
       {isOpen && (
         <div className={styles.dropdownMenu}>
           <a
-            href="https://metafy.gg/@pvtvoid"
+            href="https://metafy.gg/@talishar"
             target="_blank"
             rel="noopener noreferrer"
             className={styles.socialLink}
