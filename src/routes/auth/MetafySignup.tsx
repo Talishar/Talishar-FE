@@ -1,62 +1,16 @@
-import React, { useEffect, useRef, useCallback } from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import { BACKEND_URL } from 'appConstants';
 
+// Module-level variable to track processed codes - persists across component remounts
+const processedCodes = new Set<string>();
+
 const MetafySignup = () => {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
-  const isProcessingRef = useRef(false);
-
-  const processMetafySignup = useCallback(async (code: string) => {
-    try {
-      const response = await fetch(
-        `${BACKEND_URL}/AccountFiles/MetafySignupAPI.php?code=${encodeURIComponent(code)}`,
-        {
-          method: 'GET',
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
-
-      if (data.message === 'ok') {
-        toast.success('Signup successful! Redirecting...', {
-          position: 'top-center'
-        });
-        // Redirect to home after successful signup
-        setTimeout(() => {
-          navigate('/', { replace: true });
-        }, 500);
-      } else {
-        toast.error(`Signup failed: ${data.error || 'Unknown error'}`, {
-          position: 'top-center'
-        });
-        navigate('/user/login', { replace: true });
-      }
-    } catch (err) {
-      console.error('Metafy signup error:', err);
-      toast.error(`Signup error: ${err instanceof Error ? err.message : 'Unknown error'}`, {
-        position: 'top-center'
-      });
-      navigate('/user/login', { replace: true });
-    }
-  }, [navigate]);
 
   useEffect(() => {
-    // Prevent duplicate processing - use ref to guard against StrictMode double-render
-    // The ref check must happen synchronously before any async operation
-    if (isProcessingRef.current) {
-      return;
-    }
-
     const code = searchParams.get('code');
     const error = searchParams.get('error');
 
@@ -76,15 +30,62 @@ const MetafySignup = () => {
       return;
     }
 
-    // Set the ref immediately and synchronously to prevent race conditions
-    isProcessingRef.current = true;
-    processMetafySignup(code);
+    // Check if this code has already been processed (survives StrictMode remounts)
+    if (processedCodes.has(code)) {
+      console.log('[MetafySignup] Code already processed, skipping duplicate request');
+      return;
+    }
 
-    // Cleanup function to reset on unmount (though this shouldn't be needed in normal flow)
-    return () => {
-      // Note: we intentionally don't reset isProcessingRef here to prevent
-      // duplicate calls even if the component remounts
+    // Mark this code as processed BEFORE making the request
+    processedCodes.add(code);
+
+    // Clear the URL parameters immediately to prevent issues with page refresh
+    // This replaces the current URL without the code parameter
+    window.history.replaceState({}, '', window.location.pathname);
+
+    const processMetafySignup = async () => {
+      try {
+        const response = await fetch(
+          `${BACKEND_URL}/AccountFiles/MetafySignupAPI.php?code=${encodeURIComponent(code)}`,
+          {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        if (data.message === 'ok') {
+          toast.success('Signup successful! Redirecting...', {
+            position: 'top-center'
+          });
+          // Redirect to home after successful signup
+          setTimeout(() => {
+            navigate('/', { replace: true });
+          }, 500);
+        } else {
+          toast.error(`Signup failed: ${data.error || 'Unknown error'}`, {
+            position: 'top-center'
+          });
+          navigate('/user/login', { replace: true });
+        }
+      } catch (err) {
+        console.error('Metafy signup error:', err);
+        toast.error(`Signup error: ${err instanceof Error ? err.message : 'Unknown error'}`, {
+          position: 'top-center'
+        });
+        navigate('/user/login', { replace: true });
+      }
     };
+
+    processMetafySignup();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Empty dependency array - only run once on mount
 
