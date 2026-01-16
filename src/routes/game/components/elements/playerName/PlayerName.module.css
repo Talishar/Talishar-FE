@@ -196,27 +196,54 @@
 }
 
 .playerName.patron {
-  border: 2px solid var(--theme-primary-focus);
+  border: 1px solid var(--theme-primary-focus);
   background: linear-gradient(rgba(50, 10, 10, 0.6), rgba(50, 10, 10, 0.6)),
               linear-gradient(135deg, var(--theme-primary-focus), rgba(255, 237, 78, 0.05));
-  box-shadow: 0 0 12px var(--theme-primary-focus), inset 0 0 8px var(--theme-primary-focus);
+  box-shadow: 
+    0 0 6px var(--theme-primary-focus),
+    0 0 12px var(--theme-primary-focus),
+    0 0 18px var(--theme-primary-focus),
+    inset 0 0 6px var(--theme-primary-focus);
   border-radius: 0.3em;
+  position: relative;
+  animation: playerNamePatronShine 2s ease-in-out infinite;
 }
 
 .playerName.pvtVoidPatron {
-  border: 2px solid var(--theme-primary-focus);
+  border: 1px solid var(--theme-primary-focus);
   background: linear-gradient(rgba(50, 10, 10, 0.6), rgba(50, 10, 10, 0.6)),
               linear-gradient(135deg, var(--theme-primary-focus), rgba(255, 237, 78, 0.05));
-  box-shadow: 0 0 12px var(--theme-primary-focus), inset 0 0 8px var(--theme-primary-focus);
+  box-shadow: 
+    0 0 6px var(--theme-primary-focus),
+    0 0 12px var(--theme-primary-focus),
+    0 0 18px var(--theme-primary-focus),
+    inset 0 0 6px var(--theme-primary-focus);
   border-radius: 0.3em;
+  position: relative;
+  animation: playerNamePatronShine 2s ease-in-out infinite;
 }
 
 .playerName.contributor {
-  border: 2px solid var(--theme-primary-focus);
+  border: 1px solid var(--theme-primary-focus);
   background: linear-gradient(rgba(50, 10, 10, 0.6), rgba(50, 10, 10, 0.6)),
               linear-gradient(135deg, var(--theme-primary-focus), rgba(255, 237, 78, 0.05));
-  box-shadow: 0 0 12px var(--theme-primary-focus), inset 0 0 8px var(--theme-primary-focus);
+  box-shadow: 
+    0 0 6px var(--theme-primary-focus),
+    0 0 12px var(--theme-primary-focus),
+    0 0 18px var(--theme-primary-focus),
+    inset 0 0 6px var(--theme-primary-focus);
   border-radius: 0.3em;
+  position: relative;
+  animation: playerNamePatronShine 2s ease-in-out infinite;
+}
+
+@keyframes playerNamePatronShine {
+  0%, 100% {
+    filter: brightness(1);
+  }
+  50% {
+    filter: brightness(1.05);
+  }
 }
 
 .icon {

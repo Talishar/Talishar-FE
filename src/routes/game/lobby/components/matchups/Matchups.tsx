@@ -6,6 +6,7 @@ import React, { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { shallowEqual } from 'react-redux';
 import styles from './Matchups.module.css';
+import MatchupTooltip from './MatchupTooltip';
 
 export interface Matchups {
   refetch: () => void;
@@ -66,21 +67,23 @@ const Matchups = ({ refetch }: Matchups) => {
             const turnOrderIndicator = getTurnOrderIndicator(matchup.preferredTurnOrder);
             return (
               <div className={styles.matchups} key={ix}>
-                <button
-                  disabled={isUpdating}
-                  className={'outline'}
-                  onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
-                    e.preventDefault();
-                    handleMatchupClick(matchup.matchupId);
-                  }}
-                >
-                  <span className={styles.matchupName}>{matchup.name}</span>
-                  {turnOrderIndicator && (
-                    <span className={styles.turnOrderBadge}>
-                      {turnOrderIndicator}
-                    </span>
-                  )}
-                </button>
+                <MatchupTooltip content={matchup.notes}>
+                  <button
+                    disabled={isUpdating}
+                    className={'outline'}
+                    onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                      e.preventDefault();
+                      handleMatchupClick(matchup.matchupId);
+                    }}
+                  >
+                    <span className={styles.matchupName}>{matchup.name}</span>
+                    {turnOrderIndicator && (
+                      <span className={styles.turnOrderBadge}>
+                        {turnOrderIndicator}
+                      </span>
+                    )}
+                  </button>
+                </MatchupTooltip>
               </div>
             );
           })}
