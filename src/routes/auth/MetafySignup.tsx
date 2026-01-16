@@ -23,10 +23,8 @@ const MetafySignup = () => {
     }
 
     if (!code) {
-      toast.error('No authorization code received from Metafy', {
-        position: 'top-center'
-      });
-      navigate('/user/login', { replace: true });
+      // No code and no error means we've already cleared the params
+      // or this is a direct navigation - do nothing
       return;
     }
 
@@ -39,9 +37,9 @@ const MetafySignup = () => {
     // Mark this code as processed BEFORE making the request
     processedCodes.add(code);
 
-    // Clear the URL parameters immediately to prevent issues with page refresh
-    // This replaces the current URL without the code parameter
-    window.history.replaceState({}, '', window.location.pathname);
+    // Clear the search params immediately using React Router
+    // This prevents the component from processing the same code on remount
+    setSearchParams({}, { replace: true });
 
     const processMetafySignup = async () => {
       try {
@@ -86,8 +84,7 @@ const MetafySignup = () => {
     };
 
     processMetafySignup();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // Empty dependency array - only run once on mount
+  }, [searchParams, navigate, setSearchParams]); // Re-run when searchParams change
 
   return (
     <div style={{ textAlign: 'center', padding: '2rem' }}>
