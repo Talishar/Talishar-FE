@@ -1,0 +1,67 @@
+.tooltipContainer {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+.tooltip {
+  position: fixed;
+  background-color: var(--theme-surface, #2a2f35);
+  color: var(--theme-text, #ffffff);
+  padding: 0.75rem;
+  border-radius: 6px;
+  border: 1px solid var(--theme-primary, #d4af37);
+  font-size: 0.85rem;
+  line-height: 1.4;
+  white-space: normal;
+  word-wrap: break-word;
+  max-width: 500px;
+  z-index: 10000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  animation: fadeIn 0.2s ease;
+  pointer-events: none;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.tooltip.top {
+  transform: none;
+}
+
+.tooltip.bottom {
+  transform: none;
+}
+
+.tooltip.left {
+  transform: none;
+}
+
+.tooltip.right {
+  transform: none;
+}
+
+/* Style the tooltip content (HTML from Fabrary) */
+.tooltip p {
+  margin: 0 0 0.5rem 0;
+  padding: 0;
+}
+
+.tooltip p:last-child {
+  margin-bottom: 0;
+}
+
+.tooltip br {
+  content: '';
+}
+
+.tooltip strong {
+  font-weight: 600;
+  color: var(--theme-primary, #d4af37);
+}
