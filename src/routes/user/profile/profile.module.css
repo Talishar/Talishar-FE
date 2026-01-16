@@ -801,25 +801,25 @@ td {
 
 /* Supporter Badge */
 .supporterBadge {
-  border-left: 5px solid #ffd700;
-  background: linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, rgba(255, 215, 0, 0.05) 100%);
+  border-left: 5px solid #c9a961;
+  background: rgba(0, 0, 0, 0.3);
 }
 
 .supporterBadge h3 {
-  color: #ffd700;
+  color: #c9a961;
 }
 
 .supporterText {
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba(255, 255, 255, 0.75);
   margin: 0.5em 0;
   line-height: 1.6;
 }
 
 .supporterThanks {
-  color: #ffd700;
+  color: rgba(201, 169, 97, 0.85);
   font-style: italic;
   padding: 1em;
-  background: rgba(255, 215, 0, 0.1);
+  background: rgba(201, 169, 97, 0.06);
   border-radius: 4px;
   margin: 1em 0 0 0;
 }

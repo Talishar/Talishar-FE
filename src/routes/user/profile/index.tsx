@@ -303,8 +303,9 @@ export const ProfilePage = () => {
                 
                 {/* Show Upgrade/Supporter Status */}
                 <UpgradeSection
-                  isSupporter={profileData?.isPatron === "1" || profileData?.isPatron === true}
+                  isSupporter={profileData?.isMetafyLinked ?? false}
                   userName={profileData?.userName}
+                  isOwner={profileData?.userName === 'PvtVoid' || profileData?.userName === 'OotTheMonk'}
                 />
 
                 {/* Metafy Section */}
@@ -315,8 +316,9 @@ export const ProfilePage = () => {
                   metafyInfo={profileData?.metafyInfo ?? ''}
                 />
               )}
-                
+          
                 {/* Patreon Section */}
+                {/*
                 {!profileIsLoading && (
                   <div className={styles.patreonSection}>
                     <h3>Patreon</h3>
@@ -335,7 +337,8 @@ export const ProfilePage = () => {
                       </p>
                     )}
                   </div>
-                )}
+                )} 
+                */}
               </div>
 
               <FriendsList className={styles.friendsSection} />

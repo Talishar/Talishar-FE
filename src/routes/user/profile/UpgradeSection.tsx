@@ -5,14 +5,16 @@ interface UpgradeSectionProps {
   isSupporter: boolean;
   userName?: string;
   className?: string;
+  isOwner?: boolean;
 }
 
 const UpgradeSection: React.FC<UpgradeSectionProps> = ({
   isSupporter,
   userName,
-  className
+  className,
+  isOwner
 }) => {
-  if (isSupporter) {
+  if (isSupporter || isOwner) {
     return (
       <div className={`${styles.upgradeSection} ${styles.supporterBadge}`}>
         <h3>✨ Supporter Status</h3>
@@ -20,7 +22,7 @@ const UpgradeSection: React.FC<UpgradeSectionProps> = ({
           Thank you for supporting Talishar! Your contribution helps us keep the platform running and improve the game experience for everyone.
         </p>
         <p className={styles.supporterThanks}>
-          You're part of our community of supporters. Enjoy premium benefits and thank you for your generosity!
+          Enjoy premium benefits and thank you for your generosity!
         </p>
       </div>
     );
