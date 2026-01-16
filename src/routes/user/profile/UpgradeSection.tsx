@@ -14,7 +14,7 @@ const UpgradeSection: React.FC<UpgradeSectionProps> = ({
   className,
   isOwner
 }) => {
-  if (isSupporter || isOwner) {
+  if (isSupporter) {
     return (
       <div className={`${styles.upgradeSection} ${styles.supporterBadge}`}>
         <h3>✨ Supporter Status</h3>
@@ -31,8 +31,8 @@ const UpgradeSection: React.FC<UpgradeSectionProps> = ({
   return (
     <div className={`${styles.upgradeSection} ${styles.freeUserBadge}`}>
       <div className={styles.upgradeHeader}>
-        <h3>Free User</h3>
         <span className={styles.freeBadge}>FREE</span>
+        <h3>Free User</h3>
       </div>
       
       <p className={styles.upgradeDescription}>

@@ -834,7 +834,7 @@ td {
   display: flex;
   align-items: center;
   gap: 1em;
-  margin-bottom: 1em;
+  margin-bottom: 1em !important;
 }
 
 .upgradeHeader h3 {
