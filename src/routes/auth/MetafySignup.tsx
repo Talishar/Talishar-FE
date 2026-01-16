@@ -1,44 +1,14 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useCallback } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import { BACKEND_URL } from 'appConstants';
 
-let hasProcessedCode = false; // Module-level flag
-
 const MetafySignup = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const isProcessingRef = useRef(false);
 
-  useEffect(() => {
-    // Prevent processing if already done (handles StrictMode double-render)
-    if (hasProcessedCode) {
-      return;
-    }
-
-    const code = searchParams.get('code');
-    const error = searchParams.get('error');
-
-    if (error) {
-      toast.error(`Metafy signup error: ${error}`, {
-        position: 'top-center'
-      });
-      navigate('/user/login', { replace: true });
-      return;
-    }
-
-    if (!code) {
-      toast.error('No authorization code received from Metafy', {
-        position: 'top-center'
-      });
-      navigate('/user/login', { replace: true });
-      return;
-    }
-
-    hasProcessedCode = true;
-    processMetafySignup(code);
-  }, [searchParams, navigate]);
-
-  const processMetafySignup = async (code: string) => {
+  const processMetafySignup = useCallback(async (code: string) => {
     try {
       const response = await fetch(
         `${BACKEND_URL}/AccountFiles/MetafySignupAPI.php?code=${encodeURIComponent(code)}`,
@@ -78,7 +48,38 @@ const MetafySignup = () => {
       });
       navigate('/user/login', { replace: true });
     }
-  };
+  }, [navigate]);
+
+  useEffect(() => {
+    // Prevent duplicate processing - use ref to guard against StrictMode double-render
+    // The ref check must happen synchronously before any async operation
+    if (isProcessingRef.current) {
+      return;
+    }
+
+    const code = searchParams.get('code');
+    const error = searchParams.get('error');
+
+    if (error) {
+      toast.error(`Metafy signup error: ${error}`, {
+        position: 'top-center'
+      });
+      navigate('/user/login', { replace: true });
+      return;
+    }
+
+    if (!code) {
+      toast.error('No authorization code received from Metafy', {
+        position: 'top-center'
+      });
+      navigate('/user/login', { replace: true });
+      return;
+    }
+
+    // Set the ref immediately and synchronously to prevent race conditions
+    isProcessingRef.current = true;
+    processMetafySignup(code);
+  }, [searchParams, navigate, processMetafySignup]);
 
   return (
     <div style={{ textAlign: 'center', padding: '2rem' }}>
