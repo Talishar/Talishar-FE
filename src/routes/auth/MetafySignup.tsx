@@ -2,6 +2,8 @@ import React, { useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import { BACKEND_URL } from 'appConstants';
+import { useAppDispatch } from 'app/Hooks';
+import { setCredentialsReducer } from 'features/auth/authSlice';
 
 // Module-level variable to track processed codes - persists across component remounts
 const processedCodes = new Set<string>();
@@ -9,6 +11,7 @@ const processedCodes = new Set<string>();
 const MetafySignup = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     const code = searchParams.get('code');
@@ -61,12 +64,27 @@ const MetafySignup = () => {
         const data = await response.json();
 
         if (data.message === 'ok') {
+          // Update Redux auth state with the logged-in user info
+          if (data.loggedInUserID && data.loggedInUserName) {
+            dispatch(
+              setCredentialsReducer({
+                user: data.loggedInUserID,
+                userName: data.loggedInUserName,
+                accessToken: '', // Token is in httpOnly cookie, not returned
+                isPatron: data.isPatron || null,
+                isMod: data.isMod || false
+              })
+            );
+          }
+          
           toast.success('Signup successful! Redirecting...', {
             position: 'top-center'
           });
-          // Redirect to home after successful signup
+          
+          // Give time for the cookie to be set and Redux to update before redirecting
           setTimeout(() => {
-            navigate('/', { replace: true });
+            // Force a hard refresh to ensure all auth state is synced
+            window.location.href = '/';
           }, 500);
         } else {
           toast.error(`Signup failed: ${data.error || 'Unknown error'}`, {
