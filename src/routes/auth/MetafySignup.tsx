@@ -1,9 +1,7 @@
 import React, { useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
-import { BACKEND_URL } from 'appConstants';
-import { useAppDispatch } from 'app/Hooks';
-import { setCredentialsReducer } from 'features/auth/authSlice';
+import { useSubmitMetafyLoginMutation } from 'features/api/apiSlice';
 
 // Module-level variable to track processed codes - persists across component remounts
 const processedCodes = new Set<string>();
@@ -11,7 +9,7 @@ const processedCodes = new Set<string>();
 const MetafySignup = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
-  const dispatch = useAppDispatch();
+  const [submitMetafyLogin] = useSubmitMetafyLoginMutation();
 
   useEffect(() => {
     const code = searchParams.get('code');
@@ -44,68 +42,37 @@ const MetafySignup = () => {
     // This prevents the component from processing the same code on remount
     setSearchParams({}, { replace: true });
 
-    const processMetafySignup = async () => {
-      try {
-        const response = await fetch(
-          `${BACKEND_URL}/AccountFiles/MetafySignupAPI.php?code=${encodeURIComponent(code)}`,
-          {
-            method: 'GET',
-            credentials: 'include',
-            headers: {
-              'Content-Type': 'application/json'
-            }
-          }
-        );
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const data = await response.json();
-
+    // Use RTK Query mutation instead of raw fetch
+    submitMetafyLogin({
+      code: code,
+      redirect_uri: window.location.origin + '/auth/metafy-signup'
+    })
+      .unwrap()
+      .then((data) => {
         if (data.message === 'ok') {
-          // Update Redux auth state with the logged-in user info
-          if (data.loggedInUserID && data.loggedInUserName) {
-            dispatch(
-              setCredentialsReducer({
-                user: data.loggedInUserID,
-                userName: data.loggedInUserName,
-                accessToken: '', // Token is in httpOnly cookie, not returned
-                isPatron: data.isPatron || null,
-                isMod: data.isMod || false
-              })
-            );
-          }
-          
           toast.success('Signup successful! Redirecting...', {
             position: 'top-center'
           });
-          /*
-          Do we actually need this timeout?
-          // Give time for the cookie to be set and Redux to update before redirecting
+          // Force a hard refresh to ensure all auth state is synced
+          // The backend has set the session cookie and RTK Query will invalidate/refetch
           setTimeout(() => {
-            // Force a hard refresh to ensure all auth state is synced
             window.location.href = '/';
           }, 500);
-          */
-          window.location.href = '/';
         } else {
           toast.error(`Signup failed: ${data.error || 'Unknown error'}`, {
             position: 'top-center'
           });
           navigate('/user/login', { replace: true });
         }
-      } catch (err) {
+      })
+      .catch((err) => {
         console.error('Metafy signup error:', err);
-        toast.error(`Signup error: ${err instanceof Error ? err.message : 'Unknown error'}`, {
+        toast.error(`Signup error: ${err?.toString() || 'Unknown error'}`, {
           position: 'top-center'
         });
         navigate('/user/login', { replace: true });
-      }
-    };
-
-    processMetafySignup();
-  }, [searchParams, navigate, setSearchParams]); // Re-run when searchParams change
+      });
+  }, [searchParams, navigate, setSearchParams, submitMetafyLogin]);
 
   return (
     <div style={{ textAlign: 'center', padding: '2rem' }}>
