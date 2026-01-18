@@ -12,10 +12,12 @@ import {
 } from 'features/options/optionsSlice';
 import { getGameInfo } from 'features/game/GameSlice';
 import { shallowEqual } from 'react-redux';
+import { useButtonDisableContext } from 'contexts/ButtonDisableContext';
 
 const SkipAllAttacksToggle = () => {
   const settingsData = useAppSelector(getSettingsEntity);
   const dispatch = useAppDispatch();
+  const { isDisabled, triggerDisable } = useButtonDisableContext();
   const setting = useSetting({
     settingName: optConst.SHORTCUT_ATTACK_THRESHOLD
   });
@@ -27,6 +29,7 @@ const SkipAllAttacksToggle = () => {
   };
 
   const handleClickSkipAllAttacks = ({ name, value }: Setting) => {
+    triggerDisable();
     dispatch(
       updateOptions({
         game: gameInfo,
@@ -51,6 +54,7 @@ const SkipAllAttacksToggle = () => {
         }
         data-tooltip="Skip Attacks"
         data-placement="left"
+        disabled={isDisabled}
       >
         <GiBouncingSword aria-hidden="true" fontSize={'2em'} />
       </button>

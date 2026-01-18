@@ -12,10 +12,12 @@ import {
 } from 'features/options/optionsSlice';
 import { getGameInfo } from 'features/game/GameSlice';
 import { shallowEqual } from 'react-redux';
+import { useButtonDisableContext } from 'contexts/ButtonDisableContext';
 
 const SkipDefenseReactionsToggle = () => {
   const settingsData = useAppSelector(getSettingsEntity);
   const dispatch = useAppDispatch();
+  const { isDisabled, triggerDisable } = useButtonDisableContext();
   const setting = useSetting({
     settingName: optConst.SKIP_DR_WINDOW
   });
@@ -26,6 +28,7 @@ const SkipDefenseReactionsToggle = () => {
   };
 
   const handleClickPassDefenseReactions = ({ name, value }: Setting) => {
+    triggerDisable();
     dispatch(
       updateOptions({
         game: gameInfo,
@@ -50,6 +53,7 @@ const SkipDefenseReactionsToggle = () => {
         }
         data-tooltip="Pass Defense Reactions"
         data-placement="bottom"
+        disabled={isDisabled}
       >
         <TbShieldOff aria-hidden="true" fontSize={'2em'} />
       </button>

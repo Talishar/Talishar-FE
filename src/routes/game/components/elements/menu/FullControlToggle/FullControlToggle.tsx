@@ -11,9 +11,11 @@ import {
   HOLD_PRIORITY_ENUM
 } from 'features/options/constants';
 import { shallowEqual } from 'react-redux';
+import { useButtonDisableContext } from 'contexts/ButtonDisableContext';
 
 const FullControlToggle = () => {
   const dispatch = useAppDispatch();
+  const { isDisabled, triggerDisable } = useButtonDisableContext();
   const setting = useSetting({
     settingName: HOLD_PRIORITY_SETTING
   });
@@ -22,6 +24,7 @@ const FullControlToggle = () => {
   const handleClickFullControl = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     e.currentTarget.blur();
+    triggerDisable();
     // If on full control, turn off full control
     if (Number(setting?.value) === HOLD_PRIORITY_ENUM.ALWAYS_HOLD) {
       dispatch(
@@ -62,6 +65,7 @@ const FullControlToggle = () => {
         onClick={handleClickFullControl}
         data-tooltip="Always Hold Priority"
         data-placement="bottom"
+        disabled={isDisabled}
       >
         <GiUsable aria-hidden="true" />
       </button>

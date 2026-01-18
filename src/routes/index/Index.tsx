@@ -1,6 +1,7 @@
 import { useAppDispatch } from 'app/Hooks';
 import { clearGameInfo } from 'features/game/GameSlice';
 import { useEffect } from 'react';
+import { usePageTitle } from 'hooks/usePageTitle';
 import CreateGame from '../game/create/CreateGame';
 import GameList from './components/gameList';
 import styles from './Index.module.css';
@@ -11,6 +12,7 @@ import AboutSection from './components/AboutSection';
 import CommunityContent from './components/CommunityContent';
 
 const Index = () => {
+  usePageTitle('Home');
   const dispatch = useAppDispatch();
 
   useEffect(() => {

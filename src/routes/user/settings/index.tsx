@@ -1,4 +1,5 @@
 import { useGetCosmeticsQuery } from 'features/api/apiSlice';
+import { usePageTitle } from 'hooks/usePageTitle';
 import { CosmeticsSection } from '../../game/components/elements/optionsMenu/OptionsSettings/CosmeticsSection';
 import {
   CheckboxSetting,
@@ -23,6 +24,7 @@ import ThemeToggle from 'themes/ThemeToggle';
 import LanguageSelector from 'components/LanguageSelector/LanguageSelector';
 
 const SettingsPage = () => {
+  usePageTitle('Settings');
   const settingsData = useAppSelector(getSettingsEntity);
   const isLoading = useAppSelector(getSettingsStatus);
   const dispatch = useAppDispatch();

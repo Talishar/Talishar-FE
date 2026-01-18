@@ -1,4 +1,5 @@
 import React, { useEffect, useState,useMemo } from 'react';
+import { usePageTitle } from 'hooks/usePageTitle';
 import Deck from './components/deck/Deck';
 import LobbyChat from './components/lobbyChat/LobbyChat';
 import Calculator from './components/calculator/Calculator';
@@ -50,6 +51,7 @@ import { getSettingsEntity } from 'features/options/optionsSlice';
 import { ChatBar } from '../../../components/chatBar/ChatBar';
 
 const Lobby = () => {
+  usePageTitle('Lobby');
   const [showCalculator, setShowCalculator] = useState(false);
   const [activeTab, setActiveTab] = useState<string>('equipment');
   const [unreadChat, setUnreadChat] = useState<boolean>(false);

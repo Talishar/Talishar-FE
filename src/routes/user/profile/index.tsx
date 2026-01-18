@@ -1,3 +1,4 @@
+import { usePageTitle } from 'hooks/usePageTitle';
 import {
   useDeleteDeckMutation,
   useDeleteAccountMutation,
@@ -31,6 +32,7 @@ const SCOPE = 'identity identity.memberships';
 const PATREON_URL = 'https://www.patreon.com/oauth2/authorize?';
 
 export const ProfilePage = () => {
+  usePageTitle('Profile');
   const navigate = useNavigate();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [confirmationUsername, setConfirmationUsername] = useState('');
@@ -318,7 +320,6 @@ export const ProfilePage = () => {
               )}
           
                 {/* Patreon Section */}
-                {/*
                 {!profileIsLoading && (
                   <div className={styles.patreonSection}>
                     <h3>Patreon</h3>
@@ -338,7 +339,6 @@ export const ProfilePage = () => {
                     )}
                   </div>
                 )} 
-                */}
               </div>
 
               <FriendsList className={styles.friendsSection} />
