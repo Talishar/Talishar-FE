@@ -320,7 +320,6 @@ export const ProfilePage = () => {
               )}
           
                 {/* Patreon Section */}
-                {/*
                 {!profileIsLoading && (
                   <div className={styles.patreonSection}>
                     <h3>Patreon</h3>
@@ -340,7 +339,6 @@ export const ProfilePage = () => {
                     )}
                   </div>
                 )} 
-                */}
               </div>
 
               <FriendsList className={styles.friendsSection} />
