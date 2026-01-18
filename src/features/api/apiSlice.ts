@@ -173,6 +173,8 @@ export const apiSlice = createApi({
   reducerPath: 'api',
   baseQuery: dynamicBaseQuery,
   tagTypes: ['ModPageData', 'UserProfile'],
+  refetchOnFocus: false,
+  refetchOnReconnect: false,
   endpoints: (builder) => ({
     getPopUpContent: builder.query({
       query: ({
