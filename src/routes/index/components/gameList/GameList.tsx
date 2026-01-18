@@ -21,6 +21,7 @@ export interface IOpenGame {
   description?: string;
   gameName: number;
   gameCreator?: string; // Username of the game creator
+  visibility?: string; // "0" = private, "1" = public, "2" = friends-only
 }
 
 export interface IGameInProgress {
@@ -31,6 +32,7 @@ export interface IGameInProgress {
   secondsSinceLastUpdate?: number;
   gameCreator?: string; // Username of the game creator (p1)
   p2Username?: string; // Username of player 2
+  visibility?: string; // "0" = private, "1" = public, "2" = friends-only
 }
 
 export interface IInProgressGameList {
@@ -231,6 +233,11 @@ const GameList = () => {
           return false;
         }
         
+        // Hide friends-only private games (visibility "2") - these can't be spectated
+        if (game.visibility === "2") {
+          return false;
+        }
+        
         // Apply hero filter
         if (heroFilter.length > 0) {
           if (!heroFilter.find((hero) => hero === game.p1Hero || hero === game.p2Hero)) {
@@ -267,6 +274,11 @@ const GameList = () => {
         .filter((game: IOpenGame) => {
           // Hide games created by blocked users
           if (game.gameCreator && blockedUsers.includes(game.gameCreator)) {
+            return false;
+          }
+          
+          // Hide friends-only private games (visibility "2") - these can't be spectated
+          if (game.visibility === "2") {
             return false;
           }
           
