@@ -10,13 +10,17 @@ import {
 import { DEFAULT_SHORTCUTS } from 'appConstants';
 import useShortcut from 'hooks/useShortcut';
 import { GiHamburgerMenu } from 'react-icons/gi';
+import { useButtonDisableContext } from 'contexts/ButtonDisableContext';
 
 function OptionsMenuToggle() {
   const optionsMenu = useAppSelector(
     (state: RootState) => state.game.optionsMenu
   );
   const dispatch = useAppDispatch();
+  const { isDisabled, triggerDisable } = useButtonDisableContext();
+
   const toggleMenu = () => {
+    triggerDisable();
     dispatch(enableModals());
     if (optionsMenu?.active) return dispatch(closeOptionsMenu());
     return dispatch(openOptionsMenu());
@@ -32,6 +36,7 @@ function OptionsMenuToggle() {
         onClick={() => toggleMenu()}
         data-tooltip="Settings Menu"
         data-placement="bottom"
+        disabled={isDisabled}
       >
         <GiHamburgerMenu aria-hidden="true" />
       </button>
