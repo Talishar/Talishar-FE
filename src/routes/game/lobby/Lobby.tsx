@@ -23,11 +23,13 @@ import {
   useGetFriendsListQuery,
   useSendPrivateMessageMutation,
   useCreateQuickGameMutation,
-  useGetOnlineFriendsQuery
+  useGetOnlineFriendsQuery,
+  useGetUserProfileQuery
 } from 'features/api/apiSlice';
 import { useAppSelector } from 'app/Hooks';
 import { shallowEqual } from 'react-redux';
 import { RootState } from 'app/Store';
+import { createPatreonIconMap } from 'utils/patronIcons';
 import { DeckResponse, Weapon } from 'interface/API/GetLobbyInfo.php';
 import LobbyUpdateHandler from './components/updateHandler/SideboardUpdateHandler';
 import { GAME_FORMAT, BREAKPOINT_EXTRA_LARGE, CLOUD_IMAGES_URL } from 'appConstants';
@@ -77,6 +79,42 @@ const Lobby = () => {
   const { isPatron } = useAuth();
   const settingsData = useAppSelector(getSettingsEntity);
   const isMuted = settingsData['MuteSound']?.value === '1';
+
+  // Get patron info for player 1 (you)
+  const yourPatronInfo = useAppSelector((state: RootState) => ({
+    isPatron: state.game.playerOne.isPatron,
+    isContributor: state.game.playerOne.isContributor,
+    isPvtVoidPatron: state.game.playerOne.isPvtVoidPatron,
+    metafyTiers: state.game.playerOne.metafyTiers
+  }), shallowEqual);
+
+  // Get patron info for player 2 (opponent)
+  const opponentPatronInfo = useAppSelector((state: RootState) => ({
+    isPatron: state.game.playerTwo.isPatron,
+    isContributor: state.game.playerTwo.isContributor,
+    isPvtVoidPatron: state.game.playerTwo.isPvtVoidPatron,
+    metafyTiers: state.game.playerTwo.metafyTiers
+  }), shallowEqual);
+
+  // Get user profile to access Metafy tiers (since Redux might not be populated in lobby)
+  const { data: userProfileData } = useGetUserProfileQuery(undefined, {
+    skip: !isLoggedIn
+  });
+
+  // Extract Metafy tier names from communities
+  const extractMetafyTiers = () => {
+    const tiers: string[] = [];
+    if (userProfileData?.metafyCommunities && Array.isArray(userProfileData.metafyCommunities)) {
+      for (const community of userProfileData.metafyCommunities) {
+        if (community.subscription_tier?.name) {
+          tiers.push(community.subscription_tier.name);
+        }
+      }
+    }
+    return tiers;
+  };
+
+  const userMetafyTiers = extractMetafyTiers();
 
   // Note tooltip state
   const [opponentNote, setOpponentNote] = useState('');
@@ -589,6 +627,30 @@ const Lobby = () => {
                 >
                   <div className={styles.dimPic}>
                     <h3 aria-busy={isLoading}>
+                      {console.log('Rendering your name icons with userMetafyTiers:', userMetafyTiers) || createPatreonIconMap(
+                        false, // isContributor not available in profile API
+                        false, // isPvtVoidPatron not available in profile API
+                        false, // isPatron not available in profile API
+                        false,
+                        userMetafyTiers.length > 0 ? userMetafyTiers : undefined
+                      )
+                        .filter(icon => icon.condition)
+                        .map((icon, index) => (
+                          <a
+                            key={`${icon.title}-${index}`}
+                            href={icon.href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            title={icon.title}
+                            style={{ display: 'inline-block', marginRight: '0.3em' }}
+                          >
+                            <img
+                              src={icon.src}
+                              alt={icon.title}
+                              style={{ height: '1.2em', verticalAlign: 'middle' }}
+                            />
+                          </a>
+                        ))}
                       {String(data.displayName ?? '').substring(0, 15)}
                     </h3>
                     <div className={styles.heroName}>{data.deck.heroName}</div>
@@ -611,6 +673,30 @@ const Lobby = () => {
                       aria-busy={!gameLobby?.theirName}
                       style={{ cursor: opponentNote ? 'help' : 'default' }}
                     >
+                      {opponentPatronInfo && (opponentPatronInfo.metafyTiers?.length ?? 0) > 0 && createPatreonIconMap(
+                        opponentPatronInfo.isContributor,
+                        opponentPatronInfo.isPvtVoidPatron,
+                        opponentPatronInfo.isPatron,
+                        false,
+                        opponentPatronInfo.metafyTiers
+                      )
+                        .filter(icon => icon.condition)
+                        .map((icon, index) => (
+                          <a
+                            key={`${icon.title}-${index}`}
+                            href={icon.href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            title={icon.title}
+                            style={{ display: 'inline-block', marginRight: '0.3em' }}
+                          >
+                            <img
+                              src={icon.src}
+                              alt={icon.title}
+                              style={{ height: '1.2em', verticalAlign: 'middle' }}
+                            />
+                          </a>
+                        ))}
                       {String(gameLobby?.theirName ?? '').substring(0, 15)}
                     </h3>
                     <div className={styles.heroName}>
