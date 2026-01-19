@@ -17,6 +17,8 @@ export interface OnlineFriend {
   lastSeen?: string;
   timeSinceActivitySeconds?: number;
   lastSeenText: string;
+  isOnline?: boolean;
+  status?: string;
 }
 
 export interface PrivateMessagingAPIResponse {

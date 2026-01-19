@@ -325,7 +325,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
       
       csvContent += '========== STATS PROVIDED BY TALISHAR ==========\n';
       csvContent += 'Support our work on Metafy!\n';
-      csvContent += 'https://linktr.ee/Talishar\n\n';
+      csvContent += 'https://metafy.gg/@Talishar\n\n';
       
       const formatHeroName = (heroName: string): string => {
         return heroName
@@ -857,7 +857,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
             <div className={styles.watermarkContent}>
               <span>Stats provided to you by</span>
               <img src={TalisharLogo} alt="Talishar" className={styles.watermarkLogo} />
-              <span>Support our work on <a href="https://linktr.ee/Talishar" target="_blank" rel="noopener noreferrer">Patreon</a>! ❤️</span>
+              <span>Support our work on <a href="https://metafy.gg/@Talishar" target="_blank" rel="noopener noreferrer">Patreon</a>! ❤️</span>
             </div>
           </div>
         </div>

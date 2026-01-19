@@ -102,7 +102,7 @@ const AdBlockingRecovery: React.FC = () => {
         <p className={styles.subDescription}>
           Alternatively, you can{' '}
           <a
-            href="https://linktr.ee/Talishar"
+            href="https://metafy.gg/@Talishar"
             target="_blank"
             rel="noopener noreferrer"
             className={styles.link}

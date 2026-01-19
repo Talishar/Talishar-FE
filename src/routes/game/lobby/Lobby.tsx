@@ -116,6 +116,17 @@ const Lobby = () => {
 
   const userMetafyTiers = extractMetafyTiers();
 
+  // Extract patron status from profile data
+  const extractPatronStatus = () => {
+    return {
+      isContributor: userProfileData?.isContributor ?? false,
+      isPvtVoidPatron: userProfileData?.isPvtVoidPatron ?? false,
+      isPatron: userProfileData?.isPatreonLinked ?? false
+    };
+  };
+
+  const userPatronStatus = extractPatronStatus();
+
   // Note tooltip state
   const [opponentNote, setOpponentNote] = useState('');
   const [isNoteTooltipOpen, setIsNoteTooltipOpen] = useState(false);
@@ -627,10 +638,10 @@ const Lobby = () => {
                 >
                   <div className={styles.dimPic}>
                     <h3 aria-busy={isLoading}>
-                      {console.log('Rendering your name icons with userMetafyTiers:', userMetafyTiers) || createPatreonIconMap(
-                        false, // isContributor not available in profile API
-                        false, // isPvtVoidPatron not available in profile API
-                        false, // isPatron not available in profile API
+                      {createPatreonIconMap(
+                        userPatronStatus.isContributor,
+                        userPatronStatus.isPvtVoidPatron,
+                        userPatronStatus.isPatron,
                         false,
                         userMetafyTiers.length > 0 ? userMetafyTiers : undefined
                       )

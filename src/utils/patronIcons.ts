@@ -58,19 +58,19 @@ export const createPatreonIconMap = (
         condition: isContributor ?? false,
         src: '/images/copper.webp',
         title: 'I am a contributor to Talishar!',
-        href: 'https://linktr.ee/Talishar'
+        href: 'https://metafy.gg/@Talishar'
       },
       {
         condition: isPatron ?? false,
         src: '/images/patronHeart.webp',
         title: 'I am a patron of Talishar!',
-        href: 'https://linktr.ee/Talishar'
+        href: 'https://metafy.gg/@Talishar'
       },
       {
         condition: isPvtVoidPatron ?? false,
         src: '/images/patronEye.webp',
         title: 'I am a patron of PvtVoid!',
-        href: 'https://linktr.ee/Talishar'
+        href: 'https://metafy.gg/@Talishar'
       }
     );
   }
