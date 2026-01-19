@@ -175,6 +175,11 @@ export default function ParseGameState(input: any) {
     if (input.errorMessage === '1234REMATCH') {
       return { ...result, isFullRematch: true };
     }
+    // Handle game not found errors
+    const errorMsg = input.errorMessage.toLowerCase();
+    if (errorMsg.includes('game no longer exists') || errorMsg.includes('does not exist')) {
+      throw new Error(`GAME_NOT_FOUND: ${input.errorMessage}`);
+    }
   }
 
   // active chain link
