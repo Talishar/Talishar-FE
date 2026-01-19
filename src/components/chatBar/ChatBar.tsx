@@ -53,14 +53,14 @@ export const ChatBar: React.FC = () => {
     data: unreadCountData
   } = useGetUnreadMessageCountQuery(undefined, {
     skip: !isLoggedIn,
-    pollingInterval: 10000 // Poll every 10 seconds
+    pollingInterval: 30000 // Poll every 30 seconds to reduce API load
   });
 
   const {
     data: unreadByFriendData
   } = useGetUnreadMessageCountByFriendQuery(undefined, {
     skip: !isLoggedIn,
-    pollingInterval: 15000 // Poll every 15 seconds for real-time notifications
+    pollingInterval: 30000 // Poll every 30 seconds to reduce API load
   });
 
   const [sendMessage] = useSendPrivateMessageMutation();
@@ -74,30 +74,12 @@ export const ChatBar: React.FC = () => {
     if (!friendsData?.friends) return [];
     
     return [...friendsData.friends].sort((a, b) => {
-      const aOnlineData = onlineFriendsData?.onlineFriends?.find((f: any) => f.userId === a.friendUserId);
-      const bOnlineData = onlineFriendsData?.onlineFriends?.find((f: any) => f.userId === b.friendUserId);
-      
-      const aIsOnline = aOnlineData?.isOnline === true;
-      const aIsAway = aOnlineData?.isAway === true;
-      const bIsOnline = bOnlineData?.isOnline === true;
-      const bIsAway = bOnlineData?.isAway === true;
-      
-      const getStatusPriority = (isOnline: boolean, isAway: boolean) => {
-        if (isOnline && !isAway) return 0; // Online
-        if (isAway) return 1; // Away
-        return 2; // Offline
-      };
-      
-      const aPriority = getStatusPriority(aIsOnline, aIsAway);
-      const bPriority = getStatusPriority(bIsOnline, bIsAway);
-      
-      if (aPriority !== bPriority) return aPriority - bPriority;
-      
+      // No longer sort by online status - just sort alphabetically by name
       const aName = a.nickname || a.username;
       const bName = b.nickname || b.username;
       return aName.localeCompare(bName);
     });
-  }, [friendsData?.friends, onlineFriendsData?.onlineFriends]);
+  }, [friendsData?.friends]);
 
   // Update ChatBar position to align with sticky footer (only in Lobby)
   useEffect(() => {
@@ -324,15 +306,13 @@ export const ChatBar: React.FC = () => {
                   const onlineFriend = onlineFriendsData?.onlineFriends?.find(
                     (f: any) => f.userId === friend.friendUserId
                   );
-                  const isOnline = onlineFriend?.isOnline === true;
-                  const isAway = onlineFriend?.isAway === true;
                   
                   return (
                     <div
                       key={friend.friendUserId}
                       className={styles.friendItem}
                     >
-                      <div className={`${styles.onlineIndicator} ${isOnline ? styles.online : isAway ? styles.away : styles.offline}`} />
+                      <div className={`${styles.onlineIndicator} ${styles.offline}`} />
                       <div 
                         className={styles.friendInfo}
                         onClick={() => {
@@ -372,10 +352,9 @@ export const ChatBar: React.FC = () => {
                           </div>
                         )}
                         <div className={styles.friendStatus}>
-                          {isAway && onlineFriend?.timeSinceActivity && (() => {
-                            const minutesAway = Math.floor((onlineFriend.timeSinceActivity - 60) / 60);
-                            return minutesAway > 0 ? `(away ${minutesAway}m)` : '(away)';
-                          })()}
+                          {onlineFriend?.lastSeenText && (
+                            <span>Last seen {onlineFriend.lastSeenText}</span>
+                          )}
                         </div>
                       </div>
                       <button
@@ -453,7 +432,7 @@ const ChatWindowComponent: React.FC<ChatWindowProps> = ({
     refetch: refetchMessages
   } = useGetPrivateMessagesQuery(
     { friendUserId: friendUserId, limit: 50 },
-    { skip: !isLoggedIn || chat.isMinimized, pollingInterval: 2000 } // Reduced from 5s to 2s for faster updates
+    { skip: !isLoggedIn || chat.isMinimized, pollingInterval: 30000 } // Poll every 30 seconds to reduce API load
   );
 
   const messages = messagesData?.messages ?? [];
