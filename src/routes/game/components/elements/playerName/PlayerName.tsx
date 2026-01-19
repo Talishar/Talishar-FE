@@ -137,11 +137,6 @@ export default function PlayerName(player: Player) {
       : state.game.playerTwo.metafyTiers
   );
 
-  // Debug logging
-  useEffect(() => {
-    console.log(`[PlayerName] ${playerName} - isPatron:`, isPatron, 'metafyTiers:', metafyTiers);
-  }, [playerName, isPatron, metafyTiers]);
-
   // Friend request and block mutations
   const [addFriend] = useAddFriendMutation();
   const [cancelRequest] = useCancelRequestMutation();
