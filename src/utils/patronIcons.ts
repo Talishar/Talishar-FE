@@ -12,7 +12,7 @@ export interface PatreonIcon {
 export type MetafyTierName = 'Fyendal Supporters' | 'Seers of Ophidia' | 'Arknight Shards' | 'Lover of Grandeur' | 'Sponsors of Trōpal-Dhani' | 'Light of Sol Gemini Circle';
 
 // Map Metafy tier names to badge images and links
-const METAFY_TIER_MAP: Record<MetafyTierName, { image: string; title: string }> = {
+export const METAFY_TIER_MAP: Record<MetafyTierName, { image: string; title: string }> = {
   'Fyendal Supporters': {
     image: '/images/fyendal.webp',
     title: 'Fyendal Supporter'
