@@ -49,6 +49,8 @@ export const createPatreonIconMap = (
   // If user has Metafy badges, only show those (skip Patreon badges)
   const hasMetafyBadges = metafyTiers && metafyTiers.length > 0;
 
+  console.log('[createPatreonIconMap] metafyTiers:', metafyTiers, 'hasMetafyBadges:', hasMetafyBadges);
+
   const icons: PatreonIcon[] = [];
 
   // Only add Patreon badges if user doesn't have Metafy badges
@@ -78,7 +80,9 @@ export const createPatreonIconMap = (
   // Add Metafy tier badges (if present, only these show)
   if (hasMetafyBadges) {
     for (const tier of metafyTiers) {
+      console.log('[createPatreonIconMap] Processing tier:', tier);
       const tierConfig = METAFY_TIER_MAP[tier as MetafyTierName];
+      console.log('[createPatreonIconMap] tierConfig:', tierConfig);
       if (tierConfig) {
         icons.push({
           condition: true,
@@ -97,5 +101,6 @@ export const createPatreonIconMap = (
     title: 'I am a bot!'
   });
 
+  console.log('[createPatreonIconMap] Final icons:', icons);
   return icons;
 };
