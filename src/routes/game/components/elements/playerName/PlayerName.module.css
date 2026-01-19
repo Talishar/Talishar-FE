@@ -131,7 +131,8 @@
 
 .dropdown.patron,
 .dropdown.pvtVoidPatron,
-.dropdown.contributor {
+.dropdown.contributor,
+.dropdown.metafy {
   border: 2px solid var(--theme-primary-focus);
   background: linear-gradient(rgba(30, 10, 10, 0.95), rgba(30, 10, 10, 0.95)),
               linear-gradient(135deg, var(--theme-primary-focus), rgba(255, 237, 78, 0.05));
@@ -224,6 +225,20 @@
 }
 
 .playerName.contributor {
+  border: 1px solid var(--theme-primary-focus);
+  background: linear-gradient(rgba(50, 10, 10, 0.6), rgba(50, 10, 10, 0.6)),
+              linear-gradient(135deg, var(--theme-primary-focus), rgba(255, 237, 78, 0.05));
+  box-shadow: 
+    0 0 6px var(--theme-primary-focus),
+    0 0 12px var(--theme-primary-focus),
+    0 0 18px var(--theme-primary-focus),
+    inset 0 0 6px var(--theme-primary-focus);
+  border-radius: 0.3em;
+  position: relative;
+  animation: playerNamePatronShine 2s ease-in-out infinite;
+}
+
+.playerName.metafy {
   border: 1px solid var(--theme-primary-focus);
   background: linear-gradient(rgba(50, 10, 10, 0.6), rgba(50, 10, 10, 0.6)),
               linear-gradient(135deg, var(--theme-primary-focus), rgba(255, 237, 78, 0.05));

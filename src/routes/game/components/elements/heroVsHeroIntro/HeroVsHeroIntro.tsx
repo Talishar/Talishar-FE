@@ -71,12 +71,12 @@ const HeroVsHeroIntro = () => {
   
   // Get patron status
   const yourPatronStatus = playerID === 1 
-    ? gameState?.playerOne?.isPatron || gameState?.playerOne?.isPvtVoidPatron || gameState?.playerOne?.isContributor
-    : gameState?.playerTwo?.isPatron || gameState?.playerTwo?.isPvtVoidPatron || gameState?.playerTwo?.isContributor;
+    ? (gameState?.playerOne?.metafyTiers?.length ?? 0) > 0 || gameState?.playerOne?.isPatron || gameState?.playerOne?.isPvtVoidPatron || gameState?.playerOne?.isContributor
+    : (gameState?.playerTwo?.metafyTiers?.length ?? 0) > 0 || gameState?.playerTwo?.isPatron || gameState?.playerTwo?.isPvtVoidPatron || gameState?.playerTwo?.isContributor;
 
   const opponentPatronStatus = playerID === 1 
-    ? gameState?.playerTwo?.isPatron || gameState?.playerTwo?.isPvtVoidPatron || gameState?.playerTwo?.isContributor
-    : gameState?.playerOne?.isPatron || gameState?.playerOne?.isPvtVoidPatron || gameState?.playerOne?.isContributor;
+    ? (gameState?.playerTwo?.metafyTiers?.length ?? 0) > 0 || gameState?.playerTwo?.isPatron || gameState?.playerTwo?.isPvtVoidPatron || gameState?.playerTwo?.isContributor
+    : (gameState?.playerOne?.metafyTiers?.length ?? 0) > 0 || gameState?.playerOne?.isPatron || gameState?.playerOne?.isPvtVoidPatron || gameState?.playerOne?.isContributor;
 
   // Check if hero intro is disabled
   const disableHeroIntro = settingsData['DisableHeroIntro']?.value === '1';

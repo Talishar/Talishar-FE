@@ -21,10 +21,10 @@ export default function ManualModePanel() {
   );
 
   useEffect(() => {
-    if (isManualMode || isPracticeDummy) {
+    if (isManualMode) {
       setIsOpen(true);
     }
-  }, [isManualMode, isPracticeDummy]);
+  }, [isManualMode]);
 
   // In local environment, always show the tab. In production, hide if manual mode is off (unless against Practice Dummy)
   if (!isLocalEnvironment && !isManualMode && !isPracticeDummy) {
