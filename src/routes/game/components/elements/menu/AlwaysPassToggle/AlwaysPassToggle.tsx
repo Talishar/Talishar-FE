@@ -11,9 +11,11 @@ import {
   HOLD_PRIORITY_ENUM
 } from 'features/options/constants';
 import { shallowEqual } from 'react-redux';
+import { useButtonDisableContext } from 'contexts/ButtonDisableContext';
 
 const AlwaysPassToggle = () => {
   const dispatch = useAppDispatch();
+  const { isDisabled, triggerDisable } = useButtonDisableContext();
   const setting = useSetting({
     settingName: HOLD_PRIORITY_SETTING
   });
@@ -22,6 +24,7 @@ const AlwaysPassToggle = () => {
   const handleClickAlwaysPass = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     e.currentTarget.blur();
+    triggerDisable();
     // If on Always Pass, turn off Always Pass
     if (Number(setting?.value) === HOLD_PRIORITY_ENUM.ALWAYS_PASS) {
       dispatch(
@@ -62,6 +65,7 @@ const AlwaysPassToggle = () => {
         onClick={handleClickAlwaysPass}
         data-tooltip="Always Pass Priority"
         data-placement="bottom"
+        disabled={isDisabled}
       >
         <BiSkipNextCircle aria-hidden="true" />
       </button>

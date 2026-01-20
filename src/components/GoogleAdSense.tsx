@@ -119,7 +119,7 @@ const GoogleAdSense: React.FC<GoogleAdSenseProps> = ({
         <p style={{ margin: 0 }}>
           Ads disabled due to cookie preferences.{' '}
           <a
-            href="https://linktr.ee/Talishar"
+            href="https://metafy.gg/@Talishar"
             target="_blank"
             rel="noopener noreferrer"
             style={{ color: '#FF424D', textDecoration: 'none' }}
@@ -149,7 +149,7 @@ const GoogleAdSense: React.FC<GoogleAdSenseProps> = ({
       >
         <p style={{ margin: 0 }}>
           <a
-            href="https://linktr.ee/Talishar"
+            href="https://metafy.gg/@Talishar"
             target="_blank"
             rel="noopener noreferrer"
             style={{ color: '#FF424D', textDecoration: 'none' }}

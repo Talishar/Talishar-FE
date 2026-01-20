@@ -71,7 +71,7 @@ const EndGameScreen = () => {
       content = (
         <div>
           Support our{' '}
-          <a href="https://linktr.ee/Talishar" target="_blank">
+          <a href="https://metafy.gg/@Talishar" target="_blank">
             Metafy
           </a>{' '}
           to access this feature.

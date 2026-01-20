@@ -14,10 +14,11 @@ export interface OnlineFriend {
   userId: number;
   username: string;
   nickname?: string;
-  isOnline: boolean;
-  isAway?: boolean;
   lastSeen?: string;
-  timeSinceActivity?: number;
+  timeSinceActivitySeconds?: number;
+  lastSeenText: string;
+  isOnline?: boolean;
+  status?: string;
 }
 
 export interface PrivateMessagingAPIResponse {

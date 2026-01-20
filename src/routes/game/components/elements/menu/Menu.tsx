@@ -8,14 +8,18 @@ import styles from './Menu.module.css';
 import { DEFAULT_SHORTCUTS, PROCESS_INPUT } from 'appConstants';
 import FullControlToggle from './FullControlToggle/FullControlToggle';
 import HideModalsToggle from './HideModalsToggle/HideModalsToggle';
-import OptionsMenuToggle from './OptionsMenuToggle';
-import ShowMobileChat from './ShowMobileChat';
+import OptionsMenuToggle from './OptionsMenuToggle/OptionsMenuToggle';
+import ShowMobileChat from './ShowMobileChat/ShowMobileChat';
 import AlwaysPassToggle from './AlwaysPassToggle/AlwaysPassToggle';
 import useShortcut from 'hooks/useShortcut';
 import PlayerName from '../playerName/PlayerName';
+import { ButtonDisableProvider, useButtonDisableContext } from 'contexts/ButtonDisableContext';
 
 function FullScreenButton() {
+  const { isDisabled, triggerDisable } = useButtonDisableContext();
+
   function toggleFullScreen() {
+    triggerDisable();
     screenfull.toggle();
   }
 
@@ -27,6 +31,7 @@ function FullScreenButton() {
         onClick={() => toggleFullScreen()}
         data-tooltip="Fullscreen"
         data-placement="bottom"
+        disabled={isDisabled}
       >
         <GiExpand aria-hidden="true" />
       </button>
@@ -36,12 +41,15 @@ function FullScreenButton() {
 
 function UndoButton() {
   const dispatch = useAppDispatch();
+  const { isDisabled, triggerDisable } = useButtonDisableContext();
+
   const clickUndo = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     e.currentTarget.blur();
     handleUndo();
   };
   const handleUndo = () => {
+    triggerDisable();
     dispatch(submitButton({ button: { mode: PROCESS_INPUT.UNDO } }));
   };
   useShortcut(DEFAULT_SHORTCUTS.UNDO, handleUndo);
@@ -54,6 +62,7 @@ function UndoButton() {
         onClick={clickUndo}
         data-tooltip="Undo"
         data-placement="bottom"
+        disabled={isDisabled}
       >
         <FaUndo aria-hidden="true" />
       </button>
@@ -61,8 +70,7 @@ function UndoButton() {
   );
 }
 
-export default function Menu() {
-
+function MenuContent() {
   const [isMobile, setIsMobile] = useState(false);
   const [isTablet, setIsTablet] = useState(false);
 
@@ -98,5 +106,13 @@ export default function Menu() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function Menu() {
+  return (
+    <ButtonDisableProvider disableDuration={2000}>
+      <MenuContent />
+    </ButtonDisableProvider>
   );
 }

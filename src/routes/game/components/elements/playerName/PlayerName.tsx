@@ -250,6 +250,7 @@ export default function PlayerName(player: Player) {
   const iconMap = createPatreonIconMap(isContributor, isPvtVoidPatron, isPatron, isPracticeDummy, metafyTiers);
 
   const getStatusClass = () => {
+    if (metafyTiers && metafyTiers.length > 0) return styles.metafy;
     if (isPvtVoidPatron) return styles.pvtVoidPatron;
     if (isContributor) return styles.contributor;
     if (isPatron) return styles.patron;

@@ -3,7 +3,6 @@ import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import styles from './timer.module.css';
 import { FaRegClock } from "react-icons/fa";
-import { useCookies } from 'react-cookie';
 
 const getGameIdFromUrl = () => {
   const url = window.location.href;
@@ -11,23 +10,50 @@ const getGameIdFromUrl = () => {
   return gameId;
 };
 
+const STORAGE_KEY_PREFIX = 'game-timer-';
+
+// Clean up old timer cookies and migrate to sessionStorage
+//TODO: Delete this once cookies are cleaned up
+const cleanupOldCookies = () => {
+  // Get all cookies and remove timer-* ones
+  const cookies = document.cookie.split(';');
+  cookies.forEach((cookie) => {
+    const cookieName = cookie.split('=')[0].trim();
+    if (cookieName.startsWith('timer-')) {
+      // Clear the cookie by setting it with an expired date
+      document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+    }
+  });
+};
+
 export default function Timer() {
   const gameId = getGameIdFromUrl();
-  const cookieName = `timer-${gameId}`;
-  const [cookies, setCookie, removeCookie] = useCookies([cookieName]);
-  const initialTimer = cookies[cookieName] ? parseInt(cookies[cookieName]) : 0;
+  const storageKey = `${STORAGE_KEY_PREFIX}${gameId}`;
+  
+  // Initialize from localStorage (persists across browser sessions)
+  const initialTimer = localStorage.getItem(storageKey) 
+    ? parseInt(localStorage.getItem(storageKey)!) 
+    : 0;
   const [timer, setTimer] = useState(initialTimer);
+
+  // Clean up old cookies on mount
+  useEffect(() => {
+    cleanupOldCookies();
+  }, []);
 
   useEffect(() => {
     const intervalId = setInterval(() => {
-      setTimer(timer + 1);
-      setCookie(cookieName, timer + 1, { path: '/' });
+      setTimer((prevTimer) => {
+        const newTimer = prevTimer + 1;
+        localStorage.setItem(storageKey, newTimer.toString());
+        return newTimer;
+      });
     }, 1000); // update every 1 second
 
     return () => {
       clearInterval(intervalId);
     };
-  }, [timer]);
+  }, [storageKey]);
 
   function fancyTimeFormat(duration: number | undefined) {
     duration = duration ?? 0;

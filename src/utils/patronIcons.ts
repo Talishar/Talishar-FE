@@ -12,7 +12,7 @@ export interface PatreonIcon {
 export type MetafyTierName = 'Fyendal Supporters' | 'Seers of Ophidia' | 'Arknight Shards' | 'Lover of Grandeur' | 'Sponsors of Trōpal-Dhani' | 'Light of Sol Gemini Circle';
 
 // Map Metafy tier names to badge images and links
-const METAFY_TIER_MAP: Record<MetafyTierName, { image: string; title: string }> = {
+export const METAFY_TIER_MAP: Record<MetafyTierName, { image: string; title: string }> = {
   'Fyendal Supporters': {
     image: '/images/fyendal.webp',
     title: 'Fyendal Supporter'
@@ -58,19 +58,19 @@ export const createPatreonIconMap = (
         condition: isContributor ?? false,
         src: '/images/copper.webp',
         title: 'I am a contributor to Talishar!',
-        href: 'https://linktr.ee/Talishar'
+        href: 'https://metafy.gg/@Talishar'
       },
       {
         condition: isPatron ?? false,
         src: '/images/patronHeart.webp',
-        title: 'I am a patron of Talishar!',
-        href: 'https://linktr.ee/Talishar'
+        title: 'I am a Supporter of Talishar 💖',
+        href: 'https://metafy.gg/@Talishar'
       },
       {
         condition: isPvtVoidPatron ?? false,
         src: '/images/patronEye.webp',
-        title: 'I am a patron of PvtVoid!',
-        href: 'https://linktr.ee/Talishar'
+        title: 'I am a Supporter of Talishar 💖',
+        href: 'https://metafy.gg/@Talishar'
       }
     );
   }
@@ -94,7 +94,7 @@ export const createPatreonIconMap = (
   icons.push({
     condition: isPracticeDummy ?? false,
     src: '/images/practiceDummy.webp',
-    title: 'I am a bot!'
+    title: 'I am a bot! 🤖'
   });
 
   return icons;

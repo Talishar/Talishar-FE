@@ -4,6 +4,8 @@ export interface UserProfileAPIResponse {
   userName: string;
   patreonInfo: string;
   isPatreonLinked: boolean;
+  isContributor?: boolean;
+  isPvtVoidPatron?: boolean;
   metafyInfo?: string;
   isMetafyLinked?: boolean;
   metafyCommunities?: MetafyCommunity[];
