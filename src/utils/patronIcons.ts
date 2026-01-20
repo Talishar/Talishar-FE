@@ -94,7 +94,7 @@ export const createPatreonIconMap = (
   icons.push({
     condition: isPracticeDummy ?? false,
     src: '/images/practiceDummy.webp',
-    title: 'I am a bot!'
+    title: 'I am a bot! 🤖'
   });
 
   return icons;
