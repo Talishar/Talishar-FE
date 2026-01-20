@@ -63,13 +63,13 @@ export const createPatreonIconMap = (
       {
         condition: isPatron ?? false,
         src: '/images/patronHeart.webp',
-        title: 'I am a patron of Talishar!',
+        title: 'I am a Supporter of Talishar 💖',
         href: 'https://metafy.gg/@Talishar'
       },
       {
         condition: isPvtVoidPatron ?? false,
         src: '/images/patronEye.webp',
-        title: 'I am a patron of PvtVoid!',
+        title: 'I am a Supporter of Talishar 💖',
         href: 'https://metafy.gg/@Talishar'
       }
     );
