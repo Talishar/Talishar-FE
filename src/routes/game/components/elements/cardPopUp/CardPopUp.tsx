@@ -41,6 +41,7 @@ export default function CardPopUp({
       cardNumber === 'ENDTURN' ||
       cardNumber === 'RESUMETURN' ||
       cardNumber === 'PHANTASM' ||
+      cardNumber === 'SPECTRA' ||
       cardNumber === 'MIRAGE' ||
       cardNumber === 'FINALIZECHAINLINK' ||
       cardNumber === 'DEFENDSTEP' ||
