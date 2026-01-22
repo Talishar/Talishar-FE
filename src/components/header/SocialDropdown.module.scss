@@ -114,4 +114,78 @@
       }
     }
   }
+
+  @media (max-width: 768px) {
+    .dropdownToggle {
+      min-width: 50px;
+      padding: 0 8px;
+      font-size: 12px;
+
+      svg {
+        font-size: 24px;
+      }
+
+      .label {
+        font-size: 10px;
+      }
+    }
+
+    .dropdownMenu {
+      right: 0;
+      max-width: calc(100vw - 10px);
+      flex-wrap: wrap;
+      min-width: 200px;
+
+      .socialLink {
+        flex: 1 1 auto;
+        justify-content: center;
+        padding: 10px 8px;
+        font-size: 11px;
+        border-right: 1px solid var(--theme-border, rgba(255, 255, 255, 0.1));
+
+        span {
+          display: none;
+        }
+
+        svg {
+          font-size: 18px;
+        }
+
+        &:nth-child(3n) {
+          border-right: none;
+        }
+      }
+    }
+  }
+
+  @media (max-width: 480px) {
+    .dropdownToggle {
+      min-width: 45px;
+      padding: 0 6px;
+
+      svg {
+        font-size: 20px;
+      }
+
+      .label {
+        display: none;
+      }
+    }
+
+    .dropdownMenu {
+      min-width: 180px;
+
+      .socialLink {
+        flex: 1 1 auto;
+
+        &:nth-child(2n) {
+          border-right: none;
+        }
+
+        &:nth-child(n+3) {
+          border-right: 1px solid var(--theme-border, rgba(255, 255, 255, 0.1));
+        }
+      }
+    }
+  }
 }
