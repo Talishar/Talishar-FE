@@ -85,6 +85,7 @@
     gap: 0;
     z-index: 10001;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    min-width: max-content;
 
     .socialLink {
       display: flex;
@@ -114,11 +115,13 @@
       }
     }
   }
+}
 
-  @media (max-width: 768px) {
+@media only screen and (max-width: 768px) {
+  .socialDropdown {
     .dropdownToggle {
       min-width: 50px;
-      padding: 0 8px;
+      padding: 0 5px;
       font-size: 12px;
 
       svg {
@@ -126,64 +129,54 @@
       }
 
       .label {
-        font-size: 10px;
+        font-size: 12px;
       }
     }
 
     .dropdownMenu {
-      right: 0;
-      max-width: calc(100vw - 10px);
-      flex-wrap: wrap;
-      min-width: 200px;
+      .socialLink {
+        padding: 6px 8px;
+        font-size: 12px;
+
+        span {
+          font-size: 11px;
+        }
+
+        svg {
+          font-size: 14px;
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 400px) {
+  .socialDropdown {
+    .dropdownToggle {
+      min-width: 40px;
+      padding: 0 3px;
+
+      .label {
+        display: none;
+      }
+
+      svg {
+        font-size: 20px;
+      }
+    }
+
+    .dropdownMenu {
+      right: -10px;
 
       .socialLink {
-        flex: 1 1 auto;
-        justify-content: center;
-        padding: 10px 8px;
-        font-size: 11px;
-        border-right: 1px solid var(--theme-border, rgba(255, 255, 255, 0.1));
+        padding: 6px 6px;
 
         span {
           display: none;
         }
 
         svg {
-          font-size: 18px;
-        }
-
-        &:nth-child(3n) {
-          border-right: none;
-        }
-      }
-    }
-  }
-
-  @media (max-width: 480px) {
-    .dropdownToggle {
-      min-width: 45px;
-      padding: 0 6px;
-
-      svg {
-        font-size: 20px;
-      }
-
-      .label {
-        display: none;
-      }
-    }
-
-    .dropdownMenu {
-      min-width: 180px;
-
-      .socialLink {
-        flex: 1 1 auto;
-
-        &:nth-child(2n) {
-          border-right: none;
-        }
-
-        &:nth-child(n+3) {
-          border-right: 1px solid var(--theme-border, rgba(255, 255, 255, 0.1));
+          font-size: 16px;
         }
       }
     }
