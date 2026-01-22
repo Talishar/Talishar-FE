@@ -116,7 +116,9 @@ const Header = () => {
           )}
         </ul>
       </nav>
-      <Outlet />
+      <div className={styles.contentWrapper}>
+        <Outlet />
+      </div>
       <CookieConsent />
       <AdBlockingRecovery />
       <SessionRecovery />
