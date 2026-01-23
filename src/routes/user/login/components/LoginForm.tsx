@@ -119,7 +119,7 @@ export const LoginForm = () => {
             </clipPath>
           </defs>
         </svg>
-        Login with Metafy
+        Log In with Metafy
       </button>
    <p className={styles.orbreak}>or</p>
         <form onSubmit={handleSubmit(onSubmit)} ref={parent}>

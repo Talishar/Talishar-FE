@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from '../Learn.module.scss';
-import { MetafyGuide } from '../../services/metafyService';
+import { MetafyGuide } from '../../../services/metafyService';
 
 interface GuideGridProps {
   guides: MetafyGuide[];
@@ -59,7 +59,7 @@ const GuideGrid: React.FC<GuideGridProps> = ({ guides }) => {
             <div className={styles.guideFooter}>
               <div className={styles.guideInfo}>
                 <span className={styles.author}>
-                  {(guide as any).isOwnerGuide ? 'PvtVoid' : (guide.account?.name || 'Flesh & Blood')}
+                  {(guide as any).isOwnerGuide ? 'PvtVoid' : 'Talishar'}
                 </span>
                 {guide.rating && (
                   <span className={styles.rating}>
