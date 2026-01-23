@@ -32,7 +32,7 @@ const GuideGrid: React.FC<GuideGridProps> = ({ guides }) => {
       {guides.map((guide) => (
         <a
           key={guide.id}
-          href={`https://metafy.gg/${guide.slug}`}
+          href={`https://metafy.gg/guides/view/${guide.slug}`}
           target="_blank"
           rel="noopener noreferrer"
           className={styles.guideCard}
