@@ -12,30 +12,36 @@ export interface PatreonIcon {
 export type MetafyTierName = 'Fyendal Supporters' | 'Seers of Ophidia' | 'Arknight Shards' | 'Lover of Grandeur' | 'Sponsors of Trōpal-Dhani' | 'Light of Sol Gemini Circle';
 
 // Map Metafy tier names to badge images and links
-export const METAFY_TIER_MAP: Record<MetafyTierName, { image: string; title: string }> = {
+export const METAFY_TIER_MAP: Record<MetafyTierName, { image: string; title: string; href?: string }> = {
   'Fyendal Supporters': {
     image: '/images/fyendal.webp',
-    title: 'Fyendal Supporter'
+    title: 'I am a Metafy Supporter! 💖',
+    href: 'https://metafy.gg/@Talishar'
   },
   'Seers of Ophidia': {
     image: '/images/ophidia.webp',
-    title: 'Seer of Ophidia'
+    title: 'I am a Metafy Supporter! 💖',
+    href: 'https://metafy.gg/@Talishar'
   },
   'Arknight Shards': {
     image: '/images/arknight.webp',
-    title: 'Arknight Shards'
+    title: 'I am a Metafy Supporter! 💖',
+    href: 'https://metafy.gg/@Talishar'
   },
   'Lover of Grandeur': {
     image: '/images/grandeur.webp',
-    title: 'Lover of Grandeur'
+    title: 'I am a Metafy Supporter! 💖',
+    href: 'https://metafy.gg/@Talishar'
   },
   'Sponsors of Trōpal-Dhani': {
     image: '/images/tropal.webp',
-    title: 'Sponsor of Trōpal-Dhani'
+    title: 'I am a Metafy Supporter! 💖',
+    href: 'https://metafy.gg/@Talishar'
   },
   'Light of Sol Gemini Circle': {
     image: '/images/lightofsol.webp',
-    title: 'Light of Sol Gemini Circle'
+    title: 'I am a Metafy Supporter! 💖',
+    href: 'https://metafy.gg/@Talishar'
   }
 };
 
