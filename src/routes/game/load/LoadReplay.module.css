@@ -3,7 +3,6 @@
     min-height: calc(100vh - 80px);
     max-width: 900px;
     margin: 0 auto;
-    margin-top: 90px;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
