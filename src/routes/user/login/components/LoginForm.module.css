@@ -40,6 +40,12 @@
   text-align: center;
 }
 
+.orbreak {
+  width: 100%;
+  text-align: center;
+  margin: 0px;
+}
+
 .signupButton {
   width: 100%;
 }
