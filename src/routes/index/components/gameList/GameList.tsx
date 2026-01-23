@@ -396,7 +396,6 @@ const GameList = () => {
                 { label: 'Silver Age', value: GAME_FORMAT.SAGE },
                 { label: 'Competitive Silver Age', value: GAME_FORMAT.COMPETITIVE_SAGE },
                 { label: 'Blitz', value: GAME_FORMAT.BLITZ },
-                { label: 'Competitive Blitz', value: GAME_FORMAT.COMPETITIVE_BLITZ },
                 { label: 'Other Formats', value: 'otherFormats', isGroup: true, groupValues: otherFormats },
               ]}
               includeFriendsGames={includeFriendsGames}
