@@ -147,14 +147,15 @@ export const SignUpForm = () => {
           )}
         </form>
         <hr className={styles.divider} />
-        <p className={styles.linebreak}>or</p>
-        <Link
-          className={classNames(styles.signupButton, 'outline')}
-          role="button"
-          to={'/user/login'}
-        >
-          Log in
-        </Link>
+        <p className={styles.linebreak} style={{ marginTop: '18px' }}>
+          Already have an account?{' '}
+          <Link
+            to={'/user/login'}
+            style={{ color: 'var(--theme-primary)', textDecoration: 'underline' }}
+          >
+            Log In
+          </Link>
+        </p>
         <small className={styles.privacy}>
           <Link to={'/privacy'}>Privacy Policy</Link>
         </small>
