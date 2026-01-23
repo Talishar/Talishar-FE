@@ -61,14 +61,16 @@ const GuideGrid: React.FC<GuideGridProps> = ({ guides }) => {
                 <span className={styles.author}>
                   {guide.game?.title || 'Flesh & Blood'}
                 </span>
-                <span className={styles.rating}>
-                  {guide.rating ? `${guide.rating}/10` : 'N/A'}
-                </span>
+                {guide.rating && (
+                  <span className={styles.rating}>
+                    {`${guide.rating}/10`}
+                  </span>
+                )}
               </div>
               
               <div className={styles.guideMetadata}>
                 <span className={styles.date}>
-                  {formatDate(guide.published_at)}
+                  {formatDate(guide.updated_at)}
                 </span>
                 <span className={styles.price}>
                   {formatPrice(guide)}

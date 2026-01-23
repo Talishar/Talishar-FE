@@ -3,7 +3,7 @@ import React from 'react';
 import { Link, Outlet } from 'react-router-dom';
 import styles from './Header.module.scss';
 import TalisharLogo from '../../img/CoinLogo.png';
-import { BsPersonFill, BsShieldFillCheck, BsGear } from 'react-icons/bs';
+import { BsPersonFill, BsShieldFillCheck, BsGear, BsFillBookFill } from 'react-icons/bs';
 import { RiLogoutBoxRLine } from 'react-icons/ri';
 import { MdVideoLibrary } from 'react-icons/md';
 import SocialDropdown from 'components/header/SocialDropdown';
@@ -71,6 +71,11 @@ const Header = () => {
           </li>
         </ul>
         <ul>
+          <li>
+            <Link to="/learn">
+              <BsFillBookFill></BsFillBookFill> <span>Learn</span>
+            </Link>
+          </li>
           {isLoggedIn && isMod && (
             <li>
               <Link to="/mod">

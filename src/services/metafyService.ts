@@ -60,17 +60,27 @@ export const fetchMetafyGuides = async (
       : '/api';
     
     const url = `${baseUrl}/GetMetafyGuides.php?page=${page}&per_page=${perPage}`;
+    console.log('[Metafy Service] Fetching from:', url);
     
     const response = await fetch(url);
+    console.log('[Metafy Service] Response status:', response.status);
     
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
     
     const data: MetafyGuidesResponse = await response.json();
+    console.log('[Metafy Service] Full Response data:', JSON.stringify(data, null, 2));
+    console.log('[Metafy Service] Debug info:', (data as any)._debug);
+    console.log('[Metafy Service] Guides count:', data.guides?.length ?? 0);
+    console.log('[Metafy Service] Total pages:', data.meta?.pagination?.total_pages ?? 'unknown');
+    if (data.guides && data.guides.length > 0) {
+      console.log('[Metafy Service] First guide:', data.guides[0]);
+    }
+    
     return data;
   } catch (error) {
-    console.error('Error fetching Metafy guides:', error);
+    console.error('[Metafy Service] Error fetching guides:', error);
     throw error;
   }
 };
