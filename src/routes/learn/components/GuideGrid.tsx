@@ -59,7 +59,7 @@ const GuideGrid: React.FC<GuideGridProps> = ({ guides }) => {
             <div className={styles.guideFooter}>
               <div className={styles.guideInfo}>
                 <span className={styles.author}>
-                  {guide.game?.title || 'Flesh & Blood'}
+                  {(guide as any).isOwnerGuide ? 'PvtVoid' : (guide.account?.name || 'Flesh & Blood')}
                 </span>
                 {guide.rating && (
                   <span className={styles.rating}>
