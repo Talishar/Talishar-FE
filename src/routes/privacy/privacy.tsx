@@ -1,16 +1,16 @@
 import React from 'react';
+import styles from './Privacy.module.css';
 
 export const Privacy = () => {
   return (
-    <main className="container">
-      <article>
+    <main>
+      <article className={styles.privacyContainer}>
         <h1>Disclaimer</h1>
         <p>
           Talishar is in no way affiliated with Legend Story Studios. Legend
           Story Studios®, Flesh and Blood™, and set names are trademarks of
           Legend Story Studios. Flesh and Blood characters, cards, logos, and
           art are property of Legend Story Studios.
-          <br />
           Talishar is a "Rules enforcement application" for the Flesh and Blood™
           TCG created by Legend Story Studios®. The related IP is used in
           accordance with the{' '}
@@ -220,18 +220,7 @@ export const Privacy = () => {
         </p>
 
         <p>
-          <strong>Last updated:</strong> October 30, 2025
-        </p>
-        <h1>Sources</h1>
-        <p>
-          <a href="https://www.freepik.com/free-photo/wooden-texture_1000699.htm#query=wood%20texture&amp;position=6&amp;from_view=keyword">
-            Wooden Table Texture Image by lyashenko
-          </a>{' '}
-          on Freepik
-          <br />
-          <a href="https://unpkg.com/browse/get-css@4.0.3/license">
-            unpkg CSS styles license
-          </a>
+          <strong>Last updated:</strong> January 23, 2026
         </p>
         <h1>Credits</h1>
         <p>
