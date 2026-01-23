@@ -357,9 +357,8 @@ const JoinGame = () => {
         </form>
         <hr />
         <button
-          style={{ marginTop: '27px' }}
-          type="submit"
-          className={classNames(styles.buttonClass, 'outline')}
+          className={styles.backButton}
+          type="button"
           onClick={(e) => {
             e.stopPropagation;
             navigate(-1);

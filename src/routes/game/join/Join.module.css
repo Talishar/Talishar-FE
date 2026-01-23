@@ -17,7 +17,7 @@
 }
 
 .formContainer {
-  background: var(--theme-card-background, #1e2329);
+  background: var(--theme-section-background, linear-gradient(135deg, rgba(30, 35, 41, 0.8) 0%, rgba(30, 35, 41, 0.85) 100%));
   width: 460px;
   border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.2));
   border-radius: 10px;
@@ -25,6 +25,27 @@
 
 .alarm {
   color: var(--alarm);
+}
+
+.backButton {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--theme-primary);
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  text-decoration: underline;
+  margin-top: 27px;
+  font-size: 1rem;
+}
+
+.backButton:hover,
+.backButton:focus {
+  outline: none;
+  border: none;
+  box-shadow: none;
+  background: none;
+  color: var(--theme-primary);
 }
 
 @media (max-width: 768px) {
