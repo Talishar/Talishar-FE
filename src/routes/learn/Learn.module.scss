@@ -172,19 +172,43 @@
 .guideMetadata {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items:last baseline;
   gap: 1rem;
 }
 
 .date {
   font-size: 0.8rem;
   color: var(--theme-text-muted);
+  white-space: nowrap;
+}
+
+.priceContainer {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.originalPrice {
+  font-size: 0.9rem;
+  color: var(--theme-text-muted);
+  opacity: 0.7;
+  font-weight: 500;
 }
 
 .price {
   font-size: 1rem;
   color: var(--theme-primary);
   font-weight: 700;
+  
+  &.freeForSupporters {
+    font-size: 0.9rem;
+    background: rgba(212, 175, 55, 0.1);
+    padding: 0.25rem 0.6rem;
+    border-radius: 4px;
+    color: var(--theme-primary);
+  }
 }
 
 .subscriberBadge {

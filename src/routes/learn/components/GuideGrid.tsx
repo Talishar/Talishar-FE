@@ -7,11 +7,12 @@ interface GuideGridProps {
 }
 
 const GuideGrid: React.FC<GuideGridProps> = ({ guides }) => {
-  const formatPrice = (guide: MetafyGuide): string => {
+  const formatPrice = (guide: MetafyGuide): { display: string; originalPrice?: string; isFreeForSupporters: boolean } => {
     if (!guide.price || guide.price.value === 0) {
-      return 'Free';
+      return { display: 'Free', isFreeForSupporters: false };
     }
-    return `$${(guide.price.value_in_cents / 100).toFixed(2)}`;
+    const originalPrice = `$${(guide.price.value_in_cents / 100).toFixed(2)}`;
+    return { display: 'Free for Supporters', originalPrice, isFreeForSupporters: true };
   };
 
   const formatDate = (dateString: string): string => {
@@ -72,9 +73,23 @@ const GuideGrid: React.FC<GuideGridProps> = ({ guides }) => {
                 <span className={styles.date}>
                   {formatDate(guide.updated_at)}
                 </span>
-                <span className={styles.price}>
-                  {formatPrice(guide)}
-                </span>
+                <div className={styles.priceContainer}>
+                  {(() => {
+                    const priceInfo = formatPrice(guide);
+                    return (
+                      <>
+                        {priceInfo.originalPrice && (
+                          <span className={styles.originalPrice}>
+                            {priceInfo.originalPrice}
+                          </span>
+                        )}
+                        <span className={`${styles.price} ${priceInfo.isFreeForSupporters ? styles.freeForSupporters : ''}`}>
+                          {priceInfo.display}
+                        </span>
+                      </>
+                    );
+                  })()}
+                </div>
               </div>
             </div>
             
