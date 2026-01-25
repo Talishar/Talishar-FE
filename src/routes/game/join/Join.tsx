@@ -75,9 +75,18 @@ const JoinGame = () => {
   // Fetch game list to get the format for this specific game
   const { data: gameListData, isLoading: gameListLoading } = useGetGameListQuery(undefined);
 
+  // Check if game is found in public list
+  const gameFoundInPublicList = React.useMemo(() => {
+    if (!gameListData) return false;
+    const gameNameStr = finalGameName;
+    const openGame = gameListData.openGames?.find((g) => String(g.gameName) === gameNameStr);
+    const inProgressGame = gameListData.gamesInProgress?.find((g) => String(g.gameName) === gameNameStr);
+    return !!(openGame || inProgressGame);
+  }, [gameListData, finalGameName]);
+
   // Fallback: fetch game info directly if not in public list
   const { data: gameInfoData } = useGetGameInfoQuery(finalGameName, {
-    skip: gameListData !== undefined // Only skip if we already have game list data
+    skip: gameFoundInPublicList // Only skip if game was found in public list
   });
 
   const {
@@ -357,9 +366,8 @@ const JoinGame = () => {
         </form>
         <hr />
         <button
-          style={{ marginTop: '27px' }}
-          type="submit"
-          className={classNames(styles.buttonClass, 'outline')}
+          className={styles.backButton}
+          type="button"
           onClick={(e) => {
             e.stopPropagation;
             navigate(-1);

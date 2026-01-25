@@ -5,4 +5,11 @@
   min-height: 100vh;
   max-width: var(--aspect);
   margin: 0 auto;
+  padding: 20px;
+}
+
+@media (max-width: 768px) {
+  .LoginPageContainer {
+    padding: 20px 0;
+  }
 }

@@ -7,8 +7,12 @@
 
 @media (max-width: 768px) {
   .formContainer {
-    width: 100%;
-    border: none;
+    width: calc(100% - 32px);
+    max-width: 460px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.2));
+    border-radius: 10px;
   }
 }
 
@@ -34,6 +38,12 @@
 .linebreak {
   width: 100%;
   text-align: center;
+}
+
+.orbreak {
+  width: 100%;
+  text-align: center;
+  margin: 0px;
 }
 
 .signupButton {

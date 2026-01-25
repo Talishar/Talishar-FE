@@ -34,3 +34,14 @@ export interface MetafyLoginResponse {
   refresh_token?: string;
   tokens?: any;
 }
+
+export interface MetafySignupResponse {
+  message?: string;
+  error?: string;
+  error_description?: string;
+  redirect?: string;
+  isUserLoggedIn?: boolean;
+  loggedInUserID?: string | number;
+  loggedInUserName?: string;
+  isPatron?: string;
+}

@@ -857,7 +857,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
             <div className={styles.watermarkContent}>
               <span>Stats provided to you by</span>
               <img src={TalisharLogo} alt="Talishar" className={styles.watermarkLogo} />
-              <span>Support our work on <a href="https://metafy.gg/@Talishar" target="_blank" rel="noopener noreferrer">Patreon</a>! ❤️</span>
+              <span>Support our work on <a href="https://metafy.gg/@Talishar" target="_blank" rel="noopener noreferrer">Metafy</a>! ❤️</span>
             </div>
           </div>
         </div>

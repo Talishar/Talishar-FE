@@ -85,6 +85,7 @@
     gap: 0;
     z-index: 10001;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    min-width: max-content;
 
     .socialLink {
       display: flex;
@@ -111,6 +112,72 @@
 
       span {
         font-size: 13px;
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .socialDropdown {
+    .dropdownToggle {
+      min-width: 50px;
+      padding: 0 5px;
+      font-size: 12px;
+
+      svg {
+        font-size: 24px;
+      }
+
+      .label {
+        font-size: 12px;
+      }
+    }
+
+    .dropdownMenu {
+      .socialLink {
+        padding: 6px 8px;
+        font-size: 12px;
+
+        span {
+          font-size: 11px;
+        }
+
+        svg {
+          font-size: 14px;
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 400px) {
+  .socialDropdown {
+    .dropdownToggle {
+      min-width: 40px;
+      padding: 0 3px;
+
+      .label {
+        display: none;
+      }
+
+      svg {
+        font-size: 20px;
+      }
+    }
+
+    .dropdownMenu {
+      right: -10px;
+
+      .socialLink {
+        padding: 6px 6px;
+
+        span {
+          display: none;
+        }
+
+        svg {
+          font-size: 16px;
+        }
       }
     }
   }

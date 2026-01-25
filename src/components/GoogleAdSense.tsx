@@ -91,7 +91,7 @@ const GoogleAdSense: React.FC<GoogleAdSenseProps> = ({
     return () => clearTimeout(checkAdBlocker);
   }, [slot, hasConsent]);
 
-  // Hide ads for Patreon members
+  // Hide ads for supporters
   if (isPatron) {
     return null;
   }

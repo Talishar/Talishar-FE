@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
-import { useSubmitMetafyLoginMutation } from 'features/api/apiSlice';
+import { useSubmitMetafySignupMutation } from 'features/api/apiSlice';
 
 // Module-level variable to track processed codes - persists across component remounts
 const processedCodes = new Set<string>();
@@ -9,7 +9,7 @@ const processedCodes = new Set<string>();
 const MetafySignup = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
-  const [submitMetafyLogin] = useSubmitMetafyLoginMutation();
+  const [submitMetafySignup] = useSubmitMetafySignupMutation();
 
   useEffect(() => {
     const code = searchParams.get('code');
@@ -42,21 +42,21 @@ const MetafySignup = () => {
     // This prevents the component from processing the same code on remount
     setSearchParams({}, { replace: true });
 
-    // Use RTK Query mutation instead of raw fetch
-    submitMetafyLogin({
+    // Use RTK Query mutation to call the signup endpoint
+    submitMetafySignup({
       code: code,
       redirect_uri: window.location.origin + '/auth/metafy-signup'
     })
       .unwrap()
       .then((data) => {
-        if (data.message === 'ok') {
+        if (data.message === 'ok' && data.isUserLoggedIn) {
           toast.success('Signup successful! Redirecting...', {
             position: 'top-center'
           });
           // Force a hard refresh to ensure all auth state is synced
           // The backend has set the session cookie and RTK Query will invalidate/refetch
           setTimeout(() => {
-            window.location.href = '/';
+            window.location.href = data.redirect || '/';
           }, 500);
         } else {
           toast.error(`Signup failed: ${data.error || 'Unknown error'}`, {
@@ -72,7 +72,7 @@ const MetafySignup = () => {
         });
         navigate('/user/login', { replace: true });
       });
-  }, [searchParams, navigate, setSearchParams, submitMetafyLogin]);
+  }, [searchParams, navigate, setSearchParams, submitMetafySignup]);
 
   return (
     <div style={{ textAlign: 'center', padding: '2rem' }}>
