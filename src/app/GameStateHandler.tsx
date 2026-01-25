@@ -1,13 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from './Hooks';
-import { getGameInfo, nextTurn, setGameStart } from 'features/game/GameSlice';
+import { getGameInfo, receiveGameState, setGameStart } from 'features/game/GameSlice';
 import { useKnownSearchParams } from 'hooks/useKnownSearchParams';
 import { GameLocationState } from 'interface/GameLocationState';
 import { BACKEND_URL } from 'appConstants';
 import { RootState } from './Store';
 import { selectCurrentUserName } from 'features/auth/authSlice';
 import { getCurrentUsername, cacheCurrentUsername, loadGameAuthKey } from 'utils/LocalKeyManagement';
+import ParseGameState from './ParseGameState';
+import { toast } from 'react-hot-toast';
 
 const GameStateHandler = () => {
   const { gameID } = useParams();
@@ -22,7 +24,7 @@ const GameStateHandler = () => {
     (state: RootState) => state.game.isFullRematch
   );
   const navigate = useNavigate();
-  
+
   const sourceRef = useRef<EventSource | null>(null);
   const gameParamsRef = useRef({ gameID: 0, playerID: 0, authKey: '' });
   const retryCountRef = useRef(0);
@@ -33,7 +35,7 @@ const GameStateHandler = () => {
   useEffect(() => {
     const currentGameID = parseInt(gameID ?? gameName);
     const currentPlayerID = locationState?.playerID ?? parseInt(playerID);
-    
+
     let currentAuthKey = locationState?.authKey || authKey;
     if (!currentAuthKey) {
       currentAuthKey = gameInfo.authKey;
@@ -42,7 +44,7 @@ const GameStateHandler = () => {
       // Last resort: try to load from localStorage for same game
       currentAuthKey = loadGameAuthKey(currentGameID);
     }
-    
+
     // Only dispatch if values actually changed
     if (
       gameParamsRef.current.gameID !== currentGameID ||
@@ -53,7 +55,7 @@ const GameStateHandler = () => {
       if (usernameToSave) {
         cacheCurrentUsername(usernameToSave);
       }
-      
+
       dispatch(
         setGameStart({
           gameID: currentGameID,
@@ -107,22 +109,47 @@ const GameStateHandler = () => {
         // Mark as successful when first message comes through
         let hasConnected = false;
 
-        source.onmessage = () => {
+        source.onmessage = (event) => {
           hasConnected = true;
           retryCountRef.current = 0; // Reset retry counter on successful message
-          dispatch(
-            nextTurn({
-              game: {
-                gameID: currentGameID,
-                playerID: currentPlayerID,
-                authKey: currentAuthKey,
-                isPrivateLobby: gameInfo.isPrivateLobby,
-                isRoguelike: gameInfo.isRoguelike
-              },
-              signal: undefined,
-              lastUpdate: 0
-            })
-          );
+
+          try {
+            const data = JSON.parse(event.data);
+
+            // Check for error messages from SSE
+            if (data.error) {
+              console.error('SSE Error:', data.error);
+              const errorMsg = data.error.toLowerCase();
+
+              // Handle game not found errors
+              if (errorMsg.includes('game no longer exists') || errorMsg.includes('does not exist')) {
+                toast.error(`Game Error: ${data.error}`);
+                window.sessionStorage.setItem('gameNotFound', String(currentGameID));
+                source.close();
+                return;
+              }
+
+              // Handle auth errors
+              if (errorMsg.includes('invalid auth') || errorMsg.includes('authkey')) {
+                toast.error(`Authentication Error: ${data.error}`);
+                source.close();
+                return;
+              }
+
+              // Display other errors
+              toast.error(`Server Error: ${data.error}`);
+              return;
+            }
+
+            // Parse the game state directly from SSE data
+            const parsedState = ParseGameState(data);
+
+            // Dispatch the parsed game state directly (no HTTP round-trip needed)
+            dispatch(receiveGameState(parsedState));
+          } catch (parseError) {
+            console.error('Failed to parse SSE data:', parseError);
+            // Don't close connection on parse errors - wait for next update
+          }
         };
 
         source.onerror = () => {
@@ -135,35 +162,23 @@ const GameStateHandler = () => {
             }, 500);
             return;
           }
-          
+
           console.error('❌ EventSource connection failed');
           source.close();
           sourceRef.current = null;
-          
+
           // Retry with exponential backoff
           if (retryCountRef.current < maxRetriesRef.current) {
             retryCountRef.current++;
             const retryDelay = Math.min(500 * Math.pow(2, retryCountRef.current), 5000);
             console.warn(`⏳ Will retry EventSource connection in ${retryDelay}ms (attempt ${retryCountRef.current + 1}/${maxRetriesRef.current + 1})`);
-            
+
             setTimeout(() => {
               setForceRetry(prev => prev + 1); // Trigger the effect again
             }, retryDelay);
           } else {
-            console.error(`❌ EventSource failed after ${maxRetriesRef.current + 1} attempts. Falling back to polling.`);
-            // Fall back to polling by calling nextTurn directly
-            dispatch(
-              nextTurn({
-                game: {
-                  gameID: currentGameID,
-                  playerID: currentPlayerID,
-                  authKey: currentAuthKey,
-                  isPrivateLobby: gameInfo.isPrivateLobby
-                },
-                signal: undefined,
-                lastUpdate: 0
-              })
-            );
+            console.error(`❌ EventSource failed after ${maxRetriesRef.current + 1} attempts.`);
+            toast.error('Connection to game server lost. Please refresh the page.');
           }
         };
       } catch (error) {
@@ -188,7 +203,7 @@ const GameStateHandler = () => {
 
   // Check if game was reported as not found
   const gameNotFoundTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  
+
   useEffect(() => {
     const checkGameNotFound = () => {
       const state = window.sessionStorage.getItem('gameNotFound');
@@ -203,7 +218,7 @@ const GameStateHandler = () => {
         }
       }
     };
-    
+
     // Check periodically since errors might come asynchronously
     const interval = setInterval(checkGameNotFound, 1000);
     return () => {
