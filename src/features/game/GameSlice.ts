@@ -830,8 +830,13 @@ export const gameSlice = createSlice({
       state.isPlayerInputInProgress = false;
       state.isFullRematch = action.payload.isFullRematch ?? false;
 
+      // Preserve player names when merging game state updates
+      const playerOneName = state.playerOne.Name;
+      const playerTwoName = state.playerTwo.Name;
       state.playerOne = { ...state.playerOne, ...action.payload.playerOne };
       state.playerTwo = { ...state.playerTwo, ...action.payload.playerTwo };
+      if (playerOneName !== undefined) state.playerOne.Name = playerOneName;
+      if (playerTwoName !== undefined) state.playerTwo.Name = playerTwoName;
 
       state.activeChainLink = action.payload.activeChainLink;
       state.activeLayers = action.payload.activeLayers;
@@ -912,8 +917,13 @@ export const gameSlice = createSlice({
       state.isPlayerInputInProgress = false;
       state.isFullRematch = action.payload.isFullRematch ?? false;
 
+      // Preserve player names when merging game state updates
+      const playerOneName = state.playerOne.Name;
+      const playerTwoName = state.playerTwo.Name;
       state.playerOne = { ...state.playerOne, ...action.payload.playerOne };
       state.playerTwo = { ...state.playerTwo, ...action.payload.playerTwo };
+      if (playerOneName !== undefined) state.playerOne.Name = playerOneName;
+      if (playerTwoName !== undefined) state.playerTwo.Name = playerTwoName;
 
       state.activeChainLink = action.payload.activeChainLink;
       state.activeLayers = action.payload.activeLayers;
