@@ -57,7 +57,8 @@ export default function CardPopUp({
       cardNumber == 'HIGHTIDE' ||
       cardNumber == "WATERYGRAVE" || 
       cardNumber == "DUMMYDISHONORED" ||
-      cardNumber == "HEAVE"
+      cardNumber == "HEAVE" ||
+      cardNumber == "STARTTURN"
     ) {
       return;
     }
