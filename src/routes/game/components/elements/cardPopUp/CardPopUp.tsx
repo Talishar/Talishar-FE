@@ -37,6 +37,8 @@ export default function CardPopUp({
       ref.current === null ||
       isHidden === true ||
       cardBackValues.includes(cardNumber) ||
+      cardNumber === 'STARTTURN' ||
+      cardNumber === 'CLOSESTEP' ||
       cardNumber === 'ENDPHASE' ||
       cardNumber === 'ENDTURN' ||
       cardNumber === 'RESUMETURN' ||
