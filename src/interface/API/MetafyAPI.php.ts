@@ -24,6 +24,7 @@ export interface UserProfileAPIResponse {
   isPatreonLinked: boolean;
   metafyInfo?: string;
   isMetafyLinked?: boolean;
+  isMetafySupporter?: boolean;
   metafyCommunities?: MetafyCommunity[];
 }
 
