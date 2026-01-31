@@ -129,16 +129,7 @@ export const parseResponse = async (response: any) => {
   }
   
   try {
-    const parsedData = JSON.parse(stringData);
-    
-    // Check if the response contains an error status and throw if needed
-    if (parsedData.status === 'error') {
-      const errorMessage = parsedData.message || 'An error occurred';
-      console.error('API Error Response:', parsedData);
-      throw new Error(errorMessage);
-    }
-    
-    return parsedData;
+    return JSON.parse(stringData);
   } catch (e) {
     console.error('JSON Parse Error:', e, 'Input:', stringData);
     toast.error('Failed to parse server response. Please try again.');
