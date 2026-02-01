@@ -5,19 +5,16 @@ import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import useShowModal from 'hooks/useShowModals';
 import { toggleShowModals } from 'features/game/GameSlice';
 import classNames from 'classnames';
-import { useButtonDisableContext } from 'contexts/ButtonDisableContext';
 
 const HideModalsToggle = () => {
   const showModal = useShowModal();
   const dispatch = useAppDispatch();
-  const { isDisabled, triggerDisable } = useButtonDisableContext();
 
   const handleClickHideWindowsToggle = (
     e: React.MouseEvent<HTMLButtonElement>
   ) => {
     e.preventDefault();
     e.currentTarget.blur();
-    triggerDisable();
     dispatch(toggleShowModals());
   };
 
@@ -31,7 +28,6 @@ const HideModalsToggle = () => {
         onClick={handleClickHideWindowsToggle}
         data-tooltip="Show Arena"
         data-placement="bottom"
-        disabled={isDisabled}
       >
         {showModal && <FaEye aria-hidden="true" />}
         {!showModal && <FaEyeSlash aria-hidden="true" />}

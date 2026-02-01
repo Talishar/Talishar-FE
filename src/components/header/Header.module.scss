@@ -167,6 +167,12 @@
     ul li a {
       padding: 0 5px;
     }
+    
+    ul li a span,
+    .label {
+      display: none !important;
+    }
+
     span {
       font-size: smaller;
     }
@@ -180,7 +186,9 @@
     }
 
     width: 100%;
+
   }
+
 }
 
 @media (max-width: 400px) {

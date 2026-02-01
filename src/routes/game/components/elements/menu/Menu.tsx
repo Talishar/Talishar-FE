@@ -16,10 +16,7 @@ import PlayerName from '../playerName/PlayerName';
 import { ButtonDisableProvider, useButtonDisableContext } from 'contexts/ButtonDisableContext';
 
 function FullScreenButton() {
-  const { isDisabled, triggerDisable } = useButtonDisableContext();
-
   function toggleFullScreen() {
-    triggerDisable();
     screenfull.toggle();
   }
 
@@ -31,7 +28,6 @@ function FullScreenButton() {
         onClick={() => toggleFullScreen()}
         data-tooltip="Fullscreen"
         data-placement="bottom"
-        disabled={isDisabled}
       >
         <GiExpand aria-hidden="true" />
       </button>

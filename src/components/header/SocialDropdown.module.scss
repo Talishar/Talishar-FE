@@ -15,7 +15,6 @@
     border: none;
     color: var(--snow);
     cursor: pointer;
-    font-size: 14px;
     transition: color 0.2s ease;
     flex-direction: column;
     gap: 2px;
@@ -28,6 +27,7 @@
     .label {
       font-weight: 500;
       white-space: nowrap;
+      font-size: 15px;
     }
 
     &:focus,
@@ -122,25 +122,15 @@
     .dropdownToggle {
       min-width: 50px;
       padding: 0 5px;
-      font-size: 12px;
-
-      svg {
-        font-size: 24px;
-      }
 
       .label {
-        font-size: 12px;
+        display: none;
       }
     }
 
     .dropdownMenu {
       .socialLink {
         padding: 6px 8px;
-        font-size: 12px;
-
-        span {
-          font-size: 11px;
-        }
 
         svg {
           font-size: 14px;
@@ -155,14 +145,6 @@
     .dropdownToggle {
       min-width: 40px;
       padding: 0 3px;
-
-      .label {
-        display: none;
-      }
-
-      svg {
-        font-size: 20px;
-      }
     }
 
     .dropdownMenu {

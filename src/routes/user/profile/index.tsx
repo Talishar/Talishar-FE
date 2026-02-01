@@ -305,7 +305,7 @@ export const ProfilePage = () => {
                 
                 {/* Show Upgrade/Supporter Status */}
                 <UpgradeSection
-                  isSupporter={profileData?.isMetafyLinked ?? false}
+                  isSupporter={profileData?.isMetafySupporter ?? false}
                   userName={profileData?.userName}
                   isOwner={profileData?.userName === 'PvtVoid' || profileData?.userName === 'OotTheMonk'}
                 />
