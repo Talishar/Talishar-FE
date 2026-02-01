@@ -297,16 +297,15 @@ const GameList = () => {
   };
 
   const otherFormats = [
-    GAME_FORMAT.OPEN_CC,
     GAME_FORMAT.OPEN_BLITZ,
-    GAME_FORMAT.OPEN_SAGE,
     GAME_FORMAT.OPEN_LL_CC,
     GAME_FORMAT.COMMONER,
     GAME_FORMAT.CLASH,
     GAME_FORMAT.SEALED,
     GAME_FORMAT.DRAFT,
     GAME_FORMAT.PRECON,
-    GAME_FORMAT.OPEN
+    GAME_FORMAT.OPEN,
+    GAME_FORMAT.BLITZ
   ];
 
   // Create mapping from string formats to numeric formats
@@ -395,7 +394,8 @@ const GameList = () => {
                 { label: 'Competitive LL', value: GAME_FORMAT.COMPETITIVE_LL },
                 { label: 'Silver Age', value: GAME_FORMAT.SAGE },
                 { label: 'Competitive Silver Age', value: GAME_FORMAT.COMPETITIVE_SAGE },
-                { label: 'Blitz', value: GAME_FORMAT.BLITZ },
+                { label: 'Future SAGE', value: GAME_FORMAT.OPEN_SAGE },
+                { label: 'Future CC', value: GAME_FORMAT.OPEN_CC },
                 { label: 'Other Formats', value: 'otherFormats', isGroup: true, groupValues: otherFormats },
               ]}
               includeFriendsGames={includeFriendsGames}
