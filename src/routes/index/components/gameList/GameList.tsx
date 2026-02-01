@@ -464,6 +464,20 @@ const GameList = () => {
             friendUsernames={friendUsernames}
           />
           <FormatList
+            gameList={sortedOpenGames.filter(
+              (game) => game.format === GAME_FORMAT.OPEN_SAGE
+            )}
+            name="Future Silver Age"
+            friendUsernames={friendUsernames}
+          />
+          <FormatList
+            gameList={sortedOpenGames.filter(
+              (game) => game.format === GAME_FORMAT.OPEN_CC
+            )}
+            name="Future CC"
+            friendUsernames={friendUsernames}
+          />
+          <FormatList
             gameList={sortedOpenGames.filter((game) =>
               otherFormats.includes(game.format)
             )}
@@ -584,7 +598,7 @@ const GameList = () => {
                 gameList={[
                   ...otherGamesInProgress.filter(
                     (game) =>
-                      ![GAME_FORMAT.BLITZ, GAME_FORMAT_NUMBER.BLITZ, GAME_FORMAT.COMPETITIVE_CC, GAME_FORMAT.CLASSIC_CONSTRUCTED, GAME_FORMAT_NUMBER.CLASSIC_CONSTRUCTED, GAME_FORMAT_NUMBER.COMPETITIVE_CC, GAME_FORMAT.COMPETITIVE_LL, GAME_FORMAT.LLCC, GAME_FORMAT_NUMBER.LLCC, GAME_FORMAT_NUMBER.COMPETITIVE_LL, GAME_FORMAT.SAGE, GAME_FORMAT_NUMBER.SAGE, GAME_FORMAT.COMPETITIVE_SAGE, GAME_FORMAT_NUMBER.COMPETITIVE_SAGE].includes(game.format)
+                      ![GAME_FORMAT.BLITZ, GAME_FORMAT_NUMBER.BLITZ, GAME_FORMAT.COMPETITIVE_CC, GAME_FORMAT.CLASSIC_CONSTRUCTED, GAME_FORMAT_NUMBER.CLASSIC_CONSTRUCTED, GAME_FORMAT_NUMBER.COMPETITIVE_CC, GAME_FORMAT.COMPETITIVE_LL, GAME_FORMAT.LLCC, GAME_FORMAT_NUMBER.LLCC, GAME_FORMAT_NUMBER.COMPETITIVE_LL, GAME_FORMAT.SAGE, GAME_FORMAT_NUMBER.SAGE, GAME_FORMAT.COMPETITIVE_SAGE, GAME_FORMAT_NUMBER.COMPETITIVE_SAGE, GAME_FORMAT.OPEN_SAGE, GAME_FORMAT_NUMBER.OPEN_SAGE, GAME_FORMAT.OPEN_CC, GAME_FORMAT_NUMBER.OPEN_CC].includes(game.format)
                   ),
                 ].sort((a, b) => b.gameName - a.gameName)}
                 name="Other Formats"
