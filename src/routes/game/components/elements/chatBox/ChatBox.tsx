@@ -78,7 +78,7 @@ export default function ChatBox() {
   
   // Helper to generate Metafy badge HTML
   const generateMetafyBadges = (tiers: string[]): string => {
-    if (!tiers || tiers.length === 0) return '';
+    if (!Array.isArray(tiers) || tiers.length === 0) return '';
     
     return tiers
       .map((tierName) => {
