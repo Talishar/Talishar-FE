@@ -1,4 +1,5 @@
 .landmark {
   width: 110%;
   margin: auto;
+  transform: rotate(-90deg);
 }
