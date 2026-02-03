@@ -602,7 +602,7 @@ const GameList = () => {
                     )
                   ),
                 ].sort((a, b) => b.gameName - a.gameName)}
-                name="Future CC"
+                name="Future Classic Constructed"
                 friendUsernames={friendUsernames}
               />
               <InProgressGameList
