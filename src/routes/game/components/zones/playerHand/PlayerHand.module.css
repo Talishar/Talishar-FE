@@ -20,6 +20,15 @@
   right: 20dvh;
 }
 
+/* Desktop landscape - dynamic card spacing */
+@media (orientation: landscape) {
+  .handRow > div {
+    /* Progressive negative margin based on card count */
+    /* Formula: starts at 0 for 1-5 cards, then increases negative margin as more cards are added */
+    margin-right: calc(max(0, var(--card-count, 0) - 5) * -0.5vh);
+  }
+}
+
 @media (orientation: portrait) and (max-width: 768px) {
   .handRow {
     justify-content: center;
