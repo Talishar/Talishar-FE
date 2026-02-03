@@ -127,6 +127,7 @@ export const CARD_BACK = {
   '126': 'CBOllinTogether',
   '127': 'CBSnapDragons',
   '128': 'CBFabDads',
+  '129': 'CBFablazing',
 } as { [key: string]: string };
 
 /* All available playmats - CSS class names (must match image files) */
