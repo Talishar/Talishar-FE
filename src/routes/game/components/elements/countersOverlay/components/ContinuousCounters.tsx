@@ -26,6 +26,7 @@ const includedCounters = [
   'balance',
   'bind',
   'stain',
+  'storm',
   'gold',
   'suspense',
   'sand',
@@ -165,6 +166,14 @@ export const ContinuousCounters = (props: Props) => {
           tooltip={`${countersMap?.stain} stain counter(s)`}
         >
           <div>{countersMap?.stain}</div>
+        </TooltipWrapper>
+      )}
+      {!!Number(countersMap?.storm) && (
+        <TooltipWrapper
+          className={styles.stormCounter}
+          tooltip={`${countersMap?.storm} storm counter(s)`}
+        >
+          <div>{countersMap?.storm}</div>
         </TooltipWrapper>
       )}
       {!!Number(countersMap?.gold) && (

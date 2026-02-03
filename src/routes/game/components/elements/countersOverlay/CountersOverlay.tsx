@@ -44,6 +44,7 @@ export const CountersOverlay = ({
     'balance',
     'bind',
     'stain',
+    'storm',
     'gold',
     'suspense',
     'sand',
