@@ -550,5 +550,8 @@ export default function ParseGameState(input: any) {
   // AI infinite HP status for manual mode
   result.aiHasInfiniteHP = input.aiHasInfiniteHP ?? false;
 
+  // opponent activity status (0 = active, 2 = inactive)
+  result.opponentActivity = input.opponentActivity ?? 0;
+
   return result;
 }

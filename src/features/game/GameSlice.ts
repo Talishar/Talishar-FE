@@ -887,6 +887,8 @@ export const gameSlice = createSlice({
 
       state.aiHasInfiniteHP = action.payload.aiHasInfiniteHP ?? false;
 
+      state.opponentActivity = action.payload.opponentActivity ?? state.opponentActivity ?? 0;
+
       state.preventPassPrompt = action.payload.preventPassPrompt;
 
       // Reset inactivity timer when we get a new game state
@@ -973,6 +975,8 @@ export const gameSlice = createSlice({
         action.payload.gameInfo.isOpponentAI ?? state.gameInfo.isOpponentAI;
 
       state.aiHasInfiniteHP = action.payload.aiHasInfiniteHP ?? false;
+
+      state.opponentActivity = action.payload.opponentActivity ?? state.opponentActivity ?? 0;
 
       state.preventPassPrompt = action.payload.preventPassPrompt;
 

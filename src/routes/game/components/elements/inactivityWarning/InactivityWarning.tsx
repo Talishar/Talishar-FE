@@ -8,6 +8,7 @@ import {
 } from 'hooks/useInactivityWarning';
 import { useSendGameChat } from 'hooks/useSendGameChat';
 import { stillHereButtonClicked } from 'features/game/GameSlice';
+import { useCloseGameMutation } from 'features/api/apiSlice';
 import styles from './InactivityWarning.module.css';
 
 // DEBUG MODE - Set to true to see timer and priority info
@@ -25,14 +26,24 @@ const InactivityWarning = () => {
   const hasPriority = useAppSelector((state: RootState) => state.game.hasPriority);
   const gameInfo = useAppSelector((state: RootState) => state.game.gameInfo);
   const turnPhase = useAppSelector((state: RootState) => state.game.turnPhase?.turnPhase);
+  const opponentActivity = useAppSelector((state: RootState) => state.game.opponentActivity);
   const inactivityWarning = useAppSelector(
     (state: RootState) => state.game.inactivityWarning
   );
+  const [closeGameMutation, { isLoading: isClosingGame }] = useCloseGameMutation();
 
   const handleStillHereClick = () => {
     dispatch(stillHereButtonClicked());
     // Send chat message via the game log
     sendQuickChat('Thinking... Please bear with me!');
+  };
+
+  const handleLeaveGameClick = async () => {
+    try {
+      await closeGameMutation({ gameToClose: String(gameInfo.gameID) }).unwrap();
+    } catch (e) {
+      console.error('Error closing game:', e);
+    }
   };
 
   // Build debug display and warnings together
@@ -45,6 +56,7 @@ const InactivityWarning = () => {
         <div>IsSpectator: <strong>{gameInfo.playerID === 3 ? '✅ YES' : '❌ NO'}</strong></div>
         <div>Seconds Inactive: <strong>{secondsInactive}s</strong></div>
         <div>Warning Level: <strong>{level}</strong></div>
+        <div>OpponentActivity: <strong>{opponentActivity === 2 ? '❌ INACTIVE' : '✅ ACTIVE'}</strong></div>
         <div>LastActionTime: <strong>{inactivityWarning?.lastActionTime}</strong></div>
         <div>FirstWarningShown: <strong>{inactivityWarning?.firstWarningShown ? '✅' : '❌'}</strong></div>
         <div>SecondWarningShown: <strong>{inactivityWarning?.secondWarningShown ? '✅' : '❌'}</strong></div>
@@ -108,9 +120,20 @@ const InactivityWarning = () => {
                 </div>
               )}
               {level === InactivityWarningLevel.SECOND_WARNING || level === InactivityWarningLevel.OPPONENT_INACTIVE ? (
-                <button className={styles.stillHereButton} onClick={handleStillHereClick}>
-                  I'm still here!
-                </button>
+                <div className={styles.buttonContainer}>
+                  <button className={styles.stillHereButton} onClick={handleStillHereClick}>
+                    I'm still here!
+                  </button>
+                  {opponentActivity === 2 && (
+                    <button 
+                      className={styles.leaveGameButton} 
+                      onClick={handleLeaveGameClick}
+                      disabled={isClosingGame}
+                    >
+                      {isClosingGame ? 'Closing...' : 'Claim Victory'}
+                    </button>
+                  )}
+                </div>
               ) : null}
             </div>
           </motion.div>
