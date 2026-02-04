@@ -22,7 +22,6 @@ import { ErrorMessage } from '@hookform/error-message';
 import { generateCroppedImageUrl } from 'utils/cropImages';
 import { ImageSelect, ImageSelectOption } from 'components/ImageSelect';
 import { GAME_FORMAT, isPreconFormat, PRECON_DECKS } from 'appConstants';
-import GoogleAdSense from 'components/GoogleAdSense';
 import { getReadableFormatName } from 'utils/formatUtils';
 
 // Helper function to extract base format type for matching
