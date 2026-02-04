@@ -145,4 +145,5 @@ export default interface GameState {
   };
   aiHasInfiniteHP?: boolean;
   spectatorCameraView?: number; // 1 for player 1 view, 2 for player 2 view
+  opponentActivity?: number; // 0 = active, 2 = inactive
 }
