@@ -1,8 +1,18 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { AdUnit } from 'components/ads';
 import './AdsTest.css';
 
 const AdsTest: React.FC = () => {
+  useEffect(() => {
+    const script = document.createElement('script');
+    script.src = '//js.rev.iq/talishar.net';
+    script.async = true;
+    document.head.appendChild(script);
+
+    return () => {
+      document.head.removeChild(script);
+    };
+  }, []);
   return (
     <div className="ads-test-container">
       <header className="ads-test-header">

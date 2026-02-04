@@ -20,7 +20,6 @@ import { FaExclamationCircle } from 'react-icons/fa';
 import { HEROES_OF_RATHE, CLASS_OF_RATHE } from '../../index/components/filter/constants';
 import { generateCroppedImageUrl } from 'utils/cropImages';
 import { ImageSelect, ImageSelectOption } from 'components/ImageSelect';
-import GoogleAdSense from 'components/GoogleAdSense';
 
 // Helper function to shorten format names
 const shortenFormat = (format: string): string => {
