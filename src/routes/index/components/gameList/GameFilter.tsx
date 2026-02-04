@@ -86,11 +86,25 @@ const GameFilter = ({
   const updateDropdownPosition = () => {
     if (isOpen && buttonRef.current) {
       const rect = buttonRef.current.getBoundingClientRect();
-      setDropdownStyle({
-        top: `${rect.bottom + 8}px`,
-        left: `${rect.right - 280}px`,
-        maxWidth: '90vw',
-      });
+      const isMobile = window.innerWidth < 768;
+      
+      if (isMobile) {
+        // On mobile, position dropdown centered on screen
+        setDropdownStyle({
+          top: `${rect.bottom + 8}px`,
+          left: '1em',
+          right: '1em',
+          width: 'calc(100vw - 2em)',
+          maxWidth: 'calc(100vw - 2em)',
+        });
+      } else {
+        // On desktop, position dropdown relative to button
+        setDropdownStyle({
+          top: `${rect.bottom + 8}px`,
+          left: `${rect.right - 280}px`,
+          maxWidth: '90vw',
+        });
+      }
     }
   };
 
