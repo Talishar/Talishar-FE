@@ -57,6 +57,7 @@ const GAME_LIST_POLLING_INTERVAL = 10000; // in ms (10 seconds)
 const GameList = () => {
   const [cookies, setCookie, removeCookie] = useCookies(['experimental', 'gameFilters', 'gameFriendsFilter']);
   const [isTabActive, setIsTabActive] = useState(true);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   
   const { data, isLoading, error, refetch, isFetching } =
     useGetGameListQuery(undefined, {
@@ -166,6 +167,16 @@ const GameList = () => {
       document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
   }, [refetch]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
   // Save format filters to cookies and localStorage when they change
   useEffect(() => {
@@ -377,31 +388,33 @@ const GameList = () => {
       ) : null}
       {!isLoading && !error && (
         <>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1em', marginBottom: '1em', flexWrap: 'wrap' }}>
-            <div style={{ flex: '1 1 auto', minWidth: '250px' }}>
+          <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', alignItems: isMobile ? 'stretch' : 'center', justifyContent: isMobile ? 'flex-start' : 'space-between', gap: '1em', marginBottom: '1em', flexWrap: isMobile ? 'nowrap' : 'wrap' }}>
+            <div style={{ flex: isMobile ? '0 0 100%' : '1 1 auto', minWidth: isMobile ? '100%' : '250px', width: isMobile ? '100%' : 'auto' }}>
               <Filter
                 setHeroFilter={setHeroFilter}
                 heroOptions={filteredHeroOptions}
               />
             </div>
-            <GameFilter
-              selectedFormats={inProgressFormatFilters}
-              onFilterChange={handleInProgressFilterChange}
-              formatOptions={[
-                { label: 'Classic Constructed', value: GAME_FORMAT.CLASSIC_CONSTRUCTED },
-                { label: 'Competitive CC', value: GAME_FORMAT.COMPETITIVE_CC },
-                { label: 'Living Legend', value: GAME_FORMAT.LLCC },
-                { label: 'Competitive LL', value: GAME_FORMAT.COMPETITIVE_LL },
-                { label: 'Silver Age', value: GAME_FORMAT.SAGE },
-                { label: 'Competitive Silver Age', value: GAME_FORMAT.COMPETITIVE_SAGE },
-                { label: 'Future SAGE', value: GAME_FORMAT.OPEN_SAGE },
-                { label: 'Future CC', value: GAME_FORMAT.OPEN_CC },
-                { label: 'Other Formats', value: 'otherFormats', isGroup: true, groupValues: otherFormats },
-              ]}
-              includeFriendsGames={includeFriendsGames}
-              onFriendsGamesChange={handleFriendsGamesFilterChange}
-              formatNumberMapping={formatNumberMapping}
-            />
+            <div style={{ flex: isMobile ? '0 0 100%' : '0 0 auto', minWidth: isMobile ? '100%' : 'auto', width: isMobile ? '100%' : 'auto' }}>
+              <GameFilter
+                selectedFormats={inProgressFormatFilters}
+                onFilterChange={handleInProgressFilterChange}
+                formatOptions={[
+                  { label: 'Classic Constructed', value: GAME_FORMAT.CLASSIC_CONSTRUCTED },
+                  { label: 'Competitive CC', value: GAME_FORMAT.COMPETITIVE_CC },
+                  { label: 'Living Legend', value: GAME_FORMAT.LLCC },
+                  { label: 'Competitive LL', value: GAME_FORMAT.COMPETITIVE_LL },
+                  { label: 'Silver Age', value: GAME_FORMAT.SAGE },
+                  { label: 'Competitive Silver Age', value: GAME_FORMAT.COMPETITIVE_SAGE },
+                  { label: 'Future SAGE', value: GAME_FORMAT.OPEN_SAGE },
+                  { label: 'Future CC', value: GAME_FORMAT.OPEN_CC },
+                  { label: 'Other Formats', value: 'otherFormats', isGroup: true, groupValues: otherFormats },
+                ]}
+                includeFriendsGames={includeFriendsGames}
+                onFriendsGamesChange={handleFriendsGamesFilterChange}
+                formatNumberMapping={formatNumberMapping}
+              />
+            </div>
           </div>
         </>
       )}

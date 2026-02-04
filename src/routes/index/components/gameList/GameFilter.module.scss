@@ -4,6 +4,11 @@
   z-index: 100;
   overflow: visible;
   padding-right: .3rem;
+  width: 100%;
+
+  @media (max-width: 768px) {
+    width: 100%;
+  }
 }
 
 .filterButton {
@@ -19,8 +24,14 @@
   position: relative;
   transition: all 0.2s ease;
   z-index: 101;
-  white-space: nowrap;
+  white-space: normal;
   margin-bottom: 0;
+  width: 100%;
+  justify-content: center;
+
+  @media (max-width: 768px) {
+    width: 100%;
+  }
 
   &:hover {
     background-color: var(--theme-primary, #d4af37);
@@ -65,12 +76,18 @@
   border: 1px solid var(--theme-form-border, #797c80);
   border-radius: 4px;
   min-width: 280px;
-  max-width: 90vw;
+  max-width: calc(100vw - 2em);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7);
   z-index: 9999;
   animation: slideDown 0.2s ease;
   top: auto;
   left: auto;
+
+  @media (max-width: 768px) {
+    min-width: calc(100vw - 2em);
+    left: 1em !important;
+    right: 1em !important;
+  }
 
   @keyframes slideDown {
     from {
