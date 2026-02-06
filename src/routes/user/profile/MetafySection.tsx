@@ -25,6 +25,17 @@ const MetafySection: React.FC<MetafySectionProps> = ({
     });
   };
 
+  // Helper function to determine community type
+  const getCommunityType = (community: MetafyCommunity): 'owned' | 'supported' | undefined => {
+    // If type is explicitly set, use it
+    if (community.type) {
+      return community.type;
+    }
+    // If no type but community has content, assume it's a supporter community
+    // (owner communities would have type set)
+    return undefined;
+  };
+
   return (
     <div className={styles.metafySection}>
       <h3>Metafy Communities</h3>
@@ -51,62 +62,58 @@ const MetafySection: React.FC<MetafySectionProps> = ({
               {metafyCommunities && metafyCommunities.length > 0 ? (
                 <div>
                   <div className={styles.metafyCommunitiesHeader}>Your Communities:</div>
-                  {metafyCommunities.map((community, index) => (
-                    <div
-                      key={community.id || index}
-                      className={`${styles.metafyCommunityItem} ${
-                        community.type === 'owned' ? styles.metafyCommunityOwned : styles.metafyCommunitySupported
-                      }`}
-                    >
-                      {community.type && (
-                        <div className={styles.metafyCommunityBadge}>
-                          {community.type === 'owned' ? '👑 Owner' : '💖 Supporter'}
+                  {metafyCommunities.map((community, index) => {
+                    const communityType = getCommunityType(community);
+                    const isOwned = communityType === 'owned';
+                    const isSupported = communityType === 'supported' || (!communityType && metafyCommunities.length > 0);
+                    
+                    return (
+                      <div
+                        key={community.id || index}
+                        className={`${styles.metafyCommunityItem} ${
+                          isOwned ? styles.metafyCommunityOwned : styles.metafyCommunitySupported
+                        }`}
+                      >
+                        {isOwned && (
+                          <div className={styles.metafyCommunityBadge}>
+                            👑 Owner
+                          </div>
+                        )}
+                        {isSupported && (
+                          <div className={styles.metafyCommunityBadge}>
+                            💖 Supporter
+                          </div>
+                        )}
+                        {community.logo_url && (
+                          <div className={styles.metafyCommunityLogo}>
+                            <img src={community.logo_url} alt={community.title} />
+                          </div>
+                        )}
+                        <div className={styles.metafyCommunityName}>
+                          {community.title || community.name || 'Unnamed Community'}
                         </div>
-                      )}
-                      {community.tiers && community.tiers.length > 0 && !community.type && (
-                        <div className={styles.metafyCommunityBadge}>
-                          💖 Supporter
+                        {community.description && (
+                          <div className={styles.metafyCommunityDescription}>
+                            {community.description}
+                          </div>
+                        )}
+                        {community.url && (
+                          <div className={styles.metafyCommunityLink}>
+                            <a
+                              href={community.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              Visit Community →
+                            </a>
+                          </div>
+                        )}
+                        <div className={styles.metafyCommunityId}>
+                          ID: {community.id}
                         </div>
-                      )}
-                      {community.logo_url && (
-                        <div className={styles.metafyCommunityLogo}>
-                          <img src={community.logo_url} alt={community.title} />
-                        </div>
-                      )}
-                      <div className={styles.metafyCommunityName}>
-                        {community.title || community.name || 'Unnamed Community'}
                       </div>
-                      {community.description && (
-                        <div className={styles.metafyCommunityDescription}>
-                          {community.description}
-                        </div>
-                      )}
-                      {community.tiers && community.tiers.length > 0 && (
-                        <div className={styles.metafyCommunityTiers}>
-                          <div className={styles.metafyCommunityTiersLabel}>Tier:</div>
-                          {community.tiers.map((tier, tierIndex) => (
-                            <div key={tier.id || tierIndex} className={styles.metafyCommunityTier}>
-                              {tier.name}
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                      {community.url && (
-                        <div className={styles.metafyCommunityLink}>
-                          <a
-                            href={community.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            Visit Community →
-                          </a>
-                        </div>
-                      )}
-                      <div className={styles.metafyCommunityId}>
-                        ID: {community.id}
-                      </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               ) : (
                 <div className={styles.metafyNoCommunities}>

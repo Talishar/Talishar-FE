@@ -481,13 +481,6 @@ td {
   color: rgba(255, 255, 255, 0.8);
 }
 
-.metafyCommunityTiersLabel {
-  display: inline-block;
-  font-weight: bold;
-  margin-right: 0.5rem;
-  color: rgba(255, 255, 255, 0.9);
-}
-
 .metafyCommunityTier {
   padding: 0.25rem 0;
   margin-left: 0.5rem;

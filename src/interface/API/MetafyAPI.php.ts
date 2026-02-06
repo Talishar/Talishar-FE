@@ -1,11 +1,3 @@
-export interface MetafyTier {
-  id?: string;
-  name?: string;
-  description?: string;
-  cover_url?: string;
-  [key: string]: any;
-}
-
 export interface MetafyCommunity {
   id?: string;
   title?: string;
@@ -13,14 +5,12 @@ export interface MetafyCommunity {
   slug?: string;
   description?: string;
   logo_url?: string;
-  avatar_url?: string;
   cover_url?: string;
-  banner_url?: string;
   url?: string;
+  avatar_url?: string;
+  banner_url?: string;
   website?: string;
-  tiers?: MetafyTier[];
-  type?: 'owned' | 'supported'; // Added for membership type
-  subscription_tier?: MetafyTier; // Added for backward compatibility
+  type?: 'owned' | 'supported';
   [key: string]: any; // Allow additional properties from Metafy API
 }
 

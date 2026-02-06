@@ -292,6 +292,14 @@ export const ProfilePage = () => {
   //   PATREON_URL + PatreonOAuthParam.toString()
   // );
 
+  // Calculate isMetafySupporter based on communities with tiers
+  const isMetafySupporter: boolean = 
+    (profileData?.isMetafySupporter ?? false) ||
+    (profileData?.metafyCommunities && 
+     profileData.metafyCommunities.length > 0 &&
+     profileData.metafyCommunities.some(c => (c as any).tiers && (c as any).tiers.length > 0)) ||
+    false;
+
   return (
     <div>
       <div className={styles.wideContainer}>
@@ -305,7 +313,7 @@ export const ProfilePage = () => {
                 
                 {/* Show Upgrade/Supporter Status */}
                 <UpgradeSection
-                  isSupporter={profileData?.isMetafySupporter ?? false}
+                  isSupporter={isMetafySupporter}
                   userName={profileData?.userName}
                   isOwner={profileData?.userName === 'PvtVoid' || profileData?.userName === 'OotTheMonk'}
                 />
