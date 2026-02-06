@@ -106,8 +106,15 @@ const Lobby = () => {
     const tiers: string[] = [];
     if (userProfileData?.metafyCommunities && Array.isArray(userProfileData.metafyCommunities)) {
       for (const community of userProfileData.metafyCommunities) {
+        // Try both subscription_tier (backward compat) and tiers array (from API)
         if (community.subscription_tier?.name) {
           tiers.push(community.subscription_tier.name);
+        } else if (community.tiers && Array.isArray(community.tiers)) {
+          for (const tier of community.tiers) {
+            if (tier.name) {
+              tiers.push(tier.name);
+            }
+          }
         }
       }
     }

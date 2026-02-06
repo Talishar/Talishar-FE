@@ -63,17 +63,32 @@ const MetafySection: React.FC<MetafySectionProps> = ({
                           {community.type === 'owned' ? '👑 Owner' : '💖 Supporter'}
                         </div>
                       )}
+                      {community.tiers && community.tiers.length > 0 && !community.type && (
+                        <div className={styles.metafyCommunityBadge}>
+                          💖 Supporter
+                        </div>
+                      )}
                       {community.logo_url && (
                         <div className={styles.metafyCommunityLogo}>
                           <img src={community.logo_url} alt={community.title} />
                         </div>
                       )}
                       <div className={styles.metafyCommunityName}>
-                        {community.title || 'Unnamed Community'}
+                        {community.title || community.name || 'Unnamed Community'}
                       </div>
                       {community.description && (
                         <div className={styles.metafyCommunityDescription}>
                           {community.description}
+                        </div>
+                      )}
+                      {community.tiers && community.tiers.length > 0 && (
+                        <div className={styles.metafyCommunityTiers}>
+                          <div className={styles.metafyCommunityTiersLabel}>Tier:</div>
+                          {community.tiers.map((tier, tierIndex) => (
+                            <div key={tier.id || tierIndex} className={styles.metafyCommunityTier}>
+                              {tier.name}
+                            </div>
+                          ))}
                         </div>
                       )}
                       {community.url && (
