@@ -57,7 +57,7 @@ const EndGameMenuOptions = () => {
         {/*<div className={styles.buttonDiv} onClick={handleQuickRematch}>
               Quick Rematch (no sideboarding)
             </div> */}
-            <div className={styles.buttonDiv} onClick={handleFullRematch}>
+            <div className={styles.buttonDiv} style={{ opacity: 0.5, pointerEvents: 'none' }} title="Functionality temporarily broken. Reach out on Discord if you have time to help.">
               Send Rematch Invitation
             </div>
           </>
