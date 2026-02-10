@@ -553,5 +553,8 @@ export default function ParseGameState(input: any) {
   // opponent activity status (0 = active, 2 = inactive)
   result.opponentActivity = input.opponentActivity ?? 0;
 
+  // rematch acceptance status
+  result.isFullRematch = input.fullRematchAccepted ?? false;
+
   return result;
 }
