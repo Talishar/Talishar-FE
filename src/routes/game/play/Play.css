@@ -79,6 +79,13 @@ body {
   }
 }
 
+/* For fold and square phones in portrait mode (wider aspect ratio) */
+@media (orientation: portrait) and (min-aspect-ratio: 3/4) {
+  .gameZone {
+    padding-bottom: 6dvh;
+  }
+}
+
 .defaultToast {
   background-color: var(--near-black);
   padding: 1.5vh;

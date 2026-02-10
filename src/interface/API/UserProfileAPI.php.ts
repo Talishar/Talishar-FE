@@ -8,6 +8,7 @@ export interface UserProfileAPIResponse {
   isPvtVoidPatron?: boolean;
   metafyInfo?: string;
   isMetafyLinked?: boolean;
+  isMetafySupporter?: boolean;
   metafyCommunities?: MetafyCommunity[];
 }
 

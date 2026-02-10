@@ -1,11 +1,16 @@
 export interface MetafyCommunity {
   id?: string;
+  title?: string;
   name?: string;
   slug?: string;
   description?: string;
+  logo_url?: string;
+  cover_url?: string;
+  url?: string;
   avatar_url?: string;
   banner_url?: string;
   website?: string;
+  type?: 'owned' | 'supported';
   [key: string]: any; // Allow additional properties from Metafy API
 }
 

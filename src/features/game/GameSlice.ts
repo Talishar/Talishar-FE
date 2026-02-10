@@ -830,13 +830,34 @@ export const gameSlice = createSlice({
       state.isPlayerInputInProgress = false;
       state.isFullRematch = action.payload.isFullRematch ?? false;
 
-      // Preserve player names when merging game state updates
-      const playerOneName = state.playerOne.Name;
-      const playerTwoName = state.playerTwo.Name;
+      // Preserve player metadata when merging game state updates (patron/metafy status, names)
+      const playerOneMetadata = {
+        Name: state.playerOne.Name,
+        isPatron: state.playerOne.isPatron,
+        isContributor: state.playerOne.isContributor,
+        isPvtVoidPatron: state.playerOne.isPvtVoidPatron,
+        metafyTiers: state.playerOne.metafyTiers
+      };
+      const playerTwoMetadata = {
+        Name: state.playerTwo.Name,
+        isPatron: state.playerTwo.isPatron,
+        isContributor: state.playerTwo.isContributor,
+        isPvtVoidPatron: state.playerTwo.isPvtVoidPatron,
+        metafyTiers: state.playerTwo.metafyTiers
+      };
       state.playerOne = { ...state.playerOne, ...action.payload.playerOne };
       state.playerTwo = { ...state.playerTwo, ...action.payload.playerTwo };
-      if (playerOneName !== undefined) state.playerOne.Name = playerOneName;
-      if (playerTwoName !== undefined) state.playerTwo.Name = playerTwoName;
+      // Restore metadata from previous state to prevent flickering
+      if (playerOneMetadata.Name !== undefined) state.playerOne.Name = playerOneMetadata.Name;
+      if (playerOneMetadata.isPatron !== undefined) state.playerOne.isPatron = playerOneMetadata.isPatron;
+      if (playerOneMetadata.isContributor !== undefined) state.playerOne.isContributor = playerOneMetadata.isContributor;
+      if (playerOneMetadata.isPvtVoidPatron !== undefined) state.playerOne.isPvtVoidPatron = playerOneMetadata.isPvtVoidPatron;
+      if (playerOneMetadata.metafyTiers !== undefined) state.playerOne.metafyTiers = playerOneMetadata.metafyTiers;
+      if (playerTwoMetadata.Name !== undefined) state.playerTwo.Name = playerTwoMetadata.Name;
+      if (playerTwoMetadata.isPatron !== undefined) state.playerTwo.isPatron = playerTwoMetadata.isPatron;
+      if (playerTwoMetadata.isContributor !== undefined) state.playerTwo.isContributor = playerTwoMetadata.isContributor;
+      if (playerTwoMetadata.isPvtVoidPatron !== undefined) state.playerTwo.isPvtVoidPatron = playerTwoMetadata.isPvtVoidPatron;
+      if (playerTwoMetadata.metafyTiers !== undefined) state.playerTwo.metafyTiers = playerTwoMetadata.metafyTiers;
 
       state.activeChainLink = action.payload.activeChainLink;
       state.activeLayers = action.payload.activeLayers;
@@ -919,13 +940,34 @@ export const gameSlice = createSlice({
       state.isPlayerInputInProgress = false;
       state.isFullRematch = action.payload.isFullRematch ?? false;
 
-      // Preserve player names when merging game state updates
-      const playerOneName = state.playerOne.Name;
-      const playerTwoName = state.playerTwo.Name;
+      // Preserve player metadata when merging game state updates (patron/metafy status, names)
+      const playerOneMetadata = {
+        Name: state.playerOne.Name,
+        isPatron: state.playerOne.isPatron,
+        isContributor: state.playerOne.isContributor,
+        isPvtVoidPatron: state.playerOne.isPvtVoidPatron,
+        metafyTiers: state.playerOne.metafyTiers
+      };
+      const playerTwoMetadata = {
+        Name: state.playerTwo.Name,
+        isPatron: state.playerTwo.isPatron,
+        isContributor: state.playerTwo.isContributor,
+        isPvtVoidPatron: state.playerTwo.isPvtVoidPatron,
+        metafyTiers: state.playerTwo.metafyTiers
+      };
       state.playerOne = { ...state.playerOne, ...action.payload.playerOne };
       state.playerTwo = { ...state.playerTwo, ...action.payload.playerTwo };
-      if (playerOneName !== undefined) state.playerOne.Name = playerOneName;
-      if (playerTwoName !== undefined) state.playerTwo.Name = playerTwoName;
+      // Restore metadata from previous state to prevent flickering
+      if (playerOneMetadata.Name !== undefined) state.playerOne.Name = playerOneMetadata.Name;
+      if (playerOneMetadata.isPatron !== undefined) state.playerOne.isPatron = playerOneMetadata.isPatron;
+      if (playerOneMetadata.isContributor !== undefined) state.playerOne.isContributor = playerOneMetadata.isContributor;
+      if (playerOneMetadata.isPvtVoidPatron !== undefined) state.playerOne.isPvtVoidPatron = playerOneMetadata.isPvtVoidPatron;
+      if (playerOneMetadata.metafyTiers !== undefined) state.playerOne.metafyTiers = playerOneMetadata.metafyTiers;
+      if (playerTwoMetadata.Name !== undefined) state.playerTwo.Name = playerTwoMetadata.Name;
+      if (playerTwoMetadata.isPatron !== undefined) state.playerTwo.isPatron = playerTwoMetadata.isPatron;
+      if (playerTwoMetadata.isContributor !== undefined) state.playerTwo.isContributor = playerTwoMetadata.isContributor;
+      if (playerTwoMetadata.isPvtVoidPatron !== undefined) state.playerTwo.isPvtVoidPatron = playerTwoMetadata.isPvtVoidPatron;
+      if (playerTwoMetadata.metafyTiers !== undefined) state.playerTwo.metafyTiers = playerTwoMetadata.metafyTiers;
 
       state.activeChainLink = action.payload.activeChainLink;
       state.activeLayers = action.payload.activeLayers;
