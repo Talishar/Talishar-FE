@@ -117,7 +117,7 @@ const GameList = () => {
     if (cookies.gameFilters) {
       try {
         const parsed = JSON.parse(cookies.gameFilters);
-        const filters = new Set(parsed);
+        const filters = new Set<string>(parsed);
         if (filters.size === 0) {
           return defaultFormats;
         }
@@ -131,7 +131,7 @@ const GameList = () => {
       const stored = localStorage.getItem('gameFilters');
       if (stored) {
         const parsed = JSON.parse(stored);
-        const filters = new Set(parsed);
+        const filters = new Set<string>(parsed);
         if (filters.size === 0) {
           return defaultFormats;
         }
