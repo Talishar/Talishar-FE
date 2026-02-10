@@ -117,7 +117,11 @@ const GameList = () => {
     if (cookies.gameFilters) {
       try {
         const parsed = JSON.parse(cookies.gameFilters);
-        return new Set(parsed);
+        const filters = new Set(parsed);
+        if (filters.size === 0) {
+          return defaultFormats;
+        }
+        return filters;
       } catch {
         // Cookie parsing failed, try localStorage
       }
@@ -127,7 +131,11 @@ const GameList = () => {
       const stored = localStorage.getItem('gameFilters');
       if (stored) {
         const parsed = JSON.parse(stored);
-        return new Set(parsed);
+        const filters = new Set(parsed);
+        if (filters.size === 0) {
+          return defaultFormats;
+        }
+        return filters;
       }
     } catch {
       // localStorage parsing failed
@@ -153,6 +161,20 @@ const GameList = () => {
   });
 
   const [parent] = useAutoAnimate();
+
+  useEffect(() => {
+    try {
+      const storedFilters = localStorage.getItem('gameFilters');
+      if (storedFilters) {
+        const parsed = JSON.parse(storedFilters);
+        if (Array.isArray(parsed) && parsed.length === 0) {
+          localStorage.removeItem('gameFilters');
+        }
+      }
+    } catch {
+      // Ignore parsing errors
+    }
+  }, []);
 
   useEffect(() => {
     const handleVisibilityChange = () => {
