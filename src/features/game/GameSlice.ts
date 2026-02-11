@@ -848,12 +848,18 @@ export const gameSlice = createSlice({
       state.playerOne = { ...state.playerOne, ...action.payload.playerOne };
       state.playerTwo = { ...state.playerTwo, ...action.payload.playerTwo };
       // Restore metadata from previous state to prevent flickering
-      if (playerOneMetadata.Name !== undefined) state.playerOne.Name = playerOneMetadata.Name;
+      // For names: only preserve if incoming name is "anonymous" (not provided)
+      if (playerOneMetadata.Name !== undefined && (action.payload.playerOne?.Name === 'anonymous' || action.payload.playerOne?.Name === undefined)) {
+        state.playerOne.Name = playerOneMetadata.Name;
+      }
+      if (playerTwoMetadata.Name !== undefined && (action.payload.playerTwo?.Name === 'anonymous' || action.payload.playerTwo?.Name === undefined)) {
+        state.playerTwo.Name = playerTwoMetadata.Name;
+      }
+      // For patron/metafy status: always preserve (these never change in payload)
       if (playerOneMetadata.isPatron !== undefined) state.playerOne.isPatron = playerOneMetadata.isPatron;
       if (playerOneMetadata.isContributor !== undefined) state.playerOne.isContributor = playerOneMetadata.isContributor;
       if (playerOneMetadata.isPvtVoidPatron !== undefined) state.playerOne.isPvtVoidPatron = playerOneMetadata.isPvtVoidPatron;
       if (playerOneMetadata.metafyTiers !== undefined) state.playerOne.metafyTiers = playerOneMetadata.metafyTiers;
-      if (playerTwoMetadata.Name !== undefined) state.playerTwo.Name = playerTwoMetadata.Name;
       if (playerTwoMetadata.isPatron !== undefined) state.playerTwo.isPatron = playerTwoMetadata.isPatron;
       if (playerTwoMetadata.isContributor !== undefined) state.playerTwo.isContributor = playerTwoMetadata.isContributor;
       if (playerTwoMetadata.isPvtVoidPatron !== undefined) state.playerTwo.isPvtVoidPatron = playerTwoMetadata.isPvtVoidPatron;
@@ -958,12 +964,18 @@ export const gameSlice = createSlice({
       state.playerOne = { ...state.playerOne, ...action.payload.playerOne };
       state.playerTwo = { ...state.playerTwo, ...action.payload.playerTwo };
       // Restore metadata from previous state to prevent flickering
-      if (playerOneMetadata.Name !== undefined) state.playerOne.Name = playerOneMetadata.Name;
+      // For names: only preserve if incoming name is "anonymous" (not provided)
+      if (playerOneMetadata.Name !== undefined && (action.payload.playerOne?.Name === 'anonymous' || action.payload.playerOne?.Name === undefined)) {
+        state.playerOne.Name = playerOneMetadata.Name;
+      }
+      if (playerTwoMetadata.Name !== undefined && (action.payload.playerTwo?.Name === 'anonymous' || action.payload.playerTwo?.Name === undefined)) {
+        state.playerTwo.Name = playerTwoMetadata.Name;
+      }
+      // For patron/metafy status: always preserve (these never change in payload)
       if (playerOneMetadata.isPatron !== undefined) state.playerOne.isPatron = playerOneMetadata.isPatron;
       if (playerOneMetadata.isContributor !== undefined) state.playerOne.isContributor = playerOneMetadata.isContributor;
       if (playerOneMetadata.isPvtVoidPatron !== undefined) state.playerOne.isPvtVoidPatron = playerOneMetadata.isPvtVoidPatron;
       if (playerOneMetadata.metafyTiers !== undefined) state.playerOne.metafyTiers = playerOneMetadata.metafyTiers;
-      if (playerTwoMetadata.Name !== undefined) state.playerTwo.Name = playerTwoMetadata.Name;
       if (playerTwoMetadata.isPatron !== undefined) state.playerTwo.isPatron = playerTwoMetadata.isPatron;
       if (playerTwoMetadata.isContributor !== undefined) state.playerTwo.isContributor = playerTwoMetadata.isContributor;
       if (playerTwoMetadata.isPvtVoidPatron !== undefined) state.playerTwo.isPvtVoidPatron = playerTwoMetadata.isPvtVoidPatron;
