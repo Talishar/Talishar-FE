@@ -98,10 +98,10 @@ const GameFilter = ({
           maxWidth: 'calc(100vw - 2em)',
         });
       } else {
-        // On desktop, position dropdown relative to button
+        // On desktop, position dropdown to the right of button
         setDropdownStyle({
           top: `${rect.bottom + 8}px`,
-          left: `${rect.right - 280}px`,
+          left: `${rect.left}px`,
           maxWidth: '90vw',
         });
       }
