@@ -8,6 +8,7 @@
   top: 55%;
   left: 15%;
   right: 25%;
+  max-height: calc(45vh - 10vh);
   background-color: var(--near-black);
   padding: 1.5vh;
   border: 1px solid var(--theme-primary);
@@ -248,6 +249,7 @@
   top: 40%;
   left: 15%;
   right: 25%;
+  max-height: calc(60vh - 10vh);
   background-color: var(--near-black);
   padding: 1.5vh;
   border: 1px solid var(--theme-primary);
