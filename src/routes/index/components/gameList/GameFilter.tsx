@@ -110,6 +110,16 @@ const GameFilter = ({
 
   useEffect(() => {
     updateDropdownPosition();
+    // Hide/show scrollbar when dropdown opens/closes
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    
+    return () => {
+      document.body.style.overflow = '';
+    };
   }, [isOpen]);
 
   // Recalculate position whenever button position might change
