@@ -61,8 +61,7 @@ const GameList = () => {
   
   const { data, isLoading, error, refetch, isFetching } =
     useGetGameListQuery(undefined, {
-      //pollingInterval: isTabActive ? GAME_LIST_POLLING_INTERVAL : 0, // Stop polling when tab inactive
-      pollingInterval: 0, // Polling disabled - manual refresh only
+      pollingInterval: isTabActive ? GAME_LIST_POLLING_INTERVAL : 0, // Stop polling when tab inactive
     });
   const { data: friendsData } = useGetFriendsListQuery(undefined);
   const { isLoggedIn } = useAuth();
@@ -378,13 +377,12 @@ const GameList = () => {
       <div className={styles.titleDiv}>
         <h3 className={styles.title}>
           Games
-{/*           <span 
+          <span 
             className={styles.autoRefreshText}
-            //title={`Auto-refreshes every ${GAME_LIST_POLLING_INTERVAL / 1000} seconds`}
-            title={`Auto-refresh disabled`}
+            title={`Auto-refreshes every ${GAME_LIST_POLLING_INTERVAL / 1000} seconds`}
           >
             (Auto-refresh: {GAME_LIST_POLLING_INTERVAL / 1000}s)
-          </span> */}
+          </span>
         </h3>
         <button
           onClick={handleReloadClick}
