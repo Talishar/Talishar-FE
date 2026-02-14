@@ -92,12 +92,6 @@ const GuideGrid: React.FC<GuideGridProps> = ({ guides }) => {
                 </div>
               </div>
             </div>
-            
-            {guide.subscriber_only && (
-              <div className={styles.subscriberBadge}>
-                Subscriber Only
-              </div>
-            )}
           </div>
         </a>
       ))}
