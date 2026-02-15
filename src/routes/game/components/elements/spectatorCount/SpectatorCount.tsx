@@ -24,11 +24,6 @@ export default function SpectatorCount() {
 
   return (
     <div className={styles.spectatorCountStyle}>
-      <div
-        className={styles.spectatorCountContainer}
-        onMouseEnter={() => setShowTooltip(true)}
-        onMouseLeave={() => setShowTooltip(false)}
-      >
         <FaEye /> {spectatorCount === 1 ? 'Spectator' : 'Spectators'}: {spectatorCount}
         {showTooltip && (
           <div className={styles.tooltip}>
@@ -40,6 +35,5 @@ export default function SpectatorCount() {
           </div>
         )}
       </div>
-    </div>
   );
 }
