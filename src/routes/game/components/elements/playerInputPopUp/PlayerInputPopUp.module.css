@@ -184,10 +184,11 @@
 
 .cardDiv {
   flex-basis: var(--card-size);
-  max-height: var(--card-size);
   max-width: var(--card-size);
-  height: var(--card-size);
   width: var(--card-size);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 @media (orientation: portrait) {
