@@ -32,15 +32,11 @@ export default function SpectatorCount() {
         <FaEye /> {spectatorCount === 1 ? 'Spectator' : 'Spectators'}: {spectatorCount}
         {showTooltip && (
           <div className={styles.tooltip}>
-            {spectatorNames.length > 0 ? (
-              <div>
-                {spectatorNames.map((name, index) => (
-                  <div key={index}>{name}</div>
-                ))}
-              </div>
-            ) : (
-              <div>Anonymous spectators</div>
-            )}
+            <div>
+              {spectatorNames.map((name, index) => (
+                <div key={index}>{name}</div>
+              ))}
+            </div>
           </div>
         )}
       </div>
