@@ -50,7 +50,7 @@ export const doubleFacedCardsMappings: { [key: string]: string } = {
   levia_redeemed: 'blasmophet_levia_consumed',
 
   singularity: 'teklovossen_the_mechropotent',
-  teklovossen_the_mechropotent: 'singularity',
+  teklovossen_the_mechropotent: 'singularity_red',
 
   mistcloak_gully: 'MST000_inner_chi_blue',
   sacred_art_undercurrent_desire_blue: 'MST010_inner_chi_blue',
