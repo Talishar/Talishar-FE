@@ -53,7 +53,7 @@ export const createPatreonIconMap = (
   metafyTiers: string[] | undefined = []
 ): PatreonIcon[] => {
   // Filter for Talishar-specific Metafy badges only
-  const talisharMetafyTiers = (Array.isArray(metafyTiers) ? metafyTiers : []).filter(tier => tier in METAFY_TIER_MAP);
+  const talisharMetafyTiers = metafyTiers?.filter(tier => tier in METAFY_TIER_MAP) ?? [];
   const hasTalisharMetafyBadges = talisharMetafyTiers.length > 0;
 
   const icons: PatreonIcon[] = [];
