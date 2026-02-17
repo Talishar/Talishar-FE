@@ -312,7 +312,6 @@ export const ChatBar: React.FC = () => {
                       key={friend.friendUserId}
                       className={styles.friendItem}
                     >
-                      <div className={`${styles.onlineIndicator} ${styles.offline}`} />
                       <div 
                         className={styles.friendInfo}
                         onClick={() => {
@@ -571,16 +570,6 @@ const ChatWindowComponent: React.FC<ChatWindowProps> = ({
         title="Click to minimize"
       >
         <div className={styles.chatHeaderInfo}>
-          {(() => {
-            const onlineFriend = onlineFriendsData?.onlineFriends?.find(
-              (f: any) => f.userId === friendUserId
-            );
-            const isOnline = onlineFriend?.isOnline === true;
-            const isAway = onlineFriend?.isAway === true;
-            return (
-              <div className={`${styles.onlineIndicator} ${isOnline ? styles.online : isAway ? styles.away : styles.offline}`} />
-            );
-          })()}
           <div className={styles.chatFriendName}>
             <div>
               {chat.friend.nickname || chat.friend.username}

@@ -728,20 +728,6 @@ button.secondary:hover {
   gap: 0.5rem;
 }
 
-.friendOnlineIndicator {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  flex-shrink: 0;
-  background-color: #95a5a6;
-  transition: all 0.3s;
-}
-
-.friendOnlineIndicator.online {
-  background: #3d8d3d;
-  box-shadow: 0 0 5px #3d8d3d;
-}
-
 .friendName {
   margin-right: auto;
 }

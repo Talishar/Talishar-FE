@@ -895,7 +895,6 @@ const Lobby = () => {
                           
                           return (
                             <div key={friend.friendUserId} className={styles.friendItem}>
-                              <div className={classNames(styles.friendOnlineIndicator, { [styles.online]: isOnline })} />
                               <span className={styles.friendName}>{friend.nickname || friend.username}</span>
                               <button 
                                 onClick={() => handleSendGameInviteFromLobby(friend.friendUserId)}
