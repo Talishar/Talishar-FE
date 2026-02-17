@@ -55,6 +55,25 @@ export const ProfilePage = () => {
   const [updateFavoriteDeck] = useUpdateFavoriteDeckMutation();
   const [deleteAccount, { isLoading: isDeleting }] = useDeleteAccountMutation();
 
+  useEffect(() => {
+    console.log('[Profile] profileData updated:', {
+      userName: profileData?.userName,
+      isMetafyLinked: profileData?.isMetafyLinked,
+      isMetafySupporter: profileData?.isMetafySupporter,
+      metafyCommunities: profileData?.metafyCommunities,
+      full: profileData
+    });
+    
+    if (profileData?.metafyCommunities && profileData.metafyCommunities.length > 0) {
+      console.log('[Profile] Found', profileData.metafyCommunities.length, 'Metafy communities:');
+      profileData.metafyCommunities.forEach((community: any, idx: number) => {
+        console.log(`[Profile] Community ${idx}:`, community);
+      });
+    } else {
+      console.log('[Profile] No Metafy communities in response');
+    }
+  }, [profileData]);
+
   const handleDeleteDeckMessage = (resp: DeleteDeckAPIResponse): string => {
     if (resp.message === 'Deck deleted successfully.') {
       return 'The deck has been removed from your favorites list. It is still available to view on the deckbuilding site.';
