@@ -292,13 +292,7 @@ export const ProfilePage = () => {
   //   PATREON_URL + PatreonOAuthParam.toString()
   // );
 
-  // Calculate isMetafySupporter based on communities with tiers
-  const isMetafySupporter: boolean = 
-    (profileData?.isMetafySupporter ?? false) ||
-    (profileData?.metafyCommunities && 
-     profileData.metafyCommunities.length > 0 &&
-     profileData.metafyCommunities.some(c => (c as any).tiers && (c as any).tiers.length > 0)) ||
-    false;
+  const isMetafySupporter: boolean = profileData?.isMetafySupporter ?? false;
 
   return (
     <div>
