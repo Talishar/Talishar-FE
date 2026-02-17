@@ -18,26 +18,6 @@ const MetafySection: React.FC<MetafySectionProps> = ({
 }) => {
   const [showCommunities, setShowCommunities] = useState(false);
 
-  useEffect(() => {
-    console.log('[MetafySection] Component mounted/updated');
-    console.log('[MetafySection] isMetafyLinked:', isMetafyLinked);
-    console.log('[MetafySection] metafyCommunities:', metafyCommunities);
-    console.log('[MetafySection] metafyCommunities length:', metafyCommunities?.length);
-    
-    if (metafyCommunities && metafyCommunities.length > 0) {
-      metafyCommunities.forEach((community, index) => {
-        console.log(`[MetafySection] Community ${index}:`, {
-          id: community.id,
-          title: community.title,
-          type: community.type,
-          subscription_tier: community.subscription_tier,
-          tiers: community.tiers,
-          full: community
-        });
-      });
-    }
-  }, [isMetafyLinked, metafyCommunities]);
-
   const handleDisconnect = async () => {
     // For now, we'll show a placeholder message
     toast.success('Metafy disconnection feature coming soon', {
@@ -86,14 +66,6 @@ const MetafySection: React.FC<MetafySectionProps> = ({
                     const communityType = getCommunityType(community);
                     const isOwned = communityType === 'owned';
                     const isSupported = communityType === 'supported' || (!communityType && metafyCommunities.length > 0);
-                    
-                    console.log(`[MetafySection] Rendering community ${index}:`, {
-                      title: community.title,
-                      id: community.id,
-                      type: communityType,
-                      isOwned,
-                      isSupported
-                    });
                     
                     return (
                       <div
