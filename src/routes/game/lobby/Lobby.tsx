@@ -29,7 +29,7 @@ import {
 import { useAppSelector } from 'app/Hooks';
 import { shallowEqual } from 'react-redux';
 import { RootState } from 'app/Store';
-import { createPatreonIconMap } from 'utils/patronIcons';
+import { createPatreonIconMap, METAFY_TIER_MAP } from 'utils/patronIcons';
 import { DeckResponse, Weapon } from 'interface/API/GetLobbyInfo.php';
 import LobbyUpdateHandler from './components/updateHandler/SideboardUpdateHandler';
 import { GAME_FORMAT, BREAKPOINT_EXTRA_LARGE, CLOUD_IMAGES_URL } from 'appConstants';
@@ -684,7 +684,7 @@ const Lobby = () => {
                       aria-busy={!gameLobby?.theirName}
                       style={{ cursor: opponentNote ? 'help' : 'default' }}
                     >
-                      {opponentPatronInfo && (opponentPatronInfo.metafyTiers?.length ?? 0) > 0 && createPatreonIconMap(
+                      {opponentPatronInfo && (opponentPatronInfo.metafyTiers?.filter(tier => tier in METAFY_TIER_MAP).length ?? 0) > 0 && createPatreonIconMap(
                         opponentPatronInfo.isContributor,
                         opponentPatronInfo.isPvtVoidPatron,
                         opponentPatronInfo.isPatron,
