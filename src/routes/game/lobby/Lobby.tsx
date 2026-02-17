@@ -648,7 +648,7 @@ const Lobby = () => {
                         .filter(icon => icon.condition)
                         .map((icon, index) => (
                           <a
-                            key={`${icon.title}-${index}`}
+                            key={`${icon.src}-${index}`}
                             href={icon.href}
                             target="_blank"
                             rel="noopener noreferrer"
@@ -694,7 +694,7 @@ const Lobby = () => {
                         .filter(icon => icon.condition)
                         .map((icon, index) => (
                           <a
-                            key={`${icon.title}-${index}`}
+                            key={`${icon.src}-${index}`}
                             href={icon.href}
                             target="_blank"
                             rel="noopener noreferrer"
