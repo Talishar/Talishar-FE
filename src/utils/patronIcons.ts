@@ -52,14 +52,13 @@ export const createPatreonIconMap = (
   isPracticeDummy: boolean | undefined,
   metafyTiers: string[] | undefined = []
 ): PatreonIcon[] => {
-  // Check if user has Talishar-specific Metafy badges (not from other creators)
-  const talisharMetafyTiers = metafyTiers?.filter(tier => tier in METAFY_TIER_MAP) ?? [];
-  const hasTalisharMetafyBadges = talisharMetafyTiers.length > 0;
+  // If user has Metafy badges, only show those (skip Patreon badges)
+  const hasMetafyBadges = metafyTiers && metafyTiers.length > 0;
 
   const icons: PatreonIcon[] = [];
 
-  // Only add Talishar patron badges if user doesn't have Talishar-specific Metafy badges
-  if (!hasTalisharMetafyBadges) {
+  // Only add Patreon badges if user doesn't have Metafy badges
+  if (!hasMetafyBadges) {
     icons.push(
       {
         condition: isContributor ?? false,
@@ -82,9 +81,9 @@ export const createPatreonIconMap = (
     );
   }
 
-  // Add Talishar-specific Metafy tier badges
-  if (hasTalisharMetafyBadges) {
-    for (const tier of talisharMetafyTiers) {
+  // Add Metafy tier badges (if present, only these show)
+  if (hasMetafyBadges) {
+    for (const tier of metafyTiers) {
       const tierConfig = METAFY_TIER_MAP[tier as MetafyTierName];
       if (tierConfig) {
         icons.push({

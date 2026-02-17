@@ -11,7 +11,7 @@ import { MdBlock } from 'react-icons/md';
 import { MdNotes } from 'react-icons/md';
 import { IoMdArrowDropdown } from 'react-icons/io';
 import PlayerNoteModal from './PlayerNoteModal';
-import { createPatreonIconMap, METAFY_TIER_MAP } from 'utils/patronIcons';
+import { createPatreonIconMap } from 'utils/patronIcons';
 
 export default function PlayerName(player: Player) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -250,9 +250,7 @@ export default function PlayerName(player: Player) {
   const iconMap = createPatreonIconMap(isContributor, isPvtVoidPatron, isPatron, isPracticeDummy, metafyTiers);
 
   const getStatusClass = () => {
-    // Check if user has Talishar-specific Metafy badges
-    const talisharMetafyTiers = metafyTiers?.filter(tier => tier in METAFY_TIER_MAP) ?? [];
-    if (talisharMetafyTiers.length > 0) return styles.metafy;
+    if (metafyTiers && metafyTiers.length > 0) return styles.metafy;
     if (isPvtVoidPatron) return styles.pvtVoidPatron;
     if (isContributor) return styles.contributor;
     if (isPatron) return styles.patron;

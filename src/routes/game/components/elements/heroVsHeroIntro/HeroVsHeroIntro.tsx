@@ -4,7 +4,6 @@ import { shallowEqual } from 'react-redux';
 import { generateCroppedImageUrl } from 'utils/cropImages';
 import { markHeroIntroAsShown } from 'features/game/GameSlice';
 import { getSettingsEntity } from 'features/options/optionsSlice';
-import { METAFY_TIER_MAP } from 'utils/patronIcons';
 import styles from './HeroVsHeroIntro.module.css';
 
 const HeroVsHeroIntro = () => {
@@ -70,14 +69,14 @@ const HeroVsHeroIntro = () => {
 
   }, [isVisible, dispatch, gameID, gameGUID]);
   
-  // Get patron status - only check for Talishar-specific Metafy tiers
+  // Get patron status
   const yourPatronStatus = playerID === 1 
-    ? (gameState?.playerOne?.metafyTiers?.filter((tier: string) => tier in METAFY_TIER_MAP).length ?? 0) > 0 || gameState?.playerOne?.isPatron || gameState?.playerOne?.isPvtVoidPatron || gameState?.playerOne?.isContributor
-    : (gameState?.playerTwo?.metafyTiers?.filter((tier: string) => tier in METAFY_TIER_MAP).length ?? 0) > 0 || gameState?.playerTwo?.isPatron || gameState?.playerTwo?.isPvtVoidPatron || gameState?.playerTwo?.isContributor;
+    ? (gameState?.playerOne?.metafyTiers?.length ?? 0) > 0 || gameState?.playerOne?.isPatron || gameState?.playerOne?.isPvtVoidPatron || gameState?.playerOne?.isContributor
+    : (gameState?.playerTwo?.metafyTiers?.length ?? 0) > 0 || gameState?.playerTwo?.isPatron || gameState?.playerTwo?.isPvtVoidPatron || gameState?.playerTwo?.isContributor;
 
   const opponentPatronStatus = playerID === 1 
-    ? (gameState?.playerTwo?.metafyTiers?.filter((tier: string) => tier in METAFY_TIER_MAP).length ?? 0) > 0 || gameState?.playerTwo?.isPatron || gameState?.playerTwo?.isPvtVoidPatron || gameState?.playerTwo?.isContributor
-    : (gameState?.playerOne?.metafyTiers?.filter((tier: string) => tier in METAFY_TIER_MAP).length ?? 0) > 0 || gameState?.playerOne?.isPatron || gameState?.playerOne?.isPvtVoidPatron || gameState?.playerOne?.isContributor;
+    ? (gameState?.playerTwo?.metafyTiers?.length ?? 0) > 0 || gameState?.playerTwo?.isPatron || gameState?.playerTwo?.isPvtVoidPatron || gameState?.playerTwo?.isContributor
+    : (gameState?.playerOne?.metafyTiers?.length ?? 0) > 0 || gameState?.playerOne?.isPatron || gameState?.playerOne?.isPvtVoidPatron || gameState?.playerOne?.isContributor;
 
   // Check if hero intro is disabled
   const disableHeroIntro = settingsData['DisableHeroIntro']?.value === '1';
