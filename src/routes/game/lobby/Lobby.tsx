@@ -101,12 +101,12 @@ const Lobby = () => {
     skip: !isLoggedIn
   });
 
-  // Extract Metafy tier names from communities
   const extractMetafyTiers = () => {
     const tiers: string[] = [];
+    const TALISHAR_COMMUNITY_ID = 'be5e01c0-02d1-4080-b601-c056d69b03f6';
     if (userProfileData?.metafyCommunities && Array.isArray(userProfileData.metafyCommunities)) {
       for (const community of userProfileData.metafyCommunities) {
-        if (community.subscription_tier?.name) {
+        if (community.id === TALISHAR_COMMUNITY_ID && community.subscription_tier?.name) {
           tiers.push(community.subscription_tier.name);
         }
       }
