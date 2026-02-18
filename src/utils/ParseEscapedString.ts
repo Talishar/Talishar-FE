@@ -39,7 +39,7 @@ const ALLOWED_TAGS = new Set(['SPAN', 'A', 'IMG', 'B', 'I', 'STRONG', 'EM', 'P',
 const ALLOWED_ATTRS: { [tag: string]: Set<string> } = {
   'SPAN': new Set(['style']),
   'A': new Set(['style', 'href', 'target', 'rel']),
-  'IMG': new Set(['style', 'title', 'src']),
+  'IMG': new Set(['style', 'title', 'src', 'alt']),
   'B': new Set(['style']),
   'I': new Set(['style']),
   'STRONG': new Set(['style']),
@@ -302,9 +302,14 @@ export const parseHtmlToReactElements = (htmlString: string): ReactNode => {
         }
       }
 
+      if (allowedAttrs.has('alt')) {
+        // Always set alt (empty string is valid and prevents broken-image title rendering)
+        props.alt = element.getAttribute('alt') ?? '';
+      }
+
       if (allowedAttrs.has('src')) {
         const src = element.getAttribute('src');
-        if (src && (src.startsWith('http') || src.startsWith('./'))) {
+        if (src && (src.startsWith('http') || src.startsWith('./') || src.startsWith('/'))) {
           props.src = src;
         }
       }
