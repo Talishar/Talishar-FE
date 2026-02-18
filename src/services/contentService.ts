@@ -31,7 +31,7 @@ export const fetchDiscordReleaseNotes = async (maxMessages: number = 5): Promise
     const isProduction = window.location.hostname === 'talishar.net';
     const url = isProduction 
       ? `https://legacy.talishar.net/game/GetDiscordReleaseNotes.php?maxMessages=${maxMessages}`
-      : `/api/GetDiscordReleaseNotes.php?maxMessages=${maxMessages}`;
+      : `/game/GetDiscordReleaseNotes.php?maxMessages=${maxMessages}`;
     
     const response = await fetch(url);
     
@@ -81,7 +81,7 @@ export const fetchDiscordContentCarousel = async (maxMessages: number = 20): Pro
     const isProduction = window.location.hostname === 'talishar.net';
     const url = isProduction 
       ? `https://legacy.talishar.net/game/GetDiscordContentCarousel.php?maxMessages=${maxMessages}`
-      : `/api/GetDiscordContentCarousel.php?maxMessages=${maxMessages}`;
+      : `/game/GetDiscordContentCarousel.php?maxMessages=${maxMessages}`;
     
     const response = await fetch(url);
     
