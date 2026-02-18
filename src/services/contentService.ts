@@ -29,8 +29,11 @@ export const fetchDiscordReleaseNotes = async (maxMessages: number = 5): Promise
   try {
     // Call legacy backend directly to bypass frontend routing
     const isProduction = window.location.hostname === 'talishar.net';
+    const isPreview = window.location.hostname === 'preview.talishar.net';
     const url = isProduction 
       ? `https://legacy.talishar.net/game/GetDiscordReleaseNotes.php?maxMessages=${maxMessages}`
+      : isPreview
+      ? `https://test-api.talishar.net/game/GetDiscordReleaseNotes.php?maxMessages=${maxMessages}`
       : `/game/GetDiscordReleaseNotes.php?maxMessages=${maxMessages}`;
     
     const response = await fetch(url);
@@ -79,8 +82,11 @@ export const fetchDiscordContentCarousel = async (maxMessages: number = 20): Pro
   try {
     // Call legacy backend directly to bypass frontend routing
     const isProduction = window.location.hostname === 'talishar.net';
+    const isPreview = window.location.hostname === 'preview.talishar.net';
     const url = isProduction 
       ? `https://legacy.talishar.net/game/GetDiscordContentCarousel.php?maxMessages=${maxMessages}`
+      : isPreview
+      ? `https://test-api.talishar.net/game/GetDiscordContentCarousel.php?maxMessages=${maxMessages}`
       : `/game/GetDiscordContentCarousel.php?maxMessages=${maxMessages}`;
     
     const response = await fetch(url);
