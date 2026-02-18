@@ -6,7 +6,6 @@ import styles from './ChatBox.module.css';
 import { parseHtmlToReactElements } from 'utils/ParseEscapedString';
 import classNames from 'classnames';
 import { useCheckOpponentTypingQuery } from 'features/api/apiSlice';
-import { METAFY_TIER_MAP, MetafyTierName } from 'utils/patronIcons';
 
 const CHAT_RE = /<span[^>]*>(.*?):\s<\/span>/;
 const TYPING_TIMEOUT_MS = 5000; // 5 seconds
@@ -69,27 +68,9 @@ export default function ChatBox() {
       return state.game.playerTwo.Name;
     }) ?? 'your opponent');
   
-  // Get Metafy tiers for both players
-  const p1MetafyTiers = useAppSelector((state: RootState) => state.game.playerOne.metafyTiers) || [];
-  const p2MetafyTiers = useAppSelector((state: RootState) => state.game.playerTwo.metafyTiers) || [];
-  
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatBoxRef = useRef<HTMLDivElement>(null);
   
-  // Helper to generate Metafy badge HTML
-  const generateMetafyBadges = (tiers: string[]): string => {
-    if (!Array.isArray(tiers) || tiers.length === 0) return '';
-    
-    return tiers
-      .map((tierName) => {
-        const tierInfo = METAFY_TIER_MAP[tierName as MetafyTierName];
-        if (!tierInfo) return '';
-        return '';
-      })
-      .filter(badge => badge !== '')
-      .join('');
-  };
-
   const scrollToBottom = () => {
     if (chatBoxRef.current) {
       chatBoxRef.current.scrollTop = chatBoxRef.current.scrollHeight;
@@ -113,10 +94,6 @@ export default function ChatBox() {
       }
     })
     .map((message) => {
-      // Generate Metafy badges for the players
-      const p1Badges = generateMetafyBadges(p1MetafyTiers);
-      const p2Badges = generateMetafyBadges(p2MetafyTiers);
-      
       const p1DisplayName = amIPlayerOne
         ? myName && myName.trim() ? myName.substring(0, 15) : 'Player 1'
         : oppName && oppName.trim() ? oppName.substring(0, 15) : 'Player 1';
@@ -128,11 +105,11 @@ export default function ChatBox() {
       return message
         .replace(
           'Player 1',
-          `${p1Badges}<b>${p1DisplayName}</b>`
+          `<b>${p1DisplayName}</b>`
         )
         .replace(
           'Player 2',
-          `${p2Badges}<b>${p2DisplayName}</b>`
+          `<b>${p2DisplayName}</b>`
         );
     });
 
