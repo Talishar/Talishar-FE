@@ -84,7 +84,7 @@ export default function ChatBox() {
       .map((tierName) => {
         const tierInfo = METAFY_TIER_MAP[tierName as MetafyTierName];
         if (!tierInfo) return '';
-        return `<a href='https://metafy.gg/@Talishar' target='_blank' rel='noopener noreferrer'><img alt='' title='${tierInfo.title}' style='margin-bottom:3px; height:16px;' src='${tierInfo.image}' /></a>`;
+        return '';
       })
       .filter(badge => badge !== '')
       .join('');
