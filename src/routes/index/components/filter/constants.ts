@@ -121,6 +121,7 @@ export const HEROES_OF_RATHE: { value: string; label: string; young?: boolean }[
   { value: 'SUP072', label: 'Lyath Goldmane', young: true },
   { value: 'SMP001', label: 'Bolfar Bear Hands', young: true },
   { value: 'SMP002', label: 'Bravo Flattering Showman', young: true },
+  { value: 'BDD001', label: 'Bravo Flattering Showman', young: true },
   { value: 'JDG024', label: 'Brutus Summa Rudis', young:true },
   { value: 'MST238', label: 'Enigma New Moon', young: true },
   { value: 'SMP003', label: 'Fightmaster Kox', young: true },
