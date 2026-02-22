@@ -30,6 +30,22 @@ export default function PlayerName(player: Player) {
   const playerOneName = useAppSelector((state: RootState) => state.game.playerOne.Name);
   const playerTwoName = useAppSelector((state: RootState) => state.game.playerTwo.Name);
 
+  const getDisplayedPlayerNumber = () => {
+    if (playerID === 3) {
+      if (spectatorCameraView === 2) {
+        // Viewing player 2: board is swapped, so top (isPlayer=false) is player 1, bottom (isPlayer=true) is player 2
+        return player.isPlayer ? 2 : 1;
+      } else {
+        // Viewing player 1 (default): board is normal, so top (isPlayer=false) is player 2, bottom (isPlayer=true) is player 1
+        return player.isPlayer ? 1 : 2;
+      }
+    } else {
+      return player.isPlayer ? 1 : 2;
+    }
+  };
+
+  const displayedPlayerNumber = getDisplayedPlayerNumber();
+
   // Determine which player name to display
   let playerName;
   if (playerID === 3) {
@@ -108,31 +124,31 @@ export default function PlayerName(player: Player) {
   };
 
   const isPatron = useAppSelector((state: RootState) =>
-    player.isPlayer
+    displayedPlayerNumber === 1
       ? state.game.playerOne.isPatron
       : state.game.playerTwo.isPatron
   );
 
   const isContributor = useAppSelector((state: RootState) =>
-    player.isPlayer
+    displayedPlayerNumber === 1
       ? state.game.playerOne.isContributor
       : state.game.playerTwo.isContributor
   );
 
   const isPvtVoidPatron = useAppSelector((state: RootState) =>
-    player.isPlayer
+    displayedPlayerNumber === 1
       ? state.game.playerOne.isPvtVoidPatron
       : state.game.playerTwo.isPvtVoidPatron
   );
 
   const isPracticeDummy = useAppSelector((state: RootState) =>
-    player.isPlayer
+    displayedPlayerNumber === 1
       ? state.game.playerOne.Name === 'Practice Dummy'
       : state.game.playerTwo.Name === 'Practice Dummy'
   );
 
   const metafyTiers = useAppSelector((state: RootState) =>
-    player.isPlayer
+    displayedPlayerNumber === 1
       ? state.game.playerOne.metafyTiers
       : state.game.playerTwo.metafyTiers
   );
