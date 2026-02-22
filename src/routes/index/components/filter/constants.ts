@@ -119,20 +119,19 @@ export const HEROES_OF_RATHE: { value: string; label: string; young?: boolean }[
   { value: 'SUP064', label: 'Kayo Strong-Arm', young: true },
   { value: 'SUP071', label: 'Lyath Goldmane Vile Savant' },
   { value: 'SUP072', label: 'Lyath Goldmane', young: true },
-  { value: 'SMP001', label: 'Bolfar Bear Hands', young: true },
-  { value: 'SMP002', label: 'Bravo Flattering Showman', young: true },
   { value: 'BDD001', label: 'Bravo Flattering Showman', young: true },
-  { value: 'JDG024', label: 'Brutus Summa Rudis', young:true },
   { value: 'MST238', label: 'Enigma New Moon', young: true },
+  { value: 'AHA001', label: 'Hala Bladesaint of the Vow' },
+  /*   { value: 'JDG024', label: 'Brutus Summa Rudis', young:true },
+  { value: 'SMP001', label: 'Bolfar Bear Hands', young: true },
   { value: 'SMP003', label: 'Fightmaster Kox', young: true },
   { value: 'LSS021', label: 'Frankie Make Ends Meet', young: true },
   { value: 'SMP004', label: 'Groundbreaker Crix', young: true },
-  { value: 'AHA001', label: 'Hala Bladesaint of the Vow' },
   { value: 'SMP005', label: 'Reya the Undying', young: true },
   { value: 'LSS001', label: 'Ruudi Gem Keeper', },
   { value: 'HER100', label: 'Squizzy and Floof', young: true },
   { value: 'JDG001', label: 'Taipanis Dracai of Judgement', young: true },
-  { value: 'JDG006', label: 'Theryon Magister of Justice', young: true },
+  { value: 'JDG006', label: 'Theryon Magister of Justice', young: true }, */
 ];
 
 export const CLASS_OF_RATHE: { label: string }[] = [
