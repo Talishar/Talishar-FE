@@ -3,6 +3,7 @@
   overflow: visible;
   width: 16dvh;
   flex-shrink: 0;
+  position: relative;
 }
 
 @media (orientation: portrait) {
@@ -103,4 +104,25 @@
 .border9 {
   border-color: rgb(192, 6, 6);
   box-shadow: 0 0 5px 5px rgb(192, 6, 6);
+}
+
+.label {
+  background-color: var(--near-black);
+  color: white;
+  position: absolute;
+  bottom: 3dvh;
+  left: 2dvh;
+  right: 2dvh;
+  text-align: center;
+  border: 2px solid goldenrod;
+  border-radius: 3px;
+  z-index: 999;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  font-weight: 700;
+  font-size: 0.6em;
+  padding: 2px 3px;
+  pointer-events: none;
+  white-space: nowrap;
+  box-shadow: 0 0 8px rgba(255, 255, 0, 0.8);
 }

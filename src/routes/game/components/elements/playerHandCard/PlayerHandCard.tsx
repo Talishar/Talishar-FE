@@ -175,6 +175,9 @@ export const PlayerHandCard = ({
           )}
         </div>
       </CardPopUp>
+      {card.label && card.label !== '' && (
+        <div className={styles.label}>{card.label}</div>
+      )}
     </motion.div>
   );
 };
