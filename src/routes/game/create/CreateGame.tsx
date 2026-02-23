@@ -288,8 +288,15 @@ const CreateGame = () => {
       
       // Extract base game description (remove hero/class names)
       let baseGameDescription = values.gameDescription || '';
-      if (baseGameDescription.startsWith('Looking for ') && baseGameDescription.includes(',')) {
-        // "Looking for Arakni, Briar..." -> "Looking for a specific hero"
+      if (selectedClasses.length > 0) {
+        baseGameDescription = 'Looking for a specific class';
+      } else if (selectedHeroes.length > 0) {
+        if (gameDescription.startsWith('No interest')) {
+          baseGameDescription = 'No interest in playing against specific hero';
+        } else {
+          baseGameDescription = 'Looking for a specific hero';
+        }
+      } else if (baseGameDescription.startsWith('Looking for ') && baseGameDescription.includes(',')) {
         if (baseGameDescription.includes('in playing')) {
           baseGameDescription = 'No interest in playing against specific hero';
         } else {
