@@ -13,6 +13,7 @@ import {
   logOutReducer
 } from 'features/auth/authSlice';
 import { useEffect, useCallback, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 
 // List of mod usernames - should match backend list
@@ -34,6 +35,7 @@ export default function useAuth() {
   const { isLoading: isQueryLoading, isFetching, error, data } = useLoginWithCookieQuery({});
   const [authCheckTimedOut, setAuthCheckTimedOut] = useState(false);
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const setLoggedIn = useCallback(
     (
@@ -61,17 +63,12 @@ export default function useAuth() {
       await logOutAPI({}).unwrap();
       dispatch(logOutReducer());
       toast.success('Logged Out', { position: 'top-center' });
-      // Force a reload to clear all app state and prevent auto-login
-      setTimeout(() => {
-        window.location.href = '/';
-      }, 50);
+      navigate('/');
     } catch (err) {
       console.warn(err);
       toast.error('Error Logging Out', { position: 'top-center' });
       // Still redirect on error to clear state
-      setTimeout(() => {
-        window.location.href = '/';
-      }, 50);
+      navigate('/');
     }
   };
   
@@ -80,8 +77,10 @@ export default function useAuth() {
   const isLoading = !authCheckTimedOut && data === undefined && error === undefined;
   
   // isLoggedIn should be based on the query result if available, otherwise use Redux
-  // This ensures we show logged-in state as soon as the query returns, before Redux is updated
-  const isLoggedIn = data?.isUserLoggedIn ?? !!currentUserId;
+  // Use || (not ??) so that a `false` cookie-check result can still be overridden by
+  // a freshly-dispatched Redux credential (e.g. right after a manual login, before the
+  // loginWithCookie query has had a chance to refetch).
+  const isLoggedIn = data?.isUserLoggedIn || !!currentUserId;
 
   // Add a timeout for auth check - if it doesn't complete within 5 seconds, assume user isn't logged in
   // This prevents infinite loading state when cookies are rejected due to SameSite policy

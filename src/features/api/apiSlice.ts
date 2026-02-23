@@ -172,7 +172,7 @@ const dynamicBaseQuery: BaseQueryFn<
 export const apiSlice = createApi({
   reducerPath: 'api',
   baseQuery: dynamicBaseQuery,
-  tagTypes: ['ModPageData', 'UserProfile'],
+  tagTypes: ['ModPageData', 'UserProfile', 'Auth'],
   refetchOnFocus: false,
   refetchOnReconnect: false,
   endpoints: (builder) => ({
@@ -205,7 +205,8 @@ export const apiSlice = createApi({
           body: { ...body, submit: true },
           responseHandler: parseResponse
         };
-      }
+      },
+      invalidatesTags: ['Auth']
     }),
     loginWithCookie: builder.query({
       query: (body) => {
@@ -215,7 +216,8 @@ export const apiSlice = createApi({
           body: {},
           responseHandler: parseResponse
         };
-      }
+      },
+      providesTags: ['Auth']
     }),
     logOut: builder.mutation({
       query: (body) => {
@@ -225,7 +227,8 @@ export const apiSlice = createApi({
           body: {},
           responseHandler: parseResponse
         };
-      }
+      },
+      invalidatesTags: ['Auth']
     }),
     signUp: builder.mutation({
       query: (body) => {
@@ -235,7 +238,8 @@ export const apiSlice = createApi({
           body: { ...body, submit: true },
           responseHandler: parseResponse
         };
-      }
+      },
+      invalidatesTags: ['Auth']
     }),
     forgottenPassword: builder.mutation({
       query: (body) => {
@@ -495,7 +499,8 @@ export const apiSlice = createApi({
           },
           responseHandler: parseResponse
         };
-      }
+      },
+      invalidatesTags: ['Auth']
     }),
     submitMetafyLogin: builder.mutation<
       MetafyLoginResponse,
@@ -515,7 +520,7 @@ export const apiSlice = createApi({
           responseHandler: parseResponse
         };
       },
-      invalidatesTags: [{ type: 'UserProfile', id: 'LIST' }]
+      invalidatesTags: ['Auth', { type: 'UserProfile', id: 'LIST' }]
     }),
     submitMetafySignup: builder.mutation<
       MetafySignupResponse,
@@ -535,7 +540,7 @@ export const apiSlice = createApi({
           responseHandler: parseResponse
         };
       },
-      invalidatesTags: [{ type: 'UserProfile', id: 'LIST' }]
+      invalidatesTags: ['Auth', { type: 'UserProfile', id: 'LIST' }]
     }),
     getModPageData: builder.query<ModPageDataResponse, void>({
       query: () => {

@@ -68,10 +68,7 @@ export const LoginForm = () => {
           '',
           resp?.isPatron
         );
-        // Force a hard refresh to clear all cached state and show updated UI
-        setTimeout(() => {
-          window.location.href = '/';
-        }, 500);
+        navigate('/');
       }
       if (resp?.isUserLoggedIn === false) {
         toast.error('Incorrect username or password.', {
