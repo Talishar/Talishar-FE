@@ -105,6 +105,7 @@ const CreateGame = () => {
   const [isInitialized, setIsInitialized] = React.useState(false);
 
   const formFormat = watch('format');
+  const deckTestMode = watch('deckTestMode');
 
   // Normalize localStorage on mount - extract base option from expanded descriptions
   React.useEffect(() => {
@@ -656,7 +657,7 @@ const CreateGame = () => {
                 Single Player 🤖
                 <div>&nbsp;</div>
               </label>
-              {isLoggedIn && (
+              {isLoggedIn && deckTestMode && (
                 <label>
                   AI Deck
                   <select
