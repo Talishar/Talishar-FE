@@ -512,7 +512,7 @@
   padding: 2px;
 }
 
-@media only screen and (max-width: 768px) {
+@media only screen and (max-width: 1200px) {
   .number.number {
     max-height: 1.8em;
     max-width: 1.8em;
@@ -527,9 +527,22 @@
   }
 
   .icon.icon {
-    min-width: 1.75em;
-    height: 1.75em;
-    font-size: 1.85em;
+    min-width: 1.3em;
+    height: 1.3em;
+    font-size: 1.4em;
+    padding: 1px;
+    margin: 0.05em;
+  }
+}
+
+@media only screen and (max-width: 480px) {
+  .icon.icon {
+    min-width: 1em;
+    height: 1em;
+    font-size: 1.1em;
+    padding: 1px;
+    margin: 0.05em;
+    border-width: 0.5px;
   }
 }
 
