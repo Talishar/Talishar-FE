@@ -32,7 +32,7 @@ const OpenGame = ({
       {!!entry.p1Hero ? (
         <img className={styles.heroImg} src={generateCroppedImageUrl(entry.p1Hero)} />
       ) : (
-        <img className={styles.heroImg} src="https://images.talishar.net/public/crops/UNKNOWNHERO_cropped.png" />
+        <img className={styles.heroImg} src="https://images.talishar.net/public/crops/UNKNOWNHERO_cropped.webp" />
       )}
       </div>
       <div className={styles.description}>{entry.description}</div>

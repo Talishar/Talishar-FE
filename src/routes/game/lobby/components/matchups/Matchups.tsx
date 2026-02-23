@@ -14,6 +14,7 @@ export interface Matchups {
 
 const Matchups = ({ refetch }: Matchups) => {
   const [isUpdating, setIsUpdating] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
 
   const gameLobby = useAppSelector(
     (state: RootState) => state.game.gameLobby,
@@ -54,16 +55,26 @@ const Matchups = ({ refetch }: Matchups) => {
       setIsUpdating(false);
     }
   };
-
+  
   const sortedMatchups = [...(gameLobby?.matchups ?? [])];
   sortedMatchups.sort((a, b) => a.name.localeCompare(b.name));
+
+  const filteredMatchups = sortedMatchups.filter((matchup) =>
+    matchup.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   if (sortedMatchups.length > 0) {
     return (
       <article className={styles.matchupContainer}>
         <>
           <h4>Matchups</h4>
-          {sortedMatchups.map((matchup, ix) => {
+	  <input
+	    type="text"
+	    placeholder="Search"
+	    value={searchTerm}
+	    onChange={(e) => setSearchTerm(e.target.value)}
+	  />
+	  {filteredMatchups.map((matchup, ix) => {
             const turnOrderIndicator = getTurnOrderIndicator(matchup.preferredTurnOrder);
             return (
               <div className={styles.matchups} key={ix}>

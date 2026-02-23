@@ -64,7 +64,6 @@ const Header = () => {
               href="https://metafy.gg/@talishar"
               target={'_blank'}
               className={styles.support}
-              title={'Metafy Link'}
             >
               Support Us!
             </a>

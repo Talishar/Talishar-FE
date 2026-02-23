@@ -42,6 +42,7 @@
   "scripts": {
     "main": "index.tsx",
     "dev": "vite",
+    "dev-vm": "vite --host",
     "start": "vite",
     "build": "vite build",
     "serve": "vite preview",

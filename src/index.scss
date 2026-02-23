@@ -166,6 +166,35 @@ body {
   background-size: cover;
   background-color: var(--theme-card-background);
   color: var(--theme-text);
+  
+  /* Chrome, Edge, Safari scrollbar styling */
+  scrollbar-width: thin;
+  scrollbar-color: #606569 transparent;
+}
+
+/* Webkit browsers (Chrome, Safari, Edge) scrollbar styling */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #606569;
+  border-radius: 4px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #757a7f;
+}
+
+::-webkit-scrollbar-thumb:active {
+  background-color: #8a9094;
 }
 
 // Import Pico

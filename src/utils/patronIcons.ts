@@ -90,7 +90,7 @@ export const createPatreonIconMap = (
           condition: true,
           src: tierConfig.image,
           title: tierConfig.title,
-          href: 'https://www.metafy.gg'
+          href: 'https://metafy.gg/@Talishar'
         });
       }
     }

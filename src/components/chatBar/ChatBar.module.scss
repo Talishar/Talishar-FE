@@ -311,27 +311,6 @@
     background: rgba(255, 255, 255, 0.1);
   }
 
-  .onlineIndicator {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    flex-shrink: 0;
-
-    &.online {
-      background: var(--theme-success, #28a745);
-      box-shadow: 0 0 5px var(--theme-success, #28a745);
-    }
-
-    &.away {
-      background: var(--theme-warning, #ffc107);
-      box-shadow: 0 0 5px var(--theme-warning, #ffc107);
-    }
-
-    &.offline {
-      background: var(--theme-text-muted, rgba(255, 255, 255, 0.6));
-    }
-  }
-
   .friendInfo {
     flex: 1;
     min-width: 0;
@@ -480,27 +459,6 @@
     flex: 1;
     min-width: 0;
 
-    .onlineIndicator {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      flex-shrink: 0;
-
-      &.online {
-        background: var(--theme-success, #3d8d3d);
-        box-shadow: 0 0 5px var(--theme-success, #3d8d3d);
-      }
-
-      &.away {
-        background: #ffc107;
-        box-shadow: 0 0 5px #ffc107;
-      }
-
-      &.offline {
-        background: #95a5a6;
-      }
-    }
-
     .chatFriendName {
       font-weight: 600;
       font-size: 0.95em;
@@ -580,11 +538,6 @@
 
     .chatHeaderInfo {
       gap: 5px;
-
-      .onlineIndicator {
-        width: 8px;
-        height: 8px;
-      }
 
       .chatFriendName {
         font-size: 0.85em;

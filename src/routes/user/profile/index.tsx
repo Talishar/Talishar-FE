@@ -292,13 +292,22 @@ export const ProfilePage = () => {
   //   PATREON_URL + PatreonOAuthParam.toString()
   // );
 
-  // Calculate isMetafySupporter based on communities with tiers
-  const isMetafySupporter: boolean = 
-    (profileData?.isMetafySupporter ?? false) ||
-    (profileData?.metafyCommunities && 
-     profileData.metafyCommunities.length > 0 &&
-     profileData.metafyCommunities.some(c => (c as any).tiers && (c as any).tiers.length > 0)) ||
-    false;
+  const isMetafySupporter: boolean = profileData?.isMetafySupporter ?? false;
+
+  // DEBUG: Log supporter status calculation
+  console.log('[ProfilePage] isMetafySupporter calculation:', {
+    apiIsMetafySupporter: profileData?.isMetafySupporter,
+    finalIsMetafySupporter: isMetafySupporter,
+    metafyCommunities: profileData?.metafyCommunities,
+    communityIds: profileData?.metafyCommunities?.map((c: any) => ({
+      id: c.id,
+      title: c.title,
+      type: c.type,
+      hasSubscriptionTier: !!c.subscription_tier,
+      subscriptionTierName: c.subscription_tier?.name || c.subscription_tier
+    })),
+    talisharCommunityId: 'be5e01c0-02d1-4080-b601-c056d69b03f6'
+  });
 
   return (
     <div>
