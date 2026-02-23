@@ -1,6 +1,7 @@
 /**
  * Service to fetch automated content from Discord
  */
+import { BACKEND_URL } from 'appConstants';
 
 export interface DiscordMessage {
   id: string;
@@ -27,11 +28,7 @@ export interface ContentVideo {
 // Discord API - Fetches latest messages from #release-notes channel
 export const fetchDiscordReleaseNotes = async (maxMessages: number = 5): Promise<DiscordMessage[]> => {
   try {
-    // Call legacy backend directly to bypass frontend routing
-    const isProduction = window.location.hostname === 'talishar.net';
-    const url = isProduction 
-      ? `https://legacy.talishar.net/game/GetDiscordReleaseNotes.php?maxMessages=${maxMessages}`
-      : `/api/GetDiscordReleaseNotes.php?maxMessages=${maxMessages}`;
+    const url = `${BACKEND_URL}GetDiscordReleaseNotes.php?maxMessages=${maxMessages}`;
     
     const response = await fetch(url);
     
@@ -77,11 +74,7 @@ export interface ContentCarouselResponse {
 
 export const fetchDiscordContentCarousel = async (maxMessages: number = 20): Promise<ContentVideo[]> => {
   try {
-    // Call legacy backend directly to bypass frontend routing
-    const isProduction = window.location.hostname === 'talishar.net';
-    const url = isProduction 
-      ? `https://legacy.talishar.net/game/GetDiscordContentCarousel.php?maxMessages=${maxMessages}`
-      : `/api/GetDiscordContentCarousel.php?maxMessages=${maxMessages}`;
+    const url = `${BACKEND_URL}GetDiscordContentCarousel.php?maxMessages=${maxMessages}`;
     
     const response = await fetch(url);
     

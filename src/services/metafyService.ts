@@ -1,6 +1,7 @@
 /**
  * Service to fetch guides from Metafy API
  */
+import { BACKEND_URL } from 'appConstants';
 
 export interface MetafyPrice {
   value: number;
@@ -54,12 +55,7 @@ export const fetchMetafyGuides = async (
   perPage: number = 20
 ): Promise<MetafyGuidesResponse> => {
   try {
-    const isProduction = window.location.hostname === 'talishar.net';
-    const baseUrl = isProduction 
-      ? 'https://legacy.talishar.net/game'
-      : '/api';
-    
-    const url = `${baseUrl}/GetMetafyGuides.php?page=${page}&per_page=${perPage}`;
+    const url = `${BACKEND_URL}GetMetafyGuides.php?page=${page}&per_page=${perPage}`;
     console.log('[Metafy Service] Fetching from:', url);
     
     const response = await fetch(url);
