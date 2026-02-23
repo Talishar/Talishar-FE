@@ -12,7 +12,7 @@ import styles from './Join.module.css';
 import { useKnownSearchParams } from 'hooks/useKnownSearchParams';
 import { setGameStart } from 'features/game/GameSlice';
 import { toast } from 'react-hot-toast';
-import { FaExclamationCircle } from 'react-icons/fa';
+import { FaExclamationCircle, FaQuestionCircle } from 'react-icons/fa';
 import validationSchema from './validationSchema';
 import useAuth from 'hooks/useAuth';
 import classNames from 'classnames';
@@ -261,7 +261,7 @@ const JoinGame = () => {
               <>
                 {isLoggedIn && !isLoading && (
                   <label>
-                    Favorite Deck
+                    Selected Deck
                     <ImageSelect
                       id="favoriteDecks"
                       options={favoriteDeckOptions}
@@ -297,14 +297,22 @@ const JoinGame = () => {
                 />
                 <fieldset>
                   <label>
-                    Deck Link (URL from <a href="https://FaBrary.net"  target="_blank">FaBrary.net</a>)
+                  <>
+                    Import Deck{''}
+                    <span
+                      title="URL from FaBrary.net"
+                      style={{ cursor: 'help', display: 'inline-flex', alignItems: 'center', marginLeft: '4px' }}
+                    >
+                      <FaQuestionCircle size={14} />
+                    </span>
                     <input
                       type="text"
                       id="fabdb"
-                      aria-label="Deck Link"
+                      aria-label="Deck Link - URL from FaBrary.net"
                       {...register('fabdb')}
                       aria-invalid={errors.deck?.message ? 'true' : undefined}
                     />
+                  </>
                     <ErrorMessage
                       errors={errors}
                       name="fabdb"

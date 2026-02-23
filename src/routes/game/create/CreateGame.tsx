@@ -16,7 +16,7 @@ import validationSchema from './validationSchema';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { ErrorMessage } from '@hookform/error-message';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { FaExclamationCircle } from 'react-icons/fa';
+import { FaExclamationCircle, FaQuestionCircle } from 'react-icons/fa';
 import { HEROES_OF_RATHE, CLASS_OF_RATHE } from '../../index/components/filter/constants';
 import { generateCroppedImageUrl } from 'utils/cropImages';
 import { ImageSelect, ImageSelectOption } from 'components/ImageSelect';
@@ -381,7 +381,7 @@ const CreateGame = () => {
           <div className={styles.formInner}>
             {isLoggedIn && !isLoading && !isPreconFormat(formFormat || selectedFormat) && (
               <label>
-                Favorite Deck
+                Selected Deck
                 <ImageSelect
                   id="favoriteDecks"
                   options={favoriteDeckOptions}
@@ -439,11 +439,17 @@ const CreateGame = () => {
                   </>
                 ) : (
                   <>
-                    Deck Link (URL from <a href="https://FaBrary.net" target="_blank">FaBrary.net</a>)
+                    Import Deck{''}
+                    <span
+                      title="URL from FaBrary.net"
+                      style={{ cursor: 'help', display: 'inline-flex', alignItems: 'center', marginLeft: '4px' }}
+                    >
+                      <FaQuestionCircle size={14} />
+                    </span>
                     <input
                       type="text"
                       id="fabdb"
-                      aria-label="Deck Link"
+                      aria-label="Deck Link - URL from FaBrary.net"
                       {...register('fabdb')}
                       aria-invalid={errors.deck?.message ? 'true' : undefined}
                     />
