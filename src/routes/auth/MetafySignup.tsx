@@ -53,11 +53,7 @@ const MetafySignup = () => {
           toast.success('Signup successful! Redirecting...', {
             position: 'top-center'
           });
-          // Force a hard refresh to ensure all auth state is synced
-          // The backend has set the session cookie and RTK Query will invalidate/refetch
-          setTimeout(() => {
-            window.location.href = data.redirect || '/';
-          }, 500);
+          navigate('/');
         } else {
           toast.error(`Signup failed: ${data.error || 'Unknown error'}`, {
             position: 'top-center'
