@@ -46,10 +46,28 @@
   background-color: var(--theme-form-active, rgba(212, 175, 55, 0.05));
 }
 
+.heroSelectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
 .heroSelection > label {
   font-weight: bold;
   margin-bottom: 0.5rem;
   display: block;
+}
+
+.clearSelectionLink {
+  font-size: 0.85em;
+  color: var(--theme-primary, #d4af37);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.clearSelectionLink:hover {
+  text-decoration: underline;
 }
 
 .heroCheckboxes {

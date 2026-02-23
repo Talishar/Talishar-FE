@@ -91,8 +91,14 @@ const CreateGame = () => {
 
   const [selectedFormat, setSelectedFormat] = React.useState(initialValues.format);
   const [previousFormat, setPreviousFormat] = React.useState<string>(String(initialValues.format || ''));
-  const [selectedHeroes, setSelectedHeroes] = React.useState<string[]>([]);
-  const [selectedClasses, setSelectedClasses] = React.useState<string[]>([]);
+  const [selectedHeroes, setSelectedHeroes] = React.useState<string[]>(() => {
+    const saved = localStorage.getItem('lastSelectedHeroes');
+    return saved ? JSON.parse(saved) : [];
+  });
+  const [selectedClasses, setSelectedClasses] = React.useState<string[]>(() => {
+    const saved = localStorage.getItem('lastSelectedClasses');
+    return saved ? JSON.parse(saved) : [];
+  });
   const [gameDescription, setGameDescription] = React.useState(() => initialValues.gameDescription || '');
   const [selectedFavoriteDeck, setSelectedFavoriteDeck] = React.useState<string>(initialValues.favoriteDecks || '');
   const [selectedPreconDeck, setSelectedPreconDeck] = React.useState<string>(PRECON_DECKS.LINKS[0]);
@@ -106,8 +112,12 @@ const CreateGame = () => {
     // If it contains hero/class names (has commas), extract the base option
     if (stored && stored.includes(',')) {
       let baseDescription = '';
+      const words = stored.split(',').map(w => w.trim());
+      const classLabels = CLASS_OF_RATHE.map(classObj => classObj.label);
+      const isClassSelection = words.some(word => classLabels.includes(word));
+      
       if (stored.startsWith('Looking for ')) {
-        baseDescription = 'Looking for a specific hero';
+        baseDescription = isClassSelection ? 'Looking for a specific class' : 'Looking for a specific hero';
       } else if (stored.startsWith('No interest')) {
         baseDescription = 'No interest in playing against specific hero';
       }
@@ -245,11 +255,26 @@ const CreateGame = () => {
     }
   };
 
+  const clearSelections = () => {
+    setSelectedHeroes([]);
+    setSelectedClasses([]);
+    localStorage.setItem('lastSelectedHeroes', JSON.stringify([]));
+    localStorage.setItem('lastSelectedClasses', JSON.stringify([]));
+    setGameDescription(gameDescription === 'Looking for a specific hero' ? 'Looking for a specific hero' : gameDescription === 'No interest in playing against specific hero' ? 'No interest in playing against specific hero' : 'Looking for a specific class');
+    setValue('gameDescription', gameDescription === 'Looking for a specific hero' ? 'Looking for a specific hero' : gameDescription === 'No interest in playing against specific hero' ? 'No interest in playing against specific hero' : 'Looking for a specific class');
+  };
+
   useEffect(() => {
     reset(initialValues);
     setGameDescription(initialValues.gameDescription || '');
-    setSelectedHeroes([]);
-    setSelectedClasses([]);
+    const savedHeroes = localStorage.getItem('lastSelectedHeroes');
+    const savedClasses = localStorage.getItem('lastSelectedClasses');
+    if (savedHeroes) {
+      setSelectedHeroes(JSON.parse(savedHeroes));
+    }
+    if (savedClasses) {
+      setSelectedClasses(JSON.parse(savedClasses));
+    }
     setSelectedFavoriteDeck(initialValues.favoriteDecks || '');
     setSelectedPreconDeck(PRECON_DECKS.LINKS[0]);
     // Only set fabdb to precon deck if format is precon
@@ -306,8 +331,10 @@ const CreateGame = () => {
         baseGameDescription = 'No interest in playing against specific hero';
       }
       
-      // Save only the base option to localStorage
+      // Save the base option and selected heroes/classes to localStorage
       localStorage.setItem('lastGameDescription', baseGameDescription);
+      localStorage.setItem('lastSelectedHeroes', JSON.stringify(selectedHeroes));
+      localStorage.setItem('lastSelectedClasses', JSON.stringify(selectedClasses));
 
       
       const response = await createGame(values).unwrap();
@@ -474,7 +501,14 @@ const CreateGame = () => {
               
               {gameDescription === 'Looking for a specific hero' && (
                 <div className={styles.heroSelection}>
-                  <label>Select Heroes (up to 3):</label>
+                  <div className={styles.heroSelectionHeader}>
+                    <label>Select Heroes (up to 3):</label>
+                    {selectedHeroes.length > 0 && (
+                      <a href="#" onClick={(e) => { e.preventDefault(); clearSelections(); }} className={styles.clearSelectionLink}>
+                        Clear Selection
+                      </a>
+                    )}
+                  </div>
                   <div className={styles.heroCheckboxes}>
                     {uniqueHeroes.map((heroName) => (
                       <label key={heroName} className={styles.heroCheckbox}>
@@ -497,7 +531,14 @@ const CreateGame = () => {
               )}
               {gameDescription === 'No interest in playing against specific hero' && (
                 <div className={styles.heroSelection}>
-                  <label>Select Heroes (up to 3):</label>
+                  <div className={styles.heroSelectionHeader}>
+                    <label>Select Heroes (up to 3):</label>
+                    {selectedHeroes.length > 0 && (
+                      <a href="#" onClick={(e) => { e.preventDefault(); clearSelections(); }} className={styles.clearSelectionLink}>
+                        Clear Selection
+                      </a>
+                    )}
+                  </div>
                   <div className={styles.heroCheckboxes}>
                     {uniqueHeroes.map((heroName) => (
                       <label key={heroName} className={styles.heroCheckbox}>
@@ -520,7 +561,14 @@ const CreateGame = () => {
               )}
               {gameDescription === 'Looking for a specific class' && (
                 <div className={styles.heroSelection}>
-                  <label>Select Classes (up to 3):</label>
+                  <div className={styles.heroSelectionHeader}>
+                    <label>Select Classes (up to 3):</label>
+                    {selectedClasses.length > 0 && (
+                      <a href="#" onClick={(e) => { e.preventDefault(); clearSelections(); }} className={styles.clearSelectionLink}>
+                        Clear Selection
+                      </a>
+                    )}
+                  </div>
                   <div className={styles.heroCheckboxes}>
                     {uniqueClasses.map((className) => (
                       <label key={className} className={styles.heroCheckbox}>
