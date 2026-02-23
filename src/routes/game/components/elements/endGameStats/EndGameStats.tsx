@@ -31,6 +31,7 @@ export interface EndGameData {
   averageResourcesUsedPerTurn?: number;
   averageCardsLeftOverPerTurn?: number;
   totalLifeGained?: number;
+  totalDamageBlocked?: number;
   totalDamagePrevented?: number;
   totalLifeLost?: number;
   averageCombatValuePerTurn?: number;
@@ -43,6 +44,7 @@ export interface EndGameData {
   averageResourcesUsedPerTurn_NoLast?: number;
   averageCardsLeftOverPerTurn_NoLast?: number;
   totalLifeGained_NoLast?: number;
+  totalDamageBlocked_NoLast?: number;
   totalDamagePrevented_NoLast?: number;
   totalLifeLost_NoLast?: number;
   averageCombatValuePerTurn_NoLast?: number;
@@ -184,6 +186,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
         averageResourcesUsedPerTurn: data.averageResourcesUsedPerTurn_NoLast,
         averageCardsLeftOverPerTurn: data.averageCardsLeftOverPerTurn_NoLast,
         totalLifeGained: data.totalLifeGained_NoLast,
+        totalDamageBlocked: data.totalDamageBlocked_NoLast,
         totalDamagePrevented: data.totalDamagePrevented_NoLast,
         totalLifeLost: data.totalLifeLost_NoLast,
         averageCombatValuePerTurn: data.averageCombatValuePerTurn_NoLast,
@@ -199,6 +202,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
       averageResourcesUsedPerTurn: data.averageResourcesUsedPerTurn,
       averageCardsLeftOverPerTurn: data.averageCardsLeftOverPerTurn,
       totalLifeGained: data.totalLifeGained,
+      totalDamageBlocked: data.totalDamageBlocked,
       totalDamagePrevented: data.totalDamagePrevented,
       totalLifeLost: data.totalLifeLost,
       averageCombatValuePerTurn: data.averageCombatValuePerTurn,
@@ -381,6 +385,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
         content += `Avg Combat Value per Turn,${playerData.averageCombatValuePerTurn || 0}\n`;
         content += `Total Damage Threatened,${playerData.totalDamageThreatened || 0}\n`;
         content += `Total Damage Dealt,${playerData.totalDamageDealt || 0}\n`;
+        content += `Total Damage Blocked,${playerData.totalDamageBlocked || 0}\n`;
         content += `Total Damage Prevented,${playerData.totalDamagePrevented || 0}\n`;
         content += `Total Life Gained,${playerData.totalLifeGained || 0}\n\n`;
         content += `Total Life Self-Lost,${playerData.totalLifeLost || 0}\n\n`;
@@ -773,6 +778,10 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
             <div className={styles.infoRow}>
               <span className={styles.infoLabel}>Total Damage Dealt:</span>
               <span className={styles.infoValue}>{stats.totalDamageDealt}</span>
+            </div>
+            <div className={styles.infoRow}>
+              <span className={styles.infoLabel}>Total Damage Blocked:</span>
+              <span className={styles.infoValue}>{stats.totalDamageBlocked}</span>
             </div>
             
             <div className={styles.infoRow}>
