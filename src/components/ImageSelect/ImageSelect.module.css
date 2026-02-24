@@ -15,7 +15,7 @@
   cursor: pointer;
   min-height: 2.5rem;
   transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
-  margin-bottom: var(--spacing);
+  margin-bottom: 0;
 }
 
 .selectTrigger:hover {

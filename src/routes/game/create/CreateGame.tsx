@@ -373,7 +373,7 @@ const CreateGame = () => {
   return (
     <div>
       <article className={styles.formContainer}>
-        <h3>Create New Game</h3>
+        <h3 className={styles.title}>Create New Game</h3>
         {/*<p className={styles.fieldError}>
           <FaExclamationCircle /> Warning - SOON! an update will be pushed to the live servers. The games in progress will crash and new games will be required.
           </p> */}
@@ -450,6 +450,7 @@ const CreateGame = () => {
                       type="text"
                       id="fabdb"
                       aria-label="Deck Link - URL from FaBrary.net"
+                      placeholder="https://fabrary.net/decks/…"
                       {...register('fabdb')}
                       aria-invalid={errors.deck?.message ? 'true' : undefined}
                     />
