@@ -5,10 +5,10 @@
   min-width: 30%;
   max-width: 90%;
   min-height: 20%;
-  top: 50%;
+  top: 52.5%;
   left: 15%;
   right: 25%;
-  max-height: 45vh;
+  max-height: 40vh;
   height: auto;
   background-color: var(--near-black);
   padding: 1.5vh;
@@ -249,10 +249,10 @@
   min-width: 30%;
   max-width: 90%;
   min-height: 20%;
-  top: 50%;
+  top: 52.5%;
   left: 15%;
   right: 25%;
-  max-height: 45vh;
+  max-height: 40vh;
   height: auto;
   background-color: var(--near-black);
   padding: 1.5vh;
