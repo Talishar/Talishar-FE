@@ -212,7 +212,10 @@ const JoinGame = () => {
         );
         const searchParam = { playerID: String(response.playerID ?? '0') };
         navigate(`/game/lobby/${response.gameName}`, {
-          state: { playerID: response.playerID ?? 0 }
+          state: { 
+            playerID: response.playerID ?? 0,
+            authKey: response.authKey ?? ''
+          }
         });
       }
     } catch (error) {

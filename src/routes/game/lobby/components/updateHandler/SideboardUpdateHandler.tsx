@@ -88,7 +88,7 @@ export const LobbyUpdateHandler = React.memo(
         setGameStart({
           gameID: parseInt(gameID ?? ''),
           playerID: locationState?.playerID ?? parseInt(playerID),
-          authKey: authKey
+          authKey: locationState?.authKey ?? authKey
         })
       );
     }, []);

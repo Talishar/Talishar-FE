@@ -1,9 +1,11 @@
+import React, { useContext } from 'react';
 import classNames from 'classnames';
 import { useNavigate } from 'react-router-dom';
 import { IOpenGame } from '../gameList/GameList';
 import styles from './OpenGame.module.css';
 import { generateCroppedImageUrl } from '../../../../utils/cropImages';
 import FriendBadge from '../gameList/FriendBadge';
+import QuickJoinContext from '../quickJoin/QuickJoinContext';
 
 const OpenGame = ({
   ix,
@@ -17,16 +19,25 @@ const OpenGame = ({
   isFriendsGame?: boolean;
 }) => {
   const navigate = useNavigate();
+  const quickJoinCtx = useContext(QuickJoinContext);
+  const hasDeckReady = !!(quickJoinCtx?.hasDeckConfigured);
+  const handleJoin = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (hasDeckReady && quickJoinCtx) {
+      quickJoinCtx.quickJoin(entry.gameName);
+    } else {
+      navigate(`/game/join/${entry.gameName}`);
+    }
+  };
+
   const buttonClass = classNames(styles.button, 'secondary');
 
   return (
     <div 
       key={ix} 
       className={styles.gameItem}
-      onClick={(e) => {
-        e.preventDefault();
-        navigate(`/game/join/${entry.gameName}`);
-      }}
+      onClick={handleJoin}
       >
       <div>
       {!!entry.p1Hero ? (
@@ -39,14 +50,13 @@ const OpenGame = ({
       {isOther && <div className={styles.formatName}>{entry.formatName}</div>}
       <FriendBadge isFriendsGame={isFriendsGame} size="small" />
       <div>
-        <a
-          className={buttonClass}
+        <a 
+          className={buttonClass} 
           href={`/game/join/${entry.gameName}`}
           role="button"
-          onClick={(e) => {
-            e.preventDefault();
-            navigate(`/game/join/${entry.gameName}`);
-          }}
+          onClick={handleJoin}
+          aria-busy={quickJoinCtx?.isJoining}
+          title={hasDeckReady ? 'Join using your pre-configured deck' : 'Select a deck in the panel above to join instantly'}
         >
           Join
         </a>
