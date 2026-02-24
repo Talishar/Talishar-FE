@@ -5,10 +5,11 @@
   min-width: 30%;
   max-width: 90%;
   min-height: 20%;
-  top: 55%;
+  top: 50%;
   left: 15%;
   right: 25%;
-  max-height: calc(45vh - 10vh);
+  max-height: 45vh;
+  height: auto;
   background-color: var(--near-black);
   padding: 1.5vh;
   border: 1px solid var(--theme-primary);
@@ -99,7 +100,8 @@
   column-gap: 10px;
   flex-wrap: wrap;
   overflow: auto;
-  height: 100%;
+  flex: 1;
+  min-height: 0;
   max-height: 100%;
   padding: 0.5em;
   -webkit-overflow-scrolling: touch;
@@ -247,10 +249,11 @@
   min-width: 30%;
   max-width: 90%;
   min-height: 20%;
-  top: 40%;
+  top: 50%;
   left: 15%;
   right: 25%;
-  max-height: calc(60vh - 10vh);
+  max-height: 45vh;
+  height: auto;
   background-color: var(--near-black);
   padding: 1.5vh;
   border: 1px solid var(--theme-primary);
