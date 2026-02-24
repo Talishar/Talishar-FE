@@ -1,11 +1,9 @@
-import React, { useContext } from 'react';
 import classNames from 'classnames';
 import { useNavigate } from 'react-router-dom';
 import { IOpenGame } from '../gameList/GameList';
 import styles from './OpenGame.module.css';
 import { generateCroppedImageUrl } from '../../../../utils/cropImages';
 import FriendBadge from '../gameList/FriendBadge';
-import QuickJoinContext from '../quickJoin/QuickJoinContext';
 
 const OpenGame = ({
   ix,
@@ -19,27 +17,16 @@ const OpenGame = ({
   isFriendsGame?: boolean;
 }) => {
   const navigate = useNavigate();
-  const quickJoinCtx = useContext(QuickJoinContext);
-
-  const hasDeckReady = !!(quickJoinCtx?.hasDeckConfigured);
-
-  const handleJoin = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (hasDeckReady && quickJoinCtx) {
-      quickJoinCtx.quickJoin(entry.gameName);
-    } else {
-      navigate(`/game/join/${entry.gameName}`);
-    }
-  };
-
   const buttonClass = classNames(styles.button, 'secondary');
 
   return (
     <div 
       key={ix} 
       className={styles.gameItem}
-      onClick={handleJoin}
+      onClick={(e) => {
+        e.preventDefault();
+        navigate(`/game/join/${entry.gameName}`);
+      }}
       >
       <div>
       {!!entry.p1Hero ? (
@@ -56,8 +43,10 @@ const OpenGame = ({
           className={buttonClass}
           href={`/game/join/${entry.gameName}`}
           role="button"
-          onClick={handleJoin}
-          title={hasDeckReady ? 'Join using your pre-configured deck' : 'Select a deck to join'}
+          onClick={(e) => {
+            e.preventDefault();
+            navigate(`/game/join/${entry.gameName}`);
+          }}
         >
           Join
         </a>
