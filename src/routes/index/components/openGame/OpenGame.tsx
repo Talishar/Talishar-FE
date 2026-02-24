@@ -33,7 +33,7 @@ const OpenGame = ({
     }
   };
 
-  const buttonClass = classNames(styles.button, 'secondary');
+  const buttonClass = classNames(styles.button, hasDeckReady ? 'primary' : 'secondary');
 
   return (
     <div 
@@ -52,15 +52,15 @@ const OpenGame = ({
       {isOther && <div className={styles.formatName}>{entry.formatName}</div>}
       <FriendBadge isFriendsGame={isFriendsGame} size="small" />
       <div>
-        <a
+        <button
           className={buttonClass}
-          href={`/game/join/${entry.gameName}`}
-          role="button"
           onClick={handleJoin}
-          title={hasDeckReady ? 'Join using your pre-configured deck' : 'Select a deck to join'}
+          disabled={quickJoinCtx?.isJoining}
+          aria-busy={quickJoinCtx?.isJoining}
+          title={hasDeckReady ? 'Join using your pre-configured deck' : 'Select a deck in the panel above to join instantly'}
         >
           Join
-        </a>
+        </button>
       </div>
     </div>
   );
