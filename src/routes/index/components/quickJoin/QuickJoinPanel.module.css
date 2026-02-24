@@ -22,7 +22,7 @@
   display: flex;
   flex-direction: column;
   gap: 0.3rem;
-  font-size: 0.9rem;
+  font-size: var(--font-size);
   color: var(--theme-text, #ededed);
 }
 
@@ -42,7 +42,7 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  font-size: 0.9rem;
+  font-size: var(--font-size);
   cursor: pointer;
   margin: 0;
 }
