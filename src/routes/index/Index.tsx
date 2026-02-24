@@ -10,8 +10,6 @@ import News from 'routes/news';
 import DevTool from './components/devTool';
 import AboutSection from './components/AboutSection';
 import CommunityContent from './components/CommunityContent';
-import { QuickJoinProvider } from './components/quickJoin/QuickJoinContext';
-import QuickJoinPanel from './components/quickJoin/QuickJoinPanel';
 
 const Index = () => {
   usePageTitle('Home');
@@ -28,22 +26,19 @@ const Index = () => {
 
   return (
     <main>
-      <QuickJoinProvider>
-        <div className={styles.grid}>
-          {import.meta.env.DEV && <DevTool />}
-          <div className={styles.gameListContainer}>
-            <GameList />
-          </div>
-          <div className={styles.createGameContainer}>
-            <QuickJoinPanel />
-            <CreateGame />
-          </div>
-          <article className={styles.newsContainer}>
-            <img src={TalisharLogo} className={styles.logo} />
-            <News />
-          </article>
+      <div className={styles.grid}>
+        {import.meta.env.DEV && <DevTool />}
+        <div className={styles.gameListContainer}>
+          <GameList />
         </div>
-      </QuickJoinProvider>
+        <div className={styles.createGameContainer}>
+          <CreateGame />
+        </div>
+        <article className={styles.newsContainer}>
+          <img src={TalisharLogo} className={styles.logo} />
+          <News />
+        </article>
+      </div>
       <CommunityContent />
       <AboutSection />
     </main>
