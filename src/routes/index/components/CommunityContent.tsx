@@ -102,13 +102,6 @@ const CommunityContent: React.FC = () => {
       <section className={styles.communityContentContainer}>
         <div className={styles.content}>
           <h2>Community & Content Hub</h2>
-          <p className={styles.subtitle}>
-            Share your Flesh & Blood gameplay videos in our{' '}
-            <a href="https://discord.gg/JykuRkdd5S" target="_blank" rel="noopener noreferrer">
-              #talishar-content Discord channel
-            </a>
-            !
-          </p>
         </div>
       </section>
     );
@@ -160,13 +153,12 @@ const CommunityContent: React.FC = () => {
       <div className={styles.content}>
         <h2>Community & Content Hub</h2>
         <p className={styles.subtitle}>
-          Discover featured matches, strategy guides, tournaments, and the latest FAB news
+          Discover content, deck tech, and highlights from the Talishar community
         </p>
 
         {/* Carousel */}
         <div className={styles.carouselContainer}>
           <div className={styles.carouselWrapper}>
-            {/* Video Embed */}
             <div className={styles.videoContainer}>
               {renderVideoEmbed()}
             </div>
@@ -183,14 +175,6 @@ const CommunityContent: React.FC = () => {
               {currentVideo.description && (
                 <p className={styles.description}>{currentVideo.description}</p>
               )}
-              <a
-                href={currentVideo.messageUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={styles.discordLink}
-              >
-                View on Discord →
-              </a>
             </div>
 
             {/* Navigation */}
@@ -233,27 +217,6 @@ const CommunityContent: React.FC = () => {
               </button>
             ))}
           </div>
-
-          {/* Video Counter */}
-          <div className={styles.videoCounter}>
-            {currentIndex + 1} / {videos.length}
-          </div>
-        </div>
-
-        {/* CTA Section */}
-        <div className={styles.ctaSection}>
-          <h3>You want us to highlight Your Content?</h3>
-          <p>
-            Post your Flesh & Blood gameplay videos, podcasts, and strategy content in our{' '}
-            <a
-              href="https://discord.gg/JykuRkdd5S"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              #talishar-content Discord channel
-            </a>
-            ! Share your links and we'll feature your most recent content here.
-          </p>
         </div>
       </div>
     </section>
