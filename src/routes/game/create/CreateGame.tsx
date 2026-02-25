@@ -21,7 +21,19 @@ import { HEROES_OF_RATHE, CLASS_OF_RATHE } from '../../index/components/filter/c
 import { generateCroppedImageUrl } from 'utils/cropImages';
 import { ImageSelect, ImageSelectOption } from 'components/ImageSelect';
 
-// Helper function to shorten format names
+const getCookie = (name: string): string | null => {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop()?.split(';').shift() || null;
+  return null;
+};
+
+const setCookie = (name: string, value: string, days: number = 365) => {
+  const expires = new Date();
+  expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
+  document.cookie = `${name}=${value}; expires=${expires.toUTCString()}; path=/`;
+};
+
 const shortenFormat = (format: string): string => {
   if (!format) return '';
   if (format.toLowerCase() === 'classic constructed') return 'CC';
@@ -115,7 +127,14 @@ const CreateGame = () => {
   const [selectedFavoriteDeck, setSelectedFavoriteDeck] = React.useState<string>(initialValues.favoriteDecks || '');
   const [selectedPreconDeck, setSelectedPreconDeck] = React.useState<string>(PRECON_DECKS.LINKS[0]);
   const [isInitialized, setIsInitialized] = React.useState(false);
-  const [isExpanded, setIsExpanded] = useState(true);
+  const [isExpanded, setIsExpanded] = useState(() => {
+    const savedState = getCookie('createGamePanelExpanded');
+    return savedState !== 'false'; 
+  });
+
+  useEffect(() => {
+    setCookie('createGamePanelExpanded', String(isExpanded));
+  }, [isExpanded]);
 
   const formFormat = watch('format');
   const deckTestMode = watch('deckTestMode');

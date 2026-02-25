@@ -1,13 +1,29 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaExclamationCircle, FaQuestionCircle, FaChevronUp, FaChevronDown } from 'react-icons/fa';
 import { ImageSelect } from 'components/ImageSelect';
 import useAuth from 'hooks/useAuth';
 import { useQuickJoin } from './QuickJoinContext';
 import styles from './QuickJoinPanel.module.css';
 
+const getCookie = (name: string): string | null => {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop()?.split(';').shift() || null;
+  return null;
+};
+
+const setCookie = (name: string, value: string, days: number = 365) => {
+  const expires = new Date();
+  expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
+  document.cookie = `${name}=${value}; expires=${expires.toUTCString()}; path=/`;
+};
+
 const QuickJoinPanel = () => {
   const { isLoggedIn } = useAuth();
-  const [isExpanded, setIsExpanded] = useState(true);
+  const [isExpanded, setIsExpanded] = useState(() => {
+    const savedState = getCookie('quickJoinPanelExpanded');
+    return savedState !== 'false';
+  });
   const {
     selectedFavoriteDeck,
     importDeckUrl,
@@ -22,6 +38,10 @@ const QuickJoinPanel = () => {
     setSaveDeck,
     setError
   } = useQuickJoin();
+
+  useEffect(() => {
+    setCookie('quickJoinPanelExpanded', String(isExpanded));
+  }, [isExpanded]);
 
   if (!isLoggedIn) return null;
 
