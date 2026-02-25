@@ -302,12 +302,29 @@ const CreateGame = () => {
     setGameDescription(initialValues.gameDescription || '');
     const savedHeroes = localStorage.getItem('lastSelectedHeroes');
     const savedClasses = localStorage.getItem('lastSelectedClasses');
-    if (savedHeroes) {
-      setSelectedHeroes(JSON.parse(savedHeroes));
+    const parsedHeroes = savedHeroes ? JSON.parse(savedHeroes) : [];
+    const parsedClasses = savedClasses ? JSON.parse(savedClasses) : [];
+    
+    if (parsedHeroes.length > 0) {
+      setSelectedHeroes(parsedHeroes);
     }
-    if (savedClasses) {
-      setSelectedClasses(JSON.parse(savedClasses));
+    if (parsedClasses.length > 0) {
+      setSelectedClasses(parsedClasses);
     }
+    
+    if (parsedHeroes.length > 0) {
+      const heroList = parsedHeroes.join(', ');
+      const desc = initialValues.gameDescription || '';
+      if (desc === 'No interest in playing against specific hero') {
+        setValue('gameDescription', `No interest in playing against ${heroList}`);
+      } else if (desc === 'Looking for a specific hero') {
+        setValue('gameDescription', `Looking for ${heroList}`);
+      }
+    } else if (parsedClasses.length > 0) {
+      const classList = parsedClasses.join(', ');
+      setValue('gameDescription', `Looking for ${classList}`);
+    }
+    
     setSelectedFavoriteDeck(initialValues.favoriteDecks || '');
     setSelectedPreconDeck(PRECON_DECKS.LINKS[0]);
     // Only set fabdb to precon deck if format is precon
