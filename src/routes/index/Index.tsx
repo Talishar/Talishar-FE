@@ -28,7 +28,6 @@ const Index = () => {
 
   return (
     <main>
-      <CommunityContent />
       <QuickJoinProvider>
         <div className={styles.grid}>
           {import.meta.env.DEV && <DevTool />}
@@ -45,6 +44,7 @@ const Index = () => {
           </article>
         </div>
       </QuickJoinProvider>
+      <CommunityContent />
       <AboutSection />
     </main>
   );
