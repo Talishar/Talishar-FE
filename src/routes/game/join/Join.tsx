@@ -58,6 +58,18 @@ const shortenFormat = (format: string): string => {
   return format.charAt(0).toUpperCase() + format.slice(1).toLowerCase();
 };
 
+const formatDeckLabel = (deckName: string, format: string | null, maxLength: number = 58): string => {
+  const formatStr = format ? ` (${shortenFormat(format)})` : '';
+  const combined = `${deckName}${formatStr}`;
+  
+  if (combined.length <= maxLength) {
+    return combined;
+  }
+  
+  const availableForName = Math.max(1, maxLength - formatStr.length - 3);
+  return `${deckName.substring(0, availableForName)}...${formatStr}`;
+};
+
 const JoinGame = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -174,7 +186,7 @@ const JoinGame = () => {
       });
     return filtered.map(deck => ({
       value: deck.key,
-      label: `${deck.name}${deck.format ? ` (${shortenFormat(deck.format)})` : ''}`,
+      label: formatDeckLabel(deck.name, deck.format),
       imageUrl: generateCroppedImageUrl(deck.hero)
     }));
   }, [data?.favoriteDecks, gameFormat]);

@@ -11,11 +11,44 @@
   gap: 0.75rem;
 }
 
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
 .title {
   margin: 0 0 0.25rem;
   font-size: 1.1rem;
   font-weight: 700;
   color: var(--theme-text, #ededed);
+  flex: 1;
+}
+
+.toggleButton {
+  background: none;
+  border: none;
+  color: var(--theme-text, #ededed);
+  cursor: pointer;
+  padding: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s ease, transform 0.2s ease;
+  flex-shrink: 0;
+  width: auto !important;
+  margin-bottom: 0 !important;
+}
+
+.toggleButton:hover {
+  transform: scale(1.1);
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
 }
 
 .label {

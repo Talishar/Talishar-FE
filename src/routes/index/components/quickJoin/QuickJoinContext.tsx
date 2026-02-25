@@ -21,6 +21,18 @@ const shortenFormat = (format: string): string => {
   return readable || format;
 };
 
+const formatDeckLabel = (deckName: string, format: string | null, maxLength: number = 58): string => {
+  const formatStr = format ? ` (${shortenFormat(format)})` : '';
+  const combined = `${deckName}${formatStr}`;
+  
+  if (combined.length <= maxLength) {
+    return combined;
+  }
+  
+  const availableForName = Math.max(1, maxLength - formatStr.length - 3);
+  return `${deckName.substring(0, availableForName)}...${formatStr}`;
+};
+
 interface QuickJoinContextType {
   selectedFavoriteDeck: string;
   importDeckUrl: string;
@@ -67,7 +79,7 @@ export const QuickJoinProvider = ({ children }: { children: React.ReactNode }) =
     if (!favoritesData?.favoriteDecks) return [];
     return favoritesData.favoriteDecks.map((deck) => ({
       value: deck.key,
-      label: `${deck.name}${deck.format ? ` (${shortenFormat(deck.format)})` : ''}`,
+      label: formatDeckLabel(deck.name, deck.format),
       imageUrl: generateCroppedImageUrl(deck.hero)
     }));
   }, [favoritesData?.favoriteDecks]);
