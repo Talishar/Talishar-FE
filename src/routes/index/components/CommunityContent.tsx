@@ -167,7 +167,7 @@ const CommunityContent: React.FC = () => {
             <div className={styles.videoInfo}>
               <h3>{cleanTitle(currentVideo.title)}</h3>
               <p className={styles.videoMeta}>
-                <span className={styles.author}>By {currentVideo.author}</span>
+                <span className={styles.author}>By {currentVideo.author.charAt(0).toUpperCase() + currentVideo.author.slice(1)}</span>
                 <span className={styles.timestamp}>
                   {new Date(currentVideo.timestamp).toLocaleDateString()}
                 </span>
