@@ -6,7 +6,8 @@ const CommunityContent: React.FC = () => {
   const [videos, setVideos] = useState<ContentVideo[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [autoAdvanceInterval, setAutoAdvanceInterval] = useState(5000); // 5 seconds by default
+  const [isAutoAdvancing, setIsAutoAdvancing] = useState(false);
+  const isAutoAdvancingRef = React.useRef(false);
   const autoAdvanceTimerRef = React.useRef<NodeJS.Timeout | null>(null);
 
   // Helper function to clean titles by removing HTML tags and URLs
@@ -32,6 +33,8 @@ const CommunityContent: React.FC = () => {
       try {
         const fetchedVideos = await fetchDiscordContentCarousel(20);
         setVideos(fetchedVideos);
+        isAutoAdvancingRef.current = true;
+        setIsAutoAdvancing(true);
       } catch (error) {
         console.error('Error loading content:', error);
       } finally {
@@ -45,45 +48,57 @@ const CommunityContent: React.FC = () => {
     return () => clearInterval(interval);
   }, []);
 
-  // Auto-scroll carousel with resetable timer
+  // Auto-scroll carousel only when user has been idle for 60 seconds
   useEffect(() => {
-    if (videos.length === 0) return;
+    if (videos.length === 0 || !isAutoAdvancing) return;
 
     // Clear existing timer if any
     if (autoAdvanceTimerRef.current) {
       clearInterval(autoAdvanceTimerRef.current);
     }
 
-    // Set new timer with current interval
     autoAdvanceTimerRef.current = setInterval(() => {
+      if (!isAutoAdvancingRef.current) return;
       setCurrentIndex((prev) => (prev + 1) % videos.length);
-    }, autoAdvanceInterval);
+    }, 6000);
 
     return () => {
       if (autoAdvanceTimerRef.current) {
         clearInterval(autoAdvanceTimerRef.current);
       }
     };
-  }, [videos.length, autoAdvanceInterval]);
+  }, [videos.length, isAutoAdvancing]);
 
-  // Helper function to reset the auto-advance timer
-  const resetAutoAdvanceTimer = () => {
-    setAutoAdvanceInterval(12000); // Set to 12 seconds after user interaction
+  // Detect when user clicks inside the iframe (window loses focus to the iframe)
+  useEffect(() => {
+    const handleWindowBlur = () => {
+      if (document.activeElement?.tagName === 'IFRAME') {
+        setIsAutoAdvancing(false);
+      }
+    };
+
+    window.addEventListener('blur', handleWindowBlur);
+    return () => window.removeEventListener('blur', handleWindowBlur);
+  }, []);
+
+  const stopAutoAdvance = () => {
+    isAutoAdvancingRef.current = false; // Synchronous — blocks the interval immediately
+    setIsAutoAdvancing(false);
   };
 
   const nextSlide = () => {
     setCurrentIndex((prev) => (prev + 1) % videos.length);
-    resetAutoAdvanceTimer();
+    stopAutoAdvance();
   };
 
   const prevSlide = () => {
     setCurrentIndex((prev) => (prev - 1 + videos.length) % videos.length);
-    resetAutoAdvanceTimer();
+    stopAutoAdvance();
   };
 
   const goToSlide = (index: number) => {
     setCurrentIndex(index);
-    resetAutoAdvanceTimer();
+    stopAutoAdvance();
   };
 
   if (loading) {
@@ -102,13 +117,6 @@ const CommunityContent: React.FC = () => {
       <section className={styles.communityContentContainer}>
         <div className={styles.content}>
           <h2>Community & Content Hub</h2>
-          <p className={styles.subtitle}>
-            Share your Flesh & Blood gameplay videos in our{' '}
-            <a href="https://discord.gg/JykuRkdd5S" target="_blank" rel="noopener noreferrer">
-              #talishar-content Discord channel
-            </a>
-            !
-          </p>
         </div>
       </section>
     );
@@ -160,13 +168,12 @@ const CommunityContent: React.FC = () => {
       <div className={styles.content}>
         <h2>Community & Content Hub</h2>
         <p className={styles.subtitle}>
-          Discover featured matches, strategy guides, tournaments, and the latest FAB news
+          Discover content, deck tech, and highlights from the Talishar community
         </p>
 
         {/* Carousel */}
         <div className={styles.carouselContainer}>
           <div className={styles.carouselWrapper}>
-            {/* Video Embed */}
             <div className={styles.videoContainer}>
               {renderVideoEmbed()}
             </div>
@@ -175,7 +182,7 @@ const CommunityContent: React.FC = () => {
             <div className={styles.videoInfo}>
               <h3>{cleanTitle(currentVideo.title)}</h3>
               <p className={styles.videoMeta}>
-                <span className={styles.author}>By {currentVideo.author}</span>
+                <span className={styles.author}>By {currentVideo.author.charAt(0).toUpperCase() + currentVideo.author.slice(1)}</span>
                 <span className={styles.timestamp}>
                   {new Date(currentVideo.timestamp).toLocaleDateString()}
                 </span>
@@ -183,14 +190,6 @@ const CommunityContent: React.FC = () => {
               {currentVideo.description && (
                 <p className={styles.description}>{currentVideo.description}</p>
               )}
-              <a
-                href={currentVideo.messageUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={styles.discordLink}
-              >
-                View on Discord →
-              </a>
             </div>
 
             {/* Navigation */}
@@ -233,27 +232,6 @@ const CommunityContent: React.FC = () => {
               </button>
             ))}
           </div>
-
-          {/* Video Counter */}
-          <div className={styles.videoCounter}>
-            {currentIndex + 1} / {videos.length}
-          </div>
-        </div>
-
-        {/* CTA Section */}
-        <div className={styles.ctaSection}>
-          <h3>You want us to highlight Your Content?</h3>
-          <p>
-            Post your Flesh & Blood gameplay videos, podcasts, and strategy content in our{' '}
-            <a
-              href="https://discord.gg/JykuRkdd5S"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              #talishar-content Discord channel
-            </a>
-            ! Share your links and we'll feature your most recent content here.
-          </p>
         </div>
       </div>
     </section>

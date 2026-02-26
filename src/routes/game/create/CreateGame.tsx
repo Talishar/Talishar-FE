@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useAppDispatch } from 'app/Hooks';
 import classNames from 'classnames';
 import { GAME_FORMAT, GAME_VISIBILITY, AI_DECK, isPreconFormat, PRECON_DECKS } from 'appConstants';
@@ -16,17 +16,41 @@ import validationSchema from './validationSchema';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { ErrorMessage } from '@hookform/error-message';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { FaExclamationCircle, FaQuestionCircle } from 'react-icons/fa';
+import { FaExclamationCircle, FaQuestionCircle, FaChevronUp, FaChevronDown } from 'react-icons/fa';
 import { HEROES_OF_RATHE, CLASS_OF_RATHE } from '../../index/components/filter/constants';
 import { generateCroppedImageUrl } from 'utils/cropImages';
 import { ImageSelect, ImageSelectOption } from 'components/ImageSelect';
 
-// Helper function to shorten format names
+const getCookie = (name: string): string | null => {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop()?.split(';').shift() || null;
+  return null;
+};
+
+const setCookie = (name: string, value: string, days: number = 365) => {
+  const expires = new Date();
+  expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
+  document.cookie = `${name}=${value}; expires=${expires.toUTCString()}; path=/`;
+};
+
 const shortenFormat = (format: string): string => {
   if (!format) return '';
   if (format.toLowerCase() === 'classic constructed') return 'CC';
   // Capitalize first letter of other formats
   return format.charAt(0).toUpperCase() + format.slice(1).toLowerCase();
+};
+
+const formatDeckLabel = (deckName: string, format: string | null, maxLength: number = 58): string => {
+  const formatStr = format ? ` (${shortenFormat(format)})` : '';
+  const combined = `${deckName}${formatStr}`;
+  
+  if (combined.length <= maxLength) {
+    return combined;
+  }
+  
+  const availableForName = Math.max(1, maxLength - formatStr.length - 3);
+  return `${deckName.substring(0, availableForName)}...${formatStr}`;
 };
 
 const CreateGame = () => {
@@ -103,6 +127,14 @@ const CreateGame = () => {
   const [selectedFavoriteDeck, setSelectedFavoriteDeck] = React.useState<string>(initialValues.favoriteDecks || '');
   const [selectedPreconDeck, setSelectedPreconDeck] = React.useState<string>(PRECON_DECKS.LINKS[0]);
   const [isInitialized, setIsInitialized] = React.useState(false);
+  const [isExpanded, setIsExpanded] = useState(() => {
+    const savedState = getCookie('createGamePanelExpanded');
+    return savedState !== 'false'; 
+  });
+
+  useEffect(() => {
+    setCookie('createGamePanelExpanded', String(isExpanded));
+  }, [isExpanded]);
 
   const formFormat = watch('format');
   const deckTestMode = watch('deckTestMode');
@@ -270,12 +302,29 @@ const CreateGame = () => {
     setGameDescription(initialValues.gameDescription || '');
     const savedHeroes = localStorage.getItem('lastSelectedHeroes');
     const savedClasses = localStorage.getItem('lastSelectedClasses');
-    if (savedHeroes) {
-      setSelectedHeroes(JSON.parse(savedHeroes));
+    const parsedHeroes = savedHeroes ? JSON.parse(savedHeroes) : [];
+    const parsedClasses = savedClasses ? JSON.parse(savedClasses) : [];
+    
+    if (parsedHeroes.length > 0) {
+      setSelectedHeroes(parsedHeroes);
     }
-    if (savedClasses) {
-      setSelectedClasses(JSON.parse(savedClasses));
+    if (parsedClasses.length > 0) {
+      setSelectedClasses(parsedClasses);
     }
+    
+    if (parsedHeroes.length > 0) {
+      const heroList = parsedHeroes.join(', ');
+      const desc = initialValues.gameDescription || '';
+      if (desc === 'No interest in playing against specific hero') {
+        setValue('gameDescription', `No interest in playing against ${heroList}`);
+      } else if (desc === 'Looking for a specific hero') {
+        setValue('gameDescription', `Looking for ${heroList}`);
+      }
+    } else if (parsedClasses.length > 0) {
+      const classList = parsedClasses.join(', ');
+      setValue('gameDescription', `Looking for ${classList}`);
+    }
+    
     setSelectedFavoriteDeck(initialValues.favoriteDecks || '');
     setSelectedPreconDeck(PRECON_DECKS.LINKS[0]);
     // Only set fabdb to precon deck if format is precon
@@ -290,7 +339,7 @@ const CreateGame = () => {
     if (!data?.favoriteDecks) return [];
     return data.favoriteDecks.map(deck => ({
       value: deck.key,
-      label: `${deck.name}${deck.format ? ` (${shortenFormat(deck.format)})` : ''}`,
+      label: formatDeckLabel(deck.name, deck.format),
       imageUrl: generateCroppedImageUrl(deck.hero)
     }));
   }, [data?.favoriteDecks]);
@@ -373,12 +422,24 @@ const CreateGame = () => {
   return (
     <div>
       <article className={styles.formContainer}>
-        <h3>Create New Game</h3>
+        <div className={styles.header}>
+          <h3 className={styles.title}>Create New Game</h3>
+          <button
+            type="button"
+            className={styles.toggleButton}
+            onClick={() => setIsExpanded(!isExpanded)}
+            aria-expanded={isExpanded}
+            aria-label={isExpanded ? 'Minimize panel' : 'Expand panel'}
+          >
+            {isExpanded ? <FaChevronUp size={16} /> : <FaChevronDown size={16} />}
+          </button>
+        </div>
         {/*<p className={styles.fieldError}>
           <FaExclamationCircle /> Warning - SOON! an update will be pushed to the live servers. The games in progress will crash and new games will be required.
           </p> */}
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div className={styles.formInner}>
+        {isExpanded && (
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <div className={styles.formInner}>
             {isLoggedIn && !isLoading && !isPreconFormat(formFormat || selectedFormat) && (
               <label>
                 Selected Deck
@@ -696,6 +757,7 @@ const CreateGame = () => {
             </div>
           )}
         </form>
+        )}
       </article>
     </div>
   );

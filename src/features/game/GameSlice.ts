@@ -512,7 +512,9 @@ export const gameSlice = createSlice({
     ) => {
       state.isFullRematch = false;
       const previousGameID = state.gameInfo.gameID;
-      const newGameID = action.payload.gameID;
+      const newGameID = typeof action.payload.gameID === 'string' 
+        ? parseInt(action.payload.gameID) 
+        : action.payload.gameID;
       
       // Check if this is a NEW game or a RECONNECTION to the same game
       const isNewGame = previousGameID !== newGameID;
