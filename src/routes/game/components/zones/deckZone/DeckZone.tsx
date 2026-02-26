@@ -34,6 +34,9 @@ export const DeckZone = React.memo((prop: Displayrow) => {
   const addBotDeckCard = useAppSelector((state: RootState) => state.game.addBotDeckCard);
   const playerID = useAppSelector((state: RootState) => state.game.gameInfo.playerID);
   const otherPlayerID = useAppSelector((state: RootState) => state.game.gameInfo.playerID === 1 ? 2 : 1);
+  const clashRevealP1Card = useAppSelector((state: RootState) => state.game.clashRevealP1Card);
+  const clashRevealP2Card = useAppSelector((state: RootState) => state.game.clashRevealP2Card);
+  const clashRevealTrigger = useAppSelector((state: RootState) => state.game.clashRevealTrigger);
 
   const shouldAnimateShuffling = isShuffling && (
     (isPlayer && shufflingPlayerId === playerID) ||
@@ -44,6 +47,10 @@ export const DeckZone = React.memo((prop: Displayrow) => {
     (isPlayer && addBotDeckPlayerId === playerID) ||
     (!isPlayer && addBotDeckPlayerId === otherPlayerID)
   );
+
+  const currentDeckPlayerID = isPlayer ? playerID : otherPlayerID;
+  const clashCard = currentDeckPlayerID === 1 ? clashRevealP1Card : clashRevealP2Card;
+  const showClash = !!clashCard;
 
   if (deckCards === undefined || deckCards === 0) {
     return <div className={styles.deckZone}>Deck</div>;
@@ -115,6 +122,18 @@ export const DeckZone = React.memo((prop: Displayrow) => {
           <div key="addBotDeckAnimation" className={styles.addBotDeckAnimationCard}>
             <CardDisplay
               card={deckBack}
+              showCountersOnHover={!alwaysShowCounters}
+            />
+          </div>
+        )}
+        {showClash && (
+          <div 
+            key={`clashAnimation-${clashRevealTrigger}`}
+            className={styles.clashRevealCard}
+            style={!isMobileOrTablet ? { '--deckOffsetY': `${baseOffsetY}px`, '--deckOffsetX': `${baseOffsetX}px` } as React.CSSProperties : {}}
+          >
+            <CardDisplay
+              card={{ cardNumber: clashCard }}
               showCountersOnHover={!alwaysShowCounters}
             />
           </div>

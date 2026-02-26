@@ -106,3 +106,31 @@
   }
 }
 
+.clashRevealCard {
+  position: absolute;
+  width: var(--card-size);
+  height: var(--card-size);
+  animation: clashFlip 5.6s ease-in-out forwards;
+  transform-style: preserve-3d;
+  z-index: 200;
+}
+
+@keyframes clashFlip {
+  0% {
+    transform: translateY(var(--deckOffsetY, 0)) translateX(var(--deckOffsetX, 0)) rotateY(-90deg);
+    opacity: 0;
+  }
+  5% {
+    transform: translateY(var(--deckOffsetY, 0)) translateX(var(--deckOffsetX, 0)) rotateY(0deg);
+    opacity: 1;
+  }
+  85% {
+    transform: translateY(var(--deckOffsetY, 0)) translateX(var(--deckOffsetX, 0)) rotateY(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(var(--deckOffsetY, 0)) translateX(var(--deckOffsetX, 0)) rotateY(-90deg);
+    opacity: 0;
+  }
+}
+

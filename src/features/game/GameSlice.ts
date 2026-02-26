@@ -698,6 +698,21 @@ export const gameSlice = createSlice({
       state.addBotDeckPlayerId = action.payload.playerId;
       state.addBotDeckCard = action.payload.cardNumber;
     },
+    setClashReveal: (
+      state,
+      action: PayloadAction<{ playerId: number | null; cardNumber: string }>
+    ) => {
+      if (action.payload.playerId === null) {
+        state.clashRevealP1Card = '';
+        state.clashRevealP2Card = '';
+      } else if (action.payload.playerId === 1) {
+        state.clashRevealP1Card = action.payload.cardNumber;
+        state.clashRevealTrigger += 1;
+      } else {
+        state.clashRevealP2Card = action.payload.cardNumber;
+        state.clashRevealTrigger += 1;
+      }
+    },
     setReplayStart: (
       state,
       action: PayloadAction<{
@@ -1182,6 +1197,7 @@ export const {
   markHeroIntroAsShown,
   setShuffling,
   setAddBotDeck,
+  setClashReveal,
   setReplayStart,
   updateActionTimestamp,
   setFirstWarningShown,
