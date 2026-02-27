@@ -16,7 +16,7 @@ import {
 import { shallowEqual } from 'react-redux';
 import CardDisplay from '../cardDisplay/CardDisplay';
 import styles from './EventsHandler.module.css';
-import { setShuffling, setAddBotDeck } from 'features/game/GameSlice';
+import { setShuffling, setAddBotDeck, setClashReveal } from 'features/game/GameSlice';
 
 export const EventsHandler = React.memo(() => {
   const events = useAppSelector(
@@ -94,6 +94,17 @@ export const EventsHandler = React.memo(() => {
               </div>
             ), { duration: 5000 });
             continue;
+          case 'CLASH': {
+            const clashValue = event.eventValue ?? '';
+            const [clashPlayerID, clashCardNumber] = clashValue.split(':');
+            dispatch(setClashReveal({ playerId: parseInt(clashPlayerID), cardNumber: clashCardNumber }));
+            requestAnimationFrame(() => {
+              setTimeout(() => {
+                dispatch(setClashReveal({ playerId: null, cardNumber: '' }));
+              }, 5600);
+            });
+            continue;
+          }
           case 'DISCARD':
             toast((t) => (
               <div className={styles.card}>

@@ -125,6 +125,9 @@ export default interface GameState {
   isShuffling: boolean;
   addBotDeckPlayerId: number | null;
   addBotDeckCard: string;
+  clashRevealP1Card: string;
+  clashRevealP2Card: string;
+  clashRevealTrigger: number;
   inactivityWarning?: {
     lastActionTime: number;
     firstWarningShown: boolean;

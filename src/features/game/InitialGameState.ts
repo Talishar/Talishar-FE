@@ -21,6 +21,9 @@ const InitialGameState: GameState = {
   isShuffling: false,
   addBotDeckPlayerId: null,
   addBotDeckCard: '',
+  clashRevealP1Card: '',
+  clashRevealP2Card: '',
+  clashRevealTrigger: 0,
   inactivityWarning: {
     lastActionTime: Date.now(),
     firstWarningShown: false,
