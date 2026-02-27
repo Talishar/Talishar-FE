@@ -713,6 +713,21 @@ export const gameSlice = createSlice({
         state.clashRevealTrigger += 1;
       }
     },
+    setArsenalFlip: (
+      state,
+      action: PayloadAction<{ playerId: number | null; cardNumber: string }>
+    ) => {
+      if (action.payload.playerId === null) {
+        state.arsenalFlipP1Card = '';
+        state.arsenalFlipP2Card = '';
+      } else if (action.payload.playerId === 1) {
+        state.arsenalFlipP1Card = action.payload.cardNumber;
+        state.arsenalFlipTrigger += 1;
+      } else {
+        state.arsenalFlipP2Card = action.payload.cardNumber;
+        state.arsenalFlipTrigger += 1;
+      }
+    },
     setReplayStart: (
       state,
       action: PayloadAction<{
@@ -1198,6 +1213,7 @@ export const {
   setShuffling,
   setAddBotDeck,
   setClashReveal,
+  setArsenalFlip,
   setReplayStart,
   updateActionTimestamp,
   setFirstWarningShown,
