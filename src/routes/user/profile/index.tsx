@@ -333,7 +333,6 @@ export const ProfilePage = () => {
                   isMetafyLinked={profileData?.isMetafyLinked ?? false}
                   metafyCommunities={profileData?.metafyCommunities ?? []}
                   metafyInfo={profileData?.metafyInfo ?? ''}
-                  onRefreshCommunities={profileRefetch}
                 />
               )}
           

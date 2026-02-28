@@ -2,66 +2,21 @@ import React, { useState, useEffect } from 'react';
 import { toast } from 'react-hot-toast';
 import styles from './profile.module.css';
 import { MetafyCommunity } from 'interface/API/MetafyAPI.php';
-import { BACKEND_URL } from 'appConstants';
 
 interface MetafySectionProps {
   isMetafyLinked: boolean;
   metafyCommunities: MetafyCommunity[];
   metafyInfo: string;
   className?: string;
-  onRefreshCommunities?: () => void;
 }
 
 const MetafySection: React.FC<MetafySectionProps> = ({
   isMetafyLinked,
   metafyCommunities,
   metafyInfo,
-  className,
-  onRefreshCommunities
+  className
 }) => {
   const [showCommunities, setShowCommunities] = useState(false);
-  const [isRefreshing, setIsRefreshing] = useState(false);
-
-  const handleRefreshMetafy = async () => {
-    setIsRefreshing(true);
-    try {
-      const response = await fetch(`${BACKEND_URL}AccountFiles/RefreshMetafyCommunities.php`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        credentials: 'include'
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Failed to refresh Metafy communities');
-      }
-
-      toast.success('Metafy communities refreshed successfully!', {
-        position: 'top-center'
-      });
-
-      // Trigger parent component to refresh communities data
-      if (onRefreshCommunities) {
-        onRefreshCommunities();
-      } else {
-        // Fallback: reload the page after a short delay
-        setTimeout(() => {
-          window.location.reload();
-        }, 1000);
-      }
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'An error occurred while refreshing';
-      toast.error(errorMessage, {
-        position: 'top-center'
-      });
-      console.error('Failed to refresh Metafy communities:', error);
-    } finally {
-      setIsRefreshing(false);
-    }
-  };
 
   const handleDisconnect = async () => {
     // For now, we'll show a placeholder message
@@ -93,14 +48,7 @@ const MetafySection: React.FC<MetafySectionProps> = ({
         <>
           <p>
             You have linked your Metafy account. <br />
-            <button
-              onClick={handleRefreshMetafy}
-              disabled={isRefreshing}
-              className={styles.metafyRefreshButton}
-              title="Refresh your Metafy community data from Metafy servers"
-            >
-              {isRefreshing ? 'Refreshing...' : 'Refresh your Metafy connection'}
-            </button>
+            <a href={metafyInfo}>Refresh your Metafy connection</a>
           </p>
           <button
             onClick={() => setShowCommunities(!showCommunities)}
