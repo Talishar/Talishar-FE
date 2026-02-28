@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import styles from './profile.module.css';
 import { MetafyCommunity } from 'interface/API/MetafyAPI.php';
+import { useRefreshMetafyCommunitiesMutation } from 'features/api/apiSlice';
 
 interface MetafySectionProps {
   isMetafyLinked: boolean;
@@ -17,12 +18,34 @@ const MetafySection: React.FC<MetafySectionProps> = ({
   className
 }) => {
   const [showCommunities, setShowCommunities] = useState(false);
+  const [refreshMetafyCommunities, { isLoading: isRefreshing }] = useRefreshMetafyCommunitiesMutation();
 
   const handleDisconnect = async () => {
     // For now, we'll show a placeholder message
     toast.success('Metafy disconnection feature coming soon', {
       position: 'top-center'
     });
+  };
+
+  const handleRefresh = async (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    if (isRefreshing) return;
+    try {
+      await refreshMetafyCommunities().unwrap();
+      toast.success('Metafy communities refreshed!', { position: 'top-center' });
+    } catch (err: any) {
+      const status = err?.status;
+      const errorCode = err?.data?.error;
+      // Token expired or not linked — redirect to OAuth re-auth
+      if (status === 401 || errorCode === 'token_expired' || errorCode === 'no_access_token') {
+        toast('Redirecting to re-connect your Metafy account...', { position: 'top-center' });
+        if (metafyInfo) {
+          window.location.href = metafyInfo;
+        }
+      } else {
+        toast.error('Failed to refresh Metafy data. Please try again.', { position: 'top-center' });
+      }
+    }
   };
 
   // Helper function to determine community type
@@ -48,7 +71,9 @@ const MetafySection: React.FC<MetafySectionProps> = ({
         <>
           <p>
             You have linked your Metafy account. <br />
-            <a href={metafyInfo}>Refresh your Metafy connection</a>
+            <a href={metafyInfo ?? '#'} onClick={handleRefresh}>
+              {isRefreshing ? 'Refreshing...' : 'Refresh your Metafy connection'}
+            </a>
           </p>
           <button
             onClick={() => setShowCommunities(!showCommunities)}

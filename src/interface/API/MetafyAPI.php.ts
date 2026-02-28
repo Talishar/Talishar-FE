@@ -51,3 +51,10 @@ export interface MetafySignupResponse {
   loggedInUserName?: string;
   isPatron?: string;
 }
+
+export interface RefreshMetafyCommunitiesResponse {
+  message?: string;
+  error?: string;
+  metafyCommunities?: MetafyCommunity[];
+  isMetafySupporter?: boolean;
+}
