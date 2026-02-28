@@ -1,5 +1,6 @@
 export interface Card {
   cardNumber: string; // Card number = card ID (e.g. WTR000 = Heart of Fyendal)
+  cardName?: string; // Card name for display (e.g. "Command and Conquer")
   action?: number; // action = (ProcessInput mode)
   overlay?: 'none' | 'disabled'; // overlay = 0 is none, 1 is grayed out/disabled
   borderColor?: string; // borderColor = Border Color

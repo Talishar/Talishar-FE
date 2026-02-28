@@ -6,12 +6,22 @@ import CombatChainLink from '../features/CombatChainLink';
 import GameState from '../features/GameState';
 import Player from '../features/Player';
 
+function GetCardName(cardNumber: string): string {
+  if (!cardNumber || cardNumber === 'blank') return '';
+  let name = cardNumber.replace(/_red$|_yellow$|_blue$/, '');
+  return name
+    .split('_')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(' ');
+}
+
 function ParseCard(input: any) {
   const card: Card = { cardNumber: 'blank' };
   if (input === undefined) {
     return card;
   }
   card.cardNumber = input.cardNumber ? input.cardNumber : 'blank';
+  card.cardName = input.cardName ? input.cardName : GetCardName(card.cardNumber);
   card.action = input.action ? Number(input.action) : undefined;
   card.overlay = input.overlay == 1 ? 'disabled' : 'none';
   card.borderColor = input.borderColor ? String(input.borderColor) : undefined;

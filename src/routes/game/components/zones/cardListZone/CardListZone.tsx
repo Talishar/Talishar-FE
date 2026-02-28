@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import { clearCardListFocus, setCardListFocus, toggleCardListSort, getGameInfo } from 'features/game/GameSlice';
@@ -11,6 +11,7 @@ import { DEFAULT_SHORTCUTS } from 'appConstants';
 import { motion, AnimatePresence } from 'framer-motion';
 import useShowModal from 'hooks/useShowModals';
 import { shallowEqual } from 'react-redux';
+import { Card } from 'features/Card';
 
 const SORT_PREFERENCE_KEY = 'cardListZone_sortPreference';
 
@@ -22,6 +23,7 @@ export const CardListZone = () => {
   const dispatch = useAppDispatch();
   const [lastOpenedName, setLastOpenedName] = React.useState<string | null>(null);
   const [lastSortState, setLastSortState] = React.useState<boolean | null>(null);
+  const [searchQuery, setSearchQuery] = useState<string>('');
 
   // Apply sort preference when a new card list is opened
   useEffect(() => {
@@ -32,11 +34,13 @@ export const CardListZone = () => {
       }
       setLastOpenedName(cardList.name);
       setLastSortState(cardList.isSorted ?? false);
+      setSearchQuery(''); // Clear search when opening a new zone
     } else if (!cardList?.active && lastOpenedName && lastSortState !== null) {
       // Save sort preference when closing
       localStorage.setItem(SORT_PREFERENCE_KEY, String(lastSortState));
       setLastOpenedName(null);
       setLastSortState(null);
+      setSearchQuery(''); // Clear search when closing
     }
   }, [cardList?.active, cardList?.name, lastSortState]);
 
@@ -51,9 +55,14 @@ export const CardListZone = () => {
     ? [...cardList.cardList].reverse()
     : null;
 
+  const filteredList = reversedList?.filter(card =>
+    !searchQuery || card.cardName?.toLowerCase().includes(searchQuery.toLowerCase())
+  ) ?? null;
+
   const closeCardList = () => {
     dispatch(clearCardListFocus());
     setLastOpenedName(null);
+    setSearchQuery('');
   };
 
   useShortcut(DEFAULT_SHORTCUTS.CLOSE_WINDOW, closeCardList);
@@ -96,6 +105,28 @@ export const CardListZone = () => {
                 cardList.name.includes('Your Pitch') ||
                 cardList.name.includes('Opponent\'s Pitch')
               )) && (
+              <input
+                type="text"
+                className={styles.searchInput}
+                placeholder="Search cards..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onClick={(e) => e.stopPropagation()}
+              />
+            )}
+            {(cardList && cardList.name && 
+              (
+                cardList.name.includes('Your Graveyard') ||
+                cardList.name.includes('Opponent\'s Graveyard') ||
+                cardList.name.includes('Your Banish') ||
+                cardList.name.includes('Opponent\'s Banish') ||
+                cardList.name.includes('Your Deck') ||
+                cardList.name.includes('Opponent\'s Deck') ||
+                cardList.name.includes('Your Soul') ||
+                cardList.name.includes('Opponent\'s Soul') ||
+                cardList.name.includes('Your Pitch') ||
+                cardList.name.includes('Opponent\'s Pitch')
+              )) && (
               <button 
                 className={`${styles.button} ${cardList?.isSorted ? styles.active : ''}`}
                 onClick={handleSort}
@@ -106,13 +137,18 @@ export const CardListZone = () => {
             )}
           </div>
           {cardList?.apiCall ? (
-            <CardListZoneAPI name={cardList.apiQuery ?? ''} />
+            <CardListZoneAPI name={cardList.apiQuery ?? ''} searchQuery={searchQuery} />
           ) : (
             <div className={styles.cardListContents}>
-              {reversedList &&
-                reversedList.map((card, ix) => {
+              {filteredList && filteredList.length > 0 ? (
+                filteredList.map((card: Card, ix) => {
                   return <CardDisplay card={card} key={ix} />;
-                })}
+                })
+              ) : searchQuery ? (
+                <div className={styles.noResults}>No cards found matching "{searchQuery}"</div>
+              ) : (
+                <div className={styles.noResults}>No cards in this zone</div>
+              )}
             </div>
           )}
         </motion.div>
@@ -123,9 +159,10 @@ export const CardListZone = () => {
 
 interface CardListZoneAPI {
   name: string;
+  searchQuery: string;
 }
 
-const CardListZoneAPI = ({ name }: CardListZoneAPI) => {
+const CardListZoneAPI = ({ name, searchQuery }: CardListZoneAPI) => {
   const gameInfo = useAppSelector(getGameInfo, shallowEqual);
   const cardList = useAppSelector(
     (state: RootState) => state.game.cardListFocus
@@ -153,6 +190,10 @@ const CardListZoneAPI = ({ name }: CardListZoneAPI) => {
   // Use Redux cardList if available (for sorting), otherwise use API data
   const cardsToDisplay = cardList?.cardList || data?.cards;
 
+  const filteredCards = cardsToDisplay?.filter(card =>
+    !searchQuery || card.cardName?.toLowerCase().includes(searchQuery.toLowerCase())
+  ) ?? null;
+
   let content;
   if (isLoading) {
     content = <div>Loading...</div>;
@@ -160,12 +201,18 @@ const CardListZoneAPI = ({ name }: CardListZoneAPI) => {
   if (isError) {
     content = <div>Error!</div>;
   }
-  if (cardsToDisplay != undefined) {
+  if (filteredCards != undefined) {
     content = (
       <div className={styles.cardListContents}>
-        {cardsToDisplay.map((card: any, ix: number) => {
-          return <CardDisplay card={card} key={ix} />;
-        })}
+        {filteredCards.length > 0 ? (
+          filteredCards.map((card: Card, ix: number) => {
+            return <CardDisplay card={card} key={ix} />;
+          })
+        ) : searchQuery ? (
+          <div className={styles.noResults}>No cards found matching "{searchQuery}"</div>
+        ) : (
+          <div className={styles.noResults}>No cards in this zone</div>
+        )}
       </div>
     );
   }
