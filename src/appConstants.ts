@@ -123,6 +123,7 @@ export const PROCESS_INPUT = {
 export const DEFAULT_SHORTCUTS = {
   TOGGLE_OPTIONS_MENU: 'KeyM',
   PASS_TURN: 'Space',
+  PASS_MIDDLE_CLICK: 'MiddleClick',
   CLOSE_WINDOW: 'Escape',
   UNDO: 'KeyU',
   UNDOALT: 'KeyZ',

@@ -36,9 +36,9 @@ export default function PassTurnDisplay() {
   );
   const settingsData = useAppSelector(getSettingsEntity);
   const initialValues = { mute: settingsData['MuteSound']?.value === '1' };
-  
+
   const dispatch = useAppDispatch();
-  
+
   useEffect(() => {
     if (hasPriority && !initialValues.mute && playerID !== 3) {
       playPassTurnSound();
@@ -90,6 +90,7 @@ export default function PassTurnDisplay() {
   }, [showAreYouSureModal, dispatch]);
 
   useShortcut(DEFAULT_SHORTCUTS.PASS_TURN, onPassTurn);
+  useShortcut(DEFAULT_SHORTCUTS.PASS_MIDDLE_CLICK, onPassTurn);
   useShortcut(DEFAULT_SHORTCUTS.UNDO, onUndoKeyPress);
 
   const clickYes = (e: React.SyntheticEvent<HTMLButtonElement>) => {
@@ -114,7 +115,7 @@ export default function PassTurnDisplay() {
     // Fallback to checking hasPriority if priorityPlayer is undefined
     const priority = priorityPlayer ?? (hasPriority ? 1 : 2);
     const arrow = priority === 1 ? '▲' : '▼';
-    
+
     return (
       <div className={styles.passTurnDisplay}>
         <div className={styles.spectatorDisplay}>
