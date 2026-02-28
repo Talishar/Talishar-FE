@@ -8,6 +8,7 @@
   height: 100%;
   width: 100%;
   aspect-ratio: 1;
+  transition: transform 0.18s ease;
 }
 
 .normalSize {
@@ -188,6 +189,16 @@
 .border10 {
   border-color: rgb(18, 128, 22);
   box-shadow: 0 0 4px 4px rgb(18, 128, 22, 0.5);
+}
+
+/* Playable card (border6) hover lift animation */
+.card:has(.img.border6):hover {
+  transform: translateY(-3px) scale(1.02);
+  z-index: 10;
+}
+
+.card:has(.img.border6):hover .img.border6 {
+  box-shadow: 0 0 4px 4px chartreuse, 0 4px 4px rgba(0, 0, 0, 0.45);
 }
 
 .subCard {
