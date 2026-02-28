@@ -235,8 +235,26 @@ const Equipment = ({
                         type="checkbox"
                         checked={checked}
                         onChange={(e) => {
-                          if (e.target.checked) arrayHelpers.push(weapon);
-                          else {
+                          if (e.target.checked) {
+                            if (weapon.numHands === 2) {
+                              // Remove all other weapons first
+                              const newWeapons = [weapon];
+                              setFieldValue('weapons', newWeapons);
+                            } else {
+                              const twoHandedIndex = values.weapons.findIndex(
+                                (w) => w.numHands === 2
+                              );
+                              if (twoHandedIndex !== -1) {
+                                // Remove the 2-handed weapon first
+                                const updatedWeapons = values.weapons.filter(
+                                  (_, idx) => idx !== twoHandedIndex
+                                );
+                                setFieldValue('weapons', [...updatedWeapons, weapon]);
+                              } else {
+                                arrayHelpers.push(weapon);
+                              }
+                            }
+                          } else {
                             const idx = values.weapons.findIndex(
                               (w) => w.id === weapon.id
                             );
