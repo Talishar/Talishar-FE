@@ -237,22 +237,27 @@ const Equipment = ({
                         onChange={(e) => {
                           if (e.target.checked) {
                             if (weapon.numHands === 2) {
-                              // Remove all non-quiver weapons, keep quivers
-                              const quivers = values.weapons.filter((w) => w.isQuiver);
-                              const newWeapons = [weapon, ...quivers];
+                              // Remove all non-quiver/non-companion weapons, keep quivers and companions
+                              const equipmentExceptions = values.weapons.filter((w) => w.isQuiver || w.isCompanion);
+                              const newWeapons = [weapon, ...equipmentExceptions];
+                              setFieldValue('weapons', newWeapons);
+                            } else if (weapon.isOffhand && !weapon.isQuiver && !weapon.isCompanion) {
+                              // If adding an off-hand (regular off-hand, not quiver/companion), remove other off-hands
+                              const nonOffhands = values.weapons.filter((w) => !w.isOffhand || w.isQuiver || w.isCompanion);
+                              const newWeapons = [...nonOffhands, weapon];
                               setFieldValue('weapons', newWeapons);
                             } else {
                               const twoHandedIndex = values.weapons.findIndex(
                                 (w) => w.numHands === 2
                               );
-                              if (twoHandedIndex !== -1 && !weapon.isQuiver) {
-                                // Remove the 2-handed weapon first (unless adding a quiver)
+                              if (twoHandedIndex !== -1 && !weapon.isQuiver && !weapon.isCompanion) {
+                                // Remove the 2-handed weapon first (unless adding a quiver or companion)
                                 const updatedWeapons = values.weapons.filter(
                                   (_, idx) => idx !== twoHandedIndex
                                 );
                                 setFieldValue('weapons', [...updatedWeapons, weapon]);
                               } else {
-                                // No 2-handed weapon, or adding a quiver - just add it
+                                // No 2-handed weapon, or adding a quiver/companion - just add it
                                 arrayHelpers.push(weapon);
                               }
                             }

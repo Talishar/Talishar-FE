@@ -356,9 +356,10 @@ const Lobby = () => {
       id: `${card.id}-${ix}`,
       is1H: card.is1H,
       img: `${card.id}`,
-      numHands: card.numHands ?? (card.is1H ? 1 : 2),
+      numHands: card.numHands !== undefined ? card.numHands : (card.is1H ? 1 : 2),
       isQuiver: card.isQuiver ?? false,
-      isOffhand: card.isOffhand ?? false
+      isOffhand: card.isOffhand ?? false,
+      isCompanion: card.isCompanion ?? false
     } as Weapon;
   });
 
@@ -370,9 +371,10 @@ const Lobby = () => {
       id: `${card.id}-${ix + weaponsIndexed.length}`,
       img: `${card.id}`,
       is1H: card.is1H,
-      numHands: card.numHands ?? (card.is1H ? 1 : 2),
+      numHands: card.numHands !== undefined ? card.numHands : (card.is1H ? 1 : 2),
       isQuiver: card.isQuiver ?? false,
-      isOffhand: card.isOffhand ?? false
+      isOffhand: card.isOffhand ?? false,
+      isCompanion: card.isCompanion ?? false
     } as Weapon;
   });
 
