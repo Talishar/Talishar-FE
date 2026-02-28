@@ -789,14 +789,18 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
               <span className={styles.infoValue}>{stats.totalDamagePrevented}</span>
             </div>
             
-            <div className={styles.infoRow}>
-              <span className={styles.infoLabel}>Total Life Gained:</span>
-              <span className={styles.infoValue}>{stats.totalLifeGained}</span>
-            </div>
-            <div className={styles.infoRow}>
-              <span className={styles.infoLabel}>Total Life Self-Lost:</span>
-              <span className={styles.infoValue}>{stats.totalLifeLost}</span>
-            </div>
+            {!!stats.totalLifeGained && (
+              <div className={styles.infoRow}>
+                <span className={styles.infoLabel}>Total Life Gained:</span>
+                <span className={styles.infoValue}>{stats.totalLifeGained}</span>
+              </div>
+            )}
+            {!!stats.totalLifeLost && (
+              <div className={styles.infoRow}>
+                <span className={styles.infoLabel}>Total Life Self-Lost:</span>
+                <span className={styles.infoValue}>{stats.totalLifeLost}</span>
+              </div>
+            )}
             
             {/* Time Values */}
             <div className={styles.infoRow}>
