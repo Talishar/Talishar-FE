@@ -31,7 +31,7 @@ export interface BaseEquipment {
   demi: string[];
 }
 
-export interface HandWeapon {
+export interface HandWeapon extends Weapon {
   id: string;
 }
 
@@ -40,7 +40,7 @@ export interface EquipmentProps {
   weapons: Weapon[];
   weaponSB: Weapon[];
   baseEquipment: BaseEquipment;
-  hands: HandWeapon[];
+  hands: Weapon[];
   modularState: string[];
   setModularState: React.Dispatch<React.SetStateAction<string[]>>;
   assigned: AssignedState;
@@ -237,20 +237,22 @@ const Equipment = ({
                         onChange={(e) => {
                           if (e.target.checked) {
                             if (weapon.numHands === 2) {
-                              // Remove all other weapons first
-                              const newWeapons = [weapon];
+                              // Remove all non-quiver weapons, keep quivers
+                              const quivers = values.weapons.filter((w) => w.isQuiver);
+                              const newWeapons = [weapon, ...quivers];
                               setFieldValue('weapons', newWeapons);
                             } else {
                               const twoHandedIndex = values.weapons.findIndex(
                                 (w) => w.numHands === 2
                               );
-                              if (twoHandedIndex !== -1) {
-                                // Remove the 2-handed weapon first
+                              if (twoHandedIndex !== -1 && !weapon.isQuiver) {
+                                // Remove the 2-handed weapon first (unless adding a quiver)
                                 const updatedWeapons = values.weapons.filter(
                                   (_, idx) => idx !== twoHandedIndex
                                 );
                                 setFieldValue('weapons', [...updatedWeapons, weapon]);
                               } else {
+                                // No 2-handed weapon, or adding a quiver - just add it
                                 arrayHelpers.push(weapon);
                               }
                             }
