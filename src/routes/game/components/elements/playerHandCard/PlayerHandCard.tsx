@@ -145,7 +145,7 @@ export const PlayerHandCard = ({
     <motion.div
       drag
       className={classNames(styles.handCard, {
-        [styles.drawCardAnimation]: isNewlyDrawn
+        [styles.newlyDrawn]: isNewlyDrawn
       })}
       style={{ touchAction: 'none', zIndex }}
       onClick={handleOnClick}
