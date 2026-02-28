@@ -131,6 +131,8 @@ const CreateGame = () => {
     const savedState = getCookie('createGamePanelExpanded');
     return savedState !== 'false'; 
   });
+  const [heroSearch, setHeroSearch] = React.useState<string>('');
+  const [classSearch, setClassSearch] = React.useState<string>('');
 
   useEffect(() => {
     setCookie('createGamePanelExpanded', String(isExpanded));
@@ -223,6 +225,8 @@ const CreateGame = () => {
   const handleGameDescriptionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value;
     setGameDescription(value);
+    setHeroSearch('');
+    setClassSearch('');
     
     if (value !== 'Looking for a specific hero' && value !== 'Looking for a specific class' && value !== 'No interest in playing against specific hero') {
       setSelectedHeroes([]);
@@ -291,6 +295,8 @@ const CreateGame = () => {
   const clearSelections = () => {
     setSelectedHeroes([]);
     setSelectedClasses([]);
+    setHeroSearch('');
+    setClassSearch('');
     localStorage.setItem('lastSelectedHeroes', JSON.stringify([]));
     localStorage.setItem('lastSelectedClasses', JSON.stringify([]));
     setGameDescription(gameDescription === 'Looking for a specific hero' ? 'Looking for a specific hero' : gameDescription === 'No interest in playing against specific hero' ? 'No interest in playing against specific hero' : 'Looking for a specific class');
@@ -578,8 +584,20 @@ const CreateGame = () => {
                       </a>
                     )}
                   </div>
+                  <input
+                    type="text"
+                    placeholder="Search heroes..."
+                    value={heroSearch}
+                    onChange={(e) => setHeroSearch(e.target.value)}
+                    className={styles.searchInput}
+                    aria-label="Search heroes"
+                  />
                   <div className={styles.heroCheckboxes}>
-                    {uniqueHeroes.map((heroName) => (
+                    {uniqueHeroes
+                      .filter((heroName) =>
+                        heroName.toLowerCase().includes(heroSearch.toLowerCase())
+                      )
+                      .map((heroName) => (
                       <label key={heroName} className={styles.heroCheckbox}>
                         <input
                           type="checkbox"
@@ -608,8 +626,20 @@ const CreateGame = () => {
                       </a>
                     )}
                   </div>
+                  <input
+                    type="text"
+                    placeholder="Search heroes..."
+                    value={heroSearch}
+                    onChange={(e) => setHeroSearch(e.target.value)}
+                    className={styles.searchInput}
+                    aria-label="Search heroes"
+                  />
                   <div className={styles.heroCheckboxes}>
-                    {uniqueHeroes.map((heroName) => (
+                    {uniqueHeroes
+                      .filter((heroName) =>
+                        heroName.toLowerCase().includes(heroSearch.toLowerCase())
+                      )
+                      .map((heroName) => (
                       <label key={heroName} className={styles.heroCheckbox}>
                         <input
                           type="checkbox"
@@ -638,8 +668,20 @@ const CreateGame = () => {
                       </a>
                     )}
                   </div>
+                  <input
+                    type="text"
+                    placeholder="Search classes..."
+                    value={classSearch}
+                    onChange={(e) => setClassSearch(e.target.value)}
+                    className={styles.searchInput}
+                    aria-label="Search classes"
+                  />
                   <div className={styles.heroCheckboxes}>
-                    {uniqueClasses.map((className) => (
+                    {uniqueClasses
+                      .filter((className) =>
+                        className.toLowerCase().includes(classSearch.toLowerCase())
+                      )
+                      .map((className) => (
                       <label key={className} className={styles.heroCheckbox}>
                         <input
                           type="checkbox"
