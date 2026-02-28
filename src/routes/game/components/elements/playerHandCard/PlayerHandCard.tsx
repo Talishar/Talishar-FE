@@ -156,7 +156,7 @@ export const PlayerHandCard = ({
       dragSnapToOrigin={snapback}
       initial={getInitialPosition()}
       animate={{ opacity: 1, y: 0 }}
-      transition={isNewlyDrawn ? { duration: 0.5, ease: 'easeOut' } : { duration: 0.3 }}
+      transition={isNewlyDrawn ? { duration: 0.4, ease: 'easeOut' } : { duration: 0.2 }}
       whileHover={{ scale: 1.1, y: -50 }}
     >
       <CardPopUp
