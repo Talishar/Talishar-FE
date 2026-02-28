@@ -126,3 +126,20 @@
   white-space: nowrap;
   box-shadow: 0 0 8px rgba(255, 255, 0, 0.8);
 }
+
+/* Draw animation for newly drawn cards */
+@keyframes drawCardPulse {
+  0% {
+    filter: drop-shadow(0 0 4px rgba(100, 150, 255, 0.3));
+  }
+  50% {
+    filter: drop-shadow(0 0 12px rgba(100, 150, 255, 0.6));
+  }
+  100% {
+    filter: drop-shadow(0 0 4px rgba(100, 150, 255, 0.3));
+  }
+}
+
+.drawCardAnimation {
+  animation: drawCardPulse 0.8s ease-out forwards;
+}

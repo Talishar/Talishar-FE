@@ -31,6 +31,7 @@ export interface HandCard {
   card?: Card;
   zIndex?: number;
   addCardToPlayedCards: (cardName: string) => void;
+  isNewlyDrawn?: boolean;
 }
 
 export const PlayerHandCard = ({
@@ -39,7 +40,8 @@ export const PlayerHandCard = ({
   isBanished,
   isGraveyard,
   zIndex,
-  addCardToPlayedCards
+  addCardToPlayedCards,
+  isNewlyDrawn
 }: HandCard) => {
   const [canPopUp, setCanPopup] = useState(true);
   const [, windowHeight] = useWindowDimensions();
@@ -131,10 +133,20 @@ export const PlayerHandCard = ({
     [styles.border9]: card.borderColor == '9'
   });
 
+  // Calculate initial position for draw animation
+  const getInitialPosition = () => {
+    if (isNewlyDrawn) {
+      return { opacity: 0, y: 100 };
+    }
+    return { opacity: 0, y: 100 };
+  };
+
   return (
     <motion.div
       drag
-      className={styles.handCard}
+      className={classNames(styles.handCard, {
+        [styles.drawCardAnimation]: isNewlyDrawn
+      })}
       style={{ touchAction: 'none', zIndex }}
       onClick={handleOnClick}
       onTapStart={startPressTimer}
@@ -142,8 +154,9 @@ export const PlayerHandCard = ({
       onDragEnd={handleDragEnd}
       onDrag={onDrag}
       dragSnapToOrigin={snapback}
-      initial={{ opacity: 0, y: 100 }}
+      initial={getInitialPosition()}
       animate={{ opacity: 1, y: 0 }}
+      transition={isNewlyDrawn ? { duration: 0.5, ease: 'easeOut' } : { duration: 0.3 }}
       whileHover={{ scale: 1.1, y: -50 }}
     >
       <CardPopUp
