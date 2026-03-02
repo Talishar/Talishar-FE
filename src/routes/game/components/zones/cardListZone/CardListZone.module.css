@@ -230,10 +230,10 @@
 @media (max-width: 812px) {
   .searchInput {
     order: 2;
-    width: 100%;
-    height: 5vh;
+    width: 100% !important;
+    height: 4vh !important;
     font-size: 1rem;
-    padding: 1vh;
+    padding: 0.5vh 1vh;
   }
 }
 
