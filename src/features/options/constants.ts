@@ -23,6 +23,7 @@ export const DISABLE_HERO_INTRO = 'DisableHeroIntro';
 export const MIRRORED_BOARD_LAYOUT = 'MirroredBoardLayout';
 export const MIRRORED_PLAYER_BOARD_LAYOUT = 'MirroredPlayerBoardLayout';
 export const ALWAYS_SHOW_COUNTERS = 'AlwaysShowCounters';
+export const HIDE_HAND_FROM_FRIENDS = 'HideHandFromFriends';
 
 export enum HOLD_PRIORITY_ENUM {
   AUTO = 0,
