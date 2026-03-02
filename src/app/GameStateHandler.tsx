@@ -110,6 +110,7 @@ const GameStateHandler = () => {
         } catch (e) {
           // localStorage parsing failed, continue without friendsList
         }
+        console.log('GameStateHandler SSE - sending friendsList:', friendsList, 'playerID:', currentPlayerID);
         
         const source = new EventSource(
           `${BACKEND_URL}GetUpdateSSE.php?gameName=${currentGameID}&playerID=${currentPlayerID}&authKey=${currentAuthKey}&friendsList=${encodeURIComponent(JSON.stringify(friendsList))}`

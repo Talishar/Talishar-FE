@@ -60,6 +60,7 @@ export const nextTurn = createAsyncThunk(
         friendsList = (friendsData?.friends || []).map((f: any) => f.username);
       }
     }
+    console.log('GameSlice nextTurn - sending friendsList:', friendsList, 'playerID:', params.game.playerID);
     
     const queryParams = new URLSearchParams({
       gameName: String(params.game.gameID),

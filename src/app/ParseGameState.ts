@@ -200,7 +200,10 @@ export default function ParseGameState(input: any) {
 
   // Debug friend hand visibility
   if (input.debugFriendHand) {
-    console.log('Friend Hand Visibility Debug:', input.debugFriendHand);
+    console.log('Friend Hand Visibility Debug (Frontend):', input.debugFriendHand);
+  }
+  if (input.debugFriendsBackend) {
+    console.log('Friend Hand Visibility Debug (Backend):', input.debugFriendsBackend);
   }
 
   // active chain link
