@@ -103,12 +103,12 @@ const GameStateHandler = () => {
         console.log(`🔌 Connecting to EventSource (attempt ${retryCountRef.current + 1}/${maxRetriesRef.current + 1})...`);
         let friendsList: string[] = [];
         try {
-          const stored = localStorage.getItem('friendsList');
+          const stored = sessionStorage.getItem('friendsList');
           if (stored) {
             friendsList = JSON.parse(stored);
           }
         } catch (e) {
-          // localStorage parsing failed, continue without friendsList
+          // sessionStorage parsing failed, continue without friendsList
         }
         console.log('GameStateHandler SSE - sending friendsList:', friendsList, 'playerID:', currentPlayerID);
         

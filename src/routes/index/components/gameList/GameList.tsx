@@ -71,9 +71,10 @@ const GameList = () => {
     if (friendsData?.friends) {
       try {
         const friendsList = friendsData.friends.map(f => f.username);
-        localStorage.setItem('friendsList', JSON.stringify(friendsList));
+        sessionStorage.setItem('friendsList', JSON.stringify(friendsList));
+        console.log('GameList synced friendsList to sessionStorage:', friendsList);
       } catch (e) {
-        console.error('Failed to sync friendsList to localStorage:', e);
+        console.error('Failed to sync friendsList to sessionStorage:', e);
       }
     }
   }, [friendsData]);
