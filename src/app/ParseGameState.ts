@@ -178,7 +178,13 @@ export default function ParseGameState(input: any) {
     shufflingPlayerId: null,
     isShuffling: false,
     addBotDeckPlayerId: null,
-    addBotDeckCard: ''
+    addBotDeckCard: '',
+    clashRevealP1Card: '',
+    clashRevealP2Card: '',
+    clashRevealTrigger: 0,
+    arsenalFlipP1Card: '',
+    arsenalFlipP2Card: '',
+    arsenalFlipTrigger: 0
   };
 
   if (input.errorMessage) {
