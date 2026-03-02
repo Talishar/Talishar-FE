@@ -1,0 +1,26 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    ":pinAllExceptPeerDependencies"
+  ],
+  "packageRules": [
+    {
+      "groupName": "All Major Updates",
+      "groupSlug": "all-majors",
+      "matchUpdateTypes": ["major"],
+      "schedule": ["after 10pm every weekday", "before 5am every weekday"]
+    },
+    {
+      "groupName": "Dev Dependencies",
+      "matchDepTypes": ["devDependencies"],
+      "automerge": true
+    }
+  ],
+  "branchPrefix": "renovate/",
+  "rangeStrategy": "bump",
+  "semanticCommits": true,
+  "dependencyDashboard": true,
+  "prHourlyLimit": 2,
+  "prConcurrentLimit": 10
+}
