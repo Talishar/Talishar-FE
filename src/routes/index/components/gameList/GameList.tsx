@@ -67,6 +67,17 @@ const GameList = () => {
   const { isLoggedIn } = useAuth();
   const { blockedUsers } = useBlockedUsers();
 
+  useEffect(() => {
+    if (friendsData?.friends) {
+      try {
+        const friendsList = friendsData.friends.map(f => f.username);
+        localStorage.setItem('friendsList', JSON.stringify(friendsList));
+      } catch (e) {
+        console.error('Failed to sync friendsList to localStorage:', e);
+      }
+    }
+  }, [friendsData]);
+
   const [heroFilter, setHeroFilter] = useState<string[]>([]);
   const [gamesInProgressExpanded, setGamesInProgressExpanded] = useState(true); // Default to open
   

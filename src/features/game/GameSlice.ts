@@ -49,11 +49,24 @@ export const nextTurn = createAsyncThunk(
     const queryURL = params.game.isRoguelike
       ? `${ROGUELIKE_URL}${URL_END_POINT.GAME_STATE_POLL}`
       : `${BACKEND_URL}${URL_END_POINT.GAME_STATE_POLL}`;
+    let friendsList: string[] = [];
+    const state = getState() as any;
+    const apiState = state.api;
+    if (apiState?.queries) {
+      const cacheKeys = Object.keys(apiState.queries);
+      const friendsQueryKey = cacheKeys.find(key => key.includes('getFriendsList'));
+      if (friendsQueryKey && apiState.queries[friendsQueryKey]?.data) {
+        const friendsData = apiState.queries[friendsQueryKey].data;
+        friendsList = (friendsData?.friends || []).map((f: any) => f.username);
+      }
+    }
+    
     const queryParams = new URLSearchParams({
       gameName: String(params.game.gameID),
       playerID: String(params.game.playerID),
       authKey: String(params.game.authKey),
-      lastUpdate: String(params.lastUpdate)
+      lastUpdate: String(params.lastUpdate),
+      friendsList: JSON.stringify(friendsList)
     });
 
     let waitingForJSONResponse = true;

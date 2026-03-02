@@ -101,8 +101,18 @@ const GameStateHandler = () => {
     const connectionTimeout = setTimeout(() => {
       try {
         console.log(`🔌 Connecting to EventSource (attempt ${retryCountRef.current + 1}/${maxRetriesRef.current + 1})...`);
+        let friendsList: string[] = [];
+        try {
+          const stored = localStorage.getItem('friendsList');
+          if (stored) {
+            friendsList = JSON.parse(stored);
+          }
+        } catch (e) {
+          // localStorage parsing failed, continue without friendsList
+        }
+        
         const source = new EventSource(
-          `${BACKEND_URL}GetUpdateSSE.php?gameName=${currentGameID}&playerID=${currentPlayerID}&authKey=${currentAuthKey}`
+          `${BACKEND_URL}GetUpdateSSE.php?gameName=${currentGameID}&playerID=${currentPlayerID}&authKey=${currentAuthKey}&friendsList=${encodeURIComponent(JSON.stringify(friendsList))}`
         );
         sourceRef.current = source;
 
