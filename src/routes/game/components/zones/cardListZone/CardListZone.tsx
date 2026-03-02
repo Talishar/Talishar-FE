@@ -55,7 +55,7 @@ export const CardListZone = () => {
     ? [...cardList.cardList].reverse()
     : null;
 
-  const filteredList = reversedList?.filter(card =>
+  const filteredList = reversedList?.filter((card: Card) =>
     !searchQuery || card.cardName?.toLowerCase().includes(searchQuery.toLowerCase())
   ) ?? null;
 
@@ -141,7 +141,7 @@ export const CardListZone = () => {
           ) : (
             <div className={styles.cardListContents}>
               {filteredList && filteredList.length > 0 ? (
-                filteredList.map((card: Card, ix) => {
+                filteredList.map((card: Card, ix: number) => {
                   return <CardDisplay card={card} key={ix} />;
                 })
               ) : searchQuery ? (
@@ -190,7 +190,7 @@ const CardListZoneAPI = ({ name, searchQuery }: CardListZoneAPI) => {
   // Use Redux cardList if available (for sorting), otherwise use API data
   const cardsToDisplay = cardList?.cardList || data?.cards;
 
-  const filteredCards = cardsToDisplay?.filter(card =>
+  const filteredCards = cardsToDisplay?.filter((card: Card) =>
     !searchQuery || card.cardName?.toLowerCase().includes(searchQuery.toLowerCase())
   ) ?? null;
 
