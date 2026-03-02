@@ -23,16 +23,18 @@ export default function SpectatorCount() {
     : 'Anonymous spectators';
 
   return (
-    <div className={styles.spectatorCountStyle}>
-      <div>
+    <div 
+      className={styles.spectatorCountStyle}
+      onMouseEnter={() => setShowTooltip(true)}
+      onMouseLeave={() => setShowTooltip(false)}
+    >
+      <div className={styles.spectatorCountContainer}>
         <FaEye /> {spectatorCount === 1 ? 'Spectator' : 'Spectators'}: {spectatorCount}
-        {showTooltip && (
+        {showTooltip && spectatorNames.length > 0 && (
           <div className={styles.tooltip}>
-            <div>
-              {spectatorNames.map((name, index) => (
-                <div key={index}>{name}</div>
-              ))}
-            </div>
+            {spectatorNames.map((name, index) => (
+              <div key={index}>{name}</div>
+            ))}
           </div>
         )}
       </div>
