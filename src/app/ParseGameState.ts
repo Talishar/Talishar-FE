@@ -198,6 +198,11 @@ export default function ParseGameState(input: any) {
     }
   }
 
+  // Debug friend hand visibility
+  if (input.debugFriendHand) {
+    console.log('Friend Hand Visibility Debug:', input.debugFriendHand);
+  }
+
   // active chain link
   result.activeChainLink = {};
   if (input.activeChainLink !== undefined) {
