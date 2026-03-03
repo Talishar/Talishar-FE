@@ -94,9 +94,13 @@ export default function ChatBox() {
       }
     })
     .map((message) => {
-      // Always use playerOne for Player 1 and playerTwo for Player 2 (correct for all viewers: players and spectators)
-      const p1DisplayName = myName && myName.trim() ? myName.substring(0, 15) : 'Player 1';
-      const p2DisplayName = oppName && oppName.trim() ? oppName.substring(0, 15) : 'Player 2';
+      const p1DisplayName = amIPlayerOne
+        ? myName && myName.trim() ? myName.substring(0, 15) : 'Player 1'
+        : oppName && oppName.trim() ? oppName.substring(0, 15) : 'Player 1';
+      
+      const p2DisplayName = amIPlayerOne
+        ? oppName && oppName.trim() ? oppName.substring(0, 15) : 'Player 2'
+        : myName && myName.trim() ? myName.substring(0, 15) : 'Player 2';
       
       return message
         .replace(
