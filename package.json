@@ -101,6 +101,6 @@
   "packageManager": "yarn@3.8.7",
   "homepage": ".",
   "volta": {
-    "node": "20.20.0"
+    "node": "24.14.0"
   }
 }
