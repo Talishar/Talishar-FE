@@ -48,18 +48,15 @@ export default function ChatBox() {
       }
     })
     .map((message) => {
+      // Always use playerOne for Player 1 and playerTwo for Player 2 (correct for all viewers: players and spectators)
       return message
         .replace(
           'Player 1',
-          `${
-            amIPlayerOne ? myName.substring(0, 15) : oppName.substring(0, 15)
-          }`
+          `${myName.substring(0, 15)}`
         )
         .replace(
           'Player 2',
-          `${
-            amIPlayerOne ? oppName.substring(0, 15) : myName.substring(0, 15)
-          }`
+          `${oppName.substring(0, 15)}`
         );
     });
 
