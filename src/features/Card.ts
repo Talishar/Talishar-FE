@@ -30,4 +30,5 @@ export interface Card {
   tapped?: boolean; // tapped = 1 if tapped
   uniqueId?: string;
   isOpponent?: boolean; // isOpponent = whether the card belongs to the opponent
+  holoCounters?: boolean; // holoCounters = 1 if the card has holographic counters
 }

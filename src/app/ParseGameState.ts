@@ -49,6 +49,7 @@ function ParseCard(input: any) {
   card.marked = input.marked ? Boolean(input.marked) : false;
   card.tapped = input.tapped ? Boolean(input.tapped) : false;
   card.uniqueId = input.uniqueID ? String(input.uniqueID) : "-";
+  card.holoCounters = input.holoCounters ? Boolean(input.holoCounters) : false;
   return card;
 }
 

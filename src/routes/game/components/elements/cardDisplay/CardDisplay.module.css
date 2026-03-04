@@ -88,6 +88,12 @@
   background-size: 100% 100%;
 }
 
+.holoCounters {
+  background-image: url('../../../../../img/elements/holoOverlay.png');
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+
 .marked {
   animation: glitch 0.1s;
   animation-delay: 0.2s;
