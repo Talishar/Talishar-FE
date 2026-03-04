@@ -24,11 +24,7 @@ This is a [Vite](https://vitejs.dev/) single page [React](https://reactjs.org/) 
 
 ### Prerequisites:
 
-- [Volta](https://volta.sh/) or FNM to manage node installs.
-- node.js (currently 16.19.0), which would be managed automagically by Volta for you.
-- git
-- basic knowledge of the command line / terminal
-  - If you're on Windows, get Windows Powershell or wsl or something.
+- node.js 24.14.0
 
 ```
 git clone https://github.com/Talishar/Talishar-FE
@@ -52,8 +48,6 @@ Access the server at **http://localhost:5173/** (Port 5173 by default, if you co
 
 You must have the Talishar backend running locally to develop. The backend runs on **localhost:8000** (via Docker)
 
-You will also need the local dev talishar backend running.
-
 If you have problems running the development server, come to the discord and ask for help.
 
 ## State Management (Redux)
@@ -61,12 +55,14 @@ If you have problems running the development server, come to the discord and ask
 Talishar-FE uses Redux Toolkit for centralized state management. The game state flows from the backend through Redux to React components.
 
 ### Key Files
+
 - **`src/redux/GameSlice.ts`** - Redux slice managing the game state (actions, reducers, selectors)
 - **`src/redux/hooks.ts`** - Custom hooks for accessing Redux (`useAppSelector`, `useAppDispatch`)
 - **`src/features/api/apiSlice.ts`** - Redux-based API integration (fetch backend data)
 - **`ParseGameState.ts`** - Transforms backend JSON response to Redux-compatible format
 
 ### State Flow
+
 ```
 Backend (GetNextTurn.php)
     ↓ (JSON response)
@@ -84,6 +80,7 @@ UI updates
 ### Using Redux in Components
 
 **Access game state:**
+
 ```typescript
 import { useAppSelector } from '@/redux/hooks';
 import { selectGameState, selectCurrentPlayer } from '@/redux/slices/GameSlice';
@@ -91,23 +88,24 @@ import { selectGameState, selectCurrentPlayer } from '@/redux/slices/GameSlice';
 export const MyComponent = () => {
   const gameState = useAppSelector(selectGameState);
   const currentPlayer = useAppSelector(selectCurrentPlayer);
-  
+
   return <div>{/* Use gameState and currentPlayer */}</div>;
 };
 ```
 
 **Dispatch game actions:**
+
 ```typescript
 import { useAppDispatch } from '@/redux/hooks';
 import { updateGameState } from '@/redux/slices/GameSlice';
 
 export const MyComponent = () => {
   const dispatch = useAppDispatch();
-  
+
   const handleAction = () => {
     dispatch(updateGameState(newState));
   };
-  
+
   return <button onClick={handleAction}>Take Action</button>;
 };
 ```
@@ -115,6 +113,7 @@ export const MyComponent = () => {
 ## Component Structure
 
 ### Directory Organization
+
 ```
 src/routes/game/components/
 ├── GameBoard/           # Main game board display
@@ -131,6 +130,7 @@ src/routes/game/components/
 Components connect to game state through Redux selectors:
 
 1. **Container Components** (smart components)
+
    - Use `useAppSelector` to access Redux state
    - Use `useAppDispatch` to trigger actions
    - Located at feature level (e.g., `GameBoard/GameBoard.tsx`)
@@ -141,16 +141,17 @@ Components connect to game state through Redux selectors:
    - Reusable across different contexts
 
 **Example:**
+
 ```typescript
 // Container component (smart)
 export const GameBoard = () => {
   const gameState = useAppSelector(selectGameState);
   const dispatch = useAppDispatch();
-  
+
   const handlePlayCard = (cardId: string) => {
     dispatch(playCard(cardId));
   };
-  
+
   return <GameBoardView state={gameState} onPlayCard={handlePlayCard} />;
 };
 
@@ -158,7 +159,7 @@ export const GameBoard = () => {
 export const GameBoardView = ({ state, onPlayCard }: Props) => {
   return (
     <div>
-      {state.cards.map(card => (
+      {state.cards.map((card) => (
         <Card key={card.id} onClick={() => onPlayCard(card.id)} />
       ))}
     </div>
@@ -179,6 +180,7 @@ Configure Prettier and ESLint in your text editor of choice for a better develop
 ## Project Organization
 
 The codebase is organized with small, focused React components and containers. If you have ideas for better organization, please share them. When contributing:
+
 - Keep everything as modular as possible
 - Use React containers for logic separation
 - Pull data from Redux where appropriate
@@ -187,6 +189,7 @@ The codebase is organized with small, focused React components and containers. I
 ## Development Progress
 
 ### Completed
+
 - Automatic deployment to CDN
 - Automatic testing for all merge requests and commits to main
 
