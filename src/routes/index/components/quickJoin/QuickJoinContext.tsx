@@ -183,8 +183,7 @@ export const QuickJoinProvider = ({ children }: { children: React.ReactNode }) =
         );
 
         // Reset save deck checkbox after successful join
-        setSaveDeckState(false);
-        localStorage.setItem(LS_SAVE_DECK_KEY, 'false');
+        setSaveDeck(false);
 
         console.log('[QuickJoin] setGameStart dispatched, now navigating to:', `/game/lobby/${gameIDToUse}`);
 
@@ -201,7 +200,7 @@ export const QuickJoinProvider = ({ children }: { children: React.ReactNode }) =
         setIsJoining(false);
       }
     },
-    [joinGame, selectedFavoriteDeck, importDeckUrl, saveDeck, dispatch, navigate]
+    [joinGame, selectedFavoriteDeck, importDeckUrl, saveDeck, dispatch, navigate, setSaveDeck]
   );
 
   const value: QuickJoinContextType = {
