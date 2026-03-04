@@ -16,7 +16,7 @@ import {
 import { shallowEqual } from 'react-redux';
 import CardDisplay from '../cardDisplay/CardDisplay';
 import styles from './EventsHandler.module.css';
-import { setShuffling, setAddBotDeck, setClashReveal } from 'features/game/GameSlice';
+import { setShuffling, setAddBotDeck, setClashReveal, setArsenalFlip } from 'features/game/GameSlice';
 
 export const EventsHandler = React.memo(() => {
   const events = useAppSelector(
@@ -102,6 +102,17 @@ export const EventsHandler = React.memo(() => {
               setTimeout(() => {
                 dispatch(setClashReveal({ playerId: null, cardNumber: '' }));
               }, 5600);
+            });
+            continue;
+          }
+          case 'TURNARSENALFACEUP': {
+            const arsenalValue = event.eventValue ?? '';
+            const [arsenalPlayerID, arsenalCardNumber] = arsenalValue.split(':');
+            dispatch(setArsenalFlip({ playerId: parseInt(arsenalPlayerID), cardNumber: arsenalCardNumber }));
+            requestAnimationFrame(() => {
+              setTimeout(() => {
+                dispatch(setArsenalFlip({ playerId: null, cardNumber: '' }));
+              }, 300);
             });
             continue;
           }

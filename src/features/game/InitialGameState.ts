@@ -24,6 +24,9 @@ const InitialGameState: GameState = {
   clashRevealP1Card: '',
   clashRevealP2Card: '',
   clashRevealTrigger: 0,
+  arsenalFlipP1Card: '',
+  arsenalFlipP2Card: '',
+  arsenalFlipTrigger: 0,
   inactivityWarning: {
     lastActionTime: Date.now(),
     firstWarningShown: false,

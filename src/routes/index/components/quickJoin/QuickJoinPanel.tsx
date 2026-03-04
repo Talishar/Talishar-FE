@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FaExclamationCircle, FaQuestionCircle, FaChevronUp, FaChevronDown } from 'react-icons/fa';
+import { toast } from 'react-hot-toast';
 import { ImageSelect } from 'components/ImageSelect';
 import useAuth from 'hooks/useAuth';
 import { useQuickJoin } from './QuickJoinContext';
@@ -42,6 +43,13 @@ const QuickJoinPanel = () => {
   useEffect(() => {
     setCookie('quickJoinPanelExpanded', String(isExpanded));
   }, [isExpanded]);
+
+  useEffect(() => {
+    if (error && window.innerWidth < 768) {
+      toast.error(error);
+      setError(null);
+    }
+  }, [error, setError]);
 
   if (!isLoggedIn) return null;
 

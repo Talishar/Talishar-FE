@@ -36,7 +36,6 @@ export const CheckboxSetting: React.FC<CheckboxSettingProps> = ({
             className={styles.tooltipIcon}
             onMouseEnter={() => setIsTooltipVisible(true)}
             onMouseLeave={() => setIsTooltipVisible(false)}
-            title={tooltip}
           >
             ?
             {isTooltipVisible && (

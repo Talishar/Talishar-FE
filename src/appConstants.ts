@@ -123,6 +123,7 @@ export const PROCESS_INPUT = {
 export const DEFAULT_SHORTCUTS = {
   TOGGLE_OPTIONS_MENU: 'KeyM',
   PASS_TURN: 'Space',
+  PASS_MIDDLE_CLICK: 'MiddleClick',
   CLOSE_WINDOW: 'Escape',
   UNDO: 'KeyU',
   UNDOALT: 'KeyZ',
@@ -322,6 +323,7 @@ export const URL_END_POINT = {
   PATREON_LOGIN: `AccountFiles/PatreonLoginAPI.php`,
   METAFY_LOGIN: `AccountFiles/MetafyLoginAPI.php`,
   METAFY_SIGNUP: `AccountFiles/MetafySignupAPI.php`,
+  METAFY_REFRESH_COMMUNITIES: `APIs/RefreshMetafyCommunities.php`,
   LOAD_BUG_REPORT: `LoadBugReport.php`,
   SUBMIT_LOBBY_INPUT: 'APIs/SubmitLobbyInput.php',
   BLOCK_USER: 'include/BlockUser.php',

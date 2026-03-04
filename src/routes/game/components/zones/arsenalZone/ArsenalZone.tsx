@@ -28,6 +28,16 @@ export default function ArsenalZone(prop: Displayrow) {
       : state.game.playerTwo.Arsenal;
   });
 
+  const playerID = useAppSelector((state: RootState) => state.game.gameInfo.playerID);
+  const otherPlayerID = useAppSelector((state: RootState) => state.game.gameInfo.playerID === 1 ? 2 : 1);
+  const arsenalFlipP1Card = useAppSelector((state: RootState) => state.game.arsenalFlipP1Card);
+  const arsenalFlipP2Card = useAppSelector((state: RootState) => state.game.arsenalFlipP2Card);
+  const arsenalFlipTrigger = useAppSelector((state: RootState) => state.game.arsenalFlipTrigger);
+
+  const currentPlayerID = isPlayer ? playerID : otherPlayerID;
+  const flipCard = currentPlayerID === 1 ? arsenalFlipP1Card : arsenalFlipP2Card;
+  const showFlip = !!flipCard;
+
   const [width, height] = useWindowDimensions();
   const isPortrait = height > width;
 
@@ -50,8 +60,27 @@ export default function ArsenalZone(prop: Displayrow) {
         {arsenalCards.map((card: Card, index) => {
           // if it doesn't belong to us we don't need to know if it's faceup or facedown.
           const cardCopy = { ...card };
+          // Check if this card is currently animating
+          const isAnimatingThisCard = showFlip && card.cardNumber === flipCard;
+          
           return (
-            <CardDisplay card={cardCopy} key={index} isPlayer={isPlayer} />
+            <div key={index} className={styles.cardWrapper}>
+              {/* Hide the actual card while animation is playing */}
+              {!isAnimatingThisCard && (
+                <CardDisplay card={cardCopy} isPlayer={isPlayer} />
+              )}
+              {/* Show animation overlay while animating */}
+              {isAnimatingThisCard && (
+                <div 
+                  key={`arsenalFlipAnimation-${arsenalFlipTrigger}`}
+                  className={styles.arsenalFlipCard}
+                >
+                  <CardDisplay
+                    card={{ cardNumber: flipCard }}
+                  />
+                </div>
+              )}
+            </div>
           );
         })}
       </div>

@@ -62,7 +62,7 @@ export default ({ mode }: { mode: string }) => {
       globals: true,
       environment: 'jsdom',
       coverage: {
-        provider: 'c8'
+        provider: 'v8'
       },
       setupFiles: './src/setupTests.ts'
     }

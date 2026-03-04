@@ -68,6 +68,7 @@ export const CardDisplay = (prop: CardProp) => {
     { [styles.isBroken]: card.isBroken },
     { [styles.onChain]: card.onChain },
     { [styles.isFrozen]: card.isFrozen },
+    { [styles.holoCounters]: card.holoCounters },
     { [styles.marked]: card.marked },
     { [styles.tapped]: card.tapped },
     { [styles.isRestricted]: !!card.restriction }
@@ -143,6 +144,7 @@ export const CardDisplay = (prop: CardProp) => {
         card.onChain ||
         card.isFrozen ||
         card.marked ||
+        card.holoCounters ||
         !!card.restriction) && <div className={equipStatus}></div>}
       {card.numUses && card.numUses > 1 && card.numUses < 10 && (
         <div className={styles.numUses}>{renderNumUses(card.numUses)}</div>

@@ -128,6 +128,9 @@ export default interface GameState {
   clashRevealP1Card: string;
   clashRevealP2Card: string;
   clashRevealTrigger: number;
+  arsenalFlipP1Card: string;
+  arsenalFlipP2Card: string;
+  arsenalFlipTrigger: number;
   inactivityWarning?: {
     lastActionTime: number;
     firstWarningShown: boolean;

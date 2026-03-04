@@ -48,7 +48,7 @@ import {
 } from 'interface/API/UpdateFavoriteDeck.php';
 import { PatreonLoginResponse } from 'routes/user/profile/linkpatreon/linkPatreon';
 import { UserProfileAPIResponse } from 'interface/API/UserProfileAPI.php';
-import { MetafyLoginResponse, MetafySignupResponse } from 'interface/API/MetafyAPI.php';
+import { MetafyLoginResponse, MetafySignupResponse, RefreshMetafyCommunitiesResponse } from 'interface/API/MetafyAPI.php';
 import { SubmitChatAPI } from 'interface/API/SubmitChat.php';
 import {
   ModPageDataResponse,
@@ -542,6 +542,17 @@ export const apiSlice = createApi({
       },
       invalidatesTags: ['Auth', { type: 'UserProfile', id: 'LIST' }]
     }),
+    refreshMetafyCommunities: builder.mutation<RefreshMetafyCommunitiesResponse, void>({
+      query: () => {
+        return {
+          url: URL_END_POINT.METAFY_REFRESH_COMMUNITIES,
+          method: 'POST',
+          body: {},
+          responseHandler: parseResponse
+        };
+      },
+      invalidatesTags: [{ type: 'UserProfile', id: 'LIST' }]
+    }),
     getModPageData: builder.query<ModPageDataResponse, void>({
       query: () => {
         return {
@@ -991,6 +1002,7 @@ export const {
   useSubmitPatreonLoginMutation,
   useSubmitMetafyLoginMutation,
   useSubmitMetafySignupMutation,
+  useRefreshMetafyCommunitiesMutation,
   useLoadDebugGameMutation,
   useGetUserProfileQuery,
   useLoadReplayMutation,

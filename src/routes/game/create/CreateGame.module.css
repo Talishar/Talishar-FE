@@ -108,6 +108,28 @@
   text-decoration: underline;
 }
 
+.searchInput {
+  width: 100%;
+  padding: 0.5rem;
+  margin-bottom: 0.75rem;
+  border: 1px solid var(--theme-border-light, rgba(255, 255, 255, 0.2));
+  border-radius: 4px;
+  background-color: var(--theme-form-background, #33383d);
+  color: var(--theme-text, #ededed);
+  font-size: 0.9rem;
+  transition: border-color 0.2s, background-color 0.2s;
+}
+
+.searchInput:focus {
+  outline: none;
+  border-color: var(--theme-primary, #d4af37);
+  box-shadow: 0 0 4px rgba(212, 175, 55, 0.3);
+}
+
+.searchInput::placeholder {
+  color: var(--theme-text-muted, #999);
+}
+
 .heroCheckboxes {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));

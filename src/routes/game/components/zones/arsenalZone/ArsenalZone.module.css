@@ -23,6 +23,12 @@
   color: var(--white);
 }
 
+.cardWrapper {
+  position: relative;
+  width: var(--card-size);
+  height: var(--card-size);
+}
+
 .playerPrompt {
   background-color: var(--near-black);
   border-width: 1px;
@@ -94,5 +100,27 @@
     right: 10dvh;
     left: 5vh;
     left: 5dvh;
+  }
+}
+.arsenalFlipCard {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  animation: arsenalFlip 0.3s ease-in-out forwards;
+  transform-style: preserve-3d;
+  z-index: 200;
+  pointer-events: none;
+}
+
+@keyframes arsenalFlip {
+  0% {
+    transform: rotateY(-90deg);
+    opacity: 0;
+  }
+  100% {
+    transform: rotateY(0deg);
+    opacity: 1;
   }
 }

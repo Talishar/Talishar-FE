@@ -6,12 +6,22 @@ import CombatChainLink from '../features/CombatChainLink';
 import GameState from '../features/GameState';
 import Player from '../features/Player';
 
+function GetCardName(cardNumber: string): string {
+  if (!cardNumber || cardNumber === 'blank') return '';
+  let name = cardNumber.replace(/_red$|_yellow$|_blue$/, '');
+  return name
+    .split('_')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(' ');
+}
+
 function ParseCard(input: any) {
   const card: Card = { cardNumber: 'blank' };
   if (input === undefined) {
     return card;
   }
   card.cardNumber = input.cardNumber ? input.cardNumber : 'blank';
+  card.cardName = input.cardName ? input.cardName : GetCardName(card.cardNumber);
   card.action = input.action ? Number(input.action) : undefined;
   card.overlay = input.overlay == 1 ? 'disabled' : 'none';
   card.borderColor = input.borderColor ? String(input.borderColor) : undefined;
@@ -39,6 +49,7 @@ function ParseCard(input: any) {
   card.marked = input.marked ? Boolean(input.marked) : false;
   card.tapped = input.tapped ? Boolean(input.tapped) : false;
   card.uniqueId = input.uniqueID ? String(input.uniqueID) : "-";
+  card.holoCounters = input.holoCounters ? Boolean(input.holoCounters) : false;
   return card;
 }
 
@@ -168,7 +179,13 @@ export default function ParseGameState(input: any) {
     shufflingPlayerId: null,
     isShuffling: false,
     addBotDeckPlayerId: null,
-    addBotDeckCard: ''
+    addBotDeckCard: '',
+    clashRevealP1Card: '',
+    clashRevealP2Card: '',
+    clashRevealTrigger: 0,
+    arsenalFlipP1Card: '',
+    arsenalFlipP2Card: '',
+    arsenalFlipTrigger: 0
   };
 
   if (input.errorMessage) {
@@ -180,6 +197,14 @@ export default function ParseGameState(input: any) {
     if (errorMsg.includes('game no longer exists') || errorMsg.includes('does not exist')) {
       throw new Error(`GAME_NOT_FOUND: ${input.errorMessage}`);
     }
+  }
+
+  // Debug friend hand visibility
+  if (input.debugFriendHand) {
+    console.log('Friend Hand Visibility Debug (Frontend):', input.debugFriendHand);
+  }
+  if (input.debugFriendsBackend) {
+    console.log('Friend Hand Visibility Debug (Backend):', input.debugFriendsBackend);
   }
 
   // active chain link

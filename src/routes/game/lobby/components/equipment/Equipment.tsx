@@ -31,7 +31,7 @@ export interface BaseEquipment {
   demi: string[];
 }
 
-export interface HandWeapon {
+export interface HandWeapon extends Weapon {
   id: string;
 }
 
@@ -40,7 +40,7 @@ export interface EquipmentProps {
   weapons: Weapon[];
   weaponSB: Weapon[];
   baseEquipment: BaseEquipment;
-  hands: HandWeapon[];
+  hands: Weapon[];
   modularState: string[];
   setModularState: React.Dispatch<React.SetStateAction<string[]>>;
   assigned: AssignedState;
@@ -235,8 +235,33 @@ const Equipment = ({
                         type="checkbox"
                         checked={checked}
                         onChange={(e) => {
-                          if (e.target.checked) arrayHelpers.push(weapon);
-                          else {
+                          if (e.target.checked) {
+                            if (weapon.numHands === 2) {
+                              // Remove all non-quiver/non-companion weapons, keep quivers and companions
+                              const equipmentExceptions = values.weapons.filter((w) => w.isQuiver || w.isCompanion);
+                              const newWeapons = [weapon, ...equipmentExceptions];
+                              setFieldValue('weapons', newWeapons);
+                            } else if (weapon.isOffhand && !weapon.isQuiver && !weapon.isCompanion) {
+                              // If adding an off-hand (regular off-hand, not quiver/companion), remove other off-hands
+                              const nonOffhands = values.weapons.filter((w) => !w.isOffhand || w.isQuiver || w.isCompanion);
+                              const newWeapons = [...nonOffhands, weapon];
+                              setFieldValue('weapons', newWeapons);
+                            } else {
+                              const twoHandedIndex = values.weapons.findIndex(
+                                (w) => w.numHands === 2
+                              );
+                              if (twoHandedIndex !== -1 && !weapon.isQuiver && !weapon.isCompanion) {
+                                // Remove the 2-handed weapon first (unless adding a quiver or companion)
+                                const updatedWeapons = values.weapons.filter(
+                                  (_, idx) => idx !== twoHandedIndex
+                                );
+                                setFieldValue('weapons', [...updatedWeapons, weapon]);
+                              } else {
+                                // No 2-handed weapon, or adding a quiver/companion - just add it
+                                arrayHelpers.push(weapon);
+                              }
+                            }
+                          } else {
                             const idx = values.weapons.findIndex(
                               (w) => w.id === weapon.id
                             );

@@ -8,6 +8,7 @@ import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import { AnimatePresence } from 'framer-motion';
 import { createPortal } from 'react-dom';
+import { useNewlyDrawnCards } from 'hooks/useNewlyDrawnCards';
 
 export default function PlayerHand() {
   const isPlayable = (card: Card) => {
@@ -48,6 +49,9 @@ export default function PlayerHand() {
       (card) => card.action != null && card.action != 0
     );
   }, shallowEqual);
+
+  // Detect newly drawn cards for the draw animation
+  const newlyDrawnCardNumbers = useNewlyDrawnCards(handCards);
 
   const addCardToPlayedCards = (cardName: string) => {
     const newArray = playedCards;
@@ -111,12 +115,14 @@ export default function PlayerHand() {
                     (value) => value === card.cardNumber
                   ).length;
                   cardsInHandsAlready.push(card.cardNumber);
+                  const isNewlyDrawn = newlyDrawnCardNumbers.has(card.cardNumber);
                   return (
                     <PlayerHandCard
                       card={card}
                       key={`hand-${card.cardNumber}-${cardCount}`}
                       addCardToPlayedCards={addCardToPlayedCards}
                       zIndex={-ix}
+                      isNewlyDrawn={isNewlyDrawn}
                     />
                   );
                 })}

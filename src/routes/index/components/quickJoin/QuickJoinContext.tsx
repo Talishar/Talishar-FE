@@ -132,6 +132,9 @@ export const QuickJoinProvider = ({ children }: { children: React.ReactNode }) =
       setError(null);
       setIsJoining(true);
       try {
+        // Only save deck if it's from importDeckUrl (not from favorites)
+        const shouldSaveDeck = saveDeck && importDeckUrl.trim() !== '';
+
         const response = await joinGame({
           gameName,
           playerID: 2,
@@ -139,7 +142,7 @@ export const QuickJoinProvider = ({ children }: { children: React.ReactNode }) =
           fabdb: importDeckUrl.trim() || '',
           deckTestMode: false,
           decksToTry: '',
-          favoriteDeck: saveDeck,
+          favoriteDeck: shouldSaveDeck,
           favoriteDecks: selectedFavoriteDeck || '',
           gameDescription: ''
         }).unwrap();
@@ -179,6 +182,9 @@ export const QuickJoinProvider = ({ children }: { children: React.ReactNode }) =
           })
         );
 
+        // Reset save deck checkbox after successful join
+        setSaveDeck(false);
+
         console.log('[QuickJoin] setGameStart dispatched, now navigating to:', `/game/lobby/${gameIDToUse}`);
 
         navigate(`/game/lobby/${gameIDToUse}`, {
@@ -194,7 +200,7 @@ export const QuickJoinProvider = ({ children }: { children: React.ReactNode }) =
         setIsJoining(false);
       }
     },
-    [joinGame, selectedFavoriteDeck, importDeckUrl, saveDeck, dispatch, navigate]
+    [joinGame, selectedFavoriteDeck, importDeckUrl, saveDeck, dispatch, navigate, setSaveDeck]
   );
 
   const value: QuickJoinContextType = {

@@ -1,25 +1,34 @@
 import { useCallback } from 'react';
 
+const MOUSE_BUTTON_CODES: Record<string, number> = {
+  MiddleClick: 1
+};
 
-const shortcutListeners = new Map<string, (event: KeyboardEvent) => void>();
+const shortcutListeners = new Map<string, (event: Event) => void>();
 
 const useShortcut = (keyCode: string, callback: Function) => {
+  const isMouseShortcut = keyCode in MOUSE_BUTTON_CODES;
+  const eventType = isMouseShortcut ? 'mousedown' : 'keydown';
 
-  const handleKeyPress = useCallback(
-    (event: KeyboardEvent) => {
+  const handleEvent = useCallback(
+    (event: Event) => {
       // Check if user is typing in an input field, textarea, or contenteditable element
       const target = event.target as HTMLElement;
-      const isTyping = 
+      const isTyping =
         target.tagName === 'INPUT' ||
         target.tagName === 'TEXTAREA' ||
         target.isContentEditable;
-      
+
       // Don't trigger shortcuts when user is typing
       if (isTyping) {
         return;
       }
-      
-      if (event.code === keyCode) {
+
+      const isMatch = isMouseShortcut
+        ? (event as MouseEvent).button === MOUSE_BUTTON_CODES[keyCode]
+        : (event as KeyboardEvent).code === keyCode;
+
+      if (isMatch) {
         callback(event);
         event.preventDefault(); // prevent default behavior
       }
@@ -28,12 +37,12 @@ const useShortcut = (keyCode: string, callback: Function) => {
   );
 
   if (!shortcutListeners.has(keyCode)) {
-    shortcutListeners.set(keyCode, handleKeyPress);
-    window.addEventListener('keydown', handleKeyPress);
+    shortcutListeners.set(keyCode, handleEvent);
+    window.addEventListener(eventType, handleEvent);
   }
 
   return () => {
-    window.removeEventListener('keydown', handleKeyPress);
+    window.removeEventListener(eventType, handleEvent);
   };
 };
 

@@ -231,6 +231,7 @@ export function PassTurnDisplay() {
   };
 
   useShortcut(DEFAULT_SHORTCUTS.PASS_TURN, onPassTurn);
+  useShortcut(DEFAULT_SHORTCUTS.PASS_MIDDLE_CLICK, onPassTurn);
 
   const clickYes = (e: any) => {
     e.preventDefault();

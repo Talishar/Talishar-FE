@@ -70,7 +70,7 @@ fieldset legend strong {
 
 .tooltipContent {
   position: absolute;
-  bottom: 125%;
+  top: 100%;
   left: 50%;
   transform: translateX(-50%);
   background-color: rgba(0, 0, 0, 0.95);
@@ -78,21 +78,23 @@ fieldset legend strong {
   padding: 0.6rem 0.8rem;
   border-radius: 4px;
   font-size: 0.85em;
-  white-space: nowrap;
+  white-space: normal;
+  min-width: 200px;
   pointer-events: none;
   border: 1px solid rgba(255, 255, 255, 0.2);
   z-index: 1000;
   animation: tooltipFadeIn 0.2s ease-in-out;
+  margin-top: 0.5rem;
 }
 
 .tooltipContent::after {
   content: '';
   position: absolute;
-  top: 100%;
+  bottom: 100%;
   left: 50%;
   transform: translateX(-50%);
   border: 5px solid transparent;
-  border-top-color: rgba(0, 0, 0, 0.95);
+  border-bottom-color: rgba(0, 0, 0, 0.95);
 }
 
 @keyframes tooltipFadeIn {

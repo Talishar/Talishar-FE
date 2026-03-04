@@ -10,6 +10,8 @@ import { selectCurrentUserName } from 'features/auth/authSlice';
 import { getCurrentUsername, cacheCurrentUsername, loadGameAuthKey } from 'utils/LocalKeyManagement';
 import ParseGameState from './ParseGameState';
 import { toast } from 'react-hot-toast';
+import { useGetFriendsListQuery } from 'features/api/apiSlice';
+import useAuth from 'hooks/useAuth';
 
 const GameStateHandler = () => {
   const { gameID } = useParams();
@@ -24,6 +26,12 @@ const GameStateHandler = () => {
     (state: RootState) => state.game.isFullRematch
   );
   const navigate = useNavigate();
+
+  // Fetch friends list to ensure it's available for hand visibility checks
+  const { isLoggedIn } = useAuth();
+  const { data: friendsData } = useGetFriendsListQuery(undefined, {
+    skip: !isLoggedIn
+  });
 
   const sourceRef = useRef<EventSource | null>(null);
   const gameParamsRef = useRef({ gameID: 0, playerID: 0, authKey: '' });
@@ -68,6 +76,19 @@ const GameStateHandler = () => {
     }
   }, [gameID, gameName, playerID, authKey, gameInfo.authKey, locationState?.playerID, currentUserName, dispatch]);
 
+  // Sync friends data to sessionStorage whenever it's fetched
+  useEffect(() => {
+    if (friendsData?.friends) {
+      try {
+        const friendsList = friendsData.friends.map(f => f.username);
+        sessionStorage.setItem('friendsList', JSON.stringify(friendsList));
+        console.log('GameStateHandler synced friendsList to sessionStorage:', friendsList);
+      } catch (e) {
+        console.error('Failed to sync friendsList to sessionStorage:', e);
+      }
+    }
+  }, [friendsData?.friends]);
+
   useEffect(() => {
     // Use gameInfo from Redux state (which is already updated) rather than ref
     const currentGameID = gameInfo.gameID;
@@ -101,8 +122,19 @@ const GameStateHandler = () => {
     const connectionTimeout = setTimeout(() => {
       try {
         console.log(`🔌 Connecting to EventSource (attempt ${retryCountRef.current + 1}/${maxRetriesRef.current + 1})...`);
+        let friendsList: string[] = [];
+        try {
+          const stored = sessionStorage.getItem('friendsList');
+          if (stored) {
+            friendsList = JSON.parse(stored);
+          }
+        } catch (e) {
+          // sessionStorage parsing failed, continue without friendsList
+        }
+        console.log('GameStateHandler SSE - sending friendsList:', friendsList, 'playerID:', currentPlayerID);
+        
         const source = new EventSource(
-          `${BACKEND_URL}GetUpdateSSE.php?gameName=${currentGameID}&playerID=${currentPlayerID}&authKey=${currentAuthKey}`
+          `${BACKEND_URL}GetUpdateSSE.php?gameName=${currentGameID}&playerID=${currentPlayerID}&authKey=${currentAuthKey}&friendsList=${encodeURIComponent(JSON.stringify(friendsList))}`
         );
         sourceRef.current = source;
 
