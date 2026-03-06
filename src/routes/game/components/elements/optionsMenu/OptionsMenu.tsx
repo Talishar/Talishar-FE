@@ -29,6 +29,7 @@ import styles2 from './OptionsSettings/OptionsSettings.module.css';
 const OptionsContent = () => {
   const { gameID, playerID } = useAppSelector(getGameInfo, shallowEqual);
   const gameInfo = useAppSelector(getGameInfo, shallowEqual);
+  const isSpectator = playerID === 3;
   const settingsData = useAppSelectorOptions(getSettingsEntity);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -137,7 +138,7 @@ const OptionsContent = () => {
               >
                 Homepage
               </button>
-              {playerID !== 3 && ( // If not a spectator then can change options
+              {!isSpectator && ( // If not a spectator then can change options
                 <>
                   <button
                     className={styles.buttonDiv}
@@ -165,72 +166,74 @@ const OptionsContent = () => {
           </div>
         </div>
 
-        <div className={styles.sectionContainer}>
-          <div className={styles.sectionHeader}>
-            <span>Gamestate Correction</span>
-          </div>
-          <div className={styles.sectionContent}>
-            <div className={styles.buttonColumn}>
-              {playerID !== 3 && ( // If not a spectator then can change options
-                <>
-                  <button
-                    className={styles.buttonDiv}
-                    onClick={clickUndoButtonHandler}
-                  >
-                    Undo
-                  </button>
-                  <button
-                    className={styles.buttonDiv}
-                    onClick={clickRevertToStartOfThisTurnHandler}
-                  >
-                    Revert to Start of This turn
-                  </button>
-                  <button
-                    className={styles.buttonDiv}
-                    onClick={clickRevertToStartOfPreviousTurnHandler}
-                  >
-                    Revert to Start of Previous Turn
-                  </button>
-                </>
-              )}
+        {!isSpectator && (
+          <div className={styles.sectionContainer}>
+            <div className={styles.sectionHeader}>
+              <span>Gamestate Correction</span>
+            </div>
+            <div className={styles.sectionContent}>
+              <div className={styles.buttonColumn}>
+                <button
+                  className={styles.buttonDiv}
+                  onClick={clickUndoButtonHandler}
+                >
+                  Undo
+                </button>
+                <button
+                  className={styles.buttonDiv}
+                  onClick={clickRevertToStartOfThisTurnHandler}
+                >
+                  Revert to Start of This turn
+                </button>
+                <button
+                  className={styles.buttonDiv}
+                  onClick={clickRevertToStartOfPreviousTurnHandler}
+                >
+                  Revert to Start of Previous Turn
+                </button>
+              </div>
             </div>
           </div>
-        </div>
+        )}
 
-        <div className={styles.sectionContainer}>
-          <div className={styles.sectionHeader}>
-            <span>Invite Spectators</span>
-          </div>
-          <div className={styles.sectionContent}>
-            <div className={styles.buttonColumn}>
-              {!allowSpectator ? (
-                <>
-                  <button
-                    className={styles.buttonDiv}
-                    onClick={handleAllowSpectators}
-                  >
-                    Allow Spectators for Private Match
-                  </button>
-                </>
-              ) : (
-                <>
-                  <button
-                    className={styles.buttonDiv}
-                    onClick={clickCopySpectateToClipboardHandler}
-                  >
-                    Copy Spectate Link
-                  </button>
-                </>
-              )}
+        {!isSpectator && (
+          <div className={styles.sectionContainer}>
+            <div className={styles.sectionHeader}>
+              <span>Invite Spectators</span>
+            </div>
+            <div className={styles.sectionContent}>
+              <div className={styles.buttonColumn}>
+                {!allowSpectator ? (
+                  <>
+                    <button
+                      className={styles.buttonDiv}
+                      onClick={handleAllowSpectators}
+                    >
+                      Allow Spectators for Private Match
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <button
+                      className={styles.buttonDiv}
+                      onClick={clickCopySpectateToClipboardHandler}
+                    >
+                      Copy Spectate Link
+                    </button>
+                  </>
+                )}
+              </div>
             </div>
           </div>
-        </div>
+        )}
+        {!isSpectator && (
           <CosmeticsSection
             data={data}
             selectedCardBack={initialValues.cardBack}
             selectedPlaymat={initialValues.playMat}
             onSettingsChange={handleSettingsChange}
           />
+        )}
         </div>
       </div>
   );

@@ -9,10 +9,15 @@ import styles from './RightColumn.module.css';
 import ChatBox from '../elements/chatBox/ChatBox';
 import useSetting from 'hooks/useSetting';
 import { IS_STREAMER_MODE } from 'features/options/constants';
+import { useAppSelector } from 'app/Hooks';
+import { RootState } from 'app/Store';
 
 export default function RightColumn() {
   const isStreamerMode =
     useSetting({ settingName: IS_STREAMER_MODE })?.value === '1';
+  const playerID = useAppSelector((state: RootState) => state.game.gameInfo.playerID);
+  const isSpectator = playerID === 3;
+
   return (
     <>
       <div className={styles.mobileTopBar}>
@@ -25,7 +30,7 @@ export default function RightColumn() {
           <Timer />
           <LastPlayed />
           <SpectatorCount />
-          <PriorityControl />
+          {!isSpectator && <PriorityControl />}
         </div>
         <div className={styles.bottomGroup}>
           {isStreamerMode ? <StreamerBox /> : ""}

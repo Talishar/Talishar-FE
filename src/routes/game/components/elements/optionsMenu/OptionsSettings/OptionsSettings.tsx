@@ -26,6 +26,7 @@ import { VisualSlider, VisualPreset } from './VisualSettings';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import ThemeToggle from 'themes/ThemeToggle';
 import LanguageSelector from 'components/LanguageSelector/LanguageSelector';
+import { RootState } from 'app/Store';
 
 const OptionsSettings = () => {
   const gameInfo = useAppSelector(getGameInfo, shallowEqual);
@@ -34,6 +35,8 @@ const OptionsSettings = () => {
   const dispatch = useAppDispatch();
   const [windowWidth] = useWindowDimensions();
   const isMobile = windowWidth < 768;
+  const playerID = useAppSelector((state: RootState) => state.game.gameInfo.playerID);
+  const isSpectator = playerID === 3;
   const [cookies, setCookie, removeCookie] = useCookies([
     'experimental',
     'cardSize',
@@ -122,20 +125,23 @@ const OptionsSettings = () => {
 
   return (
     <div className={styles.leftColumn}>
-      <Fieldset legend="Priority Settings">
-        <RadioGroup
-          name="holdPriority"
-          options={priorityOptions}
-          checked={Number(initialValues.holdPriority)}
-          onChange={(value) =>
-            handleSettingsChange({
-              name: optConst.HOLD_PRIORITY_SETTING,
-              value: value
-            })
-          }
-        />
-      </Fieldset>
-      <Fieldset legend="Skip Overrides">
+      {!isSpectator && (
+        <Fieldset legend="Priority Settings">
+          <RadioGroup
+            name="holdPriority"
+            options={priorityOptions}
+            checked={Number(initialValues.holdPriority)}
+            onChange={(value) =>
+              handleSettingsChange({
+                name: optConst.HOLD_PRIORITY_SETTING,
+                value: value
+              })
+            }
+          />
+        </Fieldset>
+      )}
+      {!isSpectator && (
+        <Fieldset legend="Skip Overrides">
         <CheckboxSetting
           name="skipAttackReactions"
           label="Skip Attack Reactions"
@@ -170,22 +176,26 @@ const OptionsSettings = () => {
           }
         />
       </Fieldset>
+      )}
 
-      <Fieldset legend="Attack Shortcut Threshold">
-        <RadioGroup
-          name="attackSkip"
-          options={attackShortcutOptions}
-          checked={Number(initialValues.shortcutAttackThreshold)}
-          onChange={(value) =>
-            handleSettingsChange({
-              name: optConst.SHORTCUT_ATTACK_THRESHOLD,
-              value: value
-            })
-          }
-        />
-      </Fieldset>
+      {!isSpectator && (
+        <Fieldset legend="Attack Shortcut Threshold">
+          <RadioGroup
+            name="attackSkip"
+            options={attackShortcutOptions}
+            checked={Number(initialValues.shortcutAttackThreshold)}
+            onChange={(value) =>
+              handleSettingsChange({
+                name: optConst.SHORTCUT_ATTACK_THRESHOLD,
+                value: value
+              })
+            }
+          />
+        </Fieldset>
+      )}
 
-      <Fieldset legend="Modes">
+      {!isSpectator && (
+        <Fieldset legend="Modes">
         <CheckboxSetting
           name="streamerMode"
           label="Streamer Mode"
@@ -247,6 +257,7 @@ const OptionsSettings = () => {
           }
         />
       </Fieldset>
+      )}
 
       <Fieldset legend="Accessibility & Other">
         <CheckboxSetting

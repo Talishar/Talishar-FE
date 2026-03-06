@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import screenfull from 'screenfull';
-import { useAppDispatch } from 'app/Hooks';
+import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { submitButton } from 'features/game/GameSlice';
 import { FaUndo } from 'react-icons/fa';
 import { GiExpand } from 'react-icons/gi';
@@ -14,6 +14,7 @@ import AlwaysPassToggle from './AlwaysPassToggle/AlwaysPassToggle';
 import useShortcut from 'hooks/useShortcut';
 import PlayerName from '../playerName/PlayerName';
 import { ButtonDisableProvider, useButtonDisableContext } from 'contexts/ButtonDisableContext';
+import { RootState } from 'app/Store';
 
 function FullScreenButton() {
   function toggleFullScreen() {
@@ -69,6 +70,8 @@ function UndoButton() {
 function MenuContent() {
   const [isMobile, setIsMobile] = useState(false);
   const [isTablet, setIsTablet] = useState(false);
+  const playerID = useAppSelector((state: RootState) => state.game.gameInfo.playerID);
+  const isSpectator = playerID === 3;
 
   useEffect(() => {
     const handleResize = () => {
@@ -81,6 +84,28 @@ function MenuContent() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  // Spectator view: only show essential buttons
+  if (isSpectator) {
+    return (
+      <div>
+        {isTablet && (
+          <PlayerName isPlayer={false} />
+        )}
+        <div className={styles.menuList}>
+          <HideModalsToggle />
+          <OptionsMenuToggle />
+          <FullScreenButton />
+        </div>
+        {(isMobile || isTablet) && (
+          <div className={styles.menuList}>
+            <ShowMobileChat />
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // Player view: show all buttons
   return (
     <div>
       {isTablet && (
