@@ -12,6 +12,8 @@ import { MdNotes } from 'react-icons/md';
 import { IoMdArrowDropdown } from 'react-icons/io';
 import PlayerNoteModal from './PlayerNoteModal';
 import { createPatreonIconMap } from 'utils/patronIcons';
+import useSetting from 'hooks/useSetting';
+import { IS_STREAMER_MODE } from 'features/options/constants';
 
 export default function PlayerName(player: Player) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -25,6 +27,8 @@ export default function PlayerName(player: Player) {
 
   const playerID = useAppSelector((state: RootState) => state.game.gameInfo.playerID);
   const spectatorCameraView = useAppSelector((state: RootState) => state.game.spectatorCameraView);
+
+  const isStreamerMode = useSetting({ settingName: IS_STREAMER_MODE })?.value === '1';
 
   // Get both player names
   const playerOneName = useAppSelector((state: RootState) => state.game.playerOne.Name);
@@ -60,6 +64,11 @@ export default function PlayerName(player: Player) {
   } else {
     // Regular player: always show own name if isPlayer, opponent's if not
     playerName = player.isPlayer ? playerOneName : playerTwoName;
+  }
+
+  // Apply streamer mode: hide opponent name for non-spectators
+  if (isStreamerMode && !player.isPlayer && playerID !== 3) {
+    playerName = 'Opponent';
   }
 
   // Load and manage player notes from localStorage

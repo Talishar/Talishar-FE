@@ -6,6 +6,8 @@ import styles from './ChatBox.module.css';
 import { parseHtmlToReactElements } from 'utils/ParseEscapedString';
 import classNames from 'classnames';
 import { useCheckOpponentTypingQuery } from 'features/api/apiSlice';
+import useSetting from 'hooks/useSetting';
+import { IS_STREAMER_MODE } from 'features/options/constants';
 
 const CHAT_RE = /<span[^>]*>(.*?):\s<\/span>/;
 const TYPING_TIMEOUT_MS = 5000; // 5 seconds
@@ -21,6 +23,8 @@ export default function ChatBox() {
   const chatLog = useAppSelector((state: RootState) => state.game.chatLog);
   const [displayTyping, setDisplayTyping] = useState(false);
   const typingTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  const isStreamerMode = useSetting({ settingName: IS_STREAMER_MODE })?.value === '1';
 
   // Only poll when chat is enabled and we're a valid player (skip spectators)
   const shouldPoll = chatEnabled && (playerID === 1 || playerID === 2) && !!gameID;
@@ -94,15 +98,20 @@ export default function ChatBox() {
       }
     })
     .map((message) => {
-      const p1DisplayName = amIPlayerOne
-        ? myName && myName.trim() ? myName.substring(0, 15) : 'Player 1'
-        : oppName && oppName.trim() ? oppName.substring(0, 15) : 'Player 1';
+      const myDisplayName = amIPlayerOne
+        ? (myName && myName.trim() ? myName.substring(0, 15) : 'Player 1')
+        : (myName && myName.trim() ? myName.substring(0, 15) : 'Player 2');
       
-      const p2DisplayName = amIPlayerOne
-        ? oppName && oppName.trim() ? oppName.substring(0, 15) : 'Player 2'
-        : myName && myName.trim() ? myName.substring(0, 15) : 'Player 2';
+      const oppDisplayName = isStreamerMode
+        ? 'Opponent'
+        : (amIPlayerOne
+          ? (oppName && oppName.trim() ? oppName.substring(0, 15) : 'Player 2')
+          : (oppName && oppName.trim() ? oppName.substring(0, 15) : 'Player 1'));
+
+      const p1DisplayName = amIPlayerOne ? myDisplayName : oppDisplayName;
+      const p2DisplayName = amIPlayerOne ? oppDisplayName : myDisplayName;
       
-      return message
+      let processedMessage = message
         .replace(
           'Player 1',
           `<b>${p1DisplayName}</b>`
@@ -111,6 +120,14 @@ export default function ChatBox() {
           'Player 2',
           `<b>${p2DisplayName}</b>`
         );
+      
+      if (isStreamerMode && oppName) {
+        const oppNameEscaped = oppName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const oppNameRegex = new RegExp(oppNameEscaped, 'g');
+        processedMessage = processedMessage.replace(oppNameRegex, 'Opponent');
+      }
+      
+      return processedMessage;
     });
 
   useEffect(() => {
