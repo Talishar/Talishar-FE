@@ -7,6 +7,7 @@ import { BsPersonFill, BsShieldFillCheck, BsGear, BsFillBookFill } from 'react-i
 import { RiLogoutBoxRLine } from 'react-icons/ri';
 import { MdVideoLibrary } from 'react-icons/md';
 import SocialDropdown from 'components/header/SocialDropdown';
+import LanguageSelector from 'components/header/LanguageSelector';
 import { useGetPendingRequestsQuery } from 'features/api/apiSlice';
 import CookieConsent from 'components/CookieConsent';
 import AdBlockingRecovery from 'components/AdBlockingRecovery';
@@ -89,6 +90,7 @@ const Header = () => {
               </Link>
             </li>
           )}
+	  <LanguageSelector />
           <SocialDropdown />
           <li>
             {isLoggedIn ? (

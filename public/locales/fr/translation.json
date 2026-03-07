@@ -1,0 +1,22 @@
+{
+  "Welcome to React": "Bienvenue à React et react-i18next",
+  "HEADER":{
+    "LOGOUT":"Déconnexion",
+    "LOGIN":"Se Connecter",
+    "REPLAYS":"Rediffusions",
+    "LEARN":"Apprendre",
+    "SETTINGS":"Paramètres",
+    "SOCIALS":"Réseaux sociaux",
+    "SOCIAL_LINKS":"Liens vers les réseaux sociaux",
+    "SUPPORT_US":"Soutenez-nous!",
+    "TALISHAR_LOGO_ALT":"Logo Talishar - lien vers la page d'accueil",
+    "LANGUAGE_SELECTOR":{
+      "LANGUAGES":"Langues",
+      "LANGUAGE":"Langue",
+      "OPTIONS":{
+	"ENGLISH":"Anglais",
+	"FRENCH":"Français"
+      }
+    }
+  }
+}
