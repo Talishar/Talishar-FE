@@ -290,6 +290,12 @@ export default function ParseGameState(input: any) {
   }
 
   result.playerTwo.SoulCount = input.opponentSoulCount;
+  result.playerTwo.Soul = [];
+  if (input.opponentSoul && Array.isArray(input.opponentSoul)) {
+    for (const cardObj of input.opponentSoul) {
+      result.playerTwo.Soul.push(ParseCard(cardObj));
+    }
+  }
   result.playerTwo.bloodDebtCount = input.opponentBloodDebtCount;
   result.playerTwo.bloodDebtImmune = input.isOpponentBloodDebtImmune;
   result.playerTwo.earthCount = input.opponentEarthCount;
@@ -391,6 +397,12 @@ export default function ParseGameState(input: any) {
   result.playerOne.earthCount = input.myEarthCount;
   result.playerOne.blessingsCount = input.myBlessingsCount;
   result.playerOne.SoulCount = input.playerSoulCount;
+  result.playerOne.Soul = [];
+  if (input.playerSoul && Array.isArray(input.playerSoul)) {
+    for (const cardObj of input.playerSoul) {
+      result.playerOne.Soul.push(ParseCard(cardObj));
+    }
+  }
   result.playerOne.Health = input.playerHealth;
 
   result.playerOne.Graveyard = [];

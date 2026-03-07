@@ -33,7 +33,7 @@ export const CardDisplay = (prop: CardProp) => {
     isPlayer ? state.game.playerOne.CardBack : state.game.playerTwo.CardBack
   ) ?? { cardNumber: '' };
   const { getLanguage } = useLanguageSelector();
-  const [showSubCards, setShowSubCards] = useState(true);  const subCardRef = useRef(null);
+  const [showSubCards, setShowSubCards] = useState(false);  const subCardRef = useRef(null);
 
   if (card == null || card.cardNumber === '') {
     return null;
