@@ -27,6 +27,10 @@ export const doubleFacedCardsMappings: { [key: string]: string } = {
 
   construct_nitro_mechanoid_yellow: 'nitro_mechanoid',
   nitro_mechanoid: 'construct_nitro_mechanoid_yellow',
+  nitro_mechanoida: 'construct_nitro_mechanoid_yellow',
+  nitro_mechanoidb: 'construct_nitro_mechanoid_yellow',
+  nitro_mechanoidc: 'construct_nitro_mechanoid_yellow',
+
   invoke_suraya_yellow: 'suraya_archangel_of_knowledge',
   suraya_archangel_of_knowledge: 'invoke_suraya_yellow',
 
