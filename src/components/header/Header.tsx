@@ -14,6 +14,7 @@ import AdBlockingRecovery from 'components/AdBlockingRecovery';
 import SessionRecovery from 'components/SessionRecovery';
 import ChatBar from 'components/chatBar/ChatBar';
 import { Toaster } from 'react-hot-toast';
+import { useTranslation } from "react-i18next";
 
 const Header = () => {
   const { isLoggedIn, isMod, isPatron, currentUserName, logOut } = useAuth();
@@ -23,6 +24,9 @@ const Header = () => {
   const pendingRequestCount = pendingData?.requests?.length || 0;
   const canAccessReplays = isMod || currentUserName === 'Tegunn' || isPatron;
 
+  // Initial stuff to allow the lang to change  
+  const { t, i18n, ready } = useTranslation();
+  
   const handleLogOut = (e: React.MouseEvent) => {
     e.preventDefault();
     logOut();
@@ -56,7 +60,7 @@ const Header = () => {
             <Link to="/" className={styles.logo}>
               <img
                 src={TalisharLogo}
-                alt={'Logo Talishar - link to homepage'}
+                alt={t('HEADER.TALISHAR_LOGO_ALT')}
               />
             </Link>
           </li>
@@ -66,14 +70,14 @@ const Header = () => {
               target={'_blank'}
               className={styles.support}
             >
-              Support Us!
+              {t('HEADER.SUPPORT_US')}
             </a>
           </li>
         </ul>
         <ul>
           <li>
             <Link to="/learn">
-              <BsFillBookFill></BsFillBookFill> <span>Learn</span>
+              <BsFillBookFill></BsFillBookFill> <span>{t('HEADER.LEARN')}</span>
             </Link>
           </li>
           {isLoggedIn && isMod && (
@@ -86,7 +90,7 @@ const Header = () => {
           {isLoggedIn && canAccessReplays && (
             <li>
               <Link to="/game/load">
-                <MdVideoLibrary></MdVideoLibrary> <span>Replays</span>
+                <MdVideoLibrary></MdVideoLibrary> <span>{t('HEADER.REPLAYS')}</span>
               </Link>
             </li>
           )}
@@ -95,28 +99,28 @@ const Header = () => {
           <li>
             {isLoggedIn ? (
               <Link to="/user" className={styles.profileLink}>
-                <BsPersonFill></BsPersonFill> <span>Profile</span>
+                <BsPersonFill></BsPersonFill> <span>{t('HEADER.PROFILE')}</span>
                 {pendingRequestCount > 0 && (
                   <span className={styles.notificationBadge}>{pendingRequestCount}</span>
                 )}
               </Link>
             ) : (
               <Link to="/user/login" className={styles.login}>
-                <button>Login</button>
+                <button>{t('HEADER.LOGIN')}</button>
               </Link>
             )}
           </li>
           {isLoggedIn && (
             <li>
               <Link to="/user/settings">
-                <BsGear></BsGear> <span>Settings</span>
+                <BsGear></BsGear> <span>{t('HEADER.SETTINGS')}</span>
               </Link>
             </li>
           )}
           {isLoggedIn && (
             <li>
               <a href="" onClick={handleLogOut}>
-                <RiLogoutBoxRLine></RiLogoutBoxRLine> <span>Logout</span>
+                <RiLogoutBoxRLine></RiLogoutBoxRLine> <span>{t('HEADER.LOGOUT')}</span>
               </a>
             </li>
           )}
