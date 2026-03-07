@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import screenfull from 'screenfull';
@@ -9,6 +9,7 @@ import {
   submitButton
 } from 'features/game/GameSlice';
 import { FaTimes } from 'react-icons/fa';
+import { MdDragHandle } from 'react-icons/md';
 import styles from './OptionsMenu.module.css';
 import { DEFAULT_SHORTCUTS, PROCESS_INPUT } from 'appConstants';
 import useShortcut from 'hooks/useShortcut';
@@ -26,10 +27,13 @@ import {
 } from 'features/options/optionsSlice';
 import styles2 from './OptionsSettings/OptionsSettings.module.css';
 
+const OPTIONS_MENU_STORAGE_KEY = 'optionsMenuPosition';
+const OPTIONS_MAX_Y_OFFSET = 10;
+const OPTIONS_MIN_Y_OFFSET = -8;
+
 const OptionsContent = () => {
   const { gameID, playerID } = useAppSelector(getGameInfo, shallowEqual);
   const gameInfo = useAppSelector(getGameInfo, shallowEqual);
-  const isSpectator = playerID === 3;
   const settingsData = useAppSelectorOptions(getSettingsEntity);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -138,7 +142,7 @@ const OptionsContent = () => {
               >
                 Homepage
               </button>
-              {!isSpectator && ( // If not a spectator then can change options
+              {playerID !== 3 && ( // If not a spectator then can change options
                 <>
                   <button
                     className={styles.buttonDiv}
@@ -166,74 +170,72 @@ const OptionsContent = () => {
           </div>
         </div>
 
-        {!isSpectator && (
-          <div className={styles.sectionContainer}>
-            <div className={styles.sectionHeader}>
-              <span>Gamestate Correction</span>
-            </div>
-            <div className={styles.sectionContent}>
-              <div className={styles.buttonColumn}>
-                <button
-                  className={styles.buttonDiv}
-                  onClick={clickUndoButtonHandler}
-                >
-                  Undo
-                </button>
-                <button
-                  className={styles.buttonDiv}
-                  onClick={clickRevertToStartOfThisTurnHandler}
-                >
-                  Revert to Start of This turn
-                </button>
-                <button
-                  className={styles.buttonDiv}
-                  onClick={clickRevertToStartOfPreviousTurnHandler}
-                >
-                  Revert to Start of Previous Turn
-                </button>
-              </div>
+        <div className={styles.sectionContainer}>
+          <div className={styles.sectionHeader}>
+            <span>Gamestate Correction</span>
+          </div>
+          <div className={styles.sectionContent}>
+            <div className={styles.buttonColumn}>
+              {playerID !== 3 && ( // If not a spectator then can change options
+                <>
+                  <button
+                    className={styles.buttonDiv}
+                    onClick={clickUndoButtonHandler}
+                  >
+                    Undo
+                  </button>
+                  <button
+                    className={styles.buttonDiv}
+                    onClick={clickRevertToStartOfThisTurnHandler}
+                  >
+                    Revert to Start of This turn
+                  </button>
+                  <button
+                    className={styles.buttonDiv}
+                    onClick={clickRevertToStartOfPreviousTurnHandler}
+                  >
+                    Revert to Start of Previous Turn
+                  </button>
+                </>
+              )}
             </div>
           </div>
-        )}
+        </div>
 
-        {!isSpectator && (
-          <div className={styles.sectionContainer}>
-            <div className={styles.sectionHeader}>
-              <span>Invite Spectators</span>
-            </div>
-            <div className={styles.sectionContent}>
-              <div className={styles.buttonColumn}>
-                {!allowSpectator ? (
-                  <>
-                    <button
-                      className={styles.buttonDiv}
-                      onClick={handleAllowSpectators}
-                    >
-                      Allow Spectators for Private Match
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    <button
-                      className={styles.buttonDiv}
-                      onClick={clickCopySpectateToClipboardHandler}
-                    >
-                      Copy Spectate Link
-                    </button>
-                  </>
-                )}
-              </div>
+        <div className={styles.sectionContainer}>
+          <div className={styles.sectionHeader}>
+            <span>Invite Spectators</span>
+          </div>
+          <div className={styles.sectionContent}>
+            <div className={styles.buttonColumn}>
+              {!allowSpectator ? (
+                <>
+                  <button
+                    className={styles.buttonDiv}
+                    onClick={handleAllowSpectators}
+                  >
+                    Allow Spectators for Private Match
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button
+                    className={styles.buttonDiv}
+                    onClick={clickCopySpectateToClipboardHandler}
+                  >
+                    Copy Spectate Link
+                  </button>
+                </>
+              )}
             </div>
           </div>
-        )}
-        {!isSpectator && (
+        </div>
           <CosmeticsSection
             data={data}
             selectedCardBack={initialValues.cardBack}
             selectedPlaymat={initialValues.playMat}
             onSettingsChange={handleSettingsChange}
           />
-        )}
         </div>
       </div>
   );
@@ -246,6 +248,69 @@ export default function OptionsMenu() {
   );
   const dispatch = useAppDispatch();
 
+  const [yOffset, setYOffset] = useState(() => {
+    const stored = localStorage.getItem(OPTIONS_MENU_STORAGE_KEY);
+    return stored ? parseFloat(stored) : 0;
+  });
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragStartY, setDragStartY] = useState(0);
+  const [dragStartOffset, setDragStartOffset] = useState(0);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+    setIsDragging(true);
+    setDragStartY(e.clientY);
+    setDragStartOffset(yOffset);
+  };
+
+  const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+    setIsDragging(true);
+    setDragStartY(e.touches[0].clientY);
+    setDragStartOffset(yOffset);
+  };
+
+  useEffect(() => {
+    if (!isDragging) return;
+
+    const handleMouseMove = (e: MouseEvent) => {
+      const delta = e.clientY - dragStartY;
+      const deltaDvh = (delta / window.innerHeight) * 100;
+      let newOffset = dragStartOffset + deltaDvh;
+      newOffset = Math.max(OPTIONS_MIN_Y_OFFSET, Math.min(OPTIONS_MAX_Y_OFFSET, newOffset));
+      setYOffset(newOffset);
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      const delta = e.touches[0].clientY - dragStartY;
+      const deltaDvh = (delta / window.innerHeight) * 100;
+      let newOffset = dragStartOffset + deltaDvh;
+      newOffset = Math.max(OPTIONS_MIN_Y_OFFSET, Math.min(OPTIONS_MAX_Y_OFFSET, newOffset));
+      setYOffset(newOffset);
+    };
+
+    const handleMouseUp = () => {
+      setIsDragging(false);
+      localStorage.setItem(OPTIONS_MENU_STORAGE_KEY, yOffset.toString());
+    };
+
+    const handleTouchEnd = () => {
+      setIsDragging(false);
+      localStorage.setItem(OPTIONS_MENU_STORAGE_KEY, yOffset.toString());
+    };
+
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('touchmove', handleTouchMove);
+    document.addEventListener('mouseup', handleMouseUp);
+    document.addEventListener('touchend', handleTouchEnd);
+
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('touchmove', handleTouchMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+      document.removeEventListener('touchend', handleTouchEnd);
+    };
+  }, [isDragging, dragStartY, dragStartOffset, yOffset]);
+
   const closeOptions = () => {
     dispatch(closeOptionsMenu());
   };
@@ -254,26 +319,41 @@ export default function OptionsMenu() {
     <AnimatePresence>
       {optionsMenu?.active && showModal && (
         <motion.div
+          ref={containerRef}
           className={styles.optionsContainer}
           initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
+          animate={{ opacity: 1, scale: 1, y: `${yOffset}dvh` }}
           exit={{ opacity: 0, scale: 0.8 }}
+          transition={isDragging ? { type: 'tween', duration: 0 } : { type: 'tween' }}
           key="optionsMenuPopup"
         >
-          <div className={styles.optionsTitleContainer}>
-            <hgroup className={styles.optionsTitle}>
-              <h2 className={styles.title}>Settings Menu</h2>
-              <h4></h4>
-            </hgroup>
-            <div
-              className={styles.optionsMenuCloseIcon}
-              onClick={closeOptions}
-              data-testid="close-button"
-            >
-              <FaTimes title="Close Settings Menu" />
+          <div className={styles.optionsMenuContent}>
+            <div className={styles.optionsTitleContainer}>
+              <hgroup className={styles.optionsTitle}>
+                <h2 className={styles.title}>Settings Menu</h2>
+                <h4></h4>
+              </hgroup>
+              <div
+                className={styles.optionsMenuCloseIcon}
+                onClick={closeOptions}
+                data-testid="close-button"
+              >
+                <FaTimes title="Close Settings Menu" />
+              </div>
             </div>
+            <OptionsContent />
           </div>
-          <OptionsContent />
+          <div
+            className={`${styles.grabbyHandle} ${isDragging ? styles.grabbyHandleDragging : ''}`}
+            onMouseDown={handleMouseDown}
+            onTouchStart={handleTouchStart}
+          >
+            <MdDragHandle
+              size={32}
+              className={styles.gripIcon}
+              aria-label="Drag to move options menu"
+            />
+          </div>
         </motion.div>
       )}
     </AnimatePresence>

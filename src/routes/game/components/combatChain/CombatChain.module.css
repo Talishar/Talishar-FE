@@ -37,7 +37,7 @@
 }
 
 .grabbyHandle {
-  width: calc(var(--card-size) * 0.3);
+  width: calc(var(--card-size) * 0.25);
   height: 100%;
   background-color: var(--theme-tertiary);
   border-radius: 10px;
@@ -67,8 +67,6 @@
   transition: opacity 0.2s ease;
   width: 100%;
   height: 100%;
-  max-width: 1.5em;
-  max-height: 1.5em;
 }
 
 .grabbyHandle:hover .gripIcon {

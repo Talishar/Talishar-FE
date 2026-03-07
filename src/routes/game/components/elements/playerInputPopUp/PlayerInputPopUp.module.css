@@ -1,7 +1,7 @@
 .optionsContainer {
   position: fixed;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   min-width: 30%;
   max-width: 90%;
   min-height: 20%;
@@ -11,7 +11,7 @@
   max-height: 40vh;
   height: auto;
   background-color: var(--near-black);
-  padding: 1.5vh;
+  padding: 1vh;
   border: 1px solid var(--theme-primary);
   border-radius: 10px;
   z-index: 900;
@@ -245,7 +245,7 @@
 .optOptionsContainer {
   position: fixed;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   min-width: 30%;
   max-width: 90%;
   min-height: 20%;
@@ -392,4 +392,52 @@
     margin-top: 0;
     height: 40%
   }
+}
+
+
+.popupContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.grabbyHandle {
+  width: calc(var(--card-size) * 0.2);
+  height: auto;
+  background-color: var(--theme-tertiary);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  cursor: grab;
+  user-select: none;
+  transition: all 0.2s ease;
+  padding: 0.5em;
+  box-sizing: border-box;
+  flex-shrink: 0;
+  align-self: stretch;
+}
+
+.grabbyHandle:active {
+  cursor: grabbing;
+}
+
+.grabbyHandleDragging {
+  background-color: var(--theme-secondary);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.gripIcon {
+  color: var(--white);
+  opacity: 0.8;
+  transition: opacity 0.2s ease;
+  width: 100%;
+  height: 100%;
+}
+
+.grabbyHandle:hover .gripIcon {
+  opacity: 1;
 }
