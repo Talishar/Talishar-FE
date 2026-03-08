@@ -5,7 +5,7 @@
   min-width: 30%;
   max-width: 90%;
   min-height: 20%;
-  top: 52.5%;
+
   left: 15%;
   right: 25%;
   max-height: 40vh;
@@ -248,8 +248,7 @@
   flex-direction: row;
   min-width: 30%;
   max-width: 90%;
-  min-height: 20%;
-  top: 40%;
+  min-height: 40%;
   left: 15%;
   right: 25%;
   max-height: 52.5vh;
