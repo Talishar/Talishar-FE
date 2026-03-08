@@ -327,22 +327,6 @@ export default function OptionsMenu() {
           transition={isDragging ? { type: 'tween', duration: 0 } : { type: 'tween' }}
           key="optionsMenuPopup"
         >
-          <div className={styles.optionsMenuContent}>
-            <div className={styles.optionsTitleContainer}>
-              <hgroup className={styles.optionsTitle}>
-                <h2 className={styles.title}>Settings Menu</h2>
-                <h4></h4>
-              </hgroup>
-              <div
-                className={styles.optionsMenuCloseIcon}
-                onClick={closeOptions}
-                data-testid="close-button"
-              >
-                <FaTimes title="Close Settings Menu" />
-              </div>
-            </div>
-            <OptionsContent />
-          </div>
           <div
             className={`${styles.grabbyHandle} ${isDragging ? styles.grabbyHandleDragging : ''}`}
             onMouseDown={handleMouseDown}
@@ -354,6 +338,20 @@ export default function OptionsMenu() {
               aria-label="Drag to move options menu"
             />
           </div>
+          <div className={styles.optionsTitleContainer}>
+            <hgroup className={styles.optionsTitle}>
+              <h2 className={styles.title}>Settings Menu</h2>
+              <h4></h4>
+            </hgroup>
+            <div
+              className={styles.optionsMenuCloseIcon}
+              onClick={closeOptions}
+              data-testid="close-button"
+            >
+              <FaTimes title="Close Settings Menu" />
+            </div>
+          </div>
+          <OptionsContent />
         </motion.div>
       )}
     </AnimatePresence>
