@@ -1,5 +1,4 @@
 import React, { useRef, useEffect, useState } from 'react';
-import DOMPurify from 'dompurify';
 import styles from './MatchupTooltip.module.css';
 
 export interface MatchupTooltipProps {
@@ -13,11 +12,6 @@ interface TooltipPosition {
   position: 'top' | 'bottom' | 'left' | 'right';
 }
 
-/**
- * Smart tooltip component that displays HTML content safely.
- * Automatically positions to avoid going off-screen (especially important for right-side panels).
- * Uses fixed positioning to avoid being clipped by parent overflow.
- */
 const MatchupTooltip: React.FC<MatchupTooltipProps> = ({ content, children }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [tooltipPos, setTooltipPos] = useState<TooltipPosition>({
@@ -89,9 +83,6 @@ const MatchupTooltip: React.FC<MatchupTooltipProps> = ({ content, children }) =>
     return <div>{children}</div>;
   }
 
-  // Sanitize HTML content
-  const sanitizedHTML = DOMPurify.sanitize(content);
-
   return (
     <div
       ref={triggerRef}
@@ -108,7 +99,7 @@ const MatchupTooltip: React.FC<MatchupTooltipProps> = ({ content, children }) =>
             top: `${tooltipPos.top}px`,
             left: `${tooltipPos.left}px`
           }}
-          dangerouslySetInnerHTML={{ __html: sanitizedHTML }}
+          dangerouslySetInnerHTML={{ __html: content }}
         />
       )}
     </div>
