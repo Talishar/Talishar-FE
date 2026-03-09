@@ -103,6 +103,7 @@
   transition: background-color 0.2s ease;
   margin-bottom: 0;
   margin-left: 0.5rem;
+  width: auto !important;
 
   &:hover {
     background-color: var(--theme-button-hover, rgba(255, 255, 255, 0.1));
@@ -134,12 +135,10 @@
   border-radius: 10px;
   background-color: var(--theme-card-dark, #0d0d0d);
   border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.1));
-  cursor: pointer;
-  transition: transform 0.2s ease, border-color 0.2s ease;
+  transition: border-color 0.2s ease;
   aspect-ratio: 1 / 1;
 
   &:hover {
-    transform: scale(1.05);
     border-color: var(--theme-border-hover, rgba(255, 255, 255, 0.3));
   }
 }

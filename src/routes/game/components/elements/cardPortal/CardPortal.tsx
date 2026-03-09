@@ -8,6 +8,7 @@ import classNames from 'classnames';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import { CARD_IMAGES_PATH, getCollectionCardImagePath } from 'utils';
 import { useCookies } from 'react-cookie';
+import { createPortal } from 'react-dom';
 
 const popUpGap = 130;
 
@@ -75,7 +76,7 @@ export default function CardPortal() {
   });
 
   if (popup.xCoord === undefined || popup.yCoord === undefined) {
-    return <CardDetails src={src} />;
+    return createPortal(<CardDetails src={src} />, document.body);
   }
 
   const isDFC = dfcSrc != null;
@@ -110,7 +111,7 @@ export default function CardPortal() {
     
   }
 
-  return (
+  return createPortal(
     <div className={styles.popUpContainer} style={popUpStyle}>
       {isDFC && (
         <CardDetails
@@ -126,5 +127,7 @@ export default function CardPortal() {
         isOpponent={popup.isOpponent}
       />
     </div>
+    ,
+    document.body
   );
 }
