@@ -32,11 +32,6 @@ export interface HandCard {
   zIndex?: number;
   addCardToPlayedCards: (cardName: string) => void;
   isNewlyDrawn?: boolean;
-  disableDrag?: boolean;
-  onHandReorderDragStart?: () => void;
-  onHandReorderDragMove?: (info: PanInfo) => void;
-  onHandReorderDragEnd?: (info: PanInfo) => boolean;
-  onHandReorderDragCancel?: () => void;
 }
 
 export const PlayerHandCard = ({
@@ -46,15 +41,9 @@ export const PlayerHandCard = ({
   isGraveyard,
   zIndex,
   addCardToPlayedCards,
-  isNewlyDrawn,
-  disableDrag,
-  onHandReorderDragStart,
-  onHandReorderDragMove,
-  onHandReorderDragEnd,
-  onHandReorderDragCancel
+  isNewlyDrawn
 }: HandCard) => {
   const [canPopUp, setCanPopup] = useState(true);
-  const [isDragging, setIsDragging] = useState(false);
   const [, windowHeight] = useWindowDimensions();
   const [snapback, setSnapback] = useState<boolean>(true);
   const { getLanguage } = useLanguageSelector();
@@ -63,7 +52,6 @@ export const PlayerHandCard = ({
   const timerRef = useRef<ReturnType<typeof setTimeout>>();
   const isLongPress = useRef<boolean>();
   const hasDispatchedClearRef = useRef<boolean>(false);
-  const draggedRef = useRef<boolean>(false);
 
   if (card === undefined) {
     return <div className={styles.handCard}></div>;
@@ -76,37 +64,23 @@ export const PlayerHandCard = ({
   });
   const dispatch = useAppDispatch();
 
-  const handleDragStart = () => {
-    setIsDragging(true);
-    onHandReorderDragStart?.();
-  };
-
   const handleDragEnd = (
     event: MouseEvent | TouchEvent | PointerEvent,
     info: PanInfo
   ) => {
-    const absY = Math.abs(info.offset.y);
-    const absX = Math.abs(info.offset.x);
-
     // Only play card on drag if vertical movement is significant (prevent accidental plays on scroll)
     const isMobile = windowHeight > 800;
     const dragThreshold = isMobile 
       ? windowHeight * ScreenPercentageForCardPlayed * 1.5 // Higher threshold on mobile
       : windowHeight * ScreenPercentageForCardPlayed;
     
-    if (absY > dragThreshold) {
+    if (Math.abs(info.offset.y) > dragThreshold) {
       setSnapback(false);
       playCardFunc();
       addCardToPlayedCards(card.cardNumber);
-    } else if (onHandReorderDragEnd && absX > 8 && absX > absY) {
-      onHandReorderDragEnd(info);
     }
-
-    draggedRef.current = false;
-    setIsDragging(false);
     setCanPopup(true);
     hasDispatchedClearRef.current = false;
-    onHandReorderDragCancel?.();
   };
 
   const playCardFunc = () => {
@@ -117,16 +91,7 @@ export const PlayerHandCard = ({
     }
   };
 
-  const onDrag = (
-    event: MouseEvent | TouchEvent | PointerEvent,
-    info: PanInfo
-  ) => {
-    onHandReorderDragMove?.(info);
-
-    if (Math.abs(info.offset.x) > 8 || Math.abs(info.offset.y) > 8) {
-      draggedRef.current = true;
-    }
-
+  const onDrag = () => {
     if (canPopUp && !hasDispatchedClearRef.current) {
       setSnapback(true);
       if (!isLongPress.current) {
@@ -138,11 +103,6 @@ export const PlayerHandCard = ({
   };
 
   const handleOnClick = () => {
-    if (draggedRef.current) {
-      draggedRef.current = false;
-      return;
-    }
-
     // Tap to play card (unless it was a long press which shows preview)
     if (!isLongPress.current) {
       playCardFunc();
@@ -183,8 +143,7 @@ export const PlayerHandCard = ({
 
   return (
     <motion.div
-      layout="position"
-      drag={!disableDrag}
+      drag
       className={classNames(styles.handCard, {
         [styles.newlyDrawn]: isNewlyDrawn
       })}
@@ -192,16 +151,13 @@ export const PlayerHandCard = ({
       onClick={handleOnClick}
       onTapStart={startPressTimer}
       onTap={stopPressTimer}
-      onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
       onDrag={onDrag}
       dragSnapToOrigin={snapback}
-      dragMomentum={false}
       initial={getInitialPosition()}
       animate={{ opacity: 1, y: 0 }}
       transition={isNewlyDrawn ? { duration: 0.2, ease: 'easeOut' } : { duration: 0.1 }}
-      whileHover={isDragging ? undefined : { scale: 1.1, y: -50 }}
-      whileDrag={{ scale: 1.05, zIndex: 1000 }}
+      whileHover={{ scale: 1.1, y: -50 }}
     >
       <CardPopUp
         containerClass={styles.imgContainer}
