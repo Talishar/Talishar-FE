@@ -32,7 +32,7 @@ import { RootState } from 'app/Store';
 import { createPatreonIconMap } from 'utils/patronIcons';
 import { DeckResponse, Weapon } from 'interface/API/GetLobbyInfo.php';
 import LobbyUpdateHandler from './components/updateHandler/SideboardUpdateHandler';
-import { GAME_FORMAT, BREAKPOINT_EXTRA_LARGE, CLOUD_IMAGES_URL } from 'appConstants';
+import { GAME_FORMAT, BREAKPOINT_EXTRA_LARGE, CLOUD_IMAGES_URL, QUERY_STATUS } from 'appConstants';
 import { getReadableFormatName } from 'utils/formatUtils';
 import ChooseFirstTurn from './components/chooseFirstTurn/ChooseFirstTurn';
 import useWindowDimensions from 'hooks/useWindowDimensions';
@@ -49,9 +49,8 @@ import playerJoined from 'sounds/playerJoinedSound.mp3';
 import { createPortal } from 'react-dom';
 import { useAppDispatch } from 'app/Hooks';
 import { generateCroppedImageUrl } from 'utils/cropImages';
-import { getSettingsEntity } from 'features/options/optionsSlice';
+import { getSettingsEntity, fetchAllSettings, getSettingsStatus } from 'features/options/optionsSlice';
 import { ChatBar } from '../../../components/chatBar/ChatBar';
-import useSetting from 'hooks/useSetting';
 import { IS_STREAMER_MODE } from 'features/options/constants';
 
 const Lobby = () => {
@@ -67,11 +66,10 @@ const Lobby = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const settingsStatus = useAppSelector(getSettingsStatus);
   const { isLoggedIn } = useAuth();
-  const { playerID, gameID, authKey } = useAppSelector(
-    getGameInfo,
-    shallowEqual
-  );
+  const gameInfo = useAppSelector(getGameInfo, shallowEqual);
+  const { playerID, gameID, authKey } = gameInfo;
   const [acceptedDisclaimer, setAcceptedDisclaimer] = useState<boolean>(false);
   const gameLobby = useAppSelector(
     (state: RootState) => state.game.gameLobby,
@@ -81,7 +79,16 @@ const Lobby = () => {
   const { isPatron } = useAuth();
   const settingsData = useAppSelector(getSettingsEntity);
   const isMuted = settingsData['MuteSound']?.value === '1';
-  const isStreamerMode = useSetting({ settingName: IS_STREAMER_MODE })?.value === '1';
+  const isStreamerMode = String(settingsData['IsStreamerMode']?.value) === '1';
+
+  
+  // Load settings when in lobby (same approach as SettingsPage - no active game needed)
+  const dummyGameInfo = { playerID: 0, gameID: 0, authKey: '', isPrivateLobby: false };
+  useEffect(() => {
+    if (settingsStatus === QUERY_STATUS.IDLE || Object.keys(settingsData).length === 0) {
+      dispatch(fetchAllSettings({ game: dummyGameInfo }));
+    }
+  }, []);
 
   // Get patron info for player 1 (you)
   const yourPatronInfo = useAppSelector((state: RootState) => ({

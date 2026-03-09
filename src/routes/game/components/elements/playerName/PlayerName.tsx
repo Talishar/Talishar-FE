@@ -28,7 +28,7 @@ export default function PlayerName(player: Player) {
   const playerID = useAppSelector((state: RootState) => state.game.gameInfo.playerID);
   const spectatorCameraView = useAppSelector((state: RootState) => state.game.spectatorCameraView);
 
-  const isStreamerMode = useSetting({ settingName: IS_STREAMER_MODE })?.value === '1';
+  const isStreamerMode = String(useSetting({ settingName: IS_STREAMER_MODE })?.value) === '1';
 
   // Get both player names
   const playerOneName = useAppSelector((state: RootState) => state.game.playerOne.Name);

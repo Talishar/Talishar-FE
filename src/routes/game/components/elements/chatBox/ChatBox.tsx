@@ -24,7 +24,7 @@ export default function ChatBox() {
   const [displayTyping, setDisplayTyping] = useState(false);
   const typingTimerRef = useRef<NodeJS.Timeout | null>(null);
 
-  const isStreamerMode = useSetting({ settingName: IS_STREAMER_MODE })?.value === '1';
+  const isStreamerMode = String(useSetting({ settingName: IS_STREAMER_MODE })?.value) === '1';
 
   // Only poll when chat is enabled and we're a valid player (skip spectators)
   const shouldPoll = chatEnabled && (playerID === 1 || playerID === 2) && !!gameID;
