@@ -556,14 +556,123 @@
   }
 }
 
+@media only screen and (max-width: 768px) {
+  .number.number {
+    max-height: 1.5em;
+    max-width: 1.5em;
+    min-height: 0.9em;
+    min-width: 0.9em;
+    font-size: 1.1em;
+    border-width: 1.5px;
+  }
+
+  .defCounter.defCounter,
+  .steamCounter.steamCounter,
+  .energyCounter.energyCounter,
+  .hauntCounter.hauntCounter,
+  .verseCounter.verseCounter,
+  .doomCounter.doomCounter,
+  .lessonCounter.lessonCounter,
+  .rustCounter.rustCounter,
+  .flowCounter.flowCounter,
+  .frostCounter.frostCounter,
+  .balanceCounter.balanceCounter,
+  .bindCounter.bindCounter,
+  .stainCounter.stainCounter,
+  .stormCounter.stormCounter,
+  .goldCounter.goldCounter,
+  .suspenseCounter.suspenseCounter,
+  .sandCounter.sandCounter,
+  .powerCounter.powerCounter,
+  .lifeCounter.lifeCounter {
+    height: 1.5em;
+    width: 1.5em;
+    font-size: 1.1em;
+  }
+
+  .wateryGraveIcon.wateryGraveIcon {
+    min-width: 1.3em;
+    height: 1.3em;
+    font-size: 1.2em;
+    padding: 1px;
+    margin: 0.05em;
+  }
+
+  .icon.icon {
+    min-width: 1.2em;
+    height: 1.2em;
+    font-size: 1.3em;
+    padding: 1px;
+    margin: 0.05em;
+    border-width: 0.75px;
+  }
+}
+
 @media only screen and (max-width: 480px) {
+  .countersCover.countersCover {
+    flex-wrap: nowrap;
+    gap: 2px;
+    overflow: hidden;
+    flex-direction: row;
+  }
+
+  .number.number {
+    max-height: 1.2em;
+    max-width: 1.2em;
+    min-height: 0.8em;
+    min-width: 0.8em;
+    font-size: 0.9em;
+    border-width: 1px;
+    flex-shrink: 0;
+  }
+
+  .defCounter.defCounter,
+  .steamCounter.steamCounter,
+  .energyCounter.energyCounter,
+  .hauntCounter.hauntCounter,
+  .verseCounter.verseCounter,
+  .doomCounter.doomCounter,
+  .lessonCounter.lessonCounter,
+  .rustCounter.rustCounter,
+  .flowCounter.flowCounter,
+  .frostCounter.frostCounter,
+  .balanceCounter.balanceCounter,
+  .bindCounter.bindCounter,
+  .stainCounter.stainCounter,
+  .stormCounter.stormCounter,
+  .goldCounter.goldCounter,
+  .suspenseCounter.suspenseCounter,
+  .sandCounter.sandCounter,
+  .powerCounter.powerCounter,
+  .lifeCounter.lifeCounter {
+    height: 1.2em;
+    width: 1.2em;
+    font-size: 0.9em;
+    flex-shrink: 0;
+  }
+
+  .wateryGraveIcon.wateryGraveIcon {
+    min-width: 1em;
+    height: 1em;
+    font-size: 0.9em;
+    padding: 0px;
+    margin: 0.02em;
+    border-width: 0.5px;
+    flex-shrink: 0;
+  }
+
   .icon.icon {
     min-width: 1em;
     height: 1em;
-    font-size: 1.1em;
-    padding: 1px;
-    margin: 0.05em;
+    font-size: 1em;
+    padding: 0px;
+    margin: 0.02em;
     border-width: 0.5px;
+    flex-shrink: 0;
+  }
+
+  .label.label {
+    display: none;
   }
 }
 
