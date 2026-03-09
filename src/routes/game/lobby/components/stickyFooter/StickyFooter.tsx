@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { useFormikContext } from 'formik';
 import { FaExclamationCircle } from 'react-icons/fa';
 import { DeckResponse } from 'interface/API/GetLobbyInfo.php';
@@ -10,9 +10,12 @@ import { MdGames } from 'react-icons/md';
 export type DeckSize = {
   deckSize: number;
   submitSideboard: boolean;
+  canUnreadySideboard?: boolean;
+  isUnreadyLoading?: boolean;
   isWidescreen: boolean;
   needToDoDisclaimer: boolean;
   handleLeave: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  onUnreadySideboard?: () => void;
   onSendInviteClick?: () => void;
   onIsValidChange?: (isValid: boolean) => void;
 };
@@ -20,9 +23,12 @@ export type DeckSize = {
 const StickyFooter = ({
   deckSize,
   submitSideboard,
+  canUnreadySideboard = false,
+  isUnreadyLoading = false,
   isWidescreen,
   needToDoDisclaimer,
   handleLeave,
+  onUnreadySideboard,
   onSendInviteClick,
   onIsValidChange
 }: DeckSize) => {
@@ -32,8 +38,6 @@ const StickyFooter = ({
   for (const [key, value] of Object.entries(errors)) {
     errorArray.push(String(value));
   }
-
-  const [sideboardSubmitted, setSideboardSubmitted] = useState(false);
 
   // Update CSS custom property with footer height
   useEffect(() => {
@@ -123,14 +127,24 @@ const StickyFooter = ({
           </div>
         </div>
         <div className={styles.buttonHolder}>
-          <button
-            className={styles.buttonClass}
-            type="submit"
-            disabled={isValid === false || !submitSideboard || needToDoDisclaimer}
-            onClick={() => setSideboardSubmitted(true)}
-          >
-            {sideboardSubmitted ? 'Resubmit Deck' : 'Submit Deck'}
-          </button>
+          {canUnreadySideboard ? (
+            <button
+              className={styles.buttonClass}
+              type="button"
+              disabled={isUnreadyLoading || needToDoDisclaimer}
+              onClick={onUnreadySideboard}
+            >
+              {'Edit Deck'}
+            </button>
+          ) : (
+            <button
+              className={styles.buttonClass}
+              type="submit"
+              disabled={isValid === false || !submitSideboard || needToDoDisclaimer}
+            >
+              Confirm Deck
+            </button>
+          )}
           {isWidescreen && (
             <button className={leaveLobby} onClick={handleLeave}>
               Leave

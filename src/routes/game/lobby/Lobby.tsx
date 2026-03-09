@@ -158,6 +158,19 @@ const Lobby = () => {
   const [sendMessage] = useSendPrivateMessageMutation();
   const [createQuickGame] = useCreateQuickGameMutation();
 
+  const handleUnreadySideboard = async () => {
+    try {
+      await submitLobbyInput({
+        gameName: gameID,
+        playerID: playerID,
+        authKey: authKey,
+        action: 'Unready Sideboard'
+      }).unwrap();
+    } catch (err: any) {
+      toast.error(err?.error || 'Failed to unready sideboard');
+    }
+  };
+
   // Sort friends by status (online, away, offline) then alphabetically
   const sortedFriends = useMemo(() => {
     if (!friendsData?.friends) return [];
@@ -946,9 +959,12 @@ const Lobby = () => {
             <StickyFooter
               deckSize={deckSize}
               submitSideboard={gameLobby?.canSubmitSideboard ?? false}
+              canUnreadySideboard={gameLobby?.canUnreadySideboard ?? false}
+              isUnreadyLoading={submitLobbyInputData.isLoading}
               handleLeave={handleLeave}
               isWidescreen={isWideScreen}
               needToDoDisclaimer={needToDoDisclaimer}
+              onUnreadySideboard={handleUnreadySideboard}
               onSendInviteClick={() => setShowFriendsPanel(!showFriendsPanel)}
               onIsValidChange={setIsDeckValid}
             />

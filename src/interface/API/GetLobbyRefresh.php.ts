@@ -21,6 +21,7 @@ export interface GetLobbyRefreshResponse {
   myPriority?: boolean;
   isMainGameReady?: boolean;
   canSubmitSideboard?: boolean;
+  canUnreadySideboard?: boolean;
   myDeckLink?: string;
   matchups?: Matchup[];
   chatEnabled?: boolean;
