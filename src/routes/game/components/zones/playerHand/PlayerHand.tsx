@@ -37,20 +37,67 @@ export default function PlayerHand() {
     (state: RootState) => state.game.playerOne.Hand
   );
 
+  // Use a ref to maintain stable IDs across renders
+  const cardIdMapRef = useRef<Map<string, string>>(new Map());
+  const nextIdCounterRef = useRef<number>(0);
+
   const handCardsWithStableIds = useMemo<CardWithStableId[]>(() => {
-    const occurrenceByCardNumber = new Map<string, number>();
-    return (handCards ?? []).map((card, index) => {
-      const currentOccurrence = occurrenceByCardNumber.get(card.cardNumber) ?? 0;
-      const nextOccurrence = currentOccurrence + 1;
-      occurrenceByCardNumber.set(card.cardNumber, nextOccurrence);
+    const cardIdMap = cardIdMapRef.current;
+    const cards = handCards ?? [];
+    
+    // Create fingerprints WITHOUT index so reordering doesn't create new IDs
+    const baseFingerprints = cards.map((card) => 
+      `${card.cardNumber}-${card.uniqueId ?? 'na'}-${card.cardIndex ?? 'na'}`
+    );
 
-      const id =
-        card.uniqueId !== undefined && card.uniqueId !== null && card.uniqueId !== ''
-          ? `${card.cardNumber}-uid-${card.uniqueId}`
-          : `${card.cardNumber}-card-index-${card.cardIndex ?? 'na'}-occurrence-${nextOccurrence}-index-${index}`;
-
+    // Track which fingerprints we've seen in this render (for duplicates)
+    const fingerprintOccurrences = new Map<string, number>();
+    const usedIds = new Set<string>();
+    
+    const result = cards.map((card, index) => {
+      const baseFingerprint = baseFingerprints[index];
+      
+      // Count occurrences to handle duplicates
+      const occurrence = fingerprintOccurrences.get(baseFingerprint) ?? 0;
+      fingerprintOccurrences.set(baseFingerprint, occurrence + 1);
+      
+      // Create unique fingerprint including occurrence
+      const uniqueFingerprint = occurrence === 0 
+        ? baseFingerprint 
+        : `${baseFingerprint}-dup-${occurrence}`;
+      
+      let id = cardIdMap.get(uniqueFingerprint);
+      
+      // If no existing ID or ID is already used, generate a new one
+      if (!id || usedIds.has(id)) {
+        id = `hand-card-${nextIdCounterRef.current++}`;
+        cardIdMap.set(uniqueFingerprint, id);
+      }
+      
+      usedIds.add(id);
       return { card, id };
     });
+
+    // Clean up unused IDs from the map
+    const currentFingerprints = new Set<string>();
+    result.forEach((_, idx) => {
+      const baseFingerprint = baseFingerprints[idx];
+      const occurrence = Array.from(currentFingerprints)
+        .filter(fp => fp.startsWith(baseFingerprint))
+        .length;
+      const uniqueFingerprint = occurrence === 0 
+        ? baseFingerprint 
+        : `${baseFingerprint}-dup-${occurrence}`;
+      currentFingerprints.add(uniqueFingerprint);
+    });
+    
+    for (const [fingerprint] of cardIdMap) {
+      if (!currentFingerprints.has(fingerprint)) {
+        cardIdMap.delete(fingerprint);
+      }
+    }
+
+    return result;
   }, [handCards]);
 
   const [orderedHandIds, setOrderedHandIds] = useState<string[]>([]);

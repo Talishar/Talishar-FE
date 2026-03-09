@@ -51,6 +51,8 @@ import { useAppDispatch } from 'app/Hooks';
 import { generateCroppedImageUrl } from 'utils/cropImages';
 import { getSettingsEntity } from 'features/options/optionsSlice';
 import { ChatBar } from '../../../components/chatBar/ChatBar';
+import useSetting from 'hooks/useSetting';
+import { IS_STREAMER_MODE } from 'features/options/constants';
 
 const Lobby = () => {
   usePageTitle('Lobby');
@@ -79,6 +81,7 @@ const Lobby = () => {
   const { isPatron } = useAuth();
   const settingsData = useAppSelector(getSettingsEntity);
   const isMuted = settingsData['MuteSound']?.value === '1';
+  const isStreamerMode = useSetting({ settingName: IS_STREAMER_MODE })?.value === '1';
 
   // Get patron info for player 1 (you)
   const yourPatronInfo = useAppSelector((state: RootState) => ({
@@ -723,7 +726,7 @@ const Lobby = () => {
                             />
                           </a>
                         ))}
-                      {String(gameLobby?.theirName ?? '').substring(0, 15)}
+                      {isStreamerMode ? 'Opponent' : String(gameLobby?.theirName ?? '').substring(0, 15)}
                     </h3>
                     <div className={styles.heroName}>
                       {gameLobby?.theirHeroName != ''
