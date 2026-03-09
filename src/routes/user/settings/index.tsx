@@ -15,6 +15,7 @@ import {
   Setting,
   updateOptions
 } from 'features/options/optionsSlice';
+import { QUERY_STATUS } from 'appConstants';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import { useEffect } from 'react';
 import { useCookies } from 'react-cookie';
@@ -44,9 +45,10 @@ const SettingsPage = () => {
 
   // fetch all settings when component is loaded
   useEffect(() => {
-    // Load settings from backend for settings context - only on mount
-    dispatch(fetchAllSettings({ game: profileGameInfo }));
-  }, [dispatch]); // Only depend on dispatch to run once on mount
+    if (isLoading === QUERY_STATUS.IDLE) {
+      dispatch(fetchAllSettings({ game: profileGameInfo }));
+    }
+  }, [dispatch, isLoading]);
 
   const handleSettingsChange = ({ name, value }: Setting) => {
     dispatch(

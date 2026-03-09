@@ -19,7 +19,9 @@ import { useCookies } from 'react-cookie';
 import { useEffect } from 'react';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { useAppDispatch, useAppSelector } from '../../../app/Hooks';
-import { setIsRoguelike, setHeroInfo } from '../../../features/game/GameSlice';
+import { setIsRoguelike, setHeroInfo, getGameInfo } from '../../../features/game/GameSlice';
+import { fetchAllSettings, getSettingsStatus } from 'features/options/optionsSlice';
+import { QUERY_STATUS } from 'appConstants';
 import { Toaster } from 'react-hot-toast';
 import { shallowEqual } from 'react-redux';
 import { PanelProvider } from '../components/leftColumn/PanelContext';
@@ -36,10 +38,18 @@ function Play({ isRoguelike }: { isRoguelike: boolean }) {
   const dispatch = useAppDispatch();
   const gameState = useAppSelector((state: any) => state.game, shallowEqual);
   const heroIntroShown = useAppSelector((state: any) => state.game.heroIntroShown);
+  const gameInfo = useAppSelector(getGameInfo, shallowEqual);
+  const settingsStatus = useAppSelector(getSettingsStatus);
 
   useEffect(() => {
     dispatch(setIsRoguelike(isRoguelike));
   }, [isRoguelike]);
+
+  useEffect(() => {
+    if (gameInfo.gameID && settingsStatus === QUERY_STATUS.IDLE) {
+      dispatch(fetchAllSettings({ game: gameInfo }));
+    }
+  }, [gameInfo.gameID, settingsStatus]);
 
   // Dispatch hero info once game state is fully populated
   useEffect(() => {
