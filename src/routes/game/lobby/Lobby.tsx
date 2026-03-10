@@ -634,7 +634,7 @@ const Lobby = () => {
         initialValues={{
           hero: data?.deck.hero,
           deck: deckIndexed,
-          weapons: weaponsIndexed,
+          weapons: weaponsIndexed.length > 0 ? weaponsIndexed : [weaponsSBIndexed.find(w => w.img === 'NONE00')!],
           head: initialEquipment(data.deck.head, data.deck.headSB),
           chest: initialEquipment(data.deck.chest, data.deck.chestSB),
           arms: initialEquipment(data.deck.arms, data.deck.armsSB),
