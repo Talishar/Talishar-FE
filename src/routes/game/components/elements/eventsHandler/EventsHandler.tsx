@@ -5,6 +5,9 @@ import { getGameInfo, submitButton } from 'features/game/GameSlice';
 import React, { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { toast } from 'react-hot-toast';
+import useSound from 'use-sound';
+import { getSettingsEntity } from 'features/options/optionsSlice';
+import shuffleSound from 'sounds/shuffle.m4a';
 import {
   GiDiceSixFacesFive,
   GiDiceSixFacesFour,
@@ -35,6 +38,9 @@ export const EventsHandler = React.memo(() => {
   const [modal, setModal] = useState('');
   const [modalType, setModalType] = useState(ModalType.RequestChat);
   const { playerID } = useAppSelector(getGameInfo, shallowEqual);
+  const settingsData = useAppSelector(getSettingsEntity);
+  const isMuted = settingsData['MuteSound']?.value === '1';
+  const [playShuffleSound] = useSound(shuffleSound, { volume: 0.5 });
   const dispatch = useAppDispatch();
 
   const clickYes = (e: any) => {
@@ -198,6 +204,9 @@ export const EventsHandler = React.memo(() => {
           case "SHUFFLE":
             const PlayerShuffling = event.eventValue !== undefined ? parseInt(event.eventValue) : null;
 
+            if (!isMuted) {
+              playShuffleSound();
+            }
             dispatch(setShuffling({ playerId: PlayerShuffling, isShuffling: true }));
             requestAnimationFrame(() => {
               setTimeout(() => {
@@ -220,7 +229,7 @@ export const EventsHandler = React.memo(() => {
         }
       }
     }
-  }, [events, dispatch, playerID]);
+  }, [events, dispatch, playerID, isMuted, playShuffleSound]);
 
   if (showModal)
     return (
