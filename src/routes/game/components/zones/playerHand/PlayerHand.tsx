@@ -9,6 +9,9 @@ import useWindowDimensions from 'hooks/useWindowDimensions';
 import { AnimatePresence } from 'framer-motion';
 import { createPortal } from 'react-dom';
 import { useNewlyDrawnCards } from 'hooks/useNewlyDrawnCards';
+import useSound from 'use-sound';
+import drawingCardsSound from 'sounds/drawing_cards.m4a';
+import { getSettingsEntity } from 'features/options/optionsSlice';
 
 const DEFAULT_HAND_REORDER_STEP_PX = 120;
 
@@ -32,6 +35,11 @@ export default function PlayerHand() {
   let hasArsenal = true;
 
   const showArsenal = false;
+
+  const settingsData = useAppSelector(getSettingsEntity);
+  const isMuted = settingsData['MuteSound']?.value === '1';
+
+  const [playDrawingCardsSound] = useSound(drawingCardsSound, { volume: 0.5 });
 
   const handCards = useAppSelector(
     (state: RootState) => state.game.playerOne.Hand
@@ -109,6 +117,7 @@ export default function PlayerHand() {
     DEFAULT_HAND_REORDER_STEP_PX
   );
   const handRowRef = useRef<HTMLDivElement | null>(null);
+  const prevPreviewHandIdsRef = useRef<string[] | null>(null);
   const arsenalCards = useAppSelector(
     (state: RootState) => state.game.playerOne.Arsenal
   );
@@ -255,6 +264,25 @@ export default function PlayerHand() {
     setDragStartOrderIds(null);
     setPreviewHandIds(null);
   };
+
+  // Play sound when cards are reordered during drag
+  useEffect(() => {
+    if (previewHandIds && dragStartOrderIds) {
+      const hasPreviousDragOrder = prevPreviewHandIdsRef.current !== null;
+      const hasOrderChanged =
+        !prevPreviewHandIdsRef.current ||
+        previewHandIds.length !== prevPreviewHandIdsRef.current.length ||
+        !previewHandIds.every((id, idx) => id === prevPreviewHandIdsRef.current?.[idx]);
+
+      if (hasPreviousDragOrder && hasOrderChanged && !isMuted) {
+        playDrawingCardsSound();
+      }
+
+      prevPreviewHandIdsRef.current = previewHandIds;
+    } else {
+      prevPreviewHandIdsRef.current = null;
+    }
+  }, [previewHandIds, dragStartOrderIds, isMuted, playDrawingCardsSound]);
 
   useEffect(() => {
     const handRow = handRowRef.current;
