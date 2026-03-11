@@ -117,7 +117,7 @@ export default function PlayerHand() {
     DEFAULT_HAND_REORDER_STEP_PX
   );
   const handRowRef = useRef<HTMLDivElement | null>(null);
-  const prevPreviewHandIdsRef = useRef<string[] | null>(null);
+  const soundPlayedForDragRef = useRef<boolean>(false);
   const arsenalCards = useAppSelector(
     (state: RootState) => state.game.playerOne.Arsenal
   );
@@ -215,6 +215,7 @@ export default function PlayerHand() {
   const handleHandCardDragStart = () => {
     setDragStartOrderIds(orderedHandIds);
     setPreviewHandIds(orderedHandIds);
+    soundPlayedForDragRef.current = false;
   };
 
   const handleHandCardDragMove = (
@@ -263,24 +264,20 @@ export default function PlayerHand() {
   const clearHandDragPreview = () => {
     setDragStartOrderIds(null);
     setPreviewHandIds(null);
+    soundPlayedForDragRef.current = false;
   };
 
-  // Play sound when cards are reordered during drag
+  // Play sound once when card is first moved during drag
   useEffect(() => {
-    if (previewHandIds && dragStartOrderIds) {
-      const hasPreviousDragOrder = prevPreviewHandIdsRef.current !== null;
-      const hasOrderChanged =
-        !prevPreviewHandIdsRef.current ||
-        previewHandIds.length !== prevPreviewHandIdsRef.current.length ||
-        !previewHandIds.every((id, idx) => id === prevPreviewHandIdsRef.current?.[idx]);
+    if (previewHandIds && dragStartOrderIds && !soundPlayedForDragRef.current) {
+      const orderHasChanged =
+        previewHandIds.length !== dragStartOrderIds.length ||
+        !previewHandIds.every((id, idx) => id === dragStartOrderIds[idx]);
 
-      if (hasPreviousDragOrder && hasOrderChanged && !isMuted) {
+      if (orderHasChanged && !isMuted) {
         playDrawingCardsSound();
+        soundPlayedForDragRef.current = true;
       }
-
-      prevPreviewHandIdsRef.current = previewHandIds;
-    } else {
-      prevPreviewHandIdsRef.current = null;
     }
   }, [previewHandIds, dragStartOrderIds, isMuted, playDrawingCardsSound]);
 
