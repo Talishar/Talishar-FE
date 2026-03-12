@@ -102,6 +102,24 @@
   border-color: #4a9eff;
 }
 
+.textarea {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #666;
+  border-radius: 3px;
+  background-color: #2a2a2a;
+  color: #ffffff;
+  box-sizing: border-box;
+  resize: vertical;
+  font-family: inherit;
+}
+
+.textarea:focus {
+  outline: none;
+  border-color: #4a9eff;
+}
+
 .form button {
   padding: 10px 20px;
   background-color: #4a9eff;
