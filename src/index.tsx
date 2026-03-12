@@ -11,6 +11,8 @@ import CookieConsent from 'components/CookieConsent';
 import { initializeAdSense } from 'utils/adsenseInit';
 import { ThemeProvider } from './themes/ThemeContext';
 
+import './i18n';
+
 // Initialize AdSense if user has already consented
 initializeAdSense();
 

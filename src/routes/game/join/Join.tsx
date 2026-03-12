@@ -23,6 +23,8 @@ import { generateCroppedImageUrl } from 'utils/cropImages';
 import { ImageSelect, ImageSelectOption } from 'components/ImageSelect';
 import { GAME_FORMAT, isPreconFormat, PRECON_DECKS } from 'appConstants';
 import { getReadableFormatName } from 'utils/formatUtils';
+import { useTranslation, Trans } from "react-i18next";
+
 
 // Helper function to extract base format type for matching
 // "Open CC", "Competitive CC", "Classic Constructed" all map to "Classic Constructed" base
@@ -77,6 +79,9 @@ const JoinGame = () => {
   const { data, isLoading, isSuccess } = useGetFavoriteDecksQuery(undefined);
   const { isLoggedIn } = useAuth();
 
+  // Initial stuff to allow the lang to change  
+  const { t, i18n, ready } = useTranslation();
+  
   let [{ gameName: searchGameName = '0', playerID = '2', authKey = '' }] =
     useKnownSearchParams();
 
@@ -249,7 +254,7 @@ const JoinGame = () => {
           <div className={styles.formInner}>
             {isPrecon ? (
               <label>
-                Preconstructed Deck
+		{t('JOIN.PRECON')}
                 <ImageSelect
                   id="preconDecks"
                   options={preconDeckOptions}
@@ -258,7 +263,7 @@ const JoinGame = () => {
                     setSelectedPreconDeck(value);
                     setValue('fabdb', value);
                   }}
-                  placeholder="Select a deck"
+                  placeholder={t('JOIN.SELECT_DECK')}
                   aria-invalid={errors.deck?.message ? 'true' : undefined}
                 />
                 <input
@@ -276,7 +281,7 @@ const JoinGame = () => {
               <>
                 {isLoggedIn && !isLoading && (
                   <label>
-                    Selected Deck
+		    {t('JOIN.SELECTED_DECK')}
                     <ImageSelect
                       id="favoriteDecks"
                       options={favoriteDeckOptions}
@@ -285,7 +290,7 @@ const JoinGame = () => {
                         setSelectedFavoriteDeck(value);
                         setValue('favoriteDecks', value);
                       }}
-                      placeholder="Select a deck"
+                      placeholder={t('JOIN.SELECTED_DECK_PLACEHOLDER')}
                       aria-busy={isLoading}
                       aria-invalid={errors.favoriteDecks?.message ? 'true' : undefined}
                     />
@@ -312,10 +317,10 @@ const JoinGame = () => {
                 />
                 <fieldset>
                   <label>
-                  <>
-                    Import Deck{''}
+                    <>
+		      {t('JOIN.IMPORT_DECK')}{''}
                     <span
-                      title="URL from FaBrary.net"
+                      title={t('JOIN.IMPORT_TITLE')}
                       style={{ cursor: 'help', display: 'inline-flex', alignItems: 'center', marginLeft: '4px' }}
                     >
                       <FaQuestionCircle size={14} />
@@ -323,7 +328,7 @@ const JoinGame = () => {
                     <input
                       type="text"
                       id="fabdb"
-                      aria-label="Deck Link - URL from FaBrary.net"
+                      aria-label={t('JOIN.IMPORT_HELP')}
                       {...register('fabdb')}
                       aria-invalid={errors.deck?.message ? 'true' : undefined}
                     />
@@ -346,15 +351,15 @@ const JoinGame = () => {
                         id="favoriteDeck"
                         {...register('favoriteDeck')}
                       />
-                      Save Deck to ❤️ Favorites
+		      {t('JOIN.SAVE_DECK_FAVOURITES')}
                     </label>
                   )}
                   <label style={{ marginTop: '1rem' }}>
-                    Game Format
+		    {t('JOIN.GAME_FORMAT')}
                     <input
                       type="text"
                       id="gameFormat"
-                      aria-label="Game Format"
+                      aria-label={t('JOIN.GAME_FORMAT')}
                       value={getReadableFormatName(gameFormat || '')}
                       disabled
                       readOnly
@@ -366,9 +371,8 @@ const JoinGame = () => {
           </div>
           {!isLoggedIn && (
             <p>
-              <small>
-                You must be <Link to="/user/login">logged in</Link> to join
-                public lobbies.
+              <small>		
+                <Trans i18nKey="LOGIN_REQUIRED">You must be <Link to="/user/login">logged in</Link> to join public lobbies.</Trans>
               </small>
             </p>
           )}
@@ -378,7 +382,7 @@ const JoinGame = () => {
             aria-busy={isSubmitting}
             style={{ marginTop: '27px' }}
           >
-            Join Game
+	    {t('JOIN.JOIN')}
           </button>
           {errors.root?.serverError?.message && (
             <div className={styles.fieldError}>
@@ -395,7 +399,7 @@ const JoinGame = () => {
             navigate(-1);
           }}
         >
-          Back
+	  {t('JOIN.BACK')}
         </button>
       </article>
     </main>
