@@ -46,10 +46,11 @@ function Play({ isRoguelike }: { isRoguelike: boolean }) {
   }, [isRoguelike]);
 
   useEffect(() => {
-    if (gameInfo.gameID && settingsStatus === QUERY_STATUS.IDLE) {
-      dispatch(fetchAllSettings({ game: gameInfo }));
+    if (settingsStatus === QUERY_STATUS.IDLE) {
+      const profileGameInfo = { playerID: 0, gameID: 0, authKey: '', isPrivateLobby: false };
+      dispatch(fetchAllSettings({ game: profileGameInfo }));
     }
-  }, [gameInfo.gameID, settingsStatus]);
+  }, []);
 
   // Dispatch hero info once game state is fully populated
   useEffect(() => {
