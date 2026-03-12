@@ -45,7 +45,7 @@ const LanguageSelector = () => {
             className={styles.socialLink}
             title={t("HEADER.LANGUAGE_SELECTOR.OPTIONS.ENGLISH")}
           >
-            <span>{t("HEADER.LANGUAGE_SELECTOR.OPTIONS.ENGLISH")}</span>
+            {t("HEADER.LANGUAGE_SELECTOR.OPTIONS.ENGLISH")}
           </a>
           <a
 	    onClick={() => changeLanguage("fr")} 
@@ -54,7 +54,7 @@ const LanguageSelector = () => {
             className={styles.socialLink}
 	    title={t("HEADER.LANGUAGE_SELECTOR.OPTIONS.FRENCH")}
           >
-	   <span>{t("HEADER.LANGUAGE_SELECTOR.OPTIONS.FRENCH")}</span>
+	   {t("HEADER.LANGUAGE_SELECTOR.OPTIONS.FRENCH")}
           </a>
         </div>
       )}
