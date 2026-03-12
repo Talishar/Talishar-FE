@@ -20,6 +20,7 @@ import { FaExclamationCircle, FaQuestionCircle, FaChevronUp, FaChevronDown } fro
 import { HEROES_OF_RATHE, CLASS_OF_RATHE } from '../../index/components/filter/constants';
 import { generateCroppedImageUrl } from 'utils/cropImages';
 import { ImageSelect, ImageSelectOption } from 'components/ImageSelect';
+import { useTranslation } from "react-i18next";
 
 const getCookie = (name: string): string | null => {
   const value = `; ${document.cookie}`;
@@ -61,6 +62,9 @@ const CreateGame = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [createGame, createGameResult] = useCreateGameMutation();
 
+  // Initial stuff to allow the lang to change  
+  const { t, i18n, ready } = useTranslation();
+  
   const {
     formState: { isSubmitting, errors },
     register,
@@ -429,7 +433,7 @@ const CreateGame = () => {
     <div>
       <article className={styles.formContainer}>
         <div className={styles.header}>
-          <h3 className={styles.title}>Create New Game</h3>
+          <h3 className={styles.title}>{t('MENU.CREATE_GAME.TITLE')}</h3>
           <button
             type="button"
             className={styles.toggleButton}
@@ -448,7 +452,7 @@ const CreateGame = () => {
             <div className={styles.formInner}>
             {isLoggedIn && !isLoading && !isPreconFormat(formFormat || selectedFormat) && (
               <label>
-                Selected Deck
+		{t('MENU.CREATE_GAME.SELECTED_DECK')}
                 <ImageSelect
                   id="favoriteDecks"
                   options={favoriteDeckOptions}
@@ -457,7 +461,7 @@ const CreateGame = () => {
                     setSelectedFavoriteDeck(value);
                     setValue('favoriteDecks', value);
                   }}
-                  placeholder="Select a deck"
+                  placeholder={t('MENU.CREATE_GAME.SELECTED_DECK_PLACEHOLDER')}
                   aria-busy={isLoading}
                   aria-invalid={errors.favoriteDecks?.message ? 'true' : undefined}
                 />
@@ -486,7 +490,7 @@ const CreateGame = () => {
               <label>
                 {isPreconFormat(formFormat || selectedFormat) ? (
                   <>
-                    Preconstructed Deck
+		    {t('HEADER.CREATE_GAME.PRECONSTRUCTED_DECK')}
                     <ImageSelect
                       id="preconDecks"
                       options={preconDeckOptions}
@@ -495,7 +499,7 @@ const CreateGame = () => {
                         setSelectedPreconDeck(value);
                         setValue('fabdb', value);
                       }}
-                      placeholder="Select a deck"
+                      placeholder={t('HEADER.CREATE_GAME.SELECT_DECK_PLACEHOLDER')}
                       aria-invalid={errors.deck?.message ? 'true' : undefined}
                     />
                     <input
@@ -506,9 +510,9 @@ const CreateGame = () => {
                   </>
                 ) : (
                   <>
-                    Import Deck{''}
+                    {t('MENU.CREATE_GAME.IMPORT')}{''}
                     <span
-                      title="URL from FaBrary.net"
+                      title={t('MENU.CREATE_GAME.IMPORT_TITLE')}
                       style={{ cursor: 'help', display: 'inline-flex', alignItems: 'center', marginLeft: '4px' }}
                     >
                       <FaQuestionCircle size={14} />
@@ -516,7 +520,7 @@ const CreateGame = () => {
                     <input
                       type="text"
                       id="fabdb"
-                      aria-label="Deck Link - URL from FaBrary.net"
+                      aria-label={t('MENU.CREATE_GAME.IMPORT_HELP')}
                       placeholder="https://fabrary.net/decks/…"
                       {...register('fabdb')}
                       aria-invalid={errors.deck?.message ? 'true' : undefined}
@@ -541,12 +545,12 @@ const CreateGame = () => {
                     id="favoriteDeck"
                     {...register('favoriteDeck')}
                   />
-                  Save Deck to ❤️ Favorites
+                  {t('MENU.CREATE_GAME.SAVE_DECK_FAVOURITES')}
                 </label>
               )}
             </fieldset>
               <label>
-                Game Description
+                {t('MENU.CREATE_GAME.GAME_DESCRIPTION')}		
                 <select
                   id="gameDescription"
                   aria-label="Game Description"
@@ -560,37 +564,37 @@ const CreateGame = () => {
                     register('gameDescription').onChange(e);
                   }}
                 >
-                  <option value="">Default Game #</option>
-                  <option value="Looking for best deck in the format">Looking for best deck in the format</option>
-                  <option value="Looking for meta heroes">Looking for meta heroes</option>
-                  <option value="Looking for a specific hero">Looking for a specific hero</option>
-                  <option value="No interest in playing against specific hero">No interest in playing against specific hero</option>
-                  <option value="Looking for a specific class">Looking for a specific class</option>
-                  <option value="Looking for a quick game">Looking for a quick game</option>
-                  <option value="Playing spicy brews">Playing spicy brews</option>
-                  <option value="Casual play">Casual play</option>
-                  <option value="New player help">New player help</option>
-                  <option value="Learning a new hero">Learning a new hero</option>
+                  <option value="">{t("MENU.CREATE_GAME.GAME_DESCRIPTIONS.DEFAULT")}</option>
+                  <option value="Looking for best deck in the format">{t("MENU.CREATE_GAME.GAME_DESCRIPTIONS.BEST_DECK")}</option>
+                  <option value="Looking for meta heroes">{t("MENU.CREATE_GAME.GAME_DESCRIPTIONS.META_HEROES")}</option>
+                  <option value="Looking for a specific hero">{t("MENU.CREATE_GAME.GAME_DESCRIPTIONS.SPECIFIC_HERO")}</option>
+                  <option value="No interest in playing against specific hero">{t("MENU.CREATE_GAME.GAME_DESCRIPTIONS.SPECIFIC_HERO")}</option>
+                  <option value="Looking for a specific class">{t("MENU.CREATE_GAME.GAME_DESCRIPTIONS.SPECIFIC_CLASS")}</option>
+                  <option value="Looking for a quick game">{t("MENU.CREATE_GAME.GAME_DESCRIPTIONS.QUICK")}</option>
+                  <option value="Playing spicy brews">{t("MENU.CREATE_GAME.GAME_DESCRIPTIONS.SPICY_BREWS")}</option>
+                  <option value="Casual play">{t("MENU.CREATE_GAME.GAME_DESCRIPTIONS.CASUAL")}</option>
+                  <option value="New player help">{t("MENU.CREATE_GAME.GAME_DESCRIPTIONS.NEW_PLAYER")}</option>
+                  <option value="Learning a new hero">{t("MENU.CREATE_GAME.GAME_DESCRIPTIONS.NEW_HERO")}</option>
                 </select>
               </label>
               
               {gameDescription === 'Looking for a specific hero' && (
                 <div className={styles.heroSelection}>
                   <div className={styles.heroSelectionHeader}>
-                    <label>Select Heroes (up to 3):</label>
+                    <label>{t('MENU.CREATE_GAME.GAME_DESCRIPTIONS.HERO_SELECT.SELECT_HEROES', { amount:'3' })}</label>
                     {selectedHeroes.length > 0 && (
                       <a href="#" onClick={(e) => { e.preventDefault(); clearSelections(); }} className={styles.clearSelectionLink}>
-                        Clear Selection
+			{t('MENU.CREATE_GAME.GAME_DESCRIPTIONS.HERO_SELECT.CLEAR')}
                       </a>
                     )}
                   </div>
                   <input
                     type="text"
-                    placeholder="Search heroes..."
+                    placeholder={t('MENU.CREATE_GAME.GAME_DESCRIPTIONS.HERO_SELECT.SEARCH_HEROES_PLACEHOLDER')}
                     value={heroSearch}
                     onChange={(e) => setHeroSearch(e.target.value)}
                     className={styles.searchInput}
-                    aria-label="Search heroes"
+                    aria-label={t('MENU.CREATE_GAME.GAME_DESCRIPTIONS.HERO_SELECT.SEARCH_HEROES')}
                   />
                   <div className={styles.heroCheckboxes}>
                     {uniqueHeroes
@@ -611,7 +615,7 @@ const CreateGame = () => {
                   </div>
                   {selectedHeroes.length > 0 && (
                     <div className={styles.selectedHeroesPreview}>
-                      Preview: Looking for {selectedHeroes.join(', ')}
+		      {t('MENU.CREATE_GAME.GAME_DESCRIPTIONS.HERO_SELECT.PREVIEW')}{selectedHeroes.join(', ')}
                     </div>
                   )}
                 </div>
@@ -619,20 +623,20 @@ const CreateGame = () => {
               {gameDescription === 'No interest in playing against specific hero' && (
                 <div className={styles.heroSelection}>
                   <div className={styles.heroSelectionHeader}>
-                    <label>Select Heroes (up to 3):</label>
+                    <label>{t('MENU.CREATE_GAME.GAME_DESCRIPTIONS.HERO_SELECT.SELECT_HEROES', { amount: '3' })}</label>
                     {selectedHeroes.length > 0 && (
                       <a href="#" onClick={(e) => { e.preventDefault(); clearSelections(); }} className={styles.clearSelectionLink}>
-                        Clear Selection
+			{t('MENU.CREATE_GAME.GAME_DESCRIPTIONS.HERO_SELECT.CLEAR')}
                       </a>
                     )}
                   </div>
                   <input
                     type="text"
-                    placeholder="Search heroes..."
+                    placeholder={t('MENU.CREATE_GAME.GAME_DESCRIPTIONS.HERO_SELECT.SEARCH_HEROES_PLACEHOLDER')}
                     value={heroSearch}
                     onChange={(e) => setHeroSearch(e.target.value)}
                     className={styles.searchInput}
-                    aria-label="Search heroes"
+                    aria-label={t('MENU.CREATE_GAME.GAME_DESCRIPTIONS.HERO_SELECT.SEARCH_HEROES')}
                   />
                   <div className={styles.heroCheckboxes}>
                     {uniqueHeroes
@@ -653,7 +657,7 @@ const CreateGame = () => {
                   </div>
                   {selectedHeroes.length > 0 && (
                     <div className={styles.selectedHeroesPreview}>
-                      Preview: Not interested in {selectedHeroes.join(', ')}
+		      {t('MENU.CREATE_GAME.GAME_DESCRIPTIONS.HERO_SELECT.PREVIEW_NOT')}{selectedHeroes.join(', ')}
                     </div>
                   )}
                 </div>
@@ -661,7 +665,7 @@ const CreateGame = () => {
               {gameDescription === 'Looking for a specific class' && (
                 <div className={styles.heroSelection}>
                   <div className={styles.heroSelectionHeader}>
-                    <label>Select Classes (up to 3):</label>
+                    <label>{t('MENU.CREATE_GAME.GAME_DESCRIPTIONS.HERO_SELECT.SELECT_CLASSES', { amount: '3' })}</label>
                     {selectedClasses.length > 0 && (
                       <a href="#" onClick={(e) => { e.preventDefault(); clearSelections(); }} className={styles.clearSelectionLink}>
                         Clear Selection
@@ -670,11 +674,11 @@ const CreateGame = () => {
                   </div>
                   <input
                     type="text"
-                    placeholder="Search classes..."
+                    placeholder={t('MENU.CREATE_GAME.GAME_DESCRIPTIONS.HERO_SELECT.SEARCH_CLASSES_PLACEHOLDER')}
                     value={classSearch}
                     onChange={(e) => setClassSearch(e.target.value)}
                     className={styles.searchInput}
-                    aria-label="Search classes"
+                    aria-label={t('MENU.CREATE_GAME.GAME_DESCRIPTIONS.HERO_SELECT.SEARCH_CLASSES')}
                   />
                   <div className={styles.heroCheckboxes}>
                     {uniqueClasses
@@ -695,16 +699,16 @@ const CreateGame = () => {
                   </div>
                   {selectedClasses.length > 0 && (
                     <div className={styles.selectedHeroesPreview}>
-                      Preview: Looking for {selectedClasses.join(', ')}
+                      {t('MENU.CREATE_GAME.GAME_DESCRIPTIONS.HERO_SELECT.PREVIEW')}{selectedClasses.join(', ')}
                     </div>
                   )}
                 </div>
               )}
-            <label>
-              Format
+              <label>
+		{t('MENU.CREATE_GAME.FORMAT')}
               <select
                 id="format"
-                aria-label="format"
+                aria-label={t('MENU.CREATE_GAME.FORMAT')}
                 {...register('format')}
                 aria-invalid={errors.format?.message ? 'true' : undefined}
                 onChange={(e) => {
@@ -712,44 +716,44 @@ const CreateGame = () => {
                   register('format').onChange(e);
                 }}
               >
-                <optgroup label="Popular Formats">
-                  <option value={GAME_FORMAT.CLASSIC_CONSTRUCTED}>Classic Constructed</option>
-                  <option value={GAME_FORMAT.SAGE}>Silver Age</option>
-                  <option value={GAME_FORMAT.LLCC}>Living Legend</option>
+                <optgroup label={t('MENU.CREATE_GAME.FORMATS.POPULAR')}>
+                  <option value={GAME_FORMAT.CLASSIC_CONSTRUCTED}>{t('MENU.CREATE_GAME.FORMATS.CC')}</option>
+                  <option value={GAME_FORMAT.SAGE}>{t('MENU.CREATE_GAME.FORMATS.SAGE')}</option>
+                  <option value={GAME_FORMAT.LLCC}>{t('MENU.CREATE_GAME.FORMATS.LL')}</option>
                 </optgroup>
-                <optgroup label="Competitive Formats">
-                  <option value={GAME_FORMAT.COMPETITIVE_CC}>Competitive Classic Constructed</option>
-                  <option value={GAME_FORMAT.COMPETITIVE_SAGE}>Competitive Silver Age</option>
-                  <option value={GAME_FORMAT.COMPETITIVE_LL}>Competitive Living Legend</option>
+                <optgroup label={t('MENU.CREATE_GAME.FORMATS.COMPETITIVE')}>
+                  <option value={GAME_FORMAT.COMPETITIVE_CC}>{t('MENU.CREATE_GAME.FORMATS.COMPETITIVE_CC')}</option>
+                  <option value={GAME_FORMAT.COMPETITIVE_SAGE}>{t('MENU.CREATE_GAME.FORMATS.COMPETITIVE_SAGE')}</option>
+                  <option value={GAME_FORMAT.COMPETITIVE_LL}>{t('MENU.CREATE_GAME.FORMATS.COMPETITIVE_LL')}</option>
                 </optgroup>
-                <optgroup label="Future Formats (Play with spoiled cards!)">
-                  <option value={GAME_FORMAT.OPEN_CC}>Future Classic Constructed</option>
-                  <option value={GAME_FORMAT.OPEN_LL_CC}>Future Living Legend</option>
-                  <option value={GAME_FORMAT.OPEN_SAGE}>Future Silver Age</option>
+                <optgroup label={t('MENU.CREATE_GAME.FORMATS.FUTURE_FORMATS')}>
+                  <option value={GAME_FORMAT.OPEN_CC}>{t('MENU.CREATE_GAME.FORMATS.FUTURE_CC')}</option>
+                  <option value={GAME_FORMAT.OPEN_LL_CC}>{t('MENU.CREATE_GAME.FORMATS.FUTURE_LL')}</option>
+                  <option value={GAME_FORMAT.OPEN_SAGE}>{t('MENU.CREATE_GAME.FORMATS.FUTURE_SAGE')}</option>
                 </optgroup>
-                <optgroup label="Other Formats">
-                  <option value={GAME_FORMAT.PRECON}>Preconstructed Decks</option>
-                  <option value={GAME_FORMAT.BLITZ}>Blitz</option>
-                  <option value={GAME_FORMAT.DRAFT}>Draft / Limited</option>
-                  <option value={GAME_FORMAT.OPEN}>Open (no restrictions)</option>
+                <optgroup label={t('MENU.CREATE_GAME.FORMATS.OTHER')}>
+                  <option value={GAME_FORMAT.PRECON}>{t('MENU.CREATE_GAME.FORMATS.PRECON')}</option>
+                  <option value={GAME_FORMAT.BLITZ}>{t('MENU.CREATE_GAME.FORMATS.BLITZ')}</option>
+                  <option value={GAME_FORMAT.DRAFT}>{t('MENU.CREATE_GAME.FORMATS.DRAFT')}</option>
+                  <option value={GAME_FORMAT.OPEN}>{t('MENU.CREATE_GAME.FORMATS.OPEN')}</option>
                 </optgroup>
               </select>
             </label>
             <fieldset>
               <label>
-                Visibility
+		{t('MENU.CREATE_GAME.VISIBILITY')}
                 <select
                   id="visibility"
-                  aria-label="Visibility"
+                  aria-label={t('MENU.CREATE_GAME.VISIBILITY')}
                   {...register('visibility')}
                   aria-invalid={errors.visibility?.message ? 'true' : undefined}
                 >
                   {isLoggedIn && (
-                    <option value={GAME_VISIBILITY.PUBLIC}>Public</option>
+                    <option value={GAME_VISIBILITY.PUBLIC}>{t('MENU.CREATE_GAME.VISIBILITIES.PUBLIC')}</option>
                   )}
-                  <option value={GAME_VISIBILITY.PRIVATE}>Private</option>
+                  <option value={GAME_VISIBILITY.PRIVATE}>{t('MENU.CREATE_GAME.VISIBILITIES.PRIVATE')}</option>
                   {isLoggedIn && (
-                    <option value={GAME_VISIBILITY.FRIENDS_ONLY}>Friends Only</option>
+                    <option value={GAME_VISIBILITY.FRIENDS_ONLY}>{t('MENU.CREATE_GAME.VISIBILITIES.FRIENDS')}</option>
                   )}
                 </select>
               </label>
@@ -758,18 +762,18 @@ const CreateGame = () => {
                   type="checkbox"
                   role="switch"
                   id="deckTestMode"
-                  aria-label="Single Player"
+                  aria-label={t('MENU.CREATE_GAME.SINGLE_PLAYER')}
                   {...register('deckTestMode')}
                   aria-invalid={
                     errors.deckTestMode?.message ? 'true' : undefined
                   }
                 />
-                Single Player 🤖
+		{t('MENU.CREATE_GAME.SINGLE_PLAYER')}
                 <div>&nbsp;</div>
               </label>
               {isLoggedIn && deckTestMode && (
                 <label>
-                  AI Deck
+		  {t('MENU.CREATE_GAME.AI_DECK')}
                   <select
                     id="deckTestDeck"
                     aria-label="deckTestDeck"
@@ -792,7 +796,7 @@ const CreateGame = () => {
             disabled={isSubmitting}
             aria-busy={isSubmitting}
           >
-            Create Game
+	    {t('MENU.CREATE_GAME.TITLE')}	   
           </button>
           {errors.root?.serverError?.message && (
             <div className={styles.fieldError}>

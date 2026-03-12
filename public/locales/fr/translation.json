@@ -1,5 +1,4 @@
 {
-  "Welcome to React": "Bienvenue à React et react-i18next",
   "HEADER":{
     "LOGOUT":"Déconnexion",
     "LOGIN":"Se Connecter",
@@ -18,6 +17,71 @@
 	"ENGLISH":"Anglais",
 	"FRENCH":"Français"
       }
+    }
+  },
+  "MENU":{
+    "CREATE_GAME": {
+      "TITLE": "Créer une partie",
+      "IMPORT": "Importer un deck",
+      "IMPORT_TITLE": "URL de FaBrary.net",
+      "IMPORT_HELP": "Lien du deck — URL de FaBrary.net",
+      "SAVE_DECK_FAVOURITES": "Enregistrer le deck dans les ❤️ Favoris",
+      "SELECTED_DECK": "Deck sélectionné",
+      "SELECTED_DECK_PLACEHOLDER": "Sélectionner un deck",
+      "PRECONSTRUCTED_DECK": "Deck préconstruit",
+      "GAME_DESCRIPTION": "Description de la partie",
+      "GAME_DESCRIPTIONS": {
+	"DEFAULT": "Partie par défaut #",
+	"BEST_DECK": "À la recherche du meilleur deck du format",
+	"META_HEROES": "Recherche de héros méta",
+	"SPECIFIC_HERO": "Recherche d’un héros précis",
+	"NOT_SPECIFIC_HERO": "Pas intéressé par un héros précis",
+	"SPECIFIC_CLASS": "Recherche d’une classe spécifique",
+	"QUICK": "Recherche d’une partie rapide",
+	"SPICY_BREWS": "Jouer des decks originaux",
+	"CASUAL": "Partie détente",
+	"NEW_PLAYER": "Aide pour nouveaux joueurs",
+	"NEW_HERO": "Apprendre un nouveau héros",
+	"HERO_SELECT": {
+	  "SELECT_HEROES": "Sélectionner des héros (jusqu’à {{amount}}) :",
+	  "SELECT_CLASSES": "Sélectionner des classes (jusqu’à {{amount}}) :",
+	  "CLEAR": "Effacer la sélection",
+	  "SEARCH_HEROES": "Rechercher des héros",
+	  "SEARCH_HEROES_PLACEHOLDER": "Rechercher des héros...",
+	  "SEARCH_CLASSES": "Rechercher des classes",
+	  "SEARCH_CLASSES_PLACEHOLDER": "Rechercher des classes...",
+	  "PREVIEW": "Aperçu : Recherche ",
+	  "PREVIEW_NOT": "Aperçu : Ne recherche pas "
+	}
+      },
+      "FORMAT": "Format",
+      "FORMATS": {
+	"POPULAR": "Formats populaires",
+	"CC": "Classic Constructed",
+	"SAGE": "Silver Age",
+	"LL": "Living Legend",
+	"COMPETITIVE": "Formats compétitifs",
+	"COMPETITIVE_CC": "Classic Constructed compétitif",
+	"COMPETITIVE_SAGE": "Silver Age compétitif",
+	"COMPETITIVE_LL": "Living Legend compétitif",
+	"FUTURE_FORMATS": "Formats futurs (jouer avec les cartes révélées !)",
+	"FUTURE_CC": "Future Classic Constructed",
+	"FUTURE_LL": "Future Living Legend",
+	"FUTURE_SAGE": "Future Silver Age",
+	"OTHER": "Autres formats",
+	"PRECON": "Decks préconstruits",
+	"BLITZ": "Blitz",
+	"DRAFT": "Draft / Limité",
+	"OPEN": "Ouvert (aucune restriction)"
+      },
+      "VISIBILITY": "Visibilité",
+      "VISIBILITIES": {
+	"PUBLIC": "Public",
+	"PRIVATE": "Privé",
+	"FRIENDS": "Amis seulement"
+      },
+      "SINGLE_PLAYER": "Solo",
+      "AI_DECK": "Deck de l’IA"
     }
   }
 }

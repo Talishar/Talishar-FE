@@ -1,5 +1,4 @@
 {
-  "Welcome to React": "Welcome to React and react-i18next",
   "HEADER": {
     "LOGOUT":"Logout",
     "LOGIN":"Login",
@@ -18,6 +17,71 @@
 	"ENGLISH":"English",
 	"FRENCH":"French"
       }
+    }
+  },
+  "MENU":{
+    "CREATE_GAME":{
+      "TITLE":"Create Game",
+      "IMPORT":"Import Deck",
+      "IMPORT_TITLE":"URL from FaBrary.net",      
+      "IMPORT_HELP":"Deck Link - URL from FaBrary.net",
+      "SAVE_DECK_FAVOURITES":"Save Deck to ❤️ Favorites",
+      "SELECTED_DECK":"Selected Deck",
+      "SELECTED_DECK_PLACEHOLDER":"Select a deck",
+      "PRECONSTRUCTED_DECK":"Preconstructed deck",
+      "GAME_DESCRIPTION":"Game Description",
+      "GAME_DESCRIPTIONS":{
+	"DEFAULT":"Default Game #",
+	"BEST_DECK":"Looking for best deck in the format",
+	"META_HEROES":"Looking for meta heroes",
+	"SPECIFIC_HERO":"Looking for a specific hero",
+	"NOT_SPECIFIC_HERO":"No interest in playing against specific hero",
+	"SPECIFIC_CLASS":"Looking for a specific class",
+	"QUICK":"Looking for a quick game",
+	"SPICY_BREWS":"Playing spicy brews",
+	"CASUAL":"Casual play",
+	"NEW_PLAYER":"New player help",
+	"NEW_HERO":"Learning a new hero",
+	"HERO_SELECT":{
+	  "SELECT_HEROES":"Select Heroes (up to {{amount}}):",
+	  "SELECT_CLASSES":"Select Classes (up to {{amount}}):",	  
+	  "CLEAR":"Clear Selection",
+	  "SEARCH_HEROES":"Search heroes",
+	  "SEARCH_HEROES_PLACEHOLDER":"Search heroes...",
+	  "SEARCH_CLASSES":"Search classes",
+	  "SEARCH_CLASSES_PLACEHOLDER":"Search classes...",	  
+	  "PREVIEW":"Preview: Looking for ",
+	  "PREVIEW":"Preview: Not looking for "
+	}
+      },
+      "FORMAT":"Format",
+      "FORMATS":{
+	"POPULAR":"Popular Formats",
+	"CC":"Classic Constructed",
+	"SAGE":"Silver Age",
+	"LL":"Living Legend",
+	"COMPETITIVE":"Competitive Formats",
+	"COMPETITIVE_CC":"Competitive Clasic Constructed",
+	"COMPETITIVE_SAGE":"Competitive Silver Age",
+	"COMPETITIVE_LL":"Competitive Living Legend",
+	"FUTURE_FORMATS":"Future Formats (Play with spoiled cards!)",
+	"FUTURE_CC":"Fututure Classic Constructed",
+	"FUTURE_LL":"Future Living Legend",
+	"FUTURE_SAGE":"Future Silver Age",
+	"OTHER":"Other Formats",
+	"PRECON":"Preconstructed Decks",
+	"BLITZ":"Blitz",
+	"DRAFT":"Draft / Limited",
+	"OPEN":"Open (no restrictions)"
+      },
+      "VISIBILITY":"Visibility",
+      "VISIBILITIES":{
+	"PUBLIC":"Public",
+	"PRIVATE":"Private",
+	"FRIENDS":"Friends Only"
+      },
+      "SINGLE_PLAYER":"Single Player",
+      "AI_DECK":"AI Deck"
     }
   }
 }
