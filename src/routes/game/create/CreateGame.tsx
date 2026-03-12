@@ -568,7 +568,7 @@ const CreateGame = () => {
 																																																											   <option value="Looking for best deck in the format">{t("MENU.CREATE_GAME.GAME_DESCRIPTIONS.BEST_DECK")}</option>
 																																																											   <option value="Looking for meta heroes">{t("MENU.CREATE_GAME.GAME_DESCRIPTIONS.META_HEROES")}</option>
 																																																											   <option value="Looking for a specific hero">{t("MENU.CREATE_GAME.GAME_DESCRIPTIONS.SPECIFIC_HERO")}</option>
-																																																											   <option value="No interest in playing against specific hero">{t("MENU.CREATE_GAME.GAME_DESCRIPTIONS.SPECIFIC_HERO")}</option>
+																																																											   <option value="No interest in playing against specific hero">{t("MENU.CREATE_GAME.GAME_DESCRIPTIONS.NOT_SPECIFIC_HERO")}</option>
 																																																											   <option value="Looking for a specific class">{t("MENU.CREATE_GAME.GAME_DESCRIPTIONS.SPECIFIC_CLASS")}</option>
 																																																											   <option value="Looking for a quick game">{t("MENU.CREATE_GAME.GAME_DESCRIPTIONS.QUICK")}</option>
 																																																											   <option value="Playing spicy brews">{t("MENU.CREATE_GAME.GAME_DESCRIPTIONS.SPICY_BREWS")}</option>
@@ -780,7 +780,7 @@ const CreateGame = () => {
 																																																											       {...register('deckTestDeck')}
 																																																											       aria-invalid={errors.format?.message ? 'true' : undefined}
 																																																											     >
-																																																											       <option value={AI_DECK.COMBAT_DUMMY}>Practice Dummy</option>
+																																																											       <option value={AI_DECK.BAT_DUMMY}>Practice Dummy</option>
 																																																											       <option value={AI_DECK.IRABLITZ}>
 																																																												 Flic Flak Ira (Blitz)
 																																																											       </option>
