@@ -83,5 +83,18 @@
       "SINGLE_PLAYER":"Single Player",
       "AI_DECK":"AI Deck"
     }
+  },
+  "JOIN":{
+    "PRECON":"Preconstructed Deck",    
+    "IMPORT":"Import Deck",
+    "IMPORT_TITLE":"URL from FaBrary.net",      
+    "IMPORT_HELP":"Deck Link - URL from FaBrary.net",
+    "SAVE_DECK_FAVOURITES":"Save Deck to ❤️ Favorites",
+    "SELECTED_DECK":"Selected Deck",
+    "SELECTED_DECK_PLACEHOLDER":"Select a deck",
+    "GAME_FORMAT":"Game Format",
+    "LOGIN_REQUIRED":"You must be <1>logged in</1> to join public lobbies.",
+    "JOIN":"Join Game",
+    "BACK":"Back"    
   }
 }
