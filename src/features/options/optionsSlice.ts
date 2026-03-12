@@ -88,14 +88,15 @@ export const fetchAllSettings = createAsyncThunk(
 
 export const updateOptions = createAsyncThunk(
   'options/setSettings',
-  async ({ game, settings }: { game: GameStaticInfo; settings: Setting[] }) => {
+  async ({ game, settings, userID }: { game: GameStaticInfo; settings: Setting[]; userID?: string }) => {
     const queryURL = `${BACKEND_URL}${URL_END_POINT.PROCESS_INPUT_POST}`;
     const payload = {
       playerID: game.playerID,
       gameName: game.gameID,
       authKey: game.authKey,
       mode: PROCESS_INPUT.CHANGE_SETTING,
-      submission: { settings: [...settings] }
+      submission: { settings: [...settings] },
+      userID: userID
     };
 
     try {

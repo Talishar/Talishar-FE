@@ -54,9 +54,9 @@ const HeroVsHeroIntro = () => {
   const displayYourHeroName = formatHeroName(yourHero) || 'Your Hero';
   const displayOpponentHeroName = formatHeroName(opponentHero) || 'Opponent';
 
-  // Auto-dismiss after 2.5 seconds
+  // Auto-dismiss after 2.5 seconds, but only after settings have loaded
   useEffect(() => {
-    if (!isVisible) return;
+    if (!isVisible || !settingsData) return;
 
     const timer = setTimeout(() => {
       setIsVisible(false);
@@ -67,7 +67,7 @@ const HeroVsHeroIntro = () => {
 
     return () => clearTimeout(timer);
 
-  }, [isVisible, dispatch, gameID, gameGUID]);
+  }, [isVisible, dispatch, gameID, gameGUID, settingsData]);
   
   // Get patron status
   const yourPatronStatus = playerID === 1 

@@ -15,6 +15,7 @@ import {
   Setting,
   updateOptions
 } from 'features/options/optionsSlice';
+import { selectCurrentUser } from 'features/auth/authSlice';
 import { QUERY_STATUS } from 'appConstants';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import { useEffect } from 'react';
@@ -27,7 +28,7 @@ import LanguageSelector from 'components/LanguageSelector/LanguageSelector';
 const SettingsPage = () => {
   usePageTitle('Settings');
   const settingsData = useAppSelector(getSettingsEntity);
-  const isLoading = useAppSelector(getSettingsStatus);
+  const currentUserID = useAppSelector(selectCurrentUser);
   const dispatch = useAppDispatch();
   const [windowWidth] = useWindowDimensions();
   const isMobile = windowWidth < 768;
@@ -45,16 +46,15 @@ const SettingsPage = () => {
 
   // fetch all settings when component is loaded
   useEffect(() => {
-    if (isLoading === QUERY_STATUS.IDLE) {
-      dispatch(fetchAllSettings({ game: profileGameInfo }));
-    }
-  }, [dispatch, isLoading]);
+    dispatch(fetchAllSettings({ game: profileGameInfo }));
+  }, [dispatch]);
 
   const handleSettingsChange = ({ name, value }: Setting) => {
     dispatch(
       updateOptions({
         game: profileGameInfo,
-        settings: [{ name: name, value: value }]
+        settings: [{ name: name, value: value }],
+        userID: currentUserID ? String(currentUserID) : undefined
       })
     );
   };
