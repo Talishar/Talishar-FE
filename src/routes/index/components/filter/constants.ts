@@ -114,6 +114,7 @@ export const HEROES_OF_RATHE: {
   { value: 'SEA083', label: 'Marlynn', young: true },
   { value: 'HER123', label: 'Ira Scarlet Revenger' },
   { value: 'MPG001', label: 'Valda Seismic Impact' },
+  { value: 'HER135', label: 'Valda Seismic Impact' },
   { value: 'SEA123', label: 'Scurv Stowaway', young: true },
   { value: 'SUP001', label: 'Tuffnut Bumbling Hulkster' },
   { value: 'SUP002', label: 'Tuffnut', young: true },
