@@ -45,4 +45,3 @@ export interface FriendListAPIResponse {
   requests?: FriendRequest[];
   sentRequests?: SentFriendRequest[];
 }
-

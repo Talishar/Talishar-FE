@@ -4,7 +4,14 @@ import Player from 'interface/Player';
 import { useAppSelector } from 'app/Hooks';
 import { useState, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { useAddFriendMutation, useGetSentRequestsQuery, useCancelRequestMutation, useBlockUserMutation, useGetBlockedUsersQuery, useUnblockUserMutation } from 'features/api/apiSlice';
+import {
+  useAddFriendMutation,
+  useGetSentRequestsQuery,
+  useCancelRequestMutation,
+  useBlockUserMutation,
+  useGetBlockedUsersQuery,
+  useUnblockUserMutation
+} from 'features/api/apiSlice';
 import { toast } from 'react-hot-toast';
 import { MdPersonAdd } from 'react-icons/md';
 import { MdBlock } from 'react-icons/md';
@@ -21,18 +28,30 @@ export default function PlayerName(player: Player) {
   const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
   const [playerNote, setPlayerNote] = useState('');
   const [isNoteTooltipOpen, setIsNoteTooltipOpen] = useState(false);
-  const [noteTooltipPosition, setNoteTooltipPosition] = useState({ top: 0, left: 0 });
+  const [noteTooltipPosition, setNoteTooltipPosition] = useState({
+    top: 0,
+    left: 0
+  });
   const dropdownRef = useRef<HTMLDivElement>(null);
   const noteButtonRef = useRef<HTMLButtonElement>(null);
 
-  const playerID = useAppSelector((state: RootState) => state.game.gameInfo.playerID);
-  const spectatorCameraView = useAppSelector((state: RootState) => state.game.spectatorCameraView);
+  const playerID = useAppSelector(
+    (state: RootState) => state.game.gameInfo.playerID
+  );
+  const spectatorCameraView = useAppSelector(
+    (state: RootState) => state.game.spectatorCameraView
+  );
 
-  const isStreamerMode = String(useSetting({ settingName: IS_STREAMER_MODE })?.value) === '1';
+  const isStreamerMode =
+    String(useSetting({ settingName: IS_STREAMER_MODE })?.value) === '1';
 
   // Get both player names
-  const playerOneName = useAppSelector((state: RootState) => state.game.playerOne.Name);
-  const playerTwoName = useAppSelector((state: RootState) => state.game.playerTwo.Name);
+  const playerOneName = useAppSelector(
+    (state: RootState) => state.game.playerOne.Name
+  );
+  const playerTwoName = useAppSelector(
+    (state: RootState) => state.game.playerTwo.Name
+  );
 
   const getDisplayedPlayerNumber = () => {
     if (playerID === 3) {
@@ -168,22 +187,30 @@ export default function PlayerName(player: Player) {
   const [blockUser] = useBlockUserMutation();
   const [unblockUser] = useUnblockUserMutation();
 
-  const { data: sentData, refetch: refetchSent } = useGetSentRequestsQuery(undefined);
-  const { data: blockedData, refetch: refetchBlocked } = useGetBlockedUsersQuery(undefined);
+  const { data: sentData, refetch: refetchSent } =
+    useGetSentRequestsQuery(undefined);
+  const { data: blockedData, refetch: refetchBlocked } =
+    useGetBlockedUsersQuery(undefined);
 
   // Create maps for username to userId lookup
   const sentRequestsByUsername = new Map(
-    sentData?.sentRequests?.map((req: any) => [req.recipientUsername, req.recipientUserId]) || []
+    sentData?.sentRequests?.map((req: any) => [
+      req.recipientUsername,
+      req.recipientUserId
+    ]) || []
   );
-  
+
   const blockedUsersByUsername = new Map(
-    blockedData?.blockedUsers?.map((user: any) => [user.username, user.blockedUserId]) || []
+    blockedData?.blockedUsers?.map((user: any) => [
+      user.username,
+      user.blockedUserId
+    ]) || []
   );
 
   // Check if current opponent has a sent request or is blocked
   const hasRequestSent = sentRequestsByUsername.has(playerName);
   const isBlocked = blockedUsersByUsername.has(playerName);
-  
+
   // Get the user IDs for canceling requests and unblocking
   const sentRequestUserId = sentRequestsByUsername.get(playerName);
   const blockedUserId = blockedUsersByUsername.get(playerName);
@@ -214,7 +241,10 @@ export default function PlayerName(player: Player) {
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         // Check if the click is on the dropdown portal
         const dropdown = document.querySelector(`.${styles.dropdown}`);
         if (dropdown && dropdown.contains(event.target as Node)) {
@@ -226,7 +256,8 @@ export default function PlayerName(player: Player) {
 
     if (isDropdownOpen) {
       document.addEventListener('mousedown', handleClickOutside);
-      return () => document.removeEventListener('mousedown', handleClickOutside);
+      return () =>
+        document.removeEventListener('mousedown', handleClickOutside);
     }
   }, [isDropdownOpen]);
 
@@ -271,8 +302,14 @@ export default function PlayerName(player: Player) {
       toast.error(err.error || 'Failed to unblock user');
     }
   };
-  
-  const iconMap = createPatreonIconMap(isContributor, isPvtVoidPatron, isPatron, isPracticeDummy, metafyTiers);
+
+  const iconMap = createPatreonIconMap(
+    isContributor,
+    isPvtVoidPatron,
+    isPatron,
+    isPracticeDummy,
+    metafyTiers
+  );
 
   const getStatusClass = () => {
     if (metafyTiers && metafyTiers.length > 0) return styles.metafy;
@@ -283,20 +320,36 @@ export default function PlayerName(player: Player) {
   };
 
   return (
-    <div className={`${styles.playerName} ${getStatusClass()} ${player.isPlayer ? styles.playerTwo : ''}`} ref={dropdownRef}>
+    <div
+      className={`${styles.playerName} ${getStatusClass()} ${
+        player.isPlayer ? styles.playerTwo : ''
+      }`}
+      ref={dropdownRef}
+    >
       <div className={styles.nameContainer}>
         <div className={styles.nameContent}>
-          {iconMap.filter(icon => icon.condition).map((icon, index) => (
-            <a href={icon.href} target="_blank" rel="noopener noreferrer" key={`${icon.src}-${index}`}>
-              <img
-                className={styles.icon}
-                src={icon.src}
-                title={icon.title}
-                alt={icon.title}
-              />
-            </a>
-          ))}
-          <span className={styles.name}>{String(playerName ?? '').substring(0, 30).replace('-', `Practice Dummy`)}</span>
+          {iconMap
+            .filter((icon) => icon.condition)
+            .map((icon, index) => (
+              <a
+                href={icon.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                key={`${icon.src}-${index}`}
+              >
+                <img
+                  className={styles.icon}
+                  src={icon.src}
+                  title={icon.title}
+                  alt={icon.title}
+                />
+              </a>
+            ))}
+          <span className={styles.name}>
+            {String(playerName ?? '')
+              .substring(0, 30)
+              .replace('-', `Practice Dummy`)}
+          </span>
         </div>
 
         {/* Dropdown arrow for opponent - hidden for Practice Dummy and spectators */}
@@ -307,50 +360,66 @@ export default function PlayerName(player: Player) {
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
               title="Open player options"
             >
-              <IoMdArrowDropdown className={`${styles.dropdownArrow} ${isDropdownOpen ? styles.open : ''}`} />
+              <IoMdArrowDropdown
+                className={`${styles.dropdownArrow} ${
+                  isDropdownOpen ? styles.open : ''
+                }`}
+              />
             </button>
           </div>
         )}
       </div>
 
       {/* Dropdown menu rendered as portal for opponent - hidden for Practice Dummy and spectators */}
-      {!player.isPlayer && !isPracticeDummy && playerID !== 3 && isDropdownOpen && createPortal(
-        <div 
-          className={`${styles.dropdown} ${getStatusClass()}`}
-          style={{
-            top: `${dropdownPosition.top}px`,
-            left: `${dropdownPosition.left}px`
-          }}
-        >
-          <button
-            className={`${styles.dropdownOption} ${hasRequestSent ? styles.disabled : ''}`}
-            onClick={hasRequestSent ? handleCancelFriendRequest : handleAddFriend}
-            title={hasRequestSent ? 'Cancel friend request' : 'Send friend request'}
+      {!player.isPlayer &&
+        !isPracticeDummy &&
+        playerID !== 3 &&
+        isDropdownOpen &&
+        createPortal(
+          <div
+            className={`${styles.dropdown} ${getStatusClass()}`}
+            style={{
+              top: `${dropdownPosition.top}px`,
+              left: `${dropdownPosition.left}px`
+            }}
           >
-            <MdPersonAdd className={styles.optionIcon} />
-            {hasRequestSent ? 'Request Sent' : 'Send Friend Request'}
-          </button>
-          <button
-            className={`${styles.dropdownOption} ${isBlocked ? styles.disabled : ''}`}
-            onClick={isBlocked ? handleUnblockUser : handleBlockUser}
-            title={isBlocked ? 'Unblock user' : 'Block user'}
-          >
-            <MdBlock className={styles.optionIcon} />
-            {isBlocked ? 'Blocked' : 'Block User'}
-          </button>
-          <button
-            ref={noteButtonRef}
-            className={styles.dropdownOption}
-            onClick={handleNoteModalOpen}
-            onMouseEnter={handleNoteTooltipOpen}
-            onMouseLeave={handleNoteTooltipClose}
-          >
-            <MdNotes className={styles.optionIcon} />
-            {playerNote ? 'Edit Note' : 'Add Note'}
-          </button>
-        </div>,
-        document.body
-      )}
+            <button
+              className={`${styles.dropdownOption} ${
+                hasRequestSent ? styles.disabled : ''
+              }`}
+              onClick={
+                hasRequestSent ? handleCancelFriendRequest : handleAddFriend
+              }
+              title={
+                hasRequestSent ? 'Cancel friend request' : 'Send friend request'
+              }
+            >
+              <MdPersonAdd className={styles.optionIcon} />
+              {hasRequestSent ? 'Request Sent' : 'Send Friend Request'}
+            </button>
+            <button
+              className={`${styles.dropdownOption} ${
+                isBlocked ? styles.disabled : ''
+              }`}
+              onClick={isBlocked ? handleUnblockUser : handleBlockUser}
+              title={isBlocked ? 'Unblock user' : 'Block user'}
+            >
+              <MdBlock className={styles.optionIcon} />
+              {isBlocked ? 'Blocked' : 'Block User'}
+            </button>
+            <button
+              ref={noteButtonRef}
+              className={styles.dropdownOption}
+              onClick={handleNoteModalOpen}
+              onMouseEnter={handleNoteTooltipOpen}
+              onMouseLeave={handleNoteTooltipClose}
+            >
+              <MdNotes className={styles.optionIcon} />
+              {playerNote ? 'Edit Note' : 'Add Note'}
+            </button>
+          </div>,
+          document.body
+        )}
 
       {/* Note modal for editing player notes */}
       {!player.isPlayer && !isPracticeDummy && playerID !== 3 && (
@@ -364,18 +433,20 @@ export default function PlayerName(player: Player) {
       )}
 
       {/* Note tooltip for quick preview */}
-      {playerNote && isNoteTooltipOpen && createPortal(
-        <div
-          className={styles.noteTooltip}
-          style={{
-            top: `${noteTooltipPosition.top}px`,
-            left: `${noteTooltipPosition.left}px`
-          }}
-        >
-          {playerNote}
-        </div>,
-        document.body
-      )}
+      {playerNote &&
+        isNoteTooltipOpen &&
+        createPortal(
+          <div
+            className={styles.noteTooltip}
+            style={{
+              top: `${noteTooltipPosition.top}px`,
+              left: `${noteTooltipPosition.left}px`
+            }}
+          >
+            {playerNote}
+          </div>,
+          document.body
+        )}
     </div>
   );
 }

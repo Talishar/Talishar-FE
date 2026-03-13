@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from '../Menu.module.css';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
-import { BsChatFill } from "react-icons/bs";
+import { BsChatFill } from 'react-icons/bs';
 import useShowModal from 'hooks/useShowModals';
 import { toggleShowModals, toggleChatModal } from 'features/game/GameSlice';
 import classNames from 'classnames';
@@ -24,7 +24,7 @@ const ShowMobileChat = () => {
 
   return (
     <div>
-      <div style={{width:'10%', position: 'relative', zIndex: 1001}}>
+      <div style={{ width: '10%', position: 'relative', zIndex: 1001 }}>
         <button
           className={classNames(styles.btn, {
             [styles.buttonActive]: showChatModal
@@ -34,13 +34,21 @@ const ShowMobileChat = () => {
           data-placement="bottom"
           disabled={isDisabled}
         >
-          {showChatModal && <BsChatFill aria-hidden="true" style={{ fontSize: '2em', width: '20px' }} />}
-          {!showChatModal && <BsChatFill aria-hidden="true" style={{ fontSize: '2em', width: '20px' }} />}
+          {showChatModal && (
+            <BsChatFill
+              aria-hidden="true"
+              style={{ fontSize: '2em', width: '20px' }}
+            />
+          )}
+          {!showChatModal && (
+            <BsChatFill
+              aria-hidden="true"
+              style={{ fontSize: '2em', width: '20px' }}
+            />
+          )}
         </button>
       </div>
-      {showChatModal && (
-          <ChatBoxMobile />
-      )}
+      {showChatModal && <ChatBoxMobile />}
     </div>
   );
 };

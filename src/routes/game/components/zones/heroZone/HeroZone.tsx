@@ -5,7 +5,12 @@ import Displayrow from 'interface/Displayrow';
 import CardDisplay from '../../elements/cardDisplay/CardDisplay';
 import DamagePopup from '../../elements/damagePopup/DamagePopup';
 import HealingPopup from '../../elements/healingPopup/HealingPopup';
-import { removeDamagePopup, addDamagePopup, addHealingPopup, removeHealingPopup } from 'features/game/GameSlice';
+import {
+  removeDamagePopup,
+  addDamagePopup,
+  addHealingPopup,
+  removeHealingPopup
+} from 'features/game/GameSlice';
 import styles from './HeroZone.module.css';
 
 export const HeroZone = React.memo((prop: Displayrow) => {
@@ -23,7 +28,7 @@ export const HeroZone = React.memo((prop: Displayrow) => {
 
   const cardWithSoul = React.useMemo(() => {
     if (!cardToDisplay) return cardToDisplay;
-    const soulSubcards = soulCards?.map(c => c.cardNumber) ?? [];
+    const soulSubcards = soulCards?.map((c) => c.cardNumber) ?? [];
     if (soulSubcards.length === 0) return cardToDisplay;
     return { ...cardToDisplay, subcards: soulSubcards };
   }, [cardToDisplay, soulCards]);

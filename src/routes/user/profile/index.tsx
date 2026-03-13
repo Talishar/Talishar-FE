@@ -12,7 +12,7 @@ import { DeleteAccountAPIResponse } from 'interface/API/DeleteAccountAPI.php';
 import { AddFavoriteDeckRequest } from 'interface/API/AddFavoriteDeck.php';
 import { UpdateFavoriteDeckRequest } from 'interface/API/UpdateFavoriteDeck.php';
 import { toast } from 'react-hot-toast';
-import { RiEdit2Line, RiDeleteBin5Line } from "react-icons/ri";
+import { RiEdit2Line, RiDeleteBin5Line } from 'react-icons/ri';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './profile.module.css';
@@ -38,7 +38,9 @@ export const ProfilePage = () => {
   const [confirmationUsername, setConfirmationUsername] = useState('');
   const [newDeckUrl, setNewDeckUrl] = useState('');
   const [isAddingDeck, setIsAddingDeck] = useState(false);
-  const [selectedHeroByDeck, setSelectedHeroByDeck] = useState<Record<string, string>>({});
+  const [selectedHeroByDeck, setSelectedHeroByDeck] = useState<
+    Record<string, string>
+  >({});
   const [updatingDeckLink, setUpdatingDeckLink] = useState<string | null>(null);
   const {
     data: decksData,
@@ -117,7 +119,12 @@ export const ProfilePage = () => {
 
   const handleHeroChange = async (deckLink: string, newHeroValue: string) => {
     setUpdatingDeckLink(deckLink);
-    console.log('[Hero Update] Starting hero update for deck:', deckLink, 'Hero:', newHeroValue);
+    console.log(
+      '[Hero Update] Starting hero update for deck:',
+      deckLink,
+      'Hero:',
+      newHeroValue
+    );
     try {
       const updatePayload: UpdateFavoriteDeckRequest = {
         decklink: deckLink,
@@ -133,7 +140,10 @@ export const ProfilePage = () => {
           loading: 'Updating hero...',
           success: (data) => {
             console.log('[Hero Update] Success response:', data);
-            setSelectedHeroByDeck(prev => ({ ...prev, [deckLink]: newHeroValue }));
+            setSelectedHeroByDeck((prev) => ({
+              ...prev,
+              [deckLink]: newHeroValue
+            }));
             return 'Hero updated successfully!';
           },
           error: (err) => {
@@ -145,7 +155,9 @@ export const ProfilePage = () => {
               data: err?.data,
               toString: err?.toString()
             });
-            return `Error updating hero: ${err?.message || err?.error || err?.toString() || 'Unknown error'}`;
+            return `Error updating hero: ${
+              err?.message || err?.error || err?.toString() || 'Unknown error'
+            }`;
           }
         },
         {
@@ -208,7 +220,12 @@ export const ProfilePage = () => {
               data: err?.data,
               toString: err?.toString()
             });
-            return `Error adding deck: ${err?.message || err?.error || err?.toString() || 'Invalid deck URL or deck not accessible'}`;
+            return `Error adding deck: ${
+              err?.message ||
+              err?.error ||
+              err?.toString() ||
+              'Invalid deck URL or deck not accessible'
+            }`;
           }
         },
         {
@@ -272,12 +289,15 @@ export const ProfilePage = () => {
       }, 1000);
     } catch (err) {
       console.warn(err);
-      toast.error(`Error deleting account: ${err?.toString() || 'Unknown error'}`, {
-        style: {
-          minWidth: '250px'
-        },
-        position: 'top-center'
-      });
+      toast.error(
+        `Error deleting account: ${err?.toString() || 'Unknown error'}`,
+        {
+          style: {
+            minWidth: '250px'
+          },
+          position: 'top-center'
+        }
+      );
     }
   };
 
@@ -319,23 +339,26 @@ export const ProfilePage = () => {
               <h5>Username: {profileData?.userName}</h5>
               <div>
                 {profileIsLoading && <p>Loading Profile...</p>}
-                
+
                 {/* Show Upgrade/Supporter Status */}
                 <UpgradeSection
                   isSupporter={isMetafySupporter}
                   userName={profileData?.userName}
-                  isOwner={profileData?.userName === 'PvtVoid' || profileData?.userName === 'OotTheMonk'}
+                  isOwner={
+                    profileData?.userName === 'PvtVoid' ||
+                    profileData?.userName === 'OotTheMonk'
+                  }
                 />
 
                 {/* Metafy Section */}
                 {profileData?.metafyInfo && (
-                <MetafySection
-                  isMetafyLinked={profileData?.isMetafyLinked ?? false}
-                  metafyCommunities={profileData?.metafyCommunities ?? []}
-                  metafyInfo={profileData?.metafyInfo ?? ''}
-                />
-              )}
-          
+                  <MetafySection
+                    isMetafyLinked={profileData?.isMetafyLinked ?? false}
+                    metafyCommunities={profileData?.metafyCommunities ?? []}
+                    metafyInfo={profileData?.metafyInfo ?? ''}
+                  />
+                )}
+
                 {/* Patreon Section */}
                 {!profileIsLoading && (
                   <div className={styles.patreonSection}>
@@ -355,14 +378,15 @@ export const ProfilePage = () => {
                       </p>
                     )}
                   </div>
-                )} 
+                )}
               </div>
 
               <FriendsList className={styles.friendsSection} />
               <BlockedUsers className={styles.friendsSection} />
               <h3 className={styles.title}>Delete Account</h3>
               <p style={{ color: '#fa3737ff', marginBottom: '1em' }}>
-                <strong>Warning:</strong> This action is permanent and cannot be undone. All your account data will be deleted.
+                <strong>Warning:</strong> This action is permanent and cannot be
+                undone. All your account data will be deleted.
               </p>
               <button
                 className={styles.deleteAccountButton}
@@ -376,10 +400,12 @@ export const ProfilePage = () => {
                   <div className={styles.modal}>
                     <h4>Delete Account Confirmation</h4>
                     <p>
-                      Are you sure you want to delete your account? This action is <strong>permanent</strong> and cannot be undone.
+                      Are you sure you want to delete your account? This action
+                      is <strong>permanent</strong> and cannot be undone.
                     </p>
                     <p>
-                      Please type your username <strong>{profileData?.userName}</strong> to confirm:
+                      Please type your username{' '}
+                      <strong>{profileData?.userName}</strong> to confirm:
                     </p>
                     <input
                       type="text"
@@ -402,7 +428,10 @@ export const ProfilePage = () => {
                       <button
                         className={styles.confirmDeleteButton}
                         onClick={handleDeleteAccountConfirm}
-                        disabled={isDeleting || confirmationUsername !== profileData?.userName}
+                        disabled={
+                          isDeleting ||
+                          confirmationUsername !== profileData?.userName
+                        }
                       >
                         {isDeleting ? 'Deleting...' : 'Delete Account'}
                       </button>
@@ -418,7 +447,15 @@ export const ProfilePage = () => {
               {/* Add Deck Section */}
               <div className={styles.addDeckSection}>
                 <p>
-                  Paste a deck link from <a href="https://FaBrary.net" target="_blank" rel="noopener noreferrer">FaBrary.net</a> to add it to your favorites.
+                  Paste a deck link from{' '}
+                  <a
+                    href="https://FaBrary.net"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    FaBrary.net
+                  </a>{' '}
+                  to add it to your favorites.
                 </p>
                 <div className={styles.addDeckContainer}>
                   <input
@@ -469,23 +506,29 @@ export const ProfilePage = () => {
                       </th>
                       <td>
                         <select
-                          value={selectedHeroByDeck[deck.link] || deck.hero || ''}
-                          onChange={(e) => handleHeroChange(deck.link, e.target.value)}
+                          value={
+                            selectedHeroByDeck[deck.link] || deck.hero || ''
+                          }
+                          onChange={(e) =>
+                            handleHeroChange(deck.link, e.target.value)
+                          }
                           disabled={updatingDeckLink === deck.link}
                           className={styles.heroSelect}
                         >
                           <option value="">-- Select Hero --</option>
-                          {[...HEROES_OF_RATHE].sort((a, b) => {
-                            const displayLabelA = a.label;
-                            const displayLabelB = b.label;
-                            return displayLabelA.localeCompare(displayLabelB);
-                          }).map((hero) => {
-                            return (
-                              <option key={hero.value} value={hero.value}>
-                                {hero.label}
-                              </option>
-                            );
-                          })}
+                          {[...HEROES_OF_RATHE]
+                            .sort((a, b) => {
+                              const displayLabelA = a.label;
+                              const displayLabelB = b.label;
+                              return displayLabelA.localeCompare(displayLabelB);
+                            })
+                            .map((hero) => {
+                              return (
+                                <option key={hero.value} value={hero.value}>
+                                  {hero.label}
+                                </option>
+                              );
+                            })}
                         </select>
                       </td>
                       <td>{deck.name}</td>

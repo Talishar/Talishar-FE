@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { FaExclamationCircle, FaQuestionCircle, FaChevronUp, FaChevronDown } from 'react-icons/fa';
+import {
+  FaExclamationCircle,
+  FaQuestionCircle,
+  FaChevronUp,
+  FaChevronDown
+} from 'react-icons/fa';
 import { toast } from 'react-hot-toast';
 import { ImageSelect } from 'components/ImageSelect';
 import useAuth from 'hooks/useAuth';
@@ -77,7 +82,9 @@ const QuickJoinPanel = () => {
               options={favoriteDeckOptions}
               value={selectedFavoriteDeck}
               onChange={setSelectedFavoriteDeck}
-              placeholder={isFavoritesLoading ? 'Loading…' : 'Select a saved deck'}
+              placeholder={
+                isFavoritesLoading ? 'Loading…' : 'Select a saved deck'
+              }
               aria-busy={isFavoritesLoading}
             />
           </label>
@@ -87,7 +94,11 @@ const QuickJoinPanel = () => {
               Import Deck&nbsp;
               <span
                 title="URL from FaBrary.net or fabdb.net"
-                style={{ cursor: 'help', display: 'inline-flex', alignItems: 'center' }}
+                style={{
+                  cursor: 'help',
+                  display: 'inline-flex',
+                  alignItems: 'center'
+                }}
               >
                 <FaQuestionCircle size={13} />
               </span>
@@ -127,9 +138,14 @@ const QuickJoinPanel = () => {
           )}
           <p className={styles.hint}>
             {selectedFavoriteDeck || importDeckUrl.trim() ? (
-              <>Click <strong>Join</strong> on any open game to join instantly.</>
+              <>
+                Click <strong>Join</strong> on any open game to join instantly.
+              </>
             ) : (
-              <>Select or import a deck above, then click <strong>Join</strong> on any open game.</>
+              <>
+                Select or import a deck above, then click <strong>Join</strong>{' '}
+                on any open game.
+              </>
             )}
           </p>
 

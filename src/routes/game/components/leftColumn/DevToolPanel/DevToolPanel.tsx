@@ -23,8 +23,10 @@ export default function DevToolPanel() {
 
   return (
     <>
-      <button 
-        className={`${styles.devToolTab} ${isOpen || isManualModeOpen ? styles.hidden : ''}`}
+      <button
+        className={`${styles.devToolTab} ${
+          isOpen || isManualModeOpen ? styles.hidden : ''
+        }`}
         onClick={() => {
           setIsOpen(!isOpen);
           setIsDevToolOpen(!isOpen);
@@ -33,15 +35,26 @@ export default function DevToolPanel() {
       >
         Dev Tool
       </button>
-      {isOpen && <DevToolContent gameIdFromUrl={gameIdFromUrl} onClose={() => {
-        setIsOpen(false);
-        setIsDevToolOpen(false);
-      }} />}
+      {isOpen && (
+        <DevToolContent
+          gameIdFromUrl={gameIdFromUrl}
+          onClose={() => {
+            setIsOpen(false);
+            setIsDevToolOpen(false);
+          }}
+        />
+      )}
     </>
   );
 }
 
-function DevToolContent({ gameIdFromUrl, onClose }: { gameIdFromUrl: string; onClose: () => void }) {
+function DevToolContent({
+  gameIdFromUrl,
+  onClose
+}: {
+  gameIdFromUrl: string;
+  onClose: () => void;
+}) {
   const gameIDInput = useId();
   const variantInput = useId();
   const localIDInput = useId();
@@ -54,40 +67,40 @@ function DevToolContent({ gameIdFromUrl, onClose }: { gameIdFromUrl: string; onC
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     e.preventDefault();
-    
+
     const performMutation = async () => {
       // Construct the source game ID with variant
       const sourceGameID = `${gameID?.trim()}-${variant}`;
-      
+
       try {
-        const result = await debugGameMutation({ 
-          source: sourceGameID, 
-          target: localGame?.trim() 
+        const result = await debugGameMutation({
+          source: sourceGameID,
+          target: localGame?.trim()
         }).unwrap();
-        
+
         // Only reload if mutation succeeds
         window.location.reload();
       } catch (error: any) {
         // Parse the error message from the backend or network error
         let errorMessage = 'Failed to load game state';
-        
+
         if (error?.data?.error) {
           errorMessage = error.data.error;
         } else if (error?.message) {
           errorMessage = error.message;
         }
-        
+
         // Improve message for missing bug reports
         if (errorMessage.includes('does not exist')) {
           errorMessage = `Bug report ${sourceGameID} does not exist. Please check the ID and variant.`;
         } else if (errorMessage.includes('PARSING ERROR')) {
           errorMessage = `Invalid bug report data for ${sourceGameID}. The files may be corrupted.`;
         }
-        
+
         throw new Error(errorMessage);
       }
     };
-    
+
     toast.promise(performMutation(), {
       loading: 'Loading debug game state...',
       success: 'Reloading...',

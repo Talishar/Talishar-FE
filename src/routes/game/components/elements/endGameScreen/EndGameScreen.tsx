@@ -4,13 +4,16 @@ import styles from './EndGameScreen.module.css';
 import { useGetPopUpContentQuery } from 'features/api/apiSlice';
 import { END_GAME_STATS } from 'appConstants';
 import { getGameInfo } from 'features/game/GameSlice';
-import EndGameStats, { EndGameData, EndGameStatsRef } from '../endGameStats/EndGameStats';
+import EndGameStats, {
+  EndGameData,
+  EndGameStatsRef
+} from '../endGameStats/EndGameStats';
 import { shallowEqual } from 'react-redux';
 import useShowModal from 'hooks/useShowModals';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import classNames from 'classnames';
 import useAuth from 'hooks/useAuth';
-import { PiFileCsvFill, PiCameraFill } from "react-icons/pi";
+import { PiFileCsvFill, PiCameraFill } from 'react-icons/pi';
 import { parseHtmlToReactElements } from 'utils/ParseEscapedString';
 
 const EndGameScreen = () => {
@@ -19,7 +22,9 @@ const EndGameScreen = () => {
   const [playerID, setPlayerID] = useState(gameInfo.playerID === 2 ? 2 : 1);
   const [showStats, setShowStats] = useState(true);
   const [showFullLog, setShowFullLog] = useState(false);
-  const [bothPlayersData, setBothPlayersData] = useState<{ [key: number]: any }>({});
+  const [bothPlayersData, setBothPlayersData] = useState<{
+    [key: number]: any;
+  }>({});
   const { isPatron } = useAuth();
   const endGameStatsRef = useRef<EndGameStatsRef>(null);
   const { data, isLoading, error } = useGetPopUpContentQuery({
@@ -28,11 +33,11 @@ const EndGameScreen = () => {
     authKey: gameInfo.authKey,
     popupType: END_GAME_STATS
   });
-  
+
   // Cache both players' data as they're loaded
   React.useEffect(() => {
     if (data && playerID) {
-      setBothPlayersData(prev => ({
+      setBothPlayersData((prev) => ({
         ...prev,
         [playerID]: data
       }));
@@ -46,11 +51,21 @@ const EndGameScreen = () => {
 
   // Extract heroes from API data first (most reliable source)
   // If API doesn't have them, try gameState as fallback
-  const yourHero = data?.yourHero || (playerID === 1 ? gameState?.playerOne?.Hero?.cardNumber : gameState?.playerTwo?.Hero?.cardNumber) || null;
-  
+  const yourHero =
+    data?.yourHero ||
+    (playerID === 1
+      ? gameState?.playerOne?.Hero?.cardNumber
+      : gameState?.playerTwo?.Hero?.cardNumber) ||
+    null;
+
   // For opponent hero: get from API data first, then fallback to gameState
   const opponentPlayerID = playerID === 1 ? 2 : 1;
-  const opponentHero = data?.opponentHero || (opponentPlayerID === 1 ? gameState?.playerOne?.Hero?.cardNumber : gameState?.playerTwo?.Hero?.cardNumber) || null;
+  const opponentHero =
+    data?.opponentHero ||
+    (opponentPlayerID === 1
+      ? gameState?.playerOne?.Hero?.cardNumber
+      : gameState?.playerTwo?.Hero?.cardNumber) ||
+    null;
 
   if (!showModal) return null;
 
@@ -88,12 +103,7 @@ const EndGameScreen = () => {
       gameID: gameInfo.gameID?.toString(),
       bothPlayersData: bothPlayersData
     };
-    content = (
-      <EndGameStats 
-        ref={endGameStatsRef} 
-        {...endGameDataWithHeroes}
-      />
-    );
+    content = <EndGameStats ref={endGameStatsRef} {...endGameDataWithHeroes} />;
   }
 
   const switchPlayer = () => {
@@ -134,11 +144,16 @@ const EndGameScreen = () => {
               <div className={styles.buttonGroup}>
                 {!showFullLog && (
                   <>
-                    <div className={styles.buttonDiv} onClick={handleExportStats}>
-                      <PiCameraFill size="1.5em" />&nbsp;Export as Image
+                    <div
+                      className={styles.buttonDiv}
+                      onClick={handleExportStats}
+                    >
+                      <PiCameraFill size="1.5em" />
+                      &nbsp;Export as Image
                     </div>
                     <div className={styles.buttonDiv} onClick={handleExportCSV}>
-                      <PiFileCsvFill size="1.5em" />&nbsp;Export as CSV
+                      <PiFileCsvFill size="1.5em" />
+                      &nbsp;Export as CSV
                     </div>
                   </>
                 )}

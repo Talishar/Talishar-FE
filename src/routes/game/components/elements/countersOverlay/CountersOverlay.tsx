@@ -68,15 +68,17 @@ export const CountersOverlay = ({
 
   return (
     <div className={styles.countersCover}>
-      {countersMap && (!excludeFancyCounters || countersMap?.amp) && <ContinuousCounters countersMap={countersMap} excludeFancyCounters={excludeFancyCounters} />}
+      {countersMap && (!excludeFancyCounters || countersMap?.amp) && (
+        <ContinuousCounters
+          countersMap={countersMap}
+          excludeFancyCounters={excludeFancyCounters}
+        />
+      )}
       {activeCombatChain && (
         <ActiveCardCounterOverlay activeCombatChain={activeCombatChain} />
       )}
       {!!restriction && (
-        <TooltipWrapper 
-          className={styles.icon} 
-          tooltip="Restricted"
-        >
+        <TooltipWrapper className={styles.icon} tooltip="Restricted">
           <GiDialPadlock />
         </TooltipWrapper>
       )}

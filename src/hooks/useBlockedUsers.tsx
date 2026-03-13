@@ -14,16 +14,16 @@ export const useBlockedUsers = () => {
         body: JSON.stringify({ action: 'getBlockedUsers' }),
         credentials: 'include'
       });
-      
+
       // Handle error statuses silently
       if (!response.ok) {
         setBlockedUsers([]);
         setError(null);
         return;
       }
-      
+
       const data = await response.json();
-      
+
       if (data && data.blockedUsers && Array.isArray(data.blockedUsers)) {
         setBlockedUsers(data.blockedUsers.map((u: any) => u.username));
         setError(null);

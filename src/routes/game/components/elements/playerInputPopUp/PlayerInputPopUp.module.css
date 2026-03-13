@@ -294,7 +294,7 @@
 .firstLabel {
   background-color: var(--theme-primary);
   color: black;
-  border : 1px solid var(--near-black);
+  border: 1px solid var(--near-black);
 }
 
 .lastLabel {
@@ -387,12 +387,11 @@
     font-size: 0.7em;
   }
 
-    .reorderCards {
+  .reorderCards {
     margin-top: 0;
-    height: 40%
+    height: 40%;
   }
 }
-
 
 .popupContent {
   flex: 1;

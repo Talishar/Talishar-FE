@@ -45,7 +45,10 @@ const DeleteUsernameAutocomplete: React.FC<DeleteUsernameAutocompleteProps> = ({
   };
 
   const handleClickOutside = (e: MouseEvent) => {
-    if (suggestionsRef.current && !suggestionsRef.current.contains(e.target as Node)) {
+    if (
+      suggestionsRef.current &&
+      !suggestionsRef.current.contains(e.target as Node)
+    ) {
       setShowSuggestions(false);
     }
   };
@@ -56,7 +59,8 @@ const DeleteUsernameAutocomplete: React.FC<DeleteUsernameAutocompleteProps> = ({
   }, []);
 
   const suggestions = searchResults?.users || [];
-  const showDropdown = showSuggestions && searchTerm.length >= 2 && suggestions.length > 0;
+  const showDropdown =
+    showSuggestions && searchTerm.length >= 2 && suggestions.length > 0;
 
   return (
     <div className={styles.container}>
@@ -70,7 +74,7 @@ const DeleteUsernameAutocomplete: React.FC<DeleteUsernameAutocompleteProps> = ({
           className={styles.input}
           required
         />
-        
+
         {showDropdown && (
           <div className={styles.suggestionsDropdown}>
             {suggestions.map((user) => (

@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
-import { useGetOffensiveUsernamesQuery, useBanOffensiveUsernameMutation, useWhitelistOffensiveUsernameMutation } from 'features/api/apiSlice';
+import {
+  useGetOffensiveUsernamesQuery,
+  useBanOffensiveUsernameMutation,
+  useWhitelistOffensiveUsernameMutation
+} from 'features/api/apiSlice';
 import { toast } from 'react-hot-toast';
 import styles from './UsernameModeration.module.css';
 
@@ -11,11 +15,19 @@ interface OffensiveUser {
 
 export const UsernameModeration: React.FC = () => {
   const [selectedUsers, setSelectedUsers] = useState<Set<number>>(new Set());
-  const [expandedUserIds, setExpandedUserIds] = useState<Set<number>>(new Set());
+  const [expandedUserIds, setExpandedUserIds] = useState<Set<number>>(
+    new Set()
+  );
 
-  const { data: moderationData, isLoading, refetch } = useGetOffensiveUsernamesQuery();
-  const [banUsername, { isLoading: isBanning }] = useBanOffensiveUsernameMutation();
-  const [whitelistUsername, { isLoading: isWhitelisting }] = useWhitelistOffensiveUsernameMutation();
+  const {
+    data: moderationData,
+    isLoading,
+    refetch
+  } = useGetOffensiveUsernamesQuery();
+  const [banUsername, { isLoading: isBanning }] =
+    useBanOffensiveUsernameMutation();
+  const [whitelistUsername, { isLoading: isWhitelisting }] =
+    useWhitelistOffensiveUsernameMutation();
 
   const handleSelectUser = (usersId: number) => {
     const newSelected = new Set(selectedUsers);
@@ -45,13 +57,16 @@ export const UsernameModeration: React.FC = () => {
       return;
     }
 
-    const usersToBan = moderationData?.offensiveUsers.filter((user) =>
-      selectedUsers.has(user.usersId)
-    ) || [];
+    const usersToBan =
+      moderationData?.offensiveUsers.filter((user) =>
+        selectedUsers.has(user.usersId)
+      ) || [];
 
     if (
       !window.confirm(
-        `Ban ${usersToBan.length} user(s) with offensive usernames?\n\n${usersToBan
+        `Ban ${
+          usersToBan.length
+        } user(s) with offensive usernames?\n\n${usersToBan
           .map((u) => u.username)
           .join(', ')}`
       )
@@ -73,7 +88,9 @@ export const UsernameModeration: React.FC = () => {
     }
 
     toast.success(
-      `Banned ${successCount} user(s)${failureCount > 0 ? ` (${failureCount} failed)` : ''}`
+      `Banned ${successCount} user(s)${
+        failureCount > 0 ? ` (${failureCount} failed)` : ''
+      }`
     );
     setSelectedUsers(new Set());
     await refetch();
@@ -114,9 +131,10 @@ export const UsernameModeration: React.FC = () => {
       return;
     }
 
-    const usersToWhitelist = moderationData?.offensiveUsers.filter((user) =>
-      selectedUsers.has(user.usersId)
-    ) || [];
+    const usersToWhitelist =
+      moderationData?.offensiveUsers.filter((user) =>
+        selectedUsers.has(user.usersId)
+      ) || [];
 
     if (
       !window.confirm(
@@ -142,7 +160,9 @@ export const UsernameModeration: React.FC = () => {
     }
 
     toast.success(
-      `Whitelisted ${successCount} user(s)${failureCount > 0 ? ` (${failureCount} failed)` : ''}`
+      `Whitelisted ${successCount} user(s)${
+        failureCount > 0 ? ` (${failureCount} failed)` : ''
+      }`
     );
     setSelectedUsers(new Set());
     await refetch();
@@ -160,8 +180,8 @@ export const UsernameModeration: React.FC = () => {
         <div>
           <div className={styles.summary}>
             <p>
-              Found <strong>{offensiveUsers.length}</strong> user(s) with potentially offensive
-              usernames
+              Found <strong>{offensiveUsers.length}</strong> user(s) with
+              potentially offensive usernames
             </p>
           </div>
 
@@ -171,7 +191,8 @@ export const UsernameModeration: React.FC = () => {
               onClick={handleSelectAll}
               disabled={isBanning || isWhitelisting}
             >
-              {selectedUsers.size === offensiveUsers.length && offensiveUsers.length > 0
+              {selectedUsers.size === offensiveUsers.length &&
+              offensiveUsers.length > 0
                 ? 'Deselect All'
                 : 'Select All'}
             </button>
@@ -181,7 +202,9 @@ export const UsernameModeration: React.FC = () => {
               onClick={handleBanSelected}
               disabled={selectedUsers.size === 0 || isBanning || isWhitelisting}
             >
-              {isBanning ? 'Banning...' : `Ban Selected (${selectedUsers.size})`}
+              {isBanning
+                ? 'Banning...'
+                : `Ban Selected (${selectedUsers.size})`}
             </button>
 
             <button
@@ -189,10 +212,16 @@ export const UsernameModeration: React.FC = () => {
               onClick={handleWhitelistSelected}
               disabled={selectedUsers.size === 0 || isBanning || isWhitelisting}
             >
-              {isWhitelisting ? 'Whitelisting...' : `Whitelist Selected (${selectedUsers.size})`}
+              {isWhitelisting
+                ? 'Whitelisting...'
+                : `Whitelist Selected (${selectedUsers.size})`}
             </button>
 
-            <button className={styles.refreshButton} onClick={() => refetch()} disabled={isBanning || isWhitelisting}>
+            <button
+              className={styles.refreshButton}
+              onClick={() => refetch()}
+              disabled={isBanning || isWhitelisting}
+            >
               Refresh
             </button>
           </div>
@@ -241,7 +270,9 @@ export const UsernameModeration: React.FC = () => {
                       )}
                     </td>
                     <td className={styles.patternCell}>
-                      <span className={styles.pattern}>{user.matchedPattern}</span>
+                      <span className={styles.pattern}>
+                        {user.matchedPattern}
+                      </span>
                     </td>
                     <td className={styles.actionCell}>
                       <button
@@ -253,7 +284,9 @@ export const UsernameModeration: React.FC = () => {
                             handleBanSelected();
                           }, 0);
                         }}
-                        disabled={isBanning || isWhitelisting || selectedUsers.size > 0}
+                        disabled={
+                          isBanning || isWhitelisting || selectedUsers.size > 0
+                        }
                         title="Ban this user immediately"
                       >
                         Ban

@@ -173,12 +173,22 @@ const ReorderOpt = ({
                 >
                   <div className={styles.cardWrapper}>
                     {showLabels && isFirst && (
-                      <div className={classNames(styles.positionLabel, styles.firstLabel)}>
+                      <div
+                        className={classNames(
+                          styles.positionLabel,
+                          styles.firstLabel
+                        )}
+                      >
                         FIRST
                       </div>
                     )}
                     {showLabels && isLast && (
-                      <div className={classNames(styles.positionLabel, styles.lastLabel)}>
+                      <div
+                        className={classNames(
+                          styles.positionLabel,
+                          styles.lastLabel
+                        )}
+                      >
                         LAST
                       </div>
                     )}
@@ -237,12 +247,22 @@ const ReorderOpt = ({
                 >
                   <div className={styles.cardWrapper}>
                     {showLabels && isFirst && (
-                      <div className={classNames(styles.positionLabel, styles.firstLabel)}>
+                      <div
+                        className={classNames(
+                          styles.positionLabel,
+                          styles.firstLabel
+                        )}
+                      >
                         FIRST
                       </div>
                     )}
                     {showLabels && isLast && (
-                      <div className={classNames(styles.positionLabel, styles.lastLabel)}>
+                      <div
+                        className={classNames(
+                          styles.positionLabel,
+                          styles.lastLabel
+                        )}
+                      >
                         LAST
                       </div>
                     )}

@@ -1,4 +1,9 @@
-import { createAsyncThunk, createSlice, PayloadAction, createSelector } from '@reduxjs/toolkit';
+import {
+  createAsyncThunk,
+  createSlice,
+  PayloadAction,
+  createSelector
+} from '@reduxjs/toolkit';
 import ParseGameState from '../../app/ParseGameState';
 import InitialGameState from './InitialGameState';
 import GameStaticInfo from '../GameStaticInfo';
@@ -54,14 +59,21 @@ export const nextTurn = createAsyncThunk(
     const apiState = state.api;
     if (apiState?.queries) {
       const cacheKeys = Object.keys(apiState.queries);
-      const friendsQueryKey = cacheKeys.find(key => key.includes('getFriendsList'));
+      const friendsQueryKey = cacheKeys.find((key) =>
+        key.includes('getFriendsList')
+      );
       if (friendsQueryKey && apiState.queries[friendsQueryKey]?.data) {
         const friendsData = apiState.queries[friendsQueryKey].data;
         friendsList = (friendsData?.friends || []).map((f: any) => f.username);
       }
     }
-    console.log('GameSlice nextTurn - sending friendsList:', friendsList, 'playerID:', params.game.playerID);
-    
+    console.log(
+      'GameSlice nextTurn - sending friendsList:',
+      friendsList,
+      'playerID:',
+      params.game.playerID
+    );
+
     const queryParams = new URLSearchParams({
       gameName: String(params.game.gameID),
       playerID: String(params.game.playerID),
@@ -91,18 +103,23 @@ export const nextTurn = createAsyncThunk(
           // No JSON object found - backend returned an error message or non-JSON response
           const errorMessage = sanitizeHtmlTags(data);
           toast.error(`Backend Error: ${errorMessage}`);
-          
+
           // Check for fatal errors that should end the game
-          if (errorMessage.includes('game no longer exists') || errorMessage.includes('does not exist')) {
+          if (
+            errorMessage.includes('game no longer exists') ||
+            errorMessage.includes('does not exist')
+          ) {
             // Return special error marker that will be handled by the rejected handler
             throw new Error(`GAME_NOT_FOUND: ${errorMessage}`);
           }
-          
+
           return console.error(`Backend returned non-JSON response: ${data}`);
         }
         if (indexOfBraces !== 0) {
-          const warningMessage = sanitizeHtmlTags(data.substring(0, indexOfBraces));
-          toast.error(`Backend Warning: ${warningMessage}`);          
+          const warningMessage = sanitizeHtmlTags(
+            data.substring(0, indexOfBraces)
+          );
+          toast.error(`Backend Warning: ${warningMessage}`);
           console.warn(data.substring(0, indexOfBraces));
           data = data.substring(indexOfBraces);
         }
@@ -279,10 +296,13 @@ export const submitMultiButton = createAsyncThunk(
 
 export const submitInactivityMessage = createAsyncThunk(
   'game/submitInactivityMessage',
-  async (params: { playerID: number; inactivePlayer: number }, { getState }) => {
+  async (
+    params: { playerID: number; inactivePlayer: number },
+    { getState }
+  ) => {
     const { game } = getState() as { game: GameState };
     const gameInfo = game.gameInfo;
-    
+
     const queryURL = 'SubmitInactivityMessage.php';
     const queryParams = new URLSearchParams({
       gameName: String(gameInfo.gameID),
@@ -377,7 +397,7 @@ export const gameSlice = createSlice({
         if (!state.cardListFocus.originalCardList) {
           state.cardListFocus.originalCardList = state.cardListFocus.cardList;
         }
-        
+
         const isSorted = state.cardListFocus.isSorted;
         if (isSorted) {
           // Revert to original order
@@ -385,7 +405,9 @@ export const gameSlice = createSlice({
           state.cardListFocus.isSorted = false;
         } else {
           // Sort the cards
-          const sortedCardList = [...state.cardListFocus.cardList].sort((a, b) => b.cardNumber.localeCompare(a.cardNumber));
+          const sortedCardList = [...state.cardListFocus.cardList].sort(
+            (a, b) => b.cardNumber.localeCompare(a.cardNumber)
+          );
           state.cardListFocus.cardList = sortedCardList;
           state.cardListFocus.isSorted = true;
         }
@@ -499,13 +521,15 @@ export const gameSlice = createSlice({
     ) => {
       if (!state.actionPointPopups) return;
       if (action.payload.isPlayer) {
-        state.actionPointPopups.playerOne = state.actionPointPopups.playerOne.filter(
-          (p) => p.id !== action.payload.id
-        );
+        state.actionPointPopups.playerOne =
+          state.actionPointPopups.playerOne.filter(
+            (p) => p.id !== action.payload.id
+          );
       } else {
-        state.actionPointPopups.playerTwo = state.actionPointPopups.playerTwo.filter(
-          (p) => p.id !== action.payload.id
-        );
+        state.actionPointPopups.playerTwo =
+          state.actionPointPopups.playerTwo.filter(
+            (p) => p.id !== action.payload.id
+          );
       }
     },
     openOptionsMenu: (state) => {
@@ -526,16 +550,17 @@ export const gameSlice = createSlice({
     ) => {
       state.isFullRematch = false;
       const previousGameID = state.gameInfo.gameID;
-      const newGameID = typeof action.payload.gameID === 'string' 
-        ? parseInt(action.payload.gameID) 
-        : action.payload.gameID;
-      
+      const newGameID =
+        typeof action.payload.gameID === 'string'
+          ? parseInt(action.payload.gameID)
+          : action.payload.gameID;
+
       // Check if this is a NEW game or a RECONNECTION to the same game
       const isNewGame = previousGameID !== newGameID;
-      
+
       // Always update gameID
       state.gameInfo.gameID = newGameID;
-      
+
       // Handle playerID
       if (isNewGame) {
         // NEW GAME: Always use provided playerID from action, never use storage
@@ -546,10 +571,13 @@ export const gameSlice = createSlice({
           // Keep existing playerID
         } else {
           const storedPlayerID = loadGamePlayerID(newGameID);
-          state.gameInfo.playerID = (storedPlayerID > 0 && storedPlayerID !== 3) ? storedPlayerID : action.payload.playerID;
+          state.gameInfo.playerID =
+            storedPlayerID > 0 && storedPlayerID !== 3
+              ? storedPlayerID
+              : action.payload.playerID;
         }
       }
-      
+
       // Handle authKey
       if (isNewGame) {
         // NEW GAME: Always use provided authKey if available, never use old storage
@@ -557,12 +585,17 @@ export const gameSlice = createSlice({
         if (previousGameID > 0) {
           deleteGameAuthKey(previousGameID);
         }
-        
+
         if (state.gameInfo.playerID === 3) {
           state.gameInfo.authKey = 'spectator';
         } else if (action.payload.authKey !== '') {
           // Save new authKey to storage with username
-          saveGameAuthKey(newGameID, action.payload.authKey, state.gameInfo.playerID, action.payload.username);
+          saveGameAuthKey(
+            newGameID,
+            action.payload.authKey,
+            state.gameInfo.playerID,
+            action.payload.username
+          );
           state.gameInfo.authKey = action.payload.authKey;
         } else {
           // No authKey provided for new game (shouldn't happen, but handle gracefully)
@@ -572,7 +605,12 @@ export const gameSlice = createSlice({
         // RECONNECTION to same game: Prefer provided authKey, fall back to stored/existing
         if (action.payload.authKey !== '') {
           // Update with fresh authKey from server with username
-          saveGameAuthKey(newGameID, action.payload.authKey, state.gameInfo.playerID, action.payload.username);
+          saveGameAuthKey(
+            newGameID,
+            action.payload.authKey,
+            state.gameInfo.playerID,
+            action.payload.username
+          );
           state.gameInfo.authKey = action.payload.authKey;
         } else if (!state.gameInfo.authKey || state.gameInfo.authKey === '') {
           // Try to load from storage if we don't have one
@@ -585,7 +623,7 @@ export const gameSlice = createSlice({
         }
         // else: keep existing authKey
       }
-      
+
       state.gameDynamicInfo.lastUpdate = 0;
       state.playerOne = {};
       state.playerTwo = {};
@@ -689,7 +727,8 @@ export const gameSlice = createSlice({
         state.gameInfo.opponentHeroName = action.payload.opponentHeroName;
       }
       if (action.payload.opponentHeroCardNumber !== undefined) {
-        state.gameInfo.opponentHeroCardNumber = action.payload.opponentHeroCardNumber;
+        state.gameInfo.opponentHeroCardNumber =
+          action.payload.opponentHeroCardNumber;
       }
     },
     markHeroIntroAsShown: (state) => {
@@ -761,7 +800,12 @@ export const gameSlice = createSlice({
         //And the payload is giving us an auth key
         if (state.gameInfo.playerID == 3) state.gameInfo.authKey = 'spectator';
         else if (action.payload.authKey !== '') {
-          saveGameAuthKey(action.payload.gameID, action.payload.authKey, action.payload.playerID, action.payload.username);
+          saveGameAuthKey(
+            action.payload.gameID,
+            action.payload.authKey,
+            action.payload.playerID,
+            action.payload.username
+          );
           state.gameInfo.authKey = action.payload.authKey;
         }
         //Else try to set from local storage
@@ -816,11 +860,15 @@ export const gameSlice = createSlice({
           state.inactivityWarning.secondWarningStartTime = Date.now();
         }
       }
-      
+
       // Add inactivity message to chat log when second warning triggers
       if (action.payload && state.chatLog) {
         const playerID = state.gameInfo.playerID;
-        const inactivePlayer = state.hasPriority ? playerID : (playerID === 1 ? 2 : 1);
+        const inactivePlayer = state.hasPriority
+          ? playerID
+          : playerID === 1
+          ? 2
+          : 1;
         state.chatLog.push(`⌛Player ${inactivePlayer} is inactive.`);
       }
     },
@@ -894,16 +942,26 @@ export const gameSlice = createSlice({
       state.playerOne = { ...state.playerOne, ...action.payload.playerOne };
       state.playerTwo = { ...state.playerTwo, ...action.payload.playerTwo };
       // Restore metadata from previous state to prevent flickering
-      if (playerOneMetadata.Name !== undefined) state.playerOne.Name = playerOneMetadata.Name;
-      if (playerOneMetadata.isPatron !== undefined) state.playerOne.isPatron = playerOneMetadata.isPatron;
-      if (playerOneMetadata.isContributor !== undefined) state.playerOne.isContributor = playerOneMetadata.isContributor;
-      if (playerOneMetadata.isPvtVoidPatron !== undefined) state.playerOne.isPvtVoidPatron = playerOneMetadata.isPvtVoidPatron;
-      if (playerOneMetadata.metafyTiers !== undefined) state.playerOne.metafyTiers = playerOneMetadata.metafyTiers;
-      if (playerTwoMetadata.Name !== undefined) state.playerTwo.Name = playerTwoMetadata.Name;
-      if (playerTwoMetadata.isPatron !== undefined) state.playerTwo.isPatron = playerTwoMetadata.isPatron;
-      if (playerTwoMetadata.isContributor !== undefined) state.playerTwo.isContributor = playerTwoMetadata.isContributor;
-      if (playerTwoMetadata.isPvtVoidPatron !== undefined) state.playerTwo.isPvtVoidPatron = playerTwoMetadata.isPvtVoidPatron;
-      if (playerTwoMetadata.metafyTiers !== undefined) state.playerTwo.metafyTiers = playerTwoMetadata.metafyTiers;
+      if (playerOneMetadata.Name !== undefined)
+        state.playerOne.Name = playerOneMetadata.Name;
+      if (playerOneMetadata.isPatron !== undefined)
+        state.playerOne.isPatron = playerOneMetadata.isPatron;
+      if (playerOneMetadata.isContributor !== undefined)
+        state.playerOne.isContributor = playerOneMetadata.isContributor;
+      if (playerOneMetadata.isPvtVoidPatron !== undefined)
+        state.playerOne.isPvtVoidPatron = playerOneMetadata.isPvtVoidPatron;
+      if (playerOneMetadata.metafyTiers !== undefined)
+        state.playerOne.metafyTiers = playerOneMetadata.metafyTiers;
+      if (playerTwoMetadata.Name !== undefined)
+        state.playerTwo.Name = playerTwoMetadata.Name;
+      if (playerTwoMetadata.isPatron !== undefined)
+        state.playerTwo.isPatron = playerTwoMetadata.isPatron;
+      if (playerTwoMetadata.isContributor !== undefined)
+        state.playerTwo.isContributor = playerTwoMetadata.isContributor;
+      if (playerTwoMetadata.isPvtVoidPatron !== undefined)
+        state.playerTwo.isPvtVoidPatron = playerTwoMetadata.isPvtVoidPatron;
+      if (playerTwoMetadata.metafyTiers !== undefined)
+        state.playerTwo.metafyTiers = playerTwoMetadata.metafyTiers;
 
       state.activeChainLink = action.payload.activeChainLink;
       state.activeLayers = action.payload.activeLayers;
@@ -917,13 +975,18 @@ export const gameSlice = createSlice({
       state.playerInputPopUp = action.payload.playerInputPopUp;
 
       // gameInfo
-      state.gameDynamicInfo.lastPlayed = action.payload.gameDynamicInfo.lastPlayed;
-      state.gameDynamicInfo.lastUpdate = action.payload.gameDynamicInfo.lastUpdate;
+      state.gameDynamicInfo.lastPlayed =
+        action.payload.gameDynamicInfo.lastPlayed;
+      state.gameDynamicInfo.lastUpdate =
+        action.payload.gameDynamicInfo.lastUpdate;
       state.gameDynamicInfo.turnNo = action.payload.gameDynamicInfo.turnNo;
       state.gameDynamicInfo.clock = action.payload.gameDynamicInfo.clock;
-      state.gameDynamicInfo.spectatorCount = action.payload.gameDynamicInfo.spectatorCount ?? 0;
-      state.gameDynamicInfo.spectatorNames = action.payload.gameDynamicInfo.spectatorNames ?? [];
-      state.gameDynamicInfo.playerInventory = action.payload.gameDynamicInfo.playerInventory;
+      state.gameDynamicInfo.spectatorCount =
+        action.payload.gameDynamicInfo.spectatorCount ?? 0;
+      state.gameDynamicInfo.spectatorNames =
+        action.payload.gameDynamicInfo.spectatorNames ?? [];
+      state.gameDynamicInfo.playerInventory =
+        action.payload.gameDynamicInfo.playerInventory;
       state.hasPriority = action.payload.hasPriority;
       state.priorityPlayer = action.payload.priorityPlayer;
       state.chatEnabled = action.payload.chatEnabled;
@@ -941,7 +1004,8 @@ export const gameSlice = createSlice({
         action.payload.gameInfo.altArts ?? state.gameInfo.altArts;
 
       state.gameInfo.opponentAltArts =
-        action.payload.gameInfo.opponentAltArts ?? state.gameInfo.opponentAltArts;
+        action.payload.gameInfo.opponentAltArts ??
+        state.gameInfo.opponentAltArts;
 
       state.gameInfo.isPrivate =
         action.payload.gameInfo.isPrivate ?? state.gameInfo.isPrivate;
@@ -954,7 +1018,8 @@ export const gameSlice = createSlice({
 
       state.aiHasInfiniteHP = action.payload.aiHasInfiniteHP ?? false;
 
-      state.opponentActivity = action.payload.opponentActivity ?? state.opponentActivity ?? 0;
+      state.opponentActivity =
+        action.payload.opponentActivity ?? state.opponentActivity ?? 0;
 
       state.preventPassPrompt = action.payload.preventPassPrompt;
 
@@ -972,7 +1037,7 @@ export const gameSlice = createSlice({
       }
 
       return state;
-    },
+    }
   },
   // The `extraReducers` field lets the slice handle actions defined elsewhere,
   // including actions generated by createAsyncThunk or in other slices.
@@ -1004,16 +1069,26 @@ export const gameSlice = createSlice({
       state.playerOne = { ...state.playerOne, ...action.payload.playerOne };
       state.playerTwo = { ...state.playerTwo, ...action.payload.playerTwo };
       // Restore metadata from previous state to prevent flickering
-      if (playerOneMetadata.Name !== undefined) state.playerOne.Name = playerOneMetadata.Name;
-      if (playerOneMetadata.isPatron !== undefined) state.playerOne.isPatron = playerOneMetadata.isPatron;
-      if (playerOneMetadata.isContributor !== undefined) state.playerOne.isContributor = playerOneMetadata.isContributor;
-      if (playerOneMetadata.isPvtVoidPatron !== undefined) state.playerOne.isPvtVoidPatron = playerOneMetadata.isPvtVoidPatron;
-      if (playerOneMetadata.metafyTiers !== undefined) state.playerOne.metafyTiers = playerOneMetadata.metafyTiers;
-      if (playerTwoMetadata.Name !== undefined) state.playerTwo.Name = playerTwoMetadata.Name;
-      if (playerTwoMetadata.isPatron !== undefined) state.playerTwo.isPatron = playerTwoMetadata.isPatron;
-      if (playerTwoMetadata.isContributor !== undefined) state.playerTwo.isContributor = playerTwoMetadata.isContributor;
-      if (playerTwoMetadata.isPvtVoidPatron !== undefined) state.playerTwo.isPvtVoidPatron = playerTwoMetadata.isPvtVoidPatron;
-      if (playerTwoMetadata.metafyTiers !== undefined) state.playerTwo.metafyTiers = playerTwoMetadata.metafyTiers;
+      if (playerOneMetadata.Name !== undefined)
+        state.playerOne.Name = playerOneMetadata.Name;
+      if (playerOneMetadata.isPatron !== undefined)
+        state.playerOne.isPatron = playerOneMetadata.isPatron;
+      if (playerOneMetadata.isContributor !== undefined)
+        state.playerOne.isContributor = playerOneMetadata.isContributor;
+      if (playerOneMetadata.isPvtVoidPatron !== undefined)
+        state.playerOne.isPvtVoidPatron = playerOneMetadata.isPvtVoidPatron;
+      if (playerOneMetadata.metafyTiers !== undefined)
+        state.playerOne.metafyTiers = playerOneMetadata.metafyTiers;
+      if (playerTwoMetadata.Name !== undefined)
+        state.playerTwo.Name = playerTwoMetadata.Name;
+      if (playerTwoMetadata.isPatron !== undefined)
+        state.playerTwo.isPatron = playerTwoMetadata.isPatron;
+      if (playerTwoMetadata.isContributor !== undefined)
+        state.playerTwo.isContributor = playerTwoMetadata.isContributor;
+      if (playerTwoMetadata.isPvtVoidPatron !== undefined)
+        state.playerTwo.isPvtVoidPatron = playerTwoMetadata.isPvtVoidPatron;
+      if (playerTwoMetadata.metafyTiers !== undefined)
+        state.playerTwo.metafyTiers = playerTwoMetadata.metafyTiers;
 
       state.activeChainLink = action.payload.activeChainLink;
       state.activeLayers = action.payload.activeLayers;
@@ -1027,13 +1102,18 @@ export const gameSlice = createSlice({
       state.playerInputPopUp = action.payload.playerInputPopUp;
 
       // gameInfo
-      state.gameDynamicInfo.lastPlayed = action.payload.gameDynamicInfo.lastPlayed;
-      state.gameDynamicInfo.lastUpdate = action.payload.gameDynamicInfo.lastUpdate;
+      state.gameDynamicInfo.lastPlayed =
+        action.payload.gameDynamicInfo.lastPlayed;
+      state.gameDynamicInfo.lastUpdate =
+        action.payload.gameDynamicInfo.lastUpdate;
       state.gameDynamicInfo.turnNo = action.payload.gameDynamicInfo.turnNo;
       state.gameDynamicInfo.clock = action.payload.gameDynamicInfo.clock;
-      state.gameDynamicInfo.spectatorCount = action.payload.gameDynamicInfo.spectatorCount ?? 0;
-      state.gameDynamicInfo.spectatorNames = action.payload.gameDynamicInfo.spectatorNames ?? [];
-      state.gameDynamicInfo.playerInventory = action.payload.gameDynamicInfo.playerInventory;
+      state.gameDynamicInfo.spectatorCount =
+        action.payload.gameDynamicInfo.spectatorCount ?? 0;
+      state.gameDynamicInfo.spectatorNames =
+        action.payload.gameDynamicInfo.spectatorNames ?? [];
+      state.gameDynamicInfo.playerInventory =
+        action.payload.gameDynamicInfo.playerInventory;
       state.hasPriority = action.payload.hasPriority;
       state.priorityPlayer = action.payload.priorityPlayer;
       state.chatEnabled = action.payload.chatEnabled;
@@ -1051,7 +1131,8 @@ export const gameSlice = createSlice({
         action.payload.gameInfo.altArts ?? state.gameInfo.altArts;
 
       state.gameInfo.opponentAltArts =
-        action.payload.gameInfo.opponentAltArts ?? state.gameInfo.opponentAltArts;
+        action.payload.gameInfo.opponentAltArts ??
+        state.gameInfo.opponentAltArts;
 
       state.gameInfo.isPrivate =
         action.payload.gameInfo.isPrivate ?? state.gameInfo.isPrivate;
@@ -1064,14 +1145,15 @@ export const gameSlice = createSlice({
 
       state.aiHasInfiniteHP = action.payload.aiHasInfiniteHP ?? false;
 
-      state.opponentActivity = action.payload.opponentActivity ?? state.opponentActivity ?? 0;
+      state.opponentActivity =
+        action.payload.opponentActivity ?? state.opponentActivity ?? 0;
 
       state.preventPassPrompt = action.payload.preventPassPrompt;
 
       // Don't reset inactivity warning on every game state update
       // It should only reset when the CURRENT player takes an action
       // (handled by playCard.fulfilled and submitButton.fulfilled)
-      
+
       // Reset inactivity timer when we get a new game state
       // This ensures both players' timers reset whenever ANY action happens
       if (!state.inactivityWarning) {
@@ -1094,14 +1176,17 @@ export const gameSlice = createSlice({
     });
     builder.addCase(nextTurn.rejected, (state, action) => {
       state.isUpdateInProgress = false;
-      
+
       // Check if this was a "game not found" error
       const errorMessage = action.error?.message || '';
       if (errorMessage.includes('GAME_NOT_FOUND')) {
         console.error('Game not found on server, marking for navigation');
-        window.sessionStorage.setItem('gameNotFound', String(state.gameInfo.gameID));
+        window.sessionStorage.setItem(
+          'gameNotFound',
+          String(state.gameInfo.gameID)
+        );
       }
-      
+
       return state;
     });
 
@@ -1246,8 +1331,10 @@ export const {
 
 export const getGameInfo = (state: RootState) => state.game.gameInfo;
 
-const selectPlayerOnePermanents = (state: RootState) => state.game.playerOne.Permanents;
-const selectPlayerTwoPermanents = (state: RootState) => state.game.playerTwo.Permanents;
+const selectPlayerOnePermanents = (state: RootState) =>
+  state.game.playerOne.Permanents;
+const selectPlayerTwoPermanents = (state: RootState) =>
+  state.game.playerTwo.Permanents;
 
 // Memoized selector factories for player one and player two
 const selectPlayerOnePermanentsAsStack = createSelector(
@@ -1342,6 +1429,11 @@ const selectPlayerTwoPermanentsAsStack = createSelector(
   }
 );
 
-export const selectPermanentsAsStack = (state: RootState, isPlayer: boolean): CardStack[] => {
-  return isPlayer ? selectPlayerOnePermanentsAsStack(state) : selectPlayerTwoPermanentsAsStack(state);
+export const selectPermanentsAsStack = (
+  state: RootState,
+  isPlayer: boolean
+): CardStack[] => {
+  return isPlayer
+    ? selectPlayerOnePermanentsAsStack(state)
+    : selectPlayerTwoPermanentsAsStack(state);
 };

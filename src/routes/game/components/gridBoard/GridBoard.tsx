@@ -34,26 +34,38 @@ const GridBoard = () => {
   const [cookies] = useCookies(['experimental']);
   const settingsData = useAppSelector(getSettingsEntity);
   const { playerID } = useAppSelector(getGameInfo);
-  const spectatorCameraView = useAppSelector((state: any) => state.game.spectatorCameraView);
-  const isMirroredOpponent = settingsData?.[optConst.MIRRORED_BOARD_LAYOUT]?.value === '1';
-  const isMirroredPlayer = settingsData?.[optConst.MIRRORED_PLAYER_BOARD_LAYOUT]?.value === '1';
-  
+  const spectatorCameraView = useAppSelector(
+    (state: any) => state.game.spectatorCameraView
+  );
+  const isMirroredOpponent =
+    settingsData?.[optConst.MIRRORED_BOARD_LAYOUT]?.value === '1';
+  const isMirroredPlayer =
+    settingsData?.[optConst.MIRRORED_PLAYER_BOARD_LAYOUT]?.value === '1';
+
   // For spectators, check if they want to view from player 2's perspective
   const isSpectatorViewingPlayer2 = playerID === 3 && spectatorCameraView === 2;
-  
+
   const gridBoardClass = classNames({
     // Swapped spectator views (with optional mirroring)
-    [styles.SwappedGameBoardGrid]: isSpectatorViewingPlayer2 && !isMirroredOpponent && !isMirroredPlayer,
-    [styles.SwappedMirroredOpponentGameBoardGrid]: isSpectatorViewingPlayer2 && isMirroredOpponent && !isMirroredPlayer,
-    [styles.SwappedMirroredPlayerGameBoardGrid]: isSpectatorViewingPlayer2 && isMirroredPlayer && !isMirroredOpponent,
-    [styles.SwappedMirroredBothGameBoardGrid]: isSpectatorViewingPlayer2 && isMirroredOpponent && isMirroredPlayer,
+    [styles.SwappedGameBoardGrid]:
+      isSpectatorViewingPlayer2 && !isMirroredOpponent && !isMirroredPlayer,
+    [styles.SwappedMirroredOpponentGameBoardGrid]:
+      isSpectatorViewingPlayer2 && isMirroredOpponent && !isMirroredPlayer,
+    [styles.SwappedMirroredPlayerGameBoardGrid]:
+      isSpectatorViewingPlayer2 && isMirroredPlayer && !isMirroredOpponent,
+    [styles.SwappedMirroredBothGameBoardGrid]:
+      isSpectatorViewingPlayer2 && isMirroredOpponent && isMirroredPlayer,
     // Normal views (non-spectator or spectator viewing player 1)
-    [styles.gameBoardGrid]: !isSpectatorViewingPlayer2 && !isMirroredOpponent && !isMirroredPlayer,
-    [styles.MirroredOpponentGameBoardGrid]: !isSpectatorViewingPlayer2 && isMirroredOpponent && !isMirroredPlayer,
-    [styles.MirroredPlayerGameBoardGrid]: !isSpectatorViewingPlayer2 && isMirroredPlayer && !isMirroredOpponent,
-    [styles.MirroredBothGameBoardGrid]: !isSpectatorViewingPlayer2 && isMirroredOpponent && isMirroredPlayer
+    [styles.gameBoardGrid]:
+      !isSpectatorViewingPlayer2 && !isMirroredOpponent && !isMirroredPlayer,
+    [styles.MirroredOpponentGameBoardGrid]:
+      !isSpectatorViewingPlayer2 && isMirroredOpponent && !isMirroredPlayer,
+    [styles.MirroredPlayerGameBoardGrid]:
+      !isSpectatorViewingPlayer2 && isMirroredPlayer && !isMirroredOpponent,
+    [styles.MirroredBothGameBoardGrid]:
+      !isSpectatorViewingPlayer2 && isMirroredOpponent && isMirroredPlayer
   });
-  
+
   return (
     <>
       <ManualModePanel />

@@ -12,7 +12,9 @@ export default function CurrentAttack() {
   const activeCombatChain = useAppSelector(
     (state: RootState) => state.game.activeChainLink
   );
-  const playerID = useAppSelector((state: RootState) => state.game.gameInfo.playerID);
+  const playerID = useAppSelector(
+    (state: RootState) => state.game.gameInfo.playerID
+  );
   const dispatch = useAppDispatch();
   if (
     activeCombatChain === undefined ||
@@ -31,7 +33,10 @@ export default function CurrentAttack() {
   const isPlayer = playerID === attCard.controller;
 
   const targets = activeCombatChain.attackTarget?.split('|');
-  const tooltipText = targets && targets.length > 1 ? `Attack targets: ${targets.join(', ')}` : `Attack target: ${targets?.[0]}`;
+  const tooltipText =
+    targets && targets.length > 1
+      ? `Attack targets: ${targets.join(', ')}`
+      : `Attack target: ${targets?.[0]}`;
 
   return (
     <div className={styles.currentAttack}>
@@ -57,16 +62,17 @@ export default function CurrentAttack() {
           {defValue}
         </div>
         {activeCombatChain.attackTarget ? (
-          <div
-            className={styles.icon}
-            data-tooltip={tooltipText}
-          >
+          <div className={styles.icon} data-tooltip={tooltipText}>
             <BiTargetLock />
           </div>
         ) : null}
       </div>
       <div className={styles.attack}>
-        <CardDisplay card={attCard} activeCombatChain={activeCombatChain} isPlayer={isPlayer} />
+        <CardDisplay
+          card={attCard}
+          activeCombatChain={activeCombatChain}
+          isPlayer={isPlayer}
+        />
       </div>
     </div>
   );

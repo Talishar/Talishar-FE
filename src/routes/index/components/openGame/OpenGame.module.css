@@ -58,19 +58,19 @@ img {
 }
 
 /* Allow larger images for Discord embeds and attachments */
-img:is([class*="attachmentImage"], [class*="embedImage"]) {
+img:is([class*='attachmentImage'], [class*='embedImage']) {
   max-height: none;
 }
 
 /* Special handling for reaction emojis */
-img[class*="reactionEmoji"] {
+img[class*='reactionEmoji'] {
   max-height: 1em !important;
   flex-shrink: 0 !important;
   display: inline !important;
 }
 
 /* Remove margin from Discord message content */
-p:is([class*="messageContent"]) {
+p:is([class*='messageContent']) {
   margin-bottom: 1em !important;
 }
 

@@ -17,8 +17,12 @@ export default function HandZone(prop: Player) {
   );
 
   // Get both hands
-  const playerOneHand = useAppSelector((state: RootState) => state.game.playerOne.Hand);
-  const playerTwoHand = useAppSelector((state: RootState) => state.game.playerTwo.Hand);
+  const playerOneHand = useAppSelector(
+    (state: RootState) => state.game.playerOne.Hand
+  );
+  const playerTwoHand = useAppSelector(
+    (state: RootState) => state.game.playerTwo.Hand
+  );
 
   let handCards;
   if (playerID === 3) {

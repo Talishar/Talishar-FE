@@ -15,7 +15,9 @@ import { RootState } from 'app/Store';
 export default function RightColumn() {
   const isStreamerMode =
     useSetting({ settingName: IS_STREAMER_MODE })?.value === '1';
-  const playerID = useAppSelector((state: RootState) => state.game.gameInfo.playerID);
+  const playerID = useAppSelector(
+    (state: RootState) => state.game.gameInfo.playerID
+  );
   const isSpectator = playerID === 3;
 
   return (
@@ -33,7 +35,7 @@ export default function RightColumn() {
           {!isSpectator && <PriorityControl />}
         </div>
         <div className={styles.bottomGroup}>
-          {isStreamerMode ? <StreamerBox /> : ""}
+          {isStreamerMode ? <StreamerBox /> : ''}
           <ChatBox />
         </div>
       </div>

@@ -8,8 +8,10 @@ export default function Reactions() {
   const activeCombatChain = useAppSelector(
     (state: RootState) => state.game.activeChainLink?.reactionCards
   );
-  const playerID = useAppSelector((state: RootState) => state.game.gameInfo.playerID);
-  
+  const playerID = useAppSelector(
+    (state: RootState) => state.game.gameInfo.playerID
+  );
+
   if (activeCombatChain === undefined) {
     return <div className={styles.currentAttack}></div>;
   }
@@ -21,7 +23,11 @@ export default function Reactions() {
           const isPlayer = playerID === card.controller;
           return (
             <div key={ix.toString()} className={styles.cardContainer}>
-              <CardDisplay card={card} key={ix.toString()} isPlayer={isPlayer} />
+              <CardDisplay
+                card={card}
+                key={ix.toString()}
+                isPlayer={isPlayer}
+              />
             </div>
           );
         })}

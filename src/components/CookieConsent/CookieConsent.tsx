@@ -30,10 +30,10 @@ const CookieConsent: React.FC<CookieConsentProps> = ({ onConsent }) => {
     localStorage.setItem('cookieConsent', 'accepted');
     localStorage.setItem('cookieConsentDate', new Date().toISOString());
     setIsVisible(false);
-    
+
     // Initialize AdSense after consent
     initializeAdSense();
-    
+
     if (onConsent) onConsent(true);
   };
 
@@ -51,38 +51,40 @@ const CookieConsent: React.FC<CookieConsentProps> = ({ onConsent }) => {
       <div className={styles.cookieConsentBanner}>
         <div className={styles.content}>
           <h3 className={styles.title}>🍪 Cookie Consent</h3>
-          
+
           {!isExpanded ? (
             <p className={styles.description}>
-              We use cookies and similar technologies to enhance your experience,
-              analyze site traffic, and serve personalized advertisements through
-              Google AdSense and other third-party services.
+              We use cookies and similar technologies to enhance your
+              experience, analyze site traffic, and serve personalized
+              advertisements through Google AdSense and other third-party
+              services.
             </p>
           ) : (
             <div className={styles.expandedContent}>
               <p className={styles.description}>
-                <strong>Essential Cookies:</strong> Required for game functionality,
-                authentication, and session management.
+                <strong>Essential Cookies:</strong> Required for game
+                functionality, authentication, and session management.
               </p>
               <p className={styles.description}>
-                <strong>Advertising Cookies:</strong> Google and its partners use
-                cookies to serve ads based on your visits to our site and other
-                sites. This helps us keep Talishar free to use.
+                <strong>Advertising Cookies:</strong> Google and its partners
+                use cookies to serve ads based on your visits to our site and
+                other sites. This helps us keep Talishar free to use.
               </p>
               <p className={styles.description}>
-                <strong>Analytics:</strong> We use cookies to understand how visitors
-                interact with our site to improve user experience.
+                <strong>Analytics:</strong> We use cookies to understand how
+                visitors interact with our site to improve user experience.
               </p>
               <p className={styles.description}>
-                You can manage your preferences anytime through your browser settings
-                or by visiting{' '}
+                You can manage your preferences anytime through your browser
+                settings or by visiting{' '}
                 <a
                   href="https://www.google.com/settings/ads"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
                   Google Ads Settings
-                </a>.
+                </a>
+                .
               </p>
             </div>
           )}

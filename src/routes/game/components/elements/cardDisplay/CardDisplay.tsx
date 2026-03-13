@@ -27,13 +27,22 @@ export interface CardProp {
 }
 
 export const CardDisplay = (prop: CardProp) => {
-  const { card, preventUseOnClick, activeCombatChain, num, isPlayer, isShuffling, showCountersOnHover } = prop;
+  const {
+    card,
+    preventUseOnClick,
+    activeCombatChain,
+    num,
+    isPlayer,
+    isShuffling,
+    showCountersOnHover
+  } = prop;
   const dispatch = useAppDispatch();
   const cardBack = useAppSelector((state: RootState) =>
     isPlayer ? state.game.playerOne.CardBack : state.game.playerTwo.CardBack
   ) ?? { cardNumber: '' };
   const { getLanguage } = useLanguageSelector();
-  const [showSubCards, setShowSubCards] = useState(false);  const subCardRef = useRef(null);
+  const [showSubCards, setShowSubCards] = useState(false);
+  const subCardRef = useRef(null);
 
   if (card == null || card.cardNumber === '') {
     return null;
@@ -102,8 +111,12 @@ export const CardDisplay = (prop: CardProp) => {
 
   const subCardsToShow = (() => {
     if (!card.subcards || card.subcards.length === 0) return [];
-    const validSubcards = card.subcards.filter(subCard => !!subCard);
-    return showSubCards ? validSubcards : validSubcards.length ? [validSubcards[0]] : [];
+    const validSubcards = card.subcards.filter((subCard) => !!subCard);
+    return showSubCards
+      ? validSubcards
+      : validSubcards.length
+      ? [validSubcards[0]]
+      : [];
   })();
 
   return (
@@ -116,20 +129,28 @@ export const CardDisplay = (prop: CardProp) => {
       isOpponent={card.isOpponent !== undefined ? card.isOpponent : !isPlayer}
     >
       {subCardsToShow.map((subCardNumber, ix) => {
-        if (!subCardNumber || typeof subCardNumber !== 'string' || subCardNumber.trim() === '') return null;
+        if (
+          !subCardNumber ||
+          typeof subCardNumber !== 'string' ||
+          subCardNumber.trim() === ''
+        )
+          return null;
         const subCardKey = `subcard-${card.cardNumber}-${subCardNumber}-${ix}`;
 
         return (
-            <div
-              ref={subCardRef}
-              style={{
-                top: `calc(-0.15 * ${ix + 1} * var(--card-size))`,
-                zIndex: `-${ix + 1}`,
-              }}
-              className={styles.subCard}
-            >
-              <CardDisplay card={{ cardNumber: subCardNumber }} preventUseOnClick />
-            </div>
+          <div
+            ref={subCardRef}
+            style={{
+              top: `calc(-0.15 * ${ix + 1} * var(--card-size))`,
+              zIndex: `-${ix + 1}`
+            }}
+            className={styles.subCard}
+          >
+            <CardDisplay
+              card={{ cardNumber: subCardNumber }}
+              preventUseOnClick
+            />
+          </div>
         );
       })}
 

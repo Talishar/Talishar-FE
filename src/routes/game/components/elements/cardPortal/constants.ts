@@ -1,5 +1,4 @@
 export const doubleFacedCardsMappings: { [key: string]: string } = {
-
   invoke_azvolai_red: 'azvolai',
   invoke_cromai_red: 'cromai',
   invoke_dominia_red: 'dominia',

@@ -42,7 +42,8 @@
   border: 2px solid var(--theme-contrastHover);
   border-radius: 12px;
   pointer-events: none;
-  box-shadow: inset 0 0 2px var(--theme-overlay), 1px 1px 2px var(--theme-overlay);
+  box-shadow: inset 0 0 2px var(--theme-overlay),
+    1px 1px 2px var(--theme-overlay);
 }
 
 .zoneLayer:nth-child(1),
@@ -59,7 +60,8 @@
   border: 2px solid var(--theme-contrastHover);
   border-radius: 12px;
   pointer-events: none;
-  box-shadow: inset 0 0 2px var(--theme-overlay), 1px 1px 2px var(--theme-overlay);
+  box-shadow: inset 0 0 2px var(--theme-overlay),
+    1px 1px 2px var(--theme-overlay);
   animation: shuffle-animation 0.8s ease-in-out;
   animation-delay: inherit;
 }
@@ -74,13 +76,13 @@
   0% {
     transform: rotate(0deg);
   }
-  25%{
+  25% {
     transform: rotate(540deg);
   }
-  50%{
+  50% {
     transform: rotate(1080deg);
   }
-  75%{
+  75% {
     transform: rotate(540deg);
   }
   100% {
@@ -117,20 +119,23 @@
 
 @keyframes clashFlip {
   0% {
-    transform: translateY(var(--deckOffsetY, 0)) translateX(var(--deckOffsetX, 0)) rotateY(-90deg);
+    transform: translateY(var(--deckOffsetY, 0))
+      translateX(var(--deckOffsetX, 0)) rotateY(-90deg);
     opacity: 0;
   }
   5% {
-    transform: translateY(var(--deckOffsetY, 0)) translateX(var(--deckOffsetX, 0)) rotateY(0deg);
+    transform: translateY(var(--deckOffsetY, 0))
+      translateX(var(--deckOffsetX, 0)) rotateY(0deg);
     opacity: 1;
   }
   85% {
-    transform: translateY(var(--deckOffsetY, 0)) translateX(var(--deckOffsetX, 0)) rotateY(0deg);
+    transform: translateY(var(--deckOffsetY, 0))
+      translateX(var(--deckOffsetX, 0)) rotateY(0deg);
     opacity: 1;
   }
   100% {
-    transform: translateY(var(--deckOffsetY, 0)) translateX(var(--deckOffsetX, 0)) rotateY(-90deg);
+    transform: translateY(var(--deckOffsetY, 0))
+      translateX(var(--deckOffsetX, 0)) rotateY(-90deg);
     opacity: 0;
   }
 }
-

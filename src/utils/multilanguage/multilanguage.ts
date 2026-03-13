@@ -18,23 +18,22 @@ import { CLOUD_IMAGES_URL } from 'appConstants';
 
 const getCollectionCode = (cardNumber: string): string =>
   Object.keys(setIDs).includes(cardNumber)
-  ? setIDs[cardNumber].substring(0, 3)
-  : cardNumber.substring(0, 3);
+    ? setIDs[cardNumber].substring(0, 3)
+    : cardNumber.substring(0, 3);
 
 const getSetID = (cardNumber: string): string =>
-  Object.keys(setIDs).includes(cardNumber)
-  ? setIDs[cardNumber]
-  : cardNumber;
+  Object.keys(setIDs).includes(cardNumber) ? setIDs[cardNumber] : cardNumber;
 
 const isJapaneseCard = (locale: string, collectionCode: string): boolean =>
-  locale === JAPANESE_LANGUAGE && 
+  locale === JAPANESE_LANGUAGE &&
   JAPANESE_LANGUAGE_PRINTED_COLLECTIONS.includes(collectionCode);
 
 // This condition is created due to LSS removing support to Spanish, German and Italian languages from "High Seas" set
-const isFrenchNewSupportedSets = (locale: string, collectionCode: string): boolean => (
-  locale === 'fr' &&
-  FRENCH_PRINTED_COLLECTIONS.includes(collectionCode)
-);
+const isFrenchNewSupportedSets = (
+  locale: string,
+  collectionCode: string
+): boolean =>
+  locale === 'fr' && FRENCH_PRINTED_COLLECTIONS.includes(collectionCode);
 
 const isEuropeanCard = (
   locale: string,
@@ -43,9 +42,8 @@ const isEuropeanCard = (
 ): boolean =>
   EUROPEAN_LANGUAGES.includes(locale) &&
   (EUROPEAN_LANGUAGES_PRINTED_COLLECTIONS.includes(collectionCode) ||
-    isHistoryPackCard(collectionCode, cardNumber) 
-    || isFrenchNewSupportedSets(locale, collectionCode)
-  );
+    isHistoryPackCard(collectionCode, cardNumber) ||
+    isFrenchNewSupportedSets(locale, collectionCode));
 
 const isHistoryPack1Card = (
   collectionCode: string,

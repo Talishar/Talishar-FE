@@ -18,18 +18,20 @@ export default function SpectatorCount() {
     return null;
   }
 
-  const tooltipText = spectatorNames.length > 0 
-    ? spectatorNames.join('\n')
-    : 'Anonymous spectators';
+  const tooltipText =
+    spectatorNames.length > 0
+      ? spectatorNames.join('\n')
+      : 'Anonymous spectators';
 
   return (
-    <div 
+    <div
       className={styles.spectatorCountStyle}
       onMouseEnter={() => setShowTooltip(true)}
       onMouseLeave={() => setShowTooltip(false)}
     >
       <div className={styles.spectatorCountContainer}>
-        <FaEye /> {spectatorCount === 1 ? 'Spectator' : 'Spectators'}: {spectatorCount}
+        <FaEye /> {spectatorCount === 1 ? 'Spectator' : 'Spectators'}:{' '}
+        {spectatorCount}
         {showTooltip && spectatorNames.length > 0 && (
           <div className={styles.tooltip}>
             {spectatorNames.map((name, index) => (

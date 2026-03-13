@@ -1,6 +1,6 @@
 /**
  * AuthKeyMonitoring.ts
- * 
+ *
  * Utility for monitoring and logging auth key loss incidents.
  * Helps diagnose authKey loss issues by tracking when and where keys are lost.
  */
@@ -102,7 +102,7 @@ export const clearAuthKeyLossLog = (): void => {
  */
 export const getAuthKeyLossStatistics = () => {
   const log = getAuthKeyLossLog();
-  
+
   const stats = {
     totalEvents: log.length,
     eventsByGame: {} as Record<number, number>,
@@ -110,12 +110,14 @@ export const getAuthKeyLossStatistics = () => {
     recentEvents: log.slice(-10)
   };
 
-  log.forEach(event => {
+  log.forEach((event) => {
     // Count by game
-    stats.eventsByGame[event.gameId] = (stats.eventsByGame[event.gameId] || 0) + 1;
-    
+    stats.eventsByGame[event.gameId] =
+      (stats.eventsByGame[event.gameId] || 0) + 1;
+
     // Count by source
-    stats.eventsBySource[event.source] = (stats.eventsBySource[event.source] || 0) + 1;
+    stats.eventsBySource[event.source] =
+      (stats.eventsBySource[event.source] || 0) + 1;
   });
 
   return stats;
@@ -129,9 +131,9 @@ export const shouldWarnAboutAuthKeyLoss = (): boolean => {
   if (log.length === 0) return false;
 
   // Warn if more than 5 losses in the last hour
-  const oneHourAgo = Date.now() - (60 * 60 * 1000);
-  const recentLosses = log.filter(event => event.timestamp > oneHourAgo);
-  
+  const oneHourAgo = Date.now() - 60 * 60 * 1000;
+  const recentLosses = log.filter((event) => event.timestamp > oneHourAgo);
+
   return recentLosses.length > 5;
 };
 

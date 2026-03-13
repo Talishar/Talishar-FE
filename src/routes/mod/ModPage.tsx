@@ -17,7 +17,9 @@ const ModPage: React.FC = () => {
   const [gameToClose, setGameToClose] = useState('');
   const [playerToBan, setPlayerToBan] = useState('');
   const [usernameToDelete, setUsernameToDelete] = useState('');
-  const [selectedUserEmail, setSelectedUserEmail] = useState<string | null>(null);
+  const [selectedUserEmail, setSelectedUserEmail] = useState<string | null>(
+    null
+  );
 
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
@@ -30,9 +32,12 @@ const ModPage: React.FC = () => {
   } = useGetModPageDataQuery(undefined);
 
   const [banByIP, { isLoading: isBanningByIP }] = useBanPlayerByIPMutation();
-  const [banByName, { isLoading: isBanningByName }] = useBanPlayerByNameMutation();
-  const [closeGameMutation, { isLoading: isClosingGame }] = useCloseGameMutation();
-  const [deleteUsername, { isLoading: isDeletingUsername }] = useDeleteUsernameMutation();
+  const [banByName, { isLoading: isBanningByName }] =
+    useBanPlayerByNameMutation();
+  const [closeGameMutation, { isLoading: isClosingGame }] =
+    useCloseGameMutation();
+  const [deleteUsername, { isLoading: isDeletingUsername }] =
+    useDeleteUsernameMutation();
 
   const handleBanByIP = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -93,19 +98,27 @@ const ModPage: React.FC = () => {
     }
 
     try {
-      console.log('[ModPage Delete Username] Starting deletion for:', usernameToDelete);
+      console.log(
+        '[ModPage Delete Username] Starting deletion for:',
+        usernameToDelete
+      );
       const response = await deleteUsername({ usernameToDelete }).unwrap();
       console.log('[ModPage Delete Username] Success response:', response);
-      
+
       // Show success toast
-      toast.success(response.message || 'Username deleted successfully from database', {
-        style: {
-          minWidth: '300px'
-        },
-        position: 'top-center'
-      });
-      
-      setSuccessMessage(response.message || 'Username deleted successfully from database');
+      toast.success(
+        response.message || 'Username deleted successfully from database',
+        {
+          style: {
+            minWidth: '300px'
+          },
+          position: 'top-center'
+        }
+      );
+
+      setSuccessMessage(
+        response.message || 'Username deleted successfully from database'
+      );
       setUsernameToDelete('');
       setSelectedUserEmail(null);
     } catch (err: any) {
@@ -117,9 +130,14 @@ const ModPage: React.FC = () => {
         data: err?.data,
         toString: err?.toString()
       });
-      
-      const errorMessage = err?.data?.message || err?.message || err?.error || err?.toString() || 'Unknown error';
-      
+
+      const errorMessage =
+        err?.data?.message ||
+        err?.message ||
+        err?.error ||
+        err?.toString() ||
+        'Unknown error';
+
       // Show error toast
       toast.error(`Error deleting username: ${errorMessage}`, {
         style: {
@@ -135,7 +153,9 @@ const ModPage: React.FC = () => {
       <div className={styles.modPagePanel}>
         <h1 className={styles.title}>Moderator Panel</h1>
 
-        {successMessage && <div className={styles.successMessage}>{successMessage}</div>}
+        {successMessage && (
+          <div className={styles.successMessage}>{successMessage}</div>
+        )}
 
         <div className={styles.contentWrapper}>
           <div className={styles.leftColumn}>
@@ -149,7 +169,9 @@ const ModPage: React.FC = () => {
                 onChange={(e) => setIpToBan(e.target.value)}
                 required
               />
-              <label htmlFor="playerNumberToBan">Player to ban? (1 or 2):</label>
+              <label htmlFor="playerNumberToBan">
+                Player to ban? (1 or 2):
+              </label>
               <input
                 type="text"
                 id="playerNumberToBan"
@@ -197,7 +219,10 @@ const ModPage: React.FC = () => {
                   setSelectedUserEmail(email);
                 }}
               />
-              <button type="submit" disabled={isDeletingUsername || !usernameToDelete.trim()}>
+              <button
+                type="submit"
+                disabled={isDeletingUsername || !usernameToDelete.trim()}
+              >
                 {isDeletingUsername ? 'Deleting...' : 'Delete Username'}
               </button>
             </form>
@@ -208,7 +233,8 @@ const ModPage: React.FC = () => {
               <h2>Most Recently Created Accounts</h2>
               {isLoading ? (
                 <p>Loading...</p>
-              ) : modPageData?.recentAccounts && modPageData.recentAccounts.length > 0 ? (
+              ) : modPageData?.recentAccounts &&
+                modPageData.recentAccounts.length > 0 ? (
                 <ul className={styles.dataList}>
                   {modPageData.recentAccounts.map((account, index) => (
                     <li key={index}>{account}</li>
@@ -225,7 +251,8 @@ const ModPage: React.FC = () => {
               <h2>Banned Players</h2>
               {isLoading ? (
                 <p>Loading...</p>
-              ) : modPageData?.bannedPlayers && modPageData.bannedPlayers.length > 0 ? (
+              ) : modPageData?.bannedPlayers &&
+                modPageData.bannedPlayers.length > 0 ? (
                 <ul className={styles.dataList}>
                   {modPageData.bannedPlayers.map((player, index) => (
                     <li key={index}>{player}</li>

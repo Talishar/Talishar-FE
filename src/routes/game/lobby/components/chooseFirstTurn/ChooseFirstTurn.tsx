@@ -1,4 +1,3 @@
-
 import React, { ReactEventHandler } from 'react';
 import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
@@ -60,7 +59,7 @@ const ChooseFirstTurn = () => {
           <h5>Would you like to go first or second?</h5>
         </hgroup>
         <div className={styles.buttons}>
-          <button 
+          <button
             className={styles.firstButton}
             onClick={chooseFirst}
             type="button"
@@ -70,7 +69,7 @@ const ChooseFirstTurn = () => {
             </div>
             First
           </button>
-          <button 
+          <button
             className={styles.secondButton}
             onClick={chooseSecond}
             type="button"

@@ -35,7 +35,9 @@ const OptionsSettings = () => {
   const dispatch = useAppDispatch();
   const [windowWidth] = useWindowDimensions();
   const isMobile = windowWidth < 768;
-  const playerID = useAppSelector((state: RootState) => state.game.gameInfo.playerID);
+  const playerID = useAppSelector(
+    (state: RootState) => state.game.gameInfo.playerID
+  );
   const isSpectator = playerID === 3;
   const [cookies, setCookie, removeCookie] = useCookies([
     'experimental',
@@ -81,12 +83,16 @@ const OptionsSettings = () => {
     manualTunic: settingsData['ManualTunic']?.value === '1',
     disableFabInsights: settingsData['DisableFabInsights']?.value === '1',
     disableHeroIntro: settingsData['DisableHeroIntro']?.value === '1',
-    mirroredBoardLayout: settingsData[optConst.MIRRORED_BOARD_LAYOUT]?.value === '1',
-    mirroredPlayerBoardLayout: settingsData[optConst.MIRRORED_PLAYER_BOARD_LAYOUT]?.value === '1',
-    alwaysShowCounters: String(settingsData[optConst.ALWAYS_SHOW_COUNTERS]?.value) === '1',
-    hideHandFromFriends: settingsData[optConst.HIDE_HAND_FROM_FRIENDS]?.value === '1',
+    mirroredBoardLayout:
+      settingsData[optConst.MIRRORED_BOARD_LAYOUT]?.value === '1',
+    mirroredPlayerBoardLayout:
+      settingsData[optConst.MIRRORED_PLAYER_BOARD_LAYOUT]?.value === '1',
+    alwaysShowCounters:
+      String(settingsData[optConst.ALWAYS_SHOW_COUNTERS]?.value) === '1',
+    hideHandFromFriends:
+      settingsData[optConst.HIDE_HAND_FROM_FRIENDS]?.value === '1'
   };
-  
+
   useShortcut(DEFAULT_SHORTCUTS.TOGGLE_MANUAL_MODE, () => {
     handleSettingsChange({ name: optConst.MANUAL_MODE, value: '1' });
   });
@@ -118,7 +124,7 @@ const OptionsSettings = () => {
   const transparencyPresets = [
     { value: 0.75, label: '75%' },
     { value: 0.85, label: '85%' },
-    { value: 0.90, label: '90%' },
+    { value: 0.9, label: '90%' },
     { value: 0.95, label: '95%' },
     { value: 1.0, label: '100%' }
   ];
@@ -142,40 +148,40 @@ const OptionsSettings = () => {
       )}
       {!isSpectator && (
         <Fieldset legend="Skip Overrides">
-        <CheckboxSetting
-          name="skipAttackReactions"
-          label="Skip Attack Reactions"
-          checked={initialValues.skipAttackReactions}
-          onChange={() =>
-            handleSettingsChange({
-              name: optConst.SKIP_AR_WINDOW,
-              value: initialValues.skipAttackReactions ? '0' : '1'
-            })
-          }
-        />
-        <CheckboxSetting
-          name="skipDefenseReactions"
-          label="Skip Defense Reactions"
-          checked={initialValues.skipDefenseReactions}
-          onChange={() =>
-            handleSettingsChange({
-              name: optConst.SKIP_DR_WINDOW,
-              value: initialValues.skipDefenseReactions ? '0' : '1'
-            })
-          }
-        />
-        <CheckboxSetting
-          name="manualTargeting"
-          label="Manual Targeting"
-          checked={initialValues.manualTargeting}
-          onChange={() =>
-            handleSettingsChange({
-              name: optConst.AUTO_TARGET_OPPONENT,
-              value: initialValues.manualTargeting ? '1' : '0'
-            })
-          }
-        />
-      </Fieldset>
+          <CheckboxSetting
+            name="skipAttackReactions"
+            label="Skip Attack Reactions"
+            checked={initialValues.skipAttackReactions}
+            onChange={() =>
+              handleSettingsChange({
+                name: optConst.SKIP_AR_WINDOW,
+                value: initialValues.skipAttackReactions ? '0' : '1'
+              })
+            }
+          />
+          <CheckboxSetting
+            name="skipDefenseReactions"
+            label="Skip Defense Reactions"
+            checked={initialValues.skipDefenseReactions}
+            onChange={() =>
+              handleSettingsChange({
+                name: optConst.SKIP_DR_WINDOW,
+                value: initialValues.skipDefenseReactions ? '0' : '1'
+              })
+            }
+          />
+          <CheckboxSetting
+            name="manualTargeting"
+            label="Manual Targeting"
+            checked={initialValues.manualTargeting}
+            onChange={() =>
+              handleSettingsChange({
+                name: optConst.AUTO_TARGET_OPPONENT,
+                value: initialValues.manualTargeting ? '1' : '0'
+              })
+            }
+          />
+        </Fieldset>
       )}
 
       {!isSpectator && (
@@ -196,67 +202,67 @@ const OptionsSettings = () => {
 
       {!isSpectator && (
         <Fieldset legend="Modes">
-        <CheckboxSetting
-          name="streamerMode"
-          label="Streamer Mode"
-          checked={initialValues.streamerMode}
-          onChange={() =>
-            handleSettingsChange({
-              name: optConst.IS_STREAMER_MODE,
-              value: initialValues.streamerMode ? '0' : '1'
-            })
-          }
-          ariaDisabled={true}
-        />
-        <CheckboxSetting
-          name="casterMode"
-          label="Caster Mode"
-          tooltip="Show both players hands for casting purposes, only if both players have the setting enabled."
-          checked={initialValues.casterMode}
-          onChange={() =>
-            handleSettingsChange({
-              name: optConst.IS_CASTER_MODE,
-              value: initialValues.casterMode ? '0' : '1'
-            })
-          }
-          ariaDisabled={true}
-        />
-        <CheckboxSetting
-          name="hideHandFromFriends"
-          label="Hide hand from friends"
-          tooltip="Do not show your hand content to your friends."
-          checked={initialValues.hideHandFromFriends}
-          onChange={() =>
-            handleSettingsChange({
-              name: optConst.HIDE_HAND_FROM_FRIENDS,
-              value: initialValues.hideHandFromFriends ? '0' : '1'
-            })
-          }
-        />
-        <CheckboxSetting
-          name="manualMode"
-          label="Manual Mode"
-          checked={initialValues.manualMode}
-          onChange={() =>
-            handleSettingsChange({
-              name: optConst.MANUAL_MODE,
-              value: initialValues.manualMode ? '0' : '1'
-            })
-          }
-          ariaDisabled={true}
-        />
-        <CheckboxSetting
-          name="manualTunic"
-          label="Manual Tunic Mode"
-          checked={initialValues.manualTunic}
-          onChange={() =>
-            handleSettingsChange({
-              name: optConst.MANUAL_TUNIC,
-              value: initialValues.manualTunic ? '0' : '1'
-            })
-          }
-        />
-      </Fieldset>
+          <CheckboxSetting
+            name="streamerMode"
+            label="Streamer Mode"
+            checked={initialValues.streamerMode}
+            onChange={() =>
+              handleSettingsChange({
+                name: optConst.IS_STREAMER_MODE,
+                value: initialValues.streamerMode ? '0' : '1'
+              })
+            }
+            ariaDisabled={true}
+          />
+          <CheckboxSetting
+            name="casterMode"
+            label="Caster Mode"
+            tooltip="Show both players hands for casting purposes, only if both players have the setting enabled."
+            checked={initialValues.casterMode}
+            onChange={() =>
+              handleSettingsChange({
+                name: optConst.IS_CASTER_MODE,
+                value: initialValues.casterMode ? '0' : '1'
+              })
+            }
+            ariaDisabled={true}
+          />
+          <CheckboxSetting
+            name="hideHandFromFriends"
+            label="Hide hand from friends"
+            tooltip="Do not show your hand content to your friends."
+            checked={initialValues.hideHandFromFriends}
+            onChange={() =>
+              handleSettingsChange({
+                name: optConst.HIDE_HAND_FROM_FRIENDS,
+                value: initialValues.hideHandFromFriends ? '0' : '1'
+              })
+            }
+          />
+          <CheckboxSetting
+            name="manualMode"
+            label="Manual Mode"
+            checked={initialValues.manualMode}
+            onChange={() =>
+              handleSettingsChange({
+                name: optConst.MANUAL_MODE,
+                value: initialValues.manualMode ? '0' : '1'
+              })
+            }
+            ariaDisabled={true}
+          />
+          <CheckboxSetting
+            name="manualTunic"
+            label="Manual Tunic Mode"
+            checked={initialValues.manualTunic}
+            onChange={() =>
+              handleSettingsChange({
+                name: optConst.MANUAL_TUNIC,
+                value: initialValues.manualTunic ? '0' : '1'
+              })
+            }
+          />
+        </Fieldset>
       )}
 
       <Fieldset legend="Accessibility & Other">
@@ -345,7 +351,7 @@ const OptionsSettings = () => {
       <Fieldset legend="Cards Language">
         <LanguageSelector />
       </Fieldset>
-      
+
       <Fieldset legend="Theme">
         <ThemeToggle />
       </Fieldset>
@@ -423,8 +429,11 @@ const OptionsSettings = () => {
         Talishar is in no way affiliated with Legend Story Studios. Legend Story
         Studios®, Flesh and Blood™, and set names are trademarks of Legend Story
         Studios. Flesh and Blood characters, cards, logos, and art are property
-        of <a href="https://legendstory.com/" target="_blank" rel="noreferrer">Legend Story Studios</a>. 
-        Card Images © Legend Story Studios
+        of{' '}
+        <a href="https://legendstory.com/" target="_blank" rel="noreferrer">
+          Legend Story Studios
+        </a>
+        . Card Images © Legend Story Studios
       </p>
     </div>
   );

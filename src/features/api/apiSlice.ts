@@ -48,7 +48,11 @@ import {
 } from 'interface/API/UpdateFavoriteDeck.php';
 import { PatreonLoginResponse } from 'routes/user/profile/linkpatreon/linkPatreon';
 import { UserProfileAPIResponse } from 'interface/API/UserProfileAPI.php';
-import { MetafyLoginResponse, MetafySignupResponse, RefreshMetafyCommunitiesResponse } from 'interface/API/MetafyAPI.php';
+import {
+  MetafyLoginResponse,
+  MetafySignupResponse,
+  RefreshMetafyCommunitiesResponse
+} from 'interface/API/MetafyAPI.php';
 import { SubmitChatAPI } from 'interface/API/SubmitChat.php';
 import {
   ModPageDataResponse,
@@ -91,7 +95,7 @@ export const rtkQueryErrorToaster: Middleware =
       //console.log('errorMessage:', errorMessage);
       //console.log('action.payload:', action.payload);
       //console.log('action.error:', action.error);
-      
+
       // Suppress 401 Unauthorized errors - these are often benign (e.g., logging out/in quickly)
       // and not user-facing errors that need a toast notification
       if (errorStatus !== 401) {
@@ -122,12 +126,16 @@ export const parseResponse = async (response: any) => {
     toast.error(`BE Response:\n${cleanedError}`);
     stringData = stringData.substring(indexOfBraces);
   }
-  
+
   // Only try to parse if we have valid JSON-like content
-  if (stringData.length === 0 || stringData === '{}' || !stringData.startsWith('{')) {
+  if (
+    stringData.length === 0 ||
+    stringData === '{}' ||
+    !stringData.startsWith('{')
+  ) {
     return {};
   }
-  
+
   try {
     return JSON.parse(stringData);
   } catch (e) {
@@ -149,22 +157,25 @@ const dynamicBaseQuery: BaseQueryFn<
     baseUrl,
     credentials: 'include'
   });
-  
+
   const result = await rawBaseQuery(args, webApi, extraOptions);
-  
+
   // Check for VPN provider blocks in response headers
   if (result.meta?.response?.headers) {
     const vpnBlock = detectVpnBlock(result.meta.response.headers);
     if (vpnBlock) {
       logVpnBlock(vpnBlock);
-      
+
       // For BlockedUsersAPI specifically, gracefully degrade instead of erroring
-      if (typeof args === 'object' && (args as any).url?.includes('BlockedUsersAPI')) {
+      if (
+        typeof args === 'object' &&
+        (args as any).url?.includes('BlockedUsersAPI')
+      ) {
         return { data: { blockedUsers: [] } };
       }
     }
   }
-  
+
   return result;
 };
 
@@ -341,7 +352,10 @@ export const apiSlice = createApi({
         };
       }
     }),
-    addFavoriteDeck: builder.mutation<AddFavoriteDeckResponse, AddFavoriteDeckRequest>({
+    addFavoriteDeck: builder.mutation<
+      AddFavoriteDeckResponse,
+      AddFavoriteDeckRequest
+    >({
       query: (body: AddFavoriteDeckRequest) => {
         return {
           url: URL_END_POINT.ADD_FAVORITE_DECK,
@@ -351,7 +365,10 @@ export const apiSlice = createApi({
         };
       }
     }),
-    updateFavoriteDeck: builder.mutation<UpdateFavoriteDeckResponse, UpdateFavoriteDeckRequest>({
+    updateFavoriteDeck: builder.mutation<
+      UpdateFavoriteDeckResponse,
+      UpdateFavoriteDeckRequest
+    >({
       query: (body: UpdateFavoriteDeckRequest) => {
         return {
           url: URL_END_POINT.UPDATE_FAVORITE_DECK,
@@ -361,7 +378,10 @@ export const apiSlice = createApi({
         };
       }
     }),
-    deleteAccount: builder.mutation<DeleteAccountAPIResponse, DeleteAccountAPIRequest>({
+    deleteAccount: builder.mutation<
+      DeleteAccountAPIResponse,
+      DeleteAccountAPIRequest
+    >({
       query: (body: DeleteAccountAPIRequest) => {
         return {
           url: URL_END_POINT.DELETE_ACCOUNT,
@@ -542,7 +562,10 @@ export const apiSlice = createApi({
       },
       invalidatesTags: ['Auth', { type: 'UserProfile', id: 'LIST' }]
     }),
-    refreshMetafyCommunities: builder.mutation<RefreshMetafyCommunitiesResponse, void>({
+    refreshMetafyCommunities: builder.mutation<
+      RefreshMetafyCommunitiesResponse,
+      void
+    >({
       query: () => {
         return {
           url: URL_END_POINT.METAFY_REFRESH_COMMUNITIES,
@@ -590,7 +613,10 @@ export const apiSlice = createApi({
       },
       invalidatesTags: [{ type: 'ModPageData', id: 'LIST' }]
     }),
-    deleteUsername: builder.mutation<DeleteAccountAPIResponse, DeleteUsernameRequest>({
+    deleteUsername: builder.mutation<
+      DeleteAccountAPIResponse,
+      DeleteUsernameRequest
+    >({
       query: ({ usernameToDelete }) => {
         return {
           url: URL_END_POINT.DELETE_ACCOUNT,
@@ -617,7 +643,9 @@ export const apiSlice = createApi({
     searchUsernames: builder.query<SearchUsernamesResponse, string>({
       query: (searchQuery) => {
         return {
-          url: `${URL_END_POINT.SEARCH_USERNAMES}?q=${encodeURIComponent(searchQuery)}`,
+          url: `${URL_END_POINT.SEARCH_USERNAMES}?q=${encodeURIComponent(
+            searchQuery
+          )}`,
           method: 'GET',
           responseHandler: parseResponse
         };
@@ -633,7 +661,10 @@ export const apiSlice = createApi({
         };
       }
     }),
-    addFriend: builder.mutation<FriendListAPIResponse, { friendUsername: string }>({
+    addFriend: builder.mutation<
+      FriendListAPIResponse,
+      { friendUsername: string }
+    >({
       query: ({ friendUsername }) => {
         return {
           url: URL_END_POINT.FRIEND_LIST,
@@ -643,7 +674,10 @@ export const apiSlice = createApi({
         };
       }
     }),
-    removeFriend: builder.mutation<FriendListAPIResponse, { friendUserId: number }>({
+    removeFriend: builder.mutation<
+      FriendListAPIResponse,
+      { friendUserId: number }
+    >({
       query: ({ friendUserId }) => {
         return {
           url: URL_END_POINT.FRIEND_LIST,
@@ -653,7 +687,10 @@ export const apiSlice = createApi({
         };
       }
     }),
-    searchUsers: builder.query<FriendListAPIResponse, { searchTerm: string; limit?: number }>({
+    searchUsers: builder.query<
+      FriendListAPIResponse,
+      { searchTerm: string; limit?: number }
+    >({
       query: ({ searchTerm, limit = 10 }) => {
         return {
           url: URL_END_POINT.FRIEND_LIST,
@@ -673,7 +710,10 @@ export const apiSlice = createApi({
         };
       }
     }),
-    acceptRequest: builder.mutation<FriendListAPIResponse, { requesterUserId: number }>({
+    acceptRequest: builder.mutation<
+      FriendListAPIResponse,
+      { requesterUserId: number }
+    >({
       query: ({ requesterUserId }) => {
         return {
           url: URL_END_POINT.FRIEND_LIST,
@@ -683,7 +723,10 @@ export const apiSlice = createApi({
         };
       }
     }),
-    rejectRequest: builder.mutation<FriendListAPIResponse, { requesterUserId: number }>({
+    rejectRequest: builder.mutation<
+      FriendListAPIResponse,
+      { requesterUserId: number }
+    >({
       query: ({ requesterUserId }) => {
         return {
           url: URL_END_POINT.FRIEND_LIST,
@@ -703,7 +746,10 @@ export const apiSlice = createApi({
         };
       }
     }),
-    cancelRequest: builder.mutation<FriendListAPIResponse, { recipientUserId: number }>({
+    cancelRequest: builder.mutation<
+      FriendListAPIResponse,
+      { recipientUserId: number }
+    >({
       query: ({ recipientUserId }) => {
         return {
           url: URL_END_POINT.FRIEND_LIST,
@@ -713,12 +759,19 @@ export const apiSlice = createApi({
         };
       }
     }),
-    updateFriendNickname: builder.mutation<FriendListAPIResponse, { friendUserId: number; nickname: string }>({
+    updateFriendNickname: builder.mutation<
+      FriendListAPIResponse,
+      { friendUserId: number; nickname: string }
+    >({
       query: ({ friendUserId, nickname }) => {
         return {
           url: URL_END_POINT.FRIEND_LIST,
           method: 'POST',
-          body: { action: 'updateNickname', friendUserId: friendUserId, nickname: nickname },
+          body: {
+            action: 'updateNickname',
+            friendUserId: friendUserId,
+            nickname: nickname
+          },
           responseHandler: parseResponse
         };
       }
@@ -734,13 +787,15 @@ export const apiSlice = createApi({
             body: { action: 'getBlockedUsers' },
             responseHandler: parseResponse
           });
-          
+
           // If we get a 405 or other error, return empty blocked users list instead of error
           if (!result.data) {
-            console.warn('BlockedUsersAPI unavailable, continuing without blocked users');
+            console.warn(
+              'BlockedUsersAPI unavailable, continuing without blocked users'
+            );
             return { data: { blockedUsers: [] } as BlockedUsersAPIResponse };
           }
-          
+
           return result;
         } catch (error) {
           console.warn('Failed to fetch blocked users:', error);
@@ -750,7 +805,10 @@ export const apiSlice = createApi({
       }
     }),
 
-    blockUser: builder.mutation<BlockedUsersAPIResponse, { blockedUsername: string }>({
+    blockUser: builder.mutation<
+      BlockedUsersAPIResponse,
+      { blockedUsername: string }
+    >({
       query: ({ blockedUsername }) => {
         return {
           url: URL_END_POINT.BLOCKED_USERS,
@@ -760,19 +818,28 @@ export const apiSlice = createApi({
         };
       },
       // Handle errors gracefully - don't crash if BlockedUsersAPI is unavailable
-      async onQueryStarted({ blockedUsername }, { dispatch, queryFulfilled, getState }) {
+      async onQueryStarted(
+        { blockedUsername },
+        { dispatch, queryFulfilled, getState }
+      ) {
         try {
           await queryFulfilled;
         } catch (error: any) {
           if (error.error?.status === 405 || error.error?.status === 401) {
             // If API is unavailable, just log a warning and continue
-            console.warn(`Could not block user ${blockedUsername}:`, error.error?.data?.error || 'API unavailable');
+            console.warn(
+              `Could not block user ${blockedUsername}:`,
+              error.error?.data?.error || 'API unavailable'
+            );
           }
         }
       }
     }),
 
-    unblockUser: builder.mutation<BlockedUsersAPIResponse, { blockedUserId: number }>({
+    unblockUser: builder.mutation<
+      BlockedUsersAPIResponse,
+      { blockedUserId: number }
+    >({
       query: ({ blockedUserId }) => {
         return {
           url: URL_END_POINT.BLOCKED_USERS,
@@ -782,13 +849,19 @@ export const apiSlice = createApi({
         };
       },
       // Handle errors gracefully - don't crash if BlockedUsersAPI is unavailable
-      async onQueryStarted({ blockedUserId }, { dispatch, queryFulfilled, getState }) {
+      async onQueryStarted(
+        { blockedUserId },
+        { dispatch, queryFulfilled, getState }
+      ) {
         try {
           await queryFulfilled;
         } catch (error: any) {
           if (error.error?.status === 405 || error.error?.status === 401) {
             // If API is unavailable, just log a warning and continue
-            console.warn(`Could not unblock user ${blockedUserId}:`, error.error?.data?.error || 'API unavailable');
+            console.warn(
+              `Could not unblock user ${blockedUserId}:`,
+              error.error?.data?.error || 'API unavailable'
+            );
           }
         }
       }
@@ -829,7 +902,10 @@ export const apiSlice = createApi({
     }),
 
     // Private Messaging endpoints
-    sendPrivateMessage: builder.mutation<PrivateMessagingAPIResponse, { toUserId: number; message: string; gameLink?: string }>({
+    sendPrivateMessage: builder.mutation<
+      PrivateMessagingAPIResponse,
+      { toUserId: number; message: string; gameLink?: string }
+    >({
       query: ({ toUserId, message, gameLink }) => {
         return {
           url: URL_END_POINT.PRIVATE_MESSAGING,
@@ -839,7 +915,10 @@ export const apiSlice = createApi({
         };
       }
     }),
-    getPrivateMessages: builder.query<PrivateMessagingAPIResponse, { friendUserId: number; limit?: number }>({
+    getPrivateMessages: builder.query<
+      PrivateMessagingAPIResponse,
+      { friendUserId: number; limit?: number }
+    >({
       query: ({ friendUserId, limit = 50 }) => {
         return {
           url: URL_END_POINT.PRIVATE_MESSAGING,
@@ -849,7 +928,10 @@ export const apiSlice = createApi({
         };
       }
     }),
-    markMessagesAsRead: builder.mutation<PrivateMessagingAPIResponse, { messageIds: number[] }>({
+    markMessagesAsRead: builder.mutation<
+      PrivateMessagingAPIResponse,
+      { messageIds: number[] }
+    >({
       query: ({ messageIds }) => {
         return {
           url: URL_END_POINT.PRIVATE_MESSAGING,
@@ -879,7 +961,10 @@ export const apiSlice = createApi({
         };
       }
     }),
-    getUnreadMessageCountByFriend: builder.query<PrivateMessagingAPIResponse, void>({
+    getUnreadMessageCountByFriend: builder.query<
+      PrivateMessagingAPIResponse,
+      void
+    >({
       query: () => {
         return {
           url: URL_END_POINT.PRIVATE_MESSAGING,
@@ -889,7 +974,10 @@ export const apiSlice = createApi({
         };
       }
     }),
-    createQuickGame: builder.mutation<CreateGameResponse, { format: string; visibility: string }>({
+    createQuickGame: builder.mutation<
+      CreateGameResponse,
+      { format: string; visibility: string }
+    >({
       query: (prefs) => {
         return {
           url: URL_END_POINT.CREATE_GAME,
@@ -932,7 +1020,10 @@ export const apiSlice = createApi({
         };
       }
     }),
-    checkOpponentTyping: builder.query<{ opponentIsTyping: boolean }, { gameID: number; playerID: number }>({
+    checkOpponentTyping: builder.query<
+      { opponentIsTyping: boolean },
+      { gameID: number; playerID: number }
+    >({
       query: ({ gameID = 0, playerID = 0 }) => {
         return {
           url: 'APIs/CheckOpponentTyping.php',

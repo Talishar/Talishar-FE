@@ -13,12 +13,14 @@
   width: 8px;
   height: 8px;
   background: radial-gradient(circle at 30% 30%, #ff6b6b, #cc0000);
-  box-shadow: 0 0 6px #ff6b6b, 0 0 12px #cc0000, inset 0 0 3px rgba(255, 255, 255, 0.5);
+  box-shadow: 0 0 6px #ff6b6b, 0 0 12px #cc0000,
+    inset 0 0 3px rgba(255, 255, 255, 0.5);
 }
 
 .chiParticle {
   width: 8px;
   height: 8px;
   background: radial-gradient(circle at 30% 30%, #4d9eff, #0066cc);
-  box-shadow: 0 0 6px #4d9eff, 0 0 12px #0066cc, inset 0 0 3px rgba(255, 255, 255, 0.5);
+  box-shadow: 0 0 6px #4d9eff, 0 0 12px #0066cc,
+    inset 0 0 3px rgba(255, 255, 255, 0.5);
 }

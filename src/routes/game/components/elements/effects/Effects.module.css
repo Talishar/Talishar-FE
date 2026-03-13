@@ -70,7 +70,6 @@
 }
 
 @media (orientation: portrait) {
-
   .overlayContainer .img {
     width: 100%;
     height: auto;

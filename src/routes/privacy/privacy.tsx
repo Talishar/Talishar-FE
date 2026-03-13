@@ -10,10 +10,9 @@ export const Privacy = () => {
           Talishar is in no way affiliated with Legend Story Studios. Legend
           Story Studios®, Flesh and Blood™, and set names are trademarks of
           Legend Story Studios. Flesh and Blood characters, cards, logos, and
-          art are property of Legend Story Studios.
-          Talishar is a "Rules enforcement application" for the Flesh and Blood™
-          TCG created by Legend Story Studios®. The related IP is used in
-          accordance with the{' '}
+          art are property of Legend Story Studios. Talishar is a "Rules
+          enforcement application" for the Flesh and Blood™ TCG created by
+          Legend Story Studios®. The related IP is used in accordance with the{' '}
           <a href="https://fabtcg.com/resources/terms-use-licensed-assets/">
             Terms of Use for Game and Studio Assets and IP
           </a>
@@ -37,21 +36,22 @@ export const Privacy = () => {
           not receive this cookie, you must not play the game.
         </p>
         <h1>Talishar Privacy Policy</h1>
-        
+
         <h2>Data Collection and Use</h2>
         <p>
-          Talishar uses third-party advertising services, including Google AdSense,
-          to serve advertisements when you visit our website. These companies may
-          use information about your visits to this and other websites to provide
-          relevant advertisements about goods and services.
+          Talishar uses third-party advertising services, including Google
+          AdSense, to serve advertisements when you visit our website. These
+          companies may use information about your visits to this and other
+          websites to provide relevant advertisements about goods and services.
         </p>
 
         <h2>Google AdSense and Cookies</h2>
         <p>
-          Google, as a third party vendor, uses cookies to serve ads on Talishar.
-          Google's use of advertising cookies enables it and its partners to serve
-          ads to you based on your visit to Talishar and/or other sites on the
-          Internet. These cookies allow Google and its partners to:
+          Google, as a third party vendor, uses cookies to serve ads on
+          Talishar. Google's use of advertising cookies enables it and its
+          partners to serve ads to you based on your visit to Talishar and/or
+          other sites on the Internet. These cookies allow Google and its
+          partners to:
         </p>
         <ul>
           <li>Display personalized ads based on your interests</li>
@@ -67,9 +67,14 @@ export const Privacy = () => {
         <p>
           <strong>Learn more:</strong> For more information about how Google
           uses data when you use our site, please visit{' '}
-          <a href="https://policies.google.com/technologies/partner-sites" target="_blank" rel="noopener noreferrer">
+          <a
+            href="https://policies.google.com/technologies/partner-sites"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             How Google uses data when you use our partners' sites or apps
-          </a>.
+          </a>
+          .
         </p>
 
         <h2>Your Privacy Choices</h2>
@@ -79,28 +84,41 @@ export const Privacy = () => {
         <ul>
           <li>
             <strong>Opt out of personalized advertising:</strong> Visit{' '}
-            <a href="https://www.google.com/settings/ads" target="_blank" rel="noopener noreferrer">
+            <a
+              href="https://www.google.com/settings/ads"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               Google Ads Settings
             </a>{' '}
-            to manage your ad preferences and opt out of personalized advertising.
+            to manage your ad preferences and opt out of personalized
+            advertising.
           </li>
           <li>
             <strong>Opt out of third-party cookies:</strong> Visit{' '}
-            <a href="http://www.aboutads.info/choices/" target="_blank" rel="noopener noreferrer">
+            <a
+              href="http://www.aboutads.info/choices/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               aboutads.info
             </a>{' '}
             or{' '}
-            <a href="http://www.youronlinechoices.eu/" target="_blank" rel="noopener noreferrer">
+            <a
+              href="http://www.youronlinechoices.eu/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               youronlinechoices.eu
             </a>{' '}
             (for EU users) to opt out of interest-based advertising from
             participating companies.
           </li>
           <li>
-            <strong>Browser settings:</strong> You can configure your browser
-            to refuse all cookies or to alert you when a cookie is being set.
-            Note that some features of Talishar may not function properly
-            without cookies.
+            <strong>Browser settings:</strong> You can configure your browser to
+            refuse all cookies or to alert you when a cookie is being set. Note
+            that some features of Talishar may not function properly without
+            cookies.
           </li>
         </ul>
 
@@ -108,9 +126,9 @@ export const Privacy = () => {
         <p>
           Talishar does not knowingly collect personal information from children
           under the age of 13. Our website is not directed at children under 13,
-          and we do not use Google AdSense to target personalized ads to children.
-          If you are under 13 years of age, please do not use our website or
-          provide any personal information without parental consent.
+          and we do not use Google AdSense to target personalized ads to
+          children. If you are under 13 years of age, please do not use our
+          website or provide any personal information without parental consent.
         </p>
         <p>
           Parents and guardians: If you believe your child has provided personal
@@ -121,9 +139,9 @@ export const Privacy = () => {
         <h2>International Users and GDPR</h2>
         <p>
           If you are accessing Talishar from the European Economic Area (EEA),
-          United Kingdom, or other regions with data protection laws, please note
-          that we comply with applicable privacy regulations. You have rights
-          regarding your personal data, including:
+          United Kingdom, or other regions with data protection laws, please
+          note that we comply with applicable privacy regulations. You have
+          rights regarding your personal data, including:
         </p>
         <ul>
           <li>The right to access your personal data</li>
@@ -133,7 +151,8 @@ export const Privacy = () => {
           <li>The right to data portability</li>
         </ul>
         <p>
-          To exercise these rights, please contact us through our Discord community.
+          To exercise these rights, please contact us through our Discord
+          community.
         </p>
 
         <h2>Changes to Privacy Policy</h2>
@@ -146,34 +165,36 @@ export const Privacy = () => {
         <h2>US State Privacy Laws (CCPA, CPRA, and Others)</h2>
         <p>
           If you are a resident of California, Virginia, Colorado, Connecticut,
-          Utah, or other states with privacy laws, you may have additional rights
-          regarding your personal information. Talishar complies with applicable
-          state privacy laws including:
+          Utah, or other states with privacy laws, you may have additional
+          rights regarding your personal information. Talishar complies with
+          applicable state privacy laws including:
         </p>
         <ul>
           <li>
-            <strong>California Consumer Privacy Act (CCPA):</strong> Provides rights
-            to know, delete, and opt-out of the sale of personal information
+            <strong>California Consumer Privacy Act (CCPA):</strong> Provides
+            rights to know, delete, and opt-out of the sale of personal
+            information
           </li>
           <li>
             <strong>California Privacy Rights Act (CPRA):</strong> Enhanced CCPA
-            protections including the right to correct and limit use of information
+            protections including the right to correct and limit use of
+            information
           </li>
           <li>
-            <strong>Virginia Consumer Data Protection Act (VCDPA):</strong> Provides
-            rights to access, delete, and correct personal data
+            <strong>Virginia Consumer Data Protection Act (VCDPA):</strong>{' '}
+            Provides rights to access, delete, and correct personal data
           </li>
           <li>
             <strong>Colorado Privacy Act (CPA):</strong> Similar protections for
             Colorado residents
           </li>
           <li>
-            <strong>Connecticut Data Privacy Act (CTDPA):</strong> Protections for
-            Connecticut residents
+            <strong>Connecticut Data Privacy Act (CTDPA):</strong> Protections
+            for Connecticut residents
           </li>
           <li>
-            <strong>Utah Consumer Privacy Act (UCPA):</strong> Privacy protections
-            for Utah residents
+            <strong>Utah Consumer Privacy Act (UCPA):</strong> Privacy
+            protections for Utah residents
           </li>
         </ul>
         <p>
@@ -181,8 +202,8 @@ export const Privacy = () => {
         </p>
         <ul>
           <li>
-            <strong>Right to Know:</strong> You can request what personal information
-            we collect about you
+            <strong>Right to Know:</strong> You can request what personal
+            information we collect about you
           </li>
           <li>
             <strong>Right to Delete:</strong> You can request deletion of your
@@ -206,7 +227,11 @@ export const Privacy = () => {
         </p>
         <p>
           To exercise any of these rights, please contact us through our{' '}
-          <a href="https://discord.gg/JykuRkdd5S" target="_blank" rel="noopener noreferrer">
+          <a
+            href="https://discord.gg/JykuRkdd5S"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             Discord community
           </a>
           . We will respond to verified requests within 45 days (or as otherwise
@@ -214,9 +239,9 @@ export const Privacy = () => {
           exercising your rights under these laws.
         </p>
         <p>
-          <strong>Non-Discrimination:</strong> We will not deny, charge different
-          prices for, or provide different quality of service based on your
-          exercise of these privacy rights, except as permitted by law.
+          <strong>Non-Discrimination:</strong> We will not deny, charge
+          different prices for, or provide different quality of service based on
+          your exercise of these privacy rights, except as permitted by law.
         </p>
 
         <p>

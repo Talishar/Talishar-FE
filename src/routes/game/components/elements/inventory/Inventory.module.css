@@ -17,9 +17,8 @@
   border-radius: 0.4em;
   border: 2px solid rgba(0, 0, 0, 0.2);
   flex-basis: auto;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3),
-              0 1px 2px rgba(0, 0, 0, 0.2),
-              inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
   transition: all 0.2s ease;
   position: relative;
   z-index: 1;
@@ -36,17 +35,15 @@
   color: var(--theme-primary);
   border: 2px solid var(--theme-primary);
   cursor: pointer;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4),
-              0 2px 4px rgba(0, 0, 0, 0.3),
-              0 0 8px rgba(255, 215, 0, 0.3);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3),
+    0 0 8px rgba(255, 215, 0, 0.3);
   transform: translateY(-1px);
   z-index: 10;
 }
 
 .inventoryButton:active {
   transform: translateY(1px);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3),
-              inset 0 2px 4px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3), inset 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .modalBackdrop {
@@ -67,9 +64,9 @@
   border: 2px solid var(--theme-border, rgba(255, 255, 255, 0.2)) !important;
   border-radius: 8px;
   padding: 0;
-  width: 90%  !important;
-  max-width: 600px  !important;
-  max-height: 80vh  !important;
+  width: 90% !important;
+  max-width: 600px !important;
+  max-height: 80vh !important;
   display: flex;
   flex-direction: column;
   box-shadow: 0 8px 32px var(--theme-overlay, rgba(0, 0, 0, 0.8));
