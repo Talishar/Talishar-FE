@@ -20,7 +20,7 @@ const OpenGame = ({
 }) => {
   const navigate = useNavigate();
   const quickJoinCtx = useContext(QuickJoinContext);
-  const hasDeckReady = !!(quickJoinCtx?.hasDeckConfigured);
+  const hasDeckReady = !!quickJoinCtx?.hasDeckConfigured;
   const handleJoin = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -34,29 +34,35 @@ const OpenGame = ({
   const buttonClass = classNames(styles.button, 'secondary');
 
   return (
-    <div 
-      key={ix} 
-      className={styles.gameItem}
-      onClick={handleJoin}
-      >
+    <div key={ix} className={styles.gameItem} onClick={handleJoin}>
       <div>
-      {!!entry.p1Hero ? (
-        <img className={styles.heroImg} src={generateCroppedImageUrl(entry.p1Hero)} />
-      ) : (
-        <img className={styles.heroImg} src="https://images.talishar.net/public/crops/UNKNOWNHERO_cropped.webp" />
-      )}
+        {!!entry.p1Hero ? (
+          <img
+            className={styles.heroImg}
+            src={generateCroppedImageUrl(entry.p1Hero)}
+          />
+        ) : (
+          <img
+            className={styles.heroImg}
+            src="https://images.talishar.net/public/crops/UNKNOWNHERO_cropped.webp"
+          />
+        )}
       </div>
       <div className={styles.description}>{entry.description}</div>
       {isOther && <div className={styles.formatName}>{entry.formatName}</div>}
       <FriendBadge isFriendsGame={isFriendsGame} size="small" />
       <div>
-        <a 
-          className={buttonClass} 
+        <a
+          className={buttonClass}
           href={`/game/join/${entry.gameName}`}
           role="button"
           onClick={handleJoin}
           aria-busy={quickJoinCtx?.isJoining}
-          title={hasDeckReady ? 'Join using your pre-configured deck' : 'Select a deck in the panel above to join instantly'}
+          title={
+            hasDeckReady
+              ? 'Join using your pre-configured deck'
+              : 'Select a deck in the panel above to join instantly'
+          }
         >
           Join
         </a>

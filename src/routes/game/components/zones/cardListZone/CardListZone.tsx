@@ -1,7 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
-import { clearCardListFocus, setCardListFocus, toggleCardListSort, getGameInfo } from 'features/game/GameSlice';
+import {
+  clearCardListFocus,
+  setCardListFocus,
+  toggleCardListSort,
+  getGameInfo
+} from 'features/game/GameSlice';
 import CardDisplay from '../../elements/cardDisplay/CardDisplay';
 import { FaTimes } from 'react-icons/fa';
 import styles from './CardListZone.module.css';
@@ -21,14 +26,24 @@ export const CardListZone = () => {
     (state: RootState) => state.game.cardListFocus
   );
   const dispatch = useAppDispatch();
-  const [lastOpenedName, setLastOpenedName] = React.useState<string | null>(null);
-  const [lastSortState, setLastSortState] = React.useState<boolean | null>(null);
+  const [lastOpenedName, setLastOpenedName] = React.useState<string | null>(
+    null
+  );
+  const [lastSortState, setLastSortState] = React.useState<boolean | null>(
+    null
+  );
   const [searchQuery, setSearchQuery] = useState<string>('');
 
   // Apply sort preference when a new card list is opened
   useEffect(() => {
-    if (cardList?.active && cardList?.name && cardList?.name !== lastOpenedName && !cardList?.apiCall) {
-      const savedSortPreference = localStorage.getItem(SORT_PREFERENCE_KEY) === 'true';
+    if (
+      cardList?.active &&
+      cardList?.name &&
+      cardList?.name !== lastOpenedName &&
+      !cardList?.apiCall
+    ) {
+      const savedSortPreference =
+        localStorage.getItem(SORT_PREFERENCE_KEY) === 'true';
       if (savedSortPreference && !cardList.isSorted) {
         dispatch(toggleCardListSort());
       }
@@ -55,9 +70,12 @@ export const CardListZone = () => {
     ? [...cardList.cardList].reverse()
     : null;
 
-  const filteredList = reversedList?.filter((card: Card) =>
-    !searchQuery || card.cardName?.toLowerCase().includes(searchQuery.toLowerCase())
-  ) ?? null;
+  const filteredList =
+    reversedList?.filter(
+      (card: Card) =>
+        !searchQuery ||
+        card.cardName?.toLowerCase().includes(searchQuery.toLowerCase())
+    ) ?? null;
 
   const closeCardList = () => {
     dispatch(clearCardListFocus());
@@ -92,52 +110,57 @@ export const CardListZone = () => {
             <div className={styles.cardListTitle}>
               <h3 className={styles.title}>{cardList?.name}</h3>
             </div>
-            {(cardList && cardList.name && 
-              (
-                cardList.name.includes('Your Graveyard') ||
-                cardList.name.includes('Opponent\'s Graveyard') ||
+            {cardList &&
+              cardList.name &&
+              (cardList.name.includes('Your Graveyard') ||
+                cardList.name.includes("Opponent's Graveyard") ||
                 cardList.name.includes('Your Banish') ||
-                cardList.name.includes('Opponent\'s Banish') ||
+                cardList.name.includes("Opponent's Banish") ||
                 cardList.name.includes('Your Deck') ||
-                cardList.name.includes('Opponent\'s Deck') ||
+                cardList.name.includes("Opponent's Deck") ||
                 cardList.name.includes('Your Soul') ||
-                cardList.name.includes('Opponent\'s Soul') ||
+                cardList.name.includes("Opponent's Soul") ||
                 cardList.name.includes('Your Pitch') ||
-                cardList.name.includes('Opponent\'s Pitch')
-              )) && (
-              <input
-                type="text"
-                className={styles.searchInput}
-                placeholder="Search cards..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                onClick={(e) => e.stopPropagation()}
-              />
-            )}
-            {(cardList && cardList.name && 
-              (
-                cardList.name.includes('Your Graveyard') ||
-                cardList.name.includes('Opponent\'s Graveyard') ||
+                cardList.name.includes("Opponent's Pitch")) && (
+                <input
+                  type="text"
+                  className={styles.searchInput}
+                  placeholder="Search cards..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onClick={(e) => e.stopPropagation()}
+                />
+              )}
+            {cardList &&
+              cardList.name &&
+              (cardList.name.includes('Your Graveyard') ||
+                cardList.name.includes("Opponent's Graveyard") ||
                 cardList.name.includes('Your Banish') ||
-                cardList.name.includes('Opponent\'s Banish') ||
+                cardList.name.includes("Opponent's Banish") ||
                 cardList.name.includes('Your Deck') ||
-                cardList.name.includes('Opponent\'s Deck') ||
+                cardList.name.includes("Opponent's Deck") ||
                 cardList.name.includes('Your Soul') ||
-                cardList.name.includes('Opponent\'s Soul') ||
+                cardList.name.includes("Opponent's Soul") ||
                 cardList.name.includes('Your Pitch') ||
-                cardList.name.includes('Opponent\'s Pitch')
-              )) && (
-              <button 
-                className={`${styles.button} ${cardList?.isSorted ? styles.active : ''}`}
-                onClick={handleSort}
-                title={cardList?.isSorted ? 'Click to unsort' : 'Click to sort'}
-              >
-                Sort
-              </button>
-            )}
+                cardList.name.includes("Opponent's Pitch")) && (
+                <button
+                  className={`${styles.button} ${
+                    cardList?.isSorted ? styles.active : ''
+                  }`}
+                  onClick={handleSort}
+                  title={
+                    cardList?.isSorted ? 'Click to unsort' : 'Click to sort'
+                  }
+                >
+                  Sort
+                </button>
+              )}
           </div>
           {cardList?.apiCall ? (
-            <CardListZoneAPI name={cardList.apiQuery ?? ''} searchQuery={searchQuery} />
+            <CardListZoneAPI
+              name={cardList.apiQuery ?? ''}
+              searchQuery={searchQuery}
+            />
           ) : (
             <div className={styles.cardListContents}>
               {filteredList && filteredList.length > 0 ? (
@@ -145,7 +168,9 @@ export const CardListZone = () => {
                   return <CardDisplay card={card} key={ix} />;
                 })
               ) : searchQuery ? (
-                <div className={styles.noResults}>No cards found matching "{searchQuery}"</div>
+                <div className={styles.noResults}>
+                  No cards found matching "{searchQuery}"
+                </div>
               ) : (
                 <div className={styles.noResults}>No cards in this zone</div>
               )}
@@ -180,19 +205,30 @@ const CardListZoneAPI = ({ name, searchQuery }: CardListZoneAPI) => {
   // When API data arrives, populate the Redux cardList state so sorting can work
   useEffect(() => {
     if (data?.cards && cardList?.apiCall && !cardList?.cardList) {
-      dispatch(setCardListFocus({
-        cardList: data.cards,
-        name: cardList?.name
-      }));
+      dispatch(
+        setCardListFocus({
+          cardList: data.cards,
+          name: cardList?.name
+        })
+      );
     }
-  }, [data?.cards, cardList?.apiCall, cardList?.cardList, cardList?.name, dispatch]);
+  }, [
+    data?.cards,
+    cardList?.apiCall,
+    cardList?.cardList,
+    cardList?.name,
+    dispatch
+  ]);
 
   // Use Redux cardList if available (for sorting), otherwise use API data
   const cardsToDisplay = cardList?.cardList || data?.cards;
 
-  const filteredCards = cardsToDisplay?.filter((card: Card) =>
-    !searchQuery || card.cardName?.toLowerCase().includes(searchQuery.toLowerCase())
-  ) ?? null;
+  const filteredCards =
+    cardsToDisplay?.filter(
+      (card: Card) =>
+        !searchQuery ||
+        card.cardName?.toLowerCase().includes(searchQuery.toLowerCase())
+    ) ?? null;
 
   let content;
   if (isLoading) {
@@ -209,7 +245,9 @@ const CardListZoneAPI = ({ name, searchQuery }: CardListZoneAPI) => {
             return <CardDisplay card={card} key={ix} />;
           })
         ) : searchQuery ? (
-          <div className={styles.noResults}>No cards found matching "{searchQuery}"</div>
+          <div className={styles.noResults}>
+            No cards found matching "{searchQuery}"
+          </div>
         ) : (
           <div className={styles.noResults}>No cards in this zone</div>
         )}

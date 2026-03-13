@@ -31,6 +31,6 @@ export interface GetLobbyRefreshResponse {
 export interface Matchup {
   matchupId: string;
   name: string;
-  preferredTurnOrder?: string | null;  // "1st", "2nd", or null
-  notes?: string | null;  // HTML notes from Fabrary
+  preferredTurnOrder?: string | null; // "1st", "2nd", or null
+  notes?: string | null; // HTML notes from Fabrary
 }

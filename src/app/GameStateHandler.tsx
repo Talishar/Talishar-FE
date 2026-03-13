@@ -1,13 +1,21 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from './Hooks';
-import { getGameInfo, receiveGameState, setGameStart } from 'features/game/GameSlice';
+import {
+  getGameInfo,
+  receiveGameState,
+  setGameStart
+} from 'features/game/GameSlice';
 import { useKnownSearchParams } from 'hooks/useKnownSearchParams';
 import { GameLocationState } from 'interface/GameLocationState';
 import { BACKEND_URL } from 'appConstants';
 import { RootState } from './Store';
 import { selectCurrentUserName } from 'features/auth/authSlice';
-import { getCurrentUsername, cacheCurrentUsername, loadGameAuthKey } from 'utils/LocalKeyManagement';
+import {
+  getCurrentUsername,
+  cacheCurrentUsername,
+  loadGameAuthKey
+} from 'utils/LocalKeyManagement';
 import ParseGameState from './ParseGameState';
 import { toast } from 'react-hot-toast';
 import { useGetFriendsListQuery } from 'features/api/apiSlice';
@@ -72,17 +80,33 @@ const GameStateHandler = () => {
           username: usernameToSave || undefined
         })
       );
-      gameParamsRef.current = { gameID: currentGameID, playerID: currentPlayerID, authKey: currentAuthKey };
+      gameParamsRef.current = {
+        gameID: currentGameID,
+        playerID: currentPlayerID,
+        authKey: currentAuthKey
+      };
     }
-  }, [gameID, gameName, playerID, authKey, gameInfo.authKey, locationState?.playerID, currentUserName, dispatch]);
+  }, [
+    gameID,
+    gameName,
+    playerID,
+    authKey,
+    gameInfo.authKey,
+    locationState?.playerID,
+    currentUserName,
+    dispatch
+  ]);
 
   // Sync friends data to sessionStorage whenever it's fetched
   useEffect(() => {
     if (friendsData?.friends) {
       try {
-        const friendsList = friendsData.friends.map(f => f.username);
+        const friendsList = friendsData.friends.map((f) => f.username);
         sessionStorage.setItem('friendsList', JSON.stringify(friendsList));
-        console.log('GameStateHandler synced friendsList to sessionStorage:', friendsList);
+        console.log(
+          'GameStateHandler synced friendsList to sessionStorage:',
+          friendsList
+        );
       } catch (e) {
         console.error('Failed to sync friendsList to sessionStorage:', e);
       }
@@ -100,7 +124,9 @@ const GameStateHandler = () => {
     if ((currentPlayerID === 1 || currentPlayerID === 2) && !currentAuthKey) {
       // This is expected while authKey is loading, only log once per game change
       if (gameParamsRef.current.gameID !== currentGameID) {
-        console.warn(`⏳ AuthKey loading for game ${currentGameID}, player ${currentPlayerID}...`);
+        console.warn(
+          `⏳ AuthKey loading for game ${currentGameID}, player ${currentPlayerID}...`
+        );
       }
       // Wait for authKey to be available before connecting
       return;
@@ -109,7 +135,11 @@ const GameStateHandler = () => {
     // Reset retry count when game changes
     if (gameParamsRef.current.gameID !== currentGameID) {
       retryCountRef.current = 0;
-      gameParamsRef.current = { gameID: currentGameID, playerID: currentPlayerID, authKey: currentAuthKey };
+      gameParamsRef.current = {
+        gameID: currentGameID,
+        playerID: currentPlayerID,
+        authKey: currentAuthKey
+      };
     }
 
     // Close existing connection before creating new one
@@ -121,7 +151,11 @@ const GameStateHandler = () => {
     // Add a small delay before connecting to ensure page is ready
     const connectionTimeout = setTimeout(() => {
       try {
-        console.log(`🔌 Connecting to EventSource (attempt ${retryCountRef.current + 1}/${maxRetriesRef.current + 1})...`);
+        console.log(
+          `🔌 Connecting to EventSource (attempt ${retryCountRef.current + 1}/${
+            maxRetriesRef.current + 1
+          })...`
+        );
         let friendsList: string[] = [];
         try {
           const stored = sessionStorage.getItem('friendsList');
@@ -131,10 +165,17 @@ const GameStateHandler = () => {
         } catch (e) {
           // sessionStorage parsing failed, continue without friendsList
         }
-        console.log('GameStateHandler SSE - sending friendsList:', friendsList, 'playerID:', currentPlayerID);
-        
+        console.log(
+          'GameStateHandler SSE - sending friendsList:',
+          friendsList,
+          'playerID:',
+          currentPlayerID
+        );
+
         const source = new EventSource(
-          `${BACKEND_URL}GetUpdateSSE.php?gameName=${currentGameID}&playerID=${currentPlayerID}&authKey=${currentAuthKey}&friendsList=${encodeURIComponent(JSON.stringify(friendsList))}`
+          `${BACKEND_URL}GetUpdateSSE.php?gameName=${currentGameID}&playerID=${currentPlayerID}&authKey=${currentAuthKey}&friendsList=${encodeURIComponent(
+            JSON.stringify(friendsList)
+          )}`
         );
         sourceRef.current = source;
 
@@ -154,15 +195,24 @@ const GameStateHandler = () => {
               const errorMsg = data.error.toLowerCase();
 
               // Handle game not found errors
-              if (errorMsg.includes('game no longer exists') || errorMsg.includes('does not exist')) {
+              if (
+                errorMsg.includes('game no longer exists') ||
+                errorMsg.includes('does not exist')
+              ) {
                 toast.error(`Game Error: ${data.error}`);
-                window.sessionStorage.setItem('gameNotFound', String(currentGameID));
+                window.sessionStorage.setItem(
+                  'gameNotFound',
+                  String(currentGameID)
+                );
                 source.close();
                 return;
               }
 
               // Handle auth errors
-              if (errorMsg.includes('invalid auth') || errorMsg.includes('authkey')) {
+              if (
+                errorMsg.includes('invalid auth') ||
+                errorMsg.includes('authkey')
+              ) {
                 toast.error(`Authentication Error: ${data.error}`);
                 source.close();
                 return;
@@ -187,10 +237,12 @@ const GameStateHandler = () => {
         source.onerror = () => {
           // Only process error if connection was actually established (not just interruption during page load)
           if (!hasConnected && retryCountRef.current === 0) {
-            console.warn('⚠️ EventSource connection interrupted during page load');
+            console.warn(
+              '⚠️ EventSource connection interrupted during page load'
+            );
             // Treat interruptions during load as transient, retry once quickly
             setTimeout(() => {
-              setForceRetry(prev => prev + 1);
+              setForceRetry((prev) => prev + 1);
             }, 500);
             return;
           }
@@ -202,15 +254,28 @@ const GameStateHandler = () => {
           // Retry with exponential backoff
           if (retryCountRef.current < maxRetriesRef.current) {
             retryCountRef.current++;
-            const retryDelay = Math.min(500 * Math.pow(2, retryCountRef.current), 5000);
-            console.warn(`⏳ Will retry EventSource connection in ${retryDelay}ms (attempt ${retryCountRef.current + 1}/${maxRetriesRef.current + 1})`);
+            const retryDelay = Math.min(
+              500 * Math.pow(2, retryCountRef.current),
+              5000
+            );
+            console.warn(
+              `⏳ Will retry EventSource connection in ${retryDelay}ms (attempt ${
+                retryCountRef.current + 1
+              }/${maxRetriesRef.current + 1})`
+            );
 
             setTimeout(() => {
-              setForceRetry(prev => prev + 1); // Trigger the effect again
+              setForceRetry((prev) => prev + 1); // Trigger the effect again
             }, retryDelay);
           } else {
-            console.error(`❌ EventSource failed after ${maxRetriesRef.current + 1} attempts.`);
-            toast.error('Connection to game server lost. Please refresh the page.');
+            console.error(
+              `❌ EventSource failed after ${
+                maxRetriesRef.current + 1
+              } attempts.`
+            );
+            toast.error(
+              'Connection to game server lost. Please refresh the page.'
+            );
           }
         };
       } catch (error) {
@@ -225,7 +290,15 @@ const GameStateHandler = () => {
         sourceRef.current = null;
       }
     };
-  }, [gameInfo.gameID, gameInfo.playerID, gameInfo.authKey, gameInfo.isPrivateLobby, gameInfo.isRoguelike, forceRetry, dispatch]);
+  }, [
+    gameInfo.gameID,
+    gameInfo.playerID,
+    gameInfo.authKey,
+    gameInfo.isPrivateLobby,
+    gameInfo.isRoguelike,
+    forceRetry,
+    dispatch
+  ]);
 
   useEffect(() => {
     if (isFullRematch && gameID) {
@@ -242,7 +315,9 @@ const GameStateHandler = () => {
       if (state === String(gameInfo.gameID)) {
         // Only schedule navigation once
         if (!gameNotFoundTimeoutRef.current) {
-          console.log(`Game ${gameInfo.gameID} no longer exists, will navigate to games list in 60s`);
+          console.log(
+            `Game ${gameInfo.gameID} no longer exists, will navigate to games list in 60s`
+          );
           gameNotFoundTimeoutRef.current = setTimeout(() => {
             window.sessionStorage.removeItem('gameNotFound');
             navigate('/');

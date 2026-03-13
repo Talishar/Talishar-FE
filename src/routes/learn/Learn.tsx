@@ -65,14 +65,17 @@ const Learn: React.FC = () => {
         ) : error ? (
           <div className={styles.errorContainer}>
             <p className={styles.errorMessage}>{error}</p>
-            <button onClick={() => loadGuides(1)} className={styles.retryButton}>
+            <button
+              onClick={() => loadGuides(1)}
+              className={styles.retryButton}
+            >
               Try Again
             </button>
           </div>
         ) : guides.length > 0 ? (
           <>
             <GuideGrid guides={guides} />
-            
+
             {totalPages > 1 && (
               <div className={styles.pagination}>
                 <button

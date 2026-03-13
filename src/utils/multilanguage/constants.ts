@@ -40,12 +40,7 @@ export const EUROPEAN_LANGUAGES_PRINTED_COLLECTIONS = [
   'HNT'
 ];
 
-export const FRENCH_PRINTED_COLLECTIONS = [
-  'AIO',
-  'AJV',
-  'AMX',
-  'SEA'
-];
+export const FRENCH_PRINTED_COLLECTIONS = ['AIO', 'AJV', 'AMX', 'SEA'];
 
 export const JAPANESE_LANGUAGE_PRINTED_COLLECTIONS = [
   'IRA',

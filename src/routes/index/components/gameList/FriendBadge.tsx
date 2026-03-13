@@ -9,7 +9,7 @@ interface FriendBadgeProps {
   label?: string;
 }
 
-export const FriendBadge: React.FC<FriendBadgeProps> = ({ 
+export const FriendBadge: React.FC<FriendBadgeProps> = ({
   isFriendsGame = false,
   friendName,
   size = 'small',
@@ -42,7 +42,7 @@ export const FriendBadge: React.FC<FriendBadgeProps> = ({
 
   return (
     <>
-      <div 
+      <div
         ref={badgeRef}
         className={`${styles.friendBadge} ${styles[size]}`}
         onMouseEnter={handleMouseEnter}
@@ -51,7 +51,7 @@ export const FriendBadge: React.FC<FriendBadgeProps> = ({
         {label}
       </div>
       {showTooltip && (
-        <div 
+        <div
           className={styles.tooltip}
           style={{
             top: `${tooltipPosition.top}px`,

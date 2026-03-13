@@ -1,9 +1,9 @@
 import classNames from 'classnames';
 import styles from '../CountersOverlay.module.css';
 import { TooltipWrapper } from './TooltipWrapper';
-import { GiLightningArc } from "react-icons/gi";
-import { GiTombstone } from "react-icons/gi";
-import { TbTargetArrow } from "react-icons/tb";
+import { GiLightningArc } from 'react-icons/gi';
+import { GiTombstone } from 'react-icons/gi';
+import { TbTargetArrow } from 'react-icons/tb';
 
 type Props = {
   countersMap: { [key: string]: number };
@@ -205,9 +205,7 @@ export const ContinuousCounters = (props: Props) => {
           className={styles.icon}
           tooltip={`${countersMap?.lightning} lightning card(s) played`}
         >
-          <div className={styles.iconText}>
-            {countersMap?.lightning}
-          </div>
+          <div className={styles.iconText}>{countersMap?.lightning}</div>
           <GiLightningArc />
         </TooltipWrapper>
       )}
@@ -216,17 +214,12 @@ export const ContinuousCounters = (props: Props) => {
           className={styles.icon}
           tooltip={`${countersMap?.amp} Arcane Bonus`}
         >
-          <div className={styles.iconText}>
-            {countersMap?.amp}
-          </div>
+          <div className={styles.iconText}>{countersMap?.amp}</div>
           <GiLightningArc />
         </TooltipWrapper>
       )}
       {!!Number(countersMap?.aim) && (
-        <TooltipWrapper
-          className={styles.icon}
-          tooltip="Aim counter(s)"
-        >
+        <TooltipWrapper className={styles.icon} tooltip="Aim counter(s)">
           <TbTargetArrow />
         </TooltipWrapper>
       )}
@@ -237,7 +230,7 @@ export const ContinuousCounters = (props: Props) => {
         >
           <GiTombstone />
         </TooltipWrapper>
-      )}    
-      </>
+      )}
+    </>
   );
 };

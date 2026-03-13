@@ -13,18 +13,22 @@ interface VpnBlockInfo {
 /**
  * Detect if a response was blocked by a VPN provider
  */
-export const detectVpnBlock = (headers: Headers | Record<string, string>): VpnBlockInfo | null => {
+export const detectVpnBlock = (
+  headers: Headers | Record<string, string>
+): VpnBlockInfo | null => {
   // Check NordVPN blocks
-  const nordSecHeader = headers instanceof Headers 
-    ? headers.get('x-nord-sec')
-    : headers['x-nord-sec'];
-  
+  const nordSecHeader =
+    headers instanceof Headers
+      ? headers.get('x-nord-sec')
+      : headers['x-nord-sec'];
+
   if (nordSecHeader === 'blocked') {
     return {
       isBlocked: true,
       provider: 'NordVPN',
       header: 'x-nord-sec: blocked',
-      solution: 'Whitelist talishar.net in your NordVPN settings, or temporarily disable the VPN'
+      solution:
+        'Whitelist talishar.net in your NordVPN settings, or temporarily disable the VPN'
     };
   }
 

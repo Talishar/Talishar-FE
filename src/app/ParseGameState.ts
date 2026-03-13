@@ -11,7 +11,7 @@ function GetCardName(cardNumber: string): string {
   let name = cardNumber.replace(/_red$|_yellow$|_blue$/, '');
   return name
     .split('_')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
     .join(' ');
 }
 
@@ -21,7 +21,9 @@ function ParseCard(input: any) {
     return card;
   }
   card.cardNumber = input.cardNumber ? input.cardNumber : 'blank';
-  card.cardName = input.cardName ? input.cardName : GetCardName(card.cardNumber);
+  card.cardName = input.cardName
+    ? input.cardName
+    : GetCardName(card.cardNumber);
   card.action = input.action ? Number(input.action) : undefined;
   card.overlay = input.overlay == 1 ? 'disabled' : 'none';
   card.borderColor = input.borderColor ? String(input.borderColor) : undefined;
@@ -48,7 +50,7 @@ function ParseCard(input: any) {
   card.subcards = input.subcards;
   card.marked = input.marked ? Boolean(input.marked) : false;
   card.tapped = input.tapped ? Boolean(input.tapped) : false;
-  card.uniqueId = input.uniqueID ? String(input.uniqueID) : "-";
+  card.uniqueId = input.uniqueID ? String(input.uniqueID) : '-';
   card.holoCounters = input.holoCounters ? Boolean(input.holoCounters) : false;
   return card;
 }
@@ -113,7 +115,7 @@ function ParseEquipment(input: any) {
           result.LegsEq = ParseCard(cardObj);
           break;
         default:
-          console.log("Frostbite processed without assignment", cardObj);
+          console.log('Frostbite processed without assignment', cardObj);
           break;
       }
     } else {
@@ -158,7 +160,7 @@ function ParseEquipment(input: any) {
             result.WeaponREq = ParseCard(cardObj);
             break;
           }
-          console.log("Companion processed without assignment", cardObj);
+          console.log('Companion processed without assignment', cardObj);
           break;
         default:
           break;
@@ -171,7 +173,14 @@ function ParseEquipment(input: any) {
 
 export default function ParseGameState(input: any) {
   const result: GameState = {
-    gameInfo: { gameID: 0, gameGUID: '', playerID: 0, authKey: '', isPrivateLobby: false, isPrivate: false },
+    gameInfo: {
+      gameID: 0,
+      gameGUID: '',
+      playerID: 0,
+      authKey: '',
+      isPrivateLobby: false,
+      isPrivate: false
+    },
     gameDynamicInfo: {},
     playerOne: {},
     playerTwo: {},
@@ -194,7 +203,10 @@ export default function ParseGameState(input: any) {
     }
     // Handle game not found errors
     const errorMsg = input.errorMessage.toLowerCase();
-    if (errorMsg.includes('game no longer exists') || errorMsg.includes('does not exist')) {
+    if (
+      errorMsg.includes('game no longer exists') ||
+      errorMsg.includes('does not exist')
+    ) {
       throw new Error(`GAME_NOT_FOUND: ${input.errorMessage}`);
     }
   }
@@ -526,7 +538,8 @@ export default function ParseGameState(input: any) {
     result.playerTwo.Name = input.initialLoad.opponentName;
     result.playerTwo.isPatron = input.initialLoad.opponentIsPatron;
     result.playerTwo.isContributor = input.initialLoad.opponentIsContributor;
-    result.playerTwo.isPvtVoidPatron = input.initialLoad.opponentIsPvtVoidPatron;
+    result.playerTwo.isPvtVoidPatron =
+      input.initialLoad.opponentIsPvtVoidPatron;
     result.playerTwo.metafyTiers = input.initialLoad.opponentMetafyTiers || [];
     result.gameInfo.roguelikeGameID = input.initialLoad.roguelikeGameID;
     result.gameInfo.gameGUID = input.initialLoad.gameGUID;

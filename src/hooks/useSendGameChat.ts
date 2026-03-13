@@ -6,22 +6,22 @@ import { CHAT_WHEEL } from 'constants/chatMessages';
 /**
  * Hook to send persistent chat messages to the game log
  * Messages are written to gamelog.txt with proper player color formatting
- * 
+ *
  * Supports two modes:
  * 1. Quick chat messages from CHAT_WHEEL (predefined messages)
  * 2. Custom raw messages sent directly to backend
- * 
+ *
  * @returns Object with two functions:
  *   - sendQuickChat(message: string): Send predefined quick chat messages
  *   - sendCustomMessage(message: string): Send any custom message string
- * 
+ *
  * @example
  * const { sendQuickChat, sendCustomMessage } = useSendGameChat();
- * 
+ *
  * // Send predefined quick chat
  * sendQuickChat('Thinking... Please bear with me!');
  * sendQuickChat('Good game!');
- * 
+ *
  * // Send custom message
  * sendCustomMessage('⌛Player 1 is inactive.');
  * sendCustomMessage('Game restarted');
@@ -39,7 +39,10 @@ export const useSendGameChat = () => {
     const quickChatOption = quickChatMap[message];
 
     if (!quickChatOption) {
-      console.error(`Unknown chat message: "${message}". Available messages:`, Array.from(CHAT_WHEEL.values()));
+      console.error(
+        `Unknown chat message: "${message}". Available messages:`,
+        Array.from(CHAT_WHEEL.values())
+      );
       return;
     }
 
@@ -59,18 +62,18 @@ export const useSendGameChat = () => {
       method: 'GET',
       credentials: 'include'
     })
-      .then(res => {
+      .then((res) => {
         if (debug) {
           console.log('SubmitChat response:', res.status, res.statusText);
         }
         return res.text();
       })
-      .then(text => {
+      .then((text) => {
         if (debug) {
           console.log('SubmitChat response body:', text);
         }
       })
-      .catch(e => console.error('Failed to send quick chat:', e));
+      .catch((e) => console.error('Failed to send quick chat:', e));
   };
 
   const sendCustomMessage = (message: string, debug = false) => {
@@ -90,20 +93,19 @@ export const useSendGameChat = () => {
       method: 'GET',
       credentials: 'include'
     })
-      .then(res => {
+      .then((res) => {
         if (debug) {
           console.log('SubmitChat response:', res.status, res.statusText);
         }
         return res.text();
       })
-      .then(text => {
+      .then((text) => {
         if (debug) {
           console.log('SubmitChat response body:', text);
         }
       })
-      .catch(e => console.error('Failed to send custom message:', e));
+      .catch((e) => console.error('Failed to send custom message:', e));
   };
 
   return { sendQuickChat, sendCustomMessage };
 };
-

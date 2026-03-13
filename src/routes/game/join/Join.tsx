@@ -23,26 +23,29 @@ import { generateCroppedImageUrl } from 'utils/cropImages';
 import { ImageSelect, ImageSelectOption } from 'components/ImageSelect';
 import { GAME_FORMAT, isPreconFormat, PRECON_DECKS } from 'appConstants';
 import { getReadableFormatName } from 'utils/formatUtils';
-import { useTranslation, Trans } from "react-i18next";
-
+import { useTranslation, Trans } from 'react-i18next';
 
 // Helper function to extract base format type for matching
 // "Open CC", "Competitive CC", "Classic Constructed" all map to "Classic Constructed" base
 const getBaseFormatType = (format: string | null): string => {
   if (!format) return '';
   const readable = getReadableFormatName(format).toLowerCase();
-  
+
   // Extract base format by removing qualifiers like "open", "competitive"
-  if (readable.includes('living legend') || readable.includes('ll')) return 'living legend';
-  if (readable.includes('classic constructed') || readable.includes('cc')) return 'classic constructed';
+  if (readable.includes('living legend') || readable.includes('ll'))
+    return 'living legend';
+  if (readable.includes('classic constructed') || readable.includes('cc'))
+    return 'classic constructed';
   if (readable.includes('blitz')) return 'blitz';
-  if (readable.includes('silver age') || readable.includes('sage')) return 'silver age';
+  if (readable.includes('silver age') || readable.includes('sage'))
+    return 'silver age';
   if (readable.includes('commoner')) return 'commoner';
   if (readable.includes('clash')) return 'clash';
   if (readable.includes('sealed')) return 'sealed';
-  if (readable.includes('draft') || readable.includes('limited')) return 'draft / limited';
+  if (readable.includes('draft') || readable.includes('limited'))
+    return 'draft / limited';
   if (readable.includes('precon')) return 'preconstructed decks';
-  
+
   return readable;
 };
 
@@ -60,14 +63,18 @@ const shortenFormat = (format: string): string => {
   return format.charAt(0).toUpperCase() + format.slice(1).toLowerCase();
 };
 
-const formatDeckLabel = (deckName: string, format: string | null, maxLength: number = 58): string => {
+const formatDeckLabel = (
+  deckName: string,
+  format: string | null,
+  maxLength: number = 58
+): string => {
   const formatStr = format ? ` (${shortenFormat(format)})` : '';
   const combined = `${deckName}${formatStr}`;
-  
+
   if (combined.length <= maxLength) {
     return combined;
   }
-  
+
   const availableForName = Math.max(1, maxLength - formatStr.length - 3);
   return `${deckName.substring(0, availableForName)}...${formatStr}`;
 };
@@ -79,9 +86,9 @@ const JoinGame = () => {
   const { data, isLoading, isSuccess } = useGetFavoriteDecksQuery(undefined);
   const { isLoggedIn } = useAuth();
 
-  // Initial stuff to allow the lang to change  
+  // Initial stuff to allow the lang to change
   const { t, i18n, ready } = useTranslation();
-  
+
   let [{ gameName: searchGameName = '0', playerID = '2', authKey = '' }] =
     useKnownSearchParams();
 
@@ -89,14 +96,19 @@ const JoinGame = () => {
   const finalGameName = gameID ?? searchGameName;
 
   // Fetch game list to get the format for this specific game
-  const { data: gameListData, isLoading: gameListLoading } = useGetGameListQuery(undefined);
+  const { data: gameListData, isLoading: gameListLoading } =
+    useGetGameListQuery(undefined);
 
   // Check if game is found in public list
   const gameFoundInPublicList = React.useMemo(() => {
     if (!gameListData) return false;
     const gameNameStr = finalGameName;
-    const openGame = gameListData.openGames?.find((g) => String(g.gameName) === gameNameStr);
-    const inProgressGame = gameListData.gamesInProgress?.find((g) => String(g.gameName) === gameNameStr);
+    const openGame = gameListData.openGames?.find(
+      (g) => String(g.gameName) === gameNameStr
+    );
+    const inProgressGame = gameListData.gamesInProgress?.find(
+      (g) => String(g.gameName) === gameNameStr
+    );
     return !!(openGame || inProgressGame);
   }, [gameListData, finalGameName]);
 
@@ -117,8 +129,11 @@ const JoinGame = () => {
     resolver: yupResolver(validationSchema)
   });
 
-  const [selectedFavoriteDeck, setSelectedFavoriteDeck] = React.useState<string>('');
-  const [selectedPreconDeck, setSelectedPreconDeck] = React.useState<string>(PRECON_DECKS.LINKS[0]);
+  const [selectedFavoriteDeck, setSelectedFavoriteDeck] =
+    React.useState<string>('');
+  const [selectedPreconDeck, setSelectedPreconDeck] = React.useState<string>(
+    PRECON_DECKS.LINKS[0]
+  );
   const [gameFormat, setGameFormat] = React.useState<string | null>(null);
 
   const initialValues: JoinGameAPI = useMemo(() => {
@@ -152,11 +167,15 @@ const JoinGame = () => {
   useEffect(() => {
     if (gameListData) {
       const gameNameStr = finalGameName;
-      
-      const openGame = gameListData.openGames?.find((g) => String(g.gameName) === gameNameStr);
-      const inProgressGame = gameListData.gamesInProgress?.find((g) => String(g.gameName) === gameNameStr);
+
+      const openGame = gameListData.openGames?.find(
+        (g) => String(g.gameName) === gameNameStr
+      );
+      const inProgressGame = gameListData.gamesInProgress?.find(
+        (g) => String(g.gameName) === gameNameStr
+      );
       const foundGame = openGame || inProgressGame;
-      
+
       if (foundGame?.format) {
         setGameFormat(foundGame.format);
         return; // Found in public list, don't need private API
@@ -179,17 +198,18 @@ const JoinGame = () => {
   // Convert favorite decks to ImageSelect options
   const favoriteDeckOptions: ImageSelectOption[] = React.useMemo(() => {
     if (!data?.favoriteDecks) return [];
-    const isOpenFormat = gameFormat && getReadableFormatName(gameFormat).toLowerCase().includes('open');
+    const isOpenFormat =
+      gameFormat &&
+      getReadableFormatName(gameFormat).toLowerCase().includes('open');
     const baseGameFormat = getBaseFormatType(gameFormat);
-    const filtered = data.favoriteDecks
-      .filter(deck => {
-        // Show all decks for OPEN format
-        if (isOpenFormat) return true;
-        if (!deck.format) return false;
-        const baseDeckFormat = getBaseFormatType(deck.format);
-        return baseDeckFormat === baseGameFormat;
-      });
-    return filtered.map(deck => ({
+    const filtered = data.favoriteDecks.filter((deck) => {
+      // Show all decks for OPEN format
+      if (isOpenFormat) return true;
+      if (!deck.format) return false;
+      const baseDeckFormat = getBaseFormatType(deck.format);
+      return baseDeckFormat === baseGameFormat;
+    });
+    return filtered.map((deck) => ({
       value: deck.key,
       label: formatDeckLabel(deck.name, deck.format),
       imageUrl: generateCroppedImageUrl(deck.hero)
@@ -208,8 +228,7 @@ const JoinGame = () => {
   const isPrecon = isPreconFormat(gameFormat);
 
   // Debug logging
-  React.useEffect(() => {
-  }, [isPrecon, gameFormat, gameListLoading]);
+  React.useEffect(() => {}, [isPrecon, gameFormat, gameListLoading]);
 
   const onSubmit: SubmitHandler<JoinGameAPI> = async (values: JoinGameAPI) => {
     values.playerID = parseInt(playerID);
@@ -229,7 +248,7 @@ const JoinGame = () => {
         );
         const searchParam = { playerID: String(response.playerID ?? '0') };
         navigate(`/game/lobby/${response.gameName}`, {
-          state: { 
+          state: {
             playerID: response.playerID ?? 0,
             authKey: response.authKey ?? ''
           }
@@ -254,7 +273,7 @@ const JoinGame = () => {
           <div className={styles.formInner}>
             {isPrecon ? (
               <label>
-		{t('JOIN.PRECON')}
+                {t('JOIN.PRECON')}
                 <ImageSelect
                   id="preconDecks"
                   options={preconDeckOptions}
@@ -281,7 +300,7 @@ const JoinGame = () => {
               <>
                 {isLoggedIn && !isLoading && (
                   <label>
-		    {t('JOIN.SELECTED_DECK')}
+                    {t('JOIN.SELECTED_DECK')}
                     <ImageSelect
                       id="favoriteDecks"
                       options={favoriteDeckOptions}
@@ -292,7 +311,9 @@ const JoinGame = () => {
                       }}
                       placeholder={t('JOIN.SELECTED_DECK_PLACEHOLDER')}
                       aria-busy={isLoading}
-                      aria-invalid={errors.favoriteDecks?.message ? 'true' : undefined}
+                      aria-invalid={
+                        errors.favoriteDecks?.message ? 'true' : undefined
+                      }
                     />
                     <input
                       type="hidden"
@@ -318,21 +339,27 @@ const JoinGame = () => {
                 <fieldset>
                   <label>
                     <>
-		      {t('JOIN.IMPORT_DECK')}{''}
-                    <span
-                      title={t('JOIN.IMPORT_TITLE')}
-                      style={{ cursor: 'help', display: 'inline-flex', alignItems: 'center', marginLeft: '4px' }}
-                    >
-                      <FaQuestionCircle size={14} />
-                    </span>
-                    <input
-                      type="text"
-                      id="fabdb"
-                      aria-label={t('JOIN.IMPORT_HELP')}
-                      {...register('fabdb')}
-                      aria-invalid={errors.deck?.message ? 'true' : undefined}
-                    />
-                  </>
+                      {t('JOIN.IMPORT_DECK')}
+                      {''}
+                      <span
+                        title={t('JOIN.IMPORT_TITLE')}
+                        style={{
+                          cursor: 'help',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          marginLeft: '4px'
+                        }}
+                      >
+                        <FaQuestionCircle size={14} />
+                      </span>
+                      <input
+                        type="text"
+                        id="fabdb"
+                        aria-label={t('JOIN.IMPORT_HELP')}
+                        {...register('fabdb')}
+                        aria-invalid={errors.deck?.message ? 'true' : undefined}
+                      />
+                    </>
                     <ErrorMessage
                       errors={errors}
                       name="fabdb"
@@ -351,11 +378,11 @@ const JoinGame = () => {
                         id="favoriteDeck"
                         {...register('favoriteDeck')}
                       />
-		      {t('JOIN.SAVE_DECK_FAVOURITES')}
+                      {t('JOIN.SAVE_DECK_FAVOURITES')}
                     </label>
                   )}
                   <label style={{ marginTop: '1rem' }}>
-		    {t('JOIN.GAME_FORMAT')}
+                    {t('JOIN.GAME_FORMAT')}
                     <input
                       type="text"
                       id="gameFormat"
@@ -371,8 +398,11 @@ const JoinGame = () => {
           </div>
           {!isLoggedIn && (
             <p>
-              <small>		
-                <Trans i18nKey="LOGIN_REQUIRED">You must be <Link to="/user/login">logged in</Link> to join public lobbies.</Trans>
+              <small>
+                <Trans i18nKey="LOGIN_REQUIRED">
+                  You must be <Link to="/user/login">logged in</Link> to join
+                  public lobbies.
+                </Trans>
               </small>
             </p>
           )}
@@ -382,7 +412,7 @@ const JoinGame = () => {
             aria-busy={isSubmitting}
             style={{ marginTop: '27px' }}
           >
-	    {t('JOIN.JOIN')}
+            {t('JOIN.JOIN')}
           </button>
           {errors.root?.serverError?.message && (
             <div className={styles.fieldError}>
@@ -399,7 +429,7 @@ const JoinGame = () => {
             navigate(-1);
           }}
         >
-	  {t('JOIN.BACK')}
+          {t('JOIN.BACK')}
         </button>
       </article>
     </main>

@@ -79,7 +79,7 @@ export const ChatInput = () => {
 
   const handleInputFocus = () => {
     handleTyping();
-    
+
     // Start refresh interval to keep sending typing updates every 2.5 seconds
     if (typingRefreshRef.current) {
       clearInterval(typingRefreshRef.current);
@@ -261,7 +261,7 @@ const ChatWheel = () => {
               >
                 <div className={styles.chatOptionsContainer}>
                   <ChatOptions setModalDisplay={setModalDisplay} />
-                </div>              
+                </div>
               </div>
             </FloatingFocusManager>
           </FloatingOverlay>,

@@ -13,11 +13,7 @@ import { on } from 'events';
 
 let change = false;
 let buttonClick = false;
-const TriggerOrdering = ({
-  topCards
-}: {
-  topCards: Card[];
-}) => {
+const TriggerOrdering = ({ topCards }: { topCards: Card[] }) => {
   const { gameID, playerID, authKey } = useAppSelector(
     getGameInfo,
     shallowEqual
@@ -45,7 +41,6 @@ const TriggerOrdering = ({
     change = true;
   };
 
-
   useEffect(() => {
     if (buttonClick) {
       const cardNamesTop = cardListTop.map((card) => card.cardNumber);
@@ -55,7 +50,7 @@ const TriggerOrdering = ({
         authKey: authKey,
         mode: 108,
         submission: {
-          cardListTop: cardNamesTop,
+          cardListTop: cardNamesTop
         }
       };
       processInputAPI(body);
@@ -73,7 +68,7 @@ const TriggerOrdering = ({
         authKey: authKey,
         mode: 108,
         submission: {
-          cardListTop: cardNamesTop,
+          cardListTop: cardNamesTop
         }
       };
       processInputAPI(body);

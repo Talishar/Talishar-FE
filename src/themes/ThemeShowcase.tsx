@@ -13,12 +13,14 @@ const ThemeShowcase: React.FC = () => {
     <div className={styles.showcase}>
       <h2 className={styles.title}>Theme Showcase</h2>
       <p className={styles.subtitle}>Click on any theme to preview it</p>
-      
+
       <div className={styles.themesGrid}>
         {availableThemes.map((theme) => (
           <div
             key={theme.id}
-            className={`${styles.themeCard} ${currentTheme.id === theme.id ? styles.active : ''}`}
+            className={`${styles.themeCard} ${
+              currentTheme.id === theme.id ? styles.active : ''
+            }`}
             onClick={() => setTheme(theme.id)}
           >
             <div className={styles.themeHeader}>
@@ -27,32 +29,32 @@ const ThemeShowcase: React.FC = () => {
                 <span className={styles.badge}>Active</span>
               )}
             </div>
-            
+
             <div className={styles.colorPalette}>
-              <div 
+              <div
                 className={styles.colorSwatch}
                 style={{ backgroundColor: theme.colors.primary }}
                 title="Primary"
               />
-              <div 
+              <div
                 className={styles.colorSwatch}
                 style={{ backgroundColor: theme.colors.cardBackground }}
                 title="Card Background"
               />
-              <div 
+              <div
                 className={styles.colorSwatch}
                 style={{ backgroundColor: theme.colors.text }}
                 title="Text"
               />
-              <div 
+              <div
                 className={styles.colorSwatch}
                 style={{ backgroundColor: theme.colors.success }}
                 title="Success"
               />
             </div>
-            
+
             <div className={styles.preview}>
-              <div 
+              <div
                 className={styles.previewContent}
                 style={{
                   background: theme.colors.sectionBackground,
@@ -61,7 +63,7 @@ const ThemeShowcase: React.FC = () => {
                 }}
               >
                 <p style={{ color: theme.colors.textSecondary }}>Sample text</p>
-                <button 
+                <button
                   className={styles.previewButton}
                   style={{
                     backgroundColor: theme.colors.primary,
@@ -75,11 +77,14 @@ const ThemeShowcase: React.FC = () => {
           </div>
         ))}
       </div>
-      
+
       <div className={styles.info}>
-        <p>Current Theme: <strong>{currentTheme.name}</strong></p>
+        <p>
+          Current Theme: <strong>{currentTheme.name}</strong>
+        </p>
         <p className={styles.hint}>
-          Your theme preference is automatically saved and will persist across sessions.
+          Your theme preference is automatically saved and will persist across
+          sessions.
         </p>
       </div>
     </div>

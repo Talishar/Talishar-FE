@@ -10,34 +10,34 @@ const HeroVsHeroIntro = () => {
   const dispatch = useAppDispatch();
   const gameState = useAppSelector((state: any) => state.game, shallowEqual);
   const settingsData = useAppSelector(getSettingsEntity);
-  
+
   const playerID = gameState?.gameInfo?.playerID;
   const gameID = gameState?.gameInfo?.gameID;
   const gameGUID = gameState?.gameInfo?.gameGUID;
   const heroIntroShown = gameState?.gameInfo?.heroIntroShown;
-  
+
   // Initialize isVisible from localStorage if available, otherwise true
   const getLocalStorageKey = (): string => {
     return gameGUID || `heroIntro_${gameID}`;
   };
-  
+
   const [isVisible, setIsVisible] = useState(true);
 
   // Sync isVisible with localStorage whenever gameID or gameGUID changes
   useEffect(() => {
     if (!gameID) return;
-    
+
     const key = getLocalStorageKey();
     const stored = localStorage.getItem(key);
     if (stored === 'false') {
       setIsVisible(false);
     }
   }, [gameID, gameGUID]);
-  
+
   // Get hero card numbers directly from Redux state
   const playerOneHero = gameState?.playerOne?.Hero?.cardNumber;
   const playerTwoHero = gameState?.playerTwo?.Hero?.cardNumber;
-  
+
   const yourHero = playerID === 1 ? playerOneHero : playerTwoHero;
   const opponentHero = playerID === 1 ? playerTwoHero : playerOneHero;
 
@@ -46,7 +46,7 @@ const HeroVsHeroIntro = () => {
     if (!cardId) return '';
     return cardId
       .split('_')
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
       .join(' ');
   };
 
@@ -66,17 +66,30 @@ const HeroVsHeroIntro = () => {
     }, 2500);
 
     return () => clearTimeout(timer);
-
   }, [isVisible, dispatch, gameID, gameGUID, settingsData]);
-  
-  // Get patron status
-  const yourPatronStatus = playerID === 1 
-    ? (gameState?.playerOne?.metafyTiers?.length ?? 0) > 0 || gameState?.playerOne?.isPatron || gameState?.playerOne?.isPvtVoidPatron || gameState?.playerOne?.isContributor
-    : (gameState?.playerTwo?.metafyTiers?.length ?? 0) > 0 || gameState?.playerTwo?.isPatron || gameState?.playerTwo?.isPvtVoidPatron || gameState?.playerTwo?.isContributor;
 
-  const opponentPatronStatus = playerID === 1 
-    ? (gameState?.playerTwo?.metafyTiers?.length ?? 0) > 0 || gameState?.playerTwo?.isPatron || gameState?.playerTwo?.isPvtVoidPatron || gameState?.playerTwo?.isContributor
-    : (gameState?.playerOne?.metafyTiers?.length ?? 0) > 0 || gameState?.playerOne?.isPatron || gameState?.playerOne?.isPvtVoidPatron || gameState?.playerOne?.isContributor;
+  // Get patron status
+  const yourPatronStatus =
+    playerID === 1
+      ? (gameState?.playerOne?.metafyTiers?.length ?? 0) > 0 ||
+        gameState?.playerOne?.isPatron ||
+        gameState?.playerOne?.isPvtVoidPatron ||
+        gameState?.playerOne?.isContributor
+      : (gameState?.playerTwo?.metafyTiers?.length ?? 0) > 0 ||
+        gameState?.playerTwo?.isPatron ||
+        gameState?.playerTwo?.isPvtVoidPatron ||
+        gameState?.playerTwo?.isContributor;
+
+  const opponentPatronStatus =
+    playerID === 1
+      ? (gameState?.playerTwo?.metafyTiers?.length ?? 0) > 0 ||
+        gameState?.playerTwo?.isPatron ||
+        gameState?.playerTwo?.isPvtVoidPatron ||
+        gameState?.playerTwo?.isContributor
+      : (gameState?.playerOne?.metafyTiers?.length ?? 0) > 0 ||
+        gameState?.playerOne?.isPatron ||
+        gameState?.playerOne?.isPvtVoidPatron ||
+        gameState?.playerOne?.isContributor;
 
   // Check if hero intro is disabled
   const disableHeroIntro = settingsData['DisableHeroIntro']?.value === '1';
@@ -87,7 +100,13 @@ const HeroVsHeroIntro = () => {
   }
 
   // Don't render if not visible or if missing hero data or if disabled
-  if (!isVisible || !yourHero || !opponentHero || yourHero === opponentHero || disableHeroIntro) {
+  if (
+    !isVisible ||
+    !yourHero ||
+    !opponentHero ||
+    yourHero === opponentHero ||
+    disableHeroIntro
+  ) {
     return null;
   }
 
@@ -100,7 +119,9 @@ const HeroVsHeroIntro = () => {
         {/* Left Hero */}
         <div className={styles.heroSection}>
           <div
-            className={`${styles.heroImageWrapper} ${yourPatronStatus ? styles.patron : ''}`}
+            className={`${styles.heroImageWrapper} ${
+              yourPatronStatus ? styles.patron : ''
+            }`}
             style={{
               backgroundImage: `url(${yourHeroImage})`
             }}
@@ -117,7 +138,9 @@ const HeroVsHeroIntro = () => {
         {/* Right Hero */}
         <div className={styles.heroSection}>
           <div
-            className={`${styles.heroImageWrapper} ${opponentPatronStatus ? styles.patron : ''}`}
+            className={`${styles.heroImageWrapper} ${
+              opponentPatronStatus ? styles.patron : ''
+            }`}
             style={{
               backgroundImage: `url(${opponentHeroImage})`
             }}

@@ -1,4 +1,4 @@
-import React, { useEffect, useState,useMemo } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { usePageTitle } from 'hooks/usePageTitle';
 import Deck from './components/deck/Deck';
 import LobbyChat from './components/lobbyChat/LobbyChat';
@@ -32,7 +32,12 @@ import { RootState } from 'app/Store';
 import { createPatreonIconMap } from 'utils/patronIcons';
 import { DeckResponse, Weapon } from 'interface/API/GetLobbyInfo.php';
 import LobbyUpdateHandler from './components/updateHandler/SideboardUpdateHandler';
-import { GAME_FORMAT, BREAKPOINT_EXTRA_LARGE, CLOUD_IMAGES_URL, QUERY_STATUS } from 'appConstants';
+import {
+  GAME_FORMAT,
+  BREAKPOINT_EXTRA_LARGE,
+  CLOUD_IMAGES_URL,
+  QUERY_STATUS
+} from 'appConstants';
 import { getReadableFormatName } from 'utils/formatUtils';
 import ChooseFirstTurn from './components/chooseFirstTurn/ChooseFirstTurn';
 import useWindowDimensions from 'hooks/useWindowDimensions';
@@ -49,7 +54,11 @@ import playerJoined from 'sounds/playerJoinedSound.mp3';
 import { createPortal } from 'react-dom';
 import { useAppDispatch } from 'app/Hooks';
 import { generateCroppedImageUrl } from 'utils/cropImages';
-import { getSettingsEntity, fetchAllSettings, getSettingsStatus } from 'features/options/optionsSlice';
+import {
+  getSettingsEntity,
+  fetchAllSettings,
+  getSettingsStatus
+} from 'features/options/optionsSlice';
 import { ChatBar } from '../../../components/chatBar/ChatBar';
 import { IS_STREAMER_MODE } from 'features/options/constants';
 
@@ -81,30 +90,43 @@ const Lobby = () => {
   const isMuted = settingsData['MuteSound']?.value === '1';
   const isStreamerMode = String(settingsData['IsStreamerMode']?.value) === '1';
 
-  
   // Load settings when in lobby (same approach as SettingsPage - no active game needed)
-  const dummyGameInfo = { playerID: 0, gameID: 0, authKey: '', isPrivateLobby: false };
+  const dummyGameInfo = {
+    playerID: 0,
+    gameID: 0,
+    authKey: '',
+    isPrivateLobby: false
+  };
   useEffect(() => {
-    if (settingsStatus === QUERY_STATUS.IDLE || Object.keys(settingsData).length === 0) {
+    if (
+      settingsStatus === QUERY_STATUS.IDLE ||
+      Object.keys(settingsData).length === 0
+    ) {
       dispatch(fetchAllSettings({ game: dummyGameInfo }));
     }
   }, []);
 
   // Get patron info for player 1 (you)
-  const yourPatronInfo = useAppSelector((state: RootState) => ({
-    isPatron: state.game.playerOne.isPatron,
-    isContributor: state.game.playerOne.isContributor,
-    isPvtVoidPatron: state.game.playerOne.isPvtVoidPatron,
-    metafyTiers: state.game.playerOne.metafyTiers
-  }), shallowEqual);
+  const yourPatronInfo = useAppSelector(
+    (state: RootState) => ({
+      isPatron: state.game.playerOne.isPatron,
+      isContributor: state.game.playerOne.isContributor,
+      isPvtVoidPatron: state.game.playerOne.isPvtVoidPatron,
+      metafyTiers: state.game.playerOne.metafyTiers
+    }),
+    shallowEqual
+  );
 
   // Get patron info for player 2 (opponent)
-  const opponentPatronInfo = useAppSelector((state: RootState) => ({
-    isPatron: state.game.playerTwo.isPatron,
-    isContributor: state.game.playerTwo.isContributor,
-    isPvtVoidPatron: state.game.playerTwo.isPvtVoidPatron,
-    metafyTiers: state.game.playerTwo.metafyTiers
-  }), shallowEqual);
+  const opponentPatronInfo = useAppSelector(
+    (state: RootState) => ({
+      isPatron: state.game.playerTwo.isPatron,
+      isContributor: state.game.playerTwo.isContributor,
+      isPvtVoidPatron: state.game.playerTwo.isPvtVoidPatron,
+      metafyTiers: state.game.playerTwo.metafyTiers
+    }),
+    shallowEqual
+  );
 
   // Get user profile to access Metafy tiers (since Redux might not be populated in lobby)
   const { data: userProfileData } = useGetUserProfileQuery(undefined, {
@@ -114,9 +136,15 @@ const Lobby = () => {
   const extractMetafyTiers = () => {
     const tiers: string[] = [];
     const TALISHAR_COMMUNITY_ID = 'be5e01c0-02d1-4080-b601-c056d69b03f6';
-    if (userProfileData?.metafyCommunities && Array.isArray(userProfileData.metafyCommunities)) {
+    if (
+      userProfileData?.metafyCommunities &&
+      Array.isArray(userProfileData.metafyCommunities)
+    ) {
       for (const community of userProfileData.metafyCommunities) {
-        if (community.id === TALISHAR_COMMUNITY_ID && community.subscription_tier?.name) {
+        if (
+          community.id === TALISHAR_COMMUNITY_ID &&
+          community.subscription_tier?.name
+        ) {
           tiers.push(community.subscription_tier.name);
         }
       }
@@ -140,7 +168,10 @@ const Lobby = () => {
   // Note tooltip state
   const [opponentNote, setOpponentNote] = useState('');
   const [isNoteTooltipOpen, setIsNoteTooltipOpen] = useState(false);
-  const [noteTooltipPosition, setNoteTooltipPosition] = useState({ top: 0, left: 0 });
+  const [noteTooltipPosition, setNoteTooltipPosition] = useState({
+    top: 0,
+    left: 0
+  });
   const opponentNameRef = React.useRef<HTMLHeadingElement>(null);
 
   let { data, isLoading, refetch } = useGetLobbyInfoQuery({
@@ -184,28 +215,32 @@ const Lobby = () => {
   // Sort friends by status (online, away, offline) then alphabetically
   const sortedFriends = useMemo(() => {
     if (!friendsData?.friends) return [];
-    
+
     return [...friendsData.friends].sort((a, b) => {
-      const aOnlineData = onlineFriendsData?.onlineFriends?.find((f: any) => f.userId === a.friendUserId);
-      const bOnlineData = onlineFriendsData?.onlineFriends?.find((f: any) => f.userId === b.friendUserId);
-      
+      const aOnlineData = onlineFriendsData?.onlineFriends?.find(
+        (f: any) => f.userId === a.friendUserId
+      );
+      const bOnlineData = onlineFriendsData?.onlineFriends?.find(
+        (f: any) => f.userId === b.friendUserId
+      );
+
       const aStatus = (aOnlineData as any)?.status || 'offline';
       const bStatus = (bOnlineData as any)?.status || 'offline';
-      
+
       // Determine status priority
       const getStatusPriority = (status: string) => {
         if (status === 'online') return 0; // Online first
         if (status === 'away' || status === 'idle') return 1; // Away second
         return 2; // Offline last
       };
-      
+
       const aPriority = getStatusPriority(aStatus);
       const bPriority = getStatusPriority(bStatus);
-      
+
       if (aPriority !== bPriority) {
         return aPriority - bPriority;
       }
-      
+
       // Within same status, sort alphabetically by nickname or username
       const aName = a.nickname || a.username;
       const bName = b.nickname || b.username;
@@ -248,8 +283,10 @@ const Lobby = () => {
       // Send the current lobby link to the friend
       const gameJoinLink = `${window.location.origin}/game/join/${gameID}`;
       const readableFormat = getReadableFormatName(data?.format || '');
-      const message = readableFormat ? `Join my ${readableFormat} game!` : 'Join my game!';
-      
+      const message = readableFormat
+        ? `Join my ${readableFormat} game!`
+        : 'Join my game!';
+
       await sendMessage({
         toUserId: friendUserId,
         message: message,
@@ -316,15 +353,26 @@ const Lobby = () => {
           opponentHeroCardNumber: gameLobby?.theirHero
         })
       );
-      
+
       navigate(`/game/play/${gameID}`, {
-        state: { 
+        state: {
           playerID: playerID ?? 0,
           authKey: authKey
         } as GameLocationState
       });
     }
-  }, [gameLobby?.isMainGameReady, gameID, playerID, authKey, navigate, dispatch, data?.deck?.heroName, data?.deck?.hero, gameLobby?.theirHeroName, gameLobby?.theirHero]);
+  }, [
+    gameLobby?.isMainGameReady,
+    gameID,
+    playerID,
+    authKey,
+    navigate,
+    dispatch,
+    data?.deck?.heroName,
+    data?.deck?.hero,
+    gameLobby?.theirHeroName,
+    gameLobby?.theirHero
+  ]);
 
   const deckClone = [...data.deck.cards];
   const deckSBClone = [...data.deck.cardsSB];
@@ -333,11 +381,15 @@ const Lobby = () => {
     .sort()
     .map((card, ix) => `${card}-${ix + deckIndexed.length}`);
 
-    const leftHero = data.deck.hero === 'CardBack' ? 'UNKNOWNHERO' : data.deck.hero;
-    const rightHero = gameLobby?.theirHero === 'CardBack' ? 'UNKNOWNHERO' : gameLobby?.theirHero;
+  const leftHero =
+    data.deck.hero === 'CardBack' ? 'UNKNOWNHERO' : data.deck.hero;
+  const rightHero =
+    gameLobby?.theirHero === 'CardBack' ? 'UNKNOWNHERO' : gameLobby?.theirHero;
 
   const leftPic = `url(${generateCroppedImageUrl(leftHero)})`;
-  const rightPic = `url(${generateCroppedImageUrl(rightHero ?? 'UNKNOWNHERO')})`;
+  const rightPic = `url(${generateCroppedImageUrl(
+    rightHero ?? 'UNKNOWNHERO'
+  )})`;
 
   const eqClasses = classNames({});
   const deckClasses = classNames({});
@@ -372,14 +424,13 @@ const Lobby = () => {
         return { deckSize: 60, maxDeckSize: 99999 };
     }
   }, [data.format]);
-  
 
   const weaponsIndexed = [...data.deck.hands].map((card, ix) => {
     return {
       id: `${card.id}-${ix}`,
       is1H: card.is1H,
       img: `${card.id}`,
-      numHands: card.numHands !== undefined ? card.numHands : (card.is1H ? 1 : 2),
+      numHands: card.numHands !== undefined ? card.numHands : card.is1H ? 1 : 2,
       isQuiver: card.isQuiver ?? false,
       isOffhand: card.isOffhand ?? false,
       isCompanion: card.isCompanion ?? false
@@ -394,7 +445,7 @@ const Lobby = () => {
       id: `${card.id}-${ix + weaponsIndexed.length}`,
       img: `${card.id}`,
       is1H: card.is1H,
-      numHands: card.numHands !== undefined ? card.numHands : (card.is1H ? 1 : 2),
+      numHands: card.numHands !== undefined ? card.numHands : card.is1H ? 1 : 2,
       isQuiver: card.isQuiver ?? false,
       isOffhand: card.isOffhand ?? false,
       isCompanion: card.isCompanion ?? false
@@ -409,9 +460,9 @@ const Lobby = () => {
       return [...main, ...side, 'NONE00'][0];
     }
   };
-  
+
   type EquipFieldName = 'head' | 'chest' | 'arms' | 'legs';
-  
+
   const [assigned, setAssigned] = React.useState<
     Record<EquipFieldName, string[]>
   >({
@@ -425,7 +476,7 @@ const Lobby = () => {
     () => [...weaponsIndexed, ...weaponsSBIndexed],
     [weaponsIndexed, weaponsSBIndexed]
   );
-  
+
   const baseEquipment = React.useMemo(
     () => ({
       head: [...data.deck.head, ...data.deck.headSB],
@@ -437,7 +488,7 @@ const Lobby = () => {
     }),
     [data.deck]
   );
-  
+
   const [modularState, setModularState] = React.useState<string[]>(
     baseEquipment.modular
   );
@@ -446,8 +497,13 @@ const Lobby = () => {
     setAssigned({ head: [], chest: [], arms: [], legs: [] });
     setModularState(baseEquipment.modular);
   }, [baseEquipment.modular]);
-  
-  const oneHandedHeroes = ['kayo_armed_and_dangerous', 'kayo', 'kayo_underhanded_cheat', 'kayo_strong_arm'];
+
+  const oneHandedHeroes = [
+    'kayo_armed_and_dangerous',
+    'kayo',
+    'kayo_underhanded_cheat',
+    'kayo_strong_arm'
+  ];
   let handsTotal = oneHandedHeroes.includes(data.deck.hero) ? 1 : 2;
   const mainClassNames = classNames(styles.lobbyClass);
 
@@ -476,19 +532,23 @@ const Lobby = () => {
       data.format === GAME_FORMAT.OPEN_BLITZ ||
       data.format === GAME_FORMAT.OPEN_LL_CC ||
       data.format === GAME_FORMAT.OPEN_SAGE ||
-      data.format === GAME_FORMAT.OPEN
-      // data.format === GAME_FORMAT.OPEN_LL_BLITZ
-    );
+      data.format === GAME_FORMAT.OPEN);
+  // data.format === GAME_FORMAT.OPEN_LL_BLITZ
   //const needToDoDisclaimer = false;
   const leaveLobby = classNames(styles.buttonClass, 'outline');
 
   const handleFormSubmission = async (values: DeckResponse) => {
     setIsSubmitting(true);
 
-    const hands = values.weapons.map((item) => item.id.split("-")[0]);
-    const deck = values.deck.map((card) => card.split("-")[0]);
+    const hands = values.weapons.map((item) => item.id.split('-')[0]);
+    const deck = values.deck.map((card) => card.split('-')[0]);
     const modularOriginal = [...(data?.deck?.modular ?? [])];
-    const assigned = (values as any).assignedModulars || { head: [], chest: [], arms: [], legs: [] };
+    const assigned = (values as any).assignedModulars || {
+      head: [],
+      chest: [],
+      arms: [],
+      legs: []
+    };
 
     const removeOne = (arr: string[], val: string) => {
       const i = arr.indexOf(val);
@@ -506,15 +566,19 @@ const Lobby = () => {
       });
     });
 
-    const filterWeaponsSB = (totalWeapons: Weapon[], equippedWeapons: string[]) => {
-    const indexedWeapons: any = {};
+    const filterWeaponsSB = (
+      totalWeapons: Weapon[],
+      equippedWeapons: string[]
+    ) => {
+      const indexedWeapons: any = {};
 
-    for (const weaponName of equippedWeapons) {
-      indexedWeapons[weaponName] = (indexedWeapons[weaponName] || 0) + 1;
-    }
+      for (const weaponName of equippedWeapons) {
+        indexedWeapons[weaponName] = (indexedWeapons[weaponName] || 0) + 1;
+      }
 
       return totalWeapons.filter((weapon) => {
-        if (indexedWeapons[weapon.img]) { //img = name = id
+        if (indexedWeapons[weapon.img]) {
+          //img = name = id
           indexedWeapons[weapon.img]--;
           return false;
         }
@@ -522,9 +586,12 @@ const Lobby = () => {
       });
     };
 
-    const weaponsSB = filterWeaponsSB([...weaponsIndexed, ...weaponsSBIndexed], [...hands])
-      .filter((item: { id: string; }) => item.id !== 'NONE00')
-      .map((item: { id: string; }) => item.id.split("-")[0]);
+    const weaponsSB = filterWeaponsSB(
+      [...weaponsIndexed, ...weaponsSBIndexed],
+      [...hands]
+    )
+      .filter((item: { id: string }) => item.id !== 'NONE00')
+      .map((item: { id: string }) => item.id.split('-')[0]);
 
     const inventory = [
       ...weaponsSB,
@@ -534,9 +601,10 @@ const Lobby = () => {
       ...(data?.deck?.legsSB ?? []),
       ...(data?.deck?.demiHero ?? []),
       ...modularRemaining,
-      ...(((deckIndexed.concat(deckSBIndexed))
-      .filter(x => !values.deck.includes(x)))
-      .map((card) => card.split("-")[0]) ?? [])
+      ...(deckIndexed
+        .concat(deckSBIndexed)
+        .filter((x) => !values.deck.includes(x))
+        .map((card) => card.split('-')[0]) ?? [])
     ].filter((item) => item !== 'NONE00');
 
     const submitDeck = {
@@ -558,11 +626,13 @@ const Lobby = () => {
 
     try {
       const data: any = await submitSideboardMutation(requestBody).unwrap();
-      
+
       // If game started, capture and store the auth key for future use
       if (data?.gameStarted && data?.authKey && gameID) {
         saveGameAuthKey(gameID, data.authKey, playerID);
-        console.log("Game started! Auth key stored. Waiting for lobby to be ready...");
+        console.log(
+          'Game started! Auth key stored. Waiting for lobby to be ready...'
+        );
         // The existing useEffect in this component will navigate to /game/play/{gameID}
         // when gameLobby?.isMainGameReady becomes true
       }
@@ -600,10 +670,18 @@ const Lobby = () => {
                 </header>
                 <p style={{ marginBottom: '1em' }}>
                   Note that new cards are added on a 'best-effort' basis and
-                  there may be more bugs and innacurate card interactions. 
-                  It may not be a completely accurate representation of the Rules
-                  as written. If you have questions about interactions or rulings,
-                  please contact the <a href="https://discord.gg/flesh-and-blood-judge-hub-874145774135558164" target="_blank"> JudgeHub Discord</a> for clarification.
+                  there may be more bugs and innacurate card interactions. It
+                  may not be a completely accurate representation of the Rules
+                  as written. If you have questions about interactions or
+                  rulings, please contact the{' '}
+                  <a
+                    href="https://discord.gg/flesh-and-blood-judge-hub-874145774135558164"
+                    target="_blank"
+                  >
+                    {' '}
+                    JudgeHub Discord
+                  </a>{' '}
+                  for clarification.
                 </p>
                 <div className={styles.disclaimerAcceptButtons}>
                   <button
@@ -634,7 +712,10 @@ const Lobby = () => {
         initialValues={{
           hero: data?.deck.hero,
           deck: deckIndexed,
-          weapons: weaponsIndexed.length > 0 ? weaponsIndexed : [weaponsSBIndexed.find(w => w.img === 'NONE00')!],
+          weapons:
+            weaponsIndexed.length > 0
+              ? weaponsIndexed
+              : [weaponsSBIndexed.find((w) => w.img === 'NONE00')!],
           head: initialEquipment(data.deck.head, data.deck.headSB),
           chest: initialEquipment(data.deck.chest, data.deck.chestSB),
           arms: initialEquipment(data.deck.arms, data.deck.armsSB),
@@ -649,9 +730,12 @@ const Lobby = () => {
         enableReinitialize
       >
         <Form className={styles.form}>
-          <div className={classNames(styles.gridLayout, {
-            [styles.noMatchups]: !gameLobby?.matchups || gameLobby.matchups.length === 0
-          })}>
+          <div
+            className={classNames(styles.gridLayout, {
+              [styles.noMatchups]:
+                !gameLobby?.matchups || gameLobby.matchups.length === 0
+            })}
+          >
             <div className={styles.titleContainer}>
               <CardPopUp
                 cardNumber={data.deck.hero}
@@ -670,7 +754,7 @@ const Lobby = () => {
                         false,
                         userMetafyTiers.length > 0 ? userMetafyTiers : undefined
                       )
-                        .filter(icon => icon.condition)
+                        .filter((icon) => icon.condition)
                         .map((icon, index) => (
                           <a
                             key={`${icon.src}-${index}`}
@@ -678,12 +762,18 @@ const Lobby = () => {
                             target="_blank"
                             rel="noopener noreferrer"
                             title={icon.title}
-                            style={{ display: 'inline-block', marginRight: '0.3em' }}
+                            style={{
+                              display: 'inline-block',
+                              marginRight: '0.3em'
+                            }}
                           >
                             <img
                               src={icon.src}
                               alt={icon.title}
-                              style={{ height: '1.2em', verticalAlign: 'middle' }}
+                              style={{
+                                height: '1.2em',
+                                verticalAlign: 'middle'
+                              }}
                             />
                           </a>
                         ))}
@@ -702,38 +792,48 @@ const Lobby = () => {
                   style={{ backgroundImage: rightPic }}
                 >
                   <div className={styles.dimPic}>
-                    <h3 
+                    <h3
                       ref={opponentNameRef}
                       onMouseEnter={handleNoteTooltipOpen}
                       onMouseLeave={handleNoteTooltipClose}
                       aria-busy={!gameLobby?.theirName}
                       style={{ cursor: opponentNote ? 'help' : 'default' }}
                     >
-                      {opponentPatronInfo && (opponentPatronInfo.metafyTiers?.length ?? 0) > 0 && createPatreonIconMap(
-                        opponentPatronInfo.isContributor,
-                        opponentPatronInfo.isPvtVoidPatron,
-                        opponentPatronInfo.isPatron,
-                        false,
-                        opponentPatronInfo.metafyTiers
-                      )
-                        .filter(icon => icon.condition)
-                        .map((icon, index) => (
-                          <a
-                            key={`${icon.src}-${index}`}
-                            href={icon.href}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            title={icon.title}
-                            style={{ display: 'inline-block', marginRight: '0.3em' }}
-                          >
-                            <img
-                              src={icon.src}
-                              alt={icon.title}
-                              style={{ height: '1.2em', verticalAlign: 'middle' }}
-                            />
-                          </a>
-                        ))}
-                      {isStreamerMode ? 'Opponent' : String(gameLobby?.theirName ?? '').substring(0, 15)}
+                      {opponentPatronInfo &&
+                        (opponentPatronInfo.metafyTiers?.length ?? 0) > 0 &&
+                        createPatreonIconMap(
+                          opponentPatronInfo.isContributor,
+                          opponentPatronInfo.isPvtVoidPatron,
+                          opponentPatronInfo.isPatron,
+                          false,
+                          opponentPatronInfo.metafyTiers
+                        )
+                          .filter((icon) => icon.condition)
+                          .map((icon, index) => (
+                            <a
+                              key={`${icon.src}-${index}`}
+                              href={icon.href}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              title={icon.title}
+                              style={{
+                                display: 'inline-block',
+                                marginRight: '0.3em'
+                              }}
+                            >
+                              <img
+                                src={icon.src}
+                                alt={icon.title}
+                                style={{
+                                  height: '1.2em',
+                                  verticalAlign: 'middle'
+                                }}
+                              />
+                            </a>
+                          ))}
+                      {isStreamerMode
+                        ? 'Opponent'
+                        : String(gameLobby?.theirName ?? '').substring(0, 15)}
                     </h3>
                     <div className={styles.heroName}>
                       {gameLobby?.theirHeroName != ''
@@ -846,7 +946,13 @@ const Lobby = () => {
                     </li>
                   </ul>
                   <div style={{ marginLeft: 'auto' }}>
-                    <DesktopDeckSelectionButtons deckIndexed={deckIndexed} deckSBIndexed={deckSBIndexed} activeTab={activeTab} filtersExpanded={filtersExpanded} setFiltersExpanded={setFiltersExpanded} />
+                    <DesktopDeckSelectionButtons
+                      deckIndexed={deckIndexed}
+                      deckSBIndexed={deckSBIndexed}
+                      activeTab={activeTab}
+                      filtersExpanded={filtersExpanded}
+                      setFiltersExpanded={setFiltersExpanded}
+                    />
                   </div>
                 </nav>
                 {activeTab !== 'deck' && (
@@ -859,11 +965,12 @@ const Lobby = () => {
                     baseEquipment={baseEquipment}
                     hands={hands}
                     modularState={modularState}
-                    setModularState={setModularState} />
+                    setModularState={setModularState}
+                  />
                 )}
                 {activeTab === 'deck' && (
-                  <Deck 
-                    deck={[...deckIndexed, ...deckSBIndexed]} 
+                  <Deck
+                    deck={[...deckIndexed, ...deckSBIndexed]}
                     cardDictionary={data?.deck?.cardDictionary}
                     filtersExpanded={filtersExpanded}
                     setFiltersExpanded={setFiltersExpanded}
@@ -883,11 +990,12 @@ const Lobby = () => {
                     baseEquipment={baseEquipment}
                     hands={hands}
                     modularState={modularState}
-                    setModularState={setModularState} />
+                    setModularState={setModularState}
+                  />
                 )}
                 {activeTab === 'deck' && (
-                  <Deck 
-                    deck={[...deckIndexed, ...deckSBIndexed]} 
+                  <Deck
+                    deck={[...deckIndexed, ...deckSBIndexed]}
                     cardDictionary={data?.deck?.cardDictionary}
                     filtersExpanded={filtersExpanded}
                     setFiltersExpanded={setFiltersExpanded}
@@ -897,13 +1005,19 @@ const Lobby = () => {
               </>
             )}
             {(activeTab === 'chat' || isWideScreen) && (
-              <div className={!isDeckValid ? styles.chatAreaContainerRestrained : styles.chatAreaContainer}>
+              <div
+                className={
+                  !isDeckValid
+                    ? styles.chatAreaContainerRestrained
+                    : styles.chatAreaContainer
+                }
+              >
                 {showFriendsPanel ? (
                   // Friends Panel
                   <div className={styles.friendsPanel}>
                     <div className={styles.friendsPanelHeader}>
                       <h3>Invite Friends</h3>
-                      <button 
+                      <button
                         onClick={() => setShowFriendsPanel(false)}
                         className={styles.friendsPanelCloseButton}
                       >
@@ -913,16 +1027,26 @@ const Lobby = () => {
                     {friendsData?.friends && friendsData.friends.length > 0 ? (
                       <div className={styles.friendsList}>
                         {sortedFriends.map((friend) => {
-                          const onlineFriend = onlineFriendsData?.onlineFriends?.find(
-                            (f: any) => f.userId === friend.friendUserId
-                          );
+                          const onlineFriend =
+                            onlineFriendsData?.onlineFriends?.find(
+                              (f: any) => f.userId === friend.friendUserId
+                            );
                           const isOnline = onlineFriend?.isOnline === true;
-                          
+
                           return (
-                            <div key={friend.friendUserId} className={styles.friendItem}>
-                              <span className={styles.friendName}>{friend.nickname || friend.username}</span>
-                              <button 
-                                onClick={() => handleSendGameInviteFromLobby(friend.friendUserId)}
+                            <div
+                              key={friend.friendUserId}
+                              className={styles.friendItem}
+                            >
+                              <span className={styles.friendName}>
+                                {friend.nickname || friend.username}
+                              </span>
+                              <button
+                                onClick={() =>
+                                  handleSendGameInviteFromLobby(
+                                    friend.friendUserId
+                                  )
+                                }
                                 className={styles.friendInviteButton}
                               >
                                 <MdGames size={18} />
@@ -933,17 +1057,19 @@ const Lobby = () => {
                         })}
                       </div>
                     ) : (
-                      <p className={styles.friendsEmptyState}>No friends to invite</p>
+                      <p className={styles.friendsEmptyState}>
+                        No friends to invite
+                      </p>
                     )}
                   </div>
                 ) : (
-                  <>
-                    {showCalculator ? <Calculator /> : <LobbyChat />}
-                  </>
+                  <>{showCalculator ? <Calculator /> : <LobbyChat />}</>
                 )}
                 {!showFriendsPanel && (
                   <button
-                    className={classNames(styles.smallButton, { [styles.active]: showCalculator })}
+                    className={classNames(styles.smallButton, {
+                      [styles.active]: showCalculator
+                    })}
                     onClick={(e) => {
                       e.preventDefault();
                       toggleShowCalculator();
@@ -956,9 +1082,8 @@ const Lobby = () => {
               </div>
             )}
 
-            {!isWideScreen && (activeTab !== 'chat') && (
-              <div className={styles.mobileBottomActions}>
-              </div>
+            {!isWideScreen && activeTab !== 'chat' && (
+              <div className={styles.mobileBottomActions}></div>
             )}
 
             <div className={styles.spacer}></div>
@@ -984,26 +1109,40 @@ const Lobby = () => {
       <CardPortal />
 
       {/* Opponent note tooltip in lobby */}
-      {opponentNote && isNoteTooltipOpen && createPortal(
-        <div
-          className={styles.noteTooltip}
-          style={{
-            top: `${noteTooltipPosition.top}px`,
-            left: `${noteTooltipPosition.left}px`
-          }}
-        >
-          {opponentNote}
-        </div>,
-        document.body
-      )}
+      {opponentNote &&
+        isNoteTooltipOpen &&
+        createPortal(
+          <div
+            className={styles.noteTooltip}
+            style={{
+              top: `${noteTooltipPosition.top}px`,
+              left: `${noteTooltipPosition.left}px`
+            }}
+          >
+            {opponentNote}
+          </div>,
+          document.body
+        )}
     </main>
   );
 };
 
 // Component to handle Filters, Select All/None buttons for desktop - has access to Formik context
-const DesktopDeckSelectionButtons = ({ deckIndexed, deckSBIndexed, activeTab, filtersExpanded, setFiltersExpanded }: { deckIndexed: string[], deckSBIndexed: string[], activeTab: string, filtersExpanded: boolean, setFiltersExpanded: (value: boolean) => void }) => {
+const DesktopDeckSelectionButtons = ({
+  deckIndexed,
+  deckSBIndexed,
+  activeTab,
+  filtersExpanded,
+  setFiltersExpanded
+}: {
+  deckIndexed: string[];
+  deckSBIndexed: string[];
+  activeTab: string;
+  filtersExpanded: boolean;
+  setFiltersExpanded: (value: boolean) => void;
+}) => {
   const { setFieldValue } = useFormikContext<DeckResponse>();
-  
+
   const handleSelectAll = () => {
     const allCards = [...deckIndexed, ...deckSBIndexed];
     setFieldValue('deck', allCards);
@@ -1026,7 +1165,11 @@ const DesktopDeckSelectionButtons = ({ deckIndexed, deckSBIndexed, activeTab, fi
         type="button"
         title={filtersExpanded ? 'Collapse filters' : 'Expand filters'}
       >
-        {filtersExpanded ? <MdArrowDropDown size={24} /> : <MdArrowRight size={24} />}
+        {filtersExpanded ? (
+          <MdArrowDropDown size={24} />
+        ) : (
+          <MdArrowRight size={24} />
+        )}
         Filters
       </button>
       <button

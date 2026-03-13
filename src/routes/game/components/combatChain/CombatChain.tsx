@@ -111,7 +111,9 @@ export default function CombatChain() {
           ref={containerRef}
           initial={{ opacity: 0, y: `${yOffset}dvh` }}
           animate={{ opacity: 1, x: 0, y: `${yOffset}dvh` }}
-          transition={isDragging ? { type: 'tween', duration: 0 } : { type: 'tween' }}
+          transition={
+            isDragging ? { type: 'tween', duration: 0 } : { type: 'tween' }
+          }
           exit={{ opacity: 0 }}
           className={styles.combatChain}
         >
@@ -120,13 +122,15 @@ export default function CombatChain() {
             <ChainLinks />
             <Reactions />
           </div>
-          <div 
-            className={`${styles.grabbyHandle} ${isDragging ? styles.grabbyHandleDragging : ''}`}
+          <div
+            className={`${styles.grabbyHandle} ${
+              isDragging ? styles.grabbyHandleDragging : ''
+            }`}
             onMouseDown={handleMouseDown}
             onTouchStart={handleTouchStart}
           >
-            <MdDragHandle 
-              size={32} 
+            <MdDragHandle
+              size={32}
               className={styles.gripIcon}
               aria-label="Drag to move combat chain"
             />
@@ -178,9 +182,7 @@ const PlayerPrompt = () => {
         key={`${playerPrompt?.helpText?.substring(0, 10)}`}
       >
         <div className={styles.content}>
-          <div>
-            {parseHtmlToReactElements(playerPrompt?.helpText ?? '')}
-          </div>
+          <div>{parseHtmlToReactElements(playerPrompt?.helpText ?? '')}</div>
         </div>
         {buttons}
       </motion.div>

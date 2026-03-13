@@ -90,10 +90,10 @@ export const PlayerHandCard = ({
 
     // Only play card on drag if vertical movement is significant (prevent accidental plays on scroll)
     const isMobile = windowHeight > 800;
-    const dragThreshold = isMobile 
+    const dragThreshold = isMobile
       ? windowHeight * ScreenPercentageForCardPlayed * 1.5 // Higher threshold on mobile
       : windowHeight * ScreenPercentageForCardPlayed;
-    
+
     if (absY > dragThreshold) {
       setSnapback(false);
       playCardFunc();
@@ -199,7 +199,9 @@ export const PlayerHandCard = ({
       dragMomentum={false}
       initial={getInitialPosition()}
       animate={{ opacity: 1, y: 0 }}
-      transition={isNewlyDrawn ? { duration: 0.2, ease: 'easeOut' } : { duration: 0.1 }}
+      transition={
+        isNewlyDrawn ? { duration: 0.2, ease: 'easeOut' } : { duration: 0.1 }
+      }
       whileHover={isDragging ? undefined : { scale: 1.1, y: -50 }}
       whileDrag={{ scale: 1.05, zIndex: 1000 }}
     >

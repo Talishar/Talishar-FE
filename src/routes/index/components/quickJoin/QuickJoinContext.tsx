@@ -9,7 +9,10 @@ import React, {
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from 'app/Hooks';
 import { setGameStart } from 'features/game/GameSlice';
-import { useJoinGameMutation, useGetFavoriteDecksQuery } from 'features/api/apiSlice';
+import {
+  useJoinGameMutation,
+  useGetFavoriteDecksQuery
+} from 'features/api/apiSlice';
 import { generateCroppedImageUrl } from 'utils/cropImages';
 import { ImageSelectOption } from 'components/ImageSelect';
 import { getReadableFormatName } from 'utils/formatUtils';
@@ -21,14 +24,18 @@ const shortenFormat = (format: string): string => {
   return readable || format;
 };
 
-const formatDeckLabel = (deckName: string, format: string | null, maxLength: number = 58): string => {
+const formatDeckLabel = (
+  deckName: string,
+  format: string | null,
+  maxLength: number = 58
+): string => {
   const formatStr = format ? ` (${shortenFormat(format)})` : '';
   const combined = `${deckName}${formatStr}`;
-  
+
   if (combined.length <= maxLength) {
     return combined;
   }
-  
+
   const availableForName = Math.max(1, maxLength - formatStr.length - 3);
   return `${deckName.substring(0, availableForName)}...${formatStr}`;
 };
@@ -56,11 +63,16 @@ const LS_FAVE_DECK_KEY = 'quickJoin_favoriteDeck';
 const LS_IMPORT_URL_KEY = 'quickJoin_importUrl';
 const LS_SAVE_DECK_KEY = 'quickJoin_saveDeck';
 
-export const QuickJoinProvider = ({ children }: { children: React.ReactNode }) => {
+export const QuickJoinProvider = ({
+  children
+}: {
+  children: React.ReactNode;
+}) => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [joinGame] = useJoinGameMutation();
-  const { data: favoritesData, isLoading: isFavoritesLoading } = useGetFavoriteDecksQuery(undefined);
+  const { data: favoritesData, isLoading: isFavoritesLoading } =
+    useGetFavoriteDecksQuery(undefined);
 
   const [selectedFavoriteDeck, setSelectedFavoriteDeckState] = useState<string>(
     () => localStorage.getItem(LS_FAVE_DECK_KEY) ?? ''
@@ -162,9 +174,10 @@ export const QuickJoinProvider = ({ children }: { children: React.ReactNode }) =
         const authKeyToUse = response.authKey ?? '';
         const playerIDToUse = response.playerID ?? 0;
         // Ensure gameID is always a number (backend might return string)
-        const gameIDToUse = typeof response.gameName === 'number' 
-          ? response.gameName 
-          : parseInt(String(response.gameName ?? 0));
+        const gameIDToUse =
+          typeof response.gameName === 'number'
+            ? response.gameName
+            : parseInt(String(response.gameName ?? 0));
 
         console.log('[QuickJoin] About to dispatch setGameStart with:', {
           playerID: playerIDToUse,
@@ -185,22 +198,34 @@ export const QuickJoinProvider = ({ children }: { children: React.ReactNode }) =
         // Reset save deck checkbox after successful join
         setSaveDeck(false);
 
-        console.log('[QuickJoin] setGameStart dispatched, now navigating to:', `/game/lobby/${gameIDToUse}`);
+        console.log(
+          '[QuickJoin] setGameStart dispatched, now navigating to:',
+          `/game/lobby/${gameIDToUse}`
+        );
 
         navigate(`/game/lobby/${gameIDToUse}`, {
-          state: { 
+          state: {
             playerID: playerIDToUse,
             authKey: authKeyToUse
           }
         });
       } catch (err: any) {
-        const message = typeof err === 'string' ? err : err?.message ?? String(err);
+        const message =
+          typeof err === 'string' ? err : err?.message ?? String(err);
         setError(message);
       } finally {
         setIsJoining(false);
       }
     },
-    [joinGame, selectedFavoriteDeck, importDeckUrl, saveDeck, dispatch, navigate, setSaveDeck]
+    [
+      joinGame,
+      selectedFavoriteDeck,
+      importDeckUrl,
+      saveDeck,
+      dispatch,
+      navigate,
+      setSaveDeck
+    ]
   );
 
   const value: QuickJoinContextType = {
@@ -229,7 +254,8 @@ export const QuickJoinProvider = ({ children }: { children: React.ReactNode }) =
 
 export const useQuickJoin = (): QuickJoinContextType => {
   const ctx = useContext(QuickJoinContext);
-  if (!ctx) throw new Error('useQuickJoin must be used inside <QuickJoinProvider>');
+  if (!ctx)
+    throw new Error('useQuickJoin must be used inside <QuickJoinProvider>');
   return ctx;
 };
 

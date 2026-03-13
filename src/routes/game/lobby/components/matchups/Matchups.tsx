@@ -23,9 +23,11 @@ const Matchups = ({ refetch }: Matchups) => {
   const { gameID, playerID } = useAppSelector(getGameInfo, shallowEqual);
   const [joinGameMutation, joinGameMutationData] = useJoinGameMutation();
 
-  const getTurnOrderIndicator = (preferredTurnOrder: string | null | undefined) => {
+  const getTurnOrderIndicator = (
+    preferredTurnOrder: string | null | undefined
+  ) => {
     if (!preferredTurnOrder) return null;
-    
+
     if (preferredTurnOrder === '1st') {
       return '1st';
     } else if (preferredTurnOrder === '2nd') {
@@ -55,7 +57,7 @@ const Matchups = ({ refetch }: Matchups) => {
       setIsUpdating(false);
     }
   };
-  
+
   const sortedMatchups = [...(gameLobby?.matchups ?? [])];
   sortedMatchups.sort((a, b) => a.name.localeCompare(b.name));
 
@@ -68,14 +70,16 @@ const Matchups = ({ refetch }: Matchups) => {
       <article className={styles.matchupContainer}>
         <>
           <h4>Matchups</h4>
-	  <input
-	    type="text"
-	    placeholder="Search"
-	    value={searchTerm}
-	    onChange={(e) => setSearchTerm(e.target.value)}
-	  />
-	  {filteredMatchups.map((matchup, ix) => {
-            const turnOrderIndicator = getTurnOrderIndicator(matchup.preferredTurnOrder);
+          <input
+            type="text"
+            placeholder="Search"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+          {filteredMatchups.map((matchup, ix) => {
+            const turnOrderIndicator = getTurnOrderIndicator(
+              matchup.preferredTurnOrder
+            );
             return (
               <div className={styles.matchups} key={ix}>
                 <MatchupTooltip content={matchup.notes}>
@@ -102,7 +106,7 @@ const Matchups = ({ refetch }: Matchups) => {
       </article>
     );
   }
-  
+
   return null;
 };
 

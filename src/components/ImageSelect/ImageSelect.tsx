@@ -29,18 +29,21 @@ export const ImageSelect: React.FC<ImageSelectProps> = ({
   id
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState<ImageSelectOption | undefined>(
-    options.find(opt => opt.value === value)
-  );
+  const [selectedOption, setSelectedOption] = useState<
+    ImageSelectOption | undefined
+  >(options.find((opt) => opt.value === value));
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    setSelectedOption(options.find(opt => opt.value === value));
+    setSelectedOption(options.find((opt) => opt.value === value));
   }, [value, options]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target as Node)
+      ) {
         setIsOpen(false);
       }
     };
@@ -68,7 +71,10 @@ export const ImageSelect: React.FC<ImageSelectProps> = ({
     setIsOpen(false);
   };
 
-  const handleKeyDown = (event: React.KeyboardEvent, option?: ImageSelectOption) => {
+  const handleKeyDown = (
+    event: React.KeyboardEvent,
+    option?: ImageSelectOption
+  ) => {
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
       if (option) {
@@ -80,13 +86,15 @@ export const ImageSelect: React.FC<ImageSelectProps> = ({
   };
 
   return (
-    <div 
-      className={`${styles.imageSelect} ${disabled ? styles.disabled : ''}`} 
+    <div
+      className={`${styles.imageSelect} ${disabled ? styles.disabled : ''}`}
       ref={containerRef}
       id={id}
     >
       <div
-        className={`${styles.selectTrigger} ${isOpen ? styles.open : ''} ${ariaInvalid ? styles.invalid : ''}`}
+        className={`${styles.selectTrigger} ${isOpen ? styles.open : ''} ${
+          ariaInvalid ? styles.invalid : ''
+        }`}
         onClick={() => !disabled && setIsOpen(!isOpen)}
         onKeyDown={(e) => !disabled && handleKeyDown(e)}
         tabIndex={disabled ? -1 : 0}
@@ -99,9 +107,9 @@ export const ImageSelect: React.FC<ImageSelectProps> = ({
         {selectedOption ? (
           <div className={styles.selectedOption}>
             {selectedOption.imageUrl && (
-              <img 
-                src={selectedOption.imageUrl} 
-                alt="" 
+              <img
+                src={selectedOption.imageUrl}
+                alt=""
                 className={styles.optionImage}
               />
             )}
@@ -110,14 +118,19 @@ export const ImageSelect: React.FC<ImageSelectProps> = ({
         ) : (
           <span className={styles.placeholder}>{placeholder}</span>
         )}
-        <svg 
-          className={styles.arrow} 
-          width="12" 
-          height="8" 
-          viewBox="0 0 12 8" 
+        <svg
+          className={styles.arrow}
+          width="12"
+          height="8"
+          viewBox="0 0 12 8"
           fill="none"
         >
-          <path d="M1 1L6 6L11 1" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+          <path
+            d="M1 1L6 6L11 1"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+          />
         </svg>
       </div>
 
@@ -126,7 +139,9 @@ export const ImageSelect: React.FC<ImageSelectProps> = ({
           {options.map((option) => (
             <div
               key={option.value}
-              className={`${styles.option} ${selectedOption?.value === option.value ? styles.selected : ''}`}
+              className={`${styles.option} ${
+                selectedOption?.value === option.value ? styles.selected : ''
+              }`}
               onClick={() => handleSelect(option)}
               onKeyDown={(e) => handleKeyDown(e, option)}
               tabIndex={0}
@@ -134,9 +149,9 @@ export const ImageSelect: React.FC<ImageSelectProps> = ({
               aria-selected={selectedOption?.value === option.value}
             >
               {option.imageUrl && (
-                <img 
-                  src={option.imageUrl} 
-                  alt="" 
+                <img
+                  src={option.imageUrl}
+                  alt=""
                   className={styles.optionImage}
                 />
               )}

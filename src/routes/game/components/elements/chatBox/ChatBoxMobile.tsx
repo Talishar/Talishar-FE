@@ -14,14 +14,16 @@ export default function ChatBox() {
   });
   const [chatFilter, setChatFilter] = useState<'none' | 'chat' | 'log'>('none');
   const chatLog = useAppSelector((state: RootState) => state.game.chatLog);
-  const myName =
-    String(useAppSelector((state: RootState) => {
+  const myName = String(
+    useAppSelector((state: RootState) => {
       return state.game.playerOne.Name;
-    }) ?? 'you');
-  const oppName =
-    String(useAppSelector((state: RootState) => {
+    }) ?? 'you'
+  );
+  const oppName = String(
+    useAppSelector((state: RootState) => {
       return state.game.playerTwo.Name;
-    }) ?? 'your opponent');
+    }) ?? 'your opponent'
+  );
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -51,15 +53,11 @@ export default function ChatBox() {
       return message
         .replace(
           'Player 1',
-          `${
-            amIPlayerOne ? myName.substring(0, 15) : oppName.substring(0, 15)
-          }`
+          `${amIPlayerOne ? myName.substring(0, 15) : oppName.substring(0, 15)}`
         )
         .replace(
           'Player 2',
-          `${
-            amIPlayerOne ? oppName.substring(0, 15) : myName.substring(0, 15)
-          }`
+          `${amIPlayerOne ? oppName.substring(0, 15) : myName.substring(0, 15)}`
         );
     });
 
@@ -69,12 +67,15 @@ export default function ChatBox() {
 
   return (
     // Added inline styles for fixed positioning
-    <div className={styles.chatBoxMobileContainer} style={{
-      position: 'fixed',
-      top: '2vh',
-      right: '2vh', 
-      zIndex: 1000, 
-    }}>
+    <div
+      className={styles.chatBoxMobileContainer}
+      style={{
+        position: 'fixed',
+        top: '2vh',
+        right: '2vh',
+        zIndex: 1000
+      }}
+    >
       <div className={styles.chatBoxMobileInner}>
         <div className={styles.chatMobileBox}>
           {chatMessages &&

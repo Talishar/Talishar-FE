@@ -45,17 +45,20 @@ const StickyFooter = ({
       if (footerRef.current) {
         const height = footerRef.current.offsetHeight;
         if (height > 0) {
-          document.documentElement.style.setProperty('--sticky-footer-height', `${height}px`);
+          document.documentElement.style.setProperty(
+            '--sticky-footer-height',
+            `${height}px`
+          );
         }
       }
     };
 
     // Initial update
     updateFooterHeight();
-    
+
     // Small delay to ensure DOM is fully rendered on mobile
     const timer = setTimeout(updateFooterHeight, 100);
-    
+
     window.addEventListener('resize', updateFooterHeight);
     return () => {
       clearTimeout(timer);
@@ -80,10 +83,27 @@ const StickyFooter = ({
   return (
     <div className={styles.stickyFooter} ref={footerRef}>
       <div className={dynamicContainer}>
-        <div style={{display: 'flex', gap: '2rem', alignItems: 'center', flex: 1}}>
-          <div style={{display: 'flex', alignItems: 'center', gap: '0.5rem'}}>
-            <span style={{whiteSpace: 'nowrap'}} className={styles.labelTextLong}>Copy Invite Link</span>
-            <span style={{whiteSpace: 'nowrap'}} className={styles.labelTextShort}>Copy Link</span>
+        <div
+          style={{
+            display: 'flex',
+            gap: '2rem',
+            alignItems: 'center',
+            flex: 1
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <span
+              style={{ whiteSpace: 'nowrap' }}
+              className={styles.labelTextLong}
+            >
+              Copy Invite Link
+            </span>
+            <span
+              style={{ whiteSpace: 'nowrap' }}
+              className={styles.labelTextShort}
+            >
+              Copy Link
+            </span>
             <div className={styles.clipboardButtonHolder}>
               <button
                 className={styles.buttonClass}
@@ -98,9 +118,21 @@ const StickyFooter = ({
             </div>
           </div>
           {onSendInviteClick && (
-            <div style={{display: 'flex', alignItems: 'center', gap: '0.5rem'}}>
-              <span style={{whiteSpace: 'nowrap'}} className={styles.labelTextLong}>Send Friends Invite</span>
-              <span style={{whiteSpace: 'nowrap'}} className={styles.labelTextShort}>Send Invite</span>
+            <div
+              style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+            >
+              <span
+                style={{ whiteSpace: 'nowrap' }}
+                className={styles.labelTextLong}
+              >
+                Send Friends Invite
+              </span>
+              <span
+                style={{ whiteSpace: 'nowrap' }}
+                className={styles.labelTextShort}
+              >
+                Send Invite
+              </span>
               <button
                 className={styles.buttonClass}
                 onClick={onSendInviteClick}
@@ -140,7 +172,9 @@ const StickyFooter = ({
             <button
               className={styles.buttonClass}
               type="submit"
-              disabled={isValid === false || !submitSideboard || needToDoDisclaimer}
+              disabled={
+                isValid === false || !submitSideboard || needToDoDisclaimer
+              }
             >
               Confirm Deck
             </button>

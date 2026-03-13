@@ -236,7 +236,6 @@
   transition: opacity 200ms ease, transform 200ms ease;
 }
 
-
 @media (orientation: portrait) {
   .normalSize {
     max-height: 14vw;

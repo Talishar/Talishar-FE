@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import styles from './CommunityContent.module.css';
-import { fetchDiscordContentCarousel, ContentVideo } from '../../../services/contentService';
+import {
+  fetchDiscordContentCarousel,
+  ContentVideo
+} from '../../../services/contentService';
 
 const CommunityContent: React.FC = () => {
   const [videos, setVideos] = useState<ContentVideo[]>([]);
@@ -168,21 +171,24 @@ const CommunityContent: React.FC = () => {
       <div className={styles.content}>
         <h2>Community & Content Hub</h2>
         <p className={styles.subtitle}>
-          Discover content, deck tech, and highlights from the Talishar community
+          Discover content, deck tech, and highlights from the Talishar
+          community
         </p>
 
         {/* Carousel */}
         <div className={styles.carouselContainer}>
           <div className={styles.carouselWrapper}>
-            <div className={styles.videoContainer}>
-              {renderVideoEmbed()}
-            </div>
+            <div className={styles.videoContainer}>{renderVideoEmbed()}</div>
 
             {/* Video Info */}
             <div className={styles.videoInfo}>
               <h3>{cleanTitle(currentVideo.title)}</h3>
               <p className={styles.videoMeta}>
-                <span className={styles.author}>By {currentVideo.author.charAt(0).toUpperCase() + currentVideo.author.slice(1)}</span>
+                <span className={styles.author}>
+                  By{' '}
+                  {currentVideo.author.charAt(0).toUpperCase() +
+                    currentVideo.author.slice(1)}
+                </span>
                 <span className={styles.timestamp}>
                   {new Date(currentVideo.timestamp).toLocaleDateString()}
                 </span>

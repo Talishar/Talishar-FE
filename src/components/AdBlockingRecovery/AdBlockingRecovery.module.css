@@ -19,7 +19,11 @@
 }
 
 .message {
-  background: linear-gradient(135deg, rgba(255, 184, 77, 0.1), rgba(255, 100, 100, 0.1));
+  background: linear-gradient(
+    135deg,
+    rgba(255, 184, 77, 0.1),
+    rgba(255, 100, 100, 0.1)
+  );
   border: 1px solid rgba(255, 184, 77, 0.3);
   border-radius: 8px;
   padding: 1rem;

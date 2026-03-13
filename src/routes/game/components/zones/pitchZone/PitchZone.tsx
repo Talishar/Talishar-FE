@@ -17,7 +17,9 @@ export default function PitchZone(prop: Displayrow) {
     isPlayer ? state.game.playerOne.Pitch : state.game.playerTwo.Pitch
   );
 
-  const cardListFocus = useAppSelector((state: RootState) => state.game.cardListFocus);
+  const cardListFocus = useAppSelector(
+    (state: RootState) => state.game.cardListFocus
+  );
 
   let pitchAmount = useAppSelector((state: RootState) =>
     isPlayer
@@ -28,15 +30,13 @@ export default function PitchZone(prop: Displayrow) {
 
   if (
     (pitchZone === undefined ||
-    pitchZone.length === 0 ||
-    pitchZone[0].cardNumber === 'blankZone') &&
+      pitchZone.length === 0 ||
+      pitchZone[0].cardNumber === 'blankZone') &&
     numericPitch === 0
   ) {
     return (
       <>
-        <div className={styles.pitchZone}>
-          Pitch
-        </div>
+        <div className={styles.pitchZone}>Pitch</div>
       </>
     );
   }
@@ -62,7 +62,8 @@ export default function PitchZone(prop: Displayrow) {
 
   const pitchOrder = pitchZone ? [...pitchZone].reverse() : [];
   const numInPitch = pitchZone ? pitchZone.length : 0;
-  const cardToDisplay = numInPitch > 0 ? { ...pitchZone![numInPitch - 1], borderColor: '' } : null;
+  const cardToDisplay =
+    numInPitch > 0 ? { ...pitchZone![numInPitch - 1], borderColor: '' } : null;
 
   return (
     <div className={styles.pitchZone} onClick={pitchZoneDisplay}>
@@ -77,7 +78,7 @@ export default function PitchZone(prop: Displayrow) {
               transition={{ ease: 'easeIn', duration: 0.2 }}
               exit={{ opacity: 0 }}
               key={`${card.cardNumber}-${ix}`}
-              data-testid='pitch-motion-div'
+              data-testid="pitch-motion-div"
             >
               <CardDisplay card={card} preventUseOnClick isPlayer={isPlayer} />
             </motion.div>

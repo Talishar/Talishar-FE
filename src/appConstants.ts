@@ -146,11 +146,11 @@ export const GAME_FORMAT = {
   OPEN_LL_CC: 'futurell',
   BRAWL: 'brawl',
   PRECON: 'precon',
-  COMPETITIVE_LL: "compllcc",
-  SAGE: "sage",
-  COMPETITIVE_SAGE: "compsage",
+  COMPETITIVE_LL: 'compllcc',
+  SAGE: 'sage',
+  COMPETITIVE_SAGE: 'compsage',
   OPEN_SAGE: 'futuresage',
-  OPEN: "open"
+  OPEN: 'open'
   //OPEN_LL_BLITZ: 'openformatllblitz'
 };
 
@@ -178,22 +178,23 @@ export const GAME_FORMAT_NUMBER = {
 };
 
 // Create a mapping from number format to string format for normalization
-const FORMAT_NUMBER_TO_STRING: { [key: string]: string } = Object.entries(GAME_FORMAT_NUMBER).reduce(
-  (acc, [key, value]) => {
-    const stringKey = key as keyof typeof GAME_FORMAT;
-    if (stringKey in GAME_FORMAT) {
-      acc[value] = GAME_FORMAT[stringKey];
-    }
-    return acc;
-  },
-  {} as { [key: string]: string }
-);
+const FORMAT_NUMBER_TO_STRING: { [key: string]: string } = Object.entries(
+  GAME_FORMAT_NUMBER
+).reduce((acc, [key, value]) => {
+  const stringKey = key as keyof typeof GAME_FORMAT;
+  if (stringKey in GAME_FORMAT) {
+    acc[value] = GAME_FORMAT[stringKey];
+  }
+  return acc;
+}, {} as { [key: string]: string });
 
 /**
  * Normalizes format values to their string representation (GAME_FORMAT values)
  * Handles both string formats ('precon') and number formats ('-2')
  */
-export const normalizeFormat = (format: string | number | null | undefined): string | null => {
+export const normalizeFormat = (
+  format: string | number | null | undefined
+): string | null => {
   if (!format) return null;
   const formatStr = String(format);
   // If it's a number format, convert to string format
@@ -203,7 +204,9 @@ export const normalizeFormat = (format: string | number | null | undefined): str
 /**
  * Checks if a format is preconstructed, handling both string and number formats
  */
-export const isPreconFormat = (format: string | number | null | undefined): boolean => {
+export const isPreconFormat = (
+  format: string | number | null | undefined
+): boolean => {
   const normalized = normalizeFormat(format);
   return normalized === GAME_FORMAT.PRECON;
 };
@@ -279,9 +282,9 @@ const PRECON_DECK_DATA = [
 ];
 
 // Create sorted arrays for easier consumption
-const SORTED_PRECON_DECKS = PRECON_DECK_DATA
-  .map((deck) => ({ ...deck }))
-  .sort((a, b) => a.name.localeCompare(b.name));
+const SORTED_PRECON_DECKS = PRECON_DECK_DATA.map((deck) => ({ ...deck })).sort(
+  (a, b) => a.name.localeCompare(b.name)
+);
 
 export const PRECON_DECKS = {
   DATA: SORTED_PRECON_DECKS,
@@ -294,7 +297,7 @@ export const URL_END_POINT = {
   GET_GAME_LIST: 'APIs/GetGameList.php',
   GET_GAME_INFO: 'APIs/GetGameInfo.php',
   CREATE_GAME: 'APIs/CreateGame.php',
-  REPLAYS: "APIs/CreateReplayGame.php",
+  REPLAYS: 'APIs/CreateReplayGame.php',
   SUBMIT_CHAT: 'SubmitChat.php',
   GET_POPUP: 'GetPopupAPI.php',
   GAME_STATE_POLL: 'GetNextTurn.php?',

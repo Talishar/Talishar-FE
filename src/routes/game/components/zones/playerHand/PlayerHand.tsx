@@ -52,36 +52,38 @@ export default function PlayerHand() {
   const handCardsWithStableIds = useMemo<CardWithStableId[]>(() => {
     const cardIdMap = cardIdMapRef.current;
     const cards = handCards ?? [];
-    
+
     // Create fingerprints WITHOUT index so reordering doesn't create new IDs
-    const baseFingerprints = cards.map((card) => 
-      `${card.cardNumber}-${card.uniqueId ?? 'na'}-${card.cardIndex ?? 'na'}`
+    const baseFingerprints = cards.map(
+      (card) =>
+        `${card.cardNumber}-${card.uniqueId ?? 'na'}-${card.cardIndex ?? 'na'}`
     );
 
     // Track which fingerprints we've seen in this render (for duplicates)
     const fingerprintOccurrences = new Map<string, number>();
     const usedIds = new Set<string>();
-    
+
     const result = cards.map((card, index) => {
       const baseFingerprint = baseFingerprints[index];
-      
+
       // Count occurrences to handle duplicates
       const occurrence = fingerprintOccurrences.get(baseFingerprint) ?? 0;
       fingerprintOccurrences.set(baseFingerprint, occurrence + 1);
-      
+
       // Create unique fingerprint including occurrence
-      const uniqueFingerprint = occurrence === 0 
-        ? baseFingerprint 
-        : `${baseFingerprint}-dup-${occurrence}`;
-      
+      const uniqueFingerprint =
+        occurrence === 0
+          ? baseFingerprint
+          : `${baseFingerprint}-dup-${occurrence}`;
+
       let id = cardIdMap.get(uniqueFingerprint);
-      
+
       // If no existing ID or ID is already used, generate a new one
       if (!id || usedIds.has(id)) {
         id = `hand-card-${nextIdCounterRef.current++}`;
         cardIdMap.set(uniqueFingerprint, id);
       }
-      
+
       usedIds.add(id);
       return { card, id };
     });
@@ -90,15 +92,16 @@ export default function PlayerHand() {
     const currentFingerprints = new Set<string>();
     result.forEach((_, idx) => {
       const baseFingerprint = baseFingerprints[idx];
-      const occurrence = Array.from(currentFingerprints)
-        .filter(fp => fp.startsWith(baseFingerprint))
-        .length;
-      const uniqueFingerprint = occurrence === 0 
-        ? baseFingerprint 
-        : `${baseFingerprint}-dup-${occurrence}`;
+      const occurrence = Array.from(currentFingerprints).filter((fp) =>
+        fp.startsWith(baseFingerprint)
+      ).length;
+      const uniqueFingerprint =
+        occurrence === 0
+          ? baseFingerprint
+          : `${baseFingerprint}-dup-${occurrence}`;
       currentFingerprints.add(uniqueFingerprint);
     });
-    
+
     for (const [fingerprint] of cardIdMap) {
       if (!currentFingerprints.has(fingerprint)) {
         cardIdMap.delete(fingerprint);
@@ -169,7 +172,9 @@ export default function PlayerHand() {
     }
 
     const validIds = new Set(handCardsWithStableIds.map((entry) => entry.id));
-    const hasInvalidDraggedId = dragStartOrderIds.some((id) => !validIds.has(id));
+    const hasInvalidDraggedId = dragStartOrderIds.some(
+      (id) => !validIds.has(id)
+    );
     if (hasInvalidDraggedId) {
       setDragStartOrderIds(null);
       setPreviewHandIds(null);
@@ -382,6 +387,75 @@ export default function PlayerHand() {
     playableGraveyardCards
   ]);
 
+  // Shuffle hand randomly with S key; hold to repeat every 50ms
+  useEffect(() => {
+    const HOLD_INITIAL_DELAY_MS = 400;
+    const HOLD_REPEAT_INTERVAL_MS = 150;
+
+    let initialDelayTimer: ReturnType<typeof setTimeout> | null = null;
+    let repeatInterval: ReturnType<typeof setInterval> | null = null;
+    let isHolding = false;
+
+    const doShuffle = () => {
+      setOrderedHandIds((currentOrder) => {
+        if (currentOrder.length <= 1) return currentOrder;
+        const shuffled = [...currentOrder];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        return shuffled;
+      });
+
+      if (!isMuted) {
+        playDrawingCardsSound();
+      }
+    };
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key !== 's' && e.key !== 'S') return;
+      const target = e.target as HTMLElement;
+      if (
+        target.tagName === 'INPUT' ||
+        target.tagName === 'TEXTAREA' ||
+        target.isContentEditable
+      )
+        return;
+
+      // e.repeat fires for OS key-repeat events — ignore those, we manage our own
+      if (isHolding) return;
+      isHolding = true;
+
+      doShuffle();
+
+      initialDelayTimer = setTimeout(() => {
+        repeatInterval = setInterval(doShuffle, HOLD_REPEAT_INTERVAL_MS);
+      }, HOLD_INITIAL_DELAY_MS);
+    };
+
+    const handleKeyUp = (e: KeyboardEvent) => {
+      if (e.key !== 's' && e.key !== 'S') return;
+      isHolding = false;
+      if (initialDelayTimer !== null) {
+        clearTimeout(initialDelayTimer);
+        initialDelayTimer = null;
+      }
+      if (repeatInterval !== null) {
+        clearInterval(repeatInterval);
+        repeatInterval = null;
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+      if (initialDelayTimer !== null) clearTimeout(initialDelayTimer);
+      if (repeatInterval !== null) clearInterval(repeatInterval);
+    };
+  }, [isMuted, playDrawingCardsSound]);
+
   if (
     arsenalCards === undefined ||
     arsenalCards.length === 0 ||
@@ -407,11 +481,15 @@ export default function PlayerHand() {
     <>
       {createPortal(
         <>
-          <div 
+          <div
             ref={handRowRef}
             className={styles.handRow}
-            style={lengthOfCards > 5 ? { '--card-count': lengthOfCards } as React.CSSProperties : undefined}
-            onContextMenu={(e)=> e.preventDefault()}
+            style={
+              lengthOfCards > 5
+                ? ({ '--card-count': lengthOfCards } as React.CSSProperties)
+                : undefined
+            }
+            onContextMenu={(e) => e.preventDefault()}
           >
             <AnimatePresence>
               {orderedHandCards.length > 0 &&
@@ -420,7 +498,9 @@ export default function PlayerHand() {
                     (value) => value === card.cardNumber
                   ).length;
                   cardsInHandsAlready.push(card.cardNumber);
-                  const isNewlyDrawn = newlyDrawnCardNumbers.has(card.cardNumber);
+                  const isNewlyDrawn = newlyDrawnCardNumbers.has(
+                    card.cardNumber
+                  );
                   return (
                     <PlayerHandCard
                       card={card}
