@@ -19,7 +19,7 @@ const setCookie = (name: string, value: string, days: number = 365) => {
 };
 
 const UnifiedGamePanel = () => {
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, isLoading: isAuthLoading } = useAuth();
   const [isExpanded, setIsExpanded] = useState(() => {
     const savedState = getCookie('unifiedGamePanelExpanded');
     return savedState !== 'false';
@@ -28,6 +28,10 @@ const UnifiedGamePanel = () => {
   useEffect(() => {
     setCookie('unifiedGamePanelExpanded', String(isExpanded));
   }, [isExpanded]);
+
+  if (isAuthLoading) {
+    return null;
+  }
 
   if (!isLoggedIn) {
     // Non-logged-in users only see Create Game (deck selector not shown anyway)
