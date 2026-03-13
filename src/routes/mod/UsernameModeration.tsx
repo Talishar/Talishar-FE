@@ -18,12 +18,13 @@ export const UsernameModeration: React.FC = () => {
   const [expandedUserIds, setExpandedUserIds] = useState<Set<number>>(
     new Set()
   );
+  const [scanEnabled, setScanEnabled] = useState(false);
 
   const {
     data: moderationData,
     isLoading,
     refetch
-  } = useGetOffensiveUsernamesQuery();
+  } = useGetOffensiveUsernamesQuery(undefined, { skip: !scanEnabled });
   const [banUsername, { isLoading: isBanning }] =
     useBanOffensiveUsernameMutation();
   const [whitelistUsername, { isLoading: isWhitelisting }] =
@@ -174,7 +175,11 @@ export const UsernameModeration: React.FC = () => {
     <div className={styles.container}>
       <h2>Username Moderation</h2>
 
-      {isLoading ? (
+      {!scanEnabled ? (
+        <button className={styles.refreshButton} onClick={() => setScanEnabled(true)}>
+          Run Username Scan
+        </button>
+      ) : isLoading ? (
         <p>Scanning database for offensive usernames...</p>
       ) : offensiveUsers.length > 0 ? (
         <div>
