@@ -387,6 +387,75 @@ export default function PlayerHand() {
     playableGraveyardCards
   ]);
 
+  // Shuffle hand randomly with S key; hold to repeat every 50ms
+  useEffect(() => {
+    const HOLD_INITIAL_DELAY_MS = 400;
+    const HOLD_REPEAT_INTERVAL_MS = 150;
+
+    let initialDelayTimer: ReturnType<typeof setTimeout> | null = null;
+    let repeatInterval: ReturnType<typeof setInterval> | null = null;
+    let isHolding = false;
+
+    const doShuffle = () => {
+      setOrderedHandIds((currentOrder) => {
+        if (currentOrder.length <= 1) return currentOrder;
+        const shuffled = [...currentOrder];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        return shuffled;
+      });
+
+      if (!isMuted) {
+        playDrawingCardsSound();
+      }
+    };
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key !== 's' && e.key !== 'S') return;
+      const target = e.target as HTMLElement;
+      if (
+        target.tagName === 'INPUT' ||
+        target.tagName === 'TEXTAREA' ||
+        target.isContentEditable
+      )
+        return;
+
+      // e.repeat fires for OS key-repeat events — ignore those, we manage our own
+      if (isHolding) return;
+      isHolding = true;
+
+      doShuffle();
+
+      initialDelayTimer = setTimeout(() => {
+        repeatInterval = setInterval(doShuffle, HOLD_REPEAT_INTERVAL_MS);
+      }, HOLD_INITIAL_DELAY_MS);
+    };
+
+    const handleKeyUp = (e: KeyboardEvent) => {
+      if (e.key !== 's' && e.key !== 'S') return;
+      isHolding = false;
+      if (initialDelayTimer !== null) {
+        clearTimeout(initialDelayTimer);
+        initialDelayTimer = null;
+      }
+      if (repeatInterval !== null) {
+        clearInterval(repeatInterval);
+        repeatInterval = null;
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+      if (initialDelayTimer !== null) clearTimeout(initialDelayTimer);
+      if (repeatInterval !== null) clearInterval(repeatInterval);
+    };
+  }, [isMuted, playDrawingCardsSound]);
+
   if (
     arsenalCards === undefined ||
     arsenalCards.length === 0 ||
