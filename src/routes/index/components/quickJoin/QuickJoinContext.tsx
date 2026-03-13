@@ -259,4 +259,9 @@ export const useQuickJoin = (): QuickJoinContextType => {
   return ctx;
 };
 
+/** Returns the context value, or null when called outside a <QuickJoinProvider>. */
+export const useQuickJoinOptional = (): QuickJoinContextType | null => {
+  return useContext(QuickJoinContext);
+};
+
 export default QuickJoinContext;

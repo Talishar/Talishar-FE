@@ -2,7 +2,6 @@ import { useAppDispatch } from 'app/Hooks';
 import { clearGameInfo } from 'features/game/GameSlice';
 import { useEffect } from 'react';
 import { usePageTitle } from 'hooks/usePageTitle';
-import CreateGame from '../game/create/CreateGame';
 import GameList from './components/gameList';
 import styles from './Index.module.css';
 import TalisharLogo from '../../img/TalisharLogo.webp';
@@ -11,7 +10,7 @@ import DevTool from './components/devTool';
 import AboutSection from './components/AboutSection';
 import CommunityContent from './components/CommunityContent';
 import { QuickJoinProvider } from './components/quickJoin/QuickJoinContext';
-import QuickJoinPanel from './components/quickJoin/QuickJoinPanel';
+import UnifiedGamePanel from './components/UnifiedGamePanel';
 import { useGetSystemMessageQuery } from 'features/api/apiSlice';
 import SystemMessageModal from 'components/SystemMessageModal/SystemMessageModal';
 import useAuth from 'hooks/useAuth';
@@ -42,8 +41,7 @@ const Index = () => {
             <GameList />
           </div>
           <div className={styles.createGameContainer}>
-            <QuickJoinPanel />
-            <CreateGame />
+            <UnifiedGamePanel />
           </div>
           <article className={styles.newsContainer}>
             <img src={TalisharLogo} className={styles.logo} />

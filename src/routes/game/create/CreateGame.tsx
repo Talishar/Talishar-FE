@@ -35,6 +35,7 @@ import {
 import { generateCroppedImageUrl } from 'utils/cropImages';
 import { ImageSelect, ImageSelectOption } from 'components/ImageSelect';
 import { useTranslation } from 'react-i18next';
+import { useQuickJoinOptional } from 'routes/index/components/quickJoin';
 
 const getCookie = (name: string): string | null => {
   const value = `; ${document.cookie}`;
@@ -73,7 +74,10 @@ const formatDeckLabel = (
 };
 
 const CreateGame = () => {
+  const quickJoinCtx = useQuickJoinOptional();
   const { isLoggedIn, isPatron } = useAuth();
+  // True when rendered inside the unified main-menu panel (logged-in users only)
+  const isEmbedded = quickJoinCtx !== null && isLoggedIn;
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { data, isLoading, isSuccess } = useGetFavoriteDecksQuery(undefined);
@@ -172,6 +176,14 @@ const CreateGame = () => {
 
   const formFormat = watch('format');
   const deckTestMode = watch('deckTestMode');
+
+  // When inside QuickJoinProvider (main menu), sync deck values from the shared context
+  React.useEffect(() => {
+    if (isEmbedded) {
+      setValue('favoriteDecks', quickJoinCtx!.selectedFavoriteDeck);
+      setValue('fabdb', quickJoinCtx!.importDeckUrl);
+    }
+  }, [quickJoinCtx?.selectedFavoriteDeck, quickJoinCtx?.importDeckUrl, setValue]);
 
   // Normalize localStorage on mount - extract base option from expanded descriptions
   React.useEffect(() => {
@@ -436,6 +448,13 @@ const CreateGame = () => {
       if (!isLoggedIn) values.visibility = GAME_VISIBILITY.PRIVATE;
       values.user = searchParams.get('user') ?? undefined;
 
+      // When inside QuickJoinProvider (main menu), use deck from shared context
+      if (isEmbedded) {
+        values.favoriteDecks = quickJoinCtx!.selectedFavoriteDeck;
+        values.fabdb = quickJoinCtx!.importDeckUrl;
+        values.favoriteDeck = false; // saving is managed by the Quick Join panel
+      }
+
       // Extract base game description (remove hero/class names)
       let baseGameDescription = values.gameDescription || '';
       if (selectedClasses.length > 0) {
@@ -507,7 +526,8 @@ const CreateGame = () => {
 
   return (
     <div>
-      <article className={styles.formContainer}>
+      <article className={isEmbedded ? styles.embeddedForm : styles.formContainer}>
+        {!isEmbedded && (
         <div className={styles.header}>
           <h3 className={styles.title}>{t('MENU.CREATE_GAME.TITLE')}</h3>
           <button
@@ -524,13 +544,22 @@ const CreateGame = () => {
             )}
           </button>
         </div>
+        )}
         {/*<p className={styles.fieldError}>
 																																																										    <FaExclamationCircle /> Warning - SOON! an update will be pushed to the live servers. The games in progress will crash and new games will be required.
 																																																										    </p> */}
-        {isExpanded && (
+        {(isEmbedded || isExpanded) && (
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className={styles.formInner}>
-              {isLoggedIn &&
+              {/* Register deck fields when inside QuickJoinProvider (values synced from context) */}
+              {isEmbedded && !isPreconFormat(formFormat || selectedFormat) && (
+                <>
+                  <input type="hidden" {...register('favoriteDecks')} />
+                  <input type="hidden" {...register('fabdb')} />
+                </>
+              )}
+              {!isEmbedded &&
+                isLoggedIn &&
                 !isLoading &&
                 !isPreconFormat(formFormat || selectedFormat) && (
                   <label>
@@ -563,6 +592,7 @@ const CreateGame = () => {
                     />
                   </label>
                 )}
+              {!isEmbedded && (
               <ErrorMessage
                 errors={errors}
                 name="favoriteDecks"
@@ -572,6 +602,8 @@ const CreateGame = () => {
                   </p>
                 )}
               />
+              )}
+              {(!isEmbedded || isPreconFormat(formFormat || selectedFormat)) && (
               <fieldset>
                 <label>
                   {isPreconFormat(formFormat || selectedFormat) ? (
@@ -631,7 +663,7 @@ const CreateGame = () => {
                     )}
                   />
                 </label>
-                {isLoggedIn && (
+                {isLoggedIn && !isEmbedded && (
                   <label>
                     <input
                       type="checkbox"
@@ -643,6 +675,7 @@ const CreateGame = () => {
                   </label>
                 )}
               </fieldset>
+              )}
               <label>
                 {t('MENU.CREATE_GAME.GAME_DESCRIPTION')}
                 <select

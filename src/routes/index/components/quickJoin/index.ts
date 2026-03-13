@@ -1,2 +1,2 @@
-export { QuickJoinProvider, useQuickJoin } from './QuickJoinContext';
+export { QuickJoinProvider, useQuickJoin, useQuickJoinOptional } from './QuickJoinContext';
 export { default as QuickJoinPanel } from './QuickJoinPanel';

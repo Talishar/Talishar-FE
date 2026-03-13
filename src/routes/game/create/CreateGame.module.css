@@ -18,6 +18,21 @@
   gap: 0.75rem;
 }
 
+/* Resets PicoCSS article + fieldset card styling when CreateGame is embedded */
+.embeddedForm {
+  background: none !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  box-shadow: none !important;
+}
+
+.embeddedForm fieldset {
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
 @media (max-width: 768px) {
   .formContainer {
     width: 100%;
