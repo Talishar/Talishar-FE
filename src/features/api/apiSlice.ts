@@ -183,7 +183,7 @@ const dynamicBaseQuery: BaseQueryFn<
 export const apiSlice = createApi({
   reducerPath: 'api',
   baseQuery: dynamicBaseQuery,
-  tagTypes: ['ModPageData', 'UserProfile', 'Auth'],
+  tagTypes: ['ModPageData', 'UserProfile', 'Auth', 'SystemMessage'],
   refetchOnFocus: false,
   refetchOnReconnect: false,
   endpoints: (builder) => ({
@@ -901,6 +901,47 @@ export const apiSlice = createApi({
       }
     }),
 
+    // System Message endpoints
+    getSystemMessage: builder.query<{ systemMessage: string | null }, void>({
+      query: () => ({
+        url: URL_END_POINT.GET_SYSTEM_MESSAGE,
+        method: 'GET',
+        responseHandler: parseResponse
+      }),
+      providesTags: [{ type: 'SystemMessage', id: 'MINE' }]
+    }),
+    sendSystemMessageToPlayer: builder.mutation<any, { username: string; message: string }>({
+      query: ({ username, message }) => {
+        return {
+          url: URL_END_POINT.SYSTEM_MESSAGE,
+          method: 'POST',
+          body: { action: 'sendToPlayer', username, message },
+          responseHandler: parseResponse
+        };
+      }
+    }),
+    sendSystemMessageToAll: builder.mutation<any, { message: string }>({
+      query: ({ message }) => {
+        return {
+          url: URL_END_POINT.SYSTEM_MESSAGE,
+          method: 'POST',
+          body: { action: 'sendToAll', message },
+          responseHandler: parseResponse
+        };
+      }
+    }),
+    acknowledgeSystemMessage: builder.mutation<any, void>({
+      query: () => {
+        return {
+          url: URL_END_POINT.SYSTEM_MESSAGE,
+          method: 'POST',
+          body: { action: 'acknowledge' },
+          responseHandler: parseResponse
+        };
+      },
+      invalidatesTags: [{ type: 'SystemMessage', id: 'MINE' }]
+    }),
+
     // Private Messaging endpoints
     sendPrivateMessage: builder.mutation<
       PrivateMessagingAPIResponse,
@@ -1120,6 +1161,10 @@ export const {
   useGetOffensiveUsernamesQuery,
   useBanOffensiveUsernameMutation,
   useWhitelistOffensiveUsernameMutation,
+  useGetSystemMessageQuery,
+  useSendSystemMessageToPlayerMutation,
+  useSendSystemMessageToAllMutation,
+  useAcknowledgeSystemMessageMutation,
   useSendPrivateMessageMutation,
   useGetPrivateMessagesQuery,
   useMarkMessagesAsReadMutation,

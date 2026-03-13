@@ -12,10 +12,17 @@ import AboutSection from './components/AboutSection';
 import CommunityContent from './components/CommunityContent';
 import { QuickJoinProvider } from './components/quickJoin/QuickJoinContext';
 import QuickJoinPanel from './components/quickJoin/QuickJoinPanel';
+import { useGetSystemMessageQuery } from 'features/api/apiSlice';
+import SystemMessageModal from 'components/SystemMessageModal/SystemMessageModal';
+import useAuth from 'hooks/useAuth';
 
 const Index = () => {
   usePageTitle('Home');
   const dispatch = useAppDispatch();
+  const { isLoggedIn } = useAuth();
+  const { data: systemMessageData } = useGetSystemMessageQuery(undefined, {
+    skip: !isLoggedIn
+  });
 
   useEffect(() => {
     dispatch(clearGameInfo());
@@ -46,6 +53,9 @@ const Index = () => {
       </QuickJoinProvider>
       <CommunityContent />
       <AboutSection />
+      {systemMessageData?.systemMessage && (
+        <SystemMessageModal message={systemMessageData.systemMessage} />
+      )}
     </main>
   );
 };

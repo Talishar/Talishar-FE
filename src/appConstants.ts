@@ -338,6 +338,8 @@ export const URL_END_POINT = {
   BLOCKED_USERS: 'APIs/BlockedUsersAPI.php',
   USERNAME_MODERATION: 'APIs/UsernameModeration.php',
   PRIVATE_MESSAGING: 'APIs/PrivateMessagingAPI.php',
+  SYSTEM_MESSAGE: 'APIs/SystemMessageAPI.php',
+  GET_SYSTEM_MESSAGE: 'APIs/GetSystemMessage.php',
   GET_LAST_ACTIVE_GAME: 'APIs/GetLastActiveGame.php',
   GET_APP_INFO: 'AccountFiles/GetAppInfoAPI.php',
   GENERATE_AUTH_TOKEN: 'AccountFiles/GenerateAuthTokenAPI.php'
