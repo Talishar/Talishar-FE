@@ -16,6 +16,7 @@ import {
 import { generateCroppedImageUrl } from 'utils/cropImages';
 import { ImageSelectOption } from 'components/ImageSelect';
 import { getReadableFormatName } from 'utils/formatUtils';
+import { normalizeFormat } from 'appConstants';
 
 const shortenFormat = (format: string): string => {
   if (!format) return '';
@@ -45,6 +46,7 @@ interface QuickJoinContextType {
   importDeckUrl: string;
   saveDeck: boolean;
   detectedFormat: string | null;
+  selectedDeckRawFormat: string | null;
   error: string | null;
   isJoining: boolean;
   hasDeckConfigured: boolean;
@@ -86,6 +88,14 @@ export const QuickJoinProvider = ({
   const [detectedFormat, setDetectedFormat] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isJoining, setIsJoining] = useState(false);
+
+  const selectedDeckRawFormat = useMemo<string | null>(() => {
+    if (!selectedFavoriteDeck || !favoritesData?.favoriteDecks) return null;
+    const found = favoritesData.favoriteDecks.find(
+      (deck) => deck.key === selectedFavoriteDeck
+    );
+    return found?.format ? normalizeFormat(found.format) : null;
+  }, [selectedFavoriteDeck, favoritesData?.favoriteDecks]);
 
   const favoriteDeckOptions: ImageSelectOption[] = useMemo(() => {
     if (!favoritesData?.favoriteDecks) return [];
@@ -233,6 +243,7 @@ export const QuickJoinProvider = ({
     importDeckUrl,
     saveDeck,
     detectedFormat,
+    selectedDeckRawFormat,
     error,
     isJoining,
     hasDeckConfigured,

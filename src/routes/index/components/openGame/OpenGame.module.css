@@ -30,6 +30,11 @@
   gap: 0.35rem;
 }
 
+.buttonIncompatible {
+  opacity: 0.45;
+  cursor: default;
+}
+
 .joinHeroIcon {
   height: 1.8em;
   width: auto;

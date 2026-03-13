@@ -211,6 +211,37 @@ export const isPreconFormat = (
   return normalized === GAME_FORMAT.PRECON;
 };
 
+/**
+ * Groups format variants into their base family.
+ * e.g. 'compcc' and 'futurecc' both belong to the 'cc' family.
+ */
+const getFormatFamily = (normalizedFormat: string): string => {
+  if (['cc', 'compcc', 'futurecc'].includes(normalizedFormat)) return 'cc';
+  if (['blitz', 'compblitz', 'openformatblitz'].includes(normalizedFormat))
+    return 'blitz';
+  if (['llcc', 'compllcc', 'futurell'].includes(normalizedFormat)) return 'llcc';
+  if (['sage', 'compsage', 'futuresage'].includes(normalizedFormat)) return 'sage';
+  // commoner, clash, sealed, draft, brawl, precon, open — each is its own family
+  return normalizedFormat;
+};
+
+/**
+ * Returns true when a deck built for deckFormat is valid in a game of gameFormat.
+ * - Unknown/missing formats are assumed compatible (don't block the join).
+ * - Open-format games accept any deck.
+ * - Otherwise both formats must belong to the same base family.
+ */
+export const isDeckCompatibleWithGameFormat = (
+  deckFormat: string | null | undefined,
+  gameFormat: string | null | undefined
+): boolean => {
+  const normalizedDeck = normalizeFormat(deckFormat);
+  const normalizedGame = normalizeFormat(gameFormat);
+  if (!normalizedDeck || !normalizedGame) return true;
+  if (normalizedGame === GAME_FORMAT.OPEN) return true;
+  return getFormatFamily(normalizedDeck) === getFormatFamily(normalizedGame);
+};
+
 export const AI_DECK = {
   COMBAT_DUMMY: 'Dummy',
   IRABLITZ: 'Ira',

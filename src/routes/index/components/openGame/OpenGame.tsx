@@ -6,6 +6,7 @@ import styles from './OpenGame.module.css';
 import { generateCroppedImageUrl } from '../../../../utils/cropImages';
 import FriendBadge from '../gameList/FriendBadge';
 import QuickJoinContext from '../quickJoin/QuickJoinContext';
+import { isDeckCompatibleWithGameFormat } from '../../../../appConstants';
 
 const OpenGame = ({
   ix,
@@ -21,22 +22,34 @@ const OpenGame = ({
   const navigate = useNavigate();
   const quickJoinCtx = useContext(QuickJoinContext);
   const hasDeckReady = !!quickJoinCtx?.hasDeckConfigured;
-  const selectedHeroImageUrl = quickJoinCtx?.selectedFavoriteDeck
-    ? quickJoinCtx.favoriteDeckOptions.find(
-        (o) => o.value === quickJoinCtx.selectedFavoriteDeck
-      )?.imageUrl
-    : undefined;
+
+  const selectedDeckRawFormat = quickJoinCtx?.selectedDeckRawFormat ?? null;
+  const isFormatCompatible =
+    !hasDeckReady ||
+    !selectedDeckRawFormat ||
+    isDeckCompatibleWithGameFormat(selectedDeckRawFormat, entry.format);
+  const canQuickJoin = hasDeckReady && isFormatCompatible;
+
+  const selectedHeroImageUrl =
+    canQuickJoin && quickJoinCtx?.selectedFavoriteDeck
+      ? quickJoinCtx.favoriteDeckOptions.find(
+          (o) => o.value === quickJoinCtx.selectedFavoriteDeck
+        )?.imageUrl
+      : undefined;
+
   const handleJoin = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    if (hasDeckReady && quickJoinCtx) {
+    if (canQuickJoin && quickJoinCtx) {
       quickJoinCtx.quickJoin(entry.gameName);
     } else {
       navigate(`/game/join/${entry.gameName}`);
     }
   };
 
-  const buttonClass = classNames(styles.button, 'secondary');
+  const buttonClass = classNames(styles.button, 'secondary', {
+    [styles.buttonIncompatible]: hasDeckReady && !isFormatCompatible
+  });
 
   return (
     <div key={ix} className={styles.gameItem} onClick={handleJoin}>
@@ -62,11 +75,13 @@ const OpenGame = ({
           href={`/game/join/${entry.gameName}`}
           role="button"
           onClick={handleJoin}
-          aria-busy={quickJoinCtx?.isJoining}
+          aria-busy={canQuickJoin ? quickJoinCtx?.isJoining : undefined}
           title={
-            hasDeckReady
-              ? 'Join using your pre-configured deck'
-              : 'Select a deck in the panel above to join instantly'
+            !hasDeckReady
+              ? 'Select a deck in the panel above to join instantly'
+              : !isFormatCompatible
+                ? 'Your selected deck format is not compatible with this game'
+                : 'Join using your pre-configured deck'
           }
         >
           {selectedHeroImageUrl && (
