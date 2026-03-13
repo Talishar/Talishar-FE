@@ -452,7 +452,8 @@ const CreateGame = () => {
       if (isEmbedded) {
         values.favoriteDecks = quickJoinCtx!.selectedFavoriteDeck;
         values.fabdb = quickJoinCtx!.importDeckUrl;
-        values.favoriteDeck = false; // saving is managed by the Quick Join panel
+        // Only save deck if "Save Deck" is checked and a new deck URL is being used (not a saved favorite)
+        values.favoriteDeck = quickJoinCtx!.saveDeck && quickJoinCtx!.importDeckUrl.trim() !== '';
       }
 
       // Extract base game description (remove hero/class names)
@@ -506,6 +507,8 @@ const CreateGame = () => {
             authKey: response.authKey ?? ''
           })
         );
+        // Reset save deck checkbox after successful game creation
+        quickJoinCtx?.setSaveDeck(false);
         navigate(`/game/lobby/${response.gameName}`, {
           state: { playerID: response.playerID ?? 0 }
         });
