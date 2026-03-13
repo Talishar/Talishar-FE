@@ -21,6 +21,11 @@ const OpenGame = ({
   const navigate = useNavigate();
   const quickJoinCtx = useContext(QuickJoinContext);
   const hasDeckReady = !!quickJoinCtx?.hasDeckConfigured;
+  const selectedHeroImageUrl = quickJoinCtx?.selectedFavoriteDeck
+    ? quickJoinCtx.favoriteDeckOptions.find(
+        (o) => o.value === quickJoinCtx.selectedFavoriteDeck
+      )?.imageUrl
+    : undefined;
   const handleJoin = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -64,6 +69,14 @@ const OpenGame = ({
               : 'Select a deck in the panel above to join instantly'
           }
         >
+          {selectedHeroImageUrl && (
+            <img
+              src={selectedHeroImageUrl}
+              alt=""
+              className={styles.joinHeroIcon}
+              aria-hidden="true"
+            />
+          )}
           Join
         </a>
       </div>

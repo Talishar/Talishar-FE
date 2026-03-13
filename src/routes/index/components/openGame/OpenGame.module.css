@@ -25,6 +25,18 @@
   background-color: var(--theme-secondary);
   margin-bottom: 0;
   flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.joinHeroIcon {
+  height: 1.8em;
+  width: auto;
+  border-radius: 6px;
+  flex-shrink: 0;
+  vertical-align: middle;
+  pointer-events: none;
 }
 
 .description {
