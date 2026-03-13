@@ -12,7 +12,7 @@ import { IS_STREAMER_MODE } from 'features/options/constants';
 const CHAT_RE = /<span[^>]*>(.*?):\s<\/span>/;
 const TYPING_TIMEOUT_MS = 5000; // 5 seconds
 
-export default function ChatBox() {
+export default function ChatBox({ usePrimary = false }: { usePrimary?: boolean }) {
   const amIPlayerOne = useAppSelector((state: RootState) => {
     return state.game.gameInfo.playerID === 1;
   });
@@ -148,7 +148,7 @@ export default function ChatBox() {
 
   return (
     <div className={styles.chatBoxContainer}>
-      <div className={styles.tabs}>
+      <div className={classNames(styles.tabs, { [styles.primaryTabs]: usePrimary })}>
         <button
           className={classNames(
             chatFilter === 'none' ? 'outline' : '',
@@ -194,7 +194,7 @@ export default function ChatBox() {
           {!displayTyping && <div ref={messagesEndRef} />}
         </div>
       </div>
-      <ChatInput />
+      <ChatInput usePrimary={usePrimary} />
     </div>
   );
 }

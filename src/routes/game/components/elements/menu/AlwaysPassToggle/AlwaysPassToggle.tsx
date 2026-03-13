@@ -13,7 +13,13 @@ import {
 import { shallowEqual } from 'react-redux';
 import { useButtonDisableContext } from 'contexts/ButtonDisableContext';
 
-const AlwaysPassToggle = () => {
+const AlwaysPassToggle = ({
+  btnClass,
+  activeBtnClass
+}: {
+  btnClass?: string;
+  activeBtnClass?: string;
+} = {}) => {
   const dispatch = useAppDispatch();
   const { isDisabled, triggerDisable } = useButtonDisableContext();
   const setting = useSetting({
@@ -53,8 +59,8 @@ const AlwaysPassToggle = () => {
     );
   };
 
-  const buttonStyle = classNames(styles.btn, {
-    [styles.buttonActive]:
+  const buttonStyle = classNames(btnClass ?? styles.btn, {
+    [activeBtnClass ?? styles.buttonActive]:
       Number(setting?.value) === HOLD_PRIORITY_ENUM.ALWAYS_PASS
   });
   return (
@@ -64,7 +70,7 @@ const AlwaysPassToggle = () => {
         aria-label="Always Pass Priority"
         onClick={handleClickAlwaysPass}
         data-tooltip="Always Pass Priority"
-        data-placement="bottom"
+        data-placement="top"
         disabled={isDisabled}
       >
         <BiSkipNextCircle aria-hidden="true" />

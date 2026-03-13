@@ -975,8 +975,12 @@ export const gameSlice = createSlice({
       state.playerInputPopUp = action.payload.playerInputPopUp;
 
       // gameInfo
-      state.gameDynamicInfo.lastPlayed =
-        action.payload.gameDynamicInfo.lastPlayed;
+      const newCard1 = action.payload.gameDynamicInfo.lastPlayed;
+      state.gameDynamicInfo.lastPlayed = newCard1;
+      if (newCard1) {
+        const prev1 = state.gameDynamicInfo.recentlyPlayed ?? [];
+        state.gameDynamicInfo.recentlyPlayed = [newCard1, ...prev1].slice(0, 5);
+      }
       state.gameDynamicInfo.lastUpdate =
         action.payload.gameDynamicInfo.lastUpdate;
       state.gameDynamicInfo.turnNo = action.payload.gameDynamicInfo.turnNo;
@@ -1102,8 +1106,12 @@ export const gameSlice = createSlice({
       state.playerInputPopUp = action.payload.playerInputPopUp;
 
       // gameInfo
-      state.gameDynamicInfo.lastPlayed =
-        action.payload.gameDynamicInfo.lastPlayed;
+      const newCard2 = action.payload.gameDynamicInfo.lastPlayed;
+      state.gameDynamicInfo.lastPlayed = newCard2;
+      if (newCard2) {
+        const prev2 = state.gameDynamicInfo.recentlyPlayed ?? [];
+        state.gameDynamicInfo.recentlyPlayed = [newCard2, ...prev2].slice(0, 5);
+      }
       state.gameDynamicInfo.lastUpdate =
         action.payload.gameDynamicInfo.lastUpdate;
       state.gameDynamicInfo.turnNo = action.payload.gameDynamicInfo.turnNo;

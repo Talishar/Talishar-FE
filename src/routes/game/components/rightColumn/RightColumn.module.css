@@ -14,6 +14,9 @@
   justify-content: space-between;
   align-items: stretch;
   align-content: stretch;
+  background-color: var(--near-black);
+  margin-right: 0.2em;
+  margin-left: 0.2em;
 }
 
 .mobileTopBar {

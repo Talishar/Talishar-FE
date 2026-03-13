@@ -4,16 +4,17 @@
   text-align: center;
   vertical-align: middle;
   touch-action: manipulation;
-  padding: 0.5em 0.6em;
-  font-size: 1em;
+  padding: 0.2em;
+  font-size: 1.1em;
   background-color: var(--theme-primary);
   color: black;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  min-width: 4.5vh;
-  height: 3.5vh;
+  width: 3vh;
+  height: 3vh;
+  min-width: 3vh;
   border-radius: 0.4em;
   border: 2px solid rgba(0, 0, 0, 0.2);
   flex-basis: auto;
@@ -25,7 +26,7 @@
 }
 
 .btn svg {
-  font-size: 1.65em !important;
+  font-size: 1.3em !important;
   width: auto !important;
   height: auto !important;
 }
@@ -92,6 +93,17 @@
   bottom: auto !important;
   top: 100% !important;
   margin-top: 0.5em !important;
+}
+
+/* Right-aligned tooltip for last button (top-end) */
+.btn[data-tooltip][data-placement='top-end']::before,
+.btn[data-tooltip][data-placement='top-end']::after {
+  left: auto !important;
+  right: 0 !important;
+  transform: none !important;
+  bottom: 100% !important;
+  top: auto !important;
+  margin-bottom: 0.5em !important;
 }
 
 /* Ensure tooltips appear above buttons */

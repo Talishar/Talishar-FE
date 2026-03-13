@@ -52,7 +52,7 @@ const SkipAttackReactionsToggle = () => {
           })
         }
         data-tooltip="Pass Attack Reactions"
-        data-placement="bottom"
+        data-placement="top"
         disabled={isDisabled}
       >
         <TbSwordOff aria-hidden="true" fontSize={'2em'} />

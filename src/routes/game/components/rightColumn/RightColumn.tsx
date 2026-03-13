@@ -2,9 +2,7 @@ import React from 'react';
 import PriorityControl from '../elements/priorityControl/PriorityControl';
 import LastPlayed from '../elements/lastPlayed/LastPlayed';
 import Menu from '../elements/menu/Menu';
-import TurnNumber from '../elements/turnNumber/TurnNumber';
-import Timer from '../elements/timer/timer';
-import SpectatorCount from '../elements/spectatorCount/SpectatorCount';
+import TurnInfo from '../elements/turnInfo/TurnInfo';
 import styles from './RightColumn.module.css';
 import ChatBox from '../elements/chatBox/ChatBox';
 import useSetting from 'hooks/useSetting';
@@ -28,10 +26,8 @@ export default function RightColumn() {
       <div className={styles.rightColumn}>
         <div className={styles.topGroup}>
           <Menu />
-          <TurnNumber />
-          <Timer />
+          <TurnInfo />
           <LastPlayed />
-          <SpectatorCount />
           {!isSpectator && <PriorityControl />}
         </div>
         <div className={styles.bottomGroup}>

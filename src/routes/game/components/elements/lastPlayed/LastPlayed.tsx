@@ -5,7 +5,7 @@ import { clearPopUp, setPopUp, getGameInfo } from 'features/game/GameSlice';
 import CardImage from '../cardImage/CardImage';
 import styles from './LastPlayed.module.css';
 import CardPopUp from '../cardPopUp/CardPopUp';
-import { CARD_IMAGES_PATH, getCollectionCardImagePath } from 'utils';
+import { CARD_SQUARES_PATH, getCollectionCardImagePath } from 'utils';
 import { useLanguageSelector } from 'hooks/useLanguageSelector';
 import classNames from 'classnames';
 import { shallowEqual } from 'react-redux';
@@ -35,7 +35,7 @@ export default function LastPlayed() {
   const cardNumber = cardRedux?.cardNumber ?? 'CardBack';
   const hasMeld = MELD_CARDS.has(cardNumber);
   const imageSrc = getCollectionCardImagePath({
-    path: CARD_IMAGES_PATH,
+    path: CARD_SQUARES_PATH,
     locale: getLanguage(),
     cardNumber
   });
@@ -43,7 +43,8 @@ export default function LastPlayed() {
   // Determine if the card is controlled by the opponent
   // cardRedux.controller is 1 or 2 for players
   const isOpponent =
-    cardRedux?.controller && cardRedux.controller !== gameInfo.playerID;
+    cardRedux?.controller !== undefined &&
+    cardRedux.controller !== gameInfo.playerID;
 
   const imgClassNames = classNames(styles.img, {
     [styles.rotated]: hasMeld

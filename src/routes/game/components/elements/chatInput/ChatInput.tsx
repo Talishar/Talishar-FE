@@ -31,13 +31,13 @@ import { toast } from 'react-hot-toast';
 import useAuth from 'hooks/useAuth';
 import { CHAT_WHEEL } from 'constants/chatMessages';
 
-const submitButtonClass = classNames('secondary', styles.buttonDiv);
+const submitButtonClass = classNames(styles.buttonDiv);
 
 interface ChatOptionsProps {
   setModalDisplay: (arg0: boolean) => void;
 }
 
-export const ChatInput = () => {
+export const ChatInput = ({ usePrimary = false }: { usePrimary?: boolean }) => {
   const { playerID, gameID, authKey } = useAppSelector(
     getGameInfo,
     shallowEqual
@@ -165,7 +165,9 @@ export const ChatInput = () => {
             }
             disabled={playerID === 3 && !isMod}
           />
-          <button className={submitButtonClass} onClick={handleSubmit}>
+          <button
+            className={classNames(styles.buttonDiv, { secondary: !usePrimary })}
+            onClick={handleSubmit}>
             <div className={styles.icon}>
               <GiChatBubble />
             </div>
@@ -174,10 +176,10 @@ export const ChatInput = () => {
       </div>
     );
   }
-  return <ChatWheel />;
+  return <ChatWheel usePrimary={usePrimary} />;
 };
 
-const ChatWheel = () => {
+const ChatWheel = ({ usePrimary = false }: { usePrimary?: boolean }) => {
   const { playerID, gameID, authKey } = useAppSelector(
     getGameInfo,
     shallowEqual
@@ -232,12 +234,12 @@ const ChatWheel = () => {
 
   return (
     <>
-      <div className={styles.quickChatButton}>
+      <div className={classNames(styles.quickChatButton, { [styles.primaryQuickChatButton]: usePrimary })}>
         <button
           ref={refs.setReference}
           {...getReferenceProps({ onClick: (e) => e.preventDefault() })}
         >
-          Send a Message
+          Quick Chat
         </button>
         <button
           onClick={(e) => {

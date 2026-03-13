@@ -2,17 +2,17 @@ import { useState, useEffect } from 'react';
 import screenfull from 'screenfull';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { submitButton } from 'features/game/GameSlice';
-import { FaUndo } from 'react-icons/fa';
 import { GiExpand } from 'react-icons/gi';
+import { FaUndo } from 'react-icons/fa';
 import styles from './Menu.module.css';
 import { DEFAULT_SHORTCUTS, PROCESS_INPUT } from 'appConstants';
-import FullControlToggle from './FullControlToggle/FullControlToggle';
 import HideModalsToggle from './HideModalsToggle/HideModalsToggle';
 import OptionsMenuToggle from './OptionsMenuToggle/OptionsMenuToggle';
 import ShowMobileChat from './ShowMobileChat/ShowMobileChat';
-import AlwaysPassToggle from './AlwaysPassToggle/AlwaysPassToggle';
-import useShortcut from 'hooks/useShortcut';
 import PlayerName from '../playerName/PlayerName';
+import Inventory from '../inventory/Inventory';
+import SpectatorCount from '../spectatorCount/SpectatorCount';
+import useShortcut from 'hooks/useShortcut';
 import {
   ButtonDisableProvider,
   useButtonDisableContext
@@ -98,34 +98,28 @@ function MenuContent() {
           <HideModalsToggle />
           <OptionsMenuToggle />
           <FullScreenButton />
+          {(isMobile || isTablet) && <ShowMobileChat />}
         </div>
-        {(isMobile || isTablet) && (
-          <div className={styles.menuList}>
-            <ShowMobileChat />
-          </div>
-        )}
       </div>
     );
   }
 
-  // Player view: show all buttons
+  // Player view: show all buttons in one row
   return (
     <div>
       {isTablet && <PlayerName isPlayer={false} />}
-      <div className={styles.menuList}>
-        <UndoButton />
-        <OptionsMenuToggle />
-        <FullScreenButton />
-      </div>
-      <div className={styles.menuList}>
-        <FullControlToggle />
-        <AlwaysPassToggle />
-        <HideModalsToggle />
-        {(isMobile || isTablet) && (
-          <>
-            <ShowMobileChat />
-          </>
-        )}
+      <div className={styles.menuRow}>
+        <div className={styles.spectatorFloating}>
+          <SpectatorCount />
+        </div>
+        <div className={styles.menuList}>
+          <UndoButton />
+          <Inventory buttonClassName={styles.btn} />
+          <HideModalsToggle />
+          <OptionsMenuToggle />
+          <FullScreenButton />
+          {(isMobile || isTablet) && <ShowMobileChat />}
+        </div>
       </div>
     </div>
   );

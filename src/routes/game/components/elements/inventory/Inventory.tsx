@@ -7,7 +7,7 @@ import { MdClose, MdInventory2 } from 'react-icons/md';
 import CardPopUp from '../cardPopUp/CardPopUp';
 import CardImage from '../cardImage/CardImage';
 
-export default function Inventory() {
+export default function Inventory({ buttonClassName }: { buttonClassName?: string }) {
   const [isOpen, setIsOpen] = useState(false);
   const gameState = useAppSelector((state: RootState) => state.game);
   const playerID = gameState?.gameInfo?.playerID;
@@ -21,7 +21,7 @@ export default function Inventory() {
   return (
     <>
       <button
-        className={styles.inventoryButton}
+        className={buttonClassName ?? styles.inventoryButton}
         onClick={() => setIsOpen(true)}
         data-tooltip={'View your inventory'}
         data-placement="bottom"

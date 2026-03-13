@@ -4,16 +4,17 @@
   text-align: center;
   vertical-align: middle;
   touch-action: manipulation;
-  padding: 0.5em 0.6em;
-  font-size: 1em;
-  background-color: var(--theme-primary);
-  color: black;
+  padding: 0.2em;
+  font-size: 0.9em;
+  background-color: var(--theme-secondary);
+  color: var(--secondary-inverse);
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  min-width: 4.5vh;
-  height: 3.5vh;
+  width: 3vh;
+  height: 3vh;
+  min-width: 3vh;
   border-radius: 0.4em;
   border: 2px solid rgba(0, 0, 0, 0.2);
   flex-basis: auto;
@@ -25,15 +26,15 @@
 }
 
 .btn svg {
-  font-size: 1.4em !important;
-  width: 1.2em !important;
-  height: 1.2em !important;
+  font-size: 1.3em !important;
+  width: 1.1em !important;
+  height: 1.1em !important;
 }
 
 .btn:hover {
   background-color: black;
-  color: var(--theme-primary);
-  border: 2px solid var(--theme-primary);
+  color: var(--theme-secondary);
+  border: 2px solid var(--theme-secondary);
   cursor: pointer;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3),
     0 0 8px rgba(255, 215, 0, 0.3);
@@ -51,6 +52,20 @@
   display: flex;
   gap: 0.5em;
   justify-content: center;
+}
+
+.menuRow {
+  position: relative;
+}
+
+.spectatorFloating {
+  position: absolute;
+  right: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  white-space: nowrap;
+  pointer-events: auto;
+  margin-right: 0.5em;
 }
 
 .buttonActive {

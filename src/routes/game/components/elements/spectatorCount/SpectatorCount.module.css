@@ -2,14 +2,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0.5rem;
-  font-size: 0.9rem;
-  color: #e0e0e0;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.8rem;
+  color: var(--secondary-inverse);
   border-radius: 4px;
-  background-color: rgba(50, 50, 50, 0.5);
-  margin: 0.25rem 0;
-  min-height: 2rem;
+  background-color: var(--theme-secondary);
   white-space: nowrap;
+  margin-right: 2vh;
 }
 
 .spectatorCountContainer {
@@ -22,7 +21,7 @@
 
 .tooltip {
   position: absolute;
-  bottom: 100%;
+  top: 100%;
   left: 50%;
   transform: translateX(-50%);
   background-color: rgba(30, 30, 30, 0.95);
@@ -48,4 +47,10 @@
 
 .tooltip div:last-child {
   margin-bottom: 0;
+}
+
+@media (max-width: 1200px) {
+  .spectatorCountStyle {
+    display: none;
+  }
 }

@@ -59,7 +59,7 @@
 .quickChatButton {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 0.5em;
+  gap: 0.2em;
 }
 
 .quickChatButton button {
@@ -126,6 +126,38 @@
   width: 100%;
   display: block;
   margin: 0 auto 5px auto;
+}
+
+.buttonDiv {
+  background-color: var(--theme-secondary) !important;
+  color: var(--secondary-inverse) !important;
+}
+
+.buttonDiv:hover {
+  color: var(--theme-secondary) !important;
+  border: 2px solid var(--theme-secondary) !important;
+}
+
+.quickChatButton button {
+  background-color: var(--theme-secondary) !important;
+  color: var(--secondary-inverse) !important;
+  margin-bottom: 0.25em;
+}
+
+.quickChatButton button:hover {
+  color: var(--theme-secondary) !important;
+  border: 2px solid var(--theme-secondary) !important;
+}
+
+.primaryQuickChatButton button {
+  background-color: var(--theme-primary) !important;
+  color: var(--primary-inverse) !important;
+  margin-bottom: 0.25em;
+}
+
+.primaryQuickChatButton button:hover {
+  color: var(--theme-primary) !important;
+  border: 2px solid var(--theme-primary) !important;
 }
 
 .floatingOverlay {
