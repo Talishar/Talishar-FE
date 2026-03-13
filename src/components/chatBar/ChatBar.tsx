@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
-import { 
-  useGetFriendsListQuery, 
+import {
+  useGetFriendsListQuery,
   useGetPrivateMessagesQuery,
   useSendPrivateMessageMutation,
   useGetOnlineFriendsQuery,
@@ -31,37 +31,34 @@ export const ChatBar: React.FC = () => {
   const { isLoggedIn } = useAuth();
   const [showFriendsPanel, setShowFriendsPanel] = useState(false);
   const [friendsPanelOpen, setFriendsPanelOpen] = useState(false);
-  const [openChats, setOpenChats] = useState<Map<number, ChatWindow>>(new Map());
+  const [openChats, setOpenChats] = useState<Map<number, ChatWindow>>(
+    new Map()
+  );
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatBarRef = useRef<HTMLDivElement>(null);
 
-  const {
-    data: friendsData,
-    isLoading: friendsLoading
-  } = useGetFriendsListQuery(undefined, {
-    skip: !isLoggedIn
-  });
+  const { data: friendsData, isLoading: friendsLoading } =
+    useGetFriendsListQuery(undefined, {
+      skip: !isLoggedIn
+    });
 
-  const {
-    data: onlineFriendsData
-  } = useGetOnlineFriendsQuery(undefined, {
+  const { data: onlineFriendsData } = useGetOnlineFriendsQuery(undefined, {
     skip: !isLoggedIn,
     pollingInterval: 30000 // Poll every 30 seconds
   });
 
-  const {
-    data: unreadCountData
-  } = useGetUnreadMessageCountQuery(undefined, {
+  const { data: unreadCountData } = useGetUnreadMessageCountQuery(undefined, {
     skip: !isLoggedIn,
     pollingInterval: 30000 // Poll every 30 seconds to reduce API load
   });
 
-  const {
-    data: unreadByFriendData
-  } = useGetUnreadMessageCountByFriendQuery(undefined, {
-    skip: !isLoggedIn,
-    pollingInterval: 30000 // Poll every 30 seconds to reduce API load
-  });
+  const { data: unreadByFriendData } = useGetUnreadMessageCountByFriendQuery(
+    undefined,
+    {
+      skip: !isLoggedIn,
+      pollingInterval: 30000 // Poll every 30 seconds to reduce API load
+    }
+  );
 
   const [sendMessage] = useSendPrivateMessageMutation();
   const [markAsRead] = useMarkMessagesAsReadMutation();
@@ -72,7 +69,7 @@ export const ChatBar: React.FC = () => {
   // Sort friends by online status, then alphabetically
   const sortedFriends = useMemo(() => {
     if (!friendsData?.friends) return [];
-    
+
     return [...friendsData.friends].sort((a, b) => {
       // No longer sort by online status - just sort alphabetically by name
       const aName = a.nickname || a.username;
@@ -84,7 +81,9 @@ export const ChatBar: React.FC = () => {
   // Update ChatBar position to align with sticky footer (only in Lobby)
   useEffect(() => {
     const updatePosition = () => {
-      const stickyFooter = document.querySelector('[class*="stickyFooter"]') as HTMLElement;
+      const stickyFooter = document.querySelector(
+        '[class*="stickyFooter"]'
+      ) as HTMLElement;
       if (stickyFooter && chatBarRef.current) {
         const footerHeight = stickyFooter.offsetHeight;
         chatBarRef.current.style.bottom = `${footerHeight}px`;
@@ -97,7 +96,7 @@ export const ChatBar: React.FC = () => {
     updatePosition();
     window.addEventListener('resize', updatePosition);
     const interval = setInterval(updatePosition, 100); // Check every 100ms for changes
-    
+
     return () => {
       window.removeEventListener('resize', updatePosition);
       clearInterval(interval);
@@ -115,11 +114,11 @@ export const ChatBar: React.FC = () => {
 
     setOpenChats((prevChats) => {
       const newChats = new Map(prevChats);
-      
+
       // For each friend with unread messages, create a minimized chat if not already open
       friends.forEach((friend) => {
         const unreadCount = unreadByFriend[friend.friendUserId] ?? 0;
-        
+
         if (unreadCount > 0 && !newChats.has(friend.friendUserId)) {
           // Create new minimized chat ONLY if there are unread messages
           newChats.set(friend.friendUserId, {
@@ -132,11 +131,13 @@ export const ChatBar: React.FC = () => {
           const existing = newChats.get(friend.friendUserId)!;
           newChats.set(friend.friendUserId, {
             ...existing,
-            unreadCount: existing.isMinimized ? unreadCount : existing.unreadCount
+            unreadCount: existing.isMinimized
+              ? unreadCount
+              : existing.unreadCount
           });
         }
       });
-      
+
       return newChats;
     });
   }, [isLoggedIn, friendsData, unreadByFriendData]);
@@ -156,7 +157,11 @@ export const ChatBar: React.FC = () => {
       if (newChats.has(friend.friendUserId)) {
         // If already open, just un-minimize it
         const existing = newChats.get(friend.friendUserId)!;
-        newChats.set(friend.friendUserId, { ...existing, isMinimized: false, unreadCount: 0 });
+        newChats.set(friend.friendUserId, {
+          ...existing,
+          isMinimized: false,
+          unreadCount: 0
+        });
       } else {
         // Open new chat window
         newChats.set(friend.friendUserId, {
@@ -200,11 +205,19 @@ export const ChatBar: React.FC = () => {
     });
   };
 
-  const handleSendMessage = async (friendUserId: number, message: string, gameLink?: string) => {
+  const handleSendMessage = async (
+    friendUserId: number,
+    message: string,
+    gameLink?: string
+  ) => {
     if (!message.trim() && !gameLink) return;
 
     try {
-      await sendMessage({ toUserId: friendUserId, message: message.trim(), gameLink }).unwrap();
+      await sendMessage({
+        toUserId: friendUserId,
+        message: message.trim(),
+        gameLink
+      }).unwrap();
     } catch (err: any) {
       toast.error(err.error || 'Failed to send message');
       console.error('Send message error:', err);
@@ -234,7 +247,7 @@ export const ChatBar: React.FC = () => {
       const gameJoinLink = `${window.location.origin}/game/join/${gameResponse.gameName}`;
       const readableFormat = getReadableFormatName('cc');
       const message = `Join my ${readableFormat} game!`;
-      
+
       // Send message with game link
       await sendMessage({
         toUserId: friendUserId,
@@ -265,9 +278,13 @@ export const ChatBar: React.FC = () => {
             friendUserId={friendUserId}
             onClose={() => handleCloseChat(friendUserId)}
             onMinimize={() => handleMinimizeChat(friendUserId)}
-            onSendMessage={(message: string, gameLink?: string) => handleSendMessage(friendUserId, message, gameLink)}
+            onSendMessage={(message: string, gameLink?: string) =>
+              handleSendMessage(friendUserId, message, gameLink)
+            }
             onSendGameInvite={() => handleSendGameInvite(friendUserId)}
-            onUpdateUnreadCount={(count: number) => handleUpdateUnreadCount(friendUserId, count)}
+            onUpdateUnreadCount={(count: number) =>
+              handleUpdateUnreadCount(friendUserId, count)
+            }
             onlineFriendsData={onlineFriendsData}
           />
         ))}
@@ -275,7 +292,7 @@ export const ChatBar: React.FC = () => {
         {/* Friends List Window */}
         {friendsPanelOpen && (
           <div className={styles.chatWindow}>
-            <div 
+            <div
               className={styles.chatHeader}
               onClick={() => setFriendsPanelOpen(false)}
               style={{ cursor: 'pointer' }}
@@ -285,7 +302,7 @@ export const ChatBar: React.FC = () => {
                 <div className={styles.chatFriendName}>Friends</div>
               </div>
               <div className={styles.chatActions}>
-                <button 
+                <button
                   onClick={(e) => {
                     e.stopPropagation();
                     setFriendsPanelOpen(false);
@@ -306,13 +323,13 @@ export const ChatBar: React.FC = () => {
                   const onlineFriend = onlineFriendsData?.onlineFriends?.find(
                     (f: any) => f.userId === friend.friendUserId
                   );
-                  
+
                   return (
                     <div
                       key={friend.friendUserId}
                       className={styles.friendItem}
                     >
-                      <div 
+                      <div
                         className={styles.friendInfo}
                         onClick={() => {
                           handleOpenChat(friend);
@@ -329,8 +346,8 @@ export const ChatBar: React.FC = () => {
                               false,
                               friend.metafyTiers
                             )
-                              .filter(icon => icon.condition)
-                              .map(icon => (
+                              .filter((icon) => icon.condition)
+                              .map((icon) => (
                                 <a
                                   key={icon.src}
                                   href={icon.href}
@@ -385,11 +402,25 @@ export const ChatBar: React.FC = () => {
             onClick={() => setFriendsPanelOpen(true)}
           >
             <span>Friends</span>
-            {onlineFriendsData?.onlineFriends && onlineFriendsData.onlineFriends.filter((f: any) => f.isOnline).length > 0 && (
-              <span className={styles.onlineFriendsCount}>
-                ({onlineFriendsData.onlineFriends.filter((f: any) => f.isOnline).length} friend{onlineFriendsData.onlineFriends.filter((f: any) => f.isOnline).length !== 1 ? 's' : ''} online)
-              </span>
-            )}
+            {onlineFriendsData?.onlineFriends &&
+              onlineFriendsData.onlineFriends.filter((f: any) => f.isOnline)
+                .length > 0 && (
+                <span className={styles.onlineFriendsCount}>
+                  (
+                  {
+                    onlineFriendsData.onlineFriends.filter(
+                      (f: any) => f.isOnline
+                    ).length
+                  }{' '}
+                  friend
+                  {onlineFriendsData.onlineFriends.filter(
+                    (f: any) => f.isOnline
+                  ).length !== 1
+                    ? 's'
+                    : ''}{' '}
+                  online)
+                </span>
+              )}
           </button>
         )}
       </div>
@@ -459,7 +490,7 @@ const ChatWindowComponent: React.FC<ChatWindowProps> = ({
       const unreadFromFriend = messages.filter(
         (msg) => msg.fromUserId === friendUserId && !msg.isRead
       ).length;
-      
+
       // Update unread count if there are new messages
       if (unreadFromFriend > 0) {
         onUpdateUnreadCount(unreadFromFriend);
@@ -481,7 +512,13 @@ const ChatWindowComponent: React.FC<ChatWindowProps> = ({
         onUpdateUnreadCount(0);
       }
     }
-  }, [chat.isMinimized, messages, friendUserId, markAsRead, onUpdateUnreadCount]);
+  }, [
+    chat.isMinimized,
+    messages,
+    friendUserId,
+    markAsRead,
+    onUpdateUnreadCount
+  ]);
 
   // Refetch messages when window is opened
   useEffect(() => {
@@ -550,7 +587,7 @@ const ChatWindowComponent: React.FC<ChatWindowProps> = ({
 
   return (
     <div className={styles.chatWindow}>
-      <div 
+      <div
         className={styles.chatHeader}
         onClick={() => {
           // Mark messages as read when clicking header to open/minimize
@@ -571,9 +608,7 @@ const ChatWindowComponent: React.FC<ChatWindowProps> = ({
       >
         <div className={styles.chatHeaderInfo}>
           <div className={styles.chatFriendName}>
-            <div>
-              {chat.friend.nickname || chat.friend.username}
-            </div>
+            <div>{chat.friend.nickname || chat.friend.username}</div>
             {(() => {
               const onlineFriend = onlineFriendsData?.onlineFriends?.find(
                 (f: any) => f.userId === friendUserId
@@ -581,30 +616,36 @@ const ChatWindowComponent: React.FC<ChatWindowProps> = ({
               const isAway = onlineFriend?.isAway === true;
               return (
                 <div className={styles.friendStatus}>
-                  {isAway && onlineFriend?.timeSinceActivity && (() => {
-                    const minutesAway = Math.floor((onlineFriend.timeSinceActivity - 60) / 60);
-                    return minutesAway > 0 ? `(away ${minutesAway}m)` : '(away)';
-                  })()}
+                  {isAway &&
+                    onlineFriend?.timeSinceActivity &&
+                    (() => {
+                      const minutesAway = Math.floor(
+                        (onlineFriend.timeSinceActivity - 60) / 60
+                      );
+                      return minutesAway > 0
+                        ? `(away ${minutesAway}m)`
+                        : '(away)';
+                    })()}
                 </div>
               );
             })()}
           </div>
         </div>
         <div className={styles.chatActions}>
-          <button 
+          <button
             onClick={(e) => {
               e.stopPropagation();
               onMinimize();
-            }} 
+            }}
             title="Minimize"
           >
             _
           </button>
-          <button 
+          <button
             onClick={(e) => {
               e.stopPropagation();
               onClose();
-            }} 
+            }}
             title="Close"
           >
             <IoMdClose />
@@ -617,13 +658,18 @@ const ChatWindowComponent: React.FC<ChatWindowProps> = ({
           <div className={styles.loadingMessage}>Loading messages...</div>
         ) : messages.length === 0 ? (
           <div className={styles.loadingMessage}>
-            Start a conversation with {chat.friend.nickname || chat.friend.username}!
+            Start a conversation with{' '}
+            {chat.friend.nickname || chat.friend.username}!
           </div>
         ) : (
           messages.map((message: PrivateMessage) => (
             <div
               key={message.messageId}
-              className={`${styles.message} ${message.fromUserId !== friendUserId ? styles.sent : styles.received}`}
+              className={`${styles.message} ${
+                message.fromUserId !== friendUserId
+                  ? styles.sent
+                  : styles.received
+              }`}
             >
               {message.gameLink ? (
                 <a
@@ -640,7 +686,9 @@ const ChatWindowComponent: React.FC<ChatWindowProps> = ({
               ) : (
                 <div className={styles.messageContent}>{message.message}</div>
               )}
-              <div className={styles.messageTime}>{formatTime(message.createdAt)}</div>
+              <div className={styles.messageTime}>
+                {formatTime(message.createdAt)}
+              </div>
             </div>
           ))
         )}
@@ -658,10 +706,7 @@ const ChatWindowComponent: React.FC<ChatWindowProps> = ({
             className={styles.messageInput}
             maxLength={500}
           />
-          <button
-            type="submit"
-            className={styles.sendButton}
-          >
+          <button type="submit" className={styles.sendButton}>
             <IoMdSend />
           </button>
         </form>

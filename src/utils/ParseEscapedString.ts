@@ -9,23 +9,37 @@ const COLOR_MAPPING: { [key: string]: string } = {
   '3': '#009ddf'
 };
 
-const ELEMENT_COLOR_MAPPING: { [key: string]: { color: string; textShadow: string; background?: string; backgroundClip?: string; WebkitBackgroundClip?: string; WebkitTextFillColor?: string } } = {
+const ELEMENT_COLOR_MAPPING: {
+  [key: string]: {
+    color: string;
+    textShadow: string;
+    background?: string;
+    backgroundClip?: string;
+    WebkitBackgroundClip?: string;
+    WebkitTextFillColor?: string;
+  };
+} = {
   '1': {
-    color: '#66ccff', 
-    textShadow: '0 0 10px rgba(102, 204, 255, 0.8), 0 0 20px rgba(102, 204, 255, 0.5)'
+    color: '#66ccff',
+    textShadow:
+      '0 0 10px rgba(102, 204, 255, 0.8), 0 0 20px rgba(102, 204, 255, 0.5)'
   },
   '2': {
     color: '#e8f4ff',
-    textShadow: '0 0 10px #c8e8ff, 0 0 20px rgba(150, 210, 255, 0.7), 0 0 40px rgba(100, 180, 255, 0.4)'  
+    textShadow:
+      '0 0 10px #c8e8ff, 0 0 20px rgba(150, 210, 255, 0.7), 0 0 40px rgba(100, 180, 255, 0.4)'
   },
   '3': {
     color: '#8bc34a',
-    textShadow: '0 0 10px rgba(139, 195, 74, 0.8), 0 0 20px rgba(76, 175, 80, 0.5)'
+    textShadow:
+      '0 0 10px rgba(139, 195, 74, 0.8), 0 0 20px rgba(76, 175, 80, 0.5)'
   },
   '4': {
     color: 'transparent',
-    textShadow: '0 0 10px rgba(255, 0, 150, 0.9), 0 0 20px rgba(255, 100, 0, 0.8), 0 0 30px rgba(0, 200, 255, 0.8), 0 0 40px rgba(100, 0, 255, 0.7)',
-    background: 'linear-gradient(90deg, #ff0080 0%, #ff6b00 25%, #00ff00 50%, #0080ff 75%, #ff00ff 100%)',
+    textShadow:
+      '0 0 10px rgba(255, 0, 150, 0.9), 0 0 20px rgba(255, 100, 0, 0.8), 0 0 30px rgba(0, 200, 255, 0.8), 0 0 40px rgba(100, 0, 255, 0.7)',
+    background:
+      'linear-gradient(90deg, #ff0080 0%, #ff6b00 25%, #00ff00 50%, #0080ff 75%, #ff00ff 100%)',
     backgroundClip: 'text',
     WebkitBackgroundClip: 'text',
     WebkitTextFillColor: 'transparent'
@@ -33,25 +47,38 @@ const ELEMENT_COLOR_MAPPING: { [key: string]: { color: string; textShadow: strin
 };
 
 // Whitelist of allowed HTML tags
-const ALLOWED_TAGS = new Set(['SPAN', 'A', 'IMG', 'B', 'I', 'STRONG', 'EM', 'P', 'BR']);
+const ALLOWED_TAGS = new Set([
+  'SPAN',
+  'A',
+  'IMG',
+  'B',
+  'I',
+  'STRONG',
+  'EM',
+  'P',
+  'BR'
+]);
 
 // Whitelist of allowed attributes
 const ALLOWED_ATTRS: { [tag: string]: Set<string> } = {
-  'SPAN': new Set(['style']),
-  'A': new Set(['style', 'href', 'target', 'rel']),
-  'IMG': new Set(['style', 'title', 'src', 'alt']),
-  'B': new Set(['style']),
-  'I': new Set(['style']),
-  'STRONG': new Set(['style']),
-  'EM': new Set(['style']),
-  'P': new Set(['style']),
-  'BR': new Set([])
+  SPAN: new Set(['style']),
+  A: new Set(['style', 'href', 'target', 'rel']),
+  IMG: new Set(['style', 'title', 'src', 'alt']),
+  B: new Set(['style']),
+  I: new Set(['style']),
+  STRONG: new Set(['style']),
+  EM: new Set(['style']),
+  P: new Set(['style']),
+  BR: new Set([])
 };
 
 /**
  * Handler for showing card details on hover
  */
-const handleCardMouseOver = (e: React.MouseEvent<HTMLSpanElement>, imgPath: string) => {
+const handleCardMouseOver = (
+  e: React.MouseEvent<HTMLSpanElement>,
+  imgPath: string
+) => {
   // Call the global ShowDetail function if it exists
   if (typeof (window as any).ShowDetail === 'function') {
     // Pass the native event to ensure clientX/clientY are available
@@ -76,13 +103,13 @@ const parseStyleString = (styleStr: string): { [key: string]: string } => {
   const style: { [key: string]: string } = {};
   if (!styleStr) return style;
 
-  styleStr.split(';').forEach(rule => {
+  styleStr.split(';').forEach((rule) => {
     const [prop, value] = rule.split(':');
     if (prop && value) {
       const camelProp = prop
         .trim()
         .split('-')
-        .map((part, i) => 
+        .map((part, i) =>
           i === 0 ? part : part.charAt(0).toUpperCase() + part.slice(1)
         )
         .join('');
@@ -103,60 +130,67 @@ export const parseHtmlToReactElements = (htmlString: string): ReactNode => {
   // First, replace card references with placeholder markers to preserve them through HTML parsing
   const cardElements: React.ReactElement[] = [];
   let cardIndex = 0;
-  
+
   // Replace {{cardID|cardName|colorCode}} with a unique placeholder
-  const processedHtml = htmlString.replace(CARDRE, (match, cardID, cardName, colorCode = '0') => {
-    const placeholder = `__CARD_${cardIndex}__`;
-    
-    // Check if this is an element reference (cardID === 'element')
-    if (cardID === 'element') {
-      const elementStyle = ELEMENT_COLOR_MAPPING[colorCode] || { color: '#999999', textShadow: 'none' };
-      const styleObj: any = {
-        fontWeight: 'bold',
-        textShadow: elementStyle.textShadow
-      };
-      
-      // Apply rainbow gradient if available
-      if (elementStyle.background) {
-        styleObj.background = elementStyle.background;
-        styleObj.backgroundClip = elementStyle.backgroundClip;
-        styleObj.WebkitBackgroundClip = elementStyle.WebkitBackgroundClip;
-        styleObj.WebkitTextFillColor = elementStyle.WebkitTextFillColor;
+  const processedHtml = htmlString.replace(
+    CARDRE,
+    (match, cardID, cardName, colorCode = '0') => {
+      const placeholder = `__CARD_${cardIndex}__`;
+
+      // Check if this is an element reference (cardID === 'element')
+      if (cardID === 'element') {
+        const elementStyle = ELEMENT_COLOR_MAPPING[colorCode] || {
+          color: '#999999',
+          textShadow: 'none'
+        };
+        const styleObj: any = {
+          fontWeight: 'bold',
+          textShadow: elementStyle.textShadow
+        };
+
+        // Apply rainbow gradient if available
+        if (elementStyle.background) {
+          styleObj.background = elementStyle.background;
+          styleObj.backgroundClip = elementStyle.backgroundClip;
+          styleObj.WebkitBackgroundClip = elementStyle.WebkitBackgroundClip;
+          styleObj.WebkitTextFillColor = elementStyle.WebkitTextFillColor;
+        } else {
+          styleObj.color = elementStyle.color;
+        }
+
+        cardElements.push(
+          React.createElement(
+            'span',
+            {
+              key: `element-${cardIndex}`,
+              style: styleObj
+            },
+            cardName
+          )
+        );
       } else {
-        styleObj.color = elementStyle.color;
+        // Regular card reference
+        const color = COLOR_MAPPING[colorCode];
+        const imgPath = `./WebpImages/${cardID}.webp`;
+        cardElements.push(
+          React.createElement(
+            'span',
+            {
+              key: `card-${cardIndex}`,
+              onMouseOver: (e: React.MouseEvent<HTMLSpanElement>) =>
+                handleCardMouseOver(e, imgPath),
+              onMouseOut: handleCardMouseOut,
+              style: { color }
+            },
+            cardName
+          )
+        );
       }
-      
-      cardElements.push(
-        React.createElement(
-          'span',
-          {
-            key: `element-${cardIndex}`,
-            style: styleObj
-          },
-          cardName
-        )
-      );
-    } else {
-      // Regular card reference
-      const color = COLOR_MAPPING[colorCode];
-      const imgPath = `./WebpImages/${cardID}.webp`;
-      cardElements.push(
-        React.createElement(
-          'span',
-          {
-            key: `card-${cardIndex}`,
-            onMouseOver: (e: React.MouseEvent<HTMLSpanElement>) => handleCardMouseOver(e, imgPath),
-            onMouseOut: handleCardMouseOut,
-            style: { color }
-          },
-          cardName
-        )
-      );
+
+      cardIndex++;
+      return placeholder;
     }
-    
-    cardIndex++;
-    return placeholder;
-  });
+  );
 
   // Create a temporary container to parse the HTML
   const temp = document.createElement('div');
@@ -182,9 +216,11 @@ export const parseHtmlToReactElements = (htmlString: string): ReactNode => {
         // Get the card index from placeholder
         const cardIdx = parseInt(match[1]);
         if (cardIdx < cardElements.length) {
-          parts.push(React.cloneElement(cardElements[cardIdx], {
-            key: `card-${cardIdx}-${elementIndex++}`
-          }));
+          parts.push(
+            React.cloneElement(cardElements[cardIdx], {
+              key: `card-${cardIdx}-${elementIndex++}`
+            })
+          );
         }
 
         lastIndex = match.index + match[0].length;
@@ -203,12 +239,14 @@ export const parseHtmlToReactElements = (htmlString: string): ReactNode => {
       // Check if this span has a ShowDetail onmouseover handler (old format)
       if (tagName === 'SPAN' && element.hasAttribute('onmouseover')) {
         const onmouseoverAttr = element.getAttribute('onmouseover') || '';
-        const imgPathMatch = onmouseoverAttr.match(/ShowDetail\(event,\s*'([^']+)'/);
-        
+        const imgPathMatch = onmouseoverAttr.match(
+          /ShowDetail\(event,\s*'([^']+)'/
+        );
+
         if (imgPathMatch) {
           const imgPath = imgPathMatch[1];
           const cardText = element.textContent || '';
-          
+
           // Process children of this span to get styled text
           const children: ReactNode[] = [];
           for (let i = 0; i < element.childNodes.length; i++) {
@@ -218,16 +256,17 @@ export const parseHtmlToReactElements = (htmlString: string): ReactNode => {
               children.push(processed);
             }
           }
-          
+
           // Get the style attribute if it exists
           const styleStr = element.getAttribute('style') || '';
           const style = parseStyleString(styleStr);
-          
+
           return React.createElement(
             'span',
             {
               key: `card-old-${elementIndex++}`,
-              onMouseOver: (e: React.MouseEvent<HTMLSpanElement>) => handleCardMouseOver(e, imgPath),
+              onMouseOver: (e: React.MouseEvent<HTMLSpanElement>) =>
+                handleCardMouseOver(e, imgPath),
               onMouseOut: handleCardMouseOut,
               style
             },
@@ -309,7 +348,12 @@ export const parseHtmlToReactElements = (htmlString: string): ReactNode => {
 
       if (allowedAttrs.has('src')) {
         const src = element.getAttribute('src');
-        if (src && (src.startsWith('http') || src.startsWith('./') || src.startsWith('/'))) {
+        if (
+          src &&
+          (src.startsWith('http') ||
+            src.startsWith('./') ||
+            src.startsWith('/'))
+        ) {
           props.src = src;
         }
       }
@@ -363,7 +407,8 @@ export const parseTextToElements = (inputString: string): ReactNode[] => {
         'span',
         {
           key: `card-${matchIndex}`,
-          onMouseOver: (e: React.MouseEvent<HTMLSpanElement>) => handleCardMouseOver(e, imgPath),
+          onMouseOver: (e: React.MouseEvent<HTMLSpanElement>) =>
+            handleCardMouseOver(e, imgPath),
           onMouseOut: handleCardMouseOut,
           style: { color }
         },

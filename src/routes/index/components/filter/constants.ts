@@ -1,4 +1,8 @@
-export const HEROES_OF_RATHE: { value: string; label: string; young?: boolean }[] = [
+export const HEROES_OF_RATHE: {
+  value: string;
+  label: string;
+  young?: boolean;
+}[] = [
   { value: 'WTR001', label: 'Rhinar Reckless Rampage' },
   { value: 'WTR002', label: 'Rhinar', young: true },
   { value: 'WTR038', label: 'Bravo Showstopper' },
@@ -50,7 +54,7 @@ export const HEROES_OF_RATHE: { value: string; label: string; young?: boolean }[
   { value: 'DYN113', label: 'Arakni Huntsman' },
   { value: 'DYN114', label: 'Arakni', young: true },
   { value: 'EVR017', label: 'Bravo Star of the Show' },
-  { value: 'EVR019', label: 'Valda Brightaxe', young:true },
+  { value: 'EVR019', label: 'Valda Brightaxe', young: true },
   { value: 'EVR085', label: 'Genis Wotchuneed', young: true },
   { value: 'DVR001', label: 'Dorinthea Quicksilver Prodigy', young: true },
   { value: 'DYN001', label: 'Emperor Dracai of Aesir', young: true },
@@ -121,7 +125,7 @@ export const HEROES_OF_RATHE: { value: string; label: string; young?: boolean }[
   { value: 'SUP072', label: 'Lyath Goldmane', young: true },
   { value: 'BDD001', label: 'Bravo Flattering Showman', young: true },
   { value: 'MST238', label: 'Enigma New Moon', young: true },
-  { value: 'AHA001', label: 'Hala Bladesaint of the Vow' },
+  { value: 'AHA001', label: 'Hala Bladesaint of the Vow' }
   /*   { value: 'JDG024', label: 'Brutus Summa Rudis', young:true },
   { value: 'SMP001', label: 'Bolfar Bear Hands', young: true },
   { value: 'SMP003', label: 'Fightmaster Kox', young: true },
@@ -146,5 +150,5 @@ export const CLASS_OF_RATHE: { label: string }[] = [
   { label: 'Ranger' },
   { label: 'Runeblade' },
   { label: 'Warrior' },
-  { label: 'Wizard' },
+  { label: 'Wizard' }
 ];

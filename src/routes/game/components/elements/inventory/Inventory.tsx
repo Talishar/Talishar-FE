@@ -13,7 +13,7 @@ export default function Inventory() {
   const playerID = gameState?.gameInfo?.playerID;
 
   const inventoryCards = gameState?.gameDynamicInfo?.playerInventory || [];
-  
+
   const handleClose = () => {
     setIsOpen(false);
   };
@@ -23,55 +23,59 @@ export default function Inventory() {
       <button
         className={styles.inventoryButton}
         onClick={() => setIsOpen(true)}
-        data-tooltip={"View your inventory"}
+        data-tooltip={'View your inventory'}
         data-placement="bottom"
         aria-label="Inventory"
       >
         <MdInventory2 />
       </button>
 
-      {isOpen && createPortal(
-        <div className={styles.modalBackdrop} onClick={handleClose}>
-          <div
-            className={styles.inventoryModal}
-            onClick={(e) => e.stopPropagation()}
-            role="dialog"
-            aria-modal="true"
-            aria-label="Inventory"
-          >
-            <div className={styles.modalHeader}>
-              <h2>Inventory</h2>
-              <button
-                className={styles.closeButton}
-                onClick={handleClose}
-                aria-label="Close inventory"
-              >
-                <MdClose size={24} />
-              </button>
+      {isOpen &&
+        createPortal(
+          <div className={styles.modalBackdrop} onClick={handleClose}>
+            <div
+              className={styles.inventoryModal}
+              onClick={(e) => e.stopPropagation()}
+              role="dialog"
+              aria-modal="true"
+              aria-label="Inventory"
+            >
+              <div className={styles.modalHeader}>
+                <h2>Inventory</h2>
+                <button
+                  className={styles.closeButton}
+                  onClick={handleClose}
+                  aria-label="Close inventory"
+                >
+                  <MdClose size={24} />
+                </button>
+              </div>
+
+              <div className={styles.modalContent}>
+                {inventoryCards.length === 0 ? (
+                  <p className={styles.emptyState}>No items in inventory</p>
+                ) : (
+                  <div className={styles.cardGrid}>
+                    {inventoryCards.map((card, index) => (
+                      <div key={index} className={styles.cardContainer}>
+                        <CardPopUp
+                          cardNumber={card.cardNumber}
+                          containerClass={styles.cardItem}
+                        >
+                          <CardImage
+                            src={`https://images.talishar.net/public/cardsquares/english/${card.cardNumber}.webp`}
+                            className={styles.cardImage}
+                          />
+                        </CardPopUp>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
-            
-            <div className={styles.modalContent}>
-              {inventoryCards.length === 0 ? (
-                <p className={styles.emptyState}>No items in inventory</p>
-              ) : (
-                <div className={styles.cardGrid}>
-                  {inventoryCards.map((card, index) => (
-                    <div key={index} className={styles.cardContainer}>
-                      <CardPopUp cardNumber={card.cardNumber} containerClass={styles.cardItem}>
-                        <CardImage
-                          src={`https://images.talishar.net/public/cardsquares/english/${card.cardNumber}.webp`}
-                          className={styles.cardImage}
-                        />
-                      </CardPopUp>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
-        </div>,
-        document.body
-      )}
+          </div>,
+          document.body
+        )}
     </>
   );
 }

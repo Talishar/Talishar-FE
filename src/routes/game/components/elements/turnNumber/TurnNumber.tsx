@@ -23,12 +23,19 @@ export default function TurnNumber() {
   });
 
   const playerName = useAppSelector((state: RootState) =>
-    (turnPlayer == 1 && amIPlayerOne || turnPlayer == 2 && !amIPlayerOne) ? state.game.playerOne.Name : state.game.playerTwo.Name
+    (turnPlayer == 1 && amIPlayerOne) || (turnPlayer == 2 && !amIPlayerOne)
+      ? state.game.playerOne.Name
+      : state.game.playerTwo.Name
   );
 
-  const isStreamerMode = String(useSetting({ settingName: IS_STREAMER_MODE })?.value) === '1';
-  const isOpponentTurn = (turnPlayer == 1 && !amIPlayerOne) || (turnPlayer == 2 && amIPlayerOne);
-  const displayName = (isStreamerMode && isOpponentTurn) ? 'Opponent' : String(playerName ?? 'Unknown').substring(0, 15);
+  const isStreamerMode =
+    String(useSetting({ settingName: IS_STREAMER_MODE })?.value) === '1';
+  const isOpponentTurn =
+    (turnPlayer == 1 && !amIPlayerOne) || (turnPlayer == 2 && amIPlayerOne);
+  const displayName =
+    isStreamerMode && isOpponentTurn
+      ? 'Opponent'
+      : String(playerName ?? 'Unknown').substring(0, 15);
 
   return (
     <div className={styles.turnNumber}>

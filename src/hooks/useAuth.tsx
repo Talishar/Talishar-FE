@@ -32,7 +32,12 @@ export default function useAuth() {
   const isMod = useAppSelector(selectIsMod);
   // const { refetch } = useGetFavoriteDecksQuery(undefined);
   const [logOutAPI, logOutData] = useLogOutMutation();
-  const { isLoading: isQueryLoading, isFetching, error, data } = useLoginWithCookieQuery({});
+  const {
+    isLoading: isQueryLoading,
+    isFetching,
+    error,
+    data
+  } = useLoginWithCookieQuery({});
   const [authCheckTimedOut, setAuthCheckTimedOut] = useState(false);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -71,11 +76,12 @@ export default function useAuth() {
       navigate('/');
     }
   };
-  
+
   // Auth check is complete when we have data (even if user is not logged in) or there's an error
   // OR if the auth check has timed out (to prevent infinite loading state)
-  const isLoading = !authCheckTimedOut && data === undefined && error === undefined;
-  
+  const isLoading =
+    !authCheckTimedOut && data === undefined && error === undefined;
+
   // isLoggedIn should be based on the query result if available, otherwise use Redux
   // Use || (not ??) so that a `false` cookie-check result can still be overridden by
   // a freshly-dispatched Redux credential (e.g. right after a manual login, before the
@@ -88,7 +94,9 @@ export default function useAuth() {
     const timeoutId = setTimeout(() => {
       if (data === undefined && error === undefined) {
         setAuthCheckTimedOut(true);
-        console.warn('Auth check timed out after 5s - proceeding without authentication');
+        console.warn(
+          'Auth check timed out after 5s - proceeding without authentication'
+        );
       }
     }, 5000);
 
@@ -122,8 +130,7 @@ export default function useAuth() {
 
   useEffect(() => {
     if (isLoggedIn && !isLoading) {
-      const authRefreshInterval = setInterval(() => {
-      }, 10 * 60 * 1000); // 10 minutes
+      const authRefreshInterval = setInterval(() => {}, 10 * 60 * 1000); // 10 minutes
 
       return () => clearInterval(authRefreshInterval);
     }

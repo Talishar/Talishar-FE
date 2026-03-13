@@ -42,7 +42,8 @@ export default function LastPlayed() {
 
   // Determine if the card is controlled by the opponent
   // cardRedux.controller is 1 or 2 for players
-  const isOpponent = cardRedux?.controller && cardRedux.controller !== gameInfo.playerID;
+  const isOpponent =
+    cardRedux?.controller && cardRedux.controller !== gameInfo.playerID;
 
   const imgClassNames = classNames(styles.img, {
     [styles.rotated]: hasMeld
@@ -54,7 +55,11 @@ export default function LastPlayed() {
       cardNumber={cardNumber}
       containerClass={styles.lastPlayed}
     >
-      <CardImage src={imageSrc} className={imgClassNames} isOpponent={isOpponent} />
+      <CardImage
+        src={imageSrc}
+        className={imgClassNames}
+        isOpponent={isOpponent}
+      />
     </CardPopUp>
   );
 }

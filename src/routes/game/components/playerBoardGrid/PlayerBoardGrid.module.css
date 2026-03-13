@@ -63,7 +63,7 @@
   }
   .playerBoard {
     transform: scale(0.95);
-    transform-origin: top left; 
+    transform-origin: top left;
     grid-template-rows: var(--card-size) var(--card-size) var(--card-size);
     grid-template-columns:
       var(--card-size) var(--card-size) 1fr var(--card-size)
@@ -71,8 +71,8 @@
     gap: 1dvw;
     padding: 1dvw;
     grid-template-areas:
-    'head permanents permanents permanents permanents permanents permanents permanents graveyard'
-    'chest arms . weaponl hero weaponr . pitch deck'
-    'legs . . . arsenal arsenal . zonecounts banish'; 
+      'head permanents permanents permanents permanents permanents permanents permanents graveyard'
+      'chest arms . weaponl hero weaponr . pitch deck'
+      'legs . . . arsenal arsenal . zonecounts banish';
   }
 }

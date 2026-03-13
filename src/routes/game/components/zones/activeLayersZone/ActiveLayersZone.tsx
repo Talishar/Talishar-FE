@@ -8,7 +8,10 @@ import ReorderLayers from './ReorderLayers';
 import useShowModal from 'hooks/useShowModals';
 import { submitButton } from 'features/game/GameSlice';
 import { PROCESS_INPUT } from 'appConstants';
-import { parseHtmlToReactElements, parseTextToElements } from 'utils/ParseEscapedString';
+import {
+  parseHtmlToReactElements,
+  parseTextToElements
+} from 'utils/ParseEscapedString';
 import { BiTargetLock } from 'react-icons/bi';
 import Button from '../../../../../features/Button';
 
@@ -32,7 +35,9 @@ export default function ActiveLayersZone() {
     (card) => card.reorderable
   );
 
-  const playerID = useAppSelector((state: RootState) => state.game.gameInfo.playerID);
+  const playerID = useAppSelector(
+    (state: RootState) => state.game.gameInfo.playerID
+  );
 
   const handlePassTurn = () => {
     dispatch(submitButton({ button: { mode: PROCESS_INPUT.PASS } }));
@@ -76,11 +81,11 @@ export default function ActiveLayersZone() {
                   : null}
               </h3>
               <Target target={activeLayer.target} />
-{/*               <p className={styles.orderingExplanation}>
+              {/*               <p className={styles.orderingExplanation}>
                 Priority settings can be adjusted in the menu
               </p> */}
             </div>
-              {canPassPhase && (
+            {canPassPhase && (
               <div className={styles.passTurnBox}>
                 <button className={styles.passTurn} onClick={handlePassTurn}>
                   Pass
@@ -92,14 +97,12 @@ export default function ActiveLayersZone() {
             {staticCards &&
               staticCards.map((card, ix) => {
                 const isPlayer = playerID === card.controller;
-                return <CardDisplay card={card} key={ix} isPlayer={isPlayer}/>;
+                return <CardDisplay card={card} key={ix} isPlayer={isPlayer} />;
               })}
             <ReorderLayers cards={reorderableCards ?? []} />
           </div>
           <div className={styles.activeLayersCallToAction}>
-            <div>
-              {parseHtmlToReactElements(playerPrompt?.helpText ?? '')}
-            </div>
+            <div>{parseHtmlToReactElements(playerPrompt?.helpText ?? '')}</div>
             {buttons}
           </div>
         </motion.div>

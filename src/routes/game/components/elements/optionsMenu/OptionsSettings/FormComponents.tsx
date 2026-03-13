@@ -105,7 +105,7 @@ export const RangeSlider: React.FC<RangeSliderProps> = ({
   displayValue
 }) => {
   const display = displayValue ?? `${Math.floor(value * 100)}%`;
-  
+
   return (
     <label className={styles.optionLabel}>
       {label}: {display}

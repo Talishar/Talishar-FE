@@ -57,7 +57,14 @@
 
 .articleTitle {
   margin-top: 0.2em;
-  background: var(--theme-section-background, linear-gradient(135deg, rgba(30, 35, 41, 0.8) 0%, rgba(30, 35, 41, 0.85) 100%));
+  background: var(
+    --theme-section-background,
+    linear-gradient(
+      135deg,
+      rgba(30, 35, 41, 0.8) 0%,
+      rgba(30, 35, 41, 0.85) 100%
+    )
+  );
 }
 
 article {
@@ -132,7 +139,7 @@ td {
   grid-template-columns: 1fr 1fr;
   gap: 2rem;
   margin-top: 1rem;
-  align-items: start; 
+  align-items: start;
 }
 
 .leftColumn {
@@ -182,7 +189,8 @@ td {
     padding: 0 0.5rem;
   }
 
-  th, td {
+  th,
+  td {
     font-size: 12px;
     padding: 0.25em 0.1em;
   }
@@ -272,7 +280,8 @@ td {
 
 @media (max-width: 350px) {
   /* On ultra-small screens, just show Hero, Name, and Edit */
-  th, td {
+  th,
+  td {
     font-size: 11px;
     padding: 0.2em 0.05em;
   }
@@ -325,13 +334,13 @@ td {
   padding: 1.5rem;
   background: rgba(0, 0, 0, 0.3);
   border-radius: 8px;
-  border-left: 4px solid #FF424D;
+  border-left: 4px solid #ff424d;
 }
 
 .patreonSection h3 {
   margin-top: 0;
   margin-bottom: 1rem;
-  color: #FF9CA0;
+  color: #ff9ca0;
   font-size: 1.3em;
 }
 
@@ -766,10 +775,9 @@ td {
 }
 
 @media (max-width: 575px) {
-
   .addDeckSection {
-    margin-bottom: .5em;
-    padding-bottom: .5em;
+    margin-bottom: 0.5em;
+    padding-bottom: 0.5em;
   }
 }
 /* ===== Upgrade Section Styles ===== */
@@ -779,7 +787,14 @@ td {
   margin-bottom: 1.5em;
   border-radius: 8px;
   border: 2px solid var(--theme-border, rgba(255, 255, 255, 0.2));
-  background: var(--theme-section-background, linear-gradient(135deg, rgba(30, 35, 41, 0.8) 0%, rgba(30, 35, 41, 0.85) 100%));
+  background: var(
+    --theme-section-background,
+    linear-gradient(
+      135deg,
+      rgba(30, 35, 41, 0.8) 0%,
+      rgba(30, 35, 41, 0.85) 100%
+    )
+  );
 }
 
 .upgradeSection h3 {
@@ -826,7 +841,11 @@ td {
 /* Free User Badge */
 .freeUserBadge {
   border-left: 5px solid #4a90e2;
-  background: linear-gradient(135deg, rgba(74, 144, 226, 0.1) 0%, rgba(74, 144, 226, 0.05) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(74, 144, 226, 0.1) 0%,
+    rgba(74, 144, 226, 0.05) 100%
+  );
 }
 
 .upgradeHeader {
@@ -877,7 +896,7 @@ td {
 }
 
 .benefitsList li:before {
-  content: "✓";
+  content: '✓';
   position: absolute;
   left: 0;
   color: #4a90e2;
@@ -967,7 +986,7 @@ td {
 }
 
 .metafyBenefits li:before {
-  content: "→";
+  content: '→';
   position: absolute;
   left: 0;
   color: var(--theme-primary, #d4af37);

@@ -7,12 +7,15 @@ export const cleanErrorText = (htmlText: string): string => {
 
   // First, try to extract content from common error tags
   // This handles xdebug errors, PHP errors, etc.
-  
+
   // Extract text content from common error elements
   let text = htmlText;
 
   // Remove script and style elements completely
-  text = text.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
+  text = text.replace(
+    /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi,
+    ''
+  );
   text = text.replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, '');
 
   // Remove HTML comments
@@ -20,7 +23,9 @@ export const cleanErrorText = (htmlText: string): string => {
 
   // Extract error message from xdebug/PHP error formatting if present
   // Look for common error patterns
-  const warningMatch = text.match(/<span[^>]*style='background-color: #cc0000[^>]*>([^<]*(?:<[^>]*>[^<]*)*)<\/span>/i);
+  const warningMatch = text.match(
+    /<span[^>]*style='background-color: #cc0000[^>]*>([^<]*(?:<[^>]*>[^<]*)*)<\/span>/i
+  );
   if (warningMatch) {
     text = warningMatch[1];
   }

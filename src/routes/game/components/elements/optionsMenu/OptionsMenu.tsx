@@ -19,7 +19,7 @@ import { shallowEqual } from 'react-redux';
 import { CosmeticsSection } from './OptionsSettings/CosmeticsSection';
 import { useGetCosmeticsQuery } from 'features/api/apiSlice';
 import { useAppSelector as useAppSelectorOptions } from 'app/Hooks';
-import { 
+import {
   getSettingsEntity,
   updateOptions,
   Setting
@@ -39,7 +39,7 @@ const OptionsContent = () => {
 
   const initialValues = {
     cardBack: String(settingsData['CardBack']?.value ?? '0'),
-    playMat: String(settingsData['Playmat']?.value ?? '0'),
+    playMat: String(settingsData['Playmat']?.value ?? '0')
   };
 
   const handleSettingsChange = ({ name, value }: Setting) => {
@@ -225,14 +225,14 @@ const OptionsContent = () => {
             </div>
           </div>
         </div>
-          <CosmeticsSection
-            data={data}
-            selectedCardBack={initialValues.cardBack}
-            selectedPlaymat={initialValues.playMat}
-            onSettingsChange={handleSettingsChange}
-          />
-        </div>
+        <CosmeticsSection
+          data={data}
+          selectedCardBack={initialValues.cardBack}
+          selectedPlaymat={initialValues.playMat}
+          onSettingsChange={handleSettingsChange}
+        />
       </div>
+    </div>
   );
 };
 

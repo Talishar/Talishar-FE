@@ -11,7 +11,7 @@
   max-width: 100%;
   border: 2px solid #8b6914;
   background-color: #2a2416;
-  color:white;
+  color: white;
   padding: 0 0.5em;
   margin: 0;
   height: 1.75rem !important;
@@ -33,9 +33,8 @@
   height: 1.65rem !important;
   border-radius: 0.4em;
   border: 2px solid rgba(0, 0, 0, 0.2);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3),
-              0 1px 2px rgba(0, 0, 0, 0.2),
-              inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
   transition: all 0.2s ease;
   position: relative;
   background-color: var(--theme-primary);
@@ -47,16 +46,14 @@
   color: var(--theme-primary);
   border: 2px solid var(--theme-primary);
   cursor: pointer;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4),
-              0 2px 4px rgba(0, 0, 0, 0.3),
-              0 0 8px rgba(255, 215, 0, 0.3);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3),
+    0 0 8px rgba(255, 215, 0, 0.3);
   transform: translateY(-1px);
 }
 
 .buttonDiv:active {
   transform: translateY(1px);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3),
-              inset 0 2px 4px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3), inset 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .quickChatButton {
@@ -73,9 +70,8 @@
   margin-top: 0.1rem;
   border-radius: 0.4em;
   border: 2px solid rgba(0, 0, 0, 0.2);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3),
-              0 1px 2px rgba(0, 0, 0, 0.2),
-              inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
   transition: all 0.2s ease;
   position: relative;
   background-color: var(--theme-primary);
@@ -87,16 +83,14 @@
   color: var(--theme-primary);
   border: 2px solid var(--theme-primary);
   cursor: pointer;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4),
-              0 2px 4px rgba(0, 0, 0, 0.3),
-              0 0 8px rgba(255, 215, 0, 0.3);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3),
+    0 0 8px rgba(255, 215, 0, 0.3);
   transform: translateY(-1px);
 }
 
 .quickChatButton button:active {
   transform: translateY(1px);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3),
-              inset 0 2px 4px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3), inset 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .quickChatButton button:disabled {
@@ -151,7 +145,7 @@
 }
 
 .chatWheelButton {
-  padding: 0.9em .1em;
+  padding: 0.9em 0.1em;
 }
 
 @media only screen and (max-width: 768px) and (orientation: portrait) {

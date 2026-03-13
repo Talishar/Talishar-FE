@@ -10,8 +10,11 @@ import * as optConst from 'features/options/constants';
 export const DeckZone = React.memo((prop: Displayrow) => {
   const { isPlayer } = prop;
   const dispatch = useAppDispatch();
-  const settingsData = useAppSelector((state: RootState) => state.settings.entities);
-  const alwaysShowCounters = String(settingsData?.[optConst.ALWAYS_SHOW_COUNTERS]?.value) === '1';
+  const settingsData = useAppSelector(
+    (state: RootState) => state.settings.entities
+  );
+  const alwaysShowCounters =
+    String(settingsData?.[optConst.ALWAYS_SHOW_COUNTERS]?.value) === '1';
 
   const showCount = true;
 
@@ -26,30 +29,51 @@ export const DeckZone = React.memo((prop: Displayrow) => {
     isPlayer ? state.game.playerOne.Deck : state.game.playerTwo.Deck
   );
 
-  const cardListFocus = useAppSelector((state: RootState) => state.game.cardListFocus);
-
-  const shufflingPlayerId = useAppSelector((state: RootState) => state.game.shufflingPlayerId);
-  const isShuffling = useAppSelector((state: RootState) => state.game.isShuffling);
-  const addBotDeckPlayerId = useAppSelector((state: RootState) => state.game.addBotDeckPlayerId);
-  const addBotDeckCard = useAppSelector((state: RootState) => state.game.addBotDeckCard);
-  const playerID = useAppSelector((state: RootState) => state.game.gameInfo.playerID);
-  const otherPlayerID = useAppSelector((state: RootState) => state.game.gameInfo.playerID === 1 ? 2 : 1);
-  const clashRevealP1Card = useAppSelector((state: RootState) => state.game.clashRevealP1Card);
-  const clashRevealP2Card = useAppSelector((state: RootState) => state.game.clashRevealP2Card);
-  const clashRevealTrigger = useAppSelector((state: RootState) => state.game.clashRevealTrigger);
-
-  const shouldAnimateShuffling = isShuffling && (
-    (isPlayer && shufflingPlayerId === playerID) ||
-    (!isPlayer && shufflingPlayerId === otherPlayerID)
+  const cardListFocus = useAppSelector(
+    (state: RootState) => state.game.cardListFocus
   );
 
-  const shouldAnimateAddBotDeck = addBotDeckPlayerId !== null && (
-    (isPlayer && addBotDeckPlayerId === playerID) ||
-    (!isPlayer && addBotDeckPlayerId === otherPlayerID)
+  const shufflingPlayerId = useAppSelector(
+    (state: RootState) => state.game.shufflingPlayerId
   );
+  const isShuffling = useAppSelector(
+    (state: RootState) => state.game.isShuffling
+  );
+  const addBotDeckPlayerId = useAppSelector(
+    (state: RootState) => state.game.addBotDeckPlayerId
+  );
+  const addBotDeckCard = useAppSelector(
+    (state: RootState) => state.game.addBotDeckCard
+  );
+  const playerID = useAppSelector(
+    (state: RootState) => state.game.gameInfo.playerID
+  );
+  const otherPlayerID = useAppSelector((state: RootState) =>
+    state.game.gameInfo.playerID === 1 ? 2 : 1
+  );
+  const clashRevealP1Card = useAppSelector(
+    (state: RootState) => state.game.clashRevealP1Card
+  );
+  const clashRevealP2Card = useAppSelector(
+    (state: RootState) => state.game.clashRevealP2Card
+  );
+  const clashRevealTrigger = useAppSelector(
+    (state: RootState) => state.game.clashRevealTrigger
+  );
+
+  const shouldAnimateShuffling =
+    isShuffling &&
+    ((isPlayer && shufflingPlayerId === playerID) ||
+      (!isPlayer && shufflingPlayerId === otherPlayerID));
+
+  const shouldAnimateAddBotDeck =
+    addBotDeckPlayerId !== null &&
+    ((isPlayer && addBotDeckPlayerId === playerID) ||
+      (!isPlayer && addBotDeckPlayerId === otherPlayerID));
 
   const currentDeckPlayerID = isPlayer ? playerID : otherPlayerID;
-  const clashCard = currentDeckPlayerID === 1 ? clashRevealP1Card : clashRevealP2Card;
+  const clashCard =
+    currentDeckPlayerID === 1 ? clashRevealP1Card : clashRevealP2Card;
   const showClash = !!clashCard;
 
   if (deckCards === undefined || deckCards === 0) {
@@ -90,26 +114,45 @@ export const DeckZone = React.memo((prop: Displayrow) => {
     <div className={styles.deckZone} onClick={deckZoneDisplay}>
       <div className={styles.zoneStack}>
         {/* Render background layers for 3D effect - only on desktop */}
-        {!isMobileOrTablet && Array.from({ length: visibleLayers - 1 }).map((_, index) => {
-          // Apply shuffling animation to the top shuffleLayerCount layers
-          const shouldAnimateLayer = shouldAnimateShuffling && index < shuffleLayerCount;
-          // Generate random delay (0ms to 400ms) for this layer
-          const animationDelay = shouldAnimateLayer ? `${Math.random() * 400}ms` : '0ms';
-          
-          return (
-            <div
-              key={`layer-${index}`}
-              className={shouldAnimateLayer ? styles.zoneLayerShuffling : styles.zoneLayer}
-              style={{
-                transform: `translateY(${baseOffsetY}px) translateX(${baseOffsetX}px) translateY(${(index + 1) * layerOffsetY}px) translateX(${(index + 1) * layerOffsetX}px)`,
-                zIndex: visibleLayers - index - 1,
-                animationDelay: animationDelay
-              }}
-            />
-          );
-        })}
+        {!isMobileOrTablet &&
+          Array.from({ length: visibleLayers - 1 }).map((_, index) => {
+            // Apply shuffling animation to the top shuffleLayerCount layers
+            const shouldAnimateLayer =
+              shouldAnimateShuffling && index < shuffleLayerCount;
+            // Generate random delay (0ms to 400ms) for this layer
+            const animationDelay = shouldAnimateLayer
+              ? `${Math.random() * 400}ms`
+              : '0ms';
+
+            return (
+              <div
+                key={`layer-${index}`}
+                className={
+                  shouldAnimateLayer
+                    ? styles.zoneLayerShuffling
+                    : styles.zoneLayer
+                }
+                style={{
+                  transform: `translateY(${baseOffsetY}px) translateX(${baseOffsetX}px) translateY(${
+                    (index + 1) * layerOffsetY
+                  }px) translateX(${(index + 1) * layerOffsetX}px)`,
+                  zIndex: visibleLayers - index - 1,
+                  animationDelay: animationDelay
+                }}
+              />
+            );
+          })}
         {/* Main card on top */}
-        <div className={styles.cardWrapper} style={!isMobileOrTablet ? { transform: `translateY(${baseOffsetY}px) translateX(${baseOffsetX}px)` } : {}}>
+        <div
+          className={styles.cardWrapper}
+          style={
+            !isMobileOrTablet
+              ? {
+                  transform: `translateY(${baseOffsetY}px) translateX(${baseOffsetX}px)`
+                }
+              : {}
+          }
+        >
           <CardDisplay
             card={deckBack}
             num={showCount ? deckCards : undefined}
@@ -119,7 +162,10 @@ export const DeckZone = React.memo((prop: Displayrow) => {
         </div>
         {/* Add card animation */}
         {shouldAnimateAddBotDeck && (
-          <div key="addBotDeckAnimation" className={styles.addBotDeckAnimationCard}>
+          <div
+            key="addBotDeckAnimation"
+            className={styles.addBotDeckAnimationCard}
+          >
             <CardDisplay
               card={deckBack}
               showCountersOnHover={!alwaysShowCounters}
@@ -127,10 +173,17 @@ export const DeckZone = React.memo((prop: Displayrow) => {
           </div>
         )}
         {showClash && (
-          <div 
+          <div
             key={`clashAnimation-${clashRevealTrigger}`}
             className={styles.clashRevealCard}
-            style={!isMobileOrTablet ? { '--deckOffsetY': `${baseOffsetY}px`, '--deckOffsetX': `${baseOffsetX}px` } as React.CSSProperties : {}}
+            style={
+              !isMobileOrTablet
+                ? ({
+                    '--deckOffsetY': `${baseOffsetY}px`,
+                    '--deckOffsetX': `${baseOffsetX}px`
+                  } as React.CSSProperties)
+                : {}
+            }
           >
             <CardDisplay
               card={{ cardNumber: clashCard }}

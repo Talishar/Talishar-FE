@@ -68,7 +68,10 @@ export default function PlayerInputPopUp() {
       const delta = e.clientY - dragStartY;
       const deltaDvh = (delta / window.innerHeight) * 100;
       let newOffset = dragStartOffset + deltaDvh;
-      newOffset = Math.max(PLAYER_INPUT_MIN_Y_OFFSET, Math.min(PLAYER_INPUT_MAX_Y_OFFSET, newOffset));
+      newOffset = Math.max(
+        PLAYER_INPUT_MIN_Y_OFFSET,
+        Math.min(PLAYER_INPUT_MAX_Y_OFFSET, newOffset)
+      );
       setYOffset(newOffset);
     };
 
@@ -76,7 +79,10 @@ export default function PlayerInputPopUp() {
       const delta = e.touches[0].clientY - dragStartY;
       const deltaDvh = (delta / window.innerHeight) * 100;
       let newOffset = dragStartOffset + deltaDvh;
-      newOffset = Math.max(PLAYER_INPUT_MIN_Y_OFFSET, Math.min(PLAYER_INPUT_MAX_Y_OFFSET, newOffset));
+      newOffset = Math.max(
+        PLAYER_INPUT_MIN_Y_OFFSET,
+        Math.min(PLAYER_INPUT_MAX_Y_OFFSET, newOffset)
+      );
       setYOffset(newOffset);
     };
 
@@ -107,7 +113,7 @@ export default function PlayerInputPopUp() {
     const cardsArrLength = inputPopUp?.popup?.cards?.length ?? 0;
     const optionsArrLength = inputPopUp?.multiChooseText?.length ?? 0;
     const checkBoxLength = Math.max(cardsArrLength, optionsArrLength);
-    
+
     // Initialize checked state from multiChooseText default values
     const initialState = new Array(checkBoxLength).fill(false);
     if (inputPopUp?.multiChooseText) {
@@ -117,7 +123,7 @@ export default function PlayerInputPopUp() {
         }
       });
     }
-    
+
     setCheckedState(initialState);
   }, [inputPopUp]);
 
@@ -197,8 +203,10 @@ export default function PlayerInputPopUp() {
 
   const FormDisplay =
     PlayerInputFormTypeMap[inputPopUp.popup?.id || ''] || OtherInput;
-  
-  const titleElements = parseHtmlToReactElements(inputPopUp?.popup?.title ?? '');
+
+  const titleElements = parseHtmlToReactElements(
+    inputPopUp?.popup?.title ?? ''
+  );
 
   const basePct = inputPopUp.popup?.id === 'NEWOPT' ? '40%' : '52.5%';
 
@@ -249,7 +257,9 @@ export default function PlayerInputPopUp() {
         </div>
       </div>
       <div
-        className={`${styles.grabbyHandle} ${isDragging ? styles.grabbyHandleDragging : ''}`}
+        className={`${styles.grabbyHandle} ${
+          isDragging ? styles.grabbyHandleDragging : ''
+        }`}
         onMouseDown={handleMouseDown}
         onTouchStart={handleTouchStart}
       >

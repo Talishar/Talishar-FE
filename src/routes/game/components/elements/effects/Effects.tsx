@@ -20,11 +20,16 @@ export function Effect(prop: CardProp) {
   const src = generateCroppedImageUrl(prop.card.cardNumber);
   // Get the number value - check counters first, then use num from card if available
   const numValue = card.counters ?? (card as any).num ?? 0;
-  const imgBorderClass = isPlayer ? styles.imgPlayerBorder : styles.imgOpponentBorder;
+  const imgBorderClass = isPlayer
+    ? styles.imgPlayerBorder
+    : styles.imgOpponentBorder;
   return (
     <CardPopUp cardNumber={prop.card.cardNumber} containerClass={styles.effect}>
       <div className={styles.overlayContainer}>
-        <img src={src} className={`${styles.img} ${imgBorderClass} ${imgClassName || ''}`} />
+        <img
+          src={src}
+          className={`${styles.img} ${imgBorderClass} ${imgClassName || ''}`}
+        />
         <CountersOverlay {...card} num={numValue} excludeFancyCounters={true} />
       </div>
     </CardPopUp>
@@ -33,13 +38,21 @@ export function Effect(prop: CardProp) {
 
 export default function Effects(props: Player) {
   const classCSS = props.isPlayer ? styles.isPlayer : styles.isOpponent;
-  
-  const playerID = useAppSelector((state: RootState) => state.game.gameInfo.playerID);
-  const spectatorCameraView = useAppSelector((state: RootState) => state.game.spectatorCameraView);
+
+  const playerID = useAppSelector(
+    (state: RootState) => state.game.gameInfo.playerID
+  );
+  const spectatorCameraView = useAppSelector(
+    (state: RootState) => state.game.spectatorCameraView
+  );
 
   // Get both effects
-  const playerOneEffects = useAppSelector((state: RootState) => state.game.playerOne.Effects);
-  const playerTwoEffects = useAppSelector((state: RootState) => state.game.playerTwo.Effects);
+  const playerOneEffects = useAppSelector(
+    (state: RootState) => state.game.playerOne.Effects
+  );
+  const playerTwoEffects = useAppSelector(
+    (state: RootState) => state.game.playerTwo.Effects
+  );
 
   let effects;
   if (playerID === 3) {

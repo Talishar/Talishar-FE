@@ -7,12 +7,22 @@ interface GuideGridProps {
 }
 
 const GuideGrid: React.FC<GuideGridProps> = ({ guides }) => {
-  const formatPrice = (guide: MetafyGuide): { display: string; originalPrice?: string; isFreeForSupporters: boolean } => {
+  const formatPrice = (
+    guide: MetafyGuide
+  ): {
+    display: string;
+    originalPrice?: string;
+    isFreeForSupporters: boolean;
+  } => {
     if (!guide.price || guide.price.value === 0) {
       return { display: 'Free', isFreeForSupporters: false };
     }
     const originalPrice = `$${(guide.price.value_in_cents / 100).toFixed(2)}`;
-    return { display: 'Free for Supporters', originalPrice, isFreeForSupporters: true };
+    return {
+      display: 'Free for Supporters',
+      originalPrice,
+      isFreeForSupporters: true
+    };
   };
 
   const formatDate = (dateString: string): string => {
@@ -51,24 +61,22 @@ const GuideGrid: React.FC<GuideGridProps> = ({ guides }) => {
               </div>
             )}
           </div>
-          
+
           <div className={styles.guideContent}>
             <h3 className={styles.guideName}>{guide.name}</h3>
-            
+
             <p className={styles.guideDescription}>{guide.description}</p>
-            
+
             <div className={styles.guideFooter}>
               <div className={styles.guideInfo}>
                 <span className={styles.author}>
                   {(guide as any).isOwnerGuide ? 'PvtVoid' : 'Talishar'}
                 </span>
                 {guide.rating && (
-                  <span className={styles.rating}>
-                    {`${guide.rating}/10`}
-                  </span>
+                  <span className={styles.rating}>{`${guide.rating}/10`}</span>
                 )}
               </div>
-              
+
               <div className={styles.guideMetadata}>
                 <span className={styles.date}>
                   {formatDate(guide.updated_at)}
@@ -83,7 +91,13 @@ const GuideGrid: React.FC<GuideGridProps> = ({ guides }) => {
                             {priceInfo.originalPrice}
                           </span>
                         )}
-                        <span className={`${styles.price} ${priceInfo.isFreeForSupporters ? styles.freeForSupporters : ''}`}>
+                        <span
+                          className={`${styles.price} ${
+                            priceInfo.isFreeForSupporters
+                              ? styles.freeForSupporters
+                              : ''
+                          }`}
+                        >
                           {priceInfo.display}
                         </span>
                       </>

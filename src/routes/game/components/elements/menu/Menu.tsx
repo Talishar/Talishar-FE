@@ -13,7 +13,10 @@ import ShowMobileChat from './ShowMobileChat/ShowMobileChat';
 import AlwaysPassToggle from './AlwaysPassToggle/AlwaysPassToggle';
 import useShortcut from 'hooks/useShortcut';
 import PlayerName from '../playerName/PlayerName';
-import { ButtonDisableProvider, useButtonDisableContext } from 'contexts/ButtonDisableContext';
+import {
+  ButtonDisableProvider,
+  useButtonDisableContext
+} from 'contexts/ButtonDisableContext';
 import { RootState } from 'app/Store';
 
 function FullScreenButton() {
@@ -70,7 +73,9 @@ function UndoButton() {
 function MenuContent() {
   const [isMobile, setIsMobile] = useState(false);
   const [isTablet, setIsTablet] = useState(false);
-  const playerID = useAppSelector((state: RootState) => state.game.gameInfo.playerID);
+  const playerID = useAppSelector(
+    (state: RootState) => state.game.gameInfo.playerID
+  );
   const isSpectator = playerID === 3;
 
   useEffect(() => {
@@ -88,9 +93,7 @@ function MenuContent() {
   if (isSpectator) {
     return (
       <div>
-        {isTablet && (
-          <PlayerName isPlayer={false} />
-        )}
+        {isTablet && <PlayerName isPlayer={false} />}
         <div className={styles.menuList}>
           <HideModalsToggle />
           <OptionsMenuToggle />
@@ -108,9 +111,7 @@ function MenuContent() {
   // Player view: show all buttons
   return (
     <div>
-      {isTablet && (
-        <PlayerName isPlayer={false} />
-      )}
+      {isTablet && <PlayerName isPlayer={false} />}
       <div className={styles.menuList}>
         <UndoButton />
         <OptionsMenuToggle />

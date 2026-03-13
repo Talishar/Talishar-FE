@@ -8,7 +8,7 @@ import {
   getCollectionCardImagePath,
   loadInitialLanguage
 } from '../multilanguage';
-import {CLOUD_IMAGES_URL} from "../../../appConstants";
+import { CLOUD_IMAGES_URL } from '../../../appConstants';
 
 const generateExpectedResult = ({
   path = CARD_IMAGES_PATH,

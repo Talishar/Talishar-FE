@@ -10,7 +10,6 @@
   touch-action: manipulation;
   background: var(--theme-card-background);
   border: 1px solid var(--theme-primary);
-
 }
 
 dialog {

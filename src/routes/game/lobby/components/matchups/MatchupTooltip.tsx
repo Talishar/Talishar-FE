@@ -12,7 +12,10 @@ interface TooltipPosition {
   position: 'top' | 'bottom' | 'left' | 'right';
 }
 
-const MatchupTooltip: React.FC<MatchupTooltipProps> = ({ content, children }) => {
+const MatchupTooltip: React.FC<MatchupTooltipProps> = ({
+  content,
+  children
+}) => {
   const [isVisible, setIsVisible] = useState(false);
   const [tooltipPos, setTooltipPos] = useState<TooltipPosition>({
     top: 0,

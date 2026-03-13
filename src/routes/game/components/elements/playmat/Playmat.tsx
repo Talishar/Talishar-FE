@@ -6,15 +6,21 @@ import { useCookies } from 'react-cookie';
 import styles from './Playmat.module.css';
 export const Playmat = ({ isPlayer }: { isPlayer: boolean }) => {
   const [cookies] = useCookies(['playmatIntensity']);
-  
-  const playerID = useAppSelector((state: RootState) => state.game.gameInfo.playerID);
+
+  const playerID = useAppSelector(
+    (state: RootState) => state.game.gameInfo.playerID
+  );
   const spectatorCameraView = useAppSelector(
     (state: RootState) => state.game.spectatorCameraView
   );
 
   // Get both playmats
-  const playerOnePlaymat = useAppSelector((state: RootState) => state.game.playerOne.Playmat);
-  const playerTwoPlaymat = useAppSelector((state: RootState) => state.game.playerTwo.Playmat);
+  const playerOnePlaymat = useAppSelector(
+    (state: RootState) => state.game.playerOne.Playmat
+  );
+  const playerTwoPlaymat = useAppSelector(
+    (state: RootState) => state.game.playerTwo.Playmat
+  );
 
   // Determine which playmat to display
   let playmat;
@@ -31,7 +37,7 @@ export const Playmat = ({ isPlayer }: { isPlayer: boolean }) => {
   const styleToApply = {
     backgroundImage: `url(/playmats/${playmat}.webp)`,
     filter: `brightness(${cookies.playmatIntensity ?? 0.65})`,
-    borderRadius: `10px`,
+    borderRadius: `10px`
   };
 
   const playmatClass = isPlayer ? styles.playerOne : styles.playerTwo;

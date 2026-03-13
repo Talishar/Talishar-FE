@@ -81,8 +81,6 @@
   color: var(--theme-text);
 }
 
-
-
 @media (min-width: 1200px) and (max-width: 1400px) {
   .sortControls {
     padding: 0.5em 0.5em;

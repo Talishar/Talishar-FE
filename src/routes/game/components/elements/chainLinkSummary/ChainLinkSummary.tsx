@@ -104,7 +104,9 @@ const ChainLinkSummary = ({
       <div className={styles.cardListContents}>
         <div className={styles.totalDamageContainer}>
           <span className={styles.totalDamageLabel}>Total Damage Dealt: </span>
-          <span className={styles.totalDamageValue}>{data.TotalDamageDealt}</span>
+          <span className={styles.totalDamageValue}>
+            {data.TotalDamageDealt}
+          </span>
         </div>
         <div className={styles.tableWrapper}>
           <table className={styles.table}>
@@ -132,7 +134,15 @@ const ChainLinkSummary = ({
                         />
                       </td>
                       <td className={styles.effectCol}>
-                        <span className={entry.modifier > 0 ? styles.positive : entry.modifier < 0 ? styles.negative : ''}>
+                        <span
+                          className={
+                            entry.modifier > 0
+                              ? styles.positive
+                              : entry.modifier < 0
+                              ? styles.negative
+                              : ''
+                          }
+                        >
                           {entry.modifier > 0 ? '+' : ''}
                           {entry.modifier === 0 ? '-' : entry.modifier}
                         </span>
@@ -141,7 +151,11 @@ const ChainLinkSummary = ({
                   );
                 })
               ) : (
-                <tr><td colSpan={3} className={styles.error}>{JSON.stringify(data)}</td></tr>
+                <tr>
+                  <td colSpan={3} className={styles.error}>
+                    {JSON.stringify(data)}
+                  </td>
+                </tr>
               )}
             </tbody>
           </table>

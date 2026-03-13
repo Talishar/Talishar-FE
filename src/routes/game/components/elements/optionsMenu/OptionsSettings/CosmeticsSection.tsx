@@ -37,7 +37,7 @@ export const CosmeticsSection: React.FC<CosmeticsSectionProps> = ({
 
   return (
     <>
-        <label className={styles.cardBackTitle}>
+      <label className={styles.cardBackTitle}>
         <strong>Playmat</strong>
         {!!data?.playmats?.length ? (
           <>
@@ -60,8 +60,8 @@ export const CosmeticsSection: React.FC<CosmeticsSectionProps> = ({
             </select>
             {selectedPlaymat && PLAYMATS[selectedPlaymat] && (
               <div className={styles.playmatPreview}>
-                <img 
-                  src={getPlaymatImagePath(selectedPlaymat)} 
+                <img
+                  src={getPlaymatImagePath(selectedPlaymat)}
                   alt={PLAYMATS[selectedPlaymat]}
                   className={styles.playmatPreviewImage}
                 />
@@ -75,7 +75,9 @@ export const CosmeticsSection: React.FC<CosmeticsSectionProps> = ({
       <label className={styles.cardBackTitle}>
         <strong>Card Back</strong>
         {!data?.cardBacks?.length && (
-          <p>Link your Metafy account on your profile page to unlock card backs</p>
+          <p>
+            Link your Metafy account on your profile page to unlock card backs
+          </p>
         )}
         <div className={styles.cardBackListContainer}>
           {data?.cardBacks?.map((cardBack) => {
