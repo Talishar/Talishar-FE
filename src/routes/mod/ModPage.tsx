@@ -6,7 +6,9 @@ import {
   useBanPlayerByIPMutation,
   useBanPlayerByNameMutation,
   useCloseGameMutation,
-  useDeleteUsernameMutation
+  useDeleteUsernameMutation,
+  useSendSystemMessageToPlayerMutation,
+  useSendSystemMessageToAllMutation
 } from 'features/api/apiSlice';
 import UsernameModeration from './UsernameModeration';
 import DeleteUsernameAutocomplete from './DeleteUsernameAutocomplete';
@@ -17,9 +19,10 @@ const ModPage: React.FC = () => {
   const [gameToClose, setGameToClose] = useState('');
   const [playerToBan, setPlayerToBan] = useState('');
   const [usernameToDelete, setUsernameToDelete] = useState('');
-  const [selectedUserEmail, setSelectedUserEmail] = useState<string | null>(
-    null
-  );
+  const [selectedUserEmail, setSelectedUserEmail] = useState<string | null>(null);
+  const [systemMsgUsername, setSystemMsgUsername] = useState('');
+  const [systemMsgText, setSystemMsgText] = useState('');
+  const [broadcastMsgText, setBroadcastMsgText] = useState('');
 
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
@@ -32,12 +35,11 @@ const ModPage: React.FC = () => {
   } = useGetModPageDataQuery(undefined);
 
   const [banByIP, { isLoading: isBanningByIP }] = useBanPlayerByIPMutation();
-  const [banByName, { isLoading: isBanningByName }] =
-    useBanPlayerByNameMutation();
-  const [closeGameMutation, { isLoading: isClosingGame }] =
-    useCloseGameMutation();
-  const [deleteUsername, { isLoading: isDeletingUsername }] =
-    useDeleteUsernameMutation();
+  const [banByName, { isLoading: isBanningByName }] = useBanPlayerByNameMutation();
+  const [closeGameMutation, { isLoading: isClosingGame }] = useCloseGameMutation();
+  const [deleteUsername, { isLoading: isDeletingUsername }] = useDeleteUsernameMutation();
+  const [sendToPlayer, { isLoading: isSendingToPlayer }] = useSendSystemMessageToPlayerMutation();
+  const [sendToAll, { isLoading: isSendingToAll }] = useSendSystemMessageToAllMutation();
 
   const handleBanByIP = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -148,6 +150,51 @@ const ModPage: React.FC = () => {
     }
   };
 
+  const handleSendSystemMessage = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSuccessMessage(null);
+
+    if (!systemMsgUsername.trim() || !systemMsgText.trim()) {
+      toast.error('Username and message are required', { position: 'top-center' });
+      return;
+    }
+
+    try {
+      const result = await sendToPlayer({ username: systemMsgUsername, message: systemMsgText }).unwrap();
+      toast.success(result.message || 'System message sent', { position: 'top-center' });
+      setSuccessMessage(result.message || 'System message sent');
+      setSystemMsgUsername('');
+      setSystemMsgText('');
+    } catch (err: any) {
+      const errorMessage = err?.data?.error || 'Failed to send system message';
+      toast.error(errorMessage, { position: 'top-center' });
+    }
+  };
+
+  const handleBroadcastMessage = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSuccessMessage(null);
+
+    if (!broadcastMsgText.trim()) {
+      toast.error('Message is required', { position: 'top-center' });
+      return;
+    }
+
+    if (!window.confirm('Send this system message to ALL players?')) {
+      return;
+    }
+
+    try {
+      const result = await sendToAll({ message: broadcastMsgText }).unwrap();
+      toast.success(result.message || 'Broadcast sent', { position: 'top-center' });
+      setSuccessMessage(result.message || 'Broadcast sent');
+      setBroadcastMsgText('');
+    } catch (err: any) {
+      const errorMessage = err?.data?.error || 'Failed to send broadcast';
+      toast.error(errorMessage, { position: 'top-center' });
+    }
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.modPagePanel}>
@@ -224,6 +271,48 @@ const ModPage: React.FC = () => {
                 disabled={isDeletingUsername || !usernameToDelete.trim()}
               >
                 {isDeletingUsername ? 'Deleting...' : 'Delete Username'}
+              </button>
+            </form>
+
+            <form onSubmit={handleSendSystemMessage} className={styles.form}>
+              <h2>Send System Message to Player</h2>
+              <label htmlFor="systemMsgUsername">Username:</label>
+              <input
+                type="text"
+                id="systemMsgUsername"
+                value={systemMsgUsername}
+                onChange={(e) => setSystemMsgUsername(e.target.value)}
+                required
+              />
+              <label htmlFor="systemMsgText">Message:</label>
+              <textarea
+                id="systemMsgText"
+                value={systemMsgText}
+                onChange={(e) => setSystemMsgText(e.target.value)}
+                required
+                rows={4}
+                maxLength={2000}
+                className={styles.textarea}
+              />
+              <button type="submit" disabled={isSendingToPlayer}>
+                {isSendingToPlayer ? 'Sending...' : 'Send Message'}
+              </button>
+            </form>
+
+            <form onSubmit={handleBroadcastMessage} className={styles.form}>
+              <h2>Broadcast System Message to All Players</h2>
+              <label htmlFor="broadcastMsgText">Message:</label>
+              <textarea
+                id="broadcastMsgText"
+                value={broadcastMsgText}
+                onChange={(e) => setBroadcastMsgText(e.target.value)}
+                required
+                rows={4}
+                maxLength={2000}
+                className={styles.textarea}
+              />
+              <button type="submit" disabled={isSendingToAll}>
+                {isSendingToAll ? 'Sending...' : 'Broadcast to All'}
               </button>
             </form>
           </div>
