@@ -94,11 +94,16 @@ function MenuContent() {
     return (
       <div>
         {isTablet && <PlayerName isPlayer={false} />}
-        <div className={styles.menuList}>
-          <HideModalsToggle />
-          <OptionsMenuToggle />
-          <FullScreenButton />
-          {(isMobile || isTablet) && <ShowMobileChat />}
+        <div className={styles.menuRow}>
+          <div className={styles.spectatorFloating}>
+            <SpectatorCount />
+          </div>
+          <div className={styles.menuList}>
+            <HideModalsToggle />
+            <OptionsMenuToggle />
+            <FullScreenButton />
+            {(isMobile || isTablet) && <ShowMobileChat />}
+          </div>
         </div>
       </div>
     );
