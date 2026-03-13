@@ -64,3 +64,39 @@
   background-color: #555;
   cursor: not-allowed;
 }
+
+.countdownWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.countdownSvg {
+  flex-shrink: 0;
+  overflow: visible;
+}
+
+.countdownTrack {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.25);
+  stroke-width: 2.5;
+}
+
+.countdownCircle {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.8);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  transform-origin: 12px 12px;
+  transform: rotate(-90deg);
+  transition: stroke-dashoffset 1s linear;
+}
+
+.countdownText {
+  fill: white;
+  font-size: 10px;
+  font-weight: bold;
+  text-anchor: middle;
+  dominant-baseline: central;
+}
