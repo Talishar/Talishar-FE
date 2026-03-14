@@ -9,6 +9,8 @@ import useSetting from 'hooks/useSetting';
 import { IS_STREAMER_MODE } from 'features/options/constants';
 import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
+import PlayerName from '../elements/playerName/PlayerName';
+
 
 export default function RightColumn() {
   const isStreamerMode =
@@ -20,9 +22,16 @@ export default function RightColumn() {
 
   return (
     <>
+    {/* Mobile */}
       <div className={styles.mobileTopBar}>
-        <Menu />
+        <div className={styles.mobileTopBarName}>
+          <PlayerName isPlayer={false} />
+        </div>
+        <div className={styles.mobileTopBarContent}>
+          <Menu />
+        </div>
       </div>
+      {/* Desktop */}
       <div className={styles.rightColumn}>
         <div className={styles.topGroup}>
           <Menu />

@@ -34,18 +34,23 @@
     top: 0;
     left: 0;
     right: 0;
-    height: 5vh;
-    height: 5dvh;
     z-index: 50;
     background-color: var(--near-black);
+    align-items: center;
   }
 
-  .mobileTopBar > div {
+  .mobileTopBarName {
+    position: absolute;
+    left: 0.5em;
+  }
+
+  .mobileTopBarContent {
     width: 100%;
     display: flex;
     flex-direction: row;
     gap: 5px;
     justify-content: center;
+    align-items: center;
   }
 }
 

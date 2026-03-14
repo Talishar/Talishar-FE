@@ -9,6 +9,8 @@ import { DEFAULT_SHORTCUTS, PROCESS_INPUT } from 'appConstants';
 import HideModalsToggle from './HideModalsToggle/HideModalsToggle';
 import OptionsMenuToggle from './OptionsMenuToggle/OptionsMenuToggle';
 import ShowMobileChat from './ShowMobileChat/ShowMobileChat';
+import FullControlToggle from './FullControlToggle/FullControlToggle';
+import AlwaysPassToggle from './AlwaysPassToggle/AlwaysPassToggle';
 import PlayerName from '../playerName/PlayerName';
 import Inventory from '../inventory/Inventory';
 import SpectatorCount from '../spectatorCount/SpectatorCount';
@@ -93,7 +95,6 @@ function MenuContent() {
   if (isSpectator) {
     return (
       <div>
-        {isTablet && <PlayerName isPlayer={false} />}
         <div className={styles.menuRow}>
           <div className={styles.spectatorFloating}>
             <SpectatorCount />
@@ -112,12 +113,13 @@ function MenuContent() {
   // Player view: show all buttons in one row
   return (
     <div>
-      {isTablet && <PlayerName isPlayer={false} />}
       <div className={styles.menuRow}>
         <div className={styles.spectatorFloating}>
           <SpectatorCount />
         </div>
         <div className={styles.menuList}>
+          {(isMobile || isTablet) && <FullControlToggle />}
+          {(isMobile || isTablet) && <AlwaysPassToggle />}
           <UndoButton />
           <Inventory buttonClassName={styles.btn} />
           <HideModalsToggle />
