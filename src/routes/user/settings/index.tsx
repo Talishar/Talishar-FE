@@ -407,6 +407,7 @@ const SettingsPage = () => {
               value={cookies.cardSize ?? 1}
               min={isMobile ? 100 : 50}
               max={125}
+              defaultValue={1}
               onChange={(value) => setCookie('cardSize', value)}
             />
 
@@ -415,6 +416,7 @@ const SettingsPage = () => {
               value={cookies.hoverImageSize ?? 1}
               min={75}
               max={125}
+              defaultValue={1}
               onChange={(value) => setCookie('hoverImageSize', value)}
             />
 
@@ -430,6 +432,7 @@ const SettingsPage = () => {
               value={cookies.playmatIntensity ?? 0.65}
               min={10}
               max={100}
+              defaultValue={0.65}
               onChange={(value) => setCookie('playmatIntensity', value)}
             />
           </Fieldset>
