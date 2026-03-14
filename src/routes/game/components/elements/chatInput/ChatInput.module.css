@@ -154,7 +154,6 @@
 }
 
 .primaryQuickChatButton button:hover {
-  color: var(--theme-primary) !important;
   border: 2px solid var(--theme-primary) !important;
 }
 
