@@ -10,7 +10,14 @@
   overflow-y: auto;
   grid-area: matchups;
   overflow-x: hidden;
-  background: var(--theme-section-background, linear-gradient(135deg, rgba(30, 35, 41, 0.8) 0%, rgba(30, 35, 41, 0.85) 100%));
+  background: var(
+    --theme-section-background,
+    linear-gradient(
+      135deg,
+      rgba(30, 35, 41, 0.8) 0%,
+      rgba(30, 35, 41, 0.85) 100%
+    )
+  );
   padding: 1rem;
   gap: 0.75rem;
   position: relative;
@@ -121,15 +128,15 @@
     max-height: calc(100vh - var(--sticky-footer-height, 80px) - 130px - 120px);
     overflow-y: auto;
   }
-  
+
   .matchupContainer h4 {
     display: none;
   }
-  
+
   .matchups {
     width: 100%;
   }
-  
+
   .matchups button {
     padding: 0.6rem 0.5rem;
     font-size: 0.75rem;
@@ -139,7 +146,7 @@
     height: 70px;
     min-height: 70px;
   }
-  
+
   .matchupName {
     text-align: center;
     width: 100%;
@@ -150,7 +157,7 @@
     word-break: break-word;
     font-size: 0.85em;
   }
-  
+
   .turnOrderBadge {
     width: 100%;
     min-width: unset;
@@ -171,15 +178,15 @@
     max-height: calc(100vh - var(--sticky-footer-height, 80px) - 130px - 120px);
     overflow-y: auto;
   }
-  
+
   .matchupContainer h4 {
     display: none;
   }
-  
+
   .matchups {
     width: 100%;
   }
-  
+
   .matchups button {
     padding: 0.5rem 0.4rem;
     font-size: 0.7rem;
@@ -189,7 +196,7 @@
     height: 65px;
     min-height: 65px;
   }
-  
+
   .matchupName {
     text-align: center;
     width: 100%;
@@ -200,7 +207,7 @@
     word-break: break-word;
     font-size: 0.8em;
   }
-  
+
   .turnOrderBadge {
     font-size: 0.6rem;
     padding: 0.15rem 0.25rem;
@@ -229,7 +236,7 @@
     height: 60px;
     min-height: 60px;
   }
-  
+
   .matchupName {
     overflow: hidden;
     display: -webkit-box;
@@ -238,7 +245,7 @@
     word-break: break-word;
     font-size: 0.75em;
   }
-  
+
   .turnOrderBadge {
     font-size: 0.55rem;
     padding: 0.1rem 0.2rem;

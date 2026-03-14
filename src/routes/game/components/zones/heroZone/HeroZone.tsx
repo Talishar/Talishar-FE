@@ -5,7 +5,12 @@ import Displayrow from 'interface/Displayrow';
 import CardDisplay from '../../elements/cardDisplay/CardDisplay';
 import DamagePopup from '../../elements/damagePopup/DamagePopup';
 import HealingPopup from '../../elements/healingPopup/HealingPopup';
-import { removeDamagePopup, addDamagePopup, addHealingPopup, removeHealingPopup } from 'features/game/GameSlice';
+import {
+  removeDamagePopup,
+  addDamagePopup,
+  addHealingPopup,
+  removeHealingPopup
+} from 'features/game/GameSlice';
 import styles from './HeroZone.module.css';
 
 export const HeroZone = React.memo((prop: Displayrow) => {
@@ -16,6 +21,17 @@ export const HeroZone = React.memo((prop: Displayrow) => {
   const cardToDisplay = useAppSelector((state: RootState) =>
     isPlayer ? state.game.playerOne.Hero : state.game.playerTwo.Hero
   );
+
+  const soulCards = useAppSelector((state: RootState) =>
+    isPlayer ? state.game.playerOne.Soul : state.game.playerTwo.Soul
+  );
+
+  const cardWithSoul = React.useMemo(() => {
+    if (!cardToDisplay) return cardToDisplay;
+    const soulSubcards = soulCards?.map((c) => c.cardNumber) ?? [];
+    if (soulSubcards.length === 0) return cardToDisplay;
+    return { ...cardToDisplay, subcards: soulSubcards };
+  }, [cardToDisplay, soulCards]);
 
   // Use the same logic as HealthDisplay/TurnWidget - isPlayer determines the health
   const health = useAppSelector((state: RootState) =>
@@ -69,7 +85,7 @@ export const HeroZone = React.memo((prop: Displayrow) => {
 
   return (
     <div className={styles.heroZone}>
-      <CardDisplay card={cardToDisplay} isPlayer={isPlayer} />
+      <CardDisplay card={cardWithSoul} isPlayer={isPlayer} />
       {damagePopups.map((popup) => (
         <DamagePopup
           key={popup.id}

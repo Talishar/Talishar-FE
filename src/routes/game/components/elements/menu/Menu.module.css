@@ -4,49 +4,47 @@
   text-align: center;
   vertical-align: middle;
   touch-action: manipulation;
-  padding: 0.5em 0.6em;
-  font-size: 1em;
-  background-color: var(--theme-primary);
-  color: black;
+  padding: 0.2em;
+  font-size: 0.9em;
+  background-color: var(--theme-secondary);
+  color: var(--secondary-inverse);
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  min-width: 4.5vh;
-  height: 3.5vh;
+  width: 3vh;
+  height: 3vh;
+  min-width: 3vh;
   border-radius: 0.4em;
   border: 2px solid rgba(0, 0, 0, 0.2);
   flex-basis: auto;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3),
-              0 1px 2px rgba(0, 0, 0, 0.2),
-              inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
   transition: all 0.2s ease;
   position: relative;
   z-index: 1;
 }
 
 .btn svg {
-  font-size: 1.4em !important;
-  width: 1.2em !important;
-  height: 1.2em !important;
+  font-size: 1.3em !important;
+  width: 1.1em !important;
+  height: 1.1em !important;
 }
 
 .btn:hover {
   background-color: black;
-  color: var(--theme-primary);
-  border: 2px solid var(--theme-primary);
+  color: var(--theme-secondary);
+  border: 2px solid var(--theme-secondary);
   cursor: pointer;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4),
-              0 2px 4px rgba(0, 0, 0, 0.3),
-              0 0 8px rgba(255, 215, 0, 0.3);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3),
+    0 0 8px rgba(255, 215, 0, 0.3);
   transform: translateY(-1px);
   z-index: 10;
 }
 
 .btn:active {
   transform: translateY(1px);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3),
-              inset 0 2px 4px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3), inset 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .menuList {
@@ -56,14 +54,26 @@
   justify-content: center;
 }
 
+.menuRow {
+  position: relative;
+}
+
+.spectatorFloating {
+  position: absolute;
+  right: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  white-space: nowrap;
+  pointer-events: auto;
+  margin-right: 0.5em;
+}
+
 .buttonActive {
   background-color: var(--alarm);
   border-color: rgba(0, 0, 0, 0.3);
   color: var(--snow);
-  box-shadow: 0 2px 4px rgba(220, 20, 60, 0.4),
-              0 1px 2px rgba(0, 0, 0, 0.3),
-              inset 0 1px 0 rgba(255, 255, 255, 0.2),
-              0 0 8px rgba(220, 20, 60, 0.3);
+  box-shadow: 0 2px 4px rgba(220, 20, 60, 0.4), 0 1px 2px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 0 8px rgba(220, 20, 60, 0.3);
   z-index: 1;
 }
 
@@ -72,17 +82,15 @@
   color: var(--alarm);
   border: 2px solid var(--alarm);
   cursor: pointer;
-  box-shadow: 0 3px 6px rgba(220, 20, 60, 0.5),
-              0 2px 4px rgba(0, 0, 0, 0.3),
-              0 0 10px rgba(220, 20, 60, 0.4);
+  box-shadow: 0 3px 6px rgba(220, 20, 60, 0.5), 0 2px 4px rgba(0, 0, 0, 0.3),
+    0 0 10px rgba(220, 20, 60, 0.4);
   transform: translateY(-1px);
   z-index: 10;
 }
 
 .buttonActive:active {
   transform: translateY(1px);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3),
-              inset 0 2px 4px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3), inset 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 /* Fix tooltip positioning to prevent off-screen issues */
@@ -94,8 +102,8 @@
   white-space: nowrap !important;
 }
 
-.btn[data-tooltip][data-placement="bottom"]::before,
-.btn[data-tooltip][data-placement="bottom"]::after {
+.btn[data-tooltip][data-placement='bottom']::before,
+.btn[data-tooltip][data-placement='bottom']::after {
   bottom: auto !important;
   top: 100% !important;
   margin-top: 0.5em !important;

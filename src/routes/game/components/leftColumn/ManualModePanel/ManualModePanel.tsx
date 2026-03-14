@@ -15,7 +15,9 @@ export default function ManualModePanel() {
   const [isOpen, setIsOpen] = useState(false);
   const { setIsManualModeOpen, isDevToolOpen } = usePanelContext();
   const isManualMode = useSetting({ settingName: MANUAL_MODE })?.value === '1';
-  const isLocalEnvironment = import.meta.env.MODE === 'development' || window.location.hostname === 'localhost';
+  const isLocalEnvironment =
+    import.meta.env.MODE === 'development' ||
+    window.location.hostname === 'localhost';
   const isPracticeDummy = useAppSelector(
     (state: RootState) => state.game.playerTwo.Name === 'Practice Dummy'
   );
@@ -33,8 +35,10 @@ export default function ManualModePanel() {
 
   return (
     <>
-      <button 
-        className={`${styles.manualModeTab} ${isOpen || isDevToolOpen ? styles.hidden : ''}`}
+      <button
+        className={`${styles.manualModeTab} ${
+          isOpen || isDevToolOpen ? styles.hidden : ''
+        }`}
         onClick={() => {
           setIsOpen(!isOpen);
           setIsManualModeOpen(!isOpen);
@@ -43,15 +47,26 @@ export default function ManualModePanel() {
       >
         Manual Mode
       </button>
-      {isOpen && <ManualModeContent onClose={() => {
-        setIsOpen(false);
-        setIsManualModeOpen(false);
-      }} isPracticeDummy={isPracticeDummy} />}
+      {isOpen && (
+        <ManualModeContent
+          onClose={() => {
+            setIsOpen(false);
+            setIsManualModeOpen(false);
+          }}
+          isPracticeDummy={isPracticeDummy}
+        />
+      )}
     </>
   );
 }
 
-function ManualModeContent({ onClose, isPracticeDummy }: { onClose: () => void; isPracticeDummy: boolean }) {
+function ManualModeContent({
+  onClose,
+  isPracticeDummy
+}: {
+  onClose: () => void;
+  isPracticeDummy: boolean;
+}) {
   const [cardInput, setCardInput] = useState('');
   const [opponentHealthInput, setOpponentHealthInput] = useState('');
   const [isCardLoading, setIsCardLoading] = useState(false);
@@ -113,7 +128,12 @@ function ManualModeContent({ onClose, isPracticeDummy }: { onClose: () => void; 
     setIsRequestInProgress(true);
     dispatch(
       submitButton({
-        button: { mode, ...(typeof param === 'string' ? { cardID: param.toLowerCase() } : { numMode: param }) }
+        button: {
+          mode,
+          ...(typeof param === 'string'
+            ? { cardID: param.toLowerCase() }
+            : { numMode: param })
+        }
       })
     ).finally(() => setIsRequestInProgress(false));
   };
@@ -152,7 +172,10 @@ function ManualModeContent({ onClose, isPracticeDummy }: { onClose: () => void; 
                 checked={aiHasInfiniteHP}
                 onChange={() => {
                   if (!isRequestInProgress) {
-                    handleDispatchWithParam(PROCESS_INPUT.TOGGLE_AI_INFINITE_HP, aiHasInfiniteHP ? 0 : 1);
+                    handleDispatchWithParam(
+                      PROCESS_INPUT.TOGGLE_AI_INFINITE_HP,
+                      aiHasInfiniteHP ? 0 : 1
+                    );
                   }
                 }}
                 className={styles.toggleCheckbox}
@@ -167,7 +190,7 @@ function ManualModeContent({ onClose, isPracticeDummy }: { onClose: () => void; 
         <div className={styles.controlGroup}>
           <span className={styles.label}>Player Life</span>
           <div className={styles.controlRow}>
-            <button 
+            <button
               className={styles.buttonSmall}
               onClick={() => handleDispatch(PROCESS_INPUT.SUBTRACT_1_HP_SELF)}
               title="Remove 1 HP from player"
@@ -176,7 +199,7 @@ function ManualModeContent({ onClose, isPracticeDummy }: { onClose: () => void; 
               <AiOutlineMinus />
             </button>
             <span className={styles.value}>{playerHealth}</span>
-            <button 
+            <button
               className={styles.buttonSmall}
               onClick={() => handleDispatch(PROCESS_INPUT.ADD_1_HP_SELF)}
               title="Add 1 HP to player"
@@ -191,16 +214,18 @@ function ManualModeContent({ onClose, isPracticeDummy }: { onClose: () => void; 
         <div className={styles.controlGroup}>
           <span className={styles.label}>Opponent Life</span>
           <div className={styles.controlRow}>
-            <button 
+            <button
               className={styles.buttonSmall}
-              onClick={() => handleDispatch(PROCESS_INPUT.SUBTRACT_1_HP_OPPONENT)}
+              onClick={() =>
+                handleDispatch(PROCESS_INPUT.SUBTRACT_1_HP_OPPONENT)
+              }
               title="Remove 1 HP from opponent"
               disabled={isRequestInProgress}
             >
               <AiOutlineMinus />
             </button>
             <span className={styles.value}>{opponentHealth}</span>
-            <button 
+            <button
               className={styles.buttonSmall}
               onClick={() => handleDispatch(PROCESS_INPUT.ADD_1_HP_OPPONENT)}
               title="Add 1 HP to opponent"
@@ -215,16 +240,18 @@ function ManualModeContent({ onClose, isPracticeDummy }: { onClose: () => void; 
         <div className={styles.controlGroup}>
           <span className={styles.label}>Action Points</span>
           <div className={styles.controlRow}>
-            <button 
+            <button
               className={styles.buttonSmall}
-              onClick={() => handleDispatch(PROCESS_INPUT.SUBTRACT_ACTION_POINT)}
+              onClick={() =>
+                handleDispatch(PROCESS_INPUT.SUBTRACT_ACTION_POINT)
+              }
               title="Remove 1 Action Point"
               disabled={isRequestInProgress}
             >
               <AiOutlineMinus />
             </button>
             <span className={styles.value}>{playerActionPoints}</span>
-            <button 
+            <button
               className={styles.buttonSmall}
               onClick={() => handleDispatch(PROCESS_INPUT.ADD_ACTION_POINT)}
               title="Add 1 Action Point"
@@ -239,18 +266,22 @@ function ManualModeContent({ onClose, isPracticeDummy }: { onClose: () => void; 
         <div className={styles.controlGroup}>
           <span className={styles.label}>Player Resources</span>
           <div className={styles.controlRow}>
-            <button 
+            <button
               className={styles.buttonSmall}
-              onClick={() => handleDispatch(PROCESS_INPUT.REMOVE_RESOURCE_FROM_POOL_SELF)}
+              onClick={() =>
+                handleDispatch(PROCESS_INPUT.REMOVE_RESOURCE_FROM_POOL_SELF)
+              }
               title="Remove 1 resource from player pool"
               disabled={isRequestInProgress}
             >
               <AiOutlineMinus />
             </button>
             <span className={styles.value}>{playerResources}</span>
-            <button 
+            <button
               className={styles.buttonSmall}
-              onClick={() => handleDispatch(PROCESS_INPUT.ADD_RESOURCE_TO_POOL_SELF)}
+              onClick={() =>
+                handleDispatch(PROCESS_INPUT.ADD_RESOURCE_TO_POOL_SELF)
+              }
               title="Add 1 resource to player pool"
               disabled={isRequestInProgress}
             >
@@ -263,18 +294,22 @@ function ManualModeContent({ onClose, isPracticeDummy }: { onClose: () => void; 
         <div className={styles.controlGroup}>
           <span className={styles.label}>Opponent Resources</span>
           <div className={styles.controlRow}>
-            <button 
+            <button
               className={styles.buttonSmall}
-              onClick={() => handleDispatch(PROCESS_INPUT.REMOVE_RESOURCE_FROM_POOL_OPPONENT)}
+              onClick={() =>
+                handleDispatch(PROCESS_INPUT.REMOVE_RESOURCE_FROM_POOL_OPPONENT)
+              }
               title="Remove 1 resource from opponent pool"
               disabled={isRequestInProgress}
             >
               <AiOutlineMinus />
             </button>
             <span className={styles.value}>{opponentResources}</span>
-            <button 
+            <button
               className={styles.buttonSmall}
-              onClick={() => handleDispatch(PROCESS_INPUT.ADD_RESOURCE_TO_POOL_OPPONENT)}
+              onClick={() =>
+                handleDispatch(PROCESS_INPUT.ADD_RESOURCE_TO_POOL_OPPONENT)
+              }
               title="Add 1 resource to opponent pool"
               disabled={isRequestInProgress}
             >
@@ -285,7 +320,7 @@ function ManualModeContent({ onClose, isPracticeDummy }: { onClose: () => void; 
 
         {/* Draw Card */}
         <div className={styles.buttonGroup}>
-          <button 
+          <button
             className={styles.buttonFull}
             onClick={() => handleDispatch(PROCESS_INPUT.DRAW_CARD_SELF)}
             title="Draw a card"
@@ -293,7 +328,7 @@ function ManualModeContent({ onClose, isPracticeDummy }: { onClose: () => void; 
           >
             Draw Card (Player)
           </button>
-          <button 
+          <button
             className={styles.buttonFull}
             onClick={() => handleDispatch(PROCESS_INPUT.DRAW_CARD_OPPONENT)}
             title="Draw a card for opponent"
@@ -318,7 +353,7 @@ function ManualModeContent({ onClose, isPracticeDummy }: { onClose: () => void; 
             placeholder="Enter card ID"
             disabled={isCardLoading || isRequestInProgress}
           />
-          <button 
+          <button
             className={styles.buttonFull}
             onClick={handleAddCard}
             disabled={isCardLoading || isRequestInProgress || cardInput === ''}
@@ -329,17 +364,21 @@ function ManualModeContent({ onClose, isPracticeDummy }: { onClose: () => void; 
 
         {/* Remove Arsenal */}
         <div className={styles.buttonGroup}>
-          <button 
+          <button
             className={styles.buttonFull}
-            onClick={() => handleDispatch(PROCESS_INPUT.REMOVE_ARSENAL_FROM_SELF)}
+            onClick={() =>
+              handleDispatch(PROCESS_INPUT.REMOVE_ARSENAL_FROM_SELF)
+            }
             title="Remove arsenal from player"
             disabled={isRequestInProgress}
           >
             Remove Arsenal (Player)
           </button>
-          <button 
+          <button
             className={styles.buttonFull}
-            onClick={() => handleDispatch(PROCESS_INPUT.REMOVE_ARSENAL_FROM_OPPONENT)}
+            onClick={() =>
+              handleDispatch(PROCESS_INPUT.REMOVE_ARSENAL_FROM_OPPONENT)
+            }
             title="Remove arsenal from opponent"
             disabled={isRequestInProgress}
           >

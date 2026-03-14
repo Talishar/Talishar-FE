@@ -87,7 +87,9 @@ const Calculator = () => {
     const rows: any = [];
     for (let i = 0; i <= 4; i++) {
       rows.push(
-        <td key={i}>{formatProbability(hgeo(values.deck.length, count, 4, i))}</td>
+        <td key={i}>
+          {formatProbability(hgeo(values.deck.length, count, 4, i))}
+        </td>
       );
     }
     return rows;
@@ -127,15 +129,17 @@ const Calculator = () => {
     let earthHero = false;
     let lightningHero = false;
     let fangOrCindraHero = false;
-    
+
     // Try to find hero in cardDictionary first
     if (heroId && data?.deck?.cardDictionary) {
-      const heroCard = data.deck.cardDictionary.find((c: CardData) => c.id === heroId);
+      const heroCard = data.deck.cardDictionary.find(
+        (c: CardData) => c.id === heroId
+      );
       if (heroCard?.class) {
-        heroClass = (heroCard.class).trim();
+        heroClass = heroCard.class.trim();
       }
       if (heroCard?.talent) {
-        heroTalent = (heroCard.talent).trim();
+        heroTalent = heroCard.talent.trim();
       }
       if (heroCard?.hasEssenceOfIce) {
         iceHero = true;
@@ -168,13 +172,26 @@ const Calculator = () => {
           if (card.type === 'AA') ++numRunebladeAA;
           else if (card.type === 'A') ++numRunebladeA;
         }
-        if ((classContains(heroClass, 'BRUTE') || classContains(heroClass, 'GUARDIAN')) && card.power !== undefined && card.power >= 6) {
+        if (
+          (classContains(heroClass, 'BRUTE') ||
+            classContains(heroClass, 'GUARDIAN')) &&
+          card.power !== undefined &&
+          card.power >= 6
+        ) {
           ++numPower6Plus;
         }
-        if (classContains(heroClass, 'MECHANOLOGIST') && card.subtype && subtypeContains(card.subtype, 'Item')) {
+        if (
+          classContains(heroClass, 'MECHANOLOGIST') &&
+          card.subtype &&
+          subtypeContains(card.subtype, 'Item')
+        ) {
           ++numItems;
         }
-        if ((classContains(heroClass, 'NECROMANCER') || classContains(heroClass, 'ILLUSIONIST')) && subtypeContains(card.subtype, 'Ally')) {
+        if (
+          (classContains(heroClass, 'NECROMANCER') ||
+            classContains(heroClass, 'ILLUSIONIST')) &&
+          subtypeContains(card.subtype, 'Ally')
+        ) {
           ++numAllies;
         }
         if (classContains(heroClass, 'ASSASSIN') && card.hasStealth) {
@@ -186,7 +203,10 @@ const Calculator = () => {
         if (classContains(heroClass, 'MECHANOLOGIST') && card.hasBoost) {
           ++numBoost;
         }
-        if (talentContains(heroTalent, 'DRACONIC') && talentContains(card.talent, 'DRACONIC')) {
+        if (
+          talentContains(heroTalent, 'DRACONIC') &&
+          talentContains(card.talent, 'DRACONIC')
+        ) {
           ++numDraconic;
         }
         if (talentContains(card.talent, 'ICE') && iceHero) {
@@ -201,22 +221,37 @@ const Calculator = () => {
         if (talentContains(card.talent, 'LIGHTNING') && lightningHero) {
           ++numLightning;
         }
-        if ((classContains(heroClass, 'ASSASSIN') || fangOrCindraHero) && card.hasMark) {
+        if (
+          (classContains(heroClass, 'ASSASSIN') || fangOrCindraHero) &&
+          card.hasMark
+        ) {
           ++numMark;
         }
-        if (typeContains(card.type, 'Instant') && heroId?.toLowerCase().includes('oscilio')) {
+        if (
+          typeContains(card.type, 'Instant') &&
+          heroId?.toLowerCase().includes('oscilio')
+        ) {
           ++numInstant;
         }
-        if (typeContains(card.type, 'Attack Reaction') && heroId?.toLowerCase().includes('dorinthea')) {
+        if (
+          typeContains(card.type, 'Attack Reaction') &&
+          heroId?.toLowerCase().includes('dorinthea')
+        ) {
           ++numAtkReaction;
         }
         if (card.hasCharge && heroId?.toLowerCase().includes('boltyn')) {
           ++numCharge;
         }
-        if (card.hasSuspense && heroId?.toLowerCase().includes('pleiades') || heroId?.toLowerCase().includes('lyath')) {
+        if (
+          (card.hasSuspense && heroId?.toLowerCase().includes('pleiades')) ||
+          heroId?.toLowerCase().includes('lyath')
+        ) {
           ++numSuspense;
         }
-        if (subtypeContains(card.subtype, 'Evo') && heroId?.toLowerCase().includes('teklovossen')) {
+        if (
+          subtypeContains(card.subtype, 'Evo') &&
+          heroId?.toLowerCase().includes('teklovossen')
+        ) {
           ++numEvo;
         }
       }

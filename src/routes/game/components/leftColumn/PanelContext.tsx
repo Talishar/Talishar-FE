@@ -14,7 +14,14 @@ export function PanelProvider({ children }: { children: React.ReactNode }) {
   const [isManualModeOpen, setIsManualModeOpen] = useState(false);
 
   return (
-    <PanelContext.Provider value={{ isDevToolOpen, setIsDevToolOpen, isManualModeOpen, setIsManualModeOpen }}>
+    <PanelContext.Provider
+      value={{
+        isDevToolOpen,
+        setIsDevToolOpen,
+        isManualModeOpen,
+        setIsManualModeOpen
+      }}
+    >
       {children}
     </PanelContext.Provider>
   );

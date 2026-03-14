@@ -1,5 +1,8 @@
 import { useState, useEffect } from 'react';
-import { useGetGameListQuery, useGetFriendsListQuery } from 'features/api/apiSlice';
+import {
+  useGetGameListQuery,
+  useGetFriendsListQuery
+} from 'features/api/apiSlice';
 import styles from './GameList.module.scss';
 import InProgressGame from '../inProgressGame';
 import Filter from '../filter';
@@ -55,14 +58,20 @@ export interface GameListResponse {
 const GAME_LIST_POLLING_INTERVAL = 10000; // in ms (10 seconds)
 
 const GameList = () => {
-  const [cookies, setCookie, removeCookie] = useCookies(['experimental', 'gameFilters', 'gameFriendsFilter']);
+  const [cookies, setCookie, removeCookie] = useCookies([
+    'experimental',
+    'gameFilters',
+    'gameFriendsFilter'
+  ]);
   const [isTabActive, setIsTabActive] = useState(true);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
-  
-  const { data, isLoading, error, refetch, isFetching } =
-    useGetGameListQuery(undefined, {
-      pollingInterval: isTabActive ? GAME_LIST_POLLING_INTERVAL : 0, // Stop polling when tab inactive
-    });
+
+  const { data, isLoading, error, refetch, isFetching } = useGetGameListQuery(
+    undefined,
+    {
+      pollingInterval: isTabActive ? GAME_LIST_POLLING_INTERVAL : 0 // Stop polling when tab inactive
+    }
+  );
   const { data: friendsData } = useGetFriendsListQuery(undefined);
   const { isLoggedIn } = useAuth();
   const { blockedUsers } = useBlockedUsers();
@@ -70,9 +79,12 @@ const GameList = () => {
   useEffect(() => {
     if (friendsData?.friends) {
       try {
-        const friendsList = friendsData.friends.map(f => f.username);
+        const friendsList = friendsData.friends.map((f) => f.username);
         sessionStorage.setItem('friendsList', JSON.stringify(friendsList));
-        console.log('GameList synced friendsList to sessionStorage:', friendsList);
+        console.log(
+          'GameList synced friendsList to sessionStorage:',
+          friendsList
+        );
       } catch (e) {
         console.error('Failed to sync friendsList to sessionStorage:', e);
       }
@@ -81,7 +93,7 @@ const GameList = () => {
 
   const [heroFilter, setHeroFilter] = useState<string[]>([]);
   const [gamesInProgressExpanded, setGamesInProgressExpanded] = useState(true); // Default to open
-  
+
   // Initialize filters from cookies
   const defaultFormats = new Set([
     GAME_FORMAT.BLITZ,
@@ -120,10 +132,12 @@ const GameList = () => {
     GAME_FORMAT_NUMBER.SEALED,
     GAME_FORMAT_NUMBER.DRAFT,
     GAME_FORMAT_NUMBER.PRECON,
-    GAME_FORMAT_NUMBER.OPEN,
+    GAME_FORMAT_NUMBER.OPEN
   ]);
 
-  const [inProgressFormatFilters, setInProgressFormatFilters] = useState<Set<string>>(() => {
+  const [inProgressFormatFilters, setInProgressFormatFilters] = useState<
+    Set<string>
+  >(() => {
     // Try to load from cookies first, then fallback to localStorage
     if (cookies.gameFilters) {
       try {
@@ -213,13 +227,20 @@ const GameList = () => {
 
   // Save format filters to cookies and localStorage when they change
   useEffect(() => {
-    setCookie('gameFilters', JSON.stringify(Array.from(inProgressFormatFilters)), {
-      path: '/',
-      maxAge: 86400 * 30, // 30 days
-    });
+    setCookie(
+      'gameFilters',
+      JSON.stringify(Array.from(inProgressFormatFilters)),
+      {
+        path: '/',
+        maxAge: 86400 * 30 // 30 days
+      }
+    );
     // Also save to localStorage as backup
     try {
-      localStorage.setItem('gameFilters', JSON.stringify(Array.from(inProgressFormatFilters)));
+      localStorage.setItem(
+        'gameFilters',
+        JSON.stringify(Array.from(inProgressFormatFilters))
+      );
     } catch {
       console.error('Failed to save filters to localStorage');
     }
@@ -229,11 +250,14 @@ const GameList = () => {
   useEffect(() => {
     setCookie('gameFriendsFilter', String(includeFriendsGames), {
       path: '/',
-      maxAge: 86400 * 30, // 30 days
+      maxAge: 86400 * 30 // 30 days
     });
     // Also save to localStorage as backup
     try {
-      localStorage.setItem('gameFriendsFilter', JSON.stringify(includeFriendsGames));
+      localStorage.setItem(
+        'gameFriendsFilter',
+        JSON.stringify(includeFriendsGames)
+      );
     } catch {
       console.error('Failed to save friends filter to localStorage');
     }
@@ -250,24 +274,26 @@ const GameList = () => {
   const activeHeroIds = new Set<string>();
 
   if (data?.openGames) {
-    data.openGames.forEach(game => {
+    data.openGames.forEach((game) => {
       if (game.p1Hero) activeHeroIds.add(game.p1Hero);
     });
   }
-  
+
   if (data?.gamesInProgress) {
-    data.gamesInProgress.forEach(game => {
+    data.gamesInProgress.forEach((game) => {
       if (game.p1Hero) activeHeroIds.add(game.p1Hero);
       if (game.p2Hero) activeHeroIds.add(game.p2Hero);
     });
   }
-  
-  const filteredHeroOptions = HEROES_OF_RATHE.filter(hero =>
+
+  const filteredHeroOptions = HEROES_OF_RATHE.filter((hero) =>
     activeHeroIds.has(hero.value)
   );
 
   // Create a set of friend usernames for quick lookup
-  const friendUsernames = new Set(friendsData?.friends?.map(f => f.username) || []);
+  const friendUsernames = new Set(
+    friendsData?.friends?.map((f) => f.username) || []
+  );
 
   // Filter games
   const filteredGamesInProgress = data?.gamesInProgress
@@ -276,15 +302,19 @@ const GameList = () => {
         if (game.gameCreator && blockedUsers.includes(game.gameCreator)) {
           return false;
         }
-        
+
         // Hide friends-only private games (visibility "2") - these can't be spectated
-        if (game.visibility === "2") {
+        if (game.visibility === '2') {
           return false;
         }
-        
+
         // Apply hero filter
         if (heroFilter.length > 0) {
-          if (!heroFilter.find((hero) => hero === game.p1Hero || hero === game.p2Hero)) {
+          if (
+            !heroFilter.find(
+              (hero) => hero === game.p1Hero || hero === game.p2Hero
+            )
+          ) {
             return false;
           }
         }
@@ -293,24 +323,26 @@ const GameList = () => {
         if (!inProgressFormatFilters.has(game.format)) {
           return false;
         }
-        
+
         return true;
       })
     : [];
 
   // Separate friend games from other games
-  const allFriendGames = filteredGamesInProgress.filter(game =>
-    (game.gameCreator && friendUsernames.has(game.gameCreator)) ||
-    (game.p2Username && friendUsernames.has(game.p2Username))
-  );
-  
-  const friendGamesInProgress = includeFriendsGames ? allFriendGames : [];
-  
-  const otherGamesInProgress = filteredGamesInProgress.filter(game =>
-    !(
+  const allFriendGames = filteredGamesInProgress.filter(
+    (game) =>
       (game.gameCreator && friendUsernames.has(game.gameCreator)) ||
       (game.p2Username && friendUsernames.has(game.p2Username))
-    )
+  );
+
+  const friendGamesInProgress = includeFriendsGames ? allFriendGames : [];
+
+  const otherGamesInProgress = filteredGamesInProgress.filter(
+    (game) =>
+      !(
+        (game.gameCreator && friendUsernames.has(game.gameCreator)) ||
+        (game.p2Username && friendUsernames.has(game.p2Username))
+      )
   );
 
   const sortedOpenGames = data?.openGames
@@ -320,14 +352,17 @@ const GameList = () => {
           if (game.gameCreator && blockedUsers.includes(game.gameCreator)) {
             return false;
           }
-          
+
           // Hide friends-only private games (visibility "2") - these can't be spectated
-          if (game.visibility === "2") {
+          if (game.visibility === '2') {
             return false;
           }
-          
+
           // Apply hero filter
-          if (heroFilter.length === 0 || heroFilter.find((hero) => hero === game.p1Hero)) {
+          if (
+            heroFilter.length === 0 ||
+            heroFilter.find((hero) => hero === game.p1Hero)
+          ) {
             // Apply format filter
             return inProgressFormatFilters.has(game.format);
           }
@@ -371,7 +406,7 @@ const GameList = () => {
     [GAME_FORMAT.SEALED]: GAME_FORMAT_NUMBER.SEALED,
     [GAME_FORMAT.DRAFT]: GAME_FORMAT_NUMBER.DRAFT,
     [GAME_FORMAT.PRECON]: GAME_FORMAT_NUMBER.PRECON,
-    [GAME_FORMAT.OPEN]: GAME_FORMAT_NUMBER.OPEN,
+    [GAME_FORMAT.OPEN]: GAME_FORMAT_NUMBER.OPEN
   };
 
   return (
@@ -389,9 +424,11 @@ const GameList = () => {
       <div className={styles.titleDiv}>
         <h3 className={styles.title}>
           Games
-          <span 
+          <span
             className={styles.autoRefreshText}
-            title={`Auto-refreshes every ${GAME_LIST_POLLING_INTERVAL / 1000} seconds`}
+            title={`Auto-refreshes every ${
+              GAME_LIST_POLLING_INTERVAL / 1000
+            } seconds`}
           >
             (Auto-refresh: {GAME_LIST_POLLING_INTERVAL / 1000}s)
           </span>
@@ -420,27 +457,66 @@ const GameList = () => {
       ) : null}
       {!isLoading && !error && (
         <>
-          <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', alignItems: isMobile ? 'stretch' : 'center', justifyContent: isMobile ? 'flex-start' : 'space-between', gap: '1em', marginBottom: '1em', flexWrap: isMobile ? 'nowrap' : 'wrap' }}>
-            <div style={{ flex: isMobile ? '0 0 100%' : '1 1 auto', minWidth: isMobile ? '100%' : '250px', width: isMobile ? '100%' : 'auto' }}>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: isMobile ? 'column' : 'row',
+              alignItems: isMobile ? 'stretch' : 'center',
+              justifyContent: isMobile ? 'flex-start' : 'space-between',
+              gap: '1em',
+              marginBottom: '1em',
+              flexWrap: isMobile ? 'nowrap' : 'wrap'
+            }}
+          >
+            <div
+              style={{
+                flex: isMobile ? '0 0 100%' : '1 1 auto',
+                minWidth: isMobile ? '100%' : '250px',
+                width: isMobile ? '100%' : 'auto'
+              }}
+            >
               <Filter
                 setHeroFilter={setHeroFilter}
                 heroOptions={filteredHeroOptions}
               />
             </div>
-            <div style={{ flex: isMobile ? '0 0 100%' : '0 0 auto', minWidth: isMobile ? '100%' : 'auto', width: isMobile ? '100%' : 'auto' }}>
+            <div
+              style={{
+                flex: isMobile ? '0 0 100%' : '0 0 auto',
+                minWidth: isMobile ? '100%' : 'auto',
+                width: isMobile ? '100%' : 'auto'
+              }}
+            >
               <GameFilter
                 selectedFormats={inProgressFormatFilters}
                 onFilterChange={handleInProgressFilterChange}
                 formatOptions={[
-                  { label: 'Classic Constructed', value: GAME_FORMAT.CLASSIC_CONSTRUCTED },
-                  { label: 'Competitive CC', value: GAME_FORMAT.COMPETITIVE_CC },
+                  {
+                    label: 'Classic Constructed',
+                    value: GAME_FORMAT.CLASSIC_CONSTRUCTED
+                  },
+                  {
+                    label: 'Competitive CC',
+                    value: GAME_FORMAT.COMPETITIVE_CC
+                  },
                   { label: 'Living Legend', value: GAME_FORMAT.LLCC },
-                  { label: 'Competitive LL', value: GAME_FORMAT.COMPETITIVE_LL },
+                  {
+                    label: 'Competitive LL',
+                    value: GAME_FORMAT.COMPETITIVE_LL
+                  },
                   { label: 'Silver Age', value: GAME_FORMAT.SAGE },
-                  { label: 'Competitive Silver Age', value: GAME_FORMAT.COMPETITIVE_SAGE },
+                  {
+                    label: 'Competitive Silver Age',
+                    value: GAME_FORMAT.COMPETITIVE_SAGE
+                  },
                   { label: 'Future SAGE', value: GAME_FORMAT.OPEN_SAGE },
                   { label: 'Future CC', value: GAME_FORMAT.OPEN_CC },
-                  { label: 'Other Formats', value: 'otherFormats', isGroup: true, groupValues: otherFormats },
+                  {
+                    label: 'Other Formats',
+                    value: 'otherFormats',
+                    isGroup: true,
+                    groupValues: otherFormats
+                  }
                 ]}
                 includeFriendsGames={includeFriendsGames}
                 onFriendsGamesChange={handleFriendsGamesFilterChange}
@@ -532,13 +608,33 @@ const GameList = () => {
           />
           {data != undefined && (
             <div data-testid="games-in-progress" ref={parent}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '0.5em', gap: '0.5em', flexWrap: 'wrap', position: 'relative', width: '100%' }}>
-                <h4 
-                  className={styles.subSectionTitle} 
-                  onClick={() => setGamesInProgressExpanded(!gamesInProgressExpanded)}
-                  style={{ cursor: 'pointer', userSelect: 'none', margin: 0, flex: '1 1 auto', textAlign: 'center' }}
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginBottom: '0.5em',
+                  gap: '0.5em',
+                  flexWrap: 'wrap',
+                  position: 'relative',
+                  width: '100%'
+                }}
+              >
+                <h4
+                  className={styles.subSectionTitle}
+                  onClick={() =>
+                    setGamesInProgressExpanded(!gamesInProgressExpanded)
+                  }
+                  style={{
+                    cursor: 'pointer',
+                    userSelect: 'none',
+                    margin: 0,
+                    flex: '1 1 auto',
+                    textAlign: 'center'
+                  }}
                 >
-                  Games in Progress:&nbsp;<span>{data.gameInProgressCount}</span>
+                  Games in Progress:&nbsp;
+                  <span>{data.gameInProgressCount}</span>
                 </h4>
               </div>
               {gamesInProgressExpanded && (
@@ -546,131 +642,161 @@ const GameList = () => {
                   {friendGamesInProgress.length > 0 && (
                     <>
                       <InProgressGameList
-                        gameList={friendGamesInProgress.sort((a, b) => b.gameName - a.gameName)}
+                        gameList={friendGamesInProgress.sort(
+                          (a, b) => b.gameName - a.gameName
+                        )}
                         name="Friends' Games"
                         isFriendsSection={true}
                         friendUsernames={friendUsernames}
                       />
                     </>
                   )}
-              <InProgressGameList
-                gameList={[
-                  ...otherGamesInProgress.filter((game) =>
-                    [GAME_FORMAT.BLITZ, GAME_FORMAT_NUMBER.BLITZ].includes(game.format)
-                  ),
-                ].sort((a, b) => b.gameName - a.gameName)}
-                name="Blitz"
-                friendUsernames={friendUsernames}
-              />
-              <InProgressGameList
-                gameList={[
-                  ...otherGamesInProgress.filter((game) =>
-                    [GAME_FORMAT.COMPETITIVE_BLITZ, GAME_FORMAT_NUMBER.COMPETITIVE_BLITZ].includes(
-                      game.format
-                    )
-                  ),
-                ].sort((a, b) => b.gameName - a.gameName)}
-                name="Competitive Blitz"
-                friendUsernames={friendUsernames}
-              />
-              <InProgressGameList
-                gameList={[
-                  ...otherGamesInProgress.filter((game) =>
-                    [GAME_FORMAT.CLASSIC_CONSTRUCTED, GAME_FORMAT_NUMBER.CLASSIC_CONSTRUCTED].includes(
-                      game.format
-                    )
-                  ),
-                ].sort((a, b) => b.gameName - a.gameName)}
-                name="Classic Constructed"
-                friendUsernames={friendUsernames}
-              />
-              <InProgressGameList
-                gameList={[
-                  ...otherGamesInProgress.filter((game) =>
-                    [GAME_FORMAT.COMPETITIVE_CC, GAME_FORMAT_NUMBER.COMPETITIVE_CC].includes(
-                      game.format
-                    )
-                  ),
-                ].sort((a, b) => b.gameName - a.gameName)}
-                name="Competitive CC"
-                friendUsernames={friendUsernames}
-              />
-              <InProgressGameList
-                gameList={[
-                  ...otherGamesInProgress.filter((game) =>
-                    [GAME_FORMAT.LLCC, GAME_FORMAT_NUMBER.LLCC].includes(
-                      game.format
-                    )
-                  ),
-                ].sort((a, b) => b.gameName - a.gameName)}
-                name="Living Legend"
-                friendUsernames={friendUsernames}
-              />
-              <InProgressGameList
-                gameList={[
-                  ...otherGamesInProgress.filter((game) =>
-                    [GAME_FORMAT.COMPETITIVE_LL, GAME_FORMAT_NUMBER.COMPETITIVE_LL].includes(
-                      game.format
-                    )
-                  ),
-                ].sort((a, b) => b.gameName - a.gameName)}
-                name="Competitive LL"
-                friendUsernames={friendUsernames}
-              />
-              <InProgressGameList
-                gameList={[
-                  ...otherGamesInProgress.filter((game) =>
-                    [GAME_FORMAT.SAGE, GAME_FORMAT_NUMBER.SAGE].includes(
-                      game.format
-                    )
-                  ),
-                ].sort((a, b) => b.gameName - a.gameName)}
-                name="Silver Age"
-                friendUsernames={friendUsernames}
-              />
-              <InProgressGameList
-                gameList={[
-                  ...otherGamesInProgress.filter((game) =>
-                    [GAME_FORMAT.COMPETITIVE_SAGE, GAME_FORMAT_NUMBER.COMPETITIVE_SAGE].includes(
-                      game.format
-                    )
-                  ),
-                ].sort((a, b) => b.gameName - a.gameName)}
-                name="Competitive Silver Age"
-                friendUsernames={friendUsernames}
-              />
-              <InProgressGameList
-                gameList={[
-                  ...otherGamesInProgress.filter((game) =>
-                    [GAME_FORMAT.OPEN_CC, GAME_FORMAT_NUMBER.OPEN_CC].includes(
-                      game.format
-                    )
-                  ),
-                ].sort((a, b) => b.gameName - a.gameName)}
-                name="Future Classic Constructed"
-                friendUsernames={friendUsernames}
-              />
-              <InProgressGameList
-                gameList={[
-                  ...otherGamesInProgress.filter((game) =>
-                    [GAME_FORMAT.OPEN_SAGE, GAME_FORMAT_NUMBER.OPEN_SAGE].includes(
-                      game.format
-                    )
-                  ),
-                ].sort((a, b) => b.gameName - a.gameName)}
-                name="Future Silver Age"
-                friendUsernames={friendUsernames}
-              />
-              <InProgressGameList
-                gameList={[
-                  ...otherGamesInProgress.filter(
-                    (game) =>
-                      ![GAME_FORMAT.BLITZ, GAME_FORMAT_NUMBER.BLITZ, GAME_FORMAT.COMPETITIVE_CC, GAME_FORMAT.CLASSIC_CONSTRUCTED, GAME_FORMAT_NUMBER.CLASSIC_CONSTRUCTED, GAME_FORMAT_NUMBER.COMPETITIVE_CC, GAME_FORMAT.COMPETITIVE_LL, GAME_FORMAT.LLCC, GAME_FORMAT_NUMBER.LLCC, GAME_FORMAT_NUMBER.COMPETITIVE_LL, GAME_FORMAT.SAGE, GAME_FORMAT_NUMBER.SAGE, GAME_FORMAT.COMPETITIVE_SAGE, GAME_FORMAT_NUMBER.COMPETITIVE_SAGE, GAME_FORMAT.OPEN_SAGE, GAME_FORMAT_NUMBER.OPEN_SAGE, GAME_FORMAT.OPEN_CC, GAME_FORMAT_NUMBER.OPEN_CC].includes(game.format)
-                  ),
-                ].sort((a, b) => b.gameName - a.gameName)}
-                name="Other Formats"
-                friendUsernames={friendUsernames}
-              />
+                  <InProgressGameList
+                    gameList={[
+                      ...otherGamesInProgress.filter((game) =>
+                        [GAME_FORMAT.BLITZ, GAME_FORMAT_NUMBER.BLITZ].includes(
+                          game.format
+                        )
+                      )
+                    ].sort((a, b) => b.gameName - a.gameName)}
+                    name="Blitz"
+                    friendUsernames={friendUsernames}
+                  />
+                  <InProgressGameList
+                    gameList={[
+                      ...otherGamesInProgress.filter((game) =>
+                        [
+                          GAME_FORMAT.COMPETITIVE_BLITZ,
+                          GAME_FORMAT_NUMBER.COMPETITIVE_BLITZ
+                        ].includes(game.format)
+                      )
+                    ].sort((a, b) => b.gameName - a.gameName)}
+                    name="Competitive Blitz"
+                    friendUsernames={friendUsernames}
+                  />
+                  <InProgressGameList
+                    gameList={[
+                      ...otherGamesInProgress.filter((game) =>
+                        [
+                          GAME_FORMAT.CLASSIC_CONSTRUCTED,
+                          GAME_FORMAT_NUMBER.CLASSIC_CONSTRUCTED
+                        ].includes(game.format)
+                      )
+                    ].sort((a, b) => b.gameName - a.gameName)}
+                    name="Classic Constructed"
+                    friendUsernames={friendUsernames}
+                  />
+                  <InProgressGameList
+                    gameList={[
+                      ...otherGamesInProgress.filter((game) =>
+                        [
+                          GAME_FORMAT.COMPETITIVE_CC,
+                          GAME_FORMAT_NUMBER.COMPETITIVE_CC
+                        ].includes(game.format)
+                      )
+                    ].sort((a, b) => b.gameName - a.gameName)}
+                    name="Competitive CC"
+                    friendUsernames={friendUsernames}
+                  />
+                  <InProgressGameList
+                    gameList={[
+                      ...otherGamesInProgress.filter((game) =>
+                        [GAME_FORMAT.LLCC, GAME_FORMAT_NUMBER.LLCC].includes(
+                          game.format
+                        )
+                      )
+                    ].sort((a, b) => b.gameName - a.gameName)}
+                    name="Living Legend"
+                    friendUsernames={friendUsernames}
+                  />
+                  <InProgressGameList
+                    gameList={[
+                      ...otherGamesInProgress.filter((game) =>
+                        [
+                          GAME_FORMAT.COMPETITIVE_LL,
+                          GAME_FORMAT_NUMBER.COMPETITIVE_LL
+                        ].includes(game.format)
+                      )
+                    ].sort((a, b) => b.gameName - a.gameName)}
+                    name="Competitive LL"
+                    friendUsernames={friendUsernames}
+                  />
+                  <InProgressGameList
+                    gameList={[
+                      ...otherGamesInProgress.filter((game) =>
+                        [GAME_FORMAT.SAGE, GAME_FORMAT_NUMBER.SAGE].includes(
+                          game.format
+                        )
+                      )
+                    ].sort((a, b) => b.gameName - a.gameName)}
+                    name="Silver Age"
+                    friendUsernames={friendUsernames}
+                  />
+                  <InProgressGameList
+                    gameList={[
+                      ...otherGamesInProgress.filter((game) =>
+                        [
+                          GAME_FORMAT.COMPETITIVE_SAGE,
+                          GAME_FORMAT_NUMBER.COMPETITIVE_SAGE
+                        ].includes(game.format)
+                      )
+                    ].sort((a, b) => b.gameName - a.gameName)}
+                    name="Competitive Silver Age"
+                    friendUsernames={friendUsernames}
+                  />
+                  <InProgressGameList
+                    gameList={[
+                      ...otherGamesInProgress.filter((game) =>
+                        [
+                          GAME_FORMAT.OPEN_CC,
+                          GAME_FORMAT_NUMBER.OPEN_CC
+                        ].includes(game.format)
+                      )
+                    ].sort((a, b) => b.gameName - a.gameName)}
+                    name="Future Classic Constructed"
+                    friendUsernames={friendUsernames}
+                  />
+                  <InProgressGameList
+                    gameList={[
+                      ...otherGamesInProgress.filter((game) =>
+                        [
+                          GAME_FORMAT.OPEN_SAGE,
+                          GAME_FORMAT_NUMBER.OPEN_SAGE
+                        ].includes(game.format)
+                      )
+                    ].sort((a, b) => b.gameName - a.gameName)}
+                    name="Future Silver Age"
+                    friendUsernames={friendUsernames}
+                  />
+                  <InProgressGameList
+                    gameList={[
+                      ...otherGamesInProgress.filter(
+                        (game) =>
+                          ![
+                            GAME_FORMAT.BLITZ,
+                            GAME_FORMAT_NUMBER.BLITZ,
+                            GAME_FORMAT.COMPETITIVE_CC,
+                            GAME_FORMAT.CLASSIC_CONSTRUCTED,
+                            GAME_FORMAT_NUMBER.CLASSIC_CONSTRUCTED,
+                            GAME_FORMAT_NUMBER.COMPETITIVE_CC,
+                            GAME_FORMAT.COMPETITIVE_LL,
+                            GAME_FORMAT.LLCC,
+                            GAME_FORMAT_NUMBER.LLCC,
+                            GAME_FORMAT_NUMBER.COMPETITIVE_LL,
+                            GAME_FORMAT.SAGE,
+                            GAME_FORMAT_NUMBER.SAGE,
+                            GAME_FORMAT.COMPETITIVE_SAGE,
+                            GAME_FORMAT_NUMBER.COMPETITIVE_SAGE,
+                            GAME_FORMAT.OPEN_SAGE,
+                            GAME_FORMAT_NUMBER.OPEN_SAGE,
+                            GAME_FORMAT.OPEN_CC,
+                            GAME_FORMAT_NUMBER.OPEN_CC
+                          ].includes(game.format)
+                      )
+                    ].sort((a, b) => b.gameName - a.gameName)}
+                    name="Other Formats"
+                    friendUsernames={friendUsernames}
+                  />
                 </>
               )}
             </div>
@@ -679,7 +805,8 @@ const GameList = () => {
       ) : (
         !isLoading && (
           <p>
-            Please <Link to="/user/login">log in</Link> to view open lobbies and spectate games!
+            Please <Link to="/user/login">log in</Link> to view open lobbies and
+            spectate games!
           </p>
         )
       )}
@@ -687,10 +814,15 @@ const GameList = () => {
   );
 };
 
-const InProgressGameList = ({ gameList, name, isFriendsSection, friendUsernames = new Set() }: IInProgressGameList) => {
+const InProgressGameList = ({
+  gameList,
+  name,
+  isFriendsSection,
+  friendUsernames = new Set()
+}: IInProgressGameList) => {
   const [parent] = useAutoAnimate();
   const [isMobile, setIsMobile] = useState(window.innerWidth < 1025);
-  
+
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 1025);
@@ -707,18 +839,40 @@ const InProgressGameList = ({ gameList, name, isFriendsSection, friendUsernames 
 
   return (
     <div className={styles.groupDiv} ref={parent}>
-      <h5 className={styles.subSectionTitle} style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', userSelect: 'none' }}>
+      <h5
+        className={styles.subSectionTitle}
+        style={{
+          cursor: 'pointer',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          userSelect: 'none'
+        }}
+      >
         {name}
       </h5>
       {gameList.map((entry, ix: number) => {
-        const isFriendsGame = isFriendsSection || !!(
-          (entry.gameCreator && friendUsernames.has(entry.gameCreator)) || 
-          (entry.p2Username && friendUsernames.has(entry.p2Username))
+        const isFriendsGame =
+          isFriendsSection ||
+          !!(
+            (entry.gameCreator && friendUsernames.has(entry.gameCreator)) ||
+            (entry.p2Username && friendUsernames.has(entry.p2Username))
+          );
+        const friendName =
+          entry.gameCreator && friendUsernames.has(entry.gameCreator)
+            ? entry.gameCreator
+            : entry.p2Username && friendUsernames.has(entry.p2Username)
+            ? entry.p2Username
+            : undefined;
+        return (
+          <InProgressGame
+            entry={entry}
+            ix={ix}
+            key={entry.gameName}
+            isFriendsGame={isFriendsGame}
+            friendName={friendName}
+          />
         );
-        const friendName = entry.gameCreator && friendUsernames.has(entry.gameCreator) 
-          ? entry.gameCreator 
-          : (entry.p2Username && friendUsernames.has(entry.p2Username) ? entry.p2Username : undefined);
-        return <InProgressGame entry={entry} ix={ix} key={entry.gameName} isFriendsGame={isFriendsGame} friendName={friendName} />;
       })}
     </div>
   );

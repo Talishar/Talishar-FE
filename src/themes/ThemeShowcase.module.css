@@ -144,11 +144,11 @@
   .showcase {
     padding: 1rem;
   }
-  
+
   .themesGrid {
     grid-template-columns: 1fr;
   }
-  
+
   .themeCard {
     padding: 1rem;
   }

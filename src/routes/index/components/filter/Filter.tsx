@@ -16,7 +16,9 @@ const Filter = ({
     return acc;
   }, {} as Record<string, string[]>);
 
-  const uniqueHeroLabels = Object.keys(heroMap).sort((a, b) => a.localeCompare(b));
+  const uniqueHeroLabels = Object.keys(heroMap).sort((a, b) =>
+    a.localeCompare(b)
+  );
 
   const handleSelectHero = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedLabel = e.target.value;
@@ -29,7 +31,11 @@ const Filter = ({
   };
 
   return (
-    <select id="filterByHero" className={styles.filterSelect} onChange={handleSelectHero}>
+    <select
+      id="filterByHero"
+      className={styles.filterSelect}
+      onChange={handleSelectHero}
+    >
       <option value="">Filter by Hero</option>
       {uniqueHeroLabels.map((label) => (
         <option key={label} value={label}>

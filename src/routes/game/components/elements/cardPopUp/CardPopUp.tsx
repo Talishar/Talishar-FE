@@ -32,7 +32,7 @@ export default function CardPopUp({
 
   const handleMouseEnter = () => {
     const cardBackValues = Object.values(CARD_BACK);
-    
+
     if (
       ref.current === null ||
       isHidden === true ||
@@ -55,9 +55,9 @@ export default function CardPopUp({
       cardNumber == 'BEATCHEST' ||
       cardNumber == 'MERIDIANWARD' ||
       cardNumber == 'HIGHTIDE' ||
-      cardNumber == "WATERYGRAVE" || 
-      cardNumber == "DUMMYDISHONORED" ||
-      cardNumber == "HEAVE"
+      cardNumber == 'WATERYGRAVE' ||
+      cardNumber == 'DUMMYDISHONORED' ||
+      cardNumber == 'HEAVE'
     ) {
       return;
     }

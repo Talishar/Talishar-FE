@@ -40,13 +40,13 @@
   0% {
     transform: rotate(0deg);
   }
-  25%{
+  25% {
     transform: rotate(540deg);
   }
-  50%{
+  50% {
     transform: rotate(1080deg);
   }
-  75%{
+  75% {
     transform: rotate(540deg);
   }
   100% {

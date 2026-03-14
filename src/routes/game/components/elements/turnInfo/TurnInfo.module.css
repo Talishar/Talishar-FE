@@ -1,0 +1,39 @@
+.turnInfoContainer {
+  padding: 10px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 220px;
+  margin-top: 10px;
+  margin-bottom: 8px;
+}
+
+.topRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.turnNumberSmall {
+  font-size: 0.85em;
+  opacity: 0.7;
+  text-align: left;
+}
+
+.timer {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 1em;
+  text-align: right;
+  opacity: 0.7;
+}
+
+.playerName {
+  font-size: 1.5em;
+  font-weight: bold;
+  color: #d4af37;
+  text-align: center;
+}

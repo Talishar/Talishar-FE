@@ -40,7 +40,7 @@ export default function PlayerNoteModal({
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
         <div className={styles.header}>
           <h2>Note for {playerName}</h2>
-          <button 
+          <button
             className={styles.closeButton}
             onClick={handleCancel}
             title="Close"
@@ -57,21 +57,13 @@ export default function PlayerNoteModal({
           maxLength={200}
         />
 
-        <div className={styles.charCount}>
-          {noteText.length}/200
-        </div>
+        <div className={styles.charCount}>{noteText.length}/200</div>
 
         <div className={styles.footer}>
-          <button
-            className={styles.buttonCancel}
-            onClick={handleCancel}
-          >
+          <button className={styles.buttonCancel} onClick={handleCancel}>
             Cancel
           </button>
-          <button
-            className={styles.buttonSave}
-            onClick={handleSave}
-          >
+          <button className={styles.buttonSave} onClick={handleSave}>
             Save Note
           </button>
         </div>

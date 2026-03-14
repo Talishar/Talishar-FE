@@ -34,16 +34,16 @@
 }
 
 @media only screen and (max-width: 768px) {
-.gem {
-  width: 2.5vh;
-  height: 2.5vh;
-}
+  .gem {
+    width: 2.5vh;
+    height: 2.5vh;
+  }
 
-.active {
-  height: 2.5vh;
-}
+  .active {
+    height: 2.5vh;
+  }
 
-.inactive {
-  height: 2.5vh;
-}
+  .inactive {
+    height: 2.5vh;
+  }
 }

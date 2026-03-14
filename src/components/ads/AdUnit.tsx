@@ -9,7 +9,7 @@ interface AdUnitProps {
 /**
  * AdUnit Component
  * Renders a RevContent ad placement
- * 
+ *
  * Available placements:
  * - left-rail-1 (300x250)
  * - left-rail-2 (300x600)
@@ -19,13 +19,11 @@ interface AdUnitProps {
  * - leaderboard-1, leaderboard-2, etc. (728x90)
  * - mobile-unit-1, mobile-unit-2, etc. (300x250)
  */
-export const AdUnit: React.FC<AdUnitProps> = ({ placement, className = '' }) => {
-  return (
-    <div 
-      className={`ad-unit ${className}`}
-      data-ad={placement}
-    />
-  );
+export const AdUnit: React.FC<AdUnitProps> = ({
+  placement,
+  className = ''
+}) => {
+  return <div className={`ad-unit ${className}`} data-ad={placement} />;
 };
 
 export default AdUnit;

@@ -12,7 +12,7 @@
   z-index: 950;
   user-select: auto;
   background: var(--near-black);
-  border-radius:  10px;
+  border-radius: 10px;
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -58,7 +58,7 @@
   color: var(--theme-primary);
   font-size: 1.2em;
   font-weight: 600;
-  margin: 0 0 .25rem 0;
+  margin: 0 0 0.25rem 0;
 }
 
 .infoBox {
@@ -137,7 +137,7 @@
   color: var(--near-black);
 }
 
-.tooltipIconBreakdown{
+.tooltipIconBreakdown {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -285,15 +285,8 @@
   color: var(--theme-primary);
   font-weight: 700;
   font-size: 1.1em;
-  text-shadow: 
-    -1px -1px 0 #000,
-    1px -1px 0 #000,
-    -1px 1px 0 #000,
-    1px 1px 0 #000,
-    -2px 0 0 #000,
-    2px 0 0 #000,
-    0 -2px 0 #000,
-    0 2px 0 #000;
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000,
+    1px 1px 0 #000, -2px 0 0 #000, 2px 0 0 #000, 0 -2px 0 #000, 0 2px 0 #000;
   z-index: 10;
 }
 
@@ -392,11 +385,11 @@
   white-space: nowrap;
 }
 
-.cardTable thead th[style*="cursor: pointer"] {
+.cardTable thead th[style*='cursor: pointer'] {
   transition: background-color 0.2s, color 0.2s;
 }
 
-.cardTable thead th[style*="cursor: pointer"]:hover {
+.cardTable thead th[style*='cursor: pointer']:hover {
   background: var(--theme-primary-focus);
   color: var(--white);
 }
@@ -526,7 +519,7 @@
 .tableContainer {
   overflow-x: auto;
   overflow-y: auto;
-  max-height: none; 
+  max-height: none;
   border-radius: 6px;
   background: rgba(0, 0, 0, 0.2);
   flex: 1;
@@ -663,7 +656,8 @@
   }
 
   @keyframes scrollHint {
-    0%, 100% {
+    0%,
+    100% {
       opacity: 0.6;
     }
     50% {
@@ -684,10 +678,10 @@
     font-size: 1em;
   }
 
-  .firstHeadersStats{
+  .firstHeadersStats {
     display: none !important;
   }
-  
+
   .card {
     display: none;
   }
@@ -754,7 +748,6 @@
     height: 160px;
     font-size: 0.9em;
   }
-
 }
 
 @media (max-width: 480px) {
@@ -780,7 +773,7 @@
     font-size: 1em;
   }
 
-  .firstHeadersStats{
+  .firstHeadersStats {
     display: none !important;
   }
 

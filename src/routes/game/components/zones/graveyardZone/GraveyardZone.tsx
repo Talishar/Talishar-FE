@@ -10,14 +10,19 @@ import * as optConst from 'features/options/constants';
 export const GraveyardZone = React.memo((prop: Displayrow) => {
   const { isPlayer } = prop;
   const dispatch = useAppDispatch();
-  const settingsData = useAppSelector((state: RootState) => state.settings.entities);
-  const alwaysShowCounters = String(settingsData?.[optConst.ALWAYS_SHOW_COUNTERS]?.value) === '1';
+  const settingsData = useAppSelector(
+    (state: RootState) => state.settings.entities
+  );
+  const alwaysShowCounters =
+    String(settingsData?.[optConst.ALWAYS_SHOW_COUNTERS]?.value) === '1';
 
   const graveyardZone = useAppSelector((state: RootState) =>
     isPlayer ? state.game.playerOne.Graveyard : state.game.playerTwo.Graveyard
   );
 
-  const cardListFocus = useAppSelector((state: RootState) => state.game.cardListFocus);
+  const cardListFocus = useAppSelector(
+    (state: RootState) => state.game.cardListFocus
+  );
 
   if (graveyardZone === undefined || graveyardZone.length === 0) {
     return <div className={styles.graveyardZone}>Graveyard</div>;
@@ -47,7 +52,9 @@ export const GraveyardZone = React.memo((prop: Displayrow) => {
   const cardToDisplay = { ...graveyardZone[0], borderColor: '' };
 
   // Count only face-up cards (overlay !== 'disabled')
-  const faceUpCount = graveyardZone.filter(card => card.overlay !== 'disabled').length;
+  const faceUpCount = graveyardZone.filter(
+    (card) => card.overlay !== 'disabled'
+  ).length;
   const isMobileOrTablet = window.innerWidth <= 1024;
   const totalCards = graveyardZone.length;
   const layerOffsetY = 0.25; // pixels per layer (down)
@@ -59,18 +66,30 @@ export const GraveyardZone = React.memo((prop: Displayrow) => {
     <div className={styles.graveyardZone} onClick={graveyardZoneDisplay}>
       <div className={styles.zoneStack}>
         {/* Render background layers for 3D effect - only on desktop */}
-        {!isMobileOrTablet && Array.from({ length: totalCards - 1 }).map((_, index) => (
-          <div
-            key={`layer-${index}`}
-            className={styles.zoneLayer}
-            style={{
-              transform: `translateY(${baseOffsetY}px) translateX(${baseOffsetX}px) translateY(${(index + 1) * layerOffsetY}px) translateX(${(index + 1) * layerOffsetX}px)`,
-              zIndex: totalCards - index - 1
-            }}
-          />
-        ))}
+        {!isMobileOrTablet &&
+          Array.from({ length: totalCards - 1 }).map((_, index) => (
+            <div
+              key={`layer-${index}`}
+              className={styles.zoneLayer}
+              style={{
+                transform: `translateY(${baseOffsetY}px) translateX(${baseOffsetX}px) translateY(${
+                  (index + 1) * layerOffsetY
+                }px) translateX(${(index + 1) * layerOffsetX}px)`,
+                zIndex: totalCards - index - 1
+              }}
+            />
+          ))}
         {/* Main card on top */}
-        <div className={styles.cardWrapper} style={!isMobileOrTablet ? { transform: `translateY(${baseOffsetY}px) translateX(${baseOffsetX}px)` } : {}}>
+        <div
+          className={styles.cardWrapper}
+          style={
+            !isMobileOrTablet
+              ? {
+                  transform: `translateY(${baseOffsetY}px) translateX(${baseOffsetX}px)`
+                }
+              : {}
+          }
+        >
           <CardDisplay
             card={cardToDisplay}
             isPlayer={isPlayer}

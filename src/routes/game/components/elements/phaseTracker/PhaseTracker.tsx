@@ -28,7 +28,7 @@ export default function PhaseTracker() {
   return (
     <div className={styles.phaseTrackerContainer}>
       <div className={styles.phaseTrackerTopContainer} />
-        <PhaseTrackerWidget phase={phaseEnum} />
+      <PhaseTrackerWidget phase={phaseEnum} />
       <div className={styles.phaseTrackerBottomContainer} />
     </div>
   );

@@ -19,13 +19,14 @@ export const VisualSlider: React.FC<VisualSliderProps> = ({
   unit = '%'
 }) => {
   const displayValue = Math.floor(value * 100);
-  
+
   return (
     <div className={styles.visualSettingItem}>
       <div className={styles.visualSettingHeader}>
         <span className={styles.visualSettingLabel}>{label}</span>
         <span className={styles.visualSettingValue}>
-          {displayValue}{unit}
+          {displayValue}
+          {unit}
         </span>
       </div>
       <div className={styles.visualSettingControl}>
@@ -55,22 +56,20 @@ export const VisualPreset: React.FC<VisualPresetProps> = ({
   onChange
 }) => {
   const displayValue = Math.floor(currentValue * 100);
-  
+
   return (
     <div className={styles.visualSettingItem}>
       <div className={styles.visualSettingHeader}>
         <span className={styles.visualSettingLabel}>{label}</span>
-        <span className={styles.visualSettingValue}>
-          {displayValue}%
-        </span>
+        <span className={styles.visualSettingValue}>{displayValue}%</span>
       </div>
       <div className={styles.presetButtons}>
         {presets.map((preset) => {
           const isActive = Math.abs(currentValue - preset.value) < 0.01;
-          const buttonClass = isActive 
+          const buttonClass = isActive
             ? `${styles.presetButton} ${styles.presetButtonActive}`
             : styles.presetButton;
-          
+
           return (
             <button
               key={preset.value}

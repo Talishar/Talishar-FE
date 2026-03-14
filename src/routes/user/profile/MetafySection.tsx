@@ -18,7 +18,8 @@ const MetafySection: React.FC<MetafySectionProps> = ({
   className
 }) => {
   const [showCommunities, setShowCommunities] = useState(false);
-  const [refreshMetafyCommunities, { isLoading: isRefreshing }] = useRefreshMetafyCommunitiesMutation();
+  const [refreshMetafyCommunities, { isLoading: isRefreshing }] =
+    useRefreshMetafyCommunitiesMutation();
 
   const handleDisconnect = async () => {
     // For now, we'll show a placeholder message
@@ -32,24 +33,36 @@ const MetafySection: React.FC<MetafySectionProps> = ({
     if (isRefreshing) return;
     try {
       await refreshMetafyCommunities().unwrap();
-      toast.success('Metafy communities refreshed!', { position: 'top-center' });
+      toast.success('Metafy communities refreshed!', {
+        position: 'top-center'
+      });
     } catch (err: any) {
       const status = err?.status;
       const errorCode = err?.data?.error;
       // Token expired or not linked — redirect to OAuth re-auth
-      if (status === 401 || errorCode === 'token_expired' || errorCode === 'no_access_token') {
-        toast('Redirecting to re-connect your Metafy account...', { position: 'top-center' });
+      if (
+        status === 401 ||
+        errorCode === 'token_expired' ||
+        errorCode === 'no_access_token'
+      ) {
+        toast('Redirecting to re-connect your Metafy account...', {
+          position: 'top-center'
+        });
         if (metafyInfo) {
           window.location.href = metafyInfo;
         }
       } else {
-        toast.error('Failed to refresh Metafy data. Please try again.', { position: 'top-center' });
+        toast.error('Failed to refresh Metafy data. Please try again.', {
+          position: 'top-center'
+        });
       }
     }
   };
 
   // Helper function to determine community type
-  const getCommunityType = (community: MetafyCommunity): 'owned' | 'supported' | undefined => {
+  const getCommunityType = (
+    community: MetafyCommunity
+  ): 'owned' | 'supported' | undefined => {
     // If type is explicitly set, use it
     if (community.type) {
       return community.type;
@@ -72,7 +85,9 @@ const MetafySection: React.FC<MetafySectionProps> = ({
           <p>
             You have linked your Metafy account. <br />
             <a href={metafyInfo ?? '#'} onClick={handleRefresh}>
-              {isRefreshing ? 'Refreshing...' : 'Refresh your Metafy connection'}
+              {isRefreshing
+                ? 'Refreshing...'
+                : 'Refresh your Metafy connection'}
             </a>
           </p>
           <button
@@ -86,17 +101,23 @@ const MetafySection: React.FC<MetafySectionProps> = ({
             <div className={styles.metafyCommunitiesList}>
               {metafyCommunities && metafyCommunities.length > 0 ? (
                 <div>
-                  <div className={styles.metafyCommunitiesHeader}>Your Communities:</div>
+                  <div className={styles.metafyCommunitiesHeader}>
+                    Your Communities:
+                  </div>
                   {metafyCommunities.map((community, index) => {
                     const communityType = getCommunityType(community);
                     const isOwned = communityType === 'owned';
-                    const isSupported = communityType === 'supported' || (!communityType && metafyCommunities.length > 0);
-                    
+                    const isSupported =
+                      communityType === 'supported' ||
+                      (!communityType && metafyCommunities.length > 0);
+
                     return (
                       <div
                         key={community.id || index}
                         className={`${styles.metafyCommunityItem} ${
-                          isOwned ? styles.metafyCommunityOwned : styles.metafyCommunitySupported
+                          isOwned
+                            ? styles.metafyCommunityOwned
+                            : styles.metafyCommunitySupported
                         }`}
                       >
                         {isOwned && (
@@ -111,11 +132,16 @@ const MetafySection: React.FC<MetafySectionProps> = ({
                         )}
                         {community.logo_url && (
                           <div className={styles.metafyCommunityLogo}>
-                            <img src={community.logo_url} alt={community.title} />
+                            <img
+                              src={community.logo_url}
+                              alt={community.title}
+                            />
                           </div>
                         )}
                         <div className={styles.metafyCommunityName}>
-                          {community.title || community.name || 'Unnamed Community'}
+                          {community.title ||
+                            community.name ||
+                            'Unnamed Community'}
                         </div>
                         {community.description && (
                           <div className={styles.metafyCommunityDescription}>
@@ -142,7 +168,8 @@ const MetafySection: React.FC<MetafySectionProps> = ({
                 </div>
               ) : (
                 <div className={styles.metafyNoCommunities}>
-                  No communities found. Community data will appear here once available.
+                  No communities found. Community data will appear here once
+                  available.
                 </div>
               )}
             </div>
@@ -154,4 +181,3 @@ const MetafySection: React.FC<MetafySectionProps> = ({
 };
 
 export default MetafySection;
-

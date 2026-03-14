@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import styles from './timer.module.css';
-import { FaRegClock } from "react-icons/fa";
+import { FaRegClock } from 'react-icons/fa';
 
 const getGameIdFromUrl = () => {
   const url = window.location.href;
@@ -29,10 +29,10 @@ const cleanupOldCookies = () => {
 export default function Timer() {
   const gameId = getGameIdFromUrl();
   const storageKey = `${STORAGE_KEY_PREFIX}${gameId}`;
-  
+
   // Initialize from localStorage (persists across browser sessions)
-  const initialTimer = localStorage.getItem(storageKey) 
-    ? parseInt(localStorage.getItem(storageKey)!) 
+  const initialTimer = localStorage.getItem(storageKey)
+    ? parseInt(localStorage.getItem(storageKey)!)
     : 0;
   const [timer, setTimer] = useState(initialTimer);
 
@@ -61,22 +61,24 @@ export default function Timer() {
     const hrs = ~~(duration / 3600);
     const mins = ~~((duration % 3600) / 60);
     const secs = ~~duration % 60;
-  
+
     let ret = '';
-  
+
     if (hrs > 0) {
       ret += '' + hrs + ':' + (mins < 10 ? '0' : '');
     }
-  
+
     ret += '' + mins + ':' + (secs < 10 ? '0' : '');
     ret += '' + secs;
-  
+
     return ret;
   }
 
   return (
     <div className={styles.timerStyle}>
-      <div><FaRegClock /> {fancyTimeFormat(timer)}</div>
+      <div>
+        <FaRegClock /> {fancyTimeFormat(timer)}
+      </div>
     </div>
   );
 }

@@ -30,7 +30,7 @@ export const ForgottenPasswordForm = () => {
   const onSubmit: SubmitHandler<ForgottenPasswordType> = async (values) => {
     try {
       const resp = await forgottenPassword(values).unwrap();
-      
+
       // TODO change this to check statusCode, but we currently don't return it here
       if (resp.message === 'Password reset email sent.') {
         toast.success('Password reset email sent. Please check your email.', {

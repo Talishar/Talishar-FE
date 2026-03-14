@@ -18,24 +18,26 @@ export default function ReplayPanel() {
 
   return (
     <>
-      <button 
+      <button
         className={`${styles.replayTab} ${isOpen ? styles.hidden : ''}`}
         onClick={() => setIsOpen(!isOpen)}
         title="Toggle Replay Controls"
       >
         Replay
       </button>
-      {isOpen && <ReplayContent gameInfo={gameInfo} onClose={() => setIsOpen(false)} />}
+      {isOpen && (
+        <ReplayContent gameInfo={gameInfo} onClose={() => setIsOpen(false)} />
+      )}
     </>
   );
 }
 
-function ReplayContent({ 
-  gameInfo, 
-  onClose 
-}: { 
-  gameInfo: any; 
-  onClose: () => void; 
+function ReplayContent({
+  gameInfo,
+  onClose
+}: {
+  gameInfo: any;
+  onClose: () => void;
 }) {
   const turnInputId = useId();
   const [turnNumber, setTurnNumber] = useState<string>('0');
@@ -47,7 +49,12 @@ function ReplayContent({
     setIsRequestInProgress(true);
     dispatch(
       submitButton({
-        button: { mode, ...(typeof param === 'string' ? { cardID: param.toLowerCase() } : { numMode: param }) }
+        button: {
+          mode,
+          ...(typeof param === 'string'
+            ? { cardID: param.toLowerCase() }
+            : { numMode: param })
+        }
       })
     ).finally(() => setIsRequestInProgress(false));
   };
@@ -119,21 +126,39 @@ function ReplayContent({
             disabled={isRequestInProgress}
           />
         </div>
-        <button className={styles.submitButton} onClick={handleLoadTurn} disabled={isRequestInProgress}>
+        <button
+          className={styles.submitButton}
+          onClick={handleLoadTurn}
+          disabled={isRequestInProgress}
+        >
           Load Turn
         </button>
-        
+
         <div className={styles.divider}></div>
-        
-        <button className={styles.actionButton} onClick={handleReturnToStart} disabled={isRequestInProgress}>
+
+        <button
+          className={styles.actionButton}
+          onClick={handleReturnToStart}
+          disabled={isRequestInProgress}
+        >
           Return to Start
         </button>
-        
+
         <div className={styles.navButtons}>
-          <button className={styles.navButton} onClick={handlePreviousTurn} title="Load previous turn" disabled={isRequestInProgress}>
+          <button
+            className={styles.navButton}
+            onClick={handlePreviousTurn}
+            title="Load previous turn"
+            disabled={isRequestInProgress}
+          >
             ← Previous
           </button>
-          <button className={styles.navButton} onClick={handleNextTurn} title="Load next turn" disabled={isRequestInProgress}>
+          <button
+            className={styles.navButton}
+            onClick={handleNextTurn}
+            title="Load next turn"
+            disabled={isRequestInProgress}
+          >
             Next →
           </button>
         </div>

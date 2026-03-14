@@ -5,7 +5,7 @@ import styles from './LobbyChat.module.css';
 const LobbyChat = () => {
   return (
     <div className={styles.container}>
-      <ChatBox />
+      <ChatBox usePrimary />
       <div className={styles.spacer}></div>
     </div>
   );

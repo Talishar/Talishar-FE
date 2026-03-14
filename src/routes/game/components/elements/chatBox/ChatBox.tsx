@@ -6,24 +6,36 @@ import styles from './ChatBox.module.css';
 import { parseHtmlToReactElements } from 'utils/ParseEscapedString';
 import classNames from 'classnames';
 import { useCheckOpponentTypingQuery } from 'features/api/apiSlice';
+import useSetting from 'hooks/useSetting';
+import { IS_STREAMER_MODE } from 'features/options/constants';
 
 const CHAT_RE = /<span[^>]*>(.*?):\s<\/span>/;
 const TYPING_TIMEOUT_MS = 5000; // 5 seconds
 
-export default function ChatBox() {
+export default function ChatBox({ usePrimary = false }: { usePrimary?: boolean }) {
   const amIPlayerOne = useAppSelector((state: RootState) => {
     return state.game.gameInfo.playerID === 1;
   });
-  const gameID = useAppSelector((state: RootState) => state.game.gameInfo.gameID);
-  const playerID = useAppSelector((state: RootState) => state.game.gameInfo.playerID);
-  const chatEnabled = useAppSelector((state: RootState) => state.game.chatEnabled);
+  const gameID = useAppSelector(
+    (state: RootState) => state.game.gameInfo.gameID
+  );
+  const playerID = useAppSelector(
+    (state: RootState) => state.game.gameInfo.playerID
+  );
+  const chatEnabled = useAppSelector(
+    (state: RootState) => state.game.chatEnabled
+  );
   const [chatFilter, setChatFilter] = useState<'none' | 'chat' | 'log'>('none');
   const chatLog = useAppSelector((state: RootState) => state.game.chatLog);
   const [displayTyping, setDisplayTyping] = useState(false);
   const typingTimerRef = useRef<NodeJS.Timeout | null>(null);
 
+  const isStreamerMode =
+    String(useSetting({ settingName: IS_STREAMER_MODE })?.value) === '1';
+
   // Only poll when chat is enabled and we're a valid player (skip spectators)
-  const shouldPoll = chatEnabled && (playerID === 1 || playerID === 2) && !!gameID;
+  const shouldPoll =
+    chatEnabled && (playerID === 1 || playerID === 2) && !!gameID;
 
   const { data: typingData, error: typingError } = useCheckOpponentTypingQuery(
     { gameID, playerID },
@@ -59,18 +71,20 @@ export default function ChatBox() {
     };
   }, []);
 
-  const myName =
-    String(useAppSelector((state: RootState) => {
+  const myName = String(
+    useAppSelector((state: RootState) => {
       return state.game.playerOne.Name;
-    }) ?? 'you');
-  const oppName =
-    String(useAppSelector((state: RootState) => {
+    }) ?? 'you'
+  );
+  const oppName = String(
+    useAppSelector((state: RootState) => {
       return state.game.playerTwo.Name;
-    }) ?? 'your opponent');
-  
+    }) ?? 'your opponent'
+  );
+
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatBoxRef = useRef<HTMLDivElement>(null);
-  
+
   const scrollToBottom = () => {
     if (chatBoxRef.current) {
       chatBoxRef.current.scrollTop = chatBoxRef.current.scrollHeight;
@@ -94,23 +108,38 @@ export default function ChatBox() {
       }
     })
     .map((message) => {
-      const p1DisplayName = amIPlayerOne
-        ? myName && myName.trim() ? myName.substring(0, 15) : 'Player 1'
-        : oppName && oppName.trim() ? oppName.substring(0, 15) : 'Player 1';
-      
-      const p2DisplayName = amIPlayerOne
-        ? oppName && oppName.trim() ? oppName.substring(0, 15) : 'Player 2'
-        : myName && myName.trim() ? myName.substring(0, 15) : 'Player 2';
-      
-      return message
-        .replace(
-          'Player 1',
-          `<b>${p1DisplayName}</b>`
-        )
-        .replace(
-          'Player 2',
-          `<b>${p2DisplayName}</b>`
-        );
+      const myDisplayName = amIPlayerOne
+        ? myName && myName.trim()
+          ? myName.substring(0, 15)
+          : 'Player 1'
+        : myName && myName.trim()
+        ? myName.substring(0, 15)
+        : 'Player 2';
+
+      const oppDisplayName = isStreamerMode
+        ? 'Opponent'
+        : amIPlayerOne
+        ? oppName && oppName.trim()
+          ? oppName.substring(0, 15)
+          : 'Player 2'
+        : oppName && oppName.trim()
+        ? oppName.substring(0, 15)
+        : 'Player 1';
+
+      const p1DisplayName = amIPlayerOne ? myDisplayName : oppDisplayName;
+      const p2DisplayName = amIPlayerOne ? oppDisplayName : myDisplayName;
+
+      let processedMessage = message
+        .replace('Player 1', `<b>${p1DisplayName}</b>`)
+        .replace('Player 2', `<b>${p2DisplayName}</b>`);
+
+      if (isStreamerMode && oppName) {
+        const oppNameEscaped = oppName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const oppNameRegex = new RegExp(oppNameEscaped, 'g');
+        processedMessage = processedMessage.replace(oppNameRegex, 'Opponent');
+      }
+
+      return processedMessage;
     });
 
   useEffect(() => {
@@ -119,7 +148,7 @@ export default function ChatBox() {
 
   return (
     <div className={styles.chatBoxContainer}>
-      <div className={styles.tabs}>
+      <div className={classNames(styles.tabs, { [styles.primaryTabs]: usePrimary })}>
         <button
           className={classNames(
             chatFilter === 'none' ? 'outline' : '',
@@ -155,11 +184,7 @@ export default function ChatBox() {
         <div className={styles.chatBox} ref={chatBoxRef}>
           {chatMessages &&
             chatMessages.map((chat, ix) => {
-              return (
-                <div key={ix}>
-                  {parseHtmlToReactElements(chat)}
-                </div>
-              );
+              return <div key={ix}>{parseHtmlToReactElements(chat)}</div>;
             })}
           {displayTyping && (
             <div className={styles.typingIndicator} ref={messagesEndRef}>
@@ -169,7 +194,7 @@ export default function ChatBox() {
           {!displayTyping && <div ref={messagesEndRef} />}
         </div>
       </div>
-      <ChatInput />
+      <ChatInput usePrimary={usePrimary} />
     </div>
   );
 }

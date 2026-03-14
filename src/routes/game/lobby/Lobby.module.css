@@ -17,7 +17,6 @@
   z-index: 10;
 }
 
-
 .smallButton {
   gap: 0.5em;
   font-size: 0.85em;
@@ -49,7 +48,8 @@
   background-color: var(--theme-primary);
   border-color: var(--theme-primary);
   color: var(--primary-inverse);
-  box-shadow: 0 2px 6px var(--primary-focus) inset, 0 2px 6px var(--primary-focus);
+  box-shadow: 0 2px 6px var(--primary-focus) inset,
+    0 2px 6px var(--primary-focus);
   transform: translateY(1px);
 }
 
@@ -170,14 +170,24 @@
   padding-bottom: 0.8em;
   color: var(--white);
   text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.9), 0 0 4px rgba(0, 0, 0, 0.8);
-  background: linear-gradient(transparent 0%, transparent 30%, rgba(0, 0, 0, 0.4) 70%, rgba(0, 0, 0, 0.8) 100%);
+  background: linear-gradient(
+    transparent 0%,
+    transparent 30%,
+    rgba(0, 0, 0, 0.4) 70%,
+    rgba(0, 0, 0, 0.8) 100%
+  );
   transition: all 0.3s ease;
   z-index: 2;
 }
 
 .leftCol:hover .dimPic,
 .rightCol:hover .dimPic {
-  background: linear-gradient(transparent 0%, transparent 20%, rgba(0, 0, 0, 0.5) 60%, rgba(0, 0, 0, 0.9) 100%);
+  background: linear-gradient(
+    transparent 0%,
+    transparent 20%,
+    rgba(0, 0, 0, 0.5) 60%,
+    rgba(0, 0, 0, 0.9) 100%
+  );
   transform: translateY(-1px);
 }
 
@@ -517,7 +527,7 @@ button.secondary:hover {
 }
 
 .disclaimerAcceptButtons {
-  margin: .5rem auto .5rem;
+  margin: 0.5rem auto 0.5rem;
   width: 60%;
   display: flex;
   justify-content: center;
@@ -676,7 +686,8 @@ button.secondary:hover {
   height: auto;
   max-height: calc(100vh - 180px);
   overflow-y: auto;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
   backdrop-filter: blur(6px);
 }
 

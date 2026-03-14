@@ -22,15 +22,23 @@ const DEBUG_MODE = false;
 const InactivityWarning = () => {
   const dispatch = useAppDispatch();
   const { sendQuickChat } = useSendGameChat();
-  const { level, secondsInactive, secondsUntilOpponentInactivePrompt } = useInactivityWarning();
-  const hasPriority = useAppSelector((state: RootState) => state.game.hasPriority);
+  const { level, secondsInactive, secondsUntilOpponentInactivePrompt } =
+    useInactivityWarning();
+  const hasPriority = useAppSelector(
+    (state: RootState) => state.game.hasPriority
+  );
   const gameInfo = useAppSelector((state: RootState) => state.game.gameInfo);
-  const turnPhase = useAppSelector((state: RootState) => state.game.turnPhase?.turnPhase);
-  const opponentActivity = useAppSelector((state: RootState) => state.game.opponentActivity);
+  const turnPhase = useAppSelector(
+    (state: RootState) => state.game.turnPhase?.turnPhase
+  );
+  const opponentActivity = useAppSelector(
+    (state: RootState) => state.game.opponentActivity
+  );
   const inactivityWarning = useAppSelector(
     (state: RootState) => state.game.inactivityWarning
   );
-  const [closeGameMutation, { isLoading: isClosingGame }] = useCloseGameMutation();
+  const [closeGameMutation, { isLoading: isClosingGame }] =
+    useCloseGameMutation();
 
   const handleStillHereClick = () => {
     dispatch(stillHereButtonClicked());
@@ -40,7 +48,9 @@ const InactivityWarning = () => {
 
   const handleLeaveGameClick = async () => {
     try {
-      await closeGameMutation({ gameToClose: String(gameInfo.gameID) }).unwrap();
+      await closeGameMutation({
+        gameToClose: String(gameInfo.gameID)
+      }).unwrap();
     } catch (e) {
       console.error('Error closing game:', e);
     }
@@ -51,24 +61,60 @@ const InactivityWarning = () => {
     <div className={styles.debugContainer}>
       <div className={styles.debugContent}>
         <div>🔍 DEBUG MODE</div>
-        <div>HasPriority: <strong>{hasPriority ? '✅ YES' : '❌ NO'}</strong></div>
-        <div>PlayerID: <strong>{gameInfo.playerID}</strong></div>
-        <div>IsSpectator: <strong>{gameInfo.playerID === 3 ? '✅ YES' : '❌ NO'}</strong></div>
-        <div>Seconds Inactive: <strong>{secondsInactive}s</strong></div>
-        <div>Warning Level: <strong>{level}</strong></div>
-        <div>OpponentActivity: <strong>{opponentActivity === 2 ? '❌ INACTIVE' : '✅ ACTIVE'}</strong></div>
-        <div>LastActionTime: <strong>{inactivityWarning?.lastActionTime}</strong></div>
-        <div>FirstWarningShown: <strong>{inactivityWarning?.firstWarningShown ? '✅' : '❌'}</strong></div>
-        <div>SecondWarningShown: <strong>{inactivityWarning?.secondWarningShown ? '✅' : '❌'}</strong></div>
-        <div>IsGamePrivate: <strong>{gameInfo.isPrivate ? '✅' : '❌'}</strong></div>
-        <div>IsOpponentAI: <strong>{gameInfo.isOpponentAI ? '✅' : '❌'}</strong></div>
-        <div>IsGameOver: <strong>{turnPhase === 'OVER' ? '✅' : '❌'}</strong></div>
+        <div>
+          HasPriority: <strong>{hasPriority ? '✅ YES' : '❌ NO'}</strong>
+        </div>
+        <div>
+          PlayerID: <strong>{gameInfo.playerID}</strong>
+        </div>
+        <div>
+          IsSpectator:{' '}
+          <strong>{gameInfo.playerID === 3 ? '✅ YES' : '❌ NO'}</strong>
+        </div>
+        <div>
+          Seconds Inactive: <strong>{secondsInactive}s</strong>
+        </div>
+        <div>
+          Warning Level: <strong>{level}</strong>
+        </div>
+        <div>
+          OpponentActivity:{' '}
+          <strong>
+            {opponentActivity === 2 ? '❌ INACTIVE' : '✅ ACTIVE'}
+          </strong>
+        </div>
+        <div>
+          LastActionTime: <strong>{inactivityWarning?.lastActionTime}</strong>
+        </div>
+        <div>
+          FirstWarningShown:{' '}
+          <strong>{inactivityWarning?.firstWarningShown ? '✅' : '❌'}</strong>
+        </div>
+        <div>
+          SecondWarningShown:{' '}
+          <strong>{inactivityWarning?.secondWarningShown ? '✅' : '❌'}</strong>
+        </div>
+        <div>
+          IsGamePrivate: <strong>{gameInfo.isPrivate ? '✅' : '❌'}</strong>
+        </div>
+        <div>
+          IsOpponentAI: <strong>{gameInfo.isOpponentAI ? '✅' : '❌'}</strong>
+        </div>
+        <div>
+          IsGameOver: <strong>{turnPhase === 'OVER' ? '✅' : '❌'}</strong>
+        </div>
       </div>
     </div>
   );
 
   // Don't show warnings for spectators, players without priority, when game is over, is private or against AI
-  if (!hasPriority || gameInfo.playerID === 3 || turnPhase === "OVER" || gameInfo.isPrivate || gameInfo.isOpponentAI) {
+  if (
+    !hasPriority ||
+    gameInfo.playerID === 3 ||
+    turnPhase === 'OVER' ||
+    gameInfo.isPrivate ||
+    gameInfo.isOpponentAI
+  ) {
     return debugDisplay;
   }
 
@@ -78,14 +124,17 @@ const InactivityWarning = () => {
 
     if (level === InactivityWarningLevel.FIRST_WARNING) {
       return {
-        title: '⚠️ You\'re taking a while...',
+        title: "⚠️ You're taking a while...",
         message: `Make a move or you may be marked inactive.`,
         className: styles.warningFirst,
         timer: null
       };
     }
 
-    if (level === InactivityWarningLevel.SECOND_WARNING || level === InactivityWarningLevel.OPPONENT_INACTIVE) {
+    if (
+      level === InactivityWarningLevel.SECOND_WARNING ||
+      level === InactivityWarningLevel.OPPONENT_INACTIVE
+    ) {
       return {
         title: '🔴 Inactivity Warning',
         message: `You\'ve been inactive for 60+ seconds. Try making a move.`,
@@ -119,14 +168,18 @@ const InactivityWarning = () => {
                   ⏱️ {content.timer}s until you become inactive
                 </div>
               )}
-              {level === InactivityWarningLevel.SECOND_WARNING || level === InactivityWarningLevel.OPPONENT_INACTIVE ? (
+              {level === InactivityWarningLevel.SECOND_WARNING ||
+              level === InactivityWarningLevel.OPPONENT_INACTIVE ? (
                 <div className={styles.buttonContainer}>
-                  <button className={styles.stillHereButton} onClick={handleStillHereClick}>
+                  <button
+                    className={styles.stillHereButton}
+                    onClick={handleStillHereClick}
+                  >
                     I'm still here!
                   </button>
                   {opponentActivity === 2 && (
-                    <button 
-                      className={styles.leaveGameButton} 
+                    <button
+                      className={styles.leaveGameButton}
                       onClick={handleLeaveGameClick}
                       disabled={isClosingGame}
                     >

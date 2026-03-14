@@ -19,7 +19,12 @@ import { useCookies } from 'react-cookie';
 import { useEffect } from 'react';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { useAppDispatch, useAppSelector } from '../../../app/Hooks';
-import { setIsRoguelike, setHeroInfo } from '../../../features/game/GameSlice';
+import {
+  setIsRoguelike,
+  setHeroInfo,
+  getGameInfo
+} from '../../../features/game/GameSlice';
+import { fetchAllSettings } from 'features/options/optionsSlice';
 import { Toaster } from 'react-hot-toast';
 import { shallowEqual } from 'react-redux';
 import { PanelProvider } from '../components/leftColumn/PanelContext';
@@ -35,28 +40,39 @@ function Play({ isRoguelike }: { isRoguelike: boolean }) {
 
   const dispatch = useAppDispatch();
   const gameState = useAppSelector((state: any) => state.game, shallowEqual);
-  const heroIntroShown = useAppSelector((state: any) => state.game.heroIntroShown);
+  const heroIntroShown = useAppSelector(
+    (state: any) => state.game.heroIntroShown
+  );
+  const gameInfo = useAppSelector(getGameInfo, shallowEqual);
 
   useEffect(() => {
     dispatch(setIsRoguelike(isRoguelike));
   }, [isRoguelike]);
+
+  useEffect(() => {
+    if (gameInfo.gameID) {
+      dispatch(fetchAllSettings({ game: gameInfo }));
+    }
+  }, [gameInfo.gameID, dispatch]);
 
   // Dispatch hero info once game state is fully populated
   useEffect(() => {
     const playerID = gameState?.gameInfo?.playerID;
     const playerOneHero = gameState?.playerOne?.Hero;
     const playerTwoHero = gameState?.playerTwo?.Hero;
-    
+
     if (playerID && playerOneHero?.cardNumber && playerTwoHero?.cardNumber) {
       // Get current hero names from gameInfo (may have been set from Lobby)
       const currentHeroName = gameState?.gameInfo?.heroName;
       const currentOpponentHeroName = gameState?.gameInfo?.opponentHeroName;
-      
+
       // Only dispatch if we don't have opponent hero card number yet (first load)
       if (!gameState?.gameInfo?.opponentHeroCardNumber) {
-        const yourCardNumber = playerID === 1 ? playerOneHero.cardNumber : playerTwoHero.cardNumber;
-        const opponentCardNumber = playerID === 1 ? playerTwoHero.cardNumber : playerOneHero.cardNumber;
-        
+        const yourCardNumber =
+          playerID === 1 ? playerOneHero.cardNumber : playerTwoHero.cardNumber;
+        const opponentCardNumber =
+          playerID === 1 ? playerTwoHero.cardNumber : playerOneHero.cardNumber;
+
         dispatch(
           setHeroInfo({
             heroName: currentHeroName,
@@ -66,7 +82,12 @@ function Play({ isRoguelike }: { isRoguelike: boolean }) {
         );
       }
     }
-  }, [gameState?.playerOne?.Hero?.cardNumber, gameState?.playerTwo?.Hero?.cardNumber, gameState?.gameInfo?.playerID, dispatch]);
+  }, [
+    gameState?.playerOne?.Hero?.cardNumber,
+    gameState?.playerTwo?.Hero?.cardNumber,
+    gameState?.gameInfo?.playerID,
+    dispatch
+  ]);
 
   useEffect(() => {
     if (cookies.cardSize) {
@@ -86,7 +107,10 @@ function Play({ isRoguelike }: { isRoguelike: boolean }) {
         cookies.transparencyIntensity
       );
     } else {
-      document.documentElement.style.setProperty('--transparency-intensity', '1');
+      document.documentElement.style.setProperty(
+        '--transparency-intensity',
+        '1'
+      );
     }
   }, [cookies.transparencyIntensity]);
 
@@ -113,14 +137,14 @@ function Play({ isRoguelike }: { isRoguelike: boolean }) {
               border: '2px solid var(--theme-border)',
               padding: '0.5rem',
               wordBreak: 'break-word',
-              maxWidth: '100vh', 
-              overflow: 'hidden', 
-              textOverflow: 'ellipsis', 
+              maxWidth: '100vh',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
               userSelect: 'none',
               msUserSelect: 'none',
               WebkitUserSelect: 'none',
               MozUserSelect: 'none',
-              zIndex: 10001,
+              zIndex: 10001
             }
           }}
         />

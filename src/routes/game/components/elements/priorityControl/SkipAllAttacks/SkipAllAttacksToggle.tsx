@@ -53,7 +53,7 @@ const SkipAllAttacksToggle = () => {
           })
         }
         data-tooltip="Skip Attacks"
-        data-placement="left"
+        data-placement="top-end"
         disabled={isDisabled}
       >
         <GiBouncingSword aria-hidden="true" fontSize={'2em'} />

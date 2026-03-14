@@ -7,7 +7,9 @@ import { MdSwapVert } from 'react-icons/md';
 export default function SpectatorCameraPanel() {
   const dispatch = useAppDispatch();
   const { playerID } = useAppSelector(getGameInfo);
-  const spectatorCameraView = useAppSelector((state: any) => state.game.spectatorCameraView);
+  const spectatorCameraView = useAppSelector(
+    (state: any) => state.game.spectatorCameraView
+  );
 
   // Only show if this is a spectator
   if (playerID !== 3) {
@@ -20,7 +22,7 @@ export default function SpectatorCameraPanel() {
   };
 
   return (
-    <button 
+    <button
       className={styles.cameraTab}
       onClick={toggleView}
       title={`Switch to Player ${spectatorCameraView === 1 ? 2 : 1} View`}
@@ -28,7 +30,9 @@ export default function SpectatorCameraPanel() {
     >
       <div className={styles.buttonContent}>
         <MdSwapVert className={styles.icon} />
-        <span className={styles.label}>P{spectatorCameraView === 1 ? '2' : '1'}</span>
+        <span className={styles.label}>
+          P{spectatorCameraView === 1 ? '2' : '1'}
+        </span>
       </div>
     </button>
   );

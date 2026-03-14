@@ -6,7 +6,10 @@ import {
   RadioGroup,
   Fieldset
 } from '../../game/components/elements/optionsMenu/OptionsSettings/FormComponents';
-import { VisualSlider, VisualPreset } from '../../game/components/elements/optionsMenu/OptionsSettings/VisualSettings';
+import {
+  VisualSlider,
+  VisualPreset
+} from '../../game/components/elements/optionsMenu/OptionsSettings/VisualSettings';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import {
   fetchAllSettings,
@@ -15,6 +18,8 @@ import {
   Setting,
   updateOptions
 } from 'features/options/optionsSlice';
+import { selectCurrentUser } from 'features/auth/authSlice';
+import { QUERY_STATUS } from 'appConstants';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import { useEffect } from 'react';
 import { useCookies } from 'react-cookie';
@@ -26,7 +31,7 @@ import LanguageSelector from 'components/LanguageSelector/LanguageSelector';
 const SettingsPage = () => {
   usePageTitle('Settings');
   const settingsData = useAppSelector(getSettingsEntity);
-  const isLoading = useAppSelector(getSettingsStatus);
+  const currentUserID = useAppSelector(selectCurrentUser);
   const dispatch = useAppDispatch();
   const [windowWidth] = useWindowDimensions();
   const isMobile = windowWidth < 768;
@@ -40,25 +45,32 @@ const SettingsPage = () => {
   ]);
 
   // Dummy game object for settings page (not in an active game)
-  const profileGameInfo = { playerID: 0, gameID: 0, authKey: '', isPrivateLobby: false };
+  const profileGameInfo = {
+    playerID: 0,
+    gameID: 0,
+    authKey: '',
+    isPrivateLobby: false
+  };
 
   // fetch all settings when component is loaded
   useEffect(() => {
-    // Load settings from backend for settings context - only on mount
     dispatch(fetchAllSettings({ game: profileGameInfo }));
-  }, [dispatch]); // Only depend on dispatch to run once on mount
+  }, [dispatch]);
 
   const handleSettingsChange = ({ name, value }: Setting) => {
     dispatch(
       updateOptions({
         game: profileGameInfo,
-        settings: [{ name: name, value: value }]
+        settings: [{ name: name, value: value }],
+        userID: currentUserID ? String(currentUserID) : undefined
       })
     );
   };
 
   const initialValues = {
-    holdPriority: settingsData['HoldPrioritySetting']?.value ?? optConst.HOLD_PRIORITY_ENUM.AUTO,
+    holdPriority:
+      settingsData['HoldPrioritySetting']?.value ??
+      optConst.HOLD_PRIORITY_ENUM.AUTO,
     tryReactUI: settingsData['TryReactUI']?.value === '1',
     darkMode: settingsData['DarkMode']?.value === '1',
     skipAttackReactions: settingsData['SkipARWindow']?.value === '1',
@@ -79,12 +91,17 @@ const SettingsPage = () => {
     manualTunic: String(settingsData['ManualTunic']?.value) === '1',
     cardBack: String(settingsData['CardBack']?.value ?? '0'),
     playMat: String(settingsData['Playmat']?.value ?? '0'),
-    disableFabInsights: String(settingsData['DisableFabInsights']?.value) === '1',
+    disableFabInsights:
+      String(settingsData['DisableFabInsights']?.value) === '1',
     disableHeroIntro: String(settingsData['DisableHeroIntro']?.value) === '1',
-    mirroredBoardLayout: settingsData?.[optConst.MIRRORED_BOARD_LAYOUT]?.value === '1',
-    mirroredPlayerBoardLayout: settingsData?.[optConst.MIRRORED_PLAYER_BOARD_LAYOUT]?.value === '1',
-    alwaysShowCounters: String(settingsData[optConst.ALWAYS_SHOW_COUNTERS]?.value) === '1',
-    hideHandFromFriends: String(settingsData[optConst.HIDE_HAND_FROM_FRIENDS]?.value) === '1',
+    mirroredBoardLayout:
+      settingsData?.[optConst.MIRRORED_BOARD_LAYOUT]?.value === '1',
+    mirroredPlayerBoardLayout:
+      settingsData?.[optConst.MIRRORED_PLAYER_BOARD_LAYOUT]?.value === '1',
+    alwaysShowCounters:
+      String(settingsData[optConst.ALWAYS_SHOW_COUNTERS]?.value) === '1',
+    hideHandFromFriends:
+      String(settingsData[optConst.HIDE_HAND_FROM_FRIENDS]?.value) === '1'
   };
 
   const priorityOptions = [
@@ -114,7 +131,7 @@ const SettingsPage = () => {
   const transparencyPresets = [
     { value: 0.75, label: '75%' },
     { value: 0.85, label: '85%' },
-    { value: 0.90, label: '90%' },
+    { value: 0.9, label: '90%' },
     { value: 0.95, label: '95%' },
     { value: 1.0, label: '100%' }
   ];
@@ -125,7 +142,7 @@ const SettingsPage = () => {
       <div className={styles.twoColumnLayout}>
         <div className={styles.settingsColumn}>
           <h3 className={styles.title}>Game Settings</h3>
-          
+
           <Fieldset legend="Priority Settings">
             <RadioGroup
               name="holdPriority"
@@ -339,7 +356,7 @@ const SettingsPage = () => {
 
         <div className={styles.settingsColumn}>
           <h3 className={styles.title}>Visual Settings</h3>
-          
+
           <Fieldset legend="Cards Language">
             <LanguageSelector />
           </Fieldset>
@@ -347,9 +364,8 @@ const SettingsPage = () => {
           <Fieldset legend="Theme">
             <ThemeToggle />
           </Fieldset>
-          
-          <Fieldset legend="Visual Settings">
 
+          <Fieldset legend="Visual Settings">
             <CheckboxSetting
               name="mirroredOpponent"
               label="Mirror Opponent Board"
@@ -426,11 +442,14 @@ const SettingsPage = () => {
           />
 
           <p className={styles.disclaimer}>
-            Talishar is in no way affiliated with Legend Story Studios. Legend Story
-            Studios®, Flesh and Blood™, and set names are trademarks of Legend Story
-            Studios. Flesh and Blood characters, cards, logos, and art are property
-            of <a href="https://legendstory.com/" target="_blank" rel="noreferrer">Legend Story Studios</a>. 
-            Card Images © Legend Story Studios
+            Talishar is in no way affiliated with Legend Story Studios. Legend
+            Story Studios®, Flesh and Blood™, and set names are trademarks of
+            Legend Story Studios. Flesh and Blood characters, cards, logos, and
+            art are property of{' '}
+            <a href="https://legendstory.com/" target="_blank" rel="noreferrer">
+              Legend Story Studios
+            </a>
+            . Card Images © Legend Story Studios
           </p>
         </div>
       </div>

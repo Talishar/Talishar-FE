@@ -43,7 +43,13 @@ export default function PassTurnDisplay() {
     if (hasPriority && !initialValues.mute && playerID !== 3) {
       playPassTurnSound();
     }
-  }, [frameNumber, hasPriority, initialValues.mute, playerID, playPassTurnSound]);
+  }, [
+    frameNumber,
+    hasPriority,
+    initialValues.mute,
+    playerID,
+    playPassTurnSound
+  ]);
 
   useEffect(() => {
     let link = document.getElementById('favicon') as HTMLLinkElement;
@@ -133,7 +139,8 @@ export default function PassTurnDisplay() {
           <div> PASS </div>
           <div className={styles.subThing}>[spacebar]</div>
         </div>
-        {showAreYouSureModal && preventPassPrompt &&
+        {showAreYouSureModal &&
+          preventPassPrompt &&
           createPortal(
             <>
               <dialog open={showAreYouSureModal} className={styles.modal}>

@@ -6,7 +6,9 @@ import {
   useBanPlayerByIPMutation,
   useBanPlayerByNameMutation,
   useCloseGameMutation,
-  useDeleteUsernameMutation
+  useDeleteUsernameMutation,
+  useSendSystemMessageToPlayerMutation,
+  useSendSystemMessageToAllMutation
 } from 'features/api/apiSlice';
 import UsernameModeration from './UsernameModeration';
 import DeleteUsernameAutocomplete from './DeleteUsernameAutocomplete';
@@ -18,6 +20,9 @@ const ModPage: React.FC = () => {
   const [playerToBan, setPlayerToBan] = useState('');
   const [usernameToDelete, setUsernameToDelete] = useState('');
   const [selectedUserEmail, setSelectedUserEmail] = useState<string | null>(null);
+  const [systemMsgUsername, setSystemMsgUsername] = useState('');
+  const [systemMsgText, setSystemMsgText] = useState('');
+  const [broadcastMsgText, setBroadcastMsgText] = useState('');
 
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
@@ -33,6 +38,8 @@ const ModPage: React.FC = () => {
   const [banByName, { isLoading: isBanningByName }] = useBanPlayerByNameMutation();
   const [closeGameMutation, { isLoading: isClosingGame }] = useCloseGameMutation();
   const [deleteUsername, { isLoading: isDeletingUsername }] = useDeleteUsernameMutation();
+  const [sendToPlayer, { isLoading: isSendingToPlayer }] = useSendSystemMessageToPlayerMutation();
+  const [sendToAll, { isLoading: isSendingToAll }] = useSendSystemMessageToAllMutation();
 
   const handleBanByIP = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -93,19 +100,27 @@ const ModPage: React.FC = () => {
     }
 
     try {
-      console.log('[ModPage Delete Username] Starting deletion for:', usernameToDelete);
+      console.log(
+        '[ModPage Delete Username] Starting deletion for:',
+        usernameToDelete
+      );
       const response = await deleteUsername({ usernameToDelete }).unwrap();
       console.log('[ModPage Delete Username] Success response:', response);
-      
+
       // Show success toast
-      toast.success(response.message || 'Username deleted successfully from database', {
-        style: {
-          minWidth: '300px'
-        },
-        position: 'top-center'
-      });
-      
-      setSuccessMessage(response.message || 'Username deleted successfully from database');
+      toast.success(
+        response.message || 'Username deleted successfully from database',
+        {
+          style: {
+            minWidth: '300px'
+          },
+          position: 'top-center'
+        }
+      );
+
+      setSuccessMessage(
+        response.message || 'Username deleted successfully from database'
+      );
       setUsernameToDelete('');
       setSelectedUserEmail(null);
     } catch (err: any) {
@@ -117,9 +132,14 @@ const ModPage: React.FC = () => {
         data: err?.data,
         toString: err?.toString()
       });
-      
-      const errorMessage = err?.data?.message || err?.message || err?.error || err?.toString() || 'Unknown error';
-      
+
+      const errorMessage =
+        err?.data?.message ||
+        err?.message ||
+        err?.error ||
+        err?.toString() ||
+        'Unknown error';
+
       // Show error toast
       toast.error(`Error deleting username: ${errorMessage}`, {
         style: {
@@ -130,12 +150,59 @@ const ModPage: React.FC = () => {
     }
   };
 
+  const handleSendSystemMessage = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSuccessMessage(null);
+
+    if (!systemMsgUsername.trim() || !systemMsgText.trim()) {
+      toast.error('Username and message are required', { position: 'top-center' });
+      return;
+    }
+
+    try {
+      const result = await sendToPlayer({ username: systemMsgUsername, message: systemMsgText }).unwrap();
+      toast.success(result.message || 'System message sent', { position: 'top-center' });
+      setSuccessMessage(result.message || 'System message sent');
+      setSystemMsgUsername('');
+      setSystemMsgText('');
+    } catch (err: any) {
+      const errorMessage = err?.data?.error || 'Failed to send system message';
+      toast.error(errorMessage, { position: 'top-center' });
+    }
+  };
+
+  const handleBroadcastMessage = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSuccessMessage(null);
+
+    if (!broadcastMsgText.trim()) {
+      toast.error('Message is required', { position: 'top-center' });
+      return;
+    }
+
+    if (!window.confirm('Send this system message to ALL players?')) {
+      return;
+    }
+
+    try {
+      const result = await sendToAll({ message: broadcastMsgText }).unwrap();
+      toast.success(result.message || 'Broadcast sent', { position: 'top-center' });
+      setSuccessMessage(result.message || 'Broadcast sent');
+      setBroadcastMsgText('');
+    } catch (err: any) {
+      const errorMessage = err?.data?.error || 'Failed to send broadcast';
+      toast.error(errorMessage, { position: 'top-center' });
+    }
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.modPagePanel}>
         <h1 className={styles.title}>Moderator Panel</h1>
 
-        {successMessage && <div className={styles.successMessage}>{successMessage}</div>}
+        {successMessage && (
+          <div className={styles.successMessage}>{successMessage}</div>
+        )}
 
         <div className={styles.contentWrapper}>
           <div className={styles.leftColumn}>
@@ -149,7 +216,9 @@ const ModPage: React.FC = () => {
                 onChange={(e) => setIpToBan(e.target.value)}
                 required
               />
-              <label htmlFor="playerNumberToBan">Player to ban? (1 or 2):</label>
+              <label htmlFor="playerNumberToBan">
+                Player to ban? (1 or 2):
+              </label>
               <input
                 type="text"
                 id="playerNumberToBan"
@@ -197,8 +266,53 @@ const ModPage: React.FC = () => {
                   setSelectedUserEmail(email);
                 }}
               />
-              <button type="submit" disabled={isDeletingUsername || !usernameToDelete.trim()}>
+              <button
+                type="submit"
+                disabled={isDeletingUsername || !usernameToDelete.trim()}
+              >
                 {isDeletingUsername ? 'Deleting...' : 'Delete Username'}
+              </button>
+            </form>
+
+            <form onSubmit={handleSendSystemMessage} className={styles.form}>
+              <h2>Send System Message to Player</h2>
+              <label htmlFor="systemMsgUsername">Username:</label>
+              <input
+                type="text"
+                id="systemMsgUsername"
+                value={systemMsgUsername}
+                onChange={(e) => setSystemMsgUsername(e.target.value)}
+                required
+              />
+              <label htmlFor="systemMsgText">Message:</label>
+              <textarea
+                id="systemMsgText"
+                value={systemMsgText}
+                onChange={(e) => setSystemMsgText(e.target.value)}
+                required
+                rows={4}
+                maxLength={2000}
+                className={styles.textarea}
+              />
+              <button type="submit" disabled={isSendingToPlayer}>
+                {isSendingToPlayer ? 'Sending...' : 'Send Message'}
+              </button>
+            </form>
+
+            <form onSubmit={handleBroadcastMessage} className={styles.form}>
+              <h2>Broadcast System Message to All Players</h2>
+              <label htmlFor="broadcastMsgText">Message:</label>
+              <textarea
+                id="broadcastMsgText"
+                value={broadcastMsgText}
+                onChange={(e) => setBroadcastMsgText(e.target.value)}
+                required
+                rows={4}
+                maxLength={2000}
+                className={styles.textarea}
+              />
+              <button type="submit" disabled={isSendingToAll}>
+                {isSendingToAll ? 'Sending...' : 'Broadcast to All'}
               </button>
             </form>
           </div>
@@ -208,7 +322,8 @@ const ModPage: React.FC = () => {
               <h2>Most Recently Created Accounts</h2>
               {isLoading ? (
                 <p>Loading...</p>
-              ) : modPageData?.recentAccounts && modPageData.recentAccounts.length > 0 ? (
+              ) : modPageData?.recentAccounts &&
+                modPageData.recentAccounts.length > 0 ? (
                 <ul className={styles.dataList}>
                   {modPageData.recentAccounts.map((account, index) => (
                     <li key={index}>{account}</li>
@@ -225,7 +340,8 @@ const ModPage: React.FC = () => {
               <h2>Banned Players</h2>
               {isLoading ? (
                 <p>Loading...</p>
-              ) : modPageData?.bannedPlayers && modPageData.bannedPlayers.length > 0 ? (
+              ) : modPageData?.bannedPlayers &&
+                modPageData.bannedPlayers.length > 0 ? (
                 <ul className={styles.dataList}>
                   {modPageData.bannedPlayers.map((player, index) => (
                     <li key={index}>{player}</li>

@@ -13,7 +13,13 @@ import {
 import { shallowEqual } from 'react-redux';
 import { useButtonDisableContext } from 'contexts/ButtonDisableContext';
 
-const FullControlToggle = () => {
+const FullControlToggle = ({
+  btnClass,
+  activeBtnClass
+}: {
+  btnClass?: string;
+  activeBtnClass?: string;
+} = {}) => {
   const dispatch = useAppDispatch();
   const { isDisabled, triggerDisable } = useButtonDisableContext();
   const setting = useSetting({
@@ -53,8 +59,8 @@ const FullControlToggle = () => {
     );
   };
 
-  const buttonStyle = classNames(styles.btn, {
-    [styles.buttonActive]:
+  const buttonStyle = classNames(btnClass ?? styles.btn, {
+    [activeBtnClass ?? styles.buttonActive]:
       Number(setting?.value) === HOLD_PRIORITY_ENUM.ALWAYS_HOLD
   });
   return (
@@ -64,7 +70,7 @@ const FullControlToggle = () => {
         aria-label="Always Hold Priority"
         onClick={handleClickFullControl}
         data-tooltip="Always Hold Priority"
-        data-placement="bottom"
+        data-placement="top"
         disabled={isDisabled}
       >
         <GiUsable aria-hidden="true" />

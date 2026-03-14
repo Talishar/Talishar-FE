@@ -1,19 +1,25 @@
 import { useState, useEffect } from 'react';
 import screenfull from 'screenfull';
-import { useAppDispatch } from 'app/Hooks';
+import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { submitButton } from 'features/game/GameSlice';
-import { FaUndo } from 'react-icons/fa';
 import { GiExpand } from 'react-icons/gi';
+import { FaUndo } from 'react-icons/fa';
 import styles from './Menu.module.css';
 import { DEFAULT_SHORTCUTS, PROCESS_INPUT } from 'appConstants';
-import FullControlToggle from './FullControlToggle/FullControlToggle';
 import HideModalsToggle from './HideModalsToggle/HideModalsToggle';
 import OptionsMenuToggle from './OptionsMenuToggle/OptionsMenuToggle';
 import ShowMobileChat from './ShowMobileChat/ShowMobileChat';
+import FullControlToggle from './FullControlToggle/FullControlToggle';
 import AlwaysPassToggle from './AlwaysPassToggle/AlwaysPassToggle';
-import useShortcut from 'hooks/useShortcut';
 import PlayerName from '../playerName/PlayerName';
-import { ButtonDisableProvider, useButtonDisableContext } from 'contexts/ButtonDisableContext';
+import Inventory from '../inventory/Inventory';
+import SpectatorCount from '../spectatorCount/SpectatorCount';
+import useShortcut from 'hooks/useShortcut';
+import {
+  ButtonDisableProvider,
+  useButtonDisableContext
+} from 'contexts/ButtonDisableContext';
+import { RootState } from 'app/Store';
 
 function FullScreenButton() {
   function toggleFullScreen() {
@@ -69,6 +75,10 @@ function UndoButton() {
 function MenuContent() {
   const [isMobile, setIsMobile] = useState(false);
   const [isTablet, setIsTablet] = useState(false);
+  const playerID = useAppSelector(
+    (state: RootState) => state.game.gameInfo.playerID
+  );
+  const isSpectator = playerID === 3;
 
   useEffect(() => {
     const handleResize = () => {
@@ -81,25 +91,42 @@ function MenuContent() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  // Spectator view: only show essential buttons
+  if (isSpectator) {
+    return (
+      <div>
+        <div className={styles.menuRow}>
+          <div className={styles.spectatorFloating}>
+            <SpectatorCount />
+          </div>
+          <div className={styles.menuList}>
+            <HideModalsToggle />
+            <OptionsMenuToggle />
+            <FullScreenButton />
+            {(isMobile || isTablet) && <ShowMobileChat />}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Player view: show all buttons in one row
   return (
     <div>
-      {isTablet && (
-        <PlayerName isPlayer={false} />
-      )}
-      <div className={styles.menuList}>
-        <UndoButton />
-        <OptionsMenuToggle />
-        <FullScreenButton />
-      </div>
-      <div className={styles.menuList}>
-        <FullControlToggle />
-        <AlwaysPassToggle />
-        <HideModalsToggle />
-        {(isMobile || isTablet) && (
-          <>
-            <ShowMobileChat />
-          </>
-        )}
+      <div className={styles.menuRow}>
+        <div className={styles.spectatorFloating}>
+          <SpectatorCount />
+        </div>
+        <div className={styles.menuList}>
+          {(isMobile || isTablet) && <FullControlToggle />}
+          {(isMobile || isTablet) && <AlwaysPassToggle />}
+          <UndoButton />
+          <Inventory buttonClassName={styles.btn} />
+          <HideModalsToggle />
+          <OptionsMenuToggle />
+          <FullScreenButton />
+          {(isMobile || isTablet) && <ShowMobileChat />}
+        </div>
       </div>
     </div>
   );

@@ -340,7 +340,6 @@ export const OfflineTestingGameState: GameState = {
   showModals: true,
   shufflingPlayerId: null,
   isShuffling: false
-
 };
 
 export default InitialGameState as GameState;

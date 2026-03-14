@@ -5,10 +5,12 @@ import { clearPopUp, setPopUp, getGameInfo } from 'features/game/GameSlice';
 import CardImage from '../cardImage/CardImage';
 import styles from './LastPlayed.module.css';
 import CardPopUp from '../cardPopUp/CardPopUp';
-import { CARD_IMAGES_PATH, getCollectionCardImagePath } from 'utils';
+import { CARD_SQUARES_PATH, CARD_IMAGES_PATH, getCollectionCardImagePath } from 'utils';
 import { useLanguageSelector } from 'hooks/useLanguageSelector';
 import classNames from 'classnames';
 import { shallowEqual } from 'react-redux';
+import useSetting from 'hooks/useSetting';
+import { IS_STREAMER_MODE } from 'features/options/constants';
 
 // Cards with Meld mechanics that need to be rotated
 const MELD_CARDS = new Set([
@@ -31,18 +33,22 @@ export default function LastPlayed() {
   );
   const gameInfo = useAppSelector(getGameInfo, shallowEqual);
   const { getLanguage } = useLanguageSelector();
+  const isStreamerMode =
+    useSetting({ settingName: IS_STREAMER_MODE })?.value === '1';
   const hasNoLastPlayedCard = cardRedux == null;
   const cardNumber = cardRedux?.cardNumber ?? 'CardBack';
   const hasMeld = MELD_CARDS.has(cardNumber);
   const imageSrc = getCollectionCardImagePath({
-    path: CARD_IMAGES_PATH,
+    path: isStreamerMode ? CARD_IMAGES_PATH : CARD_SQUARES_PATH,
     locale: getLanguage(),
     cardNumber
   });
 
   // Determine if the card is controlled by the opponent
   // cardRedux.controller is 1 or 2 for players
-  const isOpponent = cardRedux?.controller && cardRedux.controller !== gameInfo.playerID;
+  const isOpponent =
+    cardRedux?.controller !== undefined &&
+    cardRedux.controller !== gameInfo.playerID;
 
   const imgClassNames = classNames(styles.img, {
     [styles.rotated]: hasMeld
@@ -54,7 +60,11 @@ export default function LastPlayed() {
       cardNumber={cardNumber}
       containerClass={styles.lastPlayed}
     >
-      <CardImage src={imageSrc} className={imgClassNames} isOpponent={isOpponent} />
+      <CardImage
+        src={imageSrc}
+        className={imgClassNames}
+        isOpponent={isOpponent}
+      />
     </CardPopUp>
   );
 }

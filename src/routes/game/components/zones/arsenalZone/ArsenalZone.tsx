@@ -28,14 +28,25 @@ export default function ArsenalZone(prop: Displayrow) {
       : state.game.playerTwo.Arsenal;
   });
 
-  const playerID = useAppSelector((state: RootState) => state.game.gameInfo.playerID);
-  const otherPlayerID = useAppSelector((state: RootState) => state.game.gameInfo.playerID === 1 ? 2 : 1);
-  const arsenalFlipP1Card = useAppSelector((state: RootState) => state.game.arsenalFlipP1Card);
-  const arsenalFlipP2Card = useAppSelector((state: RootState) => state.game.arsenalFlipP2Card);
-  const arsenalFlipTrigger = useAppSelector((state: RootState) => state.game.arsenalFlipTrigger);
+  const playerID = useAppSelector(
+    (state: RootState) => state.game.gameInfo.playerID
+  );
+  const otherPlayerID = useAppSelector((state: RootState) =>
+    state.game.gameInfo.playerID === 1 ? 2 : 1
+  );
+  const arsenalFlipP1Card = useAppSelector(
+    (state: RootState) => state.game.arsenalFlipP1Card
+  );
+  const arsenalFlipP2Card = useAppSelector(
+    (state: RootState) => state.game.arsenalFlipP2Card
+  );
+  const arsenalFlipTrigger = useAppSelector(
+    (state: RootState) => state.game.arsenalFlipTrigger
+  );
 
   const currentPlayerID = isPlayer ? playerID : otherPlayerID;
-  const flipCard = currentPlayerID === 1 ? arsenalFlipP1Card : arsenalFlipP2Card;
+  const flipCard =
+    currentPlayerID === 1 ? arsenalFlipP1Card : arsenalFlipP2Card;
   const showFlip = !!flipCard;
 
   const [width, height] = useWindowDimensions();
@@ -62,7 +73,7 @@ export default function ArsenalZone(prop: Displayrow) {
           const cardCopy = { ...card };
           // Check if this card is currently animating
           const isAnimatingThisCard = showFlip && card.cardNumber === flipCard;
-          
+
           return (
             <div key={index} className={styles.cardWrapper}>
               {/* Hide the actual card while animation is playing */}
@@ -71,13 +82,11 @@ export default function ArsenalZone(prop: Displayrow) {
               )}
               {/* Show animation overlay while animating */}
               {isAnimatingThisCard && (
-                <div 
+                <div
                   key={`arsenalFlipAnimation-${arsenalFlipTrigger}`}
                   className={styles.arsenalFlipCard}
                 >
-                  <CardDisplay
-                    card={{ cardNumber: flipCard }}
-                  />
+                  <CardDisplay card={{ cardNumber: flipCard }} />
                 </div>
               )}
             </div>
@@ -98,9 +107,15 @@ const ArsenalPrompt = () => {
   );
   const gameInfo = useAppSelector(getGameInfo);
 
-  const oldCombatChain = useAppSelector((state: RootState) => state.game.oldCombatChain) ?? [];
-  const activeCombatChain = useAppSelector((state: RootState) => state.game.activeChainLink);
-  const showCombatChain = oldCombatChain?.length > 0 || (activeCombatChain?.attackingCard && activeCombatChain?.attackingCard?.cardNumber !== 'blank');
+  const oldCombatChain =
+    useAppSelector((state: RootState) => state.game.oldCombatChain) ?? [];
+  const activeCombatChain = useAppSelector(
+    (state: RootState) => state.game.activeChainLink
+  );
+  const showCombatChain =
+    oldCombatChain?.length > 0 ||
+    (activeCombatChain?.attackingCard &&
+      activeCombatChain?.attackingCard?.cardNumber !== 'blank');
 
   const dispatch = useAppDispatch();
 
@@ -112,8 +127,8 @@ const ArsenalPrompt = () => {
     (gameInfo.playerID !== 3 && turnPhase === 'ARS') ||
     turnPhase === 'CHOOSEHAND' ||
     turnPhase === 'MAYCHOOSEHAND' ||
-    turnPhase === 'MAYCHOOSEHANDHEAVE'
-    playerPrompt?.helpText?.includes('Opponent is inactive');
+    turnPhase === 'MAYCHOOSEHANDHEAVE';
+  playerPrompt?.helpText?.includes('Opponent is inactive');
 
   const buttons = playerPrompt?.buttons?.map((button, ix) => {
     return (
@@ -139,9 +154,7 @@ const ArsenalPrompt = () => {
           exit={{ opacity: 0 }}
         >
           <div className={styles.content}>
-            <div>
-              {parseHtmlToReactElements(playerPrompt?.helpText ?? '')}
-            </div>
+            <div>{parseHtmlToReactElements(playerPrompt?.helpText ?? '')}</div>
           </div>
           {buttons}
         </motion.div>

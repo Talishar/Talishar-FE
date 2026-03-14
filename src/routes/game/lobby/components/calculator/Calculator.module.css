@@ -268,7 +268,7 @@
 
 .atkReaction {
   color: #b2f7ef;
-} 
+}
 
 .atkReaction .classIndicator {
   background: #b2f7ef;
@@ -307,16 +307,16 @@
   .calculatorCard {
     padding: 1rem;
   }
-  
+
   .probabilityTable {
     font-size: 0.8em;
   }
-  
+
   .probabilityTable th,
   .probabilityTable td {
     padding: 0.5rem 0.25rem;
   }
-  
+
   .labelCell {
     font-size: 0.8em;
   }

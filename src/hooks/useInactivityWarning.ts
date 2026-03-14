@@ -24,13 +24,13 @@ export interface InactivityWarningState {
 
 /**
  * Hook that tracks player inactivity and manages warning levels.
- * 
+ *
  * Shows a warning at:
  * - 30 seconds: First warning
  * - 60 seconds: Second warning
- * 
+ *
  * Only active for the player who currently has priority.
- * 
+ *
  * @returns {InactivityWarningState} Current inactivity state with level and seconds inactive
  */
 export const useInactivityWarning = (): InactivityWarningState => {
@@ -42,7 +42,9 @@ export const useInactivityWarning = (): InactivityWarningState => {
     (state: RootState) => state.game.turnPhase?.turnPhase
   );
   const gameInfo = useAppSelector((state: RootState) => state.game.gameInfo);
-  const hasPriority = useAppSelector((state: RootState) => state.game.hasPriority);
+  const hasPriority = useAppSelector(
+    (state: RootState) => state.game.hasPriority
+  );
 
   // State to force re-renders when timer ticks
   const [, setTick] = useState(0);
@@ -60,13 +62,18 @@ export const useInactivityWarning = (): InactivityWarningState => {
   }, [turnPhase, dispatch]);
 
   // Calculate current inactivity level
-  const getInactivityLevel = (lastActionTime: number, secondWarningStartTime?: number): InactivityWarningState => {
+  const getInactivityLevel = (
+    lastActionTime: number,
+    secondWarningStartTime?: number
+  ): InactivityWarningState => {
     const now = Date.now();
     const secondsInactive = Math.floor((now - lastActionTime) / 1000);
 
     // Check if we're in opponent inactive state (15+ seconds after second warning)
     if (secondWarningStartTime) {
-      const secondsSinceWarning = Math.floor((now - secondWarningStartTime) / 1000);
+      const secondsSinceWarning = Math.floor(
+        (now - secondWarningStartTime) / 1000
+      );
       if (secondsSinceWarning >= 15) {
         return {
           level: InactivityWarningLevel.OPPONENT_INACTIVE,
@@ -105,13 +112,18 @@ export const useInactivityWarning = (): InactivityWarningState => {
 
   // Effect: Set up interval to check inactivity, trigger warnings, and force re-renders
   useEffect(() => {
-    if (!inactivityWarning || !turnPhase || gameInfo.playerID === 3 || !hasPriority) {
+    if (
+      !inactivityWarning ||
+      !turnPhase ||
+      gameInfo.playerID === 3 ||
+      !hasPriority
+    ) {
       // Don't track inactivity for spectators, without priority, or if no game state
       return;
     }
 
     // Don't track inactivity when the game is over
-    if (turnPhase === "OVER") {
+    if (turnPhase === 'OVER') {
       return;
     }
 
@@ -137,7 +149,12 @@ export const useInactivityWarning = (): InactivityWarningState => {
         dispatch(setSecondWarningShown(true));
         // Submit inactivity message to backend to persist in game log
         // The current player has priority and is inactive
-        dispatch(submitInactivityMessage({ playerID: gameInfo.playerID, inactivePlayer: gameInfo.playerID }));
+        dispatch(
+          submitInactivityMessage({
+            playerID: gameInfo.playerID,
+            inactivePlayer: gameInfo.playerID
+          })
+        );
       }
 
       // Force re-render to update the timer display

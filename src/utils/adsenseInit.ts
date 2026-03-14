@@ -9,8 +9,10 @@ const createMockAdSense = () => {
     push: (config: any) => {
       // Find and populate all ad containers immediately and repeatedly
       const injectMockAds = () => {
-        const adContainers = document.querySelectorAll('.adsbygoogle[data-ad-slot]');
-        
+        const adContainers = document.querySelectorAll(
+          '.adsbygoogle[data-ad-slot]'
+        );
+
         adContainers.forEach((container: Element) => {
           // Only inject if not already injected
           if (!container.querySelector('[data-mock-ad]')) {
@@ -29,29 +31,31 @@ const createMockAdSense = () => {
             `;
             mockAd.innerHTML = `
               <strong style="display: block; margin-bottom: 8px;">📢 Advertisement Space</strong>
-              <small style="display: block; margin-bottom: 4px;">Slot: ${(container as any).dataset?.adSlot || 'N/A'}</small>
+              <small style="display: block; margin-bottom: 4px;">Slot: ${
+                (container as any).dataset?.adSlot || 'N/A'
+              }</small>
               <small style="color: #999;">(Mock - Real Google Ads in production)</small>
             `;
             container.appendChild(mockAd);
           }
         });
       };
-      
+
       // Try immediately
       injectMockAds();
-      
+
       // Retry a few times in case containers appear later
       for (let i = 1; i <= 5; i++) {
         setTimeout(injectMockAds, i * 100);
       }
-    },
+    }
   };
 };
 
 export const initializeAdSense = () => {
   // Check if user has consented to cookies
   const consentStatus = localStorage.getItem('cookieConsent');
-  
+
   // Only initialize AdSense if user has explicitly accepted
   if (consentStatus !== 'accepted') {
     return;

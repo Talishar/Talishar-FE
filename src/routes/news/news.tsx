@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import styles from '../index/Index.module.css';
 import NewSetLogo from '../../img/NewSetLogo.webp';
-import { fetchDiscordReleaseNotes, DiscordMessage } from '../../services/contentService';
+import {
+  fetchDiscordReleaseNotes,
+  DiscordMessage
+} from '../../services/contentService';
 import { parseHtmlToReactElements } from 'utils/ParseEscapedString';
 
 const News = () => {
@@ -30,11 +33,10 @@ const News = () => {
   return (
     <div className={styles.newsWrapper}>
       {/* Featured Section */}
-{/*       <h4 className={styles.headlines}> ❄️ Silver Age now available on Talishar! ❄️</h4>
+      {/*       <h4 className={styles.headlines}> ❄️ Silver Age now available on Talishar! ❄️</h4>
        <a href="https://fabtcg.com/products/product/silver-age/" target="_blank" rel="noopener noreferrer">
         <img src={NewSetLogo} className={styles.NewsLogoSquare} alt="Silver Age - Latest Flesh and Blood expansion set" />
       </a> */}
-      
 
       {/* Release Notes Section - Always Visible */}
       <h3>Latest Release Notes</h3>
@@ -47,15 +49,25 @@ const News = () => {
               <div key={message.id} className={styles.messageItem}>
                 <div className={styles.messageHeader}>
                   <strong>
-                    {message.author} - {new Date(message.timestamp).toLocaleDateString('en-US', { 
-                      day: 'numeric',
-                      month: 'short',
-                      year: 'numeric'
-                    }).replace(/(\d+)/, (day) => {
-                      const d = parseInt(day);
-                      const suffix = d % 10 === 1 && d !== 11 ? 'st' : d % 10 === 2 && d !== 12 ? 'nd' : d % 10 === 3 && d !== 13 ? 'rd' : 'th';
-                      return day + suffix;
-                    })}
+                    {message.author} -{' '}
+                    {new Date(message.timestamp)
+                      .toLocaleDateString('en-US', {
+                        day: 'numeric',
+                        month: 'short',
+                        year: 'numeric'
+                      })
+                      .replace(/(\d+)/, (day) => {
+                        const d = parseInt(day);
+                        const suffix =
+                          d % 10 === 1 && d !== 11
+                            ? 'st'
+                            : d % 10 === 2 && d !== 12
+                            ? 'nd'
+                            : d % 10 === 3 && d !== 13
+                            ? 'rd'
+                            : 'th';
+                        return day + suffix;
+                      })}
                   </strong>
                 </div>
                 {message.content && (
@@ -63,22 +75,34 @@ const News = () => {
                     {parseHtmlToReactElements(message.content)}
                   </p>
                 )}
-                
+
                 {/* Attachments */}
                 {message.attachments && message.attachments.length > 0 && (
                   <div className={styles.messageAttachments}>
                     {message.attachments.map((attachment, idx) => (
-                      <a key={idx} href={attachment.url} target="_blank" rel="noopener noreferrer" className={styles.attachment}>
+                      <a
+                        key={idx}
+                        href={attachment.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={styles.attachment}
+                      >
                         {attachment.content_type?.startsWith('image/') ? (
-                          <img src={attachment.url} alt={attachment.filename} className={styles.attachmentImage} />
+                          <img
+                            src={attachment.url}
+                            alt={attachment.filename}
+                            className={styles.attachmentImage}
+                          />
                         ) : (
-                          <div className={styles.attachmentFile}>📎 {attachment.filename}</div>
+                          <div className={styles.attachmentFile}>
+                            📎 {attachment.filename}
+                          </div>
                         )}
                       </a>
                     ))}
                   </div>
                 )}
-                
+
                 {/* Embeds */}
                 {message.embeds && message.embeds.length > 0 && (
                   <div className={styles.messageEmbeds}>
@@ -86,27 +110,39 @@ const News = () => {
                       <div key={idx} className={styles.messageEmbed}>
                         {embed.title && <h4>{embed.title}</h4>}
                         {embed.description && <p>{embed.description}</p>}
-                        {embed.image && <img src={embed.image.url} alt={embed.title} className={styles.embedImage} />}
+                        {embed.image && (
+                          <img
+                            src={embed.image.url}
+                            alt={embed.title}
+                            className={styles.embedImage}
+                          />
+                        )}
                       </div>
                     ))}
                   </div>
                 )}
-                
+
                 {/* Reactions */}
                 {message.reactions && message.reactions.length > 0 && (
                   <div className={styles.messageReactions}>
                     {message.reactions.map((reaction, idx) => (
-                      <span 
-                        key={idx} 
-                        className={styles.reaction} 
+                      <span
+                        key={idx}
+                        className={styles.reaction}
                         title={reaction.emoji.name}
                       >
                         {reaction.emoji.id ? (
-                          <img src={`https://cdn.discordapp.com/emojis/${reaction.emoji.id}.webp`} alt={reaction.emoji.name} className={styles.reactionEmoji} />
+                          <img
+                            src={`https://cdn.discordapp.com/emojis/${reaction.emoji.id}.webp`}
+                            alt={reaction.emoji.name}
+                            className={styles.reactionEmoji}
+                          />
                         ) : (
                           reaction.emoji.name
                         )}
-                        <span className={styles.reactionCount}>{reaction.count}</span>
+                        <span className={styles.reactionCount}>
+                          {reaction.count}
+                        </span>
                       </span>
                     ))}
                   </div>

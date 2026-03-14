@@ -1,6 +1,6 @@
 .popUpContainer {
   position: fixed;
-  z-index: 2000;
+  z-index: 10002;
   min-height: calc(53vh - (1.5 - var(--hover-img-scale)) * 20vh);
   height: calc(55vh * var(--hover-img-scale));
 }

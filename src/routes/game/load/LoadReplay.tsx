@@ -15,16 +15,28 @@ const LoadReplay = () => {
     <article className={styles.articleContainer}>
       <h2>Replay Tool</h2>
       <ReplayGame />
-        <div className={styles.betaDisclaimer}>
+      <div className={styles.betaDisclaimer}>
         <strong>⚠️ The Replay Tool is currently in Beta</strong>
         <p>
-          The Replay Tool is currently in beta. If you encounter any issues, please report them in our Discord{' '}
-          <a href="https://discord.gg/JykuRkdd5S" target="_blank" rel="noopener noreferrer">#bug-reports</a> channel with your{' '}
-          <span className={styles.betaDisclaimerHighlight}>Talishar username</span> and{' '}
+          The Replay Tool is currently in beta. If you encounter any issues,
+          please report them in our Discord{' '}
+          <a
+            href="https://discord.gg/JykuRkdd5S"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            #bug-reports
+          </a>{' '}
+          channel with your{' '}
+          <span className={styles.betaDisclaimerHighlight}>
+            Talishar username
+          </span>{' '}
+          and{' '}
           <span className={styles.betaDisclaimerHighlight}>replay number</span>.
         </p>
         <p>
-          Please note: Replays you save might randomly stop working as engine changes get made during development.
+          Please note: Replays you save might randomly stop working as engine
+          changes get made during development.
         </p>
       </div>
     </article>
@@ -40,9 +52,9 @@ const ReplayGame = () => {
     register,
     formState: { isSubmitting, errors },
     setError,
-    handleSubmit,
+    handleSubmit
   } = useForm<LoadReplayAPI>({
-    mode: 'onBlur',
+    mode: 'onBlur'
   });
 
   const onSubmit: SubmitHandler<LoadReplayAPI> = async (
@@ -50,19 +62,23 @@ const ReplayGame = () => {
   ) => {
     try {
       if (!values.replayNumber) {
-        throw new Error('Replay number is required. Please enter a valid replay game number.');
+        throw new Error(
+          'Replay number is required. Please enter a valid replay game number.'
+        );
       }
 
       const response = await loadReplay(values).unwrap();
       if (response.error) {
         // Build detailed error message from backend response
         let errorMessage = response.error;
-        
+
         if (response.missingFiles) {
           errorMessage += '\n\nMissing files:\n';
-          Object.entries(response.missingFiles).forEach(([file, description]) => {
-            errorMessage += `  • ${file}: ${description}\n`;
-          });
+          Object.entries(response.missingFiles).forEach(
+            ([file, description]) => {
+              errorMessage += `  • ${file}: ${description}\n`;
+            }
+          );
         }
 
         if (response.copyErrors && Array.isArray(response.copyErrors)) {
@@ -80,22 +96,29 @@ const ReplayGame = () => {
         throw new Error(errorMessage);
       } else {
         if (!response.playerID || !response.gameName || !response.authKey) {
-          throw new Error('Server response incomplete. Missing: playerID, gameName, or authKey. Response: ' + JSON.stringify(response));
+          throw new Error(
+            'Server response incomplete. Missing: playerID, gameName, or authKey. Response: ' +
+              JSON.stringify(response)
+          );
         }
         dispatch(
           setReplayStart({
             playerID: response.playerID ?? 0,
             gameID: response.gameName ?? 0,
-            authKey: response.authKey ?? '',
+            authKey: response.authKey ?? ''
           })
         );
-        toast.success(`Replay loaded successfully! Game ID: ${response.gameName}`, { position: 'top-center' });
+        toast.success(
+          `Replay loaded successfully! Game ID: ${response.gameName}`,
+          { position: 'top-center' }
+        );
         navigate(`/game/play/${response.gameName}`, {
           state: { playerID: response.playerID ?? 0 } as GameLocationState
         });
       }
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : String(error);
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
       console.error('Replay load error:', errorMessage);
       toast.error(errorMessage, { position: 'top-center', duration: 6000 });
       setError('root.serverError', {
@@ -109,75 +132,74 @@ const ReplayGame = () => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-        <div>
+      <div>
         <label htmlFor="replayNumber">Replay game number:</label>
         <input
-            id="replayNumber"
-            type="number"
-            placeholder="Enter replay number"
-            {...register('replayNumber', { valueAsNumber: true })}
+          id="replayNumber"
+          type="number"
+          placeholder="Enter replay number"
+          {...register('replayNumber', { valueAsNumber: true })}
         ></input>
         <button
-            type="submit"
-            className={buttonClass}
-            disabled={isSubmitting}
-            aria-busy={isSubmitting}
-            >
-            Replay Game
-            </button>
-        </div>
-        
-        {errors.root?.serverError && (
-          <div className={styles.errorContainer}>
-            <strong className={styles.errorTitle}>⚠️ Error Loading Replay</strong>
-            
-            <div className={styles.errorMessage}>
-              {errors.root.serverError.message}
+          type="submit"
+          className={buttonClass}
+          disabled={isSubmitting}
+          aria-busy={isSubmitting}
+        >
+          Replay Game
+        </button>
+      </div>
+
+      {errors.root?.serverError && (
+        <div className={styles.errorContainer}>
+          <strong className={styles.errorTitle}>⚠️ Error Loading Replay</strong>
+
+          <div className={styles.errorMessage}>
+            {errors.root.serverError.message}
+          </div>
+
+          <details className={styles.troubleshootingDetails}>
+            <summary className={styles.troubleshootingSummary}>
+              Troubleshooting Steps
+            </summary>
+            <div className={styles.troubleshootingContent}>
+              <ol className={styles.troubleshootingList}>
+                <li className={styles.troubleshootingListItem}>
+                  Open browser console: Press{' '}
+                  <kbd className={styles.kbd}>F12</kbd> →{' '}
+                  <strong>Console</strong> tab
+                </li>
+                <li className={styles.troubleshootingListItem}>
+                  Look for{' '}
+                  <code className={styles.codeInline}>
+                    "Replay load error:"
+                  </code>{' '}
+                  message
+                </li>
+                <li className={styles.troubleshootingListItem}>
+                  Verify replay directory exists at:
+                  <div className={styles.pathBox}>
+                    /Talishar/Replays/[replayNumber]/
+                  </div>
+                </li>
+                <li className={styles.troubleshootingListItem}>
+                  Ensure both required files exist:
+                  <div className={styles.filesList}>
+                    <div className={styles.fileItem}>✓ origGamestate.txt</div>
+                    <div className={styles.fileItemLast}>✓ commandfile.txt</div>
+                  </div>
+                </li>
+              </ol>
             </div>
-            
-            <details className={styles.troubleshootingDetails}>
-              <summary className={styles.troubleshootingSummary}>
-                Troubleshooting Steps
-              </summary>
-              <div className={styles.troubleshootingContent}>
-                <ol className={styles.troubleshootingList}>
-                  <li className={styles.troubleshootingListItem}>
-                    Open browser console: Press <kbd className={styles.kbd}>F12</kbd> → <strong>Console</strong> tab
-                  </li>
-                  <li className={styles.troubleshootingListItem}>
-                    Look for <code className={styles.codeInline}>"Replay load error:"</code> message
-                  </li>
-                  <li className={styles.troubleshootingListItem}>
-                    Verify replay directory exists at:
-                    <div className={styles.pathBox}>
-                      /Talishar/Replays/[replayNumber]/
-                    </div>
-                  </li>
-                  <li className={styles.troubleshootingListItem}>
-                    Ensure both required files exist:
-                    <div className={styles.filesList}>
-                      <div className={styles.fileItem}>
-                        ✓ origGamestate.txt
-                      </div>
-                      <div className={styles.fileItemLast}>
-                        ✓ commandfile.txt
-                      </div>
-                    </div>
-                  </li>
-                </ol>
-              </div>
-            </details>
-          </div>
-        )}
-        
-        {isSubmitting && (
-          <div className={styles.loadingState}>
-            Loading replay...
-          </div>
-        )}
+          </details>
+        </div>
+      )}
+
+      {isSubmitting && (
+        <div className={styles.loadingState}>Loading replay...</div>
+      )}
     </form>
   );
-}
-
+};
 
 export default LoadReplay;

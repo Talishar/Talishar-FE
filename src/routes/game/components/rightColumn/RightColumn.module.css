@@ -14,7 +14,9 @@
   justify-content: space-between;
   align-items: stretch;
   align-content: stretch;
-  background: var(--theme-section-background, linear-gradient(135deg, rgba(30, 35, 41, 0.8) 0%, rgba(30, 35, 41, 0.85) 100%));
+  background-color: var(--near-black);
+  margin-right: 0.2em;
+  margin-left: 0.2em;
 }
 
 .mobileTopBar {
@@ -32,18 +34,23 @@
     top: 0;
     left: 0;
     right: 0;
-    height: 5vh;
-    height: 5dvh;
     z-index: 50;
     background-color: var(--near-black);
+    align-items: center;
   }
 
-  .mobileTopBar > div {
+  .mobileTopBarName {
+    position: absolute;
+    left: 0.5em;
+  }
+
+  .mobileTopBarContent {
     width: 100%;
     display: flex;
     flex-direction: row;
     gap: 5px;
     justify-content: center;
+    align-items: center;
   }
 }
 

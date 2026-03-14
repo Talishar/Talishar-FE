@@ -3,16 +3,23 @@ import React from 'react';
 import { Link, Outlet } from 'react-router-dom';
 import styles from './Header.module.scss';
 import TalisharLogo from '../../img/CoinLogo.png';
-import { BsPersonFill, BsShieldFillCheck, BsGear, BsFillBookFill } from 'react-icons/bs';
+import {
+  BsPersonFill,
+  BsShieldFillCheck,
+  BsGear,
+  BsFillBookFill
+} from 'react-icons/bs';
 import { RiLogoutBoxRLine } from 'react-icons/ri';
 import { MdVideoLibrary } from 'react-icons/md';
 import SocialDropdown from 'components/header/SocialDropdown';
+import LanguageSelector from 'components/header/LanguageSelector';
 import { useGetPendingRequestsQuery } from 'features/api/apiSlice';
 import CookieConsent from 'components/CookieConsent';
 import AdBlockingRecovery from 'components/AdBlockingRecovery';
 import SessionRecovery from 'components/SessionRecovery';
 import ChatBar from 'components/chatBar/ChatBar';
 import { Toaster } from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
 
 const Header = () => {
   const { isLoggedIn, isMod, isPatron, currentUserName, logOut } = useAuth();
@@ -21,6 +28,9 @@ const Header = () => {
   });
   const pendingRequestCount = pendingData?.requests?.length || 0;
   const canAccessReplays = isMod || currentUserName === 'Tegunn' || isPatron;
+
+  // Initial stuff to allow the lang to change
+  const { t, i18n, ready } = useTranslation();
 
   const handleLogOut = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -39,24 +49,21 @@ const Header = () => {
               border: '1px solid var(--theme-border)',
               padding: '0.5rem',
               wordBreak: 'break-word',
-              maxWidth: '100vh', 
-              overflow: 'hidden', 
-              textOverflow: 'ellipsis', 
+              maxWidth: '100vh',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
               userSelect: 'none',
               msUserSelect: 'none',
               WebkitUserSelect: 'none',
               MozUserSelect: 'none',
-              zIndex: 10001,
+              zIndex: 10001
             }
           }}
         />
         <ul>
           <li>
             <Link to="/" className={styles.logo}>
-              <img
-                src={TalisharLogo}
-                alt={'Logo Talishar - link to homepage'}
-              />
+              <img src={TalisharLogo} alt={t('HEADER.TALISHAR_LOGO_ALT')} />
             </Link>
           </li>
           <li>
@@ -65,56 +72,62 @@ const Header = () => {
               target={'_blank'}
               className={styles.support}
             >
-              Support Us!
+              {t('HEADER.SUPPORT_US')}
             </a>
           </li>
         </ul>
         <ul>
           <li>
             <Link to="/learn">
-              <BsFillBookFill></BsFillBookFill> <span>Learn</span>
+              <BsFillBookFill></BsFillBookFill> <span>{t('HEADER.LEARN')}</span>
             </Link>
           </li>
           {isLoggedIn && isMod && (
             <li>
               <Link to="/mod">
-                <BsShieldFillCheck size="0.9em"></BsShieldFillCheck> <span>Mod Page</span>
+                <BsShieldFillCheck size="0.9em"></BsShieldFillCheck>{' '}
+                <span>Mod Page</span>
               </Link>
             </li>
           )}
           {isLoggedIn && canAccessReplays && (
             <li>
               <Link to="/game/load">
-                <MdVideoLibrary></MdVideoLibrary> <span>Replays</span>
+                <MdVideoLibrary></MdVideoLibrary>{' '}
+                <span>{t('HEADER.REPLAYS')}</span>
               </Link>
             </li>
           )}
+          <LanguageSelector />
           <SocialDropdown />
           <li>
             {isLoggedIn ? (
               <Link to="/user" className={styles.profileLink}>
-                <BsPersonFill></BsPersonFill> <span>Profile</span>
+                <BsPersonFill></BsPersonFill> <span>{t('HEADER.PROFILE')}</span>
                 {pendingRequestCount > 0 && (
-                  <span className={styles.notificationBadge}>{pendingRequestCount}</span>
+                  <span className={styles.notificationBadge}>
+                    {pendingRequestCount}
+                  </span>
                 )}
               </Link>
             ) : (
               <Link to="/user/login" className={styles.login}>
-                <button>Login</button>
+                <button>{t('HEADER.LOGIN')}</button>
               </Link>
             )}
           </li>
           {isLoggedIn && (
             <li>
               <Link to="/user/settings">
-                <BsGear></BsGear> <span>Settings</span>
+                <BsGear></BsGear> <span>{t('HEADER.SETTINGS')}</span>
               </Link>
             </li>
           )}
           {isLoggedIn && (
             <li>
               <a href="" onClick={handleLogOut}>
-                <RiLogoutBoxRLine></RiLogoutBoxRLine> <span>Logout</span>
+                <RiLogoutBoxRLine></RiLogoutBoxRLine>{' '}
+                <span>{t('HEADER.LOGOUT')}</span>
               </a>
             </li>
           )}

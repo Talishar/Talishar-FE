@@ -11,7 +11,14 @@
   max-width: 480px;
   border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.2));
   border-radius: 10px;
-  background: var(--theme-section-background, linear-gradient(135deg, rgba(30, 35, 41, 0.8) 0%, rgba(30, 35, 41, 0.85) 100%));
+  background: var(
+    --theme-section-background,
+    linear-gradient(
+      135deg,
+      rgba(30, 35, 41, 0.8) 0%,
+      rgba(30, 35, 41, 0.85) 100%
+    )
+  );
   padding: 2rem;
 }
 
@@ -172,8 +179,8 @@
   font-size: 0.9rem;
 }
 
-.loginForm input[type="text"],
-.loginForm input[type="password"] {
+.loginForm input[type='text'],
+.loginForm input[type='password'] {
   margin-bottom: 1rem;
   padding: 0.75rem;
   border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.2));
@@ -183,13 +190,13 @@
   font-size: 1rem;
 }
 
-.loginForm input[type="text"]:focus,
-.loginForm input[type="password"]:focus {
+.loginForm input[type='text']:focus,
+.loginForm input[type='password']:focus {
   outline: none;
   border-color: var(--theme-primary, #4a9eff);
 }
 
-.loginForm input[aria-invalid="true"] {
+.loginForm input[aria-invalid='true'] {
   border-color: var(--theme-danger, #dc3545);
 }
 
@@ -200,7 +207,7 @@
   margin-bottom: 1rem;
 }
 
-.rememberMe input[type="checkbox"] {
+.rememberMe input[type='checkbox'] {
   width: auto;
   margin: 0;
 }

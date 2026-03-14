@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { useFormikContext } from 'formik';
 import { FaExclamationCircle } from 'react-icons/fa';
 import { DeckResponse } from 'interface/API/GetLobbyInfo.php';
@@ -10,9 +10,12 @@ import { MdGames } from 'react-icons/md';
 export type DeckSize = {
   deckSize: number;
   submitSideboard: boolean;
+  canUnreadySideboard?: boolean;
+  isUnreadyLoading?: boolean;
   isWidescreen: boolean;
   needToDoDisclaimer: boolean;
   handleLeave: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  onUnreadySideboard?: () => void;
   onSendInviteClick?: () => void;
   onIsValidChange?: (isValid: boolean) => void;
 };
@@ -20,9 +23,12 @@ export type DeckSize = {
 const StickyFooter = ({
   deckSize,
   submitSideboard,
+  canUnreadySideboard = false,
+  isUnreadyLoading = false,
   isWidescreen,
   needToDoDisclaimer,
   handleLeave,
+  onUnreadySideboard,
   onSendInviteClick,
   onIsValidChange
 }: DeckSize) => {
@@ -33,25 +39,26 @@ const StickyFooter = ({
     errorArray.push(String(value));
   }
 
-  const [sideboardSubmitted, setSideboardSubmitted] = useState(false);
-
   // Update CSS custom property with footer height
   useEffect(() => {
     const updateFooterHeight = () => {
       if (footerRef.current) {
         const height = footerRef.current.offsetHeight;
         if (height > 0) {
-          document.documentElement.style.setProperty('--sticky-footer-height', `${height}px`);
+          document.documentElement.style.setProperty(
+            '--sticky-footer-height',
+            `${height}px`
+          );
         }
       }
     };
 
     // Initial update
     updateFooterHeight();
-    
+
     // Small delay to ensure DOM is fully rendered on mobile
     const timer = setTimeout(updateFooterHeight, 100);
-    
+
     window.addEventListener('resize', updateFooterHeight);
     return () => {
       clearTimeout(timer);
@@ -76,10 +83,27 @@ const StickyFooter = ({
   return (
     <div className={styles.stickyFooter} ref={footerRef}>
       <div className={dynamicContainer}>
-        <div style={{display: 'flex', gap: '2rem', alignItems: 'center', flex: 1}}>
-          <div style={{display: 'flex', alignItems: 'center', gap: '0.5rem'}}>
-            <span style={{whiteSpace: 'nowrap'}} className={styles.labelTextLong}>Copy Invite Link</span>
-            <span style={{whiteSpace: 'nowrap'}} className={styles.labelTextShort}>Copy Link</span>
+        <div
+          style={{
+            display: 'flex',
+            gap: '2rem',
+            alignItems: 'center',
+            flex: 1
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <span
+              style={{ whiteSpace: 'nowrap' }}
+              className={styles.labelTextLong}
+            >
+              Copy Invite Link
+            </span>
+            <span
+              style={{ whiteSpace: 'nowrap' }}
+              className={styles.labelTextShort}
+            >
+              Copy Link
+            </span>
             <div className={styles.clipboardButtonHolder}>
               <button
                 className={styles.buttonClass}
@@ -94,9 +118,21 @@ const StickyFooter = ({
             </div>
           </div>
           {onSendInviteClick && (
-            <div style={{display: 'flex', alignItems: 'center', gap: '0.5rem'}}>
-              <span style={{whiteSpace: 'nowrap'}} className={styles.labelTextLong}>Send Friends Invite</span>
-              <span style={{whiteSpace: 'nowrap'}} className={styles.labelTextShort}>Send Invite</span>
+            <div
+              style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+            >
+              <span
+                style={{ whiteSpace: 'nowrap' }}
+                className={styles.labelTextLong}
+              >
+                Send Friends Invite
+              </span>
+              <span
+                style={{ whiteSpace: 'nowrap' }}
+                className={styles.labelTextShort}
+              >
+                Send Invite
+              </span>
               <button
                 className={styles.buttonClass}
                 onClick={onSendInviteClick}
@@ -123,14 +159,26 @@ const StickyFooter = ({
           </div>
         </div>
         <div className={styles.buttonHolder}>
-          <button
-            className={styles.buttonClass}
-            type="submit"
-            disabled={isValid === false || !submitSideboard || needToDoDisclaimer}
-            onClick={() => setSideboardSubmitted(true)}
-          >
-            {sideboardSubmitted ? 'Resubmit Deck' : 'Submit Deck'}
-          </button>
+          {canUnreadySideboard ? (
+            <button
+              className={styles.buttonClass}
+              type="button"
+              disabled={isUnreadyLoading || needToDoDisclaimer}
+              onClick={onUnreadySideboard}
+            >
+              {'Edit Deck'}
+            </button>
+          ) : (
+            <button
+              className={styles.buttonClass}
+              type="submit"
+              disabled={
+                isValid === false || !submitSideboard || needToDoDisclaimer
+              }
+            >
+              Confirm Deck
+            </button>
+          )}
           {isWidescreen && (
             <button className={leaveLobby} onClick={handleLeave}>
               Leave

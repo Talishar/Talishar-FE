@@ -16,7 +16,7 @@
   grid-template-columns: 3em auto 3em 1fr auto auto;
   padding: 1em 0.5em;
   gap: 0.5em;
-  grid-template-areas: 
+  grid-template-areas:
     'clipboard start content . deckCount submit'
     '. . . . alarm alarm';
   align-items: center;

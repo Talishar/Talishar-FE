@@ -1,6 +1,13 @@
 .aboutContainer {
   width: 100%;
-  background: var(--theme-section-background, linear-gradient(135deg, rgba(30, 35, 41, 0.8) 0%, rgba(30, 35, 41, 0.85) 100%));
+  background: var(
+    --theme-section-background,
+    linear-gradient(
+      135deg,
+      rgba(30, 35, 41, 0.8) 0%,
+      rgba(30, 35, 41, 0.85) 100%
+    )
+  );
   border-top: 2px solid var(--theme-border-light, rgba(255, 255, 255, 0.1));
   border-bottom: 2px solid var(--theme-border-light, rgba(255, 255, 255, 0.1));
   padding: 2em 1em;
@@ -257,7 +264,7 @@
 
 .aboutTalisharSection {
   margin: 2em 0;
-  padding: 1em;  
+  padding: 1em;
   background: rgba(70, 100, 150, 0.1);
   border-left: 4px solid rgba(100, 150, 200, 0.4);
   border-radius: 6px;
@@ -278,7 +285,7 @@
 
 .maintenanceSection {
   margin: 2em 0;
-  padding: 1em;  
+  padding: 1em;
   background: rgba(100, 70, 150, 0.1);
   border-left: 4px solid rgba(150, 100, 200, 0.4);
   border-radius: 6px;
@@ -320,7 +327,7 @@
 
 .lssRelationship {
   margin: 2em 0;
-  padding: 1em;  
+  padding: 1em;
   background: rgba(150, 100, 70, 0.1);
   border-left: 4px solid rgba(200, 150, 100, 0.4);
   border-radius: 6px;

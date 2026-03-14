@@ -52,7 +52,7 @@ const SkipDefenseReactionsToggle = () => {
           })
         }
         data-tooltip="Pass Defense Reactions"
-        data-placement="bottom"
+        data-placement="top"
         disabled={isDisabled}
       >
         <TbShieldOff aria-hidden="true" fontSize={'2em'} />

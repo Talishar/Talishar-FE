@@ -3,7 +3,12 @@ import styles from './SessionRecovery.module.css';
 import useAuth from 'hooks/useAuth';
 import { useGetLastActiveGameQuery } from 'features/api/apiSlice';
 import { useNavigate } from 'react-router-dom';
-import { deleteGameAuthKey, saveGameAuthKey, loadGameAuthKeyFromIndexedDB, loadGameUsername } from 'utils/LocalKeyManagement';
+import {
+  deleteGameAuthKey,
+  saveGameAuthKey,
+  loadGameAuthKeyFromIndexedDB,
+  loadGameUsername
+} from 'utils/LocalKeyManagement';
 import { toast } from 'react-hot-toast';
 
 const SessionRecovery: React.FC = () => {
@@ -25,9 +30,10 @@ const SessionRecovery: React.FC = () => {
 
     const dismissalKey = `sessionRecoveryDismissed_${data.gameName}`;
     const dismissedTime = localStorage.getItem(dismissalKey);
-    
+
     if (dismissedTime) {
-      const hoursSinceDismissal = (Date.now() - new Date(dismissedTime).getTime()) / (1000 * 60 * 60);
+      const hoursSinceDismissal =
+        (Date.now() - new Date(dismissedTime).getTime()) / (1000 * 60 * 60);
       if (hoursSinceDismissal < 2) {
         // Show as dismissed for 2 hours
         setIsDismissed(true);
@@ -45,16 +51,16 @@ const SessionRecovery: React.FC = () => {
   // Auto-cleanup finished/invalid games
   useEffect(() => {
     if (!data?.gameName) return;
-    
+
     // If game doesn't exist or is not in progress, auto-cleanup
     if (data?.gameExists === false || data?.gameInProgress === false) {
       // Game is finished or invalid, clear the stored data
       deleteGameAuthKey(data.gameName);
-      
+
       // Mark as dismissed to prevent re-checking for 2 hours
       const dismissalKey = `sessionRecoveryDismissed_${data.gameName}`;
       localStorage.setItem(dismissalKey, new Date().toISOString());
-      
+
       setIsDismissed(true);
       setShowPrompt(false);
     }
@@ -83,7 +89,10 @@ const SessionRecovery: React.FC = () => {
   /**
    * Attempt to recover authKey from multiple sources if primary is unavailable
    */
-  const attemptAuthKeyRecovery = async (gameId: number | string, playerID: number): Promise<string | undefined> => {
+  const attemptAuthKeyRecovery = async (
+    gameId: number | string,
+    playerID: number
+  ): Promise<string | undefined> => {
     try {
       // First try IndexedDB backup
       const idbAuthKey = await loadGameAuthKeyFromIndexedDB(gameId as number);
@@ -95,7 +104,9 @@ const SessionRecovery: React.FC = () => {
       // Second try to recover from backend API (requires user to be logged in)
       if (isLoggedIn && currentUserName) {
         try {
-          const response = await fetch(`/APIs/RecoverAuthKey.php?gameName=${gameId}&playerID=${playerID}`);
+          const response = await fetch(
+            `/APIs/RecoverAuthKey.php?gameName=${gameId}&playerID=${playerID}`
+          );
           if (response.ok) {
             const result = await response.json();
             if (result.success && result.authKey) {
@@ -103,7 +114,9 @@ const SessionRecovery: React.FC = () => {
               return result.authKey;
             }
           } else if (response.status === 410) {
-            console.warn('Auth key not available in session, game may need rejoin');
+            console.warn(
+              'Auth key not available in session, game may need rejoin'
+            );
           }
         } catch (error) {
           console.warn('Backend recovery failed:', error);
@@ -117,7 +130,7 @@ const SessionRecovery: React.FC = () => {
 
   const handleRejoin = async () => {
     if (!data?.gameName || !data?.playerID) return;
-    
+
     // Reject spectators (playerID == 3) from saving auth keys
     if (data.playerID === 3) {
       navigate(`/game/lobby/${data.gameName}`, {
@@ -127,17 +140,22 @@ const SessionRecovery: React.FC = () => {
     }
 
     setIsRecovering(true);
-    
+
     try {
       let authKeyToUse = data?.authKey;
 
       // If server didn't provide authKey, attempt recovery
       if (!authKeyToUse) {
         console.log('⚠️ Server authKey unavailable, attempting recovery...');
-        authKeyToUse = await attemptAuthKeyRecovery(data.gameName, data.playerID);
+        authKeyToUse = await attemptAuthKeyRecovery(
+          data.gameName,
+          data.playerID
+        );
 
         if (!authKeyToUse) {
-          toast.error('Unable to recover game session. Please rejoin the game.');
+          toast.error(
+            'Unable to recover game session. Please rejoin the game.'
+          );
           setIsRecovering(false);
           return;
         }
@@ -146,8 +164,13 @@ const SessionRecovery: React.FC = () => {
       }
 
       // Save auth key before navigating
-      saveGameAuthKey(data.gameName, authKeyToUse, data.playerID, currentUserName || undefined);
-      
+      saveGameAuthKey(
+        data.gameName,
+        authKeyToUse,
+        data.playerID,
+        currentUserName || undefined
+      );
+
       // Navigate to the game
       navigate(`/game/lobby/${data.gameName}`, {
         state: { playerID: data.playerID }
@@ -161,7 +184,7 @@ const SessionRecovery: React.FC = () => {
 
   const handleDismiss = () => {
     if (!data?.gameName) return;
-    
+
     setIsDismissed(true);
     // Remember the dismissal for THIS SPECIFIC GAME for 2 hours
     const dismissalKey = `sessionRecoveryDismissed_${data.gameName}`;
@@ -172,7 +195,9 @@ const SessionRecovery: React.FC = () => {
     return null;
   }
 
-  const opponentStatus = data?.opponentDisconnected ? ' (Opponent Disconnected)' : '';
+  const opponentStatus = data?.opponentDisconnected
+    ? ' (Opponent Disconnected)'
+    : '';
   const gameId = data?.gameName;
 
   return (
@@ -180,11 +205,17 @@ const SessionRecovery: React.FC = () => {
       <div className={styles.message}>
         <h3 className={styles.title}>⚡ Resume Your Game?</h3>
         <p className={styles.description}>
-          You have an active game <span className={styles.gameId}>#{gameId}</span> waiting
-          {opponentStatus ? <span className={styles.opponentStatus}>{opponentStatus}</span> : ''}
+          You have an active game{' '}
+          <span className={styles.gameId}>#{gameId}</span> waiting
+          {opponentStatus ? (
+            <span className={styles.opponentStatus}>{opponentStatus}</span>
+          ) : (
+            ''
+          )}
         </p>
         <p className={styles.opponentInfo}>
-          Opponent: <span className={styles.opponentName}>{data?.opponentName}</span>
+          Opponent:{' '}
+          <span className={styles.opponentName}>{data?.opponentName}</span>
         </p>
         <div className={styles.buttonGroup}>
           <button

@@ -11,4 +11,3 @@ export interface UserProfileAPIResponse {
   isMetafySupporter?: boolean;
   metafyCommunities?: MetafyCommunity[];
 }
-

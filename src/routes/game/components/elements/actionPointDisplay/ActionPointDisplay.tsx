@@ -4,7 +4,10 @@ import { RootState } from 'app/Store';
 import styles from './ActionPointDisplay.module.css';
 import classNames from 'classnames';
 import ActionPointPopup from '../actionPointPopup/ActionPointPopup';
-import { removeActionPointPopup, addActionPointPopup } from 'features/game/GameSlice';
+import {
+  removeActionPointPopup,
+  addActionPointPopup
+} from 'features/game/GameSlice';
 
 interface ActionPointDisplayProps {
   isPlayer?: boolean;
@@ -57,7 +60,9 @@ export default function ActionPointDisplay(props: ActionPointDisplayProps) {
   };
 
   const isOtherPlayerTurn = Number(turnPlayer) === Number(otherPlayer);
-  const shouldShowRedImage = props.isPlayer ? isOtherPlayerTurn : !isOtherPlayerTurn;
+  const shouldShowRedImage = props.isPlayer
+    ? isOtherPlayerTurn
+    : !isOtherPlayerTurn;
 
   const actionPointClass = classNames(styles.actionPointCounter, {
     [styles.actionPointRed]: shouldShowRedImage

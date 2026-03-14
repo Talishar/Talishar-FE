@@ -79,15 +79,20 @@ export default function PermanentsZone(prop: Displayrow) {
                   className={cardContainerStyles}
                   initial={{ opacity: 0, left: -100 }}
                   animate={{ opacity: 1, left: 0 }}
-                  exit={{ opacity: 0, transition: { duration: 0.3, ease: 'easeOut' } }}                  
+                  exit={{
+                    opacity: 0,
+                    transition: { duration: 0.3, ease: 'easeOut' }
+                  }}
                   layout
                 >
                   <CardDisplay card={cardStack.card} isPlayer={isPlayer} />
                   {cardStack.count > 1 && (
                     <div
                       title={`Stack of ${cardStack.count}`}
-                      className={isPlayer ? styles.counter : styles.counterOpponent}
-                      >
+                      className={
+                        isPlayer ? styles.counter : styles.counterOpponent
+                      }
+                    >
                       x {cardStack.count}
                     </div>
                   )}

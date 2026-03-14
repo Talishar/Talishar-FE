@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { GiAngelOutfit, GiGroundSprout } from 'react-icons/gi';
-import { GiDroplets } from "react-icons/gi";
-import { FaPrayingHands } from "react-icons/fa";
+import { GiDroplets } from 'react-icons/gi';
+import { FaPrayingHands } from 'react-icons/fa';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import { setCardListLoadFocus } from 'features/game/GameSlice';
@@ -103,10 +103,7 @@ const EarthCount = (prop: Displayrow) => {
   return (
     <>
       {!!hasEarth && (
-        <div
-          title="Earth Cards Count"
-          className={styles.NotClickableItem}
-        >
+        <div title="Earth Cards Count" className={styles.NotClickableItem}>
           <GiGroundSprout /> {earthCount}
         </div>
       )}
@@ -119,7 +116,9 @@ const BlessingsCount = (prop: Displayrow) => {
   const dispatch = useAppDispatch();
   const { isPlayer } = prop;
   const blessingsCount = useAppSelector((state: RootState) =>
-    isPlayer ? state.game.playerOne.blessingsCount : state.game.playerTwo.blessingsCount
+    isPlayer
+      ? state.game.playerOne.blessingsCount
+      : state.game.playerTwo.blessingsCount
   );
 
   if (!hasBlessings && blessingsCount != undefined && blessingsCount > 0) {
@@ -129,10 +128,7 @@ const BlessingsCount = (prop: Displayrow) => {
   return (
     <>
       {!!hasBlessings && (
-        <div
-          title="Count Your Blessings"
-          className={styles.NotClickableItem}
-        >
+        <div title="Count Your Blessings" className={styles.NotClickableItem}>
           <FaPrayingHands /> {blessingsCount}
         </div>
       )}
@@ -178,7 +174,10 @@ const BloodDebtCount = (prop: Displayrow) => {
   return (
     <>
       {!!hasBloodDebt ? (
-        <div title={`Blood Debt${bloodDebtCount === 1 ? '' : 's'}`} className={bloodDebtItem}>
+        <div
+          title={`Blood Debt${bloodDebtCount === 1 ? '' : 's'}`}
+          className={bloodDebtItem}
+        >
           <GiDroplets /> {bloodDebtCount}
         </div>
       ) : (

@@ -95,7 +95,7 @@ export const CARD_BACK = {
   '94': 'CBDazzyfizzle5',
   '95': 'CBDazzyfizzle6',
   '96': 'CBThaiCardsShop',
-  '97': 'CBNikobru', 
+  '97': 'CBNikobru',
   '98': 'CBDazzyfizzle7',
   '99': 'CBDazzyfizzle8',
   '100': 'CBSmilingFleshBag',
@@ -129,7 +129,7 @@ export const CARD_BACK = {
   '128': 'CBFabDads',
   '129': 'CBFablazing',
   '130': 'CBScowlingFleshBag2',
-  '131': 'CBSnow',
+  '131': 'CBSnow'
 } as { [key: string]: string };
 
 /* All available playmats - CSS class names (must match image files) */
@@ -174,9 +174,9 @@ export const PLAYMATS = {
   '37': 'TalisharDark',
   '38': 'TalisharRed',
   '39': 'TalisharBlue',
-  '40': 'TalisharGreen',  
+  '40': 'TalisharGreen',
   '41': 'TalisharPurple',
-  '42': 'LibraryOfSolana',
+  '42': 'LibraryOfSolana'
 } as { [key: string]: string };
 
 /* Display names for playmats (user-friendly formatting) */
@@ -223,7 +223,7 @@ export const PLAYMAT_DISPLAY_NAMES = {
   '39': 'Talishar Blue',
   '40': 'Talishar Green',
   '41': 'Talishar Purple',
-  '42': 'Library of Solana',
+  '42': 'Library of Solana'
 } as { [key: string]: string };
 
 /* Default playmats available to all players */
@@ -257,5 +257,5 @@ export const PLAYER_PLAYMATS = [
   '34',
   '35',
   '36',
-  '42',
+  '42'
 ];

@@ -1,5 +1,10 @@
 import React, { useState } from 'react';
-import { useBlockUserMutation, useGetBlockedUsersQuery, useUnblockUserMutation, useSearchUsersQuery } from 'features/api/apiSlice';
+import {
+  useBlockUserMutation,
+  useGetBlockedUsersQuery,
+  useUnblockUserMutation,
+  useSearchUsersQuery
+} from 'features/api/apiSlice';
 import { toast } from 'react-hot-toast';
 import { RiDeleteBin5Line } from 'react-icons/ri';
 import { MdPersonAdd } from 'react-icons/md';
@@ -28,10 +33,7 @@ export const BlockedUsers: React.FC<BlockedUsersProps> = ({ className }) => {
 
   // Search users with debouncing
   const shouldSearch = debouncedSearchTerm.length >= 2;
-  const {
-    data: searchResults,
-    isLoading: searchLoading
-  } = useSearchUsersQuery(
+  const { data: searchResults, isLoading: searchLoading } = useSearchUsersQuery(
     { searchTerm: debouncedSearchTerm, limit: 10 },
     { skip: !shouldSearch }
   );
@@ -47,7 +49,9 @@ export const BlockedUsers: React.FC<BlockedUsersProps> = ({ className }) => {
   }, [searchTerm]);
 
   // Get set of blocked user IDs
-  const blockedUserIds = new Set(blockedUsersData?.blockedUsers?.map((user: any) => user.blockedUserId) || []);
+  const blockedUserIds = new Set(
+    blockedUsersData?.blockedUsers?.map((user: any) => user.blockedUserId) || []
+  );
 
   const handleBlockUser = async (blockedUsername: string) => {
     try {
@@ -62,7 +66,11 @@ export const BlockedUsers: React.FC<BlockedUsersProps> = ({ className }) => {
   };
 
   const handleUnblockUser = async (blockedUser: BlockedUser) => {
-    if (!window.confirm(`Are you sure you want to unblock ${blockedUser.username}?`)) {
+    if (
+      !window.confirm(
+        `Are you sure you want to unblock ${blockedUser.username}?`
+      )
+    ) {
       return;
     }
 
@@ -77,19 +85,26 @@ export const BlockedUsers: React.FC<BlockedUsersProps> = ({ className }) => {
 
   return (
     <article className={`${styles.blockedUsersContainer} ${className}`}>
-      <h3 
+      <h3
         className={styles.title}
         onClick={() => setIsExpanded(!isExpanded)}
-        style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', userSelect: 'none' }}
+        style={{
+          cursor: 'pointer',
+          display: 'flex',
+          alignItems: 'center',
+          userSelect: 'none'
+        }}
       >
         Blocked Users
-        <span style={{ 
-          marginLeft: '8px',
-          transform: isExpanded ? 'rotate(90deg)' : 'rotate(0deg)', 
-          transition: 'transform 0.2s ease',
-          display: 'flex',
-          alignItems: 'center'
-        }}>
+        <span
+          style={{
+            marginLeft: '8px',
+            transform: isExpanded ? 'rotate(90deg)' : 'rotate(0deg)',
+            transition: 'transform 0.2s ease',
+            display: 'flex',
+            alignItems: 'center'
+          }}
+        >
           <IoMdArrowDropright />
         </span>
       </h3>
@@ -111,8 +126,12 @@ export const BlockedUsers: React.FC<BlockedUsersProps> = ({ className }) => {
             {/* Search Results */}
             {showSearchResults && (
               <div className={styles.searchResults}>
-                {searchLoading && <p className={styles.loadingText}>Searching...</p>}
-                {!searchLoading && searchResults?.users && searchResults.users.length > 0 ? (
+                {searchLoading && (
+                  <p className={styles.loadingText}>Searching...</p>
+                )}
+                {!searchLoading &&
+                searchResults?.users &&
+                searchResults.users.length > 0 ? (
                   <ul className={styles.resultsList}>
                     {[...searchResults.users]
                       .sort((a, b) => {
@@ -133,9 +152,15 @@ export const BlockedUsers: React.FC<BlockedUsersProps> = ({ className }) => {
                               className={`${styles.blockButton} ${
                                 isBlocked ? styles.blockButtonDisabled : ''
                               }`}
-                              onClick={() => !isBlocked && handleBlockUser(user.username)}
+                              onClick={() =>
+                                !isBlocked && handleBlockUser(user.username)
+                              }
                               disabled={isBlocked}
-                              title={isBlocked ? 'User already blocked' : 'Block user'}
+                              title={
+                                isBlocked
+                                  ? 'User already blocked'
+                                  : 'Block user'
+                              }
                             >
                               {isBlocked ? '✓ Blocked' : <MdPersonAdd />}
                             </button>
@@ -144,7 +169,9 @@ export const BlockedUsers: React.FC<BlockedUsersProps> = ({ className }) => {
                       })}
                   </ul>
                 ) : (
-                  !searchLoading && <p className={styles.noResults}>No users found</p>
+                  !searchLoading && (
+                    <p className={styles.noResults}>No users found</p>
+                  )
                 )}
               </div>
             )}
@@ -154,29 +181,34 @@ export const BlockedUsers: React.FC<BlockedUsersProps> = ({ className }) => {
           <div className={styles.blockedUsersTableContainer}>
             {blockedUsersLoading ? (
               <p className={styles.loadingText}>Loading blocked users...</p>
-            ) : blockedUsersData?.blockedUsers && blockedUsersData.blockedUsers.length > 0 ? (
+            ) : blockedUsersData?.blockedUsers &&
+              blockedUsersData.blockedUsers.length > 0 ? (
               <table className={styles.blockedUsersTable}>
                 <thead>
                   <tr>
                     <th scope="col">Blocked User</th>
-                    <th scope="col" style={{ width: '120px' }}>Action</th>
+                    <th scope="col" style={{ width: '120px' }}>
+                      Action
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
-                  {blockedUsersData.blockedUsers.map((blockedUser: BlockedUser) => (
-                    <tr key={blockedUser.blockedUserId}>
-                      <td>{blockedUser.username}</td>
-                      <td className={styles.deleteColumn}>
-                        <button
-                          className={styles.unblockButton}
-                          onClick={() => handleUnblockUser(blockedUser)}
-                          title="Unblock user"
-                        >
-                          <RiDeleteBin5Line fontSize="1.5em" />
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
+                  {blockedUsersData.blockedUsers.map(
+                    (blockedUser: BlockedUser) => (
+                      <tr key={blockedUser.blockedUserId}>
+                        <td>{blockedUser.username}</td>
+                        <td className={styles.deleteColumn}>
+                          <button
+                            className={styles.unblockButton}
+                            onClick={() => handleUnblockUser(blockedUser)}
+                            title="Unblock user"
+                          >
+                            <RiDeleteBin5Line fontSize="1.5em" />
+                          </button>
+                        </td>
+                      </tr>
+                    )
+                  )}
                 </tbody>
               </table>
             ) : (

@@ -1,8 +1,25 @@
 import React, { useState } from 'react';
-import { useAddFriendMutation, useGetFriendsListQuery, useRemoveFriendMutation, useSearchUsersQuery, useGetPendingRequestsQuery, useAcceptRequestMutation, useRejectRequestMutation, useGetSentRequestsQuery, useCancelRequestMutation, useUpdateFriendNicknameMutation } from 'features/api/apiSlice';
+import {
+  useAddFriendMutation,
+  useGetFriendsListQuery,
+  useRemoveFriendMutation,
+  useSearchUsersQuery,
+  useGetPendingRequestsQuery,
+  useAcceptRequestMutation,
+  useRejectRequestMutation,
+  useGetSentRequestsQuery,
+  useCancelRequestMutation,
+  useUpdateFriendNicknameMutation
+} from 'features/api/apiSlice';
 import { toast } from 'react-hot-toast';
 import { RiDeleteBin5Line } from 'react-icons/ri';
-import { MdPersonAdd, MdCheckCircle, MdCancel, MdBlock, MdEdit } from 'react-icons/md';
+import {
+  MdPersonAdd,
+  MdCheckCircle,
+  MdCancel,
+  MdBlock,
+  MdEdit
+} from 'react-icons/md';
 import { IoMdArrowDropright } from 'react-icons/io';
 import styles from './FriendsList.module.css';
 import { Friend } from 'interface/API/FriendListAPI.php';
@@ -22,7 +39,10 @@ export const FriendsList: React.FC<FriendsListProps> = ({ className }) => {
   const [showSearchResults, setShowSearchResults] = useState(false);
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
   const [isExpanded, setIsExpanded] = useState(true);
-  const [nicknameEdit, setNicknameEdit] = useState<NicknameEditState>({ friendUserId: null, nickname: '' });
+  const [nicknameEdit, setNicknameEdit] = useState<NicknameEditState>({
+    friendUserId: null,
+    nickname: ''
+  });
 
   const {
     data: friendsData,
@@ -51,10 +71,7 @@ export const FriendsList: React.FC<FriendsListProps> = ({ className }) => {
 
   // Search users with debouncing
   const shouldSearch = debouncedSearchTerm.length >= 2;
-  const {
-    data: searchResults,
-    isLoading: searchLoading
-  } = useSearchUsersQuery(
+  const { data: searchResults, isLoading: searchLoading } = useSearchUsersQuery(
     { searchTerm: debouncedSearchTerm, limit: 10 },
     { skip: !shouldSearch }
   );
@@ -70,7 +87,9 @@ export const FriendsList: React.FC<FriendsListProps> = ({ className }) => {
   }, [searchTerm]);
 
   // Get set of user IDs that have pending sent requests
-  const sentRequestUserIds = new Set(sentData?.sentRequests?.map((req: any) => req.recipientUserId) || []);
+  const sentRequestUserIds = new Set(
+    sentData?.sentRequests?.map((req: any) => req.recipientUserId) || []
+  );
 
   const handleAddFriend = async (friendUsername: string) => {
     try {
@@ -86,7 +105,11 @@ export const FriendsList: React.FC<FriendsListProps> = ({ className }) => {
   };
 
   const handleRemoveFriend = async (friend: Friend) => {
-    if (!window.confirm(`Are you sure you want to remove ${friend.username} from your friends?`)) {
+    if (
+      !window.confirm(
+        `Are you sure you want to remove ${friend.username} from your friends?`
+      )
+    ) {
       return;
     }
 
@@ -99,7 +122,10 @@ export const FriendsList: React.FC<FriendsListProps> = ({ className }) => {
     }
   };
 
-  const handleAcceptRequest = async (requesterUserId: number, requesterUsername: string) => {
+  const handleAcceptRequest = async (
+    requesterUserId: number,
+    requesterUsername: string
+  ) => {
     try {
       await acceptRequest({ requesterUserId }).unwrap();
       toast.success(`Added ${requesterUsername} as a friend!`);
@@ -110,7 +136,10 @@ export const FriendsList: React.FC<FriendsListProps> = ({ className }) => {
     }
   };
 
-  const handleRejectRequest = async (requesterUserId: number, requesterUsername: string) => {
+  const handleRejectRequest = async (
+    requesterUserId: number,
+    requesterUsername: string
+  ) => {
     try {
       await rejectRequest({ requesterUserId }).unwrap();
       toast.success(`Rejected friend request from ${requesterUsername}`);
@@ -120,8 +149,13 @@ export const FriendsList: React.FC<FriendsListProps> = ({ className }) => {
     }
   };
 
-  const handleCancelRequest = async (recipientUserId: number, recipientUsername: string) => {
-    if (!window.confirm(`Cancel friend request sent to ${recipientUsername}?`)) {
+  const handleCancelRequest = async (
+    recipientUserId: number,
+    recipientUsername: string
+  ) => {
+    if (
+      !window.confirm(`Cancel friend request sent to ${recipientUsername}?`)
+    ) {
       return;
     }
 
@@ -135,16 +169,19 @@ export const FriendsList: React.FC<FriendsListProps> = ({ className }) => {
   };
 
   const handleEditNickname = (friend: Friend) => {
-    setNicknameEdit({ friendUserId: friend.friendUserId, nickname: friend.nickname || '' });
+    setNicknameEdit({
+      friendUserId: friend.friendUserId,
+      nickname: friend.nickname || ''
+    });
   };
 
   const handleSaveNickname = async () => {
     if (nicknameEdit.friendUserId === null) return;
 
     try {
-      await updateFriendNickname({ 
-        friendUserId: nicknameEdit.friendUserId, 
-        nickname: nicknameEdit.nickname 
+      await updateFriendNickname({
+        friendUserId: nicknameEdit.friendUserId,
+        nickname: nicknameEdit.nickname
       }).unwrap();
       toast.success('Nickname updated successfully');
       setNicknameEdit({ friendUserId: null, nickname: '' });
@@ -160,19 +197,26 @@ export const FriendsList: React.FC<FriendsListProps> = ({ className }) => {
 
   return (
     <article className={`${styles.friendsListContainer} ${className}`}>
-      <h3 
+      <h3
         className={styles.title}
         onClick={() => setIsExpanded(!isExpanded)}
-        style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', userSelect: 'none' }}
+        style={{
+          cursor: 'pointer',
+          display: 'flex',
+          alignItems: 'center',
+          userSelect: 'none'
+        }}
       >
         Friends List
-        <span style={{ 
-          marginLeft: '8px',
-          transform: isExpanded ? 'rotate(90deg)' : 'rotate(0deg)', 
-          transition: 'transform 0.2s ease',
-          display: 'flex',
-          alignItems: 'center'
-        }}>
+        <span
+          style={{
+            marginLeft: '8px',
+            transform: isExpanded ? 'rotate(90deg)' : 'rotate(0deg)',
+            transition: 'transform 0.2s ease',
+            display: 'flex',
+            alignItems: 'center'
+          }}
+        >
           <IoMdArrowDropright />
         </span>
       </h3>
@@ -181,280 +225,335 @@ export const FriendsList: React.FC<FriendsListProps> = ({ className }) => {
         <>
           {/* Add Friend Section */}
           <div className={styles.addFriendSection}>
-        <div className={styles.searchContainer}>
-          <input
-            type="text"
-            placeholder="Search for players to add..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className={styles.searchInput}
-          />
-        </div>
-
-        {/* Search Results */}
-        {!searchLoading && searchResults?.users && searchResults.users.length > 0 ? (
-          (() => {
-            const sortedResults = [...searchResults.users].sort((a, b) => {
-              const aExact = a.username === searchTerm;
-              const bExact = b.username === searchTerm;
-
-              if (aExact && !bExact) return -1;
-              if (bExact && !aExact) return 1;
-              return 0;
-            });
-
-            return (
-              <ul className={styles.resultsList}>
-                {sortedResults.map((user) => {
-                  const hasRequestSent = sentRequestUserIds.has(user.usersId);
-                  return (
-                    <li key={user.usersId} className={styles.resultItem}>
-                      <span>{user.username}</span>
-                      <button
-                        className={`${styles.addButton} ${
-                          hasRequestSent ? styles.addButtonDisabled : ''
-                        }`}
-                        onClick={() => !hasRequestSent && handleAddFriend(user.username)}
-                        disabled={hasRequestSent}
-                        title={hasRequestSent ? 'Friend request already sent' : 'Add friend'}
-                      >
-                        {hasRequestSent ? <MdBlock /> : <MdPersonAdd />}
-                      </button>
-                    </li>
-                  );
-                })}
-              </ul>
-            );
-          })()
-        ) : (
-          !searchLoading && <p className={styles.noResults}>No users found</p>
-        )}
-      </div>
-
-      {/* Sent Friend Requests Section */}
-      {!sentLoading && sentData?.sentRequests && sentData.sentRequests.length > 0 && (
-        <div className={styles.friendsTableContainer}>
-          <h4 className={styles.subtitle}>Pending Friend Requests Sent</h4>
-          <table className={styles.friendsTable}>
-            <thead>
-              <tr>
-                <th scope="col">Sent To</th>
-                <th scope="col" className={styles.actionColumnHeader}>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {sentData.sentRequests.map((request: any) => (
-                <tr key={request.friendshipId}>
-                  <td>
-                    <div className={styles.friendNameContainer}>
-                      <div className={styles.friendIcons}>
-                        {createPatreonIconMap(
-                          request.isContributor,
-                          request.isPvtVoidPatron,
-                          request.isPatron,
-                          false,
-                          request.metafyTiers
-                        )
-                          .filter(icon => icon.condition)
-                          .map(icon => (
-                            <a
-                              key={icon.src}
-                              href={icon.href}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              title={icon.title}
-                              className={styles.friendIcon}
-                            >
-                              <img src={icon.src} alt={icon.title} />
-                            </a>
-                          ))}
-                      </div>
-                      <span>{request.recipientUsername}</span>
-                    </div>
-                  </td>
-                  <td className={styles.deleteColumn}>
-                    <button
-                      className={styles.rejectButton}
-                      onClick={() => handleCancelRequest(request.recipientUserId, request.recipientUsername)}
-                      title="Cancel friend request"
-                    >
-                      <MdCancel fontSize="1.5em" />
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
-
-      {/* Pending Friend Requests Section */}
-      {!pendingLoading && pendingData?.requests && pendingData.requests.length > 0 && (
-        <div className={styles.friendsTableContainer}>
-          <h4 className={styles.subtitle}>Pending Friend Requests</h4>
-          <table className={styles.friendsTable}>
-            <thead>
-              <tr>
-                <th scope="col">From</th>
-                <th scope="col" className={styles.actionColumnHeader}>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {pendingData.requests.map((request: any) => (
-                <tr key={request.friendshipId}>
-                  <td>
-                    <div className={styles.friendNameContainer}>
-                      <div className={styles.friendIcons}>
-                        {createPatreonIconMap(
-                          request.isContributor,
-                          request.isPvtVoidPatron,
-                          request.isPatron,
-                          false,
-                          request.metafyTiers
-                        )
-                          .filter(icon => icon.condition)
-                          .map(icon => (
-                            <a
-                              key={icon.src}
-                              href={icon.href}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              title={icon.title}
-                              className={styles.friendIcon}
-                            >
-                              <img src={icon.src} alt={icon.title} />
-                            </a>
-                          ))}
-                      </div>
-                      <span>{request.requesterUsername}</span>
-                    </div>
-                  </td>
-                  <td className={styles.deleteColumn}>
-                    <button
-                      className={styles.acceptButton}
-                      onClick={() => handleAcceptRequest(request.requesterUserId, request.requesterUsername)}
-                      title="Accept friend request"
-                    >
-                      <MdCheckCircle fontSize="1.5em" />
-                    </button>
-                    <button
-                      className={styles.rejectButton}
-                      onClick={() => handleRejectRequest(request.requesterUserId, request.requesterUsername)}
-                      title="Reject friend request"
-                    >
-                      <MdCancel fontSize="1.5em" />
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
-
-      {/* Friends List */}
-      <div className={styles.friendsTableContainer}>
-        {friendsLoading ? (
-          <p className={styles.loadingText}>Loading friends...</p>
-        ) : friendsData?.friends && friendsData.friends.length > 0 ? (
-          <>
-            <table className={styles.friendsTable}>
-              <thead>
-                <tr>
-                  <th scope="col">Friend</th>
-                  <th scope="col" className={styles.actionColumnHeader}>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {friendsData.friends.map((friend) => (
-                  <tr key={friend.friendUserId}>
-                    <td>
-                      <div className={styles.friendNameContainer}>
-                        <div className={styles.friendIcons}>
-                          {createPatreonIconMap(
-                            friend.isContributor,
-                            friend.isPvtVoidPatron,
-                            friend.isPatron,
-                            false,
-                            friend.metafyTiers
-                          )
-                            .filter(icon => icon.condition)
-                            .map(icon => (
-                              <a
-                                key={icon.src}
-                                href={icon.href}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                title={icon.title}
-                                className={styles.friendIcon}
-                              >
-                                <img src={icon.src} alt={icon.title} />
-                              </a>
-                            ))}
-                        </div>
-                        <span className={styles.username}>{friend.username}</span>
-                        {friend.nickname && (
-                          <span className={styles.nickname}>({friend.nickname})</span>
-                        )}
-                      </div>
-                    </td>
-                    <td className={styles.deleteColumn}>
-                      <button
-                        className={styles.editButton}
-                        onClick={() => handleEditNickname(friend)}
-                        title="Edit nickname"
-                      >
-                        <MdEdit fontSize="1.5em" />
-                      </button>
-                      <button
-                        className={styles.deleteButton}
-                        onClick={() => handleRemoveFriend(friend)}
-                        title="Remove friend"
-                      >
-                        <RiDeleteBin5Line fontSize="1.5em" />
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </>
-        ) : (
-          <p></p>
-        )}
-      </div>
-
-      {/* Nickname Edit Modal */}
-      {nicknameEdit.friendUserId !== null && (
-        <div className={styles.modalOverlay} onClick={handleCancelNicknameEdit}>
-          <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
-            <h3>Edit Nickname</h3>
-            <input
-              type="text"
-              placeholder="Enter nickname (optional)"
-              value={nicknameEdit.nickname}
-              onChange={(e) => setNicknameEdit({ ...nicknameEdit, nickname: e.target.value })}
-              maxLength={50}
-              className={styles.nicknameInput}
-              autoFocus
-            />
-            <div className={styles.modalActions}>
-              <button 
-                className={styles.saveButton}
-                onClick={handleSaveNickname}
-              >
-                Save
-              </button>
-              <button 
-                className={styles.cancelButton}
-                onClick={handleCancelNicknameEdit}
-              >
-                Cancel
-              </button>
+            <div className={styles.searchContainer}>
+              <input
+                type="text"
+                placeholder="Search for players to add..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className={styles.searchInput}
+              />
             </div>
+
+            {/* Search Results */}
+            {!searchLoading &&
+            searchResults?.users &&
+            searchResults.users.length > 0
+              ? (() => {
+                  const sortedResults = [...searchResults.users].sort(
+                    (a, b) => {
+                      const aExact = a.username === searchTerm;
+                      const bExact = b.username === searchTerm;
+
+                      if (aExact && !bExact) return -1;
+                      if (bExact && !aExact) return 1;
+                      return 0;
+                    }
+                  );
+
+                  return (
+                    <ul className={styles.resultsList}>
+                      {sortedResults.map((user) => {
+                        const hasRequestSent = sentRequestUserIds.has(
+                          user.usersId
+                        );
+                        return (
+                          <li key={user.usersId} className={styles.resultItem}>
+                            <span>{user.username}</span>
+                            <button
+                              className={`${styles.addButton} ${
+                                hasRequestSent ? styles.addButtonDisabled : ''
+                              }`}
+                              onClick={() =>
+                                !hasRequestSent &&
+                                handleAddFriend(user.username)
+                              }
+                              disabled={hasRequestSent}
+                              title={
+                                hasRequestSent
+                                  ? 'Friend request already sent'
+                                  : 'Add friend'
+                              }
+                            >
+                              {hasRequestSent ? <MdBlock /> : <MdPersonAdd />}
+                            </button>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  );
+                })()
+              : !searchLoading && (
+                  <p className={styles.noResults}>No users found</p>
+                )}
           </div>
-        </div>
-      )}
+
+          {/* Sent Friend Requests Section */}
+          {!sentLoading &&
+            sentData?.sentRequests &&
+            sentData.sentRequests.length > 0 && (
+              <div className={styles.friendsTableContainer}>
+                <h4 className={styles.subtitle}>
+                  Pending Friend Requests Sent
+                </h4>
+                <table className={styles.friendsTable}>
+                  <thead>
+                    <tr>
+                      <th scope="col">Sent To</th>
+                      <th scope="col" className={styles.actionColumnHeader}>
+                        Action
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {sentData.sentRequests.map((request: any) => (
+                      <tr key={request.friendshipId}>
+                        <td>
+                          <div className={styles.friendNameContainer}>
+                            <div className={styles.friendIcons}>
+                              {createPatreonIconMap(
+                                request.isContributor,
+                                request.isPvtVoidPatron,
+                                request.isPatron,
+                                false,
+                                request.metafyTiers
+                              )
+                                .filter((icon) => icon.condition)
+                                .map((icon) => (
+                                  <a
+                                    key={icon.src}
+                                    href={icon.href}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    title={icon.title}
+                                    className={styles.friendIcon}
+                                  >
+                                    <img src={icon.src} alt={icon.title} />
+                                  </a>
+                                ))}
+                            </div>
+                            <span>{request.recipientUsername}</span>
+                          </div>
+                        </td>
+                        <td className={styles.deleteColumn}>
+                          <button
+                            className={styles.rejectButton}
+                            onClick={() =>
+                              handleCancelRequest(
+                                request.recipientUserId,
+                                request.recipientUsername
+                              )
+                            }
+                            title="Cancel friend request"
+                          >
+                            <MdCancel fontSize="1.5em" />
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+
+          {/* Pending Friend Requests Section */}
+          {!pendingLoading &&
+            pendingData?.requests &&
+            pendingData.requests.length > 0 && (
+              <div className={styles.friendsTableContainer}>
+                <h4 className={styles.subtitle}>Pending Friend Requests</h4>
+                <table className={styles.friendsTable}>
+                  <thead>
+                    <tr>
+                      <th scope="col">From</th>
+                      <th scope="col" className={styles.actionColumnHeader}>
+                        Action
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {pendingData.requests.map((request: any) => (
+                      <tr key={request.friendshipId}>
+                        <td>
+                          <div className={styles.friendNameContainer}>
+                            <div className={styles.friendIcons}>
+                              {createPatreonIconMap(
+                                request.isContributor,
+                                request.isPvtVoidPatron,
+                                request.isPatron,
+                                false,
+                                request.metafyTiers
+                              )
+                                .filter((icon) => icon.condition)
+                                .map((icon) => (
+                                  <a
+                                    key={icon.src}
+                                    href={icon.href}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    title={icon.title}
+                                    className={styles.friendIcon}
+                                  >
+                                    <img src={icon.src} alt={icon.title} />
+                                  </a>
+                                ))}
+                            </div>
+                            <span>{request.requesterUsername}</span>
+                          </div>
+                        </td>
+                        <td className={styles.deleteColumn}>
+                          <button
+                            className={styles.acceptButton}
+                            onClick={() =>
+                              handleAcceptRequest(
+                                request.requesterUserId,
+                                request.requesterUsername
+                              )
+                            }
+                            title="Accept friend request"
+                          >
+                            <MdCheckCircle fontSize="1.5em" />
+                          </button>
+                          <button
+                            className={styles.rejectButton}
+                            onClick={() =>
+                              handleRejectRequest(
+                                request.requesterUserId,
+                                request.requesterUsername
+                              )
+                            }
+                            title="Reject friend request"
+                          >
+                            <MdCancel fontSize="1.5em" />
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+
+          {/* Friends List */}
+          <div className={styles.friendsTableContainer}>
+            {friendsLoading ? (
+              <p className={styles.loadingText}>Loading friends...</p>
+            ) : friendsData?.friends && friendsData.friends.length > 0 ? (
+              <>
+                <table className={styles.friendsTable}>
+                  <thead>
+                    <tr>
+                      <th scope="col">Friend</th>
+                      <th scope="col" className={styles.actionColumnHeader}>
+                        Action
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {friendsData.friends.map((friend) => (
+                      <tr key={friend.friendUserId}>
+                        <td>
+                          <div className={styles.friendNameContainer}>
+                            <div className={styles.friendIcons}>
+                              {createPatreonIconMap(
+                                friend.isContributor,
+                                friend.isPvtVoidPatron,
+                                friend.isPatron,
+                                false,
+                                friend.metafyTiers
+                              )
+                                .filter((icon) => icon.condition)
+                                .map((icon) => (
+                                  <a
+                                    key={icon.src}
+                                    href={icon.href}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    title={icon.title}
+                                    className={styles.friendIcon}
+                                  >
+                                    <img src={icon.src} alt={icon.title} />
+                                  </a>
+                                ))}
+                            </div>
+                            <span className={styles.username}>
+                              {friend.username}
+                            </span>
+                            {friend.nickname && (
+                              <span className={styles.nickname}>
+                                ({friend.nickname})
+                              </span>
+                            )}
+                          </div>
+                        </td>
+                        <td className={styles.deleteColumn}>
+                          <button
+                            className={styles.editButton}
+                            onClick={() => handleEditNickname(friend)}
+                            title="Edit nickname"
+                          >
+                            <MdEdit fontSize="1.5em" />
+                          </button>
+                          <button
+                            className={styles.deleteButton}
+                            onClick={() => handleRemoveFriend(friend)}
+                            title="Remove friend"
+                          >
+                            <RiDeleteBin5Line fontSize="1.5em" />
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </>
+            ) : (
+              <p></p>
+            )}
+          </div>
+
+          {/* Nickname Edit Modal */}
+          {nicknameEdit.friendUserId !== null && (
+            <div
+              className={styles.modalOverlay}
+              onClick={handleCancelNicknameEdit}
+            >
+              <div
+                className={styles.modalContent}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <h3>Edit Nickname</h3>
+                <input
+                  type="text"
+                  placeholder="Enter nickname (optional)"
+                  value={nicknameEdit.nickname}
+                  onChange={(e) =>
+                    setNicknameEdit({
+                      ...nicknameEdit,
+                      nickname: e.target.value
+                    })
+                  }
+                  maxLength={50}
+                  className={styles.nicknameInput}
+                  autoFocus
+                />
+                <div className={styles.modalActions}>
+                  <button
+                    className={styles.saveButton}
+                    onClick={handleSaveNickname}
+                  >
+                    Save
+                  </button>
+                  <button
+                    className={styles.cancelButton}
+                    onClick={handleCancelNicknameEdit}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
         </>
       )}
     </article>

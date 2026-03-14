@@ -101,8 +101,8 @@
 
 .passTurn {
   position: absolute;
-  top: .75vh;
-  right: .75vh;
+  top: 0.75vh;
+  right: 0.75vh;
   width: 6.5vh;
   font-size: 1.25em;
   margin-top: 10px;
@@ -129,7 +129,7 @@
   .activeLayersBox {
     min-width: auto;
   }
-  
+
   .activeLayersCallToAction {
     font-size: 0.65em;
     gap: 5px;

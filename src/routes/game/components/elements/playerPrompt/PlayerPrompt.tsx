@@ -34,9 +34,7 @@ const PlayerPrompt = () => {
   return (
     <div className={styles.playerPrompt}>
       <div className={styles.content}>
-        <div>
-          {parseHtmlToReactElements(playerPrompt?.helpText ?? '')}
-        </div>
+        <div>{parseHtmlToReactElements(playerPrompt?.helpText ?? '')}</div>
       </div>
       {buttons}
     </div>

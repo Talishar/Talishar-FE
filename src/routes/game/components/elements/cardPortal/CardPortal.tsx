@@ -8,6 +8,7 @@ import classNames from 'classnames';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import { CARD_IMAGES_PATH, getCollectionCardImagePath } from 'utils';
 import { useCookies } from 'react-cookie';
+import { createPortal } from 'react-dom';
 
 const popUpGap = 130;
 
@@ -75,7 +76,7 @@ export default function CardPortal() {
   });
 
   if (popup.xCoord === undefined || popup.yCoord === undefined) {
-    return <CardDetails src={src} />;
+    return createPortal(<CardDetails src={src} />, document.body);
   }
 
   const isDFC = dfcSrc != null;
@@ -84,33 +85,36 @@ export default function CardPortal() {
   if (isDFC) {
     // For DFC cards, position at cursor position and let absolute positioning handle left/right
     if (popup.xCoord > windowWidth / 2) {
-      popUpStyle.right = (windowWidth - (popup.xCoord - popUpGap * hoverImageSize)).toString() + 'px';
-    } 
-    else {
-      popUpStyle.left =  (popup.xCoord + popUpGap * hoverImageSize*3.5).toString() + 'px';
+      popUpStyle.right =
+        (windowWidth - (popup.xCoord - popUpGap * hoverImageSize)).toString() +
+        'px';
+    } else {
+      popUpStyle.left =
+        (popup.xCoord + popUpGap * hoverImageSize * 3.5).toString() + 'px';
     }
   } else {
     // For single cards, use the existing logic to position left or right of cursor
     if (popup.xCoord > windowWidth / 2) {
-      popUpStyle.right = (windowWidth - (popup.xCoord - popUpGap * hoverImageSize)).toString() + 'px';
+      popUpStyle.right =
+        (windowWidth - (popup.xCoord - popUpGap * hoverImageSize)).toString() +
+        'px';
     } else {
-      popUpStyle.left = (popup.xCoord + popUpGap * hoverImageSize).toString() + 'px';
+      popUpStyle.left =
+        (popup.xCoord + popUpGap * hoverImageSize).toString() + 'px';
     }
   }
 
   if (popup.yCoord < windowHeight / 2) {
-    popUpStyle.top = ((popup.yCoord + popUpGap)/2).toString() + 'px';
+    popUpStyle.top = ((popup.yCoord + popUpGap) / 2).toString() + 'px';
   } else {
     if (hoverImageSize < 1.1) {
       popUpStyle.bottom = (windowHeight - popup.yCoord).toString() + 'px';
+    } else {
+      popUpStyle.bottom = '10vh';
     }
-    else {
-      popUpStyle.bottom = '10vh';    
-    }
-    
   }
 
-  return (
+  return createPortal(
     <div className={styles.popUpContainer} style={popUpStyle}>
       {isDFC && (
         <CardDetails
@@ -125,6 +129,7 @@ export default function CardPortal() {
         containerStyle={popUpStyle}
         isOpponent={popup.isOpponent}
       />
-    </div>
+    </div>,
+    document.body
   );
 }

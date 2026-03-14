@@ -10,13 +10,13 @@ import { shallowEqual } from 'react-redux';
 import { getGameInfo } from 'features/game/GameSlice';
 
 export default function LeftColumn() {
-
   const [isMobile, setIsMobile] = useState(false);
   const { playerID } = useAppSelector(getGameInfo, shallowEqual);
 
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth < 1200) { // Standardized breakpoint
+      if (window.innerWidth < 1200) {
+        // Standardized breakpoint
         setIsMobile(true);
       } else {
         setIsMobile(false);
@@ -29,13 +29,9 @@ export default function LeftColumn() {
 
   return (
     <div className={styles.leftColumn}>
-      {!isMobile && (
-        <PlayerName isPlayer={false} />
-      )}
+      {!isMobile && <PlayerName isPlayer={false} />}
       <ActiveEffects />
-      {(!isMobile || playerID === 3) && (
-        <PlayerName isPlayer={true} />
-      )}
+      {(!isMobile || playerID === 3) && <PlayerName isPlayer={true} />}
       <ReplayPanel />
       <SpectatorCameraPanel />
       <DevToolPanel />

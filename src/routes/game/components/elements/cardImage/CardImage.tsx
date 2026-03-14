@@ -17,12 +17,15 @@ export interface CardImage {
 }
 
 export const CardImage = (props: CardImage) => {
-  const { altArts, opponentAltArts } = useAppSelector(getGameInfo, shallowEqual);
+  const { altArts, opponentAltArts } = useAppSelector(
+    getGameInfo,
+    shallowEqual
+  );
   let src = props.src;
   const { isShuffling, isOpponent } = props;
 
   let srcArray = src.split('/');
-  let cardNumber = srcArray?.pop()?.split(".")[0]?.split('-')[0];
+  let cardNumber = srcArray?.pop()?.split('.')[0]?.split('-')[0];
 
   if (isOpponent && opponentAltArts) {
     for (let i = 0; i < opponentAltArts.length; i++) {
@@ -49,7 +52,7 @@ export const CardImage = (props: CardImage) => {
   };
 
   const imageClassNames = classNames(props.className, {
-    [styles.shuffling]: isShuffling,
+    [styles.shuffling]: isShuffling
   });
 
   return (

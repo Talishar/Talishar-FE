@@ -6,11 +6,16 @@
   bottom: 15vh;
   left: 15vw;
   right: 15vw;
-  background: linear-gradient(135deg, rgba(20, 20, 30, 0.98) 0%, rgba(10, 10, 20, 0.98) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(20, 20, 30, 0.98) 0%,
+    rgba(10, 10, 20, 0.98) 100%
+  );
   padding: 2.5vh;
   border: 2px solid var(--theme-primary);
   border-radius: 12px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
 }
 

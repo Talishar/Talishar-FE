@@ -46,19 +46,19 @@ export const fetchAllSettings = createAsyncThunk(
       authKey: String(params.game.authKey),
       popupType: PLAYER_OPTIONS
     });
-    
+
     try {
       const response = await fetch(queryURL + '?' + queryParams, {
         method: 'GET',
         headers: {},
         credentials: 'include'
       });
-      
+
       // Check if response is ok before trying to parse
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      
+
       const text = await response.text();
       if (!text || text.trim() === '') {
         console.warn('Settings endpoint returned empty response');
@@ -88,14 +88,23 @@ export const fetchAllSettings = createAsyncThunk(
 
 export const updateOptions = createAsyncThunk(
   'options/setSettings',
-  async ({ game, settings }: { game: GameStaticInfo; settings: Setting[] }) => {
+  async ({
+    game,
+    settings,
+    userID
+  }: {
+    game: GameStaticInfo;
+    settings: Setting[];
+    userID?: string;
+  }) => {
     const queryURL = `${BACKEND_URL}${URL_END_POINT.PROCESS_INPUT_POST}`;
     const payload = {
       playerID: game.playerID,
       gameName: game.gameID,
       authKey: game.authKey,
       mode: PROCESS_INPUT.CHANGE_SETTING,
-      submission: { settings: [...settings] }
+      submission: { settings: [...settings] },
+      userID: userID
     };
 
     try {
@@ -105,10 +114,10 @@ export const updateOptions = createAsyncThunk(
         credentials: 'include',
         body: JSON.stringify(payload as ProcessInputAPI)
       });
-      
+
       // Get response text first to debug
       const text = await response.text();
-      
+
       // Try to parse as JSON
       try {
         const data = JSON.parse(text);
@@ -187,4 +196,5 @@ export const getSettingsLanguage = (state: RootState) =>
 export default optionsSlice.reducer;
 
 const { actions } = optionsSlice;
-export const { settingAdded, settingUpdated, settingsReceived, setLanguage } = actions;
+export const { settingAdded, settingUpdated, settingsReceived, setLanguage } =
+  actions;

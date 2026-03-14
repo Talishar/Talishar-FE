@@ -7,13 +7,18 @@ interface ResourcesParticleProps {
   onAnimationComplete: () => void;
 }
 
-export default function ResourcesParticle({ isChiCard, onAnimationComplete }: ResourcesParticleProps) {
+export default function ResourcesParticle({
+  isChiCard,
+  onAnimationComplete
+}: ResourcesParticleProps) {
   const [startPosition] = useState({
     x: Math.random() * 60 - 30, // Random horizontal offset from center
     y: -50 // Start above the pitch zone
   });
 
-  const particleClass = isChiCard ? styles.chiParticle : styles.ResourcesParticle;
+  const particleClass = isChiCard
+    ? styles.chiParticle
+    : styles.ResourcesParticle;
 
   return (
     <motion.div

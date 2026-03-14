@@ -54,7 +54,7 @@ const EndGameMenuOptions = () => {
         )}
         {!roguelikeGameID && (
           <>
-        {/*<div className={styles.buttonDiv} onClick={handleQuickRematch}>
+            {/*<div className={styles.buttonDiv} onClick={handleQuickRematch}>
               Quick Rematch (no sideboarding)
             </div> */}
             <div className={styles.buttonDiv} onClick={handleFullRematch}>

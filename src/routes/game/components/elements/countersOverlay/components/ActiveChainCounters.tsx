@@ -86,7 +86,7 @@ export const ActiveCardCounterOverlay = (props: Props) => {
       )}
       {activeCombatChain.highTide && (
         <TooltipWrapper className={styles.icon} tooltip="High Tide Active">
-          <GiWaterSplash  />
+          <GiWaterSplash />
         </TooltipWrapper>
       )}
       {!!activeCombatChain.damagePrevention && (

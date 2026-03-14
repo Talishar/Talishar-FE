@@ -31,7 +31,9 @@ const MetafySignup = () => {
 
     // Check if this code has already been processed (survives StrictMode remounts)
     if (processedCodes.has(code)) {
-      console.log('[MetafySignup] Code already processed, skipping duplicate request');
+      console.log(
+        '[MetafySignup] Code already processed, skipping duplicate request'
+      );
       return;
     }
 

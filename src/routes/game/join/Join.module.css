@@ -17,7 +17,14 @@
 }
 
 .formContainer {
-  background: var(--theme-section-background, linear-gradient(135deg, rgba(30, 35, 41, 0.8) 0%, rgba(30, 35, 41, 0.85) 100%));
+  background: var(
+    --theme-section-background,
+    linear-gradient(
+      135deg,
+      rgba(30, 35, 41, 0.8) 0%,
+      rgba(30, 35, 41, 0.85) 100%
+    )
+  );
   width: 460px;
   border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.2));
   border-radius: 10px;
