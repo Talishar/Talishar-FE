@@ -10,8 +10,8 @@ body {
   width: 100dvw;
   height: 100vh;
   height: 100dvh;
-  --card-size: calc(13vh * var(--card-scale));
-  --card-size: calc(13dvh * var(--card-scale));
+  --card-size: calc(min(13vh, 7.8vw) * var(--card-scale));
+  --card-size: calc(min(13dvh, 7.8dvw) * var(--card-scale));
 }
 
 @media (orientation: portrait) {
@@ -42,8 +42,8 @@ body {
   .app {
     height: 100%;
     width: 100%;
-    font-size: calc(1.5vh - 2px);
-    font-size: calc(1.5dvh - 2px);
+    font-size: min(calc(1.5vh - 2px), calc(0.9vw - 1px));
+    font-size: min(calc(1.5dvh - 2px), calc(0.9dvw - 1px));
   }
 }
 
@@ -85,6 +85,9 @@ body {
     padding-bottom: 6dvh;
   }
 }
+
+/* Font-size is now fluid via min(dvh, dvw) in the landscape .app rule above.
+   No stepped breakpoints needed - scaling is continuous. */
 
 .defaultToast {
   background-color: var(--near-black);

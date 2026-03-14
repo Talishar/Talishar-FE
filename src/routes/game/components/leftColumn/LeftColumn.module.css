@@ -7,8 +7,8 @@
   left: 0px;
   top: 0px;
   bottom: 0px;
-  width: 10vh;
-  width: 10dvh;
+  width: min(10vh, 6vw);
+  width: min(10dvh, 6dvw);
   height: 100vh;
 }
 
