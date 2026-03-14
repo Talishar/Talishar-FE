@@ -7,7 +7,7 @@ import { MdClose, MdInventory2 } from 'react-icons/md';
 import CardPopUp from '../cardPopUp/CardPopUp';
 import CardImage from '../cardImage/CardImage';
 
-export default function Inventory({ buttonClassName }: { buttonClassName?: string }) {
+export default function Inventory({ buttonClassName, showLabel }: { buttonClassName?: string; showLabel?: boolean }) {
   const [isOpen, setIsOpen] = useState(false);
   const gameState = useAppSelector((state: RootState) => state.game);
   const playerID = gameState?.gameInfo?.playerID;
@@ -28,6 +28,7 @@ export default function Inventory({ buttonClassName }: { buttonClassName?: strin
         aria-label="Inventory"
       >
         <MdInventory2 />
+        {showLabel && ' Inventory'}
       </button>
 
       {isOpen &&

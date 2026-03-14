@@ -15,10 +15,12 @@ import { useButtonDisableContext } from 'contexts/ButtonDisableContext';
 
 const FullControlToggle = ({
   btnClass,
-  activeBtnClass
+  activeBtnClass,
+  showLabel
 }: {
   btnClass?: string;
   activeBtnClass?: string;
+  showLabel?: boolean;
 } = {}) => {
   const dispatch = useAppDispatch();
   const { isDisabled, triggerDisable } = useButtonDisableContext();
@@ -74,6 +76,7 @@ const FullControlToggle = ({
         disabled={isDisabled}
       >
         <GiUsable aria-hidden="true" />
+        {showLabel && ' Hold Priority'}
       </button>
     </div>
   );

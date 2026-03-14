@@ -153,3 +153,108 @@
 .btn[data-tooltip]::after {
   z-index: 99 !important;
 }
+
+/* === Mobile-specific button sizing === */
+@media (orientation: portrait), (max-width: 950px) {
+  .btn {
+    width: 52px;
+    height: 38px;
+    min-width: 46px;
+    margin-bottom: 0;
+    padding: 6px 10px;
+    font-size: 14px;
+    border-radius: 6px;
+  }
+
+  .btn svg {
+    font-size: 20px !important;
+    width: 20px !important;
+    height: 20px !important;
+    flex-shrink: 0;
+  }
+
+  .menuList {
+    margin-top: 0;
+    gap: 6px;
+  }
+
+  /* Hide tooltips on mobile — buttons are touch targets, labels not needed */
+  .btn[data-tooltip]::before,
+  .btn[data-tooltip]::after {
+    display: none !important;
+  }
+}
+
+/* === Overflow menu === */
+.overflowWrapper {
+  position: relative;
+}
+
+.overflowBtn {
+  composes: btn;
+}
+
+.overflowPanel {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  background-color: var(--near-black);
+  border: 1px solid var(--theme-border, rgba(100, 100, 100, 0.5));
+  border-radius: 8px;
+  padding: 6px;
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 180px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.overflowItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  margin-bottom: 0;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--secondary-inverse, #e0e0e0);
+  font-size: 14px;
+  font-weight: 400;
+  cursor: pointer;
+  touch-action: manipulation;
+  text-align: left;
+  width: 100%;
+  white-space: nowrap;
+  transition: background 0.15s ease;
+}
+
+.overflowItem:active {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* Overflow items have text labels — never show tooltips */
+.overflowItem[data-tooltip]::before,
+.overflowItem[data-tooltip]::after {
+  display: none !important;
+}
+
+.overflowItem svg {
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.overflowItemActive {
+  composes: overflowItem;
+  color: var(--alarm);
+}
+
+.overflowBackdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 199;
+}

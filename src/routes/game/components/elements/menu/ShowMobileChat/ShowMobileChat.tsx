@@ -34,18 +34,7 @@ const ShowMobileChat = () => {
           data-placement="bottom"
           disabled={isDisabled}
         >
-          {showChatModal && (
-            <BsChatFill
-              aria-hidden="true"
-              style={{ fontSize: '2em', width: '20px' }}
-            />
-          )}
-          {!showChatModal && (
-            <BsChatFill
-              aria-hidden="true"
-              style={{ fontSize: '2em', width: '20px' }}
-            />
-          )}
+          <BsChatFill aria-hidden="true" />
         </button>
       </div>
       {showChatModal && <ChatBoxMobile />}

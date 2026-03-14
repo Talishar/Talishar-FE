@@ -11,7 +11,13 @@ import { DEFAULT_SHORTCUTS } from 'appConstants';
 import useShortcut from 'hooks/useShortcut';
 import { GiHamburgerMenu } from 'react-icons/gi';
 
-function OptionsMenuToggle() {
+function OptionsMenuToggle({
+  btnClass,
+  showLabel
+}: {
+  btnClass?: string;
+  showLabel?: boolean;
+} = {}) {
   const optionsMenu = useAppSelector(
     (state: RootState) => state.game.optionsMenu
   );
@@ -28,13 +34,14 @@ function OptionsMenuToggle() {
   return (
     <div>
       <button
-        className={styles.btn}
+        className={btnClass ?? styles.btn}
         aria-label="Toggle main menu"
         onClick={() => toggleMenu()}
         data-tooltip="Settings Menu"
         data-placement="bottom"
       >
         <GiHamburgerMenu aria-hidden="true" />
+        {showLabel && ' Settings'}
       </button>
     </div>
   );

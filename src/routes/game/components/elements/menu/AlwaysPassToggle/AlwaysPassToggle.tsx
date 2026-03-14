@@ -15,10 +15,12 @@ import { useButtonDisableContext } from 'contexts/ButtonDisableContext';
 
 const AlwaysPassToggle = ({
   btnClass,
-  activeBtnClass
+  activeBtnClass,
+  showLabel
 }: {
   btnClass?: string;
   activeBtnClass?: string;
+  showLabel?: boolean;
 } = {}) => {
   const dispatch = useAppDispatch();
   const { isDisabled, triggerDisable } = useButtonDisableContext();
@@ -74,6 +76,7 @@ const AlwaysPassToggle = ({
         disabled={isDisabled}
       >
         <BiSkipNextCircle aria-hidden="true" />
+        {showLabel && ' Always Pass'}
       </button>
     </div>
   );

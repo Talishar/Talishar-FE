@@ -6,7 +6,15 @@ import useShowModal from 'hooks/useShowModals';
 import { toggleShowModals } from 'features/game/GameSlice';
 import classNames from 'classnames';
 
-const HideModalsToggle = () => {
+const HideModalsToggle = ({
+  btnClass,
+  activeBtnClass,
+  showLabel
+}: {
+  btnClass?: string;
+  activeBtnClass?: string;
+  showLabel?: boolean;
+} = {}) => {
   const showModal = useShowModal();
   const dispatch = useAppDispatch();
 
@@ -18,12 +26,14 @@ const HideModalsToggle = () => {
     dispatch(toggleShowModals());
   };
 
+  const buttonStyle = classNames(btnClass ?? styles.btn, {
+    [activeBtnClass ?? styles.buttonActive]: !showModal
+  });
+
   return (
     <div>
       <button
-        className={classNames(styles.btn, {
-          [styles.buttonActive]: !showModal
-        })}
+        className={buttonStyle}
         aria-label="Show Arena"
         onClick={handleClickHideWindowsToggle}
         data-tooltip="Show Arena"
@@ -31,6 +41,7 @@ const HideModalsToggle = () => {
       >
         {showModal && <FaEye aria-hidden="true" />}
         {!showModal && <FaEyeSlash aria-hidden="true" />}
+        {showLabel && (showModal ? ' Show Arena' : ' Hide Arena')}
       </button>
     </div>
   );
