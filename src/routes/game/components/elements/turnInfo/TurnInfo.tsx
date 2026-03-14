@@ -96,7 +96,7 @@ export default function TurnInfo() {
           <FaRegClock /> {fancyTimeFormat(timer)}
         </div>
       </div>
-      <div className={styles.playerName}>{displayName}</div>
+      <div className={styles.playerName}>{displayName}'s Turn</div>
     </div>
   );
 }
