@@ -69,6 +69,9 @@ export default function LastPlayed() {
     (state: RootState) => state.game.gameDynamicInfo.recentlyPlayed ?? []
   );
   const gameInfo = useAppSelector(getGameInfo, shallowEqual);
+  const playerCardBack = useAppSelector(
+    (state: RootState) => state.game.playerOne.CardBack?.cardNumber
+  ) ?? 'CardBack';
   const { getLanguage } = useLanguageSelector();
   const isStreamerMode =
     useSetting({ settingName: IS_STREAMER_MODE })?.value === '1';
@@ -81,7 +84,21 @@ export default function LastPlayed() {
   }, [recentlyPlayed.length]);
 
   if (recentlyPlayed.length === 0) {
-    return null;
+    const placeholderSrc = getCollectionCardImagePath({
+      path: CARD_SQUARES_PATH,
+      locale: getLanguage(),
+      cardNumber: playerCardBack
+    });
+    return (
+      <div className={styles.container}>
+        <div className={styles.header}>
+          <span className={styles.label}>Recently Played</span>
+        </div>
+        <div className={styles.lastPlayed}>
+          <CardImage src={placeholderSrc} className={styles.img} />
+        </div>
+      </div>
+    );
   }
 
   const canPrev = index > 0;
