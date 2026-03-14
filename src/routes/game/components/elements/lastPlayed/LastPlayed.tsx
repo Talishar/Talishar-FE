@@ -94,8 +94,14 @@ export default function LastPlayed() {
         <div className={styles.header}>
           <span className={styles.label}>Recently Played</span>
         </div>
-        <div className={styles.lastPlayed}>
-          <CardImage src={placeholderSrc} className={styles.img} />
+        <div className={styles.viewport}>
+          <div className={styles.track}>
+            <div className={styles.slide}>
+              <div className={styles.lastPlayed}>
+                <CardImage src={placeholderSrc} className={styles.img} />
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     );
