@@ -84,7 +84,7 @@ function MenuContent() {
     const handleResize = () => {
       const width = window.innerWidth;
       setIsMobile(width < 600);
-      setIsTablet(width >= 600 && width < 1200);
+      setIsTablet(width >= 600 && width < 950);
     };
     window.addEventListener('resize', handleResize);
     handleResize();

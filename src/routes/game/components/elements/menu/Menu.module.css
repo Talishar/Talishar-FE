@@ -52,6 +52,43 @@
   display: flex;
   gap: 0.5em;
   justify-content: center;
+  width: 100%;
+}
+
+@media (max-width: 1200px) {
+  .btn {
+    width: 2.6vh;
+    height: 2.6vh;
+    min-width: 0;
+    padding: 0.15em;
+    font-size: 0.8em;
+    flex-shrink: 1;
+  }
+
+  .btn svg {
+    font-size: 1.1em !important;
+    width: 1em !important;
+    height: 1em !important;
+  }
+
+  .menuList {
+    gap: 0.3em;
+    margin-top: 0.3em;
+  }
+}
+
+@media (max-width: 1000px) {
+  .btn {
+    width: 2.4vh;
+    height: 2.4vh;
+    padding: 0.1em;
+    font-size: 0.75em;
+  }
+
+  .menuList {
+    gap: 0.2em;
+    margin-top: 0.25em;
+  }
 }
 
 .menuRow {

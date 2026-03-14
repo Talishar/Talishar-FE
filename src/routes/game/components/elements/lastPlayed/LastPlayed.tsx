@@ -1,7 +1,7 @@
-import React from 'react';
-import { useAppDispatch, useAppSelector } from 'app/Hooks';
+import React, { useState, useEffect } from 'react';
+import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
-import { clearPopUp, setPopUp, getGameInfo } from 'features/game/GameSlice';
+import { getGameInfo } from 'features/game/GameSlice';
 import CardImage from '../cardImage/CardImage';
 import styles from './LastPlayed.module.css';
 import CardPopUp from '../cardPopUp/CardPopUp';
@@ -11,6 +11,7 @@ import classNames from 'classnames';
 import { shallowEqual } from 'react-redux';
 import useSetting from 'hooks/useSetting';
 import { IS_STREAMER_MODE } from 'features/options/constants';
+import { Card } from 'features/Card';
 
 // Cards with Meld mechanics that need to be rotated
 const MELD_CARDS = new Set([
@@ -27,44 +28,105 @@ const MELD_CARDS = new Set([
   'vaporize__shock_yellow'
 ]);
 
-export default function LastPlayed() {
-  let cardRedux = useAppSelector(
-    (state: RootState) => state.game.gameDynamicInfo.lastPlayed
-  );
-  const gameInfo = useAppSelector(getGameInfo, shallowEqual);
-  const { getLanguage } = useLanguageSelector();
-  const isStreamerMode =
-    useSetting({ settingName: IS_STREAMER_MODE })?.value === '1';
-  const hasNoLastPlayedCard = cardRedux == null;
-  const cardNumber = cardRedux?.cardNumber ?? 'CardBack';
+function CardSlide({
+  card,
+  playerID,
+  isStreamerMode,
+  locale
+}: {
+  card: Card;
+  playerID: number;
+  isStreamerMode: boolean;
+  locale: string;
+}) {
+  const cardNumber = card.cardNumber ?? 'CardBack';
   const hasMeld = MELD_CARDS.has(cardNumber);
   const imageSrc = getCollectionCardImagePath({
     path: isStreamerMode ? CARD_IMAGES_PATH : CARD_SQUARES_PATH,
-    locale: getLanguage(),
+    locale,
     cardNumber
   });
-
-  // Determine if the card is controlled by the opponent
-  // cardRedux.controller is 1 or 2 for players
   const isOpponent =
-    cardRedux?.controller !== undefined &&
-    cardRedux.controller !== gameInfo.playerID;
+    card.controller !== undefined && card.controller !== playerID;
 
   const imgClassNames = classNames(styles.img, {
     [styles.rotated]: hasMeld
   });
 
   return (
-    <CardPopUp
-      isHidden={hasNoLastPlayedCard}
-      cardNumber={cardNumber}
-      containerClass={styles.lastPlayed}
-    >
+    <CardPopUp cardNumber={cardNumber} containerClass={styles.lastPlayed}>
       <CardImage
         src={imageSrc}
         className={imgClassNames}
         isOpponent={isOpponent}
       />
     </CardPopUp>
+  );
+}
+
+export default function LastPlayed() {
+  const recentlyPlayed = useAppSelector(
+    (state: RootState) => state.game.gameDynamicInfo.recentlyPlayed ?? []
+  );
+  const gameInfo = useAppSelector(getGameInfo, shallowEqual);
+  const { getLanguage } = useLanguageSelector();
+  const isStreamerMode =
+    useSetting({ settingName: IS_STREAMER_MODE })?.value === '1';
+
+  const [index, setIndex] = useState(0);
+
+  // Reset index when a new card is played (list grows at front)
+  useEffect(() => {
+    setIndex(0);
+  }, [recentlyPlayed.length]);
+
+  if (recentlyPlayed.length === 0) {
+    return null;
+  }
+
+  const canPrev = index > 0;
+  const canNext = index < recentlyPlayed.length - 1;
+
+  return (
+    <div className={styles.container}>
+      <div className={styles.header}>
+        <span className={styles.label}>Recently Played</span>
+        <div className={styles.arrows}>
+          <button
+            className={styles.arrowBtn}
+            disabled={!canPrev}
+            onClick={() => setIndex((i) => i - 1)}
+            aria-label="Previous card"
+          >
+            &#8592;
+          </button>
+          <button
+            className={styles.arrowBtn}
+            disabled={!canNext}
+            onClick={() => setIndex((i) => i + 1)}
+            aria-label="Next card"
+          >
+            &#8594;
+          </button>
+        </div>
+      </div>
+      <div className={styles.viewport}>
+        <div
+          className={styles.track}
+          style={{ transform: `translateX(-${index * 70}%)` }}
+        >
+          {recentlyPlayed.map((card, i) => (
+            <div className={styles.slide} key={`${card.cardNumber}-${i}`}>
+              <CardSlide
+                card={card}
+                playerID={gameInfo.playerID}
+                isStreamerMode={isStreamerMode}
+                locale={getLanguage()}
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
   );
 }
