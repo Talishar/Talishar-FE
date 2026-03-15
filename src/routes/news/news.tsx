@@ -39,7 +39,7 @@ const News = () => {
       </a> */}
 
       {/* Release Notes Section - Always Visible */}
-      <h3>Latest Release Notes</h3>
+      <h3>Release Notes</h3>
       <div className={styles.newsContent}>
         {loading ? (
           <p>Loading release notes...</p>
