@@ -152,4 +152,12 @@
   .column {
     width: 100%;
   }
+
+  .column:first-child {
+    order: 2;
+  }
+
+  .column:last-child {
+    order: 1;
+  }
 }
