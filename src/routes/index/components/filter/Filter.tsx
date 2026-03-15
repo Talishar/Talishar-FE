@@ -36,7 +36,7 @@ const Filter = ({
       className={styles.filterSelect}
       onChange={handleSelectHero}
     >
-      <option value="">Filter by Hero</option>
+      <option value="">Hero Filter</option>
       {uniqueHeroLabels.map((label) => (
         <option key={label} value={label}>
           {label}

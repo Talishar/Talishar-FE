@@ -54,7 +54,7 @@
 	  "PREVIEW_NOT":"Preview: Not looking for "
 	}
       },
-      "FORMAT":"Format",
+      "FORMAT":"Gameplay Format",
       "FORMATS":{
 	"POPULAR":"Popular Formats",
 	"CC":"Classic Constructed",
@@ -80,7 +80,7 @@
 	"PRIVATE":"Private",
 	"FRIENDS":"Friends Only"
       },
-      "SINGLE_PLAYER":"Single Player",
+      "SINGLE_PLAYER":"Practice Mode",
       "AI_DECK":"AI Deck"
     }
   },

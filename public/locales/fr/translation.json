@@ -80,7 +80,7 @@
 	"PRIVATE": "Privé",
 	"FRIENDS": "Amis seulement"
       },
-      "SINGLE_PLAYER": "Solo",
+      "SINGLE_PLAYER": "Mode entraînement",
       "AI_DECK": "Deck de l’IA"
     }
   },

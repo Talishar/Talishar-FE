@@ -41,7 +41,7 @@ function OptionsMenuToggle({
         data-placement="bottom"
       >
         <GiHamburgerMenu aria-hidden="true" />
-        {showLabel && ' Settings'}
+        {showLabel && ' Menu'}
       </button>
     </div>
   );

@@ -65,7 +65,7 @@ const QuickJoinPanel = ({ embedded = false }: Props) => {
   const content = (
     <div className={styles.content}>
       <label className={styles.label}>
-        Select a Deck
+        Select Deck
         <ImageSelect
           id="quickJoinFavoriteDeck"
           options={favoriteDeckOptions}
@@ -80,7 +80,7 @@ const QuickJoinPanel = ({ embedded = false }: Props) => {
 
       <label className={styles.label}>
         <span className={styles.labelText}>
-          Import Deck&nbsp;
+          Import Deck List&nbsp;
           <span
             title="URL from FaBrary.net or fabdb.net"
             style={{
@@ -95,7 +95,7 @@ const QuickJoinPanel = ({ embedded = false }: Props) => {
         <input
           type="text"
           className={styles.textInput}
-          placeholder="https://fabrary.net/decks/…"
+          placeholder="Paste deck list URL"
           value={importDeckUrl}
           onChange={(e) => setImportDeckUrl(e.target.value)}
           aria-label="Deck URL"
@@ -114,7 +114,7 @@ const QuickJoinPanel = ({ embedded = false }: Props) => {
 
       {detectedFormat && (
         <label className={styles.label}>
-          Format
+          Gameplay Format
           <input
             type="text"
             className={styles.textInput}

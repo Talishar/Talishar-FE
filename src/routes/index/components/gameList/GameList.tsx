@@ -440,7 +440,7 @@ const GameList = () => {
           disabled={isFetching}
           title="Manually refresh game list"
         >
-          Reload
+          Refresh
         </button>
       </div>
       {isLoading ? <div aria-busy="true">Loading games please wait</div> : null}
