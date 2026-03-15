@@ -397,7 +397,7 @@ const OptionsSettings = () => {
           label="Card Size"
           value={cookies.cardSize ?? 1}
           min={isMobile ? 100 : 50}
-          max={125}
+          max={150}
           defaultValue={1}
           onChange={(value) => setCookie('cardSize', value)}
         />
