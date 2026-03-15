@@ -12,6 +12,14 @@
   height: 100vh;
 }
 
+/* Near-square landscape (fold phones): don't cap by vw */
+@media (orientation: landscape) and (max-aspect-ratio: 3/2) {
+  .leftColumn {
+    width: 10vh;
+    width: 10dvh;
+  }
+}
+
 @media (orientation: portrait) {
   .leftColumn {
     position: fixed;

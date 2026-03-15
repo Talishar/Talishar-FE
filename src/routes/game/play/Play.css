@@ -86,6 +86,22 @@ body {
   }
 }
 
+/* Near-square landscape screens (fold phones, ~1:1 to 3:2 ratio).
+   The min(vh, vw) card-size and font-size over-shrink on these
+   because vw ≈ vh, so the vw cap dominates. Use pure vh instead. */
+@media (orientation: landscape) and (max-aspect-ratio: 3/2) {
+  html,
+  body {
+    --card-size: calc(13vh * var(--card-scale));
+    --card-size: calc(13dvh * var(--card-scale));
+  }
+
+  .app {
+    font-size: calc(1.5vh - 2px);
+    font-size: calc(1.5dvh - 2px);
+  }
+}
+
 /* Font-size is now fluid via min(dvh, dvw) in the landscape .app rule above.
    No stepped breakpoints needed - scaling is continuous. */
 

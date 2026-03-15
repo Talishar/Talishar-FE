@@ -155,7 +155,7 @@
 }
 
 /* === Mobile-specific button sizing === */
-@media (orientation: portrait), (max-width: 950px) {
+@media (orientation: portrait), (max-width: 1200px) {
   .btn {
     width: 52px;
     height: 38px;

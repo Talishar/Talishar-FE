@@ -20,12 +20,22 @@
   box-sizing: border-box;
 }
 
+/* Near-square landscape (fold phones): don't cap by vw */
+@media (orientation: landscape) and (max-aspect-ratio: 3/2) {
+  .rightColumn {
+    min-width: 20vh;
+    min-width: 20dvh;
+    max-width: 20vh;
+    max-width: 20dvh;
+  }
+}
+
 .mobileTopBar {
   display: none;
 }
 
 /* Switch to mobile top bar only on tablet/mobile */
-@media (max-width: 950px) {
+@media (max-width: 1200px) {
   .rightColumn {
     display: none;
   }
