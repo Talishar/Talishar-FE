@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import ReactDOM from 'react-dom';
 import screenfull from 'screenfull';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { submitButton } from 'features/game/GameSlice';
@@ -75,29 +76,43 @@ function UndoButton() {
 
 function MobileOverflowMenu({ isSpectator }: { isSpectator: boolean }) {
   const [open, setOpen] = useState(false);
-  const wrapperRef = useRef<HTMLDivElement>(null);
+  const [panelStyle, setPanelStyle] = useState<React.CSSProperties>({});
+  const btnRef = useRef<HTMLButtonElement>(null);
 
   const toggleFullScreen = () => {
     screenfull.toggle();
     setOpen(false);
   };
 
+  const handleOpen = () => {
+    if (!open && btnRef.current) {
+      const rect = btnRef.current.getBoundingClientRect();
+      setPanelStyle({
+        position: 'fixed',
+        top: rect.bottom + 6,
+        right: window.innerWidth - rect.right,
+      });
+    }
+    setOpen((v) => !v);
+  };
+
   return (
-    <div className={styles.overflowWrapper} ref={wrapperRef}>
+    <div className={styles.overflowWrapper}>
       <button
+        ref={btnRef}
         className={styles.btn}
         aria-label="More options"
-        onClick={() => setOpen((v) => !v)}
+        onClick={handleOpen}
       >
         <FaEllipsisH aria-hidden="true" />
       </button>
-      {open && (
+      {open && ReactDOM.createPortal(
         <>
           <div
             className={styles.overflowBackdrop}
             onClick={() => setOpen(false)}
           />
-          <div className={styles.overflowPanel}>
+          <div className={styles.overflowPanel} style={panelStyle}>
             <div onClick={() => setOpen(false)}>
               <OptionsMenuToggle
                 btnClass={styles.overflowItem}
@@ -118,7 +133,8 @@ function MobileOverflowMenu({ isSpectator }: { isSpectator: boolean }) {
               <GiExpand aria-hidden="true" /> Fullscreen
             </button>
           </div>
-        </>
+        </>,
+        document.body
       )}
     </div>
   );
