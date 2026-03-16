@@ -6,6 +6,12 @@ import styles from './OpenGame.module.css';
 import { generateCroppedImageUrl } from '../../../../utils/cropImages';
 import FriendBadge from '../gameList/FriendBadge';
 import QuickJoinContext from '../quickJoin/QuickJoinContext';
+import { GAME_FORMAT } from '../../../../appConstants';
+
+const FORMAT_DISPLAY_NAMES: Record<string, string> = {
+  [GAME_FORMAT.DRAFT]: 'Limited',
+  [GAME_FORMAT.SEALED]: 'Limited',
+};
 
 const OpenGame = ({
   ix,
@@ -54,7 +60,11 @@ const OpenGame = ({
         )}
       </div>
       <div className={styles.description}>{entry.description}</div>
-      {isOther && <div className={styles.formatName}>{entry.formatName}</div>}
+      {isOther && (
+        <div className={styles.formatName}>
+          {entry.formatName || FORMAT_DISPLAY_NAMES[entry.format] || ''}
+        </div>
+      )}
       <FriendBadge isFriendsGame={isFriendsGame} size="small" />
       <div>
         <a
