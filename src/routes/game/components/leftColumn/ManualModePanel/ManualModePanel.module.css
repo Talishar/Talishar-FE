@@ -2,7 +2,6 @@
   position: fixed;
   left: 0;
   top: 57%;
-  transform: translateY(-50%);
   width: 6rem;
   height: 3rem;
   background: var(--theme-primary);
@@ -12,7 +11,6 @@
   cursor: pointer;
   z-index: 100;
   border-radius: 0 8px 8px 0;
-  transition: all 0.3s ease;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -25,7 +23,7 @@
   }
 
   &:active {
-    transform: translateY(-50%) scale(0.95);
+    opacity: 0.75;
   }
 
   &.hidden {
