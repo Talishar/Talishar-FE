@@ -187,7 +187,7 @@ export const BlockedUsers: React.FC<BlockedUsersProps> = ({ className }) => {
                 <thead>
                   <tr>
                     <th scope="col">Blocked User</th>
-                    <th scope="col" style={{ width: '120px' }}>
+                    <th scope="col">
                       Action
                     </th>
                   </tr>

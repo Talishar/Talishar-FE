@@ -265,10 +265,29 @@
 
   .blockedUsersTable {
     font-size: 0.9rem;
+    table-layout: fixed;
   }
 
   .blockedUsersTable th,
   .blockedUsersTable td {
-    padding: 0.5rem 0.75rem;
+    padding: 0.5rem 0.5rem;
+  }
+
+  .blockedUsersTable th:first-child,
+  .blockedUsersTable td:first-child {
+    width: auto;
+    min-width: 0;
+  }
+
+  .blockedUsersTable th:last-child,
+  .blockedUsersTable td:last-child {
+    width: 64px;
+    min-width: 0;
+    text-align: center;
+  }
+
+  .deleteColumn {
+    flex-direction: row;
+    justify-content: center;
   }
 }
