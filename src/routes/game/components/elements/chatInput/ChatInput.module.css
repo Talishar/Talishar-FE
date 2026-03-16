@@ -107,7 +107,7 @@
   border: 1px solid var(--theme-primary);
   color: white;
   padding: 10px;
-  z-index: 1000;
+  z-index: 100000;
   overflow-y: auto;
   max-height: 95vh;
   max-height: 95dvh;
@@ -158,7 +158,7 @@
 }
 
 .floatingOverlay {
-  z-index: 1000;
+  z-index: 99999;
 }
 
 .icon {
