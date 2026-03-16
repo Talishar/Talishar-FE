@@ -195,14 +195,12 @@
 }
 
 .overflowPanel {
-  position: absolute;
-  top: calc(100% + 6px);
-  right: 0;
+  /* position/top/right are set via inline style from getBoundingClientRect */
   background-color: var(--near-black);
   border: 1px solid var(--theme-border, rgba(100, 100, 100, 0.5));
   border-radius: 8px;
   padding: 6px;
-  z-index: 200;
+  z-index: 99999;
   display: flex;
   flex-direction: column;
   gap: 2px;
@@ -256,5 +254,5 @@
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 199;
+  z-index: 99998;
 }
