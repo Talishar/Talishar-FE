@@ -39,6 +39,13 @@
   }
 }
 
+/* On small phones the opponent name badge overlaps the toolbar buttons — hide it */
+@media (max-width: 600px) {
+  .playerName:not(.playerTwo) {
+    display: none;
+  }
+}
+
 .nameContainer {
   display: flex;
   align-items: center;
