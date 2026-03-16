@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
+import ReactDOM from 'react-dom';
 import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import ChatInput from '../chatInput/ChatInput';
@@ -65,15 +66,14 @@ export default function ChatBox() {
     scrollToBottom();
   }, [chatLog, chatFilter]);
 
-  return (
-    // Added inline styles for fixed positioning
+  return ReactDOM.createPortal(
     <div
       className={styles.chatBoxMobileContainer}
       style={{
         position: 'fixed',
         top: '2vh',
         right: '2vh',
-        zIndex: 1000
+        zIndex: 99997
       }}
     >
       <div className={styles.chatBoxMobileInner}>
@@ -89,6 +89,7 @@ export default function ChatBox() {
         </div>
       </div>
       <ChatInput />
-    </div>
+    </div>,
+    document.body
   );
 }
