@@ -122,13 +122,6 @@ function MobileOverflowMenu({ isSpectator }: { isSpectator: boolean }) {
             <div onClick={() => setOpen(false)}>
               <Inventory buttonClassName={styles.overflowItem} showLabel />
             </div>
-            <div onClick={() => setOpen(false)}>
-              <HideModalsToggle
-                btnClass={styles.overflowItem}
-                activeBtnClass={styles.overflowItemActive}
-                showLabel
-              />
-            </div>
             <button className={styles.overflowItem} onClick={toggleFullScreen}>
               <GiExpand aria-hidden="true" /> Fullscreen
             </button>
@@ -200,6 +193,7 @@ function MenuContent() {
             <FullControlToggle />
             <AlwaysPassToggle />
             <UndoButton />
+            <HideModalsToggle />
             <ShowMobileChat />
             <MobileOverflowMenu isSpectator={false} />
           </div>
