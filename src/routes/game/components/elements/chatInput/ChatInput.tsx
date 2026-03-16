@@ -191,10 +191,10 @@ const ChatWheel = ({ usePrimary = false }: { usePrimary?: boolean }) => {
     useSubmitLobbyInputMutation();
   const dispatch = useAppDispatch();
   const { refs, floatingStyles, context } = useFloating({
-    placement: 'top-end',
+    placement: 'left',
     open: modalDisplay,
     onOpenChange: setModalDisplay,
-    middleware: [offset(10), flip(), shift({ padding: 8 })],
+    middleware: [offset(20), flip(), shift()],
     whileElementsMounted: autoUpdate
   });
   const location = useLocation();
