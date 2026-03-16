@@ -95,9 +95,11 @@ export const PlayerHandCard = ({
       : windowHeight * ScreenPercentageForCardPlayed;
 
     if (absY > dragThreshold) {
-      setSnapback(false);
-      playCardFunc();
-      addCardToPlayedCards(card.cardNumber);
+      if (card.action) {
+        setSnapback(false);
+        playCardFunc();
+        addCardToPlayedCards(card.cardNumber);
+      }
     } else if (onHandReorderDragEnd && absX > 8 && absX > absY) {
       onHandReorderDragEnd(info);
     }
@@ -145,6 +147,7 @@ export const PlayerHandCard = ({
 
     // Tap to play card (unless it was a long press which shows preview)
     if (!isLongPress.current) {
+      if (!card.action) return;
       playCardFunc();
       addCardToPlayedCards(card.cardNumber);
     }
