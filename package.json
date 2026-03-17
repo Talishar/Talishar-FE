@@ -18,7 +18,7 @@
     "dompurify": "3.3.1",
     "eslint-plugin-prettier": "4.2.5",
     "formik": "2.4.9",
-    "framer-motion": "10.18.0",
+    "framer-motion": "12.38.0",
     "html2canvas": "1.4.1",
     "i18next": "^25.8.14",
     "i18next-browser-languagedetector": "^8.2.1",
