@@ -611,7 +611,7 @@ const CreateGame = () => {
                 <label>
                   {isPreconFormat(formFormat || selectedFormat) ? (
                     <>
-                      {t('HEADER.CREATE_GAME.PRECONSTRUCTED_DECK')}
+                      {t('MENU.CREATE_GAME.PRECONSTRUCTED_DECK')}
                       <ImageSelect
                         id="preconDecks"
                         options={preconDeckOptions}
@@ -621,7 +621,7 @@ const CreateGame = () => {
                           setValue('fabdb', value);
                         }}
                         placeholder={t(
-                          'HEADER.CREATE_GAME.SELECT_DECK_PLACEHOLDER'
+                          'MENU.CREATE_GAME.SELECT_DECK_PLACEHOLDER'
                         )}
                         aria-invalid={errors.deck?.message ? 'true' : undefined}
                       />
@@ -683,7 +683,7 @@ const CreateGame = () => {
                 {t('MENU.CREATE_GAME.GAME_DESCRIPTION')}
                 <select
                   id="gameDescription"
-                  aria-label="Game Description"
+                  aria-label={t('MENU.CREATE_GAME.GAME_DESCRIPTION')}
                   {...register('gameDescription')}
                   aria-invalid={
                     errors.gameDescription?.message ? 'true' : undefined
