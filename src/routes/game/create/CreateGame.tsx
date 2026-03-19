@@ -448,8 +448,9 @@ const CreateGame = () => {
       if (!isLoggedIn) values.visibility = GAME_VISIBILITY.PRIVATE;
       values.user = searchParams.get('user') ?? undefined;
 
-      // When inside QuickJoinProvider (main menu), use deck from shared context
-      if (isEmbedded) {
+      // When inside QuickJoinProvider (main menu), use deck from shared context.
+      // For precon formats, keep the precon deck URL already set in values.fabdb via the form.
+      if (isEmbedded && !isPreconFormat(values.format)) {
         values.favoriteDecks = quickJoinCtx!.selectedFavoriteDeck;
         values.fabdb = quickJoinCtx!.importDeckUrl;
         // Only save deck if "Save Deck" is checked and a new deck URL is being used (not a saved favorite)
