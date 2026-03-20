@@ -109,8 +109,6 @@
   padding: 10px;
   z-index: 100000;
   overflow-y: auto;
-  max-height: 95vh;
-  max-height: 95dvh;
   max-width: 50vw;
   max-width: 50dvw;
   border-radius: 15px;
@@ -180,5 +178,12 @@
 @media only screen and (max-width: 768px) and (orientation: portrait) {
   .chatWheelButton {
     font-size: 12px;
+  }
+
+  .popOver {
+    max-width: 90dvw;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    right: auto !important;
   }
 }
