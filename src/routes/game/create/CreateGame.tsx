@@ -417,9 +417,15 @@ const CreateGame = () => {
     // Only set fabdb to precon deck if format is precon
     if (isPreconFormat(initialValues.format)) {
       setValue('fabdb', PRECON_DECKS.LINKS[0]);
+    } else if (isEmbedded && quickJoinCtx) {
+      // Re-apply context deck values that were cleared by reset(initialValues).
+      // This prevents a paste-then-submit failure when the query completes after
+      // the user has already typed a URL into the QuickJoin panel.
+      setValue('favoriteDecks', quickJoinCtx.selectedFavoriteDeck);
+      setValue('fabdb', quickJoinCtx.importDeckUrl);
     }
     setIsInitialized(true);
-  }, [initialValues, reset, setValue]);
+  }, [initialValues, reset, setValue]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Convert favorite decks to ImageSelect options
   const favoriteDeckOptions: ImageSelectOption[] = React.useMemo(() => {
