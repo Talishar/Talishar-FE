@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styles from './CookieConsent.module.css';
-import { initializeAdSense } from 'utils/adsenseInit';
 
 interface CookieConsentProps {
   onConsent?: (accepted: boolean) => void;
@@ -30,9 +29,6 @@ const CookieConsent: React.FC<CookieConsentProps> = ({ onConsent }) => {
     localStorage.setItem('cookieConsent', 'accepted');
     localStorage.setItem('cookieConsentDate', new Date().toISOString());
     setIsVisible(false);
-
-    // Initialize AdSense after consent
-    initializeAdSense();
 
     if (onConsent) onConsent(true);
   };
