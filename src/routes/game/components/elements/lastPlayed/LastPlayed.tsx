@@ -50,7 +50,8 @@ function CardSlide({
     card.controller !== undefined && card.controller !== playerID;
 
   const imgClassNames = classNames(styles.img, {
-    [styles.rotated]: hasMeld
+    [styles.rotated]: hasMeld,
+    [styles.streamerImg]: isStreamerMode
   });
 
   return (
@@ -136,10 +137,10 @@ export default function LastPlayed() {
       <div className={styles.viewport}>
         <div
           className={styles.track}
-          style={{ transform: `translateX(-${index * 70}%)` }}
+          style={{ transform: `translateX(-${index * (isStreamerMode ? 90 : 70)}%)` }}
         >
           {recentlyPlayed.map((card, i) => (
-            <div className={styles.slide} key={`${card.cardNumber}-${i}`}>
+            <div className={classNames(styles.slide, { [styles.streamerSlide]: isStreamerMode })} key={`${card.cardNumber}-${i}`}>
               <CardSlide
                 card={card}
                 playerID={gameInfo.playerID}

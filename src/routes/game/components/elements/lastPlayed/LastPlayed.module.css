@@ -63,6 +63,10 @@
   align-items: center;
 }
 
+.streamerSlide {
+  flex: 0 0 100%;
+}
+
 .lastPlayed {
   display: flex;
   justify-content: center;
@@ -81,4 +85,10 @@
   transform: rotate(90deg);
   max-width: 130%;
   max-height: 100%;
+}
+
+.streamerImg {
+  max-width: 100%;
+  max-height: none;
+  width: 100%;
 }
