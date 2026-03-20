@@ -18,6 +18,7 @@
   margin-right: 0.2em;
   margin-left: 0.2em;
   box-sizing: border-box;
+  position: relative;
 }
 
 /* Near-square landscape (fold phones): don't cap by vw */
@@ -91,10 +92,12 @@
 
 .bottomGroup {
   width: 100%;
-  height: 100%;
+  flex: 1 1 0;
+  min-height: 0;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
+  justify-content: flex-start;
   align-items: flex-end;
 }
 
@@ -109,4 +112,69 @@
 
 .streamerBox {
   height: 30dvh;
+}
+
+.adContainer {
+  flex: 0 0 auto;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 4px 0;
+  background-color: var(--near-black);
+}
+
+.adHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 0 4px 2px;
+  font-size: 0.6em;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+/* Fixed-size clipping box: ad scales to fill full column width */
+.adWrapper {
+  width: 100%;
+  aspect-ratio: 300 / 250;
+  overflow: hidden;
+  position: relative;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px dashed rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+}
+
+.adPlaceholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.65em;
+  color: rgba(255, 255, 255, 0.35);
+  pointer-events: none;
+  user-select: none;
+}
+
+/* The ad unit is 300×250; scale to fit the column width (≈50% of 300px) */
+.adWrapper :global(.ad-unit) {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 300px !important;
+  height: 250px !important;
+  transform-origin: top left;
+  transform: scale(0.5);
+  margin: 0 !important;
+}
+
+.removeAdsLink {
+  color: #d4af37;
+  font-size: 1em;
+  text-decoration: none;
+}
+
+.removeAdsLink:hover {
+  text-decoration: underline;
 }

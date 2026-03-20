@@ -14,11 +14,15 @@ import UnifiedGamePanel from './components/UnifiedGamePanel';
 import { useGetSystemMessageQuery } from 'features/api/apiSlice';
 import SystemMessageModal from 'components/SystemMessageModal/SystemMessageModal';
 import useAuth from 'hooks/useAuth';
+import { AdUnit } from 'components/ads';
+import useAdScript from 'hooks/useAdScript';
 
 const Index = () => {
   usePageTitle('Home');
   const dispatch = useAppDispatch();
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, isPatron } = useAuth();
+  const showAds = !isPatron || isPatron === '0';
+  useAdScript(showAds);
   const { data: systemMessageData } = useGetSystemMessageQuery(undefined, {
     skip: !isLoggedIn
   });
@@ -51,6 +55,22 @@ const Index = () => {
       </QuickJoinProvider>
       <CommunityContent />
       <AboutSection />
+      {showAds && (
+        <footer className={styles.adFooter}>
+          <div className={styles.adHeader}>
+            <span>Community Ads</span>
+            <a
+              href="https://metafy.gg/@talishar/tiers"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.removeAdsLink}
+            >
+              Remove ads
+            </a>
+          </div>
+          <AdUnit placement="leaderboard-1" />
+        </footer>
+      )}
       {systemMessageData?.systemMessage && (
         <SystemMessageModal message={systemMessageData.systemMessage} />
       )}
