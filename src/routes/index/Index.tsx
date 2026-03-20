@@ -22,9 +22,9 @@ const Index = () => {
   const dispatch = useAppDispatch();
   const { isLoggedIn, isPatron, isLoading } = useAuth();
   // Only show ads once auth has resolved AND the user is not a paid supporter.
-  // isPatron is now derived directly from the API response in useAuth, so there
-  // is no Redux race condition — it is '1' for supporters as soon as isLoading=false.
-  const showAds = !isLoading && isPatron !== '1';
+  // isPatron can be string '1', boolean true, or string '0'/null — treat anything
+  // truthy-except-'0' as supporter. isLoading guard prevents the Redux race window.
+  const showAds = !isLoading && (!isPatron || isPatron === '0');
   useAdScript(showAds);
   const { data: systemMessageData } = useGetSystemMessageQuery(undefined, {
     skip: !isLoggedIn
