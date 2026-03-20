@@ -20,8 +20,8 @@ import useAdScript from 'hooks/useAdScript';
 const Index = () => {
   usePageTitle('Home');
   const dispatch = useAppDispatch();
-  const { isLoggedIn, isPatron } = useAuth();
-  const showAds = !isPatron || isPatron === '0';
+  const { isLoggedIn, isPatron, isLoading } = useAuth();
+  const showAds = !isLoading && (!isPatron || isPatron === '0');
   useAdScript(showAds);
   const { data: systemMessageData } = useGetSystemMessageQuery(undefined, {
     skip: !isLoggedIn
