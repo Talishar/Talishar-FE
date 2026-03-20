@@ -19,6 +19,8 @@
   margin-left: 0.2em;
   box-sizing: border-box;
   position: relative;
+  container-type: inline-size;
+  container-name: right-column;
 }
 
 /* Near-square landscape (fold phones): don't cap by vw */
@@ -134,9 +136,14 @@
   color: rgba(255, 255, 255, 0.55);
 }
 
+@container right-column (max-width: 159px) {
+  .adContainer {
+    display: none;
+  }
+}
+
 /* Fixed-size clipping box: ad scales dynamically to fill the column width, centred */
 .adWrapper {
-  container-type: inline-size;
   width: 100%;
   aspect-ratio: 300 / 250;
   overflow: hidden;
@@ -158,7 +165,8 @@
 }
 
 /* Scale the native 300×250 ad unit to fill the full column width, centred.
-   calc(100cqw / 300px) produces the exact unitless scale factor at any column size. */
+   calc(100cqw / 300px) produces the exact unitless scale factor at any column size.
+   The parent .rightColumn provides the container context (container-name: right-column). */
 .adWrapper :global(.ad-unit) {
   position: absolute !important;
   top: 0 !important;
