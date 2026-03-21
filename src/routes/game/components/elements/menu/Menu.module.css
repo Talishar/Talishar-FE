@@ -101,7 +101,7 @@
   top: 50%;
   transform: translateY(-50%);
   white-space: nowrap;
-  pointer-events: auto;
+  pointer-events: none;
   margin-right: 0.5em;
 }
 
