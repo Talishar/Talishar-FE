@@ -81,10 +81,6 @@ const GameList = () => {
       try {
         const friendsList = friendsData.friends.map((f) => f.username);
         sessionStorage.setItem('friendsList', JSON.stringify(friendsList));
-        console.log(
-          'GameList synced friendsList to sessionStorage:',
-          friendsList
-        );
       } catch (e) {
         console.error('Failed to sync friendsList to sessionStorage:', e);
       }
