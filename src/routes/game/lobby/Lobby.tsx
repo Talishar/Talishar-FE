@@ -37,7 +37,8 @@ import {
   GAME_FORMAT,
   BREAKPOINT_EXTRA_LARGE,
   CLOUD_IMAGES_URL,
-  QUERY_STATUS
+  QUERY_STATUS,
+  PRIVATE_MESSAGING_ENABLED
 } from 'appConstants';
 import { getReadableFormatName } from 'utils/formatUtils';
 import ChooseFirstTurn from './components/chooseFirstTurn/ChooseFirstTurn';
@@ -194,7 +195,7 @@ const Lobby = () => {
   });
 
   const { data: onlineFriendsData } = useGetOnlineFriendsQuery(undefined, {
-    skip: !isLoggedIn,
+    skip: !isLoggedIn || !PRIVATE_MESSAGING_ENABLED,
     pollingInterval: 30000 // Poll every 30 seconds
   });
 
