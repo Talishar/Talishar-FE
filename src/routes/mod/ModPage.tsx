@@ -208,6 +208,8 @@ const ModPage: React.FC = () => {
 
     try {
       const result = await syncMetafy().unwrap();
+      console.log('[MetafySync] Response:', result);
+      if (result?.debug) console.log('[MetafySync] Debug log:', result.debug);
       setMetafySyncResult(result);
       if (result?.error) {
         toast.error(result.error, { position: 'top-center', duration: 8000 });
@@ -216,9 +218,10 @@ const ModPage: React.FC = () => {
         setSuccessMessage(`Metafy sync complete — ${result?.cleared ?? 0} expired, ${result?.stillActive ?? 0} active`);
       }
     } catch (err: any) {
+      console.error('[MetafySync] Error:', err);
+      if (err?.data?.debug) console.log('[MetafySync] Debug log:', err.data.debug);
       const errorMessage = err?.data?.error || err?.data?.apiError || 'Failed to sync Metafy subscribers';
       toast.error(errorMessage, { position: 'top-center' });
-      // Still show any partial result data for debugging
       if (err?.data) setMetafySyncResult(err.data);
     }
   };
@@ -388,14 +391,7 @@ const ModPage: React.FC = () => {
                       <strong>Skipped:</strong> {metafySyncResult.skippedUsers.join(', ')}
                     </p>
                   )}
-                  {metafySyncResult.debug?.length > 0 && (
-                    <details style={{ marginTop: '8px' }}>
-                      <summary style={{ color: '#888', fontSize: '12px', cursor: 'pointer' }}>Debug Log ({metafySyncResult.debug.length} entries)</summary>
-                      <pre style={{ fontSize: '11px', color: '#999', marginTop: '4px', maxHeight: '200px', overflow: 'auto', whiteSpace: 'pre-wrap', wordBreak: 'break-all' }}>
-                        {metafySyncResult.debug.join('\n')}
-                      </pre>
-                    </details>
-                  )}
+
                 </div>
               )}
             </div>
