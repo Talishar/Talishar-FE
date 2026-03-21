@@ -200,6 +200,20 @@ const ChatWheel = ({ usePrimary = false }: { usePrimary?: boolean }) => {
   const location = useLocation();
   const [sentChatRequest, setSentChatRequest] = useState<boolean>(false);
 
+  // Press Q to open, Escape closes via FloatingUI dismiss
+  React.useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'q' || e.key === 'Q') {
+        const tag = (e.target as HTMLElement).tagName;
+        if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+        e.preventDefault();
+        setModalDisplay((prev) => !prev);
+      }
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, []);
+
   const click = useClick(context);
   const dismiss = useDismiss(context);
   const role = useRole(context);
@@ -237,6 +251,7 @@ const ChatWheel = ({ usePrimary = false }: { usePrimary?: boolean }) => {
       <div className={classNames(styles.quickChatButton, { [styles.primaryQuickChatButton]: usePrimary })}>
         <button
           ref={refs.setReference}
+          className={styles.quickChatToggleButton}
           {...getReferenceProps({ onClick: (e) => e.preventDefault() })}
         >
           Quick Chat
@@ -273,38 +288,115 @@ const ChatWheel = ({ usePrimary = false }: { usePrimary?: boolean }) => {
   );
 };
 
+const RECENTS_KEY = 'talishar_chat_recents';
+const RECENTS_COLLAPSED_KEY = 'talishar_chat_recents_collapsed';
+const MAX_RECENTS = 5;
+
+function getRecents(): number[] {
+  try {
+    return JSON.parse(localStorage.getItem(RECENTS_KEY) ?? '[]');
+  } catch {
+    return [];
+  }
+}
+
+function addRecent(key: number): void {
+  const recents = getRecents().filter((k) => k !== key);
+  recents.unshift(key);
+  localStorage.setItem(RECENTS_KEY, JSON.stringify(recents.slice(0, MAX_RECENTS)));
+}
+
+const QUICK_CHAT_COOLDOWN_MS = 3000;
+let lastQuickChatSent = 0;
+let quickChatToastPending = false;
+
 const ChatOptions = ({ setModalDisplay }: ChatOptionsProps) => {
-  const [submitChat, submitChatResult] = useSubmitChatMutation();
+  const [submitChat] = useSubmitChatMutation();
   const { playerID, gameID, authKey } = useAppSelector(
     getGameInfo,
     shallowEqual
   );
-  const elements = [] as React.ReactNode[];
-
-  CHAT_WHEEL.forEach((value, key) =>
-    elements.push(
-      <button
-        key={`quickChat${key}`}
-        className={styles.chatWheelButton}
-        onClick={(e) => {
-          e.preventDefault();
-          submitChat({
-            playerID,
-            gameID,
-            authKey,
-            quickChat: key
-          });
-          setModalDisplay(false);
-        }}
-      >
-        {value}
-      </button>
-    )
+  const [recents, setRecents] = React.useState<number[]>(getRecents);
+  const [recentsCollapsed, setRecentsCollapsed] = React.useState<boolean>(
+    () => localStorage.getItem(RECENTS_COLLAPSED_KEY) === 'true'
   );
+  const allEntries = React.useMemo(() => Array.from(CHAT_WHEEL.entries()), []);
+
+  const toggleRecentsCollapsed = () => {
+    setRecentsCollapsed((prev) => {
+      const next = !prev;
+      localStorage.setItem(RECENTS_COLLAPSED_KEY, String(next));
+      return next;
+    });
+  };
+
+  const handleSend = (key: number) => {
+    const now = Date.now();
+    if (now - lastQuickChatSent < QUICK_CHAT_COOLDOWN_MS) {
+      if (!quickChatToastPending) {
+        quickChatToastPending = true;
+        toast.error('Please wait before sending another quick chat.', { duration: 2000 });
+        setTimeout(() => { quickChatToastPending = false; }, 2000);
+      }
+      return;
+    }
+    lastQuickChatSent = now;
+    submitChat({ playerID, gameID, authKey, quickChat: key });
+    addRecent(key);
+    setRecents(getRecents());
+    setModalDisplay(false);
+  };
+
+  React.useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      const n = parseInt(e.key);
+      if (n >= 1 && n <= 9) {
+        const entry = allEntries[n - 1];
+        if (entry) {
+          e.preventDefault();
+          handleSend(entry[0]);
+        }
+      }
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [allEntries]);
 
   return (
     <>
-      {elements.map((item) => item)}
+      {recents.length > 0 && (
+        <>
+          <div
+            className={styles.sectionLabel}
+            onClick={toggleRecentsCollapsed}
+            role="button"
+            aria-expanded={!recentsCollapsed}
+          >
+            ⭐ Recent
+            <span className={`${styles.sectionChevron} ${recentsCollapsed ? styles.sectionChevronCollapsed : ''}`}>▾</span>
+          </div>
+          {!recentsCollapsed && recents.map((key) => (
+            <button
+              key={`recent${key}`}
+              className={styles.chatWheelButton}
+              onClick={(e) => { e.preventDefault(); handleSend(key); }}
+            >
+              {CHAT_WHEEL.get(key)}
+            </button>
+          ))}
+          <div className={styles.sectionDivider} />
+        </>
+      )}
+      {allEntries.map(([key, value], index) => (
+        <button
+          key={`quickChat${key}`}
+          className={styles.chatWheelButton}
+          onClick={(e) => { e.preventDefault(); handleSend(key); }}
+        >
+          {index < 9 && <span className={styles.keyHint}>{index + 1}</span>}
+          {value}
+        </button>
+      ))}
     </>
   );
 };

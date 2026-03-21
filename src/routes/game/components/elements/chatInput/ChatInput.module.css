@@ -122,7 +122,46 @@
   margin-bottom: 0;
 }
 
+.sectionLabel {
+  font-size: 0.72em;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.72);
+  background-color: transparent;
+  border: none;
+  padding: 2px 0.75em 4px;
+  margin-top: 2px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.4em;
+  user-select: none;
+  border-radius: 4px;
+  transition: color 0.12s ease;
+}
 
+.sectionLabel:hover {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.sectionChevron {
+  display: inline-block;
+  font-style: normal;
+  transition: transform 0.18s ease;
+  transform: rotate(0deg);
+  line-height: 1;
+}
+
+.sectionChevronCollapsed {
+  transform: rotate(-90deg);
+}
+
+.sectionDivider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.07);
+  margin: 4px 0.5em 4px;
+}
 
 .buttonDiv {
   background-color: var(--theme-secondary) !important;
@@ -170,12 +209,15 @@
 }
 
 .chatWheelButton {
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: 0.55em;
   width: 100%;
   padding: 0.45em 0.75em;
   text-align: left;
   background: transparent;
   border: none;
+  justify-content: left !important;
   border-radius: 6px;
   color: rgba(255, 255, 255, 0.72);
   font-size: 0.88em;
@@ -183,6 +225,42 @@
   transition: background 0.12s ease, color 0.12s ease;
   white-space: nowrap;
   margin-bottom: 1px;
+}
+
+.keyHint {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.35em;
+  height: 1.35em;
+  font-size: 0.75em;
+  font-weight: 600;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.35);
+  flex-shrink: 0;
+}
+
+.quickChatButton button .keyHint,
+.primaryQuickChatButton button .keyHint {
+  color: inherit;
+  opacity: 0.55;
+  background: transparent;
+  border: 1px solid currentColor;
+}
+
+.quickChatToggleButton::after,
+.primaryQuickChatButton .quickChatToggleButton::after {
+  content: '';
+  font-size: 0.82em;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  margin-left: 0.3em;
+}
+
+.quickChatToggleButton:hover::after {
+  content: '(Q)';
+  opacity: 0.55;
 }
 
 .chatWheelButton:hover,
