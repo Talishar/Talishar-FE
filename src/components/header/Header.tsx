@@ -17,7 +17,6 @@ import { useGetPendingRequestsQuery } from 'features/api/apiSlice';
 import CookieConsent from 'components/CookieConsent';
 import AdBlockingRecovery from 'components/AdBlockingRecovery';
 import SessionRecovery from 'components/SessionRecovery';
-import ChatBar from 'components/chatBar/ChatBar';
 import { Toaster } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
@@ -139,7 +138,6 @@ const Header = () => {
       <CookieConsent />
       <AdBlockingRecovery />
       <SessionRecovery />
-      <ChatBar />
     </div>
   );
 };

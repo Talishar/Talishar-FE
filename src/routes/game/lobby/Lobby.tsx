@@ -10,7 +10,7 @@ import classNames from 'classnames';
 import { FaExclamationCircle } from 'react-icons/fa';
 import { GiCapeArmor } from 'react-icons/gi';
 import { SiBookstack } from 'react-icons/si';
-import { MdGames, MdArrowDropDown, MdArrowRight } from 'react-icons/md';
+import { MdArrowDropDown, MdArrowRight } from 'react-icons/md';
 import { Form, Formik, useFormikContext } from 'formik';
 import deckValidation from './validation';
 import StickyFooter from './components/stickyFooter/StickyFooter';
@@ -21,10 +21,6 @@ import {
   useGetLobbyInfoQuery,
   useSubmitSideboardMutation,
   useSubmitLobbyInputMutation,
-  useGetFriendsListQuery,
-  useSendPrivateMessageMutation,
-  useCreateQuickGameMutation,
-  useGetOnlineFriendsQuery,
   useGetUserProfileQuery
 } from 'features/api/apiSlice';
 import { useAppSelector } from 'app/Hooks';
@@ -37,10 +33,8 @@ import {
   GAME_FORMAT,
   BREAKPOINT_EXTRA_LARGE,
   CLOUD_IMAGES_URL,
-  QUERY_STATUS,
-  PRIVATE_MESSAGING_ENABLED
+  QUERY_STATUS
 } from 'appConstants';
-import { getReadableFormatName } from 'utils/formatUtils';
 import ChooseFirstTurn from './components/chooseFirstTurn/ChooseFirstTurn';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import { SubmitSideboardAPI } from 'interface/API/SubmitSideboard.php';
@@ -61,7 +55,6 @@ import {
   fetchAllSettings,
   getSettingsStatus
 } from 'features/options/optionsSlice';
-import { ChatBar } from '../../../components/chatBar/ChatBar';
 import { IS_STREAMER_MODE } from 'features/options/constants';
 
 const Lobby = () => {
@@ -70,7 +63,6 @@ const Lobby = () => {
   const [showCalculator, setShowCalculator] = useState(false);
   const [activeTab, setActiveTab] = useState<string>('equipment');
   const [unreadChat, setUnreadChat] = useState<boolean>(false);
-  const [showFriendsPanel, setShowFriendsPanel] = useState(false);
   const [filtersExpanded, setFiltersExpanded] = useState(false);
   const [width, height] = useWindowDimensions();
   const [isWideScreen, setIsWideScreen] = useState<boolean>(false);
@@ -189,19 +181,6 @@ const Lobby = () => {
   const [submitLobbyInput, submitLobbyInputData] =
     useSubmitLobbyInputMutation();
 
-  // Friends and game invite queries/mutations
-  const { data: friendsData } = useGetFriendsListQuery(undefined, {
-    skip: !isLoggedIn
-  });
-
-  const { data: onlineFriendsData } = useGetOnlineFriendsQuery(undefined, {
-    skip: !isLoggedIn || !PRIVATE_MESSAGING_ENABLED,
-    pollingInterval: 30000 // Poll every 30 seconds
-  });
-
-  const [sendMessage] = useSendPrivateMessageMutation();
-  const [createQuickGame] = useCreateQuickGameMutation();
-
   const handleUnreadySideboard = async () => {
     try {
       await submitLobbyInput({
@@ -214,42 +193,6 @@ const Lobby = () => {
       toast.error(err?.error || 'Failed to unready sideboard');
     }
   };
-
-  // Sort friends by status (online, away, offline) then alphabetically
-  const sortedFriends = useMemo(() => {
-    if (!friendsData?.friends) return [];
-
-    return [...friendsData.friends].sort((a, b) => {
-      const aOnlineData = onlineFriendsData?.onlineFriends?.find(
-        (f: any) => f.userId === a.friendUserId
-      );
-      const bOnlineData = onlineFriendsData?.onlineFriends?.find(
-        (f: any) => f.userId === b.friendUserId
-      );
-
-      const aStatus = (aOnlineData as any)?.status || 'offline';
-      const bStatus = (bOnlineData as any)?.status || 'offline';
-
-      // Determine status priority
-      const getStatusPriority = (status: string) => {
-        if (status === 'online') return 0; // Online first
-        if (status === 'away' || status === 'idle') return 1; // Away second
-        return 2; // Offline last
-      };
-
-      const aPriority = getStatusPriority(aStatus);
-      const bPriority = getStatusPriority(bStatus);
-
-      if (aPriority !== bPriority) {
-        return aPriority - bPriority;
-      }
-
-      // Within same status, sort alphabetically by nickname or username
-      const aName = a.nickname || a.username;
-      const bName = b.nickname || b.username;
-      return aName.localeCompare(bName);
-    });
-  }, [friendsData?.friends, onlineFriendsData?.onlineFriends]);
 
   useEffect(() => {
     // Only play sound when opponent first joins (when theirName becomes populated)
@@ -274,32 +217,6 @@ const Lobby = () => {
   const handleChatClick = () => {
     setUnreadChat(false);
     setActiveTab('chat');
-  };
-
-  const handleSendGameInviteFromLobby = async (friendUserId: number) => {
-    try {
-      if (!gameID) {
-        toast.error('Game not started yet. Create a game first!');
-        return;
-      }
-
-      // Send the current lobby link to the friend
-      const gameJoinLink = `${window.location.origin}/game/join/${gameID}`;
-      const readableFormat = getReadableFormatName(data?.format || '');
-      const message = readableFormat
-        ? `Join my ${readableFormat} game!`
-        : 'Join my game!';
-
-      await sendMessage({
-        toUserId: friendUserId,
-        message: message,
-        gameLink: gameJoinLink
-      }).unwrap();
-
-      toast.success(`Invite sent to friend!`);
-    } catch (err: any) {
-      toast.error(err.error || 'Failed to send invite');
-    }
   };
 
   const toggleShowCalculator = () => {
@@ -648,7 +565,6 @@ const Lobby = () => {
 
   return (
     <main className={mainClassNames}>
-      {isWideScreen && <ChatBar />}
       {gameLobby?.chatInvited &&
         showChatModal &&
         createPortal(
@@ -1015,73 +931,19 @@ const Lobby = () => {
                     : styles.chatAreaContainer
                 }
               >
-                {showFriendsPanel ? (
-                  // Friends Panel
-                  <div className={styles.friendsPanel}>
-                    <div className={styles.friendsPanelHeader}>
-                      <h3>Invite Friends</h3>
-                      <button
-                        onClick={() => setShowFriendsPanel(false)}
-                        className={styles.friendsPanelCloseButton}
-                      >
-                        ×
-                      </button>
-                    </div>
-                    {friendsData?.friends && friendsData.friends.length > 0 ? (
-                      <div className={styles.friendsList}>
-                        {sortedFriends.map((friend) => {
-                          const onlineFriend =
-                            onlineFriendsData?.onlineFriends?.find(
-                              (f: any) => f.userId === friend.friendUserId
-                            );
-                          const isOnline = onlineFriend?.isOnline === true;
-
-                          return (
-                            <div
-                              key={friend.friendUserId}
-                              className={styles.friendItem}
-                            >
-                              <span className={styles.friendName}>
-                                {friend.nickname || friend.username}
-                              </span>
-                              <button
-                                onClick={() =>
-                                  handleSendGameInviteFromLobby(
-                                    friend.friendUserId
-                                  )
-                                }
-                                className={styles.friendInviteButton}
-                              >
-                                <MdGames size={18} />
-                                Invite
-                              </button>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    ) : (
-                      <p className={styles.friendsEmptyState}>
-                        No friends to invite
-                      </p>
-                    )}
-                  </div>
-                ) : (
-                  <>{showCalculator ? <Calculator /> : <LobbyChat />}</>
-                )}
-                {!showFriendsPanel && (
-                  <button
-                    className={classNames(styles.smallButton, {
-                      [styles.active]: showCalculator
-                    })}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      toggleShowCalculator();
-                    }}
-                    disabled={false}
-                  >
-                    Hand Draw Probabilities
-                  </button>
-                )}
+                <>{showCalculator ? <Calculator /> : <LobbyChat />}</>
+                <button
+                  className={classNames(styles.smallButton, {
+                    [styles.active]: showCalculator
+                  })}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    toggleShowCalculator();
+                  }}
+                  disabled={false}
+                >
+                  Hand Draw Probabilities
+                </button>
               </div>
             )}
 
@@ -1103,7 +965,6 @@ const Lobby = () => {
               isWidescreen={isWideScreen}
               needToDoDisclaimer={needToDoDisclaimer}
               onUnreadySideboard={handleUnreadySideboard}
-              onSendInviteClick={() => setShowFriendsPanel(!showFriendsPanel)}
               onIsValidChange={setIsDeckValid}
             />
           </div>
