@@ -1,7 +1,7 @@
 .manualModeTab {
   position: fixed;
   left: 0;
-  top: 57%;
+  top: 52.5%;
   width: 6rem;
   height: 3rem;
   background: var(--theme-primary);
