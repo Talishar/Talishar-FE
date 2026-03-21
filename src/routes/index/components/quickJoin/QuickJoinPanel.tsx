@@ -82,7 +82,7 @@ const QuickJoinPanel = ({ embedded = false }: Props) => {
         <span className={styles.labelText}>
           Import Deck List&nbsp;
           <span
-            title="URL from FaBrary.net or fabdb.net"
+            title="URL from FaBrary.net or other supported deck list site"
             style={{
               cursor: 'help',
               display: 'inline-flex',

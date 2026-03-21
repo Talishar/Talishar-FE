@@ -8,7 +8,8 @@ import {
   useCloseGameMutation,
   useDeleteUsernameMutation,
   useSendSystemMessageToPlayerMutation,
-  useSendSystemMessageToAllMutation
+  useSendSystemMessageToAllMutation,
+  useSyncMetafySubscribersMutation
 } from 'features/api/apiSlice';
 import UsernameModeration from './UsernameModeration';
 import DeleteUsernameAutocomplete from './DeleteUsernameAutocomplete';
@@ -40,6 +41,8 @@ const ModPage: React.FC = () => {
   const [deleteUsername, { isLoading: isDeletingUsername }] = useDeleteUsernameMutation();
   const [sendToPlayer, { isLoading: isSendingToPlayer }] = useSendSystemMessageToPlayerMutation();
   const [sendToAll, { isLoading: isSendingToAll }] = useSendSystemMessageToAllMutation();
+  const [syncMetafy, { isLoading: isSyncingMetafy }] = useSyncMetafySubscribersMutation();
+  const [metafySyncResult, setMetafySyncResult] = useState<any>(null);
 
   const handleBanByIP = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -195,6 +198,34 @@ const ModPage: React.FC = () => {
     }
   };
 
+  const handleSyncMetafy = async () => {
+    setSuccessMessage(null);
+    setMetafySyncResult(null);
+
+    if (!window.confirm('This will fetch all Talishar Metafy subscribers and clear expired supporters from the DB. Continue?')) {
+      return;
+    }
+
+    try {
+      const result = await syncMetafy().unwrap();
+      console.log('[MetafySync] Response:', result);
+      if (result?.debug) console.log('[MetafySync] Debug log:', result.debug);
+      setMetafySyncResult(result);
+      if (result?.error) {
+        toast.error(result.error, { position: 'top-center', duration: 8000 });
+      } else {
+        toast.success(`Sync complete: ${result?.cleared ?? 0} expired supporter(s) cleared`, { position: 'top-center' });
+        setSuccessMessage(`Metafy sync complete — ${result?.cleared ?? 0} expired, ${result?.stillActive ?? 0} active`);
+      }
+    } catch (err: any) {
+      console.error('[MetafySync] Error:', err);
+      if (err?.data?.debug) console.log('[MetafySync] Debug log:', err.data.debug);
+      const errorMessage = err?.data?.error || err?.data?.apiError || 'Failed to sync Metafy subscribers';
+      toast.error(errorMessage, { position: 'top-center' });
+      if (err?.data) setMetafySyncResult(err.data);
+    }
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.modPagePanel}>
@@ -315,6 +346,64 @@ const ModPage: React.FC = () => {
                 {isSendingToAll ? 'Sending...' : 'Broadcast to All'}
               </button>
             </form>
+
+            <div className={styles.form}>
+              <h2>Sync Metafy Subscribers</h2>
+              <p style={{ color: '#ccc', fontSize: '13px', marginBottom: '10px' }}>
+                Fetches all active Talishar Metafy subscribers and cross-checks the DB to clear expired supporters.
+              </p>
+              <button
+                onClick={handleSyncMetafy}
+                disabled={isSyncingMetafy}
+                style={{ backgroundColor: '#FF9800' }}
+              >
+                {isSyncingMetafy ? 'Syncing...' : 'Sync Metafy Subscribers'}
+              </button>
+              {metafySyncResult && (
+                <div style={{ marginTop: '12px', padding: '10px', background: 'rgba(255,255,255,0.05)', borderRadius: '3px', borderLeft: `3px solid ${metafySyncResult.error ? '#f44336' : (metafySyncResult.cleared ?? 0) > 0 ? '#FF9800' : '#00ff00'}` }}>
+                  <p style={{ color: metafySyncResult.error ? '#f44336' : '#00ff00', fontWeight: 'bold', marginBottom: '6px' }}>
+                    {metafySyncResult.error ? 'Sync Error' : 'Sync Complete'}
+                  </p>
+                  {metafySyncResult.error && (
+                    <p style={{ color: '#f44336', fontSize: '13px', marginBottom: '6px' }}>{metafySyncResult.error}</p>
+                  )}
+                  {metafySyncResult.apiError && (
+                    <p style={{ color: '#f44336', fontSize: '12px', marginBottom: '4px', fontFamily: 'monospace' }}>{metafySyncResult.apiError}</p>
+                  )}
+                  {metafySyncResult.hint && (
+                    <p style={{ color: '#FF9800', fontSize: '12px', marginBottom: '6px' }}>💡 {metafySyncResult.hint}</p>
+                  )}
+                  {metafySyncResult.apiWarning && (
+                    <p style={{ color: '#FF9800', fontSize: '12px', marginBottom: '6px' }}>API Warning: {metafySyncResult.apiWarning}</p>
+                  )}
+                  <p style={{ color: '#00bcd4', fontSize: '13px', marginBottom: '6px' }}>
+                    Fetched {metafySyncResult.subscribersFetched ?? 0} subscriber(s){metafySyncResult.apiSource ? ` via ${metafySyncResult.apiSource}` : ''}
+                  </p>
+                  <table style={{ fontSize: '13px', color: '#ddd' }}>
+                    <tbody>
+                      <tr><td style={{ padding: '2px 10px' }}>Users with Talishar in DB:</td><td><strong>{metafySyncResult.usersChecked ?? 0}</strong></td></tr>
+                      <tr><td style={{ padding: '2px 10px' }}>Still active:</td><td style={{ color: '#00ff00' }}><strong>{metafySyncResult.stillActive ?? 0}</strong></td></tr>
+                      <tr><td style={{ padding: '2px 10px' }}>Expired (cleared):</td><td style={{ color: '#FF9800' }}><strong>{metafySyncResult.cleared ?? 0}</strong></td></tr>
+                      {(metafySyncResult.backfilled ?? 0) > 0 && (
+                        <tr><td style={{ padding: '2px 10px' }}>MetafyID backfilled:</td><td style={{ color: '#00bcd4' }}><strong>{metafySyncResult.backfilled}</strong></td></tr>
+                      )}
+                      <tr><td style={{ padding: '2px 10px' }}>Skipped (no metafyID):</td><td style={{ color: '#aaa' }}><strong>{metafySyncResult.skippedNoMetafyId ?? 0}</strong></td></tr>
+                    </tbody>
+                  </table>
+                  {metafySyncResult.clearedUsers?.length > 0 && (
+                    <p style={{ marginTop: '8px', color: '#FF9800', fontSize: '12px' }}>
+                      <strong>Cleared:</strong> {metafySyncResult.clearedUsers.join(', ')}
+                    </p>
+                  )}
+                  {metafySyncResult.skippedUsers?.length > 0 && (
+                    <p style={{ marginTop: '4px', color: '#aaa', fontSize: '12px' }}>
+                      <strong>Skipped:</strong> {metafySyncResult.skippedUsers.join(', ')}
+                    </p>
+                  )}
+
+                </div>
+              )}
+            </div>
           </div>
 
           <div className={styles.middleColumn}>

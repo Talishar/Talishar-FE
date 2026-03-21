@@ -16,6 +16,7 @@ import deckValidation from './validation';
 import StickyFooter from './components/stickyFooter/StickyFooter';
 import { toast } from 'react-hot-toast';
 import useAuth from 'hooks/useAuth';
+import useAdScript from 'hooks/useAdScript';
 import {
   useGetLobbyInfoQuery,
   useSubmitSideboardMutation,
@@ -64,6 +65,7 @@ import { IS_STREAMER_MODE } from 'features/options/constants';
 
 const Lobby = () => {
   usePageTitle('Lobby');
+  useAdScript(false);
   const [showCalculator, setShowCalculator] = useState(false);
   const [activeTab, setActiveTab] = useState<string>('equipment');
   const [unreadChat, setUnreadChat] = useState<boolean>(false);

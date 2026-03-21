@@ -28,9 +28,11 @@ import { fetchAllSettings } from 'features/options/optionsSlice';
 import { Toaster } from 'react-hot-toast';
 import { shallowEqual } from 'react-redux';
 import { PanelProvider } from '../components/leftColumn/PanelContext';
+import useAdScript from 'hooks/useAdScript';
 
 function Play({ isRoguelike }: { isRoguelike: boolean }) {
   usePageTitle('In Game');
+  useAdScript(false); // Purge any lingering ad scripts/elements from the landing page
   const [cookies] = useCookies([
     'experimental',
     'cardSize',

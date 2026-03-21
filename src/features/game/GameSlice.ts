@@ -638,6 +638,8 @@ export const gameSlice = createSlice({
           firstWarningShown: false,
           secondWarningShown: false
         };
+        // Clear recently played history from previous game
+        state.gameDynamicInfo.recentlyPlayed = [];
       } else {
         // RECONNECTION to same game: Keep existing timer if present
         if (!state.inactivityWarning) {
