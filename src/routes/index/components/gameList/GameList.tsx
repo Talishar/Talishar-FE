@@ -432,15 +432,6 @@ const GameList = () => {
             (Auto-refresh: {GAME_LIST_POLLING_INTERVAL / 1000}s)
           </span>
         </h3>
-        <button
-          onClick={handleReloadClick}
-          className={styles.reloadButton}
-          aria-busy={isFetching}
-          disabled={isFetching}
-          title="Manually refresh game list"
-        >
-          Refresh
-        </button>
       </div>
       {isLoading ? <div aria-busy="true">Loading games please wait</div> : null}
       {error ? (
