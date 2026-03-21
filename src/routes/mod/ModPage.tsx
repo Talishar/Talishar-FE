@@ -209,11 +209,17 @@ const ModPage: React.FC = () => {
     try {
       const result = await syncMetafy().unwrap();
       setMetafySyncResult(result);
-      toast.success(`Sync complete: ${result.cleared} expired supporter(s) cleared`, { position: 'top-center' });
-      setSuccessMessage(`Metafy sync complete — ${result.cleared} expired, ${result.stillActive} active`);
+      if (result?.error) {
+        toast.error(result.error, { position: 'top-center', duration: 8000 });
+      } else {
+        toast.success(`Sync complete: ${result?.cleared ?? 0} expired supporter(s) cleared`, { position: 'top-center' });
+        setSuccessMessage(`Metafy sync complete — ${result?.cleared ?? 0} expired, ${result?.stillActive ?? 0} active`);
+      }
     } catch (err: any) {
       const errorMessage = err?.data?.error || err?.data?.apiError || 'Failed to sync Metafy subscribers';
       toast.error(errorMessage, { position: 'top-center' });
+      // Still show any partial result data for debugging
+      if (err?.data) setMetafySyncResult(err.data);
     }
   };
 
@@ -351,17 +357,25 @@ const ModPage: React.FC = () => {
                 {isSyncingMetafy ? 'Syncing...' : 'Sync Metafy Subscribers'}
               </button>
               {metafySyncResult && (
-                <div style={{ marginTop: '12px', padding: '10px', background: 'rgba(255,255,255,0.05)', borderRadius: '3px', borderLeft: `3px solid ${metafySyncResult.cleared > 0 ? '#FF9800' : '#00ff00'}` }}>
-                  <p style={{ color: '#00ff00', fontWeight: 'bold', marginBottom: '6px' }}>Sync Complete</p>
+                <div style={{ marginTop: '12px', padding: '10px', background: 'rgba(255,255,255,0.05)', borderRadius: '3px', borderLeft: `3px solid ${metafySyncResult.error ? '#f44336' : (metafySyncResult.cleared ?? 0) > 0 ? '#FF9800' : '#00ff00'}` }}>
+                  <p style={{ color: metafySyncResult.error ? '#f44336' : '#00ff00', fontWeight: 'bold', marginBottom: '6px' }}>
+                    {metafySyncResult.error ? 'Sync Error' : 'Sync Complete'}
+                  </p>
+                  {metafySyncResult.error && (
+                    <p style={{ color: '#f44336', fontSize: '13px', marginBottom: '6px' }}>{metafySyncResult.error}</p>
+                  )}
+                  {metafySyncResult.apiWarning && (
+                    <p style={{ color: '#FF9800', fontSize: '12px', marginBottom: '6px' }}>API Warning: {metafySyncResult.apiWarning}</p>
+                  )}
                   <p style={{ color: '#00bcd4', fontSize: '13px', marginBottom: '6px' }}>
-                    Fetched {metafySyncResult.subscribersFetched} subscriber(s) via {metafySyncResult.apiSource}
+                    Fetched {metafySyncResult.subscribersFetched ?? 0} subscriber(s){metafySyncResult.apiSource ? ` via ${metafySyncResult.apiSource}` : ''}
                   </p>
                   <table style={{ fontSize: '13px', color: '#ddd' }}>
                     <tbody>
-                      <tr><td style={{ padding: '2px 10px' }}>Users with Talishar in DB:</td><td><strong>{metafySyncResult.usersChecked}</strong></td></tr>
-                      <tr><td style={{ padding: '2px 10px' }}>Still active:</td><td style={{ color: '#00ff00' }}><strong>{metafySyncResult.stillActive}</strong></td></tr>
-                      <tr><td style={{ padding: '2px 10px' }}>Expired (cleared):</td><td style={{ color: '#FF9800' }}><strong>{metafySyncResult.cleared}</strong></td></tr>
-                      <tr><td style={{ padding: '2px 10px' }}>Skipped (no metafyID):</td><td style={{ color: '#aaa' }}><strong>{metafySyncResult.skippedNoMetafyId}</strong></td></tr>
+                      <tr><td style={{ padding: '2px 10px' }}>Users with Talishar in DB:</td><td><strong>{metafySyncResult.usersChecked ?? 0}</strong></td></tr>
+                      <tr><td style={{ padding: '2px 10px' }}>Still active:</td><td style={{ color: '#00ff00' }}><strong>{metafySyncResult.stillActive ?? 0}</strong></td></tr>
+                      <tr><td style={{ padding: '2px 10px' }}>Expired (cleared):</td><td style={{ color: '#FF9800' }}><strong>{metafySyncResult.cleared ?? 0}</strong></td></tr>
+                      <tr><td style={{ padding: '2px 10px' }}>Skipped (no metafyID):</td><td style={{ color: '#aaa' }}><strong>{metafySyncResult.skippedNoMetafyId ?? 0}</strong></td></tr>
                     </tbody>
                   </table>
                   {metafySyncResult.clearedUsers?.length > 0 && (
@@ -373,6 +387,14 @@ const ModPage: React.FC = () => {
                     <p style={{ marginTop: '4px', color: '#aaa', fontSize: '12px' }}>
                       <strong>Skipped:</strong> {metafySyncResult.skippedUsers.join(', ')}
                     </p>
+                  )}
+                  {metafySyncResult.debug?.length > 0 && (
+                    <details style={{ marginTop: '8px' }}>
+                      <summary style={{ color: '#888', fontSize: '12px', cursor: 'pointer' }}>Debug Log ({metafySyncResult.debug.length} entries)</summary>
+                      <pre style={{ fontSize: '11px', color: '#999', marginTop: '4px', maxHeight: '200px', overflow: 'auto', whiteSpace: 'pre-wrap', wordBreak: 'break-all' }}>
+                        {metafySyncResult.debug.join('\n')}
+                      </pre>
+                    </details>
                   )}
                 </div>
               )}
