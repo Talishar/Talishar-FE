@@ -367,6 +367,12 @@ const ModPage: React.FC = () => {
                   {metafySyncResult.error && (
                     <p style={{ color: '#f44336', fontSize: '13px', marginBottom: '6px' }}>{metafySyncResult.error}</p>
                   )}
+                  {metafySyncResult.apiError && (
+                    <p style={{ color: '#f44336', fontSize: '12px', marginBottom: '4px', fontFamily: 'monospace' }}>{metafySyncResult.apiError}</p>
+                  )}
+                  {metafySyncResult.hint && (
+                    <p style={{ color: '#FF9800', fontSize: '12px', marginBottom: '6px' }}>💡 {metafySyncResult.hint}</p>
+                  )}
                   {metafySyncResult.apiWarning && (
                     <p style={{ color: '#FF9800', fontSize: '12px', marginBottom: '6px' }}>API Warning: {metafySyncResult.apiWarning}</p>
                   )}
