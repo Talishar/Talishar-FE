@@ -991,8 +991,6 @@ export const gameSlice = createSlice({
       state.gameDynamicInfo.clock = action.payload.gameDynamicInfo.clock;
       state.gameDynamicInfo.spectatorCount =
         action.payload.gameDynamicInfo.spectatorCount ?? 0;
-      state.gameDynamicInfo.spectatorNames =
-        action.payload.gameDynamicInfo.spectatorNames ?? [];
       state.gameDynamicInfo.playerInventory =
         action.payload.gameDynamicInfo.playerInventory;
       state.hasPriority = action.payload.hasPriority;
@@ -1124,8 +1122,6 @@ export const gameSlice = createSlice({
       state.gameDynamicInfo.clock = action.payload.gameDynamicInfo.clock;
       state.gameDynamicInfo.spectatorCount =
         action.payload.gameDynamicInfo.spectatorCount ?? 0;
-      state.gameDynamicInfo.spectatorNames =
-        action.payload.gameDynamicInfo.spectatorNames ?? [];
       state.gameDynamicInfo.playerInventory =
         action.payload.gameDynamicInfo.playerInventory;
       state.hasPriority = action.payload.hasPriority;
