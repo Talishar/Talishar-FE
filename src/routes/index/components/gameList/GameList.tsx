@@ -91,7 +91,7 @@ const GameList = () => {
   const [gamesInProgressExpanded, setGamesInProgressExpanded] = useState(true); // Default to open
   const [isRateLimited, setIsRateLimited] = useState(false);
   const lastRefetchTime = useRef<number>(0);
-  const REFETCH_RATE_LIMIT_MS = 5000;
+  const REFETCH_RATE_LIMIT_MS = 3000;
 
   // Initialize filters from cookies
   const defaultFormats = new Set([
