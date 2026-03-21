@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
   useGetGameListQuery,
   useGetFriendsListQuery
@@ -89,6 +89,9 @@ const GameList = () => {
 
   const [heroFilter, setHeroFilter] = useState<string[]>([]);
   const [gamesInProgressExpanded, setGamesInProgressExpanded] = useState(true); // Default to open
+  const [isRateLimited, setIsRateLimited] = useState(false);
+  const lastRefetchTime = useRef<number>(0);
+  const REFETCH_RATE_LIMIT_MS = 5000;
 
   // Initialize filters from cookies
   const defaultFormats = new Set([
@@ -368,7 +371,13 @@ const GameList = () => {
     : [];
 
   const handleReloadClick = () => {
-    refetch();
+    const now = Date.now();
+    if (now - lastRefetchTime.current >= REFETCH_RATE_LIMIT_MS) {
+      lastRefetchTime.current = now;
+      setIsRateLimited(true);
+      refetch();
+      setTimeout(() => setIsRateLimited(false), REFETCH_RATE_LIMIT_MS);
+    }
   };
 
   const otherFormats = [
@@ -432,7 +441,7 @@ const GameList = () => {
           onClick={handleReloadClick}
           className={styles.reloadButton}
           aria-busy={isFetching}
-          disabled={isFetching}
+          disabled={isFetching || isRateLimited}
           title="Manually refresh game list"
         >
           Refresh
