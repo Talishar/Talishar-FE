@@ -384,6 +384,9 @@ const ModPage: React.FC = () => {
                       <tr><td style={{ padding: '2px 10px' }}>Users with Talishar in DB:</td><td><strong>{metafySyncResult.usersChecked ?? 0}</strong></td></tr>
                       <tr><td style={{ padding: '2px 10px' }}>Still active:</td><td style={{ color: '#00ff00' }}><strong>{metafySyncResult.stillActive ?? 0}</strong></td></tr>
                       <tr><td style={{ padding: '2px 10px' }}>Expired (cleared):</td><td style={{ color: '#FF9800' }}><strong>{metafySyncResult.cleared ?? 0}</strong></td></tr>
+                      {(metafySyncResult.backfilled ?? 0) > 0 && (
+                        <tr><td style={{ padding: '2px 10px' }}>MetafyID backfilled:</td><td style={{ color: '#00bcd4' }}><strong>{metafySyncResult.backfilled}</strong></td></tr>
+                      )}
                       <tr><td style={{ padding: '2px 10px' }}>Skipped (no metafyID):</td><td style={{ color: '#aaa' }}><strong>{metafySyncResult.skippedNoMetafyId ?? 0}</strong></td></tr>
                     </tbody>
                   </table>
