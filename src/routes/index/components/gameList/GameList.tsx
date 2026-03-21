@@ -55,23 +55,15 @@ export interface GameListResponse {
   LastAuthKey?: string;
 }
 
-const GAME_LIST_POLLING_INTERVAL = 10000; // in ms (10 seconds)
-
 const GameList = () => {
   const [cookies, setCookie, removeCookie] = useCookies([
     'experimental',
     'gameFilters',
     'gameFriendsFilter'
   ]);
-  const [isTabActive, setIsTabActive] = useState(true);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
-  const { data, isLoading, error, refetch, isFetching } = useGetGameListQuery(
-    undefined,
-    {
-      pollingInterval: isTabActive ? GAME_LIST_POLLING_INTERVAL : 0 // Stop polling when tab inactive
-    }
-  );
+  const { data, isLoading, error, refetch, isFetching } = useGetGameListQuery(undefined);
   const { data: friendsData } = useGetFriendsListQuery(undefined);
   const { isLoggedIn } = useAuth();
   const { blockedUsers } = useBlockedUsers();
@@ -199,20 +191,6 @@ const GameList = () => {
       // Ignore parsing errors
     }
   }, []);
-
-  useEffect(() => {
-    const handleVisibilityChange = () => {
-      setIsTabActive(!document.hidden);
-      if (!document.hidden) {
-        refetch();
-      }
-    };
-
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-    return () => {
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
-    };
-  }, [refetch]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -428,14 +406,6 @@ const GameList = () => {
       <div className={styles.titleDiv}>
         <h3 className={styles.title}>
           Games
-          <span
-            className={styles.autoRefreshText}
-            title={`Auto-refreshes every ${
-              GAME_LIST_POLLING_INTERVAL / 1000
-            } seconds`}
-          >
-            (Auto-refresh: {GAME_LIST_POLLING_INTERVAL / 1000}s)
-          </span>
         </h3>
         <button
           onClick={handleReloadClick}
