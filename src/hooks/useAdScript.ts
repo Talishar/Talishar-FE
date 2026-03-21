@@ -1,5 +1,14 @@
 import { useEffect } from 'react';
 
+const AD_SELECTORS =
+  '[id^="rev-"], [class*="rev-content"], [class*="revcontent"],' +
+  'iframe[src*="rev.iq"], iframe[src*="revcontent"],' +
+  'div[data-ad], ins.adsbygoogle,' +
+  '[id*="google_ads"], [id*="gpt-ad"], [id*="aswift"],' +
+  'iframe[id*="google_ads"], iframe[src*="googlesyndication"],' +
+  'div[id*="adsense"], div[class*="google-ad"],' +
+  '[id="google_vignette"], [id*="vignette"], div[id^="google_ads_iframe"]';
+
 function purgeAdElements() {
   // Remove Rev.IQ and Google ad scripts
   document
@@ -7,17 +16,7 @@ function purgeAdElements() {
     .forEach((el) => el.remove());
 
   // Remove ad containers, iframes, and Google vignette/interstitial overlays
-  document
-    .querySelectorAll(
-      '[id^="rev-"], [class*="rev-content"], [class*="revcontent"],' +
-      'iframe[src*="rev.iq"], iframe[src*="revcontent"],' +
-      'div[data-ad], ins.adsbygoogle,' +
-      '[id*="google_ads"], [id*="gpt-ad"], [id*="aswift"],' +
-      'iframe[id*="google_ads"], iframe[src*="googlesyndication"],' +
-      'div[id*="adsense"], div[class*="google-ad"],' +
-      '[id="google_vignette"], [id*="vignette"], div[id^="google_ads_iframe"]'
-    )
-    .forEach((el) => el.remove());
+  document.querySelectorAll(AD_SELECTORS).forEach((el) => el.remove());
 
   // Strip #google_vignette from the URL without triggering a navigation
   if (window.location.hash === '#google_vignette') {
@@ -36,7 +35,41 @@ export default function useAdScript(enabled: boolean = true) {
   useEffect(() => {
     if (!enabled) {
       purgeAdElements();
-      return;
+
+      const observer = new MutationObserver((mutations) => {
+        for (const mutation of mutations) {
+          for (const node of mutation.addedNodes) {
+            if (!(node instanceof HTMLElement)) continue;
+            if (node.matches?.(AD_SELECTORS)) {
+              node.remove();
+              continue;
+            }
+            if (
+              node.tagName === 'SCRIPT' &&
+              node instanceof HTMLScriptElement &&
+              (node.src.includes('rev.iq') ||
+                node.src.includes('googlesyndication') ||
+                node.src.includes('adsbygoogle'))
+            ) {
+              node.remove();
+              continue;
+            }
+            node.querySelectorAll?.(AD_SELECTORS)?.forEach((el) => el.remove());
+          }
+        }
+      });
+
+      observer.observe(document.documentElement, {
+        childList: true,
+        subtree: true
+      });
+
+      const intervalId = window.setInterval(purgeAdElements, 2000);
+
+      return () => {
+        observer.disconnect();
+        window.clearInterval(intervalId);
+      };
     }
 
     const script = document.createElement('script');
