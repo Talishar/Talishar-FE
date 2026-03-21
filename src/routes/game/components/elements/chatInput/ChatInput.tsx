@@ -254,7 +254,7 @@ const ChatWheel = ({ usePrimary = false }: { usePrimary?: boolean }) => {
       {modalDisplay &&
         createPortal(
           <FloatingOverlay lockScroll className={styles.floatingOverlay}>
-            <FloatingFocusManager context={context} modal={false}>
+            <FloatingFocusManager context={context} modal={false} initialFocus={-1}>
               <div
                 ref={refs.setFloating}
                 style={floatingStyles}
@@ -304,7 +304,6 @@ const ChatOptions = ({ setModalDisplay }: ChatOptionsProps) => {
 
   return (
     <>
-      <h4 className={styles.quickChatHeader}>Quick Chat</h4>
       {elements.map((item) => item)}
     </>
   );

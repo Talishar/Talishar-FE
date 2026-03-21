@@ -103,29 +103,26 @@
 }
 
 .popOver {
-  background-color: black;
-  border: 1px solid var(--theme-primary);
+  background-color: rgba(12, 14, 18);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   color: white;
-  padding: 10px;
+  padding: 8px 6px;
   z-index: 100000;
   overflow-y: auto;
   max-width: 50vw;
   max-width: 50dvw;
   max-height: 70vh;
   max-height: 70dvh;
-  border-radius: 15px;
+  border-radius: 10px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7), 0 2px 8px rgba(0, 0, 0, 0.5);
+  min-width: 200px;
 }
 
 .popOver button:last-child {
   margin-bottom: 0;
 }
 
-.quickChatHeader {
-  text-align: center;
-  width: 100%;
-  display: block;
-  margin: 0 auto 5px auto;
-}
+
 
 .buttonDiv {
   background-color: var(--theme-secondary) !important;
@@ -173,18 +170,43 @@
 }
 
 .chatWheelButton {
-  padding: 0.9em 0.1em;
+  display: block;
+  width: 100%;
+  padding: 0.45em 0.75em;
+  text-align: left;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 0.88em;
+  cursor: pointer;
+  transition: background 0.12s ease, color 0.12s ease;
+  white-space: nowrap;
+  margin-bottom: 1px;
+}
+
+.chatWheelButton:hover,
+.chatWheelButton:focus-visible {
+  background: rgba(255, 255, 255, 0.09);
+  color: rgba(255, 255, 255, 0.95);
+  outline: none;
+}
+
+.chatWheelButton:active {
+  background: rgba(255, 255, 255, 0.15);
 }
 
 @media only screen and (max-width: 768px) and (orientation: portrait) {
   .chatWheelButton {
-    font-size: 12px;
+    font-size: 13px;
   }
 
   .popOver {
     max-width: 90dvw;
     left: 50% !important;
-    transform: translateX(-50%) !important;
     right: auto !important;
+    top: auto !important;
+    bottom: 0 !important;
+    transform: translateX(-50%) !important;
   }
 }
