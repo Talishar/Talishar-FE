@@ -87,6 +87,7 @@
   "JOIN":{
     "PRECON": "Deck préconstruit",
     "IMPORT": "Importer un deck",
+    "IMPORT_DECK":"Importer un deck",
     "IMPORT_TITLE": "URL de FaBrary.net",
     "IMPORT_HELP": "Lien du deck — URL de FaBrary.net",
     "SAVE_DECK_FAVOURITES": "Enregistrer le deck dans les ❤️ Favoris",
