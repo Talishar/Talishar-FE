@@ -55,6 +55,7 @@ export default interface GameState {
   optionsMenu?: {
     active?: boolean;
   };
+  inventoryOpen?: boolean;
   playerInputPopUp?: {
     active?: boolean;
     buttons?: Button[];

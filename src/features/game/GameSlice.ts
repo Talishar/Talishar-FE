@@ -538,6 +538,12 @@ export const gameSlice = createSlice({
     closeOptionsMenu: (state) => {
       state.optionsMenu = { active: false };
     },
+    openInventory: (state) => {
+      state.inventoryOpen = true;
+    },
+    closeInventory: (state) => {
+      state.inventoryOpen = false;
+    },
     // sets game information if any
     setGameStart: (
       state,
@@ -1305,6 +1311,8 @@ export const {
   removeCardFromHand,
   openOptionsMenu,
   closeOptionsMenu,
+  openInventory,
+  closeInventory,
   showChainLinkSummary,
   hideChainLinkSummary,
   hideActiveLayer,

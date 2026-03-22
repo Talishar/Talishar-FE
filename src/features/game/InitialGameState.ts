@@ -15,6 +15,7 @@ const InitialGameState: GameState = {
   playerTwo: {},
   isUpdateInProgress: false,
   optionsMenu: { active: false },
+  inventoryOpen: false,
   showModals: true,
   chatEnabled: false,
   shufflingPlayerId: null,

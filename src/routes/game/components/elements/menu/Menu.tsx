@@ -119,9 +119,7 @@ function MobileOverflowMenu({ isSpectator }: { isSpectator: boolean }) {
                 showLabel
               />
             </div>
-            <div onClick={() => setOpen(false)}>
-              <Inventory buttonClassName={styles.overflowItem} showLabel />
-            </div>
+            <Inventory buttonClassName={styles.overflowItem} showLabel />
             <button className={styles.overflowItem} onClick={toggleFullScreen}>
               <GiExpand aria-hidden="true" /> Fullscreen
             </button>

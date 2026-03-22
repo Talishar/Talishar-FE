@@ -201,6 +201,7 @@
   height: 100%;
   z-index: 100;
 }
+
 .searchInput {
   padding: 0.5vh 1vh;
   border-radius: 5px;
@@ -213,7 +214,7 @@
   width: 200px !important;
   order: 2;
   cursor: text;
-  
+  margin-bottom: 0 !important;
 }
 
 .searchInput::placeholder {
