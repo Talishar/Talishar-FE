@@ -356,6 +356,12 @@ const ChatOptions = ({ setModalDisplay }: ChatOptionsProps) => {
           e.preventDefault();
           handleSend(entry[0]);
         }
+      } else if (e.key === '0') {
+        const entry = allEntries[9];
+        if (entry) {
+          e.preventDefault();
+          handleSend(entry[0]);
+        }
       }
     };
     window.addEventListener('keydown', onKeyDown);
@@ -393,7 +399,7 @@ const ChatOptions = ({ setModalDisplay }: ChatOptionsProps) => {
           className={styles.chatWheelButton}
           onClick={(e) => { e.preventDefault(); handleSend(key); }}
         >
-          {index < 9 && <span className={styles.keyHint}>{index + 1}</span>}
+          {index <= 9 && <span className={styles.keyHint}>{index < 9 ? index + 1 : 0}</span>}
           {value}
         </button>
       ))}
