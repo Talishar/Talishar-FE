@@ -77,7 +77,9 @@ const Index = () => {
               Remove ads
             </a>
           </div>
-          <AdUnit placement="leaderboard-1" />
+          {/* Leaderboard (728x90) on desktop, mobile banner (300x250) on small screens */}
+          <AdUnit placement="leaderboard-1" className={styles.desktopAd} />
+          <AdUnit placement="mobile-unit-1" className={styles.mobileAd} />
         </footer>
       )}
       {systemMessageData?.systemMessage && (

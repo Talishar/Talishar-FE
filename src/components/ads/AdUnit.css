@@ -33,12 +33,28 @@
   margin: 15px auto;
 }
 
-/* Leaderboard ad units */
 .ad-unit[data-ad^='leaderboard'] {
+  container-type: inline-size;
   width: 100%;
   max-width: 728px;
   height: 90px;
   margin: 15px auto;
+  overflow: hidden;
+  position: relative;
+  background: rgba(255, 255, 255, 0.04);
+  display: block;
+}
+
+.ad-unit[data-ad^='leaderboard'] > *,
+.ad-unit[data-ad^='leaderboard'] iframe {
+  position: absolute !important;
+  top: 0 !important;
+  left: 50% !important;
+  width: 728px !important;
+  height: 90px !important;
+  transform-origin: top center;
+  transform: translateX(-50%) scale(calc(100cqw / 728px));
+  margin: 0 !important;
 }
 
 /* Mobile ad units */
@@ -62,10 +78,9 @@
     max-width: none;
   }
 
-  /* Adjust leaderboard units for mobile */
+  /* Hide leaderboard on mobile — a mobile-unit is shown instead */
   .ad-unit[data-ad^='leaderboard'] {
-    width: 100%;
-    max-width: none;
+    display: none;
   }
 }
 
