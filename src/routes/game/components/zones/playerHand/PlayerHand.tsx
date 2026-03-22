@@ -10,7 +10,7 @@ import { AnimatePresence } from 'framer-motion';
 import { createPortal } from 'react-dom';
 import { useNewlyDrawnCards } from 'hooks/useNewlyDrawnCards';
 import useSound from 'use-sound';
-import drawingCardsSound from 'sounds/drawing_cards.m4a';
+import drawingCardsSound from 'sounds/drawing_cards.wav';
 import { getSettingsEntity } from 'features/options/optionsSlice';
 
 const DEFAULT_HAND_REORDER_STEP_PX = 120;
