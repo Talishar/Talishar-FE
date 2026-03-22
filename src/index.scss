@@ -201,11 +201,6 @@ body {
 // Import Pico
 @import '@picocss/pico/scss/pico';
 
-// Remove Pico's default bottom margin on buttons
-button {
-  margin-bottom: 0;
-}
-
 // Override Pico's dialog styles to allow scrolling behind dialogs
 dialog {
   width: unset !important;
