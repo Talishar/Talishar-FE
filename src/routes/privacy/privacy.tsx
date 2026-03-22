@@ -39,18 +39,18 @@ export const Privacy = () => {
 
         <h2>Data Collection and Use</h2>
         <p>
-          Talishar uses third-party advertising services, including Google
-          AdSense, to serve advertisements when you visit our website. These
+          Talishar uses third-party advertising services, including rev.iq,
+          to serve advertisements when you visit our website. These
           companies may use information about your visits to this and other
           websites to provide relevant advertisements about goods and services.
         </p>
 
-        <h2>Google AdSense and Cookies</h2>
+        <h2>rev.iq Advertising and Cookies</h2>
         <p>
-          Google, as a third party vendor, uses cookies to serve ads on
-          Talishar. Google's use of advertising cookies enables it and its
+          rev.iq, as a third-party vendor, uses cookies to serve ads on
+          Talishar. rev.iq's use of advertising cookies enables it and its
           partners to serve ads to you based on your visit to Talishar and/or
-          other sites on the Internet. These cookies allow Google and its
+          other sites on the Internet. These cookies allow rev.iq and its
           partners to:
         </p>
         <ul>
@@ -60,19 +60,19 @@ export const Privacy = () => {
           <li>Provide aggregate reporting to advertisers</li>
         </ul>
         <p>
-          Third party vendors, including Google, may place and read cookies on
+          Third-party vendors, including rev.iq, may place and read cookies on
           your browser, or use web beacons or other technologies to collect
           information as a result of ad serving on Talishar.
         </p>
         <p>
-          <strong>Learn more:</strong> For more information about how Google
+          <strong>Learn more:</strong> For more information about how rev.iq
           uses data when you use our site, please visit{' '}
           <a
-            href="https://policies.google.com/technologies/partner-sites"
+            href="https://www.rev.iq/privacy"
             target="_blank"
             rel="noopener noreferrer"
           >
-            How Google uses data when you use our partners' sites or apps
+            rev.iq Privacy Policy
           </a>
           .
         </p>
@@ -85,11 +85,11 @@ export const Privacy = () => {
           <li>
             <strong>Opt out of personalized advertising:</strong> Visit{' '}
             <a
-              href="https://www.google.com/settings/ads"
+              href="https://www.rev.iq/optout"
               target="_blank"
               rel="noopener noreferrer"
             >
-              Google Ads Settings
+              rev.iq Ad Settings
             </a>{' '}
             to manage your ad preferences and opt out of personalized
             advertising.
@@ -126,7 +126,7 @@ export const Privacy = () => {
         <p>
           Talishar does not knowingly collect personal information from children
           under the age of 13. Our website is not directed at children under 13,
-          and we do not use Google AdSense to target personalized ads to
+          and we do not use rev.iq to target personalized ads to
           children. If you are under 13 years of age, please do not use our
           website or provide any personal information without parental consent.
         </p>

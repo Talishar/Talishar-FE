@@ -149,10 +149,10 @@ const TermsOfService: React.FC = () => {
         <section className={styles.section}>
           <h2>11. Advertisements</h2>
           <p>
-            Talishar displays advertisements through Google AdSense. We are not
+            Talishar displays advertisements through rev.iq. We are not
             responsible for the content of advertisements or any issues arising
-            from ads. Google's use of cookies and similar technologies is
-            governed by Google's policies.
+            from ads. rev.iq's use of cookies and similar technologies is
+            governed by rev.iq's policies.
           </p>
         </section>
 

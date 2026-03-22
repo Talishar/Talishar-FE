@@ -3,32 +3,16 @@ import { useEffect } from 'react';
 const AD_SELECTORS =
   '[id^="rev-"], [class*="rev-content"], [class*="revcontent"],' +
   'iframe[src*="rev.iq"], iframe[src*="revcontent"],' +
-  'div[data-ad], ins.adsbygoogle,' +
-  '[id*="google_ads"], [id*="gpt-ad"], [id*="aswift"],' +
-  'iframe[id*="google_ads"], iframe[src*="googlesyndication"],' +
-  'div[id*="adsense"], div[class*="google-ad"],' +
-  '[id="google_vignette"], [id*="vignette"], div[id^="google_ads_iframe"]';
+  'div[data-ad]';
 
 function purgeAdElements() {
-  // Remove Rev.IQ and Google ad scripts
+  // Remove Rev.IQ ad scripts
   document
-    .querySelectorAll('script[src*="rev.iq"], script[src*="googlesyndication"], script[src*="adsbygoogle"]')
+    .querySelectorAll('script[src*="rev.iq"]')
     .forEach((el) => el.remove());
 
-  // Remove ad containers, iframes, and Google vignette/interstitial overlays
+  // Remove ad containers and iframes
   document.querySelectorAll(AD_SELECTORS).forEach((el) => el.remove());
-
-  // Strip #google_vignette from the URL without triggering a navigation
-  if (window.location.hash === '#google_vignette') {
-    window.history.replaceState(null, '', window.location.pathname + window.location.search);
-  }
-
-  // Neutralise adsbygoogle so any queued push() calls silently no-op
-  try {
-    (window as any).adsbygoogle = { push: () => {} };
-  } catch (_) {
-    // ignore
-  }
 }
 
 export default function useAdScript(enabled: boolean = true) {
@@ -47,9 +31,7 @@ export default function useAdScript(enabled: boolean = true) {
             if (
               node.tagName === 'SCRIPT' &&
               node instanceof HTMLScriptElement &&
-              (node.src.includes('rev.iq') ||
-                node.src.includes('googlesyndication') ||
-                node.src.includes('adsbygoogle'))
+              node.src.includes('rev.iq')
             ) {
               node.remove();
               continue;

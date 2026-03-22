@@ -70,7 +70,7 @@ const PrivacyPolicy: React.FC = () => {
             <li>To comply with legal obligations</li>
             <li>To analyze platform usage and trends</li>
             <li>
-              To display personalized advertisements through Google AdSense
+              To display advertisements through rev.iq
             </li>
           </ul>
         </section>
@@ -99,7 +99,7 @@ const PrivacyPolicy: React.FC = () => {
           <ul>
             <li>Remember your preferences and login information</li>
             <li>Analyze platform usage through Google Analytics</li>
-            <li>Display personalized ads through Google AdSense</li>
+            <li>Display ads through rev.iq</li>
             <li>Enable essential platform functionality</li>
           </ul>
           <p>
@@ -109,18 +109,18 @@ const PrivacyPolicy: React.FC = () => {
         </section>
 
         <section className={styles.section}>
-          <h2>6. Google AdSense</h2>
+          <h2>6. rev.iq Advertising</h2>
           <p>
-            Talishar uses Google AdSense to display advertisements. Google may
+            Talishar uses rev.iq to display advertisements. rev.iq may
             collect information about your browsing behavior to deliver
-            personalized ads. For more information, see
+            relevant ads. For more information, see
             <a
-              href="https://policies.google.com/privacy"
+              href="https://www.rev.iq/privacy"
               target="_blank"
               rel="noopener noreferrer"
             >
               {' '}
-              Google's Privacy Policy
+              rev.iq's Privacy Policy
             </a>
             .
           </p>
