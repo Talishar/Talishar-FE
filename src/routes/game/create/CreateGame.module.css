@@ -225,3 +225,55 @@
   font-weight: bold;
   color: var(--theme-text-muted, #999);
 }
+
+/* ── Deck source tabs (standalone Create Game form) ─────────────── */
+
+.deckTabBar {
+  display: flex;
+  border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.15));
+  border-radius: 8px;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.15);
+}
+
+.deckTab {
+  flex: 1;
+  padding: 0.4rem 0.75rem;
+  border: none;
+  background: transparent;
+  color: var(--theme-text-muted, rgba(237, 237, 237, 0.55));
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: background 0.15s ease, color 0.15s ease;
+  text-align: center;
+  width: auto !important;
+  margin-bottom: 0 !important;
+}
+
+.deckTab:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--theme-text, #ededed);
+}
+
+.deckTab + .deckTab {
+  border-left: 1px solid var(--theme-border, rgba(255, 255, 255, 0.15));
+}
+
+.deckTabActive {
+  background: var(--theme-primary-muted, rgba(212, 175, 55, 0.2));
+  color: var(--theme-primary, #d4af37);
+  font-weight: 600;
+}
+
+.bazaarMessage {
+  font-size: 0.875rem;
+  color: var(--theme-text-muted, rgba(237, 237, 237, 0.6));
+  margin: 0.25rem 0;
+  text-align: center;
+}
+
+.bazaarMessage a {
+  color: var(--theme-primary, #d4af37);
+  text-decoration: underline;
+}

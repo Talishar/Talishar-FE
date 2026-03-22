@@ -7,15 +7,18 @@ import React, {
   useState
 } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAppDispatch } from 'app/Hooks';
+import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { setGameStart } from 'features/game/GameSlice';
 import {
   useJoinGameMutation,
-  useGetFavoriteDecksQuery
+  useGetFavoriteDecksQuery,
+  useGetBazaarDecksQuery
 } from 'features/api/apiSlice';
+import { selectCurrentUser, selectMetafyHash } from 'features/auth/authSlice';
 import { generateCroppedImageUrl } from 'utils/cropImages';
 import { ImageSelectOption } from 'components/ImageSelect';
 import { getReadableFormatName } from 'utils/formatUtils';
+import { FAB_BAZAAR_DECK_URL_BASE } from 'appConstants';
 
 const shortenFormat = (format: string): string => {
   if (!format) return '';
@@ -41,7 +44,9 @@ const formatDeckLabel = (
 };
 
 interface QuickJoinContextType {
+  deckSource: 'talishar' | 'bazaar';
   selectedFavoriteDeck: string;
+  selectedBazaarDeck: string;
   importDeckUrl: string;
   saveDeck: boolean;
   detectedFormat: string | null;
@@ -50,7 +55,17 @@ interface QuickJoinContextType {
   hasDeckConfigured: boolean;
   favoriteDeckOptions: ImageSelectOption[];
   isFavoritesLoading: boolean;
+  bazaarDeckOptions: ImageSelectOption[];
+  isBazaarLoading: boolean;
+  bazaarError: string | null;
+  metafyHash: string | null;
+  /** URL-ready fabdb value that accounts for the active deck source */
+  effectiveFabdb: string;
+  /** Talishar deck key that accounts for the active deck source */
+  effectiveFavoriteDecks: string;
+  setDeckSource: (v: 'talishar' | 'bazaar') => void;
   setSelectedFavoriteDeck: (v: string) => void;
+  setSelectedBazaarDeck: (v: string) => void;
   setImportDeckUrl: (v: string) => void;
   setSaveDeck: (v: boolean) => void;
   setError: (v: string | null) => void;
@@ -62,6 +77,8 @@ const QuickJoinContext = createContext<QuickJoinContextType | null>(null);
 const LS_FAVE_DECK_KEY = 'quickJoin_favoriteDeck';
 const LS_IMPORT_URL_KEY = 'quickJoin_importUrl';
 const LS_SAVE_DECK_KEY = 'quickJoin_saveDeck';
+const LS_DECK_SOURCE_KEY = 'quickJoin_deckSource';
+const LS_BAZAAR_DECK_KEY = 'quickJoin_bazaarDeck';
 
 export const QuickJoinProvider = ({
   children
@@ -71,11 +88,22 @@ export const QuickJoinProvider = ({
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [joinGame] = useJoinGameMutation();
+  const metafyHash = useAppSelector(selectMetafyHash);
+  const metafyId = useAppSelector(selectCurrentUser);
+
   const { data: favoritesData, isLoading: isFavoritesLoading } =
     useGetFavoriteDecksQuery(undefined);
 
+  const [deckSource, setDeckSourceState] = useState<'talishar' | 'bazaar'>(
+    () =>
+      (localStorage.getItem(LS_DECK_SOURCE_KEY) as 'talishar' | 'bazaar') ??
+      'talishar'
+  );
   const [selectedFavoriteDeck, setSelectedFavoriteDeckState] = useState<string>(
     () => localStorage.getItem(LS_FAVE_DECK_KEY) ?? ''
+  );
+  const [selectedBazaarDeck, setSelectedBazaarDeckState] = useState<string>(
+    () => localStorage.getItem(LS_BAZAAR_DECK_KEY) ?? ''
   );
   const [importDeckUrl, setImportDeckUrlState] = useState<string>(
     () => localStorage.getItem(LS_IMPORT_URL_KEY) ?? ''
@@ -87,6 +115,16 @@ export const QuickJoinProvider = ({
   const [error, setError] = useState<string | null>(null);
   const [isJoining, setIsJoining] = useState(false);
 
+  const canFetchBazaar = deckSource === 'bazaar' && !!metafyId && !!metafyHash;
+  const {
+    data: bazaarData,
+    isLoading: isBazaarLoading,
+    error: bazaarFetchError
+  } = useGetBazaarDecksQuery(
+    { metafyId: metafyId!, metafyHash: metafyHash! },
+    { skip: !canFetchBazaar }
+  );
+
   const favoriteDeckOptions: ImageSelectOption[] = useMemo(() => {
     if (!favoritesData?.favoriteDecks) return [];
     return [...favoritesData.favoriteDecks].reverse().map((deck) => ({
@@ -95,6 +133,26 @@ export const QuickJoinProvider = ({
       imageUrl: generateCroppedImageUrl(deck.hero)
     }));
   }, [favoritesData?.favoriteDecks]);
+
+  const bazaarDeckOptions: ImageSelectOption[] = useMemo(() => {
+    if (!bazaarData?.decks) return [];
+    return bazaarData.decks.map((deck) => ({
+      value: deck.deckId,
+      label: deck.name
+    }));
+  }, [bazaarData?.decks]);
+
+  const bazaarError: string | null = useMemo(() => {
+    if (!bazaarFetchError) return null;
+    if (
+      typeof bazaarFetchError === 'object' &&
+      'data' in bazaarFetchError &&
+      (bazaarFetchError.data as any)?.error
+    ) {
+      return (bazaarFetchError.data as any).error;
+    }
+    return 'Failed to load FaB Bazaar decks';
+  }, [bazaarFetchError]);
 
   useEffect(() => {
     if (!selectedFavoriteDeck || !favoritesData?.favoriteDecks) {
@@ -111,6 +169,12 @@ export const QuickJoinProvider = ({
     }
   }, [selectedFavoriteDeck, favoritesData?.favoriteDecks, importDeckUrl]);
 
+  const setDeckSource = useCallback((v: 'talishar' | 'bazaar') => {
+    setDeckSourceState(v);
+    localStorage.setItem(LS_DECK_SOURCE_KEY, v);
+    setError(null);
+  }, []);
+
   const setSelectedFavoriteDeck = useCallback((v: string) => {
     setSelectedFavoriteDeckState(v);
     localStorage.setItem(LS_FAVE_DECK_KEY, v);
@@ -118,6 +182,12 @@ export const QuickJoinProvider = ({
       setImportDeckUrlState('');
       localStorage.setItem(LS_IMPORT_URL_KEY, '');
     }
+    setError(null);
+  }, []);
+
+  const setSelectedBazaarDeck = useCallback((v: string) => {
+    setSelectedBazaarDeckState(v);
+    localStorage.setItem(LS_BAZAAR_DECK_KEY, v);
     setError(null);
   }, []);
 
@@ -137,25 +207,42 @@ export const QuickJoinProvider = ({
     localStorage.setItem(LS_SAVE_DECK_KEY, String(v));
   }, []);
 
-  const hasDeckConfigured = !!(selectedFavoriteDeck || importDeckUrl.trim());
+  const hasDeckConfigured =
+    deckSource === 'bazaar'
+      ? !!selectedBazaarDeck
+      : !!(selectedFavoriteDeck || importDeckUrl.trim());
+
+  const effectiveFabdb = useMemo(() => {
+    if (deckSource === 'bazaar' && selectedBazaarDeck) {
+      return `${FAB_BAZAAR_DECK_URL_BASE}${selectedBazaarDeck}`;
+    }
+    return importDeckUrl;
+  }, [deckSource, selectedBazaarDeck, importDeckUrl]);
+
+  const effectiveFavoriteDecks = deckSource === 'talishar' ? selectedFavoriteDeck : '';
 
   const quickJoin = useCallback(
     async (gameName: number) => {
       setError(null);
       setIsJoining(true);
       try {
-        // Only save deck if it's from importDeckUrl (not from favorites)
-        const shouldSaveDeck = saveDeck && importDeckUrl.trim() !== '';
+        const isBazaar = deckSource === 'bazaar';
+        const fabdbValue = isBazaar
+          ? `${FAB_BAZAAR_DECK_URL_BASE}${selectedBazaarDeck}`
+          : importDeckUrl.trim();
+        const favDecksValue = isBazaar ? '' : selectedFavoriteDeck;
+        // Only save deck if it's from importDeckUrl (not from favorites or bazaar)
+        const shouldSaveDeck = !isBazaar && saveDeck && importDeckUrl.trim() !== '';
 
         const response = await joinGame({
           gameName,
           playerID: 2,
           deck: '',
-          fabdb: importDeckUrl.trim() || '',
+          fabdb: fabdbValue,
           deckTestMode: false,
           decksToTry: '',
           favoriteDeck: shouldSaveDeck,
-          favoriteDecks: selectedFavoriteDeck || '',
+          favoriteDecks: favDecksValue,
           gameDescription: ''
         }).unwrap();
 
@@ -201,6 +288,8 @@ export const QuickJoinProvider = ({
       selectedFavoriteDeck,
       importDeckUrl,
       saveDeck,
+      deckSource,
+      selectedBazaarDeck,
       dispatch,
       navigate,
       setSaveDeck
@@ -208,7 +297,9 @@ export const QuickJoinProvider = ({
   );
 
   const value: QuickJoinContextType = {
+    deckSource,
     selectedFavoriteDeck,
+    selectedBazaarDeck,
     importDeckUrl,
     saveDeck,
     detectedFormat,
@@ -217,7 +308,15 @@ export const QuickJoinProvider = ({
     hasDeckConfigured,
     favoriteDeckOptions,
     isFavoritesLoading,
+    bazaarDeckOptions,
+    isBazaarLoading,
+    bazaarError,
+    metafyHash,
+    effectiveFabdb,
+    effectiveFavoriteDecks,
+    setDeckSource,
     setSelectedFavoriteDeck,
+    setSelectedBazaarDeck,
     setImportDeckUrl,
     setSaveDeck,
     setError,

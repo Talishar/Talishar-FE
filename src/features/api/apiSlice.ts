@@ -7,7 +7,12 @@ import {
 } from '@reduxjs/toolkit/query/react';
 import { isRejectedWithValue } from '@reduxjs/toolkit';
 import type { MiddlewareAPI, Middleware } from '@reduxjs/toolkit';
-import { BACKEND_URL, ROGUELIKE_URL, URL_END_POINT } from 'appConstants';
+import {
+  BACKEND_URL,
+  FAB_BAZAAR_DECKS_API_URL,
+  ROGUELIKE_URL,
+  URL_END_POINT
+} from 'appConstants';
 import { detectVpnBlock, logVpnBlock } from 'utils/VpnDetection';
 import {
   CreateGameAPI,
@@ -28,6 +33,10 @@ import { SubmitLobbyInput } from 'interface/API/SubmitLobbyInput.php';
 import { ChooseFirstPlayer } from 'interface/API/ChooseFirstPlayer.php';
 import { SubmitSideboardAPI } from 'interface/API/SubmitSideboard.php';
 import { GetFavoriteDecksResponse } from 'interface/API/GetFavoriteDecks.php';
+import {
+  BazaarDecksResponse,
+  GetBazaarDecksRequest
+} from 'interface/API/GetBazaarDecks';
 import { GameListResponse } from 'routes/index/components/gameList/GameList';
 import { GetCosmeticsResponse } from 'interface/API/GetCosmeticsResponse.php';
 import {
@@ -328,6 +337,28 @@ export const apiSlice = createApi({
           url: URL_END_POINT.GET_COSMETICS,
           responseHandler: parseResponse
         };
+      }
+    }),
+    getBazaarDecks: builder.query<BazaarDecksResponse, GetBazaarDecksRequest>({
+      queryFn: async ({ metafyId, metafyHash }) => {
+        const timestamp = Math.floor(Date.now() / 1000);
+        const url = new URL(FAB_BAZAAR_DECKS_API_URL);
+        url.searchParams.set('metafyId', String(metafyId));
+        url.searchParams.set('metafyHash', metafyHash);
+        url.searchParams.set('timestamp', String(timestamp));
+        try {
+          const response = await fetch(url.toString());
+          if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            return { error: { status: response.status, data: errorData } };
+          }
+          const data: BazaarDecksResponse = await response.json();
+          return { data };
+        } catch (error) {
+          return {
+            error: { status: 'FETCH_ERROR' as const, error: String(error) }
+          };
+        }
       }
     }),
     getFavoriteDecks: builder.query<GetFavoriteDecksResponse, undefined>({
@@ -1083,5 +1114,6 @@ export const {
   useReportTypingMutation,
   useCheckOpponentTypingQuery,
   useGetAppInfoQuery,
-  useGenerateAuthTokenMutation
+  useGenerateAuthTokenMutation,
+  useGetBazaarDecksQuery
 } = apiSlice;
