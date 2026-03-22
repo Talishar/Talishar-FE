@@ -124,7 +124,7 @@ const InactivityWarning = () => {
 
     if (level === InactivityWarningLevel.FIRST_WARNING) {
       return {
-        title: "⚠️ You're taking a while...",
+        title: 'Still there?',
         message: `Make a move or you may be marked inactive.`,
         className: styles.warningFirst,
         timer: null
@@ -136,8 +136,8 @@ const InactivityWarning = () => {
       level === InactivityWarningLevel.OPPONENT_INACTIVE
     ) {
       return {
-        title: '🔴 Inactivity Warning',
-        message: `You\'ve been inactive for 60+ seconds. Try making a move.`,
+        title: 'Inactivity Warning',
+        message: `You've been inactive for 60+ seconds.`,
         className: styles.warningSecond,
         timer: countdownToOpponentPrompt
       };
@@ -165,7 +165,7 @@ const InactivityWarning = () => {
               <div className={styles.warningMessage}>{content.message}</div>
               {content.timer !== null && (
                 <div className={styles.timerDisplay}>
-                  ⏱️ {content.timer}s until you become inactive
+                  {content.timer}s until marked inactive
                 </div>
               )}
               {level === InactivityWarningLevel.SECOND_WARNING ||
