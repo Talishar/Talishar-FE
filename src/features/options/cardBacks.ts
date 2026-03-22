@@ -176,7 +176,8 @@ export const PLAYMATS = {
   '39': 'TalisharBlue',
   '40': 'TalisharGreen',
   '41': 'TalisharPurple',
-  '42': 'LibraryOfSolana'
+  '42': 'LibraryOfSolana',
+  '43': 'TaddleDown',
 } as { [key: string]: string };
 
 /* Display names for playmats (user-friendly formatting) */
@@ -223,7 +224,8 @@ export const PLAYMAT_DISPLAY_NAMES = {
   '39': 'Talishar Blue',
   '40': 'Talishar Green',
   '41': 'Talishar Purple',
-  '42': 'Library of Solana'
+  '42': 'Library of Solana',
+  '43': 'Taddle Down'
 } as { [key: string]: string };
 
 /* Default playmats available to all players */
