@@ -161,13 +161,28 @@ export const PresetButtons: React.FC<PresetButtonsProps> = ({
 interface FieldsetProps {
   legend: string;
   children: React.ReactNode;
+  tooltip?: string;
 }
 
-export const Fieldset: React.FC<FieldsetProps> = ({ legend, children }) => {
+export const Fieldset: React.FC<FieldsetProps> = ({ legend, children, tooltip }) => {
+  const [isTooltipVisible, setIsTooltipVisible] = React.useState(false);
+
   return (
     <fieldset className={styles.fieldset}>
       <legend>
         <strong>{legend}</strong>
+        {tooltip && (
+          <span
+            className={styles.tooltipIcon}
+            onMouseEnter={() => setIsTooltipVisible(true)}
+            onMouseLeave={() => setIsTooltipVisible(false)}
+          >
+            ?
+            {isTooltipVisible && (
+              <span className={styles.tooltipContent}>{tooltip}</span>
+            )}
+          </span>
+        )}
       </legend>
       {children}
     </fieldset>

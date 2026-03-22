@@ -185,7 +185,10 @@ const OptionsSettings = () => {
       )}
 
       {!isSpectator && (
-        <Fieldset legend="Attack Shortcut Threshold">
+        <Fieldset
+          legend="Attack Shortcut Threshold"
+          tooltip="Resets to 'Never Skip Attacks' at the start of each turn."
+        >
           <RadioGroup
             name="attackSkip"
             options={attackShortcutOptions}

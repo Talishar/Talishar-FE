@@ -16,7 +16,7 @@ import InactivityWarning from '../components/elements/inactivityWarning/Inactivi
 import GameStateHandler from 'app/GameStateHandler';
 import HeroVsHeroIntro from '../components/elements/heroVsHeroIntro/HeroVsHeroIntro';
 import { useCookies } from 'react-cookie';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { useAppDispatch, useAppSelector } from '../../../app/Hooks';
 import {
@@ -24,7 +24,8 @@ import {
   setHeroInfo,
   getGameInfo
 } from '../../../features/game/GameSlice';
-import { fetchAllSettings } from 'features/options/optionsSlice';
+import { fetchAllSettings, settingUpdated } from 'features/options/optionsSlice';
+import { SHORTCUT_ATTACK_THRESHOLD } from 'features/options/constants';
 import { Toaster } from 'react-hot-toast';
 import { shallowEqual } from 'react-redux';
 import { PanelProvider } from '../components/leftColumn/PanelContext';
@@ -56,6 +57,19 @@ function Play({ isRoguelike }: { isRoguelike: boolean }) {
       dispatch(fetchAllSettings({ game: gameInfo }));
     }
   }, [gameInfo.gameID, dispatch]);
+
+  const turnNo = useAppSelector((state: any) => state.game.gameDynamicInfo?.turnNo);
+  const prevTurnNoRef = useRef<number | undefined>(undefined);
+  useEffect(() => {
+    if (prevTurnNoRef.current === undefined) {
+      prevTurnNoRef.current = turnNo;
+      return;
+    }
+    if (turnNo !== prevTurnNoRef.current) {
+      prevTurnNoRef.current = turnNo;
+      dispatch(settingUpdated({ name: SHORTCUT_ATTACK_THRESHOLD, value: '0' }));
+    }
+  }, [turnNo, dispatch]);
 
   // Dispatch hero info once game state is fully populated
   useEffect(() => {

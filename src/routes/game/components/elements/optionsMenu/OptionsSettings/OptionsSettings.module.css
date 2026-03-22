@@ -17,7 +17,10 @@
   padding: 0 0.5rem;
   color: var(--theme-primary);
   font-size: 0.95em;
-  overflow: auto;
+  overflow: visible;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
 }
 
 fieldset legend strong {

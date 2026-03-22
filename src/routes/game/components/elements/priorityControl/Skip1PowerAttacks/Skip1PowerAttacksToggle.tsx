@@ -49,7 +49,7 @@ const Skip1PowerAttacksToggle = () => {
             value: Number(initialValues.shortcutAttackThreshold) ? 0 : 1
           })
         }
-        data-tooltip="Skip 1 Power Attacks"
+        data-tooltip="Skip 1 Power Attacks (resets at the start of each turn)"
         data-placement="bottom"
       >
         <TbCircleNumber1 aria-hidden="true" fontSize={'2em'} />

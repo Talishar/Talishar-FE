@@ -52,7 +52,7 @@ const SkipAllAttacksToggle = () => {
             value: Number(initialValues.shortcutAttackThreshold) ? 0 : 99
           })
         }
-        data-tooltip="Skip Attacks"
+        data-tooltip="Skip All Attacks (resets at the start of each turn)"
         data-placement="top-end"
         disabled={isDisabled}
       >
