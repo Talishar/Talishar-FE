@@ -1,17 +1,20 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { useAppDispatch } from 'app/Hooks';
+import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import classNames from 'classnames';
 import {
   GAME_FORMAT,
   GAME_VISIBILITY,
   AI_DECK,
   isPreconFormat,
-  PRECON_DECKS
+  PRECON_DECKS,
+  FAB_BAZAAR_DECK_URL_BASE
 } from 'appConstants';
 import {
   useCreateGameMutation,
-  useGetFavoriteDecksQuery
+  useGetFavoriteDecksQuery,
+  useGetBazaarDecksQuery
 } from 'features/api/apiSlice';
+import { selectCurrentUser, selectMetafyHash } from 'features/auth/authSlice';
 import { setGameStart } from 'features/game/GameSlice';
 import useAuth from 'hooks/useAuth';
 import { CreateGameAPI } from 'interface/API/CreateGame.php';
@@ -83,6 +86,44 @@ const CreateGame = () => {
   const { data, isLoading, isSuccess } = useGetFavoriteDecksQuery(undefined);
   const [searchParams, setSearchParams] = useSearchParams();
   const [createGame, createGameResult] = useCreateGameMutation();
+
+  // FaB Bazaar — standalone mode only (embedded mode uses QuickJoinContext)
+  const metafyHash = useAppSelector(selectMetafyHash);
+  const metafyId = useAppSelector(selectCurrentUser);
+  const [standaloneDeckSource, setStandaloneDeckSourceState] = useState<'talishar' | 'bazaar'>(
+    () =>
+      (localStorage.getItem('quickJoin_deckSource') as 'talishar' | 'bazaar') ?? 'talishar'
+  );
+  const [standaloneSelectedBazaarDeck, setStandaloneSelectedBazaarDeck] = useState<string>(
+    () => localStorage.getItem('quickJoin_bazaarDeck') ?? ''
+  );
+  const canFetchBazaarStandalone =
+    !isEmbedded &&
+    standaloneDeckSource === 'bazaar' &&
+    !!metafyId &&
+    !!metafyHash;
+  const { data: bazaarData, isLoading: isBazaarLoading } = useGetBazaarDecksQuery(
+    { metafyId: metafyId!, metafyHash: metafyHash! },
+    { skip: !canFetchBazaarStandalone }
+  );
+  const standaloneBazaarDeckOptions = useMemo(() => {
+    if (!bazaarData?.decks) return [];
+    return bazaarData.decks.map((deck) => ({
+      value: deck.deckId,
+      label: deck.name
+    }));
+  }, [bazaarData?.decks]);
+
+  const setStandaloneDeckSource = (src: 'talishar' | 'bazaar') => {
+    setStandaloneDeckSourceState(src);
+    localStorage.setItem('quickJoin_deckSource', src);
+  };
+  const handleStandaloneSelectBazaarDeck = (deckId: string) => {
+    setStandaloneSelectedBazaarDeck(deckId);
+    localStorage.setItem('quickJoin_bazaarDeck', deckId);
+    setValue('fabdb', deckId ? `${FAB_BAZAAR_DECK_URL_BASE}${deckId}` : '');
+    setValue('favoriteDecks', '');
+  };
 
   // Initial stuff to allow the lang to change
   const { t, i18n, ready } = useTranslation();
@@ -180,10 +221,10 @@ const CreateGame = () => {
   // When inside QuickJoinProvider (main menu), sync deck values from the shared context
   React.useEffect(() => {
     if (isEmbedded) {
-      setValue('favoriteDecks', quickJoinCtx!.selectedFavoriteDeck);
-      setValue('fabdb', quickJoinCtx!.importDeckUrl);
+      setValue('favoriteDecks', quickJoinCtx!.effectiveFavoriteDecks);
+      setValue('fabdb', quickJoinCtx!.effectiveFabdb);
     }
-  }, [quickJoinCtx?.selectedFavoriteDeck, quickJoinCtx?.importDeckUrl, setValue]);
+  }, [quickJoinCtx?.effectiveFavoriteDecks, quickJoinCtx?.effectiveFabdb, setValue]);
 
   // Normalize localStorage on mount - extract base option from expanded descriptions
   React.useEffect(() => {
@@ -419,10 +460,8 @@ const CreateGame = () => {
       setValue('fabdb', PRECON_DECKS.LINKS[0]);
     } else if (isEmbedded && quickJoinCtx) {
       // Re-apply context deck values that were cleared by reset(initialValues).
-      // This prevents a paste-then-submit failure when the query completes after
-      // the user has already typed a URL into the QuickJoin panel.
-      setValue('favoriteDecks', quickJoinCtx.selectedFavoriteDeck);
-      setValue('fabdb', quickJoinCtx.importDeckUrl);
+      setValue('favoriteDecks', quickJoinCtx.effectiveFavoriteDecks);
+      setValue('fabdb', quickJoinCtx.effectiveFabdb);
     }
     setIsInitialized(true);
   }, [initialValues, reset, setValue]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -457,10 +496,13 @@ const CreateGame = () => {
       // When inside QuickJoinProvider (main menu), use deck from shared context.
       // For precon formats, keep the precon deck URL already set in values.fabdb via the form.
       if (isEmbedded && !isPreconFormat(values.format)) {
-        values.favoriteDecks = quickJoinCtx!.selectedFavoriteDeck;
-        values.fabdb = quickJoinCtx!.importDeckUrl;
-        // Only save deck if "Save Deck" is checked and a new deck URL is being used (not a saved favorite)
-        values.favoriteDeck = quickJoinCtx!.saveDeck && quickJoinCtx!.importDeckUrl.trim() !== '';
+        values.favoriteDecks = quickJoinCtx!.effectiveFavoriteDecks;
+        values.fabdb = quickJoinCtx!.effectiveFabdb;
+        // Only save deck if "Save Deck" is checked and a new deck URL is being used (not a saved favorite or bazaar)
+        values.favoriteDeck =
+          quickJoinCtx!.saveDeck &&
+          quickJoinCtx!.deckSource === 'talishar' &&
+          quickJoinCtx!.importDeckUrl.trim() !== '';
       }
 
       // Extract base game description (remove hero/class names)
@@ -568,9 +610,64 @@ const CreateGame = () => {
                   <input type="hidden" {...register('fabdb')} />
                 </>
               )}
+              {/* Deck source tabs — standalone logged-in non-precon only */}
+              {!isEmbedded &&
+                isLoggedIn &&
+                !isPreconFormat(formFormat || selectedFormat) && (
+                  <div className={styles.deckTabBar} role="tablist">
+                    <button
+                      type="button"
+                      role="tab"
+                      aria-selected={standaloneDeckSource === 'talishar'}
+                      className={`${styles.deckTab} ${standaloneDeckSource === 'talishar' ? styles.deckTabActive : ''}`}
+                      onClick={() => setStandaloneDeckSource('talishar')}
+                    >
+                      Talishar Decks
+                    </button>
+                    <button
+                      type="button"
+                      role="tab"
+                      aria-selected={standaloneDeckSource === 'bazaar'}
+                      className={`${styles.deckTab} ${standaloneDeckSource === 'bazaar' ? styles.deckTabActive : ''}`}
+                      onClick={() => setStandaloneDeckSource('bazaar')}
+                    >
+                      FaB Bazaar
+                    </button>
+                  </div>
+                )}
+              {/* FaB Bazaar deck picker (standalone) */}
+              {!isEmbedded &&
+                isLoggedIn &&
+                standaloneDeckSource === 'bazaar' &&
+                !isPreconFormat(formFormat || selectedFormat) && (
+                  metafyHash ? (
+                    <label>
+                      {t('MENU.CREATE_GAME.SELECTED_DECK')}
+                      <ImageSelect
+                        id="bazaarDecks"
+                        options={standaloneBazaarDeckOptions}
+                        value={standaloneSelectedBazaarDeck}
+                        onChange={handleStandaloneSelectBazaarDeck}
+                        placeholder={
+                          isBazaarLoading
+                            ? 'Loading…'
+                            : 'Select a FaB Bazaar deck'
+                        }
+                        aria-busy={isBazaarLoading}
+                      />
+                    </label>
+                  ) : (
+                    <p className={styles.bazaarMessage}>
+                      Link your FaB Bazaar account in your{' '}
+                      <a href="/user/profile">profile</a> to see your decks
+                      here.
+                    </p>
+                  )
+                )}
               {!isEmbedded &&
                 isLoggedIn &&
                 !isLoading &&
+                standaloneDeckSource === 'talishar' &&
                 !isPreconFormat(formFormat || selectedFormat) && (
                   <label>
                     {t('MENU.CREATE_GAME.SELECTED_DECK')}
@@ -602,7 +699,7 @@ const CreateGame = () => {
                     />
                   </label>
                 )}
-              {!isEmbedded && (
+              {!isEmbedded && standaloneDeckSource === 'talishar' && (
               <ErrorMessage
                 errors={errors}
                 name="favoriteDecks"
@@ -613,7 +710,8 @@ const CreateGame = () => {
                 )}
               />
               )}
-              {(!isEmbedded || isPreconFormat(formFormat || selectedFormat)) && (
+              {(isPreconFormat(formFormat || selectedFormat) ||
+                (!isEmbedded && standaloneDeckSource === 'talishar')) && (
               <fieldset>
                 <label>
                   {isPreconFormat(formFormat || selectedFormat) ? (
