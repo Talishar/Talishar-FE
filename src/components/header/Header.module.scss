@@ -194,19 +194,33 @@
 .burgerButton {
   display: none;
   background: none;
-  border: none;
+  border: 2px solid transparent;
   color: var(--snow, #fff);
   cursor: pointer;
-  padding: 0 12px;
-  font-size: 32px;
+  padding: 0;
+  width: 44px;
+  height: 44px;
+  font-size: 24px;
   align-items: center;
   justify-content: center;
-  height: 100%;
-  margin-left: auto;
   flex-shrink: 0;
+  margin-left: auto;
+  margin-bottom: 0 !important;
+  margin-right: 10px;
+  align-self: center;
+  border-radius: 6px;
+  transition: background-color 150ms ease, color 150ms ease, border-color 150ms ease;
 
   &:hover {
     color: var(--theme-primary);
+    background-color: var(--theme-tertiary, #4a5056);
+    border-color: var(--theme-primary, #d4af37);
+  }
+
+  &[aria-expanded='true'] {
+    color: var(--theme-primary);
+    background-color: var(--theme-tertiary, #4a5056);
+    border-color: var(--theme-primary, #d4af37);
   }
 }
 
@@ -233,11 +247,12 @@
   top: 70px;
   left: 0;
   right: 0;
-  background: var(--theme-section-background);
-  border-bottom: 1px solid var(--theme-border, rgba(255, 255, 255, 0.2));
+  background: var(--theme-card-background, #1e2329);
+  border-top: 2px solid var(--theme-primary, #d4af37);
   z-index: 9999;
   overflow-y: auto;
   max-height: calc(100dvh - 70px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.7);
 
   ul {
     list-style: none;
@@ -246,29 +261,32 @@
     display: flex;
     flex-direction: column;
 
-    // SocialDropdown / LanguageSelector li wrappers
     > li {
-      border-bottom: 1px solid var(--theme-border, rgba(255, 255, 255, 0.1));
+      border-bottom: 1px solid var(--muted-border-color, #202632);
 
       > a,
       > button {
         display: flex;
         flex-direction: row !important;
         align-items: center;
-        gap: 12px;
-        padding: 16px 20px;
+        gap: 14px;
+        padding: 14px 20px;
         width: 100%;
         color: var(--snow, #fff);
         text-decoration: none;
-        font-size: 16px;
+        font-size: 15px;
+        font-weight: 500;
         min-width: unset;
         height: auto;
         border-radius: 0;
         justify-content: flex-start;
+        border-left: 3px solid transparent;
+        transition: background-color 150ms ease, color 150ms ease, border-left-color 150ms ease;
 
         &:hover {
-          background-color: rgba(0, 0, 0, 0.15);
-          color: var(--theme-primary);
+          background-color: var(--theme-form-background, #33383d);
+          color: var(--theme-primary, #d4af37);
+          border-left-color: var(--theme-primary, #d4af37);
         }
 
         &::before,
@@ -277,13 +295,25 @@
         }
 
         svg {
-          font-size: 22px;
+          font-size: 20px;
           flex-shrink: 0;
         }
 
         span {
           display: inline !important;
-          font-size: 16px;
+          font-size: 15px;
+        }
+
+        // Strip native button styles from Login button rendered inside a Link
+        > button {
+          background: none;
+          border: none;
+          color: inherit;
+          padding: 0;
+          font: inherit;
+          cursor: pointer;
+          font-weight: 500;
+          margin: 0;
         }
       }
 
@@ -291,9 +321,33 @@
       &[class] {
         > button {
           flex-direction: row !important;
+          justify-content: flex-start !important;
+          align-items: center !important;
+          gap: 14px !important;
           min-width: unset;
-          padding: 16px 20px;
+          padding: 14px 20px;
           height: auto;
+          width: 100%;
+          font-size: 15px;
+          font-weight: 500;
+          border-left: 3px solid transparent;
+          transition: background-color 150ms ease, color 150ms ease, border-left-color 150ms ease;
+
+          &:hover {
+            background-color: var(--theme-form-background, #33383d);
+            color: var(--theme-primary, #d4af37);
+            border-left-color: var(--theme-primary, #d4af37);
+          }
+
+          svg {
+            font-size: 20px;
+            flex-shrink: 0;
+          }
+
+          span {
+            display: inline !important;
+            font-size: 15px;
+          }
         }
       }
     }

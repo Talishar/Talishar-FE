@@ -30,7 +30,7 @@ const SocialDropdown = () => {
       <button
         className={styles.dropdownToggle}
         onClick={() => setIsOpen(!isOpen)}
-        title={t('HEADER.SOCIAL_LINKS')}
+        aria-label={t('HEADER.SOCIAL_LINKS')}
       >
         <svg
           width="1em"
@@ -50,7 +50,6 @@ const SocialDropdown = () => {
             target="_blank"
             rel="noopener noreferrer"
             className={styles.socialLink}
-            title="Metafy Link"
           >
             <svg
               width="1em"
@@ -70,7 +69,6 @@ const SocialDropdown = () => {
             target="_blank"
             rel="noopener noreferrer"
             className={styles.socialLink}
-            title="Github Link"
           >
             <BsGithub /> <span>GitHub</span>
           </a>
@@ -79,7 +77,6 @@ const SocialDropdown = () => {
             target="_blank"
             rel="noopener noreferrer"
             className={styles.socialLink}
-            title="Discord Link"
           >
             <FaDiscord /> <span>Discord</span>
           </a>
@@ -88,7 +85,6 @@ const SocialDropdown = () => {
             target="_blank"
             rel="noopener noreferrer"
             className={styles.socialLink}
-            title="Bluesky Link"
           >
             <svg
               width="1em"
@@ -106,7 +102,6 @@ const SocialDropdown = () => {
             target="_blank"
             rel="noopener noreferrer"
             className={styles.socialLink}
-            title="Twitter Link"
           >
             <FaTwitter /> <span>Twitter</span>
           </a>
@@ -115,7 +110,6 @@ const SocialDropdown = () => {
             target="_blank"
             rel="noopener noreferrer"
             className={styles.socialLink}
-            title="YouTube Channel"
           >
             <FaYoutube /> <span>YouTube</span>
           </a>
