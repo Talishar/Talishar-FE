@@ -213,7 +213,7 @@
   width: 200px !important;
   order: 2;
   cursor: text;
-  margin-bottom: 0 !important;
+  
 }
 
 .searchInput::placeholder {

@@ -45,7 +45,7 @@
   transition: color 0.2s ease, transform 0.2s ease;
   flex-shrink: 0;
   width: auto !important;
-  margin-bottom: 0 !important;
+  
 }
 
 .toggleButton:hover {
@@ -75,7 +75,7 @@
 .textInput {
   width: 100%;
   box-sizing: border-box;
-  margin-bottom: 0 !important;
+  
 }
 
 .toggleLabel {

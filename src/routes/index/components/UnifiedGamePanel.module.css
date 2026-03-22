@@ -45,7 +45,7 @@
   transition: color 0.2s ease, transform 0.2s ease;
   flex-shrink: 0;
   width: auto !important;
-  margin-bottom: 0 !important;
+  
 }
 
 .toggleButton:hover {
