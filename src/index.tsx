@@ -8,13 +8,9 @@ import './index.scss';
 import { router } from 'routes';
 import { RouterProvider } from 'react-router-dom';
 import CookieConsent from 'components/CookieConsent';
-import { initializeAdSense } from 'utils/adsenseInit';
 import { ThemeProvider } from './themes/ThemeContext';
 
 import './i18n';
-
-// Initialize AdSense if user has already consented
-initializeAdSense();
 
 // Because we *must* have a root else the site won't work at all.
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

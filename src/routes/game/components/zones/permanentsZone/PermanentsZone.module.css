@@ -19,12 +19,13 @@
   right: 0;
   bottom: 0;
   display: flex;
-  gap: 8px;
+  gap: 4px;
   justify-content: flex-start;
   align-items: flex-end;
   flex-wrap: nowrap;
   min-height: var(--card-size);
   max-width: 100%;
+  overflow: hidden;
 }
 
 .permanentsInner {

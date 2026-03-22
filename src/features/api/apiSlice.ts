@@ -930,6 +930,15 @@ export const apiSlice = createApi({
         };
       }
     }),
+    syncMetafySubscribers: builder.mutation<any, void>({
+      query: () => {
+        return {
+          url: URL_END_POINT.SYNC_METAFY_SUBSCRIBERS,
+          method: 'POST',
+          responseHandler: parseResponse
+        };
+      }
+    }),
     acknowledgeSystemMessage: builder.mutation<any, void>({
       query: () => {
         return {
@@ -1164,6 +1173,7 @@ export const {
   useGetSystemMessageQuery,
   useSendSystemMessageToPlayerMutation,
   useSendSystemMessageToAllMutation,
+  useSyncMetafySubscribersMutation,
   useAcknowledgeSystemMessageMutation,
   useSendPrivateMessageMutation,
   useGetPrivateMessagesQuery,

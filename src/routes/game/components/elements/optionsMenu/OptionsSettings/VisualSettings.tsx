@@ -8,6 +8,7 @@ interface VisualSliderProps {
   max: number;
   onChange: (value: number) => void;
   unit?: string;
+  defaultValue?: number;
 }
 
 export const VisualSlider: React.FC<VisualSliderProps> = ({
@@ -16,18 +17,35 @@ export const VisualSlider: React.FC<VisualSliderProps> = ({
   min,
   max,
   onChange,
-  unit = '%'
+  unit = '%',
+  defaultValue
 }) => {
   const displayValue = Math.floor(value * 100);
+  const isDefault =
+    defaultValue !== undefined &&
+    Math.abs(value - defaultValue) < 0.005;
+  const canReset = defaultValue !== undefined && !isDefault;
 
   return (
     <div className={styles.visualSettingItem}>
       <div className={styles.visualSettingHeader}>
         <span className={styles.visualSettingLabel}>{label}</span>
-        <span className={styles.visualSettingValue}>
-          {displayValue}
-          {unit}
-        </span>
+        <div className={styles.visualSettingValueGroup}>
+          {canReset && (
+            <button
+              type="button"
+              className={styles.resetButton}
+              onClick={() => onChange(defaultValue)}
+              title={`Reset to ${Math.floor(defaultValue * 100)}${unit}`}
+            >
+              Reset
+            </button>
+          )}
+          <span className={styles.visualSettingValue}>
+            {displayValue}
+            {unit}
+          </span>
+        </div>
       </div>
       <div className={styles.visualSettingControl}>
         <input

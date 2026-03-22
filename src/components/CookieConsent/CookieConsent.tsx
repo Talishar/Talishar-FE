@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styles from './CookieConsent.module.css';
-import { initializeAdSense } from 'utils/adsenseInit';
 
 interface CookieConsentProps {
   onConsent?: (accepted: boolean) => void;
@@ -31,9 +30,6 @@ const CookieConsent: React.FC<CookieConsentProps> = ({ onConsent }) => {
     localStorage.setItem('cookieConsentDate', new Date().toISOString());
     setIsVisible(false);
 
-    // Initialize AdSense after consent
-    initializeAdSense();
-
     if (onConsent) onConsent(true);
   };
 
@@ -56,7 +52,7 @@ const CookieConsent: React.FC<CookieConsentProps> = ({ onConsent }) => {
             <p className={styles.description}>
               We use cookies and similar technologies to enhance your
               experience, analyze site traffic, and serve personalized
-              advertisements through Google AdSense and other third-party
+              advertisements through rev.iq and other third-party
               services.
             </p>
           ) : (
@@ -66,7 +62,7 @@ const CookieConsent: React.FC<CookieConsentProps> = ({ onConsent }) => {
                 functionality, authentication, and session management.
               </p>
               <p className={styles.description}>
-                <strong>Advertising Cookies:</strong> Google and its partners
+                <strong>Advertising Cookies:</strong> rev.iq and its partners
                 use cookies to serve ads based on your visits to our site and
                 other sites. This helps us keep Talishar free to use.
               </p>
@@ -78,11 +74,11 @@ const CookieConsent: React.FC<CookieConsentProps> = ({ onConsent }) => {
                 You can manage your preferences anytime through your browser
                 settings or by visiting{' '}
                 <a
-                  href="https://www.google.com/settings/ads"
+                  href="https://www.rev.iq/optout"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  Google Ads Settings
+                  rev.iq Ad Settings
                 </a>
                 .
               </p>

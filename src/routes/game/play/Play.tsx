@@ -5,6 +5,7 @@ import RightColumn from '../components/rightColumn/RightColumn';
 import HandZone from '../components/zones/handZone/HandZone';
 import PlayerHand from '../components/zones/playerHand/PlayerHand';
 import OptionsMenu from '../components/elements/optionsMenu/OptionsMenu';
+import InventoryModal from '../components/elements/inventory/InventoryModal';
 import EventsHandler from '../components/elements/eventsHandler/EventsHandler';
 import PlayerInputPopUp from '../components/elements/playerInputPopUp/PlayerInputPopUp';
 import CardPortal from '../components/elements/cardPortal/CardPortal';
@@ -16,7 +17,7 @@ import InactivityWarning from '../components/elements/inactivityWarning/Inactivi
 import GameStateHandler from 'app/GameStateHandler';
 import HeroVsHeroIntro from '../components/elements/heroVsHeroIntro/HeroVsHeroIntro';
 import { useCookies } from 'react-cookie';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { useAppDispatch, useAppSelector } from '../../../app/Hooks';
 import {
@@ -24,13 +25,16 @@ import {
   setHeroInfo,
   getGameInfo
 } from '../../../features/game/GameSlice';
-import { fetchAllSettings } from 'features/options/optionsSlice';
+import { fetchAllSettings, settingUpdated } from 'features/options/optionsSlice';
+import { SHORTCUT_ATTACK_THRESHOLD } from 'features/options/constants';
 import { Toaster } from 'react-hot-toast';
 import { shallowEqual } from 'react-redux';
 import { PanelProvider } from '../components/leftColumn/PanelContext';
+import useAdScript from 'hooks/useAdScript';
 
 function Play({ isRoguelike }: { isRoguelike: boolean }) {
   usePageTitle('In Game');
+  useAdScript(false); // Purge any lingering ad scripts/elements from the landing page
   const [cookies] = useCookies([
     'experimental',
     'cardSize',
@@ -54,6 +58,19 @@ function Play({ isRoguelike }: { isRoguelike: boolean }) {
       dispatch(fetchAllSettings({ game: gameInfo }));
     }
   }, [gameInfo.gameID, dispatch]);
+
+  const turnNo = useAppSelector((state: any) => state.game.gameDynamicInfo?.turnNo);
+  const prevTurnNoRef = useRef<number | undefined>(undefined);
+  useEffect(() => {
+    if (prevTurnNoRef.current === undefined) {
+      prevTurnNoRef.current = turnNo;
+      return;
+    }
+    if (turnNo !== prevTurnNoRef.current) {
+      prevTurnNoRef.current = turnNo;
+      dispatch(settingUpdated({ name: SHORTCUT_ATTACK_THRESHOLD, value: '0' }));
+    }
+  }, [turnNo, dispatch]);
 
   // Dispatch hero info once game state is fully populated
   useEffect(() => {
@@ -164,6 +181,7 @@ function Play({ isRoguelike }: { isRoguelike: boolean }) {
         <CardListZone />
         <ActiveLayersZone />
         <OptionsMenu />
+        <InventoryModal />
         <PlayerInputPopUp />
         <CardPortal />
         <InactivityWarning />

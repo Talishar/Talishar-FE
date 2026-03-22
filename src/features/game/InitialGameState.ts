@@ -10,11 +10,12 @@ const InitialGameState: GameState = {
     isPrivate: false,
     isReplay: false
   },
-  gameDynamicInfo: { spectatorCount: 0, spectatorNames: [] },
+  gameDynamicInfo: { spectatorCount: 0 },
   playerOne: {},
   playerTwo: {},
   isUpdateInProgress: false,
   optionsMenu: { active: false },
+  inventoryOpen: false,
   showModals: true,
   chatEnabled: false,
   shufflingPlayerId: null,
@@ -59,7 +60,7 @@ export const OfflineTestingGameState: GameState = {
     isReplay: false
   },
   chatEnabled: false,
-  gameDynamicInfo: { lastUpdate: 0, spectatorCount: 0, spectatorNames: [] },
+  gameDynamicInfo: { lastUpdate: 0, spectatorCount: 0 },
   amIActivePlayer: false,
   oldCombatChain: [
     {

@@ -293,6 +293,9 @@ export const PRECON_DECKS = {
   HEROES: SORTED_PRECON_DECKS.map((deck) => deck.hero)
 };
 
+// Feature toggle: set to true to re-enable private messaging API calls
+export const PRIVATE_MESSAGING_ENABLED = false;
+
 export const URL_END_POINT = {
   GET_GAME_LIST: 'APIs/GetGameList.php',
   GET_GAME_INFO: 'APIs/GetGameInfo.php',
@@ -341,6 +344,7 @@ export const URL_END_POINT = {
   SYSTEM_MESSAGE: 'APIs/SystemMessageAPI.php',
   GET_SYSTEM_MESSAGE: 'APIs/GetSystemMessage.php',
   GET_LAST_ACTIVE_GAME: 'APIs/GetLastActiveGame.php',
+  SYNC_METAFY_SUBSCRIBERS: 'APIs/SyncMetafySubscribers.php',
   GET_APP_INFO: 'AccountFiles/GetAppInfoAPI.php',
   GENERATE_AUTH_TOKEN: 'AccountFiles/GenerateAuthTokenAPI.php'
 };

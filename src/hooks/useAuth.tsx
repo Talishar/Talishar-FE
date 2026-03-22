@@ -28,7 +28,7 @@ const MOD_USERNAMES = [
 export default function useAuth() {
   const currentUserId = useAppSelector(selectCurrentUser);
   const currentUserName = useAppSelector(selectCurrentUserName);
-  const isPatron = useAppSelector(selectIsPatron);
+  const reduxIsPatron = useAppSelector(selectIsPatron);
   const isMod = useAppSelector(selectIsMod);
   // const { refetch } = useGetFavoriteDecksQuery(undefined);
   const [logOutAPI, logOutData] = useLogOutMutation();
@@ -87,6 +87,10 @@ export default function useAuth() {
   // a freshly-dispatched Redux credential (e.g. right after a manual login, before the
   // loginWithCookie query has had a chance to refetch).
   const isLoggedIn = data?.isUserLoggedIn || !!currentUserId;
+
+  const isPatron = data?.isUserLoggedIn
+    ? (data?.isPatron ?? reduxIsPatron)
+    : reduxIsPatron;
 
   // Add a timeout for auth check - if it doesn't complete within 5 seconds, assume user isn't logged in
   // This prevents infinite loading state when cookies are rejected due to SameSite policy

@@ -17,7 +17,10 @@
   padding: 0 0.5rem;
   color: var(--theme-primary);
   font-size: 0.95em;
-  overflow: auto;
+  overflow: visible;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
 }
 
 fieldset legend strong {
@@ -239,11 +242,35 @@ hr {
   font-weight: 500;
 }
 
+.visualSettingValueGroup {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
 .visualSettingValue {
   font-size: 0.9em;
   font-weight: 600;
   min-width: 50px;
   text-align: right;
+}
+
+.resetButton {
+  font-size: 0.75em;
+  padding: 0.15rem 0.4rem;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  color: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-bottom: 0;
+}
+
+.resetButton:hover {
+  border-color: var(--theme-primary);
+  color: var(--theme-primary);
+  background: rgba(255, 184, 77, 0.1);
 }
 
 .visualSettingControl {

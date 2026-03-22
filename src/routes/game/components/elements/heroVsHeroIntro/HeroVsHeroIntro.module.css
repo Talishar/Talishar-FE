@@ -416,7 +416,7 @@
 
   .introContent {
     gap: 0.75rem;
-    flex-direction: column;
+    flex-direction: column-reverse;
   }
 
   .heroImageWrapper {
@@ -469,7 +469,7 @@
 /* Extra Small Mobile (< 360px) */
 @media (max-width: 360px) {
   .introContent {
-    flex-direction: column;
+    flex-direction: column-reverse;
   }
 
   .heroImageWrapper {

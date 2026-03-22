@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
   useGetGameListQuery,
   useGetFriendsListQuery
@@ -55,23 +55,15 @@ export interface GameListResponse {
   LastAuthKey?: string;
 }
 
-const GAME_LIST_POLLING_INTERVAL = 10000; // in ms (10 seconds)
-
 const GameList = () => {
   const [cookies, setCookie, removeCookie] = useCookies([
     'experimental',
     'gameFilters',
     'gameFriendsFilter'
   ]);
-  const [isTabActive, setIsTabActive] = useState(true);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
-  const { data, isLoading, error, refetch, isFetching } = useGetGameListQuery(
-    undefined,
-    {
-      pollingInterval: isTabActive ? GAME_LIST_POLLING_INTERVAL : 0 // Stop polling when tab inactive
-    }
-  );
+  const { data, isLoading, error, refetch, isFetching } = useGetGameListQuery(undefined);
   const { data: friendsData } = useGetFriendsListQuery(undefined);
   const { isLoggedIn } = useAuth();
   const { blockedUsers } = useBlockedUsers();
@@ -81,10 +73,6 @@ const GameList = () => {
       try {
         const friendsList = friendsData.friends.map((f) => f.username);
         sessionStorage.setItem('friendsList', JSON.stringify(friendsList));
-        console.log(
-          'GameList synced friendsList to sessionStorage:',
-          friendsList
-        );
       } catch (e) {
         console.error('Failed to sync friendsList to sessionStorage:', e);
       }
@@ -93,6 +81,9 @@ const GameList = () => {
 
   const [heroFilter, setHeroFilter] = useState<string[]>([]);
   const [gamesInProgressExpanded, setGamesInProgressExpanded] = useState(true); // Default to open
+  const [isRateLimited, setIsRateLimited] = useState(false);
+  const lastRefetchTime = useRef<number>(0);
+  const REFETCH_RATE_LIMIT_MS = 3000;
 
   // Initialize filters from cookies
   const defaultFormats = new Set([
@@ -200,20 +191,6 @@ const GameList = () => {
       // Ignore parsing errors
     }
   }, []);
-
-  useEffect(() => {
-    const handleVisibilityChange = () => {
-      setIsTabActive(!document.hidden);
-      if (!document.hidden) {
-        refetch();
-      }
-    };
-
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-    return () => {
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
-    };
-  }, [refetch]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -372,7 +349,13 @@ const GameList = () => {
     : [];
 
   const handleReloadClick = () => {
-    refetch();
+    const now = Date.now();
+    if (now - lastRefetchTime.current >= REFETCH_RATE_LIMIT_MS) {
+      lastRefetchTime.current = now;
+      setIsRateLimited(true);
+      refetch();
+      setTimeout(() => setIsRateLimited(false), REFETCH_RATE_LIMIT_MS);
+    }
   };
 
   const otherFormats = [
@@ -383,8 +366,7 @@ const GameList = () => {
     GAME_FORMAT.SEALED,
     GAME_FORMAT.DRAFT,
     GAME_FORMAT.PRECON,
-    GAME_FORMAT.OPEN,
-    GAME_FORMAT.BLITZ
+    GAME_FORMAT.OPEN
   ];
 
   // Create mapping from string formats to numeric formats
@@ -424,23 +406,15 @@ const GameList = () => {
       <div className={styles.titleDiv}>
         <h3 className={styles.title}>
           Games
-          <span
-            className={styles.autoRefreshText}
-            title={`Auto-refreshes every ${
-              GAME_LIST_POLLING_INTERVAL / 1000
-            } seconds`}
-          >
-            (Auto-refresh: {GAME_LIST_POLLING_INTERVAL / 1000}s)
-          </span>
         </h3>
         <button
           onClick={handleReloadClick}
           className={styles.reloadButton}
           aria-busy={isFetching}
-          disabled={isFetching}
+          disabled={isFetching || isRateLimited}
           title="Manually refresh game list"
         >
-          Reload
+          Refresh
         </button>
       </div>
       {isLoading ? <div aria-busy="true">Loading games please wait</div> : null}

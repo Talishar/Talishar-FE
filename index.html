@@ -45,8 +45,6 @@
         default-src 'self';
         script-src 'self' 'unsafe-inline' 'unsafe-eval'
           https://static.cloudflareinsights.com
-          https://pagead2.googlesyndication.com
-          https://googleads.g.doubleclick.net
           https://cdn.jsdelivr.net
           https://www.googletagmanager.com
           https://www.google-analytics.com
@@ -56,9 +54,6 @@
         font-src 'self' data: https:;
         connect-src 'self' https:;
         frame-src 'self'
-          https://pagead2.googlesyndication.com
-          https://googleads.g.doubleclick.net
-          https://tpc.googlesyndication.com
           https://www.youtube.com
           https://www.youtube-nocookie.com;
         object-src 'none';
@@ -216,6 +211,20 @@
         var el = document.getElementById('cardDetail');
         el.style.display = 'none';
       }
+
+      // Block Google vignette/interstitial injected by ad network demand partners.
+      // The #google_vignette hash is appended by Google's script before showing
+      // a fullscreen interstitial. Strip it immediately to prevent the ad from rendering.
+      (function() {
+        function stripVignetteHash() {
+          if (window.location.hash === '#google_vignette' ||
+              window.location.hash.indexOf('google_vignette') !== -1) {
+            history.replaceState(null, '', window.location.pathname + window.location.search);
+          }
+        }
+        stripVignetteHash();
+        window.addEventListener('hashchange', stripVignetteHash);
+      })();
     </script>
   </body>
 </html>

@@ -161,6 +161,7 @@ textarea:focus {
 html,
 body {
   overflow-y: auto;
+  overflow-x: hidden;
   background: var(--theme-background), url('./img/backgrounds/dark_bg_texture.webp');
   background-position: center;
   background-size: cover;

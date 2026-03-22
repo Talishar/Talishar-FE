@@ -4,92 +4,137 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: var(--theme-overlay, rgba(0, 0, 0, 0.7));
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 9998;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 100000;
 }
 
 .inventoryModal {
-  background-color: var(--theme-card-background, #1e1e1e) !important;
-  border: 2px solid var(--theme-border, rgba(255, 255, 255, 0.2)) !important;
-  border-radius: 8px;
-  padding: 0;
-  width: 90% !important;
-  max-width: 600px !important;
-  max-height: 80vh !important;
+  position: fixed;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 8px 32px var(--theme-overlay, rgba(0, 0, 0, 0.8));
-  backdrop-filter: none !important;
+  top: 10vh;
+  bottom: 20vh;
+  left: 20vw;
+  right: 20vw;
+  background-color: rgba(0, 0, 0, 0.95);
+  padding: 1.5vh;
+  border: 2px solid var(--theme-border);
+  border-radius: 10px;
+  z-index: 100001;
 }
 
-.modalHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1.5rem;
-  min-height: 60px;
-
-  h2 {
-    margin: 0;
-    font-size: 1.5rem;
-    color: var(--theme-text, #f4eded);
+@media (max-width: 812px) {
+  .inventoryModal {
+    top: 5vh;
+    bottom: 5vh;
+    left: 5vw;
+    right: 5vw;
+    padding: 1vh;
   }
 }
 
-.closeButton {
-  background: none;
-  border: none;
-  color: var(--theme-text, #f4eded);
-  cursor: pointer;
-  padding: 0.5rem;
+.modalHeader {
+  position: relative;
   display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 1.5vh;
+  margin-bottom: 1vh;
+  flex-wrap: nowrap;
+  height: 4vh;
+}
+
+@media (max-width: 812px) {
+  .modalHeader {
+    height: auto;
+  }
+}
+
+.modalHeader h2 {
+  flex: 1;
+  margin: 0;
+  padding: 0;
+  font-size: clamp(0.85rem, 1.8vh, 1.1rem);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  line-height: 1;
+}
+
+.closeButton {
+  display: flex;
+  flex-direction: row;
   align-items: center;
   justify-content: center;
-  border-radius: 4px;
-  transition: background-color 0.2s ease;
+  width: 4vh;
+  height: 100%;
+  border-radius: 5px;
+  font-size: 1.1em;
+  flex-shrink: 0;
+  cursor: pointer;
+  background: none;
+  border: none;
+  color: inherit;
   margin-bottom: 0;
-  margin-left: 0.5rem;
-  width: auto !important;
+  padding: 0;
 
   &:hover {
-    background-color: var(--theme-button-hover, rgba(255, 255, 255, 0.1));
+    background-color: var(--theme-primary);
+    color: black;
   }
 }
 
 .modalContent {
-  padding: 1.5rem;
+  padding-left: 1vh;
+  padding-top: 1vh;
+  display: flex;
+  flex-grow: 1;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-start;
+  align-content: flex-start;
+  flex-wrap: wrap;
+  gap: 1vh;
   overflow-y: auto;
-  overflow-x: visible;
-  flex: 1;
+  height: auto;
+}
+
+@media (max-width: 812px) {
+  .modalContent {
+    padding-left: 0.5vh;
+    padding-top: 0.5vh;
+    gap: 0.8vh;
+  }
 }
 
 .cardGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-  gap: 1rem;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  gap: 1vh;
 }
 
 .cardContainer {
   position: relative;
   overflow: visible;
   border-radius: 10px;
+  max-width: var(--card-size, 12vh);
+  max-height: var(--card-size, 12vh);
+}
+
+@media (max-width: 812px) {
+  .cardContainer {
+    max-width: 26vw;
+    max-height: 26vw;
+  }
 }
 
 .cardItem {
   position: relative;
   overflow: hidden;
   border-radius: 10px;
-  background-color: var(--theme-card-dark, #0d0d0d);
-  border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.1));
-  transition: border-color 0.2s ease;
-  aspect-ratio: 1 / 1;
-
-  &:hover {
-    border-color: var(--theme-border-hover, rgba(255, 255, 255, 0.3));
-  }
 }
 
 .cardImage {
@@ -115,33 +160,10 @@
 }
 
 .emptyState {
+  width: 100%;
   text-align: center;
   color: var(--theme-text-secondary, #999);
   padding: 3rem 1rem;
   font-style: italic;
   font-size: 1rem;
-}
-
-@media (max-width: 600px) {
-  .inventoryModal {
-    width: 95%;
-    max-height: 90vh;
-  }
-
-  .cardGrid {
-    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-    gap: 0.75rem;
-  }
-
-  .modalHeader {
-    padding: 1rem;
-
-    h2 {
-      font-size: 1.25rem;
-    }
-  }
-
-  .modalContent {
-    padding: 1rem;
-  }
 }

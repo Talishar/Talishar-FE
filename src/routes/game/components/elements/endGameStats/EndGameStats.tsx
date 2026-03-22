@@ -677,17 +677,17 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
             : Object.keys(data.turnResults).indexOf(b.key);
       } else if (turnSortField === 'totalValue') {
         aValue =
-          (a.damageThreatened || 0) +
-          (a.damageBlocked || 0) +
-          (a.damagePrevented || 0) +
-          (a.lifeGained || 0) +
-          (a.lifeLost || 0);
+          (+a.damageThreatened || 0) +
+          (+a.damageBlocked || 0) +
+          (+a.damagePrevented || 0) +
+          (+a.lifeGained || 0) +
+          (+a.lifeLost || 0);
         bValue =
-          (b.damageThreatened || 0) +
-          (b.damageBlocked || 0) +
-          (b.damagePrevented || 0) +
-          (b.lifeGained || 0) +
-          (b.lifeLost || 0);
+          (+b.damageThreatened || 0) +
+          (+b.damageBlocked || 0) +
+          (+b.damagePrevented || 0) +
+          (+b.lifeGained || 0) +
+          (+b.lifeLost || 0);
       } else {
         aValue = a[turnSortField] || 0;
         bValue = b[turnSortField] || 0;

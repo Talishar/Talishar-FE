@@ -2,9 +2,10 @@
   min-height: 100vh;
   padding: 20px;
   display: flex;
-  justify-content: center;
-  align-items: flex-start;
+  flex-direction: column;
+  align-items: center;
   padding-top: 90px;
+  gap: 20px;
 }
 
 .modPagePanel {
@@ -12,6 +13,7 @@
   padding: 20px;
   width: 100%;
   max-width: 1600px;
+  min-width: 0;
   background: var(
     --theme-section-background,
     linear-gradient(
@@ -58,12 +60,31 @@
 }
 
 @media (max-width: 768px) {
+  .container {
+    padding: 10px;
+    padding-top: 70px;
+  }
+
+  .modPagePanel {
+    padding: 12px;
+  }
+
   .contentWrapper {
     grid-template-columns: 1fr;
+    gap: 12px;
   }
 
   .middleColumn {
     grid-column: span 1;
+  }
+
+  .title {
+    font-size: 1.4rem;
+  }
+
+  .form h2,
+  .dataSection h2 {
+    font-size: 1rem;
   }
 }
 

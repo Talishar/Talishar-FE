@@ -1,9 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import ReactDOM from 'react-dom';
 import screenfull from 'screenfull';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { submitButton } from 'features/game/GameSlice';
 import { GiExpand } from 'react-icons/gi';
-import { FaUndo } from 'react-icons/fa';
+import { FaUndo, FaEllipsisH } from 'react-icons/fa';
+import { MdInventory2 } from 'react-icons/md';
 import styles from './Menu.module.css';
 import { DEFAULT_SHORTCUTS, PROCESS_INPUT } from 'appConstants';
 import HideModalsToggle from './HideModalsToggle/HideModalsToggle';
@@ -72,6 +74,63 @@ function UndoButton() {
   );
 }
 
+function MobileOverflowMenu({ isSpectator }: { isSpectator: boolean }) {
+  const [open, setOpen] = useState(false);
+  const [panelStyle, setPanelStyle] = useState<React.CSSProperties>({});
+  const btnRef = useRef<HTMLButtonElement>(null);
+
+  const toggleFullScreen = () => {
+    screenfull.toggle();
+    setOpen(false);
+  };
+
+  const handleOpen = () => {
+    if (!open && btnRef.current) {
+      const rect = btnRef.current.getBoundingClientRect();
+      setPanelStyle({
+        position: 'fixed',
+        top: rect.bottom + 6,
+        right: window.innerWidth - rect.right,
+      });
+    }
+    setOpen((v) => !v);
+  };
+
+  return (
+    <div className={styles.overflowWrapper}>
+      <button
+        ref={btnRef}
+        className={styles.btn}
+        aria-label="More options"
+        onClick={handleOpen}
+      >
+        <FaEllipsisH aria-hidden="true" />
+      </button>
+      {open && ReactDOM.createPortal(
+        <>
+          <div
+            className={styles.overflowBackdrop}
+            onClick={() => setOpen(false)}
+          />
+          <div className={styles.overflowPanel} style={panelStyle}>
+            <div onClick={() => setOpen(false)}>
+              <OptionsMenuToggle
+                btnClass={styles.overflowItem}
+                showLabel
+              />
+            </div>
+            <Inventory buttonClassName={styles.overflowItem} showLabel />
+            <button className={styles.overflowItem} onClick={toggleFullScreen}>
+              <GiExpand aria-hidden="true" /> Fullscreen
+            </button>
+          </div>
+        </>,
+        document.body
+      )}
+    </div>
+  );
+}
+
 function MenuContent() {
   const [isMobile, setIsMobile] = useState(false);
   const [isTablet, setIsTablet] = useState(false);
@@ -93,6 +152,20 @@ function MenuContent() {
 
   // Spectator view: only show essential buttons
   if (isSpectator) {
+    if (isMobile || isTablet) {
+      return (
+        <div>
+          <div className={styles.menuRow}>
+            <div className={styles.menuList}>
+              <UndoButton />
+              <ShowMobileChat />
+              <MobileOverflowMenu isSpectator />
+            </div>
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div>
         <div className={styles.menuRow}>
@@ -103,14 +176,31 @@ function MenuContent() {
             <HideModalsToggle />
             <OptionsMenuToggle />
             <FullScreenButton />
-            {(isMobile || isTablet) && <ShowMobileChat />}
           </div>
         </div>
       </div>
     );
   }
 
-  // Player view: show all buttons in one row
+  // Player mobile/tablet: essential buttons + overflow
+  if (isMobile || isTablet) {
+    return (
+      <div>
+        <div className={styles.menuRow}>
+          <div className={styles.menuList}>
+            <FullControlToggle />
+            <AlwaysPassToggle />
+            <UndoButton />
+            <HideModalsToggle />
+            <ShowMobileChat />
+            <MobileOverflowMenu isSpectator={false} />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Player desktop: show all buttons in one row
   return (
     <div>
       <div className={styles.menuRow}>
@@ -118,14 +208,11 @@ function MenuContent() {
           <SpectatorCount />
         </div>
         <div className={styles.menuList}>
-          {(isMobile || isTablet) && <FullControlToggle />}
-          {(isMobile || isTablet) && <AlwaysPassToggle />}
           <UndoButton />
           <Inventory buttonClassName={styles.btn} />
           <HideModalsToggle />
           <OptionsMenuToggle />
           <FullScreenButton />
-          {(isMobile || isTablet) && <ShowMobileChat />}
         </div>
       </div>
     </div>

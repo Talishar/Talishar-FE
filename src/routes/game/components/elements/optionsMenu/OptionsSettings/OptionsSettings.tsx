@@ -185,7 +185,10 @@ const OptionsSettings = () => {
       )}
 
       {!isSpectator && (
-        <Fieldset legend="Attack Shortcut Threshold">
+        <Fieldset
+          legend="Attack Shortcut Threshold"
+          tooltip="Resets to 'Never Skip Attacks' at the start of each turn."
+        >
           <RadioGroup
             name="attackSkip"
             options={attackShortcutOptions}
@@ -397,7 +400,8 @@ const OptionsSettings = () => {
           label="Card Size"
           value={cookies.cardSize ?? 1}
           min={isMobile ? 100 : 50}
-          max={125}
+          max={150}
+          defaultValue={1}
           onChange={(value) => setCookie('cardSize', value)}
         />
 
@@ -406,6 +410,7 @@ const OptionsSettings = () => {
           value={cookies.hoverImageSize ?? 1}
           min={75}
           max={125}
+          defaultValue={1}
           onChange={(value) => setCookie('hoverImageSize', value)}
         />
 
@@ -421,6 +426,7 @@ const OptionsSettings = () => {
           value={cookies.playmatIntensity ?? 0.65}
           min={10}
           max={100}
+          defaultValue={0.65}
           onChange={(value) => setCookie('playmatIntensity', value)}
         />
       </Fieldset>

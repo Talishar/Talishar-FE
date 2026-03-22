@@ -40,3 +40,9 @@
     top: calc((var(--card-size) * -0.4) + 5dvh);
   }
 }
+
+@media (orientation: landscape) and (max-width: 1200px) {
+  .isOpponent {
+    top: calc((var(--card-size) * -0.4) + max(5dvh, 35px));
+  }
+}

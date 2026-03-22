@@ -11,14 +11,27 @@ import AboutSection from './components/AboutSection';
 import CommunityContent from './components/CommunityContent';
 import { QuickJoinProvider } from './components/quickJoin/QuickJoinContext';
 import UnifiedGamePanel from './components/UnifiedGamePanel';
-import { useGetSystemMessageQuery } from 'features/api/apiSlice';
+import { useGetSystemMessageQuery, useGetUserProfileQuery } from 'features/api/apiSlice';
 import SystemMessageModal from 'components/SystemMessageModal/SystemMessageModal';
 import useAuth from 'hooks/useAuth';
+import { AdUnit } from 'components/ads';
+import useAdScript from 'hooks/useAdScript';
 
 const Index = () => {
   usePageTitle('Home');
   const dispatch = useAppDispatch();
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, isLoading } = useAuth();
+
+  const { data: profileData, isLoading: isProfileLoading } = useGetUserProfileQuery(
+    undefined,
+    { skip: !isLoggedIn }
+  );
+
+  const isSupporter = isLoggedIn
+    ? (isProfileLoading ? true : (profileData?.isMetafySupporter ?? false))
+    : false;
+  const showAds = !isLoading && !isSupporter;
+  useAdScript(showAds);
   const { data: systemMessageData } = useGetSystemMessageQuery(undefined, {
     skip: !isLoggedIn
   });
@@ -51,6 +64,24 @@ const Index = () => {
       </QuickJoinProvider>
       <CommunityContent />
       <AboutSection />
+      {showAds && (
+        <footer className={styles.adFooter}>
+          <div className={styles.adHeader}>
+            <span>Community Ads</span>
+            <a
+              href="https://metafy.gg/@talishar/tiers"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.removeAdsLink}
+            >
+              Remove ads
+            </a>
+          </div>
+          {/* Leaderboard (728x90) on desktop, mobile banner (300x250) on small screens */}
+          <AdUnit placement="leaderboard-1" className={styles.desktopAd} />
+          <AdUnit placement="mobile-unit-1" className={styles.mobileAd} />
+        </footer>
+      )}
       {systemMessageData?.systemMessage && (
         <SystemMessageModal message={systemMessageData.systemMessage} />
       )}

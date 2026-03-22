@@ -17,6 +17,7 @@ import { AiOutlineUser } from 'react-icons/ai';
 import { IoChatbubble } from 'react-icons/io5';
 import styles from './ChatBar.module.scss';
 import useAuth from 'hooks/useAuth';
+import { PRIVATE_MESSAGING_ENABLED } from 'appConstants';
 import { toast } from 'react-hot-toast';
 import { getReadableFormatName } from 'utils/formatUtils';
 import { createPatreonIconMap } from 'utils/patronIcons';
@@ -43,19 +44,19 @@ export const ChatBar: React.FC = () => {
     });
 
   const { data: onlineFriendsData } = useGetOnlineFriendsQuery(undefined, {
-    skip: !isLoggedIn,
+    skip: !isLoggedIn || !PRIVATE_MESSAGING_ENABLED,
     pollingInterval: 30000 // Poll every 30 seconds
   });
 
   const { data: unreadCountData } = useGetUnreadMessageCountQuery(undefined, {
-    skip: !isLoggedIn,
+    skip: !isLoggedIn || !PRIVATE_MESSAGING_ENABLED,
     pollingInterval: 30000 // Poll every 30 seconds to reduce API load
   });
 
   const { data: unreadByFriendData } = useGetUnreadMessageCountByFriendQuery(
     undefined,
     {
-      skip: !isLoggedIn,
+      skip: !isLoggedIn || !PRIVATE_MESSAGING_ENABLED,
       pollingInterval: 30000 // Poll every 30 seconds to reduce API load
     }
   );
@@ -462,7 +463,7 @@ const ChatWindowComponent: React.FC<ChatWindowProps> = ({
     refetch: refetchMessages
   } = useGetPrivateMessagesQuery(
     { friendUserId: friendUserId, limit: 50 },
-    { skip: !isLoggedIn || chat.isMinimized, pollingInterval: 30000 } // Poll every 30 seconds to reduce API load
+    { skip: !isLoggedIn || chat.isMinimized || !PRIVATE_MESSAGING_ENABLED, pollingInterval: 30000 } // Poll every 30 seconds to reduce API load
   );
 
   const messages = messagesData?.messages ?? [];

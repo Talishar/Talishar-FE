@@ -60,6 +60,7 @@
   text-align: center;
   word-wrap: break-word;
   overflow-wrap: break-word;
+  min-width: 60px;
   max-width: 130px;
   font-size: 0.8em;
 }

@@ -127,7 +127,6 @@
     padding: 0 1em;
     max-width: 100%;
     overflow-x: hidden;
-    width: 100vw;
   }
 
   .newsContainer {
@@ -535,5 +534,58 @@ h3 {
     margin: 0 0.75em 0.75em 0.75em;
     font-size: 0.85rem;
     color: #888;
+  }
+}
+
+.adFooter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8px 0 16px;
+  background-color: var(--near-black, #0d0d0d);
+  width: 100%;
+}
+
+.adHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 728px;
+  padding: 0 4px 4px;
+  font-size: 0.7em;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.removeAdsLink {
+  color: #d4af37;
+  text-decoration: none;
+  font-size: 1em;
+}
+
+.removeAdsLink:hover {
+  text-decoration: underline;
+}
+
+/* Show leaderboard on desktop, hide on mobile */
+.desktopAd {
+  display: block;
+}
+
+.mobileAd {
+  display: none;
+}
+
+@media (max-width: 728px) {
+  .desktopAd {
+    display: none !important;
+  }
+
+  .mobileAd {
+    display: block !important;
+  }
+
+  .adHeader {
+    max-width: 300px;
   }
 }
