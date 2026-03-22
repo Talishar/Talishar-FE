@@ -191,10 +191,111 @@
 
 }
 
+.burgerButton {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--snow, #fff);
+  cursor: pointer;
+  padding: 0 12px;
+  font-size: 32px;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  margin-left: auto;
+  flex-shrink: 0;
+
+  &:hover {
+    color: var(--theme-primary);
+  }
+}
+
+@media (max-width: 768px) and (orientation: portrait) {
+  .navBar .rightNav {
+    display: none;
+  }
+
+  .burgerButton {
+    display: flex;
+  }
+}
+
 @media (max-width: 400px) {
   .navBar {
     li.languageSelectorListElement {
       display: none !important;
+    }
+  }
+}
+
+.mobileMenu {
+  position: fixed;
+  top: 70px;
+  left: 0;
+  right: 0;
+  background: var(--theme-section-background);
+  border-bottom: 1px solid var(--theme-border, rgba(255, 255, 255, 0.2));
+  z-index: 9999;
+  overflow-y: auto;
+  max-height: calc(100dvh - 70px);
+
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+
+    // SocialDropdown / LanguageSelector li wrappers
+    > li {
+      border-bottom: 1px solid var(--theme-border, rgba(255, 255, 255, 0.1));
+
+      > a,
+      > button {
+        display: flex;
+        flex-direction: row !important;
+        align-items: center;
+        gap: 12px;
+        padding: 16px 20px;
+        width: 100%;
+        color: var(--snow, #fff);
+        text-decoration: none;
+        font-size: 16px;
+        min-width: unset;
+        height: auto;
+        border-radius: 0;
+        justify-content: flex-start;
+
+        &:hover {
+          background-color: rgba(0, 0, 0, 0.15);
+          color: var(--theme-primary);
+        }
+
+        &::before,
+        &::after {
+          display: none !important;
+        }
+
+        svg {
+          font-size: 22px;
+          flex-shrink: 0;
+        }
+
+        span {
+          display: inline !important;
+          font-size: 16px;
+        }
+      }
+
+      // LanguageSelector / SocialDropdown wrappers rendered as <li>
+      &[class] {
+        > button {
+          flex-direction: row !important;
+          min-width: unset;
+          padding: 16px 20px;
+          height: auto;
+        }
+      }
     }
   }
 }
