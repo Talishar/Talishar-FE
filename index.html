@@ -211,6 +211,20 @@
         var el = document.getElementById('cardDetail');
         el.style.display = 'none';
       }
+
+      // Block Google vignette/interstitial injected by ad network demand partners.
+      // The #google_vignette hash is appended by Google's script before showing
+      // a fullscreen interstitial. Strip it immediately to prevent the ad from rendering.
+      (function() {
+        function stripVignetteHash() {
+          if (window.location.hash === '#google_vignette' ||
+              window.location.hash.indexOf('google_vignette') !== -1) {
+            history.replaceState(null, '', window.location.pathname + window.location.search);
+          }
+        }
+        stripVignetteHash();
+        window.addEventListener('hashchange', stripVignetteHash);
+      })();
     </script>
   </body>
 </html>
