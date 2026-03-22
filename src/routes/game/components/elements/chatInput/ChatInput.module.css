@@ -279,6 +279,10 @@
     font-size: 13px;
   }
 
+  .keyHint {
+    display: none;
+  }
+
   .popOver {
     max-width: 90dvw;
     left: 50% !important;
