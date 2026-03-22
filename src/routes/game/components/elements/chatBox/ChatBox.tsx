@@ -150,10 +150,7 @@ export default function ChatBox({ usePrimary = false }: { usePrimary?: boolean }
     <div className={styles.chatBoxContainer}>
       <div className={classNames(styles.tabs, { [styles.primaryTabs]: usePrimary })}>
         <button
-          className={classNames(
-            chatFilter === 'none' ? 'outline' : '',
-            styles.buttonOverride
-          )}
+          className={classNames(chatFilter === 'none' && styles.activeTab)}
           onClick={(e) => {
             e.preventDefault();
             setChatFilter('none');
@@ -162,7 +159,7 @@ export default function ChatBox({ usePrimary = false }: { usePrimary?: boolean }
           All
         </button>
         <button
-          className={chatFilter === 'chat' ? 'outline' : ''}
+          className={classNames(chatFilter === 'chat' && styles.activeTab)}
           onClick={(e) => {
             e.preventDefault();
             setChatFilter('chat');
@@ -171,7 +168,7 @@ export default function ChatBox({ usePrimary = false }: { usePrimary?: boolean }
           Chat
         </button>
         <button
-          className={chatFilter === 'log' ? 'outline' : ''}
+          className={classNames(chatFilter === 'log' && styles.activeTab)}
           onClick={(e) => {
             e.preventDefault();
             setChatFilter('log');
