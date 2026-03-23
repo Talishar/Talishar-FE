@@ -173,10 +173,10 @@ export const gameLobby = createAsyncThunk(
         let data = await response.text();
         if (data.toString().trim() === '0') {
           retryCount++;
-          // Wait 3 seconds before retrying to prevent hammering the server when
+          // Wait 1 second before retrying to prevent hammering the server when
           // the backend returns '0' (no update) without a server-side long-poll delay.
           await new Promise<void>((resolve) =>
-            setTimeout(resolve, 500)
+            setTimeout(resolve, 1000)
           );
           continue;
         }
