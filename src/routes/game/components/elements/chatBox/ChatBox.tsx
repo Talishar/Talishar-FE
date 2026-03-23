@@ -37,13 +37,15 @@ export default function ChatBox({ usePrimary = false }: { usePrimary?: boolean }
   const shouldPoll =
     chatEnabled && (playerID === 1 || playerID === 2) && !!gameID;
 
-  const { data: typingData, error: typingError } = useCheckOpponentTypingQuery(
-    { gameID, playerID },
-    {
-      skip: !shouldPoll,
-      pollingInterval: 3000 // 3 seconds
-    }
-  );
+  // TEMPORARILY DISABLED: CheckOpponentTyping polling
+  // const { data: typingData, error: typingError } = useCheckOpponentTypingQuery(
+  //   { gameID, playerID },
+  //   {
+  //     skip: !shouldPoll,
+  //     pollingInterval: 3000 // 3 seconds
+  //   }
+  // );
+  const typingData: { opponentIsTyping?: boolean } | undefined = undefined;
 
   // When typing data updates, refresh the timer
   useEffect(() => {

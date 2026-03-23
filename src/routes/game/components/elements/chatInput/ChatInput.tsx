@@ -56,25 +56,26 @@ export const ChatInput = ({ usePrimary = false }: { usePrimary?: boolean }) => {
   const canChat = playerID !== 3 || (playerID === 3 && isMod);
 
   const handleTyping = async () => {
-    // Clear existing timeout
-    if (typingTimeoutRef.current) {
-      clearTimeout(typingTimeoutRef.current);
-    }
-
-    // Report typing to backend
-    try {
-      await reportTyping({
-        gameID: gameID,
-        playerID: playerID
-      });
-    } catch (err) {
-      console.error('Failed to report typing:', err);
-    }
-
-    // Set timeout to stop reporting after 5 seconds of inactivity
-    typingTimeoutRef.current = setTimeout(() => {
-      typingTimeoutRef.current = null;
-    }, 5000);
+    // TEMPORARILY DISABLED: ChatTyping reporting
+    // // Clear existing timeout
+    // if (typingTimeoutRef.current) {
+    //   clearTimeout(typingTimeoutRef.current);
+    // }
+    //
+    // // Report typing to backend
+    // try {
+    //   await reportTyping({
+    //     gameID: gameID,
+    //     playerID: playerID
+    //   });
+    // } catch (err) {
+    //   console.error('Failed to report typing:', err);
+    // }
+    //
+    // // Set timeout to stop reporting after 5 seconds of inactivity
+    // typingTimeoutRef.current = setTimeout(() => {
+    //   typingTimeoutRef.current = null;
+    // }, 5000);
   };
 
   const handleInputFocus = () => {
