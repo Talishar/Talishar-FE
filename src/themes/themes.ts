@@ -130,7 +130,7 @@ export const themes: Theme[] = [
       dropdownColor: '#f4eded',
       dropdownHoverBackground: 'rgba(212, 175, 55, 0.15)',
 
-      alarm: '#8b0000',
+      alarm: '#b10202',
       success: '#28a745',
       warning: '#feca57',
       danger: '#dc3545',
@@ -194,7 +194,7 @@ export const themes: Theme[] = [
       dropdownColor: '#f0f0f0',
       dropdownHoverBackground: 'rgba(212, 175, 55, 0.15)',
 
-      alarm: '#8b0000',
+      alarm: '#b10202',
       success: '#22c55e',
       warning: '#f59e0b',
       danger: '#dc2626',
@@ -258,7 +258,7 @@ export const themes: Theme[] = [
       dropdownColor: '#e0e7ff',
       dropdownHoverBackground: 'rgba(96, 165, 250, 0.15)',
 
-      alarm: '#8b0000',
+      alarm: '#b10202',
       success: '#10b981',
       warning: '#f59e0b',
       danger: '#dc2626',
@@ -322,7 +322,7 @@ export const themes: Theme[] = [
       dropdownColor: '#e6dff5',
       dropdownHoverBackground: 'rgba(201, 162, 39, 0.15)',
 
-      alarm: '#8b0000',
+      alarm: '#b10202',
       success: '#22c55e',
       warning: '#f59e0b',
       danger: '#dc2626',
@@ -386,7 +386,7 @@ export const themes: Theme[] = [
       dropdownColor: '#e8e0e0',
       dropdownHoverBackground: 'rgba(201, 162, 39, 0.15)',
 
-      alarm: '#8b0000',
+      alarm: '#b10202',
       success: '#22c55e',
       warning: '#f59e0b',
       danger: '#dc2626',
@@ -450,7 +450,7 @@ export const themes: Theme[] = [
       dropdownColor: '#d8e5df',
       dropdownHoverBackground: 'rgba(46, 168, 118, 0.15)',
 
-      alarm: '#8b0000',
+      alarm: '#b10202',
       success: '#22c55e',
       warning: '#f59e0b',
       danger: '#dc2626',
@@ -514,7 +514,7 @@ export const themes: Theme[] = [
       dropdownColor: '#e8d8eb',
       dropdownHoverBackground: 'rgba(215, 75, 184, 0.15)',
 
-      alarm: '#8b0000',
+      alarm: '#b10202',
       success: '#22c55e',
       warning: '#f59e0b',
       danger: '#dc2626',
@@ -578,7 +578,7 @@ export const themes: Theme[] = [
       dropdownColor: '#e8dfc0',
       dropdownHoverBackground: 'rgba(201, 162, 39, 0.15)',
 
-      alarm: '#8b0000',
+      alarm: '#b10202',
       success: '#22c55e',
       warning: '#f59e0b',
       danger: '#dc2626',
@@ -642,7 +642,7 @@ export const themes: Theme[] = [
       dropdownColor: '#e8dfc0',
       dropdownHoverBackground: 'rgba(201, 162, 39, 0.15)',
 
-      alarm: '#8b0000',
+      alarm: '#b10202',
       success: '#22c55e',
       warning: '#f59e0b',
       danger: '#dc2626',
@@ -706,7 +706,7 @@ export const themes: Theme[] = [
       dropdownColor: '#e5d8d0',
       dropdownHoverBackground: 'rgba(214, 53, 69, 0.15)',
 
-      alarm: '#8b0000',
+      alarm: '#b10202',
       success: '#22c55e',
       warning: '#f59e0b',
       danger: '#dc2626',
@@ -770,7 +770,7 @@ export const themes: Theme[] = [
       dropdownColor: '#d9e2ed',
       dropdownHoverBackground: 'rgba(37, 99, 235, 0.15)',
 
-      alarm: '#8b0000',
+      alarm: '#b10202',
       success: '#22c55e',
       warning: '#f59e0b',
       danger: '#dc2626',
@@ -834,7 +834,7 @@ export const themes: Theme[] = [
       dropdownColor: '#e8dcc8',
       dropdownHoverBackground: 'rgba(230, 126, 34, 0.15)',
 
-      alarm: '#8b0000',
+      alarm: '#b10202',
       success: '#22c55e',
       warning: '#f59e0b',
       danger: '#dc2626',
