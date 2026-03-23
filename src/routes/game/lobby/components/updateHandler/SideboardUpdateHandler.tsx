@@ -19,9 +19,12 @@ interface LobbyUpdateHandlerProps {
   isSubmitting: boolean;
 }
 
+const MIN_DISPATCH_INTERVAL_MS = 2000;
+
 export const LobbyUpdateHandler = React.memo(
   ({ isSubmitting }: LobbyUpdateHandlerProps) => {
     const abortRef = useRef<AbortController>();
+    const lastDispatchTimeRef = useRef<number>(0);
     const gameInfo = useAppSelector(getGameInfo, shallowEqual);
     const isUpdateInProgress = useAppSelector(
       (state: RootState) => state.game.isUpdateInProgress
@@ -47,6 +50,20 @@ export const LobbyUpdateHandler = React.memo(
       if (isUpdateInProgress) {
         return;
       }
+
+      // Client-side rate limit: enforce a minimum interval between dispatches
+      // to prevent runaway polling if the server is returning responses very quickly.
+      const now = Date.now();
+      const elapsed = now - lastDispatchTimeRef.current;
+      if (elapsed < MIN_DISPATCH_INTERVAL_MS) {
+        const delay = MIN_DISPATCH_INTERVAL_MS - elapsed;
+        const rateLimitTimer = setTimeout(() => {
+          dispatch(setIsUpdateInProgressFalse());
+        }, delay);
+        return () => clearTimeout(rateLimitTimer);
+      }
+      lastDispatchTimeRef.current = now;
+
       dispatch(
         gameLobby({
           game: gameInfo,
@@ -58,7 +75,7 @@ export const LobbyUpdateHandler = React.memo(
       // timeout if longer than 10 seconds. Will clear this interval on next poll
       const timeOut = setTimeout(() => {
         //console.log('timed out');
-        abortRef.current?.abort;
+        abortRef.current?.abort();
         dispatch(setIsUpdateInProgressFalse());
       }, 10000);
 
