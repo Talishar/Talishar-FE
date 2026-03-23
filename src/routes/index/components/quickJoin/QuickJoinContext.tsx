@@ -89,7 +89,7 @@ export const QuickJoinProvider = ({
 
   const favoriteDeckOptions: ImageSelectOption[] = useMemo(() => {
     if (!favoritesData?.favoriteDecks) return [];
-    return favoritesData.favoriteDecks.map((deck) => ({
+    return [...favoritesData.favoriteDecks].reverse().map((deck) => ({
       value: deck.key,
       label: formatDeckLabel(deck.name, deck.format),
       imageUrl: generateCroppedImageUrl(deck.hero)
