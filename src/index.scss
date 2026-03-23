@@ -228,6 +228,8 @@ h6 {
   margin-bottom: 0.5rem;
 }
 
+button.primary,
+[role='button'].primary {
   background: linear-gradient(
     180deg,
     #dbb83c 0%,
