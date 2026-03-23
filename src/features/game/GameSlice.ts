@@ -158,9 +158,7 @@ export const gameLobby = createAsyncThunk(
     } as GetLobbyRefresh;
 
     let waitingForJSONResponse = true;
-    let retryCount = 0;
-    const MAX_RETRIES = 60;
-    while (waitingForJSONResponse && retryCount < MAX_RETRIES) {
+    while (waitingForJSONResponse) {
       try {
         const response = await fetch(queryURL, {
           method: 'POST',
@@ -172,12 +170,6 @@ export const gameLobby = createAsyncThunk(
 
         let data = await response.text();
         if (data.toString().trim() === '0') {
-          retryCount++;
-          // Wait 1 second before retrying to prevent hammering the server when
-          // the backend returns '0' (no update) without a server-side long-poll delay.
-          await new Promise<void>((resolve) =>
-            setTimeout(resolve, 1000)
-          );
           continue;
         }
         waitingForJSONResponse = false;
