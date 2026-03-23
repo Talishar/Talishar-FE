@@ -28,9 +28,9 @@
 }
 
 .primaryTabs > button {
-  border: 1px solid var(--theme-primary) !important;
+  border: 1px solid var(--theme-secondary) !important;
   background-color: black !important;
-  color: var(--theme-primary) !important;
+  color: var(--secondary-inverse) !important;
 }
 
 .tabs > button.activeTab {
@@ -54,8 +54,8 @@
 
 .primaryTabs > button:hover {
   background-color: black;
-  color: var(--theme-primary);
-  border: 1px solid var(--theme-primary);
+  color: var(--theme-secondary);
+  border: 1px solid var(--theme-secondary);
   cursor: pointer;
 }
 
