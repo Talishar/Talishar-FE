@@ -41,11 +41,11 @@ export default function ChatBox() {
     .map((message) =>
       message
         .replace(
-          'Player 1',
+          /Player 1/g,
           amIPlayerOne ? myName.substring(0, 15) : oppName.substring(0, 15)
         )
         .replace(
-          'Player 2',
+          /Player 2/g,
           amIPlayerOne ? oppName.substring(0, 15) : myName.substring(0, 15)
         )
     );

@@ -55,8 +55,8 @@
 
 .warningContainer {
   position: fixed;
-  top: 4vh;
-  right: 1vh;
+  top: 1vh;
+  right: calc(min(20dvh, 12dvw) + 1em);
   z-index: 1000;
   border-radius: 5px;
   padding: 10px 12px 10px 14px;
@@ -90,6 +90,20 @@
     0 4px 24px rgba(0, 0, 0, 0.7),
     inset 0 1px 0 rgba(255, 255, 255, 0.04);
   animation: crimsonGlow 3s ease-in-out infinite;
+}
+
+/* Opponent is inactive — amber/golden tones to distinguish from self-inactivity warnings */
+.warningOpponent {
+  background-color: rgba(40, 28, 5, 0.93);
+  border: 1px solid rgba(160, 100, 0, 0.45);
+  border-top: 1px solid rgba(180, 120, 0, 0.65);
+  border-left: 2px solid rgba(200, 140, 0, 0.85);
+  border-right: none;
+  color: rgba(245, 225, 175, 0.95);
+  box-shadow:
+    0 4px 24px rgba(0, 0, 0, 0.7),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  animation: amberGlow 3s ease-in-out infinite;
 }
 
 .warningContent {
@@ -225,6 +239,20 @@
     box-shadow:
       0 4px 32px rgba(0, 0, 0, 0.75),
       0 0 12px rgba(111, 0, 0, 0.25),
+      inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  }
+}
+
+@keyframes amberGlow {
+  0%, 100% {
+    box-shadow:
+      0 4px 24px rgba(0, 0, 0, 0.7),
+      inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  }
+  50% {
+    box-shadow:
+      0 4px 32px rgba(0, 0, 0, 0.75),
+      0 0 12px rgba(200, 140, 0, 0.25),
       inset 0 1px 0 rgba(255, 255, 255, 0.04);
   }
 }

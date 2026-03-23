@@ -64,8 +64,8 @@ const GameList = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
   const { data, isLoading, error, refetch, isFetching } = useGetGameListQuery(undefined);
-  const { data: friendsData } = useGetFriendsListQuery(undefined);
   const { isLoggedIn } = useAuth();
+  const { data: friendsData } = useGetFriendsListQuery(undefined, { skip: !isLoggedIn });
   const { blockedUsers } = useBlockedUsers();
 
   useEffect(() => {

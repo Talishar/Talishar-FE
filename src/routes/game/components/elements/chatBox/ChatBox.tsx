@@ -130,8 +130,8 @@ export default function ChatBox({ usePrimary = false }: { usePrimary?: boolean }
       const p2DisplayName = amIPlayerOne ? oppDisplayName : myDisplayName;
 
       let processedMessage = message
-        .replace('Player 1', `<b>${p1DisplayName}</b>`)
-        .replace('Player 2', `<b>${p2DisplayName}</b>`);
+        .replace(/Player 1/g, `<b>${p1DisplayName}</b>`)
+        .replace(/Player 2/g, `<b>${p2DisplayName}</b>`);
 
       if (isStreamerMode && oppName) {
         const oppNameEscaped = oppName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');

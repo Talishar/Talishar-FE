@@ -4,11 +4,12 @@ import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import {
   useInactivityWarning,
-  InactivityWarningLevel
+  InactivityWarningLevel,
+  useOpponentInactivityWarning,
+  OpponentInactivityLevel
 } from 'hooks/useInactivityWarning';
 import { useSendGameChat } from 'hooks/useSendGameChat';
-import { stillHereButtonClicked } from 'features/game/GameSlice';
-import { useCloseGameMutation } from 'features/api/apiSlice';
+import { stillHereButtonClicked, submitButton, submitInactivityMessage } from 'features/game/GameSlice';
 import styles from './InactivityWarning.module.css';
 
 // DEBUG MODE - Set to true to see timer and priority info
@@ -24,6 +25,7 @@ const InactivityWarning = () => {
   const { sendQuickChat } = useSendGameChat();
   const { level, secondsInactive, secondsUntilOpponentInactivePrompt } =
     useInactivityWarning();
+  const opponentInactivity = useOpponentInactivityWarning();
   const hasPriority = useAppSelector(
     (state: RootState) => state.game.hasPriority
   );
@@ -37,22 +39,32 @@ const InactivityWarning = () => {
   const inactivityWarning = useAppSelector(
     (state: RootState) => state.game.inactivityWarning
   );
-  const [closeGameMutation, { isLoading: isClosingGame }] =
-    useCloseGameMutation();
+  const [isClaimingVictory, setIsClaimingVictory] = React.useState(false);
 
   const handleStillHereClick = () => {
     dispatch(stillHereButtonClicked());
+    // Reset backend inactivity marker so the waiting player's Claim Victory disappears
+    dispatch(
+      submitInactivityMessage({
+        playerID: gameInfo.playerID,
+        inactivePlayer: gameInfo.playerID,
+        reset: true
+      })
+    );
     // Send chat message via the game log
     sendQuickChat('Thinking... Please bear with me!');
   };
 
-  const handleLeaveGameClick = async () => {
+  const handleClaimVictoryClick = async () => {
+    setIsClaimingVictory(true);
     try {
-      await closeGameMutation({
-        gameToClose: String(gameInfo.gameID)
-      }).unwrap();
+      await dispatch(
+        submitButton({ button: { mode: 100007, buttonInput: '0' } })
+      );
     } catch (e) {
-      console.error('Error closing game:', e);
+      console.error('Error claiming victory:', e);
+    } finally {
+      setIsClaimingVictory(false);
     }
   };
 
@@ -80,7 +92,7 @@ const InactivityWarning = () => {
         <div>
           OpponentActivity:{' '}
           <strong>
-            {opponentActivity === 2 ? '❌ INACTIVE' : '✅ ACTIVE'}
+            {opponentActivity === 1 ? '❌ INACTIVE' : '✅ ACTIVE'}
           </strong>
         </div>
         <div>
@@ -107,9 +119,8 @@ const InactivityWarning = () => {
     </div>
   );
 
-  // Don't show warnings for spectators, players without priority, when game is over, is private or against AI
+  // Never show warnings for spectators, when game is over, is private or against AI
   if (
-    !hasPriority ||
     gameInfo.playerID === 3 ||
     turnPhase === 'OVER' ||
     gameInfo.isPrivate ||
@@ -118,14 +129,16 @@ const InactivityWarning = () => {
     return debugDisplay;
   }
 
-  const getWarningContent = () => {
-    const secondsUntilCritical = 60 - secondsInactive;
+  // --- Self-inactivity content (priority player is idle) ---
+  const getSelfWarningContent = () => {
+    if (!hasPriority) return null;
+
     const countdownToOpponentPrompt = secondsUntilOpponentInactivePrompt ?? 0;
 
     if (level === InactivityWarningLevel.FIRST_WARNING) {
       return {
         title: 'Still there?',
-        message: `Make a move or you may be marked inactive.`,
+        message: 'Make a move or you may be marked inactive.',
         className: styles.warningFirst,
         timer: null
       };
@@ -137,7 +150,7 @@ const InactivityWarning = () => {
     ) {
       return {
         title: 'Inactivity Warning',
-        message: `You've been inactive for 60+ seconds.`,
+        message: "You've been inactive for 60+ seconds.",
         className: styles.warningSecond,
         timer: countdownToOpponentPrompt
       };
@@ -146,30 +159,58 @@ const InactivityWarning = () => {
     return null;
   };
 
-  const content = getWarningContent();
+  // --- Opponent-inactivity content (waiting player watching opponent go idle) ---
+  const getOpponentWarningContent = () => {
+    if (hasPriority) return null;
+
+    if (opponentInactivity.level === OpponentInactivityLevel.GOING_INACTIVE) {
+      return {
+        title: 'Opponent Slowing Down',
+        message: `Your opponent is going inactive in ${opponentInactivity.secondsUntilInactive}s.`,
+        className: styles.warningFirst,
+        showClaimVictory: false
+      };
+    }
+
+    if (opponentInactivity.level === OpponentInactivityLevel.INACTIVE) {
+      return {
+        title: 'Opponent Inactive',
+        message: 'Your opponent has been inactive for 60+ seconds.',
+        className: styles.warningOpponent,
+        showClaimVictory: true
+      };
+    }
+
+    return null;
+  };
+
+  const selfContent = getSelfWarningContent();
+  const opponentContent = getOpponentWarningContent();
 
   return (
     <>
       {debugDisplay}
+
+      {/* Self-inactivity warning: shown when the priority player is idle */}
       <AnimatePresence>
-        {content && (
+        {selfContent && (
           <motion.div
-            className={`${styles.warningContainer} ${content.className}`}
+            className={`${styles.warningContainer} ${selfContent.className}`}
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.3 }}
           >
             <div className={styles.warningContent}>
-              <div className={styles.warningTitle}>{content.title}</div>
-              <div className={styles.warningMessage}>{content.message}</div>
-              {content.timer !== null && (
+              <div className={styles.warningTitle}>{selfContent.title}</div>
+              <div className={styles.warningMessage}>{selfContent.message}</div>
+              {selfContent.timer !== null && (
                 <div className={styles.timerDisplay}>
-                  {content.timer}s until marked inactive
+                  {selfContent.timer}s until marked inactive
                 </div>
               )}
-              {level === InactivityWarningLevel.SECOND_WARNING ||
-              level === InactivityWarningLevel.OPPONENT_INACTIVE ? (
+              {(level === InactivityWarningLevel.SECOND_WARNING ||
+                level === InactivityWarningLevel.OPPONENT_INACTIVE) && (
                 <div className={styles.buttonContainer}>
                   <button
                     className={styles.stillHereButton}
@@ -177,17 +218,39 @@ const InactivityWarning = () => {
                   >
                     I'm still here!
                   </button>
-                  {opponentActivity === 2 && (
-                    <button
-                      className={styles.leaveGameButton}
-                      onClick={handleLeaveGameClick}
-                      disabled={isClosingGame}
-                    >
-                      {isClosingGame ? 'Closing...' : 'Claim Victory'}
-                    </button>
-                  )}
                 </div>
-              ) : null}
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Opponent-inactivity warning: shown to the waiting player when their opponent is idle */}
+      <AnimatePresence>
+        {opponentContent && (
+          <motion.div
+            className={`${styles.warningContainer} ${opponentContent.className}`}
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3 }}
+          >
+            <div className={styles.warningContent}>
+              <div className={styles.warningTitle}>{opponentContent.title}</div>
+              <div className={styles.warningMessage}>
+                {opponentContent.message}
+              </div>
+              {opponentContent.showClaimVictory && (
+                <div className={styles.buttonContainer}>
+                  <button
+                    className={styles.leaveGameButton}
+                    onClick={handleClaimVictoryClick}
+                    disabled={isClaimingVictory}
+                  >
+                    {isClaimingVictory ? 'Leaving Game...' : 'Leave Game'}
+                  </button>
+                </div>
+              )}
             </div>
           </motion.div>
         )}
