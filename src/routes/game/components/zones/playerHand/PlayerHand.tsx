@@ -398,6 +398,7 @@ export default function PlayerHand() {
         target.isContentEditable
       ) return;
 
+      let didShuffle = false;
       setOrderedHandIds((currentOrder) => {
         if (currentOrder.length <= 1) return currentOrder;
         
@@ -414,10 +415,11 @@ export default function PlayerHand() {
           hasChanged = shuffled.some((card, idx) => card !== currentOrder[idx]);
         } while (!hasChanged);
         
+        didShuffle = true;
         return shuffled;
       });
 
-      if (!isMuted) {
+      if (didShuffle && !isMuted) {
         playDrawingCardsSound();
       }
     };
