@@ -19,7 +19,7 @@ interface LobbyUpdateHandlerProps {
   isSubmitting: boolean;
 }
 
-const MIN_DISPATCH_INTERVAL_MS = 2000;
+const MIN_DISPATCH_INTERVAL_MS = 500;
 
 export const LobbyUpdateHandler = React.memo(
   ({ isSubmitting }: LobbyUpdateHandlerProps) => {
