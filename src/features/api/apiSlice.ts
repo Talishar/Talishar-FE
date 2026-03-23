@@ -69,7 +69,6 @@ import {
   BanOffensiveUsernameRequest
 } from 'interface/API/UsernameModerationAPI';
 import { BlockedUsersAPIResponse } from 'interface/API/BlockedUsersAPI.php';
-import { PrivateMessagingAPIResponse } from 'interface/API/PrivateMessagingAPI.php';
 import { getGameInfo } from '../game/GameSlice';
 import { RootState } from '../../app/Store';
 
@@ -951,102 +950,6 @@ export const apiSlice = createApi({
       invalidatesTags: [{ type: 'SystemMessage', id: 'MINE' }]
     }),
 
-    // Private Messaging endpoints
-    sendPrivateMessage: builder.mutation<
-      PrivateMessagingAPIResponse,
-      { toUserId: number; message: string; gameLink?: string }
-    >({
-      query: ({ toUserId, message, gameLink }) => {
-        return {
-          url: URL_END_POINT.PRIVATE_MESSAGING,
-          method: 'POST',
-          body: { action: 'sendMessage', toUserId, message, gameLink },
-          responseHandler: parseResponse
-        };
-      }
-    }),
-    getPrivateMessages: builder.query<
-      PrivateMessagingAPIResponse,
-      { friendUserId: number; limit?: number }
-    >({
-      query: ({ friendUserId, limit = 50 }) => {
-        return {
-          url: URL_END_POINT.PRIVATE_MESSAGING,
-          method: 'POST',
-          body: { action: 'getMessages', friendUserId, limit },
-          responseHandler: parseResponse
-        };
-      }
-    }),
-    markMessagesAsRead: builder.mutation<
-      PrivateMessagingAPIResponse,
-      { messageIds: number[] }
-    >({
-      query: ({ messageIds }) => {
-        return {
-          url: URL_END_POINT.PRIVATE_MESSAGING,
-          method: 'POST',
-          body: { action: 'markAsRead', messageIds },
-          responseHandler: parseResponse
-        };
-      }
-    }),
-    getOnlineFriends: builder.query<PrivateMessagingAPIResponse, void>({
-      query: () => {
-        return {
-          url: URL_END_POINT.PRIVATE_MESSAGING,
-          method: 'POST',
-          body: { action: 'getOnlineFriends' },
-          responseHandler: parseResponse
-        };
-      }
-    }),
-    getUnreadMessageCount: builder.query<PrivateMessagingAPIResponse, void>({
-      query: () => {
-        return {
-          url: URL_END_POINT.PRIVATE_MESSAGING,
-          method: 'POST',
-          body: { action: 'getUnreadCount' },
-          responseHandler: parseResponse
-        };
-      }
-    }),
-    getUnreadMessageCountByFriend: builder.query<
-      PrivateMessagingAPIResponse,
-      void
-    >({
-      query: () => {
-        return {
-          url: URL_END_POINT.PRIVATE_MESSAGING,
-          method: 'POST',
-          body: { action: 'getUnreadCountByFriend' },
-          responseHandler: parseResponse
-        };
-      }
-    }),
-    createQuickGame: builder.mutation<
-      CreateGameResponse,
-      { format: string; visibility: string }
-    >({
-      query: (prefs) => {
-        return {
-          url: URL_END_POINT.CREATE_GAME,
-          method: 'POST',
-          body: {
-            format: prefs.format,
-            visibility: prefs.visibility,
-            deckTestMode: false,
-            deck: '',
-            fabdb: '',
-            decksToTry: '1',
-            favoriteDeck: false,
-            favoriteDecks: '',
-            gameDescription: 'Invite from Friends'
-          },
-          responseHandler: parseResponse
-        };
-      }
-    }),
     getLastActiveGame: builder.query<GetLastActiveGameResponse, void>({
       query: () => {
         return {
@@ -1175,13 +1078,6 @@ export const {
   useSendSystemMessageToAllMutation,
   useSyncMetafySubscribersMutation,
   useAcknowledgeSystemMessageMutation,
-  useSendPrivateMessageMutation,
-  useGetPrivateMessagesQuery,
-  useMarkMessagesAsReadMutation,
-  useGetOnlineFriendsQuery,
-  useGetUnreadMessageCountQuery,
-  useGetUnreadMessageCountByFriendQuery,
-  useCreateQuickGameMutation,
   useGetLastActiveGameQuery,
   useReportTypingMutation,
   useCheckOpponentTypingQuery,
