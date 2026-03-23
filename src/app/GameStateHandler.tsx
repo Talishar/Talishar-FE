@@ -221,8 +221,18 @@ const GameStateHandler = () => {
       }
     }, 100);
 
+    const handleBeforeUnload = () => {
+      if (sourceRef.current) {
+        sourceRef.current.close();
+        sourceRef.current = null;
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
     return () => {
       clearTimeout(connectionTimeout);
+      window.removeEventListener('beforeunload', handleBeforeUnload);
       if (sourceRef.current) {
         sourceRef.current.close();
         sourceRef.current = null;
