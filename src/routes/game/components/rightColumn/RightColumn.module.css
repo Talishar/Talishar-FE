@@ -124,6 +124,7 @@
   align-items: center;
   padding: 4px 0;
   background-color: var(--near-black);
+  overflow: visible;
 }
 
 .adHeader {
@@ -142,11 +143,12 @@
   }
 }
 
-/* Fixed-size clipping box: ad scales dynamically to fill the column width, centred */
+/* Fixed 300×250 — renders at native ad size, overflows the column edge if needed */
 .adWrapper {
-  width: 100%;
-  aspect-ratio: 300 / 250;
-  overflow: hidden;
+  width: 300px;
+  height: 250px;
+  flex-shrink: 0;
+  overflow: visible;
   position: relative;
   background: rgba(255, 255, 255, 0.04);
   border-radius: 4px;
@@ -164,17 +166,10 @@
   user-select: none;
 }
 
-/* Scale the native 300×250 ad unit to fill the full column width, centred.
-   calc(100cqw / 300px) produces the exact unitless scale factor at any column size.
-   The parent .rightColumn provides the container context (container-name: right-column). */
+/* Ad unit sits naturally at 300×250 — no scaling needed */
 .adWrapper :global(.ad-unit) {
-  position: absolute !important;
-  top: 0 !important;
-  left: 50% !important;
   width: 300px !important;
   height: 250px !important;
-  transform-origin: top center;
-  transform: translateX(-50%) scale(calc(100cqw / 300px));
   margin: 0 !important;
 }
 
