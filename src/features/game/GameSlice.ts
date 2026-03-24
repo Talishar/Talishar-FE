@@ -157,41 +157,35 @@ export const gameLobby = createAsyncThunk(
       lastUpdate: params.lastUpdate
     } as GetLobbyRefresh;
 
-    let waitingForJSONResponse = true;
-    while (waitingForJSONResponse) {
-      try {
-        const response = await fetch(queryURL, {
-          method: 'POST',
-          headers: {},
-          credentials: 'include',
-          signal: params.signal,
-          body: JSON.stringify(requestBody)
-        });
+    try {
+      const response = await fetch(queryURL, {
+        method: 'POST',
+        headers: {},
+        credentials: 'include',
+        signal: params.signal,
+        body: JSON.stringify(requestBody)
+      });
 
-        let data = await response.text();
-        if (data.toString().trim() === '0') {
-          continue;
-        }
-        waitingForJSONResponse = false;
-        data = data.toString().trim();
-        const indexOfBraces = data.indexOf('{');
-        if (indexOfBraces === -1) {
-          // No JSON object found - backend returned an error message or non-JSON response
+      let data = (await response.text()).trim();
+      const indexOfBraces = data.indexOf('{');
+      if (indexOfBraces === -1) {
+        // No JSON object found - backend returned an error message or non-JSON response
+        if (data !== '0') {
           toast.error(`Backend Error: ${sanitizeHtmlTags(data)}`);
-          return console.error(`Backend returned non-JSON response: ${data}`);
+          console.error(`Backend returned non-JSON response: ${data}`);
         }
-        if (indexOfBraces !== 0) {
-          data = data.substring(indexOfBraces);
-        }
-        const parsedData = JSON.parse(data) as GetLobbyRefreshResponse;
-        return parsedData;
-      } catch (e) {
-        if (params.signal?.aborted) {
-          return;
-        }
-        waitingForJSONResponse = false;
-        return console.error(e);
+        return;
       }
+      if (indexOfBraces !== 0) {
+        data = data.substring(indexOfBraces);
+      }
+      const parsedData = JSON.parse(data) as GetLobbyRefreshResponse;
+      return parsedData;
+    } catch (e) {
+      if (params.signal?.aborted) {
+        return;
+      }
+      return console.error(e);
     }
   }
 );
