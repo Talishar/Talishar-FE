@@ -146,10 +146,11 @@ const GameStateHandler = () => {
           // Continue without friendsList
         }
 
+        const resolvedUserName = getCurrentUsername(currentUserName) ?? '';
         const source = new EventSource(
           `${BACKEND_URL}GetUpdateSSE.php?gameName=${currentGameID}&playerID=${currentPlayerID}&authKey=${currentAuthKey}&friendsList=${encodeURIComponent(
             JSON.stringify(friendsList)
-          )}`
+          )}&userName=${encodeURIComponent(resolvedUserName)}`
         );
         sourceRef.current = source;
 
