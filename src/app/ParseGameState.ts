@@ -515,6 +515,7 @@ export default function ParseGameState(input: any) {
 
   // spectator count
   result.gameDynamicInfo.spectatorCount = input.spectatorCount ?? 0;
+  result.gameDynamicInfo.spectatorNames = input.spectatorNames ?? [];
   // player inventory
   result.gameDynamicInfo.playerInventory = input.playerInventory
     ? input.playerInventory.map((card: any) => ParseCard(card))
