@@ -183,7 +183,7 @@ const InactivityWarning = () => {
                       onClick={handleLeaveGameClick}
                       disabled={isClosingGame}
                     >
-                      {isClosingGame ? 'Closing...' : 'Claim Victory'}
+                      {isClosingGame ? 'Leaving...' : 'Leave Game'}
                     </button>
                   )}
                 </div>

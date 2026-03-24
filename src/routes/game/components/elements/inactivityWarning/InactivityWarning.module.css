@@ -55,8 +55,8 @@
 
 .warningContainer {
   position: fixed;
-  top: 4vh;
-  right: 1vh;
+  top: 1vh;
+  right: calc(min(20dvh, 12dvw) + 0.9em);
   z-index: 1000;
   border-radius: 5px;
   padding: 10px 12px 10px 14px;
@@ -146,6 +146,7 @@
   transition: background-color 0.15s ease, border-color 0.15s ease;
   text-align: center;
   white-space: nowrap;
+  margin-bottom: 0 !important;
 }
 
 .stillHereButton:hover {
@@ -189,6 +190,12 @@
   cursor: not-allowed;
 }
 
+
+@media (orientation: landscape) and (max-aspect-ratio: 3/2) {
+  .warningContainer {
+    right: calc(20dvh + 0.5em);
+  }
+}
 
 @media (max-width: 1200px) {
   .warningContainer {
