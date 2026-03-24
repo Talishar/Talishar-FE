@@ -188,7 +188,14 @@ h3 {
 
   .button {
     flex: 0 0 auto;
-    padding: 0.3em 0.5em;
+  }
+
+  .buttonWithIcon {
+    height: 2.2em;
+  }
+
+  .joinLabel {
+    padding: 0.2em 0.5em;
   }
 }
 
@@ -220,8 +227,19 @@ h3 {
   }
 
   .button {
-    padding: 0.3em 0.5em;
-    font-size: 0.85em;
     flex: 0 0 auto;
+  }
+
+  .buttonWithIcon {
+    height: 1.8em;
+  }
+
+  .joinLabel {
+    padding: 0.15em 0.4em;
+    font-size: 0.9em;
+  }
+
+  .joinHeroIcon {
+    width: 1.8em;
   }
 }
