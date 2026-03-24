@@ -291,7 +291,7 @@ export const submitMultiButton = createAsyncThunk(
 export const submitInactivityMessage = createAsyncThunk(
   'game/submitInactivityMessage',
   async (
-    params: { playerID: number; inactivePlayer: number; reset?: boolean },
+    params: { playerID: number; inactivePlayer: number },
     { getState }
   ) => {
     const { game } = getState() as { game: GameState };
@@ -302,8 +302,7 @@ export const submitInactivityMessage = createAsyncThunk(
       gameName: String(gameInfo.gameID),
       playerID: String(params.playerID),
       authKey: String(gameInfo.authKey),
-      inactivePlayer: String(params.inactivePlayer),
-      ...(params.reset ? { reset: '1' } : {})
+      inactivePlayer: String(params.inactivePlayer)
     });
 
     try {
