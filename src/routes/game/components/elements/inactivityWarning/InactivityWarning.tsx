@@ -161,7 +161,6 @@ const InactivityWarning = () => {
 
   // --- Opponent-inactivity content (waiting player watching opponent go idle) ---
   const getOpponentWarningContent = () => {
-    return null; // TEMP: Hiding opponent warnings for now since the backend logic is still being tweaked. Will re-enable once stable.
     if (hasPriority) return null;
 
     if (opponentInactivity.level === OpponentInactivityLevel.GOING_INACTIVE) {
