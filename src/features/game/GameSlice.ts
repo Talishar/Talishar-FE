@@ -917,6 +917,9 @@ export const gameSlice = createSlice({
       }
       // Chat message is sent via submitChat API, not added here
     },
+    setOpponentTyping: (state, action: PayloadAction<boolean>) => {
+      state.opponentIsTyping = action.payload;
+    },
     // Receive game state directly from SSE (no HTTP round-trip needed)
     receiveGameState: (state, action: PayloadAction<GameState>) => {
       if (action.payload === undefined) {
@@ -1275,6 +1278,7 @@ export const gameSlice = createSlice({
       state.isFullRematch = false;
 
       state.chatEnabled = action.payload.chatEnabled ?? false;
+      state.opponentIsTyping = action.payload.opponentIsTyping ?? false;
 
       return state;
     });
@@ -1331,6 +1335,7 @@ export const {
   setSecondWarningShown,
   resetInactivityTimer,
   stillHereButtonClicked,
+  setOpponentTyping,
   addDamagePopup,
   removeDamagePopup,
   addHealingPopup,

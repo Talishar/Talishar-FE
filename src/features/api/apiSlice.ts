@@ -960,14 +960,15 @@ export const apiSlice = createApi({
         };
       }
     }),
-    reportTyping: builder.mutation<any, { gameID: number; playerID: number }>({
-      query: ({ gameID = 0, playerID = 0 }) => {
+    reportTyping: builder.mutation<any, { gameID: number; playerID: number; typing?: boolean }>({
+      query: ({ gameID = 0, playerID = 0, typing = true }) => {
         return {
           url: 'APIs/ChatTyping.php',
           method: 'GET',
           params: {
             gameName: gameID,
-            playerID: playerID
+            playerID: playerID,
+            typing: typing ? '1' : '0'
           },
           responseHandler: parseResponse
         };

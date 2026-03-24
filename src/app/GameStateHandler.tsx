@@ -4,7 +4,8 @@ import { useAppDispatch, useAppSelector } from './Hooks';
 import {
   getGameInfo,
   receiveGameState,
-  setGameStart
+  setGameStart,
+  setOpponentTyping
 } from 'features/game/GameSlice';
 import { useKnownSearchParams } from 'hooks/useKnownSearchParams';
 import { GameLocationState } from 'interface/GameLocationState';
@@ -192,6 +193,17 @@ const GameStateHandler = () => {
             console.error('Failed to parse SSE data:', parseError);
           }
         };
+
+        // This replaces the old CheckOpponentTyping polling entirely.
+        source.addEventListener('typing', (event: MessageEvent) => {
+          try {
+            const data = JSON.parse(event.data);
+            if (typeof data.opponentIsTyping === 'boolean') {
+              dispatch(setOpponentTyping(data.opponentIsTyping));
+            }
+          } catch {
+          }
+        });
 
         source.onerror = () => {
           retryCountRef.current++;

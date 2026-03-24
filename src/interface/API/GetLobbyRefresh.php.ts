@@ -26,6 +26,7 @@ export interface GetLobbyRefreshResponse {
   matchups?: Matchup[];
   chatEnabled?: boolean;
   chatInvited?: boolean;
+  opponentIsTyping?: boolean;
 }
 
 export interface Matchup {

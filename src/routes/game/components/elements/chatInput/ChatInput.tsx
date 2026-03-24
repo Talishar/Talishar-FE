@@ -49,68 +49,46 @@ export const ChatInput = ({ usePrimary = false }: { usePrimary?: boolean }) => {
   const [chatInput, setChatInput] = useState('');
   const [submitChat, submitChatResult] = useSubmitChatMutation();
   const [reportTyping] = useReportTypingMutation();
-  const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const typingRefreshRef = useRef<NodeJS.Timeout | null>(null);
+  // true while we've sent a "typing" signal and haven't sent "stopped" yet
+  const isTypingRef = useRef<boolean>(false);
+  const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   // Allow players (playerID 1-2) or mods spectating (playerID 3 but isMod true)
   const canChat = playerID !== 3 || (playerID === 3 && isMod);
 
-  const handleTyping = async () => {
-    // TEMPORARILY DISABLED: ChatTyping reporting
-    // // Clear existing timeout
-    // if (typingTimeoutRef.current) {
-    //   clearTimeout(typingTimeoutRef.current);
-    // }
-    //
-    // // Report typing to backend
-    // try {
-    //   await reportTyping({
-    //     gameID: gameID,
-    //     playerID: playerID
-    //   });
-    // } catch (err) {
-    //   console.error('Failed to report typing:', err);
-    // }
-    //
-    // // Set timeout to stop reporting after 5 seconds of inactivity
-    // typingTimeoutRef.current = setTimeout(() => {
-    //   typingTimeoutRef.current = null;
-    // }, 5000);
-  };
+  const sendStopTyping = React.useCallback(() => {
+    if (!isTypingRef.current) return;
+    isTypingRef.current = false;
+    reportTyping({ gameID, playerID, typing: false }).catch(() => {});
+  }, [gameID, playerID, reportTyping]);
 
-  const handleInputFocus = () => {
-    handleTyping();
+  // Call on every keystroke with non-empty value.
+  // Sends "typing" once per burst; resets a 1.5 s debounce to send "stopped".
+  const handleTyping = React.useCallback(() => {
+    if (!isTypingRef.current) {
+      isTypingRef.current = true;
+      reportTyping({ gameID, playerID, typing: true }).catch(() => {});
+    }
+    if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
+    debounceTimerRef.current = setTimeout(sendStopTyping, 1500);
+  }, [gameID, playerID, reportTyping, sendStopTyping]);
 
-    // Start refresh interval to keep sending typing updates every 2.5 seconds
-    if (typingRefreshRef.current) {
-      clearInterval(typingRefreshRef.current);
-    }
-    typingRefreshRef.current = setInterval(() => {
-      handleTyping();
-    }, 2500);
-  };
+  const handleInputFocus = React.useCallback(() => {
+    // No immediate typing signal on focus — wait for actual keystrokes
+  }, []);
 
-  const handleInputBlur = () => {
-    // Clear timeout when input loses focus
-    if (typingTimeoutRef.current) {
-      clearTimeout(typingTimeoutRef.current);
-      typingTimeoutRef.current = null;
+  const handleInputBlur = React.useCallback(() => {
+    // Treat blur as immediate end-of-typing
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
+      debounceTimerRef.current = null;
     }
-    // Clear refresh interval
-    if (typingRefreshRef.current) {
-      clearInterval(typingRefreshRef.current);
-      typingRefreshRef.current = null;
-    }
-  };
+    sendStopTyping();
+  }, [sendStopTyping]);
 
   useEffect(() => {
     return () => {
-      if (typingTimeoutRef.current) {
-        clearTimeout(typingTimeoutRef.current);
-      }
-      if (typingRefreshRef.current) {
-        clearInterval(typingRefreshRef.current);
-      }
+      if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
     };
   }, []);
 
@@ -123,6 +101,12 @@ export const ChatInput = ({ usePrimary = false }: { usePrimary?: boolean }) => {
     if (chatInput.trim() === '') {
       return;
     }
+    // Stop the typing indicator immediately when the message is sent
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
+      debounceTimerRef.current = null;
+    }
+    sendStopTyping();
     try {
       await submitChat({
         gameID: gameID,
@@ -142,6 +126,13 @@ export const ChatInput = ({ usePrimary = false }: { usePrimary?: boolean }) => {
     setChatInput(e.target?.value);
     if (e.target?.value.trim() !== '') {
       handleTyping();
+    } else {
+      // Input cleared — treat as stopped typing immediately
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+        debounceTimerRef.current = null;
+      }
+      sendStopTyping();
     }
   };
 
