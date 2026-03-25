@@ -61,7 +61,7 @@ export default function RightColumn() {
               </a>
             </div>
             <div className={styles.adWrapper}>
-              <AdUnit placement="mobile-unit-1" />
+              <AdUnit placement="right-rail-1" />
               {import.meta.env.DEV && (
                 <div className={styles.adPlaceholder}>Ad · 300×250</div>
               )}
