@@ -31,17 +31,10 @@ import { Toaster } from 'react-hot-toast';
 import { shallowEqual } from 'react-redux';
 import { PanelProvider } from '../components/leftColumn/PanelContext';
 import useAdScript from 'hooks/useAdScript';
-import { AdUnit } from 'components/ads';
-import useAuth from 'hooks/useAuth';
-import { useGetUserProfileQuery } from 'features/api/apiSlice';
 
 function Play({ isRoguelike }: { isRoguelike: boolean }) {
   usePageTitle('In Game');
-  const { isLoggedIn } = useAuth();
-  const { data: profileData, isLoading: isProfileLoading } = useGetUserProfileQuery(undefined, { skip: !isLoggedIn });
-  const isSupporter = isLoggedIn ? (isProfileLoading ? true : (profileData?.isMetafySupporter ?? false)) : false;
-  const showAds = !isSupporter;
-  useAdScript(showAds, { suppressAnchor: true }); // Load RevIQ for non-supporters; suppress auto-injected anchor on game page
+  useAdScript(false); // Purge any lingering ad scripts/elements from the landing page
   const [cookies] = useCookies([
     'experimental',
     'cardSize',
@@ -185,21 +178,6 @@ function Play({ isRoguelike }: { isRoguelike: boolean }) {
           <RightColumn />
         </div>
         {!heroIntroShown && <HeroVsHeroIntro />}
-        {showAds && (
-          <div className="gameAdOverlay">
-            <div className="gameAdHeader">
-              <a
-                href="https://metafy.gg/@talishar/tiers"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="gameRemoveAdsLink"
-              >
-                Remove ads
-              </a>
-            </div>
-            <AdUnit placement="right-rail-1" />
-          </div>
-        )}
         <CardListZone />
         <ActiveLayersZone />
         <OptionsMenu />

@@ -30,7 +30,7 @@ const Index = () => {
   const isSupporter = isLoggedIn
     ? (isProfileLoading ? true : (profileData?.isMetafySupporter ?? false))
     : false;
-  const showAds = !isSupporter;
+  const showAds = !isLoading && !isSupporter;
   useAdScript(showAds);
   const { data: systemMessageData } = useGetSystemMessageQuery(undefined, {
     skip: !isLoggedIn

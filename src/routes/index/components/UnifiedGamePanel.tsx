@@ -29,7 +29,7 @@ const UnifiedGamePanel = () => {
   const isSupporter = isLoggedIn
     ? (isProfileLoading ? true : (profileData?.isMetafySupporter ?? false))
     : false;
-  const showAds = !isSupporter;
+  const showAds = !isAuthLoading && !isSupporter;
   const [isExpanded, setIsExpanded] = useState(() => {
     const savedState = getCookie('unifiedGamePanelExpanded');
     return savedState !== 'false';
