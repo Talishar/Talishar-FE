@@ -37,11 +37,11 @@ import { useGetUserProfileQuery } from 'features/api/apiSlice';
 
 function Play({ isRoguelike }: { isRoguelike: boolean }) {
   usePageTitle('In Game');
-  useAdScript(false); // Purge any lingering ad scripts/elements from the landing page
   const { isLoggedIn } = useAuth();
   const { data: profileData, isLoading: isProfileLoading } = useGetUserProfileQuery(undefined, { skip: !isLoggedIn });
   const isSupporter = isLoggedIn ? (isProfileLoading ? true : (profileData?.isMetafySupporter ?? false)) : false;
   const showAds = !isSupporter;
+  useAdScript(showAds, { suppressAnchor: true }); // Load RevIQ for non-supporters; suppress auto-injected anchor on game page
   const [cookies] = useCookies([
     'experimental',
     'cardSize',
@@ -198,9 +198,6 @@ function Play({ isRoguelike }: { isRoguelike: boolean }) {
               </a>
             </div>
             <AdUnit placement="right-rail-1" />
-            {import.meta.env.DEV && (
-              <div className="gameAdPlaceholder">Ad · 250×250</div>
-            )}
           </div>
         )}
         <CardListZone />

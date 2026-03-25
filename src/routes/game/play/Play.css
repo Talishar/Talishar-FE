@@ -150,19 +150,7 @@ body {
   text-decoration: underline;
 }
 
-.gameAdPlaceholder {
-  width: 250px;
-  height: 250px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 11px;
-  color: rgba(255, 255, 255, 0.35);
-  background: rgba(255, 255, 255, 0.04);
-  border-radius: 4px;
-  pointer-events: none;
-  user-select: none;
-}
+
 
 /* Hide on mobile/tablet — right column is already hidden there */
 @media (max-width: 1200px) {
