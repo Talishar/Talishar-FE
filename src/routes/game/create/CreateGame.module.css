@@ -33,6 +33,10 @@
   margin: 0 !important;
 }
 
+.embeddedForm form {
+  margin-bottom: 0 !important;
+}
+
 @media (max-width: 768px) {
   .formContainer {
     width: 100%;
@@ -87,6 +91,7 @@
 .button {
   color: var(--primary-inverse);
   width: 100%;
+  margin-bottom: 0 !important;
 }
 
 .alarm {

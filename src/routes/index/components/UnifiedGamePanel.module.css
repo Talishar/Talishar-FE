@@ -66,6 +66,21 @@
 
 .createGameAd {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
   margin-top: 4px;
+}
+
+.removeAdsLink {
+  align-self: flex-end;
+  color: rgba(255, 100, 50, 0.55);
+  text-decoration: none;
+  font-size: 0.7rem;
+  line-height: 1;
+  margin-bottom: 2px;
+}
+
+.removeAdsLink:hover {
+  color: rgba(255, 100, 50, 0.85);
+  text-decoration: underline;
 }

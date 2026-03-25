@@ -72,6 +72,14 @@ const UnifiedGamePanel = () => {
       )}
       {showAds && (
         <div className={styles.createGameAd}>
+          <a
+            href="https://metafy.gg/@talishar/tiers"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={styles.removeAdsLink}
+          >
+            Remove ads
+          </a>
           <AdUnit placement="right-rail-1" />
         </div>
       )}
