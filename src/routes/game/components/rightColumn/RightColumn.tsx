@@ -10,8 +10,8 @@ import { IS_STREAMER_MODE } from 'features/options/constants';
 import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import PlayerName from '../elements/playerName/PlayerName';
-import { AdUnit } from 'components/ads';
 import useAuth from 'hooks/useAuth';
+import { useGetUserProfileQuery } from 'features/api/apiSlice';
 
 
 export default function RightColumn() {
@@ -21,8 +21,10 @@ export default function RightColumn() {
     (state: RootState) => state.game.gameInfo.playerID
   );
   const isSpectator = playerID === 3;
-  const { isPatron } = useAuth();
-  const showAds = !isPatron || isPatron === '0';
+  const { isLoggedIn } = useAuth();
+  const { data: profileData, isLoading: isProfileLoading } = useGetUserProfileQuery(undefined, { skip: !isLoggedIn });
+  const isSupporter = isLoggedIn ? (isProfileLoading ? true : (profileData?.isMetafySupporter ?? false)) : false;
+  const showAds = !isSupporter;
 
   return (
     <>
@@ -36,7 +38,7 @@ export default function RightColumn() {
         </div>
       </div>
       {/* Desktop */}
-      <div className={styles.rightColumn}>
+      <div className={`${styles.rightColumn}${showAds ? ` ${styles.rightColumnWithAds}` : ''}`}>
         <div className={styles.topGroup}>
           <Menu />
           <TurnInfo />
@@ -47,27 +49,6 @@ export default function RightColumn() {
           {isStreamerMode ? <StreamerBox /> : ''}
           <ChatBox />
         </div>
-        {showAds && (
-          <div className={styles.adContainer}>
-            <div className={styles.adHeader}>
-              <span>{/*Community Ads*/}</span>
-              <a
-                href="https://metafy.gg/@talishar/tiers"
-                target="_blank"
-                rel="noopener noreferrer"
-                className={styles.removeAdsLink}
-              >
-                Remove ads
-              </a>
-            </div>
-            <div className={styles.adWrapper}>
-              <AdUnit placement="mobile-unit-1" />
-              {import.meta.env.DEV && (
-                <div className={styles.adPlaceholder}>Ad · 300×250</div>
-              )}
-            </div>
-          </div>
-        )}
       </div>
     </>
   );

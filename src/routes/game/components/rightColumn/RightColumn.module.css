@@ -5,9 +5,9 @@
   bottom: 0px;
   width: 20%;
   min-width: min(20vh, 12vw);
-  min-width: min(20dvh, 12dvw);
+  min-width: max(min(20dvh, 12dvw), 300px);
   max-width: min(20vh, 12vw);
-  max-width: min(20dvh, 12dvw);
+  max-width: max(min(20dvh, 12dvw), 300px);
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
@@ -26,10 +26,10 @@
 /* Near-square landscape (fold phones): don't cap by vw */
 @media (orientation: landscape) and (max-aspect-ratio: 3/2) {
   .rightColumn {
-    min-width: 20vh;
-    min-width: 20dvh;
-    max-width: 20vh;
-    max-width: 20dvh;
+    min-width: max(20vh, 300px);
+    min-width: max(20dvh, 300px);
+    max-width: max(20vh, 300px);
+    max-width: max(20dvh, 300px);
   }
 }
 
@@ -83,6 +83,11 @@
   .mobileTopBarContent {
     gap: 3px;
   }
+}
+
+/* Reserve space at the bottom so the chat doesn't slide under the fixed ad overlay */
+.rightColumnWithAds {
+  padding-bottom: 270px;
 }
 
 .topGroup {
