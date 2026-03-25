@@ -33,12 +33,15 @@ import { PanelProvider } from '../components/leftColumn/PanelContext';
 import useAdScript from 'hooks/useAdScript';
 import { AdUnit } from 'components/ads';
 import useAuth from 'hooks/useAuth';
+import { useGetUserProfileQuery } from 'features/api/apiSlice';
 
 function Play({ isRoguelike }: { isRoguelike: boolean }) {
   usePageTitle('In Game');
   useAdScript(false); // Purge any lingering ad scripts/elements from the landing page
-  const { isPatron } = useAuth();
-  const showAds = !isPatron || isPatron === '0';
+  const { isLoggedIn } = useAuth();
+  const { data: profileData, isLoading: isProfileLoading } = useGetUserProfileQuery(undefined, { skip: !isLoggedIn });
+  const isSupporter = isLoggedIn ? (isProfileLoading ? true : (profileData?.isMetafySupporter ?? false)) : false;
+  const showAds = !isSupporter;
   const [cookies] = useCookies([
     'experimental',
     'cardSize',

@@ -11,6 +11,7 @@ import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import PlayerName from '../elements/playerName/PlayerName';
 import useAuth from 'hooks/useAuth';
+import { useGetUserProfileQuery } from 'features/api/apiSlice';
 
 
 export default function RightColumn() {
@@ -20,8 +21,10 @@ export default function RightColumn() {
     (state: RootState) => state.game.gameInfo.playerID
   );
   const isSpectator = playerID === 3;
-  const { isPatron } = useAuth();
-  const showAds = !isPatron || isPatron === '0';
+  const { isLoggedIn } = useAuth();
+  const { data: profileData, isLoading: isProfileLoading } = useGetUserProfileQuery(undefined, { skip: !isLoggedIn });
+  const isSupporter = isLoggedIn ? (isProfileLoading ? true : (profileData?.isMetafySupporter ?? false)) : false;
+  const showAds = !isSupporter;
 
   return (
     <>
