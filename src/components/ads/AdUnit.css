@@ -21,24 +21,6 @@
   height: fit-content;
 }
 
-/* Force the in-game right-rail-1 slot to exactly 250×250.
-   Override RevIQ's inline --ad-width/--ad-height CSS vars and clip the iframe. */
-.gameAdOverlay .ad-unit[data-ad='right-rail-1'] {
-  --ad-width: 250px !important;
-  --ad-height: 250px !important;
-  width: 250px !important;
-  height: 250px !important;
-  min-height: 250px;
-  max-width: 250px;
-  max-height: 250px;
-  overflow: hidden;
-}
-
-.gameAdOverlay .ad-unit[data-ad='right-rail-1'] iframe {
-  width: 250px !important;
-  max-width: 250px !important;
-}
-
 /* Billboard ad units */
 .ad-unit[data-ad^='billboard'] {
   width: 100%;
