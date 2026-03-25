@@ -66,17 +66,6 @@ const Index = () => {
       <AboutSection />
       {showAds && (
         <footer className={styles.adFooter}>
-          <div className={styles.adHeader}>
-            <span>Community Ads</span>
-            <a
-              href="https://metafy.gg/@talishar/tiers"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={styles.removeAdsLink}
-            >
-              Remove ads
-            </a>
-          </div>
           {/* Leaderboard (728x90) on desktop, mobile banner (300x250) on small screens */}
           <AdUnit placement="leaderboard-1" className={styles.desktopAd} />
           <AdUnit placement="mobile-unit-1" className={styles.mobileAd} />
