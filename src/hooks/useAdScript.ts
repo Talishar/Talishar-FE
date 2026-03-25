@@ -54,28 +54,13 @@ export default function useAdScript(enabled: boolean = true) {
       };
     }
 
-    const initScript = () => {
-      const script = document.createElement('script');
-      script.src = '//js.rev.iq/talishar.net';
-      script.async = true;
-      document.head.appendChild(script);
-    };
-
-    initScript();
-
-    // For EU users who consent after the page loads: purge the old script
-    // (which got no-fill due to no TCF consent) and reinitialise rev.iq.
-    const handleConsentChange = (e: Event) => {
-      if ((e as CustomEvent).detail?.accepted) {
-        purgeAdElements();
-        setTimeout(initScript, 100);
-      }
-    };
-    window.addEventListener('cookieConsentChanged', handleConsentChange);
+    const script = document.createElement('script');
+    script.src = '//js.rev.iq/talishar.net';
+    script.async = true;
+    document.head.appendChild(script);
 
     return () => {
       purgeAdElements();
-      window.removeEventListener('cookieConsentChanged', handleConsentChange);
     };
   }, [enabled]);
 }
