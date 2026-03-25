@@ -112,3 +112,60 @@ body {
   border-radius: 10px;
   color: var(--theme-primary);
 }
+
+/* Fixed bottom-right ad overlay — sits outside the flex layout so RevIQ
+   can render freely at its native 300×250 size without flex constraints. */
+.gameAdOverlay {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  pointer-events: none;
+}
+
+.gameAdOverlay > * {
+  pointer-events: auto;
+}
+
+.gameAdHeader {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+  padding: 0 4px 2px;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.gameRemoveAdsLink {
+  color: #d4af37;
+  text-decoration: none;
+  font-size: 11px;
+}
+
+.gameRemoveAdsLink:hover {
+  text-decoration: underline;
+}
+
+.gameAdPlaceholder {
+  width: 20vh;
+  height: 22vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 4px;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Hide on mobile/tablet — right column is already hidden there */
+@media (max-width: 1200px) {
+  .gameAdOverlay {
+    display: none;
+  }
+}

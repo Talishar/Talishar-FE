@@ -85,6 +85,11 @@
   }
 }
 
+/* Reserve space at the bottom so the chat doesn't slide under the fixed ad overlay */
+.rightColumnWithAds {
+  padding-bottom: 280px;
+}
+
 .topGroup {
   display: flex;
   flex-direction: column;

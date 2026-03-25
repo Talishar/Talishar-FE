@@ -31,10 +31,14 @@ import { Toaster } from 'react-hot-toast';
 import { shallowEqual } from 'react-redux';
 import { PanelProvider } from '../components/leftColumn/PanelContext';
 import useAdScript from 'hooks/useAdScript';
+import { AdUnit } from 'components/ads';
+import useAuth from 'hooks/useAuth';
 
 function Play({ isRoguelike }: { isRoguelike: boolean }) {
   usePageTitle('In Game');
   useAdScript(false); // Purge any lingering ad scripts/elements from the landing page
+  const { isPatron } = useAuth();
+  const showAds = !isPatron || isPatron === '0';
   const [cookies] = useCookies([
     'experimental',
     'cardSize',
@@ -178,6 +182,24 @@ function Play({ isRoguelike }: { isRoguelike: boolean }) {
           <RightColumn />
         </div>
         {!heroIntroShown && <HeroVsHeroIntro />}
+        {showAds && (
+          <div className="gameAdOverlay">
+            <div className="gameAdHeader">
+              <a
+                href="https://metafy.gg/@talishar/tiers"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="gameRemoveAdsLink"
+              >
+                Remove ads
+              </a>
+            </div>
+            <AdUnit placement="right-rail-1" />
+            {import.meta.env.DEV && (
+              <div className="gameAdPlaceholder">Ad · 220×260</div>
+            )}
+          </div>
+        )}
         <CardListZone />
         <ActiveLayersZone />
         <OptionsMenu />
