@@ -199,7 +199,7 @@ function Play({ isRoguelike }: { isRoguelike: boolean }) {
             </div>
             <AdUnit placement="right-rail-1" />
             {import.meta.env.DEV && (
-              <div className="gameAdPlaceholder">Ad · 220×260</div>
+              <div className="gameAdPlaceholder">Ad · 250×250</div>
             )}
           </div>
         )}

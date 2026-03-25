@@ -123,6 +123,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
+  min-width: 250px;
   pointer-events: none;
 }
 
@@ -150,8 +151,8 @@ body {
 }
 
 .gameAdPlaceholder {
-  width: 20vh;
-  height: 22vh;
+  width: 250px;
+  height: 250px;
   display: flex;
   align-items: center;
   justify-content: center;
