@@ -46,67 +46,72 @@ export default function PlayerHand() {
   );
 
   // Use a ref to maintain stable IDs across renders
-  const cardIdMapRef = useRef<Map<string, string>>(new Map());
+  // Maps actionDataOverride → { id, cardNumber } for cross-render matching
+  const cardIdMapRef = useRef<
+    Map<string, { id: string; cardNumber: string }>
+  >(new Map());
   const nextIdCounterRef = useRef<number>(0);
 
   const handCardsWithStableIds = useMemo<CardWithStableId[]>(() => {
-    const cardIdMap = cardIdMapRef.current;
     const cards = handCards ?? [];
+    const prevMap = cardIdMapRef.current;
 
-    // Create fingerprints WITHOUT index so reordering doesn't create new IDs
-    const baseFingerprints = cards.map(
-      (card) =>
-        `${card.cardNumber}-${card.uniqueId ?? 'na'}-${card.cardIndex ?? 'na'}`
-    );
-
-    // Track which fingerprints we've seen in this render (for duplicates)
-    const fingerprintOccurrences = new Map<string, number>();
     const usedIds = new Set<string>();
+    const result: CardWithStableId[] = new Array(cards.length);
+    const unmatchedIndices: number[] = [];
 
-    const result = cards.map((card, index) => {
-      const baseFingerprint = baseFingerprints[index];
+    for (let i = 0; i < cards.length; i++) {
+      const card = cards[i];
+      const key = card.actionDataOverride;
+      const existing =
+        key != null && key !== '' ? prevMap.get(key) : undefined;
 
-      // Count occurrences to handle duplicates
-      const occurrence = fingerprintOccurrences.get(baseFingerprint) ?? 0;
-      fingerprintOccurrences.set(baseFingerprint, occurrence + 1);
-
-      // Create unique fingerprint including occurrence
-      const uniqueFingerprint =
-        occurrence === 0
-          ? baseFingerprint
-          : `${baseFingerprint}-dup-${occurrence}`;
-
-      let id = cardIdMap.get(uniqueFingerprint);
-
-      // If no existing ID or ID is already used, generate a new one
-      if (!id || usedIds.has(id)) {
-        id = `hand-card-${nextIdCounterRef.current++}`;
-        cardIdMap.set(uniqueFingerprint, id);
-      }
-
-      usedIds.add(id);
-      return { card, id };
-    });
-
-    // Clean up unused IDs from the map
-    const currentFingerprints = new Set<string>();
-    result.forEach((_, idx) => {
-      const baseFingerprint = baseFingerprints[idx];
-      const occurrence = Array.from(currentFingerprints).filter((fp) =>
-        fp.startsWith(baseFingerprint)
-      ).length;
-      const uniqueFingerprint =
-        occurrence === 0
-          ? baseFingerprint
-          : `${baseFingerprint}-dup-${occurrence}`;
-      currentFingerprints.add(uniqueFingerprint);
-    });
-
-    for (const [fingerprint] of cardIdMap) {
-      if (!currentFingerprints.has(fingerprint)) {
-        cardIdMap.delete(fingerprint);
+      if (
+        existing &&
+        !usedIds.has(existing.id) &&
+        existing.cardNumber === card.cardNumber
+      ) {
+        result[i] = { card, id: existing.id };
+        usedIds.add(existing.id);
+      } else {
+        unmatchedIndices.push(i);
       }
     }
+
+    if (unmatchedIndices.length > 0) {
+      const unusedOldByCardNumber = new Map<string, string[]>();
+      for (const entry of prevMap.values()) {
+        if (!usedIds.has(entry.id)) {
+          const arr = unusedOldByCardNumber.get(entry.cardNumber) ?? [];
+          arr.push(entry.id);
+          unusedOldByCardNumber.set(entry.cardNumber, arr);
+        }
+      }
+
+      for (const idx of unmatchedIndices) {
+        const card = cards[idx];
+        const available = unusedOldByCardNumber.get(card.cardNumber);
+        if (available && available.length > 0) {
+          const oldId = available.shift()!;
+          result[idx] = { card, id: oldId };
+          usedIds.add(oldId);
+        } else {
+          const newId = `hand-card-${nextIdCounterRef.current++}`;
+          result[idx] = { card, id: newId };
+          usedIds.add(newId);
+        }
+      }
+    }
+
+    // Rebuild map for next render
+    const newMap = new Map<string, { id: string; cardNumber: string }>();
+    for (const { card, id } of result) {
+      const key = card.actionDataOverride;
+      if (key != null && key !== '') {
+        newMap.set(key, { id, cardNumber: card.cardNumber });
+      }
+    }
+    cardIdMapRef.current = newMap;
 
     return result;
   }, [handCards]);
