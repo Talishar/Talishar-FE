@@ -283,7 +283,7 @@ export const FriendsList: React.FC<FriendsListProps> = ({ className }) => {
                     </ul>
                   );
                 })()
-              : !searchLoading && (
+              : showSearchResults && !searchLoading && (
                   <p className={styles.noResults}>No users found</p>
                 )}
           </div>

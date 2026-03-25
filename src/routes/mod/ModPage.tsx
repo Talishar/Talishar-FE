@@ -108,7 +108,6 @@ const ModPage: React.FC = () => {
         usernameToDelete
       );
       const response = await deleteUsername({ usernameToDelete }).unwrap();
-      console.log('[ModPage Delete Username] Success response:', response);
 
       // Show success toast
       toast.success(
@@ -208,8 +207,6 @@ const ModPage: React.FC = () => {
 
     try {
       const result = await syncMetafy().unwrap();
-      console.log('[MetafySync] Response:', result);
-      if (result?.debug) console.log('[MetafySync] Debug log:', result.debug);
       setMetafySyncResult(result);
       if (result?.error) {
         toast.error(result.error, { position: 'top-center', duration: 8000 });
@@ -218,8 +215,6 @@ const ModPage: React.FC = () => {
         setSuccessMessage(`Metafy sync complete — ${result?.cleared ?? 0} expired, ${result?.stillActive ?? 0} active`);
       }
     } catch (err: any) {
-      console.error('[MetafySync] Error:', err);
-      if (err?.data?.debug) console.log('[MetafySync] Debug log:', err.data.debug);
       const errorMessage = err?.data?.error || err?.data?.apiError || 'Failed to sync Metafy subscribers';
       toast.error(errorMessage, { position: 'top-center' });
       if (err?.data) setMetafySyncResult(err.data);

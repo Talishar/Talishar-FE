@@ -163,14 +163,6 @@ export const QuickJoinProvider = ({
           throw response.error;
         }
 
-        console.log('[QuickJoin] JoinGame response:', {
-          playerID: response.playerID,
-          gameName: response.gameName,
-          authKey: response.authKey,
-          hasAuthKey: !!response.authKey,
-          authKeyLength: response.authKey?.length ?? 0
-        });
-
         const authKeyToUse = response.authKey ?? '';
         const playerIDToUse = response.playerID ?? 0;
         // Ensure gameID is always a number (backend might return string)
@@ -178,14 +170,6 @@ export const QuickJoinProvider = ({
           typeof response.gameName === 'number'
             ? response.gameName
             : parseInt(String(response.gameName ?? 0));
-
-        console.log('[QuickJoin] About to dispatch setGameStart with:', {
-          playerID: playerIDToUse,
-          gameID: gameIDToUse,
-          gameIDType: typeof gameIDToUse,
-          authKey: authKeyToUse,
-          authKeyEmpty: authKeyToUse === ''
-        });
 
         dispatch(
           setGameStart({
@@ -197,11 +181,6 @@ export const QuickJoinProvider = ({
 
         // Reset save deck checkbox after successful join
         setSaveDeck(false);
-
-        console.log(
-          '[QuickJoin] setGameStart dispatched, now navigating to:',
-          `/game/lobby/${gameIDToUse}`
-        );
 
         navigate(`/game/lobby/${gameIDToUse}`, {
           state: {
