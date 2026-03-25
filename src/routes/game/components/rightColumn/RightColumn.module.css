@@ -5,9 +5,9 @@
   bottom: 0px;
   width: 20%;
   min-width: min(20vh, 12vw);
-  min-width: max(min(20dvh, 12dvw), 280px);
+  min-width: max(min(20dvh, 12dvw), 300px);
   max-width: min(20vh, 12vw);
-  max-width: max(min(20dvh, 12dvw), 280px);
+  max-width: max(min(20dvh, 12dvw), 300px);
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
@@ -26,10 +26,10 @@
 /* Near-square landscape (fold phones): don't cap by vw */
 @media (orientation: landscape) and (max-aspect-ratio: 3/2) {
   .rightColumn {
-    min-width: max(20vh, 280px);
-    min-width: max(20dvh, 280px);
-    max-width: max(20vh, 280px);
-    max-width: max(20dvh, 280px);
+    min-width: max(20vh, 300px);
+    min-width: max(20dvh, 300px);
+    max-width: max(20vh, 300px);
+    max-width: max(20dvh, 300px);
   }
 }
 
