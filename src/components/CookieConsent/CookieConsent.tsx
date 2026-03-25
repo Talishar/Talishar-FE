@@ -30,6 +30,10 @@ const CookieConsent: React.FC<CookieConsentProps> = ({ onConsent }) => {
     localStorage.setItem('cookieConsentDate', new Date().toISOString());
     setIsVisible(false);
 
+    // Notify rev.iq (and any other TCF-aware scripts) that consent was given
+    (window as any).__tcfapi_triggerUpdate?.();
+    window.dispatchEvent(new CustomEvent('cookieConsentChanged', { detail: { accepted: true } }));
+
     if (onConsent) onConsent(true);
   };
 
@@ -37,6 +41,10 @@ const CookieConsent: React.FC<CookieConsentProps> = ({ onConsent }) => {
     localStorage.setItem('cookieConsent', 'declined');
     localStorage.setItem('cookieConsentDate', new Date().toISOString());
     setIsVisible(false);
+
+    (window as any).__tcfapi_triggerUpdate?.();
+    window.dispatchEvent(new CustomEvent('cookieConsentChanged', { detail: { accepted: false } }));
+
     if (onConsent) onConsent(false);
   };
 
