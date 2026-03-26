@@ -106,7 +106,8 @@ export const rtkQueryErrorToaster: Middleware =
 
       // Suppress 401 Unauthorized errors - these are often benign (e.g., logging out/in quickly)
       // and not user-facing errors that need a toast notification
-      if (errorStatus !== 401) {
+      // Also 403 Forbidden errors which can happen when trying to access a resource the user doesn't have permissions for, and are not actionable by the user
+      if (errorStatus !== 401 && errorStatus !== 403) {
         toast.error(
           `A network error happened, please try again. Error:\n${errorStatus}\n${errorMessage}`
         );
