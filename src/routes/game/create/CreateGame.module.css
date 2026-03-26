@@ -266,6 +266,25 @@
   font-weight: 600;
 }
 
+.deckTabDisabled {
+  opacity: 0.45 !important;
+  cursor: not-allowed !important;
+  /* Pico CSS sets pointer-events: none on button:disabled, which prevents cursor: not-allowed from showing.
+     Restoring pointer-events here is safe because the disabled HTML attribute still blocks click events. */
+  pointer-events: auto !important;
+}
+
+.deckTabDisabled:hover {
+  background: transparent !important;
+  color: var(--theme-text-muted, rgba(237, 237, 237, 0.55)) !important;
+}
+
+.comingSoonBadge {
+  font-size: 0.75rem;
+  font-style: italic;
+  opacity: 0.8;
+}
+
 .bazaarMessage {
   font-size: 0.875rem;
   color: var(--theme-text-muted, rgba(237, 237, 237, 0.6));

@@ -14,7 +14,7 @@ import {
   useGetFavoriteDecksQuery,
   useGetBazaarDecksQuery
 } from 'features/api/apiSlice';
-import { selectCurrentUser, selectMetafyHash } from 'features/auth/authSlice';
+import { selectCurrentUser, selectCurrentUserName, selectMetafyHash } from 'features/auth/authSlice';
 import { setGameStart } from 'features/game/GameSlice';
 import useAuth from 'hooks/useAuth';
 import { CreateGameAPI } from 'interface/API/CreateGame.php';
@@ -90,6 +90,8 @@ const CreateGame = () => {
   // FaB Bazaar — standalone mode only (embedded mode uses QuickJoinContext)
   const metafyHash = useAppSelector(selectMetafyHash);
   const metafyId = useAppSelector(selectCurrentUser);
+  const currentUserName = useAppSelector(selectCurrentUserName);
+  const isBazaarEnabled = currentUserName === 'OotTheMonk';
   const [standaloneDeckSource, setStandaloneDeckSourceState] = useState<'talishar' | 'bazaar'>(
     () =>
       (localStorage.getItem('quickJoin_deckSource') as 'talishar' | 'bazaar') ?? 'talishar'
@@ -113,6 +115,15 @@ const CreateGame = () => {
       label: deck.name
     }));
   }, [bazaarData?.decks]);
+
+  // If FaB Bazaar isn't enabled for this user, reset any stored 'bazaar' selection so
+  // the disabled tab doesn't also get the deckTabActive class from a stale localStorage value.
+  useEffect(() => {
+    if (!isBazaarEnabled && standaloneDeckSource === 'bazaar') {
+      setStandaloneDeckSourceState('talishar');
+      localStorage.setItem('quickJoin_deckSource', 'talishar');
+    }
+  }, [isBazaarEnabled]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const setStandaloneDeckSource = (src: 'talishar' | 'bazaar') => {
     setStandaloneDeckSourceState(src);
@@ -628,10 +639,12 @@ const CreateGame = () => {
                       type="button"
                       role="tab"
                       aria-selected={standaloneDeckSource === 'bazaar'}
-                      className={`${styles.deckTab} ${standaloneDeckSource === 'bazaar' ? styles.deckTabActive : ''}`}
-                      onClick={() => setStandaloneDeckSource('bazaar')}
+                      className={`${styles.deckTab} ${standaloneDeckSource === 'bazaar' ? styles.deckTabActive : ''} ${!isBazaarEnabled ? styles.deckTabDisabled : ''}`}
+                      onClick={() => isBazaarEnabled && setStandaloneDeckSource('bazaar')}
+                      disabled={!isBazaarEnabled}
+                      title={!isBazaarEnabled ? 'Coming soon!' : undefined}
                     >
-                      FaB Bazaar
+                      FaB Bazaar{!isBazaarEnabled && <span className={styles.comingSoonBadge}> — Coming soon!</span>}
                     </button>
                   </div>
                 )}

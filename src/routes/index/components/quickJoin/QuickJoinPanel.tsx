@@ -45,6 +45,7 @@ const QuickJoinPanel = ({ embedded = false }: Props) => {
     isBazaarLoading,
     bazaarError,
     metafyHash,
+    isBazaarEnabled,
     setDeckSource,
     setSelectedFavoriteDeck,
     setSelectedBazaarDeck,
@@ -158,10 +159,12 @@ const QuickJoinPanel = ({ embedded = false }: Props) => {
         <button
           role="tab"
           aria-selected={deckSource === 'bazaar'}
-          className={`${styles.tab} ${deckSource === 'bazaar' ? styles.tabActive : ''}`}
-          onClick={() => setDeckSource('bazaar')}
+          className={`${styles.tab} ${deckSource === 'bazaar' ? styles.tabActive : ''} ${!isBazaarEnabled ? styles.tabDisabled : ''}`}
+          onClick={() => isBazaarEnabled && setDeckSource('bazaar')}
+          disabled={!isBazaarEnabled}
+          title={!isBazaarEnabled ? 'Coming soon!' : undefined}
         >
-          FaB Bazaar
+          {isBazaarEnabled ? 'FaB Bazaar' : <span className={styles.comingSoonBadge}>Coming soon!</span>}
         </button>
       </div>
 

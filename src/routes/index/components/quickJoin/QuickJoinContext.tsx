@@ -14,7 +14,7 @@ import {
   useGetFavoriteDecksQuery,
   useGetBazaarDecksQuery
 } from 'features/api/apiSlice';
-import { selectCurrentUser, selectMetafyHash } from 'features/auth/authSlice';
+import { selectCurrentUser, selectCurrentUserName, selectMetafyHash } from 'features/auth/authSlice';
 import { generateCroppedImageUrl } from 'utils/cropImages';
 import { ImageSelectOption } from 'components/ImageSelect';
 import { getReadableFormatName } from 'utils/formatUtils';
@@ -59,6 +59,7 @@ interface QuickJoinContextType {
   isBazaarLoading: boolean;
   bazaarError: string | null;
   metafyHash: string | null;
+  isBazaarEnabled: boolean;
   /** URL-ready fabdb value that accounts for the active deck source */
   effectiveFabdb: string;
   /** Talishar deck key that accounts for the active deck source */
@@ -90,6 +91,8 @@ export const QuickJoinProvider = ({
   const [joinGame] = useJoinGameMutation();
   const metafyHash = useAppSelector(selectMetafyHash);
   const metafyId = useAppSelector(selectCurrentUser);
+  const currentUserName = useAppSelector(selectCurrentUserName);
+  const isBazaarEnabled = currentUserName === 'OotTheMonk' || currentUserName === 'Rocu2';
 
   const { data: favoritesData, isLoading: isFavoritesLoading } =
     useGetFavoriteDecksQuery(undefined);
@@ -168,6 +171,15 @@ export const QuickJoinProvider = ({
       setDetectedFormat(null);
     }
   }, [selectedFavoriteDeck, favoritesData?.favoriteDecks, importDeckUrl]);
+
+  // If FaB Bazaar isn't enabled for this user, reset any stale 'bazaar' value so the
+  // disabled tab doesn't get the active class from localStorage.
+  useEffect(() => {
+    if (!isBazaarEnabled && deckSource === 'bazaar') {
+      setDeckSourceState('talishar');
+      localStorage.setItem(LS_DECK_SOURCE_KEY, 'talishar');
+    }
+  }, [isBazaarEnabled]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const setDeckSource = useCallback((v: 'talishar' | 'bazaar') => {
     setDeckSourceState(v);
@@ -312,6 +324,7 @@ export const QuickJoinProvider = ({
     isBazaarLoading,
     bazaarError,
     metafyHash,
+    isBazaarEnabled,
     effectiveFabdb,
     effectiveFavoriteDecks,
     setDeckSource,
