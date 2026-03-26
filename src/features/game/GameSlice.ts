@@ -288,35 +288,6 @@ export const submitMultiButton = createAsyncThunk(
   }
 );
 
-export const submitInactivityMessage = createAsyncThunk(
-  'game/submitInactivityMessage',
-  async (
-    params: { playerID: number; inactivePlayer: number },
-    { getState }
-  ) => {
-    const { game } = getState() as { game: GameState };
-    const gameInfo = game.gameInfo;
-
-    const queryURL = 'SubmitInactivityMessage.php';
-    const queryParams = new URLSearchParams({
-      gameName: String(gameInfo.gameID),
-      playerID: String(params.playerID),
-      authKey: String(gameInfo.authKey),
-      inactivePlayer: String(params.inactivePlayer)
-    });
-
-    try {
-      await fetch(`${BACKEND_URL}${queryURL}?${queryParams.toString()}`, {
-        method: 'GET',
-        headers: {},
-        credentials: 'include'
-      });
-    } catch (e) {
-      console.error('Error submitting inactivity message:', e);
-    }
-  }
-);
-
 export const gameSlice = createSlice({
   name: 'game',
   initialState: InitialGameState,
@@ -630,25 +601,9 @@ export const gameSlice = createSlice({
       state.activeLayers = undefined;
       state.activeChainLink = undefined;
 
-      // Initialize inactivity timer
       if (isNewGame) {
-        // NEW GAME: Start fresh timer
-        state.inactivityWarning = {
-          lastActionTime: Date.now(),
-          firstWarningShown: false,
-          secondWarningShown: false
-        };
         // Clear recently played history from previous game
         state.gameDynamicInfo.recentlyPlayed = [];
-      } else {
-        // RECONNECTION to same game: Keep existing timer if present
-        if (!state.inactivityWarning) {
-          state.inactivityWarning = {
-            lastActionTime: Date.now(),
-            firstWarningShown: false,
-            secondWarningShown: false
-          };
-        }
       }
 
       return state;
@@ -823,100 +778,6 @@ export const gameSlice = createSlice({
 
       return state;
     },
-    updateActionTimestamp: (state) => {
-      if (!state.inactivityWarning) {
-        state.inactivityWarning = {
-          lastActionTime: Date.now(),
-          firstWarningShown: false,
-          secondWarningShown: false
-        };
-      } else {
-        state.inactivityWarning.lastActionTime = Date.now();
-        state.inactivityWarning.firstWarningShown = false;
-        state.inactivityWarning.secondWarningShown = false;
-      }
-    },
-    setFirstWarningShown: (state, action: PayloadAction<boolean>) => {
-      if (!state.inactivityWarning) {
-        state.inactivityWarning = {
-          lastActionTime: Date.now(),
-          firstWarningShown: action.payload,
-          secondWarningShown: false
-        };
-      } else {
-        state.inactivityWarning.firstWarningShown = action.payload;
-      }
-    },
-    setSecondWarningShown: (state, action: PayloadAction<boolean>) => {
-      if (!state.inactivityWarning) {
-        state.inactivityWarning = {
-          lastActionTime: Date.now(),
-          firstWarningShown: false,
-          secondWarningShown: action.payload,
-          secondWarningStartTime: action.payload ? Date.now() : undefined
-        };
-      } else {
-        state.inactivityWarning.secondWarningShown = action.payload;
-        // Set timestamp when warning is first shown
-        if (action.payload) {
-          state.inactivityWarning.secondWarningStartTime = Date.now();
-        }
-      }
-
-      // Add inactivity message to chat log when second warning triggers
-      if (action.payload && state.chatLog) {
-        const playerID = state.gameInfo.playerID;
-        const inactivePlayer = state.hasPriority
-          ? playerID
-          : playerID === 1
-          ? 2
-          : 1;
-        state.chatLog.push(`⌛Player ${inactivePlayer} is inactive.`);
-      }
-    },
-    resetInactivityTimer: (state) => {
-      if (!state.inactivityWarning) {
-        state.inactivityWarning = {
-          lastActionTime: Date.now(),
-          firstWarningShown: false,
-          secondWarningShown: false
-        };
-      } else {
-        state.inactivityWarning.lastActionTime = Date.now();
-        state.inactivityWarning.firstWarningShown = false;
-        state.inactivityWarning.secondWarningShown = false;
-      }
-      // Save to localStorage (safely)
-      if (typeof window !== 'undefined' && window.localStorage) {
-        try {
-          const gameID = state.gameInfo.gameID;
-          if (gameID > 0 && state.inactivityWarning) {
-            localStorage.setItem(
-              `talishar_inactivity_${gameID}`,
-              JSON.stringify(state.inactivityWarning)
-            );
-          }
-        } catch (e) {
-          // Silently fail
-        }
-      }
-    },
-    stillHereButtonClicked: (state) => {
-      // Reset the inactivity timer when button is clicked
-      if (!state.inactivityWarning) {
-        state.inactivityWarning = {
-          lastActionTime: Date.now(),
-          firstWarningShown: false,
-          secondWarningShown: false
-        };
-      } else {
-        state.inactivityWarning.lastActionTime = Date.now();
-        state.inactivityWarning.firstWarningShown = false;
-        state.inactivityWarning.secondWarningShown = false;
-        state.inactivityWarning.secondWarningStartTime = undefined;
-      }
-      // Chat message is sent via submitChat API, not added here
-    },
     setOpponentTyping: (state, action: PayloadAction<boolean>) => {
       state.opponentIsTyping = action.payload;
     },
@@ -1029,23 +890,7 @@ export const gameSlice = createSlice({
 
       state.aiHasInfiniteHP = action.payload.aiHasInfiniteHP ?? false;
 
-      state.opponentActivity =
-        action.payload.opponentActivity ?? state.opponentActivity ?? 0;
-
       state.preventPassPrompt = action.payload.preventPassPrompt;
-
-      // Reset inactivity timer when we get a new game state
-      if (!state.inactivityWarning) {
-        state.inactivityWarning = {
-          lastActionTime: Date.now(),
-          firstWarningShown: false,
-          secondWarningShown: false
-        };
-      } else {
-        state.inactivityWarning.lastActionTime = Date.now();
-        state.inactivityWarning.firstWarningShown = false;
-        state.inactivityWarning.secondWarningShown = false;
-      }
 
       return state;
     }
@@ -1162,28 +1007,7 @@ export const gameSlice = createSlice({
 
       state.aiHasInfiniteHP = action.payload.aiHasInfiniteHP ?? false;
 
-      state.opponentActivity =
-        action.payload.opponentActivity ?? state.opponentActivity ?? 0;
-
       state.preventPassPrompt = action.payload.preventPassPrompt;
-
-      // Don't reset inactivity warning on every game state update
-      // It should only reset when the CURRENT player takes an action
-      // (handled by playCard.fulfilled and submitButton.fulfilled)
-
-      // Reset inactivity timer when we get a new game state
-      // This ensures both players' timers reset whenever ANY action happens
-      if (!state.inactivityWarning) {
-        state.inactivityWarning = {
-          lastActionTime: Date.now(),
-          firstWarningShown: false,
-          secondWarningShown: false
-        };
-      } else {
-        state.inactivityWarning.lastActionTime = Date.now();
-        state.inactivityWarning.firstWarningShown = false;
-        state.inactivityWarning.secondWarningShown = false;
-      }
 
       return state;
     });
@@ -1214,18 +1038,6 @@ export const gameSlice = createSlice({
       return state;
     });
     builder.addCase(playCard.fulfilled, (state) => {
-      // Update inactivity timestamp when card is played
-      if (!state.inactivityWarning) {
-        state.inactivityWarning = {
-          lastActionTime: Date.now(),
-          firstWarningShown: false,
-          secondWarningShown: false
-        };
-      } else {
-        state.inactivityWarning.lastActionTime = Date.now();
-        state.inactivityWarning.firstWarningShown = false;
-        state.inactivityWarning.secondWarningShown = false;
-      }
       // not setting isPlayerInput to false because the
       // 'nextTurn' builder will set to true.
       return state;
@@ -1242,18 +1054,6 @@ export const gameSlice = createSlice({
       return state;
     });
     builder.addCase(submitButton.fulfilled, (state) => {
-      // Update inactivity timestamp when button is submitted
-      if (!state.inactivityWarning) {
-        state.inactivityWarning = {
-          lastActionTime: Date.now(),
-          firstWarningShown: false,
-          secondWarningShown: false
-        };
-      } else {
-        state.inactivityWarning.lastActionTime = Date.now();
-        state.inactivityWarning.firstWarningShown = false;
-        state.inactivityWarning.secondWarningShown = false;
-      }
       return state;
     });
     builder.addCase(submitButton.rejected, (state) => {
@@ -1334,11 +1134,6 @@ export const {
   setClashReveal,
   setArsenalFlip,
   setReplayStart,
-  updateActionTimestamp,
-  setFirstWarningShown,
-  setSecondWarningShown,
-  resetInactivityTimer,
-  stillHereButtonClicked,
   setOpponentTyping,
   addDamagePopup,
   removeDamagePopup,

@@ -28,11 +28,6 @@ const InitialGameState: GameState = {
   arsenalFlipP1Card: '',
   arsenalFlipP2Card: '',
   arsenalFlipTrigger: 0,
-  inactivityWarning: {
-    lastActionTime: Date.now(),
-    firstWarningShown: false,
-    secondWarningShown: false
-  },
   damagePopups: {
     playerOne: [],
     playerTwo: []
@@ -340,7 +335,15 @@ export const OfflineTestingGameState: GameState = {
   },
   showModals: true,
   shufflingPlayerId: null,
-  isShuffling: false
+  isShuffling: false,
+  addBotDeckPlayerId: null,
+  addBotDeckCard: '',
+  clashRevealP1Card: '',
+  clashRevealP2Card: '',
+  clashRevealTrigger: 0,
+  arsenalFlipP1Card: '',
+  arsenalFlipP2Card: '',
+  arsenalFlipTrigger: 0
 };
 
 export default InitialGameState as GameState;

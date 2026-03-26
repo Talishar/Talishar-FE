@@ -3,29 +3,6 @@ import { RootState } from 'app/Store';
 import { BACKEND_URL } from 'appConstants';
 import { CHAT_WHEEL } from 'constants/chatMessages';
 
-/**
- * Hook to send persistent chat messages to the game log
- * Messages are written to gamelog.txt with proper player color formatting
- *
- * Supports two modes:
- * 1. Quick chat messages from CHAT_WHEEL (predefined messages)
- * 2. Custom raw messages sent directly to backend
- *
- * @returns Object with two functions:
- *   - sendQuickChat(message: string): Send predefined quick chat messages
- *   - sendCustomMessage(message: string): Send any custom message string
- *
- * @example
- * const { sendQuickChat, sendCustomMessage } = useSendGameChat();
- *
- * // Send predefined quick chat
- * sendQuickChat('Thinking... Please bear with me!');
- * sendQuickChat('Good game!');
- *
- * // Send custom message
- * sendCustomMessage('⌛Player 1 is inactive.');
- * sendCustomMessage('Game restarted');
- */
 export const useSendGameChat = () => {
   const gameInfo = useAppSelector((state: RootState) => state.game.gameInfo);
 

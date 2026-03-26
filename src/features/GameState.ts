@@ -132,12 +132,6 @@ export default interface GameState {
   arsenalFlipP1Card: string;
   arsenalFlipP2Card: string;
   arsenalFlipTrigger: number;
-  inactivityWarning?: {
-    lastActionTime: number;
-    firstWarningShown: boolean;
-    secondWarningShown: boolean;
-    secondWarningStartTime?: number; // Timestamp when second warning triggered
-  };
   damagePopups?: {
     playerOne: Array<{ id: string; amount: number }>;
     playerTwo: Array<{ id: string; amount: number }>;
@@ -152,5 +146,4 @@ export default interface GameState {
   };
   aiHasInfiniteHP?: boolean;
   spectatorCameraView?: number; // 1 for player 1 view, 2 for player 2 view
-  opponentActivity?: number; // 0 = active, 2 = inactive
 }
