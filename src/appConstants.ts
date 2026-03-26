@@ -20,6 +20,10 @@ export const DATADOLL_URL = import.meta.env.DEV
   ? '/datadoll/'
   : `https://${import.meta.env.VITE_DATADOLL_URL}/`;
 
+export const FAB_BAZAAR_DECKS_API_URL =
+  'https://fabbazaar.app/api/talishar/decks';
+export const FAB_BAZAAR_DECK_URL_BASE = 'https://fabbazaar.app/decks/';
+
 // what playmat is the default
 export const DEFAULT_PLAYMAT = `Default`;
 

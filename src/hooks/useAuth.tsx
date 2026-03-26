@@ -9,6 +9,7 @@ import {
   selectCurrentUserName,
   selectIsPatron,
   selectIsMod,
+  selectMetafyHash,
   setCredentialsReducer,
   logOutReducer
 } from 'features/auth/authSlice';
@@ -30,6 +31,7 @@ export default function useAuth() {
   const currentUserName = useAppSelector(selectCurrentUserName);
   const reduxIsPatron = useAppSelector(selectIsPatron);
   const isMod = useAppSelector(selectIsMod);
+  const metafyHash = useAppSelector(selectMetafyHash);
   // const { refetch } = useGetFavoriteDecksQuery(undefined);
   const [logOutAPI, logOutData] = useLogOutMutation();
   const {
@@ -48,7 +50,8 @@ export default function useAuth() {
       userName: string,
       token: string,
       patron: string,
-      isMod?: boolean
+      isMod?: boolean,
+      metafyHash?: string | null
     ) => {
       dispatch(
         setCredentialsReducer({
@@ -56,7 +59,8 @@ export default function useAuth() {
           userName: userName,
           accessToken: token,
           isPatron: patron,
-          isMod: isMod || false
+          isMod: isMod || false,
+          metafyHash: metafyHash ?? null
         })
       );
     },
@@ -123,7 +127,8 @@ export default function useAuth() {
           data.loggedInUserName,
           '',
           data.isPatron,
-          userIsMod
+          userIsMod,
+          data.metafyHash ?? null
         );
       } else {
         // User is not logged in, clear any stale auth state
@@ -148,6 +153,7 @@ export default function useAuth() {
     error,
     isPatron,
     isMod,
+    metafyHash,
     setLoggedIn,
     logOut
   };
