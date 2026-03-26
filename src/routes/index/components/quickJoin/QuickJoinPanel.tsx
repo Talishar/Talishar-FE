@@ -1,10 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {
-  FaExclamationCircle,
-  FaQuestionCircle,
-  FaChevronUp,
-  FaChevronDown
-} from 'react-icons/fa';
+import { FaQuestionCircle, FaChevronUp, FaChevronDown } from 'react-icons/fa';
 import { toast } from 'react-hot-toast';
 import { ImageSelect } from 'components/ImageSelect';
 import useAuth from 'hooks/useAuth';
@@ -35,15 +30,25 @@ const QuickJoinPanel = ({ embedded = false }: Props) => {
     return savedState !== 'false';
   });
   const {
+    deckSource,
     selectedFavoriteDeck,
+    selectedBazaarDeck,
     importDeckUrl,
     saveDeck,
     detectedFormat,
     error,
     isJoining,
+    hasDeckConfigured,
     favoriteDeckOptions,
     isFavoritesLoading,
+    bazaarDeckOptions,
+    isBazaarLoading,
+    bazaarError,
+    metafyHash,
+    isBazaarEnabled,
+    setDeckSource,
     setSelectedFavoriteDeck,
+    setSelectedBazaarDeck,
     setImportDeckUrl,
     setSaveDeck,
     setError
@@ -62,32 +67,25 @@ const QuickJoinPanel = ({ embedded = false }: Props) => {
 
   if (!isLoggedIn) return null;
 
-  const content = (
-    <div className={styles.content}>
+  const talisharContent = (
+    <>
       <label className={styles.label}>
-        Select Deck
         <ImageSelect
           id="quickJoinFavoriteDeck"
           options={favoriteDeckOptions}
           value={selectedFavoriteDeck}
           onChange={setSelectedFavoriteDeck}
-          placeholder={
-            isFavoritesLoading ? 'Loading…' : 'Select a saved deck'
-          }
+          placeholder={isFavoritesLoading ? 'Loading…' : 'Select a saved deck'}
           aria-busy={isFavoritesLoading}
         />
       </label>
 
       <label className={styles.label}>
         <span className={styles.labelText}>
-          Import Deck List&nbsp;
+          Import Deck URL&nbsp;
           <span
             title="URL from FaBrary.net or other supported deck list site"
-            style={{
-              cursor: 'help',
-              display: 'inline-flex',
-              alignItems: 'center'
-            }}
+            style={{ cursor: 'help', display: 'inline-flex', alignItems: 'center' }}
           >
             <FaQuestionCircle size={13} />
           </span>
@@ -125,16 +123,64 @@ const QuickJoinPanel = ({ embedded = false }: Props) => {
           />
         </label>
       )}
+    </>
+  );
+
+  const bazaarContent = metafyHash ? (
+    <label className={styles.label}>
+      <ImageSelect
+        id="quickJoinBazaarDeck"
+        options={bazaarDeckOptions}
+        value={selectedBazaarDeck}
+        onChange={setSelectedBazaarDeck}
+        placeholder={isBazaarLoading ? 'Loading…' : 'Select a FaB Bazaar deck'}
+        aria-busy={isBazaarLoading}
+      />
+      {bazaarError && <span className={styles.bazaarError}>{bazaarError}</span>}
+    </label>
+  ) : (
+    <p className={styles.bazaarMessage}>
+      Link your FaB Bazaar account in your{' '}
+      <a href="/user/profile">profile</a> to see your decks here.
+    </p>
+  );
+
+  const content = (
+    <div className={styles.content}>
+      <div className={styles.tabBar} role="tablist">
+        <button
+          role="tab"
+          aria-selected={deckSource === 'talishar'}
+          className={`${styles.tab} ${deckSource === 'talishar' ? styles.tabActive : ''}`}
+          onClick={() => setDeckSource('talishar')}
+        >
+          Talishar Decks
+        </button>
+        <button
+          role="tab"
+          aria-selected={deckSource === 'bazaar'}
+          className={`${styles.tab} ${deckSource === 'bazaar' ? styles.tabActive : ''} ${!isBazaarEnabled ? styles.tabDisabled : ''}`}
+          onClick={() => isBazaarEnabled && setDeckSource('bazaar')}
+          disabled={!isBazaarEnabled}
+          title={!isBazaarEnabled ? 'Coming soon!' : undefined}
+        >
+          {isBazaarEnabled ? 'FaB Bazaar' : <span className={styles.comingSoonBadge}>Coming soon!</span>}
+        </button>
+      </div>
+
+      <div className={styles.tabContent}>
+        {deckSource === 'talishar' ? talisharContent : bazaarContent}
+      </div>
+
       {!embedded && (
         <p className={styles.hint}>
-          {selectedFavoriteDeck || importDeckUrl.trim() ? (
+          {hasDeckConfigured ? (
             <>
               Click <strong>Join</strong> on any open game to join instantly.
             </>
           ) : (
             <>
-              Select or import a deck above, then click <strong>Join</strong>{' '}
-              on any open game.
+              Select a deck above, then click <strong>Join</strong> on any open game.
             </>
           )}
         </p>
@@ -177,3 +223,4 @@ const QuickJoinPanel = ({ embedded = false }: Props) => {
 };
 
 export default QuickJoinPanel;
+
