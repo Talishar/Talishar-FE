@@ -1,206 +1,188 @@
 import React from 'react';
 import styles from './AboutSection.module.css';
 import { parseHtmlToReactElements } from 'utils/ParseEscapedString';
+import { useTranslation, Trans } from 'react-i18next';
 
 const AboutSection: React.FC = () => {
   const [expandedFAQ, setExpandedFAQ] = React.useState<number | null>(null);
-
+  // Initial stuff to allow the lang to change
+  const { t, i18n, ready } = useTranslation();
   const faqs = [
     {
-      question: 'Is Talishar free to play?',
-      answer:
-        'Yes! Talishar is completely free to play. You can enjoy all features without spending any money. We offer exclusive cosmetics for our supporters and those who want to help fund development.'
+      question: t("ABOUT.FAQ.IS_FREE_Q"),
+      answer: t("ABOUT.FAQ.IS_FREE_A")       
     },
     {
-      question: 'Do I need to download anything?',
-      answer:
-        'No downloads required! Talishar runs directly in your web browser on desktop, tablet, or mobile.'
+      question: t("ABOUT.FAQ.DOWNLOAD_NEEDED_Q"),
+      answer: t("ABOUT.FAQ.DOWNLOAD_NEEDED_A")
     },
     {
-      question: 'Can I play offline?',
-      answer:
-        'Talishar is an online platform that requires an internet connection to play. This allows you to compete against real players worldwide in real-time.'
+      question: t("ABOUT.FAQ.PLAY_OFFLINE_A"),
+      answer: t("ABOUT.FAQ.PLAY_OFFLINE_Q")
     },
     {
-      question: 'How do I create an account?',
-      answer:
-        "Click the 'Sign Up' button on the main page and enter your email and password. Your account is created instantly, and you can start playing right away."
+      question: t("ABOUT.FAQ.HOW_SIGNUP_Q"),
+      answer: t("ABOUT.FAQ.HOW_SIGNUP_A")
     },
     {
-      question: 'Is this an official Flesh & Blood platform?',
-      answer:
-        "Talishar is an unofficial community-created platform. It's not affiliated with Legend Story Studios."
+      question: t("ABOUT.FAQ.IS_OFFICIAL_Q"),
+      answer: t("ABOUT.FAQ.IS_OFFICIAL_Q")
     },
     {
-      question: 'What if I find a bug or have suggestions?',
-      answer:
-        'We love feedback, this platform wouldn\'t be the same without it! You can report issues or suggest features through our <a href="https://discord.gg/JykuRkdd5S" target="_blank">Discord</a> server. Players input helps us improve Talishar.'
+      question: t("ABOUT.FAQ.BUG_FEATURE_Q"),
+      answer: t("ABOUT.FAQ.BUG_FEATURE_A")
     },
     {
-      question: 'Why is there no matchmaking or ranked play?',
-      answer:
-        'Talishar is designed as a no-stakes testing platform for players to experiment with decks and strategies. If you wish to have competitive play, head to <a href="https://fabtcg.com/organised-play/" target="_blank">organised play</a> and join official flesh and blood tournaments!'
+      question: t("ABOUT.FAQ.WHY_NO_RANKED_Q"),
+      answer: t("ABOUT.FAQ.WHY_NO_RANKED_A")
     },
     {
-      question: 'Where can I play in person?',
-      answer:
-        ' Check out LSS official <a href="https://fabtcg.com/locator/?tab=event&privateMode=false" target="_blank">event locator</a> to find local tournaments and events.'
+      question: t("ABOUT.FAQ.WHERE_PLAY_Q"),
+      answer: t("ABOUT.FAQ.WHERE_PLAY_A")
     },
     {
-      question: 'How can I become a contributor?',
-      answer:
-        'Talishar is an open-source project. Head to our discord #dev-general channel to get involved, and check our <a href="https://github.com/Talishar/Talishar/blob/main/README.md" target="_blank">GitHub</a> for contribution guidelines.'
+      question: t("ABOUT.FAQ.HOW_CONTRIBUTER_Q"),
+      answer: t("ABOUT.FAQ.HOW_CONTRIBUTER_A")
     }
   ];
 
   return (
     <section className={styles.aboutContainer}>
       <div className={styles.content}>
-        <h2>Welcome to Talishar</h2>
+        <h2>{t("ABOUT.TITLE")}</h2>
         <p className={styles.tagline}>
-          The Unofficial Online Platform for Flesh & Blood
+          {t("ABOUT.SUB_HEADER")}
         </p>
 
         <p className={styles.description}>
-          Talishar is the free, browser-based community platform where over
-          9,000+ players daily compete in real-time games of Flesh & Blood.
-          Bring your deck, face off against players worldwide, and master your
-          heroes.
+	  {t("ABOUT.DESCRIPTION")}
         </p>
 
         {/* About Talishar Section */}
         <div className={styles.aboutTalisharSection}>
-          <h3>🎮 What is Talishar?</h3>
+          <h3>🎮 {t("ABOUT.WHAT_IS_TITLE")}</h3>
           <p>
-            Talishar is a passion project built by the Flesh & Blood community
-            for the community. We created this platform to provide players with
-            a free, accessible, and welcoming space to play and test deck ideas.
-            Whether you're a casual player looking to learn the game before
-            joining a local armory or a competitive player wanting some reps.
-            Talishar is there for the community.
+	    {t("ABOUT.WHAT_IS_DESCRIPTION")}
           </p>
         </div>
 
         {/* Who Maintains Talishar */}
         <div className={styles.maintenanceSection}>
-          <h3>👥 Who Maintains Talishar?</h3>
+          <h3>👥 {t("ABOUT.WHO_MAINTAINS_TITLE")}</h3>
           <p>
-            Talishar is maintained by a dedicated team of volunteer developers
-            and community members who are passionate about Flesh & Blood. Our
-            team works entirely on a volunteer basis to keep the platform
-            running, code new card sets, fix bugs, and implement new features.
-            We're supported by the community through optional contributions
-            platform like Metafy. It help cover server costs and fund
-            development.
+	    {t("ABOUT.WHO_MAINTAINS_DESCRIPTION")}            
           </p>
           <p className={styles.contributorInfo}>
-            Want to contribute? Talishar is open-source! Join us on{' '}
+	    <Trans i18nKey="ABOUT.WANT_TO_CONTRIBUTE">
+	    Want to contribute? Talishar is open-source! Join us on
             <a
               href="https://discord.gg/JykuRkdd5S"
               target="_blank"
               rel="noopener noreferrer"
             >
               Discord
-            </a>{' '}
-            or check our{' '}
+            </a>
+            or check our
             <a
               href="https://github.com/Talishar/Talishar"
               target="_blank"
               rel="noopener noreferrer"
             >
               GitHub repository
-            </a>{' '}
-            to get involved.
+            </a>
+              to get involved.
+	    </Trans>
           </p>
         </div>
 
         {/* LSS Relationship */}
         <div className={styles.lssRelationship}>
-          <h3>⚖️ Our Relationship with Legend Story Studios</h3>
-          <p>
-            <strong>Talishar is an unofficial platform and independent.</strong>{' '}
-            We are not affiliated with, endorsed by, or connected to Legend
-            Story Studios (LSS), the creators of Flesh & Blood. Talishar
-            operates as a fan-made platform created to celebrate and support the
-            FAB community.
-          </p>
-          <p>
-            While we strive to maintain rules accuracy, Talishar may not be a
-            completely accurate representation of the official rules. For
-            official rulings and clarifications, we recommend consulting the
-            judge community on the
-            <a
-              href="https://discord.com/invite/flesh-and-blood-judge-hub-874145774135558164"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {' '}
-              Judge Hub Discord
-            </a>{' '}
-            or visiting the{' '}
-            <a
-              href="https://fabtcg.com/rules-and-policy-center/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              official FAB rules and policy center
-            </a>
-            .
-          </p>
+          <h3>⚖️{t("ABOUT.LSS_RELATIONSHIP_TITLE")}</h3>
+	  <Trans
+	    i18nKey="ABOUT.LSS_RELATIONSHIP_DESCRIPTION"
+	    components={{
+	      0: <p />,
+	      1: <p />,
+	      2: (
+		<a
+		  href="https://discord.gg/JykuRkdd5S"
+		  target="_blank"
+		  rel="noopener noreferrer"
+		/>
+	      ),
+	      3: (
+		<a
+		  href="https://fabtcg.com/rules/"
+		  target="_blank"
+		  rel="noopener noreferrer"
+		/>
+	      ),
+	    }}
+	  />
         </div>
 
         {/* Features & Stats */}
         <div className={styles.featuresGrid}>
           <div className={styles.featureCard}>
-            <h3>⚡ Instant Play</h3>
-            <p>No downloads required. Play directly in your browser</p>
+            <h3>⚡{t("ABOUT.FEATURES.INSTANT_TITLE")}</h3>
+            <p>{t("ABOUT.FEATURES.INSTANT_DESCRIPTION")}</p>
           </div>
 
           <div className={styles.featureCard}>
-            <h3>🌍 Active Community</h3>
-            <p>Join 9,000+ daily players worldwide</p>
+            <h3>🌍{t("ABOUT.FEATURES.ACTIVE_TITLE")}</h3>
+            <p>{t("ABOUT.FEATURES.ACTIVE_DESCRIPTION")}</p>
           </div>
 
           <div className={styles.featureCard}>
-            <h3>📱 Mobile Friendly</h3>
-            <p>Play on your phone, tablet, or computer</p>
+            <h3>📱{t("ABOUT.FEATURES.MOBILE_TITLE")}</h3>
+            <p>{t("ABOUT.FEATURES.MOBILE_DESCRIPTION")}</p>
           </div>
 
           <div className={styles.featureCard}>
-            <h3>📣 Open to feedback and suggestions</h3>
-            <p>We value your input to improve the platform</p>
+            <h3>📣{t("ABOUT.FEATURES.FEEDBACK_TITLE")}</h3>
+            <p>{t("ABOUT.FEATURES.FEEDBACK_DESCRIPTION")}</p>
           </div>
 
           <div className={styles.featureCard}>
-            <h3>⚖️ No Stakes Platform</h3>
-            <p>Don't stress, play and have fun.</p>
+            <h3>⚖️{t("ABOUT.FEATURES.NO_STAKES_TITLE")}</h3>
+            <p>{t("ABOUT.FEATURES.NO_STAKES_DESCRIPTION")}</p>
           </div>
 
           <div className={styles.featureCard}>
-            <h3>🌶️ Test Your Spicy Brew</h3>
-            <p>Experiment with strategies and refine your builds</p>
+            <h3>🌶️{t("ABOUT.FEATURES.SPICY_TITLE")}</h3>
+            <p>{t("ABOUT.FEATURES.SPICY_DESCRIPTION")}</p>
           </div>
         </div>
         <div className={styles.statsContainer}>
           <div className={styles.stat}>
-            <span className={styles.statNumber}>9,000+</span>
-            <span className={styles.statLabel}>Daily Players</span>
+	    <Trans
+	      i18nKey="ABOUT.STATS.PLAYERS"
+	      values={{players:"9,000+"}}>
+	      <span className={styles.statNumber}>9,000+</span>
+	      <span className={styles.statLabel}>Daily Players</span>
+	    </Trans>
           </div>
           <div className={styles.stat}>
-            <span className={styles.statNumber}>100%</span>
-            <span className={styles.statLabel}>Free to Play</span>
+	    <Trans
+	      i18nKey="ABOUT.STATS.FREE"
+	      values={{percent:"100%"}}>
+              <span className={styles.statNumber}>100%</span>
+	      <span className={styles.statLabel}>Free to Play</span>
+	    </Trans>
           </div>
           <div className={styles.stat}>
-            <span className={styles.statNumber}>500+</span>
-            <span className={styles.statLabel}>Active Supporters</span>
+	    <Trans
+	      i18nKey="ABOUT.STATS.ACTIVE"
+	      values={{supporters:"500+"}}>
+              <span className={styles.statNumber}>500+</span>
+              <span className={styles.statLabel}>Active Supporters</span>
+	    </Trans>
           </div>
         </div>
-
         <div className={styles.communityResourcesContainer}>
-          <h3>🤝 Built By The Community</h3>
+          <h3>🤝{t("ABOUT.COMMUNITY.TITLE")}</h3>
           <p>
-            Talishar thrives thanks to collaboration with other talented fan
-            software developers from the FAB community:
+            {t("ABOUT.COMMUNITY.DESCRIPTION")}
           </p>
 
           <div className={styles.resourcesGrid}>
@@ -212,8 +194,7 @@ const AboutSection: React.FC = () => {
             >
               <h4>Fabrary</h4>
               <p>
-                The most advanced Flesh and Blood card search, deck building,
-                and collection management tool.
+                {t("ABOUT.COMMUNITY.FABRARY_DESCRIPTION")}
               </p>
             </a>
 
@@ -225,8 +206,7 @@ const AboutSection: React.FC = () => {
             >
               <h4>The FAB Cube</h4>
               <p>
-                Easy to use cube builder with comprehensive card database for
-                the Flesh and Blood TCG.
+                {t("ABOUT.COMMUNITY.THE_FAB_CUBE_DESCRIPTION")}
               </p>
             </a>
 
@@ -238,8 +218,7 @@ const AboutSection: React.FC = () => {
             >
               <h4>FAB Card Database</h4>
               <p>
-                Open source database with JSON/CSV representations of Flesh and
-                Blood cards.
+                {t("ABOUT.COMMUNITY.FAB_CARD_DATABASE_DESCRIPTION")}    
               </p>
             </a>
 
@@ -251,9 +230,8 @@ const AboutSection: React.FC = () => {
             >
               <h4>Legendary Stories</h4>
               <p>
-                Fan-curated archive of all official Flesh and Blood lore and
-                world-building.
-              </p>
+		{t("ABOUT.COMMUNITY.LEGENDARY_STORIES_DESCRIPTION")}
+	      </p>
             </a>
 
             <a
@@ -264,8 +242,7 @@ const AboutSection: React.FC = () => {
             >
               <h4>FAB Blazing Data</h4>
               <p>
-                Discover the current meta landscape and access detailed hero and
-                deck statistics.
+		{t("ABOUT.COMMUNITY.FABLAZING_DATA_DESCRIPTION")}
               </p>
             </a>
 
@@ -277,15 +254,14 @@ const AboutSection: React.FC = () => {
             >
               <h4>FAB Insights</h4>
               <p>
-                Advanced statistical analysis of the meta, hero interactions,
-                and Talishar gameplay data.
+		{t("ABOUT.COMMUNITY.FAB_INSIGHTS_DESCRIPTION")}   
               </p>
             </a>
           </div>
         </div>
 
         <div className={styles.faqContainer}>
-          <h3>❓ Frequently Asked Questions</h3>
+          <h3>❓{t("ABOUT.FAQ.TITLE")}</h3>
           <div className={styles.faqList}>
             {faqs.map((faq, index) => (
               <div key={index} className={styles.faqItem}>
@@ -312,85 +288,69 @@ const AboutSection: React.FC = () => {
 
         {/* Community Values */}
         <div className={styles.communityValuesSection}>
-          <h3>Talishar Values</h3>
+          <h3>{t("ABOUT.VALUES.TITLE")}</h3>
           <div className={styles.valuesGrid}>
             <div className={styles.valueCard}>
-              <h4>🤝 Inclusivity</h4>
+              <h4>🤝{t("ABOUT.VALUES.INCLUSIVITY_TITLE")}</h4>
               <p>
-                We welcome players of all skill levels and backgrounds. Everyone
-                deserves a safe place to play and learn.
+		{t("ABOUT.VALUES.INCLUSIVITY_DESCRIPTION")}                
               </p>
             </div>
             <div className={styles.valueCard}>
-              <h4>📖 Transparency</h4>
+              <h4>📖 {t("ABOUT.VALUES.TRANSPARENCY_TITLE")}</h4>
               <p>
-                We communicate openly with our community about updates,
-                features, and decisions that affect the platform.
+		{t("ABOUT.VALUES.TRANSPARENCY_DESCRIPTION")}
+                
               </p>
             </div>
             <div className={styles.valueCard}>
-              <h4>🎯 Accuracy</h4>
+              <h4>🎯{t("ABOUT.VALUES.ACCURACY_TITLE")}</h4>
               <p>
-                We continuously work to ensure card mechanics and rules are as
-                accurate as possible to official FAB standards.
+		{t("ABOUT.VALUES.ACCURACY_DESCRIPTION")}
               </p>
             </div>
             <div className={styles.valueCard}>
-              <h4>💡 Innovation</h4>
+              <h4>💡{t("ABOUT.VALUES.INNOVATION_TITLE")}</h4>
               <p>
-                We listen to player feedback and regularly implement
-                improvements to enhance the gaming experience.
+		{t("ABOUT.VALUES.INNOVATION_DESCRIPTION")}                
               </p>
             </div>
             <div className={styles.valueCard}>
-              <h4>🛡️ Safety</h4>
+              <h4>🛡️{t("ABOUT.VALUES.SAFETY_TITLE")}</h4>
               <p>
-                We maintain a respectful, harassment-free environment where all
-                players can enjoy the game safely. Report any kind of abuse to
-                our moderators on Discord.
+		{t("ABOUT.VALUES.SAFETY_DESCRIPTION")}
               </p>
             </div>
             <div className={styles.valueCard}>
-              <h4>🌱 Community-Driven</h4>
+              <h4>🌱{t("ABOUT.VALUES.COMMUNITY_DRIVEN_TITLE")}</h4>
               <p>
-                Talishar is built by the community, for the community. We value
-                player input and collaboration to shape the platform's future.
+		{t("ABOUT.VALUES.COMMUNITY_DRIVEN_DESCRIPTION")}
               </p>
             </div>
           </div>
         </div>
 
         <div className={styles.disclaimer}>
-          <p>
-            <strong>Disclaimer:</strong> Talishar is an open-source, fan-made
-            platform not associated with LSS. It may not be a completely
-            accurate representation of the Rules as written. If you have
-            questions about interactions or rulings, please contact the judges
-            community on the
-            <a
-              href="https://discord.com/invite/flesh-and-blood-judge-hub-874145774135558164"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {' '}
-              JudgeHub Discord
-            </a>{' '}
-            for clarification.
-          </p>
-          <p>
-            Talishar is in no way affiliated with Legend Story Studios. Legend
-            Story Studios®, Flesh and Blood™, and set names are trademarks of
-            Legend Story Studios. Flesh and Blood characters, cards, logos, and
-            art are property of{' '}
-            <a
-              href="https://legendstory.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Legend Story Studios
-            </a>
-            . Card Images © Legend Story Studios
-          </p>
+	  <Trans i18nKey="ABOUT.DISCLAIMER"
+		 components={{
+		 0: <p />,
+		 1: <strong></strong>,
+		 2: <p />,		 
+		 3: (<a
+		       href="https://discord.com/invite/flesh-and-blood-judge-hub-874145774135558164"
+		       target="_blank"
+		       rel="noopener noreferrer"
+		       />),
+		 4: (<a
+		       href="https://legendstory.com/"
+		       target="_blank"
+		       rel="noopener noreferrer"
+		       />)
+		 
+		 }}
+
+	  />
+
         </div>
       </div>
     </section>

@@ -4,6 +4,7 @@ import {
   fetchDiscordContentCarousel,
   ContentVideo
 } from '../../../services/contentService';
+import { useTranslation } from 'react-i18next';
 
 const CommunityContent: React.FC = () => {
   const [videos, setVideos] = useState<ContentVideo[]>([]);
@@ -12,7 +13,9 @@ const CommunityContent: React.FC = () => {
   const [isAutoAdvancing, setIsAutoAdvancing] = useState(false);
   const isAutoAdvancingRef = React.useRef(false);
   const autoAdvanceTimerRef = React.useRef<NodeJS.Timeout | null>(null);
-
+  // Initial stuff to allow the lang to change
+  const { t, i18n, ready } = useTranslation();
+  
   // Helper function to clean titles by removing HTML tags and URLs
   const cleanTitle = (title: string): string => {
     // Remove URLs
@@ -108,8 +111,8 @@ const CommunityContent: React.FC = () => {
     return (
       <section className={styles.communityContentContainer}>
         <div className={styles.content}>
-          <h2>Community & Content Hub</h2>
-          <p className={styles.subtitle}>Loading featured content...</p>
+          <h2>{t("COMMUNITY_CONTENT.TITLE")}</h2>
+          <p className={styles.subtitle}>{t("COMMUNITY_CONTENT.LOADING")}</p>
         </div>
       </section>
     );
@@ -119,7 +122,7 @@ const CommunityContent: React.FC = () => {
     return (
       <section className={styles.communityContentContainer}>
         <div className={styles.content}>
-          <h2>Community & Content Hub</h2>
+          <h2>{t("COMMUNITY_CONTENT.TITLE")}</h2>
         </div>
       </section>
     );
@@ -169,10 +172,9 @@ const CommunityContent: React.FC = () => {
   return (
     <section className={styles.communityContentContainer}>
       <div className={styles.content}>
-        <h2>Community & Content Hub</h2>
+        <h2>{t("COMMUNITY_CONTENT.TITLE")}</h2>
         <p className={styles.subtitle}>
-          Discover content, deck tech, and highlights from the Talishar
-          community
+	  {t("COMMUNITY_CONTENT.DISCOVER")}
         </p>
 
         {/* Carousel */}
@@ -185,7 +187,7 @@ const CommunityContent: React.FC = () => {
               <h3>{cleanTitle(currentVideo.title)}</h3>
               <p className={styles.videoMeta}>
                 <span className={styles.author}>
-                  By{' '}
+                  {t("COMMUNITY_CONTENT.BY")}{' '}
                   {currentVideo.author.charAt(0).toUpperCase() +
                     currentVideo.author.slice(1)}
                 </span>
@@ -202,14 +204,14 @@ const CommunityContent: React.FC = () => {
             <button
               className={`${styles.navButton} ${styles.prevButton}`}
               onClick={prevSlide}
-              aria-label="Previous video"
+              aria-label={t("COMMUNITY_CONTENT.PREVIOUS")}
             >
               ←
             </button>
             <button
               className={`${styles.navButton} ${styles.nextButton}`}
               onClick={nextSlide}
-              aria-label="Next video"
+              aria-label={t("COMMUNITY_CONTENT.NEXT")}
             >
               →
             </button>
@@ -225,7 +227,7 @@ const CommunityContent: React.FC = () => {
                 }`}
                 onClick={() => goToSlide(index)}
                 title={video.title}
-                aria-label={`View video ${index + 1}`}
+                aria-label={`${t("COMMUNITY_CONTENT.VIEW")} ${index + 1}`}
               >
                 <img
                   src={`https://img.youtube.com/vi/${video.videoId}/default.jpg`}
