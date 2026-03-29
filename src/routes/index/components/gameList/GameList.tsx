@@ -16,6 +16,7 @@ import { useCookies } from 'react-cookie';
 import { useAppDispatch } from 'app/Hooks';
 import { HEROES_OF_RATHE } from '../filter/constants';
 import GameFilter from './GameFilter';
+import { useTranslation, Trans } from 'react-i18next';
 
 export interface IOpenGame {
   p1Hero?: string;
@@ -63,6 +64,9 @@ const GameList = () => {
   ]);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
+  // Initial stuff to allow the lang to change
+  const { t, i18n, ready } = useTranslation();
+  
   const { data, isLoading, error, refetch, isFetching } = useGetGameListQuery(undefined);
   const { isLoggedIn } = useAuth();
   const { data: friendsData } = useGetFriendsListQuery(undefined, { skip: !isLoggedIn });
@@ -400,31 +404,29 @@ const GameList = () => {
             removeCookie('experimental');
           }}
         >
-          Disable experimental features
+          {t("GAME_LIST.DISABLE_EXPERIMENTAL")}
         </button>
       )}
       <div className={styles.titleDiv}>
-        <h3 className={styles.title}>
-          Games
+      <h3 className={styles.title}>
+      {t("GAME_LIST.GAMES")}          
         </h3>
         <button
           onClick={handleReloadClick}
           className={styles.reloadButton}
           aria-busy={isFetching}
           disabled={isFetching || isRateLimited}
-          title="Manually refresh game list"
-        >
-          Refresh
+    title={t("GAME_LIST.MANUAL_REFRESH")}
+      >
+      {t("GAME_LIST.REFRESH")}
         </button>
       </div>
-      {isLoading ? <div aria-busy="true">Loading games please wait</div> : null}
+      {isLoading ? <div aria-busy="true">{t("GAME_LIST.LOADING")}</div> : null}
       {error ? (
         <div>
-          <h2>There has been an error!</h2>
+          <h2>{t("GAME_LIST.LOAD_ERROR_TITLE")}</h2>
           <p>
-            Please refresh the page and try again, if you still get an error
-            loading the gamelist. Please report on our discord and let us know
-            the following:
+	  {t("GAME_LIST.LOAD_ERROR_DESCRIPTION")}            
           </p>
           <p>{JSON.stringify(error)}</p>
         </div>
@@ -466,27 +468,38 @@ const GameList = () => {
                 onFilterChange={handleInProgressFilterChange}
                 formatOptions={[
                   {
-                    label: 'Classic Constructed',
+                    label: t("GAME_LIST.FORMATS.CC"),
                     value: GAME_FORMAT.CLASSIC_CONSTRUCTED
                   },
                   {
-                    label: 'Competitive CC',
+                    label: t("GAME_LIST.FORMATS.COMPETITIVE_CC"),
                     value: GAME_FORMAT.COMPETITIVE_CC
                   },
-                  { label: 'Living Legend', value: GAME_FORMAT.LLCC },
                   {
-                    label: 'Competitive LL',
+		    label: t("GAME_LIST.FORMATS.LL"),
+		    value: GAME_FORMAT.LLCC },
+                  {
+                    label: t("GAME_LIST.FORMATS.COMPETITIVE_LL"),
                     value: GAME_FORMAT.COMPETITIVE_LL
                   },
-                  { label: 'Silver Age', value: GAME_FORMAT.SAGE },
                   {
-                    label: 'Competitive Silver Age',
+		    label: t("GAME_LIST.FORMATS.SAGE"),
+		    value: GAME_FORMAT.SAGE
+		  },
+                  {
+		    label: t("GAME_LIST.FORMATS.COMPETITIVE_SAGE"),
                     value: GAME_FORMAT.COMPETITIVE_SAGE
                   },
-                  { label: 'Future SAGE', value: GAME_FORMAT.OPEN_SAGE },
-                  { label: 'Future CC', value: GAME_FORMAT.OPEN_CC },
                   {
-                    label: 'Other Formats',
+		    label: t("GAME_LIST.FORMATS.FUTURE_SAGE"),
+		    value: GAME_FORMAT.OPEN_SAGE
+		  },
+                  {
+		    label: t("GAME_LIST.FORMATS.FUTURE_CC"),
+		    value: GAME_FORMAT.OPEN_CC
+		  },
+                  {
+                    label: t("GAME_LIST.FORMATS.OTHER"),
                     value: 'otherFormats',
                     isGroup: true,
                     groupValues: otherFormats
@@ -506,77 +519,77 @@ const GameList = () => {
             gameList={sortedOpenGames.filter(
               (game) => game.format === GAME_FORMAT.BLITZ
             )}
-            name="Blitz"
+        name={t("GAME_LIST.FORMATS.BLITZ")}
             friendUsernames={friendUsernames}
           />
           <FormatList
             gameList={sortedOpenGames.filter(
               (game) => game.format === GAME_FORMAT.COMPETITIVE_BLITZ
             )}
-            name="Competitive Blitz"
+            name={t("GAME_LIST.FORMATS.COMPETITIVE_BLITZ")}
             friendUsernames={friendUsernames}
           />
           <FormatList
             gameList={sortedOpenGames.filter(
               (game) => game.format === GAME_FORMAT.CLASSIC_CONSTRUCTED
             )}
-            name="Classic Constructed"
+            name={t("GAME_LIST.FORMATS.CC")}
             friendUsernames={friendUsernames}
           />
           <FormatList
             gameList={sortedOpenGames.filter(
               (game) => game.format === GAME_FORMAT.COMPETITIVE_CC
             )}
-            name="Competitive CC"
+            name={t("GAME_LIST.FORMATS.COMPETITIVE_CC")}
             friendUsernames={friendUsernames}
           />
           <FormatList
             gameList={sortedOpenGames.filter(
               (game) => game.format === GAME_FORMAT.LLCC
             )}
-            name="Living Legend"
+            name={t("GAME_LIST.FORMATS.LL")}
             friendUsernames={friendUsernames}
           />
           <FormatList
             gameList={sortedOpenGames.filter(
               (game) => game.format === GAME_FORMAT.COMPETITIVE_LL
             )}
-            name="Competitive LL"
+            name={t("GAME_LIST.FORMATS.COMPETITIVE_LL")}
             friendUsernames={friendUsernames}
           />
           <FormatList
             gameList={sortedOpenGames.filter(
               (game) => game.format === GAME_FORMAT.SAGE
             )}
-            name="Silver Age"
+            name={t("GAME_LIST.FORMATS.SAGE")}
             friendUsernames={friendUsernames}
           />
           <FormatList
             gameList={sortedOpenGames.filter(
               (game) => game.format === GAME_FORMAT.COMPETITIVE_SAGE
             )}
-            name="Competitive Silver Age"
+            name={t("GAME_LIST.FORMATS.COMPETITIVE_SAGE")}
             friendUsernames={friendUsernames}
           />
           <FormatList
             gameList={sortedOpenGames.filter(
               (game) => game.format === GAME_FORMAT.OPEN_SAGE
             )}
-            name="Future Silver Age"
+            name={t("GAME_LIST.FORMATS.FUTURE_SAGE")}
             friendUsernames={friendUsernames}
           />
           <FormatList
             gameList={sortedOpenGames.filter(
               (game) => game.format === GAME_FORMAT.OPEN_CC
             )}
-            name="Future CC"
+            name={t("GAME_LIST.FORMATS.FUTURE_CC")}
             friendUsernames={friendUsernames}
           />
           <FormatList
             gameList={sortedOpenGames.filter((game) =>
               otherFormats.includes(game.format)
             )}
-            name="Other Formats"
+            name={t("GAME_LIST.FORMATS.OTHER")}
             isOther
             friendUsernames={friendUsernames}
           />
@@ -606,9 +619,9 @@ const GameList = () => {
                     flex: '1 1 auto',
                     textAlign: 'center'
                   }}
-                >
-                  Games in Progress:&nbsp;
-                  <span>{data.gameInProgressCount}</span>
+              >
+	      <Trans i18nKey="GAME_LIST.IN_PROGRESS" value={{games: data.gameInProgressCount}}>
+	      </Trans>
                 </h4>
               </div>
               {gamesInProgressExpanded && (
@@ -619,7 +632,7 @@ const GameList = () => {
                         gameList={friendGamesInProgress.sort(
                           (a, b) => b.gameName - a.gameName
                         )}
-                        name="Friends' Games"
+                    name={t("GAME_LIST.FRIENDS")}
                         isFriendsSection={true}
                         friendUsernames={friendUsernames}
                       />
@@ -633,7 +646,7 @@ const GameList = () => {
                         )
                       )
                     ].sort((a, b) => b.gameName - a.gameName)}
-                    name="Blitz"
+                    name={t("GAME_LIST.FORMATS.BLITZ")}
                     friendUsernames={friendUsernames}
                   />
                   <InProgressGameList
@@ -645,7 +658,7 @@ const GameList = () => {
                         ].includes(game.format)
                       )
                     ].sort((a, b) => b.gameName - a.gameName)}
-                    name="Competitive Blitz"
+                    name={t("GAME_LIST.FORMATS.COMPETITIVE_BLITZ")}
                     friendUsernames={friendUsernames}
                   />
                   <InProgressGameList
@@ -657,7 +670,7 @@ const GameList = () => {
                         ].includes(game.format)
                       )
                     ].sort((a, b) => b.gameName - a.gameName)}
-                    name="Classic Constructed"
+                    name={t("GAME_LIST.FORMATS.CC")}
                     friendUsernames={friendUsernames}
                   />
                   <InProgressGameList
@@ -669,7 +682,7 @@ const GameList = () => {
                         ].includes(game.format)
                       )
                     ].sort((a, b) => b.gameName - a.gameName)}
-                    name="Competitive CC"
+                    name={t("GAME_LIST.FORMATS.COMPETITIVE_CC")}
                     friendUsernames={friendUsernames}
                   />
                   <InProgressGameList
@@ -680,7 +693,7 @@ const GameList = () => {
                         )
                       )
                     ].sort((a, b) => b.gameName - a.gameName)}
-                    name="Living Legend"
+                    name={t("GAME_LIST.FORMATS.LL")}
                     friendUsernames={friendUsernames}
                   />
                   <InProgressGameList
@@ -692,7 +705,7 @@ const GameList = () => {
                         ].includes(game.format)
                       )
                     ].sort((a, b) => b.gameName - a.gameName)}
-                    name="Competitive LL"
+                    name={t("GAME_LIST.FORMATS.COMPETITIVE_LL")}
                     friendUsernames={friendUsernames}
                   />
                   <InProgressGameList
@@ -703,7 +716,7 @@ const GameList = () => {
                         )
                       )
                     ].sort((a, b) => b.gameName - a.gameName)}
-                    name="Silver Age"
+                    name={t("GAME_LIST.FORMATS.SAGE")}
                     friendUsernames={friendUsernames}
                   />
                   <InProgressGameList
@@ -715,7 +728,7 @@ const GameList = () => {
                         ].includes(game.format)
                       )
                     ].sort((a, b) => b.gameName - a.gameName)}
-                    name="Competitive Silver Age"
+                    name={t("GAME_LIST.FORMATS.COMPETITIVE_SAGE")}
                     friendUsernames={friendUsernames}
                   />
                   <InProgressGameList
@@ -727,7 +740,7 @@ const GameList = () => {
                         ].includes(game.format)
                       )
                     ].sort((a, b) => b.gameName - a.gameName)}
-                    name="Future Classic Constructed"
+                    name={t("GAME_LIST.FORMATS.FUTURE_CC")}
                     friendUsernames={friendUsernames}
                   />
                   <InProgressGameList
@@ -739,7 +752,7 @@ const GameList = () => {
                         ].includes(game.format)
                       )
                     ].sort((a, b) => b.gameName - a.gameName)}
-                    name="Future Silver Age"
+                    name={t("GAME_LIST.FORMATS.FUTURE_SAGE")}
                     friendUsernames={friendUsernames}
                   />
                   <InProgressGameList
@@ -768,7 +781,7 @@ const GameList = () => {
                           ].includes(game.format)
                       )
                     ].sort((a, b) => b.gameName - a.gameName)}
-                    name="Other Formats"
+                    name={t("GAME_LIST.FORMATS.OTHER")}
                     friendUsernames={friendUsernames}
                   />
                 </>
@@ -778,9 +791,11 @@ const GameList = () => {
         </>
       ) : (
         !isLoading && (
-          <p>
+            <p>
+	    <Trans i18nKey="GAME_LIST.PLEASE_LOGIN">
             Please <Link to="/user/login">log in</Link> to view open lobbies and
-            spectate games!
+          spectate games!
+	  </Trans>
           </p>
         )
       )}

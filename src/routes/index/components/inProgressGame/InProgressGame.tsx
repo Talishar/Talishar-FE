@@ -6,6 +6,7 @@ import styles from './InProgressGame.module.scss';
 import { RiSwordLine } from 'react-icons/ri';
 import { generateCroppedImageUrl } from '../../../../utils/cropImages';
 import FriendBadge from '../gameList/FriendBadge';
+import { useTranslation } from 'react-i18next';
 
 export const InProgressGame = ({
   ix,
@@ -23,6 +24,9 @@ export const InProgressGame = ({
     navigate(`/game/play/${gameName}`);
   };
   const buttonClass = classNames(styles.button, 'secondary');
+  // Initial stuff to allow the lang to change
+  const { t, i18n, ready } = useTranslation();
+
   return (
     <div
       key={entry.gameName}
@@ -60,7 +64,7 @@ export const InProgressGame = ({
           href={`/game/play/${entry.gameName}`}
           role="button"
         >
-          Spectate
+          {t("IN_PROGRESS_GAME.SPECTATE")}
         </a>
       </div>
     </div>

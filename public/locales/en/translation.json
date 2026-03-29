@@ -184,5 +184,60 @@
       "COMMUNITY_DRIVEN_DESCRIPTION":"Talishar is built by the community, for the community. We value player input and collaboration to shape the platform's future."      
     },
     "DISCLAIMER":"<2><1>Disclaimer:</1> Talishar is an open-source, fan-made platform not associated with LSS. It may not be a completely accurate representation of the Rules as written. If you have questions about interactions or rulings, please contact the judges community on the <3> JudgeHub Discord </3> for clarification.</2><2>Talishar is in no way affiliated with Legend Story Studios. Legend Story Studios®, Flesh and Blood™, and set names are trademarks of Legend Story Studios. Flesh and Blood characters, cards, logos, and art are property of <4> Legend Story Studios </4>. Card Images © Legend Story Studios</2>"
+  },
+  "UNITED_GAME_PANEL":{
+    "GAME_SETUP":"Game Setup",
+    "JOIN_CREATE":"Quick Join / Create Game",
+    "MINIMIZE":"Minimize panel",
+    "EXPAND":"Expand panel",
+    "REMOVE_ADS":"Remove ads"
+  },
+  "FILTER":{
+    "HERO_FILTER":"Hero Filter"
+  },
+  "GAME_FILTER":{
+    "FILTER_GAMES":"Filter Games",
+    "RESET_FILTER":"Reset Filters",
+    "UNCHECK_ALL":"Uncheck All"
+  },
+  "GAME_LIST":{
+    "DISABLE_EXPERIMENTAL":"Disable experimental features",
+    "GAMES":"Games",
+    "MANUAL_REFRESH":"Manually refresh game list",
+    "LOAD_ERROR_TITLE":"There has been an error!",
+    "LOAD_ERROR_DESCRIPTION":"Please refresh the page and try again, if you still get an error loading the gamelist. Please report on our discord and let us know the following:",
+    "REFRESH":"Refresh",
+    "LOADING":"Loading games please wait",
+    "FORMATS":{
+      "POPULAR":"Popular Formats",
+      "CC":"Classic Constructed",
+      "SAGE":"Silver Age",
+      "LL":"Living Legend",
+      "COMPETITIVE":"Competitive Formats",
+      "COMPETITIVE_CC":"Competitive Classic Constructed",
+      "COMPETITIVE_SAGE":"Competitive Silver Age",
+      "COMPETITIVE_LL":"Competitive Living Legend",
+      "FUTURE_FORMATS":"Future Formats (Play with spoiled cards!)",
+      "FUTURE_CC":"Future Classic Constructed",
+      "FUTURE_LL":"Future Living Legend",
+      "FUTURE_SAGE":"Future Silver Age",
+      "OTHER":"Other Formats",
+      "PRECON":"Preconstructed Decks",
+      "BLITZ":"Blitz",
+      "COMPETITIVE_BLITZ":"Competitive Blitz",      
+      "DRAFT":"Draft / Limited",
+      "OPEN":"Open (no restrictions)"      
+    },
+    "FRIENDS":"Friends' Games",
+    "IN_PROGRESS":"Games in Progress:&nbsp;<span>{{games}}</span>",
+    "PLEASE_LOGIN":"Please <1>log in</1> to view open lobbies and spectate games!"    
+  },
+  "IN_PROGRESS_GAME":{
+    "SPECTATE":"Spectate"
+  },
+  "OPEN_GAME":{
+    "JOIN_DECK_READY":"Join using your pre-configured deck",
+    "JOIN_DECK_NOT_READY":"Select a deck in the panel above to join instantly",
+    "JOIN":"Join"
   }
 }

@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from './Filter.module.css';
+import { useTranslation } from 'react-i18next';
 
 const Filter = ({
   setHeroFilter,
@@ -8,6 +9,9 @@ const Filter = ({
   setHeroFilter: React.Dispatch<React.SetStateAction<string[]>>;
   heroOptions: { value: string; label: string }[];
 }) => {
+  // Initial stuff to allow the lang to change
+  const { t, i18n, ready } = useTranslation();
+  
   const heroMap = heroOptions.reduce((acc, hero) => {
     if (!acc[hero.label]) {
       acc[hero.label] = [];
@@ -36,7 +40,7 @@ const Filter = ({
       className={styles.filterSelect}
       onChange={handleSelectHero}
     >
-      <option value="">Hero Filter</option>
+      <option value="">{t("FILTER.HERO_FILTER")}</option>
       {uniqueHeroLabels.map((label) => (
         <option key={label} value={label}>
           {label}

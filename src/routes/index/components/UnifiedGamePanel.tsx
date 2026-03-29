@@ -6,6 +6,7 @@ import { AdUnit } from 'components/ads';
 import QuickJoinPanel from './quickJoin/QuickJoinPanel';
 import CreateGame from 'routes/game/create/CreateGame';
 import styles from './UnifiedGamePanel.module.css';
+import { useTranslation } from 'react-i18next';
 
 const getCookie = (name: string): string | null => {
   const value = `; ${document.cookie}`;
@@ -34,7 +35,9 @@ const UnifiedGamePanel = () => {
     const savedState = getCookie('unifiedGamePanelExpanded');
     return savedState !== 'false';
   });
-
+  // Initial stuff to allow the lang to change
+  const { t, i18n, ready } = useTranslation();
+  
   useEffect(() => {
     setCookie('unifiedGamePanelExpanded', String(isExpanded));
   }, [isExpanded]);
@@ -49,15 +52,15 @@ const UnifiedGamePanel = () => {
   }
 
   return (
-    <section className={styles.panel} aria-label="Game Setup">
+    <section className={styles.panel} aria-label={t("UNITED_GAME_PANEL.GAME_SETUP")}>
       <div className={styles.header}>
-        <h3 className={styles.title}>Quick Join / Create Game</h3>
+        <h3 className={styles.title}>{t("UNITED_GAME_PANEL.JOIN_CREATE")}</h3>
         <button
           type="button"
           className={styles.toggleButton}
           onClick={() => setIsExpanded(!isExpanded)}
           aria-expanded={isExpanded}
-          aria-label={isExpanded ? 'Minimize panel' : 'Expand panel'}
+          aria-label={isExpanded ? t("UNITED_GAME_PANEL.MINIMIZE") : t("UNITED_GAME_PANEL.EXPAND")}
         >
           {isExpanded ? <FaChevronUp size={16} /> : <FaChevronDown size={16} />}
         </button>
@@ -78,7 +81,7 @@ const UnifiedGamePanel = () => {
             rel="noopener noreferrer"
             className={styles.removeAdsLink}
           >
-            Remove ads
+            {t("UNITED_GAME_PANEL.REMOVE_ADS")}
           </a>
           <AdUnit placement="right-rail-1" />
         </div>

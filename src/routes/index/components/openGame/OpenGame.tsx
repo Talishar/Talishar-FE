@@ -7,6 +7,7 @@ import { generateCroppedImageUrl } from '../../../../utils/cropImages';
 import FriendBadge from '../gameList/FriendBadge';
 import QuickJoinContext from '../quickJoin/QuickJoinContext';
 import { GAME_FORMAT } from '../../../../appConstants';
+import { useTranslation } from 'react-i18next';
 
 const FORMAT_DISPLAY_NAMES: Record<string, string> = {
   [GAME_FORMAT.DRAFT]: 'Limited',
@@ -45,7 +46,9 @@ const OpenGame = ({
       navigate(`/game/join/${entry.gameName}`);
     }
   };
-
+  // Initial stuff to allow the lang to change
+  const { t, i18n, ready } = useTranslation();
+  
   const buttonClass = classNames(styles.button, styles.buttonWithIcon, 'secondary');
 
   return (
@@ -81,8 +84,8 @@ const OpenGame = ({
           onClick={handleJoin}
           title={
             hasDeckReady
-              ? 'Join using your pre-configured deck'
-              : 'Select a deck in the panel above to join instantly'
+              ? t("OPEN_GAME.JOIN_DECK_READY")
+              : t("OPEN_GAME.JOIN_DECK_NOT_READY")
           }
         >
           <img
@@ -95,7 +98,7 @@ const OpenGame = ({
             {hasDeckReady && (
               <span className={styles.joinMicroLabel}></span>
             )}
-            Join
+            {t("OPEN_GAME.JOIN")}
           </span>
         </a>
       </div>

@@ -2,6 +2,7 @@ import { useState, useRef, useEffect, useCallback } from 'react';
 import styles from './GameFilter.module.scss';
 import { IoMdArrowDropright } from 'react-icons/io';
 import { IoFunnel } from 'react-icons/io5';
+import { useTranslation } from 'react-i18next';
 
 // Utility functions for persisting filters to local storage
 const FILTER_STORAGE_KEY = 'gameFilters';
@@ -72,6 +73,9 @@ const GameFilter = ({
   const dropdownRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const [dropdownStyle, setDropdownStyle] = useState<React.CSSProperties>({});
+										
+  // Initial stuff to allow the lang to change
+  const { t, i18n, ready } = useTranslation();
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -253,7 +257,7 @@ const GameFilter = ({
         ref={buttonRef}
         className={styles.filterButton}
         onClick={() => setIsOpen(!isOpen)}
-        title="Filter Games"
+        title={t("GAME_FILTER.FILTER_GAMES")}
       >
         <span className={styles.filterIcon}>
           <IoFunnel />
@@ -271,7 +275,7 @@ const GameFilter = ({
       {isOpen && (
         <div className={styles.dropdown} style={dropdownStyle}>
           <div className={styles.dropdownHeader}>
-            <h5 className={styles.dropdownTitle}>Filter Games</h5>
+            <h5 className={styles.dropdownTitle}>{t("GAME_FILTER.FILTER_GAMES")}</h5>
           </div>
 
           <div className={styles.checklistContainer}>
@@ -296,13 +300,13 @@ const GameFilter = ({
 
           <div className={styles.buttonContainer}>
             <button className={styles.resetButton} onClick={handleResetFilters}>
-              Reset Filters
+              {t("GAME_FILTER.RESET_FILTER")}
             </button>
             <button
               className={styles.deselectButton}
               onClick={handleDeselectAll}
             >
-              Uncheck All
+              {t("GAME_FILTER.UNCHECK_ALL")}
             </button>
           </div>
         </div>
