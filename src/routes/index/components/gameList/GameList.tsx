@@ -620,8 +620,11 @@ const GameList = () => {
                     textAlign: 'center'
                   }}
               >
-	      <Trans i18nKey="GAME_LIST.IN_PROGRESS" values={{games: data.gameInProgressCount}}>
-	      </Trans>
+                    <Trans
+                      i18nKey="GAME_LIST.IN_PROGRESS"
+                      values={{ games: data.gameInProgressCount }}
+                      components={[<></>, <span key="games-count" />]}
+                    />
                 </h4>
               </div>
               {gamesInProgressExpanded && (

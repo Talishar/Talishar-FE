@@ -225,7 +225,7 @@
       "OPEN":"Open (no restrictions)"      
     },
     "FRIENDS":"Friends' Games",
-    "IN_PROGRESS":"Games in Progress:&nbsp;<span>{{games}}</span>",
+    "IN_PROGRESS":"Games in Progress: <1>{{games}}</1>",
     "PLEASE_LOGIN":"Please <1>log in</1> to view open lobbies and spectate games!"    
   },
   "IN_PROGRESS_GAME":{
