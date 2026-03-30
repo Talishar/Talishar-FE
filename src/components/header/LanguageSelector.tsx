@@ -3,15 +3,16 @@ import { BsGithub } from 'react-icons/bs';
 import { FaDiscord, FaTwitter, FaYoutube } from 'react-icons/fa';
 import styles from './LanguageSelector.module.scss';
 import { useTranslation } from 'react-i18next';
+import { I18N_SUPPORTED_LANGUAGE_CODES } from '../../constants/i18nSupportedLanguages';
 
 const LanguageSelector = () => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLLIElement>(null);
 
   // Initial stuff to allow the lang to change
-  const { t, i18n, ready } = useTranslation();
+  const { t, i18n } = useTranslation();
 
-  const changeLanguage = (lng) => {
+  const changeLanguage = (lng: string) => {
     i18n.changeLanguage(lng);
   };
 
@@ -52,22 +53,20 @@ const LanguageSelector = () => {
       </button>
       {isOpen && (
         <div className={styles.dropdownMenu}>
-          <a
-            onClick={() => changeLanguage('en')}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.socialLink}
-          >
-            {t('HEADER.LANGUAGE_SELECTOR.OPTIONS.ENGLISH')}
-          </a>
-          <a
-            onClick={() => changeLanguage('fr')}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.socialLink}
-          >
-            {t('HEADER.LANGUAGE_SELECTOR.OPTIONS.FRENCH')}
-          </a>
+          {I18N_SUPPORTED_LANGUAGE_CODES.map((code) => (
+            <a
+              key={code}
+              href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                changeLanguage(code);
+                setIsOpen(false);
+              }}
+              className={styles.socialLink}
+            >
+              {t(`HEADER.LANGUAGE_SELECTOR.OPTIONS.${code}`)}
+            </a>
+          ))}
         </div>
       )}
     </li>

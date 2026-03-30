@@ -59,7 +59,7 @@ describe('Multilanguage', () => {
       it('should return valid japanese value with an existing card', () => {
         const result = getCollectionCardImagePath({
           path: CARD_SQUARES_PATH,
-          locale: 'jp',
+          locale: 'ja',
           cardNumber: 'MST111'
         });
         expect(result).to.equal(
@@ -74,7 +74,7 @@ describe('Multilanguage', () => {
       it('if is not a valid japanese collection, return a valid english value', () => {
         const result = getCollectionCardImagePath({
           path: CARD_SQUARES_PATH,
-          locale: 'jp',
+          locale: 'ja',
           cardNumber: 'WTR111'
         });
         expect(result).to.equal(
@@ -89,7 +89,7 @@ describe('Multilanguage', () => {
       it('should return english values if is an alternative art card code', () => {
         const result = getCollectionCardImagePath({
           path: CARD_SQUARES_PATH,
-          locale: 'jp',
+          locale: 'ja',
           cardNumber: 'MST111_Brandao'
         });
         expect(result).to.equal(
