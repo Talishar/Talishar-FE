@@ -17,8 +17,8 @@ const AboutSection: React.FC = () => {
       answer: t("ABOUT.FAQ.DOWNLOAD_NEEDED_A")
     },
     {
-      question: t("ABOUT.FAQ.PLAY_OFFLINE_A"),
-      answer: t("ABOUT.FAQ.PLAY_OFFLINE_Q")
+      question: t("ABOUT.FAQ.PLAY_OFFLINE_Q"),
+      answer: t("ABOUT.FAQ.PLAY_OFFLINE_A")
     },
     {
       question: t("ABOUT.FAQ.HOW_SIGNUP_Q"),
@@ -26,7 +26,7 @@ const AboutSection: React.FC = () => {
     },
     {
       question: t("ABOUT.FAQ.IS_OFFICIAL_Q"),
-      answer: t("ABOUT.FAQ.IS_OFFICIAL_Q")
+      answer: t("ABOUT.FAQ.IS_OFFICIAL_A")
     },
     {
       question: t("ABOUT.FAQ.BUG_FEATURE_Q"),
