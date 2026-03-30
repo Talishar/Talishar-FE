@@ -3,7 +3,10 @@ import { BsGithub } from 'react-icons/bs';
 import { FaDiscord, FaTwitter, FaYoutube } from 'react-icons/fa';
 import styles from './LanguageSelector.module.scss';
 import { useTranslation } from 'react-i18next';
-import { I18N_SUPPORTED_LANGUAGE_CODES } from '../../constants/i18nSupportedLanguages';
+import {
+  I18N_LANGUAGE_LABELS,
+  I18N_SUPPORTED_LANGUAGE_CODES
+} from '../../constants/i18nSupportedLanguages';
 
 const LanguageSelector = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -64,7 +67,7 @@ const LanguageSelector = () => {
               }}
               className={styles.socialLink}
             >
-              {t(`HEADER.LANGUAGE_SELECTOR.OPTIONS.${code}`)}
+              {I18N_LANGUAGE_LABELS[code]}
             </a>
           ))}
         </div>

@@ -12,11 +12,7 @@
     "TALISHAR_LOGO_ALT":"Logo Talishar - lien vers la page d'accueil",
     "LANGUAGE_SELECTOR":{
       "LANGUAGES":"Langues",
-      "LANGUAGE":"Langue",
-      "OPTIONS":{
-	"ENGLISH":"Anglais",
-	"FRENCH":"Français"
-      }
+      "LANGUAGE":"Langue"
     }
   },
   "MENU":{
