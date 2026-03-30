@@ -620,7 +620,7 @@ const GameList = () => {
                     textAlign: 'center'
                   }}
               >
-	      <Trans i18nKey="GAME_LIST.IN_PROGRESS" value={{games: data.gameInProgressCount}}>
+	      <Trans i18nKey="GAME_LIST.IN_PROGRESS" values={{games: data.gameInProgressCount}}>
 	      </Trans>
                 </h4>
               </div>
