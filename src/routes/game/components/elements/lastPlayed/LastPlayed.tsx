@@ -13,21 +13,6 @@ import useSetting from 'hooks/useSetting';
 import { IS_STREAMER_MODE } from 'features/options/constants';
 import { Card } from 'features/Card';
 
-// Cards with Meld mechanics that need to be rotated
-const MELD_CARDS = new Set([
-  'arcane_seeds__life_red',
-  'burn_up__shock_red',
-  'comet_storm__shock_red',
-  'consign_to_cosmos__shock_yellow',
-  'everbloom__life_blue',
-  'null__shock_yellow',
-  'pulsing_aether__life_red',
-  'rampant_growth__life_yellow',
-  'regrowth__shock_blue',
-  'thistle_bloom__life_yellow',
-  'vaporize__shock_yellow'
-]);
-
 function CardSlide({
   card,
   playerID,
@@ -40,7 +25,6 @@ function CardSlide({
   locale: string;
 }) {
   const cardNumber = card.cardNumber ?? 'CardBack';
-  const hasMeld = MELD_CARDS.has(cardNumber);
   const imageSrc = getCollectionCardImagePath({
     path: isStreamerMode ? CARD_IMAGES_PATH : CARD_SQUARES_PATH,
     locale,
@@ -50,7 +34,6 @@ function CardSlide({
     card.controller !== undefined && card.controller !== playerID;
 
   const imgClassNames = classNames(styles.img, {
-    [styles.rotated]: hasMeld,
     [styles.streamerImg]: isStreamerMode
   });
 

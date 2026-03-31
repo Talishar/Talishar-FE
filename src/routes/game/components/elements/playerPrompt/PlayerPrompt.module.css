@@ -8,9 +8,9 @@
   max-width: 100%;
   max-height: 100%;
   width: 100%;
+  box-sizing: border-box;
   text-align: center;
   position: relative;
-  border-radius: 5px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -20,7 +20,7 @@
   font-weight: 500;
   padding: 2px 4px;
   flex-direction: row;
-  overflow-x: min-content;
+  overflow: hidden;
   gap: 5px;
   z-index: 30;
 }
@@ -44,8 +44,7 @@
   min-height: 2.2em;
   border-radius: 5px;
   border: 1px solid black;
-  flex-basis: auto;
-  flex-shrink: 0;
+  flex: 1 1 auto;
   padding: 0.4em 1em;
   margin-left: 0.5em;
   white-space: nowrap;
@@ -61,10 +60,6 @@
 }
 
 @media (orientation: portrait) {
-  .playerPrompt {
-    top: 10px;
-  }
-
   .buttonDiv {
     min-width: 4em;
     min-height: 2em;

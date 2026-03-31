@@ -22,6 +22,8 @@ export default function ChatBox() {
     useAppSelector((state: RootState) => state.game.playerTwo.Name) ?? 'your opponent'
   );
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const prevChatLengthRef = useRef<number>(0);
+  const prevChatFilterRef = useRef<string>('none');
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
@@ -41,17 +43,28 @@ export default function ChatBox() {
     .map((message) =>
       message
         .replace(
-          'Player 1',
+          /Player 1/g,
           amIPlayerOne ? myName.substring(0, 15) : oppName.substring(0, 15)
         )
         .replace(
-          'Player 2',
+          /Player 2/g,
           amIPlayerOne ? oppName.substring(0, 15) : myName.substring(0, 15)
         )
     );
 
   useEffect(() => {
-    if (!collapsed) scrollToBottom();
+    if (collapsed) return;
+
+    const currentLength = chatLog?.length ?? 0;
+    const filterChanged = chatFilter !== prevChatFilterRef.current;
+    const hasNewMessages = currentLength > prevChatLengthRef.current;
+
+    prevChatLengthRef.current = currentLength;
+    prevChatFilterRef.current = chatFilter;
+
+    if (hasNewMessages || filterChanged) {
+      scrollToBottom();
+    }
   }, [chatLog, chatFilter, collapsed]);
 
   return ReactDOM.createPortal(

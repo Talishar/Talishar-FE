@@ -7,7 +7,12 @@ import {
 } from '@reduxjs/toolkit/query/react';
 import { isRejectedWithValue } from '@reduxjs/toolkit';
 import type { MiddlewareAPI, Middleware } from '@reduxjs/toolkit';
-import { BACKEND_URL, ROGUELIKE_URL, URL_END_POINT } from 'appConstants';
+import {
+  BACKEND_URL,
+  FAB_BAZAAR_DECKS_API_URL,
+  ROGUELIKE_URL,
+  URL_END_POINT
+} from 'appConstants';
 import { detectVpnBlock, logVpnBlock } from 'utils/VpnDetection';
 import {
   CreateGameAPI,
@@ -28,6 +33,10 @@ import { SubmitLobbyInput } from 'interface/API/SubmitLobbyInput.php';
 import { ChooseFirstPlayer } from 'interface/API/ChooseFirstPlayer.php';
 import { SubmitSideboardAPI } from 'interface/API/SubmitSideboard.php';
 import { GetFavoriteDecksResponse } from 'interface/API/GetFavoriteDecks.php';
+import {
+  BazaarDecksResponse,
+  GetBazaarDecksRequest
+} from 'interface/API/GetBazaarDecks';
 import { GameListResponse } from 'routes/index/components/gameList/GameList';
 import { GetCosmeticsResponse } from 'interface/API/GetCosmeticsResponse.php';
 import {
@@ -69,7 +78,6 @@ import {
   BanOffensiveUsernameRequest
 } from 'interface/API/UsernameModerationAPI';
 import { BlockedUsersAPIResponse } from 'interface/API/BlockedUsersAPI.php';
-import { PrivateMessagingAPIResponse } from 'interface/API/PrivateMessagingAPI.php';
 import { getGameInfo } from '../game/GameSlice';
 import { RootState } from '../../app/Store';
 
@@ -98,7 +106,8 @@ export const rtkQueryErrorToaster: Middleware =
 
       // Suppress 401 Unauthorized errors - these are often benign (e.g., logging out/in quickly)
       // and not user-facing errors that need a toast notification
-      if (errorStatus !== 401) {
+      // Also 403 Forbidden errors which can happen when trying to access a resource the user doesn't have permissions for, and are not actionable by the user
+      if (errorStatus !== 401 && errorStatus !== 403) {
         toast.error(
           `A network error happened, please try again. Error:\n${errorStatus}\n${errorMessage}`
         );
@@ -329,6 +338,28 @@ export const apiSlice = createApi({
           url: URL_END_POINT.GET_COSMETICS,
           responseHandler: parseResponse
         };
+      }
+    }),
+    getBazaarDecks: builder.query<BazaarDecksResponse, GetBazaarDecksRequest>({
+      queryFn: async ({ metafyId, metafyHash }) => {
+        const timestamp = Math.floor(Date.now() / 1000);
+        const url = new URL(FAB_BAZAAR_DECKS_API_URL);
+        url.searchParams.set('metafyId', String(metafyId));
+        url.searchParams.set('metafyHash', metafyHash);
+        url.searchParams.set('timestamp', String(timestamp));
+        try {
+          const response = await fetch(url.toString());
+          if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            return { error: { status: response.status, data: errorData } };
+          }
+          const data: BazaarDecksResponse = await response.json();
+          return { data };
+        } catch (error) {
+          return {
+            error: { status: 'FETCH_ERROR' as const, error: String(error) }
+          };
+        }
       }
     }),
     getFavoriteDecks: builder.query<GetFavoriteDecksResponse, undefined>({
@@ -951,102 +982,6 @@ export const apiSlice = createApi({
       invalidatesTags: [{ type: 'SystemMessage', id: 'MINE' }]
     }),
 
-    // Private Messaging endpoints
-    sendPrivateMessage: builder.mutation<
-      PrivateMessagingAPIResponse,
-      { toUserId: number; message: string; gameLink?: string }
-    >({
-      query: ({ toUserId, message, gameLink }) => {
-        return {
-          url: URL_END_POINT.PRIVATE_MESSAGING,
-          method: 'POST',
-          body: { action: 'sendMessage', toUserId, message, gameLink },
-          responseHandler: parseResponse
-        };
-      }
-    }),
-    getPrivateMessages: builder.query<
-      PrivateMessagingAPIResponse,
-      { friendUserId: number; limit?: number }
-    >({
-      query: ({ friendUserId, limit = 50 }) => {
-        return {
-          url: URL_END_POINT.PRIVATE_MESSAGING,
-          method: 'POST',
-          body: { action: 'getMessages', friendUserId, limit },
-          responseHandler: parseResponse
-        };
-      }
-    }),
-    markMessagesAsRead: builder.mutation<
-      PrivateMessagingAPIResponse,
-      { messageIds: number[] }
-    >({
-      query: ({ messageIds }) => {
-        return {
-          url: URL_END_POINT.PRIVATE_MESSAGING,
-          method: 'POST',
-          body: { action: 'markAsRead', messageIds },
-          responseHandler: parseResponse
-        };
-      }
-    }),
-    getOnlineFriends: builder.query<PrivateMessagingAPIResponse, void>({
-      query: () => {
-        return {
-          url: URL_END_POINT.PRIVATE_MESSAGING,
-          method: 'POST',
-          body: { action: 'getOnlineFriends' },
-          responseHandler: parseResponse
-        };
-      }
-    }),
-    getUnreadMessageCount: builder.query<PrivateMessagingAPIResponse, void>({
-      query: () => {
-        return {
-          url: URL_END_POINT.PRIVATE_MESSAGING,
-          method: 'POST',
-          body: { action: 'getUnreadCount' },
-          responseHandler: parseResponse
-        };
-      }
-    }),
-    getUnreadMessageCountByFriend: builder.query<
-      PrivateMessagingAPIResponse,
-      void
-    >({
-      query: () => {
-        return {
-          url: URL_END_POINT.PRIVATE_MESSAGING,
-          method: 'POST',
-          body: { action: 'getUnreadCountByFriend' },
-          responseHandler: parseResponse
-        };
-      }
-    }),
-    createQuickGame: builder.mutation<
-      CreateGameResponse,
-      { format: string; visibility: string }
-    >({
-      query: (prefs) => {
-        return {
-          url: URL_END_POINT.CREATE_GAME,
-          method: 'POST',
-          body: {
-            format: prefs.format,
-            visibility: prefs.visibility,
-            deckTestMode: false,
-            deck: '',
-            fabdb: '',
-            decksToTry: '1',
-            favoriteDeck: false,
-            favoriteDecks: '',
-            gameDescription: 'Invite from Friends'
-          },
-          responseHandler: parseResponse
-        };
-      }
-    }),
     getLastActiveGame: builder.query<GetLastActiveGameResponse, void>({
       query: () => {
         return {
@@ -1057,14 +992,15 @@ export const apiSlice = createApi({
         };
       }
     }),
-    reportTyping: builder.mutation<any, { gameID: number; playerID: number }>({
-      query: ({ gameID = 0, playerID = 0 }) => {
+    reportTyping: builder.mutation<any, { gameID: number; playerID: number; typing?: boolean }>({
+      query: ({ gameID = 0, playerID = 0, typing = true }) => {
         return {
           url: 'APIs/ChatTyping.php',
           method: 'GET',
           params: {
             gameName: gameID,
-            playerID: playerID
+            playerID: playerID,
+            typing: typing ? '1' : '0'
           },
           responseHandler: parseResponse
         };
@@ -1175,16 +1111,10 @@ export const {
   useSendSystemMessageToAllMutation,
   useSyncMetafySubscribersMutation,
   useAcknowledgeSystemMessageMutation,
-  useSendPrivateMessageMutation,
-  useGetPrivateMessagesQuery,
-  useMarkMessagesAsReadMutation,
-  useGetOnlineFriendsQuery,
-  useGetUnreadMessageCountQuery,
-  useGetUnreadMessageCountByFriendQuery,
-  useCreateQuickGameMutation,
   useGetLastActiveGameQuery,
   useReportTypingMutation,
   useCheckOpponentTypingQuery,
   useGetAppInfoQuery,
-  useGenerateAuthTokenMutation
+  useGenerateAuthTokenMutation,
+  useGetBazaarDecksQuery
 } = apiSlice;

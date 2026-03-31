@@ -3,5 +3,6 @@ export const defaultAuth = {
   userName: null,
   token: null,
   isPatron: null,
-  isMod: false
+  isMod: false,
+  metafyHash: null as string | null
 };

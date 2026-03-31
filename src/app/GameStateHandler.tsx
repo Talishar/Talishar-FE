@@ -4,7 +4,8 @@ import { useAppDispatch, useAppSelector } from './Hooks';
 import {
   getGameInfo,
   receiveGameState,
-  setGameStart
+  setGameStart,
+  setOpponentTyping
 } from 'features/game/GameSlice';
 import { useKnownSearchParams } from 'hooks/useKnownSearchParams';
 import { GameLocationState } from 'interface/GameLocationState';
@@ -145,10 +146,11 @@ const GameStateHandler = () => {
           // Continue without friendsList
         }
 
+        const resolvedUserName = getCurrentUsername(currentUserName) ?? '';
         const source = new EventSource(
           `${BACKEND_URL}GetUpdateSSE.php?gameName=${currentGameID}&playerID=${currentPlayerID}&authKey=${currentAuthKey}&friendsList=${encodeURIComponent(
             JSON.stringify(friendsList)
-          )}`
+          )}&userName=${encodeURIComponent(resolvedUserName)}`
         );
         sourceRef.current = source;
 
@@ -193,6 +195,17 @@ const GameStateHandler = () => {
           }
         };
 
+        // This replaces the old CheckOpponentTyping polling entirely.
+        source.addEventListener('typing', (event: MessageEvent) => {
+          try {
+            const data = JSON.parse(event.data);
+            if (typeof data.opponentIsTyping === 'boolean') {
+              dispatch(setOpponentTyping(data.opponentIsTyping));
+            }
+          } catch {
+          }
+        });
+
         source.onerror = () => {
           retryCountRef.current++;
           source.close();
@@ -221,8 +234,18 @@ const GameStateHandler = () => {
       }
     }, 100);
 
+    const handleBeforeUnload = () => {
+      if (sourceRef.current) {
+        sourceRef.current.close();
+        sourceRef.current = null;
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
     return () => {
       clearTimeout(connectionTimeout);
+      window.removeEventListener('beforeunload', handleBeforeUnload);
       if (sourceRef.current) {
         sourceRef.current.close();
         sourceRef.current = null;

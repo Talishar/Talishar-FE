@@ -5,12 +5,10 @@ import ChatInput from '../chatInput/ChatInput';
 import styles from './ChatBox.module.css';
 import { parseHtmlToReactElements } from 'utils/ParseEscapedString';
 import classNames from 'classnames';
-import { useCheckOpponentTypingQuery } from 'features/api/apiSlice';
 import useSetting from 'hooks/useSetting';
 import { IS_STREAMER_MODE } from 'features/options/constants';
 
 const CHAT_RE = /<span[^>]*>(.*?):\s<\/span>/;
-const TYPING_TIMEOUT_MS = 5000; // 5 seconds
 
 export default function ChatBox({ usePrimary = false }: { usePrimary?: boolean }) {
   const amIPlayerOne = useAppSelector((state: RootState) => {
@@ -27,49 +25,18 @@ export default function ChatBox({ usePrimary = false }: { usePrimary?: boolean }
   );
   const [chatFilter, setChatFilter] = useState<'none' | 'chat' | 'log'>('none');
   const chatLog = useAppSelector((state: RootState) => state.game.chatLog);
-  const [displayTyping, setDisplayTyping] = useState(false);
-  const typingTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   const isStreamerMode =
     String(useSetting({ settingName: IS_STREAMER_MODE })?.value) === '1';
 
-  // Only poll when chat is enabled and we're a valid player (skip spectators)
-  const shouldPoll =
-    chatEnabled && (playerID === 1 || playerID === 2) && !!gameID;
-
-  const { data: typingData, error: typingError } = useCheckOpponentTypingQuery(
-    { gameID, playerID },
-    {
-      skip: !shouldPoll,
-      pollingInterval: 3000 // 3 seconds
-    }
+  // Typing state is pushed via SSE named event → stored in Redux.
+  // No polling needed — zero extra HTTP connections.
+  const displayTyping = useAppSelector(
+    (state: RootState) =>
+      (state.game.opponentIsTyping ?? false) &&
+      chatEnabled &&
+      (playerID === 1 || playerID === 2)
   );
-
-  // When typing data updates, refresh the timer
-  useEffect(() => {
-    if (typingData?.opponentIsTyping) {
-      setDisplayTyping(true);
-
-      // Clear existing timer
-      if (typingTimerRef.current) {
-        clearTimeout(typingTimerRef.current);
-      }
-
-      // Set timer to hide typing indicator after 5 seconds
-      typingTimerRef.current = setTimeout(() => {
-        setDisplayTyping(false);
-      }, TYPING_TIMEOUT_MS);
-    }
-  }, [typingData?.opponentIsTyping]);
-
-  // Cleanup timer on unmount
-  useEffect(() => {
-    return () => {
-      if (typingTimerRef.current) {
-        clearTimeout(typingTimerRef.current);
-      }
-    };
-  }, []);
 
   const myName = String(
     useAppSelector((state: RootState) => {
@@ -84,6 +51,8 @@ export default function ChatBox({ usePrimary = false }: { usePrimary?: boolean }
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatBoxRef = useRef<HTMLDivElement>(null);
+  const prevChatLengthRef = useRef<number>(0);
+  const prevChatFilterRef = useRef<string>('none');
 
   const scrollToBottom = () => {
     if (chatBoxRef.current) {
@@ -130,8 +99,8 @@ export default function ChatBox({ usePrimary = false }: { usePrimary?: boolean }
       const p2DisplayName = amIPlayerOne ? oppDisplayName : myDisplayName;
 
       let processedMessage = message
-        .replace('Player 1', `<b>${p1DisplayName}</b>`)
-        .replace('Player 2', `<b>${p2DisplayName}</b>`);
+        .replace(/Player 1/g, `<b>${p1DisplayName}</b>`)
+        .replace(/Player 2/g, `<b>${p2DisplayName}</b>`);
 
       if (isStreamerMode && oppName) {
         const oppNameEscaped = oppName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -143,7 +112,16 @@ export default function ChatBox({ usePrimary = false }: { usePrimary?: boolean }
     });
 
   useEffect(() => {
-    scrollToBottom();
+    const currentLength = chatLog?.length ?? 0;
+    const filterChanged = chatFilter !== prevChatFilterRef.current;
+    const hasNewMessages = currentLength > prevChatLengthRef.current;
+
+    prevChatLengthRef.current = currentLength;
+    prevChatFilterRef.current = chatFilter;
+
+    if (hasNewMessages || filterChanged || displayTyping) {
+      scrollToBottom();
+    }
   }, [chatLog, chatFilter, displayTyping]);
 
   return (

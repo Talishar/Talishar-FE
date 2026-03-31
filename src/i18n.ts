@@ -2,6 +2,7 @@ import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 import Backend from 'i18next-http-backend';
+import { I18N_SUPPORTED_LANGUAGE_CODES } from './constants/i18nSupportedLanguages';
 
 // the translations
 // (tip move them in a JSON file and import them,
@@ -14,6 +15,7 @@ i18n
   .use(initReactI18next)
   .init({
     fallbackLng: 'en',
+    supportedLngs: [...I18N_SUPPORTED_LANGUAGE_CODES],
     interpolation: {
       escapeValue: false // not needed for react as it escapes by default
     },

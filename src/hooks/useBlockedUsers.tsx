@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
+import useAuth from 'hooks/useAuth';
 
 export const useBlockedUsers = () => {
+  const { isLoggedIn } = useAuth();
   const [blockedUsers, setBlockedUsers] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -40,8 +42,12 @@ export const useBlockedUsers = () => {
   };
 
   useEffect(() => {
-    fetchBlockedUsers();
-  }, []);
+    if (isLoggedIn) {
+      fetchBlockedUsers();
+    } else {
+      setIsLoading(false);
+    }
+  }, [isLoggedIn]);
 
   return {
     blockedUsers,

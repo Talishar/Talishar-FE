@@ -191,10 +191,165 @@
 
 }
 
+.burgerButton {
+  display: none;
+  background: none;
+  border: 2px solid transparent;
+  color: var(--snow, #fff);
+  cursor: pointer;
+  padding: 0;
+  width: 44px;
+  height: 44px;
+  font-size: 24px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-left: auto;
+  margin-bottom: 0 !important;
+  margin-right: 10px;
+  align-self: center;
+  border-radius: 6px;
+  transition: background-color 150ms ease, color 150ms ease, border-color 150ms ease;
+
+  &:hover {
+    color: var(--theme-primary);
+    background-color: var(--theme-tertiary, #4a5056);
+    border-color: var(--theme-primary, #d4af37);
+  }
+
+  &[aria-expanded='true'] {
+    color: var(--theme-primary);
+    background-color: var(--theme-tertiary, #4a5056);
+    border-color: var(--theme-primary, #d4af37);
+  }
+}
+
+@media (max-width: 768px) and (orientation: portrait) {
+  .navBar .rightNav {
+    display: none;
+  }
+
+  .burgerButton {
+    display: flex;
+  }
+}
+
 @media (max-width: 400px) {
   .navBar {
     li.languageSelectorListElement {
       display: none !important;
+    }
+  }
+}
+
+.mobileMenu {
+  position: fixed;
+  top: 70px;
+  left: 0;
+  right: 0;
+  background: var(--theme-card-background, #1e2329);
+  border-top: 2px solid var(--theme-primary, #d4af37);
+  z-index: 9999;
+  overflow-y: auto;
+  max-height: calc(100dvh - 70px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.7);
+
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+
+    > li {
+      border-bottom: 1px solid var(--muted-border-color, #202632);
+
+      > a,
+      > button {
+        display: flex;
+        flex-direction: row !important;
+        align-items: center;
+        gap: 14px;
+        padding: 14px 20px;
+        width: 100%;
+        color: var(--snow, #fff);
+        text-decoration: none;
+        font-size: 15px;
+        font-weight: 500;
+        min-width: unset;
+        height: auto;
+        border-radius: 0;
+        justify-content: flex-start;
+        border-left: 3px solid transparent;
+        transition: background-color 150ms ease, color 150ms ease, border-left-color 150ms ease;
+
+        &:hover {
+          background-color: var(--theme-form-background, #33383d);
+          color: var(--theme-primary, #d4af37);
+          border-left-color: var(--theme-primary, #d4af37);
+        }
+
+        &::before,
+        &::after {
+          display: none !important;
+        }
+
+        svg {
+          font-size: 20px;
+          flex-shrink: 0;
+        }
+
+        span {
+          display: inline !important;
+          font-size: 15px;
+        }
+
+        // Strip native button styles from Login button rendered inside a Link
+        > button {
+          background: none;
+          border: none;
+          color: inherit;
+          padding: 0;
+          font: inherit;
+          cursor: pointer;
+          font-weight: 500;
+          margin: 0;
+        }
+      }
+
+      // LanguageSelector / SocialDropdown wrappers rendered as <li>
+      &[class] {
+        > button {
+          flex-direction: row !important;
+          justify-content: flex-start !important;
+          align-items: center !important;
+          gap: 14px !important;
+          min-width: unset;
+          padding: 14px 20px;
+          height: auto;
+          width: 100%;
+          font-size: 15px;
+          font-weight: 500;
+          border-left: 3px solid transparent;
+          transition: background-color 150ms ease, color 150ms ease, border-left-color 150ms ease;
+
+          &:hover {
+            background-color: var(--theme-form-background, #33383d);
+            color: var(--theme-primary, #d4af37);
+            border-left-color: var(--theme-primary, #d4af37);
+          }
+
+          svg {
+            font-size: 20px;
+            flex-shrink: 0;
+          }
+
+          span {
+            display: inline !important;
+            font-size: 15px;
+          }
+        }
+      }
     }
   }
 }

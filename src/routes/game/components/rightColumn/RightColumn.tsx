@@ -47,27 +47,6 @@ export default function RightColumn() {
           {isStreamerMode ? <StreamerBox /> : ''}
           <ChatBox />
         </div>
-        {showAds && (
-          <div className={styles.adContainer}>
-            <div className={styles.adHeader}>
-              <span>{/*Community Ads*/}</span>
-              <a
-                href="https://metafy.gg/@talishar/tiers"
-                target="_blank"
-                rel="noopener noreferrer"
-                className={styles.removeAdsLink}
-              >
-                Remove ads
-              </a>
-            </div>
-            <div className={styles.adWrapper}>
-              <AdUnit placement="mobile-unit-1" />
-              {import.meta.env.DEV && (
-                <div className={styles.adPlaceholder}>Ad · 300×250</div>
-              )}
-            </div>
-          </div>
-        )}
       </div>
     </>
   );

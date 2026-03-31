@@ -4,7 +4,7 @@ export const LOCALE_DICTIONARY: { [index: string]: string } = {
   fr: 'french',
   de: 'german',
   it: 'italian',
-  jp: 'japanese'
+  ja: 'japanese'
 };
 
 export const LOCALE_FLAGS: { [index: string]: string } = {
@@ -13,14 +13,14 @@ export const LOCALE_FLAGS: { [index: string]: string } = {
   fr: '🇫🇷',
   de: '🇩🇪',
   it: '🇮🇹',
-  jp: '🇯🇵'
+  ja: '🇯🇵'
 };
 
 export const CARD_IMAGES_PATH = 'cardimages';
 export const CARD_SQUARES_PATH = 'cardsquares';
 
 export const DEFAULT_LANGUAGE = 'en';
-export const JAPANESE_LANGUAGE = 'jp';
+export const JAPANESE_LANGUAGE = 'ja';
 export const EUROPEAN_LANGUAGES = ['es', 'fr', 'de', 'it'];
 
 export const EUROPEAN_LANGUAGES_PRINTED_COLLECTIONS = [

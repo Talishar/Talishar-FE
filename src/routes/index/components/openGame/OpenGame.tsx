@@ -6,6 +6,7 @@ import { generateCroppedImageUrl } from '../../../../utils/cropImages';
 import FriendBadge from '../gameList/FriendBadge';
 import QuickJoinContext from '../quickJoin/QuickJoinContext';
 import { GAME_FORMAT } from '../../../../appConstants';
+import { useTranslation } from 'react-i18next';
 
 const FORMAT_DISPLAY_NAMES: Record<string, string> = {
   [GAME_FORMAT.DRAFT]: 'Limited',
@@ -26,11 +27,15 @@ const OpenGame = ({
   const navigate = useNavigate();
   const quickJoinCtx = useContext(QuickJoinContext);
   const hasDeckReady = !!quickJoinCtx?.hasDeckConfigured;
-  const selectedHeroImageUrl = quickJoinCtx?.selectedFavoriteDeck
-    ? quickJoinCtx.favoriteDeckOptions.find(
-        (o) => o.value === quickJoinCtx.selectedFavoriteDeck
-      )?.imageUrl
-    : undefined;
+  const UNKNOWN_HERO_URL =
+    'https://images.talishar.net/public/crops/UNKNOWNHERO_cropped.webp';
+  const selectedHeroImageUrl =
+    (quickJoinCtx?.selectedFavoriteDeck
+      ? quickJoinCtx.favoriteDeckOptions.find(
+          (o) => o.value === quickJoinCtx.selectedFavoriteDeck
+        )?.imageUrl
+      : undefined) ??
+    UNKNOWN_HERO_URL;
   const handleJoin = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -40,8 +45,10 @@ const OpenGame = ({
       navigate(`/game/join/${entry.gameName}`);
     }
   };
-
-  const buttonClass = classNames(styles.button, 'secondary');
+  // Initial stuff to allow the lang to change
+  const { t, i18n, ready } = useTranslation();
+  
+  const buttonClass = classNames(styles.button, styles.buttonWithIcon, 'secondary');
 
   return (
     <div key={ix} className={styles.gameItem} onClick={handleJoin}>
@@ -65,28 +72,33 @@ const OpenGame = ({
         </div>
       )}
       <FriendBadge isFriendsGame={isFriendsGame} size="small" />
-      <div>
+      <div
+        className={styles.buttonWrapper}
+        aria-busy={quickJoinCtx?.isJoining}
+      >
         <a
           className={buttonClass}
           href={`/game/join/${entry.gameName}`}
           role="button"
           onClick={handleJoin}
-          aria-busy={quickJoinCtx?.isJoining}
           title={
             hasDeckReady
-              ? 'Join using your pre-configured deck'
-              : 'Select a deck in the panel above to join instantly'
+              ? t("OPEN_GAME.JOIN_DECK_READY")
+              : t("OPEN_GAME.JOIN_DECK_NOT_READY")
           }
         >
-          {selectedHeroImageUrl && (
-            <img
+          <img
               src={selectedHeroImageUrl}
               alt=""
               className={styles.joinHeroIcon}
               aria-hidden="true"
             />
-          )}
-          Join
+          <span className={styles.joinLabel}>
+            {hasDeckReady && (
+              <span className={styles.joinMicroLabel}></span>
+            )}
+            {t("OPEN_GAME.JOIN")}
+          </span>
         </a>
       </div>
     </div>

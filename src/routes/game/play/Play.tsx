@@ -13,7 +13,6 @@ import ChatCardDetail from '../components/elements/chatCardDetail/ChatCardDetail
 import CardListZone from '../components/zones/cardListZone/CardListZone';
 import ChainLinkSummaryContainer from '../components/elements/chainLinkSummary/ChainLinkSummary';
 import ActiveLayersZone from '../components/zones/activeLayersZone/ActiveLayersZone';
-import InactivityWarning from '../components/elements/inactivityWarning/InactivityWarning';
 import GameStateHandler from 'app/GameStateHandler';
 import HeroVsHeroIntro from '../components/elements/heroVsHeroIntro/HeroVsHeroIntro';
 import { useCookies } from 'react-cookie';
@@ -184,7 +183,6 @@ function Play({ isRoguelike }: { isRoguelike: boolean }) {
         <InventoryModal />
         <PlayerInputPopUp />
         <CardPortal />
-        <InactivityWarning />
         <GameStateHandler />
         <EventsHandler />
       </div>

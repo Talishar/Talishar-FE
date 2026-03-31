@@ -63,3 +63,24 @@
   border-top: 1px solid var(--theme-border, rgba(255, 255, 255, 0.15));
   margin: 0.25rem 0;
 }
+
+.createGameAd {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 4px;
+}
+
+.removeAdsLink {
+  align-self: flex-end;
+  color: rgba(255, 100, 50, 0.55);
+  text-decoration: none;
+  font-size: 0.7rem;
+  line-height: 1;
+  margin-bottom: 2px;
+}
+
+.removeAdsLink:hover {
+  color: rgba(255, 100, 50, 0.85);
+  text-decoration: underline;
+}

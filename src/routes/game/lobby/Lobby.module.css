@@ -521,19 +521,31 @@ button.secondary:hover {
 
 .disclaimerButtons {
   margin: 1rem auto;
-  width: 60%;
+  width: 75%;
   display: flex;
   justify-content: center;
 }
 
+@media (max-width: 768px) {
+  .disclaimerButtons {
+    width: 80%;
+  }
+}
+
 .disclaimerAcceptButtons {
   margin: 0.5rem auto 0.5rem;
-  width: 60%;
+  width: 75%;
   display: flex;
   justify-content: center;
   animation: wiggle 3s linear 2;
   animation-delay: 5s;
   animation-iteration-count: infinite;
+}
+
+@media (max-width: 768px) {
+  .disclaimerAcceptButtons {
+    width: 80%;
+  }
 }
 
 .disclaimerAcceptButtons button {
@@ -609,6 +621,26 @@ button.secondary:hover {
   border: 1px solid var(--theme-primary);
   border-radius: 15px;
   background: var(--theme-card-background);
+  width: 85%;
+  max-width: 600px;
+  min-width: 300px;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+@media (max-width: 768px) {
+  .disclaimerArticles {
+    width: 90%;
+    max-width: 500px;
+  }
+}
+
+@media (min-width: 769px) {
+  .disclaimerArticles {
+    width: 80%;
+    max-width: 650px;
+  }
 }
 
 .container {

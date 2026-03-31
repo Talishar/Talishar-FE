@@ -2,10 +2,11 @@
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-  padding: 1.5rem;
-  background: var(--theme-section-background, rgba(0, 0, 0, 0.2));
-  border-radius: 10px;
-  border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.2));
+  padding: 1.5rem 0;
+  border: none;
+  border-top: 1px solid var(--theme-border, rgba(255, 255, 255, 0.15));
+  border-radius: 0;
+  background: transparent;
 }
 
 .title {
@@ -147,77 +148,68 @@
 
 .blockedUsersTableContainer {
   overflow-x: auto;
-  border-radius: 10px;
-  overflow: hidden;
 }
 
 .blockedUsersTable {
   width: 100%;
   border-collapse: collapse;
   background: transparent;
-  border-radius: 10px;
+  table-layout: fixed;
 }
 
 .blockedUsersTable thead {
-  background: var(--theme-form-background, rgba(0, 0, 0, 0.3));
-  border-bottom: 2px solid var(--theme-border, rgba(255, 255, 255, 0.2));
-  border-radius: 10px 10px 0 0;
+  border-bottom: 1px solid var(--theme-border, rgba(255, 255, 255, 0.15));
 }
 
 .blockedUsersTable th {
-  padding: 0.6rem 1rem;
+  padding: 0.5rem 1rem;
   text-align: left;
-  color: var(--theme-text, #e0e0e0);
+  color: var(--theme-text-muted, rgba(255, 255, 255, 0.5));
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+.blockedUsersTable th:last-child {
+  width: 112px;
+  text-align: center;
   white-space: nowrap;
 }
 
 .blockedUsersTable td {
   padding: 0.5rem 1rem;
-  border-bottom: 1px solid var(--theme-border-light, rgba(255, 255, 255, 0.1));
+  border-bottom: 1px solid var(--theme-border-light, rgba(255, 255, 255, 0.07));
   color: var(--theme-text, #e0e0e0);
   text-align: left;
   vertical-align: middle;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  max-width: 0;
-  min-width: 100px;
 }
 
 .blockedUsersTable td:last-child {
   overflow: visible;
   text-overflow: unset;
-  white-space: normal;
-  max-width: unset;
-  min-width: unset;
+  white-space: nowrap;
+  text-align: center;
 }
 
 .blockedUsersTable tbody tr {
-  background-color: var(--theme-form-background, rgba(0, 0, 0, 0.2));
   transition: background-color 0.2s;
-  height: 3rem;
-}
-
-.blockedUsersTable tbody tr:nth-child(odd) {
-  background-color: var(--theme-form-active, rgba(0, 0, 0, 0.4));
 }
 
 .blockedUsersTable tbody tr:hover {
-  background-color: var(--theme-primary-focus, rgba(212, 175, 55, 0.15));
+  background-color: var(--theme-primary-focus, rgba(212, 175, 55, 0.08));
 }
 
 .deleteColumn {
-  text-align: right;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  gap: 0.5rem;
+  text-align: center;
 }
 
 .unblockButton {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   width: 2rem;
@@ -251,7 +243,7 @@
 
 @media (max-width: 768px) {
   .blockedUsersContainer {
-    padding: 1rem;
+    padding: 1rem 0;
     gap: 1rem;
   }
 

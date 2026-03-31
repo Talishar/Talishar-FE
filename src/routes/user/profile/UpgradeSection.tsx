@@ -14,13 +14,6 @@ const UpgradeSection: React.FC<UpgradeSectionProps> = ({
   className,
   isOwner
 }) => {
-  // DEBUG: Log what UpgradeSection receives
-  console.log('[UpgradeSection] Received props:', {
-    isSupporter,
-    userName,
-    isOwner,
-    willShowSupporterBadge: !!isSupporter
-  });
   if (isSupporter) {
     return (
       <div className={`${styles.upgradeSection} ${styles.supporterBadge}`}>

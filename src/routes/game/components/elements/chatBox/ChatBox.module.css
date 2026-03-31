@@ -28,9 +28,9 @@
 }
 
 .primaryTabs > button {
-  border: 1px solid var(--theme-primary) !important;
+  border: 1px solid var(--theme-secondary) !important;
   background-color: black !important;
-  color: var(--theme-primary) !important;
+  color: var(--secondary-inverse) !important;
 }
 
 .tabs > button.activeTab {
@@ -54,8 +54,8 @@
 
 .primaryTabs > button:hover {
   background-color: black;
-  color: var(--theme-primary);
-  border: 1px solid var(--theme-primary);
+  color: var(--theme-secondary);
+  border: 1px solid var(--theme-secondary);
   cursor: pointer;
 }
 
@@ -76,7 +76,7 @@
   line-height: 1.3;
   position: relative;
   overflow: clip;
-  flex: 0 1 100%;
+  flex: 1 1 auto;
   margin-top: 0.2em;
   margin-bottom: 0.2em;
   outline: 2px solid black;

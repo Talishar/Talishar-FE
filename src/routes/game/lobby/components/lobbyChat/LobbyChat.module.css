@@ -14,6 +14,17 @@
   height: 5em;
 }
 
+@media (max-width: 1199px) {
+  .container {
+    height: calc(100dvh - 380px);
+    min-height: 200px;
+  }
+
+  .spacer {
+    display: none;
+  }
+}
+
 @media (min-width: 1200px) {
   .spacer {
     height: 0;

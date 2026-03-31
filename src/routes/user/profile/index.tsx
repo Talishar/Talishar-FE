@@ -66,7 +66,6 @@ export const ProfilePage = () => {
   };
 
   const handleDeleteDeck = async (deckLink: string) => {
-    console.log('[Deck Deletion] Starting deck deletion for:', deckLink);
     try {
       const deleteDeckPromise = deleteDeck({ deckLink }).unwrap();
       toast.promise(
@@ -74,7 +73,6 @@ export const ProfilePage = () => {
         {
           loading: 'Deleting deck...',
           success: (data) => {
-            console.log('[Deck Deletion] Success response:', data);
             return handleDeleteDeckMessage(data);
           },
           error: (err) => {
@@ -98,7 +96,6 @@ export const ProfilePage = () => {
         }
       );
       const resp = await deleteDeckPromise;
-      console.log('[Deck Deletion] Full API response:', resp);
     } catch (err) {
       console.error('[Deck Deletion] Caught exception:', {
         errorObject: err,
@@ -108,7 +105,6 @@ export const ProfilePage = () => {
         type: typeof err
       });
     } finally {
-      console.log('[Deck Deletion] Refetching decks list');
       deckRefetch();
     }
   };
@@ -119,19 +115,11 @@ export const ProfilePage = () => {
 
   const handleHeroChange = async (deckLink: string, newHeroValue: string) => {
     setUpdatingDeckLink(deckLink);
-    console.log(
-      '[Hero Update] Starting hero update for deck:',
-      deckLink,
-      'Hero:',
-      newHeroValue
-    );
     try {
       const updatePayload: UpdateFavoriteDeckRequest = {
         decklink: deckLink,
         heroID: newHeroValue
       };
-
-      console.log('[Hero Update] Update payload created:', updatePayload);
 
       const updatePromise = updateFavoriteDeck(updatePayload).unwrap();
       toast.promise(
@@ -139,7 +127,6 @@ export const ProfilePage = () => {
         {
           loading: 'Updating hero...',
           success: (data) => {
-            console.log('[Hero Update] Success response:', data);
             setSelectedHeroByDeck((prev) => ({
               ...prev,
               [deckLink]: newHeroValue
@@ -168,7 +155,6 @@ export const ProfilePage = () => {
         }
       );
       await updatePromise;
-      console.log('[Hero Update] Refetching decks list');
       deckRefetch();
     } catch (err) {
       console.error('[Hero Update] Caught exception:', {
@@ -192,13 +178,10 @@ export const ProfilePage = () => {
     }
 
     setIsAddingDeck(true);
-    console.log('[Deck Addition] Starting deck addition with URL:', newDeckUrl);
     try {
       const deckPayload: AddFavoriteDeckRequest = {
         fabdb: newDeckUrl
       };
-
-      console.log('[Deck Addition] Deck payload created:', deckPayload);
 
       const addDeckPromise = addFavoriteDeck(deckPayload).unwrap();
       toast.promise(
@@ -206,7 +189,6 @@ export const ProfilePage = () => {
         {
           loading: 'Adding deck to favorites...',
           success: (data) => {
-            console.log('[Deck Addition] Success response:', data);
             return 'Deck added to favorites successfully!';
           },
           error: (err) => {
@@ -236,7 +218,6 @@ export const ProfilePage = () => {
         }
       );
       const result = await addDeckPromise;
-      console.log('[Deck Addition] Full API response:', result);
       setNewDeckUrl('');
     } catch (err) {
       console.error('[Deck Addition] Caught exception:', {
@@ -247,7 +228,6 @@ export const ProfilePage = () => {
         type: typeof err
       });
     } finally {
-      console.log('[Deck Addition] Refetching decks list');
       setIsAddingDeck(false);
       deckRefetch();
     }
@@ -313,21 +293,6 @@ export const ProfilePage = () => {
   // );
 
   const isMetafySupporter: boolean = profileData?.isMetafySupporter ?? false;
-
-  // DEBUG: Log supporter status calculation
-  console.log('[ProfilePage] isMetafySupporter calculation:', {
-    apiIsMetafySupporter: profileData?.isMetafySupporter,
-    finalIsMetafySupporter: isMetafySupporter,
-    metafyCommunities: profileData?.metafyCommunities,
-    communityIds: profileData?.metafyCommunities?.map((c: any) => ({
-      id: c.id,
-      title: c.title,
-      type: c.type,
-      hasSubscriptionTier: !!c.subscription_tier,
-      subscriptionTierName: c.subscription_tier?.name || c.subscription_tier
-    })),
-    talisharCommunityId: 'be5e01c0-02d1-4080-b601-c056d69b03f6'
-  });
 
   return (
     <div>
@@ -479,13 +444,13 @@ export const ProfilePage = () => {
                 <thead>
                   <tr>
                     <th scope="col">Hero</th>
-                    <th scope="col">Select Hero</th>
+                    {/* <th scope="col">Select Hero</th> */}
                     <th scope="col">Name</th>
                     <th scope="col">Format</th>
                     {/* <th scope="col">Card Back</th>
-                <th scope="col">Playmat</th> */}
-                    <th scope="col">Edit</th>
-                    <th scope="col">Delete</th>
+                      <th scope="col">Playmat</th> */}
+                    <th scope="col" aria-label="Edit Deck"></th>
+                    <th scope="col" aria-label="Delete Deck"></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -504,7 +469,7 @@ export const ProfilePage = () => {
                           />
                         )}
                       </th>
-                      <td>
+{/*                       <td>
                         <select
                           value={
                             selectedHeroByDeck[deck.link] || deck.hero || ''
@@ -530,15 +495,16 @@ export const ProfilePage = () => {
                               );
                             })}
                         </select>
-                      </td>
+                      </td> */}
                       <td>{deck.name}</td>
-                      <td>{getReadableFormatName(deck.format || '')}</td>
+                      <td className={styles.formatCell}>{getReadableFormatName(deck.format || '')}</td>
                       {/* <td>{deck.cardBack ? deck.cardBack.charAt(0).toUpperCase() + deck.cardBack.slice(1).toLowerCase() : ""}</td>
                   <td>{deck.playmat ? deck.playmat.charAt(0).toUpperCase() + deck.playmat.slice(1).toLowerCase() : ""}</td> */}
                       <td className={styles.editButton}>
                         <button
                           className={styles.button}
                           onClick={() => handleEditDeck(deck.link)}
+                          title="Edit Deck"
                         >
                           <RiEdit2Line
                             fontSize={'1.5em'}
@@ -550,6 +516,7 @@ export const ProfilePage = () => {
                         <button
                           className={styles.button}
                           onClick={() => handleDeleteDeck(deck.link)}
+                          title="Delete Deck"
                         >
                           <RiDeleteBin5Line
                             fontSize={'1.5em'}

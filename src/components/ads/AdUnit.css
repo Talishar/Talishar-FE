@@ -16,13 +16,10 @@
 }
 
 .ad-unit[data-ad='left-rail-1'],
-.ad-unit[data-ad='right-rail-1'] {
-  height: 250px;
-}
-
+.ad-unit[data-ad='right-rail-1'],
 .ad-unit[data-ad='left-rail-2'],
 .ad-unit[data-ad='right-rail-2'] {
-  height: 600px;
+  height: fit-content;
 }
 
 /* Billboard ad units */

@@ -128,8 +128,7 @@ const ArsenalPrompt = () => {
     turnPhase === 'CHOOSEHAND' ||
     turnPhase === 'MAYCHOOSEHAND' ||
     turnPhase === 'MAYCHOOSEHANDHEAVE';
-  playerPrompt?.helpText?.includes('Opponent is inactive');
-
+    
   const buttons = playerPrompt?.buttons?.map((button, ix) => {
     return (
       <div

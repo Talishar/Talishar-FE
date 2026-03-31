@@ -341,31 +341,14 @@ h3 {
   border-radius: 12px;
   color: #aaa;
   font-size: 0.85rem;
-  cursor: pointer;
-  transition: all 0.2s ease;
+  cursor: default;
+  pointer-events: none;
   user-select: none;
-}
-
-.reaction:hover {
-  background: rgba(100, 181, 246, 0.2);
-  border-color: rgba(100, 181, 246, 0.6);
-  transform: scale(1.05);
-  box-shadow: 0 2px 8px rgba(100, 181, 246, 0.2);
-}
-
-.reaction:active {
-  transform: scale(0.98);
-  background: rgba(100, 181, 246, 0.3);
 }
 
 .reactionEmoji {
   width: 1em;
   height: 1em;
-  transition: transform 0.2s ease;
-}
-
-.reaction:hover .reactionEmoji {
-  transform: scale(1.2);
 }
 
 .reactionCount {

@@ -19,6 +19,7 @@
     flex-direction: column;
     gap: 2px;
     position: relative;
+    margin-bottom: 0 !important;
 
     svg {
       font-size: 30px;
@@ -158,6 +159,71 @@
 
         svg {
           font-size: 16px;
+        }
+      }
+    }
+  }
+}
+
+// In the burger menu (portrait mobile) the dropdown must expand inline, not float off-screen
+@media (max-width: 768px) and (orientation: portrait) {
+  .socialDropdown {
+    width: 100%;
+    height: auto;
+    display: block;
+
+    .dropdownToggle {
+      width: 100%;
+      height: auto;
+      flex-direction: row !important;
+      justify-content: flex-start;
+      gap: 14px;
+      padding: 14px 20px;
+      min-width: unset;
+      font-size: 15px;
+      font-weight: 500;
+      border-left: 3px solid transparent;
+      transition: background-color 150ms ease, color 150ms ease, border-left-color 150ms ease;
+
+      &:hover {
+        background-color: var(--theme-form-background, #33383d);
+        border-left-color: var(--theme-primary, #d4af37);
+      }
+
+      svg {
+        font-size: 20px;
+      }
+
+      .label {
+        display: inline !important;
+        font-size: 15px;
+      }
+    }
+
+    .dropdownMenu {
+      position: static;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      border: none;
+      border-radius: 0;
+      box-shadow: none;
+      background: var(--theme-near-black, rgba(0, 0, 0, 0.95));
+      min-width: unset;
+
+      .socialLink {
+        padding: 12px 20px 12px 54px;
+        border-right: none;
+        border-bottom: 1px solid var(--muted-border-color, #202632);
+        font-size: 14px;
+
+        &:last-child {
+          border-bottom: none;
+        }
+
+        span {
+          display: inline !important;
+          font-size: 14px;
         }
       }
     }

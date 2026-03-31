@@ -20,6 +20,10 @@ export const DATADOLL_URL = import.meta.env.DEV
   ? '/datadoll/'
   : `https://${import.meta.env.VITE_DATADOLL_URL}/`;
 
+export const FAB_BAZAAR_DECKS_API_URL =
+  'https://fabbazaar.app/api/talishar/decks';
+export const FAB_BAZAAR_DECK_URL_BASE = 'https://fabbazaar.app/decks/';
+
 // what playmat is the default
 export const DEFAULT_PLAYMAT = `Default`;
 
@@ -293,9 +297,6 @@ export const PRECON_DECKS = {
   HEROES: SORTED_PRECON_DECKS.map((deck) => deck.hero)
 };
 
-// Feature toggle: set to true to re-enable private messaging API calls
-export const PRIVATE_MESSAGING_ENABLED = false;
-
 export const URL_END_POINT = {
   GET_GAME_LIST: 'APIs/GetGameList.php',
   GET_GAME_INFO: 'APIs/GetGameInfo.php',
@@ -340,7 +341,6 @@ export const URL_END_POINT = {
   FRIEND_LIST: 'APIs/FriendListAPI.php',
   BLOCKED_USERS: 'APIs/BlockedUsersAPI.php',
   USERNAME_MODERATION: 'APIs/UsernameModeration.php',
-  PRIVATE_MESSAGING: 'APIs/PrivateMessagingAPI.php',
   SYSTEM_MESSAGE: 'APIs/SystemMessageAPI.php',
   GET_SYSTEM_MESSAGE: 'APIs/GetSystemMessage.php',
   GET_LAST_ACTIVE_GAME: 'APIs/GetLastActiveGame.php',

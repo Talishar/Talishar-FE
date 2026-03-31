@@ -3,7 +3,7 @@ import { render } from '@testing-library/react';
 import type { RenderOptions } from '@testing-library/react';
 import type { PreloadedState } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
-import { AppStore, RootState, setupStore } from '../src/app/Store';
+import { AppStore, RootState, globalInitialState, setupStore } from '../src/app/Store';
 import { OfflineTestingGameState } from '../src/features/game/InitialGameState';
 import '../src/index.css';
 import { MemoryRouter } from 'react-router-dom';
@@ -20,7 +20,7 @@ export const Wrapper: React.FC<ExtendedRenderOptions> = ({
   store
 }) => {
   //console.log(OfflineTestingGameState);
-  store = setupStore({ game: OfflineTestingGameState });
+  store = setupStore({ ...globalInitialState, game: OfflineTestingGameState });
   return (
     <>
       <Provider store={store}>

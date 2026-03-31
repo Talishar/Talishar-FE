@@ -51,7 +51,7 @@ export const resetPasswordValidationSchema = yup.object().shape({
 });
 
 export const loginValidationSchema = yup.object().shape({
-  userID: yup.string().required('You must enter a username'),
+  userID: yup.string().trim().required('You must enter a username'),
   password: yup.string().required('You must enter a password'),
   rememberMe: yup.boolean()
 });

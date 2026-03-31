@@ -547,9 +547,9 @@
   }
 
   .icon.icon {
-    min-width: 1.3em;
-    height: 1.3em;
-    font-size: 1.4em;
+    min-width: 1.4em;
+    height: 1.4em;
+    font-size: 1.5em;
     padding: 1px;
     margin: 0.05em;
   }
@@ -598,12 +598,11 @@
   }
 
   .icon.icon {
-    min-width: 1.2em;
-    height: 1.2em;
-    font-size: 1.3em;
+    min-width: 1.3em;
+    height: 1.3em;
+    font-size: 1.4em;
     padding: 1px;
     margin: 0.05em;
-    border-width: 0.75px;
   }
 }
 
@@ -654,16 +653,6 @@
     min-width: 1em;
     height: 1em;
     font-size: 0.9em;
-    padding: 0px;
-    margin: 0.02em;
-    border-width: 0.5px;
-    flex-shrink: 0;
-  }
-
-  .icon.icon {
-    min-width: 1em;
-    height: 1em;
-    font-size: 1em;
     padding: 0px;
     margin: 0.02em;
     border-width: 0.5px;
