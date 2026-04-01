@@ -16,6 +16,11 @@
   max-width: 260px;
 }
 
+.warning {
+  border-color: var(--theme-warning, #feca57);
+  box-shadow: 0 0 20px rgba(254, 202, 87, 0.25);
+}
+
 @keyframes slideIn {
   from {
     opacity: 0;
@@ -61,6 +66,31 @@
 }
 
 .leaveButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.stillHereButton {
+  width: 100%;
+  padding: 0.5rem 1rem;
+  background-color: var(--theme-warning, #feca57);
+  color: #000;
+  border: 1px solid var(--theme-warning, #feca57);
+  border-radius: 5px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.stillHereButton:hover {
+  background-color: transparent;
+  color: var(--theme-warning, #feca57);
+}
+
+.stillHereButton:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
