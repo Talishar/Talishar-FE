@@ -1,0 +1,238 @@
+{
+  "HEADER": {
+    "LOGOUT":"ログアウト",
+    "LOGIN":"ログイン",
+    "REPLAYS":"リプレイ",
+    "LEARN":"学ぶ",
+    "PROFILE":"プロフィール",
+    "SETTINGS":"設定",
+    "SOCIALS":"ソーシャル",
+    "SOCIAL_LINKS":"ソーシャルリンク",
+    "SUPPORT_US":"Support Us!",
+    "TALISHAR_LOGO_ALT":"Talisharのロゴ - ホームページへのリンク",
+    "LANGUAGE_SELECTOR": {
+      "LANGUAGES":"言語",
+      "LANGUAGE":"言語"
+    }
+  },
+  "MENU":{
+    "CREATE_GAME":{
+      "TITLE":"ゲームを作成",
+      "IMPORT":"デッキをインポート",
+      "IMPORT_TITLE":"FaBrary.netのURL",      
+      "IMPORT_HELP":"デッキリンク - FaBrary.netのURL",
+      "SAVE_DECK_FAVOURITES":"デッキをお気に入り❤️に保存",
+      "SELECTED_DECK":"選択されたデッキ",
+      "SELECTED_DECK_PLACEHOLDER":"デッキを選択",
+      "PRECONSTRUCTED_DECK":"構築済みデッキ",
+      "GAME_DESCRIPTION":"ゲームの説明",
+      "GAME_DESCRIPTIONS":{
+	"DEFAULT":"通常のゲーム",
+	"BEST_DECK":"フォーマット内で最良のデッキを探している",
+	"META_HEROES":"メタヒーローを探している",
+	"SPECIFIC_HERO":"特定のヒーローを探している",
+	"NOT_SPECIFIC_HERO":"特定のヒーローに対して興味がない",
+	"SPECIFIC_CLASS":"特定のクラスを探している",
+	"QUICK":"短時間のゲーム",
+	"SPICY_BREWS":"独創的なデッキ",
+	"CASUAL":"カジュアルなゲーム",
+	"NEW_PLAYER":"初心者のサポートをお願いしたい",
+	"NEW_HERO":"新しいヒーローを試したい",
+	"HERO_SELECT":{
+	  "SELECT_HEROES":"ヒーローを選択 (最大 {{amount}}):",
+	  "SELECT_CLASSES":"クラスを選択 (最大 {{amount}}):",	  
+	  "CLEAR":"選択をクリア",
+	  "SEARCH_HEROES":"ヒーローを検索",
+	  "SEARCH_HEROES_PLACEHOLDER":"ヒーローを検索中...",
+	  "SEARCH_CLASSES":"クラスを検索",
+	  "SEARCH_CLASSES_PLACEHOLDER":"クラスを検索中...",	  
+	  "PREVIEW":"このヒーローを検索する: ",
+	  "PREVIEW_NOT":"このヒーローを検索しない: "
+	}
+      },
+      "FORMAT":"フォーマット",
+      "FORMATS":{
+	"POPULAR":"人気のフォーマット",
+	"CC":"クラシック(CC)",
+	"SAGE":"シルバーエイジ(SAGE)",
+	"LL":"リビングレジェンド(LL)",
+	"COMPETITIVE":"競技用フォーマット（対戦成立まで相手ヒーローが不明になります）",
+	"COMPETITIVE_CC":"競技用クラシック (CC)",
+	"COMPETITIVE_SAGE":"競技用シルバーエイジ (SAGE)",
+	"COMPETITIVE_LL":"競技用リビングレジェンド (LL)",
+	"FUTURE_FORMATS":"未来のフォーマット（先行公開済みのカードでプレイ！）",
+	"FUTURE_CC":"未来のクラシック (CC)",
+	"FUTURE_LL":"未来のリビングレジェンド (LL)",
+	"FUTURE_SAGE":"未来のシルバーエイジ (SAGE)",
+	"OTHER":"その他のフォーマット",
+	"PRECON":"構築済みデッキ",
+	"BLITZ":"ブリッツ（Blitz）",
+	"DRAFT":"ドラフト / リミテッド",
+	"OPEN":"オープン (制限なし)"
+      },
+      "VISIBILITY":"公開範囲",
+      "VISIBILITIES":{
+	"PUBLIC":"公開",
+	"PRIVATE":"非公開",
+	"FRIENDS":"フレンドのみ"
+      },
+      "SINGLE_PLAYER":"練習モード",
+      "AI_DECK":"AIデッキ"
+    }
+  },
+  "JOIN":{
+    "PRECON":"構築済みデッキ",    
+    "IMPORT":"デッキをインポート",
+    "IMPORT_DECK":"デッキをインポート",
+    "IMPORT_TITLE":"FaBrary.netのURL",      
+    "IMPORT_HELP":"デッキリンク - FaBrary.netのURL",
+    "SAVE_DECK_FAVOURITES":"デッキをお気に入り❤️に保存",
+    "SELECTED_DECK":"選択されたデッキ",
+    "SELECTED_DECK_PLACEHOLDER":"デッキを選択",
+    "GAME_FORMAT":"ゲームのフォーマット",
+    "LOGIN_REQUIRED":"公開ロビーに参加するには、<1>ログイン</1>する必要があります。",
+    "JOIN":"ゲームに参加",
+    "BACK":"戻る"    
+  },
+  "COMMUNITY_CONTENT":{
+    "TITLE":"コミュニティ&コンテンツハブ",
+    "LOADING":"コンテンツを読み込み中...",
+    "DISCOVER":"Talisharコミュニティのコンテンツ、デッキ構築、そして注目のハイライトをチェックしよう",
+    "PREVIOUS":"前のビデオ",
+    "NEXT":"次のビデオ",
+    "VIEW":"ビデオを表示",
+    "BY":"By"
+  },
+  "ABOUT":{
+    "FAQ":{
+      "TITLE":" よくある質問",
+      "IS_FREE_Q":"Talisharは無料でプレイできますか？",
+      "IS_FREE_A":"はい！ Talisharは完全に無料でプレイできます。お金をかけずにすべての機能を楽しむことができます。また、サポーターの方々や開発を支援した人には限定のコスメティックアイテムをご用意しています。",
+      "DOWNLOAD_NEEDED_Q":"何かをダウンロードする必要がありますか？",
+      "DOWNLOAD_NEEDED_A":"ダウンロードは不要です！ Talisharは、デスクトップ、タブレット、モバイル端末のWebブラウザ上で動作します。",
+      "PLAY_OFFLINE_Q":"オフラインでプレイできますか？",
+      "PLAY_OFFLINE_A":"Talisharはインターネット接続が必要なオンラインプラットフォームです。これにより、世界中のプレイヤーとリアルタイムで対戦することができます。",
+      "HOW_SIGNUP_Q":"アカウントを作成するにはどうすればいいですか？",
+      "HOW_SIGNUP_A":"メインページの'新規登録'ボタンをクリックし、メールアドレスとパスワードを入力してください。アカウントは即座に作成され、すぐにプレイを開始できます。",
+      "IS_OFFICIAL_Q":"これは公式のFlesh & Bloodプラットフォームですか？",
+      "IS_OFFICIAL_A":"Talisharはコミュニティが作成した非公式のプラットフォームです。Legend Story Studiosとの提携・協力関係は一切ございません。",
+      "BUG_FEATURE_Q":"バグを見つけた場合や、機能の提案がある場合はどうすればいいですか？",
+      "BUG_FEATURE_A":"皆様からのフィードバックは大変貴重です！問題の報告や機能の提案は、<a href='https://discord.gg/JykuRkdd5S' target='_blank'>Discord</a>サーバーからお願いいたします。プレイヤーの皆様からのフィードバックはTalisharの改善に大きく役立ちます。",
+      "WHY_NO_RANKED_Q":"マッチメイキングやランクマッチはありますか？",
+      "WHY_NO_RANKED_A":"Talisharは、プレイヤーがデッキや戦術を、リスク無く、自由に実験するための検証プラットフォームとして設計されています。競技的なプレイを希望する場合は、<a href='https://fabtcg.com/ja/organised-play/' target='_blank'>organised play</a>にアクセスして、公式トーナメントにご参加ください！",
+      "WHERE_PLAY_Q":"対面（リアル）で遊べる場所はどこですか？",
+      "WHERE_PLAY_A":"LSS公式の<a href='https://fabtcg.com/locator/?tab=event&privateMode=false' target='_blank'>イベントロケーター</a>をチェックして、近くのトーナメントやイベントを探してみてください。",
+      "HOW_CONTRIBUTER_Q":"開発に参加するにはどうすればいいですか？",
+      "HOW_CONTRIBUTER_A":"Talisharはオープンソースプロジェクトです。参加をご希望の方は、Discordの#dev-generalチャンネルにアクセスしてください。ガイドラインについては<a href='https://github.com/Talishar/Talishar/blob/main/README.md' target='_blank'>GitHub</a>をご確認ください。"
+    },
+    "TITLE":"ようこそ！ Talisharへ",
+    "SUB_HEADER":"Flesh & Bloodの非公式オンラインプラットフォーム",
+    "DESCRIPTION":"Talisharは、無料のブラウザベースのコミュニティプラットフォームです。Flesh & Bloodのリアルタイム対戦を毎日9,000人以上のプレイヤーが楽しんでいます。デッキを構築し、世界中のプレイヤーと対戦し、ヒーローを極めましょう。",
+    "WHAT_IS_TITLE":" Talisharとは何ですか？",
+    "WHAT_IS_DESCRIPTION":"Talisharは、Flesh & Bloodコミュニティがコミュニティのために情熱を込めて作り上げたプロジェクトです。このプラットフォームはプレイヤーの皆様に、気軽にプレイしたり、デッキのアイデアを試すことができる無料の環境を提供するために作成されました。",
+    "WHO_MAINTAINS_TITLE":" Talisharは誰が管理していますか？",
+    "WHO_MAINTAINS_DESCRIPTION":"Talisharは、Flesh & Bloodに情熱を注ぐ献身的なボランティア開発者とコミュニティメンバーのチームによって管理されています。私たちのチームは完全にボランティアとして活動しており、プラットフォームの維持、新しいカードセットの実装、不具合の修正、新機能の実装を行なっています。私たちは、Metafyなどの寄付プラットフォームを通じて、コミュニティからのサポートを受け付けています。それらはサーバー費用や、開発資金の確保に役立てています。",
+    "WANT_TO_CONTRIBUTE":"開発に参加してみませんか？ Talisharはオープンソースです！ 参加をご希望の方は、<1>Discord</1>に参加するか、<3>Githubリポジトリ</3>をチェックして、ぜひご参加ください。",
+    "LSS_RELATIONSHIP_TITLE":" Legend Story Studiosとの関係",
+    "LSS_RELATIONSHIP_DESCRIPTION": "<0><strong>Talisharは非公式かつ独立したプラットフォームです。</strong> Legend Story Studios (LSS)、Flesh & Bloodのクリエイターとは、提携・協力関係は一切ございません。Talisharは、FaBコミュニティを祝福し、支援するために作成されたファンメイドプラットフォームです。</0><1>私たちはルールの正確性を維持するために尽力していますが、Talisharは公式ルールを完全に再現しているとは限りません。公式の裁定やルールについては、<2>Judge Hub Discord</2>でジャッジコミュニティに相談するか、<3>official FAB rules and policy center</3>を訪れてください。</1>",
+    "FEATURES":{
+      "INSTANT_TITLE":" インスタントプレイ",
+      "INSTANT_DESCRIPTION":"ダウンロードは不要です。ブラウザから直接プレイできます。",
+      "ACTIVE_TITLE":" 活発なコミュニティ",
+      "ACTIVE_DESCRIPTION":"9,000人以上のプレイヤーが毎日世界中からプレイしています。",
+      "MOBILE_TITLE":" モバイルフレンドリー",
+      "MOBILE_DESCRIPTION":"スマートフォン、タブレット、PCからプレイできます。",
+      "FEEDBACK_TITLE":" フィードバック募集中",
+      "FEEDBACK_DESCRIPTION":"プラットフォームの改善に、あなたのご意見をお寄せください。",
+      "NO_STAKES_TITLE":" 何も失わない対戦",
+      "NO_STAKES_DESCRIPTION":"緊張せず、楽しんでプレイしましょう！",
+      "SPICY_TITLE":" 独創的なアイデアを試そう",
+      "SPICY_DESCRIPTION":"色々な戦術を試し、デッキを磨きましょう！"
+    },
+    "STATS":{
+      "PLAYERS":"<0>{{players}}</0><1>デイリーアクティブユーザー</1>",
+      "FREE":"<0>{{percent}}</0><1>無料</1>",
+      "ACTIVE":"<0>{{supporters}}</0><1>サポーター</1>"
+    },
+    "COMMUNITY":{
+      "TITLE":" コミュニティによって作られました",
+      "DESCRIPTION":"Talisharは、FaBコミュニティの才能あるソフトウェア開発者とのコラボレーションのおかげで成功を収めています。",
+      "FABRARY_DESCRIPTION":"最も高度な「Fresh and Blood」カードの検索、デッキ構築、コレクション管理のためのツール。",
+      "THE_FAB_CUBE_DESCRIPTION":"「Flesh and Blood」の包括的なカードデータベースを備えた、使いやすいキューブビルダー。",
+      "FAB_CARD_DATABASE_DESCRIPTION":"「Flesh and Blood」のカードデータベースをJSON/CSV形式で公開しているオープンソースデータベース。",
+      "LEGENDARY_STORIES_DESCRIPTION":"ファンが厳選した公式の「Flesh and Blood」の伝承を集めたアーカイブ。",
+      "FABLAZING_DATA_DESCRIPTION":"現在のメタ環境を把握し、ヒーローとデッキの詳細な統計情報にアクセスしよう。",
+      "FAB_INSIGHTS_DESCRIPTION":"メタ環境、ヒーローの相互作用、およびTalisharのプレイデータに関する高度な統計分析。"
+    },
+    "VALUES":{
+      "TITLE":"Talisharの価値観",
+      "INCLUSIVITY_TITLE":" 包容性",
+      "INCLUSIVITY_DESCRIPTION":"私たちは、あらゆるスキルレベルや背景を持つプレイヤーを歓迎します。誰もが安全にプレイし、学ぶことができる場所を持つ権利があります。",
+      "TRANSPARENCY_TITLE":" 透明性",
+      "TRANSPARENCY_DESCRIPTION":"私たちは、プラットフォームに影響を与えるアップデート、機能、決定事項について、コミュニティとオープンにコミュニケーションを取っています。",
+      "ACCURACY_TITLE":" 正確性",
+      "ACCURACY_DESCRIPTION":"私たちは、カードの仕組みやルールが公式のFaB標準にできる限り準拠するよう、継続的に取り組んでいます。",
+      "INNOVATION_TITLE":" イノベーション",
+      "INNOVATION_DESCRIPTION":"私たちは、プレイヤーのフィードバックに耳を傾け、ゲーム体験を向上させるための改善を定期的に実施しています。",
+      "SAFETY_TITLE":" 安全性",
+      "SAFETY_DESCRIPTION":"私たちは、すべてのプレイヤーが安全にゲームを楽しめる、敬意に満ちた、ハラスメントの無い環境を維持しています。あらゆる種類の不正行為は、Discordのモデレーターに報告してください。",
+      "COMMUNITY_DRIVEN_TITLE":" コミュニティ主導",
+      "COMMUNITY_DRIVEN_DESCRIPTION":"Talisharは、FaBコミュニティによる、FaBコミュニティのためのプラットフォームです。私たちは、プレイヤーの皆様からのご意見やご協力を大切にし、プラットフォームの未来を共に築いていきたいと考えています。"      
+    },
+    "DISCLAIMER":"<2><1>免責事項:</1> Talisharは、独立したオープンソースのファンメイドプロジェクトであり、Legend Story Studios (LSS)とは一切関係ありません。そのため、公式のルールを完全に反映しているとは限りません。効果や裁定についての質問がある場合は、<3> JudgeHub Discord </3>でジャッジコミュニティにご相談ください。</2><2>Talisharは、Legend Story Studiosとは一切関係ありません。Legend Story Studios®、Flesh and Blood™、およびセット名はLegend Story Studiosの商標です。Flesh and Bloodのキャラクター、カード、ロゴ、アートは<4> Legend Story Studios </4>の所有物です。 © Legend Story Studios</2>"
+  },
+  "UNITED_GAME_PANEL":{
+    "GAME_SETUP":"Game Setup",
+    "JOIN_CREATE":"クイックプレイ / ゲームを作成",
+    "MINIMIZE":"パネルを最小化",
+    "EXPAND":"パネルを拡張",
+    "REMOVE_ADS":"広告を削除"
+  },
+  "FILTER":{
+    "HERO_FILTER":"ヒーローフィルター"
+  },
+  "GAME_FILTER":{
+    "FILTER_GAMES":"ゲームをフィルター",
+    "RESET_FILTER":"フィルターをリセット",
+    "UNCHECK_ALL":"すべてのチェックを解除"
+  },
+  "GAME_LIST":{
+    "DISABLE_EXPERIMENTAL":"実験的な機能を無効",
+    "GAMES":"ゲーム",
+    "MANUAL_REFRESH":"ゲームリストを手動で更新",
+    "LOAD_ERROR_TITLE":"エラーが発生しました！",
+    "LOAD_ERROR_DESCRIPTION":"ページを更新して再試行してください。ゲームリストの読み込みエラーが発生した場合は、Discordでお知らせください。以下の情報をお知らせください：",
+    "REFRESH":"更新",
+    "LOADING":"ゲームを読み込んでいます。しばらくお待ちください。",
+    "FORMATS":{
+      "POPULAR":"人気のフォーマット",
+      "CC":"クラシック(CC)",
+      "SAGE":"シルバーエイジ(SAGE)",
+      "LL":"リビングレジェンド(LL)",
+      "COMPETITIVE":"競技用フォーマット（対戦成立まで相手ヒーローが不明になります）",
+      "COMPETITIVE_CC":"競技用クラシック (CC)",
+      "COMPETITIVE_SAGE":"競技用シルバーエイジ (SAGE)",
+      "COMPETITIVE_LL":"競技用リビングレジェンド (LL)",
+      "FUTURE_FORMATS":"未来のフォーマット（先行公開済みのカードでプレイ！）",
+      "FUTURE_CC":"未来のクラシック (CC)",
+      "FUTURE_LL":"未来のリビングレジェンド (LL)",
+      "FUTURE_SAGE":"未来のシルバーエイジ (SAGE)",
+      "OTHER":"その他のフォーマット",
+      "PRECON":"構築済みデッキ",
+      "BLITZ":"ブリッツ（Blitz）",
+      "DRAFT":"ドラフト / リミテッド",
+      "OPEN":"オープン (制限なし)"
+    },
+    "FRIENDS":"フレンドのゲーム",
+    "IN_PROGRESS":"進行中のゲーム: <1>{{games}}</1>",
+    "PLEASE_LOGIN":"<1>ログイン</1>して、公開ロビーからゲームを観戦できます！"    
+  },
+  "IN_PROGRESS_GAME":{
+    "SPECTATE":"観戦"
+  },
+  "OPEN_GAME":{
+    "JOIN_DECK_READY":"構築済みデッキを使用して参加",
+    "JOIN_DECK_NOT_READY":"上のパネルからデッキを選択して、すぐに参加できます",
+    "JOIN":"参加"
+  }
+}
