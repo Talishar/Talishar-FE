@@ -890,6 +890,8 @@ export const gameSlice = createSlice({
 
       state.aiHasInfiniteHP = action.payload.aiHasInfiniteHP ?? false;
 
+      state.opponentInactive = action.payload.opponentInactive ?? false;
+
       state.preventPassPrompt = action.payload.preventPassPrompt;
 
       return state;
@@ -1006,6 +1008,8 @@ export const gameSlice = createSlice({
         action.payload.gameInfo.isOpponentAI ?? state.gameInfo.isOpponentAI;
 
       state.aiHasInfiniteHP = action.payload.aiHasInfiniteHP ?? false;
+
+      state.opponentInactive = action.payload.opponentInactive ?? false;
 
       state.preventPassPrompt = action.payload.preventPassPrompt;
 

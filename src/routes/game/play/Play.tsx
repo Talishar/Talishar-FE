@@ -15,6 +15,7 @@ import ChainLinkSummaryContainer from '../components/elements/chainLinkSummary/C
 import ActiveLayersZone from '../components/zones/activeLayersZone/ActiveLayersZone';
 import GameStateHandler from 'app/GameStateHandler';
 import HeroVsHeroIntro from '../components/elements/heroVsHeroIntro/HeroVsHeroIntro';
+import OpponentInactive from '../components/elements/opponentInactive/OpponentInactive';
 import { useCookies } from 'react-cookie';
 import { useEffect, useRef } from 'react';
 import { usePageTitle } from 'hooks/usePageTitle';
@@ -182,6 +183,7 @@ function Play({ isRoguelike }: { isRoguelike: boolean }) {
         <OptionsMenu />
         <InventoryModal />
         <PlayerInputPopUp />
+        <OpponentInactive />
         <CardPortal />
         <GameStateHandler />
         <EventsHandler />
