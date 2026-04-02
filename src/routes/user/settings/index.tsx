@@ -249,18 +249,6 @@ const SettingsPage = () => {
               }
             />
             <CheckboxSetting
-              name="manualMode"
-              label="Manual Mode"
-              checked={initialValues.manualMode}
-              onChange={() =>
-                handleSettingsChange({
-                  name: optConst.MANUAL_MODE,
-                  value: initialValues.manualMode ? '0' : '1'
-                })
-              }
-              ariaDisabled={true}
-            />
-            <CheckboxSetting
               name="manualTunic"
               label="Manual Tunic Mode"
               checked={initialValues.manualTunic}
