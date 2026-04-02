@@ -2,6 +2,7 @@ import React from 'react';
 import styles from './AboutSection.module.css';
 import { parseHtmlToReactElements } from 'utils/ParseEscapedString';
 import { useTranslation, Trans } from 'react-i18next';
+import ContributorLeaderboard from './ContributorLeaderboard';
 
 const AboutSection: React.FC = () => {
   const [expandedFAQ, setExpandedFAQ] = React.useState<number | null>(null);
@@ -72,6 +73,8 @@ const AboutSection: React.FC = () => {
           <p>
 	    {t("ABOUT.WHO_MAINTAINS_DESCRIPTION")}            
           </p>
+          <h4 className={styles.leaderboardHeading}>🏆 Contributor Leaderboard</h4>
+          <ContributorLeaderboard />
           <p className={styles.contributorInfo}>
 	    <Trans i18nKey="ABOUT.WANT_TO_CONTRIBUTE">
 	    Want to contribute? Talishar is open-source! Join us on

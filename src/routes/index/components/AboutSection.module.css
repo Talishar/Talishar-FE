@@ -308,6 +308,13 @@
   margin-top: 0;
 }
 
+.leaderboardHeading {
+  margin: 1.25em 0 0.5em 0;
+  font-size: 1.1rem;
+  color: #fff;
+  font-weight: 600;
+}
+
 .contributorInfo {
   margin-top: 1em !important;
   padding-top: 1em;
