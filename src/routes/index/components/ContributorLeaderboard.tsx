@@ -204,11 +204,12 @@ const ContributorLeaderboard: React.FC = () => {
               <span className={styles.contributions}>
                 {c.totalContributions.toLocaleString()} commits
               </span>
-              {c.backendContributions > 0 && c.frontendContributions > 0 && (
-                <span className={styles.breakdown}>
-                  BE: {c.backendContributions.toLocaleString()} · FE: {c.frontendContributions.toLocaleString()}
-                </span>
-              )}
+              <span className={styles.breakdown}>
+                {[
+                  c.backendContributions > 0 ? `BE: ${c.backendContributions.toLocaleString()}` : '',
+                  c.frontendContributions > 0 ? `FE: ${c.frontendContributions.toLocaleString()}` : '',
+                ].filter(Boolean).join(' · ')}
+              </span>
             </div>
           </a>
         ))}
