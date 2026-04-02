@@ -18,8 +18,8 @@ const AboutSection: React.FC = () => {
       answer: t("ABOUT.FAQ.DOWNLOAD_NEEDED_A")
     },
     {
-      question: t("ABOUT.FAQ.PLAY_OFFLINE_A"),
-      answer: t("ABOUT.FAQ.PLAY_OFFLINE_Q")
+      question: t("ABOUT.FAQ.PLAY_OFFLINE_Q"),
+      answer: t("ABOUT.FAQ.PLAY_OFFLINE_A")
     },
     {
       question: t("ABOUT.FAQ.HOW_SIGNUP_Q"),
@@ -27,7 +27,7 @@ const AboutSection: React.FC = () => {
     },
     {
       question: t("ABOUT.FAQ.IS_OFFICIAL_Q"),
-      answer: t("ABOUT.FAQ.IS_OFFICIAL_Q")
+      answer: t("ABOUT.FAQ.IS_OFFICIAL_A")
     },
     {
       question: t("ABOUT.FAQ.BUG_FEATURE_Q"),
@@ -103,24 +103,22 @@ const AboutSection: React.FC = () => {
           <h3>⚖️{t("ABOUT.LSS_RELATIONSHIP_TITLE")}</h3>
 	  <Trans
 	    i18nKey="ABOUT.LSS_RELATIONSHIP_DESCRIPTION"
-	    components={{
-	      0: <p />,
-	      1: <p />,
-	      2: (
-		<a
-		  href="https://discord.gg/JykuRkdd5S"
-		  target="_blank"
-		  rel="noopener noreferrer"
-		/>
-	      ),
-	      3: (
-		<a
-		  href="https://fabtcg.com/rules/"
-		  target="_blank"
-		  rel="noopener noreferrer"
-		/>
-	      ),
-	    }}
+	    components={[
+	      <p key="lss-p0" />,
+	      <p key="lss-p1" />,
+	      <a
+		key="lss-discord"
+		href="https://discord.gg/JykuRkdd5S"
+		target="_blank"
+		rel="noopener noreferrer"
+	      />,
+	      <a
+		key="lss-rules"
+		href="https://fabtcg.com/rules/"
+		target="_blank"
+		rel="noopener noreferrer"
+	      />,
+	    ]}
 	  />
         </div>
 
