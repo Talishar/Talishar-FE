@@ -483,7 +483,7 @@ export default function PlayerHand() {
                       card={card}
                       key={`hand-${id}`}
                       addCardToPlayedCards={addCardToPlayedCards}
-                      zIndex={-ix}
+                      zIndex={ix}
                       isNewlyDrawn={isNewlyDrawn}
                       onHandReorderDragStart={handleHandCardDragStart}
                       onHandReorderDragMove={(info) =>
