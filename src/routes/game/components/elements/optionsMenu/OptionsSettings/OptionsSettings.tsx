@@ -39,6 +39,22 @@ const OptionsSettings = () => {
     (state: RootState) => state.game.gameInfo.playerID
   );
   const isSpectator = playerID === 3;
+  const isOpponentAI = useAppSelector(
+    (state: RootState) => state.game.gameInfo.isOpponentAI ?? false
+  );
+  const isPrivate = useAppSelector(
+    (state: RootState) =>
+      (state.game.gameInfo.isPrivate ?? false) ||
+      (state.game.gameInfo.isPrivateLobby ?? false)
+  );
+  const isPracticeDummy = useAppSelector(
+    (state: RootState) => state.game.playerTwo?.Name === 'Practice Dummy'
+  );
+  const isLocalEnvironment =
+    import.meta.env.MODE === 'development' ||
+    window.location.hostname === 'localhost';
+  const canUseManualMode =
+    isLocalEnvironment || isOpponentAI || isPracticeDummy || isPrivate;
   const [cookies, setCookie, removeCookie] = useCookies([
     'experimental',
     'cardSize',
@@ -242,18 +258,20 @@ const OptionsSettings = () => {
               })
             }
           />
-          <CheckboxSetting
-            name="manualMode"
-            label="Manual Mode"
-            checked={initialValues.manualMode}
-            onChange={() =>
-              handleSettingsChange({
-                name: optConst.MANUAL_MODE,
-                value: initialValues.manualMode ? '0' : '1'
-              })
-            }
-            ariaDisabled={true}
-          />
+          {canUseManualMode && (
+            <CheckboxSetting
+              name="manualMode"
+              label="Manual Mode"
+              checked={initialValues.manualMode}
+              onChange={() =>
+                handleSettingsChange({
+                  name: optConst.MANUAL_MODE,
+                  value: initialValues.manualMode ? '0' : '1'
+                })
+              }
+              ariaDisabled={true}
+            />
+          )}
           <CheckboxSetting
             name="manualTunic"
             label="Manual Tunic Mode"

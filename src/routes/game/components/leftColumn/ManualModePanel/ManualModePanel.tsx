@@ -21,6 +21,17 @@ export default function ManualModePanel() {
   const isPracticeDummy = useAppSelector(
     (state: RootState) => state.game.playerTwo.Name === 'Practice Dummy'
   );
+  const isOpponentAI = useAppSelector(
+    (state: RootState) => state.game.gameInfo.isOpponentAI ?? false
+  );
+  const isPrivate = useAppSelector(
+    (state: RootState) =>
+      (state.game.gameInfo.isPrivate ?? false) ||
+      (state.game.gameInfo.isPrivateLobby ?? false)
+  );
+
+  // Only allow manual mode in: dev/localhost, AI games, or private/friends-only games
+  const canUseManualMode = isLocalEnvironment || isOpponentAI || isPracticeDummy || isPrivate;
 
   useEffect(() => {
     if (isManualMode) {
@@ -28,8 +39,7 @@ export default function ManualModePanel() {
     }
   }, [isManualMode]);
 
-  // In local environment, always show the tab. In production, hide if manual mode is off (unless against Practice Dummy)
-  if (!isLocalEnvironment && !isManualMode && !isPracticeDummy) {
+  if (!canUseManualMode) {
     return null;
   }
 
