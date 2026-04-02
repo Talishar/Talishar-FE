@@ -23,7 +23,6 @@
 }
 
 .playerPlaymat {
-  top: 2vh;
   position: relative;
   margin: auto;
   width: 95%;
@@ -50,7 +49,6 @@
 
 @media (orientation: portrait) {
   .playerPlaymat {
-    top: 2vh;
     position: relative;
     margin: auto;
     width: 100%;
