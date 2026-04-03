@@ -53,8 +53,12 @@ const OptionsSettings = () => {
   const isLocalEnvironment =
     import.meta.env.MODE === 'development' ||
     window.location.hostname === 'localhost';
+  const isFuturesFormat = useAppSelector((state: RootState) => {
+    const fmt = state.game.gameInfo.gameFormat ?? '';
+    return fmt === 'futurecc' || fmt === 'futurell' || fmt === 'futuresage';
+  });
   const canUseManualMode =
-    isLocalEnvironment || isOpponentAI || isPracticeDummy || isPrivate;
+    isLocalEnvironment || isOpponentAI || isPracticeDummy || isPrivate || isFuturesFormat;
   const [cookies, setCookie, removeCookie] = useCookies([
     'experimental',
     'cardSize',

@@ -888,6 +888,9 @@ export const gameSlice = createSlice({
       state.gameInfo.isOpponentAI =
         action.payload.gameInfo.isOpponentAI ?? state.gameInfo.isOpponentAI;
 
+      state.gameInfo.gameFormat =
+        action.payload.gameInfo.gameFormat ?? state.gameInfo.gameFormat;
+
       state.aiHasInfiniteHP = action.payload.aiHasInfiniteHP ?? false;
 
       state.opponentInactive = action.payload.opponentInactive ?? false;
@@ -1006,6 +1009,9 @@ export const gameSlice = createSlice({
 
       state.gameInfo.isOpponentAI =
         action.payload.gameInfo.isOpponentAI ?? state.gameInfo.isOpponentAI;
+
+      state.gameInfo.gameFormat =
+        action.payload.gameInfo.gameFormat ?? state.gameInfo.gameFormat;
 
       state.aiHasInfiniteHP = action.payload.aiHasInfiniteHP ?? false;
 

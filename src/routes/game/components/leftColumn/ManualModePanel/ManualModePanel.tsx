@@ -29,9 +29,13 @@ export default function ManualModePanel() {
       (state.game.gameInfo.isPrivate ?? false) ||
       (state.game.gameInfo.isPrivateLobby ?? false)
   );
+  const isFuturesFormat = useAppSelector((state: RootState) => {
+    const fmt = state.game.gameInfo.gameFormat ?? '';
+    return fmt === 'futurecc' || fmt === 'futurell' || fmt === 'futuresage';
+  });
 
-  // Only allow manual mode in: dev/localhost, AI games, or private/friends-only games
-  const canUseManualMode = isLocalEnvironment || isOpponentAI || isPracticeDummy || isPrivate;
+  // Only allow manual mode in: dev/localhost, AI games, private/friends-only games, or Futures queue
+  const canUseManualMode = isLocalEnvironment || isOpponentAI || isPracticeDummy || isPrivate || isFuturesFormat;
 
   useEffect(() => {
     if (isManualMode) {
