@@ -14,7 +14,12 @@ import {
   useGetFavoriteDecksQuery,
   useGetBazaarDecksQuery
 } from 'features/api/apiSlice';
-import { selectCurrentUser, selectCurrentUserName, selectMetafyHash } from 'features/auth/authSlice';
+import {
+  selectCurrentUser,
+  selectCurrentUserName,
+  selectMetafyHash,
+  selectMetafyTimestamp
+} from 'features/auth/authSlice';
 import { setGameStart } from 'features/game/GameSlice';
 import useAuth from 'hooks/useAuth';
 import { CreateGameAPI } from 'interface/API/CreateGame.php';
@@ -89,6 +94,7 @@ const CreateGame = () => {
 
   // FaB Bazaar — standalone mode only (embedded mode uses QuickJoinContext)
   const metafyHash = useAppSelector(selectMetafyHash);
+  const metafyTimestamp = useAppSelector(selectMetafyTimestamp);
   const metafyId = useAppSelector(selectCurrentUser);
   const currentUserName = useAppSelector(selectCurrentUserName);
   const isBazaarEnabled = currentUserName === 'OotTheMonk';
@@ -103,9 +109,14 @@ const CreateGame = () => {
     !isEmbedded &&
     standaloneDeckSource === 'bazaar' &&
     !!metafyId &&
-    !!metafyHash;
+    !!metafyHash &&
+    !!metafyTimestamp;
   const { data: bazaarData, isLoading: isBazaarLoading } = useGetBazaarDecksQuery(
-    { metafyId: metafyId!, metafyHash: metafyHash! },
+    {
+      metafyId: metafyId!,
+      metafyHash: metafyHash!,
+      metafyTimestamp: metafyTimestamp!
+    },
     { skip: !canFetchBazaarStandalone }
   );
   const standaloneBazaarDeckOptions = useMemo(() => {

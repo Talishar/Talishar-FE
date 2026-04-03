@@ -7,13 +7,22 @@ const authSlice = createSlice({
   initialState: defaultAuth,
   reducers: {
     setCredentialsReducer: (state, action) => {
-      const { user, accessToken, userName, isPatron, isMod, metafyHash } = action.payload;
+      const {
+        user,
+        accessToken,
+        userName,
+        isPatron,
+        isMod,
+        metafyHash,
+        metafyTimestamp
+      } = action.payload;
       (state.user = user),
         (state.token = accessToken),
         (state.userName = userName);
       state.isPatron = isPatron;
       state.isMod = isMod || false;
       state.metafyHash = metafyHash ?? null;
+      state.metafyTimestamp = metafyTimestamp ?? null;
     },
     logOutReducer: (state) => {
       state.user = null;
@@ -22,6 +31,7 @@ const authSlice = createSlice({
       state.isPatron = null;
       state.isMod = false;
       state.metafyHash = null;
+      state.metafyTimestamp = null;
     }
   }
 });
@@ -35,3 +45,5 @@ export const selectCurrentUserName = (state: RootState) => state.auth.userName;
 export const selectIsPatron = (state: RootState) => state.auth.isPatron;
 export const selectIsMod = (state: RootState) => state.auth.isMod;
 export const selectMetafyHash = (state: RootState) => state.auth.metafyHash;
+export const selectMetafyTimestamp = (state: RootState) =>
+  state.auth.metafyTimestamp;

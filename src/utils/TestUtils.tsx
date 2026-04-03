@@ -26,7 +26,15 @@ export const renderWithProviders = (
     // @ts-ignore - I know I know...
     preloadedState = {
       game: InitialGameState,
-      auth: { user: null, userName: null, token: null, isPatron: null, isMod: false, metafyHash: null },
+      auth: {
+        user: null,
+        userName: null,
+        token: null,
+        isPatron: null,
+        isMod: false,
+        metafyHash: null,
+        metafyTimestamp: null
+      },
       settings: settingsInitialState
     },
     // Automatically create a store instance if no store was passed in
@@ -47,5 +55,13 @@ export const renderWithProviders = (
 export const preloadedState = {
   api: undefined,
   game: InitialGameState,
-  auth: { user: null, userName: null, token: null, isPatron: null, isMod: false, metafyHash: null }
+  auth: {
+    user: null,
+    userName: null,
+    token: null,
+    isPatron: null,
+    isMod: false,
+    metafyHash: null,
+    metafyTimestamp: null
+  }
 };

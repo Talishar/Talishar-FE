@@ -12,4 +12,5 @@ export interface BazaarDecksResponse {
 export interface GetBazaarDecksRequest {
   metafyId: number | string;
   metafyHash: string;
+  metafyTimestamp: number;
 }

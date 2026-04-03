@@ -10,6 +10,7 @@ import {
   selectIsPatron,
   selectIsMod,
   selectMetafyHash,
+  selectMetafyTimestamp,
   setCredentialsReducer,
   logOutReducer
 } from 'features/auth/authSlice';
@@ -32,6 +33,7 @@ export default function useAuth() {
   const reduxIsPatron = useAppSelector(selectIsPatron);
   const isMod = useAppSelector(selectIsMod);
   const metafyHash = useAppSelector(selectMetafyHash);
+  const metafyTimestamp = useAppSelector(selectMetafyTimestamp);
   // const { refetch } = useGetFavoriteDecksQuery(undefined);
   const [logOutAPI, logOutData] = useLogOutMutation();
   const {
@@ -51,7 +53,8 @@ export default function useAuth() {
       token: string,
       patron: string,
       isMod?: boolean,
-      metafyHash?: string | null
+      metafyHash?: string | null,
+      metafyTimestamp?: number | null
     ) => {
       dispatch(
         setCredentialsReducer({
@@ -60,7 +63,8 @@ export default function useAuth() {
           accessToken: token,
           isPatron: patron,
           isMod: isMod || false,
-          metafyHash: metafyHash ?? null
+          metafyHash: metafyHash ?? null,
+          metafyTimestamp: metafyTimestamp ?? null
         })
       );
     },
@@ -128,7 +132,8 @@ export default function useAuth() {
           '',
           data.isPatron,
           userIsMod,
-          data.metafyHash ?? null
+          data.metafyHash ?? null,
+          data.timestamp ?? null
         );
       } else {
         // User is not logged in, clear any stale auth state
@@ -154,6 +159,7 @@ export default function useAuth() {
     isPatron,
     isMod,
     metafyHash,
+    metafyTimestamp,
     setLoggedIn,
     logOut
   };

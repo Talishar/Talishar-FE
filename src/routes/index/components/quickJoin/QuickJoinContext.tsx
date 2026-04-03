@@ -14,7 +14,12 @@ import {
   useGetFavoriteDecksQuery,
   useGetBazaarDecksQuery
 } from 'features/api/apiSlice';
-import { selectCurrentUser, selectCurrentUserName, selectMetafyHash } from 'features/auth/authSlice';
+import {
+  selectCurrentUser,
+  selectCurrentUserName,
+  selectMetafyHash,
+  selectMetafyTimestamp
+} from 'features/auth/authSlice';
 import { generateCroppedImageUrl } from 'utils/cropImages';
 import { ImageSelectOption } from 'components/ImageSelect';
 import { getReadableFormatName } from 'utils/formatUtils';
@@ -90,6 +95,7 @@ export const QuickJoinProvider = ({
   const dispatch = useAppDispatch();
   const [joinGame] = useJoinGameMutation();
   const metafyHash = useAppSelector(selectMetafyHash);
+  const metafyTimestamp = useAppSelector(selectMetafyTimestamp);
   const metafyId = useAppSelector(selectCurrentUser);
   const currentUserName = useAppSelector(selectCurrentUserName);
   const isBazaarEnabled = currentUserName === 'OotTheMonk' || currentUserName === 'Rocu2';
@@ -118,13 +124,18 @@ export const QuickJoinProvider = ({
   const [error, setError] = useState<string | null>(null);
   const [isJoining, setIsJoining] = useState(false);
 
-  const canFetchBazaar = deckSource === 'bazaar' && !!metafyId && !!metafyHash;
+  const canFetchBazaar =
+    deckSource === 'bazaar' && !!metafyId && !!metafyHash && !!metafyTimestamp;
   const {
     data: bazaarData,
     isLoading: isBazaarLoading,
     error: bazaarFetchError
   } = useGetBazaarDecksQuery(
-    { metafyId: metafyId!, metafyHash: metafyHash! },
+    {
+      metafyId: metafyId!,
+      metafyHash: metafyHash!,
+      metafyTimestamp: metafyTimestamp!
+    },
     { skip: !canFetchBazaar }
   );
 

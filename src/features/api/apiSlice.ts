@@ -341,12 +341,11 @@ export const apiSlice = createApi({
       }
     }),
     getBazaarDecks: builder.query<BazaarDecksResponse, GetBazaarDecksRequest>({
-      queryFn: async ({ metafyId, metafyHash }) => {
-        const timestamp = Math.floor(Date.now() / 1000);
+      queryFn: async ({ metafyId, metafyHash, metafyTimestamp }) => {
         const url = new URL(FAB_BAZAAR_DECKS_API_URL);
         url.searchParams.set('metafyId', String(metafyId));
         url.searchParams.set('metafyHash', metafyHash);
-        url.searchParams.set('timestamp', String(timestamp));
+        url.searchParams.set('timestamp', String(metafyTimestamp));
         try {
           const response = await fetch(url.toString());
           if (!response.ok) {
