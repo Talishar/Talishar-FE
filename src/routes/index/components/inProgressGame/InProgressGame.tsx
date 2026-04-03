@@ -40,7 +40,7 @@ export const InProgressGame = ({
         {!!entry.p1Hero && (
           <img
             className={styles.heroImg}
-            src={generateCroppedImageUrl(entry.p1Hero)}
+            src={generateCroppedImageUrl(entry.p1Hero, i18n.language)}
           />
         )}
       </div>
@@ -49,7 +49,7 @@ export const InProgressGame = ({
         {!!entry.p2Hero && (
           <img
             className={styles.heroImg}
-            src={generateCroppedImageUrl(entry.p2Hero)}
+            src={generateCroppedImageUrl(entry.p2Hero, i18n.language)}
           />
         )}
       </div>

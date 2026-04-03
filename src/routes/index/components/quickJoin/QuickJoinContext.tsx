@@ -21,6 +21,7 @@ import {
   selectMetafyTimestamp
 } from 'features/auth/authSlice';
 import { generateCroppedImageUrl } from 'utils/cropImages';
+import { useLanguageSelector } from 'hooks/useLanguageSelector';
 import { ImageSelectOption } from 'components/ImageSelect';
 import { getReadableFormatName } from 'utils/formatUtils';
 import { FAB_BAZAAR_DECK_URL_BASE } from 'appConstants';
@@ -94,6 +95,8 @@ export const QuickJoinProvider = ({
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [joinGame] = useJoinGameMutation();
+  const { getLanguage } = useLanguageSelector();
+  const cardImageLocale = getLanguage();
   const metafyHash = useAppSelector(selectMetafyHash);
   const metafyTimestamp = useAppSelector(selectMetafyTimestamp);
   const metafyId = useAppSelector(selectCurrentUser);
@@ -144,9 +147,9 @@ export const QuickJoinProvider = ({
     return [...favoritesData.favoriteDecks].reverse().map((deck) => ({
       value: deck.key,
       label: formatDeckLabel(deck.name, deck.format),
-      imageUrl: generateCroppedImageUrl(deck.hero)
+      imageUrl: generateCroppedImageUrl(deck.hero, cardImageLocale)
     }));
-  }, [favoritesData?.favoriteDecks]);
+  }, [favoritesData?.favoriteDecks, cardImageLocale]);
 
   const bazaarDeckOptions: ImageSelectOption[] = useMemo(() => {
     if (!bazaarData?.decks) return [];

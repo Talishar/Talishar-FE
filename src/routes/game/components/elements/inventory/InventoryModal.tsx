@@ -6,9 +6,13 @@ import { MdClose } from 'react-icons/md';
 import CardPopUp from '../cardPopUp/CardPopUp';
 import CardImage from '../cardImage/CardImage';
 import { closeInventory } from 'features/game/GameSlice';
+import { useLanguageSelector } from 'hooks/useLanguageSelector';
+import { CARD_SQUARES_PATH, getCollectionCardImagePath } from 'utils';
 
 export default function InventoryModal() {
   const dispatch = useAppDispatch();
+  const { getLanguage } = useLanguageSelector();
+  const locale = getLanguage();
   const isOpen = useAppSelector((state: RootState) => state.game.inventoryOpen);
   const inventoryCards = useAppSelector(
     (state: RootState) => state.game.gameDynamicInfo?.playerInventory || []
@@ -48,7 +52,11 @@ export default function InventoryModal() {
                     containerClass={styles.cardItem}
                   >
                     <CardImage
-                      src={`https://images.talishar.net/public/cardsquares/english/${card.cardNumber}.webp`}
+                      src={getCollectionCardImagePath({
+                        path: CARD_SQUARES_PATH,
+                        locale,
+                        cardNumber: card.cardNumber
+                      })}
                       className={styles.cardImage}
                     />
                   </CardPopUp>

@@ -82,11 +82,11 @@ const getHistoryPackCard = (cardNumber: string, collectionCode: string) => {
 const isAlternativeArt = (cardNumber: string): boolean =>
   ALTERNATIVE_ARTS_CODES.some((code: string) => cardNumber.includes(code));
 
-export const getCollectionCardImagePath = ({
-  path = CARD_IMAGES_PATH,
-  locale = 'en',
-  cardNumber = 'CardBack'
-}: CollectionCardImagePathData): string => {
+/** Resolves S3 folder name and card id (e.g. history-pack remap) for card / crop URLs. */
+export const getCardImagePathParts = (
+  locale: string = DEFAULT_LANGUAGE,
+  cardNumber: string = 'CardBack'
+): { languagePath: string; cardNumber: string } => {
   const cardPathData = {
     languagePath: LOCALE_DICTIONARY[DEFAULT_LANGUAGE],
     cardNumber
@@ -105,7 +105,30 @@ export const getCollectionCardImagePath = ({
     }
   }
 
-  return `${CLOUD_IMAGES_URL}/${path}/${cardPathData.languagePath}/${cardPathData.cardNumber}.webp`;
+  return cardPathData;
+};
+
+/** Cloud crop folders match zzImageConverter: english | japanese | french */
+export const getCropsSubfolder = (
+  locale: string,
+  cardIdentifier: string
+): 'english' | 'japanese' | 'french' => {
+  const { languagePath } = getCardImagePathParts(locale, cardIdentifier);
+  if (languagePath === 'japanese') return 'japanese';
+  if (languagePath === 'french') return 'french';
+  return 'english';
+};
+
+export const getCollectionCardImagePath = ({
+  path = CARD_IMAGES_PATH,
+  locale = 'en',
+  cardNumber = 'CardBack'
+}: CollectionCardImagePathData): string => {
+  const { languagePath, cardNumber: resolved } = getCardImagePathParts(
+    locale,
+    cardNumber
+  );
+  return `${CLOUD_IMAGES_URL}/${path}/${languagePath}/${resolved}.webp`;
 };
 
 export const loadInitialLanguage = () => {

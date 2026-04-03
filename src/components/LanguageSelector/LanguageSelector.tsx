@@ -2,6 +2,8 @@ import react, { useState } from 'react';
 import { useLanguageSelector } from 'hooks/useLanguageSelector';
 import { toast } from 'react-hot-toast';
 import { LOCALE_DICTIONARY, LOCALE_FLAGS } from 'utils/multilanguage/constants';
+import { useTranslation } from 'react-i18next';
+import { I18N_SUPPORTED_LANGUAGE_CODES } from 'constants/i18nSupportedLanguages';
 
 const capitalizeFirstLetter = (text: string): string =>
   text.charAt(0).toUpperCase() + text.slice(1);
@@ -13,6 +15,7 @@ const isChromiumBased = () => {
 };
 
 const LanguageSelector = () => {
+  const { i18n } = useTranslation();
   const { getLanguage, setLanguage } = useLanguageSelector();
   const [isToastShown, setIsToastShown] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState(getLanguage());
@@ -22,6 +25,13 @@ const LanguageSelector = () => {
     const language = event.target.value;
     setLanguage(language);
     setSelectedLanguage(language);
+    if (
+      I18N_SUPPORTED_LANGUAGE_CODES.includes(
+        language as (typeof I18N_SUPPORTED_LANGUAGE_CODES)[number]
+      )
+    ) {
+      i18n.changeLanguage(language);
+    }
 
     if (!isToastShown) {
       toast(

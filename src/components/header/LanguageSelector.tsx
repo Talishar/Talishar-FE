@@ -6,6 +6,7 @@ import {
   I18N_LANGUAGE_LABELS,
   I18N_SUPPORTED_LANGUAGE_CODES
 } from '../../constants/i18nSupportedLanguages';
+import { useLanguageSelector } from 'hooks/useLanguageSelector';
 
 const LanguageSelector = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -13,9 +14,11 @@ const LanguageSelector = () => {
 
   // Initial stuff to allow the lang to change
   const { t, i18n } = useTranslation();
+  const { setLanguage } = useLanguageSelector();
 
   const changeLanguage = (lng: string) => {
     i18n.changeLanguage(lng);
+    setLanguage(lng);
   };
 
   useEffect(() => {

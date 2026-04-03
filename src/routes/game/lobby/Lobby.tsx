@@ -50,6 +50,7 @@ import playerJoined from 'sounds/playerJoinedSound.mp3';
 import { createPortal } from 'react-dom';
 import { useAppDispatch } from 'app/Hooks';
 import { generateCroppedImageUrl } from 'utils/cropImages';
+import { useLanguageSelector } from 'hooks/useLanguageSelector';
 import {
   getSettingsEntity,
   fetchAllSettings,
@@ -87,6 +88,8 @@ const Lobby = () => {
   const settingsData = useAppSelector(getSettingsEntity);
   const isMuted = settingsData['MuteSound']?.value === '1';
   const isStreamerMode = String(settingsData['IsStreamerMode']?.value) === '1';
+  const { getLanguage } = useLanguageSelector();
+  const cardImageLocale = getLanguage();
 
   // Load settings when in lobby (same approach as SettingsPage - no active game needed)
   const dummyGameInfo = {
@@ -315,9 +318,10 @@ const Lobby = () => {
   const rightHero =
     gameLobby?.theirHero === 'CardBack' ? 'UNKNOWNHERO' : gameLobby?.theirHero;
 
-  const leftPic = `url(${generateCroppedImageUrl(leftHero)})`;
+  const leftPic = `url(${generateCroppedImageUrl(leftHero, cardImageLocale)})`;
   const rightPic = `url(${generateCroppedImageUrl(
-    rightHero ?? 'UNKNOWNHERO'
+    rightHero ?? 'UNKNOWNHERO',
+    cardImageLocale
   )})`;
 
   const eqClasses = classNames({});

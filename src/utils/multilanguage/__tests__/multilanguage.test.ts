@@ -6,6 +6,7 @@ import {
 } from '../constants';
 import {
   getCollectionCardImagePath,
+  getCropsSubfolder,
   loadInitialLanguage
 } from '../multilanguage';
 import { CLOUD_IMAGES_URL } from '../../../appConstants';
@@ -192,6 +193,24 @@ describe('Multilanguage', () => {
           })
         );
       });
+    });
+  });
+
+  describe('getCropsSubfolder', () => {
+    it('uses english folder by default', () => {
+      expect(getCropsSubfolder('en', 'WTR111')).to.equal('english');
+    });
+
+    it('uses japanese folder when locale and set support JP art', () => {
+      expect(getCropsSubfolder('ja', 'MST111')).to.equal('japanese');
+    });
+
+    it('uses french folder when locale and set support FR art', () => {
+      expect(getCropsSubfolder('fr', 'SEA111')).to.equal('french');
+    });
+
+    it('falls back to english when JP locale but set has no JP art', () => {
+      expect(getCropsSubfolder('ja', 'WTR111')).to.equal('english');
     });
   });
 

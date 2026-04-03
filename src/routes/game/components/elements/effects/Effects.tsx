@@ -5,6 +5,7 @@ import { Card } from 'features/Card';
 import { useAppSelector } from 'app/Hooks';
 import CardPopUp from '../cardPopUp/CardPopUp';
 import { generateCroppedImageUrl } from 'utils/cropImages';
+import { useLanguageSelector } from 'hooks/useLanguageSelector';
 import CountersOverlay from '../countersOverlay/CountersOverlay';
 
 export interface CardProp {
@@ -17,7 +18,11 @@ export interface CardProp {
 
 export function Effect(prop: CardProp) {
   const { card, imgClassName, isPlayer } = prop;
-  const src = generateCroppedImageUrl(prop.card.cardNumber);
+  const { getLanguage } = useLanguageSelector();
+  const src = generateCroppedImageUrl(
+    prop.card.cardNumber,
+    getLanguage()
+  );
   // Get the number value - check counters first, then use num from card if available
   const numValue = card.counters ?? (card as any).num ?? 0;
   const imgBorderClass = isPlayer

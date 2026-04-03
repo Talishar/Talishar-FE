@@ -2,11 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { useAppSelector, useAppDispatch } from 'app/Hooks';
 import { shallowEqual } from 'react-redux';
 import { generateCroppedImageUrl } from 'utils/cropImages';
+import { useLanguageSelector } from 'hooks/useLanguageSelector';
 import { markHeroIntroAsShown } from 'features/game/GameSlice';
 import { getSettingsEntity } from 'features/options/optionsSlice';
 import styles from './HeroVsHeroIntro.module.css';
 
 const HeroVsHeroIntro = () => {
+  const { getLanguage } = useLanguageSelector();
   const dispatch = useAppDispatch();
   const gameState = useAppSelector((state: any) => state.game, shallowEqual);
   const settingsData = useAppSelector(getSettingsEntity);
@@ -110,8 +112,9 @@ const HeroVsHeroIntro = () => {
     return null;
   }
 
-  const yourHeroImage = generateCroppedImageUrl(yourHero);
-  const opponentHeroImage = generateCroppedImageUrl(opponentHero);
+  const locale = getLanguage();
+  const yourHeroImage = generateCroppedImageUrl(yourHero, locale);
+  const opponentHeroImage = generateCroppedImageUrl(opponentHero, locale);
 
   return (
     <div className={styles.introContainer}>

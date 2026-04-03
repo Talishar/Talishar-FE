@@ -20,6 +20,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { ErrorMessage } from '@hookform/error-message';
 import { generateCroppedImageUrl } from 'utils/cropImages';
+import { useLanguageSelector } from 'hooks/useLanguageSelector';
 import { ImageSelect, ImageSelectOption } from 'components/ImageSelect';
 import { GAME_FORMAT, isPreconFormat, PRECON_DECKS } from 'appConstants';
 import { getReadableFormatName } from 'utils/formatUtils';
@@ -88,6 +89,8 @@ const JoinGame = () => {
 
   // Initial stuff to allow the lang to change
   const { t, i18n, ready } = useTranslation();
+  const { getLanguage } = useLanguageSelector();
+  const cardImageLocale = getLanguage();
 
   let [{ gameName: searchGameName = '0', playerID = '2', authKey = '' }] =
     useKnownSearchParams();
@@ -212,18 +215,21 @@ const JoinGame = () => {
     return filtered.map((deck) => ({
       value: deck.key,
       label: formatDeckLabel(deck.name, deck.format),
-      imageUrl: generateCroppedImageUrl(deck.hero)
+      imageUrl: generateCroppedImageUrl(deck.hero, cardImageLocale)
     }));
-  }, [data?.favoriteDecks, gameFormat]);
+  }, [data?.favoriteDecks, gameFormat, cardImageLocale]);
 
   // Convert precon decks to ImageSelect options
   const preconDeckOptions: ImageSelectOption[] = React.useMemo(() => {
     return PRECON_DECKS.LINKS.map((link, index) => ({
       value: link,
       label: PRECON_DECKS.NAMES[index],
-      imageUrl: generateCroppedImageUrl(PRECON_DECKS.HEROES[index])
+      imageUrl: generateCroppedImageUrl(
+        PRECON_DECKS.HEROES[index],
+        cardImageLocale
+      )
     }));
-  }, []);
+  }, [cardImageLocale]);
 
   const isPrecon = isPreconFormat(gameFormat);
 

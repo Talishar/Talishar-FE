@@ -26,10 +26,13 @@ const OpenGame = ({
   isFriendsGame?: boolean;
 }) => {
   const navigate = useNavigate();
+  const { t, i18n, ready } = useTranslation();
   const quickJoinCtx = useContext(QuickJoinContext);
   const hasDeckReady = !!quickJoinCtx?.hasDeckConfigured;
-  const UNKNOWN_HERO_URL =
-    'https://images.talishar.net/public/crops/UNKNOWNHERO_cropped.webp';
+  const UNKNOWN_HERO_URL = generateCroppedImageUrl(
+    'UNKNOWNHERO',
+    i18n.language
+  );
   const selectedHeroImageUrl =
     (quickJoinCtx?.selectedFavoriteDeck
       ? quickJoinCtx.favoriteDeckOptions.find(
@@ -46,9 +49,7 @@ const OpenGame = ({
       navigate(`/game/join/${entry.gameName}`);
     }
   };
-  // Initial stuff to allow the lang to change
-  const { t, i18n, ready } = useTranslation();
-  
+
   const buttonClass = classNames(styles.button, styles.buttonWithIcon, 'secondary');
 
   return (
@@ -57,12 +58,12 @@ const OpenGame = ({
         {!!entry.p1Hero ? (
           <img
             className={styles.heroImg}
-            src={generateCroppedImageUrl(entry.p1Hero)}
+            src={generateCroppedImageUrl(entry.p1Hero, i18n.language)}
           />
         ) : (
           <img
             className={styles.heroImg}
-            src="https://images.talishar.net/public/crops/UNKNOWNHERO_cropped.webp"
+            src={UNKNOWN_HERO_URL}
           />
         )}
       </div>

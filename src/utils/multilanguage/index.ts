@@ -1,5 +1,7 @@
 export {
+  getCardImagePathParts,
   getCollectionCardImagePath,
+  getCropsSubfolder,
   loadInitialLanguage
 } from './multilanguage';
 export {

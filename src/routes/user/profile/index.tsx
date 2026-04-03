@@ -17,6 +17,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './profile.module.css';
 import { generateCroppedImageUrl } from 'utils/cropImages';
+import { useLanguageSelector } from 'hooks/useLanguageSelector';
 import { getReadableFormatName } from 'utils/formatUtils';
 import { HEROES_OF_RATHE } from 'routes/index/components/filter/constants';
 import FriendsList from './FriendsList';
@@ -33,6 +34,8 @@ const PATREON_URL = 'https://www.patreon.com/oauth2/authorize?';
 
 export const ProfilePage = () => {
   usePageTitle('Profile');
+  const { getLanguage } = useLanguageSelector();
+  const cardImageLocale = getLanguage();
   const navigate = useNavigate();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [confirmationUsername, setConfirmationUsername] = useState('');
@@ -464,7 +467,10 @@ export const ProfilePage = () => {
                       <th scope="row">
                         {!!deck.hero && (
                           <img
-                            src={generateCroppedImageUrl(deck.hero)}
+                            src={generateCroppedImageUrl(
+                              deck.hero,
+                              cardImageLocale
+                            )}
                             className={styles.heroImage}
                           />
                         )}
