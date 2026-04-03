@@ -444,7 +444,7 @@ export const ProfilePage = () => {
                 <thead>
                   <tr>
                     <th scope="col">Hero</th>
-                    {/* <th scope="col">Select Hero</th> */}
+                    <th scope="col">Select Hero</th>
                     <th scope="col">Name</th>
                     <th scope="col">Format</th>
                     {/* <th scope="col">Card Back</th>
@@ -469,7 +469,7 @@ export const ProfilePage = () => {
                           />
                         )}
                       </th>
-{/*                       <td>
+                      <td>
                         <select
                           value={
                             selectedHeroByDeck[deck.link] || deck.hero || ''
@@ -495,7 +495,7 @@ export const ProfilePage = () => {
                               );
                             })}
                         </select>
-                      </td> */}
+                      </td>
                       <td>{deck.name}</td>
                       <td className={styles.formatCell}>{getReadableFormatName(deck.format || '')}</td>
                       {/* <td>{deck.cardBack ? deck.cardBack.charAt(0).toUpperCase() + deck.cardBack.slice(1).toLowerCase() : ""}</td>
