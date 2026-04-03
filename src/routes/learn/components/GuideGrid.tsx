@@ -15,11 +15,11 @@ const GuideGrid: React.FC<GuideGridProps> = ({ guides }) => {
     isFreeForSupporters: boolean;
   } => {
     if (!guide.price || guide.price.value === 0) {
-      return { display: 'Free', isFreeForSupporters: false };
+      return { display: 'Free for supporters', isFreeForSupporters: false };
     }
     const originalPrice = `$${(guide.price.value_in_cents / 100).toFixed(2)}`;
     return {
-      display: 'Free for Supporters',
+      display: 'Supporter discount',
       originalPrice,
       isFreeForSupporters: true
     };
