@@ -70,6 +70,7 @@ const Lobby = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [hasMatchups, setHasMatchups] = useState<boolean>(false);
   const settingsStatus = useAppSelector(getSettingsStatus);
   const { isLoggedIn } = useAuth();
   const gameInfo = useAppSelector(getGameInfo, shallowEqual);
@@ -207,6 +208,12 @@ const Lobby = () => {
   useEffect(() => {
     setIsWideScreen(width > BREAKPOINT_EXTRA_LARGE);
   }, [width]);
+
+  useEffect(() => {
+    if (gameLobby?.matchups && gameLobby.matchups.length > 0) {
+      setHasMatchups(true);
+    }
+  }, [gameLobby?.matchups]);
 
   const handleEquipmentClick = () => {
     setActiveTab('equipment');
@@ -654,8 +661,7 @@ const Lobby = () => {
         <Form className={styles.form}>
           <div
             className={classNames(styles.gridLayout, {
-              [styles.noMatchups]:
-                !gameLobby?.matchups || gameLobby.matchups.length === 0
+              [styles.noMatchups]: !hasMatchups
             })}
           >
             <div className={styles.titleContainer}>
