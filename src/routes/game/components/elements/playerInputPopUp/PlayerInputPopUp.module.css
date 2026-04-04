@@ -196,8 +196,8 @@
 @media (orientation: portrait) {
   .optionsContainer {
     left: 0px;
-    width: 100%;
-    max-width: 100%;
+    width: 75%;
+    max-width: 90%;
   }
 
   .cardDiv {
