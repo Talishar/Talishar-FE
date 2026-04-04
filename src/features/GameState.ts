@@ -116,6 +116,7 @@ export default interface GameState {
   gameLobby?: GetLobbyRefreshResponse;
   showModals?: boolean;
   showChatModal?: boolean;
+  unreadChatCount?: number;
   landmark?: Card;
   hasPriority?: boolean;
   priorityPlayer?: number;
