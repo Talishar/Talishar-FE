@@ -33,6 +33,10 @@ const EndGameMenuOptions = () => {
     dispatch(submitButton({ button: { mode: PROCESS_INPUT.FULL_REMATCH } }));
   };
 
+  const handleSwapHeroesRematch = () => {
+    dispatch(submitButton({ button: { mode: PROCESS_INPUT.SWAP_HEROES_REMATCH } }));
+  };
+
   const handleContinueAdventure = () => {
     window.location.href = `https://beta.talishar.net/game/Roguelike/ContinueAdventure.php?gameName=${roguelikeGameID}&playerID=1&health=${health}`;
   };
@@ -59,6 +63,9 @@ const EndGameMenuOptions = () => {
             </div> */}
             <div className={styles.buttonDiv} onClick={handleFullRematch}>
               Send Rematch Invitation
+            </div>
+            <div className={styles.buttonDiv} onClick={handleSwapHeroesRematch}>
+              Swap Heroes &amp; Rematch
             </div>
           </>
         )}
