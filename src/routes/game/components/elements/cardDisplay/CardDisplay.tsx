@@ -72,6 +72,8 @@ export const CardDisplay = (prop: CardProp) => {
     [styles.disabled]: card.overlay === 'disabled'
   });
 
+  const isTargeted = card.label?.includes('Targeted') ?? false;
+
   const equipStatus = classNames(
     styles.floatTint,
     { [styles.isBroken]: card.isBroken },
@@ -80,7 +82,8 @@ export const CardDisplay = (prop: CardProp) => {
     { [styles.holoCounters]: card.holoCounters },
     { [styles.marked]: card.marked },
     { [styles.tapped]: card.tapped },
-    { [styles.isRestricted]: !!card.restriction }
+    { [styles.isRestricted]: !!card.restriction },
+    { [styles.isTargeted]: isTargeted }
   );
 
   const imgStyles = classNames(styles.img, {
@@ -166,12 +169,14 @@ export const CardDisplay = (prop: CardProp) => {
         card.isFrozen ||
         card.marked ||
         card.holoCounters ||
-        !!card.restriction) && <div className={equipStatus}></div>}
+        !!card.restriction ||
+        isTargeted) && <div className={equipStatus}></div>}
       {card.numUses && card.numUses > 1 && card.numUses < 10 && (
         <div className={styles.numUses}>{renderNumUses(card.numUses)}</div>
       )}
       <CountersOverlay
         {...card}
+        label={isTargeted ? card.label?.replace('Targeted', '').replace(/^\/|\/$|^\s*\/\s*/g, '').trim() : card.label}
         num={num}
         activeCombatChain={activeCombatChain}
       />
