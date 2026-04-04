@@ -74,7 +74,9 @@ const Lobby = () => {
   const { isLoggedIn } = useAuth();
   const gameInfo = useAppSelector(getGameInfo, shallowEqual);
   const { playerID, gameID, authKey } = gameInfo;
-  const [acceptedDisclaimer, setAcceptedDisclaimer] = useState<boolean>(false);
+  const [acceptedDisclaimer, setAcceptedDisclaimer] = useState<boolean>(
+    () => localStorage.getItem('openFormatDisclaimerAccepted') === 'true'
+  );
   const gameLobby = useAppSelector(
     (state: RootState) => state.game.gameLobby,
     shallowEqual
@@ -605,6 +607,7 @@ const Lobby = () => {
                 <div className={styles.disclaimerAcceptButtons}>
                   <button
                     onClick={() => {
+                      localStorage.setItem('openFormatDisclaimerAccepted', 'true');
                       setAcceptedDisclaimer(true);
                     }}
                   >
