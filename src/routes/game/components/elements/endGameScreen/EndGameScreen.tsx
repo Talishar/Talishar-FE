@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import ReactDOM from 'react-dom';
 import { useAppSelector } from 'app/Hooks';
 import styles from './EndGameScreen.module.css';
 import { useGetPopUpContentQuery } from 'features/api/apiSlice';
@@ -8,9 +9,10 @@ import EndGameStats, {
   EndGameData,
   EndGameStatsRef
 } from '../endGameStats/EndGameStats';
+import EndGameMenuOptions from '../endGameMenuOptions/EndGameMenuOptions';
 import { shallowEqual } from 'react-redux';
 import useShowModal from 'hooks/useShowModals';
-import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import { FaEye, FaEyeSlash, FaEllipsisH } from 'react-icons/fa';
 import classNames from 'classnames';
 import useAuth from 'hooks/useAuth';
 import { PiFileCsvFill, PiCameraFill } from 'react-icons/pi';
@@ -25,6 +27,9 @@ const EndGameScreen = () => {
   const [bothPlayersData, setBothPlayersData] = useState<{
     [key: number]: any;
   }>({});
+  const [moreOpen, setMoreOpen] = useState(false);
+  const moreBtnRef = useRef<HTMLButtonElement>(null);
+  const [menuStyle, setMenuStyle] = useState<React.CSSProperties>({});
   const { isPatron } = useAuth();
   const endGameStatsRef = useRef<EndGameStatsRef>(null);
   const { data, isLoading, error } = useGetPopUpContentQuery({
@@ -108,6 +113,7 @@ const EndGameScreen = () => {
 
   const switchPlayer = () => {
     playerID === 2 ? setPlayerID(1) : setPlayerID(2);
+    setMoreOpen(false);
   };
 
   const toggleShowStats = () => {
@@ -116,6 +122,7 @@ const EndGameScreen = () => {
 
   const toggleShowFullLog = () => {
     setShowFullLog(!showFullLog);
+    setMoreOpen(false);
   };
 
   const handleExportStats = () => {
@@ -124,6 +131,7 @@ const EndGameScreen = () => {
       return;
     }
     endGameStatsRef.current.exportScreenshot();
+    setMoreOpen(false);
   };
 
   const handleExportCSV = async () => {
@@ -132,6 +140,19 @@ const EndGameScreen = () => {
       return;
     }
     await endGameStatsRef.current.exportCSV();
+    setMoreOpen(false);
+  };
+
+  const handleOpenMore = () => {
+    if (!moreOpen && moreBtnRef.current) {
+      const rect = moreBtnRef.current.getBoundingClientRect();
+      setMenuStyle({
+        position: 'fixed',
+        top: rect.bottom + 6,
+        right: Math.max(8, window.innerWidth - rect.right)
+      });
+    }
+    setMoreOpen((v) => !v);
   };
 
   return (
@@ -141,28 +162,45 @@ const EndGameScreen = () => {
           <div className={styles.cardListTitleContainer}>
             <div className={styles.cardListTitle}>
               <h2 className={styles.title}>Game Over Summary</h2>
+              <div className={styles.menuOptionsWrapper}>
+                <EndGameMenuOptions />
+              </div>
               <div className={styles.buttonGroup}>
-                {!showFullLog && (
+                <button
+                  ref={moreBtnRef}
+                  className={styles.buttonDiv}
+                  onClick={handleOpenMore}
+                  aria-label="More options"
+                >
+                  <FaEllipsisH aria-hidden="true" />&nbsp;More
+                </button>
+                {moreOpen && ReactDOM.createPortal(
                   <>
                     <div
-                      className={styles.buttonDiv}
-                      onClick={handleExportStats}
-                    >
-                      <PiCameraFill size="1.5em" />
-                      &nbsp;Export as Image
+                      className={styles.dropdownBackdrop}
+                      onClick={() => setMoreOpen(false)}
+                    />
+                    <div className={styles.dropdownMenu} style={menuStyle}>
+                      {!showFullLog && (
+                        <>
+                          <button className={styles.dropdownItem} onClick={handleExportStats}>
+                            <PiCameraFill aria-hidden="true" /> Export as Image
+                          </button>
+                          <button className={styles.dropdownItem} onClick={handleExportCSV}>
+                            <PiFileCsvFill aria-hidden="true" /> Export as CSV
+                          </button>
+                        </>
+                      )}
+                      <button className={styles.dropdownItem} onClick={toggleShowFullLog}>
+                        {showFullLog ? 'Back to Stats' : 'Full Game Log'}
+                      </button>
+                      <button className={styles.dropdownItem} onClick={switchPlayer}>
+                        Switch Player Stats
+                      </button>
                     </div>
-                    <div className={styles.buttonDiv} onClick={handleExportCSV}>
-                      <PiFileCsvFill size="1.5em" />
-                      &nbsp;Export as CSV
-                    </div>
-                  </>
+                  </>,
+                  document.body
                 )}
-                <div className={styles.buttonDiv} onClick={toggleShowFullLog}>
-                  Full Game Log
-                </div>
-                <div className={styles.buttonDiv} onClick={switchPlayer}>
-                  Switch player stats
-                </div>
                 <div className={styles.buttonDiv} onClick={toggleShowStats}>
                   <FaEye aria-hidden="true" fontSize={'1.5em'} />
                 </div>

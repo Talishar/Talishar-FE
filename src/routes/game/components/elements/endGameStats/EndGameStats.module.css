@@ -11,9 +11,7 @@
   height: auto;
   z-index: 950;
   user-select: auto;
-  background: var(--near-black);
   border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .statsContent {
@@ -33,7 +31,7 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 8px;
   padding: 0.75rem;
-  background: rgba(0, 0, 0, 0.3);
+  background: var(--near-black);
   position: relative;
   display: flex;
   flex-direction: column;
@@ -45,13 +43,12 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 8px;
   padding: 0.75rem;
-  background: rgba(0, 0, 0, 0.3);
+  background: var(--near-black);
   position: relative;
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
   width: 100%;
-  margin-top: 1rem;
 }
 
 .sectionHeader {
@@ -365,13 +362,13 @@
   border-spacing: 0;
   font-size: 1.1em;
   margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
 }
 
 .cardTable thead {
   position: sticky;
   top: 0;
   z-index: 10;
-  background: rgba(0, 0, 0, 0.4);
 }
 
 .cardTable thead th {

@@ -46,8 +46,7 @@ const EndGameMenuOptions = () => {
   };
 
   return (
-    <div className={styles.container}>
-      <div className={styles.buttons}>
+    <div className={styles.buttons}>
         <div className={styles.buttonDiv} onClick={handleMainMenu}>
           Main Menu
         </div>
@@ -76,7 +75,6 @@ const EndGameMenuOptions = () => {
             </div>
           </>
         )}
-      </div>
     </div>
   );
 };
