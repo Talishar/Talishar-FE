@@ -2,8 +2,8 @@ import { CLOUD_IMAGES_URL } from 'appConstants';
 import { getCropsSubfolder, loadInitialLanguage } from './multilanguage';
 
 /**
- * Hero / effect crop URLs — must match CardImages .../crops/{english|japanese|french}/ on CDN.
- * @param cardName Hero slug, card id, or set-style id (same rules as {@link getCollectionCardImagePath})
+ * Hero / effect crop URLs — must match CardImages .../crops/{languagePath}/ on CDN (see getCropsSubfolder).
+ * @param cardName Talishar cardID (basename `{cardName}_cropped.webp` on CDN)
  * @param locale i18n or settings language code (`en`, `ja`, `fr`, …)
  */
 export const generateCroppedImageUrl = (

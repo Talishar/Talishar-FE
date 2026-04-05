@@ -6,7 +6,6 @@ import {
   EUROPEAN_LANGUAGES_PRINTED_COLLECTIONS,
   COLLECTIONS_HISTORY_PACK_1,
   COLLECTIONS_HISTORY_PACK_2,
-  ADDITIONAL_REPRINTS_HISTORY_PACK_2,
   ALTERNATIVE_ARTS_CODES,
   CARD_IMAGES_PATH,
   FRENCH_PRINTED_COLLECTIONS,
@@ -59,9 +58,6 @@ const isHistoryPack2Card = (
   COLLECTIONS_HISTORY_PACK_2.includes(collectionCode) &&
   Object.keys(historyPack2).includes(cardNumber);
 
-const isReprintedInHistoryPack2 = (cardNumber: string): boolean =>
-  ADDITIONAL_REPRINTS_HISTORY_PACK_2.includes(cardNumber);
-
 const isHistoryPackCard = (
   collectionCode: string,
   cardNumber: string
@@ -69,20 +65,14 @@ const isHistoryPackCard = (
   isHistoryPack1Card(collectionCode, cardNumber) ||
   isHistoryPack2Card(collectionCode, cardNumber);
 
-const getHistoryPackCard = (cardNumber: string, collectionCode: string) => {
-  if (isHistoryPack2Card(collectionCode, cardNumber)) {
-    return historyPack2[cardNumber];
-  } else if (isHistoryPack1Card(collectionCode, cardNumber)) {
-    return isReprintedInHistoryPack2(cardNumber)
-      ? historyPack2[cardNumber]
-      : historyPack1[cardNumber];
-  }
-};
-
 const isAlternativeArt = (cardNumber: string): boolean =>
   ALTERNATIVE_ARTS_CODES.some((code: string) => cardNumber.includes(code));
 
-/** Resolves S3 folder name and card id (e.g. history-pack remap) for card / crop URLs. */
+/**
+ * Resolves CDN folder (`english` | `japanese` | `french` | …) and filename stem.
+ * All card image files use Talishar cardID as the basename (alt-art URL suffixes are separate).
+ * History-pack logic only picks localized folders, not 1HP/2HP filenames.
+ */
 export const getCardImagePathParts = (
   locale: string = DEFAULT_LANGUAGE,
   cardNumber: string = 'CardBack'
@@ -98,25 +88,20 @@ export const getCardImagePathParts = (
     if (isJapaneseCard(locale, collectionCode)) {
       Object.assign(cardPathData, { languagePath: LOCALE_DICTIONARY[locale] });
     } else if (isEuropeanCard(locale, setID, collectionCode)) {
-      Object.assign(cardPathData, {
-        languagePath: LOCALE_DICTIONARY[locale],
-        cardNumber: getHistoryPackCard(setID, collectionCode) || setID
-      });
+      Object.assign(cardPathData, { languagePath: LOCALE_DICTIONARY[locale] });
     }
   }
 
   return cardPathData;
 };
 
-/** Cloud crop folders match zzImageConverter: english | japanese | french */
+/** Crop CDN subfolder — same `languagePath` as cardimages (aligned with zzImageConverter folders). */
 export const getCropsSubfolder = (
   locale: string,
   cardIdentifier: string
-): 'english' | 'japanese' | 'french' => {
+): string => {
   const { languagePath } = getCardImagePathParts(locale, cardIdentifier);
-  if (languagePath === 'japanese') return 'japanese';
-  if (languagePath === 'french') return 'french';
-  return 'english';
+  return languagePath;
 };
 
 export const getCollectionCardImagePath = ({
