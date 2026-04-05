@@ -32,6 +32,7 @@ export const renderWithProviders = (
         token: null,
         isPatron: null,
         isMod: false,
+        metafyId: null,
         metafyHash: null,
         metafyTimestamp: null
       },
@@ -61,6 +62,7 @@ export const preloadedState = {
     token: null,
     isPatron: null,
     isMod: false,
+    metafyId: null,
     metafyHash: null,
     metafyTimestamp: null
   }

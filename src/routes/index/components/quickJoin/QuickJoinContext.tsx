@@ -15,7 +15,7 @@ import {
   useGetBazaarDecksQuery
 } from 'features/api/apiSlice';
 import {
-  selectCurrentUser,
+  selectMetafyId,
   selectCurrentUserName,
   selectMetafyHash,
   selectMetafyTimestamp
@@ -96,7 +96,7 @@ export const QuickJoinProvider = ({
   const [joinGame] = useJoinGameMutation();
   const metafyHash = useAppSelector(selectMetafyHash);
   const metafyTimestamp = useAppSelector(selectMetafyTimestamp);
-  const metafyId = useAppSelector(selectCurrentUser);
+  const metafyId = useAppSelector(selectMetafyId);
   const currentUserName = useAppSelector(selectCurrentUserName);
   const isBazaarEnabled = currentUserName === 'OotTheMonk' || currentUserName === 'Rocu2';
 

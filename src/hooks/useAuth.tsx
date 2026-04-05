@@ -9,6 +9,7 @@ import {
   selectCurrentUserName,
   selectIsPatron,
   selectIsMod,
+  selectMetafyId,
   selectMetafyHash,
   selectMetafyTimestamp,
   setCredentialsReducer,
@@ -32,6 +33,7 @@ export default function useAuth() {
   const currentUserName = useAppSelector(selectCurrentUserName);
   const reduxIsPatron = useAppSelector(selectIsPatron);
   const isMod = useAppSelector(selectIsMod);
+  const metafyId = useAppSelector(selectMetafyId);
   const metafyHash = useAppSelector(selectMetafyHash);
   const metafyTimestamp = useAppSelector(selectMetafyTimestamp);
   // const { refetch } = useGetFavoriteDecksQuery(undefined);
@@ -53,6 +55,7 @@ export default function useAuth() {
       token: string,
       patron: string,
       isMod?: boolean,
+      metafyId?: string | number | null,
       metafyHash?: string | null,
       metafyTimestamp?: number | null
     ) => {
@@ -63,6 +66,7 @@ export default function useAuth() {
           accessToken: token,
           isPatron: patron,
           isMod: isMod || false,
+          metafyId: metafyId ?? null,
           metafyHash: metafyHash ?? null,
           metafyTimestamp: metafyTimestamp ?? null
         })
@@ -132,6 +136,7 @@ export default function useAuth() {
           '',
           data.isPatron,
           userIsMod,
+          data.metafyID ?? data.metafyId ?? null,
           data.metafyHash ?? null,
           data.timestamp ?? null
         );
@@ -158,6 +163,7 @@ export default function useAuth() {
     error,
     isPatron,
     isMod,
+    metafyId,
     metafyHash,
     metafyTimestamp,
     setLoggedIn,

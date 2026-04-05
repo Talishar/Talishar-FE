@@ -50,6 +50,10 @@ export interface MetafySignupResponse {
   loggedInUserID?: string | number;
   loggedInUserName?: string;
   isPatron?: string;
+  metafyID?: string | number;
+  metafyId?: string | number;
+  metafyHash?: string;
+  timestamp?: number;
 }
 
 export interface RefreshMetafyCommunitiesResponse {

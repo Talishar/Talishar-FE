@@ -15,7 +15,7 @@ import {
   useGetBazaarDecksQuery
 } from 'features/api/apiSlice';
 import {
-  selectCurrentUser,
+  selectMetafyId,
   selectCurrentUserName,
   selectMetafyHash,
   selectMetafyTimestamp
@@ -95,7 +95,7 @@ const CreateGame = () => {
   // FaB Bazaar — standalone mode only (embedded mode uses QuickJoinContext)
   const metafyHash = useAppSelector(selectMetafyHash);
   const metafyTimestamp = useAppSelector(selectMetafyTimestamp);
-  const metafyId = useAppSelector(selectCurrentUser);
+  const metafyId = useAppSelector(selectMetafyId);
   const currentUserName = useAppSelector(selectCurrentUserName);
   const isBazaarEnabled = currentUserName === 'OotTheMonk';
   const [standaloneDeckSource, setStandaloneDeckSourceState] = useState<'talishar' | 'bazaar'>(

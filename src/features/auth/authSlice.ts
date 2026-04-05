@@ -13,6 +13,7 @@ const authSlice = createSlice({
         userName,
         isPatron,
         isMod,
+        metafyId,
         metafyHash,
         metafyTimestamp
       } = action.payload;
@@ -21,6 +22,7 @@ const authSlice = createSlice({
         (state.userName = userName);
       state.isPatron = isPatron;
       state.isMod = isMod || false;
+      state.metafyId = metafyId ?? null;
       state.metafyHash = metafyHash ?? null;
       state.metafyTimestamp = metafyTimestamp ?? null;
     },
@@ -30,6 +32,7 @@ const authSlice = createSlice({
       state.token = null;
       state.isPatron = null;
       state.isMod = false;
+      state.metafyId = null;
       state.metafyHash = null;
       state.metafyTimestamp = null;
     }
@@ -44,6 +47,7 @@ export const selectCurrentUser = (state: RootState) => state.auth.user;
 export const selectCurrentUserName = (state: RootState) => state.auth.userName;
 export const selectIsPatron = (state: RootState) => state.auth.isPatron;
 export const selectIsMod = (state: RootState) => state.auth.isMod;
+export const selectMetafyId = (state: RootState) => state.auth.metafyId;
 export const selectMetafyHash = (state: RootState) => state.auth.metafyHash;
 export const selectMetafyTimestamp = (state: RootState) =>
   state.auth.metafyTimestamp;
