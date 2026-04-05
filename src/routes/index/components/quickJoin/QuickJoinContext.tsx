@@ -24,6 +24,7 @@ import { generateCroppedImageUrl } from 'utils/cropImages';
 import { ImageSelectOption } from 'components/ImageSelect';
 import { getReadableFormatName } from 'utils/formatUtils';
 import { FAB_BAZAAR_DECK_URL_BASE } from 'appConstants';
+import useAuth from 'hooks/useAuth';
 
 const shortenFormat = (format: string): string => {
   if (!format) return '';
@@ -94,11 +95,14 @@ export const QuickJoinProvider = ({
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [joinGame] = useJoinGameMutation();
+  const { isLoggedIn, isLoading: isAuthLoading } = useAuth();
   const metafyHash = useAppSelector(selectMetafyHash);
   const metafyTimestamp = useAppSelector(selectMetafyTimestamp);
   const metafyId = useAppSelector(selectMetafyId);
   const currentUserName = useAppSelector(selectCurrentUserName);
   const isBazaarEnabled = currentUserName === 'OotTheMonk' || currentUserName === 'rocu';
+  const canResolveBazaarAccess =
+    !isAuthLoading && (!isLoggedIn || !!currentUserName);
 
   const { data: favoritesData, isLoading: isFavoritesLoading } =
     useGetFavoriteDecksQuery(undefined);
@@ -186,11 +190,15 @@ export const QuickJoinProvider = ({
   // If FaB Bazaar isn't enabled for this user, reset any stale 'bazaar' value so the
   // disabled tab doesn't get the active class from localStorage.
   useEffect(() => {
-    if (!isBazaarEnabled && deckSource === 'bazaar') {
+    if (
+      canResolveBazaarAccess &&
+      !isBazaarEnabled &&
+      deckSource === 'bazaar'
+    ) {
       setDeckSourceState('talishar');
       localStorage.setItem(LS_DECK_SOURCE_KEY, 'talishar');
     }
-  }, [isBazaarEnabled]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [canResolveBazaarAccess, isBazaarEnabled, deckSource]);
 
   const setDeckSource = useCallback((v: 'talishar' | 'bazaar') => {
     setDeckSourceState(v);

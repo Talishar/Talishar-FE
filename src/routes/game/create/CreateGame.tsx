@@ -83,7 +83,7 @@ const formatDeckLabel = (
 
 const CreateGame = () => {
   const quickJoinCtx = useQuickJoinOptional();
-  const { isLoggedIn, isPatron } = useAuth();
+  const { isLoggedIn, isPatron, isLoading: isAuthLoading } = useAuth();
   // True when rendered inside the unified main-menu panel (logged-in users only)
   const isEmbedded = quickJoinCtx !== null && isLoggedIn;
   const navigate = useNavigate();
@@ -98,6 +98,8 @@ const CreateGame = () => {
   const metafyId = useAppSelector(selectMetafyId);
   const currentUserName = useAppSelector(selectCurrentUserName);
   const isBazaarEnabled = currentUserName === 'OotTheMonk';
+  const canResolveBazaarAccess =
+    !isAuthLoading && (!isLoggedIn || !!currentUserName);
   const [standaloneDeckSource, setStandaloneDeckSourceState] = useState<'talishar' | 'bazaar'>(
     () =>
       (localStorage.getItem('quickJoin_deckSource') as 'talishar' | 'bazaar') ?? 'talishar'
@@ -130,11 +132,15 @@ const CreateGame = () => {
   // If FaB Bazaar isn't enabled for this user, reset any stored 'bazaar' selection so
   // the disabled tab doesn't also get the deckTabActive class from a stale localStorage value.
   useEffect(() => {
-    if (!isBazaarEnabled && standaloneDeckSource === 'bazaar') {
+    if (
+      canResolveBazaarAccess &&
+      !isBazaarEnabled &&
+      standaloneDeckSource === 'bazaar'
+    ) {
       setStandaloneDeckSourceState('talishar');
       localStorage.setItem('quickJoin_deckSource', 'talishar');
     }
-  }, [isBazaarEnabled]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [canResolveBazaarAccess, isBazaarEnabled, standaloneDeckSource]);
 
   const setStandaloneDeckSource = (src: 'talishar' | 'bazaar') => {
     setStandaloneDeckSourceState(src);
