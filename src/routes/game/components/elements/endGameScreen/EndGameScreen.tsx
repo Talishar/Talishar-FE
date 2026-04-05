@@ -12,7 +12,7 @@ import EndGameStats, {
 import EndGameMenuOptions from '../endGameMenuOptions/EndGameMenuOptions';
 import { shallowEqual } from 'react-redux';
 import useShowModal from 'hooks/useShowModals';
-import { FaEye, FaEyeSlash, FaEllipsisH } from 'react-icons/fa';
+import { FaEye, FaEyeSlash, FaEllipsisH, FaList, FaExchangeAlt } from 'react-icons/fa';
 import classNames from 'classnames';
 import useAuth from 'hooks/useAuth';
 import { PiFileCsvFill, PiCameraFill } from 'react-icons/pi';
@@ -184,18 +184,18 @@ const EndGameScreen = () => {
                       {!showFullLog && (
                         <>
                           <button className={styles.dropdownItem} onClick={handleExportStats}>
-                            <PiCameraFill aria-hidden="true" /> Export as Image
+                            <PiCameraFill aria-hidden="true" className={styles.dropdownIcon} /> Export as Image
                           </button>
                           <button className={styles.dropdownItem} onClick={handleExportCSV}>
-                            <PiFileCsvFill aria-hidden="true" /> Export as CSV
+                            <PiFileCsvFill aria-hidden="true" className={styles.dropdownIcon} style={{ fontSize: '1.6em' }} /> Export as CSV
                           </button>
                         </>
                       )}
                       <button className={styles.dropdownItem} onClick={toggleShowFullLog}>
-                        {showFullLog ? 'Back to Stats' : 'Full Game Log'}
+                        <FaList aria-hidden="true" className={styles.dropdownIcon} /> {showFullLog ? 'Back to Stats' : 'Full Game Log'}
                       </button>
                       <button className={styles.dropdownItem} onClick={switchPlayer}>
-                        Switch Player Stats
+                        <FaExchangeAlt aria-hidden="true" className={styles.dropdownIcon} /> Switch Player Stats
                       </button>
                     </div>
                   </>,

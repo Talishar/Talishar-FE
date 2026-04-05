@@ -138,12 +138,12 @@
 
 .dropdownMenu {
   z-index: 1100;
-  min-width: 190px;
+  min-width: 210px;
   background: #1c1c20;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 8px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
-  padding: 0.3rem;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 9px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.65);
+  padding: 0.35rem;
   display: flex;
   flex-direction: column;
 }
@@ -151,15 +151,16 @@
 .dropdownItem {
   display: flex;
   align-items: center;
-  gap: 0.6rem;
+  gap: 0.65rem;
   background: none;
   border: none;
-  color: rgba(255, 255, 255, 0.82);
-  padding: 0.55rem 0.8rem;
-  font-size: 0.9em;
-  border-radius: 5px;
+  color: rgba(255, 255, 255, 0.85);
+  padding: 0.65rem 1rem;
+  font-size: 0.95em;
+  font-family: inherit;
+  border-radius: 6px;
   cursor: pointer;
-  transition: background 0.12s;
+  transition: background 0.15s, color 0.15s;
   text-align: left;
   width: 100%;
   white-space: nowrap;
@@ -167,8 +168,24 @@
 }
 
 .dropdownItem:hover {
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.1);
   color: white;
+}
+
+.dropdownIcon {
+  font-size: 1.15em;
+  flex-shrink: 0;
+  opacity: 0.85;
+}
+
+.dropdownItem:hover .dropdownIcon {
+  opacity: 1;
+}
+
+.dropdownDivider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+  margin: 0.3rem 0.5rem;
 }
 
 @media (max-width: 1080px) {
