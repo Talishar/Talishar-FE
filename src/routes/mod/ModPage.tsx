@@ -395,6 +395,14 @@ const ModPage: React.FC = () => {
                       <strong>Skipped:</strong> {metafySyncResult.skippedUsers.join(', ')}
                     </p>
                   )}
+                  {metafySyncResult._debug && (
+                    <details style={{ marginTop: '8px' }}>
+                      <summary style={{ color: '#aaa', fontSize: '12px', cursor: 'pointer' }}>Debug info</summary>
+                      <pre style={{ fontSize: '11px', color: '#ccc', background: 'rgba(0,0,0,0.3)', padding: '8px', borderRadius: '3px', overflowX: 'auto', marginTop: '4px', whiteSpace: 'pre-wrap', wordBreak: 'break-all' }}>
+                        {JSON.stringify(metafySyncResult._debug, null, 2)}
+                      </pre>
+                    </details>
+                  )}
 
                 </div>
               )}
