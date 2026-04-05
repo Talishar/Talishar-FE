@@ -2,7 +2,9 @@
 export const GAME_LIMIT_LIVE = 1000000;
 export const GAME_LIMIT_BETA = 1000;
 
-export const CLOUD_IMAGES_URL = 'https://images.talishar.net/public';
+/** Override with VITE_CLOUD_IMAGES_URL when serving CardImages/media/uploaded/public locally (e.g. npx serve). */
+export const CLOUD_IMAGES_URL =
+  import.meta.env.VITE_CLOUD_IMAGES_URL ?? 'https://images.talishar.net/public';
 
 export const BACKEND_URL = import.meta.env.DEV
   ? '/api/'
