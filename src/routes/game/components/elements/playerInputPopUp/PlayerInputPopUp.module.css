@@ -5,9 +5,8 @@
   min-width: 30%;
   max-width: 90%;
   min-height: 20%;
-
   left: 15%;
-  right: 25%;
+  right: 28%;
   max-height: 40vh;
   height: auto;
   background-color: var(--near-black);
@@ -196,8 +195,8 @@
 @media (orientation: portrait) {
   .optionsContainer {
     left: 0px;
-    width: 100%;
-    max-width: 100%;
+    width: 75%;
+    max-width: 90%;
   }
 
   .cardDiv {

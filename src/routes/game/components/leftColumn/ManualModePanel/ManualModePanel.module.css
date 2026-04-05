@@ -322,3 +322,21 @@
   accent-color: var(--theme-primary);
   margin: 0;
 }
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .manualModePanel {
+    width: 80vw;
+    max-width: 250px;
+  }
+
+  .manualModeTab {
+    width: 2.5rem;
+    height: 2.5rem;
+    font-size: 0.75rem;
+  }
+
+  .content {
+    padding: 1rem;
+  }
+}

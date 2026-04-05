@@ -21,15 +21,20 @@ import ArsenalZone from '../zones/arsenalZone/ArsenalZone';
 import ZoneCounts from '../zones/zoneCountsZone/ZoneCounts';
 import BanishZone from '../zones/banishZone/BanishZone';
 
-export default function PlayerBoardGrid() {
-  let playmat = useAppSelector(
+interface Props {
+  swapPlayers?: boolean;
+}
+
+export default function PlayerBoardGrid({ swapPlayers = false }: Props) {
+  const p1Playmat = useAppSelector(
     (state: RootState) => state.game.playerOne.Playmat
   );
+  const p2Playmat = useAppSelector(
+    (state: RootState) => state.game.playerTwo.Playmat
+  );
 
-  if (playmat === undefined) {
-    // playmat = DEFAULT_PLAYMAT;
-    playmat = `aria`;
-  }
+  const playmat = swapPlayers ? (p2Playmat ?? 'volcor') : (p1Playmat ?? 'aria');
+  const isPlayer = !swapPlayers;
 
   const styleToApply = {
     backgroundImage: `url(/playmats/${playmat}.webp)`
@@ -39,20 +44,20 @@ export default function PlayerBoardGrid() {
     <div className={styles.playerPlaymat} style={styleToApply}>
       {/* Customise the playmat here */}
       <div className={styles.playerBoard}>
-        <HeadEqZone isPlayer />
-        <PermanentsZone isPlayer />
-        <GraveyardZone isPlayer />
-        <ChestEqZone isPlayer />
-        <ArmsEqZone isPlayer />
-        <WeaponLZone isPlayer />
-        <HeroZone isPlayer />
-        <WeaponRZone isPlayer />
-        <PitchZone isPlayer />
-        <DeckZone isPlayer />
-        <LegsEqZone isPlayer />
-        <ArsenalZone isPlayer />
-        <ZoneCounts isPlayer />
-        <BanishZone isPlayer />
+        <HeadEqZone isPlayer={isPlayer} />
+        <PermanentsZone isPlayer={isPlayer} />
+        <GraveyardZone isPlayer={isPlayer} />
+        <ChestEqZone isPlayer={isPlayer} />
+        <ArmsEqZone isPlayer={isPlayer} />
+        <WeaponLZone isPlayer={isPlayer} />
+        <HeroZone isPlayer={isPlayer} />
+        <WeaponRZone isPlayer={isPlayer} />
+        <PitchZone isPlayer={isPlayer} />
+        <DeckZone isPlayer={isPlayer} />
+        <LegsEqZone isPlayer={isPlayer} />
+        <ArsenalZone isPlayer={isPlayer} />
+        <ZoneCounts isPlayer={isPlayer} />
+        <BanishZone isPlayer={isPlayer} />
       </div>
     </div>
   );

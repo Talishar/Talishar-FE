@@ -32,7 +32,7 @@ export function Board() {
     return (
       <div className={styles.gameBoard}>
         <ManualModePanel />
-        {isSpectatorViewingPlayer2 ? <PlayerBoardGrid /> : <OpponentBoardGrid />}
+        <OpponentBoardGrid swapPlayers={isSpectatorViewingPlayer2} />
         <div className={styles.chainMiddleContainer}>
           <div className={styles.chainContainer}>
             <CombatChain />
@@ -42,7 +42,7 @@ export function Board() {
           </div>
         </div>
         <PlayerPrompt />
-        {isSpectatorViewingPlayer2 ? <OpponentBoardGrid /> : <PlayerBoardGrid />}
+        <PlayerBoardGrid swapPlayers={isSpectatorViewingPlayer2} />
       </div>
     );
   }

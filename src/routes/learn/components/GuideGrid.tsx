@@ -91,15 +91,11 @@ const GuideGrid: React.FC<GuideGridProps> = ({ guides }) => {
                             {priceInfo.originalPrice}
                           </span>
                         )}
-                        <span
-                          className={`${styles.price} ${
-                            priceInfo.isFreeForSupporters
-                              ? styles.freeForSupporters
-                              : ''
-                          }`}
-                        >
-                          {priceInfo.display}
-                        </span>
+                        {!priceInfo.isFreeForSupporters && (
+                          <span className={styles.price}>
+                            {priceInfo.display}
+                          </span>
+                        )}
                       </>
                     );
                   })()}
