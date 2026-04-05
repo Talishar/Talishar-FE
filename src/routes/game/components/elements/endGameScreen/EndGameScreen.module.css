@@ -86,7 +86,9 @@
 }
 
 .menuOptionsWrapper {
-  display: contents;
+  display: flex;
+  flex: 1;
+  justify-content: center;
 }
 
 .buttonGroup {
