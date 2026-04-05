@@ -98,7 +98,7 @@ export const QuickJoinProvider = ({
   const metafyTimestamp = useAppSelector(selectMetafyTimestamp);
   const metafyId = useAppSelector(selectMetafyId);
   const currentUserName = useAppSelector(selectCurrentUserName);
-  const isBazaarEnabled = currentUserName === 'OotTheMonk' || currentUserName === 'Rocu2';
+  const isBazaarEnabled = currentUserName === 'OotTheMonk' || currentUserName === 'rocu';
 
   const { data: favoritesData, isLoading: isFavoritesLoading } =
     useGetFavoriteDecksQuery(undefined);
