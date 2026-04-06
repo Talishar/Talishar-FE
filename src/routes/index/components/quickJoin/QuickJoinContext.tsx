@@ -100,7 +100,7 @@ export const QuickJoinProvider = ({
   const metafyTimestamp = useAppSelector(selectMetafyTimestamp);
   const metafyId = useAppSelector(selectMetafyId);
   const currentUserName = useAppSelector(selectCurrentUserName);
-  const isBazaarEnabled = currentUserName === 'OotTheMonk' || currentUserName === 'rocu';
+  const isBazaarEnabled = true;
   const canResolveBazaarAccess =
     !isAuthLoading && (!isLoggedIn || !!currentUserName);
 
