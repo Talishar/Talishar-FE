@@ -30,14 +30,18 @@
 	"DEFAULT":"通常のゲーム",
 	"BEST_DECK":"フォーマット内で最良のデッキを探している",
 	"META_HEROES":"メタヒーローを探している",
-	"SPECIFIC_HERO":"特定のヒーローを探している",
-	"NOT_SPECIFIC_HERO":"特定のヒーローに対して興味がない",
-	"SPECIFIC_CLASS":"特定のクラスを探している",
-	"QUICK":"短時間のゲーム",
-	"SPICY_BREWS":"独創的なデッキ",
-	"CASUAL":"カジュアルなゲーム",
-	"NEW_PLAYER":"初心者のサポートをお願いしたい",
-	"NEW_HERO":"新しいヒーローを試したい",
+	"SPECIFIC_HERO":"特定のヒーローと対戦したい",
+	"NOT_SPECIFIC_HERO":"特定のヒーローは避けたい",
+	"SPECIFIC_CLASS":"特定のクラスと対戦したい",
+	"QUICK":"手っ取り早くゲームを楽しみたい",
+	"SPICY_BREWS":"メタ外 / 実験的なデッキ",
+	"CASUAL":"カジュアル / 気軽なプレイ",
+	"NEW_PLAYER":"新規プレイヤー \u2014 ゲームを学習中",
+	"NEW_HERO":"新しいヒーローを練習中",
+	"AGGRO":"高速デッキ（アグロ）を好む",
+	"CONTROL":"低速デッキ（コントロール）を好む",
+	"MEME":"ミーム / ファンデッキのみ",
+	"SLOW_PLAY":"ゆっくりしたプレイでも可",
 	"HERO_SELECT":{
 	  "SELECT_HEROES":"ヒーローを選択 (最大 {{amount}}):",
 	  "SELECT_CLASSES":"クラスを選択 (最大 {{amount}}):",	  
@@ -49,6 +53,12 @@
 	  "PREVIEW":"このヒーローを検索する: ",
 	  "PREVIEW_NOT":"このヒーローを検索しない: "
 	}
+      },
+      "GAME_DESCRIPTION_GROUPS":{
+	"PLAY_STYLE":"プレイスタイル",
+	"DECK_TYPE":"デッキタイプ",
+	"PREFERENCES":"希望",
+	"PLAYER_INTENT":"プレイヤーの意図"
       },
       "FORMAT":"フォーマット",
       "FORMATS":{

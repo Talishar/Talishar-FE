@@ -30,14 +30,18 @@
 	"DEFAULT": "Partie par défaut #",
 	"BEST_DECK": "À la recherche du meilleur deck du format",
 	"META_HEROES": "Recherche de héros méta",
-	"SPECIFIC_HERO": "Recherche d’un héros précis",
-	"NOT_SPECIFIC_HERO": "Pas intéressé par un héros précis",
-	"SPECIFIC_CLASS": "Recherche d’une classe spécifique",
-	"QUICK": "Recherche d’une partie rapide",
-	"SPICY_BREWS": "Jouer des decks originaux",
-	"CASUAL": "Partie détente",
-	"NEW_PLAYER": "Aide pour nouveaux joueurs",
-	"NEW_HERO": "Apprendre un nouveau héros",
+	"SPECIFIC_HERO": "Cherche à jouer contre un héros précis",
+	"NOT_SPECIFIC_HERO": "Pas intéressé par certains héros",
+	"SPECIFIC_CLASS": "Cherche à jouer contre une classe spécifique",
+	"QUICK": "Recherche une partie rapide",
+	"SPICY_BREWS": "Decks hors-méta / expérimentaux",
+	"CASUAL": "Jeu détendu / casual",
+	"NEW_PLAYER": "Nouveau joueur \u2014 apprend le jeu",
+	"NEW_HERO": "S'entraîne avec un nouveau héros",
+	"AGGRO": "Préfère les decks rapides (aggro)",
+	"CONTROL": "Préfère les decks lents (contrôle)",
+	"MEME": "Decks fun / mème uniquement",
+	"SLOW_PLAY": "Jeu lent accepté",
 	"HERO_SELECT": {
 	  "SELECT_HEROES": "Sélectionner des héros (jusqu’à {{amount}}) :",
 	  "SELECT_CLASSES": "Sélectionner des classes (jusqu’à {{amount}}) :",
@@ -49,6 +53,12 @@
 	  "PREVIEW": "Aperçu : Recherche ",
 	  "PREVIEW_NOT": "Aperçu : Ne recherche pas "
 	}
+      },
+      "GAME_DESCRIPTION_GROUPS": {
+	"PLAY_STYLE": "Style de jeu",
+	"DECK_TYPE": "Type de deck",
+	"PREFERENCES": "Préférences",
+	"PLAYER_INTENT": "Intention du joueur"
       },
       "FORMAT": "Format",
       "FORMATS": {

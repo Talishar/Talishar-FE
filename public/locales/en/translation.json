@@ -30,14 +30,18 @@
 	"DEFAULT":"Default Game #",
 	"BEST_DECK":"Looking for best deck in the format",
 	"META_HEROES":"Looking for meta heroes",
-	"SPECIFIC_HERO":"Looking for a specific hero",
+	"SPECIFIC_HERO":"Looking to play against a specific hero",
 	"NOT_SPECIFIC_HERO":"No interest in playing against specific hero",
-	"SPECIFIC_CLASS":"Looking for a specific class",
+	"SPECIFIC_CLASS":"Looking to play against a specific class",
 	"QUICK":"Looking for a quick game",
-	"SPICY_BREWS":"Playing spicy brews",
-	"CASUAL":"Casual play",
-	"NEW_PLAYER":"New player help",
-	"NEW_HERO":"Learning a new hero",
+	"SPICY_BREWS":"Off-meta / experimental decks",
+	"CASUAL":"Casual / relaxed play",
+	"NEW_PLAYER":"New player \u2014 learning the game",
+	"NEW_HERO":"Practicing a new hero",
+	"AGGRO":"Prefer fast decks (aggro)",
+	"CONTROL":"Prefer slow decks (control)",
+	"MEME":"Meme / fun decks only",
+	"SLOW_PLAY":"Slow play OK",
 	"HERO_SELECT":{
 	  "SELECT_HEROES":"Select Heroes (up to {{amount}}):",
 	  "SELECT_CLASSES":"Select Classes (up to {{amount}}):",	  
@@ -49,6 +53,12 @@
 	  "PREVIEW":"Preview: Looking for ",
 	  "PREVIEW_NOT":"Preview: Not looking for "
 	}
+      },
+      "GAME_DESCRIPTION_GROUPS":{
+	"PLAY_STYLE":"Play Style",
+	"DECK_TYPE":"Deck Type",
+	"PREFERENCES":"Preferences",
+	"PLAYER_INTENT":"Player Intent"
       },
       "FORMAT":"Gameplay Format",
       "FORMATS":{

@@ -264,12 +264,17 @@ const CreateGame = () => {
       const classLabels = CLASS_OF_RATHE.map((classObj) => classObj.label);
       const isClassSelection = words.some((word) => classLabels.includes(word));
 
-      if (stored.startsWith('Looking for ')) {
+      if (stored.startsWith('Looking to play against ')) {
         baseDescription = isClassSelection
-          ? 'Looking for a specific class'
-          : 'Looking for a specific hero';
-      } else if (stored.startsWith('No interest')) {
+          ? 'Looking to play against a specific class'
+          : 'Looking to play against a specific hero';
+      } else if (stored.startsWith('No interest') || stored.startsWith('Avoiding')) {
         baseDescription = 'No interest in playing against specific hero';
+      // Handle legacy formats
+      } else if (stored.startsWith('Looking for ')) {
+        baseDescription = isClassSelection
+          ? 'Looking to play against a specific class'
+          : 'Looking to play against a specific hero';
       }
       if (baseDescription) {
         localStorage.setItem('lastGameDescription', baseDescription);
@@ -347,17 +352,17 @@ const CreateGame = () => {
     setClassSearch('');
 
     if (
-      value !== 'Looking for a specific hero' &&
-      value !== 'Looking for a specific class' &&
+      value !== 'Looking to play against a specific hero' &&
+      value !== 'Looking to play against a specific class' &&
       value !== 'No interest in playing against specific hero'
     ) {
       setSelectedHeroes([]);
       setSelectedClasses([]);
       setValue('gameDescription', value);
     } else if (
-      value === 'Looking for a specific hero' ||
+      value === 'Looking to play against a specific hero' ||
       value === 'No interest in playing against specific hero' ||
-      value === 'Looking for a specific class'
+      value === 'Looking to play against a specific class'
     ) {
       setValue('gameDescription', value);
     }
@@ -384,7 +389,7 @@ const CreateGame = () => {
     if (
       (newSelectedHeroes.length > 0 &&
         gameDescription === 'No interest in playing against specific hero') ||
-      gameDescription === 'Looking for a specific hero'
+      gameDescription === 'Looking to play against a specific hero'
     ) {
       const heroList = newSelectedHeroes.join(', ');
       // Check if current mode is preference or exclusion
@@ -394,7 +399,7 @@ const CreateGame = () => {
           `No interest in playing against ${heroList}`
         );
       } else {
-        setValue('gameDescription', `Looking for ${heroList}`);
+        setValue('gameDescription', `Looking to play against ${heroList}`);
       }
     } else {
       setValue('gameDescription', initialValues.gameDescription || '');
@@ -420,9 +425,9 @@ const CreateGame = () => {
 
     if (newSelectedClasses.length > 0) {
       const classList = newSelectedClasses.join(', ');
-      setValue('gameDescription', `Looking for ${classList}`);
+      setValue('gameDescription', `Looking to play against ${classList}`);
     } else {
-      setValue('gameDescription', 'Looking for a specific class');
+      setValue('gameDescription', 'Looking to play against a specific class');
     }
   };
 
@@ -434,19 +439,19 @@ const CreateGame = () => {
     localStorage.setItem('lastSelectedHeroes', JSON.stringify([]));
     localStorage.setItem('lastSelectedClasses', JSON.stringify([]));
     setGameDescription(
-      gameDescription === 'Looking for a specific hero'
-        ? 'Looking for a specific hero'
+      gameDescription === 'Looking to play against a specific hero'
+        ? 'Looking to play against a specific hero'
         : gameDescription === 'No interest in playing against specific hero'
         ? 'No interest in playing against specific hero'
-        : 'Looking for a specific class'
+        : 'Looking to play against a specific class'
     );
     setValue(
       'gameDescription',
-      gameDescription === 'Looking for a specific hero'
-        ? 'Looking for a specific hero'
+      gameDescription === 'Looking to play against a specific hero'
+        ? 'Looking to play against a specific hero'
         : gameDescription === 'No interest in playing against specific hero'
         ? 'No interest in playing against specific hero'
-        : 'Looking for a specific class'
+        : 'Looking to play against a specific class'
     );
   };
 
@@ -473,12 +478,12 @@ const CreateGame = () => {
           'gameDescription',
           `No interest in playing against ${heroList}`
         );
-      } else if (desc === 'Looking for a specific hero') {
-        setValue('gameDescription', `Looking for ${heroList}`);
+      } else if (desc === 'Looking to play against a specific hero') {
+        setValue('gameDescription', `Looking to play against ${heroList}`);
       }
     } else if (parsedClasses.length > 0) {
       const classList = parsedClasses.join(', ');
-      setValue('gameDescription', `Looking for ${classList}`);
+      setValue('gameDescription', `Looking to play against ${classList}`);
     }
 
     setSelectedFavoriteDeck(initialValues.favoriteDecks || '');
@@ -536,22 +541,18 @@ const CreateGame = () => {
       // Extract base game description (remove hero/class names)
       let baseGameDescription = values.gameDescription || '';
       if (selectedClasses.length > 0) {
-        baseGameDescription = 'Looking for a specific class';
+        baseGameDescription = 'Looking to play against a specific class';
       } else if (selectedHeroes.length > 0) {
         if (gameDescription.startsWith('No interest')) {
           baseGameDescription = 'No interest in playing against specific hero';
         } else {
-          baseGameDescription = 'Looking for a specific hero';
+          baseGameDescription = 'Looking to play against a specific hero';
         }
       } else if (
-        baseGameDescription.startsWith('Looking for ') &&
+        baseGameDescription.startsWith('Looking to play against ') &&
         baseGameDescription.includes(',')
       ) {
-        if (baseGameDescription.includes('in playing')) {
-          baseGameDescription = 'No interest in playing against specific hero';
-        } else {
-          baseGameDescription = 'Looking for a specific hero';
-        }
+        baseGameDescription = 'Looking to play against a specific hero';
       } else if (
         baseGameDescription.startsWith('No interest in playing against') &&
         baseGameDescription.includes(',')
@@ -625,9 +626,11 @@ const CreateGame = () => {
           </button>
         </div>
         )}
-        {/*<p className={styles.fieldError}>
-																																																										    <FaExclamationCircle /> Warning - SOON! an update will be pushed to the live servers. The games in progress will crash and new games will be required.
-																																																										    </p> */}
+        {/*
+          <p className={styles.fieldError}>
+          <FaExclamationCircle /> Warning - SOON! an update will be pushed to the live servers. The games in progress will crash and new games will be required.
+          </p> 
+        */}
         {(isEmbedded || isExpanded) && (
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className={styles.formInner}>
@@ -832,40 +835,58 @@ const CreateGame = () => {
                   <option value="">
                     {t('MENU.CREATE_GAME.GAME_DESCRIPTIONS.DEFAULT')}
                   </option>
-                  <option value="Looking for best deck in the format">
-                    {t('MENU.CREATE_GAME.GAME_DESCRIPTIONS.BEST_DECK')}
-                  </option>
-                  <option value="Looking for meta heroes">
-                    {t('MENU.CREATE_GAME.GAME_DESCRIPTIONS.META_HEROES')}
-                  </option>
-                  <option value="Looking for a specific hero">
-                    {t('MENU.CREATE_GAME.GAME_DESCRIPTIONS.SPECIFIC_HERO')}
-                  </option>
-                  <option value="No interest in playing against specific hero">
-                    {t('MENU.CREATE_GAME.GAME_DESCRIPTIONS.NOT_SPECIFIC_HERO')}
-                  </option>
-                  <option value="Looking for a specific class">
-                    {t('MENU.CREATE_GAME.GAME_DESCRIPTIONS.SPECIFIC_CLASS')}
-                  </option>
-                  <option value="Looking for a quick game">
-                    {t('MENU.CREATE_GAME.GAME_DESCRIPTIONS.QUICK')}
-                  </option>
-                  <option value="Playing spicy brews">
-                    {t('MENU.CREATE_GAME.GAME_DESCRIPTIONS.SPICY_BREWS')}
-                  </option>
-                  <option value="Casual play">
-                    {t('MENU.CREATE_GAME.GAME_DESCRIPTIONS.CASUAL')}
-                  </option>
-                  <option value="New player help">
-                    {t('MENU.CREATE_GAME.GAME_DESCRIPTIONS.NEW_PLAYER')}
-                  </option>
-                  <option value="Learning a new hero">
-                    {t('MENU.CREATE_GAME.GAME_DESCRIPTIONS.NEW_HERO')}
-                  </option>
+                  <optgroup label={t('MENU.CREATE_GAME.GAME_DESCRIPTION_GROUPS.DECK_TYPE')}>
+                    <option value="Looking for best deck in the format">
+                      {t('MENU.CREATE_GAME.GAME_DESCRIPTIONS.BEST_DECK')}
+                    </option>
+                    <option value="Looking for meta heroes">
+                      {t('MENU.CREATE_GAME.GAME_DESCRIPTIONS.META_HEROES')}
+                    </option>
+                    <option value="Meme / fun decks only">
+                      {t('MENU.CREATE_GAME.GAME_DESCRIPTIONS.MEME')}
+                    </option>
+                    <option value="Off-meta / experimental decks">
+                      {t('MENU.CREATE_GAME.GAME_DESCRIPTIONS.SPICY_BREWS')}
+                    </option>
+                  </optgroup>
+                  <optgroup label={t('MENU.CREATE_GAME.GAME_DESCRIPTION_GROUPS.PREFERENCES')}>
+                    <option value="Looking to play against a specific class">
+                      {t('MENU.CREATE_GAME.GAME_DESCRIPTIONS.SPECIFIC_CLASS')}
+                    </option>
+                    <option value="Looking to play against a specific hero">
+                      {t('MENU.CREATE_GAME.GAME_DESCRIPTIONS.SPECIFIC_HERO')}
+                    </option>
+                    <option value="No interest in playing against specific hero">
+                      {t('MENU.CREATE_GAME.GAME_DESCRIPTIONS.NOT_SPECIFIC_HERO')}
+                    </option>
+                    <option value="Prefer fast decks (aggro)">
+                      {t('MENU.CREATE_GAME.GAME_DESCRIPTIONS.AGGRO')}
+                    </option>
+                    <option value="Prefer slow decks (control)">
+                      {t('MENU.CREATE_GAME.GAME_DESCRIPTIONS.CONTROL')}
+                    </option>
+                  </optgroup>
+                  <optgroup label={t('MENU.CREATE_GAME.GAME_DESCRIPTION_GROUPS.PLAY_STYLE')}>
+                    <option value="Casual / relaxed play">
+                      {t('MENU.CREATE_GAME.GAME_DESCRIPTIONS.CASUAL')}
+                    </option>
+                    <option value="Looking for a quick game">
+                      {t('MENU.CREATE_GAME.GAME_DESCRIPTIONS.QUICK')}
+                    </option>
+                    <option value="New player — learning the game">
+                      {t('MENU.CREATE_GAME.GAME_DESCRIPTIONS.NEW_PLAYER')}
+                    </option>
+                    <option value="Practicing a new hero">
+                      {t('MENU.CREATE_GAME.GAME_DESCRIPTIONS.NEW_HERO')}
+                    </option>
+                    <option value="Slow play OK">
+                      {t('MENU.CREATE_GAME.GAME_DESCRIPTIONS.SLOW_PLAY')}
+                    </option>
+                  </optgroup>
                 </select>
               </label>
 
-              {gameDescription === 'Looking for a specific hero' && (
+              {gameDescription === 'Looking to play against a specific hero' && (
                 <div className={styles.heroSelection}>
                   <div className={styles.heroSelectionHeader}>
                     <label>
@@ -1006,7 +1027,7 @@ const CreateGame = () => {
                   )}
                 </div>
               )}
-              {gameDescription === 'Looking for a specific class' && (
+              {gameDescription === 'Looking to play against a specific class' && (
                 <div className={styles.heroSelection}>
                   <div className={styles.heroSelectionHeader}>
                     <label>
