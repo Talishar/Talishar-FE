@@ -1,6 +1,9 @@
 export interface BazaarDeck {
+  id: string;
   name: string;
-  deckId: string;
+  hero?: string;
+  format?: string | null;
+  deckId?: string;
 }
 
 export interface BazaarDecksResponse {

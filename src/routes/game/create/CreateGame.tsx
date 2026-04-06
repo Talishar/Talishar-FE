@@ -124,8 +124,9 @@ const CreateGame = () => {
   const standaloneBazaarDeckOptions = useMemo(() => {
     if (!bazaarData?.decks) return [];
     return bazaarData.decks.map((deck) => ({
-      value: deck.deckId,
-      label: deck.name
+      value: deck.id ?? deck.deckId ?? '',
+      label: formatDeckLabel(deck.name, deck.format ?? null),
+      imageUrl: deck.hero ? generateCroppedImageUrl(deck.hero) : undefined
     }));
   }, [bazaarData?.decks]);
 
