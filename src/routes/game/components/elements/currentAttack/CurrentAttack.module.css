@@ -106,6 +106,17 @@
   cursor: pointer;
 }
 
+.defSymbol {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 3vh;
+  width: 3vh;
+  height: 3dvh;
+  width: 3dvh;
+  cursor: default;
+}
+
 .chainSymbols {
   height: 2.5vh;
   width: 2.5vh;
