@@ -233,12 +233,9 @@ export const ContinuousCounters = (props: Props) => {
         </TooltipWrapper>
       )}
       {!!Number(countersMap?.counters) && (
-        <TooltipWrapper
-          className={styles.enduranceCounter}
-          tooltip={toTooltipString('endurance', Number(countersMap?.counters))}
-        >
+        <div className={styles.enduranceCounter}>
           <div>{countersMap?.counters}</div>
-        </TooltipWrapper>
+        </div>
       )}
     </>
   );
