@@ -2,10 +2,10 @@
   position: fixed;
   display: flex;
   flex-direction: column;
-  top: 10vh;
+  top: 9vh;
   bottom: 10vh;
-  left: 9vw;
-  right: 13vw;
+  left: 8vw;
+  right: 12vw;
   background-color: black;
   padding: 1.5rem;
   border: 2px solid var(--theme-border);
