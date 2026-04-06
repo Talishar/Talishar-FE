@@ -116,6 +116,15 @@
   text-align: center;
 }
 
+.attackSymbol {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 3dvh;
+  width: 3dvh;
+  margin: auto;
+}
+
 .cardNameCol {
   flex: 1;
   text-align: center;
