@@ -51,7 +51,7 @@ const SkipDefenseReactionsToggle = () => {
             value: initialValues.skipDefenseReactions ? '0' : '1'
           })
         }
-        data-tooltip="Pass Defense Reactions"
+        data-tooltip="Pass Defense Reactions (resets at the start of each turn)"
         data-placement="top"
         disabled={isDisabled}
       >

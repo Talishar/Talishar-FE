@@ -167,7 +167,7 @@ const OptionsSettings = () => {
         </Fieldset>
       )}
       {!isSpectator && (
-        <Fieldset legend="Skip Overrides">
+        <Fieldset legend="Skip Overrides" tooltip="Resets at the start of each turn.">
           <CheckboxSetting
             name="skipAttackReactions"
             label="Skip Attack Reactions"

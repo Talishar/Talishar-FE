@@ -26,7 +26,7 @@ import {
   getGameInfo
 } from '../../../features/game/GameSlice';
 import { fetchAllSettings, settingUpdated } from 'features/options/optionsSlice';
-import { SHORTCUT_ATTACK_THRESHOLD } from 'features/options/constants';
+import { SHORTCUT_ATTACK_THRESHOLD, SKIP_AR_WINDOW, SKIP_DR_WINDOW } from 'features/options/constants';
 import { Toaster } from 'react-hot-toast';
 import { shallowEqual } from 'react-redux';
 import { PanelProvider } from '../components/leftColumn/PanelContext';
@@ -69,6 +69,8 @@ function Play({ isRoguelike }: { isRoguelike: boolean }) {
     if (turnNo !== prevTurnNoRef.current) {
       prevTurnNoRef.current = turnNo;
       dispatch(settingUpdated({ name: SHORTCUT_ATTACK_THRESHOLD, value: '0' }));
+      dispatch(settingUpdated({ name: SKIP_AR_WINDOW, value: '0' }));
+      dispatch(settingUpdated({ name: SKIP_DR_WINDOW, value: '0' }));
     }
   }, [turnNo, dispatch]);
 
