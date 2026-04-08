@@ -234,7 +234,11 @@ const InlineLoginForm = ({}: InlineLoginFormProps) => {
           resp?.loggedInUserID ?? '0',
           resp?.loggedInUserName,
           '',
-          resp?.isPatron
+          resp?.isPatron,
+          false,
+          resp?.metafyID ?? resp?.metafyId ?? null,
+          resp?.metafyHash ?? null,
+          resp?.timestamp ?? null
         );
         // Reload the page to refresh auth state and show consent screen
         window.location.reload();

@@ -7,6 +7,7 @@ import {
 } from 'features/game/GameSlice';
 import { FaTimes } from 'react-icons/fa';
 import styles from './ChainLinkSummary.module.css';
+import attackSymbol from '../../../../../img/symbols/symbol-attack.png';
 import { useGetPopUpContentQuery } from 'features/api/apiSlice';
 import GameStaticInfo from 'features/GameStaticInfo';
 import CardTextLink from '../cardTextLink/CardTextLink';
@@ -125,7 +126,15 @@ const ChainLinkSummary = ({
                   return (
                     <tr key={`cardList${ix}`} className={styles.tableRow}>
                       <td className={styles.cardImageCol}>
-                        <Effect card={card} isPlayer={isPlayer} />
+                        {entry.cardID === 'POWERCOUNTER' ? (
+                          <img
+                            src={attackSymbol}
+                            className={styles.attackSymbol}
+                            alt="+1 Power Counter"
+                          />
+                        ) : (
+                          <Effect card={card} isPlayer={isPlayer} />
+                        )}
                       </td>
                       <td className={styles.cardNameCol}>
                         <CardTextLink

@@ -4,5 +4,7 @@ export const defaultAuth = {
   token: null,
   isPatron: null,
   isMod: false,
-  metafyHash: null as string | null
+  metafyId: null as string | number | null,
+  metafyHash: null as string | null,
+  metafyTimestamp: null as number | null
 };

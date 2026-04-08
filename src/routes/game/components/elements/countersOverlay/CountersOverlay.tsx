@@ -51,7 +51,8 @@ export const CountersOverlay = ({
     'lightning',
     'amp',
     'aim',
-    'wateryGrave'
+    'wateryGrave',
+    'counters'
   ];
 
   let numTotal = num ?? 0;

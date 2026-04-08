@@ -66,7 +66,11 @@ export const LoginForm = () => {
           resp?.loggedInUserID ?? '0',
           resp?.loggedInUserName,
           '',
-          resp?.isPatron
+          resp?.isPatron,
+          false,
+          resp?.metafyID ?? resp?.metafyId ?? null,
+          resp?.metafyHash ?? null,
+          resp?.timestamp ?? null
         );
         navigate('/');
       }

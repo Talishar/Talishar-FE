@@ -433,6 +433,27 @@
   border: 0px;
 }
 
+.enduranceCounter.enduranceCounter {
+  border-radius: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 1.75em;
+  width: 1.75em;
+  background: radial-gradient(circle at 28% 25%, #ffffff 0%, #9eb8cc 40%, #3a5a72 100%);
+  border: 2px solid #2a4a60;
+  box-shadow: 0 0 7px 2px rgba(160, 210, 255, 0.6),
+    inset 0 1px 5px rgba(255, 255, 255, 0.5);
+  text-align: center;
+  font-size: 1.5em;
+  font-weight: bold;
+  color: var(--white);
+  text-shadow: -1px 1px 2px #000, 1px 1px 2px #000, 1px -1px 0 #000,
+    -1px -1px 0 #000;
+  z-index: -1;
+  cursor: default;
+}
+
 .lifeCounter.lifeCounter {
   border-radius: 100%;
   display: flex;

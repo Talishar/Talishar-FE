@@ -9,6 +9,8 @@ import { useCookies } from 'react-cookie';
 import ExperimentalTurnWidget from '../elements/experimentalTurnWidget';
 import TurnWidget from '../elements/turnWidget/TurnWidget';
 import ManualModePanel from '../leftColumn/ManualModePanel/ManualModePanel';
+import { useAppSelector } from 'app/Hooks';
+import { getGameInfo } from 'features/game/GameSlice';
 
 export interface playAreaDimensions {
   dimension: number;
@@ -17,15 +19,20 @@ export interface playAreaDimensions {
 export function Board() {
   const [width, height] = useWindowDimensions();
   const [cookies] = useCookies(['experimental']);
+  const { playerID } = useAppSelector(getGameInfo);
+  const spectatorCameraView = useAppSelector(
+    (state: any) => state.game.spectatorCameraView
+  );
 
   const useOldScreen = height > width;
   // const useOldScreen = true;
+  const isSpectatorViewingPlayer2 = playerID === 3 && spectatorCameraView === 2;
 
   if (useOldScreen) {
     return (
       <div className={styles.gameBoard}>
         <ManualModePanel />
-        <OpponentBoardGrid />
+        <OpponentBoardGrid swapPlayers={isSpectatorViewingPlayer2} />
         <div className={styles.chainMiddleContainer}>
           <div className={styles.chainContainer}>
             <CombatChain />
@@ -35,7 +42,7 @@ export function Board() {
           </div>
         </div>
         <PlayerPrompt />
-        <PlayerBoardGrid />
+        <PlayerBoardGrid swapPlayers={isSpectatorViewingPlayer2} />
       </div>
     );
   }

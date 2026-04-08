@@ -183,18 +183,23 @@
     display: none;
   }
 
+  .matchupContainer input[type='text'] {
+    grid-column: 1 / -1;
+    margin-bottom: 0.25rem;
+  }
+
   .matchups {
     width: 100%;
   }
 
   .matchups button {
-    padding: 0.5rem 0.4rem;
-    font-size: 0.7rem;
+    padding: 0.65rem 0.5rem;
+    font-size: 0.9rem;
     margin-bottom: 0;
     flex-direction: column;
     gap: 0.25rem;
-    height: 65px;
-    min-height: 65px;
+    height: auto;
+    min-height: 56px;
   }
 
   .matchupName {
@@ -205,11 +210,11 @@
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     word-break: break-word;
-    font-size: 0.8em;
+    font-size: 1em;
   }
 
   .turnOrderBadge {
-    font-size: 0.6rem;
+    font-size: 0.7rem;
     padding: 0.15rem 0.25rem;
     min-width: unset;
     width: 100%;
@@ -229,12 +234,17 @@
     display: none;
   }
 
+  .matchupContainer input[type='text'] {
+    grid-column: 1 / -1;
+    margin-bottom: 0.25rem;
+  }
+
   .matchups button {
-    padding: 0.4rem 0.3rem;
-    font-size: 0.65rem;
+    padding: 0.55rem 0.4rem;
+    font-size: 0.875rem;
     gap: 0.2rem;
-    height: 60px;
-    min-height: 60px;
+    height: auto;
+    min-height: 52px;
   }
 
   .matchupName {
@@ -243,11 +253,11 @@
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     word-break: break-word;
-    font-size: 0.75em;
+    font-size: 1em;
   }
 
   .turnOrderBadge {
-    font-size: 0.55rem;
+    font-size: 0.65rem;
     padding: 0.1rem 0.2rem;
   }
 }

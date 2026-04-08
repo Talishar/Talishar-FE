@@ -30,14 +30,18 @@
 	"DEFAULT":"Default Game #",
 	"BEST_DECK":"Looking for best deck in the format",
 	"META_HEROES":"Looking for meta heroes",
-	"SPECIFIC_HERO":"Looking for a specific hero",
+	"SPECIFIC_HERO":"Looking to play against a specific hero",
 	"NOT_SPECIFIC_HERO":"No interest in playing against specific hero",
-	"SPECIFIC_CLASS":"Looking for a specific class",
+	"SPECIFIC_CLASS":"Looking to play against a specific class",
 	"QUICK":"Looking for a quick game",
-	"SPICY_BREWS":"Playing spicy brews",
-	"CASUAL":"Casual play",
-	"NEW_PLAYER":"New player help",
-	"NEW_HERO":"Learning a new hero",
+	"SPICY_BREWS":"Off-meta / experimental decks",
+	"CASUAL":"Casual / relaxed play",
+	"NEW_PLAYER":"New player \u2014 learning the game",
+	"NEW_HERO":"Practicing a new hero",
+	"AGGRO":"Prefer fast decks (aggro)",
+	"CONTROL":"Prefer slow decks (control)",
+	"MEME":"Meme / fun decks only",
+	"SLOW_PLAY":"Slow play OK",
 	"HERO_SELECT":{
 	  "SELECT_HEROES":"Select Heroes (up to {{amount}}):",
 	  "SELECT_CLASSES":"Select Classes (up to {{amount}}):",	  
@@ -49,6 +53,12 @@
 	  "PREVIEW":"Preview: Looking for ",
 	  "PREVIEW_NOT":"Preview: Not looking for "
 	}
+      },
+      "GAME_DESCRIPTION_GROUPS":{
+	"PLAY_STYLE":"Play Style",
+	"DECK_TYPE":"Deck Type",
+	"PREFERENCES":"Preferences",
+	"PLAYER_INTENT":"Player Intent"
       },
       "FORMAT":"Gameplay Format",
       "FORMATS":{
@@ -179,7 +189,7 @@
       "COMMUNITY_DRIVEN_TITLE":" Community-Driven",
       "COMMUNITY_DRIVEN_DESCRIPTION":"Talishar is built by the community, for the community. We value player input and collaboration to shape the platform's future."      
     },
-    "DISCLAIMER":"<2><1>Disclaimer:</1> Talishar is an open-source, fan-made platform not associated with LSS. It may not be a completely accurate representation of the Rules as written. If you have questions about interactions or rulings, please contact the judges community on the <3> JudgeHub Discord </3> for clarification.</2><2>Talishar is in no way affiliated with Legend Story Studios. Legend Story Studios®, Flesh and Blood™, and set names are trademarks of Legend Story Studios. Flesh and Blood characters, cards, logos, and art are property of <4> Legend Story Studios </4>. Card Images © Legend Story Studios</2>"
+    "DISCLAIMER":"<2><1>Disclaimer:</1> Talishar is an open-source, fan-made platform not associated with LSS. It may not be a completely accurate representation of the Rules as written. If you have questions about interactions or rulings, please contact the judges community on the <3> JudgeHub Discord </3> for clarification.</2><2>Talishar is in no way affiliated with Legend Story Studios. Legend Story Studios®, Flesh and Blood™, and set names are trademarks of Legend Story Studios. Flesh and Blood characters, cards, logos, and art are property of <4> Legend Story Studios </4>. © Legend Story Studios</2>"
   },
   "UNITED_GAME_PANEL":{
     "GAME_SETUP":"Game Setup",

@@ -6,13 +6,14 @@ import TalisharLogo from '../../img/CoinLogo.png';
 import {
   BsPersonFill,
   BsShieldFillCheck,
-  BsGear,
+  BsGearFill,
   BsFillBookFill,
   BsList,
-  BsX
+  BsX,
+  BsCollectionPlayFill,
+  BsBoxArrowRight
 } from 'react-icons/bs';
-import { RiLogoutBoxRLine } from 'react-icons/ri';
-import { MdVideoLibrary } from 'react-icons/md';
+import { IoLogOut } from "react-icons/io5";
 import SocialDropdown from 'components/header/SocialDropdown';
 import LanguageSelector from 'components/header/LanguageSelector';
 import { useGetPendingRequestsQuery } from 'features/api/apiSlice';
@@ -96,7 +97,7 @@ const Header = () => {
           {isLoggedIn && isMod && (
             <li>
               <Link to="/mod">
-                <BsShieldFillCheck size="0.9em"></BsShieldFillCheck>{' '}
+                <BsShieldFillCheck></BsShieldFillCheck>{' '}
                 <span>Mod Page</span>
               </Link>
             </li>
@@ -104,7 +105,7 @@ const Header = () => {
           {isLoggedIn && canAccessReplays && (
             <li>
               <Link to="/game/load">
-                <MdVideoLibrary></MdVideoLibrary>{' '}
+                <BsCollectionPlayFill></BsCollectionPlayFill>{' '}
                 <span>{t('HEADER.REPLAYS')}</span>
               </Link>
             </li>
@@ -130,14 +131,14 @@ const Header = () => {
           {isLoggedIn && (
             <li>
               <Link to="/user/settings">
-                <BsGear></BsGear> <span>{t('HEADER.SETTINGS')}</span>
+                <BsGearFill></BsGearFill> <span>{t('HEADER.SETTINGS')}</span>
               </Link>
             </li>
           )}
           {isLoggedIn && (
             <li>
               <a href="" onClick={handleLogOut}>
-                <RiLogoutBoxRLine></RiLogoutBoxRLine>{' '}
+                <IoLogOut></IoLogOut>{' '}
                 <span>{t('HEADER.LOGOUT')}</span>
               </a>
             </li>
@@ -170,7 +171,7 @@ const Header = () => {
             {isLoggedIn && canAccessReplays && (
               <li>
                 <Link to="/game/load" onClick={closeMobileMenu}>
-                  <MdVideoLibrary /> <span>{t('HEADER.REPLAYS')}</span>
+                  <BsCollectionPlayFill /> <span>{t('HEADER.REPLAYS')}</span>
                 </Link>
               </li>
             )}
@@ -195,14 +196,14 @@ const Header = () => {
             {isLoggedIn && (
               <li>
                 <Link to="/user/settings" onClick={closeMobileMenu}>
-                  <BsGear /> <span>{t('HEADER.SETTINGS')}</span>
+                  <BsGearFill /> <span>{t('HEADER.SETTINGS')}</span>
                 </Link>
               </li>
             )}
             {isLoggedIn && (
               <li>
                 <a href="" onClick={handleLogOut}>
-                  <RiLogoutBoxRLine /> <span>{t('HEADER.LOGOUT')}</span>
+                <BsBoxArrowRight /> <span>{t('HEADER.LOGOUT')}</span>
                 </a>
               </li>
             )}

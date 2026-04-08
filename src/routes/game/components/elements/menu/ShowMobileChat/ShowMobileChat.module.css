@@ -1,3 +1,32 @@
+@keyframes chatPulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.8);
+    border-color: rgba(59, 130, 246, 0.9);
+  }
+  50% {
+    box-shadow: 0 0 0 5px rgba(59, 130, 246, 0);
+    border-color: rgba(100, 160, 255, 1);
+  }
+}
+
+.chatBtnUnread {
+  animation: chatPulse 3s ease-in-out infinite;
+  border-color: rgba(59, 130, 246, 0.9) !important;
+}
+
+.chatBadge {
+  position: absolute;
+  top: 1px;
+  right: 1px;
+  width: 9px;
+  height: 9px;
+  background-color: #ef4444;
+  border-radius: 50%;
+  border: 1.5px solid #111;
+  pointer-events: none;
+  z-index: 2;
+}
+
 .rightColumn {
   order: 3;
   right: 0px;

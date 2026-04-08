@@ -186,12 +186,11 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  flex-wrap: wrap;
   justify-content: flex-end;
 }
 
 .originalPrice {
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   color: var(--theme-text-muted);
   opacity: 0.7;
   font-weight: 500;
@@ -203,11 +202,13 @@
   font-weight: 700;
   
   &.freeForSupporters {
-    font-size: 0.9rem;
-    background: rgba(212, 175, 55, 0.1);
-    padding: 0.25rem 0.6rem;
-    border-radius: 4px;
+    font-size: 0.8rem;
+    background: rgba(212, 175, 55, 0.15);
+    padding: 0.2rem 0.55rem;
+    border-radius: 20px;
     color: var(--theme-primary);
+    white-space: nowrap;
+    border: 1px solid rgba(212, 175, 55, 0.3);
   }
 }
 

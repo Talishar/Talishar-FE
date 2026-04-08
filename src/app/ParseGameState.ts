@@ -588,8 +588,16 @@ export default function ParseGameState(input: any) {
   // opponent AI status (from initialLoad)
   result.gameInfo.isOpponentAI = input.initialLoad?.isOpponentAI ?? false;
 
+  // game format (from initialLoad)
+  if (input.initialLoad?.gameFormat) {
+    result.gameInfo.gameFormat = input.initialLoad.gameFormat;
+  }
+
   // AI infinite HP status for manual mode
   result.aiHasInfiniteHP = input.aiHasInfiniteHP ?? false;
+
+  // opponent inactivity status
+  result.opponentInactive = input.inactive ?? false;
 
   // rematch acceptance status
   result.isFullRematch = input.fullRematchAccepted ?? false;

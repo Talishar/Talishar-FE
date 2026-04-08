@@ -14,11 +14,17 @@ import {
   useGetFavoriteDecksQuery,
   useGetBazaarDecksQuery
 } from 'features/api/apiSlice';
-import { selectCurrentUser, selectCurrentUserName, selectMetafyHash } from 'features/auth/authSlice';
+import {
+  selectMetafyId,
+  selectCurrentUserName,
+  selectMetafyHash,
+  selectMetafyTimestamp
+} from 'features/auth/authSlice';
 import { generateCroppedImageUrl } from 'utils/cropImages';
 import { ImageSelectOption } from 'components/ImageSelect';
 import { getReadableFormatName } from 'utils/formatUtils';
 import { FAB_BAZAAR_DECK_URL_BASE } from 'appConstants';
+import useAuth from 'hooks/useAuth';
 
 const shortenFormat = (format: string): string => {
   if (!format) return '';
@@ -89,10 +95,14 @@ export const QuickJoinProvider = ({
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [joinGame] = useJoinGameMutation();
+  const { isLoggedIn, isLoading: isAuthLoading } = useAuth();
   const metafyHash = useAppSelector(selectMetafyHash);
-  const metafyId = useAppSelector(selectCurrentUser);
+  const metafyTimestamp = useAppSelector(selectMetafyTimestamp);
+  const metafyId = useAppSelector(selectMetafyId);
   const currentUserName = useAppSelector(selectCurrentUserName);
-  const isBazaarEnabled = currentUserName === 'OotTheMonk' || currentUserName === 'Rocu2';
+  const isBazaarEnabled = true;
+  const canResolveBazaarAccess =
+    !isAuthLoading && (!isLoggedIn || !!currentUserName);
 
   const { data: favoritesData, isLoading: isFavoritesLoading } =
     useGetFavoriteDecksQuery(undefined);
@@ -118,13 +128,18 @@ export const QuickJoinProvider = ({
   const [error, setError] = useState<string | null>(null);
   const [isJoining, setIsJoining] = useState(false);
 
-  const canFetchBazaar = deckSource === 'bazaar' && !!metafyId && !!metafyHash;
+  const canFetchBazaar =
+    deckSource === 'bazaar' && !!metafyId && !!metafyHash && !!metafyTimestamp;
   const {
     data: bazaarData,
     isLoading: isBazaarLoading,
     error: bazaarFetchError
   } = useGetBazaarDecksQuery(
-    { metafyId: metafyId!, metafyHash: metafyHash! },
+    {
+      metafyId: metafyId!,
+      metafyHash: metafyHash!,
+      metafyTimestamp: metafyTimestamp!
+    },
     { skip: !canFetchBazaar }
   );
 
@@ -140,8 +155,9 @@ export const QuickJoinProvider = ({
   const bazaarDeckOptions: ImageSelectOption[] = useMemo(() => {
     if (!bazaarData?.decks) return [];
     return bazaarData.decks.map((deck) => ({
-      value: deck.deckId,
-      label: deck.name
+      value: deck.id ?? deck.deckId ?? '',
+      label: formatDeckLabel(deck.name, deck.format ?? null),
+      imageUrl: deck.hero ? generateCroppedImageUrl(deck.hero) : undefined
     }));
   }, [bazaarData?.decks]);
 
@@ -175,11 +191,15 @@ export const QuickJoinProvider = ({
   // If FaB Bazaar isn't enabled for this user, reset any stale 'bazaar' value so the
   // disabled tab doesn't get the active class from localStorage.
   useEffect(() => {
-    if (!isBazaarEnabled && deckSource === 'bazaar') {
+    if (
+      canResolveBazaarAccess &&
+      !isBazaarEnabled &&
+      deckSource === 'bazaar'
+    ) {
       setDeckSourceState('talishar');
       localStorage.setItem(LS_DECK_SOURCE_KEY, 'talishar');
     }
-  }, [isBazaarEnabled]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [canResolveBazaarAccess, isBazaarEnabled, deckSource]);
 
   const setDeckSource = useCallback((v: 'talishar' | 'bazaar') => {
     setDeckSourceState(v);

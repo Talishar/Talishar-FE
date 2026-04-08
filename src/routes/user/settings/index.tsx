@@ -157,7 +157,7 @@ const SettingsPage = () => {
             />
           </Fieldset>
 
-          <Fieldset legend="Skip Overrides">
+          <Fieldset legend="Skip Overrides" tooltip="Resets at the start of each turn.">
             <CheckboxSetting
               name="skipAttackReactions"
               label="Skip Attack Reactions"
@@ -247,18 +247,6 @@ const SettingsPage = () => {
                   value: initialValues.hideHandFromFriends ? '0' : '1'
                 })
               }
-            />
-            <CheckboxSetting
-              name="manualMode"
-              label="Manual Mode"
-              checked={initialValues.manualMode}
-              onChange={() =>
-                handleSettingsChange({
-                  name: optConst.MANUAL_MODE,
-                  value: initialValues.manualMode ? '0' : '1'
-                })
-              }
-              ariaDisabled={true}
             />
             <CheckboxSetting
               name="manualTunic"

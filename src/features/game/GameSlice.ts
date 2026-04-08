@@ -26,6 +26,8 @@ import {
 import isEqual from 'react-fast-compare';
 import { CardStack } from '../../routes/game/components/zones/permanentsZone/PermanentsZone';
 
+const CHAT_RE = /<span[^>]*>(.*?):\s<\/span>/;
+
 /**
  * Sanitizes HTML content by removing all HTML tags.
  * Applies the regex replacement repeatedly until no more replacements occur
@@ -658,6 +660,9 @@ export const gameSlice = createSlice({
     },
     toggleChatModal: (state) => {
       state.showChatModal = !state.showChatModal;
+      if (state.showChatModal) {
+        state.unreadChatCount = 0;
+      }
     },
     enableModals: (state) => {
       state.showModals = true;
@@ -832,6 +837,19 @@ export const gameSlice = createSlice({
       state.activeChainLink = action.payload.activeChainLink;
       state.activeLayers = action.payload.activeLayers;
       state.oldCombatChain = action.payload.oldCombatChain;
+
+      {
+        const prevLen = (state.chatLog ?? []).filter((m: string) => m.length > 0).length;
+        const incoming = action.payload.chatLog ?? [];
+        if (!state.showChatModal && prevLen > 0) {
+          const incomingNonEmpty = incoming.filter((m: string) => m.length > 0);
+          const newPlayerChats = incomingNonEmpty.slice(prevLen).filter((m: string) => CHAT_RE.test(m)).length;
+          if (newPlayerChats > 0) {
+            state.unreadChatCount = (state.unreadChatCount ?? 0) + newPlayerChats;
+          }
+        }
+      }
+
       state.chatLog = action.payload.chatLog;
       state.opponentIsTyping = action.payload.opponentIsTyping ?? false;
       state.amIActivePlayer = action.payload.amIActivePlayer;
@@ -888,7 +906,12 @@ export const gameSlice = createSlice({
       state.gameInfo.isOpponentAI =
         action.payload.gameInfo.isOpponentAI ?? state.gameInfo.isOpponentAI;
 
+      state.gameInfo.gameFormat =
+        action.payload.gameInfo.gameFormat ?? state.gameInfo.gameFormat;
+
       state.aiHasInfiniteHP = action.payload.aiHasInfiniteHP ?? false;
+
+      state.opponentInactive = action.payload.opponentInactive ?? false;
 
       state.preventPassPrompt = action.payload.preventPassPrompt;
 
@@ -949,6 +972,19 @@ export const gameSlice = createSlice({
       state.activeChainLink = action.payload.activeChainLink;
       state.activeLayers = action.payload.activeLayers;
       state.oldCombatChain = action.payload.oldCombatChain;
+
+      {
+        const prevLen = (state.chatLog ?? []).filter((m: string) => m.length > 0).length;
+        const incoming = action.payload.chatLog ?? [];
+        if (!state.showChatModal && prevLen > 0) {
+          const incomingNonEmpty = incoming.filter((m: string) => m.length > 0);
+          const newPlayerChats = incomingNonEmpty.slice(prevLen).filter((m: string) => CHAT_RE.test(m)).length;
+          if (newPlayerChats > 0) {
+            state.unreadChatCount = (state.unreadChatCount ?? 0) + newPlayerChats;
+          }
+        }
+      }
+
       state.chatLog = action.payload.chatLog;
       state.opponentIsTyping = action.payload.opponentIsTyping ?? false;
       state.amIActivePlayer = action.payload.amIActivePlayer;
@@ -1005,7 +1041,12 @@ export const gameSlice = createSlice({
       state.gameInfo.isOpponentAI =
         action.payload.gameInfo.isOpponentAI ?? state.gameInfo.isOpponentAI;
 
+      state.gameInfo.gameFormat =
+        action.payload.gameInfo.gameFormat ?? state.gameInfo.gameFormat;
+
       state.aiHasInfiniteHP = action.payload.aiHasInfiniteHP ?? false;
+
+      state.opponentInactive = action.payload.opponentInactive ?? false;
 
       state.preventPassPrompt = action.payload.preventPassPrompt;
 

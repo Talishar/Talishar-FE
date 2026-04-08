@@ -1,6 +1,9 @@
 export interface BazaarDeck {
+  id: string;
   name: string;
-  deckId: string;
+  hero?: string;
+  format?: string | null;
+  deckId?: string;
 }
 
 export interface BazaarDecksResponse {
@@ -12,4 +15,5 @@ export interface BazaarDecksResponse {
 export interface GetBazaarDecksRequest {
   metafyId: number | string;
   metafyHash: string;
+  metafyTimestamp: number;
 }

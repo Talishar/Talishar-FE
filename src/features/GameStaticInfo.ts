@@ -11,6 +11,7 @@ export default interface GameStaticInfo {
   opponentAltArts?: AltArt[];
   isRoguelike?: boolean;
   isOpponentAI?: boolean;
+  gameFormat?: string;
   heroName?: string;
   yourHeroCardNumber?: string;
   opponentHeroName?: string;

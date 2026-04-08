@@ -1,6 +1,5 @@
 import { Card } from 'features/Card';
 import { Effect } from '../effects/Effects';
-import EndGameMenuOptions from '../endGameMenuOptions/EndGameMenuOptions';
 import styles from './EndGameStats.module.css';
 import useAuth from 'hooks/useAuth';
 import {
@@ -768,8 +767,6 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
 
   return (
     <div className={styles.endGameStats} data-testid="test-stats">
-      <EndGameMenuOptions />
-
       <div ref={statsRef} className={styles.statsContent}>
         <div className={styles.statsContainer}>
           <div className={styles.statsSection}>

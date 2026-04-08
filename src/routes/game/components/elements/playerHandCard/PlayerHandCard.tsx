@@ -18,11 +18,14 @@ import classNames from 'classnames';
 import CardImage from '../cardImage/CardImage';
 import CardPopUp from '../cardPopUp/CardPopUp';
 import useWindowDimensions from 'hooks/useWindowDimensions';
-import { motion, PanInfo } from 'framer-motion';
+import { motion, PanInfo, useMotionValue, animate as animateValue } from 'framer-motion';
 import { CARD_SQUARES_PATH, getCollectionCardImagePath } from 'utils';
 import { useLanguageSelector } from 'hooks/useLanguageSelector';
 
 const ScreenPercentageForCardPlayed = 0.25;
+
+const supportsHover =
+  typeof window !== 'undefined' && window.matchMedia('(hover: hover)').matches;
 
 export interface HandCard {
   isArsenal?: boolean;
@@ -64,6 +67,9 @@ export const PlayerHandCard = ({
   const isLongPress = useRef<boolean>();
   const hasDispatchedClearRef = useRef<boolean>(false);
   const draggedRef = useRef<boolean>(false);
+
+  const dragX = useMotionValue(0);
+  const dragY = useMotionValue(0);
 
   if (card === undefined) {
     return <div className={styles.handCard}></div>;
@@ -107,6 +113,17 @@ export const PlayerHandCard = ({
     draggedRef.current = false;
     setIsDragging(false);
     setCanPopup(true);
+    hasDispatchedClearRef.current = false;
+    onHandReorderDragCancel?.();
+  };
+
+  const handlePointerCancel = () => {
+    animateValue(dragX, 0, { type: 'spring', bounce: 0.25, duration: 0.3 });
+    animateValue(dragY, 0, { type: 'spring', bounce: 0.25, duration: 0.3 });
+    draggedRef.current = false;
+    setIsDragging(false);
+    setCanPopup(true);
+    setSnapback(true);
     hasDispatchedClearRef.current = false;
     onHandReorderDragCancel?.();
   };
@@ -191,13 +208,14 @@ export const PlayerHandCard = ({
       className={classNames(styles.handCard, {
         [styles.newlyDrawn]: isNewlyDrawn
       })}
-      style={{ touchAction: 'none', zIndex }}
+      style={{ x: dragX, y: dragY, touchAction: 'none', zIndex: isDragging ? 1000 : zIndex }}
       onClick={handleOnClick}
       onTapStart={startPressTimer}
       onTap={stopPressTimer}
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
       onDrag={onDrag}
+      onPointerCancel={handlePointerCancel}
       dragSnapToOrigin={snapback}
       dragMomentum={false}
       initial={getInitialPosition()}
@@ -205,8 +223,8 @@ export const PlayerHandCard = ({
       transition={
         isNewlyDrawn ? { duration: 0.2, ease: 'easeOut' } : { duration: 0.1 }
       }
-      whileHover={isDragging ? undefined : { scale: 1.1, y: -50 }}
-      whileDrag={{ scale: 1.05, zIndex: 1000 }}
+      whileHover={isDragging || !supportsHover ? undefined : { scale: 1.1, y: -50, zIndex: 1000 }}
+      whileDrag={{ scale: 1.05 }}
     >
       <CardPopUp
         containerClass={styles.imgContainer}

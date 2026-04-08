@@ -39,6 +39,26 @@ const OptionsSettings = () => {
     (state: RootState) => state.game.gameInfo.playerID
   );
   const isSpectator = playerID === 3;
+  const isOpponentAI = useAppSelector(
+    (state: RootState) => state.game.gameInfo.isOpponentAI ?? false
+  );
+  const isPrivate = useAppSelector(
+    (state: RootState) =>
+      (state.game.gameInfo.isPrivate ?? false) ||
+      (state.game.gameInfo.isPrivateLobby ?? false)
+  );
+  const isPracticeDummy = useAppSelector(
+    (state: RootState) => state.game.playerTwo?.Name === 'Practice Dummy'
+  );
+  const isLocalEnvironment =
+    import.meta.env.MODE === 'development' ||
+    window.location.hostname === 'localhost';
+  const isFuturesFormat = useAppSelector((state: RootState) => {
+    const fmt = state.game.gameInfo.gameFormat ?? '';
+    return fmt === 'futurecc' || fmt === 'futurell' || fmt === 'futuresage';
+  });
+  const canUseManualMode =
+    isLocalEnvironment || isOpponentAI || isPracticeDummy || isPrivate || isFuturesFormat;
   const [cookies, setCookie, removeCookie] = useCookies([
     'experimental',
     'cardSize',
@@ -147,7 +167,7 @@ const OptionsSettings = () => {
         </Fieldset>
       )}
       {!isSpectator && (
-        <Fieldset legend="Skip Overrides">
+        <Fieldset legend="Skip Overrides" tooltip="Resets at the start of each turn.">
           <CheckboxSetting
             name="skipAttackReactions"
             label="Skip Attack Reactions"
@@ -242,18 +262,20 @@ const OptionsSettings = () => {
               })
             }
           />
-          <CheckboxSetting
-            name="manualMode"
-            label="Manual Mode"
-            checked={initialValues.manualMode}
-            onChange={() =>
-              handleSettingsChange({
-                name: optConst.MANUAL_MODE,
-                value: initialValues.manualMode ? '0' : '1'
-              })
-            }
-            ariaDisabled={true}
-          />
+          {canUseManualMode && (
+            <CheckboxSetting
+              name="manualMode"
+              label="Manual Mode"
+              checked={initialValues.manualMode}
+              onChange={() =>
+                handleSettingsChange({
+                  name: optConst.MANUAL_MODE,
+                  value: initialValues.manualMode ? '0' : '1'
+                })
+              }
+              ariaDisabled={true}
+            />
+          )}
           <CheckboxSetting
             name="manualTunic"
             label="Manual Tunic Mode"

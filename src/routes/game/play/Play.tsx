@@ -15,6 +15,7 @@ import ChainLinkSummaryContainer from '../components/elements/chainLinkSummary/C
 import ActiveLayersZone from '../components/zones/activeLayersZone/ActiveLayersZone';
 import GameStateHandler from 'app/GameStateHandler';
 import HeroVsHeroIntro from '../components/elements/heroVsHeroIntro/HeroVsHeroIntro';
+import OpponentInactive from '../components/elements/opponentInactive/OpponentInactive';
 import { useCookies } from 'react-cookie';
 import { useEffect, useRef } from 'react';
 import { usePageTitle } from 'hooks/usePageTitle';
@@ -25,7 +26,7 @@ import {
   getGameInfo
 } from '../../../features/game/GameSlice';
 import { fetchAllSettings, settingUpdated } from 'features/options/optionsSlice';
-import { SHORTCUT_ATTACK_THRESHOLD } from 'features/options/constants';
+import { SHORTCUT_ATTACK_THRESHOLD, SKIP_AR_WINDOW, SKIP_DR_WINDOW } from 'features/options/constants';
 import { Toaster } from 'react-hot-toast';
 import { shallowEqual } from 'react-redux';
 import { PanelProvider } from '../components/leftColumn/PanelContext';
@@ -68,6 +69,8 @@ function Play({ isRoguelike }: { isRoguelike: boolean }) {
     if (turnNo !== prevTurnNoRef.current) {
       prevTurnNoRef.current = turnNo;
       dispatch(settingUpdated({ name: SHORTCUT_ATTACK_THRESHOLD, value: '0' }));
+      dispatch(settingUpdated({ name: SKIP_AR_WINDOW, value: '0' }));
+      dispatch(settingUpdated({ name: SKIP_DR_WINDOW, value: '0' }));
     }
   }, [turnNo, dispatch]);
 
@@ -182,6 +185,7 @@ function Play({ isRoguelike }: { isRoguelike: boolean }) {
         <OptionsMenu />
         <InventoryModal />
         <PlayerInputPopUp />
+        <OpponentInactive />
         <CardPortal />
         <GameStateHandler />
         <EventsHandler />

@@ -5,13 +5,22 @@ const MOUSE_BUTTON_CODES: Record<string, number> = {
 };
 
 const shortcutListeners = new Map<string, (event: Event) => void>();
+const shortcutCallbackRefs = new Map<string, { current: Function }>();
 
 const useShortcut = (keyCode: string, callback: Function) => {
   const isMouseShortcut = keyCode in MOUSE_BUTTON_CODES;
   const eventType = isMouseShortcut ? 'mousedown' : 'keydown';
 
-  const handleEvent = useCallback(
-    (event: Event) => {
+  if (!shortcutCallbackRefs.has(keyCode)) {
+    shortcutCallbackRefs.set(keyCode, { current: callback });
+  } else {
+    shortcutCallbackRefs.get(keyCode)!.current = callback;
+  }
+
+  if (!shortcutListeners.has(keyCode)) {
+    const callbackRef = shortcutCallbackRefs.get(keyCode)!;
+
+    const handleEvent = (event: Event) => {
       // Check if user is typing in an input field, textarea, or contenteditable element
       const target = event.target as HTMLElement;
       const isTyping =
@@ -29,20 +38,17 @@ const useShortcut = (keyCode: string, callback: Function) => {
         : (event as KeyboardEvent).code === keyCode;
 
       if (isMatch) {
-        callback(event);
+        callbackRef.current(event);
         event.preventDefault(); // prevent default behavior
       }
-    },
-    [keyCode, callback]
-  );
+    };
 
-  if (!shortcutListeners.has(keyCode)) {
     shortcutListeners.set(keyCode, handleEvent);
     window.addEventListener(eventType, handleEvent);
   }
 
   return () => {
-    window.removeEventListener(eventType, handleEvent);
+    window.removeEventListener(eventType, shortcutListeners.get(keyCode)!);
   };
 };
 

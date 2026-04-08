@@ -33,7 +33,8 @@ const includedCounters = [
   'lightning',
   'amp',
   'aim',
-  'wateryGrave'
+  'wateryGrave',
+  'counters'
 ];
 
 const toTooltipString = (type: string, value: number) =>
@@ -230,6 +231,11 @@ export const ContinuousCounters = (props: Props) => {
         >
           <GiTombstone />
         </TooltipWrapper>
+      )}
+      {!!Number(countersMap?.counters) && (
+        <div className={styles.enduranceCounter}>
+          <div>{countersMap?.counters}</div>
+        </div>
       )}
     </>
   );
