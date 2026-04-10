@@ -1212,7 +1212,7 @@ const CreateGame = () => {
                         Practice Dummy
                       </option>
                       <option value={AI_DECK.IRABLITZ}>
-                        Flic Flak Ira (Blitz)
+                        Ira (SAGE)
                       </option>
                       <option value={AI_DECK.FAICC}>Fai (CC)</option>
                     </select>
