@@ -126,7 +126,8 @@ export const HEROES_OF_RATHE: {
   { value: 'SUP072', label: 'Lyath Goldmane', young: true },
   { value: 'BDD001', label: 'Bravo Flattering Showman', young: true },
   { value: 'MST238', label: 'Enigma New Moon', young: true },
-  { value: 'AHA001', label: 'Hala Bladesaint of the Vow' }
+  { value: 'AHA001', label: 'Hala Bladesaint of the Vow' }, 
+  { value: 'MPW004', label: 'Hala', young: true }
   /*   { value: 'JDG024', label: 'Brutus Summa Rudis', young:true },
   { value: 'SMP001', label: 'Bolfar Bear Hands', young: true },
   { value: 'SMP003', label: 'Fightmaster Kox', young: true },
