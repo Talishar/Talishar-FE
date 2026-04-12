@@ -34,7 +34,8 @@ import {
   GAME_FORMAT,
   BREAKPOINT_EXTRA_LARGE,
   CLOUD_IMAGES_URL,
-  QUERY_STATUS
+  QUERY_STATUS,
+  FAB_BAZAAR_DECK_URL_BASE
 } from 'appConstants';
 import ChooseFirstTurn from './components/chooseFirstTurn/ChooseFirstTurn';
 import useWindowDimensions from 'hooks/useWindowDimensions';
@@ -469,6 +470,16 @@ const Lobby = () => {
   //const needToDoDisclaimer = false;
   const leaveLobby = classNames(styles.buttonClass, 'outline');
 
+  const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
+    if (!deckLink) return null;
+    const normalizedBase = FAB_BAZAAR_DECK_URL_BASE.endsWith('/')
+      ? FAB_BAZAAR_DECK_URL_BASE
+      : `${FAB_BAZAAR_DECK_URL_BASE}/`;
+    if (!deckLink.startsWith(normalizedBase)) return null;
+    const deckId = deckLink.slice(normalizedBase.length).split('?')[0].trim();
+    return deckId || null;
+  };
+
   const handleFormSubmission = async (values: DeckResponse) => {
     setIsSubmitting(true);
 
@@ -570,15 +581,18 @@ const Lobby = () => {
       }
 
       // Save sideboard changes back to FaB Bazaar (sticky sideboarding)
-      const bazaarDeckId = gameInfo.bazaarDeckId;
+      const bazaarDeckId =
+        gameInfo.bazaarDeckId ??
+        extractBazaarDeckIdFromLink(gameLobby?.myDeckLink);
       const opponentHeroId = gameLobby?.theirHero;
-      if (
+      const canSyncBazaarSideboard =
         bazaarDeckId &&
         opponentHeroId &&
         metafyId &&
         metafyHash &&
-        metafyTimestamp
-      ) {
+        metafyTimestamp;
+
+      if (canSyncBazaarSideboard) {
         const multisetDiff = (have: string[], remove: string[]): string[] => {
           const counts = new Map<string, number>();
           for (const card of have) counts.set(card, (counts.get(card) ?? 0) + 1);
@@ -604,6 +618,15 @@ const Lobby = () => {
           sideboard: { in: sideboardIn, out: sideboardOut }
         }).catch(() => {
           // Fire-and-forget: Bazaar sync failure should not affect game flow
+        });
+      } else if (!import.meta.env.PROD) {
+        console.info('Skipping Bazaar sideboard sync', {
+          bazaarDeckId: bazaarDeckId ?? null,
+          myDeckLink: gameLobby?.myDeckLink ?? null,
+          opponentHeroId: opponentHeroId ?? null,
+          metafyId: metafyId ?? null,
+          metafyHashPresent: !!metafyHash,
+          metafyTimestamp: metafyTimestamp ?? null
         });
       }
     } catch (err) {
