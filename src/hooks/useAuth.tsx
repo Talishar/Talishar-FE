@@ -169,6 +169,7 @@ export default function useAuth() {
     metafyId,
     metafyHash,
     metafyTimestamp,
+    refreshAuth: refetchAuth,
     setLoggedIn,
     logOut
   };

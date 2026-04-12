@@ -74,7 +74,14 @@ const Lobby = () => {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [hasMatchups, setHasMatchups] = useState<boolean>(false);
   const settingsStatus = useAppSelector(getSettingsStatus);
-  const { isLoggedIn, metafyId, metafyHash, metafyTimestamp } = useAuth();
+  const {
+    isLoggedIn,
+    isPatron,
+    metafyId,
+    metafyHash,
+    metafyTimestamp,
+    refreshAuth
+  } = useAuth();
   const gameInfo = useAppSelector(getGameInfo, shallowEqual);
   const { playerID, gameID, authKey } = gameInfo;
   const [acceptedDisclaimer, setAcceptedDisclaimer] = useState<boolean>(
@@ -85,7 +92,6 @@ const Lobby = () => {
     shallowEqual
   );
   const [playLobbyJoin] = useSound(playerJoined, { volume: 1 });
-  const { isPatron } = useAuth();
   const settingsData = useAppSelector(getSettingsEntity);
   const isMuted = settingsData['MuteSound']?.value === '1';
   const isStreamerMode = String(settingsData['IsStreamerMode']?.value) === '1';
@@ -482,6 +488,19 @@ const Lobby = () => {
 
   const handleFormSubmission = async (values: DeckResponse) => {
     setIsSubmitting(true);
+    console.groupCollapsed('[StickySideboard] Submit sideboard start');
+    console.info('[StickySideboard] game context', {
+      gameID,
+      playerID,
+      hasGameAuthKey: !!authKey,
+      reduxBazaarDeckId: gameInfo.bazaarDeckId ?? null,
+      myDeckLink: gameLobby?.myDeckLink ?? null,
+      opponentHero: gameLobby?.theirHero ?? null,
+      metafyId: metafyId ?? null,
+      metafyHashPresent: !!metafyHash,
+      metafyTimestamp: metafyTimestamp ?? null
+    });
+    console.groupEnd();
 
     const hands = values.weapons.map((item) => item.id.split('-')[0]);
     const deck = values.deck.map((card) => card.split('-')[0]);
@@ -567,8 +586,19 @@ const Lobby = () => {
       submission: JSON.stringify(submitDeck) // the API unmarshals the JSON inside the unmarshaled JSON.
     };
 
+    console.info('[StickySideboard] Submitting to Talishar', {
+      mainDeckCount: deck.length,
+      inventoryCount: inventory.length,
+      requestGameID: requestBody.gameName,
+      requestPlayerID: requestBody.playerID
+    });
+
     try {
       const submitResponse: any = await submitSideboardMutation(requestBody).unwrap();
+      console.info('[StickySideboard] Talishar submit success', {
+        gameStarted: !!submitResponse?.gameStarted,
+        hasNewAuthKey: !!submitResponse?.authKey
+      });
 
       // If game started, capture and store the auth key for future use
       if (submitResponse?.gameStarted && submitResponse?.authKey && gameID) {
@@ -585,12 +615,53 @@ const Lobby = () => {
         gameInfo.bazaarDeckId ??
         extractBazaarDeckIdFromLink(gameLobby?.myDeckLink);
       const opponentHeroId = gameLobby?.theirHero;
+      let resolvedMetafyId = metafyId;
+      let resolvedMetafyHash = metafyHash;
+      let resolvedMetafyTimestamp = metafyTimestamp;
+
+      // If Bazaar deck/opponent are known but metafy credentials are missing,
+      // force-refresh TryLoginAPI and retry with fresh values.
+      if (
+        bazaarDeckId &&
+        opponentHeroId &&
+        (!resolvedMetafyId || !resolvedMetafyHash || !resolvedMetafyTimestamp)
+      ) {
+        console.warn('[StickySideboard] Missing metafy credentials, forcing auth refresh', {
+          resolvedMetafyId: resolvedMetafyId ?? null,
+          resolvedMetafyHashPresent: !!resolvedMetafyHash,
+          resolvedMetafyTimestamp: resolvedMetafyTimestamp ?? null
+        });
+        try {
+          const refreshedAuth: any = await refreshAuth();
+          const refreshed = refreshedAuth?.data;
+          resolvedMetafyId = refreshed?.metafyID ?? refreshed?.metafyId ?? resolvedMetafyId;
+          resolvedMetafyHash = refreshed?.metafyHash ?? resolvedMetafyHash;
+          resolvedMetafyTimestamp = refreshed?.timestamp ?? resolvedMetafyTimestamp;
+          console.info('[StickySideboard] Auth refresh complete', {
+            refreshedMetafyId: resolvedMetafyId ?? null,
+            refreshedMetafyHashPresent: !!resolvedMetafyHash,
+            refreshedMetafyTimestamp: resolvedMetafyTimestamp ?? null
+          });
+        } catch (authRefreshErr) {
+          console.error('[StickySideboard] Auth refresh failed', authRefreshErr);
+        }
+      }
+
       const canSyncBazaarSideboard =
         bazaarDeckId &&
         opponentHeroId &&
-        metafyId &&
-        metafyHash &&
-        metafyTimestamp;
+        resolvedMetafyId &&
+        resolvedMetafyHash &&
+        resolvedMetafyTimestamp;
+
+      console.info('[StickySideboard] Bazaar sync gate evaluation', {
+        canSyncBazaarSideboard: !!canSyncBazaarSideboard,
+        bazaarDeckId: bazaarDeckId ?? null,
+        opponentHeroId: opponentHeroId ?? null,
+        metafyId: resolvedMetafyId ?? null,
+        metafyHashPresent: !!resolvedMetafyHash,
+        metafyTimestamp: resolvedMetafyTimestamp ?? null
+      });
 
       if (canSyncBazaarSideboard) {
         const multisetDiff = (have: string[], remove: string[]): string[] => {
@@ -609,28 +680,45 @@ const Lobby = () => {
         const originalMain: string[] = data?.deck?.cards ?? [];
         const sideboardIn = multisetDiff(deck, originalMain);
         const sideboardOut = multisetDiff(originalMain, deck);
+        console.info('[StickySideboard] Calling Bazaar PATCH', {
+          deckId: bazaarDeckId,
+          heroId: opponentHeroId,
+          sideboardInCount: sideboardIn.length,
+          sideboardOutCount: sideboardOut.length,
+          sideboardInSample: sideboardIn.slice(0, 5),
+          sideboardOutSample: sideboardOut.slice(0, 5)
+        });
         updateBazaarMatchup({
           deckId: bazaarDeckId,
           heroId: opponentHeroId,
-          metafyId,
-          metafyHash,
-          metafyTimestamp,
+          metafyId: resolvedMetafyId,
+          metafyHash: resolvedMetafyHash,
+          metafyTimestamp: resolvedMetafyTimestamp,
           sideboard: { in: sideboardIn, out: sideboardOut }
-        }).catch(() => {
-          // Fire-and-forget: Bazaar sync failure should not affect game flow
-        });
-      } else if (!import.meta.env.PROD) {
-        console.info('Skipping Bazaar sideboard sync', {
+        })
+          .unwrap()
+          .then((bazaarResponse) => {
+            console.info('[StickySideboard] Bazaar PATCH success', {
+              success: bazaarResponse?.success ?? true,
+              heroId: bazaarResponse?.data?.matchup?.heroId ?? null
+            });
+          })
+          .catch((bazaarErr) => {
+            console.error('[StickySideboard] Bazaar PATCH failed', bazaarErr);
+            // Fire-and-forget: Bazaar sync failure should not affect game flow
+          });
+      } else {
+        console.warn('[StickySideboard] Bazaar sync skipped - missing required data', {
           bazaarDeckId: bazaarDeckId ?? null,
           myDeckLink: gameLobby?.myDeckLink ?? null,
           opponentHeroId: opponentHeroId ?? null,
-          metafyId: metafyId ?? null,
-          metafyHashPresent: !!metafyHash,
-          metafyTimestamp: metafyTimestamp ?? null
+          metafyId: resolvedMetafyId ?? null,
+          metafyHashPresent: !!resolvedMetafyHash,
+          metafyTimestamp: resolvedMetafyTimestamp ?? null
         });
       }
     } catch (err) {
-      console.error(err);
+      console.error('[StickySideboard] Talishar sideboard submit failed', err);
     } finally {
       setIsSubmitting(false);
     }
@@ -723,6 +811,7 @@ const Lobby = () => {
         enableReinitialize
       >
         <Form className={styles.form}>
+          <FormikDebugLogger />
           <div
             className={classNames(styles.gridLayout, {
               [styles.noMatchups]: !hasMatchups
@@ -1062,6 +1151,33 @@ const Lobby = () => {
         )}
     </main>
   );
+};
+
+const FormikDebugLogger = () => {
+  const { submitCount, isValid, errors, values, isSubmitting } =
+    useFormikContext<DeckResponse>();
+  const previousSubmitCount = React.useRef(submitCount);
+
+  useEffect(() => {
+    if (submitCount > previousSubmitCount.current) {
+      console.info('[StickySideboard/Formik] Submit attempt', {
+        submitCount,
+        isValid,
+        errorKeys: Object.keys(errors || {}),
+        selectedMainDeckCount: values.deck?.length ?? 0,
+        selectedWeaponCount: values.weapons?.length ?? 0,
+        isSubmitting
+      });
+      if (!isValid) {
+        console.warn('[StickySideboard/Formik] Submit blocked by validation', {
+          errors
+        });
+      }
+      previousSubmitCount.current = submitCount;
+    }
+  }, [submitCount, isValid, errors, values, isSubmitting]);
+
+  return null;
 };
 
 // Component to handle Filters, Select All/None buttons for desktop - has access to Formik context

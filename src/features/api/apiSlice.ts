@@ -383,19 +383,39 @@ export const apiSlice = createApi({
         url.searchParams.set('metafyId', String(metafyId));
         url.searchParams.set('metafyHash', metafyHash);
         url.searchParams.set('timestamp', String(metafyTimestamp));
+        console.info('[StickySideboard/API] PATCH request', {
+          url: url.toString(),
+          deckId,
+          heroId,
+          metafyId,
+          metafyHashPresent: !!metafyHash,
+          metafyTimestamp,
+          sideboardInCount: sideboard.in?.length ?? 0,
+          sideboardOutCount: sideboard.out?.length ?? 0
+        });
         try {
           const response = await fetch(url.toString(), {
             method: 'PATCH',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ sideboard })
           });
+          console.info('[StickySideboard/API] PATCH response status', {
+            status: response.status,
+            ok: response.ok
+          });
           if (!response.ok) {
             const errorData = await response.json().catch(() => ({}));
+            console.error('[StickySideboard/API] PATCH non-OK response', {
+              status: response.status,
+              errorData
+            });
             return { error: { status: response.status, data: errorData } };
           }
           const data: UpdateBazaarMatchupResponse = await response.json();
+          console.info('[StickySideboard/API] PATCH success body', data);
           return { data };
         } catch (error) {
+          console.error('[StickySideboard/API] PATCH fetch exception', error);
           return {
             error: { status: 'FETCH_ERROR' as const, error: String(error) }
           };
