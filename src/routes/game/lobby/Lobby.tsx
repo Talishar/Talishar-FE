@@ -21,7 +21,8 @@ import {
   useGetLobbyInfoQuery,
   useSubmitSideboardMutation,
   useSubmitLobbyInputMutation,
-  useGetUserProfileQuery
+  useGetUserProfileQuery,
+  useUpdateBazaarMatchupMutation
 } from 'features/api/apiSlice';
 import { useAppSelector } from 'app/Hooks';
 import { shallowEqual } from 'react-redux';
@@ -72,7 +73,7 @@ const Lobby = () => {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [hasMatchups, setHasMatchups] = useState<boolean>(false);
   const settingsStatus = useAppSelector(getSettingsStatus);
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, metafyId, metafyHash, metafyTimestamp } = useAuth();
   const gameInfo = useAppSelector(getGameInfo, shallowEqual);
   const { playerID, gameID, authKey } = gameInfo;
   const [acceptedDisclaimer, setAcceptedDisclaimer] = useState<boolean>(
@@ -180,6 +181,8 @@ const Lobby = () => {
 
   const [submitSideboardMutation, submitSideboardMutationData] =
     useSubmitSideboardMutation();
+
+  const [updateBazaarMatchup] = useUpdateBazaarMatchupMutation();
 
   const [submitLobbyInput, submitLobbyInputData] =
     useSubmitLobbyInputMutation();
@@ -554,16 +557,54 @@ const Lobby = () => {
     };
 
     try {
-      const data: any = await submitSideboardMutation(requestBody).unwrap();
+      const submitResponse: any = await submitSideboardMutation(requestBody).unwrap();
 
       // If game started, capture and store the auth key for future use
-      if (data?.gameStarted && data?.authKey && gameID) {
-        saveGameAuthKey(gameID, data.authKey, playerID);
+      if (submitResponse?.gameStarted && submitResponse?.authKey && gameID) {
+        saveGameAuthKey(gameID, submitResponse.authKey, playerID);
         console.log(
           'Game started! Auth key stored. Waiting for lobby to be ready...'
         );
         // The existing useEffect in this component will navigate to /game/play/{gameID}
         // when gameLobby?.isMainGameReady becomes true
+      }
+
+      // Save sideboard changes back to FaB Bazaar (sticky sideboarding)
+      const bazaarDeckId = gameInfo.bazaarDeckId;
+      const opponentHeroId = gameLobby?.theirHero;
+      if (
+        bazaarDeckId &&
+        opponentHeroId &&
+        metafyId &&
+        metafyHash &&
+        metafyTimestamp
+      ) {
+        const multisetDiff = (have: string[], remove: string[]): string[] => {
+          const counts = new Map<string, number>();
+          for (const card of have) counts.set(card, (counts.get(card) ?? 0) + 1);
+          for (const card of remove) {
+            const c = counts.get(card) ?? 0;
+            if (c <= 1) counts.delete(card);
+            else counts.set(card, c - 1);
+          }
+          return Array.from(counts.entries()).flatMap(([card, n]) =>
+            Array(n).fill(card)
+          );
+        };
+        // Use lobby deck data to compute which cards moved in/out of main deck
+        const originalMain: string[] = data?.deck?.cards ?? [];
+        const sideboardIn = multisetDiff(deck, originalMain);
+        const sideboardOut = multisetDiff(originalMain, deck);
+        updateBazaarMatchup({
+          deckId: bazaarDeckId,
+          heroId: opponentHeroId,
+          metafyId,
+          metafyHash,
+          metafyTimestamp,
+          sideboard: { in: sideboardIn, out: sideboardOut }
+        }).catch(() => {
+          // Fire-and-forget: Bazaar sync failure should not affect game flow
+        });
       }
     } catch (err) {
       console.error(err);

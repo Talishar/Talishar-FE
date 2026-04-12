@@ -42,8 +42,9 @@ export default function useAuth() {
     isLoading: isQueryLoading,
     isFetching,
     error,
-    data
-  } = useLoginWithCookieQuery({});
+    data,
+    refetch: refetchAuth
+  } = useLoginWithCookieQuery({}, { refetchOnMountOrArgChange: 600 });
   const [authCheckTimedOut, setAuthCheckTimedOut] = useState(false);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -149,11 +150,13 @@ export default function useAuth() {
 
   useEffect(() => {
     if (isLoggedIn && !isLoading) {
-      const authRefreshInterval = setInterval(() => {}, 10 * 60 * 1000); // 10 minutes
+      const authRefreshInterval = setInterval(() => {
+        refetchAuth();
+      }, 10 * 60 * 1000); // 10 minutes
 
       return () => clearInterval(authRefreshInterval);
     }
-  }, [isLoggedIn, isLoading]);
+  }, [isLoggedIn, isLoading, refetchAuth]);
 
   return {
     isLoggedIn,

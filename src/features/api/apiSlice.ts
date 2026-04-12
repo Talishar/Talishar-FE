@@ -37,6 +37,10 @@ import {
   BazaarDecksResponse,
   GetBazaarDecksRequest
 } from 'interface/API/GetBazaarDecks';
+import {
+  UpdateBazaarMatchupRequest,
+  UpdateBazaarMatchupResponse
+} from 'interface/API/UpdateBazaarMatchup';
 import { GameListResponse } from 'routes/index/components/gameList/GameList';
 import { GetCosmeticsResponse } from 'interface/API/GetCosmeticsResponse.php';
 import {
@@ -353,6 +357,43 @@ export const apiSlice = createApi({
             return { error: { status: response.status, data: errorData } };
           }
           const data: BazaarDecksResponse = await response.json();
+          return { data };
+        } catch (error) {
+          return {
+            error: { status: 'FETCH_ERROR' as const, error: String(error) }
+          };
+        }
+      }
+    }),
+    updateBazaarMatchup: builder.mutation<
+      UpdateBazaarMatchupResponse,
+      UpdateBazaarMatchupRequest
+    >({
+      queryFn: async ({
+        deckId,
+        heroId,
+        metafyId,
+        metafyHash,
+        metafyTimestamp,
+        sideboard
+      }) => {
+        const url = new URL(
+          `https://fabbazaar.app/api/decks/${encodeURIComponent(deckId)}/matchups/${encodeURIComponent(heroId)}`
+        );
+        url.searchParams.set('metafyId', String(metafyId));
+        url.searchParams.set('metafyHash', metafyHash);
+        url.searchParams.set('timestamp', String(metafyTimestamp));
+        try {
+          const response = await fetch(url.toString(), {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ sideboard })
+          });
+          if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            return { error: { status: response.status, data: errorData } };
+          }
+          const data: UpdateBazaarMatchupResponse = await response.json();
           return { data };
         } catch (error) {
           return {
@@ -1115,5 +1156,6 @@ export const {
   useCheckOpponentTypingQuery,
   useGetAppInfoQuery,
   useGenerateAuthTokenMutation,
-  useGetBazaarDecksQuery
+  useGetBazaarDecksQuery,
+  useUpdateBazaarMatchupMutation
 } = apiSlice;

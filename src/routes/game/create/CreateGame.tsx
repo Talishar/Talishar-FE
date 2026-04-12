@@ -583,7 +583,13 @@ const CreateGame = () => {
           setGameStart({
             playerID: response.playerID ?? 0,
             gameID: response.gameName ?? 0,
-            authKey: response.authKey ?? ''
+            authKey: response.authKey ?? '',
+            bazaarDeckId:
+              standaloneDeckSource === 'bazaar' && standaloneSelectedBazaarDeck
+                ? standaloneSelectedBazaarDeck
+                : quickJoinCtx?.deckSource === 'bazaar' && quickJoinCtx?.selectedBazaarDeck
+                  ? quickJoinCtx.selectedBazaarDeck
+                  : undefined
           })
         );
         // Reset save deck checkbox after successful game creation

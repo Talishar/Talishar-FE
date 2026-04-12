@@ -519,6 +519,7 @@ export const gameSlice = createSlice({
         gameID: number;
         authKey: string;
         username?: string;
+        bazaarDeckId?: string;
       }>
     ) => {
       state.isFullRematch = false;
@@ -604,6 +605,7 @@ export const gameSlice = createSlice({
       state.activeChainLink = undefined;
 
       if (isNewGame) {
+        state.gameInfo.bazaarDeckId = action.payload.bazaarDeckId ?? undefined;
         // Clear recently played history from previous game
         state.gameDynamicInfo.recentlyPlayed = [];
       }
