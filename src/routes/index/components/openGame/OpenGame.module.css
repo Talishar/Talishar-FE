@@ -74,8 +74,8 @@
 
 .joinHeroIcon {
   align-self: stretch;
-  width: 2.8em;
-  height: auto;
+  width: 3em;
+  height: 3em;
   object-fit: cover;
   flex-shrink: 0;
   display: block;
@@ -167,8 +167,12 @@ h3 {
 }
 
 .heroImg {
+  width: 3em;
+  height: 3em;
   border-radius: var(--border-radius);
   border: 0.5px solid var(--form-element-border-color);
+  object-fit: cover;
+  display: block;
   transition: filter 200ms;
 }
 
@@ -189,14 +193,15 @@ h3 {
     font-size: 0.8em;
   }
 
+  .heroImg {
+    width: 2.2em;
+    height: 2.2em;
+  }
+
   .formatName {
     flex: 0 0 auto;
     font-size: 0.8em;
     white-space: nowrap;
-  }
-
-  img {
-    max-height: 2.2em;
   }
 
   .button {
@@ -204,6 +209,11 @@ h3 {
   }
 
   .buttonWithIcon {
+    height: 2.2em;
+  }
+
+  .joinHeroIcon {
+    width: 2.2em;
     height: 2.2em;
   }
 
@@ -227,16 +237,17 @@ h3 {
     display: block;
   }
 
+  .heroImg {
+    width: 1.8em;
+    height: 1.8em;
+  }
+
   .formatName {
     flex: 1 1 auto;
     min-width: 80px;
     font-size: 0.8em;
     white-space: normal;
     text-align: center;
-  }
-
-  img {
-    max-height: 1.8em;
   }
 
   .button {
@@ -254,5 +265,6 @@ h3 {
 
   .joinHeroIcon {
     width: 1.8em;
+    height: 1.8em;
   }
 }

@@ -36,9 +36,12 @@
 }
 
 .heroImg {
+  width: 3em;
+  height: 3em;
   border-radius: var(--border-radius);
   border: 0.5px solid var(--form-element-border-color);
-  max-height: 3em;
+  object-fit: cover;
+  display: block;
 }
 
 .matchupBlock {
@@ -86,7 +89,8 @@
   }
 
   .heroImg {
-    max-height: 2.2em;
+    width: 2.2em;
+    height: 2.2em;
   }
 }
 
@@ -97,6 +101,7 @@
   }
 
   .heroImg {
-    max-height: 1.8em;
+    width: 1.8em;
+    height: 1.8em;
   }
 }

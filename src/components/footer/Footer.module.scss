@@ -12,7 +12,6 @@
     padding: 0 !important;
     top: auto !important;
     z-index: auto !important;
-    justify-content: flex-start !important;
   }
 }
 
@@ -252,6 +251,8 @@
   }
 
   .socialLinks {
+    width: 100%;
+    margin: 0 auto;
     justify-content: center !important;
     padding-bottom: 0.75rem;
     gap: 1rem;
