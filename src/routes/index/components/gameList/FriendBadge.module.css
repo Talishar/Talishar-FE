@@ -9,6 +9,7 @@
   box-shadow: 0 2px 8px rgba(212, 175, 55, 0.4);
   flex-shrink: 0;
   cursor: pointer;
+  align-self: center;
 }
 
 .small {

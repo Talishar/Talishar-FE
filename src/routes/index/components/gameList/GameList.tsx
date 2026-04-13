@@ -71,42 +71,7 @@ const GameList = () => {
   const { data: apiData, isLoading, error, refetch, isFetching } = useGetGameListQuery(undefined);
   const { isLoggedIn } = useAuth();
 
-  // DEV-only: simulate 20 open lobbies and 20 in-progress games
-  const DEV_HEROES = [
-    'WTR001', 'ARC001', 'MON001', 'UPR001',
-    'OUT001', 'SUP001', 'HNT001', 'SEA001',
-    'ROS001', 'MST001',
-  ];
-  const DEV_FORMATS = [
-    GAME_FORMAT.BLITZ, GAME_FORMAT.CLASSIC_CONSTRUCTED,
-    GAME_FORMAT.COMPETITIVE_BLITZ, GAME_FORMAT.COMPETITIVE_CC,
-    GAME_FORMAT.COMMONER, GAME_FORMAT.SAGE, GAME_FORMAT.OPEN,
-  ];
-  const devMockData: GameListResponse | undefined = import.meta.env.DEV
-    ? {
-        openGames: Array.from({ length: 20 }, (_, i) => ({
-          p1Hero: DEV_HEROES[i % DEV_HEROES.length],
-          format: DEV_FORMATS[i % DEV_FORMATS.length],
-          formatName: '',
-          description: `Game #${700000 + i}`,
-          gameName: 700000 + i,
-          gameCreator: `devplayer${i + 1}`,
-          visibility: '1',
-        })),
-        gamesInProgress: Array.from({ length: 20 }, (_, i) => ({
-          p1Hero: DEV_HEROES[i % DEV_HEROES.length],
-          p2Hero: DEV_HEROES[(i + 5) % DEV_HEROES.length],
-          format: DEV_FORMATS[i % DEV_FORMATS.length],
-          gameName: 800000 + i,
-          secondsSinceLastUpdate: (i * 7) % 120,
-          gameCreator: `devplayer${i + 101}`,
-          p2Username: `devplayer${i + 201}`,
-          visibility: '1',
-        })),
-      }
-    : undefined;
-
-  const data = devMockData ?? apiData;
+  const data = apiData;
   const { data: friendsData } = useGetFriendsListQuery(undefined, { skip: !isLoggedIn });
   const { blockedUsers } = useBlockedUsers();
 
@@ -541,7 +506,7 @@ const GameList = () => {
                 onClick={() => { setActiveTab('inProgress'); setShowAll(false); setShowAllInProgress(false); }}
               >
                 {t("GAME_LIST.IN_PROGRESS_TAB", "In progress")}
-                <span className={styles.tabBadge}>
+                <span className={`${styles.tabBadge} ${activeTab === 'inProgress' ? styles.tabBadgeActive : ''}`}>
                   {data?.gameInProgressCount ?? 0}
                 </span>
               </button>
@@ -642,7 +607,7 @@ const GameList = () => {
                   />
                 </>
               ) : (
-                displayInProgressGames.map((entry, ix) => {
+                [...friendGamesInProgress, ...otherGamesInProgress].map((entry, ix) => {
                   const isFriendsGame = !!(
                     (entry.gameCreator && friendUsernames.has(entry.gameCreator)) ||
                     (entry.p2Username && friendUsernames.has(entry.p2Username))

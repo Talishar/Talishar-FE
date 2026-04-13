@@ -2,7 +2,7 @@
   margin-top: -80px;
   --landing-surface: var(--theme-background, #0b0e14);
   background: var(--landing-surface);
-  background-color: #000000;
+  background-color: var(--theme-contrast-inverse, #000000);
 }
 
 .bannerSection {
@@ -24,8 +24,8 @@
       rgba(0, 0, 0, 0.55) 0%,
       rgba(0, 0, 0, 0.55) 40%,
       rgba(0, 0, 0, 0.75) 58%,
-      rgba(0, 0, 0, 1) 78%,
-      rgba(0, 0, 0, 1) 100%
+      var(--theme-contrast-inverse, #000000) 78%,
+      var(--theme-contrast-inverse, #000000) 100%
     ),
     url('/images/talishar-lost-prince.webp') center 40% / cover no-repeat;
 }
@@ -121,7 +121,7 @@
   position: relative;
   z-index: 1;
   background: var(--landing-surface);
-  background-color: #000000;
+  background-color: var(--theme-contrast-inverse, #000000);
   margin-top: -1px;
   scroll-margin-top: 86px;
 }
@@ -577,7 +577,6 @@ h3 {
   flex-direction: column;
   align-items: center;
   padding: 8px 0 16px;
-  background-color: var(--near-black, #0d0d0d);
   width: 100%;
 }
 

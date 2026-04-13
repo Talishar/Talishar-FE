@@ -147,7 +147,7 @@
   padding: 1rem;
   border: 1px solid var(--theme-form-border, #797c80);
   border-radius: 8px;
-  background-color: var(--theme-form-active, rgba(212, 175, 55, 0.05));
+  background-color: var(--theme-form-background, #33383d);
 }
 
 .heroSelectionHeader {
