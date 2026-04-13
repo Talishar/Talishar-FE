@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import styles from '../index/Index.module.css';
 import {
   fetchDiscordReleaseNotes,
-  DiscordMessage
+  DiscordMessage,
+  DiscordReaction
 } from '../../services/contentService';
 import { parseHtmlToReactElements } from 'utils/ParseEscapedString';
 
@@ -78,6 +79,27 @@ const News = () => {
                 <p className={styles.newsCardContent}>
                   {parseHtmlToReactElements(message.content)}
                 </p>
+              )}
+              {message.reactions && message.reactions.length > 0 && (
+                <div className={styles.newsCardReactions}>
+                  {message.reactions.map((reaction: DiscordReaction) => (
+                    <span
+                      key={reaction.emoji.id ?? reaction.emoji.name}
+                      className={styles.newsCardReaction}
+                    >
+                      {reaction.emoji.id ? (
+                        <img
+                          src={`https://cdn.discordapp.com/emojis/${reaction.emoji.id}.webp?size=16`}
+                          alt={reaction.emoji.name}
+                          title={reaction.emoji.name}
+                        />
+                      ) : (
+                        reaction.emoji.name
+                      )}
+                      {reaction.count}
+                    </span>
+                  ))}
+                </div>
               )}
             </div>
           ))

@@ -51,29 +51,35 @@ const Index = () => {
 
   return (
     <main className={styles.main}>
-      <div className={styles.bannerSection}>
+      <div className={`${styles.bannerSection}${isLoggedIn ? ` ${styles.bannerSectionCompact}` : ''}`}>
         <div className={styles.bannerBackground} />
         <div className={styles.bannerOverlay} />
         <div className={styles.bannerContent}>
-          <img src={TalisharLogo} alt="Talishar" className={styles.heroLogo} />
-          <h1 className={styles.heroTitle}>
-            Jump into a game<br />of Flesh &amp; Blood
-          </h1>
-          <p className={styles.heroSubtitle}>
-            Talishar lets you play online for free, right in your browser.{' '}
-            Find opponents, test decks, and get games in whenever you want.
-          </p>
-          <div className={styles.heroCta}>
-            <a href="#games" className={styles.heroCtaPrimary}>Join a game</a>
-            <a
-              href="https://metafy.gg/@talishar/tiers"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={styles.heroCtaSecondary}
-            >
-              Support us on Metafy
-            </a>
-          </div>
+          {!isLoggedIn && (
+            <img src={TalisharLogo} alt="Talishar" className={styles.heroLogo} />
+          )}
+          {!isLoggedIn && (
+            <>
+              <h1 className={styles.heroTitle}>
+                Jump into a game<br />of Flesh &amp; Blood
+              </h1>
+              <p className={styles.heroSubtitle}>
+                Talishar lets you play online for free, right in your browser.{' '}
+                Find opponents, test decks, and get games in whenever you want.
+              </p>
+              <div className={styles.heroCta}>
+                <a href="#games" className={styles.heroCtaPrimary}>Join a game</a>
+                <a
+                  href="https://metafy.gg/@talishar/tiers"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.heroCtaSecondary}
+                >
+                  Support us on Metafy
+                </a>
+              </div>
+            </>
+          )}
         </div>
       </div>
       <div id="games" className={styles.contentSection}>
