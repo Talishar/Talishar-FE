@@ -1,6 +1,6 @@
 import { useAppDispatch } from 'app/Hooks';
 import { clearGameInfo } from 'features/game/GameSlice';
-import { useEffect } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { usePageTitle } from 'hooks/usePageTitle';
 import GameList from './components/gameList';
 import styles from './Index.module.css';
@@ -15,11 +15,18 @@ import useAuth from 'hooks/useAuth';
 import { AdUnit } from 'components/ads';
 import useAdScript from 'hooks/useAdScript';
 import TalisharLogo from '../../img/TalisharLogo.webp';
+import { BsChevronDown, BsChevronUp } from 'react-icons/bs';
 
 const Index = () => {
   usePageTitle('Home');
   const dispatch = useAppDispatch();
-  const { isLoggedIn, isLoading } = useAuth();
+  const { isLoggedIn, isLoading, currentUserName } = useAuth();
+  const [isBannerHidden, setIsBannerHidden] = useState(false);
+
+  const bannerPreferenceKey = useMemo(() => {
+    if (!isLoggedIn || !currentUserName) return null;
+    return `talishar_home_banner_hidden_${currentUserName}`;
+  }, [isLoggedIn, currentUserName]);
 
   const { data: profileData, isLoading: isProfileLoading } = useGetUserProfileQuery(
     undefined,
@@ -49,16 +56,60 @@ const Index = () => {
     };
   }, []);
 
+  useEffect(() => {
+    if (!isLoggedIn) {
+      // Logged out users should always see the banner.
+      setIsBannerHidden(false);
+      return;
+    }
+
+    if (!bannerPreferenceKey) {
+      setIsBannerHidden(false);
+      return;
+    }
+
+    try {
+      setIsBannerHidden(localStorage.getItem(bannerPreferenceKey) === '1');
+    } catch {
+      setIsBannerHidden(false);
+    }
+  }, [isLoggedIn, bannerPreferenceKey]);
+
+  const handleToggleBanner = () => {
+    const nextHiddenValue = !isBannerHidden;
+    setIsBannerHidden(nextHiddenValue);
+
+    if (!bannerPreferenceKey) return;
+
+    try {
+      localStorage.setItem(bannerPreferenceKey, nextHiddenValue ? '1' : '0');
+    } catch {
+      // Ignore storage write failures and keep in-memory toggle behavior.
+    }
+  };
+
   return (
     <main className={styles.main}>
-      <div className={`${styles.bannerSection}${isLoggedIn ? ` ${styles.bannerSectionCompact}` : ''}`}>
+      <div className={`${styles.bannerSection}${isLoggedIn && isBannerHidden ? ` ${styles.bannerSectionCompact}` : ''}`}>
+        {isLoggedIn && (
+          <button
+            type="button"
+            className={styles.bannerToggle}
+            onClick={handleToggleBanner}
+            aria-pressed={isBannerHidden}
+            aria-label={isBannerHidden ? 'Expand banner' : 'Collapse banner'}
+            title={isBannerHidden ? 'Expand banner' : 'Collapse banner'}
+          >
+            {isBannerHidden ? <BsChevronDown /> : <BsChevronUp />}
+          </button>
+        )}
         <div className={styles.bannerBackground} />
         <div className={styles.bannerOverlay} />
         <div className={styles.bannerContent}>
-          {!isLoggedIn && (
+          {!isBannerHidden && (
             <img src={TalisharLogo} alt="Talishar" className={styles.heroLogo} />
           )}
-          {!isLoggedIn && (
+          {!isBannerHidden && (
             <>
               <h1 className={styles.heroTitle}>
                 Jump into a game<br />of Flesh &amp; Blood

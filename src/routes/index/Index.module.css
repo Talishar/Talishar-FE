@@ -4,12 +4,48 @@
   background-color: var(--landing-surface);
 }
 
+.bannerToggle {
+  position: absolute;
+  top: 86px;
+  left: 16px;
+  z-index: 3;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--theme-border, rgba(255, 255, 255, 0.2)) 70%, black 30%);
+  background: color-mix(in srgb, var(--landing-surface) 93%, black 7%);
+  color: color-mix(in srgb, var(--theme-text, #ffffff) 68%, black 32%);
+  font-size: 0.95rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+}
+
+.bannerToggle:hover {
+  border-color: var(--theme-primary, #d4af37);
+  background: color-mix(in srgb, var(--landing-surface) 82%, black 18%);
+  color: var(--theme-primary, #d4af37);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.25), 0 0 12px rgba(212, 175, 55, 0.18);
+  transform: translateY(-1px);
+}
+
+.bannerToggle:focus-visible {
+  outline: 2px solid var(--theme-primary, #d4af37);
+  outline-offset: 2px;
+}
+
 .bannerSection {
   position: relative;
   width: 100%;
   height: 60vh;
-  min-height: 380px;
-  max-height: 520px;
+  min-height: 350px;
+  max-height: 560px;
   overflow: hidden;
   background-color: var(--landing-surface);
 }
@@ -132,6 +168,14 @@
 }
 
 @media (max-width: 768px) {
+  .bannerToggle {
+    top: 76px;
+    left: 12px;
+    width: 30px;
+    height: 30px;
+    font-size: 0.85rem;
+  }
+
   .bannerSection {
     height: auto;
     min-height: unset;
