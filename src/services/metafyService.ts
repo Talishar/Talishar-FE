@@ -16,6 +16,12 @@ export interface MetafyGame {
   poster_image_url?: string;
 }
 
+export interface MetafyGuideUser {
+  id?: string;
+  username?: string;
+  display_name?: string;
+}
+
 export interface MetafyGuide {
   product_id: string;
   name: string;
@@ -29,6 +35,8 @@ export interface MetafyGuide {
   updated_at: string;
   game: MetafyGame;
   rating?: number;
+  user?: MetafyGuideUser;
+  users?: MetafyGuideUser[];
 }
 
 export interface MetafyPagination {

@@ -27,7 +27,7 @@ import { toast } from 'react-hot-toast';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import styles from './CreateGame.module.css';
 import validationSchema from './validationSchema';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { FieldErrors, SubmitHandler, useForm } from 'react-hook-form';
 import { ErrorMessage } from '@hookform/error-message';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
@@ -81,11 +81,16 @@ const formatDeckLabel = (
   return `${deckName.substring(0, availableForName)}...${formatStr}`;
 };
 
-const CreateGame = () => {
+type CreateGameProps = {
+  inUnifiedPanel?: boolean;
+};
+
+const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
   const quickJoinCtx = useQuickJoinOptional();
   const { isLoggedIn, isPatron, isLoading: isAuthLoading } = useAuth();
   // True when rendered inside the unified main-menu panel (logged-in users only)
   const isEmbedded = quickJoinCtx !== null && isLoggedIn;
+  const useUnifiedPanelStyles = isEmbedded || inUnifiedPanel;
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { data, isLoading, isSuccess } = useGetFavoriteDecksQuery(undefined);
@@ -610,12 +615,20 @@ const CreateGame = () => {
     }
   };
 
+  const onInvalid = (formErrors: FieldErrors<CreateGameAPI>) => {
+    if (formErrors.favoriteDecks?.message) {
+      toast.error(formErrors.favoriteDecks.message, { position: 'top-center' });
+    } else if (formErrors.fabdb?.message) {
+      toast.error(formErrors.fabdb.message, { position: 'top-center' });
+    }
+  };
+
   const buttonClass = classNames(styles.button, 'primary');
 
   return (
     <div>
-      <article className={isEmbedded ? styles.embeddedForm : styles.formContainer}>
-        {!isEmbedded && (
+      <article className={useUnifiedPanelStyles ? styles.embeddedForm : styles.formContainer}>
+        {!useUnifiedPanelStyles && (
         <div className={styles.header}>
           <h3 className={styles.title}>{t('MENU.CREATE_GAME.TITLE')}</h3>
           <button
@@ -638,9 +651,12 @@ const CreateGame = () => {
           <FaExclamationCircle /> Warning - SOON! an update will be pushed to the live servers. The games in progress will crash and new games will be required.
           </p> 
         */}
-        {(isEmbedded || isExpanded) && (
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <div className={styles.formInner}>
+        {(useUnifiedPanelStyles || isExpanded) && (
+          <form
+            className={useUnifiedPanelStyles ? styles.embeddedFormLayout : undefined}
+            onSubmit={handleSubmit(onSubmit, onInvalid)}
+          >
+            <div className={useUnifiedPanelStyles ? styles.embeddedFormInner : styles.formInner}>
               {/* Register deck fields when inside QuickJoinProvider (values synced from context) */}
               {isEmbedded && !isPreconFormat(formFormat || selectedFormat) && (
                 <>
@@ -880,7 +896,7 @@ const CreateGame = () => {
                     <option value="Looking for a quick game">
                       {t('MENU.CREATE_GAME.GAME_DESCRIPTIONS.QUICK')}
                     </option>
-                    <option value="New player — learning the game">
+                    <option value="New player - learning the game">
                       {t('MENU.CREATE_GAME.GAME_DESCRIPTIONS.NEW_PLAYER')}
                     </option>
                     <option value="Practicing a new hero">
@@ -1228,7 +1244,7 @@ const CreateGame = () => {
             </div>
             <button
               type="submit"
-              className={buttonClass}
+              className={classNames(buttonClass, isEmbedded && styles.embeddedSubmitButton)}
               disabled={isSubmitting}
               aria-busy={isSubmitting}
             >

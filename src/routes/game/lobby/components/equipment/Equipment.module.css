@@ -75,5 +75,7 @@
 @media (min-width: 1200px) {
   .container {
     overflow-y: auto;
+    flex: 1;
+    min-height: 0;
   }
 }

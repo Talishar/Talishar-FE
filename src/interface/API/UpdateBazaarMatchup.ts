@@ -1,9 +1,9 @@
 export interface UpdateBazaarMatchupRequest {
   deckId: string;
   heroId: string;
-  metafyId: number | string;
-  metafyHash: string;
-  metafyTimestamp: number;
+  metafyId: number | string | null;
+  metafyHash: string | null;
+  metafyTimestamp: number | null;
   sideboard: {
     in: string[];
     out: string[];

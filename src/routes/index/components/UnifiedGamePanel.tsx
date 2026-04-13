@@ -47,8 +47,30 @@ const UnifiedGamePanel = () => {
   }
 
   if (!isLoggedIn) {
-    // Non-logged-in users only see Create Game (deck selector not shown anyway)
-    return <CreateGame />;
+    return (
+      <section className={styles.panel} aria-label={t('MENU.CREATE_GAME.TITLE')}>
+        <div className={styles.header}>
+          <h3 className={styles.title}>{t('MENU.CREATE_GAME.TITLE')}</h3>
+          <button
+            type="button"
+            className={styles.toggleButton}
+            onClick={() => setIsExpanded(!isExpanded)}
+            aria-expanded={isExpanded}
+            aria-label={isExpanded ? t('UNITED_GAME_PANEL.MINIMIZE') : t('UNITED_GAME_PANEL.EXPAND')}
+          >
+            {isExpanded ? <FaChevronUp size={16} /> : <FaChevronDown size={16} />}
+          </button>
+        </div>
+
+        {isExpanded && (
+          <div className={styles.content}>
+            <div className={styles.createGameSection}>
+              <CreateGame inUnifiedPanel />
+            </div>
+          </div>
+        )}
+      </section>
+    );
   }
 
   return (
@@ -68,22 +90,13 @@ const UnifiedGamePanel = () => {
 
       {isExpanded && (
         <div className={styles.content}>
-          <QuickJoinPanel embedded />
+          <div className={styles.quickJoinSection}>
+            <QuickJoinPanel embedded />
+          </div>
           <hr className={styles.divider} />
-          <CreateGame />
-        </div>
-      )}
-      {showAds && (
-        <div className={styles.createGameAd}>
-          <a
-            href="https://metafy.gg/@talishar/tiers"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.removeAdsLink}
-          >
-            {t("UNITED_GAME_PANEL.REMOVE_ADS")}
-          </a>
-          <AdUnit placement="right-rail-1" />
+          <div className={styles.createGameSection}>
+            <CreateGame />
+          </div>
         </div>
       )}
     </section>

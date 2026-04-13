@@ -137,7 +137,7 @@ const SettingsPage = () => {
   ];
 
   return (
-    <div className={styles.wideContainer}>
+    <div className={`${styles.wideContainer} ${styles.flatSettingsPage}`}>
       <h1 className={styles.title}>Settings</h1>
       <div className={styles.twoColumnLayout}>
         <div className={styles.settingsColumn}>

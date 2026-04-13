@@ -13,14 +13,14 @@
 }
 
 .calculatorCard {
-  background: rgba(0, 0, 0, 0.7);
-  border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.2));
-  border-radius: 12px;
+  background: transparent;
+  border: none;
+  border-radius: 0;
   padding: 1rem;
-  backdrop-filter: blur(5px);
+  backdrop-filter: none;
   width: 100%;
   max-width: 600px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  box-shadow: none;
 }
 
 .header {

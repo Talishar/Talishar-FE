@@ -18,12 +18,14 @@ const OpenGame = ({
   ix,
   entry,
   isOther,
-  isFriendsGame = false
+  isFriendsGame = false,
+  formatLabel
 }: {
   ix: number;
   entry: IOpenGame;
   isOther?: boolean;
   isFriendsGame?: boolean;
+  formatLabel?: string;
 }) => {
   const navigate = useNavigate();
   const quickJoinCtx = useContext(QuickJoinContext);
@@ -66,8 +68,11 @@ const OpenGame = ({
           />
         )}
       </div>
-      <div className={styles.description}>{entry.description}</div>
-      {isOther && (
+      <div className={styles.descriptionBlock}>
+        {formatLabel && <span className={styles.formatLabel}>{formatLabel}</span>}
+        <span className={styles.description}>{entry.description}</span>
+      </div>
+      {isOther && !formatLabel && (
         <div className={styles.formatName}>
           {entry.formatName || FORMAT_DISPLAY_NAMES[entry.format] || ''}
         </div>

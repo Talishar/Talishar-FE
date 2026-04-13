@@ -330,8 +330,12 @@ const Lobby = () => {
     rightHero ?? 'UNKNOWNHERO'
   )})`;
 
-  const eqClasses = classNames({});
-  const deckClasses = classNames({});
+  const eqClasses = classNames(styles.tabButton, {
+    [styles.tabActive]: activeTab === 'equipment'
+  });
+  const deckClasses = classNames(styles.tabButton, {
+    [styles.tabActive]: activeTab === 'deck'
+  });
   const chatClasses = classNames({});
   const matchupClasses = classNames({});
   const leaveClasses = classNames('outline');

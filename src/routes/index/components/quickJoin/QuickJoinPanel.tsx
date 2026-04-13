@@ -109,20 +109,6 @@ const QuickJoinPanel = ({ embedded = false }: Props) => {
         />
         Save Deck to ❤️ Favorites
       </label>
-
-      {detectedFormat && (
-        <label className={styles.label}>
-          Gameplay Format
-          <input
-            type="text"
-            className={styles.textInput}
-            value={detectedFormat}
-            disabled
-            readOnly
-            aria-label="Detected deck format"
-          />
-        </label>
-      )}
     </>
   );
 

@@ -209,6 +209,9 @@
   "GAME_LIST":{
     "DISABLE_EXPERIMENTAL":"Disable experimental features",
     "GAMES":"Games",
+    "OPEN_GAMES":"Open Games",
+    "LOOKING_FOR_OPPONENT":"Looking for opponent",
+    "IN_PROGRESS_TAB":"In progress",
     "MANUAL_REFRESH":"Manually refresh game list",
     "LOAD_ERROR_TITLE":"There has been an error!",
     "LOAD_ERROR_DESCRIPTION":"Please refresh the page and try again, if you still get an error loading the gamelist. Please report on our discord and let us know the following:",

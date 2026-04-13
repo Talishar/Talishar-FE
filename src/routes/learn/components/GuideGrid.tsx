@@ -70,7 +70,9 @@ const GuideGrid: React.FC<GuideGridProps> = ({ guides }) => {
             <div className={styles.guideFooter}>
               <div className={styles.guideInfo}>
                 <span className={styles.author}>
-                  {(guide as any).isOwnerGuide ? 'PvtVoid' : 'Talishar'}
+                  {guide.users && guide.users.length > 0
+                    ? guide.users.map((u) => u.display_name || u.username).filter(Boolean).join(' & ')
+                    : guide.user?.display_name || guide.user?.username || 'Talishar'}
                 </span>
                 {guide.rating && (
                   <span className={styles.rating}>{`${guide.rating}/10`}</span>

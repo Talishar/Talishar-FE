@@ -1,7 +1,8 @@
 .deckContainer {
   display: flex;
   flex-direction: column;
-  height: 100%;
+  flex: 1;
+  min-height: 0;
   width: 100%;
 }
 
@@ -25,10 +26,10 @@
 }
 
 .sortButton {
-  padding: 0.5em 1em;
+  padding: 0.25rem 1.1rem;
   border: 1px solid var(--theme-border);
   background-color: var(--theme-card-background);
-  border-radius: 0.25em;
+  border-radius: 6px;
   cursor: pointer;
   font-size: 0.9em;
   font-weight: 500;
@@ -58,10 +59,10 @@
 }
 
 .expandButton {
-  padding: 0.5em 1em;
+  padding: 0.25rem 1.1rem;
   border: 1px solid var(--theme-border);
   background-color: var(--theme-card-background);
-  border-radius: 0.25em;
+  border-radius: 6px;
   cursor: pointer;
   font-size: 0.9em;
   font-weight: 500;
@@ -88,17 +89,17 @@
   }
 
   .sortButton {
-    padding: 0.35em 0.7em;
+    padding: 0.2rem 0.7rem;
     font-size: 0.8em;
   }
 
   .expandButton {
-    padding: 0.35em 0.7em;
+    padding: 0.2rem 0.7rem;
     font-size: 0.8em;
   }
 
   .selectionButton {
-    padding: 0.35em 0.7em;
+    padding: 0.2rem 0.7rem;
     font-size: 0.8em;
   }
 }

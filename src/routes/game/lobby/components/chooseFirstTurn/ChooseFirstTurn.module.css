@@ -3,13 +3,17 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 1em;
+  padding: 2em 2.5em;
   max-width: 512px;
   margin: auto;
   pointer-events: auto;
   touch-action: manipulation;
-  background: var(--theme-card-background);
-  border: 1px solid var(--theme-primary);
+  background: var(--theme-card-background, #1e2329);
+  border: none;
+  border-radius: 12px;
+  box-shadow:
+    0 25px 60px rgba(0, 0, 0, 0.5),
+    0 4px 16px rgba(0, 0, 0, 0.3);
 }
 
 dialog {
@@ -53,9 +57,10 @@ h5 {
   user-select: none;
   -webkit-user-select: none;
   -webkit-touch-callout: none;
-  padding: 0.75rem 1rem;
+  padding: 0.75rem 1.25rem;
   font-size: 1rem;
   min-height: 3rem;
+  border-radius: 8px;
 }
 
 .firstButton,

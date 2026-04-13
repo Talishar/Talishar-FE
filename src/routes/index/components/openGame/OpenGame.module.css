@@ -22,7 +22,7 @@
   }
 
   &:hover .button {
-    background-color: var(--theme-secondary);
+    background-color: var(--theme-form-border);
     border-color: rgba(255, 255, 255, 0.22);
   }
 
@@ -52,7 +52,7 @@
 }
 
 .button {
-  background-color: var(--theme-secondary);
+  background-color: var(--theme-form-background);
   border: 1px solid rgba(255, 255, 255, 0.12);
   margin-bottom: 0;
   flex-shrink: 0;
@@ -100,19 +100,30 @@
   white-space: nowrap;
 }
 
-.description {
-  flex: 1 1 50px;
-  min-width: 50px;
-  max-width: 200px;
-  text-align: center;
+.descriptionBlock {
+  flex: 1 1 auto;
+  min-width: 0;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
   padding: 0.1rem;
+}
+
+.formatLabel {
+  font-size: 0.7em;
+  color: var(--theme-primary, #d4af37);
+  opacity: 0.8;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.description {
+  display: block;
   word-wrap: break-word;
   overflow-wrap: break-word;
   font-size: 0.9em;
   white-space: normal;
+  font-weight: 600;
 }
 
 .formatName {
@@ -126,18 +137,18 @@
   font-size: 0.8em;
 }
 
-img {
+.gameItem img {
   max-height: 3em;
   flex-shrink: 0;
 }
 
 /* Allow larger images for Discord embeds and attachments */
-img:is([class*='attachmentImage'], [class*='embedImage']) {
+.gameItem img:is([class*='attachmentImage'], [class*='embedImage']) {
   max-height: none;
 }
 
 /* Special handling for reaction emojis */
-img[class*='reactionEmoji'] {
+.gameItem img[class*='reactionEmoji'] {
   max-height: 1em !important;
   flex-shrink: 0 !important;
   display: inline !important;
@@ -167,13 +178,15 @@ h3 {
     row-gap: 0.35rem;
   }
 
-  .description {
+  .descriptionBlock {
     flex: 1 1 60px;
     min-width: 60px;
     max-width: 150px;
     padding: 0.08rem;
+  }
+
+  .description {
     font-size: 0.8em;
-    white-space: normal;
   }
 
   .formatName {

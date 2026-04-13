@@ -1,4 +1,146 @@
-.gameListContainer {
+.main {
+  margin-top: -80px;
+  --landing-surface: var(--theme-background, #0b0e14);
+  background: var(--landing-surface);
+  background-color: #000000;
+}
+
+.bannerSection {
+  position: relative;
+  width: 100%;
+  height: 56vh;
+  min-height: 380px;
+  max-height: 520px;
+  overflow: hidden;
+  background-color: var(--landing-surface);
+}
+
+.bannerBackground {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.55) 0%,
+      rgba(0, 0, 0, 0.55) 40%,
+      rgba(0, 0, 0, 0.75) 58%,
+      rgba(0, 0, 0, 1) 78%,
+      rgba(0, 0, 0, 1) 100%
+    ),
+    url('/images/talishar-lost-prince.webp') center 40% / cover no-repeat;
+}
+
+.bannerOverlay {
+  display: none;
+}
+
+.bannerContent {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 50px 2rem 0;
+  pointer-events: none;
+}
+
+.heroLogo {
+  width: auto;
+  height: clamp(70px, 12vw, 120px);
+  margin-bottom: 0.5rem;
+  filter: drop-shadow(0 2px 12px rgba(0, 0, 0, 0.6));
+  object-fit: contain;
+}
+
+.heroTitle {
+  font-size: clamp(1.8rem, 4.5vw, 3rem);
+  font-weight: 800;
+  line-height: 1.18;
+  color: var(--theme-primary, #d4af37);
+  margin: 0 0 0.6rem;
+  text-shadow: 0 2px 24px rgba(0, 0, 0, 0.8);
+}
+
+.heroSubtitle {
+  font-size: clamp(0.85rem, 1.4vw, 1rem);
+  color: rgba(244, 237, 237, 0.85);
+  line-height: 1.6;
+  margin: 0 0 1.25rem;
+  max-width: 580px;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.7);
+}
+
+.heroCta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: center;
+  pointer-events: all;
+}
+
+.heroCtaPrimary {
+  display: inline-block;
+  padding: 0.6rem 1.4rem;
+  background: var(--theme-primary, #d4af37);
+  color: #000 !important;
+  font-weight: 700;
+  font-size: 0.95rem;
+  border-radius: 4px;
+  text-decoration: none !important;
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+
+.heroCtaPrimary:hover {
+  background: var(--theme-primary-hover, #e8c547);
+  transform: translateY(-1px);
+  opacity: 1 !important;
+}
+
+.heroCtaSecondary {
+  display: inline-block;
+  padding: 0.6rem 1.4rem;
+  background: var(--theme-secondary, #606569);
+  color: #fff !important;
+  font-weight: 600;
+  font-size: 0.95rem;
+  border-radius: 4px;
+  border: none;
+  text-decoration: none !important;
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+
+.heroCtaSecondary:hover {
+  background: var(--theme-secondary-hover, #757a7f);
+  transform: translateY(-1px);
+  opacity: 1 !important;
+}
+
+.contentSection {
+  position: relative;
+  z-index: 1;
+  background: var(--landing-surface);
+  background-color: #000000;
+  margin-top: -1px;
+  scroll-margin-top: 86px;
+}
+
+@media (max-width: 768px) {
+  .bannerSection {
+    height: auto;
+    min-height: unset;
+    max-height: unset;
+  }
+
+  .bannerContent {
+    position: relative;
+    padding: 80px 1.25rem 1.5rem;
+  }
+
+  .heroSubtitle {
+    max-width: 100%;
+  }
 }
 
 .logo {
@@ -37,8 +179,8 @@
   display: grid;
   gap: 25px;
   margin: 0 auto;
-  padding: 0 1em;
-  max-width: 100%;
+  padding: 0em 1em 1em 1em;
+  max-width: 1400px;
 }
 
 .gameListContainer {
@@ -64,53 +206,25 @@
 
 .createGameContainer {
   order: 2;
+  display: flex;
+  flex-direction: column;
+  align-self: start;
 }
 
 @media (max-width: 768px) {
-  .gameListContainer {
+  .gridLoggedOut .gameListContainer {
     order: 2;
   }
 
-  .createGameContainer {
+  .gridLoggedOut .createGameContainer {
     order: 1;
   }
 }
 
 .newsContainer {
-  margin: 1.5em auto;
-  display: flex;
-  flex-direction: column;
-  gap: 1em;
-  max-width: 900px;
-  border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.2));
-  border-radius: 10px;
-  order: 3;
-  background: var(
-    --theme-section-background,
-    linear-gradient(
-      135deg,
-      rgba(30, 35, 41, 0.8) 0%,
-      rgba(30, 35, 41, 0.85) 100%
-    )
-  );
-  max-height: 150vh;
-}
-
-.newsContainer::-webkit-scrollbar {
-  width: 12px;
-}
-
-.newsContainer::-webkit-scrollbar-track {
-  background: #1a1d21;
-}
-
-.newsContainer::-webkit-scrollbar-thumb {
-  background: #5a5f66;
-  border-radius: 6px;
-}
-
-.newsContainer::-webkit-scrollbar-thumb:hover {
-  background: #d4af37;
+  width: 100%;
+  padding: 1.5em 1em;
+  margin-bottom: 0 !important;
 }
 
 .newsWrapper {
@@ -121,16 +235,12 @@
 
 @media (min-width: 1350px) {
   .grid {
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
     gap: 25px;
     margin: 0 auto;
-    padding: 0 1em;
-    max-width: 100%;
+    padding: 0em 1em 1em 1em;    
+    max-width: 1400px;
     overflow-x: hidden;
-  }
-
-  .newsContainer {
-    overflow-y: auto;
   }
 }
 
@@ -139,56 +249,9 @@
     grid-template-columns: 1fr 1fr;
     gap: 25px;
     margin: 0 auto;
-    padding: 0 1em;
-    max-width: 100%;
+    padding: 0em 1em 1em 1em;
+    max-width: 1400px;
     overflow-x: hidden;
-    grid-template-areas:
-      'gameList createGame'
-      'gameList news';
-  }
-
-  .gameListContainer {
-    grid-area: gameList;
-  }
-
-  .createGameContainer {
-    grid-area: createGame;
-  }
-
-  .newsContainer {
-    grid-area: news;
-    max-width: 100%;
-    margin: 0;
-    max-height: calc(100vh - 150px);
-    overflow-y: auto;
-  }
-}
-
-@media (min-width: 769px) and (max-width: 1349px) {
-  .grid {
-    grid-template-columns: 1fr 1fr;
-    gap: 25px;
-    margin: 0 auto;
-    padding: 0 1em;
-    max-width: 100%;
-    overflow-x: hidden;
-    grid-template-areas:
-      'gameList createGame'
-      'gameList news';
-  }
-
-  .gameListContainer {
-    grid-area: gameList;
-  }
-
-  .createGameContainer {
-    grid-area: createGame;
-  }
-
-  .newsContainer {
-    grid-area: news;
-    max-width: 100%;
-    margin: 0;
   }
 }
 
@@ -205,12 +268,10 @@
   font-size: 0.8em;
 }
 
-/* Release Notes Title */
 h3 {
   margin-bottom: 0.5em !important;
 }
 
-/* Message Styles (all screen sizes) */
 .messagesList {
   display: flex;
   flex-direction: column;
@@ -355,7 +416,6 @@ h3 {
   font-weight: 500;
 }
 
-/* News Container Scrolling */
 .newsContent {
   flex: 1;
   overflow-y: auto;
@@ -384,13 +444,12 @@ h3 {
 @media only screen and (max-width: 768px) and (orientation: portrait) {
   .grid {
     grid-template-columns: 1fr;
-    gap: 25px;
+    gap: 0;
     margin: 0 auto;
     max-width: 100%;
     overflow-x: hidden;
     width: 100vw;
     line-height: normal;
-    margin-top: 3.5em;
   }
 
   .gameListContainer {
@@ -403,12 +462,6 @@ h3 {
     overflow-x: hidden;
     width: 100%;
     order: 2;
-  }
-
-  .newsContainer {
-    overflow-x: hidden;
-    width: 100%;
-    order: 3;
   }
 
   .logo {
@@ -425,7 +478,6 @@ h3 {
     width: 100%;
   }
 
-  /* News Tabs Styles */
   .newsTabsContainer {
     display: flex;
     gap: 0.5em;
@@ -550,7 +602,6 @@ h3 {
   text-decoration: underline;
 }
 
-/* Show leaderboard on desktop, hide on mobile */
 .desktopAd {
   display: block;
 }
@@ -570,5 +621,104 @@ h3 {
 
   .adHeader {
     max-width: 300px;
+  }
+}
+
+.newsInner {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.newsSectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1em;
+}
+
+.newsSectionTitle {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 0;
+}
+
+.viewAllLink {
+  color: #d4af37;
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 500;
+  white-space: nowrap;
+  transition: opacity 0.2s;
+}
+
+.viewAllLink:hover {
+  opacity: 0.75;
+}
+
+.newsHorizontalList {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1em;
+}
+
+.newsCard {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 0;
+  padding: 1em 0.25em;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  min-height: 120px;
+  overflow: hidden;
+}
+
+.newsCardSkeleton {
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 4px;
+  animation: newsCardPulse 1.5s ease-in-out infinite;
+  min-height: 120px;
+}
+
+@keyframes newsCardPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.newsCardHeader {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6em;
+  flex-wrap: wrap;
+}
+
+.newsCardAuthor {
+  color: #d4af37;
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.newsCardDate {
+  color: #666;
+  font-size: 0.8rem;
+}
+
+.newsCardContent {
+  color: #aaa;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  line-clamp: 4;
+  overflow: hidden;
+}
+
+@media (max-width: 768px) {
+  .newsHorizontalList {
+    grid-template-columns: 1fr;
   }
 }

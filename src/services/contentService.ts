@@ -15,7 +15,7 @@ export interface DiscordMessage {
 
 export interface ContentVideo {
   videoId: string;
-  type: 'youtube' | 'twitch' | 'fabinsights';
+  type: 'youtube' | 'twitch' | 'fabinsights' | 'metafy';
   title: string;
   author: string;
   authorAvatar?: string;
@@ -23,6 +23,7 @@ export interface ContentVideo {
   thumbnail?: string;
   timestamp: string;
   messageUrl: string;
+  url?: string;
 }
 
 // Discord API - Fetches latest messages from #release-notes channel

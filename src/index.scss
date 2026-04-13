@@ -107,6 +107,12 @@ $primary-700: #f9a91e;
   --card-sectionning-background-color: var(--theme-card-background);
 }
 
+// Override Pico's scoped switch color (Pico sets it inside [data-theme] which beats :root)
+[type=checkbox][role=switch] {
+  --switch-background-color: var(--theme-form-background) !important;
+  --switch-color: var(--theme-text, #f4eded) !important;
+}
+
 // Global styles for select elements
 select {
   background-color: var(--dropdown-background-color, var(--theme-form-background, #33383d)) !important;

@@ -70,19 +70,12 @@
 
 .articleTitle {
   margin-top: 0.2em;
-  background: var(
-    --theme-section-background,
-    linear-gradient(
-      135deg,
-      rgba(30, 35, 41, 0.8) 0%,
-      rgba(30, 35, 41, 0.85) 100%
-    )
-  );
+  background: transparent;
 }
 
 article {
-  border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.2));
-  border-radius: 10px;
+  border: none;
+  border-radius: 0;
 }
 
 table {
@@ -318,17 +311,16 @@ td {
 
 .friendsSection {
   margin: 1.5rem 0;
-  background: rgba(0, 0, 0, 0.3);
+  background: transparent;
 }
 
 /* Metafy Section — External Integration: neutral card, small top accent */
 .metafySection {
   margin: 1.5rem 0;
   padding: 1.5rem;
-  background: rgba(0, 0, 0, 0.3);
-  border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-top: 3px solid rgba(157, 78, 221, 0.65);
+  background: transparent;
+  border-radius: 0;
+  border: none;
 }
 
 .metafySection h3 {
@@ -359,10 +351,9 @@ td {
 .patreonSection {
   margin: 1.5rem 0;
   padding: 1.5rem;
-  background: rgba(0, 0, 0, 0.3);
-  border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-top: 3px solid rgba(255, 66, 77, 0.65);
+  background: transparent;
+  border-radius: 0;
+  border: none;
 }
 
 .patreonSection h3 {
@@ -426,36 +417,33 @@ td {
 .metafyCommunityItem {
   padding: 0.75rem;
   margin-bottom: 0.75rem;
-  background: rgba(157, 78, 221, 0.1);
-  border: 1px solid rgba(157, 78, 221, 0.3);
-  border-radius: 4px;
-  transition: background-color 0.2s ease, border-color 0.2s ease;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  transition: color 0.2s ease;
   position: relative;
 }
 
 .metafyCommunityItem:hover {
-  background: rgba(157, 78, 221, 0.15);
-  border-color: rgba(157, 78, 221, 0.5);
+  background: transparent;
 }
 
 .metafyCommunityOwned {
-  border-left: 4px solid #d4af37;
-  background: rgba(212, 175, 55, 0.05);
+  border-left: none;
+  background: transparent;
 }
 
 .metafyCommunityOwned:hover {
-  background: rgba(212, 175, 55, 0.1);
-  border-color: rgba(212, 175, 55, 0.5);
+  background: transparent;
 }
 
 .metafyCommunitySupported {
-  border-left: 4px solid #e75480;
-  background: rgba(231, 84, 128, 0.05);
+  border-left: none;
+  background: transparent;
 }
 
 .metafyCommunitySupported:hover {
-  background: rgba(231, 84, 128, 0.1);
-  border-color: rgba(231, 84, 128, 0.5);
+  background: transparent;
 }
 
 .metafyCommunityBadge {
@@ -536,8 +524,8 @@ td {
   text-align: center;
   color: rgba(255, 255, 255, 0.6);
   font-size: 0.9rem;
-  background: rgba(157, 78, 221, 0.05);
-  border-radius: 4px;
+  background: transparent;
+  border-radius: 0;
 }
 
 .metafyActionButtons {
@@ -813,16 +801,9 @@ td {
 .upgradeSection {
   padding: 1.5em;
   margin-bottom: 1.5em;
-  border-radius: 8px;
-  border: 2px solid var(--theme-border, rgba(255, 255, 255, 0.2));
-  background: var(
-    --theme-section-background,
-    linear-gradient(
-      135deg,
-      rgba(30, 35, 41, 0.8) 0%,
-      rgba(30, 35, 41, 0.85) 100%
-    )
-  );
+  border-radius: 0;
+  border: none;
+  background: transparent;
 }
 
 .upgradeSection h3 {
@@ -843,9 +824,9 @@ td {
 
 /* Supporter Badge — Highlight Card: gold border + subtle glow */
 .supporterBadge {
-  border-left: 4px solid #c9a961;
-  background: rgba(0, 0, 0, 0.3);
-  box-shadow: 0 0 20px rgba(201, 169, 97, 0.1), inset 0 0 40px rgba(201, 169, 97, 0.03);
+  border-left: none;
+  background: transparent;
+  box-shadow: none;
 }
 
 .supporterBadge h3 {
@@ -862,15 +843,15 @@ td {
   color: rgba(201, 169, 97, 0.85);
   font-style: italic;
   padding: 1em;
-  background: rgba(201, 169, 97, 0.06);
-  border-radius: 4px;
+  background: transparent;
+  border-radius: 0;
   margin: 1em 0 0 0;
 }
 
 /* Free User Badge — Default Card: neutral dark, no colored tint */
 .freeUserBadge {
-  border-left: 4px solid rgba(255, 255, 255, 0.1);
-  background: rgba(0, 0, 0, 0.3);
+  border-left: none;
+  background: transparent;
 }
 
 .upgradeHeader {

@@ -3,279 +3,192 @@ import styles from './AboutSection.module.css';
 import { parseHtmlToReactElements } from 'utils/ParseEscapedString';
 import { useTranslation, Trans } from 'react-i18next';
 import ContributorLeaderboard from './ContributorLeaderboard';
+import { AdUnit } from 'components/ads';
+import useAuth from 'hooks/useAuth';
+import { useGetUserProfileQuery } from 'features/api/apiSlice';
 
 const AboutSection: React.FC = () => {
   const [expandedFAQ, setExpandedFAQ] = React.useState<number | null>(null);
   // Initial stuff to allow the lang to change
   const { t, i18n, ready } = useTranslation();
+  const { isLoggedIn, isLoading } = useAuth();
+  const { data: profileData, isLoading: isProfileLoading } = useGetUserProfileQuery(
+    undefined,
+    { skip: !isLoggedIn }
+  );
+  const isSupporter = isLoggedIn
+    ? (isProfileLoading ? true : (profileData?.isMetafySupporter ?? false))
+    : false;
+  const showAds = !isLoading && !isSupporter;
+
   const faqs = [
-    {
-      question: t("ABOUT.FAQ.IS_FREE_Q"),
-      answer: t("ABOUT.FAQ.IS_FREE_A")       
-    },
-    {
-      question: t("ABOUT.FAQ.DOWNLOAD_NEEDED_Q"),
-      answer: t("ABOUT.FAQ.DOWNLOAD_NEEDED_A")
-    },
-    {
-      question: t("ABOUT.FAQ.PLAY_OFFLINE_Q"),
-      answer: t("ABOUT.FAQ.PLAY_OFFLINE_A")
-    },
-    {
-      question: t("ABOUT.FAQ.HOW_SIGNUP_Q"),
-      answer: t("ABOUT.FAQ.HOW_SIGNUP_A")
-    },
-    {
-      question: t("ABOUT.FAQ.IS_OFFICIAL_Q"),
-      answer: t("ABOUT.FAQ.IS_OFFICIAL_A")
-    },
-    {
-      question: t("ABOUT.FAQ.BUG_FEATURE_Q"),
-      answer: t("ABOUT.FAQ.BUG_FEATURE_A")
-    },
-    {
-      question: t("ABOUT.FAQ.WHY_NO_RANKED_Q"),
-      answer: t("ABOUT.FAQ.WHY_NO_RANKED_A")
-    },
-    {
-      question: t("ABOUT.FAQ.WHERE_PLAY_Q"),
-      answer: t("ABOUT.FAQ.WHERE_PLAY_A")
-    },
-    {
-      question: t("ABOUT.FAQ.HOW_CONTRIBUTER_Q"),
-      answer: t("ABOUT.FAQ.HOW_CONTRIBUTER_A")
-    }
+    { question: t("ABOUT.FAQ.IS_FREE_Q"),         answer: t("ABOUT.FAQ.IS_FREE_A") },
+    { question: t("ABOUT.FAQ.DOWNLOAD_NEEDED_Q"), answer: t("ABOUT.FAQ.DOWNLOAD_NEEDED_A") },
+    { question: t("ABOUT.FAQ.PLAY_OFFLINE_Q"),    answer: t("ABOUT.FAQ.PLAY_OFFLINE_A") },
+    { question: t("ABOUT.FAQ.HOW_SIGNUP_Q"),      answer: t("ABOUT.FAQ.HOW_SIGNUP_A") },
+    { question: t("ABOUT.FAQ.IS_OFFICIAL_Q"),     answer: t("ABOUT.FAQ.IS_OFFICIAL_A") },
+    { question: t("ABOUT.FAQ.BUG_FEATURE_Q"),     answer: t("ABOUT.FAQ.BUG_FEATURE_A") },
+    { question: t("ABOUT.FAQ.WHY_NO_RANKED_Q"),   answer: t("ABOUT.FAQ.WHY_NO_RANKED_A") },
+    { question: t("ABOUT.FAQ.WHERE_PLAY_Q"),      answer: t("ABOUT.FAQ.WHERE_PLAY_A") },
+    { question: t("ABOUT.FAQ.HOW_CONTRIBUTER_Q"), answer: t("ABOUT.FAQ.HOW_CONTRIBUTER_A") },
+  ];
+
+  const features = [
+    { icon: "⚡", title: t("ABOUT.FEATURES.INSTANT_TITLE"),   desc: t("ABOUT.FEATURES.INSTANT_DESCRIPTION") },
+    { icon: "🌍", title: t("ABOUT.FEATURES.ACTIVE_TITLE"),    desc: t("ABOUT.FEATURES.ACTIVE_DESCRIPTION") },
+    { icon: "📱", title: t("ABOUT.FEATURES.MOBILE_TITLE"),    desc: t("ABOUT.FEATURES.MOBILE_DESCRIPTION") },
+    { icon: "📣", title: t("ABOUT.FEATURES.FEEDBACK_TITLE"),  desc: t("ABOUT.FEATURES.FEEDBACK_DESCRIPTION") },
+    { icon: "⚖️", title: t("ABOUT.FEATURES.NO_STAKES_TITLE"), desc: t("ABOUT.FEATURES.NO_STAKES_DESCRIPTION") },
+    { icon: "🌶️", title: t("ABOUT.FEATURES.SPICY_TITLE"),     desc: t("ABOUT.FEATURES.SPICY_DESCRIPTION") },
+  ];
+
+  const resources = [
+    { href: "https://fabrary.net/",                                            name: "Fabrary",           desc: t("ABOUT.COMMUNITY.FABRARY_DESCRIPTION") },
+    { href: "https://www.thefabcube.com/cubes",                                name: "The FAB Cube",      desc: t("ABOUT.COMMUNITY.THE_FAB_CUBE_DESCRIPTION") },
+    { href: "https://github.com/the-fab-cube/flesh-and-blood-cards",           name: "FAB Card Database", desc: t("ABOUT.COMMUNITY.FAB_CARD_DATABASE_DESCRIPTION") },
+    { href: "https://legendarystories.net/intro.html",                         name: "Legendary Stories", desc: t("ABOUT.COMMUNITY.LEGENDARY_STORIES_DESCRIPTION") },
+    { href: "https://fablazingdata.com",                                       name: "FAB Blazing Data",  desc: t("ABOUT.COMMUNITY.FABLAZING_DATA_DESCRIPTION") },
+    { href: "https://www.fabinsights.net/",                                    name: "FAB Insights",      desc: t("ABOUT.COMMUNITY.FAB_INSIGHTS_DESCRIPTION") },
   ];
 
   return (
     <section className={styles.aboutContainer}>
       <div className={styles.content}>
-        <h2>{t("ABOUT.TITLE")}</h2>
-        <p className={styles.tagline}>
-          {t("ABOUT.SUB_HEADER")}
-        </p>
 
-        <p className={styles.description}>
-	  {t("ABOUT.DESCRIPTION")}
-        </p>
-
-        {/* About Talishar Section */}
-        <div className={styles.aboutTalisharSection}>
-          <h3>🎮 {t("ABOUT.WHAT_IS_TITLE")}</h3>
-          <p>
-	    {t("ABOUT.WHAT_IS_DESCRIPTION")}
-          </p>
+        <div className={styles.pageHeader}>
+          <h2>{t("ABOUT.TITLE")}</h2>
+          <p className={styles.tagline}>{t("ABOUT.SUB_HEADER")}</p>
         </div>
 
-        {/* Who Maintains Talishar */}
-        <div className={styles.maintenanceSection}>
-          <h3>👥 {t("ABOUT.WHO_MAINTAINS_TITLE")}</h3>
-          <p>
-	    {t("ABOUT.WHO_MAINTAINS_DESCRIPTION")}            
-          </p>
-          <h4 className={styles.leaderboardHeading}>🏆 Contributor Leaderboard</h4>
+        <div className={styles.section}>
+          <div className={styles.introGrid}>
+            <div className={styles.introLeft}>
+              <h3 className={styles.sectionTitle}>{t("ABOUT.WHAT_IS_TITLE")}</h3>
+              <p className={styles.bodyText}>{t("ABOUT.WHAT_IS_DESCRIPTION")}</p>
+              <p className={styles.bodyText}>{t("ABOUT.DESCRIPTION")}</p>
+            </div>
+            <ul className={styles.featureList}>
+              {features.map((f, i) => (
+                <li key={i} className={styles.featureItem}>
+                  <span className={styles.featureIcon}>{f.icon}</span>
+                  <div className={styles.featureText}>
+                    <strong>{f.title}</strong>
+                    <p>{f.desc}</p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className={styles.statsRow}>
+            <div className={styles.stat}>
+              <Trans i18nKey="ABOUT.STATS.PLAYERS" values={{ players: "9,000+" }}>
+                <span className={styles.statNumber}>9,000+</span>
+                <span className={styles.statLabel}>Daily Players</span>
+              </Trans>
+            </div>
+            <div className={styles.stat}>
+              <Trans i18nKey="ABOUT.STATS.FREE" values={{ percent: "100%" }}>
+                <span className={styles.statNumber}>100%</span>
+                <span className={styles.statLabel}>Free to Play</span>
+              </Trans>
+            </div>
+            <div className={styles.stat}>
+              <Trans i18nKey="ABOUT.STATS.ACTIVE" values={{ supporters: "500+" }}>
+                <span className={styles.statNumber}>500+</span>
+                <span className={styles.statLabel}>Active Supporters</span>
+              </Trans>
+            </div>
+          </div>
+        </div>
+
+        <div className={styles.section}>
+          <div className={styles.sectionHeader}>
+            <h3 className={styles.sectionTitle}>{t("ABOUT.WHO_MAINTAINS_TITLE")}</h3>
+            <div className={styles.contributeButtons}>
+              <a
+                href="https://github.com/Talishar/Talishar"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.githubButton}
+              >
+                Github
+              </a>
+              <a
+                href="https://discord.gg/JykuRkdd5S"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.discordButton}
+              >
+                Discord
+              </a>
+            </div>
+          </div>
+          <p className={styles.bodyText}>{t("ABOUT.WHO_MAINTAINS_DESCRIPTION")}</p>
           <ContributorLeaderboard />
-          <p className={styles.contributorInfo}>
-	    <Trans i18nKey="ABOUT.WANT_TO_CONTRIBUTE">
-	    Want to contribute? Talishar is open-source! Join us on
-            <a
-              href="https://discord.gg/JykuRkdd5S"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Discord
-            </a>
-            or check our
-            <a
-              href="https://github.com/Talishar/Talishar"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              GitHub repository
-            </a>
-              to get involved.
-	    </Trans>
-          </p>
+          {showAds && (
+            <div className={styles.adRow}>
+              <AdUnit placement="leaderboard-2" className={styles.desktopAd} />
+              <AdUnit placement="mobile-unit-2" className={styles.mobileAd} />
+            </div>
+          )}
         </div>
 
-        {/* LSS Relationship */}
-        <div className={styles.lssRelationship}>
-          <h3>⚖️{t("ABOUT.LSS_RELATIONSHIP_TITLE")}</h3>
-	  <Trans
-	    i18nKey="ABOUT.LSS_RELATIONSHIP_DESCRIPTION"
-	    components={[
-	      <p key="lss-p0" />,
-	      <p key="lss-p1" />,
-	      <a
-		key="lss-discord"
-		href="https://discord.gg/JykuRkdd5S"
-		target="_blank"
-		rel="noopener noreferrer"
-	      />,
-	      <a
-		key="lss-rules"
-		href="https://fabtcg.com/rules/"
-		target="_blank"
-		rel="noopener noreferrer"
-	      />,
-	    ]}
-	  />
+        <div className={styles.section}>
+          <div className={styles.lssGrid}>
+            <div>
+              <h3 className={styles.sectionTitle}>Talishar is Unofficial and Independent</h3>
+              <Trans
+                i18nKey="ABOUT.LSS_RELATIONSHIP_DESCRIPTION"
+                components={[
+                  <p key="lss-p0" className={styles.bodyText} />,
+                  <p key="lss-p1" className={styles.bodyText} />,
+                  <a key="lss-discord" href="https://discord.gg/JykuRkdd5S" target="_blank" rel="noopener noreferrer" />,
+                  <a key="lss-rules"   href="https://fabtcg.com/rules/"       target="_blank" rel="noopener noreferrer" />,
+                ]}
+              />
+            </div>
+            <div>
+              <h3 className={styles.sectionTitle}>{t("ABOUT.LSS_RELATIONSHIP_TITLE")}</h3>
+              <p className={styles.bodyText}>{t("ABOUT.WHO_MAINTAINS_DESCRIPTION")}</p>
+            </div>
+          </div>
+          <a
+            href="https://metafy.gg/@talishar"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={styles.metafyButton}
+          >
+            Support us on Metafy
+          </a>
         </div>
 
-        {/* Features & Stats */}
-        <div className={styles.featuresGrid}>
-          <div className={styles.featureCard}>
-            <h3>⚡{t("ABOUT.FEATURES.INSTANT_TITLE")}</h3>
-            <p>{t("ABOUT.FEATURES.INSTANT_DESCRIPTION")}</p>
-          </div>
-
-          <div className={styles.featureCard}>
-            <h3>🌍{t("ABOUT.FEATURES.ACTIVE_TITLE")}</h3>
-            <p>{t("ABOUT.FEATURES.ACTIVE_DESCRIPTION")}</p>
-          </div>
-
-          <div className={styles.featureCard}>
-            <h3>📱{t("ABOUT.FEATURES.MOBILE_TITLE")}</h3>
-            <p>{t("ABOUT.FEATURES.MOBILE_DESCRIPTION")}</p>
-          </div>
-
-          <div className={styles.featureCard}>
-            <h3>📣{t("ABOUT.FEATURES.FEEDBACK_TITLE")}</h3>
-            <p>{t("ABOUT.FEATURES.FEEDBACK_DESCRIPTION")}</p>
-          </div>
-
-          <div className={styles.featureCard}>
-            <h3>⚖️{t("ABOUT.FEATURES.NO_STAKES_TITLE")}</h3>
-            <p>{t("ABOUT.FEATURES.NO_STAKES_DESCRIPTION")}</p>
-          </div>
-
-          <div className={styles.featureCard}>
-            <h3>🌶️{t("ABOUT.FEATURES.SPICY_TITLE")}</h3>
-            <p>{t("ABOUT.FEATURES.SPICY_DESCRIPTION")}</p>
-          </div>
-        </div>
-        <div className={styles.statsContainer}>
-          <div className={styles.stat}>
-	    <Trans
-	      i18nKey="ABOUT.STATS.PLAYERS"
-	      values={{players:"9,000+"}}>
-	      <span className={styles.statNumber}>9,000+</span>
-	      <span className={styles.statLabel}>Daily Players</span>
-	    </Trans>
-          </div>
-          <div className={styles.stat}>
-	    <Trans
-	      i18nKey="ABOUT.STATS.FREE"
-	      values={{percent:"100%"}}>
-              <span className={styles.statNumber}>100%</span>
-	      <span className={styles.statLabel}>Free to Play</span>
-	    </Trans>
-          </div>
-          <div className={styles.stat}>
-	    <Trans
-	      i18nKey="ABOUT.STATS.ACTIVE"
-	      values={{supporters:"500+"}}>
-              <span className={styles.statNumber}>500+</span>
-              <span className={styles.statLabel}>Active Supporters</span>
-	    </Trans>
-          </div>
-        </div>
-        <div className={styles.communityResourcesContainer}>
-          <h3>🤝{t("ABOUT.COMMUNITY.TITLE")}</h3>
-          <p>
-            {t("ABOUT.COMMUNITY.DESCRIPTION")}
-          </p>
-
+        <div className={styles.section}>
+          <h3 className={styles.sectionTitle}>{t("ABOUT.COMMUNITY.TITLE")}</h3>
+          <p className={styles.bodyText}>{t("ABOUT.COMMUNITY.DESCRIPTION")}</p>
           <div className={styles.resourcesGrid}>
-            <a
-              href="https://fabrary.net/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={styles.resourceCard}
-            >
-              <h4>Fabrary</h4>
-              <p>
-                {t("ABOUT.COMMUNITY.FABRARY_DESCRIPTION")}
-              </p>
-            </a>
-
-            <a
-              href="https://www.thefabcube.com/cubes"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={styles.resourceCard}
-            >
-              <h4>The FAB Cube</h4>
-              <p>
-                {t("ABOUT.COMMUNITY.THE_FAB_CUBE_DESCRIPTION")}
-              </p>
-            </a>
-
-            <a
-              href="https://github.com/the-fab-cube/flesh-and-blood-cards"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={styles.resourceCard}
-            >
-              <h4>FAB Card Database</h4>
-              <p>
-                {t("ABOUT.COMMUNITY.FAB_CARD_DATABASE_DESCRIPTION")}    
-              </p>
-            </a>
-
-            <a
-              href="https://legendarystories.net/intro.html"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={styles.resourceCard}
-            >
-              <h4>Legendary Stories</h4>
-              <p>
-		{t("ABOUT.COMMUNITY.LEGENDARY_STORIES_DESCRIPTION")}
-	      </p>
-            </a>
-
-            <a
-              href="https://fablazingdata.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={styles.resourceCard}
-            >
-              <h4>FAB Blazing Data</h4>
-              <p>
-		{t("ABOUT.COMMUNITY.FABLAZING_DATA_DESCRIPTION")}
-              </p>
-            </a>
-
-            <a
-              href="https://www.fabinsights.net/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={styles.resourceCard}
-            >
-              <h4>FAB Insights</h4>
-              <p>
-		{t("ABOUT.COMMUNITY.FAB_INSIGHTS_DESCRIPTION")}   
-              </p>
-            </a>
+            {resources.map((r, i) => (
+              <a key={i} href={r.href} target="_blank" rel="noopener noreferrer" className={styles.resourceCard}>
+                <div className={styles.resourceCardBody}>
+                  <h4>{r.name}</h4>
+                  <p>{r.desc}</p>
+                </div>
+                <span className={styles.linkIcon}>↗</span>
+              </a>
+            ))}
           </div>
         </div>
 
-        <div className={styles.faqContainer}>
-          <h3>❓{t("ABOUT.FAQ.TITLE")}</h3>
+        <div className={styles.section}>
+          <h3 className={styles.sectionTitle}>{t("ABOUT.FAQ.TITLE")}</h3>
           <div className={styles.faqList}>
             {faqs.map((faq, index) => (
               <div key={index} className={styles.faqItem}>
                 <button
                   className={styles.faqQuestion}
-                  onClick={() =>
-                    setExpandedFAQ(expandedFAQ === index ? null : index)
-                  }
+                  onClick={() => setExpandedFAQ(expandedFAQ === index ? null : index)}
                 >
                   <span>{faq.question}</span>
-                  <span className={styles.faqToggle}>
-                    {expandedFAQ === index ? '−' : '+'}
-                  </span>
+                  <span className={styles.faqToggle}>{expandedFAQ === index ? '−' : '+'}</span>
                 </button>
                 {expandedFAQ === index && (
                   <div className={styles.faqAnswer}>
@@ -285,73 +198,12 @@ const AboutSection: React.FC = () => {
               </div>
             ))}
           </div>
-        </div>
-
-        {/* Community Values */}
-        <div className={styles.communityValuesSection}>
-          <h3>{t("ABOUT.VALUES.TITLE")}</h3>
-          <div className={styles.valuesGrid}>
-            <div className={styles.valueCard}>
-              <h4>🤝{t("ABOUT.VALUES.INCLUSIVITY_TITLE")}</h4>
-              <p>
-		{t("ABOUT.VALUES.INCLUSIVITY_DESCRIPTION")}                
-              </p>
+          {showAds && (
+            <div className={styles.adRow}>
+              <AdUnit placement="leaderboard-3" className={styles.desktopAd} />
+              <AdUnit placement="mobile-unit-3" className={styles.mobileAd} />
             </div>
-            <div className={styles.valueCard}>
-              <h4>📖 {t("ABOUT.VALUES.TRANSPARENCY_TITLE")}</h4>
-              <p>
-		{t("ABOUT.VALUES.TRANSPARENCY_DESCRIPTION")}
-                
-              </p>
-            </div>
-            <div className={styles.valueCard}>
-              <h4>🎯{t("ABOUT.VALUES.ACCURACY_TITLE")}</h4>
-              <p>
-		{t("ABOUT.VALUES.ACCURACY_DESCRIPTION")}
-              </p>
-            </div>
-            <div className={styles.valueCard}>
-              <h4>💡{t("ABOUT.VALUES.INNOVATION_TITLE")}</h4>
-              <p>
-		{t("ABOUT.VALUES.INNOVATION_DESCRIPTION")}                
-              </p>
-            </div>
-            <div className={styles.valueCard}>
-              <h4>🛡️{t("ABOUT.VALUES.SAFETY_TITLE")}</h4>
-              <p>
-		{t("ABOUT.VALUES.SAFETY_DESCRIPTION")}
-              </p>
-            </div>
-            <div className={styles.valueCard}>
-              <h4>🌱{t("ABOUT.VALUES.COMMUNITY_DRIVEN_TITLE")}</h4>
-              <p>
-		{t("ABOUT.VALUES.COMMUNITY_DRIVEN_DESCRIPTION")}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className={styles.disclaimer}>
-	  <Trans i18nKey="ABOUT.DISCLAIMER"
-		 components={{
-		 0: <p />,
-		 1: <strong></strong>,
-		 2: <p />,		 
-		 3: (<a
-		       href="https://discord.com/invite/flesh-and-blood-judge-hub-874145774135558164"
-		       target="_blank"
-		       rel="noopener noreferrer"
-		       />),
-		 4: (<a
-		       href="https://legendstory.com/"
-		       target="_blank"
-		       rel="noopener noreferrer"
-		       />)
-		 
-		 }}
-
-	  />
-
+          )}
         </div>
       </div>
     </section>
