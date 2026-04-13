@@ -167,6 +167,36 @@
   scroll-margin-top: 86px;
 }
 
+@media (min-width: 769px) and (max-width: 1024px) {
+  .bannerSection {
+    height: auto;
+    min-height: unset;
+    max-height: unset;
+  }
+
+  .bannerContent {
+    position: relative;
+    padding: 100px 2rem 2.5rem;
+  }
+
+  .heroSubtitle {
+    max-width: 100%;
+  }
+
+  .bannerBackground {
+    background:
+      linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0.55) 0%,
+        rgba(0, 0, 0, 0.55) 40%,
+        rgba(0, 0, 0, 0.75) 58%,
+        var(--landing-surface) 78%,
+        var(--landing-surface) 100%
+      ),
+      url('/images/talishar-lost-prince.webp') center center / cover no-repeat;
+  }
+}
+
 @media (max-width: 768px) {
   .bannerToggle {
     top: 76px;
