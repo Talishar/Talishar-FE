@@ -413,6 +413,27 @@
   transform: translateY(-1px);
 }
 
+.adFooter {
+  margin-top: 1.25em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35em;
+}
+
+.adHeader {
+  width: min(100%, 970px);
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.desktopAd {
+  display: block;
+  width: 100%;
+  max-width: 970px;
+}
+
 
 @media (max-width: 960px) {
   .heroLayout {

@@ -300,6 +300,22 @@ const CommunityContent: React.FC<CommunityContentProps> = ({ showAds = false }) 
             Join Discord
           </a>
         </div>
+          {showAds && (
+            <div className={styles.adFooter}>
+              <div className={styles.adHeader}>
+                <span></span>
+                <a
+                  href="https://metafy.gg/@talishar/tiers"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.removeAdsLink}
+                >
+                  Remove ads
+                </a>
+              </div>
+              <AdUnit placement="billboard-1" className={styles.desktopAd} />
+            </div>
+          )}
       </div>
     </section>
   );

@@ -161,7 +161,7 @@ const Index = () => {
                 Remove ads
               </a>
             </div>
-            <AdUnit placement="leaderboard-1" className={styles.desktopAd} />
+            <AdUnit placement="billboard-1" className={styles.desktopAd} />
           </div>
         )}
         <CommunityContent showAds={showAds} />
