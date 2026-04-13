@@ -10,6 +10,7 @@
 
 @media (max-width: 768px) {
   .LoginPageContainer {
-    padding: 20px 0;
+    padding: 16px;
+    align-items: flex-start;
   }
 }

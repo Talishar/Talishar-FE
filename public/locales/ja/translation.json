@@ -209,6 +209,9 @@
   "GAME_LIST":{
     "DISABLE_EXPERIMENTAL":"実験的な機能を無効",
     "GAMES":"ゲーム",
+    "OPEN_GAMES":"ゲーム一覧",
+    "LOOKING_FOR_OPPONENT":"対戦相手を探す",
+    "IN_PROGRESS_TAB":"進行中",
     "MANUAL_REFRESH":"ゲームリストを手動で更新",
     "LOAD_ERROR_TITLE":"エラーが発生しました！",
     "LOAD_ERROR_DESCRIPTION":"ページを更新して再試行してください。ゲームリストの読み込みエラーが発生した場合は、Discordでお知らせください。以下の情報をお知らせください：",

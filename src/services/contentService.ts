@@ -3,6 +3,15 @@
  */
 import { BACKEND_URL } from 'appConstants';
 
+export interface DiscordReaction {
+  count: number;
+  me: boolean;
+  emoji: {
+    id: string | null; // null for standard unicode emoji
+    name: string;
+  };
+}
+
 export interface DiscordMessage {
   id: string;
   content: string;
@@ -10,12 +19,12 @@ export interface DiscordMessage {
   timestamp: string;
   embeds: any[];
   attachments: any[];
-  reactions: any[];
+  reactions: DiscordReaction[];
 }
 
 export interface ContentVideo {
   videoId: string;
-  type: 'youtube' | 'twitch' | 'fabinsights';
+  type: 'youtube' | 'twitch' | 'fabinsights' | 'metafy';
   title: string;
   author: string;
   authorAvatar?: string;
@@ -23,6 +32,7 @@ export interface ContentVideo {
   thumbnail?: string;
   timestamp: string;
   messageUrl: string;
+  url?: string;
 }
 
 // Discord API - Fetches latest messages from #release-notes channel

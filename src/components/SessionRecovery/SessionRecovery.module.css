@@ -1,12 +1,10 @@
 .container {
   position: fixed;
-  top: 90px;
+  top: 80px;
   right: 1rem;
   z-index: 9999;
-  max-width: 380px;
+  max-width: 340px;
   animation: slideIn 0.3s ease-out;
-  border: 2px solid var(--theme-border, rgba(76, 175, 80, 0.3));
-  border-radius: 10px;
 }
 
 @keyframes slideIn {
@@ -21,51 +19,51 @@
 }
 
 .message {
-  background: var(--theme-card-background, #1a1a1a);
-  border: 1px solid var(--theme-border, rgba(76, 175, 80, 0.3));
+  background: rgba(20, 24, 30, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 8px;
   padding: 1rem;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
 }
 
 .title {
   margin: 0 0 0.5rem 0;
-  font-size: 1.1rem;
+  font-size: 0.95rem;
   font-weight: 600;
-  color: var(--primary, #4caf50);
+  color: #ffffff;
+  letter-spacing: 0.01em;
 }
 
 .description {
-  margin: 0.5rem 0;
-  font-size: 0.9rem;
+  margin: 0.4rem 0;
+  font-size: 0.83rem;
   line-height: 1.5;
-  color: var(--text-primary, rgba(255, 255, 255, 0.85));
+  color: rgba(255, 255, 255, 0.7);
 }
 
 .gameId {
   font-weight: 600;
-  color: var(--primary, #4caf50);
-  font-family: monospace;
+  color: rgba(255, 255, 255, 0.95);
 }
 
 .opponentStatus {
   display: block;
-  margin-top: 0.25rem;
-  font-size: 0.85rem;
-  color: var(--text-danger, #ff6b6b);
+  margin-top: 0.2rem;
+  font-size: 0.78rem;
+  color: #f87171;
   font-weight: 500;
 }
 
 .opponentInfo {
-  margin: 0.75rem 0 0 0;
-  font-size: 0.85rem;
-  color: var(--text-secondary, rgba(255, 255, 255, 0.8));
+  margin: 0.4rem 0 0 0;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.5);
 }
 
 .opponentName {
   font-weight: 500;
-  color: var(--primary, #4caf50);
-  font-style: italic;
+  color: rgba(255, 255, 255, 0.85);
 }
 
 .buttonGroup {
@@ -76,39 +74,43 @@
 
 .rejoinButton {
   flex: 1;
-  padding: 0.65rem 0.75rem;
-  background: var(--theme-tertiary, #2a2a2a);
-  border: 1px solid var(--primary, #4caf50);
-  color: var(--primary, #4caf50);
+  padding: 0.5rem 0.75rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #ffffff;
   border-radius: 6px;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.15s ease;
 }
 
-.rejoinButton:hover {
-  background: var(--primary, #4caf50);
-  color: var(--theme-secondary, #1a1a1a);
-  transform: translateY(-1px);
-  box-shadow: 0 2px 8px var(--primary, rgba(76, 175, 80, 0.2));
+.rejoinButton:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.rejoinButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .dismissButton {
-  flex: 0.8;
-  padding: 0.65rem 0.5rem;
+  flex: 0.65;
+  padding: 0.5rem 0.5rem;
   background: transparent;
-  border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.15));
-  color: var(--text-secondary, rgba(255, 255, 255, 0.7));
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.45);
   border-radius: 6px;
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.15s ease;
 }
 
-.dismissButton:hover {
-  background: var(--theme-tertiary, rgba(255, 255, 255, 0.05));
-  border-color: var(--theme-border-focus, rgba(255, 255, 255, 0.25));
+.dismissButton:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.18);
+  color: rgba(255, 255, 255, 0.65);
 }
 
 @media (max-width: 768px) {
@@ -125,25 +127,22 @@
   }
 
   .title {
-    font-size: 1rem;
+    font-size: 0.9rem;
   }
 
   .description {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
   }
 
   .opponentInfo {
-    font-size: 0.8rem;
+    font-size: 0.76rem;
   }
 
   .buttonGroup {
     flex-direction: column;
   }
 
-  .rejoinButton {
-    width: 100%;
-  }
-
+  .rejoinButton,
   .dismissButton {
     width: 100%;
     flex: 1;

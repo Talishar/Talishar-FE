@@ -1,20 +1,23 @@
 .subSectionTitle {
   text-align: center;
-  margin-bottom: 0.3em;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.7);
 }
 
 .groupDiv {
-  padding-bottom: 0.3em;
+  padding-bottom: 0.5rem;
   border-bottom: 1px solid var(--theme-border, rgba(255, 255, 255, 0.2));
 }
 
 @media (max-width: 768px) {
   .subSectionTitle {
-    margin-bottom: 0.2em;
-    font-size: 0.9em;
+    margin-bottom: 0.25rem;
+    font-size: 0.85rem;
   }
 
   .groupDiv {
-    padding-bottom: 0.2em;
+    padding-bottom: 0.25rem;
   }
 }

@@ -1,12 +1,18 @@
 .navBar {
   top: 0;
-  border-bottom: 1px solid var(--theme-border, rgba(255, 255, 255, 0.2));
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   min-height: 70px;
   z-index: 10000;
   position: fixed;
   width: 100%;
   left: 0;
-  background: var(--theme-section-background);
+  background: rgba(0, 0, 0, 0.18);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  display: flex !important;
+  align-items: stretch;
+  justify-content: space-between;
+  transition: background 0.4s ease, border-bottom-color 0.4s ease, backdrop-filter 0.4s ease;
 
   .logo {
     padding: 10px 0;
@@ -159,22 +165,271 @@
   }
 }
 
-@media only screen and (max-width: 768px) {
-  // hide social icons on small screen, so it won't be too small
-  .navBar {
-    font-size: smaller;
-    padding: 0px;
-    ul li a {
-      padding: 0 5px;
+.leftGroup {
+  display: flex;
+  align-items: center;
+  list-style: none;
+  margin: 0 !important;
+  padding: 0 0 0 16px;
+  flex: 1;
+  min-width: 0;
+}
+
+.centerNav {
+  display: flex;
+  align-items: stretch;
+  list-style: none;
+  margin: 0 !important;
+  padding: 0;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 100%;
+
+  li {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+
+    a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      padding: 0 18px;
+      color: var(--snow);
+      font-size: 16px;
+      font-weight: 500;
+      white-space: nowrap;
+      position: relative;
+      text-decoration: none;
+      border-radius: 0;
+      transition: color 200ms ease, background-color 200ms ease;
+
+      &:hover,
+      &:focus {
+        color: var(--theme-primary);
+        background-color: rgba(0, 0, 0, 0.1);
+
+        &::before {
+          rotate: 225deg;
+        }
+
+        &::before,
+        &::after {
+          transform: scale(1);
+        }
+      }
+
+      &::before,
+      &::after {
+        display: block;
+        content: '';
+        position: absolute;
+        background-color: var(--theme-primary);
+        transition: all 300ms;
+        transform: scale(0);
+        transform-origin: center;
+      }
+
+      &::before {
+        $width: 10px;
+        width: $width;
+        height: $width;
+        bottom: -(calc($width/2) - 1);
+        left: calc(50% - ($width/2));
+        rotate: 45deg;
+      }
+
+      &::after {
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 3px;
+      }
     }
-    
-    ul li a span,
-    .label {
+  }
+}
+
+.activeNavLink {
+  color: var(--theme-primary) !important;
+
+  &::before,
+  &::after {
+    transform: scale(1) !important;
+  }
+
+  &::before {
+    rotate: 225deg !important;
+  }
+}
+
+.rightGroup {
+  display: flex;
+  align-items: center;
+  list-style: none;
+  margin: 0 !important;
+  padding: 0 16px 0 0;
+  flex: 1;
+  justify-content: flex-end;
+
+  > li {
+    height: 100%;
+    display: flex;
+    align-items: center;
+  }
+}
+
+.userDropdown {
+  position: relative;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.userDropdownTrigger {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  height: 100%;
+  padding: 0 14px;
+  background: none;
+  border: none;
+  color: var(--snow);
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 500;
+  white-space: nowrap;
+  position: relative;
+  transition: color 200ms ease, background-color 200ms ease;
+  margin-bottom: 0 !important;
+  border-radius: 0;
+
+  svg {
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+
+  .userName {
+    font-size: 15px;
+  }
+
+  &:hover,
+  &[aria-expanded='true'] {
+    color: var(--theme-primary);
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+}
+
+.chevron {
+  font-size: 14px !important;
+  transition: transform 200ms ease;
+}
+
+.chevronOpen {
+  transform: rotate(180deg);
+}
+
+.userDropdownMenu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: var(--theme-card-background, #1e2329);
+  border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.12));
+  border-top: 2px solid var(--theme-primary, #d4af37);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.55);
+  z-index: 10001;
+  list-style: none;
+  margin: 0 !important;
+  padding: 6px 0;
+  display: flex !important;
+  flex-direction: column !important;
+  border-radius: 0 0 6px 6px;
+
+  > li > a {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 12px;
+    padding: 10px 18px;
+    color: var(--snow, #fff);
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    white-space: nowrap;
+    height: auto;
+    border-radius: 0;
+    border-left: 3px solid transparent;
+    transition: background-color 150ms ease, color 150ms ease, border-left-color 150ms ease;
+
+    &::before,
+    &::after {
       display: none !important;
     }
 
+    svg {
+      font-size: 17px !important;
+      flex-shrink: 0;
+      opacity: 0.85;
+    }
+
     span {
-      font-size: smaller;
+      font-size: 14px !important;
+      display: inline !important;
+    }
+
+    &:hover,
+    &:focus {
+      background-color: var(--theme-form-background, #2a2f35);
+      color: var(--theme-primary, #d4af37);
+      border-left-color: var(--theme-primary, #d4af37);
+      background-image: none;
+
+      svg {
+        opacity: 1;
+      }
+    }
+  }
+}
+
+.dropdownDivider {
+  height: 1px;
+  background-color: var(--theme-border, rgba(255, 255, 255, 0.08));
+  margin: 6px 0;
+  padding: 0 !important;
+}
+
+.mobileDivider {
+  height: 1px;
+  background-color: var(--theme-border, rgba(255, 255, 255, 0.1));
+  margin: 4px 0;
+  padding: 0 !important;
+  border-bottom: none !important;
+}
+
+@media only screen and (max-width: 768px) {
+  .navBar {
+    font-size: smaller;
+    padding: 0px;
+    width: 100%;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: rgba(13, 14, 16, 0.97);
+
+    .leftGroup li a {
+      padding: 0 5px;
+    }
+
+    .leftGroup li a span,
+    .leftGroup .label,
+    .rightGroup .label {
+      display: none !important;
+    }
+
+    .centerNav li a {
+      padding: 0 12px;
+      font-size: 14px;
     }
 
     li.languageSelectorListElement {
@@ -184,9 +439,6 @@
       margin-right: 5px;
       transform: scale(0.9);
     }
-
-    width: 100%;
-
   }
 
 }
@@ -225,7 +477,11 @@
 }
 
 @media (max-width: 768px) and (orientation: portrait) {
-  .navBar .rightNav {
+  .centerNav {
+    display: none;
+  }
+
+  .rightGroup {
     display: none;
   }
 
@@ -426,4 +682,8 @@
 
 .contentWrapper {
   padding-top: 70px;
+
+  :global(body[data-hero-page]) & {
+    background: var(--theme-background) !important;
+  }
 }

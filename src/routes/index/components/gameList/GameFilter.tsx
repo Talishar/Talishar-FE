@@ -255,7 +255,7 @@ const GameFilter = ({
     <div className={styles.filterContainer} ref={dropdownRef}>
       <button
         ref={buttonRef}
-        className={styles.filterButton}
+        className={`${styles.filterButton}${hasActiveFilters ? ` ${styles.filterButtonActive}` : ''}`}
         onClick={() => setIsOpen(!isOpen)}
         title={t("GAME_FILTER.FILTER_GAMES")}
       >
@@ -273,43 +273,45 @@ const GameFilter = ({
       </button>
 
       {isOpen && (
-        <div className={styles.dropdown} style={dropdownStyle}>
-          <div className={styles.dropdownHeader}>
-            <h5 className={styles.dropdownTitle}>{t("GAME_FILTER.FILTER_GAMES")}</h5>
-          </div>
+        <>
+          <div className={styles.backdrop} onClick={() => setIsOpen(false)} />
+          <div className={styles.dropdown} style={dropdownStyle}>
+            <div className={styles.dropdownHeader}>
+              <h5 className={styles.dropdownTitle}>{t("GAME_FILTER.FILTER_GAMES")}</h5>
+              <div className={styles.headerActions}>
+                <button className={styles.headerActionBtn} onClick={handleResetFilters}>
+                  {t("GAME_FILTER.RESET_FILTER")}
+                </button>
+                <button className={styles.headerActionBtn} onClick={handleDeselectAll}>
+                  {t("GAME_FILTER.UNCHECK_ALL")}
+                </button>
+              </div>
+            </div>
 
-          <div className={styles.checklistContainer}>
-            {/* Format Options */}
-            {formatOptions.map((format) => (
-              <label key={format.value} className={styles.checklistItem}>
-                <input
-                  type="checkbox"
-                  checked={
-                    format.isGroup
-                      ? isGroupSelected(format.groupValues)
-                      : selectedFormats.has(format.value)
-                  }
-                  onChange={() =>
-                    handleFormatChange(format.value, format.groupValues)
-                  }
-                />
-                <span>{format.label}</span>
-              </label>
-            ))}
+            <div className={styles.checklistContainer}>
+              {formatOptions.map((format) => {
+                const isChecked = format.isGroup
+                  ? isGroupSelected(format.groupValues)
+                  : selectedFormats.has(format.value);
+                return (
+                  <label
+                    key={format.value}
+                    className={`${styles.checklistItem}${isChecked ? ` ${styles.checklistItemChecked}` : ''}`}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={isChecked}
+                      onChange={() =>
+                        handleFormatChange(format.value, format.groupValues)
+                      }
+                    />
+                    <span>{format.label}</span>
+                  </label>
+                );
+              })}
+            </div>
           </div>
-
-          <div className={styles.buttonContainer}>
-            <button className={styles.resetButton} onClick={handleResetFilters}>
-              {t("GAME_FILTER.RESET_FILTER")}
-            </button>
-            <button
-              className={styles.deselectButton}
-              onClick={handleDeselectAll}
-            >
-              {t("GAME_FILTER.UNCHECK_ALL")}
-            </button>
-          </div>
-        </div>
+        </>
       )}
     </div>
   );

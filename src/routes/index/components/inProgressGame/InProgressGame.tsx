@@ -12,46 +12,63 @@ export const InProgressGame = ({
   ix,
   entry,
   isFriendsGame = false,
-  friendName
+  friendName,
+  formatLabel
 }: {
   ix: number;
   entry: IGameInProgress;
   isFriendsGame?: boolean;
   friendName?: string;
+  formatLabel?: string;
 }) => {
   const navigate = useNavigate();
+  const hasFormatLabel = !!formatLabel;
   const spectateHandler = (gameName: number) => {
     navigate(`/game/play/${gameName}`);
   };
-  const buttonClass = classNames(styles.button, 'secondary');
+  const buttonClass = styles.button;
+  const gameItemClass = classNames(styles.gameItem, {
+    [styles.gameItemNoFormat]: !hasFormatLabel
+  });
+  const matchupBlockClass = classNames(styles.matchupBlock, {
+    [styles.matchupBlockNoFormat]: !hasFormatLabel
+  });
+  const heroRowClass = classNames(styles.heroRow, {
+    [styles.heroRowNoFormat]: !hasFormatLabel
+  });
   // Initial stuff to allow the lang to change
   const { t, i18n, ready } = useTranslation();
 
   return (
     <div
       key={entry.gameName}
-      className={styles.gameItem}
+      className={gameItemClass}
       onClick={(e) => {
         e.preventDefault();
         spectateHandler(entry.gameName);
       }}
     >
-      <div>
-        {!!entry.p1Hero && (
-          <img
-            className={styles.heroImg}
-            src={generateCroppedImageUrl(entry.p1Hero)}
-          />
-        )}
-      </div>
-      <RiSwordLine />
-      <div>
-        {!!entry.p2Hero && (
-          <img
-            className={styles.heroImg}
-            src={generateCroppedImageUrl(entry.p2Hero)}
-          />
-        )}
+      <div className={matchupBlockClass}>
+        <div className={heroRowClass}>
+          <div>
+            {!!entry.p1Hero && (
+              <img
+                className={styles.heroImg}
+                src={generateCroppedImageUrl(entry.p1Hero)}
+              />
+            )}
+          </div>
+          <RiSwordLine />
+          <div>
+            {!!entry.p2Hero && (
+              <img
+                className={styles.heroImg}
+                src={generateCroppedImageUrl(entry.p2Hero)}
+              />
+            )}
+          </div>
+        </div>
+        {formatLabel && <span className={styles.formatLabel}>{formatLabel}</span>}
       </div>
       <FriendBadge
         isFriendsGame={isFriendsGame}

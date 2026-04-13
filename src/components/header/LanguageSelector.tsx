@@ -7,7 +7,7 @@ import {
   I18N_SUPPORTED_LANGUAGE_CODES
 } from '../../constants/i18nSupportedLanguages';
 
-const LanguageSelector = () => {
+const LanguageSelector = ({ inDropdown = false }: { inDropdown?: boolean }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLLIElement>(null);
 
@@ -33,7 +33,7 @@ const LanguageSelector = () => {
   }, []);
 
   return (
-    <li className={styles.socialDropdown} ref={dropdownRef}>
+    <li className={`${styles.socialDropdown}${inDropdown ? ` ${styles.inDropdown}` : ''}`} ref={dropdownRef}>
       <button
         className={styles.dropdownToggle}
         onClick={() => setIsOpen(!isOpen)}

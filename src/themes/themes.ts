@@ -103,13 +103,13 @@ export const themes: Theme[] = [
       primaryHover: '#e8c547',
       primaryFocus: 'rgba(212, 175, 55, 0.125)',
 
-      secondary: '#606569',
-      secondaryHover: '#757a7f',
+      secondary: '#3d3d52',
+      secondaryHover: '#4d4d62',
       secondaryInverse: '#ffffff',
-      secondaryFocus: 'rgba(96, 101, 105, 0.125)',
+      secondaryFocus: 'rgba(61, 61, 82, 0.125)',
 
-      tertiary: '#4a5056',
-      tertiaryHover: '#5a6066',
+      tertiary: '#282838',
+      tertiaryHover: '#3d3d52',
 
       contrast: '#f4eded',
       contrastHover: '#ffffff',
@@ -120,13 +120,13 @@ export const themes: Theme[] = [
       borderLight: 'rgba(255, 255, 255, 0.1)',
       mutedBorderColor: '#202632',
       mutedColor: '#7b8495',
-      formBackground: '#33383d',
-      formBorder: '#797c80',
-      formActive: '#33383d',
+      formBackground: '#0e0e11',
+      formBorder: '#1b1b28',
+      formActive: '#121219',
 
       // Dropdown colors
-      dropdownBackground: '#33383d',
-      dropdownBorder: '#797c80',
+      dropdownBackground: '#0e0e11',
+      dropdownBorder: '#1b1b28',
       dropdownColor: '#f4eded',
       dropdownHoverBackground: 'rgba(212, 175, 55, 0.15)',
 

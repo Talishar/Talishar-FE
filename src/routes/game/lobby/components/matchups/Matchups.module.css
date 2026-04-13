@@ -10,19 +10,12 @@
   overflow-y: auto;
   grid-area: matchups;
   overflow-x: hidden;
-  background: var(
-    --theme-section-background,
-    linear-gradient(
-      135deg,
-      rgba(30, 35, 41, 0.8) 0%,
-      rgba(30, 35, 41, 0.85) 100%
-    )
-  );
-  padding: 1rem;
-  gap: 0.75rem;
+  background: transparent;
+  padding: 0.75rem 0.5rem;
+  gap: 0.25rem;
   position: relative;
   z-index: 1001;
-  max-height: calc(100vh - 180px);
+  max-height: calc(100vh - 120px);
   overflow-y: auto;
 }
 
@@ -56,63 +49,66 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 0.75rem;
+  gap: 0.5rem;
   width: 100%;
-  padding: 0.75rem 1rem;
-  background-color: var(--theme-primary, #d4af37);
-  border: 1px solid var(--theme-primary, #d4af37);
+  padding: 0.5rem 0.75rem;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 6px;
-  color: var(--theme-primary-inverse, #000000);
-  font-weight: 500;
-  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.85);
+  font-weight: 400;
+  font-size: 0.875rem;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.15s ease;
   position: relative;
   overflow: visible;
-  margin-bottom: 0.5em;
+  margin-bottom: 0;
 }
 
 .matchups button:hover {
-  background-color: var(--theme-primary-hover, #e8c547);
-  border-color: var(--theme-primary-hover, #e8c547);
-  color: var(--theme-primary-inverse, #000000);
-  box-shadow: 0 4px 8px var(--theme-primary-focus, rgba(212, 175, 55, 0.125));
-  transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.05);
+  border-color: var(--theme-primary, #d4af37);
+  color: #fff;
+  transform: none;
 }
 
 .matchups button:disabled {
-  opacity: 0.6;
+  opacity: 0.4;
   cursor: not-allowed;
   transform: none;
 }
 
 .matchups button:active {
-  transform: translateY(0);
+  background: rgba(255, 255, 255, 0.08);
+  transform: none;
 }
 
 .matchupName {
   text-align: left;
-  font-weight: 500;
-  color: var(--theme-primary-inverse, #000000);
+  font-weight: 400;
+  color: inherit;
   flex: 1;
   min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .turnOrderBadge {
-  font-size: 0.65rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  padding: 0.2rem 0.3rem;
-  border-radius: 0.3rem;
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  padding: 0.15rem 0.35rem;
+  border-radius: 3px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  background-color: var(--theme-secondary, #606569);
-  color: var(--theme-secondary-inverse, #ffffff);
-  border: 1.5px solid var(--theme-secondary-hover, #757a7f);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
-  min-width: 2.1rem;
+  background: rgba(212, 175, 55, 0.15);
+  color: var(--theme-primary, #d4af37);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  box-shadow: none;
+  min-width: 1.8rem;
   margin-left: auto;
 }
 
@@ -138,28 +134,25 @@
   }
 
   .matchups button {
-    padding: 0.6rem 0.5rem;
+    padding: 0.45rem 0.5rem;
     font-size: 0.75rem;
     margin-bottom: 0;
-    flex-direction: column;
-    gap: 0.3rem;
-    height: 70px;
-    min-height: 70px;
+    flex-direction: row;
+    gap: 0.4rem;
+    height: auto;
+    min-height: unset;
   }
 
   .matchupName {
-    text-align: center;
+    text-align: left;
     width: 100%;
     overflow: hidden;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    word-break: break-word;
+    text-overflow: ellipsis;
+    white-space: nowrap;
     font-size: 0.85em;
   }
 
   .turnOrderBadge {
-    width: 100%;
     min-width: unset;
     flex-shrink: 0;
   }
@@ -193,31 +186,28 @@
   }
 
   .matchups button {
-    padding: 0.65rem 0.5rem;
-    font-size: 0.9rem;
+    padding: 0.45rem 0.5rem;
+    font-size: 0.8rem;
     margin-bottom: 0;
-    flex-direction: column;
-    gap: 0.25rem;
+    flex-direction: row;
+    gap: 0.4rem;
     height: auto;
-    min-height: 56px;
+    min-height: unset;
   }
 
   .matchupName {
-    text-align: center;
+    text-align: left;
     width: 100%;
     overflow: hidden;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    word-break: break-word;
-    font-size: 1em;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 0.85em;
   }
 
   .turnOrderBadge {
-    font-size: 0.7rem;
-    padding: 0.15rem 0.25rem;
+    font-size: 0.6rem;
+    padding: 0.1rem 0.25rem;
     min-width: unset;
-    width: 100%;
     flex-shrink: 0;
   }
 }
@@ -240,24 +230,22 @@
   }
 
   .matchups button {
-    padding: 0.55rem 0.4rem;
-    font-size: 0.875rem;
-    gap: 0.2rem;
+    padding: 0.4rem 0.4rem;
+    font-size: 0.8rem;
+    gap: 0.3rem;
     height: auto;
-    min-height: 52px;
+    min-height: unset;
   }
 
   .matchupName {
     overflow: hidden;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    word-break: break-word;
-    font-size: 1em;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 0.85em;
   }
 
   .turnOrderBadge {
-    font-size: 0.65rem;
+    font-size: 0.55rem;
     padding: 0.1rem 0.2rem;
   }
 }

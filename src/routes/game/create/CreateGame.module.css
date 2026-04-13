@@ -37,6 +37,45 @@
   margin-bottom: 0 !important;
 }
 
+.embeddedFormLayout {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+.embeddedFormInner {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 0.25rem;
+  scrollbar-width: thin;
+  scrollbar-color: #5a5f66 #1a1d21;
+}
+
+.embeddedFormInner::-webkit-scrollbar {
+  width: 6px;
+}
+
+.embeddedFormInner::-webkit-scrollbar-track {
+  background: #1a1d21;
+}
+
+.embeddedFormInner::-webkit-scrollbar-thumb {
+  background: #5a5f66;
+  border-radius: 3px;
+}
+
+.embeddedFormInner::-webkit-scrollbar-thumb:hover {
+  background: #d4af37;
+}
+
+.embeddedSubmitButton {
+  margin-top: 0.75rem;
+  flex-shrink: 0;
+}
+
 @media (max-width: 768px) {
   .formContainer {
     width: 100%;
@@ -108,7 +147,7 @@
   padding: 1rem;
   border: 1px solid var(--theme-form-border, #797c80);
   border-radius: 8px;
-  background-color: var(--theme-form-active, rgba(212, 175, 55, 0.05));
+  background-color: var(--theme-form-background, #33383d);
 }
 
 .heroSelectionHeader {

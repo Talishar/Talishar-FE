@@ -209,6 +209,9 @@
   "GAME_LIST": {
     "DISABLE_EXPERIMENTAL": "Désactiver les fonctionnalités expérimentales",
     "GAMES": "Jeux",
+    "OPEN_GAMES":"Parties Ouvertes",
+    "LOOKING_FOR_OPPONENT":"Recherche d'adversaire",
+    "IN_PROGRESS_TAB":"En cours",
     "MANUAL_REFRESH": "Actualiser la liste des jeux manuellement",
     "LOAD_ERROR_TITLE": "Une erreur s'est produite!",
     "LOAD_ERROR_DESCRIPTION": "Veuillez actualiser la page et réessayer. Si l'erreur persiste lors du chargement de la liste des jeux, merci de la signaler sur notre Discord en nous indiquant les informations suivantes :",

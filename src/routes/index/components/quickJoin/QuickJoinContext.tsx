@@ -294,7 +294,8 @@ export const QuickJoinProvider = ({
           setGameStart({
             playerID: playerIDToUse,
             gameID: gameIDToUse,
-            authKey: authKeyToUse
+            authKey: authKeyToUse,
+            bazaarDeckId: isBazaar ? selectedBazaarDeck : undefined
           })
         );
 

@@ -17,6 +17,8 @@ export default interface GameStaticInfo {
   opponentHeroName?: string;
   opponentHeroCardNumber?: string;
   hasShownHeroIntro?: boolean;
+  /** FaB Bazaar public deck ID when the player joined with a Bazaar deck */
+  bazaarDeckId?: string;
 }
 
 export interface AltArt {

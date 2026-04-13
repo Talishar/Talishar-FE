@@ -4,7 +4,7 @@
   flex-wrap: nowrap;
   padding: 0.3rem;
   vertical-align: center;
-  align-items: center;
+  align-items: flex-end;
   justify-content: space-between;
   position: relative;
   cursor: pointer;
@@ -18,17 +18,68 @@
     left: 0.3rem;
     background-color: rgba(0, 0, 0, 0.2);
   }
+
+  &:hover .button {
+    background-color: var(--theme-form-border);
+  }
+}
+
+.gameItemNoFormat {
+  align-items: center;
 }
 
 .button {
-  background-color: var(--theme-secondary);
+  background-color: var(--theme-form-background);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: var(--theme-text, #f4eded) !important;
   margin-bottom: 0;
 }
 
 .heroImg {
+  width: 3em;
+  height: 3em;
   border-radius: var(--border-radius);
   border: 0.5px solid var(--form-element-border-color);
-  max-height: 3em;
+  object-fit: cover;
+  display: block;
+}
+
+.matchupBlock {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.matchupBlockNoFormat {
+  flex: 1;
+  width: auto;
+}
+
+.heroRow {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.5rem;
+}
+
+.heroRowNoFormat {
+  width: 100%;
+  justify-content: space-between;
+  gap: 1rem;
+  max-width: none;
+  padding-right: 1.5rem;
+}
+
+.formatLabel {
+  font-size: 0.7em;
+  color: var(--theme-primary, #d4af37);
+  opacity: 0.8;
+  white-space: nowrap;
+  line-height: 1.2;
+  flex: 1;
+  text-align: center;
 }
 
 @media (max-width: 1024px) {
@@ -38,7 +89,8 @@
   }
 
   .heroImg {
-    max-height: 2.2em;
+    width: 2.2em;
+    height: 2.2em;
   }
 }
 
@@ -49,6 +101,7 @@
   }
 
   .heroImg {
-    max-height: 1.8em;
+    width: 1.8em;
+    height: 1.8em;
   }
 }

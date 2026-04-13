@@ -5,7 +5,7 @@ import { FaDiscord, FaTwitter, FaYoutube } from 'react-icons/fa';
 import styles from './SocialDropdown.module.scss';
 import { useTranslation } from 'react-i18next';
 
-const SocialDropdown = () => {
+const SocialDropdown = ({ inDropdown = false }: { inDropdown?: boolean }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLLIElement>(null);
 
@@ -27,7 +27,7 @@ const SocialDropdown = () => {
   }, []);
 
   return (
-    <li className={styles.socialDropdown} ref={dropdownRef}>
+    <li className={`${styles.socialDropdown}${inDropdown ? ` ${styles.inDropdown}` : ''}`} ref={dropdownRef}>
       <button
         className={styles.dropdownToggle}
         onClick={() => setIsOpen(!isOpen)}

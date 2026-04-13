@@ -166,6 +166,102 @@
   }
 }
 
+.inDropdown {
+  height: auto;
+  display: block;
+  position: relative;
+
+  .dropdownToggle {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 12px;
+    width: 100%;
+    height: auto;
+    min-width: unset;
+    font-size: 14px;
+    font-weight: 500;
+    border-left: 3px solid transparent;
+    color: var(--snow, #fff);
+    background: none;
+    border-top: none;
+    border-right: none;
+    border-bottom: none;
+    border-radius: 0;
+    cursor: pointer;
+    transition: background-color 150ms ease, color 150ms ease, border-left-color 150ms ease;
+    margin-bottom: 0 !important;
+
+    &::before,
+    &::after {
+      display: none !important;
+    }
+
+    svg {
+      font-size: 17px;
+      opacity: 0.85;
+      flex-shrink: 0;
+    }
+
+    .label {
+      font-size: 14px;
+      font-weight: 500;
+      display: inline;
+    }
+
+    &:hover,
+    &:focus {
+      background-color: var(--theme-form-background, #2a2f35);
+      color: var(--theme-primary, #d4af37);
+      border-left-color: var(--theme-primary, #d4af37);
+      background-image: none;
+
+      svg { opacity: 1; }
+    }
+  }
+
+  .dropdownMenu {
+    position: absolute;
+    top: 0;
+    right: 100%;
+    left: auto;
+    display: flex;
+    flex-direction: column;
+    min-width: 160px;
+    background: var(--theme-card-background, #1e2329);
+    border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.12));
+    border-top: 2px solid var(--theme-primary, #d4af37);
+    border-radius: 0 0 6px 6px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.55);
+    z-index: 10002;
+
+    .socialLink {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 16px;
+      font-size: 14px;
+      color: var(--snow, #fff);
+      text-decoration: none;
+      border-right: none;
+      border-bottom: 1px solid var(--theme-border, rgba(255, 255, 255, 0.06));
+      transition: background-color 150ms ease, color 150ms ease;
+      white-space: nowrap;
+
+      &:last-child { border-bottom: none; }
+
+      &:hover {
+        background-color: var(--theme-form-background, #2a2f35);
+        color: var(--theme-primary, #d4af37);
+      }
+
+      svg { font-size: 16px; }
+      span { font-size: 14px; display: inline !important; }
+    }
+  }
+}
+
 // In the burger menu (portrait mobile) the dropdown must expand inline, not float off-screen
 @media (max-width: 768px) and (orientation: portrait) {
   .socialDropdown {
