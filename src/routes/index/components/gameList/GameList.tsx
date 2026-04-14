@@ -467,6 +467,17 @@ const GameList = () => {
 
   const displayOpenGames = sortedOpenGames;
 
+  // Count friend games in each tab for the badge indicator
+  const friendOpenGamesCount = sortedOpenGames.filter(
+    (game) => game.gameCreator && friendUsernames.has(game.gameCreator)
+  ).length;
+
+  const friendInProgressCount = filteredGamesInProgress.filter(
+    (game) =>
+      (game.gameCreator && friendUsernames.has(game.gameCreator)) ||
+      (game.p2Username && friendUsernames.has(game.p2Username))
+  ).length;
+
   return (
     <article className={`${styles.gameList}${!isLoggedIn ? ` ${styles.gameListLoggedOut}` : ''}`}>
       {/* Sticky header — always visible, never scrolls */}
@@ -522,6 +533,11 @@ const GameList = () => {
                 <span className={`${styles.tabBadge} ${activeTab === 'open' ? styles.tabBadgeActive : ''}`}>
                   {sortedOpenGames.length}
                 </span>
+                {friendOpenGamesCount > 0 && (
+                  <span className={styles.friendTabIndicator} title={`${friendOpenGamesCount} friend game${friendOpenGamesCount > 1 ? 's' : ''}`}>
+                    👥
+                  </span>
+                )}
               </button>
               <button
                 className={`${styles.tab} ${activeTab === 'inProgress' ? styles.tabActive : ''}`}
@@ -531,6 +547,11 @@ const GameList = () => {
                 <span className={`${styles.tabBadge} ${activeTab === 'inProgress' ? styles.tabBadgeActive : ''}`}>
                   {data?.gameInProgressCount ?? 0}
                 </span>
+                {friendInProgressCount > 0 && (
+                  <span className={styles.friendTabIndicator} title={`${friendInProgressCount} friend game${friendInProgressCount > 1 ? 's' : ''}`}>
+                    👥
+                  </span>
+                )}
               </button>
             </div>
 
