@@ -68,7 +68,7 @@ const OpenGame = ({
           />
         )}
       </div>
-      <div className={styles.descriptionBlock} title={entry.description}>
+      <div className={styles.descriptionBlock}>
         {formatLabel && <span className={styles.formatLabel}>{formatLabel}</span>}
         <span className={styles.description}>{entry.description}</span>
       </div>
