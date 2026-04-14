@@ -237,11 +237,6 @@
   background: transparent;
 }
 
-/* Hide right-column ad section when no ad fills */
-.communityAdSection:not(:has(:global(.ad-unit) > *)) {
-  display: none;
-}
-
 .adWrapper {
   position: relative;
   display: inline-block;
@@ -421,17 +416,6 @@
   flex-direction: column;
   align-items: center;
   gap: 0.35em;
-}
-
-.adWrapper {
-  position: relative;
-  width: min(100%, 970px);
-  margin: 0 auto;
-}
-
-/* Hide wrapper (including Remove ads link) when the ad slot has no injected content */
-.adWrapper:not(:has(:global(.ad-unit) > *)) {
-  display: none;
 }
 
 .adHeader {
