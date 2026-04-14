@@ -219,8 +219,8 @@
 
 .metafyButton {
   display: inline-block;
-  background: #c8920a;
-  color: #000;
+  background: var(--theme-primary, #d4af37);
+  color: var(--theme-primaryText, #111);
   font-weight: 700;
   padding: 0.875em 2.25em;
   border-radius: 6px;
@@ -231,8 +231,8 @@
 }
 
 .metafyButton:hover {
-  background: #dfa50e;
-  color: #000;
+  background: var(--theme-primary-hover, #dfa50e);
+  color: var(--theme-primary-text, #000);
 }
 
 .resourcesGrid {

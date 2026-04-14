@@ -138,6 +138,7 @@
   overflow: hidden;
   display: -webkit-box;
   -webkit-line-clamp: 3;
+  line-clamp: 3;
   -webkit-box-orient: vertical;
 }
 
@@ -220,6 +221,7 @@
   overflow: hidden;
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
 }
 
@@ -333,6 +335,7 @@
   overflow: hidden;
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
 }
 
@@ -344,8 +347,6 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-
-/* ── CTA bar ─────────────────────────────────────────────── */
 
 .ctaBar {
   display: flex;
@@ -385,8 +386,8 @@
   flex-shrink: 0;
   display: inline-block;
   padding: 0.6em 1.4em;
-  background: #f0a500;
-  color: #111;
+  background: var(--theme-primary, #d4af37);
+  color: var(--theme-primaryText, #111);
   text-decoration: none;
   border-radius: 6px;
   font-weight: 700;
@@ -396,7 +397,7 @@
 }
 
 .discordButton:hover {
-  background: #d99400;
+  background: var(--theme-primary-hover, #d99400);
   transform: translateY(-1px);
 }
 
@@ -429,7 +430,7 @@
 }
 
 .mobileAd {
-  display: none !important;
+  display: none;
 }
 
 @media (max-width: 728px) {

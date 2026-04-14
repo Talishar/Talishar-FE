@@ -136,7 +136,7 @@ const AboutSection: React.FC = () => {
         <div className={styles.section}>
           <div className={styles.lssGrid}>
             <div>
-              <h3 className={styles.sectionTitle}>Talishar is Unofficial and Independent</h3>
+              <h3 className={styles.sectionTitle}>Talishar is an Unofficial Independent platform</h3>
               <Trans
                 i18nKey="ABOUT.LSS_RELATIONSHIP_DESCRIPTION"
                 components={[
@@ -150,18 +150,18 @@ const AboutSection: React.FC = () => {
             <div>
               <h3 className={styles.sectionTitle}>{t("ABOUT.LSS_RELATIONSHIP_TITLE")}</h3>
               <p className={styles.bodyText}>{t("ABOUT.WHO_MAINTAINS_DESCRIPTION")}</p>
+              {!isSupporter && (
+              <a
+                href="https://metafy.gg/@talishar"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.metafyButton}
+              >
+                Support us on Metafy
+              </a>
+            )}
             </div>
           </div>
-          {!isSupporter && (
-            <a
-              href="https://metafy.gg/@talishar"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={styles.metafyButton}
-            >
-              Support us on Metafy
-            </a>
-          )}
         </div>
 
         <div className={styles.section}>
