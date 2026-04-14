@@ -193,7 +193,7 @@ td {
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1rem;
 }
 
 .leftColumn table {
@@ -334,14 +334,14 @@ td {
 }
 
 .friendsSection {
-  margin: 1.5rem 0;
+  margin: 1rem 0;
   background: transparent;
 }
 
 /* Metafy Section — External Integration: neutral card, small top accent */
 .metafySection {
-  margin: 1.5rem 0;
-  padding: 1.5rem;
+  margin: 1rem 0;
+  padding: 1rem;
   background: rgba(255, 255, 255, 0.03);
   border-radius: 10px;
   border: 1px solid rgba(255, 255, 255, 0.08);
@@ -378,8 +378,8 @@ td {
 
 /* Patreon Section — External Integration: neutral card, small top accent */
 .patreonSection {
-  margin: 1.5rem 0;
-  padding: 1.5rem;
+  margin: 1rem 0;
+  padding: 1rem;
   background: rgba(255, 255, 255, 0.03);
   border-radius: 10px;
   border: 1px solid rgba(255, 255, 255, 0.08);
@@ -843,7 +843,6 @@ td {
 
 .upgradeSection {
   padding: 1.5em;
-  margin-bottom: 1.5em;
   border-radius: 10px;
   border: 1px solid rgba(255, 255, 255, 0.08);
   background: rgba(255, 255, 255, 0.03);
@@ -924,7 +923,6 @@ td {
 
 .upgradeDescription {
   color: rgba(255, 255, 255, 0.8);
-  margin-bottom: 1.5em;
   line-height: 1.6;
   font-size: 1em;
 }
