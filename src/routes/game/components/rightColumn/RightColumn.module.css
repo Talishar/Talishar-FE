@@ -174,11 +174,13 @@
 }
 
 .removeAdsLink {
-  color: #d4af37;
-  font-size: 1em;
+  color: var(--theme-primary, #d4af37);
+  font-size: 0.7rem;
+  font-weight: 500;
   text-decoration: none;
 }
 
 .removeAdsLink:hover {
+  color: var(--theme-primary-hover, #e6c04a);
   text-decoration: underline;
 }

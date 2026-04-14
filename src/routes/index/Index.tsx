@@ -135,13 +135,15 @@ const Index = () => {
       </div>
       <div id="games" className={styles.contentSection}>
         <QuickJoinProvider>
-          <div className={`${styles.grid}${!isLoggedIn ? ` ${styles.gridLoggedOut}` : ''}`}>
+          <div className={styles.gridWrapper}>
             {import.meta.env.DEV && <DevTool />}
-            <div className={styles.gameListContainer}>
-              <GameList />
-            </div>
-            <div className={styles.createGameContainer}>
-              <UnifiedGamePanel />
+            <div className={`${styles.grid}${!isLoggedIn ? ` ${styles.gridLoggedOut}` : ''}`}>
+              <div className={styles.gameListContainer}>
+                <GameList />
+              </div>
+              <div className={styles.createGameContainer}>
+                <UnifiedGamePanel />
+              </div>
             </div>
           </div>
         </QuickJoinProvider>

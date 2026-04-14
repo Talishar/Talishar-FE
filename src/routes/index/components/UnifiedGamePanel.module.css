@@ -3,9 +3,8 @@
   max-width: 900px;
   border: none;
   border-radius: 0;
-  margin: 1.5em auto 0;
-  margin-bottom: 0;
-  padding: 1.25rem 1.5rem 1rem;
+  margin: 0 auto;
+  padding: 1.75rem 1.25rem;
   background: transparent;
   display: flex;
   flex-direction: column;
@@ -88,15 +87,16 @@
 
 .removeAdsLink {
   align-self: flex-end;
-  color: rgba(255, 100, 50, 0.55);
+  color: var(--theme-primary, #d4af37);
   text-decoration: none;
   font-size: 0.7rem;
+  font-weight: 500;
   line-height: 1;
   margin-bottom: 2px;
 }
 
 .removeAdsLink:hover {
-  color: rgba(255, 100, 50, 0.85);
+  color: var(--theme-primary-hover, #e6c04a);
   text-decoration: underline;
 }
 

@@ -52,16 +52,15 @@
 
 .gameList {
   position: relative;
-  margin: 1.5em auto;
   display: flex;
   flex-direction: column;
   max-width: 900px;
+  margin: 0 auto;
   border: none;
   border-radius: 0;
-  margin-bottom: 0;
   padding: 0;
-  background: transparent !important;
-  height: 925px;
+  background: transparent;
+  height: 900px;
   overflow: hidden;
   box-sizing: border-box;
 }
@@ -73,7 +72,7 @@
 
 .stickyHeader {
   flex-shrink: 0;
-  padding: 1.25rem 1.5rem 0;
+  padding: 1.5rem 1.75rem 0;
   gap: 0.5em;
   display: flex;
   flex-direction: column;
@@ -83,7 +82,7 @@
   flex: 1;
   min-height: 0;
   overflow-y: auto;
-  padding: 0.5rem 1.5rem 0.5rem;
+  padding: 0.5rem 1.75rem 0.5rem;
   scrollbar-width: thin;
   scrollbar-color: #5a5f66 #1a1d21;
 
