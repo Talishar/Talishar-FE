@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo, useRef } from 'react';
 import { usePageTitle } from 'hooks/usePageTitle';
 import Deck from './components/deck/Deck';
 import LobbyChat from './components/lobbyChat/LobbyChat';
@@ -19,6 +19,7 @@ import useAuth from 'hooks/useAuth';
 import useAdScript from 'hooks/useAdScript';
 import {
   useGetLobbyInfoQuery,
+  useJoinGameMutation,
   useSubmitSideboardMutation,
   useSubmitLobbyInputMutation,
   useGetUserProfileQuery,
@@ -59,6 +60,18 @@ import {
 } from 'features/options/optionsSlice';
 import { IS_STREAMER_MODE } from 'features/options/constants';
 
+const FAB_BAZAAR_LEARN_MORE_URL = 'https://fabbazaar.app/tutorials/talishar';
+
+const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
+  if (!deckLink) return null;
+  const normalizedBase = FAB_BAZAAR_DECK_URL_BASE.endsWith('/')
+    ? FAB_BAZAAR_DECK_URL_BASE
+    : `${FAB_BAZAAR_DECK_URL_BASE}/`;
+  if (!deckLink.startsWith(normalizedBase)) return null;
+  const deckId = deckLink.slice(normalizedBase.length).split('?')[0].trim();
+  return deckId || null;
+};
+
 const Lobby = () => {
   usePageTitle('Lobby');
   useAdScript(false);
@@ -73,6 +86,12 @@ const Lobby = () => {
   const dispatch = useAppDispatch();
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [hasMatchups, setHasMatchups] = useState<boolean>(false);
+  const [selectedMatchupId, setSelectedMatchupId] = useState<string | null>(
+    null
+  );
+  const [isAutoApplyingMatchup, setIsAutoApplyingMatchup] =
+    useState<boolean>(false);
+  const lastAutoAppliedMatchupKey = useRef<string>('');
   const settingsStatus = useAppSelector(getSettingsStatus);
   const {
     isLoggedIn,
@@ -91,6 +110,11 @@ const Lobby = () => {
     (state: RootState) => state.game.gameLobby,
     shallowEqual
   );
+  const isBazaarDeckInLobby = !!extractBazaarDeckIdFromLink(
+    gameLobby?.myDeckLink
+  );
+  const shouldShowMatchupsUI =
+    !isBazaarDeckInLobby && (gameLobby?.matchups?.length ?? 0) > 0;
   const [playLobbyJoin] = useSound(playerJoined, { volume: 1 });
   const settingsData = useAppSelector(getSettingsEntity);
   const isMuted = settingsData['MuteSound']?.value === '1';
@@ -189,6 +213,8 @@ const Lobby = () => {
   const [submitSideboardMutation, submitSideboardMutationData] =
     useSubmitSideboardMutation();
 
+  const [joinGameMutation] = useJoinGameMutation();
+
   const [updateBazaarMatchup] = useUpdateBazaarMatchupMutation();
 
   const [submitLobbyInput, submitLobbyInputData] =
@@ -220,10 +246,84 @@ const Lobby = () => {
   }, [width]);
 
   useEffect(() => {
-    if (gameLobby?.matchups && gameLobby.matchups.length > 0) {
-      setHasMatchups(true);
+    setHasMatchups(shouldShowMatchupsUI);
+  }, [shouldShowMatchupsUI]);
+
+  useEffect(() => {
+    if (isBazaarDeckInLobby && activeTab === 'matchups') {
+      setActiveTab('equipment');
     }
-  }, [gameLobby?.matchups]);
+  }, [isBazaarDeckInLobby, activeTab]);
+
+  useEffect(() => {
+    // New lobby/deck context: clear stale selected matchup from previous session.
+    setSelectedMatchupId(null);
+    lastAutoAppliedMatchupKey.current = '';
+  }, [gameID, playerID, gameLobby?.myDeckLink]);
+
+  useEffect(() => {
+    // No opponent yet: hide any previous matchup indicator until a hero is known.
+    if (!gameLobby?.theirHero || gameLobby.theirHero === 'CardBack') {
+      setSelectedMatchupId(null);
+    }
+  }, [gameLobby?.theirHero]);
+
+  useEffect(() => {
+    if (!gameLobby?.theirHero || gameLobby.theirHero === 'CardBack') {
+      return;
+    }
+
+    if (!isBazaarDeckInLobby) {
+      return;
+    }
+
+    const matchingMatchup = (gameLobby?.matchups ?? []).find(
+      (matchup) =>
+        matchup.matchupId?.toLowerCase?.() ===
+        gameLobby.theirHero?.toLowerCase?.()
+    );
+
+    const targetMatchupId = matchingMatchup?.matchupId ?? '';
+    const autoApplyKey = `${gameID}:${playerID}:${gameLobby.myDeckLink}:${gameLobby.theirHero}:${targetMatchupId || 'DEFAULT'}`;
+    if (lastAutoAppliedMatchupKey.current === autoApplyKey) {
+      return;
+    }
+
+    const applyMatchupForHero = async () => {
+      setIsAutoApplyingMatchup(true);
+      try {
+        const joinPayload: any = {
+          gameName: gameID,
+          playerID,
+          fabdb: gameLobby?.myDeckLink ?? ''
+        };
+        if (targetMatchupId) {
+          joinPayload.matchup = targetMatchupId;
+        } else {
+          joinPayload.matchup = '__base__';
+        }
+        await joinGameMutation(joinPayload).unwrap();
+        setSelectedMatchupId(targetMatchupId || null);
+        lastAutoAppliedMatchupKey.current = autoApplyKey;
+        refetch();
+      } catch (err) {
+        console.error('[StickySideboard] Auto matchup apply failed', err);
+      } finally {
+        setIsAutoApplyingMatchup(false);
+      }
+    };
+
+    applyMatchupForHero();
+  }, [
+    gameLobby?.theirHero,
+    gameLobby?.myDeckLink,
+    gameLobby?.matchups,
+    isBazaarDeckInLobby,
+    gameID,
+    playerID,
+    joinGameMutation,
+    refetch
+  ]);
 
   const handleEquipmentClick = () => {
     setActiveTab('equipment');
@@ -243,6 +343,20 @@ const Lobby = () => {
   };
 
   const handleMatchupClick = () => setActiveTab('matchups');
+
+  const selectedMatchup = useMemo(() => {
+    if (!selectedMatchupId) return null;
+    return (gameLobby?.matchups ?? []).find(
+      (matchup) => matchup.matchupId === selectedMatchupId
+    );
+  }, [selectedMatchupId, gameLobby?.matchups]);
+
+  const selectedMatchupForCurrentHero = useMemo(() => {
+    if (!selectedMatchup || !gameLobby?.theirHero) return null;
+    return selectedMatchup.matchupId === gameLobby.theirHero
+      ? selectedMatchup
+      : null;
+  }, [selectedMatchup, gameLobby?.theirHero]);
 
   // Note functions
   const getPlayerNoteKey = (username: string) => `player_note_${username}`;
@@ -479,16 +593,6 @@ const Lobby = () => {
   // data.format === GAME_FORMAT.OPEN_LL_BLITZ
   //const needToDoDisclaimer = false;
   const leaveLobby = classNames(styles.buttonClass, 'outline');
-
-  const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
-    if (!deckLink) return null;
-    const normalizedBase = FAB_BAZAAR_DECK_URL_BASE.endsWith('/')
-      ? FAB_BAZAAR_DECK_URL_BASE
-      : `${FAB_BAZAAR_DECK_URL_BASE}/`;
-    if (!deckLink.startsWith(normalizedBase)) return null;
-    const deckId = deckLink.slice(normalizedBase.length).split('?')[0].trim();
-    return deckId || null;
-  };
 
   const handleFormSubmission = async (values: DeckResponse) => {
     setIsSubmitting(true);
@@ -929,6 +1033,7 @@ const Lobby = () => {
                 </div>
               </CardPopUp>
             </div>
+
             {gameLobby?.amIChoosingFirstPlayer && !needToDoDisclaimer
               ? createPortal(<ChooseFirstTurn />, document.body)
               : !isWideScreen && (
@@ -948,8 +1053,7 @@ const Lobby = () => {
                       )}
                     </ul>
                     <ul>
-                      {gameLobby?.matchups != undefined &&
-                        gameLobby?.matchups?.length > 0 && (
+                      {shouldShowMatchupsUI && (
                           <li>
                             <button
                               className={matchupClasses}
@@ -1119,8 +1223,13 @@ const Lobby = () => {
 
             <div className={styles.spacer}></div>
 
-            {(activeTab === 'matchups' || isWideScreen) && (
-              <Matchups refetch={refetch} />
+            {shouldShowMatchupsUI && (activeTab === 'matchups' || isWideScreen) && (
+              <Matchups
+                refetch={refetch}
+                selectedMatchupId={selectedMatchupId}
+                onMatchupSelected={setSelectedMatchupId}
+                isAutoApplyingMatchup={isAutoApplyingMatchup}
+              />
             )}
             <StickyFooter
               deckSize={deckSize}
@@ -1132,6 +1241,17 @@ const Lobby = () => {
               needToDoDisclaimer={needToDoDisclaimer}
               onUnreadySideboard={handleUnreadySideboard}
               onIsValidChange={setIsDeckValid}
+              syncEnabled={isBazaarDeckInLobby}
+              syncStatusText={
+                isAutoApplyingMatchup
+                  ? 'Applying matchup...'
+                  : selectedMatchupForCurrentHero
+                    ? `Synced: ${selectedMatchupForCurrentHero.name ?? selectedMatchupForCurrentHero.matchupId}`
+                    : gameLobby?.theirHero && gameLobby.theirHero !== 'CardBack'
+                      ? 'Base deck (no matchup saved)'
+                      : 'Waiting for opponent hero'
+              }
+              syncLearnMoreUrl={FAB_BAZAAR_LEARN_MORE_URL}
             />
           </div>
         </Form>

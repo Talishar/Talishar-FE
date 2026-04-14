@@ -225,6 +225,24 @@
   transform: translateY(-1px);
 }
 
+.selectedMatchupIndicator {
+  margin-top: 0.45rem;
+  padding: 0.18rem 0.45rem;
+  width: fit-content;
+  max-width: 100%;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  border-radius: 0.35rem;
+  background: rgba(0, 0, 0, 0.58);
+  color: var(--theme-primary, #d4af37);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  text-shadow: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .leftCol:hover {
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4), 0 0 20px var(--primary-focus);
 }
@@ -288,6 +306,80 @@
   font-size: 1.15em;
   margin: 0;
   color: inherit;
+}
+
+.syncBannerContainer {
+  grid-column: 1 / -1;
+  margin: 0.6rem 0 0.4rem 0;
+}
+
+.syncBannerActive,
+.syncBannerPassive {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-rows: auto auto;
+  gap: 0.25rem 0.75rem;
+  align-items: center;
+  padding: 0.7rem 0.9rem;
+  border-radius: 0.55rem;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.syncBannerActive {
+  background: linear-gradient(
+    120deg,
+    rgba(23, 48, 37, 0.9),
+    rgba(32, 73, 56, 0.92)
+  );
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.28);
+}
+
+.syncBannerPassive {
+  background: linear-gradient(
+    120deg,
+    rgba(48, 42, 23, 0.9),
+    rgba(77, 63, 24, 0.92)
+  );
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.24);
+}
+
+.syncBannerTitle {
+  grid-column: 1;
+  grid-row: 1;
+  font-size: 0.86rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: #fff;
+}
+
+.syncBannerBody {
+  grid-column: 1;
+  grid-row: 2;
+  font-size: 0.77rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.94);
+}
+
+.syncBannerLink {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  justify-self: end;
+  align-self: center;
+  white-space: nowrap;
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: #fff;
+  text-decoration: none;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 999px;
+  padding: 0.3rem 0.6rem;
+  background: rgba(0, 0, 0, 0.24);
+}
+
+.syncBannerLink:hover {
+  background: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.7);
 }
 
 .deckSelectorContainer {
