@@ -152,14 +152,16 @@ const AboutSection: React.FC = () => {
               <p className={styles.bodyText}>{t("ABOUT.WHO_MAINTAINS_DESCRIPTION")}</p>
             </div>
           </div>
-          <a
-            href="https://metafy.gg/@talishar"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.metafyButton}
-          >
-            Support us on Metafy
-          </a>
+          {!isSupporter && (
+            <a
+              href="https://metafy.gg/@talishar"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.metafyButton}
+            >
+              Support us on Metafy
+            </a>
+          )}
         </div>
 
         <div className={styles.section}>

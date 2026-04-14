@@ -237,23 +237,13 @@
   background: transparent;
 }
 
-.adWrapper {
-  position: relative;
-  display: inline-block;
-}
-
 .removeAdsLink {
-  position: absolute;
-  top: 0;
-  right: 0;
-  z-index: 1;
   color: rgba(255, 255, 255, 0.28);
   text-decoration: none;
   font-size: 0.58rem;
   font-weight: 500;
   line-height: 1;
   padding: 2px 4px;
-  border-radius: 0 0 0 3px;
 }
 
 .removeAdsLink:hover {

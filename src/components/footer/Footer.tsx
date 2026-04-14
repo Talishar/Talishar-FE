@@ -4,22 +4,35 @@ import { BsGithub, BsPersonFill, BsGearFill } from 'react-icons/bs';
 import { FaDiscord, FaTwitter, FaYoutube } from 'react-icons/fa';
 import TalisharLogo from '../../img/TalisharLogo.webp';
 import styles from './Footer.module.scss';
+import useAuth from 'hooks/useAuth';
+import { useGetUserProfileQuery } from 'features/api/apiSlice';
 
 const Footer = () => {
+  const { isLoggedIn } = useAuth();
+  const { data: profileData, isLoading: isProfileLoading } = useGetUserProfileQuery(
+    undefined,
+    { skip: !isLoggedIn }
+  );
+  const isSupporter = isLoggedIn
+    ? (isProfileLoading ? true : (profileData?.isMetafySupporter ?? false))
+    : false;
+
   return (
     <footer className={styles.footer}>
       <div className={styles.inner}>
         <div className={styles.columns}>
           <div className={styles.leftCol}>
             <img src={TalisharLogo} alt="Talishar" className={styles.logo} />
-            <a
-              href="https://metafy.gg/@talishar"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={styles.supportBtn}
-            >
-              Support us on Metafy
-            </a>
+            {!isSupporter && (
+              <a
+                href="https://metafy.gg/@talishar"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.supportBtn}
+              >
+                Support us on Metafy
+              </a>
+            )}
           </div>
 
           <div className={styles.rightCol}>

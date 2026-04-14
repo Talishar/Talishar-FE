@@ -301,7 +301,10 @@ export const ProfilePage = () => {
         <div className={styles.twoColumnLayout}>
           <div className={styles.leftColumn}>
             <article className={styles.articleTitle}>
-              <h5>Username: {profileData?.userName}</h5>
+              <div className={styles.usernameHeader}>
+                <span className={styles.usernameLabel}>Username</span>
+                <h2 className={styles.usernameValue}>{profileData?.userName}</h2>
+              </div>
               <div>
                 {profileIsLoading && <p>Loading Profile...</p>}
 

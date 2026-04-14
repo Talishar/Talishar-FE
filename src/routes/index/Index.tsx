@@ -120,14 +120,16 @@ const Index = () => {
               </p>
               <div className={styles.heroCta}>
                 <a href="#games" className={styles.heroCtaPrimary}>Join a game</a>
-                <a
-                  href="https://metafy.gg/@talishar/tiers"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={styles.heroCtaSecondary}
-                >
-                  Support us on Metafy
-                </a>
+                {!isSupporter && (
+                  <a
+                    href="https://metafy.gg/@talishar/tiers"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={styles.heroCtaSecondary}
+                  >
+                    Support us on Metafy
+                  </a>
+                )}
               </div>
             </>
           )}
@@ -152,17 +154,19 @@ const Index = () => {
         </section>
         {showAds && (
           <div className={styles.adFooter}>
-            <div className={styles.adWrapper}>
-              <a
-                href="https://metafy.gg/@talishar/tiers"
-                target="_blank"
-                rel="noopener noreferrer"
-                className={styles.removeAdsLink}
-              >
-                Remove ads
-              </a>
-              <AdUnit placement="billboard-1" className={styles.desktopAd} />
-            </div>
+            {!isSupporter && (
+              <div className={styles.adHeader}>
+                <a
+                  href="https://metafy.gg/@talishar/tiers"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.removeAdsLink}
+                >
+                  Remove ads
+                </a>
+              </div>
+            )}
+            <AdUnit placement="billboard-1" className={styles.desktopAd} />
           </div>
         )}
         <CommunityContent showAds={showAds} />

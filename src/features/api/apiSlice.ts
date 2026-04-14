@@ -381,7 +381,7 @@ export const apiSlice = createApi({
           `https://fabbazaar.app/api/decks/${encodeURIComponent(deckId)}/matchups/${encodeURIComponent(heroId)}`
         );
         url.searchParams.set('metafyId', String(metafyId));
-        url.searchParams.set('metafyHash', metafyHash);
+        url.searchParams.set('metafyHash', String(metafyHash));
         url.searchParams.set('timestamp', String(metafyTimestamp));
         console.info('[StickySideboard/API] PATCH request', {
           url: url.toString(),

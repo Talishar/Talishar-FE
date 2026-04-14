@@ -19,7 +19,7 @@ import { IoLogOut } from "react-icons/io5";
 import SocialDropdown from 'components/header/SocialDropdown';
 import LanguageSelector from 'components/header/LanguageSelector';
 import Footer from 'components/footer/Footer';
-import { useGetPendingRequestsQuery } from 'features/api/apiSlice';
+import { useGetPendingRequestsQuery, useGetUserProfileQuery } from 'features/api/apiSlice';
 import CookieConsent from 'components/CookieConsent';
 import AdBlockingRecovery from 'components/AdBlockingRecovery';
 import SessionRecovery from 'components/SessionRecovery';
@@ -31,6 +31,13 @@ const Header = () => {
   const { data: pendingData } = useGetPendingRequestsQuery(undefined, {
     skip: !isLoggedIn
   });
+  const { data: profileData, isLoading: isProfileLoading } = useGetUserProfileQuery(
+    undefined,
+    { skip: !isLoggedIn }
+  );
+  const isSupporter = isLoggedIn
+    ? (isProfileLoading ? true : (profileData?.isMetafySupporter ?? false))
+    : false;
   const pendingRequestCount = pendingData?.requests?.length || 0;
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
@@ -98,16 +105,18 @@ const Header = () => {
               <img src={TalisharLogo} alt={t('HEADER.TALISHAR_LOGO_ALT')} />
             </Link>
           </li>
-          <li>
-            <a
-              href="https://metafy.gg/@talishar"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={styles.support}
-            >
-              {t('HEADER.SUPPORT_US')}
-            </a>
-          </li>
+          {!isSupporter && (
+            <li>
+              <a
+                href="https://metafy.gg/@talishar"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.support}
+              >
+                {t('HEADER.SUPPORT_US')}
+              </a>
+            </li>
+          )}
         </ul>
 
         <ul className={styles.centerNav}>

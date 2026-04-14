@@ -68,6 +68,26 @@
   margin-bottom: 0.5em;
 }
 
+.usernameHeader {
+  padding-bottom: 1em;
+}
+
+.usernameLabel {
+  font-size: 0.8em;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: rgba(255, 255, 255, 0.4);
+  display: block;
+  margin-bottom: 0.25em;
+}
+
+.usernameValue {
+  margin: 0;
+  font-size: 1.6em;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.95);
+}
+
 .articleTitle {
   margin-top: 0.2em;
   background: transparent;
@@ -94,12 +114,16 @@ td {
 
 .heroImage {
   border-radius: 5%;
+  width: 106px;
+  height: 86px;
+  object-fit: cover;
+  object-position: center top;
 }
 
 .heroSelect {
   padding: 0.5rem;
   margin-bottom: 0;
-  border-radius: 4px;
+  border-radius: 10px;
   border: 1px solid var(--theme-border, #ccc);
   background-color: var(--theme-form-background, #f5f5f5);
   color: var(--theme-text, #333);
@@ -318,9 +342,9 @@ td {
 .metafySection {
   margin: 1.5rem 0;
   padding: 1.5rem;
-  background: transparent;
-  border-radius: 0;
-  border: none;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .metafySection h3 {
@@ -339,21 +363,26 @@ td {
   color: #d4af37;
   text-decoration: none;
   font-weight: 500;
-  transition: color 0.2s ease;
+  transition: color 0.2s ease, background-color 0.2s ease;
+  padding: 0.4em 0.8em;
+  border-radius: 5px;
+  display: inline-block;
 }
 
 .metafySection a:hover {
   color: #e8c547;
-  text-decoration: underline;
+  text-decoration: none;
+  background: rgba(212, 175, 55, 0.1);
+  border-color: rgba(212, 175, 55, 0.5);
 }
 
 /* Patreon Section — External Integration: neutral card, small top accent */
 .patreonSection {
   margin: 1.5rem 0;
   padding: 1.5rem;
-  background: transparent;
-  border-radius: 0;
-  border: none;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .patreonSection h3 {
@@ -372,12 +401,17 @@ td {
   color: #d4af37;
   text-decoration: none;
   font-weight: 500;
-  transition: color 0.2s ease;
+  transition: color 0.2s ease, background-color 0.2s ease;
+  padding: 0.4em 0.8em;
+  border-radius: 5px;
+  display: inline-block;
 }
 
 .patreonSection a:hover {
   color: #e8c547;
-  text-decoration: underline;
+  text-decoration: none;
+  background: rgba(212, 175, 55, 0.1);
+  border-color: rgba(212, 175, 55, 0.5);
 }
 
 .metafyToggleButton {
@@ -601,8 +635,23 @@ td {
   }
 }
 
+.deleteAccountButton {
+  padding: 0.6em 1.4em;
+  background: transparent;
+  color: #e05252;
+  border: 1px solid rgba(224, 82, 82, 0.4);
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.95em;
+  font-weight: 600;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  width: auto;
+}
+
 .deleteAccountButton:hover {
-  background-color: var(--theme-danger, #b71c1c);
+  background-color: rgba(224, 82, 82, 0.12);
+  border-color: rgba(224, 82, 82, 0.7);
+  color: #f07070;
 }
 
 .deleteAccountButton:active {
@@ -711,12 +760,6 @@ td {
   opacity: 0.7;
 }
 
-.addDeckSection {
-  margin-bottom: 1.5em;
-  padding-bottom: 1.5em;
-  border-bottom: 1px solid var(--theme-border, rgba(255, 255, 255, 0.2));
-}
-
 .addDeckSection h4 {
   margin-bottom: 0.5em;
   color: var(--theme-text, #f4eded);
@@ -801,9 +844,9 @@ td {
 .upgradeSection {
   padding: 1.5em;
   margin-bottom: 1.5em;
-  border-radius: 0;
-  border: none;
-  background: transparent;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
 }
 
 .upgradeSection h3 {
@@ -824,9 +867,9 @@ td {
 
 /* Supporter Badge — Highlight Card: gold border + subtle glow */
 .supporterBadge {
-  border-left: none;
-  background: transparent;
-  box-shadow: none;
+  border: 1px solid rgba(201, 169, 97, 0.25);
+  background: linear-gradient(135deg, rgba(201, 169, 97, 0.06) 0%, rgba(201, 169, 97, 0.02) 100%);
+  box-shadow: 0 0 20px rgba(201, 169, 97, 0.05);
 }
 
 .supporterBadge h3 {
@@ -843,15 +886,16 @@ td {
   color: rgba(201, 169, 97, 0.85);
   font-style: italic;
   padding: 1em;
-  background: transparent;
-  border-radius: 0;
+  background: rgba(201, 169, 97, 0.06);
+  border-radius: 6px;
   margin: 1em 0 0 0;
+  border-left: 3px solid rgba(201, 169, 97, 0.3);
 }
 
 /* Free User Badge — Default Card: neutral dark, no colored tint */
 .freeUserBadge {
-  border-left: none;
-  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.03);
 }
 
 .upgradeHeader {
