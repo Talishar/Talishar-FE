@@ -610,8 +610,10 @@ h3 {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   padding: 8px 0 16px;
   width: 100%;
+  gap: 0.5rem;
 }
 
 .adHeader {
@@ -639,7 +641,7 @@ h3 {
 }
 
 .mobileAd {
-  display: none;
+  display: none !important;
 }
 
 @media (max-width: 728px) {

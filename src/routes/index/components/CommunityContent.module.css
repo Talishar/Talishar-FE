@@ -415,10 +415,31 @@
   align-items: center;
 }
 
+@media (max-width: 728px) {
+  .adHeader {
+    width: min(100%, 300px);
+    justify-content: flex-end;
+  }
+}
+
 .desktopAd {
   display: block;
   width: 100%;
   max-width: 970px;
+}
+
+.mobileAd {
+  display: none !important;
+}
+
+@media (max-width: 728px) {
+  .desktopAd {
+    display: none !important;
+  }
+
+  .mobileAd {
+    display: block !important;
+  }
 }
 
 
