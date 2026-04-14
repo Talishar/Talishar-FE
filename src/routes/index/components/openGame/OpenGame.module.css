@@ -108,7 +108,9 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 0.1rem;
+  justify-content: center;
+  padding: 0.1rem 0.3rem;
+  text-align: center;
 }
 
 .formatLabel {
@@ -127,6 +129,9 @@
   overflow: hidden;
   font-size: 0.9em;
   font-weight: 600;
+  text-align: center;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 .formatName {
