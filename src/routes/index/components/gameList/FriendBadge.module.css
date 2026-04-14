@@ -12,6 +12,13 @@
   align-self: center;
 }
 
+.tab {
+  width: 18px;
+  height: 18px;
+  font-size: 12px;
+  box-shadow: 0 1px 4px rgba(212, 175, 55, 0.35);
+}
+
 .small {
   width: 24px;
   height: 24px;

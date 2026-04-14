@@ -17,6 +17,7 @@ import { useCookies } from 'react-cookie';
 import { useAppDispatch } from 'app/Hooks';
 import { HEROES_OF_RATHE } from '../filter/constants';
 import GameFilter from './GameFilter';
+import FriendBadge from './FriendBadge';
 import { useTranslation, Trans } from 'react-i18next';
 
 export interface IOpenGame {
@@ -73,7 +74,8 @@ const GameList = () => {
 
   const HERO_LIST = ['WTR001', 'ARC001', 'MON001', 'UPR001', 'ELE001', 'ROS001', 'HNT001', 'SUP001'];
   const FORMAT_LIST = [GAME_FORMAT.CLASSIC_CONSTRUCTED, GAME_FORMAT.BLITZ, GAME_FORMAT.COMMONER, GAME_FORMAT.DRAFT, GAME_FORMAT.SEALED];
-  const DEV_FAKE_OPEN: IOpenGame[] = import.meta.env.DEV ? Array.from({ length: 20 }, (_, i) => ({
+  const USE_DEV_FAKE_GAMES = false;
+  const DEV_FAKE_OPEN: IOpenGame[] = (import.meta.env.DEV && USE_DEV_FAKE_GAMES) ? Array.from({ length: 20 }, (_, i) => ({
     gameName: 80000 + i,
     p1Hero: HERO_LIST[i % HERO_LIST.length],
     format: FORMAT_LIST[i % FORMAT_LIST.length],
@@ -81,7 +83,7 @@ const GameList = () => {
     description: `Dev test game ${i + 1}`,
     visibility: '1',
   })) : [];
-  const DEV_FAKE_IN_PROGRESS: IGameInProgress[] = import.meta.env.DEV ? Array.from({ length: 20 }, (_, i) => ({
+  const DEV_FAKE_IN_PROGRESS: IGameInProgress[] = (import.meta.env.DEV && USE_DEV_FAKE_GAMES) ? Array.from({ length: 20 }, (_, i) => ({
     gameName: 90000 + i,
     p1Hero: HERO_LIST[i % HERO_LIST.length],
     p2Hero: HERO_LIST[(i + 5) % HERO_LIST.length],
@@ -534,9 +536,11 @@ const GameList = () => {
                   {sortedOpenGames.length}
                 </span>
                 {friendOpenGamesCount > 0 && (
-                  <span className={styles.friendTabIndicator} title={`${friendOpenGamesCount} friend game${friendOpenGamesCount > 1 ? 's' : ''}`}>
-                    👥
-                  </span>
+                  <FriendBadge
+                    isFriendsGame
+                    size="small"
+                    tooltip={`${friendOpenGamesCount} friend${friendOpenGamesCount > 1 ? 's' : ''} looking for opponent`}
+                  />
                 )}
               </button>
               <button
@@ -548,9 +552,11 @@ const GameList = () => {
                   {data?.gameInProgressCount ?? 0}
                 </span>
                 {friendInProgressCount > 0 && (
-                  <span className={styles.friendTabIndicator} title={`${friendInProgressCount} friend game${friendInProgressCount > 1 ? 's' : ''}`}>
-                    👥
-                  </span>
+                  <FriendBadge
+                    isFriendsGame
+                    size="small"
+                    tooltip={`${friendInProgressCount} friend${friendInProgressCount > 1 ? 's' : ''} playing`}
+                  />
                 )}
               </button>
             </div>
