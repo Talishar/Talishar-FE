@@ -416,14 +416,6 @@
   padding: 0 !important;
 }
 
-.mobileDivider {
-  height: 1px;
-  background-color: var(--theme-border, rgba(255, 255, 255, 0.1));
-  margin: 4px 0;
-  padding: 0 !important;
-  border-bottom: none !important;
-}
-
 @media only screen and (max-width: 768px) {
   .navBar {
     font-size: smaller;
@@ -694,6 +686,19 @@
 // Ensure Toaster appears above the navbar
 :global(.toaster) {
   z-index: 10001 !important;
+}
+
+.mobileDivider {
+  border-bottom: 1px solid var(--muted-border-color, #202632);
+  margin: 8px 0;
+  padding: 0 !important;
+  height: 0;
+  background: none;
+  min-height: 1px;
+
+  > * {
+    display: none;
+  }
 }
 
 .contentWrapper {
