@@ -262,6 +262,11 @@
   .grid {
     grid-template-columns: 1fr 1fr;
   }
+
+  .gameListContainer {
+    position: relative;
+    overflow: hidden;
+  }
 }
 
 @media (max-width: 768px) {
@@ -609,26 +614,28 @@ h3 {
   width: 100%;
 }
 
-.adHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  max-width: 728px;
-  padding: 0 4px 4px;
-  font-size: 0.7em;
-  color: rgba(255, 255, 255, 0.45);
+.adWrapper {
+  position: relative;
+  display: inline-block;
 }
 
 .removeAdsLink {
-  color: var(--theme-primary, #d4af37);
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 1;
+  color: rgba(255, 255, 255, 0.28);
   text-decoration: none;
-  font-size: 0.7rem;
+  font-size: 0.58rem;
   font-weight: 500;
+  line-height: 1;
+  padding: 2px 4px;
+  background: rgba(0, 0, 0, 0.45);
+  border-radius: 0 0 0 3px;
 }
 
 .removeAdsLink:hover {
-  color: var(--theme-primary-hover, #e6c04a);
+  color: rgba(255, 255, 255, 0.6);
   text-decoration: underline;
 }
 

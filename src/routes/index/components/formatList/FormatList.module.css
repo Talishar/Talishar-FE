@@ -11,6 +11,10 @@
   border-bottom: 1px solid var(--theme-border, rgba(255, 255, 255, 0.2));
 }
 
+.groupDiv:last-child {
+  border-bottom: none;
+}
+
 @media (max-width: 768px) {
   .subSectionTitle {
     margin-bottom: 0.25rem;

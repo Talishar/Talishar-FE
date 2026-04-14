@@ -86,17 +86,22 @@
 }
 
 .removeAdsLink {
-  align-self: flex-end;
-  color: var(--theme-primary, #d4af37);
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 1;
+  color: rgba(255, 255, 255, 0.28);
   text-decoration: none;
-  font-size: 0.7rem;
+  font-size: 0.58rem;
   font-weight: 500;
   line-height: 1;
-  margin-bottom: 2px;
+  padding: 2px 4px;
+  background: rgba(0, 0, 0, 0.45);
+  border-radius: 0 0 0 3px;
 }
 
 .removeAdsLink:hover {
-  color: var(--theme-primary-hover, #e6c04a);
+  color: rgba(255, 255, 255, 0.6);
   text-decoration: underline;
 }
 

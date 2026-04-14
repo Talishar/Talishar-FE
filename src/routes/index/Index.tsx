@@ -152,8 +152,7 @@ const Index = () => {
         </section>
         {showAds && (
           <div className={styles.adFooter}>
-            <div className={styles.adHeader}>
-              <span></span>
+            <div className={styles.adWrapper}>
               <a
                 href="https://metafy.gg/@talishar/tiers"
                 target="_blank"
@@ -162,8 +161,8 @@ const Index = () => {
               >
                 Remove ads
               </a>
+              <AdUnit placement="billboard-1" className={styles.desktopAd} />
             </div>
-            <AdUnit placement="billboard-1" className={styles.desktopAd} />
           </div>
         )}
         <CommunityContent showAds={showAds} />

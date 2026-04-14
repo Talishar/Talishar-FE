@@ -228,8 +228,7 @@ const CommunityContent: React.FC<CommunityContentProps> = ({ showAds = false }) 
 
             {showAds && (
               <div className={styles.communityAdSection}>
-                <div className={styles.communityAdHeader}>
-                  <span className={styles.communityAdLabel}></span>
+                <div className={styles.adWrapper}>
                   <a
                     href="https://metafy.gg/@talishar/tiers"
                     target="_blank"
@@ -238,8 +237,8 @@ const CommunityContent: React.FC<CommunityContentProps> = ({ showAds = false }) 
                   >
                     Remove ads
                   </a>
+                  <AdUnit placement="mobile-unit-3" />
                 </div>
-                <AdUnit placement="mobile-unit-3" />
               </div>
             )}
           </div>
@@ -302,8 +301,7 @@ const CommunityContent: React.FC<CommunityContentProps> = ({ showAds = false }) 
         </div>
           {showAds && (
             <div className={styles.adFooter}>
-              <div className={styles.adHeader}>
-                <span></span>
+              <div className={styles.adWrapper}>
                 <a
                   href="https://metafy.gg/@talishar/tiers"
                   target="_blank"
@@ -312,8 +310,8 @@ const CommunityContent: React.FC<CommunityContentProps> = ({ showAds = false }) 
                 >
                   Remove ads
                 </a>
+                <AdUnit placement="billboard-1" className={styles.desktopAd} />
               </div>
-              <AdUnit placement="billboard-1" className={styles.desktopAd} />
             </div>
           )}
       </div>
