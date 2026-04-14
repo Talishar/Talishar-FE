@@ -123,7 +123,7 @@
 .tabBar {
   display: flex;
   border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.15));
-  border-radius: 8px;
+  border-radius: 0;
   overflow: hidden;
   background: rgba(0, 0, 0, 0.15);
 }
@@ -153,7 +153,7 @@
 }
 
 .tabActive {
-  background: var(--theme-primary-muted, rgba(212, 175, 55, 0.2));
+  background: color-mix(in srgb, var(--theme-primary, #d4af37) 20%, transparent);
   color: var(--theme-primary, #d4af37);
   font-weight: 600;
 }

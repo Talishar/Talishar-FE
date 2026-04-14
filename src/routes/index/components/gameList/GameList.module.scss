@@ -113,7 +113,7 @@
   }
 
   &::-webkit-scrollbar-thumb:hover {
-    background: #d4af37;
+    background: var(--theme-primary, #d4af37);
   }
 }
 
@@ -143,7 +143,7 @@
   background: transparent !important;
   border: none !important;
   box-shadow: none !important;
-  color: #d4af37;
+  color: var(--theme-primary, #d4af37);
   font-size: 0.9em;
   font-weight: 600;
   letter-spacing: 0.02em;
@@ -156,7 +156,7 @@
     background: transparent !important;
     border: none !important;
     box-shadow: none !important;
-    color: #d4af37 !important;
+    color: var(--theme-primary, #d4af37) !important;
   }
 
   &:active:not(:disabled):not([aria-busy='true']) {
@@ -171,7 +171,7 @@
     cursor: not-allowed;
     background: transparent !important;
     border: none !important;
-    color: #d4af37 !important;
+    color: var(--theme-primary, #d4af37) !important;
   }
 }
 
@@ -228,12 +228,12 @@
 }
 
 .tabActive {
-  color: #d4af37 !important;
-  border-bottom: 2px solid #d4af37 !important;
+  color: var(--theme-primary, #d4af37) !important;
+  border-bottom: 2px solid var(--theme-primary, #d4af37) !important;
 
   &:hover {
-    color: #d4af37 !important;
-    border-bottom: 2px solid #d4af37 !important;
+    color: var(--theme-primary, #d4af37) !important;
+    border-bottom: 2px solid var(--theme-primary, #d4af37) !important;
   }
 }
 
@@ -252,8 +252,8 @@
 }
 
 .tabBadgeActive {
-  background: rgba(212, 175, 55, 0.25);
-  color: #d4af37;
+  background: color-mix(in srgb, var(--theme-primary, #d4af37) 25%, transparent);
+  color: var(--theme-primary, #d4af37);
 }
 
 .filterRow {
@@ -311,15 +311,15 @@
   gap: 0.6em;
   margin: 0.75rem 0 0;
   padding: 0.7rem 1rem;
-  background: rgba(212, 175, 55, 0.08);
-  border: 1px solid rgba(212, 175, 55, 0.25);
+  background: color-mix(in srgb, var(--theme-primary, #d4af37) 8%, transparent);
+  border: 1px solid color-mix(in srgb, var(--theme-primary, #d4af37) 25%, transparent);
   border-radius: 6px;
   font-size: 0.88rem;
   color: rgba(255, 255, 255, 0.75);
   line-height: 1.4;
 
   a {
-    color: #d4af37;
+    color: var(--theme-primary, #d4af37);
     font-weight: 600;
     text-decoration: none;
 

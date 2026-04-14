@@ -3,10 +3,10 @@
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  background: linear-gradient(135deg, #d4af37 0%, #f0e68c 100%);
-  color: #000;
+  background: linear-gradient(135deg, var(--theme-primary, #d4af37) 0%, color-mix(in srgb, var(--theme-primary, #d4af37) 55%, white 45%) 100%);
+  color: var(--theme-primary-inverse, #000);
   font-weight: bold;
-  box-shadow: 0 2px 8px rgba(212, 175, 55, 0.4);
+  box-shadow: 0 2px 8px color-mix(in srgb, var(--theme-primary, #d4af37) 40%, transparent);
   flex-shrink: 0;
   cursor: pointer;
   align-self: center;
@@ -16,7 +16,7 @@
   width: 18px;
   height: 18px;
   font-size: 12px;
-  box-shadow: 0 1px 4px rgba(212, 175, 55, 0.35);
+  box-shadow: 0 1px 4px color-mix(in srgb, var(--theme-primary, #d4af37) 35%, transparent);
 }
 
 .small {
@@ -40,7 +40,7 @@
 .tooltip {
   position: fixed;
   background: rgba(0, 0, 0, 0.9);
-  color: #d4af37;
+  color: var(--theme-primary, #d4af37);
   padding: 0.5em 0.75em;
   border-radius: 8px;
   font-size: 0.85rem;
@@ -49,5 +49,5 @@
   pointer-events: none;
   transform: translateX(-50%);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
-  border: 1px solid rgba(212, 175, 55, 0.3);
+  border: 1px solid color-mix(in srgb, var(--theme-primary, #d4af37) 30%, transparent);
 }

@@ -31,7 +31,7 @@
   border-color: var(--theme-primary, #d4af37);
   background: color-mix(in srgb, var(--landing-surface) 82%, black 18%);
   color: var(--theme-primary, #d4af37);
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.25), 0 0 12px rgba(212, 175, 55, 0.18);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.25), 0 0 12px color-mix(in srgb, var(--theme-primary, #d4af37) 18%, transparent);
   transform: translateY(-1px);
 }
 
@@ -238,7 +238,7 @@
 }
 
 .gameListContainer::-webkit-scrollbar-thumb:hover {
-  background: #d4af37;
+  background: var(--theme-primary, #d4af37);
 }
 
 .createGameContainer {
@@ -314,7 +314,7 @@ h3 {
 
 .messageItem {
   background: rgba(255, 255, 255, 0.05);
-  border-left: 3px solid #d4af37;
+  border-left: 3px solid var(--theme-primary, #d4af37);
   border-radius: 4px;
   padding: 1em;
   margin-bottom: 1em;
@@ -330,7 +330,7 @@ h3 {
 }
 
 .messageHeader strong {
-  color: #d4af37;
+  color: var(--theme-primary, #d4af37);
   font-size: 0.95rem;
 }
 
@@ -379,7 +379,7 @@ h3 {
   background: rgba(100, 181, 246, 0.1);
   border: 1px solid rgba(100, 181, 246, 0.3);
   border-radius: 4px;
-  color: #d4af37;
+  color: var(--theme-primary, #d4af37);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -394,14 +394,14 @@ h3 {
 
 .messageEmbed {
   background: rgba(100, 181, 246, 0.05);
-  border-left: 3px solid #d4af37;
+  border-left: 3px solid var(--theme-primary, #d4af37);
   border-radius: 4px;
   padding: 0.75em;
 }
 
 .messageEmbed h4 {
   margin: 0 0 0.5em 0;
-  color: #d4af37;
+  color: var(--theme-primary, #d4af37);
   font-size: 0.95rem;
 }
 
@@ -472,7 +472,7 @@ h3 {
 }
 
 .newsContent::-webkit-scrollbar-thumb:hover {
-  background: #d4af37;
+  background: var(--theme-primary, #d4af37);
 }
 
 @media only screen and (max-width: 768px) and (orientation: portrait) {
@@ -537,8 +537,8 @@ h3 {
 
   .newsTab.active {
     background: rgba(100, 181, 246, 0.2);
-    border-color: #d4af37;
-    color: #d4af37;
+    border-color: var(--theme-primary, #d4af37);
+    color: var(--theme-primary, #d4af37);
     font-weight: 500;
   }
 
@@ -619,6 +619,11 @@ h3 {
   display: inline-block;
 }
 
+/* Hide wrapper (including Remove ads link) when the ad slot has no injected content */
+.adWrapper:not(:has(:global(.ad-unit) > *)) {
+  display: none;
+}
+
 .removeAdsLink {
   position: absolute;
   top: 0;
@@ -630,7 +635,6 @@ h3 {
   font-weight: 500;
   line-height: 1;
   padding: 2px 4px;
-  background: rgba(0, 0, 0, 0.45);
   border-radius: 0 0 0 3px;
 }
 
@@ -681,7 +685,7 @@ h3 {
 }
 
 .viewAllLink {
-  color: #d4af37;
+  color: var(--theme-primary, #d4af37);
   text-decoration: none;
   font-size: 0.95rem;
   font-weight: 500;
@@ -732,7 +736,7 @@ h3 {
 }
 
 .newsCardAuthor {
-  color: #d4af37;
+  color: var(--theme-primary, #d4af37);
   font-size: 0.95rem;
   font-weight: 700;
 }
