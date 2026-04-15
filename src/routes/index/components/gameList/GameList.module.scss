@@ -132,9 +132,6 @@
 }
 
 .reloadButton {
-  position: absolute !important;
-  top: 1em;
-  right: 1em;
   display: inline-flex !important;
   width: auto !important;
   align-items: center;
@@ -284,8 +281,10 @@
 }
 
 .titleDiv {
-  display: block;
-  padding-right: 6em;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5em;
 }
 
 .subSectionTitle {
