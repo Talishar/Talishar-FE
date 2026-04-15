@@ -74,7 +74,9 @@ const GameList = () => {
 
   const HERO_LIST = ['WTR001', 'ARC001', 'MON001', 'UPR001', 'ELE001', 'ROS001', 'HNT001', 'SUP001'];
   const FORMAT_LIST = [GAME_FORMAT.CLASSIC_CONSTRUCTED, GAME_FORMAT.BLITZ, GAME_FORMAT.COMMONER, GAME_FORMAT.DRAFT, GAME_FORMAT.SEALED];
-  const USE_DEV_FAKE_GAMES = false;
+  
+  const USE_DEV_FAKE_GAMES = false; // Set to true to enable fake games for testing
+
   const DEV_FAKE_OPEN: IOpenGame[] = (import.meta.env.DEV && USE_DEV_FAKE_GAMES) ? Array.from({ length: 20 }, (_, i) => ({
     gameName: 80000 + i,
     p1Hero: HERO_LIST[i % HERO_LIST.length],

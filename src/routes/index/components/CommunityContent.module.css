@@ -430,7 +430,7 @@
 }
 
 .mobileAd {
-  display: none;
+  display: none !important;
 }
 
 @media (max-width: 728px) {

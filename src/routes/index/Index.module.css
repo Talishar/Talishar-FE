@@ -266,6 +266,7 @@
   .gameListContainer {
     position: relative;
     overflow: hidden;
+    min-height: 550px;
   }
 }
 
