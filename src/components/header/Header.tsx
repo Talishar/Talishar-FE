@@ -105,7 +105,6 @@ const Header = () => {
               <img src={TalisharLogo} alt={t('HEADER.TALISHAR_LOGO_ALT')} />
             </Link>
           </li>
-          {!isSupporter && (
             <li>
               <a
                 href="https://metafy.gg/@talishar"
@@ -116,7 +115,6 @@ const Header = () => {
                 {t('HEADER.SUPPORT_US')}
               </a>
             </li>
-          )}
         </ul>
 
         <ul className={styles.centerNav}>
