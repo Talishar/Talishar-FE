@@ -140,6 +140,70 @@ export const themes: Theme[] = [
     }
   },
   {
+    name: '🌟 Radiant',
+    id: 'radiant',
+    colors: {
+      background: 'radial-gradient(#e8edf2, #cdd5de)',
+      backgroundTexture: "url('./img/backgrounds/everfest-bg.webp')",
+      cardBackground: '#ffffff',
+      sectionBackground:
+        'linear-gradient(135deg, rgba(255, 255, 255, 0.92) 0%, rgba(240, 244, 248, 0.95) 100%)',
+      sectionBackgroundTransparent: 'rgba(255, 255, 255, 0.88)',
+
+      text: '#1a1a2e',
+      textSecondary: '#2d3748',
+      textMuted: 'rgba(45, 55, 72, 0.65)',
+      color: '#1a1a2e',
+
+      h1Color: '#0f0f1a',
+      h2Color: '#1a1a2e',
+      h3Color: '#2d3748',
+      h4Color: '#4a5568',
+      h5Color: '#606a7a',
+      h6Color: '#718096',
+
+      primary: '#a0762e',
+      primaryInverse: '#ffffff',
+      primaryHover: '#7d5a22',
+      primaryFocus: 'rgba(160, 118, 46, 0.2)',
+
+      secondary: '#e2e8f0',
+      secondaryHover: '#cbd5e0',
+      secondaryInverse: '#1a1a2e',
+      secondaryFocus: 'rgba(226, 232, 240, 0.5)',
+
+      tertiary: '#f0f4f8',
+      tertiaryHover: '#e2e8f0',
+
+      contrast: '#1a1a2e',
+      contrastHover: '#0f0f1a',
+      contrastInverse: '#ffffff',
+      contrastFocus: 'rgba(26, 26, 46, 0.15)',
+
+      border: 'rgba(0, 0, 0, 0.15)',
+      borderLight: 'rgba(0, 0, 0, 0.08)',
+      mutedBorderColor: '#cbd5e0',
+      mutedColor: '#718096',
+      formBackground: '#ffffff',
+      formBorder: '#a0aec0',
+      formActive: '#f7fafc',
+
+      // Dropdown colors
+      dropdownBackground: '#ffffff',
+      dropdownBorder: '#cbd5e0',
+      dropdownColor: '#1a1a2e',
+      dropdownHoverBackground: 'rgba(160, 118, 46, 0.1)',
+
+      alarm: '#b10202',
+      success: '#276749',
+      warning: '#b7791f',
+      danger: '#c53030',
+
+      nearBlack: 'rgba(240, 244, 248, var(--transparency-intensity, 0.98))',
+      overlay: 'rgba(0, 0, 0, 0.4)'
+    }
+  },
+  {
     name: '☀️ Light',
     id: 'light',
     colors: {
