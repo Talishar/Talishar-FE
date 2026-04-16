@@ -78,7 +78,14 @@
 }
 
 .alarm {
-  color: var(--alarm);
+  /* Use orange-amber instead of red so the text is visible for users with
+     red color blindness (protanopia / deuteranopia). Combine with bold weight
+     and a subtle border so the error is not conveyed by color alone. */
+  color: #E67E22;
+  font-weight: 600;
+  border: 1px solid rgba(230, 126, 34, 0.45);
+  border-radius: 4px;
+  padding: 0.2rem 0.5rem;
   display: flex;
   align-items: center;
   justify-content: center;
