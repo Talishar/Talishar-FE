@@ -796,6 +796,11 @@ const Lobby = () => {
           sideboardInSample: sideboardIn.slice(0, 5),
           sideboardOutSample: sideboardOut.slice(0, 5)
         });
+        // Preemptively mark the saved matchup as auto-applied so the effect does
+        // not re-fire (with a new key) when the newly-created matchup entry first
+        // appears in the lobby refresh and gameLobby?.matchups changes.  The save
+        // always writes exactly what was submitted, so there is nothing to reload.
+        lastAutoAppliedMatchupKey.current = `${gameID}:${playerID}:${gameLobby?.myDeckLink}:${opponentHeroId}:${opponentHeroId}`;
         updateBazaarMatchup({
           deckId: bazaarDeckId,
           heroId: opponentHeroId,
