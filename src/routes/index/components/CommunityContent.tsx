@@ -291,7 +291,7 @@ const CommunityContent: React.FC<CommunityContentProps> = ({ showAds = false }) 
             </p>
           </div>
           <a
-            href="https://discord.gg/talishar"
+            href="https://discord.com/JykuRkdd5S"
             target="_blank"
             rel="noopener noreferrer"
             className={styles.discordButton}
