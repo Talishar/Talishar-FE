@@ -47,7 +47,7 @@ import Matchups from './components/matchups/Matchups';
 import { GameLocationState } from 'interface/GameLocationState';
 import { saveGameAuthKey } from 'utils/LocalKeyManagement';
 import CardPopUp from '../components/elements/cardPopUp/CardPopUp';
-import { getGameInfo, setHeroInfo, setGameStart } from 'features/game/GameSlice';
+import { getGameInfo, setHeroInfo } from 'features/game/GameSlice';
 import useSound from 'use-sound';
 import playerJoined from 'sounds/playerJoinedSound.mp3';
 import { createPortal } from 'react-dom';
@@ -303,18 +303,6 @@ const Lobby = () => {
           joinPayload.matchup = '__base__';
         }
         const joinResponse: any = await joinGameMutation(joinPayload).unwrap();
-        // Keep Redux in sync with the auth key the server holds for this game.
-        // JoinGame.php can regenerate the key on a genuine re-join; if we don't
-        // update Redux here the subsequent GetNextTurn calls will be rejected.
-        if (joinResponse?.authKey) {
-          dispatch(
-            setGameStart({
-              gameID: parseInt(gameID ?? '0'),
-              playerID,
-              authKey: joinResponse.authKey
-            })
-          );
-        }
         setSelectedMatchupId(targetMatchupId || null);
         lastAutoAppliedMatchupKey.current = autoApplyKey;
         refetch();
