@@ -694,6 +694,120 @@ const Lobby = () => {
       submission: JSON.stringify(submitDeck) // the API unmarshals the JSON inside the unmarshaled JSON.
     };
 
+    // Save sideboard changes to FaB Bazaar (sticky sideboarding) BEFORE
+    // submitting to Talishar, because the Talishar submit may start the game
+    // immediately and any lobby refresh that follows could trigger the
+    // auto-apply matchup effect with a stale/new key.
+    const bazaarDeckId =
+      gameInfo.bazaarDeckId ??
+      extractBazaarDeckIdFromLink(gameLobby?.myDeckLink);
+    const opponentHeroId = gameLobby?.theirHero;
+    let resolvedMetafyId = metafyId;
+    let resolvedMetafyHash = metafyHash;
+    let resolvedMetafyTimestamp = metafyTimestamp;
+
+    // If Bazaar deck/opponent are known but metafy credentials are missing,
+    // force-refresh TryLoginAPI and retry with fresh values.
+    if (
+      bazaarDeckId &&
+      opponentHeroId &&
+      (!resolvedMetafyId || !resolvedMetafyHash || !resolvedMetafyTimestamp)
+    ) {
+      console.warn('[StickySideboard] Missing metafy credentials, forcing auth refresh', {
+        resolvedMetafyId: resolvedMetafyId ?? null,
+        resolvedMetafyHashPresent: !!resolvedMetafyHash,
+        resolvedMetafyTimestamp: resolvedMetafyTimestamp ?? null
+      });
+      try {
+        const refreshedAuth: any = await refreshAuth();
+        const refreshed = refreshedAuth?.data;
+        resolvedMetafyId = refreshed?.metafyID ?? refreshed?.metafyId ?? resolvedMetafyId;
+        resolvedMetafyHash = refreshed?.metafyHash ?? resolvedMetafyHash;
+        resolvedMetafyTimestamp = refreshed?.timestamp ?? resolvedMetafyTimestamp;
+        console.info('[StickySideboard] Auth refresh complete', {
+          refreshedMetafyId: resolvedMetafyId ?? null,
+          refreshedMetafyHashPresent: !!resolvedMetafyHash,
+          refreshedMetafyTimestamp: resolvedMetafyTimestamp ?? null
+        });
+      } catch (authRefreshErr) {
+        console.error('[StickySideboard] Auth refresh failed', authRefreshErr);
+      }
+    }
+
+    const canSyncBazaarSideboard =
+      bazaarDeckId &&
+      opponentHeroId &&
+      resolvedMetafyId &&
+      resolvedMetafyHash &&
+      resolvedMetafyTimestamp;
+
+    console.info('[StickySideboard] Bazaar sync gate evaluation', {
+      canSyncBazaarSideboard: !!canSyncBazaarSideboard,
+      bazaarDeckId: bazaarDeckId ?? null,
+      opponentHeroId: opponentHeroId ?? null,
+      metafyId: resolvedMetafyId ?? null,
+      metafyHashPresent: !!resolvedMetafyHash,
+      metafyTimestamp: resolvedMetafyTimestamp ?? null
+    });
+
+    if (canSyncBazaarSideboard) {
+      const multisetDiff = (have: string[], remove: string[]): string[] => {
+        const counts = new Map<string, number>();
+        for (const card of have) counts.set(card, (counts.get(card) ?? 0) + 1);
+        for (const card of remove) {
+          const c = counts.get(card) ?? 0;
+          if (c <= 1) counts.delete(card);
+          else counts.set(card, c - 1);
+        }
+        return Array.from(counts.entries()).flatMap(([card, n]) =>
+          Array(n).fill(card)
+        );
+      };
+      // Use lobby deck data to compute which cards moved in/out of main deck
+      const originalMain: string[] = data?.deck?.cards ?? [];
+      const sideboardIn = multisetDiff(deck, originalMain);
+      const sideboardOut = multisetDiff(originalMain, deck);
+      console.info('[StickySideboard] Calling Bazaar PATCH', {
+        deckId: bazaarDeckId,
+        heroId: opponentHeroId,
+        sideboardInCount: sideboardIn.length,
+        sideboardOutCount: sideboardOut.length,
+        sideboardInSample: sideboardIn.slice(0, 5),
+        sideboardOutSample: sideboardOut.slice(0, 5)
+      });
+      // Preemptively mark the saved matchup as auto-applied so the effect does
+      // not re-fire (with a new key) when the newly-created matchup entry first
+      // appears in the lobby refresh and gameLobby?.matchups changes.  The save
+      // always writes exactly what was submitted, so there is nothing to reload.
+      lastAutoAppliedMatchupKey.current = `${gameID}:${playerID}:${gameLobby?.myDeckLink}:${opponentHeroId}:${opponentHeroId}`;
+      try {
+        const bazaarResponse = await updateBazaarMatchup({
+          deckId: bazaarDeckId,
+          heroId: opponentHeroId,
+          metafyId: resolvedMetafyId,
+          metafyHash: resolvedMetafyHash,
+          metafyTimestamp: resolvedMetafyTimestamp,
+          sideboard: { in: sideboardIn, out: sideboardOut }
+        }).unwrap();
+        console.info('[StickySideboard] Bazaar PATCH success', {
+          success: bazaarResponse?.success ?? true,
+          heroId: bazaarResponse?.data?.matchup?.heroId ?? null
+        });
+      } catch (bazaarErr) {
+        console.error('[StickySideboard] Bazaar PATCH failed', bazaarErr);
+        // Bazaar sync failure should not block the Talishar submit
+      }
+    } else {
+      console.warn('[StickySideboard] Bazaar sync skipped - missing required data', {
+        bazaarDeckId: bazaarDeckId ?? null,
+        myDeckLink: gameLobby?.myDeckLink ?? null,
+        opponentHeroId: opponentHeroId ?? null,
+        metafyId: resolvedMetafyId ?? null,
+        metafyHashPresent: !!resolvedMetafyHash,
+        metafyTimestamp: resolvedMetafyTimestamp ?? null
+      });
+    }
+
     console.info('[StickySideboard] Submitting to Talishar', {
       mainDeckCount: deck.length,
       inventoryCount: inventory.length,
@@ -716,119 +830,6 @@ const Lobby = () => {
         );
         // The existing useEffect in this component will navigate to /game/play/{gameID}
         // when gameLobby?.isMainGameReady becomes true
-      }
-
-      // Save sideboard changes back to FaB Bazaar (sticky sideboarding)
-      const bazaarDeckId =
-        gameInfo.bazaarDeckId ??
-        extractBazaarDeckIdFromLink(gameLobby?.myDeckLink);
-      const opponentHeroId = gameLobby?.theirHero;
-      let resolvedMetafyId = metafyId;
-      let resolvedMetafyHash = metafyHash;
-      let resolvedMetafyTimestamp = metafyTimestamp;
-
-      // If Bazaar deck/opponent are known but metafy credentials are missing,
-      // force-refresh TryLoginAPI and retry with fresh values.
-      if (
-        bazaarDeckId &&
-        opponentHeroId &&
-        (!resolvedMetafyId || !resolvedMetafyHash || !resolvedMetafyTimestamp)
-      ) {
-        console.warn('[StickySideboard] Missing metafy credentials, forcing auth refresh', {
-          resolvedMetafyId: resolvedMetafyId ?? null,
-          resolvedMetafyHashPresent: !!resolvedMetafyHash,
-          resolvedMetafyTimestamp: resolvedMetafyTimestamp ?? null
-        });
-        try {
-          const refreshedAuth: any = await refreshAuth();
-          const refreshed = refreshedAuth?.data;
-          resolvedMetafyId = refreshed?.metafyID ?? refreshed?.metafyId ?? resolvedMetafyId;
-          resolvedMetafyHash = refreshed?.metafyHash ?? resolvedMetafyHash;
-          resolvedMetafyTimestamp = refreshed?.timestamp ?? resolvedMetafyTimestamp;
-          console.info('[StickySideboard] Auth refresh complete', {
-            refreshedMetafyId: resolvedMetafyId ?? null,
-            refreshedMetafyHashPresent: !!resolvedMetafyHash,
-            refreshedMetafyTimestamp: resolvedMetafyTimestamp ?? null
-          });
-        } catch (authRefreshErr) {
-          console.error('[StickySideboard] Auth refresh failed', authRefreshErr);
-        }
-      }
-
-      const canSyncBazaarSideboard =
-        bazaarDeckId &&
-        opponentHeroId &&
-        resolvedMetafyId &&
-        resolvedMetafyHash &&
-        resolvedMetafyTimestamp;
-
-      console.info('[StickySideboard] Bazaar sync gate evaluation', {
-        canSyncBazaarSideboard: !!canSyncBazaarSideboard,
-        bazaarDeckId: bazaarDeckId ?? null,
-        opponentHeroId: opponentHeroId ?? null,
-        metafyId: resolvedMetafyId ?? null,
-        metafyHashPresent: !!resolvedMetafyHash,
-        metafyTimestamp: resolvedMetafyTimestamp ?? null
-      });
-
-      if (canSyncBazaarSideboard) {
-        const multisetDiff = (have: string[], remove: string[]): string[] => {
-          const counts = new Map<string, number>();
-          for (const card of have) counts.set(card, (counts.get(card) ?? 0) + 1);
-          for (const card of remove) {
-            const c = counts.get(card) ?? 0;
-            if (c <= 1) counts.delete(card);
-            else counts.set(card, c - 1);
-          }
-          return Array.from(counts.entries()).flatMap(([card, n]) =>
-            Array(n).fill(card)
-          );
-        };
-        // Use lobby deck data to compute which cards moved in/out of main deck
-        const originalMain: string[] = data?.deck?.cards ?? [];
-        const sideboardIn = multisetDiff(deck, originalMain);
-        const sideboardOut = multisetDiff(originalMain, deck);
-        console.info('[StickySideboard] Calling Bazaar PATCH', {
-          deckId: bazaarDeckId,
-          heroId: opponentHeroId,
-          sideboardInCount: sideboardIn.length,
-          sideboardOutCount: sideboardOut.length,
-          sideboardInSample: sideboardIn.slice(0, 5),
-          sideboardOutSample: sideboardOut.slice(0, 5)
-        });
-        // Preemptively mark the saved matchup as auto-applied so the effect does
-        // not re-fire (with a new key) when the newly-created matchup entry first
-        // appears in the lobby refresh and gameLobby?.matchups changes.  The save
-        // always writes exactly what was submitted, so there is nothing to reload.
-        lastAutoAppliedMatchupKey.current = `${gameID}:${playerID}:${gameLobby?.myDeckLink}:${opponentHeroId}:${opponentHeroId}`;
-        updateBazaarMatchup({
-          deckId: bazaarDeckId,
-          heroId: opponentHeroId,
-          metafyId: resolvedMetafyId,
-          metafyHash: resolvedMetafyHash,
-          metafyTimestamp: resolvedMetafyTimestamp,
-          sideboard: { in: sideboardIn, out: sideboardOut }
-        })
-          .unwrap()
-          .then((bazaarResponse) => {
-            console.info('[StickySideboard] Bazaar PATCH success', {
-              success: bazaarResponse?.success ?? true,
-              heroId: bazaarResponse?.data?.matchup?.heroId ?? null
-            });
-          })
-          .catch((bazaarErr) => {
-            console.error('[StickySideboard] Bazaar PATCH failed', bazaarErr);
-            // Fire-and-forget: Bazaar sync failure should not affect game flow
-          });
-      } else {
-        console.warn('[StickySideboard] Bazaar sync skipped - missing required data', {
-          bazaarDeckId: bazaarDeckId ?? null,
-          myDeckLink: gameLobby?.myDeckLink ?? null,
-          opponentHeroId: opponentHeroId ?? null,
-          metafyId: resolvedMetafyId ?? null,
-          metafyHashPresent: !!resolvedMetafyHash,
-          metafyTimestamp: resolvedMetafyTimestamp ?? null
-        });
       }
     } catch (err) {
       console.error('[StickySideboard] Talishar sideboard submit failed', err);
