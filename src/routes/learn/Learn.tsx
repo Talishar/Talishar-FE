@@ -3,9 +3,22 @@ import styles from './Learn.module.scss';
 import { usePageTitle } from 'hooks/usePageTitle';
 import GuideGrid from './components/GuideGrid';
 import { fetchMetafyGuides, MetafyGuide } from '../../services/metafyService';
+import { useGetUserProfileQuery } from 'features/api/apiSlice';
+import useAuth from 'hooks/useAuth';
+import useAdScript from 'hooks/useAdScript';
 
 const Learn: React.FC = () => {
   usePageTitle('Learn');
+  const { isLoggedIn, isLoading: isAuthLoading } = useAuth();
+  const { data: profileData, isLoading: isProfileLoading } = useGetUserProfileQuery(
+    undefined,
+    { skip: !isLoggedIn }
+  );
+  const isSupporter = isLoggedIn
+    ? (isProfileLoading ? true : (profileData?.isMetafySupporter ?? false))
+    : false;
+  const showAds = !isAuthLoading && !isSupporter;
+  useAdScript(showAds);
   const [guides, setGuides] = useState<MetafyGuide[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -74,7 +87,7 @@ const Learn: React.FC = () => {
           </div>
         ) : guides.length > 0 ? (
           <>
-            <GuideGrid guides={guides} />
+            <GuideGrid guides={guides} showAds={showAds} />
 
             {totalPages > 1 && (
               <div className={styles.pagination}>
