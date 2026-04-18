@@ -4,7 +4,8 @@ import {
   useGetFavoriteDecksQuery,
   useJoinGameMutation,
   useGetGameListQuery,
-  useGetGameInfoQuery
+  useGetGameInfoQuery,
+  useGetUserProfileQuery
 } from 'features/api/apiSlice';
 import { JoinGameAPI } from 'interface/API/JoinGame.php';
 import { Link, useNavigate, useParams } from 'react-router-dom';
@@ -15,6 +16,8 @@ import { toast } from 'react-hot-toast';
 import { FaExclamationCircle, FaQuestionCircle } from 'react-icons/fa';
 import validationSchema from './validationSchema';
 import useAuth from 'hooks/useAuth';
+import useAdScript from 'hooks/useAdScript';
+import { AdUnit } from 'components/ads';
 import classNames from 'classnames';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -84,7 +87,17 @@ const JoinGame = () => {
   const dispatch = useAppDispatch();
   const [joinGame, joinGameResult] = useJoinGameMutation();
   const { data, isLoading, isSuccess } = useGetFavoriteDecksQuery(undefined);
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, isLoading: authLoading } = useAuth();
+
+  const { data: profileData, isLoading: isProfileLoading } = useGetUserProfileQuery(
+    undefined,
+    { skip: !isLoggedIn }
+  );
+  const isSupporter = isLoggedIn
+    ? (isProfileLoading ? true : (profileData?.isMetafySupporter ?? false))
+    : false;
+  const showAds = !authLoading && !isSupporter;
+  useAdScript(showAds);
 
   // Initial stuff to allow the lang to change
   const { t, i18n, ready } = useTranslation();
@@ -268,6 +281,11 @@ const JoinGame = () => {
 
   return (
     <main className={styles.LoginPageContainer}>
+      {showAds && (
+        <aside className={styles.leftRail}>
+          <AdUnit placement="left-rail-1" />
+        </aside>
+      )}
       <article className={styles.formContainer}>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className={styles.formInner}>
@@ -432,6 +450,16 @@ const JoinGame = () => {
           {t('JOIN.BACK')}
         </button>
       </article>
+      {showAds && (
+        <aside className={styles.rightRail}>
+          <AdUnit placement="right-rail-1" />
+        </aside>
+      )}
+      {showAds && (
+        <div className={styles.mobileAd}>
+          <AdUnit placement="mobile-unit-4" />
+        </div>
+      )}
     </main>
   );
 };

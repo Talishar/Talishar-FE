@@ -173,7 +173,7 @@ const CommunityContent: React.FC<CommunityContentProps> = ({ showAds = false }) 
         src={src}
         title={video.title}
         frameBorder="0"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allow="autoplay; encrypted-media; picture-in-picture"
         allowFullScreen
       />
     );
