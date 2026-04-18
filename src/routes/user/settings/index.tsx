@@ -434,17 +434,6 @@ const SettingsPage = () => {
             selectedPlaymat={initialValues.playMat}
             onSettingsChange={handleSettingsChange}
           />
-
-          <p className={styles.disclaimer}>
-            Talishar is in no way affiliated with Legend Story Studios. Legend
-            Story Studios®, Flesh and Blood™, and set names are trademarks of
-            Legend Story Studios. Flesh and Blood characters, cards, logos, and
-            art are property of{' '}
-            <a href="https://legendstory.com/" target="_blank" rel="noreferrer">
-              Legend Story Studios
-            </a>
-            . Card Images © Legend Story Studios
-          </p>
         </div>
       </div>
     </div>
