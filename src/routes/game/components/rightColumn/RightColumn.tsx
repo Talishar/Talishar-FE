@@ -12,6 +12,8 @@ import { RootState } from 'app/Store';
 import PlayerName from '../elements/playerName/PlayerName';
 import { AdUnit } from 'components/ads';
 import useAuth from 'hooks/useAuth';
+import useAdScript from 'hooks/useAdScript';
+import { useGetUserProfileQuery } from 'features/api/apiSlice';
 import squareMemberCTA from '../../../../img/squareMemberCTA.webp';
 
 
@@ -22,8 +24,18 @@ export default function RightColumn() {
     (state: RootState) => state.game.gameInfo.playerID
   );
   const isSpectator = playerID === 3;
-  const { isPatron } = useAuth();
-  const showAds = !isPatron || isPatron === '0';
+  const { isLoggedIn, isLoading } = useAuth();
+
+  const { data: profileData, isLoading: isProfileLoading } = useGetUserProfileQuery(
+    undefined,
+    { skip: !isLoggedIn }
+  );
+
+  const isSupporter = isLoggedIn
+    ? (isProfileLoading ? true : (profileData?.isMetafySupporter ?? false))
+    : false;
+  const showAds = !isLoading && !isSupporter;
+  useAdScript(showAds);
 
   return (
     <>
