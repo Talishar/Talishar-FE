@@ -7,11 +7,13 @@ import CardPopUp from '../cardPopUp/CardPopUp';
 import CardImage from '../cardImage/CardImage';
 import { closeInventory } from 'features/game/GameSlice';
 
+const emptyArray: any[] = [];
+
 export default function InventoryModal() {
   const dispatch = useAppDispatch();
   const isOpen = useAppSelector((state: RootState) => state.game.inventoryOpen);
   const inventoryCards = useAppSelector(
-    (state: RootState) => state.game.gameDynamicInfo?.playerInventory || []
+    (state: RootState) => state.game.gameDynamicInfo?.playerInventory ?? emptyArray
   );
 
   if (!isOpen) return null;

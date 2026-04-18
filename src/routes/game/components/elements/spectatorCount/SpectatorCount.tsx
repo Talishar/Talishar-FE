@@ -4,12 +4,14 @@ import { RootState } from 'app/Store';
 import styles from './SpectatorCount.module.css';
 import { FaEye } from 'react-icons/fa';
 
+const emptyArray: string[] = [];
+
 export default function SpectatorCount() {
   const spectatorCount = useAppSelector(
     (state: RootState) => state.game?.gameDynamicInfo?.spectatorCount ?? 0
   );
   const spectatorNames = useAppSelector(
-    (state: RootState) => state.game?.gameDynamicInfo?.spectatorNames ?? []
+    (state: RootState) => state.game?.gameDynamicInfo?.spectatorNames ?? emptyArray
   );
   const [showTooltip, setShowTooltip] = useState(false);
 

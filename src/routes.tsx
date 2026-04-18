@@ -254,5 +254,11 @@ export const router = createBrowserRouter(
         </Route>
       </Route>
     </Route>
-  )
+  ),
+  {
+    future: {
+      v7_startTransition: true,
+      v7_relativeSplatPath: true
+    }
+  }
 );

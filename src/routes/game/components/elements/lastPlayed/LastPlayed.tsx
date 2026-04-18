@@ -13,6 +13,8 @@ import useSetting from 'hooks/useSetting';
 import { IS_STREAMER_MODE } from 'features/options/constants';
 import { Card } from 'features/Card';
 
+const emptyCardArray: Card[] = [];
+
 function CardSlide({
   card,
   playerID,
@@ -50,7 +52,7 @@ function CardSlide({
 
 export default function LastPlayed() {
   const recentlyPlayed = useAppSelector(
-    (state: RootState) => state.game.gameDynamicInfo.recentlyPlayed ?? []
+    (state: RootState) => state.game.gameDynamicInfo.recentlyPlayed ?? emptyCardArray
   );
   const gameInfo = useAppSelector(getGameInfo, shallowEqual);
   const playerCardBack = useAppSelector(
