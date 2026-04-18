@@ -137,7 +137,7 @@ const AboutSection: React.FC = () => {
           <div className={styles.lssGrid}>
             <div>
               <h3 className={styles.sectionTitle}>Talishar is an Unofficial Independent platform</h3>
-              <Trans
+              <p className={styles.bodyText}><Trans
                 i18nKey="ABOUT.LSS_RELATIONSHIP_DESCRIPTION"
                 components={[
                   <p key="lss-p0" className={styles.bodyText} />,
@@ -145,7 +145,7 @@ const AboutSection: React.FC = () => {
                   <a key="lss-discord" href="https://discord.gg/JykuRkdd5S" target="_blank" rel="noopener noreferrer" />,
                   <a key="lss-rules"   href="https://fabtcg.com/rules/"       target="_blank" rel="noopener noreferrer" />,
                 ]}
-              />
+              /></p>
             </div>
             <div>
               <h3 className={styles.sectionTitle}>{t("ABOUT.LSS_RELATIONSHIP_TITLE")}</h3>
