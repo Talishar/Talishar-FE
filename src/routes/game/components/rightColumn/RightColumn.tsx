@@ -12,6 +12,7 @@ import { RootState } from 'app/Store';
 import PlayerName from '../elements/playerName/PlayerName';
 import { AdUnit } from 'components/ads';
 import useAuth from 'hooks/useAuth';
+import squareMemberCTA from '../../../../img/squareMemberCTA.webp';
 
 
 export default function RightColumn() {
@@ -47,6 +48,29 @@ export default function RightColumn() {
           {isStreamerMode ? <StreamerBox /> : ''}
           <ChatBox />
         </div>
+        {showAds && (
+          <div className={styles.adSection}>
+            <div className={styles.adHeader}>
+              <span>Community Ads</span>
+              <a
+                href="https://metafy.gg/@talishar/members"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.removeAdsLink}
+              >
+                Remove ads
+              </a>
+            </div>
+            <div className={styles.adWrapper}>
+              <AdUnit placement="right-rail-1" />
+            </div>
+            <div className={styles.ctaWrapper}>
+              <a href="https://metafy.gg/@talishar" target="_blank" rel="noopener noreferrer">
+                <img src={squareMemberCTA} alt="Support Talishar" width={250} height={250} />
+              </a>
+            </div>
+          </div>
+        )}
       </div>
     </>
   );
