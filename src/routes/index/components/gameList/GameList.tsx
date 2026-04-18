@@ -505,7 +505,7 @@ const GameList = () => {
             title={t("GAME_LIST.MANUAL_REFRESH")}
           >
             {t("GAME_LIST.REFRESH")}
-            <span className={`${styles.refreshIcon}${isFetching ? ` ${styles.spinning}` : ''}`}>↻</span>
+            <span className={`${styles.refreshIcon}${(isFetching || isRateLimited) ? ` ${styles.spinning}` : ''}`}>↻</span>
           </button>
         </div>
         {isLoading ? <div aria-busy="true">{t("GAME_LIST.LOADING")}</div> : null}
