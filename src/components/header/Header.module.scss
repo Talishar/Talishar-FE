@@ -6,13 +6,16 @@
   position: fixed;
   width: 100%;
   left: 0;
-  background: rgba(0, 0, 0, 0.18);
+  background: rgba(10, 10, 14, 0.92);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  will-change: transform;
   display: flex !important;
   align-items: stretch;
   justify-content: space-between;
-  transition: background 0.4s ease, border-bottom-color 0.4s ease, backdrop-filter 0.4s ease;
+  transition: background 0.4s ease, border-bottom-color 0.4s ease;
 
   .logo {
     padding: 10px 0;
