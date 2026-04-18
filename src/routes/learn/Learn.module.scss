@@ -114,6 +114,7 @@
   flex-grow: 1;
   display: -webkit-box;
   -webkit-line-clamp: 5;
+  line-clamp: 5;  
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -222,6 +223,7 @@
   flex-grow: 1;
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -314,8 +316,8 @@
   box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
 }
 
-// Ad tile that sits in the grid alongside guide cards
 .adTile {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -339,11 +341,16 @@
 }
 
 .removeAdsLink {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  z-index: 1;
   color: rgba(255, 255, 255, 0.28);
   text-decoration: none;
+  font-size: 0.58rem;
   font-weight: 500;
   line-height: 1;
-  padding: 2px 4px;
+  padding: 4px 8px;
 }
 
 .removeAdsLink:hover {

@@ -134,17 +134,14 @@ const GuideGrid: React.FC<GuideGridProps> = ({ guides, showAds = false }) => {
       adCount++;
       gridItems.push(
         <div key={`ad-${adCount}`} className={styles.adTile}>
-          <div className={styles.adTileHeader}>
-            <span></span>
-            <a
-              href="https://metafy.gg/@talishar/tiers"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={styles.removeAdsLink}
-            >
-              Remove ads
-            </a>
-          </div>
+          <a
+            href="https://metafy.gg/@talishar/tiers"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={styles.removeAdsLink}
+          >
+            Remove ads
+          </a>
           <AdUnit placement={`mobile-unit-${adCount + 3}`} className={styles.adTileUnit} />
         </div>
       );
