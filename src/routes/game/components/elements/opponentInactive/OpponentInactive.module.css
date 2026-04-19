@@ -13,7 +13,7 @@
   border-radius: 10px;
   box-shadow: 0 0 20px rgba(198, 40, 40, 0.3);
   animation: slideIn 0.3s ease-out;
-  max-width: 240px;
+  max-width: 250px;
 }
 
 .warning {
