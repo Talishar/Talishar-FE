@@ -39,11 +39,6 @@
   gap: 20px;
 }
 
-.ads-test-sidebar-left,
-.ads-test-sidebar-right {
-  /* Content will be here */
-}
-
 .ads-test-main {
   background: white;
   border-radius: 8px;
@@ -101,7 +96,6 @@
 
 .ad-section {
   background: #f9f9f9;
-  padding: 15px;
   border-radius: 8px;
   border: 1px solid #e0e0e0;
 }

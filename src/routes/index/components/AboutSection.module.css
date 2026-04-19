@@ -380,24 +380,6 @@
   gap: 0.5rem;
 }
 
-.desktopAd {
-  display: block;
-}
-
-.mobileAd {
-  display: none;
-}
-
-@media (max-width: 728px) {
-  .desktopAd {
-    display: none !important;
-  }
-
-  .mobileAd {
-    display: block !important;
-  }
-}
-
 .disclaimer {
   font-size: 0.82rem;
   color: #555;

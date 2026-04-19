@@ -6,6 +6,7 @@ import ContributorLeaderboard from './ContributorLeaderboard';
 import { AdUnit } from 'components/ads';
 import useAuth from 'hooks/useAuth';
 import { useGetUserProfileQuery } from 'features/api/apiSlice';
+import { useMediaQuery } from 'hooks/useMediaQuery';
 
 const AboutSection: React.FC = () => {
   const [expandedFAQ, setExpandedFAQ] = React.useState<number | null>(null);
@@ -20,6 +21,7 @@ const AboutSection: React.FC = () => {
     ? (isProfileLoading ? true : (profileData?.isMetafySupporter ?? false))
     : false;
   const showAds = !isLoading && !isSupporter;
+  const isMobile = useMediaQuery('(max-width: 728px)');
 
   const faqs = [
     { question: t("ABOUT.FAQ.IS_FREE_Q"),         answer: t("ABOUT.FAQ.IS_FREE_A") },
@@ -127,8 +129,9 @@ const AboutSection: React.FC = () => {
           <ContributorLeaderboard />
           {showAds && (
             <div className={styles.adRow}>
-              <AdUnit placement="leaderboard-2" className={styles.desktopAd} />
-              <AdUnit placement="mobile-unit-2" className={styles.mobileAd} />
+              {isMobile
+                ? <AdUnit placement="mobile-unit-2" />
+                : <AdUnit placement="leaderboard-2" />}
             </div>
           )}
         </div>
@@ -202,8 +205,9 @@ const AboutSection: React.FC = () => {
           </div>
           {showAds && (
             <div className={styles.adRow}>
-              <AdUnit placement="leaderboard-3" className={styles.desktopAd} />
-              <AdUnit placement="mobile-unit-3" className={styles.mobileAd} />
+              {isMobile
+                ? <AdUnit placement="mobile-unit-3" />
+                : <AdUnit placement="leaderboard-3" />}
             </div>
           )}
         </div>
