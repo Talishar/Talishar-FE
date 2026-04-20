@@ -142,6 +142,7 @@ export const CardDisplay = (prop: CardProp) => {
 
         return (
           <div
+            key={subCardKey}
             ref={subCardRef}
             style={{
               top: `calc(-0.15 * ${ix + 1} * var(--card-size))`,

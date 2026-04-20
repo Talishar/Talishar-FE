@@ -92,6 +92,11 @@ const Lobby = () => {
   const [isAutoApplyingMatchup, setIsAutoApplyingMatchup] =
     useState<boolean>(false);
   const lastAutoAppliedMatchupKey = useRef<string>('');
+  const submittedMatchupRef = useRef<string | null>(null);
+  const deckLinkTrackingRef = useRef<{ link: string | undefined; gameKey: string }>({
+    link: undefined,
+    gameKey: ''
+  });
   const settingsStatus = useAppSelector(getSettingsStatus);
   const {
     isLoggedIn,
@@ -257,14 +262,25 @@ const Lobby = () => {
 
   useEffect(() => {
     // New lobby/deck context: clear stale selected matchup from previous session.
+    // Skip when myDeckLink is transiently undefined (gameLobby cleared during polling reset on submit).
+    // Also skip when polling recovers with the same link — that is not a real deck change.
+    const newLink = gameLobby?.myDeckLink;
+    if (!newLink) return;
+    const gameKey = `${gameID}:${playerID}`;
+    const { link: prevLink, gameKey: prevGameKey } = deckLinkTrackingRef.current;
+    if (gameKey === prevGameKey && newLink === prevLink) return;
+    deckLinkTrackingRef.current = { link: newLink, gameKey };
     setSelectedMatchupId(null);
     lastAutoAppliedMatchupKey.current = '';
+    submittedMatchupRef.current = null;
   }, [gameID, playerID, gameLobby?.myDeckLink]);
 
   useEffect(() => {
     // No opponent yet: hide any previous matchup indicator until a hero is known.
     if (!gameLobby?.theirHero || gameLobby.theirHero === 'CardBack') {
-      setSelectedMatchupId(null);
+      if (!submittedMatchupRef.current) {
+        setSelectedMatchupId(null);
+      }
     }
   }, [gameLobby?.theirHero]);
 
@@ -595,6 +611,10 @@ const Lobby = () => {
   const leaveLobby = classNames(styles.buttonClass, 'outline');
 
   const handleFormSubmission = async (values: DeckResponse) => {
+    const matchupIdToRestore = selectedMatchupId;
+    // Pin the ref BEFORE setIsSubmitting so the theirHero guard is active
+    // from the moment SideboardUpdateHandler clears gameLobby.
+    submittedMatchupRef.current = matchupIdToRestore;
     setIsSubmitting(true);
     console.groupCollapsed('[StickySideboard] Submit sideboard start');
     console.info('[StickySideboard] game context', {
@@ -835,6 +855,9 @@ const Lobby = () => {
       console.error('[StickySideboard] Talishar sideboard submit failed', err);
     } finally {
       setIsSubmitting(false);
+      if (matchupIdToRestore) {
+        setSelectedMatchupId(matchupIdToRestore);
+      }
     }
   };
 
