@@ -19,7 +19,8 @@ import { IoLogOut } from "react-icons/io5";
 import SocialDropdown from 'components/header/SocialDropdown';
 import LanguageSelector from 'components/header/LanguageSelector';
 import Footer from 'components/footer/Footer';
-import { useGetPendingRequestsQuery, useGetUserProfileQuery } from 'features/api/apiSlice';
+import { useGetPendingRequestsQuery } from 'features/api/apiSlice';
+import useSupporterStatus from 'hooks/useSupporterStatus';
 import CookieConsent from 'components/CookieConsent';
 import AdBlockingRecovery from 'components/AdBlockingRecovery';
 import SessionRecovery from 'components/SessionRecovery';
@@ -31,13 +32,7 @@ const Header = () => {
   const { data: pendingData } = useGetPendingRequestsQuery(undefined, {
     skip: !isLoggedIn
   });
-  const { data: profileData, isLoading: isProfileLoading } = useGetUserProfileQuery(
-    undefined,
-    { skip: !isLoggedIn }
-  );
-  const isSupporter = isLoggedIn
-    ? (isProfileLoading ? true : (profileData?.isMetafySupporter ?? false))
-    : false;
+  const { isSupporter } = useSupporterStatus();
   const pendingRequestCount = pendingData?.requests?.length || 0;
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);

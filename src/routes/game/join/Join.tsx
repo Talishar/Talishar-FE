@@ -4,8 +4,7 @@ import {
   useGetFavoriteDecksQuery,
   useJoinGameMutation,
   useGetGameListQuery,
-  useGetGameInfoQuery,
-  useGetUserProfileQuery
+  useGetGameInfoQuery
 } from 'features/api/apiSlice';
 import { JoinGameAPI } from 'interface/API/JoinGame.php';
 import { Link, useNavigate, useParams } from 'react-router-dom';
@@ -16,6 +15,7 @@ import { toast } from 'react-hot-toast';
 import { FaExclamationCircle, FaQuestionCircle } from 'react-icons/fa';
 import validationSchema from './validationSchema';
 import useAuth from 'hooks/useAuth';
+import useSupporterStatus from 'hooks/useSupporterStatus';
 import useAdScript from 'hooks/useAdScript';
 import { AdUnit } from 'components/ads';
 import classNames from 'classnames';
@@ -87,15 +87,8 @@ const JoinGame = () => {
   const dispatch = useAppDispatch();
   const [joinGame, joinGameResult] = useJoinGameMutation();
   const { data, isLoading, isSuccess } = useGetFavoriteDecksQuery(undefined);
-  const { isLoggedIn, isLoading: authLoading } = useAuth();
-
-  const { data: profileData, isLoading: isProfileLoading } = useGetUserProfileQuery(
-    undefined,
-    { skip: !isLoggedIn }
-  );
-  const isSupporter = isLoggedIn
-    ? (isProfileLoading ? true : (profileData?.isMetafySupporter ?? false))
-    : false;
+  const { isLoggedIn } = useAuth();
+  const { isSupporter, isLoading: authLoading } = useSupporterStatus();
   const showAds = !authLoading && !isSupporter;
   useAdScript(showAds);
 

@@ -3,20 +3,12 @@ import styles from './Learn.module.scss';
 import { usePageTitle } from 'hooks/usePageTitle';
 import GuideGrid from './components/GuideGrid';
 import { fetchMetafyGuides, MetafyGuide } from '../../services/metafyService';
-import { useGetUserProfileQuery } from 'features/api/apiSlice';
-import useAuth from 'hooks/useAuth';
+import useSupporterStatus from 'hooks/useSupporterStatus';
 import useAdScript from 'hooks/useAdScript';
 
 const Learn: React.FC = () => {
   usePageTitle('Learn');
-  const { isLoggedIn, isLoading: isAuthLoading } = useAuth();
-  const { data: profileData, isLoading: isProfileLoading } = useGetUserProfileQuery(
-    undefined,
-    { skip: !isLoggedIn }
-  );
-  const isSupporter = isLoggedIn
-    ? (isProfileLoading ? true : (profileData?.isMetafySupporter ?? false))
-    : false;
+  const { isSupporter, isLoading: isAuthLoading } = useSupporterStatus();
   const showAds = !isAuthLoading && !isSupporter;
   useAdScript(showAds);
   const [guides, setGuides] = useState<MetafyGuide[]>([]);

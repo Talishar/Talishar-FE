@@ -4,18 +4,10 @@ import { BsGithub, BsPersonFill, BsGearFill } from 'react-icons/bs';
 import { FaDiscord, FaTwitter, FaYoutube } from 'react-icons/fa';
 import TalisharLogo from '../../img/TalisharLogo.webp';
 import styles from './Footer.module.scss';
-import useAuth from 'hooks/useAuth';
-import { useGetUserProfileQuery } from 'features/api/apiSlice';
+import useSupporterStatus from 'hooks/useSupporterStatus';
 
 const Footer = () => {
-  const { isLoggedIn } = useAuth();
-  const { data: profileData, isLoading: isProfileLoading } = useGetUserProfileQuery(
-    undefined,
-    { skip: !isLoggedIn }
-  );
-  const isSupporter = isLoggedIn
-    ? (isProfileLoading ? true : (profileData?.isMetafySupporter ?? false))
-    : false;
+  const { isSupporter } = useSupporterStatus();
 
   return (
     <footer className={styles.footer}>

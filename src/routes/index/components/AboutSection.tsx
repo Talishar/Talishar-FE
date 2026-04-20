@@ -4,22 +4,14 @@ import { parseHtmlToReactElements } from 'utils/ParseEscapedString';
 import { useTranslation, Trans } from 'react-i18next';
 import ContributorLeaderboard from './ContributorLeaderboard';
 import { AdUnit } from 'components/ads';
-import useAuth from 'hooks/useAuth';
-import { useGetUserProfileQuery } from 'features/api/apiSlice';
+import useSupporterStatus from 'hooks/useSupporterStatus';
 import { useMediaQuery } from 'hooks/useMediaQuery';
 
 const AboutSection: React.FC = () => {
   const [expandedFAQ, setExpandedFAQ] = React.useState<number | null>(null);
   // Initial stuff to allow the lang to change
   const { t, i18n, ready } = useTranslation();
-  const { isLoggedIn, isLoading } = useAuth();
-  const { data: profileData, isLoading: isProfileLoading } = useGetUserProfileQuery(
-    undefined,
-    { skip: !isLoggedIn }
-  );
-  const isSupporter = isLoggedIn
-    ? (isProfileLoading ? true : (profileData?.isMetafySupporter ?? false))
-    : false;
+  const { isSupporter, isLoading } = useSupporterStatus();
   const showAds = !isLoading && !isSupporter;
   const isMobile = useMediaQuery('(max-width: 728px)');
 

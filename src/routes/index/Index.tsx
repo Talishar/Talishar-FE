@@ -9,9 +9,10 @@ import DevTool from './components/devTool';
 import CommunityContent from './components/CommunityContent';
 import { QuickJoinProvider } from './components/quickJoin/QuickJoinContext';
 import UnifiedGamePanel from './components/UnifiedGamePanel';
-import { useGetSystemMessageQuery, useGetUserProfileQuery } from 'features/api/apiSlice';
+import { useGetSystemMessageQuery } from 'features/api/apiSlice';
 import SystemMessageModal from 'components/SystemMessageModal/SystemMessageModal';
 import useAuth from 'hooks/useAuth';
+import useSupporterStatus from 'hooks/useSupporterStatus';
 import { AdUnit } from 'components/ads';
 import useAdScript from 'hooks/useAdScript';
 import TalisharLogo from '../../img/TalisharLogo.webp';
@@ -20,23 +21,15 @@ import { BsChevronDown, BsChevronUp } from 'react-icons/bs';
 const Index = () => {
   usePageTitle('Home');
   const dispatch = useAppDispatch();
-  const { isLoggedIn, isLoading, currentUserName } = useAuth();
+  const { isLoggedIn, currentUserName } = useAuth();
+  const { isSupporter, isLoading } = useSupporterStatus();
+  const showAds = !isLoading && !isSupporter;
   const [isBannerHidden, setIsBannerHidden] = useState(false);
 
   const bannerPreferenceKey = useMemo(() => {
     if (!isLoggedIn || !currentUserName) return null;
     return `talishar_home_banner_hidden_${currentUserName}`;
   }, [isLoggedIn, currentUserName]);
-
-  const { data: profileData, isLoading: isProfileLoading } = useGetUserProfileQuery(
-    undefined,
-    { skip: !isLoggedIn }
-  );
-
-  const isSupporter = isLoggedIn
-    ? (isProfileLoading ? true : (profileData?.isMetafySupporter ?? false))
-    : false;
-  const showAds = !isLoading && !isSupporter;
   useAdScript(showAds);
   const { data: systemMessageData } = useGetSystemMessageQuery(undefined, {
     skip: !isLoggedIn
