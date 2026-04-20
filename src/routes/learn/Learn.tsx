@@ -5,6 +5,7 @@ import GuideGrid from './components/GuideGrid';
 import { fetchMetafyGuides, MetafyGuide } from '../../services/metafyService';
 import useSupporterStatus from 'hooks/useSupporterStatus';
 import useAdScript from 'hooks/useAdScript';
+import PageBanner from 'components/PageBanner/PageBanner';
 
 const Learn: React.FC = () => {
   usePageTitle('Learn');
@@ -54,13 +55,11 @@ const Learn: React.FC = () => {
 
   return (
     <main className={styles.learnPage}>
+      <PageBanner
+        title="Learn Flesh & Blood"
+        subtitle="Master your skills with expert guides from our community"
+      />
       <div className={styles.container}>
-        <div className={styles.header}>
-          <h1>Learn Flesh & Blood</h1>
-          <p className={styles.subtitle}>
-            Master your skills with expert guides from our community
-          </p>
-        </div>
 
         {loading ? (
           <div className={styles.loadingContainer}>

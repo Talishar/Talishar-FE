@@ -6,6 +6,7 @@ import ContributorLeaderboard from './ContributorLeaderboard';
 import { AdUnit } from 'components/ads';
 import useSupporterStatus from 'hooks/useSupporterStatus';
 import { useMediaQuery } from 'hooks/useMediaQuery';
+import PageBanner from 'components/PageBanner/PageBanner';
 
 const AboutSection: React.FC = () => {
   const [expandedFAQ, setExpandedFAQ] = React.useState<number | null>(null);
@@ -46,13 +47,10 @@ const AboutSection: React.FC = () => {
   ];
 
   return (
-    <section className={styles.aboutContainer}>
+    <>
+      <PageBanner title={t('ABOUT.TITLE')} subtitle={t('ABOUT.SUB_HEADER')} />
+      <section className={styles.aboutContainer}>
       <div className={styles.content}>
-
-        <div className={styles.pageHeader}>
-          <h2>{t("ABOUT.TITLE")}</h2>
-          <p className={styles.tagline}>{t("ABOUT.SUB_HEADER")}</p>
-        </div>
 
         <div className={styles.section}>
           <div className={styles.introGrid}>
@@ -204,7 +202,8 @@ const AboutSection: React.FC = () => {
           )}
         </div>
       </div>
-    </section>
+      </section>
+    </>
   );
 };
 
