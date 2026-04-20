@@ -13,7 +13,7 @@ import PageBanner from 'components/PageBanner/PageBanner';
 
 const LoadReplay = () => {
   return (
-    <>
+    <main className={styles.pageWrapper}>
       <PageBanner title="Replay Tool" subtitle="Watch and review past games" />
       <article className={styles.articleContainer}>
       <ReplayGame />
@@ -42,7 +42,7 @@ const LoadReplay = () => {
         </p>
       </div>
       </article>
-    </>
+    </main>
   );
 };
 

@@ -1,3 +1,9 @@
+.pageWrapper {
+  --landing-surface: var(--theme-contrast-inverse, #000000);
+  background: var(--theme-background);
+  min-height: 100vh;
+}
+
 .aboutContainer {
   width: 100%;
   padding: 0;

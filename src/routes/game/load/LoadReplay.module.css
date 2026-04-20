@@ -1,3 +1,9 @@
+.pageWrapper {
+  --landing-surface: var(--theme-contrast-inverse, #000000);
+  background: var(--theme-background);
+  min-height: 100vh;
+}
+
 .articleContainer {
   background: none;
   box-shadow: none;

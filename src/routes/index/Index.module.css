@@ -1,7 +1,7 @@
 .main {
   margin-top: -80px;
   --landing-surface: var(--theme-contrast-inverse, #000000);
-  background-color: var(--landing-surface);
+  background: var(--theme-background);
 }
 
 .bannerToggle {
@@ -150,7 +150,7 @@
 .contentSection {
   position: relative;
   z-index: 1;
-  background-color: var(--landing-surface);
+  background: var(--theme-background);
   margin-top: 0;
   scroll-margin-top: 86px;
 }

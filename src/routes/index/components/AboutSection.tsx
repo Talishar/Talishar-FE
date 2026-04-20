@@ -47,7 +47,7 @@ const AboutSection: React.FC = () => {
   ];
 
   return (
-    <>
+    <main className={styles.pageWrapper}>
       <PageBanner title={t('ABOUT.TITLE')} subtitle={t('ABOUT.SUB_HEADER')} />
       <section className={styles.aboutContainer}>
       <div className={styles.content}>
@@ -203,7 +203,7 @@ const AboutSection: React.FC = () => {
         </div>
       </div>
       </section>
-    </>
+    </main>
   );
 };
 
