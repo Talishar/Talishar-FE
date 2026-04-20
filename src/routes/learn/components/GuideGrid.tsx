@@ -135,7 +135,7 @@ const GuideGrid: React.FC<GuideGridProps> = ({ guides, showAds = false }) => {
       gridItems.push(
         <div key={`ad-${adCount}`} className={styles.adTile}>
           <a
-            href="https://metafy.gg/@talishar/tiers"
+            href="https://metafy.gg/@talishar/members"
             target="_blank"
             rel="noopener noreferrer"
             className={styles.removeAdsLink}

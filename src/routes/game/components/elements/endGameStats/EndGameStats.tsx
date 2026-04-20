@@ -1138,7 +1138,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                 <span>
                   Support our work on{' '}
                   <a
-                    href="https://metafy.gg/@Talishar"
+                    href="https://metafy.gg/@talishar/members"
                     target="_blank"
                     rel="noopener noreferrer"
                   >

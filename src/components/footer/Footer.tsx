@@ -25,7 +25,7 @@ const Footer = () => {
             <img src={TalisharLogo} alt="Talishar" className={styles.logo} />
             {!isSupporter && (
               <a
-                href="https://metafy.gg/@talishar"
+                href="https://metafy.gg/@talishar/members"
                 target="_blank"
                 rel="noopener noreferrer"
                 className={styles.supportBtn}

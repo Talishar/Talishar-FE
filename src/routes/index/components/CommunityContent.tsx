@@ -230,7 +230,7 @@ const CommunityContent: React.FC<CommunityContentProps> = ({ showAds = false }) 
               <div className={styles.communityAdSection}>
                 <div className={styles.adHeader}>
                   <a
-                    href="https://metafy.gg/@talishar/tiers"
+                    href="https://metafy.gg/@talishar/members"
                     target="_blank"
                     rel="noopener noreferrer"
                     className={styles.removeAdsLink}
@@ -303,7 +303,7 @@ const CommunityContent: React.FC<CommunityContentProps> = ({ showAds = false }) 
             <div className={styles.adFooter}>
               <div className={styles.adHeader}>
                 <a
-                  href="https://metafy.gg/@talishar/tiers"
+                  href="https://metafy.gg/@talishar/members"
                   target="_blank"
                   rel="noopener noreferrer"
                   className={styles.removeAdsLink}

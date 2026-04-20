@@ -77,7 +77,7 @@ export default function RightColumn() {
               <AdUnit placement="right-rail-1" />
             </div>
             <div className={styles.ctaWrapper}>
-              <a href="https://metafy.gg/@talishar" target="_blank" rel="noopener noreferrer">
+              <a href="https://metafy.gg/@talishar/members" target="_blank" rel="noopener noreferrer">
                 <img src={squareMemberCTA} alt="Support Talishar" width={250} height={250} />
               </a>
             </div>

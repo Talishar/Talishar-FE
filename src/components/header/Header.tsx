@@ -107,7 +107,7 @@ const Header = () => {
           </li>
             <li>
               <a
-                href="https://metafy.gg/@talishar"
+                href="https://metafy.gg/@talishar/members"
                 target="_blank"
                 rel="noopener noreferrer"
                 className={styles.support}
