@@ -44,9 +44,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 8px 0 4px;
   width: 100%;
-  gap: 0.5rem;
 }
 
 .adHeader {
