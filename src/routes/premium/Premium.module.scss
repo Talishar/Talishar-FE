@@ -1,0 +1,406 @@
+.premiumPage {
+  min-height: 100vh;
+  padding: 2rem 1rem 4rem;
+  background: var(--theme-background);
+  color: var(--theme-text);
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.hero {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.hero h1 {
+  font-size: 2.4rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  background: linear-gradient(135deg, var(--theme-primary), #f0d060);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero p {
+  font-size: 1.1rem;
+  color: var(--theme-text-secondary);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.billingToggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-bottom: 2.5rem;
+}
+
+.billingToggle span {
+  font-size: 0.95rem;
+  color: var(--theme-text-muted);
+  transition: color 0.2s;
+}
+
+.billingToggle span.activeLabel {
+  color: var(--theme-text);
+  font-weight: 600;
+}
+
+.toggleTrack {
+  position: relative;
+  width: 48px;
+  height: 26px;
+  border-radius: 13px;
+  background: rgba(255, 255, 255, 0.15);
+  cursor: pointer;
+  transition: background 0.2s;
+  border: none;
+  padding: 0;
+  margin-bottom: 0 !important;
+}
+
+.toggleTrack:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.toggleKnob {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--theme-primary);
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.toggleKnob.yearly {
+  transform: translateX(22px);
+}
+
+.saveBadge {
+  font-size: 0.75rem;
+  background: rgba(212, 175, 55, 0.15);
+  color: var(--theme-primary);
+  padding: 0.2rem 0.6rem;
+  border-radius: 10px;
+  font-weight: 600;
+}
+
+.tierGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+  margin-bottom: 4rem;
+}
+
+.tierCard {
+  position: relative;
+  background: var(--theme-card-background, #1a1a2e);
+  border: 1px solid var(--theme-border);
+  border-radius: 12px;
+  padding: 1.75rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+    border-color 0.25s;
+}
+
+.tierCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.tierCard.recommended {
+  border-color: var(--theme-primary);
+  box-shadow: 0 0 20px rgba(212, 175, 55, 0.15);
+}
+
+.recommendedBadge {
+  position: absolute;
+  top: -11px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--theme-primary);
+  color: #000;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.25rem 0.9rem;
+  border-radius: 10px;
+}
+
+.tierHeader {
+  text-align: center;
+}
+
+.tierImage {
+  width: 72px;
+  height: 72px;
+  object-fit: contain;
+  border-radius: 50%;
+  margin-bottom: 0.75rem;
+}
+
+.tierName {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin-bottom: 0.15rem;
+  color: var(--theme-text);
+}
+
+.memberCount {
+  font-size: 0.75rem;
+  color: var(--theme-text-muted);
+}
+
+.price {
+  text-align: center;
+  margin-bottom: 1.25rem;
+}
+
+.priceAmount {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--theme-text);
+}
+
+.priceInterval {
+  font-size: 0.85rem;
+  color: var(--theme-text-muted);
+  margin-left: 0.15rem;
+}
+
+.originalPriceLine {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  margin-top: 0.15rem;
+}
+
+.originalPrice {
+  font-size: 0.8rem;
+  color: var(--theme-text-muted);
+  text-decoration: line-through;
+}
+
+.discountTag {
+  display: inline-block;
+  font-size: 0.7rem;
+  background: rgba(76, 175, 80, 0.15);
+  color: #66bb6a;
+  padding: 0.15rem 0.5rem;
+  border-radius: 8px;
+  margin-left: 0.35rem;
+  font-weight: 600;
+}
+
+.upgradeBtn {
+  display: block;
+  width: 100%;
+  padding: 0.7rem;
+  border: 1px solid var(--theme-border);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--theme-text);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+  margin-bottom: 1.25rem;
+  text-align: center;
+  text-decoration: none;
+}
+
+.upgradeBtn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.tierCard.recommended .upgradeBtn {
+  background: var(--theme-primary);
+  border-color: var(--theme-primary);
+  color: #000;
+}
+
+.tierCard.recommended .upgradeBtn:hover {
+  background: var(--theme-primary-hover);
+  border-color: var(--theme-primary-hover);
+}
+
+.benefits {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  flex: 1;
+}
+
+.benefits li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  font-size: 0.82rem;
+  color: var(--theme-text-secondary);
+  padding: 0.35rem 0;
+}
+
+.benefits li::before {
+  content: '✓';
+  color: var(--theme-primary);
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.comparisonSection {
+  margin-bottom: 2rem;
+}
+
+.comparisonSection h2 {
+  text-align: center;
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin-bottom: 0.4rem;
+}
+
+.comparisonSubtitle {
+  text-align: center;
+  color: var(--theme-text-secondary);
+  font-size: 0.95rem;
+  margin-bottom: 2rem;
+}
+
+.tableWrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-radius: 12px;
+  border: 1px solid var(--theme-border);
+}
+
+.comparisonTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+
+.comparisonTable th,
+.comparisonTable td {
+  padding: 0.75rem 1rem;
+  text-align: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.comparisonTable th:first-child,
+.comparisonTable td:first-child {
+  text-align: left;
+  font-weight: 500;
+  color: var(--theme-text-secondary);
+}
+
+.comparisonTable thead th {
+  background: rgba(255, 255, 255, 0.04);
+  font-weight: 700;
+  font-size: 0.8rem;
+  color: var(--theme-text);
+  white-space: nowrap;
+}
+
+.comparisonTable thead th.highlighted {
+  color: var(--theme-primary);
+}
+
+.comparisonTable tbody tr:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.check {
+  color: var(--theme-primary);
+  font-weight: 700;
+}
+
+.cross {
+  color: var(--theme-text-muted);
+}
+
+.ctaSection {
+  text-align: center;
+  padding: 1rem;
+  background: linear-gradient(180deg, transparent 0%, rgba(212, 175, 55, 0.04) 100%);
+  border-radius: 16px;
+  border: 1px solid rgba(212, 175, 55, 0.1);
+}
+
+.ctaSection h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.ctaSection p {
+  color: var(--theme-text-secondary);
+  margin-bottom: 1.5rem;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.ctaBtn {
+  display: inline-block;
+  padding: 0.85rem 2.5rem;
+  background: var(--theme-primary);
+  color: #000;
+  font-weight: 700;
+  font-size: 1rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+
+.ctaBtn:hover {
+  background: var(--theme-primary-hover);
+}
+
+@media (max-width: 1024px) {
+  .tierGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .premiumPage {
+    padding: 1.5rem 0.75rem 3rem;
+  }
+
+  .hero h1 {
+    font-size: 1.8rem;
+  }
+
+  .hero p {
+    font-size: 0.95rem;
+  }
+
+  .tierGrid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .tierCard {
+    padding: 1.5rem 1.25rem;
+  }
+
+  .comparisonTable th,
+  .comparisonTable td {
+    padding: 0.6rem 0.5rem;
+    font-size: 0.78rem;
+  }
+}

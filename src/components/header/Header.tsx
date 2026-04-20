@@ -106,14 +106,9 @@ const Header = () => {
             </Link>
           </li>
             <li>
-              <a
-                href="https://metafy.gg/@talishar/members"
-                target="_blank"
-                rel="noopener noreferrer"
-                className={styles.support}
-              >
+              <NavLink to="/premium" className={styles.support}>
                 {t('HEADER.SUPPORT_US')}
-              </a>
+              </NavLink>
             </li>
         </ul>
 

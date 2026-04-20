@@ -36,6 +36,7 @@ import MetafySignup from 'routes/auth/MetafySignup';
 import AdsTest from 'routes/ads/AdsTest';
 import Learn from 'routes/learn/Learn';
 import About from 'routes/about/About';
+import Premium from 'routes/premium/Premium';
 
 const PlayGuard = ({ children }: { children: JSX.Element }) => {
   const [searchParams] = useKnownSearchParams();
@@ -189,6 +190,7 @@ export const router = createBrowserRouter(
           </Route>
           <Route path="learn" element={<Learn />} />
           <Route path="about" element={<About />} />
+          <Route path="premium" element={<Premium />} />
           <Route path="game/join/:gameID" element={<JoinGame />} />
           <Route path="game/create" element={<CreateGame />} />
           <Route path="game/load" element={<LoadReplay />} />
