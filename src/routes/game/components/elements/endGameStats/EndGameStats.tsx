@@ -1158,7 +1158,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
 
         {/* Ad above Turn by Turn Breakdown */}
         {showAds && (
-          <div className={styles.adBlock}>
+          <div className={`${styles.adBlock} ${styles.hideOnExport}`}>
             {!isSupporter && (
               <div className={styles.adHeader}>
                 <a
