@@ -27,6 +27,7 @@ import { ImageSelect, ImageSelectOption } from 'components/ImageSelect';
 import { GAME_FORMAT, isPreconFormat, PRECON_DECKS } from 'appConstants';
 import { getReadableFormatName } from 'utils/formatUtils';
 import { useTranslation, Trans } from 'react-i18next';
+import PageBanner from 'components/PageBanner/PageBanner';
 
 // Helper function to extract base format type for matching
 // "Open CC", "Competitive CC", "Classic Constructed" all map to "Classic Constructed" base
@@ -273,7 +274,9 @@ const JoinGame = () => {
   };
 
   return (
-    <main className={styles.LoginPageContainer}>
+    <div className={styles.pageWrapper}>
+      <PageBanner title={t('JOIN.TITLE', 'Join Game')} subtitle={t('JOIN.SUBTITLE', 'Choose your deck and enter the game')} />
+      <main className={styles.LoginPageContainer}>
       {showAds && (
         <aside className={styles.leftRail}>
           <AdUnit placement="left-rail-1" />
@@ -454,6 +457,7 @@ const JoinGame = () => {
         </div>
       )}
     </main>
+    </div>
   );
 };
 
