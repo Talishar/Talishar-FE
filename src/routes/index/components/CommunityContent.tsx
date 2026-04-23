@@ -173,7 +173,7 @@ const CommunityContent: React.FC<CommunityContentProps> = ({ showAds = false }) 
         src={src}
         title={video.title}
         frameBorder="0"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allow="autoplay; encrypted-media; picture-in-picture"
         allowFullScreen
       />
     );
@@ -228,10 +228,9 @@ const CommunityContent: React.FC<CommunityContentProps> = ({ showAds = false }) 
 
             {showAds && (
               <div className={styles.communityAdSection}>
-                <div className={styles.communityAdHeader}>
-                  <span className={styles.communityAdLabel}></span>
+                <div className={styles.adHeader}>
                   <a
-                    href="https://metafy.gg/@talishar/tiers"
+                    href="https://metafy.gg/@talishar/members"
                     target="_blank"
                     rel="noopener noreferrer"
                     className={styles.removeAdsLink}
@@ -292,7 +291,7 @@ const CommunityContent: React.FC<CommunityContentProps> = ({ showAds = false }) 
             </p>
           </div>
           <a
-            href="https://discord.gg/talishar"
+            href="https://discord.com/JykuRkdd5S"
             target="_blank"
             rel="noopener noreferrer"
             className={styles.discordButton}
@@ -300,6 +299,22 @@ const CommunityContent: React.FC<CommunityContentProps> = ({ showAds = false }) 
             Join Discord
           </a>
         </div>
+          {showAds && (
+            <div className={styles.adFooter}>
+              <div className={styles.adHeader}>
+                <a
+                  href="https://metafy.gg/@talishar/members"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.removeAdsLink}
+                >
+                  Remove ads
+                </a>
+              </div>
+              <AdUnit placement="billboard-1" className={styles.desktopAd} />
+              <AdUnit placement="mobile-unit-2" className={styles.mobileAd} />
+            </div>
+          )}
       </div>
     </section>
   );

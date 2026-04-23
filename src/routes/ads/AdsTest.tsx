@@ -75,6 +75,14 @@ const AdsTest: React.FC = () => {
                 <div className="ad-label">mobile-unit-4</div>
                 <AdUnit placement="mobile-unit-4" />
               </div>
+              <div>
+                <div className="ad-label">mobile-unit-5</div>
+                <AdUnit placement="mobile-unit-5" />
+              </div>
+              <div>
+                <div className="ad-label">mobile-unit-6</div>
+                <AdUnit placement="mobile-unit-6" />
+              </div>
             </div>
           </section>
         </main>

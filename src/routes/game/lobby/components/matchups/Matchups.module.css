@@ -45,6 +45,38 @@
   position: relative;
 }
 
+.matchupButton {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.matchupButtonSelected {
+  background-color: var(--theme-secondary, #606569) !important;
+  border-color: var(--theme-secondary-hover, #757a7f) !important;
+  color: var(--theme-secondary-inverse, #ffffff) !important;
+  box-shadow: 0 0 0 2px var(--theme-primary, #d4af37) inset;
+}
+
+.selectedBadge {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  border-radius: 0.35rem;
+  padding: 0.16rem 0.34rem;
+  background: rgba(0, 0, 0, 0.35);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.autoApplyingStatus {
+  margin: 0;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--theme-primary, #d4af37);
+  opacity: 0.9;
+}
+
 .matchups button {
   display: flex;
   align-items: center;
@@ -108,7 +140,8 @@
   color: var(--theme-primary, #d4af37);
   border: 1px solid rgba(212, 175, 55, 0.3);
   box-shadow: none;
-  min-width: 1.8rem;
+  min-width: 2.2rem;
+  width: 2.2rem;
   margin-left: auto;
 }
 

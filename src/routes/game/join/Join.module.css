@@ -1,3 +1,9 @@
+.pageWrapper {
+  --landing-surface: var(--theme-contrast-inverse, #000000);
+  background: var(--theme-background);
+  min-height: 100vh;
+}
+
 .button {
   color: black;
 }
@@ -10,6 +16,20 @@
   max-width: var(--aspect);
   margin: 0 auto;
   padding: 20px;
+  gap: 20px;
+}
+
+.leftRail,
+.rightRail {
+  flex-shrink: 0;
+  width: 300px;
+  position: sticky;
+  top: 80px;
+  margin-top: var(--block-spacing-vertical);
+}
+
+.mobileAd {
+  display: none !important;
 }
 
 .fieldError {
@@ -54,6 +74,18 @@
   .LoginPageContainer {
     padding: 16px;
     align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .leftRail,
+  .rightRail {
+    display: none !important;
+  }
+
+  .mobileAd {
+    display: flex !important;
+    justify-content: center;
+    width: 100%;
   }
 
   .formContainer {

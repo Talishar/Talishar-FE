@@ -1,19 +1,22 @@
 import React, { useState, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { MdPeople } from 'react-icons/md';
 import styles from './FriendBadge.module.css';
 
 interface FriendBadgeProps {
   isFriendsGame?: boolean;
   friendName?: string;
-  size?: 'small' | 'medium' | 'large';
+  tooltip?: string;
+  size?: 'tab' | 'small' | 'medium' | 'large';
   label?: string;
 }
 
 export const FriendBadge: React.FC<FriendBadgeProps> = ({
   isFriendsGame = false,
   friendName,
+  tooltip,
   size = 'small',
-  label = '👥'
+  label
 }) => {
   const [showTooltip, setShowTooltip] = useState(false);
   const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0 });
@@ -38,7 +41,7 @@ export const FriendBadge: React.FC<FriendBadgeProps> = ({
     setShowTooltip(false);
   };
 
-  const tooltipText = friendName ? `${friendName}'s game` : "Friend's game";
+  const tooltipText = tooltip ?? (friendName ? `${friendName}'s game` : "Friend's game");
 
   return (
     <>
@@ -48,9 +51,9 @@ export const FriendBadge: React.FC<FriendBadgeProps> = ({
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >
-        {label}
+        {label ?? <MdPeople />}
       </div>
-      {showTooltip && (
+      {showTooltip && createPortal(
         <div
           className={styles.tooltip}
           style={{
@@ -59,7 +62,8 @@ export const FriendBadge: React.FC<FriendBadgeProps> = ({
           }}
         >
           {tooltipText}
-        </div>
+        </div>,
+        document.body
       )}
     </>
   );

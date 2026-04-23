@@ -6,13 +6,16 @@
   position: fixed;
   width: 100%;
   left: 0;
-  background: rgba(0, 0, 0, 0.18);
+  background: rgba(10, 10, 14, 0.92);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  will-change: transform;
   display: flex !important;
   align-items: stretch;
   justify-content: space-between;
-  transition: background 0.4s ease, border-bottom-color 0.4s ease, backdrop-filter 0.4s ease;
+  transition: background 0.4s ease, border-bottom-color 0.4s ease;
 
   .logo {
     padding: 10px 0;
@@ -335,33 +338,43 @@
   position: absolute;
   top: 100%;
   right: 0;
-  background: var(--theme-card-background, #1e2329);
-  border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.12));
+  min-width: 220px;
+  background: rgba(0, 0, 0, 0.58);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
   border-top: 2px solid var(--theme-primary, #d4af37);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.55);
   z-index: 10001;
   list-style: none;
   margin: 0 !important;
-  padding: 6px 0;
+  padding: 10px 8px;
   display: flex !important;
   flex-direction: column !important;
+  gap: 4px;
   border-radius: 0 0 6px 6px;
 
-  > li > a {
+  > li > :is(a, button) {
     display: flex !important;
     flex-direction: row !important;
     align-items: center !important;
-    gap: 12px;
-    padding: 10px 18px;
+    gap: 16px;
+    padding: 13px 16px;
     color: var(--snow, #fff);
-    font-size: 14px;
+    font-size: 20px;
     font-weight: 500;
     text-decoration: none;
     white-space: nowrap;
     height: auto;
-    border-radius: 0;
-    border-left: 3px solid transparent;
-    transition: background-color 150ms ease, color 150ms ease, border-left-color 150ms ease;
+    width: 100%;
+    border-radius: 8px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    text-align: left;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+    transition: background-color 150ms ease, color 150ms ease;
 
     &::before,
     &::after {
@@ -369,13 +382,13 @@
     }
 
     svg {
-      font-size: 17px !important;
+      font-size: 24px !important;
       flex-shrink: 0;
       opacity: 0.85;
     }
 
     span {
-      font-size: 14px !important;
+      font-size: 20px !important;
       display: inline !important;
     }
 
@@ -383,12 +396,18 @@
     &:focus {
       background-color: var(--theme-form-background, #2a2f35);
       color: var(--theme-primary, #d4af37);
-      border-left-color: var(--theme-primary, #d4af37);
       background-image: none;
 
       svg {
         opacity: 1;
       }
+    }
+
+    &:focus-visible {
+      outline: none;
+      box-shadow: none;
+      background-color: var(--theme-form-background, #2a2f35);
+      color: var(--theme-primary, #d4af37);
     }
   }
 }
@@ -398,14 +417,6 @@
   background-color: var(--theme-border, rgba(255, 255, 255, 0.08));
   margin: 6px 0;
   padding: 0 !important;
-}
-
-.mobileDivider {
-  height: 1px;
-  background-color: var(--theme-border, rgba(255, 255, 255, 0.1));
-  margin: 4px 0;
-  padding: 0 !important;
-  border-bottom: none !important;
 }
 
 @media only screen and (max-width: 768px) {
@@ -678,6 +689,19 @@
 // Ensure Toaster appears above the navbar
 :global(.toaster) {
   z-index: 10001 !important;
+}
+
+.mobileDivider {
+  border-bottom: 1px solid var(--muted-border-color, #202632);
+  margin: 8px 0;
+  padding: 0 !important;
+  height: 0;
+  background: none;
+  min-height: 1px;
+
+  > * {
+    display: none;
+  }
 }
 
 .contentWrapper {

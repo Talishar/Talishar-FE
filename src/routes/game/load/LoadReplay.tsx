@@ -9,11 +9,13 @@ import { useNavigate } from 'react-router-dom';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import styles from './LoadReplay.module.css';
 import { GameLocationState } from 'interface/GameLocationState';
+import PageBanner from 'components/PageBanner/PageBanner';
 
 const LoadReplay = () => {
   return (
-    <article className={styles.articleContainer}>
-      <h2>Replay Tool</h2>
+    <main className={styles.pageWrapper}>
+      <PageBanner title="Replay Tool" subtitle="Watch and review past games" />
+      <article className={styles.articleContainer}>
       <ReplayGame />
       <div className={styles.betaDisclaimer}>
         <strong>⚠️ The Replay Tool is currently in Beta</strong>
@@ -39,7 +41,8 @@ const LoadReplay = () => {
           changes get made during development.
         </p>
       </div>
-    </article>
+      </article>
+    </main>
   );
 };
 

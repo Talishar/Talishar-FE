@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import useAuth from 'hooks/useAuth';
+import { BACKEND_URL } from 'appConstants';
 
 export const useBlockedUsers = () => {
   const { isLoggedIn } = useAuth();
@@ -10,7 +11,7 @@ export const useBlockedUsers = () => {
   const fetchBlockedUsers = async () => {
     try {
       setIsLoading(true);
-      const response = await fetch('APIs/BlockedUsersAPI.php', {
+      const response = await fetch(`${BACKEND_URL}APIs/BlockedUsersAPI.php`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action: 'getBlockedUsers' }),

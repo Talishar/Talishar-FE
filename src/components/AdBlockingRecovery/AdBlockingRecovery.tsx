@@ -1,103 +1,78 @@
 import React, { useEffect, useState } from 'react';
 import styles from './AdBlockingRecovery.module.css';
-import useAuth from 'hooks/useAuth';
+
+declare global {
+  interface Window {
+    reviq?: {
+      checkAdblock: () => Promise<boolean>;
+      onAdblock: (cb: () => void) => void;
+      push: (fn: (obj: { setKv: (k: string, v: number) => void }) => void) => void;
+    };
+  }
+}
+
+const DISMISS_KEY = 'talishar_adblock_dismissed';
+const DISMISS_DURATION_MS = 2 * 60 * 60 * 1000; // 2 hours
 
 const AdBlockingRecovery: React.FC = () => {
-  // Ad blocker detection is currently disabled
-  return null;
-
-  // const { isPatron } = useAuth();
-  const [isAdBlockerDetected, setIsAdBlockerDetected] = useState(false);
-  const [isDismissed, setIsDismissed] = useState(false);
+  const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    // Check if ad blocker is active by detecting if the rev.iq script loaded
-    const detectAdBlocker = () => {
-      // Check if any rev.iq ad scripts have loaded
-      const hasRevIqScript = !!document.querySelector('script[src*="rev.iq"]');
+    const dismissed = localStorage.getItem(DISMISS_KEY);
+    if (dismissed && Date.now() - Number(dismissed) < DISMISS_DURATION_MS) {
+      return;
+    }
 
-      // If the rev.iq script didn't load at all, it's likely blocked
-      if (!hasRevIqScript) {
-        setIsAdBlockerDetected(true);
-        return;
-      }
+    // Dev override: append ?adblock=1 to the URL to force the modal
+    if (new URLSearchParams(window.location.search).get('adblock') === '1') {
+      setVisible(true);
+      return;
+    }
 
-      // Check if any ad containers have been filled by rev.iq
-      const adElements = document.querySelectorAll('[data-ad]');
-
-      if (adElements.length === 0) {
-        setIsAdBlockerDetected(false);
-        return;
-      }
-
-      let hasVisibleAds = false;
-
-      adElements.forEach((adEl) => {
-        const el = adEl as HTMLElement;
-        if (el.children.length > 0 || el.offsetHeight > 0) {
-          hasVisibleAds = true;
+    const check = async () => {
+      try {
+        if (typeof window.reviq?.checkAdblock === 'function') {
+          const hasAdblock = await window.reviq.checkAdblock();
+          if (hasAdblock) setVisible(true);
+        } else if (typeof window.reviq?.onAdblock === 'function') {
+          window.reviq.onAdblock(() => setVisible(true));
         }
-      });
-
-      setIsAdBlockerDetected(!hasVisibleAds);
+      } catch {
+        // Detection unavailable; silently ignore
+      }
     };
 
-    // Run detection after a delay to give ads time to load
-    const timer = setTimeout(detectAdBlocker, 3000);
-    return () => clearTimeout(timer);
+    check();
   }, []);
 
   const handleDismiss = () => {
-    setIsDismissed(true);
-    // Remember the dismissal for 24 hours
-    localStorage.setItem(
-      'adBlockingRecoveryDismissed',
-      new Date().toISOString()
-    );
+    localStorage.setItem(DISMISS_KEY, String(Date.now()));
+    setVisible(false);
   };
 
-  // Check if user dismissed this recently
-  useEffect(() => {
-    const dismissedTime = localStorage.getItem('adBlockingRecoveryDismissed');
-    if (dismissedTime) {
-      const hoursSinceDismissal =
-        (Date.now() - new Date(dismissedTime).getTime()) / (1000 * 60 * 60);
-      if (hoursSinceDismissal < 24) {
-        setIsDismissed(true);
-      }
-    }
-  }, []);
-
-  if (!isAdBlockerDetected || isDismissed || isPatron) {
-    return null;
-  }
+  if (!visible) return null;
 
   return (
     <div className={styles.container}>
       <div className={styles.message}>
-        <h3 className={styles.title}>We Notice You're Using an Ad Blocker</h3>
+        <p className={styles.title}>Ad Blocker Detected</p>
         <p className={styles.description}>
-          Talishar is free to play thanks to ad revenue and Metafy support. Our
-          ads placement is carefully selected to not interfere with gameplay.
-          Please consider disabling your ad blocker to support our work.
+          Talishar is free to play and supported by ads. Please consider
+          disabling your ad blocker to help keep the platform running.
         </p>
         <p className={styles.subDescription}>
-          Alternatively, you can{' '}
+          You can also support us directly on{' '}
           <a
-            href="https://metafy.gg/@Talishar"
+            className={styles.link}
+            href="https://metafy.gg/@talishar/members"
             target="_blank"
             rel="noopener noreferrer"
-            className={styles.link}
           >
-            support us on Metafy
-          </a>{' '}
-          to help keep Talishar running and hide all ads!
+            Metafy
+          </a>
+          .
         </p>
-        <button
-          className={styles.dismissButton}
-          onClick={handleDismiss}
-          title="Dismiss this message for 24 hours"
-        >
+        <button className={styles.dismissButton} onClick={handleDismiss}>
           Dismiss
         </button>
       </div>

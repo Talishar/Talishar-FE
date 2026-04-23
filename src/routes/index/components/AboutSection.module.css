@@ -1,3 +1,9 @@
+.pageWrapper {
+  --landing-surface: var(--theme-contrast-inverse, #000000);
+  background: var(--theme-background);
+  min-height: 100vh;
+}
+
 .aboutContainer {
   width: 100%;
   padding: 0;
@@ -219,8 +225,8 @@
 
 .metafyButton {
   display: inline-block;
-  background: #c8920a;
-  color: #000;
+  background: var(--theme-primary, #d4af37);
+  color: var(--theme-primaryText, #111);
   font-weight: 700;
   padding: 0.875em 2.25em;
   border-radius: 6px;
@@ -231,8 +237,8 @@
 }
 
 .metafyButton:hover {
-  background: #dfa50e;
-  color: #000;
+  background: var(--theme-primary-hover, #dfa50e);
+  color: var(--theme-primary-text, #000);
 }
 
 .resourcesGrid {
@@ -372,27 +378,12 @@
 /* Ad row */
 .adRow {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
-  margin-top: 1.5em;
-}
-
-.desktopAd {
-  display: block;
-}
-
-.mobileAd {
-  display: none;
-}
-
-@media (max-width: 728px) {
-  .desktopAd {
-    display: none !important;
-  }
-
-  .mobileAd {
-    display: block !important;
-  }
+  justify-content: center;
+  padding: 8px 0 16px;
+  width: 100%;
+  gap: 0.5rem;
 }
 
 .disclaimer {

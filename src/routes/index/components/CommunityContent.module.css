@@ -138,6 +138,7 @@
   overflow: hidden;
   display: -webkit-box;
   -webkit-line-clamp: 3;
+  line-clamp: 3;
   -webkit-box-orient: vertical;
 }
 
@@ -220,6 +221,7 @@
   overflow: hidden;
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
 }
 
@@ -237,30 +239,17 @@
   background: transparent;
 }
 
-.communityAdHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  margin-bottom: 0.4em;
-}
-
-.communityAdLabel {
-  font-size: 0.72rem;
-  color: #555;
-  font-weight: 500;
-  letter-spacing: 0.02em;
-}
-
 .removeAdsLink {
-  color: var(--theme-primary, #d4af37);
+  color: rgba(255, 255, 255, 0.28);
   text-decoration: none;
-  font-size: 0.7rem;
+  font-size: 0.58rem;
   font-weight: 500;
+  line-height: 1;
+  padding: 2px 4px;
 }
 
 .removeAdsLink:hover {
-  color: var(--theme-primary-hover, #e6c04a);
+  color: rgba(255, 255, 255, 0.6);
   text-decoration: underline;
 }
 
@@ -346,6 +335,7 @@
   overflow: hidden;
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
 }
 
@@ -357,8 +347,6 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-
-/* ── CTA bar ─────────────────────────────────────────────── */
 
 .ctaBar {
   display: flex;
@@ -398,8 +386,8 @@
   flex-shrink: 0;
   display: inline-block;
   padding: 0.6em 1.4em;
-  background: #f0a500;
-  color: #111;
+  background: var(--theme-primary, #d4af37);
+  color: var(--theme-primaryText, #111);
   text-decoration: none;
   border-radius: 6px;
   font-weight: 700;
@@ -409,8 +397,50 @@
 }
 
 .discordButton:hover {
-  background: #d99400;
+  background: var(--theme-primary-hover, #d99400);
   transform: translateY(-1px);
+}
+
+.adFooter {
+  margin-top: 1.25em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35em;
+}
+
+.adHeader {
+  width: min(100%, 970px);
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+@media (max-width: 728px) {
+  .adHeader {
+    width: min(100%, 300px);
+    justify-content: flex-end;
+  }
+}
+
+.desktopAd {
+  display: block;
+  width: 100%;
+  max-width: 970px;
+}
+
+.mobileAd {
+  display: none !important;
+}
+
+@media (max-width: 728px) {
+  .desktopAd {
+    display: none !important;
+  }
+
+  .mobileAd {
+    display: block !important;
+  }
 }
 
 

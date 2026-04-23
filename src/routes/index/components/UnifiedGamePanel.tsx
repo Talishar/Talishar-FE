@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FaChevronUp, FaChevronDown } from 'react-icons/fa';
 import useAuth from 'hooks/useAuth';
-import { useGetUserProfileQuery } from 'features/api/apiSlice';
+import useSupporterStatus from 'hooks/useSupporterStatus';
 import { AdUnit } from 'components/ads';
 import QuickJoinPanel from './quickJoin/QuickJoinPanel';
 import CreateGame from 'routes/game/create/CreateGame';
@@ -22,14 +22,8 @@ const setCookie = (name: string, value: string, days: number = 365) => {
 };
 
 const UnifiedGamePanel = () => {
-  const { isLoggedIn, isLoading: isAuthLoading } = useAuth();
-  const { data: profileData, isLoading: isProfileLoading } = useGetUserProfileQuery(
-    undefined,
-    { skip: !isLoggedIn }
-  );
-  const isSupporter = isLoggedIn
-    ? (isProfileLoading ? true : (profileData?.isMetafySupporter ?? false))
-    : false;
+  const { isLoggedIn } = useAuth();
+  const { isSupporter, isLoading: isAuthLoading } = useSupporterStatus();
   const showAds = !isAuthLoading && !isSupporter;
   const [isExpanded, setIsExpanded] = useState(() => {
     const savedState = getCookie('unifiedGamePanelExpanded');

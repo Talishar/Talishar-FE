@@ -3,16 +3,13 @@
   max-width: 900px;
   border: none;
   border-radius: 0;
-  margin: 1.5em auto 0;
-  margin-bottom: 0;
-  padding: 1.25rem 1.5rem 1rem;
+  margin: 0 auto;
+  padding: 1.75rem 1.25rem;
   background: transparent;
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
   flex: 1;
-  height: 900px;
-  overflow: hidden;
   box-sizing: border-box;
 }
 
@@ -56,7 +53,6 @@
   gap: 0.75rem;
   flex: 1;
   min-height: 0;
-  overflow: hidden;
 }
 
 .quickJoinSection {
@@ -68,7 +64,6 @@
   flex-direction: column;
   flex: 1;
   min-height: 0;
-  overflow: hidden;
 }
 
 .createGameSection > div {
@@ -91,28 +86,22 @@
 }
 
 .removeAdsLink {
-  align-self: flex-end;
-  color: rgba(255, 100, 50, 0.55);
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 1;
+  color: rgba(255, 255, 255, 0.28);
   text-decoration: none;
-  font-size: 0.7rem;
+  font-size: 0.58rem;
+  font-weight: 500;
   line-height: 1;
-  margin-bottom: 2px;
+  padding: 2px 4px;
+  border-radius: 0 0 0 3px;
 }
 
 .removeAdsLink:hover {
-  color: rgba(255, 100, 50, 0.85);
+  color: rgba(255, 255, 255, 0.6);
   text-decoration: underline;
 }
 
-@media (max-width: 768px) {
-  .panel {
-    height: auto;
-    overflow: visible;
-  }
 
-  .content,
-  .createGameSection,
-  .createGameSection > div {
-    overflow: visible;
-  }
-}

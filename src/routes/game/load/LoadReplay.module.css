@@ -1,12 +1,12 @@
+.pageWrapper {
+  --landing-surface: var(--theme-contrast-inverse, #000000);
+  background: var(--theme-background);
+  min-height: 100vh;
+}
+
 .articleContainer {
-  background: var(
-    --theme-section-background,
-    linear-gradient(
-      135deg,
-      rgba(30, 35, 41, 0.8) 0%,
-      rgba(30, 35, 41, 0.85) 100%
-    )
-  );
+  background: none;
+  box-shadow: none;
   min-height: calc(100vh - 80px);
   max-width: 900px;
   margin: 0 auto;

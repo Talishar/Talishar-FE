@@ -16,6 +16,7 @@ i18n
   .init({
     fallbackLng: 'en',
     supportedLngs: [...I18N_SUPPORTED_LANGUAGE_CODES],
+    showSupportNotice: false,
     interpolation: {
       escapeValue: false // not needed for react as it escapes by default
     },

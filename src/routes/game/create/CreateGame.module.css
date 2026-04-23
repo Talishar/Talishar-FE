@@ -68,7 +68,7 @@
 }
 
 .embeddedFormInner::-webkit-scrollbar-thumb:hover {
-  background: #d4af37;
+  background: var(--theme-primary, #d4af37);
 }
 
 .embeddedSubmitButton {
@@ -300,7 +300,7 @@
 }
 
 .deckTabActive {
-  background: var(--theme-primary-muted, rgba(212, 175, 55, 0.2));
+  background: color-mix(in srgb, var(--theme-primary, #d4af37) 20%, transparent);
   color: var(--theme-primary, #d4af37);
   font-weight: 600;
 }

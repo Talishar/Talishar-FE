@@ -132,6 +132,7 @@
   flex: 1;
   padding: 0.4rem 0.75rem;
   border: none;
+  border-radius: 0;
   background: transparent;
   color: var(--theme-text-muted, rgba(237, 237, 237, 0.55));
   cursor: pointer;
@@ -153,7 +154,7 @@
 }
 
 .tabActive {
-  background: var(--theme-primary-muted, rgba(212, 175, 55, 0.2));
+  background: color-mix(in srgb, var(--theme-primary, #d4af37) 20%, transparent);
   color: var(--theme-primary, #d4af37);
   font-weight: 600;
 }

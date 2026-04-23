@@ -17,6 +17,7 @@ import { useCookies } from 'react-cookie';
 import { useAppDispatch } from 'app/Hooks';
 import { HEROES_OF_RATHE } from '../filter/constants';
 import GameFilter from './GameFilter';
+import FriendBadge from './FriendBadge';
 import { useTranslation, Trans } from 'react-i18next';
 
 export interface IOpenGame {
@@ -71,7 +72,35 @@ const GameList = () => {
   const { data: apiData, isLoading, error, refetch, isFetching } = useGetGameListQuery(undefined);
   const { isLoggedIn } = useAuth();
 
-  const data = apiData;
+  const HERO_LIST = ['WTR001', 'ARC001', 'MON001', 'UPR001', 'ELE001', 'ROS001', 'HNT001', 'SUP001'];
+  const FORMAT_LIST = [GAME_FORMAT.COMPETITIVE_CC, GAME_FORMAT.BLITZ, GAME_FORMAT.COMMONER, GAME_FORMAT.DRAFT, GAME_FORMAT.SEALED];
+  
+  const USE_DEV_FAKE_GAMES = false; // Set to true to enable fake games for testing
+
+  const DEV_FAKE_OPEN: IOpenGame[] = (import.meta.env.DEV && USE_DEV_FAKE_GAMES) ? Array.from({ length: 20 }, (_, i) => ({
+    gameName: 80000 + i,
+    p1Hero: HERO_LIST[i % HERO_LIST.length],
+    format: FORMAT_LIST[i % FORMAT_LIST.length],
+    formatName: FORMAT_LIST[i % FORMAT_LIST.length],
+    description: `Dev test game ${i + 1}`,
+    visibility: '1',
+  })) : [];
+  const DEV_FAKE_IN_PROGRESS: IGameInProgress[] = (import.meta.env.DEV && USE_DEV_FAKE_GAMES) ? Array.from({ length: 20 }, (_, i) => ({
+    gameName: 90000 + i,
+    p1Hero: HERO_LIST[i % HERO_LIST.length],
+    p2Hero: HERO_LIST[(i + 5) % HERO_LIST.length],
+    format: FORMAT_LIST[i % FORMAT_LIST.length],
+    secondsSinceLastUpdate: Math.floor(Math.random() * 600),
+    visibility: '1',
+  })) : [];
+
+  const data: typeof apiData = apiData
+    ? {
+        ...apiData,
+        openGames: [...DEV_FAKE_OPEN, ...(apiData.openGames ?? [])],
+        gamesInProgress: [...DEV_FAKE_IN_PROGRESS, ...(apiData.gamesInProgress ?? [])],
+      }
+    : apiData;
   const { data: friendsData } = useGetFriendsListQuery(undefined, { skip: !isLoggedIn });
   const { blockedUsers } = useBlockedUsers();
 
@@ -94,8 +123,6 @@ const GameList = () => {
     scrollableContentRef.current?.scrollTo({ top: 0 });
   }, [activeTab]);
   const [isRateLimited, setIsRateLimited] = useState(false);
-  const [showAll, setShowAll] = useState(false);
-  const [showAllInProgress, setShowAllInProgress] = useState(false);
   const PREVIEW_LIMIT = 9;
   const lastRefetchTime = useRef<number>(0);
   const scrollableContentRef = useRef<HTMLDivElement>(null);
@@ -322,7 +349,7 @@ const GameList = () => {
     : [];
 
   // Separate friend games from other games
-  const hasMoreInProgressGames = !showAllInProgress && filteredGamesInProgress.length > PREVIEW_LIMIT;
+
   const sortedInProgressGames = [...filteredGamesInProgress].sort((a, b) => {
     const fmtA = normalizeFormat(a.format) ?? a.format;
     const fmtB = normalizeFormat(b.format) ?? b.format;
@@ -442,8 +469,18 @@ const GameList = () => {
 
   const getFormatLabel = (format: string) => formatLabelMap[format] || t("GAME_LIST.FORMATS.OTHER");
 
-  const displayOpenGames = showAll ? sortedOpenGames : sortedOpenGames.slice(0, PREVIEW_LIMIT);
-  const hasMoreOpenGames = !showAll && sortedOpenGames.length > PREVIEW_LIMIT;
+  const displayOpenGames = sortedOpenGames;
+
+  // Count friend games in each tab for the badge indicator
+  const friendOpenGamesCount = sortedOpenGames.filter(
+    (game) => game.gameCreator && friendUsernames.has(game.gameCreator)
+  ).length;
+
+  const friendInProgressCount = filteredGamesInProgress.filter(
+    (game) =>
+      (game.gameCreator && friendUsernames.has(game.gameCreator)) ||
+      (game.p2Username && friendUsernames.has(game.p2Username))
+  ).length;
 
   return (
     <article className={`${styles.gameList}${!isLoggedIn ? ` ${styles.gameListLoggedOut}` : ''}`}>
@@ -468,7 +505,7 @@ const GameList = () => {
             title={t("GAME_LIST.MANUAL_REFRESH")}
           >
             {t("GAME_LIST.REFRESH")}
-            <span className={`${styles.refreshIcon}${isFetching ? ` ${styles.spinning}` : ''}`}>↻</span>
+            <span className={`${styles.refreshIcon}${(isFetching || isRateLimited) ? ` ${styles.spinning}` : ''}`}>↻</span>
           </button>
         </div>
         {isLoading ? <div aria-busy="true">{t("GAME_LIST.LOADING")}</div> : null}
@@ -494,21 +531,35 @@ const GameList = () => {
             <div className={styles.tabs}>
               <button
                 className={`${styles.tab} ${activeTab === 'open' ? styles.tabActive : ''}`}
-                onClick={() => { setActiveTab('open'); setShowAll(false); setShowAllInProgress(false); }}
+                onClick={() => { setActiveTab('open'); }}
               >
                 {t("GAME_LIST.LOOKING_FOR_OPPONENT", "Looking for opponent")}
                 <span className={`${styles.tabBadge} ${activeTab === 'open' ? styles.tabBadgeActive : ''}`}>
                   {sortedOpenGames.length}
                 </span>
+                {friendOpenGamesCount > 0 && (
+                  <FriendBadge
+                    isFriendsGame
+                    size="small"
+                    tooltip={`${friendOpenGamesCount} friend${friendOpenGamesCount > 1 ? 's' : ''} looking for opponent`}
+                  />
+                )}
               </button>
               <button
                 className={`${styles.tab} ${activeTab === 'inProgress' ? styles.tabActive : ''}`}
-                onClick={() => { setActiveTab('inProgress'); setShowAll(false); setShowAllInProgress(false); }}
+                onClick={() => { setActiveTab('inProgress'); }}
               >
                 {t("GAME_LIST.IN_PROGRESS_TAB", "In progress")}
                 <span className={`${styles.tabBadge} ${activeTab === 'inProgress' ? styles.tabBadgeActive : ''}`}>
                   {data?.gameInProgressCount ?? 0}
                 </span>
+                {friendInProgressCount > 0 && (
+                  <FriendBadge
+                    isFriendsGame
+                    size="small"
+                    tooltip={`${friendInProgressCount} friend${friendInProgressCount > 1 ? 's' : ''} playing`}
+                  />
+                )}
               </button>
             </div>
 
@@ -546,117 +597,50 @@ const GameList = () => {
         <div className={styles.scrollableContent} ref={scrollableContentRef}>
           {activeTab === 'open' ? (
             <>
-              {showAll ? (
-                <>
-                  <FormatList gameList={displayOpenGames.filter((game) => game.format === GAME_FORMAT.BLITZ)} name={t("GAME_LIST.FORMATS.BLITZ")} friendUsernames={friendUsernames} />
-                  <FormatList gameList={displayOpenGames.filter((game) => game.format === GAME_FORMAT.COMPETITIVE_BLITZ)} name={t("GAME_LIST.FORMATS.COMPETITIVE_BLITZ")} friendUsernames={friendUsernames} />
-                  <FormatList gameList={displayOpenGames.filter((game) => game.format === GAME_FORMAT.CLASSIC_CONSTRUCTED)} name={t("GAME_LIST.FORMATS.CC")} friendUsernames={friendUsernames} />
-                  <FormatList gameList={displayOpenGames.filter((game) => game.format === GAME_FORMAT.COMPETITIVE_CC)} name={t("GAME_LIST.FORMATS.COMPETITIVE_CC")} friendUsernames={friendUsernames} />
-                  <FormatList gameList={displayOpenGames.filter((game) => game.format === GAME_FORMAT.LLCC)} name={t("GAME_LIST.FORMATS.LL")} friendUsernames={friendUsernames} />
-                  <FormatList gameList={displayOpenGames.filter((game) => game.format === GAME_FORMAT.COMPETITIVE_LL)} name={t("GAME_LIST.FORMATS.COMPETITIVE_LL")} friendUsernames={friendUsernames} />
-                  <FormatList gameList={displayOpenGames.filter((game) => game.format === GAME_FORMAT.SAGE)} name={t("GAME_LIST.FORMATS.SAGE")} friendUsernames={friendUsernames} />
-                  <FormatList gameList={displayOpenGames.filter((game) => game.format === GAME_FORMAT.COMPETITIVE_SAGE)} name={t("GAME_LIST.FORMATS.COMPETITIVE_SAGE")} friendUsernames={friendUsernames} />
-                  <FormatList gameList={displayOpenGames.filter((game) => game.format === GAME_FORMAT.OPEN_SAGE)} name={t("GAME_LIST.FORMATS.FUTURE_SAGE")} friendUsernames={friendUsernames} />
-                  <FormatList gameList={displayOpenGames.filter((game) => game.format === GAME_FORMAT.OPEN_CC)} name={t("GAME_LIST.FORMATS.FUTURE_CC")} friendUsernames={friendUsernames} />
-                  <FormatList gameList={displayOpenGames.filter((game) => otherFormats.includes(game.format))} name={t("GAME_LIST.FORMATS.OTHER")} isOther friendUsernames={friendUsernames} />
-                </>
-              ) : (
-                displayOpenGames.map((entry, ix) => {
-                  const isFriendsGame = !!(entry.gameCreator && friendUsernames.has(entry.gameCreator));
-                  return (
-                    <OpenGame
-                      entry={entry}
-                      ix={ix}
-                      isOther={otherFormats.includes(entry.format)}
-                      key={entry.gameName}
-                      isFriendsGame={isFriendsGame}
-                      formatLabel={getFormatLabel(entry.format)}
-                    />
-                  );
-                })
-              )}
+              {displayOpenGames.map((entry, ix) => {
+                const isFriendsGame = !!(entry.gameCreator && friendUsernames.has(entry.gameCreator));
+                return (
+                  <OpenGame
+                    entry={entry}
+                    ix={ix}
+                    isOther={otherFormats.includes(entry.format)}
+                    key={entry.gameName}
+                    isFriendsGame={isFriendsGame}
+                    formatLabel={getFormatLabel(entry.format)}
+                  />
+                );
+              })}
             </>
           ) : (
             <div data-testid="games-in-progress" ref={parent}>
-              {showAllInProgress ? (
-                <>
-                  {friendGamesInProgress.length > 0 && (
-                    <InProgressGameList
-                      gameList={friendGamesInProgress.sort((a, b) => b.gameName - a.gameName)}
-                      name={t("GAME_LIST.FRIENDS")}
-                      isFriendsSection={true}
-                      friendUsernames={friendUsernames}
-                    />
-                  )}
-                  <InProgressGameList gameList={[...otherGamesInProgress.filter((game) => [GAME_FORMAT.BLITZ, GAME_FORMAT_NUMBER.BLITZ].includes(game.format))].sort((a, b) => b.gameName - a.gameName)} name={t("GAME_LIST.FORMATS.BLITZ")} friendUsernames={friendUsernames} />
-                  <InProgressGameList gameList={[...otherGamesInProgress.filter((game) => [GAME_FORMAT.COMPETITIVE_BLITZ, GAME_FORMAT_NUMBER.COMPETITIVE_BLITZ].includes(game.format))].sort((a, b) => b.gameName - a.gameName)} name={t("GAME_LIST.FORMATS.COMPETITIVE_BLITZ")} friendUsernames={friendUsernames} />
-                  <InProgressGameList gameList={[...otherGamesInProgress.filter((game) => [GAME_FORMAT.CLASSIC_CONSTRUCTED, GAME_FORMAT_NUMBER.CLASSIC_CONSTRUCTED].includes(game.format))].sort((a, b) => b.gameName - a.gameName)} name={t("GAME_LIST.FORMATS.CC")} friendUsernames={friendUsernames} />
-                  <InProgressGameList gameList={[...otherGamesInProgress.filter((game) => [GAME_FORMAT.COMPETITIVE_CC, GAME_FORMAT_NUMBER.COMPETITIVE_CC].includes(game.format))].sort((a, b) => b.gameName - a.gameName)} name={t("GAME_LIST.FORMATS.COMPETITIVE_CC")} friendUsernames={friendUsernames} />
-                  <InProgressGameList gameList={[...otherGamesInProgress.filter((game) => [GAME_FORMAT.LLCC, GAME_FORMAT_NUMBER.LLCC].includes(game.format))].sort((a, b) => b.gameName - a.gameName)} name={t("GAME_LIST.FORMATS.LL")} friendUsernames={friendUsernames} />
-                  <InProgressGameList gameList={[...otherGamesInProgress.filter((game) => [GAME_FORMAT.COMPETITIVE_LL, GAME_FORMAT_NUMBER.COMPETITIVE_LL].includes(game.format))].sort((a, b) => b.gameName - a.gameName)} name={t("GAME_LIST.FORMATS.COMPETITIVE_LL")} friendUsernames={friendUsernames} />
-                  <InProgressGameList gameList={[...otherGamesInProgress.filter((game) => [GAME_FORMAT.SAGE, GAME_FORMAT_NUMBER.SAGE].includes(game.format))].sort((a, b) => b.gameName - a.gameName)} name={t("GAME_LIST.FORMATS.SAGE")} friendUsernames={friendUsernames} />
-                  <InProgressGameList gameList={[...otherGamesInProgress.filter((game) => [GAME_FORMAT.COMPETITIVE_SAGE, GAME_FORMAT_NUMBER.COMPETITIVE_SAGE].includes(game.format))].sort((a, b) => b.gameName - a.gameName)} name={t("GAME_LIST.FORMATS.COMPETITIVE_SAGE")} friendUsernames={friendUsernames} />
-                  <InProgressGameList gameList={[...otherGamesInProgress.filter((game) => [GAME_FORMAT.OPEN_CC, GAME_FORMAT_NUMBER.OPEN_CC].includes(game.format))].sort((a, b) => b.gameName - a.gameName)} name={t("GAME_LIST.FORMATS.FUTURE_CC")} friendUsernames={friendUsernames} />
-                  <InProgressGameList gameList={[...otherGamesInProgress.filter((game) => [GAME_FORMAT.OPEN_SAGE, GAME_FORMAT_NUMBER.OPEN_SAGE].includes(game.format))].sort((a, b) => b.gameName - a.gameName)} name={t("GAME_LIST.FORMATS.FUTURE_SAGE")} friendUsernames={friendUsernames} />
-                  <InProgressGameList
-                    gameList={[...otherGamesInProgress.filter((game) =>
-                      ![GAME_FORMAT.BLITZ, GAME_FORMAT_NUMBER.BLITZ, GAME_FORMAT.COMPETITIVE_CC, GAME_FORMAT.CLASSIC_CONSTRUCTED, GAME_FORMAT_NUMBER.CLASSIC_CONSTRUCTED, GAME_FORMAT_NUMBER.COMPETITIVE_CC, GAME_FORMAT.COMPETITIVE_LL, GAME_FORMAT.LLCC, GAME_FORMAT_NUMBER.LLCC, GAME_FORMAT_NUMBER.COMPETITIVE_LL, GAME_FORMAT.SAGE, GAME_FORMAT_NUMBER.SAGE, GAME_FORMAT.COMPETITIVE_SAGE, GAME_FORMAT_NUMBER.COMPETITIVE_SAGE, GAME_FORMAT.OPEN_SAGE, GAME_FORMAT_NUMBER.OPEN_SAGE, GAME_FORMAT.OPEN_CC, GAME_FORMAT_NUMBER.OPEN_CC].includes(game.format)
-                    )].sort((a, b) => b.gameName - a.gameName)}
-                    name={t("GAME_LIST.FORMATS.OTHER")}
-                    friendUsernames={friendUsernames}
+              {[...friendGamesInProgress, ...otherGamesInProgress].map((entry, ix) => {
+                const isFriendsGame = !!(
+                  (entry.gameCreator && friendUsernames.has(entry.gameCreator)) ||
+                  (entry.p2Username && friendUsernames.has(entry.p2Username))
+                );
+                const friendName =
+                  entry.gameCreator && friendUsernames.has(entry.gameCreator)
+                    ? entry.gameCreator
+                    : entry.p2Username && friendUsernames.has(entry.p2Username)
+                    ? entry.p2Username
+                    : undefined;
+                return (
+                  <InProgressGame
+                    entry={entry}
+                    ix={ix}
+                    key={entry.gameName}
+                    isFriendsGame={isFriendsGame}
+                    friendName={friendName}
+                    formatLabel={getFormatLabel(entry.format)}
                   />
-                </>
-              ) : (
-                [...friendGamesInProgress, ...otherGamesInProgress].map((entry, ix) => {
-                  const isFriendsGame = !!(
-                    (entry.gameCreator && friendUsernames.has(entry.gameCreator)) ||
-                    (entry.p2Username && friendUsernames.has(entry.p2Username))
-                  );
-                  const friendName =
-                    entry.gameCreator && friendUsernames.has(entry.gameCreator)
-                      ? entry.gameCreator
-                      : entry.p2Username && friendUsernames.has(entry.p2Username)
-                      ? entry.p2Username
-                      : undefined;
-                  return (
-                    <InProgressGame
-                      entry={entry}
-                      ix={ix}
-                      key={entry.gameName}
-                      isFriendsGame={isFriendsGame}
-                      friendName={friendName}
-                      formatLabel={getFormatLabel(entry.format)}
-                    />
-                  );
-                })
-              )}
+                );
+              })}
             </div>
           )}
         </div>
       )}
 
-      {/* View All footer — sticky at bottom, shown when preview is active */}
-      {!isLoading && !error && isLoggedIn && activeTab === 'open' && hasMoreOpenGames && (
-        <div className={styles.viewAllFooter}>
-          <button
-            className={`${styles.viewAllButton} primary`}
-            onClick={() => setShowAll(true)}
-          >
-            View all games ({sortedOpenGames.length})
-          </button>
-        </div>
-      )}
 
-      {!isLoading && !error && isLoggedIn && activeTab === 'inProgress' && hasMoreInProgressGames && (
-        <div className={styles.viewAllFooter}>
-          <button
-            className={`${styles.viewAllButton} primary`}
-            onClick={() => setShowAllInProgress(true)}
-          >
-            View all games ({filteredGamesInProgress.length})
-          </button>
-        </div>
-      )}
 
 
 

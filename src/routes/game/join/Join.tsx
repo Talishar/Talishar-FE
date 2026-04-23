@@ -15,6 +15,9 @@ import { toast } from 'react-hot-toast';
 import { FaExclamationCircle, FaQuestionCircle } from 'react-icons/fa';
 import validationSchema from './validationSchema';
 import useAuth from 'hooks/useAuth';
+import useSupporterStatus from 'hooks/useSupporterStatus';
+import useAdScript from 'hooks/useAdScript';
+import { AdUnit } from 'components/ads';
 import classNames from 'classnames';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -24,6 +27,7 @@ import { ImageSelect, ImageSelectOption } from 'components/ImageSelect';
 import { GAME_FORMAT, isPreconFormat, PRECON_DECKS } from 'appConstants';
 import { getReadableFormatName } from 'utils/formatUtils';
 import { useTranslation, Trans } from 'react-i18next';
+import PageBanner from 'components/PageBanner/PageBanner';
 
 // Helper function to extract base format type for matching
 // "Open CC", "Competitive CC", "Classic Constructed" all map to "Classic Constructed" base
@@ -85,6 +89,9 @@ const JoinGame = () => {
   const [joinGame, joinGameResult] = useJoinGameMutation();
   const { data, isLoading, isSuccess } = useGetFavoriteDecksQuery(undefined);
   const { isLoggedIn } = useAuth();
+  const { isSupporter, isLoading: authLoading } = useSupporterStatus();
+  const showAds = !authLoading && !isSupporter;
+  useAdScript(showAds);
 
   // Initial stuff to allow the lang to change
   const { t, i18n, ready } = useTranslation();
@@ -267,7 +274,14 @@ const JoinGame = () => {
   };
 
   return (
-    <main className={styles.LoginPageContainer}>
+    <div className={styles.pageWrapper}>
+      <PageBanner title={t('JOIN.TITLE', 'Join Game')} subtitle={t('JOIN.SUBTITLE', 'Choose your deck and enter the game')} />
+      <main className={styles.LoginPageContainer}>
+      {showAds && (
+        <aside className={styles.leftRail}>
+          <AdUnit placement="left-rail-1" />
+        </aside>
+      )}
       <article className={styles.formContainer}>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className={styles.formInner}>
@@ -432,7 +446,18 @@ const JoinGame = () => {
           {t('JOIN.BACK')}
         </button>
       </article>
+      {showAds && (
+        <aside className={styles.rightRail}>
+          <AdUnit placement="right-rail-1" />
+        </aside>
+      )}
+      {showAds && (
+        <div className={styles.mobileAd}>
+          <AdUnit placement="mobile-unit-4" />
+        </div>
+      )}
     </main>
+    </div>
   );
 };
 

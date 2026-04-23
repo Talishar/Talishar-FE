@@ -31,27 +31,13 @@
 }
 
 .ad-unit[data-ad^='leaderboard'] {
-  container-type: inline-size;
   width: 100%;
   max-width: 728px;
-  height: 90px;
+  min-height: 90px;
   margin: 15px auto;
-  overflow: hidden;
-  position: relative;
-  background: rgba(255, 255, 255, 0.04);
-  display: block;
-}
-
-.ad-unit[data-ad^='leaderboard'] > *,
-.ad-unit[data-ad^='leaderboard'] iframe {
-  position: absolute !important;
-  top: 0 !important;
-  left: 50% !important;
-  width: 728px !important;
-  height: 90px !important;
-  transform-origin: top center;
-  transform: translateX(-50%) scale(calc(100cqw / 728px));
-  margin: 0 !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* Mobile ad units */

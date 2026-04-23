@@ -52,18 +52,30 @@
 
 .gameList {
   position: relative;
-  margin: 1.5em auto;
   display: flex;
   flex-direction: column;
   max-width: 900px;
+  margin: 0 auto;
   border: none;
   border-radius: 0;
-  margin-bottom: 0;
   padding: 0;
-  background: transparent !important;
-  height: 925px;
+  background: transparent;
+  height: 100%;
+  min-height: 400px;
   overflow: hidden;
   box-sizing: border-box;
+}
+
+@media (min-width: 769px) {
+  .gameList {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: auto;
+    min-height: 0;
+  }
 }
 
 .gameListLoggedOut {
@@ -73,7 +85,7 @@
 
 .stickyHeader {
   flex-shrink: 0;
-  padding: 1.25rem 1.5rem 0;
+  padding: 1.5rem 1.75rem 0;
   gap: 0.5em;
   display: flex;
   flex-direction: column;
@@ -83,7 +95,8 @@
   flex: 1;
   min-height: 0;
   overflow-y: auto;
-  padding: 0.5rem 1.5rem 0.5rem;
+  overscroll-behavior: contain;
+  padding: 0.5rem 1.75rem 0;
   scrollbar-width: thin;
   scrollbar-color: #5a5f66 #1a1d21;
 
@@ -101,7 +114,7 @@
   }
 
   &::-webkit-scrollbar-thumb:hover {
-    background: #d4af37;
+    background: var(--theme-primary, #d4af37);
   }
 }
 
@@ -120,9 +133,6 @@
 }
 
 .reloadButton {
-  position: absolute !important;
-  top: 1em;
-  right: 1em;
   display: inline-flex !important;
   width: auto !important;
   align-items: center;
@@ -131,7 +141,7 @@
   background: transparent !important;
   border: none !important;
   box-shadow: none !important;
-  color: #d4af37;
+  color: var(--theme-primary, #d4af37);
   font-size: 0.9em;
   font-weight: 600;
   letter-spacing: 0.02em;
@@ -144,7 +154,7 @@
     background: transparent !important;
     border: none !important;
     box-shadow: none !important;
-    color: #d4af37 !important;
+    color: var(--theme-primary, #d4af37) !important;
   }
 
   &:active:not(:disabled):not([aria-busy='true']) {
@@ -159,7 +169,7 @@
     cursor: not-allowed;
     background: transparent !important;
     border: none !important;
-    color: #d4af37 !important;
+    color: var(--theme-primary, #d4af37) !important;
   }
 }
 
@@ -216,12 +226,12 @@
 }
 
 .tabActive {
-  color: #d4af37 !important;
-  border-bottom: 2px solid #d4af37 !important;
+  color: var(--theme-primary, #d4af37) !important;
+  border-bottom: 2px solid var(--theme-primary, #d4af37) !important;
 
   &:hover {
-    color: #d4af37 !important;
-    border-bottom: 2px solid #d4af37 !important;
+    color: var(--theme-primary, #d4af37) !important;
+    border-bottom: 2px solid var(--theme-primary, #d4af37) !important;
   }
 }
 
@@ -240,8 +250,8 @@
 }
 
 .tabBadgeActive {
-  background: rgba(212, 175, 55, 0.25);
-  color: #d4af37;
+  background: color-mix(in srgb, var(--theme-primary, #d4af37) 25%, transparent);
+  color: var(--theme-primary, #d4af37);
 }
 
 .filterRow {
@@ -272,8 +282,10 @@
 }
 
 .titleDiv {
-  display: block;
-  padding-right: 6em;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5em;
 }
 
 .subSectionTitle {
@@ -299,15 +311,15 @@
   gap: 0.6em;
   margin: 0.75rem 0 0;
   padding: 0.7rem 1rem;
-  background: rgba(212, 175, 55, 0.08);
-  border: 1px solid rgba(212, 175, 55, 0.25);
+  background: color-mix(in srgb, var(--theme-primary, #d4af37) 8%, transparent);
+  border: 1px solid color-mix(in srgb, var(--theme-primary, #d4af37) 25%, transparent);
   border-radius: 6px;
   font-size: 0.88rem;
   color: rgba(255, 255, 255, 0.75);
   line-height: 1.4;
 
   a {
-    color: #d4af37;
+    color: var(--theme-primary, #d4af37);
     font-weight: 600;
     text-decoration: none;
 

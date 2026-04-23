@@ -39,6 +39,56 @@
   min-height: 0;
 }
 
+.adBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.adHeader {
+  width: min(100%, 728px);
+  display: flex;
+  justify-content: flex-end;
+}
+
+.removeAdsLink {
+  color: rgba(255, 255, 255, 0.28);
+  text-decoration: none;
+  font-size: 0.58rem;
+  font-weight: 500;
+  line-height: 1;
+  padding: 2px 4px;
+}
+
+.removeAdsLink:hover {
+  color: rgba(255, 255, 255, 0.6);
+  text-decoration: underline;
+}
+
+.desktopAd {
+  display: block;
+}
+
+.mobileAd {
+  display: none !important;
+}
+
+@media (max-width: 728px) {
+  .desktopAd {
+    display: none !important;
+  }
+
+  .mobileAd {
+    display: block !important;
+  }
+
+  .adHeader {
+    max-width: 300px;
+  }
+}
+
 .turnBreakdownSection {
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 8px;

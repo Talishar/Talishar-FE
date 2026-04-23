@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo, useRef } from 'react';
 import { usePageTitle } from 'hooks/usePageTitle';
 import Deck from './components/deck/Deck';
 import LobbyChat from './components/lobbyChat/LobbyChat';
@@ -19,6 +19,7 @@ import useAuth from 'hooks/useAuth';
 import useAdScript from 'hooks/useAdScript';
 import {
   useGetLobbyInfoQuery,
+  useJoinGameMutation,
   useSubmitSideboardMutation,
   useSubmitLobbyInputMutation,
   useGetUserProfileQuery,
@@ -59,6 +60,18 @@ import {
 } from 'features/options/optionsSlice';
 import { IS_STREAMER_MODE } from 'features/options/constants';
 
+const FAB_BAZAAR_LEARN_MORE_URL = 'https://fabbazaar.app/tutorials/talishar';
+
+const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
+  if (!deckLink) return null;
+  const normalizedBase = FAB_BAZAAR_DECK_URL_BASE.endsWith('/')
+    ? FAB_BAZAAR_DECK_URL_BASE
+    : `${FAB_BAZAAR_DECK_URL_BASE}/`;
+  if (!deckLink.startsWith(normalizedBase)) return null;
+  const deckId = deckLink.slice(normalizedBase.length).split('?')[0].trim();
+  return deckId || null;
+};
+
 const Lobby = () => {
   usePageTitle('Lobby');
   useAdScript(false);
@@ -73,6 +86,17 @@ const Lobby = () => {
   const dispatch = useAppDispatch();
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [hasMatchups, setHasMatchups] = useState<boolean>(false);
+  const [selectedMatchupId, setSelectedMatchupId] = useState<string | null>(
+    null
+  );
+  const [isAutoApplyingMatchup, setIsAutoApplyingMatchup] =
+    useState<boolean>(false);
+  const lastAutoAppliedMatchupKey = useRef<string>('');
+  const submittedMatchupRef = useRef<string | null>(null);
+  const deckLinkTrackingRef = useRef<{ link: string | undefined; gameKey: string }>({
+    link: undefined,
+    gameKey: ''
+  });
   const settingsStatus = useAppSelector(getSettingsStatus);
   const {
     isLoggedIn,
@@ -91,6 +115,11 @@ const Lobby = () => {
     (state: RootState) => state.game.gameLobby,
     shallowEqual
   );
+  const isBazaarDeckInLobby = !!extractBazaarDeckIdFromLink(
+    gameLobby?.myDeckLink
+  );
+  const shouldShowMatchupsUI =
+    !isBazaarDeckInLobby && (gameLobby?.matchups?.length ?? 0) > 0;
   const [playLobbyJoin] = useSound(playerJoined, { volume: 1 });
   const settingsData = useAppSelector(getSettingsEntity);
   const isMuted = settingsData['MuteSound']?.value === '1';
@@ -189,6 +218,8 @@ const Lobby = () => {
   const [submitSideboardMutation, submitSideboardMutationData] =
     useSubmitSideboardMutation();
 
+  const [joinGameMutation] = useJoinGameMutation();
+
   const [updateBazaarMatchup] = useUpdateBazaarMatchupMutation();
 
   const [submitLobbyInput, submitLobbyInputData] =
@@ -220,10 +251,95 @@ const Lobby = () => {
   }, [width]);
 
   useEffect(() => {
-    if (gameLobby?.matchups && gameLobby.matchups.length > 0) {
-      setHasMatchups(true);
+    setHasMatchups(shouldShowMatchupsUI);
+  }, [shouldShowMatchupsUI]);
+
+  useEffect(() => {
+    if (isBazaarDeckInLobby && activeTab === 'matchups') {
+      setActiveTab('equipment');
     }
-  }, [gameLobby?.matchups]);
+  }, [isBazaarDeckInLobby, activeTab]);
+
+  useEffect(() => {
+    // New lobby/deck context: clear stale selected matchup from previous session.
+    // Skip when myDeckLink is transiently undefined (gameLobby cleared during polling reset on submit).
+    // Also skip when polling recovers with the same link — that is not a real deck change.
+    const newLink = gameLobby?.myDeckLink;
+    if (!newLink) return;
+    const gameKey = `${gameID}:${playerID}`;
+    const { link: prevLink, gameKey: prevGameKey } = deckLinkTrackingRef.current;
+    if (gameKey === prevGameKey && newLink === prevLink) return;
+    deckLinkTrackingRef.current = { link: newLink, gameKey };
+    setSelectedMatchupId(null);
+    lastAutoAppliedMatchupKey.current = '';
+    submittedMatchupRef.current = null;
+  }, [gameID, playerID, gameLobby?.myDeckLink]);
+
+  useEffect(() => {
+    // No opponent yet: hide any previous matchup indicator until a hero is known.
+    if (!gameLobby?.theirHero || gameLobby.theirHero === 'CardBack') {
+      if (!submittedMatchupRef.current) {
+        setSelectedMatchupId(null);
+      }
+    }
+  }, [gameLobby?.theirHero]);
+
+  useEffect(() => {
+    if (!gameLobby?.theirHero || gameLobby.theirHero === 'CardBack') {
+      return;
+    }
+
+    if (!isBazaarDeckInLobby) {
+      return;
+    }
+
+    const matchingMatchup = (gameLobby?.matchups ?? []).find(
+      (matchup) =>
+        matchup.matchupId?.toLowerCase?.() ===
+        gameLobby.theirHero?.toLowerCase?.()
+    );
+
+    const targetMatchupId = matchingMatchup?.matchupId ?? '';
+    const autoApplyKey = `${gameID}:${playerID}:${gameLobby.myDeckLink}:${gameLobby.theirHero}:${targetMatchupId || 'DEFAULT'}`;
+    if (lastAutoAppliedMatchupKey.current === autoApplyKey) {
+      return;
+    }
+
+    const applyMatchupForHero = async () => {
+      setIsAutoApplyingMatchup(true);
+      try {
+        const joinPayload: any = {
+          gameName: gameID,
+          playerID,
+          fabdb: gameLobby?.myDeckLink ?? ''
+        };
+        if (targetMatchupId) {
+          joinPayload.matchup = targetMatchupId;
+        } else {
+          joinPayload.matchup = '__base__';
+        }
+        const joinResponse: any = await joinGameMutation(joinPayload).unwrap();
+        setSelectedMatchupId(targetMatchupId || null);
+        lastAutoAppliedMatchupKey.current = autoApplyKey;
+        refetch();
+      } catch (err) {
+        console.error('[StickySideboard] Auto matchup apply failed', err);
+      } finally {
+        setIsAutoApplyingMatchup(false);
+      }
+    };
+
+    applyMatchupForHero();
+  }, [
+    gameLobby?.theirHero,
+    gameLobby?.myDeckLink,
+    gameLobby?.matchups,
+    isBazaarDeckInLobby,
+    gameID,
+    playerID,
+    joinGameMutation,
+    refetch
+  ]);
 
   const handleEquipmentClick = () => {
     setActiveTab('equipment');
@@ -243,6 +359,20 @@ const Lobby = () => {
   };
 
   const handleMatchupClick = () => setActiveTab('matchups');
+
+  const selectedMatchup = useMemo(() => {
+    if (!selectedMatchupId) return null;
+    return (gameLobby?.matchups ?? []).find(
+      (matchup) => matchup.matchupId === selectedMatchupId
+    );
+  }, [selectedMatchupId, gameLobby?.matchups]);
+
+  const selectedMatchupForCurrentHero = useMemo(() => {
+    if (!selectedMatchup || !gameLobby?.theirHero) return null;
+    return selectedMatchup.matchupId === gameLobby.theirHero
+      ? selectedMatchup
+      : null;
+  }, [selectedMatchup, gameLobby?.theirHero]);
 
   // Note functions
   const getPlayerNoteKey = (username: string) => `player_note_${username}`;
@@ -480,17 +610,11 @@ const Lobby = () => {
   //const needToDoDisclaimer = false;
   const leaveLobby = classNames(styles.buttonClass, 'outline');
 
-  const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
-    if (!deckLink) return null;
-    const normalizedBase = FAB_BAZAAR_DECK_URL_BASE.endsWith('/')
-      ? FAB_BAZAAR_DECK_URL_BASE
-      : `${FAB_BAZAAR_DECK_URL_BASE}/`;
-    if (!deckLink.startsWith(normalizedBase)) return null;
-    const deckId = deckLink.slice(normalizedBase.length).split('?')[0].trim();
-    return deckId || null;
-  };
-
   const handleFormSubmission = async (values: DeckResponse) => {
+    const matchupIdToRestore = selectedMatchupId;
+    // Pin the ref BEFORE setIsSubmitting so the theirHero guard is active
+    // from the moment SideboardUpdateHandler clears gameLobby.
+    submittedMatchupRef.current = matchupIdToRestore;
     setIsSubmitting(true);
     console.groupCollapsed('[StickySideboard] Submit sideboard start');
     console.info('[StickySideboard] game context', {
@@ -590,6 +714,120 @@ const Lobby = () => {
       submission: JSON.stringify(submitDeck) // the API unmarshals the JSON inside the unmarshaled JSON.
     };
 
+    // Save sideboard changes to FaB Bazaar (sticky sideboarding) BEFORE
+    // submitting to Talishar, because the Talishar submit may start the game
+    // immediately and any lobby refresh that follows could trigger the
+    // auto-apply matchup effect with a stale/new key.
+    const bazaarDeckId =
+      gameInfo.bazaarDeckId ??
+      extractBazaarDeckIdFromLink(gameLobby?.myDeckLink);
+    const opponentHeroId = gameLobby?.theirHero;
+    let resolvedMetafyId = metafyId;
+    let resolvedMetafyHash = metafyHash;
+    let resolvedMetafyTimestamp = metafyTimestamp;
+
+    // If Bazaar deck/opponent are known but metafy credentials are missing,
+    // force-refresh TryLoginAPI and retry with fresh values.
+    if (
+      bazaarDeckId &&
+      opponentHeroId &&
+      (!resolvedMetafyId || !resolvedMetafyHash || !resolvedMetafyTimestamp)
+    ) {
+      console.warn('[StickySideboard] Missing metafy credentials, forcing auth refresh', {
+        resolvedMetafyId: resolvedMetafyId ?? null,
+        resolvedMetafyHashPresent: !!resolvedMetafyHash,
+        resolvedMetafyTimestamp: resolvedMetafyTimestamp ?? null
+      });
+      try {
+        const refreshedAuth: any = await refreshAuth();
+        const refreshed = refreshedAuth?.data;
+        resolvedMetafyId = refreshed?.metafyID ?? refreshed?.metafyId ?? resolvedMetafyId;
+        resolvedMetafyHash = refreshed?.metafyHash ?? resolvedMetafyHash;
+        resolvedMetafyTimestamp = refreshed?.timestamp ?? resolvedMetafyTimestamp;
+        console.info('[StickySideboard] Auth refresh complete', {
+          refreshedMetafyId: resolvedMetafyId ?? null,
+          refreshedMetafyHashPresent: !!resolvedMetafyHash,
+          refreshedMetafyTimestamp: resolvedMetafyTimestamp ?? null
+        });
+      } catch (authRefreshErr) {
+        console.error('[StickySideboard] Auth refresh failed', authRefreshErr);
+      }
+    }
+
+    const canSyncBazaarSideboard =
+      bazaarDeckId &&
+      opponentHeroId &&
+      resolvedMetafyId &&
+      resolvedMetafyHash &&
+      resolvedMetafyTimestamp;
+
+    console.info('[StickySideboard] Bazaar sync gate evaluation', {
+      canSyncBazaarSideboard: !!canSyncBazaarSideboard,
+      bazaarDeckId: bazaarDeckId ?? null,
+      opponentHeroId: opponentHeroId ?? null,
+      metafyId: resolvedMetafyId ?? null,
+      metafyHashPresent: !!resolvedMetafyHash,
+      metafyTimestamp: resolvedMetafyTimestamp ?? null
+    });
+
+    if (canSyncBazaarSideboard) {
+      const multisetDiff = (have: string[], remove: string[]): string[] => {
+        const counts = new Map<string, number>();
+        for (const card of have) counts.set(card, (counts.get(card) ?? 0) + 1);
+        for (const card of remove) {
+          const c = counts.get(card) ?? 0;
+          if (c <= 1) counts.delete(card);
+          else counts.set(card, c - 1);
+        }
+        return Array.from(counts.entries()).flatMap(([card, n]) =>
+          Array(n).fill(card)
+        );
+      };
+      // Use lobby deck data to compute which cards moved in/out of main deck
+      const originalMain: string[] = data?.deck?.cards ?? [];
+      const sideboardIn = multisetDiff(deck, originalMain);
+      const sideboardOut = multisetDiff(originalMain, deck);
+      console.info('[StickySideboard] Calling Bazaar PATCH', {
+        deckId: bazaarDeckId,
+        heroId: opponentHeroId,
+        sideboardInCount: sideboardIn.length,
+        sideboardOutCount: sideboardOut.length,
+        sideboardInSample: sideboardIn.slice(0, 5),
+        sideboardOutSample: sideboardOut.slice(0, 5)
+      });
+      // Preemptively mark the saved matchup as auto-applied so the effect does
+      // not re-fire (with a new key) when the newly-created matchup entry first
+      // appears in the lobby refresh and gameLobby?.matchups changes.  The save
+      // always writes exactly what was submitted, so there is nothing to reload.
+      lastAutoAppliedMatchupKey.current = `${gameID}:${playerID}:${gameLobby?.myDeckLink}:${opponentHeroId}:${opponentHeroId}`;
+      try {
+        const bazaarResponse = await updateBazaarMatchup({
+          deckId: bazaarDeckId,
+          heroId: opponentHeroId,
+          metafyId: resolvedMetafyId,
+          metafyHash: resolvedMetafyHash,
+          metafyTimestamp: resolvedMetafyTimestamp,
+          sideboard: { in: sideboardIn, out: sideboardOut }
+        }).unwrap();
+        console.info('[StickySideboard] Bazaar PATCH success', {
+          success: bazaarResponse?.success ?? true,
+          heroId: bazaarResponse?.data?.matchup?.heroId ?? null
+        });
+      } catch (bazaarErr) {
+        console.error('[StickySideboard] Bazaar PATCH failed', bazaarErr);
+        // Bazaar sync failure should not block the Talishar submit
+      }
+    } else {
+      console.warn('[StickySideboard] Bazaar sync skipped - missing required data', {
+        bazaarDeckId: bazaarDeckId ?? null,
+        myDeckLink: gameLobby?.myDeckLink ?? null,
+        opponentHeroId: opponentHeroId ?? null,
+        metafyId: resolvedMetafyId ?? null,
+        metafyHashPresent: !!resolvedMetafyHash,
+        metafyTimestamp: resolvedMetafyTimestamp ?? null
+      });
+    }
+
     console.info('[StickySideboard] Submitting to Talishar', {
       mainDeckCount: deck.length,
       inventoryCount: inventory.length,
@@ -613,118 +851,13 @@ const Lobby = () => {
         // The existing useEffect in this component will navigate to /game/play/{gameID}
         // when gameLobby?.isMainGameReady becomes true
       }
-
-      // Save sideboard changes back to FaB Bazaar (sticky sideboarding)
-      const bazaarDeckId =
-        gameInfo.bazaarDeckId ??
-        extractBazaarDeckIdFromLink(gameLobby?.myDeckLink);
-      const opponentHeroId = gameLobby?.theirHero;
-      let resolvedMetafyId = metafyId;
-      let resolvedMetafyHash = metafyHash;
-      let resolvedMetafyTimestamp = metafyTimestamp;
-
-      // If Bazaar deck/opponent are known but metafy credentials are missing,
-      // force-refresh TryLoginAPI and retry with fresh values.
-      if (
-        bazaarDeckId &&
-        opponentHeroId &&
-        (!resolvedMetafyId || !resolvedMetafyHash || !resolvedMetafyTimestamp)
-      ) {
-        console.warn('[StickySideboard] Missing metafy credentials, forcing auth refresh', {
-          resolvedMetafyId: resolvedMetafyId ?? null,
-          resolvedMetafyHashPresent: !!resolvedMetafyHash,
-          resolvedMetafyTimestamp: resolvedMetafyTimestamp ?? null
-        });
-        try {
-          const refreshedAuth: any = await refreshAuth();
-          const refreshed = refreshedAuth?.data;
-          resolvedMetafyId = refreshed?.metafyID ?? refreshed?.metafyId ?? resolvedMetafyId;
-          resolvedMetafyHash = refreshed?.metafyHash ?? resolvedMetafyHash;
-          resolvedMetafyTimestamp = refreshed?.timestamp ?? resolvedMetafyTimestamp;
-          console.info('[StickySideboard] Auth refresh complete', {
-            refreshedMetafyId: resolvedMetafyId ?? null,
-            refreshedMetafyHashPresent: !!resolvedMetafyHash,
-            refreshedMetafyTimestamp: resolvedMetafyTimestamp ?? null
-          });
-        } catch (authRefreshErr) {
-          console.error('[StickySideboard] Auth refresh failed', authRefreshErr);
-        }
-      }
-
-      const canSyncBazaarSideboard =
-        bazaarDeckId &&
-        opponentHeroId &&
-        resolvedMetafyId &&
-        resolvedMetafyHash &&
-        resolvedMetafyTimestamp;
-
-      console.info('[StickySideboard] Bazaar sync gate evaluation', {
-        canSyncBazaarSideboard: !!canSyncBazaarSideboard,
-        bazaarDeckId: bazaarDeckId ?? null,
-        opponentHeroId: opponentHeroId ?? null,
-        metafyId: resolvedMetafyId ?? null,
-        metafyHashPresent: !!resolvedMetafyHash,
-        metafyTimestamp: resolvedMetafyTimestamp ?? null
-      });
-
-      if (canSyncBazaarSideboard) {
-        const multisetDiff = (have: string[], remove: string[]): string[] => {
-          const counts = new Map<string, number>();
-          for (const card of have) counts.set(card, (counts.get(card) ?? 0) + 1);
-          for (const card of remove) {
-            const c = counts.get(card) ?? 0;
-            if (c <= 1) counts.delete(card);
-            else counts.set(card, c - 1);
-          }
-          return Array.from(counts.entries()).flatMap(([card, n]) =>
-            Array(n).fill(card)
-          );
-        };
-        // Use lobby deck data to compute which cards moved in/out of main deck
-        const originalMain: string[] = data?.deck?.cards ?? [];
-        const sideboardIn = multisetDiff(deck, originalMain);
-        const sideboardOut = multisetDiff(originalMain, deck);
-        console.info('[StickySideboard] Calling Bazaar PATCH', {
-          deckId: bazaarDeckId,
-          heroId: opponentHeroId,
-          sideboardInCount: sideboardIn.length,
-          sideboardOutCount: sideboardOut.length,
-          sideboardInSample: sideboardIn.slice(0, 5),
-          sideboardOutSample: sideboardOut.slice(0, 5)
-        });
-        updateBazaarMatchup({
-          deckId: bazaarDeckId,
-          heroId: opponentHeroId,
-          metafyId: resolvedMetafyId,
-          metafyHash: resolvedMetafyHash,
-          metafyTimestamp: resolvedMetafyTimestamp,
-          sideboard: { in: sideboardIn, out: sideboardOut }
-        })
-          .unwrap()
-          .then((bazaarResponse) => {
-            console.info('[StickySideboard] Bazaar PATCH success', {
-              success: bazaarResponse?.success ?? true,
-              heroId: bazaarResponse?.data?.matchup?.heroId ?? null
-            });
-          })
-          .catch((bazaarErr) => {
-            console.error('[StickySideboard] Bazaar PATCH failed', bazaarErr);
-            // Fire-and-forget: Bazaar sync failure should not affect game flow
-          });
-      } else {
-        console.warn('[StickySideboard] Bazaar sync skipped - missing required data', {
-          bazaarDeckId: bazaarDeckId ?? null,
-          myDeckLink: gameLobby?.myDeckLink ?? null,
-          opponentHeroId: opponentHeroId ?? null,
-          metafyId: resolvedMetafyId ?? null,
-          metafyHashPresent: !!resolvedMetafyHash,
-          metafyTimestamp: resolvedMetafyTimestamp ?? null
-        });
-      }
     } catch (err) {
       console.error('[StickySideboard] Talishar sideboard submit failed', err);
     } finally {
       setIsSubmitting(false);
+      if (matchupIdToRestore) {
+        setSelectedMatchupId(matchupIdToRestore);
+      }
     }
   };
 
@@ -929,6 +1062,7 @@ const Lobby = () => {
                 </div>
               </CardPopUp>
             </div>
+
             {gameLobby?.amIChoosingFirstPlayer && !needToDoDisclaimer
               ? createPortal(<ChooseFirstTurn />, document.body)
               : !isWideScreen && (
@@ -948,8 +1082,7 @@ const Lobby = () => {
                       )}
                     </ul>
                     <ul>
-                      {gameLobby?.matchups != undefined &&
-                        gameLobby?.matchups?.length > 0 && (
+                      {shouldShowMatchupsUI && (
                           <li>
                             <button
                               className={matchupClasses}
@@ -1119,8 +1252,13 @@ const Lobby = () => {
 
             <div className={styles.spacer}></div>
 
-            {(activeTab === 'matchups' || isWideScreen) && (
-              <Matchups refetch={refetch} />
+            {shouldShowMatchupsUI && (activeTab === 'matchups' || isWideScreen) && (
+              <Matchups
+                refetch={refetch}
+                selectedMatchupId={selectedMatchupId}
+                onMatchupSelected={setSelectedMatchupId}
+                isAutoApplyingMatchup={isAutoApplyingMatchup}
+              />
             )}
             <StickyFooter
               deckSize={deckSize}
@@ -1132,6 +1270,17 @@ const Lobby = () => {
               needToDoDisclaimer={needToDoDisclaimer}
               onUnreadySideboard={handleUnreadySideboard}
               onIsValidChange={setIsDeckValid}
+              syncEnabled={isBazaarDeckInLobby}
+              syncStatusText={
+                isAutoApplyingMatchup
+                  ? 'Applying matchup...'
+                  : selectedMatchupForCurrentHero
+                    ? `Synced: ${selectedMatchupForCurrentHero.name ?? selectedMatchupForCurrentHero.matchupId}`
+                    : gameLobby?.theirHero && gameLobby.theirHero !== 'CardBack'
+                      ? 'Base deck (no matchup saved)'
+                      : 'Waiting for opponent hero'
+              }
+              syncLearnMoreUrl={FAB_BAZAAR_LEARN_MORE_URL}
             />
           </div>
         </Form>

@@ -2,6 +2,8 @@ import { Card } from 'features/Card';
 import { Effect } from '../effects/Effects';
 import styles from './EndGameStats.module.css';
 import useAuth from 'hooks/useAuth';
+import useSupporterStatus from 'hooks/useSupporterStatus';
+import { AdUnit } from 'components/ads';
 import {
   useState,
   useMemo,
@@ -107,6 +109,9 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
     opponentHero?: string;
   }>({});
   const [excludeLastTurn, setExcludeLastTurn] = useState(false);
+
+  const { isSupporter, isLoading: isSupporterLoading } = useSupporterStatus();
+  const showAds = !isSupporterLoading && !isSupporter;
 
   const [turnSortField, setTurnSortField] = useState<
     | 'turnNo'
@@ -1138,7 +1143,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                 <span>
                   Support our work on{' '}
                   <a
-                    href="https://metafy.gg/@Talishar"
+                    href="https://metafy.gg/@talishar/members"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
@@ -1150,6 +1155,26 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
             </div>
           </div>
         </div>
+
+        {/* Ad above Turn by Turn Breakdown */}
+        {showAds && (
+          <div className={`${styles.adBlock} ${styles.hideOnExport}`}>
+            {!isSupporter && (
+              <div className={styles.adHeader}>
+                <a
+                  href="https://metafy.gg/@talishar/members"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.removeAdsLink}
+                >
+                  Remove ads
+                </a>
+              </div>
+            )}
+            <AdUnit placement="billboard-1" className={styles.desktopAd} />
+            <AdUnit placement="mobile-unit-1" className={styles.mobileAd} />
+          </div>
+        )}
 
         {/* Turn by Turn Breakdown - Full Width Section */}
         <div className={styles.turnBreakdownSection}>

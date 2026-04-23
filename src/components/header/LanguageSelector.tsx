@@ -34,16 +34,29 @@ const LanguageSelector = ({ inDropdown = false }: { inDropdown?: boolean }) => {
 
   return (
     <li className={`${styles.socialDropdown}${inDropdown ? ` ${styles.inDropdown}` : ''}`} ref={dropdownRef}>
-      <button
-        className={styles.dropdownToggle}
-        onClick={() => setIsOpen(!isOpen)}
-        aria-label={t('HEADER.LANGUAGE_SELECTOR.LANGUAGES')}
-      >
-        <BsTranslate />
-        <span className={styles.label}>
-          {t('HEADER.LANGUAGE_SELECTOR.LANGUAGE')}
-        </span>
-      </button>
+      {inDropdown ? (
+        <a
+          href="#"
+          onClick={(e) => { e.preventDefault(); setIsOpen(!isOpen); }}
+          aria-label={t('HEADER.LANGUAGE_SELECTOR.LANGUAGES')}
+        >
+          <BsTranslate />{' '}
+          <span>
+            {t('HEADER.LANGUAGE_SELECTOR.LANGUAGE')}
+          </span>
+        </a>
+      ) : (
+        <button
+          className={styles.dropdownToggle}
+          onClick={() => setIsOpen(!isOpen)}
+          aria-label={t('HEADER.LANGUAGE_SELECTOR.LANGUAGES')}
+        >
+          <BsTranslate />
+          <span className={styles.label}>
+            {t('HEADER.LANGUAGE_SELECTOR.LANGUAGE')}
+          </span>
+        </button>
+      )}
       {isOpen && (
         <div className={styles.dropdownMenu}>
           {I18N_SUPPORTED_LANGUAGE_CODES.map((code) => (

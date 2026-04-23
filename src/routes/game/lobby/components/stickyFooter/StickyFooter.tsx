@@ -18,6 +18,9 @@ export type DeckSize = {
   onUnreadySideboard?: () => void;
   onSendInviteClick?: () => void;
   onIsValidChange?: (isValid: boolean) => void;
+  syncEnabled?: boolean;
+  syncStatusText?: string;
+  syncLearnMoreUrl?: string;
 };
 
 const StickyFooter = ({
@@ -30,7 +33,10 @@ const StickyFooter = ({
   handleLeave,
   onUnreadySideboard,
   onSendInviteClick,
-  onIsValidChange
+  onIsValidChange,
+  syncEnabled = false,
+  syncStatusText,
+  syncLearnMoreUrl
 }: DeckSize) => {
   const { errors, values, isValid } = useFormikContext<DeckResponse>();
   const footerRef = useRef<HTMLDivElement>(null);
@@ -92,18 +98,6 @@ const StickyFooter = ({
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <span
-              style={{ whiteSpace: 'nowrap' }}
-              className={styles.labelTextLong}
-            >
-              Copy Invite Link
-            </span>
-            <span
-              style={{ whiteSpace: 'nowrap' }}
-              className={styles.labelTextShort}
-            >
-              Copy Link
-            </span>
             <div className={styles.clipboardButtonHolder}>
               <button
                 className={styles.buttonClass}
@@ -115,6 +109,27 @@ const StickyFooter = ({
                   <HiClipboardCopy />
                 </div>
               </button>
+            </div>
+            <div className={styles.syncInline}>
+              <span
+                className={syncEnabled ? styles.syncInlineActive : styles.syncInlinePassive}
+                title={syncStatusText}
+              >
+                {syncEnabled ? 'Sync On' : 'Sync Off'}
+              </span>
+              {syncStatusText && (
+                <span className={styles.syncInlineText}>{syncStatusText}</span>
+              )}
+              {syncLearnMoreUrl && !syncEnabled && (
+                <a
+                  href={syncLearnMoreUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.syncInlineLink}
+                >
+                  Read more
+                </a>
+              )}
             </div>
           </div>
           {onSendInviteClick && (

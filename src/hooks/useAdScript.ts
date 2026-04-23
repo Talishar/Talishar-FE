@@ -54,10 +54,19 @@ export default function useAdScript(enabled: boolean = true) {
       };
     }
 
-    const script = document.createElement('script');
-    script.src = '//js.rev.iq/talishar.net';
-    script.async = true;
-    document.head.appendChild(script);
+    // Destroy any pre-existing GPT slots so the rev.iq script can re-register
+    // the same div IDs without "already associated with another slot" errors.
+    try {
+      (window as any).googletag?.destroySlots?.();
+    } catch (_) {}
+
+    // Only inject the script if it isn't already present in the document.
+    if (!document.querySelector('script[src="//js.rev.iq/talishar.net"]')) {
+      const script = document.createElement('script');
+      script.src = '//js.rev.iq/talishar.net';
+      script.async = true;
+      document.head.appendChild(script);
+    }
 
     return () => {
       purgeAdElements();

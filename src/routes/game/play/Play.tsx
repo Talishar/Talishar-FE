@@ -31,10 +31,31 @@ import { Toaster } from 'react-hot-toast';
 import { shallowEqual } from 'react-redux';
 import { PanelProvider } from '../components/leftColumn/PanelContext';
 import useAdScript from 'hooks/useAdScript';
+import useSupporterStatus from 'hooks/useSupporterStatus';
 
 function Play({ isRoguelike }: { isRoguelike: boolean }) {
   usePageTitle('In Game');
-  useAdScript(false); // Purge any lingering ad scripts/elements from the landing page
+  const turnPhase = useAppSelector((state: any) => state.game.turnPhase?.turnPhase);
+  const isGameOver = turnPhase === 'OVER';
+  const { isSupporter, isLoading: isSupporterLoading } = useSupporterStatus();
+  const showAdsOnGameOver = !isSupporterLoading && !isSupporter;
+  // Purge ads during active game; allow them on the end game screen
+  // Anchor ads are always hidden during gameplay regardless of game-over state
+  useAdScript(isGameOver ? showAdsOnGameOver : false);
+
+  // Always hide anchor ads while the game view is mounted
+  useEffect(() => {
+    const ANCHOR_SELECTOR = '[data-ad="anchor"]';
+    const hideAnchors = () => {
+      document.querySelectorAll(ANCHOR_SELECTOR).forEach((el) => {
+        (el as HTMLElement).style.display = 'none';
+      });
+    };
+    hideAnchors();
+    const observer = new MutationObserver(hideAnchors);
+    observer.observe(document.documentElement, { childList: true, subtree: true });
+    return () => observer.disconnect();
+  }, []);
   const [cookies] = useCookies([
     'experimental',
     'cardSize',

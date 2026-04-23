@@ -4,22 +4,17 @@ import { parseHtmlToReactElements } from 'utils/ParseEscapedString';
 import { useTranslation, Trans } from 'react-i18next';
 import ContributorLeaderboard from './ContributorLeaderboard';
 import { AdUnit } from 'components/ads';
-import useAuth from 'hooks/useAuth';
-import { useGetUserProfileQuery } from 'features/api/apiSlice';
+import useSupporterStatus from 'hooks/useSupporterStatus';
+import { useMediaQuery } from 'hooks/useMediaQuery';
+import PageBanner from 'components/PageBanner/PageBanner';
 
 const AboutSection: React.FC = () => {
   const [expandedFAQ, setExpandedFAQ] = React.useState<number | null>(null);
   // Initial stuff to allow the lang to change
   const { t, i18n, ready } = useTranslation();
-  const { isLoggedIn, isLoading } = useAuth();
-  const { data: profileData, isLoading: isProfileLoading } = useGetUserProfileQuery(
-    undefined,
-    { skip: !isLoggedIn }
-  );
-  const isSupporter = isLoggedIn
-    ? (isProfileLoading ? true : (profileData?.isMetafySupporter ?? false))
-    : false;
+  const { isSupporter, isLoading } = useSupporterStatus();
   const showAds = !isLoading && !isSupporter;
+  const isMobile = useMediaQuery('(max-width: 728px)');
 
   const faqs = [
     { question: t("ABOUT.FAQ.IS_FREE_Q"),         answer: t("ABOUT.FAQ.IS_FREE_A") },
@@ -52,13 +47,10 @@ const AboutSection: React.FC = () => {
   ];
 
   return (
-    <section className={styles.aboutContainer}>
+    <main className={styles.pageWrapper}>
+      <PageBanner title={t('ABOUT.TITLE')} subtitle={t('ABOUT.SUB_HEADER')} />
+      <section className={styles.aboutContainer}>
       <div className={styles.content}>
-
-        <div className={styles.pageHeader}>
-          <h2>{t("ABOUT.TITLE")}</h2>
-          <p className={styles.tagline}>{t("ABOUT.SUB_HEADER")}</p>
-        </div>
 
         <div className={styles.section}>
           <div className={styles.introGrid}>
@@ -127,8 +119,9 @@ const AboutSection: React.FC = () => {
           <ContributorLeaderboard />
           {showAds && (
             <div className={styles.adRow}>
-              <AdUnit placement="leaderboard-2" className={styles.desktopAd} />
-              <AdUnit placement="mobile-unit-2" className={styles.mobileAd} />
+              {isMobile
+                ? <AdUnit placement="mobile-unit-2" />
+                : <AdUnit placement="leaderboard-2" />}
             </div>
           )}
         </div>
@@ -136,8 +129,8 @@ const AboutSection: React.FC = () => {
         <div className={styles.section}>
           <div className={styles.lssGrid}>
             <div>
-              <h3 className={styles.sectionTitle}>Talishar is Unofficial and Independent</h3>
-              <Trans
+              <h3 className={styles.sectionTitle}>Talishar is an Unofficial Independent platform</h3>
+              <p className={styles.bodyText}><Trans
                 i18nKey="ABOUT.LSS_RELATIONSHIP_DESCRIPTION"
                 components={[
                   <p key="lss-p0" className={styles.bodyText} />,
@@ -145,21 +138,23 @@ const AboutSection: React.FC = () => {
                   <a key="lss-discord" href="https://discord.gg/JykuRkdd5S" target="_blank" rel="noopener noreferrer" />,
                   <a key="lss-rules"   href="https://fabtcg.com/rules/"       target="_blank" rel="noopener noreferrer" />,
                 ]}
-              />
+              /></p>
             </div>
             <div>
               <h3 className={styles.sectionTitle}>{t("ABOUT.LSS_RELATIONSHIP_TITLE")}</h3>
               <p className={styles.bodyText}>{t("ABOUT.WHO_MAINTAINS_DESCRIPTION")}</p>
+              {!isSupporter && (
+              <a
+                href="https://metafy.gg/@talishar/members"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.metafyButton}
+              >
+                Support us on Metafy
+              </a>
+            )}
             </div>
           </div>
-          <a
-            href="https://metafy.gg/@talishar"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.metafyButton}
-          >
-            Support us on Metafy
-          </a>
         </div>
 
         <div className={styles.section}>
@@ -200,13 +195,15 @@ const AboutSection: React.FC = () => {
           </div>
           {showAds && (
             <div className={styles.adRow}>
-              <AdUnit placement="leaderboard-3" className={styles.desktopAd} />
-              <AdUnit placement="mobile-unit-3" className={styles.mobileAd} />
+              {isMobile
+                ? <AdUnit placement="mobile-unit-3" />
+                : <AdUnit placement="leaderboard-3" />}
             </div>
           )}
         </div>
       </div>
-    </section>
+      </section>
+    </main>
   );
 };
 

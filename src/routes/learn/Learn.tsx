@@ -3,9 +3,15 @@ import styles from './Learn.module.scss';
 import { usePageTitle } from 'hooks/usePageTitle';
 import GuideGrid from './components/GuideGrid';
 import { fetchMetafyGuides, MetafyGuide } from '../../services/metafyService';
+import useSupporterStatus from 'hooks/useSupporterStatus';
+import useAdScript from 'hooks/useAdScript';
+import PageBanner from 'components/PageBanner/PageBanner';
 
 const Learn: React.FC = () => {
   usePageTitle('Learn');
+  const { isSupporter, isLoading: isAuthLoading } = useSupporterStatus();
+  const showAds = !isAuthLoading && !isSupporter;
+  useAdScript(showAds);
   const [guides, setGuides] = useState<MetafyGuide[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -49,13 +55,11 @@ const Learn: React.FC = () => {
 
   return (
     <main className={styles.learnPage}>
+      <PageBanner
+        title="Learn Flesh & Blood"
+        subtitle="Master your skills with expert guides from our community"
+      />
       <div className={styles.container}>
-        <div className={styles.header}>
-          <h1>Learn Flesh & Blood</h1>
-          <p className={styles.subtitle}>
-            Master your skills with expert guides from our community
-          </p>
-        </div>
 
         {loading ? (
           <div className={styles.loadingContainer}>
@@ -74,7 +78,7 @@ const Learn: React.FC = () => {
           </div>
         ) : guides.length > 0 ? (
           <>
-            <GuideGrid guides={guides} />
+            <GuideGrid guides={guides} showAds={showAds} />
 
             {totalPages > 1 && (
               <div className={styles.pagination}>

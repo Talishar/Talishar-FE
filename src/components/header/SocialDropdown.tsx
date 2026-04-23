@@ -39,7 +39,7 @@ const SocialDropdown = ({ inDropdown = false }: { inDropdown?: boolean }) => {
       {isOpen && (
         <div className={styles.dropdownMenu}>
           <a
-            href="https://metafy.gg/@talishar"
+            href="https://metafy.gg/@talishar/members"
             target="_blank"
             rel="noopener noreferrer"
             className={styles.socialLink}

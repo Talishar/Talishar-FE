@@ -4,22 +4,27 @@ import { BsGithub, BsPersonFill, BsGearFill } from 'react-icons/bs';
 import { FaDiscord, FaTwitter, FaYoutube } from 'react-icons/fa';
 import TalisharLogo from '../../img/TalisharLogo.webp';
 import styles from './Footer.module.scss';
+import useSupporterStatus from 'hooks/useSupporterStatus';
 
 const Footer = () => {
+  const { isSupporter } = useSupporterStatus();
+
   return (
     <footer className={styles.footer}>
       <div className={styles.inner}>
         <div className={styles.columns}>
           <div className={styles.leftCol}>
             <img src={TalisharLogo} alt="Talishar" className={styles.logo} />
-            <a
-              href="https://metafy.gg/@talishar"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={styles.supportBtn}
-            >
-              Support us on Metafy
-            </a>
+            {!isSupporter && (
+              <a
+                href="https://metafy.gg/@talishar/members"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.supportBtn}
+              >
+                Support us on Metafy
+              </a>
+            )}
           </div>
 
           <div className={styles.rightCol}>

@@ -46,7 +46,7 @@ const UpgradeSection: React.FC<UpgradeSectionProps> = ({
           Join our community of supporters and help us grow!
         </p>
         <a
-          href="https://metafy.gg/@talishar"
+          href="https://metafy.gg/@talishar/members"
           target="_blank"
           rel="noopener noreferrer"
           className={styles.upgradeButton}

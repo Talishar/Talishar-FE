@@ -10,9 +10,17 @@ import MatchupTooltip from './MatchupTooltip';
 
 export interface Matchups {
   refetch: () => void;
+  selectedMatchupId?: string | null;
+  onMatchupSelected?: (matchupId: string) => void;
+  isAutoApplyingMatchup?: boolean;
 }
 
-const Matchups = ({ refetch }: Matchups) => {
+const Matchups = ({
+  refetch,
+  selectedMatchupId,
+  onMatchupSelected,
+  isAutoApplyingMatchup = false
+}: Matchups) => {
   const [isUpdating, setIsUpdating] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -45,6 +53,7 @@ const Matchups = ({ refetch }: Matchups) => {
         fabdb: gameLobby?.myDeckLink ?? '',
         matchup: matchupID
       }).unwrap();
+      onMatchupSelected?.(matchupID);
       refetch();
       toast.success(
         `Matchup profile applied, check your deck before submission`,
@@ -85,13 +94,20 @@ const Matchups = ({ refetch }: Matchups) => {
                 <MatchupTooltip content={matchup.notes}>
                   <button
                     disabled={isUpdating}
-                    className={'outline'}
+                    className={`${styles.matchupButton} ${
+                      selectedMatchupId === matchup.matchupId
+                        ? styles.matchupButtonSelected
+                        : 'outline'
+                    }`}
                     onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                       e.preventDefault();
                       handleMatchupClick(matchup.matchupId);
                     }}
                   >
                     <span className={styles.matchupName}>{matchup.name}</span>
+                    {selectedMatchupId === matchup.matchupId && (
+                      <span className={styles.selectedBadge}>Selected</span>
+                    )}
                     {turnOrderIndicator && (
                       <span className={styles.turnOrderBadge}>
                         {turnOrderIndicator}
@@ -102,6 +118,9 @@ const Matchups = ({ refetch }: Matchups) => {
               </div>
             );
           })}
+          {isAutoApplyingMatchup && (
+            <p className={styles.autoApplyingStatus}>Applying hero matchup...</p>
+          )}
         </>
       </article>
     );
