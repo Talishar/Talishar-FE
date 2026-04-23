@@ -525,20 +525,7 @@ export default function ParseGameState(input: any) {
     result.turnPhase = input.turnPhase;
   }
 
-  if (input.playerInputPopUp) {
-    result.playerInputPopUp = input.playerInputPopUp;
-    if (result.playerInputPopUp?.popup?.cards) {
-      result.playerInputPopUp.popup.cards = result.playerInputPopUp.popup.cards.map((card: any) => ParseCard(card));
-    }
-    if (result.playerInputPopUp?.popup?.topCards) {
-      result.playerInputPopUp.popup.topCards = result.playerInputPopUp.popup.topCards.map((card: any) => ParseCard(card));
-    }
-    if (result.playerInputPopUp?.popup?.bottomCards) {
-      result.playerInputPopUp.popup.bottomCards = result.playerInputPopUp.popup.bottomCards.map((card: any) => ParseCard(card));
-    }
-  } else {
-    result.playerInputPopUp = input.playerInputPopUp;
-  }
+  result.playerInputPopUp = input.playerInputPopUp;
 
   // if it's the first turn of the game add these details:
   if (input.initialLoad) {
