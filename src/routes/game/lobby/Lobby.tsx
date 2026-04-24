@@ -55,7 +55,7 @@ import Matchups from './components/matchups/Matchups';
 import { GameLocationState } from 'interface/GameLocationState';
 import { saveGameAuthKey } from 'utils/LocalKeyManagement';
 import CardPopUp from '../components/elements/cardPopUp/CardPopUp';
-import { getGameInfo, setHeroInfo } from 'features/game/GameSlice';
+import { clearGetLobbyRefresh, getGameInfo, setHeroInfo } from 'features/game/GameSlice';
 import useSound from 'use-sound';
 import playerJoined from 'sounds/playerJoinedSound.mp3';
 import { createPortal } from 'react-dom';
@@ -132,6 +132,10 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
   const settingsData = useAppSelector(getSettingsEntity);
   const isMuted = settingsData['MuteSound']?.value === '1';
   const isStreamerMode = String(settingsData['IsStreamerMode']?.value) === '1';
+
+  useEffect(() => {
+    dispatch(clearGetLobbyRefresh());
+  }, []);
 
   // Load settings when in lobby (same approach as SettingsPage - no active game needed)
   const dummyGameInfo = {
