@@ -20,13 +20,13 @@
 .smallButton {
   gap: 0.4em;
   font-size: 0.75em;
-  font-weight: 400;
+  font-weight: 500;
   padding: 0.4rem 0.75rem;
   margin: 0;
   margin-top: 0.4em;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--theme-border-light);
   background: transparent;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--theme-text-muted);
   border-radius: 6px;
   transition: all 0.15s ease;
   cursor: pointer;
@@ -37,17 +37,19 @@
 }
 
 .smallButton:hover {
-  background: rgba(255, 255, 255, 0.05);
-  border-color: var(--theme-primary, #d4af37);
-  color: rgba(255, 255, 255, 0.85);
+  background: var(--theme-primary-focus);
+  border-color: var(--theme-primary);
+  color: var(--theme-text);
+  text-decoration-color: var(--theme-primary);
   transform: none;
   box-shadow: none;
 }
 
 .smallButton.active {
-  background: rgba(212, 175, 55, 0.1);
-  border-color: var(--theme-primary, #d4af37);
-  color: var(--theme-primary, #d4af37);
+  background: var(--theme-primary-focus);
+  border-color: var(--theme-primary);
+  color: var(--theme-primary);
+  text-decoration-color: var(--theme-primary);
   box-shadow: none;
   transform: none;
 }
@@ -214,31 +216,36 @@
 }
 
 .kickButton {
-  display: block;
-  margin-top: 0.4em;
-  margin-bottom: 0 !important;
-  margin-left: auto;
-  margin-right: auto;
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  z-index: 10;
+  width: fit-content;
   padding: 0.15rem 0.5rem;
-  font-size: 0.65rem;
-  font-weight: 500;
-  background: rgba(120, 20, 20);
-  color: rgba(255, 200, 200, 0.85);
-  border: 1px solid rgba(180, 60, 60, 0.3);
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  background: rgba(100, 15, 15, 0.95);
+  color: rgba(255, 180, 180, 0.9);
+  border: 1px solid rgba(200, 60, 60, 0.45);
   border-radius: 4px;
   cursor: pointer;
-  opacity: 0.85;
-  transition: opacity 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+  opacity: 1;
+  transition: opacity 0.2s ease, background 0.2s ease, transform 0.15s ease;
+  backdrop-filter: blur(2px);
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
-  width: 50%;
 }
 
-.rightCol:hover .kickButton,
+.rightCol:hover .kickButton {
+  opacity: 0.75;
+}
+
 .kickButton:hover {
-  opacity: 1;
-  background: rgba(190, 40, 40, 0.85);
-  color: rgba(255, 220, 220, 0.95);
-  border-color: rgba(220, 80, 80, 0.7);
+  background: rgba(200, 30, 30);
+  color: white;
+  border-color: rgba(240, 80, 80, 0.8);
+  transform: scale(1.15);
 }
 
 .leftCol:hover .heroName,

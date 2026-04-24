@@ -80,7 +80,7 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
   return deckId || null;
 };
 
-const Lobby = () => {
+ const Lobby = () => {
   usePageTitle('Lobby');
   useAdScript(false);
   const [showCalculator, setShowCalculator] = useState(false);
@@ -1028,7 +1028,6 @@ const Lobby = () => {
                         ))}
                       {String(data.displayName ?? '').substring(0, 15)}
                     </h3>
-                    <div className={styles.heroName}>{data.deck.heroName}</div>
                   </div>
                 </div>
               </CardPopUp>
@@ -1040,6 +1039,20 @@ const Lobby = () => {
                   className={styles.rightCol}
                   style={{ backgroundImage: rightPic }}
                 >
+                  {playerID === 1 &&
+                    gameLobby?.theirHero &&
+                    gameLobby.theirHero !== 'CardBack' &&
+                    !COMPETITIVE_FORMATS.has(data.format as string) && (
+                      <button
+                        type="button"
+                        className={styles.kickButton}
+                        onClick={handleKickPlayer}
+                        title={`Kick ${isStreamerMode ? 'opponent' : gameLobby.theirName} from the lobby`}
+                        aria-label="Kick opponent"
+                      >
+                        Kick
+                      </button>
+                    )}
                   <div className={styles.dimPic}>
                     <h3
                       ref={opponentNameRef}
@@ -1048,60 +1061,45 @@ const Lobby = () => {
                       aria-busy={!gameLobby}
                       style={{ cursor: opponentNote ? 'help' : 'default' }}
                     >
-                      {opponentPatronInfo &&
-                        (opponentPatronInfo.metafyTiers?.length ?? 0) > 0 &&
-                        createPatreonIconMap(
-                          opponentPatronInfo.isContributor,
-                          opponentPatronInfo.isPvtVoidPatron,
-                          opponentPatronInfo.isPatron,
-                          false,
-                          opponentPatronInfo.metafyTiers
-                        )
-                          .filter((icon) => icon.condition)
-                          .map((icon, index) => (
-                            <a
-                              key={`${icon.src}-${index}`}
-                              href={icon.href}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              title={icon.title}
+                      {createPatreonIconMap(
+                        gameLobby?.theirIsContributor ?? false,
+                        gameLobby?.theirIsPvtVoidPatron ?? false,
+                        gameLobby?.theirIsPatron ? true : false,
+                        false,
+                        (gameLobby?.theirMetafyTiers?.length ?? 0) > 0 ? gameLobby!.theirMetafyTiers : undefined
+                      )
+                        .filter((icon) => icon.condition)
+                        .map((icon, index) => (
+                          <a
+                            key={`${icon.src}-${index}`}
+                            href={icon.href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            title={icon.title}
+                            style={{
+                              display: 'inline-block',
+                              marginRight: '0.3em'
+                            }}
+                          >
+                            <img
+                              src={icon.src}
+                              alt={icon.title}
                               style={{
-                                display: 'inline-block',
-                                marginRight: '0.3em'
+                                height: '1.2em',
+                                verticalAlign: 'middle'
                               }}
-                            >
-                              <img
-                                src={icon.src}
-                                alt={icon.title}
-                                style={{
-                                  height: '1.2em',
-                                  verticalAlign: 'middle'
-                                }}
-                              />
-                            </a>
-                          ))}
+                            />
+                          </a>
+                        ))}
                       {isStreamerMode
                         ? 'Opponent'
                         : String(gameLobby?.theirName ?? '').substring(0, 15)}
                     </h3>
                     <div className={styles.heroName}>
                       {gameLobby?.theirHeroName != ''
-                        ? gameLobby?.theirHeroName
+                        ? ''
                         : 'Waiting For Opponent'}
                     </div>
-                    {playerID === 1 &&
-                      gameLobby?.theirHero &&
-                      gameLobby.theirHero !== 'CardBack' &&
-                      !COMPETITIVE_FORMATS.has(data.format as string) && (
-                        <button
-                          type="button"
-                          className={styles.kickButton}
-                          onClick={handleKickPlayer}
-                          title={`Kick ${isStreamerMode ? 'opponent' : gameLobby.theirName} from the lobby`}
-                        >
-                          Kick
-                        </button>
-                      )}
                   </div>
                 </div>
               </CardPopUp>
