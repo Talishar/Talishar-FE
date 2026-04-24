@@ -92,7 +92,6 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
   overflow: visible;
   transition: all 0.3s ease;
-  cursor: pointer;
   position: relative;
 }
 
@@ -111,8 +110,7 @@
 }
 
 .leftCol:hover {
-  border-color: var(--theme-primary);
-  transform: translateY(-2px);
+  transform: translateY(-1px);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4), 0 0 20px var(--primary-focus);
 }
 
@@ -128,7 +126,6 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
   overflow: visible;
   transition: all 0.3s ease;
-  cursor: pointer;
   position: relative;
 }
 
@@ -147,8 +144,7 @@
 }
 
 .rightCol:hover {
-  border-color: var(--theme-primary);
-  transform: translateY(-2px);
+  transform: translateY(-1px);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4), 0 0 20px var(--primary-focus);
 }
 
@@ -215,6 +211,34 @@
   font-size: 1.1em;
   transition: all 0.3s ease;
   opacity: 0.9;
+}
+
+.kickButton {
+  display: block;
+  margin-top: 0.4em;
+  margin-bottom: 0 !important;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0.15rem 0.5rem;
+  font-size: 0.65rem;
+  font-weight: 500;
+  background: rgba(120, 20, 20);
+  color: rgba(255, 200, 200, 0.85);
+  border: 1px solid rgba(180, 60, 60, 0.3);
+  border-radius: 4px;
+  cursor: pointer;
+  opacity: 0.85;
+  transition: opacity 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+  width: 50%;
+}
+
+.rightCol:hover .kickButton,
+.kickButton:hover {
+  opacity: 1;
+  background: rgba(190, 40, 40, 0.85);
+  color: rgba(255, 220, 220, 0.95);
+  border-color: rgba(220, 80, 80, 0.7);
 }
 
 .leftCol:hover .heroName,

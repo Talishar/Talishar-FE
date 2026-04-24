@@ -334,6 +334,7 @@ export const URL_END_POINT = {
   METAFY_REFRESH_COMMUNITIES: `APIs/RefreshMetafyCommunities.php`,
   LOAD_BUG_REPORT: `LoadBugReport.php`,
   SUBMIT_LOBBY_INPUT: 'APIs/SubmitLobbyInput.php',
+  KICK_PLAYER: 'APIs/KickPlayer.php',
   BLOCK_USER: 'include/BlockUser.php',
   GET_MOD_PAGE_DATA: 'APIs/GetModPageData.php',
   SEARCH_USERNAMES: 'APIs/SearchUsernames.php',

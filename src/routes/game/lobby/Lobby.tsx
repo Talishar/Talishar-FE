@@ -23,7 +23,8 @@ import {
   useSubmitSideboardMutation,
   useSubmitLobbyInputMutation,
   useGetUserProfileQuery,
-  useUpdateBazaarMatchupMutation
+  useUpdateBazaarMatchupMutation,
+  useKickPlayerMutation
 } from 'features/api/apiSlice';
 import { useAppSelector } from 'app/Hooks';
 import { shallowEqual } from 'react-redux';
@@ -38,6 +39,13 @@ import {
   QUERY_STATUS,
   FAB_BAZAAR_DECK_URL_BASE
 } from 'appConstants';
+
+const COMPETITIVE_FORMATS = new Set([
+  GAME_FORMAT.COMPETITIVE_CC,
+  GAME_FORMAT.COMPETITIVE_BLITZ,
+  GAME_FORMAT.COMPETITIVE_LL,
+  GAME_FORMAT.COMPETITIVE_SAGE
+]);
 import ChooseFirstTurn from './components/chooseFirstTurn/ChooseFirstTurn';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import { SubmitSideboardAPI } from 'interface/API/SubmitSideboard.php';
@@ -224,6 +232,21 @@ const Lobby = () => {
 
   const [submitLobbyInput, submitLobbyInputData] =
     useSubmitLobbyInputMutation();
+
+  const [kickPlayerMutation] = useKickPlayerMutation();
+
+  const handleKickPlayer = async () => {
+    try {
+      await kickPlayerMutation({
+        gameName: gameID,
+        playerID: playerID,
+        authKey: authKey
+      }).unwrap();
+      toast.success('Opponent has been kicked from the lobby.');
+    } catch (err: any) {
+      toast.error(err?.error || 'Failed to kick opponent.');
+    }
+  };
 
   const handleUnreadySideboard = async () => {
     try {
@@ -442,6 +465,14 @@ const Lobby = () => {
     gameLobby?.theirHeroName,
     gameLobby?.theirHero
   ]);
+
+  // Navigate home if the host kicked us
+  useEffect(() => {
+    if (gameLobby?.wasKicked) {
+      toast.error('You were kicked from the lobby.');
+      navigate('/');
+    }
+  }, [gameLobby?.wasKicked, navigate]);
 
   const deckClone = [...data.deck.cards];
   const deckSBClone = [...data.deck.cardsSB];
@@ -1014,7 +1045,7 @@ const Lobby = () => {
                       ref={opponentNameRef}
                       onMouseEnter={handleNoteTooltipOpen}
                       onMouseLeave={handleNoteTooltipClose}
-                      aria-busy={!gameLobby?.theirName}
+                      aria-busy={!gameLobby}
                       style={{ cursor: opponentNote ? 'help' : 'default' }}
                     >
                       {opponentPatronInfo &&
@@ -1058,6 +1089,19 @@ const Lobby = () => {
                         ? gameLobby?.theirHeroName
                         : 'Waiting For Opponent'}
                     </div>
+                    {playerID === 1 &&
+                      gameLobby?.theirHero &&
+                      gameLobby.theirHero !== 'CardBack' &&
+                      !COMPETITIVE_FORMATS.has(data.format as string) && (
+                        <button
+                          type="button"
+                          className={styles.kickButton}
+                          onClick={handleKickPlayer}
+                          title={`Kick ${isStreamerMode ? 'opponent' : gameLobby.theirName} from the lobby`}
+                        >
+                          Kick
+                        </button>
+                      )}
                   </div>
                 </div>
               </CardPopUp>
@@ -1265,6 +1309,7 @@ const Lobby = () => {
               submitSideboard={gameLobby?.canSubmitSideboard ?? false}
               canUnreadySideboard={gameLobby?.canUnreadySideboard ?? false}
               isUnreadyLoading={submitLobbyInputData.isLoading}
+              isSubmitting={isSubmitting}
               handleLeave={handleLeave}
               isWidescreen={isWideScreen}
               needToDoDisclaimer={needToDoDisclaimer}
