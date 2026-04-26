@@ -2,7 +2,6 @@ import React, { useRef } from 'react';
 import { useEffect } from 'react';
 import { RootState } from 'app/Store';
 import {
-  clearGetLobbyRefresh,
   gameLobby,
   getGameInfo,
   setGameStart,
@@ -79,7 +78,6 @@ export const LobbyUpdateHandler = React.memo(
       return () => {
         abortRef.current?.abort();
         dispatch(setIsUpdateInProgressFalse());
-        dispatch(clearGetLobbyRefresh());
       };
     }, [isSubmitting]);
 

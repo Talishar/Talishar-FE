@@ -17,6 +17,10 @@ export interface GetLobbyRefreshResponse {
   theirNameColor?: string;
   theirOverlayUrl?: string;
   theirChannelLink?: string;
+  theirIsContributor?: boolean;
+  theirIsPatron?: string;
+  theirIsPvtVoidPatron?: boolean;
+  theirMetafyTiers?: string[];
   submitSideboard?: string;
   myPriority?: boolean;
   isMainGameReady?: boolean;
@@ -27,6 +31,7 @@ export interface GetLobbyRefreshResponse {
   chatEnabled?: boolean;
   chatInvited?: boolean;
   opponentIsTyping?: boolean;
+  wasKicked?: boolean;
 }
 
 export interface Matchup {

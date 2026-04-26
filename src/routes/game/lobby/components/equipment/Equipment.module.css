@@ -24,6 +24,12 @@
   -webkit-touch-callout: none;
 }
 
+.cardContainer:has(img[src*="NONE00"]) {
+  height: 72px;
+  width: 72px;
+  opacity: 0.45;
+}
+
 .card {
   height: 100%;
   width: 100%;

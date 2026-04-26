@@ -761,12 +761,12 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
     return ret;
   }
   let numCharged: number = 0;
-  for (let i = 0; i < data.cardResults.length; i++) {
+  for (let i = 0; i < (data.cardResults?.length ?? 0); i++) {
     numCharged += data.cardResults[i].charged;
   }
 
   let numKatsuDiscard: number = 0;
-  for (let i = 0; i < data.cardResults.length; i++) {
+  for (let i = 0; i < (data.cardResults?.length ?? 0); i++) {
     numKatsuDiscard += data.cardResults[i].katsuDiscard;
   }
 

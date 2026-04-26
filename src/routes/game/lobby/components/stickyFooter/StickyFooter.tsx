@@ -12,6 +12,7 @@ export type DeckSize = {
   submitSideboard: boolean;
   canUnreadySideboard?: boolean;
   isUnreadyLoading?: boolean;
+  isSubmitting?: boolean;
   isWidescreen: boolean;
   needToDoDisclaimer: boolean;
   handleLeave: (e: React.MouseEvent<HTMLButtonElement>) => void;
@@ -28,6 +29,7 @@ const StickyFooter = ({
   submitSideboard,
   canUnreadySideboard = false,
   isUnreadyLoading = false,
+  isSubmitting = false,
   isWidescreen,
   needToDoDisclaimer,
   handleLeave,
@@ -187,11 +189,12 @@ const StickyFooter = ({
             <button
               className={styles.buttonClass}
               type="submit"
+              aria-busy={isSubmitting}
               disabled={
-                isValid === false || !submitSideboard || needToDoDisclaimer
+                isValid === false || !submitSideboard || needToDoDisclaimer || isSubmitting
               }
             >
-              Confirm Deck
+              {isSubmitting ? 'Submitting...' : 'Confirm Deck'}
             </button>
           )}
           {isWidescreen && (

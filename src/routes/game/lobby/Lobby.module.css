@@ -20,13 +20,13 @@
 .smallButton {
   gap: 0.4em;
   font-size: 0.75em;
-  font-weight: 400;
+  font-weight: 500;
   padding: 0.4rem 0.75rem;
   margin: 0;
   margin-top: 0.4em;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--theme-border-light);
   background: transparent;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--theme-text-muted);
   border-radius: 6px;
   transition: all 0.15s ease;
   cursor: pointer;
@@ -37,17 +37,19 @@
 }
 
 .smallButton:hover {
-  background: rgba(255, 255, 255, 0.05);
-  border-color: var(--theme-primary, #d4af37);
-  color: rgba(255, 255, 255, 0.85);
+  background: var(--theme-primary-focus);
+  border-color: var(--theme-primary);
+  color: var(--theme-text);
+  text-decoration-color: var(--theme-primary);
   transform: none;
   box-shadow: none;
 }
 
 .smallButton.active {
-  background: rgba(212, 175, 55, 0.1);
-  border-color: var(--theme-primary, #d4af37);
-  color: var(--theme-primary, #d4af37);
+  background: var(--theme-primary-focus);
+  border-color: var(--theme-primary);
+  color: var(--theme-primary);
+  text-decoration-color: var(--theme-primary);
   box-shadow: none;
   transform: none;
 }
@@ -92,7 +94,6 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
   overflow: visible;
   transition: all 0.3s ease;
-  cursor: pointer;
   position: relative;
 }
 
@@ -111,8 +112,7 @@
 }
 
 .leftCol:hover {
-  border-color: var(--theme-primary);
-  transform: translateY(-2px);
+  transform: translateY(-1px);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4), 0 0 20px var(--primary-focus);
 }
 
@@ -128,7 +128,6 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
   overflow: visible;
   transition: all 0.3s ease;
-  cursor: pointer;
   position: relative;
 }
 
@@ -147,8 +146,7 @@
 }
 
 .rightCol:hover {
-  border-color: var(--theme-primary);
-  transform: translateY(-2px);
+  transform: translateY(-1px);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4), 0 0 20px var(--primary-focus);
 }
 
@@ -215,6 +213,39 @@
   font-size: 1.1em;
   transition: all 0.3s ease;
   opacity: 0.9;
+}
+
+.kickButton {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  z-index: 10;
+  width: fit-content;
+  padding: 0.15rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  background: rgba(100, 15, 15, 0.95);
+  color: rgba(255, 180, 180, 0.9);
+  border: 1px solid rgba(200, 60, 60, 0.45);
+  border-radius: 4px;
+  cursor: pointer;
+  opacity: 1;
+  transition: opacity 0.2s ease, background 0.2s ease, transform 0.15s ease;
+  backdrop-filter: blur(2px);
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+.rightCol:hover .kickButton {
+  opacity: 0.75;
+}
+
+.kickButton:hover {
+  background: rgba(200, 30, 30);
+  color: white;
+  border-color: rgba(240, 80, 80, 0.8);
+  transform: scale(1.15);
 }
 
 .leftCol:hover .heroName,

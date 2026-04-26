@@ -68,8 +68,10 @@ export const CardDisplay = (prop: CardProp) => {
     dispatch(playCard({ cardParams: card }));
   }
 
+  const isDisabled = card.overlay === 'disabled' || Number(card.overlay) === 1;
+
   const classStyles = classNames(styles.floatTint, {
-    [styles.disabled]: card.overlay === 'disabled'
+    [styles.disabled]: isDisabled
   });
 
   const isTargeted = card.label?.includes('Targeted') ?? false;
@@ -164,7 +166,7 @@ export const CardDisplay = (prop: CardProp) => {
         isShuffling={isShuffling}
         isOpponent={card.isOpponent !== undefined ? card.isOpponent : !isPlayer}
       />
-      {card.overlay === 'disabled' && <div className={classStyles}></div>}
+      {isDisabled && <div className={classStyles}></div>}
       {(card.isBroken ||
         card.onChain ||
         card.isFrozen ||

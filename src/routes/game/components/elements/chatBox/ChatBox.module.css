@@ -79,10 +79,10 @@
   flex: 1 1 auto;
   margin-top: 0.2em;
   margin-bottom: 0.2em;
-  outline: 2px solid black;
-  background-color: rgb(255, 255, 255, 0.9);
+  outline: 1px solid var(--theme-border-light);
+  background-color: var(--theme-form-background);
   border-radius: 5px;
-  color: black;
+  color: var(--theme-text);
 }
 
 .tabs {

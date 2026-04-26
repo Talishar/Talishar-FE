@@ -23,7 +23,8 @@ import {
   useSubmitSideboardMutation,
   useSubmitLobbyInputMutation,
   useGetUserProfileQuery,
-  useUpdateBazaarMatchupMutation
+  useUpdateBazaarMatchupMutation,
+  useKickPlayerMutation
 } from 'features/api/apiSlice';
 import { useAppSelector } from 'app/Hooks';
 import { shallowEqual } from 'react-redux';
@@ -38,6 +39,13 @@ import {
   QUERY_STATUS,
   FAB_BAZAAR_DECK_URL_BASE
 } from 'appConstants';
+
+const COMPETITIVE_FORMATS = new Set([
+  GAME_FORMAT.COMPETITIVE_CC,
+  GAME_FORMAT.COMPETITIVE_BLITZ,
+  GAME_FORMAT.COMPETITIVE_LL,
+  GAME_FORMAT.COMPETITIVE_SAGE
+]);
 import ChooseFirstTurn from './components/chooseFirstTurn/ChooseFirstTurn';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import { SubmitSideboardAPI } from 'interface/API/SubmitSideboard.php';
@@ -47,7 +55,7 @@ import Matchups from './components/matchups/Matchups';
 import { GameLocationState } from 'interface/GameLocationState';
 import { saveGameAuthKey } from 'utils/LocalKeyManagement';
 import CardPopUp from '../components/elements/cardPopUp/CardPopUp';
-import { getGameInfo, setHeroInfo } from 'features/game/GameSlice';
+import { clearGetLobbyRefresh, getGameInfo, setHeroInfo } from 'features/game/GameSlice';
 import useSound from 'use-sound';
 import playerJoined from 'sounds/playerJoinedSound.mp3';
 import { createPortal } from 'react-dom';
@@ -72,7 +80,7 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
   return deckId || null;
 };
 
-const Lobby = () => {
+ const Lobby = () => {
   usePageTitle('Lobby');
   useAdScript(false);
   const [showCalculator, setShowCalculator] = useState(false);
@@ -124,6 +132,10 @@ const Lobby = () => {
   const settingsData = useAppSelector(getSettingsEntity);
   const isMuted = settingsData['MuteSound']?.value === '1';
   const isStreamerMode = String(settingsData['IsStreamerMode']?.value) === '1';
+
+  useEffect(() => {
+    dispatch(clearGetLobbyRefresh());
+  }, []);
 
   // Load settings when in lobby (same approach as SettingsPage - no active game needed)
   const dummyGameInfo = {
@@ -224,6 +236,21 @@ const Lobby = () => {
 
   const [submitLobbyInput, submitLobbyInputData] =
     useSubmitLobbyInputMutation();
+
+  const [kickPlayerMutation] = useKickPlayerMutation();
+
+  const handleKickPlayer = async () => {
+    try {
+      await kickPlayerMutation({
+        gameName: gameID,
+        playerID: playerID,
+        authKey: authKey
+      }).unwrap();
+      toast.success('Opponent has been kicked from the lobby.');
+    } catch (err: any) {
+      toast.error(err?.error || 'Failed to kick opponent.');
+    }
+  };
 
   const handleUnreadySideboard = async () => {
     try {
@@ -442,6 +469,14 @@ const Lobby = () => {
     gameLobby?.theirHeroName,
     gameLobby?.theirHero
   ]);
+
+  // Navigate home if the host kicked us
+  useEffect(() => {
+    if (gameLobby?.wasKicked) {
+      toast.error('You were kicked from the lobby.');
+      navigate('/');
+    }
+  }, [gameLobby?.wasKicked, navigate]);
 
   const deckClone = [...data.deck.cards];
   const deckSBClone = [...data.deck.cardsSB];
@@ -997,7 +1032,6 @@ const Lobby = () => {
                         ))}
                       {String(data.displayName ?? '').substring(0, 15)}
                     </h3>
-                    <div className={styles.heroName}>{data.deck.heroName}</div>
                   </div>
                 </div>
               </CardPopUp>
@@ -1009,53 +1043,66 @@ const Lobby = () => {
                   className={styles.rightCol}
                   style={{ backgroundImage: rightPic }}
                 >
+                  {playerID === 1 &&
+                    gameLobby?.theirHero &&
+                    gameLobby.theirHero !== 'CardBack' &&
+                    !COMPETITIVE_FORMATS.has(data.format as string) &&
+                    !gameLobby?.amIChoosingFirstPlayer && (
+                      <button
+                        type="button"
+                        className={styles.kickButton}
+                        onClick={handleKickPlayer}
+                        title={`Kick ${isStreamerMode ? 'opponent' : gameLobby.theirName} from the lobby`}
+                        aria-label="Kick opponent"
+                      >
+                        Kick
+                      </button>
+                    )}
                   <div className={styles.dimPic}>
                     <h3
                       ref={opponentNameRef}
                       onMouseEnter={handleNoteTooltipOpen}
                       onMouseLeave={handleNoteTooltipClose}
-                      aria-busy={!gameLobby?.theirName}
+                      aria-busy={!gameLobby}
                       style={{ cursor: opponentNote ? 'help' : 'default' }}
                     >
-                      {opponentPatronInfo &&
-                        (opponentPatronInfo.metafyTiers?.length ?? 0) > 0 &&
-                        createPatreonIconMap(
-                          opponentPatronInfo.isContributor,
-                          opponentPatronInfo.isPvtVoidPatron,
-                          opponentPatronInfo.isPatron,
-                          false,
-                          opponentPatronInfo.metafyTiers
-                        )
-                          .filter((icon) => icon.condition)
-                          .map((icon, index) => (
-                            <a
-                              key={`${icon.src}-${index}`}
-                              href={icon.href}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              title={icon.title}
+                      {createPatreonIconMap(
+                        gameLobby?.theirIsContributor ?? false,
+                        gameLobby?.theirIsPvtVoidPatron ?? false,
+                        gameLobby?.theirIsPatron ? true : false,
+                        false,
+                        (gameLobby?.theirMetafyTiers?.length ?? 0) > 0 ? gameLobby!.theirMetafyTiers : undefined
+                      )
+                        .filter((icon) => icon.condition)
+                        .map((icon, index) => (
+                          <a
+                            key={`${icon.src}-${index}`}
+                            href={icon.href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            title={icon.title}
+                            style={{
+                              display: 'inline-block',
+                              marginRight: '0.3em'
+                            }}
+                          >
+                            <img
+                              src={icon.src}
+                              alt={icon.title}
                               style={{
-                                display: 'inline-block',
-                                marginRight: '0.3em'
+                                height: '1.2em',
+                                verticalAlign: 'middle'
                               }}
-                            >
-                              <img
-                                src={icon.src}
-                                alt={icon.title}
-                                style={{
-                                  height: '1.2em',
-                                  verticalAlign: 'middle'
-                                }}
-                              />
-                            </a>
-                          ))}
+                            />
+                          </a>
+                        ))}
                       {isStreamerMode
                         ? 'Opponent'
                         : String(gameLobby?.theirName ?? '').substring(0, 15)}
                     </h3>
                     <div className={styles.heroName}>
                       {gameLobby?.theirHeroName != ''
-                        ? gameLobby?.theirHeroName
+                        ? ''
                         : 'Waiting For Opponent'}
                     </div>
                   </div>
@@ -1265,6 +1312,7 @@ const Lobby = () => {
               submitSideboard={gameLobby?.canSubmitSideboard ?? false}
               canUnreadySideboard={gameLobby?.canUnreadySideboard ?? false}
               isUnreadyLoading={submitLobbyInputData.isLoading}
+              isSubmitting={isSubmitting}
               handleLeave={handleLeave}
               isWidescreen={isWideScreen}
               needToDoDisclaimer={needToDoDisclaimer}

@@ -24,6 +24,10 @@ export default function OpponentInactive() {
   const isRequestInProgress = useAppSelector(
     (state: any) => state.game.isUpdateInProgress
   );
+  // hasn't been reset, so a chat from the non-priority player won't clear it.
+  const backendInactive = useAppSelector(
+    (state: any) => state.game.opponentInactive ?? false
+  );
   const { playerID, gameID, authKey } = useAppSelector(
     getGameInfo,
     shallowEqual
@@ -42,11 +46,13 @@ export default function OpponentInactive() {
   useEffect(() => {
     if (lastUpdate !== lastUpdateRef.current) {
       lastUpdateRef.current = lastUpdate;
-      lastUpdateTimeRef.current = Date.now();
-      setInactive(false);
-      setDismissed(false);
+      if (!backendInactive) {
+        lastUpdateTimeRef.current = Date.now();
+        setInactive(false);
+        setDismissed(false);
+      }
     }
-  }, [lastUpdate]);
+  }, [lastUpdate, backendInactive]);
 
   // Poll for inactivity
   useEffect(() => {

@@ -553,6 +553,16 @@ export const apiSlice = createApi({
         };
       }
     }),
+    kickPlayer: builder.mutation<{ success: boolean; error?: string }, { gameName: number; playerID: number; authKey: string }>({
+      query: (body) => {
+        return {
+          url: URL_END_POINT.KICK_PLAYER,
+          method: 'POST',
+          body: body,
+          responseHandler: parseResponse
+        };
+      }
+    }),
     submitSideboard: builder.mutation({
       query: ({ ...body }: SubmitSideboardAPI) => {
         return {
@@ -1144,6 +1154,7 @@ export const {
   useGetUserProfileQuery,
   useLoadReplayMutation,
   useSubmitLobbyInputMutation,
+  useKickPlayerMutation,
   useGetModPageDataQuery,
   useBanPlayerByIPMutation,
   useBanPlayerByNameMutation,
