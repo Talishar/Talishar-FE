@@ -155,7 +155,8 @@ export const GAME_FORMAT = {
   SAGE: 'sage',
   COMPETITIVE_SAGE: 'compsage',
   OPEN_SAGE: 'futuresage',
-  OPEN: 'open'
+  OPEN: 'open',
+  GAGE: 'gage'
   //OPEN_LL_BLITZ: 'openformatllblitz'
 };
 
@@ -179,7 +180,8 @@ export const GAME_FORMAT_NUMBER = {
   SAGE: '14',
   COMPETITIVE_SAGE: '15',
   OPEN_SAGE: '16',
-  OPEN: '17'
+  OPEN: '17',
+  GAGE: '18'
 };
 
 // Create a mapping from number format to string format for normalization

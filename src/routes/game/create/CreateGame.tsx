@@ -1178,6 +1178,9 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
                     <option value={GAME_FORMAT.OPEN}>
                       {t('MENU.CREATE_GAME.FORMATS.OPEN')}
                     </option>
+                    <option value={GAME_FORMAT.GAGE}>
+                      {t('MENU.CREATE_GAME.FORMATS.GAGE')}
+                    </option>
                   </optgroup>
                 </select>
               </label>
