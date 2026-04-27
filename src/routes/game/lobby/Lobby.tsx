@@ -123,6 +123,7 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
     (state: RootState) => state.game.gameLobby,
     shallowEqual
   );
+  const initialGameLobbyRef = useRef(gameLobby);
   const isBazaarDeckInLobby = !!extractBazaarDeckIdFromLink(
     gameLobby?.myDeckLink
   );
@@ -439,6 +440,7 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
 
   // Navigate to main game when ready - must be in useEffect to avoid setState during render
   useEffect(() => {
+    if (gameLobby === initialGameLobbyRef.current) return;
     if (gameLobby?.isMainGameReady) {
       // Dispatch hero info to Redux before navigating
       dispatch(
