@@ -283,6 +283,11 @@ const PRECON_DECK_DATA = [
     name: 'Arakni, 5L!p3d 7hRu 7h3 cR4X',
     link: 'https://fabrary.net/decks/01K74RXDPRPJT9YWGFVAPHECDF',
     hero: 'HNT261'
+  },
+  {
+    name: 'Hala, Bladesaint of the Vow',
+    link: 'https://fabrary.net/decks/01KNHHE1MY39BC4PXYXMTJVT1M',
+    hero: 'AHA001'
   }
 ];
 
