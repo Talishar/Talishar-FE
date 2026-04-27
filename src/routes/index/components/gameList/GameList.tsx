@@ -148,6 +148,7 @@ const GameList = () => {
     GAME_FORMAT.DRAFT,
     GAME_FORMAT.PRECON,
     GAME_FORMAT.OPEN,
+    GAME_FORMAT.GAGE,
     // Also include numeric format values
     GAME_FORMAT_NUMBER.BLITZ,
     GAME_FORMAT_NUMBER.COMPETITIVE_BLITZ,
@@ -166,7 +167,8 @@ const GameList = () => {
     GAME_FORMAT_NUMBER.SEALED,
     GAME_FORMAT_NUMBER.DRAFT,
     GAME_FORMAT_NUMBER.PRECON,
-    GAME_FORMAT_NUMBER.OPEN
+    GAME_FORMAT_NUMBER.OPEN,
+    GAME_FORMAT_NUMBER.GAGE
   ]);
 
   const [inProgressFormatFilters, setInProgressFormatFilters] = useState<
@@ -419,7 +421,8 @@ const GameList = () => {
     GAME_FORMAT.SEALED,
     GAME_FORMAT.DRAFT,
     GAME_FORMAT.PRECON,
-    GAME_FORMAT.OPEN
+    GAME_FORMAT.OPEN,
+    GAME_FORMAT.GAGE
   ];
 
   // Create mapping from string formats to numeric formats
@@ -441,7 +444,8 @@ const GameList = () => {
     [GAME_FORMAT.SEALED]: GAME_FORMAT_NUMBER.SEALED,
     [GAME_FORMAT.DRAFT]: GAME_FORMAT_NUMBER.DRAFT,
     [GAME_FORMAT.PRECON]: GAME_FORMAT_NUMBER.PRECON,
-    [GAME_FORMAT.OPEN]: GAME_FORMAT_NUMBER.OPEN
+    [GAME_FORMAT.OPEN]: GAME_FORMAT_NUMBER.OPEN,
+    [GAME_FORMAT.GAGE]: GAME_FORMAT_NUMBER.GAGE
   };
 
   const formatLabelMap: Record<string, string> = {
@@ -465,6 +469,7 @@ const GameList = () => {
     [GAME_FORMAT_NUMBER.COMPETITIVE_SAGE]: t("GAME_LIST.FORMATS.COMPETITIVE_SAGE"),
     [GAME_FORMAT_NUMBER.OPEN_SAGE]: t("GAME_LIST.FORMATS.FUTURE_SAGE"),
     [GAME_FORMAT_NUMBER.OPEN_CC]: t("GAME_LIST.FORMATS.FUTURE_CC"),
+    [GAME_FORMAT_NUMBER.GAGE]: t("GAME_LIST.FORMATS.GAGE"),
   };
 
   const getFormatLabel = (format: string) => formatLabelMap[format] || t("GAME_LIST.FORMATS.OTHER");

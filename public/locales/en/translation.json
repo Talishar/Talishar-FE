@@ -78,7 +78,8 @@
 	"PRECON":"Preconstructed Decks",
 	"BLITZ":"Blitz",
 	"DRAFT":"Draft / Limited",
-	"OPEN":"Open (no restrictions)"
+	"OPEN":"Open (no restrictions)",
+  "GAGE":"Golden Age"
       },
       "VISIBILITY":"Visibility",
       "VISIBILITIES":{
@@ -235,7 +236,8 @@
       "BLITZ":"Blitz",
       "COMPETITIVE_BLITZ":"Competitive Blitz",      
       "DRAFT":"Draft / Limited",
-      "OPEN":"Open (no restrictions)"      
+      "OPEN":"Open (no restrictions)",
+      "GAGE":"Golden Age"
     },
     "FRIENDS":"Friends' Games",
     "IN_PROGRESS":"Games in Progress: <1>{{games}}</1>",
