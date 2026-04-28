@@ -530,6 +530,8 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
       case GAME_FORMAT.OPEN_BLITZ:
       case GAME_FORMAT.OPEN:
         return { deckSize: 0, maxDeckSize: 99999 };
+      case GAME_FORMAT.GAGE:
+        return { deckSize: 60, maxDeckSize: 60 };
       default:
         return { deckSize: 60, maxDeckSize: 99999 };
     }
