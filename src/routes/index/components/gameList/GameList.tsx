@@ -73,7 +73,7 @@ const GameList = () => {
   const { isLoggedIn } = useAuth();
 
   const HERO_LIST = ['WTR001', 'ARC001', 'MON001', 'UPR001', 'ELE001', 'ROS001', 'HNT001', 'SUP001'];
-  const FORMAT_LIST = [GAME_FORMAT.COMPETITIVE_CC, GAME_FORMAT.BLITZ, GAME_FORMAT.COMMONER, GAME_FORMAT.DRAFT, GAME_FORMAT.SEALED];
+  const FORMAT_LIST = [GAME_FORMAT.COMPETITIVE_CC, GAME_FORMAT.BLITZ, GAME_FORMAT.COMMONER, GAME_FORMAT.DRAFT, GAME_FORMAT.SEALED, GAME_FORMAT.GAGE];
   
   const USE_DEV_FAKE_GAMES = false; // Set to true to enable fake games for testing
 
@@ -421,8 +421,7 @@ const GameList = () => {
     GAME_FORMAT.SEALED,
     GAME_FORMAT.DRAFT,
     GAME_FORMAT.PRECON,
-    GAME_FORMAT.OPEN,
-    GAME_FORMAT.GAGE
+    GAME_FORMAT.OPEN
   ];
 
   // Create mapping from string formats to numeric formats
@@ -459,6 +458,7 @@ const GameList = () => {
     [GAME_FORMAT.COMPETITIVE_SAGE]: t("GAME_LIST.FORMATS.COMPETITIVE_SAGE"),
     [GAME_FORMAT.OPEN_SAGE]: t("GAME_LIST.FORMATS.FUTURE_SAGE"),
     [GAME_FORMAT.OPEN_CC]: t("GAME_LIST.FORMATS.FUTURE_CC"),
+    [GAME_FORMAT.GAGE]: t("GAME_LIST.FORMATS.GAGE"),
     [GAME_FORMAT_NUMBER.BLITZ]: t("GAME_LIST.FORMATS.BLITZ"),
     [GAME_FORMAT_NUMBER.COMPETITIVE_BLITZ]: t("GAME_LIST.FORMATS.COMPETITIVE_BLITZ"),
     [GAME_FORMAT_NUMBER.CLASSIC_CONSTRUCTED]: t("GAME_LIST.FORMATS.CC"),
@@ -585,6 +585,7 @@ const GameList = () => {
                     { label: t("GAME_LIST.FORMATS.COMPETITIVE_SAGE"), value: GAME_FORMAT.COMPETITIVE_SAGE },
                     { label: t("GAME_LIST.FORMATS.FUTURE_SAGE"), value: GAME_FORMAT.OPEN_SAGE },
                     { label: t("GAME_LIST.FORMATS.FUTURE_CC"), value: GAME_FORMAT.OPEN_CC },
+                    { label: t("GAME_LIST.FORMATS.GAGE"), value: GAME_FORMAT.GAGE },
                     { label: t("GAME_LIST.FORMATS.OTHER"), value: 'otherFormats', isGroup: true, groupValues: otherFormats }
                   ]}
                   includeFriendsGames={includeFriendsGames}
