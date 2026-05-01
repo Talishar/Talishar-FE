@@ -127,8 +127,7 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
   const isBazaarDeckInLobby = !!extractBazaarDeckIdFromLink(
     gameLobby?.myDeckLink
   );
-  const shouldShowMatchupsUI =
-    !isBazaarDeckInLobby && (gameLobby?.matchups?.length ?? 0) > 0;
+  const shouldShowMatchupsUI = (gameLobby?.matchups?.length ?? 0) > 0;
   const [playLobbyJoin] = useSound(playerJoined, { volume: 1 });
   const settingsData = useAppSelector(getSettingsEntity);
   const isMuted = settingsData['MuteSound']?.value === '1';
@@ -282,11 +281,6 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
     setHasMatchups(shouldShowMatchupsUI);
   }, [shouldShowMatchupsUI]);
 
-  useEffect(() => {
-    if (isBazaarDeckInLobby && activeTab === 'matchups') {
-      setActiveTab('equipment');
-    }
-  }, [isBazaarDeckInLobby, activeTab]);
 
   useEffect(() => {
     // New lobby/deck context: clear stale selected matchup from previous session.
