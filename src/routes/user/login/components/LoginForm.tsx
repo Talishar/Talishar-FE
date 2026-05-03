@@ -16,6 +16,7 @@ import { setCredentialsReducer } from 'features/auth/authSlice';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
 import { loginValidationSchema, LoginValidationType } from './validation';
 import { FaExclamationCircle } from 'react-icons/fa';
+import { useTranslation } from 'react-i18next';
 
 const getLoginBody = ({
   userID,
@@ -38,6 +39,9 @@ export const LoginForm = () => {
   const { setLoggedIn } = useAuth();
   const navigate = useNavigate();
   const { refetch } = useGetFavoriteDecksQuery(undefined);
+    // Initial stuff to allow the lang to change
+  const { t, i18n, ready } = useTranslation();
+
   const {
     register,
     handleSubmit,
@@ -47,7 +51,7 @@ export const LoginForm = () => {
     mode: 'onBlur',
     resolver: yupResolver(loginValidationSchema)
   });
-
+  
   const onSubmit: SubmitHandler<LoginValidationType> = async (data) => {
     const values = { ...data, rememberMe: data.rememberMe ?? false };
     try {
@@ -60,7 +64,7 @@ export const LoginForm = () => {
         toast.error(resp.error, { position: 'top-center' });
       }
       if (resp?.isUserLoggedIn) {
-        toast.success('Logged In!', { position: 'top-center' });
+        toast.success(t("USER.LOGIN.LOGGED_IN"), { position: 'top-center' });
         refetch();
         setLoggedIn(
           resp?.loggedInUserID ?? '0',
@@ -75,12 +79,12 @@ export const LoginForm = () => {
         navigate('/');
       }
       if (resp?.isUserLoggedIn === false) {
-        toast.error('Incorrect username or password.', {
+        toast.error(t("USER.LOGIN.INCORRECT_CREDENTIALS"), {
           position: 'top-center'
         });
         setError('root.serverError', {
           type: 'custom',
-          message: 'Incorrect username or password.'
+          message: t("USER.LOGIN.INCORRECT_CREDENTIALS")
         });
       }
     } catch (err) {
@@ -99,7 +103,7 @@ export const LoginForm = () => {
 
   return (
     <div>
-      <h2>Log In</h2>
+      <h2>{t("USER.LOGIN.LOGIN")}</h2>
       <article className={styles.formContainer}>
         <button
           onClick={() => {
@@ -148,12 +152,12 @@ export const LoginForm = () => {
                 <rect width="278" height="212" fill="white" />
               </clipPath>
             </defs>
-          </svg>
-          Log In with Metafy
+      </svg>
+      {t("USER.LOGIN.LOGIN_METAFY")}
         </button>
-        <p className={styles.orbreak}>or</p>
+        <p className={styles.orbreak}>{t("USER.LOGIN.OR")}</p>
         <form onSubmit={handleSubmit(onSubmit)} ref={parent}>
-          <label htmlFor="userID">Username</label>
+      <label htmlFor="userID">{t("USER.LOGIN.USERNAME")}</label>
           <input
             type="text"
             placeholder="bravo"
@@ -163,7 +167,7 @@ export const LoginForm = () => {
           {errors.userID?.message && (
             <div className={styles.fieldError}>{errors.userID?.message}</div>
           )}
-          <label htmlFor="password">Password</label>
+          <label htmlFor="password">{t("USER.LOGIN.PASSWORD")}</label>
           <input
             type="password"
             placeholder="********"
@@ -179,7 +183,7 @@ export const LoginForm = () => {
             autoComplete="off"
             {...register('rememberMe')}
           />
-          <label htmlFor="rememberMe">Remember me</label>
+          <label htmlFor="rememberMe">{t("USER.LOGIN.PASSWORD")}</label>
           {errors.rememberMe?.message && (
             <div className={styles.fieldError}>
               {errors.rememberMe?.message}
@@ -199,8 +203,8 @@ export const LoginForm = () => {
             disabled={isSubmitting}
             aria-busy={isSubmitting}
             className={styles.submitButton}
-          >
-            Log In
+      >
+      {t("USER.LOGIN.LOGIN")}
           </button>
           {errors.root?.serverError?.message && (
             <div className={styles.fieldError}>
@@ -217,20 +221,18 @@ export const LoginForm = () => {
               color: 'var(--theme-primary)',
               textDecoration: 'underline'
             }}
-          >
-            Sign Up
+      >
+      {t("USER.LOGIN.SIGN_UP")}
           </Link>
         </p>
         <small>
-          <em>
-            By using the Remember Me function, you consent to a cookie being
-            stored in your browser for purpose of identifying your account on
-            future visits.
+      <em>
+      {t("USER.LOGIN.REMEMBER_ME_CONSENT")}                  
           </em>
         </small>
         &nbsp;
         <small>
-          <Link to={'/privacy'}>Privacy Policy</Link>
+          <Link to={'/privacy'}>{t("USER.LOGIN.REMEMBER_ME_CONSENT")}</Link>
         </small>
       </article>
     </div>

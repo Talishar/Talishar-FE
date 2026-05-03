@@ -547,23 +547,23 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
       // Extract base game description (remove hero/class names)
       let baseGameDescription = values.gameDescription || '';
       if (selectedClasses.length > 0) {
-        baseGameDescription = 'Looking to play against a specific class';
+        baseGameDescription = t("MENU.CREATE_GAME.GAME_DESCRIPTIONS.SPECIFIC_CLASS");
       } else if (selectedHeroes.length > 0) {
         if (gameDescription.startsWith('No interest')) {
-          baseGameDescription = 'No interest in playing against specific hero';
+          baseGameDescription = t("MENU.CREATE_GAME.GAME_DESCRIPTIONS.NOT_SPECIFIC_CLASS");
         } else {
-          baseGameDescription = 'Looking to play against a specific hero';
+          baseGameDescription = t("MENU.CREATE_GAME.GAME_DESCRIPTIONS.SPECIFIC_CLASS");
         }
       } else if (
         baseGameDescription.startsWith('Looking to play against ') &&
         baseGameDescription.includes(',')
       ) {
-        baseGameDescription = 'Looking to play against a specific hero';
+        baseGameDescription = t("MENU.CREATE_GAME.GAME_DESCRIPTIONS.SPECIFIC_HERO");
       } else if (
         baseGameDescription.startsWith('No interest in playing against') &&
         baseGameDescription.includes(',')
       ) {
-        baseGameDescription = 'No interest in playing against specific hero';
+        baseGameDescription = t("MENU.CREATE_GAME.GAME_DESCRIPTIONS.NOT_SPECIFIC_HERO");
       }
 
       // Save the base option and selected heroes/classes to localStorage

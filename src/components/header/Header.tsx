@@ -128,8 +128,12 @@ const Header = () => {
               About
             </NavLink>
           </li>
-        </ul>
-
+	  {!isLoggedIn ? (
+	  <li>
+	    <LanguageSelector className={navLinkClass}/>
+	  </li>
+	  ) : ''}
+	</ul>
         <ul className={styles.rightGroup}>
           <li>
             {isLoggedIn ? (

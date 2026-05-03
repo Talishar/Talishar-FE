@@ -250,5 +250,36 @@
     "JOIN_DECK_READY":"Join using your pre-configured deck",
     "JOIN_DECK_NOT_READY":"Select a deck in the panel above to join instantly",
     "JOIN":"Join"
+  },
+  "NEWS":{
+    "TITLE":"Talishar Release Notes",
+    "LOADING":"Loading release notes...",
+    "NO_NEWS":"No recent announcements. Join our Discord for updates!",
+    "VIEW_ALL":"View all "
+  },
+  "USER":{
+    "LOGIN":{
+      "LOGIN_METAFY":"Log In with Metafy",
+      "USERNAME":"Username",
+      "OR":"or",
+      "PASSWORD":"Password",
+      "CONFIRM_PASSWORD":"Confirm Password",
+      "EMAIL":"Email",
+      "REMEMBER_ME":"Remember me",
+      "LOGIN":"Log In",
+      "SIGN_UP":"Sign Up",
+      "REMEMBER_ME_CONSENT":"By using the Remember Me function, you consent to a cookie being stored in your browser for purpose of identifying your account on future visits.",
+      "PRIVACY_POLICY":"Privacy Policy",
+      "LOGGED_IN":"Logged In!",
+      "CT_CREDENTIALS":"Incorrect username or password.",
+      "TALISHAR_CONSENT":"I agree that <0>Talishar is not a judge.</0>",
+      "RESET_PASSWORD_TITLE":"Reset Password",
+      "SUBMIT":"Submit",
+      "DISCLAIMER":"Disclaimer",
+      "PASSWORD_RESET_SUCESS":"Password reset successfully! Login with your new password.",
+      "POLICY_DIALOG_BUTTON":"I agree, let me play already!",
+      "ALREADY_HAVE_ACCOUNT":"Already have an account? <0>Login</0>",
+      "WELCOME_BACK":"Welcome back to Talishar"
+    }
   }
 }

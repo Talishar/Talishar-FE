@@ -1,6 +1,7 @@
 import { Outlet, useLocation } from 'react-router-dom';
 import styles from './LoginPage.module.css';
 import PageBanner from 'components/PageBanner/PageBanner';
+import { useTranslation } from 'react-i18next';
 
 const bannerByPath: Record<string, { title: string; subtitle?: string }> = {
   signup: { title: 'Create Account', subtitle: 'Join Talishar for free' },
@@ -11,7 +12,9 @@ const bannerByPath: Record<string, { title: string; subtitle?: string }> = {
 export const LoginPage = () => {
   const location = useLocation();
   const segment = location.pathname.split('/').filter(Boolean).pop() ?? '';
-  const { title, subtitle } = bannerByPath[segment] ?? { title: 'Sign In', subtitle: 'Welcome back to Talishar' };
+  const { t, i18n, ready } = useTranslation();
+
+  const { title, subtitle } = bannerByPath[segment] ?? { title: t("USER.LOGIN.LOGIN"), subtitle: t("USER.LOGIN.WELCOME_BACK") };
 
   return (
     <main className={styles.LoginPageContainer}>

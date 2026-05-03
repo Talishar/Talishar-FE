@@ -248,5 +248,36 @@
     "JOIN_DECK_READY": "Rejoindre avec votre deck préconfiguré",
     "JOIN_DECK_NOT_READY": "Sélectionnez un deck dans le panneau ci-dessus pour rejoindre instantanément",
     "JOIN": "Rejoindre"
+  },
+  "NEWS": {
+    "TITLE": "Notes de version de Talishar",
+    "LOADING": "Chargement des notes de version...",
+    "NO_NEWS": "Aucune annonce récente. Rejoignez notre Discord pour les mises à jour!",
+    "VIEW_ALL": "Tout voir "
+  },
+  "USER": {
+    "LOGIN": {
+      "LOGIN_METAFY": "Se connecter avec Metafy",
+      "USERNAME": "Nom d’utilisateur",
+      "OR": "ou",
+      "PASSWORD": "Mot de passe",
+      "CONFIRM_PASSWORD": "Confirmer le mot de passe",
+      "EMAIL": "Courriel",
+      "REMEMBER_ME": "Se souvenir de moi",
+      "LOGIN": "Se connecter",
+      "SIGN_UP": "S’inscrire",
+      "REMEMBER_ME_CONSENT": "En utilisant la fonction Se souvenir de moi, vous consentez à ce qu’un cookie soit stocké dans votre navigateur afin d’identifier votre compte lors de vos prochaines visites.",
+      "PRIVACY_POLICY": "Politique de confidentialité",
+      "LOGGED_IN": "Connecté!",
+      "CT_CREDENTIALS": "Nom d’utilisateur ou mot de passe incorrect.",
+      "TALISHAR_CONSENT": "J’accepte que <0>Talishar ne soit pas un juge.</0>",
+      "RESET_PASSWORD_TITLE": "Réinitialiser le mot de passe",
+      "SUBMIT": "Soumettre",
+      "DISCLAIMER": "Avis de non-responsabilité",
+      "PASSWORD_RESET_SUCESS": "Mot de passe réinitialisé avec succès! Connectez-vous avec votre nouveau mot de passe.",
+      "POLICY_DIALOG_BUTTON": "J’accepte, laissez-moi jouer!",
+      "ALREADY_HAVE_ACCOUNT": "Vous avez déjà un compte? <0>Connectez-vous</0>",
+      "WELCOME_BACK": "Bon retour sur Talishar"
+    }
   }
 }
