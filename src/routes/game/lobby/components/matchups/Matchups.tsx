@@ -25,43 +25,11 @@ export interface Matchups {
   isBazaarDeck?: boolean;
 }
 
-const HERO_CLASS_MAP: Record<string, string> = {
-  Arakni: 'Assassin', Uzuri: 'Assassin', Nuu: 'Assassin',
-  Bravo: 'Guardian', Oldhim: 'Guardian', Betsy: 'Guardian', Victor: 'Guardian',
-  Jarl: 'Guardian', Valda: 'Guardian', Lyath: 'Guardian', Pleiades: 'Guardian',
-  Genis: 'Guardian', Brevant: 'Guardian', Terra: 'Guardian',
-  Rhinar: 'Brute', Levia: 'Brute', Kayo: 'Brute', Tuffnut: 'Brute',
-  Katsu: 'Ninja', Ira: 'Ninja', Benji: 'Ninja', Fai: 'Ninja',
-  Emperor: 'Ninja', Fang: 'Ninja',
-  Dorinthea: 'Warrior', Boltyn: 'Warrior', Kassai: 'Warrior', Ser: 'Warrior',
-  Olympia: 'Warrior', Yoji: 'Warrior', Hala: 'Warrior',
-  Briar: 'Runeblade', Chane: 'Runeblade', Viserai: 'Runeblade',
-  Blasmophet: 'Runeblade', Vynnset: 'Runeblade', Dromai: 'Runeblade', Cindra: 'Runeblade',
-  Prism: 'Illusionist', Enigma: 'Illusionist', Aurora: 'Illusionist',
-  Kano: 'Wizard', Iyslander: 'Wizard', Blaze: 'Wizard',
-  Dash: 'Mechanologist', Maxx: 'Mechanologist', Teklovossen: 'Mechanologist',
-  Puffin: 'Mechanologist', Data: 'Mechanologist', Professor: 'Mechanologist',
-  Azalea: 'Ranger', Gorganian: 'Ranger', Lexi: 'Ranger', Riptide: 'Ranger',
-  Gravy: 'Pirate', Anothos: 'Pirate', Marlynn: 'Pirate', Scurv: 'Pirate',
-  Florian: 'Necromancer', Verdance: 'Necromancer', Oscilio: 'Necromancer',
-};
-
-const CLASS_ORDER = [
-  'Assassin', 'Brute', 'Guardian', 'Illusionist',
-  'Mechanologist', 'Necromancer', 'Ninja', 'Pirate',
-  'Ranger', 'Runeblade', 'Warrior', 'Wizard', 'Other',
-];
-
 const BLITZ_FORMATS = new Set([
   GAME_FORMAT.BLITZ, GAME_FORMAT.COMPETITIVE_BLITZ, GAME_FORMAT.OPEN_BLITZ,
   GAME_FORMAT.SAGE, GAME_FORMAT.COMPETITIVE_SAGE, GAME_FORMAT.OPEN_SAGE,
   GAME_FORMAT.COMMONER,
 ]);
-
-const getHeroClass = (name: string): string => {
-  const firstName = name.split(/[\s,]/)[0];
-  return HERO_CLASS_MAP[firstName] ?? 'Other';
-};
 
 const Matchups = ({
   refetch,
@@ -264,18 +232,25 @@ const Matchups = ({
     [unsavedHeroes, searchTerm]
   );
 
+  // Group by backend-supplied class (e.g. "RUNEBLADE" -> "Runeblade").
+  // When the backend hasn't shipped legalHeroes (fallback path), `class` is
+  // empty and everything buckets under "Other" — still functional, just less
+  // organized until the backend ships.
   const groupedMatchups = useMemo(() => {
     const groups: Record<string, typeof filteredUnsavedHeroes> = {};
     for (const h of filteredUnsavedHeroes) {
-      // Prefer backend-supplied class; fall back to first-name HERO_CLASS_MAP
       const cls = h.class
-        ? h.class.charAt(0) + h.class.slice(1).toLowerCase() // "RUNEBLADE" -> "Runeblade"
-        : getHeroClass(h.name);
+        ? h.class.charAt(0) + h.class.slice(1).toLowerCase()
+        : 'Other';
       if (!groups[cls]) groups[cls] = [];
       groups[cls].push(h);
     }
-    return CLASS_ORDER
-      .filter((cls) => groups[cls]?.length)
+    return Object.keys(groups)
+      .sort((a, b) => {
+        if (a === 'Other') return 1;
+        if (b === 'Other') return -1;
+        return a.localeCompare(b);
+      })
       .map((cls) => ({ cls, matchups: groups[cls] }));
   }, [filteredUnsavedHeroes]);
 
