@@ -61,18 +61,15 @@ const StickyFooter = ({
       }
     };
 
+    // Initial update
     updateFooterHeight();
-    const timer = setTimeout(updateFooterHeight, 100);
 
-    const observer = footerRef.current
-      ? new ResizeObserver(updateFooterHeight)
-      : null;
-    if (observer && footerRef.current) observer.observe(footerRef.current);
+    // Small delay to ensure DOM is fully rendered on mobile
+    const timer = setTimeout(updateFooterHeight, 100);
 
     window.addEventListener('resize', updateFooterHeight);
     return () => {
       clearTimeout(timer);
-      observer?.disconnect();
       window.removeEventListener('resize', updateFooterHeight);
     };
   }, []);
@@ -166,14 +163,15 @@ const StickyFooter = ({
             </div>
           )}
         </div>
+        <div className={styles.footerAlarm}>
+          {!isValid && (
+            <div className={styles.alarm}>
+              <FaExclamationCircle /> {errorArray[0]}
+            </div>
+          )}
+        </div>
         <div className={styles.footerContent}>
-          <div className={styles.deckCount}>
-            {!isValid && errorArray.length > 0 && (
-              <span className={styles.deckErrorIcon}>
-                <FaExclamationCircle />
-                <span className={styles.deckErrorTooltip}>{errorArray[0]}</span>
-              </span>
-            )}
+          <div>
             Deck {values.deck.length}/{deckSize}
           </div>
         </div>

@@ -20,7 +20,9 @@
   grid-template-columns: 3em auto 3em 1fr auto auto;
   padding: 1em 0.5em;
   gap: 0.5em;
-  grid-template-areas: 'clipboard start content . deckCount submit';
+  grid-template-areas:
+    'clipboard start content . deckCount submit'
+    '. . . . alarm alarm';
   align-items: center;
 }
 
@@ -32,55 +34,21 @@
   grid-area: deckCount;
 }
 
-.deckCount {
+.footerAlarm {
+  grid-area: alarm;
   display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  white-space: nowrap;
+  justify-content: flex-end;
+  gap: 0.5em;
+  width: 100%;
+  min-height: 0;
 }
 
-@keyframes pulseWarning {
-  0%, 100% { opacity: 0.45; }
-  50% { opacity: 1; }
-}
-
-.deckErrorIcon {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  color: #E67E22;
-  font-size: 1.1em;
-  animation: pulseWarning 1.6s ease-in-out infinite;
-  cursor: default;
-  flex-shrink: 0;
-}
-
-.deckErrorIcon:hover {
-  animation: none;
-  opacity: 1;
-}
-
-.deckErrorTooltip {
-  position: absolute;
-  bottom: calc(100% + 8px);
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(20, 24, 28, 0.97);
-  border: 1px solid rgba(230, 126, 34, 0.55);
-  color: #E67E22;
-  font-size: 0.78rem;
-  font-weight: 600;
-  padding: 0.3rem 0.65rem;
-  border-radius: 5px;
-  white-space: nowrap;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.15s ease;
-  z-index: 100;
-}
-
-.deckErrorIcon:hover .deckErrorTooltip {
-  opacity: 1;
+.footerAlarm > * {
+  padding: 0.5em 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  justify-content: center;
+  width: auto;
 }
 
 .buttonHolder {
@@ -109,6 +77,21 @@
   transition: 0.7s;
 }
 
+.alarm {
+  /* Use orange-amber instead of red so the text is visible for users with
+     red color blindness (protanopia / deuteranopia). Combine with bold weight
+     and a subtle border so the error is not conveyed by color alone. */
+  color: #E67E22;
+  font-weight: 600;
+  border: 1px solid rgba(230, 126, 34, 0.45);
+  border-radius: 4px;
+  padding: 0.2rem 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+}
 
 .clipboardButtonHolder {
   grid-area: clipboard;
@@ -237,6 +220,11 @@
     width: auto;
   }
 
+  .footerAlarm {
+    width: 100%;
+    order: 10;
+  }
+
   .syncInlineText {
     max-width: 150px;
   }
@@ -300,6 +288,12 @@
 
   .stickyFooter {
     border-top: 1px solid rgba(255, 255, 255, 0.15);
+  }
+
+  .footerAlarm {
+    width: 100%;
+    order: 10;
+    min-height: 0;
   }
 
   .syncInline {
