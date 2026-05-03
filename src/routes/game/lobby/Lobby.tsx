@@ -42,6 +42,7 @@ import {
   QUERY_STATUS,
   FAB_BAZAAR_DECK_URL_BASE
 } from 'appConstants';
+import { useTranslation, Trans } from 'react-i18next';
 
 const COMPETITIVE_FORMATS = new Set([
   GAME_FORMAT.COMPETITIVE_CC,
@@ -146,7 +147,10 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
   const settingsData = useAppSelector(getSettingsEntity);
   const isMuted = settingsData['MuteSound']?.value === '1';
   const isStreamerMode = String(settingsData['IsStreamerMode']?.value) === '1';
+  // Initial stuff to allow the lang to change
+  const { t, i18n, ready } = useTranslation();
 
+								
   useEffect(() => {
     dispatch(clearGetLobbyRefresh());
   }, []);
@@ -260,9 +264,9 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
         playerID: playerID,
         authKey: authKey
       }).unwrap();
-      toast.success('Opponent has been kicked from the lobby.');
+      toast.success(t("GAME_LOBBY.KICKED_SUCCESS"));
     } catch (err: any) {
-      toast.error(err?.error || 'Failed to kick opponent.');
+      toast.error(err?.error || t("GAME_LOBBY.KICKED_FAILURE"));
     }
   };
 
@@ -275,7 +279,7 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
         action: 'Unready Sideboard'
       }).unwrap();
     } catch (err: any) {
-      toast.error(err?.error || 'Failed to unready sideboard');
+      toast.error(err?.error || t("GAME_LOBBY.SIDEBOARD_UNREADY_FAILURE"));
     }
   };
 
@@ -483,7 +487,7 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
   // Navigate home if the host kicked us
   useEffect(() => {
     if (gameLobby?.wasKicked) {
-      toast.error('You were kicked from the lobby.');
+      toast.error(t("GAME_LOBBY.KICKED"));
       navigate('/');
     }
   }, [gameLobby?.wasKicked, navigate]);
@@ -629,7 +633,7 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
 
   const [showChatModal, setShowChatModal] = useState(true);
   const [chatModal, setChatModal] = useState('');
-  const [modal, setModal] = useState('Do you want to enable chat?');
+  const [modal, setModal] = useState(t("GAME_LOBBY.ENABLE_CHAT_QUERY"));
 
   const clickYes = (e: any) => {
     e.preventDefault();
@@ -883,7 +887,7 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
     });
 
     try {
-      const submitResponse: any = await submitSideboardMutation(requestBody).unwrap();
+      const esponse: any = await submitSideboardMutation(requestBody).unwrap();
       console.info('[StickySideboard] Talishar submit success', {
         gameStarted: !!submitResponse?.gameStarted,
         hasNewAuthKey: !!submitResponse?.authKey
@@ -917,8 +921,8 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
             <dialog open className={styles.modal}>
               <article>
                 <header>{modal}</header>
-                <button onClick={clickYes}>Yes</button>
-                <button onClick={clickNo}>No</button>
+                <button onClick={clickYes}>{t("BASE.YES")}</button>
+                <button onClick={clickNo}>{t("BASE.NO")}</button>
               </article>
             </dialog>
           </>,
@@ -930,22 +934,19 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
             <dialog open={needToDoDisclaimer}>
               <article className={styles.disclaimerArticles}>
                 <header className={styles.disclaimerHeader}>
-                  ⚠️ Open Format Disclaimer
+                  ⚠️{t("GAME_LOBBY.OPEN_FORMAT_DISCLAIMER_HEADER")}
                 </header>
                 <p style={{ marginBottom: '1em' }}>
-                  Note that new cards are added on a 'best-effort' basis and
-                  there may be more bugs and innacurate card interactions. It
-                  may not be a completely accurate representation of the Rules
-                  as written. If you have questions about interactions or
-                  rulings, please contact the{' '}
-                  <a
+		  <Trans
+		    i18nKey="GAME_LOBBY.OPEN_FORMAT_DISCLAIMER"
+		    components={[
+		      <a key="judge-a0"
                     href="https://discord.gg/flesh-and-blood-judge-hub-874145774135558164"
                     target="_blank"
-                  >
-                    {' '}
-                    JudgeHub Discord
-                  </a>{' '}
-                  for clarification.
+                  />
+		    ]}
+		    >
+		  </Trans>
                 </p>
                 <div className={styles.disclaimerAcceptButtons}>
                   <button
@@ -954,7 +955,7 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
                       setAcceptedDisclaimer(true);
                     }}
                   >
-                    I Accept!
+		    {t("GAME_LOBBY.I_ACCEPT")}
                   </button>
                 </div>
                 <div className={styles.disclaimerButtons}>
@@ -964,7 +965,7 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
                     }}
                     className={leaveLobby}
                   >
-                    No Thanks!
+		    {t("GAME_LOBBY.NO_THANKS")}
                   </button>
                 </div>
               </article>
@@ -1065,10 +1066,10 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
                         type="button"
                         className={styles.kickButton}
                         onClick={handleKickPlayer}
-                        title={`Kick ${isStreamerMode ? 'opponent' : gameLobby.theirName} from the lobby`}
-                        aria-label="Kick opponent"
+                        title={t('GAME_LOBBY.KICK_TITLE', {name: `${isStreamerMode ? 'opponent' : gameLobby.theirName}`})}
+                        aria-label={t("GAME_LOBBY.KICK_LABEL")}
                       >
-                        Kick
+                        {t("GAME_LOBBY.KICK")}
                       </button>
                     )}
                   <div className={styles.dimPic}>
@@ -1116,7 +1117,7 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
                     <div className={styles.heroName}>
                       {gameLobby?.theirHeroName != ''
                         ? ''
-                        : 'Waiting For Opponent'}
+                       : t("GAME_LOBBY.WAITING")}
                     </div>
                   </div>
                 </div>
@@ -1131,12 +1132,12 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
                       {!isWideScreen && (
                         <li>
                           <button
-                            aria-label="Leave the lobby"
+                            aria-label={t("GAME_LOBBY.LEAVE_TITLE")}
                             className={leaveClasses}
                             onClick={handleLeave}
                             type="button"
                           >
-                            Leave
+			    {t("GAME_LOBBY.LEAVE")}
                           </button>
                         </li>
                       )}
@@ -1149,7 +1150,7 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
                               onClick={handleMatchupClick}
                               type="button"
                             >
-                              Matchups
+			      {t("GAME_LOBBY.MATCHUPS")}
                             </button>
                           </li>
                         )}
@@ -1162,7 +1163,7 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
                           <div className={styles.icon}>
                             <GiCapeArmor />
                           </div>
-                          Equipment
+			  {t("GAME_LOBBY.EQUIPMENT")}
                         </button>
                       </li>
                       <li>
@@ -1174,7 +1175,7 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
                           <div className={styles.icon}>
                             <SiBookstack />
                           </div>
-                          Deck
+			  {t("GAME_LOBBY.DECK")}                          
                         </button>
                       </li>
                       <li>
@@ -1188,7 +1189,7 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
                               <FaExclamationCircle />{' '}
                             </>
                           )}
-                          Chat
+			  {t("GAME_LOBBY.CHAT")}
                         </button>
                       </li>
                     </ul>
@@ -1207,7 +1208,7 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
                         <div className={styles.icon}>
                           <GiCapeArmor />
                         </div>
-                        Equipment
+			{t("GAME_LOBBY.EQUIPMENT")}
                       </button>
                     </li>
                     <li>
@@ -1219,7 +1220,7 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
                         <div className={styles.icon}>
                           <SiBookstack />
                         </div>
-                        Deck
+			{t("GAME_LOBBY.DECK")}
                       </button>
                     </li>
                   </ul>
@@ -1292,7 +1293,9 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
               >
                 {isWideScreen && !chatExpanded && hasMatchups ? (
                   <div className={styles.compactChat}>
-                    <div className={styles.compactChatHeader}>Chat</div>
+                    <div className={styles.compactChatHeader}>
+		      {t("GAME_LOBBY.CHAT")}		      
+		    </div>
                     <MiniChatLog />
                     <div className={styles.quickChatStrip}>
                       {LOBBY_PRESETS.map(({ id, label }) => (
@@ -1311,7 +1314,7 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
                       className={styles.chatExpandBtn}
                       onClick={() => setChatExpanded(true)}
                     >
-                      Open Chat ▸
+		      {t("GAME_LOBBY.OPEN_CHAT")}▸
                     </button>
                   </div>
                 ) : (
@@ -1322,7 +1325,7 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
                         className={styles.chatToggleBtn}
                         onClick={() => setChatExpanded(false)}
                       >
-                        ◂ Matchups
+                        ◂{t("GAME_LOBBY.OPEN_MATCHUPS")}
                       </button>
                     )}
                     <>{showCalculator ? <Calculator /> : <LobbyChat />}</>
@@ -1336,7 +1339,7 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
                       }}
                       disabled={false}
                     >
-                      Hand Draw Probabilities
+		      {t("GAME_LOBBY.HAND_DRAW")}                      
                     </button>
                   </>
                 )}
@@ -1373,12 +1376,12 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
               syncEnabled={isBazaarDeckInLobby}
               syncStatusText={
                 isAutoApplyingMatchup
-                  ? 'Applying matchup...'
+                  ? t("GAME_LOBBY.APPLYING_MATCHUP")
                   : selectedMatchupForCurrentHero
-                    ? `Synced: ${selectedMatchupForCurrentHero.name ?? selectedMatchupForCurrentHero.matchupId}`
+                  ? t("GAME_LOBBY.SYNCED_MATCHUP", { hero: selectedMatchupForCurrentHero.name ?? selectedMatchupForCurrentHero.matchupId })
                     : gameLobby?.theirHero && gameLobby.theirHero !== 'CardBack'
-                      ? 'Base deck (no matchup saved)'
-                      : 'Waiting for opponent hero'
+                  ? t("GAME_LOBBY.BASE_MATCHUP")
+                  : t("GAME_LOBBY.WAITING_HERO")
               }
               syncLearnMoreUrl={FAB_BAZAAR_LEARN_MORE_URL}
             />
@@ -1473,6 +1476,8 @@ const DesktopDeckSelectionButtons = ({
   setFiltersExpanded: (value: boolean) => void;
 }) => {
   const { setFieldValue } = useFormikContext<DeckResponse>();
+  // Initial stuff to allow the lang to change
+  const { t, i18n, ready } = useTranslation();
 
   const handleSelectAll = () => {
     const allCards = [...deckIndexed, ...deckSBIndexed];
@@ -1482,7 +1487,7 @@ const DesktopDeckSelectionButtons = ({
   const handleSelectNone = () => {
     setFieldValue('deck', []);
   };
-
+					      
   // Only show buttons when Deck tab is active
   if (activeTab !== 'deck') {
     return null;
@@ -1494,30 +1499,30 @@ const DesktopDeckSelectionButtons = ({
         className={styles.selectionButton}
         onClick={() => setFiltersExpanded(!filtersExpanded)}
         type="button"
-        title={filtersExpanded ? 'Collapse filters' : 'Expand filters'}
+        title={filtersExpanded ? t("GAME_LOBBY.COLLAPSE_FILTERS") : t("GAME_LOBBY.EXPAND_FILTERS")}
       >
         {filtersExpanded ? (
           <MdArrowDropDown size={24} />
         ) : (
           <MdArrowRight size={24} />
         )}
-        Filters
+	{t("GAME_LOBBY.FILTERS")}
       </button>
       <button
         className={styles.selectionButton}
         onClick={handleSelectAll}
         type="button"
-        title="Select all cards"
+        title={t("GAME_LOBBY.SELECT_ALL_TITLE")}
       >
-        Select All
+	{t("GAME_LOBBY.SELECT_ALL")}	        
       </button>
       <button
         className={styles.selectionButton}
         onClick={handleSelectNone}
         type="button"
-        title="Deselect all cards"
+        title={t("GAME_LOBBY.SELECT_NONE_TITLE")}
       >
-        Select None
+	{t("GAME_LOBBY.SELECT_NONE")}
       </button>
     </div>
   );

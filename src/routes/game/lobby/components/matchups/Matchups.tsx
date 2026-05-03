@@ -11,6 +11,7 @@ import { HEROES_OF_RATHE } from 'routes/index/components/filter/constants';
 import { generateCroppedImageUrl } from 'utils/cropImages';
 import styles from './Matchups.module.css';
 import MatchupTooltip from './MatchupTooltip';
+import { useTranslation, Trans } from 'react-i18next';
 
 // A hero entry that has been resolved from a saved matchup or the legalHeroes
 // list. `id` is whichever identifier we have (slug from backend, or card-ID
@@ -42,7 +43,7 @@ const Matchups = ({
     name: string;
     anchorRect: DOMRect;
   } | null>(null);
-
+  
   const gameLobby = useAppSelector(
     (state: RootState) => state.game.gameLobby,
     shallowEqual
@@ -50,6 +51,9 @@ const Matchups = ({
   const { gameID, playerID } = useAppSelector(getGameInfo, shallowEqual);
   const [joinGameMutation] = useJoinGameMutation();
 
+  // Initial stuff to allow the lang to change
+  const { t, i18n, ready } = useTranslation();
+  
   const handleMatchupClick = async (matchupID: string) => {
     setIsUpdating(true);
     try {
@@ -67,12 +71,12 @@ const Matchups = ({
       );
     } catch (err) {
       console.warn(err);
-      toast.error('Some error happened', { position: 'top-center' });
+      toast.error(t("GAME_LOBBY.SOME_ERROR"), { position: 'top-center' });
     } finally {
       setIsUpdating(false);
     }
   };
-
+  
   // Universe of all known heroes — used for resolveHero() so we can identify
   // a saved matchup as hero-backed even when the hero is banned in the current
   // format (e.g. Verdance saved against a CC deck → still recognized as a hero
@@ -223,14 +227,14 @@ const Matchups = ({
     for (const h of filteredUnsavedHeroes) {
       const cls = h.class
         ? h.class.charAt(0) + h.class.slice(1).toLowerCase()
-        : 'Other';
+            : t("BASE.OTHER");
       if (!groups[cls]) groups[cls] = [];
       groups[cls].push(h);
     }
     return Object.keys(groups)
       .sort((a, b) => {
-        if (a === 'Other') return 1;
-        if (b === 'Other') return -1;
+        if (a === t("BASE.OTHER")) return 1;
+        if (b === t("BASE.OTHER")) return -1;
         return a.localeCompare(b);
       })
       .map((cls) => ({ cls, matchups: groups[cls] }));
@@ -241,31 +245,33 @@ const Matchups = ({
   return (
     <article className={styles.matchupContainer}>
       <div className={styles.matchupHeader}>
-        <h4>Matchups</h4>
+        <h4>{t("GAME_LOBBY.MATCHUPS")}</h4>
         {onExpandChat && (
           <button
             type="button"
             className={styles.chatToggleBtn}
             onClick={onExpandChat}
           >
-            ◂ Chat
+            ◂{' '}{t("GAME_LOBBY.CHAT")}
           </button>
         )}
       </div>
       <input
         type="text"
-        placeholder="Search"
+        placeholder={t("BASE.SEARCH")}
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
         className={styles.searchInput}
       />
       {isAutoApplyingMatchup && (
-        <p className={styles.autoApplyingStatus}>Applying hero matchup...</p>
+        <p className={styles.autoApplyingStatus}>{t("GAME_LOBBY.APPLYING_MATCHUP")}</p>
       )}
       <div className={styles.groupsWrapper}>
         {(filteredSavedHeroMatchups.length > 0 || filteredCustomMatchups.length > 0) && (
           <div className={styles.classGroup}>
-            <p className={styles.groupHeader}>SAVED PROFILES</p>
+            <p className={styles.groupHeader}>
+	      {t("GAME_LOBBY.SAVED_PROFILES")}
+	    </p>
             {filteredSavedHeroMatchups.length > 0 && (
               <div className={styles.portraitGrid}>
                 {filteredSavedHeroMatchups.map(({ hero, matchup }) => {
@@ -427,6 +433,9 @@ const NoDataPopover = ({
   deckLink?: string;
 }) => {
   const { anchorRect } = hero;
+  // Initial stuff to allow the lang to change
+  const { t, i18n, ready } = useTranslation();
+  
   const vw = window.innerWidth;
   const vh = window.innerHeight;
 
@@ -468,8 +477,13 @@ const NoDataPopover = ({
         </button>
         <p className={styles.noDataTitle}>No matchup saved</p>
         <p className={styles.noDataBody}>
-          No deck profile against <strong>{hero.name}</strong>. Save one in
-          your deckbuilder to auto-apply sideboard adjustments.
+	  <Trans i18nKey="GAME_LOBBY.NO_DECK_PROFILE"
+		 components={[
+		   <strong key="s0"/>
+		 ]}
+		 hero={hero.name}
+	    />
+
         </p>
         {(() => {
           const matchupsHref = buildMatchupsLink(deckLink);
@@ -482,7 +496,7 @@ const NoDataPopover = ({
               rel="noopener noreferrer"
               className={styles.noDataLearnLink}
             >
-              {isBazaar ? 'Configure matchup ↗' : 'Open deck ↗'}
+              {isBazaar ? t("GAME_LOBBY.CONFIGURE_MATCHUP") : t("GAME_LOBBY.CONFIGURE_MATCHUP")}
             </a>
           );
         })()}
