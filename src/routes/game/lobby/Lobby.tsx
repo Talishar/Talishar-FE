@@ -1356,7 +1356,6 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
                 onMatchupSelected={setSelectedMatchupId}
                 isAutoApplyingMatchup={isAutoApplyingMatchup}
                 onExpandChat={isWideScreen ? () => setChatExpanded(true) : undefined}
-                format={data.format}
                 isBazaarDeck={isBazaarDeckInLobby}
               />
             )}

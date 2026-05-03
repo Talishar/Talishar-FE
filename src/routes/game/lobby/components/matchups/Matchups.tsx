@@ -1,6 +1,5 @@
 import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
-import { GAME_FORMAT } from 'appConstants';
 import { useJoinGameMutation } from 'features/api/apiSlice';
 import { getGameInfo } from 'features/game/GameSlice';
 import { Matchup, LegalHero } from 'interface/API/GetLobbyRefresh.php';
@@ -21,15 +20,8 @@ export interface Matchups {
   onMatchupSelected?: (matchupId: string) => void;
   isAutoApplyingMatchup?: boolean;
   onExpandChat?: () => void;
-  format?: string;
   isBazaarDeck?: boolean;
 }
-
-const BLITZ_FORMATS = new Set([
-  GAME_FORMAT.BLITZ, GAME_FORMAT.COMPETITIVE_BLITZ, GAME_FORMAT.OPEN_BLITZ,
-  GAME_FORMAT.SAGE, GAME_FORMAT.COMPETITIVE_SAGE, GAME_FORMAT.OPEN_SAGE,
-  GAME_FORMAT.COMMONER,
-]);
 
 const Matchups = ({
   refetch,
@@ -37,7 +29,6 @@ const Matchups = ({
   onMatchupSelected,
   isAutoApplyingMatchup = false,
   onExpandChat,
-  format,
   isBazaarDeck = false,
 }: Matchups) => {
   const [isUpdating, setIsUpdating] = useState(false);
@@ -159,41 +150,28 @@ const Matchups = ({
     return { savedHeroMatchups: heroes, customMatchups: customs };
   }, [gameLobby?.matchups, gameLobby?.legalHeroes, HERO_BY_ID, HERO_BY_NAME]);
 
-  // Format-legal heroes that AREN'T already saved (the discovery grid for Bazaar).
-  // Non-Bazaar decks don't show this section at all.
-  // When the backend sent `legalHeroes`, that list is already ban-filtered and
-  // format-filtered. Otherwise we fall back to HEROES_OF_RATHE + young flag.
+  // Format-legal heroes that AREN'T already saved (the discovery grid for
+  // Bazaar). Sourced exclusively from the backend's `legalHeroes` list —
+  // it has already applied the format-tier and ban filters via CardClass()
+  // and isBannedInFormat(). When the field isn't present on the response
+  // (older backend), the discovery grid simply doesn't render — better than
+  // guessing format legality on the FE.
   const unsavedHeroes = useMemo(() => {
     if (!isBazaarDeck) return [];
-    const savedHeroIds = new Set(savedHeroMatchups.map((s) => s.hero.id));
     const fromBackend = gameLobby?.legalHeroes;
-    if (fromBackend && fromBackend.length > 0) {
-      return fromBackend
-        .filter((h) => !savedHeroIds.has(h.heroId))
-        .map((h) => ({
-          matchupId: h.heroId,
-          name: h.name,
-          class: h.class,
-          preferredTurnOrder: null as string | null,
-          notes: null as string | null,
-          hasData: false,
-        }));
-    }
-    // Fallback: derive from FE constants (NO ban filter — heroes that are banned
-    // in the current format will incorrectly appear)
-    const useYoung = format ? BLITZ_FORMATS.has(format) : false;
-    return HEROES_OF_RATHE
-      .filter((h) => !!h.young === useYoung)
-      .filter((h) => !savedHeroIds.has(h.value))
+    if (!fromBackend || fromBackend.length === 0) return [];
+    const savedHeroIds = new Set(savedHeroMatchups.map((s) => s.hero.id));
+    return fromBackend
+      .filter((h) => !savedHeroIds.has(h.heroId))
       .map((h) => ({
-        matchupId: h.value,
-        name: h.label,
-        class: '',
+        matchupId: h.heroId,
+        name: h.name,
+        class: h.class,
         preferredTurnOrder: null as string | null,
         notes: null as string | null,
         hasData: false,
       }));
-  }, [format, savedHeroMatchups, isBazaarDeck, gameLobby?.legalHeroes]);
+  }, [savedHeroMatchups, isBazaarDeck, gameLobby?.legalHeroes]);
 
   const matchesSearch = (s: string) =>
     s.toLowerCase().includes(searchTerm.toLowerCase());
