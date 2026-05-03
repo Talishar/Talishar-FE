@@ -12,7 +12,11 @@ import { generateCroppedImageUrl } from 'utils/cropImages';
 import styles from './Matchups.module.css';
 import MatchupTooltip from './MatchupTooltip';
 
-const FAB_BAZAAR_LEARN_MORE_URL = 'https://fabbazaar.app/tutorials/talishar';
+// A hero entry that has been resolved from a saved matchup or the legalHeroes
+// list. `id` is whichever identifier we have (slug from backend, or card-ID
+// from HEROES_OF_RATHE). `class` is empty when sourced from HEROES_OF_RATHE
+// alone; populated when sourced from / overridden by backend `legalHeroes`.
+type ResolvedHero = { id: string; name: string; class: string };
 
 export interface Matchups {
   refetch: () => void;
@@ -76,7 +80,7 @@ const Matchups = ({
   // HEROES_OF_RATHE; backend's legalHeroes is layered on top to attach the
   // class string when available.
   const HERO_BY_NAME = useMemo(() => {
-    const map = new Map<string, { id: string; name: string; class: string }>();
+    const map = new Map<string, ResolvedHero>();
     for (const h of HEROES_OF_RATHE) {
       map.set(h.label.toLowerCase(), { id: h.value, name: h.label, class: '' });
     }
@@ -89,7 +93,7 @@ const Matchups = ({
   }, [gameLobby?.legalHeroes]);
 
   const HERO_BY_ID = useMemo(() => {
-    const map = new Map<string, { id: string; name: string; class: string }>();
+    const map = new Map<string, ResolvedHero>();
     // Card-ID keyed (e.g. "DYN113")
     for (const h of HEROES_OF_RATHE) {
       map.set(h.value, { id: h.value, name: h.label, class: '' });
@@ -103,7 +107,7 @@ const Matchups = ({
 
   // Resolve a saved matchup to a hero entry if it conceptually targets one.
   // First try matchupId (slug or card ID), then the matchup's display name.
-  const resolveHero = (m: { matchupId: string; name?: string | null }) => {
+  const resolveHero = (m: { matchupId: string; name?: string | null }): ResolvedHero | null => {
     return (
       HERO_BY_ID.get(m.matchupId) ??
       (m.name ? HERO_BY_NAME.get(m.name.toLowerCase()) : undefined) ??
@@ -121,7 +125,7 @@ const Matchups = ({
   // side. When the backend hasn't sent `legalHeroes`, all hero matchups
   // are shown (no ban data available to filter on).
   const { savedHeroMatchups, customMatchups } = useMemo(() => {
-    const heroes: { hero: { id: string; name: string; class: string }; matchup: Matchup }[] = [];
+    const heroes: { hero: ResolvedHero; matchup: Matchup }[] = [];
     const customs: Matchup[] = [];
 
     const legalList = gameLobby?.legalHeroes;
@@ -211,9 +215,9 @@ const Matchups = ({
   );
 
   // Group by backend-supplied class (e.g. "RUNEBLADE" -> "Runeblade").
-  // When the backend hasn't shipped legalHeroes (fallback path), `class` is
-  // empty and everything buckets under "Other" — still functional, just less
-  // organized until the backend ships.
+  // Heroes whose `class` is empty bucket under "Other" as a safety net —
+  // shouldn't happen in normal operation since the backend computes class
+  // via CardClass() for every legal hero.
   const groupedMatchups = useMemo(() => {
     const groups: Record<string, typeof filteredUnsavedHeroes> = {};
     for (const h of filteredUnsavedHeroes) {
@@ -469,27 +473,16 @@ const NoDataPopover = ({
         </p>
         {(() => {
           const matchupsHref = buildMatchupsLink(deckLink);
-          if (matchupsHref) {
-            const isBazaar = matchupsHref.startsWith(FAB_BAZAAR_DECK_PREFIX);
-            return (
-              <a
-                href={matchupsHref}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={styles.noDataLearnLink}
-              >
-                {isBazaar ? 'Configure matchup ↗' : 'Open deck ↗'}
-              </a>
-            );
-          }
+          if (!matchupsHref) return null;
+          const isBazaar = matchupsHref.startsWith(FAB_BAZAAR_DECK_PREFIX);
           return (
             <a
-              href={FAB_BAZAAR_LEARN_MORE_URL}
+              href={matchupsHref}
               target="_blank"
               rel="noopener noreferrer"
               className={styles.noDataLearnLink}
             >
-              Learn more ↗
+              {isBazaar ? 'Configure matchup ↗' : 'Open deck ↗'}
             </a>
           );
         })()}
