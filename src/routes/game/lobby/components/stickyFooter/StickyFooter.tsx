@@ -1,10 +1,10 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { useFormikContext } from 'formik';
 import { FaExclamationCircle } from 'react-icons/fa';
 import { DeckResponse } from 'interface/API/GetLobbyInfo.php';
 import styles from './StickyFooter.module.css';
 import classNames from 'classnames';
-import { HiClipboardCopy, HiClipboardCheck } from 'react-icons/hi';
+import { HiClipboardCopy } from 'react-icons/hi';
 import { MdGames } from 'react-icons/md';
 
 export type DeckSize = {
@@ -42,15 +42,10 @@ const StickyFooter = ({
 }: DeckSize) => {
   const { errors, values, isValid } = useFormikContext<DeckResponse>();
   const footerRef = useRef<HTMLDivElement>(null);
-  const [copied, setCopied] = useState(false);
-  const copyTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   let errorArray = [] as string[];
-  for (const [, value] of Object.entries(errors)) {
+  for (const [key, value] of Object.entries(errors)) {
     errorArray.push(String(value));
   }
-
-  const needed = deckSize - values.deck.length;
-  const isConfirmEnabled = isValid && submitSideboard && !needToDoDisclaimer;
 
   // Update CSS custom property with footer height
   useEffect(() => {
@@ -68,160 +63,148 @@ const StickyFooter = ({
 
     updateFooterHeight();
     const timer = setTimeout(updateFooterHeight, 100);
+
+    const observer = footerRef.current
+      ? new ResizeObserver(updateFooterHeight)
+      : null;
+    if (observer && footerRef.current) observer.observe(footerRef.current);
+
     window.addEventListener('resize', updateFooterHeight);
     return () => {
       clearTimeout(timer);
+      observer?.disconnect();
       window.removeEventListener('resize', updateFooterHeight);
     };
   }, []);
 
+  // Call the callback when isValid changes
   useEffect(() => {
     onIsValidChange?.(isValid);
   }, [isValid, onIsValidChange]);
 
-  const triggerCopiedFeedback = () => {
-    setCopied(true);
-    if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
-    copyTimerRef.current = setTimeout(() => setCopied(false), 2000);
-  };
-
   const handleClipboardCopy = () => {
-    const text = window.location.href.replace('lobby', 'join');
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(text)
-        .then(triggerCopiedFeedback)
-        .catch(() => {
-          fallbackCopyToClipboard(text);
-          triggerCopiedFeedback();
-        });
-    } else {
-      fallbackCopyToClipboard(text);
-      triggerCopiedFeedback();
-    }
+    navigator.clipboard.writeText(
+      window.location.href.replace('lobby', 'join')
+    );
   };
 
-  const fallbackCopyToClipboard = (text: string) => {
-    const textarea = document.createElement('textarea');
-    textarea.value = text;
-    textarea.style.position = 'fixed';
-    textarea.style.opacity = '0';
-    document.body.appendChild(textarea);
-    textarea.focus();
-    textarea.select();
-    document.execCommand('copy');
-    document.body.removeChild(textarea);
-  };
-
-  const wrapperClass = classNames(styles.dynamicContainer, 'container');
-  const leaveClass = classNames(styles.leaveButton, 'outline secondary');
-
-  const deckMetaText = isConfirmEnabled
-    ? `/${deckSize}\u00a0\u00b7\u00a0\u2713\u00a0ready`
-    : needed > 0
-    ? `/${deckSize}\u00a0\u00b7\u00a0need\u00a0${needed}\u00a0more`
-    : `/${deckSize}`;
+  const dynamicContainer = classNames(styles.dynamicContainer, 'container');
+  const leaveLobby = classNames(styles.buttonClassLeave, 'outline secondary');
 
   return (
     <div className={styles.stickyFooter} ref={footerRef}>
-      <div className={wrapperClass}>
-        {/* Main action row: sync | deck count | confirm */}
-        <div className={styles.mainRow}>
-          {/* Left: copy + sync status */}
-          <div className={styles.syncSection}>
-            <button
-              className={classNames(styles.iconButton, { [styles.iconButtonCopied]: copied })}
-              onClick={handleClipboardCopy}
-              type="button"
-              title={copied ? 'Copied!' : 'Copy invite link'}
-            >
-              {copied ? <HiClipboardCheck /> : <HiClipboardCopy />}
-            </button>
-            {!syncEnabled && (
-              syncLearnMoreUrl ? (
+      <div className={dynamicContainer}>
+        <div
+          style={{
+            display: 'flex',
+            gap: '2rem',
+            alignItems: 'center',
+            flex: 1
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <div className={styles.clipboardButtonHolder}>
+              <button
+                className={styles.buttonClass}
+                onClick={handleClipboardCopy}
+                type="button"
+                title="Copy invite link"
+              >
+                <div className={styles.icon}>
+                  <HiClipboardCopy />
+                </div>
+              </button>
+            </div>
+            <div className={styles.syncInline}>
+              <span
+                className={syncEnabled ? styles.syncInlineActive : styles.syncInlinePassive}
+                title={syncStatusText}
+              >
+                {syncEnabled ? 'Sync On' : 'Sync Off'}
+              </span>
+              {syncStatusText && (
+                <span className={styles.syncInlineText}>{syncStatusText}</span>
+              )}
+              {syncLearnMoreUrl && !syncEnabled && (
                 <a
                   href={syncLearnMoreUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={styles.syncPassiveLink}
-                  title={syncStatusText}
+                  className={styles.syncInlineLink}
                 >
-                  Sync off
+                  Read more
                 </a>
-              ) : (
-                <span
-                  className={styles.syncPassive}
-                  title={syncStatusText}
-                >
-                  Sync off
-                </span>
-              )
-            )}
-            {onSendInviteClick && isWidescreen && (
+              )}
+            </div>
+          </div>
+          {onSendInviteClick && (
+            <div
+              style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+            >
+              <span
+                style={{ whiteSpace: 'nowrap' }}
+                className={styles.labelTextLong}
+              >
+                Send Friends Invite
+              </span>
+              <span
+                style={{ whiteSpace: 'nowrap' }}
+                className={styles.labelTextShort}
+              >
+                Send Invite
+              </span>
               <button
-                className={styles.iconButton}
+                className={styles.buttonClass}
                 onClick={onSendInviteClick}
                 type="button"
                 title="Send invite to friend"
               >
-                <MdGames />
+                <div className={styles.icon}>
+                  <MdGames />
+                </div>
               </button>
+            </div>
+          )}
+        </div>
+        <div className={styles.footerContent}>
+          <div className={styles.deckCount}>
+            {!isValid && errorArray.length > 0 && (
+              <span className={styles.deckErrorIcon}>
+                <FaExclamationCircle />
+                <span className={styles.deckErrorTooltip}>{errorArray[0]}</span>
+              </span>
             )}
-          </div>
-
-          {/* Center: deck count */}
-          <div
-            className={`${styles.deckSection} ${
-              isConfirmEnabled ? styles.deckReady : ''
-            }`}
-          >
-            <span className={styles.deckNumber}>{values.deck.length}</span>
-            <span className={styles.deckMeta}>{deckMetaText}</span>
-          </div>
-
-          {/* Right: confirm / edit + optional leave */}
-          <div className={styles.actionSection}>
-            {canUnreadySideboard ? (
-              <button
-                className={styles.editButton}
-                type="button"
-                disabled={isUnreadyLoading || needToDoDisclaimer}
-                onClick={onUnreadySideboard}
-              >
-                Edit Deck
-              </button>
-            ) : (
-              <button
-                className={`${styles.confirmButton} ${
-                  isConfirmEnabled
-                    ? styles.confirmReady
-                    : styles.confirmDisabled
-                }`}
-                type="submit"
-                aria-busy={isSubmitting}
-                disabled={!isConfirmEnabled || isSubmitting}
-              >
-                {isSubmitting
-                  ? 'Submitting\u2026'
-                  : isWidescreen
-                  ? 'Confirm Deck'
-                  : 'Confirm'}
-              </button>
-            )}
-            {isWidescreen && (
-              <button className={leaveClass} onClick={handleLeave}>
-                Leave
-              </button>
-            )}
+            Deck {values.deck.length}/{deckSize}
           </div>
         </div>
-
-        {/* Alarm row — slides in only when deck is invalid */}
-        {!isValid && errorArray[0] && (
-          <div className={styles.alarmRow}>
-            <FaExclamationCircle className={styles.alarmIcon} />
-            <span>{errorArray[0]}</span>
-          </div>
-        )}
+        <div className={styles.buttonHolder}>
+          {canUnreadySideboard ? (
+            <button
+              className={styles.buttonClass}
+              type="button"
+              disabled={isUnreadyLoading || needToDoDisclaimer}
+              onClick={onUnreadySideboard}
+            >
+              {'Edit Deck'}
+            </button>
+          ) : (
+            <button
+              className={styles.buttonClass}
+              type="submit"
+              aria-busy={isSubmitting}
+              disabled={
+                isValid === false || !submitSideboard || needToDoDisclaimer || isSubmitting
+              }
+            >
+              {isSubmitting ? 'Submitting...' : 'Confirm Deck'}
+            </button>
+          )}
+          {isWidescreen && (
+            <button className={leaveLobby} onClick={handleLeave}>
+              Leave
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );

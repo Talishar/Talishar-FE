@@ -1,7 +1,10 @@
 import React, { useEffect, useState, useMemo, useRef } from 'react';
 import { usePageTitle } from 'hooks/usePageTitle';
+import { parseHtmlToReactElements } from 'utils/ParseEscapedString';
 import Deck from './components/deck/Deck';
 import LobbyChat from './components/lobbyChat/LobbyChat';
+import { CHAT_WHEEL } from 'constants/chatMessages';
+import { useSendGameChat } from 'hooks/useSendGameChat';
 import Calculator from './components/calculator/Calculator';
 import testData from './mockdata.json';
 import styles from './Lobby.module.css';
@@ -84,6 +87,15 @@ const normalizeMatchupName = (name: string): string =>
     .toLowerCase()
     .replace(/\s+/g, '_');
 
+const LOBBY_PRESETS = [
+  { id: 1,  label: 'Hello' },
+  { id: 2,  label: 'GLHF' },
+  { id: 4,  label: 'BRB' },
+  { id: 5,  label: 'Undo?' },
+  { id: 7,  label: 'No prob!' },
+  { id: 20, label: 'Chat?' },
+];
+
 const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
   if (!deckLink) return null;
   // Strip the "{index}<fav>" prefix that appears when a favorite deck link is stored
@@ -120,7 +132,9 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
   );
   const [isAutoApplyingMatchup, setIsAutoApplyingMatchup] =
     useState<boolean>(false);
+  const [chatExpanded, setChatExpanded] = useState(false);
   const lastAutoAppliedMatchupKey = useRef<string>('');
+  const { sendQuickChat } = useSendGameChat();
   const submittedMatchupRef = useRef<string | null>(null);
   const deckLinkTrackingRef = useRef<{ link: string | undefined; gameKey: string }>({
     link: undefined,
@@ -1024,7 +1038,8 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
           <FormikDebugLogger />
           <div
             className={classNames(styles.gridLayout, {
-              [styles.noMatchups]: !hasMatchups
+              [styles.noMatchups]: !hasMatchups,
+              [styles.chatExpanded]: chatExpanded && isWideScreen && hasMatchups,
             })}
           >
             <div className={styles.titleContainer}>
@@ -1248,7 +1263,7 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
                       </button>
                     </li>
                   </ul>
-                  <div style={{ marginLeft: 'auto' }}>
+                  <div style={{ marginLeft: '1rem' }}>
                     <DesktopDeckSelectionButtons
                       deckIndexed={deckIndexed}
                       deckSBIndexed={deckSBIndexed}
@@ -1315,19 +1330,56 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
                     : styles.chatAreaContainer
                 }
               >
-                <>{showCalculator ? <Calculator /> : <LobbyChat />}</>
-                <button
-                  className={classNames(styles.smallButton, {
-                    [styles.active]: showCalculator
-                  })}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    toggleShowCalculator();
-                  }}
-                  disabled={false}
-                >
-                  Hand Draw Probabilities
-                </button>
+                {isWideScreen && !chatExpanded && hasMatchups ? (
+                  <div className={styles.compactChat}>
+                    <div className={styles.compactChatHeader}>Chat</div>
+                    <MiniChatLog />
+                    <div className={styles.quickChatStrip}>
+                      {LOBBY_PRESETS.map(({ id, label }) => (
+                        <button
+                          key={id}
+                          type="button"
+                          className={styles.quickChatChip}
+                          onClick={() => sendQuickChat(CHAT_WHEEL.get(id) ?? '')}
+                        >
+                          {label}
+                        </button>
+                      ))}
+                    </div>
+                    <button
+                      type="button"
+                      className={styles.chatExpandBtn}
+                      onClick={() => setChatExpanded(true)}
+                    >
+                      Open Chat ▸
+                    </button>
+                  </div>
+                ) : (
+                  <>
+                    {isWideScreen && hasMatchups && (
+                      <button
+                        type="button"
+                        className={styles.chatToggleBtn}
+                        onClick={() => setChatExpanded(false)}
+                      >
+                        ◂ Matchups
+                      </button>
+                    )}
+                    <>{showCalculator ? <Calculator /> : <LobbyChat />}</>
+                    <button
+                      className={classNames(styles.smallButton, {
+                        [styles.active]: showCalculator
+                      })}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        toggleShowCalculator();
+                      }}
+                      disabled={false}
+                    >
+                      Hand Draw Probabilities
+                    </button>
+                  </>
+                )}
               </div>
             )}
 
@@ -1337,13 +1389,15 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
 
             <div className={styles.spacer}></div>
 
-            {shouldShowMatchupsUI && (activeTab === 'matchups' || isWideScreen) && (
+            {shouldShowMatchupsUI && (activeTab === 'matchups' || (isWideScreen && !chatExpanded)) && (
               <Matchups
                 refetch={refetch}
                 selectedMatchupId={selectedMatchupId}
                 onMatchupSelected={setSelectedMatchupId}
                 isAutoApplyingMatchup={isAutoApplyingMatchup}
                 isReadied={!!(gameLobby?.canUnreadySideboard || gameLobby?.amIChoosingFirstPlayer)}
+                onExpandChat={isWideScreen ? () => setChatExpanded(true) : undefined}
+                isBazaarDeck={isBazaarDeckInLobby}
               />
             )}
             <StickyFooter
@@ -1393,6 +1447,31 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
   );
 };
 
+const COMPACT_CHAT_RE = /<span[^>]*>(.*?):\s<\/span>/;
+
+const MiniChatLog = () => {
+  const chatLog = useAppSelector((state: RootState) => state.game.chatLog);
+  const chatMessages = (chatLog ?? []).filter((m) => COMPACT_CHAT_RE.test(m));
+  const bottomRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [chatMessages.length]);
+
+  return (
+    <div className={styles.compactChatLog}>
+      {chatMessages.length === 0 ? (
+        <span className={styles.compactChatEmpty}>No messages yet</span>
+      ) : (
+        chatMessages.map((msg, i) => (
+          <div key={i}>{parseHtmlToReactElements(msg)}</div>
+        ))
+      )}
+      <div ref={bottomRef} />
+    </div>
+  );
+};
+
 const FormikDebugLogger = () => {
   const { submitCount, isValid, errors, values, isSubmitting } =
     useFormikContext<DeckResponse>();
@@ -1426,7 +1505,7 @@ const DesktopDeckSelectionButtons = ({
   deckSBIndexed,
   activeTab,
   filtersExpanded,
-  setFiltersExpanded
+  setFiltersExpanded,
 }: {
   deckIndexed: string[];
   deckSBIndexed: string[];

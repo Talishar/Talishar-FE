@@ -28,6 +28,7 @@ export interface GetLobbyRefreshResponse {
   canUnreadySideboard?: boolean;
   myDeckLink?: string;
   matchups?: Matchup[];
+  legalHeroes?: LegalHero[];
   chatEnabled?: boolean;
   chatInvited?: boolean;
   opponentIsTyping?: boolean;
@@ -37,7 +38,22 @@ export interface GetLobbyRefreshResponse {
 export interface Matchup {
   matchupId: string;
   name: string;
+  heroIdenfitiers?: string[]; // Fabrary's typo is canonical; hero slugs e.g. ["bravo-showstopper"]
   preferredTurnOrder?: string | null; // "1st", "2nd", or null
   notes?: string | null; // HTML notes from Fabrary
   heroIdentifiers?: string[]; // Canonical hero card IDs from FaBrary API (e.g. ["briar", "briar-warden-of-thorns"])
+}
+
+// Heroes the backend has determined are legal for the current deck's format.
+// Already filtered: bans applied (via JoinGame.php isBannedInFormat),
+// young/adult split applied for the format. The FE renders these directly
+// as the discovery grid for Bazaar decks; no further filtering needed.
+//
+// If absent (older backend versions), the FE falls back to its local
+// HEROES_OF_RATHE constant + young flag — without ban filtering.
+export interface LegalHero {
+  heroId: string;   // slug, e.g. "briar_warden_of_thorns"
+  name: string;     // display name, e.g. "Briar Warden of Thorns"
+  class: string;    // class name from CardClass(): "RUNEBLADE", "WIZARD", "ASSASSIN", etc.
+  young?: boolean;  // optional; backend has already format-filtered, FE doesn't re-filter
 }
