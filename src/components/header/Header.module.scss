@@ -693,6 +693,13 @@
 
 .contentWrapper {
   padding-top: 70px;
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+
+  > :first-child {
+    flex: 1;
+  }
 
   :global(body[data-hero-page]) & {
     background: var(--theme-background) !important;
