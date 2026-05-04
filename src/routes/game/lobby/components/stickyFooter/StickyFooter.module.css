@@ -184,7 +184,6 @@
 
 .confirmReady:hover {
   background: var(--theme-primary-hover, #e5c443);
-  transform: none;
   box-shadow: 0 2px 10px rgba(212, 175, 55, 0.35);
 }
 
