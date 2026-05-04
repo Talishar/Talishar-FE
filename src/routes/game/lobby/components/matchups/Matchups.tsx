@@ -93,12 +93,12 @@ const Matchups = ({
   //
   // Bazaar: matchupId IS the hero slug (e.g. "bravo_showstopper").
   // Fabrary: matchupId is a ULID, but hero-backed matchups include
-  //   heroIdenfitiers (Fabrary's typo) with the slug in hyphen form.
+  //   heroIdentifiers with the slug in hyphen form.
   // FabDB/other: no reliable hero signal — renders as button.
   const resolveHero = (m: Matchup): ResolvedHero | null => {
     const bySlug = HERO_BY_SLUG.get(normalizeSlug(m.matchupId));
     if (bySlug) return bySlug;
-    const fabId = m.heroIdenfitiers?.[0];
+    const fabId = m.heroIdentifiers?.[0];
     if (fabId) return HERO_BY_SLUG.get(normalizeSlug(fabId.replace(/-/g, '_'))) ?? null;
     return null;
   };

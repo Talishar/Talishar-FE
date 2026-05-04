@@ -38,10 +38,9 @@ export interface GetLobbyRefreshResponse {
 export interface Matchup {
   matchupId: string;
   name: string;
-  heroIdenfitiers?: string[]; // Fabrary's typo is canonical; hero slugs e.g. ["bravo-showstopper"]
+  heroIdentifiers?: string[]; // hero slugs e.g. ["bravo-showstopper"]
   preferredTurnOrder?: string | null; // "1st", "2nd", or null
   notes?: string | null; // HTML notes from Fabrary
-  heroIdentifiers?: string[]; // Canonical hero card IDs from FaBrary API (e.g. ["briar", "briar-warden-of-thorns"])
 }
 
 // Heroes the backend has determined are legal for the current deck's format.
