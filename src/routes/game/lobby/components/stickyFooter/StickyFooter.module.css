@@ -102,8 +102,8 @@
   padding: 0;
   margin: 0;
   cursor: pointer;
-  font-size: 0;
-  line-height: 0;
+  font-size: 18px;
+  line-height: 1;
   transition: all 0.15s ease;
   flex-shrink: 0;
 }
@@ -118,9 +118,21 @@
 
 .iconButton > svg {
   display: block;
-  width: 18px;
-  height: 18px;
+  width: 1em;
+  height: 1em;
   flex-shrink: 0;
+}
+
+.iconButtonCopied {
+  color: #4ade80;
+  border-color: #4ade80;
+  background: rgba(74, 222, 128, 0.1);
+}
+
+.iconButtonCopied:hover {
+  color: #4ade80;
+  border-color: #4ade80;
+  background: rgba(74, 222, 128, 0.15);
 }
 
 /* ── Center: deck count ───────────────────────── */
