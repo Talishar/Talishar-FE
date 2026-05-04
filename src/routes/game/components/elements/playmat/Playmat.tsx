@@ -10,6 +10,9 @@ export const Playmat = ({ isPlayer }: { isPlayer: boolean }) => {
   const playerID = useAppSelector(
     (state: RootState) => state.game.gameInfo.playerID
   );
+  const isReplay = useAppSelector(
+    (state: RootState) => state.game.gameInfo.isReplay
+  );
   const spectatorCameraView = useAppSelector(
     (state: RootState) => state.game.spectatorCameraView
   );
@@ -24,7 +27,7 @@ export const Playmat = ({ isPlayer }: { isPlayer: boolean }) => {
 
   // Determine which playmat to display
   let playmat;
-  if (playerID === 3) {
+  if (playerID === 3 || isReplay) {
     if (spectatorCameraView === 2) {
       playmat = isPlayer ? playerTwoPlaymat : playerOnePlaymat;
     } else {
