@@ -43,9 +43,12 @@ const StickyFooter = ({
   const { errors, values, isValid } = useFormikContext<DeckResponse>();
   const footerRef = useRef<HTMLDivElement>(null);
   let errorArray = [] as string[];
-  for (const [key, value] of Object.entries(errors)) {
+  for (const [, value] of Object.entries(errors)) {
     errorArray.push(String(value));
   }
+
+  const needed = deckSize - values.deck.length;
+  const isConfirmEnabled = isValid && submitSideboard && !needToDoDisclaimer;
 
   // Update CSS custom property with footer height
   useEffect(() => {
@@ -61,12 +64,8 @@ const StickyFooter = ({
       }
     };
 
-    // Initial update
     updateFooterHeight();
-
-    // Small delay to ensure DOM is fully rendered on mobile
     const timer = setTimeout(updateFooterHeight, 100);
-
     window.addEventListener('resize', updateFooterHeight);
     return () => {
       clearTimeout(timer);
@@ -74,7 +73,6 @@ const StickyFooter = ({
     };
   }, []);
 
-  // Call the callback when isValid changes
   useEffect(() => {
     onIsValidChange?.(isValid);
   }, [isValid, onIsValidChange]);
@@ -85,124 +83,114 @@ const StickyFooter = ({
     );
   };
 
-  const dynamicContainer = classNames(styles.dynamicContainer, 'container');
-  const leaveLobby = classNames(styles.buttonClassLeave, 'outline secondary');
+  const wrapperClass = classNames(styles.dynamicContainer, 'container');
+  const leaveClass = classNames(styles.leaveButton, 'outline secondary');
+
+  const deckMetaText = isConfirmEnabled
+    ? `/${deckSize}\u00a0\u00b7\u00a0\u2713\u00a0ready`
+    : needed > 0
+    ? `/${deckSize}\u00a0\u00b7\u00a0need\u00a0${needed}\u00a0more`
+    : `/${deckSize}`;
 
   return (
     <div className={styles.stickyFooter} ref={footerRef}>
-      <div className={dynamicContainer}>
-        <div
-          style={{
-            display: 'flex',
-            gap: '2rem',
-            alignItems: 'center',
-            flex: 1
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <div className={styles.clipboardButtonHolder}>
-              <button
-                className={styles.buttonClass}
-                onClick={handleClipboardCopy}
-                type="button"
-                title="Copy invite link"
-              >
-                <div className={styles.icon}>
-                  <HiClipboardCopy />
-                </div>
-              </button>
-            </div>
-            <div className={styles.syncInline}>
-              <span
-                className={syncEnabled ? styles.syncInlineActive : styles.syncInlinePassive}
+      <div className={wrapperClass}>
+        {/* Main action row: sync | deck count | confirm */}
+        <div className={styles.mainRow}>
+          {/* Left: copy + sync status */}
+          <div className={styles.syncSection}>
+            <button
+              className={styles.iconButton}
+              onClick={handleClipboardCopy}
+              type="button"
+              title="Copy invite link"
+            >
+              <HiClipboardCopy />
+            </button>
+            {syncLearnMoreUrl && !syncEnabled ? (
+              <a
+                href={syncLearnMoreUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.syncPassiveLink}
                 title={syncStatusText}
               >
-                {syncEnabled ? 'Sync On' : 'Sync Off'}
-              </span>
-              {syncStatusText && (
-                <span className={styles.syncInlineText}>{syncStatusText}</span>
-              )}
-              {syncLearnMoreUrl && !syncEnabled && (
-                <a
-                  href={syncLearnMoreUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={styles.syncInlineLink}
-                >
-                  Read more
-                </a>
-              )}
-            </div>
-          </div>
-          {onSendInviteClick && (
-            <div
-              style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
-            >
+                {syncEnabled ? 'Sync on' : 'Sync off'}
+              </a>
+            ) : (
               <span
-                style={{ whiteSpace: 'nowrap' }}
-                className={styles.labelTextLong}
+                className={syncEnabled ? styles.syncActive : styles.syncPassive}
+                title={syncStatusText}
               >
-                Send Friends Invite
+                {syncEnabled ? 'Sync on' : 'Sync off'}
               </span>
-              <span
-                style={{ whiteSpace: 'nowrap' }}
-                className={styles.labelTextShort}
-              >
-                Send Invite
-              </span>
+            )}
+            {onSendInviteClick && isWidescreen && (
               <button
-                className={styles.buttonClass}
+                className={styles.iconButton}
                 onClick={onSendInviteClick}
                 type="button"
                 title="Send invite to friend"
               >
-                <div className={styles.icon}>
-                  <MdGames />
-                </div>
+                <MdGames />
               </button>
-            </div>
-          )}
-        </div>
-        <div className={styles.footerAlarm}>
-          {!isValid && (
-            <div className={styles.alarm}>
-              <FaExclamationCircle /> {errorArray[0]}
-            </div>
-          )}
-        </div>
-        <div className={styles.footerContent}>
-          <div>
-            Deck {values.deck.length}/{deckSize}
+            )}
+          </div>
+
+          {/* Center: deck count */}
+          <div
+            className={`${styles.deckSection} ${
+              isConfirmEnabled ? styles.deckReady : ''
+            }`}
+          >
+            <span className={styles.deckNumber}>{values.deck.length}</span>
+            <span className={styles.deckMeta}>{deckMetaText}</span>
+          </div>
+
+          {/* Right: confirm / edit + optional leave */}
+          <div className={styles.actionSection}>
+            {canUnreadySideboard ? (
+              <button
+                className={styles.editButton}
+                type="button"
+                disabled={isUnreadyLoading || needToDoDisclaimer}
+                onClick={onUnreadySideboard}
+              >
+                Edit Deck
+              </button>
+            ) : (
+              <button
+                className={`${styles.confirmButton} ${
+                  isConfirmEnabled
+                    ? styles.confirmReady
+                    : styles.confirmDisabled
+                }`}
+                type="submit"
+                aria-busy={isSubmitting}
+                disabled={!isConfirmEnabled || isSubmitting}
+              >
+                {isSubmitting
+                  ? 'Submitting\u2026'
+                  : isWidescreen
+                  ? 'Confirm Deck'
+                  : 'Confirm'}
+              </button>
+            )}
+            {isWidescreen && (
+              <button className={leaveClass} onClick={handleLeave}>
+                Leave
+              </button>
+            )}
           </div>
         </div>
-        <div className={styles.buttonHolder}>
-          {canUnreadySideboard ? (
-            <button
-              className={styles.buttonClass}
-              type="button"
-              disabled={isUnreadyLoading || needToDoDisclaimer}
-              onClick={onUnreadySideboard}
-            >
-              {'Edit Deck'}
-            </button>
-          ) : (
-            <button
-              className={styles.buttonClass}
-              type="submit"
-              aria-busy={isSubmitting}
-              disabled={
-                isValid === false || !submitSideboard || needToDoDisclaimer || isSubmitting
-              }
-            >
-              {isSubmitting ? 'Submitting...' : 'Confirm Deck'}
-            </button>
-          )}
-          {isWidescreen && (
-            <button className={leaveLobby} onClick={handleLeave}>
-              Leave
-            </button>
-          )}
-        </div>
+
+        {/* Alarm row — slides in only when deck is invalid */}
+        {!isValid && errorArray[0] && (
+          <div className={styles.alarmRow}>
+            <FaExclamationCircle className={styles.alarmIcon} />
+            <span>{errorArray[0]}</span>
+          </div>
+        )}
       </div>
     </div>
   );
