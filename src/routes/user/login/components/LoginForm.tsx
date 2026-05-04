@@ -2,6 +2,7 @@ import { ErrorMessage, FormikProvider, useFormik } from 'formik';
 import { Link, useNavigate } from 'react-router-dom';
 import styles from './LoginForm.module.css';
 import classnames from 'classnames';
+import SwordLoader from 'components/SwordLoader/SwordLoader';
 import {
   useGetFavoriteDecksQuery,
   useLoginMutation
@@ -100,7 +101,13 @@ export const LoginForm = () => {
   return (
     <div>
       <h2>Log In</h2>
-      <article className={styles.formContainer}>
+      <article className={styles.formContainer} style={{ position: 'relative' }}>
+        {isSubmitting && (
+          <div className={styles.loadingOverlay}>
+            <SwordLoader size={50} />
+            <p className={styles.loadingText}>Logging in...</p>
+          </div>
+        )}
         <button
           onClick={() => {
             window.location.href = `https://metafy.gg/auth/authorize?client_id=${
