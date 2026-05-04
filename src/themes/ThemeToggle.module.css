@@ -24,6 +24,8 @@
 
 .trigger:hover {
   border-color: var(--theme-primary, #d4af37);
+  background: var(--dropdown-background-color);
+  color: var(--theme-text, #f4eded);
 }
 
 .trigger:focus {
