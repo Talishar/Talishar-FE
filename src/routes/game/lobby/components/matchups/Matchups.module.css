@@ -189,6 +189,10 @@
     min-width: unset;
     flex-shrink: 0;
   }
+
+  .autoApplyingStatus {
+    grid-column: 1 / -1;
+  }
 }
 
 /* Mobile: 2-column grid, uniform sizing */
@@ -242,6 +246,10 @@
     padding: 0.1rem 0.25rem;
     min-width: unset;
     flex-shrink: 0;
+  }
+
+  .autoApplyingStatus {
+    grid-column: 1 / -1;
   }
 }
 

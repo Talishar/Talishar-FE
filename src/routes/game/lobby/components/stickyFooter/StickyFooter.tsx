@@ -107,23 +107,25 @@ const StickyFooter = ({
             >
               <HiClipboardCopy />
             </button>
-            {syncLearnMoreUrl && !syncEnabled ? (
-              <a
-                href={syncLearnMoreUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={styles.syncPassiveLink}
-                title={syncStatusText}
-              >
-                {syncEnabled ? 'Sync on' : 'Sync off'}
-              </a>
-            ) : (
-              <span
-                className={syncEnabled ? styles.syncActive : styles.syncPassive}
-                title={syncStatusText}
-              >
-                {syncEnabled ? 'Sync on' : 'Sync off'}
-              </span>
+            {!syncEnabled && (
+              syncLearnMoreUrl ? (
+                <a
+                  href={syncLearnMoreUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.syncPassiveLink}
+                  title={syncStatusText}
+                >
+                  Sync off
+                </a>
+              ) : (
+                <span
+                  className={styles.syncPassive}
+                  title={syncStatusText}
+                >
+                  Sync off
+                </span>
+              )
             )}
             {onSendInviteClick && isWidescreen && (
               <button

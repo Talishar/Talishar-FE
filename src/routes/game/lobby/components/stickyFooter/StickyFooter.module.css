@@ -93,8 +93,8 @@
   align-items: center;
   justify-content: center;
   appearance: none;
-  width: 26px;
-  height: 26px;
+  width: 34px;
+  height: 34px;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.12);
@@ -118,8 +118,8 @@
 
 .iconButton > svg {
   display: block;
-  width: 14px;
-  height: 14px;
+  width: 18px;
+  height: 18px;
   flex-shrink: 0;
 }
 
@@ -217,8 +217,8 @@
 }
 
 .leaveButton {
-  font-size: 0.8rem;
-  padding: 0.4rem 0.75rem;
+  font-size: 0.88rem;
+  padding: 0.45rem 1.1rem;
   margin: 0;
   white-space: nowrap;
   width: auto;

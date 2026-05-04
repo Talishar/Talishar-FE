@@ -1,3 +1,7 @@
+h3 {
+  margin-bottom: 0em !important;
+}
+
 .lobbyClass {
   user-select: none;
   margin: auto;
@@ -176,17 +180,6 @@
   z-index: 2;
 }
 
-.leftCol:hover .dimPic,
-.rightCol:hover .dimPic {
-  background: linear-gradient(
-    transparent 0%,
-    transparent 20%,
-    rgba(0, 0, 0, 0.5) 60%,
-    rgba(0, 0, 0, 0.9) 100%
-  );
-  transform: translateY(-1px);
-}
-
 .dimPic > h3 {
   margin-bottom: 0.3em;
   font-size: 1.3em;
@@ -199,9 +192,7 @@
 
 .leftCol:hover .dimPic > h3,
 .rightCol:hover .dimPic > h3 {
-  color: var(--theme-primary);
   text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.9), 0 0 8px var(--primary-focus);
-  transform: translateY(-2px);
 }
 
 .heroName {
