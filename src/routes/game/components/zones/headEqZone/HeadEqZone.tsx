@@ -15,9 +15,16 @@ export const HeadEqZone = React.memo((prop: Displayrow) => {
     return <div className={styles.headZone}>Head</div>;
   }
 
+  const subcardCount = cardToDisplay.subcards?.length ?? 0;
+
   return (
     <div className={styles.headZone}>
       <CardDisplay card={cardToDisplay} isPlayer={isPlayer} />
+      {subcardCount > 0 && (
+        <div className={styles.subcardCounter} title={`${subcardCount} card${subcardCount !== 1 ? 's' : ''} underneath`}>
+          x {subcardCount}
+        </div>
+      )}
     </div>
   );
 });

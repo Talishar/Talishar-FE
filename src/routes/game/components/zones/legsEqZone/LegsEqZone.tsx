@@ -16,9 +16,16 @@ export const LegsEqZone = React.memo((prop: Displayrow) => {
     return <div className={styles.legsZone}>Legs</div>;
   }
 
+  const subcardCount = cardToDisplay.subcards?.length ?? 0;
+
   return (
     <div className={styles.legsZone}>
       <CardDisplay card={cardToDisplay} isPlayer={isPlayer} />
+      {subcardCount > 0 && (
+        <div className={styles.subcardCounter} title={`${subcardCount} card${subcardCount !== 1 ? 's' : ''} underneath`}>
+          x {subcardCount}
+        </div>
+      )}
     </div>
   );
 });
