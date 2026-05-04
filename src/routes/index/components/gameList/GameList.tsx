@@ -385,8 +385,8 @@ const GameList = () => {
             return false;
           }
 
-          // Hide friends-only private games (visibility "2") - these can't be spectated
-          if (game.visibility === '2') {
+          // Hide friends-only games from non-friends
+          if (game.visibility === '2' && !(game.gameCreator && friendUsernames.has(game.gameCreator))) {
             return false;
           }
 

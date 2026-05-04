@@ -9,4 +9,25 @@
   grid-area: head;
   min-width: 100%;
   min-height: 100%;
+  position: relative;
+}
+
+.subcardCounter {
+  position: absolute;
+  z-index: 10;
+  bottom: 0.4em;
+  left: 0.2em;
+  height: 1.6em;
+  min-width: 1.6em;
+  width: auto;
+  background-color: black;
+  border: var(--theme-primary) solid 1px;
+  color: var(--white);
+  border-radius: 5px;
+  font-size: max(8px, 0.7em);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.2em 0.4em;
+  pointer-events: none;
 }

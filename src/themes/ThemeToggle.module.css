@@ -1,46 +1,155 @@
 .themeToggleContainer {
+  position: relative;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
 }
 
-.label {
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: var(--theme-text-secondary, #e0e0e0);
-}
-
-.select {
+/* Trigger button — styled to match native Pico select elements */
+.trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
   padding: 0.5rem 0.75rem;
-  background: var(--theme-form-background, #33383d);
-  border: 1px solid var(--theme-form-border, #797c80);
-  border-radius: 6px;
+  margin-bottom: 0 !important;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
   color: var(--theme-text, #f4eded);
-  font-size: 0.95rem;
+  font-size: 0.95em;
   cursor: pointer;
-  transition: border-color 0.2s ease, background-color 0.2s ease;
-  outline: none;
+  text-align: left;
+  transition: border-color 0.2s ease;
 }
 
-.select:hover {
+.trigger:hover {
   border-color: var(--theme-primary, #d4af37);
-}
-
-.select:focus {
-  border-color: var(--theme-primary, #d4af37);
-  background: var(--theme-form-active, #33383d);
-  box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.1);
-}
-
-.select option {
-  background: var(--theme-card-background, #1e2329);
+  background: var(--dropdown-background-color);
   color: var(--theme-text, #f4eded);
-  padding: 0.5rem;
+}
+
+.trigger:focus {
+  outline: none;
+  border-color: var(--theme-primary, #d4af37);
+}
+
+/* CSS chevron — matches Pico's thin caret style */
+.chevron {
+  flex-shrink: 0;
+  margin-left: 0.5rem;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(45deg);
+  transition: transform 0.2s ease;
+  opacity: 0.7;
+  position: relative;
+  top: -2px;
+}
+
+.chevronOpen {
+  transform: rotate(225deg);
+  top: 2px;
+}
+
+/* Dropdown list */
+.dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: var(--dropdown-background-color);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: none;
+  border-radius: 0 0 4px 4px;
+  list-style: none;
+  margin: 0;
+  padding: 0.25rem 0;
+  z-index: 1000;
+  overflow-y: auto;
+  backdrop-filter: blur(4px);
+}
+
+/* Individual option */
+.option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.45rem 0.75rem;
+  cursor: pointer;
+  font-size: 0.95em;
+  color: var(--theme-text, #f4eded);
+  transition: background-color 0.15s ease;
+  user-select: none;
+}
+
+.option:hover:not(.optionLocked) {
+  background: var(--dropdown-hover-background-color, rgba(212, 175, 55, 0.15));
+}
+
+.optionSelected {
+  background: rgba(255, 255, 255, 0.07);
+  font-weight: 600;
+}
+
+/* Locked premium option */
+.optionLocked {
+  cursor: default;
+  opacity: 0.5;
+}
+
+.optionName {
+  flex: 1;
+}
+
+.lockBadge {
+  font-size: 0.8rem;
+  margin-left: 0.5rem;
+  cursor: pointer;
+  flex-shrink: 0;
+  opacity: 0.85;
+  transition: opacity 0.15s ease;
+}
+
+.lockBadge:hover {
+  opacity: 1;
+}
+
+/* Upgrade CTA row at the bottom */
+.upgradeRow {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 0.5rem 0.75rem 0.35rem;
+  list-style: none;
+}
+
+.upgradeButton {
+  width: 100%;
+  padding: 0.4rem 0.6rem;
+  margin-bottom: 0 !important;
+  background: var(--theme-primary, #d4af37);
+  color: var(--theme-primary-inverse, #000);
+  border: none;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+  text-align: center;
+}
+
+.upgradeButton:hover {
+  background: var(--theme-primary-hover, #e8c547);
 }
 
 /* Mobile responsive */
 @media (max-width: 768px) {
-  .select {
+  .trigger {
+    font-size: 0.875rem;
+    padding: 0.4rem 0.6rem;
+  }
+
+  .option {
     font-size: 0.875rem;
     padding: 0.4rem 0.6rem;
   }

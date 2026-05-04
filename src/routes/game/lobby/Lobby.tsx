@@ -37,7 +37,8 @@ import {
   BREAKPOINT_EXTRA_LARGE,
   CLOUD_IMAGES_URL,
   QUERY_STATUS,
-  FAB_BAZAAR_DECK_URL_BASE
+  FAB_BAZAAR_DECK_URL_BASE,
+  FABRARY_DECK_URL_BASE
 } from 'appConstants';
 
 const COMPETITIVE_FORMATS = new Set([
@@ -70,14 +71,34 @@ import { IS_STREAMER_MODE } from 'features/options/constants';
 
 const FAB_BAZAAR_LEARN_MORE_URL = 'https://fabbazaar.app/tutorials/talishar';
 
+// FaBrary uses hyphens (e.g. "briar-warden-of-thorns"), Talishar uses underscores.
+const normalizeHeroId = (id: string) => id.toLowerCase().replace(/-/g, '_');
+
+// Strip emoji and punctuation from a FaBrary matchup display name for fuzzy matching.
+// e.g. "🪴Briar" → "briar", "🏀 Vynnset" → "vynnset"
+const normalizeMatchupName = (name: string): string =>
+  name
+    .replace(/[\p{Emoji_Presentation}\p{Extended_Pictographic}\uFE0F\u200D]/gu, '')
+    .replace(/[^a-zA-Z0-9\s]/g, '')
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, '_');
+
 const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
   if (!deckLink) return null;
-  const normalizedBase = FAB_BAZAAR_DECK_URL_BASE.endsWith('/')
-    ? FAB_BAZAAR_DECK_URL_BASE
-    : `${FAB_BAZAAR_DECK_URL_BASE}/`;
-  if (!deckLink.startsWith(normalizedBase)) return null;
-  const deckId = deckLink.slice(normalizedBase.length).split('?')[0].trim();
-  return deckId || null;
+  // Strip the "{index}<fav>" prefix that appears when a favorite deck link is stored
+  // e.g. "20<fav>https://fabrary.net/decks/..." → "https://fabrary.net/decks/..."
+  const favMarker = deckLink.indexOf('<fav>');
+  const cleanedLink = favMarker !== -1 ? deckLink.slice(favMarker + 5) : deckLink;
+  const bases = [FAB_BAZAAR_DECK_URL_BASE, FABRARY_DECK_URL_BASE];
+  for (const base of bases) {
+    const normalizedBase = base.endsWith('/') ? base : `${base}/`;
+    if (cleanedLink.startsWith(normalizedBase)) {
+      const deckId = cleanedLink.slice(normalizedBase.length).split('?')[0].trim();
+      return deckId || null;
+    }
+  }
+  return null;
 };
 
  const Lobby = () => {
@@ -127,8 +148,7 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
   const isBazaarDeckInLobby = !!extractBazaarDeckIdFromLink(
     gameLobby?.myDeckLink
   );
-  const shouldShowMatchupsUI =
-    !isBazaarDeckInLobby && (gameLobby?.matchups?.length ?? 0) > 0;
+  const shouldShowMatchupsUI = (gameLobby?.matchups?.length ?? 0) > 0;
   const [playLobbyJoin] = useSound(playerJoined, { volume: 1 });
   const settingsData = useAppSelector(getSettingsEntity);
   const isMuted = settingsData['MuteSound']?.value === '1';
@@ -282,11 +302,6 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
     setHasMatchups(shouldShowMatchupsUI);
   }, [shouldShowMatchupsUI]);
 
-  useEffect(() => {
-    if (isBazaarDeckInLobby && activeTab === 'matchups') {
-      setActiveTab('equipment');
-    }
-  }, [isBazaarDeckInLobby, activeTab]);
 
   useEffect(() => {
     // New lobby/deck context: clear stale selected matchup from previous session.
@@ -321,11 +336,20 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
       return;
     }
 
-    const matchingMatchup = (gameLobby?.matchups ?? []).find(
-      (matchup) =>
-        matchup.matchupId?.toLowerCase?.() ===
-        gameLobby.theirHero?.toLowerCase?.()
-    );
+    const opponentHero = normalizeHeroId(gameLobby.theirHero ?? '');
+    const matchingMatchup = (gameLobby?.matchups ?? []).find((matchup) => {
+      if (matchup.heroIdentifiers?.length) {
+        return matchup.heroIdentifiers.some((id) => normalizeHeroId(id) === opponentHero);
+      }
+
+      const normalizedId = normalizeHeroId(matchup.matchupId);
+      if (normalizedId === opponentHero) return true;
+      if (opponentHero.startsWith(normalizedId + '_')) return true;
+
+      const normalizedName = normalizeMatchupName(matchup.name);
+      if (normalizedName === opponentHero) return true;
+      return opponentHero.startsWith(normalizedName + '_');
+    });
 
     const targetMatchupId = matchingMatchup?.matchupId ?? '';
     const autoApplyKey = `${gameID}:${playerID}:${gameLobby.myDeckLink}:${gameLobby.theirHero}:${targetMatchupId || 'DEFAULT'}`;
@@ -397,9 +421,16 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
 
   const selectedMatchupForCurrentHero = useMemo(() => {
     if (!selectedMatchup || !gameLobby?.theirHero) return null;
-    return selectedMatchup.matchupId === gameLobby.theirHero
-      ? selectedMatchup
-      : null;
+    const opponentHero = normalizeHeroId(gameLobby.theirHero);
+    if (selectedMatchup.heroIdentifiers?.length) {
+      return selectedMatchup.heroIdentifiers.some((id) => normalizeHeroId(id) === opponentHero)
+        ? selectedMatchup : null;
+    }
+    const normalizedId = normalizeHeroId(selectedMatchup.matchupId);
+    if (normalizedId === opponentHero || opponentHero.startsWith(normalizedId + '_')) return selectedMatchup;
+    const normalizedName = normalizeMatchupName(selectedMatchup.name);
+    if (normalizedName === opponentHero || opponentHero.startsWith(normalizedName + '_')) return selectedMatchup;
+    return null;
   }, [selectedMatchup, gameLobby?.theirHero]);
 
   // Note functions

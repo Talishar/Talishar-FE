@@ -691,21 +691,15 @@
   z-index: 10001 !important;
 }
 
-.mobileDivider {
-  border-bottom: 1px solid var(--muted-border-color, #202632);
-  margin: 8px 0;
-  padding: 0 !important;
-  height: 0;
-  background: none;
-  min-height: 1px;
-
-  > * {
-    display: none;
-  }
-}
-
 .contentWrapper {
   padding-top: 70px;
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+
+  > :first-child {
+    flex: 1;
+  }
 
   :global(body[data-hero-page]) & {
     background: var(--theme-background) !important;

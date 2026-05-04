@@ -118,9 +118,6 @@ const Matchups = ({
               </div>
             );
           })}
-          {isAutoApplyingMatchup && (
-            <p className={styles.autoApplyingStatus}>Applying hero matchup...</p>
-          )}
         </>
       </article>
     );

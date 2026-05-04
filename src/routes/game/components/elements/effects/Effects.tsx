@@ -42,6 +42,9 @@ export default function Effects(props: Player) {
   const playerID = useAppSelector(
     (state: RootState) => state.game.gameInfo.playerID
   );
+  const isReplay = useAppSelector(
+    (state: RootState) => state.game.gameInfo.isReplay
+  );
   const spectatorCameraView = useAppSelector(
     (state: RootState) => state.game.spectatorCameraView
   );
@@ -55,7 +58,7 @@ export default function Effects(props: Player) {
   );
 
   let effects;
-  if (playerID === 3) {
+  if (playerID === 3 || isReplay) {
     if (spectatorCameraView === 2) {
       effects = props.isPlayer ? playerTwoEffects : playerOneEffects;
     } else {

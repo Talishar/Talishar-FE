@@ -39,4 +39,5 @@ export interface Matchup {
   name: string;
   preferredTurnOrder?: string | null; // "1st", "2nd", or null
   notes?: string | null; // HTML notes from Fabrary
+  heroIdentifiers?: string[]; // Canonical hero card IDs from FaBrary API (e.g. ["briar", "briar-warden-of-thorns"])
 }

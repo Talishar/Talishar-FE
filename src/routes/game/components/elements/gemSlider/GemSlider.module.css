@@ -47,3 +47,23 @@
     height: 2.5vh;
   }
 }
+
+@media (orientation: portrait) and (max-width: 600px) {
+  .gem {
+    width: 4.5dvw;
+    height: 4.5dvw;
+    bottom: -0.3dvw;
+  }
+
+  .active {
+    height: 4.5dvw;
+    width: 2.25dvw;
+    left: 2.25dvw;
+  }
+
+  .inactive {
+    height: 4.5dvw;
+    width: 2.25dvw;
+    left: 0;
+  }
+}

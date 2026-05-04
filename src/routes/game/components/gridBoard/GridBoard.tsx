@@ -33,7 +33,7 @@ import ManualModePanel from '../leftColumn/ManualModePanel/ManualModePanel';
 const GridBoard = () => {
   const [cookies] = useCookies(['experimental']);
   const settingsData = useAppSelector(getSettingsEntity);
-  const { playerID } = useAppSelector(getGameInfo);
+  const { playerID, isReplay } = useAppSelector(getGameInfo);
   const spectatorCameraView = useAppSelector(
     (state: any) => state.game.spectatorCameraView
   );
@@ -42,8 +42,8 @@ const GridBoard = () => {
   const isMirroredPlayer =
     settingsData?.[optConst.MIRRORED_PLAYER_BOARD_LAYOUT]?.value === '1';
 
-  // For spectators, check if they want to view from player 2's perspective
-  const isSpectatorViewingPlayer2 = playerID === 3 && spectatorCameraView === 2;
+  // For spectators and replay viewers, check if they want to view from player 2's perspective
+  const isSpectatorViewingPlayer2 = (playerID === 3 || isReplay) && spectatorCameraView === 2;
 
   const gridBoardClass = classNames({
     // Swapped spectator views (with optional mirroring)

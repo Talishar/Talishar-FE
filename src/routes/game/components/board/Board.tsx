@@ -19,14 +19,14 @@ export interface playAreaDimensions {
 export function Board() {
   const [width, height] = useWindowDimensions();
   const [cookies] = useCookies(['experimental']);
-  const { playerID } = useAppSelector(getGameInfo);
+  const { playerID, isReplay } = useAppSelector(getGameInfo);
   const spectatorCameraView = useAppSelector(
     (state: any) => state.game.spectatorCameraView
   );
 
   const useOldScreen = height > width;
   // const useOldScreen = true;
-  const isSpectatorViewingPlayer2 = playerID === 3 && spectatorCameraView === 2;
+  const isSpectatorViewingPlayer2 = (playerID === 3 || isReplay) && spectatorCameraView === 2;
 
   if (useOldScreen) {
     return (

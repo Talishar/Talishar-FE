@@ -127,23 +127,37 @@
 
 @media only screen and (max-width: 768px) {
   .activeLayersBox {
-    min-width: auto;
+    min-width: min(70dvw, 320px);
+    max-width: 92dvw;
+    max-height: 55dvh;
+    left: 50%;
+    translate: -50% 0;
+    padding: 2dvw;
+  }
+
+  .activeLayersContents > div {
+    width: 20dvw;
+    margin-right: -5dvw;
+  }
+
+  .activeLayersContents > div:last-child {
+    margin-right: 0;
   }
 
   .activeLayersCallToAction {
-    font-size: 0.65em;
-    gap: 5px;
+    font-size: 0.7em;
+    gap: 6px;
     padding-left: 0.25em;
   }
 
   .activeLayersTitle {
-    font-size: 0.75em;
-    gap: 5px;
+    font-size: 0.8em;
+    gap: 6px;
     padding-left: 0.25em;
   }
 
   .title {
-    font-size: 0.9em;
+    font-size: 1.1em;
     margin: 0px;
   }
 
@@ -154,7 +168,7 @@
   }
 
   .activeLayersContents {
-    gap: 2px;
+    gap: 0;
   }
 
   .orderingExplanation {
@@ -166,7 +180,7 @@
   }
 
   .buttonDiv {
-    font-size: 0.65em;
-    padding: 4px 6px;
+    font-size: 0.7em;
+    padding: 5px 8px;
   }
 }
