@@ -514,24 +514,27 @@ h3 {
 }
 
 .quickChatStrip {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.28rem;
-  padding: 0.15rem 0.05rem;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.2rem;
+  padding: 0.1rem 0;
   flex-shrink: 0;
 }
 
 .quickChatChip {
-  font-size: 0.65rem;
+  font-size: 0.6rem;
   font-weight: 600;
-  padding: 0.22rem 0.55rem;
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  padding: 0.18rem 0.2rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
   background: rgba(255, 255, 255, 0.03);
-  color: rgba(255, 255, 255, 0.65);
-  border-radius: 999px;
+  color: rgba(255, 255, 255, 0.5);
+  border-radius: 4px;
   cursor: pointer;
   white-space: nowrap;
-  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
   width: auto;
   margin: 0;
 }
@@ -539,16 +542,53 @@ h3 {
 .quickChatChip:hover {
   background: rgba(217, 184, 74, 0.1);
   color: #f0d070;
-  border-color: rgba(217, 184, 74, 0.4);
-  transform: translateY(-1px);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  border-color: rgba(217, 184, 74, 0.35);
 }
 
 .quickChatChip:active {
   background: rgba(217, 184, 74, 0.18);
   color: #fff;
-  transform: translateY(0);
+}
+
+.quickChatChip:last-child:nth-child(odd) {
+  grid-column: 1 / -1;
+}
+
+.chatBottomBar {
+  display: flex;
+  gap: 0.35rem;
+  flex-shrink: 0;
+  margin-top: 0.25rem;
+}
+
+.chatBottomBtn {
+  flex: 1;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.35rem 0.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.6);
+  border-radius: 5px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  margin: 0;
+  width: auto;
+}
+
+.chatBottomBtn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.9);
+  border-color: rgba(255, 255, 255, 0.25);
+  transform: none;
   box-shadow: none;
+}
+
+.chatBottomBtn.active {
+  background: rgba(217, 184, 74, 0.12);
+  color: #d9b84a;
+  border-color: rgba(217, 184, 74, 0.45);
 }
 
 .chatExpandBtn {

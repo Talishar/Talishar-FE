@@ -77,8 +77,6 @@ const FAB_BAZAAR_LEARN_MORE_URL = 'https://fabbazaar.app/tutorials/talishar';
 // FaBrary uses hyphens (e.g. "briar-warden-of-thorns"), Talishar uses underscores.
 const normalizeHeroId = (id: string) => id.toLowerCase().replace(/-/g, '_');
 
-// Strip emoji and punctuation from a FaBrary matchup display name for fuzzy matching.
-// e.g. "🪴Briar" → "briar", "🏀 Vynnset" → "vynnset"
 const normalizeMatchupName = (name: string): string =>
   name
     .replace(/[\p{Emoji_Presentation}\p{Extended_Pictographic}\uFE0F\u200D]/gu, '')
@@ -91,7 +89,8 @@ const LOBBY_PRESETS = [
   { id: 1,  label: 'Hello' },
   { id: 2,  label: 'GLHF' },
   { id: 4,  label: 'BRB' },
-  { id: 5,  label: 'Undo?' },
+  { id: 3,  label: 'You there?' },
+  { id: 8,  label: 'Thinking...' },
   { id: 7,  label: 'No prob!' },
   { id: 20, label: 'Chat?' },
 ];
@@ -1366,18 +1365,28 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
                       </button>
                     )}
                     <>{showCalculator ? <Calculator /> : <LobbyChat />}</>
-                    <button
-                      className={classNames(styles.smallButton, {
-                        [styles.active]: showCalculator
-                      })}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        toggleShowCalculator();
-                      }}
-                      disabled={false}
-                    >
-                      Hand Draw Probabilities
-                    </button>
+                    <div className={styles.chatBottomBar}>
+                      {isWideScreen && hasMatchups && (
+                        <button
+                          type="button"
+                          className={styles.chatBottomBtn}
+                          onClick={() => setChatExpanded(false)}
+                        >
+                          ◂ Matchups
+                        </button>
+                      )}
+                      <button
+                        className={classNames(styles.chatBottomBtn, {
+                          [styles.active]: showCalculator
+                        })}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          toggleShowCalculator();
+                        }}
+                      >
+                        Hand Probabilities
+                      </button>
+                    </div>
                   </>
                 )}
               </div>
