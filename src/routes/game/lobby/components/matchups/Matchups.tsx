@@ -13,13 +13,15 @@ export interface Matchups {
   selectedMatchupId?: string | null;
   onMatchupSelected?: (matchupId: string) => void;
   isAutoApplyingMatchup?: boolean;
+  isReadied?: boolean;
 }
 
 const Matchups = ({
   refetch,
   selectedMatchupId,
   onMatchupSelected,
-  isAutoApplyingMatchup = false
+  isAutoApplyingMatchup = false,
+  isReadied = false
 }: Matchups) => {
   const [isUpdating, setIsUpdating] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
@@ -45,12 +47,16 @@ const Matchups = ({
   };
 
   const handleMatchupClick = async (matchupID: string) => {
+    if (isReadied) return;
     setIsUpdating(true);
     try {
+      const rawDeckLink = gameLobby?.myDeckLink ?? '';
+      const favMarker = rawDeckLink.indexOf('<fav>');
+      const cleanedDeckLink = favMarker !== -1 ? rawDeckLink.slice(favMarker + 5) : rawDeckLink;
       await joinGameMutation({
         gameName: gameID,
         playerID: playerID,
-        fabdb: gameLobby?.myDeckLink ?? '',
+        fabdb: cleanedDeckLink,
         matchup: matchupID
       }).unwrap();
       onMatchupSelected?.(matchupID);
@@ -93,7 +99,7 @@ const Matchups = ({
               <div className={styles.matchups} key={ix}>
                 <MatchupTooltip content={matchup.notes}>
                   <button
-                    disabled={isUpdating}
+                    disabled={isUpdating || isReadied}
                     className={`${styles.matchupButton} ${
                       selectedMatchupId === matchup.matchupId
                         ? styles.matchupButtonSelected

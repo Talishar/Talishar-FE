@@ -601,7 +601,7 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
   const hasModular = (data.deck.modular?.length ?? 0) > 0;
   const initialEquipment = (main: string[], side: string[]) => {
     if (hasModular) {
-      return [...main, 'NONE00'].filter((id) => id !== 'EVO013')[0];
+      return [...main, ...side, 'NONE00'].filter((id) => id !== 'EVO013')[0];
     } else {
       return [...main, ...side, 'NONE00'][0];
     }
@@ -872,7 +872,7 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
       // not re-fire (with a new key) when the newly-created matchup entry first
       // appears in the lobby refresh and gameLobby?.matchups changes.  The save
       // always writes exactly what was submitted, so there is nothing to reload.
-      lastAutoAppliedMatchupKey.current = `${gameID}:${playerID}:${gameLobby?.myDeckLink}:${opponentHeroId}:${opponentHeroId}`;
+      lastAutoAppliedMatchupKey.current = `${gameID}:${playerID}:${gameLobby?.myDeckLink}:${opponentHeroId}:${matchupIdToRestore || opponentHeroId}`;
       try {
         const bazaarResponse = await updateBazaarMatchup({
           deckId: bazaarDeckId,
@@ -1343,6 +1343,7 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
                 selectedMatchupId={selectedMatchupId}
                 onMatchupSelected={setSelectedMatchupId}
                 isAutoApplyingMatchup={isAutoApplyingMatchup}
+                isReadied={!!(gameLobby?.canUnreadySideboard || gameLobby?.amIChoosingFirstPlayer)}
               />
             )}
             <StickyFooter
