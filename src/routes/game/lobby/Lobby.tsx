@@ -360,10 +360,13 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
     const applyMatchupForHero = async () => {
       setIsAutoApplyingMatchup(true);
       try {
+        const rawDeckLink = gameLobby?.myDeckLink ?? '';
+        const favMarker = rawDeckLink.indexOf('<fav>');
+        const cleanedDeckLink = favMarker !== -1 ? rawDeckLink.slice(favMarker + 5) : rawDeckLink;
         const joinPayload: any = {
           gameName: gameID,
           playerID,
-          fabdb: gameLobby?.myDeckLink ?? ''
+          fabdb: cleanedDeckLink
         };
         if (targetMatchupId) {
           joinPayload.matchup = targetMatchupId;
