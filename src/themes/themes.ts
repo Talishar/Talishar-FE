@@ -2,6 +2,7 @@
 export interface Theme {
   name: string;
   id: string;
+  premium?: boolean;
   transparency?: number; // 0-1, defaults to 0.98
   colors: {
     // Background colors
@@ -142,6 +143,7 @@ export const themes: Theme[] = [
   {
     name: '🌟 Radiant',
     id: 'radiant',
+    premium: true,
     colors: {
       background: 'radial-gradient(#e8edf2, #cdd5de)',
       backgroundTexture: "url('./img/backgrounds/everfest-bg.webp')",
@@ -206,6 +208,7 @@ export const themes: Theme[] = [
   {
     name: '☀️ Light',
     id: 'light',
+    premium: true,
     colors: {
       background: 'radial-gradient(transparent, #252525)',
       backgroundTexture: "url('./img/backgrounds/dark_bg_texture.webp')",
@@ -270,6 +273,7 @@ export const themes: Theme[] = [
   {
     name: '🌌 Midnight Blue',
     id: 'blue',
+    premium: true,
     colors: {
       background: 'radial-gradient(transparent, #0a0e27)',
       backgroundTexture: "url('./img/backgrounds/dark_bg_texture.webp')",
@@ -334,6 +338,7 @@ export const themes: Theme[] = [
   {
     name: '👑 Royal Purple',
     id: 'purple',
+    premium: true,
     colors: {
       background: 'radial-gradient(transparent, #0f0a15)',
       backgroundTexture: "url('./img/backgrounds/dark_bg_texture.webp')",
@@ -398,6 +403,7 @@ export const themes: Theme[] = [
   {
     name: '🔴 Crimson Red',
     id: 'red',
+    premium: true,
     colors: {
       background: 'radial-gradient(transparent, #0d0a0a)',
       backgroundTexture: "url('./img/backgrounds/dark_bg_texture.webp')",
@@ -462,6 +468,7 @@ export const themes: Theme[] = [
   {
     name: '💚 Emerald Green',
     id: 'emerald-green',
+    premium: true,
     colors: {
       background: 'radial-gradient(transparent, #0d1410)',
       backgroundTexture: "url('./img/backgrounds/dark_bg_texture.webp')",
@@ -526,6 +533,7 @@ export const themes: Theme[] = [
   {
     name: '💗 Magenta Pink',
     id: 'magenta',
+    premium: true,
     colors: {
       background: 'radial-gradient(transparent, #110914)',
       backgroundTexture: "url('./img/backgrounds/dark_bg_texture.webp')",
@@ -590,6 +598,7 @@ export const themes: Theme[] = [
   {
     name: '⭐ Bronze & Gold',
     id: 'bronze',
+    premium: true,
     colors: {
       background: 'radial-gradient(transparent, #15100a)',
       backgroundTexture: "url('./img/backgrounds/dark_bg_texture.webp')",
@@ -654,6 +663,7 @@ export const themes: Theme[] = [
   {
     name: '⚓ Navy Blue & Gold',
     id: 'navy-blue-gold',
+    premium: true,
     colors: {
       background: 'radial-gradient(transparent, #0f1419)',
       backgroundTexture: "url('./img/backgrounds/dark_bg_texture.webp')",
@@ -718,6 +728,7 @@ export const themes: Theme[] = [
   {
     name: '🧛 Crimson & Silver',
     id: 'crimson-silver',
+    premium: true,
     colors: {
       background: 'radial-gradient(transparent, #0a0e12)',
       backgroundTexture: "url('./img/backgrounds/dark_bg_texture.webp')",
@@ -782,6 +793,7 @@ export const themes: Theme[] = [
   {
     name: '💎 Sapphire & Copper',
     id: 'sapphire-copper',
+    premium: true,
     colors: {
       background: 'radial-gradient(transparent, #0a0f1a)',
       backgroundTexture: "url('./img/backgrounds/dark_bg_texture.webp')",
@@ -846,6 +858,7 @@ export const themes: Theme[] = [
   {
     name: '🌅 Sunset & Cream',
     id: 'sunset-cream',
+    premium: true,
     colors: {
       background: 'radial-gradient(transparent, #15100a)',
       backgroundTexture: "url('./img/backgrounds/dark_bg_texture.webp')",
