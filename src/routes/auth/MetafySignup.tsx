@@ -2,6 +2,8 @@ import React, { useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import { useSubmitMetafySignupMutation } from 'features/api/apiSlice';
+import SwordLoader from 'components/SwordLoader/SwordLoader';
+import styles from 'routes/user/profile/linkmetafy/linkMetafy.module.css';
 
 // Module-level variable to track processed codes - persists across component remounts
 const processedCodes = new Set<string>();
@@ -73,9 +75,15 @@ const MetafySignup = () => {
   }, [searchParams, navigate, setSearchParams, submitMetafySignup]);
 
   return (
-    <div style={{ textAlign: 'center', padding: '2rem' }}>
-      <h2>Signing up with Metafy...</h2>
-      <p>Please wait while we create your account.</p>
+    <div className={styles.container}>
+      <SwordLoader />
+      <h2 className={styles.title}>Signing up with Metafy...</h2>
+      <p className={styles.subtitle}>Please wait while we create your account.</p>
+      <div className={styles.dots}>
+        <div className={styles.dot} />
+        <div className={styles.dot} />
+        <div className={styles.dot} />
+      </div>
     </div>
   );
 };
