@@ -220,10 +220,9 @@ const Header = () => {
                 <BsInfoCircleFill /> <span>About</span>
               </Link>
             </li>
-            <li className={styles.mobileDivider} />
             <li>
               {isLoggedIn ? (
-                <Link to="/user" className={styles.profileLink} onClick={closeMobileMenu}>
+                <Link to="/user" onClick={closeMobileMenu}>
                   <BsPersonFill /> <span>{t('HEADER.PROFILE')}</span>
                   {pendingRequestCount > 0 && (
                     <span className={styles.notificationBadge}>
@@ -232,8 +231,8 @@ const Header = () => {
                   )}
                 </Link>
               ) : (
-                <Link to="/user/login" className={styles.login} onClick={closeMobileMenu}>
-                  <button>{t('HEADER.LOGIN')}</button>
+                <Link to="/user/login" onClick={closeMobileMenu}>
+                  <BsPersonFill /> <span>{t('HEADER.LOGIN')}</span>
                 </Link>
               )}
             </li>
