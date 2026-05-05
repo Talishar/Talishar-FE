@@ -858,7 +858,7 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
     });
 
     try {
-      const esponse: any = await submitSideboardMutation(requestBody).unwrap();
+      const submitResponse: any = await submitSideboardMutation(requestBody).unwrap();
       console.info('[StickySideboard] Talishar submit success', {
         gameStarted: !!submitResponse?.gameStarted,
         hasNewAuthKey: !!submitResponse?.authKey
