@@ -168,10 +168,20 @@ const Matchups = ({
     [sortedSavedHeroMatchups, searchTerm]
   );
 
-  const filteredCustomMatchups = useMemo(
-    () => customMatchups.filter((m) => matchesSearch(m.name ?? m.matchupId)),
-    [customMatchups, searchTerm]
-  );
+  const filteredCustomMatchups = useMemo(() => {
+    const filtered = customMatchups.filter((m) => matchesSearch(m.name ?? m.matchupId));
+    // Suggested matchup is always pinned to the top
+    if (suggestedMatchupId) {
+      const idx = filtered.findIndex((m) => m.matchupId === suggestedMatchupId);
+      if (idx > 0) {
+        const reordered = [...filtered];
+        const [suggested] = reordered.splice(idx, 1);
+        reordered.unshift(suggested);
+        return reordered;
+      }
+    }
+    return filtered;
+  }, [customMatchups, searchTerm, suggestedMatchupId]);
 
   const filteredUnsavedHeroes = useMemo(
     () => unsavedHeroes.filter((h) => matchesSearch(h.name)),
@@ -222,7 +232,8 @@ const Matchups = ({
               <div className={styles.portraitGrid}>
                 {filteredSavedHeroMatchups.map(({ hero, matchup }) => {
                   const isSelected = selectedMatchupId === matchup.matchupId;
-                  const isSuggested = !isSelected && suggestedMatchupId === matchup.matchupId;
+                  // Only show suggestion when nothing has been selected yet
+                  const isSuggested = !selectedMatchupId && suggestedMatchupId === matchup.matchupId;
                   return (
                     <MatchupTooltip key={matchup.matchupId} content={matchup.notes ?? null}>
                       <button
@@ -250,11 +261,19 @@ const Matchups = ({
                           <span className={styles.portraitName}>
                             {matchup.name ?? hero.name}
                           </span>
-                          {matchup.preferredTurnOrder && (
-                            <span className={styles.turnOrderBadge}>
-                              {matchup.preferredTurnOrder}
-                            </span>
-                          )}
+                          <div className={styles.portraitBadgeRow}>
+                            {isSelected && (
+                              <span className={styles.portraitStatusBadgeSelected}>Selected</span>
+                            )}
+                            {isSuggested && (
+                              <span className={styles.portraitStatusBadgeSuggested}>Suggested</span>
+                            )}
+                            {matchup.preferredTurnOrder && (
+                              <span className={styles.turnOrderBadge}>
+                                {matchup.preferredTurnOrder}
+                              </span>
+                            )}
+                          </div>
                         </div>
                       </button>
                     </MatchupTooltip>
@@ -266,7 +285,8 @@ const Matchups = ({
               <div className={styles.namedMatchupList}>
                 {filteredCustomMatchups.map((m) => {
                   const isSelected = selectedMatchupId === m.matchupId;
-                  const isSuggested = !isSelected && suggestedMatchupId === m.matchupId;
+                  // Only show suggestion when nothing has been selected yet
+                  const isSuggested = !selectedMatchupId && suggestedMatchupId === m.matchupId;
                   return (
                     <MatchupTooltip key={m.matchupId} content={m.notes ?? null}>
                       <button
@@ -285,6 +305,12 @@ const Matchups = ({
                         <span className={styles.namedMatchupName}>
                           {m.name ?? m.matchupId}
                         </span>
+                        {isSelected && (
+                          <span className={styles.namedStatusBadge}>Selected</span>
+                        )}
+                        {isSuggested && (
+                          <span className={`${styles.namedStatusBadge} ${styles.namedStatusBadgeSuggested}`}>Suggested</span>
+                        )}
                         {m.preferredTurnOrder && (
                           <span className={styles.namedMatchupBadge}>
                             {m.preferredTurnOrder}
