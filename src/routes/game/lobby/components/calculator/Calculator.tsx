@@ -7,7 +7,6 @@ import { getGameInfo } from 'features/game/GameSlice';
 import { shallowEqual } from 'react-redux';
 import { useGetLobbyInfoQuery } from 'features/api/apiSlice';
 import { TYPE_LABELS } from 'constants/cardConstants';
-import { useTranslation, Trans } from 'react-i18next';
 
 function hgeo(
   totalPopulation: number,
@@ -76,9 +75,6 @@ const Calculator = () => {
     shallowEqual
   );
   const { values } = useFormikContext<DeckResponse>();
-
-  // Initial stuff to allow the lang to change
-  const { t, i18n, ready } = useTranslation();
 
   let { data, isLoading, refetch } = useGetLobbyInfoQuery({
     gameName: gameID,

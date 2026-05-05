@@ -8,7 +8,6 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { toast } from 'react-hot-toast';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
-import { useTranslation } from 'react-i18next';
 
 export const ResetPasswordForm = () => {
   const navigate = useNavigate();
@@ -25,9 +24,6 @@ export const ResetPasswordForm = () => {
     resolver: yupResolver(resetPasswordValidationSchema)
   });
 
-  // Initial stuff to allow the lang to change
-  const { t, i18n, ready } = useTranslation();
-
   const onSubmit: SubmitHandler<ResetPassword> = async (values) => {
     try {
       values.selector = params.get('selector') ?? '';
@@ -42,7 +38,7 @@ export const ResetPasswordForm = () => {
       }
       if (resp.message === 'Success!') {
         toast.success(
-          t("USER.LOGIN.PASSWORD_RESET_SUCESS"),
+          'Password reset successfully! Login with your new password.',
           {
             position: 'top-center'
           }
@@ -63,10 +59,10 @@ export const ResetPasswordForm = () => {
 
   return (
     <div>
-      <h2>{t("USER.LOGIN.RESET_PASSWORD_TITLE")}</h2>
+      <h2>Reset Password</h2>
       <article className={styles.formContainer}>
         <form onSubmit={handleSubmit(onSubmit)} ref={parent}>
-          <label htmlFor="password">{t("USER.LOGIN.PASSWORD")}</label>
+          <label htmlFor="password">Password</label>
           <input
             type="password"
             placeholder="********"
@@ -76,7 +72,7 @@ export const ResetPasswordForm = () => {
           {errors.password?.message && (
             <div className={styles.fieldError}>{errors.password?.message}</div>
           )}
-          <label htmlFor="passwordRepeat">{t("USER.LOGIN.CONFIRM_PASSWORD")}</label>
+          <label htmlFor="passwordRepeat">Confirm Password</label>
           <input
             type="password"
             placeholder="********"
@@ -94,7 +90,7 @@ export const ResetPasswordForm = () => {
             aria-busy={isSubmitting}
             className={styles.submitButton}
           >
-            {t("USER.LOGIN.SUBMIT")}
+            Submit
           </button>
           {errors.root?.serverError?.message && (
             <div className={styles.fieldError}>
