@@ -28,7 +28,7 @@ export default function OpponentInactive() {
   const backendInactive = useAppSelector(
     (state: any) => state.game.opponentInactive ?? false
   );
-  const { playerID, gameID, authKey } = useAppSelector(
+  const { playerID, gameID, authKey, isReplay } = useAppSelector(
     getGameInfo,
     shallowEqual
   );
@@ -39,7 +39,7 @@ export default function OpponentInactive() {
   const lastUpdateRef = useRef(lastUpdate);
   const lastUpdateTimeRef = useRef(Date.now());
 
-  // Spectators don't see inactivity warnings
+  // Spectators and replay viewers don't see inactivity warnings
   const isSpectator = playerID === 3;
 
   // Track when lastUpdate changes to reset inactivity
@@ -67,7 +67,7 @@ export default function OpponentInactive() {
     return () => clearInterval(interval);
   }, [turnPhase]);
 
-  if (!inactive || dismissed || turnPhase === 'OVER' || isSpectator) return null;
+  if (!inactive || dismissed || turnPhase === 'OVER' || isSpectator || isReplay) return null;
 
   // The player with priority is the one who should be acting
   const amIInactive = hasPriority;

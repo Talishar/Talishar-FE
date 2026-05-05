@@ -38,6 +38,9 @@ export default function PlayerName(player: Player) {
   const playerID = useAppSelector(
     (state: RootState) => state.game.gameInfo.playerID
   );
+  const isReplay = useAppSelector(
+    (state: RootState) => state.game.gameInfo.isReplay
+  );
   const spectatorCameraView = useAppSelector(
     (state: RootState) => state.game.spectatorCameraView
   );
@@ -54,7 +57,7 @@ export default function PlayerName(player: Player) {
   );
 
   const getDisplayedPlayerNumber = () => {
-    if (playerID === 3) {
+    if (playerID === 3 || isReplay) {
       if (spectatorCameraView === 2) {
         // Viewing player 2: board is swapped, so top (isPlayer=false) is player 1, bottom (isPlayer=true) is player 2
         return player.isPlayer ? 2 : 1;
@@ -71,8 +74,8 @@ export default function PlayerName(player: Player) {
 
   // Determine which player name to display
   let playerName;
-  if (playerID === 3) {
-    // Spectator: show names based on their camera view
+  if (playerID === 3 || isReplay) {
+    // Spectator/replay: show names based on camera view
     if (spectatorCameraView === 2) {
       // Viewing player 2: board is swapped, so top (isPlayer=false) is player 1, bottom (isPlayer=true) is player 2
       playerName = player.isPlayer ? playerTwoName : playerOneName;
@@ -86,7 +89,7 @@ export default function PlayerName(player: Player) {
   }
 
   // Apply streamer mode: hide opponent name for non-spectators
-  if (isStreamerMode && !player.isPlayer && playerID !== 3) {
+  if (isStreamerMode && !player.isPlayer && playerID !== 3 && !isReplay) {
     playerName = 'Opponent';
   }
 

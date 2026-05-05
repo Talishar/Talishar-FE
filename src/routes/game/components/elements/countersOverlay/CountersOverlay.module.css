@@ -723,3 +723,60 @@
   border-top: 6px solid rgba(0, 0, 0, 0.95);
   animation: tooltipSlideIn 0.3s ease-out;
 }
+
+@media (orientation: portrait) and (max-width: 600px) {
+  .number.number {
+    height: 4.5dvw;
+    max-height: 4.5dvw;
+    min-height: 3dvw;
+    width: 4.5dvw;
+    max-width: 4.5dvw;
+    min-width: 3dvw;
+    font-size: 2.5dvw;
+    border-width: 1.5px;
+    flex-shrink: 0;
+  }
+
+  .defCounter.defCounter,
+  .steamCounter.steamCounter,
+  .energyCounter.energyCounter,
+  .hauntCounter.hauntCounter,
+  .verseCounter.verseCounter,
+  .doomCounter.doomCounter,
+  .lessonCounter.lessonCounter,
+  .rustCounter.rustCounter,
+  .flowCounter.flowCounter,
+  .frostCounter.frostCounter,
+  .balanceCounter.balanceCounter,
+  .bindCounter.bindCounter,
+  .stainCounter.stainCounter,
+  .stormCounter.stormCounter,
+  .goldCounter.goldCounter,
+  .suspenseCounter.suspenseCounter,
+  .sandCounter.sandCounter,
+  .powerCounter.powerCounter,
+  .lifeCounter.lifeCounter,
+  .enduranceCounter.enduranceCounter {
+    height: 4.5dvw;
+    width: 4.5dvw;
+    font-size: 2.5dvw;
+    flex-shrink: 0;
+  }
+
+  .wateryGraveIcon.wateryGraveIcon {
+    min-width: 4dvw;
+    height: 4dvw;
+    font-size: 2.5dvw;
+    padding: 1px;
+    margin: 0.05em;
+    flex-shrink: 0;
+  }
+
+  .icon.icon {
+    min-width: 4dvw;
+    height: 4dvw;
+    font-size: 2.5dvw;
+    padding: 1px;
+    margin: 0.05em;
+  }
+}

@@ -33,8 +33,8 @@ const MatchupTooltip: React.FC<MatchupTooltipProps> = ({
     const tooltipRect = tooltipRef.current.getBoundingClientRect();
     const viewportWidth = window.innerWidth;
     const viewportHeight = window.innerHeight;
-    const padding = 0; // No gap between button and tooltip
-    const tooltipWidth = tooltipRect.width + 10; // Use actual rendered width
+    const padding = 8; // Minimum gap from screen edges
+    const tooltipWidth = tooltipRect.width;
     const tooltipHeight = tooltipRect.height;
 
     let position: 'top' | 'bottom' | 'left' | 'right' = 'left';
@@ -72,12 +72,8 @@ const MatchupTooltip: React.FC<MatchupTooltipProps> = ({
       }
     }
 
-    // Clamp vertical position to viewport
-    if (top < padding) {
-      top = padding;
-    } else if (top + tooltipHeight + padding > viewportHeight) {
-      top = viewportHeight - tooltipHeight - padding;
-    }
+    left = Math.max(padding, Math.min(left, viewportWidth - tooltipWidth - padding));
+    top = Math.max(padding, Math.min(top, viewportHeight - tooltipHeight - padding));
 
     setTooltipPos({ top, left, position });
   }, [isVisible]);

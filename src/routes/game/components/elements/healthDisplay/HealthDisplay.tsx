@@ -8,6 +8,9 @@ export default function HealthDisplay(props: Player) {
   const playerID = useAppSelector(
     (state: RootState) => state.game.gameInfo.playerID
   );
+  const isReplay = useAppSelector(
+    (state: RootState) => state.game.gameInfo.isReplay
+  );
   const spectatorCameraView = useAppSelector(
     (state: RootState) => state.game.spectatorCameraView
   );
@@ -20,7 +23,7 @@ export default function HealthDisplay(props: Player) {
   );
 
   let health;
-  if (playerID === 3) {
+  if (playerID === 3 || isReplay) {
     if (spectatorCameraView === 2) {
       health = props.isPlayer ? playerTwoHealth : playerOneHealth;
     } else {

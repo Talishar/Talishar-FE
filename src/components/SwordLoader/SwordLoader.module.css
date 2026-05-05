@@ -1,0 +1,54 @@
+.wrapper {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.wrapper::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  border-top-color: #c9a84c;
+  border-right-color: rgba(201, 168, 76, 0.3);
+  animation: spinRing 1.4s linear infinite;
+}
+
+.wrapper::after {
+  content: '';
+  position: absolute;
+  inset: 10px;
+  border-radius: 50%;
+  border: 1px solid transparent;
+  border-bottom-color: rgba(201, 168, 76, 0.5);
+  border-left-color: rgba(201, 168, 76, 0.2);
+  animation: spinRing 2s linear infinite reverse;
+}
+
+.sword {
+  animation: swordPulse 1.8s ease-in-out infinite;
+  filter: drop-shadow(0 0 8px rgba(201, 168, 76, 0.6));
+}
+
+@keyframes spinRing {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes swordPulse {
+  0%, 100% {
+    opacity: 1;
+    filter: drop-shadow(0 0 6px rgba(201, 168, 76, 0.5));
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.85;
+    filter: drop-shadow(0 0 16px rgba(201, 168, 76, 0.9));
+    transform: scale(1.06);
+  }
+}

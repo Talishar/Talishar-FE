@@ -40,7 +40,8 @@ import {
   BREAKPOINT_EXTRA_LARGE,
   CLOUD_IMAGES_URL,
   QUERY_STATUS,
-  FAB_BAZAAR_DECK_URL_BASE
+  FAB_BAZAAR_DECK_URL_BASE,
+  FABRARY_DECK_URL_BASE
 } from 'appConstants';
 import { useTranslation, Trans } from 'react-i18next';
 
@@ -74,23 +75,42 @@ import { IS_STREAMER_MODE } from 'features/options/constants';
 
 const FAB_BAZAAR_LEARN_MORE_URL = 'https://fabbazaar.app/tutorials/talishar';
 
+// FaBrary uses hyphens (e.g. "briar-warden-of-thorns"), Talishar uses underscores.
+const normalizeHeroId = (id: string) => id.toLowerCase().replace(/-/g, '_');
+
+const normalizeMatchupName = (name: string): string =>
+  name
+    .replace(/[\p{Emoji_Presentation}\p{Extended_Pictographic}\uFE0F\u200D]/gu, '')
+    .replace(/[^a-zA-Z0-9\s]/g, '')
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, '_');
+
 const LOBBY_PRESETS = [
   { id: 1,  label: 'Hello' },
   { id: 2,  label: 'GLHF' },
   { id: 4,  label: 'BRB' },
-  { id: 5,  label: 'Undo?' },
+  { id: 3,  label: 'You there?' },
+  { id: 8,  label: 'Thinking...' },
   { id: 7,  label: 'No prob!' },
   { id: 20, label: 'Chat?' },
 ];
 
 const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
   if (!deckLink) return null;
-  const normalizedBase = FAB_BAZAAR_DECK_URL_BASE.endsWith('/')
-    ? FAB_BAZAAR_DECK_URL_BASE
-    : `${FAB_BAZAAR_DECK_URL_BASE}/`;
-  if (!deckLink.startsWith(normalizedBase)) return null;
-  const deckId = deckLink.slice(normalizedBase.length).split('?')[0].trim();
-  return deckId || null;
+  // Strip the "{index}<fav>" prefix that appears when a favorite deck link is stored
+  // e.g. "20<fav>https://fabrary.net/decks/..." → "https://fabrary.net/decks/..."
+  const favMarker = deckLink.indexOf('<fav>');
+  const cleanedLink = favMarker !== -1 ? deckLink.slice(favMarker + 5) : deckLink;
+  const bases = [FAB_BAZAAR_DECK_URL_BASE, FABRARY_DECK_URL_BASE];
+  for (const base of bases) {
+    const normalizedBase = base.endsWith('/') ? base : `${base}/`;
+    if (cleanedLink.startsWith(normalizedBase)) {
+      const deckId = cleanedLink.slice(normalizedBase.length).split('?')[0].trim();
+      return deckId || null;
+    }
+  }
+  return null;
 };
 
  const Lobby = () => {
@@ -333,11 +353,20 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
       return;
     }
 
-    const matchingMatchup = (gameLobby?.matchups ?? []).find(
-      (matchup) =>
-        matchup.matchupId?.toLowerCase?.() ===
-        gameLobby.theirHero?.toLowerCase?.()
-    );
+    const opponentHero = normalizeHeroId(gameLobby.theirHero ?? '');
+    const matchingMatchup = (gameLobby?.matchups ?? []).find((matchup) => {
+      if (matchup.heroIdentifiers?.length) {
+        return matchup.heroIdentifiers.some((id) => normalizeHeroId(id) === opponentHero);
+      }
+
+      const normalizedId = normalizeHeroId(matchup.matchupId);
+      if (normalizedId === opponentHero) return true;
+      if (opponentHero.startsWith(normalizedId + '_')) return true;
+
+      const normalizedName = normalizeMatchupName(matchup.name);
+      if (normalizedName === opponentHero) return true;
+      return opponentHero.startsWith(normalizedName + '_');
+    });
 
     const targetMatchupId = matchingMatchup?.matchupId ?? '';
     const autoApplyKey = `${gameID}:${playerID}:${gameLobby.myDeckLink}:${gameLobby.theirHero}:${targetMatchupId || 'DEFAULT'}`;
@@ -348,10 +377,13 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
     const applyMatchupForHero = async () => {
       setIsAutoApplyingMatchup(true);
       try {
+        const rawDeckLink = gameLobby?.myDeckLink ?? '';
+        const favMarker = rawDeckLink.indexOf('<fav>');
+        const cleanedDeckLink = favMarker !== -1 ? rawDeckLink.slice(favMarker + 5) : rawDeckLink;
         const joinPayload: any = {
           gameName: gameID,
           playerID,
-          fabdb: gameLobby?.myDeckLink ?? ''
+          fabdb: cleanedDeckLink
         };
         if (targetMatchupId) {
           joinPayload.matchup = targetMatchupId;
@@ -409,9 +441,16 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
 
   const selectedMatchupForCurrentHero = useMemo(() => {
     if (!selectedMatchup || !gameLobby?.theirHero) return null;
-    return selectedMatchup.matchupId === gameLobby.theirHero
-      ? selectedMatchup
-      : null;
+    const opponentHero = normalizeHeroId(gameLobby.theirHero);
+    if (selectedMatchup.heroIdentifiers?.length) {
+      return selectedMatchup.heroIdentifiers.some((id) => normalizeHeroId(id) === opponentHero)
+        ? selectedMatchup : null;
+    }
+    const normalizedId = normalizeHeroId(selectedMatchup.matchupId);
+    if (normalizedId === opponentHero || opponentHero.startsWith(normalizedId + '_')) return selectedMatchup;
+    const normalizedName = normalizeMatchupName(selectedMatchup.name);
+    if (normalizedName === opponentHero || opponentHero.startsWith(normalizedName + '_')) return selectedMatchup;
+    return null;
   }, [selectedMatchup, gameLobby?.theirHero]);
 
   // Note functions
@@ -579,7 +618,7 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
   const hasModular = (data.deck.modular?.length ?? 0) > 0;
   const initialEquipment = (main: string[], side: string[]) => {
     if (hasModular) {
-      return [...main, 'NONE00'].filter((id) => id !== 'EVO013')[0];
+      return [...main, ...side, 'NONE00'].filter((id) => id !== 'EVO013')[0];
     } else {
       return [...main, ...side, 'NONE00'][0];
     }
@@ -850,7 +889,7 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
       // not re-fire (with a new key) when the newly-created matchup entry first
       // appears in the lobby refresh and gameLobby?.matchups changes.  The save
       // always writes exactly what was submitted, so there is nothing to reload.
-      lastAutoAppliedMatchupKey.current = `${gameID}:${playerID}:${gameLobby?.myDeckLink}:${opponentHeroId}:${opponentHeroId}`;
+      lastAutoAppliedMatchupKey.current = `${gameID}:${playerID}:${gameLobby?.myDeckLink}:${opponentHeroId}:${matchupIdToRestore || opponentHeroId}`;
       try {
         const bazaarResponse = await updateBazaarMatchup({
           deckId: bazaarDeckId,
@@ -1329,18 +1368,28 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
                       </button>
                     )}
                     <>{showCalculator ? <Calculator /> : <LobbyChat />}</>
-                    <button
-                      className={classNames(styles.smallButton, {
-                        [styles.active]: showCalculator
-                      })}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        toggleShowCalculator();
-                      }}
-                      disabled={false}
-                    >
-		      {t("GAME_LOBBY.HAND_DRAW")}                      
-                    </button>
+                    <div className={styles.chatBottomBar}>
+                      {isWideScreen && hasMatchups && (
+                        <button
+                          type="button"
+                          className={styles.chatBottomBtn}
+                          onClick={() => setChatExpanded(false)}
+                        >
+                          ◂ Matchups
+                        </button>
+                      )}
+                      <button
+                        className={classNames(styles.chatBottomBtn, {
+                          [styles.active]: showCalculator
+                        })}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          toggleShowCalculator();
+                        }}
+                      >
+                        Hand Probabilities
+                      </button>
+                    </div>
                   </>
                 )}
               </div>
@@ -1358,6 +1407,7 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
                 selectedMatchupId={selectedMatchupId}
                 onMatchupSelected={setSelectedMatchupId}
                 isAutoApplyingMatchup={isAutoApplyingMatchup}
+                isReadied={!!(gameLobby?.canUnreadySideboard || gameLobby?.amIChoosingFirstPlayer)}
                 onExpandChat={isWideScreen ? () => setChatExpanded(true) : undefined}
                 isBazaarDeck={isBazaarDeckInLobby}
               />

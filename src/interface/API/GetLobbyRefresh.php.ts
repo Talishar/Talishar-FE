@@ -38,6 +38,7 @@ export interface GetLobbyRefreshResponse {
 export interface Matchup {
   matchupId: string;
   name: string;
+  heroIdentifiers?: string[]; // hero slugs e.g. ["bravo-showstopper"]
   preferredTurnOrder?: string | null; // "1st", "2nd", or null
   notes?: string | null; // HTML notes from Fabrary
 }

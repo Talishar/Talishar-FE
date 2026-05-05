@@ -253,6 +253,9 @@ export const submitButton = createAsyncThunk(
         credentials: 'include'
       });
       const data = await response.text();
+      if (!response.ok || (data && data.startsWith('Invalid'))) {
+        console.error('[submitButton] Backend error:', data, '| params:', Object.fromEntries(queryParams));
+      }
       return;
     } catch (e) {
       console.error(e);

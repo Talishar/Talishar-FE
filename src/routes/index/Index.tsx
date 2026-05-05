@@ -19,7 +19,7 @@ import TalisharLogo from '../../img/TalisharLogo.webp';
 import { BsChevronDown, BsChevronUp } from 'react-icons/bs';
 
 const Index = () => {
-  usePageTitle('Home');
+  usePageTitle('Play FaB Online');
   const dispatch = useAppDispatch();
   const { isLoggedIn, currentUserName } = useAuth();
   const { isSupporter, isLoading } = useSupporterStatus();
@@ -105,10 +105,10 @@ const Index = () => {
           {!isBannerHidden && (
             <>
               <h1 className={styles.heroTitle}>
-                Jump into a game<br />of Flesh &amp; Blood
+                Play Flesh &amp; Blood Online
               </h1>
               <p className={styles.heroSubtitle}>
-                Talishar lets you play online for free, right in your browser.{' '}
+                Talishar lets you play FaB online for free, right in your browser.{' '}
                 Find opponents, test decks, and get games in whenever you want.
               </p>
               <div className={styles.heroCta}>

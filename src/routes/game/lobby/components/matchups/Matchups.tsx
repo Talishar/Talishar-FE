@@ -7,16 +7,12 @@ import React, { useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { toast } from 'react-hot-toast';
 import { shallowEqual } from 'react-redux';
-import { HEROES_OF_RATHE } from 'routes/index/components/filter/constants';
 import { generateCroppedImageUrl } from 'utils/cropImages';
 import styles from './Matchups.module.css';
 import MatchupTooltip from './MatchupTooltip';
 import { useTranslation, Trans } from 'react-i18next';
 
-// A hero entry that has been resolved from a saved matchup or the legalHeroes
-// list. `id` is whichever identifier we have (slug from backend, or card-ID
-// from HEROES_OF_RATHE). `class` is empty when sourced from HEROES_OF_RATHE
-// alone; populated when sourced from / overridden by backend `legalHeroes`.
+// A hero entry resolved from a saved matchup against the backend legalHeroes list.
 type ResolvedHero = { id: string; name: string; class: string };
 
 export interface Matchups {
@@ -24,6 +20,7 @@ export interface Matchups {
   selectedMatchupId?: string | null;
   onMatchupSelected?: (matchupId: string) => void;
   isAutoApplyingMatchup?: boolean;
+  isReadied?: boolean;
   onExpandChat?: () => void;
   isBazaarDeck?: boolean;
 }
@@ -33,6 +30,7 @@ const Matchups = ({
   selectedMatchupId,
   onMatchupSelected,
   isAutoApplyingMatchup = false,
+  isReadied = false,
   onExpandChat,
   isBazaarDeck = false,
 }: Matchups) => {
@@ -55,12 +53,16 @@ const Matchups = ({
   const { t, i18n, ready } = useTranslation();
   
   const handleMatchupClick = async (matchupID: string) => {
+    if (isReadied) return;
     setIsUpdating(true);
     try {
+      const rawDeckLink = gameLobby?.myDeckLink ?? '';
+      const favMarker = rawDeckLink.indexOf('<fav>');
+      const cleanedDeckLink = favMarker !== -1 ? rawDeckLink.slice(favMarker + 5) : rawDeckLink;
       await joinGameMutation({
         gameName: gameID,
         playerID: playerID,
-        fabdb: gameLobby?.myDeckLink ?? '',
+        fabdb: cleanedDeckLink,
         matchup: matchupID
       }).unwrap();
       onMatchupSelected?.(matchupID);
@@ -76,87 +78,49 @@ const Matchups = ({
       setIsUpdating(false);
     }
   };
-  
-  // Universe of all known heroes — used for resolveHero() so we can identify
-  // a saved matchup as hero-backed even when the hero is banned in the current
-  // format (e.g. Verdance saved against a CC deck → still recognized as a hero
-  // even though Verdance is a Living Legend banned in CC). Always sources from
-  // HEROES_OF_RATHE; backend's legalHeroes is layered on top to attach the
-  // class string when available.
-  const HERO_BY_NAME = useMemo(() => {
+
+  // Slug → hero entry, sourced from backend `legalHeroes`. Used for hero-tile
+  // rendering and the discovery grid. Already format-filtered + ban-filtered
+  // server-side (via CardClass + isBannedInFormat in JoinGame.php), so any
+  // entry here is implicitly a legal hero in the current format.
+  const normalizeSlug = (s: string) => s.replace(/[/!]/g, '');
+
+  const HERO_BY_SLUG = useMemo(() => {
     const map = new Map<string, ResolvedHero>();
-    for (const h of HEROES_OF_RATHE) {
-      map.set(h.label.toLowerCase(), { id: h.value, name: h.label, class: '' });
-    }
-    // Layer in backend data when present — gives us the class string and the
-    // slug-style id (vs. HEROES_OF_RATHE's card-ID style).
     for (const h of gameLobby?.legalHeroes ?? []) {
-      map.set(h.name.toLowerCase(), { id: h.heroId, name: h.name, class: h.class });
+      map.set(normalizeSlug(h.heroId), { id: h.heroId, name: h.name, class: h.class });
     }
     return map;
   }, [gameLobby?.legalHeroes]);
 
-  const HERO_BY_ID = useMemo(() => {
-    const map = new Map<string, ResolvedHero>();
-    // Card-ID keyed (e.g. "DYN113")
-    for (const h of HEROES_OF_RATHE) {
-      map.set(h.value, { id: h.value, name: h.label, class: '' });
-    }
-    // Slug-keyed from backend (e.g. "arakni_huntsman") — overrides where present
-    for (const h of gameLobby?.legalHeroes ?? []) {
-      map.set(h.heroId, { id: h.heroId, name: h.name, class: h.class });
-    }
-    return map;
-  }, [gameLobby?.legalHeroes]);
-
-  // Resolve a saved matchup to a hero entry if it conceptually targets one.
-  // First try matchupId (slug or card ID), then the matchup's display name.
-  const resolveHero = (m: { matchupId: string; name?: string | null }): ResolvedHero | null => {
-    return (
-      HERO_BY_ID.get(m.matchupId) ??
-      (m.name ? HERO_BY_NAME.get(m.name.toLowerCase()) : undefined) ??
-      null
-    );
+  // Resolve a saved matchup to a hero entry.
+  //
+  // Bazaar: matchupId IS the hero slug (e.g. "bravo_showstopper").
+  // Fabrary: matchupId is a ULID, but hero-backed matchups include
+  //   heroIdentifiers with the slug in hyphen form.
+  // FabDB/other: no reliable hero signal — renders as button.
+  const resolveHero = (m: Matchup): ResolvedHero | null => {
+    const bySlug = HERO_BY_SLUG.get(normalizeSlug(m.matchupId));
+    if (bySlug) return bySlug;
+    const fabId = m.heroIdentifiers?.[0];
+    if (fabId) return HERO_BY_SLUG.get(normalizeSlug(fabId.replace(/-/g, '_'))) ?? null;
+    return null;
   };
 
   // Partition saved matchups into hero-backed (rendered as portrait) vs
-  // custom-named (rendered as full-width button).
-  //
-  // When the backend provides `legalHeroes`, that list is authoritative —
-  // hero matchups for heroes NOT in the legal list (e.g. saved against a
-  // Living Legend then loaded into a CC deck) are dropped entirely. This
-  // protects against deckbuilders that don't validate format bans on their
-  // side. When the backend hasn't sent `legalHeroes`, all hero matchups
-  // are shown (no ban data available to filter on).
+  // custom-named (rendered as full-width button). Banned-hero matchups
+  // (slug not in legalHeroes) naturally fall into customs and render as
+  // buttons — their data is preserved, just visually treated as a profile.
   const { savedHeroMatchups, customMatchups } = useMemo(() => {
     const heroes: { hero: ResolvedHero; matchup: Matchup }[] = [];
     const customs: Matchup[] = [];
-
-    const legalList = gameLobby?.legalHeroes;
-    const legalSet =
-      legalList && legalList.length > 0
-        ? new Set<string>([
-            ...legalList.map((h) => h.heroId),
-            ...legalList.map((h) => h.name.toLowerCase()),
-          ])
-        : null;
-
     for (const m of gameLobby?.matchups ?? []) {
       const hero = resolveHero(m);
-      if (hero) {
-        if (legalSet) {
-          const isLegal =
-            legalSet.has(m.matchupId) ||
-            (m.name ? legalSet.has(m.name.toLowerCase()) : false);
-          if (!isLegal) continue; // banned hero in this format — drop entirely
-        }
-        heroes.push({ hero, matchup: m });
-      } else {
-        customs.push(m);
-      }
+      if (hero) heroes.push({ hero, matchup: m });
+      else customs.push(m);
     }
     return { savedHeroMatchups: heroes, customMatchups: customs };
-  }, [gameLobby?.matchups, gameLobby?.legalHeroes, HERO_BY_ID, HERO_BY_NAME]);
+  }, [gameLobby?.matchups, HERO_BY_SLUG, isBazaarDeck]);
 
   // Format-legal heroes that AREN'T already saved (the discovery grid for
   // Bazaar). Sourced exclusively from the backend's `legalHeroes` list —
@@ -280,7 +244,7 @@ const Matchups = ({
                     <MatchupTooltip key={matchup.matchupId} content={matchup.notes ?? null}>
                       <button
                         type="button"
-                        disabled={isUpdating}
+                        disabled={isUpdating || isReadied}
                         className={`${styles.portraitCard} ${isSelected ? styles.portraitCardSelected : ''}`}
                         onClick={(e) => {
                           e.preventDefault();
@@ -288,7 +252,7 @@ const Matchups = ({
                         }}
                       >
                         <img
-                          src={generateCroppedImageUrl(hero.id)}
+                          src={generateCroppedImageUrl(normalizeSlug(hero.id))}
                           alt={matchup.name ?? hero.name}
                           className={`${styles.portraitImg} ${styles.portraitImgHasData}`}
                           onError={(e) => {
@@ -319,7 +283,7 @@ const Matchups = ({
                     <MatchupTooltip key={m.matchupId} content={m.notes ?? null}>
                       <button
                         type="button"
-                        disabled={isUpdating}
+                        disabled={isUpdating || isReadied}
                         className={`${styles.namedMatchupItem} ${isSelected ? styles.namedMatchupSelected : ''}`}
                         onClick={(e) => {
                           e.preventDefault();
@@ -352,7 +316,7 @@ const Matchups = ({
                   <MatchupTooltip key={matchup.matchupId} content={matchup.notes}>
                     <button
                       type="button"
-                      disabled={isUpdating}
+                      disabled={isUpdating || isReadied}
                       className={`${styles.portraitCard} ${isSelected ? styles.portraitCardSelected : ''}`}
                       onClick={(e) => {
                         e.preventDefault();
@@ -369,7 +333,7 @@ const Matchups = ({
                       }}
                     >
                       <img
-                        src={generateCroppedImageUrl(matchup.matchupId)}
+                        src={generateCroppedImageUrl(normalizeSlug(matchup.matchupId))}
                         alt={matchup.name}
                         className={`${styles.portraitImg} ${matchup.hasData ? styles.portraitImgHasData : ''}`}
                         onError={(e) => {

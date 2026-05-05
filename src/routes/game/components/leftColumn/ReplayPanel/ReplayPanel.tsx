@@ -1,10 +1,11 @@
 import React, { useId, useState } from 'react';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
-import { submitButton, getGameInfo } from 'features/game/GameSlice';
+import { submitButton, getGameInfo, setSpectatorCameraView } from 'features/game/GameSlice';
 import { useLocation } from 'react-router-dom';
 import styles from './ReplayPanel.module.css';
 import { toast } from 'react-hot-toast';
 import { BACKEND_URL, URL_END_POINT, PROCESS_INPUT } from 'appConstants';
+import { MdSwapVert } from 'react-icons/md';
 
 export default function ReplayPanel() {
   const [isOpen, setIsOpen] = useState(false);
@@ -43,6 +44,14 @@ function ReplayContent({
   const [turnNumber, setTurnNumber] = useState<string>('0');
   const [isRequestInProgress, setIsRequestInProgress] = useState(false);
   const dispatch = useAppDispatch();
+  const spectatorCameraView = useAppSelector(
+    (state: any) => state.game.spectatorCameraView
+  );
+
+  const togglePerspective = () => {
+    const newView = spectatorCameraView === 1 ? 2 : 1;
+    dispatch(setSpectatorCameraView(newView));
+  };
 
   const handleDispatchWithParam = (mode: number, param: string | number) => {
     if (isRequestInProgress) return;
@@ -162,6 +171,17 @@ function ReplayContent({
             Next →
           </button>
         </div>
+
+        <div className={styles.divider}></div>
+
+        <button
+          className={styles.actionButton}
+          onClick={togglePerspective}
+          title={`Switch to Player ${spectatorCameraView === 1 ? 2 : 1} perspective`}
+        >
+          <MdSwapVert style={{ verticalAlign: 'middle', marginRight: '0.3rem' }} />
+          P{spectatorCameraView === 1 ? '2' : '1'} View
+        </button>
       </div>
     </div>
   );

@@ -2,6 +2,8 @@ import { useSubmitMetafyLoginMutation } from 'features/api/apiSlice';
 import React, { useEffect } from 'react';
 import { toast } from 'react-hot-toast';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import SwordLoader from 'components/SwordLoader/SwordLoader';
+import styles from './linkMetafy.module.css';
 
 export interface MetafyLoginResponse {
   message?: string;
@@ -44,9 +46,15 @@ const LinkMetafy = () => {
   }, []);
 
   return (
-    <div style={{ textAlign: 'center', padding: '2rem' }}>
-      <h2>Connecting to Metafy...</h2>
-      <p>Please wait while we connect your account.</p>
+    <div className={styles.container}>
+      <SwordLoader />
+      <h2 className={styles.title}>Connecting to Metafy...</h2>
+      <p className={styles.subtitle}>Please wait while we connect your account.</p>
+      <div className={styles.dots}>
+        <div className={styles.dot} />
+        <div className={styles.dot} />
+        <div className={styles.dot} />
+      </div>
     </div>
   );
 };

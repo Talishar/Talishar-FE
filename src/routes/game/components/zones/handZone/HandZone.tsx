@@ -12,6 +12,9 @@ export default function HandZone(prop: Player) {
   const playerID = useAppSelector(
     (state: RootState) => state.game.gameInfo.playerID
   );
+  const isReplay = useAppSelector(
+    (state: RootState) => state.game.gameInfo.isReplay
+  );
   const spectatorCameraView = useAppSelector(
     (state: RootState) => state.game.spectatorCameraView
   );
@@ -25,7 +28,7 @@ export default function HandZone(prop: Player) {
   );
 
   let handCards;
-  if (playerID === 3) {
+  if (playerID === 3 || isReplay) {
     if (spectatorCameraView === 2) {
       handCards = isPlayer ? playerTwoHand : playerOneHand;
     } else {
@@ -38,7 +41,7 @@ export default function HandZone(prop: Player) {
   let displayRow = isPlayer ? styles.isPlayer : styles.isOpponent;
   displayRow = `${displayRow} ${styles.handZone}`;
 
-  if (handCards === undefined || (playerID !== 3 && isPlayer)) {
+  if (handCards === undefined || (playerID !== 3 && !isReplay && isPlayer)) {
     return <div className={displayRow}></div>;
   }
 

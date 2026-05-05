@@ -23,6 +23,7 @@ export const DATADOLL_URL = import.meta.env.DEV
 export const FAB_BAZAAR_DECKS_API_URL =
   'https://fabbazaar.app/api/talishar/decks';
 export const FAB_BAZAAR_DECK_URL_BASE = 'https://fabbazaar.app/decks/';
+export const FABRARY_DECK_URL_BASE = 'https://fabrary.net/decks/';
 
 // what playmat is the default
 export const DEFAULT_PLAYMAT = `Default`;
