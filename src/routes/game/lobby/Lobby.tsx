@@ -1349,12 +1349,12 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
               syncEnabled={isBazaarDeckInLobby}
               syncStatusText={
                 selectedMatchupForCurrentHero
-                  ? t("GAME_LOBBY.SYNCED_MATCHUP", { hero: selectedMatchupForCurrentHero.name ?? selectedMatchupForCurrentHero.matchupId })
+                  ? t("GAME_LOBBY.MATCHUP_APPLIED", { hero: selectedMatchupForCurrentHero.name ?? selectedMatchupForCurrentHero.matchupId })
                   : gameLobby?.theirHero && gameLobby.theirHero !== 'CardBack'
                     ? suggestedMatchupId
-                      ? 'Matchup suggested — click to apply'
-                      : 'No matchup for this hero'
-                    : 'Waiting for opponent hero'
+                  ? t("GAME_LOBBY.MATCHUP_SUGGESTED")
+                      : t("GAME_LOBBY.NO_MATCHUP")
+                : t("GAME_LOBBY.WAITING_HERO")
               }
               syncLearnMoreUrl={FAB_BAZAAR_LEARN_MORE_URL}
             />
