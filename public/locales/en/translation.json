@@ -354,6 +354,7 @@
     "MATCHUPS":"Matchups",
     "APPLYING_MATCHUP":"Applying hero matchup...",
     "SAVED_PROFILES":"SAVED PROFILES",
+    "NO_MATCHUP_SAVED":"No matchup saved",
     "NO_DECK_PROFILE":"No deck profile against <0>{{hero}}</0>. Save one in your deckbuilder to auto-apply sideboard adjustments.",
     "CONFIGURE_MATCHUP":"Configure matchup ↗",
     "OPEN_DECK":"Open deck ↗",

@@ -282,7 +282,7 @@
       "WELCOME_BACK": "Bon retour sur Talishar"
     }
   },
-   "GAME_LOBBY": {
+  "GAME_LOBBY": {
     "KICKED_SUCCESS": "L’adversaire a été expulsé du lobby.",
     "KICKED_FAILURE": "Impossible d’expulser l’adversaire.",
     "SIDEBOARD_UNREADY_FAILURE": "Impossible d’annuler l’état prêt du sideboard",
@@ -297,7 +297,7 @@
     "KICK_LABEL": "Expulser l’adversaire",
     "WAITING": "En attente de l’adversaire",
     "LEAVE_TITLE": "Quitter le lobby",
-     "LEAVE": "Quitter",
+    "LEAVE": "Quitter",
     "MATCHUPS": "Matchups",
     "EQUIPMENT": "Équipement",
     "DECK": "Deck",
@@ -348,6 +348,7 @@
     "LEGS": "Jambes",
     "SOME_ERROR": "Une erreur est survenue",
     "SAVED_PROFILES": "PROFILS ENREGISTRÉS",
+    "NO_MATCHUP_SAVED": "Aucun matchup enregistré",
     "NO_DECK_PROFILE": "Aucun profil de deck contre <0>{{hero}}</0>. Enregistrez-en un dans votre constructeur de deck pour appliquer automatiquement les ajustements du sideboard.",
     "CONFIGURE_MATCHUP": "Configurer le matchup ↗",
     "OPEN_DECK": "Ouvrir le deck ↗",

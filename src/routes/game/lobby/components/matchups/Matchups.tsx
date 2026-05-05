@@ -439,13 +439,13 @@ const NoDataPopover = ({
         >
           ×
         </button>
-        <p className={styles.noDataTitle}>No matchup saved</p>
+        <p className={styles.noDataTitle}>{t("GAME_LOBBY.NO_MATCHUP_SAVED")}</p>
         <p className={styles.noDataBody}>
 	  <Trans i18nKey="GAME_LOBBY.NO_DECK_PROFILE"
 		 components={[
 		   <strong key="s0"/>
 		 ]}
-		 hero={hero.name}
+		 values={{hero:hero.name}}
 	    />
 
         </p>
