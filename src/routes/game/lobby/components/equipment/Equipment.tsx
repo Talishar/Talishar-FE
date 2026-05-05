@@ -12,6 +12,7 @@ import styles from './Equipment.module.css';
 import CardPopUp from 'routes/game/components/elements/cardPopUp/CardPopUp';
 import { useLanguageSelector } from 'hooks/useLanguageSelector';
 import { CARD_SQUARES_PATH, getCollectionCardImagePath } from 'utils';
+import { useTranslation } from 'react-i18next';
 
 export type EquipFieldName = 'head' | 'chest' | 'arms' | 'legs';
 const EQUIP_FIELDS: EquipFieldName[] = ['head', 'chest', 'arms', 'legs'];
@@ -64,7 +65,9 @@ const Equipment = ({
   const dispatch = useAppDispatch();
   const { getLanguage } = useLanguageSelector();
   const locale = getLanguage();
-
+  // Initial stuff to allow the lang to change
+  const { t, i18n, ready } = useTranslation();
+						      
   React.useEffect(() => {
     setFieldValue('assignedModulars', assigned);
   }, [assigned, setFieldValue]);
@@ -216,7 +219,7 @@ const Equipment = ({
   return (
     <div className={styles.container} onContextMenu={(e) => e.preventDefault()}>
       <div className={styles.eqCategory}>
-        <h3>Weapons / Off-Hand</h3>
+        <h3>{t("GAME_LOBBY.WEAPONS")}</h3>
 
         <FieldArray
           name="weapons"
@@ -302,14 +305,14 @@ const Equipment = ({
         />
       </div>
 
-      {renderEquipZone('Head', 'head', baseEquipment.head)}
-      {renderEquipZone('Chest', 'chest', baseEquipment.chest)}
-      {renderEquipZone('Arms', 'arms', baseEquipment.arms)}
-      {renderEquipZone('Legs', 'legs', baseEquipment.legs)}
+      {renderEquipZone(t("GAME_LOBBY.HEAD"), 'head', baseEquipment.head)}
+      {renderEquipZone(t("GAME_LOBBY.CHEST"), 'chest', baseEquipment.chest)}
+      {renderEquipZone(t("GAME_LOBBY.ARMS"), 'arms', baseEquipment.arms)}
+      {renderEquipZone(t("GAME_LOBBY.LEGS"), 'legs', baseEquipment.legs)}
 
       {baseEquipment.demi.length > 0 && (
         <div className={styles.eqCategory}>
-          <h3>Demi-Hero</h3>
+          <h3>{t("GAME_LOBBY.DEMIHERO")}</h3>
           <div className={styles.categoryContainer}>
             {baseEquipment.demi.map((card, ix) => (
               <div key={`demi-${ix}`} className={styles.cardContainer}>
@@ -329,9 +332,9 @@ const Equipment = ({
           onDrop={handleReturnToModular}
         >
           <div style={{ display: 'flex', flexDirection: 'row' }}>
-            <h3>Modular</h3>
+            <h3>{t("GAME_LOBBY.MODULAR")}</h3>
             <h6 style={{ paddingLeft: '10px' }}>
-              <i>(drag into Zone)</i>
+              <i>{t("GAME_LOBBY.DRAG")}</i>
             </h6>
           </div>
 

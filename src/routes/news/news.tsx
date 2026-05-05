@@ -6,6 +6,7 @@ import {
   DiscordReaction
 } from '../../services/contentService';
 import { parseHtmlToReactElements } from 'utils/ParseEscapedString';
+import { useTranslation } from 'react-i18next';
 
 const formatDate = (timestamp: string) => {
   return new Date(timestamp)
@@ -31,7 +32,9 @@ const formatDate = (timestamp: string) => {
 const News = () => {
   const [discordMessages, setDiscordMessages] = useState<DiscordMessage[]>([]);
   const [loading, setLoading] = useState(false);
-
+  // Initial stuff to allow the lang to change
+  const { t, i18n, ready } = useTranslation();
+ 
   useEffect(() => {
     const loadContent = async () => {
       setLoading(true);
@@ -53,14 +56,14 @@ const News = () => {
   return (
     <div className={styles.newsInner}>
       <div className={styles.newsSectionHeader}>
-        <h2 className={styles.newsSectionTitle}>Talishar Release Notes</h2>
+        <h2 className={styles.newsSectionTitle}>{t("NEWS.TITLE")}</h2>
         <a
           href="https://discord.gg/JykuRkdd5S"
           target="_blank"
           rel="noopener noreferrer"
           className={styles.viewAllLink}
         >
-          View all →
+          {t("NEWS.VIEW_ALL")}→
         </a>
       </div>
       <div className={styles.newsHorizontalList}>
@@ -104,7 +107,7 @@ const News = () => {
             </div>
           ))
         ) : (
-          <p>No recent announcements. Join our Discord for updates!</p>
+          <p>{t("NEWS.NO_NEWS")}</p>
         )}
       </div>
     </div>
