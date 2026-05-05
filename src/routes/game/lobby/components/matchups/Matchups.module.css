@@ -177,8 +177,8 @@
 }
 
 .portraitCardSelected {
-  border-color: #4a9eff !important;
-  box-shadow: 0 0 0 1px #4a9eff;
+  border-color: rgba(255, 255, 255, 0.8) !important;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.4);
 }
 
 .portraitCardSuggested {
@@ -232,6 +232,39 @@
   overflow: hidden;
   text-overflow: ellipsis;
   line-height: 1.2;
+}
+
+.portraitBadgeRow {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  flex-wrap: wrap;
+}
+
+.portraitStatusBadgeSelected,
+.portraitStatusBadgeSuggested {
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  padding: 0.1rem 0.3rem;
+  border-radius: 3px;
+  background: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  width: fit-content;
+}
+
+.namedStatusBadge,
+.namedStatusBadgeSuggested {
+  flex-shrink: 0;
+  padding: 0.12rem 0.45rem;
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 999px;
 }
 
 .turnOrderBadge {
