@@ -13,6 +13,7 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { GameLocationState } from 'interface/GameLocationState';
 import { useKnownSearchParams } from 'hooks/useKnownSearchParams';
 import { toast } from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
 
 interface LobbyUpdateHandlerProps {
   isSubmitting: boolean;
@@ -35,10 +36,12 @@ export const LobbyUpdateHandler = React.memo(
     const locationState = location.state as GameLocationState | undefined;
     const [{ gameName = '0', playerID = '3', authKey = '' }] =
       useKnownSearchParams();
+    // Initial stuff to allow the lang to change
+    const { t, i18n, ready } = useTranslation();
 
     if (gameID === undefined) {
       navigate('/');
-      toast.error('No GameID defined');
+      toast.error(t("GAME_LOBBY.NO_GAMEID"));
     }
 
     // setup long poll

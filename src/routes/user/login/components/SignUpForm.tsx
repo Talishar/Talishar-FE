@@ -10,6 +10,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import useAuth from 'hooks/useAuth';
 import { toast } from 'react-hot-toast';
 import { useState } from 'react';
+import { useTranslation, Trans } from 'react-i18next';
 
 export const SignUpForm = () => {
   const [disclaimerOpen, setDisclaimerOpen] = useState(false);
@@ -17,6 +18,8 @@ export const SignUpForm = () => {
   const [signup, signupResult] = useSignUpMutation();
   const [parent] = useAutoAnimate();
   const navigate = useNavigate();
+  // Initial stuff to allow the lang to change
+  const { t, i18n, ready } = useTranslation();
 
   const {
     register,
@@ -65,7 +68,7 @@ export const SignUpForm = () => {
 
   return (
     <div>
-      <h2>Sign Up</h2>
+      <h2>{t("USER.LOGIN.SIGN_UP")}</h2>
       <article className={styles.formContainer}>
         <form onSubmit={handleSubmit(onSubmit)} ref={parent}>
           <label htmlFor="userId">Username</label>
@@ -79,7 +82,7 @@ export const SignUpForm = () => {
           {errors.userId?.message && (
             <div className={styles.fieldError}>{errors.userId?.message}</div>
           )}
-          <label htmlFor="email">Email</label>
+      <label htmlFor="email">{t("USER.LOGIN.EMAIL")}</label>
           <input
             type="email"
             placeholder="Bravo@talishar.net"
@@ -90,7 +93,7 @@ export const SignUpForm = () => {
           {errors.email?.message && (
             <div className={styles.fieldError}>{errors.email?.message}</div>
           )}
-          <label htmlFor="password">Password</label>
+          <label htmlFor="password">{t("USER.LOGIN.PASSWORD")}</label>
           <input
             type="password"
             placeholder="********"
@@ -101,7 +104,7 @@ export const SignUpForm = () => {
           {errors.password?.message && (
             <div className={styles.fieldError}>{errors.password?.message}</div>
           )}
-          <label htmlFor="passwordRepeat">Confirm Password</label>
+          <label htmlFor="passwordRepeat">{t("USER.LOGIN.CONFIRM_PASSWORD")}</label>
           <input
             type="password"
             placeholder="********"
@@ -119,14 +122,17 @@ export const SignUpForm = () => {
             {...register('agreeToTerms')}
             aria-invalid={errors.agreeToTerms?.message ? 'true' : undefined}
           />
-          <label htmlFor="agreeToTerms">
-            I agree that{' '}
-            <span
+      <label htmlFor="agreeToTerms">
+      <Trans
+         i18nKey="USER.LOGIN.TALISHAR_CONSENT"
+    components={[
+      <span  key="not-judge-s0"
               onClick={() => setDisclaimerOpen(true)}
               className={styles.link}
-            >
-              Talishar is not a judge.
-            </span>
+            />
+    ]}
+         >
+      </Trans>
           </label>
           {errors.agreeToTerms?.message && (
             <div className={styles.fieldError}>
@@ -138,7 +144,7 @@ export const SignUpForm = () => {
             aria-busy={isSubmitting}
             disabled={isSubmitting}
           >
-            Submit
+            {t("USER.LOGIN.SUBMIT")}
           </button>
           {errors.root?.serverError?.message && (
             <div className={styles.fieldError}>
@@ -147,20 +153,22 @@ export const SignUpForm = () => {
           )}
         </form>
         <hr className={styles.divider} />
-        <p className={styles.linebreak} style={{ marginTop: '18px' }}>
-          Already have an account?{' '}
-          <Link
+<p className={styles.linebreak} style={{ marginTop: '18px' }}>
+  <Trans i18nKey="USER.LOGIN.ALREADY_HAVE_ACCOUNT"
+	 components={[
+	 <Link
+	   key="already-account-l0"
             to={'/user/login'}
             style={{
               color: 'var(--theme-primary)',
               textDecoration: 'underline'
             }}
-          >
-            Log In
-          </Link>
+            />
+	 ]}>
+	  </Trans>
         </p>
         <small className={styles.privacy}>
-          <Link to={'/privacy'}>Privacy Policy</Link>
+          <Link to={'/privacy'}>{t("USER.LOGIN.PRIVACY_POLICY")}</Link>
         </small>
       </article>
       <dialog open={disclaimerOpen}>
@@ -170,8 +178,8 @@ export const SignUpForm = () => {
               aria-label="Close"
               className="close"
               onClick={() => setDisclaimerOpen(false)}
-            ></span>
-            Disclaimer
+              ></span>
+	    {t("USER.LOGIN.DISCLAIMER")}            
           </header>
           <p>
             Welcome to Talishar, a fan-made website where you can play the
@@ -218,7 +226,7 @@ export const SignUpForm = () => {
               setDisclaimerOpen(false);
             }}
           >
-            I agree, let me play already!
+            {t("USER.LOGIN.POLICY_DIALOG_BUTTON")}
           </button>
         </article>
       </dialog>
