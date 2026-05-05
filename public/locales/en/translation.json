@@ -267,6 +267,8 @@
       "EMAIL":"Email",
       "REMEMBER_ME":"Remember me",
       "LOGIN":"Log In",
+      "LOGGING_IN":"Logging in...",
+      "NO_ACCOUNT":"No account yet?",
       "SIGN_UP":"Sign Up",
       "REMEMBER_ME_CONSENT":"By using the Remember Me function, you consent to a cookie being stored in your browser for purpose of identifying your account on future visits.",
       "PRIVACY_POLICY":"Privacy Policy",

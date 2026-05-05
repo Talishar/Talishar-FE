@@ -109,7 +109,7 @@ export const LoginForm = () => {
         {isSubmitting && (
           <div className={styles.loadingOverlay}>
             <SwordLoader size={50} />
-            <p className={styles.loadingText}>Logging in...</p>
+            <p className={styles.loadingText}>{t("USER.LOGIN.LOGGING_IN")}</p>
           </div>
         )}
         <button
@@ -221,7 +221,7 @@ export const LoginForm = () => {
         </form>
         <hr className={styles.divider} />
         <p className={styles.linebreak} style={{ marginTop: '18px' }}>
-          No account yet?{' '}
+          {t("USER.LOGIN.NO_ACCOUNT")}{' '}
           <Link
             to={'./signup'}
             style={{
