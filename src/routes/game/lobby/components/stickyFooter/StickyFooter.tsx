@@ -6,7 +6,6 @@ import styles from './StickyFooter.module.css';
 import classNames from 'classnames';
 import { HiClipboardCopy, HiClipboardCheck } from 'react-icons/hi';
 import { MdGames } from 'react-icons/md';
-import { useTranslation } from 'react-i18next';
 
 export type DeckSize = {
   deckSize: number;
@@ -50,10 +49,6 @@ const StickyFooter = ({
     errorArray.push(String(value));
   }
 
-  // Initial stuff to allow the lang to change
-  const { t, i18n, ready } = useTranslation();
-
-			    
   // Update CSS custom property with footer height
   useEffect(() => {
     const updateFooterHeight = () => {
@@ -142,7 +137,7 @@ const StickyFooter = ({
                 className={classNames(styles.iconButton, { [styles.iconButtonCopied]: copied })}
                 onClick={handleClipboardCopy}
                 type="button"
-                title={copied ? 'Copied!' : t("GAME_LOBBY.COPY_INVITE")}
+                title={copied ? 'Copied!' : 'Copy invite link'}
               >
                 {copied ? <HiClipboardCheck /> : <HiClipboardCopy />}
               </button>
@@ -156,19 +151,19 @@ const StickyFooter = ({
                 style={{ whiteSpace: 'nowrap' }}
                 className={styles.labelTextLong}
               >
-		{t("GAME_LOBBY.SEND_FRIEND_INVITE")}                
+                Send Friends Invite
               </span>
               <span
                 style={{ whiteSpace: 'nowrap' }}
                 className={styles.labelTextShort}
               >
-		{t("GAME_LOBBY.SEND_INVITE")}                 
+                Send Invite
               </span>
               <button
                 className={styles.buttonClass}
                 onClick={onSendInviteClick}
                 type="button"
-                title={t("GAME_LOBBY.SEND_INVITE_FRIEND")}
+                title="Send invite to friend"
               >
                 <div className={styles.icon}>
                   <MdGames />
@@ -185,7 +180,7 @@ const StickyFooter = ({
                 <span className={styles.deckErrorTooltip}>{errorArray[0]}</span>
               </span>
             )}
-            {t("GAME_LOBBY.DECK")}{' '}{values.deck.length}/{deckSize}
+            Deck {values.deck.length}/{deckSize}
           </div>
         </div>
         <div className={styles.buttonHolder}>
@@ -196,7 +191,7 @@ const StickyFooter = ({
               disabled={isUnreadyLoading || needToDoDisclaimer}
               onClick={onUnreadySideboard}
             >
-              {t("GAME_LOBBY.EDIT_DECK")}
+              {'Edit Deck'}
             </button>
           ) : (
             <button
@@ -207,12 +202,12 @@ const StickyFooter = ({
                 isValid === false || !submitSideboard || needToDoDisclaimer || isSubmitting
               }
             >
-              {isSubmitting ? t("GAME_LOBBY.SUBMITTING") : t("GAME_LOBBY.CONFIRM_DECK")}
+              {isSubmitting ? 'Submitting...' : 'Confirm Deck'}
             </button>
           )}
           {isWidescreen && (
             <button className={leaveLobby} onClick={handleLeave}>
-              {t("GAME_LOBBY.LEAVE")}
+              Leave
             </button>
           )}
         </div>

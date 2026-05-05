@@ -10,7 +10,6 @@ import { shallowEqual } from 'react-redux';
 import { generateCroppedImageUrl } from 'utils/cropImages';
 import styles from './Matchups.module.css';
 import MatchupTooltip from './MatchupTooltip';
-import { useTranslation, Trans } from 'react-i18next';
 
 // A hero entry resolved from a saved matchup against the backend legalHeroes list.
 type ResolvedHero = { id: string; name: string; class: string };
@@ -41,7 +40,7 @@ const Matchups = ({
     name: string;
     anchorRect: DOMRect;
   } | null>(null);
-  
+
   const gameLobby = useAppSelector(
     (state: RootState) => state.game.gameLobby,
     shallowEqual
@@ -49,9 +48,6 @@ const Matchups = ({
   const { gameID, playerID } = useAppSelector(getGameInfo, shallowEqual);
   const [joinGameMutation] = useJoinGameMutation();
 
-  // Initial stuff to allow the lang to change
-  const { t, i18n, ready } = useTranslation();
-  
   const handleMatchupClick = async (matchupID: string) => {
     if (isReadied) return;
     setIsUpdating(true);
@@ -73,7 +69,7 @@ const Matchups = ({
       );
     } catch (err) {
       console.warn(err);
-      toast.error(t("GAME_LOBBY.SOME_ERROR"), { position: 'top-center' });
+      toast.error('Some error happened', { position: 'top-center' });
     } finally {
       setIsUpdating(false);
     }
@@ -201,14 +197,14 @@ const Matchups = ({
     for (const h of filteredUnsavedHeroes) {
       const cls = h.class
         ? h.class.charAt(0) + h.class.slice(1).toLowerCase()
-            : t("BASE.OTHER");
+        : 'Other';
       if (!groups[cls]) groups[cls] = [];
       groups[cls].push(h);
     }
     return Object.keys(groups)
       .sort((a, b) => {
-        if (a === t("BASE.OTHER")) return 1;
-        if (b === t("BASE.OTHER")) return -1;
+        if (a === 'Other') return 1;
+        if (b === 'Other') return -1;
         return a.localeCompare(b);
       })
       .map((cls) => ({ cls, matchups: groups[cls] }));
@@ -219,11 +215,11 @@ const Matchups = ({
   return (
     <article className={styles.matchupContainer}>
       <div className={styles.matchupHeader}>
-        <h4>{t("GAME_LOBBY.MATCHUPS")}</h4>
+        <h4>Matchups</h4>
       </div>
       <input
         type="text"
-        placeholder={t("BASE.SEARCH")}
+        placeholder="Search"
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
         className={styles.searchInput}
@@ -231,9 +227,7 @@ const Matchups = ({
       <div className={styles.groupsWrapper}>
         {(filteredSavedHeroMatchups.length > 0 || filteredCustomMatchups.length > 0) && (
           <div className={styles.classGroup}>
-            <p className={styles.groupHeader}>
-	      {t("GAME_LOBBY.SAVED_PROFILES")}
-	    </p>
+            <p className={styles.groupHeader}>SAVED PROFILES</p>
             {filteredSavedHeroMatchups.length > 0 && (
               <div className={styles.portraitGrid}>
                 {filteredSavedHeroMatchups.map(({ hero, matchup }) => {
@@ -421,9 +415,6 @@ const NoDataPopover = ({
   deckLink?: string;
 }) => {
   const { anchorRect } = hero;
-  // Initial stuff to allow the lang to change
-  const { t, i18n, ready } = useTranslation();
-  
   const vw = window.innerWidth;
   const vh = window.innerHeight;
 
@@ -463,15 +454,10 @@ const NoDataPopover = ({
         >
           ×
         </button>
-        <p className={styles.noDataTitle}>{t("GAME_LOBBY.NO_MATCHUP_SAVED")}</p>
+        <p className={styles.noDataTitle}>No matchup saved</p>
         <p className={styles.noDataBody}>
-	  <Trans i18nKey="GAME_LOBBY.NO_DECK_PROFILE"
-		 components={[
-		   <strong key="s0"/>
-		 ]}
-		 values={{hero:hero.name}}
-	    />
-
+          No deck profile against <strong>{hero.name}</strong>. Save one in
+          your deckbuilder to auto-apply sideboard adjustments.
         </p>
         {(() => {
           const matchupsHref = buildMatchupsLink(deckLink);
@@ -484,7 +470,7 @@ const NoDataPopover = ({
               rel="noopener noreferrer"
               className={styles.noDataLearnLink}
             >
-              {isBazaar ? t("GAME_LOBBY.CONFIGURE_MATCHUP") : t("GAME_LOBBY.CONFIGURE_MATCHUP")}
+              {isBazaar ? 'Configure matchup ↗' : 'Open deck ↗'}
             </a>
           );
         })()}

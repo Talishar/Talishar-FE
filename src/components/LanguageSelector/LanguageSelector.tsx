@@ -37,7 +37,7 @@ const LanguageSelector = () => {
   return (
     <div>
       <select onChange={handleLanguageSelect} defaultValue={selectedLanguage}>
-      {Object.keys(LOCALE_DICTIONARY).map((language, index) => (
+        {Object.keys(LOCALE_DICTIONARY).map((language, index) => (
           <option
             key={`${language}-${index}`}
             className="dropdown-item"
