@@ -22,6 +22,7 @@ import useAuth from 'hooks/useAuth';
 import useAdScript from 'hooks/useAdScript';
 import {
   useGetLobbyInfoQuery,
+  useJoinGameMutation,
   useSubmitSideboardMutation,
   useSubmitLobbyInputMutation,
   useGetUserProfileQuery,
@@ -91,7 +92,7 @@ const LOBBY_PRESETS = [
   { id: 3,  label: 'You there?' },
   { id: 8,  label: 'Thinking...' },
   { id: 7,  label: 'No prob!' },
-  { id: 20, label: 'Do you want to chat?' },
+  { id: 20, label: 'Chat?' },
 ];
 
 const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
@@ -128,8 +129,12 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
   const [selectedMatchupId, setSelectedMatchupId] = useState<string | null>(
     null
   );
+  const [isAutoApplyingMatchup, setIsAutoApplyingMatchup] =
+    useState<boolean>(false);
   const [chatExpanded, setChatExpanded] = useState(false);
+  const lastAutoAppliedMatchupKey = useRef<string>('');
   const { sendQuickChat } = useSendGameChat();
+  const submittedMatchupRef = useRef<string | null>(null);
   const deckLinkTrackingRef = useRef<{ link: string | undefined; gameKey: string }>({
     link: undefined,
     gameKey: ''
@@ -259,6 +264,8 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
   const [submitSideboardMutation, submitSideboardMutationData] =
     useSubmitSideboardMutation();
 
+  const [joinGameMutation] = useJoinGameMutation();
+
   const [updateBazaarMatchup] = useUpdateBazaarMatchupMutation();
 
   const [submitLobbyInput, submitLobbyInputData] =
@@ -320,34 +327,87 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
     if (gameKey === prevGameKey && newLink === prevLink) return;
     deckLinkTrackingRef.current = { link: newLink, gameKey };
     setSelectedMatchupId(null);
+    lastAutoAppliedMatchupKey.current = '';
+    submittedMatchupRef.current = null;
   }, [gameID, playerID, gameLobby?.myDeckLink]);
 
   useEffect(() => {
-    // No opponent yet: clear any previous manual matchup selection.
+    // No opponent yet: hide any previous matchup indicator until a hero is known.
     if (!gameLobby?.theirHero || gameLobby.theirHero === 'CardBack') {
-      setSelectedMatchupId(null);
+      if (!submittedMatchupRef.current) {
+        setSelectedMatchupId(null);
+      }
     }
   }, [gameLobby?.theirHero]);
 
-  const suggestedMatchupId = useMemo(() => {
-    if (!gameLobby?.theirHero || gameLobby.theirHero === 'CardBack') return null;
-    if (!isBazaarDeckInLobby) return null;
+  useEffect(() => {
+    if (!gameLobby?.theirHero || gameLobby.theirHero === 'CardBack') {
+      return;
+    }
+
+    if (!isBazaarDeckInLobby) {
+      return;
+    }
 
     const opponentHero = normalizeHeroId(gameLobby.theirHero ?? '');
     const matchingMatchup = (gameLobby?.matchups ?? []).find((matchup) => {
       if (matchup.heroIdentifiers?.length) {
         return matchup.heroIdentifiers.some((id) => normalizeHeroId(id) === opponentHero);
       }
+
       const normalizedId = normalizeHeroId(matchup.matchupId);
       if (normalizedId === opponentHero) return true;
       if (opponentHero.startsWith(normalizedId + '_')) return true;
+
       const normalizedName = normalizeMatchupName(matchup.name);
       if (normalizedName === opponentHero) return true;
       return opponentHero.startsWith(normalizedName + '_');
     });
 
-    return matchingMatchup?.matchupId ?? null;
-  }, [gameLobby?.theirHero, gameLobby?.matchups, isBazaarDeckInLobby]);
+    const targetMatchupId = matchingMatchup?.matchupId ?? '';
+    const autoApplyKey = `${gameID}:${playerID}:${gameLobby.myDeckLink}:${gameLobby.theirHero}:${targetMatchupId || 'DEFAULT'}`;
+    if (lastAutoAppliedMatchupKey.current === autoApplyKey) {
+      return;
+    }
+
+    const applyMatchupForHero = async () => {
+      setIsAutoApplyingMatchup(true);
+      try {
+        const rawDeckLink = gameLobby?.myDeckLink ?? '';
+        const favMarker = rawDeckLink.indexOf('<fav>');
+        const cleanedDeckLink = favMarker !== -1 ? rawDeckLink.slice(favMarker + 5) : rawDeckLink;
+        const joinPayload: any = {
+          gameName: gameID,
+          playerID,
+          fabdb: cleanedDeckLink
+        };
+        if (targetMatchupId) {
+          joinPayload.matchup = targetMatchupId;
+        } else {
+          joinPayload.matchup = '__base__';
+        }
+        const joinResponse: any = await joinGameMutation(joinPayload).unwrap();
+        setSelectedMatchupId(targetMatchupId || null);
+        lastAutoAppliedMatchupKey.current = autoApplyKey;
+        refetch();
+      } catch (err) {
+        console.error('[StickySideboard] Auto matchup apply failed', err);
+      } finally {
+        setIsAutoApplyingMatchup(false);
+      }
+    };
+
+    applyMatchupForHero();
+  }, [
+    gameLobby?.theirHero,
+    gameLobby?.myDeckLink,
+    gameLobby?.matchups,
+    isBazaarDeckInLobby,
+    gameID,
+    playerID,
+    joinGameMutation,
+    refetch
+  ]);
 
   const handleEquipmentClick = () => {
     setActiveTab('equipment');
@@ -638,6 +698,9 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
 
   const handleFormSubmission = async (values: DeckResponse) => {
     const matchupIdToRestore = selectedMatchupId;
+    // Pin the ref BEFORE setIsSubmitting so the theirHero guard is active
+    // from the moment SideboardUpdateHandler clears gameLobby.
+    submittedMatchupRef.current = matchupIdToRestore;
     setIsSubmitting(true);
     console.groupCollapsed('[StickySideboard] Submit sideboard start');
     console.info('[StickySideboard] game context', {
@@ -818,6 +881,11 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
         sideboardInSample: sideboardIn.slice(0, 5),
         sideboardOutSample: sideboardOut.slice(0, 5)
       });
+      // Preemptively mark the saved matchup as auto-applied so the effect does
+      // not re-fire (with a new key) when the newly-created matchup entry first
+      // appears in the lobby refresh and gameLobby?.matchups changes.  The save
+      // always writes exactly what was submitted, so there is nothing to reload.
+      lastAutoAppliedMatchupKey.current = `${gameID}:${playerID}:${gameLobby?.myDeckLink}:${opponentHeroId}:${matchupIdToRestore || opponentHeroId}`;
       try {
         const bazaarResponse = await updateBazaarMatchup({
           deckId: bazaarDeckId,
@@ -1287,6 +1355,15 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
                   </div>
                 ) : (
                   <>
+                    {isWideScreen && hasMatchups && (
+                      <button
+                        type="button"
+                        className={styles.chatToggleBtn}
+                        onClick={() => setChatExpanded(false)}
+                      >
+                        ◂ Matchups
+                      </button>
+                    )}
                     <>{showCalculator ? <Calculator /> : <LobbyChat />}</>
                     <div className={styles.chatBottomBar}>
                       {isWideScreen && hasMatchups && (
@@ -1326,7 +1403,7 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
                 refetch={refetch}
                 selectedMatchupId={selectedMatchupId}
                 onMatchupSelected={setSelectedMatchupId}
-                suggestedMatchupId={suggestedMatchupId}
+                isAutoApplyingMatchup={isAutoApplyingMatchup}
                 isReadied={!!(gameLobby?.canUnreadySideboard || gameLobby?.amIChoosingFirstPlayer)}
                 onExpandChat={isWideScreen ? () => setChatExpanded(true) : undefined}
                 isBazaarDeck={isBazaarDeckInLobby}
@@ -1345,13 +1422,13 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
               onIsValidChange={setIsDeckValid}
               syncEnabled={isBazaarDeckInLobby}
               syncStatusText={
-                selectedMatchupForCurrentHero
-                  ? `Matchup applied: ${selectedMatchupForCurrentHero.name ?? selectedMatchupForCurrentHero.matchupId}`
-                  : gameLobby?.theirHero && gameLobby.theirHero !== 'CardBack'
-                    ? suggestedMatchupId
-                      ? 'Matchup suggested — click to apply'
-                      : 'No matchup for this hero'
-                    : 'Waiting for opponent hero'
+                isAutoApplyingMatchup
+                  ? 'Applying matchup...'
+                  : selectedMatchupForCurrentHero
+                    ? `Synced: ${selectedMatchupForCurrentHero.name ?? selectedMatchupForCurrentHero.matchupId}`
+                    : gameLobby?.theirHero && gameLobby.theirHero !== 'CardBack'
+                      ? 'Base deck (no matchup saved)'
+                      : 'Waiting for opponent hero'
               }
               syncLearnMoreUrl={FAB_BAZAAR_LEARN_MORE_URL}
             />

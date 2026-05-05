@@ -126,11 +126,6 @@
   color: #f0d070;
 }
 
-.namedMatchupSuggested {
-  border-color: rgba(217, 184, 74, 0.45);
-  background: rgba(217, 184, 74, 0.06);
-}
-
 .namedMatchupName {
   flex: 1;
   min-width: 0;
@@ -179,11 +174,6 @@
 .portraitCardSelected {
   border-color: #4a9eff !important;
   box-shadow: 0 0 0 1px #4a9eff;
-}
-
-.portraitCardSuggested {
-  border-color: var(--theme-primary, #d4af37) !important;
-  box-shadow: 0 0 0 1px var(--theme-primary, #d4af37);
 }
 
 .portraitImg {

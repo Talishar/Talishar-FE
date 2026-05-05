@@ -1,10 +1,10 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { useFormikContext } from 'formik';
 import { FaExclamationCircle } from 'react-icons/fa';
 import { DeckResponse } from 'interface/API/GetLobbyInfo.php';
 import styles from './StickyFooter.module.css';
 import classNames from 'classnames';
-import { HiClipboardCopy, HiClipboardCheck } from 'react-icons/hi';
+import { HiClipboardCopy } from 'react-icons/hi';
 import { MdGames } from 'react-icons/md';
 
 export type DeckSize = {
@@ -42,8 +42,6 @@ const StickyFooter = ({
 }: DeckSize) => {
   const { errors, values, isValid } = useFormikContext<DeckResponse>();
   const footerRef = useRef<HTMLDivElement>(null);
-  const [copied, setCopied] = useState(false);
-  const copyTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   let errorArray = [] as string[];
   for (const [key, value] of Object.entries(errors)) {
     errorArray.push(String(value));
@@ -84,37 +82,10 @@ const StickyFooter = ({
     onIsValidChange?.(isValid);
   }, [isValid, onIsValidChange]);
 
-  const fallbackCopyToClipboard = (text: string) => {
-    const textarea = document.createElement('textarea');
-    textarea.value = text;
-    textarea.style.position = 'fixed';
-    textarea.style.opacity = '0';
-    document.body.appendChild(textarea);
-    textarea.focus();
-    textarea.select();
-    document.execCommand('copy');
-    document.body.removeChild(textarea);
-  };
-
-  const triggerCopiedFeedback = () => {
-    setCopied(true);
-    if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
-    copyTimerRef.current = setTimeout(() => setCopied(false), 2000);
-  };
-
   const handleClipboardCopy = () => {
-    const text = window.location.href.replace('lobby', 'join');
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(text)
-        .then(triggerCopiedFeedback)
-        .catch(() => {
-          fallbackCopyToClipboard(text);
-          triggerCopiedFeedback();
-        });
-    } else {
-      fallbackCopyToClipboard(text);
-      triggerCopiedFeedback();
-    }
+    navigator.clipboard.writeText(
+      window.location.href.replace('lobby', 'join')
+    );
   };
 
   const dynamicContainer = classNames(styles.dynamicContainer, 'container');
@@ -134,13 +105,36 @@ const StickyFooter = ({
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <div className={styles.clipboardButtonHolder}>
               <button
-                className={classNames(styles.iconButton, { [styles.iconButtonCopied]: copied })}
+                className={styles.buttonClass}
                 onClick={handleClipboardCopy}
                 type="button"
-                title={copied ? 'Copied!' : 'Copy invite link'}
+                title="Copy invite link"
               >
-                {copied ? <HiClipboardCheck /> : <HiClipboardCopy />}
+                <div className={styles.icon}>
+                  <HiClipboardCopy />
+                </div>
               </button>
+            </div>
+            <div className={styles.syncInline}>
+              <span
+                className={syncEnabled ? styles.syncInlineActive : styles.syncInlinePassive}
+                title={syncStatusText}
+              >
+                {syncEnabled ? 'Sync On' : 'Sync Off'}
+              </span>
+              {syncStatusText && (
+                <span className={styles.syncInlineText}>{syncStatusText}</span>
+              )}
+              {syncLearnMoreUrl && !syncEnabled && (
+                <a
+                  href={syncLearnMoreUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.syncInlineLink}
+                >
+                  Read more
+                </a>
+              )}
             </div>
           </div>
           {onSendInviteClick && (

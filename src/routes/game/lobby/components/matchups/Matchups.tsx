@@ -18,7 +18,7 @@ export interface Matchups {
   refetch: () => void;
   selectedMatchupId?: string | null;
   onMatchupSelected?: (matchupId: string) => void;
-  suggestedMatchupId?: string | null;
+  isAutoApplyingMatchup?: boolean;
   isReadied?: boolean;
   onExpandChat?: () => void;
   isBazaarDeck?: boolean;
@@ -28,7 +28,7 @@ const Matchups = ({
   refetch,
   selectedMatchupId,
   onMatchupSelected,
-  suggestedMatchupId = null,
+  isAutoApplyingMatchup = false,
   isReadied = false,
   onExpandChat,
   isBazaarDeck = false,
@@ -206,6 +206,15 @@ const Matchups = ({
     <article className={styles.matchupContainer}>
       <div className={styles.matchupHeader}>
         <h4>Matchups</h4>
+        {onExpandChat && (
+          <button
+            type="button"
+            className={styles.chatToggleBtn}
+            onClick={onExpandChat}
+          >
+            ◂ Chat
+          </button>
+        )}
       </div>
       <input
         type="text"
@@ -214,6 +223,9 @@ const Matchups = ({
         onChange={(e) => setSearchTerm(e.target.value)}
         className={styles.searchInput}
       />
+      {isAutoApplyingMatchup && (
+        <p className={styles.autoApplyingStatus}>Applying hero matchup...</p>
+      )}
       <div className={styles.groupsWrapper}>
         {(filteredSavedHeroMatchups.length > 0 || filteredCustomMatchups.length > 0) && (
           <div className={styles.classGroup}>
@@ -222,17 +234,12 @@ const Matchups = ({
               <div className={styles.portraitGrid}>
                 {filteredSavedHeroMatchups.map(({ hero, matchup }) => {
                   const isSelected = selectedMatchupId === matchup.matchupId;
-                  const isSuggested = !isSelected && suggestedMatchupId === matchup.matchupId;
                   return (
                     <MatchupTooltip key={matchup.matchupId} content={matchup.notes ?? null}>
                       <button
                         type="button"
                         disabled={isUpdating || isReadied}
-                        className={`${styles.portraitCard} ${
-                          isSelected ? styles.portraitCardSelected
-                          : isSuggested ? styles.portraitCardSuggested
-                          : ''
-                        }`}
+                        className={`${styles.portraitCard} ${isSelected ? styles.portraitCardSelected : ''}`}
                         onClick={(e) => {
                           e.preventDefault();
                           handleMatchupClick(matchup.matchupId);
@@ -266,17 +273,12 @@ const Matchups = ({
               <div className={styles.namedMatchupList}>
                 {filteredCustomMatchups.map((m) => {
                   const isSelected = selectedMatchupId === m.matchupId;
-                  const isSuggested = !isSelected && suggestedMatchupId === m.matchupId;
                   return (
                     <MatchupTooltip key={m.matchupId} content={m.notes ?? null}>
                       <button
                         type="button"
                         disabled={isUpdating || isReadied}
-                        className={`${styles.namedMatchupItem} ${
-                          isSelected ? styles.namedMatchupSelected
-                          : isSuggested ? styles.namedMatchupSuggested
-                          : ''
-                        }`}
+                        className={`${styles.namedMatchupItem} ${isSelected ? styles.namedMatchupSelected : ''}`}
                         onClick={(e) => {
                           e.preventDefault();
                           handleMatchupClick(m.matchupId);
