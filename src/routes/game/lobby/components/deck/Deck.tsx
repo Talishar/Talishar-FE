@@ -8,6 +8,7 @@ import { useLanguageSelector } from 'hooks/useLanguageSelector';
 import { CARD_SQUARES_PATH, getCollectionCardImagePath } from 'utils';
 import { MdArrowDropDown, MdArrowRight } from 'react-icons/md';
 import { TYPE_LABELS } from 'constants/cardConstants';
+import { useTranslation, Trans } from 'react-i18next';
 
 type SortMode =
   | 'none'
@@ -38,6 +39,8 @@ const Deck = ({
   const { values } = useFormikContext<DeckResponse>();
   const { getLanguage } = useLanguageSelector();
   const [sortMode, setSortMode] = useState<SortMode>('none');
+  // Initial stuff to allow the lang to change
+  const { t, i18n, ready } = useTranslation();
 
   const DeckSelectionButtons = () => {
     const { setFieldValue } = useFormikContext<DeckResponse>();
@@ -58,7 +61,7 @@ const Deck = ({
             setFiltersExpanded && setFiltersExpanded(!filtersExpanded)
           }
           type="button"
-          title={filtersExpanded ? 'Collapse filters' : 'Expand filters'}
+          title={filtersExpanded ? t("GAME_LOBBY.COLLAPSE_FILTERS") : t("GAME_LOBBY.EXPAND_FILTERS")}
         >
           {filtersExpanded ? (
             <MdArrowDropDown size={24} />
@@ -71,17 +74,17 @@ const Deck = ({
           className={styles.selectionButton}
           onClick={handleSelectAll}
           type="button"
-          title="Select all cards"
+          title={t("GAME_LOBBY.SELECT_ALL_TITLE")}
         >
-          Select All
+	  {t("GAME_LOBBY.SELECT_ALL")}          
         </button>
         <button
           className={styles.selectionButton}
           onClick={handleSelectNone}
           type="button"
-          title="Deselect all cards"
+          title={t("GAME_LOBBY.SELECT_NONE_TITLE")}
         >
-          Select None
+	  {t("GAME_LOBBY.SELECT_NONE")}
         </button>
       </div>
     );
@@ -96,7 +99,7 @@ const Deck = ({
 
   // Utility function to clean and format class/talent strings
   const formatAttributeString = (str: string | undefined): string => {
-    if (!str) return 'Unknown';
+    if (!str) return t("BASE.UNKNOWN");
     // Add space after commas and capitalize each word
     return str
       .split(',')
@@ -107,7 +110,7 @@ const Deck = ({
 
   // Utility function to format type codes to human-readable labels
   const formatTypeLabel = (typeCode: string | undefined): string => {
-    if (!typeCode) return 'Unknown';
+    if (!typeCode) return t("BASE.UNKNOWN");
     return TYPE_LABELS[typeCode] || typeCode;
   };
 
@@ -547,7 +550,7 @@ const Deck = ({
         type: 'string',
         groups: classGroups,
         noValueCards: noClassCards,
-        headerPrefix: 'Class'
+        headerPrefix: t("GAME_LOBBY.CLASS")
       };
     }
 
@@ -574,7 +577,7 @@ const Deck = ({
         type: 'string',
         groups: talentGroups,
         noValueCards: noTalentCards,
-        headerPrefix: 'Talent'
+        headerPrefix: t("GAME_LOBBY.TALENT")
       };
     }
 
@@ -654,7 +657,7 @@ const Deck = ({
         type: 'numeric',
         groups: costGroups,
         noValueCards: noCostCards,
-        headerPrefix: 'Cost'
+        headerPrefix: t("GAME_LOBBY.COST")
       };
     }
 
@@ -695,9 +698,9 @@ const Deck = ({
               }`}
               onClick={() => setSortMode('none')}
               type="button"
-              title="Display cards in original order"
+              title={t("GAME_LOBBY.DISPLAY_ORDER")}
             >
-              Default
+	      {t("GAME_LOBBY.DEFAULT")}
             </button>
             <button
               className={`${styles.sortButton} ${
@@ -705,9 +708,9 @@ const Deck = ({
               }`}
               onClick={() => setSortMode('pitch')}
               type="button"
-              title="Sort cards by pitch"
+              title={t("GAME_LOBBY.PITCH_SORT")}
             >
-              Pitch
+	      {t("GAME_LOBBY.PITCH")}
             </button>
             <button
               className={`${styles.sortButton} ${
@@ -715,9 +718,9 @@ const Deck = ({
               }`}
               onClick={() => setSortMode('power')}
               type="button"
-              title="Sort cards by power (higher first)"
+              title={t("GAME_LOBBY.POWER_SORT")}
             >
-              Power
+	      {t("GAME_LOBBY.POWER")}
             </button>
             <button
               className={`${styles.sortButton} ${
@@ -725,9 +728,9 @@ const Deck = ({
               }`}
               onClick={() => setSortMode('blockValue')}
               type="button"
-              title="Sort cards by block value (higher first)"
+              title={t("GAME_LOBBY.BLOCK_SORT")}
             >
-              Block Value
+	      {t("GAME_LOBBY.BLOCK")}              
             </button>
             <button
               className={`${styles.sortButton} ${
@@ -735,9 +738,9 @@ const Deck = ({
               }`}
               onClick={() => setSortMode('class')}
               type="button"
-              title="Group cards by class"
+              title={t("GAME_LOBBY.CLASS_SORT")}
             >
-              Class
+	      {t("GAME_LOBBY.CLASS")}
             </button>
             <button
               className={`${styles.sortButton} ${
@@ -745,9 +748,9 @@ const Deck = ({
               }`}
               onClick={() => setSortMode('talent')}
               type="button"
-              title="Group cards by talent"
+              title={t("GAME_LOBBY.TALENT_SORT")}
             >
-              Talent
+	      {t("GAME_LOBBY.TALENT")}
             </button>
             <button
               className={`${styles.sortButton} ${
@@ -755,9 +758,9 @@ const Deck = ({
               }`}
               onClick={() => setSortMode('type')}
               type="button"
-              title="Group cards by type"
+              title={t("GAME_LOBBY.TYPE_SORT")}
             >
-              Type
+	      {t("GAME_LOBBY.TYPE")}
             </button>
             <button
               className={`${styles.sortButton} ${
@@ -765,9 +768,9 @@ const Deck = ({
               }`}
               onClick={() => setSortMode('subtype')}
               type="button"
-              title="Group cards by subtype"
-            >
-              Subtype
+              title={t("GAME_LOBBY.SUBTYPE_SORT")}
+              >
+	      {t("GAME_LOBBY.SUBTYPE")}
             </button>
             <button
               className={`${styles.sortButton} ${
@@ -775,9 +778,9 @@ const Deck = ({
               }`}
               onClick={() => setSortMode('cost')}
               type="button"
-              title="Sort cards by cost (lowest first)"
+              title={t("GAME_LOBBY.COST_SORT")}
             >
-              Cost
+              {t("GAME_LOBBY.COST")}
             </button>
           </>
         )}

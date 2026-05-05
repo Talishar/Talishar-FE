@@ -74,3 +74,24 @@
   border: 1px solid var(--theme-primary);
   border-radius: 15px;
 }
+
+.loadingOverlay {
+  position: absolute;
+  inset: 0;
+  border-radius: 10px;
+  background: rgba(10, 10, 14, 0.82);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  gap: 0.75rem;
+  backdrop-filter: blur(2px);
+}
+
+.loadingText {
+  color: #e8d5a3;
+  font-size: 0.95rem;
+  margin: 0;
+  letter-spacing: 0.03em;
+}

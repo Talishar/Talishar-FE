@@ -7,10 +7,13 @@ import styles from './ChooseFirstTurn.module.css';
 import { TbHexagonNumber1, TbHexagonNumber2 } from 'react-icons/tb';
 import { shallowEqual } from 'react-redux';
 import { getGameInfo } from 'features/game/GameSlice';
+import { useTranslation, Trans } from 'react-i18next';
 
 const ChooseFirstTurn = () => {
   const [chooseFirstPlayer, chooseFirstPlayerData] =
-    useChooseFirstPlayerMutation();
+	useChooseFirstPlayerMutation();
+  // Initial stuff to allow the lang to change
+  const { t, i18n, ready } = useTranslation();
   const { gameID, playerID, authKey } = useAppSelector(
     getGameInfo,
     shallowEqual
@@ -31,7 +34,7 @@ const ChooseFirstTurn = () => {
       });
     } catch (err) {
       console.warn(err);
-      toast.error('There has been an error!');
+      toast.error(t("BASE.ERROR_ALERT"));
     }
   };
 
@@ -46,7 +49,7 @@ const ChooseFirstTurn = () => {
       });
     } catch (err) {
       console.warn(err);
-      toast.error('There has been an error!');
+      toast.error(t("BASE.ERROR_ALERT"));
     }
   };
 
@@ -54,9 +57,9 @@ const ChooseFirstTurn = () => {
     <dialog open>
       <article className={styles.container}>
         <hgroup style={{ width: '100%' }}>
-          <h3>You won the die roll!</h3>
+          <h3>{t("GAME_LOBBY.YOU_WON_DIE")}</h3>
           {/* <h5>Their hero is {gameLobby?.theirHeroName}</h5> */}
-          <h5>Would you like to go first or second?</h5>
+          <h5>{t("GAME_LOBBY.FIRST_OR_SECOND")}</h5>
         </hgroup>
         <div className={styles.buttons}>
           <button
@@ -67,7 +70,7 @@ const ChooseFirstTurn = () => {
             <div className={styles.icon}>
               <TbHexagonNumber1 />
             </div>
-            First
+	    {t("GAME_LOBBY.FIRST")}
           </button>
           <button
             className={styles.secondButton}
@@ -77,7 +80,7 @@ const ChooseFirstTurn = () => {
             <div className={styles.icon}>
               <TbHexagonNumber2 />
             </div>
-            Second
+	    {t("GAME_LOBBY.SECOND")}
           </button>
         </div>
       </article>
