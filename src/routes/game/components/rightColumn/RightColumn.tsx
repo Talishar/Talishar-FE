@@ -1,4 +1,4 @@
-import React from 'react';
+import { useEffect, useState } from 'react';
 import PriorityControl from '../elements/priorityControl/PriorityControl';
 import LastPlayed from '../elements/lastPlayed/LastPlayed';
 import Menu from '../elements/menu/Menu';
@@ -10,7 +10,6 @@ import { IS_STREAMER_MODE } from 'features/options/constants';
 import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import PlayerName from '../elements/playerName/PlayerName';
-import { AdUnit } from 'components/ads';
 import useAdScript from 'hooks/useAdScript';
 import useSupporterStatus from 'hooks/useSupporterStatus';
 import squareMemberCTA from '../../../../img/squareMemberCTA.webp';
@@ -27,6 +26,27 @@ export default function RightColumn() {
   const { isSupporter, isLoading } = useSupporterStatus();
   const showAds = !isLoading && !isSupporter;
   useAdScript(showAds);
+
+  const [adBlocked, setAdBlocked] = useState(false);
+
+  useEffect(() => {
+    if (!showAds) return;
+
+    const check = async () => {
+      try {
+        if (typeof window.reviq?.checkAdblock === 'function') {
+          const hasAdblock = await window.reviq.checkAdblock();
+          if (hasAdblock) setAdBlocked(true);
+        } else if (typeof window.reviq?.onAdblock === 'function') {
+          window.reviq.onAdblock(() => setAdBlocked(true));
+        }
+      } catch {
+        // Detection unavailable
+      }
+    };
+
+    check();
+  }, [showAds]);
 
   return (
     <>
@@ -64,14 +84,17 @@ export default function RightColumn() {
                 Remove ads
               </a>
             </div>
-            <div className={styles.adWrapper}>
-              <AdUnit placement="right-rail-1" />
-            </div>
-            <div className={styles.ctaWrapper}>
-              <a href="https://metafy.gg/@talishar/members" target="_blank" rel="noopener noreferrer">
-                <img src={squareMemberCTA} alt="Support Talishar" width={250} height={250} />
-              </a>
-            </div>
+            {adBlocked ? (
+              <div className={styles.ctaWrapper}>
+                <a href="https://metafy.gg/@talishar/members" target="_blank" rel="noopener noreferrer">
+                  <img src={squareMemberCTA} alt="Support Talishar" width={250} height={250} />
+                </a>
+              </div>
+            ) : (
+              <div className={styles.inGameAdWrapper}>
+                <div data-ad="in-game-block" />
+              </div>
+            )}
           </div>
         )}
       </div>
