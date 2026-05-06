@@ -92,7 +92,7 @@ export default function RightColumn() {
               </div>
             ) : (
               <div className={styles.inGameAdWrapper}>
-                <div data-ad="in-game-block" />
+                <div className="ad-unit" data-ad="in-game-block" />
               </div>
             )}
           </div>
