@@ -46,12 +46,6 @@
   height: 250px;
 }
 
-.ad-unit[data-ad='in-game-block'] {
-  width: 250px;
-  height: 250px;
-  margin: 0;
-}
-
 /* Responsive adjustments */
 @media (max-width: 768px) {
   /* Hide rail ads on mobile */
