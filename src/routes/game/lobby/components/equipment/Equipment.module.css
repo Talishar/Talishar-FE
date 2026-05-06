@@ -8,8 +8,6 @@
   gap: 0.5em 3em;
   padding: 0 1em;
   min-width: 0px;
-  flex: 1;
-  min-height: 0;
   overflow-y: auto;
 }
 

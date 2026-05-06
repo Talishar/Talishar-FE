@@ -10,7 +10,7 @@ import { IS_STREAMER_MODE } from 'features/options/constants';
 
 const CHAT_RE = /<span[^>]*>(.*?):\s<\/span>/;
 
-export default function ChatBox({ usePrimary = false }: { usePrimary?: boolean }) {
+export default function ChatBox({ usePrimary = false, showTabs = true }: { usePrimary?: boolean; showTabs?: boolean }) {
   const amIPlayerOne = useAppSelector((state: RootState) => {
     return state.game.gameInfo.playerID === 1;
   });
@@ -126,35 +126,37 @@ export default function ChatBox({ usePrimary = false }: { usePrimary?: boolean }
 
   return (
     <div className={styles.chatBoxContainer}>
-      <div className={classNames(styles.tabs, { [styles.primaryTabs]: usePrimary })}>
-        <button
-          className={classNames(chatFilter === 'none' && styles.activeTab)}
-          onClick={(e) => {
-            e.preventDefault();
-            setChatFilter('none');
-          }}
-        >
-          All
-        </button>
-        <button
-          className={classNames(chatFilter === 'chat' && styles.activeTab)}
-          onClick={(e) => {
-            e.preventDefault();
-            setChatFilter('chat');
-          }}
-        >
-          Chat
-        </button>
-        <button
-          className={classNames(chatFilter === 'log' && styles.activeTab)}
-          onClick={(e) => {
-            e.preventDefault();
-            setChatFilter('log');
-          }}
-        >
-          Log
-        </button>
-      </div>
+      {showTabs && (
+        <div className={classNames(styles.tabs, { [styles.primaryTabs]: usePrimary })}>
+          <button
+            className={classNames(chatFilter === 'none' && styles.activeTab)}
+            onClick={(e) => {
+              e.preventDefault();
+              setChatFilter('none');
+            }}
+          >
+            All
+          </button>
+          <button
+            className={classNames(chatFilter === 'chat' && styles.activeTab)}
+            onClick={(e) => {
+              e.preventDefault();
+              setChatFilter('chat');
+            }}
+          >
+            Chat
+          </button>
+          <button
+            className={classNames(chatFilter === 'log' && styles.activeTab)}
+            onClick={(e) => {
+              e.preventDefault();
+              setChatFilter('log');
+            }}
+          >
+            Log
+          </button>
+        </div>
+      )}
       <div className={styles.chatBoxInner}>
         <div className={styles.chatBox} ref={chatBoxRef}>
           {chatMessages &&

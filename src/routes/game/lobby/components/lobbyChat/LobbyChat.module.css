@@ -3,11 +3,11 @@
   flex-direction: column;
   align-content: center;
   justify-content: flex-end;
-  align-items: stretch;
+  align-items: flex-end;
   max-width: 100%;
   min-width: 0px;
-  flex: 1;
-  min-height: 0;
+  grid-area: chat;
+  height: calc(100dvh - 40px);
 }
 
 .spacer {
@@ -18,7 +18,6 @@
   .container {
     height: calc(100dvh - 380px);
     min-height: 200px;
-    flex: 0 0 auto;
   }
 
   .spacer {
