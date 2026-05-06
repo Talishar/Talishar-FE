@@ -9,8 +9,8 @@
   flex-shrink: 1;
   flex-grow: 1;
   max-width: 100%;
-  border: 2px solid #8b6914;
-  background-color: #2a2416;
+  border: 2px solid var(--theme-secondary);
+  background-color: black;
   color: white;
   padding: 0 0.5em;
   margin: 0;
