@@ -14,7 +14,6 @@ export interface Matchups {
   onMatchupSelected?: (matchupId: string) => void;
   suggestedMatchupId?: string | null;
   isReadied?: boolean;
-  isAutoApplyingMatchup?: boolean;
 }
 
 const Matchups = ({
@@ -22,8 +21,7 @@ const Matchups = ({
   selectedMatchupId,
   onMatchupSelected,
   suggestedMatchupId = null,
-  isReadied = false,
-  isAutoApplyingMatchup = false
+  isReadied = false
 }: Matchups) => {
   const [isUpdating, setIsUpdating] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');

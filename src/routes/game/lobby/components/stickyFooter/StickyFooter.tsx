@@ -19,9 +19,6 @@ export type DeckSize = {
   onUnreadySideboard?: () => void;
   onSendInviteClick?: () => void;
   onIsValidChange?: (isValid: boolean) => void;
-  syncEnabled?: boolean;
-  syncStatusText?: string;
-  syncLearnMoreUrl?: string;
 };
 
 const StickyFooter = ({
@@ -35,10 +32,7 @@ const StickyFooter = ({
   handleLeave,
   onUnreadySideboard,
   onSendInviteClick,
-  onIsValidChange,
-  syncEnabled = false,
-  syncStatusText,
-  syncLearnMoreUrl
+  onIsValidChange
 }: DeckSize) => {
   const { errors, values, isValid } = useFormikContext<DeckResponse>();
   const footerRef = useRef<HTMLDivElement>(null);
@@ -136,26 +130,6 @@ const StickyFooter = ({
             >
               {copied ? <HiClipboardCheck /> : <HiClipboardCopy />}
             </button>
-            {!syncEnabled && (
-              syncLearnMoreUrl ? (
-                <a
-                  href={syncLearnMoreUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={styles.syncPassiveLink}
-                  title={syncStatusText}
-                >
-                  Sync off
-                </a>
-              ) : (
-                <span
-                  className={styles.syncPassive}
-                  title={syncStatusText}
-                >
-                  Sync off
-                </span>
-              )
-            )}
             {onSendInviteClick && isWidescreen && (
               <button
                 className={styles.iconButton}
