@@ -14,7 +14,7 @@
   justify-content: space-between;
   align-items: stretch;
   align-content: stretch;
-  background-color: var(--near-black);
+  background-color: transparent;
   margin-right: 0.2em;
   margin-left: 0.2em;
   box-sizing: border-box;
@@ -123,8 +123,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 4px 0;
-  background-color: var(--near-black);
+  background-color: transparent;
   overflow: visible;
 }
 
@@ -155,20 +154,29 @@
   margin: 0 !important;
 }
 
-/* CTA image — shown on narrower columns */
+/* CTA — always visible, reserves space before ad network injects content */
 .ctaWrapper {
-  display: none;
+  display: flex;
   flex-shrink: 0;
   align-items: center;
   justify-content: center;
+  min-height: 250px;
+  width: 100%;
+  position: relative;
 }
 
-.ctaWrapper img {
+.ctaImage {
   display: block;
   width: 100%;
   max-width: 250px;
   height: auto;
   border-radius: 4px;
+}
+
+/* Ad overlays the CTA image — when it loads it covers the fallback */
+.inGameBlockAd {
+  position: absolute;
+  inset: 0;
 }
 
 .removeAdsLink {
@@ -184,22 +192,16 @@
   text-decoration: underline;
 }
 
-/* Wide column (>=300px): show 300×250 ad */
+/* Wide column (>=300px): show 300×250 rail ad above the CTA */
 @container right-column (min-width: 300px) {
   .adWrapper {
     display: block;
   }
-  .ctaWrapper {
-    display: none;
-  }
 }
 
-/* Narrow column (<300px): show CTA, hide ad */
+/* Narrow column (<300px): hide rail ad, CTA still always shown */
 @container right-column (max-width: 299px) {
   .adWrapper {
     display: none;
-  }
-  .ctaWrapper {
-    display: flex;
   }
 }

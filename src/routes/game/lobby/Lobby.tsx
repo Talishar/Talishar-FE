@@ -2,7 +2,6 @@ import React, { useEffect, useState, useMemo, useRef } from 'react';
 import { usePageTitle } from 'hooks/usePageTitle';
 import Deck from './components/deck/Deck';
 import LobbyChat from './components/lobbyChat/LobbyChat';
-import Calculator from './components/calculator/Calculator';
 import testData from './mockdata.json';
 import styles from './Lobby.module.css';
 import Equipment from './components/equipment/Equipment';
@@ -104,7 +103,6 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
  const Lobby = () => {
   usePageTitle('Lobby');
   useAdScript(false);
-  const [showCalculator, setShowCalculator] = useState(false);
   const [activeTab, setActiveTab] = useState<string>('equipment');
   const [unreadChat, setUnreadChat] = useState<boolean>(false);
   const [filtersExpanded, setFiltersExpanded] = useState(false);
@@ -114,7 +112,6 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  const [hasMatchups, setHasMatchups] = useState<boolean>(false);
   const [selectedMatchupId, setSelectedMatchupId] = useState<string | null>(
     null
   );
@@ -298,10 +295,6 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
     setIsWideScreen(width > BREAKPOINT_EXTRA_LARGE);
   }, [width]);
 
-  useEffect(() => {
-    setHasMatchups(shouldShowMatchupsUI);
-  }, [shouldShowMatchupsUI]);
-
 
   useEffect(() => {
     // New lobby/deck context: clear stale selected matchup from previous session.
@@ -378,7 +371,7 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
         lastAutoAppliedMatchupKey.current = autoApplyKey;
         refetch();
       } catch (err) {
-        console.error('[StickySideboard] Auto matchup apply failed', err);
+        // Auto matchup apply failed
       } finally {
         setIsAutoApplyingMatchup(false);
       }
@@ -407,10 +400,6 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
   const handleChatClick = () => {
     setUnreadChat(false);
     setActiveTab('chat');
-  };
-
-  const toggleShowCalculator = () => {
-    setShowCalculator(!showCalculator);
   };
 
   const handleMatchupClick = () => setActiveTab('matchups');
@@ -689,19 +678,6 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
     // from the moment SideboardUpdateHandler clears gameLobby.
     submittedMatchupRef.current = matchupIdToRestore;
     setIsSubmitting(true);
-    console.groupCollapsed('[StickySideboard] Submit sideboard start');
-    console.info('[StickySideboard] game context', {
-      gameID,
-      playerID,
-      hasGameAuthKey: !!authKey,
-      reduxBazaarDeckId: gameInfo.bazaarDeckId ?? null,
-      myDeckLink: gameLobby?.myDeckLink ?? null,
-      opponentHero: gameLobby?.theirHero ?? null,
-      metafyId: metafyId ?? null,
-      metafyHashPresent: !!metafyHash,
-      metafyTimestamp: metafyTimestamp ?? null
-    });
-    console.groupEnd();
 
     const hands = values.weapons.map((item) => item.id.split('-')[0]);
     const deck = values.deck.map((card) => card.split('-')[0]);
@@ -806,24 +782,14 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
       opponentHeroId &&
       (!resolvedMetafyId || !resolvedMetafyHash || !resolvedMetafyTimestamp)
     ) {
-      console.warn('[StickySideboard] Missing metafy credentials, forcing auth refresh', {
-        resolvedMetafyId: resolvedMetafyId ?? null,
-        resolvedMetafyHashPresent: !!resolvedMetafyHash,
-        resolvedMetafyTimestamp: resolvedMetafyTimestamp ?? null
-      });
       try {
         const refreshedAuth: any = await refreshAuth();
         const refreshed = refreshedAuth?.data;
         resolvedMetafyId = refreshed?.metafyID ?? refreshed?.metafyId ?? resolvedMetafyId;
         resolvedMetafyHash = refreshed?.metafyHash ?? resolvedMetafyHash;
         resolvedMetafyTimestamp = refreshed?.timestamp ?? resolvedMetafyTimestamp;
-        console.info('[StickySideboard] Auth refresh complete', {
-          refreshedMetafyId: resolvedMetafyId ?? null,
-          refreshedMetafyHashPresent: !!resolvedMetafyHash,
-          refreshedMetafyTimestamp: resolvedMetafyTimestamp ?? null
-        });
       } catch (authRefreshErr) {
-        console.error('[StickySideboard] Auth refresh failed', authRefreshErr);
+        // Auth refresh failed
       }
     }
 
@@ -833,15 +799,6 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
       resolvedMetafyId &&
       resolvedMetafyHash &&
       resolvedMetafyTimestamp;
-
-    console.info('[StickySideboard] Bazaar sync gate evaluation', {
-      canSyncBazaarSideboard: !!canSyncBazaarSideboard,
-      bazaarDeckId: bazaarDeckId ?? null,
-      opponentHeroId: opponentHeroId ?? null,
-      metafyId: resolvedMetafyId ?? null,
-      metafyHashPresent: !!resolvedMetafyHash,
-      metafyTimestamp: resolvedMetafyTimestamp ?? null
-    });
 
     if (canSyncBazaarSideboard) {
       const multisetDiff = (have: string[], remove: string[]): string[] => {
@@ -860,14 +817,6 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
       const originalMain: string[] = data?.deck?.cards ?? [];
       const sideboardIn = multisetDiff(deck, originalMain);
       const sideboardOut = multisetDiff(originalMain, deck);
-      console.info('[StickySideboard] Calling Bazaar PATCH', {
-        deckId: bazaarDeckId,
-        heroId: opponentHeroId,
-        sideboardInCount: sideboardIn.length,
-        sideboardOutCount: sideboardOut.length,
-        sideboardInSample: sideboardIn.slice(0, 5),
-        sideboardOutSample: sideboardOut.slice(0, 5)
-      });
       // Preemptively mark the saved matchup as auto-applied so the effect does
       // not re-fire (with a new key) when the newly-created matchup entry first
       // appears in the lobby refresh and gameLobby?.matchups changes.  The save
@@ -882,50 +831,22 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
           metafyTimestamp: resolvedMetafyTimestamp,
           sideboard: { in: sideboardIn, out: sideboardOut }
         }).unwrap();
-        console.info('[StickySideboard] Bazaar PATCH success', {
-          success: bazaarResponse?.success ?? true,
-          heroId: bazaarResponse?.data?.matchup?.heroId ?? null
-        });
       } catch (bazaarErr) {
-        console.error('[StickySideboard] Bazaar PATCH failed', bazaarErr);
         // Bazaar sync failure should not block the Talishar submit
       }
-    } else {
-      console.warn('[StickySideboard] Bazaar sync skipped - missing required data', {
-        bazaarDeckId: bazaarDeckId ?? null,
-        myDeckLink: gameLobby?.myDeckLink ?? null,
-        opponentHeroId: opponentHeroId ?? null,
-        metafyId: resolvedMetafyId ?? null,
-        metafyHashPresent: !!resolvedMetafyHash,
-        metafyTimestamp: resolvedMetafyTimestamp ?? null
-      });
     }
-
-    console.info('[StickySideboard] Submitting to Talishar', {
-      mainDeckCount: deck.length,
-      inventoryCount: inventory.length,
-      requestGameID: requestBody.gameName,
-      requestPlayerID: requestBody.playerID
-    });
 
     try {
       const submitResponse: any = await submitSideboardMutation(requestBody).unwrap();
-      console.info('[StickySideboard] Talishar submit success', {
-        gameStarted: !!submitResponse?.gameStarted,
-        hasNewAuthKey: !!submitResponse?.authKey
-      });
 
       // If game started, capture and store the auth key for future use
       if (submitResponse?.gameStarted && submitResponse?.authKey && gameID) {
         saveGameAuthKey(gameID, submitResponse.authKey, playerID);
-        console.log(
-          'Game started! Auth key stored. Waiting for lobby to be ready...'
-        );
         // The existing useEffect in this component will navigate to /game/play/{gameID}
         // when gameLobby?.isMainGameReady becomes true
       }
     } catch (err) {
-      console.error('[StickySideboard] Talishar sideboard submit failed', err);
+      // Sideboard submit failed
     } finally {
       setIsSubmitting(false);
       if (matchupIdToRestore) {
@@ -1023,9 +944,7 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
         <Form className={styles.form}>
           <FormikDebugLogger />
           <div
-            className={classNames(styles.gridLayout, {
-              [styles.noMatchups]: !hasMatchups
-            })}
+            className={styles.gridLayout}
           >
             <div className={styles.titleContainer}>
               <CardPopUp
@@ -1315,7 +1234,7 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
                     : styles.chatAreaContainer
                 }
               >
-                <>{showCalculator ? <Calculator /> : <LobbyChat />}</>
+                <LobbyChat />
               </div>
             )}
 
@@ -1388,19 +1307,6 @@ const FormikDebugLogger = () => {
 
   useEffect(() => {
     if (submitCount > previousSubmitCount.current) {
-      console.info('[StickySideboard/Formik] Submit attempt', {
-        submitCount,
-        isValid,
-        errorKeys: Object.keys(errors || {}),
-        selectedMainDeckCount: values.deck?.length ?? 0,
-        selectedWeaponCount: values.weapons?.length ?? 0,
-        isSubmitting
-      });
-      if (!isValid) {
-        console.warn('[StickySideboard/Formik] Submit blocked by validation', {
-          errors
-        });
-      }
       previousSubmitCount.current = submitCount;
     }
   }, [submitCount, isValid, errors, values, isSubmitting]);

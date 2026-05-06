@@ -12,16 +12,18 @@ export interface Matchups {
   refetch: () => void;
   selectedMatchupId?: string | null;
   onMatchupSelected?: (matchupId: string) => void;
-  isAutoApplyingMatchup?: boolean;
+  suggestedMatchupId?: string | null;
   isReadied?: boolean;
+  isAutoApplyingMatchup?: boolean;
 }
 
 const Matchups = ({
   refetch,
   selectedMatchupId,
   onMatchupSelected,
-  isAutoApplyingMatchup = false,
-  isReadied = false
+  suggestedMatchupId = null,
+  isReadied = false,
+  isAutoApplyingMatchup = false
 }: Matchups) => {
   const [isUpdating, setIsUpdating] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
@@ -74,7 +76,11 @@ const Matchups = ({
   };
 
   const sortedMatchups = [...(gameLobby?.matchups ?? [])];
-  sortedMatchups.sort((a, b) => a.name.localeCompare(b.name));
+  sortedMatchups.sort((a, b) => {
+    if (a.matchupId === suggestedMatchupId) return -1;
+    if (b.matchupId === suggestedMatchupId) return 1;
+    return a.name.localeCompare(b.name);
+  });
 
   const filteredMatchups = sortedMatchups.filter((matchup) =>
     matchup.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -92,6 +98,8 @@ const Matchups = ({
             onChange={(e) => setSearchTerm(e.target.value)}
           />
           {filteredMatchups.map((matchup, ix) => {
+            const isSelected = selectedMatchupId === matchup.matchupId;
+            const isSuggested = !selectedMatchupId && suggestedMatchupId === matchup.matchupId;
             const turnOrderIndicator = getTurnOrderIndicator(
               matchup.preferredTurnOrder
             );
@@ -101,8 +109,10 @@ const Matchups = ({
                   <button
                     disabled={isUpdating || isReadied}
                     className={`${styles.matchupButton} ${
-                      selectedMatchupId === matchup.matchupId
+                      isSelected
                         ? styles.matchupButtonSelected
+                        : isSuggested
+                        ? styles.matchupButtonSuggested
                         : 'outline'
                     }`}
                     onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
@@ -111,8 +121,11 @@ const Matchups = ({
                     }}
                   >
                     <span className={styles.matchupName}>{matchup.name}</span>
-                    {selectedMatchupId === matchup.matchupId && (
+                    {isSelected && (
                       <span className={styles.selectedBadge}>Selected</span>
+                    )}
+                    {isSuggested && (
+                      <span className={styles.suggestedBadge}>Suggested</span>
                     )}
                     {turnOrderIndicator && (
                       <span className={styles.turnOrderBadge}>

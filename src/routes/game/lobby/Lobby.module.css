@@ -594,13 +594,6 @@ nav {
       'chat weapons matchups';
   }
 
-  .gridLayout.noMatchups {
-    grid-template-columns: 220px 2fr 0px;
-    grid-template-areas:
-      'hero weapons'
-      'chat weapons';
-  }
-
   .titleContainer {
     grid-area: hero;
   }

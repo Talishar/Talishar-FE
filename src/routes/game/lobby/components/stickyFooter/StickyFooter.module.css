@@ -177,7 +177,6 @@
 }
 
 .confirmButton {
-  font-weight: 700;
   font-size: 0.88rem;
   padding: 0.45rem 1.1rem;
   border-radius: 6px;
@@ -187,6 +186,10 @@
   transition: all 0.2s ease;
   width: auto;
   cursor: pointer;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .confirmReady {
@@ -196,7 +199,6 @@
 
 .confirmReady:hover {
   background: var(--theme-primary-hover, #e5c443);
-  box-shadow: 0 2px 10px rgba(212, 175, 55, 0.35);
 }
 
 .confirmDisabled {
@@ -219,12 +221,10 @@
   width: auto;
   cursor: pointer;
   transition: background 0.15s ease;
-}
-
-.editButton:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.13);
-  transform: none;
-  box-shadow: none;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .leaveButton {
@@ -233,6 +233,10 @@
   margin: 0;
   white-space: nowrap;
   width: auto;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* ── Alarm row ────────────────────────────────── */
