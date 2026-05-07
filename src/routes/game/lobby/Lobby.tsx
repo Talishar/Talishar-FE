@@ -285,7 +285,8 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
   }, [gameLobby?.theirName, isMuted]);
 
   useEffect(() => {
-    setIsWideScreen(width > BREAKPOINT_EXTRA_LARGE);
+    const hasMousePointer = window.matchMedia('(pointer: fine)').matches;
+    setIsWideScreen(width > BREAKPOINT_EXTRA_LARGE && hasMousePointer);
   }, [width]);
 
 
