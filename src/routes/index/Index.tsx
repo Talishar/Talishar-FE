@@ -28,7 +28,7 @@ const Index = () => {
 
   const bannerPreferenceKey = useMemo(() => {
     if (!isLoggedIn || !currentUserName) return null;
-    return `talishar_home_banner_hidden_${currentUserName}`;
+    return `talishar_home_banner_hidden_v2_${currentUserName}`;
   }, [isLoggedIn, currentUserName]);
   useAdScript(showAds);
   const { data: systemMessageData } = useGetSystemMessageQuery(undefined, {
@@ -62,9 +62,10 @@ const Index = () => {
     }
 
     try {
-      setIsBannerHidden(localStorage.getItem(bannerPreferenceKey) === '1');
+      const stored = localStorage.getItem(bannerPreferenceKey);
+      setIsBannerHidden(stored === null ? true : stored === '1');
     } catch {
-      setIsBannerHidden(false);
+      setIsBannerHidden(true);
     }
   }, [isLoggedIn, bannerPreferenceKey]);
 

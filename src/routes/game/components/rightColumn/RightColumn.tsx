@@ -69,8 +69,9 @@ export default function RightColumn() {
             </div>
             <div className={styles.ctaWrapper}>
               <a href="https://metafy.gg/@talishar/members" target="_blank" rel="noopener noreferrer">
-                <img src={squareMemberCTA} alt="Support Talishar" width={250} height={250} />
+                <img src={squareMemberCTA} alt="Support Talishar" className={styles.ctaImage} />
               </a>
+              <div data-ad="in-game-block" className={styles.inGameBlockAd} />
             </div>
           </div>
         )}

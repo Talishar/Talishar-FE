@@ -1,117 +1,91 @@
+/* ── Shell ────────────────────────────────────── */
 .stickyFooter {
   position: fixed;
   bottom: 0;
   right: 0;
   left: 0;
   background-color: var(--theme-card-background, #1e2329);
-  --sticky-footer-height: auto;
-  border: none;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
-  padding: 0 0.5rem;
-  border-radius: 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
   z-index: 1000;
   box-shadow:
-    0 -10px 30px rgba(0, 0, 0, 0.35),
-    0 -2px 8px rgba(0, 0, 0, 0.2);
+    0 -8px 24px rgba(0, 0, 0, 0.4),
+    0 -2px 6px rgba(0, 0, 0, 0.2);
 }
 
 .dynamicContainer {
-  display: grid;
-  grid-template-columns: 3em auto 3em 1fr auto auto;
-  padding: 1em 0.5em;
-  gap: 0.5em;
-  grid-template-areas: 'clipboard start content . deckCount submit';
+  padding: 0;
+}
+
+/* ── Main row ─────────────────────────────────── */
+.mainRow {
+  display: flex;
+  justify-content: space-between;
   align-items: center;
+  padding: 0.5rem 0.75rem;
+  gap: 0.5rem;
+  min-height: 44px;
 }
 
-.footerStart {
-  grid-area: start;
-}
-
-.footerContent {
-  grid-area: deckCount;
-}
-
-.deckCount {
+/* ── Left: sync toggle ────────────────────────── */
+.syncSection {
   display: flex;
   align-items: center;
   gap: 0.4rem;
+  justify-content: flex-start;
+  min-width: 0;
+}
+
+.syncActive,
+.syncPassive {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  border-radius: 999px;
+  padding: 0.15rem 0.5rem;
   white-space: nowrap;
 }
 
-@keyframes pulseWarning {
-  0%, 100% { opacity: 0.45; }
-  50% { opacity: 1; }
+.syncActive {
+  background: rgba(145, 110, 34, 0.22);
+  border: 1px solid rgba(214, 180, 85, 0.55);
+  color: #f1de9f;
 }
 
-.deckErrorIcon {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  color: #E67E22;
-  font-size: 1.1em;
-  animation: pulseWarning 1.6s ease-in-out infinite;
-  cursor: default;
-  flex-shrink: 0;
+.syncPassive {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.45);
 }
 
-.deckErrorIcon:hover {
-  animation: none;
-  opacity: 1;
+.syncPassiveLink {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  border-radius: 999px;
+  padding: 0.15rem 0.5rem;
+  white-space: nowrap;
+  text-decoration: none;
 }
 
-.deckErrorTooltip {
-  position: absolute;
-  bottom: calc(100% + 8px);
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(20, 24, 28, 0.97);
-  border: 1px solid rgba(230, 126, 34, 0.55);
-  color: #E67E22;
-  font-size: 0.78rem;
+.syncPassiveLink:hover {
+  color: rgba(255, 255, 255, 0.75);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.syncLink {
+  font-size: 0.67rem;
   font-weight: 600;
-  padding: 0.3rem 0.65rem;
-  border-radius: 5px;
-  white-space: nowrap;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.15s ease;
-  z-index: 100;
-}
-
-.deckErrorIcon:hover .deckErrorTooltip {
-  opacity: 1;
-}
-
-.buttonHolder {
-  grid-area: submit;
-  display: flex;
-  flex-direction: row;
-  gap: 0.5em;
-}
-
-.buttonClass {
-  margin-bottom: 0;
-  font-weight: 500;
+  color: rgba(255, 255, 255, 0.4);
+  text-decoration: underline;
+  text-underline-offset: 2px;
   white-space: nowrap;
 }
 
-.buttonClassLeave {
-  margin-bottom: 0;
-  font-weight: 500;
-  white-space: nowrap;
-}
-
-.buttonClassLeave:hover {
-  border-color: black;
-  background-color: var(--alarm);
-  color: black;
-  transition: 0.7s;
-}
-
-
-.clipboardButtonHolder {
-  grid-area: clipboard;
+.syncLink:hover {
+  color: rgba(255, 255, 255, 0.75);
 }
 
 .iconButton {
@@ -130,7 +104,7 @@
   cursor: pointer;
   font-size: 18px;
   line-height: 1;
-  transition: color 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+  transition: all 0.15s ease;
   flex-shrink: 0;
 }
 
@@ -138,6 +112,8 @@
   background: rgba(255, 255, 255, 0.1);
   color: rgba(255, 255, 255, 0.8);
   border-color: rgba(255, 255, 255, 0.25);
+  transform: none;
+  box-shadow: none;
 }
 
 .iconButton > svg {
@@ -159,209 +135,165 @@
   background: rgba(74, 222, 128, 0.15);
 }
 
-.labelText {
-  display: inline;
-}
-
-.labelTextLong {
-  display: inline;
-}
-
-.labelTextShort {
-  display: none;
-}
-
-.icon {
+/* ── Center: deck count ───────────────────────── */
+.deckSection {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 1em;
-  height: 1em;
-  font-size: 1.3em;
-  margin-left: 0.1em;
-  pointer-events: auto;
-  user-select: none;
-  cursor: pointer;
+  flex-direction: row;
+  align-items: baseline;
+  gap: 0.35rem;
 }
 
-.syncInline {
+.deckNumber {
+  font-size: 1.25rem;
+  font-weight: 800;
+  line-height: 1;
+  color: rgba(255, 255, 255, 0.85);
+  transition: color 0.3s ease;
+}
+
+.deckMeta {
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.35);
+  white-space: nowrap;
+  letter-spacing: 0.02em;
+  transition: color 0.3s ease;
+}
+
+.deckReady .deckNumber {
+  color: #4caf80;
+}
+
+.deckReady .deckMeta {
+  color: rgba(76, 175, 128, 0.65);
+}
+
+/* ── Right: action buttons ────────────────────── */
+.actionSection {
   display: flex;
   align-items: center;
   gap: 0.4rem;
-  margin-left: 0.35rem;
-  min-width: 0;
+  justify-content: flex-end;
 }
 
-.syncInlineActive,
-.syncInlinePassive {
-  font-size: 0.7rem;
-  font-weight: 800;
-  letter-spacing: 0.05em;
-  border-radius: 999px;
-  padding: 0.14rem 0.45rem;
+.confirmButton {
+  font-size: 0.88rem;
+  padding: 0.45rem 1.1rem;
+  border-radius: 6px;
+  border: none;
+  margin: 0;
   white-space: nowrap;
+  transition: all 0.2s ease;
+  width: auto;
+  cursor: pointer;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.syncInlineActive {
-  background: rgba(145, 110, 34, 0.22);
-  border: 1px solid rgba(214, 180, 85, 0.55);
-  color: #f1de9f;
+.confirmReady {
+  background: var(--theme-primary, #d4af37);
+  color: #000;
 }
 
-.syncInlinePassive {
-  background: color-mix(in srgb, var(--theme-warning) 15%, transparent);
-  border: 1px solid color-mix(in srgb, var(--theme-warning) 50%, transparent);
-  color: var(--theme-warning);
+.confirmReady:hover {
+  background: var(--theme-primary-hover, #e5c443);
 }
 
-.syncInlineText {
-  font-size: 0.72rem;
+.confirmDisabled {
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.25);
+  cursor: not-allowed;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+.editButton {
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.88rem;
+  padding: 0.45rem 1.1rem;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  margin: 0;
   white-space: nowrap;
-  max-width: 220px;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  width: auto;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.syncInlineLink {
-  font-size: 0.7rem;
-  font-weight: 700;
-  color: rgba(255, 255, 255, 0.92);
-  text-decoration: underline;
-  text-underline-offset: 2px;
+.leaveButton {
+  font-size: 0.88rem;
+  padding: 0.45rem 1.1rem;
+  margin: 0;
   white-space: nowrap;
+  width: auto;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.syncInlineLink:hover {
-  color: #fff;
+/* ── Alarm row ────────────────────────────────── */
+.alarmRow {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.3rem 0.75rem 0.4rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #e67e22;
+  border-top: 1px solid rgba(230, 126, 34, 0.2);
+  background: rgba(230, 126, 34, 0.06);
+  animation: alarmSlideIn 0.18s ease;
 }
 
-/* Tablet and smaller screens */
-@media (max-width: 1024px) {
-  .stickyFooter > .dynamicContainer > div:first-child {
-    flex: none;
-    gap: 1em !important;
+.alarmIcon {
+  flex-shrink: 0;
+}
+
+@keyframes alarmSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-3px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── Widescreen tweaks ────────────────────────── */
+@media (min-width: 769px) {
+  .mainRow {
+    padding: 0.5rem 0.9rem;
+    gap: 0.75rem;
   }
 
-  .dynamicContainer {
-    display: flex;
-    flex-wrap: wrap;
-    padding: 0.6em 0.3em;
-    gap: 0.3em;
-    align-items: center;
-    justify-content: flex-start;
+  .confirmButton {
+    padding: 0.5rem 1.35rem;
   }
 
-  .labelText {
-    display: inline;
-    font-size: 0.9em;
-  }
-
-  .footerContent {
-    font-size: 0.9em;
-    white-space: nowrap;
-    flex: 1;
-    text-align: right;
-    min-width: 60px;
-    margin-right: 0.1em;
-  }
-
-  .buttonHolder {
-    display: flex;
-    flex-direction: row;
-    gap: 0.2em;
-    flex: 0 0 auto;
-    margin-left: 0;
-  }
-
-  .buttonClass {
-    font-size: 0.8em;
-    padding: 0.4rem 0.6rem;
-    white-space: nowrap;
+  /* Alarm shrinks to a compact inline badge, no full-width bar */
+  .alarmRow {
     width: auto;
-  }
-
-  .syncInlineText {
-    max-width: 150px;
-  }
-}
-
-/* Mobile screens */
-@media (max-width: 480px) {
-  .stickyFooter > .dynamicContainer > div:first-child {
-    flex: none;
-    gap: 0.5em !important;
-  }
-
-  .dynamicContainer {
-    display: flex;
-    flex-wrap: wrap;
-    padding: 0.4em 0.2em;
-    gap: 0.1em;
-    align-items: center;
-    justify-content: flex-start;
-  }
-
-  .labelTextLong {
-    display: none;
-  }
-
-  .labelTextShort {
-    display: none;
-  }
-
-  .buttonHolder {
-    display: flex;
-    flex-direction: row;
-    gap: 0.1em;
-    flex: 0 0 auto;
-  }
-
-  .buttonClass {
-    font-size: 0.75em;
-    padding: 0.35rem 0.4rem;
-    white-space: nowrap;
-    width: auto;
-  }
-
-  .buttonClassLeave {
-    font-size: 0.75em;
-    padding: 0.35rem 0.4rem;
-    white-space: nowrap;
-  }
-
-  .footerContent {
-    font-size: 0.8em;
-    white-space: nowrap;
-    flex: 1;
-    text-align: center;
-    min-width: 50px;
-  }
-
-  .alarm {
+    align-self: center;
+    border-top: none;
+    border: 1px solid rgba(230, 126, 34, 0.35);
+    border-radius: 6px;
+    margin: 0 0.9rem 0.4rem;
+    padding: 0.2rem 0.65rem;
     font-size: 0.8rem;
-  }
-
-  .stickyFooter {
-    border-top: 1px solid rgba(255, 255, 255, 0.15);
-  }
-
-  .syncInline {
-    margin-left: 0.15rem;
-    gap: 0.25rem;
-  }
-
-  .syncInlineText {
-    display: none;
-  }
-
-  .syncInlineLink {
-    font-size: 0.66rem;
+    animation: none;
   }
 }
 
-/* Spacer to account for sticky footer */
+/* ── Spacer ───────────────────────────────────── */
 .spacer {
   height: var(--sticky-footer-height, 80px);
 }

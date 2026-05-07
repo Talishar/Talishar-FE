@@ -32,6 +32,9 @@ export default function OpponentInactive() {
     getGameInfo,
     shallowEqual
   );
+  const isOpponentAI = useAppSelector(
+    (state: any) => state.game.gameInfo.isOpponentAI ?? false
+  );
   const dispatch = useAppDispatch();
   const [submitChat] = useSubmitChatMutation();
   const [inactive, setInactive] = useState(false);
@@ -67,7 +70,7 @@ export default function OpponentInactive() {
     return () => clearInterval(interval);
   }, [turnPhase]);
 
-  if (!inactive || dismissed || turnPhase === 'OVER' || isSpectator || isReplay) return null;
+  if (!inactive || dismissed || turnPhase === 'OVER' || isSpectator || isReplay || isOpponentAI) return null;
 
   // The player with priority is the one who should be acting
   const amIInactive = hasPriority;
