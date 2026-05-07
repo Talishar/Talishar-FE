@@ -493,9 +493,17 @@ nav {
 /* Mobile optimizations */
 @media (max-width: 768px) {
   .titleContainer {
-    height: 160px;
-    top: -128px;
+    height: 112px;
+    top: -80px;
     grid-template-columns: 1fr 1fr;
+  }
+
+  .leftCol {
+    background-position: center 25%;
+  }
+
+  .rightCol {
+    background-position: center 25%;
   }
 
   .smallButton {
@@ -601,6 +609,19 @@ nav {
 
 /* Tablet optimization (769px - 1199px) */
 @media (min-width: 769px) and (max-width: 1199px) {
+  .titleContainer {
+    height: 168px;
+    top: -136px;
+  }
+
+  .leftCol {
+    background-position: center 10%;
+  }
+
+  .rightCol {
+    background-position: center 10%;
+  }
+
   .mobileNav {
     max-height: 100px;
     padding: 0.5rem;
