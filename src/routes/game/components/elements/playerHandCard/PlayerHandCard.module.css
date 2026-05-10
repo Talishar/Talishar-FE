@@ -111,11 +111,11 @@
   color: white;
   position: absolute;
   bottom: 3dvh;
-  left: 2dvh;
-  right: 2dvh;
+  left: 3dvh;
+  right: 3dvh;
   text-align: center;
   border: 2px solid goldenrod;
-  border-radius: 3px;
+  border-radius: 6px;
   z-index: 999;
   text-overflow: ellipsis;
   overflow: hidden;
