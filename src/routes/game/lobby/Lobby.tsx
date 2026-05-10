@@ -889,18 +889,11 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
                             target="_blank"
                             rel="noopener noreferrer"
                             title={icon.title}
-                            style={{
-                              display: 'inline-block',
-                              marginRight: '0.3em'
-                            }}
                           >
                             <img
                               src={icon.src}
                               alt={icon.title}
-                              style={{
-                                height: '1.2em',
-                                verticalAlign: 'middle'
-                              }}
+                              style={{ height: '1.2em' }}
                             />
                           </a>
                         ))}
@@ -955,18 +948,11 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
                             target="_blank"
                             rel="noopener noreferrer"
                             title={icon.title}
-                            style={{
-                              display: 'inline-block',
-                              marginRight: '0.3em'
-                            }}
                           >
                             <img
                               src={icon.src}
                               alt={icon.title}
-                              style={{
-                                height: '1.2em',
-                                verticalAlign: 'middle'
-                              }}
+                              style={{ height: '1.2em' }}
                             />
                           </a>
                         ))}
