@@ -930,7 +930,7 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
                       </button>
                     )}
                   <div className={styles.dimPic}>
-                    <h3
+                    {gameLobby?.theirHero && gameLobby.theirHero !== 'CardBack' && <h3
                       ref={opponentNameRef}
                       onMouseEnter={handleNoteTooltipOpen}
                       onMouseLeave={handleNoteTooltipClose}
@@ -966,7 +966,7 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
                           ? 'Opponent'
                           : String(gameLobby?.theirName ?? '').substring(0, 15)}
                       </span>
-                    </h3>
+                    </h3>}
                     <div className={styles.heroName}>
                       {gameLobby?.theirHeroName != ''
                         ? ''
