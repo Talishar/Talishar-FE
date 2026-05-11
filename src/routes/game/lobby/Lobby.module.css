@@ -264,15 +264,31 @@ h3 {
 .dimPic > h3 {
   display: flex;
   align-items: center;
-  flex-wrap: nowrap;
-  gap: 0.3em;
+  flex-wrap: wrap;
+  gap: 0.25em;
   margin-bottom: 0.3em;
-  font-size: 1.3em;
+  font-size: 0.95em;
   font-weight: 700;
   text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.9), 0 0 4px rgba(0, 0, 0, 0.8);
   color: white;
   transition: all 0.3s ease;
   letter-spacing: 0.5px;
+}
+
+.lobbyIconLink {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.lobbyIcon {
+  height: 1.1em;
+  width: 1.1em;
+  object-fit: contain;
+}
+
+.lobbyPlayerName {
+  word-break: break-word;
 }
 
 .leftCol:hover .dimPic > h3,

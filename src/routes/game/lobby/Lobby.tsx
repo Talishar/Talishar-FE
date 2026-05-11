@@ -441,9 +441,10 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
     gameLobby?.theirHero === 'CardBack' ? 'UNKNOWNHERO' : gameLobby?.theirHero;
 
   const leftPic = `url(${generateCroppedImageUrl(leftHero)})`;
-  const rightPic = `url(${generateCroppedImageUrl(
-    rightHero ?? 'UNKNOWNHERO'
-  )})`;
+  const isWaitingForOpponent = !gameLobby?.theirHero || gameLobby.theirHero === 'CardBack';
+  const rightPic = isWaitingForOpponent
+    ? 'none'
+    : `url(${generateCroppedImageUrl(rightHero!)})`;
 
   const eqClasses = classNames(styles.tabButton, {
     [styles.tabActive]: activeTab === 'equipment'
@@ -889,15 +890,18 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
                             target="_blank"
                             rel="noopener noreferrer"
                             title={icon.title}
+                            className={styles.lobbyIconLink}
                           >
                             <img
                               src={icon.src}
                               alt={icon.title}
-                              style={{ height: '1.2em' }}
+                              className={styles.lobbyIcon}
                             />
                           </a>
                         ))}
-                      {String(data.displayName ?? '').substring(0, 15)}
+                      <span className={styles.lobbyPlayerName}>
+                        {String(data.displayName ?? '').substring(0, 15)}
+                      </span>
                     </h3>
                   </div>
                 </div>
@@ -948,17 +952,20 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
                             target="_blank"
                             rel="noopener noreferrer"
                             title={icon.title}
+                            className={styles.lobbyIconLink}
                           >
                             <img
                               src={icon.src}
                               alt={icon.title}
-                              style={{ height: '1.2em' }}
+                              className={styles.lobbyIcon}
                             />
                           </a>
                         ))}
-                      {isStreamerMode
-                        ? 'Opponent'
-                        : String(gameLobby?.theirName ?? '').substring(0, 15)}
+                      <span className={styles.lobbyPlayerName}>
+                        {isStreamerMode
+                          ? 'Opponent'
+                          : String(gameLobby?.theirName ?? '').substring(0, 15)}
+                      </span>
                     </h3>
                     <div className={styles.heroName}>
                       {gameLobby?.theirHeroName != ''
