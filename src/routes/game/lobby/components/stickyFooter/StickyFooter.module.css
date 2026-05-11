@@ -14,6 +14,8 @@
 
 .dynamicContainer {
   padding: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 /* ── Main row ─────────────────────────────────── */
@@ -243,13 +245,16 @@
 .alarmRow {
   display: flex;
   align-items: center;
+  align-self: center;
   gap: 0.45rem;
-  padding: 0.3rem 0.75rem 0.4rem;
-  font-size: 0.82rem;
+  padding: 0.22rem 0.7rem;
+  margin-bottom: 0.45rem;
+  font-size: 0.8rem;
   font-weight: 600;
   color: #e67e22;
-  border-top: 1px solid rgba(230, 126, 34, 0.2);
-  background: rgba(230, 126, 34, 0.06);
+  background: rgba(230, 126, 34, 0.07);
+  border: 1px solid rgba(230, 126, 34, 0.28);
+  border-radius: 6px;
   animation: alarmSlideIn 0.18s ease;
 }
 
@@ -277,19 +282,6 @@
 
   .confirmButton {
     padding: 0.5rem 1.35rem;
-  }
-
-  /* Alarm shrinks to a compact inline badge, no full-width bar */
-  .alarmRow {
-    width: auto;
-    align-self: center;
-    border-top: none;
-    border: 1px solid rgba(230, 126, 34, 0.35);
-    border-radius: 6px;
-    margin: 0 0.9rem 0.4rem;
-    padding: 0.2rem 0.65rem;
-    font-size: 0.8rem;
-    animation: none;
   }
 }
 

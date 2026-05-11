@@ -72,7 +72,7 @@ h3 {
   overflow-y: auto;
 }
 
-@media (min-width: 1200px) {
+@media (min-width: 1200px) and (pointer: fine) {
   .chatAreaContainerRestrained {
     grid-area: chat;
     min-height: 0;
@@ -157,6 +157,87 @@ h3 {
   opacity: 1;
 }
 
+@media (min-width: 1200px) and (pointer: coarse) {
+  .titleContainer {
+    height: 168px;
+    top: -136px;
+  }
+
+  .leftCol {
+    background-position: center 10%;
+  }
+
+  .rightCol {
+    background-position: center 10%;
+  }
+}
+
+@media (orientation: landscape) and (max-height: 500px) and (pointer: coarse) {
+  .titleContainer {
+    height: 72px;
+    top: -40px;
+  }
+
+  .leftCol {
+    background-position: center 20%;
+  }
+
+  .rightCol {
+    background-position: center 20%;
+  }
+
+  .dimPic {
+    padding: 0.4em 0.6em;
+    padding-bottom: 0.3em;
+  }
+
+  .dimPic > h3 {
+    font-size: 0.9em;
+    margin-bottom: 0.1em;
+  }
+
+  .heroName {
+    font-size: 0.78em;
+  }
+
+  .mobileNav {
+    padding: 0.2rem 0.5rem;
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+
+  .mobileNav ul {
+    flex-wrap: nowrap;
+    display: flex;
+    gap: 0.25rem;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+
+  .mobileNav button {
+    font-size: 0.75em;
+    padding: 0.25rem 0.6rem;
+    height: 30px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    width: auto;
+  }
+
+  .contentContainer {
+    padding: 0.5rem;
+    margin: 0;
+  }
+
+  .lobbyChat {
+    padding: 0.5rem;
+  }
+
+  .matchupsContainer {
+    padding: 0.5rem;
+  }
+}
+
 .dimPic {
   display: flex;
   flex-direction: column;
@@ -181,13 +262,33 @@ h3 {
 }
 
 .dimPic > h3 {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.25em;
   margin-bottom: 0.3em;
-  font-size: 1.3em;
+  font-size: 0.95em;
   font-weight: 700;
   text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.9), 0 0 4px rgba(0, 0, 0, 0.8);
   color: white;
   transition: all 0.3s ease;
   letter-spacing: 0.5px;
+}
+
+.lobbyIconLink {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.lobbyIcon {
+  height: 1.1em;
+  width: 1.1em;
+  object-fit: contain;
+}
+
+.lobbyPlayerName {
+  word-break: break-word;
 }
 
 .leftCol:hover .dimPic > h3,
@@ -409,7 +510,7 @@ h3 {
   overflow-y: auto;
 }
 
-@media (min-width: 1200px) {
+@media (min-width: 1200px) and (pointer: fine) {
   .deckSelectorContainer {
     grid-area: weapons;
     grid-row: 1 / span 2;
@@ -493,9 +594,17 @@ nav {
 /* Mobile optimizations */
 @media (max-width: 768px) {
   .titleContainer {
-    height: 160px;
-    top: -128px;
+    height: 112px;
+    top: -80px;
     grid-template-columns: 1fr 1fr;
+  }
+
+  .leftCol {
+    background-position: center 25%;
+  }
+
+  .rightCol {
+    background-position: center 25%;
   }
 
   .smallButton {
@@ -567,7 +676,7 @@ nav {
   }
 }
 
-@media (min-width: 1200px) {
+@media (min-width: 1200px) and (pointer: fine) {
   .lobbyClass {
     position: fixed;
     top: 0px;
@@ -599,8 +708,20 @@ nav {
   }
 }
 
-/* Tablet optimization (769px - 1199px) */
-@media (min-width: 769px) and (max-width: 1199px) {
+@media (min-width: 769px) and (max-width: 1199px) and (min-height: 501px) {
+  .titleContainer {
+    height: 168px;
+    top: -136px;
+  }
+
+  .leftCol {
+    background-position: center 10%;
+  }
+
+  .rightCol {
+    background-position: center 10%;
+  }
+
   .mobileNav {
     max-height: 100px;
     padding: 0.5rem;

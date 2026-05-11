@@ -285,7 +285,8 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
   }, [gameLobby?.theirName, isMuted]);
 
   useEffect(() => {
-    setIsWideScreen(width > BREAKPOINT_EXTRA_LARGE);
+    const hasMousePointer = window.matchMedia('(pointer: fine)').matches;
+    setIsWideScreen(width > BREAKPOINT_EXTRA_LARGE && hasMousePointer);
   }, [width]);
 
 
@@ -440,9 +441,10 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
     gameLobby?.theirHero === 'CardBack' ? 'UNKNOWNHERO' : gameLobby?.theirHero;
 
   const leftPic = `url(${generateCroppedImageUrl(leftHero)})`;
-  const rightPic = `url(${generateCroppedImageUrl(
-    rightHero ?? 'UNKNOWNHERO'
-  )})`;
+  const isWaitingForOpponent = !gameLobby?.theirHero || gameLobby.theirHero === 'CardBack';
+  const rightPic = isWaitingForOpponent
+    ? 'none'
+    : `url(${generateCroppedImageUrl(rightHero!)})`;
 
   const eqClasses = classNames(styles.tabButton, {
     [styles.tabActive]: activeTab === 'equipment'
@@ -888,22 +890,18 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
                             target="_blank"
                             rel="noopener noreferrer"
                             title={icon.title}
-                            style={{
-                              display: 'inline-block',
-                              marginRight: '0.3em'
-                            }}
+                            className={styles.lobbyIconLink}
                           >
                             <img
                               src={icon.src}
                               alt={icon.title}
-                              style={{
-                                height: '1.2em',
-                                verticalAlign: 'middle'
-                              }}
+                              className={styles.lobbyIcon}
                             />
                           </a>
                         ))}
-                      {String(data.displayName ?? '').substring(0, 15)}
+                      <span className={styles.lobbyPlayerName}>
+                        {String(data.displayName ?? '').substring(0, 15)}
+                      </span>
                     </h3>
                   </div>
                 </div>
@@ -932,7 +930,7 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
                       </button>
                     )}
                   <div className={styles.dimPic}>
-                    <h3
+                    {gameLobby?.theirHero && gameLobby.theirHero !== 'CardBack' && <h3
                       ref={opponentNameRef}
                       onMouseEnter={handleNoteTooltipOpen}
                       onMouseLeave={handleNoteTooltipClose}
@@ -954,25 +952,21 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
                             target="_blank"
                             rel="noopener noreferrer"
                             title={icon.title}
-                            style={{
-                              display: 'inline-block',
-                              marginRight: '0.3em'
-                            }}
+                            className={styles.lobbyIconLink}
                           >
                             <img
                               src={icon.src}
                               alt={icon.title}
-                              style={{
-                                height: '1.2em',
-                                verticalAlign: 'middle'
-                              }}
+                              className={styles.lobbyIcon}
                             />
                           </a>
                         ))}
-                      {isStreamerMode
-                        ? 'Opponent'
-                        : String(gameLobby?.theirName ?? '').substring(0, 15)}
-                    </h3>
+                      <span className={styles.lobbyPlayerName}>
+                        {isStreamerMode
+                          ? 'Opponent'
+                          : String(gameLobby?.theirName ?? '').substring(0, 15)}
+                      </span>
+                    </h3>}
                     <div className={styles.heroName}>
                       {gameLobby?.theirHeroName != ''
                         ? ''
