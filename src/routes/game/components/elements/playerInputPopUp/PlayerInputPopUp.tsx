@@ -12,6 +12,7 @@ import useShowModal from 'hooks/useShowModals';
 import { OptInput } from './components/OptInput';
 import { NewOptInput } from './components/NewOptInput';
 import { TriggerOrderInput } from './components/TriggerOrderInput';
+import { RearrangeTopInput } from './components/RearrangeTopInput';
 import { FormProps } from './playerInputPopupTypes';
 import { OtherInput } from './components/OtherInput';
 import { parseHtmlToReactElements } from 'utils/ParseEscapedString';
@@ -22,7 +23,8 @@ const PlayerInputFormTypeMap: {
   OPT: OptInput,
   NEWOPT: NewOptInput,
   HANDTOPBOTTOM: OptInput,
-  TRIGGERORDER: TriggerOrderInput
+  TRIGGERORDER: TriggerOrderInput,
+  REARRANGETOP: RearrangeTopInput
 };
 
 const PLAYER_INPUT_STORAGE_KEY = 'playerInputPopupPosition';
