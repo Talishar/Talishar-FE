@@ -442,9 +442,7 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
 
   const leftPic = `url(${generateCroppedImageUrl(leftHero)})`;
   const isWaitingForOpponent = !gameLobby?.theirHero || gameLobby.theirHero === 'CardBack';
-  const rightPic = isWaitingForOpponent
-    ? 'none'
-    : `url(${generateCroppedImageUrl(rightHero!)})`;
+  const rightPic = `url(${generateCroppedImageUrl(rightHero ?? 'UNKNOWNHERO')})`;
 
   const eqClasses = classNames(styles.tabButton, {
     [styles.tabActive]: activeTab === 'equipment'
