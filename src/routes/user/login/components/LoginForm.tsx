@@ -190,7 +190,7 @@ export const LoginForm = () => {
             autoComplete="off"
             {...register('rememberMe')}
           />
-          <label htmlFor="rememberMe">{t("USER.LOGIN.PASSWORD")}</label>
+          <label htmlFor="rememberMe">{t("USER.LOGIN.REMEMBER_ME")}</label>
           {errors.rememberMe?.message && (
             <div className={styles.fieldError}>
               {errors.rememberMe?.message}
