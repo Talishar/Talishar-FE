@@ -918,7 +918,8 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
                     gameLobby?.theirHero &&
                     gameLobby.theirHero !== 'CardBack' &&
                     !COMPETITIVE_FORMATS.has(data.format as string) &&
-                    !gameLobby?.amIChoosingFirstPlayer && (
+                    !gameLobby?.amIChoosingFirstPlayer &&
+                    !gameLobby?.isOpponentAI && (
                       <button
                         type="button"
                         className={styles.kickButton}
