@@ -189,7 +189,7 @@ const Header = () => {
                       <li>
                         <a href="#" onClick={(e) => { e.preventDefault(); handleFullscreenToggle(); }}>
                           {isFullscreen ? <BsFullscreenExit /> : <BsFullscreen />}
-                          <span>{isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}</span>
+                          <span>{isFullscreen ? t('HEADER.EXIT_FULLSCREEN') : t('HEADER.FULLSCREEN')}</span>
                         </a>
                       </li>
                     )}
@@ -284,7 +284,7 @@ const Header = () => {
               <li>
                 <a href="#" onClick={(e) => { e.preventDefault(); handleFullscreenToggle(); }}>
                   {isFullscreen ? <BsFullscreenExit /> : <BsFullscreen />}
-                  <span>{isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}</span>
+                  <span>{isFullscreen ? t('HEADER.EXIT_FULLSCREEN') : t('HEADER.FULLSCREEN')}</span>
                 </a>
               </li>
             )}
