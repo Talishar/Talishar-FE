@@ -254,10 +254,10 @@
 
 @media (orientation: portrait) {
   .normalSize {
-    max-height: 20vw;
-    max-width: 20vw;
-    max-height: 20dvw;
-    max-width: 20dvw;
+    max-height: 16dvw;
+    max-width: 16dvw;
+    max-height: 16dvw;
+    max-width: 16dvw;
   }
 
   .biggerSize {
