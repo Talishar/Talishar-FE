@@ -9,6 +9,11 @@ import QuickJoinContext from '../quickJoin/QuickJoinContext';
 import { GAME_FORMAT } from '../../../../appConstants';
 import { useTranslation } from 'react-i18next';
 
+const decodeHtmlEntities = (text: string): string => {
+  const doc = new DOMParser().parseFromString(text, 'text/html');
+  return doc.documentElement.textContent ?? text;
+};
+
 const FORMAT_DISPLAY_NAMES: Record<string, string> = {
   [GAME_FORMAT.DRAFT]: 'Limited',
   [GAME_FORMAT.SEALED]: 'Limited',
@@ -70,7 +75,7 @@ const OpenGame = ({
       </div>
       <div className={styles.descriptionBlock} title={entry.description}>
         {formatLabel && <span className={styles.formatLabel}>{formatLabel}</span>}
-        <span className={styles.description}>{entry.description}</span>
+        <span className={styles.description}>{entry.description ? decodeHtmlEntities(entry.description) : entry.description}</span>
       </div>
       {isOther && !formatLabel && (
         <div className={styles.formatName}>

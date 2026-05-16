@@ -550,9 +550,9 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
         baseGameDescription = t("MENU.CREATE_GAME.GAME_DESCRIPTIONS.SPECIFIC_CLASS");
       } else if (selectedHeroes.length > 0) {
         if (gameDescription.startsWith('No interest')) {
-          baseGameDescription = t("MENU.CREATE_GAME.GAME_DESCRIPTIONS.NOT_SPECIFIC_CLASS");
+          baseGameDescription = t("MENU.CREATE_GAME.GAME_DESCRIPTIONS.NOT_SPECIFIC_HERO");
         } else {
-          baseGameDescription = t("MENU.CREATE_GAME.GAME_DESCRIPTIONS.SPECIFIC_CLASS");
+          baseGameDescription = t("MENU.CREATE_GAME.GAME_DESCRIPTIONS.SPECIFIC_HERO");
         }
       } else if (
         baseGameDescription.startsWith('Looking to play against ') &&
