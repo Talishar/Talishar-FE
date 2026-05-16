@@ -63,6 +63,8 @@ h3 {
   flex-direction: column;
   width: 100%;
   overflow-y: auto;
+  flex: 1 1 0;
+  min-height: 0;
 }
 
 .chatAreaContainer {
@@ -70,6 +72,8 @@ h3 {
   flex-direction: column;
   width: 100%;
   overflow-y: auto;
+  flex: 1 1 0;
+  min-height: 0;
 }
 
 @media (min-width: 1200px) and (pointer: fine) {
@@ -580,6 +584,12 @@ nav {
   display: flex;
   width: 100dvw;
   flex-direction: column;
+  min-height: calc(100dvh - var(--sticky-footer-height, 60px));
+}
+
+.spacer {
+  height: var(--sticky-footer-height, 60px);
+  flex-shrink: 0;
 }
 
 .buttonClass {

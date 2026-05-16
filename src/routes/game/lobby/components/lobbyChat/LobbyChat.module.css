@@ -7,7 +7,7 @@
   max-width: 100%;
   min-width: 0px;
   grid-area: chat;
-  height: calc(100dvh - 380px);
+  height: 100%;
   min-height: 200px;
 }
 

@@ -1151,7 +1151,9 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
               <div className={styles.mobileBottomActions}></div>
             )}
 
-            <div className={styles.spacer}></div>
+            {!isWideScreen && activeTab !== 'chat' && (
+              <div className={styles.spacer}></div>
+            )}
 
             {shouldShowMatchupsUI && (activeTab === 'matchups' || isWideScreen) && (
               <Matchups
