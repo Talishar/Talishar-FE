@@ -163,8 +163,9 @@
   margin-left: auto;
 }
 
-/* Tablet: 3 columns, uniform sizing */
-@media (max-width: 1200px) and (min-width: 769px) {
+/* Tablet: 3 columns, uniform sizing — also applies to touch devices above 1200px */
+@media (max-width: 1200px) and (min-width: 769px),
+       (min-width: 769px) and (pointer: coarse) {
   .matchupContainer {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -177,6 +178,10 @@
   }
 
   .matchupContainer h4 {
+    display: none;
+  }
+
+  .matchupContainer input[type='text'] {
     display: none;
   }
 
@@ -232,8 +237,7 @@
   }
 
   .matchupContainer input[type='text'] {
-    grid-column: 1 / -1;
-    margin-bottom: 0.25rem;
+    display: none;
   }
 
   .matchups {
@@ -284,8 +288,7 @@
   }
 
   .matchupContainer input[type='text'] {
-    grid-column: 1 / -1;
-    margin-bottom: 0.25rem;
+    display: none;
   }
 
   .matchups button {

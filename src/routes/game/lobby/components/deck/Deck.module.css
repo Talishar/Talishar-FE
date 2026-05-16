@@ -220,7 +220,7 @@
   font-weight: 600;
 }
 
-@media (min-width: 1200px) {
+@media (min-width: 1200px) and (pointer: fine) {
   .selectionButtons {
     display: none;
   }

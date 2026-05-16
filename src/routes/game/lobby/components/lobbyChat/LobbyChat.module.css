@@ -7,26 +7,22 @@
   max-width: 100%;
   min-width: 0px;
   grid-area: chat;
-  height: calc(100dvh - 20px);
+  height: calc(100dvh - 380px);
+  min-height: 200px;
 }
 
 .spacer {
-  height: 5em;
+  display: none;
 }
 
-@media (max-width: 1199px) {
+@media (min-width: 1200px) and (pointer: fine) {
   .container {
-    height: calc(100dvh - 380px);
-    min-height: 200px;
+    height: calc(100dvh - 20px);
+    min-height: unset;
   }
 
   .spacer {
-    display: none;
-  }
-}
-
-@media (min-width: 1200px) {
-  .spacer {
+    display: block;
     height: 0;
   }
 }

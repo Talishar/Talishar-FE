@@ -54,7 +54,7 @@ export default function RightColumn() {
         {showAds && (
           <div className={styles.adSection}>
             <div className={styles.adHeader}>
-              <span>Community Ads</span>
+              <span></span>
               <a
                 href="https://metafy.gg/@talishar/members"
                 target="_blank"
