@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import classNames from 'classnames';
 import { useNavigate } from 'react-router-dom';
 import { IOpenGame } from '../gameList/GameList';
@@ -105,6 +105,20 @@ const OpenGame = ({
     return decoded;
   };
 
+  const descRef = useRef<HTMLSpanElement>(null);
+  const [isLongDesc, setIsLongDesc] = useState(false);
+
+  useEffect(() => {
+    const el = descRef.current;
+    if (!el) return;
+    // Temporarily remove line-clamp to measure natural height
+    el.style.webkitLineClamp = 'unset';
+    const fullHeight = el.scrollHeight;
+    el.style.webkitLineClamp = '';
+    const lineHeight = parseFloat(getComputedStyle(el).lineHeight) || 16;
+    setIsLongDesc(fullHeight > lineHeight * 2 + 2);
+  }, [entry.description, i18n.language]);
+
   const buttonClass = classNames(styles.button, styles.buttonWithIcon, 'secondary');
 
   return (
@@ -124,7 +138,10 @@ const OpenGame = ({
       </div>
       <div className={styles.descriptionBlock} title={entry.description}>
         {formatLabel && <span className={styles.formatLabel}>{formatLabel}</span>}
-        <span className={styles.description}>{translateDescription(entry.description)}</span>
+        <span
+          ref={descRef}
+          className={classNames(styles.description, { [styles.descriptionLong]: isLongDesc })}
+        >{translateDescription(entry.description)}</span>
       </div>
       {isOther && !formatLabel && (
         <div className={styles.formatName}>
