@@ -14,6 +14,28 @@ const decodeHtmlEntities = (text: string): string => {
   return doc.documentElement.textContent ?? text;
 };
 
+const DESCRIPTION_KEY_MAP: Record<string, string> = {
+  'Looking for best deck in the format': 'MENU.CREATE_GAME.GAME_DESCRIPTIONS.BEST_DECK',
+  'Looking for meta heroes': 'MENU.CREATE_GAME.GAME_DESCRIPTIONS.META_HEROES',
+  'Meme / fun decks only': 'MENU.CREATE_GAME.GAME_DESCRIPTIONS.MEME',
+  'Off-meta / experimental decks': 'MENU.CREATE_GAME.GAME_DESCRIPTIONS.SPICY_BREWS',
+  'Looking to play against a specific class': 'MENU.CREATE_GAME.GAME_DESCRIPTIONS.SPECIFIC_CLASS',
+  'Looking to play against a specific hero': 'MENU.CREATE_GAME.GAME_DESCRIPTIONS.SPECIFIC_HERO',
+  'No interest in playing against specific hero': 'MENU.CREATE_GAME.GAME_DESCRIPTIONS.NOT_SPECIFIC_HERO',
+  'Prefer fast decks (aggro)': 'MENU.CREATE_GAME.GAME_DESCRIPTIONS.AGGRO',
+  'Prefer slow decks (control)': 'MENU.CREATE_GAME.GAME_DESCRIPTIONS.CONTROL',
+  'Casual / relaxed play': 'MENU.CREATE_GAME.GAME_DESCRIPTIONS.CASUAL',
+  'Looking for a quick game': 'MENU.CREATE_GAME.GAME_DESCRIPTIONS.QUICK',
+  'New player learning the game': 'MENU.CREATE_GAME.GAME_DESCRIPTIONS.NEW_PLAYER',
+  'Practicing a new hero': 'MENU.CREATE_GAME.GAME_DESCRIPTIONS.NEW_HERO',
+  'Slow play OK': 'MENU.CREATE_GAME.GAME_DESCRIPTIONS.SLOW_PLAY',
+};
+
+// Keys that were incorrectly stored verbatim due to missing translations
+const BROKEN_KEY_MAP: Record<string, string> = {
+  'MENU.CREATE_GAME.GAME_DESCRIPTIONS.NOT_SPECIFIC_CLASS': 'MENU.CREATE_GAME.GAME_DESCRIPTIONS.NOT_SPECIFIC_HERO',
+};
+
 const FORMAT_DISPLAY_NAMES: Record<string, string> = {
   [GAME_FORMAT.DRAFT]: 'Limited',
   [GAME_FORMAT.SEALED]: 'Limited',
@@ -53,9 +75,36 @@ const OpenGame = ({
       navigate(`/game/join/${entry.gameName}`);
     }
   };
-  // Initial stuff to allow the lang to change
   const { t, i18n, ready } = useTranslation();
-  
+
+  const translateDescription = (description: string | undefined): string => {
+    if (!description) return description ?? '';
+    const decoded = decodeHtmlEntities(description);
+
+    if (decoded.startsWith('MENU.CREATE_GAME.GAME_DESCRIPTIONS.')) {
+      const fixedKey = BROKEN_KEY_MAP[decoded] ?? decoded;
+      const translated = t(fixedKey);
+      return translated !== fixedKey ? translated : decoded;
+    }
+
+    const mappedKey = DESCRIPTION_KEY_MAP[decoded];
+    if (mappedKey) return t(mappedKey);
+
+    const heroPrefix = 'Looking to play against ';
+    if (decoded.startsWith(heroPrefix) && decoded.includes(',')) {
+      const names = decoded.slice(heroPrefix.length);
+      return `${t('MENU.CREATE_GAME.GAME_DESCRIPTIONS.SPECIFIC_HERO')}: ${names}`;
+    }
+
+    const notHeroPrefix = 'No interest in playing against ';
+    if (decoded.startsWith(notHeroPrefix) && decoded.includes(',')) {
+      const names = decoded.slice(notHeroPrefix.length);
+      return `${t('MENU.CREATE_GAME.GAME_DESCRIPTIONS.NOT_SPECIFIC_HERO')}: ${names}`;
+    }
+
+    return decoded;
+  };
+
   const buttonClass = classNames(styles.button, styles.buttonWithIcon, 'secondary');
 
   return (
@@ -75,7 +124,7 @@ const OpenGame = ({
       </div>
       <div className={styles.descriptionBlock} title={entry.description}>
         {formatLabel && <span className={styles.formatLabel}>{formatLabel}</span>}
-        <span className={styles.description}>{entry.description ? decodeHtmlEntities(entry.description) : entry.description}</span>
+        <span className={styles.description}>{translateDescription(entry.description)}</span>
       </div>
       {isOther && !formatLabel && (
         <div className={styles.formatName}>

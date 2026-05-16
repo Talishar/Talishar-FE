@@ -544,26 +544,27 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
           quickJoinCtx!.importDeckUrl.trim() !== '';
       }
 
-      // Extract base game description (remove hero/class names)
+      // Extract base game description (remove hero/class names) — always store in English
+      // so the description is language-neutral and can be translated on display
       let baseGameDescription = values.gameDescription || '';
       if (selectedClasses.length > 0) {
-        baseGameDescription = t("MENU.CREATE_GAME.GAME_DESCRIPTIONS.SPECIFIC_CLASS");
+        baseGameDescription = 'Looking to play against a specific class';
       } else if (selectedHeroes.length > 0) {
         if (gameDescription.startsWith('No interest')) {
-          baseGameDescription = t("MENU.CREATE_GAME.GAME_DESCRIPTIONS.NOT_SPECIFIC_HERO");
+          baseGameDescription = 'No interest in playing against specific hero';
         } else {
-          baseGameDescription = t("MENU.CREATE_GAME.GAME_DESCRIPTIONS.SPECIFIC_HERO");
+          baseGameDescription = 'Looking to play against a specific hero';
         }
       } else if (
         baseGameDescription.startsWith('Looking to play against ') &&
         baseGameDescription.includes(',')
       ) {
-        baseGameDescription = t("MENU.CREATE_GAME.GAME_DESCRIPTIONS.SPECIFIC_HERO");
+        baseGameDescription = 'Looking to play against a specific hero';
       } else if (
         baseGameDescription.startsWith('No interest in playing against') &&
         baseGameDescription.includes(',')
       ) {
-        baseGameDescription = t("MENU.CREATE_GAME.GAME_DESCRIPTIONS.NOT_SPECIFIC_HERO");
+        baseGameDescription = 'No interest in playing against specific hero';
       }
 
       // Save the base option and selected heroes/classes to localStorage
