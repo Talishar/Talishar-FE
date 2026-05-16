@@ -61,10 +61,13 @@ const StickyFooter = ({
     };
 
     updateFooterHeight();
-    const timer = setTimeout(updateFooterHeight, 100);
+    const observer = new ResizeObserver(updateFooterHeight);
+    if (footerRef.current) {
+      observer.observe(footerRef.current);
+    }
     window.addEventListener('resize', updateFooterHeight);
     return () => {
-      clearTimeout(timer);
+      observer.disconnect();
       window.removeEventListener('resize', updateFooterHeight);
     };
   }, []);
