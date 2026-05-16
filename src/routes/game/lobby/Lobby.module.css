@@ -690,7 +690,7 @@ nav {
   .lobbyClass {
     position: fixed;
     top: 0px;
-    bottom: 110px;
+    bottom: var(--sticky-footer-height, 60px);
     overflow-y: hidden;
   }
 
