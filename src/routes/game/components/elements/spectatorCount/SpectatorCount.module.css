@@ -21,7 +21,6 @@
   align-items: center;
   gap: 0.4em;
   position: relative;
-  cursor: pointer;
 }
 
 .tooltip {
