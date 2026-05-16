@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import classNames from 'classnames';
 import { useNavigate } from 'react-router-dom';
 import { IOpenGame } from '../gameList/GameList';
@@ -77,6 +77,22 @@ const OpenGame = ({
   };
   const { t, i18n, ready } = useTranslation();
 
+  // This lets us recognize descriptions stored in any language (JP, FR, etc.)
+  const reverseDescriptionMap = useMemo(() => {
+    const map: Record<string, string> = {};
+    const languages = Object.keys(i18n.store?.data ?? {});
+    for (const lang of languages) {
+      const fixedT = i18n.getFixedT(lang);
+      for (const i18nKey of Object.values(DESCRIPTION_KEY_MAP)) {
+        const translated = fixedT(i18nKey);
+        if (translated && translated !== i18nKey) {
+          map[translated] = i18nKey;
+        }
+      }
+    }
+    return map;
+  }, [i18n]);
+
   const translateDescription = (description: string | undefined): string => {
     if (!description) return description ?? '';
     const decoded = decodeHtmlEntities(description);
@@ -87,8 +103,8 @@ const OpenGame = ({
       return translated !== fixedKey ? translated : decoded;
     }
 
-    const mappedKey = DESCRIPTION_KEY_MAP[decoded];
-    if (mappedKey) return t(mappedKey);
+    const reverseKey = reverseDescriptionMap[decoded];
+    if (reverseKey) return t(reverseKey);
 
     const heroPrefix = 'Looking to play against ';
     if (decoded.startsWith(heroPrefix) && decoded.includes(',')) {
