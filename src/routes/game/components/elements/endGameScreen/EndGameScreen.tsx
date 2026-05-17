@@ -17,6 +17,8 @@ import classNames from 'classnames';
 import useAuth from 'hooks/useAuth';
 import { PiFileCsvFill, PiCameraFill } from 'react-icons/pi';
 import { parseHtmlToReactElements } from 'utils/ParseEscapedString';
+import useSupporterStatus from 'hooks/useSupporterStatus';
+import MetafyLogo from 'img/MetafyGradient.svg';
 
 const EndGameScreen = () => {
   const gameInfo = useAppSelector(getGameInfo, shallowEqual);
@@ -31,6 +33,7 @@ const EndGameScreen = () => {
   const moreBtnRef = useRef<HTMLButtonElement>(null);
   const [menuStyle, setMenuStyle] = useState<React.CSSProperties>({});
   const { isPatron } = useAuth();
+  const { isSupporter } = useSupporterStatus();
   const endGameStatsRef = useRef<EndGameStatsRef>(null);
   const { data, isLoading, error } = useGetPopUpContentQuery({
     gameID: gameInfo.gameID,
@@ -207,6 +210,20 @@ const EndGameScreen = () => {
               </div>
             </div>
           </div>
+          {!isSupporter && !isLoading && !error && (
+            <a
+              href="https://metafy.gg/@talishar/members"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.supportCta}
+            >
+              <img src={MetafyLogo} alt="Metafy" className={styles.supportCtaLogo} />
+              <span className={styles.supportCtaText}>
+                Enjoyed the game? Keep Talishar Free
+              </span>
+              <span className={styles.supportCtaAction}>Support us</span>
+            </a>
+          )}
           {content}
         </>
       )}

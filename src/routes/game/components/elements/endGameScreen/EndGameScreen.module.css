@@ -41,9 +41,8 @@
   width: calc(100% + 3rem);
   justify-content: space-between;
   align-items: center;
-  padding: 1.5rem 1.5rem 1rem 1.5rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  margin: -1.5rem -1.5rem 1rem -1.5rem;
+  padding: 1.5rem 1.5rem 0.5em 1.5rem;
+  margin: -1.5rem -1.5rem 0.5em -1.5rem;
   background-color: var(--near-black);
   z-index: 1000;
 }
@@ -186,6 +185,50 @@
   height: 1px;
   background: rgba(255, 255, 255, 0.1);
   margin: 0.3rem 0.5rem;
+}
+
+.supportCta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  width: calc(100% + 3rem);
+  margin: 0 -1.5rem 1rem -1.5rem;
+  padding: 0.45rem 1.5rem;
+  background: black;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  text-decoration: none;
+  flex-shrink: 0;
+  transition: background 0.2s;
+}
+
+.supportCta:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.supportCtaLogo {
+  width: 1rem;
+  height: 1rem;
+  flex-shrink: 0;
+  opacity: 0.9;
+}
+
+.supportCtaText {
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 1em;
+  letter-spacing: 0.01em;
+}
+
+.supportCtaAction {
+  font-size: 0.8em;
+  font-weight: 600;
+  padding: 0.2rem 0.65rem;
+  border-radius: 20px;
+  background: linear-gradient(90deg, #D4F2FE, #FFE7B7, #F9CED5);
+  color: #111;
+  white-space: nowrap;
+  flex-shrink: 0;
+  letter-spacing: 0.01em;
 }
 
 @media (max-width: 1080px) {
