@@ -97,6 +97,34 @@ export interface EndGameStatsRef {
   exportCSV: () => Promise<void>;
 }
 
+const ConfettiSvg = () => (
+  <svg className={styles.outcomeSvg} viewBox="0 0 300 70" aria-hidden="true" overflow="visible">
+    {/* 10 pieces all start centered at (150, 35); keyframes burst them outward */}
+    <rect  className={`${styles.cfBase} ${styles.cfP1}`}  x="146" y="33" width="8"  height="4" fill="#FFD700" rx="1" />
+    <circle className={`${styles.cfBase} ${styles.cfP2}`}  cx="150" cy="35" r="4"                fill="#D4691F" />
+    <rect  className={`${styles.cfBase} ${styles.cfP3}`}  x="147" y="32" width="6"  height="6" fill="#FF6B6B" rx="1" />
+    <circle className={`${styles.cfBase} ${styles.cfP4}`}  cx="150" cy="35" r="3"                fill="#4B84FF" />
+    <rect  className={`${styles.cfBase} ${styles.cfP5}`}  x="145" y="33" width="10" height="3" fill="#5FCA5F" rx="1" />
+    <circle className={`${styles.cfBase} ${styles.cfP6}`}  cx="150" cy="35" r="4"                fill="#FF69B4" />
+    <circle className={`${styles.cfBase} ${styles.cfP7}`}  cx="150" cy="35" r="3"                fill="#FFD700" />
+    <rect  className={`${styles.cfBase} ${styles.cfP8}`}  x="146" y="33" width="8"  height="3" fill="#D4691F" rx="1" />
+    <circle className={`${styles.cfBase} ${styles.cfP9}`}  cx="150" cy="35" r="3"                fill="#FF6B6B" />
+    <rect  className={`${styles.cfBase} ${styles.cfP10}`} x="147" y="32" width="6"  height="6" fill="#4B84FF" rx="1" />
+  </svg>
+);
+
+const DROP = 'M 0,-7 C 5,0 5,5 0,8 C -5,5 -5,0 0,-7 Z';
+
+const RainSvg = () => (
+  <svg className={styles.outcomeSvg} viewBox="0 0 300 70" aria-hidden="true" overflow="visible">
+    <path className={`${styles.rdBase} ${styles.rdP1}`} d={DROP} fill="#5B89B4" />
+    <path className={`${styles.rdBase} ${styles.rdP2}`} d={DROP} fill="#5B89B4" />
+    <path className={`${styles.rdBase} ${styles.rdP3}`} d={DROP} fill="#7AAAD0" />
+    <path className={`${styles.rdBase} ${styles.rdP4}`} d={DROP} fill="#5B89B4" />
+    <path className={`${styles.rdBase} ${styles.rdP5}`} d={DROP} fill="#7AAAD0" />
+  </svg>
+);
+
 const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
   const [sortField, setSortField] = useState<
     'played' | 'blocked' | 'pitched' | 'discarded' | 'hits' | 'cardName' | null
@@ -793,6 +821,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                     : styles.outcomeDefeat
                 }
               >
+                {data.winner === data.playerID ? <ConfettiSvg /> : <RainSvg />}
                 {data.winner === data.playerID ? 'Victory' : 'Defeat'}
               </div>
             )}

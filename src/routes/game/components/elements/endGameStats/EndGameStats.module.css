@@ -903,6 +903,9 @@
 
 .outcomeVictory,
 .outcomeDefeat {
+  position: relative;
+  overflow: visible;
+  isolation: isolate;
   text-align: center;
   font-size: 2.8em;
   font-weight: 800;
@@ -919,6 +922,66 @@
 .outcomeDefeat {
   color: rgba(255, 255, 255, 0.45);
 }
+
+.outcomeSvg {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 300px;
+  height: 70px;
+  pointer-events: none;
+  overflow: visible;
+  z-index: -1;
+}
+
+/* === Confetti (Victory) === */
+.cfBase {
+  transform-box: fill-box;
+  transform-origin: center;
+  opacity: 0;
+}
+
+@keyframes cfA1  { 0%{transform:translate(0,0) rotate(0deg);opacity:0} 8%{opacity:1} 80%{opacity:.9} 100%{transform:translate(-120px,-27px) rotate(420deg);opacity:0} }
+@keyframes cfA2  { 0%{transform:translate(0,0) rotate(0deg);opacity:0} 8%{opacity:1} 80%{opacity:.9} 100%{transform:translate(120px,-27px) rotate(-360deg);opacity:0} }
+@keyframes cfA3  { 0%{transform:translate(0,0) rotate(0deg);opacity:0} 8%{opacity:1} 80%{opacity:.9} 100%{transform:translate(130px,0px) rotate(300deg);opacity:0} }
+@keyframes cfA4  { 0%{transform:translate(0,0) rotate(0deg);opacity:0} 8%{opacity:1} 80%{opacity:.9} 100%{transform:translate(105px,28px) rotate(-380deg);opacity:0} }
+@keyframes cfA5  { 0%{transform:translate(0,0) rotate(0deg);opacity:0} 8%{opacity:1} 80%{opacity:.9} 100%{transform:translate(0px,32px) rotate(200deg);opacity:0} }
+@keyframes cfA6  { 0%{transform:translate(0,0) rotate(0deg);opacity:0} 8%{opacity:1} 80%{opacity:.9} 100%{transform:translate(-105px,28px) rotate(450deg);opacity:0} }
+@keyframes cfA7  { 0%{transform:translate(0,0) rotate(0deg);opacity:0} 8%{opacity:1} 80%{opacity:.9} 100%{transform:translate(-128px,0px) rotate(-320deg);opacity:0} }
+@keyframes cfA8  { 0%{transform:translate(0,0) rotate(0deg);opacity:0} 8%{opacity:1} 80%{opacity:.9} 100%{transform:translate(0px,-28px) rotate(350deg);opacity:0} }
+@keyframes cfA9  { 0%{transform:translate(0,0) rotate(0deg);opacity:0} 8%{opacity:1} 80%{opacity:.9} 100%{transform:translate(65px,-25px) rotate(-400deg);opacity:0} }
+@keyframes cfA10 { 0%{transform:translate(0,0) rotate(0deg);opacity:0} 8%{opacity:1} 80%{opacity:.9} 100%{transform:translate(-65px,-25px) rotate(380deg);opacity:0} }
+
+.cfP1  { animation: cfA1  1.4s ease-out infinite 0.00s; }
+.cfP2  { animation: cfA2  1.4s ease-out infinite 0.14s; }
+.cfP3  { animation: cfA3  1.4s ease-out infinite 0.28s; }
+.cfP4  { animation: cfA4  1.4s ease-out infinite 0.42s; }
+.cfP5  { animation: cfA5  1.4s ease-out infinite 0.56s; }
+.cfP6  { animation: cfA6  1.4s ease-out infinite 0.70s; }
+.cfP7  { animation: cfA7  1.4s ease-out infinite 0.84s; }
+.cfP8  { animation: cfA8  1.4s ease-out infinite 0.98s; }
+.cfP9  { animation: cfA9  1.4s ease-out infinite 1.12s; }
+.cfP10 { animation: cfA10 1.4s ease-out infinite 1.26s; }
+
+/* === Rain drops (Defeat) — path defined at SVG origin, keyframe handles positioning + fall === */
+.rdBase {
+  transform-box: fill-box;
+  transform-origin: center;
+  opacity: 0;
+}
+
+@keyframes rdA1 { 0%{transform:translate(40px,-15px);opacity:0}  12%{opacity:.6} 88%{opacity:.6} 100%{transform:translate(37px,88px);opacity:0} }
+@keyframes rdA2 { 0%{transform:translate(95px,-15px);opacity:0}  12%{opacity:.6} 88%{opacity:.6} 100%{transform:translate(92px,88px);opacity:0} }
+@keyframes rdA3 { 0%{transform:translate(150px,-15px);opacity:0} 12%{opacity:.6} 88%{opacity:.6} 100%{transform:translate(147px,88px);opacity:0} }
+@keyframes rdA4 { 0%{transform:translate(210px,-15px);opacity:0} 12%{opacity:.6} 88%{opacity:.6} 100%{transform:translate(207px,88px);opacity:0} }
+@keyframes rdA5 { 0%{transform:translate(258px,-15px);opacity:0} 12%{opacity:.6} 88%{opacity:.6} 100%{transform:translate(255px,88px);opacity:0} }
+
+.rdP1 { animation: rdA1 1.8s ease-in infinite 0.00s; }
+.rdP2 { animation: rdA2 2.0s ease-in infinite 0.36s; }
+.rdP3 { animation: rdA3 1.7s ease-in infinite 0.72s; }
+.rdP4 { animation: rdA4 1.9s ease-in infinite 1.08s; }
+.rdP5 { animation: rdA5 2.1s ease-in infinite 1.44s; }
 
 .keyStats {
   display: flex;
