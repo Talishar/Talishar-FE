@@ -900,3 +900,66 @@
   cursor: pointer;
   user-select: none;
 }
+
+.outcomeVictory,
+.outcomeDefeat {
+  text-align: center;
+  font-size: 2.8em;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  padding: 0.1em 0;
+  border-radius: 6px;
+}
+
+.outcomeVictory {
+  color: var(--theme-primary);
+  text-shadow: 0 0 24px rgba(212, 105, 31, 0.5);
+}
+
+.outcomeDefeat {
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.keyStats {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: space-around;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 6px;
+  padding: 0.75rem 0.5rem;
+}
+
+.keyStat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  flex: 1;
+}
+
+.keyStatValue {
+  color: var(--theme-primary);
+  font-size: 2em;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.keyStatLabel {
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 0.72em;
+  font-weight: 500;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+@media (max-width: 768px) {
+  .outcomeVictory,
+  .outcomeDefeat {
+    font-size: 2em;
+  }
+
+  .keyStatValue {
+    font-size: 1.5em;
+  }
+}

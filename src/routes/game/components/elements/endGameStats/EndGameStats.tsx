@@ -102,6 +102,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
     'played' | 'blocked' | 'pitched' | 'discarded' | 'hits' | 'cardName' | null
   >(null);
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
+  const [showAllCards, setShowAllCards] = useState(false);
   const statsRef = useRef<HTMLDivElement>(null);
   const [isExporting, setIsExporting] = useState(false);
   const [heroDataUrls, setHeroDataUrls] = useState<{
@@ -627,12 +628,20 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
     exportCSV: handleExportCSV
   }));
 
+  const filteredCardResults = useMemo(() => {
+    if (!data.cardResults) return data.cardResults;
+    if (showAllCards) return data.cardResults;
+    return data.cardResults.filter(
+      (r) => r.played > 0 || r.blocked > 0 || r.pitched > 0 || r.discarded > 0 || r.hits > 0
+    );
+  }, [data.cardResults, showAllCards]);
+
   const sortedCardResults = useMemo(() => {
-    if (!data.cardResults || !sortField) {
-      return data.cardResults;
+    if (!filteredCardResults || !sortField) {
+      return filteredCardResults;
     }
 
-    return [...data.cardResults].sort((a, b) => {
+    return [...filteredCardResults].sort((a, b) => {
       if (sortField === 'cardName') {
         const aValue = a.cardName.toLowerCase();
         const bValue = b.cardName.toLowerCase();
@@ -653,7 +662,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
         }
       }
     });
-  }, [data.cardResults, sortField, sortDirection]);
+  }, [filteredCardResults, sortField, sortDirection]);
 
   const sortedTurnResults = useMemo(() => {
     if (!data.turnResults || !turnSortField) {
@@ -774,148 +783,35 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
     <div className={styles.endGameStats} data-testid="test-stats">
       <div ref={statsRef} className={styles.statsContent}>
         <div className={styles.statsContainer}>
+                    {/* Game Time & Summary Section */}
           <div className={styles.statsSection}>
-            <h2 className={styles.sectionHeader}>Card Play Stats</h2>
-            <div className={styles.tableContainer}>
-              <table className={styles.cardTable}>
-                <thead>
-                  <tr className={styles.headers}>
-                    <th
-                      className={`${styles.firstHeadersStats} ${styles.hideOnExport}`}
-                    ></th>
-                    <th
-                      onClick={() => handleSort('cardName')}
-                      className={`${styles.headersStats} ${styles.sortableHeader} ${styles.headerGroupSeparator}`}
-                      title="Click to sort"
-                    >
-                      Card Name{' '}
-                      {sortField === 'cardName' &&
-                        (sortDirection === 'desc' ? '↓' : '↑')}
-                    </th>
-                    <th
-                      className={`${styles.headersStats} ${styles.sortableHeader} ${styles.headerGroupSeparator}`}
-                      onClick={() => handleSort('played')}
-                      title="Click to sort"
-                    >
-                      Played{' '}
-                      {sortField === 'played' &&
-                        (sortDirection === 'desc' ? '↓' : '↑')}
-                    </th>
-                    <th
-                      className={`${styles.headersStats} ${styles.sortableHeader} ${styles.headerGroupSeparator}`}
-                      onClick={() => handleSort('blocked')}
-                      title="Click to sort"
-                    >
-                      Blocked{' '}
-                      {sortField === 'blocked' &&
-                        (sortDirection === 'desc' ? '↓' : '↑')}
-                    </th>
-                    <th
-                      className={`${styles.headersStats} ${styles.sortableHeader} ${styles.headerGroupSeparator}`}
-                      onClick={() => handleSort('pitched')}
-                      title="Click to sort"
-                    >
-                      Pitched{' '}
-                      {sortField === 'pitched' &&
-                        (sortDirection === 'desc' ? '↓' : '↑')}
-                    </th>
-                    <th
-                      className={`${styles.headersStats} ${styles.sortableHeader} ${styles.headerGroupSeparator}`}
-                      onClick={() => handleSort('discarded')}
-                      title="Click to sort"
-                    >
-                      Discarded{' '}
-                      {sortField === 'discarded' &&
-                        (sortDirection === 'desc' ? '↓' : '↑')}
-                    </th>
-                    <th
-                      className={`${styles.headersStats} ${styles.sortableHeader} ${styles.headerGroupSeparator}`}
-                      onClick={() => handleSort('hits')}
-                      title="Click to sort"
-                    >
-                      Times Hit{' '}
-                      {sortField === 'hits' &&
-                        (sortDirection === 'desc' ? '↓' : '↑')}
-                    </th>
-                    {numCharged > 0 && (
-                      <th
-                        className={`${styles.headersStats} ${styles.headerGroupSeparator}`}
-                      >
-                        Times Charged
-                      </th>
-                    )}
-                    {numKatsuDiscard > 0 && (
-                      <th
-                        className={`${styles.headersStats} ${styles.headerGroupSeparator}`}
-                      >
-                        Times Katsu Discarded
-                      </th>
-                    )}
-                  </tr>
-                </thead>
-                <tbody>
-                  {!!sortedCardResults &&
-                    sortedCardResults?.map((result, ix) => {
-                      const card: Card = { cardNumber: result.cardId };
-                      let cardStyle = '';
-                      let cardBorderStyle = '';
-                      switch (result.pitchValue) {
-                        case 1:
-                          cardStyle = styles.onePitch;
-                          cardBorderStyle = styles.cardOnePitch;
-                          break;
-                        case 2:
-                          cardStyle = styles.twoPitch;
-                          cardBorderStyle = styles.cardTwoPitch;
-                          break;
-                        case 3:
-                          cardStyle = styles.threePitch;
-                          cardBorderStyle = styles.cardThreePitch;
-                          break;
-                        default:
-                          cardStyle = styles.zeroPitch;
-                          cardBorderStyle = styles.cardZeroPitch;
-                      }
-                      return (
-                        <tr key={`cardList${ix}`}>
-                          <td
-                            className={`${styles.card} ${styles.hideOnExport}`}
-                          >
-                            <Effect
-                              card={card}
-                              imgClassName={cardBorderStyle}
-                            />
-                          </td>
-                          <td className={cardStyle} title={result.cardName}>
-                            {result.cardName}
-                          </td>
-                          <td className={styles.played}>{result.played}</td>
-                          <td className={styles.blocked}>{result.blocked}</td>
-                          <td className={styles.pitched}>{result.pitched}</td>
-                          <td className={styles.cardStat}>
-                            {result.discarded}
-                          </td>
-                          <td className={styles.cardStat}>{result.hits}</td>
-                          {numCharged > 0 && (
-                            <td className={styles.cardStat}>
-                              {result.charged}
-                            </td>
-                          )}
-                          {numKatsuDiscard > 0 && (
-                            <td className={styles.cardStat}>
-                              {result.katsuDiscard}
-                            </td>
-                          )}
-                        </tr>
-                      );
-                    })}
-                </tbody>
-              </table>
-            </div>
-          </div>
+            {data.winner !== undefined && data.playerID !== undefined && data.playerID !== 3 && (
+              <div
+                className={
+                  data.winner === data.playerID
+                    ? styles.outcomeVictory
+                    : styles.outcomeDefeat
+                }
+              >
+                {data.winner === data.playerID ? 'Victory' : 'Defeat'}
+              </div>
+            )}
 
-          {/* Game Time & Summary Section */}
-          <div className={styles.statsSection}>
+            <div className={styles.keyStats}>
+              <div className={styles.keyStat}>
+                <span className={styles.keyStatValue}>{stats.totalDamageThreatened ?? 0}</span>
+                <span className={styles.keyStatLabel}>Damage Threatened</span>
+              </div>
+              <div className={styles.keyStat}>
+                <span className={styles.keyStatValue}>{stats.totalDamageDealt ?? 0}</span>
+                <span className={styles.keyStatLabel}>Damage Dealt</span>
+              </div>
+              <div className={styles.keyStat}>
+                <span className={styles.keyStatValue}>{stats.totalDamageBlocked ?? 0}</span>
+                <span className={styles.keyStatLabel}>Damage Blocked</span>
+              </div>
+            </div>
+
             <div className={styles.sectionHeaderContainer}>
               <h2 className={styles.sectionHeader}>Game Time & Summary</h2>
               <label className={styles.excludeLastTurnLabel}>
@@ -1154,6 +1050,158 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
               </div>
             </div>
           </div>
+          <div className={styles.statsSection}>
+            <div className={styles.sectionHeaderContainer}>
+              <h2 className={styles.sectionHeader}>Card Play Stats</h2>
+              <label className={styles.excludeLastTurnLabel}>
+                <input
+                  type="checkbox"
+                  checked={showAllCards}
+                  onChange={(e) => setShowAllCards(e.target.checked)}
+                  className={styles.excludeLastTurnCheckbox}
+                />
+                <span className={styles.excludeLastTurnText}>Show all cards</span>
+              </label>
+            </div>
+            <div className={styles.tableContainer}>
+              <table className={styles.cardTable}>
+                <thead>
+                  <tr className={styles.headers}>
+                    <th
+                      className={`${styles.firstHeadersStats} ${styles.hideOnExport}`}
+                    ></th>
+                    <th
+                      onClick={() => handleSort('cardName')}
+                      className={`${styles.headersStats} ${styles.sortableHeader} ${styles.headerGroupSeparator}`}
+                      title="Click to sort"
+                    >
+                      Card Name{' '}
+                      {sortField === 'cardName' &&
+                        (sortDirection === 'desc' ? '↓' : '↑')}
+                    </th>
+                    <th
+                      className={`${styles.headersStats} ${styles.sortableHeader} ${styles.headerGroupSeparator}`}
+                      onClick={() => handleSort('played')}
+                      title="Click to sort"
+                    >
+                      Played{' '}
+                      {sortField === 'played' &&
+                        (sortDirection === 'desc' ? '↓' : '↑')}
+                    </th>
+                    <th
+                      className={`${styles.headersStats} ${styles.sortableHeader} ${styles.headerGroupSeparator}`}
+                      onClick={() => handleSort('blocked')}
+                      title="Click to sort"
+                    >
+                      Blocked{' '}
+                      {sortField === 'blocked' &&
+                        (sortDirection === 'desc' ? '↓' : '↑')}
+                    </th>
+                    <th
+                      className={`${styles.headersStats} ${styles.sortableHeader} ${styles.headerGroupSeparator}`}
+                      onClick={() => handleSort('pitched')}
+                      title="Click to sort"
+                    >
+                      Pitched{' '}
+                      {sortField === 'pitched' &&
+                        (sortDirection === 'desc' ? '↓' : '↑')}
+                    </th>
+                    <th
+                      className={`${styles.headersStats} ${styles.sortableHeader} ${styles.headerGroupSeparator}`}
+                      onClick={() => handleSort('discarded')}
+                      title="Click to sort"
+                    >
+                      Discarded{' '}
+                      {sortField === 'discarded' &&
+                        (sortDirection === 'desc' ? '↓' : '↑')}
+                    </th>
+                    <th
+                      className={`${styles.headersStats} ${styles.sortableHeader} ${styles.headerGroupSeparator}`}
+                      onClick={() => handleSort('hits')}
+                      title="Click to sort"
+                    >
+                      Times Hit{' '}
+                      {sortField === 'hits' &&
+                        (sortDirection === 'desc' ? '↓' : '↑')}
+                    </th>
+                    {numCharged > 0 && (
+                      <th
+                        className={`${styles.headersStats} ${styles.headerGroupSeparator}`}
+                      >
+                        Times Charged
+                      </th>
+                    )}
+                    {numKatsuDiscard > 0 && (
+                      <th
+                        className={`${styles.headersStats} ${styles.headerGroupSeparator}`}
+                      >
+                        Times Katsu Discarded
+                      </th>
+                    )}
+                  </tr>
+                </thead>
+                <tbody>
+                  {!!sortedCardResults &&
+                    sortedCardResults?.map((result, ix) => {
+                      const card: Card = { cardNumber: result.cardId };
+                      let cardStyle = '';
+                      let cardBorderStyle = '';
+                      switch (result.pitchValue) {
+                        case 1:
+                          cardStyle = styles.onePitch;
+                          cardBorderStyle = styles.cardOnePitch;
+                          break;
+                        case 2:
+                          cardStyle = styles.twoPitch;
+                          cardBorderStyle = styles.cardTwoPitch;
+                          break;
+                        case 3:
+                          cardStyle = styles.threePitch;
+                          cardBorderStyle = styles.cardThreePitch;
+                          break;
+                        default:
+                          cardStyle = styles.zeroPitch;
+                          cardBorderStyle = styles.cardZeroPitch;
+                      }
+                      return (
+                        <tr key={`cardList${ix}`}>
+                          <td
+                            className={`${styles.card} ${styles.hideOnExport}`}
+                          >
+                            <Effect
+                              card={card}
+                              imgClassName={cardBorderStyle}
+                            />
+                          </td>
+                          <td className={cardStyle} title={result.cardName}>
+                            {result.cardName}
+                          </td>
+                          <td className={styles.played}>{result.played}</td>
+                          <td className={styles.blocked}>{result.blocked}</td>
+                          <td className={styles.pitched}>{result.pitched}</td>
+                          <td className={styles.cardStat}>
+                            {result.discarded}
+                          </td>
+                          <td className={styles.cardStat}>{result.hits}</td>
+                          {numCharged > 0 && (
+                            <td className={styles.cardStat}>
+                              {result.charged}
+                            </td>
+                          )}
+                          {numKatsuDiscard > 0 && (
+                            <td className={styles.cardStat}>
+                              {result.katsuDiscard}
+                            </td>
+                          )}
+                        </tr>
+                      );
+                    })}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+
         </div>
 
         {/* Ad above Turn by Turn Breakdown */}
