@@ -194,9 +194,7 @@
   gap: 0.6rem;
   width: calc(100% + 3rem);
   margin: 0 -1.5rem 1rem -1.5rem;
-  padding: 0.45rem 1.5rem;
   background: black;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
   text-decoration: none;
   flex-shrink: 0;
   transition: background 0.2s;

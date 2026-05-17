@@ -111,7 +111,7 @@
 .infoBox {
   background: rgba(0, 0, 0, 0.2);
   border-radius: 6px;
-  padding: 0.5rem;
+  padding: 0.5rem 0.5rem 0 0.5rem;
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
@@ -133,6 +133,7 @@
   font-size: 1.1em;
   border-radius: 4px;
   transition: background-color 0.2s;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .infoRow:nth-child(even) {
@@ -345,14 +346,24 @@
 }
 
 .disclaimer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
   font-size: 0.9em;
   color: rgba(255, 255, 255, 0.5);
   font-style: italic;
   margin-top: 0.5rem;
-  padding: 0.5rem;
+  padding: 0.4rem 0.6rem;
   background: rgba(212, 105, 31, 0.05);
   border-left: 2px solid var(--theme-primary);
   border-radius: 4px;
+}
+
+.disclaimer .excludeLastTurnLabel {
+  font-style: normal;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 /* Watermark - hidden by default, shown only in exports */
@@ -465,7 +476,7 @@
 }
 
 .card {
-  width: 55px;
+  width: 63px;
   height: 100%;
   display: flex;
   align-items: center;
@@ -632,8 +643,8 @@
   }
 
   .card {
-    width: 50px;
-    height: 50px;
+    width: 58px;
+    height: 58px;
   }
 
   .zeroPitch,
@@ -872,6 +883,44 @@
   }
 }
 
+.statsDivider {
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  margin: 0;
+}
+
+.togglePill {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.3rem 0.85rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 0.82em;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s, color 0.2s;
+  white-space: nowrap;
+}
+
+.togglePill:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.35);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.togglePillActive {
+  background: var(--theme-primary-focus);
+  border-color: var(--theme-primary);
+  color: var(--theme-primary);
+}
+
+.togglePillActive:hover {
+  background: var(--theme-primary-focus);
+  filter: brightness(1.1);
+}
+
 /* Inline style replacements */
 .sectionHeaderContainer {
   display: flex;
@@ -912,6 +961,9 @@
   letter-spacing: 0.05em;
   padding: 0.1em 0;
   border-radius: 6px;
+  align-self: stretch;
+  width: 100%;
+  display: block;
 }
 
 .outcomeVictory {
@@ -985,11 +1037,11 @@
 
 .keyStats {
   display: flex;
-  gap: 0.5rem;
+  gap: 1.5rem;
   justify-content: space-around;
   background: rgba(0, 0, 0, 0.2);
   border-radius: 6px;
-  padding: 0.75rem 0.5rem;
+  padding: 0.5rem 0.25rem;
 }
 
 .keyStat {
@@ -998,6 +1050,11 @@
   align-items: center;
   gap: 0.2rem;
   flex: 1;
+}
+
+.keyStat + .keyStat {
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+  padding-left: 1.5rem;
 }
 
 .keyStatValue {

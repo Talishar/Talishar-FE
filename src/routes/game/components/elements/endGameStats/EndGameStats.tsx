@@ -841,25 +841,23 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
               </div>
             </div>
 
-            <div className={styles.sectionHeaderContainer}>
-              <h2 className={styles.sectionHeader}>Game Time & Summary</h2>
-              <label className={styles.excludeLastTurnLabel}>
-                <input
-                  type="checkbox"
-                  checked={excludeLastTurn}
-                  onChange={(e) => setExcludeLastTurn(e.target.checked)}
-                  className={styles.excludeLastTurnCheckbox}
-                />
-                <span className={styles.excludeLastTurnText}>
-                  Exclude Last Turn
-                </span>
-              </label>
-            </div>
+            <hr className={styles.statsDivider} />
 
             {/* Unified Stats Box */}
             <div className={styles.infoBox}>
               <div className={styles.disclaimer}>
                 <em>Turn 0 automatically omitted for average calculations</em>
+                <label className={styles.excludeLastTurnLabel}>
+                  <input
+                    type="checkbox"
+                    checked={excludeLastTurn}
+                    onChange={(e) => setExcludeLastTurn(e.target.checked)}
+                    className={styles.excludeLastTurnCheckbox}
+                  />
+                  <span className={styles.excludeLastTurnText}>
+                    Exclude Last Turn
+                  </span>
+                </label>
               </div>
 
               {/* Avg Value per Turn - Top Priority */}
