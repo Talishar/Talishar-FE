@@ -219,7 +219,7 @@ const EndGameScreen = () => {
             >
               <img src={MetafyLogo} alt="Metafy" className={styles.supportCtaLogo} />
               <span className={styles.supportCtaText}>
-                Enjoyed the game? Keep Talishar Free
+                Enjoyed the game? Help Us Keep Talishar Free
               </span>
               <span className={styles.supportCtaAction}>Support us</span>
             </a>
