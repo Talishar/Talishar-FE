@@ -21,37 +21,28 @@
   align-items: center;
   gap: 0.4em;
   position: relative;
-  cursor: pointer;
 }
 
 .tooltip {
   position: absolute;
   top: 100%;
   left: 50%;
-  transform: translateX(-50%);
-  background-color: rgba(30, 30, 30, 0.95);
-  color: #e0e0e0;
-  padding: 0.5em;
-  border-radius: 0.4em;
-  font-size: 0.85em;
+  transform: translate(-50%, 0.25rem);
+  background-color: var(--tooltip-background-color);
+  color: var(--tooltip-color);
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--border-radius);
+  font-size: 0.875rem;
+  font-style: normal;
+  font-weight: var(--font-weight);
   white-space: nowrap;
   z-index: 1000;
-  border: 1px solid rgba(100, 100, 100, 0.5);
-  margin-bottom: 0.5em;
   max-height: 200px;
   overflow-y: auto;
 }
 
-.tooltip div {
-  margin: 0.25em 0;
-}
-
-.tooltip div:first-child {
-  margin-top: 0;
-}
-
-.tooltip div:last-child {
-  margin-bottom: 0;
+.tooltip div + div {
+  margin-top: 0.25em;
 }
 
 @media (max-width: 950px) {

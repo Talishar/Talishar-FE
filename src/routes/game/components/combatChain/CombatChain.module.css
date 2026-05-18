@@ -18,6 +18,7 @@
   background-color: var(--near-black);
   pointer-events: auto;
   z-index: 10;
+  overflow: visible;
 }
 
 .combatChain::before {
@@ -89,6 +90,10 @@
 @media (orientation: portrait) {
   .combatChain {
     height: 12em;
+  }
+
+  .chainCentre {
+    padding-left: 0;
   }
 }
 

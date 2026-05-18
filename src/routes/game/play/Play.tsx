@@ -30,18 +30,9 @@ import { SHORTCUT_ATTACK_THRESHOLD, SKIP_AR_WINDOW, SKIP_DR_WINDOW } from 'featu
 import { Toaster } from 'react-hot-toast';
 import { shallowEqual } from 'react-redux';
 import { PanelProvider } from '../components/leftColumn/PanelContext';
-import useAdScript from 'hooks/useAdScript';
-import useSupporterStatus from 'hooks/useSupporterStatus';
 
 function Play({ isRoguelike }: { isRoguelike: boolean }) {
   usePageTitle('In Game');
-  const turnPhase = useAppSelector((state: any) => state.game.turnPhase?.turnPhase);
-  const isGameOver = turnPhase === 'OVER';
-  const { isSupporter, isLoading: isSupporterLoading } = useSupporterStatus();
-  const showAdsOnGameOver = !isSupporterLoading && !isSupporter;
-  // Purge ads during active game; allow them on the end game screen
-  // Anchor ads are always hidden during gameplay regardless of game-over state
-  useAdScript(isGameOver ? showAdsOnGameOver : false);
 
   // Always hide anchor ads while the game view is mounted
   useEffect(() => {

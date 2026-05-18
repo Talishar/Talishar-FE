@@ -442,9 +442,7 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
 
   const leftPic = `url(${generateCroppedImageUrl(leftHero)})`;
   const isWaitingForOpponent = !gameLobby?.theirHero || gameLobby.theirHero === 'CardBack';
-  const rightPic = isWaitingForOpponent
-    ? 'none'
-    : `url(${generateCroppedImageUrl(rightHero!)})`;
+  const rightPic = `url(${generateCroppedImageUrl(rightHero ?? 'UNKNOWNHERO')})`;
 
   const eqClasses = classNames(styles.tabButton, {
     [styles.tabActive]: activeTab === 'equipment'
@@ -918,7 +916,8 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
                     gameLobby?.theirHero &&
                     gameLobby.theirHero !== 'CardBack' &&
                     !COMPETITIVE_FORMATS.has(data.format as string) &&
-                    !gameLobby?.amIChoosingFirstPlayer && (
+                    !gameLobby?.amIChoosingFirstPlayer &&
+                    !gameLobby?.isOpponentAI && (
                       <button
                         type="button"
                         className={styles.kickButton}
@@ -1152,7 +1151,9 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
               <div className={styles.mobileBottomActions}></div>
             )}
 
-            <div className={styles.spacer}></div>
+            {!isWideScreen && activeTab !== 'chat' && (
+              <div className={styles.spacer}></div>
+            )}
 
             {shouldShowMatchupsUI && (activeTab === 'matchups' || isWideScreen) && (
               <Matchups

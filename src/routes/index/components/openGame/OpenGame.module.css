@@ -133,6 +133,11 @@
   overflow-wrap: break-word;
 }
 
+.descriptionLong {
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+}
+
 .formatName {
   flex: 0.8 1 auto;
   white-space: normal;
@@ -242,8 +247,15 @@ h3 {
 
   .description {
     font-size: 0.75em;
-    -webkit-line-clamp: 1;
-    line-clamp: 1;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    text-align: left;
+  }
+
+  .descriptionLong {
+    font-size: 0.68em;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
   }
 
   .heroImg {

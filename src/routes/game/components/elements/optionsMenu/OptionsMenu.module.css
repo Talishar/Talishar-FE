@@ -10,7 +10,7 @@
   right: 13vw;
   background: var(--near-black);
   padding: 1.5vh;
-  border: 1px solid var(--theme-primary);
+  border: 1px solid var(--theme-border);
   border-radius: 10px;
   isolation: isolate;
   z-index: 1000;

@@ -86,6 +86,8 @@
   gap: 1vh;
   overflow-x: auto;
   overflow-y: hidden;
+  padding: 8px 8px 8px 0px;
+  box-sizing: border-box;
 }
 
 .reactionWrapper {

@@ -33,6 +33,7 @@ export interface GetLobbyRefreshResponse {
   chatInvited?: boolean;
   opponentIsTyping?: boolean;
   wasKicked?: boolean;
+  isOpponentAI?: boolean;
 }
 
 export interface Matchup {

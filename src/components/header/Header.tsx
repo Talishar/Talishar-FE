@@ -13,7 +13,9 @@ import {
   BsCollectionPlayFill,
   BsChevronDown,
   BsPlayFill,
-  BsInfoCircleFill
+  BsInfoCircleFill,
+  BsFullscreen,
+  BsFullscreenExit
 } from 'react-icons/bs';
 import { IoLogOut } from "react-icons/io5";
 import SocialDropdown from 'components/header/SocialDropdown';
@@ -36,6 +38,7 @@ const Header = () => {
   const pendingRequestCount = pendingData?.requests?.length || 0;
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(!!document.fullscreenElement);
   const userDropdownRef = useRef<HTMLDivElement>(null);
 
   const { t } = useTranslation();
@@ -45,6 +48,20 @@ const Header = () => {
     window.addEventListener('orientationchange', handleOrientationChange);
     return () => window.removeEventListener('orientationchange', handleOrientationChange);
   }, []);
+
+  useEffect(() => {
+    const onFullscreenChange = () => setIsFullscreen(!!document.fullscreenElement);
+    document.addEventListener('fullscreenchange', onFullscreenChange);
+    return () => document.removeEventListener('fullscreenchange', onFullscreenChange);
+  }, []);
+
+  const handleFullscreenToggle = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch(() => {});
+    } else {
+      document.exitFullscreen().catch(() => {});
+    }
+  };
 
   useEffect(() => {
     if (!userDropdownOpen) return;
@@ -130,7 +147,7 @@ const Header = () => {
           </li>
 	  {!isLoggedIn ? (
 	  <li>
-	    <LanguageSelector className={navLinkClass}/>
+	    <LanguageSelector />
 	  </li>
 	  ) : ''}
 	</ul>
@@ -168,6 +185,14 @@ const Header = () => {
                       </Link>
                     </li>
                     <LanguageSelector inDropdown />
+                    {document.fullscreenEnabled && (
+                      <li>
+                        <a href="#" onClick={(e) => { e.preventDefault(); handleFullscreenToggle(); }}>
+                          {isFullscreen ? <BsFullscreenExit /> : <BsFullscreen />}
+                          <span>{isFullscreen ? t('HEADER.EXIT_FULLSCREEN') : t('HEADER.FULLSCREEN')}</span>
+                        </a>
+                      </li>
+                    )}
                     {isMod && (
                       <li>
                         <Link to="/mod" onClick={closeUserDropdown}>
@@ -253,6 +278,14 @@ const Header = () => {
                 <Link to="/mod" onClick={closeMobileMenu}>
                   <BsShieldFillCheck /> <span>Mod Page</span>
                 </Link>
+              </li>
+            )}
+            {document.fullscreenEnabled && (
+              <li>
+                <a href="#" onClick={(e) => { e.preventDefault(); handleFullscreenToggle(); }}>
+                  {isFullscreen ? <BsFullscreenExit /> : <BsFullscreen />}
+                  <span>{isFullscreen ? t('HEADER.EXIT_FULLSCREEN') : t('HEADER.FULLSCREEN')}</span>
+                </a>
               </li>
             )}
             {isLoggedIn && (

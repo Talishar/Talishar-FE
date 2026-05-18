@@ -10,10 +10,14 @@ import {
   loadGameUsername
 } from 'utils/LocalKeyManagement';
 import { toast } from 'react-hot-toast';
+import useSetting from 'hooks/useSetting';
+import { IS_STREAMER_MODE } from 'features/options/constants';
 
 const SessionRecovery: React.FC = () => {
   const navigate = useNavigate();
   const { isLoggedIn, currentUserName } = useAuth();
+  const isStreamerMode =
+    String(useSetting({ settingName: IS_STREAMER_MODE })?.value) === '1';
   const [isDismissed, setIsDismissed] = useState(false);
   const [showPrompt, setShowPrompt] = useState(false);
   const [isRecovering, setIsRecovering] = useState(false);
@@ -215,7 +219,9 @@ const SessionRecovery: React.FC = () => {
         </p>
         <p className={styles.opponentInfo}>
           Opponent:{' '}
-          <span className={styles.opponentName}>{data?.opponentName}</span>
+          <span className={styles.opponentName}>
+            {isStreamerMode ? 'Opponent' : data?.opponentName}
+          </span>
         </p>
         <div className={styles.buttonGroup}>
           <button
