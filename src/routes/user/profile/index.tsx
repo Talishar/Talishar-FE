@@ -5,7 +5,8 @@ import {
   useGetFavoriteDecksQuery,
   useGetUserProfileQuery,
   useAddFavoriteDeckMutation,
-  useUpdateFavoriteDeckMutation
+  useUpdateFavoriteDeckMutation,
+  useSetMatchResultWebhookMutation
 } from 'features/api/apiSlice';
 import { DeleteDeckAPIResponse } from 'interface/API/DeleteDeckAPI.php';
 import { DeleteAccountAPIResponse } from 'interface/API/DeleteAccountAPI.php';
@@ -56,12 +57,41 @@ export const ProfilePage = () => {
   const [addFavoriteDeck] = useAddFavoriteDeckMutation();
   const [updateFavoriteDeck] = useUpdateFavoriteDeckMutation();
   const [deleteAccount, { isLoading: isDeleting }] = useDeleteAccountMutation();
+  const [webhookInput, setWebhookInput] = useState('');
+  const [isSavingWebhook, setIsSavingWebhook] = useState(false);
+  const [setMatchResultWebhook] = useSetMatchResultWebhookMutation();
+
+  useEffect(() => {
+    if (profileData?.matchResultWebhookUrl !== undefined) {
+      setWebhookInput(profileData.matchResultWebhookUrl ?? '');
+    }
+  }, [profileData?.matchResultWebhookUrl]);
 
   const handleDeleteDeckMessage = (resp: DeleteDeckAPIResponse): string => {
     if (resp.message === 'Deck deleted successfully.') {
       return 'The deck has been removed from your favorites list. It is still available to view on the deckbuilding site.';
     } else {
       return 'There has been a problem deleting your deck, please try again.';
+    }
+  };
+
+  const handleSaveWebhook = async () => {
+    setIsSavingWebhook(true);
+    try {
+      const resp = await setMatchResultWebhook({
+        webhookUrl: webhookInput.trim()
+      }).unwrap();
+      if (resp.success) {
+        toast.success(resp.message, { position: 'top-center' });
+      } else {
+        toast.error(resp.message, { position: 'top-center' });
+      }
+    } catch {
+      toast.error('Failed to save webhook. Please try again.', {
+        position: 'top-center'
+      });
+    } finally {
+      setIsSavingWebhook(false);
     }
   };
 
@@ -345,6 +375,34 @@ export const ProfilePage = () => {
                         </a>
                       </p>
                     )}
+                  </div>
+                )}
+
+                {/* Match Result Webhook */}
+                {!profileIsLoading && (
+                  <div className={styles.webhookSection}>
+                    <h3>Match Result Webhook</h3>
+                    <p>
+                      Receive your match results at a custom URL after each
+                      game. Must be a public https:// address.
+                    </p>
+                    <div className={styles.webhookInputRow}>
+                      <input
+                        type="url"
+                        placeholder="https://your-webhook.example.com/results"
+                        value={webhookInput}
+                        onChange={(e) => setWebhookInput(e.target.value)}
+                        disabled={isSavingWebhook}
+                        className={styles.addDeckInput}
+                      />
+                      <button
+                        className={styles.addDeckButton}
+                        onClick={handleSaveWebhook}
+                        disabled={isSavingWebhook}
+                      >
+                        {isSavingWebhook ? 'Saving...' : 'Save'}
+                      </button>
+                    </div>
                   </div>
                 )}
               </div>

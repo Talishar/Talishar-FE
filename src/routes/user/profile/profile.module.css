@@ -414,6 +414,40 @@ td {
   border-color: rgba(212, 175, 55, 0.5);
 }
 
+/* Match Result Webhook Section */
+.webhookSection {
+  margin: 1rem 0;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.webhookSection h3 {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1.3em;
+}
+
+.webhookSection p {
+  margin: 0 0 0.75rem;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9em;
+}
+
+.webhookInputRow {
+  display: flex;
+  gap: 0.5rem;
+  align-items: stretch;
+}
+
+@media (max-width: 575px) {
+  .webhookInputRow {
+    flex-direction: column;
+  }
+}
+
 .metafyToggleButton {
   padding: 0.5rem 1rem;
   margin: 1rem 0;

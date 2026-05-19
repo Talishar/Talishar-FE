@@ -356,7 +356,8 @@ export const URL_END_POINT = {
   GET_LAST_ACTIVE_GAME: 'APIs/GetLastActiveGame.php',
   SYNC_METAFY_SUBSCRIBERS: 'APIs/SyncMetafySubscribers.php',
   GET_APP_INFO: 'AccountFiles/GetAppInfoAPI.php',
-  GENERATE_AUTH_TOKEN: 'AccountFiles/GenerateAuthTokenAPI.php'
+  GENERATE_AUTH_TOKEN: 'AccountFiles/GenerateAuthTokenAPI.php',
+  MATCH_RESULT_WEBHOOK: 'APIs/MatchResultWebhookAPI.php'
 };
 
 export const GAME_VISIBILITY = {

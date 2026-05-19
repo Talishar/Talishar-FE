@@ -10,4 +10,5 @@ export interface UserProfileAPIResponse {
   isMetafyLinked?: boolean;
   isMetafySupporter?: boolean;
   metafyCommunities?: MetafyCommunity[];
+  matchResultWebhookUrl?: string;
 }
