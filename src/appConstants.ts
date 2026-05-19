@@ -291,6 +291,11 @@ const PRECON_DECK_DATA = [
     name: 'Hala, Bladesaint of the Vow',
     link: 'https://fabrary.net/decks/01KNHHE1MY39BC4PXYXMTJVT1M',
     hero: 'AHA001'
+  },
+  {
+    name: 'Zyggy Starlight',
+    link: 'https://fabrary.net/decks/01KREWW7RJS0GZ2PCCD4BM47QY',
+    hero: 'OMN001'
   }
 ];
 
