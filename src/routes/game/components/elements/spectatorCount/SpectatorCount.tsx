@@ -6,7 +6,7 @@ import { FaEye } from 'react-icons/fa';
 
 const emptyArray: string[] = [];
 
-export default function SpectatorCount() {
+export default function SpectatorCount({ compact = false }: { compact?: boolean }) {
   const spectatorCount = useAppSelector(
     (state: RootState) => state.game?.gameDynamicInfo?.spectatorCount ?? 0
   );
@@ -17,6 +17,27 @@ export default function SpectatorCount() {
 
   if (spectatorCount === 0) {
     return null;
+  }
+
+  if (compact) {
+    return (
+      <div
+        className={styles.spectatorCountCompact}
+        onMouseEnter={() => setShowTooltip(true)}
+        onMouseLeave={() => setShowTooltip(false)}
+        aria-label={`${spectatorCount} ${spectatorCount === 1 ? 'spectator' : 'spectators'} watching`}
+      >
+        <FaEye aria-hidden="true" />
+        <span className={styles.spectatorCountBadge}>{spectatorCount}</span>
+        {showTooltip && spectatorNames.length > 0 && (
+          <div className={styles.tooltip}>
+            {spectatorNames.map((name, i) => (
+              <div key={i}>{name}</div>
+            ))}
+          </div>
+        )}
+      </div>
+    );
   }
 
   return (

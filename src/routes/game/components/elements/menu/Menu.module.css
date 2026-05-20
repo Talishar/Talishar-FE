@@ -106,21 +106,18 @@
 }
 
 .buttonActive {
-  background-color: var(--alarm);
-  border-color: rgba(0, 0, 0, 0.3);
+  background-color: rgba(59, 130, 246, 0.85);
+  border-color: rgba(59, 130, 246, 0.9);
   color: var(--snow);
-  box-shadow: 0 2px 4px rgba(220, 20, 60, 0.4), 0 1px 2px rgba(0, 0, 0, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 0 8px rgba(220, 20, 60, 0.3);
+  box-shadow: 0 2px 4px rgba(59, 130, 246, 0.4), 0 1px 2px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
   z-index: 1;
 }
 
 .buttonActive:hover {
-  background-color: var(--snow);
-  color: var(--alarm);
-  border: 2px solid var(--alarm);
+  background-color: rgba(29, 100, 216, 0.95);
+  border-color: rgba(59, 130, 246, 1);
   cursor: pointer;
-  box-shadow: 0 3px 6px rgba(220, 20, 60, 0.5), 0 2px 4px rgba(0, 0, 0, 0.3),
-    0 0 10px rgba(220, 20, 60, 0.4);
   transform: translateY(-1px);
   z-index: 10;
 }
@@ -157,20 +154,24 @@
 /* === Mobile-specific button sizing === */
 @media (orientation: portrait), (max-width: 1200px) {
   .btn {
-    width: 52px;
-    height: 38px;
-    min-width: 46px;
+    width: 42px;
+    height: 42px;
+    min-width: 42px;
     margin-bottom: 0;
-    padding: 6px 10px;
+    padding: 0;
     font-size: 14px;
-    border-radius: 6px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .btn svg {
-    font-size: 20px !important;
-    width: 20px !important;
-    height: 20px !important;
+    font-size: 18px !important;
+    width: 18px !important;
+    height: 18px !important;
     flex-shrink: 0;
+    display: block;
   }
 
   .menuList {

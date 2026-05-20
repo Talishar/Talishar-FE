@@ -4,8 +4,8 @@ import screenfull from 'screenfull';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { submitButton, setSpectatorCameraView } from 'features/game/GameSlice';
 import { GiExpand } from 'react-icons/gi';
-import { FaUndo, FaEllipsisH } from 'react-icons/fa';
-import { MdInventory2, MdSwapVert } from 'react-icons/md';
+import { FaUndo, FaEllipsisH, FaExchangeAlt } from 'react-icons/fa';
+import { MdInventory2 } from 'react-icons/md';
 import styles from './Menu.module.css';
 import { DEFAULT_SHORTCUTS, PROCESS_INPUT } from 'appConstants';
 import HideModalsToggle from './HideModalsToggle/HideModalsToggle';
@@ -91,7 +91,7 @@ function CameraSwitchButton() {
       data-tooltip={`Switch to P${spectatorCameraView === 1 ? 2 : 1} View`}
       data-placement="bottom"
     >
-      <MdSwapVert aria-hidden="true" />
+      <FaExchangeAlt aria-hidden="true" />
     </button>
   );
 }
@@ -180,9 +180,9 @@ function MenuContent() {
           <div className={styles.menuRow}>
             <div className={styles.menuList}>
               <CameraSwitchButton />
-              <SpectatorCount />
               <ShowMobileChat />
               <MobileOverflowMenu isSpectator />
+              <SpectatorCount compact />
             </div>
           </div>
         </div>
@@ -217,6 +217,7 @@ function MenuContent() {
             <HideModalsToggle />
             <ShowMobileChat />
             <MobileOverflowMenu isSpectator={false} />
+            <SpectatorCount compact />
           </div>
         </div>
       </div>

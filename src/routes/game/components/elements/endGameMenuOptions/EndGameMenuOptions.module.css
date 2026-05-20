@@ -78,16 +78,16 @@
   .buttons {
     flex-direction: row;
     flex-wrap: wrap;
-    gap: 0.4rem;
+    gap: 0.35rem;
     width: 100%;
   }
 
   .buttonDiv {
-    flex: 1 1 calc(50% - 0.2rem);
-    min-width: calc(50% - 0.2rem);
-    min-height: 48px;
-    padding: 0.6rem 0.7rem;
-    font-size: 1em;
+    flex: 1 1 calc(50% - 0.175rem);
+    min-width: calc(50% - 0.175rem);
+    min-height: 38px;
+    padding: 0.4rem 0.5rem;
+    font-size: 0.85em;
     white-space: normal;
     line-height: 1.3;
     text-align: center;
@@ -96,14 +96,14 @@
 
 @media (max-width: 480px) {
   .buttons {
-    gap: 0.35rem;
+    gap: 0.3rem;
   }
 
   .buttonDiv {
-    flex: 1 1 calc(50% - 0.175rem);
-    min-width: calc(50% - 0.175rem);
-    min-height: 44px;
-    padding: 0.55rem 0.5rem;
-    font-size: 0.95em;
+    flex: 1 1 calc(50% - 0.15rem);
+    min-width: calc(50% - 0.15rem);
+    min-height: 34px;
+    padding: 0.35rem 0.4rem;
+    font-size: 0.8em;
   }
 }
