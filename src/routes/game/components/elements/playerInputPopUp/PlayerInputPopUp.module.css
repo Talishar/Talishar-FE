@@ -192,14 +192,15 @@
   align-items: center;
 }
 
-@media (orientation: portrait) {
+@media (orientation: portrait) and (max-width: 600px) {
   .optionsContainer,
   .optOptionsContainer {
     left: 50%;
     translate: -50% 0;
-    width: min(70dvw, 320px);
+    width: min(88dvw, 320px);
     max-width: 92dvw;
     right: auto;
+    min-height: 0;
   }
 
   .cardDiv {
@@ -207,6 +208,15 @@
     max-width: 14dvw;
     max-height: 14vw;
     max-height: 14dvw;
+  }
+}
+
+@media (orientation: portrait) and (min-width: 601px) {
+  .optOptionsContainer {
+    left: 18%;
+    right: 5%;
+    translate: none;
+    width: auto;
   }
 }
 
@@ -235,7 +245,7 @@
   width: 100%;
   margin: 0;
   margin-top: 10px;
-  height: 50%;
+  height: auto;
 }
 
 .reorderItem {
@@ -250,9 +260,9 @@
   flex-direction: row;
   min-width: 30%;
   max-width: 90%;
-  min-height: 40%;
+  min-height: auto;
   left: 15%;
-  right: 25%;
+  right: 30%;
   max-height: 52.5vh;
   height: auto;
   background-color: var(--near-black);
@@ -267,9 +277,16 @@
   width: 100%;
 }
 
+.newOptForm.optFormContainer {
+  height: auto;
+}
+
 .newOptForm.cardsContainer {
-  height: 90%;
+  height: auto;
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
 }
 
 /* Card position indicators */
@@ -346,17 +363,28 @@
 }
 
 @media (max-width: 768px) {
+  .optOptionsContainer {
+    left: 45%;
+    translate: -50% 0;
+    right: auto;
+    width: min(85dvw, 380px);
+    max-width: 95dvw;
+  }
+
   .newOptForm.submitButtonDiv {
     width: auto;
-    min-width: 100px;
-    max-width: 180px;
-    margin-bottom: 14px;
-    padding: 8px 16px;
+    min-width: 80px;
+    max-width: 160px;
+    margin-bottom: 10px;
+    padding: 5px 12px;
     font-size: 13px;
   }
 
   .buttonDiv {
-    width: 10dvw;
+    min-width: 0;
+    width: auto;
+    height: 26px;
+    padding: 3px 8px;
     font-size: 0.7em;
     flex: 0 1 auto;
   }
@@ -367,22 +395,29 @@
 
   .reorderCards {
     margin-top: 0;
-    height: 40%;
+    height: auto;
   }
 }
 
 @media (max-width: 480px) {
+  .optOptionsContainer {
+    width: min(92dvw, 340px);
+    max-width: 92dvw;
+  }
+
   .newOptForm.submitButtonDiv {
     width: auto;
-    min-width: 80px;
-    max-width: 150px;
-    margin-bottom: 14px;
-    padding: 6px 12px;
+    min-width: 64px;
+    max-width: 130px;
+    margin-bottom: 8px;
+    padding: 4px 10px;
     font-size: 12px;
   }
 
   .buttonDiv {
-    font-size: 0.7em;
+    height: 22px;
+    padding: 2px 6px;
+    font-size: 0.65em;
   }
 
   .topAndBottomText {
@@ -391,7 +426,7 @@
 
   .reorderCards {
     margin-top: 0;
-    height: 40%;
+    height: auto;
   }
 }
 

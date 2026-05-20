@@ -828,7 +828,6 @@ export const CARD_LIST: string[] = [
   "Electrostatic Discharge",
   "Elemental Strike",
   "Elliptical Conflux",
-  "Eloquence",
   "Eloquent Eulogy",
   "Embalm",
   "Embermaw Cenipai",
