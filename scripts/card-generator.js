@@ -15,10 +15,6 @@ axios
     const cardNames = cards.reduce((acc, card) => {
       const name = card.name.trim();
 
-      if (card.types.includes('Token')) {
-        return acc;
-      }
-
       // if name has "//" split into two names
       if (name.includes("//")) {
         const [name1, name2] = name.split("//");
