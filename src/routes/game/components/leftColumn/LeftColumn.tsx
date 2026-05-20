@@ -29,7 +29,7 @@ export default function LeftColumn() {
 
   return (
     <div className={styles.leftColumn}>
-      {!isMobile && <PlayerName isPlayer={false} />}
+      {(!isMobile || playerID === 3) && <PlayerName isPlayer={false} />}
       <ActiveEffects />
       {(!isMobile || playerID === 3) && <PlayerName isPlayer={true} />}
       <ReplayPanel />

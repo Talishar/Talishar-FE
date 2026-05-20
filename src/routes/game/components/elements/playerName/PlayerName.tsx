@@ -326,7 +326,7 @@ export default function PlayerName(player: Player) {
     <div
       className={`${styles.playerName} ${getStatusClass()} ${
         player.isPlayer ? styles.playerTwo : ''
-      }`}
+      } ${playerID === 3 ? styles.spectator : ''}`}
       ref={dropdownRef}
     >
       <div className={styles.nameContainer}>
