@@ -33,7 +33,6 @@ export default function LeftColumn() {
       <ActiveEffects />
       {(!isMobile || playerID === 3) && <PlayerName isPlayer={true} />}
       <ReplayPanel />
-      <SpectatorCameraPanel />
       <DevToolPanel />
     </div>
   );
