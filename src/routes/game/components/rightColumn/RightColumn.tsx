@@ -32,9 +32,11 @@ export default function RightColumn() {
     <>
     {/* Mobile */}
       <div className={styles.mobileTopBar}>
-        <div className={styles.mobileTopBarName}>
-          <PlayerName isPlayer={false} />
-        </div>
+        {!isSpectator && (
+          <div className={styles.mobileTopBarName}>
+            <PlayerName isPlayer={false} />
+          </div>
+        )}
         <div className={styles.mobileTopBarContent}>
           <Menu />
         </div>
