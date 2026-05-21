@@ -16,6 +16,7 @@ import { FaEye, FaEyeSlash, FaEllipsisH, FaList, FaExchangeAlt } from 'react-ico
 import classNames from 'classnames';
 import useAuth from 'hooks/useAuth';
 import { PiFileCsvFill, PiCameraFill } from 'react-icons/pi';
+import { TALISHAR_METAFY_URL } from 'constants/socialLinks';
 import { parseHtmlToReactElements } from 'utils/ParseEscapedString';
 import useSupporterStatus from 'hooks/useSupporterStatus';
 import MetafyLogo from 'img/MetafyGradient.svg';
@@ -94,7 +95,7 @@ const EndGameScreen = () => {
       content = (
         <div>
           Support our{' '}
-          <a href="https://metafy.gg/@talishar/members" target="_blank">
+          <a href={TALISHAR_METAFY_URL} target="_blank" rel="noopener noreferrer">
             Metafy
           </a>{' '}
           to access this feature.
@@ -212,7 +213,7 @@ const EndGameScreen = () => {
           </div>
           {!isSupporter && !isLoading && !error && (
             <a
-              href="https://metafy.gg/@talishar/members"
+              href={TALISHAR_METAFY_URL}
               target="_blank"
               rel="noopener noreferrer"
               className={styles.supportCta}

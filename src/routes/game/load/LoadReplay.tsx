@@ -7,6 +7,7 @@ import { LoadReplayAPI } from 'interface/API/LoadReplayAPI.php';
 import { setReplayStart } from 'features/game/GameSlice';
 import { useNavigate } from 'react-router-dom';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { TALISHAR_DISCORD_URL } from 'constants/socialLinks';
 import styles from './LoadReplay.module.css';
 import { GameLocationState } from 'interface/GameLocationState';
 import PageBanner from 'components/PageBanner/PageBanner';
@@ -23,7 +24,7 @@ const LoadReplay = () => {
           The Replay Tool is currently in beta. If you encounter any issues,
           please report them in our Discord{' '}
           <a
-            href="https://discord.gg/JykuRkdd5S"
+            href={TALISHAR_DISCORD_URL}
             target="_blank"
             rel="noopener noreferrer"
           >

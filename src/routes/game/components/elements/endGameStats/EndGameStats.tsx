@@ -1066,7 +1066,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                 <span>
                   Support our work on{' '}
                   <a
-                    href="https://metafy.gg/@talishar/members"
+                    href={TALISHAR_METAFY_URL}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
@@ -1237,7 +1237,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
             {!isSupporter && (
               <div className={styles.adHeader}>
                 <a
-                  href="https://metafy.gg/@talishar/members"
+                  href={TALISHAR_METAFY_URL}
                   target="_blank"
                   rel="noopener noreferrer"
                   className={styles.removeAdsLink}

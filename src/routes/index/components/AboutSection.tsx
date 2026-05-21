@@ -7,6 +7,11 @@ import { AdUnit } from 'components/ads';
 import useSupporterStatus from 'hooks/useSupporterStatus';
 import { useMediaQuery } from 'hooks/useMediaQuery';
 import PageBanner from 'components/PageBanner/PageBanner';
+import {
+  TALISHAR_DISCORD_URL,
+  TALISHAR_GITHUB_URL,
+  TALISHAR_METAFY_URL
+} from 'constants/socialLinks';
 
 const AboutSection: React.FC = () => {
   const [expandedFAQ, setExpandedFAQ] = React.useState<number | null>(null);
@@ -98,7 +103,7 @@ const AboutSection: React.FC = () => {
             <h3 className={styles.sectionTitle}>{t("ABOUT.WHO_MAINTAINS_TITLE")}</h3>
             <div className={styles.contributeButtons}>
               <a
-                href="https://github.com/Talishar/Talishar"
+                href={TALISHAR_GITHUB_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 className={styles.githubButton}
@@ -106,7 +111,7 @@ const AboutSection: React.FC = () => {
                 Github
               </a>
               <a
-                href="https://discord.gg/JykuRkdd5S"
+                href={TALISHAR_DISCORD_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 className={styles.discordButton}
@@ -135,7 +140,7 @@ const AboutSection: React.FC = () => {
                 components={[
                   <p key="lss-p0" className={styles.bodyText} />,
                   <p key="lss-p1" className={styles.bodyText} />,
-                  <a key="lss-discord" href="https://discord.gg/JykuRkdd5S" target="_blank" rel="noopener noreferrer" />,
+                  <a key="lss-discord" href={TALISHAR_DISCORD_URL} target="_blank" rel="noopener noreferrer" />,
                   <a key="lss-rules"   href="https://fabtcg.com/rules/"       target="_blank" rel="noopener noreferrer" />,
                 ]}
               /></p>
@@ -145,7 +150,7 @@ const AboutSection: React.FC = () => {
               <p className={styles.bodyText}>{t("ABOUT.WHO_MAINTAINS_DESCRIPTION")}</p>
               {!isSupporter && (
               <a
-                href="https://metafy.gg/@talishar/members"
+                href={TALISHAR_METAFY_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 className={styles.metafyButton}

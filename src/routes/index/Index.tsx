@@ -116,7 +116,7 @@ const Index = () => {
                 <a href="#games" className={styles.heroCtaPrimary}>Join a game</a>
                 {!isSupporter && (
                   <a
-                    href="https://metafy.gg/@talishar/members"
+                    href={TALISHAR_METAFY_URL}
                     target="_blank"
                     rel="noopener noreferrer"
                     className={styles.heroCtaSecondary}
@@ -151,7 +151,7 @@ const Index = () => {
             {!isSupporter && (
               <div className={styles.adHeader}>
                 <a
-                  href="https://metafy.gg/@talishar/members"
+                  href={TALISHAR_METAFY_URL}
                   target="_blank"
                   rel="noopener noreferrer"
                   className={styles.removeAdsLink}

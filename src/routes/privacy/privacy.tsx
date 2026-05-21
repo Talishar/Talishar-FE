@@ -1,4 +1,5 @@
 import React from 'react';
+import { TALISHAR_DISCORD_URL } from 'constants/socialLinks';
 import styles from './Privacy.module.css';
 
 export const Privacy = () => {
@@ -228,7 +229,7 @@ export const Privacy = () => {
         <p>
           To exercise any of these rights, please contact us through our{' '}
           <a
-            href="https://discord.gg/JykuRkdd5S"
+            href={TALISHAR_DISCORD_URL}
             target="_blank"
             rel="noopener noreferrer"
           >
