@@ -1,14 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import Displayrow from 'interface/Displayrow';
 import CardDisplay from '../../elements/cardDisplay/CardDisplay';
 import styles from './PermanentsZone.module.css';
 import { Card } from 'features/Card';
-import isEqual from 'react-fast-compare';
 import classNames from 'classnames';
-import { shallowEqual } from 'react-redux';
-import { HiRewind, HiFastForward } from 'react-icons/hi';
 import { motion, AnimatePresence } from 'framer-motion';
 import { selectPermanentsAsStack } from '../../../../../features/game/GameSlice';
 
@@ -20,21 +17,43 @@ export interface CardStack {
 
 export default function PermanentsZone(prop: Displayrow) {
   const { isPlayer } = prop;
-  const [scrollCount, setScrollCount] = React.useState(0);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const isDragging = useRef(false);
+  const dragStartX = useRef(0);
+  const dragScrollLeft = useRef(0);
 
   const permanents = useAppSelector((state: RootState) =>
     selectPermanentsAsStack(state, isPlayer)
   );
 
   useEffect(() => {
-    if (!permanents.length) return;
-    if (scrollCount < 0) {
-      setScrollCount(0);
-    }
-    if (scrollCount > permanents.length - 1) {
-      setScrollCount(permanents.length - 1);
-    }
-  }, [scrollCount, permanents.length]);
+    const onMouseMove = (e: MouseEvent) => {
+      if (!isDragging.current || !scrollRef.current) return;
+      e.preventDefault();
+      const walk = e.pageX - dragStartX.current;
+      scrollRef.current.scrollLeft = dragScrollLeft.current - walk;
+    };
+
+    const onMouseUp = () => {
+      if (!isDragging.current) return;
+      isDragging.current = false;
+      if (scrollRef.current) scrollRef.current.style.cursor = 'grab';
+    };
+
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
+    return () => {
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+    };
+  }, []);
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    isDragging.current = true;
+    dragStartX.current = e.pageX;
+    dragScrollLeft.current = scrollRef.current?.scrollLeft ?? 0;
+    if (scrollRef.current) scrollRef.current.style.cursor = 'grabbing';
+  };
 
   if (!permanents.length) {
     return (
@@ -46,27 +65,16 @@ export default function PermanentsZone(prop: Displayrow) {
     );
   }
 
-  const cardStackArray = permanents.slice(scrollCount);
-
   return (
     <div className={styles.permanentsWrapper}>
       <div
-        className={classNames(styles.scrollBack, styles.scrollWidget)}
-        onClick={() => {
-          if (scrollCount === 0) return;
-          setScrollCount(scrollCount - 1);
-        }}
-        onTouchStart={() => {
-          if (scrollCount === 0) return;
-          setScrollCount(scrollCount - 1);
-        }}
+        ref={scrollRef}
+        className={styles.permanentsInner}
+        onMouseDown={handleMouseDown}
       >
-        <HiRewind />
-      </div>
-      <div className={styles.permanentsInner}>
         <motion.div className={styles.permanentsZone} layout>
           <AnimatePresence>
-            {cardStackArray.map((cardStack, ix) => {
+            {permanents.map((cardStack) => {
               const cardContainerStyles = classNames(
                 {
                   [styles.stacked]: cardStack.count > 1
@@ -101,19 +109,6 @@ export default function PermanentsZone(prop: Displayrow) {
             })}
           </AnimatePresence>
         </motion.div>
-      </div>
-      <div
-        className={classNames(styles.scrollForward, styles.scrollWidget)}
-        onClick={() => {
-          if (scrollCount >= permanents.length - 1) return;
-          setScrollCount(scrollCount + 1);
-        }}
-        onTouchStart={() => {
-          if (scrollCount >= permanents.length - 1) return;
-          setScrollCount(scrollCount + 1);
-        }}
-      >
-        <HiFastForward />
       </div>
     </div>
   );

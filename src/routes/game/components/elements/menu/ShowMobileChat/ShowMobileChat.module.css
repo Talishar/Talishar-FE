@@ -1,17 +1,14 @@
 @keyframes chatPulse {
   0%, 100% {
-    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.8);
-    border-color: rgba(59, 130, 246, 0.9);
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.5);
   }
   50% {
-    box-shadow: 0 0 0 5px rgba(59, 130, 246, 0);
-    border-color: rgba(100, 160, 255, 1);
+    box-shadow: 0 0 0 4px rgba(255, 255, 255, 0);
   }
 }
 
 .chatBtnUnread {
-  animation: chatPulse 3s ease-in-out infinite;
-  border-color: rgba(59, 130, 246, 0.9) !important;
+  animation: chatPulse 2.5s ease-in-out infinite;
 }
 
 .chatBadge {

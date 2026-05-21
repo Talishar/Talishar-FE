@@ -176,6 +176,7 @@ const ChatWheel = ({ usePrimary = false }: { usePrimary?: boolean }) => {
     getGameInfo,
     shallowEqual
   );
+
   const [modalDisplay, setModalDisplay] = useState<boolean>(false);
   const [chooseFirstPlayer, chooseFirstPlayerData] =
     useChooseFirstPlayerMutation();
@@ -216,6 +217,8 @@ const ChatWheel = ({ usePrimary = false }: { usePrimary?: boolean }) => {
     dismiss,
     role
   ]);
+
+  if (playerID === 3) return null;
 
   const submitChatRequest = async () => {
     if (location.pathname.includes('/lobby/')) {

@@ -24,10 +24,10 @@
     top: 0;
     left: 0;
     margin: 0.25rem;
-    padding: 0.15rem 0.2rem;
+    padding: 0.15rem;
     height: auto;
-    width: auto;
-    max-width: 140px;
+    width: max-content;
+    max-width: 45vw;
     font-size: 0.55rem;
     z-index: 500;
     border-radius: 0.2em;
@@ -37,12 +37,21 @@
     top: auto;
     bottom: 0;
   }
+
+  .playerName.spectator:not(.playerTwo) {
+    top: 3.35rem;
+  }
 }
 
-/* On small phones the opponent name badge overlaps the toolbar buttons — hide it */
 @media (max-width: 600px) {
-  .playerName:not(.playerTwo) {
+  .playerName:not(.playerTwo):not(.spectator) {
     display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .playerName.spectator.playerTwo {
+    bottom: 4.5rem;
   }
 }
 

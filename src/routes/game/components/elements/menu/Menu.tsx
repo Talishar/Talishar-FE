@@ -2,9 +2,9 @@ import { useState, useEffect, useRef } from 'react';
 import ReactDOM from 'react-dom';
 import screenfull from 'screenfull';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
-import { submitButton } from 'features/game/GameSlice';
+import { submitButton, setSpectatorCameraView } from 'features/game/GameSlice';
 import { GiExpand } from 'react-icons/gi';
-import { FaUndo, FaEllipsisH } from 'react-icons/fa';
+import { FaUndo, FaEllipsisH, FaExchangeAlt } from 'react-icons/fa';
 import { MdInventory2 } from 'react-icons/md';
 import styles from './Menu.module.css';
 import { DEFAULT_SHORTCUTS, PROCESS_INPUT } from 'appConstants';
@@ -74,6 +74,28 @@ function UndoButton() {
   );
 }
 
+function CameraSwitchButton() {
+  const dispatch = useAppDispatch();
+  const spectatorCameraView = useAppSelector(
+    (state: RootState) => state.game.spectatorCameraView
+  );
+  const toggleView = () => {
+    const newView = spectatorCameraView === 1 ? 2 : 1;
+    dispatch(setSpectatorCameraView(newView));
+  };
+  return (
+    <button
+      className={styles.btn}
+      onClick={toggleView}
+      aria-label={`Switch to Player ${spectatorCameraView === 1 ? 2 : 1} View`}
+      data-tooltip={`Switch to P${spectatorCameraView === 1 ? 2 : 1} View`}
+      data-placement="bottom"
+    >
+      <FaExchangeAlt aria-hidden="true" />
+    </button>
+  );
+}
+
 function MobileOverflowMenu({ isSpectator }: { isSpectator: boolean }) {
   const [open, setOpen] = useState(false);
   const [panelStyle, setPanelStyle] = useState<React.CSSProperties>({});
@@ -119,7 +141,7 @@ function MobileOverflowMenu({ isSpectator }: { isSpectator: boolean }) {
                 showLabel
               />
             </div>
-            <Inventory buttonClassName={styles.overflowItem} showLabel />
+            {!isSpectator && <Inventory buttonClassName={styles.overflowItem} showLabel />}
             <button className={styles.overflowItem} onClick={toggleFullScreen}>
               <GiExpand aria-hidden="true" /> Fullscreen
             </button>
@@ -157,9 +179,10 @@ function MenuContent() {
         <div>
           <div className={styles.menuRow}>
             <div className={styles.menuList}>
-              <UndoButton />
+              <CameraSwitchButton />
               <ShowMobileChat />
               <MobileOverflowMenu isSpectator />
+              <SpectatorCount compact />
             </div>
           </div>
         </div>
@@ -194,6 +217,7 @@ function MenuContent() {
             <HideModalsToggle />
             <ShowMobileChat />
             <MobileOverflowMenu isSpectator={false} />
+            <SpectatorCount compact />
           </div>
         </div>
       </div>
