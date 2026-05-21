@@ -354,7 +354,7 @@ function ManualModeContent({
           </div>
           {showCardTooltip && (
             <div className={styles.tooltip}>
-              <p className={styles.tooltipTitle}>Card Examples Guide</p>
+              <p className={styles.tooltipTitle}>Input Examples Guide</p>
               <ul className={styles.tooltipList}>
                 <li>
                   <span className={styles.tooltipCode}>Ironrot Gauntlet</span>
