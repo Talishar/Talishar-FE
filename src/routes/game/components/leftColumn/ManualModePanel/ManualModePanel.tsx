@@ -71,6 +71,7 @@ function ManualModeContent({
   const [opponentHealthInput, setOpponentHealthInput] = useState('');
   const [isCardLoading, setIsCardLoading] = useState(false);
   const [isRequestInProgress, setIsRequestInProgress] = useState(false);
+  const [showCardTooltip, setShowCardTooltip] = useState(false);
   const dispatch = useAppDispatch();
   const gameInfo = useAppSelector(getGameInfo, shallowEqual);
   const playerHealth = useAppSelector(
@@ -338,9 +339,51 @@ function ManualModeContent({
           </button>
         </div>
 
-        {/* Add Card to Hand */}
+        {/* Add Card */}
         <div className={styles.formGroup}>
-          <label htmlFor="cardInput">Add Card to Hand</label>
+          <div className={styles.formLabelRow}>
+            <label htmlFor="cardInput">Add Card</label>
+            <button
+              className={styles.tooltipTrigger}
+              onClick={() => setShowCardTooltip((v) => !v)}
+              type="button"
+              aria-label="Show card input help"
+            >
+              ?
+            </button>
+          </div>
+          {showCardTooltip && (
+            <div className={styles.tooltip}>
+              <p className={styles.tooltipTitle}>Card Examples Guide</p>
+              <ul className={styles.tooltipList}>
+                <li>
+                  <span className={styles.tooltipCode}>Ironrot Gauntlet</span>
+                  <span>Equipment - Equip to your hero in the arena</span>
+                </li>
+                <li>
+                  <span className={styles.tooltipCode}>Runechant</span>
+                  <span>Tokens - places them directly into the arena</span>
+                </li>
+                <li>
+                  <span className={styles.tooltipCode}>Runechant|5</span>
+                  <span>
+                    Token + Pipe + Number - Creates that many copies in the arena
+                  </span>
+                </li>
+                <li>
+                  <span className={styles.tooltipCode}>Snatch|2</span>
+                  <span>Card Name + Pipe + Number also works for non-token cards</span>
+                </li>
+                <li>
+                  <span className={styles.tooltipCode}>Snatch blue</span>
+                  <span>Card Name + color will put the specific color version in your hand. By default it adds the first version found. (Red normally)</span>
+                </li>
+              </ul>
+              <p className={styles.tooltipNote}>
+                The destination (hand, play, equipment zone) is determined automatically by the card type.
+              </p>
+            </div>
+          )}
           <input
             id="cardInput"
             type="text"
@@ -350,7 +393,7 @@ function ManualModeContent({
             onKeyDownCapture={(e) => {
               e.stopPropagation();
             }}
-            placeholder="Enter card ID"
+            placeholder="e.g. Snatch or Vigor|5"
             disabled={isCardLoading || isRequestInProgress}
           />
           <button
