@@ -47,16 +47,30 @@ function Play({ isRoguelike }: { isRoguelike: boolean }) {
         return true;
       }
     };
-
     const origOpen = window.open.bind(window);
     window.open = () => null;
 
-    const origAssign = window.location.assign.bind(window.location);
-    const origReplace = window.location.replace.bind(window.location);
-    (window.location as any).assign = (url: string) => { if (isSafe(url)) origAssign(url); };
-    (window.location as any).replace = (url: string) => { if (isSafe(url)) origReplace(url); };
-
     const locProto = Location.prototype;
+    const assignDesc = Object.getOwnPropertyDescriptor(locProto, 'assign');
+    if (assignDesc?.value) {
+      const origAssign = assignDesc.value;
+      Object.defineProperty(locProto, 'assign', {
+        configurable: true,
+        writable: true,
+        value(url: string) { if (isSafe(url)) origAssign.call(this, url); },
+      });
+    }
+
+    const replaceDesc = Object.getOwnPropertyDescriptor(locProto, 'replace');
+    if (replaceDesc?.value) {
+      const origReplace = replaceDesc.value;
+      Object.defineProperty(locProto, 'replace', {
+        configurable: true,
+        writable: true,
+        value(url: string) { if (isSafe(url)) origReplace.call(this, url); },
+      });
+    }
+
     const hrefDesc = Object.getOwnPropertyDescriptor(locProto, 'href');
     if (hrefDesc?.set) {
       const origSet = hrefDesc.set;
@@ -64,16 +78,14 @@ function Play({ isRoguelike }: { isRoguelike: boolean }) {
         configurable: true,
         enumerable: hrefDesc.enumerable,
         get: hrefDesc.get,
-        set(url: string) {
-          if (isSafe(url)) origSet.call(this, url);
-        },
+        set(url: string) { if (isSafe(url)) origSet.call(this, url); },
       });
     }
 
     return () => {
       window.open = origOpen;
-      (window.location as any).assign = origAssign;
-      (window.location as any).replace = origReplace;
+      if (assignDesc) Object.defineProperty(locProto, 'assign', assignDesc);
+      if (replaceDesc) Object.defineProperty(locProto, 'replace', replaceDesc);
       if (hrefDesc) Object.defineProperty(locProto, 'href', hrefDesc);
     };
   }, [isGameOver]);
