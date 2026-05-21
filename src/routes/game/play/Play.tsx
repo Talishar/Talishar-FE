@@ -33,6 +33,50 @@ import { PanelProvider } from '../components/leftColumn/PanelContext';
 
 function Play({ isRoguelike }: { isRoguelike: boolean }) {
   usePageTitle('In Game');
+  const turnPhase = useAppSelector((state: any) => state.game.turnPhase?.turnPhase);
+  const isGameOver = turnPhase === 'OVER';
+
+  // Block ad scripts from redirecting the tab during active gameplay.
+  useEffect(() => {
+    if (isGameOver) return;
+
+    const isSafe = (url: string) => {
+      try {
+        return new URL(url, window.location.href).hostname === window.location.hostname;
+      } catch {
+        return true;
+      }
+    };
+
+    const origOpen = window.open.bind(window);
+    window.open = () => null;
+
+    const origAssign = window.location.assign.bind(window.location);
+    const origReplace = window.location.replace.bind(window.location);
+    (window.location as any).assign = (url: string) => { if (isSafe(url)) origAssign(url); };
+    (window.location as any).replace = (url: string) => { if (isSafe(url)) origReplace(url); };
+
+    const locProto = Location.prototype;
+    const hrefDesc = Object.getOwnPropertyDescriptor(locProto, 'href');
+    if (hrefDesc?.set) {
+      const origSet = hrefDesc.set;
+      Object.defineProperty(locProto, 'href', {
+        configurable: true,
+        enumerable: hrefDesc.enumerable,
+        get: hrefDesc.get,
+        set(url: string) {
+          if (isSafe(url)) origSet.call(this, url);
+        },
+      });
+    }
+
+    return () => {
+      window.open = origOpen;
+      (window.location as any).assign = origAssign;
+      (window.location as any).replace = origReplace;
+      if (hrefDesc) Object.defineProperty(locProto, 'href', hrefDesc);
+    };
+  }, [isGameOver]);
 
   // Always hide anchor ads while the game view is mounted
   useEffect(() => {
