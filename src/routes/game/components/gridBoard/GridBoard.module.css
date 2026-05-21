@@ -293,6 +293,7 @@
 .pTwoPermanents {
   grid-area: pTwoPermanents;
   position: absolute;
+  top: calc(var(--card-size) * -0.1);
   left: 0;
   right: 0;
   bottom: 0;
@@ -379,6 +380,7 @@
 .pOnePermanents {
   grid-area: pOnePermanents;
   position: absolute;
+  top: calc(var(--card-size) * -0.1);
   left: 0;
   right: 0;
   bottom: 0;
