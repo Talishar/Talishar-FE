@@ -1,6 +1,8 @@
 .permanentsWrapper {
   position: relative;
-  display: flex;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 5px;
   flex: 0 1 100%;
   border-radius: 0.5em;
   color: var(--white);
@@ -11,14 +13,19 @@
 }
 
 .permanentsZone {
+  position: absolute;
+  top: calc(var(--card-size) * -0.25);
+  left: 0;
+  right: 0;
+  bottom: 0;
   display: flex;
   gap: 4px;
   justify-content: flex-start;
   align-items: flex-end;
   flex-wrap: nowrap;
-  height: 100%;
-  width: max-content;
-  min-width: 100%;
+  min-height: var(--card-size);
+  max-width: 100%;
+  overflow: hidden;
 }
 
 .permanentsInner {
@@ -26,33 +33,8 @@
   width: 100%;
   height: 100%;
   min-width: 0;
-  overflow-x: auto;
-  overflow-y: clip;
-  cursor: grab;
-  display: flex;
-  align-items: flex-end;
-}
-
-.permanentsInner:active {
-  cursor: grabbing;
-}
-
-.permanentsInner::-webkit-scrollbar {
-  height: 4px;
-}
-
-.permanentsInner::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 2px;
-}
-
-.permanentsInner::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.3);
-  border-radius: 2px;
-}
-
-.permanentsInner::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.5);
+  max-width: 100%;
+  min-height: 0%;
 }
 
 .permanentsText {
@@ -64,6 +46,10 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.permanentsZone::-webkit-scrollbar {
+  display: none;
 }
 
 .counter {
@@ -109,7 +95,54 @@
   position: relative;
   aspect-ratio: 1;
   min-width: var(--card-size);
-  flex-shrink: 0;
+}
+
+.scrollBack {
+  background-image: linear-gradient(
+    90deg,
+    rgba(75, 75, 75, 0.85) 0%,
+    rgba(0, 0, 0, 0) 100%
+  );
+}
+
+.scrollBack:hover {
+  background-image: linear-gradient(
+    90deg,
+    rgba(218, 165, 32, 1) 0%,
+    rgba(0, 0, 0, 0) 100%
+  );
+}
+
+.scrollForward {
+  background-image: linear-gradient(
+    270deg,
+    rgba(75, 75, 75, 0.85) 0%,
+    rgba(0, 0, 0, 0) 100%
+  );
+}
+
+.scrollForward:hover {
+  background-image: linear-gradient(
+    270deg,
+    rgba(218, 165, 32, 1) 0%,
+    rgba(0, 0, 0, 0) 100%
+  );
+}
+
+.scrollWidget {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: calc(--var(--card-size) * 1);
+  padding: 5px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.scrollWidget:hover {
+  color: black;
 }
 
 .stacked {
