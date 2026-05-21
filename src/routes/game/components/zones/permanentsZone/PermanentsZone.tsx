@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef } from 'react';
 import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import Displayrow from 'interface/Displayrow';
@@ -26,33 +26,24 @@ export default function PermanentsZone(prop: Displayrow) {
     selectPermanentsAsStack(state, isPlayer)
   );
 
-  useEffect(() => {
-    const onMouseMove = (e: MouseEvent) => {
-      if (!isDragging.current || !scrollRef.current) return;
-      e.preventDefault();
-      const walk = e.pageX - dragStartX.current;
-      scrollRef.current.scrollLeft = dragScrollLeft.current - walk;
-    };
-
-    const onMouseUp = () => {
-      if (!isDragging.current) return;
-      isDragging.current = false;
-      if (scrollRef.current) scrollRef.current.style.cursor = 'grab';
-    };
-
-    document.addEventListener('mousemove', onMouseMove);
-    document.addEventListener('mouseup', onMouseUp);
-    return () => {
-      document.removeEventListener('mousemove', onMouseMove);
-      document.removeEventListener('mouseup', onMouseUp);
-    };
-  }, []);
-
   const handleMouseDown = (e: React.MouseEvent) => {
     isDragging.current = true;
-    dragStartX.current = e.pageX;
+    dragStartX.current = e.pageX - (scrollRef.current?.offsetLeft ?? 0);
     dragScrollLeft.current = scrollRef.current?.scrollLeft ?? 0;
     if (scrollRef.current) scrollRef.current.style.cursor = 'grabbing';
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging.current || !scrollRef.current) return;
+    e.preventDefault();
+    const x = e.pageX - scrollRef.current.offsetLeft;
+    const walk = x - dragStartX.current;
+    scrollRef.current.scrollLeft = dragScrollLeft.current - walk;
+  };
+
+  const handleMouseUp = () => {
+    isDragging.current = false;
+    if (scrollRef.current) scrollRef.current.style.cursor = 'grab';
   };
 
   if (!permanents.length) {
@@ -71,6 +62,9 @@ export default function PermanentsZone(prop: Displayrow) {
         ref={scrollRef}
         className={styles.permanentsInner}
         onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+        onMouseLeave={handleMouseUp}
       >
         <motion.div className={styles.permanentsZone} layout>
           <AnimatePresence>
