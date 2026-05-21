@@ -33,16 +33,6 @@ import { PanelProvider } from '../components/leftColumn/PanelContext';
 
 function Play({ isRoguelike }: { isRoguelike: boolean }) {
   usePageTitle('In Game');
-  const turnPhase = useAppSelector((state: any) => state.game.turnPhase?.turnPhase);
-  const isGameOver = turnPhase === 'OVER';
-
-  // Block window.open during active gameplay to prevent ad scripts from hijacking
-  useEffect(() => {
-    if (isGameOver) return;
-    const original = window.open.bind(window);
-    window.open = () => null;
-    return () => { window.open = original; };
-  }, [isGameOver]);
 
   // Always hide anchor ads while the game view is mounted
   useEffect(() => {
