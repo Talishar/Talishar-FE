@@ -27,12 +27,15 @@ export default function LeftColumn() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  const isSpectator = playerID === 3;
+
   return (
     <div className={styles.leftColumn}>
-      {(!isMobile || playerID === 3) && <PlayerName isPlayer={false} />}
+      {(!isMobile || isSpectator) && <PlayerName isPlayer={false} />}
       <ActiveEffects />
-      {(!isMobile || playerID === 3) && <PlayerName isPlayer={true} />}
+      {(!isMobile || isSpectator) && <PlayerName isPlayer={true} />}
       <ReplayPanel />
+      {!isMobile && <SpectatorCameraPanel />}
       <DevToolPanel />
     </div>
   );
