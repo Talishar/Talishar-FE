@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useRef } from 'react';
 import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import Displayrow from 'interface/Displayrow';
@@ -26,15 +26,25 @@ export default function PermanentsZone(prop: Displayrow) {
     selectPermanentsAsStack(state, isPlayer)
   );
 
-  useEffect(() => {
-    if (!permanents.length) return;
-    if (scrollCount < 0) {
-      setScrollCount(0);
-    }
-    if (scrollCount > permanents.length - 1) {
-      setScrollCount(permanents.length - 1);
-    }
-  }, [scrollCount, permanents.length]);
+  const handleMouseDown = (e: React.MouseEvent) => {
+    isDragging.current = true;
+    dragStartX.current = e.pageX - (scrollRef.current?.offsetLeft ?? 0);
+    dragScrollLeft.current = scrollRef.current?.scrollLeft ?? 0;
+    if (scrollRef.current) scrollRef.current.style.cursor = 'grabbing';
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging.current || !scrollRef.current) return;
+    e.preventDefault();
+    const x = e.pageX - scrollRef.current.offsetLeft;
+    const walk = x - dragStartX.current;
+    scrollRef.current.scrollLeft = dragScrollLeft.current - walk;
+  };
+
+  const handleMouseUp = () => {
+    isDragging.current = false;
+    if (scrollRef.current) scrollRef.current.style.cursor = 'grab';
+  };
 
   if (!permanents.length) {
     return (
@@ -51,15 +61,12 @@ export default function PermanentsZone(prop: Displayrow) {
   return (
     <div className={styles.permanentsWrapper}>
       <div
-        className={classNames(styles.scrollBack, styles.scrollWidget)}
-        onClick={() => {
-          if (scrollCount === 0) return;
-          setScrollCount(scrollCount - 1);
-        }}
-        onTouchStart={() => {
-          if (scrollCount === 0) return;
-          setScrollCount(scrollCount - 1);
-        }}
+        ref={scrollRef}
+        className={styles.permanentsInner}
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+        onMouseLeave={handleMouseUp}
       >
         <HiRewind />
       </div>
