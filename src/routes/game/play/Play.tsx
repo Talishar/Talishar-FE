@@ -40,82 +40,53 @@ function Play({ isRoguelike }: { isRoguelike: boolean }) {
   useEffect(() => {
     if (isGameOver) return;
 
-    const isExternal = (url: string) => {
+    const isSafe = (url: string) => {
       try {
-        return new URL(url, window.location.href).hostname !== window.location.hostname;
+        return new URL(url, window.location.href).hostname === window.location.hostname;
       } catch {
-        return false;
+        return true;
       }
     };
-
-    const sandboxIframe = (iframe: HTMLIFrameElement) => {
-      try {
-        const src = iframe.src || iframe.getAttribute('src') || '';
-        if (!src) return;
-        const host = new URL(src, window.location.href).hostname;
-        if (!host || host === window.location.hostname) return;
-        if (!iframe.hasAttribute('sandbox')) {
-          iframe.setAttribute(
-            'sandbox',
-            'allow-scripts allow-same-origin allow-popups allow-forms allow-presentation'
-          );
-        } else {
-          iframe.sandbox.remove('allow-top-navigation');
-          iframe.sandbox.remove('allow-top-navigation-by-user-activation');
-        }
-      } catch { /* malformed src — skip */ }
-    };
-    document.querySelectorAll('iframe').forEach(el => sandboxIframe(el as HTMLIFrameElement));
-    const iframeObserver = new MutationObserver(mutations => {
-      for (const m of mutations) {
-        for (const node of m.addedNodes) {
-          if (node instanceof HTMLIFrameElement) {
-            sandboxIframe(node);
-          } else if (node instanceof HTMLElement) {
-            node.querySelectorAll('iframe').forEach(el => sandboxIframe(el as HTMLIFrameElement));
-          }
-        }
-      }
-    });
-    iframeObserver.observe(document.documentElement, { childList: true, subtree: true });
-
-    const nav = (window as any).navigation;
-    const onNavigate = (event: any) => {
-      try { if (isExternal(event.destination.url)) event.preventDefault(); } catch { /* ignore */ }
-    };
-    nav?.addEventListener?.('navigate', onNavigate);
-
     const origOpen = window.open.bind(window);
     window.open = () => null;
 
     const locProto = Location.prototype;
     const assignDesc = Object.getOwnPropertyDescriptor(locProto, 'assign');
     if (assignDesc?.value) {
-      const orig = assignDesc.value;
-      try {
-        Object.defineProperty(locProto, 'assign', {
-          configurable: true, writable: true,
-          value(url: string) { if (!isExternal(url)) orig.call(this, url); },
-        });
-      } catch { /* ignore */ }
+      const origAssign = assignDesc.value;
+      Object.defineProperty(locProto, 'assign', {
+        configurable: true,
+        writable: true,
+        value(url: string) { if (isSafe(url)) origAssign.call(this, url); },
+      });
     }
+
     const replaceDesc = Object.getOwnPropertyDescriptor(locProto, 'replace');
     if (replaceDesc?.value) {
-      const orig = replaceDesc.value;
-      try {
-        Object.defineProperty(locProto, 'replace', {
-          configurable: true, writable: true,
-          value(url: string) { if (!isExternal(url)) orig.call(this, url); },
-        });
-      } catch { /* ignore */ }
+      const origReplace = replaceDesc.value;
+      Object.defineProperty(locProto, 'replace', {
+        configurable: true,
+        writable: true,
+        value(url: string) { if (isSafe(url)) origReplace.call(this, url); },
+      });
+    }
+
+    const hrefDesc = Object.getOwnPropertyDescriptor(locProto, 'href');
+    if (hrefDesc?.set) {
+      const origSet = hrefDesc.set;
+      Object.defineProperty(locProto, 'href', {
+        configurable: true,
+        enumerable: hrefDesc.enumerable,
+        get: hrefDesc.get,
+        set(url: string) { if (isSafe(url)) origSet.call(this, url); },
+      });
     }
 
     return () => {
-      iframeObserver.disconnect();
-      nav?.removeEventListener?.('navigate', onNavigate);
       window.open = origOpen;
-      try { if (assignDesc) Object.defineProperty(locProto, 'assign', assignDesc); } catch { /* ignore */ }
-      try { if (replaceDesc) Object.defineProperty(locProto, 'replace', replaceDesc); } catch { /* ignore */ }
+      if (assignDesc) Object.defineProperty(locProto, 'assign', assignDesc);
+      if (replaceDesc) Object.defineProperty(locProto, 'replace', replaceDesc);
+      if (hrefDesc) Object.defineProperty(locProto, 'href', hrefDesc);
     };
   }, [isGameOver]);
 
