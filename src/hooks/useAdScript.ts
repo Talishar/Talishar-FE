@@ -25,46 +25,64 @@ function isTrustedNavigation(rawUrl: string): boolean {
 
 let navGuardInstalled = false;
 let savedHrefDescriptor: PropertyDescriptor | null = null;
-let savedAssign: ((url: string) => void) | null = null;
-let savedReplace: ((url: string) => void) | null = null;
+let savedAssignDescriptor: PropertyDescriptor | null = null;
+let savedReplaceDescriptor: PropertyDescriptor | null = null;
 
 function installNavGuard() {
   if (navGuardInstalled) return;
 
   const locProto = window.Location.prototype;
-  savedHrefDescriptor = Object.getOwnPropertyDescriptor(locProto, 'href') ?? null;
 
+  savedHrefDescriptor = Object.getOwnPropertyDescriptor(locProto, 'href') ?? null;
   if (savedHrefDescriptor?.set) {
     const origSet = savedHrefDescriptor.set;
-    Object.defineProperty(locProto, 'href', {
-      get: savedHrefDescriptor.get,
-      set(url: string) {
-        if (isTrustedNavigation(url)) {
-          origSet.call(this, url);
-        } else {
-          console.warn('[Talishar] Ad guard blocked navigation to:', url);
-        }
-      },
-      configurable: true,
-      enumerable: savedHrefDescriptor.enumerable
-    });
+    try {
+      Object.defineProperty(locProto, 'href', {
+        get: savedHrefDescriptor.get,
+        set(url: string) {
+          if (isTrustedNavigation(url)) {
+            origSet.call(this, url);
+          } else {
+            console.warn('[Talishar] Ad guard blocked navigation to:', url);
+          }
+        },
+        configurable: true,
+        enumerable: savedHrefDescriptor.enumerable
+      });
+    } catch (_) {}
   }
 
-  try {
-    savedAssign = window.location.assign.bind(window.location);
-    window.location.assign = (url: string) => {
-      if (isTrustedNavigation(url)) savedAssign!(url);
-      else console.warn('[Talishar] Ad guard blocked assign to:', url);
-    };
-  } catch (_) {}
+  savedAssignDescriptor = Object.getOwnPropertyDescriptor(locProto, 'assign') ?? null;
+  if (savedAssignDescriptor?.value) {
+    const origAssign = savedAssignDescriptor.value;
+    try {
+      Object.defineProperty(locProto, 'assign', {
+        value(this: Location, url: string) {
+          if (isTrustedNavigation(url)) origAssign.call(this, url);
+          else console.warn('[Talishar] Ad guard blocked assign to:', url);
+        },
+        configurable: true,
+        writable: savedAssignDescriptor.writable,
+        enumerable: savedAssignDescriptor.enumerable
+      });
+    } catch (_) {}
+  }
 
-  try {
-    savedReplace = window.location.replace.bind(window.location);
-    window.location.replace = (url: string) => {
-      if (isTrustedNavigation(url)) savedReplace!(url);
-      else console.warn('[Talishar] Ad guard blocked replace to:', url);
-    };
-  } catch (_) {}
+  savedReplaceDescriptor = Object.getOwnPropertyDescriptor(locProto, 'replace') ?? null;
+  if (savedReplaceDescriptor?.value) {
+    const origReplace = savedReplaceDescriptor.value;
+    try {
+      Object.defineProperty(locProto, 'replace', {
+        value(this: Location, url: string) {
+          if (isTrustedNavigation(url)) origReplace.call(this, url);
+          else console.warn('[Talishar] Ad guard blocked replace to:', url);
+        },
+        configurable: true,
+        writable: savedReplaceDescriptor.writable,
+        enumerable: savedReplaceDescriptor.enumerable
+      });
+    } catch (_) {}
+  }
 
   navGuardInstalled = true;
 }
@@ -72,20 +90,29 @@ function installNavGuard() {
 function removeNavGuard() {
   if (!navGuardInstalled) return;
 
+  const locProto = window.Location.prototype;
+
   if (savedHrefDescriptor) {
     try {
-      Object.defineProperty(window.Location.prototype, 'href', savedHrefDescriptor);
+      Object.defineProperty(locProto, 'href', savedHrefDescriptor);
     } catch (_) {}
     savedHrefDescriptor = null;
   }
 
-  try {
-    if (savedAssign) window.location.assign = savedAssign;
-    if (savedReplace) window.location.replace = savedReplace;
-  } catch (_) {}
+  if (savedAssignDescriptor) {
+    try {
+      Object.defineProperty(locProto, 'assign', savedAssignDescriptor);
+    } catch (_) {}
+    savedAssignDescriptor = null;
+  }
 
-  savedAssign = null;
-  savedReplace = null;
+  if (savedReplaceDescriptor) {
+    try {
+      Object.defineProperty(locProto, 'replace', savedReplaceDescriptor);
+    } catch (_) {}
+    savedReplaceDescriptor = null;
+  }
+
   navGuardInstalled = false;
 }
 
