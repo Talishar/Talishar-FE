@@ -28,13 +28,8 @@
   min-width: 0;
   overflow-x: auto;
   overflow-y: clip;
-  cursor: grab;
   display: flex;
   align-items: flex-end;
-}
-
-.permanentsInner:active {
-  cursor: grabbing;
 }
 
 .permanentsInner::-webkit-scrollbar {
@@ -110,6 +105,11 @@
   aspect-ratio: 1;
   min-width: var(--card-size);
   flex-shrink: 0;
+  cursor: grab;
+}
+
+.cardContainer:active {
+  cursor: grabbing;
 }
 
 .stacked {
