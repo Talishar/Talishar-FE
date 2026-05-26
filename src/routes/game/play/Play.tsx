@@ -34,16 +34,20 @@ import { PanelProvider } from '../components/leftColumn/PanelContext';
 function Play({ isRoguelike }: { isRoguelike: boolean }) {
   usePageTitle('In Game');
 
-  // Always hide anchor ads while the game view is mounted
+  // Hide all floating ad overlays while in-game. Only the RightColumn ad slot
+  // should ever show ads during gameplay.
   useEffect(() => {
-    const ANCHOR_SELECTOR = '[data-ad="anchor"]';
-    const hideAnchors = () => {
-      document.querySelectorAll(ANCHOR_SELECTOR).forEach((el) => {
-        (el as HTMLElement).style.display = 'none';
+    const FLOATING_AD_SELECTOR =
+      '[data-ad="anchor"], [data-ad="video"], [id^="rev-"], [class*="revcontent"], [class*="rev-content"]';
+
+    const hideFloatingAds = () => {
+      document.querySelectorAll(FLOATING_AD_SELECTOR).forEach((el) => {
+        (el as HTMLElement).style.setProperty('display', 'none', 'important');
       });
     };
-    hideAnchors();
-    const observer = new MutationObserver(hideAnchors);
+
+    hideFloatingAds();
+    const observer = new MutationObserver(hideFloatingAds);
     observer.observe(document.documentElement, { childList: true, subtree: true });
     return () => observer.disconnect();
   }, []);

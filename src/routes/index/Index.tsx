@@ -34,6 +34,14 @@ const Index = () => {
 
   useEffect(() => {
     if (!showAds) return;
+
+    let videoDiv: HTMLDivElement | null = null;
+    if (!document.querySelector('[data-ad="video"]')) {
+      videoDiv = document.createElement('div');
+      videoDiv.setAttribute('data-ad', 'video');
+      document.body.appendChild(videoDiv);
+    }
+
     const ANCHOR_SELECTOR = '[data-ad="anchor"]';
     const hideAnchors = () => {
       document.querySelectorAll(ANCHOR_SELECTOR).forEach((el) => {
@@ -43,7 +51,10 @@ const Index = () => {
     hideAnchors();
     const observer = new MutationObserver(hideAnchors);
     observer.observe(document.documentElement, { childList: true, subtree: true });
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      videoDiv?.remove();
+    };
   }, [showAds]);
 
   const { data: systemMessageData } = useGetSystemMessageQuery(undefined, {
