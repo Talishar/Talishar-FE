@@ -13,8 +13,8 @@ import { useGetSystemMessageQuery } from 'features/api/apiSlice';
 import SystemMessageModal from 'components/SystemMessageModal/SystemMessageModal';
 import useAuth from 'hooks/useAuth';
 import useSupporterStatus from 'hooks/useSupporterStatus';
-import { AdUnit } from 'components/ads';
 import useAdScript from 'hooks/useAdScript';
+import { AdUnit } from 'components/ads';
 import TalisharLogo from '../../img/TalisharLogo.webp';
 import { BsChevronDown, BsChevronUp } from 'react-icons/bs';
 
@@ -31,6 +31,21 @@ const Index = () => {
     return `talishar_home_banner_hidden_v2_${currentUserName}`;
   }, [isLoggedIn, currentUserName]);
   useAdScript(showAds);
+
+  useEffect(() => {
+    if (!showAds) return;
+    const ANCHOR_SELECTOR = '[data-ad="anchor"]';
+    const hideAnchors = () => {
+      document.querySelectorAll(ANCHOR_SELECTOR).forEach((el) => {
+        (el as HTMLElement).style.display = 'none';
+      });
+    };
+    hideAnchors();
+    const observer = new MutationObserver(hideAnchors);
+    observer.observe(document.documentElement, { childList: true, subtree: true });
+    return () => observer.disconnect();
+  }, [showAds]);
+
   const { data: systemMessageData } = useGetSystemMessageQuery(undefined, {
     skip: !isLoggedIn
   });
