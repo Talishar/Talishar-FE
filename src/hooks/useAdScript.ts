@@ -211,7 +211,16 @@ export default function useAdScript(enabled: boolean = true) {
       document.body.appendChild(videoDiv);
     }
 
+    function isRevIqElement(el: HTMLElement): boolean {
+      return (
+        el.id.startsWith('rev-') ||
+        (typeof el.className === 'string' &&
+          (el.className.includes('revcontent') || el.className.includes('rev-content')))
+      );
+    }
+
     function clipOverlayToBottom(el: HTMLElement) {
+      if (!isRevIqElement(el)) return;
       requestAnimationFrame(() => {
         const cs = window.getComputedStyle(el);
         if (
@@ -235,7 +244,7 @@ export default function useAdScript(enabled: boolean = true) {
         }
       }
     });
-    adOverlayGuard.observe(document.body, { childList: true, subtree: true });
+    adOverlayGuard.observe(document.body, { childList: true });
 
     // Sandbox any ad iframes already present and watch for new ones.
     sandboxAdIframesIn(document);
