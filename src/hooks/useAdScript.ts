@@ -205,6 +205,12 @@ export default function useAdScript(enabled: boolean = true) {
       document.head.appendChild(script);
     }
 
+    if (!document.querySelector('[data-ad="video"]')) {
+      const videoDiv = document.createElement('div');
+      videoDiv.setAttribute('data-ad', 'video');
+      document.body.appendChild(videoDiv);
+    }
+
     // Sandbox any ad iframes already present and watch for new ones.
     sandboxAdIframesIn(document);
     const iframeGuard = new MutationObserver((mutations) => {

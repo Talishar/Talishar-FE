@@ -87,18 +87,6 @@
   }
 }
 
-.adSlot {
-  flex: 0 0 auto;
-  display: flex;
-  align-items: flex-end;
-  justify-content: flex-end;
-  order: 3;
-
-  @media (max-width: 768px) {
-    display: none;
-  }
-}
-
 .rightCol {
   background: transparent !important;
   flex: 1;
