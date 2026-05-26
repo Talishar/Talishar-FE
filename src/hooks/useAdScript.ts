@@ -205,38 +205,6 @@ export default function useAdScript(enabled: boolean = true) {
       document.head.appendChild(script);
     }
 
-    if (!document.querySelector('[data-ad="video"]')) {
-      const videoDiv = document.createElement('div');
-      videoDiv.setAttribute('data-ad', 'video');
-      document.body.appendChild(videoDiv);
-    }
-
-    function clipOverlayToBottom(el: HTMLElement) {
-      requestAnimationFrame(() => {
-        const cs = window.getComputedStyle(el);
-        if (
-          cs.position === 'fixed' &&
-          cs.top === '0px' &&
-          parseFloat(cs.width) > window.innerWidth * 0.5
-        ) {
-          el.style.setProperty('clip-path', 'inset(50% 0 0 0)', 'important');
-        }
-      });
-    }
-
-    const adOverlayGuard = new MutationObserver((mutations) => {
-      for (const mutation of mutations) {
-        for (const node of mutation.addedNodes) {
-          if (!(node instanceof HTMLElement)) continue;
-          clipOverlayToBottom(node);
-          node.querySelectorAll('div').forEach((child) =>
-            clipOverlayToBottom(child as HTMLElement)
-          );
-        }
-      }
-    });
-    adOverlayGuard.observe(document.body, { childList: true, subtree: true });
-
     // Sandbox any ad iframes already present and watch for new ones.
     sandboxAdIframesIn(document);
     const iframeGuard = new MutationObserver((mutations) => {
@@ -254,7 +222,6 @@ export default function useAdScript(enabled: boolean = true) {
 
     return () => {
       iframeGuard.disconnect();
-      adOverlayGuard.disconnect();
       removeNavGuard();
       purgeAdElements();
     };
