@@ -1,18 +1,10 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { AdUnit } from 'components/ads';
 import './AdsTest.css';
 
 const AdsTest: React.FC = () => {
-  useEffect(() => {
-    const script = document.createElement('script');
-    script.src = '//js.rev.iq/talishar.net';
-    script.async = true;
-    document.head.appendChild(script);
-
-    return () => {
-      document.head.removeChild(script);
-    };
-  }, []);
+  // Ad scripts are loaded inside each AdUnit's sandboxed iframe — no need
+  // to inject rev.iq into the main page anymore.
   return (
     <div className="ads-test-container">
       <header className="ads-test-header">
@@ -90,7 +82,7 @@ const AdsTest: React.FC = () => {
             <h2>In-Game Block Placements</h2>
             <div>
               <div className="ad-label">in-game-block</div>
-              <div data-ad="in-game-block" />
+              <AdUnit placement="in-game-block" />
             </div>
           </section>
 
@@ -98,7 +90,7 @@ const AdsTest: React.FC = () => {
             <h2>Video Ad Placements</h2>
             <div>
               <div className="ad-label">Rewarded Video Ad</div>
-              <div data-ad="video" />
+              <AdUnit placement="video" />
             </div>
           </section>
         </main>

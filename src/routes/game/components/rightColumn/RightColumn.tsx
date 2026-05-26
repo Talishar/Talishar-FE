@@ -11,7 +11,6 @@ import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import PlayerName from '../elements/playerName/PlayerName';
 import { AdUnit } from 'components/ads';
-import useAdScript from 'hooks/useAdScript';
 import useSupporterStatus from 'hooks/useSupporterStatus';
 import squareMemberCTA from '../../../../img/squareMemberCTA.webp';
 
@@ -26,7 +25,6 @@ export default function RightColumn() {
 
   const { isSupporter, isLoading } = useSupporterStatus();
   const showAds = !isLoading && !isSupporter;
-  useAdScript(showAds);
 
   return (
     <>
@@ -73,7 +71,7 @@ export default function RightColumn() {
               <a href="https://metafy.gg/@talishar/members" target="_blank" rel="noopener noreferrer">
                 <img src={squareMemberCTA} alt="Support Talishar" className={styles.ctaImage} />
               </a>
-              <div data-ad="in-game-block" className={styles.inGameBlockAd} />
+              <AdUnit placement="in-game-block" className={styles.inGameBlockAd} />
             </div>
           </div>
         )}
