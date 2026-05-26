@@ -9,13 +9,6 @@
   justify-content: center;
 }
 
-iframe.ad-unit {
-  border: 0;
-  background: transparent;
-  display: block;
-  color-scheme: normal;
-}
-
 /* Rail ad units (sidebar placements) */
 .ad-unit[data-ad^='left-rail'],
 .ad-unit[data-ad^='right-rail'] {
