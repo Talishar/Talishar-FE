@@ -29,7 +29,7 @@ export const AdUnit: React.FC<AdUnitProps> = ({
   return (
     <iframe
       src={`/ad-frame.html?placement=${encodeURIComponent(placement)}`}
-      sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox allow-forms"
+      sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-forms"
       className={`ad-unit ${className}`}
       data-ad={placement}
       title="Advertisement"
