@@ -231,6 +231,7 @@
 
 .leaveButton {
   font-size: 0.88rem;
+  font-weight: 600;
   padding: 0.45rem 1.1rem;
   margin: 0;
   white-space: nowrap;
@@ -239,6 +240,18 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: transparent;
+  color: rgba(255, 255, 255, 0.45);
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.leaveButton:hover {
+  border-color: rgba(220, 80, 80, 0.55);
+  color: rgba(240, 120, 120, 0.9);
+  background: rgba(200, 50, 50, 0.08);
 }
 
 /* ── Alarm row ────────────────────────────────── */
@@ -280,7 +293,12 @@
     gap: 0.75rem;
   }
 
-  .confirmButton {
+  .actionSection {
+    gap: 1.25rem;
+  }
+
+  .confirmButton,
+  .leaveButton {
     padding: 0.5rem 1.35rem;
   }
 }
