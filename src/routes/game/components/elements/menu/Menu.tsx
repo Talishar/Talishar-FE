@@ -245,7 +245,7 @@ function MenuContent() {
 
 export default function Menu() {
   return (
-    <ButtonDisableProvider disableDuration={2000}>
+    <ButtonDisableProvider disableDuration={1000}>
       <MenuContent />
     </ButtonDisableProvider>
   );
