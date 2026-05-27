@@ -67,11 +67,13 @@ export default function RightColumn() {
               </a>
             </div>
             <div className={styles.adWrapper}>
-              <a href="https://metafy.gg/@talishar/members" target="_blank" rel="noopener noreferrer" className={styles.ctaFallback}>
+              <AdUnit placement="right-rail-1" />
+            </div>
+            <div className={styles.ctaWrapper}>
+              <a href="https://metafy.gg/@talishar/members" target="_blank" rel="noopener noreferrer">
                 <img src={squareMemberCTA} alt="Support Talishar" className={styles.ctaImage} />
               </a>
-              <AdUnit placement="right-rail-1" className={styles.adOverlay} />
-              <div data-ad="in-game-block" className={styles.adOverlay} />
+              <div data-ad="in-game-block" className={styles.inGameBlockAd} />
             </div>
           </div>
         )}
