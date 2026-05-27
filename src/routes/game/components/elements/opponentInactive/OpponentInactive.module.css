@@ -60,6 +60,12 @@
   letter-spacing: 0.05em;
 }
 
+.leaveButton:hover {
+  background-color: transparent;
+  color: var(--theme-alarm, #c62828);
+  border: 1px solid var(--theme-alarm, #c62828);
+}
+
 .leaveButton:disabled {
   opacity: 0.5;
   cursor: not-allowed;
