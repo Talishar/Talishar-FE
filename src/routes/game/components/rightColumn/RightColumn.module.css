@@ -137,23 +137,6 @@
   color: rgba(255, 255, 255, 0.55);
 }
 
-/* 300×250 ad — shown on wide columns, overflows if needed */
-.adWrapper {
-  width: 300px;
-  height: 250px;
-  flex-shrink: 0;
-  overflow: visible;
-  position: relative;
-  background: rgba(255, 255, 255, 0.04);
-  border-radius: 4px;
-}
-
-.adWrapper :global(.ad-unit) {
-  width: 300px !important;
-  height: 250px !important;
-  margin: 0 !important;
-}
-
 /* CTA — always visible, reserves space before ad network injects content */
 .ctaWrapper {
   display: flex;
@@ -175,8 +158,11 @@
 
 /* Ad overlays the CTA image — when it loads it covers the fallback */
 .inGameBlockAd {
-  position: absolute;
+  position: absolute !important;
   inset: 0;
+  width: 100% !important;
+  height: 100% !important;
+  margin: 0 !important;
 }
 
 .removeAdsLink {
@@ -192,16 +178,3 @@
   text-decoration: underline;
 }
 
-/* Wide column (>=300px): show 300×250 rail ad above the CTA */
-@container right-column (min-width: 300px) {
-  .adWrapper {
-    display: block;
-  }
-}
-
-/* Narrow column (<300px): hide rail ad, CTA still always shown */
-@container right-column (max-width: 299px) {
-  .adWrapper {
-    display: none;
-  }
-}
