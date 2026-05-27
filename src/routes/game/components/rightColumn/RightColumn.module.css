@@ -137,32 +137,22 @@
   color: rgba(255, 255, 255, 0.55);
 }
 
-/* 300×250 ad — shown on wide columns, overflows if needed */
+/* Ad slot with CTA fallback — CTA visible until an ad fills the overlay */
 .adWrapper {
-  width: 300px;
-  height: 250px;
+  width: 100%;
   flex-shrink: 0;
   overflow: visible;
   position: relative;
-  background: rgba(255, 255, 255, 0.04);
   border-radius: 4px;
-}
-
-.adWrapper :global(.ad-unit) {
-  width: 300px !important;
-  height: 250px !important;
-  margin: 0 !important;
-}
-
-/* CTA — always visible, reserves space before ad network injects content */
-.ctaWrapper {
   display: flex;
-  flex-shrink: 0;
   align-items: center;
   justify-content: center;
-  min-height: 250px;
+}
+
+/* CTA fills the wrapper; ads overlay it absolutely so they cover it when filled */
+.ctaFallback {
+  display: block;
   width: 100%;
-  position: relative;
 }
 
 .ctaImage {
@@ -171,12 +161,15 @@
   max-width: 250px;
   height: auto;
   border-radius: 4px;
+  margin: 0 auto;
 }
 
-/* Ad overlays the CTA image — when it loads it covers the fallback */
-.inGameBlockAd {
-  position: absolute;
+/* Ad slots sit on top — when rev.iq fills them they cover the CTA */
+.adOverlay {
+  position: absolute !important;
   inset: 0;
+  width: 100% !important;
+  height: 100% !important;
 }
 
 .removeAdsLink {
@@ -192,16 +185,3 @@
   text-decoration: underline;
 }
 
-/* Wide column (>=300px): show 300×250 rail ad above the CTA */
-@container right-column (min-width: 300px) {
-  .adWrapper {
-    display: block;
-  }
-}
-
-/* Narrow column (<300px): hide rail ad, CTA still always shown */
-@container right-column (max-width: 299px) {
-  .adWrapper {
-    display: none;
-  }
-}
