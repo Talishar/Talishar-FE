@@ -9,7 +9,7 @@ import CardPopUp from '../cardPopUp/CardPopUp';
 import CombatChainLink from 'features/CombatChainLink';
 import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
-import { useState, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { useLanguageSelector } from 'hooks/useLanguageSelector';
 import { CARD_SQUARES_PATH, getCollectionCardImagePath } from 'utils';
 
@@ -24,6 +24,7 @@ export interface CardProp {
   isPlayer?: boolean;
   isShuffling?: boolean;
   showCountersOnHover?: boolean;
+  children?: React.ReactNode;
 }
 
 export const CardDisplay = (prop: CardProp) => {
@@ -34,7 +35,8 @@ export const CardDisplay = (prop: CardProp) => {
     num,
     isPlayer,
     isShuffling,
-    showCountersOnHover
+    showCountersOnHover,
+    children
   } = prop;
   const dispatch = useAppDispatch();
   const cardBack = useAppSelector((state: RootState) =>
@@ -183,6 +185,7 @@ export const CardDisplay = (prop: CardProp) => {
         num={num}
         activeCombatChain={activeCombatChain}
       />
+      {children}
     </CardPopUp>
   );
 };

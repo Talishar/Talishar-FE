@@ -14,6 +14,29 @@ import {
 } from 'utils/ParseEscapedString';
 import { BiTargetLock } from 'react-icons/bi';
 import Button from '../../../../../features/Button';
+import { Card } from 'features/Card';
+
+const GROUPING_THRESHOLD = 3;
+
+interface CardGroup {
+  cards: Card[];
+  isPlayer: boolean;
+}
+
+// Group cards that share the same cardNumber if there are more than GROUPING_THRESHOLD of them in a row
+function groupConsecutiveCards(cards: Card[], playerID: number): CardGroup[] {
+  const groups: CardGroup[] = [];
+  for (const card of cards) {
+    const isPlayer = playerID === card.controller;
+    const last = groups[groups.length - 1];
+    if (last && last.cards[0].cardNumber === card.cardNumber) {
+      last.cards.push(card);
+    } else {
+      groups.push({ cards: [card], isPlayer });
+    }
+  }
+  return groups;
+}
 
 export default function ActiveLayersZone() {
   const showModal = useShowModal();
@@ -95,9 +118,30 @@ export default function ActiveLayersZone() {
           </div>
           <div className={styles.activeLayersContents}>
             {staticCards &&
-              staticCards.map((card, ix) => {
-                const isPlayer = playerID === card.controller;
-                return <CardDisplay card={card} key={ix} isPlayer={isPlayer} />;
+              groupConsecutiveCards(staticCards, playerID).map((group, groupIx) => {
+                if (group.cards.length > GROUPING_THRESHOLD) {
+                  return (
+                    <div key={groupIx} className={styles.groupedCardWrapper}>
+                      <CardDisplay
+                        card={group.cards[0]}
+                        isPlayer={group.isPlayer}
+                      >
+                        <div className={styles.groupedCardCount}>
+                          <span className={styles.groupedCardCountBadge}>
+                            ×{group.cards.length}
+                          </span>
+                        </div>
+                      </CardDisplay>
+                    </div>
+                  );
+                }
+                return group.cards.map((card, cardIx) => (
+                  <CardDisplay
+                    card={card}
+                    key={`${groupIx}-${cardIx}`}
+                    isPlayer={group.isPlayer}
+                  />
+                ));
               })}
             <ReorderLayers cards={reorderableCards ?? []} />
           </div>

@@ -6,20 +6,17 @@ import { BsChatFill } from 'react-icons/bs';
 import { toggleChatModal } from 'features/game/GameSlice';
 import classNames from 'classnames';
 import ChatBoxMobile from '../../../elements/chatBox/ChatBoxMobile';
-import { useButtonDisableContext } from 'contexts/ButtonDisableContext';
 
 const ShowMobileChat = () => {
   const showChatModal = useAppSelector((state) => state.game.showChatModal);
   const unreadChatCount = useAppSelector((state) => state.game.unreadChatCount ?? 0);
   const dispatch = useAppDispatch();
-  const { isDisabled, triggerDisable } = useButtonDisableContext();
 
   const handleClickShowMobileChatToggle = (
     e: React.MouseEvent<HTMLButtonElement>
   ) => {
     e.preventDefault();
     e.currentTarget.blur();
-    triggerDisable();
     dispatch(toggleChatModal());
   };
 
@@ -37,7 +34,6 @@ const ShowMobileChat = () => {
             aria-label="Show Chat"
             onClick={handleClickShowMobileChatToggle}
             data-placement="bottom"
-            disabled={isDisabled}
           >
             <BsChatFill aria-hidden="true" />
           </button>

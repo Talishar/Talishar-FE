@@ -125,6 +125,34 @@
   align-items: center;
 }
 
+.groupedCardWrapper {
+  flex-shrink: 0;
+  position: relative;
+  display: inline-flex;
+}
+
+.groupedCardCount {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.groupedCardCountBadge {
+  background-color: rgba(0, 0, 0, 0.75);
+  color: white;
+  font-weight: bold;
+  font-size: 1em;
+  line-height: 1;
+  padding: 4px 9px;
+  border-radius: 10px;
+  white-space: nowrap;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.8);
+}
+
 @media only screen and (max-width: 768px) {
   .activeLayersBox {
     min-width: min(70dvw, 320px);
