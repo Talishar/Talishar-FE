@@ -426,9 +426,7 @@
   }
 
   .manualModeTab {
-    width: 2.5rem;
-    height: 2.5rem;
-    font-size: 0.75rem;
+    display: none;
   }
 
   .content {
