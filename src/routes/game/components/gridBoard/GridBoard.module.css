@@ -458,3 +458,15 @@
   margin: auto;
   pointer-events: all;
 }
+
+@media (max-width: 600px) {
+  .playerPromptWrapper > div {
+    width: 90%;
+  }
+}
+
+@media (max-width: 600px) and (orientation: portrait) {
+  .playerPromptWrapper {
+    bottom: 4px;
+  }
+}

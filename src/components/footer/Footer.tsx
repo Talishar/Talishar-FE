@@ -27,6 +27,11 @@ const Footer = () => {
             )}
           </div>
 
+          {!isSupporter && (
+            <div className={styles.adSlot}>
+              <div data-ad="video" />
+            </div>
+          )}
           <div className={styles.rightCol}>
             <div className={styles.navRow}>
               <nav className={styles.navLinks} aria-label="Footer navigation">

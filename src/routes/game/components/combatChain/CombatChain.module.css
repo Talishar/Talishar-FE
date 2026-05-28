@@ -89,7 +89,7 @@
 
 @media (orientation: portrait) {
   .combatChain {
-    height: 12em;
+    height: 13em;
   }
 
   .chainCentre {
@@ -145,7 +145,7 @@
   align-items: center;
   justify-content: center;
   width: fit-content;
-  height: fit-content;
+  align-self: stretch;
   min-width: 2em;
   min-height: 2em;
   border-radius: 5px;

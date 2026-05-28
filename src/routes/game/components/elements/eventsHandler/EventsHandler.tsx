@@ -119,7 +119,7 @@ export const EventsHandler = React.memo(() => {
             requestAnimationFrame(() => {
               setTimeout(() => {
                 dispatch(setClashReveal({ playerId: null, cardNumber: '' }));
-              }, 5600);
+              }, 7600);
             });
             continue;
           }

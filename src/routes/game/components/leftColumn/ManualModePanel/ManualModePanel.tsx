@@ -13,7 +13,7 @@ import { usePanelContext } from '../PanelContext';
 
 export default function ManualModePanel() {
   const [isOpen, setIsOpen] = useState(false);
-  const { setIsManualModeOpen, isDevToolOpen } = usePanelContext();
+  const { setIsManualModeOpen, isDevToolOpen, isManualModeOpen } = usePanelContext();
   const isManualMode = useSetting({ settingName: MANUAL_MODE })?.value === '1';
   const isLocalEnvironment =
     import.meta.env.MODE === 'development' ||
@@ -27,6 +27,10 @@ export default function ManualModePanel() {
       setIsOpen(true);
     }
   }, [isManualMode]);
+
+  useEffect(() => {
+    setIsOpen(isManualModeOpen);
+  }, [isManualModeOpen]);
 
   // In local environment, always show the tab. In production, hide if manual mode is off (unless against Practice Dummy)
   if (!isLocalEnvironment && !isManualMode && !isPracticeDummy) {

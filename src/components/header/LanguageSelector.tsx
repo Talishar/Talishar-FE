@@ -51,8 +51,7 @@ const LanguageSelector = ({ inDropdown = false }: { inDropdown?: boolean }) => {
           onClick={() => setIsOpen(!isOpen)}
           aria-label={t('HEADER.LANGUAGE_SELECTOR.LANGUAGES')}
         >
-	  { inDropdown ? 
-            <BsTranslate /> : '' }
+          <BsTranslate />
           <span className={styles.label}>
             {t('HEADER.LANGUAGE_SELECTOR.LANGUAGE')}
           </span>

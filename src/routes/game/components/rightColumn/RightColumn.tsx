@@ -66,13 +66,11 @@ export default function RightColumn() {
                 Remove ads
               </a>
             </div>
-            <div className={styles.adWrapper}>
-              <AdUnit placement="right-rail-1" />
-            </div>
             <div className={styles.ctaWrapper}>
               <a href="https://metafy.gg/@talishar/members" target="_blank" rel="noopener noreferrer">
                 <img src={squareMemberCTA} alt="Support Talishar" className={styles.ctaImage} />
               </a>
+              <AdUnit placement="right-rail-1" className={styles.inGameBlockAd} />
               <div data-ad="in-game-block" className={styles.inGameBlockAd} />
             </div>
           </div>

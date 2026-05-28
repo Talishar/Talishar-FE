@@ -4,7 +4,7 @@ import screenfull from 'screenfull';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { submitButton, setSpectatorCameraView } from 'features/game/GameSlice';
 import { GiExpand } from 'react-icons/gi';
-import { FaUndo, FaEllipsisH, FaExchangeAlt } from 'react-icons/fa';
+import { FaUndo, FaEllipsisH, FaExchangeAlt, FaWrench } from 'react-icons/fa';
 import { MdInventory2 } from 'react-icons/md';
 import styles from './Menu.module.css';
 import { DEFAULT_SHORTCUTS, PROCESS_INPUT } from 'appConstants';
@@ -22,6 +22,9 @@ import {
   useButtonDisableContext
 } from 'contexts/ButtonDisableContext';
 import { RootState } from 'app/Store';
+import { usePanelContext } from '../../leftColumn/PanelContext';
+import useSetting from 'hooks/useSetting';
+import { MANUAL_MODE } from 'features/options/constants';
 
 function FullScreenButton() {
   function toggleFullScreen() {
@@ -100,6 +103,15 @@ function MobileOverflowMenu({ isSpectator }: { isSpectator: boolean }) {
   const [open, setOpen] = useState(false);
   const [panelStyle, setPanelStyle] = useState<React.CSSProperties>({});
   const btnRef = useRef<HTMLButtonElement>(null);
+  const { setIsManualModeOpen, isManualModeOpen } = usePanelContext();
+  const isManualMode = useSetting({ settingName: MANUAL_MODE })?.value === '1';
+  const isLocalEnvironment =
+    import.meta.env.MODE === 'development' ||
+    window.location.hostname === 'localhost';
+  const isPracticeDummy = useAppSelector(
+    (state: RootState) => state.game.playerTwo.Name === 'Practice Dummy'
+  );
+  const showManualMode = !isSpectator && (isLocalEnvironment || isManualMode || isPracticeDummy);
 
   const toggleFullScreen = () => {
     screenfull.toggle();
@@ -116,6 +128,11 @@ function MobileOverflowMenu({ isSpectator }: { isSpectator: boolean }) {
       });
     }
     setOpen((v) => !v);
+  };
+
+  const handleManualMode = () => {
+    setIsManualModeOpen(!isManualModeOpen);
+    setOpen(false);
   };
 
   return (
@@ -142,6 +159,11 @@ function MobileOverflowMenu({ isSpectator }: { isSpectator: boolean }) {
               />
             </div>
             {!isSpectator && <Inventory buttonClassName={styles.overflowItem} showLabel />}
+            {showManualMode && (
+              <button className={styles.overflowItem} onClick={handleManualMode}>
+                <FaWrench aria-hidden="true" /> Manual Mode
+              </button>
+            )}
             <button className={styles.overflowItem} onClick={toggleFullScreen}>
               <GiExpand aria-hidden="true" /> Fullscreen
             </button>
@@ -245,7 +267,7 @@ function MenuContent() {
 
 export default function Menu() {
   return (
-    <ButtonDisableProvider disableDuration={2000}>
+    <ButtonDisableProvider disableDuration={1000}>
       <MenuContent />
     </ButtonDisableProvider>
   );

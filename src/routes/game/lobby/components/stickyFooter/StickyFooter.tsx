@@ -110,7 +110,7 @@ const StickyFooter = ({
   };
 
   const wrapperClass = classNames(styles.dynamicContainer, 'container');
-  const leaveClass = classNames(styles.leaveButton, 'outline secondary');
+  const leaveClass = styles.leaveButton;
 
   const deckMetaText = isConfirmEnabled
     ? `/${deckSize}\u00a0\u00b7\u00a0\u2713\u00a0ready`

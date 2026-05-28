@@ -1,7 +1,7 @@
 .playerPrompt {
   background-color: var(--near-black);
   border-width: 1px;
-  border-radius: 5px;
+  border-radius: 10px;
   border-color: var(--theme-primary);
   border-style: solid;
   color: var(--white);
@@ -13,7 +13,7 @@
   position: relative;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: stretch;
   transition: width 0.5s;
   flex-wrap: nowrap;
   font-size: 1.2em;
@@ -27,10 +27,8 @@
 
 .content {
   display: flex;
-  align-items: row;
-  align-content: center;
+  align-items: center;
   justify-content: center;
-  justify-items: center;
 }
 
 .buttonDiv {
@@ -45,6 +43,7 @@
   border-radius: 5px;
   border: 1px solid black;
   flex: 1 1 auto;
+  align-self: stretch;
   padding: 0.4em 1em;
   margin-left: 0.5em;
   white-space: nowrap;
@@ -61,7 +60,7 @@
 
 @media (orientation: portrait) {
   .playerPrompt {
-    font-size: 0.85em;
+    font-size: 1.2em;
     max-height: 4.5em;
     overflow: hidden;
   }
@@ -74,9 +73,52 @@
   }
 }
 
-@media (max-width: 480px) {
+/* Tablet: single row with proper button height */
+@media (max-width: 1024px) and (min-width: 601px) {
   .playerPrompt {
-    font-size: 0.75em;
-    max-height: 4em;
+    font-size: 1.2em;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 4px;
+    padding: 4px 6px;
+  }
+
+  .buttonDiv {
+    min-width: 0;
+    min-height: 2.4em;
+    padding: 0.4em 0.6em;
+    margin-left: 0;
+    white-space: nowrap;
+    font-size: 0.95em;
+  }
+}
+
+/* Mobile: single row, shrink to fit */
+@media (max-width: 600px) {
+  .playerPrompt {
+    font-size: 1.2em;
+    max-height: none;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 4px;
+    padding: 4px 6px;
+    margin-bottom: env(safe-area-inset-bottom, 4px);
+  }
+
+  .buttonDiv {
+    min-width: 0;
+    min-height: 2.4em;
+    font-size: 0.95em;
+    padding: 0.4em 0.5em;
+    margin-left: 0;
+    white-space: nowrap;
+  }
+}
+
+/* Very small phones (320px and under) */
+@media (max-width: 360px) {
+  .playerPrompt {
+    font-size: 1.1em;
+    padding: 4px 4px;
   }
 }

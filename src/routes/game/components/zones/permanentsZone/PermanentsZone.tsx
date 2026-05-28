@@ -43,7 +43,7 @@ export default function PermanentsZone(prop: Displayrow) {
 
   const handleMouseUp = () => {
     isDragging.current = false;
-    if (scrollRef.current) scrollRef.current.style.cursor = 'grab';
+    if (scrollRef.current) scrollRef.current.style.cursor = '';
   };
 
   if (!permanents.length) {
