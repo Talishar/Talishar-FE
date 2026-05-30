@@ -27,9 +27,11 @@ import * as optConst from 'features/options/constants';
 import styles from './settings.module.css';
 import ThemeToggle from 'themes/ThemeToggle';
 import LanguageSelector from 'components/LanguageSelector/LanguageSelector';
+import { useTheme } from 'themes/ThemeContext';
 
 const SettingsPage = () => {
   usePageTitle('Settings');
+  const { setTransparency } = useTheme();
   const settingsData = useAppSelector(getSettingsEntity);
   const currentUserID = useAppSelector(selectCurrentUser);
   const dispatch = useAppDispatch();
@@ -415,7 +417,10 @@ const SettingsPage = () => {
               label="Transparency"
               currentValue={cookies.transparencyIntensity ?? 1}
               presets={transparencyPresets}
-              onChange={(value) => setCookie('transparencyIntensity', value)}
+              onChange={(value) => {
+                setCookie('transparencyIntensity', value);
+                setTransparency(value);
+              }}
             />
 
             <VisualSlider

@@ -27,8 +27,10 @@ import useWindowDimensions from 'hooks/useWindowDimensions';
 import ThemeToggle from 'themes/ThemeToggle';
 import LanguageSelector from 'components/LanguageSelector/LanguageSelector';
 import { RootState } from 'app/Store';
+import { useTheme } from 'themes/ThemeContext';
 
 const OptionsSettings = () => {
+  const { setTransparency } = useTheme();
   const gameInfo = useAppSelector(getGameInfo, shallowEqual);
   const settingsData = useAppSelector(getSettingsEntity);
   const isLoading = useAppSelector(getSettingsStatus);
@@ -440,7 +442,10 @@ const OptionsSettings = () => {
           label="Transparency"
           currentValue={cookies.transparencyIntensity ?? 1}
           presets={transparencyPresets}
-          onChange={(value) => setCookie('transparencyIntensity', value)}
+          onChange={(value) => {
+            setCookie('transparencyIntensity', value);
+            setTransparency(value);
+          }}
         />
 
         <VisualSlider
