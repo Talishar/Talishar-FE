@@ -30,15 +30,21 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
   });
 
   const [transparency, setTransparencyState] = useState<number>(() => {
-    // Load transparency from localStorage or default to 0.98
     const saved = localStorage.getItem('talishar-transparency');
-    return saved ? parseFloat(saved) : 0.98;
+    if (saved) return parseFloat(saved);
+    const cookieMatch = document.cookie.match(/transparencyIntensity=([^;]+)/);
+    if (cookieMatch) return parseFloat(cookieMatch[1]);
+    return 0.98;
   });
 
   const [currentTheme, setCurrentTheme] = useState<Theme>(() => {
     const savedThemeId = localStorage.getItem('talishar-theme') || 'dark';
     const savedTransparency = localStorage.getItem('talishar-transparency');
-    const trans = savedTransparency ? parseFloat(savedTransparency) : 0.98;
+    let trans = savedTransparency ? parseFloat(savedTransparency) : null;
+    if (trans === null) {
+      const cookieMatch = document.cookie.match(/transparencyIntensity=([^;]+)/);
+      trans = cookieMatch ? parseFloat(cookieMatch[1]) : 0.98;
+    }
     return getThemeById(savedThemeId, trans);
   });
 
