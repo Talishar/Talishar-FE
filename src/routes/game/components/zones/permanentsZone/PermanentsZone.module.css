@@ -30,6 +30,7 @@
   overflow-y: clip;
   display: flex;
   align-items: flex-end;
+  padding: 4px;
 }
 
 .permanentsInner::-webkit-scrollbar {
