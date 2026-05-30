@@ -1,7 +1,6 @@
 import React from 'react';
 import styles from './PriorityControl.module.css';
-import SkipAttackReactionsToggle from './SkipAttackReactions/SkipAttackReactionsToggle';
-import SkipDefenseReactionsToggle from './SkipDefenseReactions/SkipDefenseReactionsToggle';
+import SkipReactionsToggle from './SkipReactions/SkipReactionsToggle';
 import SkipAllAttacksToggle from './SkipAllAttacks/SkipAllAttacksToggle';
 import FullControlToggle from '../menu/FullControlToggle/FullControlToggle';
 import AlwaysPassToggle from '../menu/AlwaysPassToggle/AlwaysPassToggle';
@@ -14,8 +13,7 @@ export default function PriorityControl() {
         <div className={styles.menuList}>
           <FullControlToggle btnClass={styles.btn} activeBtnClass={styles.buttonActive} />
           <AlwaysPassToggle btnClass={styles.btn} activeBtnClass={styles.buttonActive} />
-          <SkipAttackReactionsToggle />
-          <SkipDefenseReactionsToggle />
+          <SkipReactionsToggle />
           <SkipAllAttacksToggle />
         </div>
       </div>
