@@ -76,19 +76,23 @@ function Play({ isRoguelike }: { isRoguelike: boolean }) {
   }, [gameInfo.gameID, dispatch]);
 
   const turnNo = useAppSelector((state: any) => state.game.gameDynamicInfo?.turnNo);
+  const turnPlayer = useAppSelector((state: any) => state.game.turnPlayer);
   const prevTurnNoRef = useRef<number | undefined>(undefined);
+  const prevTurnPlayerRef = useRef<number | undefined>(undefined);
   useEffect(() => {
     if (prevTurnNoRef.current === undefined) {
       prevTurnNoRef.current = turnNo;
+      prevTurnPlayerRef.current = turnPlayer;
       return;
     }
-    if (turnNo !== prevTurnNoRef.current) {
+    if (turnNo !== prevTurnNoRef.current || turnPlayer !== prevTurnPlayerRef.current) {
       prevTurnNoRef.current = turnNo;
+      prevTurnPlayerRef.current = turnPlayer;
       dispatch(settingUpdated({ name: SHORTCUT_ATTACK_THRESHOLD, value: '0' }));
       dispatch(settingUpdated({ name: SKIP_AR_WINDOW, value: '0' }));
       dispatch(settingUpdated({ name: SKIP_DR_WINDOW, value: '0' }));
     }
-  }, [turnNo, dispatch]);
+  }, [turnNo, turnPlayer, dispatch]);
 
   // Dispatch hero info once game state is fully populated
   useEffect(() => {
