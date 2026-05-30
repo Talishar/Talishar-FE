@@ -29,6 +29,9 @@ export default function PlayerHand() {
   const playerID = useAppSelector(
     (state: RootState) => state.game.gameInfo.playerID
   );
+  const isReplay = useAppSelector(
+    (state: RootState) => state.game.gameInfo.isReplay
+  );
 
   const [playedCards, setPlayedCards] = useState<String[]>([]);
 
@@ -448,7 +451,7 @@ export default function PlayerHand() {
   lengthOfCards += playableGraveyardCards?.length ?? 0;
   lengthOfCards += playableTheirBanishedCards?.length ?? 0;
 
-  if (playerID === 3) {
+  if (playerID === 3 || isReplay) {
     return <></>;
   }
 
