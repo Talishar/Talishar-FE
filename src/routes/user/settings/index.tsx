@@ -385,7 +385,7 @@ const SettingsPage = () => {
 
             <CheckboxSetting
               name="alwaysShowCounters"
-              label="Always Show Counters on Cards"
+              label="Always Show Counters on zones"
               checked={initialValues.alwaysShowCounters}
               onChange={() =>
                 handleSettingsChange({
