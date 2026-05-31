@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
 
-const CARDRE = /{{(.+?)\|(.+?)(?:\|(.+?))?}}/g;
+const CARDRE = /{{(.+?)\|(.+?)(?:\|(.+?))?(?:\|(.+?))?}}/g;
 
 const COLOR_MAPPING: { [key: string]: string } = {
   '0': '#999999',
@@ -134,7 +134,7 @@ export const parseHtmlToReactElements = (htmlString: string): ReactNode => {
   // Replace {{cardID|cardName|colorCode}} with a unique placeholder
   const processedHtml = htmlString.replace(
     CARDRE,
-    (match, cardID, cardName, colorCode = '0') => {
+    (match, cardID, cardName, colorCode = '0', hoverCardID?: string) => {
       const placeholder = `__CARD_${cardIndex}__`;
 
       // Check if this is an element reference (cardID === 'element')
@@ -158,16 +158,19 @@ export const parseHtmlToReactElements = (htmlString: string): ReactNode => {
           styleObj.color = elementStyle.color;
         }
 
-        cardElements.push(
-          React.createElement(
-            'span',
-            {
-              key: `element-${cardIndex}`,
-              style: styleObj
-            },
-            cardName
-          )
-        );
+        const elementProps: any = {
+          key: `element-${cardIndex}`,
+          style: styleObj
+        };
+
+        if (hoverCardID) {
+          const imgPath = `./WebpImages/${hoverCardID}.webp`;
+          elementProps.onMouseOver = (e: React.MouseEvent<HTMLSpanElement>) =>
+            handleCardMouseOver(e, imgPath);
+          elementProps.onMouseOut = handleCardMouseOut;
+        }
+
+        cardElements.push(React.createElement('span', elementProps, cardName));
       } else {
         // Regular card reference
         const color = COLOR_MAPPING[colorCode];
