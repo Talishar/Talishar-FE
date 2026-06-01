@@ -807,6 +807,11 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
     numKatsuDiscard += data.cardResults[i].katsuDiscard;
   }
 
+  let numDiscarded: number = 0;
+  for (let i = 0; i < (data.cardResults?.length ?? 0); i++) {
+    numDiscarded += data.cardResults[i].discarded;
+  }
+
   return (
     <div className={styles.endGameStats} data-testid="test-stats">
       <div ref={statsRef} className={styles.statsContent}>
@@ -839,6 +844,12 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                 <span className={styles.keyStatValue}>{stats.totalDamageBlocked ?? 0}</span>
                 <span className={styles.keyStatLabel}>Damage Blocked</span>
               </div>
+              {(stats.totalDamagePrevented ?? 0) > 0 && (
+                <div className={styles.keyStat}>
+                  <span className={styles.keyStatValue}>{stats.totalDamagePrevented}</span>
+                  <span className={styles.keyStatLabel}>Damage Prevented</span>
+                </div>
+              )}
             </div>
 
             <hr className={styles.statsDivider} />
@@ -948,14 +959,16 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                 </span>
               </div>
 
-              <div className={styles.infoRow}>
-                <span className={styles.infoLabel}>
-                  Total Damage Prevented:
-                </span>
-                <span className={styles.infoValue}>
-                  {stats.totalDamagePrevented}
-                </span>
-              </div>
+              {(stats.totalDamagePrevented ?? 0) > 0 && (
+                <div className={styles.infoRow}>
+                  <span className={styles.infoLabel}>
+                    Total Damage Prevented:
+                  </span>
+                  <span className={styles.infoValue}>
+                    {stats.totalDamagePrevented}
+                  </span>
+                </div>
+              )}
 
               {!!stats.totalLifeGained && (
                 <div className={styles.infoRow}>
@@ -1133,15 +1146,17 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                       {sortField === 'pitched' &&
                         (sortDirection === 'desc' ? '↓' : '↑')}
                     </th>
-                    <th
-                      className={`${styles.headersStats} ${styles.sortableHeader} ${styles.headerGroupSeparator}`}
-                      onClick={() => handleSort('discarded')}
-                      title="Click to sort"
-                    >
-                      Discarded{' '}
-                      {sortField === 'discarded' &&
-                        (sortDirection === 'desc' ? '↓' : '↑')}
-                    </th>
+                    {numDiscarded > 0 && (
+                      <th
+                        className={`${styles.headersStats} ${styles.sortableHeader} ${styles.headerGroupSeparator}`}
+                        onClick={() => handleSort('discarded')}
+                        title="Click to sort"
+                      >
+                        Discarded{' '}
+                        {sortField === 'discarded' &&
+                          (sortDirection === 'desc' ? '↓' : '↑')}
+                      </th>
+                    )}
                     <th
                       className={`${styles.headersStats} ${styles.sortableHeader} ${styles.headerGroupSeparator}`}
                       onClick={() => handleSort('hits')}
@@ -1206,9 +1221,11 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                           <td className={styles.played}>{result.played}</td>
                           <td className={styles.blocked}>{result.blocked}</td>
                           <td className={styles.pitched}>{result.pitched}</td>
-                          <td className={styles.cardStat}>
-                            {result.discarded}
-                          </td>
+                          {numDiscarded > 0 && (
+                            <td className={styles.cardStat}>
+                              {result.discarded}
+                            </td>
+                          )}
                           <td className={styles.cardStat}>{result.hits}</td>
                           {numCharged > 0 && (
                             <td className={styles.cardStat}>
