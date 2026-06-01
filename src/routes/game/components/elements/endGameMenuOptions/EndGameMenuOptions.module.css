@@ -1,82 +1,60 @@
 .buttons {
   display: flex;
   flex-direction: row;
-  gap: 0.5em;
-  align-content: center;
+  gap: 0.4rem;
+  align-items: center;
   justify-content: center;
+  flex-wrap: nowrap;
+  width: max-content;
+  max-width: 100%;
 }
 
 .buttonDiv {
-  background-color: var(--theme-primary);
-  color: black;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  text-align: center;
-  min-width: 8vh;
-  min-height: 4.5vh;
-  border-radius: 5px;
-  border: 1px solid var(--theme-primary);
-  flex-basis: auto;
-  padding: 0.7vh 1.2vh;
-  font-size: 1.1em;
-  line-height: 1.2;
+  gap: 0.45rem;
+  background-color: rgba(0, 0, 0, 0.3);
+  color: rgba(255, 255, 255, 0.8);
+  min-height: 2.25rem;
+  padding: 0.4rem 0.85rem;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  white-space: nowrap;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s, transform 0.15s, box-shadow 0.15s;
+  margin-bottom: 0 !important;
 }
 
 .buttonDiv:hover {
-  background-color: black;
-  color: var(--theme-primary);
-  border: 2px solid var(--theme-primary);
-  cursor: pointer;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(255, 184, 77, 0.3);
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.35);
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 .buttonDiv:active {
   transform: translateY(0);
-  box-shadow: 0 2px 4px rgba(255, 184, 77, 0.2);
+  box-shadow: none;
+}
+
+.icon {
+  font-size: 0.9em;
+  flex-shrink: 0;
+  opacity: 0.8;
+}
+
+.buttonDiv:hover .icon {
+  opacity: 1;
 }
 
 @media (max-width: 1080px) {
   .buttons {
-    flex-wrap: wrap;
-    gap: 0.4rem;
-    width: 100%;
-  }
-
-  .buttonDiv {
-    flex: 1 1 calc(50% - 0.2rem);
-    min-width: calc(50% - 0.2rem);
-    min-height: 2.5rem;
-    padding: 0.5rem 0.5rem;
-    font-size: 0.9em;
-    white-space: normal;
-    line-height: 1.3;
-    text-align: center;
-  }
-}
-
-@media (max-width: 1200px) {
-  .buttons {
-    gap: 0.65rem;
-  }
-
-  .buttonDiv {
-    min-width: 140px;
-    min-height: 42px;
-    padding: 0.7rem 1.1rem;
-    font-size: 0.95em;
-  }
-}
-
-@media (max-width: 768px) {
-  .container {
-    margin: 0 0.25em 0.5em 0.25em;
-  }
-
-  .buttons {
-    flex-direction: row;
     flex-wrap: wrap;
     gap: 0.35rem;
     width: 100%;
@@ -85,7 +63,7 @@
   .buttonDiv {
     flex: 1 1 calc(50% - 0.175rem);
     min-width: calc(50% - 0.175rem);
-    min-height: 38px;
+    min-height: 2.25rem;
     padding: 0.4rem 0.5rem;
     font-size: 0.85em;
     white-space: normal;
@@ -94,16 +72,36 @@
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 768px) {
   .buttons {
+    flex-wrap: wrap;
     gap: 0.3rem;
+    width: 100%;
   }
 
   .buttonDiv {
     flex: 1 1 calc(50% - 0.15rem);
     min-width: calc(50% - 0.15rem);
-    min-height: 34px;
+    min-height: 2rem;
     padding: 0.35rem 0.4rem;
-    font-size: 0.8em;
+    font-size: 0.82em;
+    white-space: normal;
+    line-height: 1.3;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .buttons {
+    flex-wrap: wrap;
+    gap: 0.25rem;
+  }
+
+  .buttonDiv {
+    flex: 1 1 calc(50% - 0.125rem);
+    min-width: calc(50% - 0.125rem);
+    min-height: 1.9rem;
+    padding: 0.3rem 0.35rem;
+    font-size: 0.78em;
   }
 }

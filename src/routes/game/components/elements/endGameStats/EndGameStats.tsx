@@ -16,6 +16,17 @@ import html2canvas from 'html2canvas';
 import TalisharLogo from 'img/TalisharLogo.webp';
 import { BACKEND_URL } from 'appConstants';
 import { parseHtmlToReactElements } from 'utils/ParseEscapedString';
+import { useTheme } from 'themes/ThemeContext';
+import {
+  ResponsiveContainer,
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend
+} from 'recharts';
 
 export interface EndGameData {
   deckID?: string;
@@ -138,6 +149,10 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
     opponentHero?: string;
   }>({});
   const [excludeLastTurn, setExcludeLastTurn] = useState(false);
+  const [hoveredChartTurn, setHoveredChartTurn] = useState<number | null>(null);
+
+  const { currentTheme } = useTheme();
+  const themeColor = currentTheme.colors.primary;
 
   const { isSupporter, isLoading: isSupporterLoading } = useSupporterStatus();
   const showAds = !isSupporterLoading && !isSupporter;
@@ -301,6 +316,39 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
 
   const stats = useMemo(getStats, [excludeLastTurn, data]);
 
+  const chartData = useMemo(() => {
+    if (!data.turnResults) return [];
+    let sumValue = 0;
+    let sumThreatened = 0;
+    let sumDealt = 0;
+    let count = 0;
+    const result = [];
+    for (const key of Object.keys(data.turnResults)) {
+      const turn = data.turnResults[key];
+      const turnNo = turn.turnNo !== undefined ? turn.turnNo : Number(key);
+      if (turnNo === 0) continue;
+      const turnValue =
+        (+turn.damageThreatened || 0) +
+        (+turn.damageBlocked || 0) +
+        (+turn.damagePrevented || 0) +
+        (+turn.lifeGained || 0) +
+        (+turn.lifeLost || 0);
+      const turnThreatened = parseInt(String(turn.damageThreatened), 10) || 0;
+      const turnDealt = parseInt(String(turn.damageDealt), 10) || 0;
+      sumValue += turnValue;
+      sumThreatened += turnThreatened;
+      sumDealt += turnDealt;
+      count++;
+      result.push({
+        turn: turnNo,
+        avgValue: Math.round((sumValue / count) * 10) / 10,
+        avgThreatened: Math.round((sumThreatened / count) * 10) / 10,
+        avgDealt: Math.round((sumDealt / count) * 10) / 10
+      });
+    }
+    return result;
+  }, [data.turnResults]);
+
   const handleExportScreenshot = async () => {
     if (!statsRef.current) return;
 
@@ -413,8 +461,10 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
             .slice(0, -5);
           link.download = `game-stats-${timestamp}.png`;
           link.href = url;
+          document.body.appendChild(link);
           link.click();
-          URL.revokeObjectURL(url);
+          document.body.removeChild(link);
+          setTimeout(() => URL.revokeObjectURL(url), 1000);
         }
       });
     } catch (error) {
@@ -775,6 +825,16 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
     return !hasAnyNonZero;
   }, [data.turnResults]);
 
+  const shouldHideCardsDiscarded = useMemo(() => {
+    if (!data.turnResults || Object.keys(data.turnResults).length === 0)
+      return true;
+    const hasAnyNonZero = Object.values(data.turnResults).some((turn) => {
+      const value = parseInt(String(turn.cardsDiscarded), 10) || 0;
+      return value !== 0;
+    });
+    return !hasAnyNonZero;
+  }, [data.turnResults]);
+
   // Calculate the Life column span based on hidden columns
   const lifeColSpan =
     (shouldHideLifeGained ? 0 : 1) + (shouldHideLifeLost ? 0 : 1);
@@ -797,6 +857,16 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
 
     return ret;
   }
+  const ChartTooltip = ({ active, payload, label }: { active?: boolean; payload?: any[]; label?: number }) => {
+    if (!active || !payload?.length) return null;
+    return (
+      <div style={{ background: 'rgba(10,10,10,0.92)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '4px', padding: '4px 8px', fontSize: '0.68em', pointerEvents: 'none', whiteSpace: 'nowrap' }}>
+        <p style={{ margin: '0 0 2px', color: 'rgba(255,255,255,0.45)' }}>After turn {label}</p>
+        <p style={{ margin: 0, color: themeColor, fontWeight: 600 }}>{payload[0].name}: {payload[0].value}</p>
+      </div>
+    );
+  };
+
   let numCharged: number = 0;
   for (let i = 0; i < (data.cardResults?.length ?? 0); i++) {
     numCharged += data.cardResults[i].charged;
@@ -1289,7 +1359,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                     Turn
                   </th>
                   <th
-                    colSpan={5}
+                    colSpan={shouldHideCardsDiscarded ? 4 : 5}
                     className={`${styles.headersStats} ${styles.headerGroupSeparator}`}
                   >
                     Cards
@@ -1355,15 +1425,17 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                     {turnSortField === 'cardsPitched' &&
                       (turnSortDirection === 'desc' ? '↓' : '↑')}
                   </th>
-                  <th
-                    onClick={() => handleTurnSort('cardsDiscarded')}
-                    className={styles.sortableHeader}
-                    title="Click to sort"
-                  >
-                    Discarded{' '}
-                    {turnSortField === 'cardsDiscarded' &&
-                      (turnSortDirection === 'desc' ? '↓' : '↑')}
-                  </th>
+                  {!shouldHideCardsDiscarded && (
+                    <th
+                      onClick={() => handleTurnSort('cardsDiscarded')}
+                      className={styles.sortableHeader}
+                      title="Click to sort"
+                    >
+                      Discarded{' '}
+                      {turnSortField === 'cardsDiscarded' &&
+                        (turnSortDirection === 'desc' ? '↓' : '↑')}
+                    </th>
+                  )}
                   <th
                     onClick={() => handleTurnSort('cardsLeft')}
                     className={styles.sortableHeader}
@@ -1475,8 +1547,9 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                 {sortedTurnResults
                   ? sortedTurnResults.map((turnData, ix) => {
                       // Hide turn #0 for the non-first player
+                      const rowTurnNo = turnData.turnNo !== undefined ? turnData.turnNo : Object.keys(data.turnResults).indexOf(turnData.key);
                       return (
-                        <tr key={`turnList${ix}`}>
+                        <tr key={`turnList${ix}`} className={hoveredChartTurn === rowTurnNo ? styles.chartHighlightedRow : undefined}>
                           <td className={styles.turnNo}>
                             {turnData.turnNo !== undefined
                               ? turnData.turnNo
@@ -1493,9 +1566,11 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                           <td className={styles.pitched}>
                             {turnData.cardsPitched}
                           </td>
-                          <td className={styles.pitched}>
-                            {turnData.cardsDiscarded}
-                          </td>
+                          {!shouldHideCardsDiscarded && (
+                            <td className={styles.pitched}>
+                              {turnData.cardsDiscarded}
+                            </td>
+                          )}
                           <td className={styles.pitched}>
                             {turnData.cardsLeft}
                           </td>
@@ -1548,9 +1623,10 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                   : !!data.turnResults &&
                     Object.keys(data.turnResults).map((key, ix) => {
                       const turnNo = data.turnResults[key]?.turnNo;
+                      const rowTurnNo = turnNo !== undefined ? turnNo : ix;
                       // Hide turn #0 for the non-first player
                       return (
-                        <tr key={`turnList${ix}`}>
+                        <tr key={`turnList${ix}`} className={hoveredChartTurn === rowTurnNo ? styles.chartHighlightedRow : undefined}>
                           <td className={styles.turnNo}>
                             {turnNo !== undefined ? turnNo : ix}
                           </td>
@@ -1566,10 +1642,12 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                             {/* @ts-ignore */}
                             {data.turnResults[key]?.cardsPitched}
                           </td>
-                          <td className={styles.pitched}>
-                            {/* @ts-ignore */}
-                            {data.turnResults[key]?.cardsDiscarded}
-                          </td>
+                          {!shouldHideCardsDiscarded && (
+                            <td className={styles.pitched}>
+                              {/* @ts-ignore */}
+                              {data.turnResults[key]?.cardsDiscarded}
+                            </td>
+                          )}
                           <td className={styles.pitched}>
                             {/* @ts-ignore */}
                             {data.turnResults[key]?.cardsLeft}
@@ -1639,7 +1717,88 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
             </table>
           </div>
         </div>
+
       </div>
+
+      {/* Average Per Turn Charts - outside statsRef so html2canvas doesn't process SVG elements */}
+      {chartData.length > 1 && (
+        <div className={styles.chartsGrid}>
+            {/* Chart 1: Avg Value */}
+            <div className={styles.turnBreakdownSection}>
+              <h2 className={styles.sectionHeader}>Avg Value Per Turn</h2>
+              <ResponsiveContainer width="100%" height={220}>
+                <AreaChart data={chartData} margin={{ top: 10, right: 16, left: 0, bottom: 20 }} onMouseMove={(e) => { if (e.activeLabel !== undefined) setHoveredChartTurn(Number(e.activeLabel)); }} onMouseLeave={() => setHoveredChartTurn(null)}>
+                  <defs>
+                    <linearGradient id="egsColorValue" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor={themeColor} stopOpacity={0.3} />
+                      <stop offset="95%" stopColor={themeColor} stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.07)" />
+                  <XAxis
+                    dataKey="turn"
+                    stroke="rgba(255,255,255,0.25)"
+                    tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 11 }}
+                    label={{ value: 'Turn', position: 'insideBottom', offset: -10, fill: 'rgba(255,255,255,0.35)', fontSize: 11 }}
+                  />
+                  <YAxis stroke="rgba(255,255,255,0.25)" tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 11 }} width={30} />
+                  <Tooltip content={<ChartTooltip />} cursor={{ stroke: 'rgba(255,255,255,0.15)' }} />
+                  <Area type="monotone" dataKey="avgValue" name="Avg Value" stroke={themeColor} strokeWidth={2} fill="url(#egsColorValue)" dot={false} activeDot={{ r: 4, fill: themeColor }} />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
+
+            {/* Chart 2: Avg Damage Threatened */}
+            <div className={styles.turnBreakdownSection}>
+              <h2 className={styles.sectionHeader}>Avg Damage Threatened Per Turn</h2>
+              <ResponsiveContainer width="100%" height={220}>
+                <AreaChart data={chartData} margin={{ top: 10, right: 16, left: 0, bottom: 20 }} onMouseMove={(e) => { if (e.activeLabel !== undefined) setHoveredChartTurn(Number(e.activeLabel)); }} onMouseLeave={() => setHoveredChartTurn(null)}>
+                  <defs>
+                    <linearGradient id="egsColorThreatened" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor={themeColor} stopOpacity={0.3} />
+                      <stop offset="95%" stopColor={themeColor} stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.07)" />
+                  <XAxis
+                    dataKey="turn"
+                    stroke="rgba(255,255,255,0.25)"
+                    tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 11 }}
+                    label={{ value: 'Turn', position: 'insideBottom', offset: -10, fill: 'rgba(255,255,255,0.35)', fontSize: 11 }}
+                  />
+                  <YAxis stroke="rgba(255,255,255,0.25)" tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 11 }} width={30} />
+                  <Tooltip content={<ChartTooltip />} cursor={{ stroke: 'rgba(255,255,255,0.15)' }} />
+                  <Area type="monotone" dataKey="avgThreatened" name="Avg Damage Threatened" stroke={themeColor} strokeWidth={2} fill="url(#egsColorThreatened)" dot={false} activeDot={{ r: 4, fill: themeColor }} />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
+
+            {/* Chart 3: Avg Damage Dealt */}
+            <div className={styles.turnBreakdownSection}>
+              <h2 className={styles.sectionHeader}>Avg Damage Dealt Per Turn</h2>
+              <ResponsiveContainer width="100%" height={220}>
+                <AreaChart data={chartData} margin={{ top: 10, right: 16, left: 0, bottom: 20 }} onMouseMove={(e) => { if (e.activeLabel !== undefined) setHoveredChartTurn(Number(e.activeLabel)); }} onMouseLeave={() => setHoveredChartTurn(null)}>
+                  <defs>
+                    <linearGradient id="egsColorDealt" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor={themeColor} stopOpacity={0.3} />
+                      <stop offset="95%" stopColor={themeColor} stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.07)" />
+                  <XAxis
+                    dataKey="turn"
+                    stroke="rgba(255,255,255,0.25)"
+                    tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 11 }}
+                    label={{ value: 'Turn', position: 'insideBottom', offset: -10, fill: 'rgba(255,255,255,0.35)', fontSize: 11 }}
+                  />
+                  <YAxis stroke="rgba(255,255,255,0.25)" tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 11 }} width={30} />
+                  <Tooltip content={<ChartTooltip />} cursor={{ stroke: 'rgba(255,255,255,0.15)' }} />
+                  <Area type="monotone" dataKey="avgDealt" name="Avg Damage Dealt" stroke={themeColor} strokeWidth={2} fill="url(#egsColorDealt)" dot={false} activeDot={{ r: 4, fill: themeColor }} />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+        )}
     </div>
   );
 });

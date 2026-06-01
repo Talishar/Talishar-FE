@@ -41,7 +41,7 @@
   width: calc(100% + 3rem);
   justify-content: space-between;
   align-items: center;
-  padding: 1.5rem 1.5rem 0.5em 1.5rem;
+  padding: 1rem 1.5rem 0.5em 1.5rem;
   margin: -1.5rem -1.5rem 0.5em -1.5rem;
   background-color: var(--near-black);
   z-index: 1000;
@@ -113,7 +113,7 @@
   font-family: inherit;
   transition: all 0.2s;
   cursor: pointer;
-  margin-bottom: 0;
+  margin-bottom: 0 !important;
 }
 
 .buttonDiv:hover {
@@ -155,7 +155,7 @@
   border: none;
   color: rgba(255, 255, 255, 0.85);
   padding: 0.65rem 1rem;
-  font-size: 0.95em;
+  font-size: 0.75em;
   font-family: inherit;
   border-radius: 6px;
   cursor: pointer;

@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { shallowEqual } from 'react-redux';
 import { getGameInfo } from 'features/game/GameSlice';
 import useAuth from 'hooks/useAuth';
+import { FaHome, FaExchangeAlt, FaPaperPlane, FaSave, FaMapMarkedAlt } from 'react-icons/fa';
 
 const EndGameMenuOptions = () => {
   const dispatch = useAppDispatch();
@@ -47,34 +48,29 @@ const EndGameMenuOptions = () => {
 
   return (
     <div className={styles.buttons}>
-        <div className={styles.buttonDiv} onClick={handleMainMenu}>
-          Main Menu
-        </div>
-        {roguelikeGameID && health > 0 && (
-          <div className={styles.buttonDiv} onClick={handleContinueAdventure}>
-            Continue Adventure
-          </div>
-        )}
-        {!roguelikeGameID && (
-          <>
-            {/*<div className={styles.buttonDiv} onClick={handleQuickRematch}>
-              Quick Rematch (no sideboarding)
-            </div> */}
-            <div className={styles.buttonDiv} onClick={handleFullRematch}>
-              Send Rematch Invitation
-            </div>
-            <div className={styles.buttonDiv} onClick={handleSwapHeroesRematch}>
-              Swap Heroes &amp; Rematch
-            </div>
-          </>
-        )}
-        {!roguelikeGameID && (
-          <>
-            <div className={styles.buttonDiv} onClick={handleSaveReplay}>
-              Save Replay (beta)
-            </div>
-          </>
-        )}
+      <button className={styles.buttonDiv} onClick={handleMainMenu}>
+        <FaHome aria-hidden="true" className={styles.icon} /> Main menu
+      </button>
+      {roguelikeGameID && health > 0 && (
+        <button className={styles.buttonDiv} onClick={handleContinueAdventure}>
+          <FaMapMarkedAlt aria-hidden="true" className={styles.icon} /> Continue adventure
+        </button>
+      )}
+      {!roguelikeGameID && (
+        <>
+          <button className={styles.buttonDiv} onClick={handleSwapHeroesRematch}>
+            <FaExchangeAlt aria-hidden="true" className={styles.icon} /> Swap &amp; rematch
+          </button>
+          <button className={styles.buttonDiv} onClick={handleFullRematch}>
+            <FaPaperPlane aria-hidden="true" className={styles.icon} /> Send rematch
+          </button>
+        </>
+      )}
+      {!roguelikeGameID && (
+        <button className={styles.buttonDiv} onClick={handleSaveReplay}>
+          <FaSave aria-hidden="true" className={styles.icon} /> Save replay
+        </button>
+      )}
     </div>
   );
 };
