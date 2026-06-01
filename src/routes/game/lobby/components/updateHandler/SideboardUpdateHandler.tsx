@@ -21,6 +21,7 @@ interface LobbyUpdateHandlerProps {
 export const LobbyUpdateHandler = React.memo(
   ({ isSubmitting }: LobbyUpdateHandlerProps) => {
     const abortRef = useRef<AbortController>();
+    const timeoutRef = useRef<ReturnType<typeof setTimeout>>();
     const gameInfo = useAppSelector(getGameInfo, shallowEqual);
     const isUpdateInProgress = useAppSelector(
       (state: RootState) => state.game.isUpdateInProgress
@@ -46,37 +47,43 @@ export const LobbyUpdateHandler = React.memo(
       if (isUpdateInProgress) {
         return;
       }
+
+      if (timeoutRef.current !== undefined) {
+        clearTimeout(timeoutRef.current);
+        timeoutRef.current = undefined;
+      }
+
+      const controller = new AbortController();
+      abortRef.current = controller;
+
       dispatch(
         gameLobby({
           game: gameInfo,
-          signal: abortRef.current?.signal,
+          signal: controller.signal,
           lastUpdate: lastUpdate ?? 0
         })
       );
 
       // timeout if longer than 10 seconds. Will clear this interval on next poll
-      const timeOut = setTimeout(() => {
-        //console.log('timed out');
-        abortRef.current?.abort();
+      timeoutRef.current = setTimeout(() => {
+        timeoutRef.current = undefined;
+        controller.abort();
         dispatch(setIsUpdateInProgressFalse());
       }, 10000);
 
-      return () => {
-        //console.log('timeout cleared');
-        clearTimeout(timeOut);
-      };
     }, [gameInfo.gameID, isUpdateInProgress, dispatch]);
 
     if (isSubmitting) {
       abortRef.current?.abort();
     }
 
-    // gameID already in params
     useEffect(() => {
-      abortRef.current = new AbortController();
-
       return () => {
         abortRef.current?.abort();
+        if (timeoutRef.current !== undefined) {
+          clearTimeout(timeoutRef.current);
+          timeoutRef.current = undefined;
+        }
         dispatch(setIsUpdateInProgressFalse());
       };
     }, [isSubmitting]);
