@@ -164,7 +164,7 @@ const EndGameScreen = () => {
         <>
           <div className={styles.cardListTitleContainer}>
             <div className={styles.cardListTitle}>
-              <h2 className={styles.title}>Game Over Summary</h2>
+              <h2 className={styles.title}>Game Summary</h2>
               <div className={styles.menuOptionsWrapper}>
                 <EndGameMenuOptions />
               </div>
@@ -230,7 +230,7 @@ const EndGameScreen = () => {
       {!showStats && (
         <div className={styles.cardListTitleContainer}>
           <div className={styles.cardListTitle}>
-            <h2 className={styles.title}>Game Over Summary</h2>
+            <h2 className={styles.title}>Game Summary</h2>
             <div className={styles.buttonGroup}>
               <div className={styles.buttonDiv} onClick={toggleShowStats}>
                 <FaEyeSlash aria-hidden="true" fontSize={'1.5em'} />
