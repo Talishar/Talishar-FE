@@ -25,7 +25,8 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  Legend
+  Legend,
+  ReferenceLine
 } from 'recharts';
 
 export interface EndGameData {
@@ -70,6 +71,7 @@ export interface EndGameData {
   averageValuePerTurn_NoLast?: number;
   yourTime?: number;
   totalTime?: number;
+  startingLife?: number;
 }
 
 export interface CardResult {
@@ -318,28 +320,70 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
 
   const chartData = useMemo(() => {
     if (!data.turnResults) return [];
-    const result = [];
-    for (const key of Object.keys(data.turnResults)) {
-      const turn = data.turnResults[key];
-      const turnNo = turn.turnNo !== undefined ? turn.turnNo : Number(key);
-      if (turnNo === 0) continue;
+
+    const yourStartingLife = data.startingLife ?? 40;
+    const opponentPlayerID = data.playerID === 1 ? 2 : 1;
+    const opponentData = data.bothPlayersData?.[opponentPlayerID] as EndGameData | undefined;
+    const opponentStartingLife = opponentData?.startingLife ?? 40;
+    const opponentTurnResults = opponentData?.turnResults;
+
+    const entries = Object.entries(data.turnResults)
+      .map(([key, turn]) => ({
+        turnNo: turn.turnNo !== undefined ? turn.turnNo : Number(key.replace('turn_', '')),
+        turn
+      }))
+      .sort((a, b) => a.turnNo - b.turnNo)
+      .filter((e) => e.turnNo > 0);
+
+    let yourLife = yourStartingLife;
+    let opponentLife = opponentStartingLife;
+
+    return entries.map(({ turnNo, turn }) => {
       const turnValue =
         (+turn.damageThreatened || 0) +
         (+turn.damageBlocked || 0) +
         (+turn.damagePrevented || 0) +
         (+turn.lifeGained || 0) +
         (+turn.lifeLost || 0);
-      const turnThreatened = parseInt(String(turn.damageThreatened), 10) || 0;
       const turnDealt = parseInt(String(turn.damageDealt), 10) || 0;
-      result.push({
+
+      yourLife -= (+turn.damageTaken || 0) + (+turn.lifeLost || 0);
+      yourLife += +turn.lifeGained || 0;
+
+      const oppTurn = opponentTurnResults?.[`turn_${turnNo}`];
+      if (oppTurn) {
+        opponentLife -= (+oppTurn.damageTaken || 0) + (+oppTurn.lifeLost || 0);
+        opponentLife += +oppTurn.lifeGained || 0;
+      } else {
+        opponentLife -= turnDealt;
+      }
+
+      const turnTaken = parseInt(String(turn.damageTaken), 10) || 0;
+
+      return {
         turn: turnNo,
         avgValue: turnValue,
-        avgThreatened: turnThreatened,
-        avgDealt: turnDealt
-      });
-    }
-    return result;
-  }, [data.turnResults]);
+        avgThreatened: parseInt(String(turn.damageThreatened), 10) || 0,
+        avgDealt: turnDealt,
+        damageTaken: turnTaken,
+        yourLife: Math.max(0, yourLife),
+        opponentLife: Math.max(0, opponentLife)
+      };
+    });
+  }, [data.turnResults, data.startingLife, data.playerID, data.bothPlayersData]);
+
+  const lifeChartData = useMemo(() => {
+    const oppPlayerID = data.playerID === 1 ? 2 : 1;
+    const oppData = data.bothPlayersData?.[oppPlayerID] as EndGameData | undefined;
+    const startYour = data.startingLife ?? 40;
+    const startOpp = oppData?.startingLife ?? 40;
+    return [{ turn: 0, yourLife: startYour, opponentLife: startOpp }, ...chartData];
+  }, [chartData, data.startingLife, data.playerID, data.bothPlayersData]);
+
+  const avgChartValue = useMemo(() => {
+    if (chartData.length === 0) return 0;
+    return Math.round(chartData.reduce((sum, d) => sum + d.avgValue, 0) / chartData.length);
+  }, [chartData]);
 
   const handleExportScreenshot = async () => {
     if (!statsRef.current) return;
@@ -854,7 +898,9 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
     return (
       <div style={{ background: 'rgba(10,10,10,0.92)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '4px', padding: '4px 8px', fontSize: '0.68em', pointerEvents: 'none', whiteSpace: 'nowrap' }}>
         <p style={{ margin: '0 0 2px', color: 'rgba(255,255,255,0.45)' }}>After turn {label}</p>
-        <p style={{ margin: 0, color: themeColor, fontWeight: 600 }}>{payload[0].name}: {payload[0].value}</p>
+        {payload.map((entry, i) => (
+          <p key={i} style={{ margin: 0, color: entry.color ?? themeColor, fontWeight: 600 }}>{entry.name}: {entry.value}</p>
+        ))}
       </div>
     );
   };
@@ -1715,11 +1761,11 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
       {/* Per Turn Charts - outside statsRef so html2canvas doesn't process SVG elements */}
       {chartData.length > 1 && (
         <div className={styles.chartsGrid}>
-            {/* Chart 1: Value Per Turn */}
+            {/* Chart 1: Value Per Turn with reference lines */}
             <div className={styles.turnBreakdownSection}>
               <h2 className={styles.sectionHeader}>Value Per Turn</h2>
               <ResponsiveContainer width="100%" height={220}>
-                <AreaChart data={chartData} margin={{ top: 10, right: 16, left: 0, bottom: 20 }} onMouseMove={(e) => { if (e.activeLabel !== undefined) setHoveredChartTurn(Number(e.activeLabel)); }} onMouseLeave={() => setHoveredChartTurn(null)}>
+                <AreaChart data={chartData} margin={{ top: 5, right: 16, left: 0, bottom: 5 }} onMouseMove={(e) => { if (e.activeLabel !== undefined) setHoveredChartTurn(Number(e.activeLabel)); }} onMouseLeave={() => setHoveredChartTurn(null)}>
                   <defs>
                     <linearGradient id="egsColorValue" x1="0" y1="0" x2="0" y2="1">
                       <stop offset="5%" stopColor={themeColor} stopOpacity={0.3} />
@@ -1727,68 +1773,98 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                     </linearGradient>
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.07)" />
-                  <XAxis
-                    dataKey="turn"
-                    stroke="rgba(255,255,255,0.25)"
-                    tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 11 }}
-                    label={{ value: 'Turn', position: 'insideBottom', offset: -10, fill: 'rgba(255,255,255,0.35)', fontSize: 11 }}
-                  />
+                  <XAxis dataKey="turn" stroke="rgba(255,255,255,0.25)" tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 11 }} />
                   <YAxis stroke="rgba(255,255,255,0.25)" tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 11 }} width={30} />
                   <Tooltip content={<ChartTooltip />} cursor={{ stroke: 'rgba(255,255,255,0.15)' }} />
+                  <ReferenceLine y={12} stroke="rgba(180,130,40,0.5)" strokeDasharray="3 4" label={{ value: '12', position: 'insideTopRight', fill: 'rgba(180,130,40,0.7)', fontSize: 10 }} />
+                  <ReferenceLine y={16} stroke="rgba(180,130,40,0.5)" strokeDasharray="3 4" label={{ value: '16', position: 'insideTopRight', fill: 'rgba(180,130,40,0.7)', fontSize: 10 }} />
+                  {avgChartValue > 0 && <ReferenceLine y={avgChartValue} stroke="rgba(255,255,255,0.3)" strokeDasharray="5 3" label={{ value: `avg ${avgChartValue}`, position: 'insideTopLeft', fill: 'rgba(255,255,255,0.4)', fontSize: 10 }} />}
                   <Area type="monotone" dataKey="avgValue" name="Value" stroke={themeColor} strokeWidth={2} fill="url(#egsColorValue)" dot={false} activeDot={{ r: 4, fill: themeColor }} />
                 </AreaChart>
               </ResponsiveContainer>
             </div>
 
-            {/* Chart 2: Damage Threatened Per Turn */}
+            {/* Chart 2: Life Totals - both heroes overlaid */}
             <div className={styles.turnBreakdownSection}>
-              <h2 className={styles.sectionHeader}>Damage Threatened Per Turn</h2>
+              <h2 className={styles.sectionHeader}>Life Totals</h2>
               <ResponsiveContainer width="100%" height={220}>
-                <AreaChart data={chartData} margin={{ top: 10, right: 16, left: 0, bottom: 20 }} onMouseMove={(e) => { if (e.activeLabel !== undefined) setHoveredChartTurn(Number(e.activeLabel)); }} onMouseLeave={() => setHoveredChartTurn(null)}>
+                <AreaChart data={lifeChartData} margin={{ top: 5, right: 16, left: 0, bottom: 5 }} onMouseMove={(e) => { if (e.activeLabel !== undefined) setHoveredChartTurn(Number(e.activeLabel)); }} onMouseLeave={() => setHoveredChartTurn(null)}>
                   <defs>
-                    <linearGradient id="egsColorThreatened" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor={themeColor} stopOpacity={0.3} />
+                    <linearGradient id="egsColorYourLife" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor={themeColor} stopOpacity={0.2} />
                       <stop offset="95%" stopColor={themeColor} stopOpacity={0} />
+                    </linearGradient>
+                    <linearGradient id="egsColorOppLife" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#ef4444" stopOpacity={0.15} />
+                      <stop offset="95%" stopColor="#ef4444" stopOpacity={0} />
                     </linearGradient>
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.07)" />
-                  <XAxis
-                    dataKey="turn"
-                    stroke="rgba(255,255,255,0.25)"
-                    tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 11 }}
-                    label={{ value: 'Turn', position: 'insideBottom', offset: -10, fill: 'rgba(255,255,255,0.35)', fontSize: 11 }}
-                  />
-                  <YAxis stroke="rgba(255,255,255,0.25)" tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 11 }} width={30} />
+                  <XAxis dataKey="turn" stroke="rgba(255,255,255,0.25)" tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 11 }} tickFormatter={(v) => v === 0 ? 'Start' : String(v)} />
+                  <YAxis stroke="rgba(255,255,255,0.25)" tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 11 }} width={30} domain={[0, 'auto']} />
                   <Tooltip content={<ChartTooltip />} cursor={{ stroke: 'rgba(255,255,255,0.15)' }} />
-                  <Area type="monotone" dataKey="avgThreatened" name="Damage Threatened" stroke={themeColor} strokeWidth={2} fill="url(#egsColorThreatened)" dot={false} activeDot={{ r: 4, fill: themeColor }} />
+                  <Legend verticalAlign="top" content={() => (
+                    <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', fontSize: '0.68em', paddingBottom: '6px', color: 'rgba(255,255,255,0.6)' }}>
+                      <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><svg width="14" height="4"><line x1="0" y1="2" x2="14" y2="2" stroke={themeColor} strokeWidth="2"/></svg>Your Life</span>
+                      <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><svg width="14" height="4"><line x1="0" y1="2" x2="14" y2="2" stroke="#ef4444" strokeWidth="2"/></svg>Opp Life</span>
+                    </div>
+                  )} />
+                  <Area type="monotone" dataKey="opponentLife" name="Opp Life" stroke="#ef4444" strokeWidth={2} fill="url(#egsColorOppLife)" dot={false} activeDot={{ r: 4, fill: '#ef4444' }} />
+                  <Area type="monotone" dataKey="yourLife" name="Your Life" stroke={themeColor} strokeWidth={2} fill="url(#egsColorYourLife)" dot={false} activeDot={{ r: 4, fill: themeColor }} />
                 </AreaChart>
               </ResponsiveContainer>
             </div>
 
-            {/* Chart 3: Damage Dealt Per Turn */}
+            {/* Chart 3: Pressure Exchange - your threatened vs damage taken */}
             <div className={styles.turnBreakdownSection}>
-              <h2 className={styles.sectionHeader}>Damage Dealt Per Turn</h2>
+              <h2 className={styles.sectionHeader}>Pressure Exchange</h2>
               <ResponsiveContainer width="100%" height={220}>
-                <AreaChart data={chartData} margin={{ top: 10, right: 16, left: 0, bottom: 20 }} onMouseMove={(e) => { if (e.activeLabel !== undefined) setHoveredChartTurn(Number(e.activeLabel)); }} onMouseLeave={() => setHoveredChartTurn(null)}>
+                <AreaChart data={chartData} margin={{ top: 5, right: 16, left: 0, bottom: 5 }} onMouseMove={(e) => { if (e.activeLabel !== undefined) setHoveredChartTurn(Number(e.activeLabel)); }} onMouseLeave={() => setHoveredChartTurn(null)}>
                   <defs>
-                    <linearGradient id="egsColorDealt" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor={themeColor} stopOpacity={0.3} />
+                    <linearGradient id="egsColorThreatened2" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor={themeColor} stopOpacity={0.25} />
                       <stop offset="95%" stopColor={themeColor} stopOpacity={0} />
+                    </linearGradient>
+                    <linearGradient id="egsColorTaken" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#ef4444" stopOpacity={0.2} />
+                      <stop offset="95%" stopColor="#ef4444" stopOpacity={0} />
                     </linearGradient>
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.07)" />
-                  <XAxis
-                    dataKey="turn"
-                    stroke="rgba(255,255,255,0.25)"
-                    tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 11 }}
-                    label={{ value: 'Turn', position: 'insideBottom', offset: -10, fill: 'rgba(255,255,255,0.35)', fontSize: 11 }}
-                  />
+                  <XAxis dataKey="turn" stroke="rgba(255,255,255,0.25)" tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 11 }} />
                   <YAxis stroke="rgba(255,255,255,0.25)" tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 11 }} width={30} />
                   <Tooltip content={<ChartTooltip />} cursor={{ stroke: 'rgba(255,255,255,0.15)' }} />
-                  <Area type="monotone" dataKey="avgDealt" name="Damage Dealt" stroke={themeColor} strokeWidth={2} fill="url(#egsColorDealt)" dot={false} activeDot={{ r: 4, fill: themeColor }} />
+                  <Legend verticalAlign="top" content={() => (
+                    <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', fontSize: '0.68em', paddingBottom: '6px', color: 'rgba(255,255,255,0.6)' }}>
+                      <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><svg width="14" height="4"><line x1="0" y1="2" x2="14" y2="2" stroke={themeColor} strokeWidth="2"/></svg>You Threatened</span>
+                      <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><svg width="14" height="4"><line x1="0" y1="2" x2="14" y2="2" stroke="#ef4444" strokeWidth="2"/></svg>You Took</span>
+                    </div>
+                  )} />
+                  <Area type="monotone" dataKey="avgThreatened" name="You Threatened" stroke={themeColor} strokeWidth={2} fill="url(#egsColorThreatened2)" dot={false} activeDot={{ r: 4, fill: themeColor }} />
+                  <Area type="monotone" dataKey="damageTaken" name="You Took" stroke="#ef4444" strokeWidth={2} fill="url(#egsColorTaken)" dot={false} activeDot={{ r: 4, fill: '#ef4444' }} />
                 </AreaChart>
               </ResponsiveContainer>
             </div>
+          </div>
+        )}
+        
+        {/* Ad under charts */}
+        {showAds && (
+          <div className={`${styles.adBlock} ${styles.hideOnExport}`}>
+            {!isSupporter && (
+              <div className={styles.adHeader}>
+                <a
+                  href="https://metafy.gg/@talishar/members"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.removeAdsLink}
+                >
+                  Remove ads
+                </a>
+              </div>
+            )}
+            <AdUnit placement="billboard-2" className={styles.desktopAd} />
+            <AdUnit placement="mobile-unit-2" className={styles.mobileAd} />
           </div>
         )}
     </div>
