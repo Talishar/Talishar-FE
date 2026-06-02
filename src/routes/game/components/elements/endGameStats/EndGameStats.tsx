@@ -318,10 +318,6 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
 
   const chartData = useMemo(() => {
     if (!data.turnResults) return [];
-    let sumValue = 0;
-    let sumThreatened = 0;
-    let sumDealt = 0;
-    let count = 0;
     const result = [];
     for (const key of Object.keys(data.turnResults)) {
       const turn = data.turnResults[key];
@@ -335,15 +331,11 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
         (+turn.lifeLost || 0);
       const turnThreatened = parseInt(String(turn.damageThreatened), 10) || 0;
       const turnDealt = parseInt(String(turn.damageDealt), 10) || 0;
-      sumValue += turnValue;
-      sumThreatened += turnThreatened;
-      sumDealt += turnDealt;
-      count++;
       result.push({
         turn: turnNo,
-        avgValue: Math.round((sumValue / count) * 10) / 10,
-        avgThreatened: Math.round((sumThreatened / count) * 10) / 10,
-        avgDealt: Math.round((sumDealt / count) * 10) / 10
+        avgValue: turnValue,
+        avgThreatened: turnThreatened,
+        avgDealt: turnDealt
       });
     }
     return result;
@@ -1720,12 +1712,12 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
 
       </div>
 
-      {/* Average Per Turn Charts - outside statsRef so html2canvas doesn't process SVG elements */}
+      {/* Per Turn Charts - outside statsRef so html2canvas doesn't process SVG elements */}
       {chartData.length > 1 && (
         <div className={styles.chartsGrid}>
-            {/* Chart 1: Avg Value */}
+            {/* Chart 1: Value Per Turn */}
             <div className={styles.turnBreakdownSection}>
-              <h2 className={styles.sectionHeader}>Avg Value Per Turn</h2>
+              <h2 className={styles.sectionHeader}>Value Per Turn</h2>
               <ResponsiveContainer width="100%" height={220}>
                 <AreaChart data={chartData} margin={{ top: 10, right: 16, left: 0, bottom: 20 }} onMouseMove={(e) => { if (e.activeLabel !== undefined) setHoveredChartTurn(Number(e.activeLabel)); }} onMouseLeave={() => setHoveredChartTurn(null)}>
                   <defs>
@@ -1743,14 +1735,14 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                   />
                   <YAxis stroke="rgba(255,255,255,0.25)" tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 11 }} width={30} />
                   <Tooltip content={<ChartTooltip />} cursor={{ stroke: 'rgba(255,255,255,0.15)' }} />
-                  <Area type="monotone" dataKey="avgValue" name="Avg Value" stroke={themeColor} strokeWidth={2} fill="url(#egsColorValue)" dot={false} activeDot={{ r: 4, fill: themeColor }} />
+                  <Area type="monotone" dataKey="avgValue" name="Value" stroke={themeColor} strokeWidth={2} fill="url(#egsColorValue)" dot={false} activeDot={{ r: 4, fill: themeColor }} />
                 </AreaChart>
               </ResponsiveContainer>
             </div>
 
-            {/* Chart 2: Avg Damage Threatened */}
+            {/* Chart 2: Damage Threatened Per Turn */}
             <div className={styles.turnBreakdownSection}>
-              <h2 className={styles.sectionHeader}>Avg Damage Threatened Per Turn</h2>
+              <h2 className={styles.sectionHeader}>Damage Threatened Per Turn</h2>
               <ResponsiveContainer width="100%" height={220}>
                 <AreaChart data={chartData} margin={{ top: 10, right: 16, left: 0, bottom: 20 }} onMouseMove={(e) => { if (e.activeLabel !== undefined) setHoveredChartTurn(Number(e.activeLabel)); }} onMouseLeave={() => setHoveredChartTurn(null)}>
                   <defs>
@@ -1768,14 +1760,14 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                   />
                   <YAxis stroke="rgba(255,255,255,0.25)" tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 11 }} width={30} />
                   <Tooltip content={<ChartTooltip />} cursor={{ stroke: 'rgba(255,255,255,0.15)' }} />
-                  <Area type="monotone" dataKey="avgThreatened" name="Avg Damage Threatened" stroke={themeColor} strokeWidth={2} fill="url(#egsColorThreatened)" dot={false} activeDot={{ r: 4, fill: themeColor }} />
+                  <Area type="monotone" dataKey="avgThreatened" name="Damage Threatened" stroke={themeColor} strokeWidth={2} fill="url(#egsColorThreatened)" dot={false} activeDot={{ r: 4, fill: themeColor }} />
                 </AreaChart>
               </ResponsiveContainer>
             </div>
 
-            {/* Chart 3: Avg Damage Dealt */}
+            {/* Chart 3: Damage Dealt Per Turn */}
             <div className={styles.turnBreakdownSection}>
-              <h2 className={styles.sectionHeader}>Avg Damage Dealt Per Turn</h2>
+              <h2 className={styles.sectionHeader}>Damage Dealt Per Turn</h2>
               <ResponsiveContainer width="100%" height={220}>
                 <AreaChart data={chartData} margin={{ top: 10, right: 16, left: 0, bottom: 20 }} onMouseMove={(e) => { if (e.activeLabel !== undefined) setHoveredChartTurn(Number(e.activeLabel)); }} onMouseLeave={() => setHoveredChartTurn(null)}>
                   <defs>
@@ -1793,7 +1785,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                   />
                   <YAxis stroke="rgba(255,255,255,0.25)" tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 11 }} width={30} />
                   <Tooltip content={<ChartTooltip />} cursor={{ stroke: 'rgba(255,255,255,0.15)' }} />
-                  <Area type="monotone" dataKey="avgDealt" name="Avg Damage Dealt" stroke={themeColor} strokeWidth={2} fill="url(#egsColorDealt)" dot={false} activeDot={{ r: 4, fill: themeColor }} />
+                  <Area type="monotone" dataKey="avgDealt" name="Damage Dealt" stroke={themeColor} strokeWidth={2} fill="url(#egsColorDealt)" dot={false} activeDot={{ r: 4, fill: themeColor }} />
                 </AreaChart>
               </ResponsiveContainer>
             </div>
