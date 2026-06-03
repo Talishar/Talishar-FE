@@ -48,73 +48,41 @@ export default function PlayerHand() {
     (state: RootState) => state.game.playerOne.Hand
   );
 
-  // Use a ref to maintain stable IDs across renders
-  // Maps actionDataOverride → { id, cardNumber } for cross-render matching
-  const cardIdMapRef = useRef<
-    Map<string, { id: string; cardNumber: string }>
-  >(new Map());
+  // Track stable IDs by occurrence order within each cardNumber.
+  // actionDataOverride is NOT unique for duplicate cards (backend sends the card
+  // name for all copies), so we match by (cardNumber, occurrenceIndex) instead.
+  const cardStableListRef = useRef<Array<{ id: string; cardNumber: string }>>(
+    []
+  );
   const nextIdCounterRef = useRef<number>(0);
 
   const handCardsWithStableIds = useMemo<CardWithStableId[]>(() => {
     const cards = handCards ?? [];
-    const prevMap = cardIdMapRef.current;
+    const prevList = cardStableListRef.current;
 
-    const usedIds = new Set<string>();
-    const result: CardWithStableId[] = new Array(cards.length);
-    const unmatchedIndices: number[] = [];
-
-    for (let i = 0; i < cards.length; i++) {
-      const card = cards[i];
-      const key = card.actionDataOverride;
-      const existing =
-        key != null && key !== '' ? prevMap.get(key) : undefined;
-
-      if (
-        existing &&
-        !usedIds.has(existing.id) &&
-        existing.cardNumber === card.cardNumber
-      ) {
-        result[i] = { card, id: existing.id };
-        usedIds.add(existing.id);
-      } else {
-        unmatchedIndices.push(i);
-      }
+    const prevIdsByCardNumber = new Map<string, string[]>();
+    for (const { id, cardNumber } of prevList) {
+      const ids = prevIdsByCardNumber.get(cardNumber) ?? [];
+      ids.push(id);
+      prevIdsByCardNumber.set(cardNumber, ids);
     }
 
-    if (unmatchedIndices.length > 0) {
-      const unusedOldByCardNumber = new Map<string, string[]>();
-      for (const entry of prevMap.values()) {
-        if (!usedIds.has(entry.id)) {
-          const arr = unusedOldByCardNumber.get(entry.cardNumber) ?? [];
-          arr.push(entry.id);
-          unusedOldByCardNumber.set(entry.cardNumber, arr);
-        }
-      }
+    const seenCounts = new Map<string, number>();
+    const result: CardWithStableId[] = cards.map((card) => {
+      const count = seenCounts.get(card.cardNumber) ?? 0;
+      seenCounts.set(card.cardNumber, count + 1);
 
-      for (const idx of unmatchedIndices) {
-        const card = cards[idx];
-        const available = unusedOldByCardNumber.get(card.cardNumber);
-        if (available && available.length > 0) {
-          const oldId = available.shift()!;
-          result[idx] = { card, id: oldId };
-          usedIds.add(oldId);
-        } else {
-          const newId = `hand-card-${nextIdCounterRef.current++}`;
-          result[idx] = { card, id: newId };
-          usedIds.add(newId);
-        }
+      const prevIds = prevIdsByCardNumber.get(card.cardNumber);
+      if (prevIds && count < prevIds.length) {
+        return { card, id: prevIds[count] };
       }
-    }
+      return { card, id: `hand-card-${nextIdCounterRef.current++}` };
+    });
 
-    // Rebuild map for next render
-    const newMap = new Map<string, { id: string; cardNumber: string }>();
-    for (const { card, id } of result) {
-      const key = card.actionDataOverride;
-      if (key != null && key !== '') {
-        newMap.set(key, { id, cardNumber: card.cardNumber });
-      }
-    }
-    cardIdMapRef.current = newMap;
+    cardStableListRef.current = result.map(({ card, id }) => ({
+      id,
+      cardNumber: card.cardNumber
+    }));
 
     return result;
   }, [handCards]);
@@ -222,7 +190,11 @@ export default function PlayerHand() {
       return ordered;
     }
 
-    return handCardsWithStableIds;
+    const orderedIdSet = new Set(ordered.map((e) => e.id));
+    const newEntries = handCardsWithStableIds.filter(
+      (entry) => !orderedIdSet.has(entry.id)
+    );
+    return [...ordered, ...newEntries];
   }, [handCardsWithStableIds, orderedHandIds, previewHandIds]);
 
   const handleHandCardDragStart = () => {
