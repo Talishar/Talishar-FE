@@ -145,13 +145,9 @@ const Header = () => {
               About
             </NavLink>
           </li>
-	  {!isLoggedIn ? (
-	  <li>
-	    <LanguageSelector />
-	  </li>
-	  ) : ''}
 	</ul>
         <ul className={styles.rightGroup}>
+          {!isLoggedIn && <LanguageSelector hideIcon />}
           <li>
             {isLoggedIn ? (
               <div className={styles.userDropdown} ref={userDropdownRef}>
