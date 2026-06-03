@@ -25,17 +25,25 @@ export const CardImage = (props: CardImage) => {
   const { isShuffling, isOpponent } = props;
 
   let srcArray = src.split('/');
-  let cardNumber = srcArray?.pop()?.split('.')[0]?.split('-')[0];
+  const filename = srcArray?.pop()?.split('.')[0] ?? '';
+  const isCropped = filename.endsWith('_cropped');
+  const baseFilename = isCropped ? filename.slice(0, -'_cropped'.length) : filename;
+  let cardNumber = baseFilename.split('-')[0];
+
+  const buildAltSrc = (altPath: string) => {
+    const altFilename = isCropped ? `${altPath}_cropped` : altPath;
+    return srcArray.join('/') + `/${altFilename}.webp`;
+  };
 
   if (isOpponent && opponentAltArts) {
     for (let i = 0; i < opponentAltArts.length; i++) {
       if (cardNumber == opponentAltArts[i].cardId)
-        src = srcArray.join('/') + `/${opponentAltArts[i].altPath}.webp`;
+        src = buildAltSrc(opponentAltArts[i].altPath);
     }
   } else if (altArts) {
     for (let i = 0; i < altArts.length; i++) {
       if (cardNumber == altArts[i].cardId)
-        src = srcArray.join('/') + `/${altArts[i].altPath}.webp`;
+        src = buildAltSrc(altArts[i].altPath);
     }
   }
 

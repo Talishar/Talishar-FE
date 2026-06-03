@@ -70,6 +70,8 @@ export const CardListZone = () => {
     ? [...cardList.cardList].reverse()
     : null;
 
+  const isOpponentZone = cardList?.name?.includes("Opponent's") ?? false;
+
   const filteredList =
     reversedList?.filter(
       (card: Card) =>
@@ -160,13 +162,14 @@ export const CardListZone = () => {
             <CardListZoneAPI
               name={cardList.apiQuery ?? ''}
               searchQuery={searchQuery}
+              isOpponentZone={cardList?.name?.includes("Opponent's") ?? false}
             />
           ) : (
             <div className={styles.cardListContents}>
               {filteredList && filteredList.length > 0 ? (
-                filteredList.map((card: Card, ix: number) => {
-                  return <CardDisplay card={card} key={ix} />;
-                })
+                filteredList.map((card: Card, ix: number) => (
+                  <CardDisplay card={card} key={ix} isPlayer={!isOpponentZone} />
+                ))
               ) : searchQuery ? (
                 <div className={styles.noResults}>
                   No cards found matching "{searchQuery}"
@@ -185,9 +188,10 @@ export const CardListZone = () => {
 interface CardListZoneAPI {
   name: string;
   searchQuery: string;
+  isOpponentZone?: boolean;
 }
 
-const CardListZoneAPI = ({ name, searchQuery }: CardListZoneAPI) => {
+const CardListZoneAPI = ({ name, searchQuery, isOpponentZone }: CardListZoneAPI) => {
   const gameInfo = useAppSelector(getGameInfo, shallowEqual);
   const cardList = useAppSelector(
     (state: RootState) => state.game.cardListFocus
@@ -242,7 +246,7 @@ const CardListZoneAPI = ({ name, searchQuery }: CardListZoneAPI) => {
       <div className={styles.cardListContents}>
         {filteredCards.length > 0 ? (
           filteredCards.map((card: Card, ix: number) => {
-            return <CardDisplay card={card} key={ix} />;
+            return <CardDisplay card={card} key={ix} isPlayer={!isOpponentZone} />;
           })
         ) : searchQuery ? (
           <div className={styles.noResults}>

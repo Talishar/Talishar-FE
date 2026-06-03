@@ -40,7 +40,7 @@ function CardSlide({
   });
 
   return (
-    <CardPopUp cardNumber={cardNumber} containerClass={styles.lastPlayed}>
+    <CardPopUp cardNumber={cardNumber} containerClass={styles.lastPlayed} isOpponent={isOpponent}>
       <CardImage
         src={imageSrc}
         className={imgClassNames}

@@ -4,6 +4,7 @@ import styles from './Effects.module.css';
 import { Card } from 'features/Card';
 import { useAppSelector } from 'app/Hooks';
 import CardPopUp from '../cardPopUp/CardPopUp';
+import CardImage from '../cardImage/CardImage';
 import { generateCroppedImageUrl } from 'utils/cropImages';
 import CountersOverlay from '../countersOverlay/CountersOverlay';
 
@@ -24,11 +25,12 @@ export function Effect(prop: CardProp) {
     ? styles.imgPlayerBorder
     : styles.imgOpponentBorder;
   return (
-    <CardPopUp cardNumber={prop.card.cardNumber} containerClass={styles.effect}>
+    <CardPopUp cardNumber={prop.card.cardNumber} containerClass={styles.effect} isOpponent={!isPlayer}>
       <div className={styles.overlayContainer}>
-        <img
+        <CardImage
           src={src}
           className={`${styles.img} ${imgBorderClass} ${imgClassName || ''}`}
+          isOpponent={!isPlayer}
         />
         <CountersOverlay {...card} num={numValue} excludeFancyCounters={true} />
       </div>

@@ -48,7 +48,7 @@ export default function HandZone(prop: Player) {
   return (
     <div className={displayRow}>
       {handCards.map((card: Card, index) => {
-        return <CardDisplay card={card} key={index} />;
+        return <CardDisplay card={card} key={index} isPlayer={isPlayer} />;
       })}
     </div>
   );
