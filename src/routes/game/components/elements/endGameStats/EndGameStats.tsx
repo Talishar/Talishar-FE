@@ -72,6 +72,7 @@ export interface EndGameData {
   yourTime?: number;
   totalTime?: number;
   startingLife?: number;
+  opponentStartingLife?: number;
 }
 
 export interface CardResult {
@@ -324,7 +325,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
     const yourStartingLife = data.startingLife ?? 40;
     const opponentPlayerID = data.playerID === 1 ? 2 : 1;
     const opponentData = data.bothPlayersData?.[opponentPlayerID] as EndGameData | undefined;
-    const opponentStartingLife = opponentData?.startingLife ?? 40;
+    const opponentStartingLife = data.opponentStartingLife ?? opponentData?.startingLife ?? 40;
     const opponentTurnResults = opponentData?.turnResults;
 
     const entries = Object.entries(data.turnResults)
@@ -376,9 +377,9 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
     const oppPlayerID = data.playerID === 1 ? 2 : 1;
     const oppData = data.bothPlayersData?.[oppPlayerID] as EndGameData | undefined;
     const startYour = data.startingLife ?? 40;
-    const startOpp = oppData?.startingLife ?? 40;
+    const startOpp = data.opponentStartingLife ?? oppData?.startingLife ?? 40;
     return [{ turn: 0, yourLife: startYour, opponentLife: startOpp }, ...chartData];
-  }, [chartData, data.startingLife, data.playerID, data.bothPlayersData]);
+  }, [chartData, data.startingLife, data.opponentStartingLife, data.playerID, data.bothPlayersData]);
 
   const avgChartValue = useMemo(() => {
     if (chartData.length === 0) return 0;
