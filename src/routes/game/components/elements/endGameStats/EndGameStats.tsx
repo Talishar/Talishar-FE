@@ -348,12 +348,14 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
         (+turn.lifeLost || 0);
       const turnDealt = parseInt(String(turn.damageDealt), 10) || 0;
 
-      yourLife -= (+turn.damageTaken || 0) + (+turn.lifeLost || 0);
+      yourLife -= (+turn.damageTaken || 0);
+      yourLife += (+turn.lifeLost || 0);
       yourLife += +turn.lifeGained || 0;
 
       const oppTurn = opponentTurnResults?.[`turn_${turnNo}`];
       if (oppTurn) {
-        opponentLife -= (+oppTurn.damageTaken || 0) + (+oppTurn.lifeLost || 0);
+        opponentLife -= (+oppTurn.damageTaken || 0);
+        opponentLife += (+oppTurn.lifeLost || 0);
         opponentLife += +oppTurn.lifeGained || 0;
       } else {
         opponentLife -= turnDealt;
