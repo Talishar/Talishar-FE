@@ -25,9 +25,6 @@
 
 .tooltip {
   position: absolute;
-  top: 100%;
-  left: 50%;
-  transform: translate(-50%, 0.25rem);
   background-color: var(--tooltip-background-color);
   color: var(--tooltip-color);
   padding: 0.25rem 0.5rem;
