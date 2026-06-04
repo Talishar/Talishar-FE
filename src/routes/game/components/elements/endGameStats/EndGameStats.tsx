@@ -386,6 +386,11 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
     return Math.round(chartData.reduce((sum, d) => sum + d.avgValue, 0) / chartData.length);
   }, [chartData]);
 
+  const avgThreatenedValue = useMemo(() => {
+    if (chartData.length === 0) return 0;
+    return Math.round(chartData.reduce((sum, d) => sum + d.avgThreatened, 0) / chartData.length);
+  }, [chartData]);
+
   const handleExportScreenshot = async () => {
     if (!statsRef.current) return;
 
@@ -1777,8 +1782,6 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                   <XAxis dataKey="turn" stroke="rgba(255,255,255,0.25)" tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 11 }} />
                   <YAxis stroke="rgba(255,255,255,0.25)" tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 11 }} width={30} />
                   <Tooltip content={<ChartTooltip />} cursor={{ stroke: 'rgba(255,255,255,0.15)' }} />
-                  <ReferenceLine y={12} stroke="rgba(180,130,40,0.5)" strokeDasharray="3 4" label={{ value: '12', position: 'insideTopRight', fill: 'rgba(180,130,40,0.7)', fontSize: 10 }} />
-                  <ReferenceLine y={16} stroke="rgba(180,130,40,0.5)" strokeDasharray="3 4" label={{ value: '16', position: 'insideTopRight', fill: 'rgba(180,130,40,0.7)', fontSize: 10 }} />
                   {avgChartValue > 0 && <ReferenceLine y={avgChartValue} stroke="rgba(255,255,255,0.3)" strokeDasharray="5 3" label={{ value: `avg ${avgChartValue}`, position: 'insideTopLeft', fill: 'rgba(255,255,255,0.4)', fontSize: 10 }} />}
                   <Area type="monotone" dataKey="avgValue" name="Value" stroke={themeColor} strokeWidth={2} fill="url(#egsColorValue)" dot={false} activeDot={{ r: 4, fill: themeColor }} />
                 </AreaChart>
@@ -1841,6 +1844,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                       <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><svg width="14" height="4"><line x1="0" y1="2" x2="14" y2="2" stroke="#ef4444" strokeWidth="2"/></svg>You Took</span>
                     </div>
                   )} />
+                  {avgThreatenedValue > 0 && <ReferenceLine y={avgThreatenedValue} stroke="rgba(255,255,255,0.3)" strokeDasharray="5 3" label={{ value: `avg ${avgThreatenedValue}`, position: 'insideTopLeft', fill: 'rgba(255,255,255,0.4)', fontSize: 10 }} />}
                   <Area type="monotone" dataKey="avgThreatened" name="You Threatened" stroke={themeColor} strokeWidth={2} fill="url(#egsColorThreatened2)" dot={false} activeDot={{ r: 4, fill: themeColor }} />
                   <Area type="monotone" dataKey="damageTaken" name="You Took" stroke="#ef4444" strokeWidth={2} fill="url(#egsColorTaken)" dot={false} activeDot={{ r: 4, fill: '#ef4444' }} />
                 </AreaChart>
