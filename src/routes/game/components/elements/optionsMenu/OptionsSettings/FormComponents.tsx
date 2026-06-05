@@ -18,8 +18,6 @@ export const CheckboxSetting: React.FC<CheckboxSettingProps> = ({
   ariaDisabled = false,
   tooltip
 }) => {
-  const [isTooltipVisible, setIsTooltipVisible] = React.useState(false);
-
   return (
     <label className={styles.optionLabel}>
       <input
@@ -34,13 +32,10 @@ export const CheckboxSetting: React.FC<CheckboxSettingProps> = ({
         {tooltip && (
           <span
             className={styles.tooltipIcon}
-            onMouseEnter={() => setIsTooltipVisible(true)}
-            onMouseLeave={() => setIsTooltipVisible(false)}
+            data-tooltip={tooltip}
+            data-placement="bottom"
           >
             ?
-            {isTooltipVisible && (
-              <span className={styles.tooltipContent}>{tooltip}</span>
-            )}
           </span>
         )}
       </span>
@@ -165,8 +160,6 @@ interface FieldsetProps {
 }
 
 export const Fieldset: React.FC<FieldsetProps> = ({ legend, children, tooltip }) => {
-  const [isTooltipVisible, setIsTooltipVisible] = React.useState(false);
-
   return (
     <fieldset className={styles.fieldset}>
       <legend>
@@ -174,13 +167,10 @@ export const Fieldset: React.FC<FieldsetProps> = ({ legend, children, tooltip })
         {tooltip && (
           <span
             className={styles.tooltipIcon}
-            onMouseEnter={() => setIsTooltipVisible(true)}
-            onMouseLeave={() => setIsTooltipVisible(false)}
+            data-tooltip={tooltip}
+            data-placement="bottom"
           >
             ?
-            {isTooltipVisible && (
-              <span className={styles.tooltipContent}>{tooltip}</span>
-            )}
           </span>
         )}
       </legend>
