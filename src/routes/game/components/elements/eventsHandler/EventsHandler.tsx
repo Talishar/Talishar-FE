@@ -36,7 +36,8 @@ export const EventsHandler = React.memo(() => {
     RequestChat = 0,
     RequestUndo = 1,
     RequestThisTurnUndo = 2,
-    RequestLastTurnUndo = 3
+    RequestLastTurnUndo = 3,
+    RequestChainLinkUndo = 4
   }
 
   const [showModal, setShowModal] = useState(false);
@@ -61,6 +62,10 @@ export const EventsHandler = React.memo(() => {
       dispatch(
         submitButton({ button: { mode: PROCESS_INPUT.CONFIRM_LAST_TURN_UNDO } })
       );
+    else if (modalType == ModalType.RequestChainLinkUndo)
+      dispatch(
+        submitButton({ button: { mode: PROCESS_INPUT.CONFIRM_CHAIN_LINK_UNDO } })
+      );
     else
       dispatch(submitButton({ button: { mode: PROCESS_INPUT.ENABLE_CHAT } }));
   };
@@ -71,7 +76,8 @@ export const EventsHandler = React.memo(() => {
     if (
       modalType == ModalType.RequestUndo ||
       modalType == ModalType.RequestThisTurnUndo ||
-      modalType == ModalType.RequestLastTurnUndo
+      modalType == ModalType.RequestLastTurnUndo ||
+      modalType == ModalType.RequestChainLinkUndo
     )
       dispatch(submitButton({ button: { mode: PROCESS_INPUT.DECLINE_UNDO } }));
     else
@@ -220,6 +226,18 @@ export const EventsHandler = React.memo(() => {
               setModalType(ModalType.RequestLastTurnUndo);
               setModal(
                 'Do you want to allow the opponent to revert to last turn?'
+              );
+            }
+            continue;
+          case 'REQUESTCHAINLINKUNDO':
+            if (
+              parseInt(event.eventValue ?? '0') !== playerID &&
+              playerID !== 3
+            ) {
+              setShowModal(true);
+              setModalType(ModalType.RequestChainLinkUndo);
+              setModal(
+                'Do you want to allow the opponent to revert to the start of the chain link?'
               );
             }
             continue;
