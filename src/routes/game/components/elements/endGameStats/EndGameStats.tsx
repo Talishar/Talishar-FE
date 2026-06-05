@@ -993,7 +993,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                   Avg Value per Turn:
                   <span
                     className={styles.tooltipIcon}
-                    data-tooltip="(Damage Threatened + Damage Blocked + Life Gained - Life Self-Lost + Damage Prevented) ÷ Number of Turns (Excluding turn 0)"
+                    data-tooltip="(Damage Threatened + Damage Blocked + Life Gained - Life Self-Lost + Damage Prevented) ÷ Number of Turns (Excluding turn 0). Damage Prevented includes damage dealt to your allies."
                   >
                     ?
                   </span>
@@ -1079,6 +1079,12 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                 <div className={styles.infoRow}>
                   <span className={styles.infoLabel}>
                     Total Damage Prevented:
+                    <span
+                      className={styles.tooltipIcon}
+                      data-tooltip="Includes damage prevented by effects/equipment and damage dealt to your allies (protecting your hero)."
+                    >
+                      ?
+                    </span>
                   </span>
                   <span className={styles.infoValue}>
                     {stats.totalDamagePrevented}
@@ -1540,7 +1546,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                     <th
                       onClick={() => handleTurnSort('damagePrevented')}
                       className={styles.sortableHeader}
-                      title="Click to sort"
+                      title="Damage prevented by effects and equipment, plus damage dealt to your allies (protecting your hero). Click to sort."
                     >
                       Prevented{' '}
                       {turnSortField === 'damagePrevented' &&
