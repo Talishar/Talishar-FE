@@ -375,8 +375,17 @@ export const gameSlice = createSlice({
           state.cardListFocus.isSorted = false;
         } else {
           // Sort the cards
+          const isCardBack = (cardNumber: string) =>
+            cardNumber.toLowerCase() === 'cardback';
           const sortedCardList = [...state.cardListFocus.cardList].sort(
-            (a, b) => b.cardNumber.localeCompare(a.cardNumber)
+            (a, b) => {
+              const aBack = isCardBack(a.cardNumber);
+              const bBack = isCardBack(b.cardNumber);
+              if (aBack && bBack) return 0;
+              if (aBack) return 1;
+              if (bBack) return -1;
+              return b.cardNumber.localeCompare(a.cardNumber);
+            }
           );
           state.cardListFocus.cardList = sortedCardList;
           state.cardListFocus.isSorted = true;

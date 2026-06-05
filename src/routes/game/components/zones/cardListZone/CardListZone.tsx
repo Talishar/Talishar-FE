@@ -67,7 +67,12 @@ export const CardListZone = () => {
   }, [cardList?.isSorted]);
 
   const reversedList = cardList?.cardList
-    ? [...cardList.cardList].reverse()
+    ? (() => {
+        const reversed = [...cardList.cardList].reverse();
+        const nonBacks = reversed.filter(c => c.cardNumber.toLowerCase() !== 'cardback');
+        const backs = reversed.filter(c => c.cardNumber.toLowerCase() === 'cardback');
+        return [...nonBacks, ...backs];
+      })()
     : null;
 
   const isOpponentZone = cardList?.name?.includes("Opponent's") ?? false;
