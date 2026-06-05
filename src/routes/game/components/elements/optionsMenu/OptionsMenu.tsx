@@ -201,13 +201,13 @@ const OptionsContent = () => {
                     className={styles.buttonDiv}
                     onClick={clickRevertToStartOfChainLinkHandler}
                   >
-                    Revert to Start of Chain Link
+                    Revert to Start of This Chain Link
                   </button>
                   <button
                     className={styles.buttonDiv}
                     onClick={clickRevertToStartOfPreviousTurnHandler}
                   >
-                    Revert to Start of the Previous Turn
+                    Revert to Start of The Previous Turn
                   </button>
                 </>
               )}
