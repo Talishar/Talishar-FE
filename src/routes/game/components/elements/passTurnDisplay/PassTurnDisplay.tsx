@@ -26,6 +26,9 @@ export default function PassTurnDisplay() {
   const priorityPlayer = useAppSelector(
     (state: RootState) => state.game.priorityPlayer
   );
+  const spectatorCameraView = useAppSelector(
+    (state: RootState) => state.game.spectatorCameraView
+  );
   const [showAreYouSureModal, setShowAreYouSureModal] =
     useState<boolean>(false);
   const [isPassClickDebounced, setIsPassClickDebounced] =
@@ -116,11 +119,11 @@ export default function PassTurnDisplay() {
 
   // Spectator view - show priority indicator
   if (playerID === 3) {
-    // Use priorityPlayer to determine which player has priority
-    // priorityPlayer 1 = top player, priorityPlayer 2 = bottom player
-    // Fallback to checking hasPriority if priorityPlayer is undefined
     const priority = priorityPlayer ?? (hasPriority ? 1 : 2);
-    const arrow = priority === 1 ? '▲' : '▼';
+    // In camera view 2 the board is flipped, so invert the arrow direction
+    const isFlipped = spectatorCameraView === 2;
+    const showUpArrow = isFlipped ? priority === 2 : priority === 1;
+    const arrow = showUpArrow ? '▲' : '▼';
 
     return (
       <div className={styles.passTurnDisplay}>
