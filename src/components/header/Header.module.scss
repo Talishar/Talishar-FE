@@ -530,6 +530,8 @@
     flex-direction: column;
 
     > li {
+      margin: 0;
+      padding: 0;
       border-bottom: 1px solid var(--muted-border-color, #202632);
 
       > a,
