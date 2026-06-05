@@ -188,6 +188,7 @@ export const DeckZone = React.memo((prop: Displayrow) => {
             <CardDisplay
               card={{ cardNumber: clashCard }}
               showCountersOnHover={!alwaysShowCounters}
+              isPlayer={isPlayer}
             />
           </div>
         )}
