@@ -195,7 +195,7 @@ const OptionsContent = () => {
                     className={styles.buttonDiv}
                     onClick={clickRevertToStartOfThisTurnHandler}
                   >
-                    Revert to Start of This turn
+                    Revert to Start of This Turn
                   </button>
                   <button
                     className={styles.buttonDiv}
@@ -207,7 +207,7 @@ const OptionsContent = () => {
                     className={styles.buttonDiv}
                     onClick={clickRevertToStartOfPreviousTurnHandler}
                   >
-                    Revert to Start of Previous Turn
+                    Revert to Start of the Previous Turn
                   </button>
                 </>
               )}
