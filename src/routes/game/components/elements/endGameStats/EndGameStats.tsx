@@ -1215,7 +1215,10 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
           <div className={styles.statsSection}>
             <div className={styles.sectionHeaderContainer}>
               <h2 className={styles.sectionHeader}>Card Play Stats</h2>
-              <label className={styles.excludeLastTurnLabel}>
+              <label
+                className={styles.excludeLastTurnLabel}
+                title="By default, only cards that were played, blocked, or pitched at least once are shown. Check this to include all cards in your deck, even those that were never used."
+              >
                 <input
                   type="checkbox"
                   checked={showAllCards}
