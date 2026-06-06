@@ -163,6 +163,10 @@
   margin: 0 !important;
 }
 
+.inGameBlockAd:empty {
+  pointer-events: none;
+}
+
 .removeAdsLink {
   color: rgba(255, 255, 255, 0.38);
   text-decoration: none;
