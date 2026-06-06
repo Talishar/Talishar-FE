@@ -99,20 +99,27 @@ export const EventsHandler = React.memo(() => {
               { duration: 5000 }
             );
             continue;
-          case 'REVEAL':
+          case 'REVEAL': {
+            const revealValue = event.eventValue ?? '';
+            const colonIndex = revealValue.indexOf(':');
+            const revealPlayerID = colonIndex !== -1 ? parseInt(revealValue.slice(0, colonIndex)) : null;
+            const revealCardNumber = colonIndex !== -1 ? revealValue.slice(colonIndex + 1) : revealValue;
+            const revealIsPlayer = revealPlayerID !== null ? revealPlayerID === playerID : undefined;
             toast(
               (t) => (
                 <div className={styles.card}>
                   Card Revealed
                   <CardDisplay
-                    card={{ cardNumber: event.eventValue ?? '' }}
+                    card={{ cardNumber: revealCardNumber }}
                     makeMeBigger
+                    isPlayer={revealIsPlayer}
                   />
                 </div>
               ),
               { duration: 5000 }
             );
             continue;
+          }
           case 'CLASH': {
             const clashValue = event.eventValue ?? '';
             const [clashPlayerID, clashCardNumber] = clashValue.split(':');
