@@ -373,7 +373,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
         opponentLife: Math.max(0, opponentLife)
       };
     });
-  }, [data.turnResults, data.startingLife, data.playerID, data.bothPlayersData]);
+  }, [data.turnResults, data.startingLife, data.opponentStartingLife, data.playerID, data.bothPlayersData]);
 
   const filteredChartData = useMemo(() => {
     if (!excludeLastTurn || chartData.length === 0) return chartData;
