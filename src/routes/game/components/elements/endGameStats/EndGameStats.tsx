@@ -375,23 +375,28 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
     });
   }, [data.turnResults, data.startingLife, data.playerID, data.bothPlayersData]);
 
+  const filteredChartData = useMemo(() => {
+    if (!excludeLastTurn || chartData.length === 0) return chartData;
+    return chartData.slice(0, -1);
+  }, [chartData, excludeLastTurn]);
+
   const lifeChartData = useMemo(() => {
     const oppPlayerID = data.playerID === 1 ? 2 : 1;
     const oppData = data.bothPlayersData?.[oppPlayerID] as EndGameData | undefined;
     const startYour = data.startingLife ?? 40;
     const startOpp = data.opponentStartingLife ?? oppData?.startingLife ?? 40;
-    return [{ turn: 0, yourLife: startYour, opponentLife: startOpp }, ...chartData];
-  }, [chartData, data.startingLife, data.opponentStartingLife, data.playerID, data.bothPlayersData]);
+    return [{ turn: 0, yourLife: startYour, opponentLife: startOpp }, ...filteredChartData];
+  }, [filteredChartData, data.startingLife, data.opponentStartingLife, data.playerID, data.bothPlayersData]);
 
   const avgChartValue = useMemo(() => {
-    if (chartData.length === 0) return 0;
-    return Math.round(chartData.reduce((sum, d) => sum + d.avgValue, 0) / chartData.length);
-  }, [chartData]);
+    if (filteredChartData.length === 0) return 0;
+    return Math.round(filteredChartData.reduce((sum, d) => sum + d.avgValue, 0) / filteredChartData.length);
+  }, [filteredChartData]);
 
   const avgThreatenedValue = useMemo(() => {
-    if (chartData.length === 0) return 0;
-    return Math.round(chartData.reduce((sum, d) => sum + d.avgThreatened, 0) / chartData.length);
-  }, [chartData]);
+    if (filteredChartData.length === 0) return 0;
+    return Math.round(filteredChartData.reduce((sum, d) => sum + d.avgThreatened, 0) / filteredChartData.length);
+  }, [filteredChartData]);
 
   const handleExportScreenshot = async () => {
     if (!statsRef.current) return;
@@ -905,7 +910,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
     if (!active || !payload?.length) return null;
     return (
       <div style={{ background: 'rgba(10,10,10,0.92)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '4px', padding: '4px 8px', fontSize: '0.68em', pointerEvents: 'none', whiteSpace: 'nowrap' }}>
-        <p style={{ margin: '0 0 2px', color: 'rgba(255,255,255,0.45)' }}>After turn {label}</p>
+        <p style={{ margin: '0 0 2px', color: 'rgba(255,255,255,0.45)' }}>{label === 0 ? 'Start' : `Turn ${label}`}</p>
         {payload.map((entry, i) => (
           <p key={i} style={{ margin: 0, color: entry.color ?? themeColor, fontWeight: 600 }}>{entry.name}: {entry.value}</p>
         ))}
@@ -982,7 +987,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                     className={styles.excludeLastTurnCheckbox}
                   />
                   <span className={styles.excludeLastTurnText}>
-                    Exclude Last Turn
+                    Exclude Last Turn (stats &amp; charts)
                   </span>
                 </label>
               </div>
@@ -1776,13 +1781,13 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
       </div>
 
       {/* Per Turn Charts - outside statsRef so html2canvas doesn't process SVG elements */}
-      {chartData.length > 1 && (
+      {filteredChartData.length > 1 && (
         <div className={styles.chartsGrid}>
             {/* Chart 1: Value Per Turn with reference lines */}
             <div className={styles.turnBreakdownSection}>
               <h2 className={styles.sectionHeader}>Value Per Turn</h2>
               <ResponsiveContainer width="100%" height={220}>
-                <AreaChart data={chartData} margin={{ top: 5, right: 16, left: 0, bottom: 5 }} onMouseMove={(e) => { if (e.activeLabel !== undefined) setHoveredChartTurn(Number(e.activeLabel)); }} onMouseLeave={() => setHoveredChartTurn(null)}>
+                <AreaChart data={filteredChartData} margin={{ top: 5, right: 16, left: 0, bottom: 5 }} onMouseMove={(e) => { if (e.activeLabel !== undefined) setHoveredChartTurn(Number(e.activeLabel)); }} onMouseLeave={() => setHoveredChartTurn(null)}>
                   <defs>
                     <linearGradient id="egsColorValue" x1="0" y1="0" x2="0" y2="1">
                       <stop offset="5%" stopColor={themeColor} stopOpacity={0.3} />
@@ -1834,7 +1839,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
             <div className={styles.turnBreakdownSection}>
               <h2 className={styles.sectionHeader}>Pressure Exchange</h2>
               <ResponsiveContainer width="100%" height={220}>
-                <AreaChart data={chartData} margin={{ top: 5, right: 16, left: 0, bottom: 5 }} onMouseMove={(e) => { if (e.activeLabel !== undefined) setHoveredChartTurn(Number(e.activeLabel)); }} onMouseLeave={() => setHoveredChartTurn(null)}>
+                <AreaChart data={filteredChartData} margin={{ top: 5, right: 16, left: 0, bottom: 5 }} onMouseMove={(e) => { if (e.activeLabel !== undefined) setHoveredChartTurn(Number(e.activeLabel)); }} onMouseLeave={() => setHoveredChartTurn(null)}>
                   <defs>
                     <linearGradient id="egsColorThreatened2" x1="0" y1="0" x2="0" y2="1">
                       <stop offset="5%" stopColor={themeColor} stopOpacity={0.25} />
