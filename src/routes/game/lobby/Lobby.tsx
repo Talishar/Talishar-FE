@@ -16,6 +16,7 @@ import StickyFooter from './components/stickyFooter/StickyFooter';
 import { toast } from 'react-hot-toast';
 import useAuth from 'hooks/useAuth';
 import useAdScript from 'hooks/useAdScript';
+import { useCookies } from 'react-cookie';
 import {
   useGetLobbyInfoQuery,
   useSubmitSideboardMutation,
@@ -118,6 +119,15 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
     link: undefined,
     gameKey: ''
   });
+  const [cookies] = useCookies(['hoverImageSize']);
+
+  useEffect(() => {
+    document.documentElement.style.setProperty(
+      '--hover-img-scale',
+      cookies.hoverImageSize ? String(cookies.hoverImageSize) : '1'
+    );
+  }, [cookies.hoverImageSize]);
+
   const settingsStatus = useAppSelector(getSettingsStatus);
   const {
     isLoggedIn,
