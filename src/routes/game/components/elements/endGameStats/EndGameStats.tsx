@@ -348,17 +348,26 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
         (+turn.lifeLost || 0);
       const turnDealt = parseInt(String(turn.damageDealt), 10) || 0;
 
-      yourLife -= (+turn.damageTaken || 0);
-      yourLife -= (+turn.lifeLost || 0);
-      yourLife += +turn.lifeGained || 0;
+      if (turn.lifeAtTurnEnd != null) {
+        yourLife = Number(turn.lifeAtTurnEnd);
+      } else {
+        yourLife -= (+turn.damageTaken || 0);
+        yourLife += (+turn.lifeLost || 0); // lifeLost is stored negative by backend
+        yourLife += +turn.lifeGained || 0;
+        yourLife = Math.max(0, yourLife);
+      }
 
       const oppTurn = opponentTurnResults?.[`turn_${turnNo}`];
-      if (oppTurn) {
+      if (oppTurn?.lifeAtTurnEnd != null) {
+        opponentLife = Number(oppTurn.lifeAtTurnEnd);
+      } else if (oppTurn) {
         opponentLife -= (+oppTurn.damageTaken || 0);
-        opponentLife -= (+oppTurn.lifeLost || 0);
+        opponentLife += (+oppTurn.lifeLost || 0); // lifeLost is stored negative by backend
         opponentLife += +oppTurn.lifeGained || 0;
+        opponentLife = Math.max(0, opponentLife);
       } else {
         opponentLife -= turnDealt;
+        opponentLife = Math.max(0, opponentLife);
       }
 
       const turnTaken = parseInt(String(turn.damageTaken), 10) || 0;
@@ -369,8 +378,8 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
         avgThreatened: parseInt(String(turn.damageThreatened), 10) || 0,
         avgDealt: turnDealt,
         damageTaken: turnTaken,
-        yourLife: Math.max(0, yourLife),
-        opponentLife: Math.max(0, opponentLife)
+        yourLife,
+        opponentLife
       };
     });
   }, [data.turnResults, data.startingLife, data.opponentStartingLife, data.playerID, data.bothPlayersData]);
