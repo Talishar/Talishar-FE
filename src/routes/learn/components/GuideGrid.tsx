@@ -1,4 +1,5 @@
 import React from 'react';
+import { TALISHAR_METAFY_URL } from 'constants/socialLinks';
 import styles from '../Learn.module.scss';
 import { MetafyGuide } from '../../../services/metafyService';
 import { AdUnit } from '../../../components/ads';
@@ -135,7 +136,7 @@ const GuideGrid: React.FC<GuideGridProps> = ({ guides, showAds = false }) => {
       gridItems.push(
         <div key={`ad-${adCount}`} className={styles.adTile}>
           <a
-            href="https://metafy.gg/@talishar/members"
+            href={TALISHAR_METAFY_URL}
             target="_blank"
             rel="noopener noreferrer"
             className={styles.removeAdsLink}

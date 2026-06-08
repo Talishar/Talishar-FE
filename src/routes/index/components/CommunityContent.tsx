@@ -6,6 +6,10 @@ import {
 } from '../../../services/contentService';
 import { useTranslation } from 'react-i18next';
 import { AdUnit } from 'components/ads';
+import {
+  TALISHAR_DISCORD_URL,
+  TALISHAR_METAFY_URL
+} from 'constants/socialLinks';
 
 interface CommunityContentProps {
   showAds?: boolean;
@@ -230,7 +234,7 @@ const CommunityContent: React.FC<CommunityContentProps> = ({ showAds = false }) 
               <div className={styles.communityAdSection}>
                 <div className={styles.adHeader}>
                   <a
-                    href="https://metafy.gg/@talishar/members"
+                    href={TALISHAR_METAFY_URL}
                     target="_blank"
                     rel="noopener noreferrer"
                     className={styles.removeAdsLink}
@@ -291,7 +295,7 @@ const CommunityContent: React.FC<CommunityContentProps> = ({ showAds = false }) 
             </p>
           </div>
           <a
-            href="https://discord.com/JykuRkdd5S"
+            href={TALISHAR_DISCORD_URL}
             target="_blank"
             rel="noopener noreferrer"
             className={styles.discordButton}
@@ -303,7 +307,7 @@ const CommunityContent: React.FC<CommunityContentProps> = ({ showAds = false }) 
             <div className={styles.adFooter}>
               <div className={styles.adHeader}>
                 <a
-                  href="https://metafy.gg/@talishar/members"
+                  href={TALISHAR_METAFY_URL}
                   target="_blank"
                   rel="noopener noreferrer"
                   className={styles.removeAdsLink}

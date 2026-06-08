@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { TALISHAR_METAFY_URL } from 'constants/socialLinks';
 import styles from './AdBlockingRecovery.module.css';
 
 declare global {
@@ -64,7 +65,7 @@ const AdBlockingRecovery: React.FC = () => {
           You can also support us directly on{' '}
           <a
             className={styles.link}
-            href="https://metafy.gg/@talishar/members"
+            href={TALISHAR_METAFY_URL}
             target="_blank"
             rel="noopener noreferrer"
           >

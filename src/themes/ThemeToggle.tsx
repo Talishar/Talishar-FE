@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { TALISHAR_METAFY_URL } from 'constants/socialLinks';
 import useSupporterStatus from 'hooks/useSupporterStatus';
 import { useTheme } from './ThemeContext';
 import styles from './ThemeToggle.module.css';
@@ -32,7 +33,7 @@ const ThemeToggle: React.FC = () => {
   const handlePremiumClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     setIsOpen(false);
-    window.location.href = 'https://metafy.gg/@talishar/members';
+    window.location.href = TALISHAR_METAFY_URL;
   };
 
   return (

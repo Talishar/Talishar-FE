@@ -1,4 +1,5 @@
 import React from 'react';
+import { TALISHAR_METAFY_URL } from 'constants/socialLinks';
 import styles from './profile.module.css';
 
 interface UpgradeSectionProps {
@@ -46,7 +47,7 @@ const UpgradeSection: React.FC<UpgradeSectionProps> = ({
           Join our community of supporters and help us grow!
         </p>
         <a
-          href="https://metafy.gg/@talishar/members"
+          href={TALISHAR_METAFY_URL}
           target="_blank"
           rel="noopener noreferrer"
           className={styles.upgradeButton}
