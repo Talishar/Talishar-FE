@@ -9,7 +9,11 @@ import { getGameInfo } from 'features/game/GameSlice';
 import useAuth from 'hooks/useAuth';
 import { FaHome, FaExchangeAlt, FaPaperPlane, FaSave, FaMapMarkedAlt } from 'react-icons/fa';
 
-const EndGameMenuOptions = () => {
+interface EndGameMenuOptionsProps {
+  onSwitchPlayer?: () => void;
+}
+
+const EndGameMenuOptions = ({ onSwitchPlayer }: EndGameMenuOptionsProps) => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { roguelikeGameID } = useAppSelector(getGameInfo, shallowEqual);
@@ -69,6 +73,11 @@ const EndGameMenuOptions = () => {
       {!roguelikeGameID && (
         <button className={styles.buttonDiv} onClick={handleSaveReplay}>
           <FaSave aria-hidden="true" className={styles.icon} /> Save replay
+        </button>
+      )}
+      {onSwitchPlayer && (
+        <button className={styles.buttonDiv} onClick={onSwitchPlayer}>
+          <FaExchangeAlt aria-hidden="true" className={styles.icon} /> Switch Player Stats
         </button>
       )}
     </div>

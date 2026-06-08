@@ -103,6 +103,7 @@
   flex-direction: row;
   align-items: center;
   justify-content: center;
+  gap: 0.45rem;
   min-height: 2.5rem;
   padding: 0.5rem 1rem;
   border-radius: 6px;
@@ -111,6 +112,7 @@
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
+  line-height: 1;
   transition: all 0.2s;
   cursor: pointer;
   margin-bottom: 0 !important;
@@ -267,7 +269,7 @@
     flex-shrink: 0;
     gap: 0.4rem;
     order: 0;
-    margin-right: 2.5rem;
+    margin-left: auto;
   }
 
   /* Action buttons wrap to their own full-width row */
@@ -279,18 +281,18 @@
   }
 
   .buttonDiv {
-    min-height: 2rem;
+    min-height: 2.25rem;
     padding: 0.4rem 0.6rem;
-    font-size: 0.8em;
+    font-size: 1em;
   }
 
-  .buttonDiv:has(svg) {
+  div.buttonDiv {
     flex: 0 0 auto;
     min-width: 2.25rem;
     padding: 0.4rem;
   }
 
   .buttonDiv svg {
-    font-size: 1.2em;
+    font-size: 1em;
   }
 }
