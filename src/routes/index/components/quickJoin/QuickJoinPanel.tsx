@@ -95,7 +95,24 @@ const QuickJoinPanel = ({ embedded = false }: Props) => {
           className={styles.textInput}
           placeholder="Paste deck list URL"
           value={importDeckUrl}
-          onChange={(e) => setImportDeckUrl(e.target.value)}
+          maxLength={500}
+          onChange={(e) => {
+            const val = e.target.value;
+            if (val.length > 500) return;
+            setImportDeckUrl(val);
+          }}
+          onPaste={(e) => {
+            const text = e.clipboardData.getData('text');
+            if (text.length <= 500) return;
+            e.preventDefault();
+            const match = text.match(/https?:\/\/[^\s"'<>]+/);
+            if (match) {
+              setImportDeckUrl(match[0].slice(0, 500));
+              toast.success('URL extracted from pasted content');
+            } else {
+              toast.error('Pasted content does not appear to be a valid URL');
+            }
+          }}
           aria-label="Deck URL"
         />
       </label>
