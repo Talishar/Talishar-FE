@@ -3,10 +3,9 @@ import { usePageTitle } from 'hooks/usePageTitle';
 import useAuth from 'hooks/useAuth';
 import { useGetUserProfileQuery } from 'features/api/apiSlice';
 import useAdScript from 'hooks/useAdScript';
+import { TALISHAR_METAFY_URL } from 'constants/socialLinks';
 import { METAFY_TIER_MAP, MetafyTierName } from 'utils/patronIcons';
 import styles from './Premium.module.scss';
-
-const METAFY_URL = 'https://metafy.gg/@talishar/members';
 
 interface Tier {
   name: string;
@@ -225,7 +224,7 @@ const Premium = () => {
                   )}
                 </div>
                 <a
-                  href={METAFY_URL}
+                  href={TALISHAR_METAFY_URL}
                   target="_blank"
                   rel="noopener noreferrer"
                   className={styles.upgradeBtn}
@@ -287,7 +286,7 @@ const Premium = () => {
           <h2>Ready to upgrade?</h2>
           <p>Join hundreds of supporters keeping Talishar running and thriving.</p>
           <a
-            href={METAFY_URL}
+            href={TALISHAR_METAFY_URL}
             target="_blank"
             rel="noopener noreferrer"
             className={styles.ctaBtn}

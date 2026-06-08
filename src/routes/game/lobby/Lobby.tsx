@@ -39,6 +39,7 @@ import {
   FAB_BAZAAR_DECK_URL_BASE,
   FABRARY_DECK_URL_BASE
 } from 'appConstants';
+import { JUDGE_HUB_DISCORD_URL } from 'constants/socialLinks';
 
 const COMPETITIVE_FORMATS = new Set([
   GAME_FORMAT.COMPETITIVE_CC,
@@ -812,7 +813,7 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
                   as written. If you have questions about interactions or
                   rulings, please contact the{' '}
                   <a
-                    href="https://discord.gg/flesh-and-blood-judge-hub-874145774135558164"
+                    href={JUDGE_HUB_DISCORD_URL}
                     target="_blank"
                   >
                     {' '}

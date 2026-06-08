@@ -2,6 +2,14 @@ import React, { useState, useRef, useEffect } from 'react';
 import { BsGithub } from 'react-icons/bs';
 import { MdEmojiEmotions } from "react-icons/md";
 import { FaDiscord, FaTwitter, FaYoutube } from 'react-icons/fa';
+import {
+  TALISHAR_BLUESKY_URL,
+  TALISHAR_DISCORD_URL,
+  TALISHAR_GITHUB_URL,
+  TALISHAR_METAFY_URL,
+  TALISHAR_X_URL,
+  TALISHAR_YOUTUBE_URL
+} from 'constants/socialLinks';
 import styles from './SocialDropdown.module.scss';
 import { useTranslation } from 'react-i18next';
 
@@ -39,7 +47,7 @@ const SocialDropdown = ({ inDropdown = false }: { inDropdown?: boolean }) => {
       {isOpen && (
         <div className={styles.dropdownMenu}>
           <a
-            href="https://metafy.gg/@talishar/members"
+            href={TALISHAR_METAFY_URL}
             target="_blank"
             rel="noopener noreferrer"
             className={styles.socialLink}
@@ -58,7 +66,7 @@ const SocialDropdown = ({ inDropdown = false }: { inDropdown?: boolean }) => {
             <span>Metafy</span>
           </a>
           <a
-            href="https://github.com/Talishar/Talishar"
+            href={TALISHAR_GITHUB_URL}
             target="_blank"
             rel="noopener noreferrer"
             className={styles.socialLink}
@@ -66,7 +74,7 @@ const SocialDropdown = ({ inDropdown = false }: { inDropdown?: boolean }) => {
             <BsGithub /> <span>GitHub</span>
           </a>
           <a
-            href="https://discord.gg/JykuRkdd5S"
+            href={TALISHAR_DISCORD_URL}
             target="_blank"
             rel="noopener noreferrer"
             className={styles.socialLink}
@@ -74,7 +82,7 @@ const SocialDropdown = ({ inDropdown = false }: { inDropdown?: boolean }) => {
             <FaDiscord /> <span>Discord</span>
           </a>
           <a
-            href="https://bsky.app/profile/talishar.bsky.social"
+            href={TALISHAR_BLUESKY_URL}
             target="_blank"
             rel="noopener noreferrer"
             className={styles.socialLink}
@@ -91,7 +99,7 @@ const SocialDropdown = ({ inDropdown = false }: { inDropdown?: boolean }) => {
             <span>Bluesky</span>
           </a>
           <a
-            href="https://twitter.com/talishar_online"
+            href={TALISHAR_X_URL}
             target="_blank"
             rel="noopener noreferrer"
             className={styles.socialLink}
@@ -99,7 +107,7 @@ const SocialDropdown = ({ inDropdown = false }: { inDropdown?: boolean }) => {
             <FaTwitter /> <span>Twitter</span>
           </a>
           <a
-            href="https://www.youtube.com/@pvtvoid"
+            href={TALISHAR_YOUTUBE_URL}
             target="_blank"
             rel="noopener noreferrer"
             className={styles.socialLink}

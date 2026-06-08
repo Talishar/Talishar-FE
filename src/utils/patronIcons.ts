@@ -1,3 +1,5 @@
+import { TALISHAR_METAFY_URL } from 'constants/socialLinks';
+
 // Icon configuration for patron/contributor status indicators
 // Used across multiple components to maintain consistency
 
@@ -25,32 +27,32 @@ export const METAFY_TIER_MAP: Record<
   'Fyendal Supporters': {
     image: '/images/fyendal.webp',
     title: 'I am a Metafy Supporter! 💖',
-    href: 'https://metafy.gg/@talishar/members'
+    href: TALISHAR_METAFY_URL
   },
   'Seers of Ophidia': {
     image: '/images/ophidia.webp',
     title: 'I am a Metafy Supporter! 💖',
-    href: 'https://metafy.gg/@talishar/members'
+    href: TALISHAR_METAFY_URL
   },
   'Arknight Shards': {
     image: '/images/arknight.webp',
     title: 'I am a Metafy Supporter! 💖',
-    href: 'https://metafy.gg/@talishar/members'
+    href: TALISHAR_METAFY_URL
   },
   'Lover of Grandeur': {
     image: '/images/grandeur.webp',
     title: 'I am a Metafy Supporter! 💖',
-    href: 'https://metafy.gg/@talishar/members'
+    href: TALISHAR_METAFY_URL
   },
   'Sponsors of Trōpal-Dhani': {
     image: '/images/tropal.webp',
     title: 'I am a Metafy Supporter! 💖',
-    href: 'https://metafy.gg/@talishar/members'
+    href: TALISHAR_METAFY_URL
   },
   'Light of Sol Gemini Circle': {
     image: '/images/lightofsol.webp',
     title: 'I am a Metafy Supporter! 💖',
-    href: 'https://metafy.gg/@talishar/members'
+    href: TALISHAR_METAFY_URL
   }
 };
 
@@ -73,19 +75,19 @@ export const createPatreonIconMap = (
         condition: isContributor ?? false,
         src: '/images/copper.webp',
         title: 'I am a contributor to Talishar!',
-        href: 'https://metafy.gg/@talishar/members'
+        href: TALISHAR_METAFY_URL
       },
       {
         condition: isPatron ?? false,
         src: '/images/patronHeart.webp',
         title: 'I am a Supporter of Talishar 💖',
-        href: 'https://metafy.gg/@talishar/members'
+        href: TALISHAR_METAFY_URL
       },
       {
         condition: isPvtVoidPatron ?? false,
         src: '/images/patronEye.webp',
         title: 'I am a Supporter of Talishar 💖',
-        href: 'https://metafy.gg/@talishar/members'
+        href: TALISHAR_METAFY_URL
       }
     );
   }
@@ -99,7 +101,7 @@ export const createPatreonIconMap = (
           condition: true,
           src: tierConfig.image,
           title: tierConfig.title,
-          href: 'https://metafy.gg/@talishar/members'
+          href: TALISHAR_METAFY_URL
         });
       }
     }

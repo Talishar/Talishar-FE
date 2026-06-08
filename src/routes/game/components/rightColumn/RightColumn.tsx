@@ -11,6 +11,7 @@ import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import PlayerName from '../elements/playerName/PlayerName';
 import { AdUnit } from 'components/ads';
+import { TALISHAR_METAFY_URL } from 'constants/socialLinks';
 import useAdScript from 'hooks/useAdScript';
 import useSupporterStatus from 'hooks/useSupporterStatus';
 import squareMemberCTA from '../../../../img/squareMemberCTA.webp';
@@ -58,7 +59,7 @@ export default function RightColumn() {
             <div className={styles.adHeader}>
               <span></span>
               <a
-                href="https://metafy.gg/@talishar/members"
+                href={TALISHAR_METAFY_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 className={styles.removeAdsLink}
@@ -67,7 +68,7 @@ export default function RightColumn() {
               </a>
             </div>
             <div className={styles.ctaWrapper}>
-              <a href="https://metafy.gg/@talishar/members" target="_blank" rel="noopener noreferrer">
+              <a href={TALISHAR_METAFY_URL} target="_blank" rel="noopener noreferrer">
                 <img src={squareMemberCTA} alt="Support Talishar" className={styles.ctaImage} />
               </a>
               <AdUnit placement="right-rail-1" className={styles.inGameBlockAd} />

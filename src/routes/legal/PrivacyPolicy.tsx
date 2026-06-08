@@ -1,4 +1,8 @@
 import React from 'react';
+import {
+  TALISHAR_DISCORD_URL,
+  TALISHAR_GITHUB_URL
+} from 'constants/socialLinks';
 import styles from './LegalPages.module.css';
 
 const PrivacyPolicy: React.FC = () => {
@@ -194,7 +198,7 @@ const PrivacyPolicy: React.FC = () => {
             <li>
               <strong>Discord:</strong>{' '}
               <a
-                href="https://discord.gg/JykuRkdd5S"
+                href={TALISHAR_DISCORD_URL}
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -204,7 +208,7 @@ const PrivacyPolicy: React.FC = () => {
             <li>
               <strong>GitHub:</strong>{' '}
               <a
-                href="https://github.com/Talishar/Talishar"
+                href={TALISHAR_GITHUB_URL}
                 target="_blank"
                 rel="noopener noreferrer"
               >
