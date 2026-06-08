@@ -323,10 +323,8 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
     if (!data.turnResults) return [];
 
     const yourStartingLife = data.startingLife ?? 40;
-    const opponentPlayerID = data.playerID === 1 ? 2 : 1;
-    const opponentData = data.bothPlayersData?.[opponentPlayerID] as EndGameData | undefined;
+    const opponentData = data.bothPlayersData?.[data.playerID === 1 ? 2 : 1] as EndGameData | undefined;
     const opponentStartingLife = data.opponentStartingLife ?? opponentData?.startingLife ?? 40;
-    const opponentTurnResults = opponentData?.turnResults;
 
     const entries = Object.entries(data.turnResults)
       .map(([key, turn]) => ({
@@ -357,14 +355,8 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
         yourLife = Math.max(0, yourLife);
       }
 
-      const oppTurn = opponentTurnResults?.[`turn_${turnNo}`];
-      if (oppTurn?.lifeAtTurnEnd != null) {
-        opponentLife = Number(oppTurn.lifeAtTurnEnd);
-      } else if (oppTurn) {
-        opponentLife -= (+oppTurn.damageTaken || 0);
-        opponentLife += (+oppTurn.lifeLost || 0); // lifeLost is stored negative by backend
-        opponentLife += +oppTurn.lifeGained || 0;
-        opponentLife = Math.max(0, opponentLife);
+      if (turn.opponentLifeAtTurnEnd != null) {
+        opponentLife = Number(turn.opponentLifeAtTurnEnd);
       } else {
         opponentLife -= turnDealt;
         opponentLife = Math.max(0, opponentLife);
