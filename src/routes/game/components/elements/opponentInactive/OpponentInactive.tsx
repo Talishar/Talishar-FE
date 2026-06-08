@@ -46,12 +46,16 @@ export default function OpponentInactive() {
   const [dismissed, setDismissed] = useState(false);
   const lastUpdateRef = useRef(lastUpdate);
   const lastUpdateTimeRef = useRef(Date.now());
+  const prevBackendInactiveRef = useRef(false);
 
   // Spectators and replay viewers don't see inactivity warnings
   const isSpectator = playerID === 3;
 
   // Track when lastUpdate changes to reset inactivity
   useEffect(() => {
+    const backendInactiveCleared = prevBackendInactiveRef.current && !backendInactive;
+    prevBackendInactiveRef.current = backendInactive;
+
     if (lastUpdate !== lastUpdateRef.current) {
       lastUpdateRef.current = lastUpdate;
       if (!backendInactive) {
@@ -59,8 +63,18 @@ export default function OpponentInactive() {
         setInactive(false);
         setDismissed(false);
       }
+    } else if (backendInactiveCleared) {
+      lastUpdateTimeRef.current = Date.now();
+      setInactive(false);
+      setDismissed(false);
     }
   }, [lastUpdate, backendInactive]);
+
+  useEffect(() => {
+    if (turnPhase === 'OVER') {
+      setInactive(false);
+    }
+  }, [turnPhase]);
 
   // Poll for inactivity
   useEffect(() => {
