@@ -3,7 +3,8 @@
   height: 20dvh;
   margin: auto;
   width: 95%;
-  padding: 1vh;
+  --chain-padding: 1vh;
+  padding: var(--chain-padding);
   background: none;
   border: none;
   outline: none;
@@ -38,10 +39,9 @@
 }
 
 .grabbyHandle {
-  width: calc(var(--card-size) * 0.25);
-  height: 100%;
-  background-color: var(--theme-tertiary);
-  border-radius: 10px;
+  width: calc(var(--card-size) * 0.2);
+  background-color: color-mix(in srgb, var(--theme-tertiary) 45%, transparent);
+  border-radius: 0 0.75em 0.75em 0;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -51,6 +51,27 @@
   transition: all 0.2s ease;
   padding: 0.5em;
   box-sizing: border-box;
+  flex-shrink: 0;
+  align-self: stretch;
+  margin-top: calc(-1 * var(--chain-padding));
+  margin-right: calc(-1 * var(--chain-padding));
+  margin-bottom: calc(-1 * var(--chain-padding));
+  font-size: min(calc(1.5vh - 2px), calc(0.9vw - 1px));
+  font-size: min(calc(1.5dvh - 2px), calc(0.9dvw - 1px));
+}
+
+@media (orientation: portrait) {
+  .grabbyHandle {
+    font-size: calc(1.5vw + 3px);
+    font-size: calc(1.5dvw + 3px);
+  }
+}
+
+@media (orientation: landscape) and (max-aspect-ratio: 3/2) {
+  .grabbyHandle {
+    font-size: calc(1.5vh - 2px);
+    font-size: calc(1.5dvh - 2px);
+  }
 }
 
 .grabbyHandle:active {
@@ -58,7 +79,7 @@
 }
 
 .grabbyHandleDragging {
-  background-color: var(--theme-secondary);
+  background-color: color-mix(in srgb, var(--theme-secondary) 45%, transparent);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 }
 
@@ -67,7 +88,8 @@
   opacity: 0.8;
   transition: opacity 0.2s ease;
   width: 100%;
-  height: 100%;
+  height: auto;
+  display: block;
 }
 
 .grabbyHandle:hover .gripIcon {
@@ -132,7 +154,7 @@
   border-color: var(--theme-primary);
   padding: 5px;
   border-style: solid;
-  font-size: 1.2em;
+  font-size: 1.1em;
   gap: 3px;
   z-index: -5;
 }

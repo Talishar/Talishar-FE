@@ -10,7 +10,8 @@
   max-height: 40vh;
   height: auto;
   background-color: var(--near-black);
-  padding: 1vh;
+  --container-padding: 1vh;
+  padding: var(--container-padding);
   border: 1px solid var(--theme-primary);
   border-radius: 10px;
   z-index: 900;
@@ -262,12 +263,13 @@
   min-width: 30%;
   max-width: 90%;
   min-height: auto;
-  left: 15%;
+  left: 20%;
   right: 30%;
   max-height: 52.5vh;
   height: auto;
   background-color: var(--near-black);
-  padding: 1.5vh;
+  --container-padding: 1.5vh;
+  padding: var(--container-padding);
   border: 1px solid var(--theme-primary);
   border-radius: 10px;
   z-index: 900;
@@ -442,9 +444,8 @@
 
 .grabbyHandle {
   width: calc(var(--card-size) * 0.2);
-  height: auto;
-  background-color: var(--theme-tertiary);
-  border-radius: 10px;
+  background-color: color-mix(in srgb, var(--theme-tertiary) 45%, transparent);
+  border-radius: 0 10px 10px 0;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -456,6 +457,25 @@
   box-sizing: border-box;
   flex-shrink: 0;
   align-self: stretch;
+  margin-top: calc(-1 * var(--container-padding));
+  margin-right: calc(-1 * var(--container-padding));
+  margin-bottom: calc(-1 * var(--container-padding));
+  font-size: min(calc(1.5vh - 2px), calc(0.9vw - 1px));
+  font-size: min(calc(1.5dvh - 2px), calc(0.9dvw - 1px));
+}
+
+@media (orientation: portrait) {
+  .grabbyHandle {
+    font-size: calc(1.5vw + 3px);
+    font-size: calc(1.5dvw + 3px);
+  }
+}
+
+@media (orientation: landscape) and (max-aspect-ratio: 3/2) {
+  .grabbyHandle {
+    font-size: calc(1.5vh - 2px);
+    font-size: calc(1.5dvh - 2px);
+  }
 }
 
 .grabbyHandle:active {
@@ -463,7 +483,7 @@
 }
 
 .grabbyHandleDragging {
-  background-color: var(--theme-secondary);
+  background-color: color-mix(in srgb, var(--theme-secondary) 45%, transparent);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 }
 
@@ -472,7 +492,8 @@
   opacity: 0.8;
   transition: opacity 0.2s ease;
   width: 100%;
-  height: 100%;
+  height: auto;
+  display: block;
 }
 
 .grabbyHandle:hover .gripIcon {

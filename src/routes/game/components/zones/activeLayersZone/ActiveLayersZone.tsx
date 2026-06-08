@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import CardDisplay from '../../elements/cardDisplay/CardDisplay';
@@ -13,10 +13,14 @@ import {
   parseTextToElements
 } from 'utils/ParseEscapedString';
 import { BiTargetLock } from 'react-icons/bi';
+import { MdDragHandle } from 'react-icons/md';
 import Button from '../../../../../features/Button';
 import { Card } from 'features/Card';
 
 const GROUPING_THRESHOLD = 3;
+const STORAGE_KEY = 'activeLayersPosition';
+const MAX_Y_OFFSET = 35;
+const MIN_Y_OFFSET = -25;
 
 interface CardGroup {
   cards: Card[];
@@ -62,6 +66,69 @@ export default function ActiveLayersZone() {
     (state: RootState) => state.game.gameInfo.playerID
   );
 
+  const [yOffset, setYOffset] = useState(() => {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    return stored ? parseFloat(stored) : 0;
+  });
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragStartY, setDragStartY] = useState(0);
+  const [dragStartOffset, setDragStartOffset] = useState(0);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+    setIsDragging(true);
+    setDragStartY(e.clientY);
+    setDragStartOffset(yOffset);
+  };
+
+  const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+    setIsDragging(true);
+    setDragStartY(e.touches[0].clientY);
+    setDragStartOffset(yOffset);
+  };
+
+  useEffect(() => {
+    if (!isDragging) return;
+
+    const handleMouseMove = (e: MouseEvent) => {
+      const delta = e.clientY - dragStartY;
+      const deltaDvh = (delta / window.innerHeight) * 100;
+      let newOffset = dragStartOffset + deltaDvh;
+      newOffset = Math.max(MIN_Y_OFFSET, Math.min(MAX_Y_OFFSET, newOffset));
+      setYOffset(newOffset);
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      const delta = e.touches[0].clientY - dragStartY;
+      const deltaDvh = (delta / window.innerHeight) * 100;
+      let newOffset = dragStartOffset + deltaDvh;
+      newOffset = Math.max(MIN_Y_OFFSET, Math.min(MAX_Y_OFFSET, newOffset));
+      setYOffset(newOffset);
+    };
+
+    const handleMouseUp = () => {
+      setIsDragging(false);
+      localStorage.setItem(STORAGE_KEY, yOffset.toString());
+    };
+
+    const handleTouchEnd = () => {
+      setIsDragging(false);
+      localStorage.setItem(STORAGE_KEY, yOffset.toString());
+    };
+
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('touchmove', handleTouchMove, { passive: true });
+    document.addEventListener('mouseup', handleMouseUp);
+    document.addEventListener('touchend', handleTouchEnd);
+
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('touchmove', handleTouchMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+      document.removeEventListener('touchend', handleTouchEnd);
+    };
+  }, [isDragging, dragStartY, dragStartOffset, yOffset]);
+
   const handlePassTurn = () => {
     dispatch(submitButton({ button: { mode: PROCESS_INPUT.PASS } }));
   };
@@ -89,65 +156,77 @@ export default function ActiveLayersZone() {
     <AnimatePresence>
       {activeLayer?.active && showModal && (
         <motion.div
+          ref={containerRef}
           className={styles.activeLayersBox}
           initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
+          animate={{ opacity: 1, scale: 1, y: `${yOffset}dvh` }}
           exit={{ opacity: 0, scale: 0.8 }}
+          transition={isDragging ? { type: 'tween', duration: 0 } : undefined}
           key="activeLayersBox"
         >
-          <div className={styles.activeLayersTitle}>
-            <div className={styles.titlesColumn}>
-              <h3 className={styles.title}>
-                Active Layers
-                {activeLayer.isReorderable
-                  ? ' (Drag highlighted to reorder)'
-                  : null}
-              </h3>
-              <Target target={activeLayer.target} />
-              {/*               <p className={styles.orderingExplanation}>
-                Priority settings can be adjusted in the menu
-              </p> */}
-            </div>
-            {canPassPhase && (
-              <div className={styles.passTurnBox}>
-                <button className={styles.passTurn} onClick={handlePassTurn}>
-                  Pass
-                </button>
+          <div className={styles.activeLayersInner}>
+            <div className={styles.activeLayersTitle}>
+              <div className={styles.titlesColumn}>
+                <h3 className={styles.title}>
+                  Active Layers
+                  {activeLayer.isReorderable
+                    ? ' (Drag highlighted to reorder)'
+                    : null}
+                </h3>
+                <Target target={activeLayer.target} />
               </div>
-            )}
+              {canPassPhase && (
+                <div className={styles.passTurnBox}>
+                  <button className={styles.passTurn} onClick={handlePassTurn}>
+                    Pass
+                  </button>
+                </div>
+              )}
+            </div>
+            <div className={styles.activeLayersContents}>
+              {staticCards &&
+                groupConsecutiveCards(staticCards, playerID).map((group, groupIx) => {
+                  if (group.cards.length > GROUPING_THRESHOLD) {
+                    return (
+                      <div key={groupIx} className={styles.groupedCardWrapper}>
+                        <CardDisplay
+                          card={group.cards[0]}
+                          isPlayer={group.isPlayer}
+                        >
+                          <div className={styles.groupedCardCount}>
+                            <span className={styles.groupedCardCountBadge}>
+                              ×{group.cards.length}
+                            </span>
+                          </div>
+                        </CardDisplay>
+                      </div>
+                    );
+                  }
+                  return group.cards.map((card, cardIx) => (
+                    <CardDisplay
+                      card={card}
+                      key={`${groupIx}-${cardIx}`}
+                      isPlayer={group.isPlayer}
+                    />
+                  ));
+                })}
+              <ReorderLayers cards={reorderableCards ?? []} />
+            </div>
+            <div className={styles.activeLayersCallToAction}>
+              <div>{parseHtmlToReactElements(playerPrompt?.helpText ?? '')}</div>
+              {buttons}
+            </div>
           </div>
-          <div className={styles.activeLayersContents}>
-            {staticCards &&
-              groupConsecutiveCards(staticCards, playerID).map((group, groupIx) => {
-                if (group.cards.length > GROUPING_THRESHOLD) {
-                  return (
-                    <div key={groupIx} className={styles.groupedCardWrapper}>
-                      <CardDisplay
-                        card={group.cards[0]}
-                        isPlayer={group.isPlayer}
-                      >
-                        <div className={styles.groupedCardCount}>
-                          <span className={styles.groupedCardCountBadge}>
-                            ×{group.cards.length}
-                          </span>
-                        </div>
-                      </CardDisplay>
-                    </div>
-                  );
-                }
-                return group.cards.map((card, cardIx) => (
-                  <CardDisplay
-                    card={card}
-                    key={`${groupIx}-${cardIx}`}
-                    isPlayer={group.isPlayer}
-                  />
-                ));
-              })}
-            <ReorderLayers cards={reorderableCards ?? []} />
-          </div>
-          <div className={styles.activeLayersCallToAction}>
-            <div>{parseHtmlToReactElements(playerPrompt?.helpText ?? '')}</div>
-            {buttons}
+          <div
+            className={`${styles.grabbyHandle} ${isDragging ? styles.grabbyHandleDragging : ''}`}
+            onMouseDown={handleMouseDown}
+            onTouchStart={handleTouchStart}
+          >
+            <MdDragHandle
+              size={32}
+              className={styles.gripIcon}
+              aria-label="Drag to move active layers panel"
+            />
           </div>
         </motion.div>
       )}

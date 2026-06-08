@@ -1,18 +1,82 @@
 .activeLayersBox {
   position: fixed;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   min-width: 35vh;
   top: 8vh;
   left: 20%;
   background-color: var(--theme-near-black);
-  padding: 1.5vh;
   border: 1px solid var(--theme-primary);
   border-radius: 10px;
   max-width: 95vh;
   max-height: 40vh;
   z-index: 99;
+  touch-action: none;
+}
+
+.grabbyHandle {
+  width: calc(var(--card-size) * 0.2);
+  background-color: color-mix(in srgb, var(--theme-tertiary) 45%, transparent);
+  border-radius: 0 10px 10px 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  cursor: grab;
+  user-select: none;
+  transition: all 0.2s ease;
+  padding: 0.5em;
+  box-sizing: border-box;
+  flex-shrink: 0;
+  align-self: stretch;
+  font-size: min(calc(1.5vh - 2px), calc(0.9vw - 1px));
+  font-size: min(calc(1.5dvh - 2px), calc(0.9dvw - 1px));
+}
+
+@media (orientation: portrait) {
+  .grabbyHandle {
+    font-size: calc(1.5vw + 3px);
+    font-size: calc(1.5dvw + 3px);
+  }
+}
+
+@media (orientation: landscape) and (max-aspect-ratio: 3/2) {
+  .grabbyHandle {
+    font-size: calc(1.5vh - 2px);
+    font-size: calc(1.5dvh - 2px);
+  }
+}
+
+.grabbyHandle:active {
+  cursor: grabbing;
+}
+
+.grabbyHandleDragging {
+  background-color: color-mix(in srgb, var(--theme-secondary) 45%, transparent);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.gripIcon {
+  color: var(--white);
+  opacity: 0.8;
+  transition: opacity 0.2s ease;
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.grabbyHandle:hover .gripIcon {
+  opacity: 1;
+}
+
+.activeLayersInner {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 1.5vh;
   overflow-y: auto;
+  min-width: 0;
+  min-height: 0;
 }
 
 .activeLayersContents > div {
@@ -102,7 +166,7 @@
 .passTurn {
   position: absolute;
   top: 0.75vh;
-  right: 0.75vh;
+  right: 3.25vh;
   width: 6.5vh;
   font-size: 1.25em;
   margin-top: 10px;
@@ -157,9 +221,13 @@
   .activeLayersBox {
     min-width: min(70dvw, 320px);
     max-width: 92dvw;
-    max-height: 55dvh;
+    max-height: 45dvh;
+    top: 30dvh;
     left: 50%;
     translate: -50% 0;
+  }
+
+  .activeLayersInner {
     padding: 2dvw;
   }
 
