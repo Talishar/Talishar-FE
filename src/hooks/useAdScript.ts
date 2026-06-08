@@ -194,11 +194,12 @@ export default function useAdScript(enabled: boolean = true) {
     // attempts from the ad network are blocked from the moment the script runs.
     installNavGuard();
 
-    try {
-      (window as any).googletag?.destroySlots?.();
-    } catch (_) {}
-
     if (!document.querySelector('script[src="//js.rev.iq/talishar.net"]')) {
+      // Only destroy existing slots when injecting a fresh script
+      try {
+        (window as any).googletag?.destroySlots?.();
+      } catch (_) {}
+
       const script = document.createElement('script');
       script.src = '//js.rev.iq/talishar.net';
       script.async = true;
