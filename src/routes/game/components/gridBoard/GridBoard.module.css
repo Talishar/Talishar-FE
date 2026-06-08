@@ -296,7 +296,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  min-height: var(--card-size);
+  min-height: calc(var(--card-size) + 8px);
 }
 
 .pTwoArsenal {
