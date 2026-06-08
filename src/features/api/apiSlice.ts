@@ -59,6 +59,10 @@ import {
   UpdateFavoriteDeckRequest,
   UpdateFavoriteDeckResponse
 } from 'interface/API/UpdateFavoriteDeck.php';
+import {
+  MatchResultWebhookRequest,
+  MatchResultWebhookResponse
+} from 'interface/API/MatchResultWebhookAPI.php';
 import { PatreonLoginResponse } from 'routes/user/profile/linkpatreon/linkPatreon';
 import { UserProfileAPIResponse } from 'interface/API/UserProfileAPI.php';
 import {
@@ -443,6 +447,19 @@ export const apiSlice = createApi({
       query: (body: UpdateFavoriteDeckRequest) => {
         return {
           url: URL_END_POINT.UPDATE_FAVORITE_DECK,
+          method: 'POST',
+          body: body,
+          responseHandler: parseResponse
+        };
+      }
+    }),
+    setMatchResultWebhook: builder.mutation<
+      MatchResultWebhookResponse,
+      MatchResultWebhookRequest
+    >({
+      query: (body: MatchResultWebhookRequest) => {
+        return {
+          url: URL_END_POINT.MATCH_RESULT_WEBHOOK,
           method: 'POST',
           body: body,
           responseHandler: parseResponse
@@ -1113,6 +1130,7 @@ export const {
   useDeleteDeckMutation,
   useAddFavoriteDeckMutation,
   useUpdateFavoriteDeckMutation,
+  useSetMatchResultWebhookMutation,
   useDeleteAccountMutation,
   useLoginMutation,
   useLoginWithCookieQuery,
