@@ -11,14 +11,12 @@
   background-color: rgba(0, 0, 0, 0.92);
   border: 1px solid var(--theme-alarm, #c62828);
   border-radius: 10px;
-  box-shadow: 0 0 20px rgba(198, 40, 40, 0.3);
   animation: slideIn 0.3s ease-out;
   max-width: 250px;
 }
 
 .warning {
   border-color: var(--theme-warning, #feca57);
-  box-shadow: 0 0 20px rgba(254, 202, 87, 0.25);
 }
 
 @keyframes slideIn {
