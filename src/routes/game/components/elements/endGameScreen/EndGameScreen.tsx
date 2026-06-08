@@ -86,9 +86,13 @@ const EndGameScreen = () => {
     content = <div>{JSON.stringify(error)}</div>;
   } else if (showFullLog) {
     if (isPatron) {
-      content = (
+      content = data?.fullLog ? (
         <div className={fullLogClasses}>
           {parseHtmlToReactElements(data.fullLog)}
+        </div>
+      ) : (
+        <div>
+          Full game log was not recorded for this game. This requires at least one player to be a supporter.
         </div>
       );
     } else {
