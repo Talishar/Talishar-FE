@@ -15,6 +15,7 @@ import {
 import html2canvas from 'html2canvas';
 import TalisharLogo from 'img/TalisharLogo.webp';
 import { BACKEND_URL } from 'appConstants';
+import { TALISHAR_METAFY_URL } from 'constants/socialLinks';
 import { parseHtmlToReactElements } from 'utils/ParseEscapedString';
 import { useTheme } from 'themes/ThemeContext';
 import {

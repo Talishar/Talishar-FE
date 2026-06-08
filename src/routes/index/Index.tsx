@@ -17,6 +17,7 @@ import useAdScript from 'hooks/useAdScript';
 import { AdUnit } from 'components/ads';
 import TalisharLogo from '../../img/TalisharLogo.webp';
 import { BsChevronDown, BsChevronUp } from 'react-icons/bs';
+import { TALISHAR_METAFY_URL } from 'constants/socialLinks';
 
 const Index = () => {
   usePageTitle('Play FaB Online');
