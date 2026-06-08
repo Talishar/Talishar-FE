@@ -86,6 +86,49 @@ export const EventsHandler = React.memo(() => {
 
   useEffect(() => {
     if (events) {
+      const CLASH_DISPLAY_DURATION = 7600;
+      const CLASH_FIRST_DURATION = 3600;
+
+      // Group CLASH events into rounds due to Trounce double clash and similar effects
+      const clashRounds: Array<Array<{ playerId: number; cardNumber: string }>> = [];
+      {
+        let currentRound: Array<{ playerId: number; cardNumber: string }> = [];
+        const seenPlayers = new Set<number>();
+        for (const event of events) {
+          if (event.eventType !== 'CLASH') continue;
+          const [pid, card] = (event.eventValue ?? '').split(':');
+          const playerId = parseInt(pid);
+          if (seenPlayers.has(playerId)) {
+            clashRounds.push(currentRound);
+            currentRound = [];
+            seenPlayers.clear();
+          }
+          currentRound.push({ playerId, cardNumber: card });
+          seenPlayers.add(playerId);
+        }
+        if (currentRound.length > 0) clashRounds.push(currentRound);
+      }
+
+      const hasMultipleRounds = clashRounds.length > 1;
+      let cumulativeDelay = 0;
+      clashRounds.forEach((round, roundIndex) => {
+        const isLastRound = roundIndex === clashRounds.length - 1;
+        const displayDuration =
+          hasMultipleRounds && !isLastRound ? CLASH_FIRST_DURATION : CLASH_DISPLAY_DURATION;
+        const startDelay = cumulativeDelay;
+        cumulativeDelay += displayDuration;
+        setTimeout(() => {
+          round.forEach(({ playerId, cardNumber }) => {
+            dispatch(setClashReveal({ playerId, cardNumber }));
+          });
+          if (isLastRound) {
+            setTimeout(() => {
+              dispatch(setClashReveal({ playerId: null, cardNumber: '' }));
+            }, displayDuration);
+          }
+        }, startDelay);
+      });
+
       for (const event of events) {
         switch (event.eventType) {
           case 'ROLL':
@@ -120,22 +163,8 @@ export const EventsHandler = React.memo(() => {
             );
             continue;
           }
-          case 'CLASH': {
-            const clashValue = event.eventValue ?? '';
-            const [clashPlayerID, clashCardNumber] = clashValue.split(':');
-            dispatch(
-              setClashReveal({
-                playerId: parseInt(clashPlayerID),
-                cardNumber: clashCardNumber
-              })
-            );
-            requestAnimationFrame(() => {
-              setTimeout(() => {
-                dispatch(setClashReveal({ playerId: null, cardNumber: '' }));
-              }, 7600);
-            });
+          case 'CLASH':
             continue;
-          }
           case 'TURNARSENALFACEUP': {
             const arsenalValue = event.eventValue ?? '';
             const [arsenalPlayerID, arsenalCardNumber] =
