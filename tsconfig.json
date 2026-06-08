@@ -11,12 +11,15 @@
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
     "module": "esnext",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
-    "baseUrl": "./src"
+    "paths": {
+      "*": ["./src/*"]
+    }
   },
-  "include": ["src", "preview.config.js"]
+  "include": ["src", "preview.config.js"],
+  "exclude": ["node_modules"]
 }

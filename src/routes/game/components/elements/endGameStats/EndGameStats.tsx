@@ -104,6 +104,8 @@ export interface TurnResult {
   resourcesLeft: number;
   lifeGained: number;
   lifeLost: number;
+  lifeAtTurnEnd?: number | null;
+  opponentLifeAtTurnEnd?: number | null;
   turnNo?: number;
 }
 
@@ -139,6 +141,25 @@ const RainSvg = () => (
     <path className={`${styles.rdBase} ${styles.rdP5}`} d={DROP} fill="#7AAAD0" />
   </svg>
 );
+
+function downloadViaBackend(type: 'csv' | 'png', filename: string, data: string) {
+  const form = document.createElement('form');
+  form.method = 'POST';
+  form.action = `${BACKEND_URL}APIs/DownloadStats.php`;
+  form.style.display = 'none';
+
+  [['type', type], ['filename', filename], ['data', data]].forEach(([name, value]) => {
+    const input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = name as string;
+    input.value = value as string;
+    form.appendChild(input);
+  });
+
+  document.body.appendChild(form);
+  form.submit();
+  document.body.removeChild(form);
+}
 
 const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
   const [sortField, setSortField] = useState<
@@ -403,85 +424,72 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
   const handleExportScreenshot = async () => {
     if (!statsRef.current) return;
 
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5);
+    const filename = `game-stats-${timestamp}.png`;
+
+    // Request save dialog while user gesture is still fresh, before any async work
+    let fileHandle: any = null;
+    if ('showSaveFilePicker' in window) {
+      try {
+        fileHandle = await (window as any).showSaveFilePicker({
+          suggestedName: filename,
+          types: [{ description: 'PNG Image', accept: { 'image/png': ['.png'] } }]
+        });
+      } catch (e) {
+        if ((e as Error).name === 'AbortError') return;
+      }
+    }
+
     setIsExporting(true);
+
+    const exportEl = statsRef.current;
 
     try {
       // Wait for hero images to load if they haven't yet
-      const requiredHeroImages = [];
+      const requiredHeroImages: string[] = [];
       if (data.yourHero) requiredHeroImages.push('yourHero');
       if (data.opponentHero) requiredHeroImages.push('opponentHero');
 
-      // Wait for all required hero images to be loaded (max 5 seconds)
       if (requiredHeroImages.length > 0) {
         const startTime = Date.now();
-        const maxWait = 5000; // 5 second timeout
-
+        const maxWait = 5000;
         while (Date.now() - startTime < maxWait) {
           const allLoaded = requiredHeroImages.every(
             (hero) => heroDataUrls[hero as keyof typeof heroDataUrls]
           );
-          if (allLoaded) {
-            console.log('All hero images loaded');
-            break;
-          }
-          // Wait a bit before checking again
+          if (allLoaded) break;
           await new Promise((resolve) => setTimeout(resolve, 100));
         }
-
-        if (
-          !requiredHeroImages.every(
-            (hero) => heroDataUrls[hero as keyof typeof heroDataUrls]
-          )
-        ) {
-          console.warn(
-            'Some hero images did not load within timeout, proceeding with export anyway'
-          );
-        }
       }
 
-      // Pre-load all images in the canvas to ensure they're rendered
-      const images = statsRef.current.querySelectorAll('img');
-      const imageLoadPromises = Array.from(images).map((img) => {
-        return new Promise<void>((resolve) => {
-          if (img.complete) {
-            resolve();
-          } else {
-            img.onload = () => resolve();
-            img.onerror = () => resolve(); // Continue even if image fails
-          }
-        });
-      });
-
-      await Promise.all(imageLoadPromises);
-
-      // Show watermark and hide card images for export
-      const hideElements = statsRef.current.querySelectorAll(
-        `.${styles.hideOnExport}`
+      // Pre-load all img elements
+      const images = exportEl.querySelectorAll('img');
+      await Promise.all(
+        Array.from(images).map(
+          (img) =>
+            new Promise<void>((resolve) => {
+              if (img.complete) resolve();
+              else {
+                img.onload = () => resolve();
+                img.onerror = () => resolve();
+              }
+            })
+        )
       );
-      const watermark = statsRef.current.querySelector(
-        `.${styles.watermark}`
-      ) as HTMLElement;
-      const heroPortraits = statsRef.current.querySelector(
-        `.${styles.showOnExport}`
-      ) as HTMLElement;
 
-      // Hide card image column
-      hideElements.forEach((el) => {
-        (el as HTMLElement).style.display = 'none';
-      });
+      // Hide elements not meant for export (ads, card thumbnails, charts)
+      const hideElements = exportEl.querySelectorAll(`.${styles.hideOnExport}`);
+      hideElements.forEach((el) => ((el as HTMLElement).style.display = 'none'));
 
-      if (watermark) {
-        watermark.style.display = 'block';
-      }
+      // Show watermark and hero portraits
+      const watermark = exportEl.querySelector(`.${styles.watermark}`) as HTMLElement;
+      const heroPortraits = exportEl.querySelector(`.${styles.showOnExport}`) as HTMLElement;
+      if (watermark) watermark.style.display = 'block';
+      if (heroPortraits) heroPortraits.style.display = 'flex';
 
-      if (heroPortraits) {
-        heroPortraits.style.display = 'flex';
-      }
-
-      // Add small delay to ensure DOM has settled
       await new Promise((resolve) => setTimeout(resolve, 100));
 
-      const canvas = await html2canvas(statsRef.current, {
+      const canvas = await html2canvas(exportEl, {
         backgroundColor: '#0a0a0a',
         scale: Math.min(window.devicePixelRatio, 2),
         logging: false,
@@ -489,37 +497,22 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
         allowTaint: true
       });
 
-      hideElements.forEach((el) => {
-        (el as HTMLElement).style.display = '';
-      });
+      hideElements.forEach((el) => ((el as HTMLElement).style.display = ''));
+      if (watermark) watermark.style.display = 'none';
+      if (heroPortraits) heroPortraits.style.display = 'none';
 
-      if (watermark) {
-        watermark.style.display = 'none';
+      if (fileHandle) {
+        const pngBlob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve));
+        if (!pngBlob) throw new Error('Failed to convert canvas to blob');
+        const writable = await fileHandle.createWritable();
+        await writable.write(pngBlob);
+        await writable.close();
+      } else {
+        downloadViaBackend('png', filename, canvas.toDataURL('image/png'));
       }
-
-      if (heroPortraits) {
-        heroPortraits.style.display = 'none';
-      }
-
-      // Convert to blob and download
-      canvas.toBlob((blob) => {
-        if (blob) {
-          const url = URL.createObjectURL(blob);
-          const link = document.createElement('a');
-          const timestamp = new Date()
-            .toISOString()
-            .replace(/[:.]/g, '-')
-            .slice(0, -5);
-          link.download = `game-stats-${timestamp}.png`;
-          link.href = url;
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-          setTimeout(() => URL.revokeObjectURL(url), 1000);
-        }
-      });
     } catch (error) {
       console.error('Error exporting screenshot:', error);
+      alert(`Error exporting image: ${error}`);
     } finally {
       setIsExporting(false);
     }
@@ -535,7 +528,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
         .toISOString()
         .replace(/[:.]/g, '-')
         .slice(0, -5);
-      let csvContent = 'data:text/csv;charset=utf-8,';
+      let csvContent = '';
 
       csvContent += '========== STATS PROVIDED BY TALISHAR ==========\n';
       csvContent += 'Support our work on Metafy!\n';
@@ -687,12 +680,11 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
               +turn.lifeLost;
             content += `${ix + 1},${turn.cardsUsed},${turn.cardsBlocked},${
               turn.cardsPitched
-            },${turn.cardsDiscarded},${turn.cardsLeft}`;
+            },${turn.cardsDiscarded},${turn.cardsLeft},`;
             content += `${turn.resourcesUsed},${turn.resourcesLeft},`;
             content += `${turn.damageThreatened},${turn.damageDealt},`;
             content += `${turn.damageBlocked},${turn.damagePrevented},`;
             content += `${turn.damageTaken},${turn.lifeGained},${totalValue}\n`;
-            content += `${turn.lifeLost}\n`;
           });
         }
 
@@ -735,16 +727,21 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
         csvContent += '\n\nNote: Opponent stats not available\n';
       }
 
-      // Create and trigger download
-      const encodedUri = encodeURI(csvContent);
-      const link = document.createElement('a');
-      link.setAttribute('href', encodedUri);
-      link.setAttribute('download', `game-stats-${timestamp}.csv`);
-      document.body.appendChild(link);
-      console.log('Triggering CSV download');
-      link.click();
-      document.body.removeChild(link);
-      console.log('CSV download completed');
+      if ('showSaveFilePicker' in window) {
+        try {
+          const handle = await (window as any).showSaveFilePicker({
+            suggestedName: `game-stats-${timestamp}.csv`,
+            types: [{ description: 'CSV File', accept: { 'text/csv': ['.csv'] } }]
+          });
+          const writable = await handle.createWritable();
+          await writable.write(new Blob([csvContent], { type: 'text/csv;charset=utf-8;' }));
+          await writable.close();
+          return;
+        } catch (e) {
+          if ((e as Error).name === 'AbortError') return;
+        }
+      }
+      downloadViaBackend('csv', `game-stats-${timestamp}.csv`, csvContent);
     } catch (error) {
       console.error('Error exporting CSV:', error);
       alert(`Error exporting CSV: ${error}`);
@@ -936,8 +933,8 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
   }
 
   return (
-    <div className={styles.endGameStats} data-testid="test-stats">
-      <div ref={statsRef} className={styles.statsContent}>
+    <div ref={statsRef} className={styles.endGameStats} data-testid="test-stats">
+      <div className={styles.statsContent}>
         <div className={styles.statsContainer}>
                     {/* Game Time & Summary Section */}
           <div className={styles.statsSection}>
@@ -1782,9 +1779,9 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
 
       </div>
 
-      {/* Per Turn Charts - outside statsRef so html2canvas doesn't process SVG elements */}
+      {/* Per Turn Charts - SVGs are converted to static images before html2canvas capture */}
       {filteredChartData.length > 1 && (
-        <div className={styles.chartsGrid}>
+        <div className={`${styles.chartsGrid} ${styles.hideOnExport}`}>
             {/* Chart 1: Value Per Turn with reference lines */}
             <div className={styles.turnBreakdownSection}>
               <h2 className={styles.sectionHeader}>Value Per Turn</h2>

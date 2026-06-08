@@ -287,11 +287,6 @@ export const ProfilePage = () => {
   PatreonOAuthParam.append('redirect_uri', REDIRECT_URI);
   PatreonOAuthParam.append('scope', SCOPE);
 
-  // console.log(
-  //   'If you want to test the patreon connection go to this URL:',
-  //   PATREON_URL + PatreonOAuthParam.toString()
-  // );
-
   const isMetafySupporter: boolean = profileData?.isMetafySupporter ?? false;
 
   return (
