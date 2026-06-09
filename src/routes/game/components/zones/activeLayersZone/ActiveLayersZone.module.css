@@ -200,7 +200,7 @@
   flex-basis: auto;
   padding: 8px 16px;
   width: auto;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0;
   white-space: nowrap;
   transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
 }
