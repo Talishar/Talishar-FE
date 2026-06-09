@@ -389,7 +389,15 @@ export default function PlayerHand() {
     const newMax = Math.max(0, overflowWidth - containerWidth);
     setMaxScrollOffset(newMax);
     setScrollOffset((prev) => Math.min(prev, newMax));
-  }, [orderedHandCards.length, width, height]);
+  }, [
+    orderedHandCards.length,
+    arsenalCards?.length,
+    playableBanishedCards?.length,
+    playableTheirBanishedCards?.length,
+    playableGraveyardCards?.length,
+    width,
+    height
+  ]);
 
   const scrollHand = useCallback(
     (direction: 'left' | 'right') => {
