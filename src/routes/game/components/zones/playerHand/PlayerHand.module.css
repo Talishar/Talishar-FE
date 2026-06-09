@@ -10,6 +10,11 @@
   align-items: center;
   user-select: none;
   clip-path: inset(-500px 0 -500px 0);
+  pointer-events: none;
+}
+
+.handScrollContainer > * {
+  pointer-events: auto;
 }
 
 .handScrollInner {

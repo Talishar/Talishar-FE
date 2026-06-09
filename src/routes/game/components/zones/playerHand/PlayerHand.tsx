@@ -602,7 +602,7 @@ export default function PlayerHand() {
                       card={card}
                       key={`hand-${id}`}
                       addCardToPlayedCards={addCardToPlayedCards}
-                      zIndex={ix}
+                      zIndex={ix + 200}
                       isNewlyDrawn={isNewlyDrawn}
                       onHandReorderDragStart={handleHandCardDragStart}
                       onHandReorderDragMove={(info) =>
@@ -629,7 +629,7 @@ export default function PlayerHand() {
                       isArsenal
                       key={`arsenal-${card.cardNumber}-${cardCount}`}
                       addCardToPlayedCards={addCardToPlayedCards}
-                      zIndex={-(ix + (handCards?.length ?? 0))}
+                      zIndex={ix}
                     />
                   );
                 })}
@@ -645,13 +645,7 @@ export default function PlayerHand() {
                       isBanished
                       key={`banished-${card.cardNumber}-${cardCount}`}
                       addCardToPlayedCards={addCardToPlayedCards}
-                      zIndex={
-                        -(
-                          ix +
-                          (arsenalCards?.length ?? 0) +
-                          (handCards?.length ?? 0)
-                        )
-                      }
+                      zIndex={ix}
                     />
                   );
                 })}
@@ -667,14 +661,7 @@ export default function PlayerHand() {
                       isBanished
                       key={`banished-${card.cardNumber}-${cardCount}`}
                       addCardToPlayedCards={addCardToPlayedCards}
-                      zIndex={
-                        -(
-                          ix +
-                          (arsenalCards?.length ?? 0) +
-                          (handCards?.length ?? 0) +
-                          (playableBanishedCards?.length ?? 0)
-                        )
-                      }
+                      zIndex={ix}
                     />
                   );
                 })}
@@ -690,15 +677,7 @@ export default function PlayerHand() {
                       isGraveyard
                       key={`graveyard-${card.cardNumber}-${cardCount}`}
                       addCardToPlayedCards={addCardToPlayedCards}
-                      zIndex={
-                        -(
-                          ix +
-                          (arsenalCards?.length ?? 0) +
-                          (handCards?.length ?? 0) +
-                          (playableBanishedCards?.length ?? 0) +
-                          (playableTheirBanishedCards?.length ?? 0)
-                        )
-                      }
+                      zIndex={ix}
                     />
                   );
                 })}
