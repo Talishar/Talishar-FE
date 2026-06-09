@@ -1,59 +1,40 @@
 .handRow {
   position: fixed;
-  min-width: 10%;
-  max-width: 60%;
   max-height: 3vh;
   bottom: 2vh;
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
   justify-content: center;
-  justify-items: center;
-  align-content: center;
   align-items: center;
-  gap: 2vh;
+  gap: 0;
   user-select: none;
-  margin: auto;
   left: 10vh;
   left: 10dvh;
   right: 20vh;
   right: 20dvh;
 }
 
-/* Desktop landscape - dynamic card spacing */
-@media (orientation: landscape) {
-  .handRow > div {
-    /* Progressive negative margin based on card count */
-    /* Formula: starts at 0 for 1-5 cards, then increases negative margin as more cards are added */
-    margin-right: calc(max(0, var(--card-count, 0) - 5) * -0.5vh);
-  }
+/* Spacing between cards driven entirely by JS via --card-spacing.
+   Fallback used only on first paint before JS runs. */
+.handRow > *:not(:last-child) {
+  margin-right: var(--card-spacing, 2vh);
 }
 
 @media (orientation: portrait) and (max-width: 768px) {
   .handRow {
     justify-content: center;
     max-width: 100%;
-    gap: 5dvh;
     bottom: 2dvh;
     padding: 0 0.5dvh;
     max-height: 18dvh;
-    scroll-snap-type: x mandatory;
-  }
-
-  .cardCount5 {
-    justify-content: flex-start;
-    width: 100%;
     left: 0;
     right: 0;
-    gap: 1dvh;
   }
 
-  .cardCount6Plus {
-    justify-content: flex-start;
-    width: 100%;
-    left: 0;
-    right: 0;
-    gap: 0.25dvh;
+  /* Smaller default gap for portrait before JS kicks in */
+  .handRow > *:not(:last-child) {
+    margin-right: var(--card-spacing, 1dvh);
   }
 }
 
@@ -61,24 +42,14 @@
   .handRow {
     justify-content: center;
     max-width: 100%;
-    gap: 5dvh;
     bottom: 2dvh;
     padding: 0 0.5dvh;
     max-height: 18dvh;
-    scroll-snap-type: x mandatory;
-  }
-
-  .cardCount5 {
-    width: 100%;
     left: 0;
     right: 0;
-    gap: 1dvh;
   }
 
-  .cardCount6Plus {
-    width: 100%;
-    left: 0;
-    right: 0;
-    gap: 0.25dvh;
+  .handRow > *:not(:last-child) {
+    margin-right: var(--card-spacing, 1dvh);
   }
 }

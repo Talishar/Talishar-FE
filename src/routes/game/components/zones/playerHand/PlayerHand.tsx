@@ -97,6 +97,7 @@ export default function PlayerHand() {
   );
   const handRowRef = useRef<HTMLDivElement | null>(null);
   const soundPlayedForDragRef = useRef<boolean>(false);
+  const [cardSpacingPx, setCardSpacingPx] = useState<number | null>(null);
   const arsenalCards = useAppSelector(
     (state: RootState) => state.game.playerOne.Arsenal
   );
@@ -301,6 +302,38 @@ export default function PlayerHand() {
     }
   }, [orderedHandCards.length, width, height]);
 
+  useEffect(() => {
+    const handRow = handRowRef.current;
+    if (!handRow) return;
+
+    const cardElements = Array.from(handRow.children) as HTMLElement[];
+    const N = cardElements.length;
+    if (N <= 1) {
+      setCardSpacingPx(null);
+      return;
+    }
+
+    const containerWidth = handRow.offsetWidth;
+    // getBoundingClientRect().width is the intrinsic card width, unaffected by margin-right
+    const cardWidth = cardElements[0].getBoundingClientRect().width;
+    const isPortrait = window.innerHeight > window.innerWidth;
+    const defaultSpacing = isPortrait
+      ? window.innerHeight * 0.01
+      : window.innerHeight * 0.02;
+    const naturalWidth = N * cardWidth + (N - 1) * defaultSpacing;
+
+    if (naturalWidth <= containerWidth) {
+      setCardSpacingPx(null);
+      return;
+    }
+
+    // Solve: containerWidth = N*cardWidth + (N-1)*spacing
+    const neededSpacing = (containerWidth - N * cardWidth) / (N - 1);
+    // Always keep at least 10% of each card visible (90% max overlap)
+    const minSpacing = -(cardWidth * 0.9);
+    setCardSpacingPx(Math.max(neededSpacing, minSpacing));
+  }, [orderedHandCards.length, width, height]);
+
   const handleHandCardReorder = (
     draggedCardId: string,
     offsetX: number,
@@ -437,8 +470,8 @@ export default function PlayerHand() {
             ref={handRowRef}
             className={styles.handRow}
             style={
-              lengthOfCards > 5
-                ? ({ '--card-count': lengthOfCards } as React.CSSProperties)
+              cardSpacingPx !== null
+                ? ({ '--card-spacing': `${cardSpacingPx}px` } as React.CSSProperties)
                 : undefined
             }
             onContextMenu={(e) => e.preventDefault()}
