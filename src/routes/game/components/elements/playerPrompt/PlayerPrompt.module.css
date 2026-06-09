@@ -32,31 +32,34 @@
 }
 
 .buttonDiv {
-  background-color: var(--theme-primary);
-  color: black;
+  background-color: rgba(255, 255, 255, 0.07);
+  color: #e0e0e0;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
   min-width: 5em;
   min-height: 2.2em;
-  border-radius: 5px;
-  border: 1px solid black;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
   flex: 1 1 auto;
   align-self: stretch;
-  padding: 0.4em 1em;
+  padding: 8px 16px;
   margin-left: 0.5em;
   white-space: nowrap;
   font-size: 1em;
   line-height: 1.2;
+  margin-bottom: 0.25rem;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
 }
 
 .buttonDiv:hover {
-  background-color: black;
-  color: var(--theme-primary);
-  border: 1px solid var(--theme-primary);
+  background-color: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.3);
   cursor: pointer;
 }
+
 
 @media (orientation: portrait) {
   .playerPrompt {

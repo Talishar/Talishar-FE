@@ -72,21 +72,24 @@
 .stillHereButton {
   width: 100%;
   padding: 0.5rem 1rem;
-  background-color: var(--theme-primary);
-  color: var(--primary-inverse, #000);
-  border: 1px solid var(--theme-primary);
+  background-color: rgba(255, 255, 255, 0.07);
+  color: #e0e0e0;
+  border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 5px;
   font-size: 0.85rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s, color 0.2s;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-transform: uppercase;
   letter-spacing: 0.05em;
+  margin-bottom: 0.25rem;
 }
 
 .stillHereButton:hover {
-  background-color: transparent;
-  color: var(--theme-primary);
+  background-color: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.3);
+  cursor: pointer;
 }
 
 .stillHereButton:disabled {

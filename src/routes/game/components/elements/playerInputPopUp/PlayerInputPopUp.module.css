@@ -52,27 +52,28 @@
 }
 
 .buttonDiv {
-  background-color: var(--theme-primary);
-  color: black;
+  background-color: rgba(255, 255, 255, 0.07);
+  color: #e0e0e0;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
   min-width: calc(6dvw * var(--card-scale));
   height: 32px;
-  border-radius: 5px;
-  border: 1px solid var(--theme-primary);
+  border-radius: 6px; 
+  border: 1px solid rgba(255, 255, 255, 0.15);
   flex-basis: auto;
-  padding: 8px;
+  padding: 8px 16px;
   width: auto;
   margin-bottom: 0.25rem;
   white-space: nowrap;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
 }
 
 .buttonDiv:hover {
-  background-color: black;
-  color: var(--theme-primary);
-  border: 1px solid var(--theme-primary);
+  background-color: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.3);
   cursor: pointer;
 }
 
