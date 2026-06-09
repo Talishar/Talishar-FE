@@ -444,7 +444,7 @@
 
 .grabbyHandle {
   width: calc(var(--card-size) * 0.2);
-  background-color: color-mix(in srgb, var(--theme-tertiary) 45%, transparent);
+  background-color: color-mix(in srgb, var(--theme-tertiary) 55%, transparent);
   border-radius: 0 10px 10px 0;
   display: flex;
   flex-direction: column;
