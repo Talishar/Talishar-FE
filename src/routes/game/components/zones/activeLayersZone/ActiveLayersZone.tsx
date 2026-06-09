@@ -3,7 +3,7 @@ import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import CardDisplay from '../../elements/cardDisplay/CardDisplay';
 import styles from './ActiveLayersZone.module.css';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import ReorderLayers from './ReorderLayers';
 import useShowModal from 'hooks/useShowModals';
 import { submitButton } from 'features/game/GameSlice';
@@ -44,6 +44,7 @@ function groupConsecutiveCards(cards: Card[], playerID: number): CardGroup[] {
 
 export default function ActiveLayersZone() {
   const showModal = useShowModal();
+  const prefersReducedMotion = useReducedMotion();
   const activeLayer = useAppSelector(
     (state: RootState) => state.game.activeLayers
   );
@@ -158,10 +159,24 @@ export default function ActiveLayersZone() {
         <motion.div
           ref={containerRef}
           className={styles.activeLayersBox}
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1, y: `${yOffset}dvh` }}
-          exit={{ opacity: 0, scale: 0.8 }}
-          transition={isDragging ? { type: 'tween', duration: 0 } : undefined}
+          initial={
+            prefersReducedMotion
+              ? { opacity: 1, y: `${yOffset}dvh` }
+              : { opacity: 0, y: `${yOffset}dvh` }
+          }
+          animate={{ opacity: 1, y: `${yOffset}dvh` }}
+          exit={
+            prefersReducedMotion
+              ? { opacity: 0, y: `${yOffset}dvh` }
+              : { opacity: 0, y: `${yOffset}dvh` }
+          }
+          transition={
+            isDragging
+              ? { type: 'tween', duration: 0 }
+              : prefersReducedMotion
+                ? { duration: 0.01 }
+                : { type: 'tween', duration: 0.18, ease: 'easeOut' }
+          }
           key="activeLayersBox"
         >
           <div className={styles.activeLayersInner}>
