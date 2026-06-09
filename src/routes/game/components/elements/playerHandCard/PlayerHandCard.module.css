@@ -9,9 +9,9 @@
 @media (orientation: portrait) {
   .handCard {
     height: 9dvh;
-    width: 14%;
+    width: 10dvh;
     flex-shrink: 0;
-    min-width: 14%;
+    min-width: 10dvh;
   }
 }
 
