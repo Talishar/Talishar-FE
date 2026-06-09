@@ -348,7 +348,13 @@ export default function PlayerHand() {
     const naturalWidth = N * cardWidth + (N - 1) * defaultSpacing;
 
     if (naturalWidth <= containerWidth) {
-      setCardSpacingPx(null);
+      if (isPortrait) {
+        const availableForGaps = containerWidth - N * cardWidth;
+        const spreadGap = availableForGaps / (N - 1);
+        setCardSpacingPx(Math.min(40, Math.max(defaultSpacing, spreadGap)));
+      } else {
+        setCardSpacingPx(null);
+      }
       setMaxScrollOffset(0);
       setScrollOffset(0);
       return;
@@ -403,7 +409,7 @@ export default function PlayerHand() {
 
   // Mouse-wheel scrolls the hand horizontally (desktop); non-passive so we can preventDefault
   useEffect(() => {
-    const el = scrollInnerRef.current;
+    const el = handRowRef.current;
     if (!el || maxScrollOffset === 0) return;
 
     const handleWheel = (e: WheelEvent) => {

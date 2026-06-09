@@ -13,9 +13,6 @@
   pointer-events: none;
 }
 
-.handScrollContainer > * {
-  pointer-events: auto;
-}
 
 .handScrollInner {
   flex: 1;
@@ -36,6 +33,7 @@
   flex-wrap: nowrap;
   align-items: center;
   gap: 0;
+  pointer-events: none;
 }
 
 .handRow > *:not(:last-child) {
@@ -44,6 +42,7 @@
 
 .scrollButton {
   flex-shrink: 0;
+  pointer-events: auto;
   width: 3dvh;
   min-width: 24px;
   height: 9dvh;

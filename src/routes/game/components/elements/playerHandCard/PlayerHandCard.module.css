@@ -4,6 +4,7 @@
   width: 16dvh;
   flex-shrink: 0;
   position: relative;
+  pointer-events: auto;
 }
 
 @media (orientation: portrait) {
