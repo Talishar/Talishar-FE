@@ -1,4 +1,5 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import classNames from 'classnames';
 import { shallowEqual } from 'react-redux';
 import { RootState } from 'app/Store';
 import { Card } from 'features/Card';
@@ -96,8 +97,28 @@ export default function PlayerHand() {
     DEFAULT_HAND_REORDER_STEP_PX
   );
   const handRowRef = useRef<HTMLDivElement | null>(null);
+  const scrollInnerRef = useRef<HTMLDivElement | null>(null);
   const soundPlayedForDragRef = useRef<boolean>(false);
   const [cardSpacingPx, setCardSpacingPx] = useState<number | null>(null);
+  const [scrollOffset, setScrollOffset] = useState(0);
+  const [maxScrollOffset, setMaxScrollOffset] = useState(0);
+  const [gameZoneBounds, setGameZoneBounds] = useState<{ left: number; right: number } | null>(null);
+
+  useEffect(() => {
+    const gameZone = document.querySelector('.gameZone') as HTMLElement | null;
+    if (!gameZone) return;
+
+    const update = () => {
+      const rect = gameZone.getBoundingClientRect();
+      setGameZoneBounds({ left: rect.left, right: window.innerWidth - rect.right });
+    };
+
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(gameZone);
+    ro.observe(document.body);
+    return () => ro.disconnect();
+  }, []);
   const arsenalCards = useAppSelector(
     (state: RootState) => state.game.playerOne.Arsenal
   );
@@ -310,10 +331,14 @@ export default function PlayerHand() {
     const N = cardElements.length;
     if (N <= 1) {
       setCardSpacingPx(null);
+      setMaxScrollOffset(0);
+      setScrollOffset(0);
       return;
     }
 
-    const containerWidth = handRow.offsetWidth;
+    // Use the visible scroll-inner width so button widths are excluded
+    const containerWidth =
+      scrollInnerRef.current?.clientWidth ?? handRow.offsetWidth;
     // getBoundingClientRect().width is the intrinsic card width, unaffected by margin-right
     const cardWidth = cardElements[0].getBoundingClientRect().width;
     const isPortrait = window.innerHeight > window.innerWidth;
@@ -324,15 +349,74 @@ export default function PlayerHand() {
 
     if (naturalWidth <= containerWidth) {
       setCardSpacingPx(null);
+      setMaxScrollOffset(0);
+      setScrollOffset(0);
       return;
     }
 
-    // Solve: containerWidth = N*cardWidth + (N-1)*spacing
-    const neededSpacing = (containerWidth - N * cardWidth) / (N - 1);
-    // Always keep at least 10% of each card visible (90% max overlap)
-    const minSpacing = -(cardWidth * 0.9);
-    setCardSpacingPx(Math.max(neededSpacing, minSpacing));
+    // On desktop (landscape): compress cards using negative spacing (overlap) up to 30%
+    // of card width before falling back to scrolling.
+    if (!isPortrait) {
+      const maxOverlapSpacing = -cardWidth * 0.30;
+      const widthAtMaxOverlap = N * cardWidth + (N - 1) * maxOverlapSpacing;
+      if (widthAtMaxOverlap <= containerWidth) {
+        // Cards fit if we overlap — find exact spacing needed
+        const fittingSpacing = (containerWidth - N * cardWidth) / (N - 1);
+        setCardSpacingPx(Math.max(maxOverlapSpacing, fittingSpacing));
+        setMaxScrollOffset(0);
+        setScrollOffset(0);
+        return;
+      }
+      // Even at max overlap they don't fit — use max overlap and scroll the rest
+      setCardSpacingPx(maxOverlapSpacing);
+      const overflowWidth = widthAtMaxOverlap;
+      const newMax = Math.max(0, overflowWidth - containerWidth);
+      setMaxScrollOffset(newMax);
+      setScrollOffset((prev) => Math.min(prev, newMax));
+      return;
+    }
+
+    // Portrait/mobile: keep a visible gap and scroll
+    const minSpacing = 10;
+    setCardSpacingPx(minSpacing);
+    const overflowWidth = N * cardWidth + (N - 1) * minSpacing;
+    const newMax = Math.max(0, overflowWidth - containerWidth);
+    setMaxScrollOffset(newMax);
+    setScrollOffset((prev) => Math.min(prev, newMax));
   }, [orderedHandCards.length, width, height]);
+
+  const scrollHand = useCallback(
+    (direction: 'left' | 'right') => {
+      const inner = scrollInnerRef.current;
+      if (!inner) return;
+      const amount = inner.clientWidth * 0.6;
+      setScrollOffset((prev) => {
+        const next =
+          direction === 'right'
+            ? Math.min(maxScrollOffset, prev + amount)
+            : Math.max(0, prev - amount);
+        return next;
+      });
+    },
+    [maxScrollOffset]
+  );
+
+  // Mouse-wheel scrolls the hand horizontally (desktop); non-passive so we can preventDefault
+  useEffect(() => {
+    const el = scrollInnerRef.current;
+    if (!el || maxScrollOffset === 0) return;
+
+    const handleWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+      setScrollOffset((prev) =>
+        Math.max(0, Math.min(maxScrollOffset, prev + delta))
+      );
+    };
+
+    el.addEventListener('wheel', handleWheel, { passive: false });
+    return () => el.removeEventListener('wheel', handleWheel);
+  }, [maxScrollOffset]);
 
   const handleHandCardReorder = (
     draggedCardId: string,
@@ -462,17 +546,44 @@ export default function PlayerHand() {
 
   const cardsInHandsAlready = [...playedCards];
 
+  const canScrollLeft = scrollOffset > 0;
+  const canScrollRight = scrollOffset < maxScrollOffset;
+
   return (
     <>
       {createPortal(
         <>
           <div
+            className={styles.handScrollContainer}
+            style={gameZoneBounds ? { left: gameZoneBounds.left, right: gameZoneBounds.right } : undefined}
+          >
+            <button
+              className={classNames(styles.scrollButton, {
+                [styles.scrollButtonHidden]: !canScrollLeft
+              })}
+              onPointerDown={() => scrollHand('left')}
+              aria-label="Scroll hand left"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <polyline points="15 18 9 12 15 6" />
+              </svg>
+            </button>
+            <div
+              ref={scrollInnerRef}
+              className={classNames(styles.handScrollInner, {
+                [styles.handScrollInnerScrollable]: maxScrollOffset > 0
+              })}
+            >
+          <div
             ref={handRowRef}
             className={styles.handRow}
             style={
-              cardSpacingPx !== null
-                ? ({ '--card-spacing': `${cardSpacingPx}px` } as React.CSSProperties)
-                : undefined
+              {
+                ...(cardSpacingPx !== null
+                  ? { '--card-spacing': `${cardSpacingPx}px` }
+                  : {}),
+                transform: scrollOffset > 0 ? `translateX(-${scrollOffset}px)` : undefined
+              } as React.CSSProperties
             }
             onContextMenu={(e) => e.preventDefault()}
           >
@@ -592,6 +703,19 @@ export default function PlayerHand() {
                   );
                 })}
             </AnimatePresence>
+          </div>
+            </div>
+            <button
+              className={classNames(styles.scrollButton, {
+                [styles.scrollButtonHidden]: !canScrollRight
+              })}
+              onPointerDown={() => scrollHand('right')}
+              aria-label="Scroll hand right"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <polyline points="9 18 15 12 9 6" />
+              </svg>
+            </button>
           </div>
         </>,
         document.body

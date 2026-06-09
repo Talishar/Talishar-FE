@@ -1,55 +1,123 @@
-.handRow {
+.handScrollContainer {
   position: fixed;
-  max-height: 3vh;
   bottom: 2vh;
+  bottom: 2dvh;
+  left: 0;
+  right: 0;
+  max-height: 3vh;
+  max-height: 3dvh;
+  display: flex;
+  align-items: center;
+  user-select: none;
+  clip-path: inset(-500px 0 -500px 0);
+}
+
+.handScrollInner {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: visible;
+}
+
+.handScrollInnerScrollable {
+  justify-content: flex-start;
+}
+
+.handRow {
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
-  justify-content: center;
   align-items: center;
   gap: 0;
-  user-select: none;
-  left: 10vh;
-  left: 10dvh;
-  right: 20vh;
-  right: 20dvh;
 }
 
-/* Spacing between cards driven entirely by JS via --card-spacing.
-   Fallback used only on first paint before JS runs. */
 .handRow > *:not(:last-child) {
   margin-right: var(--card-spacing, 2vh);
 }
 
+.scrollButton {
+  flex-shrink: 0;
+  width: 3dvh;
+  min-width: 24px;
+  height: 9dvh;
+  min-height: 52px;
+  background: linear-gradient(180deg, rgba(20, 20, 20, 0.75) 0%, rgba(10, 10, 10, 0.9) 100%);
+  border: none;
+  border-radius: 6px;
+  color: rgba(255, 255, 255, 0.75);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  transition: color 0.15s, background 0.15s, opacity 0.2s, transform 0.1s;
+  padding: 0;
+  opacity: 1;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+.scrollButton svg {
+  width: max(11px, 1.6dvh);
+  height: max(11px, 1.6dvh);
+}
+
+.scrollButton:hover {
+  color: rgba(255, 255, 255, 1);
+  background: linear-gradient(180deg, rgba(35, 35, 35, 0.88) 0%, rgba(20, 20, 20, 0.96) 100%);
+  transform: scale(1.08);
+}
+
+.scrollButton:active {
+  transform: scale(0.96);
+}
+
+.scrollButtonHidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
 @media (orientation: portrait) and (max-width: 768px) {
-  .handRow {
-    justify-content: center;
-    max-width: 100%;
-    bottom: 2dvh;
-    padding: 0 0.5dvh;
-    max-height: 18dvh;
+  .handScrollContainer {
     left: 0;
     right: 0;
+    bottom: 2dvh;
+    max-height: 18dvh;
+    padding: 0;
   }
 
-  /* Smaller default gap for portrait before JS kicks in */
   .handRow > *:not(:last-child) {
     margin-right: var(--card-spacing, 1dvh);
+  }
+
+  .scrollButton {
+    width: 7dvw;
+    min-width: 24px;
+    height: 10dvh;
+    border-radius: 5px;
   }
 }
 
 @media (orientation: portrait) and (min-width: 769px) {
-  .handRow {
-    justify-content: center;
-    max-width: 100%;
-    bottom: 2dvh;
-    padding: 0 0.5dvh;
-    max-height: 18dvh;
+  .handScrollContainer {
     left: 0;
     right: 0;
+    bottom: 2dvh;
+    max-height: 18dvh;
+    padding: 0;
   }
 
   .handRow > *:not(:last-child) {
     margin-right: var(--card-spacing, 1dvh);
+  }
+
+  .scrollButton {
+    width: 5dvw;
+    min-width: 24px;
+    height: 10dvh;
+    border-radius: 5px;
   }
 }
