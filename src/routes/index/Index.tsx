@@ -36,12 +36,10 @@ const Index = () => {
   useEffect(() => {
     if (!showAds) return;
 
-    let videoDiv: HTMLDivElement | null = null;
-    if (!document.querySelector('[data-ad="video"]')) {
-      videoDiv = document.createElement('div');
-      videoDiv.setAttribute('data-ad', 'video');
-      document.body.appendChild(videoDiv);
-    }
+    document.querySelectorAll('[data-ad="video"]').forEach(el => el.remove());
+    const videoDiv = document.createElement('div');
+    videoDiv.setAttribute('data-ad', 'video');
+    document.body.appendChild(videoDiv);
 
     const ANCHOR_SELECTOR = '[data-ad="anchor"]';
     const hideAnchors = () => {
@@ -54,7 +52,7 @@ const Index = () => {
     observer.observe(document.documentElement, { childList: true, subtree: true });
     return () => {
       observer.disconnect();
-      videoDiv?.remove();
+      videoDiv.remove();
     };
   }, [showAds]);
 
