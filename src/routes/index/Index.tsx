@@ -34,12 +34,16 @@ const Index = () => {
   useAdScript(showAds);
 
   useEffect(() => {
-    if (!showAds) return;
+    if (!showAds) {
+      document.querySelectorAll('[data-ad="video"]').forEach(el => el.remove());
+      return;
+    }
 
-    document.querySelectorAll('[data-ad="video"]').forEach(el => el.remove());
-    const videoDiv = document.createElement('div');
-    videoDiv.setAttribute('data-ad', 'video');
-    document.body.appendChild(videoDiv);
+    if (!document.querySelector('[data-ad="video"]')) {
+      const videoDiv = document.createElement('div');
+      videoDiv.setAttribute('data-ad', 'video');
+      document.body.appendChild(videoDiv);
+    }
 
     const ANCHOR_SELECTOR = '[data-ad="anchor"]';
     const hideAnchors = () => {
@@ -52,7 +56,6 @@ const Index = () => {
     observer.observe(document.documentElement, { childList: true, subtree: true });
     return () => {
       observer.disconnect();
-      videoDiv.remove();
     };
   }, [showAds]);
 

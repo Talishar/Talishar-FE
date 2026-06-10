@@ -224,7 +224,6 @@ export default function useAdScript(enabled: boolean = true) {
     return () => {
       iframeGuard.disconnect();
       removeNavGuard();
-      purgeAdElements();
     };
   }, [enabled]);
 }
