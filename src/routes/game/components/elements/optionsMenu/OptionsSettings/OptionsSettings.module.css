@@ -113,23 +113,83 @@ fieldset legend strong {
   border-color: var(--theme-primary);
 }
 
-.playmatPreview {
-  margin-top: 1rem;
+.playmatListContainer {
   width: 100%;
-  min-height: 180px;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 0.5rem 0.25rem 0.5rem 0;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
 }
 
-.playmatPreviewImage {
-  width: 100%;
-  min-height: 350px;
-  height: auto;
-  display: block;
+.playmatListContainer::-webkit-scrollbar {
+  width: 6px;
+}
+
+.playmatListContainer::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.playmatListContainer::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+}
+
+.playmatThumbWrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
   border-radius: 8px;
+  transition: transform 0.2s;
+  contain: layout style paint;
+}
+
+.playmatThumbWrapper:hover {
+  will-change: transform;
+  transform: scale(1.04);
+}
+
+.playmatThumb {
+  width: 160px;
+  height: 90px;
   object-fit: cover;
+  border-radius: 8px;
+  opacity: 0.88;
+  transition: opacity 0.25s, box-shadow 0.25s;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  display: block;
+}
+
+.playmatThumbWrapper:hover .playmatThumb {
+  opacity: 1;
+}
+
+.playmatThumbSelected {
+  box-shadow: 0 0 0 3px var(--theme-primary);
+  opacity: 1;
+}
+
+.playmatLabel {
+  font-size: 0.75em;
+  color: rgba(255, 255, 255, 0.7);
+  text-align: center;
+  max-width: 160px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.lockedPlaymatLabel {
+  color: rgba(255, 255, 255, 0.35);
 }
 
 .cardBackListContainer {
@@ -148,27 +208,32 @@ fieldset legend strong {
   height: 150px;
   width: 150px;
   max-height: 150px;
-  filter: brightness(0.85);
-  transition: filter 0.25s, box-shadow 0.25s, transform 0.2s;
+  opacity: 0.88;
+  transition: opacity 0.25s, box-shadow 0.25s, transform 0.2s;
   cursor: pointer;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
   border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .cardBack:hover {
-  filter: brightness(0.85);
+  will-change: transform;
+  opacity: 1;
   transform: scale(1.05);
 }
 
 .selected {
   box-shadow: 0 0 0 3px var(--theme-primary);
-  filter: brightness(1);
+  opacity: 1;
 }
 
 .lockedCardBackWrapper {
   position: relative;
-  display: inline-block;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
   cursor: not-allowed;
+  contain: layout style paint;
 }
 
 .lockedCardBack {
@@ -189,7 +254,6 @@ fieldset legend strong {
   align-items: center;
   justify-content: center;
   border-radius: 10px;
-  background: rgba(0, 0, 0, 0.25);
   pointer-events: none;
 }
 

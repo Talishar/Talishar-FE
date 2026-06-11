@@ -70,6 +70,8 @@ export const CardImage = (props: CardImage) => {
         className={imageClassNames}
         onError={handleImageError}
         draggable={props.draggable}
+        loading="lazy"
+        decoding="async"
       />
     </>
   );

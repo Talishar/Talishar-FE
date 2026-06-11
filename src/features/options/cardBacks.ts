@@ -136,7 +136,10 @@ export const CARD_BACK = {
 } as { [key: string]: string };
 
 /* Talishar supporter card back IDs - shown as locked previews to non-supporters */
-export const TALISHAR_CARD_BACK_IDS = ['1', '2', '3', '4', '5', '6', '7', '8'];
+export const TALISHAR_CARD_BACK_IDS = ['1', '2', '3', '4', '5', '6', '7', '8', '82', '83'];
+
+/* Talishar supporter playmat IDs - shown as locked previews to non-supporters */
+export const TALISHAR_PLAYMAT_IDS = ['16', '17', '18', '19', '20', '21', '37', '38', '39', '40', '41', '45'];
 
 /* All available playmats - CSS class names (must match image files) */
 export const PLAYMATS = {
@@ -256,12 +259,6 @@ export const PLAYER_PLAYMATS = [
   '13',
   '14',
   '15',
-  '16',
-  '17',
-  '18',
-  '19',
-  '20',
-  '21',
   '30',
   '31',
   '32',
