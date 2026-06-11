@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import {
   clearPopUp,
   playCard,
@@ -37,6 +37,7 @@ export interface HandCard {
   isNewlyDrawn?: boolean;
   disableDrag?: boolean;
   enableLayoutAnimation?: boolean;
+  scrollBlockedRef?: React.RefObject<boolean>;
   onHandReorderDragStart?: () => void;
   onHandReorderDragMove?: (info: PanInfo) => void;
   onHandReorderDragEnd?: (info: PanInfo) => boolean;
@@ -53,6 +54,7 @@ export const PlayerHandCard = ({
   isNewlyDrawn,
   disableDrag,
   enableLayoutAnimation,
+  scrollBlockedRef,
   onHandReorderDragStart,
   onHandReorderDragMove,
   onHandReorderDragEnd,
@@ -163,6 +165,8 @@ export const PlayerHandCard = ({
       draggedRef.current = false;
       return;
     }
+
+    if (scrollBlockedRef?.current) return;
 
     // Tap to play card (unless it was a long press which shows preview)
     if (!isLongPress.current) {

@@ -55,7 +55,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 100;
+  position: relative;
+  z-index: 500;
   transition: color 0.15s, background 0.15s, opacity 0.2s, transform 0.1s;
   padding: 0;
   opacity: 1;

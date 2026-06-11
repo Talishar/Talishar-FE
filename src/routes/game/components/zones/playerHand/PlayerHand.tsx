@@ -133,6 +133,7 @@ export default function PlayerHand() {
   const [cardSpacingPx, setCardSpacingPx] = useState<number | null>(null);
   const [scrollOffset, setScrollOffset] = useState(0);
   const [maxScrollOffset, setMaxScrollOffset] = useState(0);
+  const scrollBlockedRef = useRef(false);
   const [gameZoneBounds, setGameZoneBounds] = useState<{ left: number; right: number } | null>(null);
 
   useEffect(() => {
@@ -415,10 +416,17 @@ export default function PlayerHand() {
       return;
     }
 
-    // Portrait/mobile: keep a visible gap and scroll
-    const minSpacing = 10;
-    setCardSpacingPx(minSpacing);
-    const overflowWidth = N * cardWidth + (N - 1) * minSpacing;
+    const maxOverlapSpacing = -cardWidth * 0.20;
+    const widthAtMaxOverlap = N * cardWidth + (N - 1) * maxOverlapSpacing;
+    if (widthAtMaxOverlap <= containerWidth) {
+      const fittingSpacing = (containerWidth - N * cardWidth) / (N - 1);
+      setCardSpacingPx(Math.max(maxOverlapSpacing, fittingSpacing));
+      setMaxScrollOffset(0);
+      setScrollOffset(0);
+      return;
+    }
+    setCardSpacingPx(maxOverlapSpacing);
+    const overflowWidth = widthAtMaxOverlap;
     const newMax = Math.max(0, overflowWidth - containerWidth);
     setMaxScrollOffset(newMax);
     setScrollOffset((prev) => Math.min(prev, newMax));
@@ -444,6 +452,8 @@ export default function PlayerHand() {
             : Math.max(0, prev - amount);
         return next;
       });
+      scrollBlockedRef.current = true;
+      setTimeout(() => { scrollBlockedRef.current = false; }, 400);
     },
     [maxScrollOffset]
   );
@@ -652,6 +662,7 @@ export default function PlayerHand() {
                       zIndex={ix + 200}
                       isNewlyDrawn={isNewlyDrawn}
                       enableLayoutAnimation={isReorderingHand}
+                      scrollBlockedRef={scrollBlockedRef}
                       onHandReorderDragStart={handleHandCardDragStart}
                       onHandReorderDragMove={(info) =>
                         handleHandCardDragMove(id, info.offset.x, info.offset.y)
@@ -694,6 +705,7 @@ export default function PlayerHand() {
                       key={`banished-${card.cardNumber}-${cardCount}`}
                       addCardToPlayedCards={addCardToPlayedCards}
                       zIndex={ix}
+                      scrollBlockedRef={scrollBlockedRef}
                     />
                   );
                 })}
@@ -710,6 +722,7 @@ export default function PlayerHand() {
                       key={`banished-${card.cardNumber}-${cardCount}`}
                       addCardToPlayedCards={addCardToPlayedCards}
                       zIndex={ix}
+                      scrollBlockedRef={scrollBlockedRef}
                     />
                   );
                 })}
@@ -726,6 +739,7 @@ export default function PlayerHand() {
                       key={`graveyard-${card.cardNumber}-${cardCount}`}
                       addCardToPlayedCards={addCardToPlayedCards}
                       zIndex={ix}
+                      scrollBlockedRef={scrollBlockedRef}
                     />
                   );
                 })}
