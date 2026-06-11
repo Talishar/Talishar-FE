@@ -36,6 +36,7 @@ export interface HandCard {
   addCardToPlayedCards: (cardName: string) => void;
   isNewlyDrawn?: boolean;
   disableDrag?: boolean;
+  enableLayoutAnimation?: boolean;
   onHandReorderDragStart?: () => void;
   onHandReorderDragMove?: (info: PanInfo) => void;
   onHandReorderDragEnd?: (info: PanInfo) => boolean;
@@ -51,6 +52,7 @@ export const PlayerHandCard = ({
   addCardToPlayedCards,
   isNewlyDrawn,
   disableDrag,
+  enableLayoutAnimation,
   onHandReorderDragStart,
   onHandReorderDragMove,
   onHandReorderDragEnd,
@@ -203,7 +205,7 @@ export const PlayerHandCard = ({
 
   return (
     <motion.div
-      layout="position"
+      layout={enableLayoutAnimation ? 'position' : false}
       drag={!disableDrag}
       className={classNames(styles.handCard, {
         [styles.newlyDrawn]: isNewlyDrawn

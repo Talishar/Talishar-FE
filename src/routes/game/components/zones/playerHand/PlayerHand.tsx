@@ -49,40 +49,70 @@ export default function PlayerHand() {
     (state: RootState) => state.game.playerOne.Hand
   );
 
-  // Track stable IDs by occurrence order within each cardNumber.
-  // actionDataOverride is NOT unique for duplicate cards (backend sends the card
-  // name for all copies), so we match by (cardNumber, occurrenceIndex) instead.
-  const cardStableListRef = useRef<Array<{ id: string; cardNumber: string }>>(
-    []
-  );
+  const cardStableListRef = useRef<
+    Array<{ id: string; cardNumber: string; actionDataOverride: string }>
+  >([]);
   const nextIdCounterRef = useRef<number>(0);
 
   const handCardsWithStableIds = useMemo<CardWithStableId[]>(() => {
     const cards = handCards ?? [];
     const prevList = cardStableListRef.current;
 
-    const prevIdsByCardNumber = new Map<string, string[]>();
-    for (const { id, cardNumber } of prevList) {
-      const ids = prevIdsByCardNumber.get(cardNumber) ?? [];
-      ids.push(id);
-      prevIdsByCardNumber.set(cardNumber, ids);
+    const prevByAdoKey = new Map<string, string[]>();
+    const prevByCardNumber = new Map<string, string[]>();
+    for (const { id, cardNumber, actionDataOverride } of prevList) {
+      const adoKey = `${cardNumber}::${actionDataOverride}`;
+      const adoArr = prevByAdoKey.get(adoKey) ?? [];
+      adoArr.push(id);
+      prevByAdoKey.set(adoKey, adoArr);
+
+      const cnArr = prevByCardNumber.get(cardNumber) ?? [];
+      cnArr.push(id);
+      prevByCardNumber.set(cardNumber, cnArr);
     }
 
-    const seenCounts = new Map<string, number>();
-    const result: CardWithStableId[] = cards.map((card) => {
-      const count = seenCounts.get(card.cardNumber) ?? 0;
-      seenCounts.set(card.cardNumber, count + 1);
+    const usedIds = new Set<string>();
+    const adoConsumed = new Map<string, number>();
 
-      const prevIds = prevIdsByCardNumber.get(card.cardNumber);
-      if (prevIds && count < prevIds.length) {
-        return { card, id: prevIds[count] };
+    const result: CardWithStableId[] = cards.map((card) => {
+      const ado = card.actionDataOverride ?? '';
+      const isNumericAdo = ado !== '' && /^\d+$/.test(ado);
+
+      if (isNumericAdo) {
+        const adoKey = `${card.cardNumber}::${ado}`;
+        const ids = prevByAdoKey.get(adoKey);
+        if (ids) {
+          const consumed = adoConsumed.get(adoKey) ?? 0;
+          if (consumed < ids.length) {
+            const id = ids[consumed];
+            if (!usedIds.has(id)) {
+              usedIds.add(id);
+              adoConsumed.set(adoKey, consumed + 1);
+              return { card, id };
+            }
+          }
+        }
       }
-      return { card, id: `hand-card-${nextIdCounterRef.current++}` };
+
+      const cnIds = prevByCardNumber.get(card.cardNumber);
+      if (cnIds) {
+        for (const id of cnIds) {
+          if (!usedIds.has(id)) {
+            usedIds.add(id);
+            return { card, id };
+          }
+        }
+      }
+
+      const newId = `hand-card-${nextIdCounterRef.current++}`;
+      usedIds.add(newId);
+      return { card, id: newId };
     });
 
     cardStableListRef.current = result.map(({ card, id }) => ({
       id,
-      cardNumber: card.cardNumber
+      cardNumber: card.cardNumber,
+      actionDataOverride: card.actionDataOverride ?? ''
     }));
 
     return result;
@@ -93,6 +123,7 @@ export default function PlayerHand() {
   const [dragStartOrderIds, setDragStartOrderIds] = useState<string[] | null>(
     null
   );
+  const [isReorderingHand, setIsReorderingHand] = useState(false);
   const [handReorderStepPx, setHandReorderStepPx] = useState<number>(
     DEFAULT_HAND_REORDER_STEP_PX
   );
@@ -222,6 +253,7 @@ export default function PlayerHand() {
   const handleHandCardDragStart = () => {
     setDragStartOrderIds(orderedHandIds);
     setPreviewHandIds(orderedHandIds);
+    setIsReorderingHand(true);
     soundPlayedForDragRef.current = false;
   };
 
@@ -271,6 +303,7 @@ export default function PlayerHand() {
   const clearHandDragPreview = () => {
     setDragStartOrderIds(null);
     setPreviewHandIds(null);
+    setIsReorderingHand(false);
     soundPlayedForDragRef.current = false;
   };
 
@@ -618,6 +651,7 @@ export default function PlayerHand() {
                       addCardToPlayedCards={addCardToPlayedCards}
                       zIndex={ix + 200}
                       isNewlyDrawn={isNewlyDrawn}
+                      enableLayoutAnimation={isReorderingHand}
                       onHandReorderDragStart={handleHandCardDragStart}
                       onHandReorderDragMove={(info) =>
                         handleHandCardDragMove(id, info.offset.x, info.offset.y)
