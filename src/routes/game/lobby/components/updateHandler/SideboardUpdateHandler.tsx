@@ -19,7 +19,7 @@ interface LobbyUpdateHandlerProps {
 }
 
 export const LobbyUpdateHandler = React.memo(
-  ({ isSubmitting }: LobbyUpdateHandlerProps) => {
+  ({ isSubmitting: _isSubmitting }: LobbyUpdateHandlerProps) => {
     const abortRef = useRef<AbortController>();
     const timeoutRef = useRef<ReturnType<typeof setTimeout>>();
     const gameInfo = useAppSelector(getGameInfo, shallowEqual);
@@ -73,10 +73,6 @@ export const LobbyUpdateHandler = React.memo(
 
     }, [gameInfo.gameID, isUpdateInProgress, dispatch]);
 
-    if (isSubmitting) {
-      abortRef.current?.abort();
-    }
-
     useEffect(() => {
       return () => {
         abortRef.current?.abort();
@@ -86,7 +82,7 @@ export const LobbyUpdateHandler = React.memo(
         }
         dispatch(setIsUpdateInProgressFalse());
       };
-    }, [isSubmitting]);
+    }, []);
 
     useEffect(() => {
       dispatch(
