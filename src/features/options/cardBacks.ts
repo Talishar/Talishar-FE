@@ -185,6 +185,7 @@ export const PLAYMATS = {
   '42': 'LibraryOfSolana',
   '43': 'TaddleDown',
   '44': 'Omens',
+  '45': 'TheLostPrince'
 } as { [key: string]: string };
 
 /* Display names for playmats (user-friendly formatting) */
@@ -234,6 +235,7 @@ export const PLAYMAT_DISPLAY_NAMES = {
   '42': 'Library of Solana',
   '43': 'Taddle Down',
   '44': 'Omens of the Third Age',
+  '45': 'Talishar, The Lost Prince'
 } as { [key: string]: string };
 
 /* Default playmats available to all players */
