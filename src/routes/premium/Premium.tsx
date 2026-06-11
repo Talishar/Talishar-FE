@@ -23,7 +23,7 @@ const tiers: Tier[] = [
     monthlyPrice: 5,
     yearlyDiscount: 0.1,
     benefits: [
-      '5 Free Guides, 50% on 3 Guides',
+      '8 Free Guides',
       'General support',
       'Alt Arts on Talishar',
       'Talishar Sleeves & Playmats',
@@ -140,7 +140,7 @@ const comparisonFeatures = [
   { label: 'No Ads', free: false, premium: true },
   { label: 'Discord role', free: false, premium: true },
   { label: 'Exclusive channels & posts', free: false, premium: true },
-  { label: 'Free Guides', free: false, premium: '$5+' },
+  { label: 'Free Guides', free: false, premium: true },
   { label: 'Extra Leaderboard Points', free: false, premium: '$10+' },
   { label: 'Weekly Group Classes & Office Hour', free: false, premium: '$35+' }
 ];

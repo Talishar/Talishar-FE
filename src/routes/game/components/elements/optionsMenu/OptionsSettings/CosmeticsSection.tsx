@@ -2,7 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 import CardPopUp from '../../cardPopUp/CardPopUp';
 import CardImage from '../../cardImage/CardImage';
-import { CARD_BACK, PLAYMATS } from 'features/options/cardBacks';
+import { CARD_BACK, PLAYMATS, TALISHAR_CARD_BACK_IDS } from 'features/options/cardBacks';
 import {
   CARD_SQUARES_PATH,
   DEFAULT_LANGUAGE,
@@ -34,6 +34,9 @@ export const CosmeticsSection: React.FC<CosmeticsSectionProps> = ({
     const playmatName = PLAYMATS[playmatId];
     return `/playmats/${playmatName}.webp`;
   };
+
+  const unlockedCardBackIds = new Set((data?.cardBacks ?? []).map((cb) => cb.id));
+  const lockedTalisharIds = TALISHAR_CARD_BACK_IDS.filter((id) => !unlockedCardBackIds.has(id));
 
   return (
     <>
@@ -107,6 +110,26 @@ export const CosmeticsSection: React.FC<CosmeticsSectionProps> = ({
               </CardPopUp>
             );
           })}
+          {lockedTalisharIds.map((id) => (
+            <div
+              key={`lockedCardBack${id}`}
+              className={styles.lockedCardBackWrapper}
+              title="Support us on Metafy to unlock customized card backs"
+            >
+              <CardImage
+                src={getCollectionCardImagePath({
+                  path: CARD_SQUARES_PATH,
+                  locale: DEFAULT_LANGUAGE,
+                  cardNumber: CARD_BACK[id]
+                })}
+                draggable={false}
+                className={classNames(styles.cardBack, styles.lockedCardBack)}
+              />
+              <div className={styles.lockOverlay}>
+                <span className={styles.lockIcon}>&#128274;</span>
+              </div>
+            </div>
+          ))}
         </div>
       </label>
     </>

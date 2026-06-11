@@ -135,6 +135,9 @@ export const CARD_BACK = {
   '134': 'CBSkillIssue',
 } as { [key: string]: string };
 
+/* Talishar supporter card back IDs - shown as locked previews to non-supporters */
+export const TALISHAR_CARD_BACK_IDS = ['1', '2', '3', '4', '5', '6', '7', '8'];
+
 /* All available playmats - CSS class names (must match image files) */
 export const PLAYMATS = {
   '0': 'Default',
