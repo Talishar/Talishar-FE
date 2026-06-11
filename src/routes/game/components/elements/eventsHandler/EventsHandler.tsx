@@ -31,6 +31,7 @@ export const EventsHandler = React.memo(() => {
     (state: RootState) => state.game.events,
     shallowEqual
   );
+  const lastProcessedEventsRef = React.useRef<typeof events>(undefined);
 
   enum ModalType {
     RequestChat = 0,
@@ -85,7 +86,8 @@ export const EventsHandler = React.memo(() => {
   };
 
   useEffect(() => {
-    if (events) {
+    if (events && events !== lastProcessedEventsRef.current) {
+      lastProcessedEventsRef.current = events;
       const CLASH_DISPLAY_DURATION = 7600;
       const CLASH_FIRST_DURATION = 3600;
 
