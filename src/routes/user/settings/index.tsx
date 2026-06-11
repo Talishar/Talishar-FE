@@ -6,10 +6,7 @@ import {
   RadioGroup,
   Fieldset
 } from '../../game/components/elements/optionsMenu/OptionsSettings/FormComponents';
-import {
-  VisualSlider,
-  VisualPreset
-} from '../../game/components/elements/optionsMenu/OptionsSettings/VisualSettings';
+import { VisualSlider } from '../../game/components/elements/optionsMenu/OptionsSettings/VisualSettings';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import {
   fetchAllSettings,
@@ -128,14 +125,6 @@ const SettingsPage = () => {
     { value: 'neverSkip', label: 'Never Skip Attacks', enumValue: 0 },
     { value: 'skipOnes', label: 'Skip 1 Power Attacks', enumValue: 1 },
     { value: 'skipAll', label: 'Skip All Attacks', enumValue: 99 }
-  ];
-
-  const transparencyPresets = [
-    { value: 0.75, label: '75%' },
-    { value: 0.85, label: '85%' },
-    { value: 0.9, label: '90%' },
-    { value: 0.95, label: '95%' },
-    { value: 1.0, label: '100%' }
   ];
 
   return (
@@ -413,10 +402,12 @@ const SettingsPage = () => {
               onChange={(value) => setCookie('hoverImageSize', value)}
             />
 
-            <VisualPreset
+            <VisualSlider
               label="Transparency"
-              currentValue={cookies.transparencyIntensity ?? 1}
-              presets={transparencyPresets}
+              value={cookies.transparencyIntensity ?? 1}
+              min={75}
+              max={100}
+              defaultValue={1}
               onChange={(value) => {
                 setCookie('transparencyIntensity', value);
                 setTransparency(value);

@@ -22,7 +22,7 @@ import {
   Fieldset
 } from './FormComponents';
 import { CosmeticsSection } from './CosmeticsSection';
-import { VisualSlider, VisualPreset } from './VisualSettings';
+import { VisualSlider } from './VisualSettings';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import ThemeToggle from 'themes/ThemeToggle';
 import LanguageSelector from 'components/LanguageSelector/LanguageSelector';
@@ -141,14 +141,6 @@ const OptionsSettings = () => {
     { value: 'neverSkip', label: 'Never Skip Attacks', enumValue: 0 },
     { value: 'skipOnes', label: 'Skip 1 Power Attacks', enumValue: 1 },
     { value: 'skipAll', label: 'Skip All Attacks', enumValue: 99 }
-  ];
-
-  const transparencyPresets = [
-    { value: 0.75, label: '75%' },
-    { value: 0.85, label: '85%' },
-    { value: 0.9, label: '90%' },
-    { value: 0.95, label: '95%' },
-    { value: 1.0, label: '100%' }
   ];
 
   return (
@@ -438,10 +430,12 @@ const OptionsSettings = () => {
           onChange={(value) => setCookie('hoverImageSize', value)}
         />
 
-        <VisualPreset
+        <VisualSlider
           label="Transparency"
-          currentValue={cookies.transparencyIntensity ?? 1}
-          presets={transparencyPresets}
+          value={cookies.transparencyIntensity ?? 1}
+          min={75}
+          max={100}
+          defaultValue={1}
           onChange={(value) => {
             setCookie('transparencyIntensity', value);
             setTransparency(value);
