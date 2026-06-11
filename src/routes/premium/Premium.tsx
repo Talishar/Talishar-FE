@@ -21,7 +21,7 @@ const tiers: Tier[] = [
     name: 'Fyendal Supporters',
     image: METAFY_TIER_MAP['Fyendal Supporters'].image,
     monthlyPrice: 5,
-    yearlyDiscount: 0.1,
+    yearlyDiscount: 0.05,
     benefits: [
       '8 Free Guides',
       'General support',
@@ -113,7 +113,7 @@ const tiers: Tier[] = [
     name: 'Sponsors of Trōpal-Dhani',
     image: METAFY_TIER_MAP['Sponsors of Trōpal-Dhani'].image,
     monthlyPrice: 50,
-    yearlyDiscount: 0.15,
+    yearlyDiscount: 0.20,
     benefits: [
       '8 Free Guides',
       'General support',
