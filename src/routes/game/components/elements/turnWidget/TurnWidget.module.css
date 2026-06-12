@@ -14,8 +14,8 @@
   top: 0;
   right: 0;
   bottom: 0;
-  width: 10vh;
-  width: 10dvh;
+  width: 9vh;
+  width: 9dvh;
   box-sizing: border-box;
   display: grid;
   grid-template-rows: 1fr 1.35fr 1fr;
