@@ -9,14 +9,16 @@
   gap: 0.75rem;
   padding: 1rem 1.5rem;
   background-color: rgba(0, 0, 0, 0.92);
-  border: 1px solid var(--theme-alarm, #c62828);
+  border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.2));
   border-radius: 10px;
   animation: slideIn 0.3s ease-out;
   max-width: 250px;
 }
 
+/* Urgency is conveyed by the icon and red leave button; the frame stays
+   neutral to match the rest of the board chrome */
 .warning {
-  border-color: var(--theme-warning, #feca57);
+  border-color: var(--theme-border, rgba(255, 255, 255, 0.2));
 }
 
 @keyframes slideIn {

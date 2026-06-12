@@ -23,7 +23,7 @@
   padding: 0.9dvh;
   border-radius: 6px;
   background: linear-gradient(to bottom, #1a1c23 0%, #0f1015 100%);
-  border: 1px solid rgba(255, 255, 255, 0.22);
+  border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.2));
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
   transition: border-color 0.35s ease, box-shadow 0.35s ease;
   font-family: 'Rajdhani', 'Segoe UI', 'Inter', system-ui, sans-serif;

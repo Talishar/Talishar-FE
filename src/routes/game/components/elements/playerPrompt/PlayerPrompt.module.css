@@ -2,7 +2,7 @@
   background-color: var(--near-black);
   border-width: 1px;
   border-radius: 10px;
-  border-color: var(--theme-primary);
+  border-color: var(--theme-border, rgba(255, 255, 255, 0.2));
   border-style: solid;
   color: var(--white);
   max-width: 100%;

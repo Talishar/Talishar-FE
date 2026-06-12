@@ -15,7 +15,7 @@
   justify-content: space-between;
   color: var(--white);
   isolation: isolate;
-  border: 1px solid var(--theme-primary);
+  border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.2));
   background-color: var(--near-black);
   pointer-events: auto;
   z-index: 10;
@@ -124,7 +124,7 @@
   justify-content: center;
   align-items: center;
   background-color: rgba(0, 0, 0, 0.5);
-  border: var(--theme-primary) solid 1px;
+  border: var(--theme-border, rgba(255, 255, 255, 0.2)) solid 1px;
   color: var(--white);
   border-radius: 5px;
   width: 1.5em;
@@ -151,7 +151,7 @@
   background-color: var(--near-black);
   border-width: 1px 1px 1px 1px;
   border-radius: 0 0 0.5em 0.5em;
-  border-color: var(--theme-primary);
+  border-color: var(--theme-border, rgba(255, 255, 255, 0.2));
   padding: 5px;
   border-style: solid;
   font-size: 1.1em;
