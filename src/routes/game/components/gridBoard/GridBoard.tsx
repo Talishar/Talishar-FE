@@ -22,6 +22,7 @@ import ZoneCounts from '../zones/zoneCountsZone/ZoneCounts';
 import CombatChain from '../combatChain/CombatChain';
 import PlayerPrompt from '../elements/playerPrompt/PlayerPrompt';
 import Playmat from '../elements/playmat';
+import AmbientParticles from '../elements/ambientParticles';
 
 import styles from './GridBoard.module.css';
 import { useCookies } from 'react-cookie';
@@ -159,6 +160,7 @@ const GridBoard = () => {
         </div>
         <Playmat isPlayer={false} />
         <Playmat isPlayer={true} />
+        <AmbientParticles />
         <div className={styles.combatChain}>
           <CombatChain />
         </div>

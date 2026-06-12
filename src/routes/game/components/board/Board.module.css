@@ -1,4 +1,5 @@
 .gameBoard {
+  position: relative; /* anchor for the AmbientParticles overlay */
   justify-self: center;
   display: flex;
   width: 95%;

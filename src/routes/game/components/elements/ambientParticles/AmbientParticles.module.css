@@ -1,0 +1,64 @@
+.ambientLayer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 1; /* above the playmat backgrounds, below interactive zones */
+  border-radius: 5px;
+}
+
+.mote,
+.spark {
+  position: absolute;
+  bottom: -10px;
+  border-radius: 50%;
+  opacity: 0;
+  will-change: transform, opacity;
+  animation: rise var(--duration) linear var(--delay) infinite;
+}
+
+.mote {
+  background: radial-gradient(
+    circle,
+    rgba(255, 214, 150, 0.9) 0%,
+    rgba(255, 180, 90, 0.4) 60%,
+    transparent 100%
+  );
+}
+
+.spark {
+  background: radial-gradient(
+    circle,
+    rgba(255, 240, 200, 1) 0%,
+    rgba(255, 170, 60, 0.6) 50%,
+    transparent 100%
+  );
+  box-shadow: 0 0 6px 1px rgba(255, 170, 60, 0.35);
+}
+
+@keyframes rise {
+  0% {
+    transform: translate3d(0, 0, 0);
+    opacity: 0;
+  }
+  10% {
+    opacity: var(--max-opacity);
+  }
+  50% {
+    transform: translate3d(calc(var(--drift) * 0.6), -45vh, 0);
+    opacity: calc(var(--max-opacity) * 0.8);
+  }
+  90% {
+    opacity: calc(var(--max-opacity) * 0.3);
+  }
+  100% {
+    transform: translate3d(var(--drift), -90vh, 0);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ambientLayer {
+    display: none;
+  }
+}

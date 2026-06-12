@@ -11,6 +11,7 @@ import TurnWidget from '../elements/turnWidget/TurnWidget';
 import ManualModePanel from '../leftColumn/ManualModePanel/ManualModePanel';
 import { useAppSelector } from 'app/Hooks';
 import { getGameInfo } from 'features/game/GameSlice';
+import AmbientParticles from '../elements/ambientParticles';
 
 export interface playAreaDimensions {
   dimension: number;
@@ -31,6 +32,7 @@ export function Board() {
   if (useOldScreen) {
     return (
       <div className={styles.gameBoard}>
+        <AmbientParticles />
         <ManualModePanel />
         <OpponentBoardGrid swapPlayers={isSpectatorViewingPlayer2} />
         <div className={styles.chainMiddleContainer}>
