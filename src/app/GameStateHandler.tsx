@@ -46,6 +46,7 @@ const GameStateHandler = () => {
   const sourceRef = useRef<EventSource | null>(null);
   const gameParamsRef = useRef({ gameID: 0, playerID: 0, authKey: '' });
   const retryCountRef = useRef(0);
+  const lastEventTimeRef = useRef(Date.now());
   const [forceRetry, setForceRetry] = useState(0);
 
   useEffect(() => {
@@ -156,9 +157,12 @@ const GameStateHandler = () => {
 
         let hasConnected = false;
 
+        lastEventTimeRef.current = Date.now();
+
         source.onmessage = (event) => {
           hasConnected = true;
           retryCountRef.current = 0;
+          lastEventTimeRef.current = Date.now();
 
           try {
             const data = JSON.parse(event.data);
@@ -197,6 +201,7 @@ const GameStateHandler = () => {
 
         // This replaces the old CheckOpponentTyping polling entirely.
         source.addEventListener('typing', (event: MessageEvent) => {
+          lastEventTimeRef.current = Date.now();
           try {
             const data = JSON.parse(event.data);
             if (typeof data.opponentIsTyping === 'boolean') {
@@ -204,6 +209,11 @@ const GameStateHandler = () => {
             }
           } catch {
           }
+        });
+
+        source.addEventListener('hb', () => {
+          hasConnected = true;
+          lastEventTimeRef.current = Date.now();
         });
 
         source.onerror = () => {
@@ -224,15 +234,25 @@ const GameStateHandler = () => {
             );
             setTimeout(() => setForceRetry((prev) => prev + 1), retryDelay);
           } else {
-            toast.error(
-              'Connection to game server lost. Please refresh the page.'
-            );
+            if (retryCountRef.current === MAX_RETRIES + 1) {
+              toast.error(
+                'Connection to game server lost. Reconnecting...'
+              );
+            }
+            setTimeout(() => setForceRetry((prev) => prev + 1), 10000);
           }
         };
       } catch (error) {
         console.error('Failed to create EventSource:', error);
       }
     }, 100);
+
+    const stalenessWatchdog = setInterval(() => {
+      if (Date.now() - lastEventTimeRef.current > 45000) {
+        lastEventTimeRef.current = Date.now();
+        setForceRetry((prev) => prev + 1);
+      }
+    }, 10000);
 
     const handleBeforeUnload = () => {
       if (sourceRef.current) {
@@ -245,6 +265,7 @@ const GameStateHandler = () => {
 
     return () => {
       clearTimeout(connectionTimeout);
+      clearInterval(stalenessWatchdog);
       window.removeEventListener('beforeunload', handleBeforeUnload);
       if (sourceRef.current) {
         sourceRef.current.close();
