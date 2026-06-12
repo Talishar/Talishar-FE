@@ -14,7 +14,7 @@ interface Particle {
 export default function PitchDisplay(prop: Displayrow) {
   const { isPlayer } = prop;
   const [particles, setParticles] = useState<Particle[]>([]);
-  const particleCounter = React.useRef(0);
+  const [particleCounter, setParticleCounter] = useState(0);
 
   let pitchAmount = useAppSelector((state: RootState) =>
     isPlayer
@@ -33,12 +33,14 @@ export default function PitchDisplay(prop: Displayrow) {
       const isChiCard = lastCard.cardNumber.includes('inner_chi');
 
       // Spawn 3 particles for the newly pitched card
-      const batch = particleCounter.current++;
-      const newParticles: Particle[] = Array.from({ length: 3 }, (_, i) => ({
-        id: `${batch}-${i}`,
-        isChiCard
-      }));
-      setParticles((prev) => [...prev, ...newParticles]);
+      for (let i = 0; i < 3; i++) {
+        const newParticle: Particle = {
+          id: `${particleCounter}-${i}`,
+          isChiCard
+        };
+        setParticles((prev) => [...prev, newParticle]);
+      }
+      setParticleCounter((prev) => prev + 1);
     }
   }, [pitchZone?.length]);
 
