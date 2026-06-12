@@ -41,7 +41,7 @@
   position: absolute;
   top: 50%;
   left: 0;
-  transform: translate(-115%, -50%);
+  transform: translate(-245%, -50%);
   z-index: 3;
 }
 
@@ -55,8 +55,14 @@
   }
 
   .widget {
-    width: 86%;
-    gap: 1vw;
-    padding: 1.2vw;
+    width: 65%;
+    gap: 1.2vw;
+    padding: 1.4vw;
+  }
+
+  .apBadge {
+    left: auto;
+    right: 103%;
+    transform: translateY(-50%);
   }
 }

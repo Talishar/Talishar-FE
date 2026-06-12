@@ -19,6 +19,12 @@
   text-shadow: 0 1px 0 rgba(0, 0, 0, 0.8);
 }
 
+@media (orientation: portrait) {
+  .health {
+    font-size: clamp(0.95rem, 4.2vw, 1.4rem);
+  }
+}
+
 .tick {
   display: inline-block;
   animation: valueTick 0.25s ease-out;
