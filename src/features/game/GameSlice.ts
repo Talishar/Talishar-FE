@@ -2,8 +2,11 @@ import {
   createAsyncThunk,
   createSlice,
   PayloadAction,
-  createSelector
+  createSelector,
+  current,
+  original
 } from '@reduxjs/toolkit';
+import { preserveIdentities } from 'utils/PreserveIdentities';
 import ParseGameState from '../../app/ParseGameState';
 import InitialGameState from './InitialGameState';
 import GameStaticInfo from '../GameStaticInfo';
@@ -805,52 +808,59 @@ export const gameSlice = createSlice({
       if (action.payload === undefined) {
         return state;
       }
+      // Previous (pre-dispatch) state — used by preserveIdentities so anything
+      // the server sent unchanged keeps its reference and skips re-renders.
+      const prevGame = original(state) ?? current(state);
       state.isUpdateInProgress = false;
       state.isPlayerInputInProgress = false;
       state.isFullRematch = action.payload.isFullRematch ?? false;
 
       // Preserve player metadata when merging game state updates (patron/metafy status, names)
-      const playerOneMetadata = {
-        Name: state.playerOne.Name,
-        isPatron: state.playerOne.isPatron,
-        isContributor: state.playerOne.isContributor,
-        isPvtVoidPatron: state.playerOne.isPvtVoidPatron,
-        metafyTiers: state.playerOne.metafyTiers
+      const mergedPlayerOne = {
+        ...prevGame.playerOne,
+        ...action.payload.playerOne
       };
-      const playerTwoMetadata = {
-        Name: state.playerTwo.Name,
-        isPatron: state.playerTwo.isPatron,
-        isContributor: state.playerTwo.isContributor,
-        isPvtVoidPatron: state.playerTwo.isPvtVoidPatron,
-        metafyTiers: state.playerTwo.metafyTiers
+      const mergedPlayerTwo = {
+        ...prevGame.playerTwo,
+        ...action.payload.playerTwo
       };
-      state.playerOne = { ...state.playerOne, ...action.payload.playerOne };
-      state.playerTwo = { ...state.playerTwo, ...action.payload.playerTwo };
       // Restore metadata from previous state to prevent flickering
-      if (playerOneMetadata.Name !== undefined)
-        state.playerOne.Name = playerOneMetadata.Name;
-      if (playerOneMetadata.isPatron !== undefined)
-        state.playerOne.isPatron = playerOneMetadata.isPatron;
-      if (playerOneMetadata.isContributor !== undefined)
-        state.playerOne.isContributor = playerOneMetadata.isContributor;
-      if (playerOneMetadata.isPvtVoidPatron !== undefined)
-        state.playerOne.isPvtVoidPatron = playerOneMetadata.isPvtVoidPatron;
-      if (playerOneMetadata.metafyTiers !== undefined)
-        state.playerOne.metafyTiers = playerOneMetadata.metafyTiers;
-      if (playerTwoMetadata.Name !== undefined)
-        state.playerTwo.Name = playerTwoMetadata.Name;
-      if (playerTwoMetadata.isPatron !== undefined)
-        state.playerTwo.isPatron = playerTwoMetadata.isPatron;
-      if (playerTwoMetadata.isContributor !== undefined)
-        state.playerTwo.isContributor = playerTwoMetadata.isContributor;
-      if (playerTwoMetadata.isPvtVoidPatron !== undefined)
-        state.playerTwo.isPvtVoidPatron = playerTwoMetadata.isPvtVoidPatron;
-      if (playerTwoMetadata.metafyTiers !== undefined)
-        state.playerTwo.metafyTiers = playerTwoMetadata.metafyTiers;
+      if (prevGame.playerOne.Name !== undefined)
+        mergedPlayerOne.Name = prevGame.playerOne.Name;
+      if (prevGame.playerOne.isPatron !== undefined)
+        mergedPlayerOne.isPatron = prevGame.playerOne.isPatron;
+      if (prevGame.playerOne.isContributor !== undefined)
+        mergedPlayerOne.isContributor = prevGame.playerOne.isContributor;
+      if (prevGame.playerOne.isPvtVoidPatron !== undefined)
+        mergedPlayerOne.isPvtVoidPatron = prevGame.playerOne.isPvtVoidPatron;
+      if (prevGame.playerOne.metafyTiers !== undefined)
+        mergedPlayerOne.metafyTiers = prevGame.playerOne.metafyTiers;
+      if (prevGame.playerTwo.Name !== undefined)
+        mergedPlayerTwo.Name = prevGame.playerTwo.Name;
+      if (prevGame.playerTwo.isPatron !== undefined)
+        mergedPlayerTwo.isPatron = prevGame.playerTwo.isPatron;
+      if (prevGame.playerTwo.isContributor !== undefined)
+        mergedPlayerTwo.isContributor = prevGame.playerTwo.isContributor;
+      if (prevGame.playerTwo.isPvtVoidPatron !== undefined)
+        mergedPlayerTwo.isPvtVoidPatron = prevGame.playerTwo.isPvtVoidPatron;
+      if (prevGame.playerTwo.metafyTiers !== undefined)
+        mergedPlayerTwo.metafyTiers = prevGame.playerTwo.metafyTiers;
 
-      state.activeChainLink = action.payload.activeChainLink;
-      state.activeLayers = action.payload.activeLayers;
-      state.oldCombatChain = action.payload.oldCombatChain;
+      state.playerOne = preserveIdentities(prevGame.playerOne, mergedPlayerOne);
+      state.playerTwo = preserveIdentities(prevGame.playerTwo, mergedPlayerTwo);
+
+      state.activeChainLink = preserveIdentities(
+        prevGame.activeChainLink,
+        action.payload.activeChainLink
+      );
+      state.activeLayers = preserveIdentities(
+        prevGame.activeLayers,
+        action.payload.activeLayers
+      );
+      state.oldCombatChain = preserveIdentities(
+        prevGame.oldCombatChain,
+        action.payload.oldCombatChain
+      );
 
       {
         const prevLen = (state.chatLog ?? []).filter((m: string) => m.length > 0).length;
@@ -864,16 +874,28 @@ export const gameSlice = createSlice({
         }
       }
 
-      state.chatLog = action.payload.chatLog;
+      state.chatLog = preserveIdentities(
+        prevGame.chatLog,
+        action.payload.chatLog
+      );
       state.opponentIsTyping = action.payload.opponentIsTyping ?? false;
       state.amIActivePlayer = action.payload.amIActivePlayer;
       state.turnPlayer = action.payload.turnPlayer;
       state.otherPlayer = action.payload.otherPlayer;
-      state.turnPhase = action.payload.turnPhase;
-      state.playerInputPopUp = action.payload.playerInputPopUp;
+      state.turnPhase = preserveIdentities(
+        prevGame.turnPhase,
+        action.payload.turnPhase
+      );
+      state.playerInputPopUp = preserveIdentities(
+        prevGame.playerInputPopUp,
+        action.payload.playerInputPopUp
+      );
 
       // gameInfo
-      const newCard1 = action.payload.gameDynamicInfo.lastPlayed;
+      const newCard1 = preserveIdentities(
+        prevGame.gameDynamicInfo.lastPlayed,
+        action.payload.gameDynamicInfo.lastPlayed
+      );
       state.gameDynamicInfo.lastPlayed = newCard1;
       if (newCard1 && newCard1.cardNumber !== 'CardBack' && !newCard1.cardNumber.startsWith('CB')) {
         const prev1 = state.gameDynamicInfo.recentlyPlayed ?? [];
@@ -887,29 +909,44 @@ export const gameSlice = createSlice({
       state.gameDynamicInfo.clock = action.payload.gameDynamicInfo.clock;
       state.gameDynamicInfo.spectatorCount =
         action.payload.gameDynamicInfo.spectatorCount ?? 0;
-      state.gameDynamicInfo.spectatorNames =
-        action.payload.gameDynamicInfo.spectatorNames ?? [];
-      state.gameDynamicInfo.playerInventory =
-        action.payload.gameDynamicInfo.playerInventory;
+      state.gameDynamicInfo.spectatorNames = preserveIdentities(
+        prevGame.gameDynamicInfo.spectatorNames,
+        action.payload.gameDynamicInfo.spectatorNames ?? []
+      );
+      state.gameDynamicInfo.playerInventory = preserveIdentities(
+        prevGame.gameDynamicInfo.playerInventory,
+        action.payload.gameDynamicInfo.playerInventory
+      );
       state.hasPriority = action.payload.hasPriority;
       state.priorityPlayer = action.payload.priorityPlayer;
       state.chatEnabled = action.payload.chatEnabled;
 
-      state.playerPrompt = action.payload.playerPrompt;
+      state.playerPrompt = preserveIdentities(
+        prevGame.playerPrompt,
+        action.payload.playerPrompt
+      );
       state.canPassPhase = action.payload.canPassPhase;
+      // events deliberately NOT identity-preserved: identical consecutive
+      // event arrays are distinct occurrences (e.g. the same animation twice)
       state.events = action.payload.events;
-      state.landmark = action.payload.landmark;
+      state.landmark = preserveIdentities(
+        prevGame.landmark,
+        action.payload.landmark
+      );
 
       state.gameInfo.roguelikeGameID =
         action.payload.gameInfo.roguelikeGameID ??
         state.gameInfo.roguelikeGameID;
 
-      state.gameInfo.altArts =
-        action.payload.gameInfo.altArts ?? state.gameInfo.altArts;
+      state.gameInfo.altArts = preserveIdentities(
+        prevGame.gameInfo.altArts,
+        action.payload.gameInfo.altArts ?? prevGame.gameInfo.altArts
+      );
 
-      state.gameInfo.opponentAltArts =
-        action.payload.gameInfo.opponentAltArts ??
-        state.gameInfo.opponentAltArts;
+      state.gameInfo.opponentAltArts = preserveIdentities(
+        prevGame.gameInfo.opponentAltArts,
+        action.payload.gameInfo.opponentAltArts ?? prevGame.gameInfo.opponentAltArts
+      );
 
       state.gameInfo.isPrivate =
         action.payload.gameInfo.isPrivate ?? state.gameInfo.isPrivate;
@@ -940,52 +977,59 @@ export const gameSlice = createSlice({
       if (action.payload === undefined) {
         return state;
       }
+      // Previous (pre-dispatch) state — used by preserveIdentities so anything
+      // the server sent unchanged keeps its reference and skips re-renders.
+      const prevGame = original(state) ?? current(state);
       state.isUpdateInProgress = false;
       state.isPlayerInputInProgress = false;
       state.isFullRematch = action.payload.isFullRematch ?? false;
 
       // Preserve player metadata when merging game state updates (patron/metafy status, names)
-      const playerOneMetadata = {
-        Name: state.playerOne.Name,
-        isPatron: state.playerOne.isPatron,
-        isContributor: state.playerOne.isContributor,
-        isPvtVoidPatron: state.playerOne.isPvtVoidPatron,
-        metafyTiers: state.playerOne.metafyTiers
+      const mergedPlayerOne = {
+        ...prevGame.playerOne,
+        ...action.payload.playerOne
       };
-      const playerTwoMetadata = {
-        Name: state.playerTwo.Name,
-        isPatron: state.playerTwo.isPatron,
-        isContributor: state.playerTwo.isContributor,
-        isPvtVoidPatron: state.playerTwo.isPvtVoidPatron,
-        metafyTiers: state.playerTwo.metafyTiers
+      const mergedPlayerTwo = {
+        ...prevGame.playerTwo,
+        ...action.payload.playerTwo
       };
-      state.playerOne = { ...state.playerOne, ...action.payload.playerOne };
-      state.playerTwo = { ...state.playerTwo, ...action.payload.playerTwo };
       // Restore metadata from previous state to prevent flickering
-      if (playerOneMetadata.Name !== undefined)
-        state.playerOne.Name = playerOneMetadata.Name;
-      if (playerOneMetadata.isPatron !== undefined)
-        state.playerOne.isPatron = playerOneMetadata.isPatron;
-      if (playerOneMetadata.isContributor !== undefined)
-        state.playerOne.isContributor = playerOneMetadata.isContributor;
-      if (playerOneMetadata.isPvtVoidPatron !== undefined)
-        state.playerOne.isPvtVoidPatron = playerOneMetadata.isPvtVoidPatron;
-      if (playerOneMetadata.metafyTiers !== undefined)
-        state.playerOne.metafyTiers = playerOneMetadata.metafyTiers;
-      if (playerTwoMetadata.Name !== undefined)
-        state.playerTwo.Name = playerTwoMetadata.Name;
-      if (playerTwoMetadata.isPatron !== undefined)
-        state.playerTwo.isPatron = playerTwoMetadata.isPatron;
-      if (playerTwoMetadata.isContributor !== undefined)
-        state.playerTwo.isContributor = playerTwoMetadata.isContributor;
-      if (playerTwoMetadata.isPvtVoidPatron !== undefined)
-        state.playerTwo.isPvtVoidPatron = playerTwoMetadata.isPvtVoidPatron;
-      if (playerTwoMetadata.metafyTiers !== undefined)
-        state.playerTwo.metafyTiers = playerTwoMetadata.metafyTiers;
+      if (prevGame.playerOne.Name !== undefined)
+        mergedPlayerOne.Name = prevGame.playerOne.Name;
+      if (prevGame.playerOne.isPatron !== undefined)
+        mergedPlayerOne.isPatron = prevGame.playerOne.isPatron;
+      if (prevGame.playerOne.isContributor !== undefined)
+        mergedPlayerOne.isContributor = prevGame.playerOne.isContributor;
+      if (prevGame.playerOne.isPvtVoidPatron !== undefined)
+        mergedPlayerOne.isPvtVoidPatron = prevGame.playerOne.isPvtVoidPatron;
+      if (prevGame.playerOne.metafyTiers !== undefined)
+        mergedPlayerOne.metafyTiers = prevGame.playerOne.metafyTiers;
+      if (prevGame.playerTwo.Name !== undefined)
+        mergedPlayerTwo.Name = prevGame.playerTwo.Name;
+      if (prevGame.playerTwo.isPatron !== undefined)
+        mergedPlayerTwo.isPatron = prevGame.playerTwo.isPatron;
+      if (prevGame.playerTwo.isContributor !== undefined)
+        mergedPlayerTwo.isContributor = prevGame.playerTwo.isContributor;
+      if (prevGame.playerTwo.isPvtVoidPatron !== undefined)
+        mergedPlayerTwo.isPvtVoidPatron = prevGame.playerTwo.isPvtVoidPatron;
+      if (prevGame.playerTwo.metafyTiers !== undefined)
+        mergedPlayerTwo.metafyTiers = prevGame.playerTwo.metafyTiers;
 
-      state.activeChainLink = action.payload.activeChainLink;
-      state.activeLayers = action.payload.activeLayers;
-      state.oldCombatChain = action.payload.oldCombatChain;
+      state.playerOne = preserveIdentities(prevGame.playerOne, mergedPlayerOne);
+      state.playerTwo = preserveIdentities(prevGame.playerTwo, mergedPlayerTwo);
+
+      state.activeChainLink = preserveIdentities(
+        prevGame.activeChainLink,
+        action.payload.activeChainLink
+      );
+      state.activeLayers = preserveIdentities(
+        prevGame.activeLayers,
+        action.payload.activeLayers
+      );
+      state.oldCombatChain = preserveIdentities(
+        prevGame.oldCombatChain,
+        action.payload.oldCombatChain
+      );
 
       {
         const prevLen = (state.chatLog ?? []).filter((m: string) => m.length > 0).length;
@@ -999,16 +1043,28 @@ export const gameSlice = createSlice({
         }
       }
 
-      state.chatLog = action.payload.chatLog;
+      state.chatLog = preserveIdentities(
+        prevGame.chatLog,
+        action.payload.chatLog
+      );
       state.opponentIsTyping = action.payload.opponentIsTyping ?? false;
       state.amIActivePlayer = action.payload.amIActivePlayer;
       state.turnPlayer = action.payload.turnPlayer;
       state.otherPlayer = action.payload.otherPlayer;
-      state.turnPhase = action.payload.turnPhase;
-      state.playerInputPopUp = action.payload.playerInputPopUp;
+      state.turnPhase = preserveIdentities(
+        prevGame.turnPhase,
+        action.payload.turnPhase
+      );
+      state.playerInputPopUp = preserveIdentities(
+        prevGame.playerInputPopUp,
+        action.payload.playerInputPopUp
+      );
 
       // gameInfo
-      const newCard2 = action.payload.gameDynamicInfo.lastPlayed;
+      const newCard2 = preserveIdentities(
+        prevGame.gameDynamicInfo.lastPlayed,
+        action.payload.gameDynamicInfo.lastPlayed
+      );
       state.gameDynamicInfo.lastPlayed = newCard2;
       if (newCard2 && newCard2.cardNumber !== 'CardBack' && !newCard2.cardNumber.startsWith('CB')) {
         const prev2 = state.gameDynamicInfo.recentlyPlayed ?? [];
@@ -1022,18 +1078,30 @@ export const gameSlice = createSlice({
       state.gameDynamicInfo.clock = action.payload.gameDynamicInfo.clock;
       state.gameDynamicInfo.spectatorCount =
         action.payload.gameDynamicInfo.spectatorCount ?? 0;
-      state.gameDynamicInfo.spectatorNames =
-        action.payload.gameDynamicInfo.spectatorNames ?? [];
-      state.gameDynamicInfo.playerInventory =
-        action.payload.gameDynamicInfo.playerInventory;
+      state.gameDynamicInfo.spectatorNames = preserveIdentities(
+        prevGame.gameDynamicInfo.spectatorNames,
+        action.payload.gameDynamicInfo.spectatorNames ?? []
+      );
+      state.gameDynamicInfo.playerInventory = preserveIdentities(
+        prevGame.gameDynamicInfo.playerInventory,
+        action.payload.gameDynamicInfo.playerInventory
+      );
       state.hasPriority = action.payload.hasPriority;
       state.priorityPlayer = action.payload.priorityPlayer;
       state.chatEnabled = action.payload.chatEnabled;
 
-      state.playerPrompt = action.payload.playerPrompt;
+      state.playerPrompt = preserveIdentities(
+        prevGame.playerPrompt,
+        action.payload.playerPrompt
+      );
       state.canPassPhase = action.payload.canPassPhase;
+      // events deliberately NOT identity-preserved: identical consecutive
+      // event arrays are distinct occurrences (e.g. the same animation twice)
       state.events = action.payload.events;
-      state.landmark = action.payload.landmark;
+      state.landmark = preserveIdentities(
+        prevGame.landmark,
+        action.payload.landmark
+      );
 
       state.gameInfo.roguelikeGameID =
         action.payload.gameInfo.roguelikeGameID ??

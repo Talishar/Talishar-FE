@@ -190,4 +190,7 @@ export const CardDisplay = (prop: CardProp) => {
   );
 };
 
-export default CardDisplay;
+// Memoized: game-state updates keep references stable for unchanged cards
+// (see utils/PreserveIdentities), so cards that didn't change skip re-render
+// even when another card in the same zone did.
+export default React.memo(CardDisplay);
