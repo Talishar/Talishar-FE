@@ -9,56 +9,40 @@
   user-select: none;
 }
 
-.widgetBackground {
-  background-position: right;
-  background-size: 10vh auto;
-  background-repeat: no-repeat;
-  height: 100%;
-  width: 15vh;
-  width: 15dvh;
+.widget {
   position: absolute;
-  right: 0px;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  flex-direction: row;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 10vh;
+  width: 10dvh;
+  box-sizing: border-box;
+  display: grid;
+  grid-template-rows: 1fr 1.35fr 1fr;
+  gap: 0.8dvh;
+  padding: 0.9dvh;
+  border-radius: 6px;
+  background: linear-gradient(to bottom, #1a1c23 0%, #0f1015 100%);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+  transition: border-color 0.35s ease, box-shadow 0.35s ease;
+  font-family: 'Rajdhani', 'Segoe UI', 'Inter', system-ui, sans-serif;
+}
+
+.widget > * {
+  min-width: 0;
 }
 
 .myTurn {
-  background-image: url('../../../../../img/elements/turnwidget/turnWidget-Green.png');
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.08), 0 4px 20px rgba(0, 0, 0, 0.6);
 }
 
-.ourTurn {
-  background-image: url('../../../../../img/elements/turnwidget/turnWidget-Normal.png');
-}
-
-.widgetLeftCol {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  color: black;
-  height: 100%;
-  z-index: 11;
-}
-
-.widgetRightCol {
-  width: 10vh;
-  height: 17vh;
-  width: 10dvh;
-  height: 17dvh;
-  padding: 1vh 0;
-  padding: 1dvh 0;
-  gap: 1vh;
-  gap: 1dvh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  top: 0px;
-  bottom: 0px;
-  right: 0px;
-  z-index: 10;
+.apBadge {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translate(-115%, -50%);
+  z-index: 3;
 }
 
 @media (orientation: portrait) {
@@ -70,20 +54,9 @@
     user-select: none;
   }
 
-  .widgetRightCol {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: auto;
-    height: 100%;
-    width: 100%;
-  }
-
-  .widgetBackground {
-    background-size: 15dvw auto;
-    height: 100%;
-    width: 100%;
-    right: -1em;
+  .widget {
+    width: 86%;
+    gap: 1vw;
+    padding: 1.2vw;
   }
 }

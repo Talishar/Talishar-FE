@@ -1,51 +1,66 @@
 .actionPointDisplay {
   position: relative;
   display: flex;
-  align-items: flex-end;
-  justify-content: flex-end;
+  align-items: center;
+  justify-content: center;
 }
 
 .actionPointCounter {
-  border-radius: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 2.5em;
-  width: 2.5em;
-  background-image: url('../../../../../img/elements/turnwidget/turnWidget-ActionPointBlue.png');
-  background-position: center;
-  background-size: contain;
-  text-align: center;
-  font-size: 1.5em;
-  color: var(--white);
-  text-shadow: -1px 1px 2px #000, 1px 1px 2px #000, 1px -1px 0 #000,
-    -1px -1px 0 #000;
-  z-index: -1;
+  font-size: clamp(0.7rem, 1.5dvh, 0.95rem);
+  padding: 0.5em 0.7em;
+  border-radius: 6px;
+  background: linear-gradient(
+        to bottom,
+        rgba(13, 16, 21, 0.45) 0%,
+        rgba(13, 16, 21, 0.7) 100%
+      )
+      center / 100% 100% no-repeat,
+    url('../../../../../img/elements/turnwidget/turnWidget-ActionPointBlueNew.png')
+      center / auto 140% no-repeat,
+    linear-gradient(to bottom, #2a4763 0%, #16242f 100%);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15),
+    0 4px 12px rgba(0, 0, 0, 0.6);
+  color: #ffffff;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  text-shadow: 0 1px 1px #000, 0 0 4px rgba(0, 0, 0, 0.9),
+    0 0 8px rgba(0, 0, 0, 0.7);
+  transition: background 0.3s ease;
+}
+
+.tick {
+  display: inline-block;
+  animation: valueTick 0.25s ease-out;
+}
+
+@keyframes valueTick {
+  0% {
+    transform: scale(1.3);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tick {
+    animation: none;
+  }
 }
 
 .actionPointRed {
-  background-image: url('../../../../../img/elements/turnwidget/turnWidget-ActionPointRed.png');
-}
-
-@media (orientation: portrait) {
-  .actionPointCounter {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 2.5em;
-    width: 2.5em;
-    background-image: url('../../../../../img/elements/turnwidget/turnWidget-ActionPointBlue.png');
-    background-position: center;
-    background-size: contain;
-    text-align: center;
-    font-size: 1.2em;
-    color: var(--white);
-    text-shadow: -1px 1px 2px #000, 1px 1px 2px #000, 1px -1px 0 #000,
-      -1px -1px 0 #000;
-    z-index: -1;
-  }
-
-  .actionPointRed {
-    background-image: url('../../../../../img/elements/turnwidget/turnWidget-ActionPointRed.png');
-  }
+  background: linear-gradient(
+        to bottom,
+        rgba(13, 16, 21, 0.45) 0%,
+        rgba(13, 16, 21, 0.7) 100%
+      )
+      center / 100% 100% no-repeat,
+    url('../../../../../img/elements/turnwidget/turnWidget-ActionPointRedNew.png')
+      center / auto 140% no-repeat,
+    linear-gradient(to bottom, #7a261d 0%, #38100c 100%);
 }

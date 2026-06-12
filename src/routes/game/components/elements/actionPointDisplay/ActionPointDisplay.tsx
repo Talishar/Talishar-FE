@@ -70,7 +70,11 @@ export default function ActionPointDisplay(props: ActionPointDisplayProps) {
 
   return (
     <div className={styles.actionPointDisplay}>
-      <div className={actionPointClass}>{`${APAvailable} AP`}</div>
+      <div className={actionPointClass}>
+        <span key={APAvailable} className={styles.tick}>
+          {`${APAvailable} AP`}
+        </span>
+      </div>
       {actionPointPopups.map((popup) => (
         <ActionPointPopup
           key={popup.id}

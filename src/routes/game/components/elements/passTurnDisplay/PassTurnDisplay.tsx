@@ -140,7 +140,7 @@ export default function PassTurnDisplay() {
       <>
         <div className={styles.passTurnDisplayActive} onClick={onPassTurn}>
           <div> PASS </div>
-          <div className={styles.subThing}>[spacebar]</div>
+          <div className={styles.subThing}>SPACE</div>
         </div>
         {showAreYouSureModal &&
           preventPassPrompt &&
