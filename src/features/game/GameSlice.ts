@@ -72,13 +72,6 @@ export const nextTurn = createAsyncThunk(
         friendsList = (friendsData?.friends || []).map((f: any) => f.username);
       }
     }
-    console.log(
-      'GameSlice nextTurn - sending friendsList:',
-      friendsList,
-      'playerID:',
-      params.game.playerID
-    );
-
     const queryParams = new URLSearchParams({
       gameName: String(params.game.gameID),
       playerID: String(params.game.playerID),
@@ -243,12 +236,12 @@ export const submitButton = createAsyncThunk(
       gameName: String(gameInfo.gameID),
       playerID: String(gameInfo.playerID),
       authKey: String(gameInfo.authKey),
-      mode: String(params.button.mode),
-      buttonInput: String(params.button.buttonInput),
-      inputText: String(params.button.inputText),
-      cardID: String(params.button.cardID),
-      numMode: String(params.button.numMode ?? '')
+      mode: String(params.button.mode ?? '')
     });
+    if (params.button.buttonInput !== undefined) queryParams.set('buttonInput', String(params.button.buttonInput));
+    if (params.button.inputText !== undefined) queryParams.set('inputText', String(params.button.inputText));
+    if (params.button.cardID !== undefined) queryParams.set('cardID', String(params.button.cardID));
+    if (params.button.numMode !== undefined) queryParams.set('numMode', String(params.button.numMode));
     try {
       const response = await fetch(queryURL + queryParams, {
         method: 'GET',
@@ -269,6 +262,7 @@ export const submitButton = createAsyncThunk(
 export const submitMultiButton = createAsyncThunk(
   'game/submitButton',
   async (params: { mode?: number; extraParams: string }, { getState }) => {
+    if (params.mode === undefined) return;
     const { game } = getState() as { game: GameState };
     const gameInfo = game.gameInfo;
     const queryURL = gameInfo.isRoguelike
