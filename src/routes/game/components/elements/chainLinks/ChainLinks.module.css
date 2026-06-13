@@ -69,24 +69,24 @@
 }
 
 .breakChain {
-  display: relative;
+  position: relative;
   right: 0px;
   background-color: black;
   width: 3.8vh;
   width: 3.8dvh;
   height: 3.8vh;
   height: 3.8dvh;
-  border: 1px solid var(--theme-primary);
+  border: 1px solid var(--theme-primary, #d4af37);
   border-radius: 5px;
   display: flex;
   justify-content: center;
   align-items: center;
-  color: var(--theme-primary);
+  color: var(--theme-primary, #d4af37);
   cursor: pointer;
 }
 
 .breakChain:hover {
-  background-color: var(--theme-primary);
+  background-color: var(--theme-primary, #d4af37);
   color: black;
 }
 
