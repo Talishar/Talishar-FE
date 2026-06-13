@@ -26,6 +26,7 @@ import useSupporterStatus from 'hooks/useSupporterStatus';
 import CookieConsent from 'components/CookieConsent';
 import AdBlockingRecovery from 'components/AdBlockingRecovery';
 import SessionRecovery from 'components/SessionRecovery';
+import { AmbientParticles } from 'routes/game/components/elements/ambientParticles/AmbientParticles';
 import { Toaster } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
@@ -298,6 +299,7 @@ const Header = () => {
         <Outlet />
         <Footer />
       </div>
+      <AmbientParticles variant="global" />
       <CookieConsent />
       <AdBlockingRecovery />
       <SessionRecovery />

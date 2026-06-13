@@ -1,6 +1,10 @@
 import React, { useMemo } from 'react';
 import styles from './AmbientParticles.module.css';
 
+interface AmbientParticlesProps {
+  variant?: 'game' | 'global';
+}
+
 interface ParticleConfig {
   left: number; // % across the board
   size: number; // px
@@ -33,12 +37,14 @@ const makeParticles = (): ParticleConfig[] =>
  * disabled and animation uses transform/opacity only. Hidden entirely when
  * the user prefers reduced motion (see module CSS).
  */
-export const AmbientParticles = () => {
+export const AmbientParticles = ({ variant = 'game' }: AmbientParticlesProps) => {
   // Randomize once per mount; re-renders keep the same particle field
   const particles = useMemo(makeParticles, []);
 
+  const layerClass = variant === 'global' ? styles.ambientLayerGlobal : styles.ambientLayer;
+
   return (
-    <div className={styles.ambientLayer} aria-hidden="true">
+    <div className={layerClass} aria-hidden="true">
       {particles.map((p, ix) => (
         <span
           key={ix}
