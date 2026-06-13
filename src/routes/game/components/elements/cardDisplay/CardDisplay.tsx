@@ -24,6 +24,7 @@ export interface CardProp {
   isPlayer?: boolean;
   isShuffling?: boolean;
   showCountersOnHover?: boolean;
+  disableTilt?: boolean;
   children?: React.ReactNode;
 }
 
@@ -36,6 +37,7 @@ export const CardDisplay = (prop: CardProp) => {
     isPlayer,
     isShuffling,
     showCountersOnHover,
+    disableTilt,
     children
   } = prop;
   const dispatch = useAppDispatch();
@@ -134,6 +136,7 @@ export const CardDisplay = (prop: CardProp) => {
       onHoverStart={() => setShowSubCards(true)}
       onHoverEnd={() => setShowSubCards(false)}
       isOpponent={card.isOpponent !== undefined ? card.isOpponent : !isPlayer}
+      disableTilt={disableTilt}
     >
       {subCardsToShow.map((subCardNumber, ix) => {
         if (
@@ -150,7 +153,8 @@ export const CardDisplay = (prop: CardProp) => {
             ref={subCardRef}
             style={{
               top: `calc(-0.15 * ${ix + 1} * var(--card-size))`,
-              zIndex: `-${ix + 1}`
+              zIndex: `-${ix + 1}`,
+              animationDelay: `${ix * 40}ms`
             }}
             className={styles.subCard}
           >

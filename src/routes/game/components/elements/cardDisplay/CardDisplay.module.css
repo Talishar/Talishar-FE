@@ -228,6 +228,18 @@
   position: absolute;
   left: 0px;
   right: 0px;
+  animation: subCardSlideUp 0.18s ease-out both;
+}
+
+@keyframes subCardSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(40%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .subcard-transition-enter {

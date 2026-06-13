@@ -96,6 +96,7 @@ export const GraveyardZone = React.memo((prop: Displayrow) => {
             num={showCount ? faceUpCount : undefined}
             preventUseOnClick
             showCountersOnHover={!alwaysShowCounters}
+            disableTilt
           />
         </div>
       </div>

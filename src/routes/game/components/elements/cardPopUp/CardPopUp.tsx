@@ -2,8 +2,11 @@ import { useAppDispatch } from 'app/Hooks';
 import { clearPopUp, setPopUp } from 'features/game/GameSlice';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import { ReactNode, useRef } from 'react';
-import { motion } from 'framer-motion';
+import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { CARD_BACK } from 'features/options/cardBacks';
+
+const supportsHover =
+  typeof window !== 'undefined' && window.matchMedia('(hover: hover)').matches;
 
 type CardPopUpProps = {
   children: ReactNode;
@@ -14,6 +17,7 @@ type CardPopUpProps = {
   onHoverStart?: () => void;
   onHoverEnd?: () => void;
   isOpponent?: boolean;
+  disableTilt?: boolean;
 };
 
 export default function CardPopUp({
@@ -24,11 +28,36 @@ export default function CardPopUp({
   isHidden,
   onHoverStart,
   onHoverEnd,
-  isOpponent
+  isOpponent,
+  disableTilt
 }: CardPopUpProps) {
   const ref = useRef<HTMLDivElement>(null);
   const dispatch = useAppDispatch();
   const [windowWidth, windowHeight] = useWindowDimensions();
+
+  const rotateXTarget = useMotionValue(0);
+  const rotateYTarget = useMotionValue(0);
+  const springConfig = { stiffness: 180, damping: 22, mass: 0.6 };
+  const rotateX = useSpring(rotateXTarget, springConfig);
+  const rotateY = useSpring(rotateYTarget, springConfig);
+  const boxShadow = useTransform(
+    [rotateX, rotateY],
+    ([rx, ry]: number[]) => {
+      const offsetX = -ry * 1.2;
+      const offsetY = rx * 1.2 + 8;
+      const blur = 18 + Math.abs(rx) * 0.7 + Math.abs(ry) * 0.7;
+      return `${offsetX}px ${offsetY}px ${blur}px rgba(0,0,0,0.52)`;
+    }
+  );
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!supportsHover || !ref.current) return;
+    const rect = ref.current.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+    rotateXTarget.set(-((e.clientY - cy) / (rect.height / 2)) * 8);
+    rotateYTarget.set(((e.clientX - cx) / (rect.width / 2)) * 8);
+  };
 
   const handleMouseEnter = () => {
     const cardBackValues = Object.values(CARD_BACK);
@@ -78,6 +107,8 @@ export default function CardPopUp({
 
   const handleMouseLeave = () => {
     dispatch(clearPopUp());
+    rotateXTarget.set(0);
+    rotateYTarget.set(0);
   };
 
   const handleOnClick = () => {
@@ -93,11 +124,13 @@ export default function CardPopUp({
       onClick={handleOnClick}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
+      onMouseMove={handleMouseMove}
       onTouchStart={handleMouseEnter}
       onTouchEnd={handleMouseLeave}
       onHoverStart={onHoverStart}
       onHoverEnd={onHoverEnd}
       ref={ref}
+      style={supportsHover && !disableTilt ? { rotateX, rotateY, transformPerspective: 600, boxShadow } : undefined}
     >
       {children}
     </motion.div>

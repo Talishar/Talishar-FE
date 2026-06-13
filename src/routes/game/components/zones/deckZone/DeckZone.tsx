@@ -158,6 +158,7 @@ export const DeckZone = React.memo((prop: Displayrow) => {
             num={showCount ? deckCards : undefined}
             isShuffling={shouldAnimateShuffling}
             showCountersOnHover={!alwaysShowCounters}
+            disableTilt
           />
         </div>
         {/* Add card animation */}
@@ -169,6 +170,7 @@ export const DeckZone = React.memo((prop: Displayrow) => {
             <CardDisplay
               card={deckBack}
               showCountersOnHover={!alwaysShowCounters}
+              disableTilt
             />
           </div>
         )}
