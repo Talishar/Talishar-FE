@@ -176,9 +176,9 @@ const PlayerPrompt = () => {
     <AnimatePresence>
       <motion.div
         className={styles.playerPrompt}
-        initial={{ opacity: '0' }}
-        animate={{ opacity: '1' }}
-        exit={{ opacity: '0' }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
         key={`${playerPrompt?.helpText?.substring(0, 10)}`}
       >
         <div className={styles.content}>
