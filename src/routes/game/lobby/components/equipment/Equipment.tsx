@@ -234,10 +234,13 @@ const Equipment = ({
                         checked={checked}
                         onChange={(e) => {
                           if (e.target.checked) {
-                            if (weapon.numHands === 2) {
+                            if (weapon.img === 'NONE00') {
+                              // Selecting "None Equipped" clears everything else
+                              setFieldValue('weapons', [weapon]);
+                            } else if (weapon.numHands === 2) {
                               // Remove all non-quiver/non-companion weapons, keep quivers and companions
                               const equipmentExceptions = values.weapons.filter(
-                                (w) => w.isQuiver || w.isCompanion
+                                (w) => (w.isQuiver || w.isCompanion) && w.img !== 'NONE00'
                               );
                               const newWeapons = [
                                 weapon,
@@ -249,15 +252,18 @@ const Equipment = ({
                               !weapon.isQuiver &&
                               !weapon.isCompanion
                             ) {
-                              // If adding an off-hand (regular off-hand, not quiver/companion), remove other off-hands
+                              // If adding an off-hand (regular off-hand, not quiver/companion), remove other off-hands and NONE00
                               const nonOffhands = values.weapons.filter(
                                 (w) =>
-                                  !w.isOffhand || w.isQuiver || w.isCompanion
+                                  (!w.isOffhand || w.isQuiver || w.isCompanion) && w.img !== 'NONE00'
                               );
                               const newWeapons = [...nonOffhands, weapon];
                               setFieldValue('weapons', newWeapons);
                             } else {
-                              const twoHandedIndex = values.weapons.findIndex(
+                              const currentWeapons = values.weapons.filter(
+                                (w) => w.img !== 'NONE00'
+                              );
+                              const twoHandedIndex = currentWeapons.findIndex(
                                 (w) => w.numHands === 2
                               );
                               if (
@@ -266,7 +272,7 @@ const Equipment = ({
                                 !weapon.isCompanion
                               ) {
                                 // Remove the 2-handed weapon first (unless adding a quiver or companion)
-                                const updatedWeapons = values.weapons.filter(
+                                const updatedWeapons = currentWeapons.filter(
                                   (_, idx) => idx !== twoHandedIndex
                                 );
                                 setFieldValue('weapons', [
@@ -274,8 +280,8 @@ const Equipment = ({
                                   weapon
                                 ]);
                               } else {
-                                // No 2-handed weapon, or adding a quiver/companion - just add it
-                                arrayHelpers.push(weapon);
+                                // No 2-handed weapon, or adding a quiver/companion - just add it (NONE00 already stripped)
+                                setFieldValue('weapons', [...currentWeapons, weapon]);
                               }
                             }
                           } else {
