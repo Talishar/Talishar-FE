@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 const AD_SELECTORS =
   '[id^="rev-"], [class*="rev-content"], [class*="revcontent"],' +
   'iframe[src*="rev.iq"], iframe[src*="revcontent"],' +
+  '[id^="reviq-"], [id^="prims_"], [id^="primis"], [class*="primis"],' +
   'div[data-ad]';
 
 // Hosts that are allowed to receive top-level navigation.

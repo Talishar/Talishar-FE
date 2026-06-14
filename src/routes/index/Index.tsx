@@ -35,15 +35,19 @@ const Index = () => {
 
   useEffect(() => {
     if (!showAds) {
-      document.querySelectorAll('[data-ad="video"]').forEach(el => el.remove());
+      document
+        .querySelectorAll('[id^="reviq-"], [id^="prims_"], [id^="primis"], [class*="primis"], [data-ad="video"]')
+        .forEach(el => el.remove());
       return;
     }
 
-    if (!document.querySelector('[data-ad="video"]')) {
-      const videoDiv = document.createElement('div');
-      videoDiv.setAttribute('data-ad', 'video');
-      document.body.appendChild(videoDiv);
-    }
+    document
+      .querySelectorAll('[id^="reviq-"], [id^="prims_"], [id^="primis"], [class*="primis"], [data-ad="video"]')
+      .forEach(el => el.remove());
+
+    const videoDiv = document.createElement('div');
+    videoDiv.setAttribute('data-ad', 'video');
+    document.body.appendChild(videoDiv);
 
     const ANCHOR_SELECTOR = '[data-ad="anchor"]';
     const hideAnchors = () => {
