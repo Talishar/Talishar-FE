@@ -23,6 +23,7 @@
 .statsContainer {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
+  align-items: start;
   gap: 1rem;
   width: 100%;
 }
@@ -106,6 +107,15 @@
   font-size: 1.2em;
   font-weight: 600;
   margin: 0 0 0.25rem 0;
+}
+
+.subSectionHeader {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.9em;
+  font-weight: 600;
+  margin: 1rem 0 0.25rem 0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .infoBox {

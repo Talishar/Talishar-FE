@@ -43,6 +43,7 @@ export interface EndGameData {
   authKey?: string;
   bothPlayersData?: { [key: number]: any };
   cardResults: CardResult[];
+  tokenResults?: CardResult[];
   turnResults: { [key: string]: TurnResult };
   totalDamageThreatened?: number;
   totalDamageDealt?: number;
@@ -659,6 +660,16 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
           if (hasKatsuDiscard) content += `,${result.katsuDiscard}`;
           content += '\n';
         });
+
+        const playedTokenResults = playerData.tokenResults?.filter((r) => r.played > 0);
+        if (playedTokenResults && playedTokenResults.length > 0) {
+          content += '\nNON-DECK CARDS\n';
+          content += 'Card Name,Played,Blocked,Pitched,Times Hit\n';
+          playedTokenResults.forEach((result) => {
+            const cardName = result.cardName.replace(/,/g, ';');
+            content += `"${cardName}",${result.played},${result.blocked},${result.pitched},${result.hits}\n`;
+          });
+        }
 
         content += '\nTURN BY TURN BREAKDOWN\n';
         content +=
@@ -1372,6 +1383,49 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                 </tbody>
               </table>
             </div>
+            {data.tokenResults && data.tokenResults.filter(r => r.played > 0).length > 0 && (
+              <>
+                <h3 className={styles.subSectionHeader}>Non-Deck Cards Played</h3>
+                <div className={styles.tableContainer}>
+                  <table className={styles.cardTable}>
+                    <thead>
+                      <tr className={styles.headers}>
+                        <th className={`${styles.firstHeadersStats} ${styles.hideOnExport}`}></th>
+                        <th className={`${styles.headersStats} ${styles.headerGroupSeparator}`}>Card Name</th>
+                        <th className={`${styles.headersStats} ${styles.headerGroupSeparator}`}>Played</th>
+                        <th className={`${styles.headersStats} ${styles.headerGroupSeparator}`}>Blocked</th>
+                        <th className={`${styles.headersStats} ${styles.headerGroupSeparator}`}>Pitched</th>
+                        <th className={`${styles.headersStats} ${styles.headerGroupSeparator}`}>Times Hit</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {data.tokenResults.filter(r => r.played > 0).map((result, ix) => {
+                        const card: Card = { cardNumber: result.cardId };
+                        let cardBorderStyle = '';
+                        switch (result.pitchValue) {
+                          case 1: cardBorderStyle = styles.cardOnePitch; break;
+                          case 2: cardBorderStyle = styles.cardTwoPitch; break;
+                          case 3: cardBorderStyle = styles.cardThreePitch; break;
+                          default: cardBorderStyle = styles.cardZeroPitch;
+                        }
+                        return (
+                          <tr key={`tokenList${ix}`}>
+                            <td className={`${styles.card} ${styles.hideOnExport}`}>
+                              <Effect card={card} imgClassName={cardBorderStyle} />
+                            </td>
+                            <td className={styles.zeroPitch} title={result.cardName}>{result.cardName}</td>
+                            <td className={styles.played}>{result.played}</td>
+                            <td className={styles.blocked}>{result.blocked}</td>
+                            <td className={styles.pitched}>{result.pitched}</td>
+                            <td className={styles.cardStat}>{result.hits}</td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              </>
+            )}
           </div>
 
 
