@@ -41,6 +41,7 @@
   width: 0;
   pointer-events: none;
   align-self: stretch;
+  margin-right: 0 !important;
 }
 
 .handRow > *:not(:last-child) {

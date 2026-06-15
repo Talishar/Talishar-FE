@@ -606,7 +606,7 @@ export default function PlayerHand() {
   }
 
   const zoneSeparatorMarginLeft = cardSpacingPx !== null && cardSpacingPx < 0
-    ? Math.max(0, 4 - 2 * cardSpacingPx)
+    ? Math.max(0, 4 - cardSpacingPx)
     : 0;
   const zoneSeparatorStyle = zoneSeparatorMarginLeft > 0
     ? { marginLeft: zoneSeparatorMarginLeft }
