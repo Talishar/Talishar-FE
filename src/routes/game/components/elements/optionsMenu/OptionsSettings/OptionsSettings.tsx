@@ -66,7 +66,9 @@ const OptionsSettings = () => {
     'cardSize',
     'playmatIntensity',
     'transparencyIntensity',
-    'hoverImageSize'
+    'hoverImageSize',
+    'disableParticles',
+    'disableCardTilt'
   ]);
 
   // fetch all settings when options is loaded
@@ -409,6 +411,24 @@ const OptionsSettings = () => {
               name: optConst.ALWAYS_SHOW_COUNTERS,
               value: initialValues.alwaysShowCounters ? '0' : '1'
             })
+          }
+        />
+
+        <CheckboxSetting
+          name="disableParticles"
+          label="Disable Particle Effects"
+          checked={cookies.disableParticles === 'true'}
+          onChange={() =>
+            setCookie('disableParticles', cookies.disableParticles === 'true' ? 'false' : 'true')
+          }
+        />
+
+        <CheckboxSetting
+          name="disableCardTilt"
+          label="Disable Card Hover Tilt"
+          checked={cookies.disableCardTilt === 'true'}
+          onChange={() =>
+            setCookie('disableCardTilt', cookies.disableCardTilt === 'true' ? 'false' : 'true')
           }
         />
 

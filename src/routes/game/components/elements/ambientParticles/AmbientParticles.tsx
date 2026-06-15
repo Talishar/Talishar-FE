@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import { useCookies } from 'react-cookie';
 import styles from './AmbientParticles.module.css';
 
 interface AmbientParticlesProps {
@@ -38,8 +39,11 @@ const makeParticles = (): ParticleConfig[] =>
  * the user prefers reduced motion (see module CSS).
  */
 export const AmbientParticles = ({ variant = 'game' }: AmbientParticlesProps) => {
+  const [cookies] = useCookies(['disableParticles']);
   // Randomize once per mount; re-renders keep the same particle field
   const particles = useMemo(makeParticles, []);
+
+  if (cookies.disableParticles === 'true') return null;
 
   const layerClass = variant === 'global' ? styles.ambientLayerGlobal : styles.ambientLayer;
 

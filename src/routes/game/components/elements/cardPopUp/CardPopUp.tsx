@@ -3,6 +3,7 @@ import { clearPopUp, setPopUp } from 'features/game/GameSlice';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import { ReactNode, useRef } from 'react';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import { useCookies } from 'react-cookie';
 import { CARD_BACK } from 'features/options/cardBacks';
 
 const supportsHover =
@@ -34,6 +35,7 @@ export default function CardPopUp({
   const ref = useRef<HTMLDivElement>(null);
   const dispatch = useAppDispatch();
   const [windowWidth, windowHeight] = useWindowDimensions();
+  const [cookies] = useCookies(['disableCardTilt']);
 
   const rotateXTarget = useMotionValue(0);
   const rotateYTarget = useMotionValue(0);
@@ -130,7 +132,7 @@ export default function CardPopUp({
       onHoverStart={onHoverStart}
       onHoverEnd={onHoverEnd}
       ref={ref}
-      style={supportsHover && !disableTilt ? { rotateX, rotateY, transformPerspective: 600, boxShadow } : undefined}
+      style={supportsHover && !disableTilt && cookies.disableCardTilt !== 'true' ? { rotateX, rotateY, transformPerspective: 600, boxShadow } : undefined}
     >
       {children}
     </motion.div>

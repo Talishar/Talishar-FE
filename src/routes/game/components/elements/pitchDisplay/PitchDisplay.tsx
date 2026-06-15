@@ -3,6 +3,7 @@ import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import Displayrow from 'interface/Displayrow';
 import { AnimatePresence } from 'framer-motion';
+import { useCookies } from 'react-cookie';
 import ResourcesParticle from '../ResourcesParticle/ResourcesParticle';
 import styles from './PitchDisplay.module.css';
 
@@ -14,6 +15,7 @@ interface Particle {
 export default function PitchDisplay(prop: Displayrow) {
   const { isPlayer } = prop;
   const [particles, setParticles] = useState<Particle[]>([]);
+  const [cookies] = useCookies(['disableParticles']);
   const particleCounter = useRef(0);
 
   let pitchAmount = useAppSelector((state: RootState) =>
@@ -28,6 +30,7 @@ export default function PitchDisplay(prop: Displayrow) {
 
   // Detect when a new card is added to pitch and spawn particles
   React.useEffect(() => {
+    if (cookies.disableParticles === 'true') return;
     if (pitchZone && pitchZone.length > 0) {
       const lastCard = pitchZone[pitchZone.length - 1];
       const isChiCard = lastCard.cardNumber.includes('inner_chi');
@@ -38,7 +41,7 @@ export default function PitchDisplay(prop: Displayrow) {
       }));
       setParticles((prev) => [...prev, ...newParticles]);
     }
-  }, [pitchZone?.length]);
+  }, [pitchZone?.length, cookies.disableParticles]);
 
   const removeParticle = (id: string) => {
     setParticles((prev) => prev.filter((p) => p.id !== id));

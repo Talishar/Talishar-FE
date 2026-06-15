@@ -12,7 +12,7 @@
   background-color: var(--near-black);
   --container-padding: 1vh;
   padding: var(--container-padding);
-  border: 1px solid var(--theme-primary);
+  border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.2));
   border-radius: 10px;
   z-index: 900;
 }
@@ -271,7 +271,7 @@
   background-color: var(--near-black);
   --container-padding: 1.5vh;
   padding: var(--container-padding);
-  border: 1px solid var(--theme-primary);
+  border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.2));
   border-radius: 10px;
   z-index: 900;
 }
