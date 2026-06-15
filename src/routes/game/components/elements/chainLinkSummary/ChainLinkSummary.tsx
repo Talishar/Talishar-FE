@@ -2,7 +2,6 @@ import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import {
   hideChainLinkSummary,
-  hideActiveLayer,
   getGameInfo
 } from 'features/game/GameSlice';
 import { FaTimes } from 'react-icons/fa';
@@ -13,11 +12,9 @@ import GameStaticInfo from 'features/GameStaticInfo';
 import CardTextLink from '../cardTextLink/CardTextLink';
 import { Effect } from '../effects/Effects';
 import { Card } from 'features/Card';
-import EndGameScreen from '../endGameScreen/EndGameScreen';
 import useShortcut from 'hooks/useShortcut';
 import { DEFAULT_SHORTCUTS } from 'appConstants';
 import { shallowEqual } from 'react-redux';
-import { useEffect } from 'react';
 
 export const ChainLinkSummaryContainer = () => {
   const chainLinkSummary = useAppSelector(
@@ -25,30 +22,9 @@ export const ChainLinkSummaryContainer = () => {
     shallowEqual
   );
   const gameInfo = useAppSelector(getGameInfo, shallowEqual);
-  const turnPhase = useAppSelector(
-    (state: RootState) => state.game.turnPhase?.turnPhase
-  );
   const lastUpdate = useAppSelector(
     (state: RootState) => state.game.gameDynamicInfo.lastUpdate
   );
-
-  const dispatch = useAppDispatch();
-
-  // if the game is over display the end game stats screen
-  useEffect(() => {
-    if (!!turnPhase && turnPhase === 'OVER') {
-      dispatch(hideActiveLayer());
-    }
-  }, [turnPhase, dispatch]);
-
-  // Check if game is over to show end game screen
-  if (!!turnPhase && turnPhase === 'OVER') {
-    return (
-      <div>
-        <EndGameScreen />
-      </div>
-    );
-  }
 
   if (!chainLinkSummary || !chainLinkSummary.show) {
     return null;

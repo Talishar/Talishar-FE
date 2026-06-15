@@ -13,14 +13,20 @@ export default function ChainLinks() {
   const oldCombatChain = useAppSelector(
     (state: RootState) => state.game.oldCombatChain
   );
+  const turnPhase = useAppSelector(
+    (state: RootState) => state.game.turnPhase?.turnPhase
+  );
 
   const dispatch = useAppDispatch();
+
+  const isGameOver = turnPhase === 'OVER';
 
   const clickChainLink = (key: number) => {
     dispatch(showChainLinkSummary({ chainLink: key }));
   };
 
   const handleBreakChainClick = () => {
+    if (isGameOver) return;
     dispatch(
       submitButton({ button: { mode: PROCESS_INPUT.BREAK_COMBAT_CHAIN } })
     );
@@ -55,7 +61,7 @@ export default function ChainLinks() {
           </div>
         );
       })}
-      {oldCombatChain.length > 0 && (
+      {oldCombatChain.length > 0 && !isGameOver && (
         <div className={styles.breakChain} onClick={handleBreakChainClick}>
           <GiBreakingChain style={{ width: '100%', height: '100%' }} />
         </div>
