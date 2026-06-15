@@ -4,7 +4,7 @@
   flex-direction: row;
   min-width: 30%;
   max-width: 90%;
-  min-height: 20%;
+  min-height: max(22vh, 150px);
   left: 15%;
   right: 28%;
   max-height: 40vh;
@@ -203,7 +203,6 @@
     width: min(88dvw, 320px);
     max-width: 92dvw;
     right: auto;
-    min-height: 0;
   }
 
   .cardDiv {
@@ -263,7 +262,7 @@
   flex-direction: row;
   min-width: 30%;
   max-width: 90%;
-  min-height: auto;
+  min-height: max(22vh, 150px);
   left: 20%;
   right: 30%;
   max-height: 52.5vh;
@@ -429,8 +428,8 @@
     min-height: 44px;
     min-width: 44px;
     height: auto;
-    padding: 10px 16px;
-    font-size: 1em;
+    padding: 8px 12px;
+    font-size: 0.75em;
     border-radius: 8px;
   }
 }
