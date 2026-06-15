@@ -43,6 +43,21 @@ const ELEMENT_COLOR_MAPPING: {
     backgroundClip: 'text',
     WebkitBackgroundClip: 'text',
     WebkitTextFillColor: 'transparent'
+  },
+  '5': {
+    color: '#ff3030',
+    textShadow:
+      '0 0 8px rgba(255, 48, 48, 0.9), 0 0 18px rgba(200, 0, 0, 0.7), 0 0 35px rgba(255, 80, 0, 0.5)'
+  },
+  '6': {
+    color: 'transparent',
+    textShadow:
+      '0 0 10px rgba(255, 230, 120, 0.6), 0 0 20px rgba(200, 255, 200, 0.4)',
+    background:
+      'linear-gradient(135deg, #fffde7 0%, #c8f7c5 40%, #e8d5ff 70%, #fffde7 100%)',
+    backgroundClip: 'text',
+    WebkitBackgroundClip: 'text',
+    WebkitTextFillColor: 'transparent'
   }
 };
 
