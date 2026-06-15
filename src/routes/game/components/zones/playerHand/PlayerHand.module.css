@@ -36,6 +36,13 @@
   pointer-events: none;
 }
 
+.zoneSeparator {
+  flex-shrink: 0;
+  width: 0;
+  pointer-events: none;
+  align-self: stretch;
+}
+
 .handRow > *:not(:last-child) {
   margin-right: var(--card-spacing, 2vh);
 }

@@ -327,7 +327,9 @@ export default function PlayerHand() {
     if (!handRow) {
       return;
     }
-    const cardElements = Array.from(handRow.children) as HTMLElement[];
+    const cardElements = (Array.from(handRow.children) as HTMLElement[]).filter(
+      (el) => !el.dataset.zoneSeparator
+    );
     if (cardElements.length === 0) {
       return;
     }
@@ -361,7 +363,9 @@ export default function PlayerHand() {
     const handRow = handRowRef.current;
     if (!handRow) return;
 
-    const cardElements = Array.from(handRow.children) as HTMLElement[];
+    const cardElements = (Array.from(handRow.children) as HTMLElement[]).filter(
+      (el) => !el.dataset.zoneSeparator
+    );
     const N = cardElements.length;
     if (N <= 1) {
       setCardSpacingPx(null);
@@ -601,6 +605,18 @@ export default function PlayerHand() {
     return <></>;
   }
 
+  const zoneSeparatorMarginLeft = cardSpacingPx !== null && cardSpacingPx < 0
+    ? Math.max(0, 4 - 2 * cardSpacingPx)
+    : 0;
+  const zoneSeparatorStyle = zoneSeparatorMarginLeft > 0
+    ? { marginLeft: zoneSeparatorMarginLeft }
+    : undefined;
+
+  const hasHandCards = orderedHandCards.length > 0;
+  const hasBanishedCards = (playableBanishedCards?.length ?? 0) > 0;
+  const hasTheirBanishedCards = (playableTheirBanishedCards?.length ?? 0) > 0;
+  const hasGraveyardCards = (playableGraveyardCards?.length ?? 0) > 0;
+
   const cardsInHandsAlready = [...playedCards];
 
   const canScrollLeft = scrollOffset > 0;
@@ -692,6 +708,13 @@ export default function PlayerHand() {
                     />
                   );
                 })}
+              {hasHandCards && hasBanishedCards && (
+                <div
+                  className={styles.zoneSeparator}
+                  data-zone-separator="true"
+                  style={zoneSeparatorStyle}
+                />
+              )}
               {playableBanishedCards !== undefined &&
                 playableBanishedCards.map((card, ix) => {
                   const cardCount = cardsInHandsAlready.filter(
@@ -704,11 +727,18 @@ export default function PlayerHand() {
                       isBanished
                       key={`banished-${card.cardNumber}-${cardCount}`}
                       addCardToPlayedCards={addCardToPlayedCards}
-                      zIndex={ix}
+                      zIndex={orderedHandCards.length + ix + 200}
                       scrollBlockedRef={scrollBlockedRef}
                     />
                   );
                 })}
+              {(hasHandCards || hasBanishedCards) && hasTheirBanishedCards && (
+                <div
+                  className={styles.zoneSeparator}
+                  data-zone-separator="true"
+                  style={zoneSeparatorStyle}
+                />
+              )}
               {playableTheirBanishedCards !== undefined &&
                 playableTheirBanishedCards.map((card, ix) => {
                   const cardCount = cardsInHandsAlready.filter(
@@ -721,11 +751,18 @@ export default function PlayerHand() {
                       isBanished
                       key={`banished-${card.cardNumber}-${cardCount}`}
                       addCardToPlayedCards={addCardToPlayedCards}
-                      zIndex={ix}
+                      zIndex={orderedHandCards.length + (playableBanishedCards?.length ?? 0) + ix + 200}
                       scrollBlockedRef={scrollBlockedRef}
                     />
                   );
                 })}
+              {(hasHandCards || hasBanishedCards || hasTheirBanishedCards) && hasGraveyardCards && (
+                <div
+                  className={styles.zoneSeparator}
+                  data-zone-separator="true"
+                  style={zoneSeparatorStyle}
+                />
+              )}
               {playableGraveyardCards !== undefined &&
                 playableGraveyardCards.map((card, ix) => {
                   const cardCount = cardsInHandsAlready.filter(
@@ -738,7 +775,7 @@ export default function PlayerHand() {
                       isGraveyard
                       key={`graveyard-${card.cardNumber}-${cardCount}`}
                       addCardToPlayedCards={addCardToPlayedCards}
-                      zIndex={ix}
+                      zIndex={orderedHandCards.length + (playableBanishedCards?.length ?? 0) + (playableTheirBanishedCards?.length ?? 0) + ix + 200}
                       scrollBlockedRef={scrollBlockedRef}
                     />
                   );
