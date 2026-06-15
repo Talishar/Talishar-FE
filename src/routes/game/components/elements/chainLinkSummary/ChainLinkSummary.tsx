@@ -39,18 +39,17 @@ export const ChainLinkSummaryContainer = () => {
     if (!!turnPhase && turnPhase === 'OVER') {
       dispatch(hideActiveLayer());
     }
-  }, [turnPhase, dispatch]);
-
-  // Check if game is over to show end game screen
-  if (!!turnPhase && turnPhase === 'OVER') {
-    return (
-      <div>
-        <EndGameScreen />
-      </div>
-    );
-  }
+  }, [turnPhase, dispatch, chainLinkSummary]);
 
   if (!chainLinkSummary || !chainLinkSummary.show) {
+    // Check if game is over to show end game screen
+    if (!!turnPhase && turnPhase === 'OVER') {
+      return (
+        <div>
+          <EndGameScreen />
+        </div>
+      );
+    }
     return null;
   }
 
@@ -103,12 +102,6 @@ const ChainLinkSummary = ({
   } else {
     content = (
       <div className={styles.cardListContents}>
-        <div className={styles.totalDamageContainer}>
-          <span className={styles.totalDamageLabel}>Total Damage Dealt: </span>
-          <span className={styles.totalDamageValue}>
-            {data.TotalDamageDealt}
-          </span>
-        </div>
         <div className={styles.tableWrapper}>
           <table className={styles.table}>
             <thead>
@@ -123,8 +116,10 @@ const ChainLinkSummary = ({
                 data.Cards.map((entry: any, ix: number) => {
                   const card: Card = { cardNumber: entry.cardID };
                   const isPlayer = parseInt(entry.Player) === playerID;
+                  const rowClass = `${styles.tableRow} ${isPlayer ? styles.playerRow : styles.opponentRow}`;
+                  const glowClass = isPlayer ? styles.playerGlow : styles.opponentGlow;
                   return (
-                    <tr key={`cardList${ix}`} className={styles.tableRow}>
+                    <tr key={`cardList${ix}`} className={rowClass}>
                       <td className={styles.cardImageCol}>
                         {entry.cardID === 'POWERCOUNTER' ? (
                           <img
@@ -133,14 +128,13 @@ const ChainLinkSummary = ({
                             alt="+1 Power Counter"
                           />
                         ) : (
-                          <Effect card={card} isPlayer={isPlayer} />
+                          <div className={glowClass}>
+                            <Effect card={card} isPlayer={isPlayer} />
+                          </div>
                         )}
                       </td>
                       <td className={styles.cardNameCol}>
-                        <CardTextLink
-                          cardName={entry.Name}
-                          cardNumber={entry.cardID}
-                        />
+                        <span>{entry.Name}</span>
                       </td>
                       <td className={styles.effectCol}>
                         <span
@@ -149,7 +143,7 @@ const ChainLinkSummary = ({
                               ? styles.positive
                               : entry.modifier < 0
                               ? styles.negative
-                              : ''
+                              : styles.neutral
                           }
                         >
                           {entry.modifier > 0 ? '+' : ''}
@@ -173,12 +167,23 @@ const ChainLinkSummary = ({
     );
   }
 
+  const totalDamage =
+    !isLoading && !error && data ? data.TotalDamageDealt : null;
+
   return (
     <div className={styles.emptyOutside} onClick={closeCardList}>
       <div className={styles.cardListBox} onClick={(e) => e.stopPropagation()}>
         <div className={styles.cardListTitleContainer}>
           <div className={styles.cardListTitle}>
-            <h3 className={styles.title}>{'Chain Link Summary'}</h3>
+            <h3 className={styles.title}>Chain Link Summary</h3>
+            {totalDamage != null && (
+              <div className={styles.totalDamageContainer}>
+                <span className={styles.totalDamageLabel}>
+                  Total Damage Dealt:
+                </span>
+                <span className={styles.totalDamageValue}>{totalDamage}</span>
+              </div>
+            )}
           </div>
           <div className={styles.cardListCloseIcon} onClick={closeCardList}>
             <FaTimes title="Close Dialog" />

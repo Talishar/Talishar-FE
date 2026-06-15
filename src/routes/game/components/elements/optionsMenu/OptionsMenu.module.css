@@ -1,3 +1,11 @@
+.optionsBackdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(3px);
+  z-index: 999;
+}
+
 .optionsContainer {
   position: fixed;
   display: flex;
@@ -15,6 +23,7 @@
   isolation: isolate;
   z-index: 1000;
 }
+
 
 .optionsTitleContainer {
   position: relative;

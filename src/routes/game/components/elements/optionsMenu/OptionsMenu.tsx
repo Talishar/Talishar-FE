@@ -268,28 +268,31 @@ export default function OptionsMenu() {
   return (
     <AnimatePresence>
       {optionsMenu?.active && showModal && (
-        <motion.div
-          className={styles.optionsContainer}
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.8 }}
-          key="optionsMenuPopup"
-        >
-          <div className={styles.optionsTitleContainer}>
-            <hgroup className={styles.optionsTitle}>
-              <h2 className={styles.title}>Settings Menu</h2>
-              <h4></h4>
-            </hgroup>
-            <div
-              className={styles.optionsMenuCloseIcon}
-              onClick={closeOptions}
-              data-testid="close-button"
-            >
-              <FaTimes title="Close Settings Menu" />
+        <>
+          <div className={styles.optionsBackdrop} onClick={closeOptions} />
+          <motion.div
+            className={styles.optionsContainer}
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.8 }}
+            key="optionsMenuPopup"
+          >
+            <div className={styles.optionsTitleContainer}>
+              <hgroup className={styles.optionsTitle}>
+                <h2 className={styles.title}>Settings Menu</h2>
+                <h4></h4>
+              </hgroup>
+              <div
+                className={styles.optionsMenuCloseIcon}
+                onClick={closeOptions}
+                data-testid="close-button"
+              >
+                <FaTimes title="Close Settings Menu" />
+              </div>
             </div>
-          </div>
-          <OptionsContent />
-        </motion.div>
+            <OptionsContent />
+          </motion.div>
+        </>
       )}
     </AnimatePresence>
   );

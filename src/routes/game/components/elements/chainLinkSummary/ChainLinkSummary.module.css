@@ -1,213 +1,259 @@
-.cardListBox {
+/* ── Backdrop ─────────────────────────────────────────── */
+.emptyOutside {
   position: fixed;
+  inset: 0;
+  z-index: 100;
+  background-color: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(3px);
   display: flex;
-  flex-direction: column;
-  top: 15vh;
-  bottom: 15vh;
-  left: 15vw;
-  right: 15vw;
-  background: linear-gradient(
-    135deg,
-    rgba(20, 20, 30, 0.98) 0%,
-    rgba(10, 10, 20, 0.98) 100%
-  );
-  padding: 2.5vh;
-  border: 2px solid var(--theme-primary);
-  border-radius: 12px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
+  align-items: center;
+  justify-content: center;
 }
 
-.cardListTitleContainer {
+/* ── Modal shell ──────────────────────────────────────── */
+.cardListBox {
   position: relative;
   display: flex;
+  flex-direction: column;
+  width: clamp(360px, 44vw, 580px);
+  max-height: min(78vh, 680px);
+  background: var(--near-black, #0d0d0f);
+  border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.18));
+  border-radius: 10px;
+  box-shadow:
+    0 24px 64px rgba(0, 0, 0, 0.75),
+    0 2px 0 rgba(255, 255, 255, 0.04) inset;
+  overflow: hidden;
+}
+
+/* ── Header ───────────────────────────────────────────── */
+.cardListTitleContainer {
+  display: flex;
   flex-direction: row;
-  flex-grow: 0;
-  width: 100%;
-  justify-content: space-between;
   align-items: center;
-  padding-bottom: 1.5vh;
-  border-bottom: 1px solid rgba(var(--theme-primary-rgb), 0.3);
-  margin-bottom: 1.5vh;
+  justify-content: space-between;
+  padding: 14px 16px 12px;
+  border-bottom: 1px solid var(--theme-border, rgba(255, 255, 255, 0.12));
+  flex-shrink: 0;
+  gap: 12px;
+}
+
+.cardListTitle {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  min-width: 0;
 }
 
 .title {
-  padding: 0;
   margin: 0;
-  font-size: 2.2vh;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-  color: var(--theme-primary);
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  padding: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--theme-primary, #c9a84c);
+  line-height: 1;
+  text-transform: uppercase;
+  text-shadow:
+    0 0 24px rgba(201, 168, 76, 0.45),
+    0 1px 3px rgba(0, 0, 0, 0.9);
 }
 
+/* Total damage lives in the header as a compact badge row */
 .totalDamageContainer {
   display: flex;
   align-items: center;
-  padding: 1.5vh 1.5vh;
-  background: rgba(var(--theme-primary-rgb), 0.08);
-  border: 1px solid rgba(var(--theme-primary-rgb), 0.3);
-  border-radius: 8px;
-  margin-bottom: 1.5vh;
-  gap: 0.5vh;
+  gap: 5px;
+  margin-top: 3px;
 }
 
 .totalDamageLabel {
-  font-size: 1.3vh;
-  font-weight: 500;
-  color: var(--theme-text);
-  letter-spacing: 0.5px;
+  font-size: 0.7rem;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.45);
+  letter-spacing: 0.3px;
 }
 
 .totalDamageValue {
-  font-size: 1.7vh;
+  font-size: 0.78rem;
   font-weight: 700;
-  color: var(--theme-text);
-  text-shadow: 0 2px 8px rgba(var(--theme-primary-rgb), 0.3);
+  color: rgba(255, 255, 255, 0.85);
 }
 
-.cardListContents {
-  padding: 0;
+.cardListCloseIcon {
   display: flex;
-  flex-grow: 1;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: stretch;
-  gap: 0;
-  overflow: hidden;
-  height: auto;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 5px;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.45);
+  transition: background 0.15s ease, color 0.15s ease;
+  font-size: 0.8rem;
+  flex-shrink: 0;
 }
 
-.tableWrapper {
-  flex: 1;
+.cardListCloseIcon:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* ── Scrollable content ───────────────────────────────── */
+.cardListContents {
+  display: flex;
+  flex-direction: column;
   overflow-y: auto;
-  border-radius: 8px;
-  border: 1px solid rgba(var(--theme-primary-rgb), 0.2);
+  overflow-x: hidden;
+}
+
+/* ── Table ────────────────────────────────────────────── */
+.tableWrapper {
+  overflow-y: auto;
 }
 
 .table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 1.4vh;
 }
 
 .table thead {
   position: sticky;
   top: 0;
-  background: rgba(var(--theme-primary-rgb), 0.15);
-  border-bottom: 2px solid var(--theme-primary);
-  z-index: 10;
+  z-index: 5;
+  background: rgba(255, 255, 255, 0.04);
 }
 
 .table th {
-  padding: 1.2vh 1vh;
-  text-align: center;
+  padding: 7px 10px;
+  font-size: 0.62rem;
   font-weight: 600;
-  color: var(--theme-primary);
   text-transform: uppercase;
-  font-size: 1.2vh;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.8px;
+  color: rgba(255, 255, 255, 0.35);
+  text-align: left;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
 }
 
-.cardImageCol {
-  width: 10vh;
-  padding: 1.2vh 2vh !important;
-  text-align: center;
+/* Align "CARD" header with name cell — same left padding as td.cardNameCol */
+.table th.cardNameCol {
+  padding-left: 8px;
+  text-align: left;
 }
 
-.attackSymbol {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 3dvh;
-  width: 3dvh;
-  margin: auto;
+.table th.effectCol {
+  text-align: right;
+  padding-right: 14px;
 }
 
-.cardNameCol {
-  flex: 1;
-  text-align: center;
-  padding: 1.2vh 0vh !important;
-  min-width: 200px;
-}
-
-.effectCol {
-  width: 10vh;
-  text-align: center;
-  padding: 1.2vh 2vh !important;
-}
-
+/* ── Rows ─────────────────────────────────────────────── */
 .tableRow {
-  border-bottom: 1px solid rgba(var(--theme-primary-rgb), 0.15);
-  transition: background-color 0.2s ease;
+  transition: background 0.15s ease;
+}
+
+.tableRow:nth-child(even) {
+  background: rgba(255, 255, 255, 0.025);
 }
 
 .tableRow:hover {
-  background-color: rgba(var(--theme-primary-rgb), 0.1);
+  background: rgba(255, 255, 255, 0.055);
 }
 
-.tableRow:last-child {
-  border-bottom: none;
-}
-
+/* ── Cells ────────────────────────────────────────────── */
 .table td {
-  padding: 1.2vh 1vh;
   vertical-align: middle;
+  padding: 7px 10px;
 }
 
-.table td:first-child {
-  text-align: center;
+.cardImageCol {
+  width: 60px;
+  padding: 4px 8px 4px 10px !important;
+}
+
+.table th.cardImageCol {
+  width: 60px;
+}
+
+.cardImageWrapper {
+  position: relative;
+  width: 36px;
+  height: 36px;
+  border-radius: 4px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+/* Override Effect's border with a glow in this context */
+.playerGlow :global(.imgPlayerBorder),
+.opponentGlow :global(.imgOpponentBorder) {
+  width: 44px !important;
+  height: 44px !important;
+  max-width: unset !important;
+  max-height: unset !important;
+  object-fit: cover;
+  border-radius: 3px;
+  display: block;
+}
+
+.playerGlow :global(.imgPlayerBorder) {
+  border: 2px solid rgba(30, 160, 255, 0.9);
+  box-shadow: 0 0 10px rgba(30, 160, 255, 0.45), 0 0 3px rgba(30, 160, 255, 0.6);
+}
+
+.opponentGlow :global(.imgOpponentBorder) {
+  border: 2px solid rgba(220, 55, 55, 0.9);
+  box-shadow: 0 0 10px rgba(220, 55, 55, 0.45), 0 0 3px rgba(220, 55, 55, 0.6);
+}
+
+.attackSymbol {
+  width: 28px;
+  height: 28px;
+  display: block;
+  margin: auto;
+  opacity: 0.9;
+}
+
+.cardNameCol {
+  padding: 7px 6px 7px 8px !important;
+  text-align: left;
+}
+
+.cardNameCol a,
+.cardNameCol span {
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.82);
+  font-weight: 400;
+}
+
+.effectCol {
+  width: 52px;
+  text-align: right;
+  padding: 7px 14px 7px 6px !important;
 }
 
 .positive {
+  font-size: 0.82rem;
+  font-weight: 700;
   color: #4ade80;
-  font-weight: 600;
-  text-shadow: 0 0 8px rgba(74, 222, 128, 0.3);
 }
 
 .negative {
+  font-size: 0.82rem;
+  font-weight: 700;
   color: #f87171;
-  font-weight: 600;
-  text-shadow: 0 0 8px rgba(248, 113, 113, 0.3);
 }
 
-.cardListCloseIcon {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  width: 4.5vh;
-  height: 4.5vh;
-  border-radius: 6px;
-  cursor: pointer;
-  color: rgba(255, 255, 255, 0.6);
-  transition: all 0.2s ease;
-  font-size: 1.8vh;
+.neutral {
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.38);
 }
 
-.cardListCloseIcon:hover {
-  background-color: var(--theme-primary);
-  color: black;
-  transform: scale(1.1);
-}
-
-.emptyOutside {
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 100;
-  background-color: rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(2px);
-}
-
+/* ── Error ────────────────────────────────────────────── */
 .error {
   color: #f87171;
-  padding: 1.5vh;
+  padding: 16px;
   text-align: center;
-  font-size: 1.1vh;
+  font-size: 0.78rem;
 }

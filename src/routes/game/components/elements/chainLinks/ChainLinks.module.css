@@ -90,6 +90,10 @@
   color: black;
 }
 
+.breakChainDisabled {
+  display: none;
+}
+
 .experimental {
   background-image: none;
 }
