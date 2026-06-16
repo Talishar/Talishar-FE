@@ -17,7 +17,7 @@ import { MdDragHandle } from 'react-icons/md';
 import Button from '../../../../../features/Button';
 import { Card } from 'features/Card';
 
-const GROUPING_THRESHOLD = 3;
+const GROUPING_THRESHOLD = 1;
 const STORAGE_KEY = 'activeLayersPosition';
 const MAX_Y_OFFSET = 35;
 const MIN_Y_OFFSET = -25;
