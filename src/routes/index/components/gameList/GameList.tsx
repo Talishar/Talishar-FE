@@ -414,6 +414,8 @@ const GameList = () => {
   };
 
   const otherFormats = [
+    GAME_FORMAT.BLITZ,
+    GAME_FORMAT.COMPETITIVE_BLITZ,
     GAME_FORMAT.OPEN_BLITZ,
     GAME_FORMAT.OPEN_LL_CC,
     GAME_FORMAT.COMMONER,
