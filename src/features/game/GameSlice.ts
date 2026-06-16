@@ -857,11 +857,21 @@ export const gameSlice = createSlice({
       );
 
       {
-        const prevLen = (state.chatLog ?? []).filter((m: string) => m.length > 0).length;
+        const prevChatLog = state.chatLog ?? [];
+        let prevLen = 0;
+        for (let i = 0; i < prevChatLog.length; i++) {
+          if (prevChatLog[i].length > 0) prevLen++;
+        }
         const incoming = action.payload.chatLog ?? [];
         if (!state.showChatModal && prevLen > 0) {
-          const incomingNonEmpty = incoming.filter((m: string) => m.length > 0);
-          const newPlayerChats = incomingNonEmpty.slice(prevLen).filter((m: string) => CHAT_RE.test(m)).length;
+          let nonEmptySeen = 0;
+          let newPlayerChats = 0;
+          for (let i = 0; i < incoming.length; i++) {
+            const message = incoming[i];
+            if (message.length === 0) continue;
+            nonEmptySeen++;
+            if (nonEmptySeen > prevLen && CHAT_RE.test(message)) newPlayerChats++;
+          }
           if (newPlayerChats > 0) {
             state.unreadChatCount = (state.unreadChatCount ?? 0) + newPlayerChats;
           }
@@ -1026,11 +1036,21 @@ export const gameSlice = createSlice({
       );
 
       {
-        const prevLen = (state.chatLog ?? []).filter((m: string) => m.length > 0).length;
+        const prevChatLog = state.chatLog ?? [];
+        let prevLen = 0;
+        for (let i = 0; i < prevChatLog.length; i++) {
+          if (prevChatLog[i].length > 0) prevLen++;
+        }
         const incoming = action.payload.chatLog ?? [];
         if (!state.showChatModal && prevLen > 0) {
-          const incomingNonEmpty = incoming.filter((m: string) => m.length > 0);
-          const newPlayerChats = incomingNonEmpty.slice(prevLen).filter((m: string) => CHAT_RE.test(m)).length;
+          let nonEmptySeen = 0;
+          let newPlayerChats = 0;
+          for (let i = 0; i < incoming.length; i++) {
+            const message = incoming[i];
+            if (message.length === 0) continue;
+            nonEmptySeen++;
+            if (nonEmptySeen > prevLen && CHAT_RE.test(message)) newPlayerChats++;
+          }
           if (newPlayerChats > 0) {
             state.unreadChatCount = (state.unreadChatCount ?? 0) + newPlayerChats;
           }

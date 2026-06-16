@@ -19,14 +19,24 @@ export function preserveIdentities<T>(prev: T | undefined, next: T): T {
     return prev as T;
   }
   if (Array.isArray(prev) && Array.isArray(next)) {
-    let allSame = prev.length === next.length;
-    const out = next.map((item, i) => {
-      const merged =
-        i < prev.length ? preserveIdentities(prev[i], item) : item;
-      if (merged !== prev[i]) allSame = false;
-      return merged;
-    });
-    return allSame ? (prev as T) : (out as T);
+    if (prev.length === next.length) {
+      let out: unknown[] | null = null;
+      for (let i = 0; i < next.length; i++) {
+        const merged = preserveIdentities(prev[i], next[i]);
+        if (out !== null) {
+          out[i] = merged;
+        } else if (merged !== prev[i]) {
+          out = new Array(next.length);
+          for (let j = 0; j < i; j++) out[j] = prev[j];
+          out[i] = merged;
+        }
+      }
+      return out === null ? (prev as T) : (out as T);
+    }
+    // Length changed: result can never equal prev, so the map is necessary.
+    return next.map((item, i) =>
+      i < prev.length ? preserveIdentities(prev[i], item) : item
+    ) as T;
   }
   if (
     typeof prev === 'object' &&
@@ -38,12 +48,19 @@ export function preserveIdentities<T>(prev: T | undefined, next: T): T {
     const nextObj = next as Record<string, unknown>;
     const nextKeys = Object.keys(nextObj);
     let allSame = Object.keys(prevObj).length === nextKeys.length;
-    const out: Record<string, unknown> = {};
-    for (const key of nextKeys) {
+    let out: Record<string, unknown> | null = null;
+    for (let i = 0; i < nextKeys.length; i++) {
+      const key = nextKeys[i];
       if (!(key in prevObj)) allSame = false;
       const merged = preserveIdentities(prevObj[key], nextObj[key]);
-      out[key] = merged;
       if (merged !== prevObj[key]) allSame = false;
+      if (out !== null) {
+        out[key] = merged;
+      } else if (!allSame) {
+        out = {};
+        for (let j = 0; j < i; j++) out[nextKeys[j]] = prevObj[nextKeys[j]];
+        out[key] = merged;
+      }
     }
     return allSame ? (prev as T) : (out as T);
   }

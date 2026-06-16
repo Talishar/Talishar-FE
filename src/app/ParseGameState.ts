@@ -6,6 +6,10 @@ import CombatChainLink from '../features/CombatChainLink';
 import GameState from '../features/GameState';
 import Player from '../features/Player';
 
+// Hoisted out of ParseGameState: this used to be allocated fresh on every
+// single poll/SSE push even though the pattern never changes.
+const IMAGE_PATH_RE = /.\/Images\//gm;
+
 function GetCardName(cardNumber: string): string {
   if (!cardNumber || cardNumber === 'blank') return '';
   let name = cardNumber.replace(/_red$|_yellow$|_blue$/, '');
@@ -486,10 +490,9 @@ export default function ParseGameState(input: any) {
 
   // Chat log.
   const chatArray = input.chatLog ? input.chatLog.split('<br>') : [];
-  const re = /.\/Images\//gm;
 
   result.chatLog = chatArray.map((message: string) => {
-    return message.replace(re, '/images/');
+    return message.replace(IMAGE_PATH_RE, '/images/');
   });
 
   // activeplayer
