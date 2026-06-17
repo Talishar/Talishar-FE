@@ -2,7 +2,7 @@
 .emptyOutside {
   position: fixed;
   inset: 0;
-  z-index: 100;
+  z-index: 950;
   background-color: rgba(0, 0, 0, 0.55);
   backdrop-filter: blur(3px);
   display: flex;
