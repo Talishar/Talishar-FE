@@ -102,6 +102,8 @@ export const CardListZone = () => {
   return (
     <AnimatePresence>
       {showModal && cardList?.active && (
+        <>
+        <div className={styles.emptyOutside} onClick={closeCardList} />
         <motion.div
           className={styles.cardListBox}
           onClick={(e) => e.stopPropagation()}
@@ -185,6 +187,7 @@ export const CardListZone = () => {
             </div>
           )}
         </motion.div>
+        </>
       )}
     </AnimatePresence>
   );

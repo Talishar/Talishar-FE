@@ -1,14 +1,13 @@
+/* ── Backdrop ─────────────────────────────────────────── */
 .modalBackdrop {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0;
   background-color: rgba(0, 0, 0, 0.55);
   backdrop-filter: blur(3px);
   z-index: 100000;
 }
 
+/* ── Modal shell ──────────────────────────────────────── */
 .inventoryModal {
   position: fixed;
   display: flex;
@@ -17,11 +16,14 @@
   bottom: 20vh;
   left: 20vw;
   right: 20vw;
-  background-color: rgba(0, 0, 0, 0.95);
-  padding: 1.5vh;
-  border: 2px solid var(--theme-border);
+  background: var(--near-black, #0d0d0f);
+  border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.18));
   border-radius: 10px;
+  box-shadow:
+    0 24px 64px rgba(0, 0, 0, 0.75),
+    0 2px 0 rgba(255, 255, 255, 0.04) inset;
   z-index: 100001;
+  overflow: hidden;
 }
 
 @media (max-width: 812px) {
@@ -30,65 +32,65 @@
     bottom: 5vh;
     left: 5vw;
     right: 5vw;
-    padding: 1vh;
   }
 }
 
+/* ── Header ───────────────────────────────────────────── */
 .modalHeader {
-  position: relative;
   display: flex;
   flex-direction: row;
-  justify-content: flex-start;
   align-items: center;
-  gap: 1.5vh;
-  margin-bottom: 1vh;
-  flex-wrap: nowrap;
-  height: 4vh;
+  justify-content: space-between;
+  padding: 14px 16px 12px;
+  flex-shrink: 0;
+  gap: 12px;
 }
 
 @media (max-width: 812px) {
   .modalHeader {
-    height: auto;
+    padding: 10px 12px;
   }
 }
 
 .modalHeader h2 {
-  flex: 1;
   margin: 0;
   padding: 0;
   font-size: clamp(0.85rem, 1.8vh, 1.1rem);
+  font-weight: 600;
+  line-height: 1;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  line-height: 1;
+  flex: 1;
 }
 
+/* ── Close button ─────────────────────────────────────── */
 .closeButton {
   display: flex;
-  flex-direction: row;
   align-items: center;
   justify-content: center;
-  width: 4vh;
-  height: 100%;
+  width: 28px;
+  height: 28px;
   border-radius: 5px;
-  font-size: 1.1em;
+  font-size: 0.85rem;
   flex-shrink: 0;
   cursor: pointer;
   background: none;
   border: none;
-  color: inherit;
-  margin-bottom: 0;
+  color: rgba(255, 255, 255, 0.45);
   padding: 0;
-
-  &:hover {
-    background-color: var(--theme-primary);
-    color: black;
-  }
+  margin-bottom: 0;
+  transition: background 0.15s ease, color 0.15s ease;
 }
 
+.closeButton:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* ── Scrollable card grid ─────────────────────────────── */
 .modalContent {
-  padding-left: 1vh;
-  padding-top: 1vh;
+  padding: 12px 16px;
   display: flex;
   flex-grow: 1;
   flex-direction: row;
@@ -96,31 +98,54 @@
   align-items: flex-start;
   align-content: flex-start;
   flex-wrap: wrap;
-  gap: 1vh;
+  gap: 10px;
   overflow-y: auto;
+  overflow-x: hidden;
   height: auto;
+  /* Custom scrollbar */
+  scrollbar-width: thin;
+  scrollbar-color: var(--theme-primary-focus, rgba(212, 175, 55, 0.3)) rgba(0, 0, 0, 0.3);
+}
+
+.modalContent::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.modalContent::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 6px;
+}
+
+.modalContent::-webkit-scrollbar-thumb {
+  background: var(--theme-primary-focus, rgba(212, 175, 55, 0.3));
+  border-radius: 6px;
+}
+
+.modalContent::-webkit-scrollbar-thumb:hover {
+  background: var(--theme-primary, #d4af37);
 }
 
 @media (max-width: 812px) {
   .modalContent {
-    padding-left: 0.5vh;
-    padding-top: 0.5vh;
-    gap: 0.8vh;
+    padding: 8px 10px;
+    gap: 8px;
   }
 }
 
+/* ── Card grid layout ─────────────────────────────────── */
 .cardGrid {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   align-content: flex-start;
-  gap: 1vh;
+  gap: 10px;
 }
 
 .cardContainer {
   position: relative;
   overflow: visible;
-  border-radius: 10px;
+  border-radius: 8px;
   max-width: var(--card-size, 12vh);
   max-height: var(--card-size, 12vh);
 }
@@ -135,7 +160,7 @@
 .cardItem {
   position: relative;
   overflow: hidden;
-  border-radius: 10px;
+  border-radius: 8px;
 }
 
 .cardImage {
@@ -146,25 +171,28 @@
   max-height: none;
 }
 
+/* ── Counter badge ────────────────────────────────────── */
 .counterBadge {
   position: absolute;
-  top: 0.5rem;
-  right: 0.5rem;
+  top: 0.35rem;
+  right: 0.35rem;
   background-color: var(--theme-danger, rgba(220, 53, 69, 0.9));
   color: white;
-  padding: 0.25rem 0.5rem;
+  padding: 0.2rem 0.45rem;
   border-radius: 4px;
-  font-size: 0.75rem;
-  font-weight: bold;
-  min-width: 1.5rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  min-width: 1.4rem;
   text-align: center;
+  line-height: 1.2;
 }
 
+/* ── Empty state ──────────────────────────────────────── */
 .emptyState {
   width: 100%;
   text-align: center;
-  color: var(--theme-text-secondary, #999);
+  color: rgba(255, 255, 255, 0.4);
   padding: 3rem 1rem;
   font-style: italic;
-  font-size: 1rem;
+  font-size: 0.9rem;
 }

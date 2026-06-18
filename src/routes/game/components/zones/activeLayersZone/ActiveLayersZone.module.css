@@ -5,9 +5,12 @@
   min-width: 35vh;
   top: 8vh;
   left: 20%;
-  background-color: var(--theme-near-black);
-  border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.2));
+  background-color: var(--near-black, #0d0d0f);
+  border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.18));
   border-radius: 10px;
+  box-shadow:
+    0 24px 64px rgba(0, 0, 0, 0.75),
+    0 2px 0 rgba(255, 255, 255, 0.04) inset;
   max-width: 95vh;
   max-height: 40vh;
   z-index: 99;
@@ -77,6 +80,27 @@
   overflow-y: auto;
   min-width: 0;
   min-height: 0;
+  /* Custom scrollbar */
+  scrollbar-width: thin;
+  scrollbar-color: var(--theme-primary-focus, rgba(212, 175, 55, 0.3)) rgba(0, 0, 0, 0.3);
+}
+
+.activeLayersInner::-webkit-scrollbar {
+  width: 4px;
+}
+
+.activeLayersInner::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+}
+
+.activeLayersInner::-webkit-scrollbar-thumb {
+  background: var(--theme-primary-focus, rgba(212, 175, 55, 0.3));
+  border-radius: 4px;
+}
+
+.activeLayersInner::-webkit-scrollbar-thumb:hover {
+  background: var(--theme-primary, #d4af37);
 }
 
 .activeLayersContents > div {
@@ -94,12 +118,16 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  align-items: center;
   gap: 10px;
+  padding-bottom: 0.5em;
+  margin-bottom: 0.4em;
 }
 
 .title {
   font-size: 1.5em;
-  margin: 0px !important;
+  margin: 0 !important;
+  line-height: 1;
 }
 
 .activeLayersContents {

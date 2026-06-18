@@ -16,23 +16,28 @@
   bottom: 10vh;
   left: 9vw;
   right: 13vw;
-  background: var(--near-black);
-  padding: 1.5vh;
-  border: 1px solid var(--theme-border);
+  background: var(--near-black, #0d0d0f);
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.18));
   border-radius: 10px;
+  box-shadow:
+    0 24px 64px rgba(0, 0, 0, 0.75),
+    0 2px 0 rgba(255, 255, 255, 0.04) inset;
   isolation: isolate;
   z-index: 1000;
 }
 
 
 .optionsTitleContainer {
-  position: relative;
   display: flex;
   flex-direction: row;
   flex-grow: 0;
   width: 100%;
   justify-content: space-between;
   align-items: center;
+  padding: 16px 24px;
+  flex-shrink: 0;
 }
 
 .title {
@@ -40,22 +45,37 @@
   margin: 0;
   font-size: 1.5em;
   font-weight: 600;
+  line-height: 1;
+}
+
+/* Pico adds margin-bottom to hgroup and every heading — suppress all of it */
+.optionsTitleContainer hgroup {
+  margin: 0;
+  padding: 0;
+}
+
+.optionsTitleContainer h4 {
+  display: none;
 }
 
 .optionsMenuCloseIcon {
   display: flex;
-  color: var(--theme-primary);
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  width: 4vh;
-  height: 4vh;
+  width: 28px;
+  height: 28px;
   border-radius: 5px;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 0.8rem;
+  flex-shrink: 0;
+  transition: background 0.15s ease, color 0.15s ease;
 }
 
 .optionsMenuCloseIcon:hover {
-  background-color: var(--theme-primary);
-  color: var(--primary-inverse);
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .radioContainer {
@@ -68,24 +88,51 @@
   flex-direction: row;
   justify-content: flex-start;
   align-items: flex-start;
-  gap: 4em;
+  gap: 1.5rem;
+  padding: 1.25rem 1.5rem 1.5rem;
   overflow-y: auto;
   scroll-behavior: auto;
+  flex: 1;
+  /* Custom scrollbar */
+  scrollbar-width: thin;
+  scrollbar-color: var(--theme-primary-focus, rgba(212, 175, 55, 0.3)) rgba(0, 0, 0, 0.3);
+}
+
+.optionsContentContainer::-webkit-scrollbar {
+  width: 6px;
+}
+
+.optionsContentContainer::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 6px;
+}
+
+.optionsContentContainer::-webkit-scrollbar-thumb {
+  background: var(--theme-primary-focus, rgba(212, 175, 55, 0.3));
+  border-radius: 6px;
+}
+
+.optionsContentContainer::-webkit-scrollbar-thumb:hover {
+  background: var(--theme-primary, #d4af37);
 }
 
 .column {
   width: 50%;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.25rem;
+}
+
+.rightColumn {
+  padding-top: 0.5em;
 }
 
 .buttonColumn {
   display: flex;
   flex-direction: column;
-  flex-wrap: wrap;
-  align-items: center;
-  padding-right: 2vh;
+  align-items: stretch;
+  gap: 0.6rem;
+  width: 35dvh;
 }
 
 .alarm {
@@ -93,44 +140,73 @@
   text-align: center;
 }
 
+/* Ghost button — must use !important to override Pico's primary button styles */
 .buttonDiv {
-  width: 70%;
-  padding: 0.25em;
-  margin-bottom: 0.5em;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 100% !important;
+  min-height: 2.75rem !important;
+  padding: 0.6rem 1rem !important;
+  margin-bottom: 0 !important;
+  background-color: rgba(0, 0, 0, 0.3) !important;
+  color: rgba(255, 255, 255, 0.8) !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  border-radius: 6px !important;
+  font-family: inherit !important;
+  font-size: 0.875rem !important;
+  font-weight: 500 !important;
+  line-height: 1.3 !important;
+  text-align: center !important;
+  cursor: pointer !important;
+  transition: background 0.2s, border-color 0.2s, color 0.2s, transform 0.15s !important;
+  white-space: nowrap !important;
+  box-shadow: none !important;
+  letter-spacing: 0.01em !important;
 }
 
-/* Section Container - Match left side fieldset styling */
+.buttonDiv:hover {
+  background-color: rgba(255, 255, 255, 0.09) !important;
+  border-color: rgba(255, 255, 255, 0.28) !important;
+  color: white !important;
+  transform: translateY(-1px) !important;
+}
+
+.buttonDiv:active {
+  transform: translateY(0) !important;
+}
+
+/* Section Container */
 .sectionContainer {
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 8px;
-  padding: 1rem;
-  margin-top: 0.75em;
+  padding: 1.5rem 1.5rem 1.25rem;
   background: rgba(0, 0, 0, 0.2);
   position: relative;
 }
 
-/* Section Headers - Positioned like fieldset legend */
+/* Section header — center its midpoint on the top border, matching native <legend> behaviour */
 .sectionHeader {
   color: var(--theme-primary);
-  font-size: 0.95em;
+  font-size: 0.875em;
   font-weight: 600;
-  padding: 0.1em 0.5rem;
+  padding: 0 0.5rem;
   position: absolute;
-  top: -0.7em;
-  left: 1rem;
+  top: 0;
+  left: 1.25rem;
+  transform: translateY(-50%);
   display: flex;
   align-items: center;
   gap: 0.5rem;
   line-height: 1.2;
+  background: var(--near-black, #0d0d0f);
 }
 
 .sectionContent {
-  padding-top: 0.5rem;
-}
-
-.sectionContent .buttonColumn {
-  padding-right: 0;
-  margin: 0;
+  padding-top: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 /* Legacy h3 support - deprecated but kept for compatibility */
@@ -154,8 +230,14 @@
     right: 0;
   }
 
+  .optionsTitleContainer {
+    padding: 12px 14px 10px;
+  }
+
   .optionsContentContainer {
     flex-direction: column;
+    padding: 0.75rem 1rem 1rem;
+    gap: 1rem;
   }
 
   .column {

@@ -952,6 +952,56 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 0.75rem;
+  min-height: 2rem;
+}
+
+.statsTabs {
+  display: flex;
+  gap: 0.25rem;
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: 8px;
+  padding: 3px;
+}
+
+.statsTab {
+  appearance: none;
+  -webkit-appearance: none;
+  background: none;
+  border: none;
+  border-radius: 6px;
+  box-shadow: none;
+  color: rgba(255, 255, 255, 0.45);
+  cursor: pointer;
+  font-size: 0.82em;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  outline: none;
+  padding: 0.3rem 0.75rem;
+  transition: color 0.15s, background 0.15s;
+  white-space: nowrap;
+}
+
+.statsTab:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.statsTab:focus,
+.statsTab:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
+.statsTabActive {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+.statsTabActive:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.95);
 }
 
 .excludeLastTurnLabel {

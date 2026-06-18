@@ -1,3 +1,13 @@
+/* ── Backdrop ─────────────────────────────────────────── */
+.emptyOutside {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  background-color: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(3px);
+}
+
+/* ── Modal shell ──────────────────────────────────────── */
 .cardListBox {
   position: fixed;
   display: flex;
@@ -6,11 +16,14 @@
   bottom: 20vh;
   left: 20vw;
   right: 20vw;
-  background-color: rgba(0, 0, 0, 0.95);
-  padding: 1.5vh;
-  border: 2px solid var(--theme-border);
+  background: var(--near-black, #0d0d0f);
+  border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.18));
   border-radius: 10px;
+  box-shadow:
+    0 24px 64px rgba(0, 0, 0, 0.75),
+    0 2px 0 rgba(255, 255, 255, 0.04) inset;
   z-index: 1000;
+  overflow: hidden;
 }
 
 @media (max-width: 812px) {
@@ -19,71 +32,53 @@
     bottom: 5vh;
     left: 5vw;
     right: 5vw;
-    padding: 1vh;
   }
 }
 
+/* ── Header ───────────────────────────────────────────── */
 .cardListTitleContainer {
   position: relative;
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
-  gap: 1.5vh;
-  margin-bottom: 1vh;
+  gap: 10px;
+  padding: 12px 16px;
+  flex-shrink: 0;
   flex-wrap: nowrap;
-  height: 4vh;
 }
 
-/* Mobile and tablet: Stack title and buttons vertically */
 @media (max-width: 812px) {
   .cardListTitleContainer {
     flex-direction: column;
     align-items: stretch;
-    gap: 1vh;
-    height: auto;
+    gap: 8px;
+    padding: 10px 12px;
   }
 }
 
+/* Title occupies remaining space, visually first */
 .cardListTitle {
   flex: 1;
   min-width: 0;
   order: 1;
   display: flex;
-  margin-top: 5px;
+  align-items: center;
 }
 
 @media (max-width: 812px) {
   .cardListTitle {
+    order: 1;
     text-align: center;
     justify-content: center;
   }
 }
 
-.cardListTitleContainer button {
-  position: relative;
-  top: auto;
-  right: auto;
-  transform: none;
-  margin-left: auto;
-  margin-right: 0;
-  order: 2;
-  height: 100%;
-}
-
-@media (max-width: 812px) {
-  .cardListTitleContainer button {
-    order: 3;
-    margin-right: 0;
-    width: 100%;
-    height: 5vh;
-  }
-}
-
 .title {
-  padding: 0px;
-  margin: 0px;
+  margin: 0;
+  padding: 0;
   font-size: clamp(0.85rem, 1.8vh, 1.1rem);
+  font-weight: 600;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -94,13 +89,134 @@
   .title {
     white-space: normal;
     word-break: break-word;
-    font-size: clamp(1rem, 2.5vh, 1.5rem);
   }
 }
 
+/* ── Search input ─────────────────────────────────────── */
+.searchInput {
+  order: 2;
+  padding: 0 0.75rem;
+  border-radius: 5px;
+  border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.15));
+  background-color: rgba(0, 0, 0, 0.35);
+  color: rgba(255, 255, 255, 0.85);
+  font-size: clamp(0.75rem, 1.6vh, 0.9rem);
+  height: 30px !important; /* !important overrides Pico CSS height on inputs */
+  flex-shrink: 0;
+  width: 180px !important; /* !important overrides Pico CSS width: 100% on inputs */
+  cursor: text;
+  margin-bottom: 0 !important;
+  transition: border-color 0.15s, background 0.15s;
+  box-sizing: border-box;
+}
+
+.searchInput::placeholder {
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.searchInput:focus {
+  outline: none;
+  border-color: var(--theme-primary, rgba(212, 175, 55, 0.6));
+  background-color: rgba(0, 0, 0, 0.55);
+}
+
+@media (max-width: 812px) {
+  .searchInput {
+    order: 2;
+    width: 100% !important;
+    height: 5vh !important;
+    font-size: 1rem;
+    padding: 0.5vh 1vh;
+  }
+}
+
+/* ── Sort / filter button ─────────────────────────────── */
+.button {
+  order: 3;
+  /* override Pico's block/100%-width behavior on <button> */
+  display: inline-flex;
+  width: auto;
+  align-items: center;
+  justify-content: center;
+  padding: 0 0.85rem;
+  border-radius: 5px;
+  border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.15));
+  background-color: rgba(0, 0, 0, 0.3);
+  color: rgba(255, 255, 255, 0.75);
+  font-size: clamp(0.75rem, 1.6vh, 0.9rem);
+  font-weight: 500;
+  font-family: inherit;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  flex-shrink: 0;
+  margin-bottom: 0;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+  height: 30px;
+  box-sizing: border-box;
+}
+
+.button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.3);
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.button.active {
+  background: var(--theme-primary-focus, rgba(212, 175, 55, 0.125));
+  border-color: var(--theme-primary, #d4af37);
+  color: var(--theme-primary, #d4af37);
+  font-weight: 600;
+}
+
+@media (max-width: 812px) {
+  .button {
+    order: 3;
+    width: 100%;
+    height: 5vh;
+    font-size: 1rem;
+    display: flex;
+  }
+}
+
+/* ── Close icon — visually rightmost ──────────────────── */
+.cardListCloseIcon {
+  order: 4;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 5px;
+  font-size: 0.85rem;
+  flex-shrink: 0;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.45);
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.cardListCloseIcon:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+@media (max-width: 812px) {
+  .cardListCloseIcon {
+    order: 2;
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 32px;
+    height: 32px;
+    font-size: 1rem;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+}
+
+/* ── Scrollable card grid ─────────────────────────────── */
 .cardListContents {
-  padding-left: 1vh;
-  padding-top: 1vh;
+  padding: 12px 16px;
   display: flex;
   flex-grow: 1;
   flex-direction: row;
@@ -108,139 +224,45 @@
   align-items: flex-start;
   align-content: flex-start;
   flex-wrap: wrap;
-  gap: 1vh;
+  gap: 10px;
   overflow-y: auto;
+  overflow-x: hidden;
   height: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--theme-primary-focus, rgba(212, 175, 55, 0.3)) rgba(0, 0, 0, 0.3);
+}
+
+.cardListContents::-webkit-scrollbar {
+  width: 6px;
+}
+
+.cardListContents::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 6px;
+}
+
+.cardListContents::-webkit-scrollbar-thumb {
+  background: var(--theme-primary-focus, rgba(212, 175, 55, 0.3));
+  border-radius: 6px;
+}
+
+.cardListContents::-webkit-scrollbar-thumb:hover {
+  background: var(--theme-primary, #d4af37);
 }
 
 @media (max-width: 812px) {
   .cardListContents {
-    padding-left: 0.5vh;
-    padding-top: 0.5vh;
-    gap: 0.8vh;
+    padding: 8px 10px;
+    gap: 8px;
   }
 }
 
-.button {
-  margin-right: 0;
-  width: 8vh;
-  height: 100%;
-  border-radius: 5px;
-  background-color: black;
-  color: var(--h3-color);
-  --font-weight: 700;
-  border: 1px solid var(--theme-primary-focus);
-  flex-shrink: 0;
-  cursor: pointer;
-  font-size: clamp(0.75rem, 1.6vh, 0.9rem);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 0;
-}
-
-@media (max-width: 812px) {
-  .button {
-    margin-right: 0;
-    width: 100%;
-    height: 5vh;
-    font-size: 1rem;
-  }
-}
-
-.button:hover {
-  background-color: var(--theme-primary);
-  color: black;
-}
-
-.button.active {
-  background-color: var(--theme-primary);
-  color: black;
-  font-weight: 600;
-}
-
-.cardListCloseIcon {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  width: 4vh;
-  height: 100%;
-  border-radius: 5px;
-  font-size: 1.1em;
-  flex-shrink: 0;
-  cursor: pointer;
-  order: 3;
-}
-
-@media (max-width: 812px) {
-  .cardListCloseIcon {
-    order: 2;
-    position: absolute;
-    top: -0.5vh;
-    right: 0.1vh;
-    width: 5vh;
-    height: 5vh;
-    font-size: 1.8em;
-    background-color: rgba(0, 0, 0, 0.7);
-  }
-}
-
-.cardListCloseIcon:hover {
-  background-color: var(--theme-primary);
-  color: black;
-}
-
-.emptyOutside {
-  position: fixed;
-  top: 0px;
-  right: 0px;
-  top: 0px;
-  bottom: 0px;
-  width: 100%;
-  height: 100%;
-  z-index: 100;
-}
-
-.searchInput {
-  padding: 0.5vh 1vh;
-  border-radius: 5px;
-  border: 1px solid var(--theme-primary-focus);
-  background-color: rgba(0, 0, 0, 0.8);
-  color: var(--h3-color);
-  font-size: clamp(0.75rem, 1.6vh, 0.9rem);
-  height: 100% !important;
-  flex-shrink: 0;
-  width: 200px !important;
-  order: 2;
-  cursor: text;
-  margin-bottom: 0 !important;
-}
-
-.searchInput::placeholder {
-  color: rgba(255, 255, 255, 0.5);
-}
-
-.searchInput:focus {
-  outline: none;
-  border-color: var(--theme-primary);
-  background-color: rgba(0, 0, 0, 0.95);
-}
-
-@media (max-width: 812px) {
-  .searchInput {
-    order: 2;
-    width: 100% !important;
-    height: 4vh !important;
-    font-size: 1rem;
-    padding: 0.5vh 1vh;
-  }
-}
-
+/* ── No-results state ─────────────────────────────────── */
 .noResults {
-  padding: 2vh;
-  color: rgba(255, 255, 255, 0.7);
+  padding: 2rem 1rem;
+  color: rgba(255, 255, 255, 0.45);
   text-align: center;
   width: 100%;
-  font-size: clamp(0.85rem, 1.8vh, 1.1rem);
+  font-size: 0.9rem;
+  font-style: italic;
 }

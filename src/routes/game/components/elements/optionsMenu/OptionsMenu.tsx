@@ -136,7 +136,7 @@ const OptionsContent = () => {
       <div className={styles.column}>
         <OptionsSettings />
       </div>
-      <div className={styles.column}>
+      <div className={`${styles.column} ${styles.rightColumn}`}>
         <div className={styles.sectionContainer}>
           <div className={styles.sectionHeader}>
             <span>General</span>

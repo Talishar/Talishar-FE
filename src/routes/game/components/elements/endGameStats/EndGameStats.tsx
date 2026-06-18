@@ -163,6 +163,7 @@ function downloadViaBackend(type: 'csv' | 'png', filename: string, data: string)
 }
 
 const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
+  const [statsTab, setStatsTab] = useState<'deck' | 'activated'>('deck');
   const [sortField, setSortField] = useState<
     'played' | 'blocked' | 'pitched' | 'discarded' | 'hits' | 'cardName' | null
   >(null);
@@ -649,11 +650,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
         if (hasKatsuDiscard) content += ',Times Katsu Discarded';
         content += '\n';
 
-        const usedArenaResults = (playerData.arenaCardResults ?? [])
-          .filter((r) => r.played > 0 || r.hits > 0);
-        const allCardResults = [...(playerData.cardResults ?? []), ...usedArenaResults];
-
-        allCardResults.forEach((result) => {
+        playerData.cardResults?.forEach((result) => {
           const cardName = result.cardName.replace(/,/g, ';');
           const cardNameWithPitch =
             result.pitchValue > 0
@@ -664,6 +661,18 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
           if (hasKatsuDiscard) content += `,${result.katsuDiscard}`;
           content += '\n';
         });
+
+        const activatedArenaResults = (playerData.arenaCardResults ?? [])
+          .filter((r) => (r.activated ?? 0) > 0 || r.hits > 0)
+          .sort((a, b) => a.cardName.localeCompare(b.cardName));
+        if (activatedArenaResults.length > 0) {
+          content += '\nCARD ACTIVATED STATS\n';
+          content += 'Card Name,Activated,Times Hit\n';
+          activatedArenaResults.forEach((result) => {
+            const cardName = result.cardName.replace(/,/g, ';');
+            content += `"${cardName}",${result.activated ?? 0},${result.hits}\n`;
+          });
+        }
 
         const playedTokenResults = playerData.tokenResults?.filter((r) => r.played > 0);
         if (playedTokenResults && playedTokenResults.length > 0) {
@@ -771,14 +780,17 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
 
   const filteredCardResults = useMemo(() => {
     if (!data.cardResults) return data.cardResults;
-    const arenaCards = (data.arenaCardResults ?? [])
-      .filter((r) => r.played > 0 || r.hits > 0);
-    const combined = [...data.cardResults, ...arenaCards];
-    if (showAllCards) return combined;
-    return combined.filter(
+    if (showAllCards) return data.cardResults;
+    return data.cardResults.filter(
       (r) => r.played > 0 || r.blocked > 0 || r.pitched > 0 || r.discarded > 0 || r.hits > 0
     );
-  }, [data.cardResults, data.arenaCardResults, showAllCards]);
+  }, [data.cardResults, showAllCards]);
+
+  const activatedCardResults = useMemo(() => {
+    return [...(data.arenaCardResults ?? [])]
+      .filter((r) => (r.activated ?? 0) > 0 || r.hits > 0)
+      .sort((a, b) => a.cardName.localeCompare(b.cardName));
+  }, [data.arenaCardResults]);
 
   const sortedCardResults = useMemo(() => {
     if (!filteredCardResults || !sortField) {
@@ -1236,20 +1248,64 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
           </div>
           <div className={styles.statsSection}>
             <div className={styles.sectionHeaderContainer}>
-              <h2 className={styles.sectionHeader}>Card Play Stats</h2>
-              <label
-                className={styles.excludeLastTurnLabel}
-                title="By default, only cards that were played, blocked, or pitched at least once are shown. Check this to include all cards in your deck, even those that were never used."
-              >
-                <input
-                  type="checkbox"
-                  checked={showAllCards}
-                  onChange={(e) => setShowAllCards(e.target.checked)}
-                  className={styles.excludeLastTurnCheckbox}
-                />
-                <span className={styles.excludeLastTurnText}>Show all cards</span>
-              </label>
+              <div className={styles.statsTabs}>
+                <button
+                  className={`${styles.statsTab} ${statsTab === 'deck' ? styles.statsTabActive : ''}`}
+                  onClick={() => setStatsTab('deck')}
+                >
+                  Card Play Stats
+                </button>
+                <button
+                  className={`${styles.statsTab} ${statsTab === 'activated' ? styles.statsTabActive : ''}`}
+                  onClick={() => setStatsTab('activated')}
+                >
+                  Card Activated Stats
+                </button>
+              </div>
+              {statsTab === 'deck' && (
+                <label
+                  className={styles.excludeLastTurnLabel}
+                  title="By default, only cards that were played, blocked, or pitched at least once are shown. Check this to include all cards in your deck, even those that were never used."
+                >
+                  <input
+                    type="checkbox"
+                    checked={showAllCards}
+                    onChange={(e) => setShowAllCards(e.target.checked)}
+                    className={styles.excludeLastTurnCheckbox}
+                  />
+                  <span className={styles.excludeLastTurnText}>Show all cards</span>
+                </label>
+              )}
             </div>
+            {statsTab === 'activated' ? (
+              <div className={styles.tableContainer}>
+                <table className={styles.cardTable}>
+                  <thead>
+                    <tr className={styles.headers}>
+                      <th className={`${styles.firstHeadersStats} ${styles.hideOnExport}`}></th>
+                      <th className={`${styles.headersStats} ${styles.headerGroupSeparator}`}>Card Name</th>
+                      <th className={`${styles.headersStats} ${styles.headerGroupSeparator}`}>Activated</th>
+                      <th className={`${styles.headersStats} ${styles.headerGroupSeparator}`}>Times Hit</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {activatedCardResults.map((result, ix) => {
+                      const card: Card = { cardNumber: result.cardId };
+                      return (
+                        <tr key={`activatedList${ix}`}>
+                          <td className={`${styles.card} ${styles.hideOnExport}`}>
+                            <Effect card={card} imgClassName={styles.cardZeroPitch} />
+                          </td>
+                          <td className={styles.zeroPitch} title={result.cardName}>{result.cardName}</td>
+                          <td className={styles.played}>{result.activated ?? 0}</td>
+                          <td className={styles.cardStat}>{result.hits}</td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            ) : (
             <div className={styles.tableContainer}>
               <table className={styles.cardTable}>
                 <thead>
@@ -1390,7 +1446,8 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                 </tbody>
               </table>
             </div>
-            {data.tokenResults && data.tokenResults.filter(r => r.played > 0).length > 0 && (
+            )}
+            {statsTab === 'deck' && data.tokenResults && data.tokenResults.filter(r => r.played > 0).length > 0 && (
               <>
                 <h3 className={styles.subSectionHeader}>Non-Deck Cards Played</h3>
                 <div className={styles.tableContainer}>

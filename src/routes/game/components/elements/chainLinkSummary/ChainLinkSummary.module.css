@@ -33,7 +33,6 @@
   align-items: center;
   justify-content: space-between;
   padding: 14px 16px 12px;
-  border-bottom: 1px solid var(--theme-border, rgba(255, 255, 255, 0.12));
   flex-shrink: 0;
   gap: 12px;
 }
