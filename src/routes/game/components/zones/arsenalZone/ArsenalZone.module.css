@@ -33,7 +33,7 @@
   background-color: var(--near-black);
   border-width: 1px;
   border-radius: 5px;
-  border-color: var(--theme-primary);
+  border-color: var(--theme-border);
   border-style: solid;
   color: var(--white);
   text-align: center;

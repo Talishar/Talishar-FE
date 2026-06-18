@@ -8,6 +8,7 @@ import { toast } from 'react-hot-toast';
 import useSound from 'use-sound';
 import { getSettingsEntity } from 'features/options/optionsSlice';
 import shuffleSound from 'sounds/shuffle.m4a';
+import prioritySound from 'sounds/prioritySound.wav';
 import {
   GiDiceSixFacesFive,
   GiDiceSixFacesFour,
@@ -45,10 +46,31 @@ export const EventsHandler = React.memo(() => {
   const [modal, setModal] = useState('');
   const [modalType, setModalType] = useState(ModalType.RequestChat);
   const { playerID } = useAppSelector(getGameInfo, shallowEqual);
+  const hasPriority = useAppSelector((state: RootState) => state.game.hasPriority);
   const settingsData = useAppSelector(getSettingsEntity);
   const isMuted = settingsData['MuteSound']?.value === '1';
   const [playShuffleSound] = useSound(shuffleSound, { volume: 0.5 });
+  const [playPrioritySound] = useSound(prioritySound);
   const dispatch = useAppDispatch();
+
+  const isUndoModal = (type: ModalType) =>
+    type === ModalType.RequestUndo ||
+    type === ModalType.RequestThisTurnUndo ||
+    type === ModalType.RequestLastTurnUndo ||
+    type === ModalType.RequestChainLinkUndo;
+
+  useEffect(() => {
+    const link = document.getElementById('favicon') as HTMLLinkElement;
+    if (showModal && isUndoModal(modalType)) {
+      if (!isMuted) playPrioritySound();
+      if (link) link.href = '/images/priorityGreen.ico';
+    } else if (!showModal && link) {
+      // Restore favicon to whatever PassTurnDisplay would show
+      link.href = hasPriority && playerID !== 3
+        ? '/images/priorityGreen.ico'
+        : '/images/priorityGrey.ico';
+    }
+  }, [showModal, modalType, isMuted, playPrioritySound, hasPriority, playerID]);
 
   const clickYes = (e: any) => {
     e.preventDefault();
@@ -338,11 +360,13 @@ export const EventsHandler = React.memo(() => {
       <>
         {createPortal(
           <dialog open className={styles.modal}>
-            <article className={styles.container}>
-              <header>{modal}</header>
-              <button onClick={clickYes}>Yes</button>
-              <button onClick={clickNo}>No</button>
-            </article>
+            <div className={styles.container}>
+              <div className={styles.dialogHeader}>{modal}</div>
+              <div className={styles.dialogFooter}>
+                <button onClick={clickYes}>Yes</button>
+                <button onClick={clickNo}>No</button>
+              </div>
+            </div>
           </dialog>,
           document.body
         )}

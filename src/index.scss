@@ -208,20 +208,22 @@ body {
 @import '@picocss/pico/scss/pico';
 
 // Override Pico's dialog styles to allow scrolling behind dialogs
+// No !important: this block comes after the Pico @import so cascade order wins,
+// and class selectors (.modal etc.) can override any of these properties.
 dialog {
-  width: unset !important;
-  min-width: unset !important;
-  height: unset !important;
-  min-height: unset !important;
-  max-width: unset !important;
-  max-height: unset !important;
-  inset: unset !important;
-  
-  /* Center the dialog */
-  position: fixed !important;
-  top: 50% !important;
-  left: 50% !important;
-  transform: translate(-50%, -50%) !important;
+  width: unset;
+  min-width: unset;
+  height: unset;
+  min-height: unset;
+  max-width: unset;
+  max-height: unset;
+  inset: unset;
+
+  /* Default centering — overrideable by class selectors */
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 // Override Pico's excessive h2 margin-bottom

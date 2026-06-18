@@ -147,15 +147,13 @@ export default function PassTurnDisplay() {
           createPortal(
             <>
               <dialog open={showAreYouSureModal} className={styles.modal}>
-                <article className={styles.container}>
-                  <header className={styles.header}>{preventPassPrompt}</header>
-                  <button className={styles.preventButtons} onClick={clickYes}>
-                    Yes
-                  </button>
-                  <button className={styles.preventButtons} onClick={clickNo}>
-                    No
-                  </button>
-                </article>
+                <div className={styles.container}>
+                  <div className={styles.dialogHeader}>{preventPassPrompt}</div>
+                  <div className={styles.dialogFooter}>
+                    <button onClick={clickYes}>Yes</button>
+                    <button onClick={clickNo}>No</button>
+                  </div>
+                </div>
               </dialog>
             </>,
             document.body
