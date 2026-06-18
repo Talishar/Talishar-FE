@@ -650,8 +650,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
         content += '\n';
 
         const usedArenaResults = (playerData.arenaCardResults ?? [])
-          .filter((r) => (r.activated ?? 0) > 0 || r.hits > 0)
-          .map((r) => ({ ...r, played: r.activated ?? 0 }));
+          .filter((r) => r.played > 0 || r.hits > 0);
         const allCardResults = [...(playerData.cardResults ?? []), ...usedArenaResults];
 
         allCardResults.forEach((result) => {
@@ -773,8 +772,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
   const filteredCardResults = useMemo(() => {
     if (!data.cardResults) return data.cardResults;
     const arenaCards = (data.arenaCardResults ?? [])
-      .filter((r) => (r.activated ?? 0) > 0 || r.hits > 0)
-      .map((r) => ({ ...r, played: r.activated ?? 0 }));
+      .filter((r) => r.played > 0 || r.hits > 0);
     const combined = [...data.cardResults, ...arenaCards];
     if (showAllCards) return combined;
     return combined.filter(
