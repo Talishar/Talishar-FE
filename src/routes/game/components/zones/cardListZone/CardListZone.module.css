@@ -164,8 +164,6 @@
 
 .button.active {
   background: var(--theme-primary-focus, rgba(212, 175, 55, 0.125));
-  border-color: var(--theme-primary, #d4af37);
-  color: var(--theme-primary, #d4af37);
   font-weight: 600;
 }
 
