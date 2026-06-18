@@ -8,6 +8,7 @@ import FriendBadge from '../gameList/FriendBadge';
 import QuickJoinContext from '../quickJoin/QuickJoinContext';
 import { GAME_FORMAT } from '../../../../appConstants';
 import { useTranslation } from 'react-i18next';
+import { CLASS_OF_RATHE } from '../filter/constants';
 
 const decodeHtmlEntities = (text: string): string => {
   const doc = new DOMParser().parseFromString(text, 'text/html');
@@ -35,6 +36,8 @@ const DESCRIPTION_KEY_MAP: Record<string, string> = {
 const BROKEN_KEY_MAP: Record<string, string> = {
   'MENU.CREATE_GAME.GAME_DESCRIPTIONS.NOT_SPECIFIC_CLASS': 'MENU.CREATE_GAME.GAME_DESCRIPTIONS.NOT_SPECIFIC_HERO',
 };
+
+const CLASS_NAMES = new Set(CLASS_OF_RATHE.map((c) => c.label));
 
 const FORMAT_DISPLAY_NAMES: Record<string, string> = {
   [GAME_FORMAT.DRAFT]: 'Limited',
@@ -109,7 +112,12 @@ const OpenGame = ({
     const heroPrefix = 'Looking to play against ';
     if (decoded.startsWith(heroPrefix) && decoded.includes(',')) {
       const names = decoded.slice(heroPrefix.length);
-      return `${t('MENU.CREATE_GAME.GAME_DESCRIPTIONS.SPECIFIC_HERO')}: ${names}`;
+      const nameList = names.split(',').map((n) => n.trim());
+      const isClassDescription = nameList.some((name) => CLASS_NAMES.has(name));
+      const descKey = isClassDescription
+        ? 'MENU.CREATE_GAME.GAME_DESCRIPTIONS.SPECIFIC_CLASS'
+        : 'MENU.CREATE_GAME.GAME_DESCRIPTIONS.SPECIFIC_HERO';
+      return `${t(descKey)}: ${names}`;
     }
 
     const notHeroPrefix = 'No interest in playing against ';
