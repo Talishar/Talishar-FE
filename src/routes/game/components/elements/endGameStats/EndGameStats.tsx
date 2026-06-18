@@ -1,7 +1,6 @@
 import { Card } from 'features/Card';
 import { Effect } from '../effects/Effects';
 import styles from './EndGameStats.module.css';
-import useAuth from 'hooks/useAuth';
 import useSupporterStatus from 'hooks/useSupporterStatus';
 import { AdUnit } from 'components/ads';
 import {
@@ -16,7 +15,6 @@ import html2canvas from 'html2canvas';
 import TalisharLogo from 'img/TalisharLogo.webp';
 import { BACKEND_URL } from 'appConstants';
 import { TALISHAR_METAFY_URL } from 'constants/socialLinks';
-import { parseHtmlToReactElements } from 'utils/ParseEscapedString';
 import { useTheme } from 'themes/ThemeContext';
 import {
   ResponsiveContainer,
@@ -44,6 +42,7 @@ export interface EndGameData {
   bothPlayersData?: { [key: number]: any };
   cardResults: CardResult[];
   tokenResults?: CardResult[];
+  arenaCardResults?: CardResult[];
   turnResults: { [key: string]: TurnResult };
   totalDamageThreatened?: number;
   totalDamageDealt?: number;
@@ -88,6 +87,7 @@ export interface CardResult {
   pitchValue: number;
   katsuDiscard: number;
   discarded: number;
+  activated?: number;
 }
 
 export interface TurnResult {
@@ -668,6 +668,16 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
           playedTokenResults.forEach((result) => {
             const cardName = result.cardName.replace(/,/g, ';');
             content += `"${cardName}",${result.played},${result.blocked},${result.pitched},${result.hits}\n`;
+          });
+        }
+
+        const usedArenaResults = playerData.arenaCardResults?.filter((r) => (r.activated ?? 0) > 0 || r.hits > 0);
+        if (usedArenaResults && usedArenaResults.length > 0) {
+          content += '\nWEAPONS & EQUIPMENT\n';
+          content += 'Card Name,Activated,Times Hit\n';
+          usedArenaResults.forEach((result) => {
+            const cardName = result.cardName.replace(/,/g, ';');
+            content += `"${cardName}",${result.activated ?? 0},${result.hits}\n`;
           });
         }
 
@@ -1417,6 +1427,38 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                             <td className={styles.played}>{result.played}</td>
                             <td className={styles.blocked}>{result.blocked}</td>
                             <td className={styles.pitched}>{result.pitched}</td>
+                            <td className={styles.cardStat}>{result.hits}</td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              </>
+            )}
+            {data.arenaCardResults && data.arenaCardResults.filter(r => (r.activated ?? 0) > 0 || r.hits > 0).length > 0 && (
+              <>
+                <h3 className={styles.subSectionHeader}>Weapons &amp; Equipment</h3>
+                <div className={styles.tableContainer}>
+                  <table className={styles.cardTable}>
+                    <thead>
+                      <tr className={styles.headers}>
+                        <th className={`${styles.firstHeadersStats} ${styles.hideOnExport}`}></th>
+                        <th className={`${styles.headersStats} ${styles.headerGroupSeparator}`}>Card Name</th>
+                        <th className={`${styles.headersStats} ${styles.headerGroupSeparator}`}>Activated</th>
+                        <th className={`${styles.headersStats} ${styles.headerGroupSeparator}`}>Times Hit</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {data.arenaCardResults.filter(r => (r.activated ?? 0) > 0 || r.hits > 0).map((result, ix) => {
+                        const card: Card = { cardNumber: result.cardId };
+                        return (
+                          <tr key={`arenaList${ix}`}>
+                            <td className={`${styles.card} ${styles.hideOnExport}`}>
+                              <Effect card={card} imgClassName={styles.cardZeroPitch} />
+                            </td>
+                            <td className={styles.zeroPitch} title={result.cardName}>{result.cardName}</td>
+                            <td className={styles.played}>{result.activated ?? 0}</td>
                             <td className={styles.cardStat}>{result.hits}</td>
                           </tr>
                         );
