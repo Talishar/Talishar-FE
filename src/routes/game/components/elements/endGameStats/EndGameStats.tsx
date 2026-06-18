@@ -1253,7 +1253,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                   className={`${styles.statsTab} ${statsTab === 'deck' ? styles.statsTabActive : ''}`}
                   onClick={() => setStatsTab('deck')}
                 >
-                  Card Play Stats
+                  Card Played Stats
                 </button>
                 <button
                   className={`${styles.statsTab} ${statsTab === 'activated' ? styles.statsTabActive : ''}`}
