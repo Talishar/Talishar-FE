@@ -649,7 +649,12 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
         if (hasKatsuDiscard) content += ',Times Katsu Discarded';
         content += '\n';
 
-        playerData.cardResults?.forEach((result) => {
+        const usedArenaResults = (playerData.arenaCardResults ?? [])
+          .filter((r) => (r.activated ?? 0) > 0 || r.hits > 0)
+          .map((r) => ({ ...r, played: r.activated ?? 0 }));
+        const allCardResults = [...(playerData.cardResults ?? []), ...usedArenaResults];
+
+        allCardResults.forEach((result) => {
           const cardName = result.cardName.replace(/,/g, ';');
           const cardNameWithPitch =
             result.pitchValue > 0
@@ -668,16 +673,6 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
           playedTokenResults.forEach((result) => {
             const cardName = result.cardName.replace(/,/g, ';');
             content += `"${cardName}",${result.played},${result.blocked},${result.pitched},${result.hits}\n`;
-          });
-        }
-
-        const usedArenaResults = playerData.arenaCardResults?.filter((r) => (r.activated ?? 0) > 0 || r.hits > 0);
-        if (usedArenaResults && usedArenaResults.length > 0) {
-          content += '\nWEAPONS & EQUIPMENT\n';
-          content += 'Card Name,Activated,Times Hit\n';
-          usedArenaResults.forEach((result) => {
-            const cardName = result.cardName.replace(/,/g, ';');
-            content += `"${cardName}",${result.activated ?? 0},${result.hits}\n`;
           });
         }
 
@@ -777,11 +772,15 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
 
   const filteredCardResults = useMemo(() => {
     if (!data.cardResults) return data.cardResults;
-    if (showAllCards) return data.cardResults;
-    return data.cardResults.filter(
+    const arenaCards = (data.arenaCardResults ?? [])
+      .filter((r) => (r.activated ?? 0) > 0 || r.hits > 0)
+      .map((r) => ({ ...r, played: r.activated ?? 0 }));
+    const combined = [...data.cardResults, ...arenaCards];
+    if (showAllCards) return combined;
+    return combined.filter(
       (r) => r.played > 0 || r.blocked > 0 || r.pitched > 0 || r.discarded > 0 || r.hits > 0
     );
-  }, [data.cardResults, showAllCards]);
+  }, [data.cardResults, data.arenaCardResults, showAllCards]);
 
   const sortedCardResults = useMemo(() => {
     if (!filteredCardResults || !sortField) {
@@ -1427,38 +1426,6 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                             <td className={styles.played}>{result.played}</td>
                             <td className={styles.blocked}>{result.blocked}</td>
                             <td className={styles.pitched}>{result.pitched}</td>
-                            <td className={styles.cardStat}>{result.hits}</td>
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                  </table>
-                </div>
-              </>
-            )}
-            {data.arenaCardResults && data.arenaCardResults.filter(r => (r.activated ?? 0) > 0 || r.hits > 0).length > 0 && (
-              <>
-                <h3 className={styles.subSectionHeader}>Weapons &amp; Equipment</h3>
-                <div className={styles.tableContainer}>
-                  <table className={styles.cardTable}>
-                    <thead>
-                      <tr className={styles.headers}>
-                        <th className={`${styles.firstHeadersStats} ${styles.hideOnExport}`}></th>
-                        <th className={`${styles.headersStats} ${styles.headerGroupSeparator}`}>Card Name</th>
-                        <th className={`${styles.headersStats} ${styles.headerGroupSeparator}`}>Activated</th>
-                        <th className={`${styles.headersStats} ${styles.headerGroupSeparator}`}>Times Hit</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {data.arenaCardResults.filter(r => (r.activated ?? 0) > 0 || r.hits > 0).map((result, ix) => {
-                        const card: Card = { cardNumber: result.cardId };
-                        return (
-                          <tr key={`arenaList${ix}`}>
-                            <td className={`${styles.card} ${styles.hideOnExport}`}>
-                              <Effect card={card} imgClassName={styles.cardZeroPitch} />
-                            </td>
-                            <td className={styles.zeroPitch} title={result.cardName}>{result.cardName}</td>
-                            <td className={styles.played}>{result.activated ?? 0}</td>
                             <td className={styles.cardStat}>{result.hits}</td>
                           </tr>
                         );
