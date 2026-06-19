@@ -218,7 +218,7 @@ export default function PlayerInputPopUp() {
       initial={{ opacity: 0, scale: 0.8 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.8 }}
-      transition={{ type: 'tween' }}
+      transition={{ type: 'tween', duration: 0.12 }}
       style={{ top: `calc(${basePct} + ${yOffset}dvh)` }}
       key="playerInputPopupBox"
       className={
