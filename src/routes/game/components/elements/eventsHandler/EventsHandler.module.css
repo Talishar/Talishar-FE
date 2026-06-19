@@ -55,7 +55,6 @@
   background: var(--near-black, #0d0d0f);
   border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.18));
   border-radius: 10px;
-  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.75);
   overflow: hidden;
   min-width: 300px;
   max-width: 460px;
