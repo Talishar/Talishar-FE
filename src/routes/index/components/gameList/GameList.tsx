@@ -293,24 +293,20 @@ const GameList = () => {
     setIncludeFriendsGames(include);
   };
 
-  const activeHeroIds = new Set<string>();
+  const heroCounts = new Map<string, number>();
 
   if (data?.openGames) {
     data.openGames.forEach((game) => {
-      if (game.p1Hero) activeHeroIds.add(game.p1Hero);
+      if (game.p1Hero) heroCounts.set(game.p1Hero, (heroCounts.get(game.p1Hero) ?? 0) + 1);
     });
   }
 
   if (data?.gamesInProgress) {
     data.gamesInProgress.forEach((game) => {
-      if (game.p1Hero) activeHeroIds.add(game.p1Hero);
-      if (game.p2Hero) activeHeroIds.add(game.p2Hero);
+      if (game.p1Hero) heroCounts.set(game.p1Hero, (heroCounts.get(game.p1Hero) ?? 0) + 1);
+      if (game.p2Hero) heroCounts.set(game.p2Hero, (heroCounts.get(game.p2Hero) ?? 0) + 1);
     });
   }
-
-  const filteredHeroOptions = HEROES_OF_RATHE.filter((hero) =>
-    activeHeroIds.has(hero.value)
-  );
 
   // Create a set of friend usernames for quick lookup
   const friendUsernames = new Set(
@@ -572,7 +568,7 @@ const GameList = () => {
 
             <div className={styles.filterRow}>
               <div className={styles.filterHeroWrapper}>
-                <Filter setHeroFilter={setHeroFilter} heroOptions={filteredHeroOptions} />
+                <Filter setHeroFilter={setHeroFilter} heroOptions={HEROES_OF_RATHE} heroCounts={heroCounts} />
               </div>
               <div className={styles.filterFormatWrapper}>
                 <GameFilter
