@@ -32,7 +32,7 @@ export default function useAuth() {
   const currentUserId = useAppSelector(selectCurrentUser);
   const currentUserName = useAppSelector(selectCurrentUserName);
   const reduxIsPatron = useAppSelector(selectIsPatron);
-  const isMod = useAppSelector(selectIsMod);
+  const reduxIsMod = useAppSelector(selectIsMod);
   const metafyId = useAppSelector(selectMetafyId);
   const metafyHash = useAppSelector(selectMetafyHash);
   const metafyTimestamp = useAppSelector(selectMetafyTimestamp);
@@ -104,6 +104,10 @@ export default function useAuth() {
   const isPatron = data?.isUserLoggedIn
     ? (data?.isPatron ?? reduxIsPatron)
     : reduxIsPatron;
+
+  const isMod = data?.isUserLoggedIn
+    ? MOD_USERNAMES.includes(data.loggedInUserName ?? '')
+    : reduxIsMod;
 
   // Add a timeout for auth check - if it doesn't complete within 5 seconds, assume user isn't logged in
   // This prevents infinite loading state when cookies are rejected due to SameSite policy
