@@ -1,10 +1,160 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef, useCallback, useMemo } from 'react';
+import {
+  motion,
+  AnimatePresence,
+  useMotionValue,
+  useTransform,
+  useSpring,
+  useAnimation,
+} from 'framer-motion';
 import { useAppSelector, useAppDispatch } from 'app/Hooks';
 import { shallowEqual } from 'react-redux';
 import { generateCroppedImageUrl } from 'utils/cropImages';
 import { markHeroIntroAsShown } from 'features/game/GameSlice';
 import { getSettingsEntity } from 'features/options/optionsSlice';
 import styles from './HeroVsHeroIntro.module.css';
+
+const PARTICLE_COUNT = 22;
+
+const Particles: React.FC = () => {
+  const particles = useMemo(
+    () =>
+      Array.from({ length: PARTICLE_COUNT }).map((_, i) => ({
+        id: i,
+        left: `${6 + Math.random() * 88}%`,
+        size: 1.2 + Math.random() * 2.8,
+        duration: 7 + Math.random() * 12,
+        delay: -(Math.random() * 12),
+      })),
+    []
+  );
+
+  return (
+    <div className={styles.particleField} aria-hidden="true">
+      {particles.map((p) => (
+        <div
+          key={p.id}
+          className={styles.particle}
+          style={{
+            left: p.left,
+            width: `${p.size}px`,
+            height: `${p.size}px`,
+            animationDuration: `${p.duration}s`,
+            animationDelay: `${p.delay}s`,
+          }}
+        />
+      ))}
+    </div>
+  );
+};
+interface HeroCardProps {
+  imageUrl: string;
+  heroName: string;
+  isPremium: boolean;
+  glowActive: boolean;
+}
+
+const HeroCard: React.FC<HeroCardProps> = ({ imageUrl, heroName, isPremium, glowActive }) => {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const [isHovering, setIsHovering] = useState(false);
+
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  const rotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-4, 4]), {
+    stiffness: 260,
+    damping: 28,
+  });
+  const rotateX = useSpring(useTransform(mouseY, [-0.5, 0.5], [4, -4]), {
+    stiffness: 260,
+    damping: 28,
+  });
+  const shimmerTranslateX = useTransform(mouseX, [-0.5, 0.5], [-90, 90]);
+
+  const handleMouseMove = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      if (!cardRef.current) return;
+      const rect = cardRef.current.getBoundingClientRect();
+      mouseX.set((e.clientX - rect.left) / rect.width - 0.5);
+      mouseY.set((e.clientY - rect.top) / rect.height - 0.5);
+    },
+    [mouseX, mouseY]
+  );
+
+  const handleMouseEnter = useCallback(() => setIsHovering(true), []);
+
+  const handleMouseLeave = useCallback(() => {
+    setIsHovering(false);
+    mouseX.set(0);
+    mouseY.set(0);
+  }, [mouseX, mouseY]);
+
+  return (
+    <div className={styles.heroCardOuter}>
+      {isPremium && (
+        <div className={`${styles.ambientGlow} ${glowActive ? styles.glowActive : ''}`} />
+      )}
+
+      {/* No transformPerspective here — the outer card wrapper's preserve-3d context handles it */}
+      <motion.div
+        ref={cardRef}
+        className={isPremium ? styles.gradientBorderWrapper : styles.plainBorderWrapper}
+        style={isPremium ? { rotateX, rotateY } : {}}
+        onMouseMove={isPremium ? handleMouseMove : undefined}
+        onMouseEnter={isPremium ? handleMouseEnter : undefined}
+        onMouseLeave={isPremium ? handleMouseLeave : undefined}
+      >
+        <div
+          className={styles.heroImageInner}
+          style={{ backgroundImage: `url(${imageUrl})` }}
+        >
+          {isPremium && (
+            <>
+              <div className={styles.sheenLoop} />
+            </>
+          )}
+        </div>
+      </motion.div>
+
+      <div className={`${styles.heroLabel} ${isPremium ? styles.heroLabelPremium : ''}`}>
+        <span className={styles.heroName}>{heroName}</span>
+        {isPremium && <span className={styles.premiumBadge}>Supporter</span>}
+      </div>
+    </div>
+  );
+};
+
+const RING_COUNT = 3;
+const VSShockwave: React.FC<{ show: boolean }> = ({ show }) => (
+  <div className={styles.vsWrapper}>
+    <AnimatePresence>
+      {show &&
+        Array.from({ length: RING_COUNT }).map((_, i) => (
+          <motion.div
+            key={i}
+            className={styles.shockwaveRing}
+            initial={{ scale: 0.3, opacity: 0.85 }}
+            animate={{ scale: 4, opacity: 0 }}
+            transition={{ duration: 0.75, delay: i * 0.11, ease: 'easeOut' }}
+          />
+        ))}
+    </AnimatePresence>
+
+    <motion.div
+      className={styles.vsContainer}
+      initial={{ scale: 0, opacity: 0, filter: 'blur(14px)' }}
+      animate={
+        show
+          ? { scale: 1, opacity: 1, filter: 'blur(0px)' }
+          : { scale: 0, opacity: 0, filter: 'blur(14px)' }
+      }
+      transition={{ type: 'spring', damping: 11, stiffness: 190, delay: 0.06 }}
+    >
+      {show && <div className={styles.vsFlash} />}
+      <span className={styles.vsText}>VS</span>
+    </motion.div>
+  </div>
+);
 
 const HeroVsHeroIntro = () => {
   const dispatch = useAppDispatch();
@@ -14,154 +164,156 @@ const HeroVsHeroIntro = () => {
   const playerID = gameState?.gameInfo?.playerID;
   const gameID = gameState?.gameInfo?.gameID;
   const gameGUID = gameState?.gameInfo?.gameGUID;
-  const heroIntroShown = gameState?.gameInfo?.heroIntroShown;
-
-  // Initialize isVisible from localStorage if available, otherwise true
-  const getLocalStorageKey = (): string => {
-    return gameGUID || `heroIntro_${gameID}`;
-  };
 
   const [isVisible, setIsVisible] = useState(true);
+  const [vsVisible, setVsVisible] = useState(false);
+  const [glowActive, setGlowActive] = useState(false);
+  const shakeControls = useAnimation();
 
-  // Sync isVisible with localStorage whenever gameID or gameGUID changes
+  const getLocalStorageKey = useCallback(
+    () => gameGUID || `heroIntro_${gameID}`,
+    [gameGUID, gameID]
+  );
+
   useEffect(() => {
     if (!gameID) return;
+    if (localStorage.getItem(getLocalStorageKey()) === 'false') setIsVisible(false);
+  }, [gameID, gameGUID, getLocalStorageKey]);
 
-    const key = getLocalStorageKey();
-    const stored = localStorage.getItem(key);
-    if (stored === 'false') {
-      setIsVisible(false);
-    }
-  }, [gameID, gameGUID]);
+  useEffect(() => {
+    if (!isVisible) return;
+    const t1 = setTimeout(() => {
+      setVsVisible(true);
+    }, 680);
+    const t2 = setTimeout(() => setGlowActive(true), 1060);
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+    };
+  }, [isVisible, shakeControls]);
 
-  // Get hero card numbers directly from Redux state
   const playerOneHero = gameState?.playerOne?.Hero?.cardNumber;
   const playerTwoHero = gameState?.playerTwo?.Hero?.cardNumber;
-
   const yourHero = playerID === 1 ? playerOneHero : playerTwoHero;
   const opponentHero = playerID === 1 ? playerTwoHero : playerOneHero;
 
-  // Helper to format card ID to readable name (e.g., "gravy_bones_shipwrecked_looter" -> "Gravy Bones Shipwrecked Looter")
-  const formatHeroName = (cardId: string): string => {
-    if (!cardId) return '';
-    return cardId
-      .split('_')
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-      .join(' ');
-  };
+  const formatHeroName = (id: string): string =>
+    id
+      ?.split('_')
+      .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+      .join(' ') ?? '';
 
-  // Display names with fallbacks: format the card ID if available
   const displayYourHeroName = formatHeroName(yourHero) || 'Your Hero';
   const displayOpponentHeroName = formatHeroName(opponentHero) || 'Opponent';
 
-  // Auto-dismiss after 2.5 seconds, but only after settings have loaded
-  useEffect(() => {
-    if (!isVisible || !settingsData) return;
+  const checkPatron = (player: any) =>
+    (player?.metafyTiers?.length ?? 0) > 0 ||
+    player?.isPatron ||
+    player?.isPvtVoidPatron ||
+    player?.isContributor;
 
-    const timer = setTimeout(() => {
-      setIsVisible(false);
-      dispatch(markHeroIntroAsShown());
-      const key = getLocalStorageKey();
-      localStorage.setItem(key, 'false');
-    }, 2500);
+  const yourPatronStatus = checkPatron(playerID === 1 ? gameState?.playerOne : gameState?.playerTwo);
+  const opponentPatronStatus = checkPatron(
+    playerID === 1 ? gameState?.playerTwo : gameState?.playerOne
+  );
 
-    return () => clearTimeout(timer);
-  }, [isVisible, dispatch, gameID, gameGUID, settingsData]);
-
-  // Get patron status
-  const yourPatronStatus =
-    playerID === 1
-      ? (gameState?.playerOne?.metafyTiers?.length ?? 0) > 0 ||
-        gameState?.playerOne?.isPatron ||
-        gameState?.playerOne?.isPvtVoidPatron ||
-        gameState?.playerOne?.isContributor
-      : (gameState?.playerTwo?.metafyTiers?.length ?? 0) > 0 ||
-        gameState?.playerTwo?.isPatron ||
-        gameState?.playerTwo?.isPvtVoidPatron ||
-        gameState?.playerTwo?.isContributor;
-
-  const opponentPatronStatus =
-    playerID === 1
-      ? (gameState?.playerTwo?.metafyTiers?.length ?? 0) > 0 ||
-        gameState?.playerTwo?.isPatron ||
-        gameState?.playerTwo?.isPvtVoidPatron ||
-        gameState?.playerTwo?.isContributor
-      : (gameState?.playerOne?.metafyTiers?.length ?? 0) > 0 ||
-        gameState?.playerOne?.isPatron ||
-        gameState?.playerOne?.isPvtVoidPatron ||
-        gameState?.playerOne?.isContributor;
-
-  // Check if hero intro is disabled
   const disableHeroIntro = settingsData['DisableHeroIntro']?.value === '1';
 
-  // Don't render if player is spectating
-  if (playerID === 3) {
-    return null;
-  }
+  const handleDismiss = useCallback(() => {
+    setIsVisible(false);
+    dispatch(markHeroIntroAsShown());
+    localStorage.setItem(getLocalStorageKey(), 'false');
+  }, [dispatch, getLocalStorageKey]);
 
-  // Don't render if not visible or if missing hero data or if disabled
+  // DEBUG: comment this to auto-dismiss disabled
+   useEffect(() => {
+     if (!isVisible || !settingsData) return;
+     const t = setTimeout(handleDismiss, 4200);
+     return () => clearTimeout(t);
+   }, [isVisible, settingsData, handleDismiss]);
+
   if (
+    playerID === 3 ||
     !isVisible ||
     !yourHero ||
     !opponentHero ||
     yourHero === opponentHero ||
     disableHeroIntro
-  ) {
+  )
     return null;
-  }
 
-  const yourHeroImage = generateCroppedImageUrl(yourHero);
-  const opponentHeroImage = generateCroppedImageUrl(opponentHero);
+  const cardSpring = { type: 'spring' as const, damping: 22, stiffness: 115 };
 
   return (
-    <div className={styles.introContainer}>
-      <div className={styles.introContent}>
-        {/* Left Hero */}
-        <div className={styles.heroSection}>
-          <div
-            className={`${styles.heroImageWrapper} ${
-              yourPatronStatus ? styles.patron : ''
-            }`}
-            style={{
-              backgroundImage: `url(${yourHeroImage})`
-            }}
-          />
-          <div className={styles.heroLabel}>{displayYourHeroName}</div>
-        </div>
+    <AnimatePresence>
+      {isVisible && (
+        <motion.div
+          className={styles.introContainer}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.32 }}
+        >
+          {/* Warm-left / cool-right contrasting atmosphere */}
+          <div className={styles.bgOrbLeft} />
+          <div className={styles.bgOrbRight} />
 
-        {/* VS Indicator */}
-        <div className={styles.vsContainer}>
-          <div className={styles.vsText}>VS</div>
-          <div className={styles.vsPulse}></div>
-        </div>
+          {/* Floating dust motes */}
+          <Particles />
 
-        {/* Right Hero */}
-        <div className={styles.heroSection}>
-          <div
-            className={`${styles.heroImageWrapper} ${
-              opponentPatronStatus ? styles.patron : ''
-            }`}
-            style={{
-              backgroundImage: `url(${opponentHeroImage})`
-            }}
-          />
-          <div className={styles.heroLabel}>{displayOpponentHeroName}</div>
-        </div>
-      </div>
-      {/* Close Button (accessibility) */}
-      <button
-        className={styles.closeButton}
-        onClick={() => {
-          setIsVisible(false);
-          dispatch(markHeroIntroAsShown());
-          const key = getLocalStorageKey();
-          localStorage.setItem(key, 'false');
-        }}
-        aria-label="Close hero intro"
-      >
-        ✕
-      </button>
-    </div>
+          {/* Radial vignette — darkens edges, pushes the eye inward */}
+          <div className={styles.vignette} />
+
+          {/* Shake wrapper fires when VS slams in */}
+          <motion.div animate={shakeControls} className={styles.introContent}>
+            {/* Your hero: slams in from the left, settles leaning toward center */}
+            <motion.div
+              initial={{ x: -440, opacity: 0, rotateY: -22 }}
+              animate={{ x: 0, opacity: 1, rotateY: -12 }}
+              transition={cardSpring}
+              style={{ transformPerspective: 1400, transformStyle: 'preserve-3d' }}
+            >
+              <HeroCard
+                imageUrl={generateCroppedImageUrl(yourHero)}
+                heroName={displayYourHeroName}
+                isPremium={yourPatronStatus}
+                glowActive={glowActive}
+              />
+            </motion.div>
+
+            <VSShockwave show={vsVisible} />
+
+            {/* Opponent hero: slams in from the right, settles leaning toward center */}
+            <motion.div
+              initial={{ x: 440, opacity: 0, rotateY: 22 }}
+              animate={{ x: 0, opacity: 1, rotateY: 12 }}
+              transition={{ ...cardSpring, delay: 0.05 }}
+              style={{ transformPerspective: 1400, transformStyle: 'preserve-3d' }}
+            >
+              <HeroCard
+                imageUrl={generateCroppedImageUrl(opponentHero)}
+                heroName={displayOpponentHeroName}
+                isPremium={opponentPatronStatus}
+                glowActive={glowActive}
+              />
+            </motion.div>
+          </motion.div>
+
+          <motion.button
+            className={styles.closeButton}
+            onClick={handleDismiss}
+            aria-label="Close hero intro"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.1 }}
+            whileHover={{ scale: 1.12 }}
+            whileTap={{ scale: 0.88 }}
+          >
+            ✕
+          </motion.button>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 };
 
