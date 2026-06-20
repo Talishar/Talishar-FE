@@ -8,21 +8,24 @@
   "schedule": ["before 5am on monday"],
   "labels": ["dependencies"],
   "rangeStrategy": "bump",
+  "vulnerabilityAlerts": {
+    "enabled": false
+  },
   "packageRules": [
     {
-      "description": "All patch updates (prod + dev) -> one grouped PR every Monday.",
+      "description": "All patch updates (prod + dev) -> one grouped PR every Monday. Security patches ride in here too.",
       "matchUpdateTypes": ["patch"],
       "groupName": "weekly patch updates",
       "schedule": ["before 5am on monday"]
     },
     {
-      "description": "All minor updates (prod + dev) -> one grouped PR every Monday.",
+      "description": "All minor updates (prod + dev) -> one grouped PR every Monday. Security minors ride in here too.",
       "matchUpdateTypes": ["minor"],
       "groupName": "weekly minor updates",
       "schedule": ["before 5am on monday"]
     },
     {
-      "description": "All majors -> NO PR. Parked on the Dependency Dashboard; tick the checkbox there to open one when ready.",
+      "description": "All majors -> NO PR. Parked on the Dependency Dashboard; tick the checkbox there to open one when ready. Security majors included.",
       "matchUpdateTypes": ["major"],
       "dependencyDashboardApproval": true
     }
