@@ -100,7 +100,7 @@
     "vite": "5.4.21",
     "vite-plugin-svgr": "4.5.0",
     "vite-tsconfig-paths": "4.3.2",
-    "vitest": "1.6.1"
+    "vitest": "3.2.6"
   },
   "homepage": "."
 }
