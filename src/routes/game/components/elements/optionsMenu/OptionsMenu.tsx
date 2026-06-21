@@ -177,72 +177,68 @@ const OptionsContent = () => {
           </div>
         </div>
 
-        <div className={styles.sectionContainer}>
-          <div className={styles.sectionHeader}>
-            <span>Gamestate Correction</span>
-          </div>
-          <div className={styles.sectionContent}>
-            <div className={styles.buttonColumn}>
-              {playerID !== 3 && ( // If not a spectator then can change options
-                <>
-                  <button
-                    className={styles.buttonDiv}
-                    onClick={clickUndoButtonHandler}
-                  >
-                    Undo
-                  </button>
-                  <button
-                    className={styles.buttonDiv}
-                    onClick={clickRevertToStartOfThisTurnHandler}
-                  >
-                    Revert to Start of This Turn
-                  </button>
-                  <button
-                    className={styles.buttonDiv}
-                    onClick={clickRevertToStartOfChainLinkHandler}
-                  >
-                    Revert to Start of This Chain Link
-                  </button>
-                  <button
-                    className={styles.buttonDiv}
-                    onClick={clickRevertToStartOfPreviousTurnHandler}
-                  >
-                    Revert to Start of The Previous Turn
-                  </button>
-                </>
-              )}
+        {playerID !== 3 && (
+          <div className={styles.sectionContainer}>
+            <div className={styles.sectionHeader}>
+              <span>Gamestate Correction</span>
+            </div>
+            <div className={styles.sectionContent}>
+              <div className={styles.buttonColumn}>
+                <button
+                  className={styles.buttonDiv}
+                  onClick={clickUndoButtonHandler}
+                >
+                  Undo
+                </button>
+                <button
+                  className={styles.buttonDiv}
+                  onClick={clickRevertToStartOfThisTurnHandler}
+                >
+                  Revert to Start of This Turn
+                </button>
+                <button
+                  className={styles.buttonDiv}
+                  onClick={clickRevertToStartOfChainLinkHandler}
+                >
+                  Revert to Start of This Chain Link
+                </button>
+                <button
+                  className={styles.buttonDiv}
+                  onClick={clickRevertToStartOfPreviousTurnHandler}
+                >
+                  Revert to Start of The Previous Turn
+                </button>
+              </div>
             </div>
           </div>
-        </div>
+        )}
 
-        <div className={styles.sectionContainer}>
-          <div className={styles.sectionHeader}>
-            <span>Invite Spectators</span>
-          </div>
-          <div className={styles.sectionContent}>
-            <div className={styles.buttonColumn}>
-              {!allowSpectator ? (
-                <>
+        {playerID !== 3 && (
+          <div className={styles.sectionContainer}>
+            <div className={styles.sectionHeader}>
+              <span>Invite Spectators</span>
+            </div>
+            <div className={styles.sectionContent}>
+              <div className={styles.buttonColumn}>
+                {!allowSpectator ? (
                   <button
                     className={styles.buttonDiv}
                     onClick={handleAllowSpectators}
                   >
                     Allow Spectators for Private Match
                   </button>
-                </>
-              ) : (
-                <>
+                ) : (
                   <button
                     className={styles.buttonDiv}
                     onClick={clickCopySpectateToClipboardHandler}
                   >
                     Copy Spectate Link
                   </button>
-                </>
-              )}
+                )}
+              </div>
             </div>
           </div>
-        </div>
+        )}
         <CosmeticsSection
           data={data}
           selectedCardBack={initialValues.cardBack}
