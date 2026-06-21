@@ -2,20 +2,32 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "config:recommended",
-    ":pinAllExceptPeerDependencies",
-    "group:allNonMajor"
+    ":dependencyDashboard"
   ],
+  "timezone": "Etc/UTC",
+  "schedule": ["before 5am on monday"],
+  "labels": ["dependencies"],
+  "rangeStrategy": "bump",
+  "vulnerabilityAlerts": {
+    "enabled": false
+  },
   "packageRules": [
     {
-      "groupName": "Dev Dependencies",
-      "matchDepTypes": ["devDependencies"],
-      "automerge": true
+      "description": "All patch updates (prod + dev) -> one grouped PR every Monday. Security patches ride in here too.",
+      "matchUpdateTypes": ["patch"],
+      "groupName": "weekly patch updates",
+      "schedule": ["before 5am on monday"]
+    },
+    {
+      "description": "All minor updates (prod + dev) -> one grouped PR every Monday. Security minors ride in here too.",
+      "matchUpdateTypes": ["minor"],
+      "groupName": "weekly minor updates",
+      "schedule": ["before 5am on monday"]
+    },
+    {
+      "description": "All majors -> NO PR. Parked on the Dependency Dashboard; tick the checkbox there to open one when ready. Security majors included.",
+      "matchUpdateTypes": ["major"],
+      "dependencyDashboardApproval": true
     }
-  ],
-  "branchPrefix": "renovate/",
-  "rangeStrategy": "bump",
-  "semanticCommits": true,
-  "dependencyDashboard": true,
-  "prHourlyLimit": 2,
-  "prConcurrentLimit": 10
+  ]
 }
