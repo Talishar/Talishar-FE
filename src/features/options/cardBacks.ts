@@ -133,6 +133,7 @@ export const CARD_BACK = {
   '132': 'CBPitchDevils2',
   '133': 'RedLine',
   '134': 'CBSkillIssue',
+  '135': 'CBWingedHussars',
 } as { [key: string]: string };
 
 /* Talishar supporter card back IDs - shown as locked previews to non-supporters */
