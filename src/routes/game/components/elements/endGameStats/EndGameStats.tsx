@@ -88,6 +88,7 @@ export interface CardResult {
   katsuDiscard: number;
   discarded: number;
   activated?: number;
+  passiveTriggered?: number;
 }
 
 export interface TurnResult {
@@ -142,6 +143,33 @@ const RainSvg = () => (
     <path className={`${styles.rdBase} ${styles.rdP5}`} d={DROP} fill="#7AAAD0" />
   </svg>
 );
+
+function mergeCompanionPairs(cards: CardResult[]): CardResult[] {
+  const merged = new Map<string, CardResult>();
+  for (const card of cards) {
+    const baseId = card.cardId.endsWith('_ally')
+      ? card.cardId.slice(0, -5)
+      : card.cardId;
+    const existing = merged.get(baseId);
+    if (existing) {
+      merged.set(baseId, {
+        ...existing,
+        played: existing.played + card.played,
+        blocked: existing.blocked + card.blocked,
+        pitched: existing.pitched + card.pitched,
+        hits: existing.hits + card.hits,
+        charged: existing.charged + card.charged,
+        katsuDiscard: existing.katsuDiscard + card.katsuDiscard,
+        discarded: existing.discarded + card.discarded,
+        activated: (existing.activated ?? 0) + (card.activated ?? 0),
+        passiveTriggered: (existing.passiveTriggered ?? 0) + (card.passiveTriggered ?? 0),
+      });
+    } else {
+      merged.set(baseId, { ...card, cardId: baseId });
+    }
+  }
+  return Array.from(merged.values());
+}
 
 function downloadViaBackend(type: 'csv' | 'png', filename: string, data: string) {
   const form = document.createElement('form');
@@ -650,7 +678,11 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
         if (hasKatsuDiscard) content += ',Times Katsu Discarded';
         content += '\n';
 
-        playerData.cardResults?.forEach((result) => {
+        const csvPlayedCards = [
+          ...(playerData.cardResults ?? []),
+          ...(playerData.arenaCardResults ?? []).filter((r) => r.pitched > 0),
+        ];
+        csvPlayedCards.forEach((result) => {
           const cardName = result.cardName.replace(/,/g, ';');
           const cardNameWithPitch =
             result.pitchValue > 0
@@ -662,15 +694,21 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
           content += '\n';
         });
 
-        const activatedArenaResults = (playerData.arenaCardResults ?? [])
-          .filter((r) => (r.activated ?? 0) > 0 || r.hits > 0)
-          .sort((a, b) => a.cardName.localeCompare(b.cardName));
+        const activatedArenaResults = mergeCompanionPairs([
+          ...(playerData.arenaCardResults ?? []).filter(
+            (r) => (r.activated ?? 0) > 0 || (r.passiveTriggered ?? 0) > 0 || r.hits > 0
+          ),
+          ...(playerData.cardResults ?? []).filter(
+            (r) => (r.activated ?? 0) > 0 || (r.passiveTriggered ?? 0) > 0
+          ),
+        ]).sort((a, b) => a.cardName.localeCompare(b.cardName));
         if (activatedArenaResults.length > 0) {
+          const csvHasPitched = activatedArenaResults.some((r) => r.pitched > 0);
           content += '\nCARD ACTIVATED STATS\n';
-          content += 'Card Name,Activated,Times Hit\n';
+          content += `Card Name,Activated,Passive Triggers${csvHasPitched ? ',Pitched' : ''},Times Hit\n`;
           activatedArenaResults.forEach((result) => {
             const cardName = result.cardName.replace(/,/g, ';');
-            content += `"${cardName}",${result.activated ?? 0},${result.hits}\n`;
+            content += `"${cardName}",${result.activated ?? 0},${result.passiveTriggered ?? 0}${csvHasPitched ? `,${result.pitched}` : ''},${result.hits}\n`;
           });
         }
 
@@ -780,17 +818,28 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
 
   const filteredCardResults = useMemo(() => {
     if (!data.cardResults) return data.cardResults;
-    if (showAllCards) return data.cardResults;
-    return data.cardResults.filter(
-      (r) => r.played > 0 || r.blocked > 0 || r.pitched > 0 || r.discarded > 0 || r.hits > 0
-    );
-  }, [data.cardResults, showAllCards]);
+    // Non-deck cards that were pitched (e.g. Heart of Fyendal gem) belong in the played stats view
+    const pitchedArenaCards = (data.arenaCardResults ?? []).filter((r) => r.pitched > 0);
+    if (showAllCards) return [...data.cardResults, ...pitchedArenaCards];
+    return [
+      ...data.cardResults.filter(
+        (r) => r.played > 0 || r.blocked > 0 || r.pitched > 0 || r.discarded > 0 || r.hits > 0
+      ),
+      ...pitchedArenaCards,
+    ];
+  }, [data.cardResults, data.arenaCardResults, showAllCards]);
 
   const activatedCardResults = useMemo(() => {
-    return [...(data.arenaCardResults ?? [])]
-      .filter((r) => (r.activated ?? 0) > 0 || r.hits > 0)
-      .sort((a, b) => a.cardName.localeCompare(b.cardName));
-  }, [data.arenaCardResults]);
+    const fromArena = (data.arenaCardResults ?? []).filter(
+      (r) => (r.activated ?? 0) > 0 || (r.passiveTriggered ?? 0) > 0 || r.hits > 0
+    );
+    const fromDeck = data.cardResults.filter(
+      (r) => (r.activated ?? 0) > 0 || (r.passiveTriggered ?? 0) > 0
+    );
+    return mergeCompanionPairs([...fromArena, ...fromDeck]).sort((a, b) =>
+      a.cardName.localeCompare(b.cardName)
+    );
+  }, [data.arenaCardResults, data.cardResults]);
 
   const sortedCardResults = useMemo(() => {
     if (!filteredCardResults || !sortField) {
@@ -1285,6 +1334,10 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                       <th className={`${styles.firstHeadersStats} ${styles.hideOnExport}`}></th>
                       <th className={`${styles.headersStats} ${styles.headerGroupSeparator}`}>Card Name</th>
                       <th className={`${styles.headersStats} ${styles.headerGroupSeparator}`}>Activated</th>
+                      <th className={`${styles.headersStats} ${styles.headerGroupSeparator}`}>Passive Triggered</th>
+                      {activatedCardResults.some((r) => r.pitched > 0) && (
+                        <th className={`${styles.headersStats} ${styles.headerGroupSeparator}`}>Pitched</th>
+                      )}
                       <th className={`${styles.headersStats} ${styles.headerGroupSeparator}`}>Times Hit</th>
                     </tr>
                   </thead>
@@ -1298,6 +1351,10 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                           </td>
                           <td className={styles.zeroPitch} title={result.cardName}>{result.cardName}</td>
                           <td className={styles.played}>{result.activated ?? 0}</td>
+                          <td className={styles.cardStat}>{result.passiveTriggered ?? 0}</td>
+                          {activatedCardResults.some((r) => r.pitched > 0) && (
+                            <td className={styles.cardStat}>{result.pitched}</td>
+                          )}
                           <td className={styles.cardStat}>{result.hits}</td>
                         </tr>
                       );
