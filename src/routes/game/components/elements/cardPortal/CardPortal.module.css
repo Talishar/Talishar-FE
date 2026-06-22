@@ -37,17 +37,25 @@
 
 @media (orientation: portrait) {
   .popUpContainer {
+    top: 50% !important;
+    left: 50% !important;
     bottom: auto !important;
     right: auto !important;
-    left: auto !important;
-    top: auto !important;
+    transform: translate(-50%, -50%);
     height: 90dvh !important;
+    width: 90vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     pointer-events: none;
-    background: url('../../../../../img/backgrounds/transparent-card.png');
+    background: url('../../../../../img/backgrounds/transparent-card.png') center / contain no-repeat;
   }
 
   .img {
-    height: 40dvh;
+    height: auto;
+    max-height: 75dvh;
+    max-width: 85vw;
+    width: auto;
   }
 
   .doubleFacedCard {

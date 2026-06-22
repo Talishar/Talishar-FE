@@ -1,13 +1,15 @@
 import { useAppDispatch } from 'app/Hooks';
 import { clearPopUp, setPopUp } from 'features/game/GameSlice';
 import useWindowDimensions from 'hooks/useWindowDimensions';
-import { ReactNode, useRef } from 'react';
+import { ReactNode, useEffect, useRef } from 'react';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { useCookies } from 'react-cookie';
 import { CARD_BACK } from 'features/options/cardBacks';
 
 const supportsHover =
   typeof window !== 'undefined' && window.matchMedia('(hover: hover)').matches;
+
+const LONG_PRESS_DELAY = 400;
 
 type CardPopUpProps = {
   children: ReactNode;
@@ -36,6 +38,8 @@ export default function CardPopUp({
   const dispatch = useAppDispatch();
   const [windowWidth, windowHeight] = useWindowDimensions();
   const [cookies] = useCookies(['disableCardTilt']);
+  const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const touchPopupShown = useRef(false);
 
   const rotateXTarget = useMotionValue(0);
   const rotateYTarget = useMotionValue(0);
@@ -51,6 +55,12 @@ export default function CardPopUp({
       return `${offsetX}px ${offsetY}px ${blur}px rgba(0,0,0,0.52)`;
     }
   );
+
+  useEffect(() => {
+    return () => {
+      if (longPressTimer.current) clearTimeout(longPressTimer.current);
+    };
+  }, []);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!supportsHover || !ref.current) return;
@@ -113,6 +123,37 @@ export default function CardPopUp({
     rotateYTarget.set(0);
   };
 
+  const handleTouchStart = () => {
+    if (longPressTimer.current) clearTimeout(longPressTimer.current);
+    touchPopupShown.current = false;
+    longPressTimer.current = setTimeout(() => {
+      longPressTimer.current = null;
+      handleMouseEnter();
+      touchPopupShown.current = true;
+    }, LONG_PRESS_DELAY);
+  };
+
+  const handleTouchEnd = () => {
+    if (longPressTimer.current) {
+      clearTimeout(longPressTimer.current);
+      longPressTimer.current = null;
+    }
+    if (touchPopupShown.current) {
+      dispatch(clearPopUp());
+      rotateXTarget.set(0);
+      rotateYTarget.set(0);
+      touchPopupShown.current = false;
+    }
+  };
+
+  const handleTouchMove = () => {
+    // Cancel long press if finger moves (user is scrolling)
+    if (longPressTimer.current) {
+      clearTimeout(longPressTimer.current);
+      longPressTimer.current = null;
+    }
+  };
+
   const handleOnClick = () => {
     if (onClick != null) {
       onClick();
@@ -127,8 +168,9 @@ export default function CardPopUp({
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       onMouseMove={handleMouseMove}
-      onTouchStart={handleMouseEnter}
-      onTouchEnd={handleMouseLeave}
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
+      onTouchMove={handleTouchMove}
       onHoverStart={onHoverStart}
       onHoverEnd={onHoverEnd}
       ref={ref}
