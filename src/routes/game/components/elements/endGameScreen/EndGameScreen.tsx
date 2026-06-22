@@ -198,9 +198,9 @@ const EndGameScreen = () => {
                           </button>
                         </>
                       )}
-                      <button className={styles.dropdownItem} onClick={toggleShowFullLog}>
+{/*                       <button className={styles.dropdownItem} onClick={toggleShowFullLog}>
                         <FaList aria-hidden="true" className={styles.dropdownIcon} /> {showFullLog ? 'Back to Stats' : 'Full Game Log'}
-                      </button>
+                      </button> */}
                     </div>
                   </>,
                   document.body

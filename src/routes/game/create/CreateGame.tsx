@@ -1237,9 +1237,9 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
                       <option value={AI_DECK.COMBAT_DUMMY}>
                         Practice Dummy
                       </option>
-                      <option value={AI_DECK.IRABLITZ}>
+{/*                       <option value={AI_DECK.IRABLITZ}>
                         Ira (SAGE)
-                      </option>
+                      </option> */}
                       <option value={AI_DECK.FAICC}>Fai (CC)</option>
                     </select>
                   </label>
