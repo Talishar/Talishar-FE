@@ -60,7 +60,7 @@ const RustCounterPanel = ({
           target="_blank"
           rel="noreferrer"
         >
-          Remove Ads
+          Remove ads
         </a>
       </div>
     </div>

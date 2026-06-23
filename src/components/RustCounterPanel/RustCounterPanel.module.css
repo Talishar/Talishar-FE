@@ -69,25 +69,15 @@
 }
 
 .removeAdsLink {
-  display: inline-flex;
-  align-items: center;
-  padding: 0.35rem 0.7rem;
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  border-radius: 4px;
-  background: transparent;
-  color: rgba(237, 237, 237, 0.7) !important;
+  color: rgba(237, 237, 237, 0.5) !important;
   font-size: 0.82rem;
   font-weight: 400;
   text-decoration: none !important;
-  white-space: nowrap;
   opacity: 1 !important;
-  transition: background 0.15s, border-color 0.15s, color 0.15s;
 }
 
 .removeAdsLink:hover {
-  background: rgba(255, 255, 255, 0.06);
-  border-color: rgba(255, 255, 255, 0.28);
-  color: rgba(237, 237, 237, 0.95) !important;
+  color: rgba(237, 237, 237, 0.85) !important;
   text-decoration: none !important;
   opacity: 1 !important;
 }
