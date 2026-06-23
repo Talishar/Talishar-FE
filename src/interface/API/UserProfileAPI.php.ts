@@ -6,6 +6,7 @@ export interface UserProfileAPIResponse {
   isPatreonLinked: boolean;
   isContributor?: boolean;
   isPvtVoidPatron?: boolean;
+  rustCounters?: number;
   metafyInfo?: string;
   isMetafyLinked?: boolean;
   isMetafySupporter?: boolean;

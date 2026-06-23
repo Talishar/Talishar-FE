@@ -3,10 +3,12 @@ import { FaChevronUp, FaChevronDown } from 'react-icons/fa';
 import useAuth from 'hooks/useAuth';
 import useSupporterStatus from 'hooks/useSupporterStatus';
 import { AdUnit } from 'components/ads';
+import RustCounterPanel from 'components/RustCounterPanel';
 import QuickJoinPanel from './quickJoin/QuickJoinPanel';
 import CreateGame from 'routes/game/create/CreateGame';
 import styles from './UnifiedGamePanel.module.css';
 import { useTranslation } from 'react-i18next';
+import { useGetUserProfileQuery } from 'features/api/apiSlice';
 
 const getCookie = (name: string): string | null => {
   const value = `; ${document.cookie}`;
@@ -22,9 +24,13 @@ const setCookie = (name: string, value: string, days: number = 365) => {
 };
 
 const UnifiedGamePanel = () => {
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, isMod } = useAuth();
   const { isSupporter, isLoading: isAuthLoading } = useSupporterStatus();
+  const { data: userProfileData } = useGetUserProfileQuery(undefined, {
+    skip: !isLoggedIn || !isMod
+  });
   const showAds = !isAuthLoading && !isSupporter;
+  const rustCounters = Math.max(0, userProfileData?.rustCounters ?? 0);
   const [isExpanded, setIsExpanded] = useState(() => {
     const savedState = getCookie('unifiedGamePanelExpanded');
     return savedState !== 'false';
@@ -84,6 +90,12 @@ const UnifiedGamePanel = () => {
 
       {isExpanded && (
         <div className={styles.content}>
+          {isMod && (
+            <RustCounterPanel
+              rustCounters={rustCounters}
+              isSupporter={isSupporter}
+            />
+          )}
           <div className={styles.quickJoinSection}>
             <QuickJoinPanel embedded />
           </div>

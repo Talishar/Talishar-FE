@@ -1,0 +1,96 @@
+.panel {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.65rem 0.75rem;
+  border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.16));
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.16);
+  color: var(--theme-text, #ededed);
+}
+
+.summary {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-width: 0;
+  font-size: 0.9rem;
+}
+
+.counterImages {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  min-width: 3.5rem;
+}
+
+.counterImage {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  flex: 0 0 auto;
+}
+
+.helpIcon {
+  display: inline-flex;
+  align-items: center;
+  color: var(--theme-text-muted, rgba(237, 237, 237, 0.65));
+  cursor: help;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex: 0 0 auto;
+}
+
+.clearButton {
+  width: auto !important;
+  margin-bottom: 0 !important;
+  padding: 0.35rem 0.7rem;
+  border: 1px solid var(--theme-primary, #d4af37);
+  background: transparent;
+  color: var(--theme-primary, #d4af37);
+  font-size: 0.82rem;
+  white-space: nowrap;
+}
+
+.clearButton:hover {
+  background: color-mix(in srgb, var(--theme-primary, #d4af37) 16%, transparent);
+}
+
+.removeAdsLink {
+  color: var(--theme-primary, #d4af37);
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.removeAdsLink:hover {
+  text-decoration: underline;
+}
+
+.supporterMessage {
+  margin: 0;
+  color: var(--theme-text, #ededed);
+  font-size: 0.9rem;
+}
+
+@media (max-width: 560px) {
+  .panel {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .clearButton {
+    width: 100% !important;
+  }
+}

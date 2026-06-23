@@ -11,6 +11,7 @@ import {
 } from 'appConstants';
 import {
   useCreateGameMutation,
+  useGetUserProfileQuery,
   useGetFavoriteDecksQuery,
   useGetBazaarDecksQuery
 } from 'features/api/apiSlice';
@@ -22,6 +23,7 @@ import {
 } from 'features/auth/authSlice';
 import { setGameStart } from 'features/game/GameSlice';
 import useAuth from 'hooks/useAuth';
+import useSupporterStatus from 'hooks/useSupporterStatus';
 import { CreateGameAPI } from 'interface/API/CreateGame.php';
 import { toast } from 'react-hot-toast';
 import { useNavigate, useSearchParams } from 'react-router-dom';
@@ -42,6 +44,7 @@ import {
 } from '../../index/components/filter/constants';
 import { generateCroppedImageUrl } from 'utils/cropImages';
 import { ImageSelect, ImageSelectOption } from 'components/ImageSelect';
+import RustCounterPanel from 'components/RustCounterPanel';
 import { useTranslation } from 'react-i18next';
 import { useQuickJoinOptional } from 'routes/index/components/quickJoin';
 
@@ -87,15 +90,20 @@ type CreateGameProps = {
 
 const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
   const quickJoinCtx = useQuickJoinOptional();
-  const { isLoggedIn, isPatron, isLoading: isAuthLoading } = useAuth();
+  const { isLoggedIn, isPatron, isMod, isLoading: isAuthLoading } = useAuth();
+  const { isSupporter } = useSupporterStatus();
   // True when rendered inside the unified main-menu panel (logged-in users only)
   const isEmbedded = quickJoinCtx !== null && isLoggedIn;
   const useUnifiedPanelStyles = isEmbedded || inUnifiedPanel;
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { data, isLoading, isSuccess } = useGetFavoriteDecksQuery(undefined);
+  const { data: userProfileData } = useGetUserProfileQuery(undefined, {
+    skip: !isLoggedIn || !isMod || isEmbedded
+  });
   const [searchParams, setSearchParams] = useSearchParams();
   const [createGame, createGameResult] = useCreateGameMutation();
+  const rustCounters = Math.max(0, userProfileData?.rustCounters ?? 0);
 
   // FaB Bazaar — standalone mode only (embedded mode uses QuickJoinContext)
   const metafyHash = useAppSelector(selectMetafyHash);
@@ -657,6 +665,12 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
             className={useUnifiedPanelStyles ? styles.embeddedFormLayout : undefined}
             onSubmit={handleSubmit(onSubmit, onInvalid)}
           >
+            {isLoggedIn && isMod && !isEmbedded && (
+              <RustCounterPanel
+                rustCounters={rustCounters}
+                isSupporter={isSupporter}
+              />
+            )}
             <div className={useUnifiedPanelStyles ? styles.embeddedFormInner : styles.formInner}>
               {/* Register deck fields when inside QuickJoinProvider (values synced from context) */}
               {isEmbedded && !isPreconFormat(formFormat || selectedFormat) && (
