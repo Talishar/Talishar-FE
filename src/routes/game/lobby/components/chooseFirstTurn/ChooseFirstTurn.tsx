@@ -20,8 +20,11 @@ const ChooseFirstTurn = () => {
     shallowEqual
   );
 
+  const isLoading = chooseFirstPlayerData.isLoading;
+
   const chooseFirst = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+    if (isLoading) return;
     try {
       await chooseFirstPlayer({
         gameName: gameID,
@@ -37,6 +40,7 @@ const ChooseFirstTurn = () => {
 
   const chooseSecond = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+    if (isLoading) return;
     try {
       await chooseFirstPlayer({
         gameName: gameID,
@@ -63,6 +67,7 @@ const ChooseFirstTurn = () => {
             className={styles.firstButton}
             onClick={chooseFirst}
             type="button"
+            disabled={isLoading}
           >
             <div className={styles.icon}>
               <TbHexagonNumber1 />
@@ -73,6 +78,7 @@ const ChooseFirstTurn = () => {
             className={styles.secondButton}
             onClick={chooseSecond}
             type="button"
+            disabled={isLoading}
           >
             <div className={styles.icon}>
               <TbHexagonNumber2 />
