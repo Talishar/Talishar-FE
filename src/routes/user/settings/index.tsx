@@ -391,7 +391,7 @@ const SettingsPage = () => {
               label="Disable Particle Effects"
               checked={cookies.disableParticles === 'true'}
               onChange={() =>
-                setCookie('disableParticles', cookies.disableParticles === 'true' ? 'false' : 'true')
+                setCookie('disableParticles', cookies.disableParticles === 'true' ? 'false' : 'true', { path: '/', maxAge: 365 * 24 * 60 * 60 })
               }
             />
 
@@ -400,7 +400,7 @@ const SettingsPage = () => {
               label="Disable Card Hover Tilt"
               checked={cookies.disableCardTilt === 'true'}
               onChange={() =>
-                setCookie('disableCardTilt', cookies.disableCardTilt === 'true' ? 'false' : 'true')
+                setCookie('disableCardTilt', cookies.disableCardTilt === 'true' ? 'false' : 'true', { path: '/', maxAge: 365 * 24 * 60 * 60 })
               }
             />
 
@@ -410,7 +410,7 @@ const SettingsPage = () => {
               min={isMobile ? 100 : 50}
               max={150}
               defaultValue={1}
-              onChange={(value) => setCookie('cardSize', value)}
+              onChange={(value) => setCookie('cardSize', value, { path: '/', maxAge: 365 * 24 * 60 * 60 })}
             />
 
             <VisualSlider
@@ -419,7 +419,7 @@ const SettingsPage = () => {
               min={75}
               max={125}
               defaultValue={1}
-              onChange={(value) => setCookie('hoverImageSize', value)}
+              onChange={(value) => setCookie('hoverImageSize', value, { path: '/', maxAge: 365 * 24 * 60 * 60 })}
             />
 
             <VisualSlider
@@ -429,7 +429,7 @@ const SettingsPage = () => {
               max={100}
               defaultValue={1}
               onChange={(value) => {
-                setCookie('transparencyIntensity', value);
+                setCookie('transparencyIntensity', value, { path: '/', maxAge: 365 * 24 * 60 * 60 });
                 setTransparency(value);
               }}
             />
@@ -440,7 +440,7 @@ const SettingsPage = () => {
               min={10}
               max={100}
               defaultValue={0.65}
-              onChange={(value) => setCookie('playmatIntensity', value)}
+              onChange={(value) => setCookie('playmatIntensity', value, { path: '/', maxAge: 365 * 24 * 60 * 60 })}
             />
           </Fieldset>
 
