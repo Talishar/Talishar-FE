@@ -16,7 +16,7 @@ const RustCounterPanel = ({
     return (
       <div className={styles.panel}>
         <p className={styles.supporterMessage}>
-          Thank you for your support. You are helping keep the servers running.
+          Thank you for your support! You are helping keep the servers running ❤️
         </p>
       </div>
     );
