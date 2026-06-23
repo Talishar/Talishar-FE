@@ -38,7 +38,7 @@ const RustCounterPanel = ({
           </span>
         )}
         <span>
-          Rust counters: <strong>{displayedRustCounters}</strong> / 3
+          Rust counters: {displayedRustCounters} / 3
         </span>
         <span
           className={styles.helpIcon}
