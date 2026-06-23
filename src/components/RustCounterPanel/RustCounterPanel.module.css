@@ -50,27 +50,46 @@
   width: auto !important;
   margin-bottom: 0 !important;
   padding: 0.35rem 0.7rem;
-  border: 1px solid var(--theme-primary, #d4af37);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 4px;
   background: transparent;
-  color: var(--theme-primary, #d4af37);
+  color: rgba(237, 237, 237, 0.7);
   font-size: 0.82rem;
+  font-weight: 400;
+  text-transform: none;
   white-space: nowrap;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
 }
 
 .clearButton:hover {
-  background: color-mix(in srgb, var(--theme-primary, #d4af37) 16%, transparent);
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.28);
+  color: rgba(237, 237, 237, 0.95);
 }
 
 .removeAdsLink {
-  color: var(--theme-primary, #d4af37);
+  display: inline-flex;
+  align-items: center;
+  padding: 0.35rem 0.7rem;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 4px;
+  background: transparent;
+  color: rgba(237, 237, 237, 0.7) !important;
   font-size: 0.82rem;
-  font-weight: 600;
-  text-decoration: none;
+  font-weight: 400;
+  text-decoration: none !important;
   white-space: nowrap;
+  opacity: 1 !important;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
 }
 
 .removeAdsLink:hover {
-  text-decoration: underline;
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.28);
+  color: rgba(237, 237, 237, 0.95) !important;
+  text-decoration: none !important;
+  opacity: 1 !important;
 }
 
 .supporterMessage {

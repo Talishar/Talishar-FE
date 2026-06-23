@@ -50,7 +50,7 @@ const RustCounterPanel = ({
       </div>
       <div className={styles.actions}>
         <button type="button" className={styles.clearButton}>
-          Watch ad to clear
+          Watch Ad to Clear
         </button>
         <a
           className={styles.removeAdsLink}
@@ -58,7 +58,7 @@ const RustCounterPanel = ({
           target="_blank"
           rel="noreferrer"
         >
-          Remove ads
+          Remove Ads
         </a>
       </div>
     </div>
