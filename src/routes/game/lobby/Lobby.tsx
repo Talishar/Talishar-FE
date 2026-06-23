@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo, useRef } from 'react';
+import React, { useEffect, useLayoutEffect, useState, useMemo, useRef } from 'react';
 import { usePageTitle } from 'hooks/usePageTitle';
 import Deck from './components/deck/Deck';
 import LobbyChat from './components/lobbyChat/LobbyChat';
@@ -157,7 +157,7 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
   const isMuted = settingsData['MuteSound']?.value === '1';
   const isStreamerMode = String(settingsData['IsStreamerMode']?.value) === '1';
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     dispatch(clearGetLobbyRefresh());
   }, []);
 
