@@ -22,7 +22,7 @@
   display: inline-flex;
   align-items: center;
   gap: 0.25rem;
-  min-width: 3.5rem;
+  flex-shrink: 0;
 }
 
 .counterImage {

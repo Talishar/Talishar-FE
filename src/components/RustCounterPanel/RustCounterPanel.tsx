@@ -25,18 +25,18 @@ const RustCounterPanel = ({
   return (
     <div className={styles.panel}>
       <div className={styles.summary}>
-        <span className={styles.counterImages} aria-hidden="true">
-          {displayedRustCounters > 0 ? (
-            Array.from({ length: displayedRustCounters }, (_, index) => (
+        {displayedRustCounters > 0 && (
+          <span className={styles.counterImages} aria-hidden="true">
+            {Array.from({ length: displayedRustCounters }, (_, index) => (
               <img
                 key={index}
                 className={styles.counterImage}
                 src="/images/rust-counter.webp"
                 alt=""
               />
-            ))
-          ) : null}
-        </span>
+            ))}
+          </span>
+        )}
         <span>
           Rust counters: <strong>{displayedRustCounters}</strong> / 3
         </span>
@@ -49,9 +49,11 @@ const RustCounterPanel = ({
         </span>
       </div>
       <div className={styles.actions}>
-        <button type="button" className={styles.clearButton}>
-          Watch Ad to Clear
-        </button>
+        {displayedRustCounters > 0 && (
+          <button type="button" className={styles.clearButton}>
+            Watch Ad to Clear
+          </button>
+        )}
         <a
           className={styles.removeAdsLink}
           href="https://metafy.gg/@talishar"
