@@ -115,7 +115,7 @@ export default function CombatChain() {
             isDragging ? { type: 'tween', duration: 0 } : { type: 'tween' }
           }
           exit={{ opacity: 0 }}
-          className={styles.combatChain}
+          className={`${styles.combatChain} ${!isPortrait ? styles.noBottomBorder : ''}`}
         >
           <CurrentAttack />
           <div className={styles.chainCentre}>

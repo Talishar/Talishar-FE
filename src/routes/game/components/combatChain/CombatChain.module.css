@@ -137,6 +137,10 @@
   cursor: pointer;
 }
 
+.noBottomBorder {
+  border-bottom: none !important;
+}
+
 .playerPrompt {
   top: 100%;
   position: absolute;
