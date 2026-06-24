@@ -7,6 +7,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  background-image: url('/playmats/Deathmatch-Arena.webp');
   background-size: cover;
   background-position: center;
   z-index: 9999;
@@ -63,10 +64,9 @@
   position: absolute;
   inset: 0;
   background: radial-gradient(
-    ellipse 58% 52% at center,
-    transparent 20%,
-    rgba(0, 0, 0, 0.58) 60%,
-    rgba(0, 0, 0, 0.96) 100%
+    ellipse 78% 72% at center,
+    transparent 36%,
+    rgba(0, 0, 0, 0.74) 100%
   );
   pointer-events: none;
   z-index: 1;
@@ -112,13 +112,11 @@
 /* ── Hero card ───────────────────────────────────────────────────── */
 
 .heroCardOuter {
-  --bleed: 36px;
-  --radius: 8px;
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0;
+  gap: 0.75rem;
   isolation: isolate;
 }
 
@@ -155,10 +153,13 @@
 }
 
 /*
+ * --bleed drives both clip-path and frameOverlay.top so they always match.
  * clip-path inset with a negative top value lets the portrait overflow upward
  * by exactly --bleed pixels while hard-clipping sides and bottom.
  */
 .heroCardVisual {
+  --bleed: 36px;
+  --radius: 8px;
   position: relative;
   width: 420px;
   height: 300px;
@@ -180,14 +181,33 @@
   display: block;
 }
 
-/* Atmospheric ground fade */
+/*
+ * Frame overlay — extends upward by --bleed so its boundary matches the full
+ * visible image area (not just the element's 323px layout box).
+ */
+.frameOverlay {
+  position: absolute;
+  top: calc(-1 * var(--bleed, 90px));
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: var(--radius, 8px);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.frameOverlayPremium {
+  box-shadow: inset 0 0 22px rgba(212, 165, 38, 0.09);
+}
+
+/* Atmospheric ground fade — grounds the character into the arena floor */
 .groundFade {
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
-  height: 52%;
-  background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.48));
+  height: 32%;
+  background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.5));
   pointer-events: none;
   z-index: 1;
 }
@@ -221,66 +241,26 @@
   32%, 100% { transform: skewX(-10deg) translateX(380%); opacity: 0; }
 }
 
-.frameGlow {
-  position: absolute;
-  top: calc(-1 * var(--bleed, 36px));
-  left: 0;
-  right: 0;
-  bottom: 0;
-  border-radius: var(--radius, 8px);
-  pointer-events: none;
-  z-index: 4;
-  box-shadow:
-    inset 0 0 28px rgba(212, 165, 38, 0.12),
-    inset 0 3px 0 rgba(255, 240, 180, 0.20);
-}
-
-.heroCardBorder {
-  position: absolute;
-  top: calc(-1 * var(--bleed));
-  left: 0;
-  right: 0;
-  bottom: 0;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: var(--radius);
-  pointer-events: none;
-  z-index: 5;
-}
-
-.heroCardBorderPremium {
-  border-color: rgba(212, 165, 38, 0.45);
-}
-
+/* ── Nameplate ───────────────────────────────────────────────────── */
 
 .heroLabel {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 0.18rem;
   text-align: center;
-  padding: 3rem 0.75rem 0.6rem;
-  background: linear-gradient(
-    to bottom,
-    transparent,
-    rgba(0, 0, 0, 0.68) 40%,
-    rgba(0, 0, 0, 0.86)
-  );
-  z-index: 2;
-  pointer-events: none;
+  max-width: 420px;
+  width: 100%;
+  padding: 0.34rem 0.8rem 0.38rem;
+  background: rgba(0, 0, 0, 0.54);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
   word-break: break-word;
+  box-sizing: border-box;
 }
 
 .heroLabelPremium {
-  background: linear-gradient(
-    to bottom,
-    transparent,
-    rgba(4, 3, 0, 0.70) 40%,
-    rgba(8, 5, 0, 0.88)
-  );
+  border-color: rgba(212, 168, 40, 0.22);
 }
 
 .heroName {
@@ -307,7 +287,7 @@
   letter-spacing: 0.3em;
   text-transform: uppercase;
   font-family: 'Black Ops One', sans-serif;
-  color: rgba(212, 168, 40, 1);
+  color: rgba(212, 168, 40);
 }
 
 /* ── VS ──────────────────────────────────────────────────────────── */
@@ -405,12 +385,13 @@
 @media (max-width: 1024px) {
   .introContent { gap: 2.5rem; }
 
-  .heroCardOuter { --bleed: 28px; }
-
   .heroCardVisual {
+    --bleed: 28px;
     width: 300px;
     height: 231px;
   }
+
+  .heroLabel { max-width: 300px; }
 
   .vsText { font-size: 1.6rem; }
   .vsWrapper { width: 48px; }
@@ -426,12 +407,13 @@
 @media (max-width: 768px) {
   .introContent { gap: 1.5rem; }
 
-  .heroCardOuter { --bleed: 20px; }
-
   .heroCardVisual {
+    --bleed: 20px;
     width: 210px;
     height: 162px;
   }
+
+  .heroLabel { max-width: 210px; }
 
   .heroName { font-size: 0.9rem; }
   .vsText { font-size: 1.15rem; }
@@ -448,16 +430,17 @@
 @media (max-width: 480px) {
   .introContent { gap: 0.75rem; }
 
-  .heroCardOuter { --bleed: 16px; }
-
   .heroCardVisual {
+    --bleed: 16px;
     width: 165px;
     height: 127px;
   }
 
-  .heroLabel { padding: 2rem 0.5rem 0.45rem; }
+  .heroLabel { max-width: 165px; }
 
-  .heroName { font-size: 0.8rem; }
+  .heroName {
+    font-size: 0.8rem;
+  }
 
   .vsText { font-size: 0.92rem; }
   .vsWrapper { width: 32px; }
@@ -479,30 +462,30 @@
 
 /* Extra small */
 @media (max-width: 360px) {
-  .heroCardOuter { --bleed: 12px; }
-
   .heroCardVisual {
+    --bleed: 12px;
     width: 132px;
     height: 102px;
   }
 
-  .heroLabel { padding: 1.6rem 0.4rem 0.35rem; }
+  .heroLabel { max-width: 132px; }
 
-  .heroName { font-size: 0.7rem; }
+  .heroName {
+    font-size: 0.7rem;
+  }
 
   .vsText { font-size: 0.76rem; }
 }
 
 /* Landscape + short viewport */
 @media (orientation: landscape) and (max-height: 500px) {
-  .heroCardOuter { --bleed: 14px; }
-
   .heroCardVisual {
+    --bleed: 14px;
     width: 154px;
     height: 119px;
   }
 
-  .heroLabel { padding: 1.8rem 0.5rem 0.4rem; }
+  .heroLabel { max-width: 154px; }
 
   .heroName { font-size: 0.8rem; }
   .vsText { font-size: 0.88rem; }
