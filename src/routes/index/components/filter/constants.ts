@@ -98,7 +98,7 @@ export const HEROES_OF_RATHE: {
   { value: 'ROS014', label: 'Verdance', young: true },
   { value: 'ROS019', label: 'Oscilio Constella Intelligence' },
   { value: 'ROS020', label: 'Oscilio', young: true },
-  { value: 'AJV001', label: 'Jarl Vetreidi' },
+  { value: 'AJV001', label: 'Jarl Vetreiði' },
   { value: 'HNT001', label: 'Arakni Marionette' },
   { value: 'HNT002', label: 'Arakni Web of Deceit', young: true },
   { value: 'HNT054', label: 'Cindra Dracai of Retribution' },
