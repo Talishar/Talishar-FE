@@ -1,5 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Black+Ops+One&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Cascadia+Code&display=swap');
+
+/* ── Container — real arena environment ──────────────────────────── */
 
 .introContainer {
   position: fixed;
@@ -7,50 +7,57 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(0, 0, 2, 0.91);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  background-image: url('/playmats/Deathmatch-Arena.webp');
+  background-size: cover;
+  background-position: center;
   z-index: 9999;
   overflow: hidden;
 }
 
-.bgOrbLeft,
-.bgOrbRight {
+/* Dark cinematic overlay */
+.arenaOverlay {
   position: absolute;
-  top: 50%;
-  width: 55%;
-  height: 90%;
-  border-radius: 50%;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.62);
   pointer-events: none;
 }
 
-.bgOrbLeft {
-  left: -12%;
-  transform: translateY(-50%);
+/* Directional key light from overhead center — warm, tight, no team color */
+.arenaKeyLight {
+  position: absolute;
+  top: -10%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 52%;
+  height: 80%;
   background: radial-gradient(
-    ellipse at center,
-    rgba(165, 52, 12, 0.38) 0%,
-    rgba(85, 22, 5, 0.18) 45%,
+    ellipse at center top,
+    rgba(255, 240, 195, 0.14) 0%,
+    rgba(255, 220, 145, 0.06) 42%,
     transparent 70%
   );
-  animation: orbBreath 8s ease-in-out infinite alternate;
+  pointer-events: none;
 }
 
-.bgOrbRight {
-  right: -12%;
-  transform: translateY(-50%);
-  background: radial-gradient(
-    ellipse at center,
-    rgba(8, 82, 160, 0.4) 0%,
-    rgba(4, 38, 82, 0.18) 45%,
-    transparent 70%
-  );
-  animation: orbBreath 10s ease-in-out infinite alternate-reverse;
+/* Cool rim fill from sides — no team color, just arena bounce */
+.arenaRimLeft {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 22%;
+  background: linear-gradient(to right, rgba(175, 205, 255, 0.07), transparent);
+  pointer-events: none;
 }
 
-@keyframes orbBreath {
-  from { opacity: 0.6; }
-  to   { opacity: 1; }
+.arenaRimRight {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 22%;
+  background: linear-gradient(to left, rgba(175, 205, 255, 0.07), transparent);
+  pointer-events: none;
 }
 
 .vignette {
@@ -59,11 +66,13 @@
   background: radial-gradient(
     ellipse 78% 72% at center,
     transparent 36%,
-    rgba(0, 0, 0, 0.68) 100%
+    rgba(0, 0, 0, 0.74) 100%
   );
   pointer-events: none;
   z-index: 1;
 }
+
+/* ── Particles ───────────────────────────────────────────────────── */
 
 .particleField {
   position: absolute;
@@ -89,38 +98,44 @@
   100% { transform: translateY(-105vh) translateX(-8px); opacity: 0; }
 }
 
+/* ── Layout ──────────────────────────────────────────────────────── */
+
 .introContent {
   position: relative;
   z-index: 2;
   display: flex;
   justify-content: center;
-  gap: 2.5rem;
+  align-items: center;
+  gap: 4rem;
 }
+
+/* ── Hero card ───────────────────────────────────────────────────── */
 
 .heroCardOuter {
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.85rem;
+  gap: 0.75rem;
   isolation: isolate;
 }
 
+/* Arena key-light halo above the character's head (premium only) */
 .ambientGlow {
   position: absolute;
-  top: 50%;
+  top: -100px;
   left: 50%;
-  transform: translate(-50%, -56%);
-  width: 290px;
-  height: 370px;
+  transform: translateX(-50%);
+  width: 420px;
+  height: 260px;
   border-radius: 50%;
   background: radial-gradient(
-    ellipse at center,
-    rgba(212, 158, 38, 0.52) 0%,
-    rgba(170, 95, 18, 0.26) 38%,
-    transparent 68%
+    ellipse at center bottom,
+    rgba(255, 215, 120, 0.42) 0%,
+    rgba(200, 148, 45, 0.20) 42%,
+    transparent 70%
   );
-  filter: blur(38px);
+  filter: blur(36px);
   pointer-events: none;
   z-index: -1;
   opacity: 0;
@@ -133,80 +148,77 @@
 }
 
 @keyframes ambientPulse {
-  from { filter: blur(34px) brightness(0.82); }
-  to   { filter: blur(44px) brightness(1.12); }
+  from { filter: blur(32px) brightness(0.85); }
+  to   { filter: blur(46px) brightness(1.18); }
 }
 
-.gradientBorderWrapper {
-  padding: 3px;
-  border-radius: 16px;
-  background: linear-gradient(
-    138deg,
-    #f0c430 0%,
-    #d07d18 22%,
-    #9a3de8 52%,
-    #36a6e6 75%,
-    #f0c430 100%
-  );
-  background-size: 260% 260%;
-  animation: borderShift 5s linear infinite;
-  will-change: transform;
-  cursor: default;
-}
-
-@keyframes borderShift {
-  0%   { background-position: 0% 50%; }
-  50%  { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-.plainBorderWrapper {
-  padding: 2px;
-  border-radius: 16px;
-  background: rgba(255, 255, 255, 0.13);
-}
-
-.heroImageInner {
+/*
+ * --bleed drives both clip-path and frameOverlay.top so they always match.
+ * clip-path inset with a negative top value lets the portrait overflow upward
+ * by exactly --bleed pixels while hard-clipping sides and bottom.
+ */
+.heroCardVisual {
+  --bleed: 36px;
+  --radius: 8px;
   position: relative;
-  width: 228px;
-  height: 323px;
-  border-radius: 14px;
-  overflow: hidden;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-color: #0e1118;
-  box-shadow:
-    0 22px 56px rgba(0, 0, 0, 0.78),
-    0 4px 18px rgba(0, 0, 0, 0.55);
+  width: 420px;
+  height: 300px;
+  clip-path: inset(calc(-1 * var(--bleed)) 0px 0px 0px round var(--radius));
+  cursor: default;
+  will-change: transform;
 }
 
-.shimmerBeam {
+.heroImg {
   position: absolute;
-  top: 0;
-  left: calc(50% - 38px);
-  width: 76px;
-  height: 100%;
-  background: linear-gradient(
-    175deg,
-    transparent 8%,
-    rgba(255, 255, 255, 0.24) 44%,
-    rgba(255, 246, 200, 0.2) 50%,
-    rgba(255, 255, 255, 0.24) 56%,
-    transparent 92%
-  );
+  inset: 0;
+  width: 100%;
+  height: 115%;
+  top: -15%;
+  object-fit: cover;
+  object-position: center top;
+  user-select: none;
   pointer-events: none;
-  z-index: 4;
-  border-radius: 40%;
-  filter: blur(5px);
+  display: block;
 }
 
+/*
+ * Frame overlay — extends upward by --bleed so its boundary matches the full
+ * visible image area (not just the element's 323px layout box).
+ */
+.frameOverlay {
+  position: absolute;
+  top: calc(-1 * var(--bleed, 90px));
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: var(--radius, 8px);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.frameOverlayPremium {
+  box-shadow: inset 0 0 22px rgba(212, 165, 38, 0.09);
+}
+
+/* Atmospheric ground fade — grounds the character into the arena floor */
+.groundFade {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 32%;
+  background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.5));
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Premium shimmer loop */
 .sheenLoop {
   position: absolute;
-  top: 0;
+  top: -15%;
   left: -55%;
   width: 52%;
-  height: 100%;
+  height: 115%;
   background: linear-gradient(
     to right,
     transparent,
@@ -216,63 +228,76 @@
     transparent
   );
   transform: skewX(-10deg) translateX(0%);
-  animation: sheenPass 3.5s ease-in-out 1.6s infinite;
+  animation: sheenPass 20s ease-in-out 1.6s infinite;
   pointer-events: none;
   z-index: 3;
   mix-blend-mode: screen;
 }
 
 @keyframes sheenPass {
-  0%,  12% { transform: skewX(-10deg) translateX(0%);   opacity: 0; }
-  14%       { transform: skewX(-10deg) translateX(0%);   opacity: 1; }
-  42%       { transform: skewX(-10deg) translateX(380%); opacity: 1; }
-  44%, 100% { transform: skewX(-10deg) translateX(380%); opacity: 0; }
+  0%,  4%  { transform: skewX(-10deg) translateX(0%);   opacity: 0; }
+  6%        { transform: skewX(-10deg) translateX(0%);   opacity: 1; }
+  28%       { transform: skewX(-10deg) translateX(380%); opacity: 1; }
+  32%, 100% { transform: skewX(-10deg) translateX(380%); opacity: 0; }
 }
+
+/* ── Nameplate ───────────────────────────────────────────────────── */
 
 .heroLabel {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.22rem;
+  gap: 0.18rem;
   text-align: center;
-  max-width: 234px;
+  max-width: 420px;
+  width: 100%;
+  padding: 0.34rem 0.8rem 0.38rem;
+  background: rgba(0, 0, 0, 0.54);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
   word-break: break-word;
+  box-sizing: border-box;
+}
+
+.heroLabelPremium {
+  border-color: rgba(212, 168, 40, 0.22);
 }
 
 .heroName {
-  font-size: 0.88rem;
+  font-size: 1.1rem;
   font-weight: 400;
-  letter-spacing: 0.13em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  font-family: 'Cascadia Code', 'Arial Black', sans-serif;
-  color: rgba(210, 212, 222, 0.88);
-  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.95);
+  font-family: 'Black Ops One', 'Arial Black', sans-serif;
+  color: rgba(228, 230, 240, 0.92);
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.9);
   display: block;
 }
 
 .heroLabelPremium .heroName {
-  background: linear-gradient(138deg, #f5c832 0%, #e69020 40%, #f0d870 75%, #e69020 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  filter: drop-shadow(0 0 8px rgba(212, 165, 38, 0.5));
+  color: rgba(245, 235, 205, 0.95);
+  text-shadow:
+    0 0 14px rgba(200, 155, 35, 0.35),
+    0 1px 8px rgba(0, 0, 0, 0.9);
 }
 
 .premiumBadge {
-  font-size: 0.55rem;
-  font-weight: 600;
-  letter-spacing: 0.25em;
+  font-size: 0.5rem;
+  font-weight: 400;
+  letter-spacing: 0.3em;
   text-transform: uppercase;
-  font-family: 'Cascadia Code', 'Arial Black', sans-serif;
-  color: rgba(212, 168, 40, 0.58);
+  font-family: 'Black Ops One', sans-serif;
+  color: rgba(212, 168, 40);
 }
+
+/* ── VS ──────────────────────────────────────────────────────────── */
 
 .vsWrapper {
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 92px;
+  width: 60px;
   flex-shrink: 0;
 }
 
@@ -286,11 +311,11 @@
 
 .vsFlash {
   position: absolute;
-  inset: -80px;
+  inset: -64px;
   border-radius: 50%;
   background: radial-gradient(
     circle,
-    rgba(255, 255, 255, 0.6) 0%,
+    rgba(255, 255, 255, 0.55) 0%,
     rgba(255, 255, 255, 0.04) 55%,
     transparent 70%
   );
@@ -305,7 +330,7 @@
 }
 
 .vsText {
-  font-size: 5.4rem;
+  font-size: 3.25rem;
   font-weight: 900;
   font-family: 'Black Ops One', 'Arial Black', sans-serif;
   background: linear-gradient(162deg, #ffffff 0%, #e8e8e8 25%, #aaa 55%, #ffffff 85%);
@@ -319,13 +344,15 @@
 
 .shockwaveRing {
   position: absolute;
-  width: 58px;
-  height: 58px;
+  width: 40px;
+  height: 40px;
   border: 1.5px solid rgba(255, 255, 255, 0.55);
   border-radius: 50%;
   pointer-events: none;
   z-index: 1;
 }
+
+/* ── Close button ────────────────────────────────────────────────── */
 
 .closeButton {
   position: absolute;
@@ -352,81 +379,76 @@
   color: #fff;
 }
 
+/* ── Responsive ──────────────────────────────────────────────────── */
+
 /* Tablet */
 @media (max-width: 1024px) {
-  .introContent { gap: 1.75rem; }
+  .introContent { gap: 2.5rem; }
 
-  .heroImageInner {
-    width: 168px;
-    height: 238px;
-    border-radius: 11px;
+  .heroCardVisual {
+    --bleed: 28px;
+    width: 300px;
+    height: 231px;
   }
 
-  .gradientBorderWrapper,
-  .plainBorderWrapper {
-    border-radius: 13px;
-  }
+  .heroLabel { max-width: 300px; }
 
-  .vsText { font-size: 2.6rem; }
-  .vsWrapper { width: 72px; }
+  .vsText { font-size: 1.6rem; }
+  .vsWrapper { width: 48px; }
 
   .ambientGlow {
-    width: 220px;
-    height: 295px;
+    width: 240px;
+    height: 190px;
+    top: -42px;
   }
 }
 
 /* Large mobile */
 @media (max-width: 768px) {
-  .introContent { gap: 1rem; }
+  .introContent { gap: 1.5rem; }
 
-  .heroImageInner {
-    width: 128px;
-    height: 181px;
-    border-radius: 9px;
+  .heroCardVisual {
+    --bleed: 20px;
+    width: 210px;
+    height: 162px;
   }
 
-  .gradientBorderWrapper,
-  .plainBorderWrapper {
-    border-radius: 11px;
-  }
+  .heroLabel { max-width: 210px; }
 
-  .heroName { font-size: 0.78rem; }
-  .vsText { font-size: 1.9rem; }
-  .vsWrapper { width: 56px; }
+  .heroName { font-size: 0.9rem; }
+  .vsText { font-size: 1.15rem; }
+  .vsWrapper { width: 38px; }
 
   .ambientGlow {
-    width: 170px;
-    height: 222px;
+    width: 185px;
+    height: 155px;
+    top: -32px;
   }
 }
 
 /* Small mobile */
 @media (max-width: 480px) {
-  .introContent { gap: 0.65rem; }
+  .introContent { gap: 0.75rem; }
 
-  .heroImageInner {
-    width: 108px;
-    height: 153px;
-    border-radius: 8px;
+  .heroCardVisual {
+    --bleed: 16px;
+    width: 165px;
+    height: 127px;
   }
 
-  .gradientBorderWrapper,
-  .plainBorderWrapper {
-    border-radius: 10px;
-  }
+  .heroLabel { max-width: 165px; }
 
   .heroName {
-    font-size: 0.7rem;
-    max-width: 112px;
+    font-size: 0.8rem;
   }
 
-  .vsText { font-size: 1.5rem; }
-  .vsWrapper { width: 48px; }
+  .vsText { font-size: 0.92rem; }
+  .vsWrapper { width: 32px; }
 
   .ambientGlow {
-    width: 140px;
-    height: 184px;
+    width: 152px;
+    height: 128px;
+    top: -26px;
   }
 
   .closeButton {
@@ -440,26 +462,31 @@
 
 /* Extra small */
 @media (max-width: 360px) {
-  .heroImageInner {
-    width: 88px;
-    height: 125px;
+  .heroCardVisual {
+    --bleed: 12px;
+    width: 132px;
+    height: 102px;
   }
+
+  .heroLabel { max-width: 132px; }
 
   .heroName {
-    font-size: 0.65rem;
-    max-width: 92px;
+    font-size: 0.7rem;
   }
 
-  .vsText { font-size: 1.25rem; }
+  .vsText { font-size: 0.76rem; }
 }
 
 /* Landscape + short viewport */
 @media (orientation: landscape) and (max-height: 500px) {
-  .heroImageInner {
-    width: 98px;
-    height: 139px;
+  .heroCardVisual {
+    --bleed: 14px;
+    width: 154px;
+    height: 119px;
   }
 
-  .heroName { font-size: 0.7rem; }
-  .vsText { font-size: 1.45rem; }
+  .heroLabel { max-width: 154px; }
+
+  .heroName { font-size: 0.8rem; }
+  .vsText { font-size: 0.88rem; }
 }

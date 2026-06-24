@@ -13,6 +13,7 @@ import { generateCroppedImageUrl } from 'utils/cropImages';
 import { markHeroIntroAsShown } from 'features/game/GameSlice';
 import { getSettingsEntity } from 'features/options/optionsSlice';
 import styles from './HeroVsHeroIntro.module.css';
+import { METAFY_TIER_MAP, MetafyTierName } from 'utils/patronIcons';
 
 const PARTICLE_COUNT = 22;
 
@@ -47,16 +48,17 @@ const Particles: React.FC = () => {
     </div>
   );
 };
+
 interface HeroCardProps {
   imageUrl: string;
   heroName: string;
   isPremium: boolean;
   glowActive: boolean;
+  metafyTierName?: string;
 }
 
-const HeroCard: React.FC<HeroCardProps> = ({ imageUrl, heroName, isPremium, glowActive }) => {
+const HeroCard: React.FC<HeroCardProps> = ({ imageUrl, heroName, isPremium, glowActive, metafyTierName }) => {
   const cardRef = useRef<HTMLDivElement>(null);
-  const [isHovering, setIsHovering] = useState(false);
 
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
@@ -69,7 +71,6 @@ const HeroCard: React.FC<HeroCardProps> = ({ imageUrl, heroName, isPremium, glow
     stiffness: 260,
     damping: 28,
   });
-  const shimmerTranslateX = useTransform(mouseX, [-0.5, 0.5], [-90, 90]);
 
   const handleMouseMove = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
@@ -81,10 +82,9 @@ const HeroCard: React.FC<HeroCardProps> = ({ imageUrl, heroName, isPremium, glow
     [mouseX, mouseY]
   );
 
-  const handleMouseEnter = useCallback(() => setIsHovering(true), []);
+  const handleMouseEnter = useCallback(() => {}, []);
 
   const handleMouseLeave = useCallback(() => {
-    setIsHovering(false);
     mouseX.set(0);
     mouseY.set(0);
   }, [mouseX, mouseY]);
@@ -95,30 +95,33 @@ const HeroCard: React.FC<HeroCardProps> = ({ imageUrl, heroName, isPremium, glow
         <div className={`${styles.ambientGlow} ${glowActive ? styles.glowActive : ''}`} />
       )}
 
-      {/* No transformPerspective here — the outer card wrapper's preserve-3d context handles it */}
       <motion.div
         ref={cardRef}
-        className={isPremium ? styles.gradientBorderWrapper : styles.plainBorderWrapper}
+        className={styles.heroCardVisual}
         style={isPremium ? { rotateX, rotateY } : {}}
         onMouseMove={isPremium ? handleMouseMove : undefined}
         onMouseEnter={isPremium ? handleMouseEnter : undefined}
         onMouseLeave={isPremium ? handleMouseLeave : undefined}
       >
-        <div
-          className={styles.heroImageInner}
-          style={{ backgroundImage: `url(${imageUrl})` }}
-        >
-          {isPremium && (
-            <>
-              <div className={styles.sheenLoop} />
-            </>
-          )}
-        </div>
+        <img
+          className={styles.heroImg}
+          src={imageUrl}
+          alt={heroName}
+          draggable={false}
+        />
+
+        {/* Inset border — transparent center so the image shows through */}
+        <div className={`${styles.frameOverlay} ${isPremium ? styles.frameOverlayPremium : ''}`} />
+
+        {/* Bottom fog to ground the character into the arena floor */}
+        <div className={styles.groundFade} />
+
+        {isPremium && <div className={styles.sheenLoop} />}
       </motion.div>
 
       <div className={`${styles.heroLabel} ${isPremium ? styles.heroLabelPremium : ''}`}>
         <span className={styles.heroName}>{heroName}</span>
-        {isPremium && <span className={styles.premiumBadge}>Supporter</span>}
+        {isPremium && metafyTierName && <span className={styles.premiumBadge}>{metafyTierName}</span>}
       </div>
     </div>
   );
@@ -212,10 +215,22 @@ const HeroVsHeroIntro = () => {
     player?.isPvtVoidPatron ||
     player?.isContributor;
 
-  const yourPatronStatus = checkPatron(playerID === 1 ? gameState?.playerOne : gameState?.playerTwo);
-  const opponentPatronStatus = checkPatron(
-    playerID === 1 ? gameState?.playerTwo : gameState?.playerOne
-  );
+  const yourPlayer = playerID === 1 ? gameState?.playerOne : gameState?.playerTwo;
+  const opponentPlayer = playerID === 1 ? gameState?.playerTwo : gameState?.playerOne;
+
+  const yourPatronStatus = checkPatron(yourPlayer);
+  const opponentPatronStatus = checkPatron(opponentPlayer);
+
+  const getBadgeLabel = (player: any): string | undefined => {
+    const tier = player?.metafyTiers?.[0] as MetafyTierName | undefined;
+    if (tier && METAFY_TIER_MAP[tier]) return METAFY_TIER_MAP[tier].label;
+    if (player?.isPvtVoidPatron) return 'Seer of Ophidia';
+    if (player?.isPatron) return 'Fyendal Supporter';
+    return undefined;
+  };
+
+  const yourMetafyTierName = getBadgeLabel(yourPlayer);
+  const opponentMetafyTierName = getBadgeLabel(opponentPlayer);
 
   const disableHeroIntro = settingsData['DisableHeroIntro']?.value === '1';
 
@@ -254,22 +269,23 @@ const HeroVsHeroIntro = () => {
           exit={{ opacity: 0 }}
           transition={{ duration: 0.32 }}
         >
-          {/* Warm-left / cool-right contrasting atmosphere */}
-          <div className={styles.bgOrbLeft} />
-          <div className={styles.bgOrbRight} />
+          {/* Arena environment layers */}
+          <div className={styles.arenaOverlay} />
+          <div className={styles.arenaKeyLight} />
+          <div className={styles.arenaRimLeft} />
+          <div className={styles.arenaRimRight} />
 
           {/* Floating dust motes */}
           <Particles />
 
-          {/* Radial vignette — darkens edges, pushes the eye inward */}
+          {/* Radial vignette */}
           <div className={styles.vignette} />
 
-          {/* Shake wrapper fires when VS slams in */}
           <motion.div animate={shakeControls} className={styles.introContent}>
             {/* Your hero: slams in from the left, settles leaning toward center */}
             <motion.div
-              initial={{ x: -440, opacity: 0, rotateY: -22 }}
-              animate={{ x: 0, opacity: 1, rotateY: -12 }}
+              initial={{ x: 440, opacity: 0, rotateY: 22 }}
+              animate={{ x: 0, opacity: 1, rotateY: 12 }}
               transition={cardSpring}
               style={{ transformPerspective: 1400, transformStyle: 'preserve-3d' }}
             >
@@ -278,6 +294,7 @@ const HeroVsHeroIntro = () => {
                 heroName={displayYourHeroName}
                 isPremium={yourPatronStatus}
                 glowActive={glowActive}
+                metafyTierName={yourMetafyTierName}
               />
             </motion.div>
 
@@ -285,8 +302,8 @@ const HeroVsHeroIntro = () => {
 
             {/* Opponent hero: slams in from the right, settles leaning toward center */}
             <motion.div
-              initial={{ x: 440, opacity: 0, rotateY: 22 }}
-              animate={{ x: 0, opacity: 1, rotateY: 12 }}
+              initial={{ x: -440, opacity: 0, rotateY: -22 }}
+              animate={{ x: 0, opacity: 1, rotateY: -12 }}
               transition={{ ...cardSpring, delay: 0.05 }}
               style={{ transformPerspective: 1400, transformStyle: 'preserve-3d' }}
             >
@@ -295,6 +312,7 @@ const HeroVsHeroIntro = () => {
                 heroName={displayOpponentHeroName}
                 isPremium={opponentPatronStatus}
                 glowActive={glowActive}
+                metafyTierName={opponentMetafyTierName}
               />
             </motion.div>
           </motion.div>
