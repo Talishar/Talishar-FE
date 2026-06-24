@@ -125,7 +125,8 @@ function ParseEquipment(input: any) {
     } else {
       switch (cardObj.type) {
         case 'C': // hero
-          result.Hero = ParseCard({ ...cardObj, zone: ZONE.HERO });
+          result.Hero = ParseCard(cardObj);
+          result.Hero.zone = ZONE.HERO;
           break;
         case 'W':
         case 'W,T': // token weapon (i.e. Graphene Chelicera)
@@ -312,16 +313,16 @@ export default function ParseGameState(input: any) {
 
   result.playerTwo.Graveyard = [];
   if (input.opponentDiscard && Array.isArray(input.opponentDiscard)) {
-    for (const cardObj of input.opponentDiscard.reverse()) {
-      result.playerTwo.Graveyard.push(ParseCard(cardObj));
+    for (let j = input.opponentDiscard.length - 1; j >= 0; j--) {
+      result.playerTwo.Graveyard.push(ParseCard(input.opponentDiscard[j]));
     }
   }
 
   result.playerTwo.PitchRemaining = input.opponentPitchCount;
   result.playerTwo.Pitch = [];
   if (input.opponentPitch && Array.isArray(input.opponentPitch)) {
-    for (const cardObj of input.opponentPitch.reverse()) {
-      result.playerTwo.Pitch.push(ParseCard(cardObj));
+    for (let j = input.opponentPitch.length - 1; j >= 0; j--) {
+      result.playerTwo.Pitch.push(ParseCard(input.opponentPitch[j]));
     }
   }
 
@@ -329,16 +330,16 @@ export default function ParseGameState(input: any) {
   result.playerTwo.DeckBack = ParseCard(input.opponentDeckCard);
   result.playerTwo.Deck = [];
   if (input.opponentDeck && Array.isArray(input.opponentDeck)) {
-    for (const cardObj of input.opponentDeck.reverse()) {
-      result.playerTwo.Deck.push(ParseCard(cardObj));
+    for (let j = input.opponentDeck.length - 1; j >= 0; j--) {
+      result.playerTwo.Deck.push(ParseCard(input.opponentDeck[j]));
     }
   }
   result.playerTwo.CardBack = input.opponentCardBack;
 
   result.playerTwo.Banish = [];
   if (input.opponentBanish && Array.isArray(input.opponentBanish)) {
-    for (const cardObj of input.opponentBanish.reverse()) {
-      result.playerTwo.Banish.push(ParseCard(cardObj));
+    for (let j = input.opponentBanish.length - 1; j >= 0; j--) {
+      result.playerTwo.Banish.push(ParseCard(input.opponentBanish[j]));
     }
   }
 
@@ -362,16 +363,16 @@ export default function ParseGameState(input: any) {
   }
   if (input.opponentAuras && Array.isArray(input.opponentAuras)) {
     for (const cardObj of input.opponentAuras) {
-      result.playerTwo.Permanents.push(
-        ParseCard({ ...cardObj, zone: ZONE.AURAS })
-      );
+      const parsed = ParseCard(cardObj);
+      parsed.zone = ZONE.AURAS;
+      result.playerTwo.Permanents.push(parsed);
     }
   }
   if (input.opponentItems && Array.isArray(input.opponentItems)) {
     for (const cardObj of input.opponentItems) {
-      result.playerTwo.Permanents.push(
-        ParseCard({ ...cardObj, zone: ZONE.ITEMS })
-      );
+      const parsed = ParseCard(cardObj);
+      parsed.zone = ZONE.ITEMS;
+      result.playerTwo.Permanents.push(parsed);
     }
   }
   if (input.opponentPermanents && Array.isArray(input.opponentPermanents)) {
@@ -415,16 +416,16 @@ export default function ParseGameState(input: any) {
 
   result.playerOne.Graveyard = [];
   if (input.playerDiscard && Array.isArray(input.playerDiscard)) {
-    for (const cardObj of input.playerDiscard.reverse()) {
-      result.playerOne.Graveyard.push(ParseCard(cardObj));
+    for (let j = input.playerDiscard.length - 1; j >= 0; j--) {
+      result.playerOne.Graveyard.push(ParseCard(input.playerDiscard[j]));
     }
   }
 
   result.playerOne.PitchRemaining = input.playerPitchCount;
   result.playerOne.Pitch = [];
   if (input.playerPitch && Array.isArray(input.playerPitch)) {
-    for (const cardObj of input.playerPitch.reverse()) {
-      result.playerOne.Pitch.push(ParseCard(cardObj));
+    for (let j = input.playerPitch.length - 1; j >= 0; j--) {
+      result.playerOne.Pitch.push(ParseCard(input.playerPitch[j]));
     }
   }
 
@@ -432,16 +433,16 @@ export default function ParseGameState(input: any) {
   result.playerOne.DeckBack = ParseCard(input.playerDeckCard);
   result.playerOne.Deck = [];
   if (input.playerDeck && Array.isArray(input.playerDeck)) {
-    for (const cardObj of input.playerDeck.reverse()) {
-      result.playerOne.Deck.push(ParseCard(cardObj));
+    for (let j = input.playerDeck.length - 1; j >= 0; j--) {
+      result.playerOne.Deck.push(ParseCard(input.playerDeck[j]));
     }
   }
   result.playerOne.CardBack = input.playerCardBack;
 
   result.playerOne.Banish = [];
   if (input.playerBanish && Array.isArray(input.playerBanish)) {
-    for (const cardObj of input.playerBanish.reverse()) {
-      result.playerOne.Banish.push(ParseCard(cardObj));
+    for (let j = input.playerBanish.length - 1; j >= 0; j--) {
+      result.playerOne.Banish.push(ParseCard(input.playerBanish[j]));
     }
   }
 
@@ -461,16 +462,16 @@ export default function ParseGameState(input: any) {
   }
   if (input.playerAuras && Array.isArray(input.playerAuras)) {
     for (const cardObj of input.playerAuras) {
-      result.playerOne.Permanents.push(
-        ParseCard({ ...cardObj, zone: ZONE.AURAS })
-      );
+      const parsed = ParseCard(cardObj);
+      parsed.zone = ZONE.AURAS;
+      result.playerOne.Permanents.push(parsed);
     }
   }
   if (input.playerItems && Array.isArray(input.playerItems)) {
     for (const cardObj of input.playerItems) {
-      result.playerOne.Permanents.push(
-        ParseCard({ ...cardObj, zone: ZONE.ITEMS })
-      );
+      const parsed = ParseCard(cardObj);
+      parsed.zone = ZONE.ITEMS;
+      result.playerOne.Permanents.push(parsed);
     }
   }
   if (input.playerPermanents && Array.isArray(input.playerPermanents)) {
