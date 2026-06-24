@@ -110,19 +110,19 @@ const HeroCard: React.FC<HeroCardProps> = ({ imageUrl, heroName, isPremium, glow
           draggable={false}
         />
 
-        {/* Inset border — transparent center so the image shows through */}
-        <div className={`${styles.frameOverlay} ${isPremium ? styles.frameOverlayPremium : ''}`} />
-
-        {/* Bottom fog to ground the character into the arena floor */}
         <div className={styles.groundFade} />
 
         {isPremium && <div className={styles.sheenLoop} />}
+
+        <div className={`${styles.heroLabel} ${isPremium ? styles.heroLabelPremium : ''}`}>
+          <span className={styles.heroName}>{heroName}</span>
+          {isPremium && metafyTierName && <span className={styles.premiumBadge}>{metafyTierName}</span>}
+        </div>
+
+        {isPremium && <div className={styles.frameGlow} />}
       </motion.div>
 
-      <div className={`${styles.heroLabel} ${isPremium ? styles.heroLabelPremium : ''}`}>
-        <span className={styles.heroName}>{heroName}</span>
-        {isPremium && metafyTierName && <span className={styles.premiumBadge}>{metafyTierName}</span>}
-      </div>
+      <div className={`${styles.heroCardBorder} ${isPremium ? styles.heroCardBorderPremium : ''}`} />
     </div>
   );
 };
