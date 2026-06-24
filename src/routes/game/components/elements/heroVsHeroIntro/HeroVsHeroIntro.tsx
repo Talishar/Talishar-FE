@@ -110,19 +110,21 @@ const HeroCard: React.FC<HeroCardProps> = ({ imageUrl, heroName, isPremium, glow
           draggable={false}
         />
 
-        {/* Inset border — transparent center so the image shows through */}
-        <div className={`${styles.frameOverlay} ${isPremium ? styles.frameOverlayPremium : ''}`} />
-
-        {/* Bottom fog to ground the character into the arena floor */}
         <div className={styles.groundFade} />
 
         {isPremium && <div className={styles.sheenLoop} />}
+
+        <div className={`${styles.heroLabel} ${isPremium ? styles.heroLabelPremium : ''}`}>
+          <span className={styles.heroName}>{heroName}</span>
+          {isPremium && metafyTierName && <span className={styles.premiumBadge}>{metafyTierName}</span>}
+        </div>
+
+        {/* Interior premium glow only — stays inside clip-path */}
+        {isPremium && <div className={styles.frameGlow} />}
       </motion.div>
 
-      <div className={`${styles.heroLabel} ${isPremium ? styles.heroLabelPremium : ''}`}>
-        <span className={styles.heroName}>{heroName}</span>
-        {isPremium && metafyTierName && <span className={styles.premiumBadge}>{metafyTierName}</span>}
-      </div>
+      {/* Border lives outside heroCardVisual so clip-path never truncates it */}
+      <div className={`${styles.heroCardBorder} ${isPremium ? styles.heroCardBorderPremium : ''}`} />
     </div>
   );
 };
@@ -178,10 +180,11 @@ const HeroVsHeroIntro = () => {
     [gameGUID, gameID]
   );
 
-  useEffect(() => {
-    if (!gameID) return;
-    if (localStorage.getItem(getLocalStorageKey()) === 'false') setIsVisible(false);
-  }, [gameID, gameGUID, getLocalStorageKey]);
+  // DEV: localStorage "seen" check disabled for testing
+  // useEffect(() => {
+  //   if (!gameID) return;
+  //   if (localStorage.getItem(getLocalStorageKey()) === 'false') setIsVisible(false);
+  // }, [gameID, gameGUID, getLocalStorageKey]);
 
   useEffect(() => {
     if (!isVisible) return;
@@ -240,19 +243,20 @@ const HeroVsHeroIntro = () => {
     localStorage.setItem(getLocalStorageKey(), 'false');
   }, [dispatch, getLocalStorageKey]);
 
-  // DEBUG: comment this to auto-dismiss disabled
-   useEffect(() => {
-     if (!isVisible || !settingsData) return;
-     const t = setTimeout(handleDismiss, 4200);
-     return () => clearTimeout(t);
-   }, [isVisible, settingsData, handleDismiss]);
+  // DEV: auto-dismiss disabled for testing
+  // useEffect(() => {
+  //   if (!isVisible || !settingsData) return;
+  //   const t = setTimeout(handleDismiss, 4200);
+  //   return () => clearTimeout(t);
+  // }, [isVisible, settingsData, handleDismiss]);
 
   if (
     playerID === 3 ||
     !isVisible ||
     !yourHero ||
     !opponentHero ||
-    yourHero === opponentHero ||
+    // DEV: same-hero guard disabled for testing
+    // yourHero === opponentHero ||
     disableHeroIntro
   )
     return null;
