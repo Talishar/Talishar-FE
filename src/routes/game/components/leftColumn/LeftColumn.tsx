@@ -11,6 +11,7 @@ import { RootState } from 'app/Store';
 export default function LeftColumn() {
   const [isMobile, setIsMobile] = useState(false);
   const playerID = useAppSelector((state: RootState) => state.game.gameInfo.playerID);
+  const rafRef = useRef<number>(0);
 
   useEffect(() => {
     const handleResize = () => {

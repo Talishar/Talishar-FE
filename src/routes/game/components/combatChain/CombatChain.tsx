@@ -26,6 +26,7 @@ export default function CombatChain() {
   const showModals = useShowModal();
   const [canSkipBlock, setCanSkipBlock] = React.useState(false);
   const [canSkipBlockAndDef, setCanSkipBlockAndDef] = React.useState(false);
+  const storedOffset = parseFloat(localStorage.getItem(STORAGE_KEY) ?? '') || 0;
   const yOffsetMV = useMotionValue(storedOffset);
   const dragStartYRef = React.useRef(0);
   const dragStartOffsetRef = React.useRef(storedOffset);
