@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useCallback, useRef } from 'react';
 import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import Displayrow from 'interface/Displayrow';
@@ -30,25 +30,25 @@ export default function PermanentsZone(prop: Displayrow) {
     selectPermanentsAsStack(state, isPlayer)
   );
 
-  const handleMouseDown = (e: React.MouseEvent) => {
+  const handleMouseDown = useCallback((e: React.MouseEvent) => {
     isDragging.current = true;
     dragStartX.current = e.pageX - (scrollRef.current?.offsetLeft ?? 0);
     dragScrollLeft.current = scrollRef.current?.scrollLeft ?? 0;
     if (scrollRef.current) scrollRef.current.style.cursor = 'grabbing';
-  };
+  }, []);
 
-  const handleMouseMove = (e: React.MouseEvent) => {
+  const handleMouseMove = useCallback((e: React.MouseEvent) => {
     if (!isDragging.current || !scrollRef.current) return;
     e.preventDefault();
     const x = e.pageX - scrollRef.current.offsetLeft;
     const walk = x - dragStartX.current;
     scrollRef.current.scrollLeft = dragScrollLeft.current - walk;
-  };
+  }, []);
 
-  const handleMouseUp = () => {
+  const handleMouseUp = useCallback(() => {
     isDragging.current = false;
     if (scrollRef.current) scrollRef.current.style.cursor = '';
-  };
+  }, []);
 
   if (!permanents.length) {
     return (

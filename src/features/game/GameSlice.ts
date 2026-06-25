@@ -1071,97 +1071,58 @@ const selectPlayerOnePermanents = (state: RootState) =>
 const selectPlayerTwoPermanents = (state: RootState) =>
   state.game.playerTwo.Permanents;
 
-// Memoized selector factories for player one and player two
+const buildPermanentsAsStack = (permanents: Card[] | undefined): CardStack[] => {
+  const cards = permanents || [];
+  if (cards.length === 0) return [];
+
+  const result: CardStack[] = [];
+  const byCardNumber = new Map<string, number[]>();
+  let idIndex = 0;
+
+  for (const currentCard of [...cards].sort((a, b) =>
+    a.cardNumber.localeCompare(b.cardNumber)
+  )) {
+    if (currentCard.cardNumber === 'EVR070') {
+      result.push({ card: currentCard, count: 1, id: `${currentCard.cardNumber}-${idIndex++}` });
+      continue;
+    }
+
+    const curNormalized = { ...currentCard, actionDataOverride: '' };
+    const candidates = byCardNumber.get(currentCard.cardNumber);
+    let matched = false;
+
+    if (candidates) {
+      for (const idx of candidates) {
+        if (isEqual({ ...result[idx].card, actionDataOverride: '' }, curNormalized)) {
+          result[idx].count++;
+          matched = true;
+          break;
+        }
+      }
+    }
+
+    if (!matched) {
+      const idx = result.length;
+      if (candidates) {
+        candidates.push(idx);
+      } else {
+        byCardNumber.set(currentCard.cardNumber, [idx]);
+      }
+      result.push({ card: currentCard, count: 1, id: `${currentCard.cardNumber}-${idIndex++}` });
+    }
+  }
+
+  return result;
+};
+
 const selectPlayerOnePermanentsAsStack = createSelector(
   [selectPlayerOnePermanents],
-  (permanents: Card[] | undefined) => {
-    const cards = permanents || [];
-    let initialCardStack: CardStack[] = [];
-    let idIndex = 0;
-    return [...cards]
-      .sort((a, b) => a.cardNumber.localeCompare(b.cardNumber))
-      .reduce((accumulator, currentCard) => {
-        if (currentCard.cardNumber === 'EVR070') {
-          accumulator.push({
-            card: currentCard,
-            count: 1,
-            id: `${currentCard.cardNumber}-${idIndex++}`
-          });
-          return accumulator;
-        }
-        const cardCopy = { ...currentCard };
-        const storedADO = currentCard.actionDataOverride;
-        cardCopy.actionDataOverride = '';
-        let isInAccumulator = false;
-        let index = 0;
-
-        for (const [ix, cardStack] of accumulator.entries()) {
-          cardCopy.actionDataOverride = cardStack.card.actionDataOverride;
-          if (isEqual(cardStack.card, cardCopy)) {
-            isInAccumulator = true;
-            index = ix;
-            break;
-          }
-        }
-        if (isInAccumulator) {
-          accumulator[index].count = accumulator[index].count + 1;
-          return accumulator;
-        }
-        accumulator.push({
-          card: currentCard,
-          count: 1,
-          id: `${currentCard.cardNumber}-${idIndex++}`
-        });
-        cardCopy.actionDataOverride = storedADO;
-        return accumulator;
-      }, initialCardStack);
-  }
+  (permanents) => buildPermanentsAsStack(permanents)
 );
 
 const selectPlayerTwoPermanentsAsStack = createSelector(
   [selectPlayerTwoPermanents],
-  (permanents: Card[] | undefined) => {
-    const cards = permanents || [];
-    let initialCardStack: CardStack[] = [];
-    let idIndex = 0;
-    return [...cards]
-      .sort((a, b) => a.cardNumber.localeCompare(b.cardNumber))
-      .reduce((accumulator, currentCard) => {
-        if (currentCard.cardNumber === 'EVR070') {
-          accumulator.push({
-            card: currentCard,
-            count: 1,
-            id: `${currentCard.cardNumber}-${idIndex++}`
-          });
-          return accumulator;
-        }
-        const cardCopy = { ...currentCard };
-        const storedADO = currentCard.actionDataOverride;
-        cardCopy.actionDataOverride = '';
-        let isInAccumulator = false;
-        let index = 0;
-
-        for (const [ix, cardStack] of accumulator.entries()) {
-          cardCopy.actionDataOverride = cardStack.card.actionDataOverride;
-          if (isEqual(cardStack.card, cardCopy)) {
-            isInAccumulator = true;
-            index = ix;
-            break;
-          }
-        }
-        if (isInAccumulator) {
-          accumulator[index].count = accumulator[index].count + 1;
-          return accumulator;
-        }
-        accumulator.push({
-          card: currentCard,
-          count: 1,
-          id: `${currentCard.cardNumber}-${idIndex++}`
-        });
-        cardCopy.actionDataOverride = storedADO;
-        return accumulator;
-      }, initialCardStack);
-  }
+  (permanents) => buildPermanentsAsStack(permanents)
 );
 
 export const selectPermanentsAsStack = (

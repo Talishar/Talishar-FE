@@ -35,7 +35,7 @@ export default function HealthDisplay(props: Player) {
 
   return (
     <div className={styles.health}>
-      <div key={health} className={styles.tick}>
+      <div className={styles.tick}>
         {health}
       </div>
     </div>

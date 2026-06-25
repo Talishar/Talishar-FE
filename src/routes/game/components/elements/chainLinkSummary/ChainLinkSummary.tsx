@@ -39,7 +39,7 @@ export const ChainLinkSummaryContainer = () => {
     if (!!turnPhase && turnPhase === 'OVER') {
       dispatch(hideActiveLayer());
     }
-  }, [turnPhase, dispatch, chainLinkSummary]);
+  }, [turnPhase, dispatch]);
 
   if (!chainLinkSummary || !chainLinkSummary.show) {
     // Check if game is over to show end game screen
@@ -98,7 +98,10 @@ const ChainLinkSummary = ({
   if (isLoading) {
     content = <div>Loading...</div>;
   } else if (error) {
-    content = <div className={styles.error}>{JSON.stringify(error)}</div>;
+    const errorMsg = 'status' in (error as object)
+      ? `Error ${(error as { status: number }).status}`
+      : 'Failed to load chain link summary';
+    content = <div className={styles.error}>{errorMsg}</div>;
   } else {
     content = (
       <div className={styles.cardListContents}>
@@ -119,7 +122,7 @@ const ChainLinkSummary = ({
                   const rowClass = `${styles.tableRow} ${isPlayer ? styles.playerRow : styles.opponentRow}`;
                   const glowClass = isPlayer ? styles.playerGlow : styles.opponentGlow;
                   return (
-                    <tr key={`cardList${ix}`} className={rowClass}>
+                    <tr key={`${entry.cardID}-${ix}`} className={rowClass}>
                       <td className={styles.cardImageCol}>
                         {entry.cardID === 'POWERCOUNTER' ? (
                           <img

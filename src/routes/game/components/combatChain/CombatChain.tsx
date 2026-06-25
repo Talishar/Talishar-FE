@@ -51,54 +51,57 @@ export default function CombatChain() {
     setDragStartOffset(yOffset);
   };
 
+  const rafRef = React.useRef<number>(0);
+
   React.useEffect(() => {
     if (!isDragging) return;
 
     const handleMouseMove = (e: MouseEvent) => {
       if (!containerRef.current) return;
-      const delta = e.clientY - dragStartY;
-      const deltaDvh = (delta / window.innerHeight) * 100;
-      let newOffset = dragStartOffset + deltaDvh;
-
-      // Constrain the position to stay on screen
-      newOffset = Math.max(MIN_Y_OFFSET, Math.min(MAX_Y_OFFSET, newOffset));
-      setYOffset(newOffset);
+      cancelAnimationFrame(rafRef.current);
+      rafRef.current = requestAnimationFrame(() => {
+        const delta = e.clientY - dragStartY;
+        const deltaDvh = (delta / window.innerHeight) * 100;
+        const newOffset = Math.max(MIN_Y_OFFSET, Math.min(MAX_Y_OFFSET, dragStartOffset + deltaDvh));
+        setYOffset(newOffset);
+      });
     };
 
     const handleTouchMove = (e: TouchEvent) => {
       if (!containerRef.current) return;
-      const delta = e.touches[0].clientY - dragStartY;
-      const deltaDvh = (delta / window.innerHeight) * 100;
-      let newOffset = dragStartOffset + deltaDvh;
-
-      // Constrain the position to stay on screen
-      newOffset = Math.max(MIN_Y_OFFSET, Math.min(MAX_Y_OFFSET, newOffset));
-      setYOffset(newOffset);
+      cancelAnimationFrame(rafRef.current);
+      rafRef.current = requestAnimationFrame(() => {
+        const delta = e.touches[0].clientY - dragStartY;
+        const deltaDvh = (delta / window.innerHeight) * 100;
+        const newOffset = Math.max(MIN_Y_OFFSET, Math.min(MAX_Y_OFFSET, dragStartOffset + deltaDvh));
+        setYOffset(newOffset);
+      });
     };
 
     const handleMouseUp = () => {
+      cancelAnimationFrame(rafRef.current);
       setIsDragging(false);
       localStorage.setItem(STORAGE_KEY, yOffsetRef.current.toString());
     };
 
     const handleTouchEnd = () => {
+      cancelAnimationFrame(rafRef.current);
       setIsDragging(false);
       localStorage.setItem(STORAGE_KEY, yOffsetRef.current.toString());
     };
 
-    if (isDragging) {
-      document.addEventListener('mousemove', handleMouseMove);
-      document.addEventListener('touchmove', handleTouchMove);
-      document.addEventListener('mouseup', handleMouseUp);
-      document.addEventListener('touchend', handleTouchEnd);
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('touchmove', handleTouchMove, { passive: true });
+    document.addEventListener('mouseup', handleMouseUp);
+    document.addEventListener('touchend', handleTouchEnd);
 
-      return () => {
-        document.removeEventListener('mousemove', handleMouseMove);
-        document.removeEventListener('touchmove', handleTouchMove);
-        document.removeEventListener('mouseup', handleMouseUp);
-        document.removeEventListener('touchend', handleTouchEnd);
-      };
-    }
+    return () => {
+      cancelAnimationFrame(rafRef.current);
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('touchmove', handleTouchMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+      document.removeEventListener('touchend', handleTouchEnd);
+    };
   }, [isDragging, dragStartY, dragStartOffset]);
 
   const showCombatChain =

@@ -1,4 +1,5 @@
 import { useAppSelector } from 'app/Hooks';
+import { useMemo } from 'react';
 import { useLanguageSelector } from 'hooks/useLanguageSelector';
 import { RootState } from 'app/Store';
 import CardImage from '../cardImage/CardImage';
@@ -29,7 +30,7 @@ function CardDetails({
       : classNames(styles.defaultPos, styles.popUp);
   return (
     <div className={containerClassName} style={containerStyle}>
-      <div className={styles.popUpInside} key={src}>
+      <div className={styles.popUpInside}>
         <CardImage src={src} className={styles.img} isOpponent={isOpponent} />
       </div>
     </div>
@@ -62,6 +63,18 @@ export default function CardPortal() {
   const hoverImageSize = Number(cookies.hoverImageSize) || 1;
   const { getLanguage } = useLanguageSelector();
   const [windowWidth, windowHeight] = useWindowDimensions();
+
+  // useMemo must come before any early return (rules of hooks).
+  // getSrcs only recomputes when the hovered card changes, not on every mouse-position update.
+  const cardNumber = popup?.popupCard?.cardNumber;
+  const [src, dfcSrc] = useMemo(
+    () =>
+      cardNumber
+        ? getSrcs({ locale: getLanguage(), cardNumber })
+        : (['', undefined] as const),
+    [cardNumber, getLanguage]
+  );
+
   if (
     popup === undefined ||
     popup.popupOn === false ||
@@ -69,11 +82,6 @@ export default function CardPortal() {
   ) {
     return null;
   }
-
-  const [src, dfcSrc] = getSrcs({
-    locale: getLanguage(),
-    cardNumber: popup.popupCard.cardNumber
-  });
 
   if (popup.xCoord === undefined || popup.yCoord === undefined) {
     return createPortal(<CardDetails src={src} />, document.body);

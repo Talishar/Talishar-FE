@@ -24,7 +24,7 @@ const PlayerPrompt = React.memo(() => {
         <div
           className={styles.buttonDiv}
           onClick={() => dispatch(submitButton({ button }))}
-          key={ix.toString()}
+          key={`${button.mode ?? ix}-${button.caption ?? ix}`}
         >
           {button.caption}
         </div>

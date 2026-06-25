@@ -63,6 +63,14 @@ export default function ChatBox({ usePrimary = false, showTabs = true }: { usePr
     }
   };
 
+  const streamerNameRegex = useMemo(
+    () =>
+      isStreamerMode && oppName
+        ? new RegExp(oppName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g')
+        : null,
+    [isStreamerMode, oppName]
+  );
+
   const chatMessages = useMemo(() => {
     if (!chatLog) return null;
 
@@ -79,30 +87,24 @@ export default function ChatBox({ usePrimary = false, showTabs = true }: { usePr
     const p1DisplayName = amIPlayerOne ? myDisplayName : oppDisplayName;
     const p2DisplayName = amIPlayerOne ? oppDisplayName : myDisplayName;
 
-    // Build once for the whole batch; was previously compiled per message.
-    const streamerNameRegex =
-      isStreamerMode && oppName
-        ? new RegExp(oppName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g')
-        : null;
+    const result: Array<{ processed: string; originalIndex: number }> = [];
+    for (let i = 0; i < chatLog.length; i++) {
+      const message = chatLog[i];
+      if (chatFilter === 'chat' && !CHAT_RE.test(message)) continue;
+      if (chatFilter === 'log' && CHAT_RE.test(message)) continue;
 
-    return chatLog
-      .filter((message) => {
-        if (chatFilter === 'chat') return CHAT_RE.test(message);
-        if (chatFilter === 'log') return !CHAT_RE.test(message);
-        return true;
-      })
-      .map((message) => {
-        let processed = message
-          .replace(/Player 1/g, `<b>${p1DisplayName}</b>`)
-          .replace(/Player 2/g, `<b>${p2DisplayName}</b>`);
+      let processed = message
+        .replace(/Player 1/g, `<b>${p1DisplayName}</b>`)
+        .replace(/Player 2/g, `<b>${p2DisplayName}</b>`);
 
-        if (streamerNameRegex) {
-          processed = processed.replace(streamerNameRegex, 'Opponent');
-        }
+      if (streamerNameRegex) {
+        processed = processed.replace(streamerNameRegex, 'Opponent');
+      }
 
-        return processed;
-      });
-  }, [chatLog, chatFilter, isStreamerMode, amIPlayerOne, myName, oppName]);
+      result.push({ processed, originalIndex: i });
+    }
+    return result;
+  }, [chatLog, chatFilter, isStreamerMode, amIPlayerOne, myName, oppName, streamerNameRegex]);
 
   useEffect(() => {
     const currentLength = chatLog?.length ?? 0;
@@ -152,8 +154,8 @@ export default function ChatBox({ usePrimary = false, showTabs = true }: { usePr
       )}
       <div className={styles.chatBoxInner}>
         <div className={styles.chatBox} ref={chatBoxRef}>
-          {chatMessages?.map((chat, ix) => (
-            <ChatMessageItem key={ix} message={chat} />
+          {chatMessages?.map(({ processed, originalIndex }) => (
+            <ChatMessageItem key={originalIndex} message={processed} />
           ))}
           {displayTyping && (
             <div className={styles.typingIndicator} ref={messagesEndRef}>

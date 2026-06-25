@@ -1,17 +1,25 @@
 import { useState, useEffect } from 'react';
 
 export default function useWindowDimensions(): [number, number] {
-  const [width, setWidth] = useState(() => window.innerWidth);
-  const [height, setHeight] = useState(() => window.innerHeight);
+  const [dims, setDims] = useState<[number, number]>(() => [
+    window.innerWidth,
+    window.innerHeight
+  ]);
 
   useEffect(() => {
+    let rafId = 0;
     const handleResize = () => {
-      setWidth(window.innerWidth);
-      setHeight(window.innerHeight);
+      cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(() => {
+        setDims([window.innerWidth, window.innerHeight]);
+      });
     };
     window.addEventListener('resize', handleResize, { passive: true });
-    return () => window.removeEventListener('resize', handleResize);
+    return () => {
+      cancelAnimationFrame(rafId);
+      window.removeEventListener('resize', handleResize);
+    };
   }, []);
 
-  return [width, height];
+  return dims;
 }

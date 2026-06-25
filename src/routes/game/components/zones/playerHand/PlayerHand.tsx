@@ -15,6 +15,7 @@ import drawingCardsSound from 'sounds/drawing_cards.wav';
 import { getSettingsEntity } from 'features/options/optionsSlice';
 
 const DEFAULT_HAND_REORDER_STEP_PX = 120;
+const NUMERIC_RE = /^\d+$/;
 
 type CardWithStableId = {
   card: Card;
@@ -73,7 +74,7 @@ export default function PlayerHand() {
 
     const result: CardWithStableId[] = cards.map((card) => {
       const ado = card.actionDataOverride ?? '';
-      const isNumericAdo = ado !== '' && /^\d+$/.test(ado);
+      const isNumericAdo = ado !== '' && NUMERIC_RE.test(ado);
 
       if (isNumericAdo) {
         const adoKey = `${card.cardNumber}::${ado}`;
@@ -145,7 +146,6 @@ export default function PlayerHand() {
     update();
     const ro = new ResizeObserver(update);
     ro.observe(gameZone);
-    ro.observe(document.body);
     return () => ro.disconnect();
   }, []);
   const arsenalCards = useAppSelector(

@@ -11,6 +11,7 @@ import TurnWidget from '../elements/turnWidget/TurnWidget';
 import ManualModePanel from '../leftColumn/ManualModePanel/ManualModePanel';
 import { useAppSelector } from 'app/Hooks';
 import { getGameInfo } from 'features/game/GameSlice';
+import { RootState } from 'app/Store';
 import AmbientParticles from '../elements/ambientParticles';
 
 export interface playAreaDimensions {
@@ -22,7 +23,7 @@ export function Board() {
   const [cookies] = useCookies(['experimental']);
   const { playerID, isReplay } = useAppSelector(getGameInfo);
   const spectatorCameraView = useAppSelector(
-    (state: any) => state.game.spectatorCameraView
+    (state: RootState) => state.game.spectatorCameraView
   );
 
   const useOldScreen = height > width;

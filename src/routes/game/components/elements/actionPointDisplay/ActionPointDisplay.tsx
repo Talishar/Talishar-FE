@@ -71,7 +71,7 @@ export default function ActionPointDisplay(props: ActionPointDisplayProps) {
   return (
     <div className={styles.actionPointDisplay}>
       <div className={actionPointClass}>
-        <span key={APAvailable} className={styles.tick}>
+        <span className={styles.tick}>
           {`${APAvailable} AP`}
         </span>
       </div>

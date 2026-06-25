@@ -81,13 +81,14 @@ export const DeckZone = React.memo((prop: Displayrow) => {
   // useMemo MUST be before the early return — hooks called after an early return
   // cause "rendered more hooks than previous render" when the deck goes from
   // empty (early-return path, useMemo skipped) to populated (full path, useMemo runs).
-  const shuffleLayerCount = Math.min(3, Math.max(5, (deckCards ?? 0) - 1));
+  // Clamp between 3 and 5 layers (was swapped: Math.min(3, Math.max(5,...)) always returned 3).
+  const shuffleLayerCount = Math.min(5, Math.max(3, (deckCards ?? 0) - 1));
   const shuffleLayerDelays = useMemo(
     () =>
       shouldAnimateShuffling
         ? Array.from({ length: shuffleLayerCount }, () => `${Math.random() * 400}ms`)
         : null,
-    [shouldAnimateShuffling]
+    [shouldAnimateShuffling, shuffleLayerCount]
   );
 
   if (deckCards === undefined || deckCards === 0) {

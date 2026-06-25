@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { submitButton } from 'features/game/GameSlice';
 import { useAppSelector, useAppDispatch } from 'app/Hooks';
 import { RootState } from 'app/Store';
@@ -34,6 +34,13 @@ export default function PassTurnDisplay() {
   const [isPassClickDebounced, setIsPassClickDebounced] =
     useState<boolean>(false);
   const [playPassTurnSound] = useSound(passTurnSound);
+  // Ref so the priority-sound effect doesn't re-register when useSound creates a new function ref.
+  const playPassTurnSoundRef = useRef(playPassTurnSound);
+  playPassTurnSoundRef.current = playPassTurnSound;
+
+  // Holds the debounce timer so it can be cleared on unmount (prevents setState after unmount).
+  const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   const preventPassPrompt = useAppSelector(
     (state: RootState) => state.game.preventPassPrompt
   );
@@ -44,15 +51,10 @@ export default function PassTurnDisplay() {
 
   useEffect(() => {
     if (hasPriority && !isMuted && playerID !== 3) {
-      playPassTurnSound();
+      playPassTurnSoundRef.current();
     }
-  }, [
-    frameNumber,
-    hasPriority,
-    isMuted,
-    playerID,
-    playPassTurnSound
-  ]);
+    // playPassTurnSound excluded: latest value always read from ref.
+  }, [frameNumber, hasPriority, isMuted, playerID]);
 
   useEffect(() => {
     let link = document.getElementById('favicon') as HTMLLinkElement;
@@ -63,19 +65,24 @@ export default function PassTurnDisplay() {
     }
   }, [hasPriority, playerID]);
 
+  // Cleanup debounce timer on unmount so setState is never called on an unmounted component.
+  useEffect(() => () => {
+    if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
+  }, []);
+
   const onPassTurn = useCallback(() => {
-    if (isPassClickDebounced) {
-      return;
-    }
+    if (isPassClickDebounced) return;
 
     setIsPassClickDebounced(true);
-    const debounceTimer = setTimeout(() => {
+    if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
+    debounceTimerRef.current = setTimeout(() => {
       setIsPassClickDebounced(false);
+      debounceTimerRef.current = null;
     }, 500);
 
     if (preventPassPrompt) {
       if (showAreYouSureModal) {
-        // Modal is already open, treat SPACE shortucut as clicking Yes
+        // Modal is already open, treat SPACE shortcut as clicking Yes
         setShowAreYouSureModal(false);
         dispatch(submitButton({ button: { mode: PROCESS_INPUT.PASS } }));
       } else {
@@ -84,8 +91,6 @@ export default function PassTurnDisplay() {
     } else {
       dispatch(submitButton({ button: { mode: PROCESS_INPUT.PASS } }));
     }
-
-    return () => clearTimeout(debounceTimer);
   }, [preventPassPrompt, showAreYouSureModal, dispatch, isPassClickDebounced]);
 
   const onUndoKeyPress = useCallback(() => {

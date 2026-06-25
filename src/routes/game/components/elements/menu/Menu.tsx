@@ -184,14 +184,21 @@ function MenuContent() {
   const isSpectator = playerID === 3;
 
   useEffect(() => {
+    let rafId = 0;
     const handleResize = () => {
-      const width = window.innerWidth;
-      setIsMobile(width < 600);
-      setIsTablet(width >= 600 && width < 1200);
+      cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(() => {
+        const width = window.innerWidth;
+        setIsMobile(width < 600);
+        setIsTablet(width >= 600 && width < 1200);
+      });
     };
-    window.addEventListener('resize', handleResize);
+    window.addEventListener('resize', handleResize, { passive: true });
     handleResize();
-    return () => window.removeEventListener('resize', handleResize);
+    return () => {
+      cancelAnimationFrame(rafId);
+      window.removeEventListener('resize', handleResize);
+    };
   }, []);
 
   // Spectator view: only show essential buttons

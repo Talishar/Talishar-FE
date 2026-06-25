@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useMemo } from 'react';
 import {
   clearPopUp,
   playCard,
@@ -44,7 +44,7 @@ export interface HandCard {
   onHandReorderDragCancel?: () => void;
 }
 
-export const PlayerHandCard = ({
+export const PlayerHandCard = React.memo(({
   card,
   isArsenal,
   isBanished,
@@ -187,17 +187,21 @@ export const PlayerHandCard = ({
     clearTimeout(timerRef.current);
   };
 
-  const imgStyles = classNames(styles.img, {
-    [styles.border1]: card.borderColor == '1',
-    [styles.border2]: card.borderColor == '2',
-    [styles.border3]: card.borderColor == '3',
-    [styles.border4]: card.borderColor == '4',
-    [styles.border5]: card.borderColor == '5',
-    [styles.border6]: card.borderColor == '6',
-    [styles.border7]: card.borderColor == '7',
-    [styles.border8]: card.borderColor == '8',
-    [styles.border9]: card.borderColor == '9'
-  });
+  const imgStyles = useMemo(
+    () =>
+      classNames(styles.img, {
+        [styles.border1]: card.borderColor == '1',
+        [styles.border2]: card.borderColor == '2',
+        [styles.border3]: card.borderColor == '3',
+        [styles.border4]: card.borderColor == '4',
+        [styles.border5]: card.borderColor == '5',
+        [styles.border6]: card.borderColor == '6',
+        [styles.border7]: card.borderColor == '7',
+        [styles.border8]: card.borderColor == '8',
+        [styles.border9]: card.borderColor == '9'
+      }),
+    [card.borderColor]
+  );
 
   return (
     <motion.div
@@ -258,6 +262,7 @@ export const PlayerHandCard = ({
       )}
     </motion.div>
   );
-};
+});
+PlayerHandCard.displayName = 'PlayerHandCard';
 
 export default PlayerHandCard;

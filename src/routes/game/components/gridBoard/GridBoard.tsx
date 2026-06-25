@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useAppSelector } from 'app/Hooks';
 import { getSettingsEntity } from 'features/options/optionsSlice';
 import { getGameInfo } from 'features/game/GameSlice';
 import * as optConst from 'features/options/constants';
+import { RootState } from 'app/Store';
 import classNames from 'classnames';
 
 import ArsenalZone from '../zones/arsenalZone/ArsenalZone';
@@ -36,7 +37,7 @@ const GridBoard = () => {
   const settingsData = useAppSelector(getSettingsEntity);
   const { playerID, isReplay } = useAppSelector(getGameInfo);
   const spectatorCameraView = useAppSelector(
-    (state: any) => state.game.spectatorCameraView
+    (state: RootState) => state.game.spectatorCameraView
   );
   const isMirroredOpponent =
     settingsData?.[optConst.MIRRORED_BOARD_LAYOUT]?.value === '1';
@@ -46,26 +47,28 @@ const GridBoard = () => {
   // For spectators and replay viewers, check if they want to view from player 2's perspective
   const isSpectatorViewingPlayer2 = (playerID === 3 || isReplay) && spectatorCameraView === 2;
 
-  const gridBoardClass = classNames({
-    // Swapped spectator views (with optional mirroring)
-    [styles.SwappedGameBoardGrid]:
-      isSpectatorViewingPlayer2 && !isMirroredOpponent && !isMirroredPlayer,
-    [styles.SwappedMirroredOpponentGameBoardGrid]:
-      isSpectatorViewingPlayer2 && isMirroredOpponent && !isMirroredPlayer,
-    [styles.SwappedMirroredPlayerGameBoardGrid]:
-      isSpectatorViewingPlayer2 && isMirroredPlayer && !isMirroredOpponent,
-    [styles.SwappedMirroredBothGameBoardGrid]:
-      isSpectatorViewingPlayer2 && isMirroredOpponent && isMirroredPlayer,
-    // Normal views (non-spectator or spectator viewing player 1)
-    [styles.gameBoardGrid]:
-      !isSpectatorViewingPlayer2 && !isMirroredOpponent && !isMirroredPlayer,
-    [styles.MirroredOpponentGameBoardGrid]:
-      !isSpectatorViewingPlayer2 && isMirroredOpponent && !isMirroredPlayer,
-    [styles.MirroredPlayerGameBoardGrid]:
-      !isSpectatorViewingPlayer2 && isMirroredPlayer && !isMirroredOpponent,
-    [styles.MirroredBothGameBoardGrid]:
-      !isSpectatorViewingPlayer2 && isMirroredOpponent && isMirroredPlayer
-  });
+  const gridBoardClass = useMemo(
+    () =>
+      classNames({
+        [styles.SwappedGameBoardGrid]:
+          isSpectatorViewingPlayer2 && !isMirroredOpponent && !isMirroredPlayer,
+        [styles.SwappedMirroredOpponentGameBoardGrid]:
+          isSpectatorViewingPlayer2 && isMirroredOpponent && !isMirroredPlayer,
+        [styles.SwappedMirroredPlayerGameBoardGrid]:
+          isSpectatorViewingPlayer2 && isMirroredPlayer && !isMirroredOpponent,
+        [styles.SwappedMirroredBothGameBoardGrid]:
+          isSpectatorViewingPlayer2 && isMirroredOpponent && isMirroredPlayer,
+        [styles.gameBoardGrid]:
+          !isSpectatorViewingPlayer2 && !isMirroredOpponent && !isMirroredPlayer,
+        [styles.MirroredOpponentGameBoardGrid]:
+          !isSpectatorViewingPlayer2 && isMirroredOpponent && !isMirroredPlayer,
+        [styles.MirroredPlayerGameBoardGrid]:
+          !isSpectatorViewingPlayer2 && isMirroredPlayer && !isMirroredOpponent,
+        [styles.MirroredBothGameBoardGrid]:
+          !isSpectatorViewingPlayer2 && isMirroredOpponent && isMirroredPlayer
+      }),
+    [isSpectatorViewingPlayer2, isMirroredOpponent, isMirroredPlayer]
+  );
 
   return (
     <>

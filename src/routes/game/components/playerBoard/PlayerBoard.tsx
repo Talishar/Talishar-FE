@@ -1,25 +1,21 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import TopRow from '../topRow/TopRow';
 import MiddleRow from '../middleRow/MiddleRow';
 import BottomRow from '../bottomRow/BottomRow';
 import styles from './PlayerBoard.module.css';
 import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
-import { DEFAULT_PLAYMAT } from 'appConstants';
 
 export default function PlayerBoard() {
-  let playmat = useAppSelector(
+  const playmatRaw = useAppSelector(
     (state: RootState) => state.game.playerOne.Playmat
   );
+  const playmat = playmatRaw ?? 'aria';
 
-  if (playmat === undefined) {
-    // playmat = DEFAULT_PLAYMAT;
-    playmat = `aria`;
-  }
-
-  const styleToApply = {
-    backgroundImage: `url(/playmats/${playmat}.webp)`
-  };
+  const styleToApply = useMemo(
+    () => ({ backgroundImage: `url(/playmats/${playmat}.webp)` }),
+    [playmat]
+  );
 
   return (
     <div className={styles.playerPlaymat} style={styleToApply}>

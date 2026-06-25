@@ -52,6 +52,7 @@ export default function PlayerInputPopUp() {
   const containerRef = useRef<HTMLDivElement>(null);
   const yOffsetRef = useRef(yOffset);
   yOffsetRef.current = yOffset;
+  const rafRef = useRef<number>(0);
 
   const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
     setIsDragging(true);
@@ -69,43 +70,50 @@ export default function PlayerInputPopUp() {
     if (!isDragging) return;
 
     const handleMouseMove = (e: MouseEvent) => {
-      const delta = e.clientY - dragStartY;
-      const deltaDvh = (delta / window.innerHeight) * 100;
-      let newOffset = dragStartOffset + deltaDvh;
-      newOffset = Math.max(
-        PLAYER_INPUT_MIN_Y_OFFSET,
-        Math.min(PLAYER_INPUT_MAX_Y_OFFSET, newOffset)
-      );
-      setYOffset(newOffset);
+      cancelAnimationFrame(rafRef.current);
+      rafRef.current = requestAnimationFrame(() => {
+        const delta = e.clientY - dragStartY;
+        const deltaDvh = (delta / window.innerHeight) * 100;
+        const newOffset = Math.max(
+          PLAYER_INPUT_MIN_Y_OFFSET,
+          Math.min(PLAYER_INPUT_MAX_Y_OFFSET, dragStartOffset + deltaDvh)
+        );
+        setYOffset(newOffset);
+      });
     };
 
     const handleTouchMove = (e: TouchEvent) => {
-      const delta = e.touches[0].clientY - dragStartY;
-      const deltaDvh = (delta / window.innerHeight) * 100;
-      let newOffset = dragStartOffset + deltaDvh;
-      newOffset = Math.max(
-        PLAYER_INPUT_MIN_Y_OFFSET,
-        Math.min(PLAYER_INPUT_MAX_Y_OFFSET, newOffset)
-      );
-      setYOffset(newOffset);
+      cancelAnimationFrame(rafRef.current);
+      rafRef.current = requestAnimationFrame(() => {
+        const delta = e.touches[0].clientY - dragStartY;
+        const deltaDvh = (delta / window.innerHeight) * 100;
+        const newOffset = Math.max(
+          PLAYER_INPUT_MIN_Y_OFFSET,
+          Math.min(PLAYER_INPUT_MAX_Y_OFFSET, dragStartOffset + deltaDvh)
+        );
+        setYOffset(newOffset);
+      });
     };
 
     const handleMouseUp = () => {
+      cancelAnimationFrame(rafRef.current);
       setIsDragging(false);
       localStorage.setItem(PLAYER_INPUT_STORAGE_KEY, yOffsetRef.current.toString());
     };
 
     const handleTouchEnd = () => {
+      cancelAnimationFrame(rafRef.current);
       setIsDragging(false);
       localStorage.setItem(PLAYER_INPUT_STORAGE_KEY, yOffsetRef.current.toString());
     };
 
     document.addEventListener('mousemove', handleMouseMove);
-    document.addEventListener('touchmove', handleTouchMove);
+    document.addEventListener('touchmove', handleTouchMove, { passive: true });
     document.addEventListener('mouseup', handleMouseUp);
     document.addEventListener('touchend', handleTouchEnd);
 
     return () => {
+      cancelAnimationFrame(rafRef.current);
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('touchmove', handleTouchMove);
       document.removeEventListener('mouseup', handleMouseUp);

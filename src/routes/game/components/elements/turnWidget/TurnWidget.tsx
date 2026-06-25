@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import ActionPointDisplay from '../actionPointDisplay/ActionPointDisplay';
@@ -12,13 +12,9 @@ export default function TurnWidget() {
     (state: RootState) => state.game.canPassPhase
   );
 
-  const widgetClass = useMemo(() => {
-    // Ensure canPassPhase is a boolean to prevent classnames parsing issues
-    const isCanPass = Boolean(canPassPhase === true);
-    return classNames(styles.widget, {
-      [styles.myTurn]: isCanPass
-    });
-  }, [canPassPhase]);
+  const widgetClass = classNames(styles.widget, {
+    [styles.myTurn]: canPassPhase === true
+  });
 
   return (
     <div className={styles.widgetContainer}>
