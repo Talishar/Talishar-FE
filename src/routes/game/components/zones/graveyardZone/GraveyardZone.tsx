@@ -12,11 +12,10 @@ export const GraveyardZone = React.memo((prop: Displayrow) => {
   const { isPlayer } = prop;
   const dispatch = useAppDispatch();
   const [windowWidth] = useWindowDimensions();
-  const settingsData = useAppSelector(
-    (state: RootState) => state.settings.entities
+  const alwaysShowCounters = useAppSelector(
+    (state: RootState) =>
+      String(state.settings.entities?.[optConst.ALWAYS_SHOW_COUNTERS]?.value) === '1'
   );
-  const alwaysShowCounters =
-    String(settingsData?.[optConst.ALWAYS_SHOW_COUNTERS]?.value) === '1';
 
   const graveyardZone = useAppSelector((state: RootState) =>
     isPlayer ? state.game.playerOne.Graveyard : state.game.playerTwo.Graveyard
@@ -26,16 +25,37 @@ export const GraveyardZone = React.memo((prop: Displayrow) => {
     (state: RootState) => state.game.cardListFocus
   );
 
+  const totalCards = graveyardZone?.length ?? 0;
+  const isMobileOrTablet = windowWidth <= 1024;
+  const baseOffsetY = totalCards * -0.24;
+  const baseOffsetX = totalCards * 0.24;
+
   const cardToDisplay = useMemo(
     () => (graveyardZone?.[0] ? { ...graveyardZone[0], borderColor: '' } : undefined),
     [graveyardZone]
   );
 
+  const layerStyles = useMemo(() => {
+    if (totalCards <= 1) return [];
+    return Array.from({ length: totalCards - 1 }, (_, index) => ({
+      transform:
+        `translateY(${baseOffsetY}px) translateX(${baseOffsetX}px) ` +
+        `translateY(${(index + 1) * 0.25}px) translateX(${(index + 1) * -0.25}px)`,
+      zIndex: totalCards - index - 1
+    }));
+  }, [totalCards, baseOffsetY, baseOffsetX]);
+
+  const cardWrapperStyle = useMemo(
+    () =>
+      !isMobileOrTablet
+        ? { transform: `translateY(${baseOffsetY}px) translateX(${baseOffsetX}px)` }
+        : {},
+    [isMobileOrTablet, baseOffsetY, baseOffsetX]
+  );
+
   if (graveyardZone === undefined || graveyardZone.length === 0) {
     return <div className={styles.graveyardZone}>Graveyard</div>;
   }
-
-  const showCount = true;
 
   const graveyardZoneDisplay = () => {
     const isPlayerPronoun = isPlayer ? 'Your' : "Opponent's";
@@ -53,46 +73,29 @@ export const GraveyardZone = React.memo((prop: Displayrow) => {
   const faceUpCount = graveyardZone.filter(
     (card) => card.overlay !== 'disabled'
   ).length;
-  const isMobileOrTablet = windowWidth <= 1024;
-  const totalCards = graveyardZone.length;
-  const layerOffsetY = 0.25; // pixels per layer (down)
-  const layerOffsetX = -0.25; // pixels per layer (left)
-  const baseOffsetY = totalCards * 0.24 * -1; // pixels (up, based on card count)
-  const baseOffsetX = totalCards * 0.24; // pixels (right, based on card count)
 
   return (
     <div className={styles.graveyardZone} onClick={graveyardZoneDisplay}>
       <div className={styles.zoneStack}>
         {/* Render background layers for 3D effect - only on desktop */}
         {!isMobileOrTablet &&
-          Array.from({ length: totalCards - 1 }).map((_, index) => (
+          layerStyles.map((style, index) => (
             <div
               key={`layer-${index}`}
               className={styles.zoneLayer}
-              style={{
-                transform: `translateY(${baseOffsetY}px) translateX(${baseOffsetX}px) translateY(${
-                  (index + 1) * layerOffsetY
-                }px) translateX(${(index + 1) * layerOffsetX}px)`,
-                zIndex: totalCards - index - 1
-              }}
+              style={style}
             />
           ))}
         {/* Main card on top */}
         <div
           className={styles.cardWrapper}
-          style={
-            !isMobileOrTablet
-              ? {
-                  transform: `translateY(${baseOffsetY}px) translateX(${baseOffsetX}px)`
-                }
-              : {}
-          }
+          style={cardWrapperStyle}
         >
           {cardToDisplay && (
             <CardDisplay
               card={cardToDisplay}
               isPlayer={isPlayer}
-              num={showCount ? faceUpCount : undefined}
+              num={faceUpCount}
               preventUseOnClick
               showCountersOnHover={!alwaysShowCounters}
               disableTilt

@@ -50,7 +50,7 @@ export const ZoneCounts = (prop: Displayrow) => {
   );
 };
 
-const SoulCount = (prop: Displayrow) => {
+const SoulCount = React.memo((prop: Displayrow) => {
   const dispatch = useAppDispatch();
   const { isPlayer } = prop;
   const soulCount = useAppSelector((state: RootState) =>
@@ -70,9 +70,9 @@ const SoulCount = (prop: Displayrow) => {
       <GiAngelOutfit /> {soulCount}
     </div>
   );
-};
+});
 
-const EarthCount = (prop: Displayrow) => {
+const EarthCount = React.memo((prop: Displayrow) => {
   const { isPlayer } = prop;
   const earthCount = useAppSelector((state: RootState) =>
     isPlayer ? state.game.playerOne.earthCount : state.game.playerTwo.earthCount
@@ -85,9 +85,9 @@ const EarthCount = (prop: Displayrow) => {
       <GiGroundSprout /> {earthCount}
     </div>
   );
-};
+});
 
-const BlessingsCount = (prop: Displayrow) => {
+const BlessingsCount = React.memo((prop: Displayrow) => {
   const { isPlayer } = prop;
   const blessingsCount = useAppSelector((state: RootState) =>
     isPlayer
@@ -102,9 +102,9 @@ const BlessingsCount = (prop: Displayrow) => {
       <FaPrayingHands /> {blessingsCount}
     </div>
   );
-};
+});
 
-const BloodDebtCount = (prop: Displayrow) => {
+const BloodDebtCount = React.memo((prop: Displayrow) => {
   const { isPlayer } = prop;
   const bloodDebtCount = useAppSelector((state: RootState) =>
     isPlayer
@@ -132,6 +132,6 @@ const BloodDebtCount = (prop: Displayrow) => {
       <GiDroplets /> {bloodDebtCount}
     </div>
   );
-};
+});
 
 export default ZoneCounts;

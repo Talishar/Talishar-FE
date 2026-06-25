@@ -9,7 +9,7 @@ import CardPopUp from '../cardPopUp/CardPopUp';
 import CombatChainLink from 'features/CombatChainLink';
 import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useCallback, useMemo } from 'react';
 import { useLanguageSelector } from 'hooks/useLanguageSelector';
 import { CARD_SQUARES_PATH, getCollectionCardImagePath } from 'utils';
 
@@ -47,6 +47,18 @@ export const CardDisplay = (prop: CardProp) => {
   const { getLanguage } = useLanguageSelector();
   const [showSubCards, setShowSubCards] = useState(false);
   const subCardRef = useRef(null);
+  const handleHoverStart = useCallback(() => setShowSubCards(true), []);
+  const handleHoverEnd = useCallback(() => setShowSubCards(false), []);
+  const subCardsToShow = useMemo(() => {
+    const subcards = card?.subcards;
+    if (!subcards || subcards.length === 0) return [];
+    const validSubcards = subcards.filter((subCard) => !!subCard);
+    return showSubCards
+      ? validSubcards
+      : validSubcards.length
+      ? [validSubcards[0]]
+      : [];
+  }, [card?.subcards, showSubCards]);
 
   if (card == null || card.cardNumber === '') {
     return null;
@@ -118,23 +130,14 @@ export const CardDisplay = (prop: CardProp) => {
     return divs;
   };
 
-  const subCardsToShow = (() => {
-    if (!card.subcards || card.subcards.length === 0) return [];
-    const validSubcards = card.subcards.filter((subCard) => !!subCard);
-    return showSubCards
-      ? validSubcards
-      : validSubcards.length
-      ? [validSubcards[0]]
-      : [];
-  })();
 
   return (
     <CardPopUp
       cardNumber={card.cardNumber}
       containerClass={cardStyle}
       onClick={onClick}
-      onHoverStart={() => setShowSubCards(true)}
-      onHoverEnd={() => setShowSubCards(false)}
+      onHoverStart={handleHoverStart}
+      onHoverEnd={handleHoverEnd}
       isOpponent={card.isOpponent !== undefined ? card.isOpponent : !isPlayer}
       disableTilt={disableTilt}
     >

@@ -12,12 +12,10 @@ export const BanishZone = React.memo((prop: Displayrow) => {
   const { isPlayer } = prop;
   const dispatch = useAppDispatch();
   const [windowWidth] = useWindowDimensions();
-  const settingsData = useAppSelector(
-    (state: RootState) => state.settings.entities
+  const alwaysShowCounters = useAppSelector(
+    (state: RootState) =>
+      String(state.settings.entities?.[optConst.ALWAYS_SHOW_COUNTERS]?.value) === '1'
   );
-  const alwaysShowCounters =
-    String(settingsData?.[optConst.ALWAYS_SHOW_COUNTERS]?.value) === '1';
-  const showCount = true;
 
   const banishZone = useAppSelector((state: RootState) =>
     isPlayer ? state.game.playerOne.Banish : state.game.playerTwo.Banish
@@ -27,9 +25,32 @@ export const BanishZone = React.memo((prop: Displayrow) => {
     (state: RootState) => state.game.cardListFocus
   );
 
+  const totalCards = banishZone?.length ?? 0;
+  const isMobileOrTablet = windowWidth <= 1024;
+  const baseOffsetY = totalCards * -0.24;
+  const baseOffsetX = totalCards * 0.24;
+
   const cardToDisplay = useMemo(
     () => banishZone?.[0] ? { ...banishZone[0], borderColor: '' } : undefined,
     [banishZone]
+  );
+
+  const layerStyles = useMemo(() => {
+    if (totalCards <= 1) return [];
+    return Array.from({ length: totalCards - 1 }, (_, index) => ({
+      transform:
+        `translateY(${baseOffsetY}px) translateX(${baseOffsetX}px) ` +
+        `translateY(${(index + 1) * 0.25}px) translateX(${(index + 1) * -0.25}px)`,
+      zIndex: totalCards - index - 1
+    }));
+  }, [totalCards, baseOffsetY, baseOffsetX]);
+
+  const cardWrapperStyle = useMemo(
+    () =>
+      !isMobileOrTablet
+        ? { transform: `translateY(${baseOffsetY}px) translateX(${baseOffsetX}px)` }
+        : undefined,
+    [isMobileOrTablet, baseOffsetY, baseOffsetX]
   );
 
   if (banishZone === undefined || banishZone.length === 0) {
@@ -47,48 +68,32 @@ export const BanishZone = React.memo((prop: Displayrow) => {
     }
   };
 
-  // Count only face-up cards (overlay !== 'disabled')
   const faceUpCount = banishZone.filter(
     (card) => card.overlay !== 'disabled'
   ).length;
-  const isMobileOrTablet = windowWidth <= 1024;
-  const totalCards = banishZone.length;
-  const layerOffsetY = 0.25;
-  const layerOffsetX = -0.25;
-  const baseOffsetY = totalCards * 0.24 * -1;
-  const baseOffsetX = totalCards * 0.24;
 
   return (
     <div className={styles.banishZone} onClick={banishZoneDisplay}>
       <div className={styles.zoneStack}>
         {/* Render background layers for 3D effect - only on desktop */}
         {!isMobileOrTablet &&
-          Array.from({ length: totalCards - 1 }).map((_, index) => (
+          layerStyles.map((style, index) => (
             <div
               key={`layer-${index}`}
               className={styles.zoneLayer}
-              style={{
-                transform: `translateY(${baseOffsetY}px) translateX(${baseOffsetX}px) translateY(${
-                  (index + 1) * layerOffsetY
-                }px) translateX(${(index + 1) * layerOffsetX}px)`,
-                zIndex: totalCards - index - 1
-              }}
+              style={style}
             />
           ))}
         {/* Main card on top */}
         <div
           className={styles.cardWrapper}
-          style={
-            !isMobileOrTablet
-              ? { transform: `translateY(${baseOffsetY}px) translateX(${baseOffsetX}px)` }
-              : undefined
-          }
+          style={cardWrapperStyle}
         >
           {cardToDisplay && (
             <CardDisplay
               card={cardToDisplay}
               isPlayer={isPlayer}
-              num={showCount ? faceUpCount : undefined}
+              num={faceUpCount}
               preventUseOnClick
               showCountersOnHover={!alwaysShowCounters}
               disableTilt

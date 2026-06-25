@@ -1,7 +1,6 @@
 import React, { useMemo } from 'react';
 import { useAppSelector } from 'app/Hooks';
 import { getSettingsEntity } from 'features/options/optionsSlice';
-import { getGameInfo } from 'features/game/GameSlice';
 import * as optConst from 'features/options/constants';
 import { RootState } from 'app/Store';
 import classNames from 'classnames';
@@ -34,15 +33,17 @@ import ManualModePanel from '../leftColumn/ManualModePanel/ManualModePanel';
 
 const GridBoard = () => {
   const [cookies] = useCookies(['experimental']);
-  const settingsData = useAppSelector(getSettingsEntity);
-  const { playerID, isReplay } = useAppSelector(getGameInfo);
+  const playerID = useAppSelector((state: RootState) => state.game.gameInfo.playerID);
+  const isReplay = useAppSelector((state: RootState) => state.game.gameInfo.isReplay);
   const spectatorCameraView = useAppSelector(
     (state: RootState) => state.game.spectatorCameraView
   );
-  const isMirroredOpponent =
-    settingsData?.[optConst.MIRRORED_BOARD_LAYOUT]?.value === '1';
-  const isMirroredPlayer =
-    settingsData?.[optConst.MIRRORED_PLAYER_BOARD_LAYOUT]?.value === '1';
+  const isMirroredOpponent = useAppSelector((state: RootState) =>
+    getSettingsEntity(state)?.[optConst.MIRRORED_BOARD_LAYOUT]?.value === '1'
+  );
+  const isMirroredPlayer = useAppSelector((state: RootState) =>
+    getSettingsEntity(state)?.[optConst.MIRRORED_PLAYER_BOARD_LAYOUT]?.value === '1'
+  );
 
   // For spectators and replay viewers, check if they want to view from player 2's perspective
   const isSpectatorViewingPlayer2 = (playerID === 3 || isReplay) && spectatorCameraView === 2;

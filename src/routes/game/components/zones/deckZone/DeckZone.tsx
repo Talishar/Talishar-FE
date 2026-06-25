@@ -12,13 +12,10 @@ export const DeckZone = React.memo((prop: Displayrow) => {
   const { isPlayer } = prop;
   const dispatch = useAppDispatch();
   const [windowWidth] = useWindowDimensions();
-  const settingsData = useAppSelector(
-    (state: RootState) => state.settings.entities
+  const alwaysShowCounters = useAppSelector(
+    (state: RootState) =>
+      String(state.settings.entities?.[optConst.ALWAYS_SHOW_COUNTERS]?.value) === '1'
   );
-  const alwaysShowCounters =
-    String(settingsData?.[optConst.ALWAYS_SHOW_COUNTERS]?.value) === '1';
-
-  const showCount = true;
 
   const deckCards = useAppSelector((state: RootState) =>
     isPlayer ? state.game.playerOne.DeckSize : state.game.playerTwo.DeckSize
@@ -78,11 +75,30 @@ export const DeckZone = React.memo((prop: Displayrow) => {
     currentDeckPlayerID === 1 ? clashRevealP1Card : clashRevealP2Card;
   const showClash = !!clashCard;
 
-  // useMemo MUST be before the early return — hooks called after an early return
-  // cause "rendered more hooks than previous render" when the deck goes from
-  // empty (early-return path, useMemo skipped) to populated (full path, useMemo runs).
-  // Clamp between 3 and 5 layers (was swapped: Math.min(3, Math.max(5,...)) always returned 3).
-  const shuffleLayerCount = Math.min(5, Math.max(3, (deckCards ?? 0) - 1));
+  const isMobileOrTablet = windowWidth <= 1024;
+  const safeCount = deckCards ?? 0;
+  const baseOffsetY = safeCount * -0.24;
+  const baseOffsetX = safeCount * 0.24;
+  const shuffleLayerCount = Math.min(5, Math.max(3, safeCount - 1));
+
+  const baseLayerStyles = useMemo(() => {
+    if (safeCount <= 1) return [];
+    return Array.from({ length: safeCount - 1 }, (_, index) => ({
+      transform:
+        `translateY(${safeCount * -0.24}px) translateX(${safeCount * 0.24}px) ` +
+        `translateY(${(index + 1) * 0.25}px) translateX(${(index + 1) * -0.25}px)`,
+      zIndex: safeCount - index - 1
+    }));
+  }, [safeCount]);
+
+  const cardWrapperStyle = useMemo(
+    () =>
+      !isMobileOrTablet
+        ? { transform: `translateY(${baseOffsetY}px) translateX(${baseOffsetX}px)` }
+        : undefined,
+    [isMobileOrTablet, baseOffsetY, baseOffsetX]
+  );
+
   const shuffleLayerDelays = useMemo(
     () =>
       shouldAnimateShuffling
@@ -107,55 +123,34 @@ export const DeckZone = React.memo((prop: Displayrow) => {
     }
   };
 
-  const isMobileOrTablet = windowWidth <= 1024;
-  const visibleLayers = deckCards;
-  const layerOffsetY = 0.25;
-  const layerOffsetX = -0.25;
-  const baseOffsetY = visibleLayers * 0.24 * -1;
-  const baseOffsetX = visibleLayers * 0.24;
-
   return (
     <div className={styles.deckZone} onClick={deckZoneDisplay}>
       <div className={styles.zoneStack}>
         {/* Render background layers for 3D effect - only on desktop */}
         {!isMobileOrTablet &&
-          Array.from({ length: visibleLayers - 1 }).map((_, index) => {
-            const shouldAnimateLayer =
-              shouldAnimateShuffling && index < shuffleLayerCount;
-            const animationDelay = shouldAnimateLayer
-              ? (shuffleLayerDelays?.[index] ?? '0ms')
-              : '0ms';
-
+          baseLayerStyles.map((style, index) => {
+            const shouldAnimateLayer = shouldAnimateShuffling && index < shuffleLayerCount;
+            // During steady-state, pass the memoized style object directly (no allocation).
+            // Only spread a new object when an animationDelay is needed during a shuffle.
+            const finalStyle = shouldAnimateLayer
+              ? { ...style, animationDelay: shuffleLayerDelays?.[index] ?? '0ms' }
+              : style;
             return (
               <div
                 key={`layer-${index}`}
-                className={
-                  shouldAnimateLayer
-                    ? styles.zoneLayerShuffling
-                    : styles.zoneLayer
-                }
-                style={{
-                  transform: `translateY(${baseOffsetY}px) translateX(${baseOffsetX}px) translateY(${
-                    (index + 1) * layerOffsetY
-                  }px) translateX(${(index + 1) * layerOffsetX}px)`,
-                  zIndex: visibleLayers - index - 1,
-                  animationDelay
-                }}
+                className={shouldAnimateLayer ? styles.zoneLayerShuffling : styles.zoneLayer}
+                style={finalStyle}
               />
             );
           })}
         {/* Main card on top */}
         <div
           className={styles.cardWrapper}
-          style={
-            !isMobileOrTablet
-              ? { transform: `translateY(${baseOffsetY}px) translateX(${baseOffsetX}px)` }
-              : undefined
-          }
+          style={cardWrapperStyle}
         >
           <CardDisplay
             card={deckBack}
-            num={showCount ? deckCards : undefined}
+            num={deckCards}
             isShuffling={shouldAnimateShuffling}
             showCountersOnHover={!alwaysShowCounters}
             disableTilt

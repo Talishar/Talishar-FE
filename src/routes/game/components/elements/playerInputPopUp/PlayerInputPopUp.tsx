@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { submitButton, submitMultiButton } from 'features/game/GameSlice';
 import { useAppSelector, useAppDispatch } from 'app/Hooks';
 import { RootState } from 'app/Store';
@@ -7,7 +7,7 @@ import Button from 'features/Button';
 import { FaTimes } from 'react-icons/fa';
 import { MdDragHandle } from 'react-icons/md';
 import { PROCESS_INPUT } from 'appConstants';
-import { motion } from 'framer-motion';
+import { motion, useMotionValue, useTransform } from 'framer-motion';
 import useShowModal from 'hooks/useShowModals';
 import { OptInput } from './components/OptInput';
 import { NewOptInput } from './components/NewOptInput';
@@ -42,29 +42,27 @@ export default function PlayerInputPopUp() {
     new Array(inputPopUp?.multiChooseText?.length).fill(false)
   );
 
-  const [yOffset, setYOffset] = useState(() => {
-    const stored = localStorage.getItem(PLAYER_INPUT_STORAGE_KEY);
-    return stored ? parseFloat(stored) : 0;
-  });
+  const storedInputOffset = parseFloat(localStorage.getItem(PLAYER_INPUT_STORAGE_KEY) ?? '') || 0;
+  const yOffsetMV = useMotionValue(storedInputOffset);
+  const dragStartYRef = useRef(0);
+  const dragStartOffsetRef = useRef(storedInputOffset);
+  const currentDragOffsetRef = useRef(storedInputOffset);
   const [isDragging, setIsDragging] = useState(false);
-  const [dragStartY, setDragStartY] = useState(0);
-  const [dragStartOffset, setDragStartOffset] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
-  const yOffsetRef = useRef(yOffset);
-  yOffsetRef.current = yOffset;
   const rafRef = useRef<number>(0);
+  const basePctRef = useRef('52.5%');
 
-  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleMouseDown = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    dragStartYRef.current = e.clientY;
+    dragStartOffsetRef.current = currentDragOffsetRef.current;
     setIsDragging(true);
-    setDragStartY(e.clientY);
-    setDragStartOffset(yOffset);
-  };
+  }, []);
 
-  const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+  const handleTouchStart = useCallback((e: React.TouchEvent<HTMLDivElement>) => {
+    dragStartYRef.current = e.touches[0].clientY;
+    dragStartOffsetRef.current = currentDragOffsetRef.current;
     setIsDragging(true);
-    setDragStartY(e.touches[0].clientY);
-    setDragStartOffset(yOffset);
-  };
+  }, []);
 
   useEffect(() => {
     if (!isDragging) return;
@@ -72,39 +70,41 @@ export default function PlayerInputPopUp() {
     const handleMouseMove = (e: MouseEvent) => {
       cancelAnimationFrame(rafRef.current);
       rafRef.current = requestAnimationFrame(() => {
-        const delta = e.clientY - dragStartY;
+        const delta = e.clientY - dragStartYRef.current;
         const deltaDvh = (delta / window.innerHeight) * 100;
         const newOffset = Math.max(
           PLAYER_INPUT_MIN_Y_OFFSET,
-          Math.min(PLAYER_INPUT_MAX_Y_OFFSET, dragStartOffset + deltaDvh)
+          Math.min(PLAYER_INPUT_MAX_Y_OFFSET, dragStartOffsetRef.current + deltaDvh)
         );
-        setYOffset(newOffset);
+        currentDragOffsetRef.current = newOffset;
+        yOffsetMV.set(newOffset); // direct DOM update — no React re-render
       });
     };
 
     const handleTouchMove = (e: TouchEvent) => {
       cancelAnimationFrame(rafRef.current);
       rafRef.current = requestAnimationFrame(() => {
-        const delta = e.touches[0].clientY - dragStartY;
+        const delta = e.touches[0].clientY - dragStartYRef.current;
         const deltaDvh = (delta / window.innerHeight) * 100;
         const newOffset = Math.max(
           PLAYER_INPUT_MIN_Y_OFFSET,
-          Math.min(PLAYER_INPUT_MAX_Y_OFFSET, dragStartOffset + deltaDvh)
+          Math.min(PLAYER_INPUT_MAX_Y_OFFSET, dragStartOffsetRef.current + deltaDvh)
         );
-        setYOffset(newOffset);
+        currentDragOffsetRef.current = newOffset;
+        yOffsetMV.set(newOffset); // direct DOM update — no React re-render
       });
     };
 
     const handleMouseUp = () => {
       cancelAnimationFrame(rafRef.current);
       setIsDragging(false);
-      localStorage.setItem(PLAYER_INPUT_STORAGE_KEY, yOffsetRef.current.toString());
+      localStorage.setItem(PLAYER_INPUT_STORAGE_KEY, currentDragOffsetRef.current.toString());
     };
 
     const handleTouchEnd = () => {
       cancelAnimationFrame(rafRef.current);
       setIsDragging(false);
-      localStorage.setItem(PLAYER_INPUT_STORAGE_KEY, yOffsetRef.current.toString());
+      localStorage.setItem(PLAYER_INPUT_STORAGE_KEY, currentDragOffsetRef.current.toString());
     };
 
     document.addEventListener('mousemove', handleMouseMove);
@@ -119,9 +119,7 @@ export default function PlayerInputPopUp() {
       document.removeEventListener('mouseup', handleMouseUp);
       document.removeEventListener('touchend', handleTouchEnd);
     };
-  // yOffset excluded: read via yOffsetRef to avoid re-registering listeners
-  // on every mousemove tick.
-  }, [isDragging, dragStartY, dragStartOffset]);
+  }, [isDragging, yOffsetMV]);
 
   useEffect(() => {
     const cardsArrLength = inputPopUp?.popup?.cards?.length ?? 0;
@@ -148,6 +146,10 @@ export default function PlayerInputPopUp() {
   const onClickButton = (button: Button) => {
     dispatch(submitButton({ button: button }));
   };
+
+  const basePct = inputPopUp?.popup?.id === 'NEWOPT' ? '40%' : '52.5%';
+  basePctRef.current = basePct;
+  const topStyle = useTransform(yOffsetMV, (v) => `calc(${basePctRef.current} + ${v}dvh)`);
 
   if (
     !showModal ||
@@ -222,8 +224,6 @@ export default function PlayerInputPopUp() {
     inputPopUp?.popup?.title ?? ''
   );
 
-  const basePct = inputPopUp.popup?.id === 'NEWOPT' ? '40%' : '52.5%';
-
   return (
     <motion.div
       ref={containerRef}
@@ -231,7 +231,7 @@ export default function PlayerInputPopUp() {
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.8 }}
       transition={{ type: 'tween', duration: 0.12 }}
-      style={{ top: `calc(${basePct} + ${yOffset}dvh)` }}
+      style={{ top: topStyle }}
       key="playerInputPopupBox"
       className={
         inputPopUp.popup?.id === 'NEWOPT'

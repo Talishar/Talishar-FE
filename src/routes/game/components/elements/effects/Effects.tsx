@@ -41,34 +41,15 @@ export function Effect(prop: CardProp) {
 export default function Effects(props: Player) {
   const classCSS = props.isPlayer ? styles.isPlayer : styles.isOpponent;
 
-  const playerID = useAppSelector(
-    (state: RootState) => state.game.gameInfo.playerID
-  );
-  const isReplay = useAppSelector(
-    (state: RootState) => state.game.gameInfo.isReplay
-  );
-  const spectatorCameraView = useAppSelector(
-    (state: RootState) => state.game.spectatorCameraView
-  );
-
-  // Get both effects
-  const playerOneEffects = useAppSelector(
-    (state: RootState) => state.game.playerOne.Effects
-  );
-  const playerTwoEffects = useAppSelector(
-    (state: RootState) => state.game.playerTwo.Effects
-  );
-
-  let effects;
-  if (playerID === 3 || isReplay) {
-    if (spectatorCameraView === 2) {
-      effects = props.isPlayer ? playerTwoEffects : playerOneEffects;
-    } else {
-      effects = props.isPlayer ? playerOneEffects : playerTwoEffects;
-    }
-  } else {
-    effects = props.isPlayer ? playerOneEffects : playerTwoEffects;
-  }
+  const isPlayer = props.isPlayer;
+  const effects = useAppSelector((state: RootState) => {
+    const { playerID, isReplay } = state.game.gameInfo;
+    const isP2View =
+      (playerID === 3 || isReplay) && state.game.spectatorCameraView === 2;
+    return isPlayer
+      ? (isP2View ? state.game.playerTwo.Effects : state.game.playerOne.Effects)
+      : (isP2View ? state.game.playerOne.Effects : state.game.playerTwo.Effects);
+  });
 
   if (effects === undefined) {
     return <div className={classCSS}></div>;

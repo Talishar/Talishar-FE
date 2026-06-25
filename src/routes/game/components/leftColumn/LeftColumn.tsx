@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import ActiveEffects from '../activeEffects/ActiveEffects';
 import PlayerName from '../elements/playerName/PlayerName';
 import DevToolPanel from './DevToolPanel/DevToolPanel';
@@ -6,25 +6,27 @@ import ReplayPanel from './ReplayPanel/ReplayPanel';
 import SpectatorCameraPanel from './SpectatorCameraPanel/SpectatorCameraPanel';
 import styles from './LeftColumn.module.css';
 import { useAppSelector } from 'app/Hooks';
-import { shallowEqual } from 'react-redux';
-import { getGameInfo } from 'features/game/GameSlice';
+import { RootState } from 'app/Store';
 
 export default function LeftColumn() {
   const [isMobile, setIsMobile] = useState(false);
-  const { playerID } = useAppSelector(getGameInfo, shallowEqual);
+  const playerID = useAppSelector((state: RootState) => state.game.gameInfo.playerID);
 
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth < 1200) {
-        // Standardized breakpoint
-        setIsMobile(true);
-      } else {
-        setIsMobile(false);
-      }
+      // Throttle through rAF so rapid window-resize events only cause one
+      // setState per animation frame instead of one per pixel dragged.
+      cancelAnimationFrame(rafRef.current);
+      rafRef.current = requestAnimationFrame(() => {
+        setIsMobile(window.innerWidth < 1200);
+      });
     };
     window.addEventListener('resize', handleResize);
     handleResize();
-    return () => window.removeEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      cancelAnimationFrame(rafRef.current);
+    };
   }, []);
 
   const isSpectator = playerID === 3;

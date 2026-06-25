@@ -4,7 +4,7 @@ import { RootState } from 'app/Store';
 import CardDisplay from '../cardDisplay/CardDisplay';
 import styles from './Reactions.module.css';
 
-export default function Reactions() {
+function Reactions() {
   const activeCombatChain = useAppSelector(
     (state: RootState) => state.game.activeChainLink?.reactionCards
   );
@@ -31,3 +31,5 @@ export default function Reactions() {
     </div>
   );
 }
+
+export default React.memo(Reactions);

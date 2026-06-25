@@ -5,33 +5,14 @@ import Player from 'interface/Player';
 import styles from './HealthDisplay.module.css';
 
 export default function HealthDisplay(props: Player) {
-  const playerID = useAppSelector(
-    (state: RootState) => state.game.gameInfo.playerID
-  );
-  const isReplay = useAppSelector(
-    (state: RootState) => state.game.gameInfo.isReplay
-  );
-  const spectatorCameraView = useAppSelector(
-    (state: RootState) => state.game.spectatorCameraView
-  );
-
-  const playerOneHealth = useAppSelector(
-    (state: RootState) => state.game.playerOne.Health
-  );
-  const playerTwoHealth = useAppSelector(
-    (state: RootState) => state.game.playerTwo.Health
-  );
-
-  let health;
-  if (playerID === 3 || isReplay) {
-    if (spectatorCameraView === 2) {
-      health = props.isPlayer ? playerTwoHealth : playerOneHealth;
-    } else {
-      health = props.isPlayer ? playerOneHealth : playerTwoHealth;
-    }
-  } else {
-    health = props.isPlayer ? playerOneHealth : playerTwoHealth;
-  }
+  const isPlayer = props.isPlayer;
+  const health = useAppSelector((state: RootState) => {
+    const { playerID, isReplay } = state.game.gameInfo;
+    const isP2View = (playerID === 3 || isReplay) && state.game.spectatorCameraView === 2;
+    return isPlayer
+      ? (isP2View ? state.game.playerTwo.Health : state.game.playerOne.Health)
+      : (isP2View ? state.game.playerOne.Health : state.game.playerTwo.Health);
+  });
 
   return (
     <div className={styles.health}>

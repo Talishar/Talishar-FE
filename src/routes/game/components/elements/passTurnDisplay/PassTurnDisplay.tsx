@@ -44,8 +44,9 @@ export default function PassTurnDisplay() {
   const preventPassPrompt = useAppSelector(
     (state: RootState) => state.game.preventPassPrompt
   );
-  const settingsData = useAppSelector(getSettingsEntity);
-  const isMuted = settingsData['MuteSound']?.value === '1';
+  const isMuted = useAppSelector(
+    (state: RootState) => getSettingsEntity(state)['MuteSound']?.value === '1'
+  );
 
   const dispatch = useAppDispatch();
 

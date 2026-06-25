@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useMemo, useState } from 'react';
 
 interface PanelContextType {
   isDevToolOpen: boolean;
@@ -13,15 +13,13 @@ export function PanelProvider({ children }: { children: React.ReactNode }) {
   const [isDevToolOpen, setIsDevToolOpen] = useState(false);
   const [isManualModeOpen, setIsManualModeOpen] = useState(false);
 
+  const value = useMemo(
+    () => ({ isDevToolOpen, setIsDevToolOpen, isManualModeOpen, setIsManualModeOpen }),
+    [isDevToolOpen, isManualModeOpen]
+  );
+
   return (
-    <PanelContext.Provider
-      value={{
-        isDevToolOpen,
-        setIsDevToolOpen,
-        isManualModeOpen,
-        setIsManualModeOpen
-      }}
-    >
+    <PanelContext.Provider value={value}>
       {children}
     </PanelContext.Provider>
   );

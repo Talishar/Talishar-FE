@@ -10,34 +10,20 @@ import { useAppSelector } from 'app/Hooks';
 const HandZone = React.memo(function HandZone(prop: Player) {
   const { isPlayer } = prop;
 
+  const handCards = useAppSelector((state: RootState) => {
+    const { playerID, isReplay } = state.game.gameInfo;
+    const isP2View =
+      (playerID === 3 || isReplay) && state.game.spectatorCameraView === 2;
+    return isPlayer
+      ? (isP2View ? state.game.playerTwo.Hand : state.game.playerOne.Hand)
+      : (isP2View ? state.game.playerOne.Hand : state.game.playerTwo.Hand);
+  });
   const playerID = useAppSelector(
     (state: RootState) => state.game.gameInfo.playerID
   );
   const isReplay = useAppSelector(
     (state: RootState) => state.game.gameInfo.isReplay
   );
-  const spectatorCameraView = useAppSelector(
-    (state: RootState) => state.game.spectatorCameraView
-  );
-
-  // Get both hands
-  const playerOneHand = useAppSelector(
-    (state: RootState) => state.game.playerOne.Hand
-  );
-  const playerTwoHand = useAppSelector(
-    (state: RootState) => state.game.playerTwo.Hand
-  );
-
-  let handCards;
-  if (playerID === 3 || isReplay) {
-    if (spectatorCameraView === 2) {
-      handCards = isPlayer ? playerTwoHand : playerOneHand;
-    } else {
-      handCards = isPlayer ? playerOneHand : playerTwoHand;
-    }
-  } else {
-    handCards = isPlayer ? playerOneHand : playerTwoHand;
-  }
 
   const displayRow = classNames(
     styles.handZone,

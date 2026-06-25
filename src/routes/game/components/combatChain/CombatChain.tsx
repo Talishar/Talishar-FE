@@ -5,7 +5,7 @@ import CurrentAttack from '../elements/currentAttack/CurrentAttack';
 import Reactions from '../elements/reactions/Reactions';
 import { useAppDispatch, useAppSelector } from '../../../../app/Hooks';
 import { RootState } from 'app/Store';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useMotionValue } from 'framer-motion';
 import Button from '../../../../features/Button';
 import { submitButton } from '../../../../features/game/GameSlice';
 import useWindowDimensions from '../../../../hooks/useWindowDimensions';
@@ -26,29 +26,25 @@ export default function CombatChain() {
   const showModals = useShowModal();
   const [canSkipBlock, setCanSkipBlock] = React.useState(false);
   const [canSkipBlockAndDef, setCanSkipBlockAndDef] = React.useState(false);
-  const [yOffset, setYOffset] = React.useState(() => {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    return stored ? parseFloat(stored) : 0;
-  });
+  const yOffsetMV = useMotionValue(storedOffset);
+  const dragStartYRef = React.useRef(0);
+  const dragStartOffsetRef = React.useRef(storedOffset);
+  const currentDragOffsetRef = React.useRef(storedOffset);
   const [isDragging, setIsDragging] = React.useState(false);
-  const [dragStartY, setDragStartY] = React.useState(0);
-  const [dragStartOffset, setDragStartOffset] = React.useState(0);
   const containerRef = React.useRef<HTMLDivElement>(null);
-  const yOffsetRef = React.useRef(yOffset);
-  yOffsetRef.current = yOffset;
   const [width, height] = useWindowDimensions();
   const isPortrait = height > width;
 
   const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+    dragStartYRef.current = e.clientY;
+    dragStartOffsetRef.current = currentDragOffsetRef.current;
     setIsDragging(true);
-    setDragStartY(e.clientY);
-    setDragStartOffset(yOffset);
   };
 
   const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+    dragStartYRef.current = e.touches[0].clientY;
+    dragStartOffsetRef.current = currentDragOffsetRef.current;
     setIsDragging(true);
-    setDragStartY(e.touches[0].clientY);
-    setDragStartOffset(yOffset);
   };
 
   const rafRef = React.useRef<number>(0);
@@ -60,10 +56,11 @@ export default function CombatChain() {
       if (!containerRef.current) return;
       cancelAnimationFrame(rafRef.current);
       rafRef.current = requestAnimationFrame(() => {
-        const delta = e.clientY - dragStartY;
+        const delta = e.clientY - dragStartYRef.current;
         const deltaDvh = (delta / window.innerHeight) * 100;
-        const newOffset = Math.max(MIN_Y_OFFSET, Math.min(MAX_Y_OFFSET, dragStartOffset + deltaDvh));
-        setYOffset(newOffset);
+        const newOffset = Math.max(MIN_Y_OFFSET, Math.min(MAX_Y_OFFSET, dragStartOffsetRef.current + deltaDvh));
+        currentDragOffsetRef.current = newOffset;
+        yOffsetMV.set(newOffset); // direct DOM update — no React re-render
       });
     };
 
@@ -71,23 +68,24 @@ export default function CombatChain() {
       if (!containerRef.current) return;
       cancelAnimationFrame(rafRef.current);
       rafRef.current = requestAnimationFrame(() => {
-        const delta = e.touches[0].clientY - dragStartY;
+        const delta = e.touches[0].clientY - dragStartYRef.current;
         const deltaDvh = (delta / window.innerHeight) * 100;
-        const newOffset = Math.max(MIN_Y_OFFSET, Math.min(MAX_Y_OFFSET, dragStartOffset + deltaDvh));
-        setYOffset(newOffset);
+        const newOffset = Math.max(MIN_Y_OFFSET, Math.min(MAX_Y_OFFSET, dragStartOffsetRef.current + deltaDvh));
+        currentDragOffsetRef.current = newOffset;
+        yOffsetMV.set(newOffset); // direct DOM update — no React re-render
       });
     };
 
     const handleMouseUp = () => {
       cancelAnimationFrame(rafRef.current);
       setIsDragging(false);
-      localStorage.setItem(STORAGE_KEY, yOffsetRef.current.toString());
+      localStorage.setItem(STORAGE_KEY, currentDragOffsetRef.current.toString());
     };
 
     const handleTouchEnd = () => {
       cancelAnimationFrame(rafRef.current);
       setIsDragging(false);
-      localStorage.setItem(STORAGE_KEY, yOffsetRef.current.toString());
+      localStorage.setItem(STORAGE_KEY, currentDragOffsetRef.current.toString());
     };
 
     document.addEventListener('mousemove', handleMouseMove);
@@ -102,7 +100,7 @@ export default function CombatChain() {
       document.removeEventListener('mouseup', handleMouseUp);
       document.removeEventListener('touchend', handleTouchEnd);
     };
-  }, [isDragging, dragStartY, dragStartOffset]);
+  }, [isDragging, yOffsetMV]);
 
   const showCombatChain =
     showModals &&
@@ -114,12 +112,10 @@ export default function CombatChain() {
       {showCombatChain && (
         <motion.div
           ref={containerRef}
-          initial={{ opacity: 0, y: `${yOffset}dvh` }}
-          animate={{ opacity: 1, x: 0, y: `${yOffset}dvh` }}
-          transition={
-            isDragging ? { type: 'tween', duration: 0 } : { type: 'tween' }
-          }
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
+          style={{ y: yOffsetMV }}
           className={`${styles.combatChain} ${!isPortrait ? styles.noBottomBorder : ''}`}
         >
           <CurrentAttack />

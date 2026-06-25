@@ -96,7 +96,7 @@ export default function ArsenalZone(prop: Displayrow) {
   );
 }
 
-const ArsenalPrompt = () => {
+const ArsenalPrompt = React.memo(() => {
   const playerPrompt = useAppSelector(
     (state: RootState) => state.game.playerPrompt
   );
@@ -158,4 +158,4 @@ const ArsenalPrompt = () => {
       )}
     </AnimatePresence>
   );
-};
+});

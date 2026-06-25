@@ -12,6 +12,19 @@ const PITCH_ANIMATE = { y: 0 };
 const PITCH_TRANSITION = { ease: 'easeIn', duration: 0.2 };
 const PITCH_EXIT = { opacity: 0 };
 
+const PITCH_CARD_STYLES: React.CSSProperties[] = [
+  { top: '0em',    zIndex: '-1' },
+  { top: '-1.5em', zIndex: '-2' },
+  { top: '-3em',   zIndex: '-3' },
+  { top: '-4.5em', zIndex: '-4' },
+];
+const PITCH_CARD_INITIALS = [
+  { y: '0em' },
+  { y: '1.5em' },
+  { y: '3em' },
+  { y: '4.5em' },
+];
+
 export default function PitchZone(prop: Displayrow) {
   const { isPlayer } = prop;
   const { DisplayRow } = prop;
@@ -72,9 +85,9 @@ export default function PitchZone(prop: Displayrow) {
         {pitchOrder.slice(0, 4).map((card, ix) => {
           return (
             <motion.div
-              style={{ top: `-${1.5 * ix}em`, zIndex: `-${ix + 1}` }}
+              style={PITCH_CARD_STYLES[ix]}
               className={styles.pitchCard}
-              initial={{ y: `${1.5 * ix}em` }}
+              initial={PITCH_CARD_INITIALS[ix]}
               animate={PITCH_ANIMATE}
               transition={PITCH_TRANSITION}
               exit={PITCH_EXIT}
