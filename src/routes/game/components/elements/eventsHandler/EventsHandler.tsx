@@ -27,7 +27,7 @@ import {
   setArsenalFlip
 } from 'features/game/GameSlice';
 
-enum ModalType {
+const enum ModalType {
   RequestChat = 0,
   RequestUndo = 1,
   RequestThisTurnUndo = 2,

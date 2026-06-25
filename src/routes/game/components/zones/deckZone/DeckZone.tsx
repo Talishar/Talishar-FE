@@ -78,18 +78,6 @@ export const DeckZone = React.memo((prop: Displayrow) => {
     currentDeckPlayerID === 1 ? clashRevealP1Card : clashRevealP2Card;
   const showClash = !!clashCard;
 
-  // useMemo MUST be before the early return — hooks called after an early return
-  // cause "rendered more hooks than previous render" when the deck goes from
-  // empty (early-return path, useMemo skipped) to populated (full path, useMemo runs).
-  const shuffleLayerCount = Math.min(3, Math.max(5, (deckCards ?? 0) - 1));
-  const shuffleLayerDelays = useMemo(
-    () =>
-      shouldAnimateShuffling
-        ? Array.from({ length: shuffleLayerCount }, () => `${Math.random() * 400}ms`)
-        : null,
-    [shouldAnimateShuffling]
-  );
-
   if (deckCards === undefined || deckCards === 0) {
     return <div className={styles.deckZone}>Deck</div>;
   }
@@ -99,19 +87,38 @@ export const DeckZone = React.memo((prop: Displayrow) => {
     const isPlayerPronoun = isPlayer ? 'Your' : "Opponent's";
     const zoneTitle = `${isPlayerPronoun} Deck`;
 
+    // Check if this zone is already open
     if (cardListFocus?.active && cardListFocus?.name === zoneTitle) {
+      // Close it
       dispatch(clearCardListFocus());
     } else {
-      dispatch(setCardListFocus({ cardList: deckZone, name: zoneTitle }));
+      // Open it
+      dispatch(
+        setCardListFocus({
+          cardList: deckZone,
+          name: zoneTitle
+        })
+      );
     }
   };
-
+  // Reactive: previously used window.innerWidth directly which wouldn't update on resize
   const isMobileOrTablet = windowWidth <= 1024;
   const visibleLayers = deckCards;
   const layerOffsetY = 0.25;
   const layerOffsetX = -0.25;
   const baseOffsetY = visibleLayers * 0.24 * -1;
   const baseOffsetX = visibleLayers * 0.24;
+
+  // Determine how many layers to animate during shuffle (3-10 layers plus the top card)
+  const shuffleLayerCount = Math.min(3, Math.max(5, visibleLayers - 1));
+
+  const shuffleLayerDelays = useMemo(
+    () =>
+      shouldAnimateShuffling
+        ? Array.from({ length: shuffleLayerCount }, () => `${Math.random() * 400}ms`)
+        : null,
+    [shouldAnimateShuffling]
+  );
 
   return (
     <div className={styles.deckZone} onClick={deckZoneDisplay}>
