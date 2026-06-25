@@ -69,6 +69,12 @@ export default function LastPlayed() {
     setIndex(0);
   }, [recentlyPlayed.length]);
 
+  // useMemo must be before any early return to satisfy the Rules of Hooks
+  const trackStyle = useMemo(
+    () => ({ transform: `translateX(-${index * (isStreamerMode ? 90 : 70)}%)` }),
+    [index, isStreamerMode]
+  );
+
   if (recentlyPlayed.length === 0) {
     const placeholderSrc = getCollectionCardImagePath({
       path: CARD_SQUARES_PATH,
@@ -95,10 +101,6 @@ export default function LastPlayed() {
 
   const canPrev = index > 0;
   const canNext = index < recentlyPlayed.length - 1;
-  const trackStyle = useMemo(
-    () => ({ transform: `translateX(-${index * (isStreamerMode ? 90 : 70)}%)` }),
-    [index, isStreamerMode]
-  );
 
   return (
     <div className={styles.container}>
