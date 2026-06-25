@@ -1,15 +1,17 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import Displayrow from 'interface/Displayrow';
 import CardDisplay from '../../elements/cardDisplay/CardDisplay';
 import styles from './DeckZone.module.css';
 import { setCardListFocus, clearCardListFocus } from 'features/game/GameSlice';
+import useWindowDimensions from 'hooks/useWindowDimensions';
 import * as optConst from 'features/options/constants';
 
 export const DeckZone = React.memo((prop: Displayrow) => {
   const { isPlayer } = prop;
   const dispatch = useAppDispatch();
+  const [windowWidth] = useWindowDimensions();
   const settingsData = useAppSelector(
     (state: RootState) => state.settings.entities
   );
@@ -99,16 +101,24 @@ export const DeckZone = React.memo((prop: Displayrow) => {
       );
     }
   };
-  // Calculate number of visible layers based on deck size
-  const isMobileOrTablet = window.innerWidth <= 1024;
+  // Reactive: previously used window.innerWidth directly which wouldn't update on resize
+  const isMobileOrTablet = windowWidth <= 1024;
   const visibleLayers = deckCards;
-  const layerOffsetY = 0.25; // pixels per layer (down)
-  const layerOffsetX = -0.25; // pixels per layer (left)
-  const baseOffsetY = visibleLayers * 0.24 * -1; // pixels (up, based on card count)
-  const baseOffsetX = visibleLayers * 0.24; // pixels (right, based on card count)
+  const layerOffsetY = 0.25;
+  const layerOffsetX = -0.25;
+  const baseOffsetY = visibleLayers * 0.24 * -1;
+  const baseOffsetX = visibleLayers * 0.24;
 
   // Determine how many layers to animate during shuffle (3-10 layers plus the top card)
   const shuffleLayerCount = Math.min(3, Math.max(5, visibleLayers - 1));
+
+  const shuffleLayerDelays = useMemo(
+    () =>
+      shouldAnimateShuffling
+        ? Array.from({ length: shuffleLayerCount }, () => `${Math.random() * 400}ms`)
+        : null,
+    [shouldAnimateShuffling]
+  );
 
   return (
     <div className={styles.deckZone} onClick={deckZoneDisplay}>
@@ -116,12 +126,10 @@ export const DeckZone = React.memo((prop: Displayrow) => {
         {/* Render background layers for 3D effect - only on desktop */}
         {!isMobileOrTablet &&
           Array.from({ length: visibleLayers - 1 }).map((_, index) => {
-            // Apply shuffling animation to the top shuffleLayerCount layers
             const shouldAnimateLayer =
               shouldAnimateShuffling && index < shuffleLayerCount;
-            // Generate random delay (0ms to 400ms) for this layer
             const animationDelay = shouldAnimateLayer
-              ? `${Math.random() * 400}ms`
+              ? (shuffleLayerDelays?.[index] ?? '0ms')
               : '0ms';
 
             return (
@@ -137,7 +145,7 @@ export const DeckZone = React.memo((prop: Displayrow) => {
                     (index + 1) * layerOffsetY
                   }px) translateX(${(index + 1) * layerOffsetX}px)`,
                   zIndex: visibleLayers - index - 1,
-                  animationDelay: animationDelay
+                  animationDelay
                 }}
               />
             );
@@ -147,10 +155,8 @@ export const DeckZone = React.memo((prop: Displayrow) => {
           className={styles.cardWrapper}
           style={
             !isMobileOrTablet
-              ? {
-                  transform: `translateY(${baseOffsetY}px) translateX(${baseOffsetX}px)`
-                }
-              : {}
+              ? { transform: `translateY(${baseOffsetY}px) translateX(${baseOffsetX}px)` }
+              : undefined
           }
         >
           <CardDisplay
@@ -184,7 +190,7 @@ export const DeckZone = React.memo((prop: Displayrow) => {
                     '--deckOffsetY': `${baseOffsetY}px`,
                     '--deckOffsetX': `${baseOffsetX}px`
                   } as React.CSSProperties)
-                : {}
+                : undefined
             }
           >
             <CardDisplay

@@ -23,11 +23,7 @@ export default function Reactions() {
           const isPlayer = playerID === card.controller;
           return (
             <div key={ix.toString()} className={styles.cardContainer}>
-              <CardDisplay
-                card={card}
-                key={ix.toString()}
-                isPlayer={isPlayer}
-              />
+              <CardDisplay card={card} isPlayer={isPlayer} />
             </div>
           );
         })}

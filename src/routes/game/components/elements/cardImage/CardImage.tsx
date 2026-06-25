@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useAppSelector } from 'app/Hooks';
-import { shallowEqual } from 'react-redux';
-import { getGameInfo } from 'features/game/GameSlice';
+import { RootState } from 'app/Store';
 import classNames from 'classnames';
 import styles from './CardImage.module.css';
 
@@ -17,10 +16,18 @@ export interface CardImage {
 }
 
 export const CardImage = (props: CardImage) => {
-  const { altArts, opponentAltArts } = useAppSelector(
-    getGameInfo,
-    shallowEqual
+  const altArts = useAppSelector((state: RootState) => state.game.gameInfo.altArts);
+  const opponentAltArts = useAppSelector((state: RootState) => state.game.gameInfo.opponentAltArts);
+
+  const altArtMap = useMemo(
+    () => altArts ? new Map(altArts.map((a) => [a.cardId, a.altPath])) : null,
+    [altArts]
   );
+  const opponentAltArtMap = useMemo(
+    () => opponentAltArts ? new Map(opponentAltArts.map((a) => [a.cardId, a.altPath])) : null,
+    [opponentAltArts]
+  );
+
   let src = props.src;
   const { isShuffling, isOpponent } = props;
 
@@ -35,16 +42,12 @@ export const CardImage = (props: CardImage) => {
     return srcArray.join('/') + `/${altFilename}.webp`;
   };
 
-  if (isOpponent && opponentAltArts) {
-    for (let i = 0; i < opponentAltArts.length; i++) {
-      if (cardNumber == opponentAltArts[i].cardId)
-        src = buildAltSrc(opponentAltArts[i].altPath);
-    }
-  } else if (altArts) {
-    for (let i = 0; i < altArts.length; i++) {
-      if (cardNumber == altArts[i].cardId)
-        src = buildAltSrc(altArts[i].altPath);
-    }
+  if (isOpponent && opponentAltArtMap) {
+    const altPath = opponentAltArtMap.get(cardNumber);
+    if (altPath) src = buildAltSrc(altPath);
+  } else if (altArtMap) {
+    const altPath = altArtMap.get(cardNumber);
+    if (altPath) src = buildAltSrc(altPath);
   }
 
   const [error, setError] = useState(false);

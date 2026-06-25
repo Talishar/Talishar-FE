@@ -50,6 +50,8 @@ export default function PlayerInputPopUp() {
   const [dragStartY, setDragStartY] = useState(0);
   const [dragStartOffset, setDragStartOffset] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
+  const yOffsetRef = useRef(yOffset);
+  yOffsetRef.current = yOffset;
 
   const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
     setIsDragging(true);
@@ -90,12 +92,12 @@ export default function PlayerInputPopUp() {
 
     const handleMouseUp = () => {
       setIsDragging(false);
-      localStorage.setItem(PLAYER_INPUT_STORAGE_KEY, yOffset.toString());
+      localStorage.setItem(PLAYER_INPUT_STORAGE_KEY, yOffsetRef.current.toString());
     };
 
     const handleTouchEnd = () => {
       setIsDragging(false);
-      localStorage.setItem(PLAYER_INPUT_STORAGE_KEY, yOffset.toString());
+      localStorage.setItem(PLAYER_INPUT_STORAGE_KEY, yOffsetRef.current.toString());
     };
 
     document.addEventListener('mousemove', handleMouseMove);
@@ -109,7 +111,9 @@ export default function PlayerInputPopUp() {
       document.removeEventListener('mouseup', handleMouseUp);
       document.removeEventListener('touchend', handleTouchEnd);
     };
-  }, [isDragging, dragStartY, dragStartOffset, yOffset]);
+  // yOffset excluded: read via yOffsetRef to avoid re-registering listeners
+  // on every mousemove tick.
+  }, [isDragging, dragStartY, dragStartOffset]);
 
   useEffect(() => {
     const cardsArrLength = inputPopUp?.popup?.cards?.length ?? 0;
