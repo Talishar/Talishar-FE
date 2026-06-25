@@ -74,6 +74,7 @@ export const PlayerHandCard = ({
 
   const dragX = useMotionValue(0);
   const dragY = useMotionValue(0);
+  const dispatch = useAppDispatch();
 
   if (card === undefined) {
     return <div className={styles.handCard}></div>;
@@ -84,7 +85,6 @@ export const PlayerHandCard = ({
     locale: getLanguage(),
     cardNumber: card.cardNumber
   });
-  const dispatch = useAppDispatch();
 
   const handleDragStart = () => {
     setIsDragging(true);
@@ -199,14 +199,6 @@ export const PlayerHandCard = ({
     [styles.border9]: card.borderColor == '9'
   });
 
-  // Calculate initial position for draw animation
-  const getInitialPosition = () => {
-    if (isNewlyDrawn) {
-      return { opacity: 0, y: 100 };
-    }
-    return { opacity: 0, y: 100 };
-  };
-
   return (
     <motion.div
       layout={enableLayoutAnimation ? 'position' : false}
@@ -224,7 +216,7 @@ export const PlayerHandCard = ({
       onPointerCancel={handlePointerCancel}
       dragSnapToOrigin={snapback}
       dragMomentum={false}
-      initial={getInitialPosition()}
+      initial={{ opacity: 0, y: 100 }}
       animate={{ opacity: 1, y: 0 }}
       transition={
         isNewlyDrawn ? { duration: 0.2, ease: 'easeOut' } : { duration: 0.1 }

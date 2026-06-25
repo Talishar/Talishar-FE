@@ -22,9 +22,6 @@ type CardWithStableId = {
 };
 
 export default function PlayerHand() {
-  const isPlayable = (card: Card) => {
-    false;
-  };
   const [width, height] = useWindowDimensions();
 
   const playerID = useAppSelector(
@@ -34,7 +31,7 @@ export default function PlayerHand() {
     (state: RootState) => state.game.gameInfo.isReplay
   );
 
-  const [playedCards, setPlayedCards] = useState<String[]>([]);
+  const [playedCards, setPlayedCards] = useState<string[]>([]);
 
   let hasArsenal = true;
 
@@ -521,9 +518,7 @@ export default function PlayerHand() {
   };
 
   const addCardToPlayedCards = (cardName: string) => {
-    const newArray = playedCards;
-    newArray.push(cardName);
-    setPlayedCards(newArray);
+    setPlayedCards((prev) => [...prev, cardName]);
   };
 
   useEffect(() => {
@@ -617,7 +612,15 @@ export default function PlayerHand() {
   const hasTheirBanishedCards = (playableTheirBanishedCards?.length ?? 0) > 0;
   const hasGraveyardCards = (playableGraveyardCards?.length ?? 0) > 0;
 
-  const cardsInHandsAlready = [...playedCards];
+  const cardOccurrenceMap = new Map<string, number>();
+  for (const c of playedCards) {
+    cardOccurrenceMap.set(c, (cardOccurrenceMap.get(c) ?? 0) + 1);
+  }
+  const nextCardOccurrence = (cardNumber: string): number => {
+    const count = cardOccurrenceMap.get(cardNumber) ?? 0;
+    cardOccurrenceMap.set(cardNumber, count + 1);
+    return count;
+  };
 
   const canScrollLeft = scrollOffset > 0;
   const canScrollRight = scrollOffset < maxScrollOffset;
@@ -663,10 +666,7 @@ export default function PlayerHand() {
             <AnimatePresence>
               {orderedHandCards.length > 0 &&
                 orderedHandCards.map(({ card, id }, ix) => {
-                  const cardCount = cardsInHandsAlready.filter(
-                    (value) => value === card.cardNumber
-                  ).length;
-                  cardsInHandsAlready.push(card.cardNumber);
+                  nextCardOccurrence(card.cardNumber);
                   const isNewlyDrawn = newlyDrawnCardNumbers.has(
                     card.cardNumber
                   );
@@ -694,10 +694,7 @@ export default function PlayerHand() {
                 showArsenal &&
                 arsenalCards !== undefined &&
                 arsenalCards.map((card, ix) => {
-                  const cardCount = cardsInHandsAlready.filter(
-                    (value) => value === card.cardNumber
-                  ).length;
-                  cardsInHandsAlready.push(card.cardNumber);
+                  const cardCount = nextCardOccurrence(card.cardNumber);
                   return (
                     <PlayerHandCard
                       card={card}
@@ -717,10 +714,7 @@ export default function PlayerHand() {
               )}
               {playableBanishedCards !== undefined &&
                 playableBanishedCards.map((card, ix) => {
-                  const cardCount = cardsInHandsAlready.filter(
-                    (value) => value === card.cardNumber
-                  ).length;
-                  cardsInHandsAlready.push(card.cardNumber);
+                  const cardCount = nextCardOccurrence(card.cardNumber);
                   return (
                     <PlayerHandCard
                       card={card}
@@ -741,10 +735,7 @@ export default function PlayerHand() {
               )}
               {playableTheirBanishedCards !== undefined &&
                 playableTheirBanishedCards.map((card, ix) => {
-                  const cardCount = cardsInHandsAlready.filter(
-                    (value) => value === card.cardNumber
-                  ).length;
-                  cardsInHandsAlready.push(card.cardNumber);
+                  const cardCount = nextCardOccurrence(card.cardNumber);
                   return (
                     <PlayerHandCard
                       card={card}
@@ -765,10 +756,7 @@ export default function PlayerHand() {
               )}
               {playableGraveyardCards !== undefined &&
                 playableGraveyardCards.map((card, ix) => {
-                  const cardCount = cardsInHandsAlready.filter(
-                    (value) => value === card.cardNumber
-                  ).length;
-                  cardsInHandsAlready.push(card.cardNumber);
+                  const cardCount = nextCardOccurrence(card.cardNumber);
                   return (
                     <PlayerHandCard
                       card={card}

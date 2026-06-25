@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import {
@@ -66,23 +66,38 @@ export const CardListZone = () => {
     }
   }, [cardList?.isSorted]);
 
-  const reversedList = cardList?.cardList
-    ? (() => {
-        const reversed = [...cardList.cardList].reverse();
-        const nonBacks = reversed.filter(c => c.cardNumber.toLowerCase() !== 'cardback');
-        const backs = reversed.filter(c => c.cardNumber.toLowerCase() === 'cardback');
-        return [...nonBacks, ...backs];
-      })()
-    : null;
+  const reversedList = useMemo(() => {
+    if (!cardList?.cardList) return null;
+    const reversed = [...cardList.cardList].reverse();
+    const nonBacks = reversed.filter(c => c.cardNumber.toLowerCase() !== 'cardback');
+    const backs = reversed.filter(c => c.cardNumber.toLowerCase() === 'cardback');
+    return [...nonBacks, ...backs];
+  }, [cardList?.cardList]);
 
   const isOpponentZone = cardList?.name?.includes("Opponent's") ?? false;
 
-  const filteredList =
-    reversedList?.filter(
-      (card: Card) =>
-        !searchQuery ||
-        card.cardName?.toLowerCase().includes(searchQuery.toLowerCase())
-    ) ?? null;
+  const showSortAndSearch = !!(cardList?.name && (
+    cardList.name.includes('Your Graveyard') ||
+    cardList.name.includes("Opponent's Graveyard") ||
+    cardList.name.includes('Your Banish') ||
+    cardList.name.includes("Opponent's Banish") ||
+    cardList.name.includes('Your Deck') ||
+    cardList.name.includes("Opponent's Deck") ||
+    cardList.name.includes('Your Soul') ||
+    cardList.name.includes("Opponent's Soul") ||
+    cardList.name.includes('Your Pitch') ||
+    cardList.name.includes("Opponent's Pitch")
+  ));
+
+  const filteredList = useMemo(
+    () =>
+      reversedList?.filter(
+        (card: Card) =>
+          !searchQuery ||
+          card.cardName?.toLowerCase().includes(searchQuery.toLowerCase())
+      ) ?? null,
+    [reversedList, searchQuery]
+  );
 
   const closeCardList = () => {
     dispatch(clearCardListFocus());
@@ -120,18 +135,7 @@ export const CardListZone = () => {
             <div className={styles.cardListTitle}>
               <h3 className={styles.title}>{cardList?.name}</h3>
             </div>
-            {cardList &&
-              cardList.name &&
-              (cardList.name.includes('Your Graveyard') ||
-                cardList.name.includes("Opponent's Graveyard") ||
-                cardList.name.includes('Your Banish') ||
-                cardList.name.includes("Opponent's Banish") ||
-                cardList.name.includes('Your Deck') ||
-                cardList.name.includes("Opponent's Deck") ||
-                cardList.name.includes('Your Soul') ||
-                cardList.name.includes("Opponent's Soul") ||
-                cardList.name.includes('Your Pitch') ||
-                cardList.name.includes("Opponent's Pitch")) && (
+            {showSortAndSearch && (
                 <input
                   type="text"
                   className={styles.searchInput}
@@ -141,18 +145,7 @@ export const CardListZone = () => {
                   onClick={(e) => e.stopPropagation()}
                 />
               )}
-            {cardList &&
-              cardList.name &&
-              (cardList.name.includes('Your Graveyard') ||
-                cardList.name.includes("Opponent's Graveyard") ||
-                cardList.name.includes('Your Banish') ||
-                cardList.name.includes("Opponent's Banish") ||
-                cardList.name.includes('Your Deck') ||
-                cardList.name.includes("Opponent's Deck") ||
-                cardList.name.includes('Your Soul') ||
-                cardList.name.includes("Opponent's Soul") ||
-                cardList.name.includes('Your Pitch') ||
-                cardList.name.includes("Opponent's Pitch")) && (
+            {showSortAndSearch && (
                 <button
                   className={`${styles.button} ${
                     cardList?.isSorted ? styles.active : ''

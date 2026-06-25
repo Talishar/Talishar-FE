@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import { getGameInfo } from 'features/game/GameSlice';
@@ -69,6 +69,12 @@ export default function LastPlayed() {
     setIndex(0);
   }, [recentlyPlayed.length]);
 
+  // useMemo must be before any early return to satisfy the Rules of Hooks
+  const trackStyle = useMemo(
+    () => ({ transform: `translateX(-${index * (isStreamerMode ? 90 : 70)}%)` }),
+    [index, isStreamerMode]
+  );
+
   if (recentlyPlayed.length === 0) {
     const placeholderSrc = getCollectionCardImagePath({
       path: CARD_SQUARES_PATH,
@@ -120,10 +126,7 @@ export default function LastPlayed() {
         </div>
       </div>
       <div className={styles.viewport}>
-        <div
-          className={styles.track}
-          style={{ transform: `translateX(-${index * (isStreamerMode ? 90 : 70)}%)` }}
-        >
+        <div className={styles.track} style={trackStyle}>
           {recentlyPlayed.map((card, i) => (
             <div className={classNames(styles.slide, { [styles.streamerSlide]: isStreamerMode })} key={`${card.cardNumber}-${i}`}>
               <CardSlide

@@ -10,13 +10,16 @@ import { IS_STREAMER_MODE } from 'features/options/constants';
 
 const CHAT_RE = /<span[^>]*>(.*?):\s<\/span>/;
 
+const ChatMessageItem = React.memo(({ message }: { message: string }) => (
+  <div>{parseHtmlToReactElements(message)}</div>
+));
+ChatMessageItem.displayName = 'ChatMessageItem';
+
 export default function ChatBox({ usePrimary = false, showTabs = true }: { usePrimary?: boolean; showTabs?: boolean }) {
   const amIPlayerOne = useAppSelector((state: RootState) => {
     return state.game.gameInfo.playerID === 1;
   });
-  const gameID = useAppSelector(
-    (state: RootState) => state.game.gameInfo.gameID
-  );
+  // gameID selector removed — it was selected but never used in this component.
   const playerID = useAppSelector(
     (state: RootState) => state.game.gameInfo.playerID
   );
@@ -60,56 +63,46 @@ export default function ChatBox({ usePrimary = false, showTabs = true }: { usePr
     }
   };
 
-  const chatMessages = chatLog
-    ?.filter((message) => {
-      switch (chatFilter) {
-        case 'none':
-          return true;
+  const chatMessages = useMemo(() => {
+    if (!chatLog) return null;
 
-        case 'chat':
-          return message.match(CHAT_RE);
+    const myDisplayName = amIPlayerOne
+      ? (myName && myName.trim() ? myName.substring(0, 15) : 'Player 1')
+      : (myName && myName.trim() ? myName.substring(0, 15) : 'Player 2');
 
-        case 'log':
-          return !message.match(CHAT_RE);
+    const oppDisplayName = isStreamerMode
+      ? 'Opponent'
+      : amIPlayerOne
+        ? (oppName && oppName.trim() ? oppName.substring(0, 15) : 'Player 2')
+        : (oppName && oppName.trim() ? oppName.substring(0, 15) : 'Player 1');
 
-        default:
-          return true;
-      }
-    })
-    .map((message) => {
-      const myDisplayName = amIPlayerOne
-        ? myName && myName.trim()
-          ? myName.substring(0, 15)
-          : 'Player 1'
-        : myName && myName.trim()
-        ? myName.substring(0, 15)
-        : 'Player 2';
+    const p1DisplayName = amIPlayerOne ? myDisplayName : oppDisplayName;
+    const p2DisplayName = amIPlayerOne ? oppDisplayName : myDisplayName;
 
-      const oppDisplayName = isStreamerMode
-        ? 'Opponent'
-        : amIPlayerOne
-        ? oppName && oppName.trim()
-          ? oppName.substring(0, 15)
-          : 'Player 2'
-        : oppName && oppName.trim()
-        ? oppName.substring(0, 15)
-        : 'Player 1';
+    // Build once for the whole batch; was previously compiled per message.
+    const streamerNameRegex =
+      isStreamerMode && oppName
+        ? new RegExp(oppName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g')
+        : null;
 
-      const p1DisplayName = amIPlayerOne ? myDisplayName : oppDisplayName;
-      const p2DisplayName = amIPlayerOne ? oppDisplayName : myDisplayName;
+    return chatLog
+      .filter((message) => {
+        if (chatFilter === 'chat') return CHAT_RE.test(message);
+        if (chatFilter === 'log') return !CHAT_RE.test(message);
+        return true;
+      })
+      .map((message) => {
+        let processed = message
+          .replace(/Player 1/g, `<b>${p1DisplayName}</b>`)
+          .replace(/Player 2/g, `<b>${p2DisplayName}</b>`);
 
-      let processedMessage = message
-        .replace(/Player 1/g, `<b>${p1DisplayName}</b>`)
-        .replace(/Player 2/g, `<b>${p2DisplayName}</b>`);
+        if (streamerNameRegex) {
+          processed = processed.replace(streamerNameRegex, 'Opponent');
+        }
 
-      if (isStreamerMode && oppName) {
-        const oppNameEscaped = oppName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-        const oppNameRegex = new RegExp(oppNameEscaped, 'g');
-        processedMessage = processedMessage.replace(oppNameRegex, 'Opponent');
-      }
-
-      return processedMessage;
-    });
+        return processed;
+      });
+  }, [chatLog, chatFilter, isStreamerMode, amIPlayerOne, myName, oppName]);
 
   useEffect(() => {
     const currentLength = chatLog?.length ?? 0;
@@ -159,10 +152,9 @@ export default function ChatBox({ usePrimary = false, showTabs = true }: { usePr
       )}
       <div className={styles.chatBoxInner}>
         <div className={styles.chatBox} ref={chatBoxRef}>
-          {chatMessages &&
-            chatMessages.map((chat, ix) => {
-              return <div key={ix}>{parseHtmlToReactElements(chat)}</div>;
-            })}
+          {chatMessages?.map((chat, ix) => (
+            <ChatMessageItem key={ix} message={chat} />
+          ))}
           {displayTyping && (
             <div className={styles.typingIndicator} ref={messagesEndRef}>
               <em>Opponent is typing…</em>

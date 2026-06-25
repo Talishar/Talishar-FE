@@ -27,20 +27,20 @@ import {
   setArsenalFlip
 } from 'features/game/GameSlice';
 
+enum ModalType {
+  RequestChat = 0,
+  RequestUndo = 1,
+  RequestThisTurnUndo = 2,
+  RequestLastTurnUndo = 3,
+  RequestChainLinkUndo = 4
+}
+
 export const EventsHandler = React.memo(() => {
   const events = useAppSelector(
     (state: RootState) => state.game.events,
     shallowEqual
   );
   const lastProcessedEventsRef = React.useRef<typeof events>(undefined);
-
-  enum ModalType {
-    RequestChat = 0,
-    RequestUndo = 1,
-    RequestThisTurnUndo = 2,
-    RequestLastTurnUndo = 3,
-    RequestChainLinkUndo = 4
-  }
 
   const [showModal, setShowModal] = useState(false);
   const [modal, setModal] = useState('');

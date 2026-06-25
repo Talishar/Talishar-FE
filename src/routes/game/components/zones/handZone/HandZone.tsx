@@ -1,4 +1,5 @@
 import React from 'react';
+import classNames from 'classnames';
 import styles from './HandZone.module.css';
 import { RootState } from 'app/Store';
 import Player from 'interface/Player';
@@ -6,7 +7,7 @@ import { Card } from 'features/Card';
 import CardDisplay from '../../elements/cardDisplay/CardDisplay';
 import { useAppSelector } from 'app/Hooks';
 
-export default function HandZone(prop: Player) {
+const HandZone = React.memo(function HandZone(prop: Player) {
   const { isPlayer } = prop;
 
   const playerID = useAppSelector(
@@ -38,8 +39,10 @@ export default function HandZone(prop: Player) {
     handCards = isPlayer ? playerOneHand : playerTwoHand;
   }
 
-  let displayRow = isPlayer ? styles.isPlayer : styles.isOpponent;
-  displayRow = `${displayRow} ${styles.handZone}`;
+  const displayRow = classNames(
+    styles.handZone,
+    isPlayer ? styles.isPlayer : styles.isOpponent
+  );
 
   if (handCards === undefined || (playerID !== 3 && !isReplay && isPlayer)) {
     return <div className={displayRow}></div>;
@@ -52,4 +55,6 @@ export default function HandZone(prop: Player) {
       })}
     </div>
   );
-}
+});
+
+export default HandZone;

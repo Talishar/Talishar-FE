@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import styles from './timer.module.css';
@@ -11,6 +11,20 @@ const getGameIdFromUrl = () => {
 };
 
 const STORAGE_KEY_PREFIX = 'game-timer-';
+
+function fancyTimeFormat(duration: number | undefined): string {
+  duration = duration ?? 0;
+  const hrs = ~~(duration / 3600);
+  const mins = ~~((duration % 3600) / 60);
+  const secs = ~~duration % 60;
+  let ret = '';
+  if (hrs > 0) {
+    ret += '' + hrs + ':' + (mins < 10 ? '0' : '');
+  }
+  ret += '' + mins + ':' + (secs < 10 ? '0' : '');
+  ret += '' + secs;
+  return ret;
+}
 
 // Clean up old timer cookies and migrate to sessionStorage
 //TODO: Delete this once cookies are cleaned up
@@ -27,14 +41,13 @@ const cleanupOldCookies = () => {
 };
 
 export default function Timer() {
-  const gameId = getGameIdFromUrl();
-  const storageKey = `${STORAGE_KEY_PREFIX}${gameId}`;
+  // Stable across the component's lifetime — the URL doesn't change during a game.
+  const storageKeyRef = useRef(`${STORAGE_KEY_PREFIX}${getGameIdFromUrl()}`);
 
-  // Initialize from localStorage (persists across browser sessions)
-  const initialTimer = localStorage.getItem(storageKey)
-    ? parseInt(localStorage.getItem(storageKey)!)
-    : 0;
-  const [timer, setTimer] = useState(initialTimer);
+  const [timer, setTimer] = useState(() => {
+    const stored = localStorage.getItem(storageKeyRef.current);
+    return stored ? parseInt(stored, 10) : 0;
+  });
 
   // Clean up old cookies on mount
   useEffect(() => {
@@ -42,37 +55,16 @@ export default function Timer() {
   }, []);
 
   useEffect(() => {
+    const key = storageKeyRef.current;
     const intervalId = setInterval(() => {
       setTimer((prevTimer) => {
         const newTimer = prevTimer + 1;
-        localStorage.setItem(storageKey, newTimer.toString());
+        localStorage.setItem(key, newTimer.toString());
         return newTimer;
       });
-    }, 1000); // update every 1 second
-
-    return () => {
-      clearInterval(intervalId);
-    };
-  }, [storageKey]);
-
-  function fancyTimeFormat(duration: number | undefined) {
-    duration = duration ?? 0;
-    // Hours, minutes and seconds
-    const hrs = ~~(duration / 3600);
-    const mins = ~~((duration % 3600) / 60);
-    const secs = ~~duration % 60;
-
-    let ret = '';
-
-    if (hrs > 0) {
-      ret += '' + hrs + ':' + (mins < 10 ? '0' : '');
-    }
-
-    ret += '' + mins + ':' + (secs < 10 ? '0' : '');
-    ret += '' + secs;
-
-    return ret;
-  }
+    }, 1000);
+    return () => clearInterval(intervalId);
+  }, []); // storageKey is stable for the component's lifetime
 
   return (
     <div className={styles.timerStyle}>
