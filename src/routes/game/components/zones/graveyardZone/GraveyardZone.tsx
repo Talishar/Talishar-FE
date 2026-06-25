@@ -1,17 +1,15 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { RootState } from 'app/Store';
 import Displayrow from 'interface/Displayrow';
 import { setCardListFocus, clearCardListFocus } from 'features/game/GameSlice';
 import CardDisplay from '../../elements/cardDisplay/CardDisplay';
 import styles from './GraveyardZone.module.css';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
-import useWindowDimensions from 'hooks/useWindowDimensions';
 import * as optConst from 'features/options/constants';
 
 export const GraveyardZone = React.memo((prop: Displayrow) => {
   const { isPlayer } = prop;
   const dispatch = useAppDispatch();
-  const [windowWidth] = useWindowDimensions();
   const settingsData = useAppSelector(
     (state: RootState) => state.settings.entities
   );
@@ -26,11 +24,6 @@ export const GraveyardZone = React.memo((prop: Displayrow) => {
     (state: RootState) => state.game.cardListFocus
   );
 
-  const cardToDisplay = useMemo(
-    () => (graveyardZone?.[0] ? { ...graveyardZone[0], borderColor: '' } : undefined),
-    [graveyardZone]
-  );
-
   if (graveyardZone === undefined || graveyardZone.length === 0) {
     return <div className={styles.graveyardZone}>Graveyard</div>;
   }
@@ -43,17 +36,26 @@ export const GraveyardZone = React.memo((prop: Displayrow) => {
 
     // Check if this zone is already open
     if (cardListFocus?.active && cardListFocus?.name === zoneTitle) {
+      // Close it
       dispatch(clearCardListFocus());
     } else {
-      dispatch(setCardListFocus({ cardList: graveyardZone, name: zoneTitle }));
+      // Open it
+      dispatch(
+        setCardListFocus({
+          cardList: graveyardZone,
+          name: zoneTitle
+        })
+      );
     }
   };
+
+  const cardToDisplay = { ...graveyardZone[0], borderColor: '' };
 
   // Count only face-up cards (overlay !== 'disabled')
   const faceUpCount = graveyardZone.filter(
     (card) => card.overlay !== 'disabled'
   ).length;
-  const isMobileOrTablet = windowWidth <= 1024;
+  const isMobileOrTablet = window.innerWidth <= 1024;
   const totalCards = graveyardZone.length;
   const layerOffsetY = 0.25; // pixels per layer (down)
   const layerOffsetX = -0.25; // pixels per layer (left)
@@ -88,16 +90,14 @@ export const GraveyardZone = React.memo((prop: Displayrow) => {
               : {}
           }
         >
-          {cardToDisplay && (
-            <CardDisplay
-              card={cardToDisplay}
-              isPlayer={isPlayer}
-              num={showCount ? faceUpCount : undefined}
-              preventUseOnClick
-              showCountersOnHover={!alwaysShowCounters}
-              disableTilt
-            />
-          )}
+          <CardDisplay
+            card={cardToDisplay}
+            isPlayer={isPlayer}
+            num={showCount ? faceUpCount : undefined}
+            preventUseOnClick
+            showCountersOnHover={!alwaysShowCounters}
+            disableTilt
+          />
         </div>
       </div>
     </div>

@@ -9,10 +9,6 @@ import classNames from 'classnames';
 import { motion, AnimatePresence } from 'framer-motion';
 import { selectPermanentsAsStack } from '../../../../../features/game/GameSlice';
 
-const PERMANENT_INITIAL = { opacity: 0, x: -100 };
-const PERMANENT_ANIMATE = { opacity: 1, x: 0 };
-const PERMANENT_EXIT = { opacity: 0, transition: { duration: 0.3, ease: 'easeOut' as const } };
-
 export interface CardStack {
   card: Card;
   count: number;
@@ -83,9 +79,12 @@ export default function PermanentsZone(prop: Displayrow) {
                 <motion.div
                   key={cardStack.id}
                   className={cardContainerStyles}
-                  initial={PERMANENT_INITIAL}
-                  animate={PERMANENT_ANIMATE}
-                  exit={PERMANENT_EXIT}
+                  initial={{ opacity: 0, left: -100 }}
+                  animate={{ opacity: 1, left: 0 }}
+                  exit={{
+                    opacity: 0,
+                    transition: { duration: 0.3, ease: 'easeOut' }
+                  }}
                   layout
                 >
                   <CardDisplay card={cardStack.card} isPlayer={isPlayer} />

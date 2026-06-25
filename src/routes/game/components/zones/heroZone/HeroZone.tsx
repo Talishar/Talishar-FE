@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useAppSelector, useAppDispatch } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import Displayrow from 'interface/Displayrow';
@@ -75,13 +75,13 @@ export const HeroZone = React.memo((prop: Displayrow) => {
     previousHealthRef.current = health;
   }, [health, dispatch, isPlayer]);
 
-  const handleDamagePopupComplete = useCallback((id: string) => {
+  const handleDamagePopupComplete = (id: string) => {
     dispatch(removeDamagePopup({ isPlayer, id }));
-  }, [dispatch, isPlayer]);
+  };
 
-  const handleHealingPopupComplete = useCallback((id: string) => {
+  const handleHealingPopupComplete = (id: string) => {
     dispatch(removeHealingPopup({ isPlayer, id }));
-  }, [dispatch, isPlayer]);
+  };
 
   return (
     <div className={styles.heroZone}>

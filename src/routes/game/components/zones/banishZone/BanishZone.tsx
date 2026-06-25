@@ -1,17 +1,15 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import { setCardListFocus, clearCardListFocus } from 'features/game/GameSlice';
 import Displayrow from 'interface/Displayrow';
 import CardDisplay from '../../elements/cardDisplay/CardDisplay';
 import styles from './BanishZone.module.css';
-import useWindowDimensions from 'hooks/useWindowDimensions';
 import * as optConst from 'features/options/constants';
 
 export const BanishZone = React.memo((prop: Displayrow) => {
   const { isPlayer } = prop;
   const dispatch = useAppDispatch();
-  const [windowWidth] = useWindowDimensions();
   const settingsData = useAppSelector(
     (state: RootState) => state.settings.entities
   );
@@ -27,11 +25,6 @@ export const BanishZone = React.memo((prop: Displayrow) => {
     (state: RootState) => state.game.cardListFocus
   );
 
-  const cardToDisplay = useMemo(
-    () => banishZone?.[0] ? { ...banishZone[0], borderColor: '' } : undefined,
-    [banishZone]
-  );
-
   if (banishZone === undefined || banishZone.length === 0) {
     return <div className={styles.banishZone}>Banish</div>;
   }
@@ -40,23 +33,33 @@ export const BanishZone = React.memo((prop: Displayrow) => {
     const isPlayerPronoun = isPlayer ? 'Your' : "Opponent's";
     const zoneTitle = `${isPlayerPronoun} Banish Zone`;
 
+    // Check if this zone is already open
     if (cardListFocus?.active && cardListFocus?.name === zoneTitle) {
+      // Close it
       dispatch(clearCardListFocus());
     } else {
-      dispatch(setCardListFocus({ cardList: banishZone, name: zoneTitle }));
+      // Open it
+      dispatch(
+        setCardListFocus({
+          cardList: banishZone,
+          name: zoneTitle
+        })
+      );
     }
   };
+
+  const cardToDisplay = { ...banishZone[0], borderColor: '' };
 
   // Count only face-up cards (overlay !== 'disabled')
   const faceUpCount = banishZone.filter(
     (card) => card.overlay !== 'disabled'
   ).length;
-  const isMobileOrTablet = windowWidth <= 1024;
+  const isMobileOrTablet = window.innerWidth <= 1024;
   const totalCards = banishZone.length;
-  const layerOffsetY = 0.25;
-  const layerOffsetX = -0.25;
-  const baseOffsetY = totalCards * 0.24 * -1;
-  const baseOffsetX = totalCards * 0.24;
+  const layerOffsetY = 0.25; // pixels per layer (down)
+  const layerOffsetX = -0.25; // pixels per layer (left)
+  const baseOffsetY = totalCards * 0.24 * -1; // pixels (up, based on card count)
+  const baseOffsetX = totalCards * 0.24; // pixels (right, based on card count)
 
   return (
     <div className={styles.banishZone} onClick={banishZoneDisplay}>
@@ -80,20 +83,20 @@ export const BanishZone = React.memo((prop: Displayrow) => {
           className={styles.cardWrapper}
           style={
             !isMobileOrTablet
-              ? { transform: `translateY(${baseOffsetY}px) translateX(${baseOffsetX}px)` }
-              : undefined
+              ? {
+                  transform: `translateY(${baseOffsetY}px) translateX(${baseOffsetX}px)`
+                }
+              : {}
           }
         >
-          {cardToDisplay && (
-            <CardDisplay
-              card={cardToDisplay}
-              isPlayer={isPlayer}
-              num={showCount ? faceUpCount : undefined}
-              preventUseOnClick
-              showCountersOnHover={!alwaysShowCounters}
-              disableTilt
-            />
-          )}
+          <CardDisplay
+            card={cardToDisplay}
+            isPlayer={isPlayer}
+            num={showCount ? faceUpCount : undefined}
+            preventUseOnClick
+            showCountersOnHover={!alwaysShowCounters}
+            disableTilt
+          />
         </div>
       </div>
     </div>

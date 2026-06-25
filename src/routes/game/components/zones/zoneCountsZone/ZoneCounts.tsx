@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { GiAngelOutfit, GiGroundSprout } from 'react-icons/gi';
 import { GiDroplets } from 'react-icons/gi';
 import { FaPrayingHands } from 'react-icons/fa';
@@ -51,43 +51,69 @@ export const ZoneCounts = (prop: Displayrow) => {
 };
 
 const SoulCount = (prop: Displayrow) => {
+  const [hasSoul, setHasSoul] = useState(false);
   const dispatch = useAppDispatch();
   const { isPlayer } = prop;
   const soulCount = useAppSelector((state: RootState) =>
     isPlayer ? state.game.playerOne.SoulCount : state.game.playerTwo.SoulCount
   );
 
-  if (!soulCount || soulCount <= 0) return null;
-
   const soulDisplay = () => {
     const playerPronoun = isPlayer ? 'Your' : "Opponent's";
     const popUpName = isPlayer ? 'mySoulPopup' : 'theirSoulPopup';
-    dispatch(setCardListLoadFocus({ query: popUpName, name: `${playerPronoun} Soul` }));
+    dispatch(
+      setCardListLoadFocus({
+        query: popUpName,
+        name: `${playerPronoun} Soul`
+      })
+    );
   };
 
+  if (!hasSoul && soulCount != undefined && soulCount > 0) {
+    setHasSoul(true);
+  }
+
   return (
-    <div title="Soul" className={styles.clickableItem} onClick={soulDisplay}>
-      <GiAngelOutfit /> {soulCount}
-    </div>
+    <>
+      {!!hasSoul && (
+        <div
+          title="Soul"
+          className={styles.clickableItem}
+          onClick={soulDisplay}
+        >
+          <GiAngelOutfit /> {soulCount}
+        </div>
+      )}
+    </>
   );
 };
 
 const EarthCount = (prop: Displayrow) => {
+  const [hasEarth, setHasEarth] = useState(false);
+  const dispatch = useAppDispatch();
   const { isPlayer } = prop;
   const earthCount = useAppSelector((state: RootState) =>
     isPlayer ? state.game.playerOne.earthCount : state.game.playerTwo.earthCount
   );
 
-  if (!earthCount || earthCount <= 0) return null;
+  if (!hasEarth && earthCount != undefined && earthCount > 0) {
+    setHasEarth(true);
+  }
 
   return (
-    <div title="Earth Cards Count" className={styles.NotClickableItem}>
-      <GiGroundSprout /> {earthCount}
-    </div>
+    <>
+      {!!hasEarth && (
+        <div title="Earth Cards Count" className={styles.NotClickableItem}>
+          <GiGroundSprout /> {earthCount}
+        </div>
+      )}
+    </>
   );
 };
 
 const BlessingsCount = (prop: Displayrow) => {
+  const [hasBlessings, setHasBlessings] = useState(false);
+  const dispatch = useAppDispatch();
   const { isPlayer } = prop;
   const blessingsCount = useAppSelector((state: RootState) =>
     isPlayer
@@ -95,16 +121,24 @@ const BlessingsCount = (prop: Displayrow) => {
       : state.game.playerTwo.blessingsCount
   );
 
-  if (!blessingsCount || blessingsCount <= 0) return null;
+  if (!hasBlessings && blessingsCount != undefined && blessingsCount > 0) {
+    setHasBlessings(true);
+  }
 
   return (
-    <div title="Count Your Blessings" className={styles.NotClickableItem}>
-      <FaPrayingHands /> {blessingsCount}
-    </div>
+    <>
+      {!!hasBlessings && (
+        <div title="Count Your Blessings" className={styles.NotClickableItem}>
+          <FaPrayingHands /> {blessingsCount}
+        </div>
+      )}
+    </>
   );
 };
 
 const BloodDebtCount = (prop: Displayrow) => {
+  const [hasBloodDebt, setHasBloodDebt] = useState(false);
+  const dispatch = useAppDispatch();
   const { isPlayer } = prop;
   const bloodDebtCount = useAppSelector((state: RootState) =>
     isPlayer
@@ -117,7 +151,20 @@ const BloodDebtCount = (prop: Displayrow) => {
       : state.game.playerTwo.bloodDebtImmune
   );
 
-  if (!bloodDebtCount || bloodDebtCount <= 0) return null;
+  const BloodDebtDisplay = () => {
+    const playerPronoun = isPlayer ? 'Your' : "Opponent's";
+    const popUpName = isPlayer ? 'myBloodDebtPopup' : 'theirBloodDebtPopup';
+    dispatch(
+      setCardListLoadFocus({
+        query: popUpName,
+        name: `${playerPronoun} BloodDebt`
+      })
+    );
+  };
+
+  if (!hasBloodDebt && bloodDebtCount != undefined && bloodDebtCount > 0) {
+    setHasBloodDebt(true);
+  }
 
   const bloodDebtItem = classNames(
     { [styles.isRed]: !isImmune },
@@ -125,12 +172,18 @@ const BloodDebtCount = (prop: Displayrow) => {
   );
 
   return (
-    <div
-      title={`Blood Debt${bloodDebtCount === 1 ? '' : 's'}`}
-      className={bloodDebtItem}
-    >
-      <GiDroplets /> {bloodDebtCount}
-    </div>
+    <>
+      {!!hasBloodDebt ? (
+        <div
+          title={`Blood Debt${bloodDebtCount === 1 ? '' : 's'}`}
+          className={bloodDebtItem}
+        >
+          <GiDroplets /> {bloodDebtCount}
+        </div>
+      ) : (
+        <div className={styles.item}> </div>
+      )}
+    </>
   );
 };
 

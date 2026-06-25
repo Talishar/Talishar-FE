@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import { getGameInfo } from 'features/game/GameSlice';
@@ -95,10 +95,6 @@ export default function LastPlayed() {
 
   const canPrev = index > 0;
   const canNext = index < recentlyPlayed.length - 1;
-  const trackStyle = useMemo(
-    () => ({ transform: `translateX(-${index * (isStreamerMode ? 90 : 70)}%)` }),
-    [index, isStreamerMode]
-  );
 
   return (
     <div className={styles.container}>
@@ -124,7 +120,10 @@ export default function LastPlayed() {
         </div>
       </div>
       <div className={styles.viewport}>
-        <div className={styles.track} style={trackStyle}>
+        <div
+          className={styles.track}
+          style={{ transform: `translateX(-${index * (isStreamerMode ? 90 : 70)}%)` }}
+        >
           {recentlyPlayed.map((card, i) => (
             <div className={classNames(styles.slide, { [styles.streamerSlide]: isStreamerMode })} key={`${card.cardNumber}-${i}`}>
               <CardSlide

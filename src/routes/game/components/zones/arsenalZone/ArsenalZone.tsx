@@ -69,6 +69,8 @@ export default function ArsenalZone(prop: Displayrow) {
     <div className={styles.arsenalContainer}>
       <div className={styles.arsenalZone}>
         {arsenalCards.map((card: Card, index) => {
+          // if it doesn't belong to us we don't need to know if it's faceup or facedown.
+          const cardCopy = { ...card };
           // Check if this card is currently animating
           const isAnimatingThisCard = showFlip && card.cardNumber === flipCard;
 
@@ -76,7 +78,7 @@ export default function ArsenalZone(prop: Displayrow) {
             <div key={index} className={styles.cardWrapper}>
               {/* Hide the actual card while animation is playing */}
               {!isAnimatingThisCard && (
-                <CardDisplay card={card} isPlayer={isPlayer} />
+                <CardDisplay card={cardCopy} isPlayer={isPlayer} />
               )}
               {/* Show animation overlay while animating */}
               {isAnimatingThisCard && (

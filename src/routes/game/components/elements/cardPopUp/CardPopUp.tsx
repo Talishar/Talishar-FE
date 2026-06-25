@@ -11,17 +11,6 @@ const supportsHover =
 
 const LONG_PRESS_DELAY = 400;
 
-const SKIP_POPUP_CARDS = new Set<string>([
-  ...Object.values(CARD_BACK),
-  'STARTTURN', 'CLOSESTEP', 'ENDPHASE', 'ENDTURN', 'RESUMETURN',
-  'PHANTASM', 'SPECTRA', 'MIRAGE', 'FINALIZECHAINLINK', 'DEFENDSTEP',
-  'ATTACKSTEP', 'RESOLUTIONSTEP', 'CLOSINGCHAIN', 'NONE00', 'BLOODDEBT',
-  'BEATCHEST', 'MERIDIANWARD', 'HIGHTIDE', 'WATERYGRAVE', 'DUMMYDISHONORED',
-  'SHARPEN', 'HEAVE', 'INTIMIDATE',
-]);
-
-const TILT_SPRING_CONFIG = { stiffness: 180, damping: 22, mass: 0.6 };
-
 type CardPopUpProps = {
   children: ReactNode;
   cardNumber: string;
@@ -54,8 +43,9 @@ export default function CardPopUp({
 
   const rotateXTarget = useMotionValue(0);
   const rotateYTarget = useMotionValue(0);
-  const rotateX = useSpring(rotateXTarget, TILT_SPRING_CONFIG);
-  const rotateY = useSpring(rotateYTarget, TILT_SPRING_CONFIG);
+  const springConfig = { stiffness: 180, damping: 22, mass: 0.6 };
+  const rotateX = useSpring(rotateXTarget, springConfig);
+  const rotateY = useSpring(rotateYTarget, springConfig);
   const boxShadow = useTransform(
     [rotateX, rotateY],
     ([rx, ry]: number[]) => {
@@ -82,7 +72,36 @@ export default function CardPopUp({
   };
 
   const handleMouseEnter = () => {
-    if (ref.current === null || isHidden === true || SKIP_POPUP_CARDS.has(cardNumber)) {
+    const cardBackValues = Object.values(CARD_BACK);
+
+    if (
+      ref.current === null ||
+      isHidden === true ||
+      cardBackValues.includes(cardNumber) ||
+      cardNumber === 'STARTTURN' ||
+      cardNumber === 'CLOSESTEP' ||
+      cardNumber === 'ENDPHASE' ||
+      cardNumber === 'ENDTURN' ||
+      cardNumber === 'RESUMETURN' ||
+      cardNumber === 'PHANTASM' ||
+      cardNumber === 'SPECTRA' ||
+      cardNumber === 'MIRAGE' ||
+      cardNumber === 'FINALIZECHAINLINK' ||
+      cardNumber === 'DEFENDSTEP' ||
+      cardNumber == 'ATTACKSTEP' ||
+      cardNumber == 'RESOLUTIONSTEP' ||
+      cardNumber == 'CLOSINGCHAIN' ||
+      cardNumber == 'NONE00' ||
+      cardNumber == 'BLOODDEBT' ||
+      cardNumber == 'BEATCHEST' ||
+      cardNumber == 'MERIDIANWARD' ||
+      cardNumber == 'HIGHTIDE' ||
+      cardNumber == 'WATERYGRAVE' ||
+      cardNumber == 'DUMMYDISHONORED' ||
+      cardNumber == 'SHARPEN' ||
+      cardNumber == 'HEAVE' ||
+      cardNumber == "INTIMIDATE"
+    ) {
       return;
     }
     const rect = ref.current.getBoundingClientRect();

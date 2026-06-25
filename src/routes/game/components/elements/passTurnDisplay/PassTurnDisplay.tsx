@@ -38,18 +38,18 @@ export default function PassTurnDisplay() {
     (state: RootState) => state.game.preventPassPrompt
   );
   const settingsData = useAppSelector(getSettingsEntity);
-  const isMuted = settingsData['MuteSound']?.value === '1';
+  const initialValues = { mute: settingsData['MuteSound']?.value === '1' };
 
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    if (hasPriority && !isMuted && playerID !== 3) {
+    if (hasPriority && !initialValues.mute && playerID !== 3) {
       playPassTurnSound();
     }
   }, [
     frameNumber,
     hasPriority,
-    isMuted,
+    initialValues.mute,
     playerID,
     playPassTurnSound
   ]);

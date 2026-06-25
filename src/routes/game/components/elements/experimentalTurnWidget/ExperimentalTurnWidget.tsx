@@ -206,11 +206,11 @@ export function PassTurnDisplay() {
 
   const dispatch = useAppDispatch();
 
-  useEffect(() => {
+  useMemo(() => {
     if (hasPriority) {
       playPassTurnSound();
     }
-  }, [frameNumber, hasPriority, playPassTurnSound]);
+  }, [frameNumber]);
 
   useEffect(() => {
     let link = document.getElementById('favicon') as HTMLLinkElement;

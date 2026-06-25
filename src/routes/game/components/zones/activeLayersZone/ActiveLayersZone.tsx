@@ -75,8 +75,6 @@ export default function ActiveLayersZone() {
   const [dragStartY, setDragStartY] = useState(0);
   const [dragStartOffset, setDragStartOffset] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
-  const yOffsetRef = useRef(yOffset);
-  yOffsetRef.current = yOffset;
 
   const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
     setIsDragging(true);
@@ -111,12 +109,12 @@ export default function ActiveLayersZone() {
 
     const handleMouseUp = () => {
       setIsDragging(false);
-      localStorage.setItem(STORAGE_KEY, yOffsetRef.current.toString());
+      localStorage.setItem(STORAGE_KEY, yOffset.toString());
     };
 
     const handleTouchEnd = () => {
       setIsDragging(false);
-      localStorage.setItem(STORAGE_KEY, yOffsetRef.current.toString());
+      localStorage.setItem(STORAGE_KEY, yOffset.toString());
     };
 
     document.addEventListener('mousemove', handleMouseMove);
@@ -130,7 +128,7 @@ export default function ActiveLayersZone() {
       document.removeEventListener('mouseup', handleMouseUp);
       document.removeEventListener('touchend', handleTouchEnd);
     };
-  }, [isDragging, dragStartY, dragStartOffset]);
+  }, [isDragging, dragStartY, dragStartOffset, yOffset]);
 
   const handlePassTurn = () => {
     dispatch(submitButton({ button: { mode: PROCESS_INPUT.PASS } }));

@@ -34,8 +34,6 @@ export default function CombatChain() {
   const [dragStartY, setDragStartY] = React.useState(0);
   const [dragStartOffset, setDragStartOffset] = React.useState(0);
   const containerRef = React.useRef<HTMLDivElement>(null);
-  const yOffsetRef = React.useRef(yOffset);
-  yOffsetRef.current = yOffset;
   const [width, height] = useWindowDimensions();
   const isPortrait = height > width;
 
@@ -78,12 +76,12 @@ export default function CombatChain() {
 
     const handleMouseUp = () => {
       setIsDragging(false);
-      localStorage.setItem(STORAGE_KEY, yOffsetRef.current.toString());
+      localStorage.setItem(STORAGE_KEY, yOffset.toString());
     };
 
     const handleTouchEnd = () => {
       setIsDragging(false);
-      localStorage.setItem(STORAGE_KEY, yOffsetRef.current.toString());
+      localStorage.setItem(STORAGE_KEY, yOffset.toString());
     };
 
     if (isDragging) {
@@ -99,7 +97,7 @@ export default function CombatChain() {
         document.removeEventListener('touchend', handleTouchEnd);
       };
     }
-  }, [isDragging, dragStartY, dragStartOffset]);
+  }, [isDragging, dragStartY, dragStartOffset, yOffset]);
 
   const showCombatChain =
     showModals &&

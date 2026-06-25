@@ -7,13 +7,6 @@ import { ContinuousCounters } from './components/ContinuousCounters';
 import { TooltipWrapper } from './components/TooltipWrapper';
 import { GiDialPadlock } from 'react-icons/gi';
 
-const INCLUDED_COUNTERS = new Set([
-  'defense', 'steam', 'life', 'attack', 'energy', 'haunt', 'verse',
-  'doom', 'lesson', 'rust', 'flow', 'frost', 'balance', 'bind', 'stain',
-  'storm', 'gold', 'suspense', 'sand', 'lightning', 'amp', 'aim',
-  'wateryGrave', 'counters'
-]);
-
 export interface CountersProp extends Card {
   num?: number;
   numDescription?: string;
@@ -35,12 +28,39 @@ export const CountersOverlay = ({
   restriction,
   excludeFancyCounters
 }: CountersProp) => {
+  const includedCounters = [
+    'defense',
+    'steam',
+    'life',
+    'attack',
+    'energy',
+    'haunt',
+    'verse',
+    'doom',
+    'lesson',
+    'rust',
+    'flow',
+    'frost',
+    'balance',
+    'bind',
+    'stain',
+    'storm',
+    'gold',
+    'suspense',
+    'sand',
+    'lightning',
+    'amp',
+    'aim',
+    'wateryGrave',
+    'counters'
+  ];
+
   let numTotal = num ?? 0;
   let numDescriptionFinal = numDescription ?? '';
 
   if (countersMap && !excludeFancyCounters) {
     for (const counter in countersMap) {
-      if (!INCLUDED_COUNTERS.has(counter)) {
+      if (!includedCounters.includes(counter)) {
         numTotal += Number(countersMap[counter]);
         numDescriptionFinal = counter;
       }

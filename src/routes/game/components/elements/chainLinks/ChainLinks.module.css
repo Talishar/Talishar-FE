@@ -98,11 +98,6 @@
   background-image: none;
 }
 
-.breakChainIcon {
-  width: 100%;
-  height: 100%;
-}
-
 @media (orientation: portrait) {
   .breakChain {
     width: 2.5dvh;

@@ -30,24 +30,6 @@ import { SHORTCUT_ATTACK_THRESHOLD, SKIP_AR_WINDOW, SKIP_DR_WINDOW } from 'featu
 import { Toaster } from 'react-hot-toast';
 import { shallowEqual } from 'react-redux';
 import { PanelProvider } from '../components/leftColumn/PanelContext';
-import { RootState } from 'app/Store';
-
-const TOAST_STYLE: React.CSSProperties = {
-  background: 'var(--theme-tertiary)',
-  color: 'var(--white)',
-  border: '2px solid var(--theme-border)',
-  padding: '0.5rem',
-  wordBreak: 'break-word',
-  maxWidth: '100vh',
-  overflow: 'hidden',
-  textOverflow: 'ellipsis',
-  userSelect: 'none',
-  msUserSelect: 'none',
-  WebkitUserSelect: 'none',
-  MozUserSelect: 'none',
-  zIndex: 10001
-};
-const TOAST_OPTIONS = { style: TOAST_STYLE };
 
 function Play({ isRoguelike }: { isRoguelike: boolean }) {
   usePageTitle('In Game');
@@ -77,12 +59,7 @@ function Play({ isRoguelike }: { isRoguelike: boolean }) {
   ]);
 
   const dispatch = useAppDispatch();
-  const playerOneHeroCardNumber = useAppSelector(
-    (state: RootState) => state.game.playerOne?.Hero?.cardNumber
-  );
-  const playerTwoHeroCardNumber = useAppSelector(
-    (state: RootState) => state.game.playerTwo?.Hero?.cardNumber
-  );
+  const gameState = useAppSelector((state: any) => state.game, shallowEqual);
   const heroIntroShown = useAppSelector(
     (state: any) => state.game.heroIntroShown
   );
@@ -119,18 +96,25 @@ function Play({ isRoguelike }: { isRoguelike: boolean }) {
 
   // Dispatch hero info once game state is fully populated
   useEffect(() => {
-    const playerID = gameInfo?.playerID;
+    const playerID = gameState?.gameInfo?.playerID;
+    const playerOneHero = gameState?.playerOne?.Hero;
+    const playerTwoHero = gameState?.playerTwo?.Hero;
 
-    if (playerID && playerOneHeroCardNumber && playerTwoHeroCardNumber) {
-      if (!gameInfo?.opponentHeroCardNumber) {
+    if (playerID && playerOneHero?.cardNumber && playerTwoHero?.cardNumber) {
+      // Get current hero names from gameInfo (may have been set from Lobby)
+      const currentHeroName = gameState?.gameInfo?.heroName;
+      const currentOpponentHeroName = gameState?.gameInfo?.opponentHeroName;
+
+      // Only dispatch if we don't have opponent hero card number yet (first load)
+      if (!gameState?.gameInfo?.opponentHeroCardNumber) {
         const yourCardNumber =
-          playerID === 1 ? playerOneHeroCardNumber : playerTwoHeroCardNumber;
+          playerID === 1 ? playerOneHero.cardNumber : playerTwoHero.cardNumber;
         const opponentCardNumber =
-          playerID === 1 ? playerTwoHeroCardNumber : playerOneHeroCardNumber;
+          playerID === 1 ? playerTwoHero.cardNumber : playerOneHero.cardNumber;
 
         dispatch(
           setHeroInfo({
-            heroName: gameInfo?.heroName,
+            heroName: currentHeroName,
             yourHeroCardNumber: yourCardNumber,
             opponentHeroCardNumber: opponentCardNumber
           })
@@ -138,11 +122,9 @@ function Play({ isRoguelike }: { isRoguelike: boolean }) {
       }
     }
   }, [
-    playerOneHeroCardNumber,
-    playerTwoHeroCardNumber,
-    gameInfo?.playerID,
-    gameInfo?.opponentHeroCardNumber,
-    gameInfo?.heroName,
+    gameState?.playerOne?.Hero?.cardNumber,
+    gameState?.playerTwo?.Hero?.cardNumber,
+    gameState?.gameInfo?.playerID,
     dispatch
   ]);
 
@@ -185,7 +167,26 @@ function Play({ isRoguelike }: { isRoguelike: boolean }) {
   return (
     <PanelProvider>
       <div className="centering">
-        <Toaster position="top-left" toastOptions={TOAST_OPTIONS} />
+        <Toaster
+          position="top-left"
+          toastOptions={{
+            style: {
+              background: 'var(--theme-tertiary)',
+              color: 'var(--white)',
+              border: '2px solid var(--theme-border)',
+              padding: '0.5rem',
+              wordBreak: 'break-word',
+              maxWidth: '100vh',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              userSelect: 'none',
+              msUserSelect: 'none',
+              WebkitUserSelect: 'none',
+              MozUserSelect: 'none',
+              zIndex: 10001
+            }
+          }}
+        />
         <div className="app" key="app">
           <ChatCardDetail />
           <LeftColumn />
