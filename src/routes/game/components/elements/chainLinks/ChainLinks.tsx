@@ -1,4 +1,4 @@
-import React, { ReactHTMLElement } from 'react';
+import React from 'react';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import styles from './ChainLinks.module.css';
@@ -67,7 +67,7 @@ export default function ChainLinks() {
           onClick={handleBreakChainClick}
           title={isGameOver ? 'Game over' : ''}
         >
-          <GiBreakingChain style={{ width: '100%', height: '100%' }} />
+          <GiBreakingChain className={styles.breakChainIcon} />
         </div>
       )}
     </div>

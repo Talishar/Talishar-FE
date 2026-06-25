@@ -73,10 +73,6 @@ export const ChatInput = ({ usePrimary = false }: { usePrimary?: boolean }) => {
     debounceTimerRef.current = setTimeout(sendStopTyping, 1500);
   }, [gameID, playerID, reportTyping, sendStopTyping]);
 
-  const handleInputFocus = React.useCallback(() => {
-    // No immediate typing signal on focus — wait for actual keystrokes
-  }, []);
-
   const handleInputBlur = React.useCallback(() => {
     // Treat blur as immediate end-of-typing
     if (debounceTimerRef.current) {
@@ -144,7 +140,6 @@ export const ChatInput = ({ usePrimary = false }: { usePrimary?: boolean }) => {
             className={styles.chatInput}
             value={chatInput}
             onChange={handleChange}
-            onFocus={handleInputFocus}
             onBlur={handleInputBlur}
             onKeyDownCapture={(e) => {
               e.stopPropagation();

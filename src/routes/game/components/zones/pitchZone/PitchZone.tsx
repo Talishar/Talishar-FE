@@ -8,6 +8,10 @@ import PitchDisplay from '../../elements/pitchDisplay/PitchDisplay';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { motion, AnimatePresence } from 'framer-motion';
 
+const PITCH_ANIMATE = { y: 0 };
+const PITCH_TRANSITION = { ease: 'easeIn', duration: 0.2 };
+const PITCH_EXIT = { opacity: 0 };
+
 export default function PitchZone(prop: Displayrow) {
   const { isPlayer } = prop;
   const { DisplayRow } = prop;
@@ -61,9 +65,6 @@ export default function PitchZone(prop: Displayrow) {
   };
 
   const pitchOrder = pitchZone ? [...pitchZone].reverse() : [];
-  const numInPitch = pitchZone ? pitchZone.length : 0;
-  const cardToDisplay =
-    numInPitch > 0 ? { ...pitchZone![numInPitch - 1], borderColor: '' } : null;
 
   return (
     <div className={styles.pitchZone} onClick={pitchZoneDisplay}>
@@ -74,9 +75,9 @@ export default function PitchZone(prop: Displayrow) {
               style={{ top: `-${1.5 * ix}em`, zIndex: `-${ix + 1}` }}
               className={styles.pitchCard}
               initial={{ y: `${1.5 * ix}em` }}
-              animate={{ y: 0 }}
-              transition={{ ease: 'easeIn', duration: 0.2 }}
-              exit={{ opacity: 0 }}
+              animate={PITCH_ANIMATE}
+              transition={PITCH_TRANSITION}
+              exit={PITCH_EXIT}
               key={`${card.cardNumber}-${ix}`}
               data-testid="pitch-motion-div"
             >
