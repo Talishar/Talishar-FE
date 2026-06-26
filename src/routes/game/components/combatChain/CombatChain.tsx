@@ -5,7 +5,7 @@ import CurrentAttack from '../elements/currentAttack/CurrentAttack';
 import Reactions from '../elements/reactions/Reactions';
 import { useAppDispatch, useAppSelector } from '../../../../app/Hooks';
 import { RootState } from 'app/Store';
-import { motion, AnimatePresence, useMotionValue } from 'framer-motion';
+import { motion, AnimatePresence, useMotionValue, useTransform } from 'framer-motion';
 import Button from '../../../../features/Button';
 import { submitButton } from '../../../../features/game/GameSlice';
 import useWindowDimensions from '../../../../hooks/useWindowDimensions';
@@ -28,6 +28,7 @@ export default function CombatChain() {
   const [canSkipBlockAndDef, setCanSkipBlockAndDef] = React.useState(false);
   const storedOffset = parseFloat(localStorage.getItem(STORAGE_KEY) ?? '') || 0;
   const yOffsetMV = useMotionValue(storedOffset);
+  const yOffsetDvh = useTransform(yOffsetMV, (v) => `${v}dvh`);
   const dragStartYRef = React.useRef(0);
   const dragStartOffsetRef = React.useRef(storedOffset);
   const currentDragOffsetRef = React.useRef(storedOffset);
@@ -116,7 +117,7 @@ export default function CombatChain() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          style={{ y: yOffsetMV }}
+          style={{ y: yOffsetDvh }}
           className={`${styles.combatChain} ${!isPortrait ? styles.noBottomBorder : ''}`}
         >
           <CurrentAttack />
