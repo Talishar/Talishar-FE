@@ -128,6 +128,13 @@ const GameList = () => {
   const scrollableContentRef = useRef<HTMLDivElement>(null);
   const REFETCH_RATE_LIMIT_MS = 3000;
 
+  useEffect(() => {
+    const id = setInterval(() => {
+      if (!document.hidden) refetch();
+    }, 10000);
+    return () => clearInterval(id);
+  }, [refetch]);
+
   // Initialize filters from cookies
   const defaultFormats = new Set([
     GAME_FORMAT.BLITZ,
