@@ -208,7 +208,7 @@
     transparent
   );
   transform: skewX(-10deg) translateX(0%);
-  animation: sheenPass 20s ease-in-out 1.6s infinite;
+  animation: sheenPass 7s ease-in-out 0.8s infinite;
   pointer-events: none;
   z-index: 3;
   mix-blend-mode: screen;

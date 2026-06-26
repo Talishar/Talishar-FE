@@ -120,9 +120,8 @@ const HeroCard: React.FC<HeroCardProps> = ({ imageUrl, heroName, isPremium, glow
         </div>
 
         {isPremium && <div className={styles.frameGlow} />}
+        <div className={`${styles.heroCardBorder} ${isPremium ? styles.heroCardBorderPremium : ''}`} />
       </motion.div>
-
-      <div className={`${styles.heroCardBorder} ${isPremium ? styles.heroCardBorderPremium : ''}`} />
     </div>
   );
 };
@@ -287,7 +286,7 @@ const HeroVsHeroIntro = () => {
               initial={{ x: 440, opacity: 0, rotateY: 22 }}
               animate={{ x: 0, opacity: 1, rotateY: 12 }}
               transition={cardSpring}
-              style={{ transformPerspective: 1400, transformStyle: 'preserve-3d' }}
+              style={{ transformPerspective: 1400 }}
             >
               <HeroCard
                 imageUrl={generateCroppedImageUrl(yourHero)}
@@ -305,7 +304,7 @@ const HeroVsHeroIntro = () => {
               initial={{ x: -440, opacity: 0, rotateY: -22 }}
               animate={{ x: 0, opacity: 1, rotateY: -12 }}
               transition={{ ...cardSpring, delay: 0.05 }}
-              style={{ transformPerspective: 1400, transformStyle: 'preserve-3d' }}
+              style={{ transformPerspective: 1400 }}
             >
               <HeroCard
                 imageUrl={generateCroppedImageUrl(opponentHero)}
