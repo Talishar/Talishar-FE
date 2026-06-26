@@ -29,6 +29,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  animation: promptFadeIn 0.12s ease;
+}
+
+@keyframes promptFadeIn {
+  from { opacity: 0.4; }
+  to { opacity: 1; }
 }
 
 .buttonDiv {
