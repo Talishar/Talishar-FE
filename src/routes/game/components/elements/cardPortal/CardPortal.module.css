@@ -61,4 +61,19 @@
   .doubleFacedCard {
     position: static;
   }
+
+  .popUpContainer:has(.doubleFacedCard) {
+    flex-direction: row;
+    gap: 1vw;
+  }
+
+  .popUpContainer:has(.doubleFacedCard) .popUp {
+    max-width: 45vw;
+    padding: 0.5vh;
+  }
+
+  .popUpContainer:has(.doubleFacedCard) .img {
+    max-width: 44vw;
+    max-height: 70dvh;
+  }
 }
