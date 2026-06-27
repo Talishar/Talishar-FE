@@ -300,20 +300,22 @@ const GameList = () => {
     setIncludeFriendsGames(include);
   };
 
-  const heroCounts = new Map<string, number>();
-
+  const heroCountsOpen = new Map<string, number>();
   if (data?.openGames) {
     data.openGames.forEach((game) => {
-      if (game.p1Hero) heroCounts.set(game.p1Hero, (heroCounts.get(game.p1Hero) ?? 0) + 1);
+      if (game.p1Hero) heroCountsOpen.set(game.p1Hero, (heroCountsOpen.get(game.p1Hero) ?? 0) + 1);
     });
   }
 
+  const heroCountsInProgress = new Map<string, number>();
   if (data?.gamesInProgress) {
     data.gamesInProgress.forEach((game) => {
-      if (game.p1Hero) heroCounts.set(game.p1Hero, (heroCounts.get(game.p1Hero) ?? 0) + 1);
-      if (game.p2Hero) heroCounts.set(game.p2Hero, (heroCounts.get(game.p2Hero) ?? 0) + 1);
+      if (game.p1Hero) heroCountsInProgress.set(game.p1Hero, (heroCountsInProgress.get(game.p1Hero) ?? 0) + 1);
+      if (game.p2Hero) heroCountsInProgress.set(game.p2Hero, (heroCountsInProgress.get(game.p2Hero) ?? 0) + 1);
     });
   }
+
+  const heroCounts = activeTab === 'open' ? heroCountsOpen : heroCountsInProgress;
 
   // Create a set of friend usernames for quick lookup
   const friendUsernames = new Set(
