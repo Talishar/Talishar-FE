@@ -184,13 +184,15 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
   });
 
   const initialValues: CreateGameAPI = useMemo(() => {
-    // Load game description from localStorage
     const savedGameDescription =
       localStorage.getItem('lastGameDescription') || '';
+    const urlGameDescription = searchParams.get('gameDescription');
+    const gameDescription =
+      urlGameDescription !== null ? urlGameDescription : savedGameDescription;
 
     return {
       deck: '',
-      fabdb: searchParams.get('fabdb') ?? '',
+      fabdb: searchParams.get('fabdb') ?? searchParams.get('decksToTry') ?? '',
       deckTestMode: false,
       format:
         searchParams.get('format') ??
@@ -218,7 +220,7 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
               (deck) => deck.index === data.lastUsedDeckIndex
             )?.key
           : '',
-      gameDescription: savedGameDescription,
+      gameDescription,
       deckTestDeck: AI_DECK.COMBAT_DUMMY
     };
   }, [isSuccess, isLoggedIn]);
@@ -472,32 +474,63 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
   useEffect(() => {
     reset(initialValues);
     setGameDescription(initialValues.gameDescription || '');
-    const savedHeroes = localStorage.getItem('lastSelectedHeroes');
-    const savedClasses = localStorage.getItem('lastSelectedClasses');
-    const parsedHeroes = savedHeroes ? JSON.parse(savedHeroes) : [];
-    const parsedClasses = savedClasses ? JSON.parse(savedClasses) : [];
 
-    if (parsedHeroes.length > 0) {
-      setSelectedHeroes(parsedHeroes);
-    }
-    if (parsedClasses.length > 0) {
-      setSelectedClasses(parsedClasses);
-    }
+    const urlGameDescription = searchParams.get('gameDescription');
 
-    if (parsedHeroes.length > 0) {
-      const heroList = parsedHeroes.join(', ');
-      const desc = initialValues.gameDescription || '';
-      if (desc === 'No interest in playing against specific hero') {
-        setValue(
-          'gameDescription',
-          `No interest in playing against ${heroList}`
-        );
-      } else if (desc === 'Looking to play against a specific hero') {
-        setValue('gameDescription', `Looking to play against ${heroList}`);
+    if (urlGameDescription) {
+      const isNoInterest = urlGameDescription.startsWith('No interest in playing against ');
+      const heroMatch = urlGameDescription.match(
+        /^(?:Looking to play against|No interest in playing against) (.+)$/
+      );
+      if (heroMatch) {
+        const names = heroMatch[1].split(',').map((s) => s.trim()).filter(Boolean);
+        const classLabels = new Set(CLASS_OF_RATHE.map((c) => c.label));
+        const heroLabels = new Set(HEROES_OF_RATHE.map((h) => h.label));
+        const validHeroes = names.filter((n) => heroLabels.has(n));
+        const validClasses = names.filter((n) => classLabels.has(n));
+        if (validClasses.length > 0) {
+          setSelectedClasses(validClasses.slice(0, 3));
+          setSelectedHeroes([]);
+          setGameDescription('Looking to play against a specific class');
+          setValue('gameDescription', `Looking to play against ${validClasses.slice(0, 3).join(', ')}`);
+        } else if (validHeroes.length > 0) {
+          setSelectedHeroes(validHeroes.slice(0, 3));
+          setSelectedClasses([]);
+          const baseDesc = isNoInterest
+            ? 'No interest in playing against specific hero'
+            : 'Looking to play against a specific hero';
+          setGameDescription(baseDesc);
+          setValue('gameDescription', isNoInterest
+            ? `No interest in playing against ${validHeroes.slice(0, 3).join(', ')}`
+            : `Looking to play against ${validHeroes.slice(0, 3).join(', ')}`
+          );
+        }
       }
-    } else if (parsedClasses.length > 0) {
-      const classList = parsedClasses.join(', ');
-      setValue('gameDescription', `Looking to play against ${classList}`);
+    } else {
+      const savedHeroes = localStorage.getItem('lastSelectedHeroes');
+      const savedClasses = localStorage.getItem('lastSelectedClasses');
+      const parsedHeroes = savedHeroes ? JSON.parse(savedHeroes) : [];
+      const parsedClasses = savedClasses ? JSON.parse(savedClasses) : [];
+
+      if (parsedHeroes.length > 0) {
+        setSelectedHeroes(parsedHeroes);
+      }
+      if (parsedClasses.length > 0) {
+        setSelectedClasses(parsedClasses);
+      }
+
+      const desc = initialValues.gameDescription || '';
+      if (parsedHeroes.length > 0) {
+        const heroList = parsedHeroes.join(', ');
+        if (desc === 'No interest in playing against specific hero') {
+          setValue('gameDescription', `No interest in playing against ${heroList}`);
+        } else if (desc === 'Looking to play against a specific hero') {
+          setValue('gameDescription', `Looking to play against ${heroList}`);
+        }
+      } else if (parsedClasses.length > 0) {
+        const classList = parsedClasses.join(', ');
+        setValue('gameDescription', `Looking to play against ${classList}`);
+      }
     }
 
     setSelectedFavoriteDeck(initialValues.favoriteDecks || '');
