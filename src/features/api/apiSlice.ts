@@ -22,6 +22,12 @@ import {
   LoadReplayAPI,
   LoadReplayResponse
 } from 'interface/API/LoadReplayAPI.php';
+import {
+  ShareReplayAPI,
+  ShareReplayResponse,
+  LoadSharedReplayAPI,
+  LoadSharedReplayResponse
+} from 'interface/API/ShareReplayAPI';
 import { toast } from 'react-hot-toast';
 import { cleanErrorText } from 'utils/cleanErrorText';
 import { JoinGameAPI, JoinGameResponse } from 'interface/API/JoinGame.php';
@@ -583,6 +589,25 @@ export const apiSlice = createApi({
       transformErrorResponse: (response: { status: string | number }) =>
         response.status
     }),
+    shareReplay: builder.mutation<ShareReplayResponse, ShareReplayAPI>({
+      query: (body) => ({
+        url: URL_END_POINT.SHARE_REPLAY,
+        method: 'POST',
+        body,
+        responseHandler: parseResponse
+      })
+    }),
+    loadSharedReplay: builder.mutation<
+      LoadSharedReplayResponse,
+      LoadSharedReplayAPI
+    >({
+      query: (body) => ({
+        url: URL_END_POINT.CREATE_SHARED_REPLAY_GAME,
+        method: 'POST',
+        body,
+        responseHandler: parseResponse
+      })
+    }),
     submitPatreonLogin: builder.mutation<
       PatreonLoginResponse,
       {
@@ -1133,6 +1158,8 @@ export const {
   useLoadDebugGameMutation,
   useGetUserProfileQuery,
   useLoadReplayMutation,
+  useShareReplayMutation,
+  useLoadSharedReplayMutation,
   useSubmitLobbyInputMutation,
   useKickPlayerMutation,
   useGetModPageDataQuery,

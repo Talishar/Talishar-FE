@@ -109,7 +109,8 @@ const ReplayGame = () => {
           setReplayStart({
             playerID: response.playerID ?? 0,
             gameID: response.gameName ?? 0,
-            authKey: response.authKey ?? ''
+            authKey: response.authKey ?? '',
+            replayNumber: values.replayNumber
           })
         );
         toast.success(

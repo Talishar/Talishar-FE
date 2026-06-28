@@ -26,6 +26,7 @@ import Header from 'components/header/Header';
 import Privacy from 'routes/privacy';
 import CreateGame from 'routes/game/create/CreateGame';
 import LoadReplay from 'routes/game/load/LoadReplay';
+import SharedReplay from 'routes/game/shared/SharedReplay';
 import LinkPatreon from 'routes/user/profile/linkpatreon';
 import LinkMetafy from 'routes/user/profile/linkmetafy/linkMetafy';
 import ModPage from 'routes/mod/ModPage';
@@ -194,6 +195,7 @@ export const router = createBrowserRouter(
           <Route path="game/join/:gameID" element={<JoinGame />} />
           <Route path="game/create" element={<CreateGame />} />
           <Route path="game/load" element={<LoadReplay />} />
+          <Route path="replay/shared" element={<SharedReplay />} />
           <Route path="privacy" element={<Privacy />} />
           <Route path="privacy-policy" element={<PrivacyPolicy />} />
           <Route path="terms-of-service" element={<TermsOfService />} />

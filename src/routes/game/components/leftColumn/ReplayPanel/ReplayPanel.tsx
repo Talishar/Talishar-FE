@@ -1,11 +1,13 @@
 import React, { useId, useState } from 'react';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { submitButton, getGameInfo, setSpectatorCameraView } from 'features/game/GameSlice';
+import { selectIsPatron } from 'features/auth/authSlice';
 import { useLocation } from 'react-router-dom';
 import styles from './ReplayPanel.module.css';
 import { toast } from 'react-hot-toast';
 import { BACKEND_URL, URL_END_POINT, PROCESS_INPUT } from 'appConstants';
-import { MdSwapVert } from 'react-icons/md';
+import { MdSwapVert, MdShare } from 'react-icons/md';
+import { useShareReplayMutation } from 'features/api/apiSlice';
 
 export default function ReplayPanel() {
   const [isOpen, setIsOpen] = useState(false);
@@ -47,6 +49,25 @@ function ReplayContent({
   const spectatorCameraView = useAppSelector(
     (state: any) => state.game.spectatorCameraView
   );
+  const isPatron = useAppSelector(selectIsPatron);
+  const [shareReplay, { isLoading: isSharing }] = useShareReplayMutation();
+
+  const handleShare = async () => {
+    const replayNumber = gameInfo?.replayNumber;
+    if (!replayNumber) {
+      toast.error('Replay number not available. Please reload the replay.');
+      return;
+    }
+    try {
+      const result = await shareReplay({ replayNumber }).unwrap();
+      if (result.error) throw new Error(result.error);
+      const shareUrl = `${window.location.origin}/replay/shared?token=${result.token}`;
+      await navigator.clipboard.writeText(shareUrl);
+      toast.success('Share link copied to clipboard!');
+    } catch (err: any) {
+      toast.error(err?.message || 'Failed to create share link.');
+    }
+  };
 
   const togglePerspective = () => {
     const newView = spectatorCameraView === 1 ? 2 : 1;
@@ -182,6 +203,21 @@ function ReplayContent({
           <MdSwapVert style={{ verticalAlign: 'middle', marginRight: '0.3rem' }} />
           P{spectatorCameraView === 1 ? '2' : '1'} View
         </button>
+
+        {isPatron && gameInfo?.replayNumber && (
+          <>
+            <div className={styles.divider}></div>
+            <button
+              className={styles.actionButton}
+              onClick={handleShare}
+              disabled={isSharing}
+              title="Copy a shareable link for this replay"
+            >
+              <MdShare style={{ verticalAlign: 'middle', marginRight: '0.3rem' }} />
+              {isSharing ? 'Sharing...' : 'Share Replay'}
+            </button>
+          </>
+        )}
       </div>
     </div>
   );

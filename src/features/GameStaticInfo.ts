@@ -6,6 +6,7 @@ export default interface GameStaticInfo {
   isPrivateLobby: boolean;
   isPrivate?: boolean;
   isReplay?: boolean;
+  replayNumber?: number;
   roguelikeGameID?: number;
   altArts?: AltArt[];
   opponentAltArts?: AltArt[];

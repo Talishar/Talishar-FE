@@ -872,10 +872,14 @@ export const gameSlice = createSlice({
         gameID: number;
         authKey: string;
         username?: string;
+        replayNumber?: number;
       }>
     ) => {
       state.isFullRematch = false;
       state.gameInfo.gameID = action.payload.gameID;
+      if (action.payload.replayNumber !== undefined) {
+        state.gameInfo.replayNumber = action.payload.replayNumber;
+      }
       state.gameInfo.playerID = !!state.gameInfo.playerID
         ? state.gameInfo.playerID
         : action.payload.playerID;
