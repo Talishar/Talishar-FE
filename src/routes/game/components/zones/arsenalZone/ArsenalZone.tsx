@@ -43,11 +43,22 @@ export default function ArsenalZone(prop: Displayrow) {
   const arsenalFlipTrigger = useAppSelector(
     (state: RootState) => state.game.arsenalFlipTrigger
   );
+  const arsenalDestroyP1Card = useAppSelector(
+    (state: RootState) => state.game.arsenalDestroyP1Card
+  );
+  const arsenalDestroyP2Card = useAppSelector(
+    (state: RootState) => state.game.arsenalDestroyP2Card
+  );
+  const arsenalDestroyTrigger = useAppSelector(
+    (state: RootState) => state.game.arsenalDestroyTrigger
+  );
 
   const currentPlayerID = isPlayer ? playerID : otherPlayerID;
   const flipCard =
     currentPlayerID === 1 ? arsenalFlipP1Card : arsenalFlipP2Card;
   const showFlip = !!flipCard;
+  const destroyCard =
+    currentPlayerID === 1 ? arsenalDestroyP1Card : arsenalDestroyP2Card;
 
   const [width, height] = useWindowDimensions();
   const isPortrait = height > width;
@@ -59,7 +70,22 @@ export default function ArsenalZone(prop: Displayrow) {
   ) {
     return (
       <div className={styles.arsenalContainer}>
-        <div className={styles.arsenalZone}>Arsenal</div>
+        <div className={styles.arsenalZone}>
+          Arsenal
+          {destroyCard && (
+            <div
+              key={`arsenalDestroyAnim-${arsenalDestroyTrigger}`}
+              className={styles.arsenalDestroyContainer}
+            >
+              <div className={styles.arsenalDestroyTopPiece}>
+                <CardDisplay card={{ cardNumber: destroyCard }} />
+              </div>
+              <div className={styles.arsenalDestroyBottomPiece}>
+                <CardDisplay card={{ cardNumber: destroyCard }} />
+              </div>
+            </div>
+          )}
+        </div>
         {!isPortrait && <ArsenalPrompt />}
       </div>
     );
@@ -90,6 +116,19 @@ export default function ArsenalZone(prop: Displayrow) {
             </div>
           );
         })}
+        {destroyCard && (
+          <div
+            key={`arsenalDestroyAnim-${arsenalDestroyTrigger}`}
+            className={styles.arsenalDestroyContainer}
+          >
+            <div className={styles.arsenalDestroyTopPiece}>
+              <CardDisplay card={{ cardNumber: destroyCard }} />
+            </div>
+            <div className={styles.arsenalDestroyBottomPiece}>
+              <CardDisplay card={{ cardNumber: destroyCard }} />
+            </div>
+          </div>
+        )}
       </div>
       <ArsenalPrompt />
     </div>

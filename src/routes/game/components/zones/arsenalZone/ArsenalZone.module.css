@@ -127,3 +127,66 @@
     opacity: 1;
   }
 }
+
+.arsenalDestroyContainer {
+  position: absolute;
+  width: var(--card-size);
+  height: var(--card-size);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 200;
+  pointer-events: none;
+}
+
+.arsenalDestroyTopPiece {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  clip-path: polygon(0% 0%, 100% 0%, 100% 43%, 0% 57%);
+  animation: slashTopPiece 0.9s ease-in forwards;
+  overflow: hidden;
+}
+
+.arsenalDestroyBottomPiece {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  clip-path: polygon(0% 57%, 100% 43%, 100% 100%, 0% 100%);
+  animation: slashBottomPiece 0.9s ease-in forwards;
+  overflow: hidden;
+}
+
+@keyframes slashTopPiece {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+    opacity: 1;
+  }
+  20% {
+    transform: translate(0, 0) rotate(-2deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-30%, -30%) rotate(-8deg);
+    opacity: 0;
+  }
+}
+
+@keyframes slashBottomPiece {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+    opacity: 1;
+  }
+  20% {
+    transform: translate(0, 0) rotate(-2deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(30%, 30%) rotate(3deg);
+    opacity: 0;
+  }
+}

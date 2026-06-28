@@ -24,7 +24,8 @@ import {
   setShuffling,
   setAddBotDeck,
   setClashReveal,
-  setArsenalFlip
+  setArsenalFlip,
+  setArsenalDestroy
 } from 'features/game/GameSlice';
 
 enum ModalType {
@@ -203,6 +204,22 @@ export const EventsHandler = React.memo(() => {
               setTimeout(() => {
                 dispatch(setArsenalFlip({ playerId: null, cardNumber: '' }));
               }, 300);
+            });
+            continue;
+          }
+          case 'ARSENALDESTROY': {
+            const destroyValue = event.eventValue ?? '';
+            const [destroyPlayerID, destroyCardNumber] = destroyValue.split(':');
+            dispatch(
+              setArsenalDestroy({
+                playerId: parseInt(destroyPlayerID),
+                cardNumber: destroyCardNumber
+              })
+            );
+            requestAnimationFrame(() => {
+              setTimeout(() => {
+                dispatch(setArsenalDestroy({ playerId: null, cardNumber: '' }));
+              }, 1000);
             });
             continue;
           }

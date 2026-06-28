@@ -28,6 +28,9 @@ const InitialGameState: GameState = {
   arsenalFlipP1Card: '',
   arsenalFlipP2Card: '',
   arsenalFlipTrigger: 0,
+  arsenalDestroyP1Card: '',
+  arsenalDestroyP2Card: '',
+  arsenalDestroyTrigger: 0,
   damagePopups: {
     playerOne: [],
     playerTwo: []
@@ -343,7 +346,10 @@ export const OfflineTestingGameState: GameState = {
   clashRevealTrigger: 0,
   arsenalFlipP1Card: '',
   arsenalFlipP2Card: '',
-  arsenalFlipTrigger: 0
+  arsenalFlipTrigger: 0,
+  arsenalDestroyP1Card: '',
+  arsenalDestroyP2Card: '',
+  arsenalDestroyTrigger: 0
 };
 
 export default InitialGameState as GameState;

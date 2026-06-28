@@ -133,6 +133,9 @@ export default interface GameState {
   arsenalFlipP1Card: string;
   arsenalFlipP2Card: string;
   arsenalFlipTrigger: number;
+  arsenalDestroyP1Card: string;
+  arsenalDestroyP2Card: string;
+  arsenalDestroyTrigger: number;
   damagePopups?: {
     playerOne: Array<{ id: string; amount: number }>;
     playerTwo: Array<{ id: string; amount: number }>;
