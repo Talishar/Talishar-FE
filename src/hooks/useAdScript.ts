@@ -167,13 +167,48 @@ function isReactPortalEl(el: Element): boolean {
   return false;
 }
 
+const CMP_IFRAME_HOSTS = [
+  'fundingchoicesmessages.google.com',
+  'consent.google.com',
+  'privacymanager.io',
+  'sp-prod.net',
+  'cmp.quantcast.com',
+  'cookie-cdn.cookiepro.com',
+  'consentcdn.cookiebot.com',
+];
+const CMP_SELECTOR =
+  '[id^="fc-"],[id^="sp_message_container"],[id^="qc-cmp"],' +
+  '[id*="onetrust"],[id*="didomi"],[id*="CybotCookie"],[id^="truste"],[id*="usercentrics"]';
+
+function isCMPElement(el: Element): boolean {
+  try {
+    if (el.matches(CMP_SELECTOR)) return true;
+  } catch (_) {}
+  for (const iframe of Array.from(el.querySelectorAll('iframe'))) {
+    const src = (iframe as HTMLIFrameElement).src || '';
+    if (CMP_IFRAME_HOSTS.some((host) => src.includes(host))) return true;
+  }
+  return false;
+}
+
 function lockNonRootBodyChildren() {
   if (!document.body) return;
   for (const el of Array.from(document.body.children)) {
     if (el.id === 'root') continue;
     if (isReactPortalEl(el)) continue;
     const h = el as HTMLElement;
+    if (isCMPElement(el)) {
+      h.style.removeProperty('pointer-events');
+      h.style.removeProperty('visibility');
+      h.querySelectorAll<HTMLElement>('*').forEach((child) => {
+        child.style.removeProperty('pointer-events');
+      });
+      continue;
+    }
     h.style.setProperty('pointer-events', 'none', 'important');
+    // Hide all non-root body children so interstitial/vignette ads can't
+    // visually cover the page regardless of what element type Google injects
+    // (div, ins, iframe wrapper, etc.). pointer-events alone only stops clicks.
     h.style.setProperty('visibility', 'hidden', 'important');
     h.querySelectorAll<HTMLElement>('*').forEach((child) => {
       child.style.setProperty('pointer-events', 'none', 'important');
