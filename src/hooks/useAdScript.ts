@@ -11,10 +11,15 @@ const AD_SELECTORS =
 const TRUSTED_HOST_RE =
   /^(localhost|127\.\d+\.\d+\.\d+|talishar\.net|[a-z0-9-]+\.talishar\.net|metafy\.gg|[a-z0-9-]+\.rev\.iq|[a-z0-9-]+\.revcontent\.com|[a-z0-9-]+\.googlesyndication\.com|[a-z0-9-]+\.doubleclick\.net)$/i;
 
+const BLOCKED_HASHES = ['#goog_rewarded', '#google_vignette'];
+
 function isTrustedNavigation(rawUrl: string): boolean {
   if (!rawUrl) return true;
-  if (rawUrl.startsWith('/') || rawUrl.startsWith('#') || rawUrl.startsWith('?')) return true;
   if (rawUrl.startsWith('javascript:')) return false;
+  if (rawUrl.startsWith('/') || rawUrl.startsWith('?')) return true;
+  if (rawUrl.startsWith('#')) {
+    return !BLOCKED_HASHES.some((h) => rawUrl.startsWith(h));
+  }
   try {
     const url = new URL(rawUrl, window.location.href);
     if (url.origin === window.location.origin) return true;
@@ -151,6 +156,75 @@ function sandboxAdIframesIn(root: Document | Element) {
   );
 }
 
+// React attaches __reactFiber$xxx to every DOM node it manages, including
+// portal nodes that land outside #root. Skip those so we don't break game UI
+// (e.g. PlayerHand portals to document.body).
+function isReactPortalEl(el: Element): boolean {
+  const keys = Object.keys(el);
+  for (const key of keys) {
+    if (key.startsWith('__reactFiber') || key.startsWith('__reactProps')) return true;
+  }
+  return false;
+}
+
+function lockNonRootBodyChildren() {
+  if (!document.body) return;
+  for (const el of Array.from(document.body.children)) {
+    if (el.id === 'root') continue;
+    if (isReactPortalEl(el)) continue;
+    const h = el as HTMLElement;
+    h.style.setProperty('pointer-events', 'none', 'important');
+    // <ins> elements are Google's GPT slot containers. Hide them entirely so
+    // interstitial ads can't visually cover the page. pointer-events alone
+    // only stops clicks — it doesn't prevent the ad from rendering on top.
+    if (h.tagName === 'INS') {
+      h.style.setProperty('visibility', 'hidden', 'important');
+    }
+    h.querySelectorAll<HTMLElement>('*').forEach((child) => {
+      child.style.setProperty('pointer-events', 'none', 'important');
+    });
+  }
+}
+
+function unlockNonRootBodyChildren() {
+  if (!document.body) return;
+  for (const el of Array.from(document.body.children)) {
+    if (el.id === 'root') continue;
+    const h = el as HTMLElement;
+    h.style.removeProperty('pointer-events');
+    h.style.removeProperty('visibility');
+    h.querySelectorAll<HTMLElement>('*').forEach((child) => {
+      child.style.removeProperty('pointer-events');
+    });
+  }
+}
+
+// Expose so index.html's _talishar_showRewarded can unlock/re-lock around the ad.
+(window as any)._talishar_lockOverlays = lockNonRootBodyChildren;
+(window as any)._talishar_unlockOverlays = unlockNonRootBodyChildren;
+
+// Google's rewarded ad SDK scans all <button> elements on the page and injects
+// data-google-rewarded="true" on them, causing any button click to trigger the
+// rewarded ad. Strip these attributes from every element except #clearRust.
+const REWARDED_ATTRS = ['data-google-rewarded', 'data-google-interstitial'];
+
+function stripRewardedAttrsFrom(el: Element) {
+  if (el.id === 'clearRust') return;
+  for (const attr of REWARDED_ATTRS) {
+    if (el.hasAttribute(attr)) el.removeAttribute(attr);
+  }
+}
+
+function sweepRewardedAttrs(root: Document | Element = document) {
+  const scope = root === document ? document.body : (root as Element);
+  if (!scope) return;
+  for (const attr of REWARDED_ATTRS) {
+    scope.querySelectorAll(`[${attr}]`).forEach((el) => {
+      if (el.id !== 'clearRust') el.removeAttribute(attr);
+    });
+  }
+}
+
 export default function useAdScript(enabled: boolean = true) {
   useEffect(() => {
     if (!enabled) {
@@ -196,7 +270,6 @@ export default function useAdScript(enabled: boolean = true) {
     installNavGuard();
 
     if (!document.querySelector('script[src="//js.rev.iq/talishar.net"]')) {
-      // Only destroy existing slots when injecting a fresh script
       try {
         (window as any).googletag?.destroySlots?.();
       } catch (_) {}
@@ -209,6 +282,40 @@ export default function useAdScript(enabled: boolean = true) {
 
     // Sandbox any ad iframes already present and watch for new ones.
     sandboxAdIframesIn(document);
+
+    // Strip data-google-rewarded from everything except #clearRust on load,
+    // then watch for the SDK re-injecting it.
+    sweepRewardedAttrs();
+
+    // Immediately lock any non-root body children, then enforce every 150ms.
+    lockNonRootBodyChildren();
+    const overlayInterval = window.setInterval(lockNonRootBodyChildren, 150);
+
+    const domGuard = new MutationObserver((mutations) => {
+      let newBodyChild = false;
+      for (const mutation of mutations) {
+        if (mutation.type === 'attributes') {
+          stripRewardedAttrsFrom(mutation.target as Element);
+        } else {
+          for (const node of mutation.addedNodes) {
+            if (!(node instanceof HTMLElement)) continue;
+            stripRewardedAttrsFrom(node);
+            sweepRewardedAttrs(node);
+            // Only re-lock when something lands directly on body — React's
+            // constant in-game DOM updates inside #root must not trigger this.
+            if (node.parentElement === document.body) newBodyChild = true;
+          }
+        }
+      }
+      if (newBodyChild) lockNonRootBodyChildren();
+    });
+    domGuard.observe(document.documentElement, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      attributeFilter: REWARDED_ATTRS
+    });
+
     const iframeGuard = new MutationObserver((mutations) => {
       for (const mutation of mutations) {
         for (const node of mutation.addedNodes) {
@@ -223,6 +330,8 @@ export default function useAdScript(enabled: boolean = true) {
     iframeGuard.observe(document.documentElement, { childList: true, subtree: true });
 
     return () => {
+      window.clearInterval(overlayInterval);
+      domGuard.disconnect();
       iframeGuard.disconnect();
       removeNavGuard();
     };
