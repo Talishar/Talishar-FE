@@ -4,24 +4,12 @@ import styles from './RustCounterPanel.module.css';
 type RustCounterPanelProps = {
   rustCounters: number;
   isSupporter: boolean;
-  onAdComplete?: () => void;
 };
 
 const RustCounterPanel = ({
   rustCounters,
-  isSupporter,
-  onAdComplete
+  isSupporter
 }: RustCounterPanelProps) => {
-  const handleWatchAd = () => {
-    (window as any)._openTalisharAdGate?.();
-    (window as any).adBreak?.({
-      type: 'reward',
-      name: 'clearRust',
-      beforeReward: (showAdFn: () => void) => showAdFn(),
-      adViewed: () => onAdComplete?.(),
-      adDismissed: () => {},
-    });
-  };
   const displayedRustCounters = Math.min(Math.max(0, rustCounters), 3);
 
   if (isSupporter) {
@@ -62,7 +50,7 @@ const RustCounterPanel = ({
       </div>
       <div className={styles.actions}>
         {displayedRustCounters > 0 && (
-          <button id="clearRust" type="button" className={styles.clearButton} onClick={handleWatchAd}>
+          <button id="clearRust" type="button" className={styles.clearButton}>
             Watch Ad to Clear
           </button>
         )}

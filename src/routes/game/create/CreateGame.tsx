@@ -98,7 +98,7 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { data, isLoading, isSuccess } = useGetFavoriteDecksQuery(undefined);
-  const { data: userProfileData, refetch: refetchUserProfile } = useGetUserProfileQuery(undefined, {
+  const { data: userProfileData } = useGetUserProfileQuery(undefined, {
     skip: !isLoggedIn || !isMod || isEmbedded
   });
   const [searchParams, setSearchParams] = useSearchParams();
@@ -702,7 +702,6 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
               <RustCounterPanel
                 rustCounters={rustCounters}
                 isSupporter={isSupporter}
-                onAdComplete={refetchUserProfile}
               />
             )}
             <div className={useUnifiedPanelStyles ? styles.embeddedFormInner : styles.formInner}>

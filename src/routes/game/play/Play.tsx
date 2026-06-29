@@ -52,20 +52,20 @@ const TOAST_OPTIONS = { style: TOAST_STYLE };
 function Play({ isRoguelike }: { isRoguelike: boolean }) {
   usePageTitle('In Game');
 
-  // Remove all floating ad overlays while in-game. Only the RightColumn ad slot
-  // should ever show ads during gameplay. We remove (not just hide) so rev.iq
-  // cannot attach interstitial listeners to orphaned ad elements and fire them
-  // on button clicks (create lobby, start match, rewind replay, etc.).
+  // Hide all floating ad overlays while in-game. Only the RightColumn ad slot
+  // should ever show ads during gameplay.
   useEffect(() => {
     const FLOATING_AD_SELECTOR =
       '[data-ad="anchor"], [data-ad="video"], [id^="rev-"], [class*="revcontent"], [class*="rev-content"]';
 
-    const removeFloatingAds = () => {
-      document.querySelectorAll(FLOATING_AD_SELECTOR).forEach((el) => el.remove());
+    const hideFloatingAds = () => {
+      document.querySelectorAll(FLOATING_AD_SELECTOR).forEach((el) => {
+        (el as HTMLElement).style.setProperty('display', 'none', 'important');
+      });
     };
 
-    removeFloatingAds();
-    const observer = new MutationObserver(removeFloatingAds);
+    hideFloatingAds();
+    const observer = new MutationObserver(hideFloatingAds);
     observer.observe(document.documentElement, { childList: true, subtree: true });
     return () => observer.disconnect();
   }, []);

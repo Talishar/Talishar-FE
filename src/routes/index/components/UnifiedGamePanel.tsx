@@ -26,7 +26,7 @@ const setCookie = (name: string, value: string, days: number = 365) => {
 const UnifiedGamePanel = () => {
   const { isLoggedIn, isMod } = useAuth();
   const { isSupporter, isLoading: isAuthLoading } = useSupporterStatus();
-  const { data: userProfileData, refetch: refetchUserProfile } = useGetUserProfileQuery(undefined, {
+  const { data: userProfileData } = useGetUserProfileQuery(undefined, {
     skip: !isLoggedIn || !isMod
   });
   const showAds = !isAuthLoading && !isSupporter;
@@ -94,7 +94,6 @@ const UnifiedGamePanel = () => {
             <RustCounterPanel
               rustCounters={rustCounters}
               isSupporter={isSupporter}
-              onAdComplete={refetchUserProfile}
             />
           )}
           <div className={styles.quickJoinSection}>
