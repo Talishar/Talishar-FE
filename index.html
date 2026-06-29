@@ -201,6 +201,17 @@
     -->
     <script>
       (function() {
+        var _origAddEL = EventTarget.prototype.addEventListener;
+        EventTarget.prototype.addEventListener = function(type, listener, opts) {
+          if (type === 'click' && this.nodeType === 1) {
+            var root = document.getElementById('root');
+            if (root && this !== root && root.contains(this)) return;
+          }
+          return _origAddEL.call(this, type, listener, opts);
+        };
+      })();
+
+      (function() {
         var _origSP  = Event.prototype.stopPropagation;
         var _origSIP = Event.prototype.stopImmediatePropagation;
         function isTalisharElement(el) {
@@ -217,7 +228,9 @@
           if (evt.type !== 'click') return false;
           if (!isTalisharElement(evt.target)) return false;
           var current = evt.currentTarget;
-          return !isTalisharElement(current);
+          var root = document.getElementById('root');
+          if (current === root) return false;
+          return true;
         }
         Event.prototype.stopPropagation = function() {
           if (isExternalInterception(this)) return;
