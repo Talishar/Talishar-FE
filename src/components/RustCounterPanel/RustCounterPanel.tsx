@@ -50,7 +50,12 @@ const RustCounterPanel = ({
       </div>
       <div className={styles.actions}>
         {displayedRustCounters > 0 && (
-          <button id="clearRust" type="button" className={styles.clearButton}>
+          <button
+            id="clearRust"
+            type="button"
+            className={styles.clearButton}
+            onClick={() => (window as any)._talishar_showRewarded?.()}
+          >
             Watch Ad to Clear
           </button>
         )}
