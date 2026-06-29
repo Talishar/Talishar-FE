@@ -254,10 +254,32 @@
         el.style.display = 'none';
       }
 
-      // Block Google vignette/interstitial injected by ad network demand partners.
-      // The #google_vignette hash is appended by Google's script before showing
-      // a fullscreen interstitial. Strip it immediately to prevent the ad from rendering.
+      // Gate Google H5 Games Ads (adBreak) so the ad network cannot trigger
+      // interstitials or rewarded ads automatically. Ads only play when the
+      // user explicitly clicks "Watch Ad to Clear" via window._openTalisharAdGate().
       (function() {
+        var _realAdBreak = null;
+        var _gateOpen = false;
+        var _pendingOpts = null;
+
+        function adBreakGate(opts) {
+          if (!_gateOpen) return;
+          _gateOpen = false;
+          if (_realAdBreak) {
+            _realAdBreak(opts);
+          }
+        }
+
+        try {
+          Object.defineProperty(window, 'adBreak', {
+            get: function() { return adBreakGate; },
+            set: function(fn) { _realAdBreak = fn; },
+            configurable: true,
+            enumerable: true
+          });
+        } catch(e) {}
+
+        window._openTalisharAdGate = function() { _gateOpen = true; };
         function isBlockedHash(h) {
           return h.indexOf('google_vignette') !== -1 || h.indexOf('goog_rewarded') !== -1;
         }

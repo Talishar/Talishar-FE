@@ -13,9 +13,8 @@ const RustCounterPanel = ({
   onAdComplete
 }: RustCounterPanelProps) => {
   const handleWatchAd = () => {
-    const adBreak = (window as any).adBreak;
-    if (typeof adBreak !== 'function') return;
-    adBreak({
+    (window as any)._openTalisharAdGate?.();
+    (window as any).adBreak?.({
       type: 'reward',
       name: 'clearRust',
       beforeReward: (showAdFn: () => void) => showAdFn(),
