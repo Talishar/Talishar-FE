@@ -259,8 +259,8 @@
       // a fullscreen interstitial. Strip it immediately to prevent the ad from rendering.
       (function() {
         function stripVignetteHash() {
-          if (window.location.hash === '#google_vignette' ||
-              window.location.hash.indexOf('google_vignette') !== -1) {
+          var h = window.location.hash;
+          if (h.indexOf('google_vignette') !== -1 || h.indexOf('goog_rewarded') !== -1) {
             history.replaceState(null, '', window.location.pathname + window.location.search);
           }
         }
