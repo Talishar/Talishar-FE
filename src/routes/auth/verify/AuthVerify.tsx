@@ -268,6 +268,7 @@ const InlineLoginForm = ({}: InlineLoginFormProps) => {
       <form onSubmit={handleSubmit(onSubmit)} ref={parent}>
         <label htmlFor="userID">Username</label>
         <input
+          id="userID"
           type="text"
           placeholder="bravo"
           {...register('userID')}
@@ -279,6 +280,7 @@ const InlineLoginForm = ({}: InlineLoginFormProps) => {
 
         <label htmlFor="password">Password</label>
         <input
+          id="password"
           type="password"
           placeholder="********"
           {...register('password')}

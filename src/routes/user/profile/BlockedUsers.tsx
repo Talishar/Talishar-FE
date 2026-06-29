@@ -115,6 +115,8 @@ export const BlockedUsers: React.FC<BlockedUsersProps> = ({ className }) => {
           <div className={styles.blockUserSection}>
             <div className={styles.searchContainer}>
               <input
+                id="block-user-search"
+                name="block-user-search"
                 type="text"
                 placeholder="Search for players to block..."
                 value={searchTerm}

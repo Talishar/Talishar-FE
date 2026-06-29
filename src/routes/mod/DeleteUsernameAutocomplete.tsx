@@ -66,6 +66,8 @@ const DeleteUsernameAutocomplete: React.FC<DeleteUsernameAutocompleteProps> = ({
     <div className={styles.container}>
       <div className={styles.inputWrapper} ref={suggestionsRef}>
         <input
+          id="username-search"
+          name="username-search"
           type="text"
           value={searchTerm}
           onChange={handleInputChange}

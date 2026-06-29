@@ -227,6 +227,8 @@ export const FriendsList: React.FC<FriendsListProps> = ({ className }) => {
           <div className={styles.addFriendSection}>
             <div className={styles.searchContainer}>
               <input
+                id="add-friend-search"
+                name="add-friend-search"
                 type="text"
                 placeholder="Search for players to add..."
                 value={searchTerm}
@@ -524,6 +526,8 @@ export const FriendsList: React.FC<FriendsListProps> = ({ className }) => {
               >
                 <h3>Edit Nickname</h3>
                 <input
+                  id="friend-nickname"
+                  name="friend-nickname"
                   type="text"
                   placeholder="Enter nickname (optional)"
                   value={nicknameEdit.nickname}

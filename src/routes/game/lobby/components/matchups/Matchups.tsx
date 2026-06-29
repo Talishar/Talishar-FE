@@ -90,6 +90,8 @@ const Matchups = ({
         <>
           <h4>Matchups</h4>
           <input
+            id="matchup-search"
+            name="matchup-search"
             type="text"
             placeholder="Search"
             value={searchTerm}

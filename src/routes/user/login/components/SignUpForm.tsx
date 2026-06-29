@@ -73,6 +73,7 @@ export const SignUpForm = () => {
         <form onSubmit={handleSubmit(onSubmit)} ref={parent}>
           <label htmlFor="userId">Username</label>
           <input
+            id="userId"
             type="text"
             placeholder="Bravo"
             autoComplete="username"
@@ -84,6 +85,7 @@ export const SignUpForm = () => {
           )}
       <label htmlFor="email">{t("USER.LOGIN.EMAIL")}</label>
           <input
+            id="email"
             type="email"
             placeholder="Bravo@talishar.net"
             autoComplete="email"
@@ -95,6 +97,7 @@ export const SignUpForm = () => {
           )}
           <label htmlFor="password">{t("USER.LOGIN.PASSWORD")}</label>
           <input
+            id="password"
             type="password"
             placeholder="********"
             autoComplete="new-password"
@@ -106,6 +109,7 @@ export const SignUpForm = () => {
           )}
           <label htmlFor="passwordRepeat">{t("USER.LOGIN.CONFIRM_PASSWORD")}</label>
           <input
+            id="passwordRepeat"
             type="password"
             placeholder="********"
             autoComplete="new-password"
@@ -118,6 +122,7 @@ export const SignUpForm = () => {
             </div>
           )}
           <input
+            id="agreeToTerms"
             type="checkbox"
             {...register('agreeToTerms')}
             aria-invalid={errors.agreeToTerms?.message ? 'true' : undefined}

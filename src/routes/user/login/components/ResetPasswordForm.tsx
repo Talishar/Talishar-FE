@@ -68,6 +68,7 @@ export const ResetPasswordForm = () => {
         <form onSubmit={handleSubmit(onSubmit)} ref={parent}>
           <label htmlFor="password">{t("USER.LOGIN.PASSWORD")}</label>
           <input
+            id="password"
             type="password"
             placeholder="********"
             {...register('password')}
@@ -78,6 +79,7 @@ export const ResetPasswordForm = () => {
           )}
           <label htmlFor="passwordRepeat">{t("USER.LOGIN.CONFIRM_PASSWORD")}</label>
           <input
+            id="passwordRepeat"
             type="password"
             placeholder="********"
             {...register('passwordRepeat')}
