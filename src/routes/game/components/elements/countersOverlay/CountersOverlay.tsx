@@ -1,3 +1,4 @@
+import React from 'react';
 import { Card } from 'features/Card';
 import styles from './CountersOverlay.module.css';
 import GemSlider from '../gemSlider/GemSlider';
@@ -21,7 +22,7 @@ export interface CountersProp extends Card {
   excludeFancyCounters?: boolean;
 }
 
-export const CountersOverlay = ({
+export const CountersOverlay = React.memo(({
   countersMap,
   label,
   gem,
@@ -81,6 +82,7 @@ export const CountersOverlay = ({
       )}
     </div>
   );
-};
+});
 
+CountersOverlay.displayName = 'CountersOverlay';
 export default CountersOverlay;

@@ -7,7 +7,7 @@ import styles from './PlayerHand.module.css';
 import PlayerHandCard from '../../elements/playerHandCard/PlayerHandCard';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import useWindowDimensions from 'hooks/useWindowDimensions';
-import { AnimatePresence } from 'framer-motion';
+import { AnimatePresence, PanInfo } from 'framer-motion';
 import { createPortal } from 'react-dom';
 import { useNewlyDrawnCards } from 'hooks/useNewlyDrawnCards';
 import useSound from 'use-sound';
@@ -517,6 +517,28 @@ export default function PlayerHand() {
     return true;
   };
 
+  const dragMoveImplRef = useRef(handleHandCardDragMove);
+  const dragEndImplRef = useRef(handleHandCardReorder);
+  const dragStartImplRef = useRef(handleHandCardDragStart);
+  const dragCancelImplRef = useRef(clearHandDragPreview);
+  dragMoveImplRef.current = handleHandCardDragMove;
+  dragEndImplRef.current = handleHandCardReorder;
+  dragStartImplRef.current = handleHandCardDragStart;
+  dragCancelImplRef.current = clearHandDragPreview;
+
+  const stableDragMove = useCallback((cardId: string, info: PanInfo) => {
+    dragMoveImplRef.current(cardId, info.offset.x, info.offset.y);
+  }, []);
+  const stableDragEnd = useCallback((cardId: string, info: PanInfo): boolean => {
+    return dragEndImplRef.current(cardId, info.offset.x, info.offset.y) ?? false;
+  }, []);
+  const stableDragStart = useCallback(() => {
+    dragStartImplRef.current();
+  }, []);
+  const stableDragCancel = useCallback(() => {
+    dragCancelImplRef.current();
+  }, []);
+
   const addCardToPlayedCards = (cardName: string) => {
     setPlayedCards((prev) => [...prev, cardName]);
   };
@@ -673,20 +695,17 @@ export default function PlayerHand() {
                   return (
                     <PlayerHandCard
                       card={card}
+                      cardId={id}
                       key={`hand-${id}`}
                       addCardToPlayedCards={addCardToPlayedCards}
                       zIndex={ix + 200}
                       isNewlyDrawn={isNewlyDrawn}
                       enableLayoutAnimation={isReorderingHand}
                       scrollBlockedRef={scrollBlockedRef}
-                      onHandReorderDragStart={handleHandCardDragStart}
-                      onHandReorderDragMove={(info) =>
-                        handleHandCardDragMove(id, info.offset.x, info.offset.y)
-                      }
-                      onHandReorderDragEnd={(info) =>
-                        handleHandCardReorder(id, info.offset.x, info.offset.y)
-                      }
-                      onHandReorderDragCancel={clearHandDragPreview}
+                      onHandReorderDragStart={stableDragStart}
+                      onHandReorderDragMove={stableDragMove}
+                      onHandReorderDragEnd={stableDragEnd}
+                      onHandReorderDragCancel={stableDragCancel}
                     />
                   );
                 })}

@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import classNames from 'classnames';
@@ -15,7 +15,7 @@ export interface CardImage {
   isOpponent?: boolean;
 }
 
-export const CardImage = (props: CardImage) => {
+export const CardImage = React.memo((props: CardImage) => {
   const altArts = useAppSelector((state: RootState) => state.game.gameInfo.altArts);
   const opponentAltArts = useAppSelector((state: RootState) => state.game.gameInfo.opponentAltArts);
 
@@ -58,9 +58,7 @@ export const CardImage = (props: CardImage) => {
     src = srcArray.join('/') + `/${UNKNOWN_IMAGE}.webp`;
   }
 
-  const handleImageError = () => {
-    setError(true);
-  };
+  const handleImageError = useCallback(() => setError(true), []);
 
   const imageClassNames = classNames(props.className, {
     [styles.shuffling]: isShuffling
@@ -78,6 +76,7 @@ export const CardImage = (props: CardImage) => {
       />
     </>
   );
-};
+});
 
+CardImage.displayName = 'CardImage';
 export default CardImage;

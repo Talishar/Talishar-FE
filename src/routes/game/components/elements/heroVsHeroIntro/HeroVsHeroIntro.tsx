@@ -9,11 +9,41 @@ import {
 } from 'framer-motion';
 import { useAppSelector, useAppDispatch } from 'app/Hooks';
 import { shallowEqual } from 'react-redux';
+import { RootState } from 'app/Store';
 import { generateCroppedImageUrl } from 'utils/cropImages';
 import { markHeroIntroAsShown } from 'features/game/GameSlice';
 import { getSettingsEntity } from 'features/options/optionsSlice';
 import styles from './HeroVsHeroIntro.module.css';
 import { METAFY_TIER_MAP, MetafyTierName } from 'utils/patronIcons';
+
+const formatHeroName = (id: string | undefined): string => {
+  if (!id) return '';
+  return id
+    .split('_')
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+    .join(' ');
+};
+
+interface PatronInfo {
+  metafyTiers?: string[] | null;
+  isPatron?: boolean;
+  isPvtVoidPatron?: boolean;
+  isContributor?: boolean;
+}
+
+const checkPatron = (p: PatronInfo | null): boolean =>
+  (p?.metafyTiers?.length ?? 0) > 0 ||
+  !!p?.isPatron ||
+  !!p?.isPvtVoidPatron ||
+  !!p?.isContributor;
+
+const getBadgeLabel = (p: PatronInfo | null): string | undefined => {
+  const tier = p?.metafyTiers?.[0] as MetafyTierName | undefined;
+  if (tier && METAFY_TIER_MAP[tier]) return METAFY_TIER_MAP[tier].label;
+  if (p?.isPvtVoidPatron) return 'Seer of Ophidia';
+  if (p?.isPatron) return 'Fyendal Supporter';
+  return undefined;
+};
 
 const PARTICLE_COUNT = 22;
 
@@ -160,12 +190,33 @@ const VSShockwave: React.FC<{ show: boolean }> = ({ show }) => (
 
 const HeroVsHeroIntro = () => {
   const dispatch = useAppDispatch();
-  const gameState = useAppSelector((state: any) => state.game, shallowEqual);
-  const settingsData = useAppSelector(getSettingsEntity);
 
-  const playerID = gameState?.gameInfo?.playerID;
-  const gameID = gameState?.gameInfo?.gameID;
-  const gameGUID = gameState?.gameInfo?.gameGUID;
+  const playerID = useAppSelector((state: RootState) => state.game.gameInfo.playerID);
+  const gameID = useAppSelector((state: RootState) => state.game.gameInfo.gameID);
+  const gameGUID = useAppSelector((state: RootState) => state.game.gameInfo.gameGUID);
+  const playerOneHero = useAppSelector((state: RootState) => state.game.playerOne?.Hero?.cardNumber);
+  const playerTwoHero = useAppSelector((state: RootState) => state.game.playerTwo?.Hero?.cardNumber);
+
+  const playerOnePatronInfo = useAppSelector(
+    (state: RootState): PatronInfo => ({
+      metafyTiers: state.game.playerOne?.metafyTiers,
+      isPatron: state.game.playerOne?.isPatron,
+      isPvtVoidPatron: state.game.playerOne?.isPvtVoidPatron,
+      isContributor: state.game.playerOne?.isContributor,
+    }),
+    shallowEqual
+  );
+  const playerTwoPatronInfo = useAppSelector(
+    (state: RootState): PatronInfo => ({
+      metafyTiers: state.game.playerTwo?.metafyTiers,
+      isPatron: state.game.playerTwo?.isPatron,
+      isPvtVoidPatron: state.game.playerTwo?.isPvtVoidPatron,
+      isContributor: state.game.playerTwo?.isContributor,
+    }),
+    shallowEqual
+  );
+
+  const settingsData = useAppSelector(getSettingsEntity);
 
   const [isVisible, setIsVisible] = useState(true);
   const [vsVisible, setVsVisible] = useState(false);
@@ -184,9 +235,7 @@ const HeroVsHeroIntro = () => {
 
   useEffect(() => {
     if (!isVisible) return;
-    const t1 = setTimeout(() => {
-      setVsVisible(true);
-    }, 680);
+    const t1 = setTimeout(() => setVsVisible(true), 680);
     const t2 = setTimeout(() => setGlowActive(true), 1060);
     return () => {
       clearTimeout(t1);
@@ -194,42 +243,17 @@ const HeroVsHeroIntro = () => {
     };
   }, [isVisible, shakeControls]);
 
-  const playerOneHero = gameState?.playerOne?.Hero?.cardNumber;
-  const playerTwoHero = gameState?.playerTwo?.Hero?.cardNumber;
   const yourHero = playerID === 1 ? playerOneHero : playerTwoHero;
   const opponentHero = playerID === 1 ? playerTwoHero : playerOneHero;
-
-  const formatHeroName = (id: string): string =>
-    id
-      ?.split('_')
-      .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
-      .join(' ') ?? '';
+  const yourPatronInfo = playerID === 1 ? playerOnePatronInfo : playerTwoPatronInfo;
+  const opponentPatronInfo = playerID === 1 ? playerTwoPatronInfo : playerOnePatronInfo;
 
   const displayYourHeroName = formatHeroName(yourHero) || 'Your Hero';
   const displayOpponentHeroName = formatHeroName(opponentHero) || 'Opponent';
-
-  const checkPatron = (player: any) =>
-    (player?.metafyTiers?.length ?? 0) > 0 ||
-    player?.isPatron ||
-    player?.isPvtVoidPatron ||
-    player?.isContributor;
-
-  const yourPlayer = playerID === 1 ? gameState?.playerOne : gameState?.playerTwo;
-  const opponentPlayer = playerID === 1 ? gameState?.playerTwo : gameState?.playerOne;
-
-  const yourPatronStatus = checkPatron(yourPlayer);
-  const opponentPatronStatus = checkPatron(opponentPlayer);
-
-  const getBadgeLabel = (player: any): string | undefined => {
-    const tier = player?.metafyTiers?.[0] as MetafyTierName | undefined;
-    if (tier && METAFY_TIER_MAP[tier]) return METAFY_TIER_MAP[tier].label;
-    if (player?.isPvtVoidPatron) return 'Seer of Ophidia';
-    if (player?.isPatron) return 'Fyendal Supporter';
-    return undefined;
-  };
-
-  const yourMetafyTierName = getBadgeLabel(yourPlayer);
-  const opponentMetafyTierName = getBadgeLabel(opponentPlayer);
+  const yourPatronStatus = checkPatron(yourPatronInfo);
+  const opponentPatronStatus = checkPatron(opponentPatronInfo);
+  const yourMetafyTierName = getBadgeLabel(yourPatronInfo);
+  const opponentMetafyTierName = getBadgeLabel(opponentPatronInfo);
 
   const disableHeroIntro = settingsData['DisableHeroIntro']?.value === '1';
 

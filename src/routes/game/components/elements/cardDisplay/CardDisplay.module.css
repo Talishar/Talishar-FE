@@ -46,7 +46,7 @@
   border-radius: 7%;
   max-height: 100%;
   max-width: 100%;
-  transition: box-shadow 0.25s, border-color 0.25s;
+  transition: box-shadow 0.25s, border-color 0.25s, filter 0.25s;
   -webkit-user-drag: none;
   -khtml-user-drag: none;
   -moz-user-drag: none;
@@ -113,16 +113,16 @@
 .isTargeted {
   border: 2px solid rgba(255, 60, 60, 0.9);
   border-radius: 7%;
-  box-shadow: 0 0 6px 3px rgba(255, 40, 40, 0.6), inset 0 0 8px 2px rgba(255, 40, 40, 0.25);
+  will-change: filter;
   animation: targetedPulse 2s ease-in-out infinite;
 }
 
 @keyframes targetedPulse {
   0%, 100% {
-    box-shadow: 0 0 6px 3px rgba(255, 40, 40, 0.6), inset 0 0 8px 2px rgba(255, 40, 40, 0.25);
+    filter: drop-shadow(0 0 5px rgba(255, 40, 40, 0.75));
   }
   50% {
-    box-shadow: 0 0 8px 4px rgba(255, 40, 40, 0.7), inset 0 0 10px 3px rgba(255, 40, 40, 0.3);
+    filter: drop-shadow(0 0 10px rgba(255, 40, 40, 1));
   }
 }
 

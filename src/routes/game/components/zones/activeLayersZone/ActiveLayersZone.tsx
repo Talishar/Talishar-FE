@@ -1,9 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import CardDisplay from '../../elements/cardDisplay/CardDisplay';
 import styles from './ActiveLayersZone.module.css';
-import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
+import { motion, AnimatePresence, useReducedMotion, useMotionValue, useTransform } from 'framer-motion';
 import ReorderLayers from './ReorderLayers';
 import useShowModal from 'hooks/useShowModals';
 import { submitButton } from 'features/game/GameSlice';
@@ -56,67 +56,70 @@ export default function ActiveLayersZone() {
   );
 
   const dispatch = useAppDispatch();
-  const staticCards = activeLayer?.cardList?.filter(
-    (card) => card.reorderable === false
-  );
-  const reorderableCards = activeLayer?.cardList?.filter(
-    (card) => card.reorderable
-  );
 
   const playerID = useAppSelector(
     (state: RootState) => state.game.gameInfo.playerID
   );
 
-  const [yOffset, setYOffset] = useState(() => {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    return stored ? parseFloat(stored) : 0;
-  });
+  const staticCards = useMemo(
+    () => activeLayer?.cardList?.filter((card) => card.reorderable === false),
+    [activeLayer?.cardList]
+  );
+  const reorderableCards = useMemo(
+    () => activeLayer?.cardList?.filter((card) => card.reorderable),
+    [activeLayer?.cardList]
+  );
+  const cardGroups = useMemo(
+    () => (staticCards ? groupConsecutiveCards(staticCards, playerID) : []),
+    [staticCards, playerID]
+  );
+
+  const yOffsetMV = useMotionValue(
+    parseFloat(localStorage.getItem(STORAGE_KEY) ?? '') || 0
+  );
+  const yOffsetDvh = useTransform(yOffsetMV, (v) => `${v}dvh`);
   const [isDragging, setIsDragging] = useState(false);
-  const [dragStartY, setDragStartY] = useState(0);
-  const [dragStartOffset, setDragStartOffset] = useState(0);
+  const dragStartYRef = useRef(0);
+  const dragStartOffsetRef = useRef(yOffsetMV.get());
   const containerRef = useRef<HTMLDivElement>(null);
-  const yOffsetRef = useRef(yOffset);
-  yOffsetRef.current = yOffset;
 
   const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+    dragStartYRef.current = e.clientY;
+    dragStartOffsetRef.current = yOffsetMV.get();
     setIsDragging(true);
-    setDragStartY(e.clientY);
-    setDragStartOffset(yOffset);
   };
 
   const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+    dragStartYRef.current = e.touches[0].clientY;
+    dragStartOffsetRef.current = yOffsetMV.get();
     setIsDragging(true);
-    setDragStartY(e.touches[0].clientY);
-    setDragStartOffset(yOffset);
   };
 
   useEffect(() => {
     if (!isDragging) return;
 
     const handleMouseMove = (e: MouseEvent) => {
-      const delta = e.clientY - dragStartY;
+      const delta = e.clientY - dragStartYRef.current;
       const deltaDvh = (delta / window.innerHeight) * 100;
-      let newOffset = dragStartOffset + deltaDvh;
-      newOffset = Math.max(MIN_Y_OFFSET, Math.min(MAX_Y_OFFSET, newOffset));
-      setYOffset(newOffset);
+      const newOffset = Math.max(MIN_Y_OFFSET, Math.min(MAX_Y_OFFSET, dragStartOffsetRef.current + deltaDvh));
+      yOffsetMV.set(newOffset); // direct DOM update — no React re-render
     };
 
     const handleTouchMove = (e: TouchEvent) => {
-      const delta = e.touches[0].clientY - dragStartY;
+      const delta = e.touches[0].clientY - dragStartYRef.current;
       const deltaDvh = (delta / window.innerHeight) * 100;
-      let newOffset = dragStartOffset + deltaDvh;
-      newOffset = Math.max(MIN_Y_OFFSET, Math.min(MAX_Y_OFFSET, newOffset));
-      setYOffset(newOffset);
+      const newOffset = Math.max(MIN_Y_OFFSET, Math.min(MAX_Y_OFFSET, dragStartOffsetRef.current + deltaDvh));
+      yOffsetMV.set(newOffset); // direct DOM update — no React re-render
     };
 
     const handleMouseUp = () => {
       setIsDragging(false);
-      localStorage.setItem(STORAGE_KEY, yOffsetRef.current.toString());
+      localStorage.setItem(STORAGE_KEY, yOffsetMV.get().toString());
     };
 
     const handleTouchEnd = () => {
       setIsDragging(false);
-      localStorage.setItem(STORAGE_KEY, yOffsetRef.current.toString());
+      localStorage.setItem(STORAGE_KEY, yOffsetMV.get().toString());
     };
 
     document.addEventListener('mousemove', handleMouseMove);
@@ -130,7 +133,8 @@ export default function ActiveLayersZone() {
       document.removeEventListener('mouseup', handleMouseUp);
       document.removeEventListener('touchend', handleTouchEnd);
     };
-  }, [isDragging, dragStartY, dragStartOffset]);
+  // dragStartYRef and dragStartOffsetRef are refs — excluded from deps intentionally
+  }, [isDragging, yOffsetMV]);
 
   const handlePassTurn = () => {
     dispatch(submitButton({ button: { mode: PROCESS_INPUT.PASS } }));
@@ -161,23 +165,14 @@ export default function ActiveLayersZone() {
         <motion.div
           ref={containerRef}
           className={styles.activeLayersBox}
-          initial={
-            prefersReducedMotion
-              ? { opacity: 1, y: `${yOffset}dvh` }
-              : { opacity: 0, y: `${yOffset}dvh` }
-          }
-          animate={{ opacity: 1, y: `${yOffset}dvh` }}
-          exit={
-            prefersReducedMotion
-              ? { opacity: 0, y: `${yOffset}dvh` }
-              : { opacity: 0, y: `${yOffset}dvh` }
-          }
+          style={{ y: yOffsetDvh }}
+          initial={prefersReducedMotion ? { opacity: 1 } : { opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
           transition={
-            isDragging
-              ? { type: 'tween', duration: 0 }
-              : prefersReducedMotion
-                ? { duration: 0.01 }
-                : { type: 'tween', duration: 0.18, ease: 'easeOut' }
+            prefersReducedMotion
+              ? { duration: 0.01 }
+              : { type: 'tween', duration: 0.18, ease: 'easeOut' }
           }
           key="activeLayersBox"
         >
@@ -201,8 +196,7 @@ export default function ActiveLayersZone() {
               )}
             </div>
             <div className={styles.activeLayersContents}>
-              {staticCards &&
-                groupConsecutiveCards(staticCards, playerID).map((group, groupIx) => {
+              {cardGroups.map((group, groupIx) => {
                   if (group.cards.length > GROUPING_THRESHOLD) {
                     return (
                       <div key={groupIx} className={styles.groupedCardWrapper}>

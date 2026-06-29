@@ -8,18 +8,19 @@ export const useNewlyDrawnCards = (
   const newlyDrawnRef = useRef<Set<string>>(new Set());
 
   useEffect(() => {
-    const currentCardNumbers = new Set(
-      (handCards || []).map((card) => card.cardNumber)
-    );
+    const cards = handCards ?? [];
+    const currentCardNumbers = new Set(cards.map((card) => card.cardNumber));
+
+    const handCountMap = new Map<string, number>();
+    for (const card of cards) {
+      handCountMap.set(card.cardNumber, (handCountMap.get(card.cardNumber) ?? 0) + 1);
+    }
 
     const newCards = new Set<string>();
     currentCardNumbers.forEach((cardNum) => {
-      if (
-        !previousHandRef.current.has(cardNum) ||
-        (handCards?.filter((c) => c.cardNumber === cardNum).length ?? 0) >
-          Array.from(previousHandRef.current).filter((c) => c === cardNum)
-            .length
-      ) {
+      const currentCount = handCountMap.get(cardNum) ?? 0;
+      const prevCount = previousHandRef.current.has(cardNum) ? 1 : 0;
+      if (!previousHandRef.current.has(cardNum) || currentCount > prevCount) {
         newCards.add(cardNum);
       }
     });

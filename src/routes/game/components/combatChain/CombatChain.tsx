@@ -8,7 +8,7 @@ import { RootState } from 'app/Store';
 import { motion, AnimatePresence, useMotionValue, useTransform } from 'framer-motion';
 import Button from '../../../../features/Button';
 import { submitButton } from '../../../../features/game/GameSlice';
-import useWindowDimensions from '../../../../hooks/useWindowDimensions';
+import { useMediaQuery } from '../../../../hooks/useMediaQuery';
 import { parseHtmlToReactElements } from 'utils/ParseEscapedString';
 import { MdDragHandle } from 'react-icons/md';
 import useShowModal from '../../../../hooks/useShowModals';
@@ -34,8 +34,7 @@ export default function CombatChain() {
   const currentDragOffsetRef = React.useRef(storedOffset);
   const [isDragging, setIsDragging] = React.useState(false);
   const containerRef = React.useRef<HTMLDivElement>(null);
-  const [width, height] = useWindowDimensions();
-  const isPortrait = height > width;
+  const isPortrait = useMediaQuery('(orientation: portrait)');
 
   const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
     dragStartYRef.current = e.clientY;

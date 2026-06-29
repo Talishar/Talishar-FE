@@ -169,7 +169,7 @@ export const CardListZone = () => {
             <div className={styles.cardListContents}>
               {filteredList && filteredList.length > 0 ? (
                 filteredList.map((card: Card, ix: number) => (
-                  <CardDisplay card={card} key={ix} isPlayer={!isOpponentZone} />
+                  <CardDisplay card={card} key={`${card.cardNumber}_${ix}`} isPlayer={!isOpponentZone} />
                 ))
               ) : searchQuery ? (
                 <div className={styles.noResults}>
@@ -248,7 +248,7 @@ const CardListZoneAPI = ({ name, searchQuery, isOpponentZone }: CardListZoneAPI)
       <div className={styles.cardListContents}>
         {filteredCards.length > 0 ? (
           filteredCards.map((card: Card, ix: number) => {
-            return <CardDisplay card={card} key={ix} isPlayer={!isOpponentZone} />;
+            return <CardDisplay card={card} key={`${card.cardNumber}_${ix}`} isPlayer={!isOpponentZone} />;
           })
         ) : searchQuery ? (
           <div className={styles.noResults}>

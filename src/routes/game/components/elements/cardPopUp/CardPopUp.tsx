@@ -1,6 +1,5 @@
 import { useAppDispatch } from 'app/Hooks';
 import { clearPopUp, setPopUp } from 'features/game/GameSlice';
-import useWindowDimensions from 'hooks/useWindowDimensions';
 import { ReactNode, useEffect, useRef } from 'react';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { useCookies } from 'react-cookie';
@@ -47,7 +46,6 @@ export default function CardPopUp({
 }: CardPopUpProps) {
   const ref = useRef<HTMLDivElement>(null);
   const dispatch = useAppDispatch();
-  const [windowWidth, windowHeight] = useWindowDimensions();
   const [cookies] = useCookies(['disableCardTilt']);
   const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const touchPopupShown = useRef(false);
@@ -86,8 +84,8 @@ export default function CardPopUp({
       return;
     }
     const rect = ref.current.getBoundingClientRect();
-    const xCoord = rect.left < windowWidth / 2 ? rect.right : rect.left;
-    const yCoord = rect.top < windowHeight / 2 ? rect.bottom : rect.top;
+    const xCoord = rect.left < window.innerWidth / 2 ? rect.right : rect.left;
+    const yCoord = rect.top < window.innerHeight / 2 ? rect.bottom : rect.top;
     dispatch(
       setPopUp({
         cardNumber,

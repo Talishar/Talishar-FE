@@ -17,7 +17,6 @@ import { LONG_PRESS_TIMER } from 'appConstants';
 import classNames from 'classnames';
 import CardImage from '../cardImage/CardImage';
 import CardPopUp from '../cardPopUp/CardPopUp';
-import useWindowDimensions from 'hooks/useWindowDimensions';
 import { motion, PanInfo, useMotionValue, animate as animateValue } from 'framer-motion';
 import { CARD_SQUARES_PATH, getCollectionCardImagePath } from 'utils';
 import { useLanguageSelector } from 'hooks/useLanguageSelector';
@@ -32,6 +31,7 @@ export interface HandCard {
   isGraveyard?: boolean;
   isBanished?: boolean;
   card?: Card;
+  cardId?: string;
   zIndex?: number;
   addCardToPlayedCards: (cardName: string) => void;
   isNewlyDrawn?: boolean;
@@ -39,13 +39,14 @@ export interface HandCard {
   enableLayoutAnimation?: boolean;
   scrollBlockedRef?: React.RefObject<boolean>;
   onHandReorderDragStart?: () => void;
-  onHandReorderDragMove?: (info: PanInfo) => void;
-  onHandReorderDragEnd?: (info: PanInfo) => boolean;
+  onHandReorderDragMove?: (cardId: string, info: PanInfo) => void;
+  onHandReorderDragEnd?: (cardId: string, info: PanInfo) => boolean;
   onHandReorderDragCancel?: () => void;
 }
 
 export const PlayerHandCard = React.memo(({
   card,
+  cardId,
   isArsenal,
   isBanished,
   isGraveyard,
@@ -62,7 +63,6 @@ export const PlayerHandCard = React.memo(({
 }: HandCard) => {
   const [canPopUp, setCanPopup] = useState(true);
   const [isDragging, setIsDragging] = useState(false);
-  const [, windowHeight] = useWindowDimensions();
   const [snapback, setSnapback] = useState<boolean>(true);
   const { getLanguage } = useLanguageSelector();
 
@@ -98,11 +98,11 @@ export const PlayerHandCard = React.memo(({
     const absY = Math.abs(info.offset.y);
     const absX = Math.abs(info.offset.x);
 
-    // Only play card on drag if vertical movement is significant (prevent accidental plays on scroll)
-    const isMobile = windowHeight > 800;
+    const currentHeight = window.innerHeight;
+    const isMobile = currentHeight > 800;
     const dragThreshold = isMobile
-      ? windowHeight * ScreenPercentageForCardPlayed * 1.5 // Higher threshold on mobile
-      : windowHeight * ScreenPercentageForCardPlayed;
+      ? currentHeight * ScreenPercentageForCardPlayed * 1.5
+      : currentHeight * ScreenPercentageForCardPlayed;
 
     if (absY > dragThreshold) {
       if (card.action) {
@@ -111,7 +111,7 @@ export const PlayerHandCard = React.memo(({
         addCardToPlayedCards(card.cardNumber);
       }
     } else if (onHandReorderDragEnd && absX > 8 && absX > absY) {
-      onHandReorderDragEnd(info);
+      onHandReorderDragEnd(cardId ?? '', info);
     }
 
     draggedRef.current = false;
@@ -144,7 +144,7 @@ export const PlayerHandCard = React.memo(({
     event: MouseEvent | TouchEvent | PointerEvent,
     info: PanInfo
   ) => {
-    onHandReorderDragMove?.(info);
+    onHandReorderDragMove?.(cardId ?? '', info);
 
     if (Math.abs(info.offset.x) > 8 || Math.abs(info.offset.y) > 8) {
       draggedRef.current = true;
