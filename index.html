@@ -258,14 +258,22 @@
       // The #google_vignette hash is appended by Google's script before showing
       // a fullscreen interstitial. Strip it immediately to prevent the ad from rendering.
       (function() {
-        function stripVignetteHash() {
-          var h = window.location.hash;
-          if (h.indexOf('google_vignette') !== -1 || h.indexOf('goog_rewarded') !== -1) {
+        function isBlockedHash(h) {
+          return h.indexOf('google_vignette') !== -1 || h.indexOf('goog_rewarded') !== -1;
+        }
+        function stripBlockedHash() {
+          if (isBlockedHash(window.location.hash)) {
             history.replaceState(null, '', window.location.pathname + window.location.search);
           }
         }
-        stripVignetteHash();
-        window.addEventListener('hashchange', stripVignetteHash);
+        stripBlockedHash();
+        window.addEventListener('hashchange', stripBlockedHash);
+
+        var origPushState = history.pushState.bind(history);
+        history.pushState = function(state, title, url) {
+          if (url && isBlockedHash(String(url))) return;
+          return origPushState(state, title, url);
+        };
       })();
     </script>
   </body>
