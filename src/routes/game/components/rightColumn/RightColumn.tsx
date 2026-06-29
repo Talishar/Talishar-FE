@@ -68,7 +68,7 @@ export default function RightColumn() {
               </a>
             </div>
             <div className={styles.ctaWrapper}>
-              <a href={TALISHAR_METAFY_URL} target="_blank" rel="noopener noreferrer">
+              <a href={TALISHAR_METAFY_URL} target="_blank" rel="noopener noreferrer" className={styles.ctaLink}>
                 <img src={squareMemberCTA} alt="Support Talishar" className={styles.ctaImage} />
               </a>
               <AdUnit placement="right-rail-1" className={styles.inGameBlockAd} />
