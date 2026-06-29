@@ -49,16 +49,11 @@ const RustCounterPanel = ({
         </span>
       </div>
       <div className={styles.actions}>
-        {displayedRustCounters > 0 && (
-          <button
-            id="clearRust"
-            type="button"
-            className={styles.clearButton}
-            onClick={() => (window as any)._talishar_showRewarded?.()}
-          >
-        Watch Ad to Clear
+{/*         {displayedRustCounters > 0 && (
+          <button id="clearRust" type="button" className={styles.clearButton}>
+            Watch Ad to Clear
           </button>
-        )}
+        )} */}
         <a
           className={styles.removeAdsLink}
           href="https://metafy.gg/@talishar"

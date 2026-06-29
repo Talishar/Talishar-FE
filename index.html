@@ -200,24 +200,6 @@
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
     <script>
-      (function() {
-        var _origSP  = Event.prototype.stopPropagation;
-        var _origSIP = Event.prototype.stopImmediatePropagation;
-        function isOurClick(evt) {
-          if (evt.type !== 'click') return false;
-          var root = document.getElementById('root');
-          return !!root && !!evt.target && root.contains(evt.target);
-        }
-        Event.prototype.stopPropagation = function() {
-          if (isOurClick(this)) return;
-          return _origSP.call(this);
-        };
-        Event.prototype.stopImmediatePropagation = function() {
-          if (isOurClick(this)) return;
-          return _origSIP.call(this);
-        };
-      })();
-
       function ShowDetail(e, imgSource) {
         const imgSrcPath = 'https://images.talishar.net/public/cardimages/english/';
         imgSource = imgSource.replace('_cropped', '');
@@ -272,28 +254,18 @@
         el.style.display = 'none';
       }
 
+      // Block Google vignette/interstitial injected by ad network demand partners.
+      // The #google_vignette hash is appended by Google's script before showing
+      // a fullscreen interstitial. Strip it immediately to prevent the ad from rendering.
       (function() {
-        var BLOCKED_HASHES = ['google_vignette', 'goog_rewarded'];
-        function isBlockedHash(hash) {
-          return hash && BLOCKED_HASHES.some(function(h) { return hash.indexOf(h) !== -1; });
-        }
-        function stripBlockedHash() {
-          if (isBlockedHash(window.location.hash)) {
+        function stripVignetteHash() {
+          var hash = window.location.hash;
+          if (hash && hash.indexOf('google_vignette') !== -1) {
             history.replaceState(null, '', window.location.pathname + window.location.search);
           }
         }
-        stripBlockedHash();
-        window.addEventListener('hashchange', stripBlockedHash);
-        var origPushState = history.pushState.bind(history);
-        history.pushState = function(state, title, url) {
-          if (url && isBlockedHash(String(url))) return;
-          return origPushState(state, title, url);
-        };
-        var origReplaceState = history.replaceState.bind(history);
-        history.replaceState = function(state, title, url) {
-          if (url && isBlockedHash(String(url))) return;
-          return origReplaceState(state, title, url);
-        };
+        stripVignetteHash();
+        window.addEventListener('hashchange', stripVignetteHash);
       })();
 
       (function() {
@@ -308,12 +280,9 @@
               _pendingMakeVisible = event.makeRewardedVisible.bind(event);
             });
           };
-          origOn('rewardedSlotClosed', function() { window._talishar_lockOverlays?.(); });
-          origOn('rewardedSlotGranted', function() { window._talishar_lockOverlays?.(); });
         });
         window._talishar_showRewarded = function() {
           if (_pendingMakeVisible) {
-            window._talishar_unlockOverlays?.();
             _pendingMakeVisible();
             _pendingMakeVisible = null;
           }
