@@ -156,16 +156,24 @@ function sandboxAdIframesIn(root: Document | Element) {
   );
 }
 
-// Lock every direct child of <body> that isn't #root, plus all iframes/ins/divs
-// inside those children. This is intentionally broad so it catches ad overlays
-// regardless of ID, class, or which ad network injected them.
+// React attaches __reactFiber$xxx to every DOM node it manages, including
+// portal nodes that land outside #root. Skip those so we don't break game UI
+// (e.g. PlayerHand portals to document.body).
+function isReactPortalEl(el: Element): boolean {
+  const keys = Object.keys(el);
+  for (const key of keys) {
+    if (key.startsWith('__reactFiber') || key.startsWith('__reactProps')) return true;
+  }
+  return false;
+}
+
 function lockNonRootBodyChildren() {
   if (!document.body) return;
   for (const el of Array.from(document.body.children)) {
     if (el.id === 'root') continue;
+    if (isReactPortalEl(el)) continue;
     const h = el as HTMLElement;
     h.style.setProperty('pointer-events', 'none', 'important');
-    // pointer-events is NOT inherited in HTML — lock every descendant type
     h.querySelectorAll<HTMLElement>('*').forEach((child) => {
       child.style.setProperty('pointer-events', 'none', 'important');
     });
@@ -277,21 +285,22 @@ export default function useAdScript(enabled: boolean = true) {
     const overlayInterval = window.setInterval(lockNonRootBodyChildren, 150);
 
     const domGuard = new MutationObserver((mutations) => {
-      let hasNewNodes = false;
+      let newBodyChild = false;
       for (const mutation of mutations) {
         if (mutation.type === 'attributes') {
           stripRewardedAttrsFrom(mutation.target as Element);
         } else {
           for (const node of mutation.addedNodes) {
-            if (node instanceof HTMLElement) {
-              stripRewardedAttrsFrom(node);
-              sweepRewardedAttrs(node);
-              hasNewNodes = true;
-            }
+            if (!(node instanceof HTMLElement)) continue;
+            stripRewardedAttrsFrom(node);
+            sweepRewardedAttrs(node);
+            // Only re-lock when something lands directly on body — React's
+            // constant in-game DOM updates inside #root must not trigger this.
+            if (node.parentElement === document.body) newBodyChild = true;
           }
         }
       }
-      if (hasNewNodes) lockNonRootBodyChildren();
+      if (newBodyChild) lockNonRootBodyChildren();
     });
     domGuard.observe(document.documentElement, {
       childList: true,
