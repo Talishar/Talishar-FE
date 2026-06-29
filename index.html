@@ -259,34 +259,13 @@
       // a fullscreen interstitial. Strip it immediately to prevent the ad from rendering.
       (function() {
         function stripVignetteHash() {
-          var hash = window.location.hash;
-          if (hash && hash.indexOf('google_vignette') !== -1) {
+          if (window.location.hash === '#google_vignette' ||
+              window.location.hash.indexOf('google_vignette') !== -1) {
             history.replaceState(null, '', window.location.pathname + window.location.search);
           }
         }
         stripVignetteHash();
         window.addEventListener('hashchange', stripVignetteHash);
-      })();
-
-      (function() {
-        window.googletag = window.googletag || { cmd: [] };
-        var _pendingMakeVisible = null;
-        window.googletag.cmd.push(function() {
-          var pubads = window.googletag.pubads();
-          var origOn = pubads.addEventListener.bind(pubads);
-          pubads.addEventListener = function(type, handler) {
-            if (type !== 'rewardedSlotReady') return origOn(type, handler);
-            return origOn(type, function(event) {
-              _pendingMakeVisible = event.makeRewardedVisible.bind(event);
-            });
-          };
-        });
-        window._talishar_showRewarded = function() {
-          if (_pendingMakeVisible) {
-            _pendingMakeVisible();
-            _pendingMakeVisible = null;
-          }
-        };
       })();
     </script>
   </body>
