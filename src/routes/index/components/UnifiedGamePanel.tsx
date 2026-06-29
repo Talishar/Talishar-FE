@@ -23,11 +23,14 @@ const setCookie = (name: string, value: string, days: number = 365) => {
   document.cookie = `${name}=${value}; expires=${expires.toUTCString()}; path=/`;
 };
 
+const RUST_COUNTER_VIEWERS = ['dineshjp'];
+
 const UnifiedGamePanel = () => {
-  const { isLoggedIn, isMod } = useAuth();
+  const { isLoggedIn, isMod, currentUserName } = useAuth();
+  const canViewRustCounters = isMod || RUST_COUNTER_VIEWERS.includes(currentUserName ?? '');
   const { isSupporter, isLoading: isAuthLoading } = useSupporterStatus();
   const { data: userProfileData } = useGetUserProfileQuery(undefined, {
-    skip: !isLoggedIn || !isMod
+    skip: !isLoggedIn || !canViewRustCounters
   });
   const showAds = !isAuthLoading && !isSupporter;
   const rustCounters = Math.max(0, userProfileData?.rustCounters ?? 0);
@@ -90,7 +93,7 @@ const UnifiedGamePanel = () => {
 
       {isExpanded && (
         <div className={styles.content}>
-          {isMod && (
+          {canViewRustCounters && (
             <RustCounterPanel
               rustCounters={rustCounters}
               isSupporter={isSupporter}
