@@ -60,6 +60,7 @@ const Index = () => {
     observer.observe(document.documentElement, { childList: true, subtree: true });
     return () => {
       observer.disconnect();
+      videoDiv.remove();
     };
   }, [showAds]);
 

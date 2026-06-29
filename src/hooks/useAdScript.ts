@@ -11,10 +11,15 @@ const AD_SELECTORS =
 const TRUSTED_HOST_RE =
   /^(localhost|127\.\d+\.\d+\.\d+|talishar\.net|[a-z0-9-]+\.talishar\.net|metafy\.gg|[a-z0-9-]+\.rev\.iq|[a-z0-9-]+\.revcontent\.com|[a-z0-9-]+\.googlesyndication\.com|[a-z0-9-]+\.doubleclick\.net)$/i;
 
+const BLOCKED_HASHES = ['#goog_rewarded', '#google_vignette'];
+
 function isTrustedNavigation(rawUrl: string): boolean {
   if (!rawUrl) return true;
-  if (rawUrl.startsWith('/') || rawUrl.startsWith('#') || rawUrl.startsWith('?')) return true;
   if (rawUrl.startsWith('javascript:')) return false;
+  if (rawUrl.startsWith('/') || rawUrl.startsWith('?')) return true;
+  if (rawUrl.startsWith('#')) {
+    return !BLOCKED_HASHES.some((h) => rawUrl.startsWith(h));
+  }
   try {
     const url = new URL(rawUrl, window.location.href);
     if (url.origin === window.location.origin) return true;

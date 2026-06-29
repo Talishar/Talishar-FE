@@ -254,18 +254,75 @@
         el.style.display = 'none';
       }
 
-      // Block Google vignette/interstitial injected by ad network demand partners.
-      // The #google_vignette hash is appended by Google's script before showing
-      // a fullscreen interstitial. Strip it immediately to prevent the ad from rendering.
+      // Block interstitial/rewarded ads from showing automatically.
+      // Ads only render when the user explicitly clicks "Watch Ad to Clear",
+      // which calls window._openTalisharAdGate() to open a timed window.
       (function() {
-        function stripVignetteHash() {
-          if (window.location.hash === '#google_vignette' ||
-              window.location.hash.indexOf('google_vignette') !== -1) {
+        var GATE_MS = 15000;
+        var _gateUntil = 0;
+        function isGateOpen() { return Date.now() < _gateUntil; }
+        window._openTalisharAdGate = function() { _gateUntil = Date.now() + GATE_MS; };
+
+        var _realAdBreak = null;
+        try {
+          Object.defineProperty(window, 'adBreak', {
+            get: function() {
+              return function(opts) {
+                if (isGateOpen() && _realAdBreak) _realAdBreak(opts);
+              };
+            },
+            set: function(fn) { _realAdBreak = fn; },
+            configurable: true,
+            enumerable: true
+          });
+        } catch(e) {}
+
+        function isInterstitial(el) {
+          if (!el || el.nodeType !== 1) return false;
+          return el.id === 'ad_position_box' ||
+                 el.hasAttribute('data-magicword') ||
+                 (el.tagName === 'INS' && el.hasAttribute('data-vignette-loaded'));
+        }
+        function sweepNode(el) {
+          if (isGateOpen()) return;
+          if (isInterstitial(el)) { el.remove(); return; }
+          el.querySelectorAll && el.querySelectorAll(
+            '#ad_position_box, [data-magicword], ins[data-vignette-loaded]'
+          ).forEach(function(child) { if (!isGateOpen()) child.remove(); });
+        }
+        new MutationObserver(function(mutations) {
+          for (var i = 0; i < mutations.length; i++) {
+            var m = mutations[i];
+            if (m.type === 'attributes') {
+              sweepNode(m.target);
+            } else {
+              for (var j = 0; j < m.addedNodes.length; j++) {
+                sweepNode(m.addedNodes[j]);
+              }
+            }
+          }
+        }).observe(document.documentElement, {
+          childList: true,
+          subtree: true,
+          attributes: true,
+          attributeFilter: ['data-vignette-loaded', 'data-magicword']
+        });
+
+        function isBlockedHash(h) {
+          return h.indexOf('google_vignette') !== -1 || h.indexOf('goog_rewarded') !== -1;
+        }
+        function stripBlockedHash() {
+          if (isBlockedHash(window.location.hash)) {
             history.replaceState(null, '', window.location.pathname + window.location.search);
           }
         }
-        stripVignetteHash();
-        window.addEventListener('hashchange', stripVignetteHash);
+        stripBlockedHash();
+        window.addEventListener('hashchange', stripBlockedHash);
+        var origPushState = history.pushState.bind(history);
+        history.pushState = function(state, title, url) {
+          if (url && isBlockedHash(String(url))) return;
+          return origPushState(state, title, url);
+        };
       })();
     </script>
   </body>
