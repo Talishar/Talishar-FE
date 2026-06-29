@@ -229,8 +229,7 @@
           if (!isTalisharElement(evt.target)) return false;
           var current = evt.currentTarget;
           var root = document.getElementById('root');
-          if (current === root) return false;
-          return true;
+          return !current || !root.contains(current);
         }
         Event.prototype.stopPropagation = function() {
           if (isExternalInterception(this)) return;

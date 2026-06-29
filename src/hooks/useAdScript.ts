@@ -174,12 +174,7 @@ function lockNonRootBodyChildren() {
     if (isReactPortalEl(el)) continue;
     const h = el as HTMLElement;
     h.style.setProperty('pointer-events', 'none', 'important');
-    // <ins> elements are Google's GPT slot containers. Hide them entirely so
-    // interstitial ads can't visually cover the page. pointer-events alone
-    // only stops clicks — it doesn't prevent the ad from rendering on top.
-    if (h.tagName === 'INS') {
-      h.style.setProperty('visibility', 'hidden', 'important');
-    }
+    h.style.setProperty('visibility', 'hidden', 'important');
     h.querySelectorAll<HTMLElement>('*').forEach((child) => {
       child.style.setProperty('pointer-events', 'none', 'important');
     });
