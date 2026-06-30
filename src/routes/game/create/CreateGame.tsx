@@ -377,10 +377,26 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
       setValue('gameDescription', value);
     } else if (
       value === 'Looking to play against a specific hero' ||
-      value === 'No interest in playing against specific hero' ||
-      value === 'Looking to play against a specific class'
+      value === 'No interest in playing against specific hero'
     ) {
-      setValue('gameDescription', value);
+      if (selectedHeroes.length > 0) {
+        const heroList = selectedHeroes.join(', ');
+        setValue(
+          'gameDescription',
+          value === 'No interest in playing against specific hero'
+            ? `No interest in playing against ${heroList}`
+            : `Looking to play against ${heroList}`
+        );
+      } else {
+        setValue('gameDescription', value);
+      }
+    } else if (value === 'Looking to play against a specific class') {
+      if (selectedClasses.length > 0) {
+        const classList = selectedClasses.join(', ');
+        setValue('gameDescription', `Looking to play against ${classList}`);
+      } else {
+        setValue('gameDescription', value);
+      }
     }
   };
 
