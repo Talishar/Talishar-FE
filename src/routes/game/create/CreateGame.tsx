@@ -187,8 +187,9 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
     const savedGameDescription =
       localStorage.getItem('lastGameDescription') || '';
     const urlGameDescription = searchParams.get('gameDescription');
-    const gameDescription =
-      urlGameDescription !== null ? urlGameDescription : savedGameDescription;
+    const gameDescription = urlGameDescription
+      ? urlGameDescription
+      : savedGameDescription;
 
     return {
       deck: '',
