@@ -10,7 +10,7 @@ const RustCounterPanel = ({
   rustCounters,
   isSupporter
 }: RustCounterPanelProps) => {
-  const displayedRustCounters = Math.min(Math.max(0, rustCounters), 3);
+  const displayedRustCounters = Math.min(Math.max(1, rustCounters), 3);
 
   if (isSupporter) {
     return (
