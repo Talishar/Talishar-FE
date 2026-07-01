@@ -23,7 +23,7 @@ const setCookie = (name: string, value: string, days: number = 365) => {
   document.cookie = `${name}=${value}; expires=${expires.toUTCString()}; path=/`;
 };
 
-const RUST_COUNTER_VIEWERS = ['dineshjp'];
+const RUST_COUNTER_VIEWERS = ['Dineshjp'];
 
 const UnifiedGamePanel = () => {
   const { isLoggedIn, isMod, currentUserName } = useAuth();
