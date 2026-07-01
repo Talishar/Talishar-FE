@@ -77,6 +77,53 @@
   cursor: pointer;
 }
 
+.numberInputRow {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.75em;
+  padding-left: 0.45em;
+}
+
+.numberInputField {
+  box-sizing: border-box;
+  background-color: rgba(255, 255, 255, 0.07);
+  color: #e0e0e0;
+  height: 40px;
+  flex: 1;
+  min-width: 0;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 8px 12px;
+  font-size: 1em;
+  transition: border-color 0.2s ease;
+}
+
+.numberInputField:focus {
+  outline: none;
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+/* Match the Submit button to the input field's box model and height */
+.numberInputSubmit.numberInputSubmit {
+  box-sizing: border-box;
+  height: 40px;
+  margin-bottom: 0;
+  flex-shrink: 0;
+}
+
+.buttonDiv:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.numberInputHint {
+  padding-left: 0.45em;
+  margin-top: 0.4em;
+  font-size: 0.85em;
+  color: rgba(224, 224, 224, 0.6);
+}
+
 .optionsMenuCloseIcon {
   display: flex;
   flex-direction: row;

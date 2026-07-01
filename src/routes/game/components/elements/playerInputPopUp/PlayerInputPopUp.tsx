@@ -13,6 +13,7 @@ import { OptInput } from './components/OptInput';
 import { NewOptInput } from './components/NewOptInput';
 import { TriggerOrderInput } from './components/TriggerOrderInput';
 import { RearrangeTopInput } from './components/RearrangeTopInput';
+import { NumberInput } from './components/NumberInput';
 import { FormProps } from './playerInputPopupTypes';
 import { OtherInput } from './components/OtherInput';
 import { parseHtmlToReactElements } from 'utils/ParseEscapedString';
@@ -24,7 +25,8 @@ const PlayerInputFormTypeMap: {
   NEWOPT: NewOptInput,
   HANDTOPBOTTOM: OptInput,
   TRIGGERORDER: TriggerOrderInput,
-  REARRANGETOP: RearrangeTopInput
+  REARRANGETOP: RearrangeTopInput,
+  NUMBERINPUT: NumberInput
 };
 
 const PLAYER_INPUT_STORAGE_KEY = 'playerInputPopupPosition';
