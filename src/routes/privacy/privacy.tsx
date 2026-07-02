@@ -1,5 +1,6 @@
 import React from 'react';
 import { TALISHAR_DISCORD_URL } from 'constants/socialLinks';
+import { reopenCookieConsent } from 'utils/cookieConsent';
 import styles from './Privacy.module.css';
 
 export const Privacy = () => {
@@ -34,8 +35,24 @@ export const Privacy = () => {
           what prevents others on the internet from executing game actions on
           your behalf. This authentication key is stored as a cookie in your
           browser. It is necessary for the operation of the game. In order to
-          not receive this cookie, you must not play the game.
+          not receive this cookie, you must not play the game. If your browser
+          blocks or clears this cookie (for example, when refusing all cookies
+          in browser settings), you may be disconnected mid-game, unable to
+          rejoin, and required to log in again between games.
         </p>
+        <h1>Cookie Preferences</h1>
+        <p>
+          Essential cookies (login session, Remember Me token, and the game
+          authorization key described above) are always active — Talishar
+          cannot function without them. Analytics cookies are only set with
+          your consent. You can change your consent choice at any time:
+        </p>
+        <p>
+          <button type="button" onClick={() => reopenCookieConsent()}>
+            Open Cookie Settings
+          </button>
+        </p>
+
         <h1>Talishar Privacy Policy</h1>
 
         <h2>Data Collection and Use</h2>

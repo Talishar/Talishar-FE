@@ -53,6 +53,8 @@ const PrivacyPolicy: React.FC = () => {
             <li>
               <strong>Analytics:</strong> We use Google Analytics and similar
               services to understand how users interact with our platform.
+              Analytics cookies are only set after you accept them in the
+              cookie consent banner.
             </li>
           </ul>
 

@@ -216,6 +216,22 @@ function lockNonRootBodyChildren() {
   }
 }
 
+function pinVideoAdAnchor() {
+  if (!document.body) return;
+  const el = document.body.querySelector(':scope > [data-ad="video"]') as HTMLElement | null;
+  if (!el) return;
+  el.style.setProperty('position', 'fixed', 'important');
+  el.style.setProperty('top', '0', 'important');
+  el.style.setProperty('left', '0', 'important');
+  el.style.setProperty('width', '0', 'important');
+  el.style.setProperty('height', '0', 'important');
+  el.style.setProperty('min-width', '0', 'important');
+  el.style.setProperty('min-height', '0', 'important');
+  el.style.setProperty('max-width', '0', 'important');
+  el.style.setProperty('max-height', '0', 'important');
+  el.style.setProperty('overflow', 'hidden', 'important');
+}
+
 function unlockNonRootBodyChildren() {
   if (!document.body) return;
   for (const el of Array.from(document.body.children)) {
@@ -319,7 +335,11 @@ export default function useAdScript(enabled: boolean = true) {
 
     // Immediately lock any non-root body children, then enforce every 150ms.
     lockNonRootBodyChildren();
-    const overlayInterval = window.setInterval(lockNonRootBodyChildren, 150);
+    pinVideoAdAnchor();
+    const overlayInterval = window.setInterval(() => {
+      lockNonRootBodyChildren();
+      pinVideoAdAnchor();
+    }, 150);
 
     const domGuard = new MutationObserver((mutations) => {
       let newBodyChild = false;

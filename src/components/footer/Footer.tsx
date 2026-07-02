@@ -14,6 +14,7 @@ import {
 import TalisharLogo from '../../img/TalisharLogo.webp';
 import styles from './Footer.module.scss';
 import useSupporterStatus from 'hooks/useSupporterStatus';
+import { reopenCookieConsent } from 'utils/cookieConsent';
 
 const Footer = () => {
   const { isSupporter } = useSupporterStatus();
@@ -72,6 +73,21 @@ const Footer = () => {
               </a>
               <a href={TALISHAR_YOUTUBE_URL} target="_blank" rel="noopener noreferrer" aria-label="YouTube">
                 <FaYoutube aria-hidden="true" />
+              </a>
+            </nav>
+
+            <nav className={styles.legalLinks} aria-label="Legal links">
+              <Link to="/privacy">Privacy Policy</Link>
+              <Link to="/terms-of-service">Terms of Service</Link>
+              <a
+                href="#"
+                className={styles.cookiePreferencesButton}
+                onClick={(e) => {
+                  e.preventDefault();
+                  reopenCookieConsent();
+                }}
+              >
+                Cookie Preferences
               </a>
             </nav>
 

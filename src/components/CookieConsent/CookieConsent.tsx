@@ -1,6 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styles from './CookieConsent.module.css';
+import {
+  getConsentStatus,
+  setConsentStatus,
+  loadGoogleAnalytics,
+  clearAnalyticsCookies,
+  OPEN_COOKIE_CONSENT_EVENT
+} from 'utils/cookieConsent';
 
 interface CookieConsentProps {
   onConsent?: (accepted: boolean) => void;
@@ -12,30 +19,42 @@ const CookieConsent: React.FC<CookieConsentProps> = ({ onConsent }) => {
 
   useEffect(() => {
     // Check if user has already made a choice
-    const consentStatus = localStorage.getItem('cookieConsent');
+    const consentStatus = getConsentStatus();
     if (!consentStatus) {
       // Show banner after a short delay for better UX
       const timer = setTimeout(() => setIsVisible(true), 1000);
       return () => clearTimeout(timer);
-    } else {
-      // Emit consent status if callback provided
-      if (onConsent) {
-        onConsent(consentStatus === 'accepted');
-      }
+    }
+
+    if (consentStatus === 'accepted') {
+      loadGoogleAnalytics();
+    }
+    if (onConsent) {
+      onConsent(consentStatus === 'accepted');
     }
   }, [onConsent]);
 
+  useEffect(() => {
+    const handleOpen = () => {
+      setIsExpanded(true);
+      setIsVisible(true);
+    };
+    window.addEventListener(OPEN_COOKIE_CONSENT_EVENT, handleOpen);
+    return () =>
+      window.removeEventListener(OPEN_COOKIE_CONSENT_EVENT, handleOpen);
+  }, []);
+
   const handleAccept = () => {
-    localStorage.setItem('cookieConsent', 'accepted');
-    localStorage.setItem('cookieConsentDate', new Date().toISOString());
+    setConsentStatus('accepted');
+    loadGoogleAnalytics();
     setIsVisible(false);
 
     if (onConsent) onConsent(true);
   };
 
   const handleDecline = () => {
-    localStorage.setItem('cookieConsent', 'declined');
-    localStorage.setItem('cookieConsentDate', new Date().toISOString());
+    setConsentStatus('declined');
+    clearAnalyticsCookies();
     setIsVisible(false);
     if (onConsent) onConsent(false);
   };
@@ -50,29 +69,35 @@ const CookieConsent: React.FC<CookieConsentProps> = ({ onConsent }) => {
 
           {!isExpanded ? (
             <p className={styles.description}>
-              We use cookies and similar technologies to enhance your
-              experience, analyze site traffic, and serve personalized
-              advertisements through rev.iq and other third-party
-              services.
+              Talishar uses essential cookies to keep you logged in and
+              connected to your games. With your consent, we also use analytics
+              cookies, and rev.iq uses advertising cookies to help keep
+              Talishar free.
             </p>
           ) : (
             <div className={styles.expandedContent}>
               <p className={styles.description}>
-                <strong>Essential Cookies:</strong> Required for game
-                functionality, authentication, and session management.
+                <strong>Essential Cookies (always active):</strong> Required
+                for Talishar to work. They store your login session, your
+                &quot;Remember Me&quot; token if you use it, and the
+                authorization key that proves you are a player in your current
+                game. Declining below does <strong>not</strong> disable these
+                — but if you block all cookies in your browser settings, you
+                may be disconnected mid-game, unable to rejoin, and forced to
+                log in again between games.
+              </p>
+              <p className={styles.description}>
+                <strong>Analytics Cookies (only with your consent):</strong>{' '}
+                We use Google Analytics to understand how visitors interact
+                with the site. These cookies are only set if you choose
+                &quot;Accept All Cookies&quot;.
               </p>
               <p className={styles.description}>
                 <strong>Advertising Cookies:</strong> rev.iq and its partners
                 use cookies to serve ads based on your visits to our site and
-                other sites. This helps us keep Talishar free to use.
-              </p>
-              <p className={styles.description}>
-                <strong>Analytics:</strong> We use cookies to understand how
-                visitors interact with our site to improve user experience.
-              </p>
-              <p className={styles.description}>
-                You can manage your preferences anytime through your browser
-                settings or by visiting{' '}
+                other sites. Ads keep Talishar free to use, so they are shown
+                to all non-supporter accounts. You can opt out of personalized
+                ads anytime via{' '}
                 <a
                   href="https://www.rev.iq/optout"
                   target="_blank"
@@ -81,6 +106,11 @@ const CookieConsent: React.FC<CookieConsentProps> = ({ onConsent }) => {
                   rev.iq Ad Settings
                 </a>
                 .
+              </p>
+              <p className={styles.description}>
+                You can change your choice anytime from the{' '}
+                <Link to="/privacy">Privacy page</Link> or through your browser
+                settings.
               </p>
             </div>
           )}
@@ -104,7 +134,7 @@ const CookieConsent: React.FC<CookieConsentProps> = ({ onConsent }) => {
             className={`${styles.button} ${styles.essentialButton}`}
             onClick={handleDecline}
           >
-            Essential Only
+            Decline Analytics
           </button>
           <Link to="/privacy" className={styles.privacyLink}>
             Privacy Policy
