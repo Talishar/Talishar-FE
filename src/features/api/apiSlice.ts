@@ -76,6 +76,7 @@ import { SubmitChatAPI } from 'interface/API/SubmitChat.php';
 import {
   ModPageDataResponse,
   BanPlayerByIPRequest,
+  BanIPDirectRequest,
   BanPlayerByNameRequest,
   CloseGameRequest,
   DeleteUsernameRequest,
@@ -706,6 +707,19 @@ export const apiSlice = createApi({
       },
       invalidatesTags: [{ type: 'ModPageData', id: 'LIST' }]
     }),
+    banIPDirect: builder.mutation<any, BanIPDirectRequest>({
+      query: ({ directIPToBan }) => {
+        return {
+          url: URL_END_POINT.BAN_PLAYER,
+          method: 'POST',
+          body: {
+            directIPToBan: directIPToBan
+          },
+          responseHandler: parseResponse
+        };
+      },
+      invalidatesTags: [{ type: 'ModPageData', id: 'LIST' }]
+    }),
     banPlayerByName: builder.mutation<any, BanPlayerByNameRequest>({
       query: ({ playerToBan }) => {
         return {
@@ -1164,6 +1178,7 @@ export const {
   useKickPlayerMutation,
   useGetModPageDataQuery,
   useBanPlayerByIPMutation,
+  useBanIPDirectMutation,
   useBanPlayerByNameMutation,
   useDeleteUsernameMutation,
   useCloseGameMutation,

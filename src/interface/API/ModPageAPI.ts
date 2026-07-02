@@ -5,6 +5,10 @@ export interface BanPlayerByIPRequest {
   playerNumberToBan: string;
 }
 
+export interface BanIPDirectRequest {
+  directIPToBan: string;
+}
+
 export interface BanPlayerByNameRequest {
   playerToBan: string;
 }
@@ -40,6 +44,7 @@ export interface ModPageDataResponse {
   bannedIPs: string[];
   recentAccounts: string[];
   linkedAccounts?: LinkedAccount[];
+  bannedPlayerIPs?: Record<string, string[]>;
 }
 
 export interface SearchUsernamesRequest {

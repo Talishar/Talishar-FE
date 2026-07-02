@@ -4,6 +4,7 @@ import { toast } from 'react-hot-toast';
 import {
   useGetModPageDataQuery,
   useBanPlayerByIPMutation,
+  useBanIPDirectMutation,
   useBanPlayerByNameMutation,
   useCloseGameMutation,
   useDeleteUsernameMutation,
@@ -17,6 +18,7 @@ import DeleteUsernameAutocomplete from './DeleteUsernameAutocomplete';
 const ModPage: React.FC = () => {
   const [ipToBan, setIpToBan] = useState('');
   const [playerNumberToBan, setPlayerNumberToBan] = useState('');
+  const [directIP, setDirectIP] = useState('');
   const [gameToClose, setGameToClose] = useState('');
   const [playerToBan, setPlayerToBan] = useState('');
   const [usernameToDelete, setUsernameToDelete] = useState('');
@@ -36,6 +38,7 @@ const ModPage: React.FC = () => {
   } = useGetModPageDataQuery(undefined);
 
   const [banByIP, { isLoading: isBanningByIP }] = useBanPlayerByIPMutation();
+  const [banIPDirect, { isLoading: isBanningIPDirect }] = useBanIPDirectMutation();
   const [banByName, { isLoading: isBanningByName }] = useBanPlayerByNameMutation();
   const [closeGameMutation, { isLoading: isClosingGame }] = useCloseGameMutation();
   const [deleteUsername, { isLoading: isDeletingUsername }] = useDeleteUsernameMutation();
@@ -58,6 +61,26 @@ const ModPage: React.FC = () => {
     } catch (err: any) {
       console.error('Failed to ban player:', err);
       // Error will be shown via toast from RTK Query error handler
+    }
+  };
+
+  const handleBanIPDirect = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSuccessMessage(null);
+
+    try {
+      const response = await banIPDirect({ directIPToBan: directIP.trim() }).unwrap();
+      if (response?.status === 'error') {
+        toast.error(response.message || 'Failed to ban IP', {
+          position: 'top-center'
+        });
+        return;
+      }
+      setSuccessMessage(response?.message || `IP ${directIP} banned successfully`);
+      setDirectIP('');
+      await refetch();
+    } catch (err: any) {
+      console.error('Failed to ban IP:', err);
     }
   };
 
@@ -255,6 +278,22 @@ const ModPage: React.FC = () => {
               <button type="submit">Ban</button>
             </form>
 
+            <form onSubmit={handleBanIPDirect} className={styles.form}>
+              <h2>Ban IP Address</h2>
+              <label htmlFor="directIP">IP address to ban:</label>
+              <input
+                type="text"
+                id="directIP"
+                value={directIP}
+                onChange={(e) => setDirectIP(e.target.value)}
+                placeholder="e.g. 203.0.113.7"
+                required
+              />
+              <button type="submit" disabled={isBanningIPDirect}>
+                {isBanningIPDirect ? 'Banning...' : 'Ban IP'}
+              </button>
+            </form>
+
             <form onSubmit={handleCloseGame} className={styles.form}>
               <h2>Close Game</h2>
               <label htmlFor="gameToClose">Game to close:</label>
@@ -449,9 +488,35 @@ const ModPage: React.FC = () => {
               ) : modPageData?.bannedPlayers &&
                 modPageData.bannedPlayers.length > 0 ? (
                 <ul className={styles.dataList}>
-                  {modPageData.bannedPlayers.map((player, index) => (
-                    <li key={index}>{player}</li>
-                  ))}
+                  {modPageData.bannedPlayers.map((player, index) => {
+                    const knownIPs =
+                      modPageData.bannedPlayerIPs?.[player.toLowerCase()];
+                    return (
+                      <li key={index}>
+                        {player}
+                        {knownIPs && knownIPs.length > 0 && (
+                          <span style={{ color: '#aaa', fontSize: '12px' }}>
+                            {' — '}
+                            {knownIPs.map((ip, ipIndex) => (
+                              <React.Fragment key={ip}>
+                                {ipIndex > 0 && ', '}
+                                <a
+                                  onClick={() => setDirectIP(ip)}
+                                  title="Click to fill the Ban IP Address form"
+                                  style={{
+                                    cursor: 'pointer',
+                                    textDecoration: 'underline'
+                                  }}
+                                >
+                                  {ip}
+                                </a>
+                              </React.Fragment>
+                            ))}
+                          </span>
+                        )}
+                      </li>
+                    );
+                  })}
                 </ul>
               ) : (
                 <p>No banned players</p>
