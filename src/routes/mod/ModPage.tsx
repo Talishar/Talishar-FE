@@ -417,6 +417,28 @@ const ModPage: React.FC = () => {
                 <p>No recent accounts</p>
               )}
             </div>
+
+            <div className={styles.dataSection}>
+              <h2>Possible Ban Evaders (shared IPs)</h2>
+              {isLoading ? (
+                <p>Loading...</p>
+              ) : modPageData?.linkedAccounts &&
+                modPageData.linkedAccounts.length > 0 ? (
+                <ul className={styles.dataList}>
+                  {modPageData.linkedAccounts.map((link, index) => (
+                    <li key={index}>
+                      <strong>{link.username}</strong> — {link.ip} (
+                      {link.linkedTo === 'banned IP'
+                        ? 'banned IP'
+                        : `shares IP with ${link.linkedTo}`}
+                      )
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p>No linked accounts found</p>
+              )}
+            </div>
           </div>
 
           <div className={styles.rightColumn}>

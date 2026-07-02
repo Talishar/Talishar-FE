@@ -29,10 +29,17 @@ export interface RecentAccountsResponse {
   recentAccounts: string[];
 }
 
+export interface LinkedAccount {
+  username: string;
+  ip: string;
+  linkedTo: string;
+}
+
 export interface ModPageDataResponse {
   bannedPlayers: string[];
   bannedIPs: string[];
   recentAccounts: string[];
+  linkedAccounts?: LinkedAccount[];
 }
 
 export interface SearchUsernamesRequest {
