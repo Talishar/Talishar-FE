@@ -12,7 +12,8 @@ import {
 import {
   useCreateGameMutation,
   useGetFavoriteDecksQuery,
-  useGetBazaarDecksQuery
+  useGetBazaarDecksQuery,
+  useClearRustCountersMutation
 } from 'features/api/apiSlice';
 import {
   selectMetafyId,
@@ -102,6 +103,7 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
   const { data, isLoading, isSuccess } = useGetFavoriteDecksQuery(undefined);
   const [searchParams, setSearchParams] = useSearchParams();
   const [createGame, createGameResult] = useCreateGameMutation();
+  const [clearRustCounters] = useClearRustCountersMutation();
   const { canViewRustCounters, rustCounters, isRustLocked } = useRustCounters();
 
   // FaB Bazaar — standalone mode only (embedded mode uses QuickJoinContext)
@@ -723,6 +725,7 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
               <RustCounterPanel
                 rustCounters={rustCounters}
                 isSupporter={isSupporter}
+                onAdUnavailable={() => clearRustCounters()}
               />
             )}
             <div className={useUnifiedPanelStyles ? styles.embeddedFormInner : styles.formInner}>

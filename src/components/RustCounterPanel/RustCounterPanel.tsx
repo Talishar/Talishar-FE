@@ -9,13 +9,15 @@ import styles from './RustCounterPanel.module.css';
 type RustCounterPanelProps = {
   rustCounters: number;
   isSupporter: boolean;
+  onAdUnavailable?: () => void;
 };
 
 const AD_UNAVAILABLE_MESSAGE_MS = 5000;
 
 const RustCounterPanel = ({
   rustCounters,
-  isSupporter
+  isSupporter,
+  onAdUnavailable
 }: RustCounterPanelProps) => {
   const displayedRustCounters = Math.min(
     Math.max(0, rustCounters),
@@ -69,6 +71,7 @@ const RustCounterPanel = ({
       setAdUnavailable(false);
       return;
     }
+    onAdUnavailable?.();
     setAdUnavailable(true);
     if (unavailableTimeoutRef.current !== null) {
       window.clearTimeout(unavailableTimeoutRef.current);
