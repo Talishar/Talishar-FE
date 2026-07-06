@@ -25,6 +25,8 @@ const tiers: Tier[] = [
     benefits: [
       '8 Free Guides',
       'General support',
+      'No Rust Counters',
+      'Unlimited Play',
       'Alt Arts on Talishar',
       'Talishar Exclusive Sleeves & Playmats',
       'Custom Themes on Talishar',
@@ -43,6 +45,8 @@ const tiers: Tier[] = [
     benefits: [
       '8 Free Guides',
       'General support',
+      'No Rust Counters',
+      'Unlimited Play',
       'Alt Arts on Talishar',
       'Talishar Exclusive Sleeves & Playmats',
       'Custom Themes on Talishar',
@@ -61,6 +65,8 @@ const tiers: Tier[] = [
     benefits: [
       '8 Free Guides',
       'General support',
+      'No Rust Counters',
+      'Unlimited Play',
       'Alt Arts on Talishar',
       'Talishar Exclusive Sleeves & Playmats',
       'Custom Themes on Talishar',
@@ -79,6 +85,8 @@ const tiers: Tier[] = [
     benefits: [
       '8 Free Guides',
       'General support',
+      'No Rust Counters',
+      'Unlimited Play',
       'Alt Arts on Talishar',
       'Talishar Exclusive Sleeves & Playmats',
       'Custom Themes on Talishar',
@@ -97,6 +105,8 @@ const tiers: Tier[] = [
     benefits: [
       '8 Free Guides',
       'General support',
+      'No Rust Counters',
+      'Unlimited Play',
       'Alt Arts on Talishar',
       'Talishar Exclusive Sleeves & Playmats',
       'Custom Themes on Talishar',
@@ -117,6 +127,8 @@ const tiers: Tier[] = [
     benefits: [
       '8 Free Guides',
       'General support',
+      'No Rust Counters',
+      'Unlimited Play',
       'Alt Arts on Talishar',
       'Talishar Exclusive Sleeves & Playmats',
       'Custom Themes on Talishar',
@@ -133,6 +145,8 @@ const tiers: Tier[] = [
 
 const comparisonFeatures = [
   { label: 'Play games online', free: true, premium: true },
+  { label: 'No Rust Counters', free: false, premium: true },
+  { label: 'Unlimited Play', free: false, premium: true },
   { label: 'Alt Arts on Talishar', free: false, premium: true },
   { label: 'Talishar Sleeves & Playmats', free: false, premium: true },
   { label: 'In-Game Badge', free: false, premium: true },
