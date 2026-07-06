@@ -88,6 +88,26 @@
   color: rgba(255, 255, 255, 0.95);
 }
 
+.userIdLine {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5em;
+  margin-top: 0.4em;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 0.9em;
+}
+
+.userIdLabel {
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 0.75em;
+}
+
+.userIdValue {
+  font-family: monospace;
+  color: rgba(255, 255, 255, 0.75);
+}
+
 .articleTitle {
   margin-top: 0.2em;
   background: transparent;
