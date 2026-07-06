@@ -1,10 +1,10 @@
 import React, { useState, useRef } from 'react';
 import ReactDOM from 'react-dom';
-import { useAppSelector } from 'app/Hooks';
+import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import styles from './EndGameScreen.module.css';
 import { useGetPopUpContentQuery } from 'features/api/apiSlice';
-import { END_GAME_STATS } from 'appConstants';
-import { getGameInfo } from 'features/game/GameSlice';
+import { END_GAME_STATS, PROCESS_INPUT } from 'appConstants';
+import { getGameInfo, submitButton } from 'features/game/GameSlice';
 import EndGameStats, {
   EndGameData,
   EndGameStatsRef
@@ -12,7 +12,7 @@ import EndGameStats, {
 import EndGameMenuOptions from '../endGameMenuOptions/EndGameMenuOptions';
 import { shallowEqual } from 'react-redux';
 import useShowModal from 'hooks/useShowModals';
-import { FaEye, FaEyeSlash, FaEllipsisH, FaList } from 'react-icons/fa';
+import { FaEye, FaEyeSlash, FaEllipsisH, FaList, FaExchangeAlt } from 'react-icons/fa';
 import classNames from 'classnames';
 import useAuth from 'hooks/useAuth';
 import { PiFileCsvFill, PiCameraFill } from 'react-icons/pi';
@@ -22,6 +22,7 @@ import useSupporterStatus from 'hooks/useSupporterStatus';
 import MetafyLogo from 'img/MetafyGradient.svg';
 
 const EndGameScreen = () => {
+  const dispatch = useAppDispatch();
   const gameInfo = useAppSelector(getGameInfo, shallowEqual);
   const gameState = useAppSelector((state: any) => state.game, shallowEqual);
   const [playerID, setPlayerID] = useState(gameInfo.playerID === 2 ? 2 : 1);
@@ -132,6 +133,11 @@ const EndGameScreen = () => {
     setMoreOpen(false);
   };
 
+  const handleSwapHeroesRematch = () => {
+    dispatch(submitButton({ button: { mode: PROCESS_INPUT.SWAP_HEROES_REMATCH } }));
+    setMoreOpen(false);
+  };
+
   const handleExportStats = () => {
     if (!endGameStatsRef.current) {
       console.error('Export ref not available');
@@ -188,6 +194,11 @@ const EndGameScreen = () => {
                       onClick={() => setMoreOpen(false)}
                     />
                     <div className={styles.dropdownMenu} style={menuStyle}>
+                      {!gameInfo.roguelikeGameID && (
+                        <button className={styles.dropdownItem} onClick={handleSwapHeroesRematch}>
+                          <FaExchangeAlt aria-hidden="true" className={styles.dropdownIcon} /> Swap &amp; rematch
+                        </button>
+                      )}
                       {!showFullLog && (
                         <>
                           <button className={styles.dropdownItem} onClick={handleExportStats}>
