@@ -4,8 +4,6 @@ import { useGetUserProfileQuery } from 'features/api/apiSlice';
 
 export const MAX_RUST_COUNTERS = 3;
 
-const RUST_COUNTER_VIEWERS = ['Dineshjp'];
-
 export const RUST_PANEL_ATTENTION_EVENT = 'talishar:rustPanelAttention';
 
 export const requestRustPanelAttention = () => {
@@ -13,12 +11,11 @@ export const requestRustPanelAttention = () => {
 };
 
 const useRustCounters = () => {
-  const { isLoggedIn, isMod, currentUserName } = useAuth();
+  const { isLoggedIn } = useAuth();
   const { isSupporter, isLoading: isSupporterLoading } = useSupporterStatus();
-  const canViewRustCounters =
-    isMod || RUST_COUNTER_VIEWERS.includes(currentUserName ?? '');
+  const canViewRustCounters = isLoggedIn;
   const { data: userProfileData } = useGetUserProfileQuery(undefined, {
-    skip: !isLoggedIn || !canViewRustCounters
+    skip: !isLoggedIn
   });
   const rustCounters = Math.max(0, userProfileData?.rustCounters ?? 0);
   const isRustLocked =
