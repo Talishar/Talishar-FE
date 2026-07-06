@@ -17,7 +17,7 @@ import useShowModal from 'hooks/useShowModals';
 import OptionsSettings from './OptionsSettings';
 import { shallowEqual } from 'react-redux';
 import { CosmeticsSection } from './OptionsSettings/CosmeticsSection';
-import { useGetCosmeticsQuery } from 'features/api/apiSlice';
+import { apiSlice, useGetCosmeticsQuery } from 'features/api/apiSlice';
 import { useAppSelector as useAppSelectorOptions } from 'app/Hooks';
 import {
   getSettingsEntity,
@@ -65,6 +65,7 @@ const OptionsContent = () => {
   const handleClickMainMenuButton = async (e: React.MouseEvent) => {
     e.preventDefault;
     clickConcedeGameHandler();
+    dispatch(apiSlice.util.invalidateTags([{ type: 'UserProfile', id: 'LIST' }]));
     navigate('/');
     clickCloseOptionsHandler();
   };

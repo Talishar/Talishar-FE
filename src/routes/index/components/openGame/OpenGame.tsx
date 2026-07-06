@@ -6,6 +6,7 @@ import styles from './OpenGame.module.css';
 import { generateCroppedImageUrl } from '../../../../utils/cropImages';
 import FriendBadge from '../gameList/FriendBadge';
 import QuickJoinContext from '../quickJoin/QuickJoinContext';
+import { requestRustPanelAttention } from 'hooks/useRustCounters';
 import { GAME_FORMAT } from '../../../../appConstants';
 import { useTranslation } from 'react-i18next';
 import { CLASS_OF_RATHE } from '../filter/constants';
@@ -69,9 +70,14 @@ const OpenGame = ({
         )?.imageUrl
       : undefined) ??
     UNKNOWN_HERO_URL;
+  const isRustLocked = !!quickJoinCtx?.isRustLocked;
   const handleJoin = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    if (isRustLocked) {
+      requestRustPanelAttention();
+      return;
+    }
     if (hasDeckReady && quickJoinCtx) {
       quickJoinCtx.quickJoin(entry.gameName);
     } else {
@@ -143,7 +149,9 @@ const OpenGame = ({
     setIsLongDesc(fullHeight > lineHeight * 2 + 2);
   }, [entry.description, i18n.language]);
 
-  const buttonClass = classNames(styles.button, styles.buttonWithIcon, 'secondary');
+  const buttonClass = classNames(styles.button, styles.buttonWithIcon, 'secondary', {
+    [styles.buttonLocked]: isRustLocked
+  });
 
   return (
     <div key={ix} className={styles.gameItem} onClick={handleJoin}>
@@ -181,9 +189,12 @@ const OpenGame = ({
           className={buttonClass}
           href={`/game/join/${entry.gameName}`}
           role="button"
+          aria-disabled={isRustLocked || undefined}
           onClick={handleJoin}
           title={
-            hasDeckReady
+            isRustLocked
+              ? 'Clear your rust counters to join'
+              : hasDeckReady
               ? t("OPEN_GAME.JOIN_DECK_READY")
               : t("OPEN_GAME.JOIN_DECK_NOT_READY")
           }

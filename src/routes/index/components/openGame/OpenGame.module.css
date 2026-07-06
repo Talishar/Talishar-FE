@@ -26,6 +26,11 @@
     border-color: rgba(255, 255, 255, 0.22);
   }
 
+  &:hover .buttonLocked {
+    background-color: var(--theme-form-background);
+    border-color: rgba(255, 255, 255, 0.12);
+  }
+
   &:hover .joinHeroIcon {
     filter: brightness(1.12);
   }
@@ -70,6 +75,12 @@
   /* match the opponent hero image height */
   height: 3.6em;
   padding: 0 !important;
+}
+
+.buttonLocked {
+  opacity: 0.4;
+  filter: grayscale(0.7);
+  cursor: not-allowed;
 }
 
 .joinHeroIcon {

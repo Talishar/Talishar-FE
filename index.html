@@ -312,6 +312,16 @@
       (function() {
         window.googletag = window.googletag || { cmd: [] };
         var _pendingMakeVisible = null;
+        var _rewardGranted = false;
+
+        function setAdReady(ready) {
+          window._talishar_rewardedAdReady = ready;
+          window.dispatchEvent(
+            new CustomEvent('talishar:rewardedAdReady', { detail: { ready: ready } })
+          );
+        }
+        setAdReady(false);
+
         window.googletag.cmd.push(function() {
           var pubads = window.googletag.pubads();
           var origOn = pubads.addEventListener.bind(pubads);
@@ -319,17 +329,34 @@
             if (type !== 'rewardedSlotReady') return origOn(type, handler);
             return origOn(type, function(event) {
               _pendingMakeVisible = event.makeRewardedVisible.bind(event);
+              setAdReady(true);
             });
           };
-          origOn('rewardedSlotClosed', function() { window._talishar_lockOverlays?.(); });
-          origOn('rewardedSlotGranted', function() { window._talishar_lockOverlays?.(); });
+          // Only fires once the viewer has watched enough of the ad to earn the reward.
+          origOn('rewardedSlotGranted', function() {
+            window._talishar_lockOverlays?.();
+            _rewardGranted = true;
+          });
+          origOn('rewardedSlotClosed', function() {
+            window._talishar_lockOverlays?.();
+            _pendingMakeVisible = null;
+            setAdReady(false);
+            if (_rewardGranted) {
+              _rewardGranted = false;
+              window._talishar_onRewardedAdGranted?.();
+            }
+          });
         });
         window._talishar_showRewarded = function() {
           if (_pendingMakeVisible) {
             window._talishar_unlockOverlays?.();
-            _pendingMakeVisible();
+            var show = _pendingMakeVisible;
             _pendingMakeVisible = null;
+            setAdReady(false);
+            show();
+            return true;
           }
+          return false;
         };
       })();
     </script>

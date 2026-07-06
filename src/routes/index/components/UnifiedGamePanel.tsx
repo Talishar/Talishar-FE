@@ -8,7 +8,8 @@ import QuickJoinPanel from './quickJoin/QuickJoinPanel';
 import CreateGame from 'routes/game/create/CreateGame';
 import styles from './UnifiedGamePanel.module.css';
 import { useTranslation } from 'react-i18next';
-import { useGetUserProfileQuery } from 'features/api/apiSlice';
+import useRustCounters from 'hooks/useRustCounters';
+import { useClearRustCountersMutation } from 'features/api/apiSlice';
 
 const getCookie = (name: string): string | null => {
   const value = `; ${document.cookie}`;
@@ -23,17 +24,21 @@ const setCookie = (name: string, value: string, days: number = 365) => {
   document.cookie = `${name}=${value}; expires=${expires.toUTCString()}; path=/`;
 };
 
-const RUST_COUNTER_VIEWERS = ['Dineshjp'];
-
 const UnifiedGamePanel = () => {
-  const { isLoggedIn, isMod, currentUserName } = useAuth();
-  const canViewRustCounters = isMod || RUST_COUNTER_VIEWERS.includes(currentUserName ?? '');
+  const { isLoggedIn } = useAuth();
+  const { canViewRustCounters, rustCounters } = useRustCounters();
   const { isSupporter, isLoading: isAuthLoading } = useSupporterStatus();
-  const { data: userProfileData } = useGetUserProfileQuery(undefined, {
-    skip: !isLoggedIn || !canViewRustCounters
-  });
+  const [clearRustCounters] = useClearRustCountersMutation();
   const showAds = !isAuthLoading && !isSupporter;
-  const rustCounters = Math.max(0, userProfileData?.rustCounters ?? 0);
+  useEffect(() => {
+    if (!canViewRustCounters) return;
+    (window as any)._talishar_onRewardedAdGranted = () => {
+      clearRustCounters();
+    };
+    return () => {
+      delete (window as any)._talishar_onRewardedAdGranted;
+    };
+  }, [canViewRustCounters, clearRustCounters]);
   const [isExpanded, setIsExpanded] = useState(() => {
     const savedState = getCookie('unifiedGamePanelExpanded');
     return savedState !== 'false';

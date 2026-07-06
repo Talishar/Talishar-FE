@@ -1,18 +1,39 @@
 .panel {
+  position: relative;
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 0.75rem;
-  padding: 0.65rem 0.75rem;
+  gap: 0.5rem 0.75rem;
+  padding: 0.65rem 2.3rem 0.65rem 0.85rem;
   color: var(--theme-text, #ededed);
 }
 
-.summary {
+.panelLocked {
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.content {
   display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  flex: 1 1 auto;
+}
+
+.titleRow {
+  display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 0.55rem;
-  min-width: 0;
+  gap: 0.25rem 0.55rem;
+}
+
+.title {
   font-size: 0.9rem;
+  font-weight: 600;
+  line-height: 1.4;
+  white-space: nowrap;
 }
 
 .counterImages {
@@ -23,17 +44,72 @@
 }
 
 .counterImage {
-  width: 24px;
-  height: 24px;
+  width: 22px;
+  height: 22px;
   object-fit: contain;
   flex: 0 0 auto;
+}
+
+.helpWrapper {
+  position: absolute;
+  top: 0.4rem;
+  right: 0.4rem;
+  display: inline-flex;
 }
 
 .helpIcon {
   display: inline-flex;
   align-items: center;
-  color: var(--theme-text-muted, rgba(237, 237, 237, 0.65));
+  justify-content: center;
+  width: auto !important;
+  margin: 0 !important;
+  padding: 0.25rem;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--theme-text-muted, rgba(237, 237, 237, 0.55));
   cursor: help;
+  transition: color 0.15s;
+}
+
+.helpIcon:hover,
+.helpIcon:focus-visible {
+  color: var(--theme-text, #ededed);
+  background: transparent;
+}
+
+.tooltip {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 10;
+  width: min(320px, calc(100vw - 2rem));
+  padding: 0.6rem 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 6px;
+  background: var(--theme-bg, #1a1a1a);
+  color: rgba(237, 237, 237, 0.85);
+  font-size: 0.78rem;
+  font-weight: 400;
+  line-height: 1.5;
+  text-align: left;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.12s ease, visibility 0.12s ease;
+  pointer-events: none;
+}
+
+.helpWrapper:hover .tooltip,
+.helpWrapper:focus-within .tooltip {
+  opacity: 1;
+  visibility: visible;
+}
+
+.subtitle {
+  color: var(--theme-text-muted, rgba(237, 237, 237, 0.65));
+  font-size: 0.82rem;
+  line-height: 1.4;
 }
 
 .actions {
@@ -41,6 +117,26 @@
   align-items: center;
   gap: 0.6rem;
   flex: 0 0 auto;
+}
+
+.watchAdWrapper {
+  position: relative;
+  display: inline-flex;
+}
+
+.adUnavailableMessage {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 0.3rem;
+  padding: 0.3rem 0.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 4px;
+  background: var(--theme-bg, #1a1a1a);
+  color: rgba(237, 237, 237, 0.75);
+  font-size: 0.75rem;
+  white-space: nowrap;
+  z-index: 1;
 }
 
 .clearButton {
@@ -65,12 +161,51 @@
   color: rgba(237, 237, 237, 0.95);
 }
 
+.clearButtonLocked {
+  background: var(--theme-primary, #d4af37);
+  border-color: var(--theme-primary, #d4af37);
+  color: var(--primary-inverse, #000000);
+  font-weight: 600;
+}
+
+.clearButtonLocked:hover {
+  background: var(--theme-primary, #d4af37);
+  border-color: var(--theme-primary, #d4af37);
+  color: var(--primary-inverse, #000000);
+  filter: brightness(1.12);
+}
+
+.pulse {
+  animation: rustPulse 0.6s ease-in-out 2;
+}
+
+@keyframes rustPulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(212, 175, 55, 0);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(212, 175, 55, 0.35);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pulse {
+    animation: none;
+  }
+
+  .tooltip {
+    transition: none;
+  }
+}
+
 .removeAdsLink {
   color: rgba(237, 237, 237, 0.5) !important;
   font-size: 0.82rem;
   font-weight: 400;
   text-decoration: none !important;
   opacity: 1 !important;
+  white-space: nowrap;
 }
 
 .removeAdsLink:hover {
@@ -89,14 +224,29 @@
   .panel {
     align-items: stretch;
     flex-direction: column;
+    padding-right: 0.85rem;
+  }
+
+  .titleRow {
+    padding-right: 1.6rem;
   }
 
   .actions {
     align-items: stretch;
     flex-direction: column;
+    width: 100%;
+  }
+
+  .watchAdWrapper {
+    width: 100%;
   }
 
   .clearButton {
     width: 100% !important;
+  }
+
+  .adUnavailableMessage {
+    right: 0;
+    white-space: normal;
   }
 }

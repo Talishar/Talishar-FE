@@ -25,6 +25,9 @@ import { ImageSelectOption } from 'components/ImageSelect';
 import { getReadableFormatName } from 'utils/formatUtils';
 import { FAB_BAZAAR_DECK_URL_BASE } from 'appConstants';
 import useAuth from 'hooks/useAuth';
+import useRustCounters, {
+  requestRustPanelAttention
+} from 'hooks/useRustCounters';
 
 const shortenFormat = (format: string): string => {
   if (!format) return '';
@@ -66,6 +69,7 @@ interface QuickJoinContextType {
   bazaarError: string | null;
   metafyHash: string | null;
   isBazaarEnabled: boolean;
+  isRustLocked: boolean;
   /** URL-ready fabdb value that accounts for the active deck source */
   effectiveFabdb: string;
   /** Talishar deck key that accounts for the active deck source */
@@ -96,6 +100,7 @@ export const QuickJoinProvider = ({
   const dispatch = useAppDispatch();
   const [joinGame] = useJoinGameMutation();
   const { isLoggedIn, isLoading: isAuthLoading } = useAuth();
+  const { isRustLocked } = useRustCounters();
   const metafyHash = useAppSelector(selectMetafyHash);
   const metafyTimestamp = useAppSelector(selectMetafyTimestamp);
   const metafyId = useAppSelector(selectMetafyId);
@@ -255,6 +260,10 @@ export const QuickJoinProvider = ({
 
   const quickJoin = useCallback(
     async (gameName: number) => {
+      if (isRustLocked) {
+        requestRustPanelAttention();
+        return;
+      }
       setError(null);
       setIsJoining(true);
       try {
@@ -325,7 +334,8 @@ export const QuickJoinProvider = ({
       selectedBazaarDeck,
       dispatch,
       navigate,
-      setSaveDeck
+      setSaveDeck,
+      isRustLocked
     ]
   );
 
@@ -346,6 +356,7 @@ export const QuickJoinProvider = ({
     bazaarError,
     metafyHash,
     isBazaarEnabled,
+    isRustLocked,
     effectiveFabdb,
     effectiveFavoriteDecks,
     setDeckSource,

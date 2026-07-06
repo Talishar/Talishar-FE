@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { shallowEqual } from 'react-redux';
 import { getGameInfo } from 'features/game/GameSlice';
 import useAuth from 'hooks/useAuth';
+import { apiSlice } from 'features/api/apiSlice';
 import { FaHome, FaExchangeAlt, FaPaperPlane, FaSave, FaMapMarkedAlt } from 'react-icons/fa';
 
 interface EndGameMenuOptionsProps {
@@ -27,6 +28,7 @@ const EndGameMenuOptions = ({ onSwitchPlayer }: EndGameMenuOptionsProps) => {
 
   const handleMainMenu = async () => {
     dispatch(submitButton({ button: { mode: PROCESS_INPUT.MAIN_MENU } }));
+    dispatch(apiSlice.util.invalidateTags([{ type: 'UserProfile', id: 'LIST' }]));
     navigate('/');
   };
 

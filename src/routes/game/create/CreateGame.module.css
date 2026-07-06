@@ -76,6 +76,18 @@
   flex-shrink: 0;
 }
 
+.submitLocked {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.rustLockedHint {
+  margin-top: 0.4rem;
+  color: var(--theme-text-muted, rgba(237, 237, 237, 0.6));
+  font-size: 0.82rem;
+  text-align: center;
+}
+
 @media (max-width: 768px) {
   .formContainer {
     width: 100%;

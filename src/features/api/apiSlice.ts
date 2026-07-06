@@ -67,6 +67,7 @@ import {
 } from 'interface/API/UpdateFavoriteDeck.php';
 import { PatreonLoginResponse } from 'routes/user/profile/linkpatreon/linkPatreon';
 import { UserProfileAPIResponse } from 'interface/API/UserProfileAPI.php';
+import { ClearRustCountersAPIResponse } from 'interface/API/ClearRustCountersAPI.php';
 import {
   MetafyLoginResponse,
   MetafySignupResponse,
@@ -519,6 +520,34 @@ export const apiSlice = createApi({
         };
       },
       providesTags: [{ type: 'UserProfile', id: 'LIST' }]
+    }),
+    clearRustCounters: builder.mutation<ClearRustCountersAPIResponse, void>({
+      query: () => {
+        return {
+          url: URL_END_POINT.CLEAR_RUST_COUNTERS,
+          method: 'POST',
+          responseHandler: parseResponse
+        };
+      },
+      invalidatesTags: [{ type: 'UserProfile', id: 'LIST' }],
+      async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          if (data?.success) {
+            dispatch(
+              apiSlice.util.updateQueryData(
+                'getUserProfile',
+                undefined,
+                (draft) => {
+                  draft.rustCounters = data.rustCounters ?? 0;
+                }
+              )
+            );
+          }
+        } catch {
+          // Ignore; invalidatesTags still triggers a reconciling refetch on failure.
+        }
+      }
     }),
     chooseFirstPlayer: builder.mutation({
       query: ({ ...body }: ChooseFirstPlayer) => {
@@ -1171,6 +1200,7 @@ export const {
   useRefreshMetafyCommunitiesMutation,
   useLoadDebugGameMutation,
   useGetUserProfileQuery,
+  useClearRustCountersMutation,
   useLoadReplayMutation,
   useShareReplayMutation,
   useLoadSharedReplayMutation,

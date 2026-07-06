@@ -11,7 +11,6 @@ import {
 } from 'appConstants';
 import {
   useCreateGameMutation,
-  useGetUserProfileQuery,
   useGetFavoriteDecksQuery,
   useGetBazaarDecksQuery
 } from 'features/api/apiSlice';
@@ -24,6 +23,9 @@ import {
 import { setGameStart } from 'features/game/GameSlice';
 import useAuth from 'hooks/useAuth';
 import useSupporterStatus from 'hooks/useSupporterStatus';
+import useRustCounters, {
+  requestRustPanelAttention
+} from 'hooks/useRustCounters';
 import { CreateGameAPI } from 'interface/API/CreateGame.php';
 import { toast } from 'react-hot-toast';
 import { useNavigate, useSearchParams } from 'react-router-dom';
@@ -90,7 +92,7 @@ type CreateGameProps = {
 
 const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
   const quickJoinCtx = useQuickJoinOptional();
-  const { isLoggedIn, isPatron, isMod, isLoading: isAuthLoading } = useAuth();
+  const { isLoggedIn, isPatron, isLoading: isAuthLoading } = useAuth();
   const { isSupporter } = useSupporterStatus();
   // True when rendered inside the unified main-menu panel (logged-in users only)
   const isEmbedded = quickJoinCtx !== null && isLoggedIn;
@@ -98,12 +100,9 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { data, isLoading, isSuccess } = useGetFavoriteDecksQuery(undefined);
-  const { data: userProfileData } = useGetUserProfileQuery(undefined, {
-    skip: !isLoggedIn || !isMod || isEmbedded
-  });
   const [searchParams, setSearchParams] = useSearchParams();
   const [createGame, createGameResult] = useCreateGameMutation();
-  const rustCounters = Math.max(0, userProfileData?.rustCounters ?? 0);
+  const { canViewRustCounters, rustCounters, isRustLocked } = useRustCounters();
 
   // FaB Bazaar — standalone mode only (embedded mode uses QuickJoinContext)
   const metafyHash = useAppSelector(selectMetafyHash);
@@ -585,6 +584,11 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
   const onSubmit: SubmitHandler<CreateGameAPI> = async (
     values: CreateGameAPI
   ) => {
+    // Guard against implicit form submission (e.g. Enter key) while locked
+    if (isRustLocked) {
+      requestRustPanelAttention();
+      return;
+    }
     try {
       // if you're not logged in you can ONLY make a private game.
       if (!isLoggedIn) values.visibility = GAME_VISIBILITY.PRIVATE;
@@ -715,7 +719,7 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
             className={useUnifiedPanelStyles ? styles.embeddedFormLayout : undefined}
             onSubmit={handleSubmit(onSubmit, onInvalid)}
           >
-            {isLoggedIn && isMod && !isEmbedded && (
+            {isLoggedIn && canViewRustCounters && !isEmbedded && (
               <RustCounterPanel
                 rustCounters={rustCounters}
                 isSupporter={isSupporter}
@@ -1310,14 +1314,34 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
                 )}
               </fieldset>
             </div>
+            {/* While rust-locked the button stays clickable
+                so it can direct the user to the rust counter panel. */}
             <button
-              type="submit"
-              className={classNames(buttonClass, isEmbedded && styles.embeddedSubmitButton)}
+              type={isRustLocked ? 'button' : 'submit'}
+              className={classNames(
+                buttonClass,
+                isEmbedded && styles.embeddedSubmitButton,
+                isRustLocked && styles.submitLocked
+              )}
               disabled={isSubmitting}
+              aria-disabled={isRustLocked || undefined}
               aria-busy={isSubmitting}
+              onClick={
+                isRustLocked
+                  ? (e) => {
+                      e.preventDefault();
+                      requestRustPanelAttention();
+                    }
+                  : undefined
+              }
             >
               {t('MENU.CREATE_GAME.TITLE')}
             </button>
+            {isRustLocked && (
+              <div className={styles.rustLockedHint}>
+                Clear your rust counters above to create a game.
+              </div>
+            )}
             {errors.root?.serverError?.message && (
               <div className={styles.fieldError}>
                 <FaExclamationCircle /> {errors.root?.serverError?.message}
