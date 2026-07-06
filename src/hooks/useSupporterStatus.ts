@@ -35,7 +35,7 @@ function writeCache(isSupporter: boolean): void {
 }
 
 /**
- * Returns whether the current user is a Metafy supporter.
+ * Returns whether the current user is a paid supporter.
  * Caches the result in localStorage for 1 hour to avoid repeated DB calls.
  */
 export default function useSupporterStatus(): {
@@ -73,7 +73,9 @@ export default function useSupporterStatus(): {
     }
 
     if (!isProfileLoading && profileData !== undefined) {
-      const value = profileData.isMetafySupporter ?? false;
+      const value =
+        (profileData.isMetafySupporter ?? false) ||
+        (profileData.isPatreonSupporter ?? false);
       writeCache(value);
       setIsSupporter(value);
     }

@@ -4,6 +4,7 @@ export interface UserProfileAPIResponse {
   userName: string;
   patreonInfo: string;
   isPatreonLinked: boolean;
+  isPatreonSupporter?: boolean;
   isContributor?: boolean;
   isPvtVoidPatron?: boolean;
   rustCounters?: number;
