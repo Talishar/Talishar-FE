@@ -86,7 +86,7 @@ const RustCounterPanel = ({
     return (
       <div className={styles.panel}>
         <p className={styles.supporterMessage}>
-          Thank you for your support! You are helping keep the servers running ❤️
+          Thank you for your support! ❤️
         </p>
       </div>
     );
@@ -169,8 +169,8 @@ const RustCounterPanel = ({
           Rust counters accrue as you play games as a non-supporter. At{' '}
           {MAX_RUST_COUNTERS} counters you can no longer queue for games. Clear
           them by watching a rewarded ad, or remove ads entirely by supporting
-          Talishar on Metafy for as low as 5$ per month. Your support keeps the servers running for
-          everyone.
+          Talishar on Metafy for as low as 5$ per month. Your support keeps the servers running 
+          and support the developers.
         </span>
       </span>
     </div>
