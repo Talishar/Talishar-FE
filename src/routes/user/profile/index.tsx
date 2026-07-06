@@ -23,6 +23,7 @@ import FriendsList from './FriendsList';
 import BlockedUsers from './BlockedUsers';
 import MetafySection from './MetafySection';
 import UpgradeSection from './UpgradeSection';
+import useAuth from 'hooks/useAuth';
 
 const CODE = 'code';
 const CLIENT_ID =
@@ -34,6 +35,7 @@ const PATREON_URL = 'https://www.patreon.com/oauth2/authorize?';
 export const ProfilePage = () => {
   usePageTitle('Profile');
   const navigate = useNavigate();
+  const { currentUserId } = useAuth();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [confirmationUsername, setConfirmationUsername] = useState('');
   const [newDeckUrl, setNewDeckUrl] = useState('');
@@ -299,6 +301,12 @@ export const ProfilePage = () => {
               <div className={styles.usernameHeader}>
                 <span className={styles.usernameLabel}>Username</span>
                 <h2 className={styles.usernameValue}>{profileData?.userName}</h2>
+                {currentUserId && (
+                  <div className={styles.userIdLine}>
+                    <span className={styles.userIdLabel}>User ID</span>
+                    <span className={styles.userIdValue}>{currentUserId}</span>
+                  </div>
+                )}
               </div>
               <div>
                 {profileIsLoading && <p>Loading Profile...</p>}
