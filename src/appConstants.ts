@@ -330,6 +330,7 @@ export const URL_END_POINT = {
   JOIN_GAME: 'APIs/JoinGame.php',
   SUBMIT_SIDEBOARD: 'APIs/SubmitSideboard.php',
   USER_PROFILE: 'APIs/UserProfileAPI.php',
+  CHANGE_DISPLAY_NAME: 'APIs/ChangeDisplayNameAPI.php',
   CLEAR_RUST_COUNTERS: 'APIs/ClearRustCounters.php',
   START_GAME_LEGACY: 'Start.php',
   LOGIN: 'AccountFiles/PasswordLoginAPI.php',

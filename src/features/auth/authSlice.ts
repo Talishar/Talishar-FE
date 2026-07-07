@@ -11,6 +11,7 @@ const authSlice = createSlice({
         user,
         accessToken,
         userName,
+        displayName,
         isPatron,
         isMod,
         metafyId,
@@ -20,6 +21,7 @@ const authSlice = createSlice({
       (state.user = user),
         (state.token = accessToken),
         (state.userName = userName);
+      state.displayName = displayName ?? userName ?? null;
       state.isPatron = isPatron;
       state.isMod = isMod || false;
       state.metafyId = metafyId ?? null;
@@ -29,6 +31,7 @@ const authSlice = createSlice({
     logOutReducer: (state) => {
       state.user = null;
       state.userName = null;
+      state.displayName = null;
       state.token = null;
       state.isPatron = null;
       state.isMod = false;
@@ -45,6 +48,8 @@ export const { setCredentialsReducer, logOutReducer } = actions;
 
 export const selectCurrentUser = (state: RootState) => state.auth.user;
 export const selectCurrentUserName = (state: RootState) => state.auth.userName;
+export const selectCurrentDisplayName = (state: RootState) =>
+  state.auth.displayName ?? state.auth.userName;
 export const selectIsPatron = (state: RootState) => state.auth.isPatron;
 export const selectIsMod = (state: RootState) => state.auth.isMod;
 export const selectMetafyId = (state: RootState) => state.auth.metafyId;

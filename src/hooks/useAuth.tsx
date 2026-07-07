@@ -7,6 +7,7 @@ import {
 import {
   selectCurrentUser,
   selectCurrentUserName,
+  selectCurrentDisplayName,
   selectIsPatron,
   selectIsMod,
   selectMetafyId,
@@ -31,6 +32,7 @@ const MOD_USERNAMES = [
 export default function useAuth() {
   const currentUserId = useAppSelector(selectCurrentUser);
   const currentUserName = useAppSelector(selectCurrentUserName);
+  const currentDisplayName = useAppSelector(selectCurrentDisplayName);
   const reduxIsPatron = useAppSelector(selectIsPatron);
   const reduxIsMod = useAppSelector(selectIsMod);
   const metafyId = useAppSelector(selectMetafyId);
@@ -58,12 +60,14 @@ export default function useAuth() {
       isMod?: boolean,
       metafyId?: string | number | null,
       metafyHash?: string | null,
-      metafyTimestamp?: number | null
+      metafyTimestamp?: number | null,
+      displayName?: string | null
     ) => {
       dispatch(
         setCredentialsReducer({
           user: user,
           userName: userName,
+          displayName: displayName ?? userName,
           accessToken: token,
           isPatron: patron,
           isMod: isMod || false,
@@ -143,7 +147,8 @@ export default function useAuth() {
           userIsMod,
           data.metafyID ?? data.metafyId ?? null,
           data.metafyHash ?? null,
-          data.timestamp ?? null
+          data.timestamp ?? null,
+          data.loggedInDisplayName ?? null
         );
       } else {
         // User is not logged in, clear any stale auth state
@@ -166,6 +171,7 @@ export default function useAuth() {
     isLoggedIn,
     currentUserId,
     currentUserName,
+    currentDisplayName,
     isLoading,
     error,
     isPatron,

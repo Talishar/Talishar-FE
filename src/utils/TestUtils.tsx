@@ -29,6 +29,7 @@ export const renderWithProviders = (
       auth: {
         user: null,
         userName: null,
+        displayName: null,
         token: null,
         isPatron: null,
         isMod: false,
@@ -59,6 +60,7 @@ export const preloadedState = {
   auth: {
     user: null,
     userName: null,
+    displayName: null,
     token: null,
     isPatron: null,
     isMod: false,

@@ -5,7 +5,8 @@ import {
   useGetFavoriteDecksQuery,
   useGetUserProfileQuery,
   useAddFavoriteDeckMutation,
-  useUpdateFavoriteDeckMutation
+  useUpdateFavoriteDeckMutation,
+  useChangeDisplayNameMutation
 } from 'features/api/apiSlice';
 import { DeleteDeckAPIResponse } from 'interface/API/DeleteDeckAPI.php';
 import { DeleteAccountAPIResponse } from 'interface/API/DeleteAccountAPI.php';
@@ -58,6 +59,39 @@ export const ProfilePage = () => {
   const [addFavoriteDeck] = useAddFavoriteDeckMutation();
   const [updateFavoriteDeck] = useUpdateFavoriteDeckMutation();
   const [deleteAccount, { isLoading: isDeleting }] = useDeleteAccountMutation();
+  const [changeDisplayName, { isLoading: isChangingName }] =
+    useChangeDisplayNameMutation();
+  const [isEditingDisplayName, setIsEditingDisplayName] = useState(false);
+  const [newDisplayName, setNewDisplayName] = useState('');
+  const [showDisplayNameInfo, setShowDisplayNameInfo] = useState(false);
+
+  const handleChangeDisplayName = async (displayName: string) => {
+    try {
+      const resp = await changeDisplayName({ displayName }).unwrap();
+      if (resp.status === 'success') {
+        toast.success(
+          displayName === ''
+            ? 'Display name reset to your username.'
+            : `Display name changed to ${resp.displayName}.`,
+          { position: 'top-center' }
+        );
+        setIsEditingDisplayName(false);
+        setNewDisplayName('');
+      } else {
+        toast.error(resp.message ?? 'Failed to change display name.', {
+          position: 'top-center'
+        });
+      }
+    } catch (err: any) {
+      const message =
+        err?.data?.message ?? 'Failed to change display name. Please try again.';
+      toast.error(message, { position: 'top-center' });
+    }
+  };
+
+  const nameChangeCooldownActive =
+    !!profileData?.nextChangeAllowed &&
+    new Date(profileData.nextChangeAllowed).getTime() > Date.now();
 
   const handleDeleteDeckMessage = (resp: DeleteDeckAPIResponse): string => {
     if (resp.message === 'Deck deleted successfully.') {
@@ -354,6 +388,112 @@ export const ProfilePage = () => {
 
               <FriendsList className={styles.friendsSection} />
               <BlockedUsers className={styles.friendsSection} />
+
+              {/* Display Name Section */}
+              {!profileIsLoading && (
+                <div className={styles.patreonSection}>
+                  <div className={styles.displayNameHeader}>
+                    <h3>Display Name</h3>
+                    <button
+                      type="button"
+                      className={styles.infoButton}
+                      onClick={() => setShowDisplayNameInfo((prev) => !prev)}
+                      aria-label="More information about display names"
+                      aria-expanded={showDisplayNameInfo}
+                    >
+                      i
+                    </button>
+                  </div>
+                  <p>
+                    Shown to other players in games, lobbies, and chat:{' '}
+                    <strong>
+                      {profileData?.displayName ?? profileData?.userName}
+                    </strong>
+                  </p>
+                  {showDisplayNameInfo && (
+                    <div className={styles.displayNameInfoBox}>
+                      <p>
+                        Your display name is what other players see in games,
+                        lobbies, and chat. Your account username is kept
+                        private and is only ever visible to moderators.
+                      </p>
+                      <p>
+                        Display names must be 3-20 letters or numbers, can't
+                        match another player's username or display name, and
+                        can only be changed once every 7 days.
+                      </p>
+                    </div>
+                  )}
+                  {profileData?.canChangeDisplayName ? (
+                    isEditingDisplayName ? (
+                      <div className={styles.displayNameEditRow}>
+                        <input
+                          type="text"
+                          value={newDisplayName}
+                          onChange={(e) => setNewDisplayName(e.target.value)}
+                          placeholder="New display name (3-20 letters/numbers)"
+                          maxLength={20}
+                          className={styles.displayNameInput}
+                          disabled={isChangingName}
+                        />
+                        <button
+                          className={styles.metafyToggleButton}
+                          onClick={() =>
+                            handleChangeDisplayName(newDisplayName.trim())
+                          }
+                          disabled={
+                            isChangingName || newDisplayName.trim().length < 3
+                          }
+                        >
+                          {isChangingName ? 'Saving...' : 'Save'}
+                        </button>
+                        <button
+                          className={styles.metafyToggleButton}
+                          onClick={() => {
+                            setIsEditingDisplayName(false);
+                            setNewDisplayName('');
+                          }}
+                          disabled={isChangingName}
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    ) : nameChangeCooldownActive ? (
+                      <p>
+                        You can change your display name again on{' '}
+                        {new Date(
+                          profileData.nextChangeAllowed as string
+                        ).toLocaleString()}
+                        .
+                      </p>
+                    ) : (
+                      <div className={styles.displayNameEditRow}>
+                        <button
+                          className={styles.metafyToggleButton}
+                          onClick={() => setIsEditingDisplayName(true)}
+                        >
+                          Change Display Name
+                        </button>
+                        {profileData?.hasCustomDisplayName && (
+                          <button
+                            className={styles.metafyToggleButton}
+                            onClick={() => handleChangeDisplayName('')}
+                            disabled={isChangingName}
+                          >
+                            Reset to Username
+                          </button>
+                        )}
+                      </div>
+                    )
+                  ) : (
+                    <p>
+                      Changing your display name is a supporter perk.
+                      Support Talishar to unlock it!
+                    </p>
+                  )}
+                </div>
+              )}
+
               <h3 className={styles.title}>Delete Account</h3>
               <p style={{ color: '#fa3737ff', marginBottom: '1em' }}>
                 <strong>Warning:</strong> This action is permanent and cannot be

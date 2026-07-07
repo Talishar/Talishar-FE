@@ -1,6 +1,7 @@
 export const defaultAuth = {
   user: null,
   userName: null,
+  displayName: null as string | null,
   token: null,
   isPatron: null,
   isMod: false,

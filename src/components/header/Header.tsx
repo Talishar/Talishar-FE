@@ -31,7 +31,8 @@ import { Toaster } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
 const Header = () => {
-  const { isLoggedIn, isMod, currentUserName, logOut } = useAuth();
+  const { isLoggedIn, isMod, currentUserName, currentDisplayName, logOut } =
+    useAuth();
   const { data: pendingData } = useGetPendingRequestsQuery(undefined, {
     skip: !isLoggedIn
   });
@@ -159,7 +160,9 @@ const Header = () => {
                   aria-haspopup="true"
                 >
                   <BsPersonFill />
-                  <span className={styles.userName}>{currentUserName}</span>
+                  <span className={styles.userName}>
+                    {currentDisplayName ?? currentUserName}
+                  </span>
                   <BsChevronDown
                     className={`${styles.chevron} ${userDropdownOpen ? styles.chevronOpen : ''}`}
                   />

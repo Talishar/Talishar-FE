@@ -66,7 +66,11 @@ import {
   UpdateFavoriteDeckResponse
 } from 'interface/API/UpdateFavoriteDeck.php';
 import { PatreonLoginResponse } from 'routes/user/profile/linkpatreon/linkPatreon';
-import { UserProfileAPIResponse } from 'interface/API/UserProfileAPI.php';
+import {
+  ChangeDisplayNameRequest,
+  ChangeDisplayNameResponse,
+  UserProfileAPIResponse
+} from 'interface/API/UserProfileAPI.php';
 import { ClearRustCountersAPIResponse } from 'interface/API/ClearRustCountersAPI.php';
 import {
   MetafyLoginResponse,
@@ -520,6 +524,20 @@ export const apiSlice = createApi({
         };
       },
       providesTags: [{ type: 'UserProfile', id: 'LIST' }]
+    }),
+    changeDisplayName: builder.mutation<
+      ChangeDisplayNameResponse,
+      ChangeDisplayNameRequest
+    >({
+      query: (body: ChangeDisplayNameRequest) => {
+        return {
+          url: URL_END_POINT.CHANGE_DISPLAY_NAME,
+          method: 'POST',
+          body: body,
+          responseHandler: parseResponse
+        };
+      },
+      invalidatesTags: [{ type: 'UserProfile', id: 'LIST' }]
     }),
     clearRustCounters: builder.mutation<ClearRustCountersAPIResponse, void>({
       query: () => {
@@ -1200,6 +1218,7 @@ export const {
   useRefreshMetafyCommunitiesMutation,
   useLoadDebugGameMutation,
   useGetUserProfileQuery,
+  useChangeDisplayNameMutation,
   useClearRustCountersMutation,
   useLoadReplayMutation,
   useShareReplayMutation,
