@@ -344,6 +344,8 @@ export const URL_END_POINT = {
   DELETE_DECK: `APIs/DeleteDeckAPI.php`,
   ADD_FAVORITE_DECK: `APIs/AddFavoriteDeck.php`,
   UPDATE_FAVORITE_DECK: `APIs/UpdateFavoriteDeck.php`,
+  GET_DECK_CARDS: `APIs/GetDeckCards.php`,
+  SAVE_DECK_COSMETICS: `APIs/SaveDeckCosmetics.php`,
   PATREON_LOGIN: `AccountFiles/PatreonLoginAPI.php`,
   METAFY_LOGIN: `AccountFiles/MetafyLoginAPI.php`,
   METAFY_SIGNUP: `AccountFiles/MetafySignupAPI.php`,

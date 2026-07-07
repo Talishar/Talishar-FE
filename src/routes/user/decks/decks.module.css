@@ -1,0 +1,462 @@
+.wideContainer {
+  width: 100%;
+  max-width: 90vw;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.title {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+.intro {
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 1.5em;
+}
+
+.upsellBanner {
+  margin-bottom: 1.5em;
+  padding: 1em 1.25em;
+  border-radius: 10px;
+  border: 1px solid rgba(201, 169, 97, 0.35);
+  background: rgba(201, 169, 97, 0.06);
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.upsellBanner a {
+  color: #d4af37;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.upsellBanner a:hover {
+  text-decoration: underline;
+}
+
+.addDeckSection {
+  margin-bottom: 1.5em;
+}
+
+.addDeckSection p {
+  font-size: 0.9em;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 0.75em;
+}
+
+.addDeckSection a {
+  color: var(--theme-primary, #d4af37);
+  text-decoration: none;
+}
+
+.addDeckSection a:hover {
+  text-decoration: underline;
+}
+
+.addDeckContainer {
+  display: flex;
+  gap: 0.5em;
+}
+
+.addDeckInput {
+  flex: 1;
+  padding: 0.75em;
+  border-radius: 4px;
+  border: 1px solid var(--theme-form-border, #797c80);
+  background-color: var(--theme-form-background, #33383d);
+  color: var(--theme-text, #f4eded);
+  font-size: 1em;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.addDeckInput:focus {
+  outline: none;
+  border-color: var(--theme-primary, #d4af37);
+}
+
+.addDeckInput:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.addDeckButton {
+  flex: 0 0 auto;
+  width: auto;
+  padding: 0.75em 1.5em;
+  background-color: var(--theme-primary, #d4af37);
+  color: var(--theme-primary-inverse, #000000);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  white-space: nowrap;
+  transition: background-color 0.2s ease;
+  margin-bottom: 0 !important;
+}
+
+.addDeckButton:hover:not(:disabled) {
+  background-color: var(--theme-primary-hover, #e8c547);
+}
+
+.addDeckButton:disabled {
+  background-color: var(--theme-form-border, #797c80);
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.deckCard {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 10px;
+  margin-bottom: 1em;
+  overflow: hidden;
+}
+
+.deckCardHeader {
+  display: flex;
+  align-items: center;
+  gap: 1em;
+  padding: 0.85em 1.1em;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  width: 100%;
+  text-align: left;
+  color: inherit;
+  margin-bottom: 0 !important;
+}
+
+.deckCardHeader:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.deckHeroImage {
+  border-radius: 5%;
+  width: 64px;
+  height: 52px;
+  object-fit: cover;
+  object-position: center top;
+  flex-shrink: 0;
+}
+
+.deckMeta {
+  flex: 1;
+  min-width: 0;
+}
+
+.deckName {
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.95);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.deckSub {
+  font-size: 0.85em;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.expandIcon {
+  transition: transform 0.15s ease;
+  color: rgba(255, 255, 255, 0.5);
+  flex-shrink: 0;
+}
+
+.expandIconOpen {
+  transform: rotate(180deg);
+}
+
+.deckPanel {
+  padding: 0 1.1em 1.1em 1.1em;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.pickerLabel {
+  display: block;
+  margin: 1em 0 0.5em 0;
+}
+
+.pickerLabelRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5em;
+  margin: 1em 0 0.5em 0;
+}
+
+.altArtToggleButtons {
+  display: flex;
+  gap: 0.5em;
+}
+
+.altArtToggleButton {
+  padding: 0.35em 0.8em;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.85em;
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease;
+  white-space: nowrap;
+  margin-bottom: 0 !important;
+}
+
+.altArtToggleButton:hover {
+  border-color: rgba(212, 175, 55, 0.6);
+  color: #d4af37;
+}
+
+.pickerLabel strong {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.pickerHint {
+  font-size: 0.85em;
+  color: rgba(255, 255, 255, 0.55);
+  margin: 0.25em 0 0.5em 0;
+}
+
+.deckDetailsRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6em;
+}
+
+.deckDetailsRowSticky {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6em;
+  position: sticky;
+  top: 70px;
+  z-index: 100;
+  margin: 0 -1.1em;
+  padding: 0.7em 1.1em;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.heroSelect {
+  flex: 1 1 220px;
+  width: auto;
+  min-width: 180px;
+  padding: 0.5rem;
+  border-radius: 10px;
+  border: 1px solid var(--theme-border, #ccc);
+  background-color: var(--theme-form-background, #f5f5f5);
+  color: var(--theme-text, #333);
+  font-size: 0.9rem;
+  cursor: pointer;
+  margin-bottom: 0 !important;
+}
+
+.heroSelect:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.deckActionButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: auto;
+  gap: 0.4em;
+  padding: 0.5em 0.9em;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.9em;
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease;
+  white-space: nowrap;
+  margin-bottom: 0 !important;
+}
+
+.deckActionButton:hover {
+  border-color: rgba(212, 175, 55, 0.6);
+  color: #d4af37;
+}
+
+.thumbGrid {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  gap: 0.6em;
+  min-width: 0;
+}
+
+.playmatThumbWrapper,
+.cardBackThumbWrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3em;
+  cursor: pointer;
+  width: 128px;
+  flex-shrink: 0;
+}
+
+.playmatThumb {
+  width: 128px;
+  height: 85px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 2px solid transparent;
+  transition: border-color 0.15s ease, transform 0.1s ease;
+}
+
+.cardBackThumb {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 2px solid transparent;
+  transition: border-color 0.15s ease, transform 0.1s ease;
+}
+
+.altArtThumb {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 2px solid transparent;
+  transition: border-color 0.15s ease, transform 0.1s ease;
+}
+
+.thumbSelected {
+  border-color: #d4af37;
+}
+
+.thumbLabel {
+  font-size: 0.72em;
+  color: rgba(255, 255, 255, 0.65);
+  text-align: center;
+  line-height: 1.2;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  hyphens: auto;
+  width: 100%;
+}
+
+.lockedThumb {
+  opacity: 0.35;
+  filter: grayscale(1);
+}
+
+.lockOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 1.6em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1em;
+}
+
+.altArtGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  column-gap: 1.5em;
+}
+
+.altArtRow {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4em;
+  padding: 0.6em 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  min-width: 0;
+}
+
+.altArtCardName {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.9em;
+}
+
+@media (max-width: 575px) {
+  .altArtGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.altArtThumbWrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  width: 100px;
+  flex-shrink: 0;
+}
+
+.saveButton {
+  width: auto;
+  flex: 0 0 auto;
+  padding: 0.5em 0.9em;
+  background-color: var(--theme-primary, #d4af37);
+  color: var(--theme-primary-inverse, #000000);
+  border: 1px solid var(--theme-primary, #d4af37);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9em;
+  font-weight: 600;
+  transition: background-color 0.2s ease;
+  margin-bottom: 0 !important;
+}
+
+.saveButton:hover:not(:disabled) {
+  background-color: var(--theme-primary-hover, #e8c547);
+}
+
+.saveButton:disabled {
+  background-color: var(--theme-form-border, #797c80);
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.savedHint {
+  font-size: 0.85em;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.emptyState {
+  color: rgba(255, 255, 255, 0.6);
+  padding: 2em 0;
+  text-align: center;
+}
+
+.hoverPreview {
+  position: fixed;
+  z-index: 3000;
+  width: 240px;
+  pointer-events: none;
+  filter: drop-shadow(0 8px 24px rgba(0, 0, 0, 0.6));
+}
+
+.hoverPreviewImg {
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  display: block;
+}
+
+@media (max-width: 575px) {
+  .wideContainer {
+    padding: 0 0.5rem;
+  }
+
+  .deckCardHeader {
+    padding: 0.65em 0.75em;
+  }
+}

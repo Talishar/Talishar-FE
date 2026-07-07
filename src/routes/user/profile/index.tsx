@@ -1,25 +1,13 @@
 import { usePageTitle } from 'hooks/usePageTitle';
 import {
-  useDeleteDeckMutation,
   useDeleteAccountMutation,
-  useGetFavoriteDecksQuery,
   useGetUserProfileQuery,
-  useAddFavoriteDeckMutation,
-  useUpdateFavoriteDeckMutation,
   useChangeDisplayNameMutation
 } from 'features/api/apiSlice';
-import { DeleteDeckAPIResponse } from 'interface/API/DeleteDeckAPI.php';
 import { DeleteAccountAPIResponse } from 'interface/API/DeleteAccountAPI.php';
-import { AddFavoriteDeckRequest } from 'interface/API/AddFavoriteDeck.php';
-import { UpdateFavoriteDeckRequest } from 'interface/API/UpdateFavoriteDeck.php';
 import { toast } from 'react-hot-toast';
-import { RiEdit2Line, RiDeleteBin5Line } from 'react-icons/ri';
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 import styles from './profile.module.css';
-import { generateCroppedImageUrl } from 'utils/cropImages';
-import { getReadableFormatName } from 'utils/formatUtils';
-import { HEROES_OF_RATHE } from 'routes/index/components/filter/constants';
 import FriendsList from './FriendsList';
 import BlockedUsers from './BlockedUsers';
 import MetafySection from './MetafySection';
@@ -35,29 +23,14 @@ const PATREON_URL = 'https://www.patreon.com/oauth2/authorize?';
 
 export const ProfilePage = () => {
   usePageTitle('Profile');
-  const navigate = useNavigate();
   const { currentUserId } = useAuth();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [confirmationUsername, setConfirmationUsername] = useState('');
-  const [newDeckUrl, setNewDeckUrl] = useState('');
-  const [isAddingDeck, setIsAddingDeck] = useState(false);
-  const [selectedHeroByDeck, setSelectedHeroByDeck] = useState<
-    Record<string, string>
-  >({});
-  const [updatingDeckLink, setUpdatingDeckLink] = useState<string | null>(null);
-  const {
-    data: decksData,
-    isLoading: deckIsLoading,
-    refetch: deckRefetch
-  } = useGetFavoriteDecksQuery(undefined);
   const {
     data: profileData,
     isLoading: profileIsLoading,
     refetch: profileRefetch
   } = useGetUserProfileQuery(undefined);
-  const [deleteDeck] = useDeleteDeckMutation();
-  const [addFavoriteDeck] = useAddFavoriteDeckMutation();
-  const [updateFavoriteDeck] = useUpdateFavoriteDeckMutation();
   const [deleteAccount, { isLoading: isDeleting }] = useDeleteAccountMutation();
   const [changeDisplayName, { isLoading: isChangingName }] =
     useChangeDisplayNameMutation();
@@ -92,182 +65,6 @@ export const ProfilePage = () => {
   const nameChangeCooldownActive =
     !!profileData?.nextChangeAllowed &&
     new Date(profileData.nextChangeAllowed).getTime() > Date.now();
-
-  const handleDeleteDeckMessage = (resp: DeleteDeckAPIResponse): string => {
-    if (resp.message === 'Deck deleted successfully.') {
-      return 'The deck has been removed from your favorites list. It is still available to view on the deckbuilding site.';
-    } else {
-      return 'There has been a problem deleting your deck, please try again.';
-    }
-  };
-
-  const handleDeleteDeck = async (deckLink: string) => {
-    try {
-      const deleteDeckPromise = deleteDeck({ deckLink }).unwrap();
-      toast.promise(
-        deleteDeckPromise,
-        {
-          loading: 'Deleting deck...',
-          success: (data) => {
-            return handleDeleteDeckMessage(data);
-          },
-          error: (err) => {
-            console.error('[Deck Deletion] Error response:', {
-              errorObject: err,
-              message: err?.message,
-              error: err?.error,
-              status: err?.status,
-              statusCode: err?.statusCode,
-              data: err?.data,
-              toString: err?.toString()
-            });
-            return `There has been an error, please try again. Error: ${err.toString()}`;
-          }
-        },
-        {
-          style: {
-            minWidth: '250px'
-          },
-          position: 'top-center'
-        }
-      );
-      const resp = await deleteDeckPromise;
-    } catch (err) {
-      console.error('[Deck Deletion] Caught exception:', {
-        errorObject: err,
-        message: err instanceof Error ? err.message : 'Unknown error',
-        stack: err instanceof Error ? err.stack : 'No stack trace',
-        toString: err?.toString(),
-        type: typeof err
-      });
-    } finally {
-      deckRefetch();
-    }
-  };
-
-  const handleEditDeck = (deckLink: string) => {
-    window.open(deckLink, '_blank');
-  };
-
-  const handleHeroChange = async (deckLink: string, newHeroValue: string) => {
-    setUpdatingDeckLink(deckLink);
-    try {
-      const updatePayload: UpdateFavoriteDeckRequest = {
-        decklink: deckLink,
-        heroID: newHeroValue
-      };
-
-      const updatePromise = updateFavoriteDeck(updatePayload).unwrap();
-      toast.promise(
-        updatePromise,
-        {
-          loading: 'Updating hero...',
-          success: (data) => {
-            setSelectedHeroByDeck((prev) => ({
-              ...prev,
-              [deckLink]: newHeroValue
-            }));
-            return 'Hero updated successfully!';
-          },
-          error: (err) => {
-            console.error('[Hero Update] Error response:', {
-              errorObject: err,
-              message: err?.message,
-              error: err?.error,
-              status: err?.status,
-              data: err?.data,
-              toString: err?.toString()
-            });
-            return `Error updating hero: ${
-              err?.message || err?.error || err?.toString() || 'Unknown error'
-            }`;
-          }
-        },
-        {
-          style: {
-            minWidth: '250px'
-          },
-          position: 'top-center'
-        }
-      );
-      await updatePromise;
-      deckRefetch();
-    } catch (err) {
-      console.error('[Hero Update] Caught exception:', {
-        errorObject: err,
-        message: err instanceof Error ? err.message : 'Unknown error',
-        stack: err instanceof Error ? err.stack : 'No stack trace',
-        toString: err?.toString(),
-        type: typeof err
-      });
-    } finally {
-      setUpdatingDeckLink(null);
-    }
-  };
-
-  const handleAddDeck = async () => {
-    if (!newDeckUrl.trim()) {
-      toast.error('Please enter a deck URL', {
-        position: 'top-center'
-      });
-      return;
-    }
-
-    setIsAddingDeck(true);
-    try {
-      const deckPayload: AddFavoriteDeckRequest = {
-        fabdb: newDeckUrl
-      };
-
-      const addDeckPromise = addFavoriteDeck(deckPayload).unwrap();
-      toast.promise(
-        addDeckPromise,
-        {
-          loading: 'Adding deck to favorites...',
-          success: (data) => {
-            return 'Deck added to favorites successfully!';
-          },
-          error: (err) => {
-            console.error('[Deck Addition] Error response:', {
-              errorObject: err,
-              message: err?.message,
-              error: err?.error,
-              status: err?.status,
-              statusCode: err?.statusCode,
-              originalStatus: err?.originalStatus,
-              data: err?.data,
-              toString: err?.toString()
-            });
-            return `Error adding deck: ${
-              err?.message ||
-              err?.error ||
-              err?.toString() ||
-              'Invalid deck URL or deck not accessible'
-            }`;
-          }
-        },
-        {
-          style: {
-            minWidth: '250px'
-          },
-          position: 'top-center'
-        }
-      );
-      const result = await addDeckPromise;
-      setNewDeckUrl('');
-    } catch (err) {
-      console.error('[Deck Addition] Caught exception:', {
-        errorObject: err,
-        message: err instanceof Error ? err.message : 'Unknown error',
-        stack: err instanceof Error ? err.stack : 'No stack trace',
-        toString: err?.toString(),
-        type: typeof err
-      });
-    } finally {
-      setIsAddingDeck(false);
-      deckRefetch();
-    }
-  };
 
   const handleDeleteAccountConfirm = async () => {
     if (!confirmationUsername) {
@@ -385,9 +182,6 @@ export const ProfilePage = () => {
                   </div>
                 )}
               </div>
-
-              <FriendsList className={styles.friendsSection} />
-              <BlockedUsers className={styles.friendsSection} />
 
               {/* Display Name Section */}
               {!profileIsLoading && (
@@ -553,128 +347,8 @@ export const ProfilePage = () => {
             </article>
           </div>
           <div className={styles.rightColumn}>
-            <article className={styles.articleTitle}>
-              <h3 className={styles.title}>Your Decks</h3>
-              {/* Add Deck Section */}
-              <div className={styles.addDeckSection}>
-                <p>
-                  Paste a deck link from{' '}
-                  <a
-                    href="https://FaBrary.net"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    FaBrary.net
-                  </a>{' '}
-                  to add it to your favorites.
-                </p>
-                <div className={styles.addDeckContainer}>
-                  <input
-                    type="text"
-                    placeholder="Paste deck URL here..."
-                    value={newDeckUrl}
-                    onChange={(e) => setNewDeckUrl(e.target.value)}
-                    disabled={isAddingDeck}
-                    className={styles.addDeckInput}
-                  />
-                  <button
-                    onClick={handleAddDeck}
-                    disabled={isAddingDeck || !newDeckUrl.trim()}
-                    className={styles.addDeckButton}
-                  >
-                    {isAddingDeck ? 'Adding...' : 'Add Deck'}
-                  </button>
-                </div>
-              </div>
-              <table>
-                <thead>
-                  <tr>
-                    <th scope="col">Hero</th>
-                    <th scope="col">Select Hero</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Format</th>
-                    {/* <th scope="col">Card Back</th>
-                      <th scope="col">Playmat</th> */}
-                    <th scope="col" aria-label="Edit Deck"></th>
-                    <th scope="col" aria-label="Delete Deck"></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {deckIsLoading && (
-                    <tr>
-                      <td colSpan={6}>Loading...</td>
-                    </tr>
-                  )}
-                  {decksData?.favoriteDecks.map((deck, ix) => (
-                    <tr key={deck.key}>
-                      <th scope="row">
-                        {!!deck.hero && (
-                          <img
-                            src={generateCroppedImageUrl(deck.hero)}
-                            className={styles.heroImage}
-                          />
-                        )}
-                      </th>
-                      <td>
-                        <select
-                          value={
-                            selectedHeroByDeck[deck.link] || deck.hero || ''
-                          }
-                          onChange={(e) =>
-                            handleHeroChange(deck.link, e.target.value)
-                          }
-                          disabled={updatingDeckLink === deck.link}
-                          className={styles.heroSelect}
-                        >
-                          <option value="">-- Select Hero --</option>
-                          {[...HEROES_OF_RATHE]
-                            .sort((a, b) => {
-                              const displayLabelA = a.label;
-                              const displayLabelB = b.label;
-                              return displayLabelA.localeCompare(displayLabelB);
-                            })
-                            .map((hero) => {
-                              return (
-                                <option key={hero.value} value={hero.value}>
-                                  {hero.label}
-                                </option>
-                              );
-                            })}
-                        </select>
-                      </td>
-                      <td>{deck.name}</td>
-                      <td className={styles.formatCell}>{getReadableFormatName(deck.format || '')}</td>
-                      {/* <td>{deck.cardBack ? deck.cardBack.charAt(0).toUpperCase() + deck.cardBack.slice(1).toLowerCase() : ""}</td>
-                  <td>{deck.playmat ? deck.playmat.charAt(0).toUpperCase() + deck.playmat.slice(1).toLowerCase() : ""}</td> */}
-                      <td className={styles.editButton}>
-                        <button
-                          className={styles.button}
-                          onClick={() => handleEditDeck(deck.link)}
-                          title="Edit Deck"
-                        >
-                          <RiEdit2Line
-                            fontSize={'1.5em'}
-                            className={styles.trashcanIcon}
-                          />
-                        </button>
-                      </td>
-                      <td className={styles.deleteButton}>
-                        <button
-                          className={styles.button}
-                          onClick={() => handleDeleteDeck(deck.link)}
-                          title="Delete Deck"
-                        >
-                          <RiDeleteBin5Line
-                            fontSize={'1.5em'}
-                            className={styles.trashcanIcon}
-                          />
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </article>
+            <FriendsList className={styles.friendsSection} />
+            <BlockedUsers className={styles.friendsSection} />
           </div>
         </div>
       </div>
