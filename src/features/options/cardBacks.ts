@@ -136,6 +136,7 @@ export const CARD_BACK = {
   '135': 'CBWingedHussars',
   '136': 'CBFabInsight',
   '137': 'CBNxi2',
+  '138': 'CBOddwillows',
 } as { [key: string]: string };
 
 /* Talishar supporter card back IDs - shown as locked previews to non-supporters */
