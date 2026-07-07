@@ -65,6 +65,14 @@ import {
   UpdateFavoriteDeckRequest,
   UpdateFavoriteDeckResponse
 } from 'interface/API/UpdateFavoriteDeck.php';
+import {
+  GetDeckCardsRequest,
+  GetDeckCardsResponse
+} from 'interface/API/GetDeckCards.php';
+import {
+  SaveDeckCosmeticsRequest,
+  SaveDeckCosmeticsResponse
+} from 'interface/API/SaveDeckCosmetics.php';
 import { PatreonLoginResponse } from 'routes/user/profile/linkpatreon/linkPatreon';
 import {
   ChangeDisplayNameRequest,
@@ -455,6 +463,29 @@ export const apiSlice = createApi({
       query: (body: UpdateFavoriteDeckRequest) => {
         return {
           url: URL_END_POINT.UPDATE_FAVORITE_DECK,
+          method: 'POST',
+          body: body,
+          responseHandler: parseResponse
+        };
+      }
+    }),
+    getDeckCards: builder.query<GetDeckCardsResponse, GetDeckCardsRequest>({
+      query: ({ decklink }: GetDeckCardsRequest) => {
+        return {
+          url: URL_END_POINT.GET_DECK_CARDS,
+          method: 'GET',
+          params: { decklink },
+          responseHandler: parseResponse
+        };
+      }
+    }),
+    saveDeckCosmetics: builder.mutation<
+      SaveDeckCosmeticsResponse,
+      SaveDeckCosmeticsRequest
+    >({
+      query: (body: SaveDeckCosmeticsRequest) => {
+        return {
+          url: URL_END_POINT.SAVE_DECK_COSMETICS,
           method: 'POST',
           body: body,
           responseHandler: parseResponse
@@ -1199,6 +1230,8 @@ export const {
   useDeleteDeckMutation,
   useAddFavoriteDeckMutation,
   useUpdateFavoriteDeckMutation,
+  useLazyGetDeckCardsQuery,
+  useSaveDeckCosmeticsMutation,
   useDeleteAccountMutation,
   useLoginMutation,
   useLoginWithCookieQuery,

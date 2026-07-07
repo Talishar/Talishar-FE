@@ -10,6 +10,7 @@ import {
   BsFillBookFill,
   BsList,
   BsX,
+  BsCollection,
   BsCollectionPlayFill,
   BsChevronDown,
   BsPlayFill,
@@ -180,6 +181,11 @@ const Header = () => {
                       </Link>
                     </li>
                     <li>
+                      <Link to="/user/decks" onClick={closeUserDropdown}>
+                        <BsCollection /> <span>My Decks</span>
+                      </Link>
+                    </li>
+                    <li>
                       <Link to="/user/settings" onClick={closeUserDropdown}>
                         <BsGearFill /> <span>{t('HEADER.SETTINGS')}</span>
                       </Link>
@@ -265,6 +271,13 @@ const Header = () => {
                 </Link>
               )}
             </li>
+            {isLoggedIn && (
+              <li>
+                <Link to="/user/decks" onClick={closeMobileMenu}>
+                  <BsCollection /> <span>My Decks</span>
+                </Link>
+              </li>
+            )}
             {isLoggedIn && (
               <li>
                 <Link to="/user/settings" onClick={closeMobileMenu}>
