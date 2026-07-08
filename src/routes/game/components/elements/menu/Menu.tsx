@@ -13,7 +13,6 @@ import OptionsMenuToggle from './OptionsMenuToggle/OptionsMenuToggle';
 import ShowMobileChat from './ShowMobileChat/ShowMobileChat';
 import FullControlToggle from './FullControlToggle/FullControlToggle';
 import AlwaysPassToggle from './AlwaysPassToggle/AlwaysPassToggle';
-import ManualTargetingToggle from './ManualTargetingToggle/ManualTargetingToggle';
 import PlayerName from '../playerName/PlayerName';
 import Inventory from '../inventory/Inventory';
 import SpectatorCount from '../spectatorCount/SpectatorCount';
@@ -246,7 +245,6 @@ function MenuContent() {
             <UndoButton />
             <HideModalsToggle />
             <ShowMobileChat />
-            <ManualTargetingToggle />
             <MobileOverflowMenu isSpectator={false} />
             <SpectatorCount compact />
           </div>
@@ -268,7 +266,6 @@ function MenuContent() {
           <HideModalsToggle />
           <OptionsMenuToggle />
           <FullScreenButton />
-          <ManualTargetingToggle placement="top-end" />
         </div>
       </div>
     </div>
