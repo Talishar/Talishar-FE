@@ -50,15 +50,26 @@ export const CardImage = React.memo((props: CardImage) => {
     if (altPath) src = buildAltSrc(altPath);
   }
 
-  const [error, setError] = useState(false);
+  const [errorStage, setErrorStage] = useState<'none' | 'reversedFallback' | 'unknown'>('none');
 
-  if (error) {
-    let srcArray = src.split('/');
+  if (errorStage === 'reversedFallback' && isCropped && cardNumber.endsWith('_r')) {
+    srcArray = src.split('/');
+    srcArray.pop();
+    const baseCardFilename = baseFilename.slice(0, -'_r'.length);
+    src = srcArray.join('/') + `/${baseCardFilename}_cropped.webp`;
+  } else if (errorStage !== 'none') {
+    srcArray = src.split('/');
     srcArray.pop();
     src = srcArray.join('/') + `/${UNKNOWN_IMAGE}.webp`;
   }
 
-  const handleImageError = useCallback(() => setError(true), []);
+  const handleImageError = useCallback(() => {
+    setErrorStage((prev) =>
+      prev === 'none' && isCropped && cardNumber.endsWith('_r')
+        ? 'reversedFallback'
+        : 'unknown'
+    );
+  }, [isCropped, cardNumber]);
 
   const imageClassNames = classNames(props.className, {
     [styles.shuffling]: isShuffling
