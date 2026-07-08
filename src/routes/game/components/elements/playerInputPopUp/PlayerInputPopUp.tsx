@@ -17,6 +17,7 @@ import { NumberInput } from './components/NumberInput';
 import { FormProps } from './playerInputPopupTypes';
 import { OtherInput } from './components/OtherInput';
 import { parseHtmlToReactElements } from 'utils/ParseEscapedString';
+import classNames from 'classnames';
 
 const PlayerInputFormTypeMap: {
   [key: string]: (props: FormProps) => JSX.Element;
@@ -38,6 +39,9 @@ export default function PlayerInputPopUp() {
   const dispatch = useAppDispatch();
   const inputPopUp = useAppSelector(
     (state: RootState) => state.game.playerInputPopUp
+  );
+  const hasGameEnded = useAppSelector(
+    (state: RootState) => state.game.hasGameEnded
   );
 
   const [checkedState, setCheckedState] = useState(
@@ -235,11 +239,12 @@ export default function PlayerInputPopUp() {
       transition={{ type: 'tween', duration: 0.12 }}
       style={{ top: topStyle }}
       key="playerInputPopupBox"
-      className={
+      className={classNames(
         inputPopUp.popup?.id === 'NEWOPT'
           ? styles.optOptionsContainer
-          : styles.optionsContainer
-      }
+          : styles.optionsContainer,
+        { [styles.aboveEndGameScreen]: hasGameEnded }
+      )}
     >
       <div className={styles.popupContent}>
         <div className={styles.optionsTitleContainer}>

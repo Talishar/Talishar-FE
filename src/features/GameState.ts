@@ -121,6 +121,7 @@ export default interface GameState {
   hasPriority?: boolean;
   priorityPlayer?: number;
   isFullRematch?: boolean;
+  hasGameEnded?: boolean;
   preventPassPrompt?: string;
   chatEnabled: boolean;
   shufflingPlayerId: number | null;

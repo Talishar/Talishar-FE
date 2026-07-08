@@ -299,6 +299,12 @@ function mergeReceivedGameState(
   state.isUpdateInProgress = false;
   state.isPlayerInputInProgress = false;
   state.isFullRematch = payload.isFullRematch ?? false;
+  const incomingTurnPhase = payload.turnPhase?.turnPhase;
+  if (incomingTurnPhase === 'OVER') {
+    state.hasGameEnded = true;
+  } else if (incomingTurnPhase !== undefined && incomingTurnPhase !== 'YESNO') {
+    state.hasGameEnded = false;
+  }
 
   const mergedPlayerOne = { ...prevGame.playerOne, ...payload.playerOne };
   const mergedPlayerTwo = { ...prevGame.playerTwo, ...payload.playerTwo };
@@ -643,6 +649,7 @@ export const gameSlice = createSlice({
       }>
     ) => {
       state.isFullRematch = false;
+      state.hasGameEnded = false;
       const previousGameID = state.gameInfo.gameID;
       const newGameID =
         typeof action.payload.gameID === 'string'
@@ -891,6 +898,7 @@ export const gameSlice = createSlice({
       }>
     ) => {
       state.isFullRematch = false;
+      state.hasGameEnded = false;
       state.gameInfo.gameID = action.payload.gameID;
       if (action.payload.replayNumber !== undefined) {
         state.gameInfo.replayNumber = action.payload.replayNumber;
@@ -1018,6 +1026,7 @@ export const gameSlice = createSlice({
 
       // set isFullRematch to false
       state.isFullRematch = false;
+      state.hasGameEnded = false;
 
       state.chatEnabled = action.payload.chatEnabled ?? false;
       state.opponentIsTyping = action.payload.opponentIsTyping ?? false;

@@ -28,6 +28,9 @@ export const ChainLinkSummaryContainer = () => {
   const turnPhase = useAppSelector(
     (state: RootState) => state.game.turnPhase?.turnPhase
   );
+  const hasGameEnded = useAppSelector(
+    (state: RootState) => state.game.hasGameEnded
+  );
   const lastUpdate = useAppSelector(
     (state: RootState) => state.game.gameDynamicInfo.lastUpdate
   );
@@ -42,8 +45,7 @@ export const ChainLinkSummaryContainer = () => {
   }, [turnPhase, dispatch]);
 
   if (!chainLinkSummary || !chainLinkSummary.show) {
-    // Check if game is over to show end game screen
-    if (!!turnPhase && turnPhase === 'OVER') {
+    if (hasGameEnded) {
       return (
         <div>
           <EndGameScreen />
