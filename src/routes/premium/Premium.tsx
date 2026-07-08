@@ -26,12 +26,12 @@ const tiers: Tier[] = [
       '8 Free Guides',
       'General support',
       'No Rust Counters',
-      'Unlimited Play',
       'Alt Arts on Talishar',
       'Talishar Exclusive Sleeves & Playmats',
       'Custom Themes on Talishar',
       'Heart of Fyendal In-Game Badge',
       'No Ads on Talishar',
+      '5 Replay Save Slots',
       'Exclusive access to 1 channel',
       'Discord role'
     ]
@@ -46,13 +46,13 @@ const tiers: Tier[] = [
       '8 Free Guides',
       'General support',
       'No Rust Counters',
-      'Unlimited Play',
       'Alt Arts on Talishar',
       'Talishar Exclusive Sleeves & Playmats',
       'Custom Themes on Talishar',
       'Eye of Ophidia In-Game Badge',
       'Extra Leaderboard Points',
       'No Ads on Talishar',
+      '8 Replay Save Slots',
       'Exclusive access to 1 channel',
       'Discord role'
     ]
@@ -66,13 +66,13 @@ const tiers: Tier[] = [
       '8 Free Guides',
       'General support',
       'No Rust Counters',
-      'Unlimited Play',
       'Alt Arts on Talishar',
       'Talishar Exclusive Sleeves & Playmats',
       'Custom Themes on Talishar',
       'Arknight Shards In-Game Badge',
       'More Extra Leaderboard Points',
       'No Ads on Talishar',
+      '10 Replay Save Slots',
       'Exclusive access to 2 channels',
       'Discord role'
     ]
@@ -86,13 +86,13 @@ const tiers: Tier[] = [
       '8 Free Guides',
       'General support',
       'No Rust Counters',
-      'Unlimited Play',
       'Alt Arts on Talishar',
       'Talishar Exclusive Sleeves & Playmats',
       'Custom Themes on Talishar',
       'Light of Sol In-Game Badge',
       'Extra Extra Leaderboard Points',
       'No Ads on Talishar',
+      '12 Replay Save Slots',
       'Exclusive access to 2 channels',
       'Discord role'
     ]
@@ -106,7 +106,6 @@ const tiers: Tier[] = [
       '8 Free Guides',
       'General support',
       'No Rust Counters',
-      'Unlimited Play',
       'Alt Arts on Talishar',
       'Talishar Exclusive Sleeves & Playmats',
       'Custom Themes on Talishar',
@@ -115,6 +114,7 @@ const tiers: Tier[] = [
       '50% off Events',
       'Access to weekly Group Classes and Office Hour',
       'No Ads on Talishar',
+      '15 Replay Save Slots',
       'Exclusive access to 2 channels',
       'Discord role'
     ]
@@ -128,7 +128,6 @@ const tiers: Tier[] = [
       '8 Free Guides',
       'General support',
       'No Rust Counters',
-      'Unlimited Play',
       'Alt Arts on Talishar',
       'Talishar Exclusive Sleeves & Playmats',
       'Custom Themes on Talishar',
@@ -137,6 +136,7 @@ const tiers: Tier[] = [
       '50% off Events',
       'Access to weekly Group Classes and Office Hour',
       'No Ads on Talishar',
+      '20 Replay Save Slots',
       'Exclusive access to 2 channels',
       'Discord role'
     ]
@@ -146,7 +146,6 @@ const tiers: Tier[] = [
 const comparisonFeatures = [
   { label: 'Play games online', free: true, premium: true },
   { label: 'No Rust Counters', free: false, premium: true },
-  { label: 'Unlimited Play', free: false, premium: true },
   { label: 'Alt Arts on Talishar', free: false, premium: true },
   { label: 'Talishar Sleeves & Playmats', free: false, premium: true },
   { label: 'In-Game Badge', free: false, premium: true },
@@ -155,6 +154,7 @@ const comparisonFeatures = [
   { label: 'Discord role', free: false, premium: true },
   { label: 'Exclusive channels & posts', free: false, premium: true },
   { label: 'Free Guides', free: false, premium: true },
+  { label: 'Replay Save Slots', free: '3', premium: '5-30 (by tier)' },
   { label: 'Extra Leaderboard Points', free: false, premium: '$10+' },
   { label: 'Weekly Group Classes & Office Hour', free: false, premium: '$35+' }
 ];
@@ -276,6 +276,8 @@ const Premium = () => {
                     <td>
                       {f.free === true ? (
                         <span className={styles.check}>✓</span>
+                      ) : typeof f.free === 'string' ? (
+                        <span className={styles.check}>{f.free}</span>
                       ) : (
                         <span className={styles.cross}>—</span>
                       )}

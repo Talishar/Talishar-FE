@@ -11,6 +11,7 @@ import { TALISHAR_DISCORD_URL } from 'constants/socialLinks';
 import styles from './LoadReplay.module.css';
 import { GameLocationState } from 'interface/GameLocationState';
 import PageBanner from 'components/PageBanner/PageBanner';
+import { Link } from 'react-router-dom';
 
 const LoadReplay = () => {
   return (
@@ -40,6 +41,12 @@ const LoadReplay = () => {
         <p>
           Please note: Replays you save might randomly stop working as engine
           changes get made during development.
+        </p>
+        <p>
+          Replay saving is available to Metafy supporters. Everyone gets a
+          base number of save slots, and higher support tiers unlock
+          additional slots so you can keep more games around at once. See the{' '}
+          <Link to="/premium">Premium</Link> page for tier details.
         </p>
       </div>
       </article>
