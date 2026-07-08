@@ -35,6 +35,19 @@
   left: calc(-38vh * var(--hover-img-scale));
 }
 
+.meldWrap {
+  --meld-h: calc(40vh * var(--hover-img-scale));
+  width: calc(var(--meld-h) / 0.7166);
+  height: var(--meld-h);
+}
+
+.meldImg {
+  height: var(--meld-h);
+  width: calc(var(--meld-h) / 0.7166);
+  max-width: none;
+  max-height: none;
+}
+
 @media (orientation: portrait) {
   .popUpContainer {
     top: 50% !important;
@@ -56,6 +69,10 @@
     max-height: 75dvh;
     max-width: 85vw;
     width: auto;
+  }
+
+  .meldWrap {
+    --meld-h: min(75dvh, 60.9vw);
   }
 
   .doubleFacedCard {

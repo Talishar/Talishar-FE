@@ -10,6 +10,7 @@ import useWindowDimensions from 'hooks/useWindowDimensions';
 import { CARD_IMAGES_PATH, getCollectionCardImagePath } from 'utils';
 import { useCookies } from 'react-cookie';
 import { createPortal } from 'react-dom';
+import { isMeldCard } from 'constants/meldCards';
 
 const popUpGap = 130;
 
@@ -17,21 +18,29 @@ function CardDetails({
   src,
   containerClass,
   containerStyle,
-  isOpponent
+  isOpponent,
+  isMeld
 }: {
   src: string;
   containerClass?: string;
   containerStyle?: Record<string, string>;
   isOpponent?: boolean;
+  isMeld?: boolean;
 }) {
-  const containerClassName =
+  const containerClassName = classNames(
     containerClass != null
       ? containerClass
-      : classNames(styles.defaultPos, styles.popUp);
+      : classNames(styles.defaultPos, styles.popUp),
+    { [styles.meldWrap]: isMeld }
+  );
   return (
     <div className={containerClassName} style={containerStyle}>
       <div className={styles.popUpInside}>
-        <CardImage src={src} className={styles.img} isOpponent={isOpponent} />
+        <CardImage
+          src={src}
+          className={classNames(styles.img, { [styles.meldImg]: isMeld })}
+          isOpponent={isOpponent}
+        />
       </div>
     </div>
   );
@@ -67,6 +76,7 @@ export default function CardPortal() {
   // useMemo must come before any early return (rules of hooks).
   // getSrcs only recomputes when the hovered card changes, not on every mouse-position update.
   const cardNumber = popup?.popupCard?.cardNumber;
+  const isMeld = isMeldCard(cardNumber);
   const [src, dfcSrc] = useMemo(
     () =>
       cardNumber
@@ -84,7 +94,7 @@ export default function CardPortal() {
   }
 
   if (popup.xCoord === undefined || popup.yCoord === undefined) {
-    return createPortal(<CardDetails src={src} />, document.body);
+    return createPortal(<CardDetails src={src} isMeld={isMeld} />, document.body);
   }
 
   const isDFC = dfcSrc != null;
@@ -136,6 +146,7 @@ export default function CardPortal() {
         containerClass={styles.popUp}
         containerStyle={popUpStyle}
         isOpponent={popup.isOpponent}
+        isMeld={isMeld}
       />
     </div>,
     document.body

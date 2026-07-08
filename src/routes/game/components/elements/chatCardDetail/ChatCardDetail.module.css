@@ -9,9 +9,5 @@
 }
 
 .cardDetailContainer img {
-  max-height: 50vh;
-  max-width: 500px;
   display: block;
-  width: 100%;
-  height: auto;
 }

@@ -12,6 +12,7 @@ import { shallowEqual } from 'react-redux';
 import useSetting from 'hooks/useSetting';
 import { IS_STREAMER_MODE } from 'features/options/constants';
 import { Card } from 'features/Card';
+import { isMeldCard } from 'constants/meldCards';
 
 const emptyCardArray: Card[] = [];
 
@@ -36,7 +37,8 @@ function CardSlide({
     card.controller !== undefined && card.controller !== playerID;
 
   const imgClassNames = classNames(styles.img, {
-    [styles.streamerImg]: isStreamerMode
+    [styles.streamerImg]: isStreamerMode,
+    [styles.rotated]: isStreamerMode && isMeldCard(cardNumber)
   });
 
   return (
