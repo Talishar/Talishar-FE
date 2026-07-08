@@ -130,6 +130,7 @@ export const DecksPage = () => {
   );
   const [editState, setEditState] = useState<Record<string, DeckEditState>>({});
   const [deckCards, setDeckCards] = useState<Record<string, DeckCardAltArtOptions[]>>({});
+  const [deckTokens, setDeckTokens] = useState<Record<string, DeckCardAltArtOptions[]>>({});
   const [loadingCards, setLoadingCards] = useState<Record<string, boolean>>({});
   const [saving, setSaving] = useState<Record<string, boolean>>({});
   const [newDeckUrl, setNewDeckUrl] = useState('');
@@ -171,10 +172,12 @@ export const DecksPage = () => {
     setLoadingCards((prev) => ({ ...prev, [deck.link]: true }));
     try {
       const result = await fetchDeckCards({ decklink: deck.link }).unwrap();
+      const tokens = result.tokens ?? [];
       setDeckCards((prev) => ({ ...prev, [deck.link]: result.cards }));
+      setDeckTokens((prev) => ({ ...prev, [deck.link]: tokens }));
 
       const savedAltArts: Record<string, string> = {};
-      result.cards.forEach((card) => {
+      [...result.cards, ...tokens].forEach((card) => {
         if (card.selectedAltPath) savedAltArts[card.cardId] = card.selectedAltPath;
       });
 
@@ -188,7 +191,7 @@ export const DecksPage = () => {
           Object.keys(savedAltArts).length > 0
             ? savedAltArts
             : !deck.altArtsCustomized && isSupporter
-              ? getAllAltArtSelection(result.cards)
+              ? getAllAltArtSelection([...result.cards, ...tokens])
               : {};
         return { ...prev, [deck.link]: { ...current, altArts: nextAltArts } };
       });
@@ -257,11 +260,15 @@ export const DecksPage = () => {
   const handleSetAllAltArt = (deck: FavoriteDeck) => {
     ensureEditState(deck);
     const cards = deckCards[deck.link] ?? [];
+    const tokens = deckTokens[deck.link] ?? [];
     setEditState((prev) => {
       const current = prev[deck.link] ?? toEditState(deck);
       return {
         ...prev,
-        [deck.link]: { ...current, altArts: getAllAltArtSelection(cards) }
+        [deck.link]: {
+          ...current,
+          altArts: getAllAltArtSelection([...cards, ...tokens])
+        }
       };
     });
   };
@@ -390,6 +397,85 @@ export const DecksPage = () => {
 
   const showUpsell = !isSupporter;
 
+  const renderAltArtRow = (
+    deck: FavoriteDeck,
+    state: DeckEditState,
+    card: DeckCardAltArtOptions
+  ) => {
+    const isBaseSelected = !state.altArts[card.cardId];
+    const hasAlts = card.altArts.length > 0;
+    return (
+      <div className={styles.altArtRow} key={card.cardId}>
+        <span className={styles.altArtCardName}>
+          {getReadableCardName(card.cardId)}
+        </span>
+        <div className={styles.thumbGrid}>
+          {card.baseCardNumber && (
+            <div
+              className={styles.altArtThumbWrapper}
+              onClick={() => handleAltArtClear(deck, card.cardId)}
+              title={
+                !hasAlts
+                  ? getReadableCardName(card.cardId)
+                  : isBaseSelected
+                    ? 'Selected'
+                    : 'Use the base art'
+              }
+            >
+              <img
+                src={getCollectionCardImagePath({
+                  path: CARD_SQUARES_PATH,
+                  locale: DEFAULT_LANGUAGE,
+                  cardNumber: card.baseCardNumber
+                })}
+                draggable={false}
+                loading="lazy"
+                alt="Default"
+                onMouseEnter={(e) => showPreview(card.baseCardNumber, e)}
+                onMouseMove={movePreview}
+                onMouseLeave={hidePreview}
+                className={`${styles.altArtThumb} ${
+                  hasAlts && isBaseSelected ? styles.thumbSelected : ''
+                }`}
+              />
+            </div>
+          )}
+          {card.altArts.map((altPath) => (
+            <div
+              key={altPath}
+              className={styles.altArtThumbWrapper}
+              onClick={() => handleAltArtSelect(deck, card.cardId, altPath)}
+              title={
+                state.altArts[card.cardId] === altPath
+                  ? 'Selected — click to use base art'
+                  : 'Use this alt art'
+              }
+            >
+              <img
+                src={getCollectionCardImagePath({
+                  path: CARD_SQUARES_PATH,
+                  locale: DEFAULT_LANGUAGE,
+                  cardNumber: altPath
+                })}
+                draggable={false}
+                loading="lazy"
+                alt={altPath}
+                onMouseEnter={(e) => showPreview(altPath, e)}
+                onMouseMove={movePreview}
+                onMouseLeave={hidePreview}
+                className={`${styles.altArtThumb} ${
+                  state.altArts[card.cardId] === altPath
+                    ? styles.thumbSelected
+                    : ''
+                }`}
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className={styles.wideContainer}>
       {hoverPreview && <CardHoverPreview preview={hoverPreview} />}
@@ -447,6 +533,7 @@ export const DecksPage = () => {
         const isExpanded = expandedDeck === deck.link;
         const state = editState[deck.link] ?? toEditState(deck);
         const cards = deckCards[deck.link] ?? [];
+        const tokens = deckTokens[deck.link] ?? [];
         const isLoadingCards = !!loadingCards[deck.link];
         const isSaving = !!saving[deck.link];
 
@@ -622,76 +709,19 @@ export const DecksPage = () => {
                   </p>
                 )}
                 <div className={styles.altArtGrid}>
-                  {cards.map((card) => {
-                    const isBaseSelected = !state.altArts[card.cardId];
-                    return (
-                      <div className={styles.altArtRow} key={card.cardId}>
-                        <span className={styles.altArtCardName}>
-                          {getReadableCardName(card.cardId)}
-                        </span>
-                        <div className={styles.thumbGrid}>
-                          {card.baseCardNumber && (
-                            <div
-                              className={styles.altArtThumbWrapper}
-                              onClick={() => handleAltArtClear(deck, card.cardId)}
-                              title={isBaseSelected ? 'Selected' : 'Use the base art'}
-                            >
-                              <img
-                                src={getCollectionCardImagePath({
-                                  path: CARD_SQUARES_PATH,
-                                  locale: DEFAULT_LANGUAGE,
-                                  cardNumber: card.baseCardNumber
-                                })}
-                                draggable={false}
-                                loading="lazy"
-                                alt="Default"
-                                onMouseEnter={(e) =>
-                                  showPreview(card.baseCardNumber, e)
-                                }
-                                onMouseMove={movePreview}
-                                onMouseLeave={hidePreview}
-                                className={`${styles.altArtThumb} ${
-                                  isBaseSelected ? styles.thumbSelected : ''
-                                }`}
-                              />
-                            </div>
-                          )}
-                          {card.altArts.map((altPath) => (
-                            <div
-                              key={altPath}
-                              className={styles.altArtThumbWrapper}
-                              onClick={() => handleAltArtSelect(deck, card.cardId, altPath)}
-                              title={
-                                state.altArts[card.cardId] === altPath
-                                  ? 'Selected — click to use base art'
-                                  : 'Use this alt art'
-                              }
-                            >
-                              <img
-                                src={getCollectionCardImagePath({
-                                  path: CARD_SQUARES_PATH,
-                                  locale: DEFAULT_LANGUAGE,
-                                  cardNumber: altPath
-                                })}
-                                draggable={false}
-                                loading="lazy"
-                                alt={altPath}
-                                onMouseEnter={(e) => showPreview(altPath, e)}
-                                onMouseMove={movePreview}
-                                onMouseLeave={hidePreview}
-                                className={`${styles.altArtThumb} ${
-                                  state.altArts[card.cardId] === altPath
-                                    ? styles.thumbSelected
-                                    : ''
-                                }`}
-                              />
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    );
-                  })}
+                  {cards.map((card) => renderAltArtRow(deck, state, card))}
                 </div>
+
+                {tokens.length > 0 && (
+                  <>
+                    <div className={styles.pickerLabelRow}>
+                      <strong>Tokens</strong>
+                      </div>
+                    <div className={styles.altArtGrid}>
+                      {tokens.map((token) => renderAltArtRow(deck, state, token))}
+                    </div>
+                  </>
+                )}
               </div>
             )}
           </div>

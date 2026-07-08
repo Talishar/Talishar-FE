@@ -11,5 +11,6 @@ export interface DeckCardAltArtOptions {
 
 export interface GetDeckCardsResponse {
   cards: DeckCardAltArtOptions[];
+  tokens?: DeckCardAltArtOptions[];
   message?: string;
 }
