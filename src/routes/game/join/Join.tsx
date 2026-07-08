@@ -72,15 +72,16 @@ const formatDeckLabel = (
   format: string | null,
   maxLength: number = 58
 ): string => {
+  const name = String(deckName ?? '');
   const formatStr = format ? ` (${shortenFormat(format)})` : '';
-  const combined = `${deckName}${formatStr}`;
+  const combined = `${name}${formatStr}`;
 
   if (combined.length <= maxLength) {
     return combined;
   }
 
   const availableForName = Math.max(1, maxLength - formatStr.length - 3);
-  return `${deckName.substring(0, availableForName)}...${formatStr}`;
+  return `${name.substring(0, availableForName)}...${formatStr}`;
 };
 
 const JoinGame = () => {
