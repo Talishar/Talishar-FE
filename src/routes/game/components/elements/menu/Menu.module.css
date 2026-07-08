@@ -143,6 +143,17 @@
   margin-top: 0.5em !important;
 }
 
+/* Right-aligned tooltip for buttons near the right edge of the screen */
+.btn[data-tooltip][data-placement='top-end']::before,
+.btn[data-tooltip][data-placement='top-end']::after {
+  left: auto !important;
+  right: 0 !important;
+  transform: none !important;
+  bottom: 100% !important;
+  top: auto !important;
+  margin-bottom: 0.5em !important;
+}
+
 .btn[data-tooltip]::before {
   z-index: 100 !important;
 }
