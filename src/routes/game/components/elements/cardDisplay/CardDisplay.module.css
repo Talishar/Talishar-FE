@@ -179,8 +179,8 @@
 }
 
 .border4 {
-  border-color: gray;
-  box-shadow: 0 0 2px 2px gray;
+  border-color: #c5cbcf;
+  box-shadow: 0 0 3px 3px #c5cbcf;
 }
 
 .border5 {
@@ -199,13 +199,13 @@
 }
 
 .border8 {
-  border-color: goldenrod;
-  box-shadow: 0 0 4px 4px goldenrod;
+  border-color: #FFD700;
+  box-shadow: 0 0 3px 3px #FFD700;
 }
 
 .border9 {
   border-color: rgb(192, 6, 6);
-  box-shadow: 0 0 4px 4px rgb(192, 6, 6);
+  box-shadow: 0 0 3px 3px rgb(192, 6, 6);
 }
 
 .border10 {

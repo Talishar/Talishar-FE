@@ -78,8 +78,8 @@
 }
 
 .border4 {
-  border-color: gray;
-  box-shadow: 0 0 4px 5px rgb(100, 100, 100);
+  border-color: #c5cbcf;
+  box-shadow: 0 0 4px 4px #c5cbcf;
 }
 
 .border5 {
@@ -99,12 +99,12 @@
 
 .border8 {
   border-color: #FFD700;
-  box-shadow: 0 0 5px 5px #FFD700;
+  box-shadow: 0 0 4px 4px #FFD700;
 }
 
 .border9 {
   border-color: rgb(192, 6, 6);
-  box-shadow: 0 0 5px 5px rgb(192, 6, 6);
+  box-shadow: 0 0 4px 4px rgb(192, 6, 6);
 }
 
 .label {
