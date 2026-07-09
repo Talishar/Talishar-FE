@@ -9,6 +9,8 @@ export interface GetLobbyRefreshResponse {
   lastUpdate?: number;
   amIChoosingFirstPlayer?: boolean;
   isPrivateLobby?: boolean;
+  format?: string;
+  gameDescription?: string;
   gameLog?: string;
   playAudio?: boolean;
   theirHero?: string;

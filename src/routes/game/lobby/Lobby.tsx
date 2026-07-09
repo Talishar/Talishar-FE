@@ -6,7 +6,7 @@ import testData from './mockdata.json';
 import styles from './Lobby.module.css';
 import Equipment from './components/equipment/Equipment';
 import classNames from 'classnames';
-import { FaExclamationCircle } from 'react-icons/fa';
+import { FaExclamationCircle, FaLock, FaGlobeAmericas } from 'react-icons/fa';
 import { GiCapeArmor } from 'react-icons/gi';
 import { SiBookstack } from 'react-icons/si';
 import { MdArrowDropDown, MdArrowRight } from 'react-icons/md';
@@ -40,6 +40,7 @@ import {
   FABRARY_DECK_URL_BASE
 } from 'appConstants';
 import { JUDGE_HUB_DISCORD_URL } from 'constants/socialLinks';
+import { getReadableFormatName } from 'utils/formatUtils';
 
 const COMPETITIVE_FORMATS = new Set([
   GAME_FORMAT.COMPETITIVE_CC,
@@ -453,6 +454,68 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
 
   const leftPic = `url(${generateCroppedImageUrl(leftHero)})`;
   const isWaitingForOpponent = !gameLobby?.theirHero || gameLobby.theirHero === 'CardBack';
+
+  const lobbyFormatName = getReadableFormatName(
+    String(gameLobby?.format ?? data.format ?? '')
+  );
+  const rawLobbyDescription = (gameLobby?.gameDescription ?? '').trim();
+  const lobbyDescription =
+    rawLobbyDescription && rawLobbyDescription !== 'Game #'
+      ? rawLobbyDescription
+      : '';
+  const lobbyVisibilityLabel =
+    gameLobby?.isPrivateLobby === undefined
+      ? ''
+      : gameLobby.isPrivateLobby
+      ? 'Private'
+      : 'Public';
+  const lobbyMetaLine = [lobbyVisibilityLabel, lobbyFormatName]
+    .filter(Boolean)
+    .join(' · ');
+  const lobbyTooltipParts = [
+    gameLobby?.isPrivateLobby === undefined
+      ? ''
+      : gameLobby.isPrivateLobby
+      ? 'Private: only players with the invite link can join'
+      : 'Public: anyone can join from the game list',
+    lobbyFormatName,
+    lobbyDescription
+  ].filter(Boolean);
+  const lobbyTooltip = lobbyTooltipParts.length
+    ? lobbyTooltipParts.join('\n')
+    : undefined;
+  const showLobbySettings = lobbyMetaLine !== '' || lobbyDescription !== '';
+  const lobbySettingsItems = (
+    <>
+      {lobbyVisibilityLabel !== '' && (
+        <span
+          className={classNames(styles.lobbySettingsItem, {
+            [styles.lobbySettingsPrivate]: gameLobby?.isPrivateLobby === true
+          })}
+        >
+          {gameLobby?.isPrivateLobby ? (
+            <FaLock aria-hidden="true" />
+          ) : (
+            <FaGlobeAmericas aria-hidden="true" />
+          )}
+          {lobbyVisibilityLabel}
+        </span>
+      )}
+      {lobbyFormatName !== '' && (
+        <span className={styles.lobbySettingsItem}>{lobbyFormatName}</span>
+      )}
+      {lobbyDescription !== '' && (
+        <span
+          className={classNames(
+            styles.lobbySettingsItem,
+            styles.lobbySettingsDescription
+          )}
+        >
+          {lobbyDescription}
+        </span>
+      )}
+    </>
+  );
   const rightPic = `url(${generateCroppedImageUrl(rightHero ?? 'UNKNOWNHERO')})`;
 
   const eqClasses = classNames(styles.tabButton, {
@@ -987,6 +1050,12 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
               </CardPopUp>
             </div>
 
+            {!isWideScreen && showLobbySettings && (
+              <div className={styles.lobbySettingsBar} title={lobbyTooltip}>
+                {lobbySettingsItems}
+              </div>
+            )}
+
             {gameLobby?.amIChoosingFirstPlayer && !needToDoDisclaimer
               ? createPortal(<ChooseFirstTurn />, document.body)
               : !isWideScreen && (
@@ -1087,6 +1156,11 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
                       </button>
                     </li>
                   </ul>
+                  {showLobbySettings && (
+                    <div className={styles.inlineNavMeta} title={lobbyTooltip}>
+                      {lobbySettingsItems}
+                    </div>
+                  )}
                   <div style={{ marginLeft: 'auto' }}>
                     <DesktopDeckSelectionButtons
                       deckIndexed={deckIndexed}

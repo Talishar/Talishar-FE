@@ -204,6 +204,15 @@ h3 {
     font-size: 0.78em;
   }
 
+  .lobbySettingsBar {
+    padding: 0.15rem 0.5rem;
+    font-size: 0.62rem;
+  }
+
+  .lobbySettingsDescription {
+    display: none;
+  }
+
   .mobileNav {
     padding: 0.2rem 0.5rem;
     overflow-x: auto;
@@ -268,15 +277,16 @@ h3 {
 .dimPic > h3 {
   display: flex;
   align-items: center;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 0.25em;
   margin-bottom: 0.3em;
   font-size: 0.95em;
-  font-weight: 700;
+  font-weight: 600;
   text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.9), 0 0 4px rgba(0, 0, 0, 0.8);
   color: white;
   transition: all 0.3s ease;
-  letter-spacing: 0.5px;
+  letter-spacing: 0;
+  min-width: 0;
 }
 
 .lobbyIconLink {
@@ -292,7 +302,19 @@ h3 {
 }
 
 .lobbyPlayerName {
-  word-break: break-word;
+  flex: 1 1 auto;
+  min-width: 0;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+/* Ensure lobby player name matches heroName on desktop */
+.dimPic > h3 .lobbyPlayerName {
+  font-size: 1.1em;
+  font-weight: 600;
+  letter-spacing: 0;
+  color: rgba(255, 255, 255, 0.95);
+  text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.9), 0 0 4px rgba(0, 0, 0, 0.8);
 }
 
 .leftCol:hover .dimPic > h3,
@@ -308,6 +330,45 @@ h3 {
   font-size: 1.1em;
   transition: all 0.3s ease;
   opacity: 0.9;
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.lobbySettingsBar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  column-gap: 0.9rem;
+  row-gap: 0.15rem;
+  width: 100%;
+  padding: 0.3rem 0.75rem;
+  background: rgba(0, 0, 0, 0.75);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: rgba(255, 255, 255, 0.92);
+  text-align: center;
+}
+
+.lobbySettingsItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+  white-space: nowrap;
+}
+
+.lobbySettingsPrivate {
+  color: var(--theme-primary, #d4af37);
+}
+
+.lobbySettingsDescription {
+  font-weight: 500;
+  opacity: 0.85;
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 
 .kickButton {
@@ -385,7 +446,7 @@ h3 {
   display: flex;
   align-items: center;
   gap: 0.25rem;
-  padding: 0.5rem;
+  padding: 0.5 0.35rem;
 }
 
 .inLineNav ul {
@@ -394,6 +455,27 @@ h3 {
   list-style: none;
   padding: 0;
   margin: 0;
+}
+
+.inlineNavMeta {
+  display: flex;
+  flex: 1 1 auto;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0.35rem 0.75rem;
+  min-width: 0;
+  padding: 0 0.35rem;
+}
+
+.inlineNavMeta .lobbySettingsItem {
+  font-size: 0.72rem;
+  font-weight: 600;
+  opacity: 0.95;
+}
+
+.inlineNavMeta .lobbySettingsDescription {
+  max-width: min(100%, 24rem);
 }
 
 .tabButton {
@@ -637,6 +719,12 @@ nav {
     font-size: 0.95em;
   }
 
+  /* Mobile: make player name match heroName size/style */
+  .dimPic > h3 .lobbyPlayerName {
+    font-size: 0.95em;
+    font-weight: 600;
+  }
+
   nav {
     padding: 0 0.5em;
   }
@@ -706,7 +794,7 @@ nav {
     min-height: 100%;
     overflow-y: hidden;
     display: grid;
-    grid-template-columns: 0.6fr 2fr 260px;
+    grid-template-columns: minmax(300px, 0.6fr) 2fr 260px;
     grid-template-rows: 240px 1fr;
     grid-template-areas:
       'hero weapons matchups'
