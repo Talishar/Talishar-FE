@@ -4,7 +4,7 @@ import {
   fetchDiscordContentCarousel,
   ContentVideo
 } from '../../../services/contentService';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { AdUnit } from 'components/ads';
 import {
   TALISHAR_DISCORD_URL,
@@ -17,13 +17,13 @@ interface CommunityContentProps {
 
 const inferContentType = (title: string, description?: string): string => {
   const text = `${title} ${description ?? ''}`.toLowerCase();
-  if (text.includes('podcast') || text.includes('#podcast')) return 'Podcast';
+  if (text.includes('podcast') || text.includes('#podcast')) return 'TYPE_PODCAST';
   if (
     text.includes('deck tech') ||
     text.includes('deck guide') ||
     text.includes('decktech')
   )
-    return 'Deck tech';
+    return 'TYPE_DECK_TECH';
   if (
     text.includes('recap') ||
     text.includes('calling') ||
@@ -31,8 +31,8 @@ const inferContentType = (title: string, description?: string): string => {
     text.includes('grand prix') ||
     text.includes('nationals')
   )
-    return 'Live recap';
-  return 'Video';
+    return 'TYPE_LIVE_RECAP';
+  return 'TYPE_VIDEO';
 };
 
 const CommunityContent: React.FC<CommunityContentProps> = ({ showAds = false }) => {
@@ -54,8 +54,8 @@ const CommunityContent: React.FC<CommunityContentProps> = ({ showAds = false }) 
   };
 
   const getContentTypeLabel = (video: ContentVideo): string => {
-    if (video.type === 'metafy') return 'Guide';
-    return inferContentType(video.title, video.description);
+    if (video.type === 'metafy') return t('COMMUNITY_CONTENT.TYPE_GUIDE');
+    return t(`COMMUNITY_CONTENT.${inferContentType(video.title, video.description)}`);
   };
 
   const getThumbnail = (video: ContentVideo): string => {
@@ -157,7 +157,7 @@ const CommunityContent: React.FC<CommunityContentProps> = ({ showAds = false }) 
           )}
           <div className={styles.guideCardOverlay} />
           <div className={styles.guideCardContent}>
-            <span className={styles.guideCardBadge}>Guide</span>
+            <span className={styles.guideCardBadge}>{t('COMMUNITY_CONTENT.TYPE_GUIDE')}</span>
             <h4 className={styles.guideCardTitle}>{cleanTitle(video.title)}</h4>
             {video.description && (
               <p className={styles.guideCardDescription}>{video.description}</p>
@@ -202,7 +202,7 @@ const CommunityContent: React.FC<CommunityContentProps> = ({ showAds = false }) 
               </h3>
               <p className={styles.featuredMeta}>
                 <span className={styles.metaAuthor}>
-                  by {capitalize(featured.author)}
+                  {t('COMMUNITY_CONTENT.BY')} {capitalize(featured.author)}
                 </span>
                 &nbsp;·&nbsp;
                 <span className={styles.metaDate}>
@@ -223,7 +223,7 @@ const CommunityContent: React.FC<CommunityContentProps> = ({ showAds = false }) 
                     {cleanTitle(secondary.title)}
                   </p>
                   <p className={styles.secondaryMeta}>
-                    by {capitalize(secondary.author)}&nbsp;·&nbsp;
+                    {t('COMMUNITY_CONTENT.BY')} {capitalize(secondary.author)}&nbsp;·&nbsp;
                     {formatDate(secondary.timestamp)}
                   </p>
                 </div>
@@ -239,7 +239,7 @@ const CommunityContent: React.FC<CommunityContentProps> = ({ showAds = false }) 
                     rel="noopener noreferrer"
                     className={styles.removeAdsLink}
                   >
-                    Remove ads
+                    {t('UNITED_GAME_PANEL.REMOVE_ADS')}
                   </a>
                 </div>
                 <AdUnit placement="mobile-unit-3" />
@@ -270,7 +270,7 @@ const CommunityContent: React.FC<CommunityContentProps> = ({ showAds = false }) 
                   <div className={styles.listInfo}>
                     <p className={styles.listTitle}>{cleanTitle(video.title)}</p>
                     <p className={styles.listMeta}>
-                      by {capitalize(video.author)}&nbsp;·&nbsp;
+                      {t('COMMUNITY_CONTENT.BY')} {capitalize(video.author)}&nbsp;·&nbsp;
                       {formatDate(video.timestamp)}
                     </p>
                   </div>
@@ -286,12 +286,10 @@ const CommunityContent: React.FC<CommunityContentProps> = ({ showAds = false }) 
         <div className={styles.ctaBar}>
           <div className={styles.ctaContent}>
             <p className={styles.ctaHeading}>
-              👋 Want your content featured here?
+              {t('COMMUNITY_CONTENT.CTA_HEADING')}
             </p>
             <p className={styles.ctaSub}>
-              Share gameplay videos, podcasts, or strategy content in{' '}
-              <strong>#talishar-content</strong> on Discord and we'll highlight
-              your best work.
+              <Trans i18nKey="COMMUNITY_CONTENT.CTA_SUB" components={{ 1: <strong /> }} />
             </p>
           </div>
           <a
@@ -300,7 +298,7 @@ const CommunityContent: React.FC<CommunityContentProps> = ({ showAds = false }) 
             rel="noopener noreferrer"
             className={styles.discordButton}
           >
-            Join Discord
+            {t('COMMUNITY_CONTENT.JOIN_DISCORD')}
           </a>
         </div>
           {showAds && (

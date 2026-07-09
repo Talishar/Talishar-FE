@@ -130,7 +130,7 @@ const Header = () => {
         <ul className={styles.centerNav}>
           <li>
             <NavLink to="/" end className={navLinkClass}>
-              Play
+              {t('HEADER.PLAY')}
             </NavLink>
           </li>
           <li>
@@ -145,7 +145,7 @@ const Header = () => {
           </li>
           <li>
             <NavLink to="/about" className={navLinkClass}>
-              About
+              {t('HEADER.ABOUT')}
             </NavLink>
           </li>
 	</ul>
@@ -182,7 +182,7 @@ const Header = () => {
                     </li>
                     <li>
                       <Link to="/user/decks" onClick={closeUserDropdown}>
-                        <BsCollection /> <span>My Decks</span>
+                        <BsCollection /> <span>{t('HEADER.MY_DECKS')}</span>
                       </Link>
                     </li>
                     <li>
@@ -202,7 +202,7 @@ const Header = () => {
                     {isMod && (
                       <li>
                         <Link to="/mod" onClick={closeUserDropdown}>
-                          <BsShieldFillCheck /> <span>Mod Page</span>
+                          <BsShieldFillCheck /> <span>{t('HEADER.MOD_PAGE')}</span>
                         </Link>
                       </li>
                     )}
@@ -225,7 +225,7 @@ const Header = () => {
         <button
           className={styles.burgerButton}
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
+          aria-label={mobileMenuOpen ? t('HEADER.CLOSE_MENU') : t('HEADER.OPEN_MENU')}
           aria-expanded={mobileMenuOpen}
         >
           {mobileMenuOpen ? <BsX /> : <BsList />}
@@ -237,7 +237,7 @@ const Header = () => {
           <ul>
             <li>
               <Link to="/" onClick={closeMobileMenu}>
-                <BsPlayFill /> <span>Play</span>
+                <BsPlayFill /> <span>{t('HEADER.PLAY')}</span>
               </Link>
             </li>
             <li>
@@ -252,7 +252,7 @@ const Header = () => {
             </li>
             <li>
               <Link to="/about" onClick={closeMobileMenu}>
-                <BsInfoCircleFill /> <span>About</span>
+                <BsInfoCircleFill /> <span>{t('HEADER.ABOUT')}</span>
               </Link>
             </li>
             <li>
@@ -274,7 +274,7 @@ const Header = () => {
             {isLoggedIn && (
               <li>
                 <Link to="/user/decks" onClick={closeMobileMenu}>
-                  <BsCollection /> <span>My Decks</span>
+                  <BsCollection /> <span>{t('HEADER.MY_DECKS')}</span>
                 </Link>
               </li>
             )}
@@ -289,7 +289,7 @@ const Header = () => {
             {isLoggedIn && isMod && (
               <li>
                 <Link to="/mod" onClick={closeMobileMenu}>
-                  <BsShieldFillCheck /> <span>Mod Page</span>
+                  <BsShieldFillCheck /> <span>{t('HEADER.MOD_PAGE')}</span>
                 </Link>
               </li>
             )}

@@ -12,6 +12,12 @@
     "SOCIAL_LINKS":"Social Links",
     "SUPPORT_US":"Support Us!",
     "TALISHAR_LOGO_ALT":"Logo Talishar - link to homepage",
+    "PLAY":"Play",
+    "ABOUT":"About",
+    "MY_DECKS":"My Decks",
+    "MOD_PAGE":"Mod Page",
+    "OPEN_MENU":"Open menu",
+    "CLOSE_MENU":"Close menu",
     "LANGUAGE_SELECTOR": {
       "LANGUAGES":"Languages",
       "LANGUAGE":"Language"
@@ -114,7 +120,15 @@
     "PREVIOUS":"Previous video",
     "NEXT":"Next video",
     "VIEW":"View video",
-    "BY":"By"
+    "BY":"by",
+    "TYPE_PODCAST":"Podcast",
+    "TYPE_DECK_TECH":"Deck tech",
+    "TYPE_LIVE_RECAP":"Live recap",
+    "TYPE_VIDEO":"Video",
+    "TYPE_GUIDE":"Guide",
+    "CTA_HEADING":"👋 Want your content featured here?",
+    "CTA_SUB":"Share gameplay videos, podcasts, or strategy content in <1>#talishar-content</1> on Discord and we'll highlight your best work.",
+    "JOIN_DISCORD":"Join Discord"
   },
   "ABOUT":{
     "FAQ":{
@@ -204,6 +218,16 @@
       "EXPAND_BANNER":"Expand banner",
       "COLLAPSE_BANNER":"Collapse banner"
     }
+  },
+  "FOOTER":{
+    "LOGO_ALT":"Talishar",
+    "NAV_LABEL":"Footer navigation",
+    "USER_LINKS_LABEL":"User links",
+    "SOCIAL_LINKS_LABEL":"Social links",
+    "LEGAL_LINKS_LABEL":"Legal links",
+    "PRIVACY_POLICY":"Privacy Policy",
+    "TERMS_OF_SERVICE":"Terms of Service",
+    "COOKIE_PREFERENCES":"Cookie Preferences"
   },
   "UNITED_GAME_PANEL":{
     "GAME_SETUP":"Game Setup",

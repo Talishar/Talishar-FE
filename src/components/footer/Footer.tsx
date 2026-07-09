@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Trans } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { BsGithub, BsPersonFill, BsGearFill } from 'react-icons/bs';
 import { FaDiscord, FaTwitter, FaYoutube } from 'react-icons/fa';
 import {
@@ -18,13 +18,14 @@ import { reopenCookieConsent } from 'utils/cookieConsent';
 
 const Footer = () => {
   const { isSupporter } = useSupporterStatus();
+  const { t } = useTranslation();
 
   return (
     <footer className={styles.footer}>
       <div className={styles.inner}>
         <div className={styles.columns}>
           <div className={styles.leftCol}>
-            <img src={TalisharLogo} alt="Talishar" className={styles.logo} />
+            <img src={TalisharLogo} alt={t('FOOTER.LOGO_ALT')} className={styles.logo} />
             {!isSupporter && (
               <a
                 href={TALISHAR_METAFY_URL}
@@ -32,7 +33,7 @@ const Footer = () => {
                 rel="noopener noreferrer"
                 className={styles.supportBtn}
               >
-                Support us on Metafy
+                {t('HOME.HERO.SUPPORT_CTA')}
               </a>
             )}
           </div>
@@ -44,19 +45,19 @@ const Footer = () => {
           )}
           <div className={styles.rightCol}>
             <div className={styles.navRow}>
-              <nav className={styles.navLinks} aria-label="Footer navigation">
-                <Link to="/">Play</Link>
-                <Link to="/game/load">Replays</Link>
-                <Link to="/learn">Learn</Link>
-                <Link to="/about">About</Link>
+              <nav className={styles.navLinks} aria-label={t('FOOTER.NAV_LABEL')}>
+                <Link to="/">{t('HEADER.PLAY')}</Link>
+                <Link to="/game/load">{t('HEADER.REPLAYS')}</Link>
+                <Link to="/learn">{t('HEADER.LEARN')}</Link>
+                <Link to="/about">{t('HEADER.ABOUT')}</Link>
               </nav>
-              <nav className={styles.userLinks} aria-label="User links">
-                <Link to="/user"><BsPersonFill aria-hidden="true" /> Profile</Link>
-                <Link to="/user/settings"><BsGearFill aria-hidden="true" /> Settings</Link>
+              <nav className={styles.userLinks} aria-label={t('FOOTER.USER_LINKS_LABEL')}>
+                <Link to="/user"><BsPersonFill aria-hidden="true" /> {t('HEADER.PROFILE')}</Link>
+                <Link to="/user/settings"><BsGearFill aria-hidden="true" /> {t('HEADER.SETTINGS')}</Link>
               </nav>
             </div>
 
-            <nav className={styles.socialLinks} aria-label="Social links">
+            <nav className={styles.socialLinks} aria-label={t('FOOTER.SOCIAL_LINKS_LABEL')}>
               <a href={TALISHAR_GITHUB_URL} target="_blank" rel="noopener noreferrer" aria-label="GitHub">
                 <BsGithub aria-hidden="true" />
               </a>
@@ -76,9 +77,9 @@ const Footer = () => {
               </a>
             </nav>
 
-            <nav className={styles.legalLinks} aria-label="Legal links">
-              <Link to="/privacy">Privacy Policy</Link>
-              <Link to="/terms-of-service">Terms of Service</Link>
+            <nav className={styles.legalLinks} aria-label={t('FOOTER.LEGAL_LINKS_LABEL')}>
+              <Link to="/privacy">{t('FOOTER.PRIVACY_POLICY')}</Link>
+              <Link to="/terms-of-service">{t('FOOTER.TERMS_OF_SERVICE')}</Link>
               <a
                 href="#"
                 className={styles.cookiePreferencesButton}
@@ -87,7 +88,7 @@ const Footer = () => {
                   reopenCookieConsent();
                 }}
               >
-                Cookie Preferences
+                {t('FOOTER.COOKIE_PREFERENCES')}
               </a>
             </nav>
 
