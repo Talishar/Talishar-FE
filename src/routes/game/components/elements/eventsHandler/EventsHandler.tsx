@@ -18,8 +18,27 @@ import {
   GiDiceSixFacesTwo
 } from 'react-icons/gi';
 import { shallowEqual } from 'react-redux';
+import { Toast } from 'react-hot-toast';
 import CardDisplay from '../cardDisplay/CardDisplay';
 import styles from './EventsHandler.module.css';
+
+const DismissibleToast = ({
+  t,
+  children
+}: {
+  t: Toast;
+  children: React.ReactNode;
+}) => (
+  <div
+    className={styles.card}
+    onClick={() => toast.dismiss(t.id)}
+    role="button"
+    tabIndex={0}
+    title="Click to dismiss"
+  >
+    {children}
+  </div>
+);
 import {
   setShuffling,
   setAddBotDeck,
@@ -159,10 +178,10 @@ export const EventsHandler = React.memo(() => {
           case 'ROLL':
             toast(
               (t) => (
-                <div className={styles.card}>
+                <DismissibleToast t={t}>
                   Die rolled, result:
                   <div className={styles.die}>{dieRoll(event.eventValue)}</div>
-                </div>
+                </DismissibleToast>
               ),
               { duration: 5000 }
             );
@@ -175,14 +194,14 @@ export const EventsHandler = React.memo(() => {
             const revealIsPlayer = revealPlayerID !== null ? revealPlayerID === playerID : undefined;
             toast(
               (t) => (
-                <div className={styles.card}>
+                <DismissibleToast t={t}>
                   Card Revealed
                   <CardDisplay
                     card={{ cardNumber: revealCardNumber }}
                     makeMeBigger
                     isPlayer={revealIsPlayer}
                   />
-                </div>
+                </DismissibleToast>
               ),
               { duration: 5000 }
             );
@@ -226,13 +245,13 @@ export const EventsHandler = React.memo(() => {
           case 'DISCARD':
             toast(
               (t) => (
-                <div className={styles.card}>
+                <DismissibleToast t={t}>
                   Card Discarded
                   <CardDisplay
                     card={{ cardNumber: event.eventValue ?? '' }}
                     makeMeBigger
                   />
-                </div>
+                </DismissibleToast>
               ),
               { duration: 5000 }
             );
@@ -240,13 +259,13 @@ export const EventsHandler = React.memo(() => {
           case 'BANISH':
             toast(
               (t) => (
-                <div className={styles.card}>
+                <DismissibleToast t={t}>
                   Card Banished
                   <CardDisplay
                     card={{ cardNumber: event.eventValue ?? '' }}
                     makeMeBigger
                   />
-                </div>
+                </DismissibleToast>
               ),
               { duration: 5000 }
             );
@@ -254,13 +273,13 @@ export const EventsHandler = React.memo(() => {
           case 'SOUL':
             toast(
               (t) => (
-                <div className={styles.card}>
+                <DismissibleToast t={t}>
                   Into Soul
                   <CardDisplay
                     card={{ cardNumber: event.eventValue ?? '' }}
                     makeMeBigger
                   />
-                </div>
+                </DismissibleToast>
               ),
               { duration: 5000 }
             );
