@@ -1,7 +1,9 @@
 import { useSubmitMetafyLoginMutation } from 'features/api/apiSlice';
 import React, { useEffect } from 'react';
 import { toast } from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { usePageTitle } from 'hooks/usePageTitle';
 import SwordLoader from 'components/SwordLoader/SwordLoader';
 import styles from './linkMetafy.module.css';
 
@@ -11,6 +13,8 @@ export interface MetafyLoginResponse {
 }
 
 const LinkMetafy = () => {
+  const { t } = useTranslation();
+  usePageTitle(t('PAGES.LINK_METAFY'));
   const [submitMetafyMutation, submitMetafyMutationResponse] =
     useSubmitMetafyLoginMutation();
   const [searchParams] = useSearchParams();
@@ -25,7 +29,7 @@ const LinkMetafy = () => {
       .then((data: MetafyLoginResponse) => {
         console.log('Metafy login response:', data);
         if (data.message === 'ok') {
-          toast.success('Metafy connection successful!', {
+          toast.success(t('LINK_METAFY_PAGE.SUCCESS'), {
             position: 'top-center'
           });
           navigate('/user/profile');
@@ -48,8 +52,8 @@ const LinkMetafy = () => {
   return (
     <div className={styles.container}>
       <SwordLoader />
-      <h2 className={styles.title}>Connecting to Metafy...</h2>
-      <p className={styles.subtitle}>Please wait while we connect your account.</p>
+      <h2 className={styles.title}>{t('LINK_METAFY_PAGE.CONNECTING')}</h2>
+      <p className={styles.subtitle}>{t('LINK_METAFY_PAGE.BANNER_SUBTITLE')}</p>
       <div className={styles.dots}>
         <div className={styles.dot} />
         <div className={styles.dot} />

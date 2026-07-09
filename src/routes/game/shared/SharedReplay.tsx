@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useAppDispatch } from 'app/Hooks';
 import { setReplayStart } from 'features/game/GameSlice';
 import { useLoadSharedReplayMutation } from 'features/api/apiSlice';
 import { GameLocationState } from 'interface/GameLocationState';
+import { usePageTitle } from 'hooks/usePageTitle';
 
 export default function SharedReplay() {
+  const { t } = useTranslation();
+  usePageTitle(t('PAGES.SHARED_REPLAY'));
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -16,12 +20,12 @@ export default function SharedReplay() {
 
   useEffect(() => {
     if (!token) {
-      setError('No share token provided.');
+      setError(t('SHARED_REPLAY_PAGE.ERROR_NO_TOKEN'));
       return;
     }
 
     if (!/^[0-9a-f]{64}$/.test(token)) {
-      setError('Invalid share token.');
+      setError(t('SHARED_REPLAY_PAGE.ERROR_INVALID_TOKEN'));
       return;
     }
 
@@ -30,7 +34,7 @@ export default function SharedReplay() {
       .then((response) => {
         if (response.error) throw new Error(response.error);
         if (!response.gameName || !response.playerID || !response.authKey) {
-          throw new Error('Incomplete response from server.');
+          throw new Error(t('SHARED_REPLAY_PAGE.ERROR_INCOMPLETE_RESPONSE'));
         }
         dispatch(
           setReplayStart({
@@ -44,7 +48,7 @@ export default function SharedReplay() {
         });
       })
       .catch((err: any) => {
-        setError(err?.message || err?.data?.error || 'Failed to load shared replay.');
+        setError(err?.message || err?.data?.error || t('SHARED_REPLAY_PAGE.ERROR_FAILED_LOAD'));
       });
   }, [token]);
 
@@ -65,7 +69,7 @@ export default function SharedReplay() {
 
   return (
     <main style={{ padding: '2rem', textAlign: 'center' }}>
-      <p>Loading shared replay...</p>
+      <p>{t('SHARED_REPLAY_PAGE.LOADING')}</p>
     </main>
   );
 }

@@ -1,13 +1,17 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { TALISHAR_DISCORD_URL } from 'constants/socialLinks';
 import { reopenCookieConsent } from 'utils/cookieConsent';
+import { usePageTitle } from 'hooks/usePageTitle';
 import styles from './Privacy.module.css';
 
 export const Privacy = () => {
+  const { t } = useTranslation();
+  usePageTitle(t('PAGES.PRIVACY'));
   return (
     <main>
       <article className={styles.privacyContainer}>
-        <h1>Disclaimer</h1>
+        <h1>{t('PRIVACY_PAGE.DISCLAIMER_TITLE')}</h1>
         <p>
           Talishar is in no way affiliated with Legend Story Studios. Legend
           Story Studios®, Flesh and Blood™, and set names are trademarks of
@@ -20,7 +24,7 @@ export const Privacy = () => {
           </a>
           .
         </p>
-        <h1>Remember Me Cookie</h1>
+        <h1>{t('PRIVACY_PAGE.REMEMBER_ME_TITLE')}</h1>
         <p>
           If you use the Remember Me function on the Login page to keep yourself
           logged in to your browser, a code is generated and associated with

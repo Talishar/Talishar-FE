@@ -1,7 +1,9 @@
 import React, { useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
 import { useSubmitMetafySignupMutation } from 'features/api/apiSlice';
+import { usePageTitle } from 'hooks/usePageTitle';
 import SwordLoader from 'components/SwordLoader/SwordLoader';
 import styles from 'routes/user/profile/linkmetafy/linkMetafy.module.css';
 
@@ -9,6 +11,8 @@ import styles from 'routes/user/profile/linkmetafy/linkMetafy.module.css';
 const processedCodes = new Set<string>();
 
 const MetafySignup = () => {
+  const { t } = useTranslation();
+  usePageTitle(t('AUTH.METAFY_SIGNUP.PAGE_TITLE'));
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const [submitMetafySignup] = useSubmitMetafySignupMutation();
@@ -54,7 +58,7 @@ const MetafySignup = () => {
       .unwrap()
       .then((data) => {
         if (data.message === 'ok' && data.isUserLoggedIn) {
-          toast.success('Signup successful! Redirecting...', {
+          toast.success(t('AUTH.METAFY_SIGNUP.REDIRECTING'), {
             position: 'top-center'
           });
           navigate('/');
@@ -77,8 +81,8 @@ const MetafySignup = () => {
   return (
     <div className={styles.container}>
       <SwordLoader />
-      <h2 className={styles.title}>Signing up with Metafy...</h2>
-      <p className={styles.subtitle}>Please wait while we create your account.</p>
+      <h2 className={styles.title}>{t('AUTH.METAFY_SIGNUP.PAGE_TITLE')}</h2>
+      <p className={styles.subtitle}>{t('AUTH.METAFY_SIGNUP.PROCESSING')}</p>
       <div className={styles.dots}>
         <div className={styles.dot} />
         <div className={styles.dot} />

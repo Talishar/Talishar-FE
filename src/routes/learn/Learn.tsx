@@ -66,7 +66,7 @@ const Learn: React.FC = () => {
         {loading ? (
           <div className={styles.loadingContainer}>
             <div className={styles.spinner}></div>
-            <p>Loading guides...</p>
+            <p>{t('LEARN.LOADING')}</p>
           </div>
         ) : error ? (
           <div className={styles.errorContainer}>
@@ -75,7 +75,7 @@ const Learn: React.FC = () => {
               onClick={() => loadGuides(1)}
               className={styles.retryButton}
             >
-              Try Again
+              {t('LEARN.TRY_AGAIN')}
             </button>
           </div>
         ) : guides.length > 0 ? (
@@ -89,24 +89,24 @@ const Learn: React.FC = () => {
                   disabled={currentPage === 1}
                   className={styles.paginationButton}
                 >
-                  ← Previous
+                  {t('LEARN.PAGINATION.PREVIOUS')}
                 </button>
                 <span className={styles.pageInfo}>
-                  Page {currentPage} of {totalPages}
+                  {t('LEARN.PAGINATION.PAGE_INFO', { page: currentPage, totalPages })}
                 </span>
                 <button
                   onClick={handleNextPage}
                   disabled={currentPage === totalPages}
                   className={styles.paginationButton}
                 >
-                  Next →
+                  {t('LEARN.PAGINATION.NEXT')}
                 </button>
               </div>
             )}
           </>
         ) : (
           <div className={styles.emptyContainer}>
-            <p>No guides available at this time.</p>
+            <p>{t('LEARN.NO_GUIDES')}</p>
           </div>
         )}
       </div>

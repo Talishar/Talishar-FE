@@ -127,22 +127,22 @@ export const ProfilePage = () => {
   return (
     <div>
       <div className={styles.wideContainer}>
-        <h1 className={styles.title}>Profile Page</h1>
+        <h1 className={styles.title}>{t('PROFILE.PAGE_TITLE')}</h1>
         <div className={styles.twoColumnLayout}>
           <div className={styles.leftColumn}>
             <article className={styles.articleTitle}>
               <div className={styles.usernameHeader}>
-                <span className={styles.usernameLabel}>Username</span>
+                <span className={styles.usernameLabel}>{t('PROFILE.USERNAME_LABEL')}</span>
                 <h2 className={styles.usernameValue}>{profileData?.userName}</h2>
                 {currentUserId && (
                   <div className={styles.userIdLine}>
-                    <span className={styles.userIdLabel}>User ID</span>
+                    <span className={styles.userIdLabel}>{t('PROFILE.USER_ID_LABEL')}</span>
                     <span className={styles.userIdValue}>{currentUserId}</span>
                   </div>
                 )}
               </div>
               <div>
-                {profileIsLoading && <p>Loading Profile...</p>}
+                {profileIsLoading && <p>{t('PROFILE.LOADING')}</p>}
 
                 {/* Show Upgrade/Supporter Status */}
                 <UpgradeSection

@@ -481,7 +481,7 @@ export const DecksPage = () => {
   return (
     <div className={styles.wideContainer}>
       {hoverPreview && <CardHoverPreview preview={hoverPreview} />}
-      <h1 className={styles.title}>My Decks</h1>
+      <h1 className={styles.title}>{t('DECKS.PAGE_TITLE')}</h1>
       <p className={styles.intro}>
         Assign a playmat, card back, and alt arts to each of your favorited decks.
       </p>

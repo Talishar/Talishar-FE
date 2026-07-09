@@ -110,35 +110,35 @@ const SettingsPage = () => {
   const priorityOptions = [
     {
       value: 'autoPass',
-      label: 'Auto-Pass Priority',
+      label: t('SETTINGS.PRIORITY_OPTIONS.AUTO_PASS'),
       enumValue: optConst.HOLD_PRIORITY_ENUM.AUTO
     },
     {
       value: 'alwaysPass',
-      label: 'Always Pass Priority',
+      label: t('SETTINGS.PRIORITY_OPTIONS.ALWAYS_PASS'),
       enumValue: optConst.HOLD_PRIORITY_ENUM.ALWAYS_PASS
     },
     {
       value: 'alwaysHold',
-      label: 'Always Hold Priority',
+      label: t('SETTINGS.PRIORITY_OPTIONS.ALWAYS_HOLD'),
       enumValue: optConst.HOLD_PRIORITY_ENUM.ALWAYS_HOLD
     }
   ];
 
   const attackShortcutOptions = [
-    { value: 'neverSkip', label: 'Never Skip Attacks', enumValue: 0 },
-    { value: 'skipOnes', label: 'Skip 1 Power Attacks', enumValue: 1 },
-    { value: 'skipAll', label: 'Skip All Attacks', enumValue: 99 }
+    { value: 'neverSkip', label: t('SETTINGS.ATTACK_OPTIONS.NEVER_SKIP'), enumValue: 0 },
+    { value: 'skipOnes', label: t('SETTINGS.ATTACK_OPTIONS.SKIP_ONES'), enumValue: 1 },
+    { value: 'skipAll', label: t('SETTINGS.ATTACK_OPTIONS.SKIP_ALL'), enumValue: 99 }
   ];
 
   return (
     <div className={`${styles.wideContainer} ${styles.flatSettingsPage}`}>
-      <h1 className={styles.title}>Settings</h1>
+      <h1 className={styles.title}>{t('SETTINGS.PAGE_TITLE')}</h1>
       <div className={styles.twoColumnLayout}>
         <div className={styles.settingsColumn}>
-          <h3 className={styles.title}>Game Settings</h3>
+          <h3 className={styles.title}>{t('SETTINGS.GAME_SETTINGS')}</h3>
 
-          <Fieldset legend="Priority Settings">
+          <Fieldset legend={t('SETTINGS.PRIORITY_SETTINGS')}>
             <RadioGroup
               name="holdPriority"
               options={priorityOptions}
@@ -189,7 +189,7 @@ const SettingsPage = () => {
           </Fieldset>
 
           <Fieldset
-            legend="Attack Shortcut Threshold"
+            legend={t('SETTINGS.ATTACK_SHORTCUTS')}
             tooltip="Resets to 'Never Skip Attacks' at the start of each turn."
           >
             <RadioGroup

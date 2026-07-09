@@ -5,6 +5,8 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { toast } from 'react-hot-toast';
 import { FaExclamationCircle, FaCheck, FaTimes } from 'react-icons/fa';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
+import { useTranslation, Trans } from 'react-i18next';
+import { usePageTitle } from 'hooks/usePageTitle';
 import useAuth from 'hooks/useAuth';
 import {
   useGetAppInfoQuery,
@@ -19,6 +21,8 @@ import {
 import styles from './AuthVerify.module.css';
 
 const AuthVerify = () => {
+  const { t } = useTranslation();
+  usePageTitle(t('PAGES.AUTH_VERIFY'));
   const [searchParams] = useSearchParams();
   const { isLoggedIn, isLoading: isAuthLoading } = useAuth();
   const [isProcessing, setIsProcessing] = useState(false);
@@ -82,8 +86,8 @@ const AuthVerify = () => {
     return (
       <div className={styles.container}>
         <div className={styles.card}>
-          <h2>Authorizing...</h2>
-          <p>Please wait while we verify the request.</p>
+          <h2>{t('AUTH.VERIFY.AUTHORIZING')}</h2>
+          <p>{t('AUTH.VERIFY.WAIT_MESSAGE')}</p>
         </div>
       </div>
     );
@@ -94,14 +98,16 @@ const AuthVerify = () => {
     return (
       <div className={styles.container}>
         <div className={styles.card}>
-          <h2>Invalid Request</h2>
+          <h2>{t('AUTH.VERIFY.INVALID_REQUEST')}</h2>
           <p className={styles.error}>
-            <FaExclamationCircle /> Missing required parameters. Please make
-            sure the authorization link includes <code>app_id</code> and{' '}
-            <code>redirect_uri</code>.
+            <FaExclamationCircle />{' '}
+            <Trans
+              i18nKey="AUTH.VERIFY.INVALID_REQUEST_MESSAGE"
+              components={[<code key="0" />, <code key="1" />]}
+            />
           </p>
           <Link to="/" className={styles.homeLink}>
-            Return to Home
+            {t('AUTH.VERIFY.RETURN_HOME')}
           </Link>
         </div>
       </div>
@@ -111,16 +117,16 @@ const AuthVerify = () => {
   // Handle app info errors (invalid app_id or redirect_uri not whitelisted, missing, etc)
   if (appInfoError || appInfo?.error) {
     const errorMessage =
-      appInfo?.error || 'Invalid application or redirect URI.';
+      appInfo?.error || t('AUTH.VERIFY.AUTHORIZATION_FAILED_MESSAGE');
     return (
       <div className={styles.container}>
         <div className={styles.card}>
-          <h2>Authorization Failed</h2>
+          <h2>{t('AUTH.VERIFY.AUTHORIZATION_FAILED')}</h2>
           <p className={styles.error}>
             <FaExclamationCircle /> {errorMessage}
           </p>
           <Link to="/" className={styles.homeLink}>
-            Return to Home
+            {t('AUTH.VERIFY.RETURN_HOME')}
           </Link>
         </div>
       </div>
@@ -132,10 +138,9 @@ const AuthVerify = () => {
     return (
       <div className={styles.container}>
         <div className={styles.card}>
-          <h2>Sign in to Continue</h2>
+          <h2>{t('AUTH.VERIFY.SIGNIN_CONTINUE')}</h2>
           <p className={styles.appRequest}>
-            <strong>{appInfo?.name}</strong> is requesting permission to
-            identify you.
+            <strong>{appInfo?.name}</strong> {t('AUTH.VERIFY.REQUEST_PERMISSION')}
           </p>
           <InlineLoginForm onSuccess={() => {}} />
         </div>
@@ -146,7 +151,7 @@ const AuthVerify = () => {
   return (
     <div className={styles.container}>
       <div className={styles.card}>
-        <h2>Authorize Application</h2>
+        <h2>{t('AUTH.VERIFY.AUTHORIZE_APP')}</h2>
 
         <div className={styles.appInfo}>
           <h3>{appInfo?.name}</h3>
@@ -193,6 +198,7 @@ interface InlineLoginFormProps {
 }
 
 const InlineLoginForm = ({}: InlineLoginFormProps) => {
+  const { t } = useTranslation();
   const [parent] = useAutoAnimate();
   const [login] = useLoginMutation();
   const { setLoggedIn } = useAuth();
@@ -313,7 +319,10 @@ const InlineLoginForm = ({}: InlineLoginFormProps) => {
 
       <div className={styles.signupLink}>
         <p>
-          Don't have an account? <Link to="/user/login/signup">Sign up</Link>
+          <Trans
+            i18nKey="AUTH.VERIFY.DONT_HAVE_ACCOUNT"
+            components={[<Link key="0" to="/user/login/signup" />]}
+          />
         </p>
       </div>
     </div>

@@ -1,15 +1,19 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   TALISHAR_DISCORD_URL,
   TALISHAR_GITHUB_URL
 } from 'constants/socialLinks';
+import { usePageTitle } from 'hooks/usePageTitle';
 import styles from './LegalPages.module.css';
 
 const TermsOfService: React.FC = () => {
+  const { t } = useTranslation();
+  usePageTitle(t('PAGES.TERMS_OF_SERVICE_PAGE'));
   return (
     <main className={styles.legalContainer}>
       <div className={styles.content}>
-        <h1>Terms of Service</h1>
+        <h1>{t('LEGAL.TERMS_OF_SERVICE')}</h1>
         <p className={styles.lastUpdated}>Last Updated: November 4, 2025</p>
 
         <section className={styles.section}>
