@@ -16,13 +16,16 @@ import { historyPack1, historyPack2, setIDs } from './collectionMaps';
 import { CollectionCardImagePathData, ImagePathNumber } from './types';
 import { CLOUD_IMAGES_URL } from 'appConstants';
 
+const hasOwn = (obj: Record<string, string>, key: string): boolean =>
+  Object.prototype.hasOwnProperty.call(obj, key);
+
 const getCollectionCode = (cardNumber: string): string =>
-  Object.keys(setIDs).includes(cardNumber)
+  hasOwn(setIDs, cardNumber)
     ? setIDs[cardNumber].substring(0, 3)
     : cardNumber.substring(0, 3);
 
 const getSetID = (cardNumber: string): string =>
-  Object.keys(setIDs).includes(cardNumber) ? setIDs[cardNumber] : cardNumber;
+  hasOwn(setIDs, cardNumber) ? setIDs[cardNumber] : cardNumber;
 
 const isJapaneseCard = (locale: string, collectionCode: string): boolean =>
   locale === JAPANESE_LANGUAGE &&
@@ -50,14 +53,14 @@ const isHistoryPack1Card = (
   cardNumber: string
 ): boolean =>
   COLLECTIONS_HISTORY_PACK_1.includes(collectionCode) &&
-  Object.keys(historyPack1).includes(cardNumber);
+  hasOwn(historyPack1, cardNumber);
 
 const isHistoryPack2Card = (
   collectionCode: string,
   cardNumber: string
 ): boolean =>
   COLLECTIONS_HISTORY_PACK_2.includes(collectionCode) &&
-  Object.keys(historyPack2).includes(cardNumber);
+  hasOwn(historyPack2, cardNumber);
 
 const isReprintedInHistoryPack2 = (cardNumber: string): boolean =>
   ADDITIONAL_REPRINTS_HISTORY_PACK_2.includes(cardNumber);
@@ -108,9 +111,27 @@ export const getCollectionCardImagePath = ({
   return `${CLOUD_IMAGES_URL}/${path}/${cardPathData.languagePath}/${cardPathData.cardNumber}.webp`;
 };
 
+let cachedLanguage: string | null | undefined;
+
+if (typeof window !== 'undefined') {
+  window.addEventListener('storage', (e) => {
+    if (e.key === 'language' || e.key === null) {
+      cachedLanguage = undefined;
+    }
+  });
+}
+
+export const cacheLanguage = (language: string) => {
+  cachedLanguage = language;
+};
+
+export const invalidateLanguageCache = () => {
+  cachedLanguage = undefined;
+};
+
 export const loadInitialLanguage = () => {
-  const languageLoadedLocalStorage = localStorage.getItem('language');
-  return languageLoadedLocalStorage
-    ? languageLoadedLocalStorage
-    : DEFAULT_LANGUAGE;
+  if (cachedLanguage === undefined) {
+    cachedLanguage = localStorage.getItem('language');
+  }
+  return cachedLanguage ? cachedLanguage : DEFAULT_LANGUAGE;
 };

@@ -49,6 +49,10 @@ export default function CardPopUp({
   const [cookies] = useCookies(['disableCardTilt']);
   const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const touchPopupShown = useRef(false);
+  const hoverRect = useRef<DOMRect | null>(null);
+
+  const tiltEnabled =
+    supportsHover && !disableTilt && cookies.disableCardTilt !== 'true';
 
   const rotateXTarget = useMotionValue(0);
   const rotateYTarget = useMotionValue(0);
@@ -71,8 +75,12 @@ export default function CardPopUp({
   }, []);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!supportsHover || !ref.current) return;
-    const rect = ref.current.getBoundingClientRect();
+    if (!tiltEnabled || !ref.current) return;
+    let rect = hoverRect.current;
+    if (!rect) {
+      rect = ref.current.getBoundingClientRect();
+      hoverRect.current = rect;
+    }
     const cx = rect.left + rect.width / 2;
     const cy = rect.top + rect.height / 2;
     rotateXTarget.set(-((e.clientY - cy) / (rect.height / 2)) * 8);
@@ -80,10 +88,14 @@ export default function CardPopUp({
   };
 
   const handleMouseEnter = () => {
-    if (ref.current === null || isHidden === true || SKIP_POPUP_CARDS.has(cardNumber)) {
+    if (ref.current === null) {
       return;
     }
     const rect = ref.current.getBoundingClientRect();
+    hoverRect.current = rect;
+    if (isHidden === true || SKIP_POPUP_CARDS.has(cardNumber)) {
+      return;
+    }
     const xCoord = rect.left < window.innerWidth / 2 ? rect.right : rect.left;
     const yCoord = rect.top < window.innerHeight / 2 ? rect.bottom : rect.top;
     dispatch(
@@ -97,6 +109,7 @@ export default function CardPopUp({
   };
 
   const handleMouseLeave = () => {
+    hoverRect.current = null;
     dispatch(clearPopUp());
     rotateXTarget.set(0);
     rotateYTarget.set(0);
@@ -118,6 +131,7 @@ export default function CardPopUp({
       longPressTimer.current = null;
     }
     if (touchPopupShown.current) {
+      hoverRect.current = null;
       dispatch(clearPopUp());
       rotateXTarget.set(0);
       rotateYTarget.set(0);
@@ -153,7 +167,7 @@ export default function CardPopUp({
       onHoverStart={onHoverStart}
       onHoverEnd={onHoverEnd}
       ref={ref}
-      style={supportsHover && !disableTilt && cookies.disableCardTilt !== 'true' ? { rotateX, rotateY, transformPerspective: 600, boxShadow } : undefined}
+      style={tiltEnabled ? { rotateX, rotateY, transformPerspective: 600, boxShadow } : undefined}
     >
       {children}
     </motion.div>
