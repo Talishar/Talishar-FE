@@ -1,6 +1,7 @@
 import { useAppDispatch } from 'app/Hooks';
 import { clearGameInfo } from 'features/game/GameSlice';
 import { useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { usePageTitle } from 'hooks/usePageTitle';
 import GameList from './components/gameList';
 import styles from './Index.module.css';
@@ -21,6 +22,7 @@ import { TALISHAR_METAFY_URL } from 'constants/socialLinks';
 
 const Index = () => {
   usePageTitle('Play FaB Online');
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const { isLoggedIn, currentUserName } = useAuth();
   const { isSupporter, isLoading } = useSupporterStatus();
@@ -123,8 +125,8 @@ const Index = () => {
             className={styles.bannerToggle}
             onClick={handleToggleBanner}
             aria-pressed={isBannerHidden}
-            aria-label={isBannerHidden ? 'Expand banner' : 'Collapse banner'}
-            title={isBannerHidden ? 'Expand banner' : 'Collapse banner'}
+            aria-label={isBannerHidden ? t('HOME.HERO.EXPAND_BANNER') : t('HOME.HERO.COLLAPSE_BANNER')}
+            title={isBannerHidden ? t('HOME.HERO.EXPAND_BANNER') : t('HOME.HERO.COLLAPSE_BANNER')}
           >
             {isBannerHidden ? <BsChevronDown /> : <BsChevronUp />}
           </button>
@@ -133,19 +135,18 @@ const Index = () => {
         <div className={styles.bannerOverlay} />
         <div className={styles.bannerContent}>
           {!isBannerHidden && (
-            <img src={TalisharLogo} alt="Talishar" className={styles.heroLogo} />
+            <img src={TalisharLogo} alt={t('HOME.HERO.LOGO_ALT')} className={styles.heroLogo} />
           )}
           {!isBannerHidden && (
             <>
               <h1 className={styles.heroTitle}>
-                Play Flesh &amp; Blood Online
+                {t('HOME.HERO.TITLE')}
               </h1>
               <p className={styles.heroSubtitle}>
-                Talishar lets you play FaB online for free, right in your browser.{' '}
-                Find opponents, test decks, and get games in whenever you want.
+                {t('HOME.HERO.SUBTITLE')}
               </p>
               <div className={styles.heroCta}>
-                <a href="#games" className={styles.heroCtaPrimary}>Join a game</a>
+                <a href="#games" className={styles.heroCtaPrimary}>{t('HOME.HERO.JOIN_CTA')}</a>
                 {!isSupporter && (
                   <a
                     href={TALISHAR_METAFY_URL}
@@ -153,7 +154,7 @@ const Index = () => {
                     rel="noopener noreferrer"
                     className={styles.heroCtaSecondary}
                   >
-                    Support us on Metafy
+                    {t('HOME.HERO.SUPPORT_CTA')}
                   </a>
                 )}
               </div>
@@ -188,7 +189,7 @@ const Index = () => {
                   rel="noopener noreferrer"
                   className={styles.removeAdsLink}
                 >
-                  Remove ads
+                  {t('UNITED_GAME_PANEL.REMOVE_ADS')}
                 </a>
               </div>
             )}
