@@ -1,5 +1,6 @@
 import { useGetCosmeticsQuery } from 'features/api/apiSlice';
 import { usePageTitle } from 'hooks/usePageTitle';
+import { useTranslation } from 'react-i18next';
 import { CosmeticsSection } from '../../game/components/elements/optionsMenu/OptionsSettings/CosmeticsSection';
 import {
   CheckboxSetting,
@@ -27,7 +28,8 @@ import LanguageSelector from 'components/LanguageSelector/LanguageSelector';
 import { useTheme } from 'themes/ThemeContext';
 
 const SettingsPage = () => {
-  usePageTitle('Settings');
+  const { t } = useTranslation();
+  usePageTitle(t('PAGES.SETTINGS'));
   const { setTransparency } = useTheme();
   const settingsData = useAppSelector(getSettingsEntity);
   const currentUserID = useAppSelector(selectCurrentUser);

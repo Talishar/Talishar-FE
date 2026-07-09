@@ -19,6 +19,7 @@ import OpponentInactive from '../components/elements/opponentInactive/OpponentIn
 import { useCookies } from 'react-cookie';
 import { useEffect, useRef } from 'react';
 import { usePageTitle } from 'hooks/usePageTitle';
+import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from '../../../app/Hooks';
 import {
   setIsRoguelike,
@@ -50,7 +51,8 @@ const TOAST_STYLE: React.CSSProperties = {
 const TOAST_OPTIONS = { style: TOAST_STYLE };
 
 function Play({ isRoguelike }: { isRoguelike: boolean }) {
-  usePageTitle('In Game');
+  const { t } = useTranslation();
+  usePageTitle(t('PAGES.GAME_PLAY'));
 
   // Hide all floating ad overlays while in-game. Only the RightColumn ad slot
   // should ever show ads during gameplay.

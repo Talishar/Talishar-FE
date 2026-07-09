@@ -5,9 +5,9 @@ import { useTranslation } from 'react-i18next';
 import { usePageTitle } from 'hooks/usePageTitle';
 
 const bannerByPath: Record<string, { title: string; subtitle?: string; pageTitle: string }> = {
-  signup: { title: 'Create Account', subtitle: 'Join Talishar for free', pageTitle: 'Sign Up - Play FaB Free Online' },
-  'password-recovery': { title: 'Reset Password', subtitle: "We'll send you a recovery link", pageTitle: 'Reset Password' },
-  'reset-password': { title: 'Reset Password', subtitle: 'Enter your new password', pageTitle: 'Reset Password' },
+  signup: { title: 'SIGNUP.BANNER_TITLE', subtitle: 'SIGNUP.BANNER_SUBTITLE', pageTitle: 'SIGNUP.PAGE_TITLE' },
+  'password-recovery': { title: 'PASSWORD.RECOVERY.BANNER_TITLE', subtitle: 'PASSWORD.RECOVERY.BANNER_SUBTITLE', pageTitle: 'PASSWORD.RECOVERY.PAGE_TITLE' },
+  'reset-password': { title: 'PASSWORD.RESET.BANNER_TITLE', subtitle: 'PASSWORD.RESET.BANNER_SUBTITLE', pageTitle: 'PASSWORD.RESET.PAGE_TITLE' },
 };
 
 export const LoginPage = () => {
@@ -15,7 +15,11 @@ export const LoginPage = () => {
   const segment = location.pathname.split('/').filter(Boolean).pop() ?? '';
   const { t, i18n, ready } = useTranslation();
 
-  const { title, subtitle, pageTitle } = bannerByPath[segment] ?? { title: t("USER.LOGIN.LOGIN"), subtitle: t("USER.LOGIN.WELCOME_BACK"), pageTitle: 'Login' };
+  const bannerConfig = bannerByPath[segment] ?? { title: "USER.LOGIN.LOGIN", subtitle: "USER.LOGIN.WELCOME_BACK", pageTitle: 'PAGES.LOGIN' };
+  const { title: titleKey, subtitle: subtitleKey, pageTitle: pageTitleKey } = bannerConfig;
+  const title = t(titleKey);
+  const subtitle = subtitleKey ? t(subtitleKey) : undefined;
+  const pageTitle = t(pageTitleKey);
 
   usePageTitle(pageTitle);
 

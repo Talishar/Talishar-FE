@@ -12,11 +12,13 @@ import styles from './LoadReplay.module.css';
 import { GameLocationState } from 'interface/GameLocationState';
 import PageBanner from 'components/PageBanner/PageBanner';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const LoadReplay = () => {
+  const { t } = useTranslation();
   return (
     <main className={styles.pageWrapper}>
-      <PageBanner title="Replay Tool" subtitle="Watch and review past games" />
+      <PageBanner title={t('PAGES.REPLAY_TOOL')} subtitle={t('LEARN.BANNER_SUBTITLE')} />
       <article className={styles.articleContainer}>
       <ReplayGame />
       <div className={styles.betaDisclaimer}>

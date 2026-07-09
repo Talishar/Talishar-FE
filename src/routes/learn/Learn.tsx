@@ -6,9 +6,11 @@ import { fetchMetafyGuides, MetafyGuide } from '../../services/metafyService';
 import useSupporterStatus from 'hooks/useSupporterStatus';
 import useAdScript from 'hooks/useAdScript';
 import PageBanner from 'components/PageBanner/PageBanner';
+import { useTranslation } from 'react-i18next';
 
 const Learn: React.FC = () => {
-  usePageTitle('Learn');
+  const { t } = useTranslation();
+  usePageTitle(t('LEARN.PAGE_TITLE'));
   const { isSupporter, isLoading: isAuthLoading } = useSupporterStatus();
   const showAds = !isAuthLoading && !isSupporter;
   useAdScript(showAds);
@@ -56,8 +58,8 @@ const Learn: React.FC = () => {
   return (
     <main className={styles.learnPage}>
       <PageBanner
-        title="Learn Flesh & Blood"
-        subtitle="Master your skills with expert guides from our community"
+        title={t('PAGES.LEARN_FAB')}
+        subtitle={t('LEARN.BANNER_SUBTITLE')}
       />
       <div className={styles.container}>
 

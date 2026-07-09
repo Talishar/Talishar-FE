@@ -5,6 +5,7 @@ import { useGetUserProfileQuery } from 'features/api/apiSlice';
 import useAdScript from 'hooks/useAdScript';
 import { TALISHAR_METAFY_URL } from 'constants/socialLinks';
 import { METAFY_TIER_MAP, MetafyTierName } from 'utils/patronIcons';
+import { useTranslation } from 'react-i18next';
 import styles from './Premium.module.scss';
 
 interface Tier {

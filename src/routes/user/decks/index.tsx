@@ -32,6 +32,7 @@ import { generateCroppedImageUrl } from 'utils/cropImages';
 import { getReadableFormatName } from 'utils/formatUtils';
 import { HEROES_OF_RATHE } from 'routes/index/components/filter/constants';
 import styles from './decks.module.css';
+import { useTranslation } from 'react-i18next';
 
 interface DeckEditState {
   cardBackId: string;
@@ -108,7 +109,8 @@ const CardHoverPreview = ({ preview }: { preview: HoverPreviewState }) => {
 };
 
 export const DecksPage = () => {
-  usePageTitle('My Decks');
+  const { t } = useTranslation();
+  usePageTitle(t('PAGES.MY_DECKS'));
   const [searchParams] = useSearchParams();
   const focusDeck = searchParams.get('focus');
 

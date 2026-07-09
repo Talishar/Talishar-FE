@@ -1,4 +1,5 @@
 import { usePageTitle } from 'hooks/usePageTitle';
+import { useTranslation } from 'react-i18next';
 import {
   useDeleteAccountMutation,
   useGetUserProfileQuery,
@@ -22,7 +23,8 @@ const SCOPE = 'identity identity.memberships';
 const PATREON_URL = 'https://www.patreon.com/oauth2/authorize?';
 
 export const ProfilePage = () => {
-  usePageTitle('Profile');
+  const { t } = useTranslation();
+  usePageTitle(t('PAGES.PROFILE'));
   const { currentUserId } = useAuth();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [confirmationUsername, setConfirmationUsername] = useState('');

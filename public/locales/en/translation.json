@@ -100,6 +100,8 @@
     }
   },
   "JOIN":{
+    "TITLE":"Join Game",
+    "SUBTITLE":"Choose your deck and enter the game",
     "PRECON":"Preconstructed Deck",    
     "IMPORT":"Import Deck",
     "IMPORT_DECK":"Import Deck",
@@ -318,7 +320,12 @@
       "PASSWORD_RESET_SUCESS":"Password reset successfully! Login with your new password.",
       "POLICY_DIALOG_BUTTON":"I agree, let me play already!",
       "ALREADY_HAVE_ACCOUNT":"Already have an account? <0>Login</0>",
-      "WELCOME_BACK":"Welcome back to Talishar"
+      "WELCOME_BACK":"Welcome back to Talishar",
+      "CREATE_ACCOUNT":"Create Account",
+      "JOIN_TALISHAR_FREE":"Join Talishar for free",
+      "RESET_PASSWORD":"Reset Password",
+      "RECOVERY_LINK":"We'll send you a recovery link",
+      "NEW_PASSWORD":"Enter your new password"
     }
   },
   "GAME_LOBBY":{
@@ -410,5 +417,224 @@
     "OTHER":"Other",
     "ERROR_ALERT":"There has been an error!",
     "SEARCH":"Search"
+  },
+  "PAGES":{
+    "PLAY":"Play",
+    "PLAY_FAB_ONLINE":"Play FaB Online",
+    "REPLAYS":"Replays",
+    "REPLAY_TOOL":"Replay Tool",
+    "LEARN":"Learn",
+    "LEARN_FAB":"Learn Flesh & Blood",
+    "ABOUT":"About",
+    "PREMIUM":"Premium",
+    "MY_DECKS":"My Decks",
+    "PROFILE":"Profile",
+    "SETTINGS":"Settings",
+    "MOD_PAGE":"Mod Page",
+    "LOGIN":"Login",
+    "SIGNUP":"Sign Up",
+    "CREATE_GAME":"Create Game",
+    "JOIN_GAME":"Join Game",
+    "LOBBY":"Lobby",
+    "GAME_PLAY":"In Game",
+    "SHARED_REPLAY":"Shared Replay",
+    "PRIVACY":"Privacy",
+    "PRIVACY_POLICY_PAGE":"Privacy Policy",
+    "TERMS_OF_SERVICE_PAGE":"Terms of Service",
+    "PASSWORD_RECOVERY":"Reset Password",
+    "PASSWORD_RESET":"Reset Password",
+    "LINK_PATREON":"Link Patreon",
+    "LINK_METAFY":"Link Metafy",
+    "AUTH_VERIFY":"Auth Verify",
+    "METAFY_SIGNUP":"Metafy Signup",
+    "ROGUELIKE":"Roguelike"
+  },
+  "LEARN":{
+    "PAGE_TITLE":"Learn",
+    "BANNER_TITLE":"Learn Flesh & Blood",
+    "BANNER_SUBTITLE":"Master your skills with expert guides from our community",
+    "LOADING":"Loading guides...",
+    "NO_GUIDES":"No guides available at this time.",
+    "TRY_AGAIN":"Try Again",
+    "PAGINATION":{
+      "PREVIOUS":"← Previous",
+      "NEXT":"Next →",
+      "PAGE_INFO":"Page {{page}} of {{totalPages}}"
+    }
+  },
+  "SETTINGS":{
+    "PAGE_TITLE":"Settings",
+    "GAME_SETTINGS":"Game Settings",
+    "PRIORITY_SETTINGS":"Priority Settings",
+    "PRIORITY_OPTIONS":{
+      "AUTO_PASS":"Auto-Pass Priority",
+      "ALWAYS_PASS":"Always Pass Priority",
+      "ALWAYS_HOLD":"Always Hold Priority"
+    },
+    "ATTACK_SHORTCUTS":"Attack Shortcuts",
+    "ATTACK_OPTIONS":{
+      "NEVER_SKIP":"Never Skip Attacks",
+      "SKIP_ONES":"Skip 1 Power Attacks",
+      "SKIP_ALL":"Skip All Attacks"
+    }
+  },
+  "PROFILE":{
+    "PAGE_TITLE":"Profile Page",
+    "USERNAME_LABEL":"Username",
+    "USER_ID_LABEL":"User ID",
+    "LOADING":"Loading Profile..."
+  },
+  "DECKS":{
+    "PAGE_TITLE":"My Decks"
+  },
+  "SIGNUP":{
+    "PAGE_TITLE":"Sign Up - Play FaB Free Online",
+    "BANNER_TITLE":"Create Account",
+    "BANNER_SUBTITLE":"Join Talishar for free"
+  },
+  "PASSWORD":{
+    "RECOVERY":{
+      "PAGE_TITLE":"Reset Password",
+      "BANNER_TITLE":"Reset Password",
+      "BANNER_SUBTITLE":"We'll send you a recovery link"
+    },
+    "RESET":{
+      "PAGE_TITLE":"Reset Password",
+      "BANNER_TITLE":"Reset Password",
+      "BANNER_SUBTITLE":"Enter your new password"
+    }
+  },
+  "AUTH":{
+    "VERIFY":{
+      "AUTHORIZING":"Authorizing...",
+      "WAIT_MESSAGE":"Please wait while we verify the request.",
+      "INVALID_REQUEST":"Invalid Request",
+      "INVALID_REQUEST_MESSAGE":"Missing required parameters. Please make sure the authorization link includes <0>app_id</0> and <1>redirect_uri</1>.",
+      "RETURN_HOME":"Return to Home",
+      "AUTHORIZATION_FAILED":"Authorization Failed",
+      "AUTHORIZATION_FAILED_MESSAGE":"Invalid application or redirect URI.",
+      "SIGNIN_CONTINUE":"Sign in to Continue",
+      "REQUEST_PERMISSION":"is requesting permission to identify you.",
+      "AUTHORIZE_APP":"Authorize Application",
+      "DONT_HAVE_ACCOUNT":"Don't have an account? <0>Sign up</0>"
+    },
+    "METAFY_SIGNUP":{
+      "PAGE_TITLE":"Metafy Sign Up",
+      "PROCESSING":"Processing...",
+      "REDIRECTING":"Redirecting to home..."
+    }
+  },
+  "CREATE_GAME_PAGE":{
+    "PAGE_TITLE":"Create Game",
+    "GAME_DETAILS":"Game Details",
+    "HERO_SELECTION":"Hero Selection",
+    "FORMAT_SELECTION":"Format Selection",
+    "VISIBILITY_SETTING":"Visibility",
+    "GAME_DESCRIPTION_SETTING":"Game Description"
+  },
+  "SHARED_REPLAY_PAGE":{
+    "PAGE_TITLE":"Shared Replay",
+    "LOADING":"Loading replay...",
+    "ERROR_NO_TOKEN":"No share token provided.",
+    "ERROR_INVALID_TOKEN":"Invalid share token.",
+    "ERROR_INCOMPLETE_RESPONSE":"Incomplete response from server.",
+    "ERROR_FAILED_LOAD":"Failed to load shared replay."
+  },
+  "PRIVACY_PAGE":{
+    "PAGE_TITLE":"Privacy",
+    "DISCLAIMER_TITLE":"Disclaimer",
+    "REMEMBER_ME_TITLE":"Remember Me Cookie",
+    "IP_ADDRESS_TITLE":"IP Address Collection",
+    "DATA_USAGE_TITLE":"Data Usage",
+    "CONTACT_TITLE":"Contact Us"
+  },
+  "LINK_PATREON_PAGE":{
+    "PAGE_TITLE":"Link Patreon Account",
+    "BANNER_TITLE":"Link Patreon",
+    "BANNER_SUBTITLE":"Connect your Patreon account to unlock rewards"
+  },
+  "LINK_METAFY_PAGE":{
+    "PAGE_TITLE":"Link Metafy Account",
+    "BANNER_TITLE":"Link Metafy",
+    "BANNER_SUBTITLE":"Connect your Metafy account",
+    "CONNECTING":"Connecting to Metafy...",
+    "SUCCESS":"Successfully linked Metafy account!"
+  },
+  "LEGAL":{
+    "PRIVACY_POLICY":"Privacy Policy",
+    "TERMS_OF_SERVICE":"Terms of Service",
+    "DISCLAIMER":"Disclaimer"
+  },
+  "PREMIUM_PAGE":{
+    "PAGE_TITLE":"Premium",
+    "SUPPORT_TITLE":"Support Talishar",
+    "SUPPORT_SUBTITLE":"Unlock more features and get the most advanced experience!",
+    "BILLING_TOGGLE_MONTHLY":"Monthly",
+    "BILLING_TOGGLE_YEARLY":"Yearly",
+    "BILLING_TOGGLE_ARIA":"Toggle yearly billing",
+    "MONTHLY_INTERVAL":"/month",
+    "YEARLY_INTERVAL":"/year",
+    "RECOMMENDED":"RECOMMENDED",
+    "TIERS":{
+      "FYENDAL_SUPPORTERS":"Fyendal Supporters",
+      "SEERS_OF_OPHIDIA":"Seers of Ophidia",
+      "ARKNIGHT_SHARDS":"Arknight Shards",
+      "LIGHT_OF_SOL":"Light of Sol Gemini Circle",
+      "CHAMPION_OF_GRANDEUR":"Champion of Grandeur",
+      "SPONSORS_OF_TROPAL_DHANI":"Sponsors of Trōpal-Dhani"
+    },
+    "BENEFITS":{
+      "FREE_GUIDES":"8 Free Guides",
+      "GENERAL_SUPPORT":"General support",
+      "NO_RUST_COUNTERS":"No Rust Counters",
+      "ALT_ARTS":"Alt Arts on Talishar",
+      "SLEEVES_PLAYMATS":"Talishar Exclusive Sleeves & Playmats",
+      "CUSTOM_THEMES":"Custom Themes on Talishar",
+      "FYENDAL_BADGE":"Heart of Fyendal In-Game Badge",
+      "OPHIDIA_BADGE":"Eye of Ophidia In-Game Badge",
+      "ARKNIGHT_BADGE":"Arknight Shards In-Game Badge",
+      "SOL_BADGE":"Light of Sol In-Game Badge",
+      "GRANDEUR_BADGE":"Grandeur of Valahai In-Game Badge",
+      "TROPAL_BADGE":"Riches of Trōpal-Dhani In-Game Badge",
+      "NO_ADS":"No Ads on Talishar",
+      "EXTRA_LEADERBOARD_POINTS":"Extra Leaderboard Points",
+      "MORE_EXTRA_LEADERBOARD":"More Extra Leaderboard Points",
+      "EVEN_MORE_EXTRA_LEADERBOARD":"Even More Extra Leaderboard Points",
+      "TONS_EXTRA_LEADERBOARD":"Tons of Extra Leaderboard Points",
+      "REPLAY_SAVE_SLOTS_5":"5 Replay Save Slots",
+      "REPLAY_SAVE_SLOTS_8":"8 Replay Save Slots",
+      "REPLAY_SAVE_SLOTS_10":"10 Replay Save Slots",
+      "REPLAY_SAVE_SLOTS_12":"12 Replay Save Slots",
+      "REPLAY_SAVE_SLOTS_15":"15 Replay Save Slots",
+      "REPLAY_SAVE_SLOTS_20":"20 Replay Save Slots",
+      "EXCLUSIVE_CHANNELS_1":"Exclusive access to 1 channel",
+      "EXCLUSIVE_CHANNELS_2":"Exclusive access to 2 channels",
+      "DISCORD_ROLE":"Discord role",
+      "GROUP_CLASSES":"Access to weekly Group Classes and Office Hour"
+    },
+    "COMPARISON":{
+      "FREE_VS_PREMIUM":"Free vs Premium",
+      "FREE":"Free",
+      "PREMIUM":"Premium",
+      "PLAY_GAMES":"Play games online",
+      "NO_RUST_COUNTERS":"No Rust Counters",
+      "ALT_ARTS":"Alt Arts on Talishar",
+      "SLEEVES_PLAYMATS":"Talishar Sleeves & Playmats",
+      "IN_GAME_BADGE":"In-Game Badge",
+      "CUSTOM_THEMES":"Custom Themes on Talishar",
+      "NO_ADS":"No Ads",
+      "DISCORD_ROLE":"Discord role",
+      "EXCLUSIVE_CHANNELS":"Exclusive channels & posts",
+      "FREE_GUIDES":"Free Guides",
+      "REPLAY_SAVE_SLOTS":"Replay Save Slots",
+      "EXTRA_LEADERBOARD":"Extra Leaderboard Points",
+      "WEEKLY_CLASSES":"Weekly Group Classes & Office Hour"
+    }
+  },
+  "GAME_PLAY_PAGE":{
+    "PAGE_TITLE":"In Game"
+  },
+  "GAME_LOBBY_PAGE":{
+    "PAGE_TITLE":"Lobby"
   }
 }

@@ -21,8 +21,8 @@ import { BsChevronDown, BsChevronUp } from 'react-icons/bs';
 import { TALISHAR_METAFY_URL } from 'constants/socialLinks';
 
 const Index = () => {
-  usePageTitle('Play FaB Online');
   const { t } = useTranslation();
+  usePageTitle(t('PAGES.PLAY_FAB_ONLINE'));
   const dispatch = useAppDispatch();
   const { isLoggedIn, currentUserName } = useAuth();
   const { isSupporter, isLoading } = useSupporterStatus();

@@ -1,5 +1,6 @@
 import React, { useEffect, useLayoutEffect, useState, useMemo, useRef } from 'react';
 import { usePageTitle } from 'hooks/usePageTitle';
+import { useTranslation } from 'react-i18next';
 import Deck from './components/deck/Deck';
 import LobbyChat from './components/lobbyChat/LobbyChat';
 import testData from './mockdata.json';
@@ -103,7 +104,8 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
 };
 
  const Lobby = () => {
-  usePageTitle('Lobby');
+  const { t } = useTranslation();
+  usePageTitle(t('PAGES.LOBBY'));
   useAdScript(false);
   const [activeTab, setActiveTab] = useState<string>('equipment');
   const [unreadChat, setUnreadChat] = useState<boolean>(false);
