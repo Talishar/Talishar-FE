@@ -443,8 +443,8 @@ const OptionsSettings = () => {
         <VisualSlider
           label="Card Preview Size"
           value={cookies.hoverImageSize ?? 1}
-          min={75}
-          max={125}
+          min={isMobile ? 50 : 75}
+          max={isMobile ? 100 : 125}
           defaultValue={1}
           onChange={(value) => setCookie('hoverImageSize', value, { path: '/', maxAge: 365 * 24 * 60 * 60 })}
         />
