@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useSearchParams } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
@@ -82,17 +82,40 @@ interface HoverPreviewState {
 }
 
 const CardHoverPreview = ({ preview }: { preview: HoverPreviewState }) => {
-  const offset = 24;
-  const flipToLeft =
-    preview.x + offset + PREVIEW_WIDTH > window.innerWidth;
-  const left = flipToLeft ? preview.x - offset - PREVIEW_WIDTH : preview.x + offset;
-  const top = Math.max(
-    8,
-    Math.min(preview.y - PREVIEW_HEIGHT / 2, window.innerHeight - PREVIEW_HEIGHT - 8)
-  );
+  const ref = useRef<HTMLDivElement>(null);
+  useLayoutEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
+    const offset = 24;
+    const place = (x: number, y: number) => {
+      const flipToLeft = x + offset + PREVIEW_WIDTH > window.innerWidth;
+      const left = flipToLeft ? x - offset - PREVIEW_WIDTH : x + offset;
+      const top = Math.max(
+        8,
+        Math.min(y - PREVIEW_HEIGHT / 2, window.innerHeight - PREVIEW_HEIGHT - 8)
+      );
+      el.style.transform = `translate3d(${left}px, ${top}px, 0)`;
+    };
+
+    place(preview.x, preview.y);
+
+    let rafId = 0;
+    const onMove = (e: MouseEvent) => {
+      cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(() => place(e.clientX, e.clientY));
+    };
+    document.addEventListener('mousemove', onMove, { passive: true });
+    return () => {
+      cancelAnimationFrame(rafId);
+      document.removeEventListener('mousemove', onMove);
+    };
+    // preview.x/y are only the entry coordinates; the listener tracks afterwards
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return createPortal(
-    <div className={styles.hoverPreview} style={{ left: `${left}px`, top: `${top}px` }}>
+    <div ref={ref} className={styles.hoverPreview}>
       <img
         src={getCollectionCardImagePath({
           path: CARD_IMAGES_PATH,
@@ -147,10 +170,6 @@ export const DecksPage = () => {
 
   const showPreview = (cardNumber: string, e: React.MouseEvent) =>
     setHoverPreview({ cardNumber, x: e.clientX, y: e.clientY });
-  const movePreview = (e: React.MouseEvent) =>
-    setHoverPreview((prev) =>
-      prev ? { ...prev, x: e.clientX, y: e.clientY } : prev
-    );
   const hidePreview = () => setHoverPreview(null);
 
   const decks = decksData?.favoriteDecks ?? [];
@@ -434,7 +453,6 @@ export const DecksPage = () => {
                 loading="lazy"
                 alt="Default"
                 onMouseEnter={(e) => showPreview(card.baseCardNumber, e)}
-                onMouseMove={movePreview}
                 onMouseLeave={hidePreview}
                 className={`${styles.altArtThumb} ${
                   hasAlts && isBaseSelected ? styles.thumbSelected : ''
@@ -463,7 +481,6 @@ export const DecksPage = () => {
                 loading="lazy"
                 alt={altPath}
                 onMouseEnter={(e) => showPreview(altPath, e)}
-                onMouseMove={movePreview}
                 onMouseLeave={hidePreview}
                 className={`${styles.altArtThumb} ${
                   state.altArts[card.cardId] === altPath
@@ -668,7 +685,6 @@ export const DecksPage = () => {
                           loading="lazy"
                           alt={cb.name}
                           onMouseEnter={(e) => showPreview(CARD_BACK[id], e)}
-                          onMouseMove={movePreview}
                           onMouseLeave={hidePreview}
                           className={`${styles.cardBackThumb} ${
                             state.cardBackId === id ? styles.thumbSelected : ''

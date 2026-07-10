@@ -438,10 +438,13 @@
 
 .hoverPreview {
   position: fixed;
+  top: 0;
+  left: 0;
   z-index: 3000;
   width: 240px;
   pointer-events: none;
   filter: drop-shadow(0 8px 24px rgba(0, 0, 0, 0.6));
+  will-change: transform;
 }
 
 .hoverPreviewImg {

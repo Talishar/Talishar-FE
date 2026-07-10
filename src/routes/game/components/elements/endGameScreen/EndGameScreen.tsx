@@ -1,14 +1,15 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, lazy, Suspense } from 'react';
 import ReactDOM from 'react-dom';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import styles from './EndGameScreen.module.css';
 import { useGetPopUpContentQuery } from 'features/api/apiSlice';
 import { END_GAME_STATS, PROCESS_INPUT } from 'appConstants';
 import { getGameInfo, submitButton } from 'features/game/GameSlice';
-import EndGameStats, {
+import type {
   EndGameData,
   EndGameStatsRef
 } from '../endGameStats/EndGameStats';
+const EndGameStats = lazy(() => import('../endGameStats/EndGameStats'));
 import EndGameMenuOptions from '../endGameMenuOptions/EndGameMenuOptions';
 import { shallowEqual } from 'react-redux';
 import useShowModal from 'hooks/useShowModals';
@@ -117,7 +118,11 @@ const EndGameScreen = () => {
       gameID: gameInfo.gameID?.toString(),
       bothPlayersData: bothPlayersData
     };
-    content = <EndGameStats ref={endGameStatsRef} {...endGameDataWithHeroes} />;
+    content = (
+      <Suspense fallback={<div>Loading...</div>}>
+        <EndGameStats ref={endGameStatsRef} {...endGameDataWithHeroes} />
+      </Suspense>
+    );
   }
 
   const switchPlayer = () => {
