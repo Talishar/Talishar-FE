@@ -12,10 +12,6 @@ import { shallowEqual } from 'react-redux';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { GameLocationState } from 'interface/GameLocationState';
 import { useKnownSearchParams } from 'hooks/useKnownSearchParams';
-import {
-  loadGameAuthKey,
-  loadGamePlayerID
-} from 'utils/LocalKeyManagement';
 import { toast } from 'react-hot-toast';
 
 interface LobbyUpdateHandlerProps {
@@ -38,7 +34,7 @@ export const LobbyUpdateHandler = React.memo(
     const { gameID } = useParams();
     const location = useLocation();
     const locationState = location.state as GameLocationState | undefined;
-    const [{ gameName = '0', playerID, authKey = '' }] =
+    const [{ gameName = '0', playerID = '3', authKey = '' }] =
       useKnownSearchParams();
 
     if (gameID === undefined) {
@@ -89,28 +85,11 @@ export const LobbyUpdateHandler = React.memo(
     }, []);
 
     useEffect(() => {
-      const lobbyGameID = parseInt(gameID ?? gameName);
-
-      let lobbyAuthKey = locationState?.authKey || authKey;
-      if (!lobbyAuthKey && lobbyGameID > 0) {
-        lobbyAuthKey = loadGameAuthKey(lobbyGameID);
-      }
-
-      let lobbyPlayerID =
-        locationState?.playerID ??
-        (playerID !== undefined ? parseInt(playerID) : NaN);
-      if (Number.isNaN(lobbyPlayerID)) {
-        const storedPlayerID =
-          lobbyAuthKey && lobbyGameID > 0 ? loadGamePlayerID(lobbyGameID) : 0;
-        lobbyPlayerID =
-          storedPlayerID === 1 || storedPlayerID === 2 ? storedPlayerID : 3;
-      }
-
       dispatch(
         setGameStart({
-          gameID: lobbyGameID,
-          playerID: lobbyPlayerID,
-          authKey: lobbyAuthKey
+          gameID: parseInt(gameID ?? ''),
+          playerID: locationState?.playerID ?? parseInt(playerID),
+          authKey: locationState?.authKey ?? authKey
         })
       );
     }, []);
