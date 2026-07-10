@@ -217,10 +217,17 @@
   font-weight: 600;
 }
 
-.cosmeticsSection {
-  margin-top: 2rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+.signpostNote {
+  margin: 0;
+  font-size: 0.875em;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.7);
+  text-align: center;
+}
+
+.signpostNote a {
+  color: var(--theme-primary);
+  text-decoration: underline;
 }
 
 @media (orientation: portrait) {

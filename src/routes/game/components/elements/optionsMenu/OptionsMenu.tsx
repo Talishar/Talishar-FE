@@ -16,40 +16,15 @@ import { motion, AnimatePresence } from 'framer-motion';
 import useShowModal from 'hooks/useShowModals';
 import OptionsSettings from './OptionsSettings';
 import { shallowEqual } from 'react-redux';
-import { CosmeticsSection } from './OptionsSettings/CosmeticsSection';
-import { apiSlice, useGetCosmeticsQuery } from 'features/api/apiSlice';
-import { useAppSelector as useAppSelectorOptions } from 'app/Hooks';
-import {
-  getSettingsEntity,
-  updateOptions,
-  Setting
-} from 'features/options/optionsSlice';
-import styles2 from './OptionsSettings/OptionsSettings.module.css';
+import { apiSlice } from 'features/api/apiSlice';
 
 const OptionsContent = () => {
   const { gameID, playerID } = useAppSelector(getGameInfo, shallowEqual);
-  const gameInfo = useAppSelector(getGameInfo, shallowEqual);
-  const settingsData = useAppSelectorOptions(getSettingsEntity);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const [allowSpectator, setAllowSpectator] = useState(false);
-  const { data } = useGetCosmeticsQuery(undefined);
 
   const gameURL = `http://talishar.net/game/play/${gameID}`;
-
-  const initialValues = {
-    cardBack: String(settingsData['CardBack']?.value ?? '0'),
-    playMat: String(settingsData['Playmat']?.value ?? '0')
-  };
-
-  const handleSettingsChange = ({ name, value }: Setting) => {
-    dispatch(
-      updateOptions({
-        game: gameInfo,
-        settings: [{ name: name, value: value }]
-      })
-    );
-  };
 
   const clickCloseOptionsHandler = () => {
     dispatch(closeOptionsMenu());
@@ -240,12 +215,25 @@ const OptionsContent = () => {
             </div>
           </div>
         )}
-        <CosmeticsSection
-          data={data}
-          selectedCardBack={initialValues.cardBack}
-          selectedPlaymat={initialValues.playMat}
-          onSettingsChange={handleSettingsChange}
-        />
+        <div className={styles.sectionContainer}>
+          <div className={styles.sectionHeader}>
+            <span>Cosmetics</span>
+          </div>
+          <div className={styles.sectionContent}>
+            <p className={styles.signpostNote}>
+              Playmats and card backs are chosen before a game starts. Set your
+              defaults in{' '}
+              <a href="/user/settings" target="_blank" rel="noreferrer">
+                Settings
+              </a>{' '}
+              or customize them per deck in{' '}
+              <a href="/user/decks" target="_blank" rel="noreferrer">
+                My Decks
+              </a>
+              .
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );

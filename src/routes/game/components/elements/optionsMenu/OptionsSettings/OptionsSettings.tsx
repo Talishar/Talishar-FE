@@ -21,7 +21,6 @@ import {
   PresetButtons,
   Fieldset
 } from './FormComponents';
-import { CosmeticsSection } from './CosmeticsSection';
 import { VisualSlider } from './VisualSettings';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import ThemeToggle from 'themes/ThemeToggle';
