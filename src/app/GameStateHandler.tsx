@@ -15,7 +15,8 @@ import { selectCurrentUserName } from 'features/auth/authSlice';
 import {
   getCurrentUsername,
   cacheCurrentUsername,
-  loadGameAuthKey
+  loadGameAuthKey,
+  loadGamePlayerID
 } from 'utils/LocalKeyManagement';
 import ParseGameState from './ParseGameState';
 import { toast } from 'react-hot-toast';
@@ -29,7 +30,7 @@ const GameStateHandler = () => {
   const gameInfo = useAppSelector(getGameInfo);
   const currentUserName = useAppSelector(selectCurrentUserName);
   const dispatch = useAppDispatch();
-  const [{ gameName = '0', playerID = '3', authKey = '' }] =
+  const [{ gameName = '0', playerID, authKey = '' }] =
     useKnownSearchParams();
   const location = useLocation();
   const locationState = location.state as GameLocationState | undefined;
@@ -51,7 +52,6 @@ const GameStateHandler = () => {
 
   useEffect(() => {
     const currentGameID = parseInt(gameID ?? gameName);
-    const currentPlayerID = locationState?.playerID ?? parseInt(playerID);
 
     let currentAuthKey = locationState?.authKey || authKey;
     if (!currentAuthKey) {
@@ -59,6 +59,18 @@ const GameStateHandler = () => {
     }
     if (!currentAuthKey && currentGameID > 0) {
       currentAuthKey = loadGameAuthKey(currentGameID);
+    }
+
+    let currentPlayerID =
+      locationState?.playerID ??
+      (playerID !== undefined ? parseInt(playerID) : NaN);
+    if (Number.isNaN(currentPlayerID)) {
+      const storedPlayerID =
+        currentAuthKey && currentGameID > 0
+          ? loadGamePlayerID(currentGameID)
+          : 0;
+      currentPlayerID =
+        storedPlayerID === 1 || storedPlayerID === 2 ? storedPlayerID : 3;
     }
 
     if (
