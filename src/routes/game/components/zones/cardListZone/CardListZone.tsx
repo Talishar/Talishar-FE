@@ -86,7 +86,9 @@ export const CardListZone = () => {
     cardList.name.includes('Your Soul') ||
     cardList.name.includes("Opponent's Soul") ||
     cardList.name.includes('Your Pitch') ||
-    cardList.name.includes("Opponent's Pitch")
+    cardList.name.includes("Opponent's Pitch") ||
+    cardList.name.includes('Your Hand') ||
+    cardList.name.includes("Opponent's Hand")
   ));
 
   const filteredList = useMemo(
