@@ -12,7 +12,7 @@
 
 .intro {
   color: rgba(255, 255, 255, 0.7);
-  margin-bottom: 1.5em;
+  margin-bottom: 1em;
 }
 
 .upsellBanner {
@@ -68,6 +68,7 @@
   font-size: 1em;
   box-sizing: border-box;
   transition: border-color 0.2s ease, background-color 0.2s ease;
+  margin-bottom: 0 !important;
 }
 
 .addDeckInput:focus {
@@ -206,8 +207,11 @@
 }
 
 .altArtToggleButton:hover {
+  background: rgba(212, 175, 55, 0.12);
   border-color: rgba(212, 175, 55, 0.6);
   color: #d4af37;
+  transform: none;
+  box-shadow: none;
 }
 
 .pickerLabel strong {
@@ -232,14 +236,26 @@
   flex-wrap: wrap;
   align-items: center;
   gap: 0.6em;
-  position: sticky;
-  top: 70px;
-  z-index: 100;
   margin: 0 -1.1em;
   padding: 0.7em 1.1em;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+@media (max-width: 600px) {
+  .deckDetailsRowSticky {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .deckDetailsRowSticky .heroSelect {
+    flex: 1 1 auto;
+    width: 100%;
+  }
+
+  .deckDetailsRowSticky .deckActionButton,
+  .deckDetailsRowSticky .saveButton {
+    flex: 1 1 auto;
+  }
 }
 
 .heroSelect {
@@ -281,8 +297,11 @@
 }
 
 .deckActionButton:hover {
+  background: rgba(212, 175, 55, 0.12);
   border-color: rgba(212, 175, 55, 0.6);
   color: #d4af37;
+  transform: none;
+  box-shadow: none;
 }
 
 .thumbGrid {
@@ -421,13 +440,23 @@
 
 .saveButton:disabled {
   background-color: var(--theme-form-border, #797c80);
+  color: #ffffff;
   cursor: not-allowed;
-  opacity: 0.7;
+  opacity: 1;
 }
 
 .savedHint {
-  font-size: 0.85em;
-  color: rgba(255, 255, 255, 0.5);
+  display: flex;
+  align-items: center;
+  align-self: stretch;
+  font-size: 0.9em;
+  font-weight: 700;
+  color: #ff4d4d;
+  background-color: rgba(255, 45, 45, 0.15);
+  border: 1px solid rgba(255, 45, 45, 0.7);
+  border-radius: 4px;
+  padding: 0.5em 0.9em;
+  white-space: nowrap;
 }
 
 .emptyState {

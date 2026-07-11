@@ -172,7 +172,12 @@ export const DecksPage = () => {
     setHoverPreview({ cardNumber, x: e.clientX, y: e.clientY });
   const hidePreview = () => setHoverPreview(null);
 
-  const decks = decksData?.favoriteDecks ?? [];
+  const rawDecks = decksData?.favoriteDecks ?? [];
+
+  const decks = useMemo(
+    () => [...rawDecks].sort((a, b) => b.index - a.index),
+    [rawDecks]
+  );
 
   useEffect(() => {
     if (!focusDeck) return;
