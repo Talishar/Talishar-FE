@@ -78,10 +78,10 @@ export default function ArsenalZone(prop: Displayrow) {
               className={styles.arsenalDestroyContainer}
             >
               <div className={styles.arsenalDestroyTopPiece}>
-                <CardDisplay card={{ cardNumber: destroyCard }} />
+                <CardDisplay card={{ cardNumber: destroyCard }} isPlayer={isPlayer} />
               </div>
               <div className={styles.arsenalDestroyBottomPiece}>
-                <CardDisplay card={{ cardNumber: destroyCard }} />
+                <CardDisplay card={{ cardNumber: destroyCard }} isPlayer={isPlayer} />
               </div>
             </div>
           )}
@@ -110,7 +110,7 @@ export default function ArsenalZone(prop: Displayrow) {
                   key={`arsenalFlipAnimation-${arsenalFlipTrigger}`}
                   className={styles.arsenalFlipCard}
                 >
-                  <CardDisplay card={{ cardNumber: flipCard }} />
+                  <CardDisplay card={{ cardNumber: flipCard }} isPlayer={isPlayer} />
                 </div>
               )}
             </div>
@@ -122,10 +122,10 @@ export default function ArsenalZone(prop: Displayrow) {
             className={styles.arsenalDestroyContainer}
           >
             <div className={styles.arsenalDestroyTopPiece}>
-              <CardDisplay card={{ cardNumber: destroyCard }} />
+              <CardDisplay card={{ cardNumber: destroyCard }} isPlayer={isPlayer} />
             </div>
             <div className={styles.arsenalDestroyBottomPiece}>
-              <CardDisplay card={{ cardNumber: destroyCard }} />
+              <CardDisplay card={{ cardNumber: destroyCard }} isPlayer={isPlayer} />
             </div>
           </div>
         )}

@@ -55,6 +55,21 @@ enum ModalType {
   RequestChainLinkUndo = 4
 }
 
+const parseCardEvent = (
+  eventValue: string | undefined,
+  viewerPlayerID: number
+): { cardNumber: string; isPlayer: boolean | undefined } => {
+  const raw = eventValue ?? '';
+  const colonIndex = raw.indexOf(':');
+  if (colonIndex === -1) return { cardNumber: raw, isPlayer: undefined };
+  const eventPlayerID = parseInt(raw.slice(0, colonIndex));
+  const viewerID = viewerPlayerID === 2 ? 2 : 1;
+  return {
+    cardNumber: raw.slice(colonIndex + 1),
+    isPlayer: Number.isNaN(eventPlayerID) ? undefined : eventPlayerID === viewerID
+  };
+};
+
 export const EventsHandler = React.memo(() => {
   const events = useAppSelector(
     (state: RootState) => state.game.events,
@@ -187,19 +202,15 @@ export const EventsHandler = React.memo(() => {
             );
             continue;
           case 'REVEAL': {
-            const revealValue = event.eventValue ?? '';
-            const colonIndex = revealValue.indexOf(':');
-            const revealPlayerID = colonIndex !== -1 ? parseInt(revealValue.slice(0, colonIndex)) : null;
-            const revealCardNumber = colonIndex !== -1 ? revealValue.slice(colonIndex + 1) : revealValue;
-            const revealIsPlayer = revealPlayerID !== null ? revealPlayerID === playerID : undefined;
+            const reveal = parseCardEvent(event.eventValue, playerID);
             toast(
               (t) => (
                 <DismissibleToast t={t}>
                   Card Revealed
                   <CardDisplay
-                    card={{ cardNumber: revealCardNumber }}
+                    card={{ cardNumber: reveal.cardNumber }}
                     makeMeBigger
-                    isPlayer={revealIsPlayer}
+                    isPlayer={reveal.isPlayer}
                   />
                 </DismissibleToast>
               ),
@@ -242,48 +253,57 @@ export const EventsHandler = React.memo(() => {
             });
             continue;
           }
-          case 'DISCARD':
+          case 'DISCARD': {
+            const discard = parseCardEvent(event.eventValue, playerID);
             toast(
               (t) => (
                 <DismissibleToast t={t}>
                   Card Discarded
                   <CardDisplay
-                    card={{ cardNumber: event.eventValue ?? '' }}
+                    card={{ cardNumber: discard.cardNumber }}
                     makeMeBigger
+                    isPlayer={discard.isPlayer}
                   />
                 </DismissibleToast>
               ),
               { duration: 5000 }
             );
             continue;
-          case 'BANISH':
+          }
+          case 'BANISH': {
+            const banish = parseCardEvent(event.eventValue, playerID);
             toast(
               (t) => (
                 <DismissibleToast t={t}>
                   Card Banished
                   <CardDisplay
-                    card={{ cardNumber: event.eventValue ?? '' }}
+                    card={{ cardNumber: banish.cardNumber }}
                     makeMeBigger
+                    isPlayer={banish.isPlayer}
                   />
                 </DismissibleToast>
               ),
               { duration: 5000 }
             );
             continue;
-          case 'SOUL':
+          }
+          case 'SOUL': {
+            const soul = parseCardEvent(event.eventValue, playerID);
             toast(
               (t) => (
                 <DismissibleToast t={t}>
                   Into Soul
                   <CardDisplay
-                    card={{ cardNumber: event.eventValue ?? '' }}
+                    card={{ cardNumber: soul.cardNumber }}
                     makeMeBigger
+                    isPlayer={soul.isPlayer}
                   />
                 </DismissibleToast>
               ),
               { duration: 5000 }
             );
             continue;
+          }
           case 'REQUESTCHAT':
             if (
               parseInt(event.eventValue ?? '0') !== playerID &&

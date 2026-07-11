@@ -41,8 +41,20 @@ export const CardDisplay = (prop: CardProp) => {
     children
   } = prop;
   const dispatch = useAppDispatch();
+  const playerID = useAppSelector(
+    (state: RootState) => state.game.gameInfo.playerID
+  );
+  const viewerID = playerID === 2 ? 2 : 1;
+  const isOpponentCard =
+    card?.isOpponent !== undefined
+      ? card.isOpponent
+      : isPlayer !== undefined
+      ? !isPlayer
+      : card?.controller
+      ? card.controller !== viewerID
+      : false;
   const cardBack = useAppSelector((state: RootState) =>
-    isPlayer ? state.game.playerOne.CardBack : state.game.playerTwo.CardBack
+    !isOpponentCard ? state.game.playerOne.CardBack : state.game.playerTwo.CardBack
   ) ?? { cardNumber: '' };
   const { getLanguage } = useLanguageSelector();
   const [showSubCards, setShowSubCards] = useState(false);
@@ -138,7 +150,7 @@ export const CardDisplay = (prop: CardProp) => {
       onClick={onClick}
       onHoverStart={handleHoverStart}
       onHoverEnd={handleHoverEnd}
-      isOpponent={card.isOpponent !== undefined ? card.isOpponent : !isPlayer}
+      isOpponent={isOpponentCard}
       disableTilt={disableTilt}
     >
       {subCardsToShow.map((subCardNumber, ix) => {
@@ -164,6 +176,7 @@ export const CardDisplay = (prop: CardProp) => {
             <CardDisplay
               card={{ cardNumber: subCardNumber }}
               preventUseOnClick
+              isPlayer={!isOpponentCard}
             />
           </div>
         );
@@ -173,7 +186,7 @@ export const CardDisplay = (prop: CardProp) => {
         src={imageSrc}
         className={classNames(imgStyles, { [styles.tapped]: card.tapped })}
         isShuffling={isShuffling}
-        isOpponent={card.isOpponent !== undefined ? card.isOpponent : !isPlayer}
+        isOpponent={isOpponentCard}
       />
       {isDisabled && <div className={classStyles}></div>}
       {(card.isBroken ||
