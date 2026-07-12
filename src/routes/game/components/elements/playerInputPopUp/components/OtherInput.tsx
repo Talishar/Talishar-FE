@@ -1,10 +1,11 @@
-import { lazy, Suspense } from 'react';
+import { Suspense } from 'react';
 import CardDisplay from '../../cardDisplay/CardDisplay';
 import { NAME_A_CARD } from '../constants';
 import { FormProps } from '../playerInputPopupTypes';
 import styles from '../PlayerInputPopUp.module.css';
+import { lazyWithRetry } from 'utils/lazyWithRetry';
 
-const SearchCardInput = lazy(
+const SearchCardInput = lazyWithRetry(
   () => import('../../searchCardInput/SearchCardInput')
 );
 

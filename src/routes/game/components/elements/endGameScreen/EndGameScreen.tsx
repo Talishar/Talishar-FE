@@ -1,4 +1,5 @@
-import React, { useState, useRef, lazy, Suspense } from 'react';
+import React, { useState, useRef, Suspense } from 'react';
+import { lazyWithRetry } from 'utils/lazyWithRetry';
 import ReactDOM from 'react-dom';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import styles from './EndGameScreen.module.css';
@@ -9,7 +10,7 @@ import type {
   EndGameData,
   EndGameStatsRef
 } from '../endGameStats/EndGameStats';
-const EndGameStats = lazy(() => import('../endGameStats/EndGameStats'));
+const EndGameStats = lazyWithRetry(() => import('../endGameStats/EndGameStats'));
 import EndGameMenuOptions from '../endGameMenuOptions/EndGameMenuOptions';
 import { shallowEqual } from 'react-redux';
 import useShowModal from 'hooks/useShowModals';
