@@ -102,6 +102,7 @@ h3 {
   overflow: hidden;
   transition: all 0.3s ease;
   position: relative;
+  border-radius: 5px 0 0 5px;
 }
 
 .leftCol::before {
@@ -136,6 +137,8 @@ h3 {
   overflow: hidden;
   transition: all 0.3s ease;
   position: relative;
+    border-radius: 0 5px 5px 0;
+
 }
 
 .rightCol::before {
@@ -790,7 +793,6 @@ nav {
   }
 
   .gridLayout {
-    gap: 0.5em;
     padding: 0.5em;
     min-height: 100%;
     overflow-y: hidden;
