@@ -15,11 +15,11 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  width: clamp(360px, 44vw, 580px);
-  max-height: min(78vh, 680px);
+  width: clamp(320px, 34vw, 400px);
+  max-height: min(82vh, 660px);
   background: var(--near-black, #0d0d0f);
-  border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.18));
-  border-radius: 10px;
+  border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.14));
+  border-radius: 12px;
   box-shadow:
     0 24px 64px rgba(0, 0, 0, 0.75),
     0 2px 0 rgba(255, 255, 255, 0.04) inset;
@@ -29,55 +29,59 @@
 /* ── Header ───────────────────────────────────────────── */
 .cardListTitleContainer {
   display: flex;
-  flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  padding: 14px 16px 12px;
+  padding: 13px 15px;
   flex-shrink: 0;
-  gap: 12px;
+  gap: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
 }
 
-.cardListTitle {
+.titleRow {
   display: flex;
-  flex-direction: column;
-  gap: 4px;
-  flex: 1;
+  align-items: center;
+  gap: 10px;
   min-width: 0;
 }
 
 .title {
   margin: 0;
   padding: 0;
-  font-size: 1rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: 0.09em;
   color: var(--theme-primary, #c9a84c);
   line-height: 1;
   text-transform: uppercase;
+  white-space: nowrap;
   text-shadow:
-    0 0 24px rgba(201, 168, 76, 0.45),
+    0 0 22px rgba(201, 168, 76, 0.4),
     0 1px 3px rgba(0, 0, 0, 0.9);
 }
 
-/* Total damage lives in the header as a compact badge row */
-.totalDamageContainer {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  margin-top: 3px;
+/* ── Hit / no-hit badge ───────────────────────────────── */
+.badge {
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 999px;
+  line-height: 1;
+  border: 1px solid transparent;
+  flex-shrink: 0;
 }
 
-.totalDamageLabel {
-  font-size: 0.7rem;
-  font-weight: 400;
-  color: rgba(255, 255, 255, 0.45);
-  letter-spacing: 0.3px;
+.hit {
+  color: #fca5a5;
+  background: rgba(220, 55, 55, 0.16);
+  border-color: rgba(220, 55, 55, 0.5);
 }
 
-.totalDamageValue {
-  font-size: 0.78rem;
-  font-weight: 700;
-  color: rgba(255, 255, 255, 0.85);
+.noHit {
+  color: rgba(255, 255, 255, 0.55);
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.16);
 }
 
 .cardListCloseIcon {
@@ -88,7 +92,7 @@
   height: 28px;
   border-radius: 5px;
   cursor: pointer;
-  color: rgba(255, 255, 255, 0.45);
+  color: rgba(255, 255, 255, 0.4);
   transition: background 0.15s ease, color 0.15s ease;
   font-size: 0.8rem;
   flex-shrink: 0;
@@ -99,154 +103,182 @@
   color: rgba(255, 255, 255, 0.9);
 }
 
-/* ── Scrollable content ───────────────────────────────── */
-.cardListContents {
+/* ── Stat ledger (hero) ───────────────────────────────── */
+.ledger {
   display: flex;
-  flex-direction: column;
-  overflow-y: auto;
-  overflow-x: hidden;
-}
-
-/* ── Table ────────────────────────────────────────────── */
-.tableWrapper {
-  overflow-y: auto;
-}
-
-.table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.table thead {
-  position: sticky;
-  top: 0;
-  z-index: 5;
-  background: rgba(255, 255, 255, 0.04);
-}
-
-.table th {
-  padding: 7px 10px;
-  font-size: 0.62rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
-  color: rgba(255, 255, 255, 0.35);
-  text-align: left;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
-}
-
-/* Align "CARD" header with name cell — same left padding as td.cardNameCol */
-.table th.cardNameCol {
-  padding-left: 8px;
-  text-align: left;
-}
-
-.table th.effectCol {
-  text-align: right;
-  padding-right: 14px;
-}
-
-/* ── Rows ─────────────────────────────────────────────── */
-.tableRow {
-  transition: background 0.15s ease;
-}
-
-.tableRow:nth-child(even) {
+  align-items: stretch;
+  margin: 14px 15px 2px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 10px;
   background: rgba(255, 255, 255, 0.025);
-}
-
-.tableRow:hover {
-  background: rgba(255, 255, 255, 0.055);
-}
-
-/* ── Cells ────────────────────────────────────────────── */
-.table td {
-  vertical-align: middle;
-  padding: 7px 10px;
-}
-
-.cardImageCol {
-  width: 60px;
-  padding: 4px 8px 4px 10px !important;
-}
-
-.table th.cardImageCol {
-  width: 60px;
-}
-
-.cardImageWrapper {
-  position: relative;
-  width: 36px;
-  height: 36px;
-  border-radius: 4px;
   overflow: hidden;
   flex-shrink: 0;
 }
 
-/* Override Effect's border with a glow in this context */
-.playerGlow :global(.imgPlayerBorder),
-.opponentGlow :global(.imgOpponentBorder) {
-  width: 44px !important;
-  height: 44px !important;
+.stat {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 11px 6px;
+}
+
+.statNum {
+  font-size: 1.5rem;
+  font-weight: 800;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  color: rgba(255, 255, 255, 0.94);
+}
+
+.statLabel {
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* Damage is the result — the only tinted number, in the theme gold. */
+.dmgNum {
+  color: var(--theme-primary, #c9a84c);
+  text-shadow: 0 0 18px rgba(201, 168, 76, 0.4);
+}
+
+.op {
+  display: flex;
+  align-items: center;
+  padding: 0 2px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+/* ── Card sections ────────────────────────────────────── */
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 4px 15px 15px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.sectionLabel {
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.34);
+  padding: 10px 2px 4px;
+}
+
+.info {
+  padding: 24px;
+  text-align: center;
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* ── Rows ─────────────────────────────────────────────── */
+.row {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 5px 6px;
+  border-radius: 6px;
+  transition: background 0.15s ease;
+}
+
+.row:hover {
+  background: rgba(255, 255, 255, 0.045);
+}
+
+.rowIcon {
+  width: 44px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.rowName {
+  flex: 1;
+  min-width: 0;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.86);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rowVal {
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: rgba(255, 255, 255, 0.92);
+  font-variant-numeric: tabular-nums;
+  padding-right: 4px;
+}
+
+.rowValPos {
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: #4ade80;
+  font-variant-numeric: tabular-nums;
+  padding-right: 4px;
+}
+
+.rowValNeg {
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: #f87171;
+  font-variant-numeric: tabular-nums;
+  padding-right: 4px;
+}
+
+.rowValNeutral {
+  font-size: 0.92rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.35);
+  font-variant-numeric: tabular-nums;
+  padding-right: 4px;
+}
+
+.emptyRow {
+  padding: 6px 8px;
+  font-size: 0.8rem;
+  font-style: italic;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* ── Card art, bordered by pitch colour (red / yellow / blue) ── */
+.pitchArt {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Applied directly to the <img> via Effect's imgClassName, so it overrides
+   Effect's own player/opponent border regardless of CSS-module hashing. */
+.pitchImg {
+  width: 40px !important;
+  height: 40px !important;
   max-width: unset !important;
   max-height: unset !important;
   object-fit: cover;
-  border-radius: 3px;
+  border-radius: 4px !important;
   display: block;
-}
-
-.playerGlow :global(.imgPlayerBorder) {
-  border: 2px solid rgba(30, 160, 255, 0.9);
-  box-shadow: 0 0 10px rgba(30, 160, 255, 0.45), 0 0 3px rgba(30, 160, 255, 0.6);
-}
-
-.opponentGlow :global(.imgOpponentBorder) {
-  border: 2px solid rgba(220, 55, 55, 0.9);
-  box-shadow: 0 0 10px rgba(220, 55, 55, 0.45), 0 0 3px rgba(220, 55, 55, 0.6);
+  border: 2px solid var(--pitch-color, rgba(219, 209, 163, 0.5)) !important;
+  box-shadow: 0 0 8px var(--pitch-glow, transparent);
 }
 
 .attackSymbol {
-  width: 28px;
-  height: 28px;
+  width: 26px;
+  height: 26px;
   display: block;
   margin: auto;
   opacity: 0.9;
-}
-
-.cardNameCol {
-  padding: 7px 6px 7px 8px !important;
-  text-align: left;
-}
-
-.cardNameCol a,
-.cardNameCol span {
-  font-size: 0.82rem;
-  color: rgba(255, 255, 255, 0.82);
-  font-weight: 400;
-}
-
-.effectCol {
-  width: 52px;
-  text-align: right;
-  padding: 7px 14px 7px 6px !important;
-}
-
-.positive {
-  font-size: 0.82rem;
-  font-weight: 700;
-  color: #4ade80;
-}
-
-.negative {
-  font-size: 0.82rem;
-  font-weight: 700;
-  color: #f87171;
-}
-
-.neutral {
-  font-size: 0.82rem;
-  font-weight: 500;
-  color: rgba(255, 255, 255, 0.38);
 }
 
 /* ── Error ────────────────────────────────────────────── */
@@ -255,4 +287,5 @@
   padding: 16px;
   text-align: center;
   font-size: 0.78rem;
+  word-break: break-word;
 }
