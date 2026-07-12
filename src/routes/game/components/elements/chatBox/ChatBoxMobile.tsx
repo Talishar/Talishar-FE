@@ -4,9 +4,7 @@ import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import ChatInput from '../chatInput/ChatInput';
 import styles from './ChatBox.module.css';
-import { parseHtmlToReactElements } from 'utils/ParseEscapedString';
-
-const CHAT_RE = /<span[^>]*>(.*?):\s<\/span>/;
+import GameLogMessages from './GameLogMessages';
 
 export default function ChatBox() {
   const amIPlayerOne = useAppSelector((state: RootState) => {
@@ -29,19 +27,8 @@ export default function ChatBox() {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
   };
 
-  const chatMessages = chatLog
-    ?.filter((message) => {
-      switch (chatFilter) {
-        case 'chat':
-          return message.match(CHAT_RE);
-        case 'log':
-          return !message.match(CHAT_RE);
-        default:
-          return true;
-      }
-    })
-    .map((message) =>
-      message
+  const transformMessage = (message: string) =>
+    message
         .replace(
           /Player 1/g,
           amIPlayerOne ? myName.substring(0, 15) : oppName.substring(0, 15)
@@ -49,8 +36,7 @@ export default function ChatBox() {
         .replace(
           /Player 2/g,
           amIPlayerOne ? oppName.substring(0, 15) : myName.substring(0, 15)
-        )
-    );
+        );
 
   useEffect(() => {
     if (collapsed) return;
@@ -73,11 +59,13 @@ export default function ChatBox() {
       {!collapsed && (
         <>
           <div className={styles.chatMobileScrollArea}>
-            {chatMessages?.map((chat, ix) => (
-              <div key={ix} className={styles.chatMobileMessage}>
-                {parseHtmlToReactElements(chat)}
-              </div>
-            ))}
+            <GameLogMessages
+              chatLog={chatLog}
+              chatFilter={chatFilter}
+              transformMessage={transformMessage}
+              playerNames={[amIPlayerOne ? myName : oppName, amIPlayerOne ? oppName : myName]}
+              mobile
+            />
             <div ref={messagesEndRef} />
           </div>
           <ChatInput />

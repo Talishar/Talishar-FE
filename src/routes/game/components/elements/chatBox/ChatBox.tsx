@@ -3,17 +3,10 @@ import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import ChatInput from '../chatInput/ChatInput';
 import styles from './ChatBox.module.css';
-import { parseHtmlToReactElements } from 'utils/ParseEscapedString';
 import classNames from 'classnames';
 import useSetting from 'hooks/useSetting';
 import { IS_STREAMER_MODE } from 'features/options/constants';
-
-const CHAT_RE = /<span[^>]*>(.*?):\s<\/span>/;
-
-const ChatMessageItem = React.memo(({ message }: { message: string }) => (
-  <div>{parseHtmlToReactElements(message)}</div>
-));
-ChatMessageItem.displayName = 'ChatMessageItem';
+import GameLogMessages from './GameLogMessages';
 
 export default function ChatBox({ usePrimary = false, showTabs = true }: { usePrimary?: boolean; showTabs?: boolean }) {
   const amIPlayerOne = useAppSelector((state: RootState) => {
@@ -71,9 +64,7 @@ export default function ChatBox({ usePrimary = false, showTabs = true }: { usePr
     [isStreamerMode, oppName]
   );
 
-  const chatMessages = useMemo(() => {
-    if (!chatLog) return null;
-
+  const transformMessage = useMemo(() => {
     const myDisplayName = amIPlayerOne
       ? (myName && myName.trim() ? myName.substring(0, 15) : 'Player 1')
       : (myName && myName.trim() ? myName.substring(0, 15) : 'Player 2');
@@ -87,12 +78,7 @@ export default function ChatBox({ usePrimary = false, showTabs = true }: { usePr
     const p1DisplayName = amIPlayerOne ? myDisplayName : oppDisplayName;
     const p2DisplayName = amIPlayerOne ? oppDisplayName : myDisplayName;
 
-    const result: Array<{ processed: string; originalIndex: number }> = [];
-    for (let i = 0; i < chatLog.length; i++) {
-      const message = chatLog[i];
-      if (chatFilter === 'chat' && !CHAT_RE.test(message)) continue;
-      if (chatFilter === 'log' && CHAT_RE.test(message)) continue;
-
+    return (message: string) => {
       let processed = message
         .replace(/Player 1/g, `<b>${p1DisplayName}</b>`)
         .replace(/Player 2/g, `<b>${p2DisplayName}</b>`);
@@ -101,10 +87,9 @@ export default function ChatBox({ usePrimary = false, showTabs = true }: { usePr
         processed = processed.replace(streamerNameRegex, 'Opponent');
       }
 
-      result.push({ processed, originalIndex: i });
-    }
-    return result;
-  }, [chatLog, chatFilter, isStreamerMode, amIPlayerOne, myName, oppName, streamerNameRegex]);
+      return processed;
+    };
+  }, [isStreamerMode, amIPlayerOne, myName, oppName, streamerNameRegex]);
 
   useEffect(() => {
     const currentLength = chatLog?.length ?? 0;
@@ -154,9 +139,12 @@ export default function ChatBox({ usePrimary = false, showTabs = true }: { usePr
       )}
       <div className={styles.chatBoxInner}>
         <div className={styles.chatBox} ref={chatBoxRef}>
-          {chatMessages?.map(({ processed, originalIndex }) => (
-            <ChatMessageItem key={originalIndex} message={processed} />
-          ))}
+          <GameLogMessages
+            chatLog={chatLog}
+            chatFilter={chatFilter}
+            transformMessage={transformMessage}
+            playerNames={[amIPlayerOne ? myName : oppName, amIPlayerOne ? oppName : myName]}
+          />
           {displayTyping && (
             <div className={styles.typingIndicator} ref={messagesEndRef}>
               <em>Opponent is typing…</em>

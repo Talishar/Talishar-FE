@@ -5,6 +5,83 @@
   bottom: 0;
   left: 0.1em;
   right: 0;
+  --game-log-accent: var(--theme-text);
+  --game-log-critical: #fca52c;
+}
+
+.chatMessage {
+  padding: 2px 5px;
+}
+
+.logMuted {
+  color: color-mix(in srgb, var(--theme-text) 55%, transparent);
+  font-size: 0.9em;
+}
+
+.logAction {
+  font-weight: 600;
+}
+
+.logTrigger {
+  border-left: 2px solid var(--game-log-accent);
+  padding-left: 6px;
+}
+
+.logCritical {
+  color: var(--game-log-critical);
+  font-weight: 700;
+}
+
+.logIrreversible {
+  font-weight: 600;
+}
+
+.turnDivider {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 9px 5px 6px;
+  color: var(--game-log-accent);
+  font-size: 0.85em;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.turnDivider::before,
+.turnDivider::after {
+  content: '';
+  height: 1px;
+  flex: 1 1 auto;
+  background-color: currentColor;
+  opacity: 0.5;
+}
+
+.turnDividerPlayer {
+  color: var(--theme-text);
+  font-weight: 500;
+  text-transform: none;
+}
+
+.combatGroup {
+  margin: 5px 4px;
+  padding: 4px 0;
+  border-left: 2px solid var(--game-log-accent);
+  background-color: color-mix(in srgb, var(--theme-form-background) 94%, var(--game-log-accent));
+}
+
+.combatGroupLabel {
+  padding: 0 6px 3px;
+  color: var(--game-log-accent);
+  font-size: 0.75em;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.combatGroup .chatMessage,
+.combatGroup .chatMobileMessage {
+  padding-left: 7px;
+  padding-right: 7px;
 }
 
 .tabs > button {
@@ -193,6 +270,8 @@
   display: flex;
   flex-direction: column;
   gap: 1px;
+  --game-log-accent: #9edfff;
+  --game-log-critical: #ffd27a;
 }
 
 /* Individual message */
