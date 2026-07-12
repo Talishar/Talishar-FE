@@ -12,6 +12,8 @@ const COMBAT_END_RE = /^The (?:chain link was (?:resolved|closed)|combat chain w
 const COMBAT_CHAIN_CLOSED_RE = /^The combat chain was closed\.?$/i;
 const COMBAT_SIGNAL_RE = /\b(?:blocked with|combat resolved|chain link|hit effect|attack)\b/i;
 const PASS_RE = /\b(?:passes? priority|passed\.?|main player passed priority)\b/i;
+const UNDO_RE = /\b(?:undid (?:their|the) last action|requested to undo the last action)\b/i;
+const UNDO_LIMIT_RE = /^Cannot undo further: Please revert to start of this\/previous turn instead\.$/i;
 const DAMAGE_RE = /\b(?:damage|lost life|gained life|won|conceded|forfeit)\b/i;
 const ACTION_RE = /^Player [12] (?:played|activated|blocked with)\b/i;
 const IRREVERSIBLE_RE = /\b(?:destroyed|banished|discarded|put .*?(?:bottom|top)|added to arsenal|drew|shuffled|revealed)\b/i;
@@ -52,12 +54,105 @@ function TurnDivider({ marker, playerNames }: { marker: RegExpMatchArray; player
   );
 }
 
-function Message({ entry, transformMessage, mobile }: { entry: LogMessage; transformMessage: (message: string) => string; mobile: boolean }) {
+function Message({ entry, transformMessage, mobile, repeatCount = 1 }: { entry: LogMessage; transformMessage: (message: string) => string; mobile: boolean; repeatCount?: number }) {
   const className = classNames(
     mobile ? styles.chatMobileMessage : styles.chatMessage,
     importanceClass(entry.message)
   );
-  return <div className={className}>{parseHtmlToReactElements(transformMessage(entry.message))}</div>;
+  return (
+    <div className={className} title={repeatCount > 1 ? `${repeatCount} repeated log events` : undefined}>
+      {parseHtmlToReactElements(transformMessage(entry.message))}
+      {repeatCount > 1 && <span className={styles.logRepeatCount}> (x{repeatCount})</span>}
+    </div>
+  );
+}
+
+function repeatedEventEnd(messages: LogMessage[], start: number, matcher: RegExp) {
+  if (!matcher.test(plainText(messages[start].message))) return start;
+
+  let end = start;
+  while (
+    end + 1 < messages.length &&
+    !CHAT_RE.test(messages[end + 1].message) &&
+    matcher.test(plainText(messages[end + 1].message))
+  ) {
+    end++;
+  }
+  return end;
+}
+
+function undoLimitSequence(messages: LogMessage[], start: number) {
+  if (!UNDO_RE.test(plainText(messages[start].message))) return null;
+
+  let end = start;
+  let undoCount = 1;
+  let warning: LogMessage | null = null;
+
+  // The server can batch several undo entries before it emits the limit warning.
+  // Treat the uninterrupted undo/warning run as one sequence regardless of order.
+  while (end + 1 < messages.length) {
+    const next = messages[end + 1];
+    const text = plainText(next.message);
+    if (UNDO_RE.test(text)) {
+      undoCount++;
+      end++;
+      continue;
+    }
+    if (UNDO_LIMIT_RE.test(text)) {
+      warning = next;
+      end++;
+      continue;
+    }
+    break;
+  }
+
+  return undoCount > 1 && warning ? { end, undoCount, warning } : null;
+}
+
+function RepeatedMessages({ entries, transformMessage, mobile }: { entries: LogMessage[]; transformMessage: (message: string) => string; mobile: boolean }) {
+  const output: React.ReactNode[] = [];
+
+  for (let index = 0; index < entries.length; index++) {
+    const entry = entries[index];
+    const undoSequence = undoLimitSequence(entries, index);
+    if (undoSequence) {
+      output.push(
+        <Message
+          key={entry.originalIndex}
+          entry={entry}
+          transformMessage={transformMessage}
+          mobile={mobile}
+          repeatCount={undoSequence.undoCount}
+        />
+      );
+      output.push(
+        <Message
+          key={undoSequence.warning.originalIndex}
+          entry={undoSequence.warning}
+          transformMessage={transformMessage}
+          mobile={mobile}
+        />
+      );
+      index = undoSequence.end;
+      continue;
+    }
+    const passEnd = repeatedEventEnd(entries, index, PASS_RE);
+    const undoEnd = repeatedEventEnd(entries, index, UNDO_RE);
+    const end = Math.max(passEnd, undoEnd);
+
+    output.push(
+      <Message
+        key={entry.originalIndex}
+        entry={entry}
+        transformMessage={transformMessage}
+        mobile={mobile}
+        repeatCount={end - index + 1}
+      />
+    );
+    index = end;
+  }
+
+  return <>{output}</>;
 }
 
 function combatGroupEnd(messages: LogMessage[], start: number) {
@@ -100,9 +195,7 @@ export default function GameLogMessages({ chatLog, chatFilter, transformMessage,
       output.push(
         <section className={styles.combatGroup} key={`combat-${entry.originalIndex}`} aria-label="Combat sequence">
           <div className={styles.combatGroupLabel}>Chain Link {chainLinkNumber}</div>
-          {messages.slice(index, groupEnd + 1).map((combatEntry) => (
-            <Message key={combatEntry.originalIndex} entry={combatEntry} transformMessage={transformMessage} mobile={mobile} />
-          ))}
+          <RepeatedMessages entries={messages.slice(index, groupEnd + 1)} transformMessage={transformMessage} mobile={mobile} />
         </section>
       );
       if (closesCombatChain) chainLinkNumber = 0;
@@ -110,7 +203,42 @@ export default function GameLogMessages({ chatLog, chatFilter, transformMessage,
       continue;
     }
 
-    output.push(<Message key={entry.originalIndex} entry={entry} transformMessage={transformMessage} mobile={mobile} />);
+    const undoSequence = undoLimitSequence(messages, index);
+    if (undoSequence) {
+      output.push(
+        <Message
+          key={entry.originalIndex}
+          entry={entry}
+          transformMessage={transformMessage}
+          mobile={mobile}
+          repeatCount={undoSequence.undoCount}
+        />
+      );
+      output.push(
+        <Message
+          key={undoSequence.warning.originalIndex}
+          entry={undoSequence.warning}
+          transformMessage={transformMessage}
+          mobile={mobile}
+        />
+      );
+      index = undoSequence.end;
+      continue;
+    }
+
+    const passEnd = repeatedEventEnd(messages, index, PASS_RE);
+    const undoEnd = repeatedEventEnd(messages, index, UNDO_RE);
+    const end = Math.max(passEnd, undoEnd);
+    output.push(
+      <Message
+        key={entry.originalIndex}
+        entry={entry}
+        transformMessage={transformMessage}
+        mobile={mobile}
+        repeatCount={end - index + 1}
+      />
+    );
+    index = end;
     if (COMBAT_CHAIN_CLOSED_RE.test(plainText(entry.message))) chainLinkNumber = 0;
   }
 

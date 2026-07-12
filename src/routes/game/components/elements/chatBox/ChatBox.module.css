@@ -18,6 +18,13 @@
   font-size: 0.9em;
 }
 
+.logRepeatCount {
+  color: inherit;
+  font-size: inherit;
+  font-weight: 400;
+  opacity: 0.7;
+}
+
 .logAction {
   font-weight: 600;
 }
