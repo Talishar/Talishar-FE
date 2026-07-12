@@ -68,10 +68,10 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.35em;
+  gap: 0.25em;
   min-height: 0;
   box-sizing: border-box;
-  padding: 0.4em 0 0.45em;
+  padding: 0.3em 0.15em 0.35em;
   border-radius: 4px;
   cursor: pointer;
   font-size: clamp(1rem, 2.25dvh, 1.45rem);
@@ -112,14 +112,19 @@
 }
 
 .subThing {
-  font-size: 0.42em;
+  font-size: 0.36em;
   font-weight: 500;
-  line-height: 1;
-  letter-spacing: 0.14em;
+  line-height: 1.05;
+  letter-spacing: 0.03em;
   text-transform: uppercase;
   opacity: 0.65;
   text-shadow: 0 1px 0 rgba(0, 0, 0, 0.8);
-  padding: 0;
+  padding: 0 0.2em;
+  max-width: 100%;
+  box-sizing: border-box;
+  text-align: center;
+  white-space: normal;
+  overflow-wrap: break-word;
   user-select: none;
 }
 

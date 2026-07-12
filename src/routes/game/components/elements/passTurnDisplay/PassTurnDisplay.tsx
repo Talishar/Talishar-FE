@@ -10,6 +10,22 @@ import passTurnSound from 'sounds/prioritySound.wav';
 import { createPortal } from 'react-dom';
 import { getSettingsEntity } from 'features/options/optionsSlice';
 
+function passSubtitle(turnPhase: string | undefined): string {
+  switch (turnPhase) {
+    case 'B': // Defend step
+      return 'Block';
+    case 'A': // Attack reaction step
+    case 'D': // Defense reaction step
+      return 'Reaction';
+    case 'ARS': // End step
+    case 'PDECK':
+      return 'end turn';
+    case 'M': // Action phase
+    default:
+      return 'Priority';
+  }
+}
+
 export default function PassTurnDisplay() {
   const canPassPhase = useAppSelector(
     (state: RootState) => state.game.canPassPhase
@@ -25,6 +41,9 @@ export default function PassTurnDisplay() {
   );
   const priorityPlayer = useAppSelector(
     (state: RootState) => state.game.priorityPlayer
+  );
+  const turnPhaseEnum = useAppSelector(
+    (state: RootState) => state.game.turnPhase?.turnPhase
   );
   const spectatorCameraView = useAppSelector(
     (state: RootState) => state.game.spectatorCameraView
@@ -142,11 +161,18 @@ export default function PassTurnDisplay() {
   }
 
   if (canPassPhase === true) {
+    const subtitle = passSubtitle(turnPhaseEnum);
     return (
       <>
-        <div className={styles.passTurnDisplayActive} onClick={onPassTurn}>
+        <div
+          className={styles.passTurnDisplayActive}
+          onClick={onPassTurn}
+          role="button"
+          aria-label="Pass priority"
+          title={`${subtitle} · pass priority · Space`}
+        >
           <div> PASS </div>
-          <div className={styles.subThing}>SPACE</div>
+          <div className={styles.subThing}>{subtitle}</div>
         </div>
         {showAreYouSureModal &&
           preventPassPrompt &&
