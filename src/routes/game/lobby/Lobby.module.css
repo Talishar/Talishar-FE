@@ -260,8 +260,8 @@ h3 {
   left: 0;
   right: 0;
   bottom: 0;
-  padding: 1.2em;
-  padding-bottom: 0.8em;
+  container-type: inline-size;
+  padding: 0.8em;
   color: var(--white);
   text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.9), 0 0 4px rgba(0, 0, 0, 0.8);
   background: linear-gradient(
@@ -302,15 +302,16 @@ h3 {
 }
 
 .lobbyPlayerName {
-  flex: 1 1 auto;
+  flex: 0 1 auto;
   min-width: 0;
-  white-space: normal;
-  overflow-wrap: anywhere;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-/* Ensure lobby player name matches heroName on desktop */
+/* Fluid, container-relative sizing so the name fits the column at any width */
 .dimPic > h3 .lobbyPlayerName {
-  font-size: 1.1em;
+  font-size: clamp(0.7rem, 7cqi, 1.15rem);
   font-weight: 600;
   letter-spacing: 0;
   color: rgba(255, 255, 255, 0.95);
@@ -719,9 +720,9 @@ nav {
     font-size: 0.95em;
   }
 
-  /* Mobile: make player name match heroName size/style */
+  /* Mobile: keep the name fluid so it fits the (wider) column without wrapping */
   .dimPic > h3 .lobbyPlayerName {
-    font-size: 0.95em;
+    font-size: clamp(0.8rem, 7cqi, 1.05rem);
     font-weight: 600;
   }
 
