@@ -15,7 +15,8 @@ const NON_ENGLISH_PROMO_ALT_ARTS = [
   'HER116',
   'HER126',
   'HER127',
-  'AGB001'
+  'AGB001',
+  '1HP405'
 ];
 
 const isNonEnglishPromoAltArt = (altPath: string): boolean =>
