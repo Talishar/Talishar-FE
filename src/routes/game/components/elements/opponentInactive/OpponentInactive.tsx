@@ -103,7 +103,7 @@ export default function OpponentInactive() {
     return (
       <div className={`${styles.overlay} ${styles.warning}`}>
         <span className={styles.icon}>⏳</span>
-        <p className={styles.message}>You appear to be inactive — make a move!</p>
+        <p className={styles.message}>You appear to be inactive. Make a move!</p>
         <button
           className={styles.stillHereButton}
           onClick={handleStillHere}
