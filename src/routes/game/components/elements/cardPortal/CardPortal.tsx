@@ -40,6 +40,7 @@ function CardDetails({
           src={src}
           className={classNames(styles.img, { [styles.meldImg]: isMeld })}
           isOpponent={isOpponent}
+          preferEnglishArt
         />
       </div>
     </div>

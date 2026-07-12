@@ -6,6 +6,21 @@ import styles from './CardImage.module.css';
 
 const UNKNOWN_IMAGE = 'Difficulties';
 
+// Alt arts of promos printed in a non-English language. 
+const NON_ENGLISH_PROMO_ALT_ARTS = [
+  'FAB331',
+  'DDD016',
+  '1HP396',
+  'FAB474',
+  'HER116',
+  'HER126',
+  'HER127',
+  'AGB001'
+];
+
+const isNonEnglishPromoAltArt = (altPath: string): boolean =>
+  NON_ENGLISH_PROMO_ALT_ARTS.some((code) => altPath.startsWith(code));
+
 export interface CardImage {
   src: string;
   className?: string;
@@ -13,6 +28,7 @@ export interface CardImage {
   draggable?: Booleanish;
   isShuffling?: boolean;
   isOpponent?: boolean;
+  preferEnglishArt?: boolean;
 }
 
 export const CardImage = React.memo((props: CardImage) => {
@@ -29,7 +45,7 @@ export const CardImage = React.memo((props: CardImage) => {
   );
 
   let src = props.src;
-  const { isShuffling, isOpponent } = props;
+  const { isShuffling, isOpponent, preferEnglishArt } = props;
 
   let srcArray = src.split('/');
   const filename = srcArray?.pop()?.split('.')[0] ?? '';
@@ -42,12 +58,15 @@ export const CardImage = React.memo((props: CardImage) => {
     return srcArray.join('/') + `/${altFilename}.webp`;
   };
 
+  const skipAltArt = (altPath: string) =>
+    preferEnglishArt && isNonEnglishPromoAltArt(altPath);
+
   if (isOpponent && opponentAltArtMap) {
     const altPath = opponentAltArtMap.get(cardNumber);
-    if (altPath) src = buildAltSrc(altPath);
+    if (altPath && !skipAltArt(altPath)) src = buildAltSrc(altPath);
   } else if (altArtMap) {
     const altPath = altArtMap.get(cardNumber);
-    if (altPath) src = buildAltSrc(altPath);
+    if (altPath && !skipAltArt(altPath)) src = buildAltSrc(altPath);
   }
 
   const [errorStage, setErrorStage] = useState<'none' | 'reversedFallback' | 'unknown'>('none');
