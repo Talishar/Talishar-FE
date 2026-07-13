@@ -19,8 +19,6 @@ import {
 } from 'utils/LocalKeyManagement';
 import ParseGameState from './ParseGameState';
 import { toast } from 'react-hot-toast';
-import { useGetFriendsListQuery } from 'features/api/apiSlice';
-import useAuth from 'hooks/useAuth';
 
 const MAX_RETRIES = 5;
 
@@ -37,11 +35,6 @@ const GameStateHandler = () => {
     (state: RootState) => state.game.isFullRematch
   );
   const navigate = useNavigate();
-
-  const { isLoggedIn } = useAuth();
-  const { data: friendsData } = useGetFriendsListQuery(undefined, {
-    skip: !isLoggedIn
-  });
 
   const sourceRef = useRef<EventSource | null>(null);
   const gameParamsRef = useRef({ gameID: 0, playerID: 0, authKey: '' });
@@ -96,18 +89,6 @@ const GameStateHandler = () => {
     dispatch
   ]);
 
-  // Sync friends list to sessionStorage whenever it's fetched
-  useEffect(() => {
-    if (friendsData?.friends) {
-      try {
-        const friendsList = friendsData.friends.map((f) => f.username);
-        sessionStorage.setItem('friendsList', JSON.stringify(friendsList));
-      } catch (e) {
-        console.error('Failed to sync friendsList to sessionStorage:', e);
-      }
-    }
-  }, [friendsData?.friends]);
-
   // SSE connection to game server
   useEffect(() => {
     const currentGameID = gameInfo.gameID;
@@ -137,21 +118,9 @@ const GameStateHandler = () => {
     // Small delay to ensure the page is ready before connecting
     const connectionTimeout = setTimeout(() => {
       try {
-        let friendsList: string[] = [];
-        try {
-          const stored = sessionStorage.getItem('friendsList');
-          if (stored) {
-            friendsList = JSON.parse(stored);
-          }
-        } catch {
-          // Continue without friendsList
-        }
-
         const resolvedUserName = getCurrentUsername(currentUserName) ?? '';
         const source = new EventSource(
-          `${BACKEND_URL}GetUpdateSSE.php?gameName=${currentGameID}&playerID=${currentPlayerID}&authKey=${currentAuthKey}&friendsList=${encodeURIComponent(
-            JSON.stringify(friendsList)
-          )}&userName=${encodeURIComponent(resolvedUserName)}`
+          `${BACKEND_URL}GetUpdateSSE.php?gameName=${currentGameID}&playerID=${currentPlayerID}&authKey=${currentAuthKey}&userName=${encodeURIComponent(resolvedUserName)}`
         );
         sourceRef.current = source;
 

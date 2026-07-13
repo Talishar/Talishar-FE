@@ -32,6 +32,11 @@ import { CardStack } from '../../routes/game/components/zones/permanentsZone/Per
 
 const CHAT_RE = /<span[^>]*>(.*?):\s<\/span>/;
 
+const createCommandId = (): string =>
+  typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function'
+    ? crypto.randomUUID()
+    : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+
 /**
  * Sanitizes HTML content by removing all HTML tags.
  * Applies the regex replacement repeatedly until no more replacements occur
@@ -60,25 +65,11 @@ export const nextTurn = createAsyncThunk(
     const queryURL = params.game.isRoguelike
       ? `${ROGUELIKE_URL}${URL_END_POINT.GAME_STATE_POLL}`
       : `${BACKEND_URL}${URL_END_POINT.GAME_STATE_POLL}`;
-    let friendsList: string[] = [];
-    const state = getState() as any;
-    const apiState = state.api;
-    if (apiState?.queries) {
-      const cacheKeys = Object.keys(apiState.queries);
-      const friendsQueryKey = cacheKeys.find((key) =>
-        key.includes('getFriendsList')
-      );
-      if (friendsQueryKey && apiState.queries[friendsQueryKey]?.data) {
-        const friendsData = apiState.queries[friendsQueryKey].data;
-        friendsList = (friendsData?.friends || []).map((f: any) => f.username);
-      }
-    }
     const queryParams = new URLSearchParams({
       gameName: String(params.game.gameID),
       playerID: String(params.game.playerID),
       authKey: String(params.game.authKey),
-      lastUpdate: String(params.lastUpdate),
-      friendsList: JSON.stringify(friendsList)
+      lastUpdate: String(params.lastUpdate)
     });
 
     let waitingForJSONResponse = true;
@@ -208,7 +199,9 @@ export const playCard = createAsyncThunk(
       playerID: String(gameInfo.playerID),
       authKey: String(gameInfo.authKey),
       mode: String(params.cardParams.action),
-      cardID: String(playNo)
+      cardID: String(playNo),
+      expectedRevision: String(game.gameDynamicInfo.lastUpdate ?? 0),
+      commandId: createCommandId()
     });
 
     try {
@@ -237,7 +230,9 @@ export const submitButton = createAsyncThunk(
       gameName: String(gameInfo.gameID),
       playerID: String(gameInfo.playerID),
       authKey: String(gameInfo.authKey),
-      mode: String(params.button.mode ?? '')
+      mode: String(params.button.mode ?? ''),
+      expectedRevision: String(game.gameDynamicInfo.lastUpdate ?? 0),
+      commandId: createCommandId()
     });
     if (params.button.buttonInput !== undefined) queryParams.set('buttonInput', String(params.button.buttonInput));
     if (params.button.inputText !== undefined) queryParams.set('inputText', String(params.button.inputText));
@@ -273,7 +268,9 @@ export const submitMultiButton = createAsyncThunk(
       gameName: String(gameInfo.gameID),
       playerID: String(gameInfo.playerID),
       authKey: String(gameInfo.authKey),
-      mode: String(params.mode)
+      mode: String(params.mode),
+      expectedRevision: String(game.gameDynamicInfo.lastUpdate ?? 0),
+      commandId: createCommandId()
     });
     const queryParamsString =
       queryURL + queryParams.toString() + params.extraParams;
