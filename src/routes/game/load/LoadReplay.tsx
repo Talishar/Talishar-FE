@@ -232,7 +232,6 @@ const ReplayGame = () => {
                       {heroLabel(replay)}
                     </span>
                   )}
-                  <span className={styles.replayLoad}>Review match</span>
                 </button>
                 <button
                   type="button"
@@ -259,7 +258,7 @@ const ReplayGame = () => {
         )}
       </section>
 
-      <details className={styles.manualReplay}>
+{/*       <details className={styles.manualReplay}>
         <summary>Load by replay number</summary>
         <div>
           <label htmlFor="replayNumber">Replay game number:</label>
@@ -278,7 +277,7 @@ const ReplayGame = () => {
             Replay Game
           </button>
         </div>
-      </details>
+      </details> */}
 
       {errors.root?.serverError && (
         <div className={styles.errorContainer}>

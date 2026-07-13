@@ -64,9 +64,6 @@
   --block-spacing-vertical: 0;
   --block-spacing-horizontal: 0;
   padding: 1.25rem;
-  border: 1px solid var(--theme-border, rgba(216, 179, 62, 0.38));
-  border-radius: 8px;
-  background: rgba(13, 15, 18, 0.76);
   margin-bottom: 0em;
 }
 
@@ -140,6 +137,7 @@
   background: rgba(255, 255, 255, 0.035);
   color: var(--theme-text-primary, #fff);
   cursor: pointer;
+  margin-bottom: 0;
 }
 
 .replayCardMain:hover:not(:disabled) {
