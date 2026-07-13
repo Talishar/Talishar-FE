@@ -5,77 +5,87 @@
 
 .textTrigger {
   cursor: help;
-  text-decoration: underline dotted;
+  color: var(--theme-primary, #d4af37);
+  text-decoration: underline dotted currentColor;
   text-underline-offset: 2px;
 }
 
 .popover {
   z-index: 100000;
   width: min(320px, calc(100vw - 24px));
-  padding: 12px;
-  border: 1px solid var(--primary-color, #64748b);
-  border-radius: 8px;
-  background: var(--background-color, #1e293b);
-  color: var(--font-color, #f8fafc);
-  box-shadow: 0 8px 24px rgb(0 0 0 / 35%);
+  padding: 1rem 1.25rem;
+  border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.2));
+  border-radius: 10px;
+  background: var(--theme-near-black, rgba(0, 0, 0, 0.98));
+  color: var(--theme-text, #f4eded);
+  box-shadow: 0 8px 24px rgb(0 0 0 / 45%);
   font-size: 0.9rem;
   line-height: 1.35;
 }
 
-.heading { 
-  display: flex; 
-  align-items: center; 
-  gap: 8px; 
-  margin-bottom: 6px; 
+.heading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
 }
 
-.heading strong { 
-  font-size: 1rem; 
+.heading strong {
+  color: var(--theme-primary, #d4af37);
+  font-size: 1rem;
 }
 
-.badge { 
-  border-radius: 999px; 
-  padding: 2px 7px; 
-  background: rgb(100 116 139 / 35%); 
-  font-size: .72rem; 
-  text-transform: capitalize; 
+.badge {
+  border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.2));
+  border-radius: 999px;
+  padding: 2px 7px;
+  background: var(--theme-primary-focus, rgba(212, 175, 55, 0.125));
+  color: var(--theme-primary, #d4af37);
+  font-size: 0.72rem;
+  text-transform: capitalize;
 }
 
-.short { 
-  margin: 0px; 
+.short {
+  margin: 0;
 }
 
-.details { 
-  margin: 8px 0; 
-  white-space: pre-wrap; 
-  font-size: .82rem; 
+.details {
+  margin: 8px 0;
+  white-space: pre-wrap;
+  font-size: 0.82rem;
 }
 
-.detailButton, .rulesLink { 
-  color: inherit; 
-  font: inherit; 
+.detailButton,
+.rulesLink {
+  color: var(--theme-primary, #d4af37);
+  font: inherit;
 }
 
-.detailButton { 
-  padding: 0; 
-  border: 0; 
-  background: none; 
-  text-decoration: underline; 
-  cursor: pointer; 
+.detailButton {
+  padding: 0;
+  border: 0;
+  background: none;
+  text-decoration: underline;
+  cursor: pointer;
   margin-bottom: 0;
 }
 
-.rulesLink { 
-  display: inline-block; 
-  margin-top: 6px; 
+.rulesLink {
+  display: inline-block;
+  margin-top: 6px;
 }
 
-.chip { 
-  border: 1px solid currentColor; 
-  border-radius: 999px; 
-  padding: 2px 8px; 
-  background: rgb(100 116 139 / 20%); 
-  color: inherit; 
-  font: inherit; 
-  cursor: help; 
+.rulesLink:hover,
+.detailButton:hover {
+  color: var(--theme-primary-hover, #e8c547);
+}
+
+.chip {
+  border: 1px solid var(--theme-primary, #d4af37);
+  border-radius: 999px;
+  padding: 2px 8px;
+  background: var(--theme-primary-focus, rgba(212, 175, 55, 0.125));
+  color: var(--theme-primary, #d4af37);
+  font: inherit;
+  cursor: help;
 }
