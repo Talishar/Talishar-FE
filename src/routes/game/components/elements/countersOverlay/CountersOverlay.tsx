@@ -7,6 +7,7 @@ import CombatChainLink from 'features/CombatChainLink';
 import { ContinuousCounters } from './components/ContinuousCounters';
 import { TooltipWrapper } from './components/TooltipWrapper';
 import { GiDialPadlock } from 'react-icons/gi';
+import { formatRestriction } from 'data/keywords';
 
 const INCLUDED_COUNTERS = new Set([
   'defense', 'steam', 'life', 'attack', 'energy', 'haunt', 'verse',
@@ -60,7 +61,7 @@ export const CountersOverlay = React.memo(({
         <ActiveCardCounterOverlay activeCombatChain={activeCombatChain} />
       )}
       {!!restriction && (
-        <TooltipWrapper className={styles.icon} tooltip="Restricted">
+        <TooltipWrapper className={styles.icon} tooltip={formatRestriction(restriction) || 'Restricted'}>
           <GiDialPadlock />
         </TooltipWrapper>
       )}

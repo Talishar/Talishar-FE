@@ -5,6 +5,7 @@ import Button from 'features/Button';
 import { submitButton } from 'features/game/GameSlice';
 import { parseHtmlToReactElements } from 'utils/ParseEscapedString';
 import styles from './PlayerPrompt.module.css';
+import { wrapKeywordsInNodes } from '../keywordPopover';
 
 const DEBOUNCE_MS = 80;
 
@@ -29,7 +30,7 @@ const PlayerPrompt = React.memo(() => {
   const dispatch = useAppDispatch();
 
   const helpTextElements = useMemo(
-    () => parseHtmlToReactElements(displayedPrompt?.helpText ?? ''),
+    () => wrapKeywordsInNodes(parseHtmlToReactElements(displayedPrompt?.helpText ?? '')),
     [displayedPrompt?.helpText]
   );
 

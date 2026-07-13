@@ -2,6 +2,7 @@ import React from 'react';
 import CombatChainLink from 'features/CombatChainLink';
 import styles from '../CountersOverlay.module.css';
 import { TooltipWrapper } from './TooltipWrapper';
+import { KeywordPopover } from '../../keywordPopover';
 import {
   GiCycle,
   GiStomp,
@@ -30,64 +31,64 @@ export const ActiveCardCounterOverlay = (props: Props) => {
   return (
     <>
       {activeCombatChain.goAgain && (
-        <TooltipWrapper className={styles.icon} tooltip="Go Again">
+        <KeywordPopover id="go-again"><span className={styles.icon}>
           <GiCycle />
-        </TooltipWrapper>
+        </span></KeywordPopover>
       )}
       {activeCombatChain.dominate && (
-        <TooltipWrapper className={styles.icon} tooltip="Dominate">
+        <KeywordPopover id="dominate"><span className={styles.icon}>
           <GiMuscleFat />
-        </TooltipWrapper>
+        </span></KeywordPopover>
       )}
       {activeCombatChain.overpower && (
-        <TooltipWrapper className={styles.icon} tooltip="Overpower">
+        <KeywordPopover id="overpower"><span className={styles.icon}>
           <GiStomp />
-        </TooltipWrapper>
+        </span></KeywordPopover>
       )}
       {activeCombatChain.confidence && (
-        <TooltipWrapper className={styles.icon} tooltip="Confidence">
+        <KeywordPopover id="confidence"><span className={styles.icon}>
           <GiGuitar />
-        </TooltipWrapper>
+        </span></KeywordPopover>
       )}
       {activeCombatChain.activeOnHits && (
-        <TooltipWrapper className={styles.icon} tooltip="Active On Hit">
+        <KeywordPopover id="on-hit"><span className={styles.icon}>
           <GiArmorPunch />
-        </TooltipWrapper>
+        </span></KeywordPopover>
       )}
       {activeCombatChain.wager && (
-        <TooltipWrapper className={styles.icon} tooltip="Wager">
+        <KeywordPopover id="wager"><span className={styles.icon}>
           <GiCash />
-        </TooltipWrapper>
+        </span></KeywordPopover>
       )}
       {activeCombatChain.phantasm && (
-        <TooltipWrapper className={styles.icon} tooltip="Phantasm">
+        <KeywordPopover id="phantasm"><span className={styles.icon}>
           <GiGhost />
-        </TooltipWrapper>
+        </span></KeywordPopover>
       )}
       {activeCombatChain.fusion && (
-        <TooltipWrapper className={styles.icon} tooltip="Fused">
+        <KeywordPopover id="fusion"><span className={styles.icon}>
           <GiZigzagLeaf />
-        </TooltipWrapper>
+        </span></KeywordPopover>
       )}
       {activeCombatChain.piercing && (
-        <TooltipWrapper className={styles.icon} tooltip="Piercing">
+        <KeywordPopover id="piercing"><span className={styles.icon}>
           <GiSpearfishing />
-        </TooltipWrapper>
+        </span></KeywordPopover>
       )}
       {activeCombatChain.tower && (
-        <TooltipWrapper className={styles.icon} tooltip="Tower Active">
+        <KeywordPopover id="tower"><span className={styles.icon}>
           <GiStoneTower />
-        </TooltipWrapper>
+        </span></KeywordPopover>
       )}
       {activeCombatChain.combo && (
-        <TooltipWrapper className={styles.icon} tooltip="Combo Active">
+        <KeywordPopover id="combo"><span className={styles.icon}>
           <GiNinjaStar />
-        </TooltipWrapper>
+        </span></KeywordPopover>
       )}
       {activeCombatChain.highTide && (
-        <TooltipWrapper className={styles.icon} tooltip="High Tide Active">
+        <KeywordPopover id="high-tide"><span className={styles.icon}>
           <GiWaterSplash />
-        </TooltipWrapper>
+        </span></KeywordPopover>
       )}
       {!!activeCombatChain.damagePrevention && (
         <TooltipWrapper

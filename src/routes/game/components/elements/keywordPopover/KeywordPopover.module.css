@@ -1,0 +1,81 @@
+.trigger {
+  display: inline-flex;
+  align-items: center;
+}
+
+.textTrigger {
+  cursor: help;
+  text-decoration: underline dotted;
+  text-underline-offset: 2px;
+}
+
+.popover {
+  z-index: 100000;
+  width: min(320px, calc(100vw - 24px));
+  padding: 12px;
+  border: 1px solid var(--primary-color, #64748b);
+  border-radius: 8px;
+  background: var(--background-color, #1e293b);
+  color: var(--font-color, #f8fafc);
+  box-shadow: 0 8px 24px rgb(0 0 0 / 35%);
+  font-size: 0.9rem;
+  line-height: 1.35;
+}
+
+.heading { 
+  display: flex; 
+  align-items: center; 
+  gap: 8px; 
+  margin-bottom: 6px; 
+}
+
+.heading strong { 
+  font-size: 1rem; 
+}
+
+.badge { 
+  border-radius: 999px; 
+  padding: 2px 7px; 
+  background: rgb(100 116 139 / 35%); 
+  font-size: .72rem; 
+  text-transform: capitalize; 
+}
+
+.short { 
+  margin: 0px; 
+}
+
+.details { 
+  margin: 8px 0; 
+  white-space: pre-wrap; 
+  font-size: .82rem; 
+}
+
+.detailButton, .rulesLink { 
+  color: inherit; 
+  font: inherit; 
+}
+
+.detailButton { 
+  padding: 0; 
+  border: 0; 
+  background: none; 
+  text-decoration: underline; 
+  cursor: pointer; 
+  margin-bottom: 0;
+}
+
+.rulesLink { 
+  display: inline-block; 
+  margin-top: 6px; 
+}
+
+.chip { 
+  border: 1px solid currentColor; 
+  border-radius: 999px; 
+  padding: 2px 8px; 
+  background: rgb(100 116 139 / 20%); 
+  color: inherit; 
+  font: inherit; 
+  cursor: help; 
+}

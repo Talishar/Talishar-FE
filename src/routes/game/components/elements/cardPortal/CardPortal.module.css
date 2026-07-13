@@ -32,6 +32,22 @@
   z-index: 111;
 }
 
+.keywordStrip {
+  pointer-events: none;
+  width: min(100%, 360px);
+  margin-top: 4px;
+  padding: 7px 9px;
+  border-radius: 7px;
+  background: rgb(15 23 42 / 88%);
+  color: #f8fafc;
+  font-size: 0.72rem;
+  line-height: 1.25;
+}
+
+.keywordLine { display: flex; align-items: baseline; gap: 5px; margin: 2px 0; }
+.keywordPill { flex: none; padding: 1px 5px; border-radius: 999px; background: rgb(148 163 184 / 35%); font-weight: 700; }
+.keywordMore { margin-top: 4px; color: #cbd5e1; }
+
 .doubleFacedCard {
   position: absolute;
   left: calc(-38vh * var(--hover-img-scale));

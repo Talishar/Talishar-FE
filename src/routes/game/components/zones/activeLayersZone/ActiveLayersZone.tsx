@@ -12,6 +12,7 @@ import {
   parseHtmlToReactElements,
   parseTextToElements
 } from 'utils/ParseEscapedString';
+import { wrapKeywordsInNodes } from '../../elements/keywordPopover';
 import { BiTargetLock } from 'react-icons/bi';
 import { MdDragHandle } from 'react-icons/md';
 import Button from '../../../../../features/Button';
@@ -224,7 +225,7 @@ export default function ActiveLayersZone() {
               <ReorderLayers cards={reorderableCards ?? []} />
             </div>
             <div className={styles.activeLayersCallToAction}>
-              <div>{parseHtmlToReactElements(playerPrompt?.helpText ?? '')}</div>
+              <div>{wrapKeywordsInNodes(parseHtmlToReactElements(playerPrompt?.helpText ?? ''))}</div>
               {buttons}
             </div>
           </div>

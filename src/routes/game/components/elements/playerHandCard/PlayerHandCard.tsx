@@ -21,6 +21,7 @@ import { motion, PanInfo, useMotionValue, animate as animateValue } from 'framer
 import { createPortal } from 'react-dom';
 import { CARD_SQUARES_PATH, getCollectionCardImagePath } from 'utils';
 import { useLanguageSelector } from 'hooks/useLanguageSelector';
+import { formatRestriction } from 'data/keywords';
 
 const ScreenPercentageForCardPlayed = 0.25;
 
@@ -246,7 +247,7 @@ export const PlayerHandCard = React.memo(({
       )}
       {!!card.restriction && (
         <div className={styles.icon}>
-          <GiDialPadlock title="Cannot Play" />
+          <GiDialPadlock title={`Cannot play: ${formatRestriction(card.restriction)}`} />
         </div>
       )}
     </div>

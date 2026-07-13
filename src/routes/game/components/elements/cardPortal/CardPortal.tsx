@@ -11,6 +11,7 @@ import { CARD_IMAGES_PATH, getCollectionCardImagePath } from 'utils';
 import { useCookies } from 'react-cookie';
 import { createPortal } from 'react-dom';
 import { isMeldCard } from 'constants/meldCards';
+import CardKeywordStrip from './CardKeywordStrip';
 
 const popUpGap = 130;
 
@@ -19,13 +20,17 @@ function CardDetails({
   containerClass,
   containerStyle,
   isOpponent,
-  isMeld
+  isMeld,
+  cardNumber,
+  showKeywords = true
 }: {
   src: string;
   containerClass?: string;
   containerStyle?: Record<string, string>;
   isOpponent?: boolean;
   isMeld?: boolean;
+  cardNumber?: string;
+  showKeywords?: boolean;
 }) {
   const containerClassName = classNames(
     containerClass != null
@@ -43,6 +48,7 @@ function CardDetails({
           preferEnglishArt
         />
       </div>
+      {showKeywords && <CardKeywordStrip cardNumber={cardNumber} />}
     </div>
   );
 }
@@ -95,7 +101,7 @@ export default function CardPortal() {
   }
 
   if (popup.xCoord === undefined || popup.yCoord === undefined) {
-    return createPortal(<CardDetails src={src} isMeld={isMeld} />, document.body);
+    return createPortal(<CardDetails src={src} isMeld={isMeld} cardNumber={cardNumber} />, document.body);
   }
 
   const isDFC = dfcSrc != null;
@@ -140,6 +146,7 @@ export default function CardPortal() {
           src={dfcSrc}
           containerClass={classNames(styles.popUp, styles.doubleFacedCard)}
           isOpponent={popup.isOpponent}
+          showKeywords={false}
         />
       )}
       <CardDetails
@@ -148,6 +155,7 @@ export default function CardPortal() {
         containerStyle={popUpStyle}
         isOpponent={popup.isOpponent}
         isMeld={isMeld}
+        cardNumber={cardNumber}
       />
     </div>,
     document.body

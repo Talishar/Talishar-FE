@@ -1,7 +1,7 @@
 const axios = require('axios');
 const fs = require('fs');
 
-const url = "https://raw.githubusercontent.com/the-fab-cube/flesh-and-blood-cards/refs/heads/omens-of-the-third-age/json/english/card.json";
+const url = "https://raw.githubusercontent.com/the-fab-cube/flesh-and-blood-cards/main/json/english/card.json";
 
 const outputFile = '../src/constants/cardList.ts';
 

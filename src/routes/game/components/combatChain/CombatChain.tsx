@@ -10,6 +10,7 @@ import Button from '../../../../features/Button';
 import { submitButton } from '../../../../features/game/GameSlice';
 import { useMediaQuery } from '../../../../hooks/useMediaQuery';
 import { parseHtmlToReactElements } from 'utils/ParseEscapedString';
+import { wrapKeywordsInNodes } from '../elements/keywordPopover';
 import { MdDragHandle } from 'react-icons/md';
 import useShowModal from '../../../../hooks/useShowModals';
 
@@ -184,7 +185,7 @@ const PlayerPrompt = () => {
         key={`${playerPrompt?.helpText?.substring(0, 10)}`}
       >
         <div className={styles.content}>
-          <div>{parseHtmlToReactElements(playerPrompt?.helpText ?? '')}</div>
+          <div>{wrapKeywordsInNodes(parseHtmlToReactElements(playerPrompt?.helpText ?? ''))}</div>
         </div>
         {buttons}
       </motion.div>
