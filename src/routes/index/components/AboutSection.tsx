@@ -43,12 +43,12 @@ const AboutSection: React.FC = () => {
   ];
 
   const resources = [
-    { href: "https://fabrary.net/",                                            name: "Fabrary",           desc: t("ABOUT.COMMUNITY.FABRARY_DESCRIPTION") },
-    { href: "https://www.thefabcube.com/cubes",                                name: "The FAB Cube",      desc: t("ABOUT.COMMUNITY.THE_FAB_CUBE_DESCRIPTION") },
-    { href: "https://github.com/the-fab-cube/flesh-and-blood-cards",           name: "FAB Card Database", desc: t("ABOUT.COMMUNITY.FAB_CARD_DATABASE_DESCRIPTION") },
-    { href: "https://legendarystories.net/intro.html",                         name: "Legendary Stories", desc: t("ABOUT.COMMUNITY.LEGENDARY_STORIES_DESCRIPTION") },
-    { href: "https://fablazingdata.com",                                       name: "FAB Blazing Data",  desc: t("ABOUT.COMMUNITY.FABLAZING_DATA_DESCRIPTION") },
-    { href: "https://www.fabinsights.net/",                                    name: "FAB Insights",      desc: t("ABOUT.COMMUNITY.FAB_INSIGHTS_DESCRIPTION") },
+    { href: "https://fabrary.net/",                                            name: "Fabrary",           logo: "/images/fabraryLogo.webp",           desc: t("ABOUT.COMMUNITY.FABRARY_DESCRIPTION") },
+    { href: "https://www.thefabcube.com/cubes",                                name: "The FAB Cube",      logo: "/images/fabCubeLogo.webp",           desc: t("ABOUT.COMMUNITY.THE_FAB_CUBE_DESCRIPTION") },
+    { href: "https://github.com/the-fab-cube/flesh-and-blood-cards",           name: "FAB Card Database", logo: "/images/fabCubeLogo.webp",           desc: t("ABOUT.COMMUNITY.FAB_CARD_DATABASE_DESCRIPTION") },
+    { href: "https://legendarystories.net/intro.html",                         name: "Legendary Stories", logo: "/images/legendaryStoriesLogo.webp",  desc: t("ABOUT.COMMUNITY.LEGENDARY_STORIES_DESCRIPTION") },
+    { href: "https://fablazingdata.com",                                       name: "FAB Blazing Data",  logo: "/images/fablazingLogo.webp",          desc: t("ABOUT.COMMUNITY.FABLAZING_DATA_DESCRIPTION") },
+    { href: "https://www.fabinsights.net/",                                    name: "FAB Insights",      logo: "/images/fabInsightsLogo.webp",        desc: t("ABOUT.COMMUNITY.FAB_INSIGHTS_DESCRIPTION") },
   ];
 
   return (
@@ -169,7 +169,10 @@ const AboutSection: React.FC = () => {
             {resources.map((r, i) => (
               <a key={i} href={r.href} target="_blank" rel="noopener noreferrer" className={styles.resourceCard}>
                 <div className={styles.resourceCardBody}>
-                  <h4>{r.name}</h4>
+                  <div className={styles.resourceCardHeader}>
+                    <img className={styles.resourceLogo} src={r.logo} alt="" />
+                    <h4>{r.name}</h4>
+                  </div>
                   <p>{r.desc}</p>
                 </div>
                 <span className={styles.linkIcon}>↗</span>

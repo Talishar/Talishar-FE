@@ -7,7 +7,6 @@
 .articleContainer {
   background: none;
   box-shadow: none;
-  min-height: calc(100vh - 80px);
   max-width: 900px;
   margin: 0 auto;
   box-sizing: border-box;
@@ -63,7 +62,7 @@
 .savedReplays {
   --block-spacing-vertical: 0;
   --block-spacing-horizontal: 0;
-  padding: 1.25rem;
+  padding: 0rem 1.25rem 1.25rem 1.25rem;
   margin-bottom: 0em;
 }
 
