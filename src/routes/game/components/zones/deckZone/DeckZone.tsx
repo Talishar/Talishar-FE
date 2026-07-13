@@ -94,7 +94,10 @@ export const DeckZone = React.memo((prop: Displayrow) => {
   const cardWrapperStyle = useMemo(
     () =>
       !isMobileOrTablet
-        ? { transform: `translateY(${baseOffsetY}px) translateX(${baseOffsetX}px)` }
+        ? {
+            top: `${Math.round(baseOffsetY)}px`,
+            left: `${Math.round(baseOffsetX)}px`
+          }
         : undefined,
     [isMobileOrTablet, baseOffsetY, baseOffsetX]
   );

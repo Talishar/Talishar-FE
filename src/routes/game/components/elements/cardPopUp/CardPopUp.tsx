@@ -187,7 +187,11 @@ export default function CardPopUp({
       onHoverStart={onHoverStart}
       onHoverEnd={onHoverEnd}
       ref={ref}
-      style={{ rotateX, rotateY, transformPerspective: 600, boxShadow }}
+      style={
+        tiltEnabled
+          ? { rotateX, rotateY, transformPerspective: 600, boxShadow }
+          : undefined
+      }
     >
       {children}
     </motion.div>

@@ -48,7 +48,10 @@ export const GraveyardZone = React.memo((prop: Displayrow) => {
   const cardWrapperStyle = useMemo(
     () =>
       !isMobileOrTablet
-        ? { transform: `translateY(${baseOffsetY}px) translateX(${baseOffsetX}px)` }
+        ? {
+            top: `${Math.round(baseOffsetY)}px`,
+            left: `${Math.round(baseOffsetX)}px`
+          }
         : {},
     [isMobileOrTablet, baseOffsetY, baseOffsetX]
   );

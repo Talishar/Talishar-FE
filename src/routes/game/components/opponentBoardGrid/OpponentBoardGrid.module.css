@@ -40,14 +40,16 @@
     width: 100%;
   }
   .playerBoard {
-    transform: scale(0.95);
-    transform-origin: bottom left;
-    grid-template-rows: var(--card-size) var(--card-size) var(--card-size);
+    grid-template-rows:
+      calc(var(--card-size) * 0.95) calc(var(--card-size) * 0.95)
+      calc(var(--card-size) * 0.95);
     grid-template-columns:
-      var(--card-size) var(--card-size) 1fr var(--card-size)
-      var(--card-size) var(--card-size) 1fr var(--card-size) var(--card-size);
-    gap: 1dvw;
-    padding: 1dvw;
+      calc(var(--card-size) * 0.95) calc(var(--card-size) * 0.95) 1fr
+      calc(var(--card-size) * 0.95) calc(var(--card-size) * 0.95)
+      calc(var(--card-size) * 0.95) 1fr calc(var(--card-size) * 0.95)
+      calc(var(--card-size) * 0.95);
+    gap: calc(1dvw * 0.95);
+    padding: calc(1dvw * 0.95);
     grid-template-areas:
       'legs . . . arsenal arsenal . zonecounts banish'
       'chest arms . weaponl hero weaponr . pitch deck'
