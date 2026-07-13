@@ -217,6 +217,11 @@ const ChainLinkSummary = ({
         (sum, c) => sum + (Number(c.modifier) || 0),
         0
       );
+      const attackCardsTotal = attackCards.reduce(
+        (sum, c) => sum + (Number(c.modifier) || 0),
+        0
+      );
+      const activeEffectModifier = totalAttack - attackCardsTotal;
       const didHit =
         data.DidItHit != null
           ? !!data.DidItHit
@@ -264,14 +269,29 @@ const ChainLinkSummary = ({
           <div className={styles.body}>
             <div className={styles.sectionLabel}>Attack</div>
             {attackCards.length > 0 ? (
-              attackCards.map((entry, ix) => (
-                <CardRow
-                  key={`atk-${entry.cardID}-${ix}`}
-                  entry={entry}
-                  isPlayer={isAttackerYou}
-                  value={Number(entry.modifier) || 0}
-                />
-              ))
+              <>
+                {attackCards.map((entry, ix) => (
+                  <CardRow
+                    key={`atk-${entry.cardID}-${ix}`}
+                    entry={entry}
+                    isPlayer={isAttackerYou}
+                    value={Number(entry.modifier) || 0}
+                  />
+                ))}
+                {activeEffectModifier !== 0 && (
+                  <CardRow
+                    entry={{
+                      Player: attackerPID,
+                      Name: 'Active combat effects',
+                      cardID: 'POWERCOUNTER',
+                      modifier: activeEffectModifier
+                    }}
+                    isPlayer={isAttackerYou}
+                    value={activeEffectModifier}
+                    signed
+                  />
+                )}
+              </>
             ) : (
               <div className={styles.emptyRow}>No attacker</div>
             )}
