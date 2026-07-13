@@ -75,10 +75,16 @@
   font-size: 1.35rem;
   line-height: 1;
   cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 .replayPanel .closeButton:hover {
-  background: rgba(255, 107, 107, 0.12) !important;
-  color: #ff6b6b;
+  background: rgba(255, 107, 107, 0.2) !important;
+  color: #fff !important;
+  box-shadow: 0 0 0 1px rgba(255, 107, 107, 0.12) !important;
+  transform: none !important;
 }
 .content {
   display: flex;
@@ -133,11 +139,19 @@
   gap: 0.08rem;
   text-align: left;
   scroll-snap-align: start;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    box-shadow 0.2s ease;
 }
-.turnMarker:hover,
+.replayPanel .turnMarker:hover:not(:disabled),
 .activeTurn {
-  border-color: #ff7777;
-  background: rgba(255, 107, 107, 0.17);
+  border-color: #ff7777 !important;
+  background: rgba(255, 107, 107, 0.2) !important;
+  color: #fff !important;
+  box-shadow: 0 0 0 1px rgba(255, 107, 107, 0.12) !important;
+  transform: none !important;
 }
 .turnMarker:disabled {
   opacity: 0.45;
@@ -182,6 +196,11 @@
   cursor: pointer;
   padding: 0.68rem 0.55rem;
   font-size: 0.78rem;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 .navButton {
   display: grid;
@@ -200,12 +219,15 @@
   color: rgba(255, 255, 255, 0.72);
   background: rgba(255, 255, 255, 0.035);
 }
-.navButton:hover,
-.eventButton:hover,
-.actionButton:hover,
-.submitButton:hover {
-  background: rgba(255, 107, 107, 0.2);
-  color: #fff;
+.replayPanel .navButton:hover:not(:disabled),
+.replayPanel .eventButton:hover:not(:disabled),
+.replayPanel .actionButton:hover:not(:disabled),
+.replayPanel .submitButton:hover:not(:disabled) {
+  border-color: #ff7777 !important;
+  background: rgba(255, 107, 107, 0.2) !important;
+  color: #fff !important;
+  box-shadow: 0 0 0 1px rgba(255, 107, 107, 0.12) !important;
+  transform: none !important;
 }
 .navButton:disabled,
 .eventButton:disabled,
