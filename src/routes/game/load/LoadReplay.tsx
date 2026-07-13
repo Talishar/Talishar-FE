@@ -211,7 +211,7 @@ const ReplayGame = () => {
           </p>
         ) : (
           <div className={styles.replayList}>
-            {savedReplays.map((replay) => (
+            {savedReplays.map((replay: SavedReplay) => (
               <article key={replay.replayNumber} className={styles.replayCard}>
                 <button
                   type="button"
