@@ -10,6 +10,7 @@ const TURN_MARKER_RE = /^\[\[TURN_START:(\d+):(\d+)\]\]$/;
 const COMBAT_START_RE = /^Player [12] (?:played|activated)\b/i;
 const COMBAT_END_RE = /^The (?:chain link was (?:resolved|closed)|combat chain was closed)\.?$/i;
 const COMBAT_CHAIN_CLOSED_RE = /^The combat chain was closed\.?$/i;
+const MUTED_COMBAT_END_RE = /^The (?:chain link was resolved|combat chain was closed)\.?$/i;
 const COMBAT_SIGNAL_RE = /\b(?:blocked with|combat resolved|chain link|hit effect|attack)\b/i;
 const PASS_RE = /\b(?:passes? priority|passed\.?|main player passed priority)\b/i;
 const UNDO_RE = /\b(?:undid (?:their|the) last action|requested to undo the last action)\b/i;
@@ -34,7 +35,7 @@ function plainText(message: string) {
 
 function importanceClass(message: string) {
   const text = plainText(message);
-  if (PASS_RE.test(text)) return styles.logMuted;
+  if (PASS_RE.test(text) || MUTED_COMBAT_END_RE.test(text)) return styles.logMuted;
   if (DAMAGE_RE.test(text)) return styles.logCritical;
   if (ACTION_RE.test(text)) return styles.logAction;
   if (IRREVERSIBLE_RE.test(text)) return styles.logIrreversible;
