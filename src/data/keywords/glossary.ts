@@ -44,7 +44,7 @@ export const GLOSSARY: KeywordEntry[] = [
     id: 'battleworn',
     name: 'Battleworn',
     short:
-      'When this equipment defends, it gets a -1 defense counter afterward — it wears down with each block.',
+      'When the combat chain closes, if this defended, put a -1 defense counter on it.',
     category: 'ability'
   },
   {
@@ -86,7 +86,7 @@ export const GLOSSARY: KeywordEntry[] = [
     id: 'spectra',
     name: 'Spectra',
     short:
-      'This aura can be attacked; when it is, it is destroyed and the chain link closes — the attack never hits.',
+      'This can be attacked. When it becomes the target of an attack, destroy it.',
     category: 'ability'
   },
   {
@@ -122,14 +122,14 @@ export const GLOSSARY: KeywordEntry[] = [
     id: 'meld',
     name: 'Meld',
     short:
-      'Two half-cards can be played together as a single melded card with both halves’ effects.',
+      'You may pay twice this card\'s base cost to play both halves of it as one card.',
     category: 'ability'
   },
   {
     id: 'ephemeral',
     name: 'Ephemeral',
     short:
-      'This card is banished when it would be put anywhere else — it never sticks around.',
+      'You cannot start the game with this in your deck. If it would enter a graveyard, it ceases to exist instead.',
     category: 'ability'
   },
   {
@@ -152,7 +152,7 @@ export const GLOSSARY: KeywordEntry[] = [
     id: 'piercing',
     name: 'Piercing',
     short:
-      'This attack ignores some of the defense in front of it — see rules detail for the exact amount.',
+      'If this is defended by equipment, it gets +X power.',
     category: 'ability',
     parameterized: true
   },
@@ -167,7 +167,7 @@ export const GLOSSARY: KeywordEntry[] = [
     id: 'mirage',
     name: 'Mirage',
     short:
-      'An illusion effect: this permanent is destroyed when its bluff is called — see rules detail.',
+      'When this is defending a non-Illusionist attack with 6 or more power, destroy it.',
     category: 'ability'
   },
   {
@@ -180,14 +180,14 @@ export const GLOSSARY: KeywordEntry[] = [
     id: 'modular',
     name: 'Modular',
     short:
-      'This piece of equipment can swap between forms/parts outside of the game rules text — see rules detail.',
+      'This may be equipped to any equipment zone and has the subtype of the zone it occupies.',
     category: 'ability'
   },
   {
     id: 'ambush',
     name: 'Ambush',
     short:
-      'This card can be played face-down and flipped up to strike when triggered — see rules detail.',
+      'While this is in your arsenal, you may defend with it.',
     category: 'ability'
   },
   {
@@ -223,28 +223,28 @@ export const GLOSSARY: KeywordEntry[] = [
     id: 'rupture',
     name: 'Rupture',
     short:
-      'This card gets its bonus effect if it entered the combat chain this turn as the result of another effect — see rules detail.',
+      'Its accompanying ability applies if this is played as or at chain link 4 or higher.',
     category: 'label'
   },
   {
     id: 'surge',
     name: 'Surge',
     short:
-      'This card gets its bonus effect if another source has dealt arcane damage this turn.',
+      'Its accompanying ability applies if this deals the stated amount of damage.',
     category: 'label'
   },
   {
     id: 'tower',
     name: 'Tower',
     short:
-      'This card gets its bonus effect if there is a card in your arsenal.',
+      'Its accompanying ability applies if this has 13 or more power.',
     category: 'label'
   },
   {
     id: 'high-tide',
     name: 'High Tide',
     short:
-      'This card gets its bonus effect if it is the second (or later) time the condition of rising resources is met this turn — see rules detail.',
+      'Its accompanying ability applies if there are 2 or more blue cards in your pitch zone.',
     category: 'label'
   },
   {
@@ -272,14 +272,14 @@ export const GLOSSARY: KeywordEntry[] = [
     id: 'wager',
     name: 'Wager',
     short:
-      'When this attack hits, players may bet on the outcome for a payoff — see rules detail.',
+      'When the attack resolves, its controller wins the stated prize if it hit; otherwise the other player wins it.',
     category: 'label'
   },
   {
     id: 'quickstrike',
     name: 'Quickstrike',
     short:
-      'A label keyword; its accompanying ability states the effect and condition.',
+      'At the beginning of your end phase, put a flow counter on this, then destroy it unless you bottom-deck the stated elemental cards for each flow counter on it.',
     category: 'label'
   },
 
@@ -347,14 +347,14 @@ export const GLOSSARY: KeywordEntry[] = [
   {
     id: 'demi-hero',
     name: 'Demi-Hero',
-    short: 'A hero variant with restricted deck-building rules — see rules detail.',
+    short: 'An arena card distinct from a hero card; it can only become your hero if you do not already control one.',
     category: 'type',
     noAutoLink: true
   },
   {
     id: 'figment',
     name: 'Figment',
-    short: 'An ephemeral token aura tied to a specific mechanic — see rules detail.',
+    short: 'A subtype for an aura-like permanent that enters the arena when it resolves.',
     category: 'type',
     noAutoLink: true
   },
@@ -371,7 +371,7 @@ export const GLOSSARY: KeywordEntry[] = [
     id: 'freeze',
     name: 'Freeze',
     short:
-      'A frozen card/object cannot be played, activated, or used to defend until it thaws at the start of its controller’s next turn.',
+      'The object cannot be played and its abilities cannot be activated for the stated duration.',
     category: 'effect',
     aliases: ['Frozen']
   },
@@ -400,7 +400,7 @@ export const GLOSSARY: KeywordEntry[] = [
   {
     id: 'charge',
     name: 'Charge',
-    short: 'Put a card from your hand face-up under your hero as a charge counter source — see rules detail.',
+    short: 'Move a card from your hand to your hero\'s soul.',
     category: 'effect'
   },
   {
@@ -413,7 +413,7 @@ export const GLOSSARY: KeywordEntry[] = [
   {
     id: 'transcend',
     name: 'Transcend',
-    short: 'Transform your hero card into its ascended form — see rules detail.',
+    short: 'Put the source of the effect into its owner\'s hand with its back face active.',
     category: 'effect'
   },
   {
@@ -427,7 +427,7 @@ export const GLOSSARY: KeywordEntry[] = [
     id: 'mark',
     name: 'Mark',
     short:
-      'A marked hero takes the stated consequence the next time the condition is met — see rules detail.',
+      'The hero gains the marked condition.',
     category: 'effect',
     aliases: ['Marked'],
     noAutoLink: true
@@ -506,7 +506,7 @@ export const GLOSSARY: KeywordEntry[] = [
     id: 'confidence',
     name: 'Confidence',
     short:
-      'An effect limiting how many cards can defend this attack — see rules detail.',
+      'A token that is destroyed at the start of your turn; your next attack action card that turn can be defended by no more than 2 non-block cards.',
     category: 'term',
     noAutoLink: true,
     crOverrideUrl: CR_BASE
