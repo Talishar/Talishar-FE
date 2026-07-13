@@ -24,7 +24,8 @@ import { useAppDispatch, useAppSelector } from '../../../app/Hooks';
 import {
   setIsRoguelike,
   setHeroInfo,
-  getGameInfo
+  getGameInfo,
+  submitButton
 } from '../../../features/game/GameSlice';
 import { fetchAllSettings, settingUpdated } from 'features/options/optionsSlice';
 import { SHORTCUT_ATTACK_THRESHOLD, SKIP_AR_WINDOW, SKIP_DR_WINDOW } from 'features/options/constants';
@@ -32,6 +33,7 @@ import { Toaster } from 'react-hot-toast';
 import { shallowEqual } from 'react-redux';
 import { PanelProvider } from '../components/leftColumn/PanelContext';
 import { RootState } from 'app/Store';
+import { PROCESS_INPUT } from 'appConstants';
 
 const TOAST_STYLE: React.CSSProperties = {
   background: 'var(--theme-tertiary)',
@@ -89,6 +91,9 @@ function Play({ isRoguelike }: { isRoguelike: boolean }) {
     (state: any) => state.game.heroIntroShown
   );
   const gameInfo = useAppSelector(getGameInfo, shallowEqual);
+  const canPassPhase = useAppSelector(
+    (state: RootState) => state.game.canPassPhase
+  );
 
   useEffect(() => {
     dispatch(setIsRoguelike(isRoguelike));
@@ -210,6 +215,17 @@ function Play({ isRoguelike }: { isRoguelike: boolean }) {
         <CardPortal />
         <GameStateHandler />
         <EventsHandler />
+        {gameInfo.isReplay && canPassPhase === true && (
+          <button
+            type="button"
+            className="replayAdvanceButton"
+            onClick={() =>
+              dispatch(submitButton({ button: { mode: PROCESS_INPUT.PASS } }))
+            }
+          >
+            Advance replay
+          </button>
+        )}
       </div>
     </PanelProvider>
   );

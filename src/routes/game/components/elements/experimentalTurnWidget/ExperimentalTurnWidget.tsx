@@ -203,6 +203,9 @@ export function PassTurnDisplay() {
   const preventPassPrompt = useAppSelector(
     (state: RootState) => state.game.preventPassPrompt
   );
+  const isReplay = useAppSelector(
+    (state: RootState) => state.game.gameInfo.isReplay
+  );
 
   const dispatch = useAppDispatch();
 
@@ -222,7 +225,7 @@ export function PassTurnDisplay() {
   }, [hasPriority]);
 
   const onPassTurn = () => {
-    if (preventPassPrompt && !showAreYouSureModal) {
+    if (!isReplay && preventPassPrompt && !showAreYouSureModal) {
       setShowAreYouSureModal(true);
     } else {
       dispatch(submitButton({ button: { mode: PROCESS_INPUT.PASS } }));
@@ -246,7 +249,7 @@ export function PassTurnDisplay() {
     setShowAreYouSureModal(false);
   };
 
-  if (canPassPhase === undefined) {
+  if (canPassPhase === undefined && !isReplay) {
     return (
       <div
         className={classNames(styles.passTurnDisplay, styles.passTurnInactive)}
@@ -254,7 +257,7 @@ export function PassTurnDisplay() {
     );
   }
 
-  if (canPassPhase === true) {
+  if (canPassPhase === true || isReplay) {
     return (
       <>
         <div

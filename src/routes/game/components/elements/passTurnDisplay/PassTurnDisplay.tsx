@@ -39,6 +39,9 @@ export default function PassTurnDisplay() {
   const playerID = useAppSelector(
     (state: RootState) => state.game.gameInfo.playerID
   );
+  const isReplay = useAppSelector(
+    (state: RootState) => state.game.gameInfo.isReplay
+  );
   const priorityPlayer = useAppSelector(
     (state: RootState) => state.game.priorityPlayer
   );
@@ -100,7 +103,7 @@ export default function PassTurnDisplay() {
       debounceTimerRef.current = null;
     }, 500);
 
-    if (preventPassPrompt) {
+    if (!isReplay && preventPassPrompt) {
       if (showAreYouSureModal) {
         // Modal is already open, treat SPACE shortcut as clicking Yes
         setShowAreYouSureModal(false);
@@ -111,7 +114,13 @@ export default function PassTurnDisplay() {
     } else {
       dispatch(submitButton({ button: { mode: PROCESS_INPUT.PASS } }));
     }
-  }, [preventPassPrompt, showAreYouSureModal, dispatch, isPassClickDebounced]);
+  }, [
+    preventPassPrompt,
+    showAreYouSureModal,
+    dispatch,
+    isPassClickDebounced,
+    isReplay
+  ]);
 
   const onUndoKeyPress = useCallback(() => {
     if (showAreYouSureModal) {
@@ -138,12 +147,12 @@ export default function PassTurnDisplay() {
     setShowAreYouSureModal(false);
   };
 
-  if (canPassPhase === undefined) {
+  if (canPassPhase === undefined && !isReplay) {
     return <div className={styles.passTurnDisplay}></div>;
   }
 
   // Spectator view - show priority indicator
-  if (playerID === 3) {
+  if (playerID === 3 && !isReplay) {
     const priority = priorityPlayer ?? (hasPriority ? 1 : 2);
     // In camera view 2 the board is flipped, so invert the arrow direction
     const isFlipped = spectatorCameraView === 2;
@@ -160,15 +169,15 @@ export default function PassTurnDisplay() {
     );
   }
 
-  if (canPassPhase === true) {
-    const subtitle = passSubtitle(turnPhaseEnum);
+  if (canPassPhase === true || isReplay) {
+    const subtitle = isReplay ? 'Replay' : passSubtitle(turnPhaseEnum);
     return (
       <>
         <div
           className={styles.passTurnDisplayActive}
           onClick={onPassTurn}
           role="button"
-          aria-label="Pass priority"
+          aria-label={isReplay ? 'Advance replay' : 'Pass priority'}
           title={`${subtitle} · pass priority · Space`}
         >
           <div> PASS </div>
