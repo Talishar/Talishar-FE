@@ -5,7 +5,7 @@
 
 .textTrigger {
   cursor: help;
-  color: var(--theme-primary, #d4af37);
+  color: inherit;
   text-decoration: underline dotted currentColor;
   text-underline-offset: 2px;
 }
