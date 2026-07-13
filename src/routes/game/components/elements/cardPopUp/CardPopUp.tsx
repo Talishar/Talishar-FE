@@ -58,9 +58,16 @@ export default function CardPopUp({
   const rotateYTarget = useMotionValue(0);
   const rotateX = useSpring(rotateXTarget, TILT_SPRING_CONFIG);
   const rotateY = useSpring(rotateYTarget, TILT_SPRING_CONFIG);
+  // Gates the tilt/shadow to a hard "off" state. Kept as its own motion value
+  // (rather than branching the style object between a spring and a static
+  // literal) because Framer Motion animates a style key's value across
+  // renders even when it switches from a MotionValue to a plain number, so a
+  // ternary style object would still visibly decay instead of snapping off.
+  const intensity = useMotionValue(1);
   const boxShadow = useTransform(
-    [rotateX, rotateY],
-    ([rx, ry]: number[]) => {
+    [rotateX, rotateY, intensity],
+    ([rx, ry, i]: number[]) => {
+      if (i === 0) return 'none';
       const offsetX = -ry * 1.2;
       const offsetY = rx * 1.2 + 8;
       const blur = 18 + Math.abs(rx) * 0.7 + Math.abs(ry) * 0.7;
@@ -73,6 +80,19 @@ export default function CardPopUp({
       if (longPressTimer.current) clearTimeout(longPressTimer.current);
     };
   }, []);
+
+  useEffect(() => {
+    if (disableTilt) {
+      hoverRect.current = null;
+      rotateXTarget.jump(0);
+      rotateYTarget.jump(0);
+      rotateX.jump(0);
+      rotateY.jump(0);
+      intensity.jump(0);
+    } else {
+      intensity.jump(1);
+    }
+  }, [disableTilt, rotateXTarget, rotateYTarget, rotateX, rotateY, intensity]);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!tiltEnabled || !ref.current) return;
@@ -160,14 +180,14 @@ export default function CardPopUp({
       onClick={handleOnClick}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      onMouseMove={handleMouseMove}
+      onMouseMove={tiltEnabled ? handleMouseMove : undefined}
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
       onTouchMove={handleTouchMove}
       onHoverStart={onHoverStart}
       onHoverEnd={onHoverEnd}
       ref={ref}
-      style={tiltEnabled ? { rotateX, rotateY, transformPerspective: 600, boxShadow } : undefined}
+      style={{ rotateX, rotateY, transformPerspective: 600, boxShadow }}
     >
       {children}
     </motion.div>
