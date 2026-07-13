@@ -1,6 +1,12 @@
 import React from 'react';
 import { useAppDispatch } from 'app/Hooks';
-import { useLoadReplayMutation } from 'features/api/apiSlice';
+import {
+  useGetSavedReplaysQuery,
+  useLoadReplayMutation,
+  useSetReplayFavoriteMutation
+} from 'features/api/apiSlice';
+import { FaRegStar, FaStar } from 'react-icons/fa';
+import { SavedReplay } from 'interface/API/GetSavedReplays.php';
 import { toast } from 'react-hot-toast';
 import classNames from 'classnames';
 import { LoadReplayAPI } from 'interface/API/LoadReplayAPI.php';
@@ -18,39 +24,45 @@ const LoadReplay = () => {
   const { t } = useTranslation();
   return (
     <main className={styles.pageWrapper}>
-      <PageBanner title={t('PAGES.REPLAY_TOOL')} subtitle={t('LEARN.BANNER_SUBTITLE')} />
+      <PageBanner
+        title={t('PAGES.REPLAY_TOOL')}
+        subtitle="Review your saved games, revisit key turns, and improve your next match."
+      />
       <article className={styles.articleContainer}>
-      <ReplayGame />
-      <div className={styles.betaDisclaimer}>
-        <strong>⚠️ The Replay Tool is currently in Beta</strong>
-        <p>
-          The Replay Tool is currently in beta. If you encounter any issues,
-          please report them in our Discord{' '}
-          <a
-            href={TALISHAR_DISCORD_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            #bug-reports
-          </a>{' '}
-          channel with your{' '}
-          <span className={styles.betaDisclaimerHighlight}>
-            Talishar username
-          </span>{' '}
-          and{' '}
-          <span className={styles.betaDisclaimerHighlight}>replay number</span>.
-        </p>
-        <p>
-          Please note: Replays you save might randomly stop working as engine
-          changes get made during development.
-        </p>
-        <p>
-          Replay saving is available to Metafy supporters. Everyone gets a
-          base number of save slots, and higher support tiers unlock
-          additional slots so you can keep more games around at once. See the{' '}
-          <Link to="/premium">Premium</Link> page for tier details.
-        </p>
-      </div>
+        <ReplayGame />
+        <div className={styles.betaDisclaimer}>
+          <strong>⚠️ The Replay Tool is currently in Beta</strong>
+          <p>
+            The Replay Tool is currently in beta. If you encounter any issues,
+            please report them in our Discord{' '}
+            <a
+              href={TALISHAR_DISCORD_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              #bug-reports
+            </a>{' '}
+            channel with your{' '}
+            <span className={styles.betaDisclaimerHighlight}>
+              Talishar username
+            </span>{' '}
+            and{' '}
+            <span className={styles.betaDisclaimerHighlight}>
+              replay number
+            </span>
+            .
+          </p>
+          <p>
+            Please note: Replays you save might randomly stop working as engine
+            changes get made during development.
+          </p>
+          <p>
+            Replay saving is available to Metafy supporters. Everyone gets a
+            base number of save slots, and higher support tiers unlock
+            additional slots so you can keep more games around at once. See the{' '}
+            <Link to="/premium">Premium</Link> page for tier details.
+          </p>
+        </div>
       </article>
     </main>
   );
@@ -60,6 +72,10 @@ const ReplayGame = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [loadReplay, loadReplayResult] = useLoadReplayMutation();
+  const [setReplayFavorite, { isLoading: isUpdatingFavorite }] =
+    useSetReplayFavoriteMutation();
+  const { data: savedReplayData, isLoading: isLoadingSavedReplays } =
+    useGetSavedReplaysQuery();
 
   const {
     register,
@@ -143,26 +159,126 @@ const ReplayGame = () => {
   };
 
   const buttonClass = classNames(styles.button, 'primary');
+  const isLoadingReplay = isSubmitting || loadReplayResult.isLoading;
+  const savedReplays = savedReplayData?.replays ?? [];
+  const replayLabel = (replay: SavedReplay) => {
+    const names = [replay.p1DisplayName, replay.p2DisplayName].filter(Boolean);
+    return names.length
+      ? names.join(' vs ')
+      : 'Players unavailable for older replay';
+  };
+  const heroLabel = (replay: SavedReplay) => {
+    const heroes = [replay.p1HeroName, replay.p2HeroName].filter(Boolean);
+    return heroes.length === 2 ? heroes.join(' vs ') : '';
+  };
+  const toggleFavorite = async (replay: SavedReplay) => {
+    try {
+      await setReplayFavorite({
+        replayNumber: replay.replayNumber,
+        favorite: !replay.favorite
+      }).unwrap();
+    } catch {
+      toast.error('Unable to update replay favorite. Please try again.');
+    }
+  };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <div>
-        <label htmlFor="replayNumber">Replay game number:</label>
-        <input
-          id="replayNumber"
-          type="number"
-          placeholder="Enter replay number"
-          {...register('replayNumber', { valueAsNumber: true })}
-        ></input>
-        <button
-          type="submit"
-          className={buttonClass}
-          disabled={isSubmitting}
-          aria-busy={isSubmitting}
-        >
-          Replay Game
-        </button>
-      </div>
+    <form onSubmit={handleSubmit(onSubmit)} className={styles.replayForm}>
+      <section
+        className={styles.savedReplays}
+        aria-labelledby="saved-replays-heading"
+      >
+        <div className={styles.savedReplaysHeader}>
+          <div>
+            <h2 id="saved-replays-heading">Your saved replays</h2>
+            <p>Choose a replay to begin reviewing the match.</p>
+            <p className={styles.favoriteExplanation}>
+              Favorites are protected from automatic cleanup. When replay
+              storage is full, the oldest non-favorite replay is removed.
+            </p>
+          </div>
+          {isLoadingSavedReplays && (
+            <span className={styles.replaysStatus}>Loading...</span>
+          )}
+        </div>
+        {savedReplayData?.loggedIn === false ? (
+          <p className={styles.emptyReplays}>
+            Sign in to view your saved replays.
+          </p>
+        ) : !isLoadingSavedReplays && savedReplays.length === 0 ? (
+          <p className={styles.emptyReplays}>
+            No saved replays yet. Save a completed game to find it here.
+          </p>
+        ) : (
+          <div className={styles.replayList}>
+            {savedReplays.map((replay) => (
+              <article key={replay.replayNumber} className={styles.replayCard}>
+                <button
+                  type="button"
+                  className={styles.replayCardMain}
+                  onClick={() =>
+                    onSubmit({ replayNumber: replay.replayNumber })
+                  }
+                  disabled={isLoadingReplay}
+                >
+                  <span className={styles.replayNumber}>
+                    Replay #{replay.replayNumber}
+                  </span>
+                  <span className={styles.replayPlayers}>
+                    {replayLabel(replay)}
+                  </span>
+                  {heroLabel(replay) && (
+                    <span className={styles.replayHeroes}>
+                      {heroLabel(replay)}
+                    </span>
+                  )}
+                  <span className={styles.replayLoad}>Review match</span>
+                </button>
+                <button
+                  type="button"
+                  className={`${styles.favoriteButton} ${
+                    replay.favorite ? styles.favoriteActive : ''
+                  }`}
+                  onClick={() => toggleFavorite(replay)}
+                  disabled={isUpdatingFavorite}
+                  aria-label={`${replay.favorite ? 'Remove' : 'Add'} Replay #${
+                    replay.replayNumber
+                  } ${replay.favorite ? 'from' : 'to'} favorites`}
+                  aria-pressed={replay.favorite}
+                  title={
+                    replay.favorite
+                      ? 'Remove from favorites'
+                      : 'Keep this replay'
+                  }
+                >
+                  {replay.favorite ? <FaStar /> : <FaRegStar />}
+                </button>
+              </article>
+            ))}
+          </div>
+        )}
+      </section>
+
+      <details className={styles.manualReplay}>
+        <summary>Load by replay number</summary>
+        <div>
+          <label htmlFor="replayNumber">Replay game number:</label>
+          <input
+            id="replayNumber"
+            type="number"
+            placeholder="Enter replay number"
+            {...register('replayNumber', { valueAsNumber: true })}
+          ></input>
+          <button
+            type="submit"
+            className={buttonClass}
+            disabled={isLoadingReplay}
+            aria-busy={isLoadingReplay}
+          >
+            Replay Game
+          </button>
+        </div>
+      </details>
 
       {errors.root?.serverError && (
         <div className={styles.errorContainer}>

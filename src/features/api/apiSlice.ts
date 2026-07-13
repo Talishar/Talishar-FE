@@ -104,6 +104,10 @@ import {
 import { BlockedUsersAPIResponse } from 'interface/API/BlockedUsersAPI.php';
 import { getGameInfo } from '../game/GameSlice';
 import { RootState } from '../../app/Store';
+import {
+  GetSavedReplaysResponse,
+  SetReplayFavoriteRequest
+} from 'interface/API/GetSavedReplays.php';
 
 export interface GetLastActiveGameResponse {
   gameExists: boolean;
@@ -216,7 +220,13 @@ const dynamicBaseQuery: BaseQueryFn<
 export const apiSlice = createApi({
   reducerPath: 'api',
   baseQuery: dynamicBaseQuery,
-  tagTypes: ['ModPageData', 'UserProfile', 'Auth', 'SystemMessage'],
+  tagTypes: [
+    'ModPageData',
+    'UserProfile',
+    'Auth',
+    'SystemMessage',
+    'SavedReplays'
+  ],
   refetchOnFocus: false,
   refetchOnReconnect: false,
   endpoints: (builder) => ({
@@ -398,7 +408,9 @@ export const apiSlice = createApi({
         sideboard
       }) => {
         const url = new URL(
-          `https://fabbazaar.app/api/decks/${encodeURIComponent(deckId)}/matchups/${encodeURIComponent(heroId)}`
+          `https://fabbazaar.app/api/decks/${encodeURIComponent(
+            deckId
+          )}/matchups/${encodeURIComponent(heroId)}`
         );
         url.searchParams.set('metafyId', String(metafyId));
         url.searchParams.set('metafyHash', String(metafyHash));
@@ -618,7 +630,10 @@ export const apiSlice = createApi({
         };
       }
     }),
-    kickPlayer: builder.mutation<{ success: boolean; error?: string }, { gameName: number; playerID: number; authKey: string }>({
+    kickPlayer: builder.mutation<
+      { success: boolean; error?: string },
+      { gameName: number; playerID: number; authKey: string }
+    >({
       query: (body) => {
         return {
           url: URL_END_POINT.KICK_PLAYER,
@@ -667,6 +682,25 @@ export const apiSlice = createApi({
       // Pick out errors and prevent nested properties in a hook or selector
       transformErrorResponse: (response: { status: string | number }) =>
         response.status
+    }),
+    getSavedReplays: builder.query<GetSavedReplaysResponse, void>({
+      query: () => ({
+        url: URL_END_POINT.GET_SAVED_REPLAYS,
+        method: 'GET'
+      }),
+      providesTags: ['SavedReplays']
+    }),
+    setReplayFavorite: builder.mutation<
+      { success: boolean; favorite: boolean },
+      SetReplayFavoriteRequest
+    >({
+      query: (body) => ({
+        url: URL_END_POINT.SET_REPLAY_FAVORITE,
+        method: 'POST',
+        body,
+        responseHandler: parseResponse
+      }),
+      invalidatesTags: ['SavedReplays']
     }),
     shareReplay: builder.mutation<ShareReplayResponse, ShareReplayAPI>({
       query: (body) => ({
@@ -1108,7 +1142,10 @@ export const apiSlice = createApi({
       }),
       providesTags: [{ type: 'SystemMessage', id: 'MINE' }]
     }),
-    sendSystemMessageToPlayer: builder.mutation<any, { username: string; message: string }>({
+    sendSystemMessageToPlayer: builder.mutation<
+      any,
+      { username: string; message: string }
+    >({
       query: ({ username, message }) => {
         return {
           url: URL_END_POINT.SYSTEM_MESSAGE,
@@ -1159,7 +1196,10 @@ export const apiSlice = createApi({
         };
       }
     }),
-    reportTyping: builder.mutation<any, { gameID: number; playerID: number; typing?: boolean }>({
+    reportTyping: builder.mutation<
+      any,
+      { gameID: number; playerID: number; typing?: boolean }
+    >({
       query: ({ gameID = 0, playerID = 0, typing = true }) => {
         return {
           url: 'APIs/ChatTyping.php',
@@ -1254,6 +1294,8 @@ export const {
   useChangeDisplayNameMutation,
   useClearRustCountersMutation,
   useLoadReplayMutation,
+  useGetSavedReplaysQuery,
+  useSetReplayFavoriteMutation,
   useShareReplayMutation,
   useLoadSharedReplayMutation,
   useSubmitLobbyInputMutation,

@@ -14,6 +14,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding: 0em;
 }
 
 .formContainer {
@@ -52,6 +53,184 @@
   color: var(--primary-inverse);
   margin-top: 32px;
   width: 100%;
+}
+
+.replayForm {
+  width: min(100%, 700px);
+  margin: 2rem auto 0;
+}
+
+.savedReplays {
+  --block-spacing-vertical: 0;
+  --block-spacing-horizontal: 0;
+  padding: 1.25rem;
+  border: 1px solid var(--theme-border, rgba(216, 179, 62, 0.38));
+  border-radius: 8px;
+  background: rgba(13, 15, 18, 0.76);
+  margin-bottom: 0em;
+}
+
+.savedReplaysHeader {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.savedReplaysHeader h2 {
+  margin: 0;
+  color: var(--theme-text-primary, #fff);
+  font-size: 1.15rem;
+}
+
+.savedReplaysHeader p,
+.emptyReplays {
+  margin: 0.35rem 0 0;
+  color: var(--theme-text-secondary, #c6c6c6);
+  font-size: 0.9rem;
+}
+
+.favoriteExplanation {
+  max-width: 38rem;
+  margin: 0.6rem 0 0;
+  color: var(--theme-text-secondary, #c6c6c6);
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+.replaysStatus {
+  color: var(--theme-warning-accent, #ffcf4f);
+  font-size: 0.82rem;
+}
+
+.emptyReplays {
+  padding: 1rem;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.replayList {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 0.65rem;
+}
+
+.replayCard {
+  --block-spacing-vertical: 0;
+  --block-spacing-horizontal: 0;
+  position: relative;
+  min-width: 0;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.replayCardMain {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.32rem 0.75rem;
+  width: 100%;
+  padding: 0.85rem;
+  text-align: left;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.035);
+  color: var(--theme-text-primary, #fff);
+  cursor: pointer;
+}
+
+.replayCardMain:hover:not(:disabled) {
+  border-color: rgba(190, 211, 230, 0.55);
+  background: rgba(190, 211, 230, 0.09);
+}
+
+.replayCardMain:disabled {
+  opacity: 0.55;
+  cursor: wait;
+}
+.replayNumber {
+  font-weight: 700;
+  color: var(--theme-warning-accent, #ffcf4f);
+}
+.replayPlayers {
+  grid-column: 1 / -1;
+  overflow: visible;
+  text-overflow: clip;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  color: var(--theme-text-secondary, #d3d3d3);
+  font-size: 0.83rem;
+}
+.replayHeroes {
+  grid-column: 1 / -1;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  color: var(--theme-text-secondary, #d3d3d3);
+  font-size: 0.76rem;
+}
+.replayLoad {
+  grid-column: 2;
+  grid-row: 1;
+  align-self: center;
+  margin-right: 1.85rem;
+  color: #bed3e6;
+  font-size: 0.76rem;
+  font-weight: 600;
+}
+
+.favoriteButton {
+  display: grid;
+  place-items: center;
+  position: absolute;
+  right: 0.45rem;
+  top: 0.35rem;
+  width: 1.8rem;
+  height: 1.8rem;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: rgba(255, 255, 255, 0.06) !important;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+}
+
+.favoriteButton:hover:not(:disabled),
+.favoriteActive {
+  background: rgba(240, 201, 77, 0.16) !important;
+  border-color: #f0c94d;
+  color: #f0c94d;
+}
+
+.favoriteButton:hover:not(:disabled) svg,
+.favoriteButton svg {
+  display: block;
+}
+
+.favoriteButton:disabled {
+  opacity: 0.5;
+  cursor: wait;
+}
+
+.manualReplay {
+  margin-top: 1rem;
+  padding: 0.9rem 1rem 1rem;
+  border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.16));
+  border-radius: 6px;
+  margin-bottom: 0em;
+}
+
+.manualReplay summary {
+  cursor: pointer;
+  color: var(--theme-text-primary, #fff);
+  font-weight: 600;
+}
+
+.manualReplay > div {
+  margin-top: 1rem;
 }
 
 .alarm {
@@ -191,7 +370,7 @@
 /* Beta Disclaimer Styles */
 .betaDisclaimer {
   max-width: 700px;
-  margin: 2rem auto;
+  margin: 1rem auto;
   padding: 1.5rem;
   background: var(
     --theme-warning-background,

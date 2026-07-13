@@ -4,11 +4,16 @@ import styles from './DevToolPanel.module.css';
 import { useLoadDebugGameMutation } from 'features/api/apiSlice';
 import { toast } from 'react-hot-toast';
 import { usePanelContext } from '../PanelContext';
+import { useAppSelector } from 'app/Hooks';
+import { RootState } from 'app/Store';
 
 export default function DevToolPanel() {
   const [isOpen, setIsOpen] = useState(false);
   const { setIsDevToolOpen, isManualModeOpen } = usePanelContext();
   const location = useLocation();
+  const isReplay = useAppSelector(
+    (state: RootState) => state.game.gameInfo.isReplay
+  );
 
   // Extract game ID from URL (e.g., /game/play/1145 -> 1145)
   const gameIdFromUrl = useMemo(() => {
@@ -17,7 +22,11 @@ export default function DevToolPanel() {
   }, [location.pathname]);
 
   // Only show in dev environment and not on CreateGame page
-  if (import.meta.env.PROD || location.pathname.includes('/create')) {
+  if (
+    import.meta.env.PROD ||
+    location.pathname.includes('/create') ||
+    isReplay
+  ) {
     return null;
   }
 

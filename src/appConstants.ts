@@ -317,6 +317,8 @@ export const URL_END_POINT = {
   GET_GAME_INFO: 'APIs/GetGameInfo.php',
   CREATE_GAME: 'APIs/CreateGame.php',
   REPLAYS: 'APIs/CreateReplayGame.php',
+  GET_SAVED_REPLAYS: 'APIs/GetSavedReplays.php',
+  SET_REPLAY_FAVORITE: 'APIs/SetReplayFavorite.php',
   SUBMIT_CHAT: 'SubmitChat.php',
   GET_POPUP: 'GetPopupAPI.php',
   GAME_STATE_POLL: 'GetNextTurn.php?',
