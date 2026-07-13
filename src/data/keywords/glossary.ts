@@ -7,28 +7,28 @@ export const GLOSSARY: KeywordEntry[] = [
     id: 'go-again',
     name: 'Go again',
     short:
-      'When this resolves, you gain an action point, letting you play another action this turn.',
+      'Gain 1 action point.',
     category: 'ability'
   },
   {
     id: 'dominate',
     name: 'Dominate',
     short:
-      'The defending hero can defend this attack with at most one card from their hand.',
+      'This attack cannot be defended by more than one card from hand.',
     category: 'ability'
   },
   {
     id: 'overpower',
     name: 'Overpower',
     short:
-      'The defending hero can defend this attack with at most one attack action card.',
+      'This attack cannot be defended by more than one action card.',
     category: 'ability'
   },
   {
     id: 'ward',
     name: 'Ward',
     short:
-      'Prevents the next X damage that would be dealt to whatever has the ward, then the ward is removed.',
+      'If this would be dealt damage, destroy it to prevent X of that damage.',
     category: 'ability',
     parameterized: true
   },
@@ -58,14 +58,14 @@ export const GLOSSARY: KeywordEntry[] = [
     id: 'temper',
     name: 'Temper',
     short:
-      'When this equipment defends, it gets a -1 defense counter; when it hits 0 defense, destroy it.',
+      'When the combat chain closes, if this defended, put a -1 defense counter on it, then destroy it if it has 0 defense.',
     category: 'ability'
   },
   {
     id: 'blood-debt',
     name: 'Blood Debt',
     short:
-      'At the end of your turn, if this card is in your banished zone, you lose 1 life.',
+      'While this is in your banished zone, at the beginning of your end phase, lose 1 life.',
     category: 'ability'
   },
   {
@@ -79,7 +79,7 @@ export const GLOSSARY: KeywordEntry[] = [
     id: 'phantasm',
     name: 'Phantasm',
     short:
-      'If this attack is defended by a non-Illusionist attack action card with 6 or more power, the attack is destroyed and the chain link closes.',
+      'Whenever this is defended by a non-Illusionist attack action card with 6 or more power, destroy it.',
     category: 'ability'
   },
   {
@@ -101,7 +101,7 @@ export const GLOSSARY: KeywordEntry[] = [
     id: 'fusion',
     name: 'Fusion',
     short:
-      'You may reveal a card of the listed element from your hand while playing this card to "fuse" it for a bonus effect.',
+      'As an additional cost to play this, you may reveal the listed elemental card or cards from your hand.',
     category: 'ability',
     aliases: ['Fused']
   },
@@ -109,7 +109,7 @@ export const GLOSSARY: KeywordEntry[] = [
     id: 'legendary',
     name: 'Legendary',
     short:
-      'Your deck can only contain one copy of this card, and you can only have one in the arena at a time.',
+      'You may only have 1 copy of this card in your constructed deck.',
     category: 'ability'
   },
   {
@@ -136,7 +136,7 @@ export const GLOSSARY: KeywordEntry[] = [
     id: 'heave',
     name: 'Heave',
     short:
-      'At the beginning of your end phase, you may pay X to put this card face-up into your arsenal and create X Seismic Surge tokens.',
+      'While this is in your hand at the beginning of your end phase, you may pay X to put it face-up into your arsenal and create X Seismic Surge tokens.',
     category: 'ability',
     parameterized: true
   },
@@ -144,7 +144,7 @@ export const GLOSSARY: KeywordEntry[] = [
     id: 'quell',
     name: 'Quell',
     short:
-      'You may pay a resource to have this equipment prevent the next X damage to your hero; if it prevents damage this way, destroy it at the start of the end phase.',
+      'If you would be dealt damage, you may pay X to prevent X of it. If you do, destroy this at the beginning of the end phase.',
     category: 'ability',
     parameterized: true
   },
@@ -173,7 +173,7 @@ export const GLOSSARY: KeywordEntry[] = [
   {
     id: 'essence',
     name: 'Essence',
-    short: 'This hero can use cards of the listed talents.',
+    short: 'You may have cards of the listed types in your deck as though your hero had those types.',
     category: 'ability'
   },
   {
@@ -209,14 +209,14 @@ export const GLOSSARY: KeywordEntry[] = [
     id: 'crush',
     name: 'Crush',
     short:
-      'This card gets its bonus effect if it deals 4 or more damage to the defending hero.',
+      'Its accompanying ability applies when this deals 4 or more damage.',
     category: 'label'
   },
   {
     id: 'reprise',
     name: 'Reprise',
     short:
-      'This card gets its bonus effect if the defending hero has defended with a card from their hand this turn.',
+      'Its accompanying ability applies if the defending hero defended this chain link with a card from hand.',
     category: 'label'
   },
   {
@@ -251,7 +251,7 @@ export const GLOSSARY: KeywordEntry[] = [
     id: 'channel',
     name: 'Channel',
     short:
-      'A label keyword; its accompanying ability states the effect and condition.',
+      'Its accompanying ability applies if this has go again.',
     category: 'label'
   },
   {
@@ -295,7 +295,7 @@ export const GLOSSARY: KeywordEntry[] = [
     id: 'attack-reaction',
     name: 'Attack Reaction',
     short:
-      'A card the attacker can play during the reaction step, usually to pump the attack.',
+      'A card or ability the controller of the attack can play during the reaction step.',
     category: 'type'
   },
   {
@@ -364,7 +364,7 @@ export const GLOSSARY: KeywordEntry[] = [
     id: 'intimidate',
     name: 'Intimidate',
     short:
-      'The defending hero banishes a random card from their hand face-down until the end of the turn.',
+      'Banish a random card from that player\'s hand face-down; return it to their hand at the beginning of the end phase.',
     category: 'effect'
   },
   {
@@ -387,14 +387,14 @@ export const GLOSSARY: KeywordEntry[] = [
     id: 'banish',
     name: 'Banish',
     short:
-      'Remove the card from the game zone it is in and place it face-up in the banished zone.',
+      'Move the object to its owner\'s banished zone.',
     category: 'effect',
     noAutoLink: true
   },
   {
     id: 'reload',
     name: 'Reload',
-    short: 'Put a card from your hand face-down into your arsenal.',
+    short: 'You may put a card from your hand face-down into your arsenal if all your arsenal zones are empty.',
     category: 'effect'
   },
   {
