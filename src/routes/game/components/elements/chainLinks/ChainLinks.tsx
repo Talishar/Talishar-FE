@@ -5,7 +5,11 @@ import styles from './ChainLinks.module.css';
 import draconic from '../../../../../img/symbols/symbol-draconic.png';
 import hit from '../../../../../img/symbols/symbol-hit.png';
 import defend from '../../../../../img/symbols/symbol-defense.png';
-import { showChainLinkSummary, submitButton } from 'features/game/GameSlice';
+import {
+  hideChainLinkSummary,
+  showChainLinkSummary,
+  submitButton
+} from 'features/game/GameSlice';
 import { GiBreakingChain } from 'react-icons/gi';
 import { PROCESS_INPUT } from 'appConstants';
 
@@ -16,13 +20,24 @@ export default function ChainLinks() {
   const turnPhase = useAppSelector(
     (state: RootState) => state.game.turnPhase?.turnPhase
   );
+  const chainLinkSummaryView = useAppSelector(
+    (state: RootState) => state.game.chainLinkSummary?.view
+  );
 
   const dispatch = useAppDispatch();
 
   const isGameOver = !!turnPhase && turnPhase === 'OVER';
 
   const clickChainLink = (key: number) => {
-    dispatch(showChainLinkSummary({ chainLink: key }));
+    dispatch(showChainLinkSummary({ chainLink: key, view: 'all' }));
+  };
+  const previewChainLink = (key: number) => {
+    dispatch(showChainLinkSummary({ chainLink: key, view: 'preview' }));
+  };
+  const hideChainLinkPreview = () => {
+    if (chainLinkSummaryView === 'preview') {
+      dispatch(hideChainLinkSummary());
+    }
   };
 
   const handleBreakChainClick = () => {
@@ -45,6 +60,8 @@ export default function ChainLinks() {
             className={styles.chainLinkSummary}
             key={ix.toString()}
             onClick={() => clickChainLink(ix)}
+            onPointerEnter={() => previewChainLink(ix)}
+            onPointerLeave={hideChainLinkPreview}
             title={ChainLink.isDraconic ? 'Draconic Chain Link' : ''}
           >
             <div className={styles.chainLinkSymbol}>

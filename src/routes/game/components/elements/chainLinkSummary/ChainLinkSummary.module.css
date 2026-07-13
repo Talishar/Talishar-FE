@@ -10,6 +10,75 @@
   justify-content: center;
 }
 
+.previewOutside {
+  position: fixed;
+  inset: 0;
+  z-index: 950;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.previewOutside .cardListBox {
+  width: clamp(280px, 30vw, 360px);
+  max-height: min(68vh, 540px);
+}
+
+.allLinksBox {
+  width: min(94vw, 1320px);
+  max-height: min(86vh, 720px);
+  display: flex;
+  flex-direction: column;
+  background: var(--near-black, #0d0d0f);
+  border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.14));
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.allLinksGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 12px;
+  padding: 12px;
+  overflow: auto;
+}
+
+.allLinksGrid .cardListBox {
+  width: 100%;
+  max-height: none;
+}
+
+@media (max-width: 700px), (orientation: portrait) {
+  .allLinksBox {
+    width: 100vw;
+    max-height: 100dvh;
+    border-radius: 0;
+  }
+
+  .allLinksGrid {
+    display: block;
+    padding: 8px;
+  }
+
+  .allLinksGrid .cardListBox {
+    max-height: none;
+    margin-bottom: 8px;
+  }
+
+  .allLinksGrid .body {
+    overflow: visible;
+  }
+
+  .allLinksGrid .cardListBox:last-child {
+    margin-bottom: 0;
+  }
+
+  .previewOutside {
+    display: none;
+  }
+}
+
 /* ── Modal shell ──────────────────────────────────────── */
 .cardListBox {
   position: relative;

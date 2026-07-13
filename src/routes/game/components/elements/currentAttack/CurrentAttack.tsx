@@ -6,7 +6,7 @@ import attackSymbol from '../../../../../img/symbols/symbol-attack.png';
 import defSymbol from '../../../../../img/symbols/symbol-defense.png';
 import CardDisplay from '../cardDisplay/CardDisplay';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
-import { showChainLinkSummary } from 'features/game/GameSlice';
+import { hideChainLinkSummary, showChainLinkSummary } from 'features/game/GameSlice';
 
 export default function CurrentAttack() {
   const activeCombatChain = useAppSelector(
@@ -14,6 +14,9 @@ export default function CurrentAttack() {
   );
   const playerID = useAppSelector(
     (state: RootState) => state.game.gameInfo.playerID
+  );
+  const chainLinkSummaryView = useAppSelector(
+    (state: RootState) => state.game.chainLinkSummary?.view
   );
   const dispatch = useAppDispatch();
   if (
@@ -25,6 +28,14 @@ export default function CurrentAttack() {
   }
   const attackZoneDisplay = () => {
     dispatch(showChainLinkSummary({ chainLink: -1 }));
+  };
+  const showAttackPreview = () => {
+    dispatch(showChainLinkSummary({ chainLink: -1, view: 'preview' }));
+  };
+  const hideAttackPreview = () => {
+    if (chainLinkSummaryView === 'preview') {
+      dispatch(hideChainLinkSummary());
+    }
   };
 
   const powerValue = activeCombatChain.totalPower;
@@ -44,7 +55,12 @@ export default function CurrentAttack() {
         <div className={styles.attDiv} data-testid="attack-value">
           {powerValue}
         </div>
-        <div className={styles.attackSymbol} onClick={attackZoneDisplay}>
+        <div
+          className={styles.attackSymbol}
+          onClick={attackZoneDisplay}
+          onPointerEnter={showAttackPreview}
+          onPointerLeave={hideAttackPreview}
+        >
           <img
             className={styles.chainSymbols}
             src={attackSymbol}

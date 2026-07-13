@@ -33,6 +33,9 @@ export const ChainLinkSummaryContainer = () => {
   const lastUpdate = useAppSelector(
     (state: RootState) => state.game.gameDynamicInfo.lastUpdate
   );
+  const oldCombatChain = useAppSelector(
+    (state: RootState) => state.game.oldCombatChain ?? []
+  );
 
   const dispatch = useAppDispatch();
 
@@ -55,13 +58,40 @@ export const ChainLinkSummaryContainer = () => {
   }
 
   const props = {
-    chainLinkIndex: chainLinkSummary.index,
     lastUpdate: lastUpdate,
     ...gameInfo
   };
+  if (chainLinkSummary.view === 'all') {
+    return (
+      <div className={styles.emptyOutside} onClick={() => dispatch(hideChainLinkSummary())}>
+        <div className={styles.allLinksBox} onClick={(e) => e.stopPropagation()}>
+          <div className={styles.cardListTitleContainer}>
+            <h3 className={styles.title}>Combat Chain</h3>
+            <div className={styles.cardListCloseIcon} onClick={() => dispatch(hideChainLinkSummary())}>
+              <FaTimes title="Close Dialog" />
+            </div>
+          </div>
+          <div className={styles.allLinksGrid}>
+            {oldCombatChain.map((_, index) => (
+              <ChainLinkSummary
+                key={index}
+                {...props}
+                chainLinkIndex={index}
+                presentation="inline"
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
   return (
     <div>
-      <ChainLinkSummary {...props} />
+      <ChainLinkSummary
+        {...props}
+        chainLinkIndex={chainLinkSummary.index}
+        presentation={chainLinkSummary.view === 'preview' ? 'preview' : 'dialog'}
+      />
     </div>
   );
 };
@@ -69,6 +99,7 @@ export const ChainLinkSummaryContainer = () => {
 interface ChainLinkSummaryProps extends GameStaticInfo {
   chainLinkIndex?: number;
   lastUpdate?: number;
+  presentation?: 'dialog' | 'preview' | 'inline';
 }
 
 interface ChainLinkCard {
@@ -149,7 +180,8 @@ const ChainLinkSummary = ({
   playerID,
   authKey,
   chainLinkIndex,
-  lastUpdate
+  lastUpdate,
+  presentation = 'dialog'
 }: ChainLinkSummaryProps) => {
   const isResolvedLink = chainLinkIndex != null && chainLinkIndex >= 0;
 
@@ -334,20 +366,28 @@ const ChainLinkSummary = ({
     }
   }
 
-  return (
-    <div className={styles.emptyOutside} onClick={closeCardList}>
+  const summary = (
       <div className={styles.cardListBox} onClick={(e) => e.stopPropagation()}>
         <div className={styles.cardListTitleContainer}>
           <div className={styles.titleRow}>
             <h3 className={styles.title}>{title}</h3>
             {headerBadge}
           </div>
-          <div className={styles.cardListCloseIcon} onClick={closeCardList}>
+          {presentation !== 'inline' && <div className={styles.cardListCloseIcon} onClick={closeCardList}>
             <FaTimes title="Close Dialog" />
-          </div>
+          </div>}
         </div>
         {content}
       </div>
+  );
+
+  if (presentation === 'inline') return summary;
+  return (
+    <div
+      className={presentation === 'preview' ? styles.previewOutside : styles.emptyOutside}
+      onClick={presentation === 'dialog' ? closeCardList : undefined}
+    >
+      {summary}
     </div>
   );
 };

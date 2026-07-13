@@ -762,11 +762,15 @@ export const gameSlice = createSlice({
     },
     showChainLinkSummary: (
       state,
-      action: PayloadAction<{ chainLink?: number }>
+      action: PayloadAction<{
+        chainLink?: number;
+        view?: 'dialog' | 'preview' | 'all';
+      }>
     ) => {
       state.chainLinkSummary = {
         show: true,
-        index: action?.payload.chainLink ?? -1
+        index: action?.payload.chainLink ?? -1,
+        view: action?.payload.view ?? 'dialog'
       };
     },
     hideChainLinkSummary: (state) => {

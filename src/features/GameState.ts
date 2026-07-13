@@ -107,6 +107,7 @@ export default interface GameState {
   chainLinkSummary?: {
     show?: boolean;
     index?: number;
+    view?: 'dialog' | 'preview' | 'all';
   };
   canPassPhase?: boolean;
   events?: {
