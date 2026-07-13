@@ -36,25 +36,27 @@
 }
 
 .clearButton {
+  all: unset;
   position: absolute;
-  right: 0.5em;
-  background: none;
-  border: none;
+  top: 50%;
+  right: 0.4em;
+  transform: translateY(-50%);
   color: var(--theme-text-muted, rgba(255, 255, 255, 0.35));
   cursor: pointer;
   font-size: 0.75em;
-  padding: 0;
   line-height: 1;
   display: flex;
   align-items: center;
-  transition: color 0.15s ease;
-  box-shadow: none;
-  outline: none;
-  margin: 0;
+  justify-content: center;
+  padding: 0.35em;
+  border-radius: 4px;
+  transition: color 0.15s ease, background-color 0.15s ease;
 }
 
 .clearButton:hover {
-  color: var(--theme-text, #f4eded);
+  color: var(--primary-inverse, #000);
+  background-color: var(--theme-primary, #e6b422);
+  transform: translateY(-50%);
 }
 
 .dropdown {
