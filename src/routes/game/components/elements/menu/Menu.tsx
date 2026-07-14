@@ -111,7 +111,8 @@ function MobileOverflowMenu({ isSpectator }: { isSpectator: boolean }) {
   const isPracticeDummy = useAppSelector(
     (state: RootState) => state.game.playerTwo.Name === 'Practice Dummy'
   );
-  const showManualMode = !isSpectator && (isLocalEnvironment || isManualMode || isPracticeDummy);
+  const showManualMode =
+    !isSpectator && (isLocalEnvironment || isManualMode || isPracticeDummy);
 
   const toggleFullScreen = () => {
     screenfull.toggle();
@@ -124,7 +125,7 @@ function MobileOverflowMenu({ isSpectator }: { isSpectator: boolean }) {
       setPanelStyle({
         position: 'fixed',
         top: rect.bottom + 6,
-        right: window.innerWidth - rect.right,
+        right: window.innerWidth - rect.right
       });
     }
     setOpen((v) => !v);
@@ -145,32 +146,38 @@ function MobileOverflowMenu({ isSpectator }: { isSpectator: boolean }) {
       >
         <FaEllipsisH aria-hidden="true" />
       </button>
-      {open && ReactDOM.createPortal(
-        <>
-          <div
-            className={styles.overflowBackdrop}
-            onClick={() => setOpen(false)}
-          />
-          <div className={styles.overflowPanel} style={panelStyle}>
-            <div onClick={() => setOpen(false)}>
-              <OptionsMenuToggle
-                btnClass={styles.overflowItem}
-                showLabel
-              />
-            </div>
-            {!isSpectator && <Inventory buttonClassName={styles.overflowItem} showLabel />}
-            {showManualMode && (
-              <button className={styles.overflowItem} onClick={handleManualMode}>
-                <FaWrench aria-hidden="true" /> Manual Mode
+      {open &&
+        ReactDOM.createPortal(
+          <>
+            <div
+              className={styles.overflowBackdrop}
+              onClick={() => setOpen(false)}
+            />
+            <div className={styles.overflowPanel} style={panelStyle}>
+              <div onClick={() => setOpen(false)}>
+                <OptionsMenuToggle btnClass={styles.overflowItem} showLabel />
+              </div>
+              {!isSpectator && (
+                <Inventory buttonClassName={styles.overflowItem} showLabel />
+              )}
+              {showManualMode && (
+                <button
+                  className={styles.overflowItem}
+                  onClick={handleManualMode}
+                >
+                  <FaWrench aria-hidden="true" /> Manual Mode
+                </button>
+              )}
+              <button
+                className={styles.overflowItem}
+                onClick={toggleFullScreen}
+              >
+                <GiExpand aria-hidden="true" /> Fullscreen
               </button>
-            )}
-            <button className={styles.overflowItem} onClick={toggleFullScreen}>
-              <GiExpand aria-hidden="true" /> Fullscreen
-            </button>
-          </div>
-        </>,
-        document.body
-      )}
+            </div>
+          </>,
+          document.body
+        )}
     </div>
   );
 }
@@ -180,6 +187,9 @@ function MenuContent() {
   const [isTablet, setIsTablet] = useState(false);
   const playerID = useAppSelector(
     (state: RootState) => state.game.gameInfo.playerID
+  );
+  const isReplay = useAppSelector(
+    (state: RootState) => state.game.gameInfo.isReplay
   );
   const isSpectator = playerID === 3;
 
@@ -200,6 +210,10 @@ function MenuContent() {
       window.removeEventListener('resize', handleResize);
     };
   }, []);
+
+  // Replay controls are provided by the replay panel and Advance replay button.
+  // Normal game controls (including undo) must not alter replay state.
+  if (isReplay) return null;
 
   // Spectator view: only show essential buttons
   if (isSpectator) {

@@ -38,7 +38,7 @@ interface ChatOptionsProps {
 }
 
 export const ChatInput = ({ usePrimary = false }: { usePrimary?: boolean }) => {
-  const { playerID, gameID, authKey } = useAppSelector(
+  const { playerID, gameID, authKey, isReplay } = useAppSelector(
     getGameInfo,
     shallowEqual
   );
@@ -88,7 +88,7 @@ export const ChatInput = ({ usePrimary = false }: { usePrimary?: boolean }) => {
     };
   }, []);
 
-  if (!canChat) {
+  if (isReplay || !canChat) {
     return null;
   }
 
@@ -154,7 +154,8 @@ export const ChatInput = ({ usePrimary = false }: { usePrimary?: boolean }) => {
           />
           <button
             className={classNames(styles.buttonDiv, { secondary: !usePrimary })}
-            onClick={handleSubmit}>
+            onClick={handleSubmit}
+          >
             <div className={styles.icon}>
               <GiChatBubble />
             </div>
@@ -238,7 +239,11 @@ const ChatWheel = ({ usePrimary = false }: { usePrimary?: boolean }) => {
 
   return (
     <>
-      <div className={classNames(styles.quickChatButton, { [styles.primaryQuickChatButton]: usePrimary })}>
+      <div
+        className={classNames(styles.quickChatButton, {
+          [styles.primaryQuickChatButton]: usePrimary
+        })}
+      >
         <button
           ref={refs.setReference}
           className={styles.quickChatToggleButton}
@@ -259,7 +264,11 @@ const ChatWheel = ({ usePrimary = false }: { usePrimary?: boolean }) => {
       {modalDisplay &&
         createPortal(
           <FloatingOverlay lockScroll className={styles.floatingOverlay}>
-            <FloatingFocusManager context={context} modal={false} initialFocus={-1}>
+            <FloatingFocusManager
+              context={context}
+              modal={false}
+              initialFocus={-1}
+            >
               <div
                 ref={refs.setFloating}
                 style={floatingStyles}
@@ -293,7 +302,10 @@ function getRecents(): number[] {
 function addRecent(key: number): void {
   const recents = getRecents().filter((k) => k !== key);
   recents.unshift(key);
-  localStorage.setItem(RECENTS_KEY, JSON.stringify(recents.slice(0, MAX_RECENTS)));
+  localStorage.setItem(
+    RECENTS_KEY,
+    JSON.stringify(recents.slice(0, MAX_RECENTS))
+  );
 }
 
 const QUICK_CHAT_COOLDOWN_MS = 3000;
@@ -325,8 +337,12 @@ const ChatOptions = ({ setModalDisplay }: ChatOptionsProps) => {
     if (now - lastQuickChatSent < QUICK_CHAT_COOLDOWN_MS) {
       if (!quickChatToastPending) {
         quickChatToastPending = true;
-        toast.error('Please wait before sending another quick chat.', { duration: 2000 });
-        setTimeout(() => { quickChatToastPending = false; }, 2000);
+        toast.error('Please wait before sending another quick chat.', {
+          duration: 2000
+        });
+        setTimeout(() => {
+          quickChatToastPending = false;
+        }, 2000);
       }
       return;
     }
@@ -369,17 +385,27 @@ const ChatOptions = ({ setModalDisplay }: ChatOptionsProps) => {
             aria-expanded={!recentsCollapsed}
           >
             ⭐ Recent
-            <span className={`${styles.sectionChevron} ${recentsCollapsed ? styles.sectionChevronCollapsed : ''}`}>▾</span>
-          </div>
-          {!recentsCollapsed && recents.map((key) => (
-            <button
-              key={`recent${key}`}
-              className={styles.chatWheelButton}
-              onClick={(e) => { e.preventDefault(); handleSend(key); }}
+            <span
+              className={`${styles.sectionChevron} ${
+                recentsCollapsed ? styles.sectionChevronCollapsed : ''
+              }`}
             >
-              {CHAT_WHEEL.get(key)}
-            </button>
-          ))}
+              ▾
+            </span>
+          </div>
+          {!recentsCollapsed &&
+            recents.map((key) => (
+              <button
+                key={`recent${key}`}
+                className={styles.chatWheelButton}
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleSend(key);
+                }}
+              >
+                {CHAT_WHEEL.get(key)}
+              </button>
+            ))}
           <div className={styles.sectionDivider} />
         </>
       )}
@@ -387,9 +413,14 @@ const ChatOptions = ({ setModalDisplay }: ChatOptionsProps) => {
         <button
           key={`quickChat${key}`}
           className={styles.chatWheelButton}
-          onClick={(e) => { e.preventDefault(); handleSend(key); }}
+          onClick={(e) => {
+            e.preventDefault();
+            handleSend(key);
+          }}
         >
-          {index <= 9 && <span className={styles.keyHint}>{index < 9 ? index + 1 : 0}</span>}
+          {index <= 9 && (
+            <span className={styles.keyHint}>{index < 9 ? index + 1 : 0}</span>
+          )}
           {value}
         </button>
       ))}

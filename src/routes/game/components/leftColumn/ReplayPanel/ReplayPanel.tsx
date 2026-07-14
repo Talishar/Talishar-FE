@@ -390,29 +390,6 @@ function ReplayContent({
             </span>
           </button>
         </div>
-        <div className={styles.navButtons}>
-          <button
-            className={styles.eventButton}
-            onClick={() => moveToAdjacent(-1, true)}
-            disabled={
-              isRequestInProgress ||
-              !reviewTurns.some((turn) => turn.hasCombat || turn.hasDamage)
-            }
-          >
-            Previous key event
-          </button>
-          <button
-            className={styles.eventButton}
-            onClick={() => moveToAdjacent(1, true)}
-            disabled={
-              isRequestInProgress ||
-              !reviewTurns.some((turn) => turn.hasCombat || turn.hasDamage)
-            }
-          >
-            Next key event
-          </button>
-        </div>
-
         <div className={styles.divider} />
         <div className={styles.formGroup}>
           <label htmlFor={turnInputId}>
@@ -445,7 +422,6 @@ function ReplayContent({
         >
           {isReloadingReplay ? 'Returning to start…' : 'Return to start'}
         </button>
-
         {isPatron && gameInfo?.replayNumber && (
           <button
             className={styles.actionButton}

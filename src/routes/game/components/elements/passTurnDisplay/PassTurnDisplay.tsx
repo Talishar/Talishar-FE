@@ -89,9 +89,12 @@ export default function PassTurnDisplay() {
   }, [hasPriority, playerID]);
 
   // Cleanup debounce timer on unmount so setState is never called on an unmounted component.
-  useEffect(() => () => {
-    if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
-  }, []);
+  useEffect(
+    () => () => {
+      if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
+    },
+    []
+  );
 
   const onPassTurn = useCallback(() => {
     if (isPassClickDebounced) return;
@@ -123,6 +126,7 @@ export default function PassTurnDisplay() {
   ]);
 
   const onUndoKeyPress = useCallback(() => {
+    if (isReplay) return;
     if (showAreYouSureModal) {
       // If modal is open, treat UNDO shortcut as clicking No (close modal)
       setShowAreYouSureModal(false);
@@ -130,7 +134,7 @@ export default function PassTurnDisplay() {
       // If modal is not open, allow normal undo action
       dispatch(submitButton({ button: { mode: PROCESS_INPUT.UNDO } }));
     }
-  }, [showAreYouSureModal, dispatch]);
+  }, [isReplay, showAreYouSureModal, dispatch]);
 
   useShortcut(DEFAULT_SHORTCUTS.PASS_TURN, onPassTurn);
   useShortcut(DEFAULT_SHORTCUTS.PASS_MIDDLE_CLICK, onPassTurn);
