@@ -318,6 +318,7 @@ export const URL_END_POINT = {
   CREATE_GAME: 'APIs/CreateGame.php',
   REPLAYS: 'APIs/CreateReplayGame.php',
   GET_SAVED_REPLAYS: 'APIs/GetSavedReplays.php',
+  GET_REPLAY_TURNS: 'APIs/GetReplayTurns.php',
   SET_REPLAY_FAVORITE: 'APIs/SetReplayFavorite.php',
   SUBMIT_CHAT: 'SubmitChat.php',
   GET_POPUP: 'GetPopupAPI.php',

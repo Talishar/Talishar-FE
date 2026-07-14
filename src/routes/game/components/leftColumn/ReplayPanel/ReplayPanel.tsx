@@ -3,16 +3,21 @@ import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import {
   submitButton,
   getGameInfo,
-  setSpectatorCameraView
+  setReplayStart
 } from 'features/game/GameSlice';
 import { RootState } from 'app/Store';
 import { selectIsPatron } from 'features/auth/authSlice';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import styles from './ReplayPanel.module.css';
 import { toast } from 'react-hot-toast';
 import { PROCESS_INPUT } from 'appConstants';
-import { MdSwapVert, MdShare } from 'react-icons/md';
-import { useShareReplayMutation } from 'features/api/apiSlice';
+import { MdShare } from 'react-icons/md';
+import {
+  useGetReplayTurnsQuery,
+  useLoadReplayMutation,
+  useShareReplayMutation
+} from 'features/api/apiSlice';
+import { GameLocationState } from 'interface/GameLocationState';
 
 const TURN_MARKER_RE = /^\[\[TURN_START:(\d+):(\d+)\]\]$/;
 const COMBAT_RE =
@@ -32,7 +37,7 @@ function toPlainText(message: string) {
     .replace(/{{.*?\|(.+?)(?:\|.*?)?}}/g, '$1');
 }
 
-function getReplayTurns(chatLog: string[] | undefined): ReplayTurn[] {
+function getChatReplayTurns(chatLog: string[] | undefined): ReplayTurn[] {
   const turns: ReplayTurn[] = [];
   let activeTurn: ReplayTurn | undefined;
 
@@ -90,6 +95,7 @@ function ReplayContent({
   onClose: () => void;
 }) {
   const turnInputId = useId();
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const chatLog = useAppSelector((state: RootState) => state.game.chatLog);
   const currentTurnNumber = useAppSelector(
@@ -97,9 +103,6 @@ function ReplayContent({
   );
   const currentTurnPlayer = useAppSelector(
     (state: RootState) => state.game.turnPlayer
-  );
-  const spectatorCameraView = useAppSelector(
-    (state: RootState) => state.game.spectatorCameraView
   );
   const localPlayerName = useAppSelector(
     (state: RootState) => state.game.playerOne.Name
@@ -109,17 +112,37 @@ function ReplayContent({
   );
   const isPatron = useAppSelector(selectIsPatron);
   const [shareReplay, { isLoading: isSharing }] = useShareReplayMutation();
+  const [reloadReplay, { isLoading: isReloadingReplay }] =
+    useLoadReplayMutation();
+  const { data: savedTurnsData } = useGetReplayTurnsQuery(gameInfo.gameID, {
+    skip: !gameInfo.gameID
+  });
   const [turnNumber, setTurnNumber] = useState(String(currentTurnNumber ?? 0));
   const [isRequestInProgress, setIsRequestInProgress] = useState(false);
 
-  const turns = useMemo(() => getReplayTurns(chatLog), [chatLog]);
-  const reviewTurns = useMemo(() => {
+  const chatTurns = useMemo(() => getChatReplayTurns(chatLog), [chatLog]);
+  const reviewTurns = useMemo<ReplayTurn[]>(() => {
+    const savedTurns: Array<{ player: 1 | 2; number: number }> =
+      savedTurnsData?.turns ?? [];
+    if (savedTurns.length) {
+      return savedTurns.map((turn) => {
+        const chatTurn = chatTurns.find(
+          (candidate) =>
+            candidate.number === turn.number && candidate.player === turn.player
+        );
+        return {
+          ...turn,
+          hasCombat: chatTurn?.hasCombat ?? false,
+          hasDamage: chatTurn?.hasDamage ?? false
+        };
+      });
+    }
     if (
-      turns.length ||
+      chatTurns.length ||
       !currentTurnNumber ||
       (currentTurnPlayer !== 1 && currentTurnPlayer !== 2)
     )
-      return turns;
+      return chatTurns;
     return [
       {
         number: currentTurnNumber,
@@ -128,8 +151,9 @@ function ReplayContent({
         hasDamage: false
       }
     ];
-  }, [turns, currentTurnNumber, currentTurnPlayer]);
+  }, [chatTurns, savedTurnsData, currentTurnNumber, currentTurnPlayer]);
   const selectedTurn = Number(turnNumber);
+  const maxSavedTurn = Math.max(0, ...reviewTurns.map((turn) => turn.number));
   const playerNames: Record<1 | 2, string> =
     gameInfo.playerID === 1
       ? { 1: localPlayerName || 'Player 1', 2: localOpponentName || 'Player 2' }
@@ -176,9 +200,7 @@ function ReplayContent({
       : reviewTurns;
     if (!targets.length) return;
     const currentIndex = targets.findIndex(
-      (turn) =>
-        turn.number === selectedTurn &&
-        (!currentTurnPlayer || turn.player === currentTurnPlayer)
+      (turn) => turn.number === selectedTurn
     );
     const nextIndex =
       currentIndex >= 0
@@ -188,6 +210,59 @@ function ReplayContent({
         : [...targets].map((turn) => turn.number).lastIndexOf(selectedTurn);
     const next = targets[nextIndex];
     if (next) loadTurn(next);
+  };
+
+  const loadInputTurn = () => {
+    const requestedTurn = Number(turnNumber);
+    if (
+      requestedTurn !== 0 &&
+      !reviewTurns.some((turn) => turn.number === requestedTurn)
+    ) {
+      toast.error(
+        maxSavedTurn
+          ? `Enter a saved turn between 1 and ${maxSavedTurn}, or 0 for the start.`
+          : 'Saved turns are still loading.'
+      );
+      return;
+    }
+    loadTurn({ number: requestedTurn });
+  };
+
+  const returnToStart = async () => {
+    if (!gameInfo?.replayNumber) {
+      loadTurn({ number: 0 });
+      return;
+    }
+
+    try {
+      const response = await reloadReplay({
+        replayNumber: gameInfo.replayNumber
+      }).unwrap();
+      if (
+        response.error ||
+        !response.playerID ||
+        !response.gameName ||
+        !response.authKey
+      ) {
+        throw new Error(response.error || 'Unable to restart this replay.');
+      }
+      dispatch(
+        setReplayStart({
+          playerID: response.playerID,
+          gameID: response.gameName,
+          authKey: response.authKey,
+          replayNumber: gameInfo.replayNumber
+        })
+      );
+      navigate(`/game/play/${response.gameName}`, {
+        state: { playerID: response.playerID } as GameLocationState
+      });
+      toast.success('Returned to the start of the replay.');
+    } catch (error: any) {
+      toast.error(
+        error?.message || error?.data?.error || 'Unable to restart this replay.'
+      );
+    }
   };
 
   const handleShare = async () => {
@@ -205,7 +280,9 @@ function ReplayContent({
       );
       toast.success('Share link copied to clipboard!');
     } catch (err: any) {
-      toast.error(err?.message || 'Failed to create share link.');
+      toast.error(
+        err?.message || err?.data?.error || 'Failed to create share link.'
+      );
     }
   };
 
@@ -230,7 +307,7 @@ function ReplayContent({
             <span>Timeline</span>
             <span>
               {reviewTurns.length
-                ? `${reviewTurns.length} ${
+                ? `${reviewTurns.length} saved ${
                     reviewTurns.length === 1 ? 'turn' : 'turns'
                   }${canScrollTimeline ? ' - scroll right' : ''}`
                 : 'Builds as you review'}
@@ -338,19 +415,23 @@ function ReplayContent({
 
         <div className={styles.divider} />
         <div className={styles.formGroup}>
-          <label htmlFor={turnInputId}>Jump directly to turn</label>
+          <label htmlFor={turnInputId}>
+            Jump directly to turn
+            {` (0-${maxSavedTurn})`}
+          </label>
           <div className={styles.jumpRow}>
             <input
               id={turnInputId}
               type="number"
               min="0"
+              max={maxSavedTurn || undefined}
               value={turnNumber}
               onChange={(event) => setTurnNumber(event.target.value)}
               disabled={isRequestInProgress}
             />
             <button
               className={styles.submitButton}
-              onClick={() => loadTurn({ number: Number(turnNumber) })}
+              onClick={loadInputTurn}
               disabled={isRequestInProgress}
             >
               Go
@@ -359,24 +440,12 @@ function ReplayContent({
         </div>
         <button
           className={styles.actionButton}
-          onClick={() => loadTurn({ number: 0 })}
-          disabled={isRequestInProgress}
+          onClick={returnToStart}
+          disabled={isRequestInProgress || isReloadingReplay}
         >
-          Return to start
+          {isReloadingReplay ? 'Returning to start…' : 'Return to start'}
         </button>
 
-        <div className={styles.divider} />
-        <button
-          className={styles.actionButton}
-          onClick={() =>
-            dispatch(setSpectatorCameraView(spectatorCameraView === 1 ? 2 : 1))
-          }
-          title={`Switch to Player ${
-            spectatorCameraView === 1 ? 2 : 1
-          } perspective`}
-        >
-          <MdSwapVert /> P{spectatorCameraView === 1 ? '2' : '1'} view
-        </button>
         {isPatron && gameInfo?.replayNumber && (
           <button
             className={styles.actionButton}

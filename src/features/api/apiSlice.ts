@@ -341,7 +341,8 @@ export const apiSlice = createApi({
       async queryFn(body, api, _extraOptions, baseQuery) {
         const gameState = (api.getState() as RootState).game;
         const commandId =
-          typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function'
+          typeof crypto !== 'undefined' &&
+          typeof crypto.randomUUID === 'function'
             ? crypto.randomUUID()
             : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
         return baseQuery({
@@ -698,6 +699,15 @@ export const apiSlice = createApi({
         method: 'GET'
       }),
       providesTags: ['SavedReplays']
+    }),
+    getReplayTurns: builder.query<
+      { turns: Array<{ player: 1 | 2; number: number }> },
+      number
+    >({
+      query: (gameName) => ({
+        url: `${URL_END_POINT.GET_REPLAY_TURNS}?gameName=${gameName}`,
+        method: 'GET'
+      })
     }),
     setReplayFavorite: builder.mutation<
       { success: boolean; favorite: boolean },
@@ -1304,6 +1314,7 @@ export const {
   useClearRustCountersMutation,
   useLoadReplayMutation,
   useGetSavedReplaysQuery,
+  useGetReplayTurnsQuery,
   useSetReplayFavoriteMutation,
   useShareReplayMutation,
   useLoadSharedReplayMutation,

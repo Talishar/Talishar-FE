@@ -1,11 +1,14 @@
 import React from 'react';
-import { useAppDispatch } from 'app/Hooks';
+import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import {
   useGetSavedReplaysQuery,
   useLoadReplayMutation,
-  useSetReplayFavoriteMutation
+  useSetReplayFavoriteMutation,
+  useShareReplayMutation
 } from 'features/api/apiSlice';
 import { FaRegStar, FaStar } from 'react-icons/fa';
+import { MdShare } from 'react-icons/md';
+import { selectIsPatron } from 'features/auth/authSlice';
 import { SavedReplay } from 'interface/API/GetSavedReplays.php';
 import { toast } from 'react-hot-toast';
 import classNames from 'classnames';
@@ -74,6 +77,8 @@ const ReplayGame = () => {
   const [loadReplay, loadReplayResult] = useLoadReplayMutation();
   const [setReplayFavorite, { isLoading: isUpdatingFavorite }] =
     useSetReplayFavoriteMutation();
+  const [shareReplay, { isLoading: isSharing }] = useShareReplayMutation();
+  const isPatron = useAppSelector(selectIsPatron);
   const { data: savedReplayData, isLoading: isLoadingSavedReplays } =
     useGetSavedReplaysQuery();
 
@@ -181,6 +186,27 @@ const ReplayGame = () => {
       toast.error('Unable to update replay favorite. Please try again.');
     }
   };
+  const shareSavedReplay = async (replay: SavedReplay) => {
+    try {
+      const result = await shareReplay({
+        replayNumber: replay.replayNumber
+      }).unwrap();
+      if (!result.token)
+        throw new Error(result.error || 'No share link created.');
+
+      await navigator.clipboard.writeText(
+        `${window.location.origin}/replay/shared?token=${result.token}`
+      );
+      toast.success('Share link copied to clipboard!');
+    } catch (error) {
+      const apiError = error as { data?: { error?: string } };
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : apiError.data?.error || 'Failed to create share link.'
+      );
+    }
+  };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className={styles.replayForm}>
@@ -252,13 +278,25 @@ const ReplayGame = () => {
                 >
                   {replay.favorite ? <FaStar /> : <FaRegStar />}
                 </button>
+                {isPatron && (
+                  <button
+                    type="button"
+                    className={styles.shareButton}
+                    onClick={() => shareSavedReplay(replay)}
+                    disabled={isSharing}
+                    aria-label={`Copy a shareable link for Replay #${replay.replayNumber}`}
+                    title="Copy shareable link"
+                  >
+                    <MdShare />
+                  </button>
+                )}
               </article>
             ))}
           </div>
         )}
       </section>
 
-{/*       <details className={styles.manualReplay}>
+      {/*       <details className={styles.manualReplay}>
         <summary>Load by replay number</summary>
         <div>
           <label htmlFor="replayNumber">Replay game number:</label>

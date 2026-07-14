@@ -6,13 +6,13 @@ import { MdSwapVert } from 'react-icons/md';
 
 export default function SpectatorCameraPanel() {
   const dispatch = useAppDispatch();
-  const { playerID } = useAppSelector(getGameInfo);
+  const { playerID, isReplay } = useAppSelector(getGameInfo);
   const spectatorCameraView = useAppSelector(
     (state: any) => state.game.spectatorCameraView
   );
 
   // Only show if this is a spectator
-  if (playerID !== 3) {
+  if (playerID !== 3 || isReplay) {
     return null;
   }
 
