@@ -13,8 +13,13 @@ import { useNewlyDrawnCards } from 'hooks/useNewlyDrawnCards';
 import useSound from 'use-sound';
 import drawingCardsSound from 'sounds/drawing_cards.wav';
 import { getSettingsEntity } from 'features/options/optionsSlice';
+import { setHandCardRotationHeld } from 'utils/handCardRotation';
 
 const DEFAULT_HAND_REORDER_STEP_PX = 120;
+const CARD_ROTATION_STEP_DEGREES = 90;
+const CARD_ROTATION_KEY_STEP_DEGREES = 3;
+const WHEEL_ROTATION_DEGREES_PER_PIXEL = 0.15;
+const MAX_WHEEL_ROTATION_DEGREES = 15;
 const NUMERIC_RE = /^\d+$/;
 
 type CardWithStableId = {
@@ -117,6 +122,15 @@ export default function PlayerHand() {
   }, [handCards]);
 
   const [orderedHandIds, setOrderedHandIds] = useState<string[]>([]);
+  const [handCardRotations, setHandCardRotations] = useState<
+    Record<string, number>
+  >({});
+  const heldHandCardIdRef = useRef<string | null>(null);
+  const adjustHandCardRotationRef = useRef<
+    (cardId: string, rotationDelta: number) => void
+  >(() => undefined);
+  const pendingWheelRotationRef = useRef(0);
+  const wheelRotationFrameRef = useRef<number | null>(null);
   const [previewHandIds, setPreviewHandIds] = useState<string[] | null>(null);
   const [dragStartOrderIds, setDragStartOrderIds] = useState<string[] | null>(
     null
@@ -189,6 +203,19 @@ export default function PlayerHand() {
       }
 
       return nextOrder;
+    });
+  }, [handCardsWithStableIds]);
+
+  useEffect(() => {
+    const validIds = new Set(handCardsWithStableIds.map((entry) => entry.id));
+    setHandCardRotations((previousRotations) => {
+      const nextRotations = Object.fromEntries(
+        Object.entries(previousRotations).filter(([id]) => validIds.has(id))
+      );
+
+      return Object.keys(nextRotations).length === Object.keys(previousRotations).length
+        ? previousRotations
+        : nextRotations;
     });
   }, [handCardsWithStableIds]);
 
@@ -459,12 +486,47 @@ export default function PlayerHand() {
     [maxScrollOffset]
   );
 
-  // Mouse-wheel scrolls the hand horizontally (desktop); non-passive so we can preventDefault
+  // A held card can be rotated with the wheel anywhere on the game board. When
+  // no card is held, wheel scrolling remains limited to the hand itself.
   useEffect(() => {
-    const el = handRowRef.current;
-    if (!el || maxScrollOffset === 0) return;
-
     const handleWheel = (e: WheelEvent) => {
+      const heldCardId = heldHandCardIdRef.current;
+      if (heldCardId) {
+        e.preventDefault();
+        const wheelDelta = e.deltaY || e.deltaX;
+        const rotationDelta = Math.max(
+          -MAX_WHEEL_ROTATION_DEGREES,
+          Math.min(
+            MAX_WHEEL_ROTATION_DEGREES,
+            wheelDelta * WHEEL_ROTATION_DEGREES_PER_PIXEL
+          )
+        );
+        pendingWheelRotationRef.current = Math.max(
+          -MAX_WHEEL_ROTATION_DEGREES,
+          Math.min(
+            MAX_WHEEL_ROTATION_DEGREES,
+            pendingWheelRotationRef.current + rotationDelta
+          )
+        );
+
+        if (wheelRotationFrameRef.current === null) {
+          wheelRotationFrameRef.current = window.requestAnimationFrame(() => {
+            const pendingRotation = pendingWheelRotationRef.current;
+            pendingWheelRotationRef.current = 0;
+            wheelRotationFrameRef.current = null;
+
+            const activeCardId = heldHandCardIdRef.current;
+            if (activeCardId && pendingRotation !== 0) {
+              adjustHandCardRotationRef.current(activeCardId, pendingRotation);
+            }
+          });
+        }
+        return;
+      }
+
+      const handRow = handRowRef.current;
+      if (!handRow || !handRow.contains(e.target as Node)) return;
+      if (maxScrollOffset === 0) return;
       e.preventDefault();
       const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
       setScrollOffset((prev) =>
@@ -472,8 +534,18 @@ export default function PlayerHand() {
       );
     };
 
-    el.addEventListener('wheel', handleWheel, { passive: false });
-    return () => el.removeEventListener('wheel', handleWheel);
+    window.addEventListener('wheel', handleWheel, {
+      capture: true,
+      passive: false
+    });
+    return () => {
+      window.removeEventListener('wheel', handleWheel, true);
+      if (wheelRotationFrameRef.current !== null) {
+        window.cancelAnimationFrame(wheelRotationFrameRef.current);
+        wheelRotationFrameRef.current = null;
+      }
+      pendingWheelRotationRef.current = 0;
+    };
   }, [maxScrollOffset]);
 
   const handleHandCardReorder = (
@@ -542,6 +614,78 @@ export default function PlayerHand() {
   const addCardToPlayedCards = (cardName: string) => {
     setPlayedCards((prev) => [...prev, cardName]);
   };
+
+  const adjustHandCardRotation = useCallback(
+    (cardId: string, rotationDelta: number) => {
+      if (!cardId) return;
+
+      setHandCardRotations((previousRotations) => {
+        const currentRotation = previousRotations[cardId] ?? 0;
+        const nextRotation =
+          ((currentRotation + rotationDelta) % 360 + 360) % 360;
+
+        if (Math.abs(nextRotation) < 0.001) {
+          const remainingRotations = { ...previousRotations };
+          delete remainingRotations[cardId];
+          return remainingRotations;
+        }
+
+        return { ...previousRotations, [cardId]: nextRotation };
+      });
+    },
+    []
+  );
+  adjustHandCardRotationRef.current = adjustHandCardRotation;
+
+  const rotateHandCard = useCallback(
+    (cardId: string, direction: 1 | -1) => {
+      adjustHandCardRotation(
+        cardId,
+        direction * CARD_ROTATION_STEP_DEGREES
+      );
+    },
+    [adjustHandCardRotation]
+  );
+
+  const startHoldingHandCardForRotation = useCallback((cardId: string) => {
+    heldHandCardIdRef.current = cardId || null;
+    setHandCardRotationHeld(Boolean(cardId));
+  }, []);
+
+  const stopHoldingHandCardForRotation = useCallback(() => {
+    heldHandCardIdRef.current = null;
+    setHandCardRotationHeld(false);
+  }, []);
+
+  useEffect(() => stopHoldingHandCardForRotation, [stopHoldingHandCardForRotation]);
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      const key = event.key.toLowerCase();
+      if (key !== 'q' && key !== 'e') return;
+
+      const target = event.target as HTMLElement;
+      if (
+        target.tagName === 'INPUT' ||
+        target.tagName === 'TEXTAREA' ||
+        target.isContentEditable
+      ) return;
+
+      const heldCardId = heldHandCardIdRef.current;
+      if (!heldCardId) return;
+
+      event.preventDefault();
+      adjustHandCardRotation(
+        heldCardId,
+        key === 'q'
+          ? -CARD_ROTATION_KEY_STEP_DEGREES
+          : CARD_ROTATION_KEY_STEP_DEGREES
+      );
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [adjustHandCardRotation]);
 
   useEffect(() => {
     if (
@@ -697,6 +841,7 @@ export default function PlayerHand() {
                       card={card}
                       cardId={id}
                       key={`hand-${id}`}
+                      rotation={handCardRotations[id]}
                       addCardToPlayedCards={addCardToPlayedCards}
                       zIndex={ix + 200}
                       isNewlyDrawn={isNewlyDrawn}
@@ -706,6 +851,9 @@ export default function PlayerHand() {
                       onHandReorderDragMove={stableDragMove}
                       onHandReorderDragEnd={stableDragEnd}
                       onHandReorderDragCancel={stableDragCancel}
+                      onRotate={rotateHandCard}
+                      onRotationHoldStart={startHoldingHandCardForRotation}
+                      onRotationHoldEnd={stopHoldingHandCardForRotation}
                     />
                   );
                 })}

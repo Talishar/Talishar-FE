@@ -31,6 +31,7 @@ type CardPopUpProps = {
   onHoverEnd?: () => void;
   isOpponent?: boolean;
   disableTilt?: boolean;
+  disableShadow?: boolean;
 };
 
 export default function CardPopUp({
@@ -42,7 +43,8 @@ export default function CardPopUp({
   onHoverStart,
   onHoverEnd,
   isOpponent,
-  disableTilt
+  disableTilt,
+  disableShadow
 }: CardPopUpProps) {
   const ref = useRef<HTMLDivElement>(null);
   const dispatch = useAppDispatch();
@@ -189,7 +191,12 @@ export default function CardPopUp({
       ref={ref}
       style={
         tiltEnabled
-          ? { rotateX, rotateY, transformPerspective: 600, boxShadow }
+          ? {
+              rotateX,
+              rotateY,
+              transformPerspective: 600,
+              boxShadow: disableShadow ? 'none' : boxShadow
+            }
           : undefined
       }
     >

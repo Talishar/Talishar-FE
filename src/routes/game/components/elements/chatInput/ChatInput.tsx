@@ -30,6 +30,7 @@ import { useLocation } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import useAuth from 'hooks/useAuth';
 import { CHAT_WHEEL } from 'constants/chatMessages';
+import { isHandCardRotationHeld } from 'utils/handCardRotation';
 
 const submitButtonClass = classNames(styles.buttonDiv);
 
@@ -195,6 +196,7 @@ const ChatWheel = ({ usePrimary = false }: { usePrimary?: boolean }) => {
       if (e.key === 'q' || e.key === 'Q') {
         const tag = (e.target as HTMLElement).tagName;
         if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+        if (isHandCardRotationHeld()) return;
         e.preventDefault();
         setModalDisplay((prev) => !prev);
       }

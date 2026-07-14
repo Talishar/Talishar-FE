@@ -38,8 +38,12 @@ export interface HandCard {
   addCardToPlayedCards: (cardName: string) => void;
   isNewlyDrawn?: boolean;
   disableDrag?: boolean;
+  rotation?: number;
   enableLayoutAnimation?: boolean;
   scrollBlockedRef?: React.RefObject<boolean>;
+  onRotate?: (cardId: string, direction: 1 | -1) => void;
+  onRotationHoldStart?: (cardId: string) => void;
+  onRotationHoldEnd?: () => void;
   onHandReorderDragStart?: () => void;
   onHandReorderDragMove?: (cardId: string, info: PanInfo) => void;
   onHandReorderDragEnd?: (cardId: string, info: PanInfo) => boolean;
@@ -56,8 +60,12 @@ export const PlayerHandCard = React.memo(({
   addCardToPlayedCards,
   isNewlyDrawn,
   disableDrag,
+  rotation = 0,
   enableLayoutAnimation,
   scrollBlockedRef,
+  onRotate,
+  onRotationHoldStart,
+  onRotationHoldEnd,
   onHandReorderDragStart,
   onHandReorderDragMove,
   onHandReorderDragEnd,
@@ -142,6 +150,7 @@ export const PlayerHandCard = React.memo(({
     setFixedRect(null);
     setCanPopup(true);
     hasDispatchedClearRef.current = false;
+    onRotationHoldEnd?.();
     onHandReorderDragCancel?.();
   };
 
@@ -154,7 +163,18 @@ export const PlayerHandCard = React.memo(({
     setCanPopup(true);
     setSnapback(true);
     hasDispatchedClearRef.current = false;
+    onRotationHoldEnd?.();
     onHandReorderDragCancel?.();
+  };
+
+  const handlePointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (event.button === 0) {
+      onRotationHoldStart?.(cardId ?? '');
+    }
+  };
+
+  const handlePointerUp = () => {
+    onRotationHoldEnd?.();
   };
 
   const playCardFunc = () => {
@@ -199,6 +219,12 @@ export const PlayerHandCard = React.memo(({
       playCardFunc();
       addCardToPlayedCards(card.cardNumber);
     }
+  };
+
+  const handleContextMenu = (event: React.MouseEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    event.stopPropagation();
+    onRotate?.(cardId ?? '', event.shiftKey ? -1 : 1);
   };
 
   const startPressTimer = () => {
@@ -262,6 +288,7 @@ export const PlayerHandCard = React.memo(({
       <motion.div
         ref={cardElRef}
         data-is-dragging={isDragging}
+        title="Hold and use the mouse wheel or Q/E for fine rotation. Right-click rotates 90°; Shift+right-click reverses it."
         layout={enableLayoutAnimation && !isDragging ? 'position' : false}
         drag={!disableDrag}
         className={classNames(styles.handCard, {
@@ -270,6 +297,7 @@ export const PlayerHandCard = React.memo(({
         style={{
           x: dragX,
           y: dragY,
+          rotate: rotation,
           touchAction: 'none',
           zIndex: isDragging ? 1000 : zIndex,
           // The real card is hidden (not opacity, which would fight the
@@ -290,12 +318,15 @@ export const PlayerHandCard = React.memo(({
             : {})
         }}
         onClick={handleOnClick}
+        onContextMenu={handleContextMenu}
         onTapStart={startPressTimer}
         onTap={stopPressTimer}
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
         onDrag={onDrag}
         onPointerCancel={handlePointerCancel}
+        onPointerDown={handlePointerDown}
+        onPointerUp={handlePointerUp}
         dragSnapToOrigin={snapback}
         dragMomentum={false}
         initial={{ opacity: 0, y: 100 }}
@@ -311,6 +342,7 @@ export const PlayerHandCard = React.memo(({
           cardNumber={card.cardNumber}
           isHidden={!canPopUp}
           disableTilt={isDragging}
+          disableShadow
         >
           <CardImage src={src} className={imgStyles} draggable="false" />
           {iconColumn}
@@ -326,6 +358,7 @@ export const PlayerHandCard = React.memo(({
               x: dragX,
               y: dragY,
               scale: 1.05,
+              rotate: rotation,
               position: 'fixed',
               left: fixedRect.left,
               top: fixedRect.top,
