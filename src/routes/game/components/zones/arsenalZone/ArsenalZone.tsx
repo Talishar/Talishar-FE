@@ -95,7 +95,7 @@ export default function ArsenalZone(prop: Displayrow) {
   return (
     <div className={styles.arsenalContainer}>
       <div className={styles.arsenalZone}>
-        {arsenalCards.map((card: Card, index) => {
+        {arsenalCards.map((card: Card, index: number) => {
           // Check if this card is currently animating
           const isAnimatingThisCard = showFlip && card.cardNumber === flipCard;
 
@@ -167,7 +167,7 @@ const ArsenalPrompt = React.memo(() => {
     turnPhase === 'MAYCHOOSEHAND' ||
     turnPhase === 'MAYCHOOSEHANDHEAVE';
     
-  const buttons = playerPrompt?.buttons?.map((button, ix) => {
+  const buttons = playerPrompt?.buttons?.map((button: Button, ix: number) => {
     return (
       <div
         className={styles.buttonDiv}

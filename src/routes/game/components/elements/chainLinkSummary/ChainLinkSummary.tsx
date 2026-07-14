@@ -12,6 +12,7 @@ import { useGetPopUpContentQuery } from 'features/api/apiSlice';
 import GameStaticInfo from 'features/GameStaticInfo';
 import { Effect } from '../effects/Effects';
 import { Card } from 'features/Card';
+import CombatChainLink from 'features/CombatChainLink';
 import EndGameScreen from '../endGameScreen/EndGameScreen';
 import useShortcut from 'hooks/useShortcut';
 import { DEFAULT_SHORTCUTS } from 'appConstants';
@@ -72,7 +73,7 @@ export const ChainLinkSummaryContainer = () => {
             </div>
           </div>
           <div className={styles.allLinksGrid}>
-            {oldCombatChain.map((_, index) => (
+            {oldCombatChain.map((_: CombatChainLink, index: number) => (
               <ChainLinkSummary
                 key={index}
                 {...props}

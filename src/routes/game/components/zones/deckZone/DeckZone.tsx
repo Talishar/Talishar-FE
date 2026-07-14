@@ -8,6 +8,8 @@ import { setCardListFocus, clearCardListFocus } from 'features/game/GameSlice';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import * as optConst from 'features/options/constants';
 
+const MAX_STACK_LAYERS = 12;
+
 export const DeckZone = React.memo((prop: Displayrow) => {
   const { isPlayer } = prop;
   const dispatch = useAppDispatch();
@@ -83,20 +85,27 @@ export const DeckZone = React.memo((prop: Displayrow) => {
 
   const baseLayerStyles = useMemo(() => {
     if (safeCount <= 1) return [];
-    return Array.from({ length: safeCount - 1 }, (_, index) => ({
-      transform:
-        `translateY(${safeCount * -0.24}px) translateX(${safeCount * 0.24}px) ` +
-        `translateY(${(index + 1) * 0.25}px) translateX(${(index + 1) * -0.25}px)`,
-      zIndex: safeCount - index - 1
-    }));
+    const layerCount = Math.min(MAX_STACK_LAYERS, safeCount - 1);
+    return Array.from({ length: layerCount }, (_, index) => {
+      const sourceIndex =
+        layerCount === 1
+          ? 0
+          : Math.round((index * (safeCount - 2)) / (layerCount - 1));
+
+      return {
+        transform:
+          `translateY(${safeCount * -0.24}px) translateX(${safeCount * 0.24}px) ` +
+          `translateY(${(sourceIndex + 1) * 0.25}px) translateX(${(sourceIndex + 1) * -0.25}px)`,
+        zIndex: safeCount - sourceIndex - 1
+      };
+    });
   }, [safeCount]);
 
   const cardWrapperStyle = useMemo(
     () =>
       !isMobileOrTablet
         ? {
-            top: `${Math.round(baseOffsetY)}px`,
-            left: `${Math.round(baseOffsetX)}px`
+            transform: `translate3d(${Math.round(baseOffsetX)}px, ${Math.round(baseOffsetY)}px, 0)`
           }
         : undefined,
     [isMobileOrTablet, baseOffsetY, baseOffsetX]

@@ -25,8 +25,8 @@ export default function CombatChain() {
     (state: RootState) => state.game.activeChainLink
   );
   const showModals = useShowModal();
-  const [canSkipBlock, setCanSkipBlock] = React.useState(false);
-  const [canSkipBlockAndDef, setCanSkipBlockAndDef] = React.useState(false);
+  const [canSkipBlock] = React.useState(false);
+  const [canSkipBlockAndDef] = React.useState(false);
   const storedOffset = parseFloat(localStorage.getItem(STORAGE_KEY) ?? '') || 0;
   const yOffsetMV = useMotionValue(storedOffset);
   const yOffsetDvh = useTransform(yOffsetMV, (v) => `${v}dvh`);
@@ -162,7 +162,7 @@ const PlayerPrompt = () => {
     dispatch(submitButton({ button: button }));
   };
 
-  const buttons = playerPrompt?.buttons?.map((button, ix) => {
+  const buttons = playerPrompt?.buttons?.map((button: Button, ix: number) => {
     return (
       <div
         className={styles.buttonDiv}

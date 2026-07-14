@@ -14,6 +14,7 @@ import {
 } from 'features/api/apiSlice';
 import UsernameModeration from './UsernameModeration';
 import DeleteUsernameAutocomplete from './DeleteUsernameAutocomplete';
+import { LinkedAccount } from 'interface/API/ModPageAPI';
 
 const ModPage: React.FC = () => {
   const [ipToBan, setIpToBan] = useState('');
@@ -448,7 +449,7 @@ const ModPage: React.FC = () => {
               ) : modPageData?.recentAccounts &&
                 modPageData.recentAccounts.length > 0 ? (
                 <ul className={styles.dataList}>
-                  {modPageData.recentAccounts.map((account, index) => (
+                  {modPageData.recentAccounts.map((account: string, index: number) => (
                     <li key={index}>{account}</li>
                   ))}
                 </ul>
@@ -464,7 +465,7 @@ const ModPage: React.FC = () => {
               ) : modPageData?.linkedAccounts &&
                 modPageData.linkedAccounts.length > 0 ? (
                 <ul className={styles.dataList}>
-                  {modPageData.linkedAccounts.map((link, index) => (
+                  {modPageData.linkedAccounts.map((link: LinkedAccount, index: number) => (
                     <li key={index}>
                       <strong>{link.username}</strong> — {link.ip} (
                       {link.linkedTo === 'banned IP'
@@ -488,7 +489,7 @@ const ModPage: React.FC = () => {
               ) : modPageData?.bannedPlayers &&
                 modPageData.bannedPlayers.length > 0 ? (
                 <ul className={styles.dataList}>
-                  {modPageData.bannedPlayers.map((player, index) => {
+                  {modPageData.bannedPlayers.map((player: string, index: number) => {
                     const knownIPs =
                       modPageData.bannedPlayerIPs?.[player.toLowerCase()];
                     return (
@@ -497,7 +498,7 @@ const ModPage: React.FC = () => {
                         {knownIPs && knownIPs.length > 0 && (
                           <span style={{ color: '#aaa', fontSize: '12px' }}>
                             {' — '}
-                            {knownIPs.map((ip, ipIndex) => (
+                            {knownIPs.map((ip: string, ipIndex: number) => (
                               <React.Fragment key={ip}>
                                 {ipIndex > 0 && ', '}
                                 <a
@@ -529,7 +530,7 @@ const ModPage: React.FC = () => {
                 <p>Loading...</p>
               ) : modPageData?.bannedIPs && modPageData.bannedIPs.length > 0 ? (
                 <ul className={styles.dataList}>
-                  {modPageData.bannedIPs.map((ip, index) => (
+                  {modPageData.bannedIPs.map((ip: string, index: number) => (
                     <li key={index}>{ip}</li>
                   ))}
                 </ul>

@@ -40,7 +40,7 @@ const LinkMetafy = () => {
           navigate('/user/profile');
         }
       })
-      .catch((err) => {
+      .catch((err: any) => {
         console.error('Metafy login error:', err);
         toast.error(`Metafy login error:\n${err?.toString()}`, {
           position: 'top-center'

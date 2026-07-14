@@ -19,6 +19,7 @@ import { HEROES_OF_RATHE } from '../filter/constants';
 import GameFilter from './GameFilter';
 import FriendBadge from './FriendBadge';
 import { useTranslation, Trans } from 'react-i18next';
+import { Friend } from 'interface/API/FriendListAPI.php';
 
 export interface IOpenGame {
   p1Hero?: string;
@@ -107,7 +108,7 @@ const GameList = () => {
   useEffect(() => {
     if (friendsData?.friends) {
       try {
-        const friendsList = friendsData.friends.map((f) => f.username);
+        const friendsList = friendsData.friends.map((f: Friend) => f.username);
         sessionStorage.setItem('friendsList', JSON.stringify(friendsList));
       } catch (e) {
         console.error('Failed to sync friendsList to sessionStorage:', e);
@@ -302,14 +303,14 @@ const GameList = () => {
 
   const heroCountsOpen = new Map<string, number>();
   if (data?.openGames) {
-    data.openGames.forEach((game) => {
+    data.openGames.forEach((game: IOpenGame) => {
       if (game.p1Hero) heroCountsOpen.set(game.p1Hero, (heroCountsOpen.get(game.p1Hero) ?? 0) + 1);
     });
   }
 
   const heroCountsInProgress = new Map<string, number>();
   if (data?.gamesInProgress) {
-    data.gamesInProgress.forEach((game) => {
+    data.gamesInProgress.forEach((game: IGameInProgress) => {
       if (game.p1Hero) heroCountsInProgress.set(game.p1Hero, (heroCountsInProgress.get(game.p1Hero) ?? 0) + 1);
       if (game.p2Hero) heroCountsInProgress.set(game.p2Hero, (heroCountsInProgress.get(game.p2Hero) ?? 0) + 1);
     });
@@ -319,12 +320,12 @@ const GameList = () => {
 
   // Create a set of friend usernames for quick lookup
   const friendUsernames = new Set(
-    friendsData?.friends?.map((f) => f.username) || []
+    friendsData?.friends?.map((f: Friend) => f.username) || []
   );
 
   // Filter games
   const filteredGamesInProgress = data?.gamesInProgress
-    ? data.gamesInProgress.filter((game) => {
+    ? data.gamesInProgress.filter((game: IGameInProgress) => {
         // Hide games created by blocked users
         if (game.gameCreator && blockedUsers.includes(game.gameCreator)) {
           return false;
@@ -405,7 +406,7 @@ const GameList = () => {
           }
           return false;
         })
-        .sort((a, b) => a.format.localeCompare(b.format))
+        .sort((a: IOpenGame, b: IOpenGame) => a.format.localeCompare(b.format))
     : [];
 
   const handleReloadClick = () => {
@@ -485,11 +486,11 @@ const GameList = () => {
 
   // Count friend games in each tab for the badge indicator
   const friendOpenGamesCount = sortedOpenGames.filter(
-    (game) => game.gameCreator && friendUsernames.has(game.gameCreator)
+    (game: IOpenGame) => game.gameCreator && friendUsernames.has(game.gameCreator)
   ).length;
 
   const friendInProgressCount = filteredGamesInProgress.filter(
-    (game) =>
+    (game: IGameInProgress) =>
       (game.gameCreator && friendUsernames.has(game.gameCreator)) ||
       (game.p2Username && friendUsernames.has(game.p2Username))
   ).length;
@@ -610,7 +611,7 @@ const GameList = () => {
         <div className={styles.scrollableContent} ref={scrollableContentRef}>
           {activeTab === 'open' ? (
             <>
-              {displayOpenGames.map((entry, ix) => {
+              {displayOpenGames.map((entry: IOpenGame, ix: number) => {
                 const isFriendsGame = !!(entry.gameCreator && friendUsernames.has(entry.gameCreator));
                 return (
                   <OpenGame

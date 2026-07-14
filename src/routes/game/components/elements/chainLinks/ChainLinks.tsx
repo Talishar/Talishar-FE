@@ -12,6 +12,7 @@ import {
 } from 'features/game/GameSlice';
 import { GiBreakingChain } from 'react-icons/gi';
 import { PROCESS_INPUT } from 'appConstants';
+import CombatChainLink from 'features/CombatChainLink';
 
 export default function ChainLinks() {
   const oldCombatChain = useAppSelector(
@@ -53,7 +54,7 @@ export default function ChainLinks() {
 
   return (
     <div className={styles.chainLinksRow}>
-      {oldCombatChain.map((ChainLink, ix) => {
+      {oldCombatChain.map((ChainLink: CombatChainLink, ix: number) => {
         const hitPic = ChainLink.didItHit ? hit : defend;
         return (
           <div

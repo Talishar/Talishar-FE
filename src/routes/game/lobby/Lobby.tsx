@@ -28,6 +28,7 @@ import {
 } from 'features/api/apiSlice';
 import { useAppSelector } from 'app/Hooks';
 import { shallowEqual } from 'react-redux';
+import { Matchup } from 'interface/API/GetLobbyRefresh.php';
 import { RootState } from 'app/Store';
 import { createPatreonIconMap } from 'utils/patronIcons';
 import { DeckResponse, Weapon } from 'interface/API/GetLobbyInfo.php';
@@ -342,7 +343,7 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
   const selectedMatchup = useMemo(() => {
     if (!selectedMatchupId) return null;
     return (gameLobby?.matchups ?? []).find(
-      (matchup) => matchup.matchupId === selectedMatchupId
+      (matchup: Matchup) => matchup.matchupId === selectedMatchupId
     );
   }, [selectedMatchupId, gameLobby?.matchups]);
 
@@ -350,9 +351,9 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
     if (!gameLobby?.theirHero || gameLobby.theirHero === 'CardBack') return null;
     if (!isBazaarDeckInLobby) return null;
     const opponentHero = normalizeHeroId(gameLobby.theirHero ?? '');
-    const matchingMatchup = (gameLobby?.matchups ?? []).find((matchup) => {
+    const matchingMatchup = (gameLobby?.matchups ?? []).find((matchup: Matchup) => {
       if (matchup.heroIdentifiers?.length) {
-        return matchup.heroIdentifiers.some((id) => normalizeHeroId(id) === opponentHero);
+        return matchup.heroIdentifiers.some((id: string) => normalizeHeroId(id) === opponentHero);
       }
       const normalizedId = normalizeHeroId(matchup.matchupId);
       if (normalizedId === opponentHero) return true;

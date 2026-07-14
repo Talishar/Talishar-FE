@@ -91,6 +91,14 @@ export default function ChatBox({ usePrimary = false, showTabs = true }: { usePr
     };
   }, [isStreamerMode, amIPlayerOne, myName, oppName, streamerNameRegex]);
 
+  const playerNames = useMemo<[string, string]>(
+    () => [
+      amIPlayerOne ? myName : oppName,
+      amIPlayerOne ? oppName : myName
+    ],
+    [amIPlayerOne, myName, oppName]
+  );
+
   useEffect(() => {
     const currentLength = chatLog?.length ?? 0;
     const filterChanged = chatFilter !== prevChatFilterRef.current;
@@ -143,7 +151,7 @@ export default function ChatBox({ usePrimary = false, showTabs = true }: { usePr
             chatLog={chatLog}
             chatFilter={chatFilter}
             transformMessage={transformMessage}
-            playerNames={[amIPlayerOne ? myName : oppName, amIPlayerOne ? oppName : myName]}
+            playerNames={playerNames}
           />
           {displayTyping && (
             <div className={styles.typingIndicator} ref={messagesEndRef}>

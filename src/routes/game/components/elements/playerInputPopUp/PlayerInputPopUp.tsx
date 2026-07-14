@@ -18,6 +18,11 @@ import { FormProps } from './playerInputPopupTypes';
 import { OtherInput } from './components/OtherInput';
 import { parseHtmlToReactElements } from 'utils/ParseEscapedString';
 import classNames from 'classnames';
+import GameState from 'features/GameState';
+
+type MultiChooseOption = NonNullable<
+  NonNullable<GameState['playerInputPopUp']>['multiChooseText']
+>[number];
 
 const PlayerInputFormTypeMap: {
   [key: string]: (props: FormProps) => JSX.Element;
@@ -135,7 +140,7 @@ export default function PlayerInputPopUp() {
     // Initialize checked state from multiChooseText default values
     const initialState = new Array(checkBoxLength).fill(false);
     if (inputPopUp?.multiChooseText) {
-      inputPopUp.multiChooseText.forEach((option, index) => {
+      inputPopUp.multiChooseText.forEach((option: MultiChooseOption, index: number) => {
         if (option.check !== undefined) {
           initialState[index] = option.check;
         }
@@ -205,7 +210,7 @@ export default function PlayerInputPopUp() {
   };
 
   const checkboxes =
-    inputPopUp.multiChooseText?.map((option, ix) => {
+    inputPopUp.multiChooseText?.map((option: MultiChooseOption, ix: number) => {
       return (
         <div key={ix} className={styles.checkBoxRow}>
           <label className={styles.checkBoxLabel}>

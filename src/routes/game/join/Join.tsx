@@ -7,6 +7,8 @@ import {
   useGetGameInfoQuery
 } from 'features/api/apiSlice';
 import { JoinGameAPI } from 'interface/API/JoinGame.php';
+import { IOpenGame, IGameInProgress } from 'routes/index/components/gameList/GameList';
+import { FavoriteDeck } from 'interface/API/GetFavoriteDecks.php';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import styles from './Join.module.css';
 import { useKnownSearchParams } from 'hooks/useKnownSearchParams';
@@ -112,10 +114,10 @@ const JoinGame = () => {
     if (!gameListData) return false;
     const gameNameStr = finalGameName;
     const openGame = gameListData.openGames?.find(
-      (g) => String(g.gameName) === gameNameStr
+      (g: IOpenGame) => String(g.gameName) === gameNameStr
     );
     const inProgressGame = gameListData.gamesInProgress?.find(
-      (g) => String(g.gameName) === gameNameStr
+      (g: IGameInProgress) => String(g.gameName) === gameNameStr
     );
     return !!(openGame || inProgressGame);
   }, [gameListData, finalGameName]);
@@ -154,7 +156,7 @@ const JoinGame = () => {
       favoriteDecks:
         data?.lastUsedDeckIndex !== undefined
           ? data.favoriteDecks.find(
-              (deck) => deck.index === data.lastUsedDeckIndex
+              (deck: FavoriteDeck) => deck.index === data.lastUsedDeckIndex
             )?.key
           : '',
       gameDescription: ''
@@ -177,10 +179,10 @@ const JoinGame = () => {
       const gameNameStr = finalGameName;
 
       const openGame = gameListData.openGames?.find(
-        (g) => String(g.gameName) === gameNameStr
+        (g: IOpenGame) => String(g.gameName) === gameNameStr
       );
       const inProgressGame = gameListData.gamesInProgress?.find(
-        (g) => String(g.gameName) === gameNameStr
+        (g: IGameInProgress) => String(g.gameName) === gameNameStr
       );
       const foundGame = openGame || inProgressGame;
 
@@ -210,14 +212,14 @@ const JoinGame = () => {
       gameFormat &&
       getReadableFormatName(gameFormat).toLowerCase().includes('open');
     const baseGameFormat = getBaseFormatType(gameFormat);
-    const filtered = data.favoriteDecks.filter((deck) => {
+    const filtered = data.favoriteDecks.filter((deck: FavoriteDeck) => {
       // Show all decks for OPEN format
       if (isOpenFormat) return true;
       if (!deck.format) return false;
       const baseDeckFormat = getBaseFormatType(deck.format);
       return baseDeckFormat === baseGameFormat;
     });
-    return filtered.map((deck) => ({
+    return filtered.map((deck: FavoriteDeck) => ({
       value: deck.key,
       label: formatDeckLabel(deck.name, deck.format),
       imageUrl: generateCroppedImageUrl(deck.hero)

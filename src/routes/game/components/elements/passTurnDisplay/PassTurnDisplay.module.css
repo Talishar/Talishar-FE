@@ -64,6 +64,8 @@
 }
 
 .passTurnDisplayActive {
+  position: relative;
+  isolation: isolate;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -86,7 +88,24 @@
     inset 0 -2px 4px rgba(0, 0, 0, 0.3);
   user-select: none;
   transition: filter 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.passTurnDisplayActive::after {
+  content: '';
+  position: absolute;
+  inset: -8px;
+  z-index: 0;
+  border-radius: inherit;
+  box-shadow: 0 0 12px rgba(63, 191, 86, 0.45);
+  opacity: 0.35;
+  pointer-events: none;
+  will-change: opacity;
   animation: passGlow 2.8s ease-in-out infinite;
+}
+
+.passTurnDisplayActive > * {
+  position: relative;
+  z-index: 1;
 }
 
 .passTurnDisplayActive:hover {
@@ -102,12 +121,10 @@
 @keyframes passGlow {
   0%,
   100% {
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2),
-      inset 0 -2px 4px rgba(0, 0, 0, 0.3), 0 0 4px rgba(63, 191, 86, 0.2);
+    opacity: 0.2;
   }
   50% {
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2),
-      inset 0 -2px 4px rgba(0, 0, 0, 0.3), 0 0 12px rgba(63, 191, 86, 0.45);
+    opacity: 1;
   }
 }
 
@@ -194,6 +211,10 @@
 
 @media (prefers-reduced-motion: reduce) {
   .passTurnDisplayActive {
+    animation: none;
+  }
+
+  .passTurnDisplayActive::after {
     animation: none;
   }
 

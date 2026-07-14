@@ -2,6 +2,7 @@ import React, { useCallback, useMemo, useState } from 'react';
 import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import classNames from 'classnames';
+import { AltArt } from 'features/GameStaticInfo';
 import styles from './CardImage.module.css';
 
 const UNKNOWN_IMAGE = 'Difficulties';
@@ -37,11 +38,11 @@ export const CardImage = React.memo((props: CardImage) => {
   const opponentAltArts = useAppSelector((state: RootState) => state.game.gameInfo.opponentAltArts);
 
   const altArtMap = useMemo(
-    () => altArts ? new Map(altArts.map((a) => [a.cardId, a.altPath])) : null,
+    () => altArts ? new Map(altArts.map((a: AltArt): [string, string] => [a.cardId, a.altPath])) : null,
     [altArts]
   );
   const opponentAltArtMap = useMemo(
-    () => opponentAltArts ? new Map(opponentAltArts.map((a) => [a.cardId, a.altPath])) : null,
+    () => opponentAltArts ? new Map(opponentAltArts.map((a: AltArt): [string, string] => [a.cardId, a.altPath])) : null,
     [opponentAltArts]
   );
 

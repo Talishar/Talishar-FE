@@ -6,6 +6,7 @@ import { MdClose } from 'react-icons/md';
 import CardPopUp from '../cardPopUp/CardPopUp';
 import CardImage from '../cardImage/CardImage';
 import { closeInventory } from 'features/game/GameSlice';
+import { Card } from 'features/Card';
 
 const emptyArray: any[] = [];
 
@@ -43,7 +44,7 @@ export default function InventoryModal() {
             <p className={styles.emptyState}>No items in inventory</p>
           ) : (
             <div className={styles.cardGrid}>
-              {inventoryCards.map((card, index) => (
+              {inventoryCards.map((card: Card, index: number) => (
                 <div key={index} className={styles.cardContainer}>
                   <CardPopUp
                     cardNumber={card.cardNumber}

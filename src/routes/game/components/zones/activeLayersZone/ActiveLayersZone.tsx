@@ -63,11 +63,11 @@ export default function ActiveLayersZone() {
   );
 
   const staticCards = useMemo(
-    () => activeLayer?.cardList?.filter((card) => card.reorderable === false),
+    () => activeLayer?.cardList?.filter((card: Card) => card.reorderable === false),
     [activeLayer?.cardList]
   );
   const reorderableCards = useMemo(
-    () => activeLayer?.cardList?.filter((card) => card.reorderable),
+    () => activeLayer?.cardList?.filter((card: Card) => card.reorderable),
     [activeLayer?.cardList]
   );
   const cardGroups = useMemo(
@@ -145,7 +145,7 @@ export default function ActiveLayersZone() {
     dispatch(submitButton({ button: button }));
   };
 
-  const buttons = playerPrompt?.buttons?.map((button, ix) => {
+  const buttons = playerPrompt?.buttons?.map((button: Button, ix: number) => {
     return (
       <button
         className={styles.buttonDiv}

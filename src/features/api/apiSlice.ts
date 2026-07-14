@@ -31,10 +31,7 @@ import {
 import { toast } from 'react-hot-toast';
 import { cleanErrorText } from 'utils/cleanErrorText';
 import { JoinGameAPI, JoinGameResponse } from 'interface/API/JoinGame.php';
-import {
-  GetLobbyInfo,
-  GetLobbyInfoResponse
-} from 'interface/API/GetLobbyInfo.php';
+import { GetLobbyInfo } from 'interface/API/GetLobbyInfo.php';
 import { SubmitLobbyInput } from 'interface/API/SubmitLobbyInput.php';
 import { ChooseFirstPlayer } from 'interface/API/ChooseFirstPlayer.php';
 import { SubmitSideboardAPI } from 'interface/API/SubmitSideboard.php';
@@ -93,7 +90,6 @@ import {
   BanPlayerByNameRequest,
   CloseGameRequest,
   DeleteUsernameRequest,
-  SearchUsernamesRequest,
   SearchUsernamesResponse
 } from 'interface/API/ModPageAPI';
 import { FriendListAPIResponse } from 'interface/API/FriendListAPI.php';
@@ -102,8 +98,7 @@ import {
   BanOffensiveUsernameRequest
 } from 'interface/API/UsernameModerationAPI';
 import { BlockedUsersAPIResponse } from 'interface/API/BlockedUsersAPI.php';
-import { getGameInfo } from '../game/GameSlice';
-import { RootState } from '../../app/Store';
+import type GameState from '../GameState';
 import {
   GetSavedReplaysResponse,
   SetReplayFavoriteRequest
@@ -120,17 +115,16 @@ export interface GetLastActiveGameResponse {
   authKeyMismatch?: boolean;
 }
 
+type ApiState = {
+  game: Pick<GameState, 'gameInfo' | 'gameDynamicInfo'>;
+};
+
 // catch warnings and show a toast if we get one.
 export const rtkQueryErrorToaster: Middleware =
-  (api: MiddlewareAPI) => (next) => (action) => {
+  (_api: MiddlewareAPI) => (next) => (action) => {
     if (isRejectedWithValue(action)) {
-      //console.warn('Rejected action:', action);
       const errorMessage = action.error?.message ?? 'an error happened';
       const errorStatus = (action.payload as any)?.status ?? 0;
-      //console.log('errorStatus:', errorStatus);
-      //console.log('errorMessage:', errorMessage);
-      //console.log('action.payload:', action.payload);
-      //console.log('action.error:', action.error);
 
       // Suppress 401 Unauthorized errors - these are often benign (e.g., logging out/in quickly)
       // and not user-facing errors that need a toast notification
@@ -188,7 +182,7 @@ const dynamicBaseQuery: BaseQueryFn<
   unknown,
   FetchBaseQueryError
 > = async (args, webApi, extraOptions) => {
-  const { isRoguelike } = getGameInfo(webApi.getState() as RootState);
+  const { isRoguelike } = (webApi.getState() as ApiState).game.gameInfo;
   const baseUrl = isRoguelike ? ROGUELIKE_URL : BACKEND_URL;
   const rawBaseQuery = fetchBaseQuery({
     baseUrl,
@@ -263,7 +257,7 @@ export const apiSlice = createApi({
       invalidatesTags: ['Auth']
     }),
     loginWithCookie: builder.query({
-      query: (body) => {
+      query: () => {
         return {
           url: URL_END_POINT.LOGIN_WITH_COOKIE,
           method: 'POST',
@@ -274,7 +268,7 @@ export const apiSlice = createApi({
       providesTags: ['Auth']
     }),
     logOut: builder.mutation({
-      query: (body) => {
+      query: () => {
         return {
           url: URL_END_POINT.LOGOUT,
           method: 'POST',
@@ -320,8 +314,7 @@ export const apiSlice = createApi({
         playerID = 0,
         chatText = '',
         authKey = '',
-        quickChat,
-        ...rest
+        quickChat
       }) => {
         return {
           url: 'SubmitChat.php',
@@ -339,7 +332,7 @@ export const apiSlice = createApi({
     }),
     processInputAPI: builder.mutation({
       async queryFn(body, api, _extraOptions, baseQuery) {
-        const gameState = (api.getState() as RootState).game;
+        const gameState = (api.getState() as ApiState).game;
         const commandId =
           typeof crypto !== 'undefined' &&
           typeof crypto.randomUUID === 'function'
@@ -450,9 +443,6 @@ export const apiSlice = createApi({
           url: URL_END_POINT.GET_FAVORITE_DECKS,
           responseHandler: parseResponse
         };
-      },
-      transformResponse: (response: GetFavoriteDecksResponse, metra, arg) => {
-        return response;
       }
     }),
     deleteDeck: builder.mutation<DeleteDeckAPIResponse, DeleteDeckAPIRequest>({
@@ -549,11 +539,8 @@ export const apiSlice = createApi({
           responseHandler: parseResponse
         };
       },
-      transformErrorResponse: (
-        response: { status: string | number },
-        meta,
-        arg
-      ) => response.status
+      transformErrorResponse: (response: { status: string | number }) =>
+        response.status
     }),
     getLobbyInfo: builder.query({
       query: ({ ...body }: GetLobbyInfo) => {
@@ -563,9 +550,6 @@ export const apiSlice = createApi({
           body: body,
           responseHandler: parseResponse
         };
-      },
-      transformResponse: (response: GetLobbyInfoResponse, meta, arg) => {
-        return response;
       }
     }),
     getUserProfile: builder.query<UserProfileAPIResponse, undefined>({
@@ -600,25 +584,7 @@ export const apiSlice = createApi({
           responseHandler: parseResponse
         };
       },
-      invalidatesTags: [{ type: 'UserProfile', id: 'LIST' }],
-      async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
-        try {
-          const { data } = await queryFulfilled;
-          if (data?.success) {
-            dispatch(
-              apiSlice.util.updateQueryData(
-                'getUserProfile',
-                undefined,
-                (draft) => {
-                  draft.rustCounters = data.rustCounters ?? 0;
-                }
-              )
-            );
-          }
-        } catch {
-          // Ignore; invalidatesTags still triggers a reconciling refetch on failure.
-        }
-      }
+      invalidatesTags: [{ type: 'UserProfile', id: 'LIST' }]
     }),
     chooseFirstPlayer: builder.mutation({
       query: ({ ...body }: ChooseFirstPlayer) => {
@@ -1030,7 +996,7 @@ export const apiSlice = createApi({
 
     // Blocked Users endpoints
     getBlockedUsers: builder.query<BlockedUsersAPIResponse, void>({
-      queryFn: async (arg, api, extraOptions, baseQuery) => {
+      queryFn: async (_arg, _api, _extraOptions, baseQuery) => {
         try {
           const result: any = await baseQuery({
             url: URL_END_POINT.BLOCKED_USERS,
@@ -1071,7 +1037,7 @@ export const apiSlice = createApi({
       // Handle errors gracefully - don't crash if BlockedUsersAPI is unavailable
       async onQueryStarted(
         { blockedUsername },
-        { dispatch, queryFulfilled, getState }
+        { queryFulfilled }
       ) {
         try {
           await queryFulfilled;
@@ -1102,7 +1068,7 @@ export const apiSlice = createApi({
       // Handle errors gracefully - don't crash if BlockedUsersAPI is unavailable
       async onQueryStarted(
         { blockedUserId },
-        { dispatch, queryFulfilled, getState }
+        { queryFulfilled }
       ) {
         try {
           await queryFulfilled;

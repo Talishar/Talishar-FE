@@ -25,6 +25,8 @@ import { ImageSelectOption } from 'components/ImageSelect';
 import { getReadableFormatName } from 'utils/formatUtils';
 import { FAB_BAZAAR_DECK_URL_BASE } from 'appConstants';
 import useAuth from 'hooks/useAuth';
+import { FavoriteDeck } from 'interface/API/GetFavoriteDecks.php';
+import { BazaarDeck } from 'interface/API/GetBazaarDecks';
 import useRustCounters, {
   requestRustPanelAttention
 } from 'hooks/useRustCounters';
@@ -160,7 +162,7 @@ export const QuickJoinProvider = ({
 
   const bazaarDeckOptions: ImageSelectOption[] = useMemo(() => {
     if (!bazaarData?.decks) return [];
-    return bazaarData.decks.map((deck) => ({
+    return bazaarData.decks.map((deck: BazaarDeck) => ({
       value: deck.id ?? deck.deckId ?? '',
       label: formatDeckLabel(deck.name, deck.format ?? null),
       imageUrl: deck.hero ? generateCroppedImageUrl(deck.hero) : undefined
@@ -185,7 +187,7 @@ export const QuickJoinProvider = ({
       return;
     }
     const found = favoritesData.favoriteDecks.find(
-      (deck) => deck.key === selectedFavoriteDeck
+      (deck: FavoriteDeck) => deck.key === selectedFavoriteDeck
     );
     if (found?.format) {
       setDetectedFormat(getReadableFormatName(found.format));

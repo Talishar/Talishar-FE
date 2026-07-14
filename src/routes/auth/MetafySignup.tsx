@@ -6,6 +6,9 @@ import { useSubmitMetafySignupMutation } from 'features/api/apiSlice';
 import { usePageTitle } from 'hooks/usePageTitle';
 import SwordLoader from 'components/SwordLoader/SwordLoader';
 import styles from 'routes/user/profile/linkmetafy/linkMetafy.module.css';
+import { MetafySignupResponse } from 'interface/API/MetafyAPI.php';
+import type { FetchBaseQueryError } from '@reduxjs/toolkit/query/react';
+import type { SerializedError } from '@reduxjs/toolkit';
 
 // Module-level variable to track processed codes - persists across component remounts
 const processedCodes = new Set<string>();
@@ -56,7 +59,7 @@ const MetafySignup = () => {
       redirect_uri: window.location.origin + '/auth/metafy-signup'
     })
       .unwrap()
-      .then((data) => {
+      .then((data: MetafySignupResponse) => {
         if (data.message === 'ok' && data.isUserLoggedIn) {
           toast.success(t('AUTH.METAFY_SIGNUP.REDIRECTING'), {
             position: 'top-center'
@@ -69,7 +72,7 @@ const MetafySignup = () => {
           navigate('/user/login', { replace: true });
         }
       })
-      .catch((err) => {
+      .catch((err: FetchBaseQueryError | SerializedError) => {
         console.error('Metafy signup error:', err);
         toast.error(`Signup error: ${err?.toString() || 'Unknown error'}`, {
           position: 'top-center'

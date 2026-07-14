@@ -5,7 +5,7 @@ import { RootState } from 'app/Store';
 import { Card } from 'features/Card';
 import styles from './PlayerHand.module.css';
 import PlayerHandCard from '../../elements/playerHandCard/PlayerHandCard';
-import { useAppDispatch, useAppSelector } from 'app/Hooks';
+import { useAppSelector } from 'app/Hooks';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import { AnimatePresence, PanInfo } from 'framer-motion';
 import { createPortal } from 'react-dom';
@@ -145,6 +145,9 @@ export default function PlayerHand() {
   const [cardSpacingPx, setCardSpacingPx] = useState<number | null>(null);
   const [scrollOffset, setScrollOffset] = useState(0);
   const [maxScrollOffset, setMaxScrollOffset] = useState(0);
+  const scrollOffsetRef = useRef(0);
+  const pendingHandScrollDeltaRef = useRef(0);
+  const handScrollFrameRef = useRef<number | null>(null);
   const scrollBlockedRef = useRef(false);
   const [gameZoneBounds, setGameZoneBounds] = useState<{ left: number; right: number } | null>(null);
 
@@ -154,7 +157,13 @@ export default function PlayerHand() {
 
     const update = () => {
       const rect = gameZone.getBoundingClientRect();
-      setGameZoneBounds({ left: rect.left, right: window.innerWidth - rect.right });
+      const left = rect.left;
+      const right = window.innerWidth - rect.right;
+      setGameZoneBounds((previousBounds) =>
+        previousBounds?.left === left && previousBounds.right === right
+          ? previousBounds
+          : { left, right }
+      );
     };
 
     update();
@@ -192,7 +201,8 @@ export default function PlayerHand() {
       const currentIdSet = new Set(currentIds);
 
       const preservedOrder = previousOrder.filter((id) => currentIdSet.has(id));
-      const newIds = currentIds.filter((id) => !preservedOrder.includes(id));
+      const preservedIdSet = new Set(preservedOrder);
+      const newIds = currentIds.filter((id) => !preservedIdSet.has(id));
       const nextOrder = [...preservedOrder, ...newIds];
 
       if (
@@ -476,6 +486,7 @@ export default function PlayerHand() {
           direction === 'right'
             ? Math.min(maxScrollOffset, prev + amount)
             : Math.max(0, prev - amount);
+        scrollOffsetRef.current = next;
         return next;
       });
       scrollBlockedRef.current = true;
@@ -483,6 +494,10 @@ export default function PlayerHand() {
     },
     [maxScrollOffset]
   );
+
+  useEffect(() => {
+    scrollOffsetRef.current = scrollOffset;
+  }, [scrollOffset]);
 
   // A held card can be rotated with the wheel anywhere on the game board. When
   // no card is held, wheel scrolling remains limited to the hand itself.
@@ -527,9 +542,23 @@ export default function PlayerHand() {
       if (maxScrollOffset === 0) return;
       e.preventDefault();
       const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
-      setScrollOffset((prev) =>
-        Math.max(0, Math.min(maxScrollOffset, prev + delta))
-      );
+      pendingHandScrollDeltaRef.current += delta;
+      if (handScrollFrameRef.current === null) {
+        handScrollFrameRef.current = window.requestAnimationFrame(() => {
+          const pendingDelta = pendingHandScrollDeltaRef.current;
+          pendingHandScrollDeltaRef.current = 0;
+          handScrollFrameRef.current = null;
+
+          setScrollOffset(() => {
+            const next = Math.max(
+              0,
+              Math.min(maxScrollOffset, scrollOffsetRef.current + pendingDelta)
+            );
+            scrollOffsetRef.current = next;
+            return next;
+          });
+        });
+      }
     };
 
     window.addEventListener('wheel', handleWheel, {
@@ -542,7 +571,12 @@ export default function PlayerHand() {
         window.cancelAnimationFrame(wheelRotationFrameRef.current);
         wheelRotationFrameRef.current = null;
       }
+      if (handScrollFrameRef.current !== null) {
+        window.cancelAnimationFrame(handScrollFrameRef.current);
+        handScrollFrameRef.current = null;
+      }
       pendingWheelRotationRef.current = 0;
+      pendingHandScrollDeltaRef.current = 0;
     };
   }, [maxScrollOffset]);
 
@@ -609,9 +643,9 @@ export default function PlayerHand() {
     dragCancelImplRef.current();
   }, []);
 
-  const addCardToPlayedCards = (cardName: string) => {
+  const addCardToPlayedCards = useCallback((cardName: string) => {
     setPlayedCards((prev) => [...prev, cardName]);
-  };
+  }, []);
 
   const adjustHandCardRotation = useCallback(
     (cardId: string, rotationDelta: number) => {
@@ -752,13 +786,6 @@ export default function PlayerHand() {
     hasArsenal = false;
   }
 
-  let lengthOfCards = 0;
-  lengthOfCards += handCards?.length ?? 0;
-  lengthOfCards += arsenalCards?.length ?? 0;
-  lengthOfCards += playableBanishedCards?.length ?? 0;
-  lengthOfCards += playableGraveyardCards?.length ?? 0;
-  lengthOfCards += playableTheirBanishedCards?.length ?? 0;
-
   if (playerID === 3 || isReplay) {
     return <></>;
   }
@@ -821,7 +848,10 @@ export default function PlayerHand() {
                 ...(cardSpacingPx !== null
                   ? { '--card-spacing': `${cardSpacingPx}px` }
                   : {}),
-                transform: scrollOffset > 0 ? `translateX(-${scrollOffset}px)` : undefined
+                transform:
+                  scrollOffset > 0
+                    ? `translate3d(-${scrollOffset}px, 0, 0)`
+                    : undefined
               } as React.CSSProperties
             }
             onContextMenu={(e) => e.preventDefault()}

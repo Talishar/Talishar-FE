@@ -5,6 +5,7 @@ import Displayrow from 'interface/Displayrow';
 import CardDisplay from '../../elements/cardDisplay/CardDisplay';
 import DamagePopup from '../../elements/damagePopup/DamagePopup';
 import HealingPopup from '../../elements/healingPopup/HealingPopup';
+import { Card } from 'features/Card';
 import {
   removeDamagePopup,
   addDamagePopup,
@@ -28,7 +29,7 @@ export const HeroZone = React.memo((prop: Displayrow) => {
 
   const cardWithSoul = React.useMemo(() => {
     if (!cardToDisplay) return cardToDisplay;
-    const soulSubcards = soulCards?.map((c) => c.cardNumber) ?? [];
+    const soulSubcards = soulCards?.map((c: Card) => c.cardNumber) ?? [];
     if (soulSubcards.length === 0) return cardToDisplay;
     return { ...cardToDisplay, subcards: soulSubcards };
   }, [cardToDisplay, soulCards]);

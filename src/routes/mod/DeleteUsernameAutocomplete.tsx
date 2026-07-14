@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styles from './DeleteUsernameAutocomplete.module.css';
 import { useSearchUsernamesQuery } from 'features/api/apiSlice';
+import { UserSearchResult } from 'interface/API/ModPageAPI';
 
 interface DeleteUsernameAutocompleteProps {
   value: string;
@@ -79,7 +80,7 @@ const DeleteUsernameAutocomplete: React.FC<DeleteUsernameAutocompleteProps> = ({
 
         {showDropdown && (
           <div className={styles.suggestionsDropdown}>
-            {suggestions.map((user) => (
+            {suggestions.map((user: UserSearchResult) => (
               <div
                 key={user.username}
                 className={styles.suggestionItem}

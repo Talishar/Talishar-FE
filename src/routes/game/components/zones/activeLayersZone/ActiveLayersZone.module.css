@@ -24,7 +24,7 @@
   align-items: center;
   cursor: grab;
   user-select: none;
-  transition: all 0.2s ease;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
   padding: 0.5em;
   box-sizing: border-box;
   flex-shrink: 0;

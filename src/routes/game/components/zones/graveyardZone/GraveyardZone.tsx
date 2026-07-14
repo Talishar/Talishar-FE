@@ -3,10 +3,13 @@ import { RootState } from 'app/Store';
 import Displayrow from 'interface/Displayrow';
 import { setCardListFocus, clearCardListFocus } from 'features/game/GameSlice';
 import CardDisplay from '../../elements/cardDisplay/CardDisplay';
+import { Card } from 'features/Card';
 import styles from './GraveyardZone.module.css';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import * as optConst from 'features/options/constants';
+
+const MAX_STACK_LAYERS = 12;
 
 export const GraveyardZone = React.memo((prop: Displayrow) => {
   const { isPlayer } = prop;
@@ -37,20 +40,27 @@ export const GraveyardZone = React.memo((prop: Displayrow) => {
 
   const layerStyles = useMemo(() => {
     if (totalCards <= 1) return [];
-    return Array.from({ length: totalCards - 1 }, (_, index) => ({
-      transform:
-        `translateY(${baseOffsetY}px) translateX(${baseOffsetX}px) ` +
-        `translateY(${(index + 1) * 0.25}px) translateX(${(index + 1) * -0.25}px)`,
-      zIndex: totalCards - index - 1
-    }));
+    const layerCount = Math.min(MAX_STACK_LAYERS, totalCards - 1);
+    return Array.from({ length: layerCount }, (_, index) => {
+      const sourceIndex =
+        layerCount === 1
+          ? 0
+          : Math.round((index * (totalCards - 2)) / (layerCount - 1));
+
+      return {
+        transform:
+          `translateY(${baseOffsetY}px) translateX(${baseOffsetX}px) ` +
+          `translateY(${(sourceIndex + 1) * 0.25}px) translateX(${(sourceIndex + 1) * -0.25}px)`,
+        zIndex: totalCards - sourceIndex - 1
+      };
+    });
   }, [totalCards, baseOffsetY, baseOffsetX]);
 
   const cardWrapperStyle = useMemo(
     () =>
       !isMobileOrTablet
         ? {
-            top: `${Math.round(baseOffsetY)}px`,
-            left: `${Math.round(baseOffsetX)}px`
+            transform: `translate3d(${Math.round(baseOffsetX)}px, ${Math.round(baseOffsetY)}px, 0)`
           }
         : {},
     [isMobileOrTablet, baseOffsetY, baseOffsetX]
@@ -74,7 +84,7 @@ export const GraveyardZone = React.memo((prop: Displayrow) => {
 
   // Count only face-up cards (overlay !== 'disabled')
   const faceUpCount = graveyardZone.filter(
-    (card) => card.overlay !== 'disabled'
+    (card: Card) => card.overlay !== 'disabled'
   ).length;
 
   return (

@@ -170,78 +170,92 @@ function combatGroupEnd(messages: LogMessage[], start: number) {
   return -1;
 }
 
-export default function GameLogMessages({ chatLog, chatFilter, transformMessage, playerNames, mobile = false }: Props) {
-  const messages = (chatLog ?? [])
-    .map((message, originalIndex) => ({ message, originalIndex }))
-    .filter((entry) => {
-      if (chatFilter === 'chat') return CHAT_RE.test(entry.message);
-      if (chatFilter === 'log') return !CHAT_RE.test(entry.message);
-      return true;
-    });
-  const output: React.ReactNode[] = [];
-  let chainLinkNumber = 0;
+const GameLogMessages = React.memo(function GameLogMessages({
+  chatLog,
+  chatFilter,
+  transformMessage,
+  playerNames,
+  mobile = false
+}: Props) {
+  const output = React.useMemo(() => {
+    const messages = (chatLog ?? [])
+      .map((message, originalIndex) => ({ message, originalIndex }))
+      .filter((entry) => {
+        if (chatFilter === 'chat') return CHAT_RE.test(entry.message);
+        if (chatFilter === 'log') return !CHAT_RE.test(entry.message);
+        return true;
+      });
+    const nextOutput: React.ReactNode[] = [];
+    let chainLinkNumber = 0;
 
-  for (let index = 0; index < messages.length; index++) {
-    const entry = messages[index];
-    const turnMarker = plainText(entry.message).match(TURN_MARKER_RE);
-    if (turnMarker) {
-      output.push(<TurnDivider key={`turn-${entry.originalIndex}`} marker={turnMarker} playerNames={playerNames} />);
-      continue;
-    }
+    for (let index = 0; index < messages.length; index++) {
+      const entry = messages[index];
+      const turnMarker = plainText(entry.message).match(TURN_MARKER_RE);
+      if (turnMarker) {
+        nextOutput.push(<TurnDivider key={`turn-${entry.originalIndex}`} marker={turnMarker} playerNames={playerNames} />);
+        continue;
+      }
 
-    const groupEnd = combatGroupEnd(messages, index);
-    if (groupEnd !== -1) {
-      chainLinkNumber++;
-      const closesCombatChain = COMBAT_CHAIN_CLOSED_RE.test(plainText(messages[groupEnd].message));
-      output.push(
-        <section className={styles.combatGroup} key={`combat-${entry.originalIndex}`} aria-label="Combat sequence">
-          <div className={styles.combatGroupLabel}>Chain Link {chainLinkNumber}</div>
-          <RepeatedMessages entries={messages.slice(index, groupEnd + 1)} transformMessage={transformMessage} mobile={mobile} />
-        </section>
-      );
-      if (closesCombatChain) chainLinkNumber = 0;
-      index = groupEnd;
-      continue;
-    }
+      const groupEnd = combatGroupEnd(messages, index);
+      if (groupEnd !== -1) {
+        chainLinkNumber++;
+        const closesCombatChain = COMBAT_CHAIN_CLOSED_RE.test(plainText(messages[groupEnd].message));
+        nextOutput.push(
+          <section className={styles.combatGroup} key={`combat-${entry.originalIndex}`} aria-label="Combat sequence">
+            <div className={styles.combatGroupLabel}>Chain Link {chainLinkNumber}</div>
+            <RepeatedMessages entries={messages.slice(index, groupEnd + 1)} transformMessage={transformMessage} mobile={mobile} />
+          </section>
+        );
+        if (closesCombatChain) chainLinkNumber = 0;
+        index = groupEnd;
+        continue;
+      }
 
-    const undoSequence = undoLimitSequence(messages, index);
-    if (undoSequence) {
-      output.push(
+      const undoSequence = undoLimitSequence(messages, index);
+      if (undoSequence) {
+        nextOutput.push(
+          <Message
+            key={entry.originalIndex}
+            entry={entry}
+            transformMessage={transformMessage}
+            mobile={mobile}
+            repeatCount={undoSequence.undoCount}
+          />
+        );
+        nextOutput.push(
+          <Message
+            key={undoSequence.warning.originalIndex}
+            entry={undoSequence.warning}
+            transformMessage={transformMessage}
+            mobile={mobile}
+          />
+        );
+        index = undoSequence.end;
+        continue;
+      }
+
+      const passEnd = repeatedEventEnd(messages, index, PASS_RE);
+      const undoEnd = repeatedEventEnd(messages, index, UNDO_RE);
+      const end = Math.max(passEnd, undoEnd);
+      nextOutput.push(
         <Message
           key={entry.originalIndex}
           entry={entry}
           transformMessage={transformMessage}
           mobile={mobile}
-          repeatCount={undoSequence.undoCount}
+          repeatCount={end - index + 1}
         />
       );
-      output.push(
-        <Message
-          key={undoSequence.warning.originalIndex}
-          entry={undoSequence.warning}
-          transformMessage={transformMessage}
-          mobile={mobile}
-        />
-      );
-      index = undoSequence.end;
-      continue;
+      index = end;
+      if (COMBAT_CHAIN_CLOSED_RE.test(plainText(entry.message))) chainLinkNumber = 0;
     }
 
-    const passEnd = repeatedEventEnd(messages, index, PASS_RE);
-    const undoEnd = repeatedEventEnd(messages, index, UNDO_RE);
-    const end = Math.max(passEnd, undoEnd);
-    output.push(
-      <Message
-        key={entry.originalIndex}
-        entry={entry}
-        transformMessage={transformMessage}
-        mobile={mobile}
-        repeatCount={end - index + 1}
-      />
-    );
-    index = end;
-    if (COMBAT_CHAIN_CLOSED_RE.test(plainText(entry.message))) chainLinkNumber = 0;
-  }
+    return nextOutput;
+  }, [chatLog, chatFilter, transformMessage, playerNames, mobile]);
 
   return <>{output}</>;
-}
+});
+
+GameLogMessages.displayName = 'GameLogMessages';
+
+export default GameLogMessages;

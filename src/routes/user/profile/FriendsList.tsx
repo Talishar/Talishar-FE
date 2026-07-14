@@ -452,7 +452,7 @@ export const FriendsList: React.FC<FriendsListProps> = ({ className }) => {
                     </tr>
                   </thead>
                   <tbody>
-                    {friendsData.friends.map((friend) => (
+                    {friendsData.friends.map((friend: Friend) => (
                       <tr key={friend.friendUserId}>
                         <td>
                           <div className={styles.friendNameContainer}>

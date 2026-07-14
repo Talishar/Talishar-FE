@@ -28,6 +28,8 @@ import useRustCounters, {
   requestRustPanelAttention
 } from 'hooks/useRustCounters';
 import { CreateGameAPI } from 'interface/API/CreateGame.php';
+import { BazaarDeck } from 'interface/API/GetBazaarDecks';
+import { FavoriteDeck } from 'interface/API/GetFavoriteDecks.php';
 import { toast } from 'react-hot-toast';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import styles from './CreateGame.module.css';
@@ -138,7 +140,7 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
   );
   const standaloneBazaarDeckOptions = useMemo(() => {
     if (!bazaarData?.decks) return [];
-    return bazaarData.decks.map((deck) => ({
+    return bazaarData.decks.map((deck: BazaarDeck) => ({
       value: deck.id ?? deck.deckId ?? '',
       label: formatDeckLabel(deck.name, deck.format ?? null),
       imageUrl: deck.hero ? generateCroppedImageUrl(deck.hero) : undefined
@@ -220,7 +222,7 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
       favoriteDecks:
         data?.lastUsedDeckIndex !== undefined
           ? data.favoriteDecks.find(
-              (deck) => deck.index === data.lastUsedDeckIndex
+              (deck: FavoriteDeck) => deck.index === data.lastUsedDeckIndex
             )?.key
           : '',
       gameDescription,
@@ -568,7 +570,7 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
   // Convert favorite decks to ImageSelect options
   const favoriteDeckOptions: ImageSelectOption[] = React.useMemo(() => {
     if (!data?.favoriteDecks) return [];
-    return data.favoriteDecks.map((deck) => ({
+    return data.favoriteDecks.map((deck: FavoriteDeck) => ({
       value: deck.key,
       label: formatDeckLabel(deck.name, deck.format),
       imageUrl: generateCroppedImageUrl(deck.hero)

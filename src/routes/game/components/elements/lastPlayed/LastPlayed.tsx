@@ -129,7 +129,7 @@ export default function LastPlayed() {
       </div>
       <div className={styles.viewport}>
         <div className={styles.track} style={trackStyle}>
-          {recentlyPlayed.map((card, i) => (
+          {recentlyPlayed.map((card: Card, i: number) => (
             <div className={classNames(styles.slide, { [styles.streamerSlide]: isStreamerMode })} key={`${card.cardNumber}-${i}`}>
               <CardSlide
                 card={card}

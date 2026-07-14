@@ -6,6 +6,7 @@ import { setReplayStart } from 'features/game/GameSlice';
 import { useLoadSharedReplayMutation } from 'features/api/apiSlice';
 import { GameLocationState } from 'interface/GameLocationState';
 import { usePageTitle } from 'hooks/usePageTitle';
+import { LoadSharedReplayResponse } from 'interface/API/ShareReplayAPI';
 
 export default function SharedReplay() {
   const { t } = useTranslation();
@@ -31,7 +32,7 @@ export default function SharedReplay() {
 
     loadSharedReplay({ shareToken: token })
       .unwrap()
-      .then((response) => {
+      .then((response: LoadSharedReplayResponse) => {
         if (response.error) throw new Error(response.error);
         if (!response.gameName || !response.playerID || !response.authKey) {
           throw new Error(t('SHARED_REPLAY_PAGE.ERROR_INCOMPLETE_RESPONSE'));

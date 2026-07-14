@@ -102,7 +102,7 @@ const HandZone = React.memo(function HandZone(prop: Player) {
       onClick={openHandList}
       title={cardCount > 0 ? `Click to view ${zoneTitle.toLowerCase()}` : undefined}
     >
-      {handCards.map((card: Card, index) => {
+      {handCards.map((card: Card, index: number) => {
         return <CardDisplay card={card} key={index} isPlayer={isPlayer} />;
       })}
     </div>

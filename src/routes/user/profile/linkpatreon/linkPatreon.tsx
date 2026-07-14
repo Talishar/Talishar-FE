@@ -28,7 +28,7 @@ const LinkPatreon = () => {
           navigate('/user/profile');
         }
       })
-      .catch((err) => {
+      .catch((err: any) => {
         toast.error(`Patreon login network error:\n${err}`);
         navigate('/user/profile');
       });

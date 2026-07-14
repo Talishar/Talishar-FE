@@ -57,7 +57,7 @@ export default function Effects(props: Player) {
 
   return (
     <div className={classCSS}>
-      {effects.map((card: Card, index) => {
+      {effects.map((card: Card, index: number) => {
         return <Effect card={card} key={index} isPlayer={props.isPlayer} />;
       })}
     </div>

@@ -123,15 +123,19 @@ function ReplayContent({
   const [isRequestInProgress, setIsRequestInProgress] = useState(false);
 
   const chatTurns = useMemo(() => getChatReplayTurns(chatLog), [chatLog]);
+  const chatTurnsByKey = useMemo(
+    () =>
+      new Map(
+        chatTurns.map((turn) => [`${turn.player}-${turn.number}`, turn])
+      ),
+    [chatTurns]
+  );
   const reviewTurns = useMemo<ReplayTurn[]>(() => {
     const savedTurns: Array<{ player: 1 | 2; number: number }> =
       savedTurnsData?.turns ?? [];
     if (savedTurns.length) {
       return savedTurns.map((turn) => {
-        const chatTurn = chatTurns.find(
-          (candidate) =>
-            candidate.number === turn.number && candidate.player === turn.player
-        );
+        const chatTurn = chatTurnsByKey.get(`${turn.player}-${turn.number}`);
         return {
           ...turn,
           hasCombat: chatTurn?.hasCombat ?? false,
@@ -153,7 +157,7 @@ function ReplayContent({
         hasDamage: false
       }
     ];
-  }, [chatTurns, savedTurnsData, currentTurnNumber, currentTurnPlayer]);
+  }, [chatTurns, chatTurnsByKey, savedTurnsData, currentTurnNumber, currentTurnPlayer]);
   const selectedTurn = Number(turnNumber);
   const maxSavedTurn = Math.max(0, ...reviewTurns.map((turn) => turn.number));
   const playerNames: Record<1 | 2, string> =

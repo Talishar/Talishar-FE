@@ -46,7 +46,7 @@ export const UsernameModeration: React.FC = () => {
         setSelectedUsers(new Set());
       } else {
         setSelectedUsers(
-          new Set(moderationData.offensiveUsers.map((user) => user.usersId))
+          new Set(moderationData.offensiveUsers.map((user: OffensiveUser) => user.usersId))
         );
       }
     }
@@ -59,7 +59,7 @@ export const UsernameModeration: React.FC = () => {
     }
 
     const usersToBan =
-      moderationData?.offensiveUsers.filter((user) =>
+      moderationData?.offensiveUsers.filter((user: OffensiveUser) =>
         selectedUsers.has(user.usersId)
       ) || [];
 
@@ -68,7 +68,7 @@ export const UsernameModeration: React.FC = () => {
         `Ban ${
           usersToBan.length
         } user(s) with offensive usernames?\n\n${usersToBan
-          .map((u) => u.username)
+          .map((u: OffensiveUser) => u.username)
           .join(', ')}`
       )
     ) {
@@ -133,14 +133,14 @@ export const UsernameModeration: React.FC = () => {
     }
 
     const usersToWhitelist =
-      moderationData?.offensiveUsers.filter((user) =>
+      moderationData?.offensiveUsers.filter((user: OffensiveUser) =>
         selectedUsers.has(user.usersId)
       ) || [];
 
     if (
       !window.confirm(
         `Whitelist ${usersToWhitelist.length} user(s)?\n\n${usersToWhitelist
-          .map((u) => u.username)
+          .map((u: OffensiveUser) => u.username)
           .join(', ')}`
       )
     ) {
@@ -252,7 +252,7 @@ export const UsernameModeration: React.FC = () => {
                 </tr>
               </thead>
               <tbody>
-                {offensiveUsers.map((user) => (
+                {offensiveUsers.map((user: OffensiveUser) => (
                   <tr key={user.usersId}>
                     <td>
                       <input
