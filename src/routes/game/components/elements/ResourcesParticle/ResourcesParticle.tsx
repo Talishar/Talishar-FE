@@ -1,24 +1,28 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import styles from './ResourcesParticle.module.css';
 
+export type PitchColor = 'red' | 'yellow' | 'blue';
+
 interface ResourcesParticleProps {
-  isChiCard: boolean;
+  pitchColor: PitchColor;
   onAnimationComplete: () => void;
 }
 
 export default function ResourcesParticle({
-  isChiCard,
+  pitchColor,
   onAnimationComplete
 }: ResourcesParticleProps) {
   const [startPosition] = useState({
-    x: Math.random() * 60 - 30, // Random horizontal offset from center
-    y: -50 // Start above the pitch zone
+    x: Math.random() * 90 - 45,
+    y: -85
   });
 
-  const particleClass = isChiCard
-    ? styles.chiParticle
-    : styles.ResourcesParticle;
+  const particleClass = {
+    red: styles.redParticle,
+    yellow: styles.yellowParticle,
+    blue: styles.blueParticle
+  }[pitchColor];
 
   return (
     <motion.div
@@ -26,18 +30,19 @@ export default function ResourcesParticle({
       initial={{
         x: startPosition.x,
         y: startPosition.y,
-        opacity: 1,
-        scale: 0.7
+        opacity: 0,
+        scale: 0.65
       }}
       animate={{
-        x: 0, // Move toward center (pitch overlay)
+        x: 0,
         y: 0,
-        opacity: 0,
-        scale: 0.5
+        opacity: [0, 1, 0],
+        scale: [0.65, 1, 0.45]
       }}
       transition={{
-        duration: 0.7,
-        ease: 'easeIn'
+        duration: 0.62,
+        ease: 'easeIn',
+        times: [0, 0.18, 1]
       }}
       onAnimationComplete={onAnimationComplete}
       data-testid="energy-particle"

@@ -1,26 +1,27 @@
 .particle {
   position: absolute;
   pointer-events: none;
-  border-radius: 50%;
+  border-radius: 999px;
   left: 50%;
   top: 50%;
-  margin-left: -4px;
-  margin-top: -4px;
+  margin-left: -3px;
+  margin-top: -12px;
   z-index: 1000;
+  width: 6px;
+  height: 24px;
 }
 
-.ResourcesParticle {
-  width: 8px;
-  height: 8px;
-  background: radial-gradient(circle at 30% 30%, #ff6b6b, #cc0000);
-  box-shadow: 0 0 6px #ff6b6b, 0 0 12px #cc0000,
-    inset 0 0 3px rgba(255, 255, 255, 0.5);
+.redParticle {
+  background: linear-gradient(to bottom, transparent, #ff4d35 28%, #ffd166 70%, transparent);
+  box-shadow: 0 0 8px #ff4d35, 0 0 16px rgba(196, 33, 20, 0.85);
 }
 
-.chiParticle {
-  width: 8px;
-  height: 8px;
-  background: radial-gradient(circle at 30% 30%, #4d9eff, #0066cc);
-  box-shadow: 0 0 6px #4d9eff, 0 0 12px #0066cc,
-    inset 0 0 3px rgba(255, 255, 255, 0.5);
+.yellowParticle {
+  background: linear-gradient(to bottom, transparent, #fff6a0 28%, #f6bd28 70%, transparent);
+  box-shadow: 0 0 8px #ffe36e, 0 0 16px rgba(224, 157, 20, 0.82);
+}
+
+.blueParticle {
+  background: linear-gradient(to bottom, transparent, #b9f4ff 28%, #35a9ff 70%, transparent);
+  box-shadow: 0 0 8px #68d7ff, 0 0 16px rgba(32, 119, 232, 0.85);
 }
