@@ -8,6 +8,7 @@ import {
 import { RootState } from 'app/Store';
 import { selectIsPatron } from 'features/auth/authSlice';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { createPortal } from 'react-dom';
 import styles from './ReplayPanel.module.css';
 import { toast } from 'react-hot-toast';
 import { PROCESS_INPUT } from 'appConstants';
@@ -70,7 +71,7 @@ export default function ReplayPanel() {
 
   if (!gameInfo.isReplay || location.pathname.includes('/create')) return null;
 
-  return (
+  return createPortal(
     <>
       <button
         className={`${styles.replayTab} ${isOpen ? styles.hidden : ''}`}
@@ -83,7 +84,8 @@ export default function ReplayPanel() {
       {isOpen && (
         <ReplayContent gameInfo={gameInfo} onClose={() => setIsOpen(false)} />
       )}
-    </>
+    </>,
+    document.body
   );
 }
 
