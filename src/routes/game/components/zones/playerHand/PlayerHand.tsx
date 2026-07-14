@@ -135,7 +135,7 @@ export default function PlayerHand() {
   const [dragStartOrderIds, setDragStartOrderIds] = useState<string[] | null>(
     null
   );
-  const [isReorderingHand, setIsReorderingHand] = useState(false);
+  const [handShuffleRevision, setHandShuffleRevision] = useState(0);
   const [handReorderStepPx, setHandReorderStepPx] = useState<number>(
     DEFAULT_HAND_REORDER_STEP_PX
   );
@@ -278,7 +278,6 @@ export default function PlayerHand() {
   const handleHandCardDragStart = () => {
     setDragStartOrderIds(orderedHandIds);
     setPreviewHandIds(orderedHandIds);
-    setIsReorderingHand(true);
     soundPlayedForDragRef.current = false;
   };
 
@@ -328,7 +327,6 @@ export default function PlayerHand() {
   const clearHandDragPreview = () => {
     setDragStartOrderIds(null);
     setPreviewHandIds(null);
-    setIsReorderingHand(false);
     soundPlayedForDragRef.current = false;
   };
 
@@ -717,10 +715,9 @@ export default function PlayerHand() {
         target.isContentEditable
       ) return;
 
-      let didShuffle = false;
+      if (orderedHandIds.length <= 1) return;
+
       setOrderedHandIds((currentOrder) => {
-        if (currentOrder.length <= 1) return currentOrder;
-        
         let shuffled: string[];
         let hasChanged = false;
         
@@ -734,18 +731,18 @@ export default function PlayerHand() {
           hasChanged = shuffled.some((card, idx) => card !== currentOrder[idx]);
         } while (!hasChanged);
         
-        didShuffle = true;
         return shuffled;
       });
 
-      if (didShuffle && !isMuted) {
+      setHandShuffleRevision((revision) => revision + 1);
+      if (!isMuted) {
         playDrawingCardsSound();
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isMuted, playDrawingCardsSound]);
+  }, [orderedHandIds.length, isMuted, playDrawingCardsSound]);
 
   if (
     arsenalCards === undefined ||
@@ -845,7 +842,8 @@ export default function PlayerHand() {
                       addCardToPlayedCards={addCardToPlayedCards}
                       zIndex={ix + 200}
                       isNewlyDrawn={isNewlyDrawn}
-                      enableLayoutAnimation={isReorderingHand}
+                      enableLayoutAnimation
+                      shuffleRevision={handShuffleRevision}
                       scrollBlockedRef={scrollBlockedRef}
                       onHandReorderDragStart={stableDragStart}
                       onHandReorderDragMove={stableDragMove}

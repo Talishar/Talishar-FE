@@ -40,6 +40,7 @@ export interface HandCard {
   disableDrag?: boolean;
   rotation?: number;
   enableLayoutAnimation?: boolean;
+  shuffleRevision?: number;
   scrollBlockedRef?: React.RefObject<boolean>;
   onRotate?: (cardId: string, direction: 1 | -1) => void;
   onRotationHoldStart?: (cardId: string) => void;
@@ -62,6 +63,7 @@ export const PlayerHandCard = React.memo(({
   disableDrag,
   rotation = 0,
   enableLayoutAnimation,
+  shuffleRevision = 0,
   scrollBlockedRef,
   onRotate,
   onRotationHoldStart,
@@ -292,7 +294,9 @@ export const PlayerHandCard = React.memo(({
         layout={enableLayoutAnimation && !isDragging ? 'position' : false}
         drag={!disableDrag}
         className={classNames(styles.handCard, {
-          [styles.newlyDrawn]: isNewlyDrawn
+          [styles.newlyDrawn]: isNewlyDrawn,
+          [styles.shuffleAccentA]: shuffleRevision > 0 && shuffleRevision % 2 === 0,
+          [styles.shuffleAccentB]: shuffleRevision % 2 === 1
         })}
         style={{
           x: dragX,
@@ -331,9 +335,15 @@ export const PlayerHandCard = React.memo(({
         dragMomentum={false}
         initial={{ opacity: 0, y: 100 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={
-          isNewlyDrawn ? { duration: 0.2, ease: 'easeOut' } : { duration: 0.1 }
-        }
+        transition={{
+          layout: { type: 'spring', stiffness: 520, damping: 38, mass: 0.72 },
+          opacity: isNewlyDrawn
+            ? { duration: 0.2, ease: 'easeOut' }
+            : { duration: 0.14, ease: 'easeOut' },
+          y: isNewlyDrawn
+            ? { duration: 0.2, ease: 'easeOut' }
+            : { duration: 0.14, ease: 'easeOut' }
+        }}
         whileHover={isDragging || !supportsHover ? undefined : { scale: 1.1, y: -50, zIndex: 1000 }}
         whileDrag={{ scale: 1.05 }}
       >

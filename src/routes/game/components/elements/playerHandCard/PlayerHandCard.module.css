@@ -7,6 +7,30 @@
   pointer-events: auto;
 }
 
+.shuffleAccentA,
+.shuffleAccentB {
+  animation: hand-shuffle-accent 460ms ease-out;
+}
+
+@keyframes hand-shuffle-accent {
+  0% {
+    filter: brightness(1) saturate(1);
+  }
+  35% {
+    filter: brightness(1.12) saturate(1.16);
+  }
+  100% {
+    filter: brightness(1) saturate(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shuffleAccentA,
+  .shuffleAccentB {
+    animation: none;
+  }
+}
+
 @media (orientation: portrait) {
   .handCard {
     height: 9dvh;
