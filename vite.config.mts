@@ -21,6 +21,15 @@ export default ({ mode }: { mode: string }) => {
   return defineConfig({
     base: './',
     build: { outDir: './build' },
+    css: {
+      preprocessorOptions: {
+        scss: {
+          api: 'modern',
+          quietDeps: true,
+          silenceDeprecations: ['import']
+        }
+      }
+    },
     plugins: [react(), viteTsconfigPaths(), svgrPlugin()],
     server: {
       proxy: {
