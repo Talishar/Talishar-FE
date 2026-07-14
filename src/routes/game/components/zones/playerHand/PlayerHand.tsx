@@ -77,7 +77,7 @@ export default function PlayerHand() {
     const usedIds = new Set<string>();
     const adoConsumed = new Map<string, number>();
 
-    const result: CardWithStableId[] = cards.map((card) => {
+    const result: CardWithStableId[] = cards.map((card: Card) => {
       const ado = card.actionDataOverride ?? '';
       const isNumericAdo = ado !== '' && NUMERIC_RE.test(ado);
 
@@ -167,19 +167,19 @@ export default function PlayerHand() {
   );
   const playableBanishedCards = useAppSelector((state: RootState) => {
     return state.game.playerOne.Banish?.filter(
-      (card) => card.action != null && card.action != 0
+      (card: Card) => card.action != null && card.action != 0
     );
   }, shallowEqual);
 
   const playableTheirBanishedCards = useAppSelector((state: RootState) => {
     return state.game.playerTwo.Banish?.filter(
-      (card) => card.action != null && card.action != 0
+      (card: Card) => card.action != null && card.action != 0
     );
   }, shallowEqual);
 
   const playableGraveyardCards = useAppSelector((state: RootState) => {
     return state.game.playerOne.Graveyard?.filter(
-      (card) => card.action != null && card.action != 0
+      (card: Card) => card.action != null && card.action != 0
     );
   }, shallowEqual);
 
@@ -858,7 +858,7 @@ export default function PlayerHand() {
               {hasArsenal &&
                 showArsenal &&
                 arsenalCards !== undefined &&
-                arsenalCards.map((card, ix) => {
+                arsenalCards.map((card: Card, ix: number) => {
                   const cardCount = nextCardOccurrence(card.cardNumber);
                   return (
                     <PlayerHandCard
@@ -878,7 +878,7 @@ export default function PlayerHand() {
                 />
               )}
               {playableBanishedCards !== undefined &&
-                playableBanishedCards.map((card, ix) => {
+                playableBanishedCards.map((card: Card, ix: number) => {
                   const cardCount = nextCardOccurrence(card.cardNumber);
                   return (
                     <PlayerHandCard
@@ -899,7 +899,7 @@ export default function PlayerHand() {
                 />
               )}
               {playableTheirBanishedCards !== undefined &&
-                playableTheirBanishedCards.map((card, ix) => {
+                playableTheirBanishedCards.map((card: Card, ix: number) => {
                   const cardCount = nextCardOccurrence(card.cardNumber);
                   return (
                     <PlayerHandCard
@@ -920,7 +920,7 @@ export default function PlayerHand() {
                 />
               )}
               {playableGraveyardCards !== undefined &&
-                playableGraveyardCards.map((card, ix) => {
+                playableGraveyardCards.map((card: Card, ix: number) => {
                   const cardCount = nextCardOccurrence(card.cardNumber);
                   return (
                     <PlayerHandCard

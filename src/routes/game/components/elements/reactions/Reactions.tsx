@@ -1,6 +1,7 @@
 import React from 'react';
 import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
+import { Card } from 'features/Card';
 import CardDisplay from '../cardDisplay/CardDisplay';
 import styles from './Reactions.module.css';
 
@@ -19,7 +20,7 @@ function Reactions() {
   return (
     <div className={styles.reactionWrapper}>
       <div className={styles.reactions}>
-        {activeCombatChain?.map((card, ix) => {
+        {activeCombatChain?.map((card: Card, ix: number) => {
           const isPlayer = playerID === card.controller;
           return (
             <div key={ix.toString()} className={styles.cardContainer}>

@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import { setCardListFocus, clearCardListFocus } from 'features/game/GameSlice';
+import { Card } from 'features/Card';
 import Displayrow from 'interface/Displayrow';
 import CardDisplay from '../../elements/cardDisplay/CardDisplay';
 import styles from './BanishZone.module.css';
@@ -72,7 +73,7 @@ export const BanishZone = React.memo((prop: Displayrow) => {
   };
 
   const faceUpCount = banishZone.filter(
-    (card) => card.overlay !== 'disabled'
+    (card: Card) => card.overlay !== 'disabled'
   ).length;
 
   return (
