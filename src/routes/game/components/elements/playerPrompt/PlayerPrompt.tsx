@@ -6,6 +6,7 @@ import { submitButton } from 'features/game/GameSlice';
 import { parseHtmlToReactElements } from 'utils/ParseEscapedString';
 import styles from './PlayerPrompt.module.css';
 import { wrapKeywordsInNodes } from '../keywordPopover';
+import useOpponentPresencePrompt from 'hooks/useOpponentPresencePrompt';
 
 const DEBOUNCE_MS = 80;
 
@@ -28,10 +29,11 @@ const PlayerPrompt = React.memo(() => {
   }, [playerPrompt]);
 
   const dispatch = useAppDispatch();
+  const helpText = useOpponentPresencePrompt(displayedPrompt?.helpText);
 
   const helpTextElements = useMemo(
-    () => wrapKeywordsInNodes(parseHtmlToReactElements(displayedPrompt?.helpText ?? '')),
-    [displayedPrompt?.helpText]
+    () => wrapKeywordsInNodes(parseHtmlToReactElements(helpText)),
+    [helpText]
   );
 
   const buttons = useMemo(
@@ -50,7 +52,7 @@ const PlayerPrompt = React.memo(() => {
 
   return (
     <div className={styles.playerPrompt}>
-      <div className={styles.content} key={displayedPrompt?.helpText}>
+      <div className={styles.content} key={helpText}>
         <div>{helpTextElements}</div>
       </div>
       {buttons}

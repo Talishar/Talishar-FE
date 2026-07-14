@@ -5,6 +5,7 @@ import {
   getGameInfo,
   receiveGameState,
   setGameStart,
+  setOpponentPresence,
   setOpponentTyping
 } from 'features/game/GameSlice';
 import { useKnownSearchParams } from 'hooks/useKnownSearchParams';
@@ -177,6 +178,17 @@ const GameStateHandler = () => {
               dispatch(setOpponentTyping(data.opponentIsTyping));
             }
           } catch {
+            return;
+          }
+        });
+
+        source.addEventListener('presence', (event: MessageEvent) => {
+          lastEventTimeRef.current = Date.now();
+          try {
+            const data = JSON.parse(event.data);
+            dispatch(setOpponentPresence(data.opponentPresence ?? null));
+          } catch {
+            return;
           }
         });
 

@@ -30,6 +30,7 @@ import {
 } from 'interface/API/ShareReplayAPI';
 import { toast } from 'react-hot-toast';
 import { cleanErrorText } from 'utils/cleanErrorText';
+import { PlayerPresence } from 'features/PlayerPresence';
 import { JoinGameAPI, JoinGameResponse } from 'interface/API/JoinGame.php';
 import { GetLobbyInfo } from 'interface/API/GetLobbyInfo.php';
 import { SubmitLobbyInput } from 'interface/API/SubmitLobbyInput.php';
@@ -1198,6 +1199,27 @@ export const apiSlice = createApi({
         };
       }
     }),
+    reportPresence: builder.mutation<
+      any,
+      {
+        gameID: number;
+        playerID: number;
+        presence: PlayerPresence | null;
+      }
+    >({
+      query: ({ gameID = 0, playerID = 0, presence }) => {
+        return {
+          url: 'APIs/PlayerPresence.php',
+          method: 'GET',
+          params: {
+            gameName: gameID,
+            playerID,
+            presence: presence ? JSON.stringify(presence) : ''
+          },
+          responseHandler: parseResponse
+        };
+      }
+    }),
     checkOpponentTyping: builder.query<
       { opponentIsTyping: boolean },
       { gameID: number; playerID: number }
@@ -1316,6 +1338,7 @@ export const {
   useAcknowledgeSystemMessageMutation,
   useGetLastActiveGameQuery,
   useReportTypingMutation,
+  useReportPresenceMutation,
   useCheckOpponentTypingQuery,
   useGetAppInfoQuery,
   useGenerateAuthTokenMutation,

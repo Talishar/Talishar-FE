@@ -15,6 +15,7 @@ import useWindowDimensions from '../../../../../hooks/useWindowDimensions';
 import { PROCESS_INPUT } from 'appConstants';
 import { parseHtmlToReactElements } from 'utils/ParseEscapedString';
 import { wrapKeywordsInNodes } from '../../elements/keywordPopover';
+import useOpponentPresencePrompt from 'hooks/useOpponentPresencePrompt';
 
 export default function ArsenalZone(prop: Displayrow) {
   const { isPlayer } = prop;
@@ -140,6 +141,7 @@ const ArsenalPrompt = React.memo(() => {
   const playerPrompt = useAppSelector(
     (state: RootState) => state.game.playerPrompt
   );
+  const helpText = useOpponentPresencePrompt(playerPrompt?.helpText);
   const turnPhase = useAppSelector(
     (state: RootState) => state.game.turnPhase?.turnPhase
   );
@@ -191,7 +193,7 @@ const ArsenalPrompt = React.memo(() => {
           exit={{ opacity: 0 }}
         >
           <div className={styles.content}>
-            <div>{wrapKeywordsInNodes(parseHtmlToReactElements(playerPrompt?.helpText ?? ''))}</div>
+            <div>{wrapKeywordsInNodes(parseHtmlToReactElements(helpText))}</div>
           </div>
           {buttons}
         </motion.div>

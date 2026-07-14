@@ -18,6 +18,7 @@ import { parseHtmlToReactElements } from 'utils/ParseEscapedString';
 import { wrapKeywordsInNodes } from '../elements/keywordPopover';
 import { MdDragHandle } from 'react-icons/md';
 import useShowModal from '../../../../hooks/useShowModals';
+import useOpponentPresencePrompt from '../../../../hooks/useOpponentPresencePrompt';
 
 const STORAGE_KEY = 'combatChainPosition';
 const MAX_Y_OFFSET = 30;
@@ -169,13 +170,14 @@ const PlayerPrompt = () => {
   const playerPrompt = useAppSelector(
     (state: RootState) => state.game.playerPrompt
   );
+  const helpText = useOpponentPresencePrompt(playerPrompt?.helpText);
   const dispatch = useAppDispatch();
   const promptContent = React.useMemo(
     () =>
       wrapKeywordsInNodes(
-        parseHtmlToReactElements(playerPrompt?.helpText ?? '')
+        parseHtmlToReactElements(helpText)
       ),
-    [playerPrompt?.helpText]
+    [helpText]
   );
 
   const buttons = playerPrompt?.buttons?.map(
@@ -200,7 +202,7 @@ const PlayerPrompt = () => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        key={`${playerPrompt?.helpText?.substring(0, 10)}`}
+        key={`${helpText.substring(0, 10)}`}
       >
         <div className={styles.content}>
           <div>{promptContent}</div>

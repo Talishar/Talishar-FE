@@ -6,6 +6,7 @@ import styles from './ActiveLayersZone.module.css';
 import { motion, AnimatePresence, useReducedMotion, useMotionValue, useTransform } from 'framer-motion';
 import ReorderLayers from './ReorderLayers';
 import useShowModal from 'hooks/useShowModals';
+import useOpponentPresencePrompt from 'hooks/useOpponentPresencePrompt';
 import { submitButton } from 'features/game/GameSlice';
 import { PROCESS_INPUT } from 'appConstants';
 import {
@@ -55,6 +56,7 @@ export default function ActiveLayersZone() {
   const playerPrompt = useAppSelector(
     (state: RootState) => state.game.playerPrompt
   );
+  const helpText = useOpponentPresencePrompt(playerPrompt?.helpText);
 
   const dispatch = useAppDispatch();
 
@@ -225,7 +227,7 @@ export default function ActiveLayersZone() {
               <ReorderLayers cards={reorderableCards ?? []} />
             </div>
             <div className={styles.activeLayersCallToAction}>
-              <div>{wrapKeywordsInNodes(parseHtmlToReactElements(playerPrompt?.helpText ?? ''))}</div>
+              <div>{wrapKeywordsInNodes(parseHtmlToReactElements(helpText))}</div>
               {buttons}
             </div>
           </div>

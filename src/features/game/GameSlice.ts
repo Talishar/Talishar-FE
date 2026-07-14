@@ -348,6 +348,7 @@ function mergeReceivedGameState(
 
   state.chatLog = preserveIdentities(prevGame.chatLog, payload.chatLog);
   state.opponentIsTyping = payload.opponentIsTyping ?? false;
+  state.opponentPresence = payload.opponentPresence ?? null;
   state.amIActivePlayer = payload.amIActivePlayer;
   state.turnPlayer = payload.turnPlayer;
   state.otherPlayer = payload.otherPlayer;
@@ -936,6 +937,12 @@ export const gameSlice = createSlice({
     setOpponentTyping: (state, action: PayloadAction<boolean>) => {
       state.opponentIsTyping = action.payload;
     },
+    setOpponentPresence: (
+      state,
+      action: PayloadAction<GameState['opponentPresence']>
+    ) => {
+      state.opponentPresence = action.payload ?? null;
+    },
     // Receive game state directly from SSE (no HTTP round-trip needed)
     receiveGameState: (state, action: PayloadAction<GameState>) => {
       if (action.payload === undefined) {
@@ -1031,6 +1038,7 @@ export const gameSlice = createSlice({
 
       state.chatEnabled = action.payload.chatEnabled ?? false;
       state.opponentIsTyping = action.payload.opponentIsTyping ?? false;
+      state.opponentPresence = null;
 
       return state;
     });
@@ -1084,6 +1092,7 @@ export const {
   setArsenalDestroy,
   setReplayStart,
   setOpponentTyping,
+  setOpponentPresence,
   addDamagePopup,
   removeDamagePopup,
   addHealingPopup,

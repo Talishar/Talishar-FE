@@ -5,6 +5,7 @@ import CombatChainLink from './CombatChainLink';
 import { GameDynamicInfo } from './GameDynamicInfo';
 import GameStaticInfo from './GameStaticInfo';
 import Player from './Player';
+import { PlayerPresence } from './PlayerPresence';
 
 export default interface GameState {
   gameInfo: GameStaticInfo;
@@ -46,6 +47,7 @@ export default interface GameState {
   };
   chatLog?: string[];
   opponentIsTyping?: boolean;
+  opponentPresence?: PlayerPresence | null;
   isUpdateInProgress?: boolean;
   isPlayerInputInProgress?: boolean;
   turnPhase?: {

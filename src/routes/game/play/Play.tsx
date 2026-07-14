@@ -41,6 +41,7 @@ import { shallowEqual } from 'react-redux';
 import { PanelProvider } from '../components/leftColumn/PanelContext';
 import { RootState } from 'app/Store';
 import { PROCESS_INPUT } from 'appConstants';
+import usePlayerPresenceReporter from 'hooks/usePlayerPresenceReporter';
 
 const TOAST_STYLE: React.CSSProperties = {
   background: 'var(--theme-tertiary)',
@@ -62,6 +63,7 @@ const TOAST_OPTIONS = { style: TOAST_STYLE };
 function Play({ isRoguelike }: { isRoguelike: boolean }) {
   const { t } = useTranslation();
   usePageTitle(t('PAGES.GAME_PLAY'));
+  usePlayerPresenceReporter();
 
   // Hide all floating ad overlays while in-game. Only the RightColumn ad slot
   // should ever show ads during gameplay.

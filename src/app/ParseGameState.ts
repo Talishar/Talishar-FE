@@ -583,6 +583,9 @@ export default function ParseGameState(input: any) {
   // opponent typing indicator
   result.opponentIsTyping = input.opponentIsTyping ?? false;
 
+  // Ephemeral opponent activity, containing zone-level information only.
+  result.opponentPresence = input.opponentPresence ?? null;
+
   // game visibility (private or public)
   result.gameInfo.isPrivate = input.isPrivate ?? false;
 
