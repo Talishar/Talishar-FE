@@ -5,7 +5,12 @@ import CurrentAttack from '../elements/currentAttack/CurrentAttack';
 import Reactions from '../elements/reactions/Reactions';
 import { useAppDispatch, useAppSelector } from '../../../../app/Hooks';
 import { RootState } from 'app/Store';
-import { motion, AnimatePresence, useMotionValue, useTransform } from 'framer-motion';
+import {
+  motion,
+  AnimatePresence,
+  useMotionValue,
+  useTransform
+} from 'framer-motion';
 import Button from '../../../../features/Button';
 import { submitButton } from '../../../../features/game/GameSlice';
 import { useMediaQuery } from '../../../../hooks/useMediaQuery';
@@ -15,8 +20,9 @@ import { MdDragHandle } from 'react-icons/md';
 import useShowModal from '../../../../hooks/useShowModals';
 
 const STORAGE_KEY = 'combatChainPosition';
-const MAX_Y_OFFSET = 30; // dvh
-const MIN_Y_OFFSET = -35; // dvh
+const MAX_Y_OFFSET = 30;
+const MIN_Y_OFFSET = -35;
+const KEYBOARD_Y_STEP = 2;
 
 export default function CombatChain() {
   const oldCombatChain =
@@ -25,90 +31,95 @@ export default function CombatChain() {
     (state: RootState) => state.game.activeChainLink
   );
   const showModals = useShowModal();
-  const [canSkipBlock] = React.useState(false);
-  const [canSkipBlockAndDef] = React.useState(false);
-  const storedOffset = parseFloat(localStorage.getItem(STORAGE_KEY) ?? '') || 0;
+  const storedOffsetRef = React.useRef<number | null>(null);
+  if (storedOffsetRef.current === null) {
+    storedOffsetRef.current =
+      parseFloat(localStorage.getItem(STORAGE_KEY) ?? '') || 0;
+  }
+  const storedOffset = storedOffsetRef.current;
   const yOffsetMV = useMotionValue(storedOffset);
-  const yOffsetDvh = useTransform(yOffsetMV, (v) => `${v}dvh`);
+  const yOffsetDvh = useTransform(yOffsetMV, (value) => `${value}dvh`);
   const dragStartYRef = React.useRef(0);
   const dragStartOffsetRef = React.useRef(storedOffset);
   const currentDragOffsetRef = React.useRef(storedOffset);
+  const pendingPointerYRef = React.useRef(0);
+  const rafRef = React.useRef(0);
   const [isDragging, setIsDragging] = React.useState(false);
   const containerRef = React.useRef<HTMLDivElement>(null);
   const isPortrait = useMediaQuery('(orientation: portrait)');
 
-  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
-    dragStartYRef.current = e.clientY;
+  const setOffsetFromClientY = (clientY: number) => {
+    const delta = clientY - dragStartYRef.current;
+    const deltaDvh = (delta / window.innerHeight) * 100;
+    const newOffset = Math.max(
+      MIN_Y_OFFSET,
+      Math.min(MAX_Y_OFFSET, dragStartOffsetRef.current + deltaDvh)
+    );
+    currentDragOffsetRef.current = newOffset;
+    yOffsetMV.set(newOffset);
+  };
+
+  const handlePointerDown = (event: React.PointerEvent<HTMLButtonElement>) => {
+    event.currentTarget.setPointerCapture(event.pointerId);
+    dragStartYRef.current = event.clientY;
     dragStartOffsetRef.current = currentDragOffsetRef.current;
     setIsDragging(true);
   };
 
-  const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
-    dragStartYRef.current = e.touches[0].clientY;
-    dragStartOffsetRef.current = currentDragOffsetRef.current;
-    setIsDragging(true);
+  const handlePointerMove = (event: React.PointerEvent<HTMLButtonElement>) => {
+    if (!event.currentTarget.hasPointerCapture(event.pointerId)) return;
+    pendingPointerYRef.current = event.clientY;
+    cancelAnimationFrame(rafRef.current);
+    rafRef.current = requestAnimationFrame(() => {
+      setOffsetFromClientY(pendingPointerYRef.current);
+    });
   };
 
-  const rafRef = React.useRef<number>(0);
+  const finishPointerDrag = (event: React.PointerEvent<HTMLButtonElement>) => {
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+      event.currentTarget.releasePointerCapture(event.pointerId);
+    }
+    cancelAnimationFrame(rafRef.current);
+    setOffsetFromClientY(event.clientY);
+    setIsDragging(false);
+    localStorage.setItem(STORAGE_KEY, currentDragOffsetRef.current.toString());
+  };
 
-  React.useEffect(() => {
-    if (!isDragging) return;
+  const cancelPointerDrag = (event: React.PointerEvent<HTMLButtonElement>) => {
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+      event.currentTarget.releasePointerCapture(event.pointerId);
+    }
+    cancelAnimationFrame(rafRef.current);
+    setIsDragging(false);
+    localStorage.setItem(STORAGE_KEY, currentDragOffsetRef.current.toString());
+  };
 
-    const handleMouseMove = (e: MouseEvent) => {
-      if (!containerRef.current) return;
-      cancelAnimationFrame(rafRef.current);
-      rafRef.current = requestAnimationFrame(() => {
-        const delta = e.clientY - dragStartYRef.current;
-        const deltaDvh = (delta / window.innerHeight) * 100;
-        const newOffset = Math.max(MIN_Y_OFFSET, Math.min(MAX_Y_OFFSET, dragStartOffsetRef.current + deltaDvh));
-        currentDragOffsetRef.current = newOffset;
-        yOffsetMV.set(newOffset); // direct DOM update — no React re-render
-      });
-    };
+  const handleHandleKeyDown = (
+    event: React.KeyboardEvent<HTMLButtonElement>
+  ) => {
+    if (event.key !== 'ArrowUp' && event.key !== 'ArrowDown') return;
+    event.preventDefault();
+    const direction = event.key === 'ArrowUp' ? -1 : 1;
+    const nextOffset = Math.max(
+      MIN_Y_OFFSET,
+      Math.min(
+        MAX_Y_OFFSET,
+        currentDragOffsetRef.current + direction * KEYBOARD_Y_STEP
+      )
+    );
+    currentDragOffsetRef.current = nextOffset;
+    yOffsetMV.set(nextOffset);
+    localStorage.setItem(STORAGE_KEY, nextOffset.toString());
+  };
 
-    const handleTouchMove = (e: TouchEvent) => {
-      if (!containerRef.current) return;
-      cancelAnimationFrame(rafRef.current);
-      rafRef.current = requestAnimationFrame(() => {
-        const delta = e.touches[0].clientY - dragStartYRef.current;
-        const deltaDvh = (delta / window.innerHeight) * 100;
-        const newOffset = Math.max(MIN_Y_OFFSET, Math.min(MAX_Y_OFFSET, dragStartOffsetRef.current + deltaDvh));
-        currentDragOffsetRef.current = newOffset;
-        yOffsetMV.set(newOffset); // direct DOM update — no React re-render
-      });
-    };
-
-    const handleMouseUp = () => {
-      cancelAnimationFrame(rafRef.current);
-      setIsDragging(false);
-      localStorage.setItem(STORAGE_KEY, currentDragOffsetRef.current.toString());
-    };
-
-    const handleTouchEnd = () => {
-      cancelAnimationFrame(rafRef.current);
-      setIsDragging(false);
-      localStorage.setItem(STORAGE_KEY, currentDragOffsetRef.current.toString());
-    };
-
-    document.addEventListener('mousemove', handleMouseMove);
-    document.addEventListener('touchmove', handleTouchMove, { passive: true });
-    document.addEventListener('mouseup', handleMouseUp);
-    document.addEventListener('touchend', handleTouchEnd);
-
-    return () => {
-      cancelAnimationFrame(rafRef.current);
-      document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('touchmove', handleTouchMove);
-      document.removeEventListener('mouseup', handleMouseUp);
-      document.removeEventListener('touchend', handleTouchEnd);
-    };
-  }, [isDragging, yOffsetMV]);
+  React.useEffect(() => () => cancelAnimationFrame(rafRef.current), []);
 
   const showCombatChain =
     showModals &&
-    (oldCombatChain?.length > 0 ||
+    (oldCombatChain.length > 0 ||
       (activeCombatChain?.attackingCard &&
-        activeCombatChain?.attackingCard?.cardNumber !== 'blank'));
+        activeCombatChain.attackingCard.cardNumber !== 'blank'));
+
   return (
     <AnimatePresence>
       {showCombatChain && (
@@ -118,33 +129,36 @@ export default function CombatChain() {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           style={{ y: yOffsetDvh }}
-          className={`${styles.combatChain} ${!isPortrait ? styles.noBottomBorder : ''}`}
+          className={`${styles.combatChain} ${
+            ''
+          }`}
         >
           <CurrentAttack />
           <div className={styles.chainCentre}>
             <ChainLinks />
             <Reactions />
           </div>
-          <div
+          <button
+            type="button"
             className={`${styles.grabbyHandle} ${
               isDragging ? styles.grabbyHandleDragging : ''
             }`}
-            onMouseDown={handleMouseDown}
-            onTouchStart={handleTouchStart}
+            aria-label="Drag to move combat chain"
+            onPointerDown={handlePointerDown}
+            onPointerMove={handlePointerMove}
+            onPointerUp={finishPointerDrag}
+            onPointerCancel={cancelPointerDrag}
+            onKeyDown={handleHandleKeyDown}
           >
             <MdDragHandle
               size={32}
               className={styles.gripIcon}
-              aria-label="Drag to move combat chain"
+              aria-hidden="true"
             />
-          </div>
+          </button>
           {!isPortrait && <PlayerPrompt />}
-          {canSkipBlock ? <div className={styles.icon}></div> : <div></div>}
-          {canSkipBlockAndDef ? (
-            <div className={styles.icon}></div>
-          ) : (
-            <div></div>
-          )}
+          <div />
+          <div />
         </motion.div>
       )}
     </AnimatePresence>
@@ -155,26 +169,30 @@ const PlayerPrompt = () => {
   const playerPrompt = useAppSelector(
     (state: RootState) => state.game.playerPrompt
   );
-
   const dispatch = useAppDispatch();
+  const promptContent = React.useMemo(
+    () =>
+      wrapKeywordsInNodes(
+        parseHtmlToReactElements(playerPrompt?.helpText ?? '')
+      ),
+    [playerPrompt?.helpText]
+  );
 
-  const clickButton = (button: Button) => {
-    dispatch(submitButton({ button: button }));
-  };
-
-  const buttons = playerPrompt?.buttons?.map((button: Button, ix: number) => {
-    return (
-      <div
+  const buttons = playerPrompt?.buttons?.map(
+    (button: Button, index: number) => (
+      <button
+        type="button"
         className={styles.buttonDiv}
-        onClick={() => {
-          clickButton(button);
-        }}
-        key={ix.toString()}
+        onClick={() => dispatch(submitButton({ button }))}
+        key={`${button.mode ?? ''}-${button.buttonInput ?? ''}-${
+          button.caption ?? ''
+        }-${index}`}
       >
         {button.caption}
-      </div>
-    );
-  });
+      </button>
+    )
+  );
+
   return (
     <AnimatePresence>
       <motion.div
@@ -185,7 +203,7 @@ const PlayerPrompt = () => {
         key={`${playerPrompt?.helpText?.substring(0, 10)}`}
       >
         <div className={styles.content}>
-          <div>{wrapKeywordsInNodes(parseHtmlToReactElements(playerPrompt?.helpText ?? ''))}</div>
+          <div>{promptContent}</div>
         </div>
         {buttons}
       </motion.div>

@@ -1,6 +1,12 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState
+} from 'react';
 import classNames from 'classnames';
-import { shallowEqual } from 'react-redux';
+import { createSelector } from '@reduxjs/toolkit';
 import { RootState } from 'app/Store';
 import { Card } from 'features/Card';
 import styles from './PlayerHand.module.css';
@@ -12,7 +18,6 @@ import { createPortal } from 'react-dom';
 import { useNewlyDrawnCards } from 'hooks/useNewlyDrawnCards';
 import useSound from 'use-sound';
 import drawingCardsSound from 'sounds/drawing_cards.wav';
-import { getSettingsEntity } from 'features/options/optionsSlice';
 import { setHandCardRotationHeld } from 'utils/handCardRotation';
 
 const DEFAULT_HAND_REORDER_STEP_PX = 120;
@@ -26,6 +31,24 @@ type CardWithStableId = {
   card: Card;
   id: string;
 };
+
+const selectPlayableBanishedCards = createSelector(
+  [(state: RootState) => state.game.playerOne.Banish],
+  (cards) =>
+    cards?.filter((card: Card) => card.action != null && card.action != 0)
+);
+
+const selectPlayableTheirBanishedCards = createSelector(
+  [(state: RootState) => state.game.playerTwo.Banish],
+  (cards) =>
+    cards?.filter((card: Card) => card.action != null && card.action != 0)
+);
+
+const selectPlayableGraveyardCards = createSelector(
+  [(state: RootState) => state.game.playerOne.Graveyard],
+  (cards) =>
+    cards?.filter((card: Card) => card.action != null && card.action != 0)
+);
 
 export default function PlayerHand() {
   const [width, height] = useWindowDimensions();
@@ -43,8 +66,9 @@ export default function PlayerHand() {
 
   const showArsenal = false;
 
-  const settingsData = useAppSelector(getSettingsEntity);
-  const isMuted = settingsData['MuteSound']?.value === '1';
+  const isMuted = useAppSelector(
+    (state: RootState) => state.settings.entities['MuteSound']?.value === '1'
+  );
 
   const [playDrawingCardsSound] = useSound(drawingCardsSound, { volume: 0.5 });
 
@@ -143,13 +167,20 @@ export default function PlayerHand() {
   const scrollInnerRef = useRef<HTMLDivElement | null>(null);
   const soundPlayedForDragRef = useRef<boolean>(false);
   const [cardSpacingPx, setCardSpacingPx] = useState<number | null>(null);
-  const [scrollOffset, setScrollOffset] = useState(0);
   const [maxScrollOffset, setMaxScrollOffset] = useState(0);
   const scrollOffsetRef = useRef(0);
+  const scrollAvailabilityRef = useRef({ left: false, right: false });
+  const [scrollAvailability, setScrollAvailability] = useState(
+    scrollAvailabilityRef.current
+  );
   const pendingHandScrollDeltaRef = useRef(0);
   const handScrollFrameRef = useRef<number | null>(null);
+  const scrollBlockTimerRef = useRef<number | null>(null);
   const scrollBlockedRef = useRef(false);
-  const [gameZoneBounds, setGameZoneBounds] = useState<{ left: number; right: number } | null>(null);
+  const [gameZoneBounds, setGameZoneBounds] = useState<{
+    left: number;
+    right: number;
+  } | null>(null);
 
   useEffect(() => {
     const gameZone = document.querySelector('.gameZone') as HTMLElement | null;
@@ -174,23 +205,39 @@ export default function PlayerHand() {
   const arsenalCards = useAppSelector(
     (state: RootState) => state.game.playerOne.Arsenal
   );
-  const playableBanishedCards = useAppSelector((state: RootState) => {
-    return state.game.playerOne.Banish?.filter(
-      (card: Card) => card.action != null && card.action != 0
-    );
-  }, shallowEqual);
+  const playableBanishedCards = useAppSelector(selectPlayableBanishedCards);
+  const playableTheirBanishedCards = useAppSelector(
+    selectPlayableTheirBanishedCards
+  );
+  const playableGraveyardCards = useAppSelector(selectPlayableGraveyardCards);
 
-  const playableTheirBanishedCards = useAppSelector((state: RootState) => {
-    return state.game.playerTwo.Banish?.filter(
-      (card: Card) => card.action != null && card.action != 0
-    );
-  }, shallowEqual);
+  const applyScrollOffset = useCallback(
+    (requestedOffset: number, limit = maxScrollOffset) => {
+      const nextOffset = Math.max(0, Math.min(limit, requestedOffset));
+      scrollOffsetRef.current = nextOffset;
 
-  const playableGraveyardCards = useAppSelector((state: RootState) => {
-    return state.game.playerOne.Graveyard?.filter(
-      (card: Card) => card.action != null && card.action != 0
-    );
-  }, shallowEqual);
+      if (handRowRef.current) {
+        handRowRef.current.style.transform =
+          nextOffset > 0 ? `translate3d(-${nextOffset}px, 0, 0)` : '';
+      }
+
+      const nextAvailability = {
+        left: nextOffset > 0,
+        right: nextOffset < limit
+      };
+      const previousAvailability = scrollAvailabilityRef.current;
+      if (
+        previousAvailability.left !== nextAvailability.left ||
+        previousAvailability.right !== nextAvailability.right
+      ) {
+        scrollAvailabilityRef.current = nextAvailability;
+        setScrollAvailability(nextAvailability);
+      }
+
+      return nextOffset;
+    },
+    [maxScrollOffset]
+  );
 
   // Detect newly drawn cards for the draw animation
   const newlyDrawnCardNumbers = useNewlyDrawnCards(handCards);
@@ -223,7 +270,8 @@ export default function PlayerHand() {
         Object.entries(previousRotations).filter(([id]) => validIds.has(id))
       );
 
-      return Object.keys(nextRotations).length === Object.keys(previousRotations).length
+      return Object.keys(nextRotations).length ===
+        Object.keys(previousRotations).length
         ? previousRotations
         : nextRotations;
     });
@@ -402,7 +450,7 @@ export default function PlayerHand() {
     if (N <= 1) {
       setCardSpacingPx(null);
       setMaxScrollOffset(0);
-      setScrollOffset(0);
+      applyScrollOffset(0, 0);
       return;
     }
 
@@ -426,21 +474,21 @@ export default function PlayerHand() {
         setCardSpacingPx(null);
       }
       setMaxScrollOffset(0);
-      setScrollOffset(0);
+      applyScrollOffset(0, 0);
       return;
     }
 
     // On desktop (landscape): compress cards using negative spacing (overlap) up to 30%
     // of card width before falling back to scrolling.
     if (!isPortrait) {
-      const maxOverlapSpacing = -cardWidth * 0.30;
+      const maxOverlapSpacing = -cardWidth * 0.3;
       const widthAtMaxOverlap = N * cardWidth + (N - 1) * maxOverlapSpacing;
       if (widthAtMaxOverlap <= containerWidth) {
         // Cards fit if we overlap — find exact spacing needed
         const fittingSpacing = (containerWidth - N * cardWidth) / (N - 1);
         setCardSpacingPx(Math.max(maxOverlapSpacing, fittingSpacing));
         setMaxScrollOffset(0);
-        setScrollOffset(0);
+        applyScrollOffset(0, 0);
         return;
       }
       // Even at max overlap they don't fit — use max overlap and scroll the rest
@@ -448,24 +496,24 @@ export default function PlayerHand() {
       const overflowWidth = widthAtMaxOverlap;
       const newMax = Math.max(0, overflowWidth - containerWidth);
       setMaxScrollOffset(newMax);
-      setScrollOffset((prev) => Math.min(prev, newMax));
+      applyScrollOffset(scrollOffsetRef.current, newMax);
       return;
     }
 
-    const maxOverlapSpacing = -cardWidth * 0.20;
+    const maxOverlapSpacing = -cardWidth * 0.2;
     const widthAtMaxOverlap = N * cardWidth + (N - 1) * maxOverlapSpacing;
     if (widthAtMaxOverlap <= containerWidth) {
       const fittingSpacing = (containerWidth - N * cardWidth) / (N - 1);
       setCardSpacingPx(Math.max(maxOverlapSpacing, fittingSpacing));
       setMaxScrollOffset(0);
-      setScrollOffset(0);
+      applyScrollOffset(0, 0);
       return;
     }
     setCardSpacingPx(maxOverlapSpacing);
     const overflowWidth = widthAtMaxOverlap;
     const newMax = Math.max(0, overflowWidth - containerWidth);
     setMaxScrollOffset(newMax);
-    setScrollOffset((prev) => Math.min(prev, newMax));
+    applyScrollOffset(scrollOffsetRef.current, newMax);
   }, [
     orderedHandCards.length,
     arsenalCards?.length,
@@ -473,7 +521,8 @@ export default function PlayerHand() {
     playableTheirBanishedCards?.length,
     playableGraveyardCards?.length,
     width,
-    height
+    height,
+    applyScrollOffset
   ]);
 
   const scrollHand = useCallback(
@@ -481,23 +530,30 @@ export default function PlayerHand() {
       const inner = scrollInnerRef.current;
       if (!inner) return;
       const amount = inner.clientWidth * 0.6;
-      setScrollOffset((prev) => {
-        const next =
-          direction === 'right'
-            ? Math.min(maxScrollOffset, prev + amount)
-            : Math.max(0, prev - amount);
-        scrollOffsetRef.current = next;
-        return next;
-      });
+      const requestedOffset =
+        direction === 'right'
+          ? scrollOffsetRef.current + amount
+          : scrollOffsetRef.current - amount;
+      applyScrollOffset(requestedOffset);
       scrollBlockedRef.current = true;
-      setTimeout(() => { scrollBlockedRef.current = false; }, 400);
+      if (scrollBlockTimerRef.current !== null) {
+        window.clearTimeout(scrollBlockTimerRef.current);
+      }
+      scrollBlockTimerRef.current = window.setTimeout(() => {
+        scrollBlockedRef.current = false;
+        scrollBlockTimerRef.current = null;
+      }, 400);
     },
-    [maxScrollOffset]
+    [applyScrollOffset]
   );
 
   useEffect(() => {
-    scrollOffsetRef.current = scrollOffset;
-  }, [scrollOffset]);
+    return () => {
+      if (scrollBlockTimerRef.current !== null) {
+        window.clearTimeout(scrollBlockTimerRef.current);
+      }
+    };
+  }, []);
 
   // A held card can be rotated with the wheel anywhere on the game board. When
   // no card is held, wheel scrolling remains limited to the hand itself.
@@ -541,7 +597,8 @@ export default function PlayerHand() {
       if (!handRow || !handRow.contains(e.target as Node)) return;
       if (maxScrollOffset === 0) return;
       e.preventDefault();
-      const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+      const delta =
+        Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
       pendingHandScrollDeltaRef.current += delta;
       if (handScrollFrameRef.current === null) {
         handScrollFrameRef.current = window.requestAnimationFrame(() => {
@@ -549,14 +606,7 @@ export default function PlayerHand() {
           pendingHandScrollDeltaRef.current = 0;
           handScrollFrameRef.current = null;
 
-          setScrollOffset(() => {
-            const next = Math.max(
-              0,
-              Math.min(maxScrollOffset, scrollOffsetRef.current + pendingDelta)
-            );
-            scrollOffsetRef.current = next;
-            return next;
-          });
+          applyScrollOffset(scrollOffsetRef.current + pendingDelta);
         });
       }
     };
@@ -578,7 +628,7 @@ export default function PlayerHand() {
       pendingWheelRotationRef.current = 0;
       pendingHandScrollDeltaRef.current = 0;
     };
-  }, [maxScrollOffset]);
+  }, [maxScrollOffset, applyScrollOffset]);
 
   const handleHandCardReorder = (
     draggedCardId: string,
@@ -633,9 +683,14 @@ export default function PlayerHand() {
   const stableDragMove = useCallback((cardId: string, info: PanInfo) => {
     dragMoveImplRef.current(cardId, info.offset.x, info.offset.y);
   }, []);
-  const stableDragEnd = useCallback((cardId: string, info: PanInfo): boolean => {
-    return dragEndImplRef.current(cardId, info.offset.x, info.offset.y) ?? false;
-  }, []);
+  const stableDragEnd = useCallback(
+    (cardId: string, info: PanInfo): boolean => {
+      return (
+        dragEndImplRef.current(cardId, info.offset.x, info.offset.y) ?? false
+      );
+    },
+    []
+  );
   const stableDragStart = useCallback(() => {
     dragStartImplRef.current();
   }, []);
@@ -654,7 +709,7 @@ export default function PlayerHand() {
       setHandCardRotations((previousRotations) => {
         const currentRotation = previousRotations[cardId] ?? 0;
         const nextRotation =
-          ((currentRotation + rotationDelta) % 360 + 360) % 360;
+          (((currentRotation + rotationDelta) % 360) + 360) % 360;
 
         if (Math.abs(nextRotation) < 0.001) {
           const remainingRotations = { ...previousRotations };
@@ -671,10 +726,7 @@ export default function PlayerHand() {
 
   const rotateHandCard = useCallback(
     (cardId: string, direction: 1 | -1) => {
-      adjustHandCardRotation(
-        cardId,
-        direction * CARD_ROTATION_STEP_DEGREES
-      );
+      adjustHandCardRotation(cardId, direction * CARD_ROTATION_STEP_DEGREES);
     },
     [adjustHandCardRotation]
   );
@@ -689,7 +741,10 @@ export default function PlayerHand() {
     setHandCardRotationHeld(false);
   }, []);
 
-  useEffect(() => stopHoldingHandCardForRotation, [stopHoldingHandCardForRotation]);
+  useEffect(
+    () => stopHoldingHandCardForRotation,
+    [stopHoldingHandCardForRotation]
+  );
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -701,7 +756,8 @@ export default function PlayerHand() {
         target.tagName === 'INPUT' ||
         target.tagName === 'TEXTAREA' ||
         target.isContentEditable
-      ) return;
+      )
+        return;
 
       const heldCardId = heldHandCardIdRef.current;
       if (!heldCardId) return;
@@ -747,14 +803,15 @@ export default function PlayerHand() {
         target.tagName === 'INPUT' ||
         target.tagName === 'TEXTAREA' ||
         target.isContentEditable
-      ) return;
+      )
+        return;
 
       if (orderedHandIds.length <= 1) return;
 
       setOrderedHandIds((currentOrder) => {
         let shuffled: string[];
         let hasChanged = false;
-        
+
         // Keep shuffling until order changes (guarantees at least 1 card moves)
         do {
           shuffled = [...currentOrder];
@@ -764,7 +821,7 @@ export default function PlayerHand() {
           }
           hasChanged = shuffled.some((card, idx) => card !== currentOrder[idx]);
         } while (!hasChanged);
-        
+
         return shuffled;
       });
 
@@ -790,12 +847,14 @@ export default function PlayerHand() {
     return <></>;
   }
 
-  const zoneSeparatorMarginLeft = cardSpacingPx !== null && cardSpacingPx < 0
-    ? Math.max(0, 4 - cardSpacingPx)
-    : 0;
-  const zoneSeparatorStyle = zoneSeparatorMarginLeft > 0
-    ? { marginLeft: zoneSeparatorMarginLeft }
-    : undefined;
+  const zoneSeparatorMarginLeft =
+    cardSpacingPx !== null && cardSpacingPx < 0
+      ? Math.max(0, 4 - cardSpacingPx)
+      : 0;
+  const zoneSeparatorStyle =
+    zoneSeparatorMarginLeft > 0
+      ? { marginLeft: zoneSeparatorMarginLeft }
+      : undefined;
 
   const hasHandCards = orderedHandCards.length > 0;
   const hasBanishedCards = (playableBanishedCards?.length ?? 0) > 0;
@@ -812,8 +871,8 @@ export default function PlayerHand() {
     return count;
   };
 
-  const canScrollLeft = scrollOffset > 0;
-  const canScrollRight = scrollOffset < maxScrollOffset;
+  const canScrollLeft = scrollAvailability.left;
+  const canScrollRight = scrollAvailability.right;
 
   return (
     <>
@@ -821,7 +880,11 @@ export default function PlayerHand() {
         <>
           <div
             className={styles.handScrollContainer}
-            style={gameZoneBounds ? { left: gameZoneBounds.left, right: gameZoneBounds.right } : undefined}
+            style={
+              gameZoneBounds
+                ? { left: gameZoneBounds.left, right: gameZoneBounds.right }
+                : undefined
+            }
           >
             <button
               className={classNames(styles.scrollButton, {
@@ -830,7 +893,17 @@ export default function PlayerHand() {
               onPointerDown={() => scrollHand('left')}
               aria-label="Scroll hand left"
             >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
                 <polyline points="15 18 9 12 15 6" />
               </svg>
             </button>
@@ -840,131 +913,146 @@ export default function PlayerHand() {
                 [styles.handScrollInnerScrollable]: maxScrollOffset > 0
               })}
             >
-          <div
-            ref={handRowRef}
-            className={styles.handRow}
-            style={
-              {
-                ...(cardSpacingPx !== null
-                  ? { '--card-spacing': `${cardSpacingPx}px` }
-                  : {}),
-                transform:
-                  scrollOffset > 0
-                    ? `translate3d(-${scrollOffset}px, 0, 0)`
-                    : undefined
-              } as React.CSSProperties
-            }
-            onContextMenu={(e) => e.preventDefault()}
-          >
-            <AnimatePresence>
-              {orderedHandCards.length > 0 &&
-                orderedHandCards.map(({ card, id }, ix) => {
-                  nextCardOccurrence(card.cardNumber);
-                  const isNewlyDrawn = newlyDrawnCardNumbers.has(
-                    card.cardNumber
-                  );
-                  return (
-                    <PlayerHandCard
-                      card={card}
-                      cardId={id}
-                      key={`hand-${id}`}
-                      rotation={handCardRotations[id]}
-                      addCardToPlayedCards={addCardToPlayedCards}
-                      zIndex={ix + 200}
-                      isNewlyDrawn={isNewlyDrawn}
-                      enableLayoutAnimation
-                      shuffleRevision={handShuffleRevision}
-                      scrollBlockedRef={scrollBlockedRef}
-                      onHandReorderDragStart={stableDragStart}
-                      onHandReorderDragMove={stableDragMove}
-                      onHandReorderDragEnd={stableDragEnd}
-                      onHandReorderDragCancel={stableDragCancel}
-                      onRotate={rotateHandCard}
-                      onRotationHoldStart={startHoldingHandCardForRotation}
-                      onRotationHoldEnd={stopHoldingHandCardForRotation}
+              <div
+                ref={handRowRef}
+                className={styles.handRow}
+                style={
+                  {
+                    ...(cardSpacingPx !== null
+                      ? { '--card-spacing': `${cardSpacingPx}px` }
+                      : {}),
+                    transform:
+                      scrollOffsetRef.current > 0
+                        ? `translate3d(-${scrollOffsetRef.current}px, 0, 0)`
+                        : undefined
+                  } as React.CSSProperties
+                }
+                onContextMenu={(e) => e.preventDefault()}
+              >
+                <AnimatePresence>
+                  {orderedHandCards.length > 0 &&
+                    orderedHandCards.map(({ card, id }, ix) => {
+                      nextCardOccurrence(card.cardNumber);
+                      const isNewlyDrawn = newlyDrawnCardNumbers.has(
+                        card.cardNumber
+                      );
+                      return (
+                        <PlayerHandCard
+                          card={card}
+                          cardId={id}
+                          key={`hand-${id}`}
+                          rotation={handCardRotations[id]}
+                          addCardToPlayedCards={addCardToPlayedCards}
+                          zIndex={ix + 200}
+                          isNewlyDrawn={isNewlyDrawn}
+                          enableLayoutAnimation
+                          shuffleRevision={handShuffleRevision}
+                          scrollBlockedRef={scrollBlockedRef}
+                          onHandReorderDragStart={stableDragStart}
+                          onHandReorderDragMove={stableDragMove}
+                          onHandReorderDragEnd={stableDragEnd}
+                          onHandReorderDragCancel={stableDragCancel}
+                          onRotate={rotateHandCard}
+                          onRotationHoldStart={startHoldingHandCardForRotation}
+                          onRotationHoldEnd={stopHoldingHandCardForRotation}
+                        />
+                      );
+                    })}
+                  {hasArsenal &&
+                    showArsenal &&
+                    arsenalCards !== undefined &&
+                    arsenalCards.map((card: Card, ix: number) => {
+                      const cardCount = nextCardOccurrence(card.cardNumber);
+                      return (
+                        <PlayerHandCard
+                          card={card}
+                          isArsenal
+                          key={`arsenal-${card.cardNumber}-${cardCount}`}
+                          addCardToPlayedCards={addCardToPlayedCards}
+                          zIndex={ix}
+                        />
+                      );
+                    })}
+                  {hasHandCards && hasBanishedCards && (
+                    <div
+                      className={styles.zoneSeparator}
+                      data-zone-separator="true"
+                      style={zoneSeparatorStyle}
                     />
-                  );
-                })}
-              {hasArsenal &&
-                showArsenal &&
-                arsenalCards !== undefined &&
-                arsenalCards.map((card: Card, ix: number) => {
-                  const cardCount = nextCardOccurrence(card.cardNumber);
-                  return (
-                    <PlayerHandCard
-                      card={card}
-                      isArsenal
-                      key={`arsenal-${card.cardNumber}-${cardCount}`}
-                      addCardToPlayedCards={addCardToPlayedCards}
-                      zIndex={ix}
-                    />
-                  );
-                })}
-              {hasHandCards && hasBanishedCards && (
-                <div
-                  className={styles.zoneSeparator}
-                  data-zone-separator="true"
-                  style={zoneSeparatorStyle}
-                />
-              )}
-              {playableBanishedCards !== undefined &&
-                playableBanishedCards.map((card: Card, ix: number) => {
-                  const cardCount = nextCardOccurrence(card.cardNumber);
-                  return (
-                    <PlayerHandCard
-                      card={card}
-                      isBanished
-                      key={`banished-${card.cardNumber}-${cardCount}`}
-                      addCardToPlayedCards={addCardToPlayedCards}
-                      zIndex={orderedHandCards.length + ix + 200}
-                      scrollBlockedRef={scrollBlockedRef}
-                    />
-                  );
-                })}
-              {(hasHandCards || hasBanishedCards) && hasTheirBanishedCards && (
-                <div
-                  className={styles.zoneSeparator}
-                  data-zone-separator="true"
-                  style={zoneSeparatorStyle}
-                />
-              )}
-              {playableTheirBanishedCards !== undefined &&
-                playableTheirBanishedCards.map((card: Card, ix: number) => {
-                  const cardCount = nextCardOccurrence(card.cardNumber);
-                  return (
-                    <PlayerHandCard
-                      card={card}
-                      isBanished
-                      key={`banished-${card.cardNumber}-${cardCount}`}
-                      addCardToPlayedCards={addCardToPlayedCards}
-                      zIndex={orderedHandCards.length + (playableBanishedCards?.length ?? 0) + ix + 200}
-                      scrollBlockedRef={scrollBlockedRef}
-                    />
-                  );
-                })}
-              {(hasHandCards || hasBanishedCards || hasTheirBanishedCards) && hasGraveyardCards && (
-                <div
-                  className={styles.zoneSeparator}
-                  data-zone-separator="true"
-                  style={zoneSeparatorStyle}
-                />
-              )}
-              {playableGraveyardCards !== undefined &&
-                playableGraveyardCards.map((card: Card, ix: number) => {
-                  const cardCount = nextCardOccurrence(card.cardNumber);
-                  return (
-                    <PlayerHandCard
-                      card={card}
-                      isGraveyard
-                      key={`graveyard-${card.cardNumber}-${cardCount}`}
-                      addCardToPlayedCards={addCardToPlayedCards}
-                      zIndex={orderedHandCards.length + (playableBanishedCards?.length ?? 0) + (playableTheirBanishedCards?.length ?? 0) + ix + 200}
-                      scrollBlockedRef={scrollBlockedRef}
-                    />
-                  );
-                })}
-            </AnimatePresence>
-          </div>
+                  )}
+                  {playableBanishedCards !== undefined &&
+                    playableBanishedCards.map((card: Card, ix: number) => {
+                      const cardCount = nextCardOccurrence(card.cardNumber);
+                      return (
+                        <PlayerHandCard
+                          card={card}
+                          isBanished
+                          key={`banished-${card.cardNumber}-${cardCount}`}
+                          addCardToPlayedCards={addCardToPlayedCards}
+                          zIndex={orderedHandCards.length + ix + 200}
+                          scrollBlockedRef={scrollBlockedRef}
+                        />
+                      );
+                    })}
+                  {(hasHandCards || hasBanishedCards) &&
+                    hasTheirBanishedCards && (
+                      <div
+                        className={styles.zoneSeparator}
+                        data-zone-separator="true"
+                        style={zoneSeparatorStyle}
+                      />
+                    )}
+                  {playableTheirBanishedCards !== undefined &&
+                    playableTheirBanishedCards.map((card: Card, ix: number) => {
+                      const cardCount = nextCardOccurrence(card.cardNumber);
+                      return (
+                        <PlayerHandCard
+                          card={card}
+                          isBanished
+                          key={`banished-${card.cardNumber}-${cardCount}`}
+                          addCardToPlayedCards={addCardToPlayedCards}
+                          zIndex={
+                            orderedHandCards.length +
+                            (playableBanishedCards?.length ?? 0) +
+                            ix +
+                            200
+                          }
+                          scrollBlockedRef={scrollBlockedRef}
+                        />
+                      );
+                    })}
+                  {(hasHandCards ||
+                    hasBanishedCards ||
+                    hasTheirBanishedCards) &&
+                    hasGraveyardCards && (
+                      <div
+                        className={styles.zoneSeparator}
+                        data-zone-separator="true"
+                        style={zoneSeparatorStyle}
+                      />
+                    )}
+                  {playableGraveyardCards !== undefined &&
+                    playableGraveyardCards.map((card: Card, ix: number) => {
+                      const cardCount = nextCardOccurrence(card.cardNumber);
+                      return (
+                        <PlayerHandCard
+                          card={card}
+                          isGraveyard
+                          key={`graveyard-${card.cardNumber}-${cardCount}`}
+                          addCardToPlayedCards={addCardToPlayedCards}
+                          zIndex={
+                            orderedHandCards.length +
+                            (playableBanishedCards?.length ?? 0) +
+                            (playableTheirBanishedCards?.length ?? 0) +
+                            ix +
+                            200
+                          }
+                          scrollBlockedRef={scrollBlockedRef}
+                        />
+                      );
+                    })}
+                </AnimatePresence>
+              </div>
             </div>
             <button
               className={classNames(styles.scrollButton, {
@@ -973,7 +1061,17 @@ export default function PlayerHand() {
               onPointerDown={() => scrollHand('right')}
               aria-label="Scroll hand right"
             >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
                 <polyline points="9 18 15 12 9 6" />
               </svg>
             </button>

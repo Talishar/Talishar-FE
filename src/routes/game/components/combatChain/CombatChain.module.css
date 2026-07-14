@@ -39,6 +39,10 @@
 }
 
 .grabbyHandle {
+  appearance: none;
+  -webkit-appearance: none;
+  --border-color: transparent;
+  --box-shadow: none;
   width: calc(var(--card-size) * 0.2);
   background-color: color-mix(in srgb, var(--theme-tertiary) 55%, transparent);
   border-radius: 0 0.75em 0.75em 0;
@@ -58,6 +62,12 @@
   margin-bottom: calc(-1 * var(--chain-padding));
   font-size: min(calc(1.5vh - 2px), calc(0.9vw - 1px));
   font-size: min(calc(1.5dvh - 2px), calc(0.9dvw - 1px));
+  border: 0;
+  outline: 0;
+  box-shadow: none;
+  color: inherit;
+  font-family: inherit;
+  touch-action: none;
 }
 
 @media (orientation: portrait) {
@@ -74,13 +84,44 @@
   }
 }
 
-.grabbyHandle:active {
-  cursor: grabbing;
+.grabbyHandle:focus {
+  --background-color: color-mix(
+    in srgb,
+    var(--theme-tertiary) 55%,
+    transparent
+  );
+  --border-color: transparent;
+  --box-shadow: none;
+  border: 0 !important;
+  background: var(--background-color) !important;
+  box-shadow: none !important;
+  outline: 0 !important;
 }
 
+.grabbyHandle:hover {
+  --background-color: color-mix(
+    in srgb,
+    var(--theme-tertiary) 45%,
+    var(--near-black) 55%
+  );
+  --border-color: transparent;
+  background: var(--background-color) !important;
+}
+
+.grabbyHandle:active,
 .grabbyHandleDragging {
-  background-color: color-mix(in srgb, var(--theme-secondary) 45%, transparent);
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  --background-color: color-mix(
+    in srgb,
+    var(--theme-tertiary) 30%,
+    var(--near-black) 70%
+  );
+  --border-color: transparent;
+  background: var(--background-color) !important;
+  box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.45);
+}
+
+.grabbyHandle:active {
+  cursor: grabbing;
 }
 
 .gripIcon {
@@ -137,10 +178,6 @@
   cursor: pointer;
 }
 
-.noBottomBorder {
-  border-bottom: none !important;
-}
-
 .playerPrompt {
   top: 100%;
   position: absolute;
@@ -180,7 +217,8 @@
   flex-basis: auto;
   padding: 8px 16px;
   margin: 0 3px;
-  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease,
+    color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
   font-size: 1.1em;
   font-weight: 500;
   font-family: inherit;

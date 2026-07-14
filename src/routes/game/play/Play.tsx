@@ -17,7 +17,7 @@ import GameStateHandler from 'app/GameStateHandler';
 import HeroVsHeroIntro from '../components/elements/heroVsHeroIntro/HeroVsHeroIntro';
 import OpponentInactive from '../components/elements/opponentInactive/OpponentInactive';
 import { useCookies } from 'react-cookie';
-import { useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from '../../../app/Hooks';
@@ -27,8 +27,15 @@ import {
   getGameInfo,
   submitButton
 } from '../../../features/game/GameSlice';
-import { fetchAllSettings, settingUpdated } from 'features/options/optionsSlice';
-import { SHORTCUT_ATTACK_THRESHOLD, SKIP_AR_WINDOW, SKIP_DR_WINDOW } from 'features/options/constants';
+import {
+  fetchAllSettings,
+  settingUpdated
+} from 'features/options/optionsSlice';
+import {
+  SHORTCUT_ATTACK_THRESHOLD,
+  SKIP_AR_WINDOW,
+  SKIP_DR_WINDOW
+} from 'features/options/constants';
 import { Toaster } from 'react-hot-toast';
 import { shallowEqual } from 'react-redux';
 import { PanelProvider } from '../components/leftColumn/PanelContext';
@@ -62,15 +69,35 @@ function Play({ isRoguelike }: { isRoguelike: boolean }) {
     const FLOATING_AD_SELECTOR =
       '[data-ad="anchor"], [data-ad="video"], [id^="rev-"], [class*="revcontent"], [class*="rev-content"]';
 
-    const hideFloatingAds = () => {
-      document.querySelectorAll(FLOATING_AD_SELECTOR).forEach((el) => {
-        (el as HTMLElement).style.setProperty('display', 'none', 'important');
-      });
+    const hideFloatingAd = (element: Element) => {
+      (element as HTMLElement).style.setProperty(
+        'display',
+        'none',
+        'important'
+      );
     };
 
-    hideFloatingAds();
-    const observer = new MutationObserver(hideFloatingAds);
-    observer.observe(document.documentElement, { childList: true, subtree: true });
+    const hideFloatingAdsWithin = (root: ParentNode) => {
+      if (root instanceof Element && root.matches(FLOATING_AD_SELECTOR)) {
+        hideFloatingAd(root);
+      }
+      root.querySelectorAll(FLOATING_AD_SELECTOR).forEach(hideFloatingAd);
+    };
+
+    hideFloatingAdsWithin(document);
+    const observer = new MutationObserver((records) => {
+      for (const record of records) {
+        record.addedNodes.forEach((node) => {
+          if (node instanceof Element) {
+            hideFloatingAdsWithin(node);
+          }
+        });
+      }
+    });
+    observer.observe(document.documentElement, {
+      childList: true,
+      subtree: true
+    });
     return () => observer.disconnect();
   }, []);
   const [cookies] = useCookies([
@@ -105,7 +132,9 @@ function Play({ isRoguelike }: { isRoguelike: boolean }) {
     }
   }, [gameInfo.gameID, dispatch]);
 
-  const turnNo = useAppSelector((state: any) => state.game.gameDynamicInfo?.turnNo);
+  const turnNo = useAppSelector(
+    (state: any) => state.game.gameDynamicInfo?.turnNo
+  );
   const turnPlayer = useAppSelector((state: any) => state.game.turnPlayer);
   const prevTurnNoRef = useRef<number | undefined>(undefined);
   const prevTurnPlayerRef = useRef<number | undefined>(undefined);
@@ -115,7 +144,10 @@ function Play({ isRoguelike }: { isRoguelike: boolean }) {
       prevTurnPlayerRef.current = turnPlayer;
       return;
     }
-    if (turnNo !== prevTurnNoRef.current || turnPlayer !== prevTurnPlayerRef.current) {
+    if (
+      turnNo !== prevTurnNoRef.current ||
+      turnPlayer !== prevTurnPlayerRef.current
+    ) {
       prevTurnNoRef.current = turnNo;
       prevTurnPlayerRef.current = turnPlayer;
       dispatch(settingUpdated({ name: SHORTCUT_ATTACK_THRESHOLD, value: '0' }));
