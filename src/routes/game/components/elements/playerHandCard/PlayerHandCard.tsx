@@ -84,6 +84,7 @@ export const PlayerHandCard = React.memo(({
   const hasDispatchedClearRef = useRef<boolean>(false);
   const draggedRef = useRef<boolean>(false);
   const cardElRef = useRef<HTMLDivElement | null>(null);
+  const lastPointerTypeRef = useRef<string | null>(null);
 
   // Screen rect captured when dragging starts. While dragging, the card is pinned
   // to this rect via position:fixed so hand-reorder logic can freely shuffle the
@@ -170,7 +171,8 @@ export const PlayerHandCard = React.memo(({
   };
 
   const handlePointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
-    if (event.button === 0) {
+    lastPointerTypeRef.current = event.pointerType;
+    if (event.pointerType === 'mouse' && event.button === 0) {
       onRotationHoldStart?.(cardId ?? '');
     }
   };
@@ -226,6 +228,11 @@ export const PlayerHandCard = React.memo(({
   const handleContextMenu = (event: React.MouseEvent<HTMLDivElement>) => {
     event.preventDefault();
     event.stopPropagation();
+
+    const nativePointerType = (event.nativeEvent as PointerEvent).pointerType;
+    const pointerType = nativePointerType || lastPointerTypeRef.current;
+    if (pointerType !== 'mouse') return;
+
     onRotate?.(cardId ?? '', event.shiftKey ? -1 : 1);
   };
 
