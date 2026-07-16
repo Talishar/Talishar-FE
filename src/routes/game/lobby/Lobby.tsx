@@ -449,6 +449,14 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
   const deckSBIndexed = deckSBClone
     .sort()
     .map((card, ix) => `${card}-${ix + deckIndexed.length}`);
+  const headClone = [...data?.deck?.head];
+  const headSBClone = [...data?.deck?.headSB];
+  const legsClone = [...data?.deck?.legs];
+  const legsSBClone = [...data?.deck?.legsSB];
+  const armsClone = [...data?.deck?.arms];
+  const armsSBClone = [...data?.deck?.armsSB];
+  const chestClone = [...data?.deck?.chest];
+  const chestSBClone = [...data?.deck?.chestSB];
 
   const leftHero =
     data.deck.hero === 'CardBack' ? 'UNKNOWNHERO' : data.deck.hero;
@@ -730,12 +738,21 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
       .filter((item: { id: string }) => item.id !== 'NONE00')
       .map((item: { id: string }) => item.id.split('-')[0]);
 
+
     const inventory = [
       ...weaponsSB,
-      ...(data?.deck?.headSB ?? []),
-      ...(data?.deck?.chestSB ?? []),
-      ...(data?.deck?.armsSB ?? []),
-      ...(data?.deck?.legsSB ?? []),
+      ...(headClone
+        .concat(headSBClone)
+        .filter((x) => !values.head.includes(x))),
+      ...(chestClone
+        .concat(chestSBClone)
+        .filter((x) => !values.chest.includes(x))),
+      ...(armsClone
+        .concat(armsSBClone)
+        .filter((x) => !values.arms.includes(x))),
+      ...(legsClone
+        .concat(legsSBClone)
+        .filter((x) => !values.legs.includes(x))),
       ...(data?.deck?.demiHero ?? []),
       ...modularRemaining,
       ...(deckIndexed
