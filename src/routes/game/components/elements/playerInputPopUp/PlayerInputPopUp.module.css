@@ -121,6 +121,36 @@
   cursor: not-allowed;
 }
 
+.multiChooseActions {
+  margin-top: 0.35rem;
+  padding: 0.75rem 0.45rem 0.65rem;
+}
+
+.multiChooseSubmit.buttonDiv {
+  box-sizing: border-box;
+  min-height: 40px;
+  margin-bottom: 0;
+  background: var(--theme-primary, #d4af37);
+  border-color: var(--theme-primary, #d4af37);
+  color: #111;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+.multiChooseSubmit.buttonDiv:hover:not(:disabled) {
+  background: var(--theme-primary-hover, #e2c45c);
+  border-color: var(--theme-primary-hover, #e2c45c);
+  color: #000;
+}
+
+.multiChooseSubmit.buttonDiv:disabled {
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.09);
+  border-color: rgba(255, 255, 255, 0.28);
+  color: rgba(255, 255, 255, 0.55);
+  box-shadow: none;
+}
+
 .numberInputHint {
   padding-left: 0.45em;
   margin-top: 0.4em;

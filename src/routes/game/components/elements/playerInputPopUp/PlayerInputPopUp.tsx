@@ -172,6 +172,13 @@ export default function PlayerInputPopUp() {
   }
 
   const checkBoxSubmit = () => {
+    const selectedCount = checkedState.filter(Boolean).length;
+    const minNo = inputPopUp.formOptions?.minNo ?? 0;
+    const maxNo = inputPopUp.formOptions?.maxNo ?? checkedState.length;
+    if (selectedCount < minNo || selectedCount > maxNo) {
+      return;
+    }
+
     let extraParams = `&chkCount=${checkedState.length}`;
     if (inputPopUp.multiChooseText) {
       for (let i = 0; i < checkedState.length; i++) {
@@ -201,6 +208,11 @@ export default function PlayerInputPopUp() {
 
   const handleCheckBoxChange = (pos: number | undefined) => {
     if (pos === undefined) {
+      return;
+    }
+    const maxNo = inputPopUp.formOptions?.maxNo ?? checkedState.length;
+    const selectedCount = checkedState.filter(Boolean).length;
+    if (!checkedState[pos] && selectedCount >= maxNo) {
       return;
     }
     const updatedCheckedState = checkedState.map((item, index) =>

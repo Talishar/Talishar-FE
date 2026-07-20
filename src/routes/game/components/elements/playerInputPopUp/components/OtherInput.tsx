@@ -23,6 +23,15 @@ export const OtherInput = (props: FormProps) => {
     checkBoxSubmit
   } = props;
 
+  const selectedCount = checkedState.filter(Boolean).length;
+  const minNo = formOptions?.minNo ?? 0;
+  const maxNo = formOptions?.maxNo ?? checkedState.length;
+  const hasValidSelection = selectedCount >= minNo && selectedCount <= maxNo;
+  const selectionRequirement =
+    minNo === maxNo
+      ? `${selectedCount}/${minNo} selected`
+      : `${selectedCount} selected (choose ${minNo}-${maxNo})`;
+
   const selectCard = cards?.map((card, ix) => {
     return choiceOptions == 'checkbox' ? (
       <div
@@ -70,18 +79,20 @@ export const OtherInput = (props: FormProps) => {
           })}
         </div>
       ) : null}
-      <div>
+      <div className={formOptions ? styles.multiChooseActions : undefined}>
         {formOptions ? (
           <div>
             {checkboxes?.length != 0 ? <div>{checkboxes}</div> : null}
-            <div
-              className={styles.buttonDiv}
+            <button
+              type="button"
+              className={`${styles.buttonDiv} ${styles.multiChooseSubmit}`}
+              disabled={!hasValidSelection}
               onClick={() => {
                 checkBoxSubmit();
               }}
             >
-              {formOptions.caption}
-            </div>
+              {formOptions.caption} ({selectionRequirement})
+            </button>
           </div>
         ) : null}
         {id === NAME_A_CARD && (

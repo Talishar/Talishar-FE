@@ -35,6 +35,7 @@ export interface GetLobbyRefreshResponse {
   chatInvited?: boolean;
   opponentIsTyping?: boolean;
   wasKicked?: boolean;
+  sideboardWasReset?: boolean;
   isOpponentAI?: boolean;
 }
 

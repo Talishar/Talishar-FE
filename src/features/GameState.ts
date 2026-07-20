@@ -88,6 +88,7 @@ export default interface GameState {
       caption: string;
       mode: number;
       maxNo: number;
+      minNo?: number;
     };
   };
   playerPreferences?: {
