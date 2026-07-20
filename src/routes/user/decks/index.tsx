@@ -216,7 +216,7 @@ export const DecksPage = () => {
         const nextAltArts =
           Object.keys(savedAltArts).length > 0
             ? savedAltArts
-            : !deck.altArtsCustomized && isSupporter
+            : !deck.altArtsCustomized
               ? getAllAltArtSelection([...result.cards, ...tokens])
               : {};
         return { ...prev, [deck.link]: { ...current, altArts: nextAltArts } };
