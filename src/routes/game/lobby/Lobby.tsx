@@ -255,6 +255,10 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
     authKey: authKey
   });
 
+  useEffect(() => {
+    if (gameLobby?.sideboardWasReset) refetch();
+  }, [gameLobby?.sideboardWasReset, refetch]);
+
   const [submitSideboardMutation, submitSideboardMutationData] =
     useSubmitSideboardMutation();
 
