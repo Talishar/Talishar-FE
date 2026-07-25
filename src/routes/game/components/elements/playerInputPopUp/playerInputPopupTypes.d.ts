@@ -2,6 +2,7 @@ import React from 'react';
 
 export interface FormProps {
   cards: Card[];
+  cardOriginalIndexes: number[];
   topCards: Card[];
   bottomCards: Card[];
   buttons: Button[];

@@ -201,17 +201,19 @@
   display: flex;
   align-items: center;
   gap: 0.65rem;
-  position: sticky;
-  top: 0;
-  z-index: 2;
-  padding-bottom: 0.35rem;
-  background: var(--near-black);
+  flex: 1 1 24rem;
+  min-width: 10rem;
+  max-width: 32rem;
+  margin-left: auto;
+  margin-right: 1rem;
+  padding-left: 1rem;
 }
 
-.cardSearchInput {
+.cardSearchInput.cardSearchInput {
   box-sizing: border-box;
-  width: min(26rem, 100%);
+  width: 100%;
   height: 38px;
+  margin-bottom: 0;
   padding: 7px 11px;
   color: #e0e0e0;
   background: rgba(255, 255, 255, 0.07);
@@ -220,7 +222,7 @@
   font-size: 0.95rem;
 }
 
-.cardSearchInput:focus {
+.cardSearchInput.cardSearchInput:focus {
   outline: none;
   border-color: var(--theme-primary, #d4af37);
   box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.18);
@@ -234,6 +236,27 @@
 
 .noSearchResults {
   padding: 1.25rem 0.25rem;
+}
+
+@media (max-width: 600px) {
+  .optionsTitleContainer {
+    flex-wrap: wrap;
+  }
+
+  .cardSearchContainer {
+    order: 2;
+    flex: 1 0 calc(100% - 0.5rem);
+    min-width: 0;
+    max-width: none;
+    margin: 0.4rem 0.5rem 0 0;
+    padding-left: 0;
+  }
+
+  .cardSearchInput.cardSearchInput {
+    height: 34px;
+    padding: 5px 10px;
+    font-size: 0.8rem;
+  }
 }
 
 .optForm.optForm {

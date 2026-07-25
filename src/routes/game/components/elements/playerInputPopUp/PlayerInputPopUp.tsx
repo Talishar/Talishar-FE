@@ -1,4 +1,10 @@
-import React, { useEffect, useState, useRef, useCallback } from 'react';
+import React, {
+  useEffect,
+  useState,
+  useRef,
+  useCallback,
+  useMemo
+} from 'react';
 import { submitButton, submitMultiButton } from 'features/game/GameSlice';
 import { useAppSelector, useAppDispatch } from 'app/Hooks';
 import { RootState } from 'app/Store';
@@ -52,6 +58,7 @@ export default function PlayerInputPopUp() {
   const [checkedState, setCheckedState] = useState(
     new Array(inputPopUp?.multiChooseText?.length).fill(false)
   );
+  const [cardSearch, setCardSearch] = useState('');
 
   const storedInputOffset = parseFloat(localStorage.getItem(PLAYER_INPUT_STORAGE_KEY) ?? '') || 0;
   const yOffsetMV = useMotionValue(storedInputOffset);
@@ -161,6 +168,31 @@ export default function PlayerInputPopUp() {
   const basePct = inputPopUp?.popup?.id === 'NEWOPT' ? '40%' : '52.5%';
   basePctRef.current = basePct;
   const topStyle = useTransform(yOffsetMV, (v) => `calc(${basePctRef.current} + ${v}dvh)`);
+  const popupId = inputPopUp?.popup?.id || '';
+  const popupCards = inputPopUp?.popup?.cards || [];
+  const usesOtherInput = !PlayerInputFormTypeMap[popupId];
+  const showCardSearch = usesOtherInput && popupCards.length >= 8;
+  const cardListKey = popupCards
+    .map((card) => `${card.cardNumber}:${card.actionDataOverride ?? ''}`)
+    .join('|');
+  const filteredCardEntries = useMemo(
+    () =>
+      popupCards
+        .map((card, originalIndex) => ({ card, originalIndex }))
+        .filter(
+          ({ card }) =>
+            !showCardSearch ||
+            !cardSearch.trim() ||
+            `${card.cardName ?? ''} ${card.cardNumber}`
+              .toLocaleLowerCase()
+              .includes(cardSearch.trim().toLocaleLowerCase())
+        ),
+    [popupCards, cardSearch, showCardSearch]
+  );
+
+  useEffect(() => {
+    setCardSearch('');
+  }, [cardListKey]);
 
   if (
     !showModal ||
@@ -240,8 +272,7 @@ export default function PlayerInputPopUp() {
       );
     }) || [];
 
-  const FormDisplay =
-    PlayerInputFormTypeMap[inputPopUp.popup?.id || ''] || OtherInput;
+  const FormDisplay = PlayerInputFormTypeMap[popupId] || OtherInput;
 
   const titleElements = parseHtmlToReactElements(
     inputPopUp?.popup?.title ?? ''
@@ -271,6 +302,25 @@ export default function PlayerInputPopUp() {
               {inputPopUp.popup?.additionalComments}
             </h4>
           </div>
+          {showCardSearch ? (
+            <div className={styles.cardSearchContainer}>
+              <input
+                type="search"
+                className={styles.cardSearchInput}
+                value={cardSearch}
+                onChange={(event) => setCardSearch(event.target.value)}
+                onKeyDown={(event) => event.stopPropagation()}
+                placeholder="Search cards by name..."
+                aria-label="Search cards by name"
+                autoFocus
+              />
+              {cardSearch ? (
+                <span className={styles.cardSearchCount} aria-live="polite">
+                  {filteredCardEntries.length} of {popupCards.length}
+                </span>
+              ) : null}
+            </div>
+          ) : null}
           {inputPopUp.popup?.canClose ? (
             <div className={styles.inputPopUpCloseIcon} onClick={onPassTurn}>
               <FaTimes title="Close Popup" />
@@ -278,8 +328,18 @@ export default function PlayerInputPopUp() {
           ) : null}
         </div>
         <div className={styles.contentContainer}>
+          {showCardSearch &&
+          cardSearch &&
+          filteredCardEntries.length === 0 ? (
+            <div className={styles.noSearchResults} role="status">
+              No matching cards
+            </div>
+          ) : null}
           <FormDisplay
-            cards={inputPopUp.popup?.cards || []}
+            cards={filteredCardEntries.map(({ card }) => card)}
+            cardOriginalIndexes={filteredCardEntries.map(
+              ({ originalIndex }) => originalIndex
+            )}
             topCards={inputPopUp.popup?.topCards || []}
             bottomCards={inputPopUp.popup?.bottomCards || []}
             buttons={inputPopUp.buttons || []}
