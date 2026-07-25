@@ -64,8 +64,8 @@ const getReadableCardName = (cardId: string) =>
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(' ');
 
-const getPlaymatImagePath = (playmatId: string) =>
-  `/playmats/${PLAYMATS[playmatId]}.webp`;
+const getPlaymatThumbnailPath = (playmatId: string) =>
+  `/playmats/thumbnails/${PLAYMATS[playmatId]}.webp`;
 
 const getPlaymatDisplayName = (playmatId: string) =>
   PLAYMAT_DISPLAY_NAMES[playmatId] || PLAYMATS[playmatId] || playmatId;
@@ -651,10 +651,13 @@ export const DecksPage = () => {
                         title={getPlaymatDisplayName(id)}
                       >
                         <img
-                          src={getPlaymatImagePath(id)}
+                          src={getPlaymatThumbnailPath(id)}
                           alt={getPlaymatDisplayName(id)}
                           draggable={false}
                           loading="lazy"
+                          decoding="async"
+                          width={128}
+                          height={85}
                           className={`${styles.playmatThumb} ${
                             state.playmatId === id ? styles.thumbSelected : ''
                           }`}
