@@ -1,32 +1,32 @@
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { FaQuestionCircle } from 'react-icons/fa';
 import {
   MAX_RUST_COUNTERS,
   RUST_PANEL_ATTENTION_EVENT
 } from 'hooks/useRustCounters';
+import HouseRewardedAd from './HouseRewardedAd';
 import styles from './RustCounterPanel.module.css';
 
 type RustCounterPanelProps = {
   rustCounters: number;
   isSupporter: boolean;
-  onAdUnavailable?: () => void;
+  onFallbackAdComplete?: () => void;
 };
-
-const AD_UNAVAILABLE_MESSAGE_MS = 5000;
 
 const RustCounterPanel = ({
   rustCounters,
   isSupporter,
-  onAdUnavailable
+  onFallbackAdComplete
 }: RustCounterPanelProps) => {
+  const canTestRewardedAds = import.meta.env.DEV;
   const displayedRustCounters = Math.min(
     Math.max(0, rustCounters),
     MAX_RUST_COUNTERS
   );
   const isLocked = !isSupporter && displayedRustCounters >= MAX_RUST_COUNTERS;
-  const [adUnavailable, setAdUnavailable] = useState(false);
+  const shouldShowWatchAd = displayedRustCounters > 0 || canTestRewardedAds;
+  const [showFallbackAd, setShowFallbackAd] = useState(false);
   const [isPulsing, setIsPulsing] = useState(isLocked);
-  const unavailableTimeoutRef = useRef<number | null>(null);
   const panelRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -45,44 +45,24 @@ const RustCounterPanel = ({
     };
   }, []);
 
-  useEffect(() => {
-    const handleAdReady = (event: Event) => {
-      const ready = (event as CustomEvent<{ ready: boolean }>).detail?.ready;
-      if (ready) {
-        setAdUnavailable(false);
-        if (unavailableTimeoutRef.current !== null) {
-          window.clearTimeout(unavailableTimeoutRef.current);
-          unavailableTimeoutRef.current = null;
-        }
-      }
-    };
-    window.addEventListener('talishar:rewardedAdReady', handleAdReady);
-    return () => {
-      window.removeEventListener('talishar:rewardedAdReady', handleAdReady);
-      if (unavailableTimeoutRef.current !== null) {
-        window.clearTimeout(unavailableTimeoutRef.current);
-      }
-    };
-  }, []);
-
   const handleWatchAdClick = () => {
-    const shown = (window as any)._talishar_showRewarded?.();
+    let shown = false;
+    try {
+      shown = (window as any)._talishar_showRewarded?.() === true;
+    } catch {
+    }
     if (shown) {
-      setAdUnavailable(false);
       return;
     }
-    onAdUnavailable?.();
-    setAdUnavailable(true);
-    if (unavailableTimeoutRef.current !== null) {
-      window.clearTimeout(unavailableTimeoutRef.current);
-    }
-    unavailableTimeoutRef.current = window.setTimeout(() => {
-      setAdUnavailable(false);
-      unavailableTimeoutRef.current = null;
-    }, AD_UNAVAILABLE_MESSAGE_MS);
+    setShowFallbackAd(true);
   };
 
-  if (isSupporter) {
+  const handleFallbackAdComplete = () => {
+    setShowFallbackAd(false);
+    onFallbackAdComplete?.();
+  };
+
+  if (isSupporter && !canTestRewardedAds) {
     return (
       <div className={styles.panel}>
         <p className={styles.supporterMessage}>
@@ -116,14 +96,18 @@ const RustCounterPanel = ({
             Rust counters: {displayedRustCounters} / {MAX_RUST_COUNTERS}
           </span>
         </div>
-        {isLocked && (
+        {canTestRewardedAds ? (
+          <span className={styles.subtitle}>
+            Development mode: rust counters do not block games.
+          </span>
+        ) : isLocked ? (
           <span className={styles.subtitle}>
             Watch a short ad to keep playing.
           </span>
-        )}
+        ) : null}
       </div>
       <div className={styles.actions}>
-        {displayedRustCounters > 0 && (
+        {shouldShowWatchAd && (
           <div className={styles.watchAdWrapper}>
             <button
               id="clearRust"
@@ -136,11 +120,6 @@ const RustCounterPanel = ({
             >
               Watch Ad to Clear
             </button>
-            {adUnavailable && (
-              <span className={styles.adUnavailableMessage} role="status">
-                No ad available right now, please try again in a moment.
-              </span>
-            )}
           </div>
         )}
         <a
@@ -169,10 +148,13 @@ const RustCounterPanel = ({
           Rust counters accrue as you play games as a non-supporter. At{' '}
           {MAX_RUST_COUNTERS} counters you can no longer queue for games. Clear
           them by watching a rewarded ad, or remove ads entirely by supporting
-          Talishar on Metafy for as low as 5$ per month. Your support keeps the servers running 
-          and support the developers.
+          Talishar on Metafy for as low as 5$ per month. Your support keeps the
+          servers running and support the developers.
         </span>
       </span>
+      {showFallbackAd && (
+        <HouseRewardedAd onRewardEarned={handleFallbackAdComplete} />
+      )}
     </div>
   );
 };

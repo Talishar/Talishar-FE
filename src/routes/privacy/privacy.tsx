@@ -47,7 +47,7 @@ export const Privacy = () => {
         <h1>Cookie Preferences</h1>
         <p>
           Essential cookies (login session, Remember Me token, and the game
-          authorization key described above) are always active — Talishar
+          authorization key described above) are always active - Talishar
           cannot function without them. Analytics cookies are only set with
           your consent. You can change your consent choice at any time:
         </p>

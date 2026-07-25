@@ -497,7 +497,7 @@ const GameList = () => {
 
   return (
     <article className={`${styles.gameList}${!isLoggedIn ? ` ${styles.gameListLoggedOut}` : ''}`}>
-      {/* Sticky header — always visible, never scrolls */}
+      {/* Sticky header - always visible, never scrolls */}
       <div className={styles.stickyHeader}>
         {cookies.experimental && (
           <button

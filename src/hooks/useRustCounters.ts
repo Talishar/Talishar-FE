@@ -19,6 +19,7 @@ const useRustCounters = () => {
   });
   const rustCounters = Math.max(0, userProfileData?.rustCounters ?? 0);
   const isRustLocked =
+    !import.meta.env.DEV &&
     canViewRustCounters &&
     !isSupporterLoading &&
     !isSupporter &&

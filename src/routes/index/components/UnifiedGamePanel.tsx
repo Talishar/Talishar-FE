@@ -102,7 +102,7 @@ const UnifiedGamePanel = () => {
             <RustCounterPanel
               rustCounters={rustCounters}
               isSupporter={isSupporter}
-              onAdUnavailable={() => clearRustCounters()}
+              onFallbackAdComplete={() => clearRustCounters()}
             />
           )}
           <div className={styles.quickJoinSection}>

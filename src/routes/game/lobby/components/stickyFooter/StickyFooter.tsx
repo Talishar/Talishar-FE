@@ -192,7 +192,7 @@ const StickyFooter = ({
           </div>
         </div>
 
-        {/* Alarm row — slides in only when deck is invalid */}
+        {/* Alarm row - slides in only when deck is invalid */}
         {!isValid && errorArray[0] && (
           <div className={styles.alarmRow}>
             <FaExclamationCircle className={styles.alarmIcon} />

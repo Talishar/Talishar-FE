@@ -124,7 +124,7 @@ export const ChatInput = ({ usePrimary = false }: { usePrimary?: boolean }) => {
     if (e.target?.value.trim() !== '') {
       handleTyping();
     } else {
-      // Input cleared — treat as stopped typing immediately
+      // Input cleared - treat as stopped typing immediately
       if (debounceTimerRef.current) {
         clearTimeout(debounceTimerRef.current);
         debounceTimerRef.current = null;

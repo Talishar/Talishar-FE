@@ -207,7 +207,7 @@ const GameStateHandler = () => {
           sourceRef.current = null;
 
           if (!hasConnected && retryCountRef.current === 1) {
-            // Transient interruption during page load — retry once quickly
+            // Transient interruption during page load - retry once quickly
             setTimeout(() => setForceRetry((prev) => prev + 1), 500);
             return;
           }

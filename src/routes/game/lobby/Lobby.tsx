@@ -312,7 +312,7 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
   useEffect(() => {
     // New lobby/deck context: clear stale selected matchup from previous session.
     // Skip when myDeckLink is transiently undefined (gameLobby cleared during polling reset on submit).
-    // Also skip when polling recovers with the same link — that is not a real deck change.
+    // Also skip when polling recovers with the same link - that is not a real deck change.
     const newLink = gameLobby?.myDeckLink;
     if (!newLink) return;
     const gameKey = `${gameID}:${playerID}`;

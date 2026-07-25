@@ -23,7 +23,7 @@ function fancyTimeFormat(duration: number | undefined): string {
 }
 
 export default function TurnInfo() {
-  // Stable for the component's lifetime — URL doesn't change during a game.
+  // Stable for the component's lifetime - URL doesn't change during a game.
   const storageKeyRef = useRef(`${STORAGE_KEY_PREFIX}${getGameIdFromUrl()}`);
 
   const [timer, setTimer] = useState(() => {

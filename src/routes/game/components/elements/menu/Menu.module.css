@@ -179,7 +179,7 @@
     gap: 6px;
   }
 
-  /* Hide tooltips on mobile — buttons are touch targets, labels not needed */
+  /* Hide tooltips on mobile - buttons are touch targets, labels not needed */
   .btn[data-tooltip]::before,
   .btn[data-tooltip]::after {
     display: none !important;
@@ -233,7 +233,7 @@
   background: rgba(255, 255, 255, 0.15);
 }
 
-/* Overflow items have text labels — never show tooltips */
+/* Overflow items have text labels - never show tooltips */
 .overflowItem[data-tooltip]::before,
 .overflowItem[data-tooltip]::after {
   display: none !important;

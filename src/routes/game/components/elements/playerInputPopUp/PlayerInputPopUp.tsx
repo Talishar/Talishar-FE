@@ -88,7 +88,7 @@ export default function PlayerInputPopUp() {
           Math.min(PLAYER_INPUT_MAX_Y_OFFSET, dragStartOffsetRef.current + deltaDvh)
         );
         currentDragOffsetRef.current = newOffset;
-        yOffsetMV.set(newOffset); // direct DOM update — no React re-render
+        yOffsetMV.set(newOffset); // direct DOM update - no React re-render
       });
     };
 
@@ -102,7 +102,7 @@ export default function PlayerInputPopUp() {
           Math.min(PLAYER_INPUT_MAX_Y_OFFSET, dragStartOffsetRef.current + deltaDvh)
         );
         currentDragOffsetRef.current = newOffset;
-        yOffsetMV.set(newOffset); // direct DOM update — no React re-render
+        yOffsetMV.set(newOffset); // direct DOM update - no React re-render
       });
     };
 

@@ -89,7 +89,7 @@ const ThemeToggle: React.FC = () => {
                 className={styles.upgradeButton}
                 onClick={handlePremiumClick}
               >
-                Unlock Custom Themes — Become a Supporter
+                Unlock Custom Themes - Become a Supporter
               </button>
             </li>
           )}

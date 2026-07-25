@@ -1,5 +1,5 @@
 
-/* ── Container — real arena environment ──────────────────────────── */
+/* ── Container - real arena environment ──────────────────────────── */
 
 .introContainer {
   position: fixed;
@@ -21,7 +21,7 @@
   pointer-events: none;
 }
 
-/* Directional key light from overhead center — warm, tight, no team color */
+/* Directional key light from overhead center - warm, tight, no team color */
 .arenaKeyLight {
   position: absolute;
   top: -10%;
@@ -38,7 +38,7 @@
   pointer-events: none;
 }
 
-/* Cool rim fill from sides — no team color, just arena bounce */
+/* Cool rim fill from sides - no team color, just arena bounce */
 .arenaRimLeft {
   position: absolute;
   left: 0;

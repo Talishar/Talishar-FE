@@ -118,7 +118,7 @@ td {
   background: transparent;
 }
 
-/* Metafy Section — External Integration: neutral card, small top accent */
+/* Metafy Section - External Integration: neutral card, small top accent */
 .metafySection {
   margin: 1rem 0;
   padding: 1rem;
@@ -156,7 +156,7 @@ td {
   border-color: rgba(212, 175, 55, 0.5);
 }
 
-/* Patreon Section — External Integration: neutral card, small top accent */
+/* Patreon Section - External Integration: neutral card, small top accent */
 .patreonSection {
   margin: 1rem 0;
   padding: 1rem;
@@ -650,7 +650,7 @@ td {
   color: var(--theme-primary, #d4af37);
 }
 
-/* Supporter Badge — Highlight Card: gold border + subtle glow */
+/* Supporter Badge - Highlight Card: gold border + subtle glow */
 .supporterBadge {
   border: 1px solid rgba(201, 169, 97, 0.25);
   background: linear-gradient(135deg, rgba(201, 169, 97, 0.06) 0%, rgba(201, 169, 97, 0.02) 100%);
@@ -677,7 +677,7 @@ td {
   border-left: 3px solid rgba(201, 169, 97, 0.3);
 }
 
-/* Free User Badge — Default Card: neutral dark, no colored tint */
+/* Free User Badge - Default Card: neutral dark, no colored tint */
 .freeUserBadge {
   border: 1px solid rgba(255, 255, 255, 0.1);
   background: rgba(255, 255, 255, 0.03);

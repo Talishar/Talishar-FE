@@ -351,7 +351,7 @@ export default function useAdScript(enabled: boolean = true) {
             if (!(node instanceof HTMLElement)) continue;
             stripRewardedAttrsFrom(node);
             sweepRewardedAttrs(node);
-            // Only re-lock when something lands directly on body — React's
+            // Only re-lock when something lands directly on body - React's
             // constant in-game DOM updates inside #root must not trigger this.
             if (node.parentElement === document.body) newBodyChild = true;
           }

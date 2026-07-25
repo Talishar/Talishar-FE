@@ -109,7 +109,7 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
   const [clearRustCounters] = useClearRustCountersMutation();
   const { canViewRustCounters, rustCounters, isRustLocked } = useRustCounters();
 
-  // FaB Bazaar — standalone mode only (embedded mode uses QuickJoinContext)
+  // FaB Bazaar - standalone mode only (embedded mode uses QuickJoinContext)
   const metafyHash = useAppSelector(selectMetafyHash);
   const metafyTimestamp = useAppSelector(selectMetafyTimestamp);
   const metafyId = useAppSelector(selectMetafyId);
@@ -611,7 +611,7 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
           quickJoinCtx!.importDeckUrl.trim() !== '';
       }
 
-      // Extract base game description (remove hero/class names) — always store in English
+      // Extract base game description (remove hero/class names) - always store in English
       // so the description is language-neutral and can be translated on display
       let baseGameDescription = values.gameDescription || '';
       if (selectedClasses.length > 0) {
@@ -728,7 +728,7 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
               <RustCounterPanel
                 rustCounters={rustCounters}
                 isSupporter={isSupporter}
-                onAdUnavailable={() => clearRustCounters()}
+                onFallbackAdComplete={() => clearRustCounters()}
               />
             )}
             <div className={useUnifiedPanelStyles ? styles.embeddedFormInner : styles.formInner}>
@@ -739,7 +739,7 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
                   <input type="hidden" {...register('fabdb')} />
                 </>
               )}
-              {/* Deck source tabs — standalone logged-in non-precon only */}
+              {/* Deck source tabs - standalone logged-in non-precon only */}
               {!isEmbedded &&
                 isLoggedIn &&
                 !isPreconFormat(formFormat || selectedFormat) && (
@@ -762,7 +762,7 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
                       disabled={!isBazaarEnabled}
                       title={!isBazaarEnabled ? 'Coming soon!' : undefined}
                     >
-                      FaB Bazaar{!isBazaarEnabled && <span className={styles.comingSoonBadge}> — Coming soon!</span>}
+                      FaB Bazaar{!isBazaarEnabled && <span className={styles.comingSoonBadge}> - Coming soon!</span>}
                     </button>
                   </div>
                 )}

@@ -472,7 +472,7 @@ export const DecksPage = () => {
               onClick={() => handleAltArtSelect(deck, card.cardId, altPath)}
               title={
                 state.altArts[card.cardId] === altPath
-                  ? 'Selected — click to use base art'
+                  ? 'Selected - click to use base art'
                   : 'Use this alt art'
               }
             >

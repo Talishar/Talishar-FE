@@ -209,7 +209,7 @@
   color: rgba(255, 255, 255, 0.4);
 }
 
-/* Damage is the result — the only tinted number, in the theme gold. */
+/* Damage is the result - the only tinted number, in the theme gold. */
 .dmgNum {
   color: var(--theme-primary, #c9a84c);
   text-shadow: 0 0 18px rgba(201, 168, 76, 0.4);

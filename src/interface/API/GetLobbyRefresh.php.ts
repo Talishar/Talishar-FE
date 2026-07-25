@@ -53,7 +53,7 @@ export interface Matchup {
 // as the discovery grid for Bazaar decks; no further filtering needed.
 //
 // If absent (older backend versions), the FE falls back to its local
-// HEROES_OF_RATHE constant + young flag — without ban filtering.
+// HEROES_OF_RATHE constant + young flag - without ban filtering.
 export interface LegalHero {
   heroId: string;   // slug, e.g. "briar_warden_of_thorns"
   name: string;     // display name, e.g. "Briar Warden of Thorns"

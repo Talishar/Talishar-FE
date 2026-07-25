@@ -12,7 +12,7 @@ export default function ChatBox({ usePrimary = false, showTabs = true }: { usePr
   const amIPlayerOne = useAppSelector((state: RootState) => {
     return state.game.gameInfo.playerID === 1;
   });
-  // gameID selector removed — it was selected but never used in this component.
+  // gameID selector removed - it was selected but never used in this component.
   const playerID = useAppSelector(
     (state: RootState) => state.game.gameInfo.playerID
   );
@@ -26,7 +26,7 @@ export default function ChatBox({ usePrimary = false, showTabs = true }: { usePr
     String(useSetting({ settingName: IS_STREAMER_MODE })?.value) === '1';
 
   // Typing state is pushed via SSE named event → stored in Redux.
-  // No polling needed — zero extra HTTP connections.
+  // No polling needed - zero extra HTTP connections.
   const displayTyping = useAppSelector(
     (state: RootState) =>
       (state.game.opponentIsTyping ?? false) &&

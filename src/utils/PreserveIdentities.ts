@@ -8,7 +8,7 @@
  * component re-render ~20x/min for no reason. With it, `useAppSelector`'s
  * default reference-equality check skips all of that.
  *
- * Works on plain JSON-shaped data (objects, arrays, primitives) — which is
+ * Works on plain JSON-shaped data (objects, arrays, primitives) - which is
  * exactly what ParseGameState produces.
  */
 export function preserveIdentities<T>(prev: T | undefined, next: T): T {

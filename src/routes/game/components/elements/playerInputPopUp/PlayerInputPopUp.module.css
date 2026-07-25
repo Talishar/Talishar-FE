@@ -503,7 +503,7 @@
   }
 }
 
-/* Touch device overrides — larger tap targets for fat-finger friendliness */
+/* Touch device overrides - larger tap targets for fat-finger friendliness */
 @media (pointer: coarse) {
   .buttonList {
     gap: 0.6rem;

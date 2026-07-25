@@ -484,14 +484,14 @@ export default function PlayerHand() {
       const maxOverlapSpacing = -cardWidth * 0.3;
       const widthAtMaxOverlap = N * cardWidth + (N - 1) * maxOverlapSpacing;
       if (widthAtMaxOverlap <= containerWidth) {
-        // Cards fit if we overlap — find exact spacing needed
+        // Cards fit if we overlap - find exact spacing needed
         const fittingSpacing = (containerWidth - N * cardWidth) / (N - 1);
         setCardSpacingPx(Math.max(maxOverlapSpacing, fittingSpacing));
         setMaxScrollOffset(0);
         applyScrollOffset(0, 0);
         return;
       }
-      // Even at max overlap they don't fit — use max overlap and scroll the rest
+      // Even at max overlap they don't fit - use max overlap and scroll the rest
       setCardSpacingPx(maxOverlapSpacing);
       const overflowWidth = widthAtMaxOverlap;
       const newMax = Math.max(0, overflowWidth - containerWidth);

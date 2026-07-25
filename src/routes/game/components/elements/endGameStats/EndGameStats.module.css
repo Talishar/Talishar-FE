@@ -1091,7 +1091,7 @@
 .cfP9  { animation: cfA9  1.4s ease-out infinite 1.12s; }
 .cfP10 { animation: cfA10 1.4s ease-out infinite 1.26s; }
 
-/* === Rain drops (Defeat) — path defined at SVG origin, keyframe handles positioning + fall === */
+/* === Rain drops (Defeat) - path defined at SVG origin, keyframe handles positioning + fall === */
 .rdBase {
   transform-box: fill-box;
   transform-origin: center;

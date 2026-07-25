@@ -41,7 +41,7 @@ const cleanupOldCookies = () => {
 };
 
 export default function Timer() {
-  // Stable across the component's lifetime — the URL doesn't change during a game.
+  // Stable across the component's lifetime - the URL doesn't change during a game.
   const storageKeyRef = useRef(`${STORAGE_KEY_PREFIX}${getGameIdFromUrl()}`);
 
   const [timer, setTimer] = useState(() => {

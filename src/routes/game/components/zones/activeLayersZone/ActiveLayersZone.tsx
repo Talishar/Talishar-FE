@@ -105,14 +105,14 @@ export default function ActiveLayersZone() {
       const delta = e.clientY - dragStartYRef.current;
       const deltaDvh = (delta / window.innerHeight) * 100;
       const newOffset = Math.max(MIN_Y_OFFSET, Math.min(MAX_Y_OFFSET, dragStartOffsetRef.current + deltaDvh));
-      yOffsetMV.set(newOffset); // direct DOM update — no React re-render
+      yOffsetMV.set(newOffset); // direct DOM update - no React re-render
     };
 
     const handleTouchMove = (e: TouchEvent) => {
       const delta = e.touches[0].clientY - dragStartYRef.current;
       const deltaDvh = (delta / window.innerHeight) * 100;
       const newOffset = Math.max(MIN_Y_OFFSET, Math.min(MAX_Y_OFFSET, dragStartOffsetRef.current + deltaDvh));
-      yOffsetMV.set(newOffset); // direct DOM update — no React re-render
+      yOffsetMV.set(newOffset); // direct DOM update - no React re-render
     };
 
     const handleMouseUp = () => {
@@ -136,7 +136,7 @@ export default function ActiveLayersZone() {
       document.removeEventListener('mouseup', handleMouseUp);
       document.removeEventListener('touchend', handleTouchEnd);
     };
-  // dragStartYRef and dragStartOffsetRef are refs — excluded from deps intentionally
+  // dragStartYRef and dragStartOffsetRef are refs - excluded from deps intentionally
   }, [isDragging, yOffsetMV]);
 
   const handlePassTurn = () => {
