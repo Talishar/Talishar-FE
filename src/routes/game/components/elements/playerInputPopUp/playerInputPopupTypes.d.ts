@@ -7,6 +7,7 @@ export interface FormProps {
   buttons: Button[];
   onClickButton: (button: Button) => void;
   id: 'OPT' | string;
+  customInput: string;
   choiceOptions: string;
   checkedState: boolean[];
   handleCheckBoxChange: (cardActivationNumber: number) => void;

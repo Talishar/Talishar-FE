@@ -285,6 +285,7 @@ export default function PlayerInputPopUp() {
             buttons={inputPopUp.buttons || []}
             onClickButton={onClickButton}
             id={inputPopUp.popup?.id || ''}
+            customInput={inputPopUp.popup?.customInput || ''}
             choiceOptions={inputPopUp.choiceOptions || ''}
             checkedState={checkedState}
             handleCheckBoxChange={handleCheckBoxChange}
