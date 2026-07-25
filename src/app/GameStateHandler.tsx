@@ -101,6 +101,10 @@ const GameStateHandler = () => {
       return;
     }
 
+    if (currentPlayerID === 3 && !currentUserName) {
+      return;
+    }
+
     // Reset retry count when the game changes
     if (gameParamsRef.current.gameID !== currentGameID) {
       retryCountRef.current = 0;
@@ -119,9 +123,9 @@ const GameStateHandler = () => {
     // Small delay to ensure the page is ready before connecting
     const connectionTimeout = setTimeout(() => {
       try {
-        const resolvedUserName = getCurrentUsername(currentUserName) ?? '';
         const source = new EventSource(
-          `${BACKEND_URL}GetUpdateSSE.php?gameName=${currentGameID}&playerID=${currentPlayerID}&authKey=${currentAuthKey}&userName=${encodeURIComponent(resolvedUserName)}`
+          `${BACKEND_URL}GetUpdateSSE.php?gameName=${currentGameID}&playerID=${currentPlayerID}&authKey=${currentAuthKey}`,
+          { withCredentials: true }
         );
         sourceRef.current = source;
 
@@ -253,7 +257,15 @@ const GameStateHandler = () => {
         sourceRef.current = null;
       }
     };
-  }, [gameInfo.gameID, gameInfo.playerID, gameInfo.authKey, forceRetry, dispatch, navigate]);
+  }, [
+    gameInfo.gameID,
+    gameInfo.playerID,
+    gameInfo.authKey,
+    currentUserName,
+    forceRetry,
+    dispatch,
+    navigate
+  ]);
 
   useEffect(() => {
     if (isFullRematch && gameID) {
