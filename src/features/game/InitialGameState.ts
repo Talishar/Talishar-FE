@@ -44,6 +44,7 @@ const InitialGameState: GameState = {
     playerTwo: []
   },
   aiHasInfiniteHP: false,
+  practiceDummyWeaponPower: 4,
   spectatorCameraView: 1
 };
 

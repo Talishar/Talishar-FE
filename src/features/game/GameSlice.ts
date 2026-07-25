@@ -401,6 +401,7 @@ function mergeReceivedGameState(
   state.gameInfo.gameFormat = payload.gameInfo.gameFormat ?? state.gameInfo.gameFormat;
 
   state.aiHasInfiniteHP = payload.aiHasInfiniteHP ?? false;
+  state.practiceDummyWeaponPower = payload.practiceDummyWeaponPower ?? 4;
   state.opponentInactive = payload.opponentInactive ?? false;
   state.preventPassPrompt = payload.preventPassPrompt;
 }
