@@ -6,7 +6,6 @@ import { usePageTitle } from 'hooks/usePageTitle';
 import GameList from './components/gameList';
 import styles from './Index.module.css';
 import News from 'routes/news';
-import DevTool from './components/devTool';
 import CommunityContent from './components/CommunityContent';
 import { QuickJoinProvider } from './components/quickJoin/QuickJoinContext';
 import UnifiedGamePanel from './components/UnifiedGamePanel';
@@ -165,7 +164,6 @@ const Index = () => {
       <div id="games" className={styles.contentSection}>
         <QuickJoinProvider>
           <div className={styles.gridWrapper}>
-            {import.meta.env.DEV && <DevTool />}
             <div className={`${styles.grid}${!isLoggedIn ? ` ${styles.gridLoggedOut}` : ''}`}>
               <div className={styles.gameListContainer}>
                 <GameList />

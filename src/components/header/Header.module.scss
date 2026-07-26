@@ -368,7 +368,7 @@
   position: absolute;
   top: 100%;
   right: 0;
-  min-width: 220px;
+  min-width: 190px;
   background: rgba(0, 0, 0, 0.92);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
@@ -377,18 +377,21 @@
   z-index: 10001;
   list-style: none;
   margin: 0 !important;
-  padding: 10px 8px;
+  padding: 6px;
   display: flex !important;
   flex-direction: column !important;
-  gap: 4px;
+  gap: 2px;
   border-radius: 0 0 6px 6px;
 
-  > li > :is(a, button) {
-    display: flex !important;
-    flex-direction: row !important;
+  // The extra navbar class keeps the general `.navBar ul li a` styles from
+  // overriding the dropdown item layout.
+  .navBar & > li > :is(a, button) {
+    display: grid !important;
+    grid-template-columns: 20px 1fr;
     align-items: center !important;
-    gap: 16px;
-    padding: 13px 16px;
+    justify-content: stretch !important;
+    column-gap: 10px;
+    padding: 8px 10px;
     margin-bottom: 0 !important;
     color: var(--snow, #fff);
     font-size: 20px;
@@ -396,8 +399,10 @@
     text-decoration: none;
     white-space: nowrap;
     height: auto;
+    min-width: 0;
     width: 100%;
-    border-radius: 8px;
+    box-sizing: border-box;
+    border-radius: 5px;
     border: none;
     background: none;
     cursor: pointer;
@@ -412,13 +417,14 @@
     }
 
     svg {
-      font-size: 24px !important;
+      width: 20px;
+      font-size: 19px !important;
       flex-shrink: 0;
       opacity: 0.85;
     }
 
     span {
-      font-size: 20px !important;
+      font-size: 16px !important;
       display: inline !important;
     }
 
@@ -616,7 +622,7 @@
         }
       }
 
-      // LanguageSelector / SocialDropdown wrappers rendered as <li>
+      // LanguageSelector wrapper rendered as <li>
       &[class] {
         > button {
           flex-direction: row !important;

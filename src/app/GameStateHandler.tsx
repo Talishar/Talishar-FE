@@ -173,7 +173,7 @@ const GameStateHandler = () => {
           }
         };
 
-        // This replaces the old CheckOpponentTyping polling entirely.
+        // Typing state arrives as a named SSE event.
         source.addEventListener('typing', (event: MessageEvent) => {
           lastEventTimeRef.current = Date.now();
           try {

@@ -1220,22 +1220,6 @@ export const apiSlice = createApi({
         };
       }
     }),
-    checkOpponentTyping: builder.query<
-      { opponentIsTyping: boolean },
-      { gameID: number; playerID: number }
-    >({
-      query: ({ gameID = 0, playerID = 0 }) => {
-        return {
-          url: 'APIs/CheckOpponentTyping.php',
-          method: 'GET',
-          params: {
-            gameName: gameID,
-            playerID: playerID
-          },
-          responseHandler: parseResponse
-        };
-      }
-    }),
     // External app auth endpoints
     getAppInfo: builder.query<
       { app_id: string; name: string; description: string; error?: string },
@@ -1339,7 +1323,6 @@ export const {
   useGetLastActiveGameQuery,
   useReportTypingMutation,
   useReportPresenceMutation,
-  useCheckOpponentTypingQuery,
   useGetAppInfoQuery,
   useGenerateAuthTokenMutation,
   useGetBazaarDecksQuery,

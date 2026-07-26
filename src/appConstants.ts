@@ -322,7 +322,6 @@ export const URL_END_POINT = {
   GET_REPLAY_TURNS: 'APIs/GetReplayTurns.php',
   SET_REPLAY_FAVORITE: 'APIs/SetReplayFavorite.php',
   GET_POPUP: 'GetPopupAPI.php',
-  GAME_STATE_POLL: 'GetNextTurn.php?',
   PROCESS_INPUT: 'ProcessInput.php?',
   PROCESS_INPUT_POST: 'ProcessInputAPI.php',
   CHOOSE_FIRST_PLAYER: 'APIs/ChooseFirstPlayer.php',
