@@ -1,4 +1,3 @@
-import React from 'react';
 import styles from './FormatList.module.css';
 import { IOpenGame } from '../gameList/GameList';
 import OpenGame from '../openGame/OpenGame';

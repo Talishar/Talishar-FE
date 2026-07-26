@@ -1,4 +1,3 @@
-import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { TALISHAR_DISCORD_URL } from 'constants/socialLinks';
 import { reopenCookieConsent } from 'utils/cookieConsent';

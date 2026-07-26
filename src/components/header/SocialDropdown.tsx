@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { BsGithub } from 'react-icons/bs';
 import { MdEmojiEmotions } from "react-icons/md";
 import { FaDiscord, FaTwitter, FaYoutube } from 'react-icons/fa';

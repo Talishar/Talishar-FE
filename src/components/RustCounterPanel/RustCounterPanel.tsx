@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { FaQuestionCircle } from 'react-icons/fa';
 import {
   MAX_RUST_COUNTERS,

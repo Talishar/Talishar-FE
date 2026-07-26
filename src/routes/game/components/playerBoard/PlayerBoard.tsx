@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import TopRow from '../topRow/TopRow';
 import MiddleRow from '../middleRow/MiddleRow';
 import BottomRow from '../bottomRow/BottomRow';

@@ -36,7 +36,6 @@ import LobbyUpdateHandler from './components/updateHandler/SideboardUpdateHandle
 import {
   GAME_FORMAT,
   BREAKPOINT_EXTRA_LARGE,
-  CLOUD_IMAGES_URL,
   QUERY_STATUS,
   FAB_BAZAAR_DECK_URL_BASE,
   FABRARY_DECK_URL_BASE
@@ -70,7 +69,6 @@ import {
   fetchAllSettings,
   getSettingsStatus
 } from 'features/options/optionsSlice';
-import { IS_STREAMER_MODE } from 'features/options/constants';
 
 const FAB_BAZAAR_LEARN_MORE_URL = 'https://fabbazaar.app/tutorials/talishar';
 

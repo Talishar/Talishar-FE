@@ -1,4 +1,3 @@
-import React from 'react';
 import styles from '../Menu.module.css';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';

@@ -16,7 +16,6 @@ import passTurnSound from 'sounds/prioritySound.wav';
 import { createPortal } from 'react-dom';
 import useShortcut from 'hooks/useShortcut';
 import { DEFAULT_SHORTCUTS } from 'appConstants';
-import { toast } from 'react-hot-toast';
 
 const MANUAL_MODE = 'ManualMode';
 

@@ -1,4 +1,3 @@
-import React from 'react';
 import styles from './PriorityControl.module.css';
 import SkipReactionsToggle from './SkipReactions/SkipReactionsToggle';
 import SkipAllAttacksToggle from './SkipAllAttacks/SkipAllAttacksToggle';

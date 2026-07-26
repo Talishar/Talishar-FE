@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from '../Menu.module.css';
-import { useAppDispatch, useAppSelector } from 'app/Hooks';
+import { useAppDispatch } from 'app/Hooks';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import useShowModal from 'hooks/useShowModals';
 import { toggleShowModals } from 'features/game/GameSlice';

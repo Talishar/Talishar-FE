@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import styles from './PhaseTracker.module.css';
 import PhaseTrackerWidget from '../phaseTrackerWidget/PhaseTrackerWidget';
 import { useAppSelector } from 'app/Hooks';

@@ -1,4 +1,3 @@
-import React from 'react';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import {
   useGetSavedReplaysQuery,

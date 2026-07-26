@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react';
+import { Suspense } from 'react';
 import CardDisplay from '../../cardDisplay/CardDisplay';
 import { NAME_A_CARD } from '../constants';
 import { FormProps } from '../playerInputPopupTypes';

@@ -1,5 +1,5 @@
 import { Field, useFormikContext } from 'formik';
-import React, { useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import CardImage from 'routes/game/components/elements/cardImage/CardImage';
 import { DeckResponse, CardData } from 'interface/API/GetLobbyInfo.php';
 import styles from './Deck.module.css';

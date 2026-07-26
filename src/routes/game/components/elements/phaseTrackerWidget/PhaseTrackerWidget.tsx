@@ -1,5 +1,4 @@
 import useWindowDimensions from 'hooks/useWindowDimensions';
-import React from 'react';
 import styles from './PhaseTrackerWidget.module.css';
 
 export interface TurnPhase {

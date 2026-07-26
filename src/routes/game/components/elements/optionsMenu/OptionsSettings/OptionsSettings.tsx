@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import styles from './OptionsSettings.module.css';
 import {
@@ -17,8 +17,6 @@ import useShortcut from 'hooks/useShortcut';
 import {
   CheckboxSetting,
   RadioGroup,
-  RangeSlider,
-  PresetButtons,
   Fieldset
 } from './FormComponents';
 import { VisualSlider } from './VisualSettings';

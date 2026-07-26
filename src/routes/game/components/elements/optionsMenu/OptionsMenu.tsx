@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
-import screenfull from 'screenfull';
 import { useNavigate } from 'react-router-dom';
 import {
   closeOptionsMenu,

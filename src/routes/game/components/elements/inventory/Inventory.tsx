@@ -1,4 +1,3 @@
-import React from 'react';
 import { useAppDispatch } from 'app/Hooks';
 import styles from './Inventory.module.css';
 import { MdInventory2 } from 'react-icons/md';

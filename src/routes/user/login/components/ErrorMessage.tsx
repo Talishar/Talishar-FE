@@ -1,4 +1,3 @@
-import React from 'react';
 import { FaExclamationCircle } from 'react-icons/fa';
 import styles from './LoginForm.module.css';
 

@@ -9,7 +9,6 @@ import { useProcessInputAPIMutation } from 'features/api/apiSlice';
 import { getGameInfo } from 'features/game/GameSlice';
 import { shallowEqual } from 'react-redux';
 import classNames from 'classnames';
-import { on } from 'events';
 
 let change = false;
 let buttonClick = false;

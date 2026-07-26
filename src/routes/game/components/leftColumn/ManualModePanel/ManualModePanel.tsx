@@ -1,4 +1,4 @@
-import React, { useState, useId, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './ManualModePanel.module.css';
 import useSetting from 'hooks/useSetting';
 import { MANUAL_MODE } from 'features/options/constants';

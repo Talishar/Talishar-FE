@@ -1,4 +1,3 @@
-import React from 'react';
 import TopRow from '../topRow/TopRow';
 import MiddleRow from '../middleRow/MiddleRow';
 import BottomRow from '../bottomRow/BottomRow';

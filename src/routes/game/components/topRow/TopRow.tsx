@@ -1,4 +1,3 @@
-import React from 'react';
 import Player from '../../../../interface/Player';
 import HeadEqZone from '../zones/headEqZone/HeadEqZone';
 import styles from './TopRow.module.css';

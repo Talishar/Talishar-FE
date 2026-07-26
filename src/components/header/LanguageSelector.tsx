@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { BsTranslate } from 'react-icons/bs';
 import styles from './LanguageSelector.module.scss';
 import { useTranslation } from 'react-i18next';

@@ -1,6 +1,6 @@
 import { useFormikContext } from 'formik';
 import { CreateGameResponse } from 'interface/API/CreateGame.php';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { FaExclamationCircle } from 'react-icons/fa';
 import styles from './CreateGame.module.css';
 

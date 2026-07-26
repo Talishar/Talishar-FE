@@ -6,7 +6,6 @@ import { RootState } from 'app/Store';
 import { useNavigate } from 'react-router-dom';
 import { shallowEqual } from 'react-redux';
 import { getGameInfo } from 'features/game/GameSlice';
-import useAuth from 'hooks/useAuth';
 import { apiSlice } from 'features/api/apiSlice';
 import { FaHome, FaExchangeAlt, FaPaperPlane, FaSave, FaMapMarkedAlt } from 'react-icons/fa';
 

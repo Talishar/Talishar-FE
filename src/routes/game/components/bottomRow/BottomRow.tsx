@@ -1,4 +1,3 @@
-import React from 'react';
 import Player from '../../../../interface/Player';
 import LegsEqZone from '../zones/legsEqZone/LegsEqZone';
 import styles from './BottomRow.module.css';

@@ -1,5 +1,5 @@
-import { Field, useFormikContext } from 'formik';
-import React, { useMemo } from 'react';
+import { useFormikContext } from 'formik';
+import { useMemo } from 'react';
 import { DeckResponse, CardData } from 'interface/API/GetLobbyInfo.php';
 import styles from './Calculator.module.css';
 import { useAppSelector } from 'app/Hooks';

@@ -1,4 +1,4 @@
-import react, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useLanguageSelector } from 'hooks/useLanguageSelector';
 import { toast } from 'react-hot-toast';
 import { LOCALE_DICTIONARY, LOCALE_FLAGS } from 'utils/multilanguage/constants';

@@ -1,6 +1,5 @@
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import {
-  useGetFavoriteDecksQuery,
   useLoginWithCookieQuery,
   useLogOutMutation
 } from 'features/api/apiSlice';

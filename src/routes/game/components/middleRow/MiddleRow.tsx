@@ -1,4 +1,3 @@
-import React from 'react';
 import Player from '../../../../interface/Player';
 import ChestEqZone from '../zones/chestEqZone/ChestEqZone';
 import ArmsEqZone from '../zones/armsEqZone/ArmsEqZone';

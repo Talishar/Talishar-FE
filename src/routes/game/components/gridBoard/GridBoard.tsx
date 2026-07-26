@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { useAppSelector } from 'app/Hooks';
 import { getSettingsEntity } from 'features/options/optionsSlice';
 import * as optConst from 'features/options/constants';
@@ -20,7 +20,6 @@ import WeaponLZone from '../zones/weaponLZone/WeaponLZone';
 import WeaponRZone from '../zones/weaponRZone/WeaponRZone';
 import ZoneCounts from '../zones/zoneCountsZone/ZoneCounts';
 import CombatChain from '../combatChain/CombatChain';
-import PlayerPrompt from '../elements/playerPrompt/PlayerPrompt';
 import Playmat from '../elements/playmat';
 import AmbientParticles from '../elements/ambientParticles';
 
@@ -28,7 +27,6 @@ import styles from './GridBoard.module.css';
 import { useCookies } from 'react-cookie';
 import ExperimentalTurnWidget from '../elements/experimentalTurnWidget';
 import TurnWidget from '../elements/turnWidget/TurnWidget';
-import { createPortal } from 'react-dom';
 import ManualModePanel from '../leftColumn/ManualModePanel/ManualModePanel';
 
 const GridBoard = () => {

@@ -1,6 +1,5 @@
 import classNames from 'classnames';
-import React from 'react';
-import { createSearchParams, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { IGameInProgress } from '../gameList/GameList';
 import styles from './InProgressGame.module.scss';
 import { RiSwordLine } from 'react-icons/ri';

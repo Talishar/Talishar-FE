@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useAppDispatch } from 'app/Hooks';
 import {
   useGetFavoriteDecksQuery,
@@ -20,13 +20,12 @@ import useAuth from 'hooks/useAuth';
 import useSupporterStatus from 'hooks/useSupporterStatus';
 import useAdScript from 'hooks/useAdScript';
 import { AdUnit } from 'components/ads';
-import classNames from 'classnames';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { ErrorMessage } from '@hookform/error-message';
 import { generateCroppedImageUrl } from 'utils/cropImages';
 import { ImageSelect, ImageSelectOption } from 'components/ImageSelect';
-import { GAME_FORMAT, isPreconFormat, PRECON_DECKS } from 'appConstants';
+import { isPreconFormat, PRECON_DECKS } from 'appConstants';
 import { getReadableFormatName } from 'utils/formatUtils';
 import { useTranslation, Trans } from 'react-i18next';
 import PageBanner from 'components/PageBanner/PageBanner';

@@ -6,7 +6,7 @@ import {
   getSettingsStatus,
   settingsSelectors
 } from 'features/options/optionsSlice';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { shallowEqual } from 'react-redux';
 
 export default function useSetting({ settingName }: { settingName: string }) {

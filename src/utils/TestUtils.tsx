@@ -9,7 +9,7 @@ import { AppStore, RootState, setupStore } from '../app/Store';
 
 import InitialGameState from '../features/game/InitialGameState';
 import { MemoryRouter } from 'react-router-dom';
-import optionsSlice, {
+import {
   settingsInitialState
 } from '../features/options/optionsSlice';
 

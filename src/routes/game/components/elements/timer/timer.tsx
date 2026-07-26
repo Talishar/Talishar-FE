@@ -1,6 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { useAppSelector } from 'app/Hooks';
-import { RootState } from 'app/Store';
+import { useEffect, useRef, useState } from 'react';
 import styles from './timer.module.css';
 import { FaRegClock } from 'react-icons/fa';
 

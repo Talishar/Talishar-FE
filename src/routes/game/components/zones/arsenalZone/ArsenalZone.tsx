@@ -12,7 +12,6 @@ import {
 import Button from '../../../../../features/Button';
 import { AnimatePresence, motion } from 'framer-motion';
 import useWindowDimensions from '../../../../../hooks/useWindowDimensions';
-import { PROCESS_INPUT } from 'appConstants';
 import { parseHtmlToReactElements } from 'utils/ParseEscapedString';
 import { wrapKeywordsInNodes } from '../../elements/keywordPopover';
 import useOpponentPresencePrompt from 'hooks/useOpponentPresencePrompt';

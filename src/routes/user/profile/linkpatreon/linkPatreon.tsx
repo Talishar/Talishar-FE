@@ -1,5 +1,5 @@
 import { useSubmitPatreonLoginMutation } from 'features/api/apiSlice';
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { toast } from 'react-hot-toast';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 

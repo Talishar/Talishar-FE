@@ -6,8 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import {
   deleteGameAuthKey,
   saveGameAuthKey,
-  loadGameAuthKeyFromIndexedDB,
-  loadGameUsername
+  loadGameAuthKeyFromIndexedDB
 } from 'utils/LocalKeyManagement';
 import { toast } from 'react-hot-toast';
 import useSetting from 'hooks/useSetting';
