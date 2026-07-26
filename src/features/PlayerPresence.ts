@@ -17,6 +17,12 @@ export type PlayerPresence =
     }
   | {
       type: 'combat-summary';
+    }
+  | {
+      type: 'choosing';
+    }
+  | {
+      type: 'settings';
     };
 
 const ZONE_BY_NAME: Array<[RegExp, PresenceZone]> = [
@@ -47,13 +53,19 @@ export function presenceFromCardListName(
 }
 
 export function getPresenceMessage(presence: PlayerPresence): string {
-  if (presence.type === 'combat-summary') {
-    return 'Opponent is reviewing the combat chain';
+  switch (presence.type) {
+    case 'combat-summary':
+      return 'Opponent is reviewing the combat chain';
+    case 'choosing':
+      return 'Opponent is considering their choice';
+    case 'settings':
+      return 'Opponent is adjusting game settings';
+    case 'zone': {
+      const owner = presence.owner === 'self' ? 'their' : 'your';
+      const zone = presence.zone === 'banish' ? 'banished zone' : presence.zone;
+      return `Opponent is checking ${owner} ${zone}`;
+    }
   }
-
-  const owner = presence.owner === 'self' ? 'their' : 'your';
-  const zone = presence.zone === 'banish' ? 'banished zone' : presence.zone;
-  return `Opponent is checking ${owner} ${zone}`;
 }
 
 export function decorateWaitingPrompt(

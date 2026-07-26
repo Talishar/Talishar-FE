@@ -28,6 +28,12 @@ export default function usePlayerPresenceReporter() {
   const showModals = useAppSelector(
     (state: RootState) => state.game.showModals
   );
+  const playerInputPopUp = useAppSelector(
+    (state: RootState) => state.game.playerInputPopUp
+  );
+  const optionsMenu = useAppSelector(
+    (state: RootState) => state.game.optionsMenu
+  );
   const [reportPresence] = useReportPresenceMutation();
 
   const presence = useMemo<PlayerPresence | null>(() => {
@@ -38,12 +44,20 @@ export default function usePlayerPresenceReporter() {
     if (cardList?.active) {
       return presenceFromCardListName(cardList.name);
     }
+    if (playerInputPopUp?.active) {
+      return { type: 'choosing' };
+    }
+    if (optionsMenu?.active) {
+      return { type: 'settings' };
+    }
     return null;
   }, [
     cardList?.active,
     cardList?.name,
     chainLinkSummary?.show,
     chainLinkSummary?.view,
+    optionsMenu?.active,
+    playerInputPopUp?.active,
     showModals
   ]);
 

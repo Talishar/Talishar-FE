@@ -25,10 +25,10 @@ export default function useOpponentPresencePrompt(
   if (playerID !== 1 && playerID !== 2) return baseText;
   if (hasPriority !== false) return baseText;
 
-  const presenceMessage = opponentPresence
-    ? getPresenceMessage(opponentPresence)
-    : opponentIsTyping
+  const presenceMessage = opponentIsTyping
     ? 'Opponent is typing'
+    : opponentPresence
+    ? getPresenceMessage(opponentPresence)
     : null;
 
   return decorateWaitingPrompt(baseText, presenceMessage);

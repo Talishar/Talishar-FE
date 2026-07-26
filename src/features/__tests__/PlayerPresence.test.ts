@@ -33,6 +33,15 @@ describe('player presence', () => {
     ).toBe('Opponent is checking your deck');
   });
 
+  it('describes generic activity without exposing choice details', () => {
+    expect(getPresenceMessage({ type: 'choosing' })).toBe(
+      'Opponent is considering their choice'
+    );
+    expect(getPresenceMessage({ type: 'settings' })).toBe(
+      'Opponent is adjusting game settings'
+    );
+  });
+
   it('decorates waiting prompts but leaves active prompts untouched', () => {
     expect(
       decorateWaitingPrompt(
