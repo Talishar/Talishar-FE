@@ -731,6 +731,8 @@ export const gameSlice = createSlice({
       state.activeChainLink = undefined;
 
       if (isNewGame) {
+        state.gameLobby = undefined;
+        state.isUpdateInProgress = false;
         state.gameInfo.bazaarDeckId = action.payload.bazaarDeckId ?? undefined;
         // Clear recently played history from previous game
         state.gameDynamicInfo.recentlyPlayed = [];
@@ -1019,6 +1021,9 @@ export const gameSlice = createSlice({
     // nextTurn
     builder.addCase(gameLobby.fulfilled, (state, action) => {
       if (action.payload === undefined) {
+        return state;
+      }
+      if (action.meta.arg.game.gameID !== state.gameInfo.gameID) {
         return state;
       }
       state.isUpdateInProgress = false;

@@ -441,11 +441,11 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
 
   // Navigate home if the host kicked us
   useEffect(() => {
-    if (gameLobby?.wasKicked) {
+    if (playerID === 2 && gameLobby?.wasKicked) {
       toast.error('You were kicked from the lobby.');
       navigate('/');
     }
-  }, [gameLobby?.wasKicked, navigate]);
+  }, [gameLobby?.wasKicked, navigate, playerID]);
 
   const deckClone = [...data.deck.cards];
   const deckSBClone = [...data.deck.cardsSB];
