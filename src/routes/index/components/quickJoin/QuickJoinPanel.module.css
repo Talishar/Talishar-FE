@@ -80,6 +80,11 @@
   margin: 0;
 }
 
+.toggleLabel input[type='checkbox'] {
+  flex-shrink: 0;
+  margin: 0;
+}
+
 /* Error box mirrors the look of existing fieldError patterns */
 .errorBox {
   display: flex;
