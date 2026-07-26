@@ -1,3 +1,4 @@
+import React from 'react';
 import {
   createBrowserRouter,
   createRoutesFromElements,
@@ -38,6 +39,7 @@ import AdsTest from 'routes/ads/AdsTest';
 import Learn from 'routes/learn/Learn';
 import About from 'routes/about/About';
 import Premium from 'routes/premium/Premium';
+import MovementEventsTest from 'routes/dev/MovementEventsTest';
 
 const PlayGuard = ({ children }: { children: JSX.Element }) => {
   const [searchParams] = useKnownSearchParams();
@@ -202,6 +204,12 @@ export const router = createBrowserRouter(
           <Route path="auth/verify" element={<AuthVerify />} />
           <Route path="auth/metafy-signup" element={<MetafySignup />} />
           <Route path="ads-test" element={<AdsTest />} />
+          <Route
+            path="dev/movement-events"
+            element={
+              import.meta.env.DEV ? <MovementEventsTest /> : <Navigate to="/" />
+            }
+          />
           <Route
             path="mod"
             element={

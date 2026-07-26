@@ -59,6 +59,214 @@
   line-height: normal;
 }
 
+.movementEvent {
+  --movement-accent: rgba(255, 255, 255, 0.65);
+  --movement-glow: rgba(255, 255, 255, 0.12);
+  --movement-card-size: clamp(5.5rem, 13dvh, 7.75rem);
+  gap: 0.35rem;
+  min-width: var(--movement-card-size);
+}
+
+.movementEventHeading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  color: var(--movement-accent);
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.025em;
+  text-shadow: 0 0 6px var(--movement-glow);
+}
+
+.movementEventHeading svg {
+  color: var(--movement-accent);
+  filter: drop-shadow(0 0 4px var(--movement-glow));
+}
+
+.movementEventStage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  isolation: isolate;
+  width: var(--movement-card-size);
+  height: var(--movement-card-size);
+}
+
+.movementEventStage::before,
+.movementEventStage::after {
+  position: absolute;
+  content: '';
+  pointer-events: none;
+}
+
+.movementEventAura {
+  position: absolute;
+  inset: 5%;
+  z-index: -1;
+  border-radius: 45%;
+  background: radial-gradient(
+    circle,
+    var(--movement-glow) 0%,
+    transparent 70%
+  );
+  opacity: 0.45;
+  transform: scale(1.08);
+  pointer-events: none;
+}
+
+.movementEventCard {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.movementEventCard > * {
+  width: 100%;
+  height: 100%;
+}
+
+.revealEvent {
+  --movement-accent: #8ed8ff;
+  --movement-glow: rgba(74, 187, 255, 0.24);
+}
+
+.revealEvent .movementEventStage::before {
+  inset: -4% -12% 22%;
+  z-index: -1;
+  background: linear-gradient(
+    180deg,
+    rgba(105, 207, 255, 0.26),
+    rgba(105, 207, 255, 0.04) 68%,
+    transparent
+  );
+  clip-path: polygon(35% 0, 65% 0, 100% 100%, 0 100%);
+}
+
+.revealEvent .movementEventStage::after {
+  right: 8%;
+  bottom: 4%;
+  left: 8%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(142, 216, 255, 0.75),
+    transparent
+  );
+  box-shadow: 0 0 7px rgba(74, 187, 255, 0.55);
+}
+
+.revealEvent .movementEventCard {
+  filter: brightness(1) drop-shadow(0 -2px 5px rgba(74, 187, 255, 0.3));
+}
+
+.discardEvent {
+  --movement-accent: #c8b89d;
+  --movement-glow: rgba(189, 166, 127, 0.18);
+}
+
+.discardEvent .movementEventStage::before,
+.discardEvent .movementEventStage::after {
+  z-index: 1;
+}
+
+.discardEvent .movementEventStage::before {
+  right: 8%;
+  bottom: -4%;
+  left: 8%;
+  height: 9%;
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse,
+    rgba(200, 184, 157, 0.32),
+    transparent 68%
+  );
+  filter: blur(2px);
+}
+
+.discardEvent .movementEventStage::after {
+  bottom: 2%;
+  left: 22%;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: rgba(220, 205, 178, 0.68);
+  box-shadow:
+    17px 3px 0 -0.5px rgba(200, 184, 157, 0.48),
+    42px -1px 0 -0.5px rgba(200, 184, 157, 0.55),
+    59px 3px 0 -1px rgba(200, 184, 157, 0.42);
+}
+
+.discardEvent .movementEventCard {
+  filter: sepia(0.08) saturate(0.92);
+  transform: translateY(2px);
+}
+
+.banishEvent {
+  --movement-accent: #c9a1ff;
+  --movement-glow: rgba(151, 82, 255, 0.27);
+}
+
+.banishEvent .movementEventStage::before {
+  inset: -3%;
+  z-index: -1;
+  border: 1px solid rgba(186, 129, 255, 0.66);
+  border-radius: 50%;
+  box-shadow:
+    inset 0 0 12px rgba(151, 82, 255, 0.2),
+    0 0 10px rgba(151, 82, 255, 0.2);
+}
+
+.banishEvent .movementEventStage::after {
+  inset: 3%;
+  z-index: -1;
+  border: 1px dashed rgba(201, 161, 255, 0.38);
+  border-radius: 50%;
+  transform: rotate(18deg);
+}
+
+.banishEvent .movementEventCard {
+  filter: saturate(1.08) brightness(1)
+    drop-shadow(0 0 5px rgba(151, 82, 255, 0.38));
+}
+
+.soulEvent {
+  --movement-accent: #ffe49a;
+  --movement-glow: rgba(255, 205, 89, 0.28);
+}
+
+.soulEvent .movementEventStage::before {
+  inset: -12%;
+  z-index: -1;
+  border-radius: 50%;
+  background: repeating-conic-gradient(
+    from 8deg,
+    rgba(255, 220, 119, 0.17) 0deg 5deg,
+    transparent 5deg 20deg
+  );
+  -webkit-mask-image: radial-gradient(circle, transparent 38%, #000 70%);
+  mask-image: radial-gradient(circle, transparent 38%, #000 70%);
+}
+
+.soulEvent .movementEventStage::after {
+  inset: 5%;
+  z-index: -1;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 228, 154, 0.3),
+    rgba(255, 205, 89, 0.08) 58%,
+    transparent 72%
+  );
+  box-shadow: 0 0 12px rgba(255, 205, 89, 0.23);
+}
+
+.soulEvent .movementEventCard {
+  filter: brightness(1.04) saturate(1)
+    drop-shadow(0 0 6px rgba(255, 205, 89, 0.42));
+}
+
 .addBotDeckCard {
   display: flex;
   flex-direction: column;

@@ -15,7 +15,6 @@ import { useAppSelector } from 'app/Hooks';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import { AnimatePresence, PanInfo } from 'framer-motion';
 import { createPortal } from 'react-dom';
-import { useNewlyDrawnCards } from 'hooks/useNewlyDrawnCards';
 import useSound from 'use-sound';
 import drawingCardsSound from 'sounds/drawing_cards.wav';
 import { setHandCardRotationHeld } from 'utils/handCardRotation';
@@ -238,9 +237,6 @@ export default function PlayerHand() {
     },
     [maxScrollOffset]
   );
-
-  // Detect newly drawn cards for the draw animation
-  const newlyDrawnCardNumbers = useNewlyDrawnCards(handCards);
 
   useEffect(() => {
     setOrderedHandIds((previousOrder) => {
@@ -933,9 +929,6 @@ export default function PlayerHand() {
                   {orderedHandCards.length > 0 &&
                     orderedHandCards.map(({ card, id }, ix) => {
                       nextCardOccurrence(card.cardNumber);
-                      const isNewlyDrawn = newlyDrawnCardNumbers.has(
-                        card.cardNumber
-                      );
                       return (
                         <PlayerHandCard
                           card={card}
@@ -944,7 +937,6 @@ export default function PlayerHand() {
                           rotation={handCardRotations[id]}
                           addCardToPlayedCards={addCardToPlayedCards}
                           zIndex={ix + 200}
-                          isNewlyDrawn={isNewlyDrawn}
                           enableLayoutAnimation
                           shuffleRevision={handShuffleRevision}
                           scrollBlockedRef={scrollBlockedRef}

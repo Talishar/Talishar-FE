@@ -19,8 +19,11 @@ import {
 } from 'react-icons/gi';
 import { shallowEqual } from 'react-redux';
 import { Toast } from 'react-hot-toast';
-import CardDisplay from '../cardDisplay/CardDisplay';
 import styles from './EventsHandler.module.css';
+import MovementEventCard, {
+  MOVEMENT_TOAST_OPTIONS,
+  MovementEventType
+} from './MovementEventCard';
 
 const DismissibleToast = ({
   t,
@@ -205,16 +208,14 @@ export const EventsHandler = React.memo(() => {
             const reveal = parseCardEvent(event.eventValue, playerID);
             toast(
               (t) => (
-                <DismissibleToast t={t}>
-                  Card Revealed
-                  <CardDisplay
-                    card={{ cardNumber: reveal.cardNumber }}
-                    makeMeBigger
-                    isPlayer={reveal.isPlayer}
-                  />
-                </DismissibleToast>
+                <MovementEventCard
+                  type={event.eventType as MovementEventType}
+                  cardNumber={reveal.cardNumber}
+                  isPlayer={reveal.isPlayer}
+                  onDismiss={() => toast.dismiss(t.id)}
+                />
               ),
-              { duration: 5000 }
+              MOVEMENT_TOAST_OPTIONS
             );
             continue;
           }
@@ -257,16 +258,14 @@ export const EventsHandler = React.memo(() => {
             const discard = parseCardEvent(event.eventValue, playerID);
             toast(
               (t) => (
-                <DismissibleToast t={t}>
-                  Card Discarded
-                  <CardDisplay
-                    card={{ cardNumber: discard.cardNumber }}
-                    makeMeBigger
-                    isPlayer={discard.isPlayer}
-                  />
-                </DismissibleToast>
+                <MovementEventCard
+                  type={event.eventType as MovementEventType}
+                  cardNumber={discard.cardNumber}
+                  isPlayer={discard.isPlayer}
+                  onDismiss={() => toast.dismiss(t.id)}
+                />
               ),
-              { duration: 5000 }
+              MOVEMENT_TOAST_OPTIONS
             );
             continue;
           }
@@ -274,16 +273,14 @@ export const EventsHandler = React.memo(() => {
             const banish = parseCardEvent(event.eventValue, playerID);
             toast(
               (t) => (
-                <DismissibleToast t={t}>
-                  Card Banished
-                  <CardDisplay
-                    card={{ cardNumber: banish.cardNumber }}
-                    makeMeBigger
-                    isPlayer={banish.isPlayer}
-                  />
-                </DismissibleToast>
+                <MovementEventCard
+                  type={event.eventType as MovementEventType}
+                  cardNumber={banish.cardNumber}
+                  isPlayer={banish.isPlayer}
+                  onDismiss={() => toast.dismiss(t.id)}
+                />
               ),
-              { duration: 5000 }
+              MOVEMENT_TOAST_OPTIONS
             );
             continue;
           }
@@ -291,16 +288,14 @@ export const EventsHandler = React.memo(() => {
             const soul = parseCardEvent(event.eventValue, playerID);
             toast(
               (t) => (
-                <DismissibleToast t={t}>
-                  Into Soul
-                  <CardDisplay
-                    card={{ cardNumber: soul.cardNumber }}
-                    makeMeBigger
-                    isPlayer={soul.isPlayer}
-                  />
-                </DismissibleToast>
+                <MovementEventCard
+                  type={event.eventType as MovementEventType}
+                  cardNumber={soul.cardNumber}
+                  isPlayer={soul.isPlayer}
+                  onDismiss={() => toast.dismiss(t.id)}
+                />
               ),
-              { duration: 5000 }
+              MOVEMENT_TOAST_OPTIONS
             );
             continue;
           }
@@ -365,7 +360,7 @@ export const EventsHandler = React.memo(() => {
               );
             }
             continue;
-          case 'SHUFFLE':
+          case 'SHUFFLE': {
             const PlayerShuffling =
               event.eventValue !== undefined
                 ? parseInt(event.eventValue)
@@ -383,7 +378,8 @@ export const EventsHandler = React.memo(() => {
               }, 1000);
             });
             continue;
-          case 'ADDBOTDECK':
+          }
+          case 'ADDBOTDECK': {
             const PlayerAddingCard =
               event.eventValue !== undefined
                 ? parseInt(event.eventValue.split(',')[0])
@@ -404,6 +400,7 @@ export const EventsHandler = React.memo(() => {
               }, 1000);
             });
             continue;
+          }
           default:
             continue;
         }
