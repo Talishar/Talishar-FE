@@ -46,6 +46,7 @@ import {
   setShuffling,
   setAddBotDeck,
   setClashReveal,
+  setHeroTransform,
   setArsenalFlip,
   setArsenalDestroy
 } from 'features/game/GameSlice';
@@ -69,7 +70,9 @@ const parseCardEvent = (
   const viewerID = viewerPlayerID === 2 ? 2 : 1;
   return {
     cardNumber: raw.slice(colonIndex + 1),
-    isPlayer: Number.isNaN(eventPlayerID) ? undefined : eventPlayerID === viewerID
+    isPlayer: Number.isNaN(eventPlayerID)
+      ? undefined
+      : eventPlayerID === viewerID
   };
 };
 
@@ -84,7 +87,9 @@ export const EventsHandler = React.memo(() => {
   const [modal, setModal] = useState('');
   const [modalType, setModalType] = useState(ModalType.RequestChat);
   const { playerID } = useAppSelector(getGameInfo, shallowEqual);
-  const hasPriority = useAppSelector((state: RootState) => state.game.hasPriority);
+  const hasPriority = useAppSelector(
+    (state: RootState) => state.game.hasPriority
+  );
   const settingsData = useAppSelector(getSettingsEntity);
   const isMuted = settingsData['MuteSound']?.value === '1';
   const [playShuffleSound] = useSound(shuffleSound, { volume: 0.5 });
@@ -104,9 +109,10 @@ export const EventsHandler = React.memo(() => {
       if (link) link.href = '/images/priorityGreen.ico';
     } else if (!showModal && link) {
       // Restore favicon to whatever PassTurnDisplay would show
-      link.href = hasPriority && playerID !== 3
-        ? '/images/priorityGreen.ico'
-        : '/images/priorityGrey.ico';
+      link.href =
+        hasPriority && playerID !== 3
+          ? '/images/priorityGreen.ico'
+          : '/images/priorityGrey.ico';
     }
   }, [showModal, modalType, isMuted, playPrioritySound, hasPriority, playerID]);
 
@@ -125,7 +131,9 @@ export const EventsHandler = React.memo(() => {
       );
     else if (modalType == ModalType.RequestChainLinkUndo)
       dispatch(
-        submitButton({ button: { mode: PROCESS_INPUT.CONFIRM_CHAIN_LINK_UNDO } })
+        submitButton({
+          button: { mode: PROCESS_INPUT.CONFIRM_CHAIN_LINK_UNDO }
+        })
       );
     else
       dispatch(submitButton({ button: { mode: PROCESS_INPUT.ENABLE_CHAT } }));
@@ -152,7 +160,9 @@ export const EventsHandler = React.memo(() => {
       const CLASH_FIRST_DURATION = 3600;
 
       // Group CLASH events into rounds due to Trounce double clash and similar effects
-      const clashRounds: Array<Array<{ playerId: number; cardNumber: string }>> = [];
+      const clashRounds: Array<
+        Array<{ playerId: number; cardNumber: string }>
+      > = [];
       {
         let currentRound: Array<{ playerId: number; cardNumber: string }> = [];
         const seenPlayers = new Set<number>();
@@ -176,7 +186,9 @@ export const EventsHandler = React.memo(() => {
       clashRounds.forEach((round, roundIndex) => {
         const isLastRound = roundIndex === clashRounds.length - 1;
         const displayDuration =
-          hasMultipleRounds && !isLastRound ? CLASH_FIRST_DURATION : CLASH_DISPLAY_DURATION;
+          hasMultipleRounds && !isLastRound
+            ? CLASH_FIRST_DURATION
+            : CLASH_DISPLAY_DURATION;
         const startDelay = cumulativeDelay;
         cumulativeDelay += displayDuration;
         setTimeout(() => {
@@ -240,7 +252,8 @@ export const EventsHandler = React.memo(() => {
           }
           case 'ARSENALDESTROY': {
             const destroyValue = event.eventValue ?? '';
-            const [destroyPlayerID, destroyCardNumber] = destroyValue.split(':');
+            const [destroyPlayerID, destroyCardNumber] =
+              destroyValue.split(':');
             dispatch(
               setArsenalDestroy({
                 playerId: parseInt(destroyPlayerID),
@@ -297,6 +310,20 @@ export const EventsHandler = React.memo(() => {
               ),
               MOVEMENT_TOAST_OPTIONS
             );
+            continue;
+          }
+          case 'HERO_TRANSFORM': {
+            const [transformPlayerID, cardNumber] = (
+              event.eventValue ?? ''
+            ).split(':');
+            const playerId = parseInt(transformPlayerID);
+            if (!cardNumber || (playerId !== 1 && playerId !== 2)) continue;
+            dispatch(setHeroTransform({ playerId, cardNumber }));
+            requestAnimationFrame(() => {
+              setTimeout(() => {
+                dispatch(setHeroTransform({ playerId: null, cardNumber: '' }));
+              }, 2350);
+            });
             continue;
           }
           case 'REQUESTCHAT':

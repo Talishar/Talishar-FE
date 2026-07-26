@@ -1,0 +1,303 @@
+.transformEffect {
+  --transform-accent: #ddd;
+  --transform-glow: rgba(255, 255, 255, 0.2);
+  position: relative;
+  width: 100%;
+  height: 100%;
+  isolation: isolate;
+  animation: transformArrival 500ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.aura,
+.accents {
+  position: absolute;
+  inset: -18%;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.aura {
+  border-radius: 46%;
+  background: radial-gradient(
+    circle,
+    var(--transform-glow) 0%,
+    transparent 68%
+  );
+  filter: blur(4px);
+  animation: auraBreathe 2.2s ease-in-out 1 forwards;
+}
+
+.cardFrame {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 0 8px var(--transform-glow));
+  animation: cardMaterialize 900ms cubic-bezier(0.16, 0.84, 0.24, 1) both;
+}
+
+.cardFrame > * {
+  width: 100%;
+  height: 100%;
+}
+
+.accents i {
+  position: absolute;
+  display: block;
+}
+
+.mechanologist {
+  --transform-accent: #ff7bc8;
+  --transform-glow: rgba(255, 35, 151, 0.34);
+}
+
+.mechanologist::after {
+  position: absolute;
+  inset: -5% -10%;
+  z-index: 2;
+  border-top: 1px solid rgba(91, 230, 255, 0.6);
+  border-bottom: 1px solid rgba(255, 61, 165, 0.48);
+  content: '';
+  opacity: 0;
+  pointer-events: none;
+  animation: mechScan 1.55s ease-out 180ms 1 forwards;
+}
+
+.mechanologist .accents {
+  border: 1px solid rgba(255, 76, 173, 0.28);
+  border-radius: 50%;
+  box-shadow: 0 0 14px rgba(44, 214, 255, 0.2);
+  animation: mechOrbit 2.2s ease-out 1 forwards;
+}
+
+.mechanologist .accents i {
+  width: 5px;
+  height: 5px;
+  border: 1px solid rgba(85, 225, 255, 0.78);
+  background: rgba(255, 53, 161, 0.62);
+  box-shadow: 0 0 5px rgba(255, 53, 161, 0.7);
+}
+
+.mechanologist .accents i:nth-child(1) {
+  top: 10%;
+  left: 8%;
+}
+
+.mechanologist .accents i:nth-child(2) {
+  top: 45%;
+  right: -2%;
+}
+
+.mechanologist .accents i:nth-child(3) {
+  bottom: 7%;
+  left: 20%;
+}
+
+.shadow {
+  --transform-accent: #e1a6ff;
+  --transform-glow: rgba(174, 50, 214, 0.36);
+}
+
+.shadow .aura {
+  background: radial-gradient(circle, rgba(239, 92, 221, 0.24), transparent 58%),
+    conic-gradient(
+      from 20deg,
+      transparent,
+      rgba(151, 55, 190, 0.16),
+      transparent 24%,
+      rgba(230, 112, 214, 0.14),
+      transparent 53%
+    );
+}
+
+.shadow .accents i {
+  top: 50%;
+  left: 50%;
+  width: 58%;
+  height: 22%;
+  border-top: 1px solid rgba(232, 146, 255, 0.55);
+  border-radius: 50%;
+  transform-origin: 0 50%;
+  filter: drop-shadow(0 0 3px rgba(195, 75, 224, 0.6));
+  animation: shadowTendril 2.2s ease-in-out 1 forwards;
+}
+
+.shadow .accents i:nth-child(1) {
+  transform: rotate(20deg);
+}
+
+.shadow .accents i:nth-child(2) {
+  transform: rotate(145deg);
+  animation-delay: 90ms;
+}
+
+.shadow .accents i:nth-child(3) {
+  transform: rotate(250deg);
+  animation-delay: 180ms;
+}
+
+.chaos {
+  --transform-accent: #ff8b87;
+  --transform-glow: rgba(210, 25, 37, 0.38);
+}
+
+.chaos .aura {
+  background: radial-gradient(circle, rgba(194, 12, 32, 0.28), transparent 62%),
+    conic-gradient(
+      from 120deg,
+      transparent,
+      rgba(255, 49, 49, 0.18),
+      transparent 15%,
+      rgba(92, 0, 7, 0.24),
+      transparent 43%
+    );
+}
+
+.chaos .accents i {
+  right: -9%;
+  width: 118%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 76, 71, 0.82),
+    transparent
+  );
+  box-shadow: 0 0 5px rgba(199, 18, 28, 0.62);
+  opacity: 0;
+  transform: rotate(-14deg) scaleX(0.25);
+  animation: chaosSlash 2.2s ease-out 1 forwards;
+}
+
+.chaos .accents i:nth-child(1) {
+  top: 25%;
+}
+
+.chaos .accents i:nth-child(2) {
+  top: 52%;
+  animation-delay: 120ms;
+}
+
+.chaos .accents i:nth-child(3) {
+  top: 72%;
+  animation-delay: 230ms;
+}
+
+@keyframes transformArrival {
+  from {
+    opacity: 0.3;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes cardMaterialize {
+  0% {
+    opacity: 0;
+    filter: brightness(1.7) saturate(0.45);
+    transform: perspective(500px) rotateY(18deg) scale(0.86);
+  }
+  58% {
+    opacity: 1;
+    filter: brightness(1.16) saturate(1.1);
+  }
+  100% {
+    filter: brightness(1) saturate(1);
+    transform: perspective(500px) rotateY(0) scale(1);
+  }
+}
+
+@keyframes auraBreathe {
+  0% {
+    opacity: 0;
+    transform: scale(0.72);
+  }
+  38% {
+    opacity: 1;
+    transform: scale(1.12);
+  }
+  68% {
+    opacity: 0.35;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.04);
+  }
+}
+
+@keyframes mechScan {
+  0% {
+    opacity: 0;
+    transform: translateY(-30%);
+  }
+  22% {
+    opacity: 0.9;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(80%);
+  }
+}
+
+@keyframes mechOrbit {
+  from {
+    opacity: 0;
+    transform: rotate(-35deg) scale(0.72);
+  }
+  30% {
+    opacity: 1;
+  }
+  68% {
+    opacity: 0.3;
+    transform: rotate(90deg) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: rotate(105deg) scale(1.03);
+  }
+}
+
+@keyframes shadowTendril {
+  from {
+    opacity: 0;
+    scale: 0.62;
+  }
+  45% {
+    opacity: 0.8;
+  }
+  68% {
+    opacity: 0.28;
+    scale: 1.12;
+  }
+  to {
+    opacity: 0;
+    scale: 1.18;
+  }
+}
+
+@keyframes chaosSlash {
+  0%,
+  20% {
+    opacity: 0;
+    transform: rotate(-14deg) scaleX(0.25);
+  }
+  38% {
+    opacity: 0.85;
+  }
+  75%,
+  100% {
+    opacity: 0;
+    transform: rotate(-14deg) scaleX(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .transformEffect,
+  .aura,
+  .cardFrame,
+  .accents,
+  .accents i,
+  .mechanologist::after {
+    animation: none;
+  }
+}
