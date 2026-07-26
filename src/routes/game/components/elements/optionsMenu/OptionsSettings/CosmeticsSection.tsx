@@ -30,8 +30,8 @@ export const CosmeticsSection: React.FC<CosmeticsSectionProps> = ({
   selectedPlaymat,
   onSettingsChange
 }) => {
-  const getPlaymatImagePath = (playmatId: string) =>
-    `/playmats/${PLAYMATS[playmatId]}.webp`;
+  const getPlaymatThumbnailPath = (playmatId: string) =>
+    `/playmats/thumbnails/${PLAYMATS[playmatId]}.webp`;
 
   const getPlaymatDisplayName = (playmatId: string) =>
     PLAYMAT_DISPLAY_NAMES[playmatId] || PLAYMATS[playmatId] || playmatId;
@@ -72,11 +72,13 @@ export const CosmeticsSection: React.FC<CosmeticsSectionProps> = ({
       onClick={() => onSettingsChange({ name: optConst.MY_PLAYMAT, value: id })}
     >
       <img
-        src={getPlaymatImagePath(id)}
+        src={getPlaymatThumbnailPath(id)}
         alt={getPlaymatDisplayName(id)}
         draggable={false}
         loading="lazy"
         decoding="async"
+        width={160}
+        height={90}
         className={classNames(styles.playmatThumb, {
           [styles.playmatThumbSelected]: selectedPlaymat === id
         })}
@@ -121,11 +123,13 @@ export const CosmeticsSection: React.FC<CosmeticsSectionProps> = ({
               title="Support us on Metafy to unlock Talishar exclusive playmats"
             >
               <img
-                src={getPlaymatImagePath(id)}
+                src={getPlaymatThumbnailPath(id)}
                 alt={getPlaymatDisplayName(id)}
                 draggable={false}
                 loading="lazy"
                 decoding="async"
+                width={160}
+                height={90}
                 className={classNames(styles.playmatThumb, styles.lockedCardBack)}
               />
               <span className={classNames(styles.playmatLabel, styles.lockedPlaymatLabel)}>
