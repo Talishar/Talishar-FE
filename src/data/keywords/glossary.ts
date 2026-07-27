@@ -463,7 +463,7 @@ export const GLOSSARY: KeywordEntry[] = [
     id: 'priority',
     name: 'Priority',
     short:
-      'Having priority means it is your window to act — play instants, activate abilities, or pass.',
+      'Having priority means it is your window to act - play instants, activate abilities, or pass.',
     category: 'term',
     noAutoLink: true,
     crOverrideUrl: CR_BASE

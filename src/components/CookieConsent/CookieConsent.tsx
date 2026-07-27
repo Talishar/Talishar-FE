@@ -82,7 +82,7 @@ const CookieConsent: React.FC<CookieConsentProps> = ({ onConsent }) => {
                 &quot;Remember Me&quot; token if you use it, and the
                 authorization key that proves you are a player in your current
                 game. Declining below does <strong>not</strong> disable these
-                — but if you block all cookies in your browser settings, you
+                - but if you block all cookies in your browser settings, you
                 may be disconnected mid-game, unable to rejoin, and forced to
                 log in again between games.
               </p>

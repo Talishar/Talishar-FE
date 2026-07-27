@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect, useMemo } from 'react';
+import React, { useRef, useState, useMemo } from 'react';
 import {
   clearPopUp,
   playCard,
@@ -36,7 +36,6 @@ export interface HandCard {
   cardId?: string;
   zIndex?: number;
   addCardToPlayedCards: (cardName: string) => void;
-  isNewlyDrawn?: boolean;
   disableDrag?: boolean;
   rotation?: number;
   enableLayoutAnimation?: boolean;
@@ -59,7 +58,6 @@ export const PlayerHandCard = React.memo(({
   isGraveyard,
   zIndex,
   addCardToPlayedCards,
-  isNewlyDrawn,
   disableDrag,
   rotation = 0,
   enableLayoutAnimation,
@@ -301,7 +299,6 @@ export const PlayerHandCard = React.memo(({
         layout={enableLayoutAnimation && !isDragging ? 'position' : false}
         drag={!disableDrag}
         className={classNames(styles.handCard, {
-          [styles.newlyDrawn]: isNewlyDrawn,
           [styles.shuffleAccentA]: shuffleRevision > 0 && shuffleRevision % 2 === 0,
           [styles.shuffleAccentB]: shuffleRevision % 2 === 1
         })}
@@ -344,12 +341,8 @@ export const PlayerHandCard = React.memo(({
         animate={{ opacity: 1, y: 0 }}
         transition={{
           layout: { type: 'spring', stiffness: 520, damping: 38, mass: 0.72 },
-          opacity: isNewlyDrawn
-            ? { duration: 0.2, ease: 'easeOut' }
-            : { duration: 0.14, ease: 'easeOut' },
-          y: isNewlyDrawn
-            ? { duration: 0.2, ease: 'easeOut' }
-            : { duration: 0.14, ease: 'easeOut' }
+          opacity: { duration: 0.14, ease: 'easeOut' },
+          y: { duration: 0.14, ease: 'easeOut' }
         }}
         whileHover={isDragging || !supportsHover ? undefined : { scale: 1.1, y: -50, zIndex: 1000 }}
         whileDrag={{ scale: 1.05 }}

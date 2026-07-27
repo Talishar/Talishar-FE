@@ -1,7 +1,6 @@
 import { useSignUpMutation } from 'features/api/apiSlice';
 import styles from './LoginForm.module.css';
 import { Link, useNavigate } from 'react-router-dom';
-import classNames from 'classnames';
 import { SignUpType, signUpValidationSchema } from './validation';
 import { FaExclamationCircle } from 'react-icons/fa';
 import { useAutoAnimate } from '@formkit/auto-animate/react';

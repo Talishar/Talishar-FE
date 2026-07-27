@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import styles from './GameFilter.module.scss';
 import { IoMdArrowDropright } from 'react-icons/io';
 import { IoFunnel } from 'react-icons/io5';

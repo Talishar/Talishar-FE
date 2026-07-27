@@ -1,4 +1,4 @@
-import React, { useState, useId, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './ManualModePanel.module.css';
 import useSetting from 'hooks/useSetting';
 import { MANUAL_MODE } from 'features/options/constants';
@@ -77,6 +77,7 @@ function ManualModeContent({
 }) {
   const [cardInput, setCardInput] = useState('');
   const [opponentHealthInput, setOpponentHealthInput] = useState('');
+  const [weaponPowerInput, setWeaponPowerInput] = useState('4');
   const [isCardLoading, setIsCardLoading] = useState(false);
   const [isRequestInProgress, setIsRequestInProgress] = useState(false);
   const [showCardTooltip, setShowCardTooltip] = useState(false);
@@ -98,7 +99,10 @@ function ManualModeContent({
     (state: RootState) => state.game.playerTwo.PitchRemaining ?? 0
   );
   const aiHasInfiniteHP = useAppSelector(
-    (state: RootState) => (state.game as any).aiHasInfiniteHP ?? false
+    (state: RootState) => state.game.aiHasInfiniteHP ?? false
+  );
+  const practiceDummyWeaponPower = useAppSelector(
+    (state: RootState) => state.game.practiceDummyWeaponPower ?? 4
   );
 
   useEffect(() => {
@@ -106,6 +110,10 @@ function ManualModeContent({
       setOpponentHealthInput(String(opponentHealth));
     }
   }, [opponentHealth, isPracticeDummy]);
+
+  useEffect(() => {
+    setWeaponPowerInput(String(practiceDummyWeaponPower));
+  }, [practiceDummyWeaponPower]);
 
   const handleClose = () => {
     dispatch(
@@ -156,6 +164,20 @@ function ManualModeContent({
     setTimeout(() => setIsCardLoading(false), 300);
   };
 
+  const handleWeaponPowerChange = () => {
+    const parsedPower = Number.parseInt(weaponPowerInput, 10);
+    const power = Number.isNaN(parsedPower)
+      ? practiceDummyWeaponPower
+      : Math.max(0, Math.min(100, parsedPower));
+    setWeaponPowerInput(String(power));
+    if (power !== practiceDummyWeaponPower) {
+      handleDispatchWithParam(
+        PROCESS_INPUT.SET_PRACTICE_DUMMY_WEAPON_POWER,
+        power
+      );
+    }
+  };
+
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     e.stopPropagation();
     if (e.key === 'Enter') {
@@ -174,25 +196,81 @@ function ManualModeContent({
       <div className={styles.content}>
         {/* AI Infinite HP Toggle - Only show against Practice Dummy */}
         {isPracticeDummy && (
-          <div className={styles.toggleGroup}>
-            <label className={styles.toggleLabel}>
-              <input
-                type="checkbox"
-                checked={aiHasInfiniteHP}
-                onChange={() => {
-                  if (!isRequestInProgress) {
+          <>
+            <div className={styles.toggleGroup}>
+              <label className={styles.toggleLabel}>
+                <input
+                  type="checkbox"
+                  checked={aiHasInfiniteHP}
+                  onChange={() => {
+                    if (!isRequestInProgress) {
+                      handleDispatchWithParam(
+                        PROCESS_INPUT.TOGGLE_AI_INFINITE_HP,
+                        aiHasInfiniteHP ? 0 : 1
+                      );
+                    }
+                  }}
+                  className={styles.toggleCheckbox}
+                  disabled={isRequestInProgress}
+                />
+                <span>AI Infinite HP</span>
+              </label>
+            </div>
+            <div className={styles.controlGroup}>
+              <span className={styles.label}>Wrench-tastic! Power</span>
+              <div className={styles.controlRow}>
+                <button
+                  className={styles.buttonSmall}
+                  onClick={() =>
                     handleDispatchWithParam(
-                      PROCESS_INPUT.TOGGLE_AI_INFINITE_HP,
-                      aiHasInfiniteHP ? 0 : 1
-                    );
+                      PROCESS_INPUT.SET_PRACTICE_DUMMY_WEAPON_POWER,
+                      Math.max(0, practiceDummyWeaponPower - 1)
+                    )
                   }
-                }}
-                className={styles.toggleCheckbox}
-                disabled={isRequestInProgress}
-              />
-              <span>AI Infinite HP</span>
-            </label>
-          </div>
+                  title="Reduce Wrench-tastic power by 1"
+                  disabled={
+                    isRequestInProgress || practiceDummyWeaponPower <= 0
+                  }
+                >
+                  <AiOutlineMinus />
+                </button>
+                <input
+                  className={styles.numberInput}
+                  type="text"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
+                  value={weaponPowerInput}
+                  onChange={(event) =>
+                    setWeaponPowerInput(event.target.value)
+                  }
+                  onBlur={handleWeaponPowerChange}
+                  onKeyDown={(event) => {
+                    event.stopPropagation();
+                    if (event.key === 'Enter') {
+                      event.currentTarget.blur();
+                    }
+                  }}
+                  aria-label="Wrench-tastic power"
+                  disabled={isRequestInProgress}
+                />
+                <button
+                  className={styles.buttonSmall}
+                  onClick={() =>
+                    handleDispatchWithParam(
+                      PROCESS_INPUT.SET_PRACTICE_DUMMY_WEAPON_POWER,
+                      Math.min(100, practiceDummyWeaponPower + 1)
+                    )
+                  }
+                  title="Increase Wrench-tastic power by 1"
+                  disabled={
+                    isRequestInProgress || practiceDummyWeaponPower >= 100
+                  }
+                >
+                  <AiOutlinePlus />
+                </button>
+              </div>
+            </div>
+          </>
         )}
 
         {/* Player Life */}

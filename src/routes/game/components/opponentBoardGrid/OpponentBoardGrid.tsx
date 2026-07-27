@@ -1,8 +1,6 @@
-import React from 'react';
 import styles from './OpponentBoardGrid.module.css';
 import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
-import { DEFAULT_PLAYMAT } from 'appConstants';
 import HeadEqZone from '../zones/headEqZone/HeadEqZone';
 import PermanentsZone from '../zones/permanentsZone/PermanentsZone';
 import GraveyardZone from '../zones/graveyardZone/GraveyardZone';

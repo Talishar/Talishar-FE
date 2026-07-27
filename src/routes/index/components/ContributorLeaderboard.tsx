@@ -164,7 +164,7 @@ const ContributorLeaderboard: React.FC = () => {
     return (
       <div className={styles.leaderboardContainer}>
         <p className={styles.errorState}>
-          Could not load contributor data — GitHub API may be rate-limited. Try again later.
+          Could not load contributor data - GitHub API may be rate-limited. Try again later.
         </p>
       </div>
     );
@@ -180,7 +180,7 @@ const ContributorLeaderboard: React.FC = () => {
             target="_blank"
             rel="noopener noreferrer"
             className={styles.card}
-            title={`${c.login} — ${c.totalContributions.toLocaleString()} total commits`}
+            title={`${c.login} - ${c.totalContributions.toLocaleString()} total commits`}
           >
             <div className={styles.rankBadge}>
               {index < 3 ? (

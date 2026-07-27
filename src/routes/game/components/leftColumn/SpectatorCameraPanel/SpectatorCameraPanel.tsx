@@ -1,4 +1,3 @@
-import React from 'react';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { getGameInfo, setSpectatorCameraView } from 'features/game/GameSlice';
 import styles from './SpectatorCameraPanel.module.css';

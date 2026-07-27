@@ -36,7 +36,6 @@ import LobbyUpdateHandler from './components/updateHandler/SideboardUpdateHandle
 import {
   GAME_FORMAT,
   BREAKPOINT_EXTRA_LARGE,
-  CLOUD_IMAGES_URL,
   QUERY_STATUS,
   FAB_BAZAAR_DECK_URL_BASE,
   FABRARY_DECK_URL_BASE
@@ -70,7 +69,6 @@ import {
   fetchAllSettings,
   getSettingsStatus
 } from 'features/options/optionsSlice';
-import { IS_STREAMER_MODE } from 'features/options/constants';
 
 const FAB_BAZAAR_LEARN_MORE_URL = 'https://fabbazaar.app/tutorials/talishar';
 
@@ -255,6 +253,10 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
     authKey: authKey
   });
 
+  useEffect(() => {
+    if (gameLobby?.sideboardWasReset) refetch();
+  }, [gameLobby?.sideboardWasReset, refetch]);
+
   const [submitSideboardMutation, submitSideboardMutationData] =
     useSubmitSideboardMutation();
 
@@ -308,7 +310,7 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
   useEffect(() => {
     // New lobby/deck context: clear stale selected matchup from previous session.
     // Skip when myDeckLink is transiently undefined (gameLobby cleared during polling reset on submit).
-    // Also skip when polling recovers with the same link — that is not a real deck change.
+    // Also skip when polling recovers with the same link - that is not a real deck change.
     const newLink = gameLobby?.myDeckLink;
     if (!newLink) return;
     const gameKey = `${gameID}:${playerID}`;
@@ -437,11 +439,11 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
 
   // Navigate home if the host kicked us
   useEffect(() => {
-    if (gameLobby?.wasKicked) {
+    if (playerID === 2 && gameLobby?.wasKicked) {
       toast.error('You were kicked from the lobby.');
       navigate('/');
     }
-  }, [gameLobby?.wasKicked, navigate]);
+  }, [gameLobby?.wasKicked, navigate, playerID]);
 
   const deckClone = [...data.deck.cards];
   const deckSBClone = [...data.deck.cardsSB];

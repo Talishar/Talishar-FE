@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { FaQuestionCircle, FaChevronUp, FaChevronDown } from 'react-icons/fa';
 import { toast } from 'react-hot-toast';
 import { ImageSelect } from 'components/ImageSelect';

@@ -19,7 +19,6 @@ import {
   BsFullscreenExit
 } from 'react-icons/bs';
 import { IoLogOut } from "react-icons/io5";
-import SocialDropdown from 'components/header/SocialDropdown';
 import LanguageSelector from 'components/header/LanguageSelector';
 import Footer from 'components/footer/Footer';
 import { useGetPendingRequestsQuery } from 'features/api/apiSlice';

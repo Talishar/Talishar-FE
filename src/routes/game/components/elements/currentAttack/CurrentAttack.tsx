@@ -1,4 +1,3 @@
-import React from 'react';
 import { RootState } from 'app/Store';
 import { BiTargetLock } from 'react-icons/bi';
 import styles from './CurrentAttack.module.css';

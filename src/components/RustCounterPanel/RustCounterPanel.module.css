@@ -124,21 +124,6 @@
   display: inline-flex;
 }
 
-.adUnavailableMessage {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  margin-top: 0.3rem;
-  padding: 0.3rem 0.5rem;
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  border-radius: 4px;
-  background: var(--theme-bg, #1a1a1a);
-  color: rgba(237, 237, 237, 0.75);
-  font-size: 0.75rem;
-  white-space: nowrap;
-  z-index: 1;
-}
-
 .clearButton {
   width: auto !important;
   margin-bottom: 0 !important;
@@ -245,8 +230,4 @@
     width: 100% !important;
   }
 
-  .adUnavailableMessage {
-    right: 0;
-    white-space: normal;
-  }
 }

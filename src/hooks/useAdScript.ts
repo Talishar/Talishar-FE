@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { ADS_ENABLED } from 'config/ads';
 
 const AD_SELECTORS =
   '[id^="rev-"], [class*="rev-content"], [class*="revcontent"],' +
@@ -55,7 +56,9 @@ function installNavGuard() {
         configurable: true,
         enumerable: savedHrefDescriptor.enumerable
       });
-    } catch (_) {}
+    } catch (_) {
+      // Location properties are non-configurable in some browsers.
+    }
   }
 
   savedAssignDescriptor = Object.getOwnPropertyDescriptor(locProto, 'assign') ?? null;
@@ -71,7 +74,9 @@ function installNavGuard() {
         writable: savedAssignDescriptor.writable,
         enumerable: savedAssignDescriptor.enumerable
       });
-    } catch (_) {}
+    } catch (_) {
+      // Location properties are non-configurable in some browsers.
+    }
   }
 
   savedReplaceDescriptor = Object.getOwnPropertyDescriptor(locProto, 'replace') ?? null;
@@ -87,7 +92,9 @@ function installNavGuard() {
         writable: savedReplaceDescriptor.writable,
         enumerable: savedReplaceDescriptor.enumerable
       });
-    } catch (_) {}
+    } catch (_) {
+      // Location properties are non-configurable in some browsers.
+    }
   }
 
   navGuardInstalled = true;
@@ -101,21 +108,27 @@ function removeNavGuard() {
   if (savedHrefDescriptor) {
     try {
       Object.defineProperty(locProto, 'href', savedHrefDescriptor);
-    } catch (_) {}
+    } catch (_) {
+      // Best-effort restoration for browsers with locked Location properties.
+    }
     savedHrefDescriptor = null;
   }
 
   if (savedAssignDescriptor) {
     try {
       Object.defineProperty(locProto, 'assign', savedAssignDescriptor);
-    } catch (_) {}
+    } catch (_) {
+      // Best-effort restoration for browsers with locked Location properties.
+    }
     savedAssignDescriptor = null;
   }
 
   if (savedReplaceDescriptor) {
     try {
       Object.defineProperty(locProto, 'replace', savedReplaceDescriptor);
-    } catch (_) {}
+    } catch (_) {
+      // Best-effort restoration for browsers with locked Location properties.
+    }
     savedReplaceDescriptor = null;
   }
 
@@ -183,7 +196,9 @@ const CMP_SELECTOR =
 function isCMPElement(el: Element): boolean {
   try {
     if (el.matches(CMP_SELECTOR)) return true;
-  } catch (_) {}
+  } catch (_) {
+    // Ignore selector errors from browser-specific injected markup.
+  }
   for (const iframe of Array.from(el.querySelectorAll('iframe'))) {
     const src = (iframe as HTMLIFrameElement).src || '';
     if (CMP_IFRAME_HOSTS.some((host) => src.includes(host))) return true;
@@ -271,9 +286,11 @@ function sweepRewardedAttrs(root: Document | Element = document) {
   }
 }
 
-export default function useAdScript(enabled: boolean = true) {
+export default function useAdScript(enabled = true) {
+  const shouldLoadProvider = enabled && ADS_ENABLED;
+
   useEffect(() => {
-    if (!enabled) {
+    if (!shouldLoadProvider) {
       removeNavGuard();
       purgeAdElements();
 
@@ -318,7 +335,9 @@ export default function useAdScript(enabled: boolean = true) {
     if (!document.querySelector('script[src="//js.rev.iq/talishar.net"]')) {
       try {
         (window as any).googletag?.destroySlots?.();
-      } catch (_) {}
+      } catch (_) {
+        // The provider may not have initialized Google Publisher Tags.
+      }
 
       const script = document.createElement('script');
       script.src = '//js.rev.iq/talishar.net';
@@ -351,7 +370,7 @@ export default function useAdScript(enabled: boolean = true) {
             if (!(node instanceof HTMLElement)) continue;
             stripRewardedAttrsFrom(node);
             sweepRewardedAttrs(node);
-            // Only re-lock when something lands directly on body — React's
+            // Only re-lock when something lands directly on body - React's
             // constant in-game DOM updates inside #root must not trigger this.
             if (node.parentElement === document.body) newBodyChild = true;
           }
@@ -385,5 +404,5 @@ export default function useAdScript(enabled: boolean = true) {
       iframeGuard.disconnect();
       removeNavGuard();
     };
-  }, [enabled]);
+  }, [shouldLoadProvider]);
 }

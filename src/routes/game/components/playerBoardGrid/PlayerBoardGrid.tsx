@@ -1,7 +1,4 @@
-import React, { useMemo } from 'react';
-import TopRow from '../topRow/TopRow';
-import MiddleRow from '../middleRow/MiddleRow';
-import BottomRow from '../bottomRow/BottomRow';
+import { useMemo } from 'react';
 import styles from './PlayerBoardGrid.module.css';
 import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';

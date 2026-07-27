@@ -1,4 +1,3 @@
-import React from 'react';
 import ChatBox from 'routes/game/components/elements/chatBox/ChatBox';
 import styles from './LobbyChat.module.css';
 

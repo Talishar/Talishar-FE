@@ -12,12 +12,10 @@ import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import {
   fetchAllSettings,
   getSettingsEntity,
-  getSettingsStatus,
   Setting,
   updateOptions
 } from 'features/options/optionsSlice';
 import { selectCurrentUser } from 'features/auth/authSlice';
-import { QUERY_STATUS } from 'appConstants';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import { useEffect } from 'react';
 import { useCookies } from 'react-cookie';

@@ -13,7 +13,7 @@ import {
   JAPANESE_LANGUAGE_PRINTED_COLLECTIONS
 } from './constants';
 import { historyPack1, historyPack2, setIDs } from './collectionMaps';
-import { CollectionCardImagePathData, ImagePathNumber } from './types';
+import { CollectionCardImagePathData } from './types';
 import { CLOUD_IMAGES_URL } from 'appConstants';
 
 const hasOwn = (obj: Record<string, string>, key: string): boolean =>

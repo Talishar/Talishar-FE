@@ -139,6 +139,30 @@
   min-width: 3rem;
 }
 
+.controlRow .numberInput {
+  flex: 1;
+  width: 3rem;
+  min-width: 0;
+  height: 2rem;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  color: var(--theme-primary) !important;
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-align: center;
+  box-shadow: none !important;
+  caret-color: var(--theme-primary) !important;
+
+  &:focus {
+    border: 0 !important;
+    outline: 0;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+}
+
 .buttonSmall {
   display: flex;
   align-items: center;

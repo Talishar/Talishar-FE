@@ -280,7 +280,7 @@ const Premium = () => {
                       ) : typeof f.free === 'string' ? (
                         <span className={styles.check}>{f.free}</span>
                       ) : (
-                        <span className={styles.cross}>—</span>
+                        <span className={styles.cross}>-</span>
                       )}
                     </td>
                     <td>
@@ -289,7 +289,7 @@ const Premium = () => {
                       ) : typeof f.premium === 'string' ? (
                         <span className={styles.check}>{f.premium}</span>
                       ) : (
-                        <span className={styles.cross}>—</span>
+                        <span className={styles.cross}>-</span>
                       )}
                     </td>
                   </tr>

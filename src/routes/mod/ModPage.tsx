@@ -236,7 +236,7 @@ const ModPage: React.FC = () => {
         toast.error(result.error, { position: 'top-center', duration: 8000 });
       } else {
         toast.success(`Sync complete: ${result?.cleared ?? 0} expired supporter(s) cleared`, { position: 'top-center' });
-        setSuccessMessage(`Metafy sync complete — ${result?.cleared ?? 0} expired, ${result?.stillActive ?? 0} active`);
+        setSuccessMessage(`Metafy sync complete - ${result?.cleared ?? 0} expired, ${result?.stillActive ?? 0} active`);
       }
     } catch (err: any) {
       const errorMessage = err?.data?.error || err?.data?.apiError || 'Failed to sync Metafy subscribers';
@@ -467,7 +467,7 @@ const ModPage: React.FC = () => {
                 <ul className={styles.dataList}>
                   {modPageData.linkedAccounts.map((link: LinkedAccount, index: number) => (
                     <li key={index}>
-                      <strong>{link.username}</strong> — {link.ip} (
+                      <strong>{link.username}</strong> - {link.ip} (
                       {link.linkedTo === 'banned IP'
                         ? 'banned IP'
                         : `shares IP with ${link.linkedTo}`}
@@ -497,7 +497,7 @@ const ModPage: React.FC = () => {
                         {player}
                         {knownIPs && knownIPs.length > 0 && (
                           <span style={{ color: '#aaa', fontSize: '12px' }}>
-                            {' — '}
+                            {' - '}
                             {knownIPs.map((ip: string, ipIndex: number) => (
                               <React.Fragment key={ip}>
                                 {ipIndex > 0 && ', '}

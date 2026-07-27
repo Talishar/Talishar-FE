@@ -88,6 +88,7 @@ export default interface GameState {
       caption: string;
       mode: number;
       maxNo: number;
+      minNo?: number;
     };
   };
   playerPreferences?: {
@@ -134,6 +135,9 @@ export default interface GameState {
   clashRevealP1Card: string;
   clashRevealP2Card: string;
   clashRevealTrigger: number;
+  heroTransformP1Card: string;
+  heroTransformP2Card: string;
+  heroTransformTrigger: number;
   arsenalFlipP1Card: string;
   arsenalFlipP2Card: string;
   arsenalFlipTrigger: number;
@@ -153,6 +157,7 @@ export default interface GameState {
     playerTwo: Array<{ id: string; amount: number }>;
   };
   aiHasInfiniteHP?: boolean;
+  practiceDummyWeaponPower?: number;
   opponentInactive?: boolean;
   spectatorCameraView?: number; // 1 for player 1 view, 2 for player 2 view
 }

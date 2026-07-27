@@ -93,7 +93,7 @@
 .passTurnDisplayActive::after {
   content: '';
   position: absolute;
-  inset: -8px;
+  inset: 0px;
   z-index: 0;
   border-radius: inherit;
   box-shadow: 0 0 12px rgba(63, 191, 86, 0.45);

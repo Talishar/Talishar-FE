@@ -48,7 +48,7 @@
   line-height: 1;
 }
 
-/* Pico adds margin-bottom to hgroup and every heading — suppress all of it */
+/* Pico adds margin-bottom to hgroup and every heading - suppress all of it */
 .optionsTitleContainer hgroup {
   margin: 0;
   padding: 0;
@@ -140,7 +140,7 @@
   text-align: center;
 }
 
-/* Ghost button — must use !important to override Pico's primary button styles */
+/* Ghost button - must use !important to override Pico's primary button styles */
 .buttonDiv {
   display: flex !important;
   align-items: center !important;
@@ -185,7 +185,7 @@
   position: relative;
 }
 
-/* Section header — center its midpoint on the top border, matching native <legend> behaviour */
+/* Section header - center its midpoint on the top border, matching native <legend> behaviour */
 .sectionHeader {
   color: var(--theme-primary);
   font-size: 0.875em;

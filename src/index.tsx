@@ -7,7 +7,6 @@ import { CookiesProvider } from 'react-cookie';
 import './index.scss';
 import { router } from 'routes';
 import { RouterProvider } from 'react-router-dom';
-import CookieConsent from 'components/CookieConsent';
 import { ThemeProvider } from './themes/ThemeContext';
 
 import './i18n';

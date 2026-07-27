@@ -1,19 +1,14 @@
-import { ErrorMessage, FormikProvider, useFormik } from 'formik';
 import { Link, useNavigate } from 'react-router-dom';
 import styles from './LoginForm.module.css';
-import classnames from 'classnames';
 import SwordLoader from 'components/SwordLoader/SwordLoader';
 import {
   useGetFavoriteDecksQuery,
   useLoginMutation
 } from 'features/api/apiSlice';
-import { QueryStatus } from '@reduxjs/toolkit/dist/query';
 import useAuth from 'hooks/useAuth';
 import { toast } from 'react-hot-toast';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useAppDispatch } from 'app/Hooks';
-import { setCredentialsReducer } from 'features/auth/authSlice';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
 import { loginValidationSchema, LoginValidationType } from './validation';
 import { FaExclamationCircle } from 'react-icons/fa';

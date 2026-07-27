@@ -1,4 +1,3 @@
-import classNames from 'classnames';
 import styles from '../CountersOverlay.module.css';
 import { TooltipWrapper } from './TooltipWrapper';
 import { GiLightningArc } from 'react-icons/gi';

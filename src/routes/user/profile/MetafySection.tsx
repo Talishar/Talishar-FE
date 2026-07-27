@@ -39,7 +39,7 @@ const MetafySection: React.FC<MetafySectionProps> = ({
     } catch (err: any) {
       const status = err?.status;
       const errorCode = err?.data?.error;
-      // Token expired or not linked — redirect to OAuth re-auth
+      // Token expired or not linked - redirect to OAuth re-auth
       if (
         status === 401 ||
         errorCode === 'token_expired' ||

@@ -4,7 +4,7 @@
   flex-direction: column;
 }
 
-/* Trigger button — styled to match native Pico select elements */
+/* Trigger button - styled to match native Pico select elements */
 .trigger {
   display: flex;
   align-items: center;
@@ -33,7 +33,7 @@
   border-color: var(--theme-primary, #d4af37);
 }
 
-/* CSS chevron — matches Pico's thin caret style */
+/* CSS chevron - matches Pico's thin caret style */
 .chevron {
   flex-shrink: 0;
   margin-left: 0.5rem;

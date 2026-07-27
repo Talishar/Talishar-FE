@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import styles from './TurnInfo.module.css';
@@ -23,7 +23,7 @@ function fancyTimeFormat(duration: number | undefined): string {
 }
 
 export default function TurnInfo() {
-  // Stable for the component's lifetime — URL doesn't change during a game.
+  // Stable for the component's lifetime - URL doesn't change during a game.
   const storageKeyRef = useRef(`${STORAGE_KEY_PREFIX}${getGameIdFromUrl()}`);
 
   const [timer, setTimer] = useState(() => {

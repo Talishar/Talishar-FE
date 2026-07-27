@@ -8,7 +8,6 @@ import {
   type Draft
 } from '@reduxjs/toolkit';
 import { preserveIdentities } from 'utils/PreserveIdentities';
-import ParseGameState from '../../app/ParseGameState';
 import InitialGameState from './InitialGameState';
 import GameStaticInfo from '../GameStaticInfo';
 import { Card } from '../Card';
@@ -51,82 +50,6 @@ const sanitizeHtmlTags = (input: string): string => {
   } while (result !== previous);
   return result;
 };
-
-export const nextTurn = createAsyncThunk(
-  'game/nextTurn',
-  async (
-    params: {
-      game: GameStaticInfo;
-      signal: AbortSignal | undefined;
-      lastUpdate: number;
-    },
-    { getState }
-  ) => {
-    const queryURL = params.game.isRoguelike
-      ? `${ROGUELIKE_URL}${URL_END_POINT.GAME_STATE_POLL}`
-      : `${BACKEND_URL}${URL_END_POINT.GAME_STATE_POLL}`;
-    const queryParams = new URLSearchParams({
-      gameName: String(params.game.gameID),
-      playerID: String(params.game.playerID),
-      authKey: String(params.game.authKey),
-      lastUpdate: String(params.lastUpdate)
-    });
-
-    let waitingForJSONResponse = true;
-    while (waitingForJSONResponse) {
-      try {
-        const response = await fetch(queryURL + queryParams, {
-          method: 'POST',
-          headers: {},
-          credentials: 'include',
-          signal: params.signal,
-          body: JSON.stringify(queryParams)
-        });
-        let data = await response.text();
-        if (data.toString().trim() === '0') {
-          continue;
-        }
-        waitingForJSONResponse = false;
-        data = data.toString().trim();
-        const indexOfBraces = data.indexOf('{');
-        if (indexOfBraces === -1) {
-          // No JSON object found - backend returned an error message or non-JSON response
-          const errorMessage = sanitizeHtmlTags(data);
-          toast.error(`Backend Error: ${errorMessage}`);
-
-          // Check for fatal errors that should end the game
-          if (
-            errorMessage.includes('game no longer exists') ||
-            errorMessage.includes('does not exist')
-          ) {
-            // Return special error marker that will be handled by the rejected handler
-            throw new Error(`GAME_NOT_FOUND: ${errorMessage}`);
-          }
-
-          return console.error(`Backend returned non-JSON response: ${data}`);
-        }
-        if (indexOfBraces !== 0) {
-          const warningMessage = sanitizeHtmlTags(
-            data.substring(0, indexOfBraces)
-          );
-          toast.error(`Backend Warning: ${warningMessage}`);
-          console.warn(data.substring(0, indexOfBraces));
-          data = data.substring(indexOfBraces);
-        }
-        const parsedData = JSON.parse(data);
-        const gs = ParseGameState(parsedData);
-        return gs;
-      } catch (e) {
-        if (params.signal?.aborted) {
-          return;
-        }
-        waitingForJSONResponse = false;
-        // Re-throw to trigger rejected handler
-        throw e;
-      }
-    }
-  }
-);
 
 export const gameLobby = createAsyncThunk(
   'gameLobby/getLobby',
@@ -234,10 +157,14 @@ export const submitButton = createAsyncThunk(
       expectedRevision: String(game.gameDynamicInfo.lastUpdate ?? 0),
       commandId: createCommandId()
     });
-    if (params.button.buttonInput !== undefined) queryParams.set('buttonInput', String(params.button.buttonInput));
-    if (params.button.inputText !== undefined) queryParams.set('inputText', String(params.button.inputText));
-    if (params.button.cardID !== undefined) queryParams.set('cardID', String(params.button.cardID));
-    if (params.button.numMode !== undefined) queryParams.set('numMode', String(params.button.numMode));
+    if (params.button.buttonInput !== undefined)
+      queryParams.set('buttonInput', String(params.button.buttonInput));
+    if (params.button.inputText !== undefined)
+      queryParams.set('inputText', String(params.button.inputText));
+    if (params.button.cardID !== undefined)
+      queryParams.set('cardID', String(params.button.cardID));
+    if (params.button.numMode !== undefined)
+      queryParams.set('numMode', String(params.button.numMode));
     try {
       const response = await fetch(queryURL + queryParams, {
         method: 'GET',
@@ -246,7 +173,12 @@ export const submitButton = createAsyncThunk(
       });
       const data = await response.text();
       if (!response.ok || (data && data.startsWith('Invalid'))) {
-        console.error('[submitButton] Backend error:', data, '| params:', Object.fromEntries(queryParams));
+        console.error(
+          '[submitButton] Backend error:',
+          data,
+          '| params:',
+          Object.fromEntries(queryParams)
+        );
       }
       return;
     } catch (e) {
@@ -306,23 +238,42 @@ function mergeReceivedGameState(
   const mergedPlayerOne = { ...prevGame.playerOne, ...payload.playerOne };
   const mergedPlayerTwo = { ...prevGame.playerTwo, ...payload.playerTwo };
 
-  if (prevGame.playerOne.Name !== undefined) mergedPlayerOne.Name = prevGame.playerOne.Name;
-  if (prevGame.playerOne.isPatron !== undefined) mergedPlayerOne.isPatron = prevGame.playerOne.isPatron;
-  if (prevGame.playerOne.isContributor !== undefined) mergedPlayerOne.isContributor = prevGame.playerOne.isContributor;
-  if (prevGame.playerOne.isPvtVoidPatron !== undefined) mergedPlayerOne.isPvtVoidPatron = prevGame.playerOne.isPvtVoidPatron;
-  if (prevGame.playerOne.metafyTiers !== undefined) mergedPlayerOne.metafyTiers = prevGame.playerOne.metafyTiers;
-  if (prevGame.playerTwo.Name !== undefined) mergedPlayerTwo.Name = prevGame.playerTwo.Name;
-  if (prevGame.playerTwo.isPatron !== undefined) mergedPlayerTwo.isPatron = prevGame.playerTwo.isPatron;
-  if (prevGame.playerTwo.isContributor !== undefined) mergedPlayerTwo.isContributor = prevGame.playerTwo.isContributor;
-  if (prevGame.playerTwo.isPvtVoidPatron !== undefined) mergedPlayerTwo.isPvtVoidPatron = prevGame.playerTwo.isPvtVoidPatron;
-  if (prevGame.playerTwo.metafyTiers !== undefined) mergedPlayerTwo.metafyTiers = prevGame.playerTwo.metafyTiers;
+  if (prevGame.playerOne.Name !== undefined)
+    mergedPlayerOne.Name = prevGame.playerOne.Name;
+  if (prevGame.playerOne.isPatron !== undefined)
+    mergedPlayerOne.isPatron = prevGame.playerOne.isPatron;
+  if (prevGame.playerOne.isContributor !== undefined)
+    mergedPlayerOne.isContributor = prevGame.playerOne.isContributor;
+  if (prevGame.playerOne.isPvtVoidPatron !== undefined)
+    mergedPlayerOne.isPvtVoidPatron = prevGame.playerOne.isPvtVoidPatron;
+  if (prevGame.playerOne.metafyTiers !== undefined)
+    mergedPlayerOne.metafyTiers = prevGame.playerOne.metafyTiers;
+  if (prevGame.playerTwo.Name !== undefined)
+    mergedPlayerTwo.Name = prevGame.playerTwo.Name;
+  if (prevGame.playerTwo.isPatron !== undefined)
+    mergedPlayerTwo.isPatron = prevGame.playerTwo.isPatron;
+  if (prevGame.playerTwo.isContributor !== undefined)
+    mergedPlayerTwo.isContributor = prevGame.playerTwo.isContributor;
+  if (prevGame.playerTwo.isPvtVoidPatron !== undefined)
+    mergedPlayerTwo.isPvtVoidPatron = prevGame.playerTwo.isPvtVoidPatron;
+  if (prevGame.playerTwo.metafyTiers !== undefined)
+    mergedPlayerTwo.metafyTiers = prevGame.playerTwo.metafyTiers;
 
   state.playerOne = preserveIdentities(prevGame.playerOne, mergedPlayerOne);
   state.playerTwo = preserveIdentities(prevGame.playerTwo, mergedPlayerTwo);
 
-  state.activeChainLink = preserveIdentities(prevGame.activeChainLink, payload.activeChainLink);
-  state.activeLayers = preserveIdentities(prevGame.activeLayers, payload.activeLayers);
-  state.oldCombatChain = preserveIdentities(prevGame.oldCombatChain, payload.oldCombatChain);
+  state.activeChainLink = preserveIdentities(
+    prevGame.activeChainLink,
+    payload.activeChainLink
+  );
+  state.activeLayers = preserveIdentities(
+    prevGame.activeLayers,
+    payload.activeLayers
+  );
+  state.oldCombatChain = preserveIdentities(
+    prevGame.oldCombatChain,
+    payload.oldCombatChain
+  );
 
   {
     const prevChatLog = state.chatLog ?? [];
@@ -353,20 +304,34 @@ function mergeReceivedGameState(
   state.turnPlayer = payload.turnPlayer;
   state.otherPlayer = payload.otherPlayer;
   state.turnPhase = preserveIdentities(prevGame.turnPhase, payload.turnPhase);
-  state.playerInputPopUp = preserveIdentities(prevGame.playerInputPopUp, payload.playerInputPopUp);
+  state.playerInputPopUp = preserveIdentities(
+    prevGame.playerInputPopUp,
+    payload.playerInputPopUp
+  );
 
-  const newLastPlayed = preserveIdentities(prevGame.gameDynamicInfo.lastPlayed, payload.gameDynamicInfo.lastPlayed);
+  const newLastPlayed = preserveIdentities(
+    prevGame.gameDynamicInfo.lastPlayed,
+    payload.gameDynamicInfo.lastPlayed
+  );
   state.gameDynamicInfo.lastPlayed = newLastPlayed;
-  if (newLastPlayed && newLastPlayed.cardNumber !== 'CardBack' && !newLastPlayed.cardNumber.startsWith('CB')) {
+  if (
+    newLastPlayed &&
+    newLastPlayed.cardNumber !== 'CardBack' &&
+    !newLastPlayed.cardNumber.startsWith('CB')
+  ) {
     const prev = state.gameDynamicInfo.recentlyPlayed ?? [];
     if (prev[0]?.cardNumber !== newLastPlayed.cardNumber) {
-      state.gameDynamicInfo.recentlyPlayed = [newLastPlayed, ...prev].slice(0, 10);
+      state.gameDynamicInfo.recentlyPlayed = [newLastPlayed, ...prev].slice(
+        0,
+        10
+      );
     }
   }
   state.gameDynamicInfo.lastUpdate = payload.gameDynamicInfo.lastUpdate;
   state.gameDynamicInfo.turnNo = payload.gameDynamicInfo.turnNo;
   state.gameDynamicInfo.clock = payload.gameDynamicInfo.clock;
-  state.gameDynamicInfo.spectatorCount = payload.gameDynamicInfo.spectatorCount ?? 0;
+  state.gameDynamicInfo.spectatorCount =
+    payload.gameDynamicInfo.spectatorCount ?? 0;
   state.gameDynamicInfo.spectatorNames = preserveIdentities(
     prevGame.gameDynamicInfo.spectatorNames,
     payload.gameDynamicInfo.spectatorNames ?? []
@@ -379,14 +344,18 @@ function mergeReceivedGameState(
   state.hasPriority = payload.hasPriority;
   state.priorityPlayer = payload.priorityPlayer;
   state.chatEnabled = payload.chatEnabled;
-  state.playerPrompt = preserveIdentities(prevGame.playerPrompt, payload.playerPrompt);
+  state.playerPrompt = preserveIdentities(
+    prevGame.playerPrompt,
+    payload.playerPrompt
+  );
   state.canPassPhase = payload.canPassPhase;
   // events deliberately NOT identity-preserved: identical consecutive
   // event arrays are distinct occurrences (e.g. the same animation twice)
   state.events = payload.events;
   state.landmark = preserveIdentities(prevGame.landmark, payload.landmark);
 
-  state.gameInfo.roguelikeGameID = payload.gameInfo.roguelikeGameID ?? state.gameInfo.roguelikeGameID;
+  state.gameInfo.roguelikeGameID =
+    payload.gameInfo.roguelikeGameID ?? state.gameInfo.roguelikeGameID;
   state.gameInfo.altArts = preserveIdentities(
     prevGame.gameInfo.altArts,
     payload.gameInfo.altArts ?? prevGame.gameInfo.altArts
@@ -395,12 +364,17 @@ function mergeReceivedGameState(
     prevGame.gameInfo.opponentAltArts,
     payload.gameInfo.opponentAltArts ?? prevGame.gameInfo.opponentAltArts
   );
-  state.gameInfo.isPrivate = payload.gameInfo.isPrivate ?? state.gameInfo.isPrivate;
-  state.gameInfo.isReplay = payload.gameInfo.isReplay ?? state.gameInfo.isReplay;
-  state.gameInfo.isOpponentAI = payload.gameInfo.isOpponentAI ?? state.gameInfo.isOpponentAI;
-  state.gameInfo.gameFormat = payload.gameInfo.gameFormat ?? state.gameInfo.gameFormat;
+  state.gameInfo.isPrivate =
+    payload.gameInfo.isPrivate ?? state.gameInfo.isPrivate;
+  state.gameInfo.isReplay =
+    payload.gameInfo.isReplay ?? state.gameInfo.isReplay;
+  state.gameInfo.isOpponentAI =
+    payload.gameInfo.isOpponentAI ?? state.gameInfo.isOpponentAI;
+  state.gameInfo.gameFormat =
+    payload.gameInfo.gameFormat ?? state.gameInfo.gameFormat;
 
   state.aiHasInfiniteHP = payload.aiHasInfiniteHP ?? false;
+  state.practiceDummyWeaponPower = payload.practiceDummyWeaponPower ?? 4;
   state.opponentInactive = payload.opponentInactive ?? false;
   state.preventPassPrompt = payload.preventPassPrompt;
 }
@@ -730,6 +704,8 @@ export const gameSlice = createSlice({
       state.activeChainLink = undefined;
 
       if (isNewGame) {
+        state.gameLobby = undefined;
+        state.isUpdateInProgress = false;
         state.gameInfo.bazaarDeckId = action.payload.bazaarDeckId ?? undefined;
         // Clear recently played history from previous game
         state.gameDynamicInfo.recentlyPlayed = [];
@@ -859,6 +835,21 @@ export const gameSlice = createSlice({
         state.clashRevealTrigger += 1;
       }
     },
+    setHeroTransform: (
+      state,
+      action: PayloadAction<{ playerId: number | null; cardNumber: string }>
+    ) => {
+      if (action.payload.playerId === null) {
+        state.heroTransformP1Card = '';
+        state.heroTransformP2Card = '';
+      } else if (action.payload.playerId === 1) {
+        state.heroTransformP1Card = action.payload.cardNumber;
+        state.heroTransformTrigger += 1;
+      } else {
+        state.heroTransformP2Card = action.payload.cardNumber;
+        state.heroTransformTrigger += 1;
+      }
+    },
     setArsenalFlip: (
       state,
       action: PayloadAction<{ playerId: number | null; cardNumber: string }>
@@ -956,35 +947,6 @@ export const gameSlice = createSlice({
   // The `extraReducers` field lets the slice handle actions defined elsewhere,
   // including actions generated by createAsyncThunk or in other slices.
   extraReducers: (builder) => {
-    // nextTurn
-    builder.addCase(nextTurn.fulfilled, (state, action) => {
-      if (action.payload === undefined) {
-        return state;
-      }
-      const prevGame = (original(state) ?? current(state)) as GameState;
-      mergeReceivedGameState(state, prevGame, action.payload);
-      return state;
-    });
-    builder.addCase(nextTurn.pending, (state, action) => {
-      state.isUpdateInProgress = true;
-      return state;
-    });
-    builder.addCase(nextTurn.rejected, (state, action) => {
-      state.isUpdateInProgress = false;
-
-      // Check if this was a "game not found" error
-      const errorMessage = action.error?.message || '';
-      if (errorMessage.includes('GAME_NOT_FOUND')) {
-        console.error('Game not found on server, marking for navigation');
-        window.sessionStorage.setItem(
-          'gameNotFound',
-          String(state.gameInfo.gameID)
-        );
-      }
-
-      return state;
-    });
-
     // playCard
     builder.addCase(playCard.pending, (state) => {
       // player input in progress
@@ -992,8 +954,7 @@ export const gameSlice = createSlice({
       return state;
     });
     builder.addCase(playCard.fulfilled, (state) => {
-      // not setting isPlayerInput to false because the
-      // 'nextTurn' builder will set to true.
+      // The next SSE game-state update clears isPlayerInputInProgress.
       return state;
     });
     builder.addCase(playCard.rejected, (state) => {
@@ -1015,9 +976,12 @@ export const gameSlice = createSlice({
       return state;
     });
 
-    // nextTurn
+    // gameLobby
     builder.addCase(gameLobby.fulfilled, (state, action) => {
       if (action.payload === undefined) {
+        return state;
+      }
+      if (action.meta.arg.game.gameID !== state.gameInfo.gameID) {
         return state;
       }
       state.isUpdateInProgress = false;
@@ -1088,6 +1052,7 @@ export const {
   setShuffling,
   setAddBotDeck,
   setClashReveal,
+  setHeroTransform,
   setArsenalFlip,
   setArsenalDestroy,
   setReplayStart,
@@ -1110,7 +1075,9 @@ const selectPlayerOnePermanents = (state: RootState) =>
 const selectPlayerTwoPermanents = (state: RootState) =>
   state.game.playerTwo.Permanents;
 
-const buildPermanentsAsStack = (permanents: Card[] | undefined): CardStack[] => {
+const buildPermanentsAsStack = (
+  permanents: Card[] | undefined
+): CardStack[] => {
   const cards = permanents || [];
   if (cards.length === 0) return [];
 
@@ -1122,7 +1089,11 @@ const buildPermanentsAsStack = (permanents: Card[] | undefined): CardStack[] => 
     a.cardNumber.localeCompare(b.cardNumber)
   )) {
     if (currentCard.cardNumber === 'EVR070') {
-      result.push({ card: currentCard, count: 1, id: `${currentCard.cardNumber}-${idIndex++}` });
+      result.push({
+        card: currentCard,
+        count: 1,
+        id: `${currentCard.cardNumber}-${idIndex++}`
+      });
       continue;
     }
 
@@ -1132,7 +1103,12 @@ const buildPermanentsAsStack = (permanents: Card[] | undefined): CardStack[] => 
 
     if (candidates) {
       for (const idx of candidates) {
-        if (isEqual({ ...result[idx].card, actionDataOverride: '' }, curNormalized)) {
+        if (
+          isEqual(
+            { ...result[idx].card, actionDataOverride: '' },
+            curNormalized
+          )
+        ) {
           result[idx].count++;
           matched = true;
           break;
@@ -1147,7 +1123,11 @@ const buildPermanentsAsStack = (permanents: Card[] | undefined): CardStack[] => 
       } else {
         byCardNumber.set(currentCard.cardNumber, [idx]);
       }
-      result.push({ card: currentCard, count: 1, id: `${currentCard.cardNumber}-${idIndex++}` });
+      result.push({
+        card: currentCard,
+        count: 1,
+        id: `${currentCard.cardNumber}-${idIndex++}`
+      });
     }
   }
 

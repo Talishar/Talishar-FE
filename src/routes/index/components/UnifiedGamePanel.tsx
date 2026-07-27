@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { FaChevronUp, FaChevronDown } from 'react-icons/fa';
 import useAuth from 'hooks/useAuth';
 import useSupporterStatus from 'hooks/useSupporterStatus';
-import { AdUnit } from 'components/ads';
 import RustCounterPanel from 'components/RustCounterPanel';
 import QuickJoinPanel from './quickJoin/QuickJoinPanel';
 import CreateGame from 'routes/game/create/CreateGame';
@@ -102,7 +101,7 @@ const UnifiedGamePanel = () => {
             <RustCounterPanel
               rustCounters={rustCounters}
               isSupporter={isSupporter}
-              onAdUnavailable={() => clearRustCounters()}
+              onFallbackAdComplete={() => clearRustCounters()}
             />
           )}
           <div className={styles.quickJoinSection}>

@@ -15,7 +15,6 @@ import { useAppSelector } from 'app/Hooks';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import { AnimatePresence, PanInfo } from 'framer-motion';
 import { createPortal } from 'react-dom';
-import { useNewlyDrawnCards } from 'hooks/useNewlyDrawnCards';
 import useSound from 'use-sound';
 import drawingCardsSound from 'sounds/drawing_cards.wav';
 import { setHandCardRotationHeld } from 'utils/handCardRotation';
@@ -238,9 +237,6 @@ export default function PlayerHand() {
     },
     [maxScrollOffset]
   );
-
-  // Detect newly drawn cards for the draw animation
-  const newlyDrawnCardNumbers = useNewlyDrawnCards(handCards);
 
   useEffect(() => {
     setOrderedHandIds((previousOrder) => {
@@ -484,14 +480,14 @@ export default function PlayerHand() {
       const maxOverlapSpacing = -cardWidth * 0.3;
       const widthAtMaxOverlap = N * cardWidth + (N - 1) * maxOverlapSpacing;
       if (widthAtMaxOverlap <= containerWidth) {
-        // Cards fit if we overlap — find exact spacing needed
+        // Cards fit if we overlap - find exact spacing needed
         const fittingSpacing = (containerWidth - N * cardWidth) / (N - 1);
         setCardSpacingPx(Math.max(maxOverlapSpacing, fittingSpacing));
         setMaxScrollOffset(0);
         applyScrollOffset(0, 0);
         return;
       }
-      // Even at max overlap they don't fit — use max overlap and scroll the rest
+      // Even at max overlap they don't fit - use max overlap and scroll the rest
       setCardSpacingPx(maxOverlapSpacing);
       const overflowWidth = widthAtMaxOverlap;
       const newMax = Math.max(0, overflowWidth - containerWidth);
@@ -933,9 +929,6 @@ export default function PlayerHand() {
                   {orderedHandCards.length > 0 &&
                     orderedHandCards.map(({ card, id }, ix) => {
                       nextCardOccurrence(card.cardNumber);
-                      const isNewlyDrawn = newlyDrawnCardNumbers.has(
-                        card.cardNumber
-                      );
                       return (
                         <PlayerHandCard
                           card={card}
@@ -944,7 +937,6 @@ export default function PlayerHand() {
                           rotation={handCardRotations[id]}
                           addCardToPlayedCards={addCardToPlayedCards}
                           zIndex={ix + 200}
-                          isNewlyDrawn={isNewlyDrawn}
                           enableLayoutAnimation
                           shuffleRevision={handShuffleRevision}
                           scrollBlockedRef={scrollBlockedRef}

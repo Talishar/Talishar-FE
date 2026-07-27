@@ -161,12 +161,13 @@ fieldset legend strong {
 .playmatThumb {
   width: 160px;
   height: 90px;
+  box-sizing: border-box;
   object-fit: cover;
   border-radius: 8px;
   opacity: 0.88;
-  transition: opacity 0.25s, box-shadow 0.25s;
+  transition: opacity 0.25s, border-color 0.15s, box-shadow 0.25s;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 2px solid transparent;
   display: block;
 }
 
@@ -175,7 +176,7 @@ fieldset legend strong {
 }
 
 .playmatThumbSelected {
-  box-shadow: 0 0 0 3px var(--theme-primary);
+  border-color: var(--theme-primary);
   opacity: 1;
 }
 
@@ -209,11 +210,13 @@ fieldset legend strong {
   height: 150px;
   width: 150px;
   max-height: 150px;
+  box-sizing: border-box;
   opacity: 0.88;
-  transition: opacity 0.25s, box-shadow 0.25s, transform 0.2s;
+  transition: opacity 0.25s, border-color 0.15s, box-shadow 0.25s,
+    transform 0.2s;
   cursor: pointer;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  border: 2px solid transparent;
 }
 
 .cardBack:hover {
@@ -223,7 +226,7 @@ fieldset legend strong {
 }
 
 .selected {
-  box-shadow: 0 0 0 3px var(--theme-primary);
+  border-color: var(--theme-primary);
   opacity: 1;
 }
 

@@ -1,4 +1,3 @@
-import React from 'react';
 import styles from './ActiveEffects.module.css';
 import Effects from '../elements/effects/Effects';
 import LandmarkZone from '../zones/LandmarkZone';

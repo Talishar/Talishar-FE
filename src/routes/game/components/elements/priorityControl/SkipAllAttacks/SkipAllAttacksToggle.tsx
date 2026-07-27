@@ -1,4 +1,3 @@
-import React from 'react';
 import styles from '../PriorityControl.module.css';
 import * as optConst from 'features/options/constants';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';

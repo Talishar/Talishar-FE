@@ -121,6 +121,36 @@
   cursor: not-allowed;
 }
 
+.multiChooseActions {
+  margin-top: 0.35rem;
+  padding: 0.75rem 0.45rem 0.65rem;
+}
+
+.multiChooseSubmit.buttonDiv {
+  box-sizing: border-box;
+  min-height: 40px;
+  margin-bottom: 0;
+  background: var(--theme-primary, #d4af37);
+  border-color: var(--theme-primary, #d4af37);
+  color: #111;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+.multiChooseSubmit.buttonDiv:hover:not(:disabled) {
+  background: var(--theme-primary-hover, #e2c45c);
+  border-color: var(--theme-primary-hover, #e2c45c);
+  color: #000;
+}
+
+.multiChooseSubmit.buttonDiv:disabled {
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.09);
+  border-color: rgba(255, 255, 255, 0.28);
+  color: rgba(255, 255, 255, 0.55);
+  box-shadow: none;
+}
+
 .numberInputHint {
   padding-left: 0.45em;
   margin-top: 0.4em;
@@ -165,6 +195,67 @@
   flex-direction: column;
   width: 100%;
   gap: 5px;
+}
+
+.cardSearchContainer {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  flex: 1 1 24rem;
+  min-width: 10rem;
+  max-width: 32rem;
+  margin-left: auto;
+  margin-right: 1rem;
+  padding-left: 1rem;
+}
+
+.cardSearchInput.cardSearchInput {
+  box-sizing: border-box;
+  width: 100%;
+  height: 38px;
+  margin-bottom: 0;
+  padding: 7px 11px;
+  color: #e0e0e0;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 6px;
+  font-size: 0.95rem;
+}
+
+.cardSearchInput.cardSearchInput:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(236, 236, 236, 0.28);
+}
+
+.cardSearchCount,
+.noSearchResults {
+  color: rgba(224, 224, 224, 0.7);
+  font-size: 0.85rem;
+}
+
+.noSearchResults {
+  padding: 1.25rem 0.25rem;
+}
+
+@media (max-width: 600px) {
+  .optionsTitleContainer {
+    flex-wrap: wrap;
+  }
+
+  .cardSearchContainer {
+    order: 2;
+    flex: 1 0 calc(100% - 0.5rem);
+    min-width: 0;
+    max-width: none;
+    margin: 0.4rem 0.5rem 0 0;
+    padding-left: 0;
+  }
+
+  .cardSearchInput.cardSearchInput {
+    height: 34px;
+    padding: 5px 10px;
+    font-size: 0.8rem;
+  }
 }
 
 .optForm.optForm {
@@ -473,7 +564,7 @@
   }
 }
 
-/* Touch device overrides — larger tap targets for fat-finger friendliness */
+/* Touch device overrides - larger tap targets for fat-finger friendliness */
 @media (pointer: coarse) {
   .buttonList {
     gap: 0.6rem;

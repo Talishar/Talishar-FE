@@ -14,7 +14,7 @@ const EndGameStats = lazyWithRetry(() => import('../endGameStats/EndGameStats'))
 import EndGameMenuOptions from '../endGameMenuOptions/EndGameMenuOptions';
 import { shallowEqual } from 'react-redux';
 import useShowModal from 'hooks/useShowModals';
-import { FaEye, FaEyeSlash, FaEllipsisH, FaList, FaExchangeAlt } from 'react-icons/fa';
+import { FaEye, FaEyeSlash, FaEllipsisH, FaExchangeAlt } from 'react-icons/fa';
 import classNames from 'classnames';
 import useAuth from 'hooks/useAuth';
 import { PiFileCsvFill, PiCameraFill } from 'react-icons/pi';

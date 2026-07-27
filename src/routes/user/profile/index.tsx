@@ -5,7 +5,6 @@ import {
   useGetUserProfileQuery,
   useChangeDisplayNameMutation
 } from 'features/api/apiSlice';
-import { DeleteAccountAPIResponse } from 'interface/API/DeleteAccountAPI.php';
 import { toast } from 'react-hot-toast';
 import { useState } from 'react';
 import styles from './profile.module.css';
