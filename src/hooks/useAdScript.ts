@@ -1,5 +1,11 @@
 import { useEffect } from 'react';
-import { ADS_ENABLED } from 'config/ads';
+import { ADS_ENABLED, isAdFreeRoute } from 'config/ads';
+
+declare global {
+  interface Window {
+    __talisharAdProviderLoaded?: boolean;
+  }
+}
 
 const AD_SELECTORS =
   '[id^="rev-"], [class*="rev-content"], [class*="revcontent"],' +
@@ -140,6 +146,13 @@ function purgeAdElements() {
     .querySelectorAll('script[src*="rev.iq"]')
     .forEach((el) => el.remove());
   document.querySelectorAll(AD_SELECTORS).forEach((el) => el.remove());
+}
+
+export function wasAdProviderLoadedInDocument(): boolean {
+  return Boolean(
+    window.__talisharAdProviderLoaded ||
+      document.querySelector('script[src*="rev.iq"]')
+  );
 }
 
 // Sandbox an iframe from an ad network so it cannot navigate the top frame.
@@ -287,7 +300,8 @@ function sweepRewardedAttrs(root: Document | Element = document) {
 }
 
 export default function useAdScript(enabled = true) {
-  const shouldLoadProvider = enabled && ADS_ENABLED;
+  const isProtectedRoute = isAdFreeRoute(window.location.pathname);
+  const shouldLoadProvider = enabled && ADS_ENABLED && !isProtectedRoute;
 
   useEffect(() => {
     if (!shouldLoadProvider) {
@@ -342,6 +356,7 @@ export default function useAdScript(enabled = true) {
       const script = document.createElement('script');
       script.src = '//js.rev.iq/talishar.net';
       script.async = true;
+      window.__talisharAdProviderLoaded = true;
       document.head.appendChild(script);
     }
 

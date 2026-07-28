@@ -24,8 +24,7 @@ const Index = () => {
   usePageTitle(t('PAGES.PLAY_FAB_ONLINE'));
   const dispatch = useAppDispatch();
   const { isLoggedIn, currentUserName } = useAuth();
-  const { isSupporter, isLoading } = useSupporterStatus();
-  const showAds = !isLoading && !isSupporter;
+  const { isSupporter, showAds } = useSupporterStatus();
   const [isBannerHidden, setIsBannerHidden] = useState(false);
 
   const bannerPreferenceKey = useMemo(() => {

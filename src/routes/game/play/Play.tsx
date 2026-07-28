@@ -17,7 +17,7 @@ import GameStateHandler from 'app/GameStateHandler';
 import HeroVsHeroIntro from '../components/elements/heroVsHeroIntro/HeroVsHeroIntro';
 import OpponentInactive from '../components/elements/opponentInactive/OpponentInactive';
 import { useCookies } from 'react-cookie';
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useLayoutEffect, useRef } from 'react';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from '../../../app/Hooks';
@@ -42,6 +42,9 @@ import { PanelProvider } from '../components/leftColumn/PanelContext';
 import { RootState } from 'app/Store';
 import { PROCESS_INPUT } from 'appConstants';
 import usePlayerPresenceReporter from 'hooks/usePlayerPresenceReporter';
+import useAdScript, {
+  wasAdProviderLoadedInDocument
+} from 'hooks/useAdScript';
 
 const TOAST_STYLE: React.CSSProperties = {
   background: 'var(--theme-tertiary)',
@@ -61,47 +64,18 @@ const TOAST_STYLE: React.CSSProperties = {
 const TOAST_OPTIONS = { style: TOAST_STYLE };
 
 function Play({ isRoguelike }: { isRoguelike: boolean }) {
+  const needsCleanDocument = useRef(wasAdProviderLoadedInDocument());
+  useLayoutEffect(() => {
+    if (needsCleanDocument.current) {
+      window.location.reload();
+    }
+  }, []);
+
+  useAdScript(false);
   const { t } = useTranslation();
   usePageTitle(t('PAGES.GAME_PLAY'));
   usePlayerPresenceReporter();
 
-  // Hide all floating ad overlays while in-game. Only the RightColumn ad slot
-  // should ever show ads during gameplay.
-  useEffect(() => {
-    const FLOATING_AD_SELECTOR =
-      '[data-ad="anchor"], [data-ad="video"], [id^="rev-"], [class*="revcontent"], [class*="rev-content"]';
-
-    const hideFloatingAd = (element: Element) => {
-      (element as HTMLElement).style.setProperty(
-        'display',
-        'none',
-        'important'
-      );
-    };
-
-    const hideFloatingAdsWithin = (root: ParentNode) => {
-      if (root instanceof Element && root.matches(FLOATING_AD_SELECTOR)) {
-        hideFloatingAd(root);
-      }
-      root.querySelectorAll(FLOATING_AD_SELECTOR).forEach(hideFloatingAd);
-    };
-
-    hideFloatingAdsWithin(document);
-    const observer = new MutationObserver((records) => {
-      for (const record of records) {
-        record.addedNodes.forEach((node) => {
-          if (node instanceof Element) {
-            hideFloatingAdsWithin(node);
-          }
-        });
-      }
-    });
-    observer.observe(document.documentElement, {
-      childList: true,
-      subtree: true
-    });
-    return () => observer.disconnect();
-  }, []);
   const [cookies] = useCookies([
     'experimental',
     'cardSize',
@@ -222,6 +196,10 @@ function Play({ isRoguelike }: { isRoguelike: boolean }) {
       document.documentElement.style.setProperty('--hover-img-scale', '1');
     }
   }, [cookies.hoverImageSize]);
+
+  if (needsCleanDocument.current) {
+    return null;
+  }
 
   return (
     <PanelProvider>

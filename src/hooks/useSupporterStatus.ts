@@ -4,6 +4,7 @@ import useAuth from 'hooks/useAuth';
 
 const CACHE_KEY = 'talishar_supporter_status';
 const CACHE_TTL_MS = 24 * 60 * 60 * 1000; // 24 hours
+const FORCE_ADS_USERNAMES = new Set(['PvtVoid']);
 
 interface CachedSupporterStatus {
   isSupporter: boolean;
@@ -34,6 +35,15 @@ function writeCache(isSupporter: boolean): void {
   }
 }
 
+export function shouldShowAdsForUser(
+  userName: string | null | undefined,
+  isSupporter: boolean,
+  isLoading: boolean
+): boolean {
+  if (isLoading) return false;
+  return !isSupporter || FORCE_ADS_USERNAMES.has(userName ?? '');
+}
+
 /**
  * Returns whether the current user is a paid supporter.
  * Caches the result in localStorage for 1 hour to avoid repeated DB calls.
@@ -41,8 +51,9 @@ function writeCache(isSupporter: boolean): void {
 export default function useSupporterStatus(): {
   isSupporter: boolean;
   isLoading: boolean;
+  showAds: boolean;
 } {
-  const { isLoggedIn, isLoading: isAuthLoading } = useAuth();
+  const { isLoggedIn, currentUserName, isLoading: isAuthLoading } = useAuth();
 
   const cached = readCache();
   const skipApiCall = !isLoggedIn || cached !== null;
@@ -82,6 +93,7 @@ export default function useSupporterStatus(): {
   }, [isLoggedIn, isProfileLoading, profileData]);
 
   const isLoading = isAuthLoading || (!skipApiCall && isProfileLoading);
+  const showAds = shouldShowAdsForUser(currentUserName, isSupporter, isLoading);
 
-  return { isSupporter, isLoading };
+  return { isSupporter, isLoading, showAds };
 }

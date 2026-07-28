@@ -17,7 +17,7 @@ import useSupporterStatus from 'hooks/useSupporterStatus';
 import { reopenCookieConsent } from 'utils/cookieConsent';
 
 const Footer = () => {
-  const { isSupporter } = useSupporterStatus();
+  const { isSupporter, showAds } = useSupporterStatus();
   const { t } = useTranslation();
 
   return (
@@ -38,7 +38,7 @@ const Footer = () => {
             )}
           </div>
 
-          {!isSupporter && (
+          {showAds && (
             <div className={styles.adSlot}>
               <div data-ad="video" />
             </div>

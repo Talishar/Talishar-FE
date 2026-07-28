@@ -17,8 +17,7 @@ const AboutSection: React.FC = () => {
   const [expandedFAQ, setExpandedFAQ] = React.useState<number | null>(null);
   // Initial stuff to allow the lang to change
   const { t, i18n, ready } = useTranslation();
-  const { isSupporter, isLoading } = useSupporterStatus();
-  const showAds = !isLoading && !isSupporter;
+  const { isSupporter, showAds } = useSupporterStatus();
   const isMobile = useMediaQuery('(max-width: 728px)');
 
   const faqs = [

@@ -11,8 +11,7 @@ import { useTranslation } from 'react-i18next';
 const Learn: React.FC = () => {
   const { t } = useTranslation();
   usePageTitle(t('LEARN.PAGE_TITLE'));
-  const { isSupporter, isLoading: isAuthLoading } = useSupporterStatus();
-  const showAds = !isAuthLoading && !isSupporter;
+  const { showAds } = useSupporterStatus();
   useAdScript(showAds);
   const [guides, setGuides] = useState<MetafyGuide[]>([]);
   const [loading, setLoading] = useState(true);

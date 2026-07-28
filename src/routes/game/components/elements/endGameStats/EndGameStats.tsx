@@ -209,8 +209,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
   const { currentTheme } = useTheme();
   const themeColor = currentTheme.colors.primary;
 
-  const { isSupporter, isLoading: isSupporterLoading } = useSupporterStatus();
-  const showAds = !isSupporterLoading && !isSupporter;
+  const { isSupporter, showAds } = useSupporterStatus();
 
   const [turnSortField, setTurnSortField] = useState<
     | 'turnNo'

@@ -28,7 +28,6 @@ const UnifiedGamePanel = () => {
   const { canViewRustCounters, rustCounters } = useRustCounters();
   const { isSupporter, isLoading: isAuthLoading } = useSupporterStatus();
   const [clearRustCounters] = useClearRustCountersMutation();
-  const showAds = !isAuthLoading && !isSupporter;
   useEffect(() => {
     if (!canViewRustCounters) return;
     (window as any)._talishar_onRewardedAdGranted = () => {
