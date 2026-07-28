@@ -744,17 +744,13 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
     const inventory = [
       ...weaponsSB,
       ...(headClone
-        .concat(headSBClone)
-        .filter((x) => !values.head.includes(x))),
+        .concat(headSBClone)),
       ...(chestClone
-        .concat(chestSBClone)
-        .filter((x) => !values.chest.includes(x))),
+        .concat(chestSBClone)),
       ...(armsClone
-        .concat(armsSBClone)
-        .filter((x) => !values.arms.includes(x))),
+        .concat(armsSBClone)),
       ...(legsClone
-        .concat(legsSBClone)
-        .filter((x) => !values.legs.includes(x))),
+        .concat(legsSBClone)),
       ...(data?.deck?.demiHero ?? []),
       ...modularRemaining,
       ...(deckIndexed
