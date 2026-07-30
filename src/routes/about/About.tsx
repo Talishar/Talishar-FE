@@ -7,8 +7,7 @@ import { useTranslation } from 'react-i18next';
 const About = () => {
   const { t } = useTranslation();
   usePageTitle(t('PAGES.ABOUT'));
-  const { isSupporter, isLoading } = useSupporterStatus();
-  const showAds = !isLoading && !isSupporter;
+  const { showAds } = useSupporterStatus();
   useAdScript(showAds);
 
   return <AboutSection />;

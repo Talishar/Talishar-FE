@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { usePageTitle } from 'hooks/usePageTitle';
-import useAuth from 'hooks/useAuth';
-import { useGetUserProfileQuery } from 'features/api/apiSlice';
+import useSupporterStatus from 'hooks/useSupporterStatus';
 import useAdScript from 'hooks/useAdScript';
 import { TALISHAR_METAFY_URL } from 'constants/socialLinks';
 import { METAFY_TIER_MAP, MetafyTierName } from 'utils/patronIcons';
@@ -162,17 +161,7 @@ const Premium = () => {
     { label: t('PREMIUM_PAGE.COMPARISON.WEEKLY_CLASSES'), free: false, premium: '$35+' }
   ];
 
-  const { isLoggedIn, isLoading } = useAuth();
-  const { data: profileData, isLoading: isProfileLoading } = useGetUserProfileQuery(
-    undefined,
-    { skip: !isLoggedIn }
-  );
-  const isSupporter = isLoggedIn
-    ? isProfileLoading
-      ? true
-      : (profileData?.isMetafySupporter ?? false)
-    : false;
-  const showAds = !isLoading && !isSupporter;
+  const { showAds } = useSupporterStatus();
   useAdScript(showAds);
 
   const [yearly, setYearly] = useState(false);

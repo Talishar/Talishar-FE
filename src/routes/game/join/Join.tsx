@@ -91,8 +91,7 @@ const JoinGame = () => {
   const [joinGame, joinGameResult] = useJoinGameMutation();
   const { data, isLoading, isSuccess } = useGetFavoriteDecksQuery(undefined);
   const { isLoggedIn } = useAuth();
-  const { isSupporter, isLoading: authLoading } = useSupporterStatus();
-  const showAds = !authLoading && !isSupporter;
+  const { showAds } = useSupporterStatus();
   useAdScript(showAds);
 
   // Initial stuff to allow the lang to change
