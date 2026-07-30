@@ -20,9 +20,14 @@ import Button from '../../../../../features/Button';
 import { Card } from 'features/Card';
 
 const GROUPING_THRESHOLD = 1;
-const STORAGE_KEY = 'activeLayersPosition';
+const STORAGE_KEY_Y = 'activeLayersPositionY';
+const STORAGE_KEY_X = 'activeLayersPositionX';
 const MAX_Y_OFFSET = 35;
 const MIN_Y_OFFSET = -25;
+const MAX_X_OFFSET = 40;
+const MIN_X_OFFSET = -20;
+// Matches the @media (max-width: 768px) breakpoint in ActiveLayersZone.module.css
+const MOBILE_BREAKPOINT = 768;
 
 interface CardGroup {
   cards: Card[];
@@ -78,23 +83,35 @@ export default function ActiveLayersZone() {
   );
 
   const yOffsetMV = useMotionValue(
-    parseFloat(localStorage.getItem(STORAGE_KEY) ?? '') || 0
+    parseFloat(localStorage.getItem(STORAGE_KEY_Y) ?? '') || 0
   );
   const yOffsetDvh = useTransform(yOffsetMV, (v) => `${v}dvh`);
-  const [isDragging, setIsDragging] = useState(false);
   const dragStartYRef = useRef(0);
   const dragStartOffsetRef = useRef(yOffsetMV.get());
+
+  const xOffsetMV = useMotionValue(
+    parseFloat(localStorage.getItem(STORAGE_KEY_X) ?? '') || 0
+  );
+  const xOffsetDvw = useTransform(xOffsetMV, (v) => `${v}dvw`);
+  const dragStartXRef = useRef(0);
+  const dragStartOffsetXRef = useRef(xOffsetMV.get());
+
   const containerRef = useRef<HTMLDivElement>(null);
+  const [isDragging, setIsDragging] = useState(false);
 
   const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
     dragStartYRef.current = e.clientY;
     dragStartOffsetRef.current = yOffsetMV.get();
+    dragStartXRef.current = e.clientX;
+    dragStartOffsetXRef.current = xOffsetMV.get();
     setIsDragging(true);
   };
 
   const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
     dragStartYRef.current = e.touches[0].clientY;
     dragStartOffsetRef.current = yOffsetMV.get();
+    dragStartXRef.current = e.touches[0].clientX;
+    dragStartOffsetXRef.current = xOffsetMV.get();
     setIsDragging(true);
   };
 
@@ -102,27 +119,43 @@ export default function ActiveLayersZone() {
     if (!isDragging) return;
 
     const handleMouseMove = (e: MouseEvent) => {
-      const delta = e.clientY - dragStartYRef.current;
-      const deltaDvh = (delta / window.innerHeight) * 100;
-      const newOffset = Math.max(MIN_Y_OFFSET, Math.min(MAX_Y_OFFSET, dragStartOffsetRef.current + deltaDvh));
-      yOffsetMV.set(newOffset); // direct DOM update - no React re-render
+      const deltaY = e.clientY - dragStartYRef.current;
+      const deltaDvh = (deltaY / window.innerHeight) * 100;
+      const newOffsetY = Math.max(MIN_Y_OFFSET, Math.min(MAX_Y_OFFSET, dragStartOffsetRef.current + deltaDvh));
+      yOffsetMV.set(newOffsetY); // direct DOM update - no React re-render
+
+      if (window.innerWidth > MOBILE_BREAKPOINT) {
+        const deltaX = e.clientX - dragStartXRef.current;
+        const deltaDvw = (deltaX / window.innerWidth) * 100;
+        const newOffsetX = Math.max(MIN_X_OFFSET, Math.min(MAX_X_OFFSET, dragStartOffsetXRef.current + deltaDvw));
+        xOffsetMV.set(newOffsetX); // direct DOM update - no React re-render
+      }
     };
 
     const handleTouchMove = (e: TouchEvent) => {
-      const delta = e.touches[0].clientY - dragStartYRef.current;
-      const deltaDvh = (delta / window.innerHeight) * 100;
-      const newOffset = Math.max(MIN_Y_OFFSET, Math.min(MAX_Y_OFFSET, dragStartOffsetRef.current + deltaDvh));
-      yOffsetMV.set(newOffset); // direct DOM update - no React re-render
+      const deltaY = e.touches[0].clientY - dragStartYRef.current;
+      const deltaDvh = (deltaY / window.innerHeight) * 100;
+      const newOffsetY = Math.max(MIN_Y_OFFSET, Math.min(MAX_Y_OFFSET, dragStartOffsetRef.current + deltaDvh));
+      yOffsetMV.set(newOffsetY); // direct DOM update - no React re-render
+
+      if (window.innerWidth > MOBILE_BREAKPOINT) {
+        const deltaX = e.touches[0].clientX - dragStartXRef.current;
+        const deltaDvw = (deltaX / window.innerWidth) * 100;
+        const newOffsetX = Math.max(MIN_X_OFFSET, Math.min(MAX_X_OFFSET, dragStartOffsetXRef.current + deltaDvw));
+        xOffsetMV.set(newOffsetX); // direct DOM update - no React re-render
+      }
     };
 
     const handleMouseUp = () => {
       setIsDragging(false);
-      localStorage.setItem(STORAGE_KEY, yOffsetMV.get().toString());
+      localStorage.setItem(STORAGE_KEY_Y, yOffsetMV.get().toString());
+      localStorage.setItem(STORAGE_KEY_X, xOffsetMV.get().toString());
     };
 
     const handleTouchEnd = () => {
       setIsDragging(false);
-      localStorage.setItem(STORAGE_KEY, yOffsetMV.get().toString());
+      localStorage.setItem(STORAGE_KEY_Y, yOffsetMV.get().toString());
+      localStorage.setItem(STORAGE_KEY_X, xOffsetMV.get().toString());
     };
 
     document.addEventListener('mousemove', handleMouseMove);
@@ -136,8 +169,8 @@ export default function ActiveLayersZone() {
       document.removeEventListener('mouseup', handleMouseUp);
       document.removeEventListener('touchend', handleTouchEnd);
     };
-  // dragStartYRef and dragStartOffsetRef are refs - excluded from deps intentionally
-  }, [isDragging, yOffsetMV]);
+  // dragStart*Ref and dragStartOffset*Ref are refs - excluded from deps intentionally
+  }, [isDragging, yOffsetMV, xOffsetMV]);
 
   const handlePassTurn = () => {
     dispatch(submitButton({ button: { mode: PROCESS_INPUT.PASS } }));
@@ -168,7 +201,7 @@ export default function ActiveLayersZone() {
         <motion.div
           ref={containerRef}
           className={styles.activeLayersBox}
-          style={{ y: yOffsetDvh }}
+          style={{ y: yOffsetDvh, x: xOffsetDvw }}
           initial={prefersReducedMotion ? { opacity: 1 } : { opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
