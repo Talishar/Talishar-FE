@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import CardDisplay from '../../elements/cardDisplay/CardDisplay';
@@ -15,14 +15,20 @@ import {
 } from 'utils/ParseEscapedString';
 import { wrapKeywordsInNodes } from '../../elements/keywordPopover';
 import { BiTargetLock } from 'react-icons/bi';
-import { MdDragHandle } from 'react-icons/md';
+import { MdDragHandle, MdOpenWith, MdHeight } from 'react-icons/md';
 import Button from '../../../../../features/Button';
 import { Card } from 'features/Card';
 
 const GROUPING_THRESHOLD = 1;
-const STORAGE_KEY = 'activeLayersPosition';
-const MAX_Y_OFFSET = 35;
+const STORAGE_KEY_Y = 'activeLayersPositionY';
+const STORAGE_KEY_X = 'activeLayersPositionX';
+const STORAGE_KEY_X_ENABLED = 'activeLayersXDragEnabled';
+const MAX_Y_OFFSET = 52;
 const MIN_Y_OFFSET = -25;
+const MAX_X_OFFSET = 40;
+const MIN_X_OFFSET = -20;
+// Matches the @media (max-width: 768px) breakpoint in ActiveLayersZone.module.css
+const MOBILE_BREAKPOINT = 768;
 
 interface CardGroup {
   cards: Card[];
@@ -78,23 +84,65 @@ export default function ActiveLayersZone() {
   );
 
   const yOffsetMV = useMotionValue(
-    parseFloat(localStorage.getItem(STORAGE_KEY) ?? '') || 0
+    parseFloat(localStorage.getItem(STORAGE_KEY_Y) ?? '') || 0
   );
   const yOffsetDvh = useTransform(yOffsetMV, (v) => `${v}dvh`);
-  const [isDragging, setIsDragging] = useState(false);
   const dragStartYRef = useRef(0);
   const dragStartOffsetRef = useRef(yOffsetMV.get());
+
+  const xOffsetMV = useMotionValue(
+    parseFloat(localStorage.getItem(STORAGE_KEY_X) ?? '') || 0
+  );
+  const xOffsetDvw = useTransform(xOffsetMV, (v) => `${v}dvw`);
+  const dragStartXRef = useRef(0);
+  const dragStartOffsetXRef = useRef(xOffsetMV.get());
+
   const containerRef = useRef<HTMLDivElement>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [xDragEnabled, setXDragEnabled] = useState(
+    localStorage.getItem(STORAGE_KEY_X_ENABLED) !== 'false'
+  );
+
+  const disableXDrag = useCallback(() => {
+    setXDragEnabled(false);
+    localStorage.setItem(STORAGE_KEY_X_ENABLED, 'false');
+    xOffsetMV.set(0);
+    localStorage.setItem(STORAGE_KEY_X, '0');
+  }, [xOffsetMV]);
+
+  const toggleXDrag = () => {
+    if (xDragEnabled) {
+      disableXDrag();
+    } else {
+      setXDragEnabled(true);
+      localStorage.setItem(STORAGE_KEY_X_ENABLED, 'true');
+    }
+  };
+
+  useEffect(() => {
+    const mql = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT}px)`);
+    if (mql.matches) disableXDrag();
+
+    const handleChange = (e: MediaQueryListEvent) => {
+      if (e.matches) disableXDrag();
+    };
+    mql.addEventListener('change', handleChange);
+    return () => mql.removeEventListener('change', handleChange);
+  }, [disableXDrag]);
 
   const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
     dragStartYRef.current = e.clientY;
     dragStartOffsetRef.current = yOffsetMV.get();
+    dragStartXRef.current = e.clientX;
+    dragStartOffsetXRef.current = xOffsetMV.get();
     setIsDragging(true);
   };
 
   const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
     dragStartYRef.current = e.touches[0].clientY;
     dragStartOffsetRef.current = yOffsetMV.get();
+    dragStartXRef.current = e.touches[0].clientX;
+    dragStartOffsetXRef.current = xOffsetMV.get();
     setIsDragging(true);
   };
 
@@ -102,27 +150,43 @@ export default function ActiveLayersZone() {
     if (!isDragging) return;
 
     const handleMouseMove = (e: MouseEvent) => {
-      const delta = e.clientY - dragStartYRef.current;
-      const deltaDvh = (delta / window.innerHeight) * 100;
-      const newOffset = Math.max(MIN_Y_OFFSET, Math.min(MAX_Y_OFFSET, dragStartOffsetRef.current + deltaDvh));
-      yOffsetMV.set(newOffset); // direct DOM update - no React re-render
+      const deltaY = e.clientY - dragStartYRef.current;
+      const deltaDvh = (deltaY / window.innerHeight) * 100;
+      const newOffsetY = Math.max(MIN_Y_OFFSET, Math.min(MAX_Y_OFFSET, dragStartOffsetRef.current + deltaDvh));
+      yOffsetMV.set(newOffsetY); // direct DOM update - no React re-render
+
+      if (xDragEnabled && window.innerWidth > MOBILE_BREAKPOINT) {
+        const deltaX = e.clientX - dragStartXRef.current;
+        const deltaDvw = (deltaX / window.innerWidth) * 100;
+        const newOffsetX = Math.max(MIN_X_OFFSET, Math.min(MAX_X_OFFSET, dragStartOffsetXRef.current + deltaDvw));
+        xOffsetMV.set(newOffsetX); // direct DOM update - no React re-render
+      }
     };
 
     const handleTouchMove = (e: TouchEvent) => {
-      const delta = e.touches[0].clientY - dragStartYRef.current;
-      const deltaDvh = (delta / window.innerHeight) * 100;
-      const newOffset = Math.max(MIN_Y_OFFSET, Math.min(MAX_Y_OFFSET, dragStartOffsetRef.current + deltaDvh));
-      yOffsetMV.set(newOffset); // direct DOM update - no React re-render
+      const deltaY = e.touches[0].clientY - dragStartYRef.current;
+      const deltaDvh = (deltaY / window.innerHeight) * 100;
+      const newOffsetY = Math.max(MIN_Y_OFFSET, Math.min(MAX_Y_OFFSET, dragStartOffsetRef.current + deltaDvh));
+      yOffsetMV.set(newOffsetY); // direct DOM update - no React re-render
+
+      if (xDragEnabled && window.innerWidth > MOBILE_BREAKPOINT) {
+        const deltaX = e.touches[0].clientX - dragStartXRef.current;
+        const deltaDvw = (deltaX / window.innerWidth) * 100;
+        const newOffsetX = Math.max(MIN_X_OFFSET, Math.min(MAX_X_OFFSET, dragStartOffsetXRef.current + deltaDvw));
+        xOffsetMV.set(newOffsetX); // direct DOM update - no React re-render
+      }
     };
 
     const handleMouseUp = () => {
       setIsDragging(false);
-      localStorage.setItem(STORAGE_KEY, yOffsetMV.get().toString());
+      localStorage.setItem(STORAGE_KEY_Y, yOffsetMV.get().toString());
+      localStorage.setItem(STORAGE_KEY_X, xOffsetMV.get().toString());
     };
 
     const handleTouchEnd = () => {
       setIsDragging(false);
-      localStorage.setItem(STORAGE_KEY, yOffsetMV.get().toString());
+      localStorage.setItem(STORAGE_KEY_Y, yOffsetMV.get().toString());
+      localStorage.setItem(STORAGE_KEY_X, xOffsetMV.get().toString());
     };
 
     document.addEventListener('mousemove', handleMouseMove);
@@ -136,8 +200,8 @@ export default function ActiveLayersZone() {
       document.removeEventListener('mouseup', handleMouseUp);
       document.removeEventListener('touchend', handleTouchEnd);
     };
-  // dragStartYRef and dragStartOffsetRef are refs - excluded from deps intentionally
-  }, [isDragging, yOffsetMV]);
+  // dragStart*Ref and dragStartOffset*Ref are refs - excluded from deps intentionally
+  }, [isDragging, yOffsetMV, xOffsetMV, xDragEnabled]);
 
   const handlePassTurn = () => {
     dispatch(submitButton({ button: { mode: PROCESS_INPUT.PASS } }));
@@ -168,7 +232,7 @@ export default function ActiveLayersZone() {
         <motion.div
           ref={containerRef}
           className={styles.activeLayersBox}
-          style={{ y: yOffsetDvh }}
+          style={{ y: yOffsetDvh, x: xOffsetDvw }}
           initial={prefersReducedMotion ? { opacity: 1 } : { opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -236,6 +300,24 @@ export default function ActiveLayersZone() {
             onMouseDown={handleMouseDown}
             onTouchStart={handleTouchStart}
           >
+            <button
+              type="button"
+              className={styles.dragModeToggle}
+              onClick={toggleXDrag}
+              onMouseDown={(e) => e.stopPropagation()}
+              onTouchStart={(e) => e.stopPropagation()}
+              title={
+                xDragEnabled
+                  ? 'Lock to vertical movement'
+                  : 'Unlock horizontal movement'
+              }
+            >
+              {xDragEnabled ? (
+                <MdOpenWith className={styles.dragModeIcon} />
+              ) : (
+                <MdHeight className={styles.dragModeIcon} />
+              )}
+            </button>
             <MdDragHandle
               size={32}
               className={styles.gripIcon}
