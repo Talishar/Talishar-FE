@@ -370,6 +370,10 @@
     display: none;
   }
 
+  .dragModeToggle {
+    display: none;
+  }
+
   .buttonDiv {
     font-size: 0.7em;
     padding: 5px 8px;

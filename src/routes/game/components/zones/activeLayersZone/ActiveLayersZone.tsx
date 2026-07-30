@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import CardDisplay from '../../elements/cardDisplay/CardDisplay';
@@ -103,15 +103,32 @@ export default function ActiveLayersZone() {
     localStorage.getItem(STORAGE_KEY_X_ENABLED) !== 'false'
   );
 
+  const disableXDrag = useCallback(() => {
+    setXDragEnabled(false);
+    localStorage.setItem(STORAGE_KEY_X_ENABLED, 'false');
+    xOffsetMV.set(0);
+    localStorage.setItem(STORAGE_KEY_X, '0');
+  }, [xOffsetMV]);
+
   const toggleXDrag = () => {
-    const next = !xDragEnabled;
-    setXDragEnabled(next);
-    localStorage.setItem(STORAGE_KEY_X_ENABLED, next.toString());
-    if (!next) {
-      xOffsetMV.set(0);
-      localStorage.setItem(STORAGE_KEY_X, '0');
+    if (xDragEnabled) {
+      disableXDrag();
+    } else {
+      setXDragEnabled(true);
+      localStorage.setItem(STORAGE_KEY_X_ENABLED, 'true');
     }
   };
+
+  useEffect(() => {
+    const mql = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT}px)`);
+    if (mql.matches) disableXDrag();
+
+    const handleChange = (e: MediaQueryListEvent) => {
+      if (e.matches) disableXDrag();
+    };
+    mql.addEventListener('change', handleChange);
+    return () => mql.removeEventListener('change', handleChange);
+  }, [disableXDrag]);
 
   const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
     dragStartYRef.current = e.clientY;
