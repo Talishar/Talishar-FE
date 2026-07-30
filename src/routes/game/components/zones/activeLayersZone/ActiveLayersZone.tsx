@@ -15,14 +15,15 @@ import {
 } from 'utils/ParseEscapedString';
 import { wrapKeywordsInNodes } from '../../elements/keywordPopover';
 import { BiTargetLock } from 'react-icons/bi';
-import { MdDragHandle } from 'react-icons/md';
+import { MdDragHandle, MdOpenWith, MdHeight } from 'react-icons/md';
 import Button from '../../../../../features/Button';
 import { Card } from 'features/Card';
 
 const GROUPING_THRESHOLD = 1;
 const STORAGE_KEY_Y = 'activeLayersPositionY';
 const STORAGE_KEY_X = 'activeLayersPositionX';
-const MAX_Y_OFFSET = 35;
+const STORAGE_KEY_X_ENABLED = 'activeLayersXDragEnabled';
+const MAX_Y_OFFSET = 52;
 const MIN_Y_OFFSET = -25;
 const MAX_X_OFFSET = 40;
 const MIN_X_OFFSET = -20;
@@ -98,6 +99,19 @@ export default function ActiveLayersZone() {
 
   const containerRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
+  const [xDragEnabled, setXDragEnabled] = useState(
+    localStorage.getItem(STORAGE_KEY_X_ENABLED) !== 'false'
+  );
+
+  const toggleXDrag = () => {
+    const next = !xDragEnabled;
+    setXDragEnabled(next);
+    localStorage.setItem(STORAGE_KEY_X_ENABLED, next.toString());
+    if (!next) {
+      xOffsetMV.set(0);
+      localStorage.setItem(STORAGE_KEY_X, '0');
+    }
+  };
 
   const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
     dragStartYRef.current = e.clientY;
@@ -124,7 +138,7 @@ export default function ActiveLayersZone() {
       const newOffsetY = Math.max(MIN_Y_OFFSET, Math.min(MAX_Y_OFFSET, dragStartOffsetRef.current + deltaDvh));
       yOffsetMV.set(newOffsetY); // direct DOM update - no React re-render
 
-      if (window.innerWidth > MOBILE_BREAKPOINT) {
+      if (xDragEnabled && window.innerWidth > MOBILE_BREAKPOINT) {
         const deltaX = e.clientX - dragStartXRef.current;
         const deltaDvw = (deltaX / window.innerWidth) * 100;
         const newOffsetX = Math.max(MIN_X_OFFSET, Math.min(MAX_X_OFFSET, dragStartOffsetXRef.current + deltaDvw));
@@ -138,7 +152,7 @@ export default function ActiveLayersZone() {
       const newOffsetY = Math.max(MIN_Y_OFFSET, Math.min(MAX_Y_OFFSET, dragStartOffsetRef.current + deltaDvh));
       yOffsetMV.set(newOffsetY); // direct DOM update - no React re-render
 
-      if (window.innerWidth > MOBILE_BREAKPOINT) {
+      if (xDragEnabled && window.innerWidth > MOBILE_BREAKPOINT) {
         const deltaX = e.touches[0].clientX - dragStartXRef.current;
         const deltaDvw = (deltaX / window.innerWidth) * 100;
         const newOffsetX = Math.max(MIN_X_OFFSET, Math.min(MAX_X_OFFSET, dragStartOffsetXRef.current + deltaDvw));
@@ -170,7 +184,7 @@ export default function ActiveLayersZone() {
       document.removeEventListener('touchend', handleTouchEnd);
     };
   // dragStart*Ref and dragStartOffset*Ref are refs - excluded from deps intentionally
-  }, [isDragging, yOffsetMV, xOffsetMV]);
+  }, [isDragging, yOffsetMV, xOffsetMV, xDragEnabled]);
 
   const handlePassTurn = () => {
     dispatch(submitButton({ button: { mode: PROCESS_INPUT.PASS } }));
@@ -269,6 +283,24 @@ export default function ActiveLayersZone() {
             onMouseDown={handleMouseDown}
             onTouchStart={handleTouchStart}
           >
+            <button
+              type="button"
+              className={styles.dragModeToggle}
+              onClick={toggleXDrag}
+              onMouseDown={(e) => e.stopPropagation()}
+              onTouchStart={(e) => e.stopPropagation()}
+              title={
+                xDragEnabled
+                  ? 'Lock to vertical movement'
+                  : 'Unlock horizontal movement'
+              }
+            >
+              {xDragEnabled ? (
+                <MdOpenWith className={styles.dragModeIcon} />
+              ) : (
+                <MdHeight className={styles.dragModeIcon} />
+              )}
+            </button>
             <MdDragHandle
               size={32}
               className={styles.gripIcon}
