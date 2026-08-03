@@ -162,6 +162,18 @@
     "SHOW_LESS": "Show Less",
     "TITLE": "🍪 Cookie Consent"
   },
+  "COOKIE_CONSENT": {
+    "ACCEPT_ALL": "Accept All Cookies",
+    "ADVERTISING": "<strong>Advertising Cookies:</strong> rev.iq and its partners use cookies to serve ads based on your visits to our site and other sites. Ads keep Talishar free to use, so they are shown to all non-supporter accounts. You can opt out of personalized ads anytime via <3>rev.iq Ad Settings</3>.",
+    "ANALYTICS": "<strong>Analytics Cookies (only with your consent):</strong> We use Google Analytics to understand how visitors interact with the site. These cookies are only set if you choose \"Accept All Cookies\".",
+    "CHANGE_CHOICE": "You can change your choice anytime from the <2>Privacy page</2> or through your browser settings.",
+    "DECLINE_ANALYTICS": "Decline Analytics",
+    "DESCRIPTION": "Talishar uses essential cookies to keep you logged in and connected to your games. With your consent, we also use analytics cookies, and rev.iq uses advertising cookies to help keep Talishar free.",
+    "ESSENTIAL": "<strong>Essential Cookies (always active):</strong> Required for Talishar to work. They store your login session, your \"Remember Me\" token if you use it, and the authorization key that proves you are a player in your current game. Declining below does <strong>not</strong> disable these - but if you block all cookies in your browser settings, you may be disconnected mid-game, unable to rejoin, and forced to log in again between games.",
+    "LEARN_MORE": "Learn More",
+    "SHOW_LESS": "Show Less",
+    "TITLE": "🍪 Cookie Consent"
+  },
   "DECKS": {
     "ADD_DECK": "Add Deck",
     "ADD_DECK_HINT": "Paste a deck link from <2>FaBrary.net</2> to add it to your favorites.",
@@ -288,6 +300,12 @@
     "YOUR_HERO": "Your Hero",
     "YOUR_LIFE": "Your Life",
     "YOUR_TIME": "Your Time:"
+  },
+  "ERROR_PAGE": {
+    "HOME": "Home",
+    "MESSAGE": "Sorry, an error has occurred.",
+    "TITLE": "Oops!",
+    "UNKNOWN_ERROR": "An unknown error happened!"
   },
   "ERROR_PAGE": {
     "HOME": "Home",
@@ -509,6 +527,11 @@
     "SUBTITLE": "Choose your deck and enter the game",
     "TALISHAR_DECKS": "Talishar Decks",
     "TITLE": "Join Game"
+  },
+  "SIGNUP":{
+    "PAGE_TITLE":"Sign Up - Play FaB Free Online",
+    "BANNER_TITLE":"Create Account",
+    "BANNER_SUBTITLE":"Join Talishar for free"
   },
   "LEARN": {
     "BANNER_SUBTITLE": "Master your skills with expert guides from our community",
@@ -1210,6 +1233,30 @@
     "USERNAME_LABEL": "Username",
     "VISIT_COMMUNITY": "Visit Community →",
     "YOUR_COMMUNITIES": "Your Communities:"
+  },
+  "RUST_COUNTER_PANEL": {
+    "DEV_MODE_NOTE": "Development mode: rust counters do not block games.",
+    "RUST_COUNTERS_one": "Rust counters: {{count}} / {{max}}",
+    "RUST_COUNTERS_other": "Rust counters: {{count}} / {{max}}",
+    "SUPPORTER_MESSAGE": "Thank you for your support! ❤️",
+    "TOOLTIP": "Rust counters accrue as you play games as a non-supporter. At {{max}} counters you can no longer queue for games. Clear them by watching a rewarded ad, or remove ads entirely by supporting Talishar on Metafy for as low as 5$ per month. Your support keeps the servers running and support the developers.",
+    "WATCH_AD_NOTE": "Watch a short ad to keep playing.",
+    "WATCH_AD_TO_CLEAR": "Watch Ad to Clear",
+    "WHAT_ARE_RUST_COUNTERS": "What are rust counters?"
+  },
+  "SESSION_RECOVERY": {
+    "ACTIVE_GAME": "You have an active game <1>#{{gameId}}</1> waiting",
+    "DISMISS": "Dismiss",
+    "DISMISS_TITLE": "Dismiss for 2 hours",
+    "GAME_SESSION_RECOVERED": "Game session recovered!",
+    "OPPONENT_DISCONNECTED": "Opponent Disconnected",
+    "OPPONENT_LABEL": "Opponent:",
+    "RECOVERING": "⏳ Recovering...",
+    "REJOIN_FAILED": "Failed to rejoin game. Please try again.",
+    "REJOIN_GAME": "Rejoin Game",
+    "RESUME_TITLE": "Resume your game",
+    "RESUME_YOUR_GAME": "⚡ Resume Your Game?",
+    "UNABLE_TO_RECOVER": "Unable to recover game session. Please rejoin the game."
   },
   "RUST_COUNTER_PANEL": {
     "DEV_MODE_NOTE": "Development mode: rust counters do not block games.",

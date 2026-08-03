@@ -162,6 +162,18 @@
     "SHOW_LESS": "",
     "TITLE": ""
   },
+  "COOKIE_CONSENT": {
+    "ACCEPT_ALL": "",
+    "ADVERTISING": "",
+    "ANALYTICS": "",
+    "CHANGE_CHOICE": "",
+    "DECLINE_ANALYTICS": "",
+    "DESCRIPTION": "",
+    "ESSENTIAL": "",
+    "LEARN_MORE": "",
+    "SHOW_LESS": "",
+    "TITLE": ""
+  },
   "DECKS": {
     "ADD_DECK": "",
     "ADD_DECK_HINT": "",
@@ -288,6 +300,12 @@
     "YOUR_HERO": "",
     "YOUR_LIFE": "",
     "YOUR_TIME": ""
+  },
+  "ERROR_PAGE": {
+    "HOME": "",
+    "MESSAGE": "",
+    "TITLE": "",
+    "UNKNOWN_ERROR": ""
   },
   "ERROR_PAGE": {
     "HOME": "",
@@ -1210,6 +1228,30 @@
     "USERNAME_LABEL": "",
     "VISIT_COMMUNITY": "",
     "YOUR_COMMUNITIES": ""
+  },
+  "RUST_COUNTER_PANEL": {
+    "DEV_MODE_NOTE": "",
+    "RUST_COUNTERS_one": "",
+    "RUST_COUNTERS_other": "",
+    "SUPPORTER_MESSAGE": "",
+    "TOOLTIP": "",
+    "WATCH_AD_NOTE": "",
+    "WATCH_AD_TO_CLEAR": "",
+    "WHAT_ARE_RUST_COUNTERS": ""
+  },
+  "SESSION_RECOVERY": {
+    "ACTIVE_GAME": "",
+    "DISMISS": "",
+    "DISMISS_TITLE": "",
+    "GAME_SESSION_RECOVERED": "",
+    "OPPONENT_DISCONNECTED": "",
+    "OPPONENT_LABEL": "",
+    "RECOVERING": "",
+    "REJOIN_FAILED": "",
+    "REJOIN_GAME": "",
+    "RESUME_TITLE": "",
+    "RESUME_YOUR_GAME": "",
+    "UNABLE_TO_RECOVER": ""
   },
   "RUST_COUNTER_PANEL": {
     "DEV_MODE_NOTE": "",
