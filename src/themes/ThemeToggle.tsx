@@ -3,11 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import { TALISHAR_METAFY_URL } from 'constants/socialLinks';
 import useSupporterStatus from 'hooks/useSupporterStatus';
 import { useTheme } from './ThemeContext';
+import { useTranslation } from 'react-i18next';
 import styles from './ThemeToggle.module.css';
 
 const ThemeToggle: React.FC = () => {
   const { currentTheme, setTheme, availableThemes } = useTheme();
   const { isSupporter } = useSupporterStatus();
+  const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
@@ -73,10 +75,10 @@ const ThemeToggle: React.FC = () => {
                 {locked && (
                   <span
                     className={styles.lockBadge}
-                    title="Metafy supporter exclusive"
+                    title={t('THEME_TOGGLE.METAFY_SUPPORTER_EXCLUSIVE')}
                     onClick={handlePremiumClick}
                   >
-                    🔒
+                    {t('THEME_TOGGLE.LOCK')}
                   </span>
                 )}
               </li>
@@ -89,7 +91,7 @@ const ThemeToggle: React.FC = () => {
                 className={styles.upgradeButton}
                 onClick={handlePremiumClick}
               >
-                Unlock Custom Themes - Become a Supporter
+                {t('THEME_TOGGLE.UNLOCK_CUSTOM_THEMES')}
               </button>
             </li>
           )}

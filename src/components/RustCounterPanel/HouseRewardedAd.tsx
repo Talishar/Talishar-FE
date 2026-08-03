@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { createPortal } from 'react-dom';
 import { FaTimes } from 'react-icons/fa';
 import { TALISHAR_METAFY_URL } from 'constants/socialLinks';
@@ -46,6 +47,7 @@ const TIERS: Tier[] = [
 ];
 
 const HouseRewardedAd = ({ onRewardEarned }: HouseRewardedAdProps) => {
+  const { t } = useTranslation();
   const [remainingMs, setRemainingMs] = useState(AD_DURATION_MS);
   const remainingMsRef = useRef(AD_DURATION_MS);
   const visibleSinceRef = useRef<number | null>(null);
@@ -115,8 +117,10 @@ const HouseRewardedAd = ({ onRewardEarned }: HouseRewardedAdProps) => {
           disabled={!rewardReady}
           aria-label={
             rewardReady
-              ? 'Close and clear rust counters'
-              : `Ad can be closed in ${secondsRemaining} seconds`
+              ? t('HOUSE_REWARDED_AD.CLOSE_AND_CLEAR')
+              : t('HOUSE_REWARDED_AD.CLOSE_IN_SECONDS', {
+                  seconds: secondsRemaining
+                })
           }
         >
           {rewardReady ? <FaTimes aria-hidden="true" /> : secondsRemaining}
@@ -127,28 +131,36 @@ const HouseRewardedAd = ({ onRewardEarned }: HouseRewardedAdProps) => {
           href={TALISHAR_METAFY_URL}
           target="_blank"
           rel="noopener noreferrer"
-          aria-label="Become a Talishar member on Metafy"
+          aria-label={t('HOUSE_REWARDED_AD.BECOME_MEMBER')}
         >
           <img
             className={styles.banner}
             src={talisharBanner}
-            alt="Join Talishar on Metafy to remove ads"
+            alt={t('HOUSE_REWARDED_AD.JOIN_TO_REMOVE_ADS')}
           />
         </a>
 
         <div className={styles.content}>
           <header className={styles.header}>
-            <h2 id="house-ad-title">Support Talishar</h2>
+            <h2 id="house-ad-title">
+              {t('HOUSE_REWARDED_AD.SUPPORT_TALISHAR')}
+            </h2>
           </header>
 
-          <ul className={styles.benefits} aria-label="Premium benefits">
-            <li>Unlimited games anytime</li>
-            <li>No rust counters</li>
-            <li>No advertisements</li>
-            <li>Extra customization</li>
+          <ul
+            className={styles.benefits}
+            aria-label={t('HOUSE_REWARDED_AD.PREMIUM_BENEFITS')}
+          >
+            <li>{t('HOUSE_REWARDED_AD.BENEFIT_UNLIMITED_GAMES')}</li>
+            <li>{t('HOUSE_REWARDED_AD.BENEFIT_NO_RUST_COUNTERS')}</li>
+            <li>{t('HOUSE_REWARDED_AD.BENEFIT_NO_ADS')}</li>
+            <li>{t('HOUSE_REWARDED_AD.BENEFIT_EXTRA_CUSTOMIZATION')}</li>
           </ul>
 
-          <div className={styles.tiers} aria-label="Membership options">
+          <div
+            className={styles.tiers}
+            aria-label={t('HOUSE_REWARDED_AD.MEMBERSHIP_OPTIONS')}
+          >
             {TIERS.map((tier) => (
               <a
                 key={tier.name}
@@ -168,13 +180,16 @@ const HouseRewardedAd = ({ onRewardEarned }: HouseRewardedAdProps) => {
                 </span>
                 <span className={styles.monthlyPrice}>
                   ${tier.monthlyPrice}
-                  <small>/month</small>
+                  <small>{t('HOUSE_REWARDED_AD.PER_MONTH')}</small>
                 </span>
                 <span className={styles.annualPrice}>
-                  ${tier.annualPrice}/year
+                  ${tier.annualPrice}
+                  {t('HOUSE_REWARDED_AD.PER_YEAR')}
                 </span>
                 <span className={styles.savings}>
-                  {tier.savings}% annual savings
+                  {t('HOUSE_REWARDED_AD.ANNUAL_SAVINGS', {
+                    savings: tier.savings
+                  })}
                 </span>
               </a>
             ))}
@@ -187,8 +202,10 @@ const HouseRewardedAd = ({ onRewardEarned }: HouseRewardedAdProps) => {
             disabled={!rewardReady}
           >
             {rewardReady
-              ? 'Continue - Clear Your Rust Counters!'
-              : `Continue in ${secondsRemaining}s`}
+              ? t('HOUSE_REWARDED_AD.CONTINUE_CLEAR')
+              : t('HOUSE_REWARDED_AD.CONTINUE_IN', {
+                  seconds: secondsRemaining
+                })}
           </button>
         </div>
       </section>

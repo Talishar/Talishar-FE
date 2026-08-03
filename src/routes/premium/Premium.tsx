@@ -193,7 +193,9 @@ const Premium = () => {
             <div className={`${styles.toggleKnob} ${yearly ? styles.yearly : ''}`} />
           </button>
           <span className={yearly ? styles.activeLabel : undefined}>{t('PREMIUM_PAGE.BILLING_TOGGLE_YEARLY')}</span>
-          <span className={styles.saveBadge}>Save up to 15%</span>
+          <span className={styles.saveBadge}>
+            {t('PREMIUM_PAGE.SAVE_UP_TO_15')}
+          </span>
         </div>
 
         <div className={styles.tierGrid}>
@@ -233,7 +235,7 @@ const Premium = () => {
                   rel="noopener noreferrer"
                   className={styles.upgradeBtn}
                 >
-                  Upgrade
+                  {t('PREMIUM_PAGE.UPGRADE')}
                 </a>
                 <ul className={styles.benefits}>
                   {tier.benefits.map((b) => (
@@ -248,15 +250,17 @@ const Premium = () => {
         <div className={styles.comparisonSection}>
           <h2>{t('PREMIUM_PAGE.COMPARISON.FREE_VS_PREMIUM')}</h2>
           <p className={styles.comparisonSubtitle}>
-            See what you get with a premium membership
+            {t('PREMIUM_PAGE.COMPARISON_SUBTITLE')}
           </p>
           <div className={styles.tableWrapper}>
             <table className={styles.comparisonTable}>
               <thead>
                 <tr>
-                  <th>Feature</th>
+                  <th>{t('PREMIUM_PAGE.COMPARISON.FEATURE')}</th>
                   <th>{t('PREMIUM_PAGE.COMPARISON.FREE')}</th>
-                  <th className={styles.highlighted}>{t('PREMIUM_PAGE.COMPARISON.PREMIUM')}</th>
+                  <th className={styles.highlighted}>
+                    {t('PREMIUM_PAGE.COMPARISON.PREMIUM')}
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -289,15 +293,15 @@ const Premium = () => {
         </div>
 
         <div className={styles.ctaSection}>
-          <h2>Ready to upgrade?</h2>
-          <p>Join hundreds of supporters keeping Talishar running and thriving.</p>
+          <h2>{t('PREMIUM_PAGE.READY_TO_UPGRADE')}</h2>
+          <p>{t('PREMIUM_PAGE.CTA_SUBTITLE')}</p>
           <a
             href={TALISHAR_METAFY_URL}
             target="_blank"
             rel="noopener noreferrer"
             className={styles.ctaBtn}
           >
-            Become a Supporter
+            {t('PREMIUM_PAGE.BECOME_SUPPORTER')}
           </a>
         </div>
       </div>

@@ -1,10 +1,12 @@
 import { useNavigate, useRouteError } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import styles from './errorPage.module.css';
 import { CARD_IMAGES_PATH, getCollectionCardImagePath } from 'utils';
 
 export const ErrorPage = () => {
   const error = useRouteError();
   const navigate = useNavigate();
+  const { t } = useTranslation();
   console.error(error);
   let statusText = '';
   let errStatus = '';
@@ -28,7 +30,7 @@ export const ErrorPage = () => {
   }
 
   if (statusText === '') {
-    statusText = 'An unknown error happened!';
+    statusText = t('ERROR_PAGE.UNKNOWN_ERROR');
   }
 
   const errorCardSrc = getCollectionCardImagePath({
@@ -40,8 +42,8 @@ export const ErrorPage = () => {
   return (
     <main className={styles.container}>
       <article className={styles.article}>
-        <h1 style={{ marginBottom: '12px' }}>Oops!</h1>
-        <p>Sorry, an error has occurred.</p>
+        <h1 style={{ marginBottom: '12px' }}>{t('ERROR_PAGE.TITLE')}</h1>
+        <p>{t('ERROR_PAGE.MESSAGE')}</p>
         {!!errStatus && <p>{errStatus}</p>}
         <p>
           <i>{statusText}</i>
@@ -57,7 +59,7 @@ export const ErrorPage = () => {
             navigate(-1);
           }}
         >
-          Back
+          {t('JOIN.BACK')}
         </button>
         <button
           onClick={(e) => {
@@ -65,7 +67,7 @@ export const ErrorPage = () => {
             navigate('/');
           }}
         >
-          Home
+          {t('ERROR_PAGE.HOME')}
         </button>
       </article>
     </main>

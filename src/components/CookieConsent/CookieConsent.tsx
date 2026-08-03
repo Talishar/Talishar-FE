@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation, Trans } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import styles from './CookieConsent.module.css';
 import {
@@ -14,6 +15,7 @@ interface CookieConsentProps {
 }
 
 const CookieConsent: React.FC<CookieConsentProps> = ({ onConsent }) => {
+  const { t } = useTranslation();
   const [isVisible, setIsVisible] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -65,52 +67,57 @@ const CookieConsent: React.FC<CookieConsentProps> = ({ onConsent }) => {
     <div className={styles.cookieConsentOverlay}>
       <div className={styles.cookieConsentBanner}>
         <div className={styles.content}>
-          <h3 className={styles.title}>🍪 Cookie Consent</h3>
+          <h3 className={styles.title}>{t('COOKIE_CONSENT.TITLE')}</h3>
 
           {!isExpanded ? (
             <p className={styles.description}>
-              Talishar uses essential cookies to keep you logged in and
-              connected to your games. With your consent, we also use analytics
-              cookies, and rev.iq uses advertising cookies to help keep
-              Talishar free.
+              {t('COOKIE_CONSENT.DESCRIPTION')}
             </p>
           ) : (
             <div className={styles.expandedContent}>
               <p className={styles.description}>
-                <strong>Essential Cookies (always active):</strong> Required
-                for Talishar to work. They store your login session, your
-                &quot;Remember Me&quot; token if you use it, and the
-                authorization key that proves you are a player in your current
-                game. Declining below does <strong>not</strong> disable these
-                - but if you block all cookies in your browser settings, you
-                may be disconnected mid-game, unable to rejoin, and forced to
-                log in again between games.
+                <Trans i18nKey="COOKIE_CONSENT.ESSENTIAL">
+                  <strong>Essential Cookies (always active):</strong> Required
+                  for Talishar to work. They store your login session, your
+                  &quot;Remember Me&quot; token if you use it, and the
+                  authorization key that proves you are a player in your current
+                  game. Declining below does <strong>not</strong> disable these
+                  - but if you block all cookies in your browser settings, you
+                  may be disconnected mid-game, unable to rejoin, and forced to
+                  log in again between games.
+                </Trans>
               </p>
               <p className={styles.description}>
-                <strong>Analytics Cookies (only with your consent):</strong>{' '}
-                We use Google Analytics to understand how visitors interact
-                with the site. These cookies are only set if you choose
-                &quot;Accept All Cookies&quot;.
+                <Trans i18nKey="COOKIE_CONSENT.ANALYTICS">
+                  <strong>Analytics Cookies (only with your consent):</strong>{' '}
+                  We use Google Analytics to understand how visitors interact
+                  with the site. These cookies are only set if you choose
+                  &quot;Accept All Cookies&quot;.
+                </Trans>
               </p>
               <p className={styles.description}>
-                <strong>Advertising Cookies:</strong> rev.iq and its partners
-                use cookies to serve ads based on your visits to our site and
-                other sites. Ads keep Talishar free to use, so they are shown
-                to all non-supporter accounts. You can opt out of personalized
-                ads anytime via{' '}
-                <a
-                  href="https://www.rev.iq/optout"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  rev.iq Ad Settings
-                </a>
-                .
+                <Trans i18nKey="COOKIE_CONSENT.ADVERTISING">
+                  <strong>Advertising Cookies:</strong> rev.iq and its partners
+                  use cookies to serve ads based on your visits to our site and
+                  other sites. Ads keep Talishar free to use, so they are shown
+                  to all non-supporter accounts. You can opt out of personalized
+                  ads anytime via{' '}
+                  <a
+                    href="https://www.rev.iq/optout"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    rev.iq Ad Settings
+                  </a>
+                  .
+                </Trans>
               </p>
               <p className={styles.description}>
-                You can change your choice anytime from the{' '}
-                <Link to="/privacy">Privacy page</Link> or through your browser
-                settings.
+                <Trans i18nKey="COOKIE_CONSENT.CHANGE_CHOICE">
+                  You can change your choice anytime from the{' '}
+                  <Link to="/privacy">Privacy page</Link> or through your
+                  browser settings.
+                </Trans>
               </p>
             </div>
           )}
@@ -119,7 +126,9 @@ const CookieConsent: React.FC<CookieConsentProps> = ({ onConsent }) => {
             className={styles.learnMoreButton}
             onClick={() => setIsExpanded(!isExpanded)}
           >
-            {isExpanded ? 'Show Less' : 'Learn More'}
+            {isExpanded
+              ? t('COOKIE_CONSENT.SHOW_LESS')
+              : t('COOKIE_CONSENT.LEARN_MORE')}
           </button>
         </div>
 
@@ -128,16 +137,16 @@ const CookieConsent: React.FC<CookieConsentProps> = ({ onConsent }) => {
             className={`${styles.button} ${styles.acceptButton}`}
             onClick={handleAccept}
           >
-            Accept All Cookies
+            {t('COOKIE_CONSENT.ACCEPT_ALL')}
           </button>
           <button
             className={`${styles.button} ${styles.essentialButton}`}
             onClick={handleDecline}
           >
-            Decline Analytics
+            {t('COOKIE_CONSENT.DECLINE_ANALYTICS')}
           </button>
           <Link to="/privacy" className={styles.privacyLink}>
-            Privacy Policy
+            {t('LEGAL.PRIVACY_POLICY')}
           </Link>
         </div>
       </div>

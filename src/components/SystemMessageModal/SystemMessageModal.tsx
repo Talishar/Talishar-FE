@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAcknowledgeSystemMessageMutation } from 'features/api/apiSlice';
 import styles from './SystemMessageModal.module.css';
 
@@ -10,12 +11,13 @@ const COUNTDOWN_SECONDS = 5;
 const CIRCUMFERENCE = 2 * Math.PI * 10;
 
 const SystemMessageModal: React.FC<SystemMessageModalProps> = ({ message }) => {
+  const { t } = useTranslation();
   const [acknowledge, { isLoading }] = useAcknowledgeSystemMessageMutation();
   const [countdown, setCountdown] = useState(COUNTDOWN_SECONDS);
 
   useEffect(() => {
     if (countdown <= 0) return;
-    const timer = setTimeout(() => setCountdown(c => c - 1), 1000);
+    const timer = setTimeout(() => setCountdown((c) => c - 1), 1000);
     return () => clearTimeout(timer);
   }, [countdown]);
 
@@ -32,7 +34,7 @@ const SystemMessageModal: React.FC<SystemMessageModalProps> = ({ message }) => {
   return (
     <div className={styles.overlay}>
       <div className={styles.modal}>
-        <h2 className={styles.title}>System Message</h2>
+        <h2 className={styles.title}>{t('SYSTEM_MESSAGE_MODAL.TITLE')}</h2>
         <div className={styles.message}>{message}</div>
         <button
           className={styles.acknowledgeBtn}
@@ -41,8 +43,18 @@ const SystemMessageModal: React.FC<SystemMessageModalProps> = ({ message }) => {
         >
           {countdown > 0 ? (
             <span className={styles.countdownWrapper}>
-              <svg width="22" height="22" viewBox="0 0 24 24" className={styles.countdownSvg}>
-                <circle cx="12" cy="12" r="10" className={styles.countdownTrack} />
+              <svg
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                className={styles.countdownSvg}
+              >
+                <circle
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  className={styles.countdownTrack}
+                />
                 <circle
                   cx="12"
                   cy="12"
@@ -50,17 +62,20 @@ const SystemMessageModal: React.FC<SystemMessageModalProps> = ({ message }) => {
                   className={styles.countdownCircle}
                   style={{
                     strokeDasharray: CIRCUMFERENCE,
-                    strokeDashoffset: CIRCUMFERENCE * (1 - countdown / COUNTDOWN_SECONDS),
+                    strokeDashoffset:
+                      CIRCUMFERENCE * (1 - countdown / COUNTDOWN_SECONDS)
                   }}
                 />
-                <text x="12" y="12" className={styles.countdownText}>{countdown}</text>
+                <text x="12" y="12" className={styles.countdownText}>
+                  {countdown}
+                </text>
               </svg>
-              <span>Please wait...</span>
+              <span>{t('SYSTEM_MESSAGE_MODAL.PLEASE_WAIT')}</span>
             </span>
           ) : isLoading ? (
-            'Acknowledging...'
+            t('SYSTEM_MESSAGE_MODAL.ACKNOWLEDGING')
           ) : (
-            'Acknowledge'
+            t('SYSTEM_MESSAGE_MODAL.ACKNOWLEDGE')
           )}
         </button>
       </div>

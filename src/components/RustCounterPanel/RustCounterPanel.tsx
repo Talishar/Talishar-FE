@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { FaQuestionCircle } from 'react-icons/fa';
 import {
   MAX_RUST_COUNTERS,
@@ -18,6 +19,7 @@ const RustCounterPanel = ({
   isSupporter,
   onFallbackAdComplete
 }: RustCounterPanelProps) => {
+  const { t } = useTranslation();
   const canTestRewardedAds = import.meta.env.DEV;
   const displayedRustCounters = Math.min(
     Math.max(0, rustCounters),
@@ -49,8 +51,7 @@ const RustCounterPanel = ({
     let shown = false;
     try {
       shown = (window as any)._talishar_showRewarded?.() === true;
-    } catch {
-    }
+    } catch {}
     if (shown) {
       return;
     }
@@ -66,7 +67,7 @@ const RustCounterPanel = ({
     return (
       <div className={styles.panel}>
         <p className={styles.supporterMessage}>
-          Thank you for your support! ❤️
+          {t('RUST_COUNTER_PANEL.SUPPORTER_MESSAGE')}
         </p>
       </div>
     );
@@ -93,16 +94,19 @@ const RustCounterPanel = ({
             </span>
           )}
           <span className={styles.title}>
-            Rust counters: {displayedRustCounters} / {MAX_RUST_COUNTERS}
+            {t('RUST_COUNTER_PANEL.RUST_COUNTERS', {
+              count: displayedRustCounters,
+              max: MAX_RUST_COUNTERS
+            })}
           </span>
         </div>
         {canTestRewardedAds ? (
           <span className={styles.subtitle}>
-            Development mode: rust counters do not block games.
+            {t('RUST_COUNTER_PANEL.DEV_MODE_NOTE')}
           </span>
         ) : isLocked ? (
           <span className={styles.subtitle}>
-            Watch a short ad to keep playing.
+            {t('RUST_COUNTER_PANEL.WATCH_AD_NOTE')}
           </span>
         ) : null}
       </div>
@@ -118,7 +122,7 @@ const RustCounterPanel = ({
               onClick={handleWatchAdClick}
               onAnimationEnd={() => setIsPulsing(false)}
             >
-              Watch Ad to Clear
+              {t('RUST_COUNTER_PANEL.WATCH_AD_TO_CLEAR')}
             </button>
           </div>
         )}
@@ -128,14 +132,14 @@ const RustCounterPanel = ({
           target="_blank"
           rel="noreferrer"
         >
-          Remove ads
+          {t('UNITED_GAME_PANEL.REMOVE_ADS')}
         </a>
       </div>
       <span className={styles.helpWrapper}>
         <button
           type="button"
           className={styles.helpIcon}
-          aria-label="What are rust counters?"
+          aria-label={t('RUST_COUNTER_PANEL.WHAT_ARE_RUST_COUNTERS')}
           aria-describedby="rust-counter-tooltip"
         >
           <FaQuestionCircle size={14} />
@@ -145,11 +149,7 @@ const RustCounterPanel = ({
           role="tooltip"
           className={styles.tooltip}
         >
-          Rust counters accrue as you play games as a non-supporter. At{' '}
-          {MAX_RUST_COUNTERS} counters you can no longer queue for games. Clear
-          them by watching a rewarded ad, or remove ads entirely by supporting
-          Talishar on Metafy for as low as 5$ per month. Your support keeps the
-          servers running and support the developers.
+          {t('RUST_COUNTER_PANEL.TOOLTIP', { max: MAX_RUST_COUNTERS })}
         </span>
       </span>
       {showFallbackAd && (
