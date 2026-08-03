@@ -1018,7 +1018,7 @@ const Lobby = () => {
                         type="button"
                         className={styles.kickButton}
                         onClick={handleKickPlayer}
-                        title={t('GAME_LOBBY.KICK_TIITLE', { 'name': (isStreamerMode ? t('GAME_LOBBY.OPPONENT') : gameLobby.theirName)})}
+                        title={t('GAME_LOBBY.KICK_TITLE', { 'name': (isStreamerMode ? t('GAME_LOBBY.OPPONENT') : gameLobby.theirName)})}
                         aria-label={t('GAME_LOBBY.KICK_LABEL')}
                       >
 			t('GAME_LOBBY.KICK')
