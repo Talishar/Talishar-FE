@@ -21,6 +21,7 @@ import {
   MdEdit
 } from 'react-icons/md';
 import { IoMdArrowDropright } from 'react-icons/io';
+import { useTranslation } from 'react-i18next';
 import styles from './FriendsList.module.css';
 import { Friend } from 'interface/API/FriendListAPI.php';
 import { createPatreonIconMap } from 'utils/patronIcons';
@@ -35,6 +36,7 @@ interface NicknameEditState {
 }
 
 export const FriendsList: React.FC<FriendsListProps> = ({ className }) => {
+  const { t } = useTranslation();
   const [searchTerm, setSearchTerm] = useState('');
   const [showSearchResults, setShowSearchResults] = useState(false);
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
@@ -94,20 +96,22 @@ export const FriendsList: React.FC<FriendsListProps> = ({ className }) => {
   const handleAddFriend = async (friendUsername: string) => {
     try {
       const result = await addFriend({ friendUsername }).unwrap();
-      toast.success(`Friend request sent to ${friendUsername}!`);
+      toast.success(
+        t('PROFILE.FRIEND_REQUEST_SENT', { username: friendUsername })
+      );
       setSearchTerm('');
       setShowSearchResults(false);
       refetchSent();
       refetchPending();
     } catch (err: any) {
-      toast.error(err.error || 'Failed to send friend request');
+      toast.error(err.error || t('PROFILE.FAILED_SEND_FRIEND_REQUEST'));
     }
   };
 
   const handleRemoveFriend = async (friend: Friend) => {
     if (
       !window.confirm(
-        `Are you sure you want to remove ${friend.username} from your friends?`
+        t('PROFILE.REMOVE_FRIEND_CONFIRM', { username: friend.username })
       )
     ) {
       return;
@@ -115,10 +119,10 @@ export const FriendsList: React.FC<FriendsListProps> = ({ className }) => {
 
     try {
       await removeFriend({ friendUserId: friend.friendUserId }).unwrap();
-      toast.success(`Removed ${friend.username} from friends`);
+      toast.success(t('PROFILE.REMOVED_FRIEND', { username: friend.username }));
       refetchFriends();
     } catch (err: any) {
-      toast.error(err.error || 'Failed to remove friend');
+      toast.error(err.error || t('PROFILE.FAILED_REMOVE_FRIEND'));
     }
   };
 
@@ -128,11 +132,11 @@ export const FriendsList: React.FC<FriendsListProps> = ({ className }) => {
   ) => {
     try {
       await acceptRequest({ requesterUserId }).unwrap();
-      toast.success(`Added ${requesterUsername} as a friend!`);
+      toast.success(t('PROFILE.ADDED_FRIEND', { username: requesterUsername }));
       refetchPending();
       refetchFriends();
     } catch (err: any) {
-      toast.error(err.error || 'Failed to accept friend request');
+      toast.error(err.error || t('PROFILE.FAILED_ACCEPT_REQUEST'));
     }
   };
 
@@ -142,10 +146,12 @@ export const FriendsList: React.FC<FriendsListProps> = ({ className }) => {
   ) => {
     try {
       await rejectRequest({ requesterUserId }).unwrap();
-      toast.success(`Rejected friend request from ${requesterUsername}`);
+      toast.success(
+        t('PROFILE.REJECTED_REQUEST', { username: requesterUsername })
+      );
       refetchPending();
     } catch (err: any) {
-      toast.error(err.error || 'Failed to reject friend request');
+      toast.error(err.error || t('PROFILE.FAILED_REJECT_REQUEST'));
     }
   };
 
@@ -154,17 +160,21 @@ export const FriendsList: React.FC<FriendsListProps> = ({ className }) => {
     recipientUsername: string
   ) => {
     if (
-      !window.confirm(`Cancel friend request sent to ${recipientUsername}?`)
+      !window.confirm(
+        t('PROFILE.CANCEL_REQUEST_CONFIRM', { username: recipientUsername })
+      )
     ) {
       return;
     }
 
     try {
       await cancelRequest({ recipientUserId }).unwrap();
-      toast.success(`Cancelled request sent to ${recipientUsername}`);
+      toast.success(
+        t('PROFILE.CANCELLED_REQUEST', { username: recipientUsername })
+      );
       refetchSent();
     } catch (err: any) {
-      toast.error(err.error || 'Failed to cancel friend request');
+      toast.error(err.error || t('PROFILE.FAILED_CANCEL_REQUEST'));
     }
   };
 
@@ -183,11 +193,11 @@ export const FriendsList: React.FC<FriendsListProps> = ({ className }) => {
         friendUserId: nicknameEdit.friendUserId,
         nickname: nicknameEdit.nickname
       }).unwrap();
-      toast.success('Nickname updated successfully');
+      toast.success(t('PROFILE.NICKNAME_UPDATED'));
       setNicknameEdit({ friendUserId: null, nickname: '' });
       refetchFriends();
     } catch (err: any) {
-      toast.error(err.error || 'Failed to update nickname');
+      toast.error(err.error || t('PROFILE.FAILED_UPDATE_NICKNAME'));
     }
   };
 
@@ -207,7 +217,7 @@ export const FriendsList: React.FC<FriendsListProps> = ({ className }) => {
           userSelect: 'none'
         }}
       >
-        Friends List
+        {t('PROFILE.FRIENDS_LIST')}
         <span
           style={{
             marginLeft: '8px',
@@ -230,7 +240,7 @@ export const FriendsList: React.FC<FriendsListProps> = ({ className }) => {
                 id="add-friend-search"
                 name="add-friend-search"
                 type="text"
-                placeholder="Search for players to add..."
+                placeholder={t('PROFILE.SEARCH_ADD_PLACEHOLDER')}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className={styles.searchInput}
@@ -273,8 +283,8 @@ export const FriendsList: React.FC<FriendsListProps> = ({ className }) => {
                               disabled={hasRequestSent}
                               title={
                                 hasRequestSent
-                                  ? 'Friend request already sent'
-                                  : 'Add friend'
+                                  ? t('PROFILE.FRIEND_REQUEST_ALREADY_SENT')
+                                  : t('PROFILE.ADD_FRIEND')
                               }
                             >
                               {hasRequestSent ? <MdBlock /> : <MdPersonAdd />}
@@ -285,8 +295,11 @@ export const FriendsList: React.FC<FriendsListProps> = ({ className }) => {
                     </ul>
                   );
                 })()
-              : showSearchResults && !searchLoading && (
-                  <p className={styles.noResults}>No users found</p>
+              : showSearchResults &&
+                !searchLoading && (
+                  <p className={styles.noResults}>
+                    {t('PROFILE.NO_USERS_FOUND')}
+                  </p>
                 )}
           </div>
 
@@ -296,14 +309,14 @@ export const FriendsList: React.FC<FriendsListProps> = ({ className }) => {
             sentData.sentRequests.length > 0 && (
               <div className={styles.friendsTableContainer}>
                 <h4 className={styles.subtitle}>
-                  Pending Friend Requests Sent
+                  {t('PROFILE.PENDING_REQUESTS_SENT')}
                 </h4>
                 <table className={styles.friendsTable}>
                   <thead>
                     <tr>
-                      <th scope="col">Sent To</th>
+                      <th scope="col">{t('PROFILE.SENT_TO')}</th>
                       <th scope="col" className={styles.actionColumnHeader}>
-                        Action
+                        {t('PROFILE.ACTION')}
                       </th>
                     </tr>
                   </thead>
@@ -346,7 +359,7 @@ export const FriendsList: React.FC<FriendsListProps> = ({ className }) => {
                                 request.recipientUsername
                               )
                             }
-                            title="Cancel friend request"
+                            title={t('PROFILE.CANCEL_FRIEND_REQUEST')}
                           >
                             <MdCancel fontSize="1.5em" />
                           </button>
@@ -363,13 +376,15 @@ export const FriendsList: React.FC<FriendsListProps> = ({ className }) => {
             pendingData?.requests &&
             pendingData.requests.length > 0 && (
               <div className={styles.friendsTableContainer}>
-                <h4 className={styles.subtitle}>Pending Friend Requests</h4>
+                <h4 className={styles.subtitle}>
+                  {t('PROFILE.PENDING_REQUESTS')}
+                </h4>
                 <table className={styles.friendsTable}>
                   <thead>
                     <tr>
-                      <th scope="col">From</th>
+                      <th scope="col">{t('PROFILE.FROM')}</th>
                       <th scope="col" className={styles.actionColumnHeader}>
-                        Action
+                        {t('PROFILE.ACTION')}
                       </th>
                     </tr>
                   </thead>
@@ -412,7 +427,7 @@ export const FriendsList: React.FC<FriendsListProps> = ({ className }) => {
                                 request.requesterUsername
                               )
                             }
-                            title="Accept friend request"
+                            title={t('PROFILE.ACCEPT_FRIEND_REQUEST')}
                           >
                             <MdCheckCircle fontSize="1.5em" />
                           </button>
@@ -424,7 +439,7 @@ export const FriendsList: React.FC<FriendsListProps> = ({ className }) => {
                                 request.requesterUsername
                               )
                             }
-                            title="Reject friend request"
+                            title={t('PROFILE.REJECT_FRIEND_REQUEST')}
                           >
                             <MdCancel fontSize="1.5em" />
                           </button>
@@ -439,15 +454,17 @@ export const FriendsList: React.FC<FriendsListProps> = ({ className }) => {
           {/* Friends List */}
           <div className={styles.friendsTableContainer}>
             {friendsLoading ? (
-              <p className={styles.loadingText}>Loading friends...</p>
+              <p className={styles.loadingText}>
+                {t('PROFILE.LOADING_FRIENDS')}
+              </p>
             ) : friendsData?.friends && friendsData.friends.length > 0 ? (
               <>
                 <table className={styles.friendsTable}>
                   <thead>
                     <tr>
-                      <th scope="col">Friend</th>
+                      <th scope="col">{t('PROFILE.FRIEND')}</th>
                       <th scope="col" className={styles.actionColumnHeader}>
-                        Action
+                        {t('PROFILE.ACTION')}
                       </th>
                     </tr>
                   </thead>
@@ -492,14 +509,14 @@ export const FriendsList: React.FC<FriendsListProps> = ({ className }) => {
                           <button
                             className={styles.editButton}
                             onClick={() => handleEditNickname(friend)}
-                            title="Edit nickname"
+                            title={t('PROFILE.EDIT_NICKNAME')}
                           >
                             <MdEdit fontSize="1.5em" />
                           </button>
                           <button
                             className={styles.deleteButton}
                             onClick={() => handleRemoveFriend(friend)}
-                            title="Remove friend"
+                            title={t('PROFILE.REMOVE_FRIEND')}
                           >
                             <RiDeleteBin5Line fontSize="1.5em" />
                           </button>
@@ -524,12 +541,12 @@ export const FriendsList: React.FC<FriendsListProps> = ({ className }) => {
                 className={styles.modalContent}
                 onClick={(e) => e.stopPropagation()}
               >
-                <h3>Edit Nickname</h3>
+                <h3>{t('PROFILE.EDIT_NICKNAME_HEADING')}</h3>
                 <input
                   id="friend-nickname"
                   name="friend-nickname"
                   type="text"
-                  placeholder="Enter nickname (optional)"
+                  placeholder={t('PROFILE.NICKNAME_PLACEHOLDER')}
                   value={nicknameEdit.nickname}
                   onChange={(e) =>
                     setNicknameEdit({
@@ -546,13 +563,13 @@ export const FriendsList: React.FC<FriendsListProps> = ({ className }) => {
                     className={styles.saveButton}
                     onClick={handleSaveNickname}
                   >
-                    Save
+                    {t('PROFILE.SAVE')}
                   </button>
                   <button
                     className={styles.cancelButton}
                     onClick={handleCancelNicknameEdit}
                   >
-                    Cancel
+                    {t('PROFILE.CANCEL')}
                   </button>
                 </div>
               </div>

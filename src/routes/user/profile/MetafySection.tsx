@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'react-hot-toast';
 import styles from './profile.module.css';
 import { MetafyCommunity } from 'interface/API/MetafyAPI.php';
@@ -17,13 +18,14 @@ const MetafySection: React.FC<MetafySectionProps> = ({
   metafyInfo,
   className
 }) => {
+  const { t } = useTranslation();
   const [showCommunities, setShowCommunities] = useState(false);
   const [refreshMetafyCommunities, { isLoading: isRefreshing }] =
     useRefreshMetafyCommunitiesMutation();
 
   const handleDisconnect = async () => {
     // For now, we'll show a placeholder message
-    toast.success('Metafy disconnection feature coming soon', {
+    toast.success(t('PROFILE.METAFY_DISCONNECT_SOON'), {
       position: 'top-center'
     });
   };
@@ -33,7 +35,7 @@ const MetafySection: React.FC<MetafySectionProps> = ({
     if (isRefreshing) return;
     try {
       await refreshMetafyCommunities().unwrap();
-      toast.success('Metafy communities refreshed!', {
+      toast.success(t('PROFILE.METAFY_REFRESHED'), {
         position: 'top-center'
       });
     } catch (err: any) {
@@ -45,14 +47,14 @@ const MetafySection: React.FC<MetafySectionProps> = ({
         errorCode === 'token_expired' ||
         errorCode === 'no_access_token'
       ) {
-        toast('Redirecting to re-connect your Metafy account...', {
+        toast(t('PROFILE.METAFY_REDIRECTING'), {
           position: 'top-center'
         });
         if (metafyInfo) {
           window.location.href = metafyInfo;
         }
       } else {
-        toast.error('Failed to refresh Metafy data. Please try again.', {
+        toast.error(t('PROFILE.METAFY_REFRESH_FAILED'), {
           position: 'top-center'
         });
       }
@@ -74,27 +76,29 @@ const MetafySection: React.FC<MetafySectionProps> = ({
 
   return (
     <div className={styles.metafySection}>
-      <h3>Metafy Communities</h3>
+      <h3>{t('PROFILE.METAFY_COMMUNITIES')}</h3>
       {!isMetafyLinked && (
         <p>
-          <a href={metafyInfo}>Connect to Metafy</a>
+          <a href={metafyInfo}>{t('PROFILE.CONNECT_METAFY')}</a>
         </p>
       )}
       {isMetafyLinked && (
         <>
           <p>
-            You have linked your Metafy account. <br />
+            {t('PROFILE.METAFY_LINKED')} <br />
             <a href={metafyInfo ?? '#'} onClick={handleRefresh}>
               {isRefreshing
-                ? 'Refreshing...'
-                : 'Refresh your Metafy connection'}
+                ? t('PROFILE.REFRESHING')
+                : t('PROFILE.REFRESH_METAFY_CONNECTION')}
             </a>
           </p>
           <button
             onClick={() => setShowCommunities(!showCommunities)}
             className={styles.metafyToggleButton}
           >
-            {showCommunities ? 'Hide Communities' : 'Show Communities'}
+            {showCommunities
+              ? t('PROFILE.HIDE_COMMUNITIES')
+              : t('PROFILE.SHOW_COMMUNITIES')}
           </button>
 
           {showCommunities && (
@@ -102,7 +106,7 @@ const MetafySection: React.FC<MetafySectionProps> = ({
               {metafyCommunities && metafyCommunities.length > 0 ? (
                 <div>
                   <div className={styles.metafyCommunitiesHeader}>
-                    Your Communities:
+                    {t('PROFILE.YOUR_COMMUNITIES')}
                   </div>
                   {metafyCommunities.map((community, index) => {
                     const communityType = getCommunityType(community);
@@ -122,12 +126,12 @@ const MetafySection: React.FC<MetafySectionProps> = ({
                       >
                         {isOwned && (
                           <div className={styles.metafyCommunityBadge}>
-                            👑 Owner
+                            {t('PROFILE.OWNER')}
                           </div>
                         )}
                         {isSupported && (
                           <div className={styles.metafyCommunityBadge}>
-                            💖 Supporter
+                            {t('PROFILE.SUPPORTER')}
                           </div>
                         )}
                         {community.logo_url && (
@@ -141,7 +145,7 @@ const MetafySection: React.FC<MetafySectionProps> = ({
                         <div className={styles.metafyCommunityName}>
                           {community.title ||
                             community.name ||
-                            'Unnamed Community'}
+                            t('PROFILE.UNNAMED_COMMUNITY')}
                         </div>
                         {community.description && (
                           <div className={styles.metafyCommunityDescription}>
@@ -155,12 +159,12 @@ const MetafySection: React.FC<MetafySectionProps> = ({
                               target="_blank"
                               rel="noopener noreferrer"
                             >
-                              Visit Community →
+                              {t('PROFILE.VISIT_COMMUNITY')}
                             </a>
                           </div>
                         )}
                         <div className={styles.metafyCommunityId}>
-                          ID: {community.id}
+                          {t('PROFILE.COMMUNITY_ID', { id: community.id })}
                         </div>
                       </div>
                     );
@@ -168,8 +172,7 @@ const MetafySection: React.FC<MetafySectionProps> = ({
                 </div>
               ) : (
                 <div className={styles.metafyNoCommunities}>
-                  No communities found. Community data will appear here once
-                  available.
+                  {t('PROFILE.NO_COMMUNITIES')}
                 </div>
               )}
             </div>

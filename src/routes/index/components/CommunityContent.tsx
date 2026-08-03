@@ -17,7 +17,8 @@ interface CommunityContentProps {
 
 const inferContentType = (title: string, description?: string): string => {
   const text = `${title} ${description ?? ''}`.toLowerCase();
-  if (text.includes('podcast') || text.includes('#podcast')) return 'TYPE_PODCAST';
+  if (text.includes('podcast') || text.includes('#podcast'))
+    return 'TYPE_PODCAST';
   if (
     text.includes('deck tech') ||
     text.includes('deck guide') ||
@@ -35,7 +36,9 @@ const inferContentType = (title: string, description?: string): string => {
   return 'TYPE_VIDEO';
 };
 
-const CommunityContent: React.FC<CommunityContentProps> = ({ showAds = false }) => {
+const CommunityContent: React.FC<CommunityContentProps> = ({
+  showAds = false
+}) => {
   const [videos, setVideos] = useState<ContentVideo[]>([]);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -55,7 +58,16 @@ const CommunityContent: React.FC<CommunityContentProps> = ({ showAds = false }) 
 
   const getContentTypeLabel = (video: ContentVideo): string => {
     if (video.type === 'metafy') return t('COMMUNITY_CONTENT.TYPE_GUIDE');
-    return t(`COMMUNITY_CONTENT.${inferContentType(video.title, video.description)}`);
+    switch (inferContentType(video.title, video.description)) {
+      case 'TYPE_PODCAST':
+        return t('COMMUNITY_CONTENT.TYPE_PODCAST');
+      case 'TYPE_DECK_TECH':
+        return t('COMMUNITY_CONTENT.TYPE_DECK_TECH');
+      case 'TYPE_LIVE_RECAP':
+        return t('COMMUNITY_CONTENT.TYPE_LIVE_RECAP');
+      default:
+        return t('COMMUNITY_CONTENT.TYPE_VIDEO');
+    }
   };
 
   const getThumbnail = (video: ContentVideo): string => {
@@ -67,7 +79,10 @@ const CommunityContent: React.FC<CommunityContentProps> = ({ showAds = false }) 
     return '';
   };
 
-  const handleThumbError = (e: React.SyntheticEvent<HTMLImageElement>, video: ContentVideo) => {
+  const handleThumbError = (
+    e: React.SyntheticEvent<HTMLImageElement>,
+    video: ContentVideo
+  ) => {
     const img = e.currentTarget;
     if (video.videoId && !img.src.includes('youtube.com')) {
       img.src = `https://img.youtube.com/vi/${video.videoId}/mqdefault.jpg`;
@@ -157,7 +172,9 @@ const CommunityContent: React.FC<CommunityContentProps> = ({ showAds = false }) 
           )}
           <div className={styles.guideCardOverlay} />
           <div className={styles.guideCardContent}>
-            <span className={styles.guideCardBadge}>{t('COMMUNITY_CONTENT.TYPE_GUIDE')}</span>
+            <span className={styles.guideCardBadge}>
+              {t('COMMUNITY_CONTENT.TYPE_GUIDE')}
+            </span>
             <h4 className={styles.guideCardTitle}>{cleanTitle(video.title)}</h4>
             {video.description && (
               <p className={styles.guideCardDescription}>{video.description}</p>
@@ -223,7 +240,8 @@ const CommunityContent: React.FC<CommunityContentProps> = ({ showAds = false }) 
                     {cleanTitle(secondary.title)}
                   </p>
                   <p className={styles.secondaryMeta}>
-                    {t('COMMUNITY_CONTENT.BY')} {capitalize(secondary.author)}&nbsp;·&nbsp;
+                    {t('COMMUNITY_CONTENT.BY')} {capitalize(secondary.author)}
+                    &nbsp;·&nbsp;
                     {formatDate(secondary.timestamp)}
                   </p>
                 </div>
@@ -268,9 +286,12 @@ const CommunityContent: React.FC<CommunityContentProps> = ({ showAds = false }) 
                     </div>
                   </div>
                   <div className={styles.listInfo}>
-                    <p className={styles.listTitle}>{cleanTitle(video.title)}</p>
+                    <p className={styles.listTitle}>
+                      {cleanTitle(video.title)}
+                    </p>
                     <p className={styles.listMeta}>
-                      {t('COMMUNITY_CONTENT.BY')} {capitalize(video.author)}&nbsp;·&nbsp;
+                      {t('COMMUNITY_CONTENT.BY')} {capitalize(video.author)}
+                      &nbsp;·&nbsp;
                       {formatDate(video.timestamp)}
                     </p>
                   </div>
@@ -289,7 +310,10 @@ const CommunityContent: React.FC<CommunityContentProps> = ({ showAds = false }) 
               {t('COMMUNITY_CONTENT.CTA_HEADING')}
             </p>
             <p className={styles.ctaSub}>
-              <Trans i18nKey="COMMUNITY_CONTENT.CTA_SUB" components={{ 1: <strong /> }} />
+              <Trans
+                i18nKey="COMMUNITY_CONTENT.CTA_SUB"
+                components={{ 1: <strong /> }}
+              />
             </p>
           </div>
           <a
@@ -301,22 +325,22 @@ const CommunityContent: React.FC<CommunityContentProps> = ({ showAds = false }) 
             {t('COMMUNITY_CONTENT.JOIN_DISCORD')}
           </a>
         </div>
-          {showAds && (
-            <div className={styles.adFooter}>
-              <div className={styles.adHeader}>
-                <a
-                  href={TALISHAR_METAFY_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={styles.removeAdsLink}
-                >
-                  Remove ads
-                </a>
-              </div>
-              <AdUnit placement="billboard-1" className={styles.desktopAd} />
-              <AdUnit placement="mobile-unit-2" className={styles.mobileAd} />
+        {showAds && (
+          <div className={styles.adFooter}>
+            <div className={styles.adHeader}>
+              <a
+                href={TALISHAR_METAFY_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.removeAdsLink}
+              >
+                {t('UNITED_GAME_PANEL.REMOVE_ADS')}
+              </a>
             </div>
-          )}
+            <AdUnit placement="billboard-1" className={styles.desktopAd} />
+            <AdUnit placement="mobile-unit-2" className={styles.mobileAd} />
+          </div>
+        )}
       </div>
     </section>
   );

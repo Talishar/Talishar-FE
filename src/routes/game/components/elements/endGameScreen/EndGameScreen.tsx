@@ -10,7 +10,9 @@ import type {
   EndGameData,
   EndGameStatsRef
 } from '../endGameStats/EndGameStats';
-const EndGameStats = lazyWithRetry(() => import('../endGameStats/EndGameStats'));
+const EndGameStats = lazyWithRetry(
+  () => import('../endGameStats/EndGameStats')
+);
 import EndGameMenuOptions from '../endGameMenuOptions/EndGameMenuOptions';
 import { shallowEqual } from 'react-redux';
 import useShowModal from 'hooks/useShowModals';
@@ -22,11 +24,13 @@ import { TALISHAR_METAFY_URL } from 'constants/socialLinks';
 import { parseHtmlToReactElements } from 'utils/ParseEscapedString';
 import useSupporterStatus from 'hooks/useSupporterStatus';
 import MetafyLogo from 'img/MetafyGradient.svg';
+import { Trans, useTranslation } from 'react-i18next';
 
 const EndGameScreen = () => {
   const dispatch = useAppDispatch();
   const gameInfo = useAppSelector(getGameInfo, shallowEqual);
   const gameState = useAppSelector((state: any) => state.game, shallowEqual);
+  const { t } = useTranslation();
   const [playerID, setPlayerID] = useState(gameInfo.playerID === 2 ? 2 : 1);
   const [showStats, setShowStats] = useState(true);
   const [showFullLog, setShowFullLog] = useState(false);
@@ -84,7 +88,7 @@ const EndGameScreen = () => {
   let content;
 
   if (isLoading) {
-    content = <div>Loading...</div>;
+    content = <div>{t('END_GAME.LOADING')}</div>;
   } else if (error) {
     content = <div>{JSON.stringify(error)}</div>;
   } else if (showFullLog) {
@@ -94,18 +98,23 @@ const EndGameScreen = () => {
           {parseHtmlToReactElements(data.fullLog)}
         </div>
       ) : (
-        <div>
-          Full game log was not recorded for this game. This requires at least one player to be a supporter.
-        </div>
+        <div>{t('END_GAME.FULL_LOG_NOT_RECORDED')}</div>
       );
     } else {
       content = (
         <div>
-          Support our{' '}
-          <a href={TALISHAR_METAFY_URL} target="_blank" rel="noopener noreferrer">
-            Metafy
-          </a>{' '}
-          to access this feature.
+          <Trans
+            i18nKey="END_GAME.SUPPORT_METAFY"
+            components={{
+              1: (
+                <a
+                  href={TALISHAR_METAFY_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                />
+              )
+            }}
+          />
         </div>
       );
     }
@@ -120,7 +129,7 @@ const EndGameScreen = () => {
       bothPlayersData: bothPlayersData
     };
     content = (
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={<div>{t('END_GAME.LOADING')}</div>}>
         <EndGameStats ref={endGameStatsRef} {...endGameDataWithHeroes} />
       </Suspense>
     );
@@ -140,7 +149,9 @@ const EndGameScreen = () => {
   };
 
   const handleSwapHeroesRematch = () => {
-    dispatch(submitButton({ button: { mode: PROCESS_INPUT.SWAP_HEROES_REMATCH } }));
+    dispatch(
+      submitButton({ button: { mode: PROCESS_INPUT.SWAP_HEROES_REMATCH } })
+    );
     setMoreOpen(false);
   };
 
@@ -180,7 +191,7 @@ const EndGameScreen = () => {
         <>
           <div className={styles.cardListTitleContainer}>
             <div className={styles.cardListTitle}>
-              <h2 className={styles.title}>Game Summary</h2>
+              <h2 className={styles.title}>{t('END_GAME.GAME_SUMMARY')}</h2>
               <div className={styles.menuOptionsWrapper}>
                 <EndGameMenuOptions onSwitchPlayer={switchPlayer} />
               </div>
@@ -189,39 +200,63 @@ const EndGameScreen = () => {
                   ref={moreBtnRef}
                   className={styles.buttonDiv}
                   onClick={handleOpenMore}
-                  aria-label="More options"
+                  aria-label={t('END_GAME.MORE_OPTIONS')}
                 >
-                  <FaEllipsisH aria-hidden="true" />&nbsp;More
+                  <FaEllipsisH aria-hidden="true" />
+                  &nbsp;{t('END_GAME.MORE')}
                 </button>
-                {moreOpen && ReactDOM.createPortal(
-                  <>
-                    <div
-                      className={styles.dropdownBackdrop}
-                      onClick={() => setMoreOpen(false)}
-                    />
-                    <div className={styles.dropdownMenu} style={menuStyle}>
-                      {!gameInfo.roguelikeGameID && (
-                        <button className={styles.dropdownItem} onClick={handleSwapHeroesRematch}>
-                          <FaExchangeAlt aria-hidden="true" className={styles.dropdownIcon} /> Swap &amp; rematch
-                        </button>
-                      )}
-                      {!showFullLog && (
-                        <>
-                          <button className={styles.dropdownItem} onClick={handleExportStats}>
-                            <PiCameraFill aria-hidden="true" className={styles.dropdownIcon} /> Export as Image
+                {moreOpen &&
+                  ReactDOM.createPortal(
+                    <>
+                      <div
+                        className={styles.dropdownBackdrop}
+                        onClick={() => setMoreOpen(false)}
+                      />
+                      <div className={styles.dropdownMenu} style={menuStyle}>
+                        {!gameInfo.roguelikeGameID && (
+                          <button
+                            className={styles.dropdownItem}
+                            onClick={handleSwapHeroesRematch}
+                          >
+                            <FaExchangeAlt
+                              aria-hidden="true"
+                              className={styles.dropdownIcon}
+                            />{' '}
+                            {t('END_GAME.SWAP_AND_REMATCH')}
                           </button>
-                          <button className={styles.dropdownItem} onClick={handleExportCSV}>
-                            <PiFileCsvFill aria-hidden="true" className={styles.dropdownIcon} style={{ fontSize: '1.6em' }} /> Export as CSV
-                          </button>
-                        </>
-                      )}
-{/*                       <button className={styles.dropdownItem} onClick={toggleShowFullLog}>
+                        )}
+                        {!showFullLog && (
+                          <>
+                            <button
+                              className={styles.dropdownItem}
+                              onClick={handleExportStats}
+                            >
+                              <PiCameraFill
+                                aria-hidden="true"
+                                className={styles.dropdownIcon}
+                              />{' '}
+                              {t('END_GAME.EXPORT_AS_IMAGE')}
+                            </button>
+                            <button
+                              className={styles.dropdownItem}
+                              onClick={handleExportCSV}
+                            >
+                              <PiFileCsvFill
+                                aria-hidden="true"
+                                className={styles.dropdownIcon}
+                                style={{ fontSize: '1.6em' }}
+                              />{' '}
+                              {t('END_GAME.EXPORT_AS_CSV')}
+                            </button>
+                          </>
+                        )}
+                        {/*                       <button className={styles.dropdownItem} onClick={toggleShowFullLog}>
                         <FaList aria-hidden="true" className={styles.dropdownIcon} /> {showFullLog ? 'Back to Stats' : 'Full Game Log'}
                       </button> */}
-                    </div>
-                  </>,
-                  document.body
-                )}
+                      </div>
+                    </>,
+                    document.body
+                  )}
                 <div className={styles.buttonDiv} onClick={toggleShowStats}>
                   <FaEye aria-hidden="true" fontSize={'1.5em'} />
                 </div>
@@ -235,11 +270,17 @@ const EndGameScreen = () => {
               rel="noopener noreferrer"
               className={styles.supportCta}
             >
-              <img src={MetafyLogo} alt="Metafy" className={styles.supportCtaLogo} />
+              <img
+                src={MetafyLogo}
+                alt={t('END_GAME.METAFY')}
+                className={styles.supportCtaLogo}
+              />
               <span className={styles.supportCtaText}>
-                Enjoyed the game? Help Us Keep Talishar Free
+                {t('END_GAME.SUPPORT_CTA_TITLE')}
               </span>
-              <span className={styles.supportCtaAction}>Support us</span>
+              <span className={styles.supportCtaAction}>
+                {t('END_GAME.SUPPORT_CTA_ACTION')}
+              </span>
             </a>
           )}
           {content}
@@ -248,7 +289,7 @@ const EndGameScreen = () => {
       {!showStats && (
         <div className={styles.cardListTitleContainer}>
           <div className={styles.cardListTitle}>
-            <h2 className={styles.title}>Game Summary</h2>
+            <h2 className={styles.title}>{t('END_GAME.GAME_SUMMARY')}</h2>
             <div className={styles.buttonGroup}>
               <div className={styles.buttonDiv} onClick={toggleShowStats}>
                 <FaEyeSlash aria-hidden="true" fontSize={'1.5em'} />

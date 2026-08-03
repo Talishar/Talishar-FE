@@ -2,7 +2,11 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useSearchParams } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
-import { RiArrowDownSLine, RiEdit2Line, RiDeleteBin5Line } from 'react-icons/ri';
+import {
+  RiArrowDownSLine,
+  RiEdit2Line,
+  RiDeleteBin5Line
+} from 'react-icons/ri';
 import { usePageTitle } from 'hooks/usePageTitle';
 import useSupporterStatus from 'hooks/useSupporterStatus';
 import {
@@ -20,7 +24,11 @@ import { DeckCardAltArtOptions } from 'interface/API/GetDeckCards.php';
 import { DeleteDeckAPIResponse } from 'interface/API/DeleteDeckAPI.php';
 import { AddFavoriteDeckRequest } from 'interface/API/AddFavoriteDeck.php';
 import { UpdateFavoriteDeckRequest } from 'interface/API/UpdateFavoriteDeck.php';
-import { PLAYMATS, PLAYMAT_DISPLAY_NAMES, CARD_BACK } from 'features/options/cardBacks';
+import {
+  PLAYMATS,
+  PLAYMAT_DISPLAY_NAMES,
+  CARD_BACK
+} from 'features/options/cardBacks';
 import {
   CARD_IMAGES_PATH,
   CARD_SQUARES_PATH,
@@ -32,7 +40,7 @@ import { generateCroppedImageUrl } from 'utils/cropImages';
 import { getReadableFormatName } from 'utils/formatUtils';
 import { HEROES_OF_RATHE } from 'routes/index/components/filter/constants';
 import styles from './decks.module.css';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 
 interface DeckEditState {
   cardBackId: string;
@@ -93,7 +101,10 @@ const CardHoverPreview = ({ preview }: { preview: HoverPreviewState }) => {
       const left = flipToLeft ? x - offset - PREVIEW_WIDTH : x + offset;
       const top = Math.max(
         8,
-        Math.min(y - PREVIEW_HEIGHT / 2, window.innerHeight - PREVIEW_HEIGHT - 8)
+        Math.min(
+          y - PREVIEW_HEIGHT / 2,
+          window.innerHeight - PREVIEW_HEIGHT - 8
+        )
       );
       el.style.transform = `translate3d(${left}px, ${top}px, 0)`;
     };
@@ -154,8 +165,12 @@ export const DecksPage = () => {
     focusDeck ? decodeURIComponent(focusDeck) : null
   );
   const [editState, setEditState] = useState<Record<string, DeckEditState>>({});
-  const [deckCards, setDeckCards] = useState<Record<string, DeckCardAltArtOptions[]>>({});
-  const [deckTokens, setDeckTokens] = useState<Record<string, DeckCardAltArtOptions[]>>({});
+  const [deckCards, setDeckCards] = useState<
+    Record<string, DeckCardAltArtOptions[]>
+  >({});
+  const [deckTokens, setDeckTokens] = useState<
+    Record<string, DeckCardAltArtOptions[]>
+  >({});
   const [loadingCards, setLoadingCards] = useState<Record<string, boolean>>({});
   const [saving, setSaving] = useState<Record<string, boolean>>({});
   const [newDeckUrl, setNewDeckUrl] = useState('');
@@ -204,7 +219,8 @@ export const DecksPage = () => {
 
       const savedAltArts: Record<string, string> = {};
       [...result.cards, ...tokens].forEach((card) => {
-        if (card.selectedAltPath) savedAltArts[card.cardId] = card.selectedAltPath;
+        if (card.selectedAltPath)
+          savedAltArts[card.cardId] = card.selectedAltPath;
       });
 
       setEditState((prev) => {
@@ -217,8 +233,8 @@ export const DecksPage = () => {
           Object.keys(savedAltArts).length > 0
             ? savedAltArts
             : !deck.altArtsCustomized
-              ? getAllAltArtSelection([...result.cards, ...tokens])
-              : {};
+            ? getAllAltArtSelection([...result.cards, ...tokens])
+            : {};
         return { ...prev, [deck.link]: { ...current, altArts: nextAltArts } };
       });
     } catch (err) {
@@ -251,7 +267,11 @@ export const DecksPage = () => {
     }));
   };
 
-  const handleAltArtSelect = (deck: FavoriteDeck, cardId: string, altPath: string) => {
+  const handleAltArtSelect = (
+    deck: FavoriteDeck,
+    cardId: string,
+    altPath: string
+  ) => {
     ensureEditState(deck);
     setEditState((prev) => {
       const current = prev[deck.link] ?? toEditState(deck);
@@ -316,7 +336,8 @@ export const DecksPage = () => {
       refetchDecks();
     } catch (err: any) {
       const message =
-        err?.data?.message ?? 'Failed to save deck customization. Please try again.';
+        err?.data?.message ??
+        'Failed to save deck customization. Please try again.';
       toast.error(message, { position: 'top-center' });
     } finally {
       setSaving((prev) => ({ ...prev, [deck.link]: false }));
@@ -375,7 +396,10 @@ export const DecksPage = () => {
         {
           loading: 'Updating hero...',
           success: () => {
-            setSelectedHeroByDeck((prev) => ({ ...prev, [deckLink]: newHeroValue }));
+            setSelectedHeroByDeck((prev) => ({
+              ...prev,
+              [deckLink]: newHeroValue
+            }));
             return 'Hero updated successfully!';
           },
           error: (err) =>
@@ -409,7 +433,8 @@ export const DecksPage = () => {
         {
           loading: 'Deleting deck...',
           success: (data) => handleDeleteDeckMessage(data),
-          error: (err) => `There has been an error, please try again. Error: ${err.toString()}`
+          error: (err) =>
+            `There has been an error, please try again. Error: ${err.toString()}`
         },
         { style: { minWidth: '250px' }, position: 'top-center' }
       );
@@ -444,8 +469,8 @@ export const DecksPage = () => {
                 !hasAlts
                   ? getReadableCardName(card.cardId)
                   : isBaseSelected
-                    ? 'Selected'
-                    : 'Use the base art'
+                  ? 'Selected'
+                  : 'Use the base art'
               }
             >
               <img
@@ -456,7 +481,7 @@ export const DecksPage = () => {
                 })}
                 draggable={false}
                 loading="lazy"
-                alt="Default"
+                alt={t('DECKS.DEFAULT')}
                 onMouseEnter={(e) => showPreview(card.baseCardNumber, e)}
                 onMouseLeave={hidePreview}
                 className={`${styles.altArtThumb} ${
@@ -504,28 +529,39 @@ export const DecksPage = () => {
     <div className={styles.wideContainer}>
       {hoverPreview && <CardHoverPreview preview={hoverPreview} />}
       <h1 className={styles.title}>{t('DECKS.PAGE_TITLE')}</h1>
-      <p className={styles.intro}>
-        Assign a playmat, card back, and alt arts to each of your favorited decks.
-      </p>
+      <p className={styles.intro}>{t('DECKS.INTRO')}</p>
 
       {showUpsell && (
         <div className={styles.upsellBanner}>
-          Card backs, playmats, and alt arts beyond the defaults are a supporter
-          perk.{' '}
-          <a href={TALISHAR_METAFY_URL} target="_blank" rel="noopener noreferrer">
-            Support Talishar on Metafy
-          </a>{' '}
-          to unlock more.
+          <Trans
+            i18nKey="DECKS.UPSELL_BANNER"
+            components={{
+              2: (
+                <a
+                  href={TALISHAR_METAFY_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                />
+              )
+            }}
+          />
         </div>
       )}
 
       <div className={styles.addDeckSection}>
         <p>
-          Paste a deck link from{' '}
-          <a href="https://FaBrary.net" target="_blank" rel="noopener noreferrer">
-            FaBrary.net
-          </a>{' '}
-          to add it to your favorites.
+          <Trans
+            i18nKey="DECKS.ADD_DECK_HINT"
+            components={{
+              2: (
+                <a
+                  href="https://FaBrary.net"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                />
+              )
+            }}
+          />
         </p>
         <div className={styles.addDeckContainer}>
           <input
@@ -541,16 +577,14 @@ export const DecksPage = () => {
             disabled={isAddingDeck || !newDeckUrl.trim()}
             className={styles.addDeckButton}
           >
-            {isAddingDeck ? 'Adding...' : 'Add Deck'}
+            {isAddingDeck ? t('DECKS.ADDING') : t('DECKS.ADD_DECK')}
           </button>
         </div>
       </div>
 
-      {decksLoading && <p>Loading your decks...</p>}
+      {decksLoading && <p>{t('DECKS.LOADING_DECKS')}</p>}
       {!decksLoading && decks.length === 0 && (
-        <p className={styles.emptyState}>
-          You haven't favorited any decks yet. Add one above.
-        </p>
+        <p className={styles.emptyState}>{t('DECKS.EMPTY_STATE')}</p>
       )}
 
       {decks.map((deck) => {
@@ -594,11 +628,13 @@ export const DecksPage = () => {
                 <div className={styles.deckDetailsRowSticky}>
                   <select
                     value={selectedHeroByDeck[deck.link] || deck.hero || ''}
-                    onChange={(e) => handleHeroChange(deck.link, e.target.value)}
+                    onChange={(e) =>
+                      handleHeroChange(deck.link, e.target.value)
+                    }
                     disabled={updatingDeckLink === deck.link}
                     className={styles.heroSelect}
                   >
-                    <option value="">-- Select Hero --</option>
+                    <option value="">{t('DECKS.SELECT_HERO')}</option>
                     {[...HEROES_OF_RATHE]
                       .sort((a, b) => a.label.localeCompare(b.label))
                       .map((hero) => (
@@ -611,17 +647,17 @@ export const DecksPage = () => {
                     type="button"
                     className={styles.deckActionButton}
                     onClick={() => handleEditDeck(deck.link)}
-                    title="Edit Deck"
+                    title={t('DECKS.EDIT_DECK')}
                   >
-                    <RiEdit2Line fontSize={'1.3em'} /> Edit
+                    <RiEdit2Line fontSize={'1.3em'} /> {t('DECKS.EDIT')}
                   </button>
                   <button
                     type="button"
                     className={styles.deckActionButton}
                     onClick={() => handleDeleteDeck(deck.link)}
-                    title="Delete Deck"
+                    title={t('DECKS.DELETE_DECK')}
                   >
-                    <RiDeleteBin5Line fontSize={'1.3em'} /> Delete
+                    <RiDeleteBin5Line fontSize={'1.3em'} /> {t('DECKS.DELETE')}
                   </button>
                   <button
                     type="button"
@@ -629,16 +665,18 @@ export const DecksPage = () => {
                     onClick={() => handleSave(deck)}
                     disabled={isSaving}
                   >
-                    {isSaving ? 'Saving...' : 'Save'}
+                    {isSaving ? t('DECKS.SAVING') : t('DECKS.SAVE')}
                   </button>
                   {(deck.cardBack !== state.cardBackId ||
                     deck.playmat !== state.playmatId) && (
-                    <span className={styles.savedHint}>Unsaved changes</span>
+                    <span className={styles.savedHint}>
+                      {t('DECKS.UNSAVED_CHANGES')}
+                    </span>
                   )}
                 </div>
 
                 <label className={styles.pickerLabel}>
-                  <strong>Playmat</strong>
+                  <strong>{t('DECKS.PLAYMAT')}</strong>
                 </label>
                 <div className={styles.thumbGrid}>
                   {playmats.map((pm) => {
@@ -671,7 +709,7 @@ export const DecksPage = () => {
                 </div>
 
                 <label className={styles.pickerLabel}>
-                  <strong>Card Back</strong>
+                  <strong>{t('DECKS.CARD_BACK')}</strong>
                 </label>
                 <div className={styles.thumbGrid}>
                   {cardBacks.map((cb) => {
@@ -705,14 +743,14 @@ export const DecksPage = () => {
                 </div>
 
                 <div className={styles.pickerLabelRow}>
-                  <strong>Alt Art</strong>
+                  <strong>{t('DECKS.ALT_ART')}</strong>
                   <div className={styles.altArtToggleButtons}>
                     <button
                       type="button"
                       className={styles.altArtToggleButton}
                       onClick={() => handleSetAllDefaultArt(deck)}
                     >
-                      Select All Default Art
+                      {t('DECKS.SELECT_ALL_DEFAULT_ART')}
                     </button>
                     <button
                       type="button"
@@ -720,18 +758,29 @@ export const DecksPage = () => {
                       onClick={() => handleSetAllAltArt(deck)}
                       disabled={cards.length === 0}
                     >
-                      Select All Alt Art
+                      {t('DECKS.SELECT_ALL_ALT_ART')}
                     </button>
                   </div>
                 </div>
-                {isLoadingCards && <p className={styles.pickerHint}>Checking your deck for unlocked alt arts...</p>}
+                {isLoadingCards && (
+                  <p className={styles.pickerHint}>
+                    {t('DECKS.CHECKING_ALT_ARTS')}
+                  </p>
+                )}
                 {!isLoadingCards && cards.length === 0 && (
                   <p className={styles.pickerHint}>
-                    Feature available to paid supporters of Talishar. Support Talishar on{' '}
-                    <a href={TALISHAR_METAFY_URL} target="_blank" rel="noopener noreferrer">
-                      Metafy
-                    </a>{' '}
-                    to unlock all alt arts and customize your decks.
+                    <Trans
+                      i18nKey="DECKS.NO_ALT_ARTS"
+                      components={{
+                        2: (
+                          <a
+                            href={TALISHAR_METAFY_URL}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          />
+                        )
+                      }}
+                    />
                   </p>
                 )}
                 <div className={styles.altArtGrid}>
@@ -741,10 +790,12 @@ export const DecksPage = () => {
                 {tokens.length > 0 && (
                   <>
                     <div className={styles.pickerLabelRow}>
-                      <strong>Tokens</strong>
-                      </div>
+                      <strong>{t('DECKS.TOKENS')}</strong>
+                    </div>
                     <div className={styles.altArtGrid}>
-                      {tokens.map((token) => renderAltArtRow(deck, state, token))}
+                      {tokens.map((token) =>
+                        renderAltArtRow(deck, state, token)
+                      )}
                     </div>
                   </>
                 )}

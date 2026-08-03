@@ -13,6 +13,7 @@ import styles from './ReplayPanel.module.css';
 import { toast } from 'react-hot-toast';
 import { PROCESS_INPUT } from 'appConstants';
 import { MdShare } from 'react-icons/md';
+import { useTranslation } from 'react-i18next';
 import {
   useGetReplayTurnsQuery,
   useLoadReplayMutation,
@@ -68,6 +69,7 @@ export default function ReplayPanel() {
   const [isOpen, setIsOpen] = useState(false);
   const gameInfo = useAppSelector(getGameInfo);
   const location = useLocation();
+  const { t } = useTranslation();
 
   if (!gameInfo.isReplay || location.pathname.includes('/create')) return null;
 
@@ -76,10 +78,10 @@ export default function ReplayPanel() {
       <button
         className={`${styles.replayTab} ${isOpen ? styles.hidden : ''}`}
         onClick={() => setIsOpen(true)}
-        title="Open match review"
-        aria-label="Open match review"
+        title={t('MATCH_REVIEW.OPEN_MATCH_REVIEW')}
+        aria-label={t('MATCH_REVIEW.OPEN_MATCH_REVIEW')}
       >
-        Replay
+        {t('MATCH_REVIEW.REPLAY')}
       </button>
       {isOpen && (
         <ReplayContent gameInfo={gameInfo} onClose={() => setIsOpen(false)} />
@@ -99,6 +101,7 @@ function ReplayContent({
   const turnInputId = useId();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const { t } = useTranslation();
   const chatLog = useAppSelector((state: RootState) => state.game.chatLog);
   const currentTurnNumber = useAppSelector(
     (state: RootState) => state.game.gameDynamicInfo.turnNo
@@ -125,9 +128,7 @@ function ReplayContent({
   const chatTurns = useMemo(() => getChatReplayTurns(chatLog), [chatLog]);
   const chatTurnsByKey = useMemo(
     () =>
-      new Map(
-        chatTurns.map((turn) => [`${turn.player}-${turn.number}`, turn])
-      ),
+      new Map(chatTurns.map((turn) => [`${turn.player}-${turn.number}`, turn])),
     [chatTurns]
   );
   const reviewTurns = useMemo<ReplayTurn[]>(() => {
@@ -157,7 +158,13 @@ function ReplayContent({
         hasDamage: false
       }
     ];
-  }, [chatTurns, chatTurnsByKey, savedTurnsData, currentTurnNumber, currentTurnPlayer]);
+  }, [
+    chatTurns,
+    chatTurnsByKey,
+    savedTurnsData,
+    currentTurnNumber,
+    currentTurnPlayer
+  ]);
   const selectedTurn = Number(turnNumber);
   const maxSavedTurn = Math.max(0, ...reviewTurns.map((turn) => turn.number));
   const playerNames: Record<1 | 2, string> =
@@ -293,24 +300,32 @@ function ReplayContent({
   };
 
   return (
-    <aside className={styles.replayPanel} aria-label="Match review">
+    <aside
+      className={styles.replayPanel}
+      aria-label={t('MATCH_REVIEW.MATCH_REVIEW')}
+    >
       <div className={styles.header}>
         <div>
-          <h3>Match Review</h3>
-          <span className={styles.subheading}>Jump to any saved turn</span>
+          <h3>{t('MATCH_REVIEW.MATCH_REVIEW_TITLE')}</h3>
+          <span className={styles.subheading}>
+            {t('MATCH_REVIEW.JUMP_TO_ANY_SAVED_TURN')}
+          </span>
         </div>
         <button
           className={styles.closeButton}
           onClick={onClose}
-          aria-label="Close match review"
+          aria-label={t('MATCH_REVIEW.CLOSE_MATCH_REVIEW')}
         >
           ×
         </button>
       </div>
       <div className={styles.content}>
-        <section className={styles.timelineSection} aria-label="Turn timeline">
+        <section
+          className={styles.timelineSection}
+          aria-label={t('MATCH_REVIEW.TURN_TIMELINE')}
+        >
           <div className={styles.sectionHeading}>
-            <span>Timeline</span>
+            <span>{t('MATCH_REVIEW.TIMELINE')}</span>
             <span>
               {reviewTurns.length
                 ? `${reviewTurns.length} saved ${
@@ -323,7 +338,7 @@ function ReplayContent({
             <div
               className={styles.timeline}
               role="list"
-              aria-label="Replay turn timeline. Scroll horizontally for more turns."
+              aria-label={t('MATCH_REVIEW.TIMELINE_ARIA')}
             >
               {reviewTurns.map((turn) => (
                 <button
@@ -337,7 +352,9 @@ function ReplayContent({
                     playerNames[turn.player]
                   }`}
                 >
-                  <span className={styles.turnNumber}>Turn {turn.number}</span>
+                  <span className={styles.turnNumber}>
+                    {t('MATCH_REVIEW.TURN')} {turn.number}
+                  </span>
                   <span className={styles.turnPlayer}>
                     {playerNames[turn.player]}
                   </span>
@@ -364,8 +381,7 @@ function ReplayContent({
             </div>
           ) : (
             <p className={styles.emptyTimeline}>
-              Turn markers appear here as the replay progresses. You can still
-              jump directly below.
+              {t('MATCH_REVIEW.TIMELINE_EMPTY')}
             </p>
           )}
         </section>
@@ -375,22 +391,22 @@ function ReplayContent({
             className={styles.navButton}
             onClick={() => moveToAdjacent(-1)}
             disabled={isRequestInProgress || !reviewTurns.length}
-            title="Previous turn"
+            title={t('MATCH_REVIEW.PREVIOUS_TURN')}
           >
             <span className={styles.navArrow} aria-hidden="true">
               &larr;
             </span>
-            <span>Previous turn</span>
+            <span>{t('MATCH_REVIEW.PREVIOUS_TURN')}</span>
             <span className={styles.navArrowPlaceholder} aria-hidden="true" />
           </button>
           <button
             className={styles.navButton}
             onClick={() => moveToAdjacent(1)}
             disabled={isRequestInProgress || !reviewTurns.length}
-            title="Next turn"
+            title={t('MATCH_REVIEW.NEXT_TURN')}
           >
             <span className={styles.navArrowPlaceholder} aria-hidden="true" />
-            <span>Next turn</span>
+            <span>{t('MATCH_REVIEW.NEXT_TURN')}</span>
             <span className={styles.navArrow} aria-hidden="true">
               &rarr;
             </span>
@@ -399,7 +415,7 @@ function ReplayContent({
         <div className={styles.divider} />
         <div className={styles.formGroup}>
           <label htmlFor={turnInputId}>
-            Jump directly to turn
+            {t('MATCH_REVIEW.JUMP_DIRECTLY_TO_TURN')}
             {` (0-${maxSavedTurn})`}
           </label>
           <div className={styles.jumpRow}>
@@ -417,7 +433,7 @@ function ReplayContent({
               onClick={loadInputTurn}
               disabled={isRequestInProgress}
             >
-              Go
+              {t('MATCH_REVIEW.GO')}
             </button>
           </div>
         </div>
@@ -433,7 +449,7 @@ function ReplayContent({
             className={styles.actionButton}
             onClick={handleShare}
             disabled={isSharing}
-            title="Copy a shareable link for this replay"
+            title={t('MATCH_REVIEW.COPY_SHAREABLE_LINK')}
           >
             <MdShare /> {isSharing ? 'Sharing…' : 'Share replay'}
           </button>

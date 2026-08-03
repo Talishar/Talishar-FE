@@ -16,11 +16,13 @@ import useShowModal from 'hooks/useShowModals';
 import OptionsSettings from './OptionsSettings';
 import { shallowEqual } from 'react-redux';
 import { apiSlice } from 'features/api/apiSlice';
+import { Trans, useTranslation } from 'react-i18next';
 
 const OptionsContent = () => {
   const { gameID, playerID } = useAppSelector(getGameInfo, shallowEqual);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [allowSpectator, setAllowSpectator] = useState(false);
 
   const gameURL = `http://talishar.net/game/play/${gameID}`;
@@ -39,7 +41,9 @@ const OptionsContent = () => {
   const handleClickMainMenuButton = async (e: React.MouseEvent) => {
     e.preventDefault;
     clickConcedeGameHandler();
-    dispatch(apiSlice.util.invalidateTags([{ type: 'UserProfile', id: 'LIST' }]));
+    dispatch(
+      apiSlice.util.invalidateTags([{ type: 'UserProfile', id: 'LIST' }])
+    );
     navigate('/');
     clickCloseOptionsHandler();
   };
@@ -78,7 +82,7 @@ const OptionsContent = () => {
     setAllowSpectator(true);
   };
 
-    const clickRevertToStartOfChainLinkHandler = () => {
+  const clickRevertToStartOfChainLinkHandler = () => {
     dispatch(
       submitButton({
         button: {
@@ -114,7 +118,7 @@ const OptionsContent = () => {
       <div className={`${styles.column} ${styles.rightColumn}`}>
         <div className={styles.sectionContainer}>
           <div className={styles.sectionHeader}>
-            <span>General</span>
+            <span>{t('OPTIONS_MENU.GENERAL')}</span>
           </div>
           <div className={styles.sectionContent}>
             <div className={styles.buttonColumn}>
@@ -122,7 +126,7 @@ const OptionsContent = () => {
                 className={styles.buttonDiv}
                 onClick={handleClickMainMenuButton}
               >
-                Homepage
+                {t('OPTIONS_MENU.HOMEPAGE')}
               </button>
               {playerID !== 3 && ( // If not a spectator then can change options
                 <>
@@ -130,21 +134,21 @@ const OptionsContent = () => {
                     className={styles.buttonDiv}
                     onClick={clickConcedeGameHandler}
                   >
-                    Concede
+                    {t('OPTIONS_MENU.CONCEDE')}
                   </button>
 
                   <button
                     className={styles.buttonDiv}
                     onClick={clickReportBugHandler}
                   >
-                    Report Bug
+                    {t('OPTIONS_MENU.REPORT_BUG')}
                   </button>
 
                   <button
                     className={styles.buttonDiv}
                     onClick={clickReportPlayerHandler}
                   >
-                    Report Player
+                    {t('OPTIONS_MENU.REPORT_PLAYER')}
                   </button>
                 </>
               )}
@@ -155,7 +159,7 @@ const OptionsContent = () => {
         {playerID !== 3 && (
           <div className={styles.sectionContainer}>
             <div className={styles.sectionHeader}>
-              <span>Gamestate Correction</span>
+              <span>{t('OPTIONS_MENU.GAMESTATE_CORRECTION')}</span>
             </div>
             <div className={styles.sectionContent}>
               <div className={styles.buttonColumn}>
@@ -163,25 +167,25 @@ const OptionsContent = () => {
                   className={styles.buttonDiv}
                   onClick={clickUndoButtonHandler}
                 >
-                  Undo
+                  {t('OPTIONS_MENU.UNDO')}
                 </button>
                 <button
                   className={styles.buttonDiv}
                   onClick={clickRevertToStartOfThisTurnHandler}
                 >
-                  Revert to Start of This Turn
+                  {t('OPTIONS_MENU.REVERT_TO_START_OF_THIS_TURN')}
                 </button>
                 <button
                   className={styles.buttonDiv}
                   onClick={clickRevertToStartOfChainLinkHandler}
                 >
-                  Revert to Start of This Chain Link
+                  {t('OPTIONS_MENU.REVERT_TO_START_OF_THIS_CHAIN_LINK')}
                 </button>
                 <button
                   className={styles.buttonDiv}
                   onClick={clickRevertToStartOfPreviousTurnHandler}
                 >
-                  Revert to Start of The Previous Turn
+                  {t('OPTIONS_MENU.REVERT_TO_START_OF_PREVIOUS_TURN')}
                 </button>
               </div>
             </div>
@@ -191,7 +195,7 @@ const OptionsContent = () => {
         {playerID !== 3 && (
           <div className={styles.sectionContainer}>
             <div className={styles.sectionHeader}>
-              <span>Invite Spectators</span>
+              <span>{t('OPTIONS_MENU.INVITE_SPECTATORS')}</span>
             </div>
             <div className={styles.sectionContent}>
               <div className={styles.buttonColumn}>
@@ -200,14 +204,14 @@ const OptionsContent = () => {
                     className={styles.buttonDiv}
                     onClick={handleAllowSpectators}
                   >
-                    Allow Spectators for Private Match
+                    {t('OPTIONS_MENU.ALLOW_SPECTATORS_PRIVATE_MATCH')}
                   </button>
                 ) : (
                   <button
                     className={styles.buttonDiv}
                     onClick={clickCopySpectateToClipboardHandler}
                   >
-                    Copy Spectate Link
+                    {t('OPTIONS_MENU.COPY_SPECTATE_LINK')}
                   </button>
                 )}
               </div>
@@ -216,20 +220,19 @@ const OptionsContent = () => {
         )}
         <div className={styles.sectionContainer}>
           <div className={styles.sectionHeader}>
-            <span>Cosmetics</span>
+            <span>{t('OPTIONS_MENU.COSMETICS')}</span>
           </div>
           <div className={styles.sectionContent}>
             <p className={styles.signpostNote}>
-              Playmats and card backs are chosen before a game starts. Set your
-              defaults in{' '}
-              <a href="/user/settings" target="_blank" rel="noreferrer">
-                Settings
-              </a>{' '}
-              or customize them per deck in{' '}
-              <a href="/user/decks" target="_blank" rel="noreferrer">
-                My Decks
-              </a>
-              .
+              <Trans
+                i18nKey="OPTIONS_MENU.COSMETICS_SIGNPOST"
+                components={{
+                  1: (
+                    <a href="/user/settings" target="_blank" rel="noreferrer" />
+                  ),
+                  2: <a href="/user/decks" target="_blank" rel="noreferrer" />
+                }}
+              />
             </p>
           </div>
         </div>
@@ -244,6 +247,7 @@ export default function OptionsMenu() {
     (state: RootState) => state.game.optionsMenu
   );
   const dispatch = useAppDispatch();
+  const { t } = useTranslation();
 
   const closeOptions = () => {
     dispatch(closeOptionsMenu());
@@ -263,7 +267,9 @@ export default function OptionsMenu() {
           >
             <div className={styles.optionsTitleContainer}>
               <hgroup className={styles.optionsTitle}>
-                <h2 className={styles.title}>Settings Menu</h2>
+                <h2 className={styles.title}>
+                  {t('OPTIONS_MENU.SETTINGS_MENU')}
+                </h2>
                 <h4></h4>
               </hgroup>
               <div
@@ -271,7 +277,7 @@ export default function OptionsMenu() {
                 onClick={closeOptions}
                 data-testid="close-button"
               >
-                <FaTimes title="Close Settings Menu" />
+                <FaTimes title={t('OPTIONS_MENU.CLOSE_SETTINGS_MENU')} />
               </div>
             </div>
             <OptionsContent />

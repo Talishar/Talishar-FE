@@ -9,6 +9,7 @@ import { toast } from 'react-hot-toast';
 import { RiDeleteBin5Line } from 'react-icons/ri';
 import { MdPersonAdd } from 'react-icons/md';
 import { IoMdArrowDropright } from 'react-icons/io';
+import { useTranslation } from 'react-i18next';
 import styles from './BlockedUsers.module.css';
 import { BlockedUser } from 'interface/API/BlockedUsersAPI.php';
 
@@ -17,6 +18,7 @@ interface BlockedUsersProps {
 }
 
 export const BlockedUsers: React.FC<BlockedUsersProps> = ({ className }) => {
+  const { t } = useTranslation();
   const [searchTerm, setSearchTerm] = useState('');
   const [showSearchResults, setShowSearchResults] = useState(false);
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
@@ -56,19 +58,19 @@ export const BlockedUsers: React.FC<BlockedUsersProps> = ({ className }) => {
   const handleBlockUser = async (blockedUsername: string) => {
     try {
       const result = await blockUser({ blockedUsername }).unwrap();
-      toast.success(`${blockedUsername} has been blocked`);
+      toast.success(t('PROFILE.USER_BLOCKED', { username: blockedUsername }));
       setSearchTerm('');
       setShowSearchResults(false);
       refetchBlockedUsers();
     } catch (err: any) {
-      toast.error(err.error || 'Failed to block user');
+      toast.error(err.error || t('PROFILE.FAILED_BLOCK'));
     }
   };
 
   const handleUnblockUser = async (blockedUser: BlockedUser) => {
     if (
       !window.confirm(
-        `Are you sure you want to unblock ${blockedUser.username}?`
+        t('PROFILE.UNBLOCK_CONFIRM', { username: blockedUser.username })
       )
     ) {
       return;
@@ -76,10 +78,12 @@ export const BlockedUsers: React.FC<BlockedUsersProps> = ({ className }) => {
 
     try {
       await unblockUser({ blockedUserId: blockedUser.blockedUserId }).unwrap();
-      toast.success(`${blockedUser.username} has been unblocked`);
+      toast.success(
+        t('PROFILE.USER_UNBLOCKED', { username: blockedUser.username })
+      );
       refetchBlockedUsers();
     } catch (err: any) {
-      toast.error(err.error || 'Failed to unblock user');
+      toast.error(err.error || t('PROFILE.FAILED_UNBLOCK'));
     }
   };
 
@@ -95,7 +99,7 @@ export const BlockedUsers: React.FC<BlockedUsersProps> = ({ className }) => {
           userSelect: 'none'
         }}
       >
-        Blocked Users
+        {t('PROFILE.BLOCKED_USERS')}
         <span
           style={{
             marginLeft: '8px',
@@ -118,7 +122,7 @@ export const BlockedUsers: React.FC<BlockedUsersProps> = ({ className }) => {
                 id="block-user-search"
                 name="block-user-search"
                 type="text"
-                placeholder="Search for players to block..."
+                placeholder={t('PROFILE.SEARCH_BLOCK_PLACEHOLDER')}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className={styles.searchInput}
@@ -129,7 +133,7 @@ export const BlockedUsers: React.FC<BlockedUsersProps> = ({ className }) => {
             {showSearchResults && (
               <div className={styles.searchResults}>
                 {searchLoading && (
-                  <p className={styles.loadingText}>Searching...</p>
+                  <p className={styles.loadingText}>{t('PROFILE.SEARCHING')}</p>
                 )}
                 {!searchLoading &&
                 searchResults?.users &&
@@ -160,11 +164,15 @@ export const BlockedUsers: React.FC<BlockedUsersProps> = ({ className }) => {
                               disabled={isBlocked}
                               title={
                                 isBlocked
-                                  ? 'User already blocked'
-                                  : 'Block user'
+                                  ? t('PROFILE.USER_ALREADY_BLOCKED')
+                                  : t('PROFILE.BLOCK_USER')
                               }
                             >
-                              {isBlocked ? '✓ Blocked' : <MdPersonAdd />}
+                              {isBlocked ? (
+                                t('PROFILE.BLOCKED')
+                              ) : (
+                                <MdPersonAdd />
+                              )}
                             </button>
                           </li>
                         );
@@ -172,7 +180,9 @@ export const BlockedUsers: React.FC<BlockedUsersProps> = ({ className }) => {
                   </ul>
                 ) : (
                   !searchLoading && (
-                    <p className={styles.noResults}>No users found</p>
+                    <p className={styles.noResults}>
+                      {t('PROFILE.NO_USERS_FOUND')}
+                    </p>
                   )
                 )}
               </div>
@@ -182,16 +192,16 @@ export const BlockedUsers: React.FC<BlockedUsersProps> = ({ className }) => {
           {/* Blocked Users List */}
           <div className={styles.blockedUsersTableContainer}>
             {blockedUsersLoading ? (
-              <p className={styles.loadingText}>Loading blocked users...</p>
+              <p className={styles.loadingText}>
+                {t('PROFILE.LOADING_BLOCKED_USERS')}
+              </p>
             ) : blockedUsersData?.blockedUsers &&
               blockedUsersData.blockedUsers.length > 0 ? (
               <table className={styles.blockedUsersTable}>
                 <thead>
                   <tr>
-                    <th scope="col">Blocked User</th>
-                    <th scope="col">
-                      Action
-                    </th>
+                    <th scope="col">{t('PROFILE.BLOCKED_USER')}</th>
+                    <th scope="col">{t('PROFILE.ACTION')}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -203,7 +213,7 @@ export const BlockedUsers: React.FC<BlockedUsersProps> = ({ className }) => {
                           <button
                             className={styles.unblockButton}
                             onClick={() => handleUnblockUser(blockedUser)}
-                            title="Unblock user"
+                            title={t('PROFILE.UNBLOCK_USER')}
                           >
                             <RiDeleteBin5Line fontSize="1.5em" />
                           </button>

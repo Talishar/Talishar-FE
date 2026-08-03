@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { TALISHAR_METAFY_URL } from 'constants/socialLinks';
 import styles from './profile.module.css';
 
@@ -15,16 +16,14 @@ const UpgradeSection: React.FC<UpgradeSectionProps> = ({
   className,
   isOwner
 }) => {
+  const { t } = useTranslation();
   if (isSupporter) {
     return (
       <div className={`${styles.upgradeSection} ${styles.supporterBadge}`}>
-        <h3>✨ Supporter Status</h3>
-        <p className={styles.supporterText}>
-          Thank you for supporting Talishar! Your contribution helps us keep the
-          platform running and improve the game experience for everyone.
-        </p>
+        <h3>{t('PROFILE.SUPPORTER_STATUS')}</h3>
+        <p className={styles.supporterText}>{t('PROFILE.SUPPORTER_THANKS')}</p>
         <p className={styles.supporterThanks}>
-          Enjoy premium benefits and thank you for your generosity!
+          {t('PROFILE.SUPPORTER_GENEROSITY')}
         </p>
       </div>
     );
@@ -33,31 +32,25 @@ const UpgradeSection: React.FC<UpgradeSectionProps> = ({
   return (
     <div className={`${styles.upgradeSection} ${styles.freeUserBadge}`}>
       <div className={styles.upgradeHeader}>
-        <span className={styles.freeBadge}>FREE</span>
-        <h3>Free User</h3>
+        <span className={styles.freeBadge}>{t('PROFILE.FREE_BADGE')}</span>
+        <h3>{t('PROFILE.FREE_USER')}</h3>
       </div>
 
       <p className={styles.upgradeDescription}>
-        Talishar is a free, community-driven platform. Support our development
-        and gain exclusive benefits!
+        {t('PROFILE.UPGRADE_DESCRIPTION')}
       </p>
 
       <div className={styles.upgradeButtonSection}>
-        <p className={styles.upgradePrompt}>
-          Join our community of supporters and help us grow!
-        </p>
+        <p className={styles.upgradePrompt}>{t('PROFILE.UPGRADE_PROMPT')}</p>
         <a
           href={TALISHAR_METAFY_URL}
           target="_blank"
           rel="noopener noreferrer"
           className={styles.upgradeButton}
         >
-          Become a Supporter on Metafy
+          {t('PROFILE.BECOME_SUPPORTER')}
         </a>
-        <p className={styles.upgradeNote}>
-          Support directly through our Metafy community and unlock supporter
-          status instantly!
-        </p>
+        <p className={styles.upgradeNote}>{t('PROFILE.UPGRADE_NOTE')}</p>
       </div>
     </div>
   );
