@@ -11,6 +11,7 @@ import { apiSlice } from './features/api/apiSlice';
 import { setupStore } from './app/Store';
 import { vi } from 'vitest';
 import mockOptionsMenuResponse from 'mocks/optionsmenu/mockOptionsMenuResponse';
+import i18n from './i18n';
 
 const store = setupStore();
 
@@ -133,7 +134,8 @@ Object.defineProperty(window, 'matchMedia', {
 const server = setupServer(...restHandlers);
 
 // Establish API mocking before all tests.
-beforeAll(() => {
+beforeAll(async () => {
+  if (!i18n.isInitialized) await i18n.init();
   server.listen({
     onUnhandledRequest: 'error'
   });
