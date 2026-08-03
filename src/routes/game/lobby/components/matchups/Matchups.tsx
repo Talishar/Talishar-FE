@@ -7,6 +7,7 @@ import { toast } from 'react-hot-toast';
 import { shallowEqual } from 'react-redux';
 import styles from './Matchups.module.css';
 import MatchupTooltip from './MatchupTooltip';
+import { useTranslation } from 'react-i18next';
 
 export interface Matchups {
   refetch: () => void;
@@ -26,6 +27,9 @@ const Matchups = ({
   const [isUpdating, setIsUpdating] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
 
+  // Initial stuff to allow the lang to change
+  const { t } = useTranslation(); 
+
   const gameLobby = useAppSelector(
     (state: RootState) => state.game.gameLobby,
     shallowEqual
@@ -39,9 +43,9 @@ const Matchups = ({
     if (!preferredTurnOrder) return null;
 
     if (preferredTurnOrder === '1st') {
-      return '1st';
+      return t('GAME_LOBBY.1ST');
     } else if (preferredTurnOrder === '2nd') {
-      return '2nd';
+      return t('GAME_LOBBY.2ND');
     }
     return null;
   };
@@ -62,12 +66,12 @@ const Matchups = ({
       onMatchupSelected?.(matchupID);
       refetch();
       toast.success(
-        `Matchup profile applied, check your deck before submission`,
+        t('GAME_LOBBY.MATCHUP_APPLIED'),
         { position: 'top-center' }
       );
     } catch (err) {
       console.warn(err);
-      toast.error('Some error happened', { position: 'top-center' });
+      toast.error(t('GAME_LOBBY.SOME_ERROR'), { position: 'top-center' });
     } finally {
       setIsUpdating(false);
     }
@@ -88,12 +92,12 @@ const Matchups = ({
     return (
       <article className={styles.matchupContainer}>
         <>
-          <h4>Matchups</h4>
+          <h4>{t('GAME_LOBBY.MATCHUPS')}</h4>
           <input
             id="matchup-search"
             name="matchup-search"
             type="text"
-            placeholder="Search"
+            placeholder={t('BASE.SEARCH')}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -122,10 +126,10 @@ const Matchups = ({
                   >
                     <span className={styles.matchupName}>{matchup.name}</span>
                     {isSelected && (
-                      <span className={styles.selectedBadge}>Selected</span>
+                      <span className={styles.selectedBadge}>{t('GAME_LOBBY.SELECTED')}</span>
                     )}
                     {isSuggested && (
-                      <span className={styles.suggestedBadge}>Suggested</span>
+                      <span className={styles.suggestedBadge}>{t('GAME_LOBBY.SUGGESTED')}</span>
                     )}
                     {turnOrderIndicator && (
                       <span className={styles.turnOrderBadge}>

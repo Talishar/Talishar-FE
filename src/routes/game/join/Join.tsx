@@ -95,7 +95,7 @@ const JoinGame = () => {
   useAdScript(showAds);
 
   // Initial stuff to allow the lang to change
-  const { t, i18n, ready } = useTranslation();
+  const { t, i18n, ready } = useTranslation(); 
 
   let [{ gameName: searchGameName = '0', playerID = '2', authKey = '' }] =
     useKnownSearchParams();

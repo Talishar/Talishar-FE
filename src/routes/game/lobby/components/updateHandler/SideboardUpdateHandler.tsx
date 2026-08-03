@@ -13,6 +13,7 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { GameLocationState } from 'interface/GameLocationState';
 import { useKnownSearchParams } from 'hooks/useKnownSearchParams';
 import { toast } from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
 
 interface LobbyUpdateHandlerProps {
   isSubmitting: boolean;
@@ -20,6 +21,8 @@ interface LobbyUpdateHandlerProps {
 
 export const LobbyUpdateHandler = React.memo(
   ({ isSubmitting: _isSubmitting }: LobbyUpdateHandlerProps) => {
+    // Initial stuff to allow the lang to change
+    const { t } = useTranslation(); 
     const abortRef = useRef<AbortController>();
     const timeoutRef = useRef<ReturnType<typeof setTimeout>>();
     const gameInfo = useAppSelector(getGameInfo, shallowEqual);
@@ -39,7 +42,7 @@ export const LobbyUpdateHandler = React.memo(
 
     if (gameID === undefined) {
       navigate('/');
-      toast.error('No GameID defined');
+      toast.error(t('GAME_LOBBY.NO_GAMEID'));
     }
 
     // setup long poll

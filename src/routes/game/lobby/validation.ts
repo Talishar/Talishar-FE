@@ -1,4 +1,5 @@
 import { array, boolean, object, string, number } from 'yup';
+import { useTranslation, Trans } from 'react-i18next';
 
 const oneHandedHeroes = ['kayo', 'kayo_armed_and_dangerous'];
 
@@ -7,23 +8,31 @@ export const deckValidation = (
   maxDeckSize: number,
   heroNumHands: number
 ) => {
+  const { t } = useTranslation();
   return object({
-    hero: string().required('You must have a hero!'),
+    hero: string().required(t('GAME_LOBBY.VALIDATION.HERO_REQUIRED')),
     weapons: array()
       .required()
-      .test('offhands', 'Too many off-hands equipped', (weapons = []) => {
-        const offhands = weapons.filter((weapon) => weapon.isOffhand);
-        return offhands.length <= 1;
-      })
-      // Test that the sum of weapons.hands is less than our hero's available hands.
-      .test('hands', 'Too many weapons for your hands', (weapons = []) => {
-        const numHands = weapons.reduce((total, row) => {
-          return total + (row.numHands ?? 0);
-        }, 0);
-        return numHands <= heroNumHands;
-      })
-      .min(1, 'Pick at least one weapon/off-hand.')
-      .max(heroNumHands, 'Too many weapons/off-hands equipped.')
+      .test(
+        'offhands',
+        t('GAME_LOBBY.VALIDATION.TOO_MANY_OFFHANDS'),
+        (weapons = []) => {
+          const offhands = weapons.filter((weapon) => weapon.isOffhand);
+          return offhands.length <= 1;
+        }
+      )
+      .test(
+        'hands',
+        t('GAME_LOBBY.VALIDATION.TOO_MANY_WEAPONS_FOR_HANDS'),
+        (weapons = []) => {
+          const numHands = weapons.reduce((total, row) => {
+            return total + (row.numHands ?? 0);
+          }, 0);
+          return numHands <= heroNumHands;
+        }
+      )
+      .min(1, t('GAME_LOBBY.VALIDATION.MIN_WEAPONS'))
+      .max(heroNumHands, t('GAME_LOBBY.VALIDATION.MAX_WEAPONS'))
       .of(
         object().shape({
           id: string().required(),
@@ -33,15 +42,21 @@ export const deckValidation = (
           isOffhand: boolean()
         })
       ),
-    head: string().required('You must have head equipment.'),
-    chest: string().required('You must have chest equipment.'),
-    arms: string().required('You must have arms equipment.'),
-    legs: string().required('You must have legs equipment.'),
+    head: string().required(t('GAME_LOBBY.VALIDATION.HEAD_REQUIRED')),
+    chest: string().required(t('GAME_LOBBY.VALIDATION.CHEST_REQUIRED')),
+    arms: string().required(t('GAME_LOBBY.VALIDATION.ARMS_REQUIRED')),
+    legs: string().required(t('GAME_LOBBY.VALIDATION.LEGS_REQUIRED')),
     deck: array()
       .required()
       .of(string().required())
-      .min(minDeckSize, `Minimum deck size is ${minDeckSize} cards.`)
-      .max(maxDeckSize, `Maximum deck size is ${maxDeckSize} cards.`)
+      .min(
+        minDeckSize,
+        t('GAME_LOBBY.VALIDATION.MIN_DECK_SIZE', { size: minDeckSize })
+      )
+      .max(
+        maxDeckSize,
+        t('GAME_LOBBY.VALIDATION.MAX_DECK_SIZE', { size: maxDeckSize })
+      )
   });
 };
 
