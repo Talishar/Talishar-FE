@@ -886,7 +886,7 @@ const Lobby = () => {
             <dialog open={needToDoDisclaimer}>
               <article className={styles.disclaimerArticles}>
                 <header className={styles.disclaimerHeader}>
-                  ⚠️ t('GAME_LOBBY.OPEN_FORMAT_DISCLAIMER_HEADER')
+                  ⚠️ {t('GAME_LOBBY.OPEN_FORMAT_DISCLAIMER_HEADER')}
                 </header>
                 <p style={{ marginBottom: '1em' }}>
 		  <Trans i18nKey="GAME_LOBBY.OPEN_FORMAT_DISCLAIMER">
@@ -913,7 +913,7 @@ const Lobby = () => {
                       setAcceptedDisclaimer(true);
                     }}
                   >
-                    t('GAME_LOBBY.I_ACCEPT')
+                    {t('GAME_LOBBY.I_ACCEPT')}
                   </button>
                 </div>
                 <div className={styles.disclaimerButtons}>
@@ -923,7 +923,7 @@ const Lobby = () => {
                     }}
                     className={leaveLobby}
                   >
-		    t('GAME_LOBBY.NO_THANKS')
+		    {t('GAME_LOBBY.NO_THANKS')}
                   </button>
                 </div>
               </article>
@@ -1018,10 +1018,11 @@ const Lobby = () => {
                         type="button"
                         className={styles.kickButton}
                         onClick={handleKickPlayer}
-                        title={t('GAME_LOBBY.KICK_TITLE', { 'name': (isStreamerMode ? t('GAME_LOBBY.OPPONENT') : gameLobby.theirName)})}
+
+title={t('GAME_LOBBY.KICK_TITLE', { 'name': (isStreamerMode ? t('GAME_LOBBY.OPPONENT') : gameLobby.theirName)})}
                         aria-label={t('GAME_LOBBY.KICK_LABEL')}
                       >
-			t('GAME_LOBBY.KICK')
+			{t('GAME_LOBBY.KICK')}
                       </button>
                     )}
                   <div className={styles.dimPic}>
