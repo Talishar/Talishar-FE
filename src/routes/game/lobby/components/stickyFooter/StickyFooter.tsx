@@ -6,6 +6,7 @@ import styles from './StickyFooter.module.css';
 import classNames from 'classnames';
 import { HiClipboardCopy, HiClipboardCheck } from 'react-icons/hi';
 import { MdGames } from 'react-icons/md';
+import { useTranslation } from 'react-i18next';
 
 export type DeckSize = {
   deckSize: number;
@@ -34,6 +35,9 @@ const StickyFooter = ({
   onSendInviteClick,
   onIsValidChange
 }: DeckSize) => {
+  // Initial stuff to allow the lang to change
+  const { t } = useTranslation();
+  
   const { errors, values, isValid } = useFormikContext<DeckResponse>();
   const footerRef = useRef<HTMLDivElement>(null);
   const [copied, setCopied] = useState(false);
@@ -129,7 +133,7 @@ const StickyFooter = ({
               className={classNames(styles.iconButton, { [styles.iconButtonCopied]: copied })}
               onClick={handleClipboardCopy}
               type="button"
-              title={copied ? 'Copied!' : 'Copy invite link'}
+              title={copied ? t('GAME_LOBBY.COPIED') : t('GAME_LOBBY.COPY_INVITE')}
             >
               {copied ? <HiClipboardCheck /> : <HiClipboardCopy />}
             </button>
@@ -138,7 +142,7 @@ const StickyFooter = ({
                 className={styles.iconButton}
                 onClick={onSendInviteClick}
                 type="button"
-                title="Send invite to friend"
+                title={t('GAME_LOBBY.SEND_INVITE_FRIEND')}
               >
                 <MdGames />
               </button>
@@ -164,7 +168,7 @@ const StickyFooter = ({
                 disabled={isUnreadyLoading || needToDoDisclaimer}
                 onClick={onUnreadySideboard}
               >
-                Edit Deck
+		{t('GAME_LOBBY.EDIT_DECK')}
               </button>
             ) : (
               <button
@@ -178,15 +182,15 @@ const StickyFooter = ({
                 disabled={!isConfirmEnabled || isSubmitting}
               >
                 {isSubmitting
-                  ? 'Submitting\u2026'
+                  ? t('GAME_LOBBY.SUBMITTING')
                   : isWidescreen
-                  ? 'Confirm Deck'
-                  : 'Confirm'}
+                  ? t('GAME_LOBBY.CONFIRM_DECK')
+                  : t('GAME_LOBBY.CONFIRM')}
               </button>
             )}
             {isWidescreen && (
               <button className={leaveClass} onClick={handleLeave}>
-                Leave
+                {t('GAME_LOBBY.LEAVE')}
               </button>
             )}
           </div>
