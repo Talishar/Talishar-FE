@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
 import { TALISHAR_METAFY_URL } from 'constants/socialLinks';
 import styles from './AdBlockingRecovery.module.css';
 
@@ -19,6 +20,7 @@ const DISMISS_KEY = 'talishar_adblock_dismissed';
 const DISMISS_DURATION_MS = 2 * 60 * 60 * 1000; // 2 hours
 
 const AdBlockingRecovery: React.FC = () => {
+  const { t } = useTranslation();
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -87,25 +89,26 @@ const AdBlockingRecovery: React.FC = () => {
   return (
     <div className={styles.container}>
       <div className={styles.message}>
-        <p className={styles.title}>Ad Blocker Detected</p>
+        <p className={styles.title}>{t('AD_BLOCKING_RECOVERY.TITLE')}</p>
         <p className={styles.description}>
-          Talishar is free to play and supported by ads. Please consider
-          disabling your ad blocker to help keep the platform running.
+          {t('AD_BLOCKING_RECOVERY.DESCRIPTION')}
         </p>
         <p className={styles.subDescription}>
-          You can also support us directly on{' '}
-          <a
-            className={styles.link}
-            href={TALISHAR_METAFY_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Metafy
-          </a>
-          .
+          <Trans i18nKey="AD_BLOCKING_RECOVERY.SUPPORT_DIRECTLY">
+            You can also support us directly on{' '}
+            <a
+              className={styles.link}
+              href={TALISHAR_METAFY_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Metafy
+            </a>
+            .
+          </Trans>
         </p>
         <button className={styles.dismissButton} onClick={handleDismiss}>
-          Dismiss
+          {t('AD_BLOCKING_RECOVERY.DISMISS')}
         </button>
       </div>
     </div>

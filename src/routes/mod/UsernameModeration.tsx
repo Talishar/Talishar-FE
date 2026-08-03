@@ -5,6 +5,7 @@ import {
   useWhitelistOffensiveUsernameMutation
 } from 'features/api/apiSlice';
 import { toast } from 'react-hot-toast';
+import { useTranslation, Trans } from 'react-i18next';
 import styles from './UsernameModeration.module.css';
 
 interface OffensiveUser {
@@ -14,6 +15,7 @@ interface OffensiveUser {
 }
 
 export const UsernameModeration: React.FC = () => {
+  const { t } = useTranslation();
   const [selectedUsers, setSelectedUsers] = useState<Set<number>>(new Set());
   const [expandedUserIds, setExpandedUserIds] = useState<Set<number>>(
     new Set()
@@ -54,7 +56,7 @@ export const UsernameModeration: React.FC = () => {
 
   const handleBanSelected = async () => {
     if (selectedUsers.size === 0) {
-      toast.error('No users selected');
+      toast.error(t('USERNAME_MODERATION.NO_USERS_SELECTED'));
       return;
     }
 
@@ -65,11 +67,12 @@ export const UsernameModeration: React.FC = () => {
 
     if (
       !window.confirm(
-        `Ban ${
-          usersToBan.length
-        } user(s) with offensive usernames?\n\n${usersToBan
-          .map((u: OffensiveUser) => u.username)
-          .join(', ')}`
+        t('USERNAME_MODERATION.BAN_CONFIRM', {
+          count: usersToBan.length,
+          usernames: usersToBan
+            .map((u: OffensiveUser) => u.username)
+            .join(', ')
+        })
       )
     ) {
       return;
@@ -89,8 +92,10 @@ export const UsernameModeration: React.FC = () => {
     }
 
     toast.success(
-      `Banned ${successCount} user(s)${
-        failureCount > 0 ? ` (${failureCount} failed)` : ''
+      `${t('USERNAME_MODERATION.BANNED_SUCCESS', { count: successCount })}${
+        failureCount > 0
+          ? t('USERNAME_MODERATION.FAILED_SUFFIX', { count: failureCount })
+          : ''
       }`
     );
     setSelectedUsers(new Set());
@@ -110,7 +115,10 @@ export const UsernameModeration: React.FC = () => {
   const handleWhitelistUser = async (user: OffensiveUser) => {
     if (
       !window.confirm(
-        `Whitelist "${user.username}"?\n\nThis username matched pattern "${user.matchedPattern}" but will be excluded from future moderation scans.`
+        t('USERNAME_MODERATION.WHITELIST_CONFIRM', {
+          username: user.username,
+          pattern: user.matchedPattern
+        })
       )
     ) {
       return;
@@ -118,17 +126,21 @@ export const UsernameModeration: React.FC = () => {
 
     try {
       await whitelistUsername({ username: user.username }).unwrap();
-      toast.success(`Whitelisted ${user.username}`);
+      toast.success(
+        t('USERNAME_MODERATION.WHITELISTED_ONE', { username: user.username })
+      );
       await refetch();
     } catch (err: any) {
       console.error(`Failed to whitelist ${user.username}:`, err);
-      toast.error(`Failed to whitelist ${user.username}`);
+      toast.error(
+        t('USERNAME_MODERATION.WHITELIST_FAILED', { username: user.username })
+      );
     }
   };
 
   const handleWhitelistSelected = async () => {
     if (selectedUsers.size === 0) {
-      toast.error('No users selected');
+      toast.error(t('USERNAME_MODERATION.NO_USERS_SELECTED'));
       return;
     }
 
@@ -139,9 +151,12 @@ export const UsernameModeration: React.FC = () => {
 
     if (
       !window.confirm(
-        `Whitelist ${usersToWhitelist.length} user(s)?\n\n${usersToWhitelist
-          .map((u: OffensiveUser) => u.username)
-          .join(', ')}`
+        t('USERNAME_MODERATION.WHITELIST_BATCH_CONFIRM', {
+          count: usersToWhitelist.length,
+          usernames: usersToWhitelist
+            .map((u: OffensiveUser) => u.username)
+            .join(', ')
+        })
       )
     ) {
       return;
@@ -161,8 +176,12 @@ export const UsernameModeration: React.FC = () => {
     }
 
     toast.success(
-      `Whitelisted ${successCount} user(s)${
-        failureCount > 0 ? ` (${failureCount} failed)` : ''
+      `${t('USERNAME_MODERATION.WHITELISTED_SUCCESS', {
+        count: successCount
+      })}${
+        failureCount > 0
+          ? t('USERNAME_MODERATION.FAILED_SUFFIX', { count: failureCount })
+          : ''
       }`
     );
     setSelectedUsers(new Set());
@@ -173,20 +192,25 @@ export const UsernameModeration: React.FC = () => {
 
   return (
     <div className={styles.container}>
-      <h2>Username Moderation</h2>
+      <h2>{t('USERNAME_MODERATION.TITLE')}</h2>
 
       {!scanEnabled ? (
         <button className={styles.refreshButton} onClick={() => setScanEnabled(true)}>
-          Run Username Scan
+          {t('USERNAME_MODERATION.RUN_SCAN')}
         </button>
       ) : isLoading ? (
-        <p>Scanning database for offensive usernames...</p>
+        <p>{t('USERNAME_MODERATION.SCANNING')}</p>
       ) : offensiveUsers.length > 0 ? (
         <div>
           <div className={styles.summary}>
             <p>
-              Found <strong>{offensiveUsers.length}</strong> user(s) with
-              potentially offensive usernames
+              <Trans
+                i18nKey="USERNAME_MODERATION.FOUND_SUMMARY"
+                values={{ count: offensiveUsers.length }}
+              >
+                Found <strong>{offensiveUsers.length}</strong> user(s) with
+                potentially offensive usernames
+              </Trans>
             </p>
           </div>
 
@@ -198,8 +222,8 @@ export const UsernameModeration: React.FC = () => {
             >
               {selectedUsers.size === offensiveUsers.length &&
               offensiveUsers.length > 0
-                ? 'Deselect All'
-                : 'Select All'}
+                ? t('USERNAME_MODERATION.DESELECT_ALL')
+                : t('USERNAME_MODERATION.SELECT_ALL')}
             </button>
 
             <button
@@ -208,8 +232,10 @@ export const UsernameModeration: React.FC = () => {
               disabled={selectedUsers.size === 0 || isBanning || isWhitelisting}
             >
               {isBanning
-                ? 'Banning...'
-                : `Ban Selected (${selectedUsers.size})`}
+                ? t('USERNAME_MODERATION.BANNING')
+                : t('USERNAME_MODERATION.BAN_SELECTED', {
+                    count: selectedUsers.size
+                  })}
             </button>
 
             <button
@@ -218,8 +244,10 @@ export const UsernameModeration: React.FC = () => {
               disabled={selectedUsers.size === 0 || isBanning || isWhitelisting}
             >
               {isWhitelisting
-                ? 'Whitelisting...'
-                : `Whitelist Selected (${selectedUsers.size})`}
+                ? t('USERNAME_MODERATION.WHITELISTING')
+                : t('USERNAME_MODERATION.WHITELIST_SELECTED', {
+                    count: selectedUsers.size
+                  })}
             </button>
 
             <button
@@ -227,7 +255,7 @@ export const UsernameModeration: React.FC = () => {
               onClick={() => refetch()}
               disabled={isBanning || isWhitelisting}
             >
-              Refresh
+              {t('GAME_LIST.REFRESH')}
             </button>
           </div>
 
@@ -246,9 +274,9 @@ export const UsernameModeration: React.FC = () => {
                       disabled={isBanning || isWhitelisting}
                     />
                   </th>
-                  <th>Username</th>
-                  <th>Matched Pattern</th>
-                  <th style={{ width: '180px' }}>Actions</th>
+                  <th>{t('PROFILE.USERNAME_LABEL')}</th>
+                  <th>{t('USERNAME_MODERATION.MATCHED_PATTERN')}</th>
+                  <th style={{ width: '180px' }}>{t('USERNAME_MODERATION.ACTIONS')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -270,7 +298,11 @@ export const UsernameModeration: React.FC = () => {
                       {user.username}
                       {expandedUserIds.has(user.usersId) && (
                         <div className={styles.details}>
-                          <small>User ID: {user.usersId}</small>
+                          <small>
+                            {t('USERNAME_MODERATION.USER_ID', {
+                              id: user.usersId
+                            })}
+                          </small>
                         </div>
                       )}
                     </td>
@@ -292,17 +324,19 @@ export const UsernameModeration: React.FC = () => {
                         disabled={
                           isBanning || isWhitelisting || selectedUsers.size > 0
                         }
-                        title="Ban this user immediately"
+                        title={t('USERNAME_MODERATION.BAN_USER_TITLE')}
                       >
-                        Ban
+                        {t('USERNAME_MODERATION.BAN')}
                       </button>
                       <button
                         className={styles.whitelistButton}
                         onClick={() => handleWhitelistUser(user)}
                         disabled={isBanning || isWhitelisting}
-                        title="Whitelist this username"
+                        title={t('USERNAME_MODERATION.WHITELIST_USER_TITLE')}
                       >
-                        {isWhitelisting ? 'Whitelisting...' : 'Whitelist'}
+                        {isWhitelisting
+                          ? t('USERNAME_MODERATION.WHITELISTING')
+                          : t('USERNAME_MODERATION.WHITELIST')}
                       </button>
                     </td>
                   </tr>
@@ -312,7 +346,9 @@ export const UsernameModeration: React.FC = () => {
           </div>
         </div>
       ) : (
-        <p className={styles.noResults}>No offensive usernames detected!</p>
+        <p className={styles.noResults}>
+          {t('USERNAME_MODERATION.NO_OFFENSIVE_USERS')}
+        </p>
       )}
     </div>
   );

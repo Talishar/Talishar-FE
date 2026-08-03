@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import styles from './DeleteUsernameAutocomplete.module.css';
 import { useSearchUsernamesQuery } from 'features/api/apiSlice';
 import { UserSearchResult } from 'interface/API/ModPageAPI';
@@ -18,6 +19,7 @@ const DeleteUsernameAutocomplete: React.FC<DeleteUsernameAutocompleteProps> = ({
   const [selectedEmail, setSelectedEmail] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState(value);
   const suggestionsRef = useRef<HTMLDivElement>(null);
+  const { t } = useTranslation();
 
   // Only query if we have at least 2 characters
   const shouldQuery = searchTerm.length >= 2;
@@ -73,7 +75,7 @@ const DeleteUsernameAutocomplete: React.FC<DeleteUsernameAutocompleteProps> = ({
           value={searchTerm}
           onChange={handleInputChange}
           onFocus={() => setShowSuggestions(true)}
-          placeholder="Type username to search..."
+          placeholder={t('MOD_PAGE.SEARCH_USERNAME_PLACEHOLDER')}
           className={styles.input}
           required
         />
@@ -97,7 +99,7 @@ const DeleteUsernameAutocomplete: React.FC<DeleteUsernameAutocompleteProps> = ({
       {selectedEmail && (
         <div className={styles.selectedInfo}>
           <label className={styles.emailLabel}>
-            <strong>Associated Email:</strong> {selectedEmail}
+            <strong>{t('MOD_PAGE.ASSOCIATED_EMAIL')}:</strong> {selectedEmail}
           </label>
         </div>
       )}
