@@ -50,9 +50,9 @@
     "LSS_RELATIONSHIP_DESCRIPTION": "We are not affiliated with, endorsed by, or connected to Legend Story Studios (LSS), the creators of Flesh & Blood. Talishar operates as a fan-made platform created to celebrate and support the FAB community.</0><1>While we strive to maintain rules accuracy, Talishar may not be a completely accurate representation of the official rules. For official rulings and clarifications, we recommend consulting the judge community on the <2>Judge Hub Discord</2> or visiting the <3>official FAB rules and policy center</3>.</1>",
     "LSS_RELATIONSHIP_TITLE": " Our Relationship with Legend Story Studios",
     "STATS": {
-      "ACTIVE": "<0>500+</0><1>Active Supporters</1>",
-      "FREE": "<0>100%</0><1>Free to Play</1>",
-      "PLAYERS": "<0>9,000+</0><1>Daily Players</1>"
+      "ACTIVE": "<0>{{supporters}}</0><1>Active Supporters</1>",
+      "FREE": "<0>{{percent}}</0><1>Free to Play</1>",
+      "PLAYERS": "<0>{{players}}</0><1>Daily Players</1>"
     },
     "SUB_HEADER": "The Unofficial Online Platform for Flesh & Blood",
     "TITLE": "Welcome to Talishar",
