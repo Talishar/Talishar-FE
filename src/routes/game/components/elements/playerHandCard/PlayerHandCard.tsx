@@ -31,6 +31,7 @@ import { useLanguageSelector } from 'hooks/useLanguageSelector';
 import { formatRestriction } from 'data/keywords';
 import { useCookies } from 'react-cookie';
 import {
+  TAP_PREVIEW_CARD_SELECTOR,
   TAP_TO_PREVIEW_PLAY_COOKIE,
   buildHandCardSelectionKey,
   clearTapToPreviewSelection,
@@ -155,14 +156,14 @@ export const PlayerHandCard = React.memo(
         if (cardElRef.current?.contains(target)) {
           return;
         }
-        const isTapOnHandCard = Boolean(
-          target?.closest?.('[data-hand-card="true"]')
+        const isTapOnPreviewableCard = Boolean(
+          target?.closest?.(TAP_PREVIEW_CARD_SELECTOR)
         );
         if (
           !shouldDismissStickyPreviewOnOutsideTap({
             enabled: true,
             selectedKey: getTapToPreviewSelectedCardKey(),
-            isTapOnHandCard
+            isTapOnPreviewableCard
           })
         ) {
           return;
@@ -415,6 +416,7 @@ export const PlayerHandCard = React.memo(
         <motion.div
           ref={cardElRef}
           data-hand-card="true"
+          data-tap-preview-card="true"
           data-is-dragging={isDragging}
           title="Hold and use the mouse wheel or Q/E for fine rotation. Right-click rotates 90°; Shift+right-click reverses it."
           layout={enableLayoutAnimation && !isDragging ? 'position' : false}
@@ -479,6 +481,7 @@ export const PlayerHandCard = React.memo(
             isHidden={!canPopUp}
             disableTilt={isDragging}
             disableShadow
+            suppressTapToPreview
             persistPopUpOnClick={
               isTapToPreviewPlayEnabled(cookies[TAP_TO_PREVIEW_PLAY_COOKIE]) &&
               !supportsHover

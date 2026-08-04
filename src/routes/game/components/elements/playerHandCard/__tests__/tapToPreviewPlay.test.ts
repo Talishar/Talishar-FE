@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import {
+  buildBoardCardSelectionKey,
   buildHandCardSelectionKey,
   clearTapToPreviewSelection,
   getTapToPreviewSelectedCardKey,
@@ -80,25 +81,35 @@ describe('tapToPreviewPlay', () => {
         })
       ).toEqual({ action: 'preview', nextSelectedKey: 'id:card-a' });
     });
+
+    it('shares selection between hand and board keys', () => {
+      expect(
+        resolveTapToPreviewPlay({
+          enabled: true,
+          cardKey: 'board:me:WTR001',
+          selectedKey: 'id:hand-1'
+        })
+      ).toEqual({ action: 'preview', nextSelectedKey: 'board:me:WTR001' });
+    });
   });
 
   describe('shouldDismissStickyPreviewOnOutsideTap', () => {
-    it('dismisses when preview is active and tap is outside hand cards', () => {
+    it('dismisses when preview is active and tap is outside previewable cards', () => {
       expect(
         shouldDismissStickyPreviewOnOutsideTap({
           enabled: true,
           selectedKey: 'id:card-a',
-          isTapOnHandCard: false
+          isTapOnPreviewableCard: false
         })
       ).toBe(true);
     });
 
-    it('does not dismiss when tapping another hand card', () => {
+    it('does not dismiss when tapping another previewable card', () => {
       expect(
         shouldDismissStickyPreviewOnOutsideTap({
           enabled: true,
           selectedKey: 'id:card-a',
-          isTapOnHandCard: true
+          isTapOnPreviewableCard: true
         })
       ).toBe(false);
     });
@@ -108,14 +119,14 @@ describe('tapToPreviewPlay', () => {
         shouldDismissStickyPreviewOnOutsideTap({
           enabled: false,
           selectedKey: 'id:card-a',
-          isTapOnHandCard: false
+          isTapOnPreviewableCard: false
         })
       ).toBe(false);
       expect(
         shouldDismissStickyPreviewOnOutsideTap({
           enabled: true,
           selectedKey: null,
-          isTapOnHandCard: false
+          isTapOnPreviewableCard: false
         })
       ).toBe(false);
     });
@@ -157,6 +168,17 @@ describe('tapToPreviewPlay', () => {
           zone: 'arsenal'
         })
       ).toBe('arsenal:WTR001:2');
+    });
+  });
+
+  describe('buildBoardCardSelectionKey', () => {
+    it('builds a stable board key', () => {
+      expect(
+        buildBoardCardSelectionKey({ cardNumber: 'WTR001', isOpponent: false })
+      ).toBe('board:me:WTR001');
+      expect(
+        buildBoardCardSelectionKey({ cardNumber: 'WTR001', isOpponent: true })
+      ).toBe('board:opp:WTR001');
     });
   });
 });

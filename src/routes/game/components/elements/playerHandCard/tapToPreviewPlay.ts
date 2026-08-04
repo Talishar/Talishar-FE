@@ -46,23 +46,26 @@ export function resolveTapToPreviewPlay({
 }
 
 /**
- * Outside taps dismiss a sticky preview. Taps on another hand card are ignored
- * here so that card can switch the preview / confirm-play itself.
+ * Outside taps dismiss a sticky preview. Taps on another previewable card
+ * (hand or board) are ignored here so that card can switch the preview itself.
  */
 export function shouldDismissStickyPreviewOnOutsideTap({
   enabled,
   selectedKey,
-  isTapOnHandCard
+  isTapOnPreviewableCard
 }: {
   enabled: boolean;
   selectedKey: string | null;
-  isTapOnHandCard: boolean;
+  isTapOnPreviewableCard: boolean;
 }): boolean {
-  if (!enabled || selectedKey == null || isTapOnHandCard) {
+  if (!enabled || selectedKey == null || isTapOnPreviewableCard) {
     return false;
   }
   return true;
 }
+
+/** CSS selector for cards that participate in tap-to-preview switching. */
+export const TAP_PREVIEW_CARD_SELECTOR = '[data-tap-preview-card="true"]';
 
 export function buildHandCardSelectionKey({
   cardId,
@@ -79,6 +82,16 @@ export function buildHandCardSelectionKey({
     return `id:${cardId}`;
   }
   return `${zone}:${cardNumber}:${cardIndex ?? ''}`;
+}
+
+export function buildBoardCardSelectionKey({
+  cardNumber,
+  isOpponent
+}: {
+  cardNumber: string;
+  isOpponent?: boolean;
+}): string {
+  return `board:${isOpponent ? 'opp' : 'me'}:${cardNumber}`;
 }
 
 export function isTapToPreviewPlayEnabled(
