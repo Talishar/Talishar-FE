@@ -159,7 +159,11 @@ interface FieldsetProps {
   tooltip?: string;
 }
 
-export const Fieldset: React.FC<FieldsetProps> = ({ legend, children, tooltip }) => {
+export const Fieldset: React.FC<FieldsetProps> = ({
+  legend,
+  children,
+  tooltip
+}) => {
   return (
     <fieldset className={styles.fieldset}>
       <legend>

@@ -25,7 +25,11 @@ export function Effect(prop: CardProp) {
     ? styles.imgPlayerBorder
     : styles.imgOpponentBorder;
   return (
-    <CardPopUp cardNumber={prop.card.cardNumber} containerClass={styles.effect} isOpponent={!isPlayer}>
+    <CardPopUp
+      cardNumber={prop.card.cardNumber}
+      containerClass={styles.effect}
+      isOpponent={!isPlayer}
+    >
       <div className={styles.overlayContainer}>
         <CardImage
           src={src}
@@ -47,8 +51,12 @@ export default function Effects(props: Player) {
     const isP2View =
       (playerID === 3 || isReplay) && state.game.spectatorCameraView === 2;
     return isPlayer
-      ? (isP2View ? state.game.playerTwo.Effects : state.game.playerOne.Effects)
-      : (isP2View ? state.game.playerOne.Effects : state.game.playerTwo.Effects);
+      ? isP2View
+        ? state.game.playerTwo.Effects
+        : state.game.playerOne.Effects
+      : isP2View
+      ? state.game.playerOne.Effects
+      : state.game.playerTwo.Effects;
   });
 
   if (effects === undefined) {

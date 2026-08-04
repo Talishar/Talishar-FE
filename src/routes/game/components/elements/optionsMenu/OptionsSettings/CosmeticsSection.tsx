@@ -2,7 +2,13 @@ import React from 'react';
 import classNames from 'classnames';
 import CardPopUp from '../../cardPopUp/CardPopUp';
 import CardImage from '../../cardImage/CardImage';
-import { CARD_BACK, PLAYMATS, PLAYMAT_DISPLAY_NAMES, TALISHAR_CARD_BACK_IDS, TALISHAR_PLAYMAT_IDS } from 'features/options/cardBacks';
+import {
+  CARD_BACK,
+  PLAYMATS,
+  PLAYMAT_DISPLAY_NAMES,
+  TALISHAR_CARD_BACK_IDS,
+  TALISHAR_PLAYMAT_IDS
+} from 'features/options/cardBacks';
 import {
   CARD_SQUARES_PATH,
   DEFAULT_LANGUAGE,
@@ -11,6 +17,7 @@ import {
 import * as optConst from 'features/options/constants';
 import { Setting } from 'features/options/optionsSlice';
 import styles from './OptionsSettings.module.css';
+import { useTranslation } from 'react-i18next';
 
 interface CosmeticsData {
   cardBacks?: Array<{ id: string; name?: string }>;
@@ -30,6 +37,7 @@ export const CosmeticsSection: React.FC<CosmeticsSectionProps> = ({
   selectedPlaymat,
   onSettingsChange
 }) => {
+  const { t } = useTranslation();
   const getPlaymatThumbnailPath = (playmatId: string) =>
     `/playmats/thumbnails/${PLAYMATS[playmatId]}.webp`;
 
@@ -110,9 +118,9 @@ export const CosmeticsSection: React.FC<CosmeticsSectionProps> = ({
   return (
     <>
       <label className={styles.cardBackTitle}>
-        <strong>Playmat</strong>
+        <strong>{t('OPTIONS_MENU.PLAYMAT')}</strong>
         {!data?.playmats?.length && (
-          <p>Log in to customise your playmat</p>
+          <p>{t('OPTIONS_MENU.LOGIN_TO_CUSTOMISE_PLAYMAT')}</p>
         )}
         <div className={styles.playmatListContainer}>
           {renderPlaymatThumb('0')}
@@ -120,7 +128,7 @@ export const CosmeticsSection: React.FC<CosmeticsSectionProps> = ({
             <div
               key={`lockedPlaymat${id}`}
               className={styles.lockedCardBackWrapper}
-              title="Support us on Metafy to unlock Talishar exclusive playmats"
+              title={t('OPTIONS_MENU.LOCKED_PLAYMAT_TOOLTIP')}
             >
               <img
                 src={getPlaymatThumbnailPath(id)}
@@ -130,13 +138,23 @@ export const CosmeticsSection: React.FC<CosmeticsSectionProps> = ({
                 decoding="async"
                 width={160}
                 height={90}
-                className={classNames(styles.playmatThumb, styles.lockedCardBack)}
+                className={classNames(
+                  styles.playmatThumb,
+                  styles.lockedCardBack
+                )}
               />
-              <span className={classNames(styles.playmatLabel, styles.lockedPlaymatLabel)}>
+              <span
+                className={classNames(
+                  styles.playmatLabel,
+                  styles.lockedPlaymatLabel
+                )}
+              >
                 {getPlaymatDisplayName(id)}
               </span>
               <div className={styles.lockOverlay}>
-                <span className={styles.lockIcon}>&#128274;</span>
+                <span className={styles.lockIcon}>
+                  {t('OPTIONS_MENU.LOCK_ICON')}
+                </span>
               </div>
             </div>
           ))}
@@ -145,11 +163,9 @@ export const CosmeticsSection: React.FC<CosmeticsSectionProps> = ({
         </div>
       </label>
       <label className={styles.cardBackTitle}>
-        <strong>Card Back</strong>
+        <strong>{t('OPTIONS_MENU.CARD_BACK')}</strong>
         {!data?.cardBacks?.length && (
-          <p>
-            Link your Metafy account on your profile page to unlock Talishar exclusive card backs
-          </p>
+          <p>{t('OPTIONS_MENU.LINK_METAFY_CARD_BACKS')}</p>
         )}
         <div className={styles.cardBackListContainer}>
           {renderCardBackThumb('0')}
@@ -160,7 +176,7 @@ export const CosmeticsSection: React.FC<CosmeticsSectionProps> = ({
             <div
               key={`lockedCardBack${id}`}
               className={styles.lockedCardBackWrapper}
-              title="Support us on Metafy to unlock Talishar exclusive card backs"
+              title={t('OPTIONS_MENU.LOCKED_CARD_BACK_TOOLTIP')}
             >
               <CardImage
                 src={getCollectionCardImagePath({
@@ -172,7 +188,9 @@ export const CosmeticsSection: React.FC<CosmeticsSectionProps> = ({
                 className={classNames(styles.cardBack, styles.lockedCardBack)}
               />
               <div className={styles.lockOverlay}>
-                <span className={styles.lockIcon}>&#128274;</span>
+                <span className={styles.lockIcon}>
+                  {t('OPTIONS_MENU.LOCK_ICON')}
+                </span>
               </div>
             </div>
           ))}

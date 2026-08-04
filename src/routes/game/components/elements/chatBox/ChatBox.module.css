@@ -73,7 +73,11 @@
   margin: 5px 4px;
   padding: 4px 0;
   border-left: 2px solid var(--game-log-accent);
-  background-color: color-mix(in srgb, var(--theme-form-background) 94%, var(--game-log-accent));
+  background-color: color-mix(
+    in srgb,
+    var(--theme-form-background) 94%,
+    var(--game-log-accent)
+  );
 }
 
 .combatGroupLabel {

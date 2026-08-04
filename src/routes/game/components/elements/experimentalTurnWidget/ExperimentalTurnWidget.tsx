@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAppSelector, useAppDispatch } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import Player from 'interface/Player';
@@ -186,6 +187,7 @@ const ManualMode = () => {
 };
 
 export function PassTurnDisplay() {
+  const { t } = useTranslation();
   const canPassPhase = useAppSelector(
     (state: RootState) => state.game.canPassPhase
   );
@@ -263,8 +265,8 @@ export function PassTurnDisplay() {
           className={classNames(styles.passTurnDisplay, styles.passTurnActive)}
           onClick={onPassTurn}
         >
-          <div className={styles.passText}>PASS</div>
-          <div className={styles.subThing}>[spacebar]</div>
+          <div className={styles.passText}>{t('TURN_WIDGET.PASS')}</div>
+          <div className={styles.subThing}>{t('TURN_WIDGET.SPACEBAR')}</div>
         </div>
         {showAreYouSureModal &&
           createPortal(
@@ -272,8 +274,8 @@ export function PassTurnDisplay() {
               <dialog open={showAreYouSureModal} className={styles.modal}>
                 <article>
                   <header>{preventPassPrompt}</header>
-                  <button onClick={clickYes}>Yes</button>
-                  <button onClick={clickNo}>No</button>
+                  <button onClick={clickYes}>{t('GAME_LOBBY.YES')}</button>
+                  <button onClick={clickNo}>{t('GAME_LOBBY.NO')}</button>
                 </article>
               </dialog>
             </>,
@@ -288,7 +290,7 @@ export function PassTurnDisplay() {
       <div
         className={classNames(styles.passTurnDisplay, styles.passTurnInactive)}
       >
-        WAIT
+        {t('TURN_WIDGET.WAIT')}
       </div>
     );
   }

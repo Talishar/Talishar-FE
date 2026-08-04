@@ -10,8 +10,10 @@ import { shallowEqual } from 'react-redux';
 import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai';
 import { RootState } from 'app/Store';
 import { usePanelContext } from '../PanelContext';
+import { useTranslation } from 'react-i18next';
 
 export default function ManualModePanel() {
+  const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const { setIsManualModeOpen, isDevToolOpen, isManualModeOpen } =
     usePanelContext();
@@ -51,9 +53,9 @@ export default function ManualModePanel() {
           setIsOpen(!isOpen);
           setIsManualModeOpen(!isOpen);
         }}
-        title="Toggle Manual Mode"
+        title={t('MANUAL_MODE_PANEL.TOGGLE_MANUAL_MODE')}
       >
-        Manual Mode
+        {t('MANUAL_MODE_PANEL.TITLE')}
       </button>
       {isOpen && (
         <ManualModeContent
@@ -81,6 +83,7 @@ function ManualModeContent({
   const [isCardLoading, setIsCardLoading] = useState(false);
   const [isRequestInProgress, setIsRequestInProgress] = useState(false);
   const [showCardTooltip, setShowCardTooltip] = useState(false);
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const gameInfo = useAppSelector(getGameInfo, shallowEqual);
   const playerHealth = useAppSelector(
@@ -188,7 +191,7 @@ function ManualModeContent({
   return (
     <div className={styles.manualModePanel}>
       <div className={styles.header}>
-        <h3>Manual Mode</h3>
+        <h3>{t('MANUAL_MODE_PANEL.TITLE')}</h3>
         <button className={styles.closeButton} onClick={handleClose}>
           ×
         </button>
@@ -213,11 +216,13 @@ function ManualModeContent({
                   className={styles.toggleCheckbox}
                   disabled={isRequestInProgress}
                 />
-                <span>AI Infinite HP</span>
+                <span>{t('MANUAL_MODE_PANEL.AI_INFINITE_HP')}</span>
               </label>
             </div>
             <div className={styles.controlGroup}>
-              <span className={styles.label}>Wrench-tastic! Power</span>
+              <span className={styles.label}>
+                {t('MANUAL_MODE_PANEL.WRENCH_POWER')}
+              </span>
               <div className={styles.controlRow}>
                 <button
                   className={styles.buttonSmall}
@@ -227,7 +232,7 @@ function ManualModeContent({
                       Math.max(0, practiceDummyWeaponPower - 1)
                     )
                   }
-                  title="Reduce Wrench-tastic power by 1"
+                  title={t('MANUAL_MODE_PANEL.REDUCE_WRENCH_POWER')}
                   disabled={
                     isRequestInProgress || practiceDummyWeaponPower <= 0
                   }
@@ -240,9 +245,7 @@ function ManualModeContent({
                   inputMode="numeric"
                   pattern="[0-9]*"
                   value={weaponPowerInput}
-                  onChange={(event) =>
-                    setWeaponPowerInput(event.target.value)
-                  }
+                  onChange={(event) => setWeaponPowerInput(event.target.value)}
                   onBlur={handleWeaponPowerChange}
                   onKeyDown={(event) => {
                     event.stopPropagation();
@@ -250,7 +253,7 @@ function ManualModeContent({
                       event.currentTarget.blur();
                     }
                   }}
-                  aria-label="Wrench-tastic power"
+                  aria-label={t('MANUAL_MODE_PANEL.WRENCH_POWER_ARIA')}
                   disabled={isRequestInProgress}
                 />
                 <button
@@ -261,7 +264,7 @@ function ManualModeContent({
                       Math.min(100, practiceDummyWeaponPower + 1)
                     )
                   }
-                  title="Increase Wrench-tastic power by 1"
+                  title={t('MANUAL_MODE_PANEL.INCREASE_WRENCH_POWER')}
                   disabled={
                     isRequestInProgress || practiceDummyWeaponPower >= 100
                   }
@@ -275,12 +278,14 @@ function ManualModeContent({
 
         {/* Player Life */}
         <div className={styles.controlGroup}>
-          <span className={styles.label}>Player Life</span>
+          <span className={styles.label}>
+            {t('MANUAL_MODE_PANEL.PLAYER_LIFE')}
+          </span>
           <div className={styles.controlRow}>
             <button
               className={styles.buttonSmall}
               onClick={() => handleDispatch(PROCESS_INPUT.SUBTRACT_1_HP_SELF)}
-              title="Remove 1 HP from player"
+              title={t('MANUAL_MODE_PANEL.REMOVE_1_HP_PLAYER')}
               disabled={isRequestInProgress}
             >
               <AiOutlineMinus />
@@ -289,7 +294,7 @@ function ManualModeContent({
             <button
               className={styles.buttonSmall}
               onClick={() => handleDispatch(PROCESS_INPUT.ADD_1_HP_SELF)}
-              title="Add 1 HP to player"
+              title={t('MANUAL_MODE_PANEL.ADD_1_HP_PLAYER')}
               disabled={isRequestInProgress}
             >
               <AiOutlinePlus />
@@ -299,14 +304,16 @@ function ManualModeContent({
 
         {/* Opponent Life */}
         <div className={styles.controlGroup}>
-          <span className={styles.label}>Opponent Life</span>
+          <span className={styles.label}>
+            {t('MANUAL_MODE_PANEL.OPPONENT_LIFE')}
+          </span>
           <div className={styles.controlRow}>
             <button
               className={styles.buttonSmall}
               onClick={() =>
                 handleDispatch(PROCESS_INPUT.SUBTRACT_1_HP_OPPONENT)
               }
-              title="Remove 1 HP from opponent"
+              title={t('MANUAL_MODE_PANEL.REMOVE_1_HP_OPPONENT')}
               disabled={isRequestInProgress}
             >
               <AiOutlineMinus />
@@ -315,7 +322,7 @@ function ManualModeContent({
             <button
               className={styles.buttonSmall}
               onClick={() => handleDispatch(PROCESS_INPUT.ADD_1_HP_OPPONENT)}
-              title="Add 1 HP to opponent"
+              title={t('MANUAL_MODE_PANEL.ADD_1_HP_OPPONENT')}
               disabled={isRequestInProgress}
             >
               <AiOutlinePlus />
@@ -325,14 +332,16 @@ function ManualModeContent({
 
         {/* Player Action Points */}
         <div className={styles.controlGroup}>
-          <span className={styles.label}>Action Points</span>
+          <span className={styles.label}>
+            {t('MANUAL_MODE_PANEL.ACTION_POINTS')}
+          </span>
           <div className={styles.controlRow}>
             <button
               className={styles.buttonSmall}
               onClick={() =>
                 handleDispatch(PROCESS_INPUT.SUBTRACT_ACTION_POINT)
               }
-              title="Remove 1 Action Point"
+              title={t('MANUAL_MODE_PANEL.REMOVE_1_ACTION_POINT')}
               disabled={isRequestInProgress}
             >
               <AiOutlineMinus />
@@ -341,7 +350,7 @@ function ManualModeContent({
             <button
               className={styles.buttonSmall}
               onClick={() => handleDispatch(PROCESS_INPUT.ADD_ACTION_POINT)}
-              title="Add 1 Action Point"
+              title={t('MANUAL_MODE_PANEL.ADD_1_ACTION_POINT')}
               disabled={isRequestInProgress}
             >
               <AiOutlinePlus />
@@ -351,14 +360,16 @@ function ManualModeContent({
 
         {/* Player Resources */}
         <div className={styles.controlGroup}>
-          <span className={styles.label}>Player Resources</span>
+          <span className={styles.label}>
+            {t('MANUAL_MODE_PANEL.PLAYER_RESOURCES')}
+          </span>
           <div className={styles.controlRow}>
             <button
               className={styles.buttonSmall}
               onClick={() =>
                 handleDispatch(PROCESS_INPUT.REMOVE_RESOURCE_FROM_POOL_SELF)
               }
-              title="Remove 1 resource from player pool"
+              title={t('MANUAL_MODE_PANEL.REMOVE_1_RESOURCE_PLAYER')}
               disabled={isRequestInProgress}
             >
               <AiOutlineMinus />
@@ -369,7 +380,7 @@ function ManualModeContent({
               onClick={() =>
                 handleDispatch(PROCESS_INPUT.ADD_RESOURCE_TO_POOL_SELF)
               }
-              title="Add 1 resource to player pool"
+              title={t('MANUAL_MODE_PANEL.ADD_1_RESOURCE_PLAYER')}
               disabled={isRequestInProgress}
             >
               <AiOutlinePlus />
@@ -379,14 +390,16 @@ function ManualModeContent({
 
         {/* Opponent Resources */}
         <div className={styles.controlGroup}>
-          <span className={styles.label}>Opponent Resources</span>
+          <span className={styles.label}>
+            {t('MANUAL_MODE_PANEL.OPPONENT_RESOURCES')}
+          </span>
           <div className={styles.controlRow}>
             <button
               className={styles.buttonSmall}
               onClick={() =>
                 handleDispatch(PROCESS_INPUT.REMOVE_RESOURCE_FROM_POOL_OPPONENT)
               }
-              title="Remove 1 resource from opponent pool"
+              title={t('MANUAL_MODE_PANEL.REMOVE_1_RESOURCE_OPPONENT')}
               disabled={isRequestInProgress}
             >
               <AiOutlineMinus />
@@ -397,7 +410,7 @@ function ManualModeContent({
               onClick={() =>
                 handleDispatch(PROCESS_INPUT.ADD_RESOURCE_TO_POOL_OPPONENT)
               }
-              title="Add 1 resource to opponent pool"
+              title={t('MANUAL_MODE_PANEL.ADD_1_RESOURCE_OPPONENT')}
               disabled={isRequestInProgress}
             >
               <AiOutlinePlus />
@@ -410,71 +423,73 @@ function ManualModeContent({
           <button
             className={styles.buttonFull}
             onClick={() => handleDispatch(PROCESS_INPUT.DRAW_CARD_SELF)}
-            title="Draw a card"
+            title={t('MANUAL_MODE_PANEL.DRAW_CARD')}
             disabled={isRequestInProgress}
           >
-            Draw Card (Player)
+            {t('MANUAL_MODE_PANEL.DRAW_CARD_PLAYER')}
           </button>
           <button
             className={styles.buttonFull}
             onClick={() => handleDispatch(PROCESS_INPUT.DRAW_CARD_OPPONENT)}
-            title="Draw a card for opponent"
+            title={t('MANUAL_MODE_PANEL.DRAW_CARD_OPPONENT_TITLE')}
             disabled={isRequestInProgress}
           >
-            Draw Card (Opp.)
+            {t('MANUAL_MODE_PANEL.DRAW_CARD_OPPONENT')}
           </button>
         </div>
 
         {/* Add Card */}
         <div className={styles.formGroup}>
           <div className={styles.formLabelRow}>
-            <label htmlFor="cardInput">Add Card</label>
+            <label htmlFor="cardInput">{t('MANUAL_MODE_PANEL.ADD_CARD')}</label>
             <button
               className={styles.tooltipTrigger}
               onClick={() => setShowCardTooltip((v) => !v)}
               type="button"
-              aria-label="Show card input help"
+              aria-label={t('MANUAL_MODE_PANEL.SHOW_CARD_INPUT_HELP')}
             >
               ?
             </button>
           </div>
           {showCardTooltip && (
             <div className={styles.tooltip}>
-              <p className={styles.tooltipTitle}>Input Examples Guide</p>
+              <p className={styles.tooltipTitle}>
+                {t('MANUAL_MODE_PANEL.INPUT_EXAMPLES_GUIDE')}
+              </p>
               <ul className={styles.tooltipList}>
                 <li>
-                  <span className={styles.tooltipCode}>Ironrot Gauntlet</span>
-                  <span>Equipment - Equip to your hero in the arena</span>
-                </li>
-                <li>
-                  <span className={styles.tooltipCode}>Runechant</span>
-                  <span>Tokens - places them directly into the arena</span>
-                </li>
-                <li>
-                  <span className={styles.tooltipCode}>Runechant|5</span>
-                  <span>
-                    Token + Pipe + Number - Creates that many copies in the
-                    arena
+                  <span className={styles.tooltipCode}>
+                    {t('MANUAL_MODE_PANEL.CARD_IRONROT_GAUNTLET')}
                   </span>
+                  <span>{t('MANUAL_MODE_PANEL.EQUIPMENT_DESCRIPTION')}</span>
                 </li>
                 <li>
-                  <span className={styles.tooltipCode}>Snatch|2</span>
-                  <span>
-                    Card Name + Pipe + Number also works for non-token cards
+                  <span className={styles.tooltipCode}>
+                    {t('MANUAL_MODE_PANEL.CARD_RUNECHANT')}
                   </span>
+                  <span>{t('MANUAL_MODE_PANEL.TOKEN_DESCRIPTION')}</span>
                 </li>
                 <li>
-                  <span className={styles.tooltipCode}>Snatch blue</span>
-                  <span>
-                    Card Name + color will put the specific color version in
-                    your hand. By default it adds the first version found. (Red
-                    normally)
+                  <span className={styles.tooltipCode}>
+                    {t('MANUAL_MODE_PANEL.CARD_RUNECHANT_PIPE')}
                   </span>
+                  <span>{t('MANUAL_MODE_PANEL.TOKEN_PIPE_DESCRIPTION')}</span>
+                </li>
+                <li>
+                  <span className={styles.tooltipCode}>
+                    {t('MANUAL_MODE_PANEL.CARD_SNATCH_PIPE')}
+                  </span>
+                  <span>{t('MANUAL_MODE_PANEL.CARD_PIPE_DESCRIPTION')}</span>
+                </li>
+                <li>
+                  <span className={styles.tooltipCode}>
+                    {t('MANUAL_MODE_PANEL.CARD_SNATCH_BLUE')}
+                  </span>
+                  <span>{t('MANUAL_MODE_PANEL.COLOR_DESCRIPTION')}</span>
                 </li>
               </ul>
               <p className={styles.tooltipNote}>
-                The destination (hand, play, equipment zone) is determined
-                automatically by the card type.
+                {t('MANUAL_MODE_PANEL.DESTINATION_NOTE')}
               </p>
             </div>
           )}
@@ -487,7 +502,7 @@ function ManualModeContent({
             onKeyDownCapture={(e) => {
               e.stopPropagation();
             }}
-            placeholder="e.g. Snatch or Vigor|5"
+            placeholder={t('MANUAL_MODE_PANEL.CARD_INPUT_PLACEHOLDER')}
             disabled={isCardLoading || isRequestInProgress}
           />
           <button
@@ -495,7 +510,9 @@ function ManualModeContent({
             onClick={handleAddCard}
             disabled={isCardLoading || isRequestInProgress || cardInput === ''}
           >
-            {isCardLoading ? 'Adding...' : 'Add'}
+            {isCardLoading
+              ? t('MANUAL_MODE_PANEL.ADDING')
+              : t('MANUAL_MODE_PANEL.ADD')}
           </button>
         </div>
 
@@ -506,20 +523,20 @@ function ManualModeContent({
             onClick={() =>
               handleDispatch(PROCESS_INPUT.REMOVE_ARSENAL_FROM_SELF)
             }
-            title="Remove arsenal from player"
+            title={t('MANUAL_MODE_PANEL.REMOVE_ARSENAL_PLAYER_TITLE')}
             disabled={isRequestInProgress}
           >
-            Remove Arsenal (Player)
+            {t('MANUAL_MODE_PANEL.REMOVE_ARSENAL_PLAYER')}
           </button>
           <button
             className={styles.buttonFull}
             onClick={() =>
               handleDispatch(PROCESS_INPUT.REMOVE_ARSENAL_FROM_OPPONENT)
             }
-            title="Remove arsenal from opponent"
+            title={t('MANUAL_MODE_PANEL.REMOVE_ARSENAL_OPPONENT_TITLE')}
             disabled={isRequestInProgress}
           >
-            Remove Arsenal (Opp.)
+            {t('MANUAL_MODE_PANEL.REMOVE_ARSENAL_OPPONENT')}
           </button>
         </div>
       </div>

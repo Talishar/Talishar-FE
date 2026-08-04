@@ -48,7 +48,11 @@ export const UsernameModeration: React.FC = () => {
         setSelectedUsers(new Set());
       } else {
         setSelectedUsers(
-          new Set(moderationData.offensiveUsers.map((user: OffensiveUser) => user.usersId))
+          new Set(
+            moderationData.offensiveUsers.map(
+              (user: OffensiveUser) => user.usersId
+            )
+          )
         );
       }
     }
@@ -69,9 +73,7 @@ export const UsernameModeration: React.FC = () => {
       !window.confirm(
         t('USERNAME_MODERATION.BAN_CONFIRM', {
           count: usersToBan.length,
-          usernames: usersToBan
-            .map((u: OffensiveUser) => u.username)
-            .join(', ')
+          usernames: usersToBan.map((u: OffensiveUser) => u.username).join(', ')
         })
       )
     ) {
@@ -195,7 +197,10 @@ export const UsernameModeration: React.FC = () => {
       <h2>{t('USERNAME_MODERATION.TITLE')}</h2>
 
       {!scanEnabled ? (
-        <button className={styles.refreshButton} onClick={() => setScanEnabled(true)}>
+        <button
+          className={styles.refreshButton}
+          onClick={() => setScanEnabled(true)}
+        >
           {t('USERNAME_MODERATION.RUN_SCAN')}
         </button>
       ) : isLoading ? (
@@ -276,7 +281,9 @@ export const UsernameModeration: React.FC = () => {
                   </th>
                   <th>{t('PROFILE.USERNAME_LABEL')}</th>
                   <th>{t('USERNAME_MODERATION.MATCHED_PATTERN')}</th>
-                  <th style={{ width: '180px' }}>{t('USERNAME_MODERATION.ACTIONS')}</th>
+                  <th style={{ width: '180px' }}>
+                    {t('USERNAME_MODERATION.ACTIONS')}
+                  </th>
                 </tr>
               </thead>
               <tbody>

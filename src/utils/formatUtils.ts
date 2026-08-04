@@ -20,7 +20,7 @@ const numericFormatCodeMap: { [key: string]: string } = {
   '16': 'futuresage',
   '17': 'open',
   '18': 'gage',
-  '-2': 'precon',
+  '-2': 'precon'
 };
 
 /**
@@ -59,7 +59,7 @@ export const getReadableFormatName = (format: string): string => {
     futurell: 'Future Living Legend',
     futurecc: 'Future Classic Constructed',
     futuresage: 'Future Silver Age',
-    gage: 'Golden Age',
+    gage: 'Golden Age'
   };
 
   const resolvedFormat = numericFormatCodeMap[format] ?? format;

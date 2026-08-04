@@ -55,8 +55,8 @@ export interface Matchup {
 // If absent (older backend versions), the FE falls back to its local
 // HEROES_OF_RATHE constant + young flag - without ban filtering.
 export interface LegalHero {
-  heroId: string;   // slug, e.g. "briar_warden_of_thorns"
-  name: string;     // display name, e.g. "Briar Warden of Thorns"
-  class: string;    // class name from CardClass(): "RUNEBLADE", "WIZARD", "ASSASSIN", etc.
-  young?: boolean;  // optional; backend has already format-filtered, FE doesn't re-filter
+  heroId: string; // slug, e.g. "briar_warden_of_thorns"
+  name: string; // display name, e.g. "Briar Warden of Thorns"
+  class: string; // class name from CardClass(): "RUNEBLADE", "WIZARD", "ASSASSIN", etc.
+  young?: boolean; // optional; backend has already format-filtered, FE doesn't re-filter
 }

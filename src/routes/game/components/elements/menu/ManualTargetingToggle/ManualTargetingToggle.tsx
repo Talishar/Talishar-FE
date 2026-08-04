@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import styles from '../Menu.module.css';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { BiSolidBullseye } from 'react-icons/bi';
@@ -22,6 +23,7 @@ const ManualTargetingToggle = ({
   placement?: 'top' | 'top-end';
 } = {}) => {
   const dispatch = useAppDispatch();
+  const { t } = useTranslation();
   const { isDisabled, triggerDisable } = useButtonDisableContext();
   const setting = useSetting({
     settingName: AUTO_TARGET_OPPONENT
@@ -31,7 +33,9 @@ const ManualTargetingToggle = ({
   // Manual Targeting is on when AutoTargetOpponent is '0' (reversed).
   const isManualTargeting = setting?.value === '0';
 
-  const handleClickManualTargeting = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleClickManualTargeting = (
+    e: React.MouseEvent<HTMLButtonElement>
+  ) => {
     e.preventDefault();
     e.currentTarget.blur();
     triggerDisable();
@@ -55,14 +59,14 @@ const ManualTargetingToggle = ({
     <div>
       <button
         className={buttonStyle}
-        aria-label="Manual Targeting"
+        aria-label={t('MENU.MANUAL_TARGETING')}
         onClick={handleClickManualTargeting}
-        data-tooltip="Manual Targeting"
+        data-tooltip={t('MENU.MANUAL_TARGETING')}
         data-placement={placement}
         disabled={isDisabled}
       >
         <BiSolidBullseye aria-hidden="true" />
-        {showLabel && ' Manual Targeting'}
+        {showLabel && ` ${t('MENU.MANUAL_TARGETING')}`}
       </button>
     </div>
   );

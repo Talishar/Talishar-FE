@@ -88,11 +88,7 @@ export default function MovementEventCard({
       <div className={styles.movementEventStage}>
         <div className={styles.movementEventAura} aria-hidden="true" />
         <div className={styles.movementEventCard}>
-          <CardDisplay
-            card={{ cardNumber }}
-            makeMeBigger
-            isPlayer={isPlayer}
-          />
+          <CardDisplay card={{ cardNumber }} makeMeBigger isPlayer={isPlayer} />
         </div>
       </div>
     </div>

@@ -28,7 +28,7 @@ const Matchups = ({
   const [searchTerm, setSearchTerm] = useState('');
 
   // Initial stuff to allow the lang to change
-  const { t } = useTranslation(); 
+  const { t } = useTranslation();
 
   const gameLobby = useAppSelector(
     (state: RootState) => state.game.gameLobby,
@@ -56,7 +56,8 @@ const Matchups = ({
     try {
       const rawDeckLink = gameLobby?.myDeckLink ?? '';
       const favMarker = rawDeckLink.indexOf('<fav>');
-      const cleanedDeckLink = favMarker !== -1 ? rawDeckLink.slice(favMarker + 5) : rawDeckLink;
+      const cleanedDeckLink =
+        favMarker !== -1 ? rawDeckLink.slice(favMarker + 5) : rawDeckLink;
       await joinGameMutation({
         gameName: gameID,
         playerID: playerID,
@@ -65,10 +66,9 @@ const Matchups = ({
       }).unwrap();
       onMatchupSelected?.(matchupID);
       refetch();
-      toast.success(
-        t('GAME_LOBBY.MATCHUP_APPLIED'),
-        { position: 'top-center' }
-      );
+      toast.success(t('GAME_LOBBY.MATCHUP_APPLIED'), {
+        position: 'top-center'
+      });
     } catch (err) {
       console.warn(err);
       toast.error(t('GAME_LOBBY.SOME_ERROR'), { position: 'top-center' });
@@ -103,7 +103,8 @@ const Matchups = ({
           />
           {filteredMatchups.map((matchup, ix) => {
             const isSelected = selectedMatchupId === matchup.matchupId;
-            const isSuggested = !selectedMatchupId && suggestedMatchupId === matchup.matchupId;
+            const isSuggested =
+              !selectedMatchupId && suggestedMatchupId === matchup.matchupId;
             const turnOrderIndicator = getTurnOrderIndicator(
               matchup.preferredTurnOrder
             );
@@ -126,10 +127,14 @@ const Matchups = ({
                   >
                     <span className={styles.matchupName}>{matchup.name}</span>
                     {isSelected && (
-                      <span className={styles.selectedBadge}>{t('GAME_LOBBY.SELECTED')}</span>
+                      <span className={styles.selectedBadge}>
+                        {t('GAME_LOBBY.SELECTED')}
+                      </span>
                     )}
                     {isSuggested && (
-                      <span className={styles.suggestedBadge}>{t('GAME_LOBBY.SUGGESTED')}</span>
+                      <span className={styles.suggestedBadge}>
+                        {t('GAME_LOBBY.SUGGESTED')}
+                      </span>
                     )}
                     {turnOrderIndicator && (
                       <span className={styles.turnOrderBadge}>

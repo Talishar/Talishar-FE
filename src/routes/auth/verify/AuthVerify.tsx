@@ -69,7 +69,7 @@ const AuthVerify = () => {
       window.location.href = buildRedirectUrl({ token: result.token, state });
     } catch (err) {
       console.error('Failed to generate token:', err);
-      toast.error('Failed to authorize. Please try again.', {
+      toast.error(t('AUTH.VERIFY.AUTHORIZE_FAILED'), {
         position: 'top-center'
       });
       setIsProcessing(false);
@@ -140,7 +140,8 @@ const AuthVerify = () => {
         <div className={styles.card}>
           <h2>{t('AUTH.VERIFY.SIGNIN_CONTINUE')}</h2>
           <p className={styles.appRequest}>
-            <strong>{appInfo?.name}</strong> {t('AUTH.VERIFY.REQUEST_PERMISSION')}
+            <strong>{appInfo?.name}</strong>{' '}
+            {t('AUTH.VERIFY.REQUEST_PERMISSION')}
           </p>
           <InlineLoginForm onSuccess={() => {}} />
         </div>
@@ -159,10 +160,10 @@ const AuthVerify = () => {
         </div>
 
         <div className={styles.permissions}>
-          <h4>This application is requesting access to:</h4>
+          <h4>{t('AUTH.VERIFY.PERMISSIONS_TITLE')}</h4>
           <ul>
-            <li>Your username</li>
-            <li>Your email address</li>
+            <li>{t('AUTH.VERIFY.PERMISSION_USERNAME')}</li>
+            <li>{t('AUTH.VERIFY.PERMISSION_EMAIL')}</li>
           </ul>
         </div>
 
@@ -173,20 +174,19 @@ const AuthVerify = () => {
             className={styles.allowButton}
             aria-busy={isProcessing}
           >
-            <FaCheck /> Allow
+            <FaCheck /> {t('AUTH.VERIFY.ALLOW')}
           </button>
           <button
             onClick={handleDeny}
             disabled={isProcessing}
             className={styles.denyButton}
           >
-            <FaTimes /> Deny
+            <FaTimes /> {t('AUTH.VERIFY.DENY')}
           </button>
         </div>
 
         <p className={styles.disclaimer}>
-          By clicking "Allow", you agree to share the above information with{' '}
-          {appInfo?.name}.
+          {t('AUTH.VERIFY.DISCLAIMER', { appName: appInfo?.name })}
         </p>
       </div>
     </div>
@@ -234,7 +234,7 @@ const InlineLoginForm = ({}: InlineLoginFormProps) => {
       }
 
       if (resp?.isUserLoggedIn) {
-        toast.success('Logged In!', { position: 'top-center' });
+        toast.success(t('USER.LOGIN.LOGGED_IN'), { position: 'top-center' });
         refetch();
         setLoggedIn(
           resp?.loggedInUserID ?? '0',
@@ -249,22 +249,25 @@ const InlineLoginForm = ({}: InlineLoginFormProps) => {
         // Reload the page to refresh auth state and show consent screen
         window.location.reload();
       } else {
-        toast.error('Incorrect username or password.', {
+        toast.error(t('USER.LOGIN.INCORRECT_CREDENTIALS'), {
           position: 'top-center'
         });
         setError('root.serverError', {
           type: 'custom',
-          message: 'Incorrect username or password.'
+          message: t('USER.LOGIN.INCORRECT_CREDENTIALS')
         });
       }
     } catch (err) {
       console.warn(err);
-      toast.error(`Network error: ${JSON.stringify(err)}`, {
-        position: 'top-center'
-      });
+      toast.error(
+        t('USER.LOGIN.NETWORK_ERROR', { error: JSON.stringify(err) }),
+        {
+          position: 'top-center'
+        }
+      );
       setError('root.serverError', {
         type: 'custom',
-        message: 'There has been a network error. Please try again.'
+        message: t('USER.LOGIN.LOGIN_NETWORK_ERROR')
       });
     }
   };
@@ -272,7 +275,7 @@ const InlineLoginForm = ({}: InlineLoginFormProps) => {
   return (
     <div className={styles.loginForm}>
       <form onSubmit={handleSubmit(onSubmit)} ref={parent}>
-        <label htmlFor="userID">Username</label>
+        <label htmlFor="userID">{t('USER.LOGIN.USERNAME')}</label>
         <input
           id="userID"
           type="text"
@@ -284,7 +287,7 @@ const InlineLoginForm = ({}: InlineLoginFormProps) => {
           <div className={styles.fieldError}>{errors.userID?.message}</div>
         )}
 
-        <label htmlFor="password">Password</label>
+        <label htmlFor="password">{t('USER.LOGIN.PASSWORD')}</label>
         <input
           id="password"
           type="password"
@@ -298,7 +301,7 @@ const InlineLoginForm = ({}: InlineLoginFormProps) => {
 
         <div className={styles.rememberMe}>
           <input id="rememberMe" type="checkbox" {...register('rememberMe')} />
-          <label htmlFor="rememberMe">Remember me</label>
+          <label htmlFor="rememberMe">{t('USER.LOGIN.REMEMBER_ME')}</label>
         </div>
 
         <button
@@ -307,7 +310,7 @@ const InlineLoginForm = ({}: InlineLoginFormProps) => {
           aria-busy={isSubmitting}
           className={styles.submitButton}
         >
-          Sign In
+          {t('AUTH.VERIFY.SIGN_IN')}
         </button>
 
         {errors.root?.serverError?.message && (

@@ -37,15 +37,19 @@ const Filter = ({
   });
 
   const query = inputValue.trim();
-  const filteredLabels = query === ''
-    ? allLabels
-    : allLabels.filter((label) =>
-        label.toLowerCase().includes(query.toLowerCase())
-      );
+  const filteredLabels =
+    query === ''
+      ? allLabels
+      : allLabels.filter((label) =>
+          label.toLowerCase().includes(query.toLowerCase())
+        );
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(e.target as Node)
+      ) {
         setIsOpen(false);
       }
     };
@@ -87,7 +91,11 @@ const Filter = ({
           autoComplete="off"
         />
         {inputValue && (
-          <button className={styles.clearButton} onMouseDown={handleClear} tabIndex={-1}>
+          <button
+            className={styles.clearButton}
+            onMouseDown={handleClear}
+            tabIndex={-1}
+          >
             ✕
           </button>
         )}
@@ -103,7 +111,11 @@ const Filter = ({
                 onMouseDown={() => handleSelectLabel(label)}
               >
                 <span className={styles.heroLabel}>{label}</span>
-                <span className={`${styles.heroCount}${count === 0 ? ` ${styles.heroCountZero}` : ''}`}>
+                <span
+                  className={`${styles.heroCount}${
+                    count === 0 ? ` ${styles.heroCountZero}` : ''
+                  }`}
+                >
                   {count}
                 </span>
               </li>

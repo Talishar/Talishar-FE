@@ -16,7 +16,7 @@ i18n
   .use(initReactI18next)
   .init({
     fallbackLng: 'en',
-    partialBundledLanguages: true, 
+    partialBundledLanguages: true,
     supportedLngs: [...I18N_SUPPORTED_LANGUAGE_CODES],
     showSupportNotice: false,
     returnEmptyString: false,
@@ -25,12 +25,12 @@ i18n
     },
     resources: {
       en: {
-        translation: enTranslations 
+        translation: enTranslations
       }
     },
     backend: {
       // Other languages will still fetch from this public URL
-      loadPath: '/locales/{{lng}}/{{ns}}.json',
+      loadPath: '/locales/{{lng}}/{{ns}}.json'
     },
     react: {
       useSuspense: false

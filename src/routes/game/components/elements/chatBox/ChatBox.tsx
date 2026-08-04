@@ -7,8 +7,16 @@ import classNames from 'classnames';
 import useSetting from 'hooks/useSetting';
 import { IS_STREAMER_MODE } from 'features/options/constants';
 import GameLogMessages from './GameLogMessages';
+import { useTranslation } from 'react-i18next';
 
-export default function ChatBox({ usePrimary = false, showTabs = true }: { usePrimary?: boolean; showTabs?: boolean }) {
+export default function ChatBox({
+  usePrimary = false,
+  showTabs = true
+}: {
+  usePrimary?: boolean;
+  showTabs?: boolean;
+}) {
+  const { t } = useTranslation();
   const amIPlayerOne = useAppSelector((state: RootState) => {
     return state.game.gameInfo.playerID === 1;
   });
@@ -66,14 +74,22 @@ export default function ChatBox({ usePrimary = false, showTabs = true }: { usePr
 
   const transformMessage = useMemo(() => {
     const myDisplayName = amIPlayerOne
-      ? (myName && myName.trim() ? myName.substring(0, 15) : 'Player 1')
-      : (myName && myName.trim() ? myName.substring(0, 15) : 'Player 2');
+      ? myName && myName.trim()
+        ? myName.substring(0, 15)
+        : 'Player 1'
+      : myName && myName.trim()
+      ? myName.substring(0, 15)
+      : 'Player 2';
 
     const oppDisplayName = isStreamerMode
       ? 'Opponent'
       : amIPlayerOne
-        ? (oppName && oppName.trim() ? oppName.substring(0, 15) : 'Player 2')
-        : (oppName && oppName.trim() ? oppName.substring(0, 15) : 'Player 1');
+      ? oppName && oppName.trim()
+        ? oppName.substring(0, 15)
+        : 'Player 2'
+      : oppName && oppName.trim()
+      ? oppName.substring(0, 15)
+      : 'Player 1';
 
     const p1DisplayName = amIPlayerOne ? myDisplayName : oppDisplayName;
     const p2DisplayName = amIPlayerOne ? oppDisplayName : myDisplayName;
@@ -92,10 +108,7 @@ export default function ChatBox({ usePrimary = false, showTabs = true }: { usePr
   }, [isStreamerMode, amIPlayerOne, myName, oppName, streamerNameRegex]);
 
   const playerNames = useMemo<[string, string]>(
-    () => [
-      amIPlayerOne ? myName : oppName,
-      amIPlayerOne ? oppName : myName
-    ],
+    () => [amIPlayerOne ? myName : oppName, amIPlayerOne ? oppName : myName],
     [amIPlayerOne, myName, oppName]
   );
 
@@ -115,7 +128,11 @@ export default function ChatBox({ usePrimary = false, showTabs = true }: { usePr
   return (
     <div className={styles.chatBoxContainer}>
       {showTabs && (
-        <div className={classNames(styles.tabs, { [styles.primaryTabs]: usePrimary })}>
+        <div
+          className={classNames(styles.tabs, {
+            [styles.primaryTabs]: usePrimary
+          })}
+        >
           <button
             className={classNames(chatFilter === 'none' && styles.activeTab)}
             onClick={(e) => {
@@ -123,7 +140,7 @@ export default function ChatBox({ usePrimary = false, showTabs = true }: { usePr
               setChatFilter('none');
             }}
           >
-            All
+            {t('CHAT.ALL')}
           </button>
           <button
             className={classNames(chatFilter === 'chat' && styles.activeTab)}
@@ -132,7 +149,7 @@ export default function ChatBox({ usePrimary = false, showTabs = true }: { usePr
               setChatFilter('chat');
             }}
           >
-            Chat
+            {t('CHAT.CHAT')}
           </button>
           <button
             className={classNames(chatFilter === 'log' && styles.activeTab)}
@@ -141,7 +158,7 @@ export default function ChatBox({ usePrimary = false, showTabs = true }: { usePr
               setChatFilter('log');
             }}
           >
-            Log
+            {t('CHAT.LOG')}
           </button>
         </div>
       )}
@@ -155,7 +172,7 @@ export default function ChatBox({ usePrimary = false, showTabs = true }: { usePr
           />
           {displayTyping && (
             <div className={styles.typingIndicator} ref={messagesEndRef}>
-              <em>Opponent is typing…</em>
+              <em>{t('CHAT.TYPING')}</em>
             </div>
           )}
           {!displayTyping && <div ref={messagesEndRef} />}

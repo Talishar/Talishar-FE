@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from './OptionsSettings.module.css';
+import { useTranslation } from 'react-i18next';
 
 interface VisualSliderProps {
   label: string;
@@ -20,10 +21,10 @@ export const VisualSlider: React.FC<VisualSliderProps> = ({
   unit = '%',
   defaultValue
 }) => {
+  const { t } = useTranslation();
   const displayValue = Math.floor(value * 100);
   const isDefault =
-    defaultValue !== undefined &&
-    Math.abs(value - defaultValue) < 0.005;
+    defaultValue !== undefined && Math.abs(value - defaultValue) < 0.005;
   const canReset = defaultValue !== undefined && !isDefault;
 
   return (
@@ -36,9 +37,12 @@ export const VisualSlider: React.FC<VisualSliderProps> = ({
               type="button"
               className={styles.resetButton}
               onClick={() => onChange(defaultValue)}
-              title={`Reset to ${Math.floor(defaultValue * 100)}${unit}`}
+              title={t('SETTINGS.RESET_TO', {
+                value: Math.floor(defaultValue * 100),
+                unit
+              })}
             >
-              Reset
+              {t('OPTIONS_MENU.RESET')}
             </button>
           )}
           <span className={styles.visualSettingValue}>

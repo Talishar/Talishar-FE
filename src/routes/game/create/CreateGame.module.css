@@ -312,7 +312,11 @@
 }
 
 .deckTabActive {
-  background: color-mix(in srgb, var(--theme-primary, #d4af37) 20%, transparent);
+  background: color-mix(
+    in srgb,
+    var(--theme-primary, #d4af37) 20%,
+    transparent
+  );
   color: var(--theme-primary, #d4af37);
   font-weight: 600;
 }

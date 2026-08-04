@@ -1,5 +1,6 @@
 import styles from '../PriorityControl.module.css';
 import * as optConst from 'features/options/constants';
+import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { GiBouncingSword } from 'react-icons/gi';
 import useSetting from 'hooks/useSetting';
@@ -16,6 +17,7 @@ import { useButtonDisableContext } from 'contexts/ButtonDisableContext';
 const SkipAllAttacksToggle = () => {
   const settingsData = useAppSelector(getSettingsEntity);
   const dispatch = useAppDispatch();
+  const { t } = useTranslation();
   const { isDisabled, triggerDisable } = useButtonDisableContext();
   const setting = useSetting({
     settingName: optConst.SHORTCUT_ATTACK_THRESHOLD
@@ -44,14 +46,14 @@ const SkipAllAttacksToggle = () => {
     <div>
       <button
         className={buttonStyle}
-        aria-label="Skip Attacks"
+        aria-label={t('MENU.SKIP_ATTACKS')}
         onClick={() =>
           handleClickSkipAllAttacks({
             name: optConst.SHORTCUT_ATTACK_THRESHOLD,
             value: Number(initialValues.shortcutAttackThreshold) ? 0 : 99
           })
         }
-        data-tooltip="Skip All Attacks (resets at the start of each turn)"
+        data-tooltip={t('MENU.SKIP_ATTACKS_TOOLTIP')}
         data-placement="top-end"
         disabled={isDisabled}
       >

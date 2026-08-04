@@ -7,16 +7,20 @@ import CardDisplay from '../../elements/cardDisplay/CardDisplay';
 import styles from './BanishZone.module.css';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import * as optConst from 'features/options/constants';
+import { useTranslation } from 'react-i18next';
 
 const MAX_STACK_LAYERS = 12;
 
 export const BanishZone = React.memo((prop: Displayrow) => {
   const { isPlayer } = prop;
   const dispatch = useAppDispatch();
+  const { t } = useTranslation();
   const [windowWidth] = useWindowDimensions();
   const alwaysShowCounters = useAppSelector(
     (state: RootState) =>
-      String(state.settings.entities?.[optConst.ALWAYS_SHOW_COUNTERS]?.value) === '1'
+      String(
+        state.settings.entities?.[optConst.ALWAYS_SHOW_COUNTERS]?.value
+      ) === '1'
   );
 
   const banishZone = useAppSelector((state: RootState) =>
@@ -33,7 +37,7 @@ export const BanishZone = React.memo((prop: Displayrow) => {
   const baseOffsetX = totalCards * 0.24;
 
   const cardToDisplay = useMemo(
-    () => banishZone?.[0] ? { ...banishZone[0], borderColor: '' } : undefined,
+    () => (banishZone?.[0] ? { ...banishZone[0], borderColor: '' } : undefined),
     [banishZone]
   );
 
@@ -49,7 +53,9 @@ export const BanishZone = React.memo((prop: Displayrow) => {
       return {
         transform:
           `translateY(${baseOffsetY}px) translateX(${baseOffsetX}px) ` +
-          `translateY(${(sourceIndex + 1) * 0.25}px) translateX(${(sourceIndex + 1) * -0.25}px)`,
+          `translateY(${(sourceIndex + 1) * 0.25}px) translateX(${
+            (sourceIndex + 1) * -0.25
+          }px)`,
         zIndex: totalCards - sourceIndex - 1
       };
     });
@@ -59,14 +65,16 @@ export const BanishZone = React.memo((prop: Displayrow) => {
     () =>
       !isMobileOrTablet
         ? {
-            transform: `translate3d(${Math.round(baseOffsetX)}px, ${Math.round(baseOffsetY)}px, 0)`
+            transform: `translate3d(${Math.round(baseOffsetX)}px, ${Math.round(
+              baseOffsetY
+            )}px, 0)`
           }
         : undefined,
     [isMobileOrTablet, baseOffsetY, baseOffsetX]
   );
 
   if (banishZone === undefined || banishZone.length === 0) {
-    return <div className={styles.banishZone}>Banish</div>;
+    return <div className={styles.banishZone}>{t('ZONES.BANISH')}</div>;
   }
 
   const banishZoneDisplay = () => {
@@ -98,10 +106,7 @@ export const BanishZone = React.memo((prop: Displayrow) => {
             />
           ))}
         {/* Main card on top */}
-        <div
-          className={styles.cardWrapper}
-          style={cardWrapperStyle}
-        >
+        <div className={styles.cardWrapper} style={cardWrapperStyle}>
           {cardToDisplay && (
             <CardDisplay
               card={cardToDisplay}

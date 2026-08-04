@@ -137,8 +137,7 @@ h3 {
   overflow: hidden;
   transition: all 0.3s ease;
   position: relative;
-    border-radius: 0 5px 5px 0;
-
+  border-radius: 0 5px 5px 0;
 }
 
 .rightCol::before {
@@ -640,9 +639,7 @@ nav {
   background: transparent;
   backdrop-filter: none;
   margin: 0.5rem 0;
-  box-shadow:
-    0 20px 44px rgba(0, 0, 0, 0.32),
-    0 2px 10px rgba(0, 0, 0, 0.22);
+  box-shadow: 0 20px 44px rgba(0, 0, 0, 0.32), 0 2px 10px rgba(0, 0, 0, 0.22);
 }
 
 .lobbyChat {
@@ -650,9 +647,7 @@ nav {
   border-radius: 0;
   border: none;
   padding: 1rem;
-  box-shadow:
-    0 20px 44px rgba(0, 0, 0, 0.32),
-    0 2px 10px rgba(0, 0, 0, 0.22);
+  box-shadow: 0 20px 44px rgba(0, 0, 0, 0.32), 0 2px 10px rgba(0, 0, 0, 0.22);
 }
 
 .matchupsContainer {
@@ -661,9 +656,7 @@ nav {
   border: none;
   padding: 1rem;
   backdrop-filter: none;
-  box-shadow:
-    0 20px 44px rgba(0, 0, 0, 0.32),
-    0 2px 10px rgba(0, 0, 0, 0.22);
+  box-shadow: 0 20px 44px rgba(0, 0, 0, 0.32), 0 2px 10px rgba(0, 0, 0, 0.22);
 }
 
 .gridLayout {
@@ -1082,9 +1075,7 @@ button.secondary:hover {
   margin: auto;
   display: flex;
   flex-direction: column;
-  box-shadow:
-    0 25px 60px rgba(0, 0, 0, 0.5),
-    0 4px 16px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5), 0 4px 16px rgba(0, 0, 0, 0.3);
 }
 
 @media (max-width: 768px) {
@@ -1105,9 +1096,7 @@ button.secondary:hover {
   border: none;
   border-radius: 0;
   background: transparent;
-  box-shadow:
-    0 20px 44px rgba(0, 0, 0, 0.32),
-    0 2px 10px rgba(0, 0, 0, 0.22);
+  box-shadow: 0 20px 44px rgba(0, 0, 0, 0.32), 0 2px 10px rgba(0, 0, 0, 0.22);
 }
 
 .modal article {

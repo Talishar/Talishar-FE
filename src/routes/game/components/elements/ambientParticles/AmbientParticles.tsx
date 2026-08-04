@@ -27,7 +27,9 @@ const makeParticles = (): ParticleConfig[] =>
       duration: 14 + Math.random() * 14,
       delay: -(Math.random() * 28),
       drift: (Math.random() - 0.5) * 80,
-      maxOpacity: isSpark ? 0.5 + Math.random() * 0.3 : 0.2 + Math.random() * 0.25,
+      maxOpacity: isSpark
+        ? 0.5 + Math.random() * 0.3
+        : 0.2 + Math.random() * 0.25,
       isSpark
     };
   });
@@ -38,14 +40,17 @@ const makeParticles = (): ParticleConfig[] =>
  * disabled and animation uses transform/opacity only. Hidden entirely when
  * the user prefers reduced motion (see module CSS).
  */
-export const AmbientParticles = ({ variant = 'game' }: AmbientParticlesProps) => {
+export const AmbientParticles = ({
+  variant = 'game'
+}: AmbientParticlesProps) => {
   const [cookies] = useCookies(['disableParticles']);
   // Randomize once per mount; re-renders keep the same particle field
   const particles = useMemo(makeParticles, []);
 
   if (cookies.disableParticles === 'true') return null;
 
-  const layerClass = variant === 'global' ? styles.ambientLayerGlobal : styles.ambientLayer;
+  const layerClass =
+    variant === 'global' ? styles.ambientLayerGlobal : styles.ambientLayer;
 
   return (
     <div className={layerClass} aria-hidden="true">

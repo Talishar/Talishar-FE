@@ -1,13 +1,18 @@
 import { RootState } from 'app/Store';
+import { useTranslation } from 'react-i18next';
 import { BiTargetLock } from 'react-icons/bi';
 import styles from './CurrentAttack.module.css';
 import attackSymbol from '../../../../../img/symbols/symbol-attack.png';
 import defSymbol from '../../../../../img/symbols/symbol-defense.png';
 import CardDisplay from '../cardDisplay/CardDisplay';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
-import { hideChainLinkSummary, showChainLinkSummary } from 'features/game/GameSlice';
+import {
+  hideChainLinkSummary,
+  showChainLinkSummary
+} from 'features/game/GameSlice';
 
 export default function CurrentAttack() {
+  const { t } = useTranslation();
   const activeCombatChain = useAppSelector(
     (state: RootState) => state.game.activeChainLink
   );
@@ -63,14 +68,14 @@ export default function CurrentAttack() {
           <img
             className={styles.chainSymbols}
             src={attackSymbol}
-            alt="attack symbol"
+            alt={t('CURRENT_ATTACK.ATTACK_SYMBOL')}
           />
         </div>
         <div className={styles.defSymbol}>
           <img
             className={styles.chainSymbols}
             src={defSymbol}
-            alt="defense symbol"
+            alt={t('CURRENT_ATTACK.DEFENSE_SYMBOL')}
           />
         </div>
         <div className={styles.defDiv} data-testid="defense-value">

@@ -2,6 +2,7 @@ import React from 'react';
 import styles from '../Menu.module.css';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { BiSkipNextCircle } from 'react-icons/bi';
+import { useTranslation } from 'react-i18next';
 import useSetting from 'hooks/useSetting';
 import classNames from 'classnames';
 import { updateOptions } from 'features/options/optionsSlice';
@@ -23,6 +24,7 @@ const AlwaysPassToggle = ({
   showLabel?: boolean;
 } = {}) => {
   const dispatch = useAppDispatch();
+  const { t } = useTranslation();
   const { isDisabled, triggerDisable } = useButtonDisableContext();
   const setting = useSetting({
     settingName: HOLD_PRIORITY_SETTING
@@ -69,14 +71,14 @@ const AlwaysPassToggle = ({
     <div>
       <button
         className={buttonStyle}
-        aria-label="Always Pass Priority"
+        aria-label={t('MENU.ALWAYS_PASS')}
         onClick={handleClickAlwaysPass}
-        data-tooltip="Always Pass Priority"
+        data-tooltip={t('MENU.ALWAYS_PASS')}
         data-placement="top"
         disabled={isDisabled}
       >
         <BiSkipNextCircle aria-hidden="true" />
-        {showLabel && ' Always Pass'}
+        {showLabel && ` ${t('MENU.ALWAYS_PASS_LABEL')}`}
       </button>
     </div>
   );

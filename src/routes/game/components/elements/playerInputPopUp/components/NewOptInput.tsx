@@ -1,5 +1,6 @@
 import { FormProps } from '../playerInputPopupTypes';
 import React, { useMemo, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import styles from '../PlayerInputPopUp.module.css';
 import CardDisplay from '../../../elements/cardDisplay/CardDisplay';
 import { Card } from 'features/Card';
@@ -24,6 +25,7 @@ const ReorderOpt = ({
     shallowEqual
   );
 
+  const { t } = useTranslation();
   const [cardListTop, setCardListTop] = React.useState<Card[]>([]);
   const [cardListBottom, setCardListBottom] = React.useState<Card[]>([]);
 
@@ -139,14 +141,14 @@ const ReorderOpt = ({
           handleSubmit();
         }}
       >
-        Submit Opt
+        {t('PLAYER_INPUT.NEW_OPT_SUBMIT')}
       </div>
       <div className={classNames(styles.newOptForm, styles.cardsContainer)}>
         <div className={classNames(styles.newOptForm, styles.reorderCards)}>
           <div
             className={classNames(styles.newOptForm, styles.topAndBottomText)}
           >
-            Top
+            {t('PLAYER_INPUT.NEW_OPT_TOP')}
           </div>
           <Reorder.Group
             className={classNames(styles.newOptForm, styles.reorderCards)}
@@ -178,7 +180,7 @@ const ReorderOpt = ({
                           styles.firstLabel
                         )}
                       >
-                        FIRST
+                        {t('PLAYER_INPUT.NEW_OPT_FIRST')}
                       </div>
                     )}
                     {showLabels && isLast && (
@@ -188,7 +190,7 @@ const ReorderOpt = ({
                           styles.lastLabel
                         )}
                       >
-                        LAST
+                        {t('PLAYER_INPUT.NEW_OPT_LAST')}
                       </div>
                     )}
                     <CardDisplay card={card} key={ix} />
@@ -207,7 +209,7 @@ const ReorderOpt = ({
                         moveCardToBottom(card, ix);
                       }}
                     >
-                      Bottom
+                      {t('PLAYER_INPUT.NEW_OPT_BOTTOM')}
                     </div>
                   </div>
                 </Reorder.Item>
@@ -219,7 +221,7 @@ const ReorderOpt = ({
           <div
             className={classNames(styles.newOptForm, styles.topAndBottomText)}
           >
-            Bottom
+            {t('PLAYER_INPUT.NEW_OPT_BOTTOM')}
           </div>
           <Reorder.Group
             className={classNames(styles.newOptForm, styles.reorderCards)}
@@ -252,7 +254,7 @@ const ReorderOpt = ({
                           styles.firstLabel
                         )}
                       >
-                        FIRST
+                        {t('PLAYER_INPUT.NEW_OPT_FIRST')}
                       </div>
                     )}
                     {showLabels && isLast && (
@@ -262,7 +264,7 @@ const ReorderOpt = ({
                           styles.lastLabel
                         )}
                       >
-                        LAST
+                        {t('PLAYER_INPUT.NEW_OPT_LAST')}
                       </div>
                     )}
                     <CardDisplay card={card} key={ix} />
@@ -281,7 +283,7 @@ const ReorderOpt = ({
                         moveCardToTop(card, ix);
                       }}
                     >
-                      Top
+                      {t('PLAYER_INPUT.NEW_OPT_TOP')}
                     </div>
                   </div>
                 </Reorder.Item>

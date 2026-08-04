@@ -1,4 +1,5 @@
 import styles from '../Menu.module.css';
+import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import {
@@ -17,6 +18,7 @@ function OptionsMenuToggle({
   btnClass?: string;
   showLabel?: boolean;
 } = {}) {
+  const { t } = useTranslation();
   const optionsMenu = useAppSelector(
     (state: RootState) => state.game.optionsMenu
   );
@@ -34,13 +36,13 @@ function OptionsMenuToggle({
     <div>
       <button
         className={btnClass ?? styles.btn}
-        aria-label="Toggle main menu"
+        aria-label={t('MENU.TOGGLE_MAIN_MENU')}
         onClick={() => toggleMenu()}
-        data-tooltip="Settings Menu"
+        data-tooltip={t('OPTIONS_MENU.SETTINGS_MENU')}
         data-placement="bottom"
       >
         <GiHamburgerMenu aria-hidden="true" />
-        {showLabel && ' Menu'}
+        {showLabel && ` ${t('MENU.MENU_LABEL')}`}
       </button>
     </div>
   );

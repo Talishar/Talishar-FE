@@ -29,7 +29,7 @@ export default function PlayerBoardGrid({ swapPlayers = false }: Props) {
     (state: RootState) => state.game.playerTwo.Playmat
   );
 
-  const playmat = swapPlayers ? (p2Playmat ?? 'volcor') : (p1Playmat ?? 'aria');
+  const playmat = swapPlayers ? p2Playmat ?? 'volcor' : p1Playmat ?? 'aria';
   const isPlayer = !swapPlayers;
 
   const styleToApply = useMemo(

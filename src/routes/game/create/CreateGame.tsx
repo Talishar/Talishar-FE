@@ -50,7 +50,7 @@ import {
 import { generateCroppedImageUrl } from 'utils/cropImages';
 import { ImageSelect, ImageSelectOption } from 'components/ImageSelect';
 import RustCounterPanel from 'components/RustCounterPanel';
-import { useTranslation } from 'react-i18next';
+import { useTranslation, Trans } from 'react-i18next';
 import { useQuickJoinOptional } from 'routes/index/components/quickJoin';
 
 const getCookie = (name: string): string | null => {
@@ -117,27 +117,30 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
   const isBazaarEnabled = currentUserName === 'OotTheMonk';
   const canResolveBazaarAccess =
     !isAuthLoading && (!isLoggedIn || !!currentUserName);
-  const [standaloneDeckSource, setStandaloneDeckSourceState] = useState<'talishar' | 'bazaar'>(
+  const [standaloneDeckSource, setStandaloneDeckSourceState] = useState<
+    'talishar' | 'bazaar'
+  >(
     () =>
-      (localStorage.getItem('quickJoin_deckSource') as 'talishar' | 'bazaar') ?? 'talishar'
+      (localStorage.getItem('quickJoin_deckSource') as 'talishar' | 'bazaar') ??
+      'talishar'
   );
-  const [standaloneSelectedBazaarDeck, setStandaloneSelectedBazaarDeck] = useState<string>(
-    () => localStorage.getItem('quickJoin_bazaarDeck') ?? ''
-  );
+  const [standaloneSelectedBazaarDeck, setStandaloneSelectedBazaarDeck] =
+    useState<string>(() => localStorage.getItem('quickJoin_bazaarDeck') ?? '');
   const canFetchBazaarStandalone =
     !isEmbedded &&
     standaloneDeckSource === 'bazaar' &&
     !!metafyId &&
     !!metafyHash &&
     !!metafyTimestamp;
-  const { data: bazaarData, isLoading: isBazaarLoading } = useGetBazaarDecksQuery(
-    {
-      metafyId: metafyId!,
-      metafyHash: metafyHash!,
-      metafyTimestamp: metafyTimestamp!
-    },
-    { skip: !canFetchBazaarStandalone }
-  );
+  const { data: bazaarData, isLoading: isBazaarLoading } =
+    useGetBazaarDecksQuery(
+      {
+        metafyId: metafyId!,
+        metafyHash: metafyHash!,
+        metafyTimestamp: metafyTimestamp!
+      },
+      { skip: !canFetchBazaarStandalone }
+    );
   const standaloneBazaarDeckOptions = useMemo(() => {
     if (!bazaarData?.decks) return [];
     return bazaarData.decks.map((deck: BazaarDeck) => ({
@@ -273,7 +276,11 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
       setValue('favoriteDecks', quickJoinCtx!.effectiveFavoriteDecks);
       setValue('fabdb', quickJoinCtx!.effectiveFabdb);
     }
-  }, [quickJoinCtx?.effectiveFavoriteDecks, quickJoinCtx?.effectiveFabdb, setValue]);
+  }, [
+    quickJoinCtx?.effectiveFavoriteDecks,
+    quickJoinCtx?.effectiveFabdb,
+    setValue
+  ]);
 
   // Normalize localStorage on mount - extract base option from expanded descriptions
   React.useEffect(() => {
@@ -289,9 +296,12 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
         baseDescription = isClassSelection
           ? 'Looking to play against a specific class'
           : 'Looking to play against a specific hero';
-      } else if (stored.startsWith('No interest') || stored.startsWith('Avoiding')) {
+      } else if (
+        stored.startsWith('No interest') ||
+        stored.startsWith('Avoiding')
+      ) {
         baseDescription = 'No interest in playing against specific hero';
-      // Handle legacy formats
+        // Handle legacy formats
       } else if (stored.startsWith('Looking for ')) {
         baseDescription = isClassSelection
           ? 'Looking to play against a specific class'
@@ -499,12 +509,17 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
     const urlGameDescription = searchParams.get('gameDescription');
 
     if (urlGameDescription) {
-      const isNoInterest = urlGameDescription.startsWith('No interest in playing against ');
+      const isNoInterest = urlGameDescription.startsWith(
+        'No interest in playing against '
+      );
       const heroMatch = urlGameDescription.match(
         /^(?:Looking to play against|No interest in playing against) (.+)$/
       );
       if (heroMatch) {
-        const names = heroMatch[1].split(',').map((s) => s.trim()).filter(Boolean);
+        const names = heroMatch[1]
+          .split(',')
+          .map((s) => s.trim())
+          .filter(Boolean);
         const classLabels = new Set(CLASS_OF_RATHE.map((c) => c.label));
         const heroLabels = new Set(HEROES_OF_RATHE.map((h) => h.label));
         const validHeroes = names.filter((n) => heroLabels.has(n));
@@ -513,7 +528,10 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
           setSelectedClasses(validClasses.slice(0, 3));
           setSelectedHeroes([]);
           setGameDescription('Looking to play against a specific class');
-          setValue('gameDescription', `Looking to play against ${validClasses.slice(0, 3).join(', ')}`);
+          setValue(
+            'gameDescription',
+            `Looking to play against ${validClasses.slice(0, 3).join(', ')}`
+          );
         } else if (validHeroes.length > 0) {
           setSelectedHeroes(validHeroes.slice(0, 3));
           setSelectedClasses([]);
@@ -521,9 +539,13 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
             ? 'No interest in playing against specific hero'
             : 'Looking to play against a specific hero';
           setGameDescription(baseDesc);
-          setValue('gameDescription', isNoInterest
-            ? `No interest in playing against ${validHeroes.slice(0, 3).join(', ')}`
-            : `Looking to play against ${validHeroes.slice(0, 3).join(', ')}`
+          setValue(
+            'gameDescription',
+            isNoInterest
+              ? `No interest in playing against ${validHeroes
+                  .slice(0, 3)
+                  .join(', ')}`
+              : `Looking to play against ${validHeroes.slice(0, 3).join(', ')}`
           );
         }
       }
@@ -544,7 +566,10 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
       if (parsedHeroes.length > 0) {
         const heroList = parsedHeroes.join(', ');
         if (desc === 'No interest in playing against specific hero') {
-          setValue('gameDescription', `No interest in playing against ${heroList}`);
+          setValue(
+            'gameDescription',
+            `No interest in playing against ${heroList}`
+          );
         } else if (desc === 'Looking to play against a specific hero') {
           setValue('gameDescription', `Looking to play against ${heroList}`);
         }
@@ -660,9 +685,10 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
             bazaarDeckId:
               standaloneDeckSource === 'bazaar' && standaloneSelectedBazaarDeck
                 ? standaloneSelectedBazaarDeck
-                : quickJoinCtx?.deckSource === 'bazaar' && quickJoinCtx?.selectedBazaarDeck
-                  ? quickJoinCtx.selectedBazaarDeck
-                  : undefined
+                : quickJoinCtx?.deckSource === 'bazaar' &&
+                  quickJoinCtx?.selectedBazaarDeck
+                ? quickJoinCtx.selectedBazaarDeck
+                : undefined
           })
         );
         // Reset save deck checkbox after successful game creation
@@ -695,24 +721,28 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
 
   return (
     <div>
-      <article className={useUnifiedPanelStyles ? styles.embeddedForm : styles.formContainer}>
+      <article
+        className={
+          useUnifiedPanelStyles ? styles.embeddedForm : styles.formContainer
+        }
+      >
         {!useUnifiedPanelStyles && (
-        <div className={styles.header}>
-          <h3 className={styles.title}>{t('MENU.CREATE_GAME.TITLE')}</h3>
-          <button
-            type="button"
-            className={styles.toggleButton}
-            onClick={() => setIsExpanded(!isExpanded)}
-            aria-expanded={isExpanded}
-            aria-label={isExpanded ? 'Minimize panel' : 'Expand panel'}
-          >
-            {isExpanded ? (
-              <FaChevronUp size={16} />
-            ) : (
-              <FaChevronDown size={16} />
-            )}
-          </button>
-        </div>
+          <div className={styles.header}>
+            <h3 className={styles.title}>{t('MENU.CREATE_GAME.TITLE')}</h3>
+            <button
+              type="button"
+              className={styles.toggleButton}
+              onClick={() => setIsExpanded(!isExpanded)}
+              aria-expanded={isExpanded}
+              aria-label={isExpanded ? 'Minimize panel' : 'Expand panel'}
+            >
+              {isExpanded ? (
+                <FaChevronUp size={16} />
+              ) : (
+                <FaChevronDown size={16} />
+              )}
+            </button>
+          </div>
         )}
         {/*
           <p className={styles.fieldError}>
@@ -721,7 +751,9 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
         */}
         {(useUnifiedPanelStyles || isExpanded) && (
           <form
-            className={useUnifiedPanelStyles ? styles.embeddedFormLayout : undefined}
+            className={
+              useUnifiedPanelStyles ? styles.embeddedFormLayout : undefined
+            }
             onSubmit={handleSubmit(onSubmit, onInvalid)}
           >
             {isLoggedIn && canViewRustCounters && !isEmbedded && (
@@ -731,7 +763,13 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
                 onFallbackAdComplete={() => clearRustCounters()}
               />
             )}
-            <div className={useUnifiedPanelStyles ? styles.embeddedFormInner : styles.formInner}>
+            <div
+              className={
+                useUnifiedPanelStyles
+                  ? styles.embeddedFormInner
+                  : styles.formInner
+              }
+            >
               {/* Register deck fields when inside QuickJoinProvider (values synced from context) */}
               {isEmbedded && !isPreconFormat(formFormat || selectedFormat) && (
                 <>
@@ -748,21 +786,41 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
                       type="button"
                       role="tab"
                       aria-selected={standaloneDeckSource === 'talishar'}
-                      className={`${styles.deckTab} ${standaloneDeckSource === 'talishar' ? styles.deckTabActive : ''}`}
+                      className={`${styles.deckTab} ${
+                        standaloneDeckSource === 'talishar'
+                          ? styles.deckTabActive
+                          : ''
+                      }`}
                       onClick={() => setStandaloneDeckSource('talishar')}
                     >
-                      Talishar Decks
+                      {t('MENU.CREATE_GAME.TALISHAR_DECKS')}
                     </button>
                     <button
                       type="button"
                       role="tab"
                       aria-selected={standaloneDeckSource === 'bazaar'}
-                      className={`${styles.deckTab} ${standaloneDeckSource === 'bazaar' ? styles.deckTabActive : ''} ${!isBazaarEnabled ? styles.deckTabDisabled : ''}`}
-                      onClick={() => isBazaarEnabled && setStandaloneDeckSource('bazaar')}
+                      className={`${styles.deckTab} ${
+                        standaloneDeckSource === 'bazaar'
+                          ? styles.deckTabActive
+                          : ''
+                      } ${!isBazaarEnabled ? styles.deckTabDisabled : ''}`}
+                      onClick={() =>
+                        isBazaarEnabled && setStandaloneDeckSource('bazaar')
+                      }
                       disabled={!isBazaarEnabled}
-                      title={!isBazaarEnabled ? 'Coming soon!' : undefined}
+                      title={
+                        !isBazaarEnabled
+                          ? t('MENU.CREATE_GAME.COMING_SOON')
+                          : undefined
+                      }
                     >
-                      FaB Bazaar{!isBazaarEnabled && <span className={styles.comingSoonBadge}> - Coming soon!</span>}
+                      {t('MENU.CREATE_GAME.BAZAAR_TAB')}
+                      {!isBazaarEnabled && (
+                        <span className={styles.comingSoonBadge}>
+                          {' - '}
+                          {t('MENU.CREATE_GAME.COMING_SOON')}
+                        </span>
+                      )}
                     </button>
                   </div>
                 )}
@@ -770,31 +828,31 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
               {!isEmbedded &&
                 isLoggedIn &&
                 standaloneDeckSource === 'bazaar' &&
-                !isPreconFormat(formFormat || selectedFormat) && (
-                  metafyHash ? (
-                    <label>
-                      {t('MENU.CREATE_GAME.SELECTED_DECK')}
-                      <ImageSelect
-                        id="bazaarDecks"
-                        options={standaloneBazaarDeckOptions}
-                        value={standaloneSelectedBazaarDeck}
-                        onChange={handleStandaloneSelectBazaarDeck}
-                        placeholder={
-                          isBazaarLoading
-                            ? 'Loading…'
-                            : 'Select a FaB Bazaar deck'
-                        }
-                        aria-busy={isBazaarLoading}
-                      />
-                    </label>
-                  ) : (
-                    <p className={styles.bazaarMessage}>
-                      Link your FaB Bazaar account in your{' '}
-                      <a href="/user/profile">profile</a> to see your decks
-                      here.
-                    </p>
-                  )
-                )}
+                !isPreconFormat(formFormat || selectedFormat) &&
+                (metafyHash ? (
+                  <label>
+                    {t('MENU.CREATE_GAME.SELECTED_DECK')}
+                    <ImageSelect
+                      id="bazaarDecks"
+                      options={standaloneBazaarDeckOptions}
+                      value={standaloneSelectedBazaarDeck}
+                      onChange={handleStandaloneSelectBazaarDeck}
+                      placeholder={
+                        isBazaarLoading
+                          ? t('MENU.CREATE_GAME.LOADING')
+                          : t('MENU.CREATE_GAME.SELECT_BAZAAR_DECK_PLACEHOLDER')
+                      }
+                      aria-busy={isBazaarLoading}
+                    />
+                  </label>
+                ) : (
+                  <p className={styles.bazaarMessage}>
+                    <Trans
+                      i18nKey="MENU.CREATE_GAME.BAZAAR_LINK_MESSAGE"
+                      components={{ 1: <a href="/user/profile" /> }}
+                    />
+                  </p>
+                ))}
               {!isEmbedded &&
                 isLoggedIn &&
                 !isLoading &&
@@ -831,89 +889,93 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
                   </label>
                 )}
               {!isEmbedded && standaloneDeckSource === 'talishar' && (
-              <ErrorMessage
-                errors={errors}
-                name="favoriteDecks"
-                render={({ message }) => (
-                  <p className={styles.fieldError}>
-                    <FaExclamationCircle /> {message}
-                  </p>
-                )}
-              />
+                <ErrorMessage
+                  errors={errors}
+                  name="favoriteDecks"
+                  render={({ message }) => (
+                    <p className={styles.fieldError}>
+                      <FaExclamationCircle /> {message}
+                    </p>
+                  )}
+                />
               )}
               {(isPreconFormat(formFormat || selectedFormat) ||
                 (!isEmbedded && standaloneDeckSource === 'talishar')) && (
-              <fieldset>
-                <label>
-                  {isPreconFormat(formFormat || selectedFormat) ? (
-                    <>
-                      {t('MENU.CREATE_GAME.PRECONSTRUCTED_DECK')}
-                      <ImageSelect
-                        id="preconDecks"
-                        options={preconDeckOptions}
-                        value={selectedPreconDeck}
-                        onChange={(value) => {
-                          setSelectedPreconDeck(value);
-                          setValue('fabdb', value);
-                        }}
-                        placeholder={t(
-                          'MENU.CREATE_GAME.SELECT_DECK_PLACEHOLDER'
-                        )}
-                        aria-invalid={errors.deck?.message ? 'true' : undefined}
-                      />
-                      <input
-                        type="hidden"
-                        {...register('fabdb')}
-                        value={selectedPreconDeck}
-                      />
-                    </>
-                  ) : (
-                    <>
-                      {t('MENU.CREATE_GAME.IMPORT')}
-                      {''}
-                      <span
-                        title={t('MENU.CREATE_GAME.IMPORT_TITLE')}
-                        style={{
-                          cursor: 'help',
-                          display: 'inline-flex',
-                          alignItems: 'center',
-                          marginLeft: '4px'
-                        }}
-                      >
-                        <FaQuestionCircle size={14} />
-                      </span>
-                      <input
-                        type="text"
-                        id="fabdb"
-                        aria-label={t('MENU.CREATE_GAME.IMPORT_HELP')}
-                        placeholder="https://fabrary.net/decks/…"
-                        {...register('fabdb')}
-                        aria-invalid={errors.deck?.message ? 'true' : undefined}
-                      />
-                    </>
-                  )}
-                  <ErrorMessage
-                    errors={errors}
-                    name="fabdb"
-                    render={({ message }) => (
-                      <p className={styles.fieldError}>
-                        <FaExclamationCircle /> {message}
-                      </p>
-                    )}
-                  />
-                </label>
-                {isLoggedIn && !isEmbedded && (
+                <fieldset>
                   <label>
-                    <input
-                      type="checkbox"
-                      role="switch"
-                      id="favoriteDeck"
-                      {...register('favoriteDeck')}
+                    {isPreconFormat(formFormat || selectedFormat) ? (
+                      <>
+                        {t('MENU.CREATE_GAME.PRECONSTRUCTED_DECK')}
+                        <ImageSelect
+                          id="preconDecks"
+                          options={preconDeckOptions}
+                          value={selectedPreconDeck}
+                          onChange={(value) => {
+                            setSelectedPreconDeck(value);
+                            setValue('fabdb', value);
+                          }}
+                          placeholder={t(
+                            'MENU.CREATE_GAME.SELECT_DECK_PLACEHOLDER'
+                          )}
+                          aria-invalid={
+                            errors.deck?.message ? 'true' : undefined
+                          }
+                        />
+                        <input
+                          type="hidden"
+                          {...register('fabdb')}
+                          value={selectedPreconDeck}
+                        />
+                      </>
+                    ) : (
+                      <>
+                        {t('MENU.CREATE_GAME.IMPORT')}
+                        {''}
+                        <span
+                          title={t('MENU.CREATE_GAME.IMPORT_TITLE')}
+                          style={{
+                            cursor: 'help',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            marginLeft: '4px'
+                          }}
+                        >
+                          <FaQuestionCircle size={14} />
+                        </span>
+                        <input
+                          type="text"
+                          id="fabdb"
+                          aria-label={t('MENU.CREATE_GAME.IMPORT_HELP')}
+                          placeholder="https://fabrary.net/decks/…"
+                          {...register('fabdb')}
+                          aria-invalid={
+                            errors.deck?.message ? 'true' : undefined
+                          }
+                        />
+                      </>
+                    )}
+                    <ErrorMessage
+                      errors={errors}
+                      name="fabdb"
+                      render={({ message }) => (
+                        <p className={styles.fieldError}>
+                          <FaExclamationCircle /> {message}
+                        </p>
+                      )}
                     />
-                    {t('MENU.CREATE_GAME.SAVE_DECK_FAVOURITES')}
                   </label>
-                )}
-              </fieldset>
+                  {isLoggedIn && !isEmbedded && (
+                    <label>
+                      <input
+                        type="checkbox"
+                        role="switch"
+                        id="favoriteDeck"
+                        {...register('favoriteDeck')}
+                      />
+                      {t('MENU.CREATE_GAME.SAVE_DECK_FAVOURITES')}
+                    </label>
+                  )}
+                </fieldset>
               )}
               <label>
                 {t('MENU.CREATE_GAME.GAME_DESCRIPTION')}
@@ -933,7 +995,11 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
                   <option value="">
                     {t('MENU.CREATE_GAME.GAME_DESCRIPTIONS.DEFAULT')}
                   </option>
-                  <optgroup label={t('MENU.CREATE_GAME.GAME_DESCRIPTION_GROUPS.DECK_TYPE')}>
+                  <optgroup
+                    label={t(
+                      'MENU.CREATE_GAME.GAME_DESCRIPTION_GROUPS.DECK_TYPE'
+                    )}
+                  >
                     <option value="Looking for best deck in the format">
                       {t('MENU.CREATE_GAME.GAME_DESCRIPTIONS.BEST_DECK')}
                     </option>
@@ -947,7 +1013,11 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
                       {t('MENU.CREATE_GAME.GAME_DESCRIPTIONS.SPICY_BREWS')}
                     </option>
                   </optgroup>
-                  <optgroup label={t('MENU.CREATE_GAME.GAME_DESCRIPTION_GROUPS.PREFERENCES')}>
+                  <optgroup
+                    label={t(
+                      'MENU.CREATE_GAME.GAME_DESCRIPTION_GROUPS.PREFERENCES'
+                    )}
+                  >
                     <option value="Looking to play against a specific class">
                       {t('MENU.CREATE_GAME.GAME_DESCRIPTIONS.SPECIFIC_CLASS')}
                     </option>
@@ -955,7 +1025,9 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
                       {t('MENU.CREATE_GAME.GAME_DESCRIPTIONS.SPECIFIC_HERO')}
                     </option>
                     <option value="No interest in playing against specific hero">
-                      {t('MENU.CREATE_GAME.GAME_DESCRIPTIONS.NOT_SPECIFIC_HERO')}
+                      {t(
+                        'MENU.CREATE_GAME.GAME_DESCRIPTIONS.NOT_SPECIFIC_HERO'
+                      )}
                     </option>
                     <option value="Prefer fast decks (aggro)">
                       {t('MENU.CREATE_GAME.GAME_DESCRIPTIONS.AGGRO')}
@@ -964,7 +1036,11 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
                       {t('MENU.CREATE_GAME.GAME_DESCRIPTIONS.CONTROL')}
                     </option>
                   </optgroup>
-                  <optgroup label={t('MENU.CREATE_GAME.GAME_DESCRIPTION_GROUPS.PLAY_STYLE')}>
+                  <optgroup
+                    label={t(
+                      'MENU.CREATE_GAME.GAME_DESCRIPTION_GROUPS.PLAY_STYLE'
+                    )}
+                  >
                     <option value="Casual / relaxed play">
                       {t('MENU.CREATE_GAME.GAME_DESCRIPTIONS.CASUAL')}
                     </option>
@@ -984,7 +1060,8 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
                 </select>
               </label>
 
-              {gameDescription === 'Looking to play against a specific hero' && (
+              {gameDescription ===
+                'Looking to play against a specific hero' && (
                 <div className={styles.heroSelection}>
                   <div className={styles.heroSelectionHeader}>
                     <label>
@@ -1125,7 +1202,8 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
                   )}
                 </div>
               )}
-              {gameDescription === 'Looking to play against a specific class' && (
+              {gameDescription ===
+                'Looking to play against a specific class' && (
                 <div className={styles.heroSelection}>
                   <div className={styles.heroSelectionHeader}>
                     <label>
@@ -1143,7 +1221,7 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
                         }}
                         className={styles.clearSelectionLink}
                       >
-                        Clear Selection
+                        {t('MENU.CREATE_GAME.CLEAR_SELECTION')}
                       </a>
                     )}
                   </div>
@@ -1309,12 +1387,14 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
                       aria-invalid={errors.format?.message ? 'true' : undefined}
                     >
                       <option value={AI_DECK.COMBAT_DUMMY}>
-                        Practice Dummy
+                        {t('MENU.CREATE_GAME.PRACTICE_DUMMY')}
                       </option>
-{/*                       <option value={AI_DECK.IRABLITZ}>
+                      {/*                       <option value={AI_DECK.IRABLITZ}>
                         Ira (SAGE)
                       </option> */}
-                      <option value={AI_DECK.FAICC}>Fai (CC)</option>
+                      <option value={AI_DECK.FAICC}>
+                        {t('MENU.CREATE_GAME.FAI_CC')}
+                      </option>
                     </select>
                   </label>
                 )}
@@ -1345,7 +1425,7 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
             </button>
             {isRustLocked && (
               <div className={styles.rustLockedHint}>
-                Clear your rust counters above to create a game.
+                {t('MENU.CREATE_GAME.RUST_LOCKED_HINT')}
               </div>
             )}
             {errors.root?.serverError?.message && (

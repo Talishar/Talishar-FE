@@ -1,5 +1,5 @@
 import { usePageTitle } from 'hooks/usePageTitle';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import {
   useDeleteAccountMutation,
   useGetUserProfileQuery,
@@ -58,7 +58,8 @@ export const ProfilePage = () => {
       }
     } catch (err: any) {
       const message =
-        err?.data?.message ?? 'Failed to change display name. Please try again.';
+        err?.data?.message ??
+        'Failed to change display name. Please try again.';
       toast.error(message, { position: 'top-center' });
     }
   };
@@ -131,11 +132,17 @@ export const ProfilePage = () => {
           <div className={styles.leftColumn}>
             <article className={styles.articleTitle}>
               <div className={styles.usernameHeader}>
-                <span className={styles.usernameLabel}>{t('PROFILE.USERNAME_LABEL')}</span>
-                <h2 className={styles.usernameValue}>{profileData?.userName}</h2>
+                <span className={styles.usernameLabel}>
+                  {t('PROFILE.USERNAME_LABEL')}
+                </span>
+                <h2 className={styles.usernameValue}>
+                  {profileData?.userName}
+                </h2>
                 {currentUserId && (
                   <div className={styles.userIdLine}>
-                    <span className={styles.userIdLabel}>{t('PROFILE.USER_ID_LABEL')}</span>
+                    <span className={styles.userIdLabel}>
+                      {t('PROFILE.USER_ID_LABEL')}
+                    </span>
                     <span className={styles.userIdValue}>{currentUserId}</span>
                   </div>
                 )}
@@ -165,18 +172,27 @@ export const ProfilePage = () => {
                 {/* Patreon Section */}
                 {!profileIsLoading && (
                   <div className={styles.patreonSection}>
-                    <h3>Patreon</h3>
+                    <h3>{t('PROFILE.PATREON_TITLE')}</h3>
                     {profileData?.isPatreonLinked ? (
                       <p>
-                        Your Patreon account is linked. <br />
-                        <a href={PATREON_URL + PatreonOAuthParam.toString()}>
-                          Refresh your Patreon connection
-                        </a>
+                        <Trans
+                          i18nKey="PROFILE.PATREON_LINKED"
+                          components={{
+                            1: <br />,
+                            2: (
+                              <a
+                                href={
+                                  PATREON_URL + PatreonOAuthParam.toString()
+                                }
+                              />
+                            )
+                          }}
+                        />
                       </p>
                     ) : (
                       <p>
                         <a href={PATREON_URL + PatreonOAuthParam.toString()}>
-                          Connect to Patreon
+                          {t('PROFILE.CONNECT_PATREON')}
                         </a>
                       </p>
                     )}
@@ -188,35 +204,27 @@ export const ProfilePage = () => {
               {!profileIsLoading && (
                 <div className={styles.patreonSection}>
                   <div className={styles.displayNameHeader}>
-                    <h3>Display Name</h3>
+                    <h3>{t('PROFILE.DISPLAY_NAME_TITLE')}</h3>
                     <button
                       type="button"
                       className={styles.infoButton}
                       onClick={() => setShowDisplayNameInfo((prev) => !prev)}
-                      aria-label="More information about display names"
+                      aria-label={t('PROFILE.DISPLAY_NAME_INFO_ARIA')}
                       aria-expanded={showDisplayNameInfo}
                     >
                       i
                     </button>
                   </div>
                   <p>
-                    Shown to other players in games, lobbies, and chat:{' '}
+                    {t('PROFILE.DISPLAY_NAME_SHOWN_HINT')}{' '}
                     <strong>
                       {profileData?.displayName ?? profileData?.userName}
                     </strong>
                   </p>
                   {showDisplayNameInfo && (
                     <div className={styles.displayNameInfoBox}>
-                      <p>
-                        Your display name is what other players see in games,
-                        lobbies, and chat. Your account username is kept
-                        private and is only ever visible to moderators.
-                      </p>
-                      <p>
-                        Display names must be 3-20 letters or numbers, can't
-                        match another player's username or display name, and
-                        can only be changed once every 7 days.
-                      </p>
+                      <p>{t('PROFILE.DISPLAY_NAME_INFO_1')}</p>
+                      <p>{t('PROFILE.DISPLAY_NAME_INFO_2')}</p>
                     </div>
                   )}
                   {profileData?.canChangeDisplayName ? (
@@ -250,16 +258,16 @@ export const ProfilePage = () => {
                           }}
                           disabled={isChangingName}
                         >
-                          Cancel
+                          {t('PROFILE.CANCEL')}
                         </button>
                       </div>
                     ) : nameChangeCooldownActive ? (
                       <p>
-                        You can change your display name again on{' '}
-                        {new Date(
-                          profileData.nextChangeAllowed as string
-                        ).toLocaleString()}
-                        .
+                        {t('PROFILE.CHANGE_AGAIN_ON', {
+                          date: new Date(
+                            profileData.nextChangeAllowed as string
+                          ).toLocaleString()
+                        })}
                       </p>
                     ) : (
                       <div className={styles.displayNameEditRow}>
@@ -267,7 +275,7 @@ export const ProfilePage = () => {
                           className={styles.metafyToggleButton}
                           onClick={() => setIsEditingDisplayName(true)}
                         >
-                          Change Display Name
+                          {t('PROFILE.CHANGE_DISPLAY_NAME')}
                         </button>
                         {profileData?.hasCustomDisplayName && (
                           <button
@@ -275,43 +283,47 @@ export const ProfilePage = () => {
                             onClick={() => handleChangeDisplayName('')}
                             disabled={isChangingName}
                           >
-                            Reset to Username
+                            {t('PROFILE.RESET_TO_USERNAME')}
                           </button>
                         )}
                       </div>
                     )
                   ) : (
-                    <p>
-                      Changing your display name is a supporter perk.
-                      Support Talishar to unlock it!
-                    </p>
+                    <p>{t('PROFILE.SUPPORTER_PERK')}</p>
                   )}
                 </div>
               )}
 
-              <h3 className={styles.title}>Delete Account</h3>
+              <h3 className={styles.title}>{t('PROFILE.DELETE_ACCOUNT')}</h3>
               <p style={{ color: '#fa3737ff', marginBottom: '1em' }}>
-                <strong>Warning:</strong> This action is permanent and cannot be
-                undone. All your account data will be deleted.
+                <Trans
+                  i18nKey="PROFILE.DELETE_WARNING"
+                  components={{ 1: <strong /> }}
+                />
               </p>
               <button
                 className={styles.deleteAccountButton}
                 onClick={() => setShowDeleteModal(true)}
               >
-                Delete My Account
+                {t('PROFILE.DELETE_MY_ACCOUNT')}
               </button>
 
               {showDeleteModal && (
                 <div className={styles.modalOverlay}>
                   <div className={styles.modal}>
-                    <h4>Delete Account Confirmation</h4>
+                    <h4>{t('PROFILE.DELETE_CONFIRMATION_TITLE')}</h4>
                     <p>
-                      Are you sure you want to delete your account? This action
-                      is <strong>permanent</strong> and cannot be undone.
+                      <Trans
+                        i18nKey="PROFILE.DELETE_CONFIRM"
+                        components={{ 1: <strong /> }}
+                      />
                     </p>
                     <p>
-                      Please type your username{' '}
-                      <strong>{profileData?.userName}</strong> to confirm:
+                      <Trans
+                        i18nKey="PROFILE.DELETE_TYPE_USERNAME"
+                        values={{ userName: profileData?.userName }}
+                        components={{ 2: <strong /> }}
+                      />
                     </p>
                     <input
                       type="text"
@@ -329,7 +341,7 @@ export const ProfilePage = () => {
                         }}
                         disabled={isDeleting}
                       >
-                        Cancel
+                        {t('PROFILE.CANCEL')}
                       </button>
                       <button
                         className={styles.confirmDeleteButton}
@@ -339,7 +351,9 @@ export const ProfilePage = () => {
                           confirmationUsername !== profileData?.userName
                         }
                       >
-                        {isDeleting ? 'Deleting...' : 'Delete Account'}
+                        {isDeleting
+                          ? t('PROFILE.DELETING')
+                          : t('PROFILE.DELETE_ACCOUNT')}
                       </button>
                     </div>
                   </div>

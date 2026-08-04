@@ -4,22 +4,31 @@ import PageBanner from 'components/PageBanner/PageBanner';
 import { useTranslation } from 'react-i18next';
 import { usePageTitle } from 'hooks/usePageTitle';
 
-const bannerByPath: Record<string, { title: string; subtitle?: string; pageTitle: string }> = {
-  signup: { title: 'SIGNUP.BANNER_TITLE', subtitle: 'SIGNUP.BANNER_SUBTITLE', pageTitle: 'SIGNUP.PAGE_TITLE' },
-  'password-recovery': { title: 'PASSWORD.RECOVERY.BANNER_TITLE', subtitle: 'PASSWORD.RECOVERY.BANNER_SUBTITLE', pageTitle: 'PASSWORD.RECOVERY.PAGE_TITLE' },
-  'reset-password': { title: 'PASSWORD.RESET.BANNER_TITLE', subtitle: 'PASSWORD.RESET.BANNER_SUBTITLE', pageTitle: 'PASSWORD.RESET.PAGE_TITLE' },
-};
-
 export const LoginPage = () => {
   const location = useLocation();
   const segment = location.pathname.split('/').filter(Boolean).pop() ?? '';
-  const { t, i18n, ready } = useTranslation();
+  const { t } = useTranslation();
 
-  const bannerConfig = bannerByPath[segment] ?? { title: "USER.LOGIN.LOGIN", subtitle: "USER.LOGIN.WELCOME_BACK", pageTitle: 'PAGES.LOGIN' };
-  const { title: titleKey, subtitle: subtitleKey, pageTitle: pageTitleKey } = bannerConfig;
-  const title = t(titleKey);
-  const subtitle = subtitleKey ? t(subtitleKey) : undefined;
-  const pageTitle = t(pageTitleKey);
+  let title: string;
+  let subtitle: string | undefined;
+  let pageTitle: string;
+  if (segment === 'signup') {
+    title = t('SIGNUP.BANNER_TITLE');
+    subtitle = t('SIGNUP.BANNER_SUBTITLE');
+    pageTitle = t('SIGNUP.PAGE_TITLE');
+  } else if (segment === 'password-recovery') {
+    title = t('PASSWORD.RECOVERY.BANNER_TITLE');
+    subtitle = t('PASSWORD.RECOVERY.BANNER_SUBTITLE');
+    pageTitle = t('PASSWORD.RECOVERY.PAGE_TITLE');
+  } else if (segment === 'reset-password') {
+    title = t('PASSWORD.RESET.BANNER_TITLE');
+    subtitle = t('PASSWORD.RESET.BANNER_SUBTITLE');
+    pageTitle = t('PASSWORD.RESET.PAGE_TITLE');
+  } else {
+    title = t('USER.LOGIN.LOGIN');
+    subtitle = t('USER.LOGIN.WELCOME_BACK');
+    pageTitle = t('PAGES.LOGIN');
+  }
 
   usePageTitle(pageTitle);
 

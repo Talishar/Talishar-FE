@@ -75,7 +75,8 @@
   margin: 0;
   box-shadow: none;
   cursor: pointer;
-  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease,
+    color 0.2s ease;
 }
 
 .dragModeToggle:hover {
@@ -119,7 +120,8 @@
   min-height: 0;
   /* Custom scrollbar */
   scrollbar-width: thin;
-  scrollbar-color: var(--theme-primary-focus, rgba(212, 175, 55, 0.3)) rgba(0, 0, 0, 0.3);
+  scrollbar-color: var(--theme-primary-focus, rgba(212, 175, 55, 0.3))
+    rgba(0, 0, 0, 0.3);
 }
 
 .activeLayersInner::-webkit-scrollbar {
@@ -236,12 +238,13 @@
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  border-radius: 6px; 
+  border-radius: 6px;
   border: 1px solid rgba(255, 255, 255, 0.15);
   flex-basis: auto;
   padding: 8px 16px;
   white-space: nowrap;
-  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease,
+    color 0.2s ease;
 }
 
 .passTurn:hover {
@@ -260,14 +263,15 @@
   justify-content: center;
   min-width: calc(6dvw * var(--card-scale));
   height: 32px;
-  border-radius: 6px; 
+  border-radius: 6px;
   border: 1px solid rgba(255, 255, 255, 0.15);
   flex-basis: auto;
   padding: 8px 16px;
   width: auto;
   margin-bottom: 0;
   white-space: nowrap;
-  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease,
+    color 0.2s ease;
   box-shadow: none;
 }
 

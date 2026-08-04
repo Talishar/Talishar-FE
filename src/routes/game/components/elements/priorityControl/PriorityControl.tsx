@@ -11,8 +11,14 @@ export default function PriorityControl() {
     <ButtonDisableProvider disableDuration={1000}>
       <div>
         <div className={styles.menuList}>
-          <FullControlToggle btnClass={styles.btn} activeBtnClass={styles.buttonActive} />
-          <AlwaysPassToggle btnClass={styles.btn} activeBtnClass={styles.buttonActive} />
+          <FullControlToggle
+            btnClass={styles.btn}
+            activeBtnClass={styles.buttonActive}
+          />
+          <AlwaysPassToggle
+            btnClass={styles.btn}
+            activeBtnClass={styles.buttonActive}
+          />
           <SkipReactionsToggle />
           <SkipAllAttacksToggle />
           <ManualTargetingToggle

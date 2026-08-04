@@ -67,7 +67,9 @@ export const InProgressGame = ({
             )}
           </div>
         </div>
-        {formatLabel && <span className={styles.formatLabel}>{formatLabel}</span>}
+        {formatLabel && (
+          <span className={styles.formatLabel}>{formatLabel}</span>
+        )}
       </div>
       <FriendBadge
         isFriendsGame={isFriendsGame}
@@ -80,7 +82,7 @@ export const InProgressGame = ({
           href={`/game/play/${entry.gameName}`}
           role="button"
         >
-          {t("IN_PROGRESS_GAME.SPECTATE")}
+          {t('IN_PROGRESS_GAME.SPECTATE')}
         </a>
       </div>
     </div>

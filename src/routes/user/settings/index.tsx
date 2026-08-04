@@ -124,9 +124,21 @@ const SettingsPage = () => {
   ];
 
   const attackShortcutOptions = [
-    { value: 'neverSkip', label: t('SETTINGS.ATTACK_OPTIONS.NEVER_SKIP'), enumValue: 0 },
-    { value: 'skipOnes', label: t('SETTINGS.ATTACK_OPTIONS.SKIP_ONES'), enumValue: 1 },
-    { value: 'skipAll', label: t('SETTINGS.ATTACK_OPTIONS.SKIP_ALL'), enumValue: 99 }
+    {
+      value: 'neverSkip',
+      label: t('SETTINGS.ATTACK_OPTIONS.NEVER_SKIP'),
+      enumValue: 0
+    },
+    {
+      value: 'skipOnes',
+      label: t('SETTINGS.ATTACK_OPTIONS.SKIP_ONES'),
+      enumValue: 1
+    },
+    {
+      value: 'skipAll',
+      label: t('SETTINGS.ATTACK_OPTIONS.SKIP_ALL'),
+      enumValue: 99
+    }
   ];
 
   return (
@@ -150,10 +162,13 @@ const SettingsPage = () => {
             />
           </Fieldset>
 
-          <Fieldset legend="Skip Overrides" tooltip="Resets at the start of each turn.">
+          <Fieldset
+            legend={t('SETTINGS.SKIP_OVERRIDES')}
+            tooltip={t('SETTINGS.SKIP_OVERRIDES_TOOLTIP')}
+          >
             <CheckboxSetting
               name="skipAttackReactions"
-              label="Skip Attack Reactions"
+              label={t('SETTINGS.SKIP_ATTACK_REACTIONS')}
               checked={initialValues.skipAttackReactions}
               onChange={() =>
                 handleSettingsChange({
@@ -164,7 +179,7 @@ const SettingsPage = () => {
             />
             <CheckboxSetting
               name="skipDefenseReactions"
-              label="Skip Defense Reactions"
+              label={t('SETTINGS.SKIP_DEFENSE_REACTIONS')}
               checked={initialValues.skipDefenseReactions}
               onChange={() =>
                 handleSettingsChange({
@@ -175,7 +190,7 @@ const SettingsPage = () => {
             />
             <CheckboxSetting
               name="manualTargeting"
-              label="Manual Targeting"
+              label={t('SETTINGS.MANUAL_TARGETING')}
               checked={initialValues.manualTargeting}
               onChange={() =>
                 handleSettingsChange({
@@ -188,7 +203,7 @@ const SettingsPage = () => {
 
           <Fieldset
             legend={t('SETTINGS.ATTACK_SHORTCUTS')}
-            tooltip="Resets to 'Never Skip Attacks' at the start of each turn."
+            tooltip={t('SETTINGS.ATTACK_SHORTCUT_THRESHOLD_TOOLTIP')}
           >
             <RadioGroup
               name="attackSkip"
@@ -203,10 +218,10 @@ const SettingsPage = () => {
             />
           </Fieldset>
 
-          <Fieldset legend="Modes">
+          <Fieldset legend={t('SETTINGS.MODES')}>
             <CheckboxSetting
               name="streamerMode"
-              label="Streamer Mode"
+              label={t('SETTINGS.STREAMER_MODE')}
               checked={initialValues.streamerMode}
               onChange={() =>
                 handleSettingsChange({
@@ -218,8 +233,8 @@ const SettingsPage = () => {
             />
             <CheckboxSetting
               name="casterMode"
-              label="Caster Mode"
-              tooltip="Show both players hands for casting purposes, only if both players have the setting enabled."
+              label={t('SETTINGS.CASTER_MODE')}
+              tooltip={t('SETTINGS.CASTER_MODE_TOOLTIP')}
               checked={initialValues.casterMode}
               onChange={() =>
                 handleSettingsChange({
@@ -231,8 +246,8 @@ const SettingsPage = () => {
             />
             <CheckboxSetting
               name="hideHandFromFriends"
-              label="Hide hand from friends"
-              tooltip="Do not show your hand content to your friends."
+              label={t('SETTINGS.HIDE_HAND_FROM_FRIENDS')}
+              tooltip={t('SETTINGS.HIDE_HAND_FROM_FRIENDS_TOOLTIP')}
               checked={initialValues.hideHandFromFriends}
               onChange={() =>
                 handleSettingsChange({
@@ -243,7 +258,7 @@ const SettingsPage = () => {
             />
             <CheckboxSetting
               name="manualTunic"
-              label="Manual Tunic Mode"
+              label={t('SETTINGS.MANUAL_TUNIC_MODE')}
               checked={initialValues.manualTunic}
               onChange={() =>
                 handleSettingsChange({
@@ -254,10 +269,10 @@ const SettingsPage = () => {
             />
           </Fieldset>
 
-          <Fieldset legend="Accessibility & Other">
+          <Fieldset legend={t('SETTINGS.ACCESSIBILITY_OTHER')}>
             <CheckboxSetting
               name="alwaysAllowUndo"
-              label="Always Allow Undo"
+              label={t('SETTINGS.ALWAYS_ALLOW_UNDO')}
               checked={initialValues.alwaysAllowUndo}
               onChange={() =>
                 handleSettingsChange({
@@ -269,7 +284,7 @@ const SettingsPage = () => {
             />
             <CheckboxSetting
               name="accessibilityMode"
-              label="Color Accessibility Mode"
+              label={t('SETTINGS.COLOR_ACCESSIBILITY_MODE')}
               checked={initialValues.accessibilityMode}
               onChange={() =>
                 handleSettingsChange({
@@ -281,7 +296,7 @@ const SettingsPage = () => {
             />
             <CheckboxSetting
               name="mute"
-              label="Mute Game Sounds"
+              label={t('SETTINGS.MUTE_GAME_SOUNDS')}
               checked={initialValues.mute}
               onChange={() =>
                 handleSettingsChange({
@@ -292,7 +307,7 @@ const SettingsPage = () => {
             />
             <CheckboxSetting
               name="disableStats"
-              label="Disable Fabrary Stats"
+              label={t('SETTINGS.DISABLE_FABRARY_STATS')}
               checked={initialValues.disableStats}
               onChange={() =>
                 handleSettingsChange({
@@ -303,8 +318,8 @@ const SettingsPage = () => {
             />
             <CheckboxSetting
               name="disableFabInsights"
-              label="Disable Global Stats"
-              tooltip="Disables sending game statistics to FaB Insights and FaBlazing for stats tracking."
+              label={t('SETTINGS.DISABLE_GLOBAL_STATS')}
+              tooltip={t('SETTINGS.DISABLE_GLOBAL_STATS_TOOLTIP')}
               checked={initialValues.disableFabInsights}
               onChange={() =>
                 handleSettingsChange({
@@ -315,7 +330,7 @@ const SettingsPage = () => {
             />
             <CheckboxSetting
               name="disableAltArts"
-              label="Disable Alternate Arts"
+              label={t('SETTINGS.DISABLE_ALTERNATE_ARTS')}
               checked={initialValues.disableAltArts}
               onChange={() =>
                 handleSettingsChange({
@@ -326,7 +341,7 @@ const SettingsPage = () => {
             />
             <CheckboxSetting
               name="disableHeroIntro"
-              label="Disable Hero Intro Animation"
+              label={t('SETTINGS.DISABLE_HERO_INTRO_ANIMATION')}
               checked={initialValues.disableHeroIntro}
               onChange={() =>
                 handleSettingsChange({
@@ -339,20 +354,20 @@ const SettingsPage = () => {
         </div>
 
         <div className={styles.settingsColumn}>
-          <h3 className={styles.title}>Visual Settings</h3>
+          <h3 className={styles.title}>{t('SETTINGS.VISUAL_SETTINGS')}</h3>
 
-          <Fieldset legend="Cards Language">
+          <Fieldset legend={t('SETTINGS.CARDS_LANGUAGE')}>
             <LanguageSelector />
           </Fieldset>
 
-          <Fieldset legend="Theme">
+          <Fieldset legend={t('SETTINGS.THEME')}>
             <ThemeToggle />
           </Fieldset>
 
-          <Fieldset legend="Visual Settings">
+          <Fieldset legend={t('SETTINGS.VISUAL_SETTINGS')}>
             <CheckboxSetting
               name="mirroredOpponent"
-              label="Mirror Opponent Board"
+              label={t('SETTINGS.MIRROR_OPPONENT_BOARD')}
               checked={initialValues.mirroredBoardLayout}
               onChange={() =>
                 handleSettingsChange({
@@ -364,7 +379,7 @@ const SettingsPage = () => {
 
             <CheckboxSetting
               name="mirroredPlayer"
-              label="Mirror Player Board"
+              label={t('SETTINGS.MIRROR_PLAYER_BOARD')}
               checked={initialValues.mirroredPlayerBoardLayout}
               onChange={() =>
                 handleSettingsChange({
@@ -376,7 +391,7 @@ const SettingsPage = () => {
 
             <CheckboxSetting
               name="alwaysShowCounters"
-              label="Always Show Counters on zones"
+              label={t('SETTINGS.ALWAYS_SHOW_COUNTERS_ON_ZONES')}
               checked={initialValues.alwaysShowCounters}
               onChange={() =>
                 handleSettingsChange({
@@ -388,59 +403,85 @@ const SettingsPage = () => {
 
             <CheckboxSetting
               name="disableParticles"
-              label="Disable Particle Effects"
+              label={t('SETTINGS.DISABLE_PARTICLE_EFFECTS')}
               checked={cookies.disableParticles === 'true'}
               onChange={() =>
-                setCookie('disableParticles', cookies.disableParticles === 'true' ? 'false' : 'true', { path: '/', maxAge: 365 * 24 * 60 * 60 })
+                setCookie(
+                  'disableParticles',
+                  cookies.disableParticles === 'true' ? 'false' : 'true',
+                  { path: '/', maxAge: 365 * 24 * 60 * 60 }
+                )
               }
             />
 
             <CheckboxSetting
               name="disableCardTilt"
-              label="Disable Card Hover Tilt"
+              label={t('SETTINGS.DISABLE_CARD_HOVER_TILT')}
               checked={cookies.disableCardTilt === 'true'}
               onChange={() =>
-                setCookie('disableCardTilt', cookies.disableCardTilt === 'true' ? 'false' : 'true', { path: '/', maxAge: 365 * 24 * 60 * 60 })
+                setCookie(
+                  'disableCardTilt',
+                  cookies.disableCardTilt === 'true' ? 'false' : 'true',
+                  { path: '/', maxAge: 365 * 24 * 60 * 60 }
+                )
               }
             />
 
             <VisualSlider
-              label="Card Size"
+              label={t('SETTINGS.CARD_SIZE')}
               value={cookies.cardSize ?? 1}
               min={isMobile ? 100 : 50}
               max={150}
               defaultValue={1}
-              onChange={(value) => setCookie('cardSize', value, { path: '/', maxAge: 365 * 24 * 60 * 60 })}
+              onChange={(value) =>
+                setCookie('cardSize', value, {
+                  path: '/',
+                  maxAge: 365 * 24 * 60 * 60
+                })
+              }
             />
 
             <VisualSlider
-              label="Card Preview Size"
+              label={t('SETTINGS.CARD_PREVIEW_SIZE')}
               value={cookies.hoverImageSize ?? 1}
               min={75}
               max={125}
               defaultValue={1}
-              onChange={(value) => setCookie('hoverImageSize', value, { path: '/', maxAge: 365 * 24 * 60 * 60 })}
+              onChange={(value) =>
+                setCookie('hoverImageSize', value, {
+                  path: '/',
+                  maxAge: 365 * 24 * 60 * 60
+                })
+              }
             />
 
             <VisualSlider
-              label="Transparency"
+              label={t('SETTINGS.TRANSPARENCY')}
               value={cookies.transparencyIntensity ?? 1}
               min={75}
               max={100}
               defaultValue={1}
               onChange={(value) => {
-                setCookie('transparencyIntensity', value, { path: '/', maxAge: 365 * 24 * 60 * 60 });
+                setCookie('transparencyIntensity', value, {
+                  path: '/',
+                  maxAge: 365 * 24 * 60 * 60
+                });
                 setTransparency(value);
               }}
             />
 
             <VisualSlider
-              label="Playmat Intensity"
+              label={t('SETTINGS.PLAYMAT_INTENSITY')}
               value={cookies.playmatIntensity ?? 0.65}
               min={10}
               max={100}
               defaultValue={0.65}
-              onChange={(value) => setCookie('playmatIntensity', value, { path: '/', maxAge: 365 * 24 * 60 * 60 })}
+              onChange={(value) =>
+                setCookie('playmatIntensity', value, {
+                  path: '/',
+                  maxAge: 365 * 24 * 60 * 60
+                })
+              }
             />
           </Fieldset>
 

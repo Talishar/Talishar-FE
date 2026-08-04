@@ -7,28 +7,30 @@ import styles from './PitchZone.module.css';
 import PitchDisplay from '../../elements/pitchDisplay/PitchDisplay';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 
 const PITCH_ANIMATE = { y: 0 };
 const PITCH_TRANSITION = { ease: 'easeIn', duration: 0.2 };
 const PITCH_EXIT = { opacity: 0 };
 
 const PITCH_CARD_STYLES: React.CSSProperties[] = [
-  { top: '0em',    zIndex: '-1' },
+  { top: '0em', zIndex: '-1' },
   { top: '-1.5em', zIndex: '-2' },
-  { top: '-3em',   zIndex: '-3' },
-  { top: '-4.5em', zIndex: '-4' },
+  { top: '-3em', zIndex: '-3' },
+  { top: '-4.5em', zIndex: '-4' }
 ];
 const PITCH_CARD_INITIALS = [
   { y: '0em' },
   { y: '1.5em' },
   { y: '3em' },
-  { y: '4.5em' },
+  { y: '4.5em' }
 ];
 
 export default function PitchZone(prop: Displayrow) {
   const { isPlayer } = prop;
   const { DisplayRow } = prop;
   const dispatch = useAppDispatch();
+  const { t } = useTranslation();
 
   const pitchZone = useAppSelector((state: RootState) =>
     isPlayer ? state.game.playerOne.Pitch : state.game.playerTwo.Pitch
@@ -53,7 +55,7 @@ export default function PitchZone(prop: Displayrow) {
   ) {
     return (
       <>
-        <div className={styles.pitchZone}>Pitch</div>
+        <div className={styles.pitchZone}>{t('ZONES.PITCH')}</div>
       </>
     );
   }

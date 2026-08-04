@@ -28,7 +28,8 @@ export function Board() {
 
   const useOldScreen = height > width;
   // const useOldScreen = true;
-  const isSpectatorViewingPlayer2 = (playerID === 3 || isReplay) && spectatorCameraView === 2;
+  const isSpectatorViewingPlayer2 =
+    (playerID === 3 || isReplay) && spectatorCameraView === 2;
 
   if (useOldScreen) {
     return (

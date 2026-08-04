@@ -7,7 +7,14 @@ import { useNavigate } from 'react-router-dom';
 import { shallowEqual } from 'react-redux';
 import { getGameInfo } from 'features/game/GameSlice';
 import { apiSlice } from 'features/api/apiSlice';
-import { FaHome, FaExchangeAlt, FaPaperPlane, FaSave, FaMapMarkedAlt } from 'react-icons/fa';
+import { useTranslation } from 'react-i18next';
+import {
+  FaHome,
+  FaExchangeAlt,
+  FaPaperPlane,
+  FaSave,
+  FaMapMarkedAlt
+} from 'react-icons/fa';
 
 interface EndGameMenuOptionsProps {
   onSwitchPlayer?: () => void;
@@ -16,6 +23,7 @@ interface EndGameMenuOptionsProps {
 const EndGameMenuOptions = ({ onSwitchPlayer }: EndGameMenuOptionsProps) => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const { roguelikeGameID } = useAppSelector(getGameInfo, shallowEqual);
   const playerName = useAppSelector(
     (state: RootState) => state.game.playerOne.Name
@@ -27,7 +35,9 @@ const EndGameMenuOptions = ({ onSwitchPlayer }: EndGameMenuOptionsProps) => {
 
   const handleMainMenu = async () => {
     dispatch(submitButton({ button: { mode: PROCESS_INPUT.MAIN_MENU } }));
-    dispatch(apiSlice.util.invalidateTags([{ type: 'UserProfile', id: 'LIST' }]));
+    dispatch(
+      apiSlice.util.invalidateTags([{ type: 'UserProfile', id: 'LIST' }])
+    );
     navigate('/');
   };
 
@@ -50,26 +60,31 @@ const EndGameMenuOptions = ({ onSwitchPlayer }: EndGameMenuOptionsProps) => {
   return (
     <div className={styles.buttons}>
       <button className={styles.buttonDiv} onClick={handleMainMenu}>
-        <FaHome aria-hidden="true" className={styles.icon} /> Main menu
+        <FaHome aria-hidden="true" className={styles.icon} />{' '}
+        {t('END_GAME.MAIN_MENU')}
       </button>
       {roguelikeGameID && health > 0 && (
         <button className={styles.buttonDiv} onClick={handleContinueAdventure}>
-          <FaMapMarkedAlt aria-hidden="true" className={styles.icon} /> Continue adventure
+          <FaMapMarkedAlt aria-hidden="true" className={styles.icon} />{' '}
+          {t('END_GAME.CONTINUE_ADVENTURE')}
         </button>
       )}
       {!roguelikeGameID && (
         <button className={styles.buttonDiv} onClick={handleFullRematch}>
-          <FaPaperPlane aria-hidden="true" className={styles.icon} /> Send rematch
+          <FaPaperPlane aria-hidden="true" className={styles.icon} />{' '}
+          {t('END_GAME.SEND_REMATCH')}
         </button>
       )}
       {!roguelikeGameID && (
         <button className={styles.buttonDiv} onClick={handleSaveReplay}>
-          <FaSave aria-hidden="true" className={styles.icon} /> Save replay
+          <FaSave aria-hidden="true" className={styles.icon} />{' '}
+          {t('END_GAME.SAVE_REPLAY')}
         </button>
       )}
       {onSwitchPlayer && (
         <button className={styles.buttonDiv} onClick={onSwitchPlayer}>
-          <FaExchangeAlt aria-hidden="true" className={styles.icon} /> Switch Player Stats
+          <FaExchangeAlt aria-hidden="true" className={styles.icon} />{' '}
+          {t('END_GAME.SWITCH_PLAYER_STATS')}
         </button>
       )}
     </div>

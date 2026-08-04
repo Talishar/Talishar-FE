@@ -8,16 +8,20 @@ import styles from './GraveyardZone.module.css';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import * as optConst from 'features/options/constants';
+import { useTranslation } from 'react-i18next';
 
 const MAX_STACK_LAYERS = 12;
 
 export const GraveyardZone = React.memo((prop: Displayrow) => {
   const { isPlayer } = prop;
   const dispatch = useAppDispatch();
+  const { t } = useTranslation();
   const [windowWidth] = useWindowDimensions();
   const alwaysShowCounters = useAppSelector(
     (state: RootState) =>
-      String(state.settings.entities?.[optConst.ALWAYS_SHOW_COUNTERS]?.value) === '1'
+      String(
+        state.settings.entities?.[optConst.ALWAYS_SHOW_COUNTERS]?.value
+      ) === '1'
   );
 
   const graveyardZone = useAppSelector((state: RootState) =>
@@ -34,7 +38,8 @@ export const GraveyardZone = React.memo((prop: Displayrow) => {
   const baseOffsetX = totalCards * 0.24;
 
   const cardToDisplay = useMemo(
-    () => (graveyardZone?.[0] ? { ...graveyardZone[0], borderColor: '' } : undefined),
+    () =>
+      graveyardZone?.[0] ? { ...graveyardZone[0], borderColor: '' } : undefined,
     [graveyardZone]
   );
 
@@ -50,7 +55,9 @@ export const GraveyardZone = React.memo((prop: Displayrow) => {
       return {
         transform:
           `translateY(${baseOffsetY}px) translateX(${baseOffsetX}px) ` +
-          `translateY(${(sourceIndex + 1) * 0.25}px) translateX(${(sourceIndex + 1) * -0.25}px)`,
+          `translateY(${(sourceIndex + 1) * 0.25}px) translateX(${
+            (sourceIndex + 1) * -0.25
+          }px)`,
         zIndex: totalCards - sourceIndex - 1
       };
     });
@@ -60,14 +67,16 @@ export const GraveyardZone = React.memo((prop: Displayrow) => {
     () =>
       !isMobileOrTablet
         ? {
-            transform: `translate3d(${Math.round(baseOffsetX)}px, ${Math.round(baseOffsetY)}px, 0)`
+            transform: `translate3d(${Math.round(baseOffsetX)}px, ${Math.round(
+              baseOffsetY
+            )}px, 0)`
           }
         : {},
     [isMobileOrTablet, baseOffsetY, baseOffsetX]
   );
 
   if (graveyardZone === undefined || graveyardZone.length === 0) {
-    return <div className={styles.graveyardZone}>Graveyard</div>;
+    return <div className={styles.graveyardZone}>{t('ZONES.GRAVEYARD')}</div>;
   }
 
   const graveyardZoneDisplay = () => {
@@ -100,10 +109,7 @@ export const GraveyardZone = React.memo((prop: Displayrow) => {
             />
           ))}
         {/* Main card on top */}
-        <div
-          className={styles.cardWrapper}
-          style={cardWrapperStyle}
-        >
+        <div className={styles.cardWrapper} style={cardWrapperStyle}>
           {cardToDisplay && (
             <CardDisplay
               card={cardToDisplay}

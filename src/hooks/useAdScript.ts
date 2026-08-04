@@ -46,7 +46,8 @@ function installNavGuard() {
 
   const locProto = window.Location.prototype;
 
-  savedHrefDescriptor = Object.getOwnPropertyDescriptor(locProto, 'href') ?? null;
+  savedHrefDescriptor =
+    Object.getOwnPropertyDescriptor(locProto, 'href') ?? null;
   if (savedHrefDescriptor?.set) {
     const origSet = savedHrefDescriptor.set;
     try {
@@ -67,7 +68,8 @@ function installNavGuard() {
     }
   }
 
-  savedAssignDescriptor = Object.getOwnPropertyDescriptor(locProto, 'assign') ?? null;
+  savedAssignDescriptor =
+    Object.getOwnPropertyDescriptor(locProto, 'assign') ?? null;
   if (savedAssignDescriptor?.value) {
     const origAssign = savedAssignDescriptor.value;
     try {
@@ -85,7 +87,8 @@ function installNavGuard() {
     }
   }
 
-  savedReplaceDescriptor = Object.getOwnPropertyDescriptor(locProto, 'replace') ?? null;
+  savedReplaceDescriptor =
+    Object.getOwnPropertyDescriptor(locProto, 'replace') ?? null;
   if (savedReplaceDescriptor?.value) {
     const origReplace = savedReplaceDescriptor.value;
     try {
@@ -177,9 +180,9 @@ function sandboxAdIframe(iframe: HTMLIFrameElement) {
 
 function sandboxAdIframesIn(root: Document | Element) {
   const container = root === document ? document.body : (root as Element);
-  container?.querySelectorAll?.('iframe').forEach((el) =>
-    sandboxAdIframe(el as HTMLIFrameElement)
-  );
+  container
+    ?.querySelectorAll?.('iframe')
+    .forEach((el) => sandboxAdIframe(el as HTMLIFrameElement));
 }
 
 // React attaches __reactFiber$xxx to every DOM node it manages, including
@@ -188,7 +191,8 @@ function sandboxAdIframesIn(root: Document | Element) {
 function isReactPortalEl(el: Element): boolean {
   const keys = Object.keys(el);
   for (const key of keys) {
-    if (key.startsWith('__reactFiber') || key.startsWith('__reactProps')) return true;
+    if (key.startsWith('__reactFiber') || key.startsWith('__reactProps'))
+      return true;
   }
   return false;
 }
@@ -200,7 +204,7 @@ const CMP_IFRAME_HOSTS = [
   'sp-prod.net',
   'cmp.quantcast.com',
   'cookie-cdn.cookiepro.com',
-  'consentcdn.cookiebot.com',
+  'consentcdn.cookiebot.com'
 ];
 const CMP_SELECTOR =
   '[id^="fc-"],[id^="sp_message_container"],[id^="qc-cmp"],' +
@@ -246,7 +250,9 @@ function lockNonRootBodyChildren() {
 
 function pinVideoAdAnchor() {
   if (!document.body) return;
-  const el = document.body.querySelector(':scope > [data-ad="video"]') as HTMLElement | null;
+  const el = document.body.querySelector(
+    ':scope > [data-ad="video"]'
+  ) as HTMLElement | null;
   if (!el) return;
   el.style.setProperty('position', 'fixed', 'important');
   el.style.setProperty('top', '0', 'important');
@@ -411,7 +417,10 @@ export default function useAdScript(enabled = true) {
         }
       }
     });
-    iframeGuard.observe(document.documentElement, { childList: true, subtree: true });
+    iframeGuard.observe(document.documentElement, {
+      childList: true,
+      subtree: true
+    });
 
     return () => {
       window.clearInterval(overlayInterval);

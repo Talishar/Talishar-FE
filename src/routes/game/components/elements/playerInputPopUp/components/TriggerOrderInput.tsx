@@ -1,5 +1,6 @@
 import { FormProps } from '../playerInputPopupTypes';
 import React, { useMemo, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import styles from '../PlayerInputPopUp.module.css';
 import CardDisplay from '../../cardDisplay/CardDisplay';
 import { Card } from 'features/Card';
@@ -18,6 +19,7 @@ const TriggerOrdering = ({ topCards }: { topCards: Card[] }) => {
     shallowEqual
   );
 
+  const { t } = useTranslation();
   const [cardListTop, setCardListTop] = React.useState<Card[]>([]);
 
   useMemo(() => {
@@ -101,14 +103,14 @@ const TriggerOrdering = ({ topCards }: { topCards: Card[] }) => {
           handleSubmit();
         }}
       >
-        Submit
+        {t('PLAYER_INPUT.SUBMIT')}
       </div>
       <div className={classNames(styles.newOptForm, styles.cardsContainer)}>
         <div className={classNames(styles.newOptForm, styles.reorderCards)}>
           <div
             className={classNames(styles.newOptForm, styles.topAndBottomText)}
           >
-            Triggers
+            {t('PLAYER_INPUT.TRIGGERS')}
           </div>
           <Reorder.Group
             className={classNames(styles.newOptForm, styles.reorderCards)}

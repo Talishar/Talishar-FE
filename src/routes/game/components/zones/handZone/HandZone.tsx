@@ -6,10 +6,7 @@ import Player from 'interface/Player';
 import { Card } from 'features/Card';
 import CardDisplay from '../../elements/cardDisplay/CardDisplay';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
-import {
-  setCardListFocus,
-  clearCardListFocus
-} from 'features/game/GameSlice';
+import { setCardListFocus, clearCardListFocus } from 'features/game/GameSlice';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 
 const CARD_GAP = 5; // matches the flex gap in HandZone.module.css
@@ -25,8 +22,12 @@ const HandZone = React.memo(function HandZone(prop: Player) {
     const isP2View =
       (playerID === 3 || isReplay) && state.game.spectatorCameraView === 2;
     return isPlayer
-      ? (isP2View ? state.game.playerTwo.Hand : state.game.playerOne.Hand)
-      : (isP2View ? state.game.playerOne.Hand : state.game.playerTwo.Hand);
+      ? isP2View
+        ? state.game.playerTwo.Hand
+        : state.game.playerOne.Hand
+      : isP2View
+      ? state.game.playerOne.Hand
+      : state.game.playerTwo.Hand;
   });
   const playerID = useAppSelector(
     (state: RootState) => state.game.gameInfo.playerID
@@ -100,7 +101,9 @@ const HandZone = React.memo(function HandZone(prop: Player) {
           : undefined
       }
       onClick={openHandList}
-      title={cardCount > 0 ? `Click to view ${zoneTitle.toLowerCase()}` : undefined}
+      title={
+        cardCount > 0 ? `Click to view ${zoneTitle.toLowerCase()}` : undefined
+      }
     >
       {handCards.map((card: Card, index: number) => {
         return <CardDisplay card={card} key={index} isPlayer={isPlayer} />;

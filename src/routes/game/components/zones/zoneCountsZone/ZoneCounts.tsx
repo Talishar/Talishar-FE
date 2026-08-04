@@ -8,6 +8,7 @@ import { setCardListLoadFocus } from 'features/game/GameSlice';
 import Displayrow from 'interface/Displayrow';
 import styles from './ZoneCounts.module.css';
 import classNames from 'classnames';
+import { useTranslation } from 'react-i18next';
 
 export const ZoneCounts = (prop: Displayrow) => {
   const soulCount = useAppSelector((state: RootState) =>
@@ -53,6 +54,7 @@ export const ZoneCounts = (prop: Displayrow) => {
 const SoulCount = React.memo((prop: Displayrow) => {
   const dispatch = useAppDispatch();
   const { isPlayer } = prop;
+  const { t } = useTranslation();
   const soulCount = useAppSelector((state: RootState) =>
     isPlayer ? state.game.playerOne.SoulCount : state.game.playerTwo.SoulCount
   );
@@ -62,11 +64,17 @@ const SoulCount = React.memo((prop: Displayrow) => {
   const soulDisplay = () => {
     const playerPronoun = isPlayer ? 'Your' : "Opponent's";
     const popUpName = isPlayer ? 'mySoulPopup' : 'theirSoulPopup';
-    dispatch(setCardListLoadFocus({ query: popUpName, name: `${playerPronoun} Soul` }));
+    dispatch(
+      setCardListLoadFocus({ query: popUpName, name: `${playerPronoun} Soul` })
+    );
   };
 
   return (
-    <div title="Soul" className={styles.clickableItem} onClick={soulDisplay}>
+    <div
+      title={t('ZONES.SOUL')}
+      className={styles.clickableItem}
+      onClick={soulDisplay}
+    >
       <GiAngelOutfit /> {soulCount}
     </div>
   );
@@ -74,6 +82,7 @@ const SoulCount = React.memo((prop: Displayrow) => {
 
 const EarthCount = React.memo((prop: Displayrow) => {
   const { isPlayer } = prop;
+  const { t } = useTranslation();
   const earthCount = useAppSelector((state: RootState) =>
     isPlayer ? state.game.playerOne.earthCount : state.game.playerTwo.earthCount
   );
@@ -81,7 +90,10 @@ const EarthCount = React.memo((prop: Displayrow) => {
   if (!earthCount || earthCount <= 0) return null;
 
   return (
-    <div title="Earth Cards Count" className={styles.NotClickableItem}>
+    <div
+      title={t('ZONES.EARTH_CARDS_COUNT')}
+      className={styles.NotClickableItem}
+    >
       <GiGroundSprout /> {earthCount}
     </div>
   );
@@ -89,6 +101,7 @@ const EarthCount = React.memo((prop: Displayrow) => {
 
 const BlessingsCount = React.memo((prop: Displayrow) => {
   const { isPlayer } = prop;
+  const { t } = useTranslation();
   const blessingsCount = useAppSelector((state: RootState) =>
     isPlayer
       ? state.game.playerOne.blessingsCount
@@ -98,7 +111,10 @@ const BlessingsCount = React.memo((prop: Displayrow) => {
   if (!blessingsCount || blessingsCount <= 0) return null;
 
   return (
-    <div title="Count Your Blessings" className={styles.NotClickableItem}>
+    <div
+      title={t('ZONES.COUNT_YOUR_BLESSINGS')}
+      className={styles.NotClickableItem}
+    >
       <FaPrayingHands /> {blessingsCount}
     </div>
   );

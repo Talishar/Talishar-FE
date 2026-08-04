@@ -7,7 +7,13 @@ import {
   I18N_SUPPORTED_LANGUAGE_CODES
 } from '../../constants/i18nSupportedLanguages';
 
-const LanguageSelector = ({ inDropdown = false, hideIcon = false }: { inDropdown?: boolean; hideIcon?: boolean }) => {
+const LanguageSelector = ({
+  inDropdown = false,
+  hideIcon = false
+}: {
+  inDropdown?: boolean;
+  hideIcon?: boolean;
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLLIElement>(null);
 
@@ -33,17 +39,22 @@ const LanguageSelector = ({ inDropdown = false, hideIcon = false }: { inDropdown
   }, []);
 
   return (
-    <li className={`${styles.socialDropdown}${inDropdown ? ` ${styles.inDropdown}` : ''}`} ref={dropdownRef}>
+    <li
+      className={`${styles.socialDropdown}${
+        inDropdown ? ` ${styles.inDropdown}` : ''
+      }`}
+      ref={dropdownRef}
+    >
       {inDropdown ? (
         <a
           href="#"
-          onClick={(e) => { e.preventDefault(); setIsOpen(!isOpen); }}
+          onClick={(e) => {
+            e.preventDefault();
+            setIsOpen(!isOpen);
+          }}
           aria-label={t('HEADER.LANGUAGE_SELECTOR.LANGUAGES')}
         >
-          <BsTranslate />{' '}
-          <span>
-            {t('HEADER.LANGUAGE_SELECTOR.LANGUAGE')}
-          </span>
+          <BsTranslate /> <span>{t('HEADER.LANGUAGE_SELECTOR.LANGUAGE')}</span>
         </a>
       ) : (
         <button

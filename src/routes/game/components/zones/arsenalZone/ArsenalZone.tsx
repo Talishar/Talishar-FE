@@ -15,9 +15,11 @@ import useWindowDimensions from '../../../../../hooks/useWindowDimensions';
 import { parseHtmlToReactElements } from 'utils/ParseEscapedString';
 import { wrapKeywordsInNodes } from '../../elements/keywordPopover';
 import useOpponentPresencePrompt from 'hooks/useOpponentPresencePrompt';
+import { useTranslation } from 'react-i18next';
 
 export default function ArsenalZone(prop: Displayrow) {
   const { isPlayer } = prop;
+  const { t } = useTranslation();
 
   const isSpectator = useAppSelector((state: RootState) => {
     return state.game.gameInfo.playerID === 3;
@@ -72,17 +74,23 @@ export default function ArsenalZone(prop: Displayrow) {
     return (
       <div className={styles.arsenalContainer}>
         <div className={styles.arsenalZone}>
-          Arsenal
+          {t('ZONES.ARSENAL')}
           {destroyCard && (
             <div
               key={`arsenalDestroyAnim-${arsenalDestroyTrigger}`}
               className={styles.arsenalDestroyContainer}
             >
               <div className={styles.arsenalDestroyTopPiece}>
-                <CardDisplay card={{ cardNumber: destroyCard }} isPlayer={isPlayer} />
+                <CardDisplay
+                  card={{ cardNumber: destroyCard }}
+                  isPlayer={isPlayer}
+                />
               </div>
               <div className={styles.arsenalDestroyBottomPiece}>
-                <CardDisplay card={{ cardNumber: destroyCard }} isPlayer={isPlayer} />
+                <CardDisplay
+                  card={{ cardNumber: destroyCard }}
+                  isPlayer={isPlayer}
+                />
               </div>
             </div>
           )}
@@ -111,7 +119,10 @@ export default function ArsenalZone(prop: Displayrow) {
                   key={`arsenalFlipAnimation-${arsenalFlipTrigger}`}
                   className={styles.arsenalFlipCard}
                 >
-                  <CardDisplay card={{ cardNumber: flipCard }} isPlayer={isPlayer} />
+                  <CardDisplay
+                    card={{ cardNumber: flipCard }}
+                    isPlayer={isPlayer}
+                  />
                 </div>
               )}
             </div>
@@ -123,10 +134,16 @@ export default function ArsenalZone(prop: Displayrow) {
             className={styles.arsenalDestroyContainer}
           >
             <div className={styles.arsenalDestroyTopPiece}>
-              <CardDisplay card={{ cardNumber: destroyCard }} isPlayer={isPlayer} />
+              <CardDisplay
+                card={{ cardNumber: destroyCard }}
+                isPlayer={isPlayer}
+              />
             </div>
             <div className={styles.arsenalDestroyBottomPiece}>
-              <CardDisplay card={{ cardNumber: destroyCard }} isPlayer={isPlayer} />
+              <CardDisplay
+                card={{ cardNumber: destroyCard }}
+                isPlayer={isPlayer}
+              />
             </div>
           </div>
         )}
@@ -167,7 +184,7 @@ const ArsenalPrompt = React.memo(() => {
     turnPhase === 'CHOOSEHAND' ||
     turnPhase === 'MAYCHOOSEHAND' ||
     turnPhase === 'MAYCHOOSEHANDHEAVE';
-    
+
   const buttons = playerPrompt?.buttons?.map((button: Button, ix: number) => {
     return (
       <div

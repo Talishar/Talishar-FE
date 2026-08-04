@@ -10,7 +10,7 @@ import { getGameInfo } from 'features/game/GameSlice';
 import { useTranslation } from 'react-i18next';
 
 const ChooseFirstTurn = () => {
-    const { t } = useTranslation();
+  const { t } = useTranslation();
   const [chooseFirstPlayer, chooseFirstPlayerData] =
     useChooseFirstPlayerMutation();
   const { gameID, playerID, authKey } = useAppSelector(
@@ -74,7 +74,7 @@ const ChooseFirstTurn = () => {
             <div className={styles.icon}>
               <TbHexagonNumber1 />
             </div>
-	    {t('GAME_LOBBY.FIRST')}
+            {t('GAME_LOBBY.FIRST')}
           </button>
           <button
             className={styles.secondButton}
@@ -85,7 +85,7 @@ const ChooseFirstTurn = () => {
             <div className={styles.icon}>
               <TbHexagonNumber2 />
             </div>
-	    {t('GAME_LOBBY.SECOND')}
+            {t('GAME_LOBBY.SECOND')}
           </button>
         </div>
       </article>

@@ -67,7 +67,8 @@
   background-color: var(--theme-dropdown-background, #0e0e11);
   border: 1px solid var(--theme-dropdown-border, #1b1b28);
   border-radius: 8px;
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.04);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.55),
+    0 0 0 1px rgba(255, 255, 255, 0.04);
   z-index: 200;
   list-style: none;
   margin: 0;

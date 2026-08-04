@@ -105,11 +105,7 @@
   inset: 5%;
   z-index: -1;
   border-radius: 45%;
-  background: radial-gradient(
-    circle,
-    var(--movement-glow) 0%,
-    transparent 70%
-  );
+  background: radial-gradient(circle, var(--movement-glow) 0%, transparent 70%);
   opacity: 0.45;
   transform: scale(1.08);
   pointer-events: none;
@@ -192,8 +188,7 @@
   height: 3px;
   border-radius: 50%;
   background: rgba(220, 205, 178, 0.68);
-  box-shadow:
-    17px 3px 0 -0.5px rgba(200, 184, 157, 0.48),
+  box-shadow: 17px 3px 0 -0.5px rgba(200, 184, 157, 0.48),
     42px -1px 0 -0.5px rgba(200, 184, 157, 0.55),
     59px 3px 0 -1px rgba(200, 184, 157, 0.42);
 }

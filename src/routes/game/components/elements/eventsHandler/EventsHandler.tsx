@@ -20,6 +20,7 @@ import {
 import { shallowEqual } from 'react-redux';
 import { Toast } from 'react-hot-toast';
 import styles from './EventsHandler.module.css';
+import { useTranslation } from 'react-i18next';
 import MovementEventCard, {
   MOVEMENT_TOAST_OPTIONS,
   MovementEventType
@@ -31,17 +32,20 @@ const DismissibleToast = ({
 }: {
   t: Toast;
   children: React.ReactNode;
-}) => (
-  <div
-    className={styles.card}
-    onClick={() => toast.dismiss(t.id)}
-    role="button"
-    tabIndex={0}
-    title="Click to dismiss"
-  >
-    {children}
-  </div>
-);
+}) => {
+  const { t: tr } = useTranslation();
+  return (
+    <div
+      className={styles.card}
+      onClick={() => toast.dismiss(t.id)}
+      role="button"
+      tabIndex={0}
+      title={tr('EVENTS.DISMISS')}
+    >
+      {children}
+    </div>
+  );
+};
 import {
   setShuffling,
   setAddBotDeck,
@@ -77,6 +81,7 @@ const parseCardEvent = (
 };
 
 export const EventsHandler = React.memo(() => {
+  const { t } = useTranslation();
   const events = useAppSelector(
     (state: RootState) => state.game.events,
     shallowEqual
@@ -443,8 +448,8 @@ export const EventsHandler = React.memo(() => {
             <div className={styles.container}>
               <div className={styles.dialogHeader}>{modal}</div>
               <div className={styles.dialogFooter}>
-                <button onClick={clickYes}>Yes</button>
-                <button onClick={clickNo}>No</button>
+                <button onClick={clickYes}>{t('GAME_LOBBY.YES')}</button>
+                <button onClick={clickNo}>{t('GAME_LOBBY.NO')}</button>
               </div>
             </div>
           </dialog>,

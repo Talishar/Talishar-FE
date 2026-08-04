@@ -36,14 +36,18 @@ const Index = () => {
   useEffect(() => {
     if (!showAds) {
       document
-        .querySelectorAll('[id^="reviq-"], [id^="prims_"], [id^="primis"], [class*="primis"], [data-ad="video"]')
-        .forEach(el => el.remove());
+        .querySelectorAll(
+          '[id^="reviq-"], [id^="prims_"], [id^="primis"], [class*="primis"], [data-ad="video"]'
+        )
+        .forEach((el) => el.remove());
       return;
     }
 
     document
-      .querySelectorAll('[id^="reviq-"], [id^="prims_"], [id^="primis"], [class*="primis"], [data-ad="video"]')
-      .forEach(el => el.remove());
+      .querySelectorAll(
+        '[id^="reviq-"], [id^="prims_"], [id^="primis"], [class*="primis"], [data-ad="video"]'
+      )
+      .forEach((el) => el.remove());
 
     const videoDiv = document.createElement('div');
     videoDiv.setAttribute('data-ad', 'video');
@@ -57,7 +61,10 @@ const Index = () => {
     };
     hideAnchors();
     const observer = new MutationObserver(hideAnchors);
-    observer.observe(document.documentElement, { childList: true, subtree: true });
+    observer.observe(document.documentElement, {
+      childList: true,
+      subtree: true
+    });
     return () => {
       observer.disconnect();
     };
@@ -116,15 +123,27 @@ const Index = () => {
 
   return (
     <main className={styles.main}>
-      <div className={`${styles.bannerSection}${isLoggedIn && isBannerHidden ? ` ${styles.bannerSectionCompact}` : ''}`}>
+      <div
+        className={`${styles.bannerSection}${
+          isLoggedIn && isBannerHidden ? ` ${styles.bannerSectionCompact}` : ''
+        }`}
+      >
         {isLoggedIn && (
           <button
             type="button"
             className={styles.bannerToggle}
             onClick={handleToggleBanner}
             aria-pressed={isBannerHidden}
-            aria-label={isBannerHidden ? t('HOME.HERO.EXPAND_BANNER') : t('HOME.HERO.COLLAPSE_BANNER')}
-            title={isBannerHidden ? t('HOME.HERO.EXPAND_BANNER') : t('HOME.HERO.COLLAPSE_BANNER')}
+            aria-label={
+              isBannerHidden
+                ? t('HOME.HERO.EXPAND_BANNER')
+                : t('HOME.HERO.COLLAPSE_BANNER')
+            }
+            title={
+              isBannerHidden
+                ? t('HOME.HERO.EXPAND_BANNER')
+                : t('HOME.HERO.COLLAPSE_BANNER')
+            }
           >
             {isBannerHidden ? <BsChevronDown /> : <BsChevronUp />}
           </button>
@@ -133,18 +152,20 @@ const Index = () => {
         <div className={styles.bannerOverlay} />
         <div className={styles.bannerContent}>
           {!isBannerHidden && (
-            <img src={TalisharLogo} alt={t('HOME.HERO.LOGO_ALT')} className={styles.heroLogo} />
+            <img
+              src={TalisharLogo}
+              alt={t('HOME.HERO.LOGO_ALT')}
+              className={styles.heroLogo}
+            />
           )}
           {!isBannerHidden && (
             <>
-              <h1 className={styles.heroTitle}>
-                {t('HOME.HERO.TITLE')}
-              </h1>
-              <p className={styles.heroSubtitle}>
-                {t('HOME.HERO.SUBTITLE')}
-              </p>
+              <h1 className={styles.heroTitle}>{t('HOME.HERO.TITLE')}</h1>
+              <p className={styles.heroSubtitle}>{t('HOME.HERO.SUBTITLE')}</p>
               <div className={styles.heroCta}>
-                <a href="#games" className={styles.heroCtaPrimary}>{t('HOME.HERO.JOIN_CTA')}</a>
+                <a href="#games" className={styles.heroCtaPrimary}>
+                  {t('HOME.HERO.JOIN_CTA')}
+                </a>
                 {!isSupporter && (
                   <a
                     href={TALISHAR_METAFY_URL}
@@ -163,7 +184,11 @@ const Index = () => {
       <div id="games" className={styles.contentSection}>
         <QuickJoinProvider>
           <div className={styles.gridWrapper}>
-            <div className={`${styles.grid}${!isLoggedIn ? ` ${styles.gridLoggedOut}` : ''}`}>
+            <div
+              className={`${styles.grid}${
+                !isLoggedIn ? ` ${styles.gridLoggedOut}` : ''
+              }`}
+            >
               <div className={styles.gameListContainer}>
                 <GameList />
               </div>

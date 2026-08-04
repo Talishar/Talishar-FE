@@ -11,7 +11,6 @@ import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import PlayerName from '../elements/playerName/PlayerName';
 
-
 export default function RightColumn() {
   const isStreamerMode =
     useSetting({ settingName: IS_STREAMER_MODE })?.value === '1';
@@ -22,7 +21,7 @@ export default function RightColumn() {
 
   return (
     <>
-    {/* Mobile */}
+      {/* Mobile */}
       <div className={styles.mobileTopBar}>
         {!isSpectator && (
           <div className={styles.mobileTopBarName}>

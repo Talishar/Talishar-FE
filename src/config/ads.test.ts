@@ -13,13 +13,10 @@ describe('ad-free routes', () => {
     expect(isAdFreeRoute(pathname)).toBe(true);
   });
 
-  it.each([
-    '/',
-    '/about',
-    '/learn',
-    '/game/join/12345',
-    '/game/lobby/12345'
-  ])('allows the configured ad provider on %s', (pathname) => {
-    expect(isAdFreeRoute(pathname)).toBe(false);
-  });
+  it.each(['/', '/about', '/learn', '/game/join/12345', '/game/lobby/12345'])(
+    'allows the configured ad provider on %s',
+    (pathname) => {
+      expect(isAdFreeRoute(pathname)).toBe(false);
+    }
+  );
 });

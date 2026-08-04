@@ -37,7 +37,7 @@ const StickyFooter = ({
 }: DeckSize) => {
   // Initial stuff to allow the lang to change
   const { t } = useTranslation();
-  
+
   const { errors, values, isValid } = useFormikContext<DeckResponse>();
   const footerRef = useRef<HTMLDivElement>(null);
   const [copied, setCopied] = useState(false);
@@ -89,7 +89,8 @@ const StickyFooter = ({
   const handleClipboardCopy = () => {
     const text = window.location.href.replace('lobby', 'join');
     if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(text)
+      navigator.clipboard
+        .writeText(text)
         .then(triggerCopiedFeedback)
         .catch(() => {
           fallbackCopyToClipboard(text);
@@ -130,10 +131,14 @@ const StickyFooter = ({
           {/* Left: copy + sync status */}
           <div className={styles.syncSection}>
             <button
-              className={classNames(styles.iconButton, { [styles.iconButtonCopied]: copied })}
+              className={classNames(styles.iconButton, {
+                [styles.iconButtonCopied]: copied
+              })}
               onClick={handleClipboardCopy}
               type="button"
-              title={copied ? t('GAME_LOBBY.COPIED') : t('GAME_LOBBY.COPY_INVITE')}
+              title={
+                copied ? t('GAME_LOBBY.COPIED') : t('GAME_LOBBY.COPY_INVITE')
+              }
             >
               {copied ? <HiClipboardCheck /> : <HiClipboardCopy />}
             </button>
@@ -168,7 +173,7 @@ const StickyFooter = ({
                 disabled={isUnreadyLoading || needToDoDisclaimer}
                 onClick={onUnreadySideboard}
               >
-		{t('GAME_LOBBY.EDIT_DECK')}
+                {t('GAME_LOBBY.EDIT_DECK')}
               </button>
             ) : (
               <button

@@ -6,22 +6,19 @@ export const GLOSSARY: KeywordEntry[] = [
   {
     id: 'go-again',
     name: 'Go again',
-    short:
-      'Gain 1 action point.',
+    short: 'Gain 1 action point.',
     category: 'ability'
   },
   {
     id: 'dominate',
     name: 'Dominate',
-    short:
-      'This attack cannot be defended by more than one card from hand.',
+    short: 'This attack cannot be defended by more than one card from hand.',
     category: 'ability'
   },
   {
     id: 'overpower',
     name: 'Overpower',
-    short:
-      'This attack cannot be defended by more than one action card.',
+    short: 'This attack cannot be defended by more than one action card.',
     category: 'ability'
   },
   {
@@ -50,7 +47,8 @@ export const GLOSSARY: KeywordEntry[] = [
   {
     id: 'blade-break',
     name: 'Blade Break',
-    short: 'If this equipment defends, destroy it when the combat chain closes.',
+    short:
+      'If this equipment defends, destroy it when the combat chain closes.',
     category: 'ability',
     crOverrideUrl: 'https://rules.fabtcg.com/en/cr/08-keywords/#cr8.3.3'
   },
@@ -108,21 +106,21 @@ export const GLOSSARY: KeywordEntry[] = [
   {
     id: 'legendary',
     name: 'Legendary',
-    short:
-      'You may only have 1 copy of this card in your constructed deck.',
+    short: 'You may only have 1 copy of this card in your constructed deck.',
     category: 'ability'
   },
   {
     id: 'specialization',
     name: 'Specialization',
-    short: 'You can only include this card in your deck if the named hero is your hero.',
+    short:
+      'You can only include this card in your deck if the named hero is your hero.',
     category: 'ability'
   },
   {
     id: 'meld',
     name: 'Meld',
     short:
-      'You may pay twice this card\'s base cost to play both halves of it as one card.',
+      "You may pay twice this card's base cost to play both halves of it as one card.",
     category: 'ability'
   },
   {
@@ -151,8 +149,7 @@ export const GLOSSARY: KeywordEntry[] = [
   {
     id: 'piercing',
     name: 'Piercing',
-    short:
-      'If this is defended by equipment, it gets +X power.',
+    short: 'If this is defended by equipment, it gets +X power.',
     category: 'ability',
     parameterized: true
   },
@@ -173,7 +170,8 @@ export const GLOSSARY: KeywordEntry[] = [
   {
     id: 'essence',
     name: 'Essence',
-    short: 'You may have cards of the listed types in your deck as though your hero had those types.',
+    short:
+      'You may have cards of the listed types in your deck as though your hero had those types.',
     category: 'ability'
   },
   {
@@ -186,8 +184,7 @@ export const GLOSSARY: KeywordEntry[] = [
   {
     id: 'ambush',
     name: 'Ambush',
-    short:
-      'While this is in your arsenal, you may defend with it.',
+    short: 'While this is in your arsenal, you may defend with it.',
     category: 'ability'
   },
   {
@@ -208,8 +205,7 @@ export const GLOSSARY: KeywordEntry[] = [
   {
     id: 'crush',
     name: 'Crush',
-    short:
-      'Its accompanying ability applies when this deals 4 or more damage.',
+    short: 'Its accompanying ability applies when this deals 4 or more damage.',
     category: 'label'
   },
   {
@@ -236,8 +232,7 @@ export const GLOSSARY: KeywordEntry[] = [
   {
     id: 'tower',
     name: 'Tower',
-    short:
-      'Its accompanying ability applies if this has 13 or more power.',
+    short: 'Its accompanying ability applies if this has 13 or more power.',
     category: 'label'
   },
   {
@@ -250,15 +245,13 @@ export const GLOSSARY: KeywordEntry[] = [
   {
     id: 'channel',
     name: 'Channel',
-    short:
-      'Its accompanying ability applies if this has go again.',
+    short: 'Its accompanying ability applies if this has go again.',
     category: 'label'
   },
   {
     id: 'material',
     name: 'Material',
-    short:
-      'This card gets its bonus effect while under another permanent.',
+    short: 'This card gets its bonus effect while under another permanent.',
     category: 'label'
   },
   {
@@ -324,7 +317,8 @@ export const GLOSSARY: KeywordEntry[] = [
   {
     id: 'item',
     name: 'Item',
-    short: 'A permanent, usually with activated abilities; often starts or gains counters.',
+    short:
+      'A permanent, usually with activated abilities; often starts or gains counters.',
     category: 'type',
     noAutoLink: true
   },
@@ -347,14 +341,16 @@ export const GLOSSARY: KeywordEntry[] = [
   {
     id: 'demi-hero',
     name: 'Demi-Hero',
-    short: 'An arena card distinct from a hero card; it can only become your hero if you do not already control one.',
+    short:
+      'An arena card distinct from a hero card; it can only become your hero if you do not already control one.',
     category: 'type',
     noAutoLink: true
   },
   {
     id: 'figment',
     name: 'Figment',
-    short: 'A subtype for an aura-like permanent that enters the arena when it resolves.',
+    short:
+      'A subtype for an aura-like permanent that enters the arena when it resolves.',
     category: 'type',
     noAutoLink: true
   },
@@ -364,7 +360,7 @@ export const GLOSSARY: KeywordEntry[] = [
     id: 'intimidate',
     name: 'Intimidate',
     short:
-      'Banish a random card from that player\'s hand face-down; return it to their hand at the beginning of the end phase.',
+      "Banish a random card from that player's hand face-down; return it to their hand at the beginning of the end phase.",
     category: 'effect'
   },
   {
@@ -386,48 +382,50 @@ export const GLOSSARY: KeywordEntry[] = [
   {
     id: 'banish',
     name: 'Banish',
-    short:
-      'Move the object to its owner\'s banished zone.',
+    short: "Move the object to its owner's banished zone.",
     category: 'effect',
     noAutoLink: true
   },
   {
     id: 'reload',
     name: 'Reload',
-    short: 'You may put a card from your hand face-down into your arsenal if all your arsenal zones are empty.',
+    short:
+      'You may put a card from your hand face-down into your arsenal if all your arsenal zones are empty.',
     category: 'effect'
   },
   {
     id: 'charge',
     name: 'Charge',
-    short: 'Move a card from your hand to your hero\'s soul.',
+    short: "Move a card from your hand to your hero's soul.",
     category: 'effect'
   },
   {
     id: 'amp',
     name: 'Amp',
-    short: 'Your next arcane damage source this turn deals X more arcane damage.',
+    short:
+      'Your next arcane damage source this turn deals X more arcane damage.',
     category: 'effect',
     parameterized: true
   },
   {
     id: 'transcend',
     name: 'Transcend',
-    short: 'Put the source of the effect into its owner\'s hand with its back face active.',
+    short:
+      "Put the source of the effect into its owner's hand with its back face active.",
     category: 'effect'
   },
   {
     id: 'transform',
     name: 'Transform',
-    short: 'Turn a card or permanent into the object stated by the effect, keeping its zone.',
+    short:
+      'Turn a card or permanent into the object stated by the effect, keeping its zone.',
     category: 'effect',
     noAutoLink: true
   },
   {
     id: 'mark',
     name: 'Mark',
-    short:
-      'The hero gains the marked condition.',
+    short: 'The hero gains the marked condition.',
     category: 'effect',
     aliases: ['Marked'],
     noAutoLink: true
@@ -523,8 +521,7 @@ export const GLOSSARY: KeywordEntry[] = [
   {
     id: 'life',
     name: 'Life',
-    short:
-      'Your hero’s health total; when it reaches 0 you lose the game.',
+    short: 'Your hero’s health total; when it reaches 0 you lose the game.',
     category: 'term',
     noAutoLink: true,
     crOverrideUrl: CR_BASE

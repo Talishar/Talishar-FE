@@ -220,7 +220,8 @@ td {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease,
+    color 0.2s ease;
 }
 
 .infoButton:hover {
@@ -509,7 +510,8 @@ td {
   cursor: pointer;
   font-size: 0.95em;
   font-weight: 600;
-  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease,
+    color 0.2s ease;
   width: auto;
 }
 
@@ -653,7 +655,11 @@ td {
 /* Supporter Badge - Highlight Card: gold border + subtle glow */
 .supporterBadge {
   border: 1px solid rgba(201, 169, 97, 0.25);
-  background: linear-gradient(135deg, rgba(201, 169, 97, 0.06) 0%, rgba(201, 169, 97, 0.02) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(201, 169, 97, 0.06) 0%,
+    rgba(201, 169, 97, 0.02) 100%
+  );
   box-shadow: 0 0 20px rgba(201, 169, 97, 0.05);
 }
 

@@ -20,7 +20,7 @@ import styles from './LoadReplay.module.css';
 import { GameLocationState } from 'interface/GameLocationState';
 import PageBanner from 'components/PageBanner/PageBanner';
 import { Link } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 
 const LoadReplay = () => {
   const { t } = useTranslation();
@@ -28,41 +28,34 @@ const LoadReplay = () => {
     <main className={styles.pageWrapper}>
       <PageBanner
         title={t('PAGES.REPLAY_TOOL')}
-        subtitle="Review your saved games, revisit key turns, and improve your next match."
+        subtitle={t('LOAD_REPLAY.SUBTITLE')}
       />
       <article className={styles.articleContainer}>
         <ReplayGame />
         <div className={styles.betaDisclaimer}>
-          <strong>⚠️ The Replay Tool is currently in Beta</strong>
+          <strong>{t('LOAD_REPLAY.BETA_TITLE')}</strong>
           <p>
-            The Replay Tool is currently in beta. If you encounter any issues,
-            please report them in our Discord{' '}
-            <a
-              href={TALISHAR_DISCORD_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              #bug-reports
-            </a>{' '}
-            channel with your{' '}
-            <span className={styles.betaDisclaimerHighlight}>
-              Talishar username
-            </span>{' '}
-            and{' '}
-            <span className={styles.betaDisclaimerHighlight}>
-              replay number
-            </span>
-            .
+            <Trans
+              i18nKey="LOAD_REPLAY.BETA_BODY"
+              components={{
+                2: (
+                  <a
+                    href={TALISHAR_DISCORD_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  />
+                ),
+                6: <span className={styles.betaDisclaimerHighlight} />,
+                10: <span className={styles.betaDisclaimerHighlight} />
+              }}
+            />
           </p>
+          <p>{t('LOAD_REPLAY.BETA_NOTE')}</p>
           <p>
-            Please note: Replays you save might randomly stop working as engine
-            changes get made during development.
-          </p>
-          <p>
-            Replay saving is available to Metafy supporters. Everyone gets a
-            base number of save slots, and higher support tiers unlock
-            additional slots so you can keep more games around at once. See the{' '}
-            <Link to="/premium">Premium</Link> page for tier details.
+            <Trans
+              i18nKey="LOAD_REPLAY.SUPPORTER_INFO"
+              components={{ 2: <Link to="/premium" /> }}
+            />
           </p>
         </div>
       </article>
@@ -71,6 +64,7 @@ const LoadReplay = () => {
 };
 
 const ReplayGame = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [loadReplay, loadReplayResult] = useLoadReplayMutation();
@@ -215,24 +209,27 @@ const ReplayGame = () => {
       >
         <div className={styles.savedReplaysHeader}>
           <div>
-            <h2 id="saved-replays-heading">Your saved replays</h2>
-            <p>Choose a replay to begin reviewing the match.</p>
+            <h2 id="saved-replays-heading">
+              {t('LOAD_REPLAY.SAVED_REPLAYS_TITLE')}
+            </h2>
+            <p>{t('LOAD_REPLAY.SAVED_REPLAYS_SUBTITLE')}</p>
             <p className={styles.favoriteExplanation}>
-              Favorites are protected from automatic cleanup. When replay
-              storage is full, the oldest non-favorite replay is removed.
+              {t('LOAD_REPLAY.FAVORITES_EXPLANATION')}
             </p>
           </div>
           {isLoadingSavedReplays && (
-            <span className={styles.replaysStatus}>Loading...</span>
+            <span className={styles.replaysStatus}>
+              {t('LOAD_REPLAY.LOADING')}
+            </span>
           )}
         </div>
         {savedReplayData?.loggedIn === false ? (
           <p className={styles.emptyReplays}>
-            Sign in to view your saved replays.
+            {t('LOAD_REPLAY.SIGN_IN_TO_VIEW')}
           </p>
         ) : !isLoadingSavedReplays && savedReplays.length === 0 ? (
           <p className={styles.emptyReplays}>
-            No saved replays yet. Save a completed game to find it here.
+            {t('LOAD_REPLAY.NO_SAVED_REPLAYS')}
           </p>
         ) : (
           <div className={styles.replayList}>
@@ -247,7 +244,9 @@ const ReplayGame = () => {
                   disabled={isLoadingReplay}
                 >
                   <span className={styles.replayNumber}>
-                    Replay #{replay.replayNumber}
+                    {t('LOAD_REPLAY.REPLAY_NUMBER', {
+                      number: replay.replayNumber
+                    })}
                   </span>
                   <span className={styles.replayPlayers}>
                     {replayLabel(replay)}
@@ -284,7 +283,7 @@ const ReplayGame = () => {
                     onClick={() => shareSavedReplay(replay)}
                     disabled={isSharing}
                     aria-label={`Copy a shareable link for Replay #${replay.replayNumber}`}
-                    title="Copy shareable link"
+                    title={t('LOAD_REPLAY.COPY_SHAREABLE_LINK')}
                   >
                     <MdShare />
                   </button>
@@ -318,7 +317,9 @@ const ReplayGame = () => {
 
       {errors.root?.serverError && (
         <div className={styles.errorContainer}>
-          <strong className={styles.errorTitle}>⚠️ Error Loading Replay</strong>
+          <strong className={styles.errorTitle}>
+            {t('LOAD_REPLAY.ERROR_LOADING_REPLAY')}
+          </strong>
 
           <div className={styles.errorMessage}>
             {errors.root.serverError.message}
@@ -326,33 +327,42 @@ const ReplayGame = () => {
 
           <details className={styles.troubleshootingDetails}>
             <summary className={styles.troubleshootingSummary}>
-              Troubleshooting Steps
+              {t('LOAD_REPLAY.TROUBLESHOOTING_STEPS')}
             </summary>
             <div className={styles.troubleshootingContent}>
               <ol className={styles.troubleshootingList}>
                 <li className={styles.troubleshootingListItem}>
-                  Open browser console: Press{' '}
-                  <kbd className={styles.kbd}>F12</kbd> →{' '}
-                  <strong>Console</strong> tab
+                  <Trans
+                    i18nKey="LOAD_REPLAY.STEP_OPEN_CONSOLE"
+                    components={{
+                      2: <kbd className={styles.kbd} />,
+                      5: <strong />
+                    }}
+                  />
                 </li>
                 <li className={styles.troubleshootingListItem}>
-                  Look for{' '}
-                  <code className={styles.codeInline}>
-                    "Replay load error:"
-                  </code>{' '}
-                  message
+                  <Trans
+                    i18nKey="LOAD_REPLAY.STEP_LOOK_FOR"
+                    components={{
+                      2: <code className={styles.codeInline} />
+                    }}
+                  />
                 </li>
                 <li className={styles.troubleshootingListItem}>
-                  Verify replay directory exists at:
+                  {t('LOAD_REPLAY.VERIFY_DIRECTORY')}
                   <div className={styles.pathBox}>
                     /Talishar/Replays/[replayNumber]/
                   </div>
                 </li>
                 <li className={styles.troubleshootingListItem}>
-                  Ensure both required files exist:
+                  {t('LOAD_REPLAY.ENSURE_FILES')}
                   <div className={styles.filesList}>
-                    <div className={styles.fileItem}>✓ origGamestate.txt</div>
-                    <div className={styles.fileItemLast}>✓ commandfile.txt</div>
+                    <div className={styles.fileItem}>
+                      {t('LOAD_REPLAY.FILE_ORIG')}
+                    </div>
+                    <div className={styles.fileItemLast}>
+                      {t('LOAD_REPLAY.FILE_COMMAND')}
+                    </div>
                   </div>
                 </li>
               </ol>
@@ -362,7 +372,9 @@ const ReplayGame = () => {
       )}
 
       {isSubmitting && (
-        <div className={styles.loadingState}>Loading replay...</div>
+        <div className={styles.loadingState}>
+          {t('LOAD_REPLAY.LOADING_REPLAY')}
+        </div>
       )}
     </form>
   );

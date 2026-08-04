@@ -54,7 +54,9 @@ export const CardDisplay = (prop: CardProp) => {
       ? card.controller !== viewerID
       : false;
   const cardBack = useAppSelector((state: RootState) =>
-    !isOpponentCard ? state.game.playerOne.CardBack : state.game.playerTwo.CardBack
+    !isOpponentCard
+      ? state.game.playerOne.CardBack
+      : state.game.playerTwo.CardBack
   ) ?? { cardNumber: '' };
   const { getLanguage } = useLanguageSelector();
   const [showSubCards, setShowSubCards] = useState(false);
@@ -142,7 +144,6 @@ export const CardDisplay = (prop: CardProp) => {
     return divs;
   };
 
-
   return (
     <CardPopUp
       cardNumber={card.cardNumber}
@@ -201,7 +202,14 @@ export const CardDisplay = (prop: CardProp) => {
       )}
       <CountersOverlay
         {...card}
-        label={isTargeted ? card.label?.replace('Targeted', '').replace(/^\/|\/$|^\s*\/\s*/g, '').trim() : card.label}
+        label={
+          isTargeted
+            ? card.label
+                ?.replace('Targeted', '')
+                .replace(/^\/|\/$|^\s*\/\s*/g, '')
+                .trim()
+            : card.label
+        }
         num={num}
         activeCombatChain={activeCombatChain}
       />

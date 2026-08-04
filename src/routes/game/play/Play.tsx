@@ -42,9 +42,7 @@ import { PanelProvider } from '../components/leftColumn/PanelContext';
 import { RootState } from 'app/Store';
 import { PROCESS_INPUT } from 'appConstants';
 import usePlayerPresenceReporter from 'hooks/usePlayerPresenceReporter';
-import useAdScript, {
-  wasAdProviderLoadedInDocument
-} from 'hooks/useAdScript';
+import useAdScript, { wasAdProviderLoadedInDocument } from 'hooks/useAdScript';
 
 const TOAST_STYLE: React.CSSProperties = {
   background: 'var(--theme-tertiary)',
@@ -235,7 +233,7 @@ function Play({ isRoguelike }: { isRoguelike: boolean }) {
               dispatch(submitButton({ button: { mode: PROCESS_INPUT.PASS } }))
             }
           >
-            Advance replay
+            {t('PLAY.ADVANCE_REPLAY')}
           </button>
         )}
       </div>

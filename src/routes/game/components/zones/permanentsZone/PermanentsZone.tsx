@@ -11,7 +11,10 @@ import { selectPermanentsAsStack } from '../../../../../features/game/GameSlice'
 
 const PERMANENT_INITIAL = { opacity: 0, x: -100 };
 const PERMANENT_ANIMATE = { opacity: 1, x: 0 };
-const PERMANENT_EXIT = { opacity: 0, transition: { duration: 0.3, ease: 'easeOut' as const } };
+const PERMANENT_EXIT = {
+  opacity: 0,
+  transition: { duration: 0.3, ease: 'easeOut' as const }
+};
 
 export interface CardStack {
   card: Card;

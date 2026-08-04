@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import styles from '../Menu.module.css';
 import localStyles from './ShowMobileChat.module.css';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
@@ -9,8 +10,11 @@ import ChatBoxMobile from '../../../elements/chatBox/ChatBoxMobile';
 
 const ShowMobileChat = () => {
   const showChatModal = useAppSelector((state) => state.game.showChatModal);
-  const unreadChatCount = useAppSelector((state) => state.game.unreadChatCount ?? 0);
+  const unreadChatCount = useAppSelector(
+    (state) => state.game.unreadChatCount ?? 0
+  );
   const dispatch = useAppDispatch();
+  const { t } = useTranslation();
 
   const handleClickShowMobileChatToggle = (
     e: React.MouseEvent<HTMLButtonElement>
@@ -31,13 +35,15 @@ const ShowMobileChat = () => {
               [styles.buttonActive]: showChatModal,
               [localStyles.chatBtnUnread]: hasUnread
             })}
-            aria-label="Show Chat"
+            aria-label={t('MENU.SHOW_CHAT')}
             onClick={handleClickShowMobileChatToggle}
             data-placement="bottom"
           >
             <BsChatFill aria-hidden="true" />
           </button>
-          {hasUnread && <div className={localStyles.chatBadge} aria-hidden="true" />}
+          {hasUnread && (
+            <div className={localStyles.chatBadge} aria-hidden="true" />
+          )}
         </div>
       </div>
       {showChatModal && <ChatBoxMobile />}

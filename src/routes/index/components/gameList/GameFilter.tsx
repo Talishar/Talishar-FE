@@ -73,7 +73,7 @@ const GameFilter = ({
   const dropdownRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const [dropdownStyle, setDropdownStyle] = useState<React.CSSProperties>({});
-										
+
   // Initial stuff to allow the lang to change
   const { t, i18n, ready } = useTranslation();
 
@@ -255,9 +255,11 @@ const GameFilter = ({
     <div className={styles.filterContainer} ref={dropdownRef}>
       <button
         ref={buttonRef}
-        className={`${styles.filterButton}${hasActiveFilters ? ` ${styles.filterButtonActive}` : ''}`}
+        className={`${styles.filterButton}${
+          hasActiveFilters ? ` ${styles.filterButtonActive}` : ''
+        }`}
         onClick={() => setIsOpen(!isOpen)}
-        title={t("GAME_FILTER.FILTER_GAMES")}
+        title={t('GAME_FILTER.FILTER_GAMES')}
       >
         <span className={styles.filterIcon}>
           <IoFunnel />
@@ -277,13 +279,21 @@ const GameFilter = ({
           <div className={styles.backdrop} onClick={() => setIsOpen(false)} />
           <div className={styles.dropdown} style={dropdownStyle}>
             <div className={styles.dropdownHeader}>
-              <h5 className={styles.dropdownTitle}>{t("GAME_FILTER.FILTER_GAMES")}</h5>
+              <h5 className={styles.dropdownTitle}>
+                {t('GAME_FILTER.FILTER_GAMES')}
+              </h5>
               <div className={styles.headerActions}>
-                <button className={styles.headerActionBtn} onClick={handleResetFilters}>
-                  {t("GAME_FILTER.RESET_FILTER")}
+                <button
+                  className={styles.headerActionBtn}
+                  onClick={handleResetFilters}
+                >
+                  {t('GAME_FILTER.RESET_FILTER')}
                 </button>
-                <button className={styles.headerActionBtn} onClick={handleDeselectAll}>
-                  {t("GAME_FILTER.UNCHECK_ALL")}
+                <button
+                  className={styles.headerActionBtn}
+                  onClick={handleDeselectAll}
+                >
+                  {t('GAME_FILTER.UNCHECK_ALL')}
                 </button>
               </div>
             </div>
@@ -296,7 +306,9 @@ const GameFilter = ({
                 return (
                   <label
                     key={format.value}
-                    className={`${styles.checklistItem}${isChecked ? ` ${styles.checklistItemChecked}` : ''}`}
+                    className={`${styles.checklistItem}${
+                      isChecked ? ` ${styles.checklistItemChecked}` : ''
+                    }`}
                   >
                     <input
                       type="checkbox"

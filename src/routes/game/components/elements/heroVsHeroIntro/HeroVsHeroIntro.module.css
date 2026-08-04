@@ -1,4 +1,3 @@
-
 /* ── Container - real arena environment ──────────────────────────── */
 
 .introContainer {
@@ -86,16 +85,32 @@
   position: absolute;
   bottom: 0;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.85) 0%, transparent 65%);
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.85) 0%,
+    transparent 65%
+  );
   animation: particleFloat linear infinite;
 }
 
 @keyframes particleFloat {
-  0%   { transform: translateY(0) translateX(0);    opacity: 0; }
-  8%   { opacity: 0.65; }
-  50%  { transform: translateY(-52vh) translateX(14px); }
-  88%  { opacity: 0.3; }
-  100% { transform: translateY(-105vh) translateX(-8px); opacity: 0; }
+  0% {
+    transform: translateY(0) translateX(0);
+    opacity: 0;
+  }
+  8% {
+    opacity: 0.65;
+  }
+  50% {
+    transform: translateY(-52vh) translateX(14px);
+  }
+  88% {
+    opacity: 0.3;
+  }
+  100% {
+    transform: translateY(-105vh) translateX(-8px);
+    opacity: 0;
+  }
 }
 
 /* ── Layout ──────────────────────────────────────────────────────── */
@@ -134,7 +149,7 @@
   background: radial-gradient(
     ellipse at center bottom,
     rgba(255, 215, 120, 0.42) 0%,
-    rgba(200, 148, 45, 0.20) 42%,
+    rgba(200, 148, 45, 0.2) 42%,
     transparent 70%
   );
   filter: blur(36px);
@@ -150,8 +165,12 @@
 }
 
 @keyframes ambientPulse {
-  from { filter: blur(32px) brightness(0.85); }
-  to   { filter: blur(46px) brightness(1.18); }
+  from {
+    filter: blur(32px) brightness(0.85);
+  }
+  to {
+    filter: blur(46px) brightness(1.18);
+  }
 }
 
 /*
@@ -215,10 +234,24 @@
 }
 
 @keyframes sheenPass {
-  0%,  4%  { transform: skewX(-10deg) translateX(0%);   opacity: 0; }
-  6%        { transform: skewX(-10deg) translateX(0%);   opacity: 1; }
-  28%       { transform: skewX(-10deg) translateX(380%); opacity: 1; }
-  32%, 100% { transform: skewX(-10deg) translateX(380%); opacity: 0; }
+  0%,
+  4% {
+    transform: skewX(-10deg) translateX(0%);
+    opacity: 0;
+  }
+  6% {
+    transform: skewX(-10deg) translateX(0%);
+    opacity: 1;
+  }
+  28% {
+    transform: skewX(-10deg) translateX(380%);
+    opacity: 1;
+  }
+  32%,
+  100% {
+    transform: skewX(-10deg) translateX(380%);
+    opacity: 0;
+  }
 }
 
 .frameGlow {
@@ -230,9 +263,8 @@
   border-radius: var(--radius, 8px);
   pointer-events: none;
   z-index: 4;
-  box-shadow:
-    inset 0 0 28px rgba(212, 165, 38, 0.12),
-    inset 0 3px 0 rgba(255, 240, 180, 0.20);
+  box-shadow: inset 0 0 28px rgba(212, 165, 38, 0.12),
+    inset 0 3px 0 rgba(255, 240, 180, 0.2);
 }
 
 .heroCardBorder {
@@ -250,7 +282,6 @@
 .heroCardBorderPremium {
   border-color: rgba(212, 165, 38, 0.45);
 }
-
 
 .heroLabel {
   position: absolute;
@@ -278,7 +309,7 @@
   background: linear-gradient(
     to bottom,
     transparent,
-    rgba(4, 3, 0, 0.70) 40%,
+    rgba(4, 3, 0, 0.7) 40%,
     rgba(8, 5, 0, 0.88)
   );
 }
@@ -296,9 +327,7 @@
 
 .heroLabelPremium .heroName {
   color: rgba(245, 235, 205, 0.95);
-  text-shadow:
-    0 0 14px rgba(200, 155, 35, 0.35),
-    0 1px 8px rgba(0, 0, 0, 0.9);
+  text-shadow: 0 0 14px rgba(200, 155, 35, 0.35), 0 1px 8px rgba(0, 0, 0, 0.9);
 }
 
 .premiumBadge {
@@ -344,16 +373,31 @@
 }
 
 @keyframes flashBurst {
-  0%   { transform: scale(0.35); opacity: 1; }
-  65%  { opacity: 0.12; transform: scale(1.7); }
-  100% { opacity: 0; transform: scale(2.4); }
+  0% {
+    transform: scale(0.35);
+    opacity: 1;
+  }
+  65% {
+    opacity: 0.12;
+    transform: scale(1.7);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(2.4);
+  }
 }
 
 .vsText {
   font-size: 3.25rem;
   font-weight: 900;
   font-family: 'Black Ops One', 'Arial Black', sans-serif;
-  background: linear-gradient(162deg, #ffffff 0%, #e8e8e8 25%, #aaa 55%, #ffffff 85%);
+  background: linear-gradient(
+    162deg,
+    #ffffff 0%,
+    #e8e8e8 25%,
+    #aaa 55%,
+    #ffffff 85%
+  );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -403,17 +447,25 @@
 
 /* Tablet */
 @media (max-width: 1024px) {
-  .introContent { gap: 2.5rem; }
+  .introContent {
+    gap: 2.5rem;
+  }
 
-  .heroCardOuter { --bleed: 28px; }
+  .heroCardOuter {
+    --bleed: 28px;
+  }
 
   .heroCardVisual {
     width: 300px;
     height: 231px;
   }
 
-  .vsText { font-size: 1.6rem; }
-  .vsWrapper { width: 48px; }
+  .vsText {
+    font-size: 1.6rem;
+  }
+  .vsWrapper {
+    width: 48px;
+  }
 
   .ambientGlow {
     width: 240px;
@@ -424,18 +476,28 @@
 
 /* Large mobile */
 @media (max-width: 768px) {
-  .introContent { gap: 1.5rem; }
+  .introContent {
+    gap: 1.5rem;
+  }
 
-  .heroCardOuter { --bleed: 20px; }
+  .heroCardOuter {
+    --bleed: 20px;
+  }
 
   .heroCardVisual {
     width: 210px;
     height: 162px;
   }
 
-  .heroName { font-size: 0.9rem; }
-  .vsText { font-size: 1.15rem; }
-  .vsWrapper { width: 38px; }
+  .heroName {
+    font-size: 0.9rem;
+  }
+  .vsText {
+    font-size: 1.15rem;
+  }
+  .vsWrapper {
+    width: 38px;
+  }
 
   .ambientGlow {
     width: 185px;
@@ -446,21 +508,33 @@
 
 /* Small mobile */
 @media (max-width: 480px) {
-  .introContent { gap: 0.75rem; }
+  .introContent {
+    gap: 0.75rem;
+  }
 
-  .heroCardOuter { --bleed: 16px; }
+  .heroCardOuter {
+    --bleed: 16px;
+  }
 
   .heroCardVisual {
     width: 165px;
     height: 127px;
   }
 
-  .heroLabel { padding: 2rem 0.5rem 0.45rem; }
+  .heroLabel {
+    padding: 2rem 0.5rem 0.45rem;
+  }
 
-  .heroName { font-size: 0.8rem; }
+  .heroName {
+    font-size: 0.8rem;
+  }
 
-  .vsText { font-size: 0.92rem; }
-  .vsWrapper { width: 32px; }
+  .vsText {
+    font-size: 0.92rem;
+  }
+  .vsWrapper {
+    width: 32px;
+  }
 
   .ambientGlow {
     width: 152px;
@@ -479,31 +553,47 @@
 
 /* Extra small */
 @media (max-width: 360px) {
-  .heroCardOuter { --bleed: 12px; }
+  .heroCardOuter {
+    --bleed: 12px;
+  }
 
   .heroCardVisual {
     width: 132px;
     height: 102px;
   }
 
-  .heroLabel { padding: 1.6rem 0.4rem 0.35rem; }
+  .heroLabel {
+    padding: 1.6rem 0.4rem 0.35rem;
+  }
 
-  .heroName { font-size: 0.7rem; }
+  .heroName {
+    font-size: 0.7rem;
+  }
 
-  .vsText { font-size: 0.76rem; }
+  .vsText {
+    font-size: 0.76rem;
+  }
 }
 
 /* Landscape + short viewport */
 @media (orientation: landscape) and (max-height: 500px) {
-  .heroCardOuter { --bleed: 14px; }
+  .heroCardOuter {
+    --bleed: 14px;
+  }
 
   .heroCardVisual {
     width: 154px;
     height: 119px;
   }
 
-  .heroLabel { padding: 1.8rem 0.5rem 0.4rem; }
+  .heroLabel {
+    padding: 1.8rem 0.5rem 0.4rem;
+  }
 
-  .heroName { font-size: 0.8rem; }
-  .vsText { font-size: 0.88rem; }
+  .heroName {
+    font-size: 0.8rem;
+  }
+  .vsText {
+    font-size: 0.88rem;
+  }
 }

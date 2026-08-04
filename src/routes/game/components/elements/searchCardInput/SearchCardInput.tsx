@@ -6,6 +6,7 @@ import classNames from 'classnames';
 import { useAppDispatch } from 'app/Hooks';
 import { PROCESS_INPUT } from 'appConstants';
 import { submitButton } from 'features/game/GameSlice';
+import { useTranslation } from 'react-i18next';
 
 const DropdownIndicator = null;
 
@@ -23,6 +24,7 @@ const customStyles = {
 };
 
 export const SearchCardInput = () => {
+  const { t } = useTranslation();
   const [card, setCard] = useState<string>('');
   const dispatch = useAppDispatch();
 
@@ -64,7 +66,7 @@ export const SearchCardInput = () => {
       />
       <hr />
       <button className={styles.button} onClick={handleOnClick}>
-        Submit
+        {t('SEARCH_CARD.SUBMIT')}
       </button>
     </div>
   );

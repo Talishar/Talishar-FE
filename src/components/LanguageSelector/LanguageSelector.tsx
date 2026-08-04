@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useLanguageSelector } from 'hooks/useLanguageSelector';
 import { toast } from 'react-hot-toast';
 import { LOCALE_DICTIONARY, LOCALE_FLAGS } from 'utils/multilanguage/constants';
+import { useTranslation } from 'react-i18next';
 import styles from './LanguageSelector.module.css';
 
 const capitalizeFirstLetter = (text: string): string =>
@@ -14,6 +15,7 @@ const isChromiumBased = () => {
 };
 
 const LanguageSelector = () => {
+  const { t } = useTranslation();
   const { getLanguage, setLanguage } = useLanguageSelector();
   const [isToastShown, setIsToastShown] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState(getLanguage());
@@ -23,7 +25,10 @@ const LanguageSelector = () => {
 
   useEffect(() => {
     const handleOutsideClick = (e: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(e.target as Node)
+      ) {
         setIsOpen(false);
       }
     };
@@ -39,15 +44,18 @@ const LanguageSelector = () => {
     setIsOpen(false);
 
     if (!isToastShown) {
-      toast(
-        'Experimental feature only for card images at this moment. Any error report it on Discord for a quick fix. Thanks.',
-        { duration: 5000 }
-      );
+      toast(t('SETTINGS.LANGUAGE_EXPERIMENTAL_TOAST'), {
+        duration: 5000
+      });
       setIsToastShown(true);
     }
   };
 
-  const currentLabel = `${!isChromium ? (LOCALE_FLAGS[selectedLanguage] ?? '') + ' ' : ''}${capitalizeFirstLetter(LOCALE_DICTIONARY[selectedLanguage] ?? selectedLanguage)}`;
+  const currentLabel = `${
+    !isChromium ? (LOCALE_FLAGS[selectedLanguage] ?? '') + ' ' : ''
+  }${capitalizeFirstLetter(
+    LOCALE_DICTIONARY[selectedLanguage] ?? selectedLanguage
+  )}`;
 
   return (
     <div className={styles.languageSelectorContainer} ref={containerRef}>
@@ -59,20 +67,29 @@ const LanguageSelector = () => {
         aria-expanded={isOpen}
       >
         <span>{currentLabel}</span>
-        <span className={`${styles.chevron}${isOpen ? ` ${styles.chevronOpen}` : ''}`} />
+        <span
+          className={`${styles.chevron}${
+            isOpen ? ` ${styles.chevronOpen}` : ''
+          }`}
+        />
       </button>
 
       {isOpen && (
         <ul className={styles.dropdown} role="listbox">
           {Object.keys(LOCALE_DICTIONARY).map((language, index) => {
             const isSelected = language === selectedLanguage;
-            const label = `${!isChromium ? (LOCALE_FLAGS[language] ?? '') + ' ' : ''}${capitalizeFirstLetter(LOCALE_DICTIONARY[language])}`;
+            const label = `${
+              !isChromium ? (LOCALE_FLAGS[language] ?? '') + ' ' : ''
+            }${capitalizeFirstLetter(LOCALE_DICTIONARY[language])}`;
             return (
               <li
                 key={`${language}-${index}`}
                 role="option"
                 aria-selected={isSelected}
-                className={[styles.option, isSelected ? styles.optionSelected : '']
+                className={[
+                  styles.option,
+                  isSelected ? styles.optionSelected : ''
+                ]
                   .filter(Boolean)
                   .join(' ')}
                 onClick={() => handleSelect(language)}

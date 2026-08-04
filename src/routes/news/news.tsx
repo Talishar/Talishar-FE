@@ -35,7 +35,7 @@ const News = () => {
   const [loading, setLoading] = useState(false);
   // Initial stuff to allow the lang to change
   const { t, i18n, ready } = useTranslation();
- 
+
   useEffect(() => {
     const loadContent = async () => {
       setLoading(true);
@@ -57,27 +57,34 @@ const News = () => {
   return (
     <div className={styles.newsInner}>
       <div className={styles.newsSectionHeader}>
-        <h2 className={styles.newsSectionTitle}>{t("NEWS.TITLE")}</h2>
+        <h2 className={styles.newsSectionTitle}>{t('NEWS.TITLE')}</h2>
         <a
           href={TALISHAR_DISCORD_URL}
           target="_blank"
           rel="noopener noreferrer"
           className={styles.viewAllLink}
         >
-          {t("NEWS.VIEW_ALL")}→
+          {t('NEWS.VIEW_ALL')}→
         </a>
       </div>
       <div className={styles.newsHorizontalList}>
         {loading ? (
           Array.from({ length: 3 }).map((_, i) => (
-            <div key={i} className={`${styles.newsCard} ${styles.newsCardSkeleton}`} />
+            <div
+              key={i}
+              className={`${styles.newsCard} ${styles.newsCardSkeleton}`}
+            />
           ))
         ) : discordMessages.length > 0 ? (
           discordMessages.slice(0, 3).map((message) => (
             <div key={message.id} className={styles.newsCard}>
               <div className={styles.newsCardHeader}>
-                <strong className={styles.newsCardAuthor}>{message.author}</strong>
-                <span className={styles.newsCardDate}>{formatDate(message.timestamp)}</span>
+                <strong className={styles.newsCardAuthor}>
+                  {message.author}
+                </strong>
+                <span className={styles.newsCardDate}>
+                  {formatDate(message.timestamp)}
+                </span>
               </div>
               {message.content && (
                 <p className={styles.newsCardContent}>
@@ -108,7 +115,7 @@ const News = () => {
             </div>
           ))
         ) : (
-          <p>{t("NEWS.NO_NEWS")}</p>
+          <p>{t('NEWS.NO_NEWS')}</p>
         )}
       </div>
     </div>
