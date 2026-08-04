@@ -98,39 +98,26 @@ describe('tapToPreviewPlay', () => {
   });
 
   describe('shouldDismissStickyPreviewOnOutsideTap', () => {
-    it('dismisses when preview is active and tap is outside previewable cards', () => {
+    it('dismisses when preview is active', () => {
       expect(
         shouldDismissStickyPreviewOnOutsideTap({
           enabled: true,
-          selectedKey: 'id:card-a',
-          isTapOnPreviewableCard: false
+          selectedKey: 'id:card-a'
         })
       ).toBe(true);
-    });
-
-    it('does not dismiss when tapping another previewable card', () => {
-      expect(
-        shouldDismissStickyPreviewOnOutsideTap({
-          enabled: true,
-          selectedKey: 'id:card-a',
-          isTapOnPreviewableCard: true
-        })
-      ).toBe(false);
     });
 
     it('does not dismiss when option is off or nothing is selected', () => {
       expect(
         shouldDismissStickyPreviewOnOutsideTap({
           enabled: false,
-          selectedKey: 'id:card-a',
-          isTapOnPreviewableCard: false
+          selectedKey: 'id:card-a'
         })
       ).toBe(false);
       expect(
         shouldDismissStickyPreviewOnOutsideTap({
           enabled: true,
-          selectedKey: null,
-          isTapOnPreviewableCard: false
+          selectedKey: null
         })
       ).toBe(false);
     });

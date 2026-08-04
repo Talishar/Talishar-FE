@@ -164,4 +164,59 @@ describe('CardPopUp board tap to preview', () => {
     expect(onClick).not.toHaveBeenCalled();
     expect(getTapToPreviewSelectedCardKey()).toBeNull();
   });
+
+  it('does not stopPropagation so parent click handlers still run', async () => {
+    document.cookie = `${TAP_TO_PREVIEW_PLAY_COOKIE}=true; path=/`;
+    const parentClick = vi.fn();
+    const cardClick = vi.fn();
+    const { store } = renderWithProviders(
+      <CookiesProvider>
+        <div onClick={parentClick}>
+          <CardPopUp cardNumber="WTR076" onClick={cardClick}>
+            <button type="button">zone-card</button>
+          </CardPopUp>
+        </div>
+      </CookiesProvider>
+    );
+
+    const card = screen.getByRole('button', { name: 'zone-card' });
+    fireEvent.pointerDown(card, { pointerType: 'touch' });
+    fireEvent.click(card);
+
+    await waitFor(() => {
+      expect(store.getState().game.popup?.popupOn).toBe(true);
+    });
+    expect(cardClick).not.toHaveBeenCalled();
+    expect(parentClick).toHaveBeenCalled();
+  });
+
+  it('tapping a non-play CardPopUp dismisses then previews that card', async () => {
+    document.cookie = `${TAP_TO_PREVIEW_PLAY_COOKIE}=true; path=/`;
+    const onClickA = vi.fn();
+    const { store } = renderWithProviders(
+      <CookiesProvider>
+        <CardPopUp cardNumber="WTR001" onClick={onClickA}>
+          <button type="button">playable</button>
+        </CardPopUp>
+        <CardPopUp cardNumber="WTR002">
+          <button type="button">effect</button>
+        </CardPopUp>
+      </CookiesProvider>
+    );
+
+    const playable = screen.getByRole('button', { name: 'playable' });
+    const effect = screen.getByRole('button', { name: 'effect' });
+    fireEvent.pointerDown(playable, { pointerType: 'touch' });
+    fireEvent.click(playable);
+    await waitFor(() => {
+      expect(store.getState().game.popup?.popupCard?.cardNumber).toBe('WTR001');
+    });
+
+    fireEvent.pointerDown(effect, { pointerType: 'touch' });
+    fireEvent.click(effect);
+    await waitFor(() => {
+      expect(store.getState().game.popup?.popupCard?.cardNumber).toBe('WTR002');
+    });
+    expect(onClickA).not.toHaveBeenCalled();
+  });
 });

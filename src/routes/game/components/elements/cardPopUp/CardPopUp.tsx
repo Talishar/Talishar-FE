@@ -11,7 +11,6 @@ import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { useCookies } from 'react-cookie';
 import { CARD_BACK } from 'features/options/cardBacks';
 import {
-  TAP_PREVIEW_CARD_SELECTOR,
   TAP_TO_PREVIEW_PLAY_COOKIE,
   buildBoardCardSelectionKey,
   clearTapToPreviewSelection,
@@ -166,15 +165,13 @@ export default function CardPopUp({
 
     const onPointerDown = (event: PointerEvent) => {
       const target = event.target as Element | null;
+      // Only the sticky card itself is exempt; any other tap dismisses.
+      // Another card's own click then re-selects / switches preview.
       if (ref.current?.contains(target)) return;
-      const isTapOnPreviewableCard = Boolean(
-        target?.closest?.(TAP_PREVIEW_CARD_SELECTOR)
-      );
       if (
         !shouldDismissStickyPreviewOnOutsideTap({
           enabled: true,
-          selectedKey,
-          isTapOnPreviewableCard
+          selectedKey
         })
       ) {
         return;
@@ -272,9 +269,10 @@ export default function CardPopUp({
     }
   };
 
-  const handleOnClick = (event: React.MouseEvent) => {
+  const handleOnClick = () => {
     if (isTapToPreviewContext()) {
-      event.stopPropagation();
+      // Do not stopPropagation: zone wrappers (pitch/graveyard/banish/deck)
+      // and modal parents (e.g. OtherInput) must still receive the click.
       if (isHidden === true || SKIP_POPUP_CARDS.has(cardNumber)) {
         onClick?.();
         return;
@@ -300,7 +298,6 @@ export default function CardPopUp({
   return (
     <motion.div
       className={containerClass}
-      data-tap-preview-card={cookieEnabled ? 'true' : undefined}
       onClick={handleOnClick}
       onPointerDown={(event) => {
         lastPointerTypeRef.current = event.pointerType;

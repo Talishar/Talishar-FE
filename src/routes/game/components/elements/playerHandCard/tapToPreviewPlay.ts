@@ -68,26 +68,19 @@ export function resolveTapToPreviewPlay({
 }
 
 /**
- * Outside taps dismiss a sticky preview. Taps on another previewable card
- * (hand or board) are ignored here so that card can switch the preview itself.
+ * Outside taps dismiss a sticky preview. "Outside" is decided by the caller
+ * (tap not inside the sticky card's own element). Tapping another card clears
+ * here on pointerdown; that card's click then selects/previews itself.
  */
 export function shouldDismissStickyPreviewOnOutsideTap({
   enabled,
-  selectedKey,
-  isTapOnPreviewableCard
+  selectedKey
 }: {
   enabled: boolean;
   selectedKey: string | null;
-  isTapOnPreviewableCard: boolean;
 }): boolean {
-  if (!enabled || selectedKey == null || isTapOnPreviewableCard) {
-    return false;
-  }
-  return true;
+  return enabled && selectedKey != null;
 }
-
-/** CSS selector for cards that participate in tap-to-preview switching. */
-export const TAP_PREVIEW_CARD_SELECTOR = '[data-tap-preview-card="true"]';
 
 export function buildHandCardSelectionKey({
   cardId,
