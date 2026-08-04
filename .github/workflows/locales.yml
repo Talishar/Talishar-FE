@@ -21,4 +21,4 @@ jobs:
       - name: Install modules
         run: npm install --legacy-peer-deps
       - name: Run i18n Linting
-        run: npm run i18next-cli lint
+        run: npx i18next-cli lint
