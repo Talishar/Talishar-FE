@@ -1474,6 +1474,7 @@
     "SKIP_OVERRIDES": "Ignorer les remplacements",
     "SKIP_OVERRIDES_TOOLTIP": "Se réinitialise au début de chaque tour.",
     "STREAMER_MODE": "Mode Streamer",
+    "TAP_TO_PREVIEW_BEFORE_PLAYING_MOBILE": "Appuyer pour prévisualiser avant de jouer (mobile)",
     "THEME": "Thème",
     "TRANSPARENCY": "Transparence",
     "VISUAL_SETTINGS": "Paramètres visuels"

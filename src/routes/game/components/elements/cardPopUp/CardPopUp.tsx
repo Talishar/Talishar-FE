@@ -50,6 +50,7 @@ type CardPopUpProps = {
   isOpponent?: boolean;
   disableTilt?: boolean;
   disableShadow?: boolean;
+  persistPopUpOnClick?: boolean;
 };
 
 export default function CardPopUp({
@@ -62,7 +63,8 @@ export default function CardPopUp({
   onHoverEnd,
   isOpponent,
   disableTilt,
-  disableShadow
+  disableShadow,
+  persistPopUpOnClick
 }: CardPopUpProps) {
   const ref = useRef<HTMLDivElement>(null);
   const dispatch = useAppDispatch();
@@ -148,9 +150,19 @@ export default function CardPopUp({
     );
   };
 
+  const clearPopUpUnlessSticky = () => {
+    // Sticky tap-to-preview keeps the portal up until a confirm play (or
+    // another card switches preview). Without this, touch browsers fire
+    // mouseleave after click and wipe the preview immediately.
+    if (persistPopUpOnClick) {
+      return;
+    }
+    dispatch(clearPopUp());
+  };
+
   const handleMouseLeave = () => {
     hoverRect.current = null;
-    dispatch(clearPopUp());
+    clearPopUpUnlessSticky();
     rotateXTarget.set(0);
     rotateYTarget.set(0);
   };
@@ -172,7 +184,7 @@ export default function CardPopUp({
     }
     if (touchPopupShown.current) {
       hoverRect.current = null;
-      dispatch(clearPopUp());
+      clearPopUpUnlessSticky();
       rotateXTarget.set(0);
       rotateYTarget.set(0);
       touchPopupShown.current = false;
@@ -191,7 +203,9 @@ export default function CardPopUp({
     if (onClick != null) {
       onClick();
     }
-    handleMouseLeave();
+    if (!persistPopUpOnClick) {
+      handleMouseLeave();
+    }
   };
 
   return (
