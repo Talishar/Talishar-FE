@@ -126,7 +126,7 @@ const Premium = () => {
       name: t('PREMIUM_PAGE.TIERS.SPONSORS_OF_TROPAL_DHANI'),
       image: METAFY_TIER_MAP['Sponsors of Trōpal-Dhani'].image,
       monthlyPrice: 50,
-      yearlyDiscount: 0.20,
+      yearlyDiscount: 0.2,
       benefits: [
         t('PREMIUM_PAGE.BENEFITS.FREE_GUIDES'),
         t('PREMIUM_PAGE.BENEFITS.GENERAL_SUPPORT'),
@@ -146,19 +146,67 @@ const Premium = () => {
   ];
 
   const comparisonFeatures = [
-    { label: t('PREMIUM_PAGE.COMPARISON.PLAY_GAMES'), free: true, premium: true },
-    { label: t('PREMIUM_PAGE.COMPARISON.NO_RUST_COUNTERS'), free: false, premium: true },
-    { label: t('PREMIUM_PAGE.COMPARISON.ALT_ARTS'), free: false, premium: true },
-    { label: t('PREMIUM_PAGE.COMPARISON.SLEEVES_PLAYMATS'), free: false, premium: true },
-    { label: t('PREMIUM_PAGE.COMPARISON.IN_GAME_BADGE'), free: false, premium: true },
-    { label: t('PREMIUM_PAGE.COMPARISON.CUSTOM_THEMES'), free: false, premium: true },
+    {
+      label: t('PREMIUM_PAGE.COMPARISON.PLAY_GAMES'),
+      free: true,
+      premium: true
+    },
+    {
+      label: t('PREMIUM_PAGE.COMPARISON.NO_RUST_COUNTERS'),
+      free: false,
+      premium: true
+    },
+    {
+      label: t('PREMIUM_PAGE.COMPARISON.ALT_ARTS'),
+      free: false,
+      premium: true
+    },
+    {
+      label: t('PREMIUM_PAGE.COMPARISON.SLEEVES_PLAYMATS'),
+      free: false,
+      premium: true
+    },
+    {
+      label: t('PREMIUM_PAGE.COMPARISON.IN_GAME_BADGE'),
+      free: false,
+      premium: true
+    },
+    {
+      label: t('PREMIUM_PAGE.COMPARISON.CUSTOM_THEMES'),
+      free: false,
+      premium: true
+    },
     { label: t('PREMIUM_PAGE.COMPARISON.NO_ADS'), free: false, premium: true },
-    { label: t('PREMIUM_PAGE.COMPARISON.DISCORD_ROLE'), free: false, premium: true },
-    { label: t('PREMIUM_PAGE.COMPARISON.EXCLUSIVE_CHANNELS'), free: false, premium: true },
-    { label: t('PREMIUM_PAGE.COMPARISON.FREE_GUIDES'), free: false, premium: true },
-    { label: t('PREMIUM_PAGE.COMPARISON.REPLAY_SAVE_SLOTS'), free: '3', premium: '5-30 (by tier)' },
-    { label: t('PREMIUM_PAGE.COMPARISON.EXTRA_LEADERBOARD'), free: false, premium: '$10+' },
-    { label: t('PREMIUM_PAGE.COMPARISON.WEEKLY_CLASSES'), free: false, premium: '$35+' }
+    {
+      label: t('PREMIUM_PAGE.COMPARISON.DISCORD_ROLE'),
+      free: false,
+      premium: true
+    },
+    {
+      label: t('PREMIUM_PAGE.COMPARISON.EXCLUSIVE_CHANNELS'),
+      free: false,
+      premium: true
+    },
+    {
+      label: t('PREMIUM_PAGE.COMPARISON.FREE_GUIDES'),
+      free: false,
+      premium: true
+    },
+    {
+      label: t('PREMIUM_PAGE.COMPARISON.REPLAY_SAVE_SLOTS'),
+      free: '3',
+      premium: '5-30 (by tier)'
+    },
+    {
+      label: t('PREMIUM_PAGE.COMPARISON.EXTRA_LEADERBOARD'),
+      free: false,
+      premium: '$10+'
+    },
+    {
+      label: t('PREMIUM_PAGE.COMPARISON.WEEKLY_CLASSES'),
+      free: false,
+      premium: '$35+'
+    }
   ];
 
   const { showAds } = useSupporterStatus();
@@ -170,9 +218,17 @@ const Premium = () => {
     if (yearly) {
       const yearlyTotal = tier.monthlyPrice * 12;
       const discounted = Math.round(yearlyTotal * (1 - tier.yearlyDiscount));
-      return { display: `$${discounted}`, interval: t('PREMIUM_PAGE.YEARLY_INTERVAL'), original: `$${yearlyTotal}` };
+      return {
+        display: `$${discounted}`,
+        interval: t('PREMIUM_PAGE.YEARLY_INTERVAL'),
+        original: `$${yearlyTotal}`
+      };
     }
-    return { display: `$${tier.monthlyPrice}`, interval: t('PREMIUM_PAGE.MONTHLY_INTERVAL'), original: null };
+    return {
+      display: `$${tier.monthlyPrice}`,
+      interval: t('PREMIUM_PAGE.MONTHLY_INTERVAL'),
+      original: null
+    };
   };
 
   return (
@@ -184,15 +240,21 @@ const Premium = () => {
         </div>
 
         <div className={styles.billingToggle}>
-          <span className={!yearly ? styles.activeLabel : undefined}>{t('PREMIUM_PAGE.BILLING_TOGGLE_MONTHLY')}</span>
+          <span className={!yearly ? styles.activeLabel : undefined}>
+            {t('PREMIUM_PAGE.BILLING_TOGGLE_MONTHLY')}
+          </span>
           <button
             className={styles.toggleTrack}
             onClick={() => setYearly(!yearly)}
             aria-label={t('PREMIUM_PAGE.BILLING_TOGGLE_ARIA')}
           >
-            <div className={`${styles.toggleKnob} ${yearly ? styles.yearly : ''}`} />
+            <div
+              className={`${styles.toggleKnob} ${yearly ? styles.yearly : ''}`}
+            />
           </button>
-          <span className={yearly ? styles.activeLabel : undefined}>{t('PREMIUM_PAGE.BILLING_TOGGLE_YEARLY')}</span>
+          <span className={yearly ? styles.activeLabel : undefined}>
+            {t('PREMIUM_PAGE.BILLING_TOGGLE_YEARLY')}
+          </span>
           <span className={styles.saveBadge}>
             {t('PREMIUM_PAGE.SAVE_UP_TO_15')}
           </span>
@@ -204,10 +266,14 @@ const Premium = () => {
             return (
               <div
                 key={tier.name}
-                className={`${styles.tierCard} ${tier.recommended ? styles.recommended : ''}`}
+                className={`${styles.tierCard} ${
+                  tier.recommended ? styles.recommended : ''
+                }`}
               >
                 {tier.recommended && (
-                  <span className={styles.recommendedBadge}>{t('PREMIUM_PAGE.RECOMMENDED')}</span>
+                  <span className={styles.recommendedBadge}>
+                    {t('PREMIUM_PAGE.RECOMMENDED')}
+                  </span>
                 )}
                 <div className={styles.tierHeader}>
                   <img

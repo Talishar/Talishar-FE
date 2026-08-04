@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import styles from './TurnInfo.module.css';
@@ -23,6 +24,7 @@ function fancyTimeFormat(duration: number | undefined): string {
 }
 
 export default function TurnInfo() {
+  const { t } = useTranslation();
   // Stable for the component's lifetime - URL doesn't change during a game.
   const storageKeyRef = useRef(`${STORAGE_KEY_PREFIX}${getGameIdFromUrl()}`);
 
@@ -72,18 +74,22 @@ export default function TurnInfo() {
     (turnPlayer == 1 && !amIPlayerOne) || (turnPlayer == 2 && amIPlayerOne);
   const displayName =
     isStreamerMode && isOpponentTurn
-      ? 'Opponent'
-      : String(playerName ?? 'Unknown').substring(0, 15);
+      ? t('TURN_INFO.OPPONENT')
+      : String(playerName ?? t('TURN_INFO.UNKNOWN')).substring(0, 15);
 
   return (
     <div className={styles.turnInfoContainer}>
       <div className={styles.topRow}>
-        <div className={styles.turnNumberSmall}>Turn #{turnNumber}</div>
+        <div className={styles.turnNumberSmall}>
+          {t('TURN_INFO.TURN_NUMBER', { turnNumber })}
+        </div>
         <div className={styles.timer}>
           <FaRegClock /> {fancyTimeFormat(timer)}
         </div>
       </div>
-      <div className={styles.playerName}>{displayName}'s Turn</div>
+      <div className={styles.playerName}>
+        {t('TURN_INFO.PLAYERS_TURN', { playerName: displayName })}
+      </div>
     </div>
   );
 }

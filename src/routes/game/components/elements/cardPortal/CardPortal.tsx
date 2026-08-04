@@ -101,7 +101,10 @@ export default function CardPortal() {
   }
 
   if (popup.xCoord === undefined || popup.yCoord === undefined) {
-    return createPortal(<CardDetails src={src} isMeld={isMeld} cardNumber={cardNumber} />, document.body);
+    return createPortal(
+      <CardDetails src={src} isMeld={isMeld} cardNumber={cardNumber} />,
+      document.body
+    );
   }
 
   const isDFC = dfcSrc != null;

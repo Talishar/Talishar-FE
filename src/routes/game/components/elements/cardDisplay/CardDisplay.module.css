@@ -118,7 +118,8 @@
 }
 
 @keyframes targetedPulse {
-  0%, 100% {
+  0%,
+  100% {
     filter: drop-shadow(0 0 5px rgba(255, 40, 40, 0.75));
   }
   50% {
@@ -199,8 +200,8 @@
 }
 
 .border8 {
-  border-color: #FFD700;
-  box-shadow: 0 0 3px 3px #FFD700;
+  border-color: #ffd700;
+  box-shadow: 0 0 3px 3px #ffd700;
 }
 
 .border9 {

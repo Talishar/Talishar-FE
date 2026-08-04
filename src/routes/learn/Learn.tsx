@@ -61,7 +61,6 @@ const Learn: React.FC = () => {
         subtitle={t('LEARN.BANNER_SUBTITLE')}
       />
       <div className={styles.container}>
-
         {loading ? (
           <div className={styles.loadingContainer}>
             <div className={styles.spinner}></div>
@@ -91,7 +90,10 @@ const Learn: React.FC = () => {
                   {t('LEARN.PAGINATION.PREVIOUS')}
                 </button>
                 <span className={styles.pageInfo}>
-                  {t('LEARN.PAGINATION.PAGE_INFO', { page: currentPage, totalPages })}
+                  {t('LEARN.PAGINATION.PAGE_INFO', {
+                    page: currentPage,
+                    totalPages
+                  })}
                 </span>
                 <button
                   onClick={handleNextPage}

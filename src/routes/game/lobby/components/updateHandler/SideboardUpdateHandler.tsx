@@ -22,7 +22,7 @@ interface LobbyUpdateHandlerProps {
 export const LobbyUpdateHandler = React.memo(
   ({ isSubmitting: _isSubmitting }: LobbyUpdateHandlerProps) => {
     // Initial stuff to allow the lang to change
-    const { t } = useTranslation(); 
+    const { t } = useTranslation();
     const abortRef = useRef<AbortController>();
     const timeoutRef = useRef<ReturnType<typeof setTimeout>>();
     const gameInfo = useAppSelector(getGameInfo, shallowEqual);
@@ -73,7 +73,6 @@ export const LobbyUpdateHandler = React.memo(
         controller.abort();
         dispatch(setIsUpdateInProgressFalse());
       }, 10000);
-
     }, [gameInfo.gameID, isUpdateInProgress, dispatch]);
 
     useEffect(() => {

@@ -42,7 +42,9 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     const savedTransparency = localStorage.getItem('talishar-transparency');
     let trans = savedTransparency ? parseFloat(savedTransparency) : null;
     if (trans === null) {
-      const cookieMatch = document.cookie.match(/transparencyIntensity=([^;]+)/);
+      const cookieMatch = document.cookie.match(
+        /transparencyIntensity=([^;]+)/
+      );
       trans = cookieMatch ? parseFloat(cookieMatch[1]) : 0.98;
     }
     return getThemeById(savedThemeId, trans);

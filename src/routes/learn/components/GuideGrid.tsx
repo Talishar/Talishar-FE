@@ -1,5 +1,6 @@
 import React from 'react';
 import { TALISHAR_METAFY_URL } from 'constants/socialLinks';
+import { useTranslation } from 'react-i18next';
 import styles from '../Learn.module.scss';
 import { MetafyGuide } from '../../../services/metafyService';
 import { AdUnit } from '../../../components/ads';
@@ -12,6 +13,7 @@ interface GuideGridProps {
 const AD_INTERVAL = 3;
 
 const GuideGrid: React.FC<GuideGridProps> = ({ guides, showAds = false }) => {
+  const { t } = useTranslation();
   const formatPrice = (
     guide: MetafyGuide
   ): {
@@ -20,11 +22,14 @@ const GuideGrid: React.FC<GuideGridProps> = ({ guides, showAds = false }) => {
     isFreeForSupporters: boolean;
   } => {
     if (!guide.price || guide.price.value === 0) {
-      return { display: 'Free for supporters', isFreeForSupporters: false };
+      return {
+        display: t('LEARN.FREE_FOR_SUPPORTERS'),
+        isFreeForSupporters: false
+      };
     }
     const originalPrice = `$${(guide.price.value_in_cents / 100).toFixed(2)}`;
     return {
-      display: 'Supporter discount',
+      display: t('LEARN.SUPPORTER_DISCOUNT'),
       originalPrice,
       isFreeForSupporters: true
     };
@@ -61,7 +66,13 @@ const GuideGrid: React.FC<GuideGridProps> = ({ guides, showAds = false }) => {
       rel="noopener noreferrer"
       className={isFeatured ? styles.featuredCard : styles.guideCard}
     >
-      <div className={isFeatured ? styles.featuredImageContainer : styles.guideImageContainer}>
+      <div
+        className={
+          isFeatured
+            ? styles.featuredImageContainer
+            : styles.guideImageContainer
+        }
+      >
         {guide.cover_url ? (
           <img
             src={guide.cover_url}
@@ -70,15 +81,23 @@ const GuideGrid: React.FC<GuideGridProps> = ({ guides, showAds = false }) => {
           />
         ) : (
           <div className={styles.placeholderImage}>
-            <span>No Image</span>
+            <span>{t('LEARN.NO_IMAGE')}</span>
           </div>
         )}
       </div>
 
-      <div className={isFeatured ? styles.featuredContent : styles.guideContent}>
-        <h3 className={isFeatured ? styles.featuredName : styles.guideName}>{guide.name}</h3>
+      <div
+        className={isFeatured ? styles.featuredContent : styles.guideContent}
+      >
+        <h3 className={isFeatured ? styles.featuredName : styles.guideName}>
+          {guide.name}
+        </h3>
 
-        <p className={isFeatured ? styles.featuredDescription : styles.guideDescription}>
+        <p
+          className={
+            isFeatured ? styles.featuredDescription : styles.guideDescription
+          }
+        >
           {guide.description}
         </p>
 
@@ -86,8 +105,13 @@ const GuideGrid: React.FC<GuideGridProps> = ({ guides, showAds = false }) => {
           <div className={styles.guideInfo}>
             <span className={styles.author}>
               {guide.users && guide.users.length > 0
-                ? guide.users.map((u) => u.display_name || u.username).filter(Boolean).join(' & ')
-                : guide.user?.display_name || guide.user?.username || 'Talishar'}
+                ? guide.users
+                    .map((u) => u.display_name || u.username)
+                    .filter(Boolean)
+                    .join(' & ')
+                : guide.user?.display_name ||
+                  guide.user?.username ||
+                  'Talishar'}
             </span>
             {guide.rating && (
               <span className={styles.rating}>{guide.rating}</span>
@@ -95,9 +119,7 @@ const GuideGrid: React.FC<GuideGridProps> = ({ guides, showAds = false }) => {
           </div>
 
           <div className={styles.guideMetadata}>
-            <span className={styles.date}>
-              {formatDate(guide.updated_at)}
-            </span>
+            <span className={styles.date}>{formatDate(guide.updated_at)}</span>
             <div className={styles.priceContainer}>
               {(() => {
                 const priceInfo = formatPrice(guide);
@@ -109,9 +131,7 @@ const GuideGrid: React.FC<GuideGridProps> = ({ guides, showAds = false }) => {
                       </span>
                     )}
                     {!priceInfo.isFreeForSupporters && (
-                      <span className={styles.price}>
-                        {priceInfo.display}
-                      </span>
+                      <span className={styles.price}>{priceInfo.display}</span>
                     )}
                   </>
                 );
@@ -141,9 +161,12 @@ const GuideGrid: React.FC<GuideGridProps> = ({ guides, showAds = false }) => {
             rel="noopener noreferrer"
             className={styles.removeAdsLink}
           >
-            Remove ads
+            {t('UNITED_GAME_PANEL.REMOVE_ADS')}
           </a>
-          <AdUnit placement={`mobile-unit-${adCount + 3}`} className={styles.adTileUnit} />
+          <AdUnit
+            placement={`mobile-unit-${adCount + 3}`}
+            className={styles.adTileUnit}
+          />
         </div>
       );
       guidesInCurrentGroup = 0;

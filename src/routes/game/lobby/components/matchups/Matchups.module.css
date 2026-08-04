@@ -189,7 +189,7 @@
 
 /* Tablet: 3 columns, uniform sizing - also applies to touch devices above 1200px */
 @media (max-width: 1200px) and (min-width: 769px),
-       (min-width: 769px) and (pointer: coarse) {
+  (min-width: 769px) and (pointer: coarse) {
   .matchupContainer {
     display: grid;
     grid-template-columns: repeat(3, 1fr);

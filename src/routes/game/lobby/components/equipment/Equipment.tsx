@@ -67,7 +67,7 @@ const Equipment = ({
   const locale = getLanguage();
   // Initial stuff to allow the lang to change
   const { t } = useTranslation();
-						      
+
   React.useEffect(() => {
     setFieldValue('assignedModulars', assigned);
   }, [assigned, setFieldValue]);
@@ -243,7 +243,9 @@ const Equipment = ({
                             } else if (weapon.numHands === 2) {
                               // Remove all non-quiver/non-companion weapons, keep quivers and companions
                               const equipmentExceptions = values.weapons.filter(
-                                (w) => (w.isQuiver || w.isCompanion) && w.img !== 'NONE00'
+                                (w) =>
+                                  (w.isQuiver || w.isCompanion) &&
+                                  w.img !== 'NONE00'
                               );
                               const newWeapons = [
                                 weapon,
@@ -258,7 +260,10 @@ const Equipment = ({
                               // If adding an off-hand (regular off-hand, not quiver/companion), remove other off-hands and NONE00
                               const nonOffhands = values.weapons.filter(
                                 (w) =>
-                                  (!w.isOffhand || w.isQuiver || w.isCompanion) && w.img !== 'NONE00'
+                                  (!w.isOffhand ||
+                                    w.isQuiver ||
+                                    w.isCompanion) &&
+                                  w.img !== 'NONE00'
                               );
                               const newWeapons = [...nonOffhands, weapon];
                               setFieldValue('weapons', newWeapons);
@@ -284,7 +289,10 @@ const Equipment = ({
                                 ]);
                               } else {
                                 // No 2-handed weapon, or adding a quiver/companion - just add it (NONE00 already stripped)
-                                setFieldValue('weapons', [...currentWeapons, weapon]);
+                                setFieldValue('weapons', [
+                                  ...currentWeapons,
+                                  weapon
+                                ]);
                               }
                             }
                           } else {

@@ -16,7 +16,10 @@ const ThemeToggle: React.FC = () => {
 
   useEffect(() => {
     const handleOutsideClick = (e: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(e.target as Node)
+      ) {
         setIsOpen(false);
       }
     };
@@ -48,7 +51,11 @@ const ThemeToggle: React.FC = () => {
         aria-expanded={isOpen}
       >
         <span>{currentTheme.name}</span>
-        <span className={`${styles.chevron}${isOpen ? ` ${styles.chevronOpen}` : ''}`} />
+        <span
+          className={`${styles.chevron}${
+            isOpen ? ` ${styles.chevronOpen}` : ''
+          }`}
+        />
       </button>
 
       {isOpen && (

@@ -28,9 +28,7 @@ export default function OpponentBoardGrid({ swapPlayers = false }: Props) {
     (state: RootState) => state.game.playerTwo.Playmat
   );
 
-  const playmat = swapPlayers
-    ? (p1Playmat ?? 'aria')
-    : (p2Playmat ?? 'volcor');
+  const playmat = swapPlayers ? p1Playmat ?? 'aria' : p2Playmat ?? 'volcor';
   const isPlayer = swapPlayers;
 
   const styleToApply = {

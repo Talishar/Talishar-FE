@@ -87,15 +87,22 @@
 .guideCardFallback {
   position: absolute;
   inset: 0;
-  background:
-    radial-gradient(circle at top right, rgba(240, 165, 0, 0.28), transparent 38%),
+  background: radial-gradient(
+      circle at top right,
+      rgba(240, 165, 0, 0.28),
+      transparent 38%
+    ),
     linear-gradient(135deg, #17120b 0%, #3b2b12 100%);
 }
 
 .guideCardOverlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(0, 0, 0, 0.18) 0%, rgba(0, 0, 0, 0.72) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.18) 0%,
+    rgba(0, 0, 0, 0.72) 100%
+  );
 }
 
 .guideCardContent {
@@ -178,7 +185,6 @@
   color: #777;
 }
 
-
 .contentTypeTag {
   display: inline-block;
   font-size: 0.7rem;
@@ -190,7 +196,6 @@
   padding: 0.18em 0.55em;
   letter-spacing: 0.02em;
 }
-
 
 .secondarySection {
   display: flex;
@@ -442,7 +447,6 @@
     display: block !important;
   }
 }
-
 
 @media (max-width: 960px) {
   .heroLayout {

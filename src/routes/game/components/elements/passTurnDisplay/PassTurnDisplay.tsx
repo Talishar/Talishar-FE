@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { submitButton } from 'features/game/GameSlice';
 import { useAppSelector, useAppDispatch } from 'app/Hooks';
 import { RootState } from 'app/Store';
@@ -10,23 +11,27 @@ import passTurnSound from 'sounds/prioritySound.wav';
 import { createPortal } from 'react-dom';
 import { getSettingsEntity } from 'features/options/optionsSlice';
 
-function passSubtitle(turnPhase: string | undefined): string {
+function passSubtitle(
+  turnPhase: string | undefined,
+  t: (key: string) => string
+): string {
   switch (turnPhase) {
     case 'B': // Defend step
-      return 'Block';
+      return t('PASS_TURN_DISPLAY.BLOCK');
     case 'A': // Attack reaction step
     case 'D': // Defense reaction step
-      return 'Reaction';
+      return t('PASS_TURN_DISPLAY.REACTION');
     case 'ARS': // End step
     case 'PDECK':
-      return 'end turn';
+      return t('PASS_TURN_DISPLAY.END_TURN');
     case 'M': // Action phase
     default:
-      return 'Priority';
+      return t('PASS_TURN_DISPLAY.PRIORITY');
   }
 }
 
 export default function PassTurnDisplay() {
+  const { t } = useTranslation();
   const canPassPhase = useAppSelector(
     (state: RootState) => state.game.canPassPhase
   );
@@ -167,24 +172,32 @@ export default function PassTurnDisplay() {
       <div className={styles.passTurnDisplay}>
         <div className={styles.spectatorDisplay}>
           <div className={styles.spectatorArrow}>{arrow}</div>
-          <div className={styles.spectatorPlayerName}>Priority</div>
+          <div className={styles.spectatorPlayerName}>
+            {t('PASS_TURN_DISPLAY.PRIORITY')}
+          </div>
         </div>
       </div>
     );
   }
 
   if (canPassPhase === true || isReplay) {
-    const subtitle = isReplay ? 'Replay' : passSubtitle(turnPhaseEnum);
+    const subtitle = isReplay
+      ? t('PASS_TURN_DISPLAY.REPLAY')
+      : passSubtitle(turnPhaseEnum, t);
     return (
       <>
         <div
           className={styles.passTurnDisplayActive}
           onClick={onPassTurn}
           role="button"
-          aria-label={isReplay ? 'Advance replay' : 'Pass priority'}
-          title={`${subtitle} · pass priority · Space`}
+          aria-label={
+            isReplay
+              ? t('PASS_TURN_DISPLAY.ADVANCE_REPLAY')
+              : t('PASS_TURN_DISPLAY.PASS_PRIORITY')
+          }
+          title={t('PASS_TURN_DISPLAY.TITLE', { subtitle })}
         >
-          <div> PASS </div>
+          <div> {t('PASS_TURN_DISPLAY.PASS')} </div>
           <div className={styles.subThing}>{subtitle}</div>
         </div>
         {showAreYouSureModal &&
@@ -195,8 +208,8 @@ export default function PassTurnDisplay() {
                 <div className={styles.container}>
                   <div className={styles.dialogHeader}>{preventPassPrompt}</div>
                   <div className={styles.dialogFooter}>
-                    <button onClick={clickYes}>Yes</button>
-                    <button onClick={clickNo}>No</button>
+                    <button onClick={clickYes}>{t('GAME_LOBBY.YES')}</button>
+                    <button onClick={clickNo}>{t('GAME_LOBBY.NO')}</button>
                   </div>
                 </div>
               </dialog>
@@ -208,7 +221,11 @@ export default function PassTurnDisplay() {
   }
 
   if (canPassPhase === false) {
-    return <div className={styles.passTurnDisplay}>WAIT</div>;
+    return (
+      <div className={styles.passTurnDisplay}>
+        {t('PASS_TURN_DISPLAY.WAIT')}
+      </div>
+    );
   }
 
   return null;

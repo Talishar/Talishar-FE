@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import ReactDOM from 'react-dom';
 import screenfull from 'screenfull';
+import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { submitButton, setSpectatorCameraView } from 'features/game/GameSlice';
 import { GiExpand } from 'react-icons/gi';
@@ -25,6 +26,7 @@ import useSetting from 'hooks/useSetting';
 import { MANUAL_MODE } from 'features/options/constants';
 
 function FullScreenButton() {
+  const { t } = useTranslation();
   function toggleFullScreen() {
     screenfull.toggle();
   }
@@ -33,9 +35,9 @@ function FullScreenButton() {
     <div>
       <button
         className={styles.btn}
-        aria-label="Full Screen"
+        aria-label={t('MENU.FULL_SCREEN')}
         onClick={() => toggleFullScreen()}
-        data-tooltip="Fullscreen"
+        data-tooltip={t('MENU.FULLSCREEN')}
         data-placement="bottom"
       >
         <GiExpand aria-hidden="true" />
@@ -45,6 +47,7 @@ function FullScreenButton() {
 }
 
 function UndoButton() {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const { isDisabled, triggerDisable } = useButtonDisableContext();
 
@@ -63,9 +66,9 @@ function UndoButton() {
     <div>
       <button
         className={styles.btn}
-        aria-label="Undo"
+        aria-label={t('OPTIONS_MENU.UNDO')}
         onClick={clickUndo}
-        data-tooltip="Undo"
+        data-tooltip={t('OPTIONS_MENU.UNDO')}
         data-placement="bottom"
         disabled={isDisabled}
       >
@@ -98,6 +101,7 @@ function CameraSwitchButton() {
 }
 
 function MobileOverflowMenu({ isSpectator }: { isSpectator: boolean }) {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [panelStyle, setPanelStyle] = useState<React.CSSProperties>({});
   const btnRef = useRef<HTMLButtonElement>(null);
@@ -139,7 +143,7 @@ function MobileOverflowMenu({ isSpectator }: { isSpectator: boolean }) {
       <button
         ref={btnRef}
         className={styles.btn}
-        aria-label="More options"
+        aria-label={t('MENU.MORE_OPTIONS')}
         onClick={handleOpen}
       >
         <FaEllipsisH aria-hidden="true" />
@@ -163,14 +167,14 @@ function MobileOverflowMenu({ isSpectator }: { isSpectator: boolean }) {
                   className={styles.overflowItem}
                   onClick={handleManualMode}
                 >
-                  <FaWrench aria-hidden="true" /> Manual Mode
+                  <FaWrench aria-hidden="true" /> {t('MENU.MANUAL_MODE')}
                 </button>
               )}
               <button
                 className={styles.overflowItem}
                 onClick={toggleFullScreen}
               >
-                <GiExpand aria-hidden="true" /> Fullscreen
+                <GiExpand aria-hidden="true" /> {t('MENU.FULLSCREEN')}
               </button>
             </div>
           </>,

@@ -41,12 +41,9 @@ export const ResetPasswordForm = () => {
         toast.error(resp.error, { position: 'top-center' });
       }
       if (resp.message === 'Success!') {
-        toast.success(
-          t("USER.LOGIN.PASSWORD_RESET_SUCESS"),
-          {
-            position: 'top-center'
-          }
-        );
+        toast.success(t('USER.LOGIN.PASSWORD_RESET_SUCESS'), {
+          position: 'top-center'
+        });
         navigate('/user/login');
       }
     } catch (err) {
@@ -63,10 +60,10 @@ export const ResetPasswordForm = () => {
 
   return (
     <div>
-      <h2>{t("USER.LOGIN.RESET_PASSWORD_TITLE")}</h2>
+      <h2>{t('USER.LOGIN.RESET_PASSWORD_TITLE')}</h2>
       <article className={styles.formContainer}>
         <form onSubmit={handleSubmit(onSubmit)} ref={parent}>
-          <label htmlFor="password">{t("USER.LOGIN.PASSWORD")}</label>
+          <label htmlFor="password">{t('USER.LOGIN.PASSWORD')}</label>
           <input
             id="password"
             type="password"
@@ -77,7 +74,9 @@ export const ResetPasswordForm = () => {
           {errors.password?.message && (
             <div className={styles.fieldError}>{errors.password?.message}</div>
           )}
-          <label htmlFor="passwordRepeat">{t("USER.LOGIN.CONFIRM_PASSWORD")}</label>
+          <label htmlFor="passwordRepeat">
+            {t('USER.LOGIN.CONFIRM_PASSWORD')}
+          </label>
           <input
             id="passwordRepeat"
             type="password"
@@ -96,7 +95,7 @@ export const ResetPasswordForm = () => {
             aria-busy={isSubmitting}
             className={styles.submitButton}
           >
-            {t("USER.LOGIN.SUBMIT")}
+            {t('USER.LOGIN.SUBMIT')}
           </button>
           {errors.root?.serverError?.message && (
             <div className={styles.fieldError}>

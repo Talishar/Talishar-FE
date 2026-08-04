@@ -2,22 +2,30 @@ import React from 'react';
 import classNames from 'classnames';
 import { parseHtmlToReactElements } from 'utils/ParseEscapedString';
 import styles from './ChatBox.module.css';
+import { useTranslation } from 'react-i18next';
 
 export type ChatFilter = 'none' | 'chat' | 'log';
 
 const CHAT_RE = /<span[^>]*>(.*?):\s<\/span>/;
 const TURN_MARKER_RE = /^\[\[TURN_START:(\d+):(\d+)\]\]$/;
 const COMBAT_START_RE = /^Player [12] (?:played|activated)\b/i;
-const COMBAT_END_RE = /^The (?:chain link was (?:resolved|closed)|combat chain was closed)\.?$/i;
+const COMBAT_END_RE =
+  /^The (?:chain link was (?:resolved|closed)|combat chain was closed)\.?$/i;
 const COMBAT_CHAIN_CLOSED_RE = /^The combat chain was closed\.?$/i;
-const MUTED_COMBAT_END_RE = /^The (?:chain link was resolved|combat chain was closed)\.?$/i;
-const COMBAT_SIGNAL_RE = /\b(?:blocked with|combat resolved|chain link|hit effect|attack)\b/i;
-const PASS_RE = /\b(?:passes? priority|passed\.?|main player passed priority)\b/i;
-const UNDO_RE = /\b(?:undid (?:their|the) last action|requested to undo the last action)\b/i;
-const UNDO_LIMIT_RE = /^Cannot undo further: Please revert to start of this\/previous turn instead\.$/i;
+const MUTED_COMBAT_END_RE =
+  /^The (?:chain link was resolved|combat chain was closed)\.?$/i;
+const COMBAT_SIGNAL_RE =
+  /\b(?:blocked with|combat resolved|chain link|hit effect|attack)\b/i;
+const PASS_RE =
+  /\b(?:passes? priority|passed\.?|main player passed priority)\b/i;
+const UNDO_RE =
+  /\b(?:undid (?:their|the) last action|requested to undo the last action)\b/i;
+const UNDO_LIMIT_RE =
+  /^Cannot undo further: Please revert to start of this\/previous turn instead\.$/i;
 const DAMAGE_RE = /\b(?:damage|lost life|gained life|won|conceded|forfeit)\b/i;
 const ACTION_RE = /^Player [12] (?:played|activated|blocked with)\b/i;
-const IRREVERSIBLE_RE = /\b(?:destroyed|banished|discarded|put .*?(?:bottom|top)|added to arsenal|drew|shuffled|revealed)\b/i;
+const IRREVERSIBLE_RE =
+  /\b(?:destroyed|banished|discarded|put .*?(?:bottom|top)|added to arsenal|drew|shuffled|revealed)\b/i;
 
 type LogMessage = { message: string; originalIndex: number };
 
@@ -30,45 +38,82 @@ type Props = {
 };
 
 function plainText(message: string) {
-  return message.replace(/<[^>]+>/g, '').replace(/{{.*?\|(.+?)(?:\|.*?)?}}/g, '$1');
+  return message
+    .replace(/<[^>]+>/g, '')
+    .replace(/{{.*?\|(.+?)(?:\|.*?)?}}/g, '$1');
 }
 
 function importanceClass(message: string) {
   const text = plainText(message);
-  if (PASS_RE.test(text) || MUTED_COMBAT_END_RE.test(text)) return styles.logMuted;
+  if (PASS_RE.test(text) || MUTED_COMBAT_END_RE.test(text))
+    return styles.logMuted;
   if (DAMAGE_RE.test(text)) return styles.logCritical;
   if (ACTION_RE.test(text)) return styles.logAction;
   if (IRREVERSIBLE_RE.test(text)) return styles.logIrreversible;
   return undefined;
 }
 
-function TurnDivider({ marker, playerNames }: { marker: RegExpMatchArray; playerNames: [string, string] }) {
+function TurnDivider({
+  marker,
+  playerNames
+}: {
+  marker: RegExpMatchArray;
+  playerNames: [string, string];
+}) {
+  const { t } = useTranslation();
   const turn = marker[1];
   const player = Number(marker[2]);
   const playerName = playerNames[player - 1] || `Player ${player}`;
 
   return (
-    <div className={styles.turnDivider} role="separator" aria-label={`Turn ${turn}, ${playerName}'s turn`}>
-      <span>Turn {turn}</span>
+    <div
+      className={styles.turnDivider}
+      role="separator"
+      aria-label={t('GAME_LOG.TURN_ARIA', { turn, playerName })}
+    >
+      <span>{t('GAME_LOG.TURN', { turn })}</span>
       <span className={styles.turnDividerPlayer}>{playerName}</span>
     </div>
   );
 }
 
-function Message({ entry, transformMessage, mobile, repeatCount = 1 }: { entry: LogMessage; transformMessage: (message: string) => string; mobile: boolean; repeatCount?: number }) {
+function Message({
+  entry,
+  transformMessage,
+  mobile,
+  repeatCount = 1
+}: {
+  entry: LogMessage;
+  transformMessage: (message: string) => string;
+  mobile: boolean;
+  repeatCount?: number;
+}) {
+  const { t } = useTranslation();
   const className = classNames(
     mobile ? styles.chatMobileMessage : styles.chatMessage,
     importanceClass(entry.message)
   );
   return (
-    <div className={className} title={repeatCount > 1 ? `${repeatCount} repeated log events` : undefined}>
+    <div
+      className={className}
+      title={repeatCount > 1 ? `${repeatCount} repeated log events` : undefined}
+    >
       {parseHtmlToReactElements(transformMessage(entry.message))}
-      {repeatCount > 1 && <span className={styles.logRepeatCount}> (x{repeatCount})</span>}
+      {repeatCount > 1 && (
+        <span className={styles.logRepeatCount}>
+          {' '}
+          {t('GAME_LOG.REPEAT_COUNT', { count: repeatCount })}
+        </span>
+      )}
     </div>
   );
 }
 
-function repeatedEventEnd(messages: LogMessage[], start: number, matcher: RegExp) {
+function repeatedEventEnd(
+  messages: LogMessage[],
+  start: number,
+  matcher: RegExp
+) {
   if (!matcher.test(plainText(messages[start].message))) return start;
 
   let end = start;
@@ -110,7 +155,15 @@ function undoLimitSequence(messages: LogMessage[], start: number) {
   return undoCount > 1 && warning ? { end, undoCount, warning } : null;
 }
 
-function RepeatedMessages({ entries, transformMessage, mobile }: { entries: LogMessage[]; transformMessage: (message: string) => string; mobile: boolean }) {
+function RepeatedMessages({
+  entries,
+  transformMessage,
+  mobile
+}: {
+  entries: LogMessage[];
+  transformMessage: (message: string) => string;
+  mobile: boolean;
+}) {
   const output: React.ReactNode[] = [];
 
   for (let index = 0; index < entries.length; index++) {
@@ -161,10 +214,19 @@ function combatGroupEnd(messages: LogMessage[], start: number) {
 
   for (let index = start + 1; index < messages.length; index++) {
     const text = plainText(messages[index].message);
-    if (TURN_MARKER_RE.test(text) || CHAT_RE.test(messages[index].message) || COMBAT_START_RE.test(text)) return -1;
+    if (
+      TURN_MARKER_RE.test(text) ||
+      CHAT_RE.test(messages[index].message) ||
+      COMBAT_START_RE.test(text)
+    )
+      return -1;
     if (COMBAT_END_RE.test(text)) {
       const segment = messages.slice(start, index + 1);
-      return segment.some((entry) => COMBAT_SIGNAL_RE.test(plainText(entry.message))) ? index : -1;
+      return segment.some((entry) =>
+        COMBAT_SIGNAL_RE.test(plainText(entry.message))
+      )
+        ? index
+        : -1;
     }
   }
   return -1;
@@ -177,6 +239,7 @@ const GameLogMessages = React.memo(function GameLogMessages({
   playerNames,
   mobile = false
 }: Props) {
+  const { t } = useTranslation();
   const output = React.useMemo(() => {
     const messages = (chatLog ?? [])
       .map((message, originalIndex) => ({ message, originalIndex }))
@@ -192,18 +255,36 @@ const GameLogMessages = React.memo(function GameLogMessages({
       const entry = messages[index];
       const turnMarker = plainText(entry.message).match(TURN_MARKER_RE);
       if (turnMarker) {
-        nextOutput.push(<TurnDivider key={`turn-${entry.originalIndex}`} marker={turnMarker} playerNames={playerNames} />);
+        nextOutput.push(
+          <TurnDivider
+            key={`turn-${entry.originalIndex}`}
+            marker={turnMarker}
+            playerNames={playerNames}
+          />
+        );
         continue;
       }
 
       const groupEnd = combatGroupEnd(messages, index);
       if (groupEnd !== -1) {
         chainLinkNumber++;
-        const closesCombatChain = COMBAT_CHAIN_CLOSED_RE.test(plainText(messages[groupEnd].message));
+        const closesCombatChain = COMBAT_CHAIN_CLOSED_RE.test(
+          plainText(messages[groupEnd].message)
+        );
         nextOutput.push(
-          <section className={styles.combatGroup} key={`combat-${entry.originalIndex}`} aria-label="Combat sequence">
-            <div className={styles.combatGroupLabel}>Chain Link {chainLinkNumber}</div>
-            <RepeatedMessages entries={messages.slice(index, groupEnd + 1)} transformMessage={transformMessage} mobile={mobile} />
+          <section
+            className={styles.combatGroup}
+            key={`combat-${entry.originalIndex}`}
+            aria-label={t('GAME_LOG.COMBAT_SEQUENCE')}
+          >
+            <div className={styles.combatGroupLabel}>
+              {t('GAME_LOG.CHAIN_LINK', { number: chainLinkNumber })}
+            </div>
+            <RepeatedMessages
+              entries={messages.slice(index, groupEnd + 1)}
+              transformMessage={transformMessage}
+              mobile={mobile}
+            />
           </section>
         );
         if (closesCombatChain) chainLinkNumber = 0;
@@ -247,11 +328,12 @@ const GameLogMessages = React.memo(function GameLogMessages({
         />
       );
       index = end;
-      if (COMBAT_CHAIN_CLOSED_RE.test(plainText(entry.message))) chainLinkNumber = 0;
+      if (COMBAT_CHAIN_CLOSED_RE.test(plainText(entry.message)))
+        chainLinkNumber = 0;
     }
 
     return nextOutput;
-  }, [chatLog, chatFilter, transformMessage, playerNames, mobile]);
+  }, [chatLog, chatFilter, transformMessage, playerNames, mobile, t]);
 
   return <>{output}</>;
 });

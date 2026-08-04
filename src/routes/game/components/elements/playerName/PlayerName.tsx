@@ -21,8 +21,10 @@ import PlayerNoteModal from './PlayerNoteModal';
 import { createPatreonIconMap } from 'utils/patronIcons';
 import useSetting from 'hooks/useSetting';
 import { IS_STREAMER_MODE } from 'features/options/constants';
+import { useTranslation } from 'react-i18next';
 
 export default function PlayerName(player: Player) {
+  const { t } = useTranslation();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
   const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
@@ -197,16 +199,24 @@ export default function PlayerName(player: Player) {
 
   // Memoized: only rebuilt when the underlying list reference changes
   const sentRequestsByUsername = useMemo(
-    () => new Map(
-      sentData?.sentRequests?.map((req: any) => [req.recipientUsername, req.recipientUserId]) || []
-    ),
+    () =>
+      new Map(
+        sentData?.sentRequests?.map((req: any) => [
+          req.recipientUsername,
+          req.recipientUserId
+        ]) || []
+      ),
     [sentData?.sentRequests]
   );
 
   const blockedUsersByUsername = useMemo(
-    () => new Map(
-      blockedData?.blockedUsers?.map((user: any) => [user.username, user.blockedUserId]) || []
-    ),
+    () =>
+      new Map(
+        blockedData?.blockedUsers?.map((user: any) => [
+          user.username,
+          user.blockedUserId
+        ]) || []
+      ),
     [blockedData?.blockedUsers]
   );
 
@@ -307,7 +317,14 @@ export default function PlayerName(player: Player) {
   };
 
   const iconMap = useMemo(
-    () => createPatreonIconMap(isContributor, isPvtVoidPatron, isPatron, isPracticeDummy, metafyTiers),
+    () =>
+      createPatreonIconMap(
+        isContributor,
+        isPvtVoidPatron,
+        isPatron,
+        isPracticeDummy,
+        metafyTiers
+      ),
     [isContributor, isPvtVoidPatron, isPatron, isPracticeDummy, metafyTiers]
   );
 
@@ -358,7 +375,7 @@ export default function PlayerName(player: Player) {
             <button
               className={styles.dropdownButton}
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              title="Open player options"
+              title={t('PLAYER_NAME.OPEN_PLAYER_OPTIONS')}
             >
               <IoMdArrowDropdown
                 className={`${styles.dropdownArrow} ${

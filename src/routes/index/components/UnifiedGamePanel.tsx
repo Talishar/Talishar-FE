@@ -43,7 +43,7 @@ const UnifiedGamePanel = () => {
   });
   // Initial stuff to allow the lang to change
   const { t, i18n, ready } = useTranslation();
-  
+
   useEffect(() => {
     setCookie('unifiedGamePanelExpanded', String(isExpanded));
   }, [isExpanded]);
@@ -54,7 +54,10 @@ const UnifiedGamePanel = () => {
 
   if (!isLoggedIn) {
     return (
-      <section className={styles.panel} aria-label={t('MENU.CREATE_GAME.TITLE')}>
+      <section
+        className={styles.panel}
+        aria-label={t('MENU.CREATE_GAME.TITLE')}
+      >
         <div className={styles.header}>
           <h3 className={styles.title}>{t('MENU.CREATE_GAME.TITLE')}</h3>
           <button
@@ -62,9 +65,17 @@ const UnifiedGamePanel = () => {
             className={styles.toggleButton}
             onClick={() => setIsExpanded(!isExpanded)}
             aria-expanded={isExpanded}
-            aria-label={isExpanded ? t('UNITED_GAME_PANEL.MINIMIZE') : t('UNITED_GAME_PANEL.EXPAND')}
+            aria-label={
+              isExpanded
+                ? t('UNITED_GAME_PANEL.MINIMIZE')
+                : t('UNITED_GAME_PANEL.EXPAND')
+            }
           >
-            {isExpanded ? <FaChevronUp size={16} /> : <FaChevronDown size={16} />}
+            {isExpanded ? (
+              <FaChevronUp size={16} />
+            ) : (
+              <FaChevronDown size={16} />
+            )}
           </button>
         </div>
 
@@ -80,15 +91,22 @@ const UnifiedGamePanel = () => {
   }
 
   return (
-    <section className={styles.panel} aria-label={t("UNITED_GAME_PANEL.GAME_SETUP")}>
+    <section
+      className={styles.panel}
+      aria-label={t('UNITED_GAME_PANEL.GAME_SETUP')}
+    >
       <div className={styles.header}>
-        <h3 className={styles.title}>{t("UNITED_GAME_PANEL.JOIN_CREATE")}</h3>
+        <h3 className={styles.title}>{t('UNITED_GAME_PANEL.JOIN_CREATE')}</h3>
         <button
           type="button"
           className={styles.toggleButton}
           onClick={() => setIsExpanded(!isExpanded)}
           aria-expanded={isExpanded}
-          aria-label={isExpanded ? t("UNITED_GAME_PANEL.MINIMIZE") : t("UNITED_GAME_PANEL.EXPAND")}
+          aria-label={
+            isExpanded
+              ? t('UNITED_GAME_PANEL.MINIMIZE')
+              : t('UNITED_GAME_PANEL.EXPAND')
+          }
         >
           {isExpanded ? <FaChevronUp size={16} /> : <FaChevronDown size={16} />}
         </button>

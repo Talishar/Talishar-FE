@@ -1,5 +1,6 @@
 import styles from '../PriorityControl.module.css';
 import * as optConst from 'features/options/constants';
+import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { TbSwordOff } from 'react-icons/tb';
 import classNames from 'classnames';
@@ -14,6 +15,7 @@ import { useButtonDisableContext } from 'contexts/ButtonDisableContext';
 const SkipReactionsToggle = () => {
   const settingsData = useAppSelector(getSettingsEntity);
   const dispatch = useAppDispatch();
+  const { t } = useTranslation();
   const { isDisabled, triggerDisable } = useButtonDisableContext();
   const gameInfo = useAppSelector(getGameInfo, shallowEqual);
 
@@ -43,9 +45,9 @@ const SkipReactionsToggle = () => {
     <div>
       <button
         className={buttonStyle}
-        aria-label="Pass Reactions"
+        aria-label={t('MENU.PASS_REACTIONS')}
         onClick={handleClick}
-        data-tooltip="Pass Reactions (resets at the start of each turn)"
+        data-tooltip={t('MENU.PASS_REACTIONS_TOOLTIP')}
         data-placement="top-end"
         disabled={isDisabled}
       >

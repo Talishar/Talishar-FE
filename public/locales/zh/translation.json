@@ -12,6 +12,7 @@
     },
     "DESCRIPTION": "Talishar 是一个免费的、基于浏览器的社区平台，每天有超过 9000 名玩家在这里进行 Flesh & Blood 的实时对战。带上您的套牌，与全球玩家同场竞技，精通您的英雄。",
     "DISCLAIMER": "<2><1>免责声明：</1> Talishar 是一个开源的粉丝制作平台，与 LSS 无关。它可能不能完全准确地反映官方书面规则。如果您对互动或判罚有疑问，请联系 <3> JudgeHub Discord </3> 上的裁判社区进行澄清。</2><2>Talishar 与 Legend Story Studios 没有任何关联。Legend Story Studios®、Flesh and Blood™ 及系列名称是 Legend Story Studios 的商标。Flesh and Blood 的角色、卡牌、标志和美术作品均为 <4> Legend Story Studios </4> 的财产。© Legend Story Studios</2>",
+    "DISCORD": "",
     "FAQ": {
       "BUG_FEATURE_A": "我们非常欢迎您的反馈，没有这些反馈这个平台就不会有今天！您可以通过我们的 <a href='https://discord.gg/JykuRkdd5S' target='_blank'>Discord</a> 服务器报告问题或提出建议。玩家的意见能帮助我们改进 Talishar。",
       "BUG_FEATURE_Q": "如果我发现错误或有建议怎么办？",
@@ -47,6 +48,7 @@
       "SPICY_DESCRIPTION": "试验各种策略并完善您的构筑",
       "SPICY_TITLE": " 测试您的黑科技"
     },
+    "GITHUB": "",
     "LSS_RELATIONSHIP_DESCRIPTION": "我们与 Flesh & Blood 的创作者 Legend Story Studios (LSS) 不存在附属、背书或联系。Talishar 作为一个由粉丝制作的平台运营，旨在庆祝和支持 FAB 社区。</0><1>尽管我们努力保持规则准确，但 Talishar 可能并非官方规则的完全准确表现。如需官方裁决和澄清，我们建议在 <2>Judge Hub Discord</2> 咨询裁判社区或访问 <3>官方 FAB 规则和政策中心</3>。</1>",
     "LSS_RELATIONSHIP_TITLE": " 我们与 Legend Story Studios 的关系",
     "STATS": {
@@ -55,7 +57,9 @@
       "PLAYERS": "<0>{{players}}</0><1>每日玩家</1>"
     },
     "SUB_HEADER": "非官方的 Flesh & Blood 在线平台",
+    "SUPPORT_METAFY": "",
     "TITLE": "欢迎来到 Talishar",
+    "UNOFFICIAL_TITLE": "",
     "WHAT_IS_DESCRIPTION": "Talishar 是由 Flesh & Blood 社区为社区构建的一个充满热情的项目。我们创建这个平台，旨在为玩家提供一个免费、易于访问且热情的空间，以游玩和测试套牌想法。无论您是想在参加当地军械库赛事前学习游戏的休闲玩家，还是想要多加练习的竞技玩家，Talishar 都在这里为您服务。",
     "WHAT_IS_TITLE": " 什么是 Talishar？",
     "WHO_MAINTAINS_DESCRIPTION": "Talishar 由一个对 Flesh & Blood 充满热情的志愿开发者和社区成员组成的敬业团队维护。我们与 Legend Story Studios (LSS) 没有任何关联。我们的团队完全在自愿的基础上工作，以保持平台的运行，编写新卡牌系列代码，修复错误并实施新功能。我们通过 Metafy 等可选贡献平台得到社区的支持，这有助于我们支付服务器成本和资助开发。",
@@ -107,15 +111,23 @@
       "REDIRECTING": "正在重定向到主页..."
     },
     "VERIFY": {
+      "ALLOW": "",
       "AUTHORIZATION_FAILED": "授权失败",
       "AUTHORIZATION_FAILED_MESSAGE": "无效的应用或重定向URI。",
       "AUTHORIZE_APP": "授权应用",
+      "AUTHORIZE_FAILED": "",
       "AUTHORIZING": "验证中...",
+      "DENY": "",
+      "DISCLAIMER": "",
       "DONT_HAVE_ACCOUNT": "没有账户？<0>注册</0>",
       "INVALID_REQUEST": "无效请求",
       "INVALID_REQUEST_MESSAGE": "缺少必要的参数。请确保授权链接包含 <0>app_id</0> 和 <1>redirect_uri</1>。",
+      "PERMISSION_EMAIL": "",
+      "PERMISSION_USERNAME": "",
+      "PERMISSIONS_TITLE": "",
       "REQUEST_PERMISSION": "请求授权以识别您的身份。",
       "RETURN_HOME": "返回主页",
+      "SIGN_IN": "",
       "SIGNIN_CONTINUE": "登陆以继续",
       "WAIT_MESSAGE": "请稍等，正在验证请求。"
     }
@@ -123,6 +135,18 @@
   "BASE": {
     "ERROR_ALERT": "发生了一个错误！",
     "SEARCH": "搜索"
+  },
+  "CARD_KEYWORD_STRIP": {
+    "MORE_one": "",
+    "MORE_other": "",
+    "TITLE": ""
+  },
+  "CARD_LIST": {
+    "ERROR": "",
+    "LOADING": "",
+    "NO_CARDS_FOUND": "",
+    "NO_CARDS_IN_ZONE": "",
+    "SORT": ""
   },
   "CHAIN_LINK_SUMMARY": {
     "ATTACK": "",
@@ -135,6 +159,18 @@
     "NO_BLOCKS": "",
     "NO_MODIFIERS": "",
     "POWER_COUNTER_ALT": ""
+  },
+  "CHAT": {
+    "ALL": "",
+    "CHAT": "",
+    "INVITE": "",
+    "LOG": "",
+    "QUICK_CHAT": "",
+    "RECENT": "",
+    "TYPING": ""
+  },
+  "COMBAT_CHAIN": {
+    "DRAG_TOOLTIP": ""
   },
   "COMMUNITY_CONTENT": {
     "BY": "作者",
@@ -162,17 +198,9 @@
     "SHOW_LESS": "",
     "TITLE": ""
   },
-  "COOKIE_CONSENT": {
-    "ACCEPT_ALL": "",
-    "ADVERTISING": "",
-    "ANALYTICS": "",
-    "CHANGE_CHOICE": "",
-    "DECLINE_ANALYTICS": "",
-    "DESCRIPTION": "",
-    "ESSENTIAL": "",
-    "LEARN_MORE": "",
-    "SHOW_LESS": "",
-    "TITLE": ""
+  "CURRENT_ATTACK": {
+    "ATTACK_SYMBOL": "",
+    "DEFENSE_SYMBOL": ""
   },
   "DECKS": {
     "ADD_DECK": "",
@@ -200,6 +228,15 @@
     "TOKENS": "",
     "UNSAVED_CHANGES": "",
     "UPSELL_BANNER": ""
+  },
+  "DEV_TOOL": {
+    "BUG_REPORT_VARIANT": "",
+    "DEBUG_GAME_ID": "",
+    "LOCAL_GAME_ID": "",
+    "REPLACE_LOCAL": "",
+    "TITLE": "",
+    "TOGGLE": "",
+    "WILL_LOAD": ""
   },
   "END_GAME": {
     "ACTIVATED": "",
@@ -307,11 +344,8 @@
     "TITLE": "",
     "UNKNOWN_ERROR": ""
   },
-  "ERROR_PAGE": {
-    "HOME": "",
-    "MESSAGE": "",
-    "TITLE": "",
-    "UNKNOWN_ERROR": ""
+  "EVENTS": {
+    "DISMISS": ""
   },
   "FILTER": {
     "HERO_FILTER": "英雄筛选"
@@ -405,12 +439,13 @@
     "MATCHUP_APPLIED": "已应用对局：{{hero}}",
     "MATCHUPS": "对局",
     "MODULAR": "模块",
+    "NO": "",
     "NO_GAMEID": "未定义 GameID",
     "NO_SUBTYPE": "",
     "NO_THANKS": "",
     "NO_VARIABLE": "",
     "OPEN_FORMAT_DISCLAIMER": "请注意，新卡牌会在“尽力而为”的基础上添加，可能会有更多错误和不准确的卡牌互动。它可能无法完全准确地反映官方书面规则。如果您对互动或判罚有疑问，请联系 <0>JudgeHub Discord</0> 进行澄清。",
-    "OPEN_FORMAT_DISCLAIMER_HEADER": "",
+    "OPEN_FORMAT_DISCLAIMER_HEADER": "⚠️ ",
     "OPPONENT": "",
     "PITCH": "资源(Pitch)",
     "PITCH_SORT": "按资源对卡牌进行排序",
@@ -448,7 +483,20 @@
     },
     "WAITING": "等待对手",
     "WEAPONS": "武器 / 副手",
+    "YES": "",
     "YOU_WON_DIE": "你赢得了掷骰！"
+  },
+  "GAME_LOG": {
+    "CHAIN_LINK": "",
+    "COMBAT_SEQUENCE": "",
+    "REPEAT_COUNT_one": "",
+    "REPEAT_COUNT_other": "",
+    "TURN": "",
+    "TURN_ARIA": ""
+  },
+  "HAND": {
+    "SCROLL_LEFT": "",
+    "SCROLL_RIGHT": ""
   },
   "HEADER": {
     "ABOUT": "关于",
@@ -471,6 +519,9 @@
     "SETTINGS": "设置",
     "SUPPORT_US": "支持我们！",
     "TALISHAR_LOGO_ALT": "Talishar Logo - 链接至首页"
+  },
+  "HERO_VS_HERO": {
+    "VS": ""
   },
   "HOME": {
     "HERO": {
@@ -504,6 +555,11 @@
   "IN_PROGRESS_GAME": {
     "SPECTATE": "观战"
   },
+  "INVENTORY": {
+    "CLOSE": "",
+    "EMPTY": "",
+    "TITLE": ""
+  },
   "JOIN": {
     "BACK": "返回",
     "BAZAAR_LINK": "",
@@ -528,16 +584,42 @@
     "TALISHAR_DECKS": "",
     "TITLE": "加入游戏"
   },
+  "KEYWORD": {
+    "LOADING_LINK": "",
+    "VIEW_CR": ""
+  },
+  "LAST_PLAYED": {
+    "NEXT_CARD": "",
+    "PREVIOUS_CARD": "",
+    "RECENTLY_PLAYED": ""
+  },
+  "LEADERBOARD": {
+    "AVATAR_ALT": "",
+    "BE": "",
+    "COMMITS": "",
+    "CONTRIBUTOR_TITLE": "",
+    "FE": "",
+    "FOOTNOTE": "",
+    "LOAD_ERROR": "",
+    "LOADING": "",
+    "RANK": "",
+    "SHOW_ALL_one": "",
+    "SHOW_ALL_other": "",
+    "SHOW_FEWER": ""
+  },
   "LEARN": {
     "BANNER_SUBTITLE": "借助我们的社区攻略，提升技巧。",
+    "FREE_FOR_SUPPORTERS": "",
     "LOADING": "加载攻略中...",
     "NO_GUIDES": "暂无攻略。",
+    "NO_IMAGE": "",
     "PAGE_TITLE": "学习",
     "PAGINATION": {
       "NEXT": "下一页",
       "PAGE_INFO": "第 {{page}} 页，共 {{totalPages}} 页",
       "PREVIOUS": "上一页"
     },
+    "SUPPORTER_DISCOUNT": "",
     "TRY_AGAIN": "重试"
   },
   "LEGAL": {
@@ -766,8 +848,16 @@
     "TURN_TIMELINE": ""
   },
   "MENU": {
+    "ALWAYS_HOLD_PRIORITY": "",
+    "ALWAYS_PASS": "",
+    "ALWAYS_PASS_LABEL": "",
     "CREATE_GAME": {
       "AI_DECK": "AI 套牌",
+      "BAZAAR_LINK_MESSAGE": "",
+      "BAZAAR_TAB": "",
+      "CLEAR_SELECTION": "",
+      "COMING_SOON": "",
+      "FAI_CC": "",
       "FORMAT": "游戏赛制",
       "FORMATS": {
         "BLITZ": "闪击战 (Blitz)",
@@ -826,12 +916,17 @@
       "IMPORT": "导入套牌",
       "IMPORT_HELP": "牌表链接 - 来自 FaBrary.net 的 URL",
       "IMPORT_TITLE": "来自 FaBrary.net 的链接",
+      "LOADING": "",
+      "PRACTICE_DUMMY": "",
       "PRECONSTRUCTED_DECK": "预设套牌",
+      "RUST_LOCKED_HINT": "",
       "SAVE_DECK_FAVOURITES": "将套牌保存至 ❤️ 收藏",
+      "SELECT_BAZAAR_DECK_PLACEHOLDER": "",
       "SELECT_DECK_PLACEHOLDER": "",
       "SELECTED_DECK": "已选套牌",
       "SELECTED_DECK_PLACEHOLDER": "选择一个套牌",
       "SINGLE_PLAYER": "练习模式",
+      "TALISHAR_DECKS": "",
       "TITLE": "创建游戏",
       "VISIBILITIES": {
         "FRIENDS": "仅限好友",
@@ -841,7 +936,22 @@
         "PUBLIC_LOBBY": ""
       },
       "VISIBILITY": "可见性"
-    }
+    },
+    "FULL_SCREEN": "",
+    "FULLSCREEN": "",
+    "HIDE_ARENA": "",
+    "HOLD_PRIORITY_LABEL": "",
+    "MANUAL_MODE": "",
+    "MANUAL_TARGETING": "",
+    "MENU_LABEL": "",
+    "MORE_OPTIONS": "",
+    "PASS_REACTIONS": "",
+    "PASS_REACTIONS_TOOLTIP": "",
+    "SHOW_ARENA": "",
+    "SHOW_CHAT": "",
+    "SKIP_ATTACKS": "",
+    "SKIP_ATTACKS_TOOLTIP": "",
+    "TOGGLE_MAIN_MENU": ""
   },
   "MOD_PAGE": {
     "API_WARNING": "",
@@ -929,6 +1039,14 @@
     "JOIN_DECK_NOT_READY": "在上方选择一个套牌以立即加入",
     "JOIN_DECK_READY": "使用预先配置的套牌加入"
   },
+  "OPPONENT_INACTIVE": {
+    "CLAIM_VICTORY": "",
+    "HOURGLASS": "",
+    "IM_STILL_HERE": "",
+    "OPPONENT_INACTIVE": "",
+    "WARNING": "",
+    "YOU_INACTIVE": ""
+  },
   "OPTIONS_MENU": {
     "ALLOW_SPECTATORS_PRIVATE_MATCH": "",
     "CARD_BACK": "",
@@ -975,6 +1093,18 @@
     "SHARED_REPLAY": "分享回放",
     "TERMS_OF_SERVICE_PAGE": "服务条款"
   },
+  "PASS_TURN_DISPLAY": {
+    "ADVANCE_REPLAY": "",
+    "BLOCK": "",
+    "END_TURN": "",
+    "PASS": "",
+    "PASS_PRIORITY": "",
+    "PRIORITY": "",
+    "REACTION": "",
+    "REPLAY": "",
+    "TITLE": "",
+    "WAIT": ""
+  },
   "PASSWORD": {
     "RECOVERY": {
       "BANNER_SUBTITLE": "",
@@ -986,6 +1116,32 @@
       "BANNER_TITLE": "",
       "PAGE_TITLE": ""
     }
+  },
+  "PLAY": {
+    "ADVANCE_REPLAY": ""
+  },
+  "PLAYER_INPUT": {
+    "CLOSE_POPUP": "",
+    "DRAG_MOVE_POPUP": "",
+    "ENTER_NUMBER": "",
+    "NEW_OPT_BOTTOM": "",
+    "NEW_OPT_FIRST": "",
+    "NEW_OPT_LAST": "",
+    "NEW_OPT_SUBMIT": "",
+    "NEW_OPT_TOP": "",
+    "NO_MATCHING_CARDS": "",
+    "OF": "",
+    "SEARCH_CARDS": "",
+    "SUBMIT": "",
+    "TRIGGERS": ""
+  },
+  "PLAYER_NAME": {
+    "CANCEL": "",
+    "CLOSE": "",
+    "NOTE_FOR": "",
+    "NOTE_PLACEHOLDER": "",
+    "OPEN_PLAYER_OPTIONS": "",
+    "SAVE_NOTE": ""
   },
   "PREMIUM_PAGE": {
     "BECOME_SUPPORTER": "",
@@ -1239,29 +1395,8 @@
     "WATCH_AD_TO_CLEAR": "",
     "WHAT_ARE_RUST_COUNTERS": ""
   },
-  "SESSION_RECOVERY": {
-    "ACTIVE_GAME": "",
-    "DISMISS": "",
-    "DISMISS_TITLE": "",
-    "GAME_SESSION_RECOVERED": "",
-    "OPPONENT_DISCONNECTED": "",
-    "OPPONENT_LABEL": "",
-    "RECOVERING": "",
-    "REJOIN_FAILED": "",
-    "REJOIN_GAME": "",
-    "RESUME_TITLE": "",
-    "RESUME_YOUR_GAME": "",
-    "UNABLE_TO_RECOVER": ""
-  },
-  "RUST_COUNTER_PANEL": {
-    "DEV_MODE_NOTE": "",
-    "RUST_COUNTERS_other": "",
-    "SUPPORTER_MESSAGE": "",
-    "TOOLTIP": "",
-    "WATCH_AD_NOTE": "",
-    "WATCH_AD_TO_CLEAR": "",
-    "WHAT_ARE_RUST_COUNTERS": "",
-    "RUST_COUNTERS_one": ""
+  "SEARCH_CARD": {
+    "SUBMIT": ""
   },
   "SESSION_RECOVERY": {
     "ACTIVE_GAME": "",
@@ -1336,7 +1471,9 @@
     "ERROR_INCOMPLETE_RESPONSE": "服务器响应不完整。",
     "ERROR_INVALID_TOKEN": "无效的分享回放代码。",
     "ERROR_NO_TOKEN": "未提供分享回放代码。",
-    "LOADING": "加载回放中..."
+    "ERROR_TITLE": "",
+    "LOADING": "加载回放中...",
+    "RETURN_MAIN_MENU": ""
   },
   "SIGNUP": {
     "BANNER_SUBTITLE": "",
@@ -1353,6 +1490,17 @@
     "LOCK": "",
     "METAFY_SUPPORTER_EXCLUSIVE": "",
     "UNLOCK_CUSTOM_THEMES": ""
+  },
+  "TURN_INFO": {
+    "OPPONENT": "",
+    "PLAYERS_TURN": "",
+    "TURN_NUMBER": "",
+    "UNKNOWN": ""
+  },
+  "TURN_WIDGET": {
+    "PASS": "",
+    "SPACEBAR": "",
+    "WAIT": ""
   },
   "UNITED_GAME_PANEL": {
     "EXPAND": "展开面板",
@@ -1380,6 +1528,7 @@
       "LOGGING_IN": "登录中...",
       "LOGIN": "登录",
       "LOGIN_METAFY": "使用 Metafy 登录",
+      "LOGIN_NETWORK_ERROR": "",
       "NETWORK_ERROR": "",
       "NO_ACCOUNT": "还没有账号？",
       "OR": "或",
@@ -1437,5 +1586,21 @@
     "WHITELISTED_SUCCESS_one": "",
     "WHITELISTED_SUCCESS_other": "",
     "WHITELISTING": ""
+  },
+  "ZONES": {
+    "ACTIVE_LAYERS": "",
+    "ARMS": "",
+    "ARSENAL": "",
+    "BANISH": "",
+    "CHEST": "",
+    "COUNT_YOUR_BLESSINGS": "",
+    "DECK": "",
+    "EARTH_CARDS_COUNT": "",
+    "GRAVEYARD": "",
+    "HEAD": "",
+    "LEGS": "",
+    "PASS": "",
+    "PITCH": "",
+    "SOUL": ""
   }
 }

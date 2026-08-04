@@ -20,7 +20,7 @@ function TooltipPortal({ anchorRef, names }: TooltipPortalProps) {
       const rect = anchorRef.current.getBoundingClientRect();
       setPos({
         top: rect.bottom + window.scrollY + 4,
-        left: rect.left + window.scrollX + rect.width / 2,
+        left: rect.left + window.scrollX + rect.width / 2
       });
     }
   }, [anchorRef]);
@@ -28,7 +28,12 @@ function TooltipPortal({ anchorRef, names }: TooltipPortalProps) {
   return ReactDOM.createPortal(
     <div
       className={styles.tooltip}
-      style={{ position: 'absolute', top: pos.top, left: pos.left, transform: 'translateX(-50%)' }}
+      style={{
+        position: 'absolute',
+        top: pos.top,
+        left: pos.left,
+        transform: 'translateX(-50%)'
+      }}
     >
       {names.map((name, i) => (
         <div key={i}>{name}</div>
@@ -38,12 +43,17 @@ function TooltipPortal({ anchorRef, names }: TooltipPortalProps) {
   );
 }
 
-export default function SpectatorCount({ compact = false }: { compact?: boolean }) {
+export default function SpectatorCount({
+  compact = false
+}: {
+  compact?: boolean;
+}) {
   const spectatorCount = useAppSelector(
     (state: RootState) => state.game?.gameDynamicInfo?.spectatorCount ?? 0
   );
   const spectatorNames = useAppSelector(
-    (state: RootState) => state.game?.gameDynamicInfo?.spectatorNames ?? emptyArray
+    (state: RootState) =>
+      state.game?.gameDynamicInfo?.spectatorNames ?? emptyArray
   );
   const [showTooltip, setShowTooltip] = useState(false);
   const anchorRef = useRef<HTMLDivElement>(null);
@@ -59,7 +69,9 @@ export default function SpectatorCount({ compact = false }: { compact?: boolean 
         className={styles.spectatorCountCompact}
         onMouseEnter={() => setShowTooltip(true)}
         onMouseLeave={() => setShowTooltip(false)}
-        aria-label={`${spectatorCount} ${spectatorCount === 1 ? 'spectator' : 'spectators'} watching`}
+        aria-label={`${spectatorCount} ${
+          spectatorCount === 1 ? 'spectator' : 'spectators'
+        } watching`}
       >
         <FaEye aria-hidden="true" />
         <span className={styles.spectatorCountBadge}>{spectatorCount}</span>
@@ -78,8 +90,8 @@ export default function SpectatorCount({ compact = false }: { compact?: boolean 
         onMouseEnter={() => setShowTooltip(true)}
         onMouseLeave={() => setShowTooltip(false)}
       >
-        <FaEye style={{ verticalAlign: 'middle' }} /> {spectatorCount === 1 ? 'Spectator' : 'Spectators'}:{' '}
-        {spectatorCount}
+        <FaEye style={{ verticalAlign: 'middle' }} />{' '}
+        {spectatorCount === 1 ? 'Spectator' : 'Spectators'}: {spectatorCount}
         {showTooltip && spectatorNames.length > 0 && (
           <TooltipPortal anchorRef={anchorRef} names={spectatorNames} />
         )}

@@ -14,14 +14,17 @@ export function PanelProvider({ children }: { children: React.ReactNode }) {
   const [isManualModeOpen, setIsManualModeOpen] = useState(false);
 
   const value = useMemo(
-    () => ({ isDevToolOpen, setIsDevToolOpen, isManualModeOpen, setIsManualModeOpen }),
+    () => ({
+      isDevToolOpen,
+      setIsDevToolOpen,
+      isManualModeOpen,
+      setIsManualModeOpen
+    }),
     [isDevToolOpen, isManualModeOpen]
   );
 
   return (
-    <PanelContext.Provider value={value}>
-      {children}
-    </PanelContext.Provider>
+    <PanelContext.Provider value={value}>{children}</PanelContext.Provider>
   );
 }
 

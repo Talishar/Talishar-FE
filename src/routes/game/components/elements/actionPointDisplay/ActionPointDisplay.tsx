@@ -55,9 +55,14 @@ export default function ActionPointDisplay(props: ActionPointDisplayProps) {
     previousAPRef.current = APAvailable;
   }, [APAvailable, dispatch, props.isPlayer]);
 
-  const handleActionPointPopupComplete = useCallback((id: string) => {
-    dispatch(removeActionPointPopup({ isPlayer: props.isPlayer || false, id }));
-  }, [dispatch, props.isPlayer]);
+  const handleActionPointPopupComplete = useCallback(
+    (id: string) => {
+      dispatch(
+        removeActionPointPopup({ isPlayer: props.isPlayer || false, id })
+      );
+    },
+    [dispatch, props.isPlayer]
+  );
 
   const isOtherPlayerTurn = Number(turnPlayer) === Number(otherPlayer);
   const shouldShowRedImage = props.isPlayer
@@ -71,9 +76,7 @@ export default function ActionPointDisplay(props: ActionPointDisplayProps) {
   return (
     <div className={styles.actionPointDisplay}>
       <div className={actionPointClass}>
-        <span className={styles.tick}>
-          {`${APAvailable} AP`}
-        </span>
+        <span className={styles.tick}>{`${APAvailable} AP`}</span>
       </div>
       {actionPointPopups.map((popup) => (
         <ActionPointPopup

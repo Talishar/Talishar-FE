@@ -1,9 +1,21 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState
+} from 'react';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import CardDisplay from '../../elements/cardDisplay/CardDisplay';
 import styles from './ActiveLayersZone.module.css';
-import { motion, AnimatePresence, useReducedMotion, useMotionValue, useTransform } from 'framer-motion';
+import {
+  motion,
+  AnimatePresence,
+  useReducedMotion,
+  useMotionValue,
+  useTransform
+} from 'framer-motion';
 import ReorderLayers from './ReorderLayers';
 import useShowModal from 'hooks/useShowModals';
 import useOpponentPresencePrompt from 'hooks/useOpponentPresencePrompt';
@@ -18,6 +30,7 @@ import { BiTargetLock } from 'react-icons/bi';
 import { MdDragHandle, MdOpenWith, MdHeight } from 'react-icons/md';
 import Button from '../../../../../features/Button';
 import { Card } from 'features/Card';
+import { useTranslation } from 'react-i18next';
 
 const GROUPING_THRESHOLD = 1;
 const STORAGE_KEY_Y = 'activeLayersPositionY';
@@ -52,6 +65,7 @@ function groupConsecutiveCards(cards: Card[], playerID: number): CardGroup[] {
 
 export default function ActiveLayersZone() {
   const showModal = useShowModal();
+  const { t } = useTranslation();
   const prefersReducedMotion = useReducedMotion();
   const activeLayer = useAppSelector(
     (state: RootState) => state.game.activeLayers
@@ -71,7 +85,8 @@ export default function ActiveLayersZone() {
   );
 
   const staticCards = useMemo(
-    () => activeLayer?.cardList?.filter((card: Card) => card.reorderable === false),
+    () =>
+      activeLayer?.cardList?.filter((card: Card) => card.reorderable === false),
     [activeLayer?.cardList]
   );
   const reorderableCards = useMemo(
@@ -152,13 +167,19 @@ export default function ActiveLayersZone() {
     const handleMouseMove = (e: MouseEvent) => {
       const deltaY = e.clientY - dragStartYRef.current;
       const deltaDvh = (deltaY / window.innerHeight) * 100;
-      const newOffsetY = Math.max(MIN_Y_OFFSET, Math.min(MAX_Y_OFFSET, dragStartOffsetRef.current + deltaDvh));
+      const newOffsetY = Math.max(
+        MIN_Y_OFFSET,
+        Math.min(MAX_Y_OFFSET, dragStartOffsetRef.current + deltaDvh)
+      );
       yOffsetMV.set(newOffsetY); // direct DOM update - no React re-render
 
       if (xDragEnabled && window.innerWidth > MOBILE_BREAKPOINT) {
         const deltaX = e.clientX - dragStartXRef.current;
         const deltaDvw = (deltaX / window.innerWidth) * 100;
-        const newOffsetX = Math.max(MIN_X_OFFSET, Math.min(MAX_X_OFFSET, dragStartOffsetXRef.current + deltaDvw));
+        const newOffsetX = Math.max(
+          MIN_X_OFFSET,
+          Math.min(MAX_X_OFFSET, dragStartOffsetXRef.current + deltaDvw)
+        );
         xOffsetMV.set(newOffsetX); // direct DOM update - no React re-render
       }
     };
@@ -166,13 +187,19 @@ export default function ActiveLayersZone() {
     const handleTouchMove = (e: TouchEvent) => {
       const deltaY = e.touches[0].clientY - dragStartYRef.current;
       const deltaDvh = (deltaY / window.innerHeight) * 100;
-      const newOffsetY = Math.max(MIN_Y_OFFSET, Math.min(MAX_Y_OFFSET, dragStartOffsetRef.current + deltaDvh));
+      const newOffsetY = Math.max(
+        MIN_Y_OFFSET,
+        Math.min(MAX_Y_OFFSET, dragStartOffsetRef.current + deltaDvh)
+      );
       yOffsetMV.set(newOffsetY); // direct DOM update - no React re-render
 
       if (xDragEnabled && window.innerWidth > MOBILE_BREAKPOINT) {
         const deltaX = e.touches[0].clientX - dragStartXRef.current;
         const deltaDvw = (deltaX / window.innerWidth) * 100;
-        const newOffsetX = Math.max(MIN_X_OFFSET, Math.min(MAX_X_OFFSET, dragStartOffsetXRef.current + deltaDvw));
+        const newOffsetX = Math.max(
+          MIN_X_OFFSET,
+          Math.min(MAX_X_OFFSET, dragStartOffsetXRef.current + deltaDvw)
+        );
         xOffsetMV.set(newOffsetX); // direct DOM update - no React re-render
       }
     };
@@ -200,7 +227,7 @@ export default function ActiveLayersZone() {
       document.removeEventListener('mouseup', handleMouseUp);
       document.removeEventListener('touchend', handleTouchEnd);
     };
-  // dragStart*Ref and dragStartOffset*Ref are refs - excluded from deps intentionally
+    // dragStart*Ref and dragStartOffset*Ref are refs - excluded from deps intentionally
   }, [isDragging, yOffsetMV, xOffsetMV, xDragEnabled]);
 
   const handlePassTurn = () => {
@@ -247,7 +274,7 @@ export default function ActiveLayersZone() {
             <div className={styles.activeLayersTitle}>
               <div className={styles.titlesColumn}>
                 <h3 className={styles.title}>
-                  Active Layers
+                  {t('ZONES.ACTIVE_LAYERS')}
                   {activeLayer.isReorderable
                     ? ' (Drag highlighted to reorder)'
                     : null}
@@ -257,46 +284,50 @@ export default function ActiveLayersZone() {
               {canPassPhase && (
                 <div className={styles.passTurnBox}>
                   <button className={styles.passTurn} onClick={handlePassTurn}>
-                    Pass
+                    {t('ZONES.PASS')}
                   </button>
                 </div>
               )}
             </div>
             <div className={styles.activeLayersContents}>
               {cardGroups.map((group, groupIx) => {
-                  if (group.cards.length > GROUPING_THRESHOLD) {
-                    return (
-                      <div key={groupIx} className={styles.groupedCardWrapper}>
-                        <CardDisplay
-                          card={group.cards[0]}
-                          isPlayer={group.isPlayer}
-                        >
-                          <div className={styles.groupedCardCount}>
-                            <span className={styles.groupedCardCountBadge}>
-                              ×{group.cards.length}
-                            </span>
-                          </div>
-                        </CardDisplay>
-                      </div>
-                    );
-                  }
-                  return group.cards.map((card, cardIx) => (
-                    <CardDisplay
-                      card={card}
-                      key={`${groupIx}-${cardIx}`}
-                      isPlayer={group.isPlayer}
-                    />
-                  ));
-                })}
+                if (group.cards.length > GROUPING_THRESHOLD) {
+                  return (
+                    <div key={groupIx} className={styles.groupedCardWrapper}>
+                      <CardDisplay
+                        card={group.cards[0]}
+                        isPlayer={group.isPlayer}
+                      >
+                        <div className={styles.groupedCardCount}>
+                          <span className={styles.groupedCardCountBadge}>
+                            ×{group.cards.length}
+                          </span>
+                        </div>
+                      </CardDisplay>
+                    </div>
+                  );
+                }
+                return group.cards.map((card, cardIx) => (
+                  <CardDisplay
+                    card={card}
+                    key={`${groupIx}-${cardIx}`}
+                    isPlayer={group.isPlayer}
+                  />
+                ));
+              })}
               <ReorderLayers cards={reorderableCards ?? []} />
             </div>
             <div className={styles.activeLayersCallToAction}>
-              <div>{wrapKeywordsInNodes(parseHtmlToReactElements(helpText))}</div>
+              <div>
+                {wrapKeywordsInNodes(parseHtmlToReactElements(helpText))}
+              </div>
               {buttons}
             </div>
           </div>
           <div
-            className={`${styles.grabbyHandle} ${isDragging ? styles.grabbyHandleDragging : ''}`}
+            className={`${styles.grabbyHandle} ${
+              isDragging ? styles.grabbyHandleDragging : ''
+            }`}
             onMouseDown={handleMouseDown}
             onTouchStart={handleTouchStart}
           >

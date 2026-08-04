@@ -12,6 +12,7 @@
     },
     "DESCRIPTION": "Talisharは、無料のブラウザベースのコミュニティプラットフォームです。Flesh & Bloodのリアルタイム対戦を毎日9,000人以上のプレイヤーが楽しんでいます。デッキを構築し、世界中のプレイヤーと対戦し、ヒーローを極めましょう。",
     "DISCLAIMER": "<2><1>免責事項:</1> Talisharは、独立したオープンソースのファンメイドプロジェクトであり、Legend Story Studios (LSS)とは一切関係ありません。そのため、公式のルールを完全に反映しているとは限りません。効果や裁定についての質問がある場合は、<3> JudgeHub Discord </3>でジャッジコミュニティにご相談ください。</2><2>Talisharは、Legend Story Studiosとは一切関係ありません。Legend Story Studios®、Flesh and Blood™、およびセット名はLegend Story Studiosの商標です。Flesh and Bloodのキャラクター、カード、ロゴ、アートは<4> Legend Story Studios </4>の所有物です。 © Legend Story Studios</2>",
+    "DISCORD": "",
     "FAQ": {
       "BUG_FEATURE_A": "皆様からのフィードバックは大変貴重です！問題の報告や機能の提案は、<a href='https://discord.gg/JykuRkdd5S' target='_blank'>Discord</a>サーバーからお願いいたします。プレイヤーの皆様からのフィードバックはTalisharの改善に大きく役立ちます。",
       "BUG_FEATURE_Q": "バグを見つけた場合や、機能の提案がある場合はどうすればいいですか？",
@@ -47,6 +48,7 @@
       "SPICY_DESCRIPTION": "色々な戦術を試し、デッキを磨きましょう！",
       "SPICY_TITLE": " 独創的なアイデアを試そう"
     },
+    "GITHUB": "",
     "LSS_RELATIONSHIP_DESCRIPTION": "<0><strong>Talisharは非公式かつ独立したプラットフォームです。</strong> Legend Story Studios (LSS)、Flesh & Bloodのクリエイターとは、提携・協力関係は一切ございません。Talisharは、FaBコミュニティを祝福し、支援するために作成されたファンメイドプラットフォームです。</0><1>私たちはルールの正確性を維持するために尽力していますが、Talisharは公式ルールを完全に再現しているとは限りません。公式の裁定やルールについては、<2>Judge Hub Discord</2>でジャッジコミュニティに相談するか、<3>official FAB rules and policy center</3>を訪れてください。</1>",
     "LSS_RELATIONSHIP_TITLE": " Legend Story Studiosとの関係",
     "STATS": {
@@ -55,7 +57,9 @@
       "PLAYERS": "<0>{{players}}</0><1>デイリーアクティブユーザー</1>"
     },
     "SUB_HEADER": "Flesh & Bloodの非公式オンラインプラットフォーム",
+    "SUPPORT_METAFY": "",
     "TITLE": "ようこそ！ Talisharへ",
+    "UNOFFICIAL_TITLE": "",
     "WHAT_IS_DESCRIPTION": "Talisharは、Flesh & Bloodコミュニティがコミュニティのために情熱を込めて作り上げたプロジェクトです。このプラットフォームはプレイヤーの皆様に、気軽にプレイしたり、デッキのアイデアを試すことができる無料の環境を提供するために作成されました。",
     "WHAT_IS_TITLE": " Talisharとは何ですか？",
     "WHO_MAINTAINS_DESCRIPTION": "Talisharは、Flesh & Bloodに情熱を注ぐ献身的なボランティア開発者とコミュニティメンバーのチームによって管理されています。私たちのチームは完全にボランティアとして活動しており、プラットフォームの維持、新しいカードセットの実装、不具合の修正、新機能の実装を行なっています。私たちは、Metafyなどの寄付プラットフォームを通じて、コミュニティからのサポートを受け付けています。それらはサーバー費用や、開発資金の確保に役立てています。",
@@ -107,15 +111,23 @@
       "REDIRECTING": ""
     },
     "VERIFY": {
+      "ALLOW": "",
       "AUTHORIZATION_FAILED": "",
       "AUTHORIZATION_FAILED_MESSAGE": "",
       "AUTHORIZE_APP": "",
+      "AUTHORIZE_FAILED": "",
       "AUTHORIZING": "",
+      "DENY": "",
+      "DISCLAIMER": "",
       "DONT_HAVE_ACCOUNT": "",
       "INVALID_REQUEST": "",
       "INVALID_REQUEST_MESSAGE": "",
+      "PERMISSION_EMAIL": "",
+      "PERMISSION_USERNAME": "",
+      "PERMISSIONS_TITLE": "",
       "REQUEST_PERMISSION": "",
       "RETURN_HOME": "",
+      "SIGN_IN": "",
       "SIGNIN_CONTINUE": "",
       "WAIT_MESSAGE": ""
     }
@@ -123,6 +135,18 @@
   "BASE": {
     "ERROR_ALERT": "",
     "SEARCH": ""
+  },
+  "CARD_KEYWORD_STRIP": {
+    "MORE_one": "",
+    "MORE_other": "",
+    "TITLE": ""
+  },
+  "CARD_LIST": {
+    "ERROR": "",
+    "LOADING": "",
+    "NO_CARDS_FOUND": "",
+    "NO_CARDS_IN_ZONE": "",
+    "SORT": ""
   },
   "CHAIN_LINK_SUMMARY": {
     "ATTACK": "",
@@ -135,6 +159,18 @@
     "NO_BLOCKS": "",
     "NO_MODIFIERS": "",
     "POWER_COUNTER_ALT": ""
+  },
+  "CHAT": {
+    "ALL": "",
+    "CHAT": "",
+    "INVITE": "",
+    "LOG": "",
+    "QUICK_CHAT": "",
+    "RECENT": "",
+    "TYPING": ""
+  },
+  "COMBAT_CHAIN": {
+    "DRAG_TOOLTIP": ""
   },
   "COMMUNITY_CONTENT": {
     "BY": "By",
@@ -162,17 +198,9 @@
     "SHOW_LESS": "",
     "TITLE": ""
   },
-  "COOKIE_CONSENT": {
-    "ACCEPT_ALL": "",
-    "ADVERTISING": "",
-    "ANALYTICS": "",
-    "CHANGE_CHOICE": "",
-    "DECLINE_ANALYTICS": "",
-    "DESCRIPTION": "",
-    "ESSENTIAL": "",
-    "LEARN_MORE": "",
-    "SHOW_LESS": "",
-    "TITLE": ""
+  "CURRENT_ATTACK": {
+    "ATTACK_SYMBOL": "",
+    "DEFENSE_SYMBOL": ""
   },
   "DECKS": {
     "ADD_DECK": "",
@@ -200,6 +228,15 @@
     "TOKENS": "",
     "UNSAVED_CHANGES": "",
     "UPSELL_BANNER": ""
+  },
+  "DEV_TOOL": {
+    "BUG_REPORT_VARIANT": "",
+    "DEBUG_GAME_ID": "",
+    "LOCAL_GAME_ID": "",
+    "REPLACE_LOCAL": "",
+    "TITLE": "",
+    "TOGGLE": "",
+    "WILL_LOAD": ""
   },
   "END_GAME": {
     "ACTIVATED": "",
@@ -307,11 +344,8 @@
     "TITLE": "",
     "UNKNOWN_ERROR": ""
   },
-  "ERROR_PAGE": {
-    "HOME": "",
-    "MESSAGE": "",
-    "TITLE": "",
-    "UNKNOWN_ERROR": ""
+  "EVENTS": {
+    "DISMISS": ""
   },
   "FILTER": {
     "HERO_FILTER": "ヒーローフィルター"
@@ -405,12 +439,13 @@
     "MATCHUP_APPLIED": "",
     "MATCHUPS": "",
     "MODULAR": "",
+    "NO": "",
     "NO_GAMEID": "",
     "NO_SUBTYPE": "",
     "NO_THANKS": "",
     "NO_VARIABLE": "",
     "OPEN_FORMAT_DISCLAIMER": "",
-    "OPEN_FORMAT_DISCLAIMER_HEADER": "",
+    "OPEN_FORMAT_DISCLAIMER_HEADER": "⚠️ ",
     "OPPONENT": "",
     "PITCH": "",
     "PITCH_SORT": "",
@@ -448,7 +483,20 @@
     },
     "WAITING": "",
     "WEAPONS": "",
+    "YES": "",
     "YOU_WON_DIE": ""
+  },
+  "GAME_LOG": {
+    "CHAIN_LINK": "",
+    "COMBAT_SEQUENCE": "",
+    "REPEAT_COUNT_one": "",
+    "REPEAT_COUNT_other": "",
+    "TURN": "",
+    "TURN_ARIA": ""
+  },
+  "HAND": {
+    "SCROLL_LEFT": "",
+    "SCROLL_RIGHT": ""
   },
   "HEADER": {
     "ABOUT": "",
@@ -471,6 +519,9 @@
     "SETTINGS": "設定",
     "SUPPORT_US": "Support Us!",
     "TALISHAR_LOGO_ALT": "Talisharのロゴ - ホームページへのリンク"
+  },
+  "HERO_VS_HERO": {
+    "VS": ""
   },
   "HOME": {
     "HERO": {
@@ -504,6 +555,11 @@
   "IN_PROGRESS_GAME": {
     "SPECTATE": "観戦"
   },
+  "INVENTORY": {
+    "CLOSE": "",
+    "EMPTY": "",
+    "TITLE": ""
+  },
   "JOIN": {
     "BACK": "戻る",
     "BAZAAR_LINK": "",
@@ -528,16 +584,42 @@
     "TALISHAR_DECKS": "",
     "TITLE": ""
   },
+  "KEYWORD": {
+    "LOADING_LINK": "",
+    "VIEW_CR": ""
+  },
+  "LAST_PLAYED": {
+    "NEXT_CARD": "",
+    "PREVIOUS_CARD": "",
+    "RECENTLY_PLAYED": ""
+  },
+  "LEADERBOARD": {
+    "AVATAR_ALT": "",
+    "BE": "",
+    "COMMITS": "",
+    "CONTRIBUTOR_TITLE": "",
+    "FE": "",
+    "FOOTNOTE": "",
+    "LOAD_ERROR": "",
+    "LOADING": "",
+    "RANK": "",
+    "SHOW_ALL_one": "",
+    "SHOW_ALL_other": "",
+    "SHOW_FEWER": ""
+  },
   "LEARN": {
     "BANNER_SUBTITLE": "",
+    "FREE_FOR_SUPPORTERS": "",
     "LOADING": "",
     "NO_GUIDES": "",
+    "NO_IMAGE": "",
     "PAGE_TITLE": "",
     "PAGINATION": {
       "NEXT": "",
       "PAGE_INFO": "",
       "PREVIOUS": ""
     },
+    "SUPPORTER_DISCOUNT": "",
     "TRY_AGAIN": ""
   },
   "LEGAL": {
@@ -766,8 +848,16 @@
     "TURN_TIMELINE": ""
   },
   "MENU": {
+    "ALWAYS_HOLD_PRIORITY": "",
+    "ALWAYS_PASS": "",
+    "ALWAYS_PASS_LABEL": "",
     "CREATE_GAME": {
       "AI_DECK": "AIデッキ",
+      "BAZAAR_LINK_MESSAGE": "",
+      "BAZAAR_TAB": "",
+      "CLEAR_SELECTION": "",
+      "COMING_SOON": "",
+      "FAI_CC": "",
       "FORMAT": "フォーマット",
       "FORMATS": {
         "BLITZ": "ブリッツ（Blitz）",
@@ -826,12 +916,17 @@
       "IMPORT": "デッキをインポート",
       "IMPORT_HELP": "デッキリンク - FaBrary.netのURL",
       "IMPORT_TITLE": "FaBrary.netのURL",
+      "LOADING": "",
+      "PRACTICE_DUMMY": "",
       "PRECONSTRUCTED_DECK": "構築済みデッキ",
+      "RUST_LOCKED_HINT": "",
       "SAVE_DECK_FAVOURITES": "デッキをお気に入り❤️に保存",
+      "SELECT_BAZAAR_DECK_PLACEHOLDER": "",
       "SELECT_DECK_PLACEHOLDER": "",
       "SELECTED_DECK": "選択されたデッキ",
       "SELECTED_DECK_PLACEHOLDER": "デッキを選択",
       "SINGLE_PLAYER": "練習モード",
+      "TALISHAR_DECKS": "",
       "TITLE": "ゲームを作成",
       "VISIBILITIES": {
         "FRIENDS": "フレンドのみ",
@@ -841,7 +936,22 @@
         "PUBLIC_LOBBY": ""
       },
       "VISIBILITY": "公開範囲"
-    }
+    },
+    "FULL_SCREEN": "",
+    "FULLSCREEN": "",
+    "HIDE_ARENA": "",
+    "HOLD_PRIORITY_LABEL": "",
+    "MANUAL_MODE": "",
+    "MANUAL_TARGETING": "",
+    "MENU_LABEL": "",
+    "MORE_OPTIONS": "",
+    "PASS_REACTIONS": "",
+    "PASS_REACTIONS_TOOLTIP": "",
+    "SHOW_ARENA": "",
+    "SHOW_CHAT": "",
+    "SKIP_ATTACKS": "",
+    "SKIP_ATTACKS_TOOLTIP": "",
+    "TOGGLE_MAIN_MENU": ""
   },
   "MOD_PAGE": {
     "API_WARNING": "",
@@ -929,6 +1039,14 @@
     "JOIN_DECK_NOT_READY": "上のパネルからデッキを選択して、すぐに参加できます",
     "JOIN_DECK_READY": "構築済みデッキを使用して参加"
   },
+  "OPPONENT_INACTIVE": {
+    "CLAIM_VICTORY": "",
+    "HOURGLASS": "",
+    "IM_STILL_HERE": "",
+    "OPPONENT_INACTIVE": "",
+    "WARNING": "",
+    "YOU_INACTIVE": ""
+  },
   "OPTIONS_MENU": {
     "ALLOW_SPECTATORS_PRIVATE_MATCH": "",
     "CARD_BACK": "",
@@ -975,6 +1093,18 @@
     "SHARED_REPLAY": "",
     "TERMS_OF_SERVICE_PAGE": ""
   },
+  "PASS_TURN_DISPLAY": {
+    "ADVANCE_REPLAY": "",
+    "BLOCK": "",
+    "END_TURN": "",
+    "PASS": "",
+    "PASS_PRIORITY": "",
+    "PRIORITY": "",
+    "REACTION": "",
+    "REPLAY": "",
+    "TITLE": "",
+    "WAIT": ""
+  },
   "PASSWORD": {
     "RECOVERY": {
       "BANNER_SUBTITLE": "",
@@ -986,6 +1116,32 @@
       "BANNER_TITLE": "",
       "PAGE_TITLE": ""
     }
+  },
+  "PLAY": {
+    "ADVANCE_REPLAY": ""
+  },
+  "PLAYER_INPUT": {
+    "CLOSE_POPUP": "",
+    "DRAG_MOVE_POPUP": "",
+    "ENTER_NUMBER": "",
+    "NEW_OPT_BOTTOM": "",
+    "NEW_OPT_FIRST": "",
+    "NEW_OPT_LAST": "",
+    "NEW_OPT_SUBMIT": "",
+    "NEW_OPT_TOP": "",
+    "NO_MATCHING_CARDS": "",
+    "OF": "",
+    "SEARCH_CARDS": "",
+    "SUBMIT": "",
+    "TRIGGERS": ""
+  },
+  "PLAYER_NAME": {
+    "CANCEL": "",
+    "CLOSE": "",
+    "NOTE_FOR": "",
+    "NOTE_PLACEHOLDER": "",
+    "OPEN_PLAYER_OPTIONS": "",
+    "SAVE_NOTE": ""
   },
   "PREMIUM_PAGE": {
     "BECOME_SUPPORTER": "",
@@ -1239,29 +1395,8 @@
     "WATCH_AD_TO_CLEAR": "",
     "WHAT_ARE_RUST_COUNTERS": ""
   },
-  "SESSION_RECOVERY": {
-    "ACTIVE_GAME": "",
-    "DISMISS": "",
-    "DISMISS_TITLE": "",
-    "GAME_SESSION_RECOVERED": "",
-    "OPPONENT_DISCONNECTED": "",
-    "OPPONENT_LABEL": "",
-    "RECOVERING": "",
-    "REJOIN_FAILED": "",
-    "REJOIN_GAME": "",
-    "RESUME_TITLE": "",
-    "RESUME_YOUR_GAME": "",
-    "UNABLE_TO_RECOVER": ""
-  },
-  "RUST_COUNTER_PANEL": {
-    "DEV_MODE_NOTE": "",
-    "RUST_COUNTERS_other": "",
-    "SUPPORTER_MESSAGE": "",
-    "TOOLTIP": "",
-    "WATCH_AD_NOTE": "",
-    "WATCH_AD_TO_CLEAR": "",
-    "WHAT_ARE_RUST_COUNTERS": "",
-    "RUST_COUNTERS_one": ""
+  "SEARCH_CARD": {
+    "SUBMIT": ""
   },
   "SESSION_RECOVERY": {
     "ACTIVE_GAME": "",
@@ -1336,7 +1471,9 @@
     "ERROR_INCOMPLETE_RESPONSE": "",
     "ERROR_INVALID_TOKEN": "",
     "ERROR_NO_TOKEN": "",
-    "LOADING": ""
+    "ERROR_TITLE": "",
+    "LOADING": "",
+    "RETURN_MAIN_MENU": ""
   },
   "SIGNUP": {
     "BANNER_SUBTITLE": "",
@@ -1353,6 +1490,17 @@
     "LOCK": "",
     "METAFY_SUPPORTER_EXCLUSIVE": "",
     "UNLOCK_CUSTOM_THEMES": ""
+  },
+  "TURN_INFO": {
+    "OPPONENT": "",
+    "PLAYERS_TURN": "",
+    "TURN_NUMBER": "",
+    "UNKNOWN": ""
+  },
+  "TURN_WIDGET": {
+    "PASS": "",
+    "SPACEBAR": "",
+    "WAIT": ""
   },
   "UNITED_GAME_PANEL": {
     "EXPAND": "パネルを拡張",
@@ -1380,6 +1528,7 @@
       "LOGGING_IN": "",
       "LOGIN": "",
       "LOGIN_METAFY": "",
+      "LOGIN_NETWORK_ERROR": "",
       "NETWORK_ERROR": "",
       "NO_ACCOUNT": "",
       "OR": "",
@@ -1437,5 +1586,21 @@
     "WHITELISTED_SUCCESS_one": "",
     "WHITELISTED_SUCCESS_other": "",
     "WHITELISTING": ""
+  },
+  "ZONES": {
+    "ACTIVE_LAYERS": "",
+    "ARMS": "",
+    "ARSENAL": "",
+    "BANISH": "",
+    "CHEST": "",
+    "COUNT_YOUR_BLESSINGS": "",
+    "DECK": "",
+    "EARTH_CARDS_COUNT": "",
+    "GRAVEYARD": "",
+    "HEAD": "",
+    "LEGS": "",
+    "PASS": "",
+    "PITCH": "",
+    "SOUL": ""
   }
 }

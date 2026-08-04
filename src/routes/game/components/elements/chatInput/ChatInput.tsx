@@ -31,6 +31,7 @@ import { toast } from 'react-hot-toast';
 import useAuth from 'hooks/useAuth';
 import { CHAT_WHEEL } from 'constants/chatMessages';
 import { isHandCardRotationHeld } from 'utils/handCardRotation';
+import { useTranslation } from 'react-i18next';
 
 const submitButtonClass = classNames(styles.buttonDiv);
 
@@ -169,6 +170,7 @@ export const ChatInput = ({ usePrimary = false }: { usePrimary?: boolean }) => {
 };
 
 const ChatWheel = ({ usePrimary = false }: { usePrimary?: boolean }) => {
+  const { t } = useTranslation();
   const { playerID, gameID, authKey } = useAppSelector(
     getGameInfo,
     shallowEqual
@@ -251,7 +253,7 @@ const ChatWheel = ({ usePrimary = false }: { usePrimary?: boolean }) => {
           className={styles.quickChatToggleButton}
           {...getReferenceProps({ onClick: (e) => e.preventDefault() })}
         >
-          Quick Chat
+          {t('CHAT.QUICK_CHAT')}
         </button>
         <button
           onClick={(e) => {
@@ -260,7 +262,7 @@ const ChatWheel = ({ usePrimary = false }: { usePrimary?: boolean }) => {
           }}
           disabled={sentChatRequest}
         >
-          Invite to Chat
+          {t('CHAT.INVITE')}
         </button>
       </div>
       {modalDisplay &&
@@ -315,6 +317,7 @@ let lastQuickChatSent = 0;
 let quickChatToastPending = false;
 
 const ChatOptions = ({ setModalDisplay }: ChatOptionsProps) => {
+  const { t } = useTranslation();
   const [submitChat] = useSubmitChatMutation();
   const { playerID, gameID, authKey } = useAppSelector(
     getGameInfo,
@@ -386,7 +389,7 @@ const ChatOptions = ({ setModalDisplay }: ChatOptionsProps) => {
             role="button"
             aria-expanded={!recentsCollapsed}
           >
-            ⭐ Recent
+            {t('CHAT.RECENT')}
             <span
               className={`${styles.sectionChevron} ${
                 recentsCollapsed ? styles.sectionChevronCollapsed : ''

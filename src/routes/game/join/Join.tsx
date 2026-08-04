@@ -7,7 +7,10 @@ import {
   useGetGameInfoQuery
 } from 'features/api/apiSlice';
 import { JoinGameAPI } from 'interface/API/JoinGame.php';
-import { IOpenGame, IGameInProgress } from 'routes/index/components/gameList/GameList';
+import {
+  IOpenGame,
+  IGameInProgress
+} from 'routes/index/components/gameList/GameList';
 import { FavoriteDeck } from 'interface/API/GetFavoriteDecks.php';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import styles from './Join.module.css';
@@ -95,7 +98,7 @@ const JoinGame = () => {
   useAdScript(showAds);
 
   // Initial stuff to allow the lang to change
-  const { t, i18n, ready } = useTranslation(); 
+  const { t, i18n, ready } = useTranslation();
 
   let [{ gameName: searchGameName = '0', playerID = '2', authKey = '' }] =
     useKnownSearchParams();
@@ -276,188 +279,193 @@ const JoinGame = () => {
 
   return (
     <div className={styles.pageWrapper}>
-      <PageBanner title={t('JOIN.TITLE', 'Join Game')} subtitle={t('JOIN.SUBTITLE', 'Choose your deck and enter the game')} />
+      <PageBanner
+        title={t('JOIN.TITLE', 'Join Game')}
+        subtitle={t('JOIN.SUBTITLE', 'Choose your deck and enter the game')}
+      />
       <main className={styles.LoginPageContainer}>
-      {showAds && (
-        <aside className={styles.leftRail}>
-          <AdUnit placement="left-rail-1" />
-        </aside>
-      )}
-      <article className={styles.formContainer}>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div className={styles.formInner}>
-            {isPrecon ? (
-              <label>
-                {t('JOIN.PRECON')}
-                <ImageSelect
-                  id="preconDecks"
-                  options={preconDeckOptions}
-                  value={selectedPreconDeck}
-                  onChange={(value) => {
-                    setSelectedPreconDeck(value);
-                    setValue('fabdb', value);
-                  }}
-                  placeholder={t('JOIN.SELECT_DECK')}
-                  aria-invalid={errors.deck?.message ? 'true' : undefined}
-                />
-                <input
-                  type="hidden"
-                  {...register('fabdb')}
-                  value={selectedPreconDeck}
-                />
-                <ErrorMessage
-                  errors={errors}
-                  name="fabdb"
-                  render={({ message }) => <p>{message}</p>}
-                />
-              </label>
-            ) : (
-              <>
-                {isLoggedIn && !isLoading && (
-                  <label>
-                    {t('JOIN.SELECTED_DECK')}
-                    <ImageSelect
-                      id="favoriteDecks"
-                      options={favoriteDeckOptions}
-                      value={selectedFavoriteDeck}
-                      onChange={(value) => {
-                        setSelectedFavoriteDeck(value);
-                        setValue('favoriteDecks', value);
-                      }}
-                      placeholder={t('JOIN.SELECTED_DECK_PLACEHOLDER')}
-                      aria-busy={isLoading}
-                      aria-invalid={
-                        errors.favoriteDecks?.message ? 'true' : undefined
-                      }
-                    />
-                    <input
-                      type="hidden"
-                      {...register('favoriteDecks')}
-                      value={selectedFavoriteDeck}
-                    />
-                    <ErrorMessage
-                      errors={errors}
-                      name="favoriteDecks"
-                      render={({ message }) => <p>{message}</p>}
-                    />
-                  </label>
-                )}
-                <ErrorMessage
-                  errors={errors}
-                  name="favoriteDecks"
-                  render={({ message }) => (
-                    <p className={styles.fieldError}>
-                      <FaExclamationCircle /> {message}
-                    </p>
-                  )}
-                />
-                <fieldset>
-                  <label>
-                    <>
-                      {t('JOIN.IMPORT_DECK')}
-                      {''}
-                      <span
-                        title={t('JOIN.IMPORT_TITLE')}
-                        style={{
-                          cursor: 'help',
-                          display: 'inline-flex',
-                          alignItems: 'center',
-                          marginLeft: '4px'
-                        }}
-                      >
-                        <FaQuestionCircle size={14} />
-                      </span>
-                      <input
-                        type="text"
-                        id="fabdb"
-                        aria-label={t('JOIN.IMPORT_HELP')}
-                        {...register('fabdb')}
-                        aria-invalid={errors.deck?.message ? 'true' : undefined}
-                      />
-                    </>
-                    <ErrorMessage
-                      errors={errors}
-                      name="fabdb"
-                      render={({ message }) => (
-                        <p className={styles.fieldError}>
-                          <FaExclamationCircle /> {message}
-                        </p>
-                      )}
-                    />
-                  </label>
-                  {isLoggedIn && (
+        {showAds && (
+          <aside className={styles.leftRail}>
+            <AdUnit placement="left-rail-1" />
+          </aside>
+        )}
+        <article className={styles.formContainer}>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <div className={styles.formInner}>
+              {isPrecon ? (
+                <label>
+                  {t('JOIN.PRECON')}
+                  <ImageSelect
+                    id="preconDecks"
+                    options={preconDeckOptions}
+                    value={selectedPreconDeck}
+                    onChange={(value) => {
+                      setSelectedPreconDeck(value);
+                      setValue('fabdb', value);
+                    }}
+                    placeholder={t('JOIN.SELECT_DECK')}
+                    aria-invalid={errors.deck?.message ? 'true' : undefined}
+                  />
+                  <input
+                    type="hidden"
+                    {...register('fabdb')}
+                    value={selectedPreconDeck}
+                  />
+                  <ErrorMessage
+                    errors={errors}
+                    name="fabdb"
+                    render={({ message }) => <p>{message}</p>}
+                  />
+                </label>
+              ) : (
+                <>
+                  {isLoggedIn && !isLoading && (
                     <label>
-                      <input
-                        type="checkbox"
-                        role="switch"
-                        id="favoriteDeck"
-                        {...register('favoriteDeck')}
+                      {t('JOIN.SELECTED_DECK')}
+                      <ImageSelect
+                        id="favoriteDecks"
+                        options={favoriteDeckOptions}
+                        value={selectedFavoriteDeck}
+                        onChange={(value) => {
+                          setSelectedFavoriteDeck(value);
+                          setValue('favoriteDecks', value);
+                        }}
+                        placeholder={t('JOIN.SELECTED_DECK_PLACEHOLDER')}
+                        aria-busy={isLoading}
+                        aria-invalid={
+                          errors.favoriteDecks?.message ? 'true' : undefined
+                        }
                       />
-                      {t('JOIN.SAVE_DECK_FAVOURITES')}
+                      <input
+                        type="hidden"
+                        {...register('favoriteDecks')}
+                        value={selectedFavoriteDeck}
+                      />
+                      <ErrorMessage
+                        errors={errors}
+                        name="favoriteDecks"
+                        render={({ message }) => <p>{message}</p>}
+                      />
                     </label>
                   )}
-                  <label style={{ marginTop: '1rem' }}>
-                    {t('JOIN.GAME_FORMAT')}
-                    <input
-                      type="text"
-                      id="gameFormat"
-                      aria-label={t('JOIN.GAME_FORMAT')}
-                      value={getReadableFormatName(gameFormat || '')}
-                      disabled
-                      readOnly
-                    />
-                  </label>
-                </fieldset>
-              </>
-            )}
-          </div>
-          {!isLoggedIn && (
-            <p>
-              <small>
-                <Trans i18nKey="LOGIN_REQUIRED">
-                  You must be <Link to="/user/login">logged in</Link> to join
-                  public lobbies.
-                </Trans>
-              </small>
-            </p>
-          )}
-          <button
-            type="submit"
-            className={styles.buttonClass}
-            aria-busy={isSubmitting}
-            style={{ marginTop: '27px' }}
-          >
-            {t('JOIN.JOIN')}
-          </button>
-          {errors.root?.serverError?.message && (
-            <div className={styles.fieldError}>
-              <FaExclamationCircle /> {errors.root?.serverError?.message}
+                  <ErrorMessage
+                    errors={errors}
+                    name="favoriteDecks"
+                    render={({ message }) => (
+                      <p className={styles.fieldError}>
+                        <FaExclamationCircle /> {message}
+                      </p>
+                    )}
+                  />
+                  <fieldset>
+                    <label>
+                      <>
+                        {t('JOIN.IMPORT_DECK')}
+                        {''}
+                        <span
+                          title={t('JOIN.IMPORT_TITLE')}
+                          style={{
+                            cursor: 'help',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            marginLeft: '4px'
+                          }}
+                        >
+                          <FaQuestionCircle size={14} />
+                        </span>
+                        <input
+                          type="text"
+                          id="fabdb"
+                          aria-label={t('JOIN.IMPORT_HELP')}
+                          {...register('fabdb')}
+                          aria-invalid={
+                            errors.deck?.message ? 'true' : undefined
+                          }
+                        />
+                      </>
+                      <ErrorMessage
+                        errors={errors}
+                        name="fabdb"
+                        render={({ message }) => (
+                          <p className={styles.fieldError}>
+                            <FaExclamationCircle /> {message}
+                          </p>
+                        )}
+                      />
+                    </label>
+                    {isLoggedIn && (
+                      <label>
+                        <input
+                          type="checkbox"
+                          role="switch"
+                          id="favoriteDeck"
+                          {...register('favoriteDeck')}
+                        />
+                        {t('JOIN.SAVE_DECK_FAVOURITES')}
+                      </label>
+                    )}
+                    <label style={{ marginTop: '1rem' }}>
+                      {t('JOIN.GAME_FORMAT')}
+                      <input
+                        type="text"
+                        id="gameFormat"
+                        aria-label={t('JOIN.GAME_FORMAT')}
+                        value={getReadableFormatName(gameFormat || '')}
+                        disabled
+                        readOnly
+                      />
+                    </label>
+                  </fieldset>
+                </>
+              )}
             </div>
-          )}
-        </form>
-        <hr />
-        <button
-          className={styles.backButton}
-          type="button"
-          onClick={(e) => {
-            e.stopPropagation;
-            navigate(-1);
-          }}
-        >
-          {t('JOIN.BACK')}
-        </button>
-      </article>
-      {showAds && (
-        <aside className={styles.rightRail}>
-          <AdUnit placement="right-rail-1" />
-        </aside>
-      )}
-      {showAds && (
-        <div className={styles.mobileAd}>
-          <AdUnit placement="mobile-unit-4" />
-        </div>
-      )}
-    </main>
+            {!isLoggedIn && (
+              <p>
+                <small>
+                  <Trans i18nKey="LOGIN_REQUIRED">
+                    You must be <Link to="/user/login">logged in</Link> to join
+                    public lobbies.
+                  </Trans>
+                </small>
+              </p>
+            )}
+            <button
+              type="submit"
+              className={styles.buttonClass}
+              aria-busy={isSubmitting}
+              style={{ marginTop: '27px' }}
+            >
+              {t('JOIN.JOIN')}
+            </button>
+            {errors.root?.serverError?.message && (
+              <div className={styles.fieldError}>
+                <FaExclamationCircle /> {errors.root?.serverError?.message}
+              </div>
+            )}
+          </form>
+          <hr />
+          <button
+            className={styles.backButton}
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation;
+              navigate(-1);
+            }}
+          >
+            {t('JOIN.BACK')}
+          </button>
+        </article>
+        {showAds && (
+          <aside className={styles.rightRail}>
+            <AdUnit placement="right-rail-1" />
+          </aside>
+        )}
+        {showAds && (
+          <div className={styles.mobileAd}>
+            <AdUnit placement="mobile-unit-4" />
+          </div>
+        )}
+      </main>
     </div>
   );
 };

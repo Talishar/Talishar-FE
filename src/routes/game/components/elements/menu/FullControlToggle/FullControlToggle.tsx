@@ -2,6 +2,7 @@ import React from 'react';
 import styles from '../Menu.module.css';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { GiUsable } from 'react-icons/gi';
+import { useTranslation } from 'react-i18next';
 import useSetting from 'hooks/useSetting';
 import classNames from 'classnames';
 import { updateOptions } from 'features/options/optionsSlice';
@@ -23,6 +24,7 @@ const FullControlToggle = ({
   showLabel?: boolean;
 } = {}) => {
   const dispatch = useAppDispatch();
+  const { t } = useTranslation();
   const { isDisabled, triggerDisable } = useButtonDisableContext();
   const setting = useSetting({
     settingName: HOLD_PRIORITY_SETTING
@@ -69,14 +71,14 @@ const FullControlToggle = ({
     <div>
       <button
         className={buttonStyle}
-        aria-label="Always Hold Priority"
+        aria-label={t('MENU.ALWAYS_HOLD_PRIORITY')}
         onClick={handleClickFullControl}
-        data-tooltip="Always Hold Priority"
+        data-tooltip={t('MENU.ALWAYS_HOLD_PRIORITY')}
         data-placement="top"
         disabled={isDisabled}
       >
         <GiUsable aria-hidden="true" />
-        {showLabel && ' Hold Priority'}
+        {showLabel && ` ${t('MENU.HOLD_PRIORITY_LABEL')}`}
       </button>
     </div>
   );

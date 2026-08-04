@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import styles from './CombatChain.module.css';
 import ChainLinks from '../elements/chainLinks/ChainLinks';
 import CurrentAttack from '../elements/currentAttack/CurrentAttack';
@@ -26,6 +27,7 @@ const MIN_Y_OFFSET = -35;
 const KEYBOARD_Y_STEP = 2;
 
 export default function CombatChain() {
+  const { t } = useTranslation();
   const oldCombatChain =
     useAppSelector((state: RootState) => state.game.oldCombatChain) ?? [];
   const activeCombatChain = useAppSelector(
@@ -130,9 +132,7 @@ export default function CombatChain() {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           style={{ y: yOffsetDvh }}
-          className={`${styles.combatChain} ${
-            ''
-          }`}
+          className={`${styles.combatChain} ${''}`}
         >
           <CurrentAttack />
           <div className={styles.chainCentre}>
@@ -144,7 +144,7 @@ export default function CombatChain() {
             className={`${styles.grabbyHandle} ${
               isDragging ? styles.grabbyHandleDragging : ''
             }`}
-            aria-label="Drag to move combat chain"
+            aria-label={t('COMBAT_CHAIN.DRAG_TOOLTIP')}
             onPointerDown={handlePointerDown}
             onPointerMove={handlePointerMove}
             onPointerUp={finishPointerDrag}
@@ -173,10 +173,7 @@ const PlayerPrompt = () => {
   const helpText = useOpponentPresencePrompt(playerPrompt?.helpText);
   const dispatch = useAppDispatch();
   const promptContent = React.useMemo(
-    () =>
-      wrapKeywordsInNodes(
-        parseHtmlToReactElements(helpText)
-      ),
+    () => wrapKeywordsInNodes(parseHtmlToReactElements(helpText)),
     [helpText]
   );
 

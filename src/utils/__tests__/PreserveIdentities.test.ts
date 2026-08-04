@@ -20,7 +20,11 @@ describe('preserveIdentities', () => {
 
   it('keeps unchanged elements when an array grows', () => {
     const prev = [{ cardNumber: 'a' }, { cardNumber: 'b' }];
-    const next = [{ cardNumber: 'a' }, { cardNumber: 'b' }, { cardNumber: 'c' }];
+    const next = [
+      { cardNumber: 'a' },
+      { cardNumber: 'b' },
+      { cardNumber: 'c' }
+    ];
     const result = preserveIdentities(prev, next);
     expect(result).not.toBe(prev);
     expect(result[0]).toBe(prev[0]);
@@ -54,10 +58,16 @@ describe('preserveIdentities', () => {
 
   it('preserves deep nested identity inside changed parents', () => {
     const prev = {
-      playerOne: { Hand: [{ cardNumber: 'a' }], Graveyard: [{ cardNumber: 'g' }] }
+      playerOne: {
+        Hand: [{ cardNumber: 'a' }],
+        Graveyard: [{ cardNumber: 'g' }]
+      }
     };
     const next = {
-      playerOne: { Hand: [{ cardNumber: 'z' }], Graveyard: [{ cardNumber: 'g' }] }
+      playerOne: {
+        Hand: [{ cardNumber: 'z' }],
+        Graveyard: [{ cardNumber: 'g' }]
+      }
     };
     const result = preserveIdentities(prev, next);
     expect(result.playerOne.Graveyard).toBe(prev.playerOne.Graveyard);

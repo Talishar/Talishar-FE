@@ -6,6 +6,7 @@ import React, {
   useMemo
 } from 'react';
 import { submitButton, submitMultiButton } from 'features/game/GameSlice';
+import { useTranslation } from 'react-i18next';
 import { useAppSelector, useAppDispatch } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import styles from './PlayerInputPopUp.module.css';
@@ -48,6 +49,7 @@ const PLAYER_INPUT_MIN_Y_OFFSET = -45;
 export default function PlayerInputPopUp() {
   const showModal = useShowModal();
   const dispatch = useAppDispatch();
+  const { t } = useTranslation();
   const inputPopUp = useAppSelector(
     (state: RootState) => state.game.playerInputPopUp
   );
@@ -60,7 +62,8 @@ export default function PlayerInputPopUp() {
   );
   const [cardSearch, setCardSearch] = useState('');
 
-  const storedInputOffset = parseFloat(localStorage.getItem(PLAYER_INPUT_STORAGE_KEY) ?? '') || 0;
+  const storedInputOffset =
+    parseFloat(localStorage.getItem(PLAYER_INPUT_STORAGE_KEY) ?? '') || 0;
   const yOffsetMV = useMotionValue(storedInputOffset);
   const dragStartYRef = useRef(0);
   const dragStartOffsetRef = useRef(storedInputOffset);
@@ -76,11 +79,14 @@ export default function PlayerInputPopUp() {
     setIsDragging(true);
   }, []);
 
-  const handleTouchStart = useCallback((e: React.TouchEvent<HTMLDivElement>) => {
-    dragStartYRef.current = e.touches[0].clientY;
-    dragStartOffsetRef.current = currentDragOffsetRef.current;
-    setIsDragging(true);
-  }, []);
+  const handleTouchStart = useCallback(
+    (e: React.TouchEvent<HTMLDivElement>) => {
+      dragStartYRef.current = e.touches[0].clientY;
+      dragStartOffsetRef.current = currentDragOffsetRef.current;
+      setIsDragging(true);
+    },
+    []
+  );
 
   useEffect(() => {
     if (!isDragging) return;
@@ -92,7 +98,10 @@ export default function PlayerInputPopUp() {
         const deltaDvh = (delta / window.innerHeight) * 100;
         const newOffset = Math.max(
           PLAYER_INPUT_MIN_Y_OFFSET,
-          Math.min(PLAYER_INPUT_MAX_Y_OFFSET, dragStartOffsetRef.current + deltaDvh)
+          Math.min(
+            PLAYER_INPUT_MAX_Y_OFFSET,
+            dragStartOffsetRef.current + deltaDvh
+          )
         );
         currentDragOffsetRef.current = newOffset;
         yOffsetMV.set(newOffset); // direct DOM update - no React re-render
@@ -106,7 +115,10 @@ export default function PlayerInputPopUp() {
         const deltaDvh = (delta / window.innerHeight) * 100;
         const newOffset = Math.max(
           PLAYER_INPUT_MIN_Y_OFFSET,
-          Math.min(PLAYER_INPUT_MAX_Y_OFFSET, dragStartOffsetRef.current + deltaDvh)
+          Math.min(
+            PLAYER_INPUT_MAX_Y_OFFSET,
+            dragStartOffsetRef.current + deltaDvh
+          )
         );
         currentDragOffsetRef.current = newOffset;
         yOffsetMV.set(newOffset); // direct DOM update - no React re-render
@@ -116,13 +128,19 @@ export default function PlayerInputPopUp() {
     const handleMouseUp = () => {
       cancelAnimationFrame(rafRef.current);
       setIsDragging(false);
-      localStorage.setItem(PLAYER_INPUT_STORAGE_KEY, currentDragOffsetRef.current.toString());
+      localStorage.setItem(
+        PLAYER_INPUT_STORAGE_KEY,
+        currentDragOffsetRef.current.toString()
+      );
     };
 
     const handleTouchEnd = () => {
       cancelAnimationFrame(rafRef.current);
       setIsDragging(false);
-      localStorage.setItem(PLAYER_INPUT_STORAGE_KEY, currentDragOffsetRef.current.toString());
+      localStorage.setItem(
+        PLAYER_INPUT_STORAGE_KEY,
+        currentDragOffsetRef.current.toString()
+      );
     };
 
     document.addEventListener('mousemove', handleMouseMove);
@@ -147,11 +165,13 @@ export default function PlayerInputPopUp() {
     // Initialize checked state from multiChooseText default values
     const initialState = new Array(checkBoxLength).fill(false);
     if (inputPopUp?.multiChooseText) {
-      inputPopUp.multiChooseText.forEach((option: MultiChooseOption, index: number) => {
-        if (option.check !== undefined) {
-          initialState[index] = option.check;
+      inputPopUp.multiChooseText.forEach(
+        (option: MultiChooseOption, index: number) => {
+          if (option.check !== undefined) {
+            initialState[index] = option.check;
+          }
         }
-      });
+      );
     }
 
     setCheckedState(initialState);
@@ -167,7 +187,10 @@ export default function PlayerInputPopUp() {
 
   const basePct = inputPopUp?.popup?.id === 'NEWOPT' ? '40%' : '52.5%';
   basePctRef.current = basePct;
-  const topStyle = useTransform(yOffsetMV, (v) => `calc(${basePctRef.current} + ${v}dvh)`);
+  const topStyle = useTransform(
+    yOffsetMV,
+    (v) => `calc(${basePctRef.current} + ${v}dvh)`
+  );
   const popupId = inputPopUp?.popup?.id || '';
   const popupCards = inputPopUp?.popup?.cards || [];
   const usesOtherInput = !PlayerInputFormTypeMap[popupId];
@@ -310,29 +333,28 @@ export default function PlayerInputPopUp() {
                 value={cardSearch}
                 onChange={(event) => setCardSearch(event.target.value)}
                 onKeyDown={(event) => event.stopPropagation()}
-                placeholder="Search cards by name..."
-                aria-label="Search cards by name"
+                placeholder={t('PLAYER_INPUT.SEARCH_CARDS')}
+                aria-label={t('PLAYER_INPUT.SEARCH_CARDS')}
                 autoFocus
               />
               {cardSearch ? (
                 <span className={styles.cardSearchCount} aria-live="polite">
-                  {filteredCardEntries.length} of {popupCards.length}
+                  {filteredCardEntries.length} {t('PLAYER_INPUT.OF')}{' '}
+                  {popupCards.length}
                 </span>
               ) : null}
             </div>
           ) : null}
           {inputPopUp.popup?.canClose ? (
             <div className={styles.inputPopUpCloseIcon} onClick={onPassTurn}>
-              <FaTimes title="Close Popup" />
+              <FaTimes title={t('PLAYER_INPUT.CLOSE_POPUP')} />
             </div>
           ) : null}
         </div>
         <div className={styles.contentContainer}>
-          {showCardSearch &&
-          cardSearch &&
-          filteredCardEntries.length === 0 ? (
+          {showCardSearch && cardSearch && filteredCardEntries.length === 0 ? (
             <div className={styles.noSearchResults} role="status">
-              No matching cards
+              {t('PLAYER_INPUT.NO_MATCHING_CARDS')}
             </div>
           ) : null}
           <FormDisplay
@@ -365,7 +387,7 @@ export default function PlayerInputPopUp() {
         <MdDragHandle
           size={32}
           className={styles.gripIcon}
-          aria-label="Drag to move popup"
+          aria-label={t('PLAYER_INPUT.DRAG_MOVE_POPUP')}
         />
       </div>
     </motion.div>

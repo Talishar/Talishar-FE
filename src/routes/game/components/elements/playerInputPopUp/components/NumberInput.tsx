@@ -1,8 +1,10 @@
 import { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { FormProps } from '../playerInputPopupTypes';
 import styles from '../PlayerInputPopUp.module.css';
 
 export const NumberInput = (props: FormProps) => {
+  const { t } = useTranslation();
   const { buttons, onClickButton } = props;
 
   const { min, max, allowed, submitMode } = useMemo(() => {
@@ -57,11 +59,11 @@ export const NumberInput = (props: FormProps) => {
             handleSubmit();
           }}
         >
-          Submit
+          {t('PLAYER_INPUT.SUBMIT')}
         </button>
       </div>
       <div className={styles.numberInputHint}>
-        Enter a number from {min} to {max}
+        {t('PLAYER_INPUT.ENTER_NUMBER', { min, max })}
       </div>
     </form>
   );

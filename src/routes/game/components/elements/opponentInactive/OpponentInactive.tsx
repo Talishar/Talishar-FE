@@ -1,4 +1,5 @@
 import { useAppSelector, useAppDispatch } from 'app/Hooks';
+import { useTranslation } from 'react-i18next';
 import { submitButton } from 'features/game/GameSlice';
 import { useSubmitChatMutation } from 'features/api/apiSlice';
 import { getGameInfo } from 'features/game/GameSlice';
@@ -12,9 +13,7 @@ const INACTIVITY_TIMEOUT_MS = 60_000; // 60 seconds, matches backend
 const CHECK_INTERVAL_MS = 5_000;
 
 export default function OpponentInactive() {
-  const hasPriority = useAppSelector(
-    (state: any) => state.game.hasPriority
-  );
+  const hasPriority = useAppSelector((state: any) => state.game.hasPriority);
   const lastUpdate = useAppSelector(
     (state: any) => state.game.gameDynamicInfo?.lastUpdate
   );
@@ -41,6 +40,7 @@ export default function OpponentInactive() {
       state.game.playerTwo?.Name === 'Practice Dummy'
   );
   const dispatch = useAppDispatch();
+  const { t } = useTranslation();
   const [submitChat] = useSubmitChatMutation();
   const [inactive, setInactive] = useState(false);
   const [dismissed, setDismissed] = useState(false);
@@ -53,7 +53,8 @@ export default function OpponentInactive() {
 
   // Track when lastUpdate changes to reset inactivity
   useEffect(() => {
-    const backendInactiveCleared = prevBackendInactiveRef.current && !backendInactive;
+    const backendInactiveCleared =
+      prevBackendInactiveRef.current && !backendInactive;
     prevBackendInactiveRef.current = backendInactive;
 
     if (lastUpdate !== lastUpdateRef.current) {
@@ -89,7 +90,16 @@ export default function OpponentInactive() {
     return () => clearInterval(interval);
   }, [turnPhase]);
 
-  if (!inactive || dismissed || turnPhase === 'OVER' || isSpectator || isReplay || isOpponentAI || isPracticeDummy) return null;
+  if (
+    !inactive ||
+    dismissed ||
+    turnPhase === 'OVER' ||
+    isSpectator ||
+    isReplay ||
+    isOpponentAI ||
+    isPracticeDummy
+  )
+    return null;
 
   // The player with priority is the one who should be acting
   const amIInactive = hasPriority;
@@ -102,14 +112,14 @@ export default function OpponentInactive() {
 
     return (
       <div className={`${styles.overlay} ${styles.warning}`}>
-        <span className={styles.icon}>⏳</span>
-        <p className={styles.message}>You appear to be inactive. Make a move!</p>
+        <span className={styles.icon}>{t('OPPONENT_INACTIVE.HOURGLASS')}</span>
+        <p className={styles.message}>{t('OPPONENT_INACTIVE.YOU_INACTIVE')}</p>
         <button
           className={styles.stillHereButton}
           onClick={handleStillHere}
           disabled={!!isRequestInProgress}
         >
-          I'm Still Here
+          {t('OPPONENT_INACTIVE.IM_STILL_HERE')}
         </button>
       </div>
     );
@@ -126,14 +136,16 @@ export default function OpponentInactive() {
 
   return (
     <div className={styles.overlay}>
-      <span className={styles.icon}>⚠️</span>
-      <p className={styles.message}>Your opponent appears to be inactive</p>
+      <span className={styles.icon}>{t('OPPONENT_INACTIVE.WARNING')}</span>
+      <p className={styles.message}>
+        {t('OPPONENT_INACTIVE.OPPONENT_INACTIVE')}
+      </p>
       <button
         className={styles.leaveButton}
         onClick={handleClaimVictory}
         disabled={!!isRequestInProgress}
       >
-        Claim Victory
+        {t('OPPONENT_INACTIVE.CLAIM_VICTORY')}
       </button>
     </div>
   );

@@ -220,9 +220,7 @@ const GameStateHandler = () => {
             setTimeout(() => setForceRetry((prev) => prev + 1), retryDelay);
           } else {
             if (retryCountRef.current === MAX_RETRIES + 1) {
-              toast.error(
-                'Connection to game server lost. Reconnecting...'
-              );
+              toast.error('Connection to game server lost. Reconnecting...');
             }
             setTimeout(() => setForceRetry((prev) => prev + 1), 10000);
           }

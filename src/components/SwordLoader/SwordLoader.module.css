@@ -41,7 +41,8 @@
 }
 
 @keyframes swordPulse {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
     filter: drop-shadow(0 0 6px rgba(201, 168, 76, 0.5));
     transform: scale(1);

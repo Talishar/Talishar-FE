@@ -44,9 +44,23 @@
   line-height: 1.25;
 }
 
-.keywordLine { display: flex; align-items: baseline; gap: 5px; margin: 2px 0; }
-.keywordPill { flex: none; padding: 1px 5px; border-radius: 999px; background: rgb(148 163 184 / 35%); font-weight: 700; }
-.keywordMore { margin-top: 4px; color: #cbd5e1; }
+.keywordLine {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+  margin: 2px 0;
+}
+.keywordPill {
+  flex: none;
+  padding: 1px 5px;
+  border-radius: 999px;
+  background: rgb(148 163 184 / 35%);
+  font-weight: 700;
+}
+.keywordMore {
+  margin-top: 4px;
+  color: #cbd5e1;
+}
 
 .doubleFacedCard {
   position: absolute;
@@ -79,7 +93,8 @@
     align-items: center;
     justify-content: center;
     pointer-events: none;
-    background: url('../../../../../img/backgrounds/transparent-card.png') center / contain no-repeat;
+    background: url('../../../../../img/backgrounds/transparent-card.png')
+      center / contain no-repeat;
   }
 
   .img {

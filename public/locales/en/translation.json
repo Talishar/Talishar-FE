@@ -12,6 +12,7 @@
     },
     "DESCRIPTION": "Talishar is the free, browser-based community platform where over 9,000+ players daily compete in real-time games of Flesh & Blood. Bring your deck, face off against players worldwide, and master your heroes.",
     "DISCLAIMER": "<2><1>Disclaimer:</1> Talishar is an open-source, fan-made platform not associated with LSS. It may not be a completely accurate representation of the Rules as written. If you have questions about interactions or rulings, please contact the judges community on the <3> JudgeHub Discord </3> for clarification.</2><2>Talishar is in no way affiliated with Legend Story Studios. Legend Story Studios®, Flesh and Blood™, and set names are trademarks of Legend Story Studios. Flesh and Blood characters, cards, logos, and art are property of <4> Legend Story Studios </4>. © Legend Story Studios</2>",
+    "DISCORD": "Discord",
     "FAQ": {
       "BUG_FEATURE_A": "We love feedback, this platform wouldn't be the same without it! You can report issues or suggest features through our <a href='https://discord.gg/JykuRkdd5S' target='_blank'>Discord</a> server. Players input helps us improve Talishar.",
       "BUG_FEATURE_Q": "What if I find a bug or have suggestions?",
@@ -47,6 +48,7 @@
       "SPICY_DESCRIPTION": "Experiment with strategies and refine your builds",
       "SPICY_TITLE": " Test Your Spicy Brew"
     },
+    "GITHUB": "Github",
     "LSS_RELATIONSHIP_DESCRIPTION": "We are not affiliated with, endorsed by, or connected to Legend Story Studios (LSS), the creators of Flesh & Blood. Talishar operates as a fan-made platform created to celebrate and support the FAB community.</0><1>While we strive to maintain rules accuracy, Talishar may not be a completely accurate representation of the official rules. For official rulings and clarifications, we recommend consulting the judge community on the <2>Judge Hub Discord</2> or visiting the <3>official FAB rules and policy center</3>.</1>",
     "LSS_RELATIONSHIP_TITLE": " Our Relationship with Legend Story Studios",
     "STATS": {
@@ -55,7 +57,9 @@
       "PLAYERS": "<0>{{players}}</0><1>Daily Players</1>"
     },
     "SUB_HEADER": "The Unofficial Online Platform for Flesh & Blood",
+    "SUPPORT_METAFY": "Support us on Metafy",
     "TITLE": "Welcome to Talishar",
+    "UNOFFICIAL_TITLE": "Talishar is an Unofficial Independent platform",
     "WHAT_IS_DESCRIPTION": "Talishar is a passion project built by the Flesh & Blood community for the community. We created this platform to provide players with a free, accessible, and welcoming space to play and test deck ideas. Whether you're a casual player looking to learn the game before joining a local armory or a competitive player wanting some reps. Talishar is there for the community.",
     "WHAT_IS_TITLE": " What is Talishar?",
     "WHO_MAINTAINS_DESCRIPTION": "Talishar is maintained by a dedicated team of volunteer developers and community members who are passionate about Flesh & Blood. We are in no way associated with Legend Story Studios (LSS). Our team works entirely on a volunteer basis to keep the platform running, code new card sets, fix bugs, and implement new features. We're supported by the community through optional contributions platform like Metafy. It help cover server costs and fund development.",
@@ -107,15 +111,23 @@
       "REDIRECTING": "Redirecting to home..."
     },
     "VERIFY": {
+      "ALLOW": "Allow",
       "AUTHORIZATION_FAILED": "Authorization Failed",
       "AUTHORIZATION_FAILED_MESSAGE": "Invalid application or redirect URI.",
       "AUTHORIZE_APP": "Authorize Application",
+      "AUTHORIZE_FAILED": "Failed to authorize. Please try again.",
       "AUTHORIZING": "Authorizing...",
+      "DENY": "Deny",
+      "DISCLAIMER": "By clicking \"Allow\", you agree to share the above information with {{appName}}.",
       "DONT_HAVE_ACCOUNT": "Don't have an account? <0>Sign up</0>",
       "INVALID_REQUEST": "Invalid Request",
       "INVALID_REQUEST_MESSAGE": "Missing required parameters. Please make sure the authorization link includes <0>app_id</0> and <1>redirect_uri</1>.",
+      "PERMISSION_EMAIL": "Your email address",
+      "PERMISSION_USERNAME": "Your username",
+      "PERMISSIONS_TITLE": "This application is requesting access to:",
       "REQUEST_PERMISSION": "is requesting permission to identify you.",
       "RETURN_HOME": "Return to Home",
+      "SIGN_IN": "Sign In",
       "SIGNIN_CONTINUE": "Sign in to Continue",
       "WAIT_MESSAGE": "Please wait while we verify the request."
     }
@@ -123,6 +135,18 @@
   "BASE": {
     "ERROR_ALERT": "There has been an error!",
     "SEARCH": "Search"
+  },
+  "CARD_KEYWORD_STRIP": {
+    "MORE_one": "+1 more - see Keywords guide",
+    "MORE_other": "+{{count}} more - see Keywords guide",
+    "TITLE": "Card keywords"
+  },
+  "CARD_LIST": {
+    "ERROR": "Error!",
+    "LOADING": "Loading...",
+    "NO_CARDS_FOUND": "No cards found matching \"{{searchQuery}}\"",
+    "NO_CARDS_IN_ZONE": "No cards in this zone",
+    "SORT": "Sort"
   },
   "CHAIN_LINK_SUMMARY": {
     "ATTACK": "Attack",
@@ -135,6 +159,18 @@
     "NO_BLOCKS": "No blocks",
     "NO_MODIFIERS": "No modifiers",
     "POWER_COUNTER_ALT": "+1 Power Counter"
+  },
+  "CHAT": {
+    "ALL": "All",
+    "CHAT": "Chat",
+    "INVITE": "Invite to Chat",
+    "LOG": "Log",
+    "QUICK_CHAT": "Quick Chat",
+    "RECENT": "⭐ Recent",
+    "TYPING": "Opponent is typing…"
+  },
+  "COMBAT_CHAIN": {
+    "DRAG_TOOLTIP": "Drag to move combat chain"
   },
   "COMMUNITY_CONTENT": {
     "BY": "by",
@@ -162,17 +198,9 @@
     "SHOW_LESS": "Show Less",
     "TITLE": "🍪 Cookie Consent"
   },
-  "COOKIE_CONSENT": {
-    "ACCEPT_ALL": "Accept All Cookies",
-    "ADVERTISING": "<strong>Advertising Cookies:</strong> rev.iq and its partners use cookies to serve ads based on your visits to our site and other sites. Ads keep Talishar free to use, so they are shown to all non-supporter accounts. You can opt out of personalized ads anytime via <3>rev.iq Ad Settings</3>.",
-    "ANALYTICS": "<strong>Analytics Cookies (only with your consent):</strong> We use Google Analytics to understand how visitors interact with the site. These cookies are only set if you choose \"Accept All Cookies\".",
-    "CHANGE_CHOICE": "You can change your choice anytime from the <2>Privacy page</2> or through your browser settings.",
-    "DECLINE_ANALYTICS": "Decline Analytics",
-    "DESCRIPTION": "Talishar uses essential cookies to keep you logged in and connected to your games. With your consent, we also use analytics cookies, and rev.iq uses advertising cookies to help keep Talishar free.",
-    "ESSENTIAL": "<strong>Essential Cookies (always active):</strong> Required for Talishar to work. They store your login session, your \"Remember Me\" token if you use it, and the authorization key that proves you are a player in your current game. Declining below does <strong>not</strong> disable these - but if you block all cookies in your browser settings, you may be disconnected mid-game, unable to rejoin, and forced to log in again between games.",
-    "LEARN_MORE": "Learn More",
-    "SHOW_LESS": "Show Less",
-    "TITLE": "🍪 Cookie Consent"
+  "CURRENT_ATTACK": {
+    "ATTACK_SYMBOL": "attack symbol",
+    "DEFENSE_SYMBOL": "defense symbol"
   },
   "DECKS": {
     "ADD_DECK": "Add Deck",
@@ -200,6 +228,15 @@
     "TOKENS": "Tokens",
     "UNSAVED_CHANGES": "Unsaved changes",
     "UPSELL_BANNER": "Card backs, playmats, and alt arts beyond the defaults are a supporter perk. <2>Support Talishar on Metafy</2> to unlock more."
+  },
+  "DEV_TOOL": {
+    "BUG_REPORT_VARIANT": "Bug report variant",
+    "DEBUG_GAME_ID": "Debug game ID",
+    "LOCAL_GAME_ID": "Local game ID to overwrite",
+    "REPLACE_LOCAL": "Replace local game with debug game",
+    "TITLE": "Dev Tool",
+    "TOGGLE": "Toggle Dev Tool",
+    "WILL_LOAD": "Will load 111-0, 111-1, 111-2, etc."
   },
   "END_GAME": {
     "ACTIVATED": "Activated",
@@ -307,11 +344,8 @@
     "TITLE": "Oops!",
     "UNKNOWN_ERROR": "An unknown error happened!"
   },
-  "ERROR_PAGE": {
-    "HOME": "Home",
-    "MESSAGE": "Sorry, an error has occurred.",
-    "TITLE": "Oops!",
-    "UNKNOWN_ERROR": "An unknown error happened!"
+  "EVENTS": {
+    "DISMISS": "Click to dismiss"
   },
   "FILTER": {
     "HERO_FILTER": "Hero Filter"
@@ -405,12 +439,13 @@
     "MATCHUP_APPLIED": "Matchup profile applied, check your deck before submission",
     "MATCHUPS": "Matchups",
     "MODULAR": "Modular",
+    "NO": "No",
     "NO_GAMEID": "No GameID defined",
     "NO_SUBTYPE": "No Subtype",
     "NO_THANKS": "No Thanks!",
     "NO_VARIABLE": "No {{variable}}",
     "OPEN_FORMAT_DISCLAIMER": " Note that new cards are added on a 'best-effort' basis and there may be more bugs and innacurate card interactions. It may not be a completely accurate representation of the Rules as written. If you have questions about interactions or rulings, please contact the <2> JudgeHub Discord</2> for clarification.",
-    "OPEN_FORMAT_DISCLAIMER_HEADER": " Open Format Disclaimer",
+    "OPEN_FORMAT_DISCLAIMER_HEADER": "⚠️ Open Format Disclaimer",
     "OPPONENT": "Opponent",
     "PITCH": "Pitch",
     "PITCH_SORT": "Sort cards by pitch",
@@ -448,7 +483,20 @@
     },
     "WAITING": "Waiting For Opponent",
     "WEAPONS": "Weapons / Off-Hand",
+    "YES": "Yes",
     "YOU_WON_DIE": "You won the die roll!"
+  },
+  "GAME_LOG": {
+    "CHAIN_LINK": "Chain Link {{number}}",
+    "COMBAT_SEQUENCE": "Combat sequence",
+    "REPEAT_COUNT_one": "(x{{count}})",
+    "REPEAT_COUNT_other": "(x{{count}})",
+    "TURN": "Turn {{turn}}",
+    "TURN_ARIA": "Turn {{turn}}, {{playerName}}'s turn"
+  },
+  "HAND": {
+    "SCROLL_LEFT": "Scroll hand left",
+    "SCROLL_RIGHT": "Scroll hand right"
   },
   "HEADER": {
     "ABOUT": "About",
@@ -471,6 +519,9 @@
     "SETTINGS": "Settings",
     "SUPPORT_US": "Support Us!",
     "TALISHAR_LOGO_ALT": "Logo Talishar - link to homepage"
+  },
+  "HERO_VS_HERO": {
+    "VS": "VS"
   },
   "HOME": {
     "HERO": {
@@ -504,6 +555,11 @@
   "IN_PROGRESS_GAME": {
     "SPECTATE": "Spectate"
   },
+  "INVENTORY": {
+    "CLOSE": "Close inventory",
+    "EMPTY": "No items in inventory",
+    "TITLE": "Inventory"
+  },
   "JOIN": {
     "BACK": "Back",
     "BAZAAR_LINK": "Link your FaB Bazaar account in your <1>profile</1> to see your decks here.",
@@ -528,21 +584,42 @@
     "TALISHAR_DECKS": "Talishar Decks",
     "TITLE": "Join Game"
   },
-  "SIGNUP":{
-    "PAGE_TITLE":"Sign Up - Play FaB Free Online",
-    "BANNER_TITLE":"Create Account",
-    "BANNER_SUBTITLE":"Join Talishar for free"
+  "KEYWORD": {
+    "LOADING_LINK": "Loading rules link…",
+    "VIEW_CR": "View in Comprehensive Rules"
+  },
+  "LAST_PLAYED": {
+    "NEXT_CARD": "Next card",
+    "PREVIOUS_CARD": "Previous card",
+    "RECENTLY_PLAYED": "Recently Played"
+  },
+  "LEADERBOARD": {
+    "AVATAR_ALT": "{{login}}'s avatar",
+    "BE": "BE: {{value}}",
+    "COMMITS": "commits",
+    "CONTRIBUTOR_TITLE": "{{login}} - {{commits}} total commits",
+    "FE": "FE: {{value}}",
+    "FOOTNOTE": "Contributions combined from <1>Talishar (backend)</1> and <2>Talishar-FE (frontend)</2>. Data fetched from the GitHub API.",
+    "LOAD_ERROR": "Could not load contributor data - GitHub API may be rate-limited. Try again later.",
+    "LOADING": "Loading contributors…",
+    "RANK": "Rank {{rank}}",
+    "SHOW_ALL_one": "Show all {{count}} contributor",
+    "SHOW_ALL_other": "Show all {{count}} contributors",
+    "SHOW_FEWER": "Show fewer contributors"
   },
   "LEARN": {
     "BANNER_SUBTITLE": "Master your skills with expert guides from our community",
+    "FREE_FOR_SUPPORTERS": "Free for supporters",
     "LOADING": "Loading guides...",
     "NO_GUIDES": "No guides available at this time.",
+    "NO_IMAGE": "No Image",
     "PAGE_TITLE": "Learn",
     "PAGINATION": {
       "NEXT": "Next →",
       "PAGE_INFO": "Page {{page}} of {{totalPages}}",
       "PREVIOUS": "← Previous"
     },
+    "SUPPORTER_DISCOUNT": "Supporter discount",
     "TRY_AGAIN": "Try Again"
   },
   "LEGAL": {
@@ -771,8 +848,16 @@
     "TURN_TIMELINE": "Turn timeline"
   },
   "MENU": {
+    "ALWAYS_HOLD_PRIORITY": "Always Hold Priority",
+    "ALWAYS_PASS": "Always Pass Priority",
+    "ALWAYS_PASS_LABEL": "Always Pass",
     "CREATE_GAME": {
       "AI_DECK": "AI Deck",
+      "BAZAAR_LINK_MESSAGE": "Link your FaB Bazaar account in your <1>profile</1> to see your decks here.",
+      "BAZAAR_TAB": "FaB Bazaar",
+      "CLEAR_SELECTION": "Clear Selection",
+      "COMING_SOON": "Coming soon!",
+      "FAI_CC": "Fai (CC)",
       "FORMAT": "Gameplay Format",
       "FORMATS": {
         "BLITZ": "Blitz",
@@ -831,12 +916,17 @@
       "IMPORT": "Import Deck",
       "IMPORT_HELP": "Deck Link - URL from FaBrary.net",
       "IMPORT_TITLE": "URL from FaBrary.net",
+      "LOADING": "Loading…",
+      "PRACTICE_DUMMY": "Practice Dummy",
       "PRECONSTRUCTED_DECK": "Preconstructed deck",
+      "RUST_LOCKED_HINT": "Clear your rust counters above to create a game.",
       "SAVE_DECK_FAVOURITES": "Save Deck to ❤️ Favorites",
+      "SELECT_BAZAAR_DECK_PLACEHOLDER": "Select a FaB Bazaar deck",
       "SELECT_DECK_PLACEHOLDER": "Select a deck",
       "SELECTED_DECK": "Selected Deck",
       "SELECTED_DECK_PLACEHOLDER": "Select a deck",
       "SINGLE_PLAYER": "Practice Mode",
+      "TALISHAR_DECKS": "Talishar Decks",
       "TITLE": "Create Game",
       "VISIBILITIES": {
         "FRIENDS": "Friends Only",
@@ -846,7 +936,22 @@
         "PUBLIC_LOBBY": "Public Lobby"
       },
       "VISIBILITY": "Visibility"
-    }
+    },
+    "FULL_SCREEN": "Full Screen",
+    "FULLSCREEN": "Fullscreen",
+    "HIDE_ARENA": "Hide Arena",
+    "HOLD_PRIORITY_LABEL": "Hold Priority",
+    "MANUAL_MODE": "Manual Mode",
+    "MANUAL_TARGETING": "Manual Targeting",
+    "MENU_LABEL": "Menu",
+    "MORE_OPTIONS": "More options",
+    "PASS_REACTIONS": "Pass Reactions",
+    "PASS_REACTIONS_TOOLTIP": "Pass Reactions (resets at the start of each turn)",
+    "SHOW_ARENA": "Show Arena",
+    "SHOW_CHAT": "Show Chat",
+    "SKIP_ATTACKS": "Skip Attacks",
+    "SKIP_ATTACKS_TOOLTIP": "Skip All Attacks (resets at the start of each turn)",
+    "TOGGLE_MAIN_MENU": "Toggle main menu"
   },
   "MOD_PAGE": {
     "API_WARNING": "API Warning:",
@@ -934,6 +1039,14 @@
     "JOIN_DECK_NOT_READY": "Select a deck in the panel above to join instantly",
     "JOIN_DECK_READY": "Join using your pre-configured deck"
   },
+  "OPPONENT_INACTIVE": {
+    "CLAIM_VICTORY": "Claim Victory",
+    "HOURGLASS": "⏳",
+    "IM_STILL_HERE": "I'm Still Here",
+    "OPPONENT_INACTIVE": "Your opponent appears to be inactive",
+    "WARNING": "⚠️",
+    "YOU_INACTIVE": "You appear to be inactive. Make a move!"
+  },
   "OPTIONS_MENU": {
     "ALLOW_SPECTATORS_PRIVATE_MATCH": "Allow Spectators for Private Match",
     "CARD_BACK": "Card Back",
@@ -980,6 +1093,18 @@
     "SHARED_REPLAY": "Shared Replay",
     "TERMS_OF_SERVICE_PAGE": "Terms of Service"
   },
+  "PASS_TURN_DISPLAY": {
+    "ADVANCE_REPLAY": "Advance replay",
+    "BLOCK": "Block",
+    "END_TURN": "end turn",
+    "PASS": "PASS",
+    "PASS_PRIORITY": "Pass priority",
+    "PRIORITY": "Priority",
+    "REACTION": "Reaction",
+    "REPLAY": "Replay",
+    "TITLE": "{{subtitle}} · pass priority · Space",
+    "WAIT": "WAIT"
+  },
   "PASSWORD": {
     "RECOVERY": {
       "BANNER_SUBTITLE": "We'll send you a recovery link",
@@ -991,6 +1116,32 @@
       "BANNER_TITLE": "Reset Password",
       "PAGE_TITLE": "Reset Password"
     }
+  },
+  "PLAY": {
+    "ADVANCE_REPLAY": "Advance replay"
+  },
+  "PLAYER_INPUT": {
+    "CLOSE_POPUP": "Close Popup",
+    "DRAG_MOVE_POPUP": "Drag to move popup",
+    "ENTER_NUMBER": "Enter a number from {{min}} to {{max}}",
+    "NEW_OPT_BOTTOM": "Bottom",
+    "NEW_OPT_FIRST": "FIRST",
+    "NEW_OPT_LAST": "LAST",
+    "NEW_OPT_SUBMIT": "Submit Opt",
+    "NEW_OPT_TOP": "Top",
+    "NO_MATCHING_CARDS": "No matching cards",
+    "OF": "of",
+    "SEARCH_CARDS": "Search cards by name...",
+    "SUBMIT": "Submit",
+    "TRIGGERS": "Triggers"
+  },
+  "PLAYER_NAME": {
+    "CANCEL": "Cancel",
+    "CLOSE": "Close",
+    "NOTE_FOR": "Note for {{playerName}}",
+    "NOTE_PLACEHOLDER": "Add a personal note about this opponent...",
+    "OPEN_PLAYER_OPTIONS": "Open player options",
+    "SAVE_NOTE": "Save Note"
   },
   "PREMIUM_PAGE": {
     "BECOME_SUPPORTER": "Become a Supporter",
@@ -1244,29 +1395,8 @@
     "WATCH_AD_TO_CLEAR": "Watch Ad to Clear",
     "WHAT_ARE_RUST_COUNTERS": "What are rust counters?"
   },
-  "SESSION_RECOVERY": {
-    "ACTIVE_GAME": "You have an active game <1>#{{gameId}}</1> waiting",
-    "DISMISS": "Dismiss",
-    "DISMISS_TITLE": "Dismiss for 2 hours",
-    "GAME_SESSION_RECOVERED": "Game session recovered!",
-    "OPPONENT_DISCONNECTED": "Opponent Disconnected",
-    "OPPONENT_LABEL": "Opponent:",
-    "RECOVERING": "⏳ Recovering...",
-    "REJOIN_FAILED": "Failed to rejoin game. Please try again.",
-    "REJOIN_GAME": "Rejoin Game",
-    "RESUME_TITLE": "Resume your game",
-    "RESUME_YOUR_GAME": "⚡ Resume Your Game?",
-    "UNABLE_TO_RECOVER": "Unable to recover game session. Please rejoin the game."
-  },
-  "RUST_COUNTER_PANEL": {
-    "DEV_MODE_NOTE": "Development mode: rust counters do not block games.",
-    "RUST_COUNTERS_one": "Rust counters: {{count}} / {{max}}",
-    "RUST_COUNTERS_other": "Rust counters: {{count}} / {{max}}",
-    "SUPPORTER_MESSAGE": "Thank you for your support! ❤️",
-    "TOOLTIP": "Rust counters accrue as you play games as a non-supporter. At {{max}} counters you can no longer queue for games. Clear them by watching a rewarded ad, or remove ads entirely by supporting Talishar on Metafy for as low as 5$ per month. Your support keeps the servers running and support the developers.",
-    "WATCH_AD_NOTE": "Watch a short ad to keep playing.",
-    "WATCH_AD_TO_CLEAR": "Watch Ad to Clear",
-    "WHAT_ARE_RUST_COUNTERS": "What are rust counters?"
+  "SEARCH_CARD": {
+    "SUBMIT": "Submit"
   },
   "SESSION_RECOVERY": {
     "ACTIVE_GAME": "You have an active game <1>#{{gameId}}</1> waiting",
@@ -1341,7 +1471,9 @@
     "ERROR_INCOMPLETE_RESPONSE": "Incomplete response from server.",
     "ERROR_INVALID_TOKEN": "Invalid share token.",
     "ERROR_NO_TOKEN": "No share token provided.",
-    "LOADING": "Loading replay..."
+    "ERROR_TITLE": "Unable to load replay",
+    "LOADING": "Loading replay...",
+    "RETURN_MAIN_MENU": "Return to main menu"
   },
   "SIGNUP": {
     "BANNER_SUBTITLE": "Join Talishar for free",
@@ -1358,6 +1490,17 @@
     "LOCK": "🔒",
     "METAFY_SUPPORTER_EXCLUSIVE": "Metafy supporter exclusive",
     "UNLOCK_CUSTOM_THEMES": "Unlock Custom Themes - Become a Supporter"
+  },
+  "TURN_INFO": {
+    "OPPONENT": "Opponent",
+    "PLAYERS_TURN": "{{playerName}}'s Turn",
+    "TURN_NUMBER": "Turn #{{turnNumber}}",
+    "UNKNOWN": "Unknown"
+  },
+  "TURN_WIDGET": {
+    "PASS": "PASS",
+    "SPACEBAR": "[spacebar]",
+    "WAIT": "WAIT"
   },
   "UNITED_GAME_PANEL": {
     "EXPAND": "Expand panel",
@@ -1385,6 +1528,7 @@
       "LOGGING_IN": "Logging in...",
       "LOGIN": "Log In",
       "LOGIN_METAFY": "Log In with Metafy",
+      "LOGIN_NETWORK_ERROR": "There has been a network error. Please try again.",
       "NETWORK_ERROR": "Network error: {{error}}",
       "NO_ACCOUNT": "No account yet?",
       "OR": "or",
@@ -1442,5 +1586,21 @@
     "WHITELISTED_SUCCESS_one": "Whitelisted {{count}} user(s)",
     "WHITELISTED_SUCCESS_other": "Whitelisted {{count}} user(s)",
     "WHITELISTING": "Whitelisting..."
+  },
+  "ZONES": {
+    "ACTIVE_LAYERS": "Active Layers",
+    "ARMS": "Arms",
+    "ARSENAL": "Arsenal",
+    "BANISH": "Banish",
+    "CHEST": "Chest",
+    "COUNT_YOUR_BLESSINGS": "Count Your Blessings",
+    "DECK": "Deck",
+    "EARTH_CARDS_COUNT": "Earth Cards Count",
+    "GRAVEYARD": "Graveyard",
+    "HEAD": "Head",
+    "LEGS": "Legs",
+    "PASS": "Pass",
+    "PITCH": "Pitch",
+    "SOUL": "Soul"
   }
 }

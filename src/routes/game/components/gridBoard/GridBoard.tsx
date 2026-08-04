@@ -31,20 +31,28 @@ import ManualModePanel from '../leftColumn/ManualModePanel/ManualModePanel';
 
 const GridBoard = () => {
   const [cookies] = useCookies(['experimental']);
-  const playerID = useAppSelector((state: RootState) => state.game.gameInfo.playerID);
-  const isReplay = useAppSelector((state: RootState) => state.game.gameInfo.isReplay);
+  const playerID = useAppSelector(
+    (state: RootState) => state.game.gameInfo.playerID
+  );
+  const isReplay = useAppSelector(
+    (state: RootState) => state.game.gameInfo.isReplay
+  );
   const spectatorCameraView = useAppSelector(
     (state: RootState) => state.game.spectatorCameraView
   );
-  const isMirroredOpponent = useAppSelector((state: RootState) =>
-    getSettingsEntity(state)?.[optConst.MIRRORED_BOARD_LAYOUT]?.value === '1'
+  const isMirroredOpponent = useAppSelector(
+    (state: RootState) =>
+      getSettingsEntity(state)?.[optConst.MIRRORED_BOARD_LAYOUT]?.value === '1'
   );
-  const isMirroredPlayer = useAppSelector((state: RootState) =>
-    getSettingsEntity(state)?.[optConst.MIRRORED_PLAYER_BOARD_LAYOUT]?.value === '1'
+  const isMirroredPlayer = useAppSelector(
+    (state: RootState) =>
+      getSettingsEntity(state)?.[optConst.MIRRORED_PLAYER_BOARD_LAYOUT]
+        ?.value === '1'
   );
 
   // For spectators and replay viewers, check if they want to view from player 2's perspective
-  const isSpectatorViewingPlayer2 = (playerID === 3 || isReplay) && spectatorCameraView === 2;
+  const isSpectatorViewingPlayer2 =
+    (playerID === 3 || isReplay) && spectatorCameraView === 2;
 
   const gridBoardClass = useMemo(
     () =>
@@ -58,7 +66,9 @@ const GridBoard = () => {
         [styles.SwappedMirroredBothGameBoardGrid]:
           isSpectatorViewingPlayer2 && isMirroredOpponent && isMirroredPlayer,
         [styles.gameBoardGrid]:
-          !isSpectatorViewingPlayer2 && !isMirroredOpponent && !isMirroredPlayer,
+          !isSpectatorViewingPlayer2 &&
+          !isMirroredOpponent &&
+          !isMirroredPlayer,
         [styles.MirroredOpponentGameBoardGrid]:
           !isSpectatorViewingPlayer2 && isMirroredOpponent && !isMirroredPlayer,
         [styles.MirroredPlayerGameBoardGrid]:

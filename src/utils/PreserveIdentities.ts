@@ -12,7 +12,12 @@
  * exactly what ParseGameState produces.
  */
 export function preserveIdentities<T>(prev: T | undefined, next: T): T {
-  if (prev === undefined || prev === null || next === undefined || next === null) {
+  if (
+    prev === undefined ||
+    prev === null ||
+    next === undefined ||
+    next === null
+  ) {
     return next;
   }
   if ((prev as unknown) === (next as unknown)) {

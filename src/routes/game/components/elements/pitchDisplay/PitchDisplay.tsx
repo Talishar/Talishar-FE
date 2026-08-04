@@ -4,7 +4,9 @@ import { RootState } from 'app/Store';
 import Displayrow from 'interface/Displayrow';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { useCookies } from 'react-cookie';
-import ResourcesParticle, { PitchColor } from '../ResourcesParticle/ResourcesParticle';
+import ResourcesParticle, {
+  PitchColor
+} from '../ResourcesParticle/ResourcesParticle';
 import styles from './PitchDisplay.module.css';
 
 interface Particle {
@@ -14,7 +16,10 @@ interface Particle {
 
 const FALLBACK_PITCH_COLOR: PitchColor = 'red';
 
-function getPitchColor(pitchValue: number | undefined, cardNumber: string): PitchColor {
+function getPitchColor(
+  pitchValue: number | undefined,
+  cardNumber: string
+): PitchColor {
   if (cardNumber.includes('inner_chi')) return 'blue';
   if (pitchValue === 3) return 'blue';
   if (pitchValue === 2) return 'yellow';
@@ -44,7 +49,10 @@ export default function PitchDisplay(prop: Displayrow) {
     if (cookies.disableParticles === 'true' || prefersReducedMotion) return;
     if (pitchZone && pitchZone.length > 0) {
       const newestCard = pitchZone[0];
-      const pitchColor = getPitchColor(newestCard.pitchValue, newestCard.cardNumber);
+      const pitchColor = getPitchColor(
+        newestCard.pitchValue,
+        newestCard.cardNumber
+      );
       const batch = particleCounter.current++;
       const newParticles: Particle[] = Array.from({ length: 3 }, (_, i) => ({
         id: `${batch}-${i}`,
@@ -73,7 +81,9 @@ export default function PitchDisplay(prop: Displayrow) {
         {pulses.map((pulse) => (
           <motion.div
             key={pulse.id}
-            className={`${styles.pitchPulse} ${styles[`pitchPulse${pulse.pitchColor}`]}`}
+            className={`${styles.pitchPulse} ${
+              styles[`pitchPulse${pulse.pitchColor}`]
+            }`}
             initial={{ opacity: 0.8, scale: 0.45 }}
             animate={{ opacity: 0, scale: 2.5 }}
             transition={{ duration: 0.7, ease: 'easeOut' }}

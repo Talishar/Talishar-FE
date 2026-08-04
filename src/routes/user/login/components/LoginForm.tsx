@@ -35,7 +35,7 @@ export const LoginForm = () => {
   const { setLoggedIn } = useAuth();
   const navigate = useNavigate();
   const { refetch } = useGetFavoriteDecksQuery(undefined);
-    // Initial stuff to allow the lang to change
+  // Initial stuff to allow the lang to change
   const { t, i18n, ready } = useTranslation();
 
   const {
@@ -47,7 +47,7 @@ export const LoginForm = () => {
     mode: 'onBlur',
     resolver: yupResolver(loginValidationSchema)
   });
-  
+
   const onSubmit: SubmitHandler<LoginValidationType> = async (data) => {
     const values = { ...data, rememberMe: data.rememberMe ?? false };
     try {
@@ -60,7 +60,7 @@ export const LoginForm = () => {
         toast.error(resp.error, { position: 'top-center' });
       }
       if (resp?.isUserLoggedIn) {
-        toast.success(t("USER.LOGIN.LOGGED_IN"), { position: 'top-center' });
+        toast.success(t('USER.LOGIN.LOGGED_IN'), { position: 'top-center' });
         refetch();
         setLoggedIn(
           resp?.loggedInUserID ?? '0',
@@ -75,12 +75,12 @@ export const LoginForm = () => {
         navigate('/');
       }
       if (resp?.isUserLoggedIn === false) {
-        toast.error(t("USER.LOGIN.INCORRECT_CREDENTIALS"), {
+        toast.error(t('USER.LOGIN.INCORRECT_CREDENTIALS'), {
           position: 'top-center'
         });
         setError('root.serverError', {
           type: 'custom',
-          message: t("USER.LOGIN.INCORRECT_CREDENTIALS")
+          message: t('USER.LOGIN.INCORRECT_CREDENTIALS')
         });
       }
     } catch (err) {
@@ -99,12 +99,15 @@ export const LoginForm = () => {
 
   return (
     <div>
-      <h2>{t("USER.LOGIN.LOGIN")}</h2>
-      <article className={styles.formContainer} style={{ position: 'relative' }}>
+      <h2>{t('USER.LOGIN.LOGIN')}</h2>
+      <article
+        className={styles.formContainer}
+        style={{ position: 'relative' }}
+      >
         {isSubmitting && (
           <div className={styles.loadingOverlay}>
             <SwordLoader size={50} />
-            <p className={styles.loadingText}>{t("USER.LOGIN.LOGGING_IN")}</p>
+            <p className={styles.loadingText}>{t('USER.LOGIN.LOGGING_IN')}</p>
           </div>
         )}
         <button
@@ -154,12 +157,12 @@ export const LoginForm = () => {
                 <rect width="278" height="212" fill="white" />
               </clipPath>
             </defs>
-      </svg>
-      {t("USER.LOGIN.LOGIN_METAFY")}
+          </svg>
+          {t('USER.LOGIN.LOGIN_METAFY')}
         </button>
-        <p className={styles.orbreak}>{t("USER.LOGIN.OR")}</p>
+        <p className={styles.orbreak}>{t('USER.LOGIN.OR')}</p>
         <form onSubmit={handleSubmit(onSubmit)} ref={parent}>
-      <label htmlFor="userID">{t("USER.LOGIN.USERNAME")}</label>
+          <label htmlFor="userID">{t('USER.LOGIN.USERNAME')}</label>
           <input
             type="text"
             placeholder="bravo"
@@ -169,7 +172,7 @@ export const LoginForm = () => {
           {errors.userID?.message && (
             <div className={styles.fieldError}>{errors.userID?.message}</div>
           )}
-          <label htmlFor="password">{t("USER.LOGIN.PASSWORD")}</label>
+          <label htmlFor="password">{t('USER.LOGIN.PASSWORD')}</label>
           <input
             type="password"
             placeholder="********"
@@ -185,7 +188,7 @@ export const LoginForm = () => {
             autoComplete="off"
             {...register('rememberMe')}
           />
-          <label htmlFor="rememberMe">{t("USER.LOGIN.REMEMBER_ME")}</label>
+          <label htmlFor="rememberMe">{t('USER.LOGIN.REMEMBER_ME')}</label>
           {errors.rememberMe?.message && (
             <div className={styles.fieldError}>
               {errors.rememberMe?.message}
@@ -205,8 +208,8 @@ export const LoginForm = () => {
             disabled={isSubmitting}
             aria-busy={isSubmitting}
             className={styles.submitButton}
-      >
-      {t("USER.LOGIN.LOGIN")}
+          >
+            {t('USER.LOGIN.LOGIN')}
           </button>
           {errors.root?.serverError?.message && (
             <div className={styles.fieldError}>
@@ -216,25 +219,23 @@ export const LoginForm = () => {
         </form>
         <hr className={styles.divider} />
         <p className={styles.linebreak} style={{ marginTop: '18px' }}>
-          {t("USER.LOGIN.NO_ACCOUNT")}{' '}
+          {t('USER.LOGIN.NO_ACCOUNT')}{' '}
           <Link
             to={'./signup'}
             style={{
               color: 'var(--theme-primary)',
               textDecoration: 'underline'
             }}
-      >
-      {t("USER.LOGIN.SIGN_UP")}
+          >
+            {t('USER.LOGIN.SIGN_UP')}
           </Link>
         </p>
         <small>
-      <em>
-      {t("USER.LOGIN.REMEMBER_ME_CONSENT")}                  
-          </em>
+          <em>{t('USER.LOGIN.REMEMBER_ME_CONSENT')}</em>
         </small>
         &nbsp;
         <small>
-          <Link to={'/privacy'}>{t("USER.LOGIN.REMEMBER_ME_CONSENT")}</Link>
+          <Link to={'/privacy'}>{t('USER.LOGIN.REMEMBER_ME_CONSENT')}</Link>
         </small>
       </article>
     </div>

@@ -8,7 +8,8 @@ export interface KeywordMatch {
   display: string;
 }
 
-const normalize = (raw: string) => raw.toLowerCase().replace(/\s+/g, ' ').trim();
+const normalize = (raw: string) =>
+  raw.toLowerCase().replace(/\s+/g, ' ').trim();
 
 const escapeRegExp = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
@@ -42,7 +43,9 @@ const buildState = (): MatcherState => {
   const regex =
     matchable.length > 0
       ? new RegExp(
-          `(^|[^${BOUNDARY}])(${matchable.map(escapeRegExp).join('|')})( (\\d+))?(?![${BOUNDARY}])`,
+          `(^|[^${BOUNDARY}])(${matchable
+            .map(escapeRegExp)
+            .join('|')})( (\\d+))?(?![${BOUNDARY}])`,
           'gi'
         )
       : null;

@@ -21,9 +21,7 @@ export function reopenCookieConsent(): void {
 }
 
 export function loadGoogleAnalytics(): void {
-  if (
-    document.querySelector('script[src*="googletagmanager.com/gtag/js"]')
-  ) {
+  if (document.querySelector('script[src*="googletagmanager.com/gtag/js"]')) {
     return;
   }
 

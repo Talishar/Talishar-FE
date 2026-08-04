@@ -1,4 +1,10 @@
-import React, { useEffect, useLayoutEffect, useState, useMemo, useRef } from 'react';
+import React, {
+  useEffect,
+  useLayoutEffect,
+  useState,
+  useMemo,
+  useRef
+} from 'react';
 import { usePageTitle } from 'hooks/usePageTitle';
 import Deck from './components/deck/Deck';
 import LobbyChat from './components/lobbyChat/LobbyChat';
@@ -57,7 +63,11 @@ import Matchups from './components/matchups/Matchups';
 import { GameLocationState } from 'interface/GameLocationState';
 import { saveGameAuthKey } from 'utils/LocalKeyManagement';
 import CardPopUp from '../components/elements/cardPopUp/CardPopUp';
-import { clearGetLobbyRefresh, getGameInfo, setHeroInfo } from 'features/game/GameSlice';
+import {
+  clearGetLobbyRefresh,
+  getGameInfo,
+  setHeroInfo
+} from 'features/game/GameSlice';
 import useSound from 'use-sound';
 import playerJoined from 'sounds/playerJoinedSound.mp3';
 import { createPortal } from 'react-dom';
@@ -70,7 +80,6 @@ import {
 } from 'features/options/optionsSlice';
 import { useTranslation, Trans } from 'react-i18next';
 
-
 const FAB_BAZAAR_LEARN_MORE_URL = 'https://fabbazaar.app/tutorials/talishar';
 
 // FaBrary uses hyphens (e.g. "briar-warden-of-thorns"), Talishar uses underscores.
@@ -80,7 +89,10 @@ const normalizeHeroId = (id: string) => id.toLowerCase().replace(/-/g, '_');
 // e.g. "🪴Briar" → "briar", "🏀 Vynnset" → "vynnset"
 const normalizeMatchupName = (name: string): string =>
   name
-    .replace(/[\p{Emoji_Presentation}\p{Extended_Pictographic}\uFE0F\u200D]/gu, '')
+    .replace(
+      /[\p{Emoji_Presentation}\p{Extended_Pictographic}\uFE0F\u200D]/gu,
+      ''
+    )
     .replace(/[^a-zA-Z0-9\s]/g, '')
     .trim()
     .toLowerCase()
@@ -91,12 +103,16 @@ const extractBazaarDeckIdFromLink = (deckLink?: string): string | null => {
   // Strip the "{index}<fav>" prefix that appears when a favorite deck link is stored
   // e.g. "20<fav>https://fabrary.net/decks/..." → "https://fabrary.net/decks/..."
   const favMarker = deckLink.indexOf('<fav>');
-  const cleanedLink = favMarker !== -1 ? deckLink.slice(favMarker + 5) : deckLink;
+  const cleanedLink =
+    favMarker !== -1 ? deckLink.slice(favMarker + 5) : deckLink;
   const bases = [FAB_BAZAAR_DECK_URL_BASE, FABRARY_DECK_URL_BASE];
   for (const base of bases) {
     const normalizedBase = base.endsWith('/') ? base : `${base}/`;
     if (cleanedLink.startsWith(normalizedBase)) {
-      const deckId = cleanedLink.slice(normalizedBase.length).split('?')[0].trim();
+      const deckId = cleanedLink
+        .slice(normalizedBase.length)
+        .split('?')[0]
+        .trim();
       return deckId || null;
     }
   }
@@ -119,7 +135,10 @@ const Lobby = () => {
   const [selectedMatchupId, setSelectedMatchupId] = useState<string | null>(
     null
   );
-  const deckLinkTrackingRef = useRef<{ link: string | undefined; gameKey: string }>({
+  const deckLinkTrackingRef = useRef<{
+    link: string | undefined;
+    gameKey: string;
+  }>({
     link: undefined,
     gameKey: ''
   });
@@ -307,7 +326,6 @@ const Lobby = () => {
     setIsWideScreen(width > BREAKPOINT_EXTRA_LARGE && hasMousePointer);
   }, [width]);
 
-
   useEffect(() => {
     // New lobby/deck context: clear stale selected matchup from previous session.
     // Skip when myDeckLink is transiently undefined (gameLobby cleared during polling reset on submit).
@@ -315,7 +333,8 @@ const Lobby = () => {
     const newLink = gameLobby?.myDeckLink;
     if (!newLink) return;
     const gameKey = `${gameID}:${playerID}`;
-    const { link: prevLink, gameKey: prevGameKey } = deckLinkTrackingRef.current;
+    const { link: prevLink, gameKey: prevGameKey } =
+      deckLinkTrackingRef.current;
     if (gameKey === prevGameKey && newLink === prevLink) return;
     deckLinkTrackingRef.current = { link: newLink, gameKey };
     setSelectedMatchupId(null);
@@ -351,20 +370,25 @@ const Lobby = () => {
   }, [selectedMatchupId, gameLobby?.matchups]);
 
   const suggestedMatchupId = useMemo(() => {
-    if (!gameLobby?.theirHero || gameLobby.theirHero === 'CardBack') return null;
+    if (!gameLobby?.theirHero || gameLobby.theirHero === 'CardBack')
+      return null;
     if (!isBazaarDeckInLobby) return null;
     const opponentHero = normalizeHeroId(gameLobby.theirHero ?? '');
-    const matchingMatchup = (gameLobby?.matchups ?? []).find((matchup: Matchup) => {
-      if (matchup.heroIdentifiers?.length) {
-        return matchup.heroIdentifiers.some((id: string) => normalizeHeroId(id) === opponentHero);
+    const matchingMatchup = (gameLobby?.matchups ?? []).find(
+      (matchup: Matchup) => {
+        if (matchup.heroIdentifiers?.length) {
+          return matchup.heroIdentifiers.some(
+            (id: string) => normalizeHeroId(id) === opponentHero
+          );
+        }
+        const normalizedId = normalizeHeroId(matchup.matchupId);
+        if (normalizedId === opponentHero) return true;
+        if (opponentHero.startsWith(normalizedId + '_')) return true;
+        const normalizedName = normalizeMatchupName(matchup.name);
+        if (normalizedName === opponentHero) return true;
+        return opponentHero.startsWith(normalizedName + '_');
       }
-      const normalizedId = normalizeHeroId(matchup.matchupId);
-      if (normalizedId === opponentHero) return true;
-      if (opponentHero.startsWith(normalizedId + '_')) return true;
-      const normalizedName = normalizeMatchupName(matchup.name);
-      if (normalizedName === opponentHero) return true;
-      return opponentHero.startsWith(normalizedName + '_');
-    });
+    );
     return matchingMatchup?.matchupId ?? null;
   }, [gameLobby?.theirHero, gameLobby?.matchups, isBazaarDeckInLobby]);
 
@@ -467,7 +491,8 @@ const Lobby = () => {
     gameLobby?.theirHero === 'CardBack' ? 'UNKNOWNHERO' : gameLobby?.theirHero;
 
   const leftPic = `url(${generateCroppedImageUrl(leftHero)})`;
-  const isWaitingForOpponent = !gameLobby?.theirHero || gameLobby.theirHero === 'CardBack';
+  const isWaitingForOpponent =
+    !gameLobby?.theirHero || gameLobby.theirHero === 'CardBack';
 
   const lobbyFormatName = getReadableFormatName(
     String(gameLobby?.format ?? data.format ?? '')
@@ -530,7 +555,9 @@ const Lobby = () => {
       )}
     </>
   );
-  const rightPic = `url(${generateCroppedImageUrl(rightHero ?? 'UNKNOWNHERO')})`;
+  const rightPic = `url(${generateCroppedImageUrl(
+    rightHero ?? 'UNKNOWNHERO'
+  )})`;
 
   const eqClasses = classNames(styles.tabButton, {
     [styles.tabActive]: activeTab === 'equipment'
@@ -741,17 +768,12 @@ const Lobby = () => {
       .filter((item: { id: string }) => item.id !== 'NONE00')
       .map((item: { id: string }) => item.id.split('-')[0]);
 
-
     const inventory = [
       ...weaponsSB,
-      ...(headClone
-        .concat(headSBClone)),
-      ...(chestClone
-        .concat(chestSBClone)),
-      ...(armsClone
-        .concat(armsSBClone)),
-      ...(legsClone
-        .concat(legsSBClone)),
+      ...headClone.concat(headSBClone),
+      ...chestClone.concat(chestSBClone),
+      ...armsClone.concat(armsSBClone),
+      ...legsClone.concat(legsSBClone),
       ...(data?.deck?.demiHero ?? []),
       ...modularRemaining,
       ...(deckIndexed
@@ -799,9 +821,11 @@ const Lobby = () => {
       try {
         const refreshedAuth: any = await refreshAuth();
         const refreshed = refreshedAuth?.data;
-        resolvedMetafyId = refreshed?.metafyID ?? refreshed?.metafyId ?? resolvedMetafyId;
+        resolvedMetafyId =
+          refreshed?.metafyID ?? refreshed?.metafyId ?? resolvedMetafyId;
         resolvedMetafyHash = refreshed?.metafyHash ?? resolvedMetafyHash;
-        resolvedMetafyTimestamp = refreshed?.timestamp ?? resolvedMetafyTimestamp;
+        resolvedMetafyTimestamp =
+          refreshed?.timestamp ?? resolvedMetafyTimestamp;
       } catch (authRefreshErr) {
         // Auth refresh failed
       }
@@ -846,7 +870,9 @@ const Lobby = () => {
     }
 
     try {
-      const submitResponse: any = await submitSideboardMutation(requestBody).unwrap();
+      const submitResponse: any = await submitSideboardMutation(
+        requestBody
+      ).unwrap();
 
       // If game started, capture and store the auth key for future use
       if (submitResponse?.gameStarted && submitResponse?.authKey && gameID) {
@@ -873,8 +899,8 @@ const Lobby = () => {
             <dialog open className={styles.modal}>
               <article>
                 <header>{modal}</header>
-                <button onClick={clickYes}>Yes</button>
-                <button onClick={clickNo}>No</button>
+                <button onClick={clickYes}>{t('GAME_LOBBY.YES')}</button>
+                <button onClick={clickNo}>{t('GAME_LOBBY.NO')}</button>
               </article>
             </dialog>
           </>,
@@ -886,30 +912,29 @@ const Lobby = () => {
             <dialog open={needToDoDisclaimer}>
               <article className={styles.disclaimerArticles}>
                 <header className={styles.disclaimerHeader}>
-                  ⚠️ {t('GAME_LOBBY.OPEN_FORMAT_DISCLAIMER_HEADER')}
+                  {t('GAME_LOBBY.OPEN_FORMAT_DISCLAIMER_HEADER')}
                 </header>
                 <p style={{ marginBottom: '1em' }}>
-		  <Trans i18nKey="GAME_LOBBY.OPEN_FORMAT_DISCLAIMER">
-			 
-                  Note that new cards are added on a \'best-effort\' basis and
-                  there may be more bugs and innacurate card interactions. It
-                  may not be a completely accurate representation of the Rules
-                  as written. If you have questions about interactions or
-                  rulings, please contact the{' '}
-                  <a
-                    href={JUDGE_HUB_DISCORD_URL}
-                    target="_blank"
-                  >
-                    {' '}
-                    JudgeHub Discord
-                  </a>{' '}
+                  <Trans i18nKey="GAME_LOBBY.OPEN_FORMAT_DISCLAIMER">
+                    Note that new cards are added on a \'best-effort\' basis and
+                    there may be more bugs and innacurate card interactions. It
+                    may not be a completely accurate representation of the Rules
+                    as written. If you have questions about interactions or
+                    rulings, please contact the{' '}
+                    <a href={JUDGE_HUB_DISCORD_URL} target="_blank">
+                      {' '}
+                      JudgeHub Discord
+                    </a>{' '}
                     for clarification.
-		    </Trans>
+                  </Trans>
                 </p>
                 <div className={styles.disclaimerAcceptButtons}>
                   <button
                     onClick={() => {
-                      localStorage.setItem('openFormatDisclaimerAccepted', 'true');
+                      localStorage.setItem(
+                        'openFormatDisclaimerAccepted',
+                        'true'
+                      );
                       setAcceptedDisclaimer(true);
                     }}
                   >
@@ -923,7 +948,7 @@ const Lobby = () => {
                     }}
                     className={leaveLobby}
                   >
-		    {t('GAME_LOBBY.NO_THANKS')}
+                    {t('GAME_LOBBY.NO_THANKS')}
                   </button>
                 </div>
               </article>
@@ -955,9 +980,7 @@ const Lobby = () => {
       >
         <Form className={styles.form}>
           <FormikDebugLogger />
-          <div
-            className={styles.gridLayout}
-          >
+          <div className={styles.gridLayout}>
             <div className={styles.titleContainer}>
               <CardPopUp
                 cardNumber={data.deck.hero}
@@ -1018,55 +1041,66 @@ const Lobby = () => {
                         type="button"
                         className={styles.kickButton}
                         onClick={handleKickPlayer}
-
-title={t('GAME_LOBBY.KICK_TITLE', { 'name': (isStreamerMode ? t('GAME_LOBBY.OPPONENT') : gameLobby.theirName)})}
+                        title={t('GAME_LOBBY.KICK_TITLE', {
+                          name: isStreamerMode
+                            ? t('GAME_LOBBY.OPPONENT')
+                            : gameLobby.theirName
+                        })}
                         aria-label={t('GAME_LOBBY.KICK_LABEL')}
                       >
-			{t('GAME_LOBBY.KICK')}
+                        {t('GAME_LOBBY.KICK')}
                       </button>
                     )}
                   <div className={styles.dimPic}>
-                    {gameLobby?.theirHero && gameLobby.theirHero !== 'CardBack' && <h3
-                      ref={opponentNameRef}
-                      onMouseEnter={handleNoteTooltipOpen}
-                      onMouseLeave={handleNoteTooltipClose}
-                      aria-busy={!gameLobby}
-                      style={{ cursor: opponentNote ? 'help' : 'default' }}
-                    >
-                      {createPatreonIconMap(
-                        gameLobby?.theirIsContributor ?? false,
-                        gameLobby?.theirIsPvtVoidPatron ?? false,
-                        gameLobby?.theirIsPatron ? true : false,
-                        false,
-                        (gameLobby?.theirMetafyTiers?.length ?? 0) > 0 ? gameLobby!.theirMetafyTiers : undefined
-                      )
-                        .filter((icon) => icon.condition)
-                        .map((icon, index) => (
-                          <a
-                            key={`${icon.src}-${index}`}
-                            href={icon.href}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            title={icon.title}
-                            className={styles.lobbyIconLink}
-                          >
-                            <img
-                              src={icon.src}
-                              alt={icon.title}
-                              className={styles.lobbyIcon}
-                            />
-                          </a>
-                        ))}
-                      <span className={styles.lobbyPlayerName}>
-                        {isStreamerMode
-                          ? t('GAME_LOBBY.OPPONENT')
-                          : String(gameLobby?.theirName ?? '').substring(0, 15)}
-                      </span>
-                    </h3>}
+                    {gameLobby?.theirHero &&
+                      gameLobby.theirHero !== 'CardBack' && (
+                        <h3
+                          ref={opponentNameRef}
+                          onMouseEnter={handleNoteTooltipOpen}
+                          onMouseLeave={handleNoteTooltipClose}
+                          aria-busy={!gameLobby}
+                          style={{ cursor: opponentNote ? 'help' : 'default' }}
+                        >
+                          {createPatreonIconMap(
+                            gameLobby?.theirIsContributor ?? false,
+                            gameLobby?.theirIsPvtVoidPatron ?? false,
+                            gameLobby?.theirIsPatron ? true : false,
+                            false,
+                            (gameLobby?.theirMetafyTiers?.length ?? 0) > 0
+                              ? gameLobby!.theirMetafyTiers
+                              : undefined
+                          )
+                            .filter((icon) => icon.condition)
+                            .map((icon, index) => (
+                              <a
+                                key={`${icon.src}-${index}`}
+                                href={icon.href}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                title={icon.title}
+                                className={styles.lobbyIconLink}
+                              >
+                                <img
+                                  src={icon.src}
+                                  alt={icon.title}
+                                  className={styles.lobbyIcon}
+                                />
+                              </a>
+                            ))}
+                          <span className={styles.lobbyPlayerName}>
+                            {isStreamerMode
+                              ? t('GAME_LOBBY.OPPONENT')
+                              : String(gameLobby?.theirName ?? '').substring(
+                                  0,
+                                  15
+                                )}
+                          </span>
+                        </h3>
+                      )}
                     <div className={styles.heroName}>
                       {gameLobby?.theirHeroName != ''
                         ? ''
-                       : t('GAME_LOBBY.WAITING')}
+                        : t('GAME_LOBBY.WAITING')}
                     </div>
                   </div>
                 </div>
@@ -1099,16 +1133,16 @@ title={t('GAME_LOBBY.KICK_TITLE', { 'name': (isStreamerMode ? t('GAME_LOBBY.OPPO
                     </ul>
                     <ul>
                       {shouldShowMatchupsUI && (
-                          <li>
-                            <button
-                              className={matchupClasses}
-                              onClick={handleMatchupClick}
-                              type="button"
-                            >
-			      {t('GAME_LOBBY.MATCHUPS')}
-                            </button>
-                          </li>
-                        )}
+                        <li>
+                          <button
+                            className={matchupClasses}
+                            onClick={handleMatchupClick}
+                            type="button"
+                          >
+                            {t('GAME_LOBBY.MATCHUPS')}
+                          </button>
+                        </li>
+                      )}
                       <li>
                         <button
                           className={eqClasses}
@@ -1118,7 +1152,7 @@ title={t('GAME_LOBBY.KICK_TITLE', { 'name': (isStreamerMode ? t('GAME_LOBBY.OPPO
                           <div className={styles.icon}>
                             <GiCapeArmor />
                           </div>
-			  {t('GAME_LOBBY.EQUIPMENT')}
+                          {t('GAME_LOBBY.EQUIPMENT')}
                         </button>
                       </li>
                       <li>
@@ -1144,7 +1178,7 @@ title={t('GAME_LOBBY.KICK_TITLE', { 'name': (isStreamerMode ? t('GAME_LOBBY.OPPO
                               <FaExclamationCircle />{' '}
                             </>
                           )}
-			  {t('GAME_LOBBY.CHAT')}
+                          {t('GAME_LOBBY.CHAT')}
                         </button>
                       </li>
                     </ul>
@@ -1163,7 +1197,7 @@ title={t('GAME_LOBBY.KICK_TITLE', { 'name': (isStreamerMode ? t('GAME_LOBBY.OPPO
                         <div className={styles.icon}>
                           <GiCapeArmor />
                         </div>
-                        Equipment
+                        {t('GAME_LOBBY.EQUIPMENT')}
                       </button>
                     </li>
                     <li>
@@ -1175,7 +1209,7 @@ title={t('GAME_LOBBY.KICK_TITLE', { 'name': (isStreamerMode ? t('GAME_LOBBY.OPPO
                         <div className={styles.icon}>
                           <SiBookstack />
                         </div>
-			{t('GAME_LOBBY.DECK')}
+                        {t('GAME_LOBBY.DECK')}
                       </button>
                     </li>
                   </ul>
@@ -1263,15 +1297,21 @@ title={t('GAME_LOBBY.KICK_TITLE', { 'name': (isStreamerMode ? t('GAME_LOBBY.OPPO
               <div className={styles.spacer}></div>
             )}
 
-            {shouldShowMatchupsUI && (activeTab === 'matchups' || isWideScreen) && (
-              <Matchups
-                refetch={refetch}
-                selectedMatchupId={selectedMatchupId}
-                onMatchupSelected={setSelectedMatchupId}
-                suggestedMatchupId={suggestedMatchupId}
-                isReadied={!!(gameLobby?.canUnreadySideboard || gameLobby?.amIChoosingFirstPlayer)}
-              />
-            )}
+            {shouldShowMatchupsUI &&
+              (activeTab === 'matchups' || isWideScreen) && (
+                <Matchups
+                  refetch={refetch}
+                  selectedMatchupId={selectedMatchupId}
+                  onMatchupSelected={setSelectedMatchupId}
+                  suggestedMatchupId={suggestedMatchupId}
+                  isReadied={
+                    !!(
+                      gameLobby?.canUnreadySideboard ||
+                      gameLobby?.amIChoosingFirstPlayer
+                    )
+                  }
+                />
+              )}
             <StickyFooter
               deckSize={deckSize}
               submitSideboard={gameLobby?.canSubmitSideboard ?? false}
@@ -1338,7 +1378,7 @@ const DesktopDeckSelectionButtons = ({
 }) => {
   const { t } = useTranslation();
   const { setFieldValue } = useFormikContext<DeckResponse>();
-					      
+
   const handleSelectAll = () => {
     const allCards = [...deckIndexed, ...deckSBIndexed];
     setFieldValue('deck', allCards);
@@ -1359,14 +1399,18 @@ const DesktopDeckSelectionButtons = ({
         className={styles.selectionButton}
         onClick={() => setFiltersExpanded(!filtersExpanded)}
         type="button"
-        title={filtersExpanded ? t('GAME_LOBBY.COLLAPSE_FILTERS') : t('GAME_LOBBY.EXPAND_FILTERS')}
+        title={
+          filtersExpanded
+            ? t('GAME_LOBBY.COLLAPSE_FILTERS')
+            : t('GAME_LOBBY.EXPAND_FILTERS')
+        }
       >
         {filtersExpanded ? (
           <MdArrowDropDown size={24} />
         ) : (
           <MdArrowRight size={24} />
         )}
-	{t('GAME_LOBBY.FILTERS')}
+        {t('GAME_LOBBY.FILTERS')}
       </button>
       <button
         className={styles.selectionButton}
@@ -1374,7 +1418,7 @@ const DesktopDeckSelectionButtons = ({
         type="button"
         title={t('GAME_LOBBY.SELECT_ALL_TITLE')}
       >
-	{t('GAME_LOBBY.SELECT_ALL')}
+        {t('GAME_LOBBY.SELECT_ALL')}
       </button>
       <button
         className={styles.selectionButton}
@@ -1382,7 +1426,7 @@ const DesktopDeckSelectionButtons = ({
         type="button"
         title={t('GAME_LOBBY.SELECT_NONE_TITLE')}
       >
-	{t('GAME_LOBBY.SELECT_NONE')}
+        {t('GAME_LOBBY.SELECT_NONE')}
       </button>
     </div>
   );

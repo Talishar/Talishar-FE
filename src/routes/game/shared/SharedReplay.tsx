@@ -49,20 +49,21 @@ export default function SharedReplay() {
         });
       })
       .catch((err: any) => {
-        setError(err?.message || err?.data?.error || t('SHARED_REPLAY_PAGE.ERROR_FAILED_LOAD'));
+        setError(
+          err?.message ||
+            err?.data?.error ||
+            t('SHARED_REPLAY_PAGE.ERROR_FAILED_LOAD')
+        );
       });
   }, [token]);
 
   if (error) {
     return (
       <main style={{ padding: '2rem', textAlign: 'center' }}>
-        <h2>Unable to load replay</h2>
+        <h2>{t('SHARED_REPLAY_PAGE.ERROR_TITLE')}</h2>
         <p style={{ color: '#ff6b6b', marginTop: '1rem' }}>{error}</p>
-        <button
-          style={{ marginTop: '1.5rem' }}
-          onClick={() => navigate('/')}
-        >
-          Return to main menu
+        <button style={{ marginTop: '1.5rem' }} onClick={() => navigate('/')}>
+          {t('SHARED_REPLAY_PAGE.RETURN_MAIN_MENU')}
         </button>
       </main>
     );

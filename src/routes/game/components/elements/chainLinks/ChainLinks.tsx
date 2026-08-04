@@ -80,7 +80,9 @@ export default function ChainLinks() {
       })}
       {oldCombatChain.length > 0 && (
         <div
-          className={`${styles.breakChain} ${isGameOver ? styles.breakChainDisabled : ''}`}
+          className={`${styles.breakChain} ${
+            isGameOver ? styles.breakChainDisabled : ''
+          }`}
           onClick={handleBreakChainClick}
           title={isGameOver ? 'Game over' : ''}
         >

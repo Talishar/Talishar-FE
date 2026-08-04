@@ -9,9 +9,7 @@ import { AppStore, RootState, setupStore } from '../app/Store';
 
 import InitialGameState from '../features/game/InitialGameState';
 import { MemoryRouter } from 'react-router-dom';
-import {
-  settingsInitialState
-} from '../features/options/optionsSlice';
+import { settingsInitialState } from '../features/options/optionsSlice';
 
 // This type interface extends the default options for render from RTL, as well
 // as allows the user to specify other things such as initialState, store.

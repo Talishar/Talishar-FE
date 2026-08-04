@@ -105,7 +105,7 @@ export default function useAuth() {
   const isLoggedIn = data?.isUserLoggedIn || !!currentUserId;
 
   const isPatron = data?.isUserLoggedIn
-    ? (data?.isPatron ?? reduxIsPatron)
+    ? data?.isPatron ?? reduxIsPatron
     : reduxIsPatron;
 
   const isMod = data?.isUserLoggedIn

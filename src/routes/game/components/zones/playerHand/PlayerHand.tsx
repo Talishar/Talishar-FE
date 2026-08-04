@@ -18,6 +18,7 @@ import { createPortal } from 'react-dom';
 import useSound from 'use-sound';
 import drawingCardsSound from 'sounds/drawing_cards.wav';
 import { setHandCardRotationHeld } from 'utils/handCardRotation';
+import { useTranslation } from 'react-i18next';
 
 const DEFAULT_HAND_REORDER_STEP_PX = 120;
 const CARD_ROTATION_STEP_DEGREES = 90;
@@ -50,6 +51,7 @@ const selectPlayableGraveyardCards = createSelector(
 );
 
 export default function PlayerHand() {
+  const { t } = useTranslation();
   const [width, height] = useWindowDimensions();
 
   const playerID = useAppSelector(
@@ -887,7 +889,7 @@ export default function PlayerHand() {
                 [styles.scrollButtonHidden]: !canScrollLeft
               })}
               onPointerDown={() => scrollHand('left')}
-              aria-label="Scroll hand left"
+              aria-label={t('HAND.SCROLL_LEFT')}
             >
               <svg
                 width="14"
@@ -1051,7 +1053,7 @@ export default function PlayerHand() {
                 [styles.scrollButtonHidden]: !canScrollRight
               })}
               onPointerDown={() => scrollHand('right')}
-              aria-label="Scroll hand right"
+              aria-label={t('HAND.SCROLL_RIGHT')}
             >
               <svg
                 width="14"

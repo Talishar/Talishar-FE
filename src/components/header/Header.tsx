@@ -18,7 +18,7 @@ import {
   BsFullscreen,
   BsFullscreenExit
 } from 'react-icons/bs';
-import { IoLogOut } from "react-icons/io5";
+import { IoLogOut } from 'react-icons/io5';
 import LanguageSelector from 'components/header/LanguageSelector';
 import Footer from 'components/footer/Footer';
 import { useGetPendingRequestsQuery } from 'features/api/apiSlice';
@@ -40,7 +40,9 @@ const Header = () => {
   const pendingRequestCount = pendingData?.requests?.length || 0;
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
-  const [isFullscreen, setIsFullscreen] = useState(!!document.fullscreenElement);
+  const [isFullscreen, setIsFullscreen] = useState(
+    !!document.fullscreenElement
+  );
   const userDropdownRef = useRef<HTMLDivElement>(null);
 
   const { t } = useTranslation();
@@ -48,13 +50,16 @@ const Header = () => {
   useEffect(() => {
     const handleOrientationChange = () => setMobileMenuOpen(false);
     window.addEventListener('orientationchange', handleOrientationChange);
-    return () => window.removeEventListener('orientationchange', handleOrientationChange);
+    return () =>
+      window.removeEventListener('orientationchange', handleOrientationChange);
   }, []);
 
   useEffect(() => {
-    const onFullscreenChange = () => setIsFullscreen(!!document.fullscreenElement);
+    const onFullscreenChange = () =>
+      setIsFullscreen(!!document.fullscreenElement);
     document.addEventListener('fullscreenchange', onFullscreenChange);
-    return () => document.removeEventListener('fullscreenchange', onFullscreenChange);
+    return () =>
+      document.removeEventListener('fullscreenchange', onFullscreenChange);
   }, []);
 
   const handleFullscreenToggle = () => {
@@ -68,7 +73,10 @@ const Header = () => {
   useEffect(() => {
     if (!userDropdownOpen) return;
     const handleClickOutside = (e: MouseEvent) => {
-      if (userDropdownRef.current && !userDropdownRef.current.contains(e.target as Node)) {
+      if (
+        userDropdownRef.current &&
+        !userDropdownRef.current.contains(e.target as Node)
+      ) {
         setUserDropdownOpen(false);
       }
     };
@@ -119,11 +127,11 @@ const Header = () => {
               <img src={TalisharLogo} alt={t('HEADER.TALISHAR_LOGO_ALT')} />
             </Link>
           </li>
-            <li>
-              <NavLink to="/premium" className={styles.support}>
-                {t('HEADER.SUPPORT_US')}
-              </NavLink>
-            </li>
+          <li>
+            <NavLink to="/premium" className={styles.support}>
+              {t('HEADER.SUPPORT_US')}
+            </NavLink>
+          </li>
         </ul>
 
         <ul className={styles.centerNav}>
@@ -147,7 +155,7 @@ const Header = () => {
               {t('HEADER.ABOUT')}
             </NavLink>
           </li>
-	</ul>
+        </ul>
         <ul className={styles.rightGroup}>
           {!isLoggedIn && <LanguageSelector hideIcon />}
           <li>
@@ -164,7 +172,9 @@ const Header = () => {
                     {currentDisplayName ?? currentUserName}
                   </span>
                   <BsChevronDown
-                    className={`${styles.chevron} ${userDropdownOpen ? styles.chevronOpen : ''}`}
+                    className={`${styles.chevron} ${
+                      userDropdownOpen ? styles.chevronOpen : ''
+                    }`}
                   />
                   {pendingRequestCount > 0 && (
                     <span className={styles.notificationBadge}>
@@ -192,16 +202,31 @@ const Header = () => {
                     <LanguageSelector inDropdown />
                     {document.fullscreenEnabled && (
                       <li>
-                        <a href="#" onClick={(e) => { e.preventDefault(); handleFullscreenToggle(); }}>
-                          {isFullscreen ? <BsFullscreenExit /> : <BsFullscreen />}
-                          <span>{isFullscreen ? t('HEADER.EXIT_FULLSCREEN') : t('HEADER.FULLSCREEN')}</span>
+                        <a
+                          href="#"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            handleFullscreenToggle();
+                          }}
+                        >
+                          {isFullscreen ? (
+                            <BsFullscreenExit />
+                          ) : (
+                            <BsFullscreen />
+                          )}
+                          <span>
+                            {isFullscreen
+                              ? t('HEADER.EXIT_FULLSCREEN')
+                              : t('HEADER.FULLSCREEN')}
+                          </span>
                         </a>
                       </li>
                     )}
                     {isMod && (
                       <li>
                         <Link to="/mod" onClick={closeUserDropdown}>
-                          <BsShieldFillCheck /> <span>{t('HEADER.MOD_PAGE')}</span>
+                          <BsShieldFillCheck />{' '}
+                          <span>{t('HEADER.MOD_PAGE')}</span>
                         </Link>
                       </li>
                     )}
@@ -224,7 +249,9 @@ const Header = () => {
         <button
           className={styles.burgerButton}
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          aria-label={mobileMenuOpen ? t('HEADER.CLOSE_MENU') : t('HEADER.OPEN_MENU')}
+          aria-label={
+            mobileMenuOpen ? t('HEADER.CLOSE_MENU') : t('HEADER.OPEN_MENU')
+          }
           aria-expanded={mobileMenuOpen}
         >
           {mobileMenuOpen ? <BsX /> : <BsList />}
@@ -294,9 +321,19 @@ const Header = () => {
             )}
             {document.fullscreenEnabled && (
               <li>
-                <a href="#" onClick={(e) => { e.preventDefault(); handleFullscreenToggle(); }}>
+                <a
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleFullscreenToggle();
+                  }}
+                >
                   {isFullscreen ? <BsFullscreenExit /> : <BsFullscreen />}
-                  <span>{isFullscreen ? t('HEADER.EXIT_FULLSCREEN') : t('HEADER.FULLSCREEN')}</span>
+                  <span>
+                    {isFullscreen
+                      ? t('HEADER.EXIT_FULLSCREEN')
+                      : t('HEADER.FULLSCREEN')}
+                  </span>
                 </a>
               </li>
             )}

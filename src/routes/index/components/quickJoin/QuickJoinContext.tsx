@@ -199,11 +199,7 @@ export const QuickJoinProvider = ({
   // If FaB Bazaar isn't enabled for this user, reset any stale 'bazaar' value so the
   // disabled tab doesn't get the active class from localStorage.
   useEffect(() => {
-    if (
-      canResolveBazaarAccess &&
-      !isBazaarEnabled &&
-      deckSource === 'bazaar'
-    ) {
+    if (canResolveBazaarAccess && !isBazaarEnabled && deckSource === 'bazaar') {
       setDeckSourceState('talishar');
       localStorage.setItem(LS_DECK_SOURCE_KEY, 'talishar');
     }
@@ -259,7 +255,8 @@ export const QuickJoinProvider = ({
     return importDeckUrl;
   }, [deckSource, selectedBazaarDeck, importDeckUrl]);
 
-  const effectiveFavoriteDecks = deckSource === 'talishar' ? selectedFavoriteDeck : '';
+  const effectiveFavoriteDecks =
+    deckSource === 'talishar' ? selectedFavoriteDeck : '';
 
   const quickJoin = useCallback(
     async (gameName: number) => {
@@ -276,7 +273,8 @@ export const QuickJoinProvider = ({
           : importDeckUrl.trim();
         const favDecksValue = isBazaar ? '' : selectedFavoriteDeck;
         // Only save deck if it's from importDeckUrl (not from favorites or bazaar)
-        const shouldSaveDeck = !isBazaar && saveDeck && importDeckUrl.trim() !== '';
+        const shouldSaveDeck =
+          !isBazaar && saveDeck && importDeckUrl.trim() !== '';
 
         const response = await joinGame({
           gameName,

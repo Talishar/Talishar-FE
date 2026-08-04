@@ -17,26 +17,30 @@ export default function ChatBox() {
     useAppSelector((state: RootState) => state.game.playerOne.Name) ?? 'you'
   );
   const oppName = String(
-    useAppSelector((state: RootState) => state.game.playerTwo.Name) ?? 'your opponent'
+    useAppSelector((state: RootState) => state.game.playerTwo.Name) ??
+      'your opponent'
   );
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const prevChatLengthRef = useRef<number>(0);
   const prevChatFilterRef = useRef<string>('none');
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    messagesEndRef.current?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'end'
+    });
   };
 
   const transformMessage = (message: string) =>
     message
-        .replace(
-          /Player 1/g,
-          amIPlayerOne ? myName.substring(0, 15) : oppName.substring(0, 15)
-        )
-        .replace(
-          /Player 2/g,
-          amIPlayerOne ? oppName.substring(0, 15) : myName.substring(0, 15)
-        );
+      .replace(
+        /Player 1/g,
+        amIPlayerOne ? myName.substring(0, 15) : oppName.substring(0, 15)
+      )
+      .replace(
+        /Player 2/g,
+        amIPlayerOne ? oppName.substring(0, 15) : myName.substring(0, 15)
+      );
 
   useEffect(() => {
     if (collapsed) return;
@@ -63,7 +67,10 @@ export default function ChatBox() {
               chatLog={chatLog}
               chatFilter={chatFilter}
               transformMessage={transformMessage}
-              playerNames={[amIPlayerOne ? myName : oppName, amIPlayerOne ? oppName : myName]}
+              playerNames={[
+                amIPlayerOne ? myName : oppName,
+                amIPlayerOne ? oppName : myName
+              ]}
               mobile
             />
             <div ref={messagesEndRef} />

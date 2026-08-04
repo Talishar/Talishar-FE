@@ -7,7 +7,7 @@ import styles from './CardImage.module.css';
 
 const UNKNOWN_IMAGE = 'Difficulties';
 
-// Alt arts of promos printed in a non-English language. 
+// Alt arts of promos printed in a non-English language.
 const NON_ENGLISH_PROMO_ALT_ARTS = [
   'FAB331',
   'DDD016',
@@ -34,15 +34,32 @@ export interface CardImage {
 }
 
 export const CardImage = React.memo((props: CardImage) => {
-  const altArts = useAppSelector((state: RootState) => state.game.gameInfo.altArts);
-  const opponentAltArts = useAppSelector((state: RootState) => state.game.gameInfo.opponentAltArts);
+  const altArts = useAppSelector(
+    (state: RootState) => state.game.gameInfo.altArts
+  );
+  const opponentAltArts = useAppSelector(
+    (state: RootState) => state.game.gameInfo.opponentAltArts
+  );
 
   const altArtMap = useMemo(
-    () => altArts ? new Map(altArts.map((a: AltArt): [string, string] => [a.cardId, a.altPath])) : null,
+    () =>
+      altArts
+        ? new Map(
+            altArts.map((a: AltArt): [string, string] => [a.cardId, a.altPath])
+          )
+        : null,
     [altArts]
   );
   const opponentAltArtMap = useMemo(
-    () => opponentAltArts ? new Map(opponentAltArts.map((a: AltArt): [string, string] => [a.cardId, a.altPath])) : null,
+    () =>
+      opponentAltArts
+        ? new Map(
+            opponentAltArts.map((a: AltArt): [string, string] => [
+              a.cardId,
+              a.altPath
+            ])
+          )
+        : null,
     [opponentAltArts]
   );
 
@@ -52,7 +69,9 @@ export const CardImage = React.memo((props: CardImage) => {
   let srcArray = src.split('/');
   const filename = srcArray?.pop()?.split('.')[0] ?? '';
   const isCropped = filename.endsWith('_cropped');
-  const baseFilename = isCropped ? filename.slice(0, -'_cropped'.length) : filename;
+  const baseFilename = isCropped
+    ? filename.slice(0, -'_cropped'.length)
+    : filename;
   let cardNumber = baseFilename.split('-')[0];
 
   const buildAltSrc = (altPath: string) => {
@@ -71,9 +90,15 @@ export const CardImage = React.memo((props: CardImage) => {
     if (altPath && !skipAltArt(altPath)) src = buildAltSrc(altPath);
   }
 
-  const [errorStage, setErrorStage] = useState<'none' | 'reversedFallback' | 'unknown'>('none');
+  const [errorStage, setErrorStage] = useState<
+    'none' | 'reversedFallback' | 'unknown'
+  >('none');
 
-  if (errorStage === 'reversedFallback' && isCropped && cardNumber.endsWith('_r')) {
+  if (
+    errorStage === 'reversedFallback' &&
+    isCropped &&
+    cardNumber.endsWith('_r')
+  ) {
     srcArray = src.split('/');
     srcArray.pop();
     const baseCardFilename = baseFilename.slice(0, -'_r'.length);

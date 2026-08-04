@@ -3,8 +3,7 @@ import { ComponentType, lazy } from 'react';
 const RELOAD_FLAG = 'talishar_chunk_reloaded';
 
 const isChunkLoadError = (error: unknown): boolean => {
-  const message =
-    error instanceof Error ? error.message : String(error ?? '');
+  const message = error instanceof Error ? error.message : String(error ?? '');
   return (
     /Failed to fetch dynamically imported module/i.test(message) ||
     /error loading dynamically imported module/i.test(message) ||

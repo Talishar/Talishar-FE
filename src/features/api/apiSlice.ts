@@ -1036,10 +1036,7 @@ export const apiSlice = createApi({
         };
       },
       // Handle errors gracefully - don't crash if BlockedUsersAPI is unavailable
-      async onQueryStarted(
-        { blockedUsername },
-        { queryFulfilled }
-      ) {
+      async onQueryStarted({ blockedUsername }, { queryFulfilled }) {
         try {
           await queryFulfilled;
         } catch (error: any) {
@@ -1067,10 +1064,7 @@ export const apiSlice = createApi({
         };
       },
       // Handle errors gracefully - don't crash if BlockedUsersAPI is unavailable
-      async onQueryStarted(
-        { blockedUserId },
-        { queryFulfilled }
-      ) {
+      async onQueryStarted({ blockedUserId }, { queryFulfilled }) {
         try {
           await queryFulfilled;
         } catch (error: any) {

@@ -89,8 +89,7 @@
   background: var(--near-black, #0d0d0f);
   border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.14));
   border-radius: 12px;
-  box-shadow:
-    0 24px 64px rgba(0, 0, 0, 0.75),
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.75),
     0 2px 0 rgba(255, 255, 255, 0.04) inset;
   overflow: hidden;
 }
@@ -123,9 +122,7 @@
   line-height: 1;
   text-transform: uppercase;
   white-space: nowrap;
-  text-shadow:
-    0 0 22px rgba(201, 168, 76, 0.4),
-    0 1px 3px rgba(0, 0, 0, 0.9);
+  text-shadow: 0 0 22px rgba(201, 168, 76, 0.4), 0 1px 3px rgba(0, 0, 0, 0.9);
 }
 
 /* ── Hit / no-hit badge ───────────────────────────────── */

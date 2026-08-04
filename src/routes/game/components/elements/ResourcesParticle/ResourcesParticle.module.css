@@ -12,16 +12,34 @@
 }
 
 .redParticle {
-  background: linear-gradient(to bottom, transparent, #ff4d35 28%, #ffd166 70%, transparent);
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    #ff4d35 28%,
+    #ffd166 70%,
+    transparent
+  );
   box-shadow: 0 0 8px #ff4d35, 0 0 16px rgba(196, 33, 20, 0.85);
 }
 
 .yellowParticle {
-  background: linear-gradient(to bottom, transparent, #fff6a0 28%, #f6bd28 70%, transparent);
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    #fff6a0 28%,
+    #f6bd28 70%,
+    transparent
+  );
   box-shadow: 0 0 8px #ffe36e, 0 0 16px rgba(224, 157, 20, 0.82);
 }
 
 .blueParticle {
-  background: linear-gradient(to bottom, transparent, #b9f4ff 28%, #35a9ff 70%, transparent);
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    #b9f4ff 28%,
+    #35a9ff 70%,
+    transparent
+  );
   box-shadow: 0 0 8px #68d7ff, 0 0 16px rgba(32, 119, 232, 0.85);
 }

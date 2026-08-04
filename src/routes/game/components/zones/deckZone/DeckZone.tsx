@@ -7,16 +7,20 @@ import styles from './DeckZone.module.css';
 import { setCardListFocus, clearCardListFocus } from 'features/game/GameSlice';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import * as optConst from 'features/options/constants';
+import { useTranslation } from 'react-i18next';
 
 const MAX_STACK_LAYERS = 12;
 
 export const DeckZone = React.memo((prop: Displayrow) => {
   const { isPlayer } = prop;
   const dispatch = useAppDispatch();
+  const { t } = useTranslation();
   const [windowWidth] = useWindowDimensions();
   const alwaysShowCounters = useAppSelector(
     (state: RootState) =>
-      String(state.settings.entities?.[optConst.ALWAYS_SHOW_COUNTERS]?.value) === '1'
+      String(
+        state.settings.entities?.[optConst.ALWAYS_SHOW_COUNTERS]?.value
+      ) === '1'
   );
 
   const deckCards = useAppSelector((state: RootState) =>
@@ -94,8 +98,12 @@ export const DeckZone = React.memo((prop: Displayrow) => {
 
       return {
         transform:
-          `translateY(${safeCount * -0.24}px) translateX(${safeCount * 0.24}px) ` +
-          `translateY(${(sourceIndex + 1) * 0.25}px) translateX(${(sourceIndex + 1) * -0.25}px)`,
+          `translateY(${safeCount * -0.24}px) translateX(${
+            safeCount * 0.24
+          }px) ` +
+          `translateY(${(sourceIndex + 1) * 0.25}px) translateX(${
+            (sourceIndex + 1) * -0.25
+          }px)`,
         zIndex: safeCount - sourceIndex - 1
       };
     });
@@ -105,7 +113,9 @@ export const DeckZone = React.memo((prop: Displayrow) => {
     () =>
       !isMobileOrTablet
         ? {
-            transform: `translate3d(${Math.round(baseOffsetX)}px, ${Math.round(baseOffsetY)}px, 0)`
+            transform: `translate3d(${Math.round(baseOffsetX)}px, ${Math.round(
+              baseOffsetY
+            )}px, 0)`
           }
         : undefined,
     [isMobileOrTablet, baseOffsetY, baseOffsetX]
@@ -114,13 +124,16 @@ export const DeckZone = React.memo((prop: Displayrow) => {
   const shuffleLayerDelays = useMemo(
     () =>
       shouldAnimateShuffling
-        ? Array.from({ length: shuffleLayerCount }, () => `${Math.random() * 400}ms`)
+        ? Array.from(
+            { length: shuffleLayerCount },
+            () => `${Math.random() * 400}ms`
+          )
         : null,
     [shouldAnimateShuffling, shuffleLayerCount]
   );
 
   if (deckCards === undefined || deckCards === 0) {
-    return <div className={styles.deckZone}>Deck</div>;
+    return <div className={styles.deckZone}>{t('ZONES.DECK')}</div>;
   }
 
   const deckZoneDisplay = () => {
@@ -141,25 +154,30 @@ export const DeckZone = React.memo((prop: Displayrow) => {
         {/* Render background layers for 3D effect - only on desktop */}
         {!isMobileOrTablet &&
           baseLayerStyles.map((style, index) => {
-            const shouldAnimateLayer = shouldAnimateShuffling && index < shuffleLayerCount;
+            const shouldAnimateLayer =
+              shouldAnimateShuffling && index < shuffleLayerCount;
             // During steady-state, pass the memoized style object directly (no allocation).
             // Only spread a new object when an animationDelay is needed during a shuffle.
             const finalStyle = shouldAnimateLayer
-              ? { ...style, animationDelay: shuffleLayerDelays?.[index] ?? '0ms' }
+              ? {
+                  ...style,
+                  animationDelay: shuffleLayerDelays?.[index] ?? '0ms'
+                }
               : style;
             return (
               <div
                 key={`layer-${index}`}
-                className={shouldAnimateLayer ? styles.zoneLayerShuffling : styles.zoneLayer}
+                className={
+                  shouldAnimateLayer
+                    ? styles.zoneLayerShuffling
+                    : styles.zoneLayer
+                }
                 style={finalStyle}
               />
             );
           })}
         {/* Main card on top */}
-        <div
-          className={styles.cardWrapper}
-          style={cardWrapperStyle}
-        >
+        <div className={styles.cardWrapper} style={cardWrapperStyle}>
           <CardDisplay
             card={deckBack}
             num={deckCards}

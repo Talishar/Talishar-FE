@@ -7,7 +7,7 @@ const makeStore = (gameInfo: Record<string, unknown>) =>
     getState: () => ({ game: { gameInfo } }),
     subscribe: () => () => {},
     dispatch: () => {}
-  }) as any;
+  } as any);
 
 const renderCard = (
   props: Partial<React.ComponentProps<typeof CardImage>> & { src: string },
@@ -29,7 +29,9 @@ describe('CardImage alt art substitution', () => {
       { cardId: 'snatch_red', altPath: 'FAB331-T' },
       { cardId: 'soup_up_red', altPath: 'LGS195-T' }
     ],
-    opponentAltArts: [{ cardId: 'enigma_ledger_of_ancestry', altPath: 'HER116-T' }]
+    opponentAltArts: [
+      { cardId: 'enigma_ledger_of_ancestry', altPath: 'HER116-T' }
+    ]
   };
 
   it('applies the equipped alt art by default', () => {

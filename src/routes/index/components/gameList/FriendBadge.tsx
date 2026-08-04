@@ -41,7 +41,8 @@ export const FriendBadge: React.FC<FriendBadgeProps> = ({
     setShowTooltip(false);
   };
 
-  const tooltipText = tooltip ?? (friendName ? `${friendName}'s game` : "Friend's game");
+  const tooltipText =
+    tooltip ?? (friendName ? `${friendName}'s game` : "Friend's game");
 
   return (
     <>
@@ -53,18 +54,19 @@ export const FriendBadge: React.FC<FriendBadgeProps> = ({
       >
         {label ?? <MdPeople />}
       </div>
-      {showTooltip && createPortal(
-        <div
-          className={styles.tooltip}
-          style={{
-            top: `${tooltipPosition.top}px`,
-            left: `${tooltipPosition.left}px`
-          }}
-        >
-          {tooltipText}
-        </div>,
-        document.body
-      )}
+      {showTooltip &&
+        createPortal(
+          <div
+            className={styles.tooltip}
+            style={{
+              top: `${tooltipPosition.top}px`,
+              left: `${tooltipPosition.left}px`
+            }}
+          >
+            {tooltipText}
+          </div>,
+          document.body
+        )}
     </>
   );
 };
