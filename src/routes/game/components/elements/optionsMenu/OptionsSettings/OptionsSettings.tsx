@@ -67,7 +67,8 @@ const OptionsSettings = () => {
     'transparencyIntensity',
     'hoverImageSize',
     'disableParticles',
-    'disableCardTilt'
+    'disableCardTilt',
+    'tapToPreviewPlay'
   ]);
 
   // fetch all settings when options is loaded
@@ -449,6 +450,19 @@ const OptionsSettings = () => {
             setCookie(
               'disableCardTilt',
               cookies.disableCardTilt === 'true' ? 'false' : 'true',
+              { path: '/', maxAge: 365 * 24 * 60 * 60 }
+            )
+          }
+        />
+
+        <CheckboxSetting
+          name="tapToPreviewPlay"
+          label={t('SETTINGS.TAP_TO_PREVIEW_BEFORE_PLAYING_MOBILE')}
+          checked={cookies.tapToPreviewPlay === 'true'}
+          onChange={() =>
+            setCookie(
+              'tapToPreviewPlay',
+              cookies.tapToPreviewPlay === 'true' ? 'false' : 'true',
               { path: '/', maxAge: 365 * 24 * 60 * 60 }
             )
           }

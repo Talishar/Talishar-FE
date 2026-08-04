@@ -42,7 +42,8 @@ const SettingsPage = () => {
     'transparencyIntensity',
     'hoverImageSize',
     'disableParticles',
-    'disableCardTilt'
+    'disableCardTilt',
+    'tapToPreviewPlay'
   ]);
 
   // Dummy game object for settings page (not in an active game)
@@ -422,6 +423,19 @@ const SettingsPage = () => {
                 setCookie(
                   'disableCardTilt',
                   cookies.disableCardTilt === 'true' ? 'false' : 'true',
+                  { path: '/', maxAge: 365 * 24 * 60 * 60 }
+                )
+              }
+            />
+
+            <CheckboxSetting
+              name="tapToPreviewPlay"
+              label={t('SETTINGS.TAP_TO_PREVIEW_BEFORE_PLAYING_MOBILE')}
+              checked={cookies.tapToPreviewPlay === 'true'}
+              onChange={() =>
+                setCookie(
+                  'tapToPreviewPlay',
+                  cookies.tapToPreviewPlay === 'true' ? 'false' : 'true',
                   { path: '/', maxAge: 365 * 24 * 60 * 60 }
                 )
               }

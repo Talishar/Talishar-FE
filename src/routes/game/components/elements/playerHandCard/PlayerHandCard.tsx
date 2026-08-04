@@ -2,7 +2,8 @@ import React, { useRef, useState, useMemo } from 'react';
 import {
   clearPopUp,
   playCard,
-  removeCardFromHand
+  removeCardFromHand,
+  setPopUp
 } from 'features/game/GameSlice';
 import {
   GiTombstone,
@@ -27,6 +28,16 @@ import { createPortal } from 'react-dom';
 import { CARD_SQUARES_PATH, getCollectionCardImagePath } from 'utils';
 import { useLanguageSelector } from 'hooks/useLanguageSelector';
 import { formatRestriction } from 'data/keywords';
+import { useCookies } from 'react-cookie';
+import {
+  TAP_TO_PREVIEW_PLAY_COOKIE,
+  buildHandCardSelectionKey,
+  clearTapToPreviewSelection,
+  getTapToPreviewSelectedCardKey,
+  isTapToPreviewPlayEnabled,
+  resolveTapToPreviewPlay,
+  setTapToPreviewSelectedCardKey
+} from './tapToPreviewPlay';
 
 const ScreenPercentageForCardPlayed = 0.25;
 
@@ -81,6 +92,7 @@ export const PlayerHandCard = React.memo(
     const [isDragging, setIsDragging] = useState(false);
     const [snapback, setSnapback] = useState<boolean>(true);
     const { getLanguage } = useLanguageSelector();
+    const [cookies] = useCookies([TAP_TO_PREVIEW_PLAY_COOKIE]);
 
     // ref to determine if we have a long press or a short tap.
     const timerRef = useRef<ReturnType<typeof setTimeout>>();
@@ -185,12 +197,43 @@ export const PlayerHandCard = React.memo(
       onRotationHoldEnd?.();
     };
 
+    const selectionKey = buildHandCardSelectionKey({
+      cardId,
+      cardNumber: card.cardNumber,
+      cardIndex: card.cardIndex,
+      zone: isArsenal
+        ? 'arsenal'
+        : isBanished
+          ? 'banished'
+          : isGraveyard
+            ? 'graveyard'
+            : 'hand'
+    });
+
     const playCardFunc = () => {
+      clearTapToPreviewSelection();
       dispatch(playCard({ cardParams: card }));
       dispatch(clearPopUp());
       if (!isBanished && !isGraveyard && !isArsenal) {
         dispatch(removeCardFromHand({ card }));
       }
+    };
+
+    const showStickyPreview = () => {
+      const rect = cardElRef.current?.getBoundingClientRect();
+      if (!rect) {
+        dispatch(setPopUp({ cardNumber: card.cardNumber }));
+        return;
+      }
+      const xCoord = rect.left < window.innerWidth / 2 ? rect.right : rect.left;
+      const yCoord = rect.top < window.innerHeight / 2 ? rect.bottom : rect.top;
+      dispatch(
+        setPopUp({
+          cardNumber: card.cardNumber,
+          xCoord,
+          yCoord
+        })
+      );
     };
 
     const onDrag = (
@@ -206,7 +249,13 @@ export const PlayerHandCard = React.memo(
       if (canPopUp && !hasDispatchedClearRef.current) {
         setSnapback(true);
         if (!isLongPress.current) {
-          dispatch(clearPopUp());
+          // Keep sticky tap-to-preview portal visible while this card is selected.
+          const stickyPreview =
+            isTapToPreviewPlayEnabled(cookies[TAP_TO_PREVIEW_PLAY_COOKIE]) &&
+            getTapToPreviewSelectedCardKey() === selectionKey;
+          if (!stickyPreview) {
+            dispatch(clearPopUp());
+          }
           hasDispatchedClearRef.current = true;
           setCanPopup(false);
         }
@@ -223,6 +272,24 @@ export const PlayerHandCard = React.memo(
 
       // Tap to play card (unless it was a long press which shows preview)
       if (!isLongPress.current) {
+        const isTouchLike =
+          lastPointerTypeRef.current === 'touch' || !supportsHover;
+        const tapToPreviewEnabled =
+          isTapToPreviewPlayEnabled(cookies[TAP_TO_PREVIEW_PLAY_COOKIE]) &&
+          isTouchLike;
+
+        if (tapToPreviewEnabled) {
+          const { action, nextSelectedKey } = resolveTapToPreviewPlay({
+            enabled: true,
+            cardKey: selectionKey
+          });
+          setTapToPreviewSelectedCardKey(nextSelectedKey);
+          if (action === 'preview') {
+            showStickyPreview();
+            return;
+          }
+        }
+
         if (!card.action) return;
         playCardFunc();
         addCardToPlayedCards(card.cardNumber);
@@ -366,6 +433,10 @@ export const PlayerHandCard = React.memo(
             isHidden={!canPopUp}
             disableTilt={isDragging}
             disableShadow
+            persistPopUpOnClick={
+              isTapToPreviewPlayEnabled(cookies[TAP_TO_PREVIEW_PLAY_COOKIE]) &&
+              !supportsHover
+            }
           >
             <CardImage src={src} className={imgStyles} draggable="false" />
             {iconColumn}
