@@ -494,6 +494,12 @@
     "TURN": "Turn {{turn}}",
     "TURN_ARIA": "Turn {{turn}}, {{playerName}}'s turn"
   },
+  "GAME_STATE": {
+    "AUTH_ERROR": "Authentication Error: {{message}}",
+    "CONNECTION_LOST": "Connection to game server lost. Reconnecting...",
+    "GAME_ERROR": "Game Error: {{message}}",
+    "SERVER_ERROR": "Server Error: {{message}}"
+  },
   "HAND": {
     "SCROLL_LEFT": "Scroll hand left",
     "SCROLL_RIGHT": "Scroll hand right"

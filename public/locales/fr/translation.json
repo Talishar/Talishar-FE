@@ -494,6 +494,12 @@
     "TURN": "",
     "TURN_ARIA": ""
   },
+  "GAME_STATE": {
+    "AUTH_ERROR": "",
+    "CONNECTION_LOST": "",
+    "GAME_ERROR": "",
+    "SERVER_ERROR": ""
+  },
   "HAND": {
     "SCROLL_LEFT": "",
     "SCROLL_RIGHT": ""

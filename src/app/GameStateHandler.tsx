@@ -20,10 +20,12 @@ import {
 } from 'utils/LocalKeyManagement';
 import ParseGameState from './ParseGameState';
 import { toast } from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
 
 const MAX_RETRIES = 5;
 
 const GameStateHandler = () => {
+  const { t } = useTranslation();
   const { gameID } = useParams();
   const gameInfo = useAppSelector(getGameInfo);
   const currentUserName = useAppSelector(selectCurrentUserName);
@@ -148,7 +150,9 @@ const GameStateHandler = () => {
                 errorMsg.includes('game no longer exists') ||
                 errorMsg.includes('does not exist')
               ) {
-                toast.error(`Game Error: ${data.error}`);
+                toast.error(
+                  t('GAME_STATE.GAME_ERROR', { message: data.error })
+                );
                 source.close();
                 setTimeout(() => navigate('/'), 60000);
                 return;
@@ -158,12 +162,16 @@ const GameStateHandler = () => {
                 errorMsg.includes('invalid auth') ||
                 errorMsg.includes('authkey')
               ) {
-                toast.error(`Authentication Error: ${data.error}`);
+                toast.error(
+                  t('GAME_STATE.AUTH_ERROR', { message: data.error })
+                );
                 source.close();
                 return;
               }
 
-              toast.error(`Server Error: ${data.error}`);
+              toast.error(
+                t('GAME_STATE.SERVER_ERROR', { message: data.error })
+              );
               return;
             }
 
@@ -220,7 +228,7 @@ const GameStateHandler = () => {
             setTimeout(() => setForceRetry((prev) => prev + 1), retryDelay);
           } else {
             if (retryCountRef.current === MAX_RETRIES + 1) {
-              toast.error('Connection to game server lost. Reconnecting...');
+              toast.error(t('GAME_STATE.CONNECTION_LOST'));
             }
             setTimeout(() => setForceRetry((prev) => prev + 1), 10000);
           }
@@ -262,7 +270,8 @@ const GameStateHandler = () => {
     currentUserName,
     forceRetry,
     dispatch,
-    navigate
+    navigate,
+    t
   ]);
 
   useEffect(() => {
