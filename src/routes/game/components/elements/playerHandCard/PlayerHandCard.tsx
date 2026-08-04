@@ -1,9 +1,8 @@
-import React, { useEffect, useRef, useState, useMemo } from 'react';
+import React, { useRef, useState, useMemo } from 'react';
 import {
   clearPopUp,
   playCard,
-  removeCardFromHand,
-  setPopUp
+  removeCardFromHand
 } from 'features/game/GameSlice';
 import {
   GiTombstone,
@@ -13,8 +12,7 @@ import {
 } from 'react-icons/gi';
 import { Card } from 'features/Card';
 import styles from './PlayerHandCard.module.css';
-import { useAppDispatch, useAppSelector } from 'app/Hooks';
-import { RootState } from 'app/Store';
+import { useAppDispatch } from 'app/Hooks';
 import { LONG_PRESS_TIMER } from 'appConstants';
 import classNames from 'classnames';
 import CardImage from '../cardImage/CardImage';
@@ -29,17 +27,10 @@ import { createPortal } from 'react-dom';
 import { CARD_SQUARES_PATH, getCollectionCardImagePath } from 'utils';
 import { useLanguageSelector } from 'hooks/useLanguageSelector';
 import { formatRestriction } from 'data/keywords';
-import { useCookies } from 'react-cookie';
 import {
-  TAP_PREVIEW_CARD_SELECTOR,
-  TAP_TO_PREVIEW_PLAY_COOKIE,
   buildHandCardSelectionKey,
   clearTapToPreviewSelection,
-  getTapToPreviewSelectedCardKey,
-  isTapToPreviewPlayEnabled,
-  resolveTapToPreviewPlay,
-  setTapToPreviewSelectedCardKey,
-  shouldDismissStickyPreviewOnOutsideTap
+  getTapToPreviewSelectedCardKey
 } from './tapToPreviewPlay';
 
 const ScreenPercentageForCardPlayed = 0.25;
@@ -95,7 +86,6 @@ export const PlayerHandCard = React.memo(
     const [isDragging, setIsDragging] = useState(false);
     const [snapback, setSnapback] = useState<boolean>(true);
     const { getLanguage } = useLanguageSelector();
-    const [cookies] = useCookies([TAP_TO_PREVIEW_PLAY_COOKIE]);
 
     // ref to determine if we have a long press or a short tap.
     const timerRef = useRef<ReturnType<typeof setTimeout>>();
@@ -119,72 +109,50 @@ export const PlayerHandCard = React.memo(
     const dragX = useMotionValue(0);
     const dragY = useMotionValue(0);
     const dispatch = useAppDispatch();
-    const popupCardNumber = useAppSelector(
-      (state: RootState) => state.game.popup?.popupCard?.cardNumber
-    );
 
-    const selectionKey = card
-      ? buildHandCardSelectionKey({
-          cardId,
-          cardNumber: card.cardNumber,
-          cardIndex: card.cardIndex,
-          zone: isArsenal
-            ? 'arsenal'
-            : isBanished
-              ? 'banished'
-              : isGraveyard
-                ? 'graveyard'
-                : 'hand'
-        })
-      : null;
-
-    // Dismiss sticky preview when tapping outside the hand (not on another hand card).
-    useEffect(() => {
-      const tapToPreviewEnabled = isTapToPreviewPlayEnabled(
-        cookies[TAP_TO_PREVIEW_PLAY_COOKIE]
-      );
-      if (
-        !tapToPreviewEnabled ||
-        !selectionKey ||
-        getTapToPreviewSelectedCardKey() !== selectionKey
-      ) {
-        return;
-      }
-
-      const onPointerDown = (event: PointerEvent) => {
-        const target = event.target as Element | null;
-        if (cardElRef.current?.contains(target)) {
-          return;
-        }
-        const isTapOnPreviewableCard = Boolean(
-          target?.closest?.(TAP_PREVIEW_CARD_SELECTOR)
-        );
-        if (
-          !shouldDismissStickyPreviewOnOutsideTap({
-            enabled: true,
-            selectedKey: getTapToPreviewSelectedCardKey(),
-            isTapOnPreviewableCard
-          })
-        ) {
-          return;
-        }
-        clearTapToPreviewSelection();
-        dispatch(clearPopUp());
-      };
-
-      document.addEventListener('pointerdown', onPointerDown);
-      return () => document.removeEventListener('pointerdown', onPointerDown);
-    }, [cookies, selectionKey, dispatch, popupCardNumber]);
-
-    if (card === undefined || selectionKey == null) {
+    if (card === undefined) {
       return <div className={styles.handCard}></div>;
     }
+
+    const selectionKey = buildHandCardSelectionKey({
+      cardId,
+      cardNumber: card.cardNumber,
+      cardIndex: card.cardIndex,
+      zone: isArsenal
+        ? 'arsenal'
+        : isBanished
+          ? 'banished'
+          : isGraveyard
+            ? 'graveyard'
+            : 'hand'
+    });
 
     const src = getCollectionCardImagePath({
       path: CARD_SQUARES_PATH,
       locale: getLanguage(),
       cardNumber: card.cardNumber
     });
+
+    const playCardFunc = () => {
+      clearTapToPreviewSelection();
+      dispatch(playCard({ cardParams: card }));
+      dispatch(clearPopUp());
+      if (!isBanished && !isGraveyard && !isArsenal) {
+        dispatch(removeCardFromHand({ card }));
+      }
+    };
+
+    const handlePlayFromTap = () => {
+      if (draggedRef.current) {
+        draggedRef.current = false;
+        return;
+      }
+      if (scrollBlockedRef?.current) return;
+      if (isLongPress.current) return;
+      if (!card.action) return;
+      playCardFunc();
+      addCardToPlayedCards(card.cardNumber);
+    };
 
     const handleDragStart = () => {
       const rect = cardElRef.current?.getBoundingClientRect();
@@ -256,32 +224,6 @@ export const PlayerHandCard = React.memo(
       onRotationHoldEnd?.();
     };
 
-    const playCardFunc = () => {
-      clearTapToPreviewSelection();
-      dispatch(playCard({ cardParams: card }));
-      dispatch(clearPopUp());
-      if (!isBanished && !isGraveyard && !isArsenal) {
-        dispatch(removeCardFromHand({ card }));
-      }
-    };
-
-    const showStickyPreview = () => {
-      const rect = cardElRef.current?.getBoundingClientRect();
-      if (!rect) {
-        dispatch(setPopUp({ cardNumber: card.cardNumber }));
-        return;
-      }
-      const xCoord = rect.left < window.innerWidth / 2 ? rect.right : rect.left;
-      const yCoord = rect.top < window.innerHeight / 2 ? rect.bottom : rect.top;
-      dispatch(
-        setPopUp({
-          cardNumber: card.cardNumber,
-          xCoord,
-          yCoord
-        })
-      );
-    };
-
     const onDrag = (
       event: MouseEvent | TouchEvent | PointerEvent,
       info: PanInfo
@@ -295,50 +237,13 @@ export const PlayerHandCard = React.memo(
       if (canPopUp && !hasDispatchedClearRef.current) {
         setSnapback(true);
         if (!isLongPress.current) {
-          // Keep sticky tap-to-preview portal visible while this card is selected.
-          const stickyPreview =
-            isTapToPreviewPlayEnabled(cookies[TAP_TO_PREVIEW_PLAY_COOKIE]) &&
-            getTapToPreviewSelectedCardKey() === selectionKey;
-          if (!stickyPreview) {
+          // Keep sticky preview while this hand card is selected.
+          if (getTapToPreviewSelectedCardKey() !== selectionKey) {
             dispatch(clearPopUp());
           }
           hasDispatchedClearRef.current = true;
           setCanPopup(false);
         }
-      }
-    };
-
-    const handleOnClick = () => {
-      if (draggedRef.current) {
-        draggedRef.current = false;
-        return;
-      }
-
-      if (scrollBlockedRef?.current) return;
-
-      // Tap to play card (unless it was a long press which shows preview)
-      if (!isLongPress.current) {
-        const isTouchLike =
-          lastPointerTypeRef.current === 'touch' || !supportsHover;
-        const tapToPreviewEnabled =
-          isTapToPreviewPlayEnabled(cookies[TAP_TO_PREVIEW_PLAY_COOKIE]) &&
-          isTouchLike;
-
-        if (tapToPreviewEnabled) {
-          const { action, nextSelectedKey } = resolveTapToPreviewPlay({
-            enabled: true,
-            cardKey: selectionKey
-          });
-          setTapToPreviewSelectedCardKey(nextSelectedKey);
-          if (action === 'preview') {
-            showStickyPreview();
-            return;
-          }
-        }
-
-        if (!card.action) return;
-        playCardFunc();
-        addCardToPlayedCards(card.cardNumber);
       }
     };
 
@@ -415,8 +320,6 @@ export const PlayerHandCard = React.memo(
       <>
         <motion.div
           ref={cardElRef}
-          data-hand-card="true"
-          data-tap-preview-card="true"
           data-is-dragging={isDragging}
           title="Hold and use the mouse wheel or Q/E for fine rotation. Right-click rotates 90°; Shift+right-click reverses it."
           layout={enableLayoutAnimation && !isDragging ? 'position' : false}
@@ -449,7 +352,6 @@ export const PlayerHandCard = React.memo(
                 }
               : {})
           }}
-          onClick={handleOnClick}
           onContextMenu={handleContextMenu}
           onTapStart={startPressTimer}
           onTap={stopPressTimer}
@@ -481,11 +383,8 @@ export const PlayerHandCard = React.memo(
             isHidden={!canPopUp}
             disableTilt={isDragging}
             disableShadow
-            suppressTapToPreview
-            persistPopUpOnClick={
-              isTapToPreviewPlayEnabled(cookies[TAP_TO_PREVIEW_PLAY_COOKIE]) &&
-              !supportsHover
-            }
+            tapPreviewKey={selectionKey}
+            onClick={handlePlayFromTap}
           >
             <CardImage src={src} className={imgStyles} draggable="false" />
             {iconColumn}

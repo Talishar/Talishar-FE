@@ -58,7 +58,10 @@ const secondCard: Card = {
   actionDataOverride: '1'
 };
 
-const cardSelector = /Hold and use the mouse wheel/;
+const tapCard = (el: HTMLElement) => {
+  fireEvent.pointerDown(el, { pointerType: 'touch' });
+  fireEvent.click(el);
+};
 
 const renderHandCard = (cookieEnabled: boolean) => {
   document.cookie = `${TAP_TO_PREVIEW_PLAY_COOKIE}=${cookieEnabled ? 'true' : 'false'}; path=/`;
@@ -106,10 +109,7 @@ describe('PlayerHandCard tap to preview play', () => {
 
   it('plays immediately on tap when the option is disabled', async () => {
     const { store, addCardToPlayedCards } = renderHandCard(false);
-    const cardEl = screen.getByTitle(cardSelector);
-
-    fireEvent.pointerDown(cardEl, { pointerType: 'touch' });
-    fireEvent.click(cardEl);
+    tapCard(screen.getByTestId('card-image'));
 
     await waitFor(() => {
       expect(addCardToPlayedCards).toHaveBeenCalledWith('WTR001');
@@ -119,10 +119,9 @@ describe('PlayerHandCard tap to preview play', () => {
 
   it('tap A → preview A; tap A again → play A', async () => {
     const { store, addCardToPlayedCards } = renderHandCard(true);
-    const cardEl = screen.getByTitle(cardSelector);
+    const cardImg = screen.getByTestId('card-image');
 
-    fireEvent.pointerDown(cardEl, { pointerType: 'touch' });
-    fireEvent.click(cardEl);
+    tapCard(cardImg);
 
     await waitFor(() => {
       expect(store.getState().game.popup?.popupOn).toBe(true);
@@ -131,12 +130,10 @@ describe('PlayerHandCard tap to preview play', () => {
     expect(addCardToPlayedCards).not.toHaveBeenCalled();
     expect(getTapToPreviewSelectedCardKey()).toBe('id:hand-1');
 
-    // Touch browsers synthesize mouseleave after tap; sticky preview must remain.
-    fireEvent.mouseLeave(cardEl);
+    fireEvent.mouseLeave(cardImg);
     expect(store.getState().game.popup?.popupOn).toBe(true);
 
-    fireEvent.pointerDown(cardEl, { pointerType: 'touch' });
-    fireEvent.click(cardEl);
+    tapCard(cardImg);
 
     await waitFor(() => {
       expect(addCardToPlayedCards).toHaveBeenCalledWith('WTR001');
@@ -146,18 +143,14 @@ describe('PlayerHandCard tap to preview play', () => {
 
   it('tap A → preview A; tap B → preview B (does not play)', async () => {
     const { store, addCardToPlayedCards } = renderTwoHandCards();
-    const cards = screen.getAllByTitle(cardSelector);
+    const images = screen.getAllByTestId('card-image');
 
-    fireEvent.pointerDown(cards[0], { pointerType: 'touch' });
-    fireEvent.click(cards[0]);
-
+    tapCard(images[0]);
     await waitFor(() => {
       expect(store.getState().game.popup?.popupCard?.cardNumber).toBe('WTR001');
     });
 
-    fireEvent.pointerDown(cards[1], { pointerType: 'touch' });
-    fireEvent.click(cards[1]);
-
+    tapCard(images[1]);
     await waitFor(() => {
       expect(store.getState().game.popup?.popupCard?.cardNumber).toBe('WTR002');
     });
@@ -167,10 +160,7 @@ describe('PlayerHandCard tap to preview play', () => {
 
   it('dismisses sticky preview when tapping outside the hand', async () => {
     const { store, addCardToPlayedCards } = renderHandCard(true);
-    const cardEl = screen.getByTitle(cardSelector);
-
-    fireEvent.pointerDown(cardEl, { pointerType: 'touch' });
-    fireEvent.click(cardEl);
+    tapCard(screen.getByTestId('card-image'));
 
     await waitFor(() => {
       expect(store.getState().game.popup?.popupOn).toBe(true);
@@ -188,10 +178,9 @@ describe('PlayerHandCard tap to preview play', () => {
 
   it('after outside dismiss, tapping A again previews instead of playing', async () => {
     const { store, addCardToPlayedCards } = renderHandCard(true);
-    const cardEl = screen.getByTitle(cardSelector);
+    const cardImg = screen.getByTestId('card-image');
 
-    fireEvent.pointerDown(cardEl, { pointerType: 'touch' });
-    fireEvent.click(cardEl);
+    tapCard(cardImg);
     await waitFor(() => {
       expect(store.getState().game.popup?.popupOn).toBe(true);
     });
@@ -201,9 +190,7 @@ describe('PlayerHandCard tap to preview play', () => {
       expect(store.getState().game.popup?.popupOn).not.toBe(true);
     });
 
-    fireEvent.pointerDown(cardEl, { pointerType: 'touch' });
-    fireEvent.click(cardEl);
-
+    tapCard(cardImg);
     await waitFor(() => {
       expect(store.getState().game.popup?.popupOn).toBe(true);
       expect(store.getState().game.popup?.popupCard?.cardNumber).toBe('WTR001');

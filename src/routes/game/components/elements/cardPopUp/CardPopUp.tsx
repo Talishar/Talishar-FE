@@ -62,9 +62,8 @@ type CardPopUpProps = {
   isOpponent?: boolean;
   disableTilt?: boolean;
   disableShadow?: boolean;
-  persistPopUpOnClick?: boolean;
-  /** Hand cards manage tap-to-preview themselves; suppress CardPopUp's copy. */
-  suppressTapToPreview?: boolean;
+  /** Override sticky-selection key (hand cards pass a unique id-based key). */
+  tapPreviewKey?: string;
 };
 
 export default function CardPopUp({
@@ -78,8 +77,7 @@ export default function CardPopUp({
   isOpponent,
   disableTilt,
   disableShadow,
-  persistPopUpOnClick,
-  suppressTapToPreview
+  tapPreviewKey
 }: CardPopUpProps) {
   const ref = useRef<HTMLDivElement>(null);
   const dispatch = useAppDispatch();
@@ -87,23 +85,28 @@ export default function CardPopUp({
   const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const touchPopupShown = useRef(false);
   const hoverRect = useRef<DOMRect | null>(null);
+  const lastPointerTypeRef = useRef<string | null>(null);
   const popupCardNumber = useAppSelector(
     (state: RootState) => state.game.popup?.popupCard?.cardNumber
   );
 
-  const tapToPreviewEnabled =
-    !suppressTapToPreview &&
-    isTapToPreviewPlayEnabled(cookies[TAP_TO_PREVIEW_PLAY_COOKIE]) &&
-    !supportsHover;
+  const selectionKey =
+    tapPreviewKey ??
+    buildBoardCardSelectionKey({
+      cardNumber,
+      isOpponent
+    });
 
-  const boardSelectionKey = buildBoardCardSelectionKey({
-    cardNumber,
-    isOpponent
-  });
+  const cookieEnabled = isTapToPreviewPlayEnabled(
+    cookies[TAP_TO_PREVIEW_PLAY_COOKIE]
+  );
+
+  const isTapToPreviewContext = () =>
+    cookieEnabled &&
+    (lastPointerTypeRef.current === 'touch' || !supportsHover);
 
   const stickyActive =
-    tapToPreviewEnabled &&
-    getTapToPreviewSelectedCardKey() === boardSelectionKey;
+    cookieEnabled && getTapToPreviewSelectedCardKey() === selectionKey;
 
   const tiltEnabled =
     supportsHover && !disableTilt && cookies.disableCardTilt !== 'true';
@@ -148,7 +151,6 @@ export default function CardPopUp({
     }
   }, [disableTilt, rotateXTarget, rotateYTarget, rotateX, rotateY, intensity]);
 
-  // Dismiss sticky board preview when tapping outside previewable cards.
   useEffect(() => {
     if (!stickyActive) return;
 
@@ -214,14 +216,7 @@ export default function CardPopUp({
   };
 
   const clearPopUpUnlessSticky = () => {
-    // Sticky tap-to-preview keeps the portal up until a confirm play (or
-    // another card switches preview). Without this, touch browsers fire
-    // mouseleave after click and wipe the preview immediately.
-    if (
-      persistPopUpOnClick ||
-      (tapToPreviewEnabled &&
-        getTapToPreviewSelectedCardKey() === boardSelectionKey)
-    ) {
+    if (getTapToPreviewSelectedCardKey() === selectionKey) {
       return;
     }
     dispatch(clearPopUp());
@@ -237,8 +232,8 @@ export default function CardPopUp({
   const handleTouchStart = () => {
     if (longPressTimer.current) clearTimeout(longPressTimer.current);
     touchPopupShown.current = false;
-    // With tap-to-preview, short tap handles sticky preview via onClick.
-    if (tapToPreviewEnabled) return;
+    lastPointerTypeRef.current = 'touch';
+    if (cookieEnabled) return;
     longPressTimer.current = setTimeout(() => {
       longPressTimer.current = null;
       handleMouseEnter();
@@ -261,22 +256,22 @@ export default function CardPopUp({
   };
 
   const handleTouchMove = () => {
-    // Cancel long press if finger moves (user is scrolling)
     if (longPressTimer.current) {
       clearTimeout(longPressTimer.current);
       longPressTimer.current = null;
     }
   };
 
-  const handleOnClick = () => {
-    if (tapToPreviewEnabled) {
+  const handleOnClick = (event: React.MouseEvent) => {
+    if (isTapToPreviewContext()) {
+      event.stopPropagation();
       if (isHidden === true || SKIP_POPUP_CARDS.has(cardNumber)) {
-        if (onClick != null) onClick();
+        onClick?.();
         return;
       }
       const { action, nextSelectedKey } = resolveTapToPreviewPlay({
         enabled: true,
-        cardKey: boardSelectionKey
+        cardKey: selectionKey
       });
       setTapToPreviewSelectedCardKey(nextSelectedKey);
       if (action === 'preview') {
@@ -284,26 +279,23 @@ export default function CardPopUp({
         return;
       }
       clearTapToPreviewSelection();
-      if (onClick != null) {
-        onClick();
-      }
+      onClick?.();
       dispatch(clearPopUp());
       return;
     }
 
-    if (onClick != null) {
-      onClick();
-    }
-    if (!persistPopUpOnClick) {
-      handleMouseLeave();
-    }
+    onClick?.();
+    handleMouseLeave();
   };
 
   return (
     <motion.div
       className={containerClass}
-      data-tap-preview-card={tapToPreviewEnabled ? 'true' : undefined}
+      data-tap-preview-card={cookieEnabled ? 'true' : undefined}
       onClick={handleOnClick}
+      onPointerDown={(event) => {
+        lastPointerTypeRef.current = event.pointerType;
+      }}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       onMouseMove={tiltEnabled ? handleMouseMove : undefined}

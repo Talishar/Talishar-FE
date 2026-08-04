@@ -43,6 +43,9 @@ describe('CardPopUp board tap to preview', () => {
   it('fires onClick immediately when the option is off', () => {
     const onClick = vi.fn();
     const { store } = renderBoardCard({ cookieEnabled: false, onClick });
+    fireEvent.pointerDown(screen.getByRole('button', { name: 'board-card' }), {
+      pointerType: 'touch'
+    });
     fireEvent.click(screen.getByRole('button', { name: 'board-card' }));
     expect(onClick).toHaveBeenCalledTimes(1);
     expect(store.getState().game.popup?.popupOn).not.toBe(true);
@@ -53,6 +56,7 @@ describe('CardPopUp board tap to preview', () => {
     const { store } = renderBoardCard({ cookieEnabled: true, onClick });
     const card = screen.getByRole('button', { name: 'board-card' });
 
+    fireEvent.pointerDown(card, { pointerType: 'touch' });
     fireEvent.click(card);
 
     await waitFor(() => {
@@ -65,6 +69,7 @@ describe('CardPopUp board tap to preview', () => {
     fireEvent.mouseLeave(card);
     expect(store.getState().game.popup?.popupOn).toBe(true);
 
+    fireEvent.pointerDown(card, { pointerType: 'touch' });
     fireEvent.click(card);
 
     await waitFor(() => {
@@ -88,12 +93,16 @@ describe('CardPopUp board tap to preview', () => {
       </CookiesProvider>
     );
 
-    fireEvent.click(screen.getByRole('button', { name: 'card-a' }));
+    const cardA = screen.getByRole('button', { name: 'card-a' });
+    const cardB = screen.getByRole('button', { name: 'card-b' });
+    fireEvent.pointerDown(cardA, { pointerType: 'touch' });
+    fireEvent.click(cardA);
     await waitFor(() => {
       expect(store.getState().game.popup?.popupCard?.cardNumber).toBe('WTR001');
     });
 
-    fireEvent.click(screen.getByRole('button', { name: 'card-b' }));
+    fireEvent.pointerDown(cardB, { pointerType: 'touch' });
+    fireEvent.click(cardB);
     await waitFor(() => {
       expect(store.getState().game.popup?.popupCard?.cardNumber).toBe('WTR002');
     });
@@ -104,7 +113,9 @@ describe('CardPopUp board tap to preview', () => {
   it('dismisses sticky board preview on outside tap', async () => {
     const onClick = vi.fn();
     const { store } = renderBoardCard({ cookieEnabled: true, onClick });
-    fireEvent.click(screen.getByRole('button', { name: 'board-card' }));
+    const card = screen.getByRole('button', { name: 'board-card' });
+    fireEvent.pointerDown(card, { pointerType: 'touch' });
+    fireEvent.click(card);
     await waitFor(() => {
       expect(store.getState().game.popup?.popupOn).toBe(true);
     });
