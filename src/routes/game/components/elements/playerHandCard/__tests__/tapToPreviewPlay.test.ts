@@ -5,7 +5,8 @@ import {
   getTapToPreviewSelectedCardKey,
   isTapToPreviewPlayEnabled,
   resolveTapToPreviewPlay,
-  setTapToPreviewSelectedCardKey
+  setTapToPreviewSelectedCardKey,
+  shouldDismissStickyPreviewOnOutsideTap
 } from '../tapToPreviewPlay';
 
 describe('tapToPreviewPlay', () => {
@@ -29,7 +30,7 @@ describe('tapToPreviewPlay', () => {
     });
   });
 
-  describe('resolveTapToPreviewPlay', () => {
+  describe('resolveTapToPreviewPlay contract', () => {
     it('plays immediately when the option is disabled', () => {
       expect(
         resolveTapToPreviewPlay({
@@ -40,7 +41,7 @@ describe('tapToPreviewPlay', () => {
       ).toEqual({ action: 'play', nextSelectedKey: null });
     });
 
-    it('previews on the first tap when the option is enabled', () => {
+    it('tap A with no selection → preview A', () => {
       expect(
         resolveTapToPreviewPlay({
           enabled: true,
@@ -50,7 +51,7 @@ describe('tapToPreviewPlay', () => {
       ).toEqual({ action: 'preview', nextSelectedKey: 'id:card-a' });
     });
 
-    it('plays on the second tap of the same card', () => {
+    it('tap A while A is selected → play A', () => {
       expect(
         resolveTapToPreviewPlay({
           enabled: true,
@@ -60,7 +61,7 @@ describe('tapToPreviewPlay', () => {
       ).toEqual({ action: 'play', nextSelectedKey: null });
     });
 
-    it('switches preview when tapping a different card', () => {
+    it('tap B while A is selected → preview B (do not play)', () => {
       expect(
         resolveTapToPreviewPlay({
           enabled: true,
@@ -68,6 +69,55 @@ describe('tapToPreviewPlay', () => {
           selectedKey: 'id:card-a'
         })
       ).toEqual({ action: 'preview', nextSelectedKey: 'id:card-b' });
+    });
+
+    it('after dismiss (selection cleared), tap A again → preview A (not play)', () => {
+      expect(
+        resolveTapToPreviewPlay({
+          enabled: true,
+          cardKey: 'id:card-a',
+          selectedKey: null
+        })
+      ).toEqual({ action: 'preview', nextSelectedKey: 'id:card-a' });
+    });
+  });
+
+  describe('shouldDismissStickyPreviewOnOutsideTap', () => {
+    it('dismisses when preview is active and tap is outside hand cards', () => {
+      expect(
+        shouldDismissStickyPreviewOnOutsideTap({
+          enabled: true,
+          selectedKey: 'id:card-a',
+          isTapOnHandCard: false
+        })
+      ).toBe(true);
+    });
+
+    it('does not dismiss when tapping another hand card', () => {
+      expect(
+        shouldDismissStickyPreviewOnOutsideTap({
+          enabled: true,
+          selectedKey: 'id:card-a',
+          isTapOnHandCard: true
+        })
+      ).toBe(false);
+    });
+
+    it('does not dismiss when option is off or nothing is selected', () => {
+      expect(
+        shouldDismissStickyPreviewOnOutsideTap({
+          enabled: false,
+          selectedKey: 'id:card-a',
+          isTapOnHandCard: false
+        })
+      ).toBe(false);
+      expect(
+        shouldDismissStickyPreviewOnOutsideTap({
+          enabled: true,
+          selectedKey: null,
+          isTapOnHandCard: false
+        })
+      ).toBe(false);
     });
   });
 

@@ -23,7 +23,7 @@ export type TapToPreviewAction = 'preview' | 'play';
  * - Option off → always play (legacy one-tap behavior).
  * - Option on, first tap on a card → preview and remember selection.
  * - Option on, second tap on the same card → play and clear selection.
- * - Option on, tap on a different card → preview that card instead.
+ * - Option on, tap on a different card → preview that card instead (do not play).
  */
 export function resolveTapToPreviewPlay({
   enabled,
@@ -43,6 +43,25 @@ export function resolveTapToPreviewPlay({
   }
 
   return { action: 'preview', nextSelectedKey: cardKey };
+}
+
+/**
+ * Outside taps dismiss a sticky preview. Taps on another hand card are ignored
+ * here so that card can switch the preview / confirm-play itself.
+ */
+export function shouldDismissStickyPreviewOnOutsideTap({
+  enabled,
+  selectedKey,
+  isTapOnHandCard
+}: {
+  enabled: boolean;
+  selectedKey: string | null;
+  isTapOnHandCard: boolean;
+}): boolean {
+  if (!enabled || selectedKey == null || isTapOnHandCard) {
+    return false;
+  }
+  return true;
 }
 
 export function buildHandCardSelectionKey({

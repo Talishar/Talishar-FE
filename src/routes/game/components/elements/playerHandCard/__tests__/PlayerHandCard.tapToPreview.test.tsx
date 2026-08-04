@@ -5,7 +5,8 @@ import { renderWithProviders } from 'utils/TestUtils';
 import PlayerHandCard from '../PlayerHandCard';
 import {
   TAP_TO_PREVIEW_PLAY_COOKIE,
-  clearTapToPreviewSelection
+  clearTapToPreviewSelection,
+  getTapToPreviewSelectedCardKey
 } from '../tapToPreviewPlay';
 import { Card } from 'features/Card';
 
@@ -29,8 +30,16 @@ vi.mock('features/game/GameSlice', async () => {
   return {
     ...actual,
     playCard: Object.assign(
-      vi.fn(() => ({ type: 'game/playCard/pending', meta: {}, payload: undefined })),
-      { pending: actual.playCard.pending, fulfilled: actual.playCard.fulfilled, rejected: actual.playCard.rejected }
+      vi.fn(() => ({
+        type: 'game/playCard/pending',
+        meta: {},
+        payload: undefined
+      })),
+      {
+        pending: actual.playCard.pending,
+        fulfilled: actual.playCard.fulfilled,
+        rejected: actual.playCard.rejected
+      }
     )
   };
 });
@@ -40,6 +49,13 @@ const playableCard: Card = {
   cardIndex: 0,
   action: 27,
   actionDataOverride: '0'
+};
+
+const secondCard: Card = {
+  cardNumber: 'WTR002',
+  cardIndex: 1,
+  action: 27,
+  actionDataOverride: '1'
 };
 
 const cardSelector = /Hold and use the mouse wheel/;
@@ -52,6 +68,28 @@ const renderHandCard = (cookieEnabled: boolean) => {
       <PlayerHandCard
         card={playableCard}
         cardId="hand-1"
+        addCardToPlayedCards={addCardToPlayedCards}
+        disableDrag
+      />
+    </CookiesProvider>
+  );
+  return { ...view, addCardToPlayedCards };
+};
+
+const renderTwoHandCards = () => {
+  document.cookie = `${TAP_TO_PREVIEW_PLAY_COOKIE}=true; path=/`;
+  const addCardToPlayedCards = vi.fn();
+  const view = renderWithProviders(
+    <CookiesProvider>
+      <PlayerHandCard
+        card={playableCard}
+        cardId="hand-1"
+        addCardToPlayedCards={addCardToPlayedCards}
+        disableDrag
+      />
+      <PlayerHandCard
+        card={secondCard}
+        cardId="hand-2"
         addCardToPlayedCards={addCardToPlayedCards}
         disableDrag
       />
@@ -79,7 +117,7 @@ describe('PlayerHandCard tap to preview play', () => {
     expect(store.getState().game.popup?.popupOn).not.toBe(true);
   });
 
-  it('opens preview on first tap and plays on second tap when enabled', async () => {
+  it('tap A → preview A; tap A again → play A', async () => {
     const { store, addCardToPlayedCards } = renderHandCard(true);
     const cardEl = screen.getByTitle(cardSelector);
 
@@ -91,6 +129,7 @@ describe('PlayerHandCard tap to preview play', () => {
       expect(store.getState().game.popup?.popupCard?.cardNumber).toBe('WTR001');
     });
     expect(addCardToPlayedCards).not.toHaveBeenCalled();
+    expect(getTapToPreviewSelectedCardKey()).toBe('id:hand-1');
 
     // Touch browsers synthesize mouseleave after tap; sticky preview must remain.
     fireEvent.mouseLeave(cardEl);
@@ -102,36 +141,13 @@ describe('PlayerHandCard tap to preview play', () => {
     await waitFor(() => {
       expect(addCardToPlayedCards).toHaveBeenCalledWith('WTR001');
     });
+    expect(getTapToPreviewSelectedCardKey()).toBeNull();
   });
 
-  it('switches preview when tapping a different card', async () => {
-    document.cookie = `${TAP_TO_PREVIEW_PLAY_COOKIE}=true; path=/`;
-    const addCardToPlayedCards = vi.fn();
-    const secondCard: Card = {
-      cardNumber: 'WTR002',
-      cardIndex: 1,
-      action: 27,
-      actionDataOverride: '1'
-    };
-
-    const { store } = renderWithProviders(
-      <CookiesProvider>
-        <PlayerHandCard
-          card={playableCard}
-          cardId="hand-1"
-          addCardToPlayedCards={addCardToPlayedCards}
-          disableDrag
-        />
-        <PlayerHandCard
-          card={secondCard}
-          cardId="hand-2"
-          addCardToPlayedCards={addCardToPlayedCards}
-          disableDrag
-        />
-      </CookiesProvider>
-    );
-
+  it('tap A → preview A; tap B → preview B (does not play)', async () => {
+    const { store, addCardToPlayedCards } = renderTwoHandCards();
     const cards = screen.getAllByTitle(cardSelector);
+
     fireEvent.pointerDown(cards[0], { pointerType: 'touch' });
     fireEvent.click(cards[0]);
 
@@ -144,6 +160,53 @@ describe('PlayerHandCard tap to preview play', () => {
 
     await waitFor(() => {
       expect(store.getState().game.popup?.popupCard?.cardNumber).toBe('WTR002');
+    });
+    expect(addCardToPlayedCards).not.toHaveBeenCalled();
+    expect(getTapToPreviewSelectedCardKey()).toBe('id:hand-2');
+  });
+
+  it('dismisses sticky preview when tapping outside the hand', async () => {
+    const { store, addCardToPlayedCards } = renderHandCard(true);
+    const cardEl = screen.getByTitle(cardSelector);
+
+    fireEvent.pointerDown(cardEl, { pointerType: 'touch' });
+    fireEvent.click(cardEl);
+
+    await waitFor(() => {
+      expect(store.getState().game.popup?.popupOn).toBe(true);
+    });
+    expect(getTapToPreviewSelectedCardKey()).toBe('id:hand-1');
+
+    fireEvent.pointerDown(document.body, { pointerType: 'touch' });
+
+    await waitFor(() => {
+      expect(store.getState().game.popup?.popupOn).not.toBe(true);
+    });
+    expect(getTapToPreviewSelectedCardKey()).toBeNull();
+    expect(addCardToPlayedCards).not.toHaveBeenCalled();
+  });
+
+  it('after outside dismiss, tapping A again previews instead of playing', async () => {
+    const { store, addCardToPlayedCards } = renderHandCard(true);
+    const cardEl = screen.getByTitle(cardSelector);
+
+    fireEvent.pointerDown(cardEl, { pointerType: 'touch' });
+    fireEvent.click(cardEl);
+    await waitFor(() => {
+      expect(store.getState().game.popup?.popupOn).toBe(true);
+    });
+
+    fireEvent.pointerDown(document.body, { pointerType: 'touch' });
+    await waitFor(() => {
+      expect(store.getState().game.popup?.popupOn).not.toBe(true);
+    });
+
+    fireEvent.pointerDown(cardEl, { pointerType: 'touch' });
+    fireEvent.click(cardEl);
+
+    await waitFor(() => {
+      expect(store.getState().game.popup?.popupOn).toBe(true);
+      expect(store.getState().game.popup?.popupCard?.cardNumber).toBe('WTR001');
     });
     expect(addCardToPlayedCards).not.toHaveBeenCalled();
   });

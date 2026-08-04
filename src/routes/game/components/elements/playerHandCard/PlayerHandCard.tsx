@@ -1,4 +1,4 @@
-import React, { useRef, useState, useMemo } from 'react';
+import React, { useEffect, useRef, useState, useMemo } from 'react';
 import {
   clearPopUp,
   playCard,
@@ -13,7 +13,8 @@ import {
 } from 'react-icons/gi';
 import { Card } from 'features/Card';
 import styles from './PlayerHandCard.module.css';
-import { useAppDispatch } from 'app/Hooks';
+import { useAppDispatch, useAppSelector } from 'app/Hooks';
+import { RootState } from 'app/Store';
 import { LONG_PRESS_TIMER } from 'appConstants';
 import classNames from 'classnames';
 import CardImage from '../cardImage/CardImage';
@@ -36,7 +37,8 @@ import {
   getTapToPreviewSelectedCardKey,
   isTapToPreviewPlayEnabled,
   resolveTapToPreviewPlay,
-  setTapToPreviewSelectedCardKey
+  setTapToPreviewSelectedCardKey,
+  shouldDismissStickyPreviewOnOutsideTap
 } from './tapToPreviewPlay';
 
 const ScreenPercentageForCardPlayed = 0.25;
@@ -116,8 +118,64 @@ export const PlayerHandCard = React.memo(
     const dragX = useMotionValue(0);
     const dragY = useMotionValue(0);
     const dispatch = useAppDispatch();
+    const popupCardNumber = useAppSelector(
+      (state: RootState) => state.game.popup?.popupCard?.cardNumber
+    );
 
-    if (card === undefined) {
+    const selectionKey = card
+      ? buildHandCardSelectionKey({
+          cardId,
+          cardNumber: card.cardNumber,
+          cardIndex: card.cardIndex,
+          zone: isArsenal
+            ? 'arsenal'
+            : isBanished
+              ? 'banished'
+              : isGraveyard
+                ? 'graveyard'
+                : 'hand'
+        })
+      : null;
+
+    // Dismiss sticky preview when tapping outside the hand (not on another hand card).
+    useEffect(() => {
+      const tapToPreviewEnabled = isTapToPreviewPlayEnabled(
+        cookies[TAP_TO_PREVIEW_PLAY_COOKIE]
+      );
+      if (
+        !tapToPreviewEnabled ||
+        !selectionKey ||
+        getTapToPreviewSelectedCardKey() !== selectionKey
+      ) {
+        return;
+      }
+
+      const onPointerDown = (event: PointerEvent) => {
+        const target = event.target as Element | null;
+        if (cardElRef.current?.contains(target)) {
+          return;
+        }
+        const isTapOnHandCard = Boolean(
+          target?.closest?.('[data-hand-card="true"]')
+        );
+        if (
+          !shouldDismissStickyPreviewOnOutsideTap({
+            enabled: true,
+            selectedKey: getTapToPreviewSelectedCardKey(),
+            isTapOnHandCard
+          })
+        ) {
+          return;
+        }
+        clearTapToPreviewSelection();
+        dispatch(clearPopUp());
+      };
+
+      document.addEventListener('pointerdown', onPointerDown);
+      return () => document.removeEventListener('pointerdown', onPointerDown);
+    }, [cookies, selectionKey, dispatch, popupCardNumber]);
+
+    if (card === undefined || selectionKey == null) {
       return <div className={styles.handCard}></div>;
     }
 
@@ -196,19 +254,6 @@ export const PlayerHandCard = React.memo(
     const handlePointerUp = () => {
       onRotationHoldEnd?.();
     };
-
-    const selectionKey = buildHandCardSelectionKey({
-      cardId,
-      cardNumber: card.cardNumber,
-      cardIndex: card.cardIndex,
-      zone: isArsenal
-        ? 'arsenal'
-        : isBanished
-          ? 'banished'
-          : isGraveyard
-            ? 'graveyard'
-            : 'hand'
-    });
 
     const playCardFunc = () => {
       clearTapToPreviewSelection();
@@ -369,6 +414,7 @@ export const PlayerHandCard = React.memo(
       <>
         <motion.div
           ref={cardElRef}
+          data-hand-card="true"
           data-is-dragging={isDragging}
           title="Hold and use the mouse wheel or Q/E for fine rotation. Right-click rotates 90°; Shift+right-click reverses it."
           layout={enableLayoutAnimation && !isDragging ? 'position' : false}
