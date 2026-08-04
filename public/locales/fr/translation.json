@@ -1,59 +1,59 @@
 {
   "ABOUT": {
     "COMMUNITY": {
-      "DESCRIPTION": "Talishar prospère grâce à la collaboration avec d'autres développeurs talentueux de la communauté FAB :",
-      "FAB_CARD_DATABASE_DESCRIPTION": "Base de données open-source avec représentations JSON/CSV des cartes Flesh & Blood.",
-      "FAB_INSIGHTS_DESCRIPTION": "Analyse statistique avancée de la méta, des interactions des héros et des données de gameplay Talishar.",
-      "FABLAZING_DATA_DESCRIPTION": "Découvrez le paysage méta actuel et accédez à des statistiques détaillées sur héros et decks.",
-      "FABRARY_DESCRIPTION": "L'outil de recherche, construction de decks et gestion de collection de cartes Flesh & Blood le plus avancé.",
-      "LEGENDARY_STORIES_DESCRIPTION": "Archive fan-curatée de tous les récits officiels et l’univers Flesh & Blood.",
-      "THE_FAB_CUBE_DESCRIPTION": "Créateur de cube facile à utiliser avec base de données complète pour Flesh & Blood TCG.",
-      "TITLE": "Créé par la communauté"
+      "DESCRIPTION": "Talishar prospère grâce à la collaboration avec d'autres développeurs de logiciels de fans talentueux de la communauté FAB :",
+      "FAB_CARD_DATABASE_DESCRIPTION": "Base de données open source avec représentations JSON/CSV des cartes Chair et Sang.",
+      "FAB_INSIGHTS_DESCRIPTION": "Analyse statistique avancée de la méta, des interactions des héros et des données de jeu Talishar.",
+      "FABLAZING_DATA_DESCRIPTION": "Découvrez le méta-paysage actuel et accédez aux statistiques détaillées des héros et des decks.",
+      "FABRARY_DESCRIPTION": "L'outil le plus avancé de recherche de cartes Chair et Sang, de création de deck et de gestion de collection.",
+      "LEGENDARY_STORIES_DESCRIPTION": "Archives organisées par des fans de toutes les traditions officielles de Flesh and Blood et de la construction du monde.",
+      "THE_FAB_CUBE_DESCRIPTION": "Générateur de cubes facile à utiliser avec base de données de cartes complète pour le Flesh and Blood TCG.",
+      "TITLE": " Construit par la communauté"
     },
     "DESCRIPTION": "Talishar est la plateforme communautaire gratuite basée sur navigateur où plus de 9 000 joueurs par jour s'affrontent en temps réel dans des parties de Flesh & Blood. Apportez votre deck, affrontez des joueurs du monde entier et maîtrisez vos héros.",
     "DISCLAIMER": "<2><1>Avertissement :</1> Talishar est une plateforme open-source créée par des fans, non associée à LSS. Elle peut ne pas représenter complètement les règles telles qu’écrites. Si vous avez des questions sur les interactions ou décisions, veuillez contacter la communauté des juges sur le <3>Discord JudgeHub</3> pour clarification.</2><2>Talishar n’est en aucun cas affilié à Legend Story Studios. Legend Story Studios®, Flesh and Blood™, et les noms de sets sont des marques déposées de Legend Story Studios. Les personnages, cartes, logos et illustrations Flesh and Blood sont la propriété de <4>Legend Story Studios</4>. © Legend Story Studios</2>",
     "DISCORD": "Discorde",
     "FAQ": {
-      "BUG_FEATURE_A": "Nous aimons les retours, cette plateforme ne serait pas la même sans eux! Vous pouvez signaler des problèmes ou suggérer des fonctionnalités via notre serveur <a href='https://discord.gg/JykuRkdd5S' target='_blank'>Discord</a>. Les retours des joueurs nous aident à améliorer Talishar.",
-      "BUG_FEATURE_Q": "Que faire si je trouve un bug ou si j'ai des suggestions?",
-      "DOWNLOAD_NEEDED_A": "Aucun téléchargement nécessaire! Talishar fonctionne directement dans votre navigateur sur ordinateur, tablette ou mobile.",
-      "DOWNLOAD_NEEDED_Q": "Dois-je télécharger quelque chose?",
-      "HOW_CONTRIBUTER_A": "Talishar est un projet open-source. Rejoignez notre canal Discord #dev-general pour participer et consultez notre <a href='https://github.com/Talishar/Talishar/blob/main/README.md' target='_blank'>GitHub</a> pour les directives de contribution.",
-      "HOW_CONTRIBUTER_Q": "Comment puis-je devenir contributeur?",
-      "HOW_SIGNUP_A": "Cliquez sur le bouton 'S'inscrire' sur la page principale et entrez votre email et mot de passe. Votre compte est créé instantanément et vous pouvez commencer à jouer immédiatement.",
-      "HOW_SIGNUP_Q": "Comment créer un compte?",
-      "IS_FREE_A": "Oui! Talishar est entièrement gratuit. Vous pouvez profiter de toutes les fonctionnalités sans dépenser d'argent. Nous proposons des cosmétiques exclusifs pour nos soutiens et ceux qui souhaitent aider au financement du développement.",
-      "IS_FREE_Q": "Talishar est-il gratuit?",
-      "IS_OFFICIAL_A": "Talishar est une plateforme communautaire non officielle. Elle n'est pas affiliée à Legend Story Studios.",
-      "IS_OFFICIAL_Q": "S'agit-il d'une plateforme officielle de Flesh & Blood?",
-      "PLAY_OFFLINE_A": "Talishar est une plateforme en ligne qui nécessite une connexion Internet pour jouer. Cela vous permet de jouer contre de vrais joueurs dans le monde entier en temps réel.",
-      "PLAY_OFFLINE_Q": "Puis-je jouer hors ligne?",
-      "TITLE": "Questions Fréquemment Posées",
-      "WHERE_PLAY_A": "Consultez le <a href='https://fabtcg.com/locator/?tab=event&privateMode=false' target='_blank'>localisateur d'événements officiel LSS</a> pour trouver des tournois et événements locaux.",
-      "WHERE_PLAY_Q": "Où puis-je jouer en personne?",
-      "WHY_NO_RANKED_A": "Talishar est conçu comme une plateforme d'essai sans enjeu pour permettre aux joueurs d'expérimenter des decks et stratégies. Si vous souhaitez jouer de manière compétitive, rendez-vous sur <a href='https://fabtcg.com/organised-play/' target='_blank'>les tournois officiels</a> et participez aux compétitions Flesh & Blood!",
-      "WHY_NO_RANKED_Q": "Pourquoi n'y a-t-il pas de matchmaking ou de parties classées?"
+      "BUG_FEATURE_A": "Nous aimons les retours, cette plateforme ne serait pas la même sans eux !  <a href='https://discord.gg/JykuRkdd5S' target='_blank'>Discorde</a> serveur. ",
+      "BUG_FEATURE_Q": "Que faire si je trouve un bug ou si j'ai des suggestions ?",
+      "DOWNLOAD_NEEDED_A": "Aucun téléchargement requis ! ",
+      "DOWNLOAD_NEEDED_Q": "Dois-je télécharger quelque chose ?",
+      "HOW_CONTRIBUTER_A": "Talishar est un projet open source.  <a href='https://github.com/Talishar/Talishar/blob/main/README.md' target='_blank'>GitHub</a> pour les directives de contribution.",
+      "HOW_CONTRIBUTER_Q": "Comment puis-je devenir contributeur ?",
+      "HOW_SIGNUP_A": "Cliquez sur le bouton « S'inscrire » sur la page principale et entrez votre e-mail et votre mot de passe. ",
+      "HOW_SIGNUP_Q": "Comment créer un compte ?",
+      "IS_FREE_A": "Oui! ",
+      "IS_FREE_Q": "Est-ce que Talishar est gratuit ?",
+      "IS_OFFICIAL_A": "Talishar est une plateforme non officielle créée par la communauté. ",
+      "IS_OFFICIAL_Q": "Est-ce une plateforme officielle Flesh & Blood ?",
+      "PLAY_OFFLINE_A": "Talishar est une plateforme en ligne qui nécessite une connexion Internet pour jouer. ",
+      "PLAY_OFFLINE_Q": "Puis-je jouer hors ligne ?",
+      "TITLE": " Foire aux questions",
+      "WHERE_PLAY_A": "Découvrez le responsable LSS <a href='https://fabtcg.com/locator/?tab=event&privateMode=false' target='_blank'>localisateur d'événements</a> pour trouver des tournois et des événements locaux.",
+      "WHERE_PLAY_Q": "Où puis-je jouer en personne ?",
+      "WHY_NO_RANKED_A": "Talishar est conçu comme une plate-forme de test sans enjeu permettant aux joueurs d'expérimenter des decks et des stratégies.  <a href='https://fabtcg.com/organised-play/' target='_blank'>jeu organisé</a> et rejoignez les tournois officiels de chair et de sang !",
+      "WHY_NO_RANKED_Q": "Pourquoi n’y a-t-il pas de matchmaking ou de jeu classé ?"
     },
     "FEATURES": {
-      "ACTIVE_DESCRIPTION": "Rejoignez plus de 9 000 joueurs actifs chaque jour dans le monde entier",
+      "ACTIVE_DESCRIPTION": "Rejoignez plus de 9 000 joueurs quotidiens dans le monde entier",
       "ACTIVE_TITLE": " Communauté active",
-      "FEEDBACK_DESCRIPTION": "Nous apprécions vos retours pour améliorer la plateforme",
+      "FEEDBACK_DESCRIPTION": "Nous apprécions votre contribution pour améliorer la plateforme",
       "FEEDBACK_TITLE": " Ouvert aux retours et suggestions",
-      "INSTANT_DESCRIPTION": "Aucun téléchargement requis. Jouez directement dans votre navigateur",
+      "INSTANT_DESCRIPTION": "Aucun téléchargement requis. ",
       "INSTANT_TITLE": " Jeu instantané",
       "MOBILE_DESCRIPTION": "Jouez sur votre téléphone, tablette ou ordinateur",
-      "MOBILE_TITLE": " Compatible mobile",
+      "MOBILE_TITLE": " Adapté aux mobiles",
       "NO_STAKES_DESCRIPTION": "Ne stressez pas, jouez et amusez-vous.",
-      "NO_STAKES_TITLE": " Plateforme sans enjeu",
-      "SPICY_DESCRIPTION": "Expérimentez des stratégies et peaufinez vos decks",
-      "SPICY_TITLE": " Testez vos stratégies"
+      "NO_STAKES_TITLE": " Plateforme sans enjeux",
+      "SPICY_DESCRIPTION": "Expérimentez des stratégies et affinez vos builds",
+      "SPICY_TITLE": " Testez votre infusion épicée"
     },
     "GITHUB": "GitHub",
     "LSS_RELATIONSHIP_DESCRIPTION": "<0><strong>Talishar est une plateforme non officielle et indépendante.</strong> Nous ne sommes pas affiliés, approuvés ou connectés à Legend Story Studios (LSS), les créateurs de Flesh & Blood. Talishar est une plateforme créée par des fans pour célébrer et soutenir la communauté FAB.</0><1>Bien que nous nous efforcions de maintenir l'exactitude des règles, Talishar peut ne pas représenter complètement les règles officielles. Pour des décisions officielles et clarifications, nous recommandons de consulter la communauté de juges sur le <2>Discord Judge Hub</2> ou de visiter le <3>centre officiel des règles et politiques FAB</3>.</1>",
     "LSS_RELATIONSHIP_TITLE": "Notre relation avec Legend Story Studios",
     "STATS": {
-      "ACTIVE": "<0>{{supporters}}</0><1>Soutiens actifs</1>",
-      "FREE": "<0>{{percent}}</0><1>Gratuit</1>",
+      "ACTIVE": "<0>{{supporters}}</0><1>Supporters actifs</1>",
+      "FREE": "<0>{{percent}}</0><1>Jouer gratuitement</1>",
       "PLAYERS": "<0>{{players}}</0><1>Joueurs quotidiens</1>"
     },
     "SUB_HEADER": "La plateforme en ligne non officielle pour Flesh & Blood",
@@ -133,8 +133,8 @@
     }
   },
   "BASE": {
-    "ERROR_ALERT": "Une erreur est survenue!",
-    "SEARCH": "Rechercher"
+    "ERROR_ALERT": "Il y a eu une erreur !",
+    "SEARCH": "Recherche"
   },
   "CARD_KEYWORD_STRIP": {
     "MORE_one": "+1 de plus - voir le guide des mots clés",
@@ -349,7 +349,7 @@
     "DISMISS": "Cliquez pour rejeter"
   },
   "FILTER": {
-    "HERO_FILTER": "Filtre des héros"
+    "HERO_FILTER": "Filtre de héros"
   },
   "FOOTER": {
     "COOKIE_PREFERENCES": "Préférences en matière de cookies",
@@ -369,16 +369,16 @@
   "GAME_FILTER": {
     "FILTER_GAMES": "Filtrer les jeux",
     "RESET_FILTER": "Réinitialiser les filtres",
-    "UNCHECK_ALL": "Tout décocher"
+    "UNCHECK_ALL": "Décocher tout"
   },
   "GAME_LIST": {
     "DISABLE_EXPERIMENTAL": "Désactiver les fonctionnalités expérimentales",
     "FORMATS": {
       "BLITZ": "Blitz",
-      "CC": "Classique construit",
+      "CC": "Construction classique",
       "COMPETITIVE_BLITZ": "Blitz compétitif",
-      "COMPETITIVE_CC": "Classique construit compétitif",
-      "COMPETITIVE_LL": "Légende vivante compétitive",
+      "COMPETITIVE_CC": "Classique compétitif construit",
+      "COMPETITIVE_LL": "Légende de la vie compétitive",
       "COMPETITIVE_SAGE": "Âge d'argent compétitif",
       "FUTURE_CC": "Classique construit futur",
       "FUTURE_SAGE": "Âge d'argent futur",
@@ -388,44 +388,44 @@
       "SAGE": "Âge d'argent"
     },
     "IN_PROGRESS_TAB": "En cours",
-    "LOAD_ERROR_DESCRIPTION": "Veuillez actualiser la page et réessayer. Si l'erreur persiste lors du chargement de la liste des jeux, merci de la signaler sur notre Discord en nous indiquant les informations suivantes :",
-    "LOAD_ERROR_TITLE": "Une erreur s'est produite!",
+    "LOAD_ERROR_DESCRIPTION": "Veuillez actualiser la page et réessayer si vous obtenez toujours une erreur lors du chargement de la liste de jeux. ",
+    "LOAD_ERROR_TITLE": "Il y a eu une erreur !",
     "LOADING": "Chargement des jeux, veuillez patienter",
-    "LOOKING_FOR_OPPONENT": "Recherche d'adversaire",
-    "MANUAL_REFRESH": "Actualiser la liste des jeux manuellement",
-    "OPEN_GAMES": "Parties Ouvertes",
-    "PLEASE_LOGIN": "Veuillez <1>vous connecter</1> pour voir les lobbies ouverts et observer les parties!",
-    "REFRESH": "Actualiser"
+    "LOOKING_FOR_OPPONENT": "À la recherche d'un adversaire",
+    "MANUAL_REFRESH": "Actualiser manuellement la liste des jeux",
+    "OPEN_GAMES": "Jeux ouverts",
+    "PLEASE_LOGIN": "S'il te plaît <1>se connecter</1> pour voir les lobbys ouverts et assister aux matchs !",
+    "REFRESH": "Rafraîchir"
   },
   "GAME_LOBBY": {
     "1ST": "1er",
     "2ND": "2ème",
     "ARMS": "Bras",
-    "BLOCK": "Valeur de blocage",
-    "BLOCK_SORT": "Trier les cartes par valeur de blocage (la plus élevée d’abord)",
-    "CHAT": "Clavardage",
-    "CHEST": "Torse",
+    "BLOCK": "Valeur du bloc",
+    "BLOCK_SORT": "Trier les cartes par valeur de bloc (la plus élevée en premier)",
+    "CHAT": "Chat",
+    "CHEST": "Poitrine",
     "CLASS": "Classe",
-    "CLASS_SORT": "Grouper les cartes par classe",
+    "CLASS_SORT": "Regrouper les cartes par classe",
     "COLLAPSE_FILTERS": "Réduire les filtres",
     "CONFIRM": "Confirmer",
     "CONFIRM_DECK": "Confirmer le deck",
     "COPIED": "Copié!",
     "COPY_INVITE": "Copier le lien d’invitation",
     "COST": "Coût",
-    "COST_SORT": "Trier les cartes par coût (le plus bas d’abord)",
-    "DECK": "Deck",
-    "DEFAULT": "Par défaut",
-    "DEMIHERO": "Demi-héros",
-    "DISPLAY_ORDER": "Afficher les cartes dans leur ordre original",
-    "DRAG": "(glisser dans la zone)",
+    "COST_SORT": "Trier les cartes par coût (le plus bas en premier)",
+    "DECK": "Pont",
+    "DEFAULT": "Défaut",
+    "DEMIHERO": "Demi-Héros",
+    "DISPLAY_ORDER": "Afficher les cartes dans l'ordre d'origine",
+    "DRAG": "(faire glisser dans Zone)",
     "EDIT_DECK": "Modifier le deck",
-    "ENABLE_CHAT_QUERY": "Voulez-vous activer le clavardage?",
+    "ENABLE_CHAT_QUERY": "Voulez-vous activer le chat ?",
     "EQUIPMENT": "Équipement",
     "EXPAND_FILTERS": "Développer les filtres",
     "FILTERS": "Filtres",
-    "FIRST": "Premier",
-    "FIRST_OR_SECOND": "Premier ou deuxième",
+    "FIRST": "D'abord",
+    "FIRST_OR_SECOND": "Voudriez-vous commencer en premier ou en deuxième ?",
     "HEAD": "Tête",
     "I_ACCEPT": "J'accepte !",
     "KICK": "Coup",
@@ -437,8 +437,8 @@
     "LEAVE": "Quitter",
     "LEAVE_TITLE": "Quitter le lobby",
     "LEGS": "Jambes",
-    "MATCHUP_APPLIED": "Matchup appliquée: {{hero}}",
-    "MATCHUPS": "Matchups",
+    "MATCHUP_APPLIED": "Profil Matchup appliqué, vérifiez votre deck avant de le soumettre",
+    "MATCHUPS": "Matchs",
     "MODULAR": "Modulaire",
     "NO": "Non",
     "NO_GAMEID": "Aucun GameID défini",
@@ -453,22 +453,22 @@
     "POWER": "Puissance",
     "POWER_SORT": "Trier les cartes par puissance (la plus élevée d’abord)",
     "SECOND": "Deuxième",
-    "SELECT_ALL": "Tout sélectionner",
-    "SELECT_ALL_TITLE": "Sélectionner toutes les cartes",
-    "SELECT_NONE": "Tout désélectionner",
+    "SELECT_ALL": "Sélectionner tout",
+    "SELECT_ALL_TITLE": "Sélectionnez toutes les cartes",
+    "SELECT_NONE": "Sélectionnez Aucun",
     "SELECT_NONE_TITLE": "Désélectionner toutes les cartes",
     "SELECTED": "Choisi",
     "SEND_INVITE_FRIEND": "Envoyer une invitation à un ami",
-    "SIDEBOARD_UNREADY_FAILURE": "Impossible d’annuler l’état prêt du sideboard",
-    "SOME_ERROR": "Une erreur est survenue",
-    "SUBMITTING": "Soumission en cours...",
+    "SIDEBOARD_UNREADY_FAILURE": "Échec de la création du buffet non prêt",
+    "SOME_ERROR": "Une erreur s'est produite",
+    "SUBMITTING": "Soumission…",
     "SUBTYPE": "Sous-type",
     "SUBTYPE_SORT": "Grouper les cartes par sous-type",
     "SUGGESTED": "Suggéré",
     "TALENT": "Talent",
-    "TALENT_SORT": "Grouper les cartes par talent",
-    "TYPE": "Type",
-    "TYPE_SORT": "Grouper les cartes par type",
+    "TALENT_SORT": "Regrouper les cartes par talent",
+    "TYPE": "Taper",
+    "TYPE_SORT": "Regrouper les cartes par type",
     "VALIDATION": {
       "ARMS_REQUIRED": "Vous devez avoir du matériel d'armes.",
       "CHEST_REQUIRED": "Vous devez avoir un équipement de poitrine.",
@@ -516,7 +516,7 @@
       "LANGUAGES": "Langues"
     },
     "LEARN": "Apprendre",
-    "LOGIN": "Se Connecter",
+    "LOGIN": "Se connecter",
     "LOGOUT": "Déconnexion",
     "MOD_PAGE": "Page de modules",
     "MY_DECKS": "Mes platines",
@@ -525,7 +525,7 @@
     "PROFILE": "Profil",
     "REPLAYS": "Rediffusions",
     "SETTINGS": "Paramètres",
-    "SUPPORT_US": "Supportez-nous!",
+    "SUPPORT_US": "Soutenez-nous !",
     "TALISHAR_LOGO_ALT": "Logo Talishar - lien vers la page d'accueil"
   },
   "HERO_VS_HERO": {
@@ -561,7 +561,7 @@
     "SUPPORT_TALISHAR": "Soutenez Talishar"
   },
   "IN_PROGRESS_GAME": {
-    "SPECTATE": "Observer"
+    "SPECTATE": "Spectateur"
   },
   "INVENTORY": {
     "CLOSE": "Fermer l'inventaire",
@@ -870,7 +870,7 @@
       "FORMAT": "Format",
       "FORMATS": {
         "BLITZ": "Blitz",
-        "CC": "Classic Constructed",
+        "CC": "Construction classique",
         "COMPETITIVE": "Formats compétitifs",
         "COMPETITIVE_CC": "Classic Constructed compétitif",
         "COMPETITIVE_LL": "Living Legend compétitif",
@@ -886,44 +886,44 @@
         "OTHER": "Autres formats",
         "POPULAR": "Formats populaires",
         "PRECON": "Decks préconstruits",
-        "SAGE": "Silver Age"
+        "SAGE": "Âge d'argent"
       },
-      "GAME_DESCRIPTION": "Description de la partie",
+      "GAME_DESCRIPTION": "Description du jeu",
       "GAME_DESCRIPTION_GROUPS": {
-        "DECK_TYPE": "Type de deck",
+        "DECK_TYPE": "Type de pont",
         "PLAY_STYLE": "Style de jeu",
         "PREFERENCES": "Préférences"
       },
       "GAME_DESCRIPTIONS": {
-        "AGGRO": "Préfère les decks rapides (aggro)",
-        "BEST_DECK": "À la recherche du meilleur deck du format",
-        "CASUAL": "Jeu détendu / casual",
-        "CONTROL": "Préfère les decks lents (contrôle)",
-        "DEFAULT": "Partie par défaut #",
+        "AGGRO": "Préférez les decks rapides (aggro)",
+        "BEST_DECK": "À la recherche du meilleur deck dans le format",
+        "CASUAL": "Jeu décontracté/détendue",
+        "CONTROL": "Préférer les decks lents (contrôle)",
+        "DEFAULT": "Numéro de jeu par défaut",
         "HERO_SELECT": {
           "CLEAR": "Effacer la sélection",
-          "PREVIEW": "Aperçu : Recherche ",
-          "PREVIEW_NOT": "Aperçu : Ne recherche pas ",
-          "SEARCH_CLASSES": "Rechercher des classes",
-          "SEARCH_CLASSES_PLACEHOLDER": "Rechercher des classes...",
+          "PREVIEW": "Aperçu : À la recherche ",
+          "PREVIEW_NOT": "Aperçu : Je ne recherche pas ",
+          "SEARCH_CLASSES": "Rechercher des cours",
+          "SEARCH_CLASSES_PLACEHOLDER": "Rechercher des cours...",
           "SEARCH_HEROES": "Rechercher des héros",
           "SEARCH_HEROES_PLACEHOLDER": "Rechercher des héros...",
-          "SELECT_CLASSES": "Sélectionner des classes (jusqu’à {{amount}}) :",
-          "SELECT_HEROES": "Sélectionner des héros (jusqu’à {{amount}}) :"
+          "SELECT_CLASSES": "Sélectionnez des classes (jusqu'à {{amount}}) :",
+          "SELECT_HEROES": "Sélectionnez des héros (jusqu'à {{amount}}) :"
         },
-        "MEME": "Decks fun / mème uniquement",
-        "META_HEROES": "Recherche de héros méta",
-        "NEW_HERO": "S'entraîne avec un nouveau héros",
-        "NEW_PLAYER": "Nouveau joueur apprend le jeu",
-        "NOT_SPECIFIC_HERO": "Pas intéressé par certains héros",
-        "QUICK": "Recherche une partie rapide",
-        "SLOW_PLAY": "Jeu lent accepté",
-        "SPECIFIC_CLASS": "Cherche à jouer contre une classe spécifique",
-        "SPECIFIC_HERO": "Cherche à jouer contre un héros précis",
-        "SPICY_BREWS": "Decks hors-méta / expérimentaux"
+        "MEME": "Decks mèmes/amusants uniquement",
+        "META_HEROES": "À la recherche de méta-héros",
+        "NEW_HERO": "Pratiquer un nouveau héros",
+        "NEW_PLAYER": "Nouveau joueur apprenant le jeu",
+        "NOT_SPECIFIC_HERO": "Aucun intérêt à jouer contre un héros spécifique",
+        "QUICK": "Je cherche un jeu rapide",
+        "SLOW_PLAY": "Lecture lente OK",
+        "SPECIFIC_CLASS": "Vous cherchez à jouer contre une classe spécifique",
+        "SPECIFIC_HERO": "Vous cherchez à jouer contre un héros spécifique",
+        "SPICY_BREWS": "Decks hors méta/expérimentaux"
       },
-      "IMPORT": "Importer un deck",
-      "IMPORT_HELP": "Lien du deck — URL de FaBrary.net",
+      "IMPORT": "Importer une plate-forme",
+      "IMPORT_HELP": "Lien de pont - URL de FaBrary.net",
       "IMPORT_TITLE": "URL de FaBrary.net",
       "LOADING": "Chargement…",
       "PRACTICE_DUMMY": "Mannequin d'entraînement",
@@ -1041,14 +1041,14 @@
     "USERS_WITH_TALISHAR_IN_DB": "Utilisateurs avec Talishar dans DB :"
   },
   "NEWS": {
-    "NO_NEWS": "Aucune annonce récente. Rejoignez notre Discord pour les mises à jour!",
+    "NO_NEWS": "Aucune annonce récente. ",
     "TITLE": "Notes de version de Talishar",
-    "VIEW_ALL": "Tout voir "
+    "VIEW_ALL": "Voir tout "
   },
   "OPEN_GAME": {
     "JOIN": "Rejoindre",
-    "JOIN_DECK_NOT_READY": "Sélectionnez un deck dans le panneau ci-dessus pour rejoindre instantanément",
-    "JOIN_DECK_READY": "Rejoindre avec votre deck préconfiguré"
+    "JOIN_DECK_NOT_READY": "Sélectionnez un deck dans le panneau ci-dessus pour le rejoindre instantanément",
+    "JOIN_DECK_READY": "Rejoignez-nous en utilisant votre deck préconfiguré"
   },
   "OPPONENT_INACTIVE": {
     "CLAIM_VICTORY": "Réclamez la victoire",
@@ -1517,7 +1517,7 @@
   "UNITED_GAME_PANEL": {
     "EXPAND": "Agrandir le panneau",
     "GAME_SETUP": "Configuration du jeu",
-    "JOIN_CREATE": "Rejoindre / Créer rapidement un jeu",
+    "JOIN_CREATE": "Rejoindre rapidement / Créer un jeu",
     "MINIMIZE": "Réduire le panneau",
     "REMOVE_ADS": "Supprimer les publicités"
   },
