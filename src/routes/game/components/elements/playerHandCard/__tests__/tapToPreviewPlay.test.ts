@@ -7,7 +7,8 @@ import {
   isTapToPreviewPlayEnabled,
   resolveTapToPreviewPlay,
   setTapToPreviewSelectedCardKey,
-  shouldDismissStickyPreviewOnOutsideTap
+  shouldDismissStickyPreviewOnOutsideTap,
+  subscribeTapToPreviewSelection
 } from '../tapToPreviewPlay';
 
 describe('tapToPreviewPlay', () => {
@@ -86,10 +87,13 @@ describe('tapToPreviewPlay', () => {
       expect(
         resolveTapToPreviewPlay({
           enabled: true,
-          cardKey: 'board:me:WTR001',
+          cardKey: 'board:me:WTR001::r1:',
           selectedKey: 'id:hand-1'
         })
-      ).toEqual({ action: 'preview', nextSelectedKey: 'board:me:WTR001' });
+      ).toEqual({
+        action: 'preview',
+        nextSelectedKey: 'board:me:WTR001::r1:'
+      });
     });
   });
 
@@ -141,6 +145,19 @@ describe('tapToPreviewPlay', () => {
       expect(getTapToPreviewSelectedCardKey()).toBeNull();
     });
 
+    it('notifies subscribers when selection changes', () => {
+      let calls = 0;
+      const unsubscribe = subscribeTapToPreviewSelection(() => {
+        calls += 1;
+      });
+      setTapToPreviewSelectedCardKey('id:card-a');
+      setTapToPreviewSelectedCardKey('id:card-a'); // no-op
+      clearTapToPreviewSelection();
+      unsubscribe();
+      setTapToPreviewSelectedCardKey('id:card-b');
+      expect(calls).toBe(2);
+    });
+
     it('uses module selection when selectedKey is omitted', () => {
       setTapToPreviewSelectedCardKey('id:card-a');
       expect(
@@ -172,13 +189,33 @@ describe('tapToPreviewPlay', () => {
   });
 
   describe('buildBoardCardSelectionKey', () => {
-    it('builds a stable board key', () => {
+    it('builds a per-instance board key', () => {
       expect(
-        buildBoardCardSelectionKey({ cardNumber: 'WTR001', isOpponent: false })
-      ).toBe('board:me:WTR001');
+        buildBoardCardSelectionKey({
+          cardNumber: 'WTR001',
+          isOpponent: false,
+          instanceId: ':r1:'
+        })
+      ).toBe('board:me:WTR001::r1:');
       expect(
-        buildBoardCardSelectionKey({ cardNumber: 'WTR001', isOpponent: true })
-      ).toBe('board:opp:WTR001');
+        buildBoardCardSelectionKey({
+          cardNumber: 'WTR001',
+          isOpponent: true,
+          instanceId: ':r2:'
+        })
+      ).toBe('board:opp:WTR001::r2:');
+    });
+
+    it('keeps duplicate cardNumbers distinct via instanceId', () => {
+      const a = buildBoardCardSelectionKey({
+        cardNumber: 'WTR001',
+        instanceId: ':a:'
+      });
+      const b = buildBoardCardSelectionKey({
+        cardNumber: 'WTR001',
+        instanceId: ':b:'
+      });
+      expect(a).not.toBe(b);
     });
   });
 });

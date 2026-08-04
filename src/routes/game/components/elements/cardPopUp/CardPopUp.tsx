@@ -1,7 +1,12 @@
-import { useAppDispatch, useAppSelector } from 'app/Hooks';
-import { RootState } from 'app/Store';
+import { useAppDispatch } from 'app/Hooks';
 import { clearPopUp, setPopUp } from 'features/game/GameSlice';
-import { ReactNode, useEffect, useRef } from 'react';
+import {
+  ReactNode,
+  useEffect,
+  useId,
+  useRef,
+  useSyncExternalStore
+} from 'react';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { useCookies } from 'react-cookie';
 import { CARD_BACK } from 'features/options/cardBacks';
@@ -14,7 +19,8 @@ import {
   isTapToPreviewPlayEnabled,
   resolveTapToPreviewPlay,
   setTapToPreviewSelectedCardKey,
-  shouldDismissStickyPreviewOnOutsideTap
+  shouldDismissStickyPreviewOnOutsideTap,
+  subscribeTapToPreviewSelection
 } from '../playerHandCard/tapToPreviewPlay';
 
 const supportsHover =
@@ -86,15 +92,16 @@ export default function CardPopUp({
   const touchPopupShown = useRef(false);
   const hoverRect = useRef<DOMRect | null>(null);
   const lastPointerTypeRef = useRef<string | null>(null);
-  const popupCardNumber = useAppSelector(
-    (state: RootState) => state.game.popup?.popupCard?.cardNumber
-  );
+  // Per-instance id so two board cards with the same cardNumber stay distinct
+  // (e.g. duplicate permanents / effects). Hand cards pass tapPreviewKey instead.
+  const instanceId = useId();
 
   const selectionKey =
     tapPreviewKey ??
     buildBoardCardSelectionKey({
       cardNumber,
-      isOpponent
+      isOpponent,
+      instanceId
     });
 
   const cookieEnabled = isTapToPreviewPlayEnabled(
@@ -102,11 +109,14 @@ export default function CardPopUp({
   );
 
   const isTapToPreviewContext = () =>
-    cookieEnabled &&
-    (lastPointerTypeRef.current === 'touch' || !supportsHover);
+    cookieEnabled && (lastPointerTypeRef.current === 'touch' || !supportsHover);
 
-  const stickyActive =
-    cookieEnabled && getTapToPreviewSelectedCardKey() === selectionKey;
+  const selectedKey = useSyncExternalStore(
+    subscribeTapToPreviewSelection,
+    getTapToPreviewSelectedCardKey,
+    getTapToPreviewSelectedCardKey
+  );
+  const stickyActive = cookieEnabled && selectedKey === selectionKey;
 
   const tiltEnabled =
     supportsHover && !disableTilt && cookies.disableCardTilt !== 'true';
@@ -163,7 +173,7 @@ export default function CardPopUp({
       if (
         !shouldDismissStickyPreviewOnOutsideTap({
           enabled: true,
-          selectedKey: getTapToPreviewSelectedCardKey(),
+          selectedKey,
           isTapOnPreviewableCard
         })
       ) {
@@ -175,7 +185,7 @@ export default function CardPopUp({
 
     document.addEventListener('pointerdown', onPointerDown);
     return () => document.removeEventListener('pointerdown', onPointerDown);
-  }, [stickyActive, dispatch, popupCardNumber]);
+  }, [stickyActive, selectedKey, dispatch]);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!tiltEnabled || !ref.current) return;
@@ -216,7 +226,7 @@ export default function CardPopUp({
   };
 
   const clearPopUpUnlessSticky = () => {
-    if (getTapToPreviewSelectedCardKey() === selectionKey) {
+    if (selectedKey === selectionKey) {
       return;
     }
     dispatch(clearPopUp());
@@ -278,7 +288,6 @@ export default function CardPopUp({
         showPreview();
         return;
       }
-      clearTapToPreviewSelection();
       onClick?.();
       dispatch(clearPopUp());
       return;

@@ -24,7 +24,9 @@ const renderBoardCard = ({
   cardNumber?: string;
   onClick?: () => void;
 }) => {
-  document.cookie = `${TAP_TO_PREVIEW_PLAY_COOKIE}=${cookieEnabled ? 'true' : 'false'}; path=/`;
+  document.cookie = `${TAP_TO_PREVIEW_PLAY_COOKIE}=${
+    cookieEnabled ? 'true' : 'false'
+  }; path=/`;
   return renderWithProviders(
     <CookiesProvider>
       <CardPopUp cardNumber={cardNumber} onClick={onClick}>
@@ -64,7 +66,7 @@ describe('CardPopUp board tap to preview', () => {
       expect(store.getState().game.popup?.popupCard?.cardNumber).toBe('WTR076');
     });
     expect(onClick).not.toHaveBeenCalled();
-    expect(getTapToPreviewSelectedCardKey()).toBe('board:me:WTR076');
+    expect(getTapToPreviewSelectedCardKey()).toMatch(/^board:me:WTR076:/);
 
     fireEvent.mouseLeave(card);
     expect(store.getState().game.popup?.popupOn).toBe(true);
@@ -108,6 +110,41 @@ describe('CardPopUp board tap to preview', () => {
     });
     expect(onClickA).not.toHaveBeenCalled();
     expect(onClickB).not.toHaveBeenCalled();
+  });
+
+  it('two instances of the same cardNumber stay distinct (no false confirm)', async () => {
+    document.cookie = `${TAP_TO_PREVIEW_PLAY_COOKIE}=true; path=/`;
+    const onClickA = vi.fn();
+    const onClickB = vi.fn();
+    const { store } = renderWithProviders(
+      <CookiesProvider>
+        <CardPopUp cardNumber="WTR001" onClick={onClickA}>
+          <button type="button">dup-a</button>
+        </CardPopUp>
+        <CardPopUp cardNumber="WTR001" onClick={onClickB}>
+          <button type="button">dup-b</button>
+        </CardPopUp>
+      </CookiesProvider>
+    );
+
+    const cardA = screen.getByRole('button', { name: 'dup-a' });
+    const cardB = screen.getByRole('button', { name: 'dup-b' });
+    fireEvent.pointerDown(cardA, { pointerType: 'touch' });
+    fireEvent.click(cardA);
+    await waitFor(() => {
+      expect(store.getState().game.popup?.popupOn).toBe(true);
+    });
+    const keyAfterA = getTapToPreviewSelectedCardKey();
+    expect(keyAfterA).toMatch(/^board:me:WTR001:/);
+
+    fireEvent.pointerDown(cardB, { pointerType: 'touch' });
+    fireEvent.click(cardB);
+    await waitFor(() => {
+      expect(getTapToPreviewSelectedCardKey()).not.toBe(keyAfterA);
+    });
+    expect(onClickA).not.toHaveBeenCalled();
+    expect(onClickB).not.toHaveBeenCalled();
+    expect(store.getState().game.popup?.popupCard?.cardNumber).toBe('WTR001');
   });
 
   it('dismisses sticky board preview on outside tap', async () => {
