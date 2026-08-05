@@ -335,7 +335,6 @@ export default function PlayerInputPopUp() {
                 onKeyDown={(event) => event.stopPropagation()}
                 placeholder={t('PLAYER_INPUT.SEARCH_CARDS')}
                 aria-label={t('PLAYER_INPUT.SEARCH_CARDS')}
-                autoFocus
               />
               {cardSearch ? (
                 <span className={styles.cardSearchCount} aria-live="polite">
