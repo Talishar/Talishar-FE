@@ -39,6 +39,10 @@
   margin-bottom: 0 !important;
 }
 
+.guestHiddenField {
+  display: none !important;
+}
+
 .embeddedFormLayout {
   display: flex;
   flex-direction: column;
@@ -319,7 +323,11 @@
   background: var(--theme-form-background, #33383d);
   color: var(--theme-primary, #d4af37);
   font-weight: 600;
-  box-shadow: inset 0 -2px 0 var(--theme-primary, #d4af37);
+  box-shadow: inset 0 -2px 0 var(--theme-primary, #d4af37) !important;
+}
+
+.deckTabActive:hover {
+  box-shadow: inset 0 -2px 0 var(--theme-primary, #d4af37) !important;
 }
 
 .deckTabDisabled {

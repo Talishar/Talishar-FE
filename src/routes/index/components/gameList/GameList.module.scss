@@ -179,8 +179,12 @@
 }
 
 @keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .spinning {
@@ -249,7 +253,7 @@
 }
 
 .tabBadgeActive {
-  background: color-mix(in srgb, var(--theme-primary, #d4af37) 25%, transparent);
+  background: rgba(212, 175, 55, 0.25);
   color: var(--theme-primary, #d4af37);
 }
 
@@ -300,32 +304,69 @@
 
 .loginNotice {
   display: flex;
-  align-items: center;
-  gap: 0.6em;
+  align-items: flex-start;
+  gap: 0.85rem;
   margin: 0.75rem 0 0;
-  padding: 0.7rem 1rem;
+  padding: 1.1rem;
   background: var(--theme-card-background, #1e2329);
   border: 1px solid var(--theme-border-light, rgba(255, 255, 255, 0.1));
-  border-radius: 6px;
-  font-size: 0.88rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
   color: var(--theme-text-secondary, #e0e0e0);
   line-height: 1.4;
+}
 
-  a {
-    color: var(--theme-primary, #d4af37);
-    font-weight: 600;
-    text-decoration: none;
+.loginNoticeContent {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.65rem;
 
-    &:hover {
-      text-decoration: underline;
-    }
+  p {
+    margin: 0;
   }
 }
 
-.loginNoticeIcon {
+.loginNoticeTitle {
+  color: var(--theme-text, #ededed);
   font-size: 1rem;
+}
+
+.loginButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  background: var(--theme-primary, #d4af37);
+  color: #000 !important;
+  font-weight: 700;
+  text-decoration: none !important;
+
+  &:hover {
+    background: var(--theme-primary-hover, #e8c547);
+    opacity: 1 !important;
+  }
+}
+
+.privateGameNotice {
+  padding-top: 0.65rem;
+  border-top: 1px solid var(--theme-border-light, rgba(255, 255, 255, 0.1));
+  color: var(--theme-text-secondary, #c8c8c8);
+  font-size: 0.84rem;
+}
+
+.loginNoticeIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background: rgba(212, 175, 55, 0.14);
+  color: var(--theme-primary, #d4af37);
+  font-size: 1.05rem;
   flex-shrink: 0;
-  opacity: 0.8;
 }
 
 @media (max-width: 768px) {

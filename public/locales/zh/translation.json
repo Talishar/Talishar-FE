@@ -393,7 +393,10 @@
     "LOOKING_FOR_OPPONENT": "寻找对手中",
     "MANUAL_REFRESH": "手动刷新游戏列表",
     "OPEN_GAMES": "公开游戏",
-    "PLEASE_LOGIN": "请 <1>登录</1> 以查看公开大厅和进行观战！",
+    "LOGIN_BUTTON": "登录",
+    "LOGIN_REQUIRED_TITLE": "公开游戏需要登录",
+    "PLEASE_LOGIN": "登录后即可浏览和加入公开大厅，或观战进行中的游戏。",
+    "PRIVATE_GAMES_AVAILABLE": "无需账户，您仍可在此创建私人游戏，或通过分享链接加入私人游戏。",
     "REFRESH": "刷新"
   },
   "GAME_LOBBY": {
@@ -534,7 +537,9 @@
       "COLLAPSE_BANNER": "折叠横幅",
       "EXPAND_BANNER": "展开横幅",
       "JOIN_CTA": "加入游戏",
+      "LOGIN_CTA": "登录并开始游戏",
       "LOGO_ALT": "Talishar",
+      "SIGN_UP_CTA": "创建账户",
       "SUBTITLE": "Talishar 让你可以在浏览器中免费在线玩 FaB。寻找对手，测试卡组，随时随地进行游戏。",
       "SUPPORT_CTA": "支持我们",
       "TITLE": "在线游玩 Flesh & Blood"
@@ -924,6 +929,7 @@
       "IMPORT_TITLE": "来自 FaBrary.net 的链接",
       "LOADING": "",
       "PRACTICE_DUMMY": "",
+      "PRIVATE_TITLE": "创建私人游戏",
       "PRECONSTRUCTED_DECK": "预设套牌",
       "RUST_LOCKED_HINT": "",
       "SAVE_DECK_FAVOURITES": "将套牌保存至 ❤️ 收藏",
@@ -1512,6 +1518,8 @@
   "UNITED_GAME_PANEL": {
     "EXPAND": "展开面板",
     "GAME_SETUP": "游戏设置",
+    "GUEST_PRIVATE_DESCRIPTION": "无需账户。创建游戏并将链接分享给好友。",
+    "GUEST_PRIVATE_TITLE": "或创建私人游戏",
     "JOIN_CREATE": "快速加入 / 创建游戏",
     "MINIMIZE": "最小化面板",
     "REMOVE_ADS": "移除广告"

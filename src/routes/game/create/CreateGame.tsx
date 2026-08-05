@@ -977,7 +977,9 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
                   )}
                 </fieldset>
               )}
-              <label>
+              <label
+                className={!isLoggedIn ? styles.guestHiddenField : undefined}
+              >
                 {t('MENU.CREATE_GAME.GAME_DESCRIPTION')}
                 <select
                   id="gameDescription"
@@ -1338,31 +1340,29 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
                 </select>
               </label>
               <fieldset>
-                <label>
-                  {t('MENU.CREATE_GAME.VISIBILITY')}
-                  <select
-                    id="visibility"
-                    aria-label={t('MENU.CREATE_GAME.VISIBILITY')}
-                    {...register('visibility')}
-                    aria-invalid={
-                      errors.visibility?.message ? 'true' : undefined
-                    }
-                  >
-                    {isLoggedIn && (
+                {isLoggedIn && (
+                  <label>
+                    {t('MENU.CREATE_GAME.VISIBILITY')}
+                    <select
+                      id="visibility"
+                      aria-label={t('MENU.CREATE_GAME.VISIBILITY')}
+                      {...register('visibility')}
+                      aria-invalid={
+                        errors.visibility?.message ? 'true' : undefined
+                      }
+                    >
                       <option value={GAME_VISIBILITY.PUBLIC}>
                         {t('MENU.CREATE_GAME.VISIBILITIES.PUBLIC')}
                       </option>
-                    )}
-                    <option value={GAME_VISIBILITY.PRIVATE}>
-                      {t('MENU.CREATE_GAME.VISIBILITIES.PRIVATE')}
-                    </option>
-                    {isLoggedIn && (
+                      <option value={GAME_VISIBILITY.PRIVATE}>
+                        {t('MENU.CREATE_GAME.VISIBILITIES.PRIVATE')}
+                      </option>
                       <option value={GAME_VISIBILITY.FRIENDS_ONLY}>
                         {t('MENU.CREATE_GAME.VISIBILITIES.FRIENDS')}
                       </option>
-                    )}
-                  </select>
-                </label>
+                    </select>
+                  </label>
+                )}
                 <label>
                   <input
                     type="checkbox"
@@ -1421,7 +1421,9 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
                   : undefined
               }
             >
-              {t('MENU.CREATE_GAME.TITLE')}
+              {isLoggedIn
+                ? t('MENU.CREATE_GAME.TITLE')
+                : t('MENU.CREATE_GAME.PRIVATE_TITLE')}
             </button>
             {isRustLocked && (
               <div className={styles.rustLockedHint}>

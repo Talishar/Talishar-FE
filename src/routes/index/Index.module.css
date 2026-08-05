@@ -82,6 +82,10 @@
   pointer-events: none;
 }
 
+.bannerContentGuest {
+  padding-bottom: 2rem;
+}
+
 .heroLogo {
   width: auto;
   height: clamp(70px, 12vw, 120px);
@@ -254,20 +258,6 @@
   align-self: stretch;
 }
 
-@media (max-width: 1199px) {
-  .gridLoggedOut {
-    grid-template-columns: 1fr;
-  }
-
-  .gridLoggedOut .gameListContainer {
-    order: 1;
-  }
-
-  .gridLoggedOut .createGameContainer {
-    order: 2;
-  }
-}
-
 @media (min-width: 769px) {
   .grid {
     grid-template-columns: 1fr 1fr;
@@ -278,6 +268,11 @@
     overflow: hidden;
     min-height: 550px;
   }
+}
+
+.grid.gridLoggedOut {
+  grid-template-columns: minmax(0, 800px);
+  justify-content: center;
 }
 
 @media (max-width: 768px) {

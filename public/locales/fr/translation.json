@@ -394,7 +394,10 @@
     "LOOKING_FOR_OPPONENT": "Recherche d'adversaire",
     "MANUAL_REFRESH": "Actualiser la liste des jeux manuellement",
     "OPEN_GAMES": "Parties Ouvertes",
-    "PLEASE_LOGIN": "Veuillez <1>vous connecter</1> pour voir les lobbies ouverts et observer les parties!",
+    "LOGIN_BUTTON": "Se connecter",
+    "LOGIN_REQUIRED_TITLE": "Connectez-vous pour les parties publiques",
+    "PLEASE_LOGIN": "Connectez-vous pour parcourir et rejoindre les salons ouverts ou observer les parties en cours.",
+    "PRIVATE_GAMES_AVAILABLE": "Vous pouvez toujours créer une partie privée ici ou en rejoindre une via un lien partagé. Aucun compte requis.",
     "REFRESH": "Actualiser"
   },
   "GAME_LOBBY": {
@@ -536,7 +539,9 @@
       "COLLAPSE_BANNER": "Réduire la bannière",
       "EXPAND_BANNER": "Développer la bannière",
       "JOIN_CTA": "Rejoignez un jeu",
+      "LOGIN_CTA": "Se connecter pour jouer",
       "LOGO_ALT": "Talishar",
+      "SIGN_UP_CTA": "Créer un compte",
       "SUBTITLE": "Talishar vous permet de jouer gratuitement à FaB en ligne, directement dans votre navigateur. ",
       "SUPPORT_CTA": "Soutenez-nous sur Metafy",
       "TITLE": "Jouer à Flesh & Blood en ligne"
@@ -927,6 +932,7 @@
       "IMPORT_TITLE": "URL de FaBrary.net",
       "LOADING": "Chargement…",
       "PRACTICE_DUMMY": "Mannequin d'entraînement",
+      "PRIVATE_TITLE": "Créer une partie privée",
       "PRECONSTRUCTED_DECK": "Deck préconstruit",
       "RUST_LOCKED_HINT": "Effacez vos compteurs de rouille ci-dessus pour créer une partie.",
       "SAVE_DECK_FAVOURITES": "Enregistrer le deck dans les ❤️ Favoris",
@@ -1518,6 +1524,8 @@
   "UNITED_GAME_PANEL": {
     "EXPAND": "Agrandir le panneau",
     "GAME_SETUP": "Configuration du jeu",
+    "GUEST_PRIVATE_DESCRIPTION": "Aucun compte requis. Créez une partie et partagez le lien avec un ami.",
+    "GUEST_PRIVATE_TITLE": "Ou créez une partie privée",
     "JOIN_CREATE": "Rejoindre / Créer rapidement un jeu",
     "MINIMIZE": "Réduire le panneau",
     "REMOVE_ADS": "Supprimer les publicités"

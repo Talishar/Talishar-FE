@@ -16,7 +16,7 @@ import { useCookies } from 'react-cookie';
 import { HEROES_OF_RATHE } from '../filter/constants';
 import GameFilter from './GameFilter';
 import FriendBadge from './FriendBadge';
-import { useTranslation, Trans } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import { Friend } from 'interface/API/FriendListAPI.php';
 
 export interface IOpenGame {
@@ -67,6 +67,8 @@ const GameList = () => {
 
   // Initial stuff to allow the lang to change
   const { t, i18n, ready } = useTranslation();
+  const { isLoggedIn, isLoading: isAuthLoading } = useAuth();
+  const canAccessPublicGames = !isAuthLoading && isLoggedIn;
 
   const {
     data: apiData,
@@ -74,8 +76,9 @@ const GameList = () => {
     error,
     refetch,
     isFetching
-  } = useGetGameListQuery(undefined);
-  const { isLoggedIn } = useAuth();
+  } = useGetGameListQuery(undefined, {
+    skip: !canAccessPublicGames
+  });
 
   const HERO_LIST = [
     'WTR001',
@@ -161,11 +164,13 @@ const GameList = () => {
   const REFETCH_RATE_LIMIT_MS = 3000;
 
   useEffect(() => {
+    if (!canAccessPublicGames) return;
+
     const id = setInterval(() => {
       if (!document.hidden) refetch();
     }, 10000);
     return () => clearInterval(id);
-  }, [refetch]);
+  }, [canAccessPublicGames, refetch]);
 
   // Initialize filters from cookies
   const defaultFormats = new Set([
@@ -570,46 +575,54 @@ const GameList = () => {
           <h3 className={styles.title}>
             {t('GAME_LIST.OPEN_GAMES', 'Open Games')}
           </h3>
-          <button
-            onClick={handleReloadClick}
-            className={styles.reloadButton}
-            disabled={isFetching || isRateLimited}
-            title={t('GAME_LIST.MANUAL_REFRESH')}
-          >
-            {t('GAME_LIST.REFRESH')}
-            <span
-              className={`${styles.refreshIcon}${
-                isFetching || isRateLimited ? ` ${styles.spinning}` : ''
-              }`}
+          {canAccessPublicGames && (
+            <button
+              onClick={handleReloadClick}
+              className={styles.reloadButton}
+              disabled={isFetching || isRateLimited}
+              title={t('GAME_LIST.MANUAL_REFRESH')}
             >
-              ↻
-            </span>
-          </button>
+              {t('GAME_LIST.REFRESH')}
+              <span
+                className={`${styles.refreshIcon}${
+                  isFetching || isRateLimited ? ` ${styles.spinning}` : ''
+                }`}
+              >
+                ↻
+              </span>
+            </button>
+          )}
         </div>
-        {isLoading ? (
+        {canAccessPublicGames && isLoading ? (
           <div aria-busy="true">{t('GAME_LIST.LOADING')}</div>
         ) : null}
-        {error ? (
+        {canAccessPublicGames && error ? (
           <div>
             <h2>{t('GAME_LIST.LOAD_ERROR_TITLE')}</h2>
             <p>{t('GAME_LIST.LOAD_ERROR_DESCRIPTION')}</p>
             <p>{JSON.stringify(error)}</p>
           </div>
         ) : null}
-        {!isLoggedIn && !isLoading && (
+        {!isAuthLoading && !isLoggedIn && (
           <div className={styles.loginNotice}>
-            <span className={styles.loginNoticeIcon}>
+            <span className={styles.loginNoticeIcon} aria-hidden="true">
               {t('OPTIONS_MENU.LOCK_ICON')}
             </span>
-            <span>
-              <Trans i18nKey="GAME_LIST.PLEASE_LOGIN">
-                Please <Link to="/user/login">log in</Link> to view open lobbies
-                and spectate games!
-              </Trans>
-            </span>
+            <div className={styles.loginNoticeContent}>
+              <strong className={styles.loginNoticeTitle}>
+                {t('GAME_LIST.LOGIN_REQUIRED_TITLE')}
+              </strong>
+              <p>{t('GAME_LIST.PLEASE_LOGIN')}</p>
+              <Link to="/user/login" className={styles.loginButton}>
+                {t('GAME_LIST.LOGIN_BUTTON')}
+              </Link>
+              <p className={styles.privateGameNotice}>
+                {t('GAME_LIST.PRIVATE_GAMES_AVAILABLE')}
+              </p>
+            </div>
           </div>
         )}
-        {!isLoading && !error && isLoggedIn && (
+        {!isLoading && !error && canAccessPublicGames && (
           <>
             <div className={styles.tabs}>
               <button
@@ -733,7 +746,7 @@ const GameList = () => {
       </div>
 
       {/* Scrollable game list content */}
-      {!isLoading && !error && isLoggedIn && (
+      {!isLoading && !error && canAccessPublicGames && (
         <div className={styles.scrollableContent} ref={scrollableContentRef}>
           {activeTab === 'open' ? (
             <>

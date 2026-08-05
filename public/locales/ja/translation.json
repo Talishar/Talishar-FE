@@ -393,7 +393,10 @@
     "LOOKING_FOR_OPPONENT": "対戦相手を探す",
     "MANUAL_REFRESH": "ゲームリストを手動で更新",
     "OPEN_GAMES": "ゲーム一覧",
-    "PLEASE_LOGIN": "<1>ログイン</1>して、公開ロビーからゲームを観戦できます！",
+    "LOGIN_BUTTON": "ログイン",
+    "LOGIN_REQUIRED_TITLE": "公開ゲームにはログインが必要です",
+    "PLEASE_LOGIN": "ログインすると、公開ロビーを閲覧・参加したり、進行中のゲームを観戦したりできます。",
+    "PRIVATE_GAMES_AVAILABLE": "アカウントがなくても、ここでプライベートゲームを作成したり、共有リンクから参加したりできます。",
     "REFRESH": "更新"
   },
   "GAME_LOBBY": {
@@ -534,7 +537,9 @@
       "COLLAPSE_BANNER": "",
       "EXPAND_BANNER": "",
       "JOIN_CTA": "",
+      "LOGIN_CTA": "ログインしてプレイ",
       "LOGO_ALT": "",
+      "SIGN_UP_CTA": "アカウント作成",
       "SUBTITLE": "",
       "SUPPORT_CTA": "",
       "TITLE": ""
@@ -924,6 +929,7 @@
       "IMPORT_TITLE": "FaBrary.netのURL",
       "LOADING": "",
       "PRACTICE_DUMMY": "",
+      "PRIVATE_TITLE": "プライベートゲームを作成",
       "PRECONSTRUCTED_DECK": "構築済みデッキ",
       "RUST_LOCKED_HINT": "",
       "SAVE_DECK_FAVOURITES": "デッキをお気に入り❤️に保存",
@@ -1512,6 +1518,8 @@
   "UNITED_GAME_PANEL": {
     "EXPAND": "パネルを拡張",
     "GAME_SETUP": "ゲーム設定",
+    "GUEST_PRIVATE_DESCRIPTION": "アカウントは不要です。ゲームを作成して、友達にリンクを共有できます。",
+    "GUEST_PRIVATE_TITLE": "またはプライベートゲームを作成",
     "JOIN_CREATE": "クイックプレイ / ゲームを作成",
     "MINIMIZE": "パネルを最小化",
     "REMOVE_ADS": "広告を削除"

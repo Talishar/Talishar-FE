@@ -18,12 +18,13 @@ import { AdUnit } from 'components/ads';
 import TalisharLogo from '../../img/TalisharLogo.webp';
 import { BsChevronDown, BsChevronUp } from 'react-icons/bs';
 import { TALISHAR_METAFY_URL } from 'constants/socialLinks';
+import { Link } from 'react-router-dom';
 
 const Index = () => {
   const { t } = useTranslation();
   usePageTitle(t('PAGES.PLAY_FAB_ONLINE'));
   const dispatch = useAppDispatch();
-  const { isLoggedIn, currentUserName } = useAuth();
+  const { isLoggedIn, isLoading: isAuthLoading, currentUserName } = useAuth();
   const { isSupporter, showAds } = useSupporterStatus();
   const [isBannerHidden, setIsBannerHidden] = useState(false);
 
@@ -150,7 +151,11 @@ const Index = () => {
         )}
         <div className={styles.bannerBackground} />
         <div className={styles.bannerOverlay} />
-        <div className={styles.bannerContent}>
+        <div
+          className={`${styles.bannerContent}${
+            !isAuthLoading && !isLoggedIn ? ` ${styles.bannerContentGuest}` : ''
+          }`}
+        >
           {!isBannerHidden && (
             <img
               src={TalisharLogo}
@@ -162,42 +167,64 @@ const Index = () => {
             <>
               <h1 className={styles.heroTitle}>{t('HOME.HERO.TITLE')}</h1>
               <p className={styles.heroSubtitle}>{t('HOME.HERO.SUBTITLE')}</p>
-              <div className={styles.heroCta}>
-                <a href="#games" className={styles.heroCtaPrimary}>
-                  {t('HOME.HERO.JOIN_CTA')}
-                </a>
-                {!isSupporter && (
-                  <a
-                    href={TALISHAR_METAFY_URL}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={styles.heroCtaSecondary}
-                  >
-                    {t('HOME.HERO.SUPPORT_CTA')}
-                  </a>
-                )}
-              </div>
+              {!isAuthLoading && (
+                <div className={styles.heroCta}>
+                  {isLoggedIn ? (
+                    <>
+                      <a href="#games" className={styles.heroCtaPrimary}>
+                        {t('HOME.HERO.JOIN_CTA')}
+                      </a>
+                      {!isSupporter && (
+                        <a
+                          href={TALISHAR_METAFY_URL}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className={styles.heroCtaSecondary}
+                        >
+                          {t('HOME.HERO.SUPPORT_CTA')}
+                        </a>
+                      )}
+                    </>
+                  ) : (
+                    <>
+                      <Link to="/user/login" className={styles.heroCtaPrimary}>
+                        {t('HOME.HERO.LOGIN_CTA')}
+                      </Link>
+                      <Link
+                        to="/user/login/signup"
+                        className={styles.heroCtaSecondary}
+                      >
+                        {t('HOME.HERO.SIGN_UP_CTA')}
+                      </Link>
+                    </>
+                  )}
+                </div>
+              )}
             </>
           )}
         </div>
       </div>
       <div id="games" className={styles.contentSection}>
-        <QuickJoinProvider>
-          <div className={styles.gridWrapper}>
-            <div
-              className={`${styles.grid}${
-                !isLoggedIn ? ` ${styles.gridLoggedOut}` : ''
-              }`}
-            >
-              <div className={styles.gameListContainer}>
-                <GameList />
-              </div>
-              <div className={styles.createGameContainer}>
-                <UnifiedGamePanel />
+        {!isAuthLoading && (
+          <QuickJoinProvider>
+            <div className={styles.gridWrapper}>
+              <div
+                className={`${styles.grid}${
+                  !isLoggedIn ? ` ${styles.gridLoggedOut}` : ''
+                }`}
+              >
+                {isLoggedIn && (
+                  <div className={styles.gameListContainer}>
+                    <GameList />
+                  </div>
+                )}
+                <div className={styles.createGameContainer}>
+                  <UnifiedGamePanel />
+                </div>
               </div>
             </div>
-          </div>
-        </QuickJoinProvider>
+          </QuickJoinProvider>
+        )}
         <section className={styles.newsContainer}>
           <News />
         </section>

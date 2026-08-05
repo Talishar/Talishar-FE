@@ -55,37 +55,22 @@ const UnifiedGamePanel = () => {
   if (!isLoggedIn) {
     return (
       <section
-        className={styles.panel}
-        aria-label={t('MENU.CREATE_GAME.TITLE')}
+        className={`${styles.panel} ${styles.guestPanel}`}
+        aria-label={t('UNITED_GAME_PANEL.GUEST_PRIVATE_TITLE')}
       >
-        <div className={styles.header}>
-          <h3 className={styles.title}>{t('MENU.CREATE_GAME.TITLE')}</h3>
-          <button
-            type="button"
-            className={styles.toggleButton}
-            onClick={() => setIsExpanded(!isExpanded)}
-            aria-expanded={isExpanded}
-            aria-label={
-              isExpanded
-                ? t('UNITED_GAME_PANEL.MINIMIZE')
-                : t('UNITED_GAME_PANEL.EXPAND')
-            }
-          >
-            {isExpanded ? (
-              <FaChevronUp size={16} />
-            ) : (
-              <FaChevronDown size={16} />
-            )}
-          </button>
-        </div>
-
-        {isExpanded && (
-          <div className={styles.content}>
-            <div className={styles.createGameSection}>
-              <CreateGame inUnifiedPanel />
-            </div>
+        <div className={styles.guestPrivateSection}>
+          <div className={styles.guestPrivateHeader}>
+            <h3 className={styles.title}>
+              {t('UNITED_GAME_PANEL.GUEST_PRIVATE_TITLE')}
+            </h3>
+            <p className={styles.guestDescription}>
+              {t('UNITED_GAME_PANEL.GUEST_PRIVATE_DESCRIPTION')}
+            </p>
           </div>
-        )}
+          <div className={styles.createGameSection}>
+            <CreateGame inUnifiedPanel />
+          </div>
+        </div>
       </section>
     );
   }

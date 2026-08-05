@@ -394,7 +394,10 @@
     "LOOKING_FOR_OPPONENT": "Looking for opponent",
     "MANUAL_REFRESH": "Manually refresh game list",
     "OPEN_GAMES": "Open Games",
-    "PLEASE_LOGIN": "Please <1>log in</1> to view open lobbies and spectate games!",
+    "LOGIN_BUTTON": "Log in",
+    "LOGIN_REQUIRED_TITLE": "Log in for public games",
+    "PLEASE_LOGIN": "Sign in to browse and join open lobbies or spectate games in progress.",
+    "PRIVATE_GAMES_AVAILABLE": "You can still create a private game here or join one from a shared link. No account needed.",
     "REFRESH": "Refresh"
   },
   "GAME_LOBBY": {
@@ -535,7 +538,9 @@
       "COLLAPSE_BANNER": "Collapse banner",
       "EXPAND_BANNER": "Expand banner",
       "JOIN_CTA": "Join a game",
+      "LOGIN_CTA": "Log in to play",
       "LOGO_ALT": "Talishar",
+      "SIGN_UP_CTA": "Create account",
       "SUBTITLE": "Talishar lets you play FaB online for free, right in your browser. Find opponents, test decks, and get games in whenever you want.",
       "SUPPORT_CTA": "Support us on Metafy",
       "TITLE": "Play Flesh & Blood Online"
@@ -925,6 +930,7 @@
       "IMPORT_TITLE": "URL from FaBrary.net",
       "LOADING": "Loading…",
       "PRACTICE_DUMMY": "Practice Dummy",
+      "PRIVATE_TITLE": "Create Private Game",
       "PRECONSTRUCTED_DECK": "Preconstructed deck",
       "RUST_LOCKED_HINT": "Clear your rust counters above to create a game.",
       "SAVE_DECK_FAVOURITES": "Save Deck to ❤️ Favorites",
@@ -1521,6 +1527,8 @@
   "UNITED_GAME_PANEL": {
     "EXPAND": "Expand panel",
     "GAME_SETUP": "Game Setup",
+    "GUEST_PRIVATE_DESCRIPTION": "No account needed. Create a game and share its link with a friend.",
+    "GUEST_PRIVATE_TITLE": "Or create a private game",
     "JOIN_CREATE": "Quick Join / Create Game",
     "MINIMIZE": "Minimize panel",
     "REMOVE_ADS": "Remove ads"
@@ -1602,6 +1610,10 @@
     "WHITELISTED_SUCCESS_one": "Whitelisted {{count}} user(s)",
     "WHITELISTED_SUCCESS_other": "Whitelisted {{count}} user(s)",
     "WHITELISTING": "Whitelisting..."
+  },
+  "GEM_SLIDER": {
+    "ACTIVE_LABEL": "Card ability active. Click to deactivate.",
+    "INACTIVE_LABEL": "Card ability inactive. Click to activate."
   },
   "ZONES": {
     "ACTIVE_LAYERS": "Active Layers",
