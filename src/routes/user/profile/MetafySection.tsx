@@ -75,7 +75,11 @@ const MetafySection: React.FC<MetafySectionProps> = ({
   };
 
   return (
-    <div className={styles.metafySection}>
+    <div
+      className={`${styles.metafySection} ${
+        !isMetafyLinked ? styles.connectionRow : ''
+      } ${className ?? ''}`}
+    >
       <h3>{t('PROFILE.METAFY_COMMUNITIES')}</h3>
       {!isMetafyLinked && (
         <p>

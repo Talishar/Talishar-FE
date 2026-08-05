@@ -130,8 +130,6 @@
   font-weight: 600;
   font-size: 0.95em;
   color: var(--theme-text-secondary);
-  background-color: var(--theme-section-background);
-  border-left: 3px solid var(--theme-primary);
   margin-bottom: 0.5em;
   border-radius: 0.25em;
   display: flex;

@@ -147,7 +147,7 @@ export const ProfilePage = () => {
                   </div>
                 )}
               </div>
-              <div>
+              <div className={styles.accountOverview}>
                 {profileIsLoading && <p>{t('PROFILE.LOADING')}</p>}
 
                 {/* Show Upgrade/Supporter Status */}
@@ -171,7 +171,11 @@ export const ProfilePage = () => {
 
                 {/* Patreon Section */}
                 {!profileIsLoading && (
-                  <div className={styles.patreonSection}>
+                  <div
+                    className={`${styles.patreonSection} ${
+                      !profileData?.isPatreonLinked ? styles.connectionRow : ''
+                    }`}
+                  >
                     <h3>{t('PROFILE.PATREON_TITLE')}</h3>
                     {profileData?.isPatreonLinked ? (
                       <p>
@@ -202,7 +206,7 @@ export const ProfilePage = () => {
 
               {/* Display Name Section */}
               {!profileIsLoading && (
-                <div className={styles.patreonSection}>
+                <section className={styles.displayNameSection}>
                   <div className={styles.displayNameHeader}>
                     <h3>{t('PROFILE.DISPLAY_NAME_TITLE')}</h3>
                     <button
@@ -251,7 +255,7 @@ export const ProfilePage = () => {
                           {isChangingName ? 'Saving...' : 'Save'}
                         </button>
                         <button
-                          className={styles.metafyToggleButton}
+                          className={`${styles.metafyToggleButton} ${styles.secondaryButton}`}
                           onClick={() => {
                             setIsEditingDisplayName(false);
                             setNewDisplayName('');
@@ -279,7 +283,7 @@ export const ProfilePage = () => {
                         </button>
                         {profileData?.hasCustomDisplayName && (
                           <button
-                            className={styles.metafyToggleButton}
+                            className={`${styles.metafyToggleButton} ${styles.secondaryButton}`}
                             onClick={() => handleChangeDisplayName('')}
                             disabled={isChangingName}
                           >
@@ -291,22 +295,24 @@ export const ProfilePage = () => {
                   ) : (
                     <p>{t('PROFILE.SUPPORTER_PERK')}</p>
                   )}
-                </div>
+                </section>
               )}
 
-              <h3 className={styles.title}>{t('PROFILE.DELETE_ACCOUNT')}</h3>
-              <p style={{ color: '#fa3737ff', marginBottom: '1em' }}>
-                <Trans
-                  i18nKey="PROFILE.DELETE_WARNING"
-                  components={{ 1: <strong /> }}
-                />
-              </p>
-              <button
-                className={styles.deleteAccountButton}
-                onClick={() => setShowDeleteModal(true)}
-              >
-                {t('PROFILE.DELETE_MY_ACCOUNT')}
-              </button>
+              <section className={styles.dangerSection}>
+                <h3 className={styles.title}>{t('PROFILE.DELETE_ACCOUNT')}</h3>
+                <p className={styles.deleteWarning}>
+                  <Trans
+                    i18nKey="PROFILE.DELETE_WARNING"
+                    components={{ 1: <strong /> }}
+                  />
+                </p>
+                <button
+                  className={styles.deleteAccountButton}
+                  onClick={() => setShowDeleteModal(true)}
+                >
+                  {t('PROFILE.DELETE_MY_ACCOUNT')}
+                </button>
+              </section>
 
               {showDeleteModal && (
                 <div className={styles.modalOverlay}>

@@ -1,7 +1,7 @@
 .friendsListContainer {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1rem;
   padding: 0.5rem;
   border: none;
   border-radius: 0;
@@ -9,15 +9,15 @@
 }
 
 .title {
-  margin: 0 0 1rem 0;
-  font-size: 1.3rem;
+  margin: 0;
+  font-size: 1.1rem;
   font-weight: 600;
   color: var(--theme-text, #e0e0e0);
 }
 
 .subtitle {
   margin: 0 0 0.75rem 0;
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-weight: 600;
   color: var(--theme-text, #e0e0e0);
 }
@@ -356,7 +356,7 @@
 }
 
 .username {
-  color: #e0e0e0;
+  color: var(--theme-text, #e0e0e0);
   font-weight: 500;
 }
 

@@ -40,9 +40,7 @@
   word-break: break-word;
   text-align: left;
   padding: 1rem;
-  background: rgba(0, 0, 0, 0.25);
   border-radius: 6px;
-  border-left: 2px solid var(--theme-primary, #d4af37);
   font-size: 0.9rem;
 }
 

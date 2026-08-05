@@ -1,17 +1,16 @@
 .title {
-  margin-top: 0.5em;
-  margin-bottom: 0.5em;
+  margin: 0;
 }
 
 .usernameHeader {
-  padding-bottom: 1em;
+  padding-bottom: 0.25rem;
 }
 
 .usernameLabel {
   font-size: 0.8em;
   text-transform: uppercase;
   letter-spacing: 1.5px;
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--theme-text-muted, rgba(255, 255, 255, 0.6));
   display: block;
   margin-bottom: 0.25em;
 }
@@ -20,7 +19,7 @@
   margin: 0;
   font-size: 1.6em;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.95);
+  color: var(--theme-text, #f4eded);
 }
 
 .userIdLine {
@@ -28,7 +27,7 @@
   align-items: baseline;
   gap: 0.5em;
   margin-top: 0.4em;
-  color: rgba(255, 255, 255, 0.55);
+  color: var(--theme-text-muted, rgba(255, 255, 255, 0.6));
   font-size: 0.9em;
 }
 
@@ -40,31 +39,19 @@
 
 .userIdValue {
   font-family: monospace;
-  color: rgba(255, 255, 255, 0.75);
+  color: var(--theme-text-secondary, rgba(255, 255, 255, 0.75));
 }
 
 .articleTitle {
-  margin-top: 0.2em;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin: 0;
+  padding: 0.5rem;
   background: transparent;
-}
-
-article {
   border: none;
   border-radius: 0;
-}
-
-table {
-  max-width: 100%;
-  width: 100%;
-  border-collapse: collapse;
-}
-
-th {
-  text-align: center;
-}
-
-td {
-  text-align: center;
+  box-shadow: none;
 }
 
 .wideContainer {
@@ -82,28 +69,24 @@ td {
   align-items: start;
 }
 
-.leftColumn {
-  min-width: 0;
-  width: 100%;
-}
-
+.leftColumn,
 .rightColumn {
   min-width: 0;
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-}
-
-@media (max-width: 1400px) {
-  .twoColumnLayout {
-    grid-template-columns: 1fr 1fr;
-  }
+  gap: 1.5rem;
+  padding: 0 0.5rem 1.5rem;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
 }
 
 @media (max-width: 1024px) {
   .twoColumnLayout {
     grid-template-columns: 1fr;
+    gap: 1rem;
   }
 }
 
@@ -111,87 +94,127 @@ td {
   .wideContainer {
     padding: 0 0.5rem;
   }
+
+  .leftColumn,
+  .rightColumn {
+    padding: 0 0 1rem;
+  }
+
+  .articleTitle {
+    gap: 1.25rem;
+    padding: 0;
+  }
 }
 
 .friendsSection {
-  margin: 1rem 0;
+  margin: 0;
   background: transparent;
 }
 
-/* Metafy Section - External Integration: neutral card, small top accent */
+.accountOverview {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* Profile sections share one flat treatment, matching the settings page. */
 .metafySection {
-  margin: 1rem 0;
-  padding: 1rem;
-  background: rgba(255, 255, 255, 0.03);
-  border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: 0;
 }
 
 .metafySection h3 {
-  margin-top: 0;
-  margin-bottom: 1rem;
-  color: rgba(255, 255, 255, 0.9);
-  font-size: 1.3em;
+  margin: 0 0 0.5rem;
+  color: var(--theme-text, rgba(255, 255, 255, 0.9));
+  font-size: 1.1rem;
+  font-weight: 600;
 }
 
 .metafySection p {
   margin: 0.5rem 0;
-  color: rgba(255, 255, 255, 0.8);
+  color: var(--theme-text-secondary, rgba(255, 255, 255, 0.8));
 }
 
 .metafySection a {
-  color: #d4af37;
+  color: var(--theme-primary, #d4af37);
   text-decoration: none;
   font-weight: 500;
   transition: color 0.2s ease, background-color 0.2s ease;
-  padding: 0.4em 0.8em;
-  border-radius: 5px;
+  padding: 0;
+  border-radius: 0;
   display: inline-block;
 }
 
 .metafySection a:hover {
-  color: #e8c547;
-  text-decoration: none;
-  background: rgba(212, 175, 55, 0.1);
-  border-color: rgba(212, 175, 55, 0.5);
+  color: var(--theme-primary-hover, #e8c547);
+  text-decoration: underline;
+  background: transparent;
 }
 
-/* Patreon Section - External Integration: neutral card, small top accent */
 .patreonSection {
-  margin: 1rem 0;
-  padding: 1rem;
-  background: rgba(255, 255, 255, 0.03);
-  border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: 0;
 }
 
 .patreonSection h3 {
-  margin-top: 0;
-  margin-bottom: 1rem;
-  color: rgba(255, 255, 255, 0.9);
-  font-size: 1.3em;
+  margin: 0 0 0.5rem;
+  color: var(--theme-text, rgba(255, 255, 255, 0.9));
+  font-size: 1.1rem;
+  font-weight: 600;
 }
 
 .patreonSection p {
   margin: 0.5rem 0;
-  color: rgba(255, 255, 255, 0.8);
+  color: var(--theme-text-secondary, rgba(255, 255, 255, 0.8));
 }
 
 .patreonSection a {
-  color: #d4af37;
+  color: var(--theme-primary, #d4af37);
   text-decoration: none;
   font-weight: 500;
   transition: color 0.2s ease, background-color 0.2s ease;
-  padding: 0.4em 0.8em;
-  border-radius: 5px;
+  padding: 0;
+  border-radius: 0;
   display: inline-block;
 }
 
 .patreonSection a:hover {
-  color: #e8c547;
-  text-decoration: none;
-  background: rgba(212, 175, 55, 0.1);
-  border-color: rgba(212, 175, 55, 0.5);
+  color: var(--theme-primary-hover, #e8c547);
+  text-decoration: underline;
+  background: transparent;
+}
+
+.connectionRow {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.3rem;
+}
+
+.connectionRow h3,
+.connectionRow p {
+  margin: 0;
+}
+
+.displayNameSection {
+  margin: 0;
+  padding: 0;
+}
+
+.displayNameSection h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.displayNameSection > p {
+  margin: 0.5rem 0 0;
+  color: var(--theme-text-secondary, rgba(255, 255, 255, 0.8));
 }
 
 .displayNameHeader {
@@ -209,9 +232,9 @@ td {
   height: 1.4em;
   padding: 0;
   border-radius: 50%;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  background: rgba(255, 255, 255, 0.05);
-  color: rgba(255, 255, 255, 0.7);
+  border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.3));
+  background: transparent;
+  color: var(--theme-text-muted, rgba(255, 255, 255, 0.7));
   font-size: 0.8em;
   font-style: italic;
   font-weight: bold;
@@ -230,22 +253,22 @@ td {
 }
 
 .displayNameHint {
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--theme-text-muted, rgba(255, 255, 255, 0.6));
   font-size: 0.9em;
 }
 
 .displayNameInfoBox {
   margin: 0.75rem 0;
-  padding: 0.75rem 1rem;
-  background: rgba(255, 255, 255, 0.04);
-  border-left: 3px solid rgba(212, 175, 55, 0.4);
-  border-radius: 4px;
+  padding: 0.25rem 0;
+  background: transparent;
+  border: none;
+  border-radius: 0;
 }
 
 .displayNameInfoBox p {
   margin: 0.5rem 0;
   font-size: 0.9em;
-  color: rgba(255, 255, 255, 0.75);
+  color: var(--theme-text-muted, rgba(255, 255, 255, 0.75));
 }
 
 .displayNameInfoBox p:first-child {
@@ -261,17 +284,17 @@ td {
   flex-wrap: wrap;
   align-items: center;
   gap: 0.5rem;
-  margin-top: 0.5rem;
+  margin-top: 0.75rem;
 }
 
 .displayNameInput {
   flex: 1 1 220px;
   min-width: 180px;
   padding: 0.5rem 0.75rem;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: var(--theme-form-background, rgba(255, 255, 255, 0.06));
+  border: 1px solid var(--theme-form-border, rgba(255, 255, 255, 0.15));
   border-radius: 4px;
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--theme-text, rgba(255, 255, 255, 0.9));
   font-size: 0.95rem;
 }
 
@@ -280,24 +303,38 @@ td {
 }
 
 .metafyToggleButton {
-  padding: 0.5rem 1rem;
+  width: auto;
+  padding: 0.5rem 0.85rem;
   margin: 1rem 0;
-  background-color: #0066cc;
-  color: white;
+  background-color: var(--theme-primary, #d4af37);
+  color: var(--theme-primary-inverse, #000);
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
+  font-weight: 600;
   transition: background-color 0.2s ease, transform 0.1s ease;
 }
 
 .metafyToggleButton:hover {
-  background-color: #0052a3;
-  transform: translateY(-2px);
+  background-color: var(--theme-primary-hover, #e8c547);
+  transform: translateY(-1px);
 }
 
 .metafyToggleButton:active {
   transform: translateY(0);
+}
+
+.secondaryButton {
+  background: transparent;
+  color: var(--theme-text-secondary, #e0e0e0);
+  border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.2));
+}
+
+.secondaryButton:hover {
+  background: var(--theme-primary-focus, rgba(212, 175, 55, 0.1));
+  color: var(--theme-text, #f4eded);
+  border-color: var(--theme-primary, #d4af37);
 }
 
 .metafyCommunitiesList {
@@ -309,7 +346,7 @@ td {
 .metafyCommunitiesHeader {
   margin-bottom: 1rem;
   font-weight: bold;
-  color: #e0aaff;
+  color: var(--theme-text, #e0aaff);
   font-size: 1rem;
 }
 
@@ -380,14 +417,14 @@ td {
 
 .metafyCommunityName {
   font-weight: bold;
-  color: #e0aaff;
+  color: var(--theme-text, #e0aaff);
   margin-bottom: 0.25rem;
   font-size: 0.95rem;
 }
 
 .metafyCommunityDescription {
   font-size: 0.85rem;
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--theme-text-muted, rgba(255, 255, 255, 0.7));
   margin: 0.25rem 0;
   line-height: 1.4;
 }
@@ -402,7 +439,7 @@ td {
   padding-top: 0.5rem;
   border-top: 1px solid rgba(157, 78, 221, 0.2);
   font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.8);
+  color: var(--theme-text-secondary, rgba(255, 255, 255, 0.8));
 }
 
 .metafyCommunityTier {
@@ -413,7 +450,7 @@ td {
 
 .metafyCommunityId {
   font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--theme-text-muted, rgba(255, 255, 255, 0.5));
   margin-top: 0.25rem;
   font-family: monospace;
 }
@@ -421,7 +458,7 @@ td {
 .metafyNoCommunities {
   padding: 1rem;
   text-align: center;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--theme-text-muted, rgba(255, 255, 255, 0.6));
   font-size: 0.9rem;
   background: transparent;
   border-radius: 0;
@@ -470,8 +507,8 @@ td {
 
 @media (max-width: 575px) {
   .metafySection {
-    padding: 1rem;
-    margin: 1rem 0;
+    padding: 0;
+    margin: 0;
   }
 
   .metafySection h3 {
@@ -485,7 +522,7 @@ td {
   }
 
   .metafyToggleButton {
-    width: 100%;
+    width: auto;
   }
 
   .metafyActionButtons {
@@ -501,17 +538,36 @@ td {
 }
 
 .deleteAccountButton {
-  padding: 0.6em 1.4em;
+  padding: 0.5rem 0.8rem;
   background: transparent;
   color: #e05252;
   border: 1px solid rgba(224, 82, 82, 0.4);
   border-radius: 5px;
   cursor: pointer;
-  font-size: 0.95em;
-  font-weight: 600;
+  font-size: 0.875rem;
+  font-weight: 500;
   transition: background-color 0.2s ease, border-color 0.2s ease,
     color 0.2s ease;
   width: auto;
+}
+
+.dangerSection {
+  padding-top: 0.25rem;
+}
+
+.dangerSection .title {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.deleteWarning {
+  margin: 0.5rem 0 0.75rem;
+  color: var(--theme-text-muted, rgba(255, 255, 255, 0.65));
+  font-size: 0.9rem;
+}
+
+.deleteWarning strong {
+  color: var(--theme-danger, #e05252);
 }
 
 .deleteAccountButton:hover {
@@ -629,16 +685,16 @@ td {
 /* ===== Upgrade Section Styles ===== */
 
 .upgradeSection {
-  padding: 1.5em;
-  border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(255, 255, 255, 0.03);
+  padding: 0;
+  border-radius: 0;
+  border: none;
+  background: transparent;
 }
 
 .upgradeSection h3 {
-  margin-top: 0;
-  margin-bottom: 0.5em;
-  font-size: 1.3em;
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
   display: flex;
   align-items: center;
   gap: 0.5em;
@@ -651,48 +707,42 @@ td {
   color: var(--theme-primary, #d4af37);
 }
 
-/* Supporter Badge - Highlight Card: gold border + subtle glow */
 .supporterBadge {
-  border: 1px solid rgba(201, 169, 97, 0.25);
-  background: linear-gradient(
-    135deg,
-    rgba(201, 169, 97, 0.06) 0%,
-    rgba(201, 169, 97, 0.02) 100%
-  );
-  box-shadow: 0 0 20px rgba(201, 169, 97, 0.05);
+  border: none;
+  background: transparent;
+  box-shadow: none;
 }
 
 .supporterBadge h3 {
-  color: #c9a961;
+  color: var(--theme-primary, #c9a961);
 }
 
 .supporterText {
-  color: rgba(255, 255, 255, 0.75);
+  color: var(--theme-text-secondary, rgba(255, 255, 255, 0.75));
   margin: 0.5em 0;
   line-height: 1.6;
 }
 
 .supporterThanks {
-  color: rgba(201, 169, 97, 0.85);
+  color: var(--theme-primary, rgba(201, 169, 97, 0.85));
   font-style: italic;
-  padding: 1em;
-  background: rgba(201, 169, 97, 0.06);
-  border-radius: 6px;
+  padding: 0;
+  background: transparent;
+  border-radius: 0;
   margin: 1em 0 0 0;
-  border-left: 3px solid rgba(201, 169, 97, 0.3);
+  border: none;
 }
 
-/* Free User Badge - Default Card: neutral dark, no colored tint */
 .freeUserBadge {
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(255, 255, 255, 0.03);
+  border: none;
+  background: transparent;
 }
 
 .upgradeHeader {
   display: flex;
   align-items: center;
-  gap: 1em;
-  margin-bottom: 1em;
+  gap: 0.65rem;
+  margin-bottom: 0.65rem;
 }
 
 .upgradeHeader h3 {
@@ -701,21 +751,22 @@ td {
 }
 
 .freeBadge {
-  background: rgba(255, 255, 255, 0.12);
-  color: rgba(255, 255, 255, 0.75);
-  padding: 0.25em 0.75em;
-  border-radius: 20px;
-  font-size: 0.8em;
-  font-weight: bold;
+  background: var(--theme-form-background, rgba(255, 255, 255, 0.08));
+  color: var(--theme-text-muted, rgba(255, 255, 255, 0.75));
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 600;
   letter-spacing: 0.5px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: none;
   flex-shrink: 0;
 }
 
 .upgradeDescription {
-  color: rgba(255, 255, 255, 0.8);
-  line-height: 1.6;
-  font-size: 1em;
+  color: var(--theme-text-secondary, rgba(255, 255, 255, 0.8));
+  line-height: 1.5;
+  font-size: 0.95rem;
+  margin: 0;
 }
 
 .benefitsSection {
@@ -731,7 +782,7 @@ td {
 .benefitsList li {
   padding: 0.6em 0;
   padding-left: 1.5em;
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--theme-text, rgba(255, 255, 255, 0.9));
   position: relative;
   line-height: 1.5;
 }
@@ -746,33 +797,30 @@ td {
 }
 
 .upgradeButtonSection {
-  padding: 1.5em;
-  background: rgba(255, 255, 255, 0.04);
-  border-radius: 6px;
-  text-align: center;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.upgradePrompt {
-  color: rgba(255, 255, 255, 0.9);
-  margin: 0 0 1em 0;
-  font-size: 1.05em;
-  font-weight: 500;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.75rem;
+  padding: 0.85rem 0 0;
+  background: transparent;
+  border-radius: 0;
+  text-align: left;
+  border: none;
 }
 
 .upgradeButton {
   display: inline-block;
-  padding: 0.85em 2em;
+  padding: 0.55rem 0.85rem;
   background: var(--theme-primary, #d4af37);
   color: var(--theme-primary-inverse, #000000);
   text-decoration: none;
-  border-radius: 6px;
-  font-weight: bold;
-  font-size: 1.05em;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 0.9rem;
   transition: background-color 0.2s ease, transform 0.2s ease;
   border: 1px solid var(--theme-primary, #d4af37);
   cursor: pointer;
-  letter-spacing: 0.3px;
+  letter-spacing: 0;
 }
 
 .upgradeButton:hover {
@@ -789,18 +837,18 @@ td {
 }
 
 .upgradeNote {
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 0.9em;
-  margin: 1em 0 0 0;
-  font-style: italic;
+  color: var(--theme-text-muted, rgba(255, 255, 255, 0.7));
+  font-size: 0.82rem;
+  margin: 0;
+  font-style: normal;
 }
 
 .supportersInfo {
   margin: 1.5em 0 0 0;
-  padding: 1em;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 6px;
-  border-left: 3px solid var(--theme-primary, #d4af37);
+  padding: 0;
+  background: transparent;
+  border-radius: 0;
+  border: none;
 }
 
 .supportersInfo h4 {
@@ -808,7 +856,7 @@ td {
 }
 
 .metafyInfo {
-  color: rgba(255, 255, 255, 0.8);
+  color: var(--theme-text-secondary, rgba(255, 255, 255, 0.8));
   margin: 0.5em 0;
   line-height: 1.6;
 }
@@ -822,7 +870,7 @@ td {
 .metafyBenefits li {
   padding: 0.4em 0;
   padding-left: 1.3em;
-  color: rgba(255, 255, 255, 0.8);
+  color: var(--theme-text-secondary, rgba(255, 255, 255, 0.8));
   position: relative;
   font-size: 0.95em;
 }
@@ -837,23 +885,24 @@ td {
 
 @media (max-width: 575px) {
   .upgradeSection {
-    padding: 1em;
+    padding: 0;
   }
 
   .upgradeButtonSection {
-    padding: 1em;
+    align-items: flex-start;
+    padding: 0.75rem 0 0;
   }
 
   .upgradeButton {
-    width: 100%;
-    padding: 0.75em 1em;
-    font-size: 1em;
+    width: auto;
+    padding: 0.55rem 0.8rem;
+    font-size: 0.875rem;
   }
 
   .upgradeHeader {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.5em;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.65rem;
   }
 
   .upgradeHeader h3 {

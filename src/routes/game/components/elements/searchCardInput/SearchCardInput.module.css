@@ -110,9 +110,7 @@
 .futureQueueNotice {
   margin: 0 0 0.75rem;
   padding: 0.65rem 0.75rem;
-  border-left: 3px solid var(--theme-primary);
   border-radius: 4px;
-  background-color: rgba(255, 255, 255, 0.06);
   color: rgba(224, 224, 224, 0.85);
   font-size: 0.85rem;
   line-height: 1.4;

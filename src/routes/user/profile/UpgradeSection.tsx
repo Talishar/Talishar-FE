@@ -41,7 +41,6 @@ const UpgradeSection: React.FC<UpgradeSectionProps> = ({
       </p>
 
       <div className={styles.upgradeButtonSection}>
-        <p className={styles.upgradePrompt}>{t('PROFILE.UPGRADE_PROMPT')}</p>
         <a
           href={TALISHAR_METAFY_URL}
           target="_blank"

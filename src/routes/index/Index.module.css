@@ -319,8 +319,6 @@ h3 {
 }
 
 .messageItem {
-  background: rgba(255, 255, 255, 0.05);
-  border-left: 3px solid var(--theme-primary, #d4af37);
   border-radius: 4px;
   padding: 1em;
   margin-bottom: 1em;
@@ -399,8 +397,6 @@ h3 {
 }
 
 .messageEmbed {
-  background: rgba(100, 181, 246, 0.05);
-  border-left: 3px solid var(--theme-primary, #d4af37);
   border-radius: 4px;
   padding: 0.75em;
 }

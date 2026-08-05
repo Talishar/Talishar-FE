@@ -270,8 +270,6 @@
 .errorContainer {
   margin-top: 1.5rem;
   padding: 1.5rem;
-  background-color: #2a1a1a;
-  border-left: 4px solid #ff6b6b;
   border-radius: 4px;
   color: #ffb3b3;
   font-family: system-ui, -apple-system, sans-serif;
@@ -349,13 +347,11 @@
 }
 
 .pathBox {
-  background-color: #1a1a1a;
   padding: 0.5rem 0.75rem;
   border-radius: 3px;
   margin-top: 0.3rem;
   font-family: monospace;
   font-size: 0.9em;
-  border-left: 2px solid #66ccff;
   color: #66ccff;
 }
 
@@ -387,9 +383,7 @@
   margin-top: 1rem;
   padding: 0.5rem;
   color: #66ccff;
-  background-color: #1a2a3a;
   border-radius: 4px;
-  border-left: 3px solid #66ccff;
 }
 
 /* Beta Disclaimer Styles */
@@ -397,15 +391,6 @@
   max-width: 700px;
   margin: 1rem auto;
   padding: 1.5rem;
-  background: var(
-    --theme-warning-background,
-    linear-gradient(
-      135deg,
-      rgba(255, 152, 0, 0.1) 0%,
-      rgba(255, 193, 7, 0.1) 100%
-    )
-  );
-  border-left: 4px solid var(--theme-warning-border, #ff9800);
   border-radius: 6px;
   color: var(--theme-warning-text, #ffc107);
   border: 1px solid var(--theme-warning-border-light, rgba(255, 152, 0, 0.3));

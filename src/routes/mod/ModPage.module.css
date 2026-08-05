@@ -194,9 +194,7 @@
   color: #ffffff;
   padding: 8px;
   margin-bottom: 5px;
-  background-color: rgba(30, 30, 30, 0.5);
   border-radius: 3px;
-  border-left: 3px solid #4a9eff;
 }
 
 .errorMessage {
