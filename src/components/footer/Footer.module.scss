@@ -193,9 +193,13 @@
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 0.25rem 1rem;
+  gap: 0.25rem 0;
   margin-inline: 0.65rem;
   padding-bottom: 0.75rem;
+
+  > *:not(:last-child) {
+    margin-right: 1rem;
+  }
 
   a,
   .cookiePreferencesButton {

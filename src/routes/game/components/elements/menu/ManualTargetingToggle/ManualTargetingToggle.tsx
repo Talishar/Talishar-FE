@@ -20,7 +20,7 @@ const ManualTargetingToggle = ({
   btnClass?: string;
   activeBtnClass?: string;
   showLabel?: boolean;
-  placement?: 'top' | 'top-end';
+  placement?: 'top' | 'top-end' | 'bottom';
 } = {}) => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();

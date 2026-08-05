@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import { useNavigate } from 'react-router-dom';
 import {
   closeOptionsMenu,
   getGameInfo,
+  setDeckCosmetics,
   submitButton
 } from 'features/game/GameSlice';
 import { FaTimes } from 'react-icons/fa';
@@ -15,15 +16,83 @@ import { motion, AnimatePresence } from 'framer-motion';
 import useShowModal from 'hooks/useShowModals';
 import OptionsSettings from './OptionsSettings';
 import { shallowEqual } from 'react-redux';
-import { apiSlice } from 'features/api/apiSlice';
+import {
+  apiSlice,
+  useGetCosmeticsQuery,
+  useSaveDeckCosmeticsMutation
+} from 'features/api/apiSlice';
 import { Trans, useTranslation } from 'react-i18next';
+import { toast } from 'react-hot-toast';
+import { CosmeticsSection } from './OptionsSettings/CosmeticsSection';
+import type { Setting } from 'features/options/optionsSlice';
+import * as optConst from 'features/options/constants';
+import { CARD_BACK, PLAYMATS } from 'features/options/cardBacks';
 
 const OptionsContent = () => {
-  const { gameID, playerID } = useAppSelector(getGameInfo, shallowEqual);
+  const {
+    gameID,
+    playerID,
+    deckLink,
+    canCustomizeDeck,
+    deckCardBackId,
+    deckPlaymatId
+  } = useAppSelector(getGameInfo, shallowEqual);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [allowSpectator, setAllowSpectator] = useState(false);
+  const [selectedCardBack, setSelectedCardBack] = useState(
+    deckCardBackId ?? '0'
+  );
+  const [selectedPlaymat, setSelectedPlaymat] = useState(
+    deckPlaymatId ?? '0'
+  );
+  const { data: cosmeticsData } = useGetCosmeticsQuery(undefined, {
+    skip: !canCustomizeDeck
+  });
+  const [saveDeckCosmetics, { isLoading: isSavingCosmetics }] =
+    useSaveDeckCosmeticsMutation();
+
+  useEffect(() => {
+    setSelectedCardBack(deckCardBackId ?? '0');
+    setSelectedPlaymat(deckPlaymatId ?? '0');
+  }, [deckCardBackId, deckPlaymatId]);
+
+  const cosmeticsChanged =
+    selectedCardBack !== (deckCardBackId ?? '0') ||
+    selectedPlaymat !== (deckPlaymatId ?? '0');
+
+  const handleDeckCosmeticChange = ({ name, value }: Setting) => {
+    if (name === optConst.CARD_BACK) setSelectedCardBack(String(value));
+    if (name === optConst.MY_PLAYMAT) setSelectedPlaymat(String(value));
+  };
+
+  const handleSaveDeckCosmetics = async () => {
+    if (!deckLink) return;
+    try {
+      await saveDeckCosmetics({
+        decklink: deckLink,
+        cardBackId: selectedCardBack,
+        playmatId: selectedPlaymat
+      }).unwrap();
+      dispatch(
+        setDeckCosmetics({
+          cardBackId: selectedCardBack,
+          playmatId: selectedPlaymat,
+          cardBack: CARD_BACK[selectedCardBack],
+          playmat: PLAYMATS[selectedPlaymat]
+        })
+      );
+      toast.success(t('OPTIONS_MENU.COSMETICS_DECK_SAVED'), {
+        position: 'top-center'
+      });
+    } catch (err: any) {
+      toast.error(
+        err?.data?.message ?? t('OPTIONS_MENU.COSMETICS_DECK_SAVE_ERROR'),
+        { position: 'top-center' }
+      );
+    }
+  };
 
   const gameURL = `http://talishar.net/game/play/${gameID}`;
 
@@ -218,22 +287,52 @@ const OptionsContent = () => {
             </div>
           </div>
         )}
-        <div className={styles.sectionContainer}>
+        <div
+          className={`${styles.sectionContainer} ${styles.cosmeticsSection}`}
+        >
           <div className={styles.sectionHeader}>
             <span>{t('OPTIONS_MENU.COSMETICS')}</span>
           </div>
           <div className={styles.sectionContent}>
-            <p className={styles.signpostNote}>
-              <Trans
-                i18nKey="OPTIONS_MENU.COSMETICS_SIGNPOST"
-                components={{
-                  1: (
-                    <a href="/user/settings" target="_blank" rel="noreferrer" />
-                  ),
-                  2: <a href="/user/decks" target="_blank" rel="noreferrer" />
-                }}
-              />
-            </p>
+            {playerID !== 3 && canCustomizeDeck && deckLink ? (
+              <>
+                <p className={styles.signpostNote}>
+                  {t('OPTIONS_MENU.COSMETICS_DECK_NOTE')}
+                </p>
+                {cosmeticsChanged && !isSavingCosmetics && (
+                  <button
+                    className={styles.cosmeticsSaveButton}
+                    onClick={handleSaveDeckCosmetics}
+                  >
+                    {t('OPTIONS_MENU.SAVE_COSMETICS_TO_DECK')}
+                  </button>
+                )}
+                <CosmeticsSection
+                  data={cosmeticsData}
+                  selectedCardBack={selectedCardBack}
+                  selectedPlaymat={selectedPlaymat}
+                  onSettingsChange={handleDeckCosmeticChange}
+                />
+              </>
+            ) : (
+              <p className={styles.signpostNote}>
+                <Trans
+                  i18nKey="OPTIONS_MENU.COSMETICS_SIGNPOST"
+                  components={{
+                    1: (
+                      <a
+                        href="/user/settings"
+                        target="_blank"
+                        rel="noreferrer"
+                      />
+                    ),
+                    2: (
+                      <a href="/user/decks" target="_blank" rel="noreferrer" />
+                    )
+                  }}
+                />
+              </p>
+            )}
           </div>
         </div>
       </div>

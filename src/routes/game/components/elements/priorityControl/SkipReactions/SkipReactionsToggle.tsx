@@ -12,7 +12,15 @@ import { getGameInfo } from 'features/game/GameSlice';
 import { shallowEqual } from 'react-redux';
 import { useButtonDisableContext } from 'contexts/ButtonDisableContext';
 
-const SkipReactionsToggle = () => {
+const SkipReactionsToggle = ({
+  btnClass,
+  activeBtnClass,
+  placement = 'top-end'
+}: {
+  btnClass?: string;
+  activeBtnClass?: string;
+  placement?: 'top' | 'top-end' | 'bottom';
+} = {}) => {
   const settingsData = useAppSelector(getSettingsEntity);
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
@@ -23,7 +31,9 @@ const SkipReactionsToggle = () => {
   const skipDR = settingsData['SkipDRWindow']?.value === '1';
   const isActive = skipAR && skipDR;
 
-  const handleClick = () => {
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    e.currentTarget.blur();
     const newValue = isActive ? '0' : '1';
     triggerDisable();
     dispatch(
@@ -37,8 +47,8 @@ const SkipReactionsToggle = () => {
     );
   };
 
-  const buttonStyle = classNames(styles.btn, {
-    [styles.buttonActive]: isActive
+  const buttonStyle = classNames(btnClass ?? styles.btn, {
+    [activeBtnClass ?? styles.buttonActive]: isActive
   });
 
   return (
@@ -48,7 +58,7 @@ const SkipReactionsToggle = () => {
         aria-label={t('MENU.PASS_REACTIONS')}
         onClick={handleClick}
         data-tooltip={t('MENU.PASS_REACTIONS_TOOLTIP')}
-        data-placement="top-end"
+        data-placement={placement}
         disabled={isDisabled}
       >
         <TbSwordOff aria-hidden="true" fontSize={'2em'} />

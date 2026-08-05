@@ -44,8 +44,8 @@
 
 @media (orientation: portrait) {
   .isOpponent {
-    top: calc((var(--card-size) * -0.4) + 6dvh);
-    top: calc((var(--card-size) * -0.4) + 6dvh);
+    top: calc((var(--card-size) * -0.4) + min(6vh, 48px));
+    top: calc((var(--card-size) * -0.4) + min(6dvh, 48px));
   }
 }
 

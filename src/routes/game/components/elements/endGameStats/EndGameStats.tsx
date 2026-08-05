@@ -4,6 +4,7 @@ import styles from './EndGameStats.module.css';
 import useSupporterStatus from 'hooks/useSupporterStatus';
 import { AdUnit } from 'components/ads';
 import {
+  ReactNode,
   useState,
   useMemo,
   useRef,
@@ -28,6 +29,48 @@ import {
   Legend,
   ReferenceLine
 } from 'recharts';
+
+const ScrollableTable = ({ children }: { children: ReactNode }) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [isOverflowing, setIsOverflowing] = useState(false);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const updateOverflow = () => {
+      setIsOverflowing(container.scrollWidth > container.clientWidth + 1);
+    };
+
+    updateOverflow();
+    window.addEventListener('resize', updateOverflow, { passive: true });
+
+    const resizeObserver =
+      typeof ResizeObserver === 'undefined'
+        ? null
+        : new ResizeObserver(updateOverflow);
+    resizeObserver?.observe(container);
+    if (container.firstElementChild) {
+      resizeObserver?.observe(container.firstElementChild);
+    }
+
+    return () => {
+      window.removeEventListener('resize', updateOverflow);
+      resizeObserver?.disconnect();
+    };
+  });
+
+  return (
+    <div
+      ref={containerRef}
+      className={`${styles.tableContainer} ${
+        isOverflowing ? styles.tableContainerOverflowing : ''
+      }`}
+    >
+      {children}
+    </div>
+  );
+};
 
 export interface EndGameData {
   deckID?: string;
@@ -1599,7 +1642,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
               )}
             </div>
             {statsTab === 'activated' ? (
-              <div className={styles.tableContainer}>
+              <ScrollableTable>
                 <table className={styles.cardTable}>
                   <thead>
                     <tr className={styles.headers}>
@@ -1671,9 +1714,9 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                     })}
                   </tbody>
                 </table>
-              </div>
+              </ScrollableTable>
             ) : (
-              <div className={styles.tableContainer}>
+              <ScrollableTable>
                 <table className={styles.cardTable}>
                   <thead>
                     <tr className={styles.headers}>
@@ -1812,7 +1855,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                       })}
                   </tbody>
                 </table>
-              </div>
+              </ScrollableTable>
             )}
             {statsTab === 'deck' &&
               data.tokenResults &&
@@ -1821,7 +1864,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                   <h3 className={styles.subSectionHeader}>
                     {t('END_GAME.NON_DECK_CARDS_PLAYED')}
                   </h3>
-                  <div className={styles.tableContainer}>
+                  <ScrollableTable>
                     <table className={styles.cardTable}>
                       <thead>
                         <tr className={styles.headers}>
@@ -1907,7 +1950,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                           })}
                       </tbody>
                     </table>
-                  </div>
+                  </ScrollableTable>
                 </>
               )}
           </div>
@@ -1944,7 +1987,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
               ?
             </span>
           </h2>
-          <div className={styles.tableContainer}>
+          <ScrollableTable>
             <table className={styles.cardTable}>
               <thead>
                 <tr>
@@ -2327,7 +2370,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                     })}
               </tbody>
             </table>
-          </div>
+          </ScrollableTable>
         </div>
       </div>
 

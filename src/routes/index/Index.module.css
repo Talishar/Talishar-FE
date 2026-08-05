@@ -254,13 +254,17 @@
   align-self: stretch;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1199px) {
+  .gridLoggedOut {
+    grid-template-columns: 1fr;
+  }
+
   .gridLoggedOut .gameListContainer {
-    order: 2;
+    order: 1;
   }
 
   .gridLoggedOut .createGameContainer {
-    order: 1;
+    order: 2;
   }
 }
 

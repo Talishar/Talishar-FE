@@ -11,6 +11,13 @@
   margin-right: auto;
 }
 
+@media (orientation: portrait) {
+  .gameBoard {
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
 .chainMiddleContainer {
   width: 100%;
   display: flex;
@@ -25,4 +32,14 @@
 
 .chainContainer {
   flex-grow: 2;
+}
+
+.playerPromptSlot {
+  width: 100%;
+  height: clamp(36px, 5vh, 44px);
+  height: clamp(36px, 5dvh, 44px);
+  flex: 0 0 clamp(36px, 5dvh, 44px);
+  min-width: 0;
+  position: relative;
+  z-index: 30;
 }

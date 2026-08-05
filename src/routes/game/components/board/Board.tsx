@@ -45,7 +45,9 @@ export function Board() {
             {cookies.experimental ? <ExperimentalTurnWidget /> : <TurnWidget />}
           </div>
         </div>
-        <PlayerPrompt />
+        <div className={styles.playerPromptSlot}>
+          <PlayerPrompt />
+        </div>
         <PlayerBoardGrid swapPlayers={isSpectatorViewingPlayer2} />
       </div>
     );

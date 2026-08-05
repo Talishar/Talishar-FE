@@ -20,6 +20,12 @@ export default interface GameStaticInfo {
   hasShownHeroIntro?: boolean;
   /** FaB Bazaar public deck ID when the player joined with a Bazaar deck */
   bazaarDeckId?: string;
+  /** The current player's deck link. Only present for a player, never a spectator. */
+  deckLink?: string;
+  /** Whether the current deck belongs to the player and supports per-deck cosmetics. */
+  canCustomizeDeck?: boolean;
+  deckCardBackId?: string;
+  deckPlaymatId?: string;
 }
 
 export interface AltArt {

@@ -7,6 +7,7 @@
   color: var(--white);
   max-width: 100%;
   max-height: 100%;
+  height: 100%;
   width: 100%;
   box-sizing: border-box;
   text-align: center;
@@ -14,22 +15,31 @@
   display: flex;
   justify-content: center;
   align-items: stretch;
-  transition: width 0.5s;
   flex-wrap: nowrap;
   font-size: 1.2em;
   font-weight: 500;
   padding: 2px 4px;
   flex-direction: row;
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: hidden;
   gap: 5px;
   z-index: 30;
 }
 
 .content {
   display: flex;
+  flex: 1 1 auto;
+  min-width: 0;
+  max-height: 100%;
   align-items: center;
   justify-content: center;
+  overflow: auto;
   animation: promptFadeIn 0.12s ease;
+}
+
+.content > div {
+  max-height: 100%;
+  overflow: auto;
 }
 
 @keyframes promptFadeIn {
@@ -48,18 +58,17 @@
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  min-width: 5em;
-  min-height: 2.2em;
+  min-width: 4.5em;
+  min-height: 0;
   border-radius: 6px;
   border: 1px solid rgba(255, 255, 255, 0.15);
-  flex: 1 1 auto;
+  flex: 0 0 auto;
   align-self: stretch;
-  padding: 8px 16px;
-  margin-left: 0.5em;
+  padding: 0.3em 0.8em;
+  margin: 0;
   white-space: nowrap;
   font-size: 1em;
   line-height: 1.2;
-  margin-bottom: 0.25rem;
   transition: background-color 0.2s ease, border-color 0.2s ease,
     color 0.2s ease;
 }
@@ -74,13 +83,14 @@
 @media (orientation: portrait) {
   .playerPrompt {
     font-size: 1.2em;
-    max-height: 4.5em;
-    overflow: hidden;
+    max-height: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
   }
 
   .buttonDiv {
     min-width: 4em;
-    min-height: 2em;
+    min-height: 0;
     padding: 0.3em 0.8em;
     font-size: 0.9em;
   }
@@ -98,7 +108,7 @@
 
   .buttonDiv {
     min-width: 0;
-    min-height: 2.4em;
+    min-height: 0;
     padding: 0.4em 0.6em;
     margin-left: 0;
     white-space: nowrap;
@@ -110,7 +120,7 @@
 @media (max-width: 600px) {
   .playerPrompt {
     font-size: 1.2em;
-    max-height: none;
+    max-height: 100%;
     flex-direction: row;
     flex-wrap: nowrap;
     gap: 4px;
@@ -120,7 +130,7 @@
 
   .buttonDiv {
     min-width: 0;
-    min-height: 2.4em;
+    min-height: 0;
     font-size: 0.95em;
     padding: 0.4em 0.5em;
     margin-left: 0;

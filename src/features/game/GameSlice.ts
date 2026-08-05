@@ -372,6 +372,14 @@ function mergeReceivedGameState(
     payload.gameInfo.isOpponentAI ?? state.gameInfo.isOpponentAI;
   state.gameInfo.gameFormat =
     payload.gameInfo.gameFormat ?? state.gameInfo.gameFormat;
+  state.gameInfo.deckLink =
+    payload.gameInfo.deckLink ?? state.gameInfo.deckLink;
+  state.gameInfo.canCustomizeDeck =
+    payload.gameInfo.canCustomizeDeck ?? state.gameInfo.canCustomizeDeck;
+  state.gameInfo.deckCardBackId =
+    payload.gameInfo.deckCardBackId ?? state.gameInfo.deckCardBackId;
+  state.gameInfo.deckPlaymatId =
+    payload.gameInfo.deckPlaymatId ?? state.gameInfo.deckPlaymatId;
 
   state.aiHasInfiniteHP = payload.aiHasInfiniteHP ?? false;
   state.practiceDummyWeaponPower = payload.practiceDummyWeaponPower ?? 4;
@@ -803,6 +811,24 @@ export const gameSlice = createSlice({
     markHeroIntroAsShown: (state) => {
       state.gameInfo.hasShownHeroIntro = true;
     },
+    setDeckCosmetics: (
+      state,
+      action: PayloadAction<{
+        cardBackId: string;
+        playmatId: string;
+        cardBack: string;
+        playmat: string;
+      }>
+    ) => {
+      state.gameInfo.deckCardBackId = action.payload.cardBackId;
+      state.gameInfo.deckPlaymatId = action.payload.playmatId;
+      state.playerOne.Playmat = action.payload.playmat;
+      if (state.playerOne.CardBack) {
+        state.playerOne.CardBack.cardNumber = action.payload.cardBack;
+      } else {
+        state.playerOne.CardBack = { cardNumber: action.payload.cardBack };
+      }
+    },
     disableModals: (state) => {
       state.showModals = false;
     },
@@ -1049,6 +1075,7 @@ export const {
   setIsRoguelike,
   setHeroInfo,
   markHeroIntroAsShown,
+  setDeckCosmetics,
   setShuffling,
   setAddBotDeck,
   setClashReveal,

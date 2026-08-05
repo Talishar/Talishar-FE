@@ -187,8 +187,8 @@
 /* Section header - center its midpoint on the top border, matching native <legend> behaviour */
 .sectionHeader {
   color: var(--theme-primary);
-  font-size: 0.875em;
-  font-weight: 600;
+  font-size: 1em;
+  font-weight: 700;
   padding: 0 0.5rem;
   position: absolute;
   top: 0;
@@ -227,6 +227,57 @@
 .signpostNote a {
   color: var(--theme-primary);
   text-decoration: underline;
+}
+
+.cosmeticsSection {
+  --cosmetics-accent: var(--theme-primary, #f9c116);
+}
+
+.cosmeticsSection .signpostNote {
+  color: #ffffff;
+}
+
+.cosmeticsSaveButton {
+  position: sticky;
+  top: 0;
+  z-index: 4;
+  width: 100% !important;
+  min-height: 3rem !important;
+  margin: 0.8rem 0 0.5rem !important;
+  padding: 0.7rem 1rem !important;
+  border: 2px solid var(--theme-primary, #d4af37) !important;
+  border-radius: 6px !important;
+  background: var(--theme-primary, #d4af37) !important;
+  background-image: none !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.45) !important;
+  font-size: 0.95rem !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.02em !important;
+}
+
+.cosmeticsSaveButton:hover:not(:disabled) {
+  background: var(--theme-primary-hover, #e8c547) !important;
+  background-image: none !important;
+  color: #ffffff !important;
+  transform: translateY(-1px);
+}
+
+.cosmeticsSaveButton:disabled {
+  background: color-mix(
+    in srgb,
+    var(--theme-primary, #d4af37) 55%,
+    #252525
+  ) !important;
+  background-image: none !important;
+  color: #ffffff !important;
+  border-color: color-mix(
+    in srgb,
+    var(--theme-primary, #d4af37) 55%,
+    #252525
+  ) !important;
+  cursor: default !important;
+  opacity: 1 !important;
 }
 
 @media (orientation: portrait) {

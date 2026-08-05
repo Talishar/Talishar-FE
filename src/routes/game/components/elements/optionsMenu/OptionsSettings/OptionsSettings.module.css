@@ -16,8 +16,9 @@
 .fieldset legend {
   padding: 0 0.5rem;
   color: var(--theme-primary);
-  font-size: 0.875em;
-  font-weight: 600;
+  font-size: 1em;
+  font-weight: 700;
+  line-height: 1.2;
   overflow: visible;
   display: inline-flex;
   align-items: center;
@@ -25,7 +26,7 @@
 }
 
 fieldset legend strong {
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .optionLabel {
@@ -87,7 +88,7 @@ fieldset legend strong {
 
 .cardBackTitle strong {
   display: block;
-  color: var(--theme-primary);
+  color: var(--cosmetics-accent, var(--theme-primary));
   font-size: 1em;
   margin-bottom: 0.5rem;
 }

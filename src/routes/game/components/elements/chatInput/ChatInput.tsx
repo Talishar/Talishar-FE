@@ -13,16 +13,13 @@ import { shallowEqual } from 'react-redux';
 import { getGameInfo, submitButton } from 'features/game/GameSlice';
 import {
   useFloating,
-  autoUpdate,
   offset,
   flip,
   shift,
   useClick,
   useDismiss,
   useRole,
-  useInteractions,
-  FloatingFocusManager,
-  FloatingOverlay
+  useInteractions
 } from '@floating-ui/react';
 import { createPortal } from 'react-dom';
 import { PROCESS_INPUT } from 'appConstants';
@@ -186,8 +183,7 @@ const ChatWheel = ({ usePrimary = false }: { usePrimary?: boolean }) => {
     placement: 'left',
     open: modalDisplay,
     onOpenChange: setModalDisplay,
-    middleware: [offset(20), flip(), shift()],
-    whileElementsMounted: autoUpdate
+    middleware: [offset(20), flip(), shift()]
   });
   const location = useLocation();
   const [sentChatRequest, setSentChatRequest] = useState<boolean>(false);
@@ -267,24 +263,16 @@ const ChatWheel = ({ usePrimary = false }: { usePrimary?: boolean }) => {
       </div>
       {modalDisplay &&
         createPortal(
-          <FloatingOverlay lockScroll className={styles.floatingOverlay}>
-            <FloatingFocusManager
-              context={context}
-              modal={false}
-              initialFocus={-1}
-            >
-              <div
-                ref={refs.setFloating}
-                style={floatingStyles}
-                className={styles.popOver}
-                {...getFloatingProps()}
-              >
-                <div className={styles.chatOptionsContainer}>
-                  <ChatOptions setModalDisplay={setModalDisplay} />
-                </div>
-              </div>
-            </FloatingFocusManager>
-          </FloatingOverlay>,
+          <div
+            ref={refs.setFloating}
+            style={floatingStyles}
+            className={styles.popOver}
+            {...getFloatingProps()}
+          >
+            <div className={styles.chatOptionsContainer}>
+              <ChatOptions setModalDisplay={setModalDisplay} />
+            </div>
+          </div>,
           document.body
         )}
     </>

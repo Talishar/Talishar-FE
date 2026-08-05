@@ -4,6 +4,7 @@
   text-align: center;
   vertical-align: middle;
   touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
   padding: 0.2em;
   font-size: 0.9em;
   background-color: var(--theme-secondary);
@@ -29,17 +30,6 @@
   font-size: 1.3em !important;
   width: 1.1em !important;
   height: 1.1em !important;
-}
-
-.btn:hover {
-  background-color: black;
-  color: var(--theme-secondary);
-  border: 2px solid var(--theme-secondary);
-  cursor: pointer;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3),
-    0 0 8px rgba(255, 215, 0, 0.3);
-  transform: translateY(-1px);
-  z-index: 10;
 }
 
 .btn:active {
@@ -114,12 +104,25 @@
   z-index: 1;
 }
 
-.buttonActive:hover {
-  background-color: rgba(29, 100, 216, 0.95);
-  border-color: rgba(59, 130, 246, 1);
-  cursor: pointer;
-  transform: translateY(-1px);
-  z-index: 10;
+@media (hover: hover) and (pointer: fine) {
+  .btn:hover {
+    background-color: black;
+    color: var(--theme-secondary);
+    border: 2px solid var(--theme-secondary);
+    cursor: pointer;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4),
+      0 2px 4px rgba(0, 0, 0, 0.3), 0 0 8px rgba(255, 215, 0, 0.3);
+    transform: translateY(-1px);
+    z-index: 10;
+  }
+
+  .buttonActive:hover {
+    background-color: rgba(29, 100, 216, 0.95);
+    border-color: rgba(59, 130, 246, 1);
+    cursor: pointer;
+    transform: translateY(-1px);
+    z-index: 10;
+  }
 }
 
 .buttonActive:active {
@@ -183,6 +186,18 @@
   .btn[data-tooltip]::before,
   .btn[data-tooltip]::after {
     display: none !important;
+  }
+}
+
+@media (max-width: 600px) {
+  .btn {
+    width: 34px;
+    height: 34px;
+    min-width: 34px;
+  }
+
+  .menuList {
+    gap: 4px;
   }
 }
 

@@ -548,6 +548,11 @@ export default function ParseGameState(input: any) {
     result.gameInfo.gameGUID = input.initialLoad.gameGUID;
     result.gameInfo.altArts = input.initialLoad.altArts;
     result.gameInfo.opponentAltArts = input.initialLoad.opponentAltArts;
+    result.gameInfo.deckLink = input.initialLoad.deckLink;
+    result.gameInfo.canCustomizeDeck =
+      input.initialLoad.canCustomizeDeck ?? false;
+    result.gameInfo.deckCardBackId = input.initialLoad.deckCardBackId;
+    result.gameInfo.deckPlaymatId = input.initialLoad.deckPlaymatId;
   }
 
   result.playerPrompt = input.playerPrompt;

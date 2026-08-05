@@ -76,6 +76,12 @@ h3 {
   min-height: 0;
 }
 
+.chatAreaContainer > div,
+.chatAreaContainerRestrained > div {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
 @media (min-width: 1200px) and (pointer: fine) {
   .chatAreaContainerRestrained {
     grid-area: chat;
@@ -769,6 +775,18 @@ nav {
     white-space: nowrap;
     flex-shrink: 0;
   }
+
+  .chatAreaContainer,
+  .chatAreaContainerRestrained {
+    min-height: max(
+      0px,
+      calc(100vh - var(--sticky-footer-height, 60px) - 168px)
+    );
+    min-height: max(
+      0px,
+      calc(100dvh - var(--sticky-footer-height, 60px) - 168px)
+    );
+  }
 }
 
 @media (min-width: 1200px) and (pointer: fine) {
@@ -866,6 +884,18 @@ nav {
     background: rgba(255, 255, 255, 0.1);
     color: #fff;
     border-color: rgba(255, 255, 255, 0.22);
+  }
+
+  .chatAreaContainer,
+  .chatAreaContainerRestrained {
+    min-height: max(
+      0px,
+      calc(100vh - var(--sticky-footer-height, 60px) - 224px)
+    );
+    min-height: max(
+      0px,
+      calc(100dvh - var(--sticky-footer-height, 60px) - 224px)
+    );
   }
 }
 

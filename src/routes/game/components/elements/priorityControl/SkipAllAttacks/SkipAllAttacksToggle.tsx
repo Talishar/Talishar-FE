@@ -14,7 +14,15 @@ import { getGameInfo } from 'features/game/GameSlice';
 import { shallowEqual } from 'react-redux';
 import { useButtonDisableContext } from 'contexts/ButtonDisableContext';
 
-const SkipAllAttacksToggle = () => {
+const SkipAllAttacksToggle = ({
+  btnClass,
+  activeBtnClass,
+  placement = 'top-end'
+}: {
+  btnClass?: string;
+  activeBtnClass?: string;
+  placement?: 'top' | 'top-end' | 'bottom';
+} = {}) => {
   const settingsData = useAppSelector(getSettingsEntity);
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
@@ -39,22 +47,25 @@ const SkipAllAttacksToggle = () => {
     );
   };
 
-  const buttonStyle = classNames(styles.btn, {
-    [styles.buttonActive]: Number(initialValues.shortcutAttackThreshold) >= 2
+  const buttonStyle = classNames(btnClass ?? styles.btn, {
+    [activeBtnClass ?? styles.buttonActive]:
+      Number(initialValues.shortcutAttackThreshold) >= 2
   });
   return (
     <div>
       <button
         className={buttonStyle}
         aria-label={t('MENU.SKIP_ATTACKS')}
-        onClick={() =>
+        onClick={(e) => {
+          e.preventDefault();
+          e.currentTarget.blur();
           handleClickSkipAllAttacks({
             name: optConst.SHORTCUT_ATTACK_THRESHOLD,
             value: Number(initialValues.shortcutAttackThreshold) ? 0 : 99
-          })
-        }
+          });
+        }}
         data-tooltip={t('MENU.SKIP_ATTACKS_TOOLTIP')}
-        data-placement="top-end"
+        data-placement={placement}
         disabled={isDisabled}
       >
         <GiBouncingSword aria-hidden="true" fontSize={'2em'} />

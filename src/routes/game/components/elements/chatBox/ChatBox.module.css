@@ -285,6 +285,18 @@
   --game-log-critical: #ffd27a;
 }
 
+.loadEarlierButton {
+  align-self: center;
+  margin: 2px 0 6px;
+  padding: 4px 10px;
+  min-height: 28px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.07);
+  color: var(--theme-text);
+  font-size: 12px;
+}
+
 /* Individual message */
 .chatMobileMessage {
   font-size: clamp(12px, 3.2vw, 15px);

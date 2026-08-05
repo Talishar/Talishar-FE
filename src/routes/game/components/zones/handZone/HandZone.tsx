@@ -29,6 +29,19 @@ const HandZone = React.memo(function HandZone(prop: Player) {
       ? state.game.playerOne.Hand
       : state.game.playerTwo.Hand;
   });
+  const handCardBackNumber = useAppSelector((state: RootState) => {
+    const { playerID, isReplay } = state.game.gameInfo;
+    const isP2View =
+      (playerID === 3 || isReplay) && state.game.spectatorCameraView === 2;
+    const handOwner = isPlayer
+      ? isP2View
+        ? state.game.playerTwo
+        : state.game.playerOne
+      : isP2View
+      ? state.game.playerOne
+      : state.game.playerTwo;
+    return handOwner.CardBack?.cardNumber.toLowerCase() ?? 'cardback';
+  });
   const playerID = useAppSelector(
     (state: RootState) => state.game.gameInfo.playerID
   );
@@ -44,6 +57,12 @@ const HandZone = React.memo(function HandZone(prop: Player) {
   const [isOverflowing, setIsOverflowing] = useState(false);
   const [overlap, setOverlap] = useState(0);
   const cardCount = handCards?.length ?? 0;
+  const canOpenHandList =
+    cardCount > 0 &&
+    (isPlayer ||
+      handCards.some(
+        (card: Card) => card.cardNumber.toLowerCase() !== handCardBackNumber
+      ));
 
   useEffect(() => {
     const zone = zoneRef.current;
@@ -71,7 +90,7 @@ const HandZone = React.memo(function HandZone(prop: Player) {
   const displayRow = classNames(
     styles.handZone,
     isPlayer ? styles.isPlayer : styles.isOpponent,
-    { [styles.clickable]: cardCount > 0 }
+    { [styles.clickable]: canOpenHandList }
   );
 
   if (handCards === undefined || (playerID !== 3 && !isReplay && isPlayer)) {
@@ -81,7 +100,7 @@ const HandZone = React.memo(function HandZone(prop: Player) {
   const zoneTitle = isPlayer ? 'Your Hand' : "Opponent's Hand";
 
   const openHandList = () => {
-    if (cardCount === 0) return;
+    if (!canOpenHandList) return;
     if (cardListFocus?.active && cardListFocus?.name === zoneTitle) {
       dispatch(clearCardListFocus());
     } else {
@@ -102,7 +121,7 @@ const HandZone = React.memo(function HandZone(prop: Player) {
       }
       onClick={openHandList}
       title={
-        cardCount > 0 ? `Click to view ${zoneTitle.toLowerCase()}` : undefined
+        canOpenHandList ? `Click to view ${zoneTitle.toLowerCase()}` : undefined
       }
     >
       {handCards.map((card: Card, index: number) => {

@@ -254,9 +254,11 @@
   margin-left: 0.3em;
 }
 
-.quickChatToggleButton:hover::after {
-  content: '(Q)';
-  opacity: 0.55;
+@media (hover: hover) and (pointer: fine) {
+  .quickChatToggleButton:hover::after {
+    content: '(Q)';
+    opacity: 0.55;
+  }
 }
 
 .chatWheelButton:hover,

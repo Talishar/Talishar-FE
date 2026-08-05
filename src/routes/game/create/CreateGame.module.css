@@ -20,6 +20,8 @@
 
 /* Resets PicoCSS article + fieldset card styling when CreateGame is embedded */
 .embeddedForm {
+  width: 100%;
+  box-sizing: border-box;
   background: none !important;
   border: none !important;
   padding: 0 !important;
@@ -140,6 +142,8 @@
 }
 
 .button {
+  background-color: var(--theme-primary, #d4af37) !important;
+  border-color: var(--theme-primary, #d4af37) !important;
   color: var(--primary-inverse);
   width: 100%;
   margin-bottom: 0 !important;

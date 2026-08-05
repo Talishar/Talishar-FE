@@ -7,7 +7,8 @@ export interface SaveDeckCosmeticsRequest {
   decklink: string;
   cardBackId: string;
   playmatId: string;
-  altArts: DeckAltArtSelection[];
+  /** Omit when changing only the playmat/card back so saved alt arts remain intact. */
+  altArts?: DeckAltArtSelection[];
 }
 
 export interface SaveDeckCosmeticsResponse {

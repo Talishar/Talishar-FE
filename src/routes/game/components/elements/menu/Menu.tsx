@@ -13,6 +13,9 @@ import OptionsMenuToggle from './OptionsMenuToggle/OptionsMenuToggle';
 import ShowMobileChat from './ShowMobileChat/ShowMobileChat';
 import FullControlToggle from './FullControlToggle/FullControlToggle';
 import AlwaysPassToggle from './AlwaysPassToggle/AlwaysPassToggle';
+import ManualTargetingToggle from './ManualTargetingToggle/ManualTargetingToggle';
+import SkipReactionsToggle from '../priorityControl/SkipReactions/SkipReactionsToggle';
+import SkipAllAttacksToggle from '../priorityControl/SkipAllAttacks/SkipAllAttacksToggle';
 import Inventory from '../inventory/Inventory';
 import SpectatorCount from '../spectatorCount/SpectatorCount';
 import useShortcut from 'hooks/useShortcut';
@@ -258,6 +261,16 @@ function MenuContent() {
           <div className={styles.menuList}>
             <FullControlToggle />
             <AlwaysPassToggle />
+            <SkipReactionsToggle
+              btnClass={styles.btn}
+              activeBtnClass={styles.buttonActive}
+              placement="bottom"
+            />
+            <ManualTargetingToggle
+              btnClass={styles.btn}
+              activeBtnClass={styles.buttonActive}
+              placement="bottom"
+            />
             <UndoButton />
             <HideModalsToggle />
             <ShowMobileChat />
