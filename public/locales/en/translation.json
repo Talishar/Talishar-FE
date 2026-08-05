@@ -1407,7 +1407,11 @@
     "WHAT_ARE_RUST_COUNTERS": "What are rust counters?"
   },
   "SEARCH_CARD": {
-    "SUBMIT": "Submit"
+    "FUTURE_QUEUE_NOTICE": "New unreleased cards may not appear in the list until the database is updated. If you cannot find one, enter its exact printed name below.",
+    "MANUAL_INPUT_LABEL": "Enter a card name manually",
+    "MANUAL_INPUT_PLACEHOLDER": "Exact printed card name",
+    "SUBMIT": "Submit",
+    "SUBMIT_MANUAL_NAME": "Submit name"
   },
   "SESSION_RECOVERY": {
     "ACTIVE_GAME": "You have an active game <1>#{{gameId}}</1> waiting",
