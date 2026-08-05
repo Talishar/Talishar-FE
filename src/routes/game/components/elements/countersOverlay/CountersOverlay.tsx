@@ -5,7 +5,7 @@ import GemSlider from '../gemSlider/GemSlider';
 import { ActiveCardCounterOverlay } from './components/ActiveChainCounters';
 import CombatChainLink from 'features/CombatChainLink';
 import { ContinuousCounters } from './components/ContinuousCounters';
-import { TooltipWrapper } from './components/TooltipWrapper';
+import { TooltipWrapper } from 'components/Tooltip/TooltipWrapper';
 import { GiDialPadlock } from 'react-icons/gi';
 import { formatRestriction } from 'data/keywords';
 

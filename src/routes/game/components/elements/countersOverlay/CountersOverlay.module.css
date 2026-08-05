@@ -698,45 +698,6 @@
   }
 }
 
-/* Keyframe animation for tooltip entrance */
-@keyframes tooltipSlideIn {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Tooltip box for portal-based tooltips */
-.tooltipBox {
-  background-color: var(--near-black);
-  color: #fff;
-  padding: 0.5em 0.75em;
-  border-radius: 4px;
-  font-size: 0.875rem;
-  white-space: nowrap;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.95);
-  line-height: 1.4;
-  animation: tooltipSlideIn 0.3s ease-out;
-}
-
-/* Tooltip arrow for portal-based tooltips */
-.tooltipArrow {
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 0;
-  height: 0;
-  border-left: 6px solid transparent;
-  border-right: 6px solid transparent;
-  border-top: 6px solid rgba(0, 0, 0, 0.95);
-  animation: tooltipSlideIn 0.3s ease-out;
-}
-
 @media (orientation: portrait) and (max-width: 600px) {
   .number.number {
     height: 4.5dvw;

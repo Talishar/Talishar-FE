@@ -292,10 +292,15 @@
 }
 
 .tooltip {
-  background: rgba(10, 10, 10, 0.98);
-  border: 1px solid var(--theme-primary-focus);
-  border-radius: 6px;
+  background: var(--tooltip-background-color);
+  border: var(--tooltip-border-width) solid var(--tooltip-border-color);
+  border-radius: var(--tooltip-border-radius);
+  box-shadow: var(--tooltip-shadow);
+  color: var(--tooltip-color);
   padding: 0.75rem;
+  font-size: var(--tooltip-font-size);
+  font-weight: var(--tooltip-font-weight);
+  line-height: var(--tooltip-line-height);
   margin-bottom: 0.5rem;
   animation: fadeIn 0.15s ease-out;
 

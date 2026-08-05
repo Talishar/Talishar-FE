@@ -6,18 +6,19 @@
 
 .tooltip {
   position: fixed;
-  background-color: var(--theme-surface, #2a2f35);
-  color: var(--theme-text, #ffffff);
+  background: var(--tooltip-background-color);
+  color: var(--tooltip-color);
   padding: 0.75rem;
-  border-radius: 6px;
-  border: 1px solid var(--theme-primary, #d4af37);
-  font-size: 0.85rem;
-  line-height: 1.4;
+  border: var(--tooltip-border-width) solid var(--tooltip-border-color);
+  border-radius: var(--tooltip-border-radius);
+  box-shadow: var(--tooltip-shadow);
+  font-size: var(--tooltip-font-size);
+  font-weight: var(--tooltip-font-weight);
+  line-height: var(--tooltip-line-height);
   white-space: normal;
   word-wrap: break-word;
   max-width: min(650px, calc(100vw - 16px));
-  z-index: 10000;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  z-index: var(--tooltip-z-index);
   animation: fadeIn 0.2s ease;
   pointer-events: none;
 }

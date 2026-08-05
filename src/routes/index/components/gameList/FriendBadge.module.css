@@ -45,16 +45,18 @@
 
 .tooltip {
   position: fixed;
-  background: rgba(0, 0, 0, 0.9);
-  color: var(--theme-primary, #d4af37);
-  padding: 0.5em 0.75em;
-  border-radius: 8px;
-  font-size: 0.85rem;
+  max-width: var(--tooltip-max-width);
+  padding: var(--tooltip-padding);
+  border: var(--tooltip-border-width) solid var(--tooltip-border-color);
+  border-radius: var(--tooltip-border-radius);
+  background: var(--tooltip-background-color);
+  color: var(--tooltip-color);
+  box-shadow: var(--tooltip-shadow);
+  font-size: var(--tooltip-font-size);
+  font-weight: var(--tooltip-font-weight);
+  line-height: var(--tooltip-line-height);
   white-space: nowrap;
-  z-index: 1000;
+  z-index: var(--tooltip-z-index);
   pointer-events: none;
   transform: translateX(-50%);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
-  border: 1px solid
-    color-mix(in srgb, var(--theme-primary, #d4af37) 30%, transparent);
 }

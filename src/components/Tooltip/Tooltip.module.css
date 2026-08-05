@@ -1,0 +1,52 @@
+.portal {
+  position: fixed;
+  z-index: var(--tooltip-z-index);
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.tooltip {
+  box-sizing: border-box;
+  max-width: var(--tooltip-max-width);
+  padding: var(--tooltip-padding);
+  border: var(--tooltip-border-width) solid var(--tooltip-border-color);
+  border-radius: var(--tooltip-border-radius);
+  background: var(--tooltip-background-color);
+  color: var(--tooltip-color);
+  box-shadow: var(--tooltip-shadow);
+  font-size: var(--tooltip-font-size);
+  font-weight: var(--tooltip-font-weight);
+  line-height: var(--tooltip-line-height);
+  text-align: center;
+  white-space: normal;
+  animation: tooltipSlideIn 0.2s ease-out;
+}
+
+.arrow {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  transform: translateX(-50%);
+  border-top: 6px solid var(--tooltip-background-color);
+  border-right: 6px solid transparent;
+  border-left: 6px solid transparent;
+}
+
+@keyframes tooltipSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tooltip {
+    animation: none;
+  }
+}

@@ -1,5 +1,6 @@
+import React from 'react';
 import styles from '../CountersOverlay.module.css';
-import { TooltipWrapper } from './TooltipWrapper';
+import { TooltipWrapper } from 'components/Tooltip/TooltipWrapper';
 import { GiLightningArc } from 'react-icons/gi';
 import { GiTombstone } from 'react-icons/gi';
 import { TbTargetArrow } from 'react-icons/tb';
