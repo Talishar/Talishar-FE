@@ -1,9 +1,26 @@
 import { useAppDispatch } from 'app/Hooks';
 import { clearPopUp, setPopUp } from 'features/game/GameSlice';
-import { ReactNode, useEffect, useRef } from 'react';
+import {
+  ReactNode,
+  useEffect,
+  useId,
+  useRef,
+  useSyncExternalStore
+} from 'react';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { useCookies } from 'react-cookie';
 import { CARD_BACK } from 'features/options/cardBacks';
+import {
+  TAP_TO_PREVIEW_PLAY_COOKIE,
+  buildBoardCardSelectionKey,
+  clearTapToPreviewSelection,
+  getTapToPreviewSelectedCardKey,
+  isTapToPreviewPlayEnabled,
+  resolveTapToPreviewPlay,
+  setTapToPreviewSelectedCardKey,
+  shouldDismissStickyPreviewOnOutsideTap,
+  subscribeTapToPreviewSelection
+} from '../playerHandCard/tapToPreviewPlay';
 
 const supportsHover =
   typeof window !== 'undefined' && window.matchMedia('(hover: hover)').matches;
@@ -50,7 +67,8 @@ type CardPopUpProps = {
   isOpponent?: boolean;
   disableTilt?: boolean;
   disableShadow?: boolean;
-  persistPopUpOnClick?: boolean;
+  /** Override sticky-selection key (hand cards pass a unique id-based key). */
+  tapPreviewKey?: string;
 };
 
 export default function CardPopUp({
@@ -64,14 +82,40 @@ export default function CardPopUp({
   isOpponent,
   disableTilt,
   disableShadow,
-  persistPopUpOnClick
+  tapPreviewKey
 }: CardPopUpProps) {
   const ref = useRef<HTMLDivElement>(null);
   const dispatch = useAppDispatch();
-  const [cookies] = useCookies(['disableCardTilt']);
+  const [cookies] = useCookies(['disableCardTilt', TAP_TO_PREVIEW_PLAY_COOKIE]);
   const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const touchPopupShown = useRef(false);
   const hoverRect = useRef<DOMRect | null>(null);
+  const lastPointerTypeRef = useRef<string | null>(null);
+  // Per-instance id so two board cards with the same cardNumber stay distinct
+  // (e.g. duplicate permanents / effects). Hand cards pass tapPreviewKey instead.
+  const instanceId = useId();
+
+  const selectionKey =
+    tapPreviewKey ??
+    buildBoardCardSelectionKey({
+      cardNumber,
+      isOpponent,
+      instanceId
+    });
+
+  const cookieEnabled = isTapToPreviewPlayEnabled(
+    cookies[TAP_TO_PREVIEW_PLAY_COOKIE]
+  );
+
+  const isTapToPreviewContext = () =>
+    cookieEnabled && (lastPointerTypeRef.current === 'touch' || !supportsHover);
+
+  const selectedKey = useSyncExternalStore(
+    subscribeTapToPreviewSelection,
+    getTapToPreviewSelectedCardKey,
+    getTapToPreviewSelectedCardKey
+  );
+  const stickyActive = cookieEnabled && selectedKey === selectionKey;
 
   const tiltEnabled =
     supportsHover && !disableTilt && cookies.disableCardTilt !== 'true';
@@ -116,6 +160,30 @@ export default function CardPopUp({
     }
   }, [disableTilt, rotateXTarget, rotateYTarget, rotateX, rotateY, intensity]);
 
+  useEffect(() => {
+    if (!stickyActive) return;
+
+    const onPointerDown = (event: PointerEvent) => {
+      const target = event.target as Element | null;
+      // Only the sticky card itself is exempt; any other tap dismisses.
+      // Another card's own click then re-selects / switches preview.
+      if (ref.current?.contains(target)) return;
+      if (
+        !shouldDismissStickyPreviewOnOutsideTap({
+          enabled: true,
+          selectedKey
+        })
+      ) {
+        return;
+      }
+      clearTapToPreviewSelection();
+      dispatch(clearPopUp());
+    };
+
+    document.addEventListener('pointerdown', onPointerDown);
+    return () => document.removeEventListener('pointerdown', onPointerDown);
+  }, [stickyActive, selectedKey, dispatch]);
+
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!tiltEnabled || !ref.current) return;
     let rect = hoverRect.current;
@@ -129,7 +197,7 @@ export default function CardPopUp({
     rotateYTarget.set(((e.clientX - cx) / (rect.width / 2)) * 8);
   };
 
-  const handleMouseEnter = () => {
+  const showPreview = () => {
     if (ref.current === null) {
       return;
     }
@@ -150,11 +218,12 @@ export default function CardPopUp({
     );
   };
 
+  const handleMouseEnter = () => {
+    showPreview();
+  };
+
   const clearPopUpUnlessSticky = () => {
-    // Sticky tap-to-preview keeps the portal up until a confirm play (or
-    // another card switches preview). Without this, touch browsers fire
-    // mouseleave after click and wipe the preview immediately.
-    if (persistPopUpOnClick) {
+    if (selectedKey === selectionKey) {
       return;
     }
     dispatch(clearPopUp());
@@ -170,6 +239,8 @@ export default function CardPopUp({
   const handleTouchStart = () => {
     if (longPressTimer.current) clearTimeout(longPressTimer.current);
     touchPopupShown.current = false;
+    lastPointerTypeRef.current = 'touch';
+    if (cookieEnabled) return;
     longPressTimer.current = setTimeout(() => {
       longPressTimer.current = null;
       handleMouseEnter();
@@ -192,7 +263,6 @@ export default function CardPopUp({
   };
 
   const handleTouchMove = () => {
-    // Cancel long press if finger moves (user is scrolling)
     if (longPressTimer.current) {
       clearTimeout(longPressTimer.current);
       longPressTimer.current = null;
@@ -200,18 +270,38 @@ export default function CardPopUp({
   };
 
   const handleOnClick = () => {
-    if (onClick != null) {
-      onClick();
+    if (isTapToPreviewContext()) {
+      // Do not stopPropagation: zone wrappers (pitch/graveyard/banish/deck)
+      // and modal parents (e.g. OtherInput) must still receive the click.
+      if (isHidden === true || SKIP_POPUP_CARDS.has(cardNumber)) {
+        onClick?.();
+        return;
+      }
+      const { action, nextSelectedKey } = resolveTapToPreviewPlay({
+        enabled: true,
+        cardKey: selectionKey
+      });
+      setTapToPreviewSelectedCardKey(nextSelectedKey);
+      if (action === 'preview') {
+        showPreview();
+        return;
+      }
+      onClick?.();
+      dispatch(clearPopUp());
+      return;
     }
-    if (!persistPopUpOnClick) {
-      handleMouseLeave();
-    }
+
+    onClick?.();
+    handleMouseLeave();
   };
 
   return (
     <motion.div
       className={containerClass}
       onClick={handleOnClick}
+      onPointerDown={(event) => {
+        lastPointerTypeRef.current = event.pointerType;
+      }}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       onMouseMove={tiltEnabled ? handleMouseMove : undefined}

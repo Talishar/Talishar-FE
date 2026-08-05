@@ -1,12 +1,14 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import {
+  buildBoardCardSelectionKey,
   buildHandCardSelectionKey,
   clearTapToPreviewSelection,
   getTapToPreviewSelectedCardKey,
   isTapToPreviewPlayEnabled,
   resolveTapToPreviewPlay,
   setTapToPreviewSelectedCardKey,
-  shouldDismissStickyPreviewOnOutsideTap
+  shouldDismissStickyPreviewOnOutsideTap,
+  subscribeTapToPreviewSelection
 } from '../tapToPreviewPlay';
 
 describe('tapToPreviewPlay', () => {
@@ -80,42 +82,42 @@ describe('tapToPreviewPlay', () => {
         })
       ).toEqual({ action: 'preview', nextSelectedKey: 'id:card-a' });
     });
+
+    it('shares selection between hand and board keys', () => {
+      expect(
+        resolveTapToPreviewPlay({
+          enabled: true,
+          cardKey: 'board:me:WTR001::r1:',
+          selectedKey: 'id:hand-1'
+        })
+      ).toEqual({
+        action: 'preview',
+        nextSelectedKey: 'board:me:WTR001::r1:'
+      });
+    });
   });
 
   describe('shouldDismissStickyPreviewOnOutsideTap', () => {
-    it('dismisses when preview is active and tap is outside hand cards', () => {
+    it('dismisses when preview is active', () => {
       expect(
         shouldDismissStickyPreviewOnOutsideTap({
           enabled: true,
-          selectedKey: 'id:card-a',
-          isTapOnHandCard: false
+          selectedKey: 'id:card-a'
         })
       ).toBe(true);
-    });
-
-    it('does not dismiss when tapping another hand card', () => {
-      expect(
-        shouldDismissStickyPreviewOnOutsideTap({
-          enabled: true,
-          selectedKey: 'id:card-a',
-          isTapOnHandCard: true
-        })
-      ).toBe(false);
     });
 
     it('does not dismiss when option is off or nothing is selected', () => {
       expect(
         shouldDismissStickyPreviewOnOutsideTap({
           enabled: false,
-          selectedKey: 'id:card-a',
-          isTapOnHandCard: false
+          selectedKey: 'id:card-a'
         })
       ).toBe(false);
       expect(
         shouldDismissStickyPreviewOnOutsideTap({
           enabled: true,
-          selectedKey: null,
-          isTapOnHandCard: false
+          selectedKey: null
         })
       ).toBe(false);
     });
@@ -128,6 +130,19 @@ describe('tapToPreviewPlay', () => {
       expect(getTapToPreviewSelectedCardKey()).toBe('id:card-a');
       clearTapToPreviewSelection();
       expect(getTapToPreviewSelectedCardKey()).toBeNull();
+    });
+
+    it('notifies subscribers when selection changes', () => {
+      let calls = 0;
+      const unsubscribe = subscribeTapToPreviewSelection(() => {
+        calls += 1;
+      });
+      setTapToPreviewSelectedCardKey('id:card-a');
+      setTapToPreviewSelectedCardKey('id:card-a'); // no-op
+      clearTapToPreviewSelection();
+      unsubscribe();
+      setTapToPreviewSelectedCardKey('id:card-b');
+      expect(calls).toBe(2);
     });
 
     it('uses module selection when selectedKey is omitted', () => {
@@ -157,6 +172,37 @@ describe('tapToPreviewPlay', () => {
           zone: 'arsenal'
         })
       ).toBe('arsenal:WTR001:2');
+    });
+  });
+
+  describe('buildBoardCardSelectionKey', () => {
+    it('builds a per-instance board key', () => {
+      expect(
+        buildBoardCardSelectionKey({
+          cardNumber: 'WTR001',
+          isOpponent: false,
+          instanceId: ':r1:'
+        })
+      ).toBe('board:me:WTR001::r1:');
+      expect(
+        buildBoardCardSelectionKey({
+          cardNumber: 'WTR001',
+          isOpponent: true,
+          instanceId: ':r2:'
+        })
+      ).toBe('board:opp:WTR001::r2:');
+    });
+
+    it('keeps duplicate cardNumbers distinct via instanceId', () => {
+      const a = buildBoardCardSelectionKey({
+        cardNumber: 'WTR001',
+        instanceId: ':a:'
+      });
+      const b = buildBoardCardSelectionKey({
+        cardNumber: 'WTR001',
+        instanceId: ':b:'
+      });
+      expect(a).not.toBe(b);
     });
   });
 });
