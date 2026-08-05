@@ -304,11 +304,11 @@
   gap: 0.6em;
   margin: 0.75rem 0 0;
   padding: 0.7rem 1rem;
-  background: color-mix(in srgb, var(--theme-primary, #d4af37) 8%, transparent);
-  border: 1px solid color-mix(in srgb, var(--theme-primary, #d4af37) 25%, transparent);
+  background: var(--theme-card-background, #1e2329);
+  border: 1px solid var(--theme-border-light, rgba(255, 255, 255, 0.1));
   border-radius: 6px;
   font-size: 0.88rem;
-  color: rgba(255, 255, 255, 0.75);
+  color: var(--theme-text-secondary, #e0e0e0);
   line-height: 1.4;
 
   a {

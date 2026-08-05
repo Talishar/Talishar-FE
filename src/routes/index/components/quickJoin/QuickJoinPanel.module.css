@@ -159,13 +159,10 @@
 }
 
 .tabActive {
-  background: color-mix(
-    in srgb,
-    var(--theme-primary, #d4af37) 20%,
-    transparent
-  );
+  background: var(--theme-form-background, #33383d);
   color: var(--theme-primary, #d4af37);
   font-weight: 600;
+  box-shadow: inset 0 -2px 0 var(--theme-primary, #d4af37);
 }
 
 .tabDisabled {

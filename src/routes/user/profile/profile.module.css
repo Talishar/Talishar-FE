@@ -220,8 +220,7 @@ td {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  transition: background-color 0.2s ease, border-color 0.2s ease,
-    color 0.2s ease;
+  transition: border-color 0.2s ease, color 0.2s ease;
 }
 
 .infoButton:hover {
@@ -516,7 +515,7 @@ td {
 }
 
 .deleteAccountButton:hover {
-  background-color: rgba(224, 82, 82, 0.12);
+  background: transparent;
   border-color: rgba(224, 82, 82, 0.7);
   color: #f07070;
 }
@@ -764,29 +763,29 @@ td {
 .upgradeButton {
   display: inline-block;
   padding: 0.85em 2em;
-  background: transparent;
-  color: #c9a961;
+  background: var(--theme-primary, #d4af37);
+  color: var(--theme-primary-inverse, #000000);
   text-decoration: none;
   border-radius: 6px;
   font-weight: bold;
   font-size: 1.05em;
-  transition: all 0.25s ease;
-  border: 1px solid rgba(201, 169, 97, 0.55);
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  border: 1px solid var(--theme-primary, #d4af37);
   cursor: pointer;
   letter-spacing: 0.3px;
 }
 
 .upgradeButton:hover {
-  background: rgba(201, 169, 97, 0.12);
-  border-color: rgba(201, 169, 97, 0.8);
-  color: #d4af37;
+  background: var(--theme-primary-hover, #e8c547);
+  border-color: var(--theme-primary-hover, #e8c547);
+  color: var(--theme-primary-inverse, #000000);
   transform: translateY(-1px);
   text-decoration: none;
 }
 
 .upgradeButton:active {
   transform: translateY(0);
-  background: rgba(201, 169, 97, 0.08);
+  background: var(--theme-primary, #d4af37);
 }
 
 .upgradeNote {
