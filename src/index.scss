@@ -245,6 +245,7 @@ body {
 
 [data-tooltip]::before {
   box-sizing: border-box;
+  width: max-content;
   max-width: var(--tooltip-max-width);
   padding: var(--tooltip-padding);
   border: var(--tooltip-border-width) solid var(--tooltip-border-color);
@@ -258,6 +259,7 @@ body {
   text-align: center;
   text-overflow: clip;
   white-space: normal;
+  overflow-wrap: anywhere;
 }
 
 [data-tooltip]::before,

@@ -10,6 +10,11 @@ import { shallowEqual } from 'react-redux';
 import { getGameInfo } from 'features/game/GameSlice';
 import { useTranslation } from 'react-i18next';
 import { TooltipWrapper } from 'components/Tooltip/TooltipWrapper';
+import { useCookies } from 'react-cookie';
+import {
+  areEquipmentGemButtonsDisabled,
+  DISABLE_EQUIPMENT_GEM_BUTTONS_COOKIE
+} from './equipmentGemPreference';
 
 interface GemSlider {
   gem?: 'none' | 'inactive' | 'active';
@@ -22,10 +27,19 @@ const GemSlider = (props: GemSlider) => {
   const { playerID } = useAppSelector(getGameInfo, shallowEqual);
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
+  const [cookies] = useCookies([DISABLE_EQUIPMENT_GEM_BUTTONS_COOKIE]);
 
   if (props.gem === undefined || props.gem === 'none') return null;
 
   const isActive = props.gem === 'active';
+  const equipmentGemHidden =
+    !props.zone &&
+    areEquipmentGemButtonsDisabled(
+      cookies[DISABLE_EQUIPMENT_GEM_BUTTONS_COOKIE]
+    );
+
+  if (equipmentGemHidden) return null;
+
   const stateLabel = t(
     isActive ? 'GEM_SLIDER.ACTIVE_LABEL' : 'GEM_SLIDER.INACTIVE_LABEL'
   );

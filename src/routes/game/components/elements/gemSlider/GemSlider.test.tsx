@@ -7,6 +7,7 @@ import GemSlider from './GemSlider';
 const mocks = vi.hoisted(() => ({
   dispatch: vi.fn(),
   playerID: 1,
+  cookies: {} as Record<string, string>,
   submitButton: vi.fn((payload) => ({ type: 'game/submitButton', payload }))
 }));
 
@@ -21,11 +22,16 @@ vi.mock('features/game/GameSlice', () => ({
   submitButton: mocks.submitButton
 }));
 
+vi.mock('react-cookie', () => ({
+  useCookies: () => [mocks.cookies]
+}));
+
 describe('GemSlider', () => {
   beforeEach(() => {
     mocks.dispatch.mockClear();
     mocks.submitButton.mockClear();
     mocks.playerID = 1;
+    mocks.cookies = {};
   });
 
   it('exposes the active state and toggles equipment', () => {
@@ -74,5 +80,31 @@ describe('GemSlider', () => {
         mode: PROCESS_INPUT.TOGGLE_PERMANENT_ACTIVE
       }
     });
+  });
+
+  it('hides equipment gems without hiding permanent gems', () => {
+    mocks.cookies = { disableEquipmentGemButtons: 'true' };
+
+    const { rerender } = render(
+      <GemSlider gem="active" cardID="equipment-card" />
+    );
+
+    expect(screen.queryByRole('button')).not.toBeInTheDocument();
+    expect(mocks.submitButton).not.toHaveBeenCalled();
+
+    rerender(
+      <GemSlider
+        gem="active"
+        cardID="permanent-card"
+        zone="MYITEMS"
+        controller={1}
+      />
+    );
+
+    const permanentButton = screen.getByRole('button', {
+      name: 'Card ability active. Click to deactivate.'
+    });
+    fireEvent.click(permanentButton);
+    expect(mocks.submitButton).toHaveBeenCalledTimes(1);
   });
 });

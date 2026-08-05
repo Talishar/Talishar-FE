@@ -1,13 +1,15 @@
 .portal {
   position: fixed;
   z-index: var(--tooltip-z-index);
+  width: max-content;
+  max-width: var(--tooltip-max-width);
   transform: translateX(-50%);
   pointer-events: none;
 }
 
 .tooltip {
   box-sizing: border-box;
-  max-width: var(--tooltip-max-width);
+  max-width: 100%;
   padding: var(--tooltip-padding);
   border: var(--tooltip-border-width) solid var(--tooltip-border-color);
   border-radius: var(--tooltip-border-radius);
@@ -19,6 +21,7 @@
   line-height: var(--tooltip-line-height);
   text-align: center;
   white-space: normal;
+  overflow-wrap: anywhere;
   animation: tooltipSlideIn 0.2s ease-out;
 }
 

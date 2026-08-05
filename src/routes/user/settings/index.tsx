@@ -24,6 +24,7 @@ import styles from './settings.module.css';
 import ThemeToggle from 'themes/ThemeToggle';
 import LanguageSelector from 'components/LanguageSelector/LanguageSelector';
 import { useTheme } from 'themes/ThemeContext';
+import { DISABLE_EQUIPMENT_GEM_BUTTONS_COOKIE } from '../../game/components/elements/gemSlider/equipmentGemPreference';
 
 const SettingsPage = () => {
   const { t } = useTranslation();
@@ -43,7 +44,8 @@ const SettingsPage = () => {
     'hoverImageSize',
     'disableParticles',
     'disableCardTilt',
-    'tapToPreviewPlay'
+    'tapToPreviewPlay',
+    DISABLE_EQUIPMENT_GEM_BUTTONS_COOKIE
   ]);
 
   // Dummy game object for settings page (not in an active game)
@@ -436,6 +438,22 @@ const SettingsPage = () => {
                 setCookie(
                   'tapToPreviewPlay',
                   cookies.tapToPreviewPlay === 'true' ? 'false' : 'true',
+                  { path: '/', maxAge: 365 * 24 * 60 * 60 }
+                )
+              }
+            />
+
+            <CheckboxSetting
+              name={DISABLE_EQUIPMENT_GEM_BUTTONS_COOKIE}
+              label={t('SETTINGS.DISABLE_EQUIPMENT_GEM_BUTTONS')}
+              tooltip={t('SETTINGS.DISABLE_EQUIPMENT_GEM_BUTTONS_TOOLTIP')}
+              checked={cookies[DISABLE_EQUIPMENT_GEM_BUTTONS_COOKIE] === 'true'}
+              onChange={() =>
+                setCookie(
+                  DISABLE_EQUIPMENT_GEM_BUTTONS_COOKIE,
+                  cookies[DISABLE_EQUIPMENT_GEM_BUTTONS_COOKIE] === 'true'
+                    ? 'false'
+                    : 'true',
                   { path: '/', maxAge: 365 * 24 * 60 * 60 }
                 )
               }

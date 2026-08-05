@@ -1454,7 +1454,7 @@
     "DISABLE_ALTERNATE_ARTS": "Disable Alternate Arts",
     "DISABLE_CARD_HOVER_TILT": "Disable Card Hover Tilt",
     "DISABLE_EQUIPMENT_GEM_BUTTONS": "Disable Equipment Gem Buttons",
-    "DISABLE_EQUIPMENT_GEM_BUTTONS_TOOLTIP": "Keeps equipment gems visible as status indicators, but makes taps pass through to the equipment card instead of toggling the gem.",
+    "DISABLE_EQUIPMENT_GEM_BUTTONS_TOOLTIP": "Hides equipment gems so taps go directly to the equipment card. Gems on permanent cards remain visible and interactive.",
     "DISABLE_FABRARY_STATS": "Disable Fabrary Stats",
     "DISABLE_GLOBAL_STATS": "Disable Global Stats",
     "DISABLE_GLOBAL_STATS_TOOLTIP": "Disables sending game statistics to FaB Insights and FaBlazing for stats tracking.",
@@ -1614,9 +1614,7 @@
     "WHITELISTING": "Whitelisting..."
   },
   "GEM_SLIDER": {
-    "ACTIVE_DISABLED_LABEL": "Card ability active. Equipment gem button disabled.",
     "ACTIVE_LABEL": "Card ability active. Click to deactivate.",
-    "INACTIVE_DISABLED_LABEL": "Card ability inactive. Equipment gem button disabled.",
     "INACTIVE_LABEL": "Card ability inactive. Click to activate."
   },
   "ZONES": {
