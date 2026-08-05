@@ -10,6 +10,7 @@ import useAuth from 'hooks/useAuth';
 import { toast } from 'react-hot-toast';
 import { useState } from 'react';
 import { useTranslation, Trans } from 'react-i18next';
+import { PasswordInput } from './PasswordInput';
 
 export const SignUpForm = () => {
   const [disclaimerOpen, setDisclaimerOpen] = useState(false);
@@ -98,17 +99,11 @@ export const SignUpForm = () => {
             <div className={styles.fieldError}>{errors.email?.message}</div>
           )}
           <label htmlFor="password">{t('USER.LOGIN.PASSWORD')}</label>
-          <input
-            id="password"
-            type="password"
-            placeholder="********"
+          <PasswordInput
+            register={register}
             autoComplete="new-password"
-            {...register('password')}
-            aria-invalid={errors.password?.message ? 'true' : undefined}
+            errorMessage={errors.password?.message}
           />
-          {errors.password?.message && (
-            <div className={styles.fieldError}>{errors.password?.message}</div>
-          )}
           <label htmlFor="passwordRepeat">
             {t('USER.LOGIN.CONFIRM_PASSWORD')}
           </label>
