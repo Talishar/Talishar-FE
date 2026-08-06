@@ -904,6 +904,10 @@
         "DEFAULT": "默认游戏 #",
         "HERO_SELECT": {
           "CLEAR": "清除选择",
+          "OSCILIO_VARIANT": "Oscilio 套牌类型",
+          "OSCILIO_VARIANT_COMBO": "连招",
+          "OSCILIO_VARIANT_NONE": "无偏好",
+          "OSCILIO_VARIANT_SPELLS": "法术",
           "PREVIEW": "预览：寻找 ",
           "PREVIEW_NOT": "预览：不寻找 ",
           "SEARCH_CLASSES": "搜索职业",

@@ -904,6 +904,10 @@
         "DEFAULT": "通常のゲーム",
         "HERO_SELECT": {
           "CLEAR": "選択をクリア",
+          "OSCILIO_VARIANT": "Oscilioのデッキタイプ",
+          "OSCILIO_VARIANT_COMBO": "コンボ",
+          "OSCILIO_VARIANT_NONE": "指定なし",
+          "OSCILIO_VARIANT_SPELLS": "スペル",
           "PREVIEW": "このヒーローを検索する: ",
           "PREVIEW_NOT": "このヒーローを検索しない: ",
           "SEARCH_CLASSES": "クラスを検索",

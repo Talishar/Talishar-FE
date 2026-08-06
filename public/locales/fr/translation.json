@@ -907,6 +907,10 @@
         "DEFAULT": "Partie par défaut #",
         "HERO_SELECT": {
           "CLEAR": "Effacer la sélection",
+          "OSCILIO_VARIANT": "Variante d’Oscilio",
+          "OSCILIO_VARIANT_COMBO": "Combo",
+          "OSCILIO_VARIANT_NONE": "Aucune préférence",
+          "OSCILIO_VARIANT_SPELLS": "Sorts",
           "PREVIEW": "Aperçu : Recherche ",
           "PREVIEW_NOT": "Aperçu : Ne recherche pas ",
           "SEARCH_CLASSES": "Rechercher des classes",

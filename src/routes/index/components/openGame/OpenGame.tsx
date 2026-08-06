@@ -122,7 +122,7 @@ const OpenGame = ({
     if (reverseKey) return t(reverseKey);
 
     const heroPrefix = 'Looking to play against ';
-    if (decoded.startsWith(heroPrefix) && decoded.includes(',')) {
+    if (decoded.startsWith(heroPrefix)) {
       const names = decoded.slice(heroPrefix.length);
       const nameList = names.split(',').map((n) => n.trim());
       const isClassDescription = nameList.some((name) => CLASS_NAMES.has(name));
@@ -133,7 +133,7 @@ const OpenGame = ({
     }
 
     const notHeroPrefix = 'No interest in playing against ';
-    if (decoded.startsWith(notHeroPrefix) && decoded.includes(',')) {
+    if (decoded.startsWith(notHeroPrefix)) {
       const names = decoded.slice(notHeroPrefix.length);
       return `${t(
         'MENU.CREATE_GAME.GAME_DESCRIPTIONS.NOT_SPECIFIC_HERO'

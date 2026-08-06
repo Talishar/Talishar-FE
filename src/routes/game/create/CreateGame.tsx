@@ -52,6 +52,13 @@ import { ImageSelect, ImageSelectOption } from 'components/ImageSelect';
 import RustCounterPanel from 'components/RustCounterPanel';
 import { useTranslation, Trans } from 'react-i18next';
 import { useQuickJoinOptional } from 'routes/index/components/quickJoin';
+import {
+  buildHeroGameDescription,
+  formatSelectedHeroes,
+  hasOscilioHero,
+  OSCILIO_VARIANTS,
+  OscilioVariant
+} from './gameDescription';
 
 const getCookie = (name: string): string | null => {
   const value = `; ${document.cookie}`;
@@ -247,6 +254,12 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
     const saved = localStorage.getItem('lastSelectedClasses');
     return saved ? JSON.parse(saved) : [];
   });
+  const [oscilioVariant, setOscilioVariant] = React.useState<OscilioVariant>(
+    () => {
+      const saved = localStorage.getItem('lastOscilioVariant');
+      return OSCILIO_VARIANTS.find((variant) => variant === saved) ?? '';
+    }
+  );
   const [gameDescription, setGameDescription] = React.useState(
     () => initialValues.gameDescription || ''
   );
@@ -395,12 +408,13 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
       value === 'No interest in playing against specific hero'
     ) {
       if (selectedHeroes.length > 0) {
-        const heroList = selectedHeroes.join(', ');
         setValue(
           'gameDescription',
-          value === 'No interest in playing against specific hero'
-            ? `No interest in playing against ${heroList}`
-            : `Looking to play against ${heroList}`
+          buildHeroGameDescription(
+            selectedHeroes,
+            value === 'No interest in playing against specific hero',
+            oscilioVariant
+          )
         );
       } else {
         setValue('gameDescription', value);
@@ -432,25 +446,44 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
 
     setSelectedHeroes(newSelectedHeroes);
 
+    if (!hasOscilioHero(newSelectedHeroes)) {
+      setOscilioVariant('');
+      localStorage.removeItem('lastOscilioVariant');
+    }
+
     // Update the gameDescription field with the formatted string
     if (
       (newSelectedHeroes.length > 0 &&
         gameDescription === 'No interest in playing against specific hero') ||
       gameDescription === 'Looking to play against a specific hero'
     ) {
-      const heroList = newSelectedHeroes.join(', ');
-      // Check if current mode is preference or exclusion
-      if (gameDescription === 'No interest in playing against specific hero') {
-        setValue(
-          'gameDescription',
-          `No interest in playing against ${heroList}`
-        );
-      } else {
-        setValue('gameDescription', `Looking to play against ${heroList}`);
-      }
+      setValue(
+        'gameDescription',
+        buildHeroGameDescription(
+          newSelectedHeroes,
+          gameDescription === 'No interest in playing against specific hero',
+          oscilioVariant
+        )
+      );
     } else {
       setValue('gameDescription', initialValues.gameDescription || '');
     }
+  };
+
+  const handleOscilioVariantChange = (
+    e: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    const variant = e.target.value as OscilioVariant;
+    setOscilioVariant(variant);
+    if (variant) {
+      localStorage.setItem('lastOscilioVariant', variant);
+    } else {
+      localStorage.removeItem('lastOscilioVariant');
+    }
+    setValue(
+      'gameDescription',
+      buildHeroGameDescription(selectedHeroes, false, variant)
+    );
   };
 
   const handleClassSelection = (className: string, isChecked: boolean) => {
@@ -481,10 +514,12 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
   const clearSelections = () => {
     setSelectedHeroes([]);
     setSelectedClasses([]);
+    setOscilioVariant('');
     setHeroSearch('');
     setClassSearch('');
     localStorage.setItem('lastSelectedHeroes', JSON.stringify([]));
     localStorage.setItem('lastSelectedClasses', JSON.stringify([]));
+    localStorage.removeItem('lastOscilioVariant');
     setGameDescription(
       gameDescription === 'Looking to play against a specific hero'
         ? 'Looking to play against a specific hero'
@@ -564,14 +599,16 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
 
       const desc = initialValues.gameDescription || '';
       if (parsedHeroes.length > 0) {
-        const heroList = parsedHeroes.join(', ');
         if (desc === 'No interest in playing against specific hero') {
           setValue(
             'gameDescription',
-            `No interest in playing against ${heroList}`
+            buildHeroGameDescription(parsedHeroes, true)
           );
         } else if (desc === 'Looking to play against a specific hero') {
-          setValue('gameDescription', `Looking to play against ${heroList}`);
+          setValue(
+            'gameDescription',
+            buildHeroGameDescription(parsedHeroes, false, oscilioVariant)
+          );
         }
       } else if (parsedClasses.length > 0) {
         const classList = parsedClasses.join(', ');
@@ -669,6 +706,15 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
         'lastSelectedClasses',
         JSON.stringify(selectedClasses)
       );
+      if (
+        gameDescription === 'Looking to play against a specific hero' &&
+        oscilioVariant &&
+        hasOscilioHero(selectedHeroes)
+      ) {
+        localStorage.setItem('lastOscilioVariant', oscilioVariant);
+      } else {
+        localStorage.removeItem('lastOscilioVariant');
+      }
 
       const response = await createGame(values).unwrap();
       if (response.error) {
@@ -1123,12 +1169,40 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
                         </label>
                       ))}
                   </div>
+                  {selectedHeroes.length > 0 &&
+                    hasOscilioHero(selectedHeroes) && (
+                      <label className={styles.oscilioVariant}>
+                        {t(
+                          'MENU.CREATE_GAME.GAME_DESCRIPTIONS.HERO_SELECT.OSCILIO_VARIANT'
+                        )}
+                        <select
+                          value={oscilioVariant}
+                          onChange={handleOscilioVariantChange}
+                        >
+                          <option value="">
+                            {t(
+                              'MENU.CREATE_GAME.GAME_DESCRIPTIONS.HERO_SELECT.OSCILIO_VARIANT_NONE'
+                            )}
+                          </option>
+                          <option value="Combo">
+                            {t(
+                              'MENU.CREATE_GAME.GAME_DESCRIPTIONS.HERO_SELECT.OSCILIO_VARIANT_COMBO'
+                            )}
+                          </option>
+                          <option value="Spells">
+                            {t(
+                              'MENU.CREATE_GAME.GAME_DESCRIPTIONS.HERO_SELECT.OSCILIO_VARIANT_SPELLS'
+                            )}
+                          </option>
+                        </select>
+                      </label>
+                    )}
                   {selectedHeroes.length > 0 && (
                     <div className={styles.selectedHeroesPreview}>
                       {t(
                         'MENU.CREATE_GAME.GAME_DESCRIPTIONS.HERO_SELECT.PREVIEW'
                       )}
-                      {selectedHeroes.join(', ')}
+                      {formatSelectedHeroes(selectedHeroes, oscilioVariant)}
                     </div>
                   )}
                 </div>

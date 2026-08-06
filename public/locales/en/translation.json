@@ -905,6 +905,10 @@
         "DEFAULT": "Default Game #",
         "HERO_SELECT": {
           "CLEAR": "Clear Selection",
+          "OSCILIO_VARIANT": "Oscilio variant",
+          "OSCILIO_VARIANT_COMBO": "Combo",
+          "OSCILIO_VARIANT_NONE": "No preference",
+          "OSCILIO_VARIANT_SPELLS": "Spells",
           "PREVIEW": "Preview: Looking for ",
           "PREVIEW_NOT": "Preview: Not looking for ",
           "SEARCH_CLASSES": "Search classes",

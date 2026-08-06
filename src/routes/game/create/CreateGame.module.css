@@ -263,6 +263,15 @@
   color: var(--theme-primary, #d4af37);
 }
 
+.oscilioVariant {
+  margin-top: 0.75rem;
+}
+
+.oscilioVariant select {
+  margin-top: 0.25rem;
+  margin-bottom: 0;
+}
+
 .deckOption {
   display: flex;
   align-items: center;
