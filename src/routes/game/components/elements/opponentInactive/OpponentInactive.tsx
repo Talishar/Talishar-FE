@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { submitButton } from 'features/game/GameSlice';
 import { useSubmitChatMutation } from 'features/api/apiSlice';
 import { getGameInfo } from 'features/game/GameSlice';
-import { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { shallowEqual } from 'react-redux';
 import styles from './OpponentInactive.module.css';
 
@@ -57,14 +57,14 @@ export default function OpponentInactive() {
       prevBackendInactiveRef.current && !backendInactive;
     prevBackendInactiveRef.current = backendInactive;
 
-    if (lastUpdate !== lastUpdateRef.current) {
+    const lastUpdateChanged = lastUpdate !== lastUpdateRef.current;
+    if (lastUpdateChanged) {
       lastUpdateRef.current = lastUpdate;
-      if (!backendInactive) {
-        lastUpdateTimeRef.current = Date.now();
-        setInactive(false);
-        setDismissed(false);
-      }
-    } else if (backendInactiveCleared) {
+    }
+
+    if (backendInactive) {
+      setInactive(true);
+    } else if (lastUpdateChanged || backendInactiveCleared) {
       lastUpdateTimeRef.current = Date.now();
       setInactive(false);
       setDismissed(false);
