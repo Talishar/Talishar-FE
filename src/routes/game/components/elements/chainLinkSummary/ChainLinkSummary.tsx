@@ -17,7 +17,7 @@ import EndGameScreen from '../endGameScreen/EndGameScreen';
 import useShortcut from 'hooks/useShortcut';
 import { DEFAULT_SHORTCUTS } from 'appConstants';
 import { shallowEqual } from 'react-redux';
-import { CSSProperties, useEffect } from 'react';
+import React, { CSSProperties, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
 export const ChainLinkSummaryContainer = () => {
@@ -49,23 +49,14 @@ export const ChainLinkSummaryContainer = () => {
     }
   }, [turnPhase, dispatch]);
 
-  if (!chainLinkSummary || !chainLinkSummary.show) {
-    if (hasGameEnded) {
-      return (
-        <div>
-          <EndGameScreen />
-        </div>
-      );
-    }
-    return null;
-  }
-
   const props = {
     lastUpdate: lastUpdate,
     ...gameInfo
   };
-  if (chainLinkSummary.view === 'all') {
-    return (
+
+  let chainLinkContent: React.ReactNode = null;
+  if (chainLinkSummary?.show && chainLinkSummary.view === 'all') {
+    chainLinkContent = (
       <div
         className={styles.emptyOutside}
         onClick={() => dispatch(hideChainLinkSummary())}
@@ -98,17 +89,29 @@ export const ChainLinkSummaryContainer = () => {
         </div>
       </div>
     );
+  } else if (chainLinkSummary?.show) {
+    chainLinkContent = (
+      <div>
+        <ChainLinkSummary
+          {...props}
+          chainLinkIndex={chainLinkSummary.index}
+          presentation={
+            chainLinkSummary.view === 'preview' ? 'preview' : 'dialog'
+          }
+        />
+      </div>
+    );
   }
+
   return (
-    <div>
-      <ChainLinkSummary
-        {...props}
-        chainLinkIndex={chainLinkSummary.index}
-        presentation={
-          chainLinkSummary.view === 'preview' ? 'preview' : 'dialog'
-        }
-      />
-    </div>
+    <>
+      {hasGameEnded && (
+        <div style={chainLinkSummary?.show ? { display: 'none' } : undefined}>
+          <EndGameScreen />
+        </div>
+      )}
+      {chainLinkContent}
+    </>
   );
 };
 
