@@ -1,6 +1,6 @@
 .gemTarget {
-  --gem-size: clamp(31px, 4.2vh, 38px);
-  --gem-target-size: clamp(35px, 4.6vh, 42px);
+  --gem-size: clamp(22px, 3vh, 28px);
+  --gem-target-size: clamp(32px, 4vh, 40px);
 
   position: absolute;
   bottom: -3px;
@@ -69,15 +69,15 @@
 
 @media only screen and (max-width: 768px) {
   .gemTarget {
-    --gem-size: clamp(29px, 3.5vh, 36px);
-    --gem-target-size: clamp(33px, 3.9vh, 40px);
+    --gem-size: clamp(17px, 2.5vh, 22px);
+    --gem-target-size: clamp(30px, 3.8vh, 36px);
   }
 }
 
 @media (orientation: portrait) and (max-width: 600px) {
   .gemTarget {
-    --gem-size: clamp(28px, 7dvw, 32px);
-    --gem-target-size: clamp(32px, 8dvw, 40px);
+    --gem-size: clamp(16px, 4.5dvw, 20px);
+    --gem-target-size: clamp(30px, 7dvw, 34px);
     bottom: -2px;
   }
 }
