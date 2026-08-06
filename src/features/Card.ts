@@ -22,6 +22,7 @@ export interface Card {
   countersMap?: { [key: string]: number }; // string = name of counter, number = number of counters
   label?: string;
   zone?: string;
+  slot?: string; // backend-assigned character/equipment board slot
   facing?: 'UP' | 'DOWN' | 'DOWNALL';
   layer?: number; // layer ID number
   reorderable?: boolean; // can be reordered in the active layers window

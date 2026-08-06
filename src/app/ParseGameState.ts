@@ -12,7 +12,7 @@ const IMAGE_PATH_RE = /.\/Images\//gm;
 
 function GetCardName(cardNumber: string): string {
   if (!cardNumber || cardNumber === 'blank') return '';
-  let name = cardNumber.replace(/_red$|_yellow$|_blue$/, '');
+  const name = cardNumber.replace(/_red$|_yellow$|_blue$/, '');
   return name
     .split('_')
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
@@ -49,6 +49,7 @@ function ParseCard(input: any) {
   card.countersMap = input.countersMap ? input.countersMap : undefined;
   card.label = input.label ? String(input.label) : undefined;
   card.zone = input.zone;
+  card.slot = input.slot ? String(input.slot) : undefined;
   card.facing = input.facing;
   card.numUses = input.numUses;
   card.subcards = input.subcards;
@@ -104,72 +105,34 @@ function ParseEquipment(input: any) {
     return result;
   }
   for (const cardObj of input) {
-    if (cardObj.cardNumber == 'frostbite') {
-      switch (cardObj.sType) {
-        case 'Head':
-          result.HeadEq = ParseCard(cardObj);
-          break;
-        case 'Chest':
-          result.ChestEq = ParseCard(cardObj);
-          break;
-        case 'Arms':
-          result.ArmsEq = ParseCard(cardObj);
-          break;
-        case 'Legs':
-          result.LegsEq = ParseCard(cardObj);
-          break;
-        default:
-          console.log('Frostbite processed without assignment', cardObj);
-          break;
-      }
-    } else {
-      switch (cardObj.type) {
-        case 'C': // hero
-          result.Hero = ParseCard(cardObj);
-          result.Hero.zone = ZONE.HERO;
-          break;
-        case 'W':
-        case 'W,T': // token weapon (i.e. Graphene Chelicera)
-        case 'W,T,E': // weapon token equipment (none as of 1/13/25 but futureproofing)
-        case 'W,E': // weapon equipment (Parry Blade, Nitro Mechanoid, etc.)
-          if (result.WeaponLEq == undefined) {
-            result.WeaponLEq = ParseCard(cardObj);
-          } else {
-            result.WeaponREq = ParseCard(cardObj);
-          }
-          break;
-        case 'E':
-          switch (cardObj.sType) {
-            case 'Head':
-              result.HeadEq = ParseCard(cardObj);
-              break;
-            case 'Chest':
-              result.ChestEq = ParseCard(cardObj);
-              break;
-            case 'Arms':
-              result.ArmsEq = ParseCard(cardObj);
-              break;
-            case 'Legs':
-              result.LegsEq = ParseCard(cardObj);
-              break;
-            case 'Off-Hand': // make assumption we won't have two weapons AND an off-hand
-            case 'Quiver': // make assumption that you can only have a 2H weapon AND a quiver
-              result.WeaponREq = ParseCard(cardObj);
-              break;
-            default:
-              break;
-          }
-          break;
-        case 'Companion':
-          if (cardObj.sType == 'Off-Hand') {
-            result.WeaponREq = ParseCard(cardObj);
-            break;
-          }
-          console.log('Companion processed without assignment', cardObj);
-          break;
-        default:
-          break;
-      }
+    const card = ParseCard(cardObj);
+
+    switch (card.slot) {
+      case 'Hero':
+        card.zone = ZONE.HERO;
+        result.Hero = card;
+        break;
+      case 'LWep':
+        result.WeaponLEq = card;
+        break;
+      case 'RWep':
+      case 'Off-Hand':
+        result.WeaponREq = card;
+        break;
+      case 'Head':
+        result.HeadEq = card;
+        break;
+      case 'Chest':
+        result.ChestEq = card;
+        break;
+      case 'Arms':
+        result.ArmsEq = card;
+        break;
+      case 'Legs':
+        result.LegsEq = card;
+        break;
+      default:
+        break;
     }
   }
 
