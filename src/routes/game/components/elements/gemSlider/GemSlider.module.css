@@ -1,6 +1,6 @@
 .gemTarget {
-  --gem-size: clamp(22px, 3vh, 28px);
-  --gem-target-size: clamp(32px, 4vh, 40px);
+  --gem-size: clamp(31px, 4.2vh, 38px);
+  --gem-target-size: clamp(35px, 4.6vh, 42px);
 
   position: absolute;
   bottom: -3px;
@@ -71,6 +71,7 @@
   .gemTarget {
     --gem-size: clamp(17px, 2.5vh, 22px);
     --gem-target-size: clamp(30px, 3.8vh, 36px);
+    align-items: flex-end;
   }
 }
 
