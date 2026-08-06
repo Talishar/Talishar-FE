@@ -249,7 +249,7 @@
   border-radius: 6px !important;
   background: var(--theme-primary, #d4af37) !important;
   background-image: none !important;
-  color: #ffffff !important;
+  color: var(--theme-primary-inverse, #000000) !important;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.45) !important;
   font-size: 0.95rem !important;
   font-weight: 800 !important;
@@ -259,7 +259,7 @@
 .cosmeticsSaveButton:hover:not(:disabled) {
   background: var(--theme-primary-hover, #e8c547) !important;
   background-image: none !important;
-  color: #ffffff !important;
+  color: var(--theme-primary-inverse, #000000) !important;
   transform: translateY(-1px);
 }
 

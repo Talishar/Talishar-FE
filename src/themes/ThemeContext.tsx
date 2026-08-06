@@ -11,6 +11,12 @@ interface ThemeContextType {
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
+const buildCheckboxIcon = (stroke: string) =>
+  `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='${stroke.replace(
+    /#/g,
+    '%23'
+  )}' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'%3E%3C/polyline%3E%3C/svg%3E")`;
+
 export const useTheme = () => {
   const context = useContext(ThemeContext);
   if (!context) {
@@ -101,6 +107,10 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     root.style.setProperty('--primary', colors.primary); // Keep for backward compatibility
     root.style.setProperty('--theme-primary-inverse', colors.primaryInverse);
     root.style.setProperty('--primary-inverse', colors.primaryInverse); // Keep for backward compatibility
+    root.style.setProperty(
+      '--theme-checkbox-icon',
+      buildCheckboxIcon(colors.primaryInverse)
+    );
     root.style.setProperty('--theme-primary-hover', colors.primaryHover);
     root.style.setProperty('--primary-hover', colors.primaryHover);
     root.style.setProperty('--theme-primary-focus', colors.primaryFocus);
