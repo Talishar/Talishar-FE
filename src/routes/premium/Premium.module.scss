@@ -113,12 +113,6 @@
     border-color 0.25s;
 }
 
-.tierCard:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
-  border-color: rgba(255, 255, 255, 0.3);
-}
-
 .tierCard.recommended {
   border-color: var(--theme-primary);
   box-shadow: 0 0 20px rgba(212, 175, 55, 0.15);
@@ -334,7 +328,7 @@
 .ctaSection {
   text-align: center;
   padding: 1rem;
-  background: linear-gradient(180deg, transparent 0%, rgba(212, 175, 55, 0.04) 100%);
+  background: var(--theme-section-background-transparent);
   border-radius: 16px;
   border: 1px solid rgba(212, 175, 55, 0.1);
 }
