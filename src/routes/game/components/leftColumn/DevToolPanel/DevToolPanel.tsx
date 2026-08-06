@@ -7,6 +7,7 @@ import { usePanelContext } from '../PanelContext';
 import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import { useTranslation } from 'react-i18next';
+import { MdClose } from 'react-icons/md';
 
 export default function DevToolPanel() {
   const [isOpen, setIsOpen] = useState(false);
@@ -124,8 +125,13 @@ function DevToolContent({
     <div className={styles.devToolPanel}>
       <div className={styles.header}>
         <h3>{t('DEV_TOOL.TITLE')}</h3>
-        <button className={styles.closeButton} onClick={onClose}>
-          ×
+        <button
+          type="button"
+          className={styles.closeButton}
+          onClick={onClose}
+          aria-label={`Close ${t('DEV_TOOL.TITLE')}`}
+        >
+          <MdClose aria-hidden="true" />
         </button>
       </div>
       <div className={styles.content}>

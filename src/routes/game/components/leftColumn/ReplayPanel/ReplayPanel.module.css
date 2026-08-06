@@ -68,23 +68,37 @@
   font-size: 0.72rem;
 }
 .replayPanel .closeButton {
+  appearance: none;
+  box-sizing: border-box;
   flex: 0 0 2rem;
   width: 2rem !important;
   height: 2rem !important;
-  min-height: 0;
-  margin: 0;
-  padding: 0;
+  min-width: 2rem !important;
+  min-height: 2rem !important;
+  margin: 0 !important;
+  padding: 0 !important;
   background: transparent !important;
-  border: 0;
+  background-image: none !important;
+  border: 0 !important;
   border-radius: 4px;
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 1.35rem;
-  line-height: 1;
+  box-shadow: none !important;
+  color: rgba(255, 255, 255, 0.7) !important;
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
   cursor: pointer;
   transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
 }
+.replayPanel .closeButton svg {
+  display: block;
+  width: 1.25rem;
+  height: 1.25rem;
+  pointer-events: none;
+}
 .replayPanel .closeButton:hover {
   background: rgba(255, 107, 107, 0.2) !important;
+  background-image: none !important;
   color: #fff !important;
   box-shadow: 0 0 0 1px rgba(255, 107, 107, 0.12) !important;
   transform: none !important;

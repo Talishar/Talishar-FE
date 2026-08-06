@@ -8,6 +8,7 @@ import { updateOptions } from 'features/options/optionsSlice';
 import { PROCESS_INPUT } from 'appConstants';
 import { shallowEqual } from 'react-redux';
 import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai';
+import { MdClose } from 'react-icons/md';
 import { RootState } from 'app/Store';
 import { usePanelContext } from '../PanelContext';
 import { useTranslation } from 'react-i18next';
@@ -192,8 +193,13 @@ function ManualModeContent({
     <div className={styles.manualModePanel}>
       <div className={styles.header}>
         <h3>{t('MANUAL_MODE_PANEL.TITLE')}</h3>
-        <button className={styles.closeButton} onClick={handleClose}>
-          ×
+        <button
+          type="button"
+          className={styles.closeButton}
+          onClick={handleClose}
+          aria-label={`Close ${t('MANUAL_MODE_PANEL.TITLE')}`}
+        >
+          <MdClose aria-hidden="true" />
         </button>
       </div>
       <div className={styles.content}>

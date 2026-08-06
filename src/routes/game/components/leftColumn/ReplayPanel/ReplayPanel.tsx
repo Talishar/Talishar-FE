@@ -12,7 +12,7 @@ import { createPortal } from 'react-dom';
 import styles from './ReplayPanel.module.css';
 import { toast } from 'react-hot-toast';
 import { PROCESS_INPUT } from 'appConstants';
-import { MdShare } from 'react-icons/md';
+import { MdClose, MdShare } from 'react-icons/md';
 import { useTranslation } from 'react-i18next';
 import {
   useGetReplayTurnsQuery,
@@ -312,11 +312,12 @@ function ReplayContent({
           </span>
         </div>
         <button
+          type="button"
           className={styles.closeButton}
           onClick={onClose}
           aria-label={t('MATCH_REVIEW.CLOSE_MATCH_REVIEW')}
         >
-          ×
+          <MdClose aria-hidden="true" />
         </button>
       </div>
       <div className={styles.content}>
