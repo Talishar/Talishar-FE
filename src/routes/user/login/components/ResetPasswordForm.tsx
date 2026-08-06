@@ -9,6 +9,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { toast } from 'react-hot-toast';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
 import { useTranslation } from 'react-i18next';
+import { PasswordInput } from './PasswordInput';
 
 export const ResetPasswordForm = () => {
   const navigate = useNavigate();
@@ -64,16 +65,10 @@ export const ResetPasswordForm = () => {
       <article className={styles.formContainer}>
         <form onSubmit={handleSubmit(onSubmit)} ref={parent}>
           <label htmlFor="password">{t('USER.LOGIN.PASSWORD')}</label>
-          <input
-            id="password"
-            type="password"
-            placeholder="********"
-            {...register('password')}
-            aria-invalid={errors.password?.message ? 'true' : undefined}
+          <PasswordInput
+            register={register}
+            errorMessage={errors.password?.message}
           />
-          {errors.password?.message && (
-            <div className={styles.fieldError}>{errors.password?.message}</div>
-          )}
           <label htmlFor="passwordRepeat">
             {t('USER.LOGIN.CONFIRM_PASSWORD')}
           </label>
