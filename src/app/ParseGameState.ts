@@ -12,11 +12,32 @@ const IMAGE_PATH_RE = /.\/Images\//gm;
 
 function GetCardName(cardNumber: string): string {
   if (!cardNumber || cardNumber === 'blank') return '';
-  const name = cardNumber.replace(/_red$|_yellow$|_blue$/, '');
-  return name
-    .split('_')
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-    .join(' ');
+
+  let end = cardNumber.length;
+  if (cardNumber.endsWith('_red')) end -= 4;
+  else if (cardNumber.endsWith('_yellow')) end -= 7;
+  else if (cardNumber.endsWith('_blue')) end -= 5;
+
+  let result = '';
+  let wordStart = 0;
+  let wordCount = 0;
+
+  for (let index = 0; index <= end; index += 1) {
+    if (index !== end && cardNumber.charCodeAt(index) !== 95) continue;
+
+    if (wordCount > 0) result += ' ';
+    if (index > wordStart) {
+      result += cardNumber.charAt(wordStart).toUpperCase();
+      if (index > wordStart + 1) {
+        result += cardNumber.slice(wordStart + 1, index).toLowerCase();
+      }
+    }
+
+    wordStart = index + 1;
+    wordCount += 1;
+  }
+
+  return result;
 }
 
 function ParseCard(input: any) {

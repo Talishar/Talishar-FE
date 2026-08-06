@@ -22,8 +22,7 @@ const ReorderLayers = ({ cards }: { cards: Card[] }) => {
       }) ?? []
     );
   }, [cards]);
-  const [processInputAPI, useProcessInputAPIResponse] =
-    useProcessInputAPIMutation();
+  const [processInputAPI] = useProcessInputAPIMutation();
 
   const changeCardOrder = (newOrder: Card[]) => {
     setCardList(newOrder);
@@ -45,7 +44,7 @@ const ReorderLayers = ({ cards }: { cards: Card[] }) => {
     processInputAPI(body);
   };
 
-  const cardInLayer = [] as string[];
+  const cardCounts = new Map<string, number>();
 
   return (
     <Reorder.Group
@@ -56,10 +55,8 @@ const ReorderLayers = ({ cards }: { cards: Card[] }) => {
     >
       {cardList.map((card, ix) => {
         // avoid any jankiness if we have duplicate cards in the layer!
-        const layerCount = cardInLayer.filter(
-          (value) => value === card.cardNumber
-        ).length;
-        cardInLayer.push(card.cardNumber);
+        const layerCount = cardCounts.get(card.cardNumber) ?? 0;
+        cardCounts.set(card.cardNumber, layerCount + 1);
 
         return (
           <Reorder.Item

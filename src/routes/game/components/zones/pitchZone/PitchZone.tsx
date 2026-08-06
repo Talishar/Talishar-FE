@@ -79,12 +79,12 @@ export default function PitchZone(prop: Displayrow) {
     }
   };
 
-  const pitchOrder = pitchZone ? [...pitchZone].reverse() : [];
+  const pitchOrder = pitchZone ? pitchZone.slice(-4).reverse() : [];
 
   return (
     <div className={styles.pitchZone} onClick={pitchZoneDisplay}>
       <AnimatePresence>
-        {pitchOrder.slice(0, 4).map((card, ix) => {
+        {pitchOrder.map((card, ix) => {
           return (
             <motion.div
               style={PITCH_CARD_STYLES[ix]}

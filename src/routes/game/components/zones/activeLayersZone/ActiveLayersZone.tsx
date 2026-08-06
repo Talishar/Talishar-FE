@@ -65,15 +65,18 @@ export default function ActiveLayersZone() {
     (state: RootState) => state.game.gameInfo.playerID
   );
 
-  const staticCards = useMemo(
-    () =>
-      activeLayer?.cardList?.filter((card: Card) => card.reorderable === false),
-    [activeLayer?.cardList]
-  );
-  const reorderableCards = useMemo(
-    () => activeLayer?.cardList?.filter((card: Card) => card.reorderable),
-    [activeLayer?.cardList]
-  );
+  const [staticCards, reorderableCards] = useMemo(() => {
+    if (!activeLayer?.cardList) return [undefined, undefined];
+
+    const staticCardList: Card[] = [];
+    const reorderableCardList: Card[] = [];
+    for (const card of activeLayer.cardList) {
+      if (card.reorderable) reorderableCardList.push(card);
+      else if (card.reorderable === false) staticCardList.push(card);
+    }
+
+    return [staticCardList, reorderableCardList];
+  }, [activeLayer?.cardList]);
   const cardGroups = useMemo(
     () => (staticCards ? groupConsecutiveCards(staticCards, playerID) : []),
     [staticCards, playerID]

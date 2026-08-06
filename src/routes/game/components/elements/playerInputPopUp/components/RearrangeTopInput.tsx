@@ -34,8 +34,7 @@ const RearrangeTop = ({ topCards }: { topCards: Card[] }) => {
     );
   }, [topCards]);
 
-  const [processInputAPI, useProcessInputAPIResponse] =
-    useProcessInputAPIMutation();
+  const [processInputAPI] = useProcessInputAPIMutation();
 
   const changeTopCardOrder = (newOrder: Card[]) => {
     setCardListTop(newOrder);
@@ -89,7 +88,6 @@ const RearrangeTop = ({ topCards }: { topCards: Card[] }) => {
     processInputAPI(body);
   };
 
-  const cardInLayer: string[] = [];
   return (
     <div className={classNames(styles.newOptForm, styles.optFormContainer)}>
       <div
@@ -119,11 +117,6 @@ const RearrangeTop = ({ topCards }: { topCards: Card[] }) => {
             axis="x"
           >
             {cardListTop.map((card, ix) => {
-              // avoid any jankiness if we have duplicate cards in the layer!
-              const layerCount = cardInLayer.filter(
-                (value) => value === card.cardNumber
-              ).length;
-              cardInLayer.push(card.cardNumber);
               return (
                 <Reorder.Item
                   key={card.uniqueId}

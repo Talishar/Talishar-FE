@@ -50,8 +50,7 @@ const ReorderOpt = ({
     );
   }, [topCards, bottomCards]);
 
-  const [processInputAPI, useProcessInputAPIResponse] =
-    useProcessInputAPIMutation();
+  const [processInputAPI] = useProcessInputAPIMutation();
 
   const changeTopCardOrder = (newOrder: Card[]) => {
     setCardListTop(newOrder);
@@ -127,7 +126,7 @@ const ReorderOpt = ({
     processInputAPI(body);
   };
 
-  const cardInLayer: string[] = [];
+  const cardCounts = new Map<string, number>();
   return (
     <div className={classNames(styles.newOptForm, styles.optFormContainer)}>
       <div
@@ -158,10 +157,8 @@ const ReorderOpt = ({
           >
             {cardListTop.map((card, ix) => {
               // avoid any jankiness if we have duplicate cards in the layer!
-              const layerCount = cardInLayer.filter(
-                (value) => value === card.cardNumber
-              ).length;
-              cardInLayer.push(card.cardNumber);
+              const layerCount = cardCounts.get(card.cardNumber) ?? 0;
+              cardCounts.set(card.cardNumber, layerCount + 1);
               const isFirst = ix === 0;
               const isLast = ix === cardListTop.length - 1;
               const showLabels = cardListTop.length > 1;
@@ -231,10 +228,8 @@ const ReorderOpt = ({
           >
             {cardListBottom.map((card, ix) => {
               // avoid any jankiness if we have duplicate cards in the layer!
-              const layerCount = cardInLayer.filter(
-                (value) => value === card.cardNumber
-              ).length;
-              cardInLayer.push(card.cardNumber);
+              const layerCount = cardCounts.get(card.cardNumber) ?? 0;
+              cardCounts.set(card.cardNumber, layerCount + 1);
               const isFirst = ix === 0;
               const isLast = ix === cardListBottom.length - 1;
               const showLabels = cardListBottom.length > 1;

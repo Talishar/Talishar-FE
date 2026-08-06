@@ -24,7 +24,10 @@ export const OtherInput = (props: FormProps) => {
     checkBoxSubmit
   } = props;
 
-  const selectedCount = checkedState.filter(Boolean).length;
+  let selectedCount = 0;
+  for (const checked of checkedState) {
+    if (checked) ++selectedCount;
+  }
   const minNo = formOptions?.minNo ?? 0;
   const maxNo = formOptions?.maxNo ?? checkedState.length;
   const hasValidSelection = selectedCount >= minNo && selectedCount <= maxNo;

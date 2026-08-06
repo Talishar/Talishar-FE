@@ -3,7 +3,6 @@ import { RootState } from 'app/Store';
 import Displayrow from 'interface/Displayrow';
 import { setCardListFocus, clearCardListFocus } from 'features/game/GameSlice';
 import CardDisplay from '../../elements/cardDisplay/CardDisplay';
-import { Card } from 'features/Card';
 import styles from './GraveyardZone.module.css';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import useWindowDimensions from 'hooks/useWindowDimensions';
@@ -91,10 +90,11 @@ export const GraveyardZone = React.memo((prop: Displayrow) => {
     }
   };
 
-  // Count only face-up cards (overlay !== 'disabled')
-  const faceUpCount = graveyardZone.filter(
-    (card: Card) => card.overlay !== 'disabled'
-  ).length;
+  // Count only face-up cards (overlay !== 'disabled') without allocating a filtered copy.
+  let faceUpCount = 0;
+  for (const card of graveyardZone) {
+    if (card.overlay !== 'disabled') ++faceUpCount;
+  }
 
   return (
     <div className={styles.graveyardZone} onClick={graveyardZoneDisplay}>

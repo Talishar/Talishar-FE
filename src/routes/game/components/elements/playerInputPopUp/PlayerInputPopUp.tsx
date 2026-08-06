@@ -26,6 +26,7 @@ import { OtherInput } from './components/OtherInput';
 import { parseHtmlToReactElements } from 'utils/ParseEscapedString';
 import classNames from 'classnames';
 import GameState from 'features/GameState';
+import { Card } from 'features/Card';
 
 type MultiChooseOption = NonNullable<
   NonNullable<GameState['playerInputPopUp']>['multiChooseText']
@@ -192,26 +193,46 @@ export default function PlayerInputPopUp() {
     (v) => `calc(${basePctRef.current} + ${v}dvh)`
   );
   const popupId = inputPopUp?.popup?.id || '';
-  const popupCards = inputPopUp?.popup?.cards || [];
+  const popupCards = inputPopUp?.popup?.cards;
   const usesOtherInput = !PlayerInputFormTypeMap[popupId];
-  const showCardSearch = usesOtherInput && popupCards.length >= 8;
-  const cardListKey = popupCards
-    .map((card) => `${card.cardNumber}:${card.actionDataOverride ?? ''}`)
-    .join('|');
-  const filteredCardEntries = useMemo(
-    () =>
-      popupCards
-        .map((card, originalIndex) => ({ card, originalIndex }))
-        .filter(
-          ({ card }) =>
-            !showCardSearch ||
-            !cardSearch.trim() ||
-            `${card.cardName ?? ''} ${card.cardNumber}`
-              .toLocaleLowerCase()
-              .includes(cardSearch.trim().toLocaleLowerCase())
-        ),
-    [popupCards, cardSearch, showCardSearch]
-  );
+  const popupCardCount = popupCards?.length ?? 0;
+  const showCardSearch = usesOtherInput && popupCardCount >= 8;
+  let cardListKey = '';
+  if (popupCards) {
+    for (let index = 0; index < popupCards.length; index += 1) {
+      const card = popupCards[index];
+      if (index > 0) cardListKey += '|';
+      cardListKey += `${card.cardNumber}:${card.actionDataOverride ?? ''}`;
+    }
+  }
+  const filteredCardEntries = useMemo(() => {
+    const cards: Card[] = [];
+    const originalIndexes: number[] = [];
+    if (!popupCards) return { cards, originalIndexes };
+
+    const normalizedSearch = showCardSearch
+      ? cardSearch.trim().toLocaleLowerCase()
+      : '';
+    for (
+      let originalIndex = 0;
+      originalIndex < popupCards.length;
+      originalIndex += 1
+    ) {
+      const card = popupCards[originalIndex];
+      if (
+        normalizedSearch &&
+        !`${card.cardName ?? ''} ${card.cardNumber}`
+          .toLocaleLowerCase()
+          .includes(normalizedSearch)
+      ) {
+        continue;
+      }
+      cards.push(card);
+      originalIndexes.push(originalIndex);
+    }
+
+    return { cards, originalIndexes };
+  }, [popupCards, cardSearch, showCardSearch]);
 
   useEffect(() => {
     setCardSearch('');
@@ -227,7 +248,10 @@ export default function PlayerInputPopUp() {
   }
 
   const checkBoxSubmit = () => {
-    const selectedCount = checkedState.filter(Boolean).length;
+    let selectedCount = 0;
+    for (const checked of checkedState) {
+      if (checked) ++selectedCount;
+    }
     const minNo = inputPopUp.formOptions?.minNo ?? 0;
     const maxNo = inputPopUp.formOptions?.maxNo ?? checkedState.length;
     if (selectedCount < minNo || selectedCount > maxNo) {
@@ -266,7 +290,10 @@ export default function PlayerInputPopUp() {
       return;
     }
     const maxNo = inputPopUp.formOptions?.maxNo ?? checkedState.length;
-    const selectedCount = checkedState.filter(Boolean).length;
+    let selectedCount = 0;
+    for (const checked of checkedState) {
+      if (checked) ++selectedCount;
+    }
     if (!checkedState[pos] && selectedCount >= maxNo) {
       return;
     }
@@ -338,8 +365,8 @@ export default function PlayerInputPopUp() {
               />
               {cardSearch ? (
                 <span className={styles.cardSearchCount} aria-live="polite">
-                  {filteredCardEntries.length} {t('PLAYER_INPUT.OF')}{' '}
-                  {popupCards.length}
+                  {filteredCardEntries.cards.length} {t('PLAYER_INPUT.OF')}{' '}
+                  {popupCardCount}
                 </span>
               ) : null}
             </div>
@@ -351,16 +378,16 @@ export default function PlayerInputPopUp() {
           ) : null}
         </div>
         <div className={styles.contentContainer}>
-          {showCardSearch && cardSearch && filteredCardEntries.length === 0 ? (
+          {showCardSearch &&
+          cardSearch &&
+          filteredCardEntries.cards.length === 0 ? (
             <div className={styles.noSearchResults} role="status">
               {t('PLAYER_INPUT.NO_MATCHING_CARDS')}
             </div>
           ) : null}
           <FormDisplay
-            cards={filteredCardEntries.map(({ card }) => card)}
-            cardOriginalIndexes={filteredCardEntries.map(
-              ({ originalIndex }) => originalIndex
-            )}
+            cards={filteredCardEntries.cards}
+            cardOriginalIndexes={filteredCardEntries.originalIndexes}
             topCards={inputPopUp.popup?.topCards || []}
             bottomCards={inputPopUp.popup?.bottomCards || []}
             buttons={inputPopUp.buttons || []}

@@ -70,14 +70,17 @@ export const CardListZone = () => {
 
   const reversedList = useMemo(() => {
     if (!cardList?.cardList) return null;
-    const reversed = [...cardList.cardList].reverse();
-    const nonBacks = reversed.filter(
-      (c) => c.cardNumber.toLowerCase() !== 'cardback'
-    );
-    const backs = reversed.filter(
-      (c) => c.cardNumber.toLowerCase() === 'cardback'
-    );
-    return [...nonBacks, ...backs];
+    const nonBacks: Card[] = [];
+    const backs: Card[] = [];
+
+    for (let index = cardList.cardList.length - 1; index >= 0; index -= 1) {
+      const card = cardList.cardList[index];
+      if (card.cardNumber.toLowerCase() === 'cardback') backs.push(card);
+      else nonBacks.push(card);
+    }
+    for (const card of backs) nonBacks.push(card);
+
+    return nonBacks;
   }, [cardList?.cardList]);
 
   const isOpponentZone = cardList?.name?.includes("Opponent's") ?? false;
@@ -98,15 +101,13 @@ export const CardListZone = () => {
       cardList.name.includes("Opponent's Hand"))
   );
 
-  const filteredList = useMemo(
-    () =>
-      reversedList?.filter(
-        (card: Card) =>
-          !searchQuery ||
-          card.cardName?.toLowerCase().includes(searchQuery.toLowerCase())
-      ) ?? null,
-    [reversedList, searchQuery]
-  );
+  const filteredList = useMemo(() => {
+    if (!reversedList || !searchQuery) return reversedList;
+    const normalizedQuery = searchQuery.toLowerCase();
+    return reversedList.filter((card: Card) =>
+      card.cardName?.toLowerCase().includes(normalizedQuery)
+    );
+  }, [reversedList, searchQuery]);
 
   const closeCardList = () => {
     dispatch(clearCardListFocus());
@@ -249,12 +250,13 @@ const CardListZoneAPI = ({
   // Use Redux cardList if available (for sorting), otherwise use API data
   const cardsToDisplay = cardList?.cardList || data?.cards;
 
-  const filteredCards =
-    cardsToDisplay?.filter(
-      (card: Card) =>
-        !searchQuery ||
-        card.cardName?.toLowerCase().includes(searchQuery.toLowerCase())
-    ) ?? null;
+  let filteredCards = cardsToDisplay ?? null;
+  if (filteredCards && searchQuery) {
+    const normalizedQuery = searchQuery.toLowerCase();
+    filteredCards = filteredCards.filter((card: Card) =>
+      card.cardName?.toLowerCase().includes(normalizedQuery)
+    );
+  }
 
   let content;
   if (isLoading) {

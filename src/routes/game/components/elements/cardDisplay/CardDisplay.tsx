@@ -66,12 +66,12 @@ export const CardDisplay = (prop: CardProp) => {
   const subCardsToShow = useMemo(() => {
     const subcards = card?.subcards;
     if (!subcards || subcards.length === 0) return [];
-    const validSubcards = subcards.filter((subCard) => !!subCard);
-    return showSubCards
-      ? validSubcards
-      : validSubcards.length
-      ? [validSubcards[0]]
-      : [];
+
+    if (showSubCards) return subcards.filter((subCard) => !!subCard);
+    for (const subcard of subcards) {
+      if (subcard) return [subcard];
+    }
+    return [];
   }, [card?.subcards, showSubCards]);
 
   if (card == null || card.cardNumber === '') {
