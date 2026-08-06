@@ -31,6 +31,7 @@ import { MdDragHandle, MdOpenWith, MdHeight } from 'react-icons/md';
 import Button from '../../../../../features/Button';
 import { Card } from 'features/Card';
 import { useTranslation } from 'react-i18next';
+import { groupConsecutiveCards } from './groupConsecutiveCards';
 
 const GROUPING_THRESHOLD = 1;
 const STORAGE_KEY_Y = 'activeLayersPositionY';
@@ -42,26 +43,6 @@ const MAX_X_OFFSET = 40;
 const MIN_X_OFFSET = -20;
 // Matches the @media (max-width: 768px) breakpoint in ActiveLayersZone.module.css
 const MOBILE_BREAKPOINT = 768;
-
-interface CardGroup {
-  cards: Card[];
-  isPlayer: boolean;
-}
-
-// Group cards that share the same cardNumber if there are more than GROUPING_THRESHOLD of them in a row
-function groupConsecutiveCards(cards: Card[], playerID: number): CardGroup[] {
-  const groups: CardGroup[] = [];
-  for (const card of cards) {
-    const isPlayer = playerID === card.controller;
-    const last = groups[groups.length - 1];
-    if (last && last.cards[0].cardNumber === card.cardNumber) {
-      last.cards.push(card);
-    } else {
-      groups.push({ cards: [card], isPlayer });
-    }
-  }
-  return groups;
-}
 
 export default function ActiveLayersZone() {
   const showModal = useShowModal();
