@@ -31,7 +31,7 @@ describe('SearchCardInput manual card names', () => {
     render(<SearchCardInput />);
 
     expect(
-      screen.getByText(/new beta cards may not appear in this list/i)
+      screen.getByText(/new unreleased cards may not appear in the list/i)
     ).toBeInTheDocument();
 
     const manualInput = screen.getByLabelText('Enter a card name manually');
