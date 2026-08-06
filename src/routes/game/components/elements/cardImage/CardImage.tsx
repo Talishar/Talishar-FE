@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import classNames from 'classnames';
@@ -20,8 +20,28 @@ const NON_ENGLISH_PROMO_ALT_ARTS = [
   '1HP405'
 ];
 
-const isNonEnglishPromoAltArt = (altPath: string): boolean =>
-  NON_ENGLISH_PROMO_ALT_ARTS.some((code) => altPath.startsWith(code));
+const isNonEnglishPromoAltArt = (altPath: string): boolean => {
+  for (let i = 0; i < NON_ENGLISH_PROMO_ALT_ARTS.length; i++) {
+    if (altPath.startsWith(NON_ENGLISH_PROMO_ALT_ARTS[i])) return true;
+  }
+  return false;
+};
+
+const findAltArtPath = (
+  altArts: AltArt[] | undefined,
+  cardNumber: string
+): string | undefined => {
+  if (!altArts) return undefined;
+  for (let i = altArts.length - 1; i >= 0; i--) {
+    if (altArts[i].cardId === cardNumber) return altArts[i].altPath;
+  }
+  return undefined;
+};
+
+const getDirectory = (path: string): string => {
+  const lastSlash = path.lastIndexOf('/');
+  return lastSlash === -1 ? '' : path.slice(0, lastSlash);
+};
 
 export interface CardImage {
   src: string;
@@ -41,53 +61,32 @@ export const CardImage = React.memo((props: CardImage) => {
     (state: RootState) => state.game.gameInfo.opponentAltArts
   );
 
-  const altArtMap = useMemo(
-    () =>
-      altArts
-        ? new Map(
-            altArts.map((a: AltArt): [string, string] => [a.cardId, a.altPath])
-          )
-        : null,
-    [altArts]
-  );
-  const opponentAltArtMap = useMemo(
-    () =>
-      opponentAltArts
-        ? new Map(
-            opponentAltArts.map((a: AltArt): [string, string] => [
-              a.cardId,
-              a.altPath
-            ])
-          )
-        : null,
-    [opponentAltArts]
-  );
-
   let src = props.src;
   const { isShuffling, isOpponent, preferEnglishArt } = props;
 
-  let srcArray = src.split('/');
-  const filename = srcArray?.pop()?.split('.')[0] ?? '';
+  const lastSlash = src.lastIndexOf('/');
+  const directory = lastSlash === -1 ? '' : src.slice(0, lastSlash);
+  const filenameWithExtension = src.slice(lastSlash + 1);
+  const firstDot = filenameWithExtension.indexOf('.');
+  const filename =
+    firstDot === -1
+      ? filenameWithExtension
+      : filenameWithExtension.slice(0, firstDot);
   const isCropped = filename.endsWith('_cropped');
   const baseFilename = isCropped
     ? filename.slice(0, -'_cropped'.length)
     : filename;
-  let cardNumber = baseFilename.split('-')[0];
+  const firstDash = baseFilename.indexOf('-');
+  const cardNumber =
+    firstDash === -1 ? baseFilename : baseFilename.slice(0, firstDash);
 
-  const buildAltSrc = (altPath: string) => {
+  const altPath = findAltArtPath(
+    isOpponent ? opponentAltArts : altArts,
+    cardNumber
+  );
+  if (altPath && !(preferEnglishArt && isNonEnglishPromoAltArt(altPath))) {
     const altFilename = isCropped ? `${altPath}_cropped` : altPath;
-    return srcArray.join('/') + `/${altFilename}.webp`;
-  };
-
-  const skipAltArt = (altPath: string) =>
-    preferEnglishArt && isNonEnglishPromoAltArt(altPath);
-
-  if (isOpponent && opponentAltArtMap) {
-    const altPath = opponentAltArtMap.get(cardNumber);
-    if (altPath && !skipAltArt(altPath)) src = buildAltSrc(altPath);
-  } else if (altArtMap) {
-    const altPath = altArtMap.get(cardNumber);
-    if (altPath && !skipAltArt(altPath)) src = buildAltSrc(altPath);
+    src = `${directory}/${altFilename}.webp`;
   }
 
   const [errorStage, setErrorStage] = useState<
@@ -99,14 +98,12 @@ export const CardImage = React.memo((props: CardImage) => {
     isCropped &&
     cardNumber.endsWith('_r')
   ) {
-    srcArray = src.split('/');
-    srcArray.pop();
+    const fallbackDirectory = getDirectory(src);
     const baseCardFilename = baseFilename.slice(0, -'_r'.length);
-    src = srcArray.join('/') + `/${baseCardFilename}_cropped.webp`;
+    src = `${fallbackDirectory}/${baseCardFilename}_cropped.webp`;
   } else if (errorStage !== 'none') {
-    srcArray = src.split('/');
-    srcArray.pop();
-    src = srcArray.join('/') + `/${UNKNOWN_IMAGE}.webp`;
+    const fallbackDirectory = getDirectory(src);
+    src = `${fallbackDirectory}/${UNKNOWN_IMAGE}.webp`;
   }
 
   const handleImageError = useCallback(() => {

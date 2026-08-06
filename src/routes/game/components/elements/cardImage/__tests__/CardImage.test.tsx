@@ -55,6 +55,19 @@ describe('CardImage alt art substitution', () => {
     expect(src).toBe(`${basePath}/LGS195-T.webp`);
   });
 
+  it('keeps the last configured alt art when card IDs are duplicated', () => {
+    const src = renderCard(
+      { src: `${basePath}/soup_up_red.webp` },
+      {
+        altArts: [
+          { cardId: 'soup_up_red', altPath: 'FIRST' },
+          { cardId: 'soup_up_red', altPath: 'LAST' }
+        ]
+      }
+    );
+    expect(src).toBe(`${basePath}/LAST.webp`);
+  });
+
   it('skips non-English promo alt arts for the opponent too', () => {
     const src = renderCard(
       {
