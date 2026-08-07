@@ -1124,23 +1124,26 @@ export const apiSlice = createApi({
     }),
     sendSystemMessageToPlayer: builder.mutation<
       any,
-      { username: string; message: string }
+      { username: string; message: string; expiresInHours?: number | null }
     >({
-      query: ({ username, message }) => {
+      query: ({ username, message, expiresInHours }) => {
         return {
           url: URL_END_POINT.SYSTEM_MESSAGE,
           method: 'POST',
-          body: { action: 'sendToPlayer', username, message },
+          body: { action: 'sendToPlayer', username, message, expiresInHours },
           responseHandler: parseResponse
         };
       }
     }),
-    sendSystemMessageToAll: builder.mutation<any, { message: string }>({
-      query: ({ message }) => {
+    sendSystemMessageToAll: builder.mutation<
+      any,
+      { message: string; expiresInHours?: number | null }
+    >({
+      query: ({ message, expiresInHours }) => {
         return {
           url: URL_END_POINT.SYSTEM_MESSAGE,
           method: 'POST',
-          body: { action: 'sendToAll', message },
+          body: { action: 'sendToAll', message, expiresInHours },
           responseHandler: parseResponse
         };
       }

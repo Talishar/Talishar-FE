@@ -30,7 +30,9 @@ const ModPage: React.FC = () => {
   );
   const [systemMsgUsername, setSystemMsgUsername] = useState('');
   const [systemMsgText, setSystemMsgText] = useState('');
+  const [systemMsgExpiresInHours, setSystemMsgExpiresInHours] = useState('24');
   const [broadcastMsgText, setBroadcastMsgText] = useState('');
+  const [broadcastExpiresInHours, setBroadcastExpiresInHours] = useState('24');
 
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
@@ -208,7 +210,10 @@ const ModPage: React.FC = () => {
     try {
       const result = await sendToPlayer({
         username: systemMsgUsername,
-        message: systemMsgText
+        message: systemMsgText,
+        expiresInHours: systemMsgExpiresInHours
+          ? Number(systemMsgExpiresInHours)
+          : null
       }).unwrap();
       toast.success(result.message || t('MOD_PAGE.SYSTEM_MESSAGE_SENT'), {
         position: 'top-center'
@@ -237,7 +242,12 @@ const ModPage: React.FC = () => {
     }
 
     try {
-      const result = await sendToAll({ message: broadcastMsgText }).unwrap();
+      const result = await sendToAll({
+        message: broadcastMsgText,
+        expiresInHours: broadcastExpiresInHours
+          ? Number(broadcastExpiresInHours)
+          : null
+      }).unwrap();
       toast.success(result.message || t('MOD_PAGE.BROADCAST_SENT'), {
         position: 'top-center'
       });
@@ -414,6 +424,22 @@ const ModPage: React.FC = () => {
                 maxLength={2000}
                 className={styles.textarea}
               />
+              <label htmlFor="systemMsgExpiresInHours">
+                {t('MOD_PAGE.EXPIRES_LABEL')}
+              </label>
+              <select
+                id="systemMsgExpiresInHours"
+                value={systemMsgExpiresInHours}
+                onChange={(e) => setSystemMsgExpiresInHours(e.target.value)}
+                className={styles.select}
+              >
+                <option value="1">{t('MOD_PAGE.EXPIRY_OPTION_1H')}</option>
+                <option value="6">{t('MOD_PAGE.EXPIRY_OPTION_6H')}</option>
+                <option value="24">{t('MOD_PAGE.EXPIRY_OPTION_24H')}</option>
+                <option value="72">{t('MOD_PAGE.EXPIRY_OPTION_3D')}</option>
+                <option value="168">{t('MOD_PAGE.EXPIRY_OPTION_7D')}</option>
+                <option value="">{t('MOD_PAGE.EXPIRY_OPTION_NEVER')}</option>
+              </select>
               <button type="submit" disabled={isSendingToPlayer}>
                 {isSendingToPlayer
                   ? t('MOD_PAGE.SENDING')
@@ -435,6 +461,22 @@ const ModPage: React.FC = () => {
                 maxLength={2000}
                 className={styles.textarea}
               />
+              <label htmlFor="broadcastExpiresInHours">
+                {t('MOD_PAGE.EXPIRES_LABEL')}
+              </label>
+              <select
+                id="broadcastExpiresInHours"
+                value={broadcastExpiresInHours}
+                onChange={(e) => setBroadcastExpiresInHours(e.target.value)}
+                className={styles.select}
+              >
+                <option value="1">{t('MOD_PAGE.EXPIRY_OPTION_1H')}</option>
+                <option value="6">{t('MOD_PAGE.EXPIRY_OPTION_6H')}</option>
+                <option value="24">{t('MOD_PAGE.EXPIRY_OPTION_24H')}</option>
+                <option value="72">{t('MOD_PAGE.EXPIRY_OPTION_3D')}</option>
+                <option value="168">{t('MOD_PAGE.EXPIRY_OPTION_7D')}</option>
+                <option value="">{t('MOD_PAGE.EXPIRY_OPTION_NEVER')}</option>
+              </select>
               <button type="submit" disabled={isSendingToAll}>
                 {isSendingToAll
                   ? t('MOD_PAGE.SENDING')
