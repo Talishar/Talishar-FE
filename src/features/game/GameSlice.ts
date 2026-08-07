@@ -188,7 +188,7 @@ export const submitButton = createAsyncThunk(
 );
 
 export const submitMultiButton = createAsyncThunk(
-  'game/submitButton',
+  'game/submitMultiButton',
   async (params: { mode?: number; extraParams: string }, { getState }) => {
     if (params.mode === undefined) return;
     const { game } = getState() as { game: GameState };
@@ -998,6 +998,19 @@ export const gameSlice = createSlice({
       return state;
     });
     builder.addCase(submitButton.rejected, (state) => {
+      state.isPlayerInputInProgress = false;
+      return state;
+    });
+
+    builder.addCase(submitMultiButton.pending, (state) => {
+      // player input in progress
+      state.isPlayerInputInProgress = true;
+      return state;
+    });
+    builder.addCase(submitMultiButton.fulfilled, (state) => {
+      return state;
+    });
+    builder.addCase(submitMultiButton.rejected, (state) => {
       state.isPlayerInputInProgress = false;
       return state;
     });

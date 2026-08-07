@@ -43,7 +43,18 @@ const GameStateHandler = () => {
   const gameParamsRef = useRef({ gameID: 0, playerID: 0, authKey: '' });
   const retryCountRef = useRef(0);
   const lastEventTimeRef = useRef(Date.now());
+  const retryTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const navigateTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [forceRetry, setForceRetry] = useState(0);
+
+  useEffect(() => {
+    return () => {
+      if (navigateTimerRef.current !== null) {
+        clearTimeout(navigateTimerRef.current);
+        navigateTimerRef.current = null;
+      }
+    };
+  }, []);
 
   useEffect(() => {
     const currentGameID = parseInt(gameID ?? gameName);
@@ -122,6 +133,16 @@ const GameStateHandler = () => {
       sourceRef.current = null;
     }
 
+    const scheduleRetry = (delay: number) => {
+      if (retryTimerRef.current !== null) {
+        clearTimeout(retryTimerRef.current);
+      }
+      retryTimerRef.current = setTimeout(() => {
+        retryTimerRef.current = null;
+        setForceRetry((prev) => prev + 1);
+      }, delay);
+    };
+
     // Small delay to ensure the page is ready before connecting
     const connectionTimeout = setTimeout(() => {
       try {
@@ -154,7 +175,12 @@ const GameStateHandler = () => {
                   t('GAME_STATE.GAME_ERROR', { message: data.error })
                 );
                 source.close();
-                setTimeout(() => navigate('/'), 60000);
+                if (navigateTimerRef.current === null) {
+                  navigateTimerRef.current = setTimeout(() => {
+                    navigateTimerRef.current = null;
+                    navigate('/');
+                  }, 60000);
+                }
                 return;
               }
 
@@ -216,7 +242,7 @@ const GameStateHandler = () => {
 
           if (!hasConnected && retryCountRef.current === 1) {
             // Transient interruption during page load - retry once quickly
-            setTimeout(() => setForceRetry((prev) => prev + 1), 500);
+            scheduleRetry(500);
             return;
           }
 
@@ -225,12 +251,12 @@ const GameStateHandler = () => {
               500 * Math.pow(2, retryCountRef.current),
               5000
             );
-            setTimeout(() => setForceRetry((prev) => prev + 1), retryDelay);
+            scheduleRetry(retryDelay);
           } else {
             if (retryCountRef.current === MAX_RETRIES + 1) {
               toast.error(t('GAME_STATE.CONNECTION_LOST'));
             }
-            setTimeout(() => setForceRetry((prev) => prev + 1), 10000);
+            scheduleRetry(10000);
           }
         };
       } catch (error) {
@@ -257,6 +283,10 @@ const GameStateHandler = () => {
     return () => {
       clearTimeout(connectionTimeout);
       clearInterval(stalenessWatchdog);
+      if (retryTimerRef.current !== null) {
+        clearTimeout(retryTimerRef.current);
+        retryTimerRef.current = null;
+      }
       window.removeEventListener('beforeunload', handleBeforeUnload);
       if (sourceRef.current) {
         sourceRef.current.close();
