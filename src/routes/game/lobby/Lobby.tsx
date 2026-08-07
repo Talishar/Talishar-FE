@@ -627,11 +627,12 @@ const Lobby = () => {
   });
 
   const hasModular = (data.deck.modular?.length ?? 0) > 0;
-  const initialEquipment = (main: string[], side: string[]) => {
+  // Only auto-select from what was actually equipped on the mainboard
+  const initialEquipment = (main: string[]) => {
     if (hasModular) {
-      return [...main, ...side, 'NONE00'].filter((id) => id !== 'EVO013')[0];
+      return [...main, 'NONE00'].filter((id) => id !== 'EVO013')[0];
     } else {
-      return [...main, ...side, 'NONE00'][0];
+      return [...main, 'NONE00'][0];
     }
   };
 
@@ -965,10 +966,10 @@ const Lobby = () => {
             weaponsIndexed.length > 0
               ? weaponsIndexed
               : [weaponsSBIndexed.find((w) => w.img === 'NONE00')!],
-          head: initialEquipment(data.deck.head, data.deck.headSB),
-          chest: initialEquipment(data.deck.chest, data.deck.chestSB),
-          arms: initialEquipment(data.deck.arms, data.deck.armsSB),
-          legs: initialEquipment(data.deck.legs, data.deck.legsSB),
+          head: initialEquipment(data.deck.head),
+          chest: initialEquipment(data.deck.chest),
+          arms: initialEquipment(data.deck.arms),
+          legs: initialEquipment(data.deck.legs),
           assignedModulars: { head: [], chest: [], arms: [], legs: [] }
         }}
         onSubmit={handleFormSubmission}
