@@ -137,7 +137,7 @@
 }
 
 .fieldError {
-  color: red;
+  color: var(--theme-danger, red);
 }
 
 .disclaimer {
@@ -320,7 +320,7 @@
 }
 
 .deckTab:hover {
-  background: rgba(255, 255, 255, 0.06);
+  background: color-mix(in srgb, var(--theme-text) 6%, transparent);
   color: var(--theme-text, #ededed);
 }
 

@@ -111,13 +111,13 @@
 
 .tabs > button {
   border: 1px solid var(--theme-secondary) !important;
-  background-color: black !important;
+  background-color: var(--theme-form-background) !important;
   color: var(--secondary-inverse) !important;
 }
 
 .primaryTabs > button {
   border: 1px solid var(--theme-secondary) !important;
-  background-color: black !important;
+  background-color: var(--theme-form-background) !important;
   color: var(--secondary-inverse) !important;
 }
 
@@ -134,14 +134,14 @@
 }
 
 .tabs > button:hover {
-  background-color: black;
+  background-color: var(--theme-form-background);
   color: var(--theme-secondary);
   border: 1px solid var(--theme-secondary);
   cursor: pointer;
 }
 
 .primaryTabs > button:hover {
-  background-color: black;
+  background-color: var(--theme-form-background);
   color: var(--theme-secondary);
   border: 1px solid var(--theme-secondary);
   cursor: pointer;
@@ -199,7 +199,7 @@
   border-radius: 10px;
   overflow: hidden;
   box-shadow: 0 6px 24px rgba(0, 0, 0, 0.65);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid var(--theme-border-light);
   background-color: var(--theme-form-background);
   user-select: text;
 }
@@ -209,9 +209,9 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: rgba(18, 14, 8, 0.97);
+  background-color: var(--theme-card-background);
   padding: 5px 8px;
-  border-bottom: 1px solid rgba(200, 164, 53, 0.35);
+  border-bottom: 1px solid color-mix(in srgb, var(--theme-primary) 35%, transparent);
   gap: 4px;
 }
 
@@ -235,27 +235,27 @@
 }
 
 .chatMobileTab {
-  background-color: rgba(255, 255, 255, 0.08);
-  color: rgba(255, 255, 255, 0.55);
-  border-color: rgba(255, 255, 255, 0.15);
+  background-color: color-mix(in srgb, var(--theme-text) 8%, transparent);
+  color: var(--theme-text-muted);
+  border-color: var(--theme-border-light);
 }
 
 .chatMobileTab:hover {
-  background-color: rgba(255, 255, 255, 0.15);
-  color: rgba(255, 255, 255, 0.85);
+  background-color: color-mix(in srgb, var(--theme-text) 15%, transparent);
+  color: var(--theme-text-secondary);
 }
 
 .chatMobileTabActive {
   background-color: var(--theme-primary, #c8a435);
-  color: #000;
+  color: var(--theme-primary-inverse);
   border-color: var(--theme-primary, #c8a435);
 }
 
 /* Collapse / expand toggle */
 .chatMobileToggle {
   background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: rgba(255, 255, 255, 0.65);
+  border: 1px solid var(--theme-border);
+  color: var(--theme-text-secondary);
   font-size: 12px;
   border-radius: 5px;
   cursor: pointer;
@@ -267,8 +267,8 @@
 }
 
 .chatMobileToggle:hover {
-  color: white;
-  border-color: rgba(255, 255, 255, 0.5);
+  color: var(--theme-text);
+  border-color: color-mix(in srgb, var(--theme-text) 50%, transparent);
 }
 
 /* Scrollable message area */
@@ -290,9 +290,9 @@
   margin: 2px 0 6px;
   padding: 4px 10px;
   min-height: 28px;
-  border: 1px solid rgba(255, 255, 255, 0.16);
+  border: 1px solid var(--theme-border-light);
   border-radius: 5px;
-  background: rgba(255, 255, 255, 0.07);
+  background: color-mix(in srgb, var(--theme-text) 7%, transparent);
   color: var(--theme-text);
   font-size: 12px;
 }
@@ -314,7 +314,7 @@
 .typingIndicator {
   padding: 8px 0;
   font-style: italic;
-  color: #666;
+  color: var(--theme-text-muted);
   animation: blink 1.4s infinite;
 }
 

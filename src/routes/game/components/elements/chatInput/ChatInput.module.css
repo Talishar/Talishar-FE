@@ -10,8 +10,8 @@
   flex-grow: 1;
   max-width: 100%;
   border: 2px solid var(--theme-secondary);
-  background-color: black;
-  color: white;
+  background-color: var(--theme-form-background);
+  color: var(--theme-text);
   padding: 0 0.5em;
   margin: 0;
   height: 1.75rem !important;
@@ -26,24 +26,24 @@
 }
 
 .buttonDiv {
-  background-color: rgba(255, 255, 255, 0.07);
-  color: #e0e0e0;
+  background-color: color-mix(in srgb, var(--theme-text) 7%, transparent);
+  color: var(--theme-text-secondary);
   padding: 8px 16px;
   font-size: max(1em, 14px);
   margin-right: 0.25rem;
   width: 2rem;
   height: 1.65rem !important;
   border-radius: 0.4em;
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  border: 1px solid var(--theme-border-light);
   transition: background-color 0.2s ease, border-color 0.2s ease,
     color 0.2s ease;
   position: relative;
 }
 
 .buttonDiv:hover {
-  background-color: rgba(255, 255, 255, 0.15);
-  color: #ffffff;
-  border-color: rgba(255, 255, 255, 0.3);
+  background-color: color-mix(in srgb, var(--theme-text) 15%, transparent);
+  color: var(--theme-text);
+  border-color: var(--theme-border);
   cursor: pointer;
 }
 
@@ -90,18 +90,18 @@
 }
 
 .quickChatButton button:disabled {
-  background-color: rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 0.5);
-  border-color: rgba(255, 255, 255, 0.2);
+  background-color: color-mix(in srgb, var(--theme-text) 10%, transparent);
+  color: var(--theme-text-muted);
+  border-color: var(--theme-border);
   cursor: not-allowed;
   transform: none;
   box-shadow: none;
 }
 
 .popOver {
-  background-color: rgba(12, 14, 18);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: white;
+  background-color: var(--theme-card-background);
+  border: 1px solid var(--theme-border-light);
+  color: var(--theme-text);
   padding: 8px 6px;
   z-index: 100000;
   overflow-y: auto;
@@ -123,7 +123,7 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.72);
+  color: var(--theme-text-secondary);
   background-color: transparent;
   border: none;
   padding: 2px 0.75em 4px;
@@ -138,7 +138,7 @@
 }
 
 .sectionLabel:hover {
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--theme-text);
 }
 
 .sectionChevron {
@@ -155,7 +155,7 @@
 
 .sectionDivider {
   height: 1px;
-  background: rgba(255, 255, 255, 0.07);
+  background: var(--theme-border-light);
   margin: 4px 0.5em 4px;
 }
 
@@ -215,7 +215,7 @@
   border: none;
   justify-content: left !important;
   border-radius: 6px;
-  color: rgba(255, 255, 255, 0.72);
+  color: var(--theme-text-secondary);
   font-size: 0.88em;
   cursor: pointer;
   transition: background 0.12s ease, color 0.12s ease;
@@ -232,8 +232,8 @@
   font-size: 0.75em;
   font-weight: 600;
   border-radius: 3px;
-  background: rgba(255, 255, 255, 0.08);
-  color: rgba(255, 255, 255, 0.35);
+  background: color-mix(in srgb, var(--theme-text) 8%, transparent);
+  color: var(--theme-text-muted);
   flex-shrink: 0;
 }
 
@@ -263,13 +263,13 @@
 
 .chatWheelButton:hover,
 .chatWheelButton:focus-visible {
-  background: rgba(255, 255, 255, 0.09);
-  color: rgba(255, 255, 255, 0.95);
+  background: color-mix(in srgb, var(--theme-text) 9%, transparent);
+  color: var(--theme-text);
   outline: none;
 }
 
 .chatWheelButton:active {
-  background: rgba(255, 255, 255, 0.15);
+  background: color-mix(in srgb, var(--theme-text) 15%, transparent);
 }
 
 @media only screen and (max-width: 768px) and (orientation: portrait) {

@@ -493,9 +493,9 @@ h3 {
   align-items: center;
   padding: 0.25rem 1.1rem;
   border-radius: 6px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(255, 255, 255, 0.04);
-  color: rgba(255, 255, 255, 0.55);
+  border: 1px solid var(--theme-border-light);
+  background: color-mix(in srgb, var(--theme-text) 4%, transparent);
+  color: var(--theme-text-muted);
   transition: all 0.2s ease;
   cursor: pointer;
   font-weight: 500;
@@ -505,18 +505,18 @@ h3 {
 }
 
 .tabButton:hover {
-  background: rgba(255, 255, 255, 0.08);
-  color: rgba(255, 255, 255, 0.85);
-  border-color: rgba(255, 255, 255, 0.18);
+  background: color-mix(in srgb, var(--theme-text) 8%, transparent);
+  color: var(--theme-text-secondary);
+  border-color: var(--theme-border);
   transform: none;
   box-shadow: none;
 }
 
 .tabButton.tabActive {
-  background: rgba(255, 255, 255, 0.1);
-  color: #fff;
-  border-color: rgba(255, 255, 255, 0.22);
-  box-shadow: 0 0 8px rgba(255, 255, 255, 0.05);
+  background: var(--theme-primary-focus);
+  color: var(--theme-primary);
+  border-color: var(--theme-primary);
+  box-shadow: 0 0 8px var(--theme-primary-focus);
 }
 
 .tabButton .icon {
@@ -629,7 +629,7 @@ nav {
   overflow-x: auto;
   overflow-y: auto;
   border: none;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid var(--theme-border-light);
   border-radius: 0;
   display: flex;
   gap: 0.4rem;
@@ -867,23 +867,23 @@ nav {
   }
 
   .mobileNav .tabButton {
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: rgba(255, 255, 255, 0.55);
+    background: color-mix(in srgb, var(--theme-text) 4%, transparent);
+    border: 1px solid var(--theme-border-light);
+    color: var(--theme-text-muted);
   }
 
   .mobileNav .tabButton:hover {
-    background: rgba(255, 255, 255, 0.08);
-    color: rgba(255, 255, 255, 0.85);
-    border-color: rgba(255, 255, 255, 0.18);
+    background: color-mix(in srgb, var(--theme-text) 8%, transparent);
+    color: var(--theme-text-secondary);
+    border-color: var(--theme-border);
     transform: none;
     box-shadow: none;
   }
 
   .mobileNav .tabButton.tabActive {
-    background: rgba(255, 255, 255, 0.1);
-    color: #fff;
-    border-color: rgba(255, 255, 255, 0.22);
+    background: var(--theme-primary-focus);
+    color: var(--theme-primary);
+    border-color: var(--theme-primary);
   }
 
   .chatAreaContainer,
@@ -919,23 +919,23 @@ nav {
   .mobileNav .tabButton {
     height: 48px;
     padding: 0.6rem 1rem;
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: rgba(255, 255, 255, 0.55);
+    background: color-mix(in srgb, var(--theme-text) 4%, transparent);
+    border: 1px solid var(--theme-border-light);
+    color: var(--theme-text-muted);
   }
 
   .mobileNav .tabButton:hover {
-    background: rgba(255, 255, 255, 0.08);
-    color: rgba(255, 255, 255, 0.85);
-    border-color: rgba(255, 255, 255, 0.18);
+    background: color-mix(in srgb, var(--theme-text) 8%, transparent);
+    color: var(--theme-text-secondary);
+    border-color: var(--theme-border);
     transform: none;
     box-shadow: none;
   }
 
   .mobileNav .tabButton.tabActive {
-    background: rgba(255, 255, 255, 0.1);
-    color: #fff;
-    border-color: rgba(255, 255, 255, 0.22);
+    background: var(--theme-primary-focus);
+    color: var(--theme-primary);
+    border-color: var(--theme-primary);
   }
 }
 
@@ -1043,9 +1043,9 @@ button.secondary:hover {
 }
 
 .disclaimerButtons button {
-  background-color: rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 0.7);
-  border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.2));
+  background-color: color-mix(in srgb, var(--theme-text) 10%, transparent);
+  color: var(--theme-text-secondary);
+  border: 1px solid var(--theme-border);
   padding: 0.75rem 2rem;
   border-radius: 8px;
   transition: all 0.2s;
@@ -1054,7 +1054,7 @@ button.secondary:hover {
 .disclaimerButtons button:hover {
   background-color: rgba(255, 0, 0, 0.2);
   border-color: rgba(255, 0, 0, 0.5);
-  color: white;
+  color: var(--theme-text);
 }
 
 @keyframes wiggle {
@@ -1248,7 +1248,7 @@ button.secondary:hover {
   justify-content: space-between;
   align-items: center;
   padding: 0.75rem;
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: color-mix(in srgb, var(--theme-text) 10%, transparent);
   border-radius: 4px;
   gap: 0.5rem;
 }
@@ -1282,7 +1282,7 @@ button.secondary:hover {
 }
 
 .friendsEmptyState {
-  color: #999;
+  color: var(--theme-text-muted);
 }
 
 .mobileBottomActions {
