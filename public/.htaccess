@@ -1,0 +1,25 @@
+# Cache policy for the Vite-built SPA (Apache).
+#
+# index.html and manifest.json must always be revalidated: they reference
+# content-hashed asset filenames (e.g. assets/index-BwTIHhXG.js) that are
+# deleted from the server on every deploy. A stale cached index.html points
+# at hashes that no longer exist, causing 404s and a blank/frozen app.
+# Hashed files under /assets/ are safe to cache forever since a content
+# change always produces a new filename.
+<IfModule mod_headers.c>
+  <FilesMatch "\.html$">
+    Header set Cache-Control "no-cache, no-store, must-revalidate"
+    Header set Pragma "no-cache"
+    Header set Expires "0"
+  </FilesMatch>
+
+  <FilesMatch "^manifest\.json$">
+    Header set Cache-Control "no-cache, no-store, must-revalidate"
+  </FilesMatch>
+</IfModule>
+
+<IfModule mod_headers.c>
+  <FilesMatch "-[A-Za-z0-9_-]{8}\.(js|css)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+</IfModule>

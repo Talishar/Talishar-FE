@@ -8,8 +8,13 @@ import './index.scss';
 import { router } from 'routes';
 import { RouterProvider } from 'react-router-dom';
 import { ThemeProvider } from './themes/ThemeContext';
+import { clearChunkReloadFlag } from './utils/lazyWithRetry';
 
 import './i18n';
+
+// This module executing at all means the entry script and its imports
+// loaded successfully, so any stale-asset reload guard can be released.
+clearChunkReloadFlag();
 
 // Because we *must* have a root else the site won't work at all.
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
