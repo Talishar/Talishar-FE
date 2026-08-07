@@ -898,7 +898,8 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
             (r) =>
               (r.activated ?? 0) > 0 ||
               (r.passiveTriggered ?? 0) > 0 ||
-              r.hits > 0
+              r.hits > 0 ||
+              r.blocked > 0
           ),
           ...(playerData.cardResults ?? []).filter(
             (r) => (r.activated ?? 0) > 0 || (r.passiveTriggered ?? 0) > 0
@@ -909,14 +910,16 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
             (r) => r.pitched > 0
           );
           content += '\nCARD ACTIVATED STATS\n';
-          content += `Card Name,Activated,Passive Triggers${
+          content += `Card Name,Activated,Passive Triggers,Blocked${
             csvHasPitched ? ',Pitched' : ''
           },Times Hit\n`;
           activatedArenaResults.forEach((result) => {
             const cardName = result.cardName.replace(/,/g, ';');
             content += `"${cardName}",${result.activated ?? 0},${
               result.passiveTriggered ?? 0
-            }${csvHasPitched ? `,${result.pitched}` : ''},${result.hits}\n`;
+            },${result.blocked}${
+              csvHasPitched ? `,${result.pitched}` : ''
+            },${result.hits}\n`;
           });
         }
 
@@ -1056,7 +1059,10 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
   const activatedCardResults = useMemo(() => {
     const fromArena = (data.arenaCardResults ?? []).filter(
       (r) =>
-        (r.activated ?? 0) > 0 || (r.passiveTriggered ?? 0) > 0 || r.hits > 0
+        (r.activated ?? 0) > 0 ||
+        (r.passiveTriggered ?? 0) > 0 ||
+        r.hits > 0 ||
+        r.blocked > 0
     );
     const fromDeck = data.cardResults.filter(
       (r) => (r.activated ?? 0) > 0 || (r.passiveTriggered ?? 0) > 0
@@ -1664,6 +1670,11 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                       >
                         {t('END_GAME.PASSIVE_TRIGGERED')}
                       </th>
+                      <th
+                        className={`${styles.headersStats} ${styles.headerGroupSeparator}`}
+                      >
+                        {t('END_GAME.BLOCKED')}
+                      </th>
                       {activatedCardResults.some((r) => r.pitched > 0) && (
                         <th
                           className={`${styles.headersStats} ${styles.headerGroupSeparator}`}
@@ -1702,6 +1713,9 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                           </td>
                           <td className={styles.cardStat}>
                             {result.passiveTriggered ?? 0}
+                          </td>
+                          <td className={styles.cardStat}>
+                            {result.blocked}
                           </td>
                           {activatedCardResults.some((r) => r.pitched > 0) && (
                             <td className={styles.cardStat}>
