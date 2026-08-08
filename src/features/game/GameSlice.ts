@@ -9,7 +9,7 @@ import {
 } from '@reduxjs/toolkit';
 import { preserveIdentities } from 'utils/PreserveIdentities';
 import InitialGameState from './InitialGameState';
-import GameStaticInfo from '../GameStaticInfo';
+import GameStaticInfo, { AltArt } from '../GameStaticInfo';
 import { Card } from '../Card';
 import { BACKEND_URL, ROGUELIKE_URL, URL_END_POINT } from 'appConstants';
 import Button from '../Button';
@@ -803,6 +803,9 @@ export const gameSlice = createSlice({
     markHeroIntroAsShown: (state) => {
       state.gameInfo.hasShownHeroIntro = true;
     },
+    setLobbyAltArts: (state, action: PayloadAction<AltArt[]>) => {
+      state.gameInfo.altArts = action.payload;
+    },
     setDeckCosmetics: (
       state,
       action: PayloadAction<{
@@ -1086,6 +1089,7 @@ export const {
   setIsRoguelike,
   setHeroInfo,
   markHeroIntroAsShown,
+  setLobbyAltArts,
   setDeckCosmetics,
   setShuffling,
   setAddBotDeck,

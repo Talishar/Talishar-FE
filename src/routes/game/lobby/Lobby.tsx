@@ -66,7 +66,8 @@ import CardPopUp from '../components/elements/cardPopUp/CardPopUp';
 import {
   clearGetLobbyRefresh,
   getGameInfo,
-  setHeroInfo
+  setHeroInfo,
+  setLobbyAltArts
 } from 'features/game/GameSlice';
 import useSound from 'use-sound';
 import playerJoined from 'sounds/playerJoinedSound.mp3';
@@ -78,6 +79,7 @@ import {
   fetchAllSettings,
   getSettingsStatus
 } from 'features/options/optionsSlice';
+import { DISABLE_ALT_ARTS } from 'features/options/constants';
 import { useTranslation, Trans } from 'react-i18next';
 
 const FAB_BAZAAR_LEARN_MORE_URL = 'https://fabbazaar.app/tutorials/talishar';
@@ -276,6 +278,15 @@ const Lobby = () => {
   useEffect(() => {
     if (gameLobby?.sideboardWasReset) refetch();
   }, [gameLobby?.sideboardWasReset, refetch]);
+
+  const altArtsFromLobby = data?.altArts;
+  const areAltArtsDisabled =
+    String(settingsData[DISABLE_ALT_ARTS]?.value) === '1';
+  useEffect(() => {
+    dispatch(
+      setLobbyAltArts(areAltArtsDisabled ? [] : altArtsFromLobby ?? [])
+    );
+  }, [altArtsFromLobby, areAltArtsDisabled, dispatch]);
 
   const [submitSideboardMutation, submitSideboardMutationData] =
     useSubmitSideboardMutation();
@@ -571,7 +582,13 @@ const Lobby = () => {
 
   const handleLeave = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    // TODO: Need a way to announce to the server that we are leaving
+    // Tell the server we are going so the opponent's lobby clears immediately
+    submitLobbyInput({
+      gameName: gameID,
+      playerID: playerID,
+      authKey: authKey,
+      action: 'Leave Lobby'
+    });
     navigate(`/`);
   };
 
