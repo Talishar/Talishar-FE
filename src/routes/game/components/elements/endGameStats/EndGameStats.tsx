@@ -18,6 +18,8 @@ import TalisharLogo from 'img/TalisharLogo.webp';
 import { BACKEND_URL } from 'appConstants';
 import { TALISHAR_METAFY_URL } from 'constants/socialLinks';
 import { useTheme } from 'themes/ThemeContext';
+import useSetting from 'hooks/useSetting';
+import { COLORBLIND_MODE } from 'features/options/constants';
 import {
   ResponsiveContainer,
   AreaChart,
@@ -316,6 +318,9 @@ function mergeCompanionPairs(cards: CardResult[]): CardResult[] {
   return Array.from(merged.values());
 }
 
+/** Chart palette used when the colorblind accessibility setting is on. */
+const ACCESSIBLE_CHART_COLORS = { you: '#4DA3FF', opponent: '#F0554E' };
+
 function downloadViaBackend(
   type: 'csv' | 'png',
   filename: string,
@@ -363,6 +368,13 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
 
   const { currentTheme } = useTheme();
   const themeColor = currentTheme.colors.primary;
+
+  const colorblindSetting = useSetting({ settingName: COLORBLIND_MODE });
+  const useAccessibleCharts = String(colorblindSetting?.value) === '1';
+
+  const chartColors = useAccessibleCharts
+    ? ACCESSIBLE_CHART_COLORS
+    : { you: themeColor, opponent: '#ef4444' };
 
   const { isSupporter, showAds } = useSupporterStatus();
 
@@ -917,9 +929,9 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
             const cardName = result.cardName.replace(/,/g, ';');
             content += `"${cardName}",${result.activated ?? 0},${
               result.passiveTriggered ?? 0
-            },${result.blocked}${
-              csvHasPitched ? `,${result.pitched}` : ''
-            },${result.hits}\n`;
+            },${result.blocked}${csvHasPitched ? `,${result.pitched}` : ''},${
+              result.hits
+            }\n`;
           });
         }
 
@@ -1247,7 +1259,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
             key={i}
             style={{
               margin: 0,
-              color: entry.color ?? themeColor,
+              color: entry.color ?? chartColors.you,
               fontWeight: 600
             }}
           >
@@ -1714,9 +1726,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                           <td className={styles.cardStat}>
                             {result.passiveTriggered ?? 0}
                           </td>
-                          <td className={styles.cardStat}>
-                            {result.blocked}
-                          </td>
+                          <td className={styles.cardStat}>{result.blocked}</td>
                           {activatedCardResults.some((r) => r.pitched > 0) && (
                             <td className={styles.cardStat}>
                               {result.pitched}
@@ -2416,10 +2426,14 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                   >
                     <stop
                       offset="5%"
-                      stopColor={themeColor}
+                      stopColor={chartColors.you}
                       stopOpacity={0.3}
                     />
-                    <stop offset="95%" stopColor={themeColor} stopOpacity={0} />
+                    <stop
+                      offset="95%"
+                      stopColor={chartColors.you}
+                      stopOpacity={0}
+                    />
                   </linearGradient>
                 </defs>
                 <CartesianGrid
@@ -2459,11 +2473,11 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                   type="monotone"
                   dataKey="avgValue"
                   name={t('END_GAME.VALUE')}
-                  stroke={themeColor}
+                  stroke={chartColors.you}
                   strokeWidth={2}
                   fill="url(#egsColorValue)"
                   dot={false}
-                  activeDot={{ r: 4, fill: themeColor }}
+                  activeDot={{ r: 4, fill: chartColors.you }}
                 />
               </AreaChart>
             </ResponsiveContainer>
@@ -2494,10 +2508,14 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                   >
                     <stop
                       offset="5%"
-                      stopColor={themeColor}
+                      stopColor={chartColors.you}
                       stopOpacity={0.2}
                     />
-                    <stop offset="95%" stopColor={themeColor} stopOpacity={0} />
+                    <stop
+                      offset="95%"
+                      stopColor={chartColors.you}
+                      stopOpacity={0}
+                    />
                   </linearGradient>
                   <linearGradient
                     id="egsColorOppLife"
@@ -2506,8 +2524,16 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                     x2="0"
                     y2="1"
                   >
-                    <stop offset="5%" stopColor="#ef4444" stopOpacity={0.15} />
-                    <stop offset="95%" stopColor="#ef4444" stopOpacity={0} />
+                    <stop
+                      offset="5%"
+                      stopColor={chartColors.opponent}
+                      stopOpacity={0.15}
+                    />
+                    <stop
+                      offset="95%"
+                      stopColor={chartColors.opponent}
+                      stopOpacity={0}
+                    />
                   </linearGradient>
                 </defs>
                 <CartesianGrid
@@ -2558,7 +2584,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                             y1="2"
                             x2="14"
                             y2="2"
-                            stroke={themeColor}
+                            stroke={chartColors.you}
                             strokeWidth="2"
                           />
                         </svg>
@@ -2577,7 +2603,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                             y1="2"
                             x2="14"
                             y2="2"
-                            stroke="#ef4444"
+                            stroke={chartColors.opponent}
                             strokeWidth="2"
                           />
                         </svg>
@@ -2590,21 +2616,21 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                   type="monotone"
                   dataKey="opponentLife"
                   name={t('END_GAME.OPP_LIFE')}
-                  stroke="#ef4444"
+                  stroke={chartColors.opponent}
                   strokeWidth={2}
                   fill="url(#egsColorOppLife)"
                   dot={false}
-                  activeDot={{ r: 4, fill: '#ef4444' }}
+                  activeDot={{ r: 4, fill: chartColors.opponent }}
                 />
                 <Area
                   type="monotone"
                   dataKey="yourLife"
                   name={t('END_GAME.YOUR_LIFE')}
-                  stroke={themeColor}
+                  stroke={chartColors.you}
                   strokeWidth={2}
                   fill="url(#egsColorYourLife)"
                   dot={false}
-                  activeDot={{ r: 4, fill: themeColor }}
+                  activeDot={{ r: 4, fill: chartColors.you }}
                 />
               </AreaChart>
             </ResponsiveContainer>
@@ -2635,10 +2661,14 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                   >
                     <stop
                       offset="5%"
-                      stopColor={themeColor}
+                      stopColor={chartColors.you}
                       stopOpacity={0.25}
                     />
-                    <stop offset="95%" stopColor={themeColor} stopOpacity={0} />
+                    <stop
+                      offset="95%"
+                      stopColor={chartColors.you}
+                      stopOpacity={0}
+                    />
                   </linearGradient>
                   <linearGradient
                     id="egsColorTaken"
@@ -2647,8 +2677,16 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                     x2="0"
                     y2="1"
                   >
-                    <stop offset="5%" stopColor="#ef4444" stopOpacity={0.2} />
-                    <stop offset="95%" stopColor="#ef4444" stopOpacity={0} />
+                    <stop
+                      offset="5%"
+                      stopColor={chartColors.opponent}
+                      stopOpacity={0.2}
+                    />
+                    <stop
+                      offset="95%"
+                      stopColor={chartColors.opponent}
+                      stopOpacity={0}
+                    />
                   </linearGradient>
                 </defs>
                 <CartesianGrid
@@ -2695,7 +2733,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                             y1="2"
                             x2="14"
                             y2="2"
-                            stroke={themeColor}
+                            stroke={chartColors.you}
                             strokeWidth="2"
                           />
                         </svg>
@@ -2714,7 +2752,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                             y1="2"
                             x2="14"
                             y2="2"
-                            stroke="#ef4444"
+                            stroke={chartColors.opponent}
                             strokeWidth="2"
                           />
                         </svg>
@@ -2742,21 +2780,21 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                   type="monotone"
                   dataKey="avgThreatened"
                   name={t('END_GAME.YOU_THREATENED')}
-                  stroke={themeColor}
+                  stroke={chartColors.you}
                   strokeWidth={2}
                   fill="url(#egsColorThreatened2)"
                   dot={false}
-                  activeDot={{ r: 4, fill: themeColor }}
+                  activeDot={{ r: 4, fill: chartColors.you }}
                 />
                 <Area
                   type="monotone"
                   dataKey="damageTaken"
                   name={t('END_GAME.YOU_TOOK')}
-                  stroke="#ef4444"
+                  stroke={chartColors.opponent}
                   strokeWidth={2}
                   fill="url(#egsColorTaken)"
                   dot={false}
-                  activeDot={{ r: 4, fill: '#ef4444' }}
+                  activeDot={{ r: 4, fill: chartColors.opponent }}
                 />
               </AreaChart>
             </ResponsiveContainer>
