@@ -1,4 +1,8 @@
-import reducer, { gameLobby, setGameStart } from 'features/game/GameSlice';
+import reducer, {
+  gameLobby,
+  setGameStart,
+  submitButton
+} from 'features/game/GameSlice';
 import GameStaticInfo from 'features/GameStaticInfo';
 
 const game = (
@@ -84,5 +88,44 @@ describe('lobby refresh isolation', () => {
     expect(state.gameInfo.gameID).toBe(202);
     expect(state.gameLobby).toBeUndefined();
     expect(state.gameDynamicInfo.lastUpdate).toBe(0);
+  });
+});
+
+describe('player input guard', () => {
+  const button = { button: { mode: 1 } };
+
+  it('marks input in progress and records the requestId', () => {
+    const state = reducer(undefined, submitButton.pending('req-1', button));
+
+    expect(state.isPlayerInputInProgress).toBe(true);
+    expect(state.playerInputRequestId).toBe('req-1');
+  });
+
+  it('releases the guard once the request settles', () => {
+    let state = reducer(undefined, submitButton.pending('req-1', button));
+    expect(state.isPlayerInputInProgress).toBe(true);
+
+    state = reducer(state, submitButton.fulfilled(undefined, 'req-1', button));
+
+    // Without this the guard would depend solely on an SSE push arriving.
+    expect(state.isPlayerInputInProgress).toBe(false);
+  });
+
+  it('releases the guard when the request is rejected', () => {
+    let state = reducer(undefined, submitButton.pending('req-1', button));
+
+    state = reducer(
+      state,
+      submitButton.rejected(new Error('network'), 'req-1', button)
+    );
+
+    expect(state.isPlayerInputInProgress).toBe(false);
+  });
+
+  it('records a fresh requestId for each submission', () => {
+    let state = reducer(undefined, submitButton.pending('req-1', button));
+    state = reducer(state, submitButton.pending('req-2', button));
+
+    expect(state.playerInputRequestId).toBe('req-2');
   });
 });

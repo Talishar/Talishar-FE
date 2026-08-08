@@ -12,6 +12,7 @@ import { MdClose } from 'react-icons/md';
 import { RootState } from 'app/Store';
 import { usePanelContext } from '../PanelContext';
 import { useTranslation } from 'react-i18next';
+import { usePlayerInputInProgress } from 'hooks/usePlayerInputInProgress';
 
 export default function ManualModePanel() {
   const { t } = useTranslation();
@@ -82,7 +83,7 @@ function ManualModeContent({
   const [opponentHealthInput, setOpponentHealthInput] = useState('');
   const [weaponPowerInput, setWeaponPowerInput] = useState('4');
   const [isCardLoading, setIsCardLoading] = useState(false);
-  const [isRequestInProgress, setIsRequestInProgress] = useState(false);
+  const isRequestInProgress = usePlayerInputInProgress();
   const [showCardTooltip, setShowCardTooltip] = useState(false);
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
@@ -136,17 +137,15 @@ function ManualModeContent({
 
   const handleDispatch = (mode: number) => {
     if (isRequestInProgress) return;
-    setIsRequestInProgress(true);
     dispatch(
       submitButton({
         button: { mode }
       })
-    ).finally(() => setIsRequestInProgress(false));
+    );
   };
 
   const handleDispatchWithParam = (mode: number, param: string | number) => {
     if (isRequestInProgress) return;
-    setIsRequestInProgress(true);
     dispatch(
       submitButton({
         button: {
@@ -156,7 +155,7 @@ function ManualModeContent({
             : { numMode: param })
         }
       })
-    ).finally(() => setIsRequestInProgress(false));
+    );
   };
 
   const handleAddCard = () => {

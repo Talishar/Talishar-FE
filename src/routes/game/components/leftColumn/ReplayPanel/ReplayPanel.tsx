@@ -20,6 +20,7 @@ import {
   useShareReplayMutation
 } from 'features/api/apiSlice';
 import { GameLocationState } from 'interface/GameLocationState';
+import { usePlayerInputInProgress } from 'hooks/usePlayerInputInProgress';
 
 const TURN_MARKER_RE = /^\[\[TURN_START:(\d+):(\d+)\]\]$/;
 const COMBAT_RE =
@@ -123,7 +124,7 @@ function ReplayContent({
     skip: !gameInfo.gameID
   });
   const [turnNumber, setTurnNumber] = useState(String(currentTurnNumber ?? 0));
-  const [isRequestInProgress, setIsRequestInProgress] = useState(false);
+  const isRequestInProgress = usePlayerInputInProgress();
 
   const chatTurns = useMemo(() => getChatReplayTurns(chatLog), [chatLog]);
   const chatTurnsByKey = useMemo(
@@ -192,7 +193,6 @@ function ReplayContent({
       turn.player === 1 || turn.player === 2
         ? `${turn.player}-${turn.number}`
         : String(turn.number);
-    setIsRequestInProgress(true);
     setTurnNumber(String(turn.number));
     const request = dispatch(
       submitButton({
@@ -204,7 +204,6 @@ function ReplayContent({
       success: `Turn ${turn.number} loaded`,
       error: 'Unable to load that turn'
     });
-    request.finally(() => setIsRequestInProgress(false));
   };
 
   const moveToAdjacent = (direction: -1 | 1, importantOnly = false) => {

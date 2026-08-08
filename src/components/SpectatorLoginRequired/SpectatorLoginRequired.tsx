@@ -21,9 +21,7 @@ const SpectatorLoginRequired = () => {
         <div className={styles.icon} aria-hidden="true">
           ⚠
         </div>
-        <h2 className={styles.title}>
-          {t('SPECTATOR.LOGIN_REQUIRED_TITLE')}
-        </h2>
+        <h2 className={styles.title}>{t('SPECTATOR.LOGIN_REQUIRED_TITLE')}</h2>
         <p className={styles.description}>
           {t('SPECTATOR.LOGIN_REQUIRED_BODY')}
         </p>
