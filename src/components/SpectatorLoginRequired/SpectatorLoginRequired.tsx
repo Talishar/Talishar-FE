@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAppSelector } from 'app/Hooks';
@@ -5,13 +6,35 @@ import { getGameInfo } from 'features/game/GameSlice';
 import { selectCurrentUserName } from 'features/auth/authSlice';
 import styles from './SpectatorLoginRequired.module.css';
 
-const SpectatorLoginRequired = () => {
+const DEFAULT_DELAY_MS = 3000;
+
+interface SpectatorLoginRequiredProps {
+  delayMs?: number;
+}
+
+const SpectatorLoginRequired = ({
+  delayMs = DEFAULT_DELAY_MS
+}: SpectatorLoginRequiredProps) => {
   const { t } = useTranslation();
   const gameInfo = useAppSelector(getGameInfo);
   const currentUserName = useAppSelector(selectCurrentUserName);
 
   const isSpectator = gameInfo.playerID === 3;
-  if (!isSpectator || currentUserName) {
+  const shouldWarn = isSpectator && !currentUserName;
+  const [graceElapsed, setGraceElapsed] = useState(false);
+
+  useEffect(() => {
+    if (!shouldWarn) {
+      // Reset so a later logout starts a fresh grace period.
+      setGraceElapsed(false);
+      return;
+    }
+
+    const timeout = setTimeout(() => setGraceElapsed(true), delayMs);
+    return () => clearTimeout(timeout);
+  }, [shouldWarn, delayMs]);
+
+  if (!shouldWarn || !graceElapsed) {
     return null;
   }
 

@@ -1,6 +1,6 @@
-import { render, screen } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import SpectatorLoginRequired from './SpectatorLoginRequired';
 
 const mockState = {
@@ -31,12 +31,26 @@ const renderNotice = () =>
     </MemoryRouter>
   );
 
+const advancePastGracePeriod = () =>
+  act(() => {
+    vi.advanceTimersByTime(3000);
+  });
+
 describe('SpectatorLoginRequired', () => {
+  beforeEach(() => {
+    vi.useFakeTimers();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
   it('explains the empty board to a logged-out spectator', () => {
     mockState.playerID = 3;
     mockState.userName = null;
 
     renderNotice();
+    advancePastGracePeriod();
 
     expect(screen.getByRole('alert')).toBeInTheDocument();
     expect(
@@ -50,11 +64,21 @@ describe('SpectatorLoginRequired', () => {
     ).toHaveAttribute('href', '/');
   });
 
+  it('stays quiet while the game is still loading', () => {
+    mockState.playerID = 3;
+    mockState.userName = null;
+
+    renderNotice();
+
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument();
+  });
+
   it('stays out of the way once the spectator is logged in', () => {
     mockState.playerID = 3;
     mockState.userName = 'someplayer';
 
     renderNotice();
+    advancePastGracePeriod();
 
     expect(screen.queryByRole('alert')).not.toBeInTheDocument();
   });
@@ -64,6 +88,7 @@ describe('SpectatorLoginRequired', () => {
     mockState.userName = null;
 
     renderNotice();
+    advancePastGracePeriod();
 
     expect(screen.queryByRole('alert')).not.toBeInTheDocument();
   });
