@@ -31,11 +31,6 @@ import { CardStack } from '../../routes/game/components/zones/permanentsZone/Per
 
 const CHAT_RE = /<span[^>]*>(.*?):\s<\/span>/;
 
-const createCommandId = (): string =>
-  typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function'
-    ? crypto.randomUUID()
-    : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
-
 /**
  * Sanitizes HTML content by removing all HTML tags.
  * Applies the regex replacement repeatedly until no more replacements occur
@@ -122,9 +117,7 @@ export const playCard = createAsyncThunk(
       playerID: String(gameInfo.playerID),
       authKey: String(gameInfo.authKey),
       mode: String(params.cardParams.action),
-      cardID: String(playNo),
-      expectedRevision: String(game.gameDynamicInfo.lastUpdate ?? 0),
-      commandId: createCommandId()
+      cardID: String(playNo)
     });
 
     try {
@@ -153,9 +146,7 @@ export const submitButton = createAsyncThunk(
       gameName: String(gameInfo.gameID),
       playerID: String(gameInfo.playerID),
       authKey: String(gameInfo.authKey),
-      mode: String(params.button.mode ?? ''),
-      expectedRevision: String(game.gameDynamicInfo.lastUpdate ?? 0),
-      commandId: createCommandId()
+      mode: String(params.button.mode ?? '')
     });
     if (params.button.buttonInput !== undefined)
       queryParams.set('buttonInput', String(params.button.buttonInput));
@@ -200,9 +191,7 @@ export const submitMultiButton = createAsyncThunk(
       gameName: String(gameInfo.gameID),
       playerID: String(gameInfo.playerID),
       authKey: String(gameInfo.authKey),
-      mode: String(params.mode),
-      expectedRevision: String(game.gameDynamicInfo.lastUpdate ?? 0),
-      commandId: createCommandId()
+      mode: String(params.mode)
     });
     const queryParamsString =
       queryURL + queryParams.toString() + params.extraParams;

@@ -332,23 +332,13 @@ export const apiSlice = createApi({
       }
     }),
     processInputAPI: builder.mutation({
-      async queryFn(body, api, _extraOptions, baseQuery) {
-        const gameState = (api.getState() as ApiState).game;
-        const commandId =
-          typeof crypto !== 'undefined' &&
-          typeof crypto.randomUUID === 'function'
-            ? crypto.randomUUID()
-            : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
-        return baseQuery({
+      query: (body) => {
+        return {
           url: URL_END_POINT.PROCESS_INPUT_POST,
           method: 'POST',
-          body: {
-            ...body,
-            expectedRevision: gameState.gameDynamicInfo.lastUpdate ?? 0,
-            commandId
-          },
+          body: body,
           responseHandler: parseResponse
-        });
+        };
       }
     }),
     getGameList: builder.query<GameListResponse, undefined>({
