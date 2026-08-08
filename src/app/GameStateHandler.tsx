@@ -46,6 +46,7 @@ const GameStateHandler = () => {
   const retryTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const navigateTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [forceRetry, setForceRetry] = useState(0);
+  const gameOverRef = useRef(false);
 
   useEffect(() => {
     return () => {
@@ -121,6 +122,7 @@ const GameStateHandler = () => {
     // Reset retry count when the game changes
     if (gameParamsRef.current.gameID !== currentGameID) {
       retryCountRef.current = 0;
+      gameOverRef.current = false;
       gameParamsRef.current = {
         gameID: currentGameID,
         playerID: currentPlayerID,
@@ -207,7 +209,16 @@ const GameStateHandler = () => {
               return;
             }
 
-            dispatch(receiveGameState(ParseGameState(data)));
+            const parsedState = ParseGameState(data);
+
+            const phase = parsedState.turnPhase?.turnPhase;
+            if (phase === 'OVER') {
+              gameOverRef.current = true;
+            } else if (phase !== undefined && phase !== 'YESNO') {
+              gameOverRef.current = false;
+            }
+
+            dispatch(receiveGameState(parsedState));
           } catch (parseError) {
             console.error('Failed to parse SSE data:', parseError);
           }
@@ -246,6 +257,8 @@ const GameStateHandler = () => {
           source.close();
           sourceRef.current = null;
 
+          if (gameOverRef.current) return;
+
           if (!hasConnected && retryCountRef.current === 1) {
             // Transient interruption during page load - retry once quickly
             scheduleRetry(500);
@@ -271,6 +284,7 @@ const GameStateHandler = () => {
     }, 100);
 
     const stalenessWatchdog = setInterval(() => {
+      if (gameOverRef.current) return;
       if (Date.now() - lastEventTimeRef.current > 45000) {
         lastEventTimeRef.current = Date.now();
         setForceRetry((prev) => prev + 1);
