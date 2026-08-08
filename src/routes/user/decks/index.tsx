@@ -54,13 +54,20 @@ const toEditState = (deck: FavoriteDeck): DeckEditState => ({
   altArts: {}
 });
 
+// Unlocked alt arts that stay selectable in the picker but are never chosen for
+// the player automatically. Mirrors GetOptInOnlyAltArts() in the backend.
+const OPT_IN_ONLY_ALT_ARTS = new Set(['scabskin_leathers-RIP']);
+
 const getAllAltArtSelection = (
   cards: DeckCardAltArtOptions[]
 ): Record<string, string> => {
   const altArts: Record<string, string> = {};
   cards.forEach((card) => {
-    if (card.altArts.length > 0) {
-      altArts[card.cardId] = card.altArts[0];
+    const defaultAlt = card.altArts.find(
+      (altPath) => !OPT_IN_ONLY_ALT_ARTS.has(altPath)
+    );
+    if (defaultAlt) {
+      altArts[card.cardId] = defaultAlt;
     }
   });
   return altArts;
