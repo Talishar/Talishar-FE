@@ -15,6 +15,7 @@ import { BACKEND_URL, ROGUELIKE_URL, URL_END_POINT } from 'appConstants';
 import Button from '../Button';
 import { toast } from 'react-hot-toast';
 import GameState from '../GameState';
+import Player from '../Player';
 import {
   GetLobbyRefresh,
   GetLobbyRefreshResponse
@@ -209,6 +210,36 @@ export const submitMultiButton = createAsyncThunk(
   }
 );
 
+const STICKY_PLAYER_FIELDS = [
+  'Name',
+  'isPatron',
+  'isContributor',
+  'isPvtVoidPatron',
+  'metafyTiers'
+] as const;
+
+const FALLBACK_GAME_INFO_FIELDS = [
+  'roguelikeGameID',
+  'isPrivate',
+  'isReplay',
+  'isOpponentAI',
+  'gameFormat',
+  'deckLink',
+  'canCustomizeDeck',
+  'deckCardBackId',
+  'deckPlaymatId'
+] as const;
+
+const mergePlayer = (prev: Player, incoming: Player | undefined): Player => {
+  const merged = { ...prev, ...incoming };
+  for (const field of STICKY_PLAYER_FIELDS) {
+    if (prev[field] !== undefined) {
+      (merged[field] as Player[typeof field]) = prev[field];
+    }
+  }
+  return preserveIdentities(prev, merged);
+};
+
 function mergeReceivedGameState(
   state: Draft<GameState>,
   prevGame: GameState,
@@ -224,32 +255,8 @@ function mergeReceivedGameState(
     state.hasGameEnded = false;
   }
 
-  const mergedPlayerOne = { ...prevGame.playerOne, ...payload.playerOne };
-  const mergedPlayerTwo = { ...prevGame.playerTwo, ...payload.playerTwo };
-
-  if (prevGame.playerOne.Name !== undefined)
-    mergedPlayerOne.Name = prevGame.playerOne.Name;
-  if (prevGame.playerOne.isPatron !== undefined)
-    mergedPlayerOne.isPatron = prevGame.playerOne.isPatron;
-  if (prevGame.playerOne.isContributor !== undefined)
-    mergedPlayerOne.isContributor = prevGame.playerOne.isContributor;
-  if (prevGame.playerOne.isPvtVoidPatron !== undefined)
-    mergedPlayerOne.isPvtVoidPatron = prevGame.playerOne.isPvtVoidPatron;
-  if (prevGame.playerOne.metafyTiers !== undefined)
-    mergedPlayerOne.metafyTiers = prevGame.playerOne.metafyTiers;
-  if (prevGame.playerTwo.Name !== undefined)
-    mergedPlayerTwo.Name = prevGame.playerTwo.Name;
-  if (prevGame.playerTwo.isPatron !== undefined)
-    mergedPlayerTwo.isPatron = prevGame.playerTwo.isPatron;
-  if (prevGame.playerTwo.isContributor !== undefined)
-    mergedPlayerTwo.isContributor = prevGame.playerTwo.isContributor;
-  if (prevGame.playerTwo.isPvtVoidPatron !== undefined)
-    mergedPlayerTwo.isPvtVoidPatron = prevGame.playerTwo.isPvtVoidPatron;
-  if (prevGame.playerTwo.metafyTiers !== undefined)
-    mergedPlayerTwo.metafyTiers = prevGame.playerTwo.metafyTiers;
-
-  state.playerOne = preserveIdentities(prevGame.playerOne, mergedPlayerOne);
-  state.playerTwo = preserveIdentities(prevGame.playerTwo, mergedPlayerTwo);
+  state.playerOne = mergePlayer(prevGame.playerOne, payload.playerOne);
+  state.playerTwo = mergePlayer(prevGame.playerTwo, payload.playerTwo);
 
   state.activeChainLink = preserveIdentities(
     prevGame.activeChainLink,
@@ -343,8 +350,12 @@ function mergeReceivedGameState(
   state.events = payload.events;
   state.landmark = preserveIdentities(prevGame.landmark, payload.landmark);
 
-  state.gameInfo.roguelikeGameID =
-    payload.gameInfo.roguelikeGameID ?? state.gameInfo.roguelikeGameID;
+  for (const field of FALLBACK_GAME_INFO_FIELDS) {
+    const incoming = payload.gameInfo[field];
+    if (incoming !== undefined && incoming !== null) {
+      (state.gameInfo[field] as GameStaticInfo[typeof field]) = incoming;
+    }
+  }
   state.gameInfo.altArts = preserveIdentities(
     prevGame.gameInfo.altArts,
     payload.gameInfo.altArts ?? prevGame.gameInfo.altArts
@@ -353,22 +364,6 @@ function mergeReceivedGameState(
     prevGame.gameInfo.opponentAltArts,
     payload.gameInfo.opponentAltArts ?? prevGame.gameInfo.opponentAltArts
   );
-  state.gameInfo.isPrivate =
-    payload.gameInfo.isPrivate ?? state.gameInfo.isPrivate;
-  state.gameInfo.isReplay =
-    payload.gameInfo.isReplay ?? state.gameInfo.isReplay;
-  state.gameInfo.isOpponentAI =
-    payload.gameInfo.isOpponentAI ?? state.gameInfo.isOpponentAI;
-  state.gameInfo.gameFormat =
-    payload.gameInfo.gameFormat ?? state.gameInfo.gameFormat;
-  state.gameInfo.deckLink =
-    payload.gameInfo.deckLink ?? state.gameInfo.deckLink;
-  state.gameInfo.canCustomizeDeck =
-    payload.gameInfo.canCustomizeDeck ?? state.gameInfo.canCustomizeDeck;
-  state.gameInfo.deckCardBackId =
-    payload.gameInfo.deckCardBackId ?? state.gameInfo.deckCardBackId;
-  state.gameInfo.deckPlaymatId =
-    payload.gameInfo.deckPlaymatId ?? state.gameInfo.deckPlaymatId;
 
   state.aiHasInfiniteHP = payload.aiHasInfiniteHP ?? false;
   state.practiceDummyWeaponPower = payload.practiceDummyWeaponPower ?? 4;
@@ -378,6 +373,41 @@ function mergeReceivedGameState(
   state.serverTimeOffset = payload.serverTimeOffset ?? state.serverTimeOffset;
   state.preventPassPrompt = payload.preventPassPrompt;
 }
+
+type PopupStateKey = 'damagePopups' | 'healingPopups' | 'actionPointPopups';
+type FloatingPopup = { id: string; amount: number };
+
+//Damage, healing and action point popups
+const createPopupReducers = (key: PopupStateKey) => ({
+  add: {
+    reducer: (
+      state: Draft<GameState>,
+      action: PayloadAction<{ isPlayer: boolean; amount: number; id: string }>
+    ) => {
+      const popups = (state[key] ??= { playerOne: [], playerTwo: [] });
+      const side = action.payload.isPlayer ? 'playerOne' : 'playerTwo';
+      popups[side].push({ id: action.payload.id, amount: action.payload.amount });
+    },
+    prepare: (payload: { isPlayer: boolean; amount: number }) => ({
+      payload: { ...payload, id: `${Date.now()}-${Math.random()}` }
+    })
+  },
+  remove: (
+    state: Draft<GameState>,
+    action: PayloadAction<{ isPlayer: boolean; id: string }>
+  ) => {
+    const popups = state[key];
+    if (!popups) return;
+    const side = action.payload.isPlayer ? 'playerOne' : 'playerTwo';
+    popups[side] = popups[side].filter(
+      (popup: FloatingPopup) => popup.id !== action.payload.id
+    );
+  }
+});
+
+const damagePopupReducers = createPopupReducers('damagePopups');
+const healingPopupReducers = createPopupReducers('healingPopups');
+const actionPointPopupReducers = createPopupReducers('actionPointPopups');
 
 export const gameSlice = createSlice({
   name: 'game',
@@ -478,125 +508,12 @@ export const gameSlice = createSlice({
         }
       }
     },
-    addDamagePopup: (
-      state,
-      action: PayloadAction<{
-        isPlayer: boolean;
-        amount: number;
-      }>
-    ) => {
-      const id = `${Date.now()}-${Math.random()}`;
-      const popup = { id, amount: action.payload.amount };
-      if (action.payload.isPlayer) {
-        if (!state.damagePopups) {
-          state.damagePopups = { playerOne: [], playerTwo: [] };
-        }
-        state.damagePopups.playerOne.push(popup);
-      } else {
-        if (!state.damagePopups) {
-          state.damagePopups = { playerOne: [], playerTwo: [] };
-        }
-        state.damagePopups.playerTwo.push(popup);
-      }
-    },
-    removeDamagePopup: (
-      state,
-      action: PayloadAction<{
-        isPlayer: boolean;
-        id: string;
-      }>
-    ) => {
-      if (!state.damagePopups) return;
-      if (action.payload.isPlayer) {
-        state.damagePopups.playerOne = state.damagePopups.playerOne.filter(
-          (p) => p.id !== action.payload.id
-        );
-      } else {
-        state.damagePopups.playerTwo = state.damagePopups.playerTwo.filter(
-          (p) => p.id !== action.payload.id
-        );
-      }
-    },
-    addHealingPopup: (
-      state,
-      action: PayloadAction<{
-        isPlayer: boolean;
-        amount: number;
-      }>
-    ) => {
-      const id = `${Date.now()}-${Math.random()}`;
-      const popup = { id, amount: action.payload.amount };
-      if (action.payload.isPlayer) {
-        if (!state.healingPopups) {
-          state.healingPopups = { playerOne: [], playerTwo: [] };
-        }
-        state.healingPopups.playerOne.push(popup);
-      } else {
-        if (!state.healingPopups) {
-          state.healingPopups = { playerOne: [], playerTwo: [] };
-        }
-        state.healingPopups.playerTwo.push(popup);
-      }
-    },
-    removeHealingPopup: (
-      state,
-      action: PayloadAction<{
-        isPlayer: boolean;
-        id: string;
-      }>
-    ) => {
-      if (!state.healingPopups) return;
-      if (action.payload.isPlayer) {
-        state.healingPopups.playerOne = state.healingPopups.playerOne.filter(
-          (p) => p.id !== action.payload.id
-        );
-      } else {
-        state.healingPopups.playerTwo = state.healingPopups.playerTwo.filter(
-          (p) => p.id !== action.payload.id
-        );
-      }
-    },
-    addActionPointPopup: (
-      state,
-      action: PayloadAction<{
-        isPlayer: boolean;
-        amount: number;
-      }>
-    ) => {
-      const id = `${Date.now()}-${Math.random()}`;
-      const popup = { id, amount: action.payload.amount };
-      if (action.payload.isPlayer) {
-        if (!state.actionPointPopups) {
-          state.actionPointPopups = { playerOne: [], playerTwo: [] };
-        }
-        state.actionPointPopups.playerOne.push(popup);
-      } else {
-        if (!state.actionPointPopups) {
-          state.actionPointPopups = { playerOne: [], playerTwo: [] };
-        }
-        state.actionPointPopups.playerTwo.push(popup);
-      }
-    },
-    removeActionPointPopup: (
-      state,
-      action: PayloadAction<{
-        isPlayer: boolean;
-        id: string;
-      }>
-    ) => {
-      if (!state.actionPointPopups) return;
-      if (action.payload.isPlayer) {
-        state.actionPointPopups.playerOne =
-          state.actionPointPopups.playerOne.filter(
-            (p) => p.id !== action.payload.id
-          );
-      } else {
-        state.actionPointPopups.playerTwo =
-          state.actionPointPopups.playerTwo.filter(
-            (p) => p.id !== action.payload.id
-          );
-      }
-    },
+    addDamagePopup: damagePopupReducers.add,
+    removeDamagePopup: damagePopupReducers.remove,
+    addHealingPopup: healingPopupReducers.add,
+    removeHealingPopup: healingPopupReducers.remove,
+    addActionPointPopup: actionPointPopupReducers.add,
+    removeActionPointPopup: actionPointPopupReducers.remove,
     openOptionsMenu: (state) => {
       state.optionsMenu = { active: true };
     },

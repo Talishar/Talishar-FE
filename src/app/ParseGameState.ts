@@ -160,6 +160,143 @@ function ParseEquipment(input: any) {
   return result;
 }
 
+function parseCards(input: any, reverse = false): Card[] {
+  if (!Array.isArray(input)) return [];
+  const result: Card[] = [];
+  if (reverse) {
+    for (let i = input.length - 1; i >= 0; i--) result.push(ParseCard(input[i]));
+  } else {
+    for (const cardObj of input) result.push(ParseCard(cardObj));
+  }
+  return result;
+}
+
+interface PlayerKeyMap {
+  equipment: string;
+  hand: string;
+  soul: string;
+  soulCount: string;
+  bloodDebtCount: string;
+  bloodDebtImmune: string;
+  earthCount: string;
+  blessingsCount: string;
+  health: string;
+  discard: string;
+  pitch: string;
+  pitchCount: string;
+  deck: string;
+  deckCount: string;
+  deckCard: string;
+  cardBack: string;
+  banish: string;
+  arsenal: string;
+  allies: string;
+  auras: string;
+  items: string;
+  permanents: string;
+  effects: string;
+  actionPoints: string;
+}
+
+const PLAYER_ONE_KEYS: PlayerKeyMap = {
+  equipment: 'playerEquipment',
+  hand: 'playerHand',
+  soul: 'playerSoul',
+  soulCount: 'playerSoulCount',
+  bloodDebtCount: 'myBloodDebtCount',
+  bloodDebtImmune: 'amIBloodDebtImmune',
+  earthCount: 'myEarthCount',
+  blessingsCount: 'myBlessingsCount',
+  health: 'playerHealth',
+  discard: 'playerDiscard',
+  pitch: 'playerPitch',
+  pitchCount: 'playerPitchCount',
+  deck: 'playerDeck',
+  deckCount: 'playerDeckCount',
+  deckCard: 'playerDeckCard',
+  cardBack: 'playerCardBack',
+  banish: 'playerBanish',
+  arsenal: 'playerArse',
+  allies: 'playerAllies',
+  auras: 'playerAuras',
+  items: 'playerItems',
+  permanents: 'playerPermanents',
+  effects: 'playerEffects',
+  actionPoints: 'playerAP'
+};
+
+const PLAYER_TWO_KEYS: PlayerKeyMap = {
+  equipment: 'opponentEquipment',
+  hand: 'opponentHand',
+  soul: 'opponentSoul',
+  soulCount: 'opponentSoulCount',
+  bloodDebtCount: 'opponentBloodDebtCount',
+  bloodDebtImmune: 'isOpponentBloodDebtImmune',
+  earthCount: 'opponentEarthCount',
+  blessingsCount: 'opponentBlessingsCount',
+  health: 'opponentHealth',
+  discard: 'opponentDiscard',
+  pitch: 'opponentPitch',
+  pitchCount: 'opponentPitchCount',
+  deck: 'opponentDeck',
+  deckCount: 'opponentDeckCount',
+  deckCard: 'opponentDeckCard',
+  cardBack: 'opponentCardBack',
+  banish: 'opponentBanish',
+  arsenal: 'opponentArse',
+  allies: 'opponentAllies',
+  auras: 'opponentAuras',
+  items: 'opponentItems',
+  permanents: 'opponentPermanents',
+  effects: 'opponentEffects',
+  actionPoints: 'opponentAP'
+};
+
+function ParsePlayer(input: any, keys: PlayerKeyMap): Player {
+  // Equipment must be parsed first; it seeds every field on the Player.
+  const player = ParseEquipment(input[keys.equipment]);
+
+  player.Hand = parseCards(input[keys.hand]);
+  player.Soul = parseCards(input[keys.soul]);
+  player.SoulCount = input[keys.soulCount];
+  player.bloodDebtCount = input[keys.bloodDebtCount];
+  player.bloodDebtImmune = input[keys.bloodDebtImmune];
+  player.earthCount = input[keys.earthCount];
+  player.blessingsCount = input[keys.blessingsCount];
+  player.Health = input[keys.health];
+
+  // Piles the backend sends bottom-first are reversed so index 0 is the top.
+  player.Graveyard = parseCards(input[keys.discard], true);
+  player.Pitch = parseCards(input[keys.pitch], true);
+  player.Deck = parseCards(input[keys.deck], true);
+  player.Banish = parseCards(input[keys.banish], true);
+
+  player.PitchRemaining = input[keys.pitchCount];
+  player.DeckSize = input[keys.deckCount];
+  player.DeckBack = ParseCard(input[keys.deckCard]);
+  player.CardBack = input[keys.cardBack];
+  player.Arsenal = parseCards(input[keys.arsenal]);
+
+  // Allies, auras, items and permanents all share one pile on the frontend.
+  player.Permanents = [
+    ...parseCards(input[keys.allies]),
+    ...parseCards(input[keys.auras]).map((card) => ({
+      ...card,
+      zone: ZONE.AURAS
+    })),
+    ...parseCards(input[keys.items]).map((card) => ({
+      ...card,
+      zone: ZONE.ITEMS
+    })),
+    ...parseCards(input[keys.permanents])
+  ];
+
+  player.Effects = parseCards(input[keys.effects]);
+  player.ActionPoints = input[keys.actionPoints];
+
+  return player;
+}
+
 export default function ParseGameState(input: any) {
   const result: GameState = {
     gameInfo: {
@@ -183,7 +320,13 @@ export default function ParseGameState(input: any) {
     clashRevealTrigger: 0,
     arsenalFlipP1Card: '',
     arsenalFlipP2Card: '',
-    arsenalFlipTrigger: 0
+    arsenalFlipTrigger: 0,
+    arsenalDestroyP1Card: '',
+    arsenalDestroyP2Card: '',
+    arsenalDestroyTrigger: 0,
+    heroTransformP1Card: '',
+    heroTransformP2Card: '',
+    heroTransformTrigger: 0
   };
 
   if (input.errorMessage) {
@@ -271,207 +414,12 @@ export default function ParseGameState(input: any) {
     result.activeLayers.active = false;
   }
 
-  // Player Two, the opponent.
-  // do equipment first as it's more complicated
-  result.playerTwo = ParseEquipment(input.opponentEquipment);
-
-  result.playerTwo.Hand = [];
-  if (input.opponentHand && Array.isArray(input.opponentHand)) {
-    for (const cardObj of input.opponentHand) {
-      result.playerTwo.Hand.push(ParseCard(cardObj));
-    }
-  }
-
-  result.playerTwo.SoulCount = input.opponentSoulCount;
-  result.playerTwo.Soul = [];
-  if (input.opponentSoul && Array.isArray(input.opponentSoul)) {
-    for (const cardObj of input.opponentSoul) {
-      result.playerTwo.Soul.push(ParseCard(cardObj));
-    }
-  }
-  result.playerTwo.bloodDebtCount = input.opponentBloodDebtCount;
-  result.playerTwo.bloodDebtImmune = input.isOpponentBloodDebtImmune;
-  result.playerTwo.earthCount = input.opponentEarthCount;
-  result.playerTwo.blessingsCount = input.opponentBlessingsCount;
-  result.playerTwo.Health = input.opponentHealth;
-
-  result.playerTwo.Graveyard = [];
-  if (input.opponentDiscard && Array.isArray(input.opponentDiscard)) {
-    for (let j = input.opponentDiscard.length - 1; j >= 0; j--) {
-      result.playerTwo.Graveyard.push(ParseCard(input.opponentDiscard[j]));
-    }
-  }
-
-  result.playerTwo.PitchRemaining = input.opponentPitchCount;
-  result.playerTwo.Pitch = [];
-  if (input.opponentPitch && Array.isArray(input.opponentPitch)) {
-    for (let j = input.opponentPitch.length - 1; j >= 0; j--) {
-      result.playerTwo.Pitch.push(ParseCard(input.opponentPitch[j]));
-    }
-  }
-
-  result.playerTwo.DeckSize = input.opponentDeckCount;
-  result.playerTwo.DeckBack = ParseCard(input.opponentDeckCard);
-  result.playerTwo.Deck = [];
-  if (input.opponentDeck && Array.isArray(input.opponentDeck)) {
-    for (let j = input.opponentDeck.length - 1; j >= 0; j--) {
-      result.playerTwo.Deck.push(ParseCard(input.opponentDeck[j]));
-    }
-  }
-  result.playerTwo.CardBack = input.opponentCardBack;
-
-  result.playerTwo.Banish = [];
-  if (input.opponentBanish && Array.isArray(input.opponentBanish)) {
-    for (let j = input.opponentBanish.length - 1; j >= 0; j--) {
-      result.playerTwo.Banish.push(ParseCard(input.opponentBanish[j]));
-    }
-  }
+  result.playerTwo = ParsePlayer(input, PLAYER_TWO_KEYS);
+  result.playerOne = ParsePlayer(input, PLAYER_ONE_KEYS);
 
   if (input.landmarks?.length > 0) {
     result.landmark = ParseCard(input.landmarks[0]);
   }
-
-  result.playerTwo.Arsenal = [];
-  if (input.opponentArse && Array.isArray(input.opponentArse)) {
-    for (const cardObj of input.opponentArse) {
-      result.playerTwo.Arsenal.push(ParseCard(cardObj));
-    }
-  }
-
-  // Stick all permanents in the same pile.
-  result.playerTwo.Permanents = [];
-  if (input.opponentAllies && Array.isArray(input.opponentAllies)) {
-    for (const cardObj of input.opponentAllies) {
-      result.playerTwo.Permanents.push(ParseCard(cardObj));
-    }
-  }
-  if (input.opponentAuras && Array.isArray(input.opponentAuras)) {
-    for (const cardObj of input.opponentAuras) {
-      const parsed = ParseCard(cardObj);
-      parsed.zone = ZONE.AURAS;
-      result.playerTwo.Permanents.push(parsed);
-    }
-  }
-  if (input.opponentItems && Array.isArray(input.opponentItems)) {
-    for (const cardObj of input.opponentItems) {
-      const parsed = ParseCard(cardObj);
-      parsed.zone = ZONE.ITEMS;
-      result.playerTwo.Permanents.push(parsed);
-    }
-  }
-  if (input.opponentPermanents && Array.isArray(input.opponentPermanents)) {
-    for (const cardObj of input.opponentPermanents) {
-      result.playerTwo.Permanents.push(ParseCard(cardObj));
-    }
-  }
-
-  result.playerTwo.Effects = [];
-  if (input.opponentEffects && Array.isArray(input.opponentEffects)) {
-    for (const cardObj of input.opponentEffects) {
-      result.playerTwo.Effects.push(ParseCard(cardObj));
-    }
-  }
-
-  result.playerTwo.ActionPoints = input.opponentAP;
-
-  // Player One the one who's playing.
-  // Equipment first again.
-  result.playerOne = ParseEquipment(input.playerEquipment);
-
-  result.playerOne.Hand = [];
-  if (input.playerHand && Array.isArray(input.playerHand)) {
-    for (const cardObj of input.playerHand) {
-      result.playerOne.Hand.push(ParseCard(cardObj));
-    }
-  }
-
-  result.playerOne.bloodDebtCount = input.myBloodDebtCount;
-  result.playerOne.bloodDebtImmune = input.amIBloodDebtImmune;
-  result.playerOne.earthCount = input.myEarthCount;
-  result.playerOne.blessingsCount = input.myBlessingsCount;
-  result.playerOne.SoulCount = input.playerSoulCount;
-  result.playerOne.Soul = [];
-  if (input.playerSoul && Array.isArray(input.playerSoul)) {
-    for (const cardObj of input.playerSoul) {
-      result.playerOne.Soul.push(ParseCard(cardObj));
-    }
-  }
-  result.playerOne.Health = input.playerHealth;
-
-  result.playerOne.Graveyard = [];
-  if (input.playerDiscard && Array.isArray(input.playerDiscard)) {
-    for (let j = input.playerDiscard.length - 1; j >= 0; j--) {
-      result.playerOne.Graveyard.push(ParseCard(input.playerDiscard[j]));
-    }
-  }
-
-  result.playerOne.PitchRemaining = input.playerPitchCount;
-  result.playerOne.Pitch = [];
-  if (input.playerPitch && Array.isArray(input.playerPitch)) {
-    for (let j = input.playerPitch.length - 1; j >= 0; j--) {
-      result.playerOne.Pitch.push(ParseCard(input.playerPitch[j]));
-    }
-  }
-
-  result.playerOne.DeckSize = input.playerDeckCount;
-  result.playerOne.DeckBack = ParseCard(input.playerDeckCard);
-  result.playerOne.Deck = [];
-  if (input.playerDeck && Array.isArray(input.playerDeck)) {
-    for (let j = input.playerDeck.length - 1; j >= 0; j--) {
-      result.playerOne.Deck.push(ParseCard(input.playerDeck[j]));
-    }
-  }
-  result.playerOne.CardBack = input.playerCardBack;
-
-  result.playerOne.Banish = [];
-  if (input.playerBanish && Array.isArray(input.playerBanish)) {
-    for (let j = input.playerBanish.length - 1; j >= 0; j--) {
-      result.playerOne.Banish.push(ParseCard(input.playerBanish[j]));
-    }
-  }
-
-  result.playerOne.Arsenal = [];
-  if (input.playerArse && Array.isArray(input.playerArse)) {
-    for (const cardObj of input.playerArse) {
-      result.playerOne.Arsenal.push(ParseCard(cardObj));
-    }
-  }
-
-  // Stick all permanents in the same pile.
-  result.playerOne.Permanents = [];
-  if (input.playerAllies && Array.isArray(input.playerAllies)) {
-    for (const cardObj of input.playerAllies) {
-      result.playerOne.Permanents.push(ParseCard(cardObj));
-    }
-  }
-  if (input.playerAuras && Array.isArray(input.playerAuras)) {
-    for (const cardObj of input.playerAuras) {
-      const parsed = ParseCard(cardObj);
-      parsed.zone = ZONE.AURAS;
-      result.playerOne.Permanents.push(parsed);
-    }
-  }
-  if (input.playerItems && Array.isArray(input.playerItems)) {
-    for (const cardObj of input.playerItems) {
-      const parsed = ParseCard(cardObj);
-      parsed.zone = ZONE.ITEMS;
-      result.playerOne.Permanents.push(parsed);
-    }
-  }
-  if (input.playerPermanents && Array.isArray(input.playerPermanents)) {
-    for (const cardObj of input.playerPermanents) {
-      result.playerOne.Permanents.push(ParseCard(cardObj));
-    }
-  }
-
-  result.playerOne.Effects = [];
-  if (input.playerEffects && Array.isArray(input.playerEffects)) {
-    for (const cardObj of input.playerEffects) {
-      result.playerOne.Effects.push(ParseCard(cardObj));
-    }
-  }
-
-  result.playerOne.ActionPoints = input.playerAP;
 
   // Chat log.
   const chatArray = input.chatLog ? input.chatLog.split('<br>') : [];
