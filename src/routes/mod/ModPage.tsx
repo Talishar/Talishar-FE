@@ -60,6 +60,7 @@ const ModPage: React.FC = () => {
   const [syncMetafy, { isLoading: isSyncingMetafy }] =
     useSyncMetafySubscribersMutation();
   const [metafySyncResult, setMetafySyncResult] = useState<any>(null);
+  const [clearNoMetafyId, setClearNoMetafyId] = useState(false);
 
   const handleBanByIP = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -268,8 +269,15 @@ const ModPage: React.FC = () => {
       return;
     }
 
+    if (
+      clearNoMetafyId &&
+      !window.confirm(t('MOD_PAGE.CONFIRM_CLEAR_NO_METAFY_ID'))
+    ) {
+      return;
+    }
+
     try {
-      const result = await syncMetafy().unwrap();
+      const result = await syncMetafy({ clearNoMetafyId }).unwrap();
       setMetafySyncResult(result);
       if (result?.error) {
         toast.error(result.error, { position: 'top-center', duration: 8000 });
@@ -495,6 +503,33 @@ const ModPage: React.FC = () => {
               >
                 {t('MOD_PAGE.SYNC_METAFY_DESCRIPTION')}
               </p>
+              <label
+                htmlFor="clearNoMetafyId"
+                style={{
+                  display: 'flex',
+                  alignItems: 'flex-start',
+                  gap: '8px',
+                  color: '#ccc',
+                  fontSize: '13px',
+                  marginBottom: '10px',
+                  cursor: 'pointer'
+                }}
+              >
+                <input
+                  id="clearNoMetafyId"
+                  type="checkbox"
+                  checked={clearNoMetafyId}
+                  onChange={(e) => setClearNoMetafyId(e.target.checked)}
+                  style={{ width: 'auto', margin: '2px 0 0 0' }}
+                />
+                <span>
+                  {t('MOD_PAGE.CLEAR_NO_METAFY_ID_LABEL')}
+                  <br />
+                  <span style={{ color: '#FF9800', fontSize: '12px' }}>
+                    {t('MOD_PAGE.CLEAR_NO_METAFY_ID_WARNING')}
+                  </span>
+                </span>
+              </label>
               <button
                 onClick={handleSyncMetafy}
                 disabled={isSyncingMetafy}
@@ -626,16 +661,29 @@ const ModPage: React.FC = () => {
                           </td>
                         </tr>
                       )}
-                      <tr>
-                        <td style={{ padding: '2px 10px' }}>
-                          {t('MOD_PAGE.SKIPPED_NO_METAFY_ID')}:
-                        </td>
-                        <td style={{ color: '#aaa' }}>
-                          <strong>
-                            {metafySyncResult.skippedNoMetafyId ?? 0}
-                          </strong>
-                        </td>
-                      </tr>
+                      {metafySyncResult.forcedNoMetafyIdClear ? (
+                        <tr>
+                          <td style={{ padding: '2px 10px' }}>
+                            {t('MOD_PAGE.CLEARED_NO_METAFY_ID')}:
+                          </td>
+                          <td style={{ color: '#FF9800' }}>
+                            <strong>
+                              {metafySyncResult.clearedNoMetafyId ?? 0}
+                            </strong>
+                          </td>
+                        </tr>
+                      ) : (
+                        <tr>
+                          <td style={{ padding: '2px 10px' }}>
+                            {t('MOD_PAGE.SKIPPED_NO_METAFY_ID')}:
+                          </td>
+                          <td style={{ color: '#aaa' }}>
+                            <strong>
+                              {metafySyncResult.skippedNoMetafyId ?? 0}
+                            </strong>
+                          </td>
+                        </tr>
+                      )}
                     </tbody>
                   </table>
                   {metafySyncResult.clearedUsers?.length > 0 && (
@@ -648,6 +696,18 @@ const ModPage: React.FC = () => {
                     >
                       <strong>{t('MOD_PAGE.CLEARED')}:</strong>{' '}
                       {metafySyncResult.clearedUsers.join(', ')}
+                    </p>
+                  )}
+                  {metafySyncResult.clearedNoMetafyIdUsers?.length > 0 && (
+                    <p
+                      style={{
+                        marginTop: '4px',
+                        color: '#FF9800',
+                        fontSize: '12px'
+                      }}
+                    >
+                      <strong>{t('MOD_PAGE.CLEARED_NO_METAFY_ID')}:</strong>{' '}
+                      {metafySyncResult.clearedNoMetafyIdUsers.join(', ')}
                     </p>
                   )}
                   {metafySyncResult.skippedUsers?.length > 0 && (

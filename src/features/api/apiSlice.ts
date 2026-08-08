@@ -1100,11 +1100,15 @@ export const apiSlice = createApi({
         };
       }
     }),
-    syncMetafySubscribers: builder.mutation<any, void>({
-      query: () => {
+    syncMetafySubscribers: builder.mutation<
+      any,
+      { clearNoMetafyId?: boolean } | void
+    >({
+      query: (args) => {
         return {
           url: URL_END_POINT.SYNC_METAFY_SUBSCRIBERS,
           method: 'POST',
+          body: { clearNoMetafyId: args?.clearNoMetafyId ?? false },
           responseHandler: parseResponse
         };
       }
