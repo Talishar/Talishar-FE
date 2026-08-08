@@ -1515,6 +1515,13 @@
     "BANNER_TITLE": "Create Account",
     "PAGE_TITLE": "Sign Up - Play FaB Free Online"
   },
+  "SPECTATOR": {
+    "LOGIN_REQUIRED_ACTION": "Log in",
+    "LOGIN_REQUIRED_BODY": "You need to be logged in to watch a game. Log in and open this link again to start spectating.",
+    "LOGIN_REQUIRED_GAME": "Game",
+    "LOGIN_REQUIRED_HOME": "Go home",
+    "LOGIN_REQUIRED_TITLE": "Log in to spectate"
+  },
   "SYSTEM_MESSAGE_MODAL": {
     "ACKNOWLEDGE": "Acknowledge",
     "ACKNOWLEDGING": "Acknowledging...",

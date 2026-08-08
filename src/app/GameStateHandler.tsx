@@ -184,6 +184,12 @@ const GameStateHandler = () => {
                 return;
               }
 
+              if (errorMsg.includes('required to spectate')) {
+                toast.error(t('SPECTATOR.LOGIN_REQUIRED_BODY'));
+                source.close();
+                return;
+              }
+
               if (
                 errorMsg.includes('invalid auth') ||
                 errorMsg.includes('authkey')

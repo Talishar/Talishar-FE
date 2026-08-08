@@ -14,6 +14,7 @@ import CardListZone from '../components/zones/cardListZone/CardListZone';
 import ChainLinkSummaryContainer from '../components/elements/chainLinkSummary/ChainLinkSummary';
 import ActiveLayersZone from '../components/zones/activeLayersZone/ActiveLayersZone';
 import GameStateHandler from 'app/GameStateHandler';
+import SpectatorLoginRequired from 'components/SpectatorLoginRequired';
 import HeroVsHeroIntro from '../components/elements/heroVsHeroIntro/HeroVsHeroIntro';
 import OpponentInactive from '../components/elements/opponentInactive/OpponentInactive';
 import { useCookies } from 'react-cookie';
@@ -226,6 +227,7 @@ function Play({ isRoguelike }: { isRoguelike: boolean }) {
         <OpponentInactive />
         <CardPortal />
         <GameStateHandler />
+        <SpectatorLoginRequired />
         <EventsHandler />
         {gameInfo.isReplay && canPassPhase === true && (
           <button
