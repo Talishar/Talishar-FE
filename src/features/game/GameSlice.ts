@@ -13,7 +13,6 @@ import GameStaticInfo, { AltArt } from '../GameStaticInfo';
 import { Card } from '../Card';
 import { BACKEND_URL, ROGUELIKE_URL, URL_END_POINT } from 'appConstants';
 import Button from '../Button';
-import { toast } from 'react-hot-toast';
 import GameState from '../GameState';
 import Player from '../Player';
 import {
@@ -27,24 +26,55 @@ import {
   saveGameAuthKey,
   loadGamePlayerID
 } from 'utils/LocalKeyManagement';
+import { parseBackendJson } from 'utils/parseBackendResponse';
 import isEqual from 'react-fast-compare';
 import { CardStack } from '../../routes/game/components/zones/permanentsZone/PermanentsZone';
 
 const CHAT_RE = /<span[^>]*>(.*?):\s<\/span>/;
 
-/**
- * Sanitizes HTML content by removing all HTML tags.
- * Applies the regex replacement repeatedly until no more replacements occur
- * to prevent bypassing via nested/overlapping tag patterns.
- */
-const sanitizeHtmlTags = (input: string): string => {
-  let previous;
-  let result = input;
-  do {
-    previous = result;
-    result = result.replace(/<[^>]*>/g, '');
-  } while (result !== previous);
-  return result;
+const processInputParams = (gameInfo: GameStaticInfo): URLSearchParams =>
+  new URLSearchParams({
+    gameName: String(gameInfo.gameID),
+    playerID: String(gameInfo.playerID),
+    authKey: String(gameInfo.authKey)
+  });
+
+const sendProcessInput = async (
+  label: string,
+  gameInfo: GameStaticInfo,
+  queryParams: URLSearchParams,
+  extraQuery = ''
+): Promise<void> => {
+  const baseURL = gameInfo.isRoguelike ? ROGUELIKE_URL : BACKEND_URL;
+  const queryURL = `${baseURL}${URL_END_POINT.PROCESS_INPUT}`;
+
+  let response: Response;
+  try {
+    response = await fetch(queryURL + queryParams.toString() + extraQuery, {
+      method: 'GET',
+      headers: {},
+      credentials: 'include'
+    });
+  } catch (e) {
+    console.error(
+      `[${label}] Network error:`,
+      e,
+      '| params:',
+      Object.fromEntries(queryParams)
+    );
+    throw e;
+  }
+
+  const data = await response.text();
+  if (!response.ok || data.startsWith('Invalid')) {
+    console.error(
+      `[${label}] Backend error:`,
+      data,
+      '| params:',
+      Object.fromEntries(queryParams)
+    );
+    throw new Error(`${label} failed (HTTP ${response.status}): ${data}`);
+  }
 };
 
 export const gameLobby = createAsyncThunk(
@@ -66,6 +96,7 @@ export const gameLobby = createAsyncThunk(
       lastUpdate: params.lastUpdate
     } as GetLobbyRefresh;
 
+    let data: string;
     try {
       const response = await fetch(queryURL, {
         method: 'POST',
@@ -74,28 +105,17 @@ export const gameLobby = createAsyncThunk(
         signal: params.signal,
         body: JSON.stringify(requestBody)
       });
-
-      let data = (await response.text()).trim();
-      const indexOfBraces = data.indexOf('{');
-      if (indexOfBraces === -1) {
-        // No JSON object found - backend returned an error message or non-JSON response
-        if (data !== '0') {
-          toast.error(`Backend Error: ${sanitizeHtmlTags(data)}`);
-          console.error(`Backend returned non-JSON response: ${data}`);
-        }
-        return;
-      }
-      if (indexOfBraces !== 0) {
-        data = data.substring(indexOfBraces);
-      }
-      const parsedData = JSON.parse(data) as GetLobbyRefreshResponse;
-      return parsedData;
+      data = (await response.text()).trim();
     } catch (e) {
-      if (params.signal?.aborted) {
-        return;
-      }
-      return console.error(e);
+      // An aborted poll is routine (game switch, unmount), not a failure.
+      if (params.signal?.aborted) return;
+      throw e;
     }
+    if (data === '0') return;
+
+    const parsedData = parseBackendJson(data) as GetLobbyRefreshResponse;
+    if (Object.keys(parsedData).length === 0) return;
+    return parsedData;
   }
 );
 
@@ -108,30 +128,12 @@ export const playCard = createAsyncThunk(
       params.cardParams.actionDataOverride != ''
         ? params.cardParams.actionDataOverride
         : params.cardIndex;
-    const gameInfo = game.gameInfo;
 
-    const queryURL = gameInfo.isRoguelike
-      ? `${ROGUELIKE_URL}${URL_END_POINT.PROCESS_INPUT}`
-      : `${BACKEND_URL}${URL_END_POINT.PROCESS_INPUT}`;
-    const queryParams = new URLSearchParams({
-      gameName: String(gameInfo.gameID),
-      playerID: String(gameInfo.playerID),
-      authKey: String(gameInfo.authKey),
-      mode: String(params.cardParams.action),
-      cardID: String(playNo)
-    });
+    const queryParams = processInputParams(game.gameInfo);
+    queryParams.set('mode', String(params.cardParams.action));
+    queryParams.set('cardID', String(playNo));
 
-    try {
-      const response = await fetch(queryURL + queryParams, {
-        method: 'GET',
-        headers: {},
-        credentials: 'include'
-      });
-      const data = await response.text();
-      return;
-    } catch (e) {
-      console.error(e);
-    }
+    await sendProcessInput('playCard', game.gameInfo, queryParams);
   }
 );
 
@@ -139,16 +141,9 @@ export const submitButton = createAsyncThunk(
   'game/submitButton',
   async (params: { button: Button }, { getState }) => {
     const { game } = getState() as { game: GameState };
-    const gameInfo = game.gameInfo;
-    const queryURL = gameInfo.isRoguelike
-      ? `${ROGUELIKE_URL}${URL_END_POINT.PROCESS_INPUT}`
-      : `${BACKEND_URL}${URL_END_POINT.PROCESS_INPUT}`;
-    const queryParams = new URLSearchParams({
-      gameName: String(gameInfo.gameID),
-      playerID: String(gameInfo.playerID),
-      authKey: String(gameInfo.authKey),
-      mode: String(params.button.mode ?? '')
-    });
+
+    const queryParams = processInputParams(game.gameInfo);
+    queryParams.set('mode', String(params.button.mode ?? ''));
     if (params.button.buttonInput !== undefined)
       queryParams.set('buttonInput', String(params.button.buttonInput));
     if (params.button.inputText !== undefined)
@@ -157,25 +152,8 @@ export const submitButton = createAsyncThunk(
       queryParams.set('cardID', String(params.button.cardID));
     if (params.button.numMode !== undefined)
       queryParams.set('numMode', String(params.button.numMode));
-    try {
-      const response = await fetch(queryURL + queryParams, {
-        method: 'GET',
-        headers: {},
-        credentials: 'include'
-      });
-      const data = await response.text();
-      if (!response.ok || (data && data.startsWith('Invalid'))) {
-        console.error(
-          '[submitButton] Backend error:',
-          data,
-          '| params:',
-          Object.fromEntries(queryParams)
-        );
-      }
-      return;
-    } catch (e) {
-      console.error(e);
-    }
+
+    await sendProcessInput('submitButton', game.gameInfo, queryParams);
   }
 );
 
@@ -184,29 +162,16 @@ export const submitMultiButton = createAsyncThunk(
   async (params: { mode?: number; extraParams: string }, { getState }) => {
     if (params.mode === undefined) return;
     const { game } = getState() as { game: GameState };
-    const gameInfo = game.gameInfo;
-    const queryURL = gameInfo.isRoguelike
-      ? `${ROGUELIKE_URL}${URL_END_POINT.PROCESS_INPUT}`
-      : `${BACKEND_URL}${URL_END_POINT.PROCESS_INPUT}`;
-    const queryParams = new URLSearchParams({
-      gameName: String(gameInfo.gameID),
-      playerID: String(gameInfo.playerID),
-      authKey: String(gameInfo.authKey),
-      mode: String(params.mode)
-    });
-    const queryParamsString =
-      queryURL + queryParams.toString() + params.extraParams;
-    try {
-      const response = await fetch(queryParamsString, {
-        method: 'GET',
-        headers: {},
-        credentials: 'include'
-      });
-      const data = await response.text();
-      return;
-    } catch (e) {
-      console.error(e);
-    }
+
+    const queryParams = processInputParams(game.gameInfo);
+    queryParams.set('mode', String(params.mode));
+
+    await sendProcessInput(
+      'submitMultiButton',
+      game.gameInfo,
+      queryParams,
+      params.extraParams
+    );
   }
 );
 
@@ -408,6 +373,31 @@ const createPopupReducers = (key: PopupStateKey) => ({
 const damagePopupReducers = createPopupReducers('damagePopups');
 const healingPopupReducers = createPopupReducers('healingPopups');
 const actionPointPopupReducers = createPopupReducers('actionPointPopups');
+
+type RevealKind =
+  | 'clashReveal'
+  | 'heroTransform'
+  | 'arsenalFlip'
+  | 'arsenalDestroy';
+
+type RevealPayload = { playerId: number | null; cardNumber: string };
+
+const createRevealReducer =
+  (kind: RevealKind) =>
+  (state: Draft<GameState>, action: PayloadAction<RevealPayload>) => {
+    const p1Card = `${kind}P1Card` as const;
+    const p2Card = `${kind}P2Card` as const;
+
+    if (action.payload.playerId === null) {
+      state[p1Card] = '';
+      state[p2Card] = '';
+      return;
+    }
+
+    state[action.payload.playerId === 1 ? p1Card : p2Card] =
+      action.payload.cardNumber;
+    state[`${kind}Trigger` as const] += 1;
+  };
 
 export const gameSlice = createSlice({
   name: 'game',
@@ -758,66 +748,10 @@ export const gameSlice = createSlice({
       state.addBotDeckPlayerId = action.payload.playerId;
       state.addBotDeckCard = action.payload.cardNumber;
     },
-    setClashReveal: (
-      state,
-      action: PayloadAction<{ playerId: number | null; cardNumber: string }>
-    ) => {
-      if (action.payload.playerId === null) {
-        state.clashRevealP1Card = '';
-        state.clashRevealP2Card = '';
-      } else if (action.payload.playerId === 1) {
-        state.clashRevealP1Card = action.payload.cardNumber;
-        state.clashRevealTrigger += 1;
-      } else {
-        state.clashRevealP2Card = action.payload.cardNumber;
-        state.clashRevealTrigger += 1;
-      }
-    },
-    setHeroTransform: (
-      state,
-      action: PayloadAction<{ playerId: number | null; cardNumber: string }>
-    ) => {
-      if (action.payload.playerId === null) {
-        state.heroTransformP1Card = '';
-        state.heroTransformP2Card = '';
-      } else if (action.payload.playerId === 1) {
-        state.heroTransformP1Card = action.payload.cardNumber;
-        state.heroTransformTrigger += 1;
-      } else {
-        state.heroTransformP2Card = action.payload.cardNumber;
-        state.heroTransformTrigger += 1;
-      }
-    },
-    setArsenalFlip: (
-      state,
-      action: PayloadAction<{ playerId: number | null; cardNumber: string }>
-    ) => {
-      if (action.payload.playerId === null) {
-        state.arsenalFlipP1Card = '';
-        state.arsenalFlipP2Card = '';
-      } else if (action.payload.playerId === 1) {
-        state.arsenalFlipP1Card = action.payload.cardNumber;
-        state.arsenalFlipTrigger += 1;
-      } else {
-        state.arsenalFlipP2Card = action.payload.cardNumber;
-        state.arsenalFlipTrigger += 1;
-      }
-    },
-    setArsenalDestroy: (
-      state,
-      action: PayloadAction<{ playerId: number | null; cardNumber: string }>
-    ) => {
-      if (action.payload.playerId === null) {
-        state.arsenalDestroyP1Card = '';
-        state.arsenalDestroyP2Card = '';
-      } else if (action.payload.playerId === 1) {
-        state.arsenalDestroyP1Card = action.payload.cardNumber;
-        state.arsenalDestroyTrigger += 1;
-      } else {
-        state.arsenalDestroyP2Card = action.payload.cardNumber;
-        state.arsenalDestroyTrigger += 1;
-      }
-    },
+    setClashReveal: createRevealReducer('clashReveal'),
+    setHeroTransform: createRevealReducer('heroTransform'),
+    setArsenalFlip: createRevealReducer('arsenalFlip'),
+    setArsenalDestroy: createRevealReducer('arsenalDestroy'),
     setReplayStart: (
       state,
       action: PayloadAction<{
