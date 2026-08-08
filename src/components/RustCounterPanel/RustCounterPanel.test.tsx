@@ -38,7 +38,7 @@ describe('RustCounterPanel rewarded ad fallback', () => {
     ).toBeInTheDocument();
   });
 
-  it('requires 15 visible seconds before clearing counters', () => {
+  it('requires 8 visible seconds before clearing counters', () => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date('2026-07-25T12:00:00Z'));
     const onFallbackAdComplete = vi.fn();
@@ -56,13 +56,13 @@ describe('RustCounterPanel rewarded ad fallback', () => {
 
     expect(screen.getByRole('dialog')).toBeInTheDocument();
     const continueButton = screen.getByRole('button', {
-      name: 'Continue in 15s'
+      name: 'Continue in 8s'
     });
     expect(continueButton).toBeDisabled();
     expect(onFallbackAdComplete).not.toHaveBeenCalled();
 
     act(() => {
-      vi.advanceTimersByTime(15_000);
+      vi.advanceTimersByTime(8_000);
     });
 
     const rewardButton = screen.getByRole('button', {
