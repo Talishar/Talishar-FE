@@ -19,7 +19,7 @@ type Tier = {
   savings: number;
 };
 
-const AD_DURATION_MS = 15_000;
+const AD_DURATION_MS = 8_000;
 const UPDATE_INTERVAL_MS = 250;
 
 const TIERS: Tier[] = [
@@ -151,10 +151,10 @@ const HouseRewardedAd = ({ onRewardEarned }: HouseRewardedAdProps) => {
             className={styles.benefits}
             aria-label={t('HOUSE_REWARDED_AD.PREMIUM_BENEFITS')}
           >
-            <li>{t('HOUSE_REWARDED_AD.BENEFIT_UNLIMITED_GAMES')}</li>
-            <li>{t('HOUSE_REWARDED_AD.BENEFIT_NO_RUST_COUNTERS')}</li>
             <li>{t('HOUSE_REWARDED_AD.BENEFIT_NO_ADS')}</li>
             <li>{t('HOUSE_REWARDED_AD.BENEFIT_EXTRA_CUSTOMIZATION')}</li>
+            <li>{t('HOUSE_REWARDED_AD.BENEFIT_SUPPORT_CREATOR')}</li>
+            <li>{t('HOUSE_REWARDED_AD.BENEFIT_EXTRA_REPLAY_SLOTS')}</li>
           </ul>
 
           <div

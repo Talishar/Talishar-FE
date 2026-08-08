@@ -553,6 +553,8 @@
     "BENEFIT_NO_ADS": "No advertisements",
     "BENEFIT_NO_RUST_COUNTERS": "No rust counters",
     "BENEFIT_UNLIMITED_GAMES": "Unlimited games anytime",
+    "BENEFIT_SUPPORT_CREATOR": "Support the Talishar devs",
+    "BENEFIT_EXTRA_REPLAY_SLOTS": "Extra replay slots",
     "CLOSE_AND_CLEAR": "Close and clear rust counters",
     "CLOSE_IN_SECONDS": "Ad can be closed in {{seconds}} seconds",
     "CONTINUE_CLEAR": "Continue - Clear Your Rust Counters!",
