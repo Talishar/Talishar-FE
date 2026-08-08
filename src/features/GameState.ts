@@ -159,5 +159,7 @@ export default interface GameState {
   aiHasInfiniteHP?: boolean;
   practiceDummyWeaponPower?: number;
   opponentInactive?: boolean;
+  inactivityDeadline?: number; // Absolute server timestamp (ms) at which the priority player becomes inactive. 
+  serverTimeOffset?: number; // Server clock minus local clock (ms)
   spectatorCameraView?: number; // 1 for player 1 view, 2 for player 2 view
 }

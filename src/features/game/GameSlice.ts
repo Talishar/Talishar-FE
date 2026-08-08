@@ -373,6 +373,9 @@ function mergeReceivedGameState(
   state.aiHasInfiniteHP = payload.aiHasInfiniteHP ?? false;
   state.practiceDummyWeaponPower = payload.practiceDummyWeaponPower ?? 4;
   state.opponentInactive = payload.opponentInactive ?? false;
+  state.inactivityDeadline =
+    payload.inactivityDeadline ?? state.inactivityDeadline;
+  state.serverTimeOffset = payload.serverTimeOffset ?? state.serverTimeOffset;
   state.preventPassPrompt = payload.preventPassPrompt;
 }
 

@@ -1065,9 +1065,13 @@
   },
   "OPPONENT_INACTIVE": {
     "CLAIM_VICTORY": "Claim Victory",
+    "COUNTDOWN_OPPONENT": "Waiting on your opponent",
+    "COUNTDOWN_PLAYER": "Waiting on {{player}}",
+    "COUNTDOWN_YOU": "It's your move",
     "HOURGLASS": "⏳",
     "IM_STILL_HERE": "I'm Still Here",
     "OPPONENT_INACTIVE": "Your opponent appears to be inactive",
+    "PLAYER_INACTIVE": "{{player}} appears to be inactive",
     "WARNING": "⚠️",
     "YOU_INACTIVE": "You appear to be inactive. Make a move!"
   },

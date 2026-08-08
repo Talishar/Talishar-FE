@@ -596,6 +596,11 @@ export default function ParseGameState(input: any) {
   // opponent inactivity status
   result.opponentInactive = input.inactive ?? false;
 
+  result.inactivityDeadline = input.inactivityDeadline ?? undefined;
+  result.serverTimeOffset = input.serverTime
+    ? input.serverTime - Date.now()
+    : undefined;
+
   // rematch acceptance status
   result.isFullRematch = input.fullRematchAccepted ?? false;
 
