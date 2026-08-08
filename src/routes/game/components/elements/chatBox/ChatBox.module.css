@@ -54,11 +54,15 @@
   text-transform: uppercase;
 }
 
+.turnDivider > span {
+  min-width: 0;
+}
+
 .turnDivider::before,
 .turnDivider::after {
   content: '';
   height: 1px;
-  flex: 1 1 auto;
+  flex: 1 0 12px;
   background-color: currentColor;
   opacity: 0.5;
 }
@@ -67,6 +71,9 @@
   color: var(--theme-text);
   font-weight: 500;
   text-transform: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .combatGroup {
