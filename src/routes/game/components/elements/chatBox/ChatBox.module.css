@@ -61,10 +61,10 @@
 .turnDivider::before,
 .turnDivider::after {
   content: '';
-  height: 1px;
+  height: 0;
   flex: 1 0 12px;
-  background-color: currentColor;
-  opacity: 0.5;
+  align-self: center;
+  border-top: 1px solid color-mix(in srgb, currentColor 50%, transparent);
 }
 
 .turnDividerPlayer {
