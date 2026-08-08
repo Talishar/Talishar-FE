@@ -58,6 +58,11 @@
   min-width: 0;
 }
 
+.turnDividerLabel {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
 .turnDivider::before,
 .turnDivider::after {
   content: '';

@@ -71,7 +71,9 @@ function TurnDivider({
       role="separator"
       aria-label={t('GAME_LOG.TURN_ARIA', { turn, playerName })}
     >
-      <span>{t('GAME_LOG.TURN', { turn })}</span>
+      <span className={styles.turnDividerLabel}>
+        {t('GAME_LOG.TURN', { turn })}
+      </span>
       <span className={styles.turnDividerPlayer}>{playerName}</span>
     </div>
   );
