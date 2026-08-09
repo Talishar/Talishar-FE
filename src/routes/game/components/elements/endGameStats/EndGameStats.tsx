@@ -761,10 +761,6 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
 
   const handleExportCSV = async () => {
     try {
-      console.log('=== Starting CSV export ===');
-      console.log('Current player ID:', data.playerID);
-      console.log('Both players data available:', data.bothPlayersData);
-
       const timestamp = new Date()
         .toISOString()
         .replace(/[:.]/g, '-')
@@ -989,10 +985,6 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
         const opponentData = data.bothPlayersData[opponentPlayerID];
 
         if (opponentData && opponentData.cardResults) {
-          console.log(
-            'Using cached opponent data for player',
-            opponentPlayerID
-          );
           const opponentDataWithID = {
             ...opponentData,
             playerID: opponentPlayerID

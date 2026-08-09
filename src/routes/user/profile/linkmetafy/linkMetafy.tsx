@@ -27,7 +27,6 @@ const LinkMetafy = () => {
     })
       .unwrap()
       .then((data: MetafyLoginResponse) => {
-        console.log('Metafy login response:', data);
         if (data.message === 'ok') {
           toast.success(t('LINK_METAFY_PAGE.SUCCESS'), {
             position: 'top-center'
