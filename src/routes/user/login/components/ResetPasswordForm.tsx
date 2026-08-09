@@ -71,9 +71,14 @@ export const ResetPasswordForm = () => {
             placeholder="********"
             {...register('password')}
             aria-invalid={errors.password?.message ? 'true' : undefined}
+            aria-describedby={
+              errors.password?.message ? 'password-error' : undefined
+            }
           />
           {errors.password?.message && (
-            <div className={styles.fieldError}>{errors.password?.message}</div>
+            <div id="password-error" className={styles.fieldError} role="alert">
+              {errors.password?.message}
+            </div>
           )}
           <label htmlFor="passwordRepeat">
             {t('USER.LOGIN.CONFIRM_PASSWORD')}
@@ -84,9 +89,18 @@ export const ResetPasswordForm = () => {
             placeholder="********"
             {...register('passwordRepeat')}
             aria-invalid={errors.passwordRepeat?.message ? 'true' : undefined}
+            aria-describedby={
+              errors.passwordRepeat?.message
+                ? 'passwordRepeat-error'
+                : undefined
+            }
           />
           {errors.passwordRepeat?.message && (
-            <div className={styles.fieldError}>
+            <div
+              id="passwordRepeat-error"
+              className={styles.fieldError}
+              role="alert"
+            >
               {errors.passwordRepeat?.message}
             </div>
           )}
@@ -96,12 +110,10 @@ export const ResetPasswordForm = () => {
             aria-busy={isSubmitting}
             className={styles.submitButton}
           >
-            {isSubmitting
-              ? t('GAME_LOBBY.SUBMITTING')
-              : t('USER.LOGIN.SUBMIT')}
+            {isSubmitting ? t('GAME_LOBBY.SUBMITTING') : t('USER.LOGIN.SUBMIT')}
           </button>
           {errors.root?.serverError?.message && (
-            <div className={styles.fieldError}>
+            <div className={styles.fieldError} role="alert">
               <FaExclamationCircle /> {errors.root?.serverError?.message}
             </div>
           )}

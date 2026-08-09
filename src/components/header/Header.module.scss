@@ -67,10 +67,11 @@
           // Sparkle effect using box-shadow on hover
           &:hover {
             filter: drop-shadow(0 0 8px rgba(255, 200, 87, 0.8));
-            animation: rainbow-flow 5s linear infinite, pulse 3s ease-in-out infinite;
+            animation: rainbow-flow 5s linear infinite,
+              pulse 3s ease-in-out infinite;
           }
         }
-        
+
         @supports (background-clip: text) or (-webkit-background-clip: text) {
           &.support {
             background: linear-gradient(
@@ -487,7 +488,6 @@
       transform: scale(0.9);
     }
   }
-
 }
 
 .burgerButton {
@@ -508,7 +508,8 @@
   margin-right: 10px;
   align-self: center;
   border-radius: 6px;
-  transition: background-color 150ms ease, color 150ms ease, border-color 150ms ease;
+  transition: background-color 150ms ease, color 150ms ease,
+    border-color 150ms ease;
 
   &:hover {
     color: var(--theme-primary);
@@ -592,7 +593,8 @@
         border-radius: 0;
         justify-content: flex-start;
         border-left: 3px solid transparent;
-        transition: background-color 150ms ease, color 150ms ease, border-left-color 150ms ease;
+        transition: background-color 150ms ease, color 150ms ease,
+          border-left-color 150ms ease;
 
         &:hover {
           background-color: var(--theme-form-background, #33383d);
@@ -614,18 +616,6 @@
           display: inline !important;
           font-size: 15px;
         }
-
-        // Strip native button styles from Login button rendered inside a Link
-        > button {
-          background: none;
-          border: none;
-          color: inherit;
-          padding: 0;
-          font: inherit;
-          cursor: pointer;
-          font-weight: 500;
-          margin: 0;
-        }
       }
 
       // LanguageSelector wrapper rendered as <li>
@@ -645,7 +635,8 @@
           font-size: 15px;
           font-weight: 500;
           border-left: 3px solid transparent;
-          transition: background-color 150ms ease, color 150ms ease, border-left-color 150ms ease;
+          transition: background-color 150ms ease, color 150ms ease,
+            border-left-color 150ms ease;
 
           &:hover {
             background-color: var(--theme-form-background, #33383d);
@@ -679,7 +670,8 @@
 }
 
 @keyframes rainbow-text {
-  0%, 100% {
+  0%,
+  100% {
     color: #ff6b6b;
   }
   16% {
@@ -701,17 +693,21 @@
 
 // Pulse animation for Support Us hover
 @keyframes pulse {
-  0%, 100% {
+  0%,
+  100% {
     filter: drop-shadow(0 0 8px rgba(255, 200, 87, 0.6));
   }
   25% {
-    filter: drop-shadow(0 0 10px rgba(255, 200, 87, 0.8)) drop-shadow(0 0 15px rgba(255, 100, 255, 0.3));
+    filter: drop-shadow(0 0 10px rgba(255, 200, 87, 0.8))
+      drop-shadow(0 0 15px rgba(255, 100, 255, 0.3));
   }
   50% {
-    filter: drop-shadow(0 0 15px rgba(255, 200, 87, 1)) drop-shadow(0 0 25px rgba(255, 100, 255, 0.5));
+    filter: drop-shadow(0 0 15px rgba(255, 200, 87, 1))
+      drop-shadow(0 0 25px rgba(255, 100, 255, 0.5));
   }
   75% {
-    filter: drop-shadow(0 0 10px rgba(255, 200, 87, 0.8)) drop-shadow(0 0 15px rgba(255, 100, 255, 0.3));
+    filter: drop-shadow(0 0 10px rgba(255, 200, 87, 0.8))
+      drop-shadow(0 0 15px rgba(255, 100, 255, 0.3));
   }
 }
 

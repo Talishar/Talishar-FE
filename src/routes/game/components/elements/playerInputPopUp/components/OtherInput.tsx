@@ -27,10 +27,8 @@ export const OtherInput = (props: FormProps) => {
   const minNo = formOptions?.minNo ?? 0;
   const maxNo = formOptions?.maxNo ?? checkedState.length;
   const hasValidSelection = selectedCount >= minNo && selectedCount <= maxNo;
-  const selectionRequirement =
-    minNo === maxNo
-      ? `${selectedCount}/${minNo} selected`
-      : `${selectedCount} selected (choose ${minNo}-${maxNo})`;
+  const selectionSummary =
+    minNo === maxNo ? `${selectedCount}/${minNo}` : `${selectedCount} selected`;
 
   const selectCard = cards?.map((card, index) => {
     const originalIndex = cardOriginalIndexes[index] ?? index;
@@ -98,7 +96,7 @@ export const OtherInput = (props: FormProps) => {
                 checkBoxSubmit();
               }}
             >
-              {formOptions.caption} ({selectionRequirement})
+              {formOptions.caption} - {selectionSummary}
             </button>
           </div>
         ) : null}

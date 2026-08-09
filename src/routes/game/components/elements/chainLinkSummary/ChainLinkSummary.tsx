@@ -69,12 +69,14 @@ export const ChainLinkSummaryContainer = () => {
             <h3 className={styles.title}>
               {t('CHAIN_LINK_SUMMARY.COMBAT_CHAIN')}
             </h3>
-            <div
+            <button
+              type="button"
               className={styles.cardListCloseIcon}
               onClick={() => dispatch(hideChainLinkSummary())}
+              aria-label={t('PLAYER_INPUT.CLOSE_POPUP')}
             >
-              <FaTimes title="Close Dialog" />
-            </div>
+              <FaTimes aria-hidden="true" />
+            </button>
           </div>
           <div className={styles.allLinksGrid}>
             {oldCombatChain.map((_: CombatChainLink, index: number) => (
@@ -413,9 +415,14 @@ const ChainLinkSummary = ({
           {headerBadge}
         </div>
         {presentation !== 'inline' && (
-          <div className={styles.cardListCloseIcon} onClick={closeCardList}>
-            <FaTimes title="Close Dialog" />
-          </div>
+          <button
+            type="button"
+            className={styles.cardListCloseIcon}
+            onClick={closeCardList}
+            aria-label={t('PLAYER_INPUT.CLOSE_POPUP')}
+          >
+            <FaTimes aria-hidden="true" />
+          </button>
         )}
       </div>
       {content}

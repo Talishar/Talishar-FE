@@ -372,9 +372,14 @@ export default function PlayerInputPopUp() {
             </div>
           ) : null}
           {inputPopUp.popup?.canClose ? (
-            <div className={styles.inputPopUpCloseIcon} onClick={onPassTurn}>
-              <FaTimes title={t('PLAYER_INPUT.CLOSE_POPUP')} />
-            </div>
+            <button
+              type="button"
+              className={styles.inputPopUpCloseIcon}
+              onClick={onPassTurn}
+              aria-label={t('PLAYER_INPUT.CLOSE_POPUP')}
+            >
+              <FaTimes aria-hidden="true" />
+            </button>
           ) : null}
         </div>
         <div className={styles.contentContainer}>

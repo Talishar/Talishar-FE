@@ -85,8 +85,7 @@ const Header = () => {
   const closeMobileMenu = () => setMobileMenuOpen(false);
   const closeUserDropdown = () => setUserDropdownOpen(false);
 
-  const handleLogOut = (e: React.MouseEvent) => {
-    e.preventDefault();
+  const handleLogOut = () => {
     logOut();
     setMobileMenuOpen(false);
     setUserDropdownOpen(false);
@@ -229,16 +228,16 @@ const Header = () => {
                       </li>
                     )}
                     <li>
-                      <a href="" onClick={handleLogOut}>
+                      <button type="button" onClick={handleLogOut}>
                         <IoLogOut /> <span>{t('HEADER.LOGOUT')}</span>
-                      </a>
+                      </button>
                     </li>
                   </ul>
                 )}
               </div>
             ) : (
-              <Link to="/user/login" className={styles.login}>
-                <button>{t('HEADER.LOGIN')}</button>
+              <Link to="/user/login" className={styles.login} role="button">
+                {t('HEADER.LOGIN')}
               </Link>
             )}
           </li>
@@ -337,9 +336,9 @@ const Header = () => {
             )}
             {isLoggedIn && (
               <li>
-                <a href="" onClick={handleLogOut}>
+                <button type="button" onClick={handleLogOut}>
                   <IoLogOut /> <span>{t('HEADER.LOGOUT')}</span>
-                </a>
+                </button>
               </li>
             )}
           </ul>

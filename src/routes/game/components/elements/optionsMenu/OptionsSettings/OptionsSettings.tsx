@@ -4,7 +4,6 @@ import styles from './OptionsSettings.module.css';
 import {
   fetchAllSettings,
   getSettingsEntity,
-  getSettingsStatus,
   Setting,
   updateOptions
 } from 'features/options/optionsSlice';

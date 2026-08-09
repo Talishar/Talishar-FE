@@ -10,7 +10,6 @@ import { MdShare } from 'react-icons/md';
 import { selectIsPatron } from 'features/auth/authSlice';
 import { SavedReplay } from 'interface/API/GetSavedReplays.php';
 import { toast } from 'react-hot-toast';
-import classNames from 'classnames';
 import { LoadReplayAPI } from 'interface/API/LoadReplayAPI.php';
 import { setReplayStart } from 'features/game/GameSlice';
 import { useNavigate } from 'react-router-dom';

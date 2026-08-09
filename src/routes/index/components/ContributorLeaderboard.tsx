@@ -227,7 +227,7 @@ const ContributorLeaderboard: React.FC = () => {
                     : ''
                 ]
                   .filter(Boolean)
-                  .join(' · ')}
+                  .join(' - ')}
               </span>
             </div>
           </a>

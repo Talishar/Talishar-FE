@@ -274,6 +274,7 @@
     "FULL_LOG_NOT_RECORDED": "Le journal de jeu complet n'a pas été enregistré pour ce jeu. ",
     "GAME_SUMMARY": "Résumé du jeu",
     "HERO_MATCHUP": "Match de héros",
+    "HIDE_STATS": "Masquer les statistiques",
     "LEFT": "Gauche",
     "LIFE": "Vie",
     "LIFE_GAINED": "Vie gagnée",
@@ -299,6 +300,7 @@
     "SEND_REMATCH": "Envoyer une revanche",
     "SHOW_ALL_CARDS": "Afficher toutes les cartes",
     "SHOW_ALL_CARDS_TITLE": "Par défaut, seules les cartes jouées, bloquées ou lancées au moins une fois sont affichées. ",
+    "SHOW_STATS": "Afficher les statistiques",
     "START": "Commencer",
     "STATS_PROVIDED_BY": "Statistiques qui vous sont fournies par",
     "SUPPORT_CTA_ACTION": "Soutenez-nous",
@@ -1124,7 +1126,7 @@
     "PRIORITY": "Priorité",
     "REACTION": "Réaction",
     "REPLAY": "Rejouer",
-    "TITLE": "{{subtitle}} · priorité de passage · Espace",
+    "TITLE": "{{subtitle}} - priorité de passage - Espace",
     "WAIT": "ATTENDEZ"
   },
   "PASSWORD": {

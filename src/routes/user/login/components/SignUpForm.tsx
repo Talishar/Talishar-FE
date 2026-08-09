@@ -91,9 +91,12 @@ export const SignUpForm = () => {
             autoComplete="email"
             {...register('email')}
             aria-invalid={errors.email?.message ? 'true' : undefined}
+            aria-describedby={errors.email?.message ? 'email-error' : undefined}
           />
           {errors.email?.message && (
-            <div className={styles.fieldError}>{errors.email?.message}</div>
+            <div id="email-error" className={styles.fieldError} role="alert">
+              {errors.email?.message}
+            </div>
           )}
           <label htmlFor="password">{t('USER.LOGIN.PASSWORD')}</label>
           <input
@@ -103,9 +106,14 @@ export const SignUpForm = () => {
             autoComplete="new-password"
             {...register('password')}
             aria-invalid={errors.password?.message ? 'true' : undefined}
+            aria-describedby={
+              errors.password?.message ? 'password-error' : undefined
+            }
           />
           {errors.password?.message && (
-            <div className={styles.fieldError}>{errors.password?.message}</div>
+            <div id="password-error" className={styles.fieldError} role="alert">
+              {errors.password?.message}
+            </div>
           )}
           <label htmlFor="passwordRepeat">
             {t('USER.LOGIN.CONFIRM_PASSWORD')}
@@ -117,9 +125,18 @@ export const SignUpForm = () => {
             autoComplete="new-password"
             {...register('passwordRepeat')}
             aria-invalid={errors.passwordRepeat?.message ? 'true' : undefined}
+            aria-describedby={
+              errors.passwordRepeat?.message
+                ? 'passwordRepeat-error'
+                : undefined
+            }
           />
           {errors.passwordRepeat?.message && (
-            <div className={styles.fieldError}>
+            <div
+              id="passwordRepeat-error"
+              className={styles.fieldError}
+              role="alert"
+            >
               {errors.passwordRepeat?.message}
             </div>
           )}
@@ -128,6 +145,9 @@ export const SignUpForm = () => {
             type="checkbox"
             {...register('agreeToTerms')}
             aria-invalid={errors.agreeToTerms?.message ? 'true' : undefined}
+            aria-describedby={
+              errors.agreeToTerms?.message ? 'agreeToTerms-error' : undefined
+            }
           />
           <label htmlFor="agreeToTerms">
             <Trans
@@ -142,7 +162,11 @@ export const SignUpForm = () => {
             ></Trans>
           </label>
           {errors.agreeToTerms?.message && (
-            <div className={styles.fieldError}>
+            <div
+              id="agreeToTerms-error"
+              className={styles.fieldError}
+              role="alert"
+            >
               {errors.agreeToTerms?.message}
             </div>
           )}
@@ -151,12 +175,10 @@ export const SignUpForm = () => {
             aria-busy={isSubmitting}
             disabled={isSubmitting}
           >
-            {isSubmitting
-              ? t('GAME_LOBBY.SUBMITTING')
-              : t('USER.LOGIN.SUBMIT')}
+            {isSubmitting ? t('GAME_LOBBY.SUBMITTING') : t('USER.LOGIN.SUBMIT')}
           </button>
           {errors.root?.serverError?.message && (
-            <div className={styles.fieldError}>
+            <div className={styles.fieldError} role="alert">
               <FaExclamationCircle /> {errors.root?.serverError?.message}
             </div>
           )}

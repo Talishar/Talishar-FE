@@ -297,6 +297,7 @@ const JoinGame = () => {
                       setValue('fabdb', value);
                     }}
                     placeholder={t('JOIN.SELECT_DECK')}
+                    aria-label={t('JOIN.PRECON')}
                     aria-invalid={errors.deck?.message ? 'true' : undefined}
                   />
                   <input
@@ -324,6 +325,7 @@ const JoinGame = () => {
                           setValue('favoriteDecks', value);
                         }}
                         placeholder={t('JOIN.SELECTED_DECK_PLACEHOLDER')}
+                        aria-label={t('JOIN.SELECTED_DECK')}
                         aria-busy={isLoading}
                         aria-invalid={
                           errors.favoriteDecks?.message ? 'true' : undefined
@@ -425,10 +427,11 @@ const JoinGame = () => {
             <button
               type="submit"
               className={styles.buttonClass}
+              disabled={isSubmitting}
               aria-busy={isSubmitting}
               style={{ marginTop: '27px' }}
             >
-              {t('JOIN.JOIN')}
+              {isSubmitting ? t('JOIN.JOINING_GAME') : t('JOIN.JOIN')}
             </button>
             {errors.root?.serverError?.message && (
               <div className={styles.fieldError}>

@@ -139,9 +139,14 @@ export const CardListZone = () => {
             key="playerInputPopupBox"
           >
             <div className={styles.cardListTitleContainer}>
-              <div className={styles.cardListCloseIcon} onClick={closeCardList}>
-                <FaTimes title="Close Dialog" />
-              </div>
+              <button
+                type="button"
+                className={styles.cardListCloseIcon}
+                onClick={closeCardList}
+                aria-label={t('PLAYER_INPUT.CLOSE_POPUP')}
+              >
+                <FaTimes aria-hidden="true" />
+              </button>
               <div className={styles.cardListTitle}>
                 <h3 className={styles.title}>{cardList?.name}</h3>
               </div>
@@ -149,7 +154,8 @@ export const CardListZone = () => {
                 <input
                   type="text"
                   className={styles.searchInput}
-                  placeholder="Search cards..."
+                  placeholder={t('PLAYER_INPUT.SEARCH_CARDS')}
+                  aria-label={t('PLAYER_INPUT.SEARCH_CARDS')}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onClick={(e) => e.stopPropagation()}
@@ -161,9 +167,7 @@ export const CardListZone = () => {
                     cardList?.isSorted ? styles.active : ''
                   }`}
                   onClick={handleSort}
-                  title={
-                    cardList?.isSorted ? 'Click to unsort' : 'Click to sort'
-                  }
+                  aria-pressed={cardList?.isSorted}
                 >
                   {t('CARD_LIST.SORT')}
                 </button>

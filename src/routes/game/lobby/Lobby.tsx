@@ -152,13 +152,8 @@ const Lobby = () => {
   }, [cookies.hoverImageSize]);
 
   const settingsStatus = useAppSelector(getSettingsStatus);
-  const {
-    isLoggedIn,
-    metafyId,
-    metafyHash,
-    metafyTimestamp,
-    refreshAuth
-  } = useAuth();
+  const { isLoggedIn, metafyId, metafyHash, metafyTimestamp, refreshAuth } =
+    useAuth();
   const gameInfo = useAppSelector(getGameInfo, shallowEqual);
   const { playerID, gameID, authKey } = gameInfo;
   const [acceptedDisclaimer, setAcceptedDisclaimer] = useState<boolean>(
@@ -244,11 +239,13 @@ const Lobby = () => {
   });
   const opponentNameRef = React.useRef<HTMLHeadingElement>(null);
 
-  let { data, isLoading, refetch } = useGetLobbyInfoQuery({
+  const lobbyInfoQuery = useGetLobbyInfoQuery({
     gameName: gameID,
     playerID: playerID,
     authKey: authKey
   });
+  let { data } = lobbyInfoQuery;
+  const { isLoading, refetch } = lobbyInfoQuery;
 
   useEffect(() => {
     if (gameLobby?.sideboardWasReset) refetch();
@@ -258,9 +255,7 @@ const Lobby = () => {
   const areAltArtsDisabled =
     String(settingsData[DISABLE_ALT_ARTS]?.value) === '1';
   useEffect(() => {
-    dispatch(
-      setLobbyAltArts(areAltArtsDisabled ? [] : altArtsFromLobby ?? [])
-    );
+    dispatch(setLobbyAltArts(areAltArtsDisabled ? [] : altArtsFromLobby ?? []));
   }, [altArtsFromLobby, areAltArtsDisabled, dispatch]);
 
   const [submitSideboardMutation] = useSubmitSideboardMutation();
@@ -485,7 +480,7 @@ const Lobby = () => {
       : t('MENU.CREATE_GAME.VISIBILITIES.PUBLIC');
   const lobbyMetaLine = [lobbyVisibilityLabel, lobbyFormatName]
     .filter(Boolean)
-    .join(' · ');
+    .join(' - ');
   const lobbyTooltipParts = [
     gameLobby?.isPrivateLobby === undefined
       ? ''
@@ -939,7 +934,7 @@ const Lobby = () => {
           </>,
           document.body
         )}
-      <LobbyUpdateHandler isSubmitting={isSubmitting} />
+      <LobbyUpdateHandler />
       <Formik
         initialValues={{
           hero: data?.deck.hero,

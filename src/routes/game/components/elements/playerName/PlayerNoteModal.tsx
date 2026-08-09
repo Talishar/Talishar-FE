@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useId } from 'react';
 import { createPortal } from 'react-dom';
 import styles from './PlayerNoteModal.module.css';
 import { useTranslation } from 'react-i18next';
@@ -20,6 +20,8 @@ export default function PlayerNoteModal({
 }: PlayerNoteModalProps) {
   const { t } = useTranslation();
   const [noteText, setNoteText] = useState(initialNote);
+  const titleId = useId();
+  const countId = useId();
 
   useEffect(() => {
     setNoteText(initialNote);
@@ -39,13 +41,19 @@ export default function PlayerNoteModal({
 
   return createPortal(
     <div className={styles.overlay} onClick={handleCancel}>
-      <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+      <div
+        className={styles.modal}
+        onClick={(e) => e.stopPropagation()}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={titleId}
+      >
         <div className={styles.header}>
-          <h2>{t('PLAYER_NAME.NOTE_FOR', { playerName })}</h2>
+          <h2 id={titleId}>{t('PLAYER_NAME.NOTE_FOR', { playerName })}</h2>
           <button
             className={styles.closeButton}
             onClick={handleCancel}
-            title={t('PLAYER_NAME.CLOSE')}
+            aria-label={t('PLAYER_NAME.CLOSE')}
           >
             ✕
           </button>
@@ -57,9 +65,13 @@ export default function PlayerNoteModal({
           onChange={(e) => setNoteText(e.target.value)}
           placeholder={t('PLAYER_NAME.NOTE_PLACEHOLDER')}
           maxLength={200}
+          aria-labelledby={titleId}
+          aria-describedby={countId}
         />
 
-        <div className={styles.charCount}>{noteText.length}/200</div>
+        <div id={countId} className={styles.charCount} aria-live="polite">
+          {noteText.length}/200
+        </div>
 
         <div className={styles.footer}>
           <button className={styles.buttonCancel} onClick={handleCancel}>

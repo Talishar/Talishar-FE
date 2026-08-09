@@ -78,5 +78,5 @@ export function decorateWaitingPrompt(
     /^Waiting for (?:other player|your opponent|opponent)/i,
     'Waiting for them'
   );
-  return `${presenceMessage} · ${waitingContext}`;
+  return `${presenceMessage} - ${waitingContext}`;
 }

@@ -74,9 +74,12 @@ export const ForgottenPasswordForm = () => {
             placeholder="bravo@talishar.net"
             {...register('email')}
             aria-invalid={errors.email?.message ? 'true' : undefined}
+            aria-describedby={errors.email?.message ? 'email-error' : undefined}
           />
           {errors.email?.message && (
-            <div className={styles.fieldError}>{errors.email?.message}</div>
+            <div id="email-error" className={styles.fieldError} role="alert">
+              {errors.email?.message}
+            </div>
           )}
           <button
             type="submit"
@@ -84,12 +87,10 @@ export const ForgottenPasswordForm = () => {
             aria-busy={isSubmitting}
             className={styles.submitButton}
           >
-            {isSubmitting
-              ? t('GAME_LOBBY.SUBMITTING')
-              : t('USER.LOGIN.SUBMIT')}
+            {isSubmitting ? t('GAME_LOBBY.SUBMITTING') : t('USER.LOGIN.SUBMIT')}
           </button>
           {errors.root?.serverError?.message && (
-            <div className={styles.fieldError}>
+            <div className={styles.fieldError} role="alert">
               <FaExclamationCircle /> {errors.root?.serverError?.message}
             </div>
           )}

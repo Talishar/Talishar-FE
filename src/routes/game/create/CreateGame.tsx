@@ -888,6 +888,7 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
                           ? t('MENU.CREATE_GAME.LOADING')
                           : t('MENU.CREATE_GAME.SELECT_BAZAAR_DECK_PLACEHOLDER')
                       }
+                      aria-label={t('MENU.CREATE_GAME.SELECTED_DECK')}
                       aria-busy={isBazaarLoading}
                     />
                   </label>
@@ -917,6 +918,7 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
                       placeholder={t(
                         'MENU.CREATE_GAME.SELECTED_DECK_PLACEHOLDER'
                       )}
+                      aria-label={t('MENU.CREATE_GAME.SELECTED_DECK')}
                       aria-busy={isLoading}
                       aria-invalid={
                         errors.favoriteDecks?.message ? 'true' : undefined
@@ -963,6 +965,7 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
                           placeholder={t(
                             'MENU.CREATE_GAME.SELECT_DECK_PLACEHOLDER'
                           )}
+                          aria-label={t('MENU.CREATE_GAME.PRECONSTRUCTED_DECK')}
                           aria-invalid={
                             errors.deck?.message ? 'true' : undefined
                           }
@@ -1495,7 +1498,9 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
                   : undefined
               }
             >
-              {isLoggedIn
+              {isSubmitting
+                ? t('GAME_LOBBY.SUBMITTING')
+                : isLoggedIn
                 ? t('MENU.CREATE_GAME.TITLE')
                 : t('MENU.CREATE_GAME.PRIVATE_TITLE')}
             </button>

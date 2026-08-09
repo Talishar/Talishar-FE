@@ -130,6 +130,10 @@
   transform: translateY(0);
 }
 
+.iconButton {
+  flex: 0 0 auto;
+}
+
 /* --- Dropdown --- */
 .dropdownBackdrop {
   position: fixed;
@@ -286,7 +290,7 @@
     font-size: 1em;
   }
 
-  div.buttonDiv {
+  .iconButton {
     flex: 0 0 auto;
     min-width: 2.25rem;
     padding: 0.4rem;

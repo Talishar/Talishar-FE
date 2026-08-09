@@ -1,6 +1,5 @@
 import React from 'react';
 import { useAppSelector } from 'app/Hooks';
-import { RootState } from 'app/Store';
 import { useChooseFirstPlayerMutation } from 'features/api/apiSlice';
 import { toast } from 'react-hot-toast';
 import styles from './ChooseFirstTurn.module.css';

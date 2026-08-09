@@ -151,6 +151,10 @@
 }
 
 .cardListCloseIcon {
+  padding: 0;
+  margin: 0;
+  border: 0;
+  background: transparent;
   display: flex;
   align-items: center;
   justify-content: center;

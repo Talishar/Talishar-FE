@@ -3,7 +3,6 @@ import * as optConst from 'features/options/constants';
 import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import { GiBouncingSword } from 'react-icons/gi';
-import useSetting from 'hooks/useSetting';
 import classNames from 'classnames';
 import {
   updateOptions,

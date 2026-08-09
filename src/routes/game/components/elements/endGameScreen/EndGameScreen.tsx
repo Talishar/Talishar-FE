@@ -204,9 +204,14 @@ const EndGameScreen = () => {
                     </>,
                     document.body
                   )}
-                <div className={styles.buttonDiv} onClick={toggleShowStats}>
+                <button
+                  type="button"
+                  className={`${styles.buttonDiv} ${styles.iconButton}`}
+                  onClick={toggleShowStats}
+                  aria-label={t('END_GAME.HIDE_STATS')}
+                >
                   <FaEye aria-hidden="true" fontSize={'1.5em'} />
-                </div>
+                </button>
               </div>
             </div>
           </div>
@@ -238,9 +243,14 @@ const EndGameScreen = () => {
           <div className={styles.cardListTitle}>
             <h2 className={styles.title}>{t('END_GAME.GAME_SUMMARY')}</h2>
             <div className={styles.buttonGroup}>
-              <div className={styles.buttonDiv} onClick={toggleShowStats}>
+              <button
+                type="button"
+                className={`${styles.buttonDiv} ${styles.iconButton}`}
+                onClick={toggleShowStats}
+                aria-label={t('END_GAME.SHOW_STATS')}
+              >
                 <FaEyeSlash aria-hidden="true" fontSize={'1.5em'} />
-              </div>
+              </button>
             </div>
           </div>
         </div>

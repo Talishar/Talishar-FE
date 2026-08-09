@@ -179,6 +179,10 @@
 
 /* ── Close icon - visually rightmost ──────────────────── */
 .cardListCloseIcon {
+  padding: 0;
+  margin: 0;
+  border: 0;
+  background: transparent;
   order: 4;
   display: flex;
   flex-direction: row;

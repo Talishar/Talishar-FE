@@ -221,7 +221,7 @@ const CommunityContent: React.FC<CommunityContentProps> = ({
                 <span className={styles.metaAuthor}>
                   {t('COMMUNITY_CONTENT.BY')} {capitalize(featured.author)}
                 </span>
-                &nbsp;·&nbsp;
+                &nbsp;-&nbsp;
                 <span className={styles.metaDate}>
                   {formatDate(featured.timestamp)}
                 </span>
@@ -241,7 +241,7 @@ const CommunityContent: React.FC<CommunityContentProps> = ({
                   </p>
                   <p className={styles.secondaryMeta}>
                     {t('COMMUNITY_CONTENT.BY')} {capitalize(secondary.author)}
-                    &nbsp;·&nbsp;
+                    &nbsp;-&nbsp;
                     {formatDate(secondary.timestamp)}
                   </p>
                 </div>
@@ -291,7 +291,7 @@ const CommunityContent: React.FC<CommunityContentProps> = ({
                     </p>
                     <p className={styles.listMeta}>
                       {t('COMMUNITY_CONTENT.BY')} {capitalize(video.author)}
-                      &nbsp;·&nbsp;
+                      &nbsp;-&nbsp;
                       {formatDate(video.timestamp)}
                     </p>
                   </div>

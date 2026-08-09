@@ -168,9 +168,14 @@ export const LoginForm = () => {
             placeholder="bravo"
             {...register('userID')}
             aria-invalid={errors.userID?.message ? 'true' : undefined}
+            aria-describedby={
+              errors.userID?.message ? 'userID-error' : undefined
+            }
           />
           {errors.userID?.message && (
-            <div className={styles.fieldError}>{errors.userID?.message}</div>
+            <div id="userID-error" className={styles.fieldError} role="alert">
+              {errors.userID?.message}
+            </div>
           )}
           <label htmlFor="password">{t('USER.LOGIN.PASSWORD')}</label>
           <input
@@ -179,19 +184,32 @@ export const LoginForm = () => {
             placeholder="********"
             {...register('password')}
             aria-invalid={errors.password?.message ? 'true' : undefined}
+            aria-describedby={
+              errors.password?.message ? 'password-error' : undefined
+            }
           />
           {errors.password?.message && (
-            <div className={styles.fieldError}>{errors.password?.message}</div>
+            <div id="password-error" className={styles.fieldError} role="alert">
+              {errors.password?.message}
+            </div>
           )}
           <input
             id="rememberMe"
             type="checkbox"
             autoComplete="off"
             {...register('rememberMe')}
+            aria-invalid={errors.rememberMe?.message ? 'true' : undefined}
+            aria-describedby={
+              errors.rememberMe?.message ? 'rememberMe-error' : undefined
+            }
           />
           <label htmlFor="rememberMe">{t('USER.LOGIN.REMEMBER_ME')}</label>
           {errors.rememberMe?.message && (
-            <div className={styles.fieldError}>
+            <div
+              id="rememberMe-error"
+              className={styles.fieldError}
+              role="alert"
+            >
               {errors.rememberMe?.message}
             </div>
           )}
@@ -210,10 +228,10 @@ export const LoginForm = () => {
             aria-busy={isSubmitting}
             className={styles.submitButton}
           >
-            {t('USER.LOGIN.LOGIN')}
+            {isSubmitting ? t('USER.LOGIN.LOGGING_IN') : t('USER.LOGIN.LOGIN')}
           </button>
           {errors.root?.serverError?.message && (
-            <div className={styles.fieldError}>
+            <div className={styles.fieldError} role="alert">
               <FaExclamationCircle /> {errors.root?.serverError?.message}
             </div>
           )}

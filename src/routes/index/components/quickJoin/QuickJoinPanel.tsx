@@ -86,6 +86,7 @@ const QuickJoinPanel = ({ embedded = false }: Props) => {
           onChange={setSelectedFavoriteDeck}
           placeholder={isFavoritesLoading ? 'Loading…' : 'Select a saved deck'}
           aria-busy={isFavoritesLoading}
+          aria-label={t('JOIN.SELECT_DECK')}
         />
       </label>
 
@@ -164,6 +165,7 @@ const QuickJoinPanel = ({ embedded = false }: Props) => {
         onChange={setSelectedBazaarDeck}
         placeholder={isBazaarLoading ? 'Loading…' : 'Select a FaB Bazaar deck'}
         aria-busy={isBazaarLoading}
+        aria-label={t('MENU.CREATE_GAME.SELECT_BAZAAR_DECK_PLACEHOLDER')}
       />
       {bazaarError && <span className={styles.bazaarError}>{bazaarError}</span>}
     </label>

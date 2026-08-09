@@ -10,7 +10,9 @@ import {
   useRef,
   useImperativeHandle,
   forwardRef,
-  useEffect
+  useEffect,
+  KeyboardEvent,
+  ThHTMLAttributes
 } from 'react';
 import html2canvas from 'html2canvas';
 import { Trans, useTranslation } from 'react-i18next';
@@ -31,6 +33,26 @@ import {
   Legend,
   ReferenceLine
 } from 'recharts';
+
+const getSortableHeaderProps = (
+  onSort: () => void,
+  isActive: boolean,
+  direction: 'asc' | 'desc'
+): ThHTMLAttributes<HTMLTableCellElement> => ({
+  onClick: onSort,
+  tabIndex: 0,
+  'aria-sort': isActive
+    ? direction === 'asc'
+      ? 'ascending'
+      : 'descending'
+    : 'none',
+  onKeyDown: (event: KeyboardEvent<HTMLTableCellElement>) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      onSort();
+    }
+  }
+});
 
 const ScrollableTable = ({ children }: { children: ReactNode }) => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -751,7 +773,6 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
     } catch (error) {
       console.error('Error exporting screenshot:', error);
       alert(t('END_GAME.EXPORT_IMAGE_ERROR', { error }));
-    } finally {
     }
   };
 
@@ -1736,7 +1757,11 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                         className={`${styles.firstHeadersStats} ${styles.hideOnExport}`}
                       ></th>
                       <th
-                        onClick={() => handleSort('cardName')}
+                        {...getSortableHeaderProps(
+                          () => handleSort('cardName'),
+                          sortField === 'cardName',
+                          sortDirection
+                        )}
                         className={`${styles.headersStats} ${styles.sortableHeader} ${styles.headerGroupSeparator}`}
                         title={t('END_GAME.CLICK_TO_SORT')}
                       >
@@ -1746,7 +1771,11 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                       </th>
                       <th
                         className={`${styles.headersStats} ${styles.sortableHeader} ${styles.headerGroupSeparator}`}
-                        onClick={() => handleSort('played')}
+                        {...getSortableHeaderProps(
+                          () => handleSort('played'),
+                          sortField === 'played',
+                          sortDirection
+                        )}
                         title={t('END_GAME.CLICK_TO_SORT')}
                       >
                         {t('END_GAME.PLAYED')}{' '}
@@ -1755,7 +1784,11 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                       </th>
                       <th
                         className={`${styles.headersStats} ${styles.sortableHeader} ${styles.headerGroupSeparator}`}
-                        onClick={() => handleSort('blocked')}
+                        {...getSortableHeaderProps(
+                          () => handleSort('blocked'),
+                          sortField === 'blocked',
+                          sortDirection
+                        )}
                         title={t('END_GAME.CLICK_TO_SORT')}
                       >
                         {t('END_GAME.BLOCKED')}{' '}
@@ -1764,7 +1797,11 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                       </th>
                       <th
                         className={`${styles.headersStats} ${styles.sortableHeader} ${styles.headerGroupSeparator}`}
-                        onClick={() => handleSort('pitched')}
+                        {...getSortableHeaderProps(
+                          () => handleSort('pitched'),
+                          sortField === 'pitched',
+                          sortDirection
+                        )}
                         title={t('END_GAME.CLICK_TO_SORT')}
                       >
                         {t('END_GAME.PITCHED')}{' '}
@@ -1774,7 +1811,11 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                       {numDiscarded > 0 && (
                         <th
                           className={`${styles.headersStats} ${styles.sortableHeader} ${styles.headerGroupSeparator}`}
-                          onClick={() => handleSort('discarded')}
+                          {...getSortableHeaderProps(
+                            () => handleSort('discarded'),
+                            sortField === 'discarded',
+                            sortDirection
+                          )}
                           title={t('END_GAME.CLICK_TO_SORT')}
                         >
                           {t('END_GAME.DISCARDED')}{' '}
@@ -1784,7 +1825,11 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                       )}
                       <th
                         className={`${styles.headersStats} ${styles.sortableHeader} ${styles.headerGroupSeparator}`}
-                        onClick={() => handleSort('hits')}
+                        {...getSortableHeaderProps(
+                          () => handleSort('hits'),
+                          sortField === 'hits',
+                          sortDirection
+                        )}
                         title={t('END_GAME.CLICK_TO_SORT')}
                       >
                         {t('END_GAME.TIMES_HIT')}{' '}
@@ -2040,7 +2085,11 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                 </tr>
                 <tr>
                   <th
-                    onClick={() => handleTurnSort('turnNo')}
+                    {...getSortableHeaderProps(
+                      () => handleTurnSort('turnNo'),
+                      turnSortField === 'turnNo',
+                      turnSortDirection
+                    )}
                     className={styles.sortableHeader}
                     title={t('END_GAME.CLICK_TO_SORT')}
                   >
@@ -2049,7 +2098,11 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                       (turnSortDirection === 'desc' ? '↓' : '↑')}
                   </th>
                   <th
-                    onClick={() => handleTurnSort('cardsUsed')}
+                    {...getSortableHeaderProps(
+                      () => handleTurnSort('cardsUsed'),
+                      turnSortField === 'cardsUsed',
+                      turnSortDirection
+                    )}
                     className={styles.sortableHeader}
                     title={t('END_GAME.CLICK_TO_SORT')}
                   >
@@ -2058,7 +2111,11 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                       (turnSortDirection === 'desc' ? '↓' : '↑')}
                   </th>
                   <th
-                    onClick={() => handleTurnSort('cardsBlocked')}
+                    {...getSortableHeaderProps(
+                      () => handleTurnSort('cardsBlocked'),
+                      turnSortField === 'cardsBlocked',
+                      turnSortDirection
+                    )}
                     className={styles.sortableHeader}
                     title={t('END_GAME.CLICK_TO_SORT')}
                   >
@@ -2067,7 +2124,11 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                       (turnSortDirection === 'desc' ? '↓' : '↑')}
                   </th>
                   <th
-                    onClick={() => handleTurnSort('cardsPitched')}
+                    {...getSortableHeaderProps(
+                      () => handleTurnSort('cardsPitched'),
+                      turnSortField === 'cardsPitched',
+                      turnSortDirection
+                    )}
                     className={styles.sortableHeader}
                     title={t('END_GAME.CLICK_TO_SORT')}
                   >
@@ -2077,7 +2138,11 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                   </th>
                   {!shouldHideCardsDiscarded && (
                     <th
-                      onClick={() => handleTurnSort('cardsDiscarded')}
+                      {...getSortableHeaderProps(
+                        () => handleTurnSort('cardsDiscarded'),
+                        turnSortField === 'cardsDiscarded',
+                        turnSortDirection
+                      )}
                       className={styles.sortableHeader}
                       title={t('END_GAME.CLICK_TO_SORT')}
                     >
@@ -2087,7 +2152,11 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                     </th>
                   )}
                   <th
-                    onClick={() => handleTurnSort('cardsLeft')}
+                    {...getSortableHeaderProps(
+                      () => handleTurnSort('cardsLeft'),
+                      turnSortField === 'cardsLeft',
+                      turnSortDirection
+                    )}
                     className={styles.sortableHeader}
                     title={t('END_GAME.CLICK_TO_SORT')}
                   >
@@ -2096,7 +2165,11 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                       (turnSortDirection === 'desc' ? '↓' : '↑')}
                   </th>
                   <th
-                    onClick={() => handleTurnSort('resourcesUsed')}
+                    {...getSortableHeaderProps(
+                      () => handleTurnSort('resourcesUsed'),
+                      turnSortField === 'resourcesUsed',
+                      turnSortDirection
+                    )}
                     className={styles.sortableHeader}
                     title={t('END_GAME.CLICK_TO_SORT')}
                   >
@@ -2105,7 +2178,11 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                       (turnSortDirection === 'desc' ? '↓' : '↑')}
                   </th>
                   <th
-                    onClick={() => handleTurnSort('resourcesLeft')}
+                    {...getSortableHeaderProps(
+                      () => handleTurnSort('resourcesLeft'),
+                      turnSortField === 'resourcesLeft',
+                      turnSortDirection
+                    )}
                     className={styles.sortableHeader}
                     title={t('END_GAME.CLICK_TO_SORT')}
                   >
@@ -2114,7 +2191,11 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                       (turnSortDirection === 'desc' ? '↓' : '↑')}
                   </th>
                   <th
-                    onClick={() => handleTurnSort('damageThreatened')}
+                    {...getSortableHeaderProps(
+                      () => handleTurnSort('damageThreatened'),
+                      turnSortField === 'damageThreatened',
+                      turnSortDirection
+                    )}
                     className={styles.sortableHeader}
                     title={t('END_GAME.CLICK_TO_SORT')}
                   >
@@ -2123,7 +2204,11 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                       (turnSortDirection === 'desc' ? '↓' : '↑')}
                   </th>
                   <th
-                    onClick={() => handleTurnSort('damageDealt')}
+                    {...getSortableHeaderProps(
+                      () => handleTurnSort('damageDealt'),
+                      turnSortField === 'damageDealt',
+                      turnSortDirection
+                    )}
                     className={styles.sortableHeader}
                     title={t('END_GAME.CLICK_TO_SORT')}
                   >
@@ -2132,7 +2217,11 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                       (turnSortDirection === 'desc' ? '↓' : '↑')}
                   </th>
                   <th
-                    onClick={() => handleTurnSort('damageBlocked')}
+                    {...getSortableHeaderProps(
+                      () => handleTurnSort('damageBlocked'),
+                      turnSortField === 'damageBlocked',
+                      turnSortDirection
+                    )}
                     className={styles.sortableHeader}
                     title={t('END_GAME.CLICK_TO_SORT')}
                   >
@@ -2142,7 +2231,11 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                   </th>
                   {!shouldHideDamagePrevented && (
                     <th
-                      onClick={() => handleTurnSort('damagePrevented')}
+                      {...getSortableHeaderProps(
+                        () => handleTurnSort('damagePrevented'),
+                        turnSortField === 'damagePrevented',
+                        turnSortDirection
+                      )}
                       className={styles.sortableHeader}
                       title={t('END_GAME.PREVENTED_TOOLTIP')}
                     >
@@ -2152,7 +2245,11 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                     </th>
                   )}
                   <th
-                    onClick={() => handleTurnSort('damageTaken')}
+                    {...getSortableHeaderProps(
+                      () => handleTurnSort('damageTaken'),
+                      turnSortField === 'damageTaken',
+                      turnSortDirection
+                    )}
                     className={styles.sortableHeader}
                     title={t('END_GAME.CLICK_TO_SORT')}
                   >
@@ -2162,7 +2259,11 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                   </th>
                   {!shouldHideLifeGained && (
                     <th
-                      onClick={() => handleTurnSort('lifeGained')}
+                      {...getSortableHeaderProps(
+                        () => handleTurnSort('lifeGained'),
+                        turnSortField === 'lifeGained',
+                        turnSortDirection
+                      )}
                       className={styles.sortableHeader}
                       title={t('END_GAME.CLICK_TO_SORT')}
                     >
@@ -2173,7 +2274,11 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                   )}
                   {!shouldHideLifeLost && (
                     <th
-                      onClick={() => handleTurnSort('lifeLost')}
+                      {...getSortableHeaderProps(
+                        () => handleTurnSort('lifeLost'),
+                        turnSortField === 'lifeLost',
+                        turnSortDirection
+                      )}
                       className={styles.sortableHeader}
                       title={t('END_GAME.CLICK_TO_SORT')}
                     >
@@ -2183,7 +2288,11 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                     </th>
                   )}
                   <th
-                    onClick={() => handleTurnSort('totalValue')}
+                    {...getSortableHeaderProps(
+                      () => handleTurnSort('totalValue'),
+                      turnSortField === 'totalValue',
+                      turnSortDirection
+                    )}
                     className={styles.sortableHeader}
                     title={t('END_GAME.CLICK_TO_SORT')}
                   >
