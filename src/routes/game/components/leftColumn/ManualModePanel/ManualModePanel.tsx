@@ -110,12 +110,6 @@ function ManualModeContent({
   );
 
   useEffect(() => {
-    if (isPracticeDummy) {
-      setOpponentHealthInput(String(opponentHealth));
-    }
-  }, [opponentHealth, isPracticeDummy]);
-
-  useEffect(() => {
     setWeaponPowerInput(String(practiceDummyWeaponPower));
   }, [practiceDummyWeaponPower]);
 
