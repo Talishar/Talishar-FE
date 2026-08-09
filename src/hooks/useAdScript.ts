@@ -212,6 +212,7 @@ const CMP_SELECTOR =
 
 const VIDEO_AD_CONTAINER_SELECTOR =
   '[id^="reviq-"], [id^="prims_"], [id^="primis"], [class*="primis"]';
+const VIDEO_AD_Z_INDEX = '9999';
 
 function isCMPElement(el: Element): boolean {
   try {
@@ -245,14 +246,29 @@ function unlockElementTree(el: HTMLElement) {
   });
 }
 
+function raiseVideoAdElement(el: HTMLElement) {
+  unlockElementTree(el);
+  el.style.setProperty('z-index', VIDEO_AD_Z_INDEX, 'important');
+  el.querySelectorAll<HTMLElement>(VIDEO_AD_CONTAINER_SELECTOR).forEach(
+    (child) => {
+      child.style.setProperty('z-index', VIDEO_AD_Z_INDEX, 'important');
+      child.style.removeProperty('pointer-events');
+    }
+  );
+}
+
 function lockNonRootBodyChildren() {
   if (!document.body) return;
   for (const el of Array.from(document.body.children)) {
     if (el.id === 'root') continue;
     if (isReactPortalEl(el)) continue;
     const h = el as HTMLElement;
-    if (isCMPElement(el) || isVideoAdElement(el)) {
+    if (isCMPElement(el)) {
       unlockElementTree(h);
+      continue;
+    }
+    if (isVideoAdElement(el)) {
+      raiseVideoAdElement(h);
       continue;
     }
     h.style.setProperty('pointer-events', 'none', 'important');
@@ -281,6 +297,7 @@ function pinVideoAdAnchor() {
   el.style.setProperty('min-height', '0', 'important');
   el.style.setProperty('max-width', '0', 'important');
   el.style.setProperty('max-height', '0', 'important');
+  el.style.setProperty('z-index', VIDEO_AD_Z_INDEX, 'important');
   // The provider may mount the floating player inside this zero-sized anchor.
   // Keep the anchor out of the layout without clipping its fixed descendants.
   el.style.setProperty('overflow', 'visible', 'important');

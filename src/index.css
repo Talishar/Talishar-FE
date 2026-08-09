@@ -34,7 +34,8 @@ body > [data-ad='video'] {
   left: 0 !important;
   width: 0 !important;
   height: 0 !important;
-  overflow: hidden !important;
+  z-index: 9999 !important;
+  overflow: visible !important;
 }
 
 /* Link styling to differentiate from headings */
