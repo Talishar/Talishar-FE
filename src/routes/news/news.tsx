@@ -34,7 +34,7 @@ const News = () => {
   const [discordMessages, setDiscordMessages] = useState<DiscordMessage[]>([]);
   const [loading, setLoading] = useState(false);
   // Initial stuff to allow the lang to change
-  const { t, i18n, ready } = useTranslation();
+  const { t } = useTranslation();
 
   useEffect(() => {
     const loadContent = async () => {

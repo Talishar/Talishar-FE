@@ -143,7 +143,7 @@ const AuthVerify = () => {
             <strong>{appInfo?.name}</strong>{' '}
             {t('AUTH.VERIFY.REQUEST_PERMISSION')}
           </p>
-          <InlineLoginForm onSuccess={() => {}} />
+          <InlineLoginForm />
         </div>
       </div>
     );
@@ -193,11 +193,7 @@ const AuthVerify = () => {
   );
 };
 
-interface InlineLoginFormProps {
-  onSuccess: () => void;
-}
-
-const InlineLoginForm = ({}: InlineLoginFormProps) => {
+const InlineLoginForm = () => {
   const { t } = useTranslation();
   const [parent] = useAutoAnimate();
   const [login] = useLoginMutation();

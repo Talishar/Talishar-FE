@@ -23,13 +23,6 @@ const MetafySection: React.FC<MetafySectionProps> = ({
   const [refreshMetafyCommunities, { isLoading: isRefreshing }] =
     useRefreshMetafyCommunitiesMutation();
 
-  const handleDisconnect = async () => {
-    // For now, we'll show a placeholder message
-    toast.success(t('PROFILE.METAFY_DISCONNECT_SOON'), {
-      position: 'top-center'
-    });
-  };
-
   const handleRefresh = async (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     if (isRefreshing) return;

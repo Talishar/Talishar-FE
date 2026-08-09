@@ -356,7 +356,6 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
   const [showAllCards, setShowAllCards] = useState(false);
   const statsRef = useRef<HTMLDivElement>(null);
-  const [isExporting, setIsExporting] = useState(false);
   const [heroDataUrls, setHeroDataUrls] = useState<{
     yourHero?: string;
     opponentHero?: string;
@@ -673,8 +672,6 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
       }
     }
 
-    setIsExporting(true);
-
     const exportEl = statsRef.current;
 
     try {
@@ -755,7 +752,6 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
       console.error('Error exporting screenshot:', error);
       alert(t('END_GAME.EXPORT_IMAGE_ERROR', { error }));
     } finally {
-      setIsExporting(false);
     }
   };
 
@@ -1262,17 +1258,17 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
     );
   };
 
-  let numCharged: number = 0;
+  let numCharged = 0;
   for (let i = 0; i < (data.cardResults?.length ?? 0); i++) {
     numCharged += data.cardResults[i].charged;
   }
 
-  let numKatsuDiscard: number = 0;
+  let numKatsuDiscard = 0;
   for (let i = 0; i < (data.cardResults?.length ?? 0); i++) {
     numKatsuDiscard += data.cardResults[i].katsuDiscard;
   }
 
-  let numDiscarded: number = 0;
+  let numDiscarded = 0;
   for (let i = 0; i < (data.cardResults?.length ?? 0); i++) {
     numDiscarded += data.cardResults[i].discarded;
   }

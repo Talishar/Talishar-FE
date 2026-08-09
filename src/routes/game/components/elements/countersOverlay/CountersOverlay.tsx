@@ -50,8 +50,6 @@ export const CountersOverlay = React.memo(
     gem,
     actionDataOverride,
     num,
-    numDescription,
-    facing,
     zone,
     activeCombatChain,
     controller,
@@ -59,13 +57,10 @@ export const CountersOverlay = React.memo(
     excludeFancyCounters
   }: CountersProp) => {
     let numTotal = num ?? 0;
-    let numDescriptionFinal = numDescription ?? '';
-
     if (countersMap && !excludeFancyCounters) {
       for (const counter in countersMap) {
         if (!INCLUDED_COUNTERS.has(counter)) {
           numTotal += Number(countersMap[counter]);
-          numDescriptionFinal = counter;
         }
       }
     }

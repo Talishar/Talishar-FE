@@ -37,7 +37,7 @@ export const LobbyUpdateHandler = React.memo(
     const { gameID } = useParams();
     const location = useLocation();
     const locationState = location.state as GameLocationState | undefined;
-    const [{ gameName = '0', playerID = '3', authKey = '' }] =
+    const [{ playerID = '3', authKey = '' }] =
       useKnownSearchParams();
 
     if (gameID === undefined) {

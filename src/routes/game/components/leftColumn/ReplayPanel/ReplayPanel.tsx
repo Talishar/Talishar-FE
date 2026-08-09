@@ -442,7 +442,9 @@ function ReplayContent({
           onClick={returnToStart}
           disabled={isRequestInProgress || isReloadingReplay}
         >
-          {isReloadingReplay ? 'Returning to start…' : 'Return to start'}
+          {isReloadingReplay
+            ? t('MATCH_REVIEW.RETURNING_TO_START')
+            : t('MATCH_REVIEW.RETURN_TO_START')}
         </button>
         {isPatron && gameInfo?.replayNumber && (
           <button
@@ -451,7 +453,10 @@ function ReplayContent({
             disabled={isSharing}
             title={t('MATCH_REVIEW.COPY_SHAREABLE_LINK')}
           >
-            <MdShare /> {isSharing ? 'Sharing…' : 'Share replay'}
+            <MdShare />{' '}
+            {isSharing
+              ? t('MATCH_REVIEW.SHARING')
+              : t('MATCH_REVIEW.SHARE_REPLAY')}
           </button>
         )}
       </div>

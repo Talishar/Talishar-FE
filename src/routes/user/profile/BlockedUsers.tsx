@@ -30,8 +30,9 @@ export const BlockedUsers: React.FC<BlockedUsersProps> = ({ className }) => {
     refetch: refetchBlockedUsers
   } = useGetBlockedUsersQuery(undefined);
 
-  const [blockUser] = useBlockUserMutation();
-  const [unblockUser] = useUnblockUserMutation();
+  const [blockUser, { isLoading: isBlockingUser }] = useBlockUserMutation();
+  const [unblockUser, { isLoading: isUnblockingUser }] =
+    useUnblockUserMutation();
 
   // Search users with debouncing
   const shouldSearch = debouncedSearchTerm.length >= 2;
@@ -57,7 +58,7 @@ export const BlockedUsers: React.FC<BlockedUsersProps> = ({ className }) => {
 
   const handleBlockUser = async (blockedUsername: string) => {
     try {
-      const result = await blockUser({ blockedUsername }).unwrap();
+      await blockUser({ blockedUsername }).unwrap();
       toast.success(t('PROFILE.USER_BLOCKED', { username: blockedUsername }));
       setSearchTerm('');
       setShowSearchResults(false);
@@ -89,28 +90,27 @@ export const BlockedUsers: React.FC<BlockedUsersProps> = ({ className }) => {
 
   return (
     <article className={`${styles.blockedUsersContainer} ${className}`}>
-      <h3
-        className={styles.title}
-        onClick={() => setIsExpanded(!isExpanded)}
-        style={{
-          cursor: 'pointer',
-          display: 'flex',
-          alignItems: 'center',
-          userSelect: 'none'
-        }}
-      >
-        {t('PROFILE.BLOCKED_USERS')}
-        <span
-          style={{
-            marginLeft: '8px',
-            transform: isExpanded ? 'rotate(90deg)' : 'rotate(0deg)',
-            transition: 'transform 0.2s ease',
-            display: 'flex',
-            alignItems: 'center'
-          }}
+      <h3 className={styles.title}>
+        <button
+          type="button"
+          className={styles.titleButton}
+          onClick={() => setIsExpanded(!isExpanded)}
+          aria-expanded={isExpanded}
         >
-          <IoMdArrowDropright />
-        </span>
+          {t('PROFILE.BLOCKED_USERS')}
+          <span
+            style={{
+              marginLeft: '8px',
+              transform: isExpanded ? 'rotate(90deg)' : 'rotate(0deg)',
+              transition: 'transform 0.2s ease',
+              display: 'flex',
+              alignItems: 'center'
+            }}
+            aria-hidden="true"
+          >
+            <IoMdArrowDropright />
+          </span>
+        </button>
       </h3>
 
       {isExpanded && (
@@ -161,7 +161,12 @@ export const BlockedUsers: React.FC<BlockedUsersProps> = ({ className }) => {
                               onClick={() =>
                                 !isBlocked && handleBlockUser(user.username)
                               }
-                              disabled={isBlocked}
+                              disabled={isBlocked || isBlockingUser}
+                              aria-label={
+                                isBlocked
+                                  ? t('PROFILE.USER_ALREADY_BLOCKED')
+                                  : t('PROFILE.BLOCK_USER')
+                              }
                               title={
                                 isBlocked
                                   ? t('PROFILE.USER_ALREADY_BLOCKED')
@@ -214,6 +219,8 @@ export const BlockedUsers: React.FC<BlockedUsersProps> = ({ className }) => {
                             className={styles.unblockButton}
                             onClick={() => handleUnblockUser(blockedUser)}
                             title={t('PROFILE.UNBLOCK_USER')}
+                            aria-label={t('PROFILE.UNBLOCK_USER')}
+                            disabled={isUnblockingUser}
                           >
                             <RiDeleteBin5Line fontSize="1.5em" />
                           </button>

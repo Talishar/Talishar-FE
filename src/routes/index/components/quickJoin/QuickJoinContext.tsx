@@ -41,7 +41,7 @@ const shortenFormat = (format: string): string => {
 const formatDeckLabel = (
   deckName: string,
   format: string | null,
-  maxLength: number = 58
+  maxLength = 58
 ): string => {
   const name = String(deckName ?? '');
   const formatStr = format ? ` (${shortenFormat(format)})` : '';

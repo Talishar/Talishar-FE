@@ -90,7 +90,7 @@ const OpenGame = ({
       navigate(`/game/join/${entry.gameName}`);
     }
   };
-  const { t, i18n, ready } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   // This lets us recognize descriptions stored in any language (JP, FR, etc.)
   const reverseDescriptionMap = useMemo(() => {
@@ -167,9 +167,9 @@ const OpenGame = ({
   );
 
   return (
-    <div key={ix} className={styles.gameItem} onClick={handleJoin}>
+    <div key={ix} className={styles.gameItem}>
       <div>
-        {!!entry.p1Hero ? (
+        {entry.p1Hero ? (
           <img
             className={styles.heroImg}
             src={generateCroppedImageUrl(entry.p1Hero)}

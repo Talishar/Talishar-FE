@@ -13,15 +13,15 @@ const DropdownIndicator = null;
 
 // TODO: replace the any
 const customStyles = {
-  container: (state: any) => styles.container,
+  container: (_state: any) => styles.container,
   control: (state: any) =>
     classNames(styles.searchBox, { [styles.focused]: state.isFocused }),
-  menuList: (state: any) => styles.menuList,
+  menuList: (_state: any) => styles.menuList,
   option: (state: any) =>
     classNames(styles.listItem, {
       [styles.selected]: state.isSelected
     }),
-  input: (state: any) => styles.styledInput
+  input: (_state: any) => styles.styledInput
 };
 
 export const SearchCardInput = () => {
@@ -36,7 +36,7 @@ export const SearchCardInput = () => {
 
   const options = useMemo(
     () =>
-      CARD_LIST?.map((card, ix) => {
+      CARD_LIST?.map((card) => {
         return { label: card, value: card };
       }),
     []
@@ -46,7 +46,7 @@ export const SearchCardInput = () => {
     e.stopPropagation();
   };
 
-  const handleChange = (newValue: any, actionMeta: any) => {
+  const handleChange = (newValue: any) => {
     setCard(newValue?.value || '');
   };
 

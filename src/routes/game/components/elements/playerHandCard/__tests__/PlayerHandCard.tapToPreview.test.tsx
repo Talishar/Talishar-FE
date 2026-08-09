@@ -18,8 +18,7 @@ vi.mock('hooks/useLanguageSelector', () => ({
 
 vi.mock('../../cardImage/CardImage', () => ({
   default: ({ src, className }: { src: string; className?: string }) => (
-    // eslint-disable-next-line jsx-a11y/alt-text
-    <img src={src} className={className} data-testid="card-image" />
+    <img src={src} className={className} data-testid="card-image" alt="" />
   )
 }));
 

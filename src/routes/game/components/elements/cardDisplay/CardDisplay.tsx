@@ -137,7 +137,7 @@ export const CardDisplay = (prop: CardProp) => {
   });
 
   const renderNumUses = (numUses: number) => {
-    let divs = [];
+    const divs = [];
     for (let i = 1; i <= numUses; i++) {
       divs.push(<div className={styles.numUsesCircle} key={i}></div>);
     }

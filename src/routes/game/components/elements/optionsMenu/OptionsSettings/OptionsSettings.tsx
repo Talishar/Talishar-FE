@@ -29,7 +29,6 @@ const OptionsSettings = () => {
   const { setTransparency } = useTheme();
   const gameInfo = useAppSelector(getGameInfo, shallowEqual);
   const settingsData = useAppSelector(getSettingsEntity);
-  const isLoading = useAppSelector(getSettingsStatus);
   const dispatch = useAppDispatch();
   const [windowWidth] = useWindowDimensions();
   const isMobile = windowWidth < 768;
@@ -61,7 +60,7 @@ const OptionsSettings = () => {
     isPracticeDummy ||
     isPrivate ||
     isFuturesFormat;
-  const [cookies, setCookie, removeCookie] = useCookies([
+  const [cookies, setCookie] = useCookies([
     'experimental',
     'cardSize',
     'playmatIntensity',

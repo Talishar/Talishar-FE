@@ -12,7 +12,6 @@ export default function KeywordDefinitionBody({
 }) {
   const { t } = useTranslation();
   const [rule, setRule] = useState<CrRule | null | undefined>();
-  const [expanded, setExpanded] = useState(false);
   useEffect(() => {
     let active = true;
     import('data/keywords/generated/crText').then((module) => {
@@ -22,12 +21,6 @@ export default function KeywordDefinitionBody({
       active = false;
     };
   }, [entry.id]);
-  const showDetails = async () => {
-    setExpanded(true);
-    if (rule !== undefined) return;
-    const module = await import('data/keywords/generated/crText');
-    setRule(module.CR_TEXT[entry.id] ?? null);
-  };
   const rulesUrl =
     entry.crOverrideUrl ??
     (rule?.anchor ? `${CR_BASE}#${rule.anchor}` : undefined);

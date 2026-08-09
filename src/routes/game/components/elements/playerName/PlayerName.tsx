@@ -408,21 +408,27 @@ export default function PlayerName(player: Player) {
                 hasRequestSent ? handleCancelFriendRequest : handleAddFriend
               }
               title={
-                hasRequestSent ? 'Cancel friend request' : 'Send friend request'
+                hasRequestSent
+                  ? t('PROFILE.CANCEL_FRIEND_REQUEST')
+                  : t('PROFILE.ADD_FRIEND')
               }
             >
               <MdPersonAdd className={styles.optionIcon} />
-              {hasRequestSent ? 'Request Sent' : 'Send Friend Request'}
+              {hasRequestSent
+                ? t('PROFILE.CANCEL_FRIEND_REQUEST')
+                : t('PROFILE.ADD_FRIEND')}
             </button>
             <button
               className={`${styles.dropdownOption} ${
                 isBlocked ? styles.disabled : ''
               }`}
               onClick={isBlocked ? handleUnblockUser : handleBlockUser}
-              title={isBlocked ? 'Unblock user' : 'Block user'}
+              title={
+                isBlocked ? t('PROFILE.UNBLOCK_USER') : t('PROFILE.BLOCK_USER')
+              }
             >
               <MdBlock className={styles.optionIcon} />
-              {isBlocked ? 'Blocked' : 'Block User'}
+              {isBlocked ? t('PROFILE.UNBLOCK_USER') : t('PROFILE.BLOCK_USER')}
             </button>
             <button
               ref={noteButtonRef}
@@ -432,7 +438,9 @@ export default function PlayerName(player: Player) {
               onMouseLeave={handleNoteTooltipClose}
             >
               <MdNotes className={styles.optionIcon} />
-              {playerNote ? 'Edit Note' : 'Add Note'}
+              {playerNote
+                ? t('PLAYER_NAME.EDIT_NOTE')
+                : t('PLAYER_NAME.ADD_NOTE')}
             </button>
           </div>,
           document.body

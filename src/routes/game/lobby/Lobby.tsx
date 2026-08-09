@@ -82,8 +82,6 @@ import {
 import { DISABLE_ALT_ARTS } from 'features/options/constants';
 import { useTranslation, Trans } from 'react-i18next';
 
-const FAB_BAZAAR_LEARN_MORE_URL = 'https://fabbazaar.app/tutorials/talishar';
-
 // FaBrary uses hyphens (e.g. "briar-warden-of-thorns"), Talishar uses underscores.
 const normalizeHeroId = (id: string) => id.toLowerCase().replace(/-/g, '_');
 
@@ -128,7 +126,7 @@ const Lobby = () => {
   const [activeTab, setActiveTab] = useState<string>('equipment');
   const [unreadChat, setUnreadChat] = useState<boolean>(false);
   const [filtersExpanded, setFiltersExpanded] = useState(false);
-  const [width, height] = useWindowDimensions();
+  const [width] = useWindowDimensions();
   const [isWideScreen, setIsWideScreen] = useState<boolean>(false);
   const [isDeckValid, setIsDeckValid] = useState(true);
   const navigate = useNavigate();
@@ -156,7 +154,6 @@ const Lobby = () => {
   const settingsStatus = useAppSelector(getSettingsStatus);
   const {
     isLoggedIn,
-    isPatron,
     metafyId,
     metafyHash,
     metafyTimestamp,
@@ -200,28 +197,6 @@ const Lobby = () => {
       dispatch(fetchAllSettings({ game: dummyGameInfo }));
     }
   }, []);
-
-  // Get patron info for player 1 (you)
-  const yourPatronInfo = useAppSelector(
-    (state: RootState) => ({
-      isPatron: state.game.playerOne.isPatron,
-      isContributor: state.game.playerOne.isContributor,
-      isPvtVoidPatron: state.game.playerOne.isPvtVoidPatron,
-      metafyTiers: state.game.playerOne.metafyTiers
-    }),
-    shallowEqual
-  );
-
-  // Get patron info for player 2 (opponent)
-  const opponentPatronInfo = useAppSelector(
-    (state: RootState) => ({
-      isPatron: state.game.playerTwo.isPatron,
-      isContributor: state.game.playerTwo.isContributor,
-      isPvtVoidPatron: state.game.playerTwo.isPvtVoidPatron,
-      metafyTiers: state.game.playerTwo.metafyTiers
-    }),
-    shallowEqual
-  );
 
   // Get user profile to access Metafy tiers (since Redux might not be populated in lobby)
   const { data: userProfileData } = useGetUserProfileQuery(undefined, {
@@ -288,8 +263,7 @@ const Lobby = () => {
     );
   }, [altArtsFromLobby, areAltArtsDisabled, dispatch]);
 
-  const [submitSideboardMutation, submitSideboardMutationData] =
-    useSubmitSideboardMutation();
+  const [submitSideboardMutation] = useSubmitSideboardMutation();
 
   const [updateBazaarMatchup] = useUpdateBazaarMatchupMutation();
 
@@ -372,13 +346,6 @@ const Lobby = () => {
   };
 
   const handleMatchupClick = () => setActiveTab('matchups');
-
-  const selectedMatchup = useMemo(() => {
-    if (!selectedMatchupId) return null;
-    return (gameLobby?.matchups ?? []).find(
-      (matchup: Matchup) => matchup.matchupId === selectedMatchupId
-    );
-  }, [selectedMatchupId, gameLobby?.matchups]);
 
   const suggestedMatchupId = useMemo(() => {
     if (!gameLobby?.theirHero || gameLobby.theirHero === 'CardBack')
@@ -487,14 +454,14 @@ const Lobby = () => {
   const deckSBIndexed = deckSBClone
     .sort()
     .map((card, ix) => `${card}-${ix + deckIndexed.length}`);
-  const headClone = [...data?.deck?.head];
-  const headSBClone = [...data?.deck?.headSB];
-  const legsClone = [...data?.deck?.legs];
-  const legsSBClone = [...data?.deck?.legsSB];
-  const armsClone = [...data?.deck?.arms];
-  const armsSBClone = [...data?.deck?.armsSB];
-  const chestClone = [...data?.deck?.chest];
-  const chestSBClone = [...data?.deck?.chestSB];
+  const headClone = [...(data?.deck?.head ?? [])];
+  const headSBClone = [...(data?.deck?.headSB ?? [])];
+  const legsClone = [...(data?.deck?.legs ?? [])];
+  const legsSBClone = [...(data?.deck?.legsSB ?? [])];
+  const armsClone = [...(data?.deck?.arms ?? [])];
+  const armsSBClone = [...(data?.deck?.armsSB ?? [])];
+  const chestClone = [...(data?.deck?.chest ?? [])];
+  const chestSBClone = [...(data?.deck?.chestSB ?? [])];
 
   const leftHero =
     data.deck.hero === 'CardBack' ? 'UNKNOWNHERO' : data.deck.hero;
@@ -502,9 +469,6 @@ const Lobby = () => {
     gameLobby?.theirHero === 'CardBack' ? 'UNKNOWNHERO' : gameLobby?.theirHero;
 
   const leftPic = `url(${generateCroppedImageUrl(leftHero)})`;
-  const isWaitingForOpponent =
-    !gameLobby?.theirHero || gameLobby.theirHero === 'CardBack';
-
   const lobbyFormatName = getReadableFormatName(
     String(gameLobby?.format ?? data.format ?? '')
   );
@@ -597,7 +561,6 @@ const Lobby = () => {
       case GAME_FORMAT.BLITZ:
       case GAME_FORMAT.COMMONER:
       case GAME_FORMAT.COMPETITIVE_BLITZ:
-      case GAME_FORMAT.COMMONER:
       case GAME_FORMAT.CLASH:
       case GAME_FORMAT.SAGE:
       case GAME_FORMAT.COMPETITIVE_SAGE:
@@ -696,12 +659,11 @@ const Lobby = () => {
     'kayo_underhanded_cheat',
     'kayo_strong_arm'
   ];
-  let handsTotal = oneHandedHeroes.includes(data.deck.hero) ? 1 : 2;
+  const handsTotal = oneHandedHeroes.includes(data.deck.hero) ? 1 : 2;
   const mainClassNames = classNames(styles.lobbyClass);
 
   const [showChatModal, setShowChatModal] = useState(true);
-  const [chatModal, setChatModal] = useState('');
-  const [modal, setModal] = useState(t('GAME_LOBBY.ENABLE_CHAT_QUERY'));
+  const [modal] = useState(t('GAME_LOBBY.ENABLE_CHAT_QUERY'));
 
   const clickYes = (e: any) => {
     e.preventDefault();
@@ -874,7 +836,7 @@ const Lobby = () => {
       const sideboardIn = multisetDiff(deck, originalMain);
       const sideboardOut = multisetDiff(originalMain, deck);
       try {
-        const bazaarResponse = await updateBazaarMatchup({
+        await updateBazaarMatchup({
           deckId: bazaarDeckId,
           heroId: opponentHeroId,
           metafyId: resolvedMetafyId,
@@ -934,13 +896,16 @@ const Lobby = () => {
                 </header>
                 <p style={{ marginBottom: '1em' }}>
                   <Trans i18nKey="GAME_LOBBY.OPEN_FORMAT_DISCLAIMER">
-                    Note that new cards are added on a \'best-effort\' basis and
-                    there may be more bugs and inaccurate card interactions. It
-                    may not be a completely accurate representation of the Rules
-                    as written. If you have questions about interactions or
-                    rulings, please contact the{' '}
-                    <a href={JUDGE_HUB_DISCORD_URL} target="_blank">
-                      {' '}
+                    Note that new cards are added on a &apos;best-effort&apos;
+                    basis and there may be more bugs and inaccurate card
+                    interactions. It may not be a completely accurate
+                    representation of the Rules as written. If you have
+                    questions about interactions or rulings, please contact the{' '}
+                    <a
+                      href={JUDGE_HUB_DISCORD_URL}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
                       JudgeHub Discord
                     </a>{' '}
                     for clarification.

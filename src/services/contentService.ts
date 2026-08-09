@@ -37,7 +37,7 @@ export interface ContentVideo {
 
 // Discord API - Fetches latest messages from #release-notes channel
 export const fetchDiscordReleaseNotes = async (
-  maxMessages: number = 5
+  maxMessages = 5
 ): Promise<DiscordMessage[]> => {
   try {
     const url = `${BACKEND_URL}GetDiscordReleaseNotes.php?maxMessages=${maxMessages}`;
@@ -87,7 +87,7 @@ export interface ContentCarouselResponse {
 }
 
 export const fetchDiscordContentCarousel = async (
-  maxMessages: number = 20
+  maxMessages = 20
 ): Promise<ContentVideo[]> => {
   try {
     const url = `${BACKEND_URL}GetDiscordContentCarousel.php?maxMessages=${maxMessages}`;

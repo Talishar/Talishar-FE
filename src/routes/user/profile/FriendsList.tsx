@@ -52,12 +52,17 @@ export const FriendsList: React.FC<FriendsListProps> = ({ className }) => {
     refetch: refetchFriends
   } = useGetFriendsListQuery(undefined);
 
-  const [addFriend] = useAddFriendMutation();
-  const [removeFriend] = useRemoveFriendMutation();
-  const [acceptRequest] = useAcceptRequestMutation();
-  const [rejectRequest] = useRejectRequestMutation();
-  const [cancelRequest] = useCancelRequestMutation();
-  const [updateFriendNickname] = useUpdateFriendNicknameMutation();
+  const [addFriend, { isLoading: isAddingFriend }] = useAddFriendMutation();
+  const [removeFriend, { isLoading: isRemovingFriend }] =
+    useRemoveFriendMutation();
+  const [acceptRequest, { isLoading: isAcceptingRequest }] =
+    useAcceptRequestMutation();
+  const [rejectRequest, { isLoading: isRejectingRequest }] =
+    useRejectRequestMutation();
+  const [cancelRequest, { isLoading: isCancellingRequest }] =
+    useCancelRequestMutation();
+  const [updateFriendNickname, { isLoading: isUpdatingNickname }] =
+    useUpdateFriendNicknameMutation();
 
   const {
     data: pendingData,
@@ -95,7 +100,7 @@ export const FriendsList: React.FC<FriendsListProps> = ({ className }) => {
 
   const handleAddFriend = async (friendUsername: string) => {
     try {
-      const result = await addFriend({ friendUsername }).unwrap();
+      await addFriend({ friendUsername }).unwrap();
       toast.success(
         t('PROFILE.FRIEND_REQUEST_SENT', { username: friendUsername })
       );
@@ -207,28 +212,27 @@ export const FriendsList: React.FC<FriendsListProps> = ({ className }) => {
 
   return (
     <article className={`${styles.friendsListContainer} ${className}`}>
-      <h3
-        className={styles.title}
-        onClick={() => setIsExpanded(!isExpanded)}
-        style={{
-          cursor: 'pointer',
-          display: 'flex',
-          alignItems: 'center',
-          userSelect: 'none'
-        }}
-      >
-        {t('PROFILE.FRIENDS_LIST')}
-        <span
-          style={{
-            marginLeft: '8px',
-            transform: isExpanded ? 'rotate(90deg)' : 'rotate(0deg)',
-            transition: 'transform 0.2s ease',
-            display: 'flex',
-            alignItems: 'center'
-          }}
+      <h3 className={styles.title}>
+        <button
+          type="button"
+          className={styles.titleButton}
+          onClick={() => setIsExpanded(!isExpanded)}
+          aria-expanded={isExpanded}
         >
-          <IoMdArrowDropright />
-        </span>
+          {t('PROFILE.FRIENDS_LIST')}
+          <span
+            style={{
+              marginLeft: '8px',
+              transform: isExpanded ? 'rotate(90deg)' : 'rotate(0deg)',
+              transition: 'transform 0.2s ease',
+              display: 'flex',
+              alignItems: 'center'
+            }}
+            aria-hidden="true"
+          >
+            <IoMdArrowDropright />
+          </span>
+        </button>
       </h3>
 
       {isExpanded && (
@@ -280,7 +284,12 @@ export const FriendsList: React.FC<FriendsListProps> = ({ className }) => {
                                 !hasRequestSent &&
                                 handleAddFriend(user.username)
                               }
-                              disabled={hasRequestSent}
+                              disabled={hasRequestSent || isAddingFriend}
+                              aria-label={
+                                hasRequestSent
+                                  ? t('PROFILE.FRIEND_REQUEST_ALREADY_SENT')
+                                  : t('PROFILE.ADD_FRIEND')
+                              }
                               title={
                                 hasRequestSent
                                   ? t('PROFILE.FRIEND_REQUEST_ALREADY_SENT')
@@ -360,6 +369,8 @@ export const FriendsList: React.FC<FriendsListProps> = ({ className }) => {
                               )
                             }
                             title={t('PROFILE.CANCEL_FRIEND_REQUEST')}
+                            aria-label={t('PROFILE.CANCEL_FRIEND_REQUEST')}
+                            disabled={isCancellingRequest}
                           >
                             <MdCancel fontSize="1.5em" />
                           </button>
@@ -428,6 +439,8 @@ export const FriendsList: React.FC<FriendsListProps> = ({ className }) => {
                               )
                             }
                             title={t('PROFILE.ACCEPT_FRIEND_REQUEST')}
+                            aria-label={t('PROFILE.ACCEPT_FRIEND_REQUEST')}
+                            disabled={isAcceptingRequest}
                           >
                             <MdCheckCircle fontSize="1.5em" />
                           </button>
@@ -440,6 +453,8 @@ export const FriendsList: React.FC<FriendsListProps> = ({ className }) => {
                               )
                             }
                             title={t('PROFILE.REJECT_FRIEND_REQUEST')}
+                            aria-label={t('PROFILE.REJECT_FRIEND_REQUEST')}
+                            disabled={isRejectingRequest}
                           >
                             <MdCancel fontSize="1.5em" />
                           </button>
@@ -510,6 +525,7 @@ export const FriendsList: React.FC<FriendsListProps> = ({ className }) => {
                             className={styles.editButton}
                             onClick={() => handleEditNickname(friend)}
                             title={t('PROFILE.EDIT_NICKNAME')}
+                            aria-label={t('PROFILE.EDIT_NICKNAME')}
                           >
                             <MdEdit fontSize="1.5em" />
                           </button>
@@ -517,6 +533,8 @@ export const FriendsList: React.FC<FriendsListProps> = ({ className }) => {
                             className={styles.deleteButton}
                             onClick={() => handleRemoveFriend(friend)}
                             title={t('PROFILE.REMOVE_FRIEND')}
+                            aria-label={t('PROFILE.REMOVE_FRIEND')}
+                            disabled={isRemovingFriend}
                           >
                             <RiDeleteBin5Line fontSize="1.5em" />
                           </button>
@@ -562,6 +580,7 @@ export const FriendsList: React.FC<FriendsListProps> = ({ className }) => {
                   <button
                     className={styles.saveButton}
                     onClick={handleSaveNickname}
+                    disabled={isUpdatingNickname}
                   >
                     {t('PROFILE.SAVE')}
                   </button>

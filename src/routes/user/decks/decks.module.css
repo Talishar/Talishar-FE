@@ -322,6 +322,9 @@
   cursor: pointer;
   width: 128px;
   flex-shrink: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
 }
 
 .playmatThumb {
@@ -417,6 +420,9 @@
   cursor: pointer;
   width: 100px;
   flex-shrink: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
 }
 
 .saveButton {

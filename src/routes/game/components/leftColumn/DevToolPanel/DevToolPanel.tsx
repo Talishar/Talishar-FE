@@ -86,7 +86,7 @@ function DevToolContent({
       const sourceGameID = `${gameID?.trim()}-${variant}`;
 
       try {
-        const result = await debugGameMutation({
+        await debugGameMutation({
           source: sourceGameID,
           target: localGame?.trim()
         }).unwrap();

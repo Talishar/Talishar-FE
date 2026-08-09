@@ -16,8 +16,7 @@ import { useTranslation } from 'react-i18next';
 export const ForgottenPasswordForm = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const [forgottenPassword, forgottenPasswordResult] =
-    useForgottenPasswordMutation();
+  const [forgottenPassword] = useForgottenPasswordMutation();
   const [parent] = useAutoAnimate();
   const {
     register,
@@ -60,7 +59,6 @@ export const ForgottenPasswordForm = () => {
           error: JSON.stringify(err)
         })
       });
-    } finally {
     }
   };
 
@@ -71,6 +69,7 @@ export const ForgottenPasswordForm = () => {
         <form onSubmit={handleSubmit(onSubmit)} ref={parent}>
           <label htmlFor="email">{t('USER.LOGIN.EMAIL')}</label>
           <input
+            id="email"
             type="email"
             placeholder="bravo@talishar.net"
             {...register('email')}
@@ -85,7 +84,9 @@ export const ForgottenPasswordForm = () => {
             aria-busy={isSubmitting}
             className={styles.submitButton}
           >
-            {t('USER.LOGIN.SUBMIT')}
+            {isSubmitting
+              ? t('GAME_LOBBY.SUBMITTING')
+              : t('USER.LOGIN.SUBMIT')}
           </button>
           {errors.root?.serverError?.message && (
             <div className={styles.fieldError}>

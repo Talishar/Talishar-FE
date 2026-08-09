@@ -14,11 +14,10 @@ import { useTranslation, Trans } from 'react-i18next';
 export const SignUpForm = () => {
   const [disclaimerOpen, setDisclaimerOpen] = useState(false);
   const { isLoggedIn } = useAuth();
-  const [signup, signupResult] = useSignUpMutation();
+  const [signup] = useSignUpMutation();
   const [parent] = useAutoAnimate();
   const navigate = useNavigate();
-  // Initial stuff to allow the lang to change
-  const { t, i18n, ready } = useTranslation();
+  const { t } = useTranslation();
 
   const {
     register,
@@ -64,7 +63,6 @@ export const SignUpForm = () => {
           error: JSON.stringify(err)
         })
       });
-    } finally {
     }
   };
 
@@ -153,7 +151,9 @@ export const SignUpForm = () => {
             aria-busy={isSubmitting}
             disabled={isSubmitting}
           >
-            {t('USER.LOGIN.SUBMIT')}
+            {isSubmitting
+              ? t('GAME_LOBBY.SUBMITTING')
+              : t('USER.LOGIN.SUBMIT')}
           </button>
           {errors.root?.serverError?.message && (
             <div className={styles.fieldError}>
@@ -184,11 +184,12 @@ export const SignUpForm = () => {
       <dialog open={disclaimerOpen}>
         <article className={styles.container}>
           <header>
-            <span
+            <button
+              type="button"
               aria-label={t('USER.LOGIN.CLOSE')}
               className="close"
               onClick={() => setDisclaimerOpen(false)}
-            ></span>
+            />
             {t('USER.LOGIN.DISCLAIMER')}
           </header>
           <p>{t('USER.LOGIN.DISCLAIMER_BODY_1')}</p>

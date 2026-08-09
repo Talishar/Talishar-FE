@@ -42,7 +42,7 @@ const StickyFooter = ({
   const footerRef = useRef<HTMLDivElement>(null);
   const [copied, setCopied] = useState(false);
   const copyTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  let errorArray = [] as string[];
+  const errorArray = [] as string[];
   for (const [, value] of Object.entries(errors)) {
     errorArray.push(String(value));
   }
@@ -139,6 +139,9 @@ const StickyFooter = ({
               title={
                 copied ? t('GAME_LOBBY.COPIED') : t('GAME_LOBBY.COPY_INVITE')
               }
+              aria-label={
+                copied ? t('GAME_LOBBY.COPIED') : t('GAME_LOBBY.COPY_INVITE')
+              }
             >
               {copied ? <HiClipboardCheck /> : <HiClipboardCopy />}
             </button>
@@ -148,6 +151,7 @@ const StickyFooter = ({
                 onClick={onSendInviteClick}
                 type="button"
                 title={t('GAME_LOBBY.SEND_INVITE_FRIEND')}
+                aria-label={t('GAME_LOBBY.SEND_INVITE_FRIEND')}
               >
                 <MdGames />
               </button>

@@ -25,14 +25,16 @@ export const ResetPasswordForm = () => {
     resolver: yupResolver(resetPasswordValidationSchema)
   });
 
-  // Initial stuff to allow the lang to change
-  const { t, i18n, ready } = useTranslation();
+  const { t } = useTranslation();
 
   const onSubmit: SubmitHandler<ResetPassword> = async (values) => {
     try {
-      values.selector = params.get('selector') ?? '';
-      values.validator = params.get('validator') ?? '';
-      const resp = await resetPassword(values).unwrap();
+      const payload = {
+        ...values,
+        selector: params.get('selector') ?? '',
+        validator: params.get('validator') ?? ''
+      };
+      const resp = await resetPassword(payload).unwrap();
       if (resp.error) {
         setError('root.serverError', {
           type: 'custom',
@@ -50,11 +52,10 @@ export const ResetPasswordForm = () => {
       console.warn(err);
       setError('root.serverError', {
         type: 'custom',
-        message: `There has been a network error submitting the password reset. Please try again. If you still get an error please report on our Discord and let us know the following: ${JSON.stringify(
+        message: `There has been a network error submitting the password reset. Please try again. If you still get an error, please report it on our Discord and include the following: ${JSON.stringify(
           err
         )}`
       });
-    } finally {
     }
   };
 
@@ -95,7 +96,9 @@ export const ResetPasswordForm = () => {
             aria-busy={isSubmitting}
             className={styles.submitButton}
           >
-            {t('USER.LOGIN.SUBMIT')}
+            {isSubmitting
+              ? t('GAME_LOBBY.SUBMITTING')
+              : t('USER.LOGIN.SUBMIT')}
           </button>
           {errors.root?.serverError?.message && (
             <div className={styles.fieldError}>

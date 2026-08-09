@@ -86,6 +86,7 @@ const LanguageSelector = () => {
                 key={`${language}-${index}`}
                 role="option"
                 aria-selected={isSelected}
+                tabIndex={0}
                 className={[
                   styles.option,
                   isSelected ? styles.optionSelected : ''
@@ -93,6 +94,12 @@ const LanguageSelector = () => {
                   .filter(Boolean)
                   .join(' ')}
                 onClick={() => handleSelect(language)}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    handleSelect(language);
+                  }
+                }}
               >
                 {label}
               </li>

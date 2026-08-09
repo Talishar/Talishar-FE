@@ -107,8 +107,8 @@
     "LOADING_ERROR": "",
     "METAFY_SIGNUP": {
       "PAGE_TITLE": "Metafy注册",
-      "PROCESSING": "正在处理...",
-      "REDIRECTING": "正在重定向到主页..."
+      "PROCESSING": "正在处理…",
+      "REDIRECTING": "正在重定向到主页…"
     },
     "VERIFY": {
       "ALLOW": "",
@@ -116,7 +116,7 @@
       "AUTHORIZATION_FAILED_MESSAGE": "无效的应用或重定向URI。",
       "AUTHORIZE_APP": "授权应用",
       "AUTHORIZE_FAILED": "",
-      "AUTHORIZING": "验证中...",
+      "AUTHORIZING": "验证中…",
       "DENY": "",
       "DISCLAIMER": "",
       "DONT_HAVE_ACCOUNT": "没有账户？<0>注册</0>",
@@ -178,7 +178,7 @@
     "CTA_SUB": "在 <1>#talishar-content</1> 分享您的游戏视频、播客或策略内容，我们将展示您的最佳作品。",
     "DISCOVER": "发现来自 Talishar 社区的内容、套牌科技和精彩瞬间",
     "JOIN_DISCORD": "加入 Discord",
-    "LOADING": "正在加载精选内容...",
+    "LOADING": "正在加载精选内容…",
     "TITLE": "社区与内容中心",
     "TYPE_DECK_TECH": "套牌科技",
     "TYPE_GUIDE": "攻略",
@@ -447,7 +447,7 @@
     "NO_SUBTYPE": "",
     "NO_THANKS": "",
     "NO_VARIABLE": "",
-    "OPEN_FORMAT_DISCLAIMER": "请注意，新卡牌会在“尽力而为”的基础上添加，可能会有更多错误和不准确的卡牌互动。它可能无法完全准确地反映官方书面规则。如果您对互动或判罚有疑问，请联系 <0>JudgeHub Discord</0> 进行澄清。",
+    "OPEN_FORMAT_DISCLAIMER": "请注意，新卡牌会在“尽力而为”的基础上添加，可能会有更多错误和不准确的卡牌互动。它可能无法完全准确地反映官方书面规则。如果您对互动或判罚有疑问，请联系 <2>JudgeHub Discord</2> 进行澄清。",
     "OPEN_FORMAT_DISCLAIMER_HEADER": "⚠️ ",
     "OPPONENT": "",
     "PITCH": "资源(Pitch)",
@@ -463,7 +463,7 @@
     "SEND_INVITE_FRIEND": "向好友发送邀请",
     "SIDEBOARD_UNREADY_FAILURE": "取消准备备牌失败",
     "SOME_ERROR": "发生了一些错误",
-    "SUBMITTING": "提交中...",
+    "SUBMITTING": "提交中…",
     "SUBTYPE": "子类型",
     "SUBTYPE_SORT": "按子类型对卡牌进行分组",
     "SUGGESTED": "",
@@ -621,7 +621,7 @@
   "LEARN": {
     "BANNER_SUBTITLE": "借助我们的社区攻略，提升技巧。",
     "FREE_FOR_SUPPORTERS": "",
-    "LOADING": "加载攻略中...",
+    "LOADING": "加载攻略中…",
     "NO_GUIDES": "暂无攻略。",
     "NO_IMAGE": "",
     "PAGE_TITLE": "学习",
@@ -758,7 +758,7 @@
   },
   "LINK_METAFY_PAGE": {
     "BANNER_SUBTITLE": "连接您的Metafy账户",
-    "CONNECTING": "正在绑定Metafy...",
+    "CONNECTING": "正在绑定Metafy…",
     "SUCCESS": "成功绑定Metafy账户!"
   },
   "LINK_PATREON_PAGE": {
@@ -911,9 +911,9 @@
           "PREVIEW": "预览：寻找 ",
           "PREVIEW_NOT": "预览：不寻找 ",
           "SEARCH_CLASSES": "搜索职业",
-          "SEARCH_CLASSES_PLACEHOLDER": "搜索职业...",
+          "SEARCH_CLASSES_PLACEHOLDER": "搜索职业…",
           "SEARCH_HEROES": "搜索英雄",
-          "SEARCH_HEROES_PLACEHOLDER": "搜索英雄...",
+          "SEARCH_HEROES_PLACEHOLDER": "搜索英雄…",
           "SELECT_CLASSES": "选择职业（最多 {{amount}} 个）：",
           "SELECT_HEROES": "选择英雄（最多 {{amount}} 个）："
         },
@@ -953,7 +953,6 @@
       },
       "VISIBILITY": "可见性"
     },
-    "FULL_SCREEN": "",
     "FULLSCREEN": "",
     "HIDE_ARENA": "",
     "HOLD_PRIORITY_LABEL": "",
@@ -1174,7 +1173,6 @@
       "FYENDAL_BADGE": "Heart of Fyendal 游戏内徽章",
       "GENERAL_SUPPORT": "支持Talishar",
       "GRANDEUR_BADGE": "Grandeur of Valahai 游戏内徽章",
-      "GROUP_CLASSES": "参加每周Group Class和Office Hour",
       "MORE_EXTRA_LEADERBOARD": "更多排行榜积分加成",
       "NO_ADS": "无广告",
       "NO_RUST_COUNTERS": "No Rust Counters",
@@ -1209,8 +1207,7 @@
       "PLAY_GAMES": "在线畅玩游戏",
       "PREMIUM": "Premium",
       "REPLAY_SAVE_SLOTS": "回放保存槽位",
-      "SLEEVES_PLAYMATS": "Talishar卡套和游戏垫",
-      "WEEKLY_CLASSES": "参加每周Group Class和Office Hour"
+      "SLEEVES_PLAYMATS": "Talishar卡套和游戏垫"
     },
     "COMPARISON_SUBTITLE": "",
     "CTA_SUBTITLE": "",
@@ -1349,7 +1346,7 @@
     "FRIENDS_LIST": "",
     "FROM": "",
     "HIDE_COMMUNITIES": "",
-    "LOADING": "加载中...",
+    "LOADING": "加载中…",
     "LOADING_BLOCKED_USERS": "",
     "LOADING_FRIENDS": "",
     "METAFY_COMMUNITIES": "",
@@ -1489,7 +1486,7 @@
     "ERROR_INVALID_TOKEN": "无效的分享回放代码。",
     "ERROR_NO_TOKEN": "未提供分享回放代码。",
     "ERROR_TITLE": "",
-    "LOADING": "加载回放中...",
+    "LOADING": "加载回放中…",
     "RETURN_MAIN_MENU": ""
   },
   "SIGNUP": {
@@ -1544,7 +1541,7 @@
       "FORGOTTEN_PASSWORD_NETWORK_ERROR": "",
       "INCORRECT_CREDENTIALS": "",
       "LOGGED_IN": "已登录！",
-      "LOGGING_IN": "登录中...",
+      "LOGGING_IN": "登录中…",
       "LOGIN": "登录",
       "LOGIN_METAFY": "使用 Metafy 登录",
       "LOGIN_NETWORK_ERROR": "",

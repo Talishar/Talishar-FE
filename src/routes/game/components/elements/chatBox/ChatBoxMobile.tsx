@@ -15,7 +15,7 @@ export default function ChatBox() {
   const amIPlayerOne = useAppSelector((state: RootState) => {
     return state.game.gameInfo.playerID === 1;
   });
-  const [chatFilter, setChatFilter] = useState<'none' | 'chat' | 'log'>('none');
+  const [chatFilter] = useState<'none' | 'chat' | 'log'>('none');
   const [logReady, setLogReady] = useState(false);
   const [visibleMessageCount, setVisibleMessageCount] = useState(
     INITIAL_MOBILE_LOG_MESSAGES

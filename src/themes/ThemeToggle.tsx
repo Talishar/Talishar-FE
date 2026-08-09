@@ -67,6 +67,7 @@ const ThemeToggle: React.FC = () => {
                 role="option"
                 aria-selected={isSelected}
                 aria-disabled={locked}
+                tabIndex={locked ? -1 : 0}
                 className={[
                   styles.option,
                   isSelected ? styles.optionSelected : '',
@@ -75,6 +76,12 @@ const ThemeToggle: React.FC = () => {
                   .filter(Boolean)
                   .join(' ')}
                 onClick={() => handleSelect(theme.id, !!theme.premium)}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    handleSelect(theme.id, !!theme.premium);
+                  }
+                }}
               >
                 <span className={styles.optionName}>{theme.name}</span>
                 {locked && (

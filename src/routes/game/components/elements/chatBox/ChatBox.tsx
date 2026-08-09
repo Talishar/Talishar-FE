@@ -129,11 +129,16 @@ export default function ChatBox({
     <div className={styles.chatBoxContainer}>
       {showTabs && (
         <div
+          role="tablist"
+          aria-label={t('CHAT.CHAT')}
           className={classNames(styles.tabs, {
             [styles.primaryTabs]: usePrimary
           })}
         >
           <button
+            type="button"
+            role="tab"
+            aria-selected={chatFilter === 'none'}
             className={classNames(chatFilter === 'none' && styles.activeTab)}
             onClick={(e) => {
               e.preventDefault();
@@ -143,6 +148,9 @@ export default function ChatBox({
             {t('CHAT.ALL')}
           </button>
           <button
+            type="button"
+            role="tab"
+            aria-selected={chatFilter === 'chat'}
             className={classNames(chatFilter === 'chat' && styles.activeTab)}
             onClick={(e) => {
               e.preventDefault();
@@ -152,6 +160,9 @@ export default function ChatBox({
             {t('CHAT.CHAT')}
           </button>
           <button
+            type="button"
+            role="tab"
+            aria-selected={chatFilter === 'log'}
             className={classNames(chatFilter === 'log' && styles.activeTab)}
             onClick={(e) => {
               e.preventDefault();

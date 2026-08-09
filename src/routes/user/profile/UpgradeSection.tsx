@@ -5,17 +5,9 @@ import styles from './profile.module.css';
 
 interface UpgradeSectionProps {
   isSupporter: boolean;
-  userName?: string;
-  className?: string;
-  isOwner?: boolean;
 }
 
-const UpgradeSection: React.FC<UpgradeSectionProps> = ({
-  isSupporter,
-  userName,
-  className,
-  isOwner
-}) => {
+const UpgradeSection: React.FC<UpgradeSectionProps> = ({ isSupporter }) => {
   const { t } = useTranslation();
   if (isSupporter) {
     return (

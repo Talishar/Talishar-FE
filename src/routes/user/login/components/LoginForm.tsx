@@ -31,12 +31,11 @@ const getLoginBody = ({
 
 export const LoginForm = () => {
   const [parent] = useAutoAnimate();
-  const [login, loginResult] = useLoginMutation();
+  const [login] = useLoginMutation();
   const { setLoggedIn } = useAuth();
   const navigate = useNavigate();
   const { refetch } = useGetFavoriteDecksQuery(undefined);
-  // Initial stuff to allow the lang to change
-  const { t, i18n, ready } = useTranslation();
+  const { t } = useTranslation();
 
   const {
     register,
@@ -90,7 +89,7 @@ export const LoginForm = () => {
       });
       setError('root.serverError', {
         type: 'custom',
-        message: `There has been a network error while logging in. Please try again. If you still get an error please report on our Discord and let us know the following: ${JSON.stringify(
+        message: `There has been a network error while logging in. Please try again. If you still get an error, please report it on our Discord and include the following: ${JSON.stringify(
           err
         )}`
       });
@@ -164,6 +163,7 @@ export const LoginForm = () => {
         <form onSubmit={handleSubmit(onSubmit)} ref={parent}>
           <label htmlFor="userID">{t('USER.LOGIN.USERNAME')}</label>
           <input
+            id="userID"
             type="text"
             placeholder="bravo"
             {...register('userID')}
@@ -174,6 +174,7 @@ export const LoginForm = () => {
           )}
           <label htmlFor="password">{t('USER.LOGIN.PASSWORD')}</label>
           <input
+            id="password"
             type="password"
             placeholder="********"
             {...register('password')}
@@ -235,7 +236,7 @@ export const LoginForm = () => {
         </small>
         &nbsp;
         <small>
-          <Link to={'/privacy'}>{t('USER.LOGIN.REMEMBER_ME_CONSENT')}</Link>
+          <Link to={'/privacy'}>{t('USER.LOGIN.PRIVACY_POLICY')}</Link>
         </small>
       </article>
     </div>

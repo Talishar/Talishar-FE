@@ -102,7 +102,6 @@ const SessionRecovery: React.FC = () => {
       // First try IndexedDB backup
       const idbAuthKey = await loadGameAuthKeyFromIndexedDB(gameId as number);
       if (idbAuthKey) {
-        console.log('✅ Recovered authKey from IndexedDB');
         return idbAuthKey;
       }
 
@@ -115,7 +114,6 @@ const SessionRecovery: React.FC = () => {
           if (response.ok) {
             const result = await response.json();
             if (result.success && result.authKey) {
-              console.log('✅ Recovered authKey from backend');
               return result.authKey;
             }
           } else if (response.status === 410) {
@@ -151,7 +149,6 @@ const SessionRecovery: React.FC = () => {
 
       // If server didn't provide authKey, attempt recovery
       if (!authKeyToUse) {
-        console.log('⚠️ Server authKey unavailable, attempting recovery...');
         authKeyToUse = await attemptAuthKeyRecovery(
           data.gameName,
           data.playerID

@@ -79,14 +79,11 @@ const sendProcessInput = async (
 
 export const gameLobby = createAsyncThunk(
   'gameLobby/getLobby',
-  async (
-    params: {
-      game: GameStaticInfo;
-      signal: AbortSignal | undefined;
-      lastUpdate: number;
-    },
-    { getState }
-  ) => {
+  async (params: {
+    game: GameStaticInfo;
+    signal: AbortSignal | undefined;
+    lastUpdate: number;
+  }) => {
     const queryURL = `${BACKEND_URL}${URL_END_POINT.GET_LOBBY_REFRESH}`;
 
     const requestBody = {
@@ -768,7 +765,7 @@ export const gameSlice = createSlice({
       if (action.payload.replayNumber !== undefined) {
         state.gameInfo.replayNumber = action.payload.replayNumber;
       }
-      state.gameInfo.playerID = !!state.gameInfo.playerID
+      state.gameInfo.playerID = state.gameInfo.playerID
         ? state.gameInfo.playerID
         : action.payload.playerID;
       //If We don't currently have an Auth Key
@@ -897,11 +894,11 @@ export const gameSlice = createSlice({
 
       return state;
     });
-    builder.addCase(gameLobby.pending, (state, action) => {
+    builder.addCase(gameLobby.pending, (state) => {
       state.isUpdateInProgress = true;
       return state;
     });
-    builder.addCase(gameLobby.rejected, (state, action) => {
+    builder.addCase(gameLobby.rejected, (state) => {
       state.isUpdateInProgress = false;
       return state;
     });

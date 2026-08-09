@@ -38,10 +38,8 @@ export default function useAuth() {
   const metafyHash = useAppSelector(selectMetafyHash);
   const metafyTimestamp = useAppSelector(selectMetafyTimestamp);
   // const { refetch } = useGetFavoriteDecksQuery(undefined);
-  const [logOutAPI, logOutData] = useLogOutMutation();
+  const [logOutAPI] = useLogOutMutation();
   const {
-    isLoading: isQueryLoading,
-    isFetching,
     error,
     data,
     refetch: refetchAuth

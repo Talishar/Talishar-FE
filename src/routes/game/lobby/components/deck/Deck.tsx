@@ -8,7 +8,7 @@ import { useLanguageSelector } from 'hooks/useLanguageSelector';
 import { CARD_SQUARES_PATH, getCollectionCardImagePath } from 'utils';
 import { MdArrowDropDown, MdArrowRight } from 'react-icons/md';
 import { TYPE_LABELS } from 'constants/cardConstants';
-import { useTranslation, Trans } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 
 type SortMode =
   | 'none'

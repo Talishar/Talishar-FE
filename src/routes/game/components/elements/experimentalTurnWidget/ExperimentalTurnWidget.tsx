@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAppSelector, useAppDispatch } from 'app/Hooks';
 import { RootState } from 'app/Store';
@@ -21,21 +21,6 @@ import { DEFAULT_SHORTCUTS } from 'appConstants';
 const MANUAL_MODE = 'ManualMode';
 
 export default function ExperimentalTurnWidget() {
-  const [heightRatio, setHeightRatio] = useState(1);
-
-  const canPassPhase = useAppSelector(
-    (state: RootState) => state.game.canPassPhase
-  );
-
-  const widgetBackground = useMemo(() => {
-    // Ensure canPassPhase is a boolean to prevent classnames parsing issues
-    const isCanPass = Boolean(canPassPhase === true);
-    return classNames(styles.widgetBackground, {
-      [styles.myTurn]: isCanPass,
-      [styles.ourTurn]: !isCanPass
-    });
-  }, [canPassPhase]);
-
   return (
     <div className={styles.widgetContainer}>
       <ActionPointDisplay isPlayer={false} />
@@ -61,7 +46,7 @@ function HealthDisplay(props: Player) {
   );
 }
 
-const ManualModeHealth = ({ isPlayer }: { isPlayer: Boolean }) => {
+const ManualModeHealth = ({ isPlayer }: { isPlayer: boolean }) => {
   const dispatch = useAppDispatch();
   const onAddResourceClick = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
@@ -199,7 +184,6 @@ export function PassTurnDisplay() {
   );
   const [showAreYouSureModal, setShowAreYouSureModal] =
     useState<boolean>(false);
-  const [canPassController, setCanPassController] = useState<boolean>(false);
   const [playPassTurnSound] = useSound(passTurnSound);
   const preventPassPrompt = useAppSelector(
     (state: RootState) => state.game.preventPassPrompt
@@ -217,7 +201,7 @@ export function PassTurnDisplay() {
   }, [frameNumber, hasPriority, playPassTurnSound]);
 
   useEffect(() => {
-    let link = document.getElementById('favicon') as HTMLLinkElement;
+    const link = document.getElementById('favicon') as HTMLLinkElement;
     if (hasPriority && link) {
       link.href = '/images/priorityGreen.ico';
     } else if (link) {
@@ -231,7 +215,6 @@ export function PassTurnDisplay() {
     } else {
       dispatch(submitButton({ button: { mode: PROCESS_INPUT.PASS } }));
     }
-    setCanPassController(true);
   };
 
   useShortcut(DEFAULT_SHORTCUTS.PASS_TURN, onPassTurn);
@@ -239,14 +222,12 @@ export function PassTurnDisplay() {
 
   const clickYes = (e: any) => {
     e.preventDefault();
-    //console.log('yes!');
     setShowAreYouSureModal(false);
     dispatch(submitButton({ button: { mode: PROCESS_INPUT.PASS } }));
   };
 
   const clickNo = (e: any) => {
     e.preventDefault();
-    //console.log('no!');
     setShowAreYouSureModal(false);
   };
 

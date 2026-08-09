@@ -27,11 +27,8 @@ export const ProfilePage = () => {
   const { currentUserId } = useAuth();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [confirmationUsername, setConfirmationUsername] = useState('');
-  const {
-    data: profileData,
-    isLoading: profileIsLoading,
-    refetch: profileRefetch
-  } = useGetUserProfileQuery(undefined);
+  const { data: profileData, isLoading: profileIsLoading } =
+    useGetUserProfileQuery(undefined);
   const [deleteAccount, { isLoading: isDeleting }] = useDeleteAccountMutation();
   const [changeDisplayName, { isLoading: isChangingName }] =
     useChangeDisplayNameMutation();
@@ -151,14 +148,7 @@ export const ProfilePage = () => {
                 {profileIsLoading && <p>{t('PROFILE.LOADING')}</p>}
 
                 {/* Show Upgrade/Supporter Status */}
-                <UpgradeSection
-                  isSupporter={isMetafySupporter}
-                  userName={profileData?.userName}
-                  isOwner={
-                    profileData?.userName === 'PvtVoid' ||
-                    profileData?.userName === 'OotTheMonk'
-                  }
-                />
+                <UpgradeSection isSupporter={isMetafySupporter} />
 
                 {/* Metafy Section */}
                 {profileData?.metafyInfo && (

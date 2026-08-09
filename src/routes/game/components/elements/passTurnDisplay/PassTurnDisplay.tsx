@@ -85,7 +85,7 @@ export default function PassTurnDisplay() {
   }, [frameNumber, hasPriority, isMuted, playerID]);
 
   useEffect(() => {
-    let link = document.getElementById('favicon') as HTMLLinkElement;
+    const link = document.getElementById('favicon') as HTMLLinkElement;
     if (hasPriority && link && playerID !== 3) {
       link.href = '/images/priorityGreen.ico';
     } else if (link) {

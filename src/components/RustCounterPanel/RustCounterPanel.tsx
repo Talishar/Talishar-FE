@@ -51,7 +51,10 @@ const RustCounterPanel = ({
     let shown = false;
     try {
       shown = (window as any)._talishar_showRewarded?.() === true;
-    } catch {}
+    } catch {
+      // The ad script is third-party and may not be loaded (ad blocker, network
+      // failure). Swallow and fall through to the in-house fallback ad below.
+    }
     if (shown) {
       return;
     }

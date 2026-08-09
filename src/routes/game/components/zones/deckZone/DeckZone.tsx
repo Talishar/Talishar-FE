@@ -47,9 +47,6 @@ export const DeckZone = React.memo((prop: Displayrow) => {
   const addBotDeckPlayerId = useAppSelector(
     (state: RootState) => state.game.addBotDeckPlayerId
   );
-  const addBotDeckCard = useAppSelector(
-    (state: RootState) => state.game.addBotDeckCard
-  );
   const playerID = useAppSelector(
     (state: RootState) => state.game.gameInfo.playerID
   );

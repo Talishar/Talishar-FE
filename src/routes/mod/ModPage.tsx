@@ -25,9 +25,7 @@ const ModPage: React.FC = () => {
   const [gameToClose, setGameToClose] = useState('');
   const [playerToBan, setPlayerToBan] = useState('');
   const [usernameToDelete, setUsernameToDelete] = useState('');
-  const [selectedUserEmail, setSelectedUserEmail] = useState<string | null>(
-    null
-  );
+  const [, setSelectedUserEmail] = useState<string | null>(null);
   const [systemMsgUsername, setSystemMsgUsername] = useState('');
   const [systemMsgText, setSystemMsgText] = useState('');
   const [systemMsgExpiresInHours, setSystemMsgExpiresInHours] = useState('24');
@@ -40,17 +38,14 @@ const ModPage: React.FC = () => {
   const {
     data: modPageData,
     isLoading,
-    error: fetchError,
     refetch
   } = useGetModPageDataQuery(undefined);
 
-  const [banByIP, { isLoading: isBanningByIP }] = useBanPlayerByIPMutation();
+  const [banByIP] = useBanPlayerByIPMutation();
   const [banIPDirect, { isLoading: isBanningIPDirect }] =
     useBanIPDirectMutation();
-  const [banByName, { isLoading: isBanningByName }] =
-    useBanPlayerByNameMutation();
-  const [closeGameMutation, { isLoading: isClosingGame }] =
-    useCloseGameMutation();
+  const [banByName] = useBanPlayerByNameMutation();
+  const [closeGameMutation] = useCloseGameMutation();
   const [deleteUsername, { isLoading: isDeletingUsername }] =
     useDeleteUsernameMutation();
   const [sendToPlayer, { isLoading: isSendingToPlayer }] =
@@ -145,10 +140,6 @@ const ModPage: React.FC = () => {
     }
 
     try {
-      console.log(
-        '[ModPage Delete Username] Starting deletion for:',
-        usernameToDelete
-      );
       const response = await deleteUsername({ usernameToDelete }).unwrap();
 
       // Show success toast

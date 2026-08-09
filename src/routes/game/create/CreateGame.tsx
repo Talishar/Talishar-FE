@@ -67,7 +67,7 @@ const getCookie = (name: string): string | null => {
   return null;
 };
 
-const setCookie = (name: string, value: string, days: number = 365) => {
+const setCookie = (name: string, value: string, days = 365) => {
   const expires = new Date();
   expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
   document.cookie = `${name}=${value}; expires=${expires.toUTCString()}; path=/`;
@@ -83,7 +83,7 @@ const shortenFormat = (format: string): string => {
 const formatDeckLabel = (
   deckName: string,
   format: string | null,
-  maxLength: number = 58
+  maxLength = 58
 ): string => {
   const name = String(deckName ?? '');
   const formatStr = format ? ` (${shortenFormat(format)})` : '';
@@ -103,7 +103,7 @@ type CreateGameProps = {
 
 const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
   const quickJoinCtx = useQuickJoinOptional();
-  const { isLoggedIn, isPatron, isLoading: isAuthLoading } = useAuth();
+  const { isLoggedIn, isLoading: isAuthLoading } = useAuth();
   const { isSupporter } = useSupporterStatus();
   // True when rendered inside the unified main-menu panel (logged-in users only)
   const isEmbedded = quickJoinCtx !== null && isLoggedIn;
@@ -111,8 +111,8 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { data, isLoading, isSuccess } = useGetFavoriteDecksQuery(undefined);
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [createGame, createGameResult] = useCreateGameMutation();
+  const [searchParams] = useSearchParams();
+  const [createGame] = useCreateGameMutation();
   const [clearRustCounters] = useClearRustCountersMutation();
   const { canViewRustCounters, rustCounters, isRustLocked } = useRustCounters();
 
@@ -182,7 +182,7 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
   };
 
   // Initial stuff to allow the lang to change
-  const { t, i18n, ready } = useTranslation();
+  const { t } = useTranslation();
 
   const {
     formState: { isSubmitting, errors },
@@ -627,7 +627,7 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
       setValue('fabdb', quickJoinCtx.effectiveFabdb);
     }
     setIsInitialized(true);
-  }, [initialValues, reset, setValue]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [initialValues, reset, setValue]);
 
   // Convert favorite decks to ImageSelect options
   const favoriteDeckOptions: ImageSelectOption[] = React.useMemo(() => {

@@ -57,12 +57,6 @@ const getBaseFormatType = (format: string | null): string => {
   return readable;
 };
 
-// Helper function to normalize format for comparison (backend format codes vs deck format names)
-const normalizeFormatForComparison = (format: string | null): string => {
-  if (!format) return '';
-  return getReadableFormatName(format).toLowerCase();
-};
-
 // Helper function to shorten format names
 const shortenFormat = (format: string): string => {
   if (!format) return '';
@@ -74,7 +68,7 @@ const shortenFormat = (format: string): string => {
 const formatDeckLabel = (
   deckName: string,
   format: string | null,
-  maxLength: number = 58
+  maxLength = 58
 ): string => {
   const name = String(deckName ?? '');
   const formatStr = format ? ` (${shortenFormat(format)})` : '';
@@ -91,16 +85,16 @@ const formatDeckLabel = (
 const JoinGame = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const [joinGame, joinGameResult] = useJoinGameMutation();
+  const [joinGame] = useJoinGameMutation();
   const { data, isLoading, isSuccess } = useGetFavoriteDecksQuery(undefined);
   const { isLoggedIn } = useAuth();
   const { showAds } = useSupporterStatus();
   useAdScript(showAds);
 
   // Initial stuff to allow the lang to change
-  const { t, i18n, ready } = useTranslation();
+  const { t } = useTranslation();
 
-  let [{ gameName: searchGameName = '0', playerID = '2', authKey = '' }] =
+  const [{ gameName: searchGameName = '0', playerID = '2' }] =
     useKnownSearchParams();
 
   const { gameID } = useParams();
@@ -257,7 +251,6 @@ const JoinGame = () => {
             authKey: response.authKey ?? ''
           })
         );
-        const searchParam = { playerID: String(response.playerID ?? '0') };
         navigate(`/game/lobby/${response.gameName}`, {
           state: {
             playerID: response.playerID ?? 0,

@@ -15,7 +15,6 @@ import FullControlToggle from './FullControlToggle/FullControlToggle';
 import AlwaysPassToggle from './AlwaysPassToggle/AlwaysPassToggle';
 import ManualTargetingToggle from './ManualTargetingToggle/ManualTargetingToggle';
 import SkipReactionsToggle from '../priorityControl/SkipReactions/SkipReactionsToggle';
-import SkipAllAttacksToggle from '../priorityControl/SkipAllAttacks/SkipAllAttacksToggle';
 import Inventory from '../inventory/Inventory';
 import SpectatorCount from '../spectatorCount/SpectatorCount';
 import useShortcut from 'hooks/useShortcut';
@@ -38,7 +37,7 @@ function FullScreenButton() {
     <div>
       <button
         className={styles.btn}
-        aria-label={t('MENU.FULL_SCREEN')}
+        aria-label={t('MENU.FULLSCREEN')}
         onClick={() => toggleFullScreen()}
         data-tooltip={t('MENU.FULLSCREEN')}
         data-placement="bottom"

@@ -17,10 +17,6 @@ const ChooseFirstTurn = () => {
     getGameInfo,
     shallowEqual
   );
-  const gameLobby = useAppSelector(
-    (state: RootState) => state.game.gameLobby,
-    shallowEqual
-  );
 
   const isLoading = chooseFirstPlayerData.isLoading;
 

@@ -53,14 +53,19 @@ const LanguageSelector = ({
             setIsOpen(!isOpen);
           }}
           aria-label={t('HEADER.LANGUAGE_SELECTOR.LANGUAGES')}
+          aria-expanded={isOpen}
+          aria-haspopup="menu"
         >
           <BsTranslate /> <span>{t('HEADER.LANGUAGE_SELECTOR.LANGUAGE')}</span>
         </a>
       ) : (
         <button
+          type="button"
           className={styles.dropdownToggle}
           onClick={() => setIsOpen(!isOpen)}
           aria-label={t('HEADER.LANGUAGE_SELECTOR.LANGUAGES')}
+          aria-expanded={isOpen}
+          aria-haspopup="menu"
         >
           {!hideIcon && <BsTranslate />}
           <span className={styles.label}>
@@ -69,7 +74,7 @@ const LanguageSelector = ({
         </button>
       )}
       {isOpen && (
-        <div className={styles.dropdownMenu}>
+        <div className={styles.dropdownMenu} role="menu">
           {I18N_SUPPORTED_LANGUAGE_CODES.map((code) => (
             <a
               key={code}
@@ -80,6 +85,7 @@ const LanguageSelector = ({
                 setIsOpen(false);
               }}
               className={styles.socialLink}
+              role="menuitem"
             >
               {I18N_LANGUAGE_LABELS[code]}
             </a>

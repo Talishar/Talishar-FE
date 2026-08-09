@@ -35,7 +35,7 @@ const Matchups = ({
     shallowEqual
   );
   const { gameID, playerID } = useAppSelector(getGameInfo, shallowEqual);
-  const [joinGameMutation, joinGameMutationData] = useJoinGameMutation();
+  const [joinGameMutation] = useJoinGameMutation();
 
   const getTurnOrderIndicator = (
     preferredTurnOrder: string | null | undefined
@@ -97,6 +97,7 @@ const Matchups = ({
             id="matchup-search"
             name="matchup-search"
             type="text"
+            aria-label={`${t('BASE.SEARCH')} ${t('GAME_LOBBY.MATCHUPS')}`}
             placeholder={t('BASE.SEARCH')}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}

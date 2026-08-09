@@ -25,9 +25,6 @@ const EndGameMenuOptions = ({ onSwitchPlayer }: EndGameMenuOptionsProps) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { roguelikeGameID } = useAppSelector(getGameInfo, shallowEqual);
-  const playerName = useAppSelector(
-    (state: RootState) => state.game.playerOne.Name
-  );
   //Always player 1 in roguelike, which is only place this matters
   const health = useAppSelector(
     (state: RootState) => state.game.playerOne.Health ?? 0
@@ -39,10 +36,6 @@ const EndGameMenuOptions = ({ onSwitchPlayer }: EndGameMenuOptionsProps) => {
       apiSlice.util.invalidateTags([{ type: 'UserProfile', id: 'LIST' }])
     );
     navigate('/');
-  };
-
-  const handleQuickRematch = () => {
-    dispatch(submitButton({ button: { mode: PROCESS_INPUT.QUICK_REMATCH } }));
   };
 
   const handleFullRematch = () => {

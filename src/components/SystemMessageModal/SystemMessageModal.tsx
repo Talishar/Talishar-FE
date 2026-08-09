@@ -33,13 +33,21 @@ const SystemMessageModal: React.FC<SystemMessageModalProps> = ({ message }) => {
 
   return (
     <div className={styles.overlay}>
-      <div className={styles.modal}>
-        <h2 className={styles.title}>{t('SYSTEM_MESSAGE_MODAL.TITLE')}</h2>
+      <div
+        className={styles.modal}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="system-message-title"
+      >
+        <h2 id="system-message-title" className={styles.title}>
+          {t('SYSTEM_MESSAGE_MODAL.TITLE')}
+        </h2>
         <div className={styles.message}>{message}</div>
         <button
           className={styles.acknowledgeBtn}
           onClick={handleAcknowledge}
           disabled={isDisabled}
+          aria-busy={isLoading}
         >
           {countdown > 0 ? (
             <span className={styles.countdownWrapper}>

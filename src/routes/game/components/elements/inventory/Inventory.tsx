@@ -21,7 +21,7 @@ export default function Inventory({
         e.stopPropagation();
         dispatch(openInventory());
       }}
-      data-tooltip={'View your inventory'}
+      data-tooltip={t('INVENTORY.VIEW')}
       data-placement="bottom"
       aria-label={t('INVENTORY.TITLE')}
     >

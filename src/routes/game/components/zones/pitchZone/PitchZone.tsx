@@ -40,7 +40,7 @@ export default function PitchZone(prop: Displayrow) {
     (state: RootState) => state.game.cardListFocus
   );
 
-  let pitchAmount = useAppSelector((state: RootState) =>
+  const pitchAmount = useAppSelector((state: RootState) =>
     isPlayer
       ? state.game.playerOne.PitchRemaining
       : state.game.playerTwo.PitchRemaining

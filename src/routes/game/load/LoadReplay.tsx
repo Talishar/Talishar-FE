@@ -76,7 +76,6 @@ const ReplayGame = () => {
     useGetSavedReplaysQuery();
 
   const {
-    register,
     formState: { isSubmitting, errors },
     setError,
     handleSubmit
@@ -156,7 +155,6 @@ const ReplayGame = () => {
     }
   };
 
-  const buttonClass = classNames(styles.button, 'primary');
   const isLoadingReplay = isSubmitting || loadReplayResult.isLoading;
   const savedReplays = savedReplayData?.replays ?? [];
   const replayLabel = (replay: SavedReplay) => {

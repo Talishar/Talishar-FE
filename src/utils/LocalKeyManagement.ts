@@ -49,7 +49,6 @@ const STORAGE_KEY_PREFIX = 'talishar_game_';
 const CURRENT_GAME_KEY = 'talishar_current_game';
 const INDEXEDDB_NAME = 'TalisharGameSessions';
 const INDEXEDDB_STORE = 'authKeys';
-const RECOVERY_ATTEMPTS_LIMIT = 3;
 
 /**
  * Initialize IndexedDB for fallback storage
@@ -270,7 +269,6 @@ export const loadGameAuthKey = (gameId: number): string => {
     const oldFormatKey = String(gameId);
     const oldSessionData = sessionStorage.getItem(oldFormatKey);
     if (oldSessionData) {
-      console.log(`Migrating auth key from old format for game ${gameId}`);
       // Old format was just an encrypted string, not a JSON object
       const migratedAuthKey = xorDecrypt(oldSessionData, gameId);
       if (migratedAuthKey) {
@@ -285,9 +283,6 @@ export const loadGameAuthKey = (gameId: number): string => {
     // Also check localStorage for old format
     const oldLocalData = localStorage.getItem(oldFormatKey);
     if (oldLocalData) {
-      console.log(
-        `Migrating auth key from old localStorage format for game ${gameId}`
-      );
       const migratedAuthKey = xorDecrypt(oldLocalData, gameId);
       if (migratedAuthKey) {
         // Save in new format
@@ -336,7 +331,6 @@ export const loadGameAuthKeyFromIndexedDB = async (
     if (sessionData && sessionData.gameId === gameId) {
       const authKey = xorDecrypt(sessionData.authKey, gameId);
       if (authKey) {
-        console.log(`Recovered authKey from IndexedDB for game ${gameId}`);
         // Restore to primary storage
         const storageKey = STORAGE_KEY_PREFIX + gameId;
         sessionStorage.setItem(storageKey, JSON.stringify(sessionData));

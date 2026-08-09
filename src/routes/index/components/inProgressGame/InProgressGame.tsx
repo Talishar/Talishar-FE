@@ -1,5 +1,4 @@
 import classNames from 'classnames';
-import { useNavigate } from 'react-router-dom';
 import { IGameInProgress } from '../gameList/GameList';
 import styles from './InProgressGame.module.scss';
 import { RiSwordLine } from 'react-icons/ri';
@@ -8,23 +7,17 @@ import FriendBadge from '../gameList/FriendBadge';
 import { useTranslation } from 'react-i18next';
 
 export const InProgressGame = ({
-  ix,
   entry,
   isFriendsGame = false,
   friendName,
   formatLabel
 }: {
-  ix: number;
   entry: IGameInProgress;
   isFriendsGame?: boolean;
   friendName?: string;
   formatLabel?: string;
 }) => {
-  const navigate = useNavigate();
   const hasFormatLabel = !!formatLabel;
-  const spectateHandler = (gameName: number) => {
-    navigate(`/game/play/${gameName}`);
-  };
   const buttonClass = styles.button;
   const gameItemClass = classNames(styles.gameItem, {
     [styles.gameItemNoFormat]: !hasFormatLabel
@@ -36,17 +29,10 @@ export const InProgressGame = ({
     [styles.heroRowNoFormat]: !hasFormatLabel
   });
   // Initial stuff to allow the lang to change
-  const { t, i18n, ready } = useTranslation();
+  const { t } = useTranslation();
 
   return (
-    <div
-      key={entry.gameName}
-      className={gameItemClass}
-      onClick={(e) => {
-        e.preventDefault();
-        spectateHandler(entry.gameName);
-      }}
-    >
+    <div key={entry.gameName} className={gameItemClass}>
       <div className={matchupBlockClass}>
         <div className={heroRowClass}>
           <div>

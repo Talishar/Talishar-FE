@@ -94,7 +94,7 @@ const OptionsContent = () => {
     }
   };
 
-  const gameURL = `http://talishar.net/game/play/${gameID}`;
+  const gameURL = `${window.location.origin}/game/play/${gameID}`;
 
   const clickCloseOptionsHandler = () => {
     dispatch(closeOptionsMenu());
@@ -175,8 +175,13 @@ const OptionsContent = () => {
     clickCloseOptionsHandler();
   };
 
-  const clickCopySpectateToClipboardHandler = () => {
-    navigator.clipboard.writeText(gameURL);
+  const clickCopySpectateToClipboardHandler = async () => {
+    try {
+      await navigator.clipboard.writeText(gameURL);
+      toast.success(t('GAME_LOBBY.COPIED'), { position: 'top-center' });
+    } catch {
+      toast.error(t('BASE.ERROR_ALERT'), { position: 'top-center' });
+    }
   };
 
   return (

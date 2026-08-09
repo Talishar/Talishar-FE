@@ -18,13 +18,11 @@ import { shallowEqual } from 'react-redux';
 import useShowModal from 'hooks/useShowModals';
 import { FaEye, FaEyeSlash, FaEllipsisH, FaExchangeAlt } from 'react-icons/fa';
 import classNames from 'classnames';
-import useAuth from 'hooks/useAuth';
 import { PiFileCsvFill, PiCameraFill } from 'react-icons/pi';
 import { TALISHAR_METAFY_URL } from 'constants/socialLinks';
-import { parseHtmlToReactElements } from 'utils/ParseEscapedString';
 import useSupporterStatus from 'hooks/useSupporterStatus';
 import MetafyLogo from 'img/MetafyGradient.svg';
-import { Trans, useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 
 const EndGameScreen = () => {
   const dispatch = useAppDispatch();
@@ -33,14 +31,12 @@ const EndGameScreen = () => {
   const { t } = useTranslation();
   const [playerID, setPlayerID] = useState(gameInfo.playerID === 2 ? 2 : 1);
   const [showStats, setShowStats] = useState(true);
-  const [showFullLog, setShowFullLog] = useState(false);
   const [bothPlayersData, setBothPlayersData] = useState<{
     [key: number]: any;
   }>({});
   const [moreOpen, setMoreOpen] = useState(false);
   const moreBtnRef = useRef<HTMLButtonElement>(null);
   const [menuStyle, setMenuStyle] = useState<React.CSSProperties>({});
-  const { isPatron } = useAuth();
   const { isSupporter } = useSupporterStatus();
   const endGameStatsRef = useRef<EndGameStatsRef>(null);
   const { data, isLoading, error } = useGetPopUpContentQuery({
@@ -63,8 +59,6 @@ const EndGameScreen = () => {
   const cardListBoxClasses = classNames(styles.cardListBox, {
     [styles.reduced]: !showStats
   });
-  const fullLogClasses = classNames(styles.fullLog, {});
-
   // Extract heroes from API data first (most reliable source)
   // If API doesn't have them, try gameState as fallback
   const yourHero =
@@ -91,33 +85,6 @@ const EndGameScreen = () => {
     content = <div>{t('END_GAME.LOADING')}</div>;
   } else if (error) {
     content = <div>{JSON.stringify(error)}</div>;
-  } else if (showFullLog) {
-    if (isPatron) {
-      content = data?.fullLog ? (
-        <div className={fullLogClasses}>
-          {parseHtmlToReactElements(data.fullLog)}
-        </div>
-      ) : (
-        <div>{t('END_GAME.FULL_LOG_NOT_RECORDED')}</div>
-      );
-    } else {
-      content = (
-        <div>
-          <Trans
-            i18nKey="END_GAME.SUPPORT_METAFY"
-            components={{
-              1: (
-                <a
-                  href={TALISHAR_METAFY_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                />
-              )
-            }}
-          />
-        </div>
-      );
-    }
   } else {
     const endGameDataWithHeroes: EndGameData = {
       ...(data as EndGameData),
@@ -141,11 +108,6 @@ const EndGameScreen = () => {
 
   const toggleShowStats = () => {
     setShowStats(!showStats);
-  };
-
-  const toggleShowFullLog = () => {
-    setShowFullLog(!showFullLog);
-    setMoreOpen(false);
   };
 
   const handleSwapHeroesRematch = () => {
@@ -225,34 +187,27 @@ const EndGameScreen = () => {
                             {t('END_GAME.SWAP_AND_REMATCH')}
                           </button>
                         )}
-                        {!showFullLog && (
-                          <>
-                            <button
-                              className={styles.dropdownItem}
-                              onClick={handleExportStats}
-                            >
-                              <PiCameraFill
-                                aria-hidden="true"
-                                className={styles.dropdownIcon}
-                              />{' '}
-                              {t('END_GAME.EXPORT_AS_IMAGE')}
-                            </button>
-                            <button
-                              className={styles.dropdownItem}
-                              onClick={handleExportCSV}
-                            >
-                              <PiFileCsvFill
-                                aria-hidden="true"
-                                className={styles.dropdownIcon}
-                                style={{ fontSize: '1.6em' }}
-                              />{' '}
-                              {t('END_GAME.EXPORT_AS_CSV')}
-                            </button>
-                          </>
-                        )}
-                        {/*                       <button className={styles.dropdownItem} onClick={toggleShowFullLog}>
-                        <FaList aria-hidden="true" className={styles.dropdownIcon} /> {showFullLog ? 'Back to Stats' : 'Full Game Log'}
-                      </button> */}
+                        <button
+                          className={styles.dropdownItem}
+                          onClick={handleExportStats}
+                        >
+                          <PiCameraFill
+                            aria-hidden="true"
+                            className={styles.dropdownIcon}
+                          />{' '}
+                          {t('END_GAME.EXPORT_AS_IMAGE')}
+                        </button>
+                        <button
+                          className={styles.dropdownItem}
+                          onClick={handleExportCSV}
+                        >
+                          <PiFileCsvFill
+                            aria-hidden="true"
+                            className={styles.dropdownIcon}
+                            style={{ fontSize: '1.6em' }}
+                          />{' '}
+                          {t('END_GAME.EXPORT_AS_CSV')}
+                        </button>
                       </div>
                     </>,
                     document.body

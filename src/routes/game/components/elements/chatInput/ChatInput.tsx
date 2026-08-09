@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import {
-  useChooseFirstPlayerMutation,
   useSubmitChatMutation,
   useSubmitLobbyInputMutation,
   useReportTypingMutation
@@ -30,8 +29,6 @@ import { CHAT_WHEEL } from 'constants/chatMessages';
 import { isHandCardRotationHeld } from 'utils/handCardRotation';
 import { useTranslation } from 'react-i18next';
 
-const submitButtonClass = classNames(styles.buttonDiv);
-
 interface ChatOptionsProps {
   setModalDisplay: (arg0: boolean) => void;
 }
@@ -43,10 +40,9 @@ export const ChatInput = ({ usePrimary = false }: { usePrimary?: boolean }) => {
   );
   const { isMod } = useAuth();
   const chatEnabled = useAppSelector((state) => state.game.chatEnabled);
-  const dispatch = useAppDispatch();
 
   const [chatInput, setChatInput] = useState('');
-  const [submitChat, submitChatResult] = useSubmitChatMutation();
+  const [submitChat] = useSubmitChatMutation();
   const [reportTyping] = useReportTypingMutation();
   // true while we've sent a "typing" signal and haven't sent "stopped" yet
   const isTypingRef = useRef<boolean>(false);
@@ -58,7 +54,7 @@ export const ChatInput = ({ usePrimary = false }: { usePrimary?: boolean }) => {
   const sendStopTyping = React.useCallback(() => {
     if (!isTypingRef.current) return;
     isTypingRef.current = false;
-    reportTyping({ gameID, playerID, typing: false }).catch(() => {});
+    reportTyping({ gameID, playerID, typing: false }).catch(() => undefined);
   }, [gameID, playerID, reportTyping]);
 
   // Call on every keystroke with non-empty value.
@@ -66,7 +62,7 @@ export const ChatInput = ({ usePrimary = false }: { usePrimary?: boolean }) => {
   const handleTyping = React.useCallback(() => {
     if (!isTypingRef.current) {
       isTypingRef.current = true;
-      reportTyping({ gameID, playerID, typing: true }).catch(() => {});
+      reportTyping({ gameID, playerID, typing: true }).catch(() => undefined);
     }
     if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
     debounceTimerRef.current = setTimeout(sendStopTyping, 1500);
@@ -174,10 +170,7 @@ const ChatWheel = ({ usePrimary = false }: { usePrimary?: boolean }) => {
   );
 
   const [modalDisplay, setModalDisplay] = useState<boolean>(false);
-  const [chooseFirstPlayer, chooseFirstPlayerData] =
-    useChooseFirstPlayerMutation();
-  const [submitLobbyInput, submitLobbyInputData] =
-    useSubmitLobbyInputMutation();
+  const [submitLobbyInput] = useSubmitLobbyInputMutation();
   const dispatch = useAppDispatch();
   const { refs, floatingStyles, context } = useFloating({
     placement: 'left',

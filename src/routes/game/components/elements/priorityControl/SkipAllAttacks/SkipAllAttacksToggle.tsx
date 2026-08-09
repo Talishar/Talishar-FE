@@ -27,9 +27,6 @@ const SkipAllAttacksToggle = ({
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
   const { isDisabled, triggerDisable } = useButtonDisableContext();
-  const setting = useSetting({
-    settingName: optConst.SHORTCUT_ATTACK_THRESHOLD
-  });
   const gameInfo = useAppSelector(getGameInfo, shallowEqual);
 
   const initialValues = {

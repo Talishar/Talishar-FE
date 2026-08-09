@@ -21,10 +21,6 @@ export default function ArsenalZone(prop: Displayrow) {
   const { isPlayer } = prop;
   const { t } = useTranslation();
 
-  const isSpectator = useAppSelector((state: RootState) => {
-    return state.game.gameInfo.playerID === 3;
-  });
-
   const arsenalCards = useAppSelector((state: RootState) => {
     return isPlayer
       ? state.game.playerOne.Arsenal

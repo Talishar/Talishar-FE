@@ -1,7 +1,5 @@
 import { array, boolean, object, string, number } from 'yup';
-import { useTranslation, Trans } from 'react-i18next';
-
-const oneHandedHeroes = ['kayo', 'kayo_armed_and_dangerous'];
+import { useTranslation } from 'react-i18next';
 
 export const deckValidation = (
   minDeckSize: number,

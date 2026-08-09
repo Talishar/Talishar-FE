@@ -40,24 +40,6 @@ import Learn from 'routes/learn/Learn';
 import About from 'routes/about/About';
 import Premium from 'routes/premium/Premium';
 
-const PlayGuard = ({ children }: { children: JSX.Element }) => {
-  const [searchParams] = useKnownSearchParams();
-
-  if (searchParams.gameName == null || searchParams.playerID == null) {
-    return (
-      <Navigate
-        to={{
-          pathname: '/',
-          search: createSearchParams(searchParams).toString()
-        }}
-        replace={true}
-      />
-    );
-  }
-
-  return children;
-};
-
 const IndexGuard = ({ children }: { children: JSX.Element }) => {
   const [searchParams] = useKnownSearchParams();
 
@@ -156,21 +138,11 @@ export const router = createBrowserRouter(
       <Route element={<Outlet />}>
         <Route
           path="game/play/:gameID"
-          element={
-            // disabled playguard as we need to redo this logic a bit
-            // <PlayGuard>
-            <Play isRoguelike={false} />
-            // </PlayGuard>
-          }
+          element={<Play isRoguelike={false} />}
         />
         <Route
           path="roguelike/play/"
-          element={
-            // disabled playguard as we need to redo this logic a bit
-            // <PlayGuard>
-            <Play isRoguelike={true} />
-            // </PlayGuard>
-          }
+          element={<Play isRoguelike={true} />}
         />
         <Route path="game/play" element={<Play isRoguelike={false} />} />
         <Route path="game/lobby/:gameID" element={<Lobby />} />

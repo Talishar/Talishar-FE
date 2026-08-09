@@ -8,7 +8,7 @@ const wrapString = (text: string, keyPrefix: string): ReactNode => {
   if (!matches.length) return text;
   const nodes: ReactNode[] = [];
   let cursor = 0;
-  matches.forEach((match, index) => {
+  matches.forEach((match) => {
     if (match.start > cursor) nodes.push(text.slice(cursor, match.start));
     nodes.push(
       <KeywordPopover key={`${keyPrefix}-${match.start}`} id={match.id}>

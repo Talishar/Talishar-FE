@@ -129,7 +129,6 @@ const CardHoverPreview = ({ preview }: { preview: HoverPreviewState }) => {
       document.removeEventListener('mousemove', onMove);
     };
     // preview.x/y are only the entry coordinates; the listener tracks afterwards
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return createPortal(
@@ -469,7 +468,8 @@ export const DecksPage = () => {
         </span>
         <div className={styles.thumbGrid}>
           {card.baseCardNumber && (
-            <div
+            <button
+              type="button"
               className={styles.altArtThumbWrapper}
               onClick={() => handleAltArtClear(deck, card.cardId)}
               title={
@@ -495,10 +495,11 @@ export const DecksPage = () => {
                   hasAlts && isBaseSelected ? styles.thumbSelected : ''
                 }`}
               />
-            </div>
+            </button>
           )}
           {card.altArts.map((altPath) => (
-            <div
+            <button
+              type="button"
               key={altPath}
               className={styles.altArtThumbWrapper}
               onClick={() => handleAltArtSelect(deck, card.cardId, altPath)}
@@ -525,7 +526,7 @@ export const DecksPage = () => {
                     : ''
                 }`}
               />
-            </div>
+            </button>
           ))}
         </div>
       </div>
@@ -689,7 +690,8 @@ export const DecksPage = () => {
                   {playmats.map((pm) => {
                     const id = String(pm.id);
                     return (
-                      <div
+                      <button
+                        type="button"
                         key={`playmat-${id}`}
                         className={styles.playmatThumbWrapper}
                         onClick={() => handlePlaymatSelect(deck, id)}
@@ -710,7 +712,7 @@ export const DecksPage = () => {
                         <span className={styles.thumbLabel}>
                           {getPlaymatDisplayName(id)}
                         </span>
-                      </div>
+                      </button>
                     );
                   })}
                 </div>
@@ -722,7 +724,8 @@ export const DecksPage = () => {
                   {cardBacks.map((cb) => {
                     const id = String(cb.id);
                     return (
-                      <div
+                      <button
+                        type="button"
                         key={`cardback-${id}`}
                         className={styles.cardBackThumbWrapper}
                         onClick={() => handleCardBackSelect(deck, id)}
@@ -744,7 +747,7 @@ export const DecksPage = () => {
                           }`}
                         />
                         <span className={styles.thumbLabel}>{cb.name}</span>
-                      </div>
+                      </button>
                     );
                   })}
                 </div>

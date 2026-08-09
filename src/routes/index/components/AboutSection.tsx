@@ -16,7 +16,7 @@ import {
 const AboutSection: React.FC = () => {
   const [expandedFAQ, setExpandedFAQ] = React.useState<number | null>(null);
   // Initial stuff to allow the lang to change
-  const { t, i18n, ready } = useTranslation();
+  const { t } = useTranslation();
   const { isSupporter, showAds } = useSupporterStatus();
   const isMobile = useMediaQuery('(max-width: 728px)');
 

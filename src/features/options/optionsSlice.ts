@@ -168,13 +168,13 @@ const optionsSlice = createSlice({
       toast.error(JSON.stringify(action.error));
       state.status = QUERY_STATUS.FAILED;
     });
-    builder.addCase(fetchAllSettings.pending, (state, action) => {
+    builder.addCase(fetchAllSettings.pending, (state) => {
       state.status = QUERY_STATUS.LOADING;
     });
-    builder.addCase(updateOptions.fulfilled, (state, action) => {
+    builder.addCase(updateOptions.fulfilled, (state) => {
       state.status = QUERY_STATUS.SUCCESS;
     });
-    builder.addCase(updateOptions.rejected, (state, action) => {
+    builder.addCase(updateOptions.rejected, (state) => {
       state.status = QUERY_STATUS.FAILED;
     });
     builder.addCase(updateOptions.pending, (state, action) => {

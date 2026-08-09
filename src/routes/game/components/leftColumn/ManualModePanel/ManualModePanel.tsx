@@ -80,7 +80,6 @@ function ManualModeContent({
   isPracticeDummy: boolean;
 }) {
   const [cardInput, setCardInput] = useState('');
-  const [opponentHealthInput, setOpponentHealthInput] = useState('');
   const [weaponPowerInput, setWeaponPowerInput] = useState('4');
   const [isCardLoading, setIsCardLoading] = useState(false);
   const isRequestInProgress = usePlayerInputInProgress();

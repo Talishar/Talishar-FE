@@ -14,7 +14,7 @@ const getCookie = (name: string): string | null => {
   return null;
 };
 
-const setCookie = (name: string, value: string, days: number = 365) => {
+const setCookie = (name: string, value: string, days = 365) => {
   const expires = new Date();
   expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
   document.cookie = `${name}=${value}; expires=${expires.toUTCString()}; path=/`;
@@ -37,7 +37,6 @@ const QuickJoinPanel = ({ embedded = false }: Props) => {
     selectedBazaarDeck,
     importDeckUrl,
     saveDeck,
-    detectedFormat,
     error,
     isJoining,
     hasDeckConfigured,

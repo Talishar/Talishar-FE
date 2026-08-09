@@ -40,13 +40,6 @@ export interface IGameInProgress {
   visibility?: string; // "0" = private, "1" = public, "2" = friends-only
 }
 
-export interface IInProgressGameList {
-  gameList: IGameInProgress[];
-  name: string;
-  isFriendsSection?: boolean;
-  friendUsernames?: Set<string>;
-}
-
 export interface GameListResponse {
   gamesInProgress: IGameInProgress[];
   openGames: IOpenGame[];
@@ -63,10 +56,9 @@ const GameList = () => {
     'gameFilters',
     'gameFriendsFilter'
   ]);
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
   // Initial stuff to allow the lang to change
-  const { t, i18n, ready } = useTranslation();
+  const { t } = useTranslation();
   const { isLoggedIn, isLoading: isAuthLoading } = useAuth();
   const canAccessPublicGames = !isAuthLoading && isLoggedIn;
 
@@ -151,14 +143,12 @@ const GameList = () => {
   }, [friendsData]);
 
   const [heroFilter, setHeroFilter] = useState<string[]>([]);
-  const [gamesInProgressExpanded, setGamesInProgressExpanded] = useState(true); // Default to open
   const [activeTab, setActiveTab] = useState<'open' | 'inProgress'>('open');
 
   useEffect(() => {
     scrollableContentRef.current?.scrollTo({ top: 0 });
   }, [activeTab]);
   const [isRateLimited, setIsRateLimited] = useState(false);
-  const PREVIEW_LIMIT = 9;
   const lastRefetchTime = useRef<number>(0);
   const scrollableContentRef = useRef<HTMLDivElement>(null);
   const REFETCH_RATE_LIMIT_MS = 3000;
@@ -248,7 +238,7 @@ const GameList = () => {
     return defaultFormats;
   });
 
-  const [includeFriendsGames, setIncludeFriendsGames] = useState(() => {
+  const [includeFriendsGames] = useState(() => {
     // Try to load from cookies first, then fallback to localStorage
     if (cookies.gameFriendsFilter !== undefined) {
       return cookies.gameFriendsFilter === 'true';
@@ -279,16 +269,6 @@ const GameList = () => {
     } catch {
       // Ignore parsing errors
     }
-  }, []);
-
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    window.addEventListener('resize', handleResize);
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
   }, []);
 
   // Save format filters to cookies and localStorage when they change
@@ -331,10 +311,6 @@ const GameList = () => {
 
   const handleInProgressFilterChange = (formats: Set<string>) => {
     setInProgressFormatFilters(formats);
-  };
-
-  const handleFriendsGamesFilterChange = (include: boolean) => {
-    setIncludeFriendsGames(include);
   };
 
   const heroCountsOpen = new Map<string, number>();
@@ -594,7 +570,9 @@ const GameList = () => {
           )}
         </div>
         {canAccessPublicGames && isLoading ? (
-          <div aria-busy="true">{t('GAME_LIST.LOADING')}</div>
+          <div role="status" aria-live="polite" aria-busy="true">
+            {t('GAME_LIST.LOADING')}
+          </div>
         ) : null}
         {canAccessPublicGames && error ? (
           <div>
@@ -736,7 +714,6 @@ const GameList = () => {
                     }
                   ]}
                   includeFriendsGames={includeFriendsGames}
-                  onFriendsGamesChange={handleFriendsGamesFilterChange}
                   formatNumberMapping={formatNumberMapping}
                 />
               </div>
@@ -769,7 +746,7 @@ const GameList = () => {
           ) : (
             <div data-testid="games-in-progress" ref={parent}>
               {[...friendGamesInProgress, ...otherGamesInProgress].map(
-                (entry, ix) => {
+                (entry) => {
                   const isFriendsGame = !!(
                     (entry.gameCreator &&
                       friendUsernames.has(entry.gameCreator)) ||
@@ -785,7 +762,6 @@ const GameList = () => {
                   return (
                     <InProgressGame
                       entry={entry}
-                      ix={ix}
                       key={entry.gameName}
                       isFriendsGame={isFriendsGame}
                       friendName={friendName}
@@ -799,70 +775,6 @@ const GameList = () => {
         </div>
       )}
     </article>
-  );
-};
-
-const InProgressGameList = ({
-  gameList,
-  name,
-  isFriendsSection,
-  friendUsernames = new Set()
-}: IInProgressGameList) => {
-  const [parent] = useAutoAnimate();
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 1025);
-
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 1025);
-    };
-    window.addEventListener('resize', handleResize);
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
-
-  if (gameList.length === 0) {
-    return null;
-  }
-
-  return (
-    <div className={styles.groupDiv} ref={parent}>
-      <h5
-        className={styles.subSectionTitle}
-        style={{
-          cursor: 'pointer',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          userSelect: 'none'
-        }}
-      >
-        {name}
-      </h5>
-      {gameList.map((entry, ix: number) => {
-        const isFriendsGame =
-          isFriendsSection ||
-          !!(
-            (entry.gameCreator && friendUsernames.has(entry.gameCreator)) ||
-            (entry.p2Username && friendUsernames.has(entry.p2Username))
-          );
-        const friendName =
-          entry.gameCreator && friendUsernames.has(entry.gameCreator)
-            ? entry.gameCreator
-            : entry.p2Username && friendUsernames.has(entry.p2Username)
-            ? entry.p2Username
-            : undefined;
-        return (
-          <InProgressGame
-            entry={entry}
-            ix={ix}
-            key={entry.gameName}
-            isFriendsGame={isFriendsGame}
-            friendName={friendName}
-          />
-        );
-      })}
-    </div>
   );
 };
 

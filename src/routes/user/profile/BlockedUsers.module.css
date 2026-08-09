@@ -15,6 +15,19 @@
   color: var(--theme-text, #e0e0e0);
 }
 
+.titleButton {
+  all: unset;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  cursor: pointer;
+}
+
+.titleButton:focus-visible {
+  outline: 2px solid var(--theme-primary, #d4af37);
+  outline-offset: 4px;
+}
+
 .blockUserSection {
   display: flex;
   flex-direction: column;
