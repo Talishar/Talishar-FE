@@ -15,8 +15,7 @@ export interface MetafyLoginResponse {
 const LinkMetafy = () => {
   const { t } = useTranslation();
   usePageTitle(t('PAGES.LINK_METAFY'));
-  const [submitMetafyMutation, submitMetafyMutationResponse] =
-    useSubmitMetafyLoginMutation();
+  const [submitMetafyMutation] = useSubmitMetafyLoginMutation();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 

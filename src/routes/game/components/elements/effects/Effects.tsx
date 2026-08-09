@@ -33,6 +33,7 @@ export function Effect(prop: CardProp) {
       <div className={styles.overlayContainer}>
         <CardImage
           src={src}
+          alt={card.cardName ?? prop.name ?? ''}
           className={`${styles.img} ${imgBorderClass} ${imgClassName || ''}`}
           isOpponent={!isPlayer}
         />

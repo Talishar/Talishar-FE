@@ -185,6 +185,7 @@ export const CardDisplay = (prop: CardProp) => {
 
       <CardImage
         src={imageSrc}
+        alt={card?.cardName ?? prop.name ?? ''}
         className={classNames(imgStyles, { [styles.tapped]: card.tapped })}
         isShuffling={isShuffling}
         isOpponent={isOpponentCard}

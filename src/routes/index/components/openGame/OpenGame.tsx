@@ -173,11 +173,15 @@ const OpenGame = ({
           <img
             className={styles.heroImg}
             src={generateCroppedImageUrl(entry.p1Hero)}
+            alt={entry.p1Hero}
+            loading="lazy"
           />
         ) : (
           <img
             className={styles.heroImg}
             src="https://images.talishar.net/public/crops/UNKNOWNHERO_cropped.webp"
+            alt=""
+            loading="lazy"
           />
         )}
       </div>

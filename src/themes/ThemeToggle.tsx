@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { TALISHAR_METAFY_URL } from 'constants/socialLinks';
 import useSupporterStatus from 'hooks/useSupporterStatus';
 import { useTheme } from './ThemeContext';
@@ -12,7 +11,6 @@ const ThemeToggle: React.FC = () => {
   const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const handleOutsideClick = (e: MouseEvent) => {

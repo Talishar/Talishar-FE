@@ -54,6 +54,8 @@ export const InProgressGame = ({
               <img
                 className={styles.heroImg}
                 src={generateCroppedImageUrl(entry.p1Hero)}
+                alt={entry.p1Hero}
+                loading="lazy"
               />
             )}
           </div>
@@ -63,6 +65,8 @@ export const InProgressGame = ({
               <img
                 className={styles.heroImg}
                 src={generateCroppedImageUrl(entry.p2Hero)}
+                alt={entry.p2Hero}
+                loading="lazy"
               />
             )}
           </div>

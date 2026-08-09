@@ -54,6 +54,7 @@ function CardSlide({
     >
       <CardImage
         src={imageSrc}
+        alt={card.cardName ?? ''}
         className={imgClassNames}
         isOpponent={isOpponent}
       />

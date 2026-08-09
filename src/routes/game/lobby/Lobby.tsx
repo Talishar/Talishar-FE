@@ -935,7 +935,7 @@ const Lobby = () => {
                 <p style={{ marginBottom: '1em' }}>
                   <Trans i18nKey="GAME_LOBBY.OPEN_FORMAT_DISCLAIMER">
                     Note that new cards are added on a \'best-effort\' basis and
-                    there may be more bugs and innacurate card interactions. It
+                    there may be more bugs and inaccurate card interactions. It
                     may not be a completely accurate representation of the Rules
                     as written. If you have questions about interactions or
                     rulings, please contact the{' '}

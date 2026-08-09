@@ -51,11 +51,12 @@ export const ErrorPage = () => {
         {!!errMessage && <p>{errMessage}</p>}
         <img
           src={errorCardSrc}
+          alt=""
           style={{ maxWidth: '100%', maxHeight: '100%', marginBottom: '19px' }}
         />
         <button
           onClick={(e) => {
-            e.preventDefault;
+            e.preventDefault();
             navigate(-1);
           }}
         >
@@ -63,7 +64,7 @@ export const ErrorPage = () => {
         </button>
         <button
           onClick={(e) => {
-            e.preventDefault;
+            e.preventDefault();
             navigate('/');
           }}
         >

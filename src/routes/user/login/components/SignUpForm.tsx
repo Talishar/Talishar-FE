@@ -199,7 +199,7 @@ export const SignUpForm = () => {
           <hr />
           <button
             onClick={(e) => {
-              e.preventDefault;
+              e.preventDefault();
               setDisclaimerOpen(false);
             }}
           >

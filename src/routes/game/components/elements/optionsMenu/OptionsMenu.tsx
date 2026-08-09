@@ -108,7 +108,7 @@ const OptionsContent = () => {
 
   // going to main menu means you concede the game
   const handleClickMainMenuButton = async (e: React.MouseEvent) => {
-    e.preventDefault;
+    e.preventDefault();
     clickConcedeGameHandler();
     dispatch(
       apiSlice.util.invalidateTags([{ type: 'UserProfile', id: 'LIST' }])

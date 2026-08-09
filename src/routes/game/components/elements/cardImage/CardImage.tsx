@@ -45,6 +45,7 @@ const getDirectory = (path: string): string => {
 
 export interface CardImage {
   src: string;
+  alt?: string;
   className?: string;
   //@ts-ignore Booleanish is allowed, right?
   draggable?: Booleanish;
@@ -122,6 +123,7 @@ export const CardImage = React.memo((props: CardImage) => {
     <>
       <img
         src={src}
+        alt={props.alt ?? ''}
         className={imageClassNames}
         onError={handleImageError}
         draggable={props.draggable}

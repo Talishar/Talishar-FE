@@ -11,8 +11,7 @@ export interface PatreonLoginResponse {
 
 const LinkPatreon = () => {
   const { t } = useTranslation();
-  const [submitPatreonMutation, submitPatreonMutationResponse] =
-    useSubmitPatreonLoginMutation();
+  const [submitPatreonMutation] = useSubmitPatreonLoginMutation();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 

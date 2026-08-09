@@ -65,12 +65,13 @@ export default function ChainLinks() {
             title={ChainLink.isDraconic ? 'Draconic Chain Link' : ''}
           >
             <div className={styles.chainLinkSymbol}>
-              <img src={hitPic} className={styles.chainLinkSymbol} />
+              <img src={hitPic} className={styles.chainLinkSymbol} alt="" />
               {ChainLink.isDraconic === true ? (
                 <div className={styles.draconicChainLinkContainer}>
                   <img
                     src={draconic}
                     className={styles.draconicChainLinkSymbol}
+                    alt=""
                   />
                 </div>
               ) : null}
