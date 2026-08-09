@@ -1562,7 +1562,7 @@
       "PASSWORD": "Mot de passe",
       "PASSWORD_RESET_EMAIL_SENT": "E-mail de réinitialisation du mot de passe envoyé. ",
       "PASSWORD_RESET_INFO": "Un e-mail vous sera envoyé avec des instructions sur la façon de réinitialiser votre mot de passe.",
-      "PASSWORD_RESET_SUCESS": "Mot de passe réinitialisé avec succès! Connectez-vous avec votre nouveau mot de passe.",
+      "PASSWORD_RESET_SUCCESS": "Mot de passe réinitialisé avec succès! Connectez-vous avec votre nouveau mot de passe.",
       "POLICY_DIALOG_BUTTON": "J’accepte, laissez-moi jouer!",
       "PRIVACY_POLICY": "Politique de confidentialité",
       "REMEMBER_ME": "Se souvenir de moi",

@@ -41,7 +41,7 @@ export const ResetPasswordForm = () => {
         toast.error(resp.error, { position: 'top-center' });
       }
       if (resp.message === 'Success!') {
-        toast.success(t('USER.LOGIN.PASSWORD_RESET_SUCESS'), {
+        toast.success(t('USER.LOGIN.PASSWORD_RESET_SUCCESS'), {
           position: 'top-center'
         });
         navigate('/user/login');
