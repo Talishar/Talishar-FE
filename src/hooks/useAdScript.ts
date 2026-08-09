@@ -210,6 +210,9 @@ const CMP_SELECTOR =
   '[id^="fc-"],[id^="sp_message_container"],[id^="qc-cmp"],' +
   '[id*="onetrust"],[id*="didomi"],[id*="CybotCookie"],[id^="truste"],[id*="usercentrics"]';
 
+const VIDEO_AD_CONTAINER_SELECTOR =
+  '[id^="reviq-"], [id^="prims_"], [id^="primis"], [class*="primis"]';
+
 function isCMPElement(el: Element): boolean {
   try {
     if (el.matches(CMP_SELECTOR)) return true;
@@ -223,18 +226,33 @@ function isCMPElement(el: Element): boolean {
   return false;
 }
 
+function isVideoAdElement(el: Element): boolean {
+  try {
+    return (
+      el.matches(VIDEO_AD_CONTAINER_SELECTOR) ||
+      el.querySelector(VIDEO_AD_CONTAINER_SELECTOR) !== null
+    );
+  } catch (_) {
+    return false;
+  }
+}
+
+function unlockElementTree(el: HTMLElement) {
+  el.style.removeProperty('pointer-events');
+  el.style.removeProperty('visibility');
+  el.querySelectorAll<HTMLElement>('*').forEach((child) => {
+    child.style.removeProperty('pointer-events');
+  });
+}
+
 function lockNonRootBodyChildren() {
   if (!document.body) return;
   for (const el of Array.from(document.body.children)) {
     if (el.id === 'root') continue;
     if (isReactPortalEl(el)) continue;
     const h = el as HTMLElement;
-    if (isCMPElement(el)) {
-      h.style.removeProperty('pointer-events');
-      h.style.removeProperty('visibility');
-      h.querySelectorAll<HTMLElement>('*').forEach((child) => {
-        child.style.removeProperty('pointer-events');
-      });
+    if (isCMPElement(el) || isVideoAdElement(el)) {
+      unlockElementTree(h);
       continue;
     }
     h.style.setProperty('pointer-events', 'none', 'important');
@@ -263,19 +281,16 @@ function pinVideoAdAnchor() {
   el.style.setProperty('min-height', '0', 'important');
   el.style.setProperty('max-width', '0', 'important');
   el.style.setProperty('max-height', '0', 'important');
-  el.style.setProperty('overflow', 'hidden', 'important');
+  // The provider may mount the floating player inside this zero-sized anchor.
+  // Keep the anchor out of the layout without clipping its fixed descendants.
+  el.style.setProperty('overflow', 'visible', 'important');
 }
 
 function unlockNonRootBodyChildren() {
   if (!document.body) return;
   for (const el of Array.from(document.body.children)) {
     if (el.id === 'root') continue;
-    const h = el as HTMLElement;
-    h.style.removeProperty('pointer-events');
-    h.style.removeProperty('visibility');
-    h.querySelectorAll<HTMLElement>('*').forEach((child) => {
-      child.style.removeProperty('pointer-events');
-    });
+    unlockElementTree(el as HTMLElement);
   }
 }
 
