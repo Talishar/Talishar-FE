@@ -49,8 +49,8 @@ export const HEROES_OF_RATHE: {
   { value: 'OUT003', label: 'Arakni Solitary Confinement', young: true },
   { value: 'OUT091', label: 'Riptide Lurker of the Deep' },
   { value: 'OUT092', label: 'Riptide', young: true },
-  { value: 'EVR120', label: 'Iyslander Stormbind' },
-  { value: 'UPR103', label: 'Iyslander', young: true },
+  { value: 'UPR102', label: 'Iyslander Stormbind' },
+  { value: 'EVR120', label: 'Iyslander', young: true },
   { value: 'DYN113', label: 'Arakni Huntsman' },
   { value: 'DYN114', label: 'Arakni', young: true },
   { value: 'EVR017', label: 'Bravo Star of the Show' },
@@ -129,17 +129,18 @@ export const HEROES_OF_RATHE: {
   { value: 'AHA001', label: 'Hala Bladesaint of the Vow' },
   { value: 'MPW004', label: 'Hala', young: true },
   { value: 'OMN001', label: 'Zyggy Starlight' },
-  { value: 'OMN002', label: 'Zyggy' },
+  { value: 'OMN002', label: 'Zyggy', young: true },
   { value: 'OMN047', label: 'Aurora, Legacy of Tempest' },
   { value: 'OMN048', label: 'Aurora, Emissary of Lightning', young: true },
   { value: 'OMN094', label: 'Oscilio, Forked Continuum' },
   { value: 'OMN095', label: 'Oscilio, Scion of the Third Age', young: true },
   { value: 'IAR159', label: 'Baalghor, Omen of the End', young: true },
-  { value: 'IAR053', label: 'malice_domina_of_the_dead' },
-  { value: 'IAR054', label: 'malice', young: true },
-  { value: 'IAR106', label: 'viserai_the_forsaken' },
-  { value: 'IAR107', label: 'viserai_between_worlds' }
-  /*   { value: 'JDG024', label: 'Brutus Summa Rudis', young:true },
+  { value: 'IAR053', label: 'Malice Domina of the Dead' },
+  { value: 'IAR054', label: 'Malice', young: true },
+  { value: 'IAR106', label: 'Viserai the Forsaken' },
+  { value: 'IAR107', label: 'Viserai Between Worlds', young: true },
+  /*
+  { value: 'JDG024', label: 'Brutus Summa Rudis', young:true },
   { value: 'SMP001', label: 'Bolfar Bear Hands', young: true },
   { value: 'SMP003', label: 'Fightmaster Kox', young: true },
   { value: 'LSS021', label: 'Frankie Make Ends Meet', young: true },
@@ -148,7 +149,10 @@ export const HEROES_OF_RATHE: {
   { value: 'LSS001', label: 'Ruudi Gem Keeper', },
   { value: 'HER100', label: 'Squizzy and Floof', young: true },
   { value: 'JDG001', label: 'Taipanis Dracai of Judgement', young: true },
-  { value: 'JDG006', label: 'Theryon Magister of Justice', young: true }, */
+  { value: 'JDG006', label: 'Theryon Magister of Justice', young: true }, 
+   */
+  { value: 'SPW001', label: 'Killjoy, the Crooked Blade', young: true },
+  { value: 'SPW003', label: 'Zane, Broadly Beloved', young: true }
 ];
 
 export const CLASS_OF_RATHE: { label: string }[] = [
@@ -157,11 +161,13 @@ export const CLASS_OF_RATHE: { label: string }[] = [
   { label: 'Guardian' },
   { label: 'Illusionist' },
   { label: 'Mechanologist' },
+  { label: 'Merchant' },
   { label: 'Necromancer' },
   { label: 'Ninja' },
   { label: 'Pirate' },
   { label: 'Ranger' },
   { label: 'Runeblade' },
+  { label: 'Thief' },
   { label: 'Warrior' },
   { label: 'Wizard' }
 ];
