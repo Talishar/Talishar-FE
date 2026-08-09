@@ -71,6 +71,16 @@
   margin-bottom: 0 !important;
 }
 
+.textInput[aria-invalid='true'] {
+  border-color: var(--alarm, #d93526);
+}
+
+.fieldError {
+  color: var(--alarm, #d93526);
+  font-size: 0.8rem;
+  line-height: 1.35;
+}
+
 .toggleLabel {
   display: flex;
   align-items: center;
@@ -152,6 +162,13 @@
 .tab:hover {
   background: rgba(255, 255, 255, 0.06);
   color: var(--theme-text, #ededed);
+}
+
+.tab:focus-visible {
+  position: relative;
+  z-index: 1;
+  outline: 2px solid var(--theme-primary, #d4af37);
+  outline-offset: -2px;
 }
 
 .tab + .tab {

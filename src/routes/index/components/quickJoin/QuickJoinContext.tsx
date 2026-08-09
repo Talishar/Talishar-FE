@@ -30,6 +30,16 @@ import { BazaarDeck } from 'interface/API/GetBazaarDecks';
 import useRustCounters, {
   requestRustPanelAttention
 } from 'hooks/useRustCounters';
+import { useTranslation } from 'react-i18next';
+
+const isValidDeckUrl = (value: string): boolean => {
+  try {
+    const url = new URL(value);
+    return url.protocol === 'http:' || url.protocol === 'https:';
+  } catch {
+    return false;
+  }
+};
 
 const shortenFormat = (format: string): string => {
   if (!format) return '';
@@ -63,6 +73,7 @@ interface QuickJoinContextType {
   saveDeck: boolean;
   detectedFormat: string | null;
   error: string | null;
+  importDeckError: string | null;
   isJoining: boolean;
   hasDeckConfigured: boolean;
   favoriteDeckOptions: ImageSelectOption[];
@@ -100,6 +111,7 @@ export const QuickJoinProvider = ({
   children: React.ReactNode;
 }) => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const [joinGame] = useJoinGameMutation();
   const { isLoggedIn, isLoading: isAuthLoading } = useAuth();
@@ -134,6 +146,7 @@ export const QuickJoinProvider = ({
   );
   const [detectedFormat, setDetectedFormat] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [importDeckError, setImportDeckError] = useState<string | null>(null);
   const [isJoining, setIsJoining] = useState(false);
 
   const canFetchBazaar =
@@ -209,6 +222,7 @@ export const QuickJoinProvider = ({
     setDeckSourceState(v);
     localStorage.setItem(LS_DECK_SOURCE_KEY, v);
     setError(null);
+    setImportDeckError(null);
   }, []);
 
   const setSelectedFavoriteDeck = useCallback((v: string) => {
@@ -219,6 +233,7 @@ export const QuickJoinProvider = ({
       localStorage.setItem(LS_IMPORT_URL_KEY, '');
     }
     setError(null);
+    setImportDeckError(null);
   }, []);
 
   const setSelectedBazaarDeck = useCallback((v: string) => {
@@ -236,6 +251,7 @@ export const QuickJoinProvider = ({
       setDetectedFormat(null);
     }
     setError(null);
+    setImportDeckError(null);
   }, []);
 
   const setSaveDeck = useCallback((v: boolean) => {
@@ -264,7 +280,17 @@ export const QuickJoinProvider = ({
         requestRustPanelAttention();
         return;
       }
+      if (
+        deckSource === 'talishar' &&
+        !selectedFavoriteDeck &&
+        !isValidDeckUrl(importDeckUrl.trim())
+      ) {
+        setError(null);
+        setImportDeckError(t('JOIN.INVALID_DECK_URL'));
+        return;
+      }
       setError(null);
+      setImportDeckError(null);
       setIsJoining(true);
       try {
         const isBazaar = deckSource === 'bazaar';
@@ -336,7 +362,8 @@ export const QuickJoinProvider = ({
       dispatch,
       navigate,
       setSaveDeck,
-      isRustLocked
+      isRustLocked,
+      t
     ]
   );
 
@@ -348,6 +375,7 @@ export const QuickJoinProvider = ({
     saveDeck,
     detectedFormat,
     error,
+    importDeckError,
     isJoining,
     hasDeckConfigured,
     favoriteDeckOptions,

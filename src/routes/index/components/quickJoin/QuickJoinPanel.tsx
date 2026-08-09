@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { FaQuestionCircle, FaChevronUp, FaChevronDown } from 'react-icons/fa';
 import { toast } from 'react-hot-toast';
 import { ImageSelect } from 'components/ImageSelect';
@@ -38,6 +38,7 @@ const QuickJoinPanel = ({ embedded = false }: Props) => {
     importDeckUrl,
     saveDeck,
     error,
+    importDeckError,
     isJoining,
     hasDeckConfigured,
     favoriteDeckOptions,
@@ -54,6 +55,7 @@ const QuickJoinPanel = ({ embedded = false }: Props) => {
     setSaveDeck,
     setError
   } = useQuickJoin();
+  const importDeckInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     setCookie('quickJoinPanelExpanded', String(isExpanded));
@@ -65,6 +67,12 @@ const QuickJoinPanel = ({ embedded = false }: Props) => {
       setError(null);
     }
   }, [error, setError]);
+
+  useEffect(() => {
+    if (importDeckError) {
+      importDeckInputRef.current?.focus();
+    }
+  }, [importDeckError]);
 
   if (!isLoggedIn) return null;
 
@@ -100,6 +108,7 @@ const QuickJoinPanel = ({ embedded = false }: Props) => {
           className={styles.textInput}
           placeholder="Paste deck list URL"
           value={importDeckUrl}
+          ref={importDeckInputRef}
           maxLength={500}
           onChange={(e) => {
             const val = e.target.value;
@@ -119,7 +128,20 @@ const QuickJoinPanel = ({ embedded = false }: Props) => {
             }
           }}
           aria-label="Deck URL"
+          aria-invalid={importDeckError ? 'true' : undefined}
+          aria-describedby={
+            importDeckError ? 'quickJoinDeckUrlError' : undefined
+          }
         />
+        {importDeckError && (
+          <span
+            id="quickJoinDeckUrlError"
+            className={styles.fieldError}
+            role="alert"
+          >
+            {importDeckError}
+          </span>
+        )}
       </label>
 
       <label className={styles.toggleLabel}>
@@ -191,21 +213,19 @@ const QuickJoinPanel = ({ embedded = false }: Props) => {
         {deckSource === 'talishar' ? talisharContent : bazaarContent}
       </div>
 
-      {!embedded && (
-        <p className={styles.hint}>
-          {hasDeckConfigured ? (
-            <Trans
-              i18nKey="JOIN.HINT_DECK_CONFIGURED"
-              components={{ 1: <strong /> }}
-            />
-          ) : (
-            <Trans
-              i18nKey="JOIN.HINT_SELECT_DECK"
-              components={{ 1: <strong /> }}
-            />
-          )}
-        </p>
-      )}
+      <p className={styles.hint}>
+        {hasDeckConfigured ? (
+          <Trans
+            i18nKey="JOIN.HINT_DECK_CONFIGURED"
+            components={{ 1: <strong /> }}
+          />
+        ) : (
+          <Trans
+            i18nKey="JOIN.HINT_SELECT_DECK"
+            components={{ 1: <strong /> }}
+          />
+        )}
+      </p>
 
       {error && (
         <div className={styles.errorBox} role="alert">

@@ -587,6 +587,7 @@
     "IMPORT_HELP": "Deck Link - URL from FaBrary.net",
     "IMPORT_TITLE": "URL from FaBrary.net",
     "IMPORT_URL_HELP": "URL from FaBrary.net or other supported deck list site",
+    "INVALID_DECK_URL": "Enter a valid deck URL (for example, a Fabrary deck link).",
     "JOIN": "Join Game",
     "JOINING_GAME": "Joining game…",
     "PRECON": "Preconstructed Deck",
