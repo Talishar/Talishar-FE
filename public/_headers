@@ -1,0 +1,4 @@
+# Revalidate every response, including SPA fallbacks for deleted asset URLs.
+# Never mark /assets/* immutable: a missing asset is served as index.html.
+/*
+  Cache-Control: public, max-age=0, must-revalidate

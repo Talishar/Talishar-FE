@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react';
+import React from 'react';
 import { CrRule, KeywordEntry } from 'data/keywords';
+import { CR_TEXT } from 'data/keywords/generated/crText';
 import styles from './KeywordPopover.module.css';
 import { useTranslation } from 'react-i18next';
 
@@ -11,16 +12,7 @@ export default function KeywordDefinitionBody({
   entry: KeywordEntry;
 }) {
   const { t } = useTranslation();
-  const [rule, setRule] = useState<CrRule | null | undefined>();
-  useEffect(() => {
-    let active = true;
-    import('data/keywords/generated/crText').then((module) => {
-      if (active) setRule(module.CR_TEXT[entry.id] ?? null);
-    });
-    return () => {
-      active = false;
-    };
-  }, [entry.id]);
+  const rule: CrRule | null = CR_TEXT[entry.id] ?? null;
   const rulesUrl =
     entry.crOverrideUrl ??
     (rule?.anchor ? `${CR_BASE}#${rule.anchor}` : undefined);
@@ -41,8 +33,6 @@ export default function KeywordDefinitionBody({
         >
           {t('KEYWORD.VIEW_CR')}
         </a>
-      ) : rule === undefined ? (
-        <span className={styles.rulesLink}>{t('KEYWORD.LOADING_LINK')}</span>
       ) : null}
     </>
   );
