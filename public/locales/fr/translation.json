@@ -1000,9 +1000,9 @@
       "VISIBILITIES": {
         "FRIENDS": "Amis seulement",
         "PRIVATE": "Privé",
-        "PRIVATE_LOBBY": "Hall d'entrée privé",
+        "PRIVATE_LOBBY": "Partie privée",
         "PUBLIC": "Public",
-        "PUBLIC_LOBBY": "Hall d'entrée public"
+        "PUBLIC_LOBBY": "Partie public"
       },
       "VISIBILITY": "Visibilité"
     },
