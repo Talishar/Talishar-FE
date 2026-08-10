@@ -387,28 +387,6 @@ const ModPage: React.FC = () => {
               <button type="submit">{t('MOD_PAGE.CLOSE_GAME')}</button>
             </form>
 
-            <div className={styles.form}>
-              <h2>{t('MOD_PAGE.RESET_ALL_RUST_COUNTERS')}</h2>
-              <p
-                style={{
-                  color: '#ccc',
-                  fontSize: '13px',
-                  marginBottom: '10px'
-                }}
-              >
-                {t('MOD_PAGE.RESET_RUST_COUNTERS_DESCRIPTION')}
-              </p>
-              <button
-                type="button"
-                onClick={handleResetAllRustCounters}
-                disabled={isResettingRustCounters}
-              >
-                {isResettingRustCounters
-                  ? t('MOD_PAGE.RESETTING_RUST_COUNTERS')
-                  : t('MOD_PAGE.RESET_ALL_RUST_COUNTERS')}
-              </button>
-            </div>
-
             <form onSubmit={handleBanPlayer} className={styles.form}>
               <h2>{t('MOD_PAGE.BAN_PLAYER_BY_USERNAME')}</h2>
               <label htmlFor="playerToBan">{t('MOD_PAGE.PLAYER_TO_BAN')}</label>
@@ -761,6 +739,28 @@ const ModPage: React.FC = () => {
                   )}
                 </div>
               )}
+            </div>
+
+            <div className={styles.form}>
+              <h2>{t('MOD_PAGE.RESET_ALL_RUST_COUNTERS')}</h2>
+              <p
+                style={{
+                  color: '#ccc',
+                  fontSize: '13px',
+                  marginBottom: '10px'
+                }}
+              >
+                {t('MOD_PAGE.RESET_RUST_COUNTERS_DESCRIPTION')}
+              </p>
+              <button
+                type="button"
+                onClick={handleResetAllRustCounters}
+                disabled={isResettingRustCounters}
+              >
+                {isResettingRustCounters
+                  ? t('MOD_PAGE.RESETTING_RUST_COUNTERS')
+                  : t('MOD_PAGE.RESET_ALL_RUST_COUNTERS')}
+              </button>
             </div>
           </div>
 
