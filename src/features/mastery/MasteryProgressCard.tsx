@@ -40,7 +40,7 @@ const MasteryProgressCard = ({
           level === 0 ? 'Hero Mastery' : `Mastery ${ROMAN_LEVELS[level + 1]}`
         }`
       : gamesToNext !== null
-      ? `${gamesToNext} games until Mastery ${ROMAN_LEVELS[level + 1]}`
+      ? `games until Mastery ${ROMAN_LEVELS[level + 1]}`
       : 'Highest mastery reached';
 
   return (
@@ -71,7 +71,7 @@ const MasteryProgressCard = ({
         </div>
         <small>
           {nextThreshold !== null
-            ? `${games} / ${nextThreshold} - ${remaining}`
+            ? `${games} / ${nextThreshold} ${remaining}`
             : `${games.toLocaleString()} games played - ${remaining}`}
         </small>
       </div>
