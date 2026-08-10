@@ -35,6 +35,7 @@ body > [data-ad='video'] {
   width: 0 !important;
   height: 0 !important;
   z-index: 9999 !important;
+  pointer-events: none !important;
   overflow: visible !important;
 }
 

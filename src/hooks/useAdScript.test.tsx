@@ -24,3 +24,34 @@ describe('ad provider security kill switch', () => {
     unmount();
   });
 });
+
+describe('video ad hit-area containment', () => {
+  afterEach(() => {
+    document.body.querySelectorAll(':scope > :not(#root)').forEach((element) => {
+      element.remove();
+    });
+  });
+
+  it('keeps transparent provider wrappers click-through', () => {
+    const wrapper = document.createElement('div');
+    const providerContainer = document.createElement('div');
+    const iframe = document.createElement('iframe');
+    const transparentCover = document.createElement('div');
+
+    providerContainer.id = 'reviq-player';
+    providerContainer.append(iframe, transparentCover);
+    wrapper.appendChild(providerContainer);
+    document.body.appendChild(wrapper);
+
+    (window as any)._talishar_lockOverlays();
+
+    expect(wrapper.style.getPropertyValue('pointer-events')).toBe('none');
+    expect(providerContainer.style.getPropertyValue('pointer-events')).toBe(
+      'none'
+    );
+    expect(transparentCover.style.getPropertyValue('pointer-events')).toBe(
+      'none'
+    );
+    expect(iframe.style.getPropertyValue('pointer-events')).toBe('auto');
+  });
+});

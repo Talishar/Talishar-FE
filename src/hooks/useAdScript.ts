@@ -212,6 +212,8 @@ const CMP_SELECTOR =
 
 const VIDEO_AD_CONTAINER_SELECTOR =
   '[id^="reviq-"], [id^="prims_"], [id^="primis"], [class*="primis"]';
+const VIDEO_AD_INTERACTIVE_SELECTOR =
+  'iframe, video, a, button, input, select, [role="button"], [tabindex]';
 const VIDEO_AD_Z_INDEX = '9999';
 
 function isCMPElement(el: Element): boolean {
@@ -247,12 +249,21 @@ function unlockElementTree(el: HTMLElement) {
 }
 
 function raiseVideoAdElement(el: HTMLElement) {
-  unlockElementTree(el);
+  // Provider wrappers can cover most or all of the viewport on mobile even
+  // when only a small floating player is visible. Keep those transparent
+  // wrappers click-through and opt only the actual ad UI back into hit testing.
+  el.style.removeProperty('visibility');
+  el.style.setProperty('pointer-events', 'none', 'important');
   el.style.setProperty('z-index', VIDEO_AD_Z_INDEX, 'important');
-  el.querySelectorAll<HTMLElement>(VIDEO_AD_CONTAINER_SELECTOR).forEach(
-    (child) => {
+  el.querySelectorAll<HTMLElement>('*').forEach((child) => {
+    child.style.setProperty('pointer-events', 'none', 'important');
+    if (child.matches(VIDEO_AD_CONTAINER_SELECTOR)) {
       child.style.setProperty('z-index', VIDEO_AD_Z_INDEX, 'important');
-      child.style.removeProperty('pointer-events');
+    }
+  });
+  el.querySelectorAll<HTMLElement>(VIDEO_AD_INTERACTIVE_SELECTOR).forEach(
+    (child) => {
+      child.style.setProperty('pointer-events', 'auto', 'important');
     }
   );
 }
@@ -298,6 +309,7 @@ function pinVideoAdAnchor() {
   el.style.setProperty('max-width', '0', 'important');
   el.style.setProperty('max-height', '0', 'important');
   el.style.setProperty('z-index', VIDEO_AD_Z_INDEX, 'important');
+  el.style.setProperty('pointer-events', 'none', 'important');
   // The provider may mount the floating player inside this zero-sized anchor.
   // Keep the anchor out of the layout without clipping its fixed descendants.
   el.style.setProperty('overflow', 'visible', 'important');
