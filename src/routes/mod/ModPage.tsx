@@ -4,6 +4,7 @@ import styles from './ModPage.module.css';
 import { toast } from 'react-hot-toast';
 import {
   useGetModPageDataQuery,
+  useResetAllRustCountersMutation,
   useBanPlayerByIPMutation,
   useBanIPDirectMutation,
   useBanPlayerByNameMutation,
@@ -46,6 +47,8 @@ const ModPage: React.FC = () => {
     useBanIPDirectMutation();
   const [banByName] = useBanPlayerByNameMutation();
   const [closeGameMutation] = useCloseGameMutation();
+  const [resetAllRustCounters, { isLoading: isResettingRustCounters }] =
+    useResetAllRustCountersMutation();
   const [deleteUsername, { isLoading: isDeletingUsername }] =
     useDeleteUsernameMutation();
   const [sendToPlayer, { isLoading: isSendingToPlayer }] =
@@ -125,6 +128,27 @@ const ModPage: React.FC = () => {
     } catch (err: any) {
       console.error('Failed to ban player:', err);
       // Error will be shown via toast from RTK Query error handler
+    }
+  };
+
+  const handleResetAllRustCounters = async () => {
+    setSuccessMessage(null);
+
+    if (!window.confirm(t('MOD_PAGE.CONFIRM_RESET_ALL_RUST_COUNTERS'))) {
+      return;
+    }
+
+    try {
+      const result = await resetAllRustCounters().unwrap();
+      const message = t('MOD_PAGE.RUST_COUNTERS_RESET_SUCCESS', {
+        count: result.usersReset
+      });
+      toast.success(message, { position: 'top-center' });
+      setSuccessMessage(message);
+    } catch (err: any) {
+      const errorMessage =
+        err?.data?.error || t('MOD_PAGE.FAILED_TO_RESET_RUST_COUNTERS');
+      toast.error(errorMessage, { position: 'top-center' });
     }
   };
 
@@ -362,6 +386,28 @@ const ModPage: React.FC = () => {
               />
               <button type="submit">{t('MOD_PAGE.CLOSE_GAME')}</button>
             </form>
+
+            <div className={styles.form}>
+              <h2>{t('MOD_PAGE.RESET_ALL_RUST_COUNTERS')}</h2>
+              <p
+                style={{
+                  color: '#ccc',
+                  fontSize: '13px',
+                  marginBottom: '10px'
+                }}
+              >
+                {t('MOD_PAGE.RESET_RUST_COUNTERS_DESCRIPTION')}
+              </p>
+              <button
+                type="button"
+                onClick={handleResetAllRustCounters}
+                disabled={isResettingRustCounters}
+              >
+                {isResettingRustCounters
+                  ? t('MOD_PAGE.RESETTING_RUST_COUNTERS')
+                  : t('MOD_PAGE.RESET_ALL_RUST_COUNTERS')}
+              </button>
+            </div>
 
             <form onSubmit={handleBanPlayer} className={styles.form}>
               <h2>{t('MOD_PAGE.BAN_PLAYER_BY_USERNAME')}</h2>

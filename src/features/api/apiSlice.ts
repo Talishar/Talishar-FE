@@ -91,6 +91,7 @@ import {
   BanPlayerByNameRequest,
   CloseGameRequest,
   DeleteUsernameRequest,
+  ResetAllRustCountersResponse,
   SearchUsernamesResponse
 } from 'interface/API/ModPageAPI';
 import { FriendListAPIResponse } from 'interface/API/FriendListAPI.php';
@@ -760,6 +761,17 @@ export const apiSlice = createApi({
       },
       providesTags: [{ type: 'ModPageData', id: 'LIST' }]
     }),
+    resetAllRustCounters: builder.mutation<ResetAllRustCountersResponse, void>({
+      query: () => ({
+        url: URL_END_POINT.RESET_ALL_RUST_COUNTERS,
+        method: 'POST',
+        responseHandler: parseResponse
+      }),
+      invalidatesTags: [
+        { type: 'ModPageData', id: 'LIST' },
+        { type: 'UserProfile', id: 'LIST' }
+      ]
+    }),
     banPlayerByIP: builder.mutation<any, BanPlayerByIPRequest>({
       query: ({ ipToBan, playerNumberToBan }) => {
         return {
@@ -1264,6 +1276,7 @@ export const {
   useSubmitLobbyInputMutation,
   useKickPlayerMutation,
   useGetModPageDataQuery,
+  useResetAllRustCountersMutation,
   useBanPlayerByIPMutation,
   useBanIPDirectMutation,
   useBanPlayerByNameMutation,

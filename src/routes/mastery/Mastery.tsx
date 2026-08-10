@@ -134,13 +134,13 @@ const Mastery = () => {
     <main className={styles.page}>
       <PageBanner title={t('MASTERY.TITLE')} subtitle={t('MASTERY.SUBTITLE')} />
       <div className={styles.content}>
-        <p className={styles.betaNotice} role="note">
-          <Trans
-            i18nKey="MASTERY.BETA_NOTICE"
-            components={{ strong: <strong /> }}
-          />
-        </p>
         <div className={styles.toolbar}>
+          <p className={styles.betaNotice} role="note">
+            <Trans
+              i18nKey="MASTERY.BETA_NOTICE"
+              components={{ strong: <strong /> }}
+            />
+          </p>
           <p className={styles.collectionSummary}>
             <Trans
               i18nKey="MASTERY.COLLECTION_SUMMARY"

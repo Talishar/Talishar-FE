@@ -12,9 +12,10 @@
 }
 
 .betaNotice {
-  margin: 0 0 0.75rem !important;
+  flex: 1 1 auto;
+  min-width: 0;
+  margin: 0 !important;
   padding: 0.55rem 0.7rem;
-  border-left: 2px solid var(--theme-primary, #d4af37);
   background: color-mix(in srgb, var(--theme-primary, #d4af37) 7%, transparent);
   color: var(--theme-text-secondary, #c6c6c6);
   font-size: 0.7rem;
@@ -371,9 +372,16 @@
     padding-top: 0.85rem;
   }
   .toolbar {
-    align-items: flex-end;
-    flex-direction: column-reverse;
+    align-items: stretch;
+    flex-direction: column;
     gap: 0.45rem;
+  }
+  .betaNotice {
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .collectionSummary {
+    text-align: right;
   }
   .toolbarControls {
     flex-wrap: wrap;

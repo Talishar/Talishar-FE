@@ -21,6 +21,12 @@ export interface CloseGameRequest {
   gameToClose: string;
 }
 
+export interface ResetAllRustCountersResponse {
+  success: boolean;
+  usersReset: number;
+  message?: string;
+}
+
 export interface BannedPlayersResponse {
   bannedPlayers: string[];
 }
