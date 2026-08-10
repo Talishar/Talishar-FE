@@ -7,7 +7,7 @@ import {
   presenceFromCardListName
 } from 'features/PlayerPresence';
 
-const PRESENCE_REFRESH_MS = 2500;
+const PRESENCE_REFRESH_MS = 4000;
 
 export default function usePlayerPresenceReporter() {
   const gameID = useAppSelector(
