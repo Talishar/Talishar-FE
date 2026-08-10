@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { useAppSelector } from 'app/Hooks';
 import { getSettingsEntity } from 'features/options/optionsSlice';
 import * as optConst from 'features/options/constants';
@@ -19,7 +19,9 @@ import PitchZone from '../zones/pitchZone/PitchZone';
 import WeaponLZone from '../zones/weaponLZone/WeaponLZone';
 import WeaponRZone from '../zones/weaponRZone/WeaponRZone';
 import ZoneCounts from '../zones/zoneCountsZone/ZoneCounts';
-import CombatChain from '../combatChain/CombatChain';
+import CombatChain, {
+  CombatChainPlayerPrompt
+} from '../combatChain/CombatChain';
 import Playmat from '../elements/playmat';
 import AmbientParticles from '../elements/ambientParticles';
 
@@ -28,6 +30,7 @@ import { useCookies } from 'react-cookie';
 import ExperimentalTurnWidget from '../elements/experimentalTurnWidget';
 import TurnWidget from '../elements/turnWidget/TurnWidget';
 import ManualModePanel from '../leftColumn/ManualModePanel/ManualModePanel';
+import useShowModal from 'hooks/useShowModals';
 
 const GridBoard = () => {
   const [cookies] = useCookies(['experimental']);
@@ -40,6 +43,12 @@ const GridBoard = () => {
   const spectatorCameraView = useAppSelector(
     (state: RootState) => state.game.spectatorCameraView
   );
+  const oldCombatChain =
+    useAppSelector((state: RootState) => state.game.oldCombatChain) ?? [];
+  const activeCombatChain = useAppSelector(
+    (state: RootState) => state.game.activeChainLink
+  );
+  const showModals = useShowModal();
   const isMirroredOpponent = useAppSelector(
     (state: RootState) =>
       getSettingsEntity(state)?.[optConst.MIRRORED_BOARD_LAYOUT]?.value === '1'
@@ -53,6 +62,11 @@ const GridBoard = () => {
   // For spectators and replay viewers, check if they want to view from player 2's perspective
   const isSpectatorViewingPlayer2 =
     (playerID === 3 || isReplay) && spectatorCameraView === 2;
+  const showCombatChain =
+    showModals &&
+    (oldCombatChain.length > 0 ||
+      (activeCombatChain?.attackingCard &&
+        activeCombatChain.attackingCard.cardNumber !== 'blank'));
 
   const gridBoardClass = useMemo(
     () =>
@@ -176,7 +190,10 @@ const GridBoard = () => {
         <div className={styles.combatChain}>
           <CombatChain />
         </div>
-      </div>
+          {!showCombatChain && showModals && (
+            <CombatChainPlayerPrompt standalone />
+          )}
+        </div>
     </>
   );
 };

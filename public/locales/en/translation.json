@@ -522,6 +522,7 @@
     "LEARN": "Learn",
     "LOGIN": "Log in",
     "LOGOUT": "Log out",
+    "MASTERY": "Mastery",
     "MOD_PAGE": "Mod Page",
     "MY_DECKS": "My Decks",
     "OPEN_MENU": "Open menu",
@@ -846,6 +847,51 @@
     "TOKEN_PIPE_DESCRIPTION": "Token + Pipe + Number - Creates that many copies in the arena",
     "WRENCH_POWER": "Wrench-tastic! Power",
     "WRENCH_POWER_ARIA": "Wrench-tastic power"
+  },
+  "MASTERY": {
+    "BETA_NOTICE": "<strong>Beta:</strong> Mastery frames are placeholders and will change as this feature develops.",
+    "CARD_MAXIMUM_one": "{{formattedCount}} game played - {{remaining}}",
+    "CARD_MAXIMUM_other": "{{formattedCount}} games played - {{remaining}}",
+    "CARD_PROGRESS": "{{games}} / {{threshold}} {{remaining}}",
+    "COLLECTION_SUMMARY": "<count>{{played}}</count> of {{total}} heroes played",
+    "EMPTY": "No heroes match this filter.",
+    "FILTER": {
+      "ALL": "All heroes",
+      "LABEL": "Filter heroes",
+      "MASTERED": "Mastered",
+      "PLAYED": "Played"
+    },
+    "GAME_COUNT_one": "{{formattedCount}} game",
+    "GAME_COUNT_other": "{{formattedCount}} games",
+    "GAMES_PLAYED_one": "{{formattedCount}} game played",
+    "GAMES_PLAYED_other": "{{formattedCount}} games played",
+    "GAMES_PROGRESS": "{{games}} / {{threshold}} games",
+    "GAMES_PROGRESS_LABEL": "{{games}} of {{threshold}} games",
+    "GAMES_UNTIL_one": "{{count}} game until {{mastery}}",
+    "GAMES_UNTIL_other": "{{count}} games until {{mastery}}",
+    "GAMES_UNTIL_MASTERY": "games until Mastery {{level}}",
+    "GROUPS": {
+      "CLASSIC_CONSTRUCTED": "Classic Constructed",
+      "LIVING_LEGEND": "Living Legend",
+      "SILVER_AGE": "Silver Age"
+    },
+    "HERO_TITLE": "{{hero}} - {{mastery}}",
+    "HIGHEST_REACHED": "Highest mastery reached",
+    "LEVEL": "Mastery {{level}}",
+    "LOAD_ERROR": "Hero Mastery could not be loaded.",
+    "LOADING": "Gathering your heroes…",
+    "MAXIMUM_REACHED": "Maximum Mastery reached",
+    "ONE_MORE_GAME": "One more game to unlock {{mastery}}",
+    "SORT": {
+      "ALPHABETICAL": "Alphabetical",
+      "LABEL": "Sort heroes",
+      "RANK": "Rank / games played"
+    },
+    "SUBTITLE": "Every qualifying game adds to your story with that hero.",
+    "TITLE": "Hero Mastery",
+    "UNLOCKED": "HERO MASTERY UNLOCKED",
+    "UNLOCKED_SUMMARY_one": "Mastery {{level}} - {{count}} game played",
+    "UNLOCKED_SUMMARY_other": "Mastery {{level}} - {{count}} games played"
   },
   "MATCH_REVIEW": {
     "CLOSE_MATCH_REVIEW": "Close match review",

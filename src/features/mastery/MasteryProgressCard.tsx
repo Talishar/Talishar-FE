@@ -1,8 +1,9 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { HEROES_OF_RATHE } from 'routes/index/components/filter/constants';
 import { generateCroppedImageUrl } from 'utils/cropImages';
 import MasteryFrame from './MasteryFrame';
-import { masteryTitle, progressStart, ROMAN_LEVELS } from './mastery';
+import { progressStart, ROMAN_LEVELS } from './mastery';
 import styles from './MasteryProgressCard.module.css';
 
 interface Props {
@@ -26,6 +27,7 @@ const MasteryProgressCard = ({
   compact,
   showPortrait
 }: Props) => {
+  const { t } = useTranslation();
   const heroName =
     HEROES_OF_RATHE.find((hero) => hero.value === heroId)?.label ?? heroId;
   const heroImage = generateCroppedImageUrl(heroId);
@@ -36,12 +38,17 @@ const MasteryProgressCard = ({
       : Math.min(100, ((games - start) / (nextThreshold - start)) * 100);
   const remaining =
     gamesToNext === 1
-      ? `One more game to unlock ${
-          level === 0 ? 'Hero Mastery' : `Mastery ${ROMAN_LEVELS[level + 1]}`
-        }`
+      ? t('MASTERY.ONE_MORE_GAME', {
+          mastery:
+            level === 0
+              ? t('MASTERY.TITLE')
+              : t('MASTERY.LEVEL', { level: ROMAN_LEVELS[level + 1] })
+        })
       : gamesToNext !== null
-      ? `games until Mastery ${ROMAN_LEVELS[level + 1]}`
-      : 'Highest mastery reached';
+      ? t('MASTERY.GAMES_UNTIL_MASTERY', {
+          level: ROMAN_LEVELS[level + 1]
+        })
+      : t('MASTERY.HIGHEST_REACHED');
 
   return (
     <aside
@@ -56,14 +63,23 @@ const MasteryProgressCard = ({
       )}
       <div className={styles.content}>
         {unlocked && (
-          <span className={styles.unlockLabel}>HERO MASTERY UNLOCKED</span>
+          <span className={styles.unlockLabel}>{t('MASTERY.UNLOCKED')}</span>
         )}
         <strong>
-          {heroName} - {masteryTitle(level)}
+          {t('MASTERY.HERO_TITLE', {
+            hero: heroName,
+            mastery:
+              level > 0
+                ? t('MASTERY.LEVEL', { level: ROMAN_LEVELS[level] })
+                : t('MASTERY.TITLE')
+          })}
         </strong>
         {unlocked && (
           <b>
-            Mastery {ROMAN_LEVELS[level]} - {games} games played
+            {t('MASTERY.UNLOCKED_SUMMARY', {
+              level: ROMAN_LEVELS[level],
+              count: games
+            })}
           </b>
         )}
         <div className={styles.track}>
@@ -71,8 +87,16 @@ const MasteryProgressCard = ({
         </div>
         <small>
           {nextThreshold !== null
-            ? `${games} / ${nextThreshold} ${remaining}`
-            : `${games.toLocaleString()} games played - ${remaining}`}
+            ? t('MASTERY.CARD_PROGRESS', {
+                games,
+                threshold: nextThreshold,
+                remaining
+              })
+            : t('MASTERY.CARD_MAXIMUM', {
+                count: games,
+                formattedCount: games.toLocaleString(),
+                remaining
+              })}
         </small>
       </div>
     </aside>

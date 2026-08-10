@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
 import { useGetHeroMasteryQuery } from 'features/api/apiSlice';
 import { HEROES_OF_RATHE } from 'routes/index/components/filter/constants';
 import { generateCroppedImageUrl } from 'utils/cropImages';
@@ -7,8 +8,8 @@ import PageBanner from 'components/PageBanner/PageBanner';
 import {
   MASTERY_MILESTONES,
   emptyMastery,
-  masteryTitle,
-  progressStart
+  progressStart,
+  ROMAN_LEVELS
 } from 'features/mastery/mastery';
 import styles from './Mastery.module.css';
 
@@ -36,6 +37,7 @@ const devGamesForHero = (
 };
 
 const Mastery = () => {
+  const { t } = useTranslation();
   const { data, isLoading, error } = useGetHeroMasteryQuery();
   const [filter, setFilter] = useState<Filter>('all');
   const [sortOrder, setSortOrder] = useState<SortOrder>('rank');
@@ -79,11 +81,17 @@ const Mastery = () => {
     };
 
     return [
-      makeGroup('Classic Constructed', data?.heroGroups?.classicConstructed),
-      makeGroup('Silver Age', data?.heroGroups?.silverAge),
-      makeGroup('Living Legend', data?.heroGroups?.livingLegend)
+      makeGroup(
+        t('MASTERY.GROUPS.CLASSIC_CONSTRUCTED'),
+        data?.heroGroups?.classicConstructed
+      ),
+      makeGroup(t('MASTERY.GROUPS.SILVER_AGE'), data?.heroGroups?.silverAge),
+      makeGroup(
+        t('MASTERY.GROUPS.LIVING_LEGEND'),
+        data?.heroGroups?.livingLegend
+      )
     ];
-  }, [data?.heroGroups]);
+  }, [data?.heroGroups, t]);
 
   const availableHeroes = useMemo(() => {
     const unique = new Map(
@@ -116,21 +124,29 @@ const Mastery = () => {
   const playedCount = availableHeroes.filter(
     (hero) => (progress.get(hero.value)?.qualifyingGames ?? 0) > 0
   ).length;
+  const filterLabels: Record<Filter, string> = {
+    all: t('MASTERY.FILTER.ALL'),
+    played: t('MASTERY.FILTER.PLAYED'),
+    mastered: t('MASTERY.FILTER.MASTERED')
+  };
 
   return (
     <main className={styles.page}>
-      <PageBanner
-        title="Hero Mastery"
-        subtitle="Every qualifying game adds to your story with that hero."
-      />
+      <PageBanner title={t('MASTERY.TITLE')} subtitle={t('MASTERY.SUBTITLE')} />
       <div className={styles.content}>
         <p className={styles.betaNotice} role="note">
-          <strong>Beta:</strong> Mastery frames are placeholders and will change
-          as this feature develops.
+          <Trans
+            i18nKey="MASTERY.BETA_NOTICE"
+            components={{ strong: <strong /> }}
+          />
         </p>
         <div className={styles.toolbar}>
           <p className={styles.collectionSummary}>
-            <span>{playedCount}</span> of {availableHeroes.length} heroes played
+            <Trans
+              i18nKey="MASTERY.COLLECTION_SUMMARY"
+              values={{ played: playedCount, total: availableHeroes.length }}
+              components={{ count: <span /> }}
+            />
           </p>
           <div className={styles.toolbarControls}>
             <label className={styles.sortControl}>
@@ -139,16 +155,18 @@ const Mastery = () => {
                 onChange={(event) =>
                   setSortOrder(event.target.value as SortOrder)
                 }
-                aria-label="Sort heroes"
+                aria-label={t('MASTERY.SORT.LABEL')}
               >
-                <option value="rank">Rank / games played</option>
-                <option value="alphabetical">Alphabetical</option>
+                <option value="rank">{t('MASTERY.SORT.RANK')}</option>
+                <option value="alphabetical">
+                  {t('MASTERY.SORT.ALPHABETICAL')}
+                </option>
               </select>
             </label>
             <div
               className={styles.filters}
               role="group"
-              aria-label="Filter heroes"
+              aria-label={t('MASTERY.FILTER.LABEL')}
             >
               {(['all', 'played', 'mastered'] as Filter[]).map((value) => (
                 <button
@@ -158,19 +176,15 @@ const Mastery = () => {
                   onClick={() => setFilter(value)}
                   className={filter === value ? styles.activeFilter : ''}
                 >
-                  {value === 'all'
-                    ? 'All heroes'
-                    : value[0].toUpperCase() + value.slice(1)}
+                  {filterLabels[value]}
                 </button>
               ))}
             </div>
           </div>
         </div>
 
-        {isLoading && <p className={styles.status}>Gathering your heroes…</p>}
-        {error && (
-          <p className={styles.status}>Hero Mastery could not be loaded.</p>
-        )}
+        {isLoading && <p className={styles.status}>{t('MASTERY.LOADING')}</p>}
+        {error && <p className={styles.status}>{t('MASTERY.LOAD_ERROR')}</p>}
 
         {!isLoading &&
           !error &&
@@ -222,11 +236,19 @@ const Mastery = () => {
                                   (end - start)) *
                                   100
                               );
-                        const nextMastery = masteryTitle(item.level + 1);
+                        const nextMastery = t('MASTERY.LEVEL', {
+                          level: ROMAN_LEVELS[item.level + 1]
+                        });
                         const gamesUntil =
                           item.gamesToNext === 1
-                            ? `1 game until ${nextMastery}`
-                            : `${item.gamesToNext} games until ${nextMastery}`;
+                            ? t('MASTERY.GAMES_UNTIL', {
+                                count: 1,
+                                mastery: nextMastery
+                              })
+                            : t('MASTERY.GAMES_UNTIL', {
+                                count: item.gamesToNext,
+                                mastery: nextMastery
+                              });
                         const isMaximum = item.nextThreshold === null;
                         const detailId = `mastery-detail-${hero.value}`;
                         return (
@@ -260,8 +282,11 @@ const Mastery = () => {
                             </MasteryFrame>
                             <strong title={hero.label}>{hero.label}</strong>
                             <span className={styles.gameCount}>
-                              {item.qualifyingGames.toLocaleString()}{' '}
-                              {item.qualifyingGames === 1 ? 'game' : 'games'}
+                              {t('MASTERY.GAME_COUNT', {
+                                count: item.qualifyingGames,
+                                formattedCount:
+                                  item.qualifyingGames.toLocaleString()
+                              })}
                             </span>
                             <div
                               className={styles.detail}
@@ -270,26 +295,45 @@ const Mastery = () => {
                               data-maximum={isMaximum}
                             >
                               <strong>{hero.label}</strong>
-                              <b>{masteryTitle(item.level)}</b>
+                              <b>
+                                {item.level > 0
+                                  ? t('MASTERY.LEVEL', {
+                                      level: ROMAN_LEVELS[item.level]
+                                    })
+                                  : t('MASTERY.TITLE')}
+                              </b>
                               {isMaximum ? (
                                 <>
                                   <span className={styles.detailGames}>
-                                    {item.qualifyingGames.toLocaleString()}{' '}
-                                    games played
+                                    {t('MASTERY.GAMES_PLAYED', {
+                                      count: item.qualifyingGames,
+                                      formattedCount:
+                                        item.qualifyingGames.toLocaleString()
+                                    })}
                                   </span>
                                   <em className={styles.maximumMessage}>
-                                    Maximum Mastery reached
+                                    {t('MASTERY.MAXIMUM_REACHED')}
                                   </em>
                                 </>
                               ) : (
                                 <>
                                   <span className={styles.detailGames}>
-                                    {item.qualifyingGames.toLocaleString()} /{' '}
-                                    {item.nextThreshold?.toLocaleString()} games
+                                    {t('MASTERY.GAMES_PROGRESS', {
+                                      games:
+                                        item.qualifyingGames.toLocaleString(),
+                                      threshold:
+                                        item.nextThreshold?.toLocaleString()
+                                    })}
                                   </span>
                                   <div
                                     className={styles.detailProgress}
-                                    aria-label={`${item.qualifyingGames} of ${item.nextThreshold} games`}
+                                    aria-label={t(
+                                      'MASTERY.GAMES_PROGRESS_LABEL',
+                                      {
+                                        games: item.qualifyingGames,
+                                        threshold: item.nextThreshold
+                                      }
+                                    )}
                                   >
                                     <i style={{ width: `${percent}%` }} />
                                   </div>
@@ -304,7 +348,7 @@ const Mastery = () => {
                       })}
                     </div>
                   ) : (
-                    <p className={styles.empty}>No heroes match this filter.</p>
+                    <p className={styles.empty}>{t('MASTERY.EMPTY')}</p>
                   ))}
               </section>
             );

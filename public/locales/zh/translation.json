@@ -519,6 +519,7 @@
     "LEARN": "学习",
     "LOGIN": "登录",
     "LOGOUT": "登出",
+    "MASTERY": "",
     "MOD_PAGE": "模组页面",
     "MY_DECKS": "我的卡组",
     "OPEN_MENU": "打开菜单",
@@ -839,6 +840,51 @@
     "TOKEN_PIPE_DESCRIPTION": "",
     "WRENCH_POWER": "",
     "WRENCH_POWER_ARIA": ""
+  },
+  "MASTERY": {
+    "BETA_NOTICE": "",
+    "CARD_MAXIMUM_one": "",
+    "CARD_MAXIMUM_other": "",
+    "CARD_PROGRESS": "",
+    "COLLECTION_SUMMARY": "",
+    "EMPTY": "",
+    "FILTER": {
+      "ALL": "",
+      "LABEL": "",
+      "MASTERED": "",
+      "PLAYED": ""
+    },
+    "GAME_COUNT_one": "",
+    "GAME_COUNT_other": "",
+    "GAMES_PLAYED_one": "",
+    "GAMES_PLAYED_other": "",
+    "GAMES_PROGRESS": "",
+    "GAMES_PROGRESS_LABEL": "",
+    "GAMES_UNTIL_one": "",
+    "GAMES_UNTIL_other": "",
+    "GAMES_UNTIL_MASTERY": "",
+    "GROUPS": {
+      "CLASSIC_CONSTRUCTED": "",
+      "LIVING_LEGEND": "",
+      "SILVER_AGE": ""
+    },
+    "HERO_TITLE": "",
+    "HIGHEST_REACHED": "",
+    "LEVEL": "",
+    "LOAD_ERROR": "",
+    "LOADING": "",
+    "MAXIMUM_REACHED": "",
+    "ONE_MORE_GAME": "",
+    "SORT": {
+      "ALPHABETICAL": "",
+      "LABEL": "",
+      "RANK": ""
+    },
+    "SUBTITLE": "",
+    "TITLE": "",
+    "UNLOCKED": "",
+    "UNLOCKED_SUMMARY_one": "",
+    "UNLOCKED_SUMMARY_other": ""
   },
   "MATCH_REVIEW": {
     "CLOSE_MATCH_REVIEW": "",

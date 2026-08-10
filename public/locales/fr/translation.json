@@ -523,6 +523,7 @@
     "LEARN": "Apprendre",
     "LOGIN": "Se Connecter",
     "LOGOUT": "Déconnexion",
+    "MASTERY": "",
     "MOD_PAGE": "Page de modules",
     "MY_DECKS": "Mes platines",
     "OPEN_MENU": "Ouvrir le menu",
@@ -846,6 +847,51 @@
     "TOKEN_PIPE_DESCRIPTION": "Jeton + Tuyau + Numéro - Crée autant de copies dans l'arène",
     "WRENCH_POWER": "Clé-tastique! ",
     "WRENCH_POWER_ARIA": "Puissance clé-tastique"
+  },
+  "MASTERY": {
+    "BETA_NOTICE": "",
+    "CARD_MAXIMUM_one": "",
+    "CARD_MAXIMUM_other": "",
+    "CARD_PROGRESS": "",
+    "COLLECTION_SUMMARY": "",
+    "EMPTY": "",
+    "FILTER": {
+      "ALL": "",
+      "LABEL": "",
+      "MASTERED": "",
+      "PLAYED": ""
+    },
+    "GAME_COUNT_one": "",
+    "GAME_COUNT_other": "",
+    "GAMES_PLAYED_one": "",
+    "GAMES_PLAYED_other": "",
+    "GAMES_PROGRESS": "",
+    "GAMES_PROGRESS_LABEL": "",
+    "GAMES_UNTIL_one": "",
+    "GAMES_UNTIL_other": "",
+    "GAMES_UNTIL_MASTERY": "",
+    "GROUPS": {
+      "CLASSIC_CONSTRUCTED": "",
+      "LIVING_LEGEND": "",
+      "SILVER_AGE": ""
+    },
+    "HERO_TITLE": "",
+    "HIGHEST_REACHED": "",
+    "LEVEL": "",
+    "LOAD_ERROR": "",
+    "LOADING": "",
+    "MAXIMUM_REACHED": "",
+    "ONE_MORE_GAME": "",
+    "SORT": {
+      "ALPHABETICAL": "",
+      "LABEL": "",
+      "RANK": ""
+    },
+    "SUBTITLE": "",
+    "TITLE": "",
+    "UNLOCKED": "",
+    "UNLOCKED_SUMMARY_one": "",
+    "UNLOCKED_SUMMARY_other": ""
   },
   "MATCH_REVIEW": {
     "CLOSE_MATCH_REVIEW": "Examen des matchs serrés",

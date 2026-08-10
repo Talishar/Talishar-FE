@@ -146,7 +146,7 @@ const Header = () => {
           {isLoggedIn && (
             <li>
               <NavLink to="/mastery" className={navLinkClass}>
-                Mastery
+                {t('HEADER.MASTERY')}
               </NavLink>
             </li>
           )}
@@ -279,7 +279,7 @@ const Header = () => {
             {isLoggedIn && (
               <li>
                 <Link to="/mastery" onClick={closeMobileMenu}>
-                  <BsStars /> <span>Mastery</span>
+                  <BsStars /> <span>{t('HEADER.MASTERY')}</span>
                 </Link>
               </li>
             )}
