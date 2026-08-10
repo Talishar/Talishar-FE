@@ -111,6 +111,16 @@ h3 {
   border-radius: 5px 0 0 5px;
 }
 
+.leftCol[data-mastery-level]:not([data-mastery-level='0']),
+.rightCol[data-mastery-level]:not([data-mastery-level='0']) {
+  border: 4px solid #b87333;
+  box-shadow: inset 0 0 0 2px rgba(255,255,255,.35), 0 0 22px rgba(184,115,51,.45);
+}
+.leftCol[data-mastery-level='3'], .leftCol[data-mastery-level='4'], .rightCol[data-mastery-level='3'], .rightCol[data-mastery-level='4'] { border-color: #e0ad3f; }
+.leftCol[data-mastery-level='5'], .leftCol[data-mastery-level='6'], .rightCol[data-mastery-level='5'], .rightCol[data-mastery-level='6'] { border-color: #9b70d7; }
+.leftCol[data-mastery-level='7'], .leftCol[data-mastery-level='8'], .rightCol[data-mastery-level='7'], .rightCol[data-mastery-level='8'] { border-color: #df5b55; }
+.leftCol[data-mastery-level='9'], .rightCol[data-mastery-level='9'] { border-color: #f5e6a3; box-shadow: inset 0 0 0 2px white, 0 0 28px rgba(245,230,163,.75); }
+
 .leftCol::before {
   content: '';
   position: absolute;

@@ -29,7 +29,8 @@ import {
   useSubmitLobbyInputMutation,
   useGetUserProfileQuery,
   useUpdateBazaarMatchupMutation,
-  useKickPlayerMutation
+  useKickPlayerMutation,
+  useGetHeroMasteryQuery
 } from 'features/api/apiSlice';
 import { useAppSelector } from 'app/Hooks';
 import { shallowEqual } from 'react-redux';
@@ -156,6 +157,10 @@ const Lobby = () => {
     useAuth();
   const gameInfo = useAppSelector(getGameInfo, shallowEqual);
   const { playerID, gameID, authKey } = gameInfo;
+  const { data: masteryData } = useGetHeroMasteryQuery(
+    { gameName: gameID },
+    { skip: !isLoggedIn }
+  );
   const [acceptedDisclaimer, setAcceptedDisclaimer] = useState<boolean>(
     () => localStorage.getItem('openFormatDisclaimerAccepted') === 'true'
   );
@@ -462,6 +467,10 @@ const Lobby = () => {
     data.deck.hero === 'CardBack' ? 'UNKNOWNHERO' : data.deck.hero;
   const rightHero =
     gameLobby?.theirHero === 'CardBack' ? 'UNKNOWNHERO' : gameLobby?.theirHero;
+  const leftMasteryLevel =
+    masteryData?.gamePlayers?.[String(playerID)]?.level ?? 0;
+  const rightMasteryLevel =
+    masteryData?.gamePlayers?.[String(playerID === 1 ? 2 : 1)]?.level ?? 0;
 
   const leftPic = `url(${generateCroppedImageUrl(leftHero)})`;
   const lobbyFormatName = getReadableFormatName(
@@ -967,6 +976,7 @@ const Lobby = () => {
                 <div
                   className={styles.leftCol}
                   style={{ backgroundImage: leftPic }}
+                  data-mastery-level={leftMasteryLevel}
                 >
                   <div className={styles.dimPic}>
                     <h3 aria-busy={isLoading}>
@@ -1008,6 +1018,7 @@ const Lobby = () => {
                 <div
                   className={styles.rightCol}
                   style={{ backgroundImage: rightPic }}
+                  data-mastery-level={rightMasteryLevel}
                 >
                   {playerID === 1 &&
                     gameLobby?.theirHero &&

@@ -12,6 +12,7 @@ import {
 import {
   useCreateGameMutation,
   useGetFavoriteDecksQuery,
+  useGetHeroMasteryQuery,
   useGetBazaarDecksQuery,
   useClearRustCountersMutation
 } from 'features/api/apiSlice';
@@ -33,10 +34,8 @@ import { FavoriteDeck } from 'interface/API/GetFavoriteDecks.php';
 import { toast } from 'react-hot-toast';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import styles from './CreateGame.module.css';
-import validationSchema from './validationSchema';
 import { FieldErrors, SubmitHandler, useForm } from 'react-hook-form';
 import { ErrorMessage } from '@hookform/error-message';
-import { yupResolver } from '@hookform/resolvers/yup';
 import {
   FaExclamationCircle,
   FaQuestionCircle,
@@ -59,6 +58,8 @@ import {
   OSCILIO_VARIANTS,
   OscilioVariant
 } from './gameDescription';
+import MasteryProgressCard from 'features/mastery/MasteryProgressCard';
+import { emptyMastery } from 'features/mastery/mastery';
 
 const getCookie = (name: string): string | null => {
   const value = `; ${document.cookie}`;
@@ -111,6 +112,10 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { data, isLoading, isSuccess } = useGetFavoriteDecksQuery(undefined);
+  const { data: masteryData } = useGetHeroMasteryQuery(undefined, {
+    skip: !isLoggedIn || isEmbedded,
+    refetchOnMountOrArgChange: true
+  });
   const [searchParams] = useSearchParams();
   const [createGame] = useCreateGameMutation();
   const [clearRustCounters] = useClearRustCountersMutation();
@@ -192,10 +197,7 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
     reset,
     setValue,
     watch
-  } = useForm<CreateGameAPI>({
-    mode: 'onBlur',
-    resolver: yupResolver(validationSchema)
-  });
+  } = useForm<CreateGameAPI>({ mode: 'onBlur' });
 
   const initialValues: CreateGameAPI = useMemo(() => {
     const savedGameDescription =
@@ -265,6 +267,15 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
   );
   const [selectedFavoriteDeck, setSelectedFavoriteDeck] =
     React.useState<string>(initialValues.favoriteDecks || '');
+  const effectiveMasteryDeck = isEmbedded
+    ? quickJoinCtx!.effectiveFavoriteDecks
+    : selectedFavoriteDeck;
+  const selectedMasteryHero = data?.favoriteDecks.find(
+    (deck: FavoriteDeck) => deck.key === effectiveMasteryDeck
+  )?.hero;
+  const selectedMasteryProgress = selectedMasteryHero
+    ? masteryData?.heroes?.find((hero) => hero.heroId === selectedMasteryHero)
+    : undefined;
   const [selectedPreconDeck, setSelectedPreconDeck] = React.useState<string>(
     PRECON_DECKS.LINKS[0]
   );
@@ -947,6 +958,19 @@ const CreateGame = ({ inUnifiedPanel = false }: CreateGameProps) => {
                   )}
                 />
               )}
+              {!isEmbedded && isLoggedIn && selectedMasteryHero && (() => {
+                const mastery = selectedMasteryProgress ?? emptyMastery(selectedMasteryHero);
+                return (
+                  <MasteryProgressCard
+                    heroId={selectedMasteryHero}
+                    games={mastery.qualifyingGames}
+                    level={mastery.level}
+                    nextThreshold={mastery.nextThreshold}
+                    gamesToNext={mastery.gamesToNext}
+                    compact
+                  />
+                );
+              })()}
               {(isPreconFormat(formFormat || selectedFormat) ||
                 (!isEmbedded && standaloneDeckSource === 'talishar')) && (
                 <fieldset>

@@ -159,7 +159,6 @@
 
 .contentSection {
   position: relative;
-  z-index: 1;
   background: var(--theme-background);
   margin-top: 0;
   scroll-margin-top: 86px;

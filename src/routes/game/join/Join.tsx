@@ -18,13 +18,11 @@ import { useKnownSearchParams } from 'hooks/useKnownSearchParams';
 import { setGameStart } from 'features/game/GameSlice';
 import { toast } from 'react-hot-toast';
 import { FaExclamationCircle, FaQuestionCircle } from 'react-icons/fa';
-import validationSchema from './validationSchema';
 import useAuth from 'hooks/useAuth';
 import useSupporterStatus from 'hooks/useSupporterStatus';
 import useAdScript from 'hooks/useAdScript';
 import { AdUnit } from 'components/ads';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
 import { ErrorMessage } from '@hookform/error-message';
 import { generateCroppedImageUrl } from 'utils/cropImages';
 import { ImageSelect, ImageSelectOption } from 'components/ImageSelect';
@@ -129,10 +127,7 @@ const JoinGame = () => {
     setError,
     reset,
     setValue
-  } = useForm<JoinGameAPI>({
-    mode: 'onBlur',
-    resolver: yupResolver(validationSchema)
-  });
+  } = useForm<JoinGameAPI>({ mode: 'onBlur' });
 
   const [selectedFavoriteDeck, setSelectedFavoriteDeck] =
     React.useState<string>('');

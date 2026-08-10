@@ -1,14 +1,10 @@
-import {
-  ForgottenPasswordType,
-  forgottenPasswordValidationSchema
-} from './validation';
+import { ForgottenPasswordType } from './validation';
 import styles from './LoginForm.module.css';
 import { FaExclamationCircle } from 'react-icons/fa';
 import { useForgottenPasswordMutation } from 'features/api/apiSlice';
 import { Link, useNavigate } from 'react-router-dom';
 import classNames from 'classnames';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
 import { toast } from 'react-hot-toast';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
 import { useTranslation } from 'react-i18next';
@@ -23,10 +19,7 @@ export const ForgottenPasswordForm = () => {
     handleSubmit,
     setError,
     formState: { errors, isSubmitting }
-  } = useForm<ForgottenPasswordType>({
-    mode: 'onBlur',
-    resolver: yupResolver(forgottenPasswordValidationSchema)
-  });
+  } = useForm<ForgottenPasswordType>({ mode: 'onBlur' });
 
   const onSubmit: SubmitHandler<ForgottenPasswordType> = async (values) => {
     try {

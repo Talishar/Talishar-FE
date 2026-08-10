@@ -16,7 +16,8 @@ import {
   BsPlayFill,
   BsInfoCircleFill,
   BsFullscreen,
-  BsFullscreenExit
+  BsFullscreenExit,
+  BsStars
 } from 'react-icons/bs';
 import { IoLogOut } from 'react-icons/io5';
 import LanguageSelector from 'components/header/LanguageSelector';
@@ -142,6 +143,13 @@ const Header = () => {
               {t('HEADER.REPLAYS')}
             </NavLink>
           </li>
+          {isLoggedIn && (
+            <li>
+              <NavLink to="/mastery" className={navLinkClass}>
+                Mastery
+              </NavLink>
+            </li>
+          )}
           <li>
             <NavLink to="/learn" className={navLinkClass}>
               {t('HEADER.LEARN')}
@@ -268,6 +276,13 @@ const Header = () => {
                 <BsCollectionPlayFill /> <span>{t('HEADER.REPLAYS')}</span>
               </Link>
             </li>
+            {isLoggedIn && (
+              <li>
+                <Link to="/mastery" onClick={closeMobileMenu}>
+                  <BsStars /> <span>Mastery</span>
+                </Link>
+              </li>
+            )}
             <li>
               <Link to="/learn" onClick={closeMobileMenu}>
                 <BsFillBookFill /> <span>{t('HEADER.LEARN')}</span>

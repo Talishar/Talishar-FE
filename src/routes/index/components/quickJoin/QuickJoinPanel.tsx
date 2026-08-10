@@ -2,6 +2,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import { FaQuestionCircle, FaChevronUp, FaChevronDown } from 'react-icons/fa';
 import { toast } from 'react-hot-toast';
 import { ImageSelect } from 'components/ImageSelect';
+import { useGetHeroMasteryQuery } from 'features/api/apiSlice';
+import MasteryProgressCard from 'features/mastery/MasteryProgressCard';
+import { emptyMastery } from 'features/mastery/mastery';
 import useAuth from 'hooks/useAuth';
 import { useQuickJoin } from './QuickJoinContext';
 import styles from './QuickJoinPanel.module.css';
@@ -34,6 +37,7 @@ const QuickJoinPanel = ({ embedded = false }: Props) => {
   const {
     deckSource,
     selectedFavoriteDeck,
+    selectedFavoriteDeckHero,
     selectedBazaarDeck,
     importDeckUrl,
     saveDeck,
@@ -55,6 +59,15 @@ const QuickJoinPanel = ({ embedded = false }: Props) => {
     setSaveDeck,
     setError
   } = useQuickJoin();
+  const { data: masteryData } = useGetHeroMasteryQuery(undefined, {
+    skip: !isLoggedIn || !selectedFavoriteDeckHero,
+    refetchOnMountOrArgChange: true
+  });
+  const selectedMasteryProgress = selectedFavoriteDeckHero
+    ? masteryData?.heroes?.find(
+        (hero) => hero.heroId === selectedFavoriteDeckHero
+      ) ?? emptyMastery(selectedFavoriteDeckHero)
+    : null;
   const importDeckInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -89,6 +102,17 @@ const QuickJoinPanel = ({ embedded = false }: Props) => {
           aria-label={t('JOIN.SELECT_DECK')}
         />
       </label>
+
+      {selectedFavoriteDeckHero && selectedMasteryProgress && (
+        <MasteryProgressCard
+          heroId={selectedFavoriteDeckHero}
+          games={selectedMasteryProgress.qualifyingGames}
+          level={selectedMasteryProgress.level}
+          nextThreshold={selectedMasteryProgress.nextThreshold}
+          gamesToNext={selectedMasteryProgress.gamesToNext}
+          compact
+        />
+      )}
 
       <label className={styles.label}>
         <span className={styles.labelText}>

@@ -8,9 +8,8 @@ import {
 import useAuth from 'hooks/useAuth';
 import { toast } from 'react-hot-toast';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
-import { loginValidationSchema, LoginValidationType } from './validation';
+import { LoginValidationType } from './validation';
 import { FaExclamationCircle } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
 
@@ -42,10 +41,7 @@ export const LoginForm = () => {
     handleSubmit,
     setError,
     formState: { errors, isSubmitting }
-  } = useForm<LoginValidationType>({
-    mode: 'onBlur',
-    resolver: yupResolver(loginValidationSchema)
-  });
+  } = useForm<LoginValidationType>({ mode: 'onBlur' });
 
   const onSubmit: SubmitHandler<LoginValidationType> = async (data) => {
     const values = { ...data, rememberMe: data.rememberMe ?? false };

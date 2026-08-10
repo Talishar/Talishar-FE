@@ -372,6 +372,7 @@ export const URL_END_POINT = {
   CREATE_SHARED_REPLAY_GAME: 'APIs/CreateSharedReplayGame.php',
   SYNC_METAFY_SUBSCRIBERS: 'APIs/SyncMetafySubscribers.php',
   GET_APP_INFO: 'AccountFiles/GetAppInfoAPI.php',
+  GET_HERO_MASTERY: 'APIs/GetHeroMastery.php',
   GENERATE_AUTH_TOKEN: 'AccountFiles/GenerateAuthTokenAPI.php'
 };
 

@@ -1,11 +1,9 @@
-import { resetPasswordValidationSchema } from './validation';
 import { ResetPassword } from 'interface/API/ResetPassword.php';
 import styles from './LoginForm.module.css';
 import { FaExclamationCircle } from 'react-icons/fa';
 import { useResetPasswordMutation } from 'features/api/apiSlice';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
 import { toast } from 'react-hot-toast';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
 import { useTranslation } from 'react-i18next';
@@ -20,10 +18,7 @@ export const ResetPasswordForm = () => {
     handleSubmit,
     setError,
     formState: { errors, isSubmitting }
-  } = useForm<ResetPassword>({
-    mode: 'onBlur',
-    resolver: yupResolver(resetPasswordValidationSchema)
-  });
+  } = useForm<ResetPassword>({ mode: 'onBlur' });
 
   const { t } = useTranslation();
 

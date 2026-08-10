@@ -104,6 +104,7 @@ import {
   GetSavedReplaysResponse,
   SetReplayFavoriteRequest
 } from 'interface/API/GetSavedReplays.php';
+import { HeroMasteryResponse } from 'interface/API/HeroMastery';
 
 export interface GetLastActiveGameResponse {
   gameExists: boolean;
@@ -182,11 +183,27 @@ export const apiSlice = createApi({
     'UserProfile',
     'Auth',
     'SystemMessage',
-    'SavedReplays'
+    'SavedReplays',
+    'HeroMastery'
   ],
   refetchOnFocus: false,
   refetchOnReconnect: false,
   endpoints: (builder) => ({
+    getHeroMastery: builder.query<
+      HeroMasteryResponse,
+      string | { gameKey?: string; gameName?: number } | void
+    >({
+      query: (request) => ({
+        url: URL_END_POINT.GET_HERO_MASTERY,
+        method: 'GET',
+        params:
+          typeof request === 'string'
+            ? { gameKey: request }
+            : request || undefined,
+        responseHandler: parseResponse
+      }),
+      providesTags: ['HeroMastery']
+    }),
     getPopUpContent: builder.query({
       query: ({
         playerID = 0,
@@ -1205,6 +1222,7 @@ export const apiSlice = createApi({
 
 // Export the auto-generated hook for the `getPosts` query endpoint
 export const {
+  useGetHeroMasteryQuery,
   useGetPopUpContentQuery,
   useSubmitChatMutation,
   useGetGameListQuery,

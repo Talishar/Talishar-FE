@@ -68,6 +68,7 @@ const formatDeckLabel = (
 interface QuickJoinContextType {
   deckSource: 'talishar' | 'bazaar';
   selectedFavoriteDeck: string;
+  selectedFavoriteDeckHero: string | null;
   selectedBazaarDeck: string;
   importDeckUrl: string;
   saveDeck: boolean;
@@ -172,6 +173,14 @@ export const QuickJoinProvider = ({
       imageUrl: generateCroppedImageUrl(deck.hero)
     }));
   }, [favoritesData?.favoriteDecks]);
+
+  const selectedFavoriteDeckHero = useMemo(
+    () =>
+      favoritesData?.favoriteDecks.find(
+        (deck: FavoriteDeck) => deck.key === selectedFavoriteDeck
+      )?.hero ?? null,
+    [favoritesData?.favoriteDecks, selectedFavoriteDeck]
+  );
 
   const bazaarDeckOptions: ImageSelectOption[] = useMemo(() => {
     if (!bazaarData?.decks) return [];
@@ -370,6 +379,7 @@ export const QuickJoinProvider = ({
   const value: QuickJoinContextType = {
     deckSource,
     selectedFavoriteDeck,
+    selectedFavoriteDeckHero,
     selectedBazaarDeck,
     importDeckUrl,
     saveDeck,

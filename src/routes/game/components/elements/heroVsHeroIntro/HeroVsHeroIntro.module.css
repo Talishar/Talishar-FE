@@ -186,6 +186,15 @@
   will-change: transform;
 }
 
+.heroCardVisual[data-mastery-level]:not([data-mastery-level='0']) {
+  --mastery-frame: #b87333;
+  box-shadow: 0 0 0 4px var(--mastery-frame), 0 0 30px color-mix(in srgb, var(--mastery-frame) 60%, transparent);
+}
+.heroCardVisual[data-mastery-level='3'], .heroCardVisual[data-mastery-level='4'] { --mastery-frame: #e0ad3f; }
+.heroCardVisual[data-mastery-level='5'], .heroCardVisual[data-mastery-level='6'] { --mastery-frame: #9b70d7; }
+.heroCardVisual[data-mastery-level='7'], .heroCardVisual[data-mastery-level='8'] { --mastery-frame: #df5b55; }
+.heroCardVisual[data-mastery-level='9'] { --mastery-frame: #f5e6a3; }
+
 .heroImg {
   position: absolute;
   inset: 0;

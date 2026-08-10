@@ -1,11 +1,10 @@
 import { useSignUpMutation } from 'features/api/apiSlice';
 import styles from './LoginForm.module.css';
 import { Link, useNavigate } from 'react-router-dom';
-import { SignUpType, signUpValidationSchema } from './validation';
+import { SignUpType } from './validation';
 import { FaExclamationCircle } from 'react-icons/fa';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
 import useAuth from 'hooks/useAuth';
 import { toast } from 'react-hot-toast';
 import { useState } from 'react';
@@ -24,10 +23,7 @@ export const SignUpForm = () => {
     handleSubmit,
     setError,
     formState: { errors, isSubmitting }
-  } = useForm<SignUpType>({
-    mode: 'onBlur',
-    resolver: yupResolver(signUpValidationSchema)
-  });
+  } = useForm<SignUpType>({ mode: 'onBlur' });
 
   if (isLoggedIn) {
     navigate('/');

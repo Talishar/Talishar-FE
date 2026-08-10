@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
 import { toast } from 'react-hot-toast';
 import { FaExclamationCircle, FaCheck, FaTimes } from 'react-icons/fa';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
@@ -14,10 +13,7 @@ import {
   useLoginMutation,
   useGetFavoriteDecksQuery
 } from 'features/api/apiSlice';
-import {
-  loginValidationSchema,
-  LoginValidationType
-} from 'routes/user/login/components/validation';
+import { LoginValidationType } from 'routes/user/login/components/validation';
 import styles from './AuthVerify.module.css';
 
 const AuthVerify = () => {
@@ -205,10 +201,7 @@ const InlineLoginForm = () => {
     handleSubmit,
     setError,
     formState: { errors, isSubmitting }
-  } = useForm<LoginValidationType>({
-    mode: 'onBlur',
-    resolver: yupResolver(loginValidationSchema)
-  });
+  } = useForm<LoginValidationType>({ mode: 'onBlur' });
 
   const onSubmit: SubmitHandler<LoginValidationType> = async (data) => {
     const values = { ...data, rememberMe: data.rememberMe ?? false };

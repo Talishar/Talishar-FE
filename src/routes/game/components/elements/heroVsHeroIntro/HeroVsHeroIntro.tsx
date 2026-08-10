@@ -22,6 +22,8 @@ import { markHeroIntroAsShown } from 'features/game/GameSlice';
 import { getSettingsEntity } from 'features/options/optionsSlice';
 import styles from './HeroVsHeroIntro.module.css';
 import { METAFY_TIER_MAP, MetafyTierName } from 'utils/patronIcons';
+import { useGetHeroMasteryQuery } from 'features/api/apiSlice';
+import useAuth from 'hooks/useAuth';
 
 const formatHeroName = (id: string | undefined): string => {
   if (!id) return '';
@@ -92,6 +94,7 @@ interface HeroCardProps {
   isPremium: boolean;
   glowActive: boolean;
   metafyTierName?: string;
+  masteryLevel?: number;
 }
 
 const HeroCard: React.FC<HeroCardProps> = ({
@@ -99,7 +102,8 @@ const HeroCard: React.FC<HeroCardProps> = ({
   heroName,
   isPremium,
   glowActive,
-  metafyTierName
+  metafyTierName,
+  masteryLevel = 0
 }) => {
   const cardRef = useRef<HTMLDivElement>(null);
 
@@ -145,6 +149,7 @@ const HeroCard: React.FC<HeroCardProps> = ({
       <motion.div
         ref={cardRef}
         className={styles.heroCardVisual}
+        data-mastery-level={masteryLevel}
         style={isPremium ? { rotateX, rotateY } : {}}
         onMouseMove={isPremium ? handleMouseMove : undefined}
         onMouseEnter={isPremium ? handleMouseEnter : undefined}
@@ -225,12 +230,17 @@ const VSShockwave: React.FC<{ show: boolean }> = ({ show }) => {
 
 const HeroVsHeroIntro = () => {
   const dispatch = useAppDispatch();
+  const { isLoggedIn } = useAuth();
 
   const playerID = useAppSelector(
     (state: RootState) => state.game.gameInfo.playerID
   );
   const gameID = useAppSelector(
     (state: RootState) => state.game.gameInfo.gameID
+  );
+  const { data: masteryData } = useGetHeroMasteryQuery(
+    { gameName: gameID },
+    { skip: !isLoggedIn }
   );
   const gameGUID = useAppSelector(
     (state: RootState) => state.game.gameInfo.gameGUID
@@ -291,6 +301,10 @@ const HeroVsHeroIntro = () => {
 
   const yourHero = playerID === 1 ? playerOneHero : playerTwoHero;
   const opponentHero = playerID === 1 ? playerTwoHero : playerOneHero;
+  const yourMasteryLevel =
+    masteryData?.gamePlayers?.[String(playerID)]?.level ?? 0;
+  const opponentMasteryLevel =
+    masteryData?.gamePlayers?.[String(playerID === 1 ? 2 : 1)]?.level ?? 0;
   const yourPatronInfo =
     playerID === 1 ? playerOnePatronInfo : playerTwoPatronInfo;
   const opponentPatronInfo =
@@ -366,6 +380,7 @@ const HeroVsHeroIntro = () => {
                 isPremium={yourPatronStatus}
                 glowActive={glowActive}
                 metafyTierName={yourMetafyTierName}
+                masteryLevel={yourMasteryLevel}
               />
             </motion.div>
 
@@ -384,6 +399,7 @@ const HeroVsHeroIntro = () => {
                 isPremium={opponentPatronStatus}
                 glowActive={glowActive}
                 metafyTierName={opponentMetafyTierName}
+                masteryLevel={opponentMasteryLevel}
               />
             </motion.div>
           </motion.div>

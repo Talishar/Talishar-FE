@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import ReactDOM from 'react-dom';
 import { useAppDispatch, useAppSelector } from 'app/Hooks';
 import styles from './EndGameScreen.module.css';
-import { useGetPopUpContentQuery } from 'features/api/apiSlice';
+import { useGetHeroMasteryQuery, useGetPopUpContentQuery } from 'features/api/apiSlice';
 import { END_GAME_STATS, PROCESS_INPUT } from 'appConstants';
 import { getGameInfo, submitButton } from 'features/game/GameSlice';
 import EndGameStats, {
@@ -19,12 +19,15 @@ import { TALISHAR_METAFY_URL } from 'constants/socialLinks';
 import useSupporterStatus from 'hooks/useSupporterStatus';
 import MetafyLogo from 'img/MetafyGradient.svg';
 import { useTranslation } from 'react-i18next';
+import useAuth from 'hooks/useAuth';
+import MasteryProgressCard from 'features/mastery/MasteryProgressCard';
 
 const EndGameScreen = () => {
   const dispatch = useAppDispatch();
   const gameInfo = useAppSelector(getGameInfo, shallowEqual);
   const gameState = useAppSelector((state: any) => state.game, shallowEqual);
   const { t } = useTranslation();
+  const { isLoggedIn } = useAuth();
   const [playerID, setPlayerID] = useState(gameInfo.playerID === 2 ? 2 : 1);
   const [showStats, setShowStats] = useState(true);
   const [bothPlayersData, setBothPlayersData] = useState<{
@@ -41,6 +44,10 @@ const EndGameScreen = () => {
     authKey: gameInfo.authKey,
     popupType: END_GAME_STATS
   });
+  const { data: masteryData } = useGetHeroMasteryQuery(
+    `talishar:${gameInfo.gameID}`,
+    { skip: !isLoggedIn || !!gameInfo.roguelikeGameID }
+  );
 
   // Cache both players' data as they're loaded
   React.useEffect(() => {
@@ -234,6 +241,16 @@ const EndGameScreen = () => {
                 {t('END_GAME.SUPPORT_CTA_ACTION')}
               </span>
             </a>
+          )}
+          {masteryData?.gameAward && (
+            <MasteryProgressCard
+              heroId={masteryData.gameAward.heroId}
+              games={masteryData.gameAward.gamesAfter}
+              level={masteryData.gameAward.levelAfter}
+              nextThreshold={masteryData.gameAward.nextThreshold}
+              gamesToNext={masteryData.gameAward.gamesToNext}
+              unlocked={masteryData.gameAward.unlocked}
+            />
           )}
           {content}
         </>
