@@ -14,7 +14,7 @@ import {
   KeyboardEvent,
   ThHTMLAttributes
 } from 'react';
-import html2canvas from 'html2canvas';
+import html2canvas from 'html2canvas-pro';
 import { Trans, useTranslation } from 'react-i18next';
 import TalisharLogo from 'img/TalisharLogo.webp';
 import { BACKEND_URL } from 'appConstants';
@@ -388,6 +388,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>((data, ref) 
   }>({});
   const [excludeLastTurn, setExcludeLastTurn] = useState(false);
   const [hoveredChartTurn, setHoveredChartTurn] = useState<number | null>(null);
+  const [isExportingImage, setIsExportingImage] = useState(false);
 
   const { t } = useTranslation();
 
@@ -397,7 +398,7 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>((data, ref) 
   const colorblindSetting = useSetting({ settingName: COLORBLIND_MODE });
   const useAccessibleCharts = String(colorblindSetting?.value) === '1';
 
-  const chartColors = useAccessibleCharts
+  const chartColors = useAccessibleCharts && !isExportingImage
     ? ACCESSIBLE_CHART_COLORS
     : { you: themeColor, opponent: '#ef4444' };
 
@@ -698,7 +699,16 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>((data, ref) 
       }
     }
 
+    setIsExportingImage(true);
+    await new Promise<void>((resolve) => {
+      requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
+    });
+
     const exportEl = statsRef.current;
+    if (!exportEl) {
+      setIsExportingImage(false);
+      return;
+    }
 
     try {
       // Wait for hero images to load if they haven't yet
@@ -733,35 +743,34 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>((data, ref) 
         )
       );
 
-      // Hide elements not meant for export (ads, card thumbnails, charts)
-      const hideElements = exportEl.querySelectorAll(`.${styles.hideOnExport}`);
-      hideElements.forEach(
-        (el) => ((el as HTMLElement).style.display = 'none')
-      );
-
-      // Show watermark and hero portraits
-      const watermark = exportEl.querySelector(
-        `.${styles.watermark}`
-      ) as HTMLElement;
-      const heroPortraits = exportEl.querySelector(
-        `.${styles.showOnExport}`
-      ) as HTMLElement;
-      if (watermark) watermark.style.display = 'block';
-      if (heroPortraits) heroPortraits.style.display = 'flex';
-
-      await new Promise((resolve) => setTimeout(resolve, 100));
-
       const canvas = await html2canvas(exportEl, {
         backgroundColor: '#0a0a0a',
         scale: Math.min(window.devicePixelRatio, 2),
         logging: false,
         useCORS: true,
-        allowTaint: true
-      });
+        allowTaint: true,
+        onclone: (clonedDocument) => {
+          const clonedExportEl = clonedDocument.querySelector(
+            `.${styles.statsContainer}`
+          );
+          if (!clonedExportEl) return;
 
-      hideElements.forEach((el) => ((el as HTMLElement).style.display = ''));
-      if (watermark) watermark.style.display = 'none';
-      if (heroPortraits) heroPortraits.style.display = 'none';
+          // html2canvas parses styles even on display:none descendants. Remove
+          // excluded charts so their modern CSS colors never reach its parser.
+          clonedExportEl
+            .querySelectorAll(`.${styles.hideOnExport}`)
+            .forEach((element) => element.remove());
+
+          const watermark = clonedExportEl.querySelector(
+            `.${styles.watermark}`
+          ) as HTMLElement | null;
+          const heroPortraits = clonedExportEl.querySelector(
+            `.${styles.showOnExport}`
+          ) as HTMLElement | null;
+          if (watermark) watermark.style.display = 'block';
+          if (heroPortraits) heroPortraits.style.display = 'flex';
+        }
+      });
 
       if (fileHandle) {
         const pngBlob = await new Promise<Blob | null>((resolve) =>
@@ -777,6 +786,8 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>((data, ref) 
     } catch (error) {
       console.error('Error exporting screenshot:', error);
       alert(t('END_GAME.EXPORT_IMAGE_ERROR', { error }));
+    } finally {
+      setIsExportingImage(false);
     }
   };
 

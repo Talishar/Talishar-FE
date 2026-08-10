@@ -16,7 +16,7 @@
     "eslint-plugin-prettier": "4.2.5",
     "formik": "2.4.9",
     "framer-motion": "10.18.0",
-    "html2canvas": "1.4.1",
+    "html2canvas-pro": "2.3.3",
     "i18next": "^25.10.10",
     "i18next-browser-languagedetector": "^8.2.1",
     "i18next-http-backend": "^3.0.6",
@@ -56,9 +56,9 @@
     "build-for-beta": "npm run build && rsync -r --stats ./dist/ talishar-beta:/opt/ReactClientRepo/build/",
     "generate-cards": "node scripts/card-generator.js && npx prettier --write src/constants/cardList.ts",
     "generate-keywords": "node scripts/keyword-map-generator.js && node scripts/cr-text-generator.js && npx prettier --write \"src/data/keywords/generated/*.ts\"",
-    "i18n:lint":"i18next-cli lint",
-    "i18n:status":"i18next-cli status",
-    "i18n:sync":"i18next-cli sync"
+    "i18n:lint": "i18next-cli lint",
+    "i18n:status": "i18next-cli status",
+    "i18n:sync": "i18next-cli sync"
   },
   "eslintConfig": {
     "extends": [
