@@ -68,7 +68,13 @@
 }
 
 .mastery_0 {
-  padding: 3px;
+  padding: 0;
+  background: none;
+  box-shadow: none;
+}
+
+.mastery_0::after {
+  display: none;
 }
 
 /* 5 games: simple bronze. */

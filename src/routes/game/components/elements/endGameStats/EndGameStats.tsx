@@ -184,6 +184,10 @@ export interface EndGameStatsRef {
   exportCSV: () => Promise<void>;
 }
 
+interface EndGameStatsProps extends EndGameData {
+  masteryProgress?: React.ReactNode;
+}
+
 const ConfettiSvg = () => (
   <svg
     className={styles.outcomeSvg}
@@ -370,7 +374,7 @@ function downloadViaBackend(
   document.body.removeChild(form);
 }
 
-const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
+const EndGameStats = forwardRef<EndGameStatsRef, EndGameStatsProps>((data, ref) => {
   const [statsTab, setStatsTab] = useState<'deck' | 'activated'>('deck');
   const [sortField, setSortField] = useState<
     'played' | 'blocked' | 'pitched' | 'discarded' | 'hits' | 'cardName' | null
@@ -1361,6 +1365,12 @@ const EndGameStats = forwardRef<EndGameStatsRef, EndGameData>((data, ref) => {
                 </div>
               )}
             </div>
+
+            {data.masteryProgress && (
+              <div className={styles.masteryProgress}>
+                {data.masteryProgress}
+              </div>
+            )}
 
             <hr className={styles.statsDivider} />
 

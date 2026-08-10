@@ -98,7 +98,26 @@ const EndGameScreen = () => {
       gameID: gameInfo.gameID?.toString(),
       bothPlayersData: bothPlayersData
     };
-    content = <EndGameStats ref={endGameStatsRef} {...endGameDataWithHeroes} />;
+    const masteryProgress = masteryData?.gameAward ? (
+      <MasteryProgressCard
+        heroId={masteryData.gameAward.heroId}
+        games={masteryData.gameAward.gamesAfter}
+        level={masteryData.gameAward.levelAfter}
+        nextThreshold={masteryData.gameAward.nextThreshold}
+        gamesToNext={masteryData.gameAward.gamesToNext}
+        unlocked={masteryData.gameAward.unlocked}
+        compact
+        showPortrait
+      />
+    ) : undefined;
+
+    content = (
+      <EndGameStats
+        ref={endGameStatsRef}
+        {...endGameDataWithHeroes}
+        masteryProgress={masteryProgress}
+      />
+    );
   }
 
   const switchPlayer = () => {
@@ -241,16 +260,6 @@ const EndGameScreen = () => {
                 {t('END_GAME.SUPPORT_CTA_ACTION')}
               </span>
             </a>
-          )}
-          {masteryData?.gameAward && (
-            <MasteryProgressCard
-              heroId={masteryData.gameAward.heroId}
-              games={masteryData.gameAward.gamesAfter}
-              level={masteryData.gameAward.levelAfter}
-              nextThreshold={masteryData.gameAward.nextThreshold}
-              gamesToNext={masteryData.gameAward.gamesToNext}
-              unlocked={masteryData.gameAward.unlocked}
-            />
           )}
           {content}
         </>

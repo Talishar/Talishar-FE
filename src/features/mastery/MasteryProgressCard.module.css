@@ -25,9 +25,11 @@
 }
 
 .compact .track {
-  height: 3px;
+  box-sizing: border-box;
+  height: 5px;
   margin: 0.35rem 0 0.25rem;
-  background: var(--theme-border, rgba(255, 255, 255, 0.12));
+  border: 1px solid var(--theme-border, rgba(255, 255, 255, 0.18));
+  background: transparent;
 }
 
 .compact .track i {
@@ -39,4 +41,31 @@
 .compact small {
   color: var(--theme-text-muted, #999);
   font-size: 0.72rem;
+}
+
+.withPortrait {
+  display: grid;
+  grid-template-columns: 3rem minmax(0, 1fr);
+  align-items: center;
+  gap: 0.65rem;
+  text-align: left;
+}
+
+.content {
+  min-width: 0;
+}
+
+.portraitFrame {
+  width: 3rem;
+  height: 3rem;
+  box-sizing: border-box;
+}
+
+.portrait {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  border-radius: 50%;
+  object-fit: cover;
 }

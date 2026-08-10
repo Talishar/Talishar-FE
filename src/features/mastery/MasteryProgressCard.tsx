@@ -1,5 +1,7 @@
 import React from 'react';
 import { HEROES_OF_RATHE } from 'routes/index/components/filter/constants';
+import { generateCroppedImageUrl } from 'utils/cropImages';
+import MasteryFrame from './MasteryFrame';
 import { masteryTitle, progressStart, ROMAN_LEVELS } from './mastery';
 import styles from './MasteryProgressCard.module.css';
 
@@ -11,25 +13,68 @@ interface Props {
   gamesToNext: number | null;
   unlocked?: boolean;
   compact?: boolean;
+  showPortrait?: boolean;
 }
 
-const MasteryProgressCard = ({ heroId, games, level, nextThreshold, gamesToNext, unlocked, compact }: Props) => {
-  const heroName = HEROES_OF_RATHE.find((hero) => hero.value === heroId)?.label ?? heroId;
+const MasteryProgressCard = ({
+  heroId,
+  games,
+  level,
+  nextThreshold,
+  gamesToNext,
+  unlocked,
+  compact,
+  showPortrait
+}: Props) => {
+  const heroName =
+    HEROES_OF_RATHE.find((hero) => hero.value === heroId)?.label ?? heroId;
+  const heroImage = generateCroppedImageUrl(heroId);
   const start = progressStart(level);
-  const percent = nextThreshold === null ? 100 : Math.min(100, ((games - start) / (nextThreshold - start)) * 100);
-  const remaining = gamesToNext === 1
-    ? `One more game to unlock ${level === 0 ? 'Hero Mastery' : `Mastery ${ROMAN_LEVELS[level + 1]}`}`
-    : gamesToNext !== null
-    ? `${gamesToNext} games until Mastery ${ROMAN_LEVELS[level + 1]}`
-    : 'Highest mastery reached';
+  const percent =
+    nextThreshold === null
+      ? 100
+      : Math.min(100, ((games - start) / (nextThreshold - start)) * 100);
+  const remaining =
+    gamesToNext === 1
+      ? `One more game to unlock ${
+          level === 0 ? 'Hero Mastery' : `Mastery ${ROMAN_LEVELS[level + 1]}`
+        }`
+      : gamesToNext !== null
+      ? `${gamesToNext} games until Mastery ${ROMAN_LEVELS[level + 1]}`
+      : 'Highest mastery reached';
 
   return (
-    <aside className={`${styles.card} ${unlocked ? styles.unlocked : ''} ${compact ? styles.compact : ''}`}>
-      {unlocked && <span className={styles.unlockLabel}>✦ HERO MASTERY UNLOCKED</span>}
-      <strong>{heroName} - {masteryTitle(level)}</strong>
-      {unlocked && <b>Mastery {ROMAN_LEVELS[level]} - {games} games played</b>}
-      <div className={styles.track}><i style={{ width: `${percent}%` }} /></div>
-      <small>{nextThreshold !== null ? `${games} / ${nextThreshold} - ${remaining}` : `${games.toLocaleString()} games played - ${remaining}`}</small>
+    <aside
+      className={`${styles.card} ${unlocked ? styles.unlocked : ''} ${
+        compact ? styles.compact : ''
+      } ${showPortrait ? styles.withPortrait : ''}`}
+    >
+      {showPortrait && (
+        <MasteryFrame level={level} className={styles.portraitFrame}>
+          <img src={heroImage} alt={heroName} className={styles.portrait} />
+        </MasteryFrame>
+      )}
+      <div className={styles.content}>
+        {unlocked && (
+          <span className={styles.unlockLabel}>HERO MASTERY UNLOCKED</span>
+        )}
+        <strong>
+          {heroName} - {masteryTitle(level)}
+        </strong>
+        {unlocked && (
+          <b>
+            Mastery {ROMAN_LEVELS[level]} - {games} games played
+          </b>
+        )}
+        <div className={styles.track}>
+          <i style={{ width: `${percent}%` }} />
+        </div>
+        <small>
+          {nextThreshold !== null
+            ? `${games} / ${nextThreshold} - ${remaining}`
+            : `${games.toLocaleString()} games played - ${remaining}`}
+        </small>
+      </div>
     </aside>
   );
 };

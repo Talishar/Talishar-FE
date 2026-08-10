@@ -371,6 +371,7 @@
   font-style: normal;
   white-space: nowrap;
   flex-shrink: 0;
+  margin: 0;
 }
 
 /* Watermark - hidden by default, shown only in exports */
@@ -912,6 +913,14 @@
   margin: 0;
 }
 
+.statsDivider + .infoBox {
+  padding-top: 0;
+}
+
+.statsDivider + .infoBox .disclaimer {
+  margin-top: 0;
+}
+
 .togglePill {
   display: inline-flex;
   align-items: center;
@@ -1009,6 +1018,8 @@
 }
 
 .excludeLastTurnCheckbox {
+  flex: 0 0 auto;
+  margin: 0;
   cursor: pointer;
   width: 18px;
   height: 18px;
@@ -1046,6 +1057,18 @@
 
 .outcomeDefeat {
   color: rgba(255, 255, 255, 0.45);
+}
+
+.masteryProgress {
+  width: min(100%, 28rem);
+  margin: -0.35rem auto -0.2rem;
+  padding: 0 0.25rem;
+}
+
+.masteryProgress aside {
+  max-width: none;
+  margin: 0;
+  padding: 0;
 }
 
 .outcomeSvg {
