@@ -192,7 +192,13 @@ export const apiSlice = createApi({
   endpoints: (builder) => ({
     getHeroMastery: builder.query<
       HeroMasteryResponse,
-      string | { gameKey?: string; gameName?: number } | void
+      | string
+      | {
+          gameKey?: string;
+          gameName?: number;
+          scope?: 'account' | 'game' | 'award';
+        }
+      | void
     >({
       query: (request) => ({
         url: URL_END_POINT.GET_HERO_MASTERY,

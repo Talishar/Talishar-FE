@@ -239,7 +239,7 @@ const HeroVsHeroIntro = () => {
     (state: RootState) => state.game.gameInfo.gameID
   );
   const { data: masteryData } = useGetHeroMasteryQuery(
-    { gameName: gameID },
+    { gameName: gameID, scope: 'game' },
     { skip: !isLoggedIn }
   );
   const gameGUID = useAppSelector(

@@ -187,7 +187,7 @@ const CommunityContent: React.FC<CommunityContentProps> = ({
     const src =
       video.type === 'twitch'
         ? `https://player.twitch.tv/?video=${video.videoId}&parent=${window.location.hostname}`
-        : `https://www.youtube.com/embed/${video.videoId}?rel=0`;
+        : `https://www.youtube-nocookie.com/embed/${video.videoId}?rel=0`;
     return (
       <iframe
         className={styles.videoFrame}

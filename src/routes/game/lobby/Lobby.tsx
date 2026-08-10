@@ -158,7 +158,7 @@ const Lobby = () => {
   const gameInfo = useAppSelector(getGameInfo, shallowEqual);
   const { playerID, gameID, authKey } = gameInfo;
   const { data: masteryData } = useGetHeroMasteryQuery(
-    { gameName: gameID },
+    { gameName: gameID, scope: 'game' },
     { skip: !isLoggedIn }
   );
   const [acceptedDisclaimer, setAcceptedDisclaimer] = useState<boolean>(
