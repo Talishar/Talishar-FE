@@ -14,12 +14,12 @@ import {
 } from 'framer-motion';
 import Button from '../../../../features/Button';
 import { submitButton } from '../../../../features/game/GameSlice';
-import { useMediaQuery } from '../../../../hooks/useMediaQuery';
 import { parseHtmlToReactElements } from 'utils/ParseEscapedString';
 import { wrapKeywordsInNodes } from '../elements/keywordPopover';
 import { MdDragHandle } from 'react-icons/md';
 import useShowModal from '../../../../hooks/useShowModals';
 import useOpponentPresencePrompt from '../../../../hooks/useOpponentPresencePrompt';
+import usePlayerPromptOwner from '../elements/playerPrompt/usePlayerPromptOwner';
 
 const STORAGE_KEY = 'combatChainPosition';
 const MAX_Y_OFFSET = 30;
@@ -49,7 +49,7 @@ export default function CombatChain() {
   const rafRef = React.useRef(0);
   const [isDragging, setIsDragging] = React.useState(false);
   const containerRef = React.useRef<HTMLDivElement>(null);
-  const isPortrait = useMediaQuery('(orientation: portrait)');
+  const promptOwner = usePlayerPromptOwner();
 
   const setOffsetFromClientY = (clientY: number) => {
     const delta = clientY - dragStartYRef.current;
@@ -157,7 +157,7 @@ export default function CombatChain() {
               aria-hidden="true"
             />
           </button>
-          {!isPortrait && <PlayerPrompt />}
+          {promptOwner === 'combatChain' && <CombatChainPlayerPrompt />}
           <div />
           <div />
         </motion.div>
@@ -166,7 +166,11 @@ export default function CombatChain() {
   );
 }
 
-const PlayerPrompt = () => {
+export const CombatChainPlayerPrompt = ({
+  standalone = false
+}: {
+  standalone?: boolean;
+}) => {
   const playerPrompt = useAppSelector(
     (state: RootState) => state.game.playerPrompt
   );
@@ -195,7 +199,9 @@ const PlayerPrompt = () => {
   return (
     <AnimatePresence>
       <motion.div
-        className={styles.playerPrompt}
+        className={`${styles.playerPrompt} ${
+          standalone ? styles.standalonePlayerPrompt : ''
+        }`}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}

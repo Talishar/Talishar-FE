@@ -201,6 +201,35 @@
   z-index: -5;
 }
 
+.standalonePlayerPrompt {
+  position: fixed;
+  /* The board's AP tracker sits just below the viewport midpoint. */
+  top: calc(50% + 0.5dvh);
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-width: 1px;
+  border-radius: 0.5em;
+  z-index: 20;
+  pointer-events: auto;
+  text-align: center;
+}
+
+.standalonePlayerPrompt .content {
+  text-align: center;
+}
+
+.standalonePlayerPrompt .buttonDiv {
+  background-color: rgba(255, 255, 255, 0.12);
+}
+
+@media (min-width: 1201px) {
+  .standalonePlayerPrompt {
+    /* Center between the desktop left and right columns: the hero/hand axis. */
+    left: calc(50% + min(5vh, 3vw) - min(10vh, 6vw) - 0.2em);
+    left: calc(50% + min(5dvh, 3dvw) - min(10dvh, 6dvw) - 0.2em);
+  }
+}
+
 .buttonDiv {
   background-color: rgba(0, 0, 0, 0.3);
   color: rgba(255, 255, 255, 0.8);

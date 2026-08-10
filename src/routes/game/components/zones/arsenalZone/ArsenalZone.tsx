@@ -1,20 +1,10 @@
 import React from 'react';
-import { useAppDispatch, useAppSelector } from 'app/Hooks';
+import { useAppSelector } from 'app/Hooks';
 import { RootState } from 'app/Store';
 import Displayrow from 'interface/Displayrow';
 import CardDisplay from '../../elements/cardDisplay/CardDisplay';
 import { Card } from 'features/Card';
 import styles from './ArsenalZone.module.css';
-import {
-  getGameInfo,
-  submitButton
-} from '../../../../../features/game/GameSlice';
-import Button from '../../../../../features/Button';
-import { AnimatePresence, motion } from 'framer-motion';
-import useWindowDimensions from '../../../../../hooks/useWindowDimensions';
-import { parseHtmlToReactElements } from 'utils/ParseEscapedString';
-import { wrapKeywordsInNodes } from '../../elements/keywordPopover';
-import useOpponentPresencePrompt from 'hooks/useOpponentPresencePrompt';
 import { useTranslation } from 'react-i18next';
 
 export default function ArsenalZone(prop: Displayrow) {
@@ -59,9 +49,6 @@ export default function ArsenalZone(prop: Displayrow) {
   const destroyCard =
     currentPlayerID === 1 ? arsenalDestroyP1Card : arsenalDestroyP2Card;
 
-  const [width, height] = useWindowDimensions();
-  const isPortrait = height > width;
-
   if (
     arsenalCards === undefined ||
     arsenalCards.length === 0 ||
@@ -91,7 +78,6 @@ export default function ArsenalZone(prop: Displayrow) {
             </div>
           )}
         </div>
-        {!isPortrait && <ArsenalPrompt />}
       </div>
     );
   }
@@ -144,72 +130,6 @@ export default function ArsenalZone(prop: Displayrow) {
           </div>
         )}
       </div>
-      <ArsenalPrompt />
     </div>
   );
 }
-
-const ArsenalPrompt = React.memo(() => {
-  const playerPrompt = useAppSelector(
-    (state: RootState) => state.game.playerPrompt
-  );
-  const helpText = useOpponentPresencePrompt(playerPrompt?.helpText);
-  const turnPhase = useAppSelector(
-    (state: RootState) => state.game.turnPhase?.turnPhase
-  );
-  const gameInfo = useAppSelector(getGameInfo);
-
-  const oldCombatChain =
-    useAppSelector((state: RootState) => state.game.oldCombatChain) ?? [];
-  const activeCombatChain = useAppSelector(
-    (state: RootState) => state.game.activeChainLink
-  );
-  const showCombatChain =
-    oldCombatChain?.length > 0 ||
-    (activeCombatChain?.attackingCard &&
-      activeCombatChain?.attackingCard?.cardNumber !== 'blank');
-
-  const dispatch = useAppDispatch();
-
-  const clickButton = (button: Button) => {
-    dispatch(submitButton({ button: button }));
-  };
-
-  const showPrompt =
-    (gameInfo.playerID !== 3 && turnPhase === 'ARS') ||
-    turnPhase === 'CHOOSEHAND' ||
-    turnPhase === 'MAYCHOOSEHAND' ||
-    turnPhase === 'MAYCHOOSEHANDHEAVE';
-
-  const buttons = playerPrompt?.buttons?.map((button: Button, ix: number) => {
-    return (
-      <div
-        className={styles.buttonDiv}
-        onClick={() => {
-          clickButton(button);
-        }}
-        key={ix.toString()}
-      >
-        {button.caption}
-      </div>
-    );
-  });
-
-  return (
-    <AnimatePresence>
-      {showPrompt && !showCombatChain && (
-        <motion.div
-          className={styles.playerPrompt}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-        >
-          <div className={styles.content}>
-            <div>{wrapKeywordsInNodes(parseHtmlToReactElements(helpText))}</div>
-          </div>
-          {buttons}
-        </motion.div>
-      )}
-    </AnimatePresence>
-  );
-});

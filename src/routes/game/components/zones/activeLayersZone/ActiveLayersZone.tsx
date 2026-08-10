@@ -32,6 +32,7 @@ import Button from '../../../../../features/Button';
 import { Card } from 'features/Card';
 import { useTranslation } from 'react-i18next';
 import { groupConsecutiveCards } from './groupConsecutiveCards';
+import usePlayerPromptOwner from '../../elements/playerPrompt/usePlayerPromptOwner';
 
 const GROUPING_THRESHOLD = 1;
 const STORAGE_KEY_Y = 'activeLayersPositionY';
@@ -46,6 +47,7 @@ const MOBILE_BREAKPOINT = 768;
 
 export default function ActiveLayersZone() {
   const showModal = useShowModal();
+  const promptOwner = usePlayerPromptOwner();
   const { t } = useTranslation();
   const prefersReducedMotion = useReducedMotion();
   const activeLayer = useAppSelector(
@@ -301,12 +303,14 @@ export default function ActiveLayersZone() {
               })}
               <ReorderLayers cards={reorderableCards ?? []} />
             </div>
-            <div className={styles.activeLayersCallToAction}>
-              <div>
-                {wrapKeywordsInNodes(parseHtmlToReactElements(helpText))}
+            {promptOwner === 'activeLayers' && (
+              <div className={styles.activeLayersCallToAction}>
+                <div>
+                  {wrapKeywordsInNodes(parseHtmlToReactElements(helpText))}
+                </div>
+                {buttons}
               </div>
-              {buttons}
-            </div>
+            )}
           </div>
           <div
             className={`${styles.grabbyHandle} ${

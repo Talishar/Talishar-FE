@@ -7,10 +7,12 @@ import { parseHtmlToReactElements } from 'utils/ParseEscapedString';
 import styles from './PlayerPrompt.module.css';
 import { wrapKeywordsInNodes } from '../keywordPopover';
 import useOpponentPresencePrompt from 'hooks/useOpponentPresencePrompt';
+import usePlayerPromptOwner from './usePlayerPromptOwner';
 
 const DEBOUNCE_MS = 80;
 
 const PlayerPrompt = React.memo(() => {
+  const promptOwner = usePlayerPromptOwner();
   const playerPrompt = useAppSelector(
     (state: RootState) => state.game.playerPrompt
   );
@@ -50,14 +52,14 @@ const PlayerPrompt = React.memo(() => {
     [displayedPrompt?.buttons, dispatch]
   );
 
-  return (
+  return promptOwner === 'board' ? (
     <div className={styles.playerPrompt}>
       <div className={styles.content} key={helpText}>
         <div>{helpTextElements}</div>
       </div>
       {buttons}
     </div>
-  );
+  ) : null;
 });
 
 PlayerPrompt.displayName = 'PlayerPrompt';

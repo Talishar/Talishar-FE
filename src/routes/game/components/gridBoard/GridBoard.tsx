@@ -30,7 +30,7 @@ import { useCookies } from 'react-cookie';
 import ExperimentalTurnWidget from '../elements/experimentalTurnWidget';
 import TurnWidget from '../elements/turnWidget/TurnWidget';
 import ManualModePanel from '../leftColumn/ManualModePanel/ManualModePanel';
-import useShowModal from 'hooks/useShowModals';
+import usePlayerPromptOwner from '../elements/playerPrompt/usePlayerPromptOwner';
 
 const GridBoard = () => {
   const [cookies] = useCookies(['experimental']);
@@ -43,12 +43,7 @@ const GridBoard = () => {
   const spectatorCameraView = useAppSelector(
     (state: RootState) => state.game.spectatorCameraView
   );
-  const oldCombatChain =
-    useAppSelector((state: RootState) => state.game.oldCombatChain) ?? [];
-  const activeCombatChain = useAppSelector(
-    (state: RootState) => state.game.activeChainLink
-  );
-  const showModals = useShowModal();
+  const promptOwner = usePlayerPromptOwner();
   const isMirroredOpponent = useAppSelector(
     (state: RootState) =>
       getSettingsEntity(state)?.[optConst.MIRRORED_BOARD_LAYOUT]?.value === '1'
@@ -62,12 +57,6 @@ const GridBoard = () => {
   // For spectators and replay viewers, check if they want to view from player 2's perspective
   const isSpectatorViewingPlayer2 =
     (playerID === 3 || isReplay) && spectatorCameraView === 2;
-  const showCombatChain =
-    showModals &&
-    (oldCombatChain.length > 0 ||
-      (activeCombatChain?.attackingCard &&
-        activeCombatChain.attackingCard.cardNumber !== 'blank'));
-
   const gridBoardClass = useMemo(
     () =>
       classNames({
@@ -189,11 +178,9 @@ const GridBoard = () => {
         <AmbientParticles />
         <div className={styles.combatChain}>
           <CombatChain />
+          {promptOwner === 'board' && <CombatChainPlayerPrompt standalone />}
         </div>
-          {!showCombatChain && showModals && (
-            <CombatChainPlayerPrompt standalone />
-          )}
-        </div>
+      </div>
     </>
   );
 };
