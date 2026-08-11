@@ -1451,6 +1451,12 @@
     "USER_UNBLOCKED": "{{username}} a été débloqué",
     "USERNAME_LABEL": "Nom d'utilisateur",
     "VISIT_COMMUNITY": "Visitez la communauté →",
+    "WEBHOOK_DESCRIPTION": "Recevez vos résultats de match à une URL personnalisée après chaque partie. L’adresse doit être publiquement accessible en http:// ou https://. Laissez vide pour désactiver.",
+    "WEBHOOK_PLACEHOLDER": "https://votre-webhook.example.com/resultats",
+    "WEBHOOK_SAVE": "Enregistrer",
+    "WEBHOOK_SAVING": "Enregistrement...",
+    "WEBHOOK_SUPPORTER_PERK": "Les webhooks de résultat de match sont un avantage réservé aux soutiens. <1>Devenez soutien sur Metafy</1> pour envoyer vos résultats où vous le souhaitez.",
+    "WEBHOOK_TITLE": "Webhook de résultat de match",
     "YOUR_COMMUNITIES": "Vos communautés :"
   },
   "RUST_COUNTER_PANEL": {

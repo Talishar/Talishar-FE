@@ -232,16 +232,12 @@ export const ProfilePage = () => {
                 {/* Match Result Webhook */}
                 {!profileIsLoading && (
                   <div className={styles.webhookSection}>
-                    <h3>Match Result Webhook</h3>
-                    <p>
-                      Receive your match results at a custom URL after each
-                      game. Must be a publicly reachable http:// or https://
-                      address. Leave empty to turn off.
-                    </p>
+                    <h3>{t('PROFILE.WEBHOOK_TITLE')}</h3>
+                    <p>{t('PROFILE.WEBHOOK_DESCRIPTION')}</p>
                     <div className={styles.webhookInputRow}>
                       <input
                         type="url"
-                        placeholder="https://your-webhook.example.com/results"
+                        placeholder={t('PROFILE.WEBHOOK_PLACEHOLDER')}
                         value={webhookInput}
                         onChange={(e) => setWebhookInput(e.target.value)}
                         disabled={isSavingWebhook || !canUseWebhook}
@@ -252,20 +248,25 @@ export const ProfilePage = () => {
                         onClick={handleSaveWebhook}
                         disabled={isSavingWebhook || !canUseWebhook}
                       >
-                        {isSavingWebhook ? 'Saving...' : 'Save'}
+                        {isSavingWebhook
+                          ? t('PROFILE.WEBHOOK_SAVING')
+                          : t('PROFILE.WEBHOOK_SAVE')}
                       </button>
                     </div>
                     {!canUseWebhook && (
                       <p className={styles.webhookLockedNote}>
-                        This is a supporter perk.{' '}
-                        <a
-                          href={TALISHAR_METAFY_URL}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          Become a supporter
-                        </a>{' '}
-                        to send your match results anywhere you like.
+                        <Trans
+                          i18nKey="PROFILE.WEBHOOK_SUPPORTER_PERK"
+                          components={{
+                            1: (
+                              <a
+                                href={TALISHAR_METAFY_URL}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              />
+                            )
+                          }}
+                        />
                       </p>
                     )}
                   </div>

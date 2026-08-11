@@ -1442,6 +1442,12 @@
     "USER_UNBLOCKED": "",
     "USERNAME_LABEL": "用户名",
     "VISIT_COMMUNITY": "",
+    "WEBHOOK_DESCRIPTION": "每场对战结束后，将结果发送到你指定的网址。必须是可公开访问的 http:// 或 https:// 地址。留空即可关闭。",
+    "WEBHOOK_PLACEHOLDER": "https://your-webhook.example.com/results",
+    "WEBHOOK_SAVE": "保存",
+    "WEBHOOK_SAVING": "保存中...",
+    "WEBHOOK_SUPPORTER_PERK": "对战结果 Webhook 是支持者专属功能。<1>在 Metafy 成为支持者</1>即可将结果发送到任何你想要的地方。",
+    "WEBHOOK_TITLE": "对战结果 Webhook",
     "YOUR_COMMUNITIES": ""
   },
   "RUST_COUNTER_PANEL": {

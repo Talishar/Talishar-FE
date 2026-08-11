@@ -1442,6 +1442,12 @@
     "USER_UNBLOCKED": "",
     "USERNAME_LABEL": "",
     "VISIT_COMMUNITY": "",
+    "WEBHOOK_DESCRIPTION": "対戦終了後、指定した URL に対戦結果を送信します。公開されている http:// または https:// のアドレスを指定してください。空欄にすると無効になります。",
+    "WEBHOOK_PLACEHOLDER": "https://your-webhook.example.com/results",
+    "WEBHOOK_SAVE": "保存",
+    "WEBHOOK_SAVING": "保存中...",
+    "WEBHOOK_SUPPORTER_PERK": "対戦結果ウェブフックはサポーター特典です。<1>Metafy でサポーターになる</1>と、結果を好きな場所へ送信できます。",
+    "WEBHOOK_TITLE": "対戦結果ウェブフック",
     "YOUR_COMMUNITIES": ""
   },
   "RUST_COUNTER_PANEL": {

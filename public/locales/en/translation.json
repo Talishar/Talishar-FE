@@ -1481,6 +1481,12 @@
     "USER_UNBLOCKED": "{{username}} has been unblocked",
     "USERNAME_LABEL": "Username",
     "VISIT_COMMUNITY": "Visit Community →",
+    "WEBHOOK_DESCRIPTION": "Receive your match results at a custom URL after each game. Must be a publicly reachable http:// or https:// address. Leave empty to turn off.",
+    "WEBHOOK_PLACEHOLDER": "https://your-webhook.example.com/results",
+    "WEBHOOK_SAVE": "Save",
+    "WEBHOOK_SAVING": "Saving...",
+    "WEBHOOK_SUPPORTER_PERK": "Match result webhooks are a supporter perk. <1>Become a Supporter on Metafy</1> to send your results anywhere you like.",
+    "WEBHOOK_TITLE": "Match Result Webhook",
     "YOUR_COMMUNITIES": "Your Communities:"
   },
   "RUST_COUNTER_PANEL": {
