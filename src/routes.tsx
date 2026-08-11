@@ -6,40 +6,67 @@ import {
   Outlet,
   Route
 } from 'react-router-dom';
-import Index from './routes/index/Index';
+import React, { lazy, Suspense } from 'react';
 import { ErrorPage } from 'errorPage';
-import Play from 'routes/game/play/Play';
 import { useKnownSearchParams } from 'hooks/useKnownSearchParams';
 import { useTranslation } from 'react-i18next';
-import {
-  ForgottenPasswordForm,
-  LoginForm,
-  LoginPage,
-  ResetPasswordForm
-} from 'routes/user/login';
-import { DecksPage, ProfilePage } from 'routes/user';
-import SettingsPage from 'routes/user/settings';
-import JoinGame from 'routes/game/join/Join';
-import Lobby from 'routes/game/lobby/Lobby';
-import { SignUpForm } from 'routes/user/login/components/SignUpForm';
 import useAuth from 'hooks/useAuth';
 import Header from 'components/header/Header';
-import Privacy from 'routes/privacy';
-import CreateGame from 'routes/game/create/CreateGame';
-import LoadReplay from 'routes/game/load/LoadReplay';
-import SharedReplay from 'routes/game/shared/SharedReplay';
-import LinkPatreon from 'routes/user/profile/linkpatreon';
-import LinkMetafy from 'routes/user/profile/linkmetafy/linkMetafy';
-import ModPage from 'routes/mod/ModPage';
-import PrivacyPolicy from 'routes/legal/PrivacyPolicy';
-import TermsOfService from 'routes/legal/TermsOfService';
-import AuthVerify from 'routes/auth/verify';
-import MetafySignup from 'routes/auth/MetafySignup';
-import AdsTest from 'routes/ads/AdsTest';
-import Learn from 'routes/learn/Learn';
-import About from 'routes/about/About';
-import Premium from 'routes/premium/Premium';
-import Mastery from 'routes/mastery/Mastery';
+
+const Index = lazy(() => import('./routes/index/Index'));
+const Play = lazy(() => import('routes/game/play/Play'));
+const JoinGame = lazy(() => import('routes/game/join/Join'));
+const Lobby = lazy(() => import('routes/game/lobby/Lobby'));
+const CreateGame = lazy(() => import('routes/game/create/CreateGame'));
+const LoadReplay = lazy(() => import('routes/game/load/LoadReplay'));
+const SharedReplay = lazy(() => import('routes/game/shared/SharedReplay'));
+const SettingsPage = lazy(() => import('routes/user/settings'));
+const Privacy = lazy(() => import('routes/privacy'));
+const LinkPatreon = lazy(() => import('routes/user/profile/linkpatreon'));
+const LinkMetafy = lazy(
+  () => import('routes/user/profile/linkmetafy/linkMetafy')
+);
+const ModPage = lazy(() => import('routes/mod/ModPage'));
+const PrivacyPolicy = lazy(() => import('routes/legal/PrivacyPolicy'));
+const TermsOfService = lazy(() => import('routes/legal/TermsOfService'));
+const AuthVerify = lazy(() => import('routes/auth/verify'));
+const MetafySignup = lazy(() => import('routes/auth/MetafySignup'));
+const AdsTest = lazy(() => import('routes/ads/AdsTest'));
+const Learn = lazy(() => import('routes/learn/Learn'));
+const About = lazy(() => import('routes/about/About'));
+const Premium = lazy(() => import('routes/premium/Premium'));
+const Mastery = lazy(() => import('routes/mastery/Mastery'));
+const LoginPage = lazy(() =>
+  import('routes/user/login').then((module) => ({ default: module.LoginPage }))
+);
+const LoginForm = lazy(() =>
+  import('routes/user/login').then((module) => ({ default: module.LoginForm }))
+);
+const ForgottenPasswordForm = lazy(() =>
+  import('routes/user/login').then((module) => ({
+    default: module.ForgottenPasswordForm
+  }))
+);
+const ResetPasswordForm = lazy(() =>
+  import('routes/user/login').then((module) => ({
+    default: module.ResetPasswordForm
+  }))
+);
+const SignUpForm = lazy(() =>
+  import('routes/user/login/components/SignUpForm').then((module) => ({
+    default: module.SignUpForm
+  }))
+);
+const DecksPage = lazy(() =>
+  import('routes/user').then((module) => ({ default: module.DecksPage }))
+);
+const ProfilePage = lazy(() =>
+  import('routes/user').then((module) => ({ default: module.ProfilePage }))
+);
+
+const RouteFallback = () => (
+  <div style={{ textAlign: 'center', padding: '2rem' }}>Loading…</div>
+);
 
 const IndexGuard = ({ children }: { children: JSX.Element }) => {
   const [searchParams] = useKnownSearchParams();
@@ -135,16 +162,20 @@ const ModGuard = ({ children }: { children: JSX.Element }) => {
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route errorElement={<ErrorPage />}>
+    <Route
+      errorElement={<ErrorPage />}
+      element={
+        <Suspense fallback={<RouteFallback />}>
+          <Outlet />
+        </Suspense>
+      }
+    >
       <Route element={<Outlet />}>
         <Route
           path="game/play/:gameID"
           element={<Play isRoguelike={false} />}
         />
-        <Route
-          path="roguelike/play/"
-          element={<Play isRoguelike={true} />}
-        />
+        <Route path="roguelike/play/" element={<Play isRoguelike={true} />} />
         <Route path="game/play" element={<Play isRoguelike={false} />} />
         <Route path="game/lobby/:gameID" element={<Lobby />} />
         <Route

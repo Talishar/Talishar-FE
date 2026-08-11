@@ -1,4 +1,5 @@
 import { Board } from '../components/board/Board';
+import '../GameViewport.css';
 import './Play.css';
 import LeftColumn from '../components/leftColumn/LeftColumn';
 import RightColumn from '../components/rightColumn/RightColumn';

@@ -29,6 +29,7 @@ import {
 import { parseBackendJson } from 'utils/parseBackendResponse';
 import isEqual from 'react-fast-compare';
 import { CardStack } from '../../routes/game/components/zones/permanentsZone/PermanentsZone';
+import { reportPerformanceMetric } from 'utils/performanceMetrics';
 
 const CHAT_RE = /<span[^>]*>(.*?):\s<\/span>/;
 
@@ -45,6 +46,7 @@ const sendProcessInput = async (
   queryParams: URLSearchParams,
   extraQuery = ''
 ): Promise<void> => {
+  const startedAt = performance.now();
   const baseURL = gameInfo.isRoguelike ? ROGUELIKE_URL : BACKEND_URL;
   const queryURL = `${baseURL}${URL_END_POINT.PROCESS_INPUT}`;
 
@@ -66,6 +68,10 @@ const sendProcessInput = async (
   }
 
   const data = await response.text();
+  reportPerformanceMetric({
+    name: 'game-action-response',
+    value: performance.now() - startedAt
+  });
   if (!response.ok || data.startsWith('Invalid')) {
     console.error(
       `[${label}] Backend error:`,
@@ -348,7 +354,10 @@ const createPopupReducers = (key: PopupStateKey) => ({
     ) => {
       const popups = (state[key] ??= { playerOne: [], playerTwo: [] });
       const side = action.payload.isPlayer ? 'playerOne' : 'playerTwo';
-      popups[side].push({ id: action.payload.id, amount: action.payload.amount });
+      popups[side].push({
+        id: action.payload.id,
+        amount: action.payload.amount
+      });
     },
     prepare: (payload: { isPlayer: boolean; amount: number }) => ({
       payload: { ...payload, id: `${Date.now()}-${Math.random()}` }

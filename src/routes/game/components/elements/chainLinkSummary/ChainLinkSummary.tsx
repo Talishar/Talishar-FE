@@ -13,12 +13,13 @@ import GameStaticInfo from 'features/GameStaticInfo';
 import { Effect } from '../effects/Effects';
 import { Card } from 'features/Card';
 import CombatChainLink from 'features/CombatChainLink';
-import EndGameScreen from '../endGameScreen/EndGameScreen';
 import useShortcut from 'hooks/useShortcut';
 import { DEFAULT_SHORTCUTS } from 'appConstants';
 import { shallowEqual } from 'react-redux';
-import React, { CSSProperties, useEffect } from 'react';
+import React, { CSSProperties, lazy, Suspense, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+
+const EndGameScreen = lazy(() => import('../endGameScreen/EndGameScreen'));
 
 export const ChainLinkSummaryContainer = () => {
   const { t } = useTranslation();
@@ -109,7 +110,9 @@ export const ChainLinkSummaryContainer = () => {
     <>
       {hasGameEnded && (
         <div style={chainLinkSummary?.show ? { display: 'none' } : undefined}>
-          <EndGameScreen />
+          <Suspense fallback={null}>
+            <EndGameScreen />
+          </Suspense>
         </div>
       )}
       {chainLinkContent}

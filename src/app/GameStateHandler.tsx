@@ -21,6 +21,7 @@ import {
 import ParseGameState from './ParseGameState';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
+import { reportPerformanceMetric } from 'utils/performanceMetrics';
 
 const MAX_RETRIES = 5;
 
@@ -159,12 +160,14 @@ const GameStateHandler = () => {
         lastEventTimeRef.current = Date.now();
 
         source.onmessage = (event) => {
+          const updateStartedAt = performance.now();
           hasConnected = true;
           retryCountRef.current = 0;
           lastEventTimeRef.current = Date.now();
 
           try {
             const data = JSON.parse(event.data);
+            const jsonParsedAt = performance.now();
 
             if (data.error) {
               const errorMsg = data.error.toLowerCase();
@@ -210,6 +213,7 @@ const GameStateHandler = () => {
             }
 
             const parsedState = ParseGameState(data);
+            const stateParsedAt = performance.now();
 
             const phase = parsedState.turnPhase?.turnPhase;
             if (phase === 'OVER') {
@@ -219,6 +223,25 @@ const GameStateHandler = () => {
             }
 
             dispatch(receiveGameState(parsedState));
+            const dispatchedAt = performance.now();
+            reportPerformanceMetric({
+              name: 'game-state-json-parse',
+              value: jsonParsedAt - updateStartedAt
+            });
+            reportPerformanceMetric({
+              name: 'game-state-transform',
+              value: stateParsedAt - jsonParsedAt
+            });
+            reportPerformanceMetric({
+              name: 'game-state-redux-commit',
+              value: dispatchedAt - stateParsedAt
+            });
+            requestAnimationFrame(() => {
+              reportPerformanceMetric({
+                name: 'game-state-to-paint',
+                value: performance.now() - updateStartedAt
+              });
+            });
           } catch (parseError) {
             console.error('Failed to parse SSE data:', parseError);
           }

@@ -9,6 +9,7 @@ import { usePageTitle } from 'hooks/usePageTitle';
 import Deck from './components/deck/Deck';
 import LobbyChat from './components/lobbyChat/LobbyChat';
 import testData from './mockdata.json';
+import '../GameViewport.css';
 import styles from './Lobby.module.css';
 import Equipment from './components/equipment/Equipment';
 import classNames from 'classnames';

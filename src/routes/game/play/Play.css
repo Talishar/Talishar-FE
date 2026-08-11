@@ -2,30 +2,6 @@
   --aspect: 1920px;
 } */
 
-html,
-body {
-  padding: 0;
-  margin: 0;
-  width: 100vw;
-  width: 100dvw;
-  height: 100vh;
-  height: 100dvh;
-  --card-size: calc(min(13vh, 7.8vw) * var(--card-scale));
-  --card-size: calc(min(13dvh, 7.8dvw) * var(--card-scale));
-}
-
-@media (orientation: portrait) {
-  html,
-  body {
-    --card-size: calc(12vw * var(--card-scale));
-    --card-size: calc(12dvw * var(--card-scale));
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-  }
-}
-
 .centering {
   position: fixed;
   top: 0;
@@ -90,12 +66,6 @@ body {
    The min(vh, vw) card-size and font-size over-shrink on these
    because vw ≈ vh, so the vw cap dominates. Use pure vh instead. */
 @media (orientation: landscape) and (max-aspect-ratio: 3/2) {
-  html,
-  body {
-    --card-size: calc(13vh * var(--card-scale));
-    --card-size: calc(13dvh * var(--card-scale));
-  }
-
   .app {
     font-size: calc(1.5vh - 2px);
     font-size: calc(1.5dvh - 2px);

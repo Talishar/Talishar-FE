@@ -1,4 +1,4 @@
-import { StrictMode } from 'react';
+import React, { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { store } from './app/Store';
@@ -8,6 +8,10 @@ import './index.scss';
 import { router } from 'routes';
 import { RouterProvider } from 'react-router-dom';
 import { ThemeProvider } from './themes/ThemeContext';
+import {
+  observeLongTasks,
+  reportPerformanceMetric
+} from 'utils/performanceMetrics';
 
 import './i18n';
 
@@ -31,4 +35,13 @@ root.render(
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+reportWebVitals((metric) => {
+  reportPerformanceMetric({
+    name: metric.name,
+    value: metric.value,
+    rating: metric.rating,
+    id: metric.id
+  });
+});
+
+observeLongTasks();

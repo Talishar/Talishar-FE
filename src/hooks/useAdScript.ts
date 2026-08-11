@@ -384,11 +384,8 @@ export default function useAdScript(enabled = true) {
         subtree: true
       });
 
-      const intervalId = window.setInterval(purgeAdElements, 2000);
-
       return () => {
         observer.disconnect();
-        window.clearInterval(intervalId);
       };
     }
 
