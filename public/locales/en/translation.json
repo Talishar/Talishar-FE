@@ -505,7 +505,7 @@
     "AUTH_ERROR": "Authentication Error: {{message}}",
     "CONNECTION_LOST": "Connection to game server lost. Reconnecting…",
     "GAME_ERROR": "Game Error: {{message}}",
-    "LOADING": "Preparing the battlefield…",
+    "LOADING": "Preparing the arena…",
     "SERVER_ERROR": "Server Error: {{message}}"
   },
   "HAND": {
