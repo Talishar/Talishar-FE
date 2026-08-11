@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react';
+import { renderHook, waitFor } from '@testing-library/react';
 import { ADS_ENABLED } from 'config/ads';
 import useAdScript from './useAdScript';
 
@@ -21,6 +21,23 @@ describe('ad provider security kill switch', () => {
     const { unmount } = renderHook(() => useAdScript(true));
 
     expect(document.querySelector('script[src*="rev.iq"]')).toBeNull();
+    unmount();
+  });
+
+  it('removes a provider element that is identified after insertion', async () => {
+    const { unmount } = renderHook(() => useAdScript(false));
+    const lateProviderElement = document.createElement('div');
+    document.body.appendChild(lateProviderElement);
+
+    // Providers commonly insert a generic wrapper, then identify it as an ad
+    await new Promise((resolve) => window.setTimeout(resolve, 0));
+    expect(document.body.contains(lateProviderElement)).toBe(true);
+
+    lateProviderElement.id = 'reviq-late-player';
+
+    await waitFor(() => {
+      expect(document.body.contains(lateProviderElement)).toBe(false);
+    });
     unmount();
   });
 });

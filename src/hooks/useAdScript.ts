@@ -151,6 +151,27 @@ function purgeAdElements() {
   document.querySelectorAll(AD_SELECTORS).forEach((el) => el.remove());
 }
 
+function purgeAdElement(node: Element): boolean {
+  const isProviderScript =
+    node instanceof HTMLScriptElement && node.src.includes('rev.iq');
+
+  if (isProviderScript || node.matches?.(AD_SELECTORS)) {
+    node.remove();
+    return true;
+  }
+
+  return false;
+}
+
+function purgeAdElementOrDescendants(node: Element) {
+  if (purgeAdElement(node)) return;
+
+  node
+    .querySelectorAll?.('script[src*="rev.iq"]')
+    .forEach((el) => el.remove());
+  node.querySelectorAll?.(AD_SELECTORS)?.forEach((el) => el.remove());
+}
+
 export function wasAdProviderLoadedInDocument(): boolean {
   return Boolean(
     window.__talisharAdProviderLoaded ||
@@ -360,28 +381,23 @@ export default function useAdScript(enabled = true) {
 
       const observer = new MutationObserver((mutations) => {
         for (const mutation of mutations) {
+          if (mutation.type === 'attributes') {
+            purgeAdElement(mutation.target as Element);
+            continue;
+          }
+
           for (const node of mutation.addedNodes) {
             if (!(node instanceof HTMLElement)) continue;
-            if (node.matches?.(AD_SELECTORS)) {
-              node.remove();
-              continue;
-            }
-            if (
-              node.tagName === 'SCRIPT' &&
-              node instanceof HTMLScriptElement &&
-              node.src.includes('rev.iq')
-            ) {
-              node.remove();
-              continue;
-            }
-            node.querySelectorAll?.(AD_SELECTORS)?.forEach((el) => el.remove());
+            purgeAdElementOrDescendants(node);
           }
         }
       });
 
       observer.observe(document.documentElement, {
         childList: true,
-        subtree: true
+        subtree: true,
+        attributes: true,
+        attributeFilter: ['id', 'class', 'src', 'data-ad']
       });
 
       return () => {
