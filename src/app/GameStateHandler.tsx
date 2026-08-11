@@ -25,7 +25,13 @@ import { reportPerformanceMetric } from 'utils/performanceMetrics';
 
 const MAX_RETRIES = 5;
 
-const GameStateHandler = () => {
+interface GameStateHandlerProps {
+  onInitialStateReceived?: (gameID: number) => void;
+}
+
+const GameStateHandler = ({
+  onInitialStateReceived
+}: GameStateHandlerProps) => {
   const { t } = useTranslation();
   const { gameID } = useParams();
   const gameInfo = useAppSelector(getGameInfo);
@@ -48,6 +54,11 @@ const GameStateHandler = () => {
   const navigateTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [forceRetry, setForceRetry] = useState(0);
   const gameOverRef = useRef(false);
+  const onInitialStateReceivedRef = useRef(onInitialStateReceived);
+
+  useEffect(() => {
+    onInitialStateReceivedRef.current = onInitialStateReceived;
+  }, [onInitialStateReceived]);
 
   useEffect(() => {
     return () => {
@@ -223,6 +234,7 @@ const GameStateHandler = () => {
             }
 
             dispatch(receiveGameState(parsedState));
+            onInitialStateReceivedRef.current?.(currentGameID);
             const dispatchedAt = performance.now();
             reportPerformanceMetric({
               name: 'game-state-json-parse',

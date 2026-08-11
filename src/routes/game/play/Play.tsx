@@ -15,11 +15,12 @@ import CardListZone from '../components/zones/cardListZone/CardListZone';
 import ChainLinkSummaryContainer from '../components/elements/chainLinkSummary/ChainLinkSummary';
 import ActiveLayersZone from '../components/zones/activeLayersZone/ActiveLayersZone';
 import GameStateHandler from 'app/GameStateHandler';
+import LoadingScreen from 'components/LoadingScreen/LoadingScreen';
 import SpectatorLoginRequired from 'components/SpectatorLoginRequired';
 import HeroVsHeroIntro from '../components/elements/heroVsHeroIntro/HeroVsHeroIntro';
 import OpponentInactive from '../components/elements/opponentInactive/OpponentInactive';
 import { useCookies } from 'react-cookie';
-import React, { useEffect, useLayoutEffect, useRef } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from '../../../app/Hooks';
@@ -44,9 +45,7 @@ import { PanelProvider } from '../components/leftColumn/PanelContext';
 import { RootState } from 'app/Store';
 import { PROCESS_INPUT } from 'appConstants';
 import usePlayerPresenceReporter from 'hooks/usePlayerPresenceReporter';
-import useAdScript, {
-  wasAdProviderLoadedInDocument
-} from 'hooks/useAdScript';
+import useAdScript, { wasAdProviderLoadedInDocument } from 'hooks/useAdScript';
 
 const TOAST_STYLE: React.CSSProperties = {
   background: 'var(--theme-tertiary)',
@@ -96,6 +95,9 @@ function Play({ isRoguelike }: { isRoguelike: boolean }) {
     (state: any) => state.game.heroIntroShown
   );
   const gameInfo = useAppSelector(getGameInfo, shallowEqual);
+  const [loadedGameID, setLoadedGameID] = useState<number | null>(null);
+  const isGameStateLoading =
+    gameInfo.gameID <= 0 || loadedGameID !== gameInfo.gameID;
   const canPassPhase = useAppSelector(
     (state: RootState) => state.game.canPassPhase
   );
@@ -227,7 +229,14 @@ function Play({ isRoguelike }: { isRoguelike: boolean }) {
         <PlayerInputPopUp />
         <OpponentInactive />
         <CardPortal />
-        <GameStateHandler />
+        <GameStateHandler
+          onInitialStateReceived={(receivedGameID) =>
+            setLoadedGameID(receivedGameID)
+          }
+        />
+        {isGameStateLoading && (
+          <LoadingScreen message={t('GAME_STATE.LOADING')} />
+        )}
         <SpectatorLoginRequired />
         <EventsHandler />
         {gameInfo.isReplay && canPassPhase === true && (

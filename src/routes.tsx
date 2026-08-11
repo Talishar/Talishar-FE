@@ -12,6 +12,7 @@ import { useKnownSearchParams } from 'hooks/useKnownSearchParams';
 import { useTranslation } from 'react-i18next';
 import useAuth from 'hooks/useAuth';
 import Header from 'components/header/Header';
+import LoadingScreen from 'components/LoadingScreen/LoadingScreen';
 
 const Index = lazy(() => import('./routes/index/Index'));
 const Play = lazy(() => import('routes/game/play/Play'));
@@ -67,11 +68,7 @@ const ProfilePage = lazy(() =>
 const RouteFallback = () => {
   const { t } = useTranslation();
 
-  return (
-    <div style={{ textAlign: 'center', padding: '2rem' }}>
-      {t('BASE.LOADING')}
-    </div>
-  );
+  return <LoadingScreen message={t('BASE.LOADING')} />;
 };
 
 const IndexGuard = ({ children }: { children: JSX.Element }) => {
@@ -105,16 +102,10 @@ const LoggedInGuard = ({
   // Don't redirect while loading auth status on page refresh
   if (isLoading) {
     return (
-      <div style={{ textAlign: 'center', padding: '2rem' }}>
-        <p>{t('AUTH.LOADING')}</p>
-        {error && (
-          <p
-            style={{ fontSize: '0.9rem', color: '#ff6b6b', marginTop: '1rem' }}
-          >
-            {t('AUTH.LOADING_ERROR')}
-          </p>
-        )}
-      </div>
+      <LoadingScreen
+        message={t('AUTH.LOADING')}
+        detail={error ? t('AUTH.LOADING_ERROR') : undefined}
+      />
     );
   }
 
@@ -139,16 +130,10 @@ const ModGuard = ({ children }: { children: JSX.Element }) => {
   // Don't redirect while loading auth status on page refresh
   if (isLoading) {
     return (
-      <div style={{ textAlign: 'center', padding: '2rem' }}>
-        <p>{t('AUTH.LOADING')}</p>
-        {error && (
-          <p
-            style={{ fontSize: '0.9rem', color: '#ff6b6b', marginTop: '1rem' }}
-          >
-            {t('AUTH.LOADING_ERROR')}
-          </p>
-        )}
-      </div>
+      <LoadingScreen
+        message={t('AUTH.LOADING')}
+        detail={error ? t('AUTH.LOADING_ERROR') : undefined}
+      />
     );
   }
 

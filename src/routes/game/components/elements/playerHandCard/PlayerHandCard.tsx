@@ -321,7 +321,6 @@ export const PlayerHandCard = React.memo(
         <motion.div
           ref={cardElRef}
           data-is-dragging={isDragging}
-          title="Hold and use the mouse wheel or Q/E for fine rotation. Right-click rotates 90°; Shift+right-click reverses it."
           layout={enableLayoutAnimation && !isDragging ? 'position' : false}
           drag={!disableDrag}
           className={classNames(styles.handCard, {
