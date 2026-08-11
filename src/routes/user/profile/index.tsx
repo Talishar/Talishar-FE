@@ -57,10 +57,13 @@ export const ProfilePage = () => {
       } else {
         toast.error(resp.message, { position: 'top-center' });
       }
-    } catch {
-      toast.error('Failed to save webhook. Please try again.', {
-        position: 'top-center'
-      });
+    } catch (err: any) {
+      // The API answers 400 on a rejected URL and 401/500 otherwise, so the
+      // specific reason ("must use a hostname, not a bare IP address", ...)
+      // arrives on the error rather than in a 200 body.
+      const message =
+        err?.data?.message ?? 'Failed to save webhook. Please try again.';
+      toast.error(message, { position: 'top-center' });
     } finally {
       setIsSavingWebhook(false);
     }
@@ -229,7 +232,8 @@ export const ProfilePage = () => {
                     <h3>Match Result Webhook</h3>
                     <p>
                       Receive your match results at a custom URL after each
-                      game. Must be a public https:// address.
+                      game. Must be a publicly reachable http:// or https://
+                      address. Leave empty to turn off.
                     </p>
                     <div className={styles.webhookInputRow}>
                       <input
