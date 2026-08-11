@@ -134,6 +134,7 @@
   },
   "BASE": {
     "ERROR_ALERT": "",
+    "LOADING": "",
     "SEARCH": ""
   },
   "CARD_KEYWORD_STRIP": {

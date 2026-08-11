@@ -134,6 +134,7 @@
   },
   "BASE": {
     "ERROR_ALERT": "There has been an error!",
+    "LOADING": "Loading…",
     "SEARCH": "Search"
   },
   "CARD_KEYWORD_STRIP": {

@@ -134,6 +134,7 @@
   },
   "BASE": {
     "ERROR_ALERT": "Une erreur est survenue!",
+    "LOADING": "Chargement…",
     "SEARCH": "Rechercher"
   },
   "CARD_KEYWORD_STRIP": {

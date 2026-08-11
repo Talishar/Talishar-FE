@@ -134,6 +134,7 @@
   },
   "BASE": {
     "ERROR_ALERT": "发生了一个错误！",
+    "LOADING": "加载中…",
     "SEARCH": "搜索"
   },
   "CARD_KEYWORD_STRIP": {
