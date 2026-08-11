@@ -344,9 +344,15 @@
   },
   "ERROR_PAGE": {
     "HOME": "Home",
+    "MAC": "Mac",
     "MESSAGE": "Sorry, an error has occurred.",
+    "STALE_CACHE_INSTRUCTION": "Hard refresh (CTRL + SHIFT + R) the page to load the latest version:",
+    "STALE_CACHE_MESSAGE": "This error is usually just stale browser cache. Your game should be fine.",
+    "STALE_CACHE_MOBILE": "On mobile, close this tab and open Talishar again.",
+    "STALE_CACHE_TITLE": "A quick refresh should fix this",
     "TITLE": "Oops!",
-    "UNKNOWN_ERROR": "An unknown error occurred."
+    "UNKNOWN_ERROR": "An unknown error occurred.",
+    "WINDOWS_LINUX": "Windows / Linux"
   },
   "EVENTS": {
     "DISMISS": "Click to dismiss"

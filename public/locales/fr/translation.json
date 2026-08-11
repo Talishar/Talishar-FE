@@ -344,8 +344,14 @@
   },
   "ERROR_PAGE": {
     "HOME": "Maison",
+    "MAC": "Mac",
     "MESSAGE": "Désolé, une erreur s'est produite.",
+    "STALE_CACHE_INSTRUCTION": "Actualisez (CTRL + SHIFT + R) la page pour charger la dernière version:",
+    "STALE_CACHE_MESSAGE": "Cette erreur est généralement due à un cache de navigateur obsolète. Votre partie est intacte.",
+    "STALE_CACHE_MOBILE": "Sur mobile, fermez cet onglet, puis ouvrez Talishar à nouveau.",
+    "STALE_CACHE_TITLE": "Une actualisation rapide devrait résoudre le problème",
     "TITLE": "Oups !",
+    "WINDOWS_LINUX": "Windows / Linux",
     "UNKNOWN_ERROR": "Une erreur inconnue s'est produite !"
   },
   "EVENTS": {
