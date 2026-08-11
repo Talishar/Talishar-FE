@@ -302,6 +302,68 @@
   margin: 0;
 }
 
+/* Match Result Webhook Section */
+.webhookSection {
+  margin: 1rem 0;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.webhookSection h3 {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1.3em;
+}
+
+.webhookSection p {
+  margin: 0 0 0.75rem;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9em;
+}
+
+.webhookInputRow {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.webhookInput {
+  flex: 1 1 220px;
+  min-width: 180px;
+  padding: 0.5rem 0.75rem;
+  background: var(--theme-form-background, rgba(255, 255, 255, 0.06));
+  border: 1px solid var(--theme-form-border, rgba(255, 255, 255, 0.15));
+  border-radius: 4px;
+  color: var(--theme-text, rgba(255, 255, 255, 0.9));
+  font-size: 0.95rem;
+}
+
+.webhookInputRow .metafyToggleButton {
+  margin: 0;
+}
+
+.webhookInput:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.webhookLockedNote {
+  margin: 0.75rem 0 0;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9em;
+}
+
+@media (max-width: 575px) {
+  .webhookInputRow {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
 .metafyToggleButton {
   width: auto;
   padding: 0.5rem 0.85rem;

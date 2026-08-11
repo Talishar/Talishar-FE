@@ -71,6 +71,10 @@ import {
   SaveDeckCosmeticsRequest,
   SaveDeckCosmeticsResponse
 } from 'interface/API/SaveDeckCosmetics.php';
+import {
+  MatchResultWebhookRequest,
+  MatchResultWebhookResponse
+} from 'interface/API/MatchResultWebhookAPI.php';
 import { PatreonLoginResponse } from 'routes/user/profile/linkpatreon/linkPatreon';
 import {
   ChangeDisplayNameRequest,
@@ -475,6 +479,19 @@ export const apiSlice = createApi({
       query: (body: SaveDeckCosmeticsRequest) => {
         return {
           url: URL_END_POINT.SAVE_DECK_COSMETICS,
+          method: 'POST',
+          body: body,
+          responseHandler: parseResponse
+        };
+      }
+    }),
+    setMatchResultWebhook: builder.mutation<
+      MatchResultWebhookResponse,
+      MatchResultWebhookRequest
+    >({
+      query: (body: MatchResultWebhookRequest) => {
+        return {
+          url: URL_END_POINT.MATCH_RESULT_WEBHOOK,
           method: 'POST',
           body: body,
           responseHandler: parseResponse
@@ -1252,6 +1269,7 @@ export const {
   useUpdateFavoriteDeckMutation,
   useLazyGetDeckCardsQuery,
   useSaveDeckCosmeticsMutation,
+  useSetMatchResultWebhookMutation,
   useDeleteAccountMutation,
   useLoginMutation,
   useLoginWithCookieQuery,

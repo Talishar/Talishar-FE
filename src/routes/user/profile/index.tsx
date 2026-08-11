@@ -3,16 +3,18 @@ import { Trans, useTranslation } from 'react-i18next';
 import {
   useDeleteAccountMutation,
   useGetUserProfileQuery,
-  useChangeDisplayNameMutation
+  useChangeDisplayNameMutation,
+  useSetMatchResultWebhookMutation
 } from 'features/api/apiSlice';
 import { toast } from 'react-hot-toast';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styles from './profile.module.css';
 import FriendsList from './FriendsList';
 import BlockedUsers from './BlockedUsers';
 import MetafySection from './MetafySection';
 import UpgradeSection from './UpgradeSection';
 import useAuth from 'hooks/useAuth';
+import { TALISHAR_METAFY_URL } from 'constants/socialLinks';
 
 const CODE = 'code';
 const CLIENT_ID =
@@ -35,6 +37,38 @@ export const ProfilePage = () => {
   const [isEditingDisplayName, setIsEditingDisplayName] = useState(false);
   const [newDisplayName, setNewDisplayName] = useState('');
   const [showDisplayNameInfo, setShowDisplayNameInfo] = useState(false);
+  const [webhookInput, setWebhookInput] = useState('');
+  const [isSavingWebhook, setIsSavingWebhook] = useState(false);
+  const [setMatchResultWebhook] = useSetMatchResultWebhookMutation();
+
+  useEffect(() => {
+    if (profileData?.matchResultWebhookUrl !== undefined) {
+      setWebhookInput(profileData.matchResultWebhookUrl ?? '');
+    }
+  }, [profileData?.matchResultWebhookUrl]);
+
+  const handleSaveWebhook = async () => {
+    setIsSavingWebhook(true);
+    try {
+      const resp = await setMatchResultWebhook({
+        webhookUrl: webhookInput.trim()
+      }).unwrap();
+      if (resp.success) {
+        toast.success(resp.message, { position: 'top-center' });
+      } else {
+        toast.error(resp.message, { position: 'top-center' });
+      }
+    } catch (err: any) {
+      // The API answers 400 on a rejected URL and 401/500 otherwise, so the
+      // specific reason ("must use a hostname, not a bare IP address", ...)
+      // arrives on the error rather than in a 200 body.
+      const message =
+        err?.data?.message ?? 'Failed to save webhook. Please try again.';
+      toast.error(message, { position: 'top-center' });
+    } finally {
+      setIsSavingWebhook(false);
+    }
+  };
 
   const handleChangeDisplayName = async (displayName: string) => {
     try {
@@ -120,6 +154,8 @@ export const ProfilePage = () => {
   PatreonOAuthParam.append('scope', SCOPE);
 
   const isMetafySupporter: boolean = profileData?.isMetafySupporter ?? false;
+  // Server-side gate is authoritative; this only decides whether the input is usable.
+  const canUseWebhook: boolean = profileData?.canUseMatchResultWebhook ?? false;
 
   return (
     <div>
@@ -188,6 +224,49 @@ export const ProfilePage = () => {
                         <a href={PATREON_URL + PatreonOAuthParam.toString()}>
                           {t('PROFILE.CONNECT_PATREON')}
                         </a>
+                      </p>
+                    )}
+                  </div>
+                )}
+
+                {/* Match Result Webhook */}
+                {!profileIsLoading && (
+                  <div className={styles.webhookSection}>
+                    <h3>{t('PROFILE.WEBHOOK_TITLE')}</h3>
+                    <p>{t('PROFILE.WEBHOOK_DESCRIPTION')}</p>
+                    <div className={styles.webhookInputRow}>
+                      <input
+                        type="url"
+                        placeholder={t('PROFILE.WEBHOOK_PLACEHOLDER')}
+                        value={webhookInput}
+                        onChange={(e) => setWebhookInput(e.target.value)}
+                        disabled={isSavingWebhook || !canUseWebhook}
+                        className={styles.webhookInput}
+                      />
+                      <button
+                        className={styles.metafyToggleButton}
+                        onClick={handleSaveWebhook}
+                        disabled={isSavingWebhook || !canUseWebhook}
+                      >
+                        {isSavingWebhook
+                          ? t('PROFILE.WEBHOOK_SAVING')
+                          : t('PROFILE.WEBHOOK_SAVE')}
+                      </button>
+                    </div>
+                    {!canUseWebhook && (
+                      <p className={styles.webhookLockedNote}>
+                        <Trans
+                          i18nKey="PROFILE.WEBHOOK_SUPPORTER_PERK"
+                          components={{
+                            1: (
+                              <a
+                                href={TALISHAR_METAFY_URL}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              />
+                            )
+                          }}
+                        />
                       </p>
                     )}
                   </div>

@@ -16,6 +16,8 @@ export interface UserProfileAPIResponse {
   isMetafyLinked?: boolean;
   isMetafySupporter?: boolean;
   metafyCommunities?: MetafyCommunity[];
+  matchResultWebhookUrl?: string | null;
+  canUseMatchResultWebhook?: boolean;
 }
 
 export interface ChangeDisplayNameRequest {
