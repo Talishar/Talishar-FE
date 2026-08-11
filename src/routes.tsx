@@ -64,9 +64,15 @@ const ProfilePage = lazy(() =>
   import('routes/user').then((module) => ({ default: module.ProfilePage }))
 );
 
-const RouteFallback = () => (
-  <div style={{ textAlign: 'center', padding: '2rem' }}>Loading…</div>
-);
+const RouteFallback = () => {
+  const { t } = useTranslation();
+
+  return (
+    <div style={{ textAlign: 'center', padding: '2rem' }}>
+      {t('BASE.LOADING')}
+    </div>
+  );
+};
 
 const IndexGuard = ({ children }: { children: JSX.Element }) => {
   const [searchParams] = useKnownSearchParams();

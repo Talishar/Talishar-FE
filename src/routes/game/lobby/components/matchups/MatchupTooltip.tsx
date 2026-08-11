@@ -99,6 +99,7 @@ const MatchupTooltip: React.FC<MatchupTooltipProps> = ({
       {isVisible && (
         <div
           ref={tooltipRef}
+          role="tooltip"
           className={`${styles.tooltip} ${styles[tooltipPos.position]}`}
           style={{
             top: `${tooltipPos.top}px`,
