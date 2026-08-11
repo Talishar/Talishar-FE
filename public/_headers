@@ -4,9 +4,6 @@
 /assets/*.js
   Cache-Control: public, max-age=0, must-revalidate
 
-/assets/*.css
-  Cache-Control: public, max-age=0, must-revalidate
-
 /playmats/*
   Cache-Control: public, max-age=604800, stale-while-revalidate=86400
 
